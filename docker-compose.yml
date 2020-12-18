@@ -1,0 +1,10 @@
+version: "3"
+services:
+    main:
+        build: .
+        ports:
+            - "3000:3000"
+        volumes:
+            - "./pages:/var/app/pages"
+            - "./public:/var/app/public"
+            - "./styles:/var/app/styles"
