@@ -5,6 +5,5 @@ services:
         ports:
             - "3000:3000"
         volumes:
-            - "./pages:/var/app/pages"
+            - "./src:/var/app/src"
             - "./public:/var/app/public"
-            - "./styles:/var/app/styles"
