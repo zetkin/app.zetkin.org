@@ -35,6 +35,7 @@ module.exports = {
           },
         ],
 
+        'brace-style': ['error', 'stroustrup'],
         'indent': ['error', 4],
         'jsx-a11y/anchor-is-valid': 'off',
         'keyword-spacing': ['error', {}],
