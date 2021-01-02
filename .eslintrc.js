@@ -25,6 +25,9 @@ module.exports = {
         'plugin:react-hooks/recommended', // React hooks rules
         'plugin:jsx-a11y/recommended', // Accessibility rules
       ],
+      plugins: [
+          'no-switch-statements',
+      ],
       rules: {
         '@typescript-eslint/no-unused-vars': ['error'],
         '@typescript-eslint/explicit-function-return-type': [
@@ -40,6 +43,7 @@ module.exports = {
         'jsx-a11y/anchor-is-valid': 'off',
         'keyword-spacing': ['error', {}],
         'no-console': 'warn',
+        'no-switch-statements/no-switch': 'error',
         'object-curly-spacing': ['error', 'always'],
         'prefer-const': ['error', {}],
         'react/jsx-closing-bracket-location': ['error', {
