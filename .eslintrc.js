@@ -95,6 +95,11 @@ module.exports = {
         'react/prop-types': 'off',
         'react/react-in-jsx-scope': 'off',
         'semi': ['error', 'always'],
+        'sort-imports': ['error', {
+            memberSyntaxSortOrder: ['none', 'all', 'single', 'multiple'],
+        }],
+        'sort-keys': 'error',
+        'sort-vars': 'error',
         'space-before-blocks': ['error', 'always'],
       },
     },
