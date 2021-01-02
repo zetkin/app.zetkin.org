@@ -45,6 +45,17 @@ module.exports = {
         'no-console': 'warn',
         'no-switch-statements/no-switch': 'error',
         'object-curly-spacing': ['error', 'always'],
+        'padding-line-between-statements': ['error',
+            // imports go together, but last import must be followed by newline
+            { blankLine: 'always', prev: 'import', next: '*' },
+            { blankLine: 'any', prev: 'import', next: 'import' },
+
+            { blankLine: 'always', prev: 'export', next: '*' },
+            { blankLine: 'always', prev: '*', next: 'export' },
+
+            { blankLine: 'always', prev: 'function', next: '*' },
+            { blankLine: 'always', prev: '*', next: 'function' },
+        ],
         'prefer-const': ['error', {}],
         'react/jsx-closing-bracket-location': ['error', {
             'nonEmpty': 'after-props',
