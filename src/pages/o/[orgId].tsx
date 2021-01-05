@@ -6,28 +6,30 @@ import Link from 'next/link';
 
 export const getServerSideProps : GetServerSideProps = async (context : NextPageContext) => {
     const { orgId } = context.params;
-    let data;
+    let props;
 
     try {
         const res = await fetch(`http://api.zetk.in/v1/orgs/${orgId}`);
-        data = await res.json();
-    } catch {
+        const data = await res.json();
+
+        props = {
+            org: data.data,
+        };
+    }
+    catch (err) {
+        if (err.name != 'FetchError') {
+            throw err;
+        }
+    }
+
+    if (props) {
+        return { props };
+    }
+    else {
         return {
             notFound: true,
         };
     }
-
-    if (!data) {
-        return {
-            notFound: true,
-        };
-    }
-
-    return { 
-        props: { 
-            org: data.data, 
-        } 
-    };
 };
 
 type OrgPageProps = {

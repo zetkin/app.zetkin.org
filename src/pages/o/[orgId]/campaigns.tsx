@@ -5,33 +5,33 @@ import {
 
 export const getServerSideProps : GetServerSideProps = async (context : NextPageContext) => {
     const { orgId } = context.params;
-    let cData;
-    let oData;
+    let props;
 
     try {
         const cRes = await fetch(`http://api.zetk.in/v1/orgs/${orgId}/campaigns`);
-        cData = await cRes.json();
-
+        const cData = await cRes.json();
         const oRes = await fetch(`https://api.zetk.in/v1/orgs/${orgId}`);
-        oData = await oRes.json();
-    } catch {
-        return {
-            notFound: true,
-        };
-    }
+        const oData = await oRes.json();
 
-    if (!cData || !oData) {
-        return {
-            notFound: true,
-        };
-    }
-
-    return { 
-        props: { 
-            org: oData.data, 
+        props = {
+            org: oData.data,
             campaigns: cData.data,
-        } 
-    };
+        };
+    }
+    catch (err) {
+        if (err.name != 'FetchError') {
+            throw err;
+        }
+    }
+
+    if (props) {
+        return { props };
+    }
+    else {
+        return {
+            notFound: true,
+        };
+    }
 };
 
 type OrgCampaignsPageProps = {

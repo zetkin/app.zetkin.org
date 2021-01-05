@@ -5,33 +5,33 @@ import {
 
 export const getServerSideProps : GetServerSideProps = async (context : NextPageContext) => {
     const { orgId, surId } = context.params;
-    let sIdData;
-    let oData;
+    let props;
 
     try {
         const sIdRes = await fetch(`http://api.zetk.in/v1/orgs/${orgId}/surveys/${surId}`);
-        sIdData = await sIdRes.json();
-
+        const sIdData = await sIdRes.json();
         const oRes = await fetch(`https://api.zetk.in/v1/orgs/${orgId}`);
-        oData = await oRes.json();
-    } catch {
-        return {
-            notFound: true,
-        };
-    }
+        const oData = await oRes.json();
 
-    if (!sIdData || !oData) {
-        return {
-            notFound: true,
-        };
-    }
-
-    return { 
-        props: {
+        props = {
             org: oData.data,
             survey: sIdData.data,
-        } 
-    };
+        };
+    }
+    catch (err) {
+        if (err.name != 'FetchError') {
+            throw err;
+        }
+    }
+
+    if (props) {
+        return { props };
+    }
+    else {
+        return {
+            notFound: true,
+        };
+    }
 };
 
 type OrgSurveyPageProps = {

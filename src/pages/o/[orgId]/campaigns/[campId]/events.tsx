@@ -5,38 +5,36 @@ import {
 
 export const getServerSideProps : GetServerSideProps = async (context : NextPageContext) => {
     const { orgId, campId } = context.params;
-    let eventsData;
-    let cIdData;
-    let oData;
+    let props;
 
     try {
         const eventsRes = await fetch(`http://api.zetk.in/v1/orgs/${orgId}/campaigns/${campId}/actions`);
-        eventsData = await eventsRes.json();
-
+        const eventsData = await eventsRes.json();
         const cIdRes = await fetch(`http://api.zetk.in/v1/orgs/${orgId}/campaigns/${campId}`);
-        cIdData = await cIdRes.json();
-
+        const cIdData = await cIdRes.json();
         const oRes = await fetch(`https://api.zetk.in/v1/orgs/${orgId}`);
-        oData = await oRes.json();
-    } catch {
-        return {
-            notFound: true,
-        };
-    }
+        const oData = await oRes.json();
 
-    if (!eventsData || !cIdData || !oData) {
-        return {
-            notFound: true,
-        };
-    }
-
-    return { 
-        props: { 
-            org: oData.data,
-            campaign: cIdData.data,
+        props = {
             events: eventsData.data,
-        } 
-    };
+            campaign: cIdData.data,
+            org: oData.data,
+        };
+    }
+    catch (err) {
+        if (err.name != 'FetchError') {
+            throw err;
+        }
+    }
+
+    if (props) {
+        return { props };
+    }
+    else {
+        return {
+            notFound: true,
+        };
+    }
 };
 
 type OrgCampaignsPageProps = {
