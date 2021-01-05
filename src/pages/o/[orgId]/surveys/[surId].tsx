@@ -4,14 +4,21 @@ import {
 } from 'next';
 
 export const getServerSideProps : GetServerSideProps = async (context : NextPageContext) => {
-    const { orgId } = context.params;
-    const { surId } = context.params;
+    const { orgId, surId } = context.params;
+    let sIdData;
+    let oData;
 
-    const sIdRes = await fetch(`http://api.zetk.in/v1/orgs/${orgId}/surveys/${surId}`);
-    const sIdData = await sIdRes.json();
+    try {
+        const sIdRes = await fetch(`http://api.zetk.in/v1/orgs/${orgId}/surveys/${surId}`);
+        sIdData = await sIdRes.json();
 
-    const oRes = await fetch(`https://api.zetk.in/v1/orgs/${orgId}`);
-    const oData = await oRes.json();
+        const oRes = await fetch(`https://api.zetk.in/v1/orgs/${orgId}`);
+        oData = await oRes.json();
+    } catch {
+        return {
+            notFound: true,
+        };
+    }
 
     if (!sIdData || !oData) {
         return {

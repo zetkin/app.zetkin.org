@@ -5,12 +5,20 @@ import {
 
 export const getServerSideProps : GetServerSideProps = async (context : NextPageContext) => {
     const { orgId } = context.params;
+    let cData;
+    let oData;
 
-    const cRes = await fetch(`http://api.zetk.in/v1/orgs/${orgId}/campaigns`);
-    const cData = await cRes.json();
-	
-    const oRes = await fetch(`https://api.zetk.in/v1/orgs/${orgId}`);
-    const oData = await oRes.json();
+    try {
+        const cRes = await fetch(`http://api.zetk.in/v1/orgs/${orgId}/campaigns`);
+        cData = await cRes.json();
+
+        const oRes = await fetch(`https://api.zetk.in/v1/orgs/${orgId}`);
+        oData = await oRes.json();
+    } catch {
+        return {
+            notFound: true,
+        };
+    }
 
     if (!cData || !oData) {
         return {

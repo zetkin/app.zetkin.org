@@ -6,9 +6,16 @@ import Link from 'next/link';
 
 export const getServerSideProps : GetServerSideProps = async (context : NextPageContext) => {
     const { orgId } = context.params;
+    let data;
 
-    const res = await fetch(`http://api.zetk.in/v1/orgs/${orgId}`);
-    const data = await res.json();
+    try {
+        const res = await fetch(`http://api.zetk.in/v1/orgs/${orgId}`);
+        data = await res.json();
+    } catch {
+        return {
+            notFound: true,
+        };
+    }
 
     if (!data) {
         return {
