@@ -40,7 +40,10 @@ export default function OrgPage(props : OrgPageProps) : JSX.Element {
     return ( 
         <>
             <h1>{ org.title }</h1>
-            <Link href={ `/o/${org.id}/campaigns` }>Campaigns</Link>
+            <ul>
+                <li><Link href={ `/o/${org.id}/campaigns` }>Campaigns</Link></li>
+                <li><Link href={ `/o/${org.id}/events` }>Events</Link></li>
+            </ul>
         </>
     );
 }
