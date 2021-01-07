@@ -5,10 +5,11 @@ import {
 import Link from 'next/link';
 
 export const getServerSideProps : GetServerSideProps = async (context : NextPageContext) => {
-    const { orgId } = context.params;
     let props;
 
     try {
+        const { orgId } = context.params;
+
         const res = await fetch(`http://api.zetk.in/v1/orgs/${orgId}`);
         const data = await res.json();
 

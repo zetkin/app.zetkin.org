@@ -4,10 +4,11 @@ import {
 } from 'next';
 
 export const getServerSideProps : GetServerSideProps = async (context : NextPageContext) => {
-    const { orgId, campId } = context.params;
     let props;
 
     try {
+        const { orgId, campId } = context.params;
+
         const eventsRes = await fetch(`http://api.zetk.in/v1/orgs/${orgId}/campaigns/${campId}/actions`);
         const eventsData = await eventsRes.json();
         const cIdRes = await fetch(`http://api.zetk.in/v1/orgs/${orgId}/campaigns/${campId}`);

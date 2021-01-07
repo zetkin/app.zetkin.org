@@ -8,6 +8,8 @@ export const getServerSideProps : GetServerSideProps = async (context : NextPage
     let props;
 
     try {
+        const { orgId, surId } = context.params;
+
         const sIdRes = await fetch(`http://api.zetk.in/v1/orgs/${orgId}/surveys/${surId}`);
         const sIdData = await sIdRes.json();
         const oRes = await fetch(`https://api.zetk.in/v1/orgs/${orgId}`);
