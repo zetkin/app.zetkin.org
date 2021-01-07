@@ -27,10 +27,12 @@ export const getServerSideProps : GetServerSideProps = async (context : NextPage
             }
         }
 
-        props = {
-            org: oData.data,
-            eventData,
-        };
+        if (eventData) {
+            props = {
+                org: oData.data,
+                eventData,
+            };
+        }
     }
     catch (err) {
         if (err.name != 'FetchError') {
