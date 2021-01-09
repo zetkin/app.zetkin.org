@@ -17,3 +17,11 @@ Run the deveopment build using [Docker Compose](https://docs.docker.com/compose/
 ```
 $ docker-compose up --build
 ```
+
+To avoid commiting anything that breaks linting rules, you can set up a git
+pre-commit hook. The `.githooks/` directory contains such a hook, so the easiest
+way to set it up is to just configure git to use hooks from there:
+
+```
+$ git config core.hooksPath .githooks
+```
