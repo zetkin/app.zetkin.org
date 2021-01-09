@@ -34,8 +34,12 @@ export const getServerSideProps : GetServerSideProps = async (context) => {
 };
 
 type OrgSurveyPageProps = {
-    org: Record<string, unknown>,
-    survey: array<Record<string, unknown>>,
+    org: {
+        title: string,
+    },
+    survey: {
+        title: string,
+    },
 }
 
 export default function OrgSurveyPage(props : OrgSurveyPageProps) : JSX.Element {

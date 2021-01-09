@@ -36,9 +36,19 @@ export const getServerSideProps : GetServerSideProps = async (context) => {
 };
 
 type OrgCampaignsPageProps = {
-    org: Record<string, unknown>,
-    campaign: array<Record<string, unknown>>,
-    events: array<Record<string, unknown>>,
+    campaign: {
+        title: string,
+    },
+    events: Array<{
+        activity: {
+            title: string,
+        },
+        id: number,
+        title: string,
+    }>,
+    org: {
+        title: string,
+    },
 }
 
 export default function OrgCampaignEventsPage(props : OrgCampaignsPageProps) : JSX.Element {

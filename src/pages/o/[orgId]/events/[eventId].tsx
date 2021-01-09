@@ -48,8 +48,12 @@ export const getServerSideProps : GetServerSideProps = async (context) => {
 };
 
 type OrgEventsPageProps = {
-    org: Record<string, unknown>,
-    eventData: Record<string, unknown>,
+    eventData: {
+        title: string,
+    },
+    org: {
+        title: string,
+    },
 }
 
 export default function OrgEventsPage(props : OrgEventsPageProps) : JSX.Element {

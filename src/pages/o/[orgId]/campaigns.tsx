@@ -33,8 +33,13 @@ export const getServerSideProps : GetServerSideProps = async (context) => {
 };
 
 type OrgCampaignsPageProps = {
-    org: Record<string, unknown>,
-    campaigns: array<Record<string, unknown>>,
+    campaigns: Array<{
+        id: string,
+        title: string,
+    }>,
+    org: {
+        title: string,
+    },
 }
 
 export default function OrgCampaignsPage(props : OrgCampaignsPageProps) : JSX.Element {
