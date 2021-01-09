@@ -25,6 +25,9 @@ module.exports = {
         'plugin:react-hooks/recommended', // React hooks rules
         'plugin:jsx-a11y/recommended', // Accessibility rules
       ],
+      plugins: [
+          'no-switch-statements',
+      ],
       rules: {
         '@typescript-eslint/no-unused-vars': ['error'],
         '@typescript-eslint/explicit-function-return-type': [
@@ -35,11 +38,24 @@ module.exports = {
           },
         ],
 
+        'brace-style': ['error', 'stroustrup'],
         'indent': ['error', 4],
         'jsx-a11y/anchor-is-valid': 'off',
         'keyword-spacing': ['error', {}],
         'no-console': 'warn',
+        'no-switch-statements/no-switch': 'error',
         'object-curly-spacing': ['error', 'always'],
+        'padding-line-between-statements': ['error',
+            // imports go together, but last import must be followed by newline
+            { blankLine: 'always', prev: 'import', next: '*' },
+            { blankLine: 'any', prev: 'import', next: 'import' },
+
+            { blankLine: 'always', prev: 'export', next: '*' },
+            { blankLine: 'always', prev: '*', next: 'export' },
+
+            { blankLine: 'always', prev: 'function', next: '*' },
+            { blankLine: 'always', prev: '*', next: 'function' },
+        ],
         'prefer-const': ['error', {}],
         'react/jsx-closing-bracket-location': ['error', {
             'nonEmpty': 'after-props',
@@ -79,6 +95,12 @@ module.exports = {
         'react/prop-types': 'off',
         'react/react-in-jsx-scope': 'off',
         'semi': ['error', 'always'],
+        'sort-imports': ['error', {
+            allowSeparatedGroups: true,
+            memberSyntaxSortOrder: ['none', 'all', 'single', 'multiple'],
+        }],
+        'sort-keys': 'error',
+        'sort-vars': 'error',
         'space-before-blocks': ['error', 'always'],
       },
     },
