@@ -1,2 +1,2 @@
 #!/bin/sh
-docker-compose run linter npm run lint
+docker-compose run --rm linter npm run lint
