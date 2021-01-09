@@ -26,8 +26,8 @@ export const getServerSideProps : GetServerSideProps = async (context) => {
 
         if (eventData) {
             props = {
-                org: oData.data,
                 eventData,
+                org: oData.data,
             };
         }
     }

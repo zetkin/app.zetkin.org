@@ -1,6 +1,6 @@
 import { GetServerSideProps } from 'next';
-import { QueryClient, useQuery } from 'react-query';
 import { dehydrate } from 'react-query/hydration';
+import { QueryClient, useQuery } from 'react-query';
 
 function getEvents(orgId) {
     return async () => {

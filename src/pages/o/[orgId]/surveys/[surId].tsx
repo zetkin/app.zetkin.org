@@ -1,7 +1,6 @@
 import { GetServerSideProps } from 'next';
 
 export const getServerSideProps : GetServerSideProps = async (context) => {
-    const { orgId, surId } = context.params;
     let props;
 
     try {

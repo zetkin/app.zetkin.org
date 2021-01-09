@@ -12,8 +12,8 @@ export const getServerSideProps : GetServerSideProps = async (context) => {
         const oData = await oRes.json();
 
         props = {
-            org: oData.data,
             campaign: cIdData.data,
+            org: oData.data,
         };
     }
     catch (err) {
