@@ -2,8 +2,17 @@ version: "3"
 services:
     main:
         build: .
+        image: main
         ports:
             - "3000:3000"
         volumes:
             - "./src:/var/app/src"
             - "./public:/var/app/public"
+
+    linter:
+        command: npm run watch
+        environment:
+            SHELL: "sh"
+        image: main
+        volumes:
+            - "./src:/var/app/src"
