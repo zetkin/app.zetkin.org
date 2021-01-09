@@ -5,6 +5,9 @@ module.exports = {
         test: /\.(j|t)sx?$/,
         exclude: /node_modules/,
         loader: 'eslint-loader',
+        options: {
+          emitWarning: true,
+        }
       });
     };
     return config;
