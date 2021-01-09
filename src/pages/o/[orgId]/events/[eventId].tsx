@@ -1,9 +1,6 @@
-import { 
-    GetServerSideProps,
-    NextPageContext,
-} from 'next';
+import { GetServerSideProps } from 'next';
 
-export const getServerSideProps : GetServerSideProps = async (context : NextPageContext) => {
+export const getServerSideProps : GetServerSideProps = async (context) => {
     let props;
 
     try {

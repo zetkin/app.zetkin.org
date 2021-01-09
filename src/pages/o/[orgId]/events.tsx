@@ -1,7 +1,4 @@
-import { 
-    GetServerSideProps,
-    NextPageContext,
-} from 'next';
+import { GetServerSideProps } from 'next';
 import { QueryClient, useQuery } from 'react-query';
 import { dehydrate } from 'react-query/hydration';
 
@@ -47,7 +44,7 @@ function getOrg(orgId) {
     };
 }
 
-export const getServerSideProps : GetServerSideProps = async (context : NextPageContext) => {
+export const getServerSideProps : GetServerSideProps = async (context) => {
     const queryClient = new QueryClient();
     const { orgId } = context.params;
 

@@ -1,10 +1,7 @@
-import {
-    GetServerSideProps,
-    NextPageContext,
-} from 'next';
+import { GetServerSideProps } from 'next';
 import Link from 'next/link';
 
-export const getServerSideProps : GetServerSideProps = async (context : NextPageContext) => {
+export const getServerSideProps : GetServerSideProps = async (context) => {
     let props;
 
     try {
