@@ -1,10 +1,6 @@
-import { 
-    GetServerSideProps,
-    NextPageContext,
-} from 'next';
+import { GetServerSideProps } from 'next';
 
-export const getServerSideProps : GetServerSideProps = async (context : NextPageContext) => {
-    const { orgId, surId } = context.params;
+export const getServerSideProps : GetServerSideProps = async (context) => {
     let props;
 
     try {
@@ -37,8 +33,12 @@ export const getServerSideProps : GetServerSideProps = async (context : NextPage
 };
 
 type OrgSurveyPageProps = {
-    org: Record<string, unknown>,
-    survey: array<Record<string, unknown>>,
+    org: {
+        title: string,
+    },
+    survey: {
+        title: string,
+    },
 }
 
 export default function OrgSurveyPage(props : OrgSurveyPageProps) : JSX.Element {

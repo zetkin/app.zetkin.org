@@ -1,9 +1,6 @@
-import { 
-    GetServerSideProps,
-    NextPageContext,
-} from 'next';
-import { QueryClient, useQuery } from 'react-query';
+import { GetServerSideProps } from 'next';
 import { dehydrate } from 'react-query/hydration';
+import { QueryClient, useQuery } from 'react-query';
 
 function getEvents(orgId) {
     return async () => {
@@ -47,7 +44,7 @@ function getOrg(orgId) {
     };
 }
 
-export const getServerSideProps : GetServerSideProps = async (context : NextPageContext) => {
+export const getServerSideProps : GetServerSideProps = async (context) => {
     const queryClient = new QueryClient();
     const { orgId } = context.params;
 

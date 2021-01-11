@@ -1,9 +1,6 @@
-import { 
-    GetServerSideProps,
-    NextPageContext,
-} from 'next';
+import { GetServerSideProps } from 'next';
 
-export const getServerSideProps : GetServerSideProps = async (context : NextPageContext) => {
+export const getServerSideProps : GetServerSideProps = async (context) => {
     let props;
 
     try {
@@ -29,8 +26,8 @@ export const getServerSideProps : GetServerSideProps = async (context : NextPage
 
         if (eventData) {
             props = {
-                org: oData.data,
                 eventData,
+                org: oData.data,
             };
         }
     }
@@ -51,8 +48,12 @@ export const getServerSideProps : GetServerSideProps = async (context : NextPage
 };
 
 type OrgEventsPageProps = {
-    org: Record<string, unknown>,
-    eventData: Record<string, unknown>,
+    eventData: {
+        title: string,
+    },
+    org: {
+        title: string,
+    },
 }
 
 export default function OrgEventsPage(props : OrgEventsPageProps) : JSX.Element {

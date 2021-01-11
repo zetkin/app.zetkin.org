@@ -31,7 +31,7 @@ module.exports = {
       rules: {
         '@typescript-eslint/no-unused-vars': ['error'],
         '@typescript-eslint/explicit-function-return-type': [
-          'warn',
+          'error',
           {
             allowExpressions: true,
             allowConciseArrowFunctionExpressionsStartingWithVoid: true,
@@ -42,7 +42,7 @@ module.exports = {
         'indent': ['error', 4],
         'jsx-a11y/anchor-is-valid': 'off',
         'keyword-spacing': ['error', {}],
-        'no-console': 'warn',
+        'no-console': 'error',
         'no-switch-statements/no-switch': 'error',
         'object-curly-spacing': ['error', 'always'],
         'padding-line-between-statements': ['error',
