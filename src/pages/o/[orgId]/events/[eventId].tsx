@@ -4,25 +4,19 @@ import { QueryClient, useQuery } from 'react-query';
 
 function getEvent(orgId, eventId) {
     return async () => {
-        try {
-            const cRes = await fetch(`http://localhost:3000/api/orgs/${orgId}/campaigns`);
-            const cData = await cRes.json();
+        const cRes = await fetch(`http://localhost:3000/api/orgs/${orgId}/campaigns`);
+        const cData = await cRes.json();
 
-            for (const obj of cData.data) {
-                const eventsRes = await fetch(`http://localhost:3000/api/orgs/${orgId}/campaigns/${obj.id}/actions`);
-                const campaignEvents = await eventsRes.json();
-                const eventData = campaignEvents.data.find(event => event.id == eventId);
-                if (eventData) {
-                    return eventData;
-                }
+        for (const obj of cData.data) {
+            const eventsRes = await fetch(`http://localhost:3000/api/orgs/${orgId}/campaigns/${obj.id}/actions`);
+            const campaignEvents = await eventsRes.json();
+            const eventData = campaignEvents.data.find(event => event.id == eventId);
+            if (eventData) {
+                return eventData;
             }
         }
-        catch (err) {
-            if (err.name != 'FetchError') {
-                throw err;
-            }
-            return null;
-        }
+
+        throw 'not found';
     };
 }
 
