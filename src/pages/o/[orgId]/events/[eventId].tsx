@@ -70,7 +70,7 @@ type OrgEventPageProps = {
 
 export default function OrgEventsPage(props : OrgEventPageProps) : JSX.Element {
     const { orgId, eventId } = props;
-    const eventQuery = useQuery('event', getEvent(orgId, eventId));
+    const eventQuery = useQuery(['event', eventId], getEvent(orgId, eventId));
     const orgQuery = useQuery(['org', orgId], getOrg(orgId));
 
     return (

@@ -40,7 +40,7 @@ export const getServerSideProps : GetServerSideProps = async (context) => {
     const queryClient = new QueryClient();
     const { orgId } = context.params;
 
-    await queryClient.prefetchQuery('campaigns', getCampaigns(orgId));
+    await queryClient.prefetchQuery(['campaigns', orgId], getCampaigns(orgId));
     await queryClient.prefetchQuery(['org', orgId], getOrg(orgId));
 
     return {
@@ -57,7 +57,7 @@ type OrgCampaignsPageProps = {
 
 export default function OrgCampaignsPage(props : OrgCampaignsPageProps) : JSX.Element {
     const { orgId } = props;
-    const campaignsQuery = useQuery('campaigns', getCampaigns(orgId));
+    const campaignsQuery = useQuery(['campaigns', orgId], getCampaigns(orgId));
     const orgQuery = useQuery(['org', orgId], getOrg(orgId));
 
     return (
