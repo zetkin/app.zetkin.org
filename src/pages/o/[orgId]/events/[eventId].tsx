@@ -41,16 +41,26 @@ export const getServerSideProps : GetServerSideProps = async (context) => {
     const queryClient = new QueryClient();
     const { orgId, eventId } = context.params;
 
-    await queryClient.prefetchQuery('event', getEvent(orgId, eventId));
+    await queryClient.prefetchQuery(['event', eventId], getEvent(orgId, eventId));
     await queryClient.prefetchQuery(['org', orgId], getOrg(orgId));
 
-    return {
-        props: {
-            dehydratedState: dehydrate(queryClient),
-            eventId,
-            orgId
-        },
-    };
+    const eventState = queryClient.getQueryState(['event', eventId]);
+    const orgState = queryClient.getQueryState(['org', orgId]);
+
+    if (eventState.status === 'success' && orgState.status === 'success') {
+        return {
+            props: {
+                dehydratedState: dehydrate(queryClient),
+                eventId,
+                orgId
+            },
+        };
+    }
+    else {
+        return {
+            notFound: true,
+        };
+    }
 };
 
 type OrgEventPageProps = {
