@@ -1,68 +1,81 @@
 import { GetServerSideProps } from 'next';
+import { dehydrate } from 'react-query/hydration';
+import { QueryClient, useQuery } from 'react-query';
 
-export const getServerSideProps : GetServerSideProps = async (context) => {
-    let props;
+function getEvent(orgId, eventId) {
+    return async () => {
+        try {
+            const cRes = await fetch(`https://api.zetk.in/v1/orgs/${orgId}/campaigns`);
+            const cData = await cRes.json();
 
-    try {
-        const { orgId, eventId } = context.params;
+            let allEventsData = [];
 
-        const cRes = await fetch(`http://api.zetk.in/v1/orgs/${orgId}/campaigns`);
-        const cData = await cRes.json();
-        const oRes = await fetch(`https://api.zetk.in/v1/orgs/${orgId}`);
-        const oData = await oRes.json();
-
-        let allEventsData = [];
-        let eventData = [];
-
-        for (const obj of cData.data) {
-            const eventsRes = await fetch(`https://api.zetk.in/v1/orgs/${orgId}/campaigns/${obj.id}/actions`);
-            const campaignEvents = await eventsRes.json();
-            allEventsData = allEventsData.concat(campaignEvents.data);
-            eventData = allEventsData.find(event => event.id == eventId);
-            if (eventData) {
-                break;
+            for (const obj of cData.data) {
+                const eventsRes = await fetch(`https://api.zetk.in/v1/orgs/${orgId}/campaigns/${obj.id}/actions`);
+                const campaignEvents = await eventsRes.json();
+                allEventsData = allEventsData.concat(campaignEvents.data);
+                const eventData = allEventsData.find(event => event.id == eventId);
+                if (eventData) {
+                    return eventData;
+                }
             }
         }
-
-        if (eventData) {
-            props = {
-                eventData,
-                org: oData.data,
-            };
+        catch (err) {
+            if (err.name != 'FetchError') {
+                throw err;
+            }
+            return null;
         }
-    }
-    catch (err) {
-        if (err.name != 'FetchError') {
-            throw err;
-        }
-    }
-
-    if (props) {
-        return { props };
-    }
-    else {
-        return {
-            notFound: true,
-        };
-    }
-};
-
-type OrgEventsPageProps = {
-    eventData: {
-        title: string,
-    },
-    org: {
-        title: string,
-    },
+    };
 }
 
-export default function OrgEventsPage(props : OrgEventsPageProps) : JSX.Element {
-    const { org, eventData } = props;
+function getOrg(orgId) {
+    return async () => {
+        try {
+            const oRes = await fetch(`http://api.zetk.in/v1/orgs/${orgId}`);
+            const oData = await oRes.json();
+
+            return oData.data;
+        }
+        catch (err) {
+            if (err.name != 'FetchError') {
+                throw err;
+            }
+            return null;
+        }
+    };
+}
+
+export const getServerSideProps : GetServerSideProps = async (context) => {
+    const queryClient = new QueryClient();
+    const { orgId, eventId } = context.params;
+
+    await queryClient.prefetchQuery('event', getEvent(orgId, eventId));
+    await queryClient.prefetchQuery(['org', orgId], getOrg(orgId));
+
+    return {
+        props: {
+            dehydratedState: dehydrate(queryClient),
+            eventId,
+            orgId
+        },
+    };
+};
+
+type OrgEventPageProps = {
+    eventId: string,
+    orgId: string,
+}
+
+export default function OrgEventsPage(props : OrgEventPageProps) : JSX.Element {
+    const { orgId, eventId } = props;
+    const eventQuery = useQuery('event', getEvent(orgId, eventId));
+    const orgQuery = useQuery(['org', orgId], getOrg(orgId));
 
     return (
         <>
-            <h1>{ org.title }</h1>
-            <h1>{ eventData.title }</h1>
+            <h1>{ orgQuery.data.title }</h1>
+            <h1>{ eventQuery.data.title }</h1>
         </>
     );
 }

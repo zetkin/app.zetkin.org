@@ -1,55 +1,70 @@
 import { GetServerSideProps } from 'next';
+import { dehydrate } from 'react-query/hydration';
+import { QueryClient, useQuery } from 'react-query';
+
+function getCampaigns(orgId) {
+    return async () => {
+        try {
+            const cRes = await fetch(`http://api.zetk.in/v1/orgs/${orgId}/campaigns`);
+            const cData = await cRes.json();
+
+            return cData.data;
+        }
+        catch (err) {
+            if (err.name != 'FetchError') {
+                throw err;
+            }
+            return null;
+        }
+    };
+}
+
+function getOrg(orgId) {
+    return async () => {
+        try {
+            const oRes = await fetch(`http://api.zetk.in/v1/orgs/${orgId}`);
+            const oData = await oRes.json();
+
+            return oData.data;
+        }
+        catch (err) {
+            if (err.name != 'FetchError') {
+                throw err;
+            }
+            return null;
+        }
+    };
+}
 
 export const getServerSideProps : GetServerSideProps = async (context) => {
-    let props;
+    const queryClient = new QueryClient();
+    const { orgId } = context.params;
 
-    try {
-        const { orgId } = context.params;
+    await queryClient.prefetchQuery('campaigns', getCampaigns(orgId));
+    await queryClient.prefetchQuery(['org', orgId], getOrg(orgId));
 
-        const cRes = await fetch(`http://api.zetk.in/v1/orgs/${orgId}/campaigns`);
-        const cData = await cRes.json();
-        const oRes = await fetch(`https://api.zetk.in/v1/orgs/${orgId}`);
-        const oData = await oRes.json();
-
-        props = {
-            campaigns: cData.data,
-            org: oData.data,
-        };
-    }
-    catch (err) {
-        if (err.name != 'FetchError') {
-            throw err;
-        }
-    }
-
-    if (props) {
-        return { props };
-    }
-    else {
-        return {
-            notFound: true,
-        };
-    }
+    return {
+        props: {
+            dehydratedState: dehydrate(queryClient),
+            orgId
+        },
+    };
 };
 
 type OrgCampaignsPageProps = {
-    campaigns: Array<{
-        id: string,
-        title: string,
-    }>,
-    org: {
-        title: string,
-    },
+    orgId: string,
 }
 
 export default function OrgCampaignsPage(props : OrgCampaignsPageProps) : JSX.Element {
-    const { org, campaigns } = props;
+    const { orgId } = props;
+    const campaignsQuery = useQuery('campaigns', getCampaigns(orgId));
+    const orgQuery = useQuery(['org', orgId], getOrg(orgId));
 
     return (
         <>
-            <h1>Campaigns for { org.title }</h1>
+            <h1>Campaigns for { orgQuery.data.title }</h1>
             <ul>
-                { campaigns.map((c) => (
+                { campaignsQuery.data.map((c) => (
                     <li key={ c.id }>{ c.title }</li>
                 )) }
             </ul>
