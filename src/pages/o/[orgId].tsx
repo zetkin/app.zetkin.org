@@ -6,7 +6,7 @@ import { QueryClient, useQuery } from 'react-query';
 function getOrg(orgId) {
     return async () => {
         try {
-            const oRes = await fetch(`http://api.zetk.in/v1/orgs/${orgId}`);
+            const oRes = await fetch(`http://localhost:3000/api/orgs/${orgId}`);
             const oData = await oRes.json();
 
             return oData.data;

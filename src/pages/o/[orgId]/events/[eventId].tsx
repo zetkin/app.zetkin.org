@@ -5,13 +5,13 @@ import { QueryClient, useQuery } from 'react-query';
 function getEvent(orgId, eventId) {
     return async () => {
         try {
-            const cRes = await fetch(`https://api.zetk.in/v1/orgs/${orgId}/campaigns`);
+            const cRes = await fetch(`http://localhost:3000/api/orgs/${orgId}/campaigns`);
             const cData = await cRes.json();
 
             let allEventsData = [];
 
             for (const obj of cData.data) {
-                const eventsRes = await fetch(`https://api.zetk.in/v1/orgs/${orgId}/campaigns/${obj.id}/actions`);
+                const eventsRes = await fetch(`http://localhost:3000/api/orgs/${orgId}/campaigns/${obj.id}/actions`);
                 const campaignEvents = await eventsRes.json();
                 allEventsData = allEventsData.concat(campaignEvents.data);
                 const eventData = allEventsData.find(event => event.id == eventId);
@@ -32,7 +32,7 @@ function getEvent(orgId, eventId) {
 function getOrg(orgId) {
     return async () => {
         try {
-            const oRes = await fetch(`http://api.zetk.in/v1/orgs/${orgId}`);
+            const oRes = await fetch(`http://localhost:3000/api/orgs/${orgId}`);
             const oData = await oRes.json();
 
             return oData.data;

@@ -5,7 +5,7 @@ import { QueryClient, useQuery } from 'react-query';
 function getSurvey(orgId, surId) {
     return async () => {
         try {
-            const sIdRes = await fetch(`http://api.zetk.in/v1/orgs/${orgId}/surveys/${surId}`);
+            const sIdRes = await fetch(`http://localhost:3000/api/orgs/${orgId}/surveys/${surId}`);
             const sIdData = await sIdRes.json();
 
             return sIdData.data;
@@ -22,7 +22,7 @@ function getSurvey(orgId, surId) {
 function getOrg(orgId) {
     return async () => {
         try {
-            const oRes = await fetch(`http://api.zetk.in/v1/orgs/${orgId}`);
+            const oRes = await fetch(`http://localhost:3000/api/orgs/${orgId}`);
             const oData = await oRes.json();
 
             return oData.data;

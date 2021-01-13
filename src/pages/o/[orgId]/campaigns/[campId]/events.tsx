@@ -5,7 +5,7 @@ import { QueryClient, useQuery } from 'react-query';
 function getCampaignEvents(orgId, campId) {
     return async () => {
         try {
-            const eventsRes = await fetch(`http://api.zetk.in/v1/orgs/${orgId}/campaigns/${campId}/actions`);
+            const eventsRes = await fetch(`http://localhost:3000/api/orgs/${orgId}/campaigns/${campId}/actions`);
             const eventsData = await eventsRes.json();
 
             return eventsData.data;
@@ -22,7 +22,7 @@ function getCampaignEvents(orgId, campId) {
 function getCampaign(orgId, campId) {
     return async () => {
         try {
-            const cIdRes = await fetch(`http://api.zetk.in/v1/orgs/${orgId}/campaigns/${campId}`);
+            const cIdRes = await fetch(`http://localhost:3000/api/orgs/${orgId}/campaigns/${campId}`);
             const cIdData = await cIdRes.json();
 
             return cIdData.data;
@@ -39,7 +39,7 @@ function getCampaign(orgId, campId) {
 function getOrg(orgId) {
     return async () => {
         try {
-            const oRes = await fetch(`http://api.zetk.in/v1/orgs/${orgId}`);
+            const oRes = await fetch(`http://localhost:3000/api/orgs/${orgId}`);
             const oData = await oRes.json();
 
             return oData.data;
