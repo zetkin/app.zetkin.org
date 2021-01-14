@@ -22,18 +22,12 @@ function getEvent(orgId, eventId) {
 
 function getOrg(orgId) {
     return async () => {
-        try {
-            const oRes = await fetch(`http://localhost:3000/api/orgs/${orgId}`);
-            const oData = await oRes.json();
-
+        const oRes = await fetch(`http://localhost:3000/api/orgs/${orgId}`);
+        const oData = await oRes.json();
+        if (oData.data) {
             return oData.data;
         }
-        catch (err) {
-            if (err.name != 'FetchError') {
-                throw err;
-            }
-            return null;
-        }
+        throw 'not found';
     };
 }
 

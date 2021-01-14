@@ -4,35 +4,23 @@ import { QueryClient, useQuery } from 'react-query';
 
 function getSurvey(orgId, surId) {
     return async () => {
-        try {
-            const sIdRes = await fetch(`http://localhost:3000/api/orgs/${orgId}/surveys/${surId}`);
-            const sIdData = await sIdRes.json();
-
+        const sIdRes = await fetch(`http://localhost:3000/api/orgs/${orgId}/surveys/${surId}`);
+        const sIdData = await sIdRes.json();
+        if (sIdData) {
             return sIdData.data;
         }
-        catch (err) {
-            if (err.name != 'FetchError') {
-                throw err;
-            }
-            return null;
-        }
+        throw 'not found';
     };
 }
 
 function getOrg(orgId) {
     return async () => {
-        try {
-            const oRes = await fetch(`http://localhost:3000/api/orgs/${orgId}`);
-            const oData = await oRes.json();
-
+        const oRes = await fetch(`http://localhost:3000/api/orgs/${orgId}`);
+        const oData = await oRes.json();
+        if (oData.data) {
             return oData.data;
         }
-        catch (err) {
-            if (err.name != 'FetchError') {
-                throw err;
-            }
-            return null;
-        }
+        throw 'not found';
     };
 }
 
@@ -43,13 +31,23 @@ export const getServerSideProps : GetServerSideProps = async (context) => {
     await queryClient.prefetchQuery(['survey', surId], getSurvey(orgId, surId));
     await queryClient.prefetchQuery(['org', orgId], getOrg(orgId));
 
-    return {
-        props: {
-            dehydratedState: dehydrate(queryClient),
-            orgId,
-            surId
-        },
-    };
+    const surveyState = queryClient.getQueryState(['survey', surId]);
+    const orgState = queryClient.getQueryState(['org', orgId]);
+
+    if (surveyState.status === 'success' && orgState.status === 'success') {
+        return {
+            props: {
+                dehydratedState: dehydrate(queryClient),
+                orgId,
+                surId
+            },
+        };
+    }
+    else {
+        return {
+            notFound: true,
+        };
+    }
 };
 
 type OrgSurveyPageProps = {

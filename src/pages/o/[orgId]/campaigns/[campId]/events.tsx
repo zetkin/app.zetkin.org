@@ -4,52 +4,34 @@ import { QueryClient, useQuery } from 'react-query';
 
 function getCampaignEvents(orgId, campId) {
     return async () => {
-        try {
-            const eventsRes = await fetch(`http://localhost:3000/api/orgs/${orgId}/campaigns/${campId}/actions`);
-            const eventsData = await eventsRes.json();
-
+        const eventsRes = await fetch(`http://localhost:3000/api/orgs/${orgId}/campaigns/${campId}/actions`);
+        const eventsData = await eventsRes.json();
+        if (eventsData.data) {
             return eventsData.data;
         }
-        catch (err) {
-            if (err.name != 'FetchError') {
-                throw err;
-            }
-            return null;
-        }
+        throw 'not found';
     };
 }
 
 function getCampaign(orgId, campId) {
     return async () => {
-        try {
-            const cIdRes = await fetch(`http://localhost:3000/api/orgs/${orgId}/campaigns/${campId}`);
-            const cIdData = await cIdRes.json();
-
+        const cIdRes = await fetch(`http://localhost:3000/api/orgs/${orgId}/campaigns/${campId}`);
+        const cIdData = await cIdRes.json();
+        if (cIdData.data) {
             return cIdData.data;
         }
-        catch (err) {
-            if (err.name != 'FetchError') {
-                throw err;
-            }
-            return null;
-        }
+        throw 'not found';
     };
 }
 
 function getOrg(orgId) {
     return async () => {
-        try {
-            const oRes = await fetch(`http://localhost:3000/api/orgs/${orgId}`);
-            const oData = await oRes.json();
-
+        const oRes = await fetch(`http://localhost:3000/api/orgs/${orgId}`);
+        const oData = await oRes.json();
+        if (oData.data) {
             return oData.data;
         }
-        catch (err) {
-            if (err.name != 'FetchError') {
-                throw err;
-            }
-            return null;
-        }
+        throw 'not found';
     };
 }
 
@@ -61,13 +43,24 @@ export const getServerSideProps : GetServerSideProps = async (context) => {
     await queryClient.prefetchQuery(['campaign', campId], getCampaign(orgId, campId));
     await queryClient.prefetchQuery(['org', orgId], getOrg(orgId));
 
-    return {
-        props: {
-            campId,
-            dehydratedState: dehydrate(queryClient),
-            orgId
-        },
-    };
+    const campaignEvents = queryClient.getQueryState(['campaignEvents', campId]);
+    const campaignState = queryClient.getQueryState(['campaign', campId]);
+    const orgState = queryClient.getQueryState(['org', orgId]);
+
+    if (campaignEvents.status === 'success' && campaignState.status === 'success' && orgState.status === 'success') {
+        return {
+            props: {
+                campId,
+                dehydratedState: dehydrate(queryClient),
+                orgId
+            },
+        };
+    }
+    else {
+        return {
+            notFound: true,
+        };
+    }
 };
 
 type OrgCampaignEventsPageProps = {

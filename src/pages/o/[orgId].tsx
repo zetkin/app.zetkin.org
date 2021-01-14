@@ -5,18 +5,12 @@ import { QueryClient, useQuery } from 'react-query';
 
 function getOrg(orgId) {
     return async () => {
-        try {
-            const oRes = await fetch(`http://localhost:3000/api/orgs/${orgId}`);
-            const oData = await oRes.json();
-
+        const oRes = await fetch(`http://localhost:3000/api/orgs/${orgId}`);
+        const oData = await oRes.json();
+        if (oData.data) {
             return oData.data;
         }
-        catch (err) {
-            if (err.name != 'FetchError') {
-                throw err;
-            }
-            return null;
-        }
+        throw 'not found';
     };
 }
 
@@ -26,12 +20,21 @@ export const getServerSideProps : GetServerSideProps = async (context) => {
 
     await queryClient.prefetchQuery(['org', orgId], getOrg(orgId));
 
-    return {
-        props: {
-            dehydratedState: dehydrate(queryClient),
-            orgId
-        },
-    };
+    const orgState = queryClient.getQueryState(['org', orgId]);
+
+    if (orgState.status === 'success') {
+        return {
+            props: {
+                dehydratedState: dehydrate(queryClient),
+                orgId
+            },
+        };
+    }
+    else {
+        return {
+            notFound: true,
+        };
+    }
 };
 
 type OrgPageProps = {
