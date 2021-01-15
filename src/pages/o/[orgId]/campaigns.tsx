@@ -6,10 +6,7 @@ function getCampaigns(orgId) {
     return async () => {
         const cRes = await fetch(`http://localhost:3000/api/orgs/${orgId}/campaigns`);
         const cData = await cRes.json();
-        if (cData.data) {
-            return cData.data;
-        }
-        throw 'not found';
+        return cData.data;
     };
 }
 
@@ -17,10 +14,7 @@ function getOrg(orgId) {
     return async () => {
         const oRes = await fetch(`http://localhost:3000/api/orgs/${orgId}`);
         const oData = await oRes.json();
-        if (oData.data) {
-            return oData.data;
-        }
-        throw 'not found';
+        return oData.data;
     };
 }
 

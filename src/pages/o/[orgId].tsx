@@ -7,10 +7,7 @@ function getOrg(orgId) {
     return async () => {
         const oRes = await fetch(`http://localhost:3000/api/orgs/${orgId}`);
         const oData = await oRes.json();
-        if (oData.data) {
-            return oData.data;
-        }
-        throw 'not found';
+        return oData.data;
     };
 }
 

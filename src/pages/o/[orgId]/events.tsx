@@ -15,10 +15,7 @@ function getEvents(orgId) {
             allEventsData = allEventsData.concat(campaignEvents.data);
         }
 
-        if (allEventsData) {
-            return allEventsData;
-        }
-        throw 'not found';
+        return allEventsData;
     };
 }
 
@@ -26,10 +23,7 @@ function getOrg(orgId) {
     return async () => {
         const oRes = await fetch(`http://localhost:3000/api/orgs/${orgId}`);
         const oData = await oRes.json();
-        if (oData.data) {
-            return oData.data;
-        }
-        throw 'not found';
+        return oData.data;
     };
 }
 

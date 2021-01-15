@@ -6,10 +6,7 @@ function getCampaignEvents(orgId, campId) {
     return async () => {
         const eventsRes = await fetch(`http://localhost:3000/api/orgs/${orgId}/campaigns/${campId}/actions`);
         const eventsData = await eventsRes.json();
-        if (eventsData.data) {
-            return eventsData.data;
-        }
-        throw 'not found';
+        return eventsData.data;
     };
 }
 
@@ -17,10 +14,7 @@ function getCampaign(orgId, campId) {
     return async () => {
         const cIdRes = await fetch(`http://localhost:3000/api/orgs/${orgId}/campaigns/${campId}`);
         const cIdData = await cIdRes.json();
-        if (cIdData.data) {
-            return cIdData.data;
-        }
-        throw 'not found';
+        return cIdData.data;
     };
 }
 
@@ -28,10 +22,7 @@ function getOrg(orgId) {
     return async () => {
         const oRes = await fetch(`http://localhost:3000/api/orgs/${orgId}`);
         const oData = await oRes.json();
-        if (oData.data) {
-            return oData.data;
-        }
-        throw 'not found';
+        return oData.data;
     };
 }
 

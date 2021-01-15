@@ -6,10 +6,7 @@ function getSurvey(orgId, surId) {
     return async () => {
         const sIdRes = await fetch(`http://localhost:3000/api/orgs/${orgId}/surveys/${surId}`);
         const sIdData = await sIdRes.json();
-        if (sIdData) {
-            return sIdData.data;
-        }
-        throw 'not found';
+        return sIdData.data;
     };
 }
 
@@ -17,10 +14,7 @@ function getOrg(orgId) {
     return async () => {
         const oRes = await fetch(`http://localhost:3000/api/orgs/${orgId}`);
         const oData = await oRes.json();
-        if (oData.data) {
-            return oData.data;
-        }
-        throw 'not found';
+        return oData.data;
     };
 }
 
