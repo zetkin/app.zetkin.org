@@ -6,12 +6,12 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 const queryClient = new QueryClient();
 
 function MyApp({ Component, pageProps } : AppProps) : JSX.Element {
-    const { dehydratedState, ...extractedPageProps } = pageProps;
+    const { dehydratedState, ...restProps } = pageProps;
 
     return (
         <QueryClientProvider client={ queryClient }>
             <Hydrate state={ dehydratedState }>
-                <Component { ...extractedPageProps } />
+                <Component { ...restProps } />
             </Hydrate>
             <ReactQueryDevtools initialIsOpen={ false } />
         </QueryClientProvider>
