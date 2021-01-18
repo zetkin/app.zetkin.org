@@ -1,31 +1,8 @@
 import { GetServerSideProps } from 'next';
 import { dehydrate } from 'react-query/hydration';
+import getEvents from '../../functions/getEvents';
+import getOrg from '../../functions/getOrg';
 import { QueryClient, useQuery } from 'react-query';
-
-function getEvents(orgId) {
-    return async () => {
-        const cRes = await fetch(`http://localhost:3000/api/orgs/${orgId}/campaigns`);
-        const cData = await cRes.json();
-
-        let allEventsData = [];
-
-        for (const obj of cData.data) {
-            const eventsRes = await fetch(`http://localhost:3000/api/orgs/${orgId}/campaigns/${obj.id}/actions`);
-            const campaignEvents = await eventsRes.json();
-            allEventsData = allEventsData.concat(campaignEvents.data);
-        }
-
-        return allEventsData;
-    };
-}
-
-function getOrg(orgId) {
-    return async () => {
-        const oRes = await fetch(`http://localhost:3000/api/orgs/${orgId}`);
-        const oData = await oRes.json();
-        return oData.data;
-    };
-}
 
 export const getServerSideProps : GetServerSideProps = async (context) => {
     const queryClient = new QueryClient();
