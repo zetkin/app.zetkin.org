@@ -1,38 +1,17 @@
 import { GetServerSideProps } from 'next';
 import { dehydrate } from 'react-query/hydration';
+import getCampaign from '../../../../../fetching/getCampaign';
+import getCampaignEvents from '../../../../../fetching/getCampaignEvents';
+import getOrg from '../../../../../fetching/getOrg';
 import { QueryClient, useQuery } from 'react-query';
-
-function getCampaignEvents(orgId, campId) {
-    return async () => {
-        const eventsRes = await fetch(`http://localhost:3000/api/orgs/${orgId}/campaigns/${campId}/actions`);
-        const eventsData = await eventsRes.json();
-        return eventsData.data;
-    };
-}
-
-function getCampaign(orgId, campId) {
-    return async () => {
-        const cIdRes = await fetch(`http://localhost:3000/api/orgs/${orgId}/campaigns/${campId}`);
-        const cIdData = await cIdRes.json();
-        return cIdData.data;
-    };
-}
-
-function getOrg(orgId) {
-    return async () => {
-        const oRes = await fetch(`http://localhost:3000/api/orgs/${orgId}`);
-        const oData = await oRes.json();
-        return oData.data;
-    };
-}
 
 export const getServerSideProps : GetServerSideProps = async (context) => {
     const queryClient = new QueryClient();
     const { orgId, campId } = context.params;
 
-    await queryClient.prefetchQuery(['campaignEvents', campId], getCampaignEvents(orgId, campId));
-    await queryClient.prefetchQuery(['campaign', campId], getCampaign(orgId, campId));
-    await queryClient.prefetchQuery(['org', orgId], getOrg(orgId));
+    await queryClient.prefetchQuery(['campaignEvents', campId], getCampaignEvents(orgId as string, campId as string));
+    await queryClient.prefetchQuery(['campaign', campId], getCampaign(orgId as string, campId as string));
+    await queryClient.prefetchQuery(['org', orgId], getOrg(orgId as string));
 
     const campaignEvents = queryClient.getQueryState(['campaignEvents', campId]);
     const campaignState = queryClient.getQueryState(['campaign', campId]);

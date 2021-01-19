@@ -1,39 +1,15 @@
 import { GetServerSideProps } from 'next';
 import { dehydrate } from 'react-query/hydration';
+import getEvent from '../../../../fetching/getEvent';
+import getOrg from '../../../../fetching/getOrg';
 import { QueryClient, useQuery } from 'react-query';
-
-function getEvent(orgId, eventId) {
-    return async () => {
-        const cRes = await fetch(`http://localhost:3000/api/orgs/${orgId}/campaigns`);
-        const cData = await cRes.json();
-
-        for (const obj of cData.data) {
-            const eventsRes = await fetch(`http://localhost:3000/api/orgs/${orgId}/campaigns/${obj.id}/actions`);
-            const campaignEvents = await eventsRes.json();
-            const eventData = campaignEvents.data.find(event => event.id == eventId);
-            if (eventData) {
-                return eventData;
-            }
-        }
-
-        throw 'not found';
-    };
-}
-
-function getOrg(orgId) {
-    return async () => {
-        const oRes = await fetch(`http://localhost:3000/api/orgs/${orgId}`);
-        const oData = await oRes.json();
-        return oData.data;
-    };
-}
 
 export const getServerSideProps : GetServerSideProps = async (context) => {
     const queryClient = new QueryClient();
     const { orgId, eventId } = context.params;
 
-    await queryClient.prefetchQuery(['event', eventId], getEvent(orgId, eventId));
-    await queryClient.prefetchQuery(['org', orgId], getOrg(orgId));
+    await queryClient.prefetchQuery(['event', eventId], getEvent(orgId as string, eventId as string));
+    await queryClient.prefetchQuery(['org', orgId], getOrg(orgId as string));
 
     const eventState = queryClient.getQueryState(['event', eventId]);
     const orgState = queryClient.getQueryState(['org', orgId]);

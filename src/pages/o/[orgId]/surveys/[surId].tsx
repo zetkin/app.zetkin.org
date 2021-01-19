@@ -1,29 +1,15 @@
 import { GetServerSideProps } from 'next';
 import { dehydrate } from 'react-query/hydration';
+import getOrg from '../../../../fetching/getOrg';
+import getSurvey from '../../../../fetching/getSurvey';
 import { QueryClient, useQuery } from 'react-query';
-
-function getSurvey(orgId, surId) {
-    return async () => {
-        const sIdRes = await fetch(`http://localhost:3000/api/orgs/${orgId}/surveys/${surId}`);
-        const sIdData = await sIdRes.json();
-        return sIdData.data;
-    };
-}
-
-function getOrg(orgId) {
-    return async () => {
-        const oRes = await fetch(`http://localhost:3000/api/orgs/${orgId}`);
-        const oData = await oRes.json();
-        return oData.data;
-    };
-}
 
 export const getServerSideProps : GetServerSideProps = async (context) => {
     const queryClient = new QueryClient();
     const { surId, orgId } = context.params;
 
-    await queryClient.prefetchQuery(['survey', surId], getSurvey(orgId, surId));
-    await queryClient.prefetchQuery(['org', orgId], getOrg(orgId));
+    await queryClient.prefetchQuery(['survey', surId], getSurvey(orgId as string, surId as string));
+    await queryClient.prefetchQuery(['org', orgId], getOrg(orgId as string));
 
     const surveyState = queryClient.getQueryState(['survey', surId]);
     const orgState = queryClient.getQueryState(['org', orgId]);
