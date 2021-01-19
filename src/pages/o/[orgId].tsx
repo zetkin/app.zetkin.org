@@ -1,21 +1,14 @@
 import { GetServerSideProps } from 'next';
 import Link from 'next/link';
 import { dehydrate } from 'react-query/hydration';
+import getOrg from '../../fetching/getOrg';
 import { QueryClient, useQuery } from 'react-query';
-
-function getOrg(orgId) {
-    return async () => {
-        const oRes = await fetch(`http://localhost:3000/api/orgs/${orgId}`);
-        const oData = await oRes.json();
-        return oData.data;
-    };
-}
 
 export const getServerSideProps : GetServerSideProps = async (context) => {
     const queryClient = new QueryClient();
     const { orgId } = context.params;
 
-    await queryClient.prefetchQuery(['org', orgId], getOrg(orgId));
+    await queryClient.prefetchQuery(['org', orgId], getOrg(orgId as string));
 
     const orgState = queryClient.getQueryState(['org', orgId]);
 
