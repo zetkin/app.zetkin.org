@@ -1,15 +1,15 @@
 import { GetServerSideProps } from 'next';
 import { dehydrate } from 'react-query/hydration';
-import getEvents from '../../functions/getEvents';
-import getOrg from '../../functions/getOrg';
+import getEvents from '../../../fetching/getEvents';
+import getOrg from '../../../fetching/getOrg';
 import { QueryClient, useQuery } from 'react-query';
 
 export const getServerSideProps : GetServerSideProps = async (context) => {
     const queryClient = new QueryClient();
     const { orgId } = context.params;
 
-    await queryClient.prefetchQuery('events', getEvents(orgId));
-    await queryClient.prefetchQuery(['org', orgId], getOrg(orgId));
+    await queryClient.prefetchQuery('events', getEvents(orgId as string));
+    await queryClient.prefetchQuery(['org', orgId], getOrg(orgId as string));
 
     const eventsState = queryClient.getQueryState('events');
     const orgState = queryClient.getQueryState(['org', orgId]);
