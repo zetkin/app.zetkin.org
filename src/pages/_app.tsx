@@ -1,5 +1,5 @@
 import { AppProps } from 'next/app';
-import DefualtLayout from '../layout/DefaultLayout';
+import DefaultLayout from '../layout/DefaultLayout';
 import { Hydrate } from 'react-query/hydration';
 import { NextPage } from 'next/types';
 import { ReactQueryDevtools } from 'react-query/devtools';
@@ -16,7 +16,7 @@ type PageWithLayout = NextPage & WithLayout;
 function MyApp({ Component, pageProps } : AppProps) : JSX.Element {
     const { dehydratedState, ...restProps } = pageProps;
     const c = Component as PageWithLayout;
-    const getLayout = c.getLayout || (page => <DefualtLayout>{ page }</DefualtLayout>);
+    const getLayout = c.getLayout || (page => <DefaultLayout>{ page }</DefaultLayout>);
 
     return (
         <QueryClientProvider client={ queryClient }>
