@@ -38,11 +38,9 @@ type OrgEventsPageProps = {
 export default function OrgEventsPage(props : OrgEventsPageProps) : JSX.Element {
     const { orgId } = props;
     const eventsQuery = useQuery('events', getEvents(orgId));
-    const orgQuery = useQuery(['org', orgId], getOrg(orgId));
 
     return (
         <>
-            <h1>Events for { orgQuery.data.title }</h1>
             <ul>
                 { eventsQuery.data.map((e) => (
                     <li key={ e.id }>{ e.title }</li>
