@@ -15,6 +15,11 @@ describe('/o/[orgId]/events', () => {
         cy.visit('/o/1/events');
         cy.contains('Mocked org');
     });
+
+    it('contains organization logo', () => {
+        cy.visit('/o/1/events');
+        cy.get('img').should('have.attr', 'src', '/api/orgs/1/avatar');
+    });
 });
 
 // Hack to flag for typescript as module
