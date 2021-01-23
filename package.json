@@ -3,9 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
     "build": "next build",
-    "lint": "eslint src && tsc",
+    "devserver": "next dev",
+    "lint": "eslint src && tsc --noEmit && echo 'Finished linting without errors!'",
+    "tdd": "concurrently 'npm run devserver' 'npx cypress open'",
+    "cypress-ci": "concurrently 'npm start' 'npx cypress run'",
     "watch": "chokidar 'src/**/*' -c 'npm run lint'",
     "start": "next start"
   },
@@ -16,11 +18,14 @@
     "react-query": "^3.5.11"
   },
   "devDependencies": {
+    "@cypress/react": "^4.16.3",
     "@types/node": "^14.14.14",
     "@types/react": "^17.0.0",
     "@typescript-eslint/eslint-plugin": "^4.10.0",
     "@typescript-eslint/parser": "^4.10.0",
     "chokidar-cli": "^2.1.0",
+    "concurrently": "^5.3.0",
+    "cypress": "^6.3.0",
     "eslint": "^7.15.0",
     "eslint-loader": "^4.0.2",
     "eslint-plugin-jsx-a11y": "^6.4.1",
