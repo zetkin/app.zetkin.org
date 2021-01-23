@@ -2,7 +2,7 @@ describe('/o/[orgId]/events', () => {
     beforeEach(() => {
         cy.intercept({
             method: 'GET',
-            url: /\/api\/orgs\/1/,
+            url: /\/api\/orgs\/1$/,
         }, {
             data: {
                 id: 1,
@@ -12,7 +12,7 @@ describe('/o/[orgId]/events', () => {
     });
 
     it('contains name of organization', () => {
-        cy.visit('/o/1');
+        cy.visit('/o/1/events');
         cy.contains('Mocked org');
     });
 });
