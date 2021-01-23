@@ -12,10 +12,25 @@ The new Zetkin app is built on [NEXT.js](https://nextjs.org) with TypeScript.
 We develop and deploy using Docker.
 
 ## Development
-Run the deveopment build using [Docker Compose](https://docs.docker.com/compose/).
+Install all the dependencies using npm:
 
 ```
-$ docker-compose up --build
+$ npm install
+```
+
+Then start the devserver in one of two ways:
+
+```
+$ npm run tdd           # Use this for test-driven development with Cypress
+$ npm run devserver     # Use this if you don't want to do TDD
+```
+
+The dev server will tell you about code issues using eslint and typescript
+in the form of warnings. No warnings are allowed in checked in code. You can
+run the linter standalone like this:
+
+```
+$npm run lint
 ```
 
 To avoid commiting anything that breaks linting rules, you can set up a git
