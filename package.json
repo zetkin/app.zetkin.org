@@ -7,6 +7,7 @@
     "devserver": "next dev",
     "lint": "eslint src && tsc --noEmit && echo 'Finished linting without errors!'",
     "tdd": "concurrently 'npm run devserver' 'npx cypress open'",
+    "cypress-ci": "concurrently 'npm start' 'npx cypress run'",
     "watch": "chokidar 'src/**/*' -c 'npm run lint'",
     "start": "next start"
   },
