@@ -17,3 +17,9 @@ jobs:
                   node-version: 14.x
             - run: npm ci
             - run: npm run lint
+    cypress:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v2
+            - name: Cypress run
+              uses: cypress-io/github-action@v2
