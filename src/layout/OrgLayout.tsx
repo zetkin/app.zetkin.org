@@ -31,8 +31,9 @@ const OrgLayout = ({ children, orgId } : OrgLayoutProps) : JSX.Element => {
                 <button style={{ marginLeft: '20px' }}>Unfollow</button>
             </figure>
             <img
+                data-test="org-logo"
                 alt='Organization avatar'
-                src={ `https://api.zetk.in/v1/orgs/${orgId}/avatar` }
+                src={ `/api/orgs/${orgId}/avatar` }
                 style={{
                     height: 'auto',
                     left: '1rem',
