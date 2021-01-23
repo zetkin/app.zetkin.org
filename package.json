@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "lint": "eslint src && tsc",
+    "lint": "eslint src && tsc --noEmit && echo 'Finished linting without errors!'",
     "watch": "chokidar 'src/**/*' -c 'npm run lint'",
     "start": "next start"
   },
