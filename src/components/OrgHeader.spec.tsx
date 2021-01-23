@@ -12,4 +12,9 @@ describe('OrgHeader', () => {
         mount(<OrgHeader org={ dummyOrg }/>);
         cy.contains(dummyOrg.title);
     });
+
+    it('contains org logo', () => {
+        mount(<OrgHeader org={ dummyOrg }/>);
+        cy.get('img').should('have.attr', 'src', '/api/orgs/1/avatar');
+    });
 });
