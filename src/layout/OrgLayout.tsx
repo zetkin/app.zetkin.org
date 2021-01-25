@@ -1,5 +1,7 @@
 import DefaultLayout from './DefaultLayout';
 import OrgHeader from './OrgHeader';
+import getOrg from '../fetching/getOrg';
+import { useQuery } from 'react-query';
 
 interface OrgLayoutProps {
     children: JSX.Element;
@@ -7,9 +9,11 @@ interface OrgLayoutProps {
 }
 
 const OrgLayout = ({ children, orgId } : OrgLayoutProps) : JSX.Element => {
+    const orgQuery = useQuery(['org', orgId], getOrg(orgId));
+
     return (
         <DefaultLayout>
-            <OrgHeader orgId={ orgId }/>
+            <OrgHeader org={ orgQuery.data }/>
             <nav style={{
                 display: 'flex',
                 justifyContent: 'flex-start',

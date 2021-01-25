@@ -1,14 +1,13 @@
 import Link from 'next/link';
-import getOrg from '../fetching/getOrg';
-import { useQuery } from 'react-query';
 
 interface OrgHeaderProps {
-    orgId: string;
+    org: {
+        id: number,
+        title: string
+    }
 }
 
-const OrgHeader = ({ orgId } : OrgHeaderProps) : JSX.Element => {
-    const orgQuery = useQuery(['org', orgId], getOrg(orgId));
-
+const OrgHeader = ({ org } : OrgHeaderProps) : JSX.Element => {
     return (
         <header style={{
             position: 'relative',
@@ -33,7 +32,7 @@ const OrgHeader = ({ orgId } : OrgHeaderProps) : JSX.Element => {
             </figure>
             <img
                 alt='Organization avatar'
-                src={ `https://api.zetk.in/v1/orgs/${orgId}/avatar` }
+                src={ `https://api.zetk.in/v1/orgs/${org.id}/avatar` }
                 style={{
                     height: 'auto',
                     left: '1rem',
@@ -47,7 +46,7 @@ const OrgHeader = ({ orgId } : OrgHeaderProps) : JSX.Element => {
                 margin: '1rem 2rem 1rem 10rem',
                 textAlign: 'left'
             }}>
-                { orgQuery.data.title }
+                { org.title }
             </h1>
         </header>
     );
