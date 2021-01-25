@@ -1,4 +1,3 @@
-import DefaultLayout from '../../../layout/DefaultLayout';
 import { GetServerSideProps } from 'next';
 import OrgLayout from '../../../layout/OrgLayout';
 import { dehydrate } from 'react-query/hydration';
@@ -52,10 +51,8 @@ export default function OrgEventsPage(props : OrgEventsPageProps) : JSX.Element 
 
 OrgEventsPage.getLayout = function getLayout(page, props) {
     return (
-        <DefaultLayout>
-            <OrgLayout orgId={ props.orgId }>
-                { page }
-            </OrgLayout>
-        </DefaultLayout>
+        <OrgLayout orgId={ props.orgId }>
+            { page }
+        </OrgLayout>
     );
 };
