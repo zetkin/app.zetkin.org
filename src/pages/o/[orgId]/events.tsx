@@ -1,4 +1,3 @@
-import DefaultLayout from '../../../layout/DefaultLayout';
 import { GetServerSideProps } from 'next';
 import OrgLayout from '../../../layout/OrgLayout';
 import { dehydrate } from 'react-query/hydration';
@@ -38,11 +37,9 @@ type OrgEventsPageProps = {
 export default function OrgEventsPage(props : OrgEventsPageProps) : JSX.Element {
     const { orgId } = props;
     const eventsQuery = useQuery('events', getEvents(orgId));
-    const orgQuery = useQuery(['org', orgId], getOrg(orgId));
 
     return (
         <>
-            <h1>Events for { orgQuery.data.title }</h1>
             <ul>
                 { eventsQuery.data.map((e) => (
                     <li key={ e.id }>{ e.title }</li>
@@ -54,10 +51,8 @@ export default function OrgEventsPage(props : OrgEventsPageProps) : JSX.Element 
 
 OrgEventsPage.getLayout = function getLayout(page, props) {
     return (
-        <DefaultLayout>
-            <OrgLayout orgId={ props.orgId }>
-                { page }
-            </OrgLayout>
-        </DefaultLayout>
+        <OrgLayout orgId={ props.orgId }>
+            { page }
+        </OrgLayout>
     );
 };

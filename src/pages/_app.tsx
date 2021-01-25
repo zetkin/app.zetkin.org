@@ -1,3 +1,4 @@
+import '../styles.css';
 import { AppProps } from 'next/app';
 import DefaultLayout from '../layout/DefaultLayout';
 import { Hydrate } from 'react-query/hydration';
