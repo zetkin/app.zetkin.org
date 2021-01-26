@@ -40,6 +40,7 @@ export default function OrgEventsPage(props : OrgEventsPageProps) : JSX.Element 
 
     return (
         <>
+            <input className="input"/>
             <ul>
                 { eventsQuery.data.map((e) => (
                     <li key={ e.id }>{ e.title }</li>
