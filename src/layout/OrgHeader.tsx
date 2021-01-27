@@ -3,11 +3,17 @@ import Link from 'next/link';
 interface OrgHeaderProps {
     org: {
         id: number,
-        title: string
-    }
+        title: string,
+    },
+    loggedIn?: boolean
 }
 
-const OrgHeader = ({ org } : OrgHeaderProps) : JSX.Element => {
+const OrgHeader = ({ org, loggedIn=false } : OrgHeaderProps) : JSX.Element => {
+    let unfollowButton = null;
+    if (loggedIn) {
+        unfollowButton = <button style={{ marginLeft: '20px' }}>Unfollow</button>;
+    }
+
     return (
         <header style={{
             position: 'relative',
@@ -28,7 +34,7 @@ const OrgHeader = ({ org } : OrgHeaderProps) : JSX.Element => {
                 <Link href='/'>
                     <a style={{ color: 'white' }}>Edit Page</a>
                 </Link>
-                <button style={{ marginLeft: '20px' }}>Unfollow</button>
+                { unfollowButton }
             </figure>
             <img
                 alt='Organization avatar'
