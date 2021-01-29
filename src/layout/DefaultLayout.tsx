@@ -3,7 +3,7 @@ import PublicHeader from '../components/PublicHeader';
 
 const DefaultLayout : FunctionComponent = ({ children }) => (
     <>
-        <PublicHeader userData={ null }/>
+        <PublicHeader user={ null }/>
         <div>{ children }</div>
     </>
 );

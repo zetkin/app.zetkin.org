@@ -1,13 +1,12 @@
 interface PublicHeaderProps {
-    userData: {
-        avatar: string;
+    user: {
         first_name: string;
         id: number;
         last_name: string;
     }
 }
 
-const PublicHeader = ({ userData } : PublicHeaderProps) : JSX.Element => {
+const PublicHeader = ({ user } : PublicHeaderProps) : JSX.Element => {
     return (
         <header>
             <div style={{
@@ -23,14 +22,14 @@ const PublicHeader = ({ userData } : PublicHeaderProps) : JSX.Element => {
                     height={ 33 }
                     width={ 40 }
                 />
-                { !userData ? <button data-test='login-button'>Login</button> : null }
-                { userData ? 
+                { !user ? <button data-test='login-button'>Login</button> : null }
+                { user ?
                     <div style={{ alignItems: 'center', display: 'flex' }}>
-                        <p>{ userData.first_name } { userData.last_name }</p>
+                        <p>{ user.first_name } { user.last_name }</p>
                         <img 
                             data-test='user-avatar'
                             alt='User avatar' 
-                            src={ userData.avatar }
+                            src={ `/api/users/${user.id}/avatar` }
                             style={{
                                 height: '40px',
                                 marginLeft: '1rem',
