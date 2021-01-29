@@ -1,3 +1,5 @@
+import { Button } from '@adobe/react-spectrum';
+
 interface PublicHeaderProps {
     user: {
         first_name: string;
@@ -22,7 +24,7 @@ const PublicHeader = ({ user } : PublicHeaderProps) : JSX.Element => {
                     height={ 33 }
                     width={ 40 }
                 />
-                { !user ? <button data-test='login-button'>Login</button> : null }
+                { !user ? <Button variant="cta" data-test='login-button'>Login</Button> : null }
                 { user ?
                     <div style={{ alignItems: 'center', display: 'flex' }}>
                         <p>{ user.first_name } { user.last_name }</p>
