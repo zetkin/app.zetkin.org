@@ -1,4 +1,11 @@
-import { Button } from '@adobe/react-spectrum';
+import {
+    Button,
+    Flex,
+    Header,
+    Image,
+    Text,
+    View
+} from '@adobe/react-spectrum';
 
 interface PublicHeaderProps {
     user: {
@@ -10,38 +17,32 @@ interface PublicHeaderProps {
 
 const PublicHeader = ({ user } : PublicHeaderProps) : JSX.Element => {
     return (
-        <header>
-            <div style={{
-                alignItems: 'center',
-                display: 'flex',
-                justifyContent: 'space-between',
-                padding: '1rem'
-            }}>
-                <img
-                    data-test='zetkin-logotype'
-                    alt='Zetkin logo'
+        <Header>
+            <Flex
+                direction='row'
+                alignItems='center'
+                justifyContent='space-between'
+                height='size-600'>
+                <Image
                     src='/logo-zetkin.png'
-                    height={ 33 }
-                    width={ 40 }
+                    alt='Zetkin logo'
+                    data-test='zetkin-logotype'
+                    objectFit='contain'
+                    height='size-600'
                 />
-                { !user ? <Button variant="cta" data-test='login-button'>Login</Button> : null }
+                { !user ? <Button variant='cta' data-test='login-button'>Login</Button> : null }
                 { user ?
-                    <div style={{ alignItems: 'center', display: 'flex' }}>
-                        <p>{ user.first_name } { user.last_name }</p>
-                        <img 
-                            data-test='user-avatar'
-                            alt='User avatar' 
+                    <View>
+                        <Text>{ user.first_name } { user.last_name }</Text>
+                        <Image
                             src={ `/api/users/${user.id}/avatar` }
-                            style={{
-                                height: '40px',
-                                marginLeft: '1rem',
-                                width: 'auto'
-                            }}
+                            alt='User avatar'
+                            data-test='user-avatar'
                         />
-                    </div>
+                    </View>
                     : null }
-            </div>
-        </header>
+            </Flex>
+        </Header>
     );
 };
 

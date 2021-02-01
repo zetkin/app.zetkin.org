@@ -1,7 +1,12 @@
+import { Content } from '@react-spectrum/view';
+import { useQuery } from 'react-query';
+import { useRouter } from 'next/router';
+import { Item, Tabs } from '@react-spectrum/tabs';
+
 import DefaultLayout from './DefaultLayout';
 import OrgHeader from './OrgHeader';
 import getOrg from '../fetching/getOrg';
-import { useQuery } from 'react-query';
+
 
 interface OrgLayoutProps {
     children: JSX.Element;
@@ -10,21 +15,31 @@ interface OrgLayoutProps {
 
 const OrgLayout = ({ children, orgId } : OrgLayoutProps) : JSX.Element => {
     const orgQuery = useQuery(['org', orgId], getOrg(orgId));
+    const router = useRouter();
+
+    const onSelectTab = (key) : Promise<boolean> => {
+        return router.push(`/o/${orgId}/${key}`);
+    };
+
+    const currentTab = router.pathname.split('/').pop();
 
     return (
         <DefaultLayout>
             <OrgHeader org={ orgQuery.data }/>
-            <nav style={{
-                display: 'flex',
-                justifyContent: 'flex-start',
-                margin: '0',
-                padding: '1rem'
-            }}>
-                <button style={{ display: 'flex', margin: '0 1rem 0 0' }}>Coming up</button>
-                <button style={{ display: 'flex', margin: '0 1rem 0 0' }}>Contact</button>
-                <button style={{ display: 'flex', margin: '0 1rem 0 0' }}>Some Custom Page</button>
-            </nav>
-            <div>{ children }</div>
+            <Tabs
+                aria-label='Organization submenu'
+                selectedKey={ currentTab }
+                onSelectionChange={ onSelectTab }>
+                <Item title='Coming up' key='events'>
+                    <Content>{ children }</Content>
+                </Item>
+                <Item title='Contact' key='contact'>
+                    <Content>{ children }</Content>
+                </Item>
+                <Item title='Some Custom Page' key='custom'>
+                    <Content>{ children }</Content>
+                </Item>
+            </Tabs>
         </DefaultLayout>
     );
 };
