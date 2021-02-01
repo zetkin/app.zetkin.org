@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import { Content, Heading } from '@adobe/react-spectrum';
 
 export default function Home() : JSX.Element {
     return (
@@ -6,9 +7,9 @@ export default function Home() : JSX.Element {
             <Head>
                 <title>Zetkin</title>
             </Head>
-            <div>
-                <h1>This will become Zetkin</h1>
-            </div>
+            <Content>
+                <Heading level={ 1 }>This will become Zetkin</Heading>
+            </Content>
         </>
     );
 }

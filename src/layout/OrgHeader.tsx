@@ -1,4 +1,13 @@
-import Link from 'next/link';
+import NextLink from 'next/link';
+import {
+    Button,
+    Flex,
+    Header,
+    Heading,
+    Image,
+    Link,
+    View
+} from '@adobe/react-spectrum';
 
 interface OrgHeaderProps {
     org: {
@@ -9,46 +18,44 @@ interface OrgHeaderProps {
 
 const OrgHeader = ({ org } : OrgHeaderProps) : JSX.Element => {
     return (
-        <header style={{
-            position: 'relative',
-        }}>
-            <figure style={{
-                alignItems: 'flex-end',
-                background: 'url(/cover.jpg)',
-                backgroundPosition: 'center',
-                backgroundSize: 'cover',
-                boxSizing: 'border-box',
-                display: 'flex',
-                height: '500px',
-                justifyContent: 'flex-end',
-                margin: '0',
-                padding: '1rem',
-                width: '100%'
-            }}>
-                <Link href='/'>
-                    <a style={{ color: 'white' }}>Edit Page</a>
-                </Link>
-                <button style={{ marginLeft: '20px' }}>Unfollow</button>
-            </figure>
-            <img
-                alt='Organization avatar'
-                src={ `https://api.zetk.in/v1/orgs/${org.id}/avatar` }
-                style={{
-                    height: 'auto',
-                    left: '1rem',
-                    position: 'absolute',
-                    top: '450px',
-                    width: '100px'
-                }}
+        <Header>
+            <Image
+                src='/cover.jpg'
+                alt='Cover image'
+                objectFit="cover"
+                width='100%'
             />
-            <h1 style={{
-                height: '100%',
-                margin: '1rem 2rem 1rem 10rem',
-                textAlign: 'left'
-            }}>
-                { org.title }
-            </h1>
-        </header>
+            <Flex
+                direction='row'
+                alignItems='center'
+                justifyContent='space-between'
+                marginX='size-200'>
+                <Image
+                    src={ `https://api.zetk.in/v1/orgs/${org.id}/avatar` }
+                    alt='Organization avatar'
+                    objectFit="cover"
+                    height='size-800'
+                />
+                <Flex
+                    direction='row'
+                    alignItems='center'
+                    marginX='size-200'>
+                    <View marginX='size-200'>
+                        <Link>
+                            <NextLink href='/'>
+                                <a>Edit Page</a>
+                            </NextLink>
+                        </Link>
+                    </View>
+                    <Button variant='cta' data-test='unfollow-button'>Unfollow</Button>
+                </Flex>
+            </Flex>
+            <View>
+                <Heading level={ 1 }>
+                    { org.title }
+                </Heading>
+            </View>
+        </Header>
     );
 };
 
