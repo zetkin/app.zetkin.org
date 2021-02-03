@@ -1,10 +1,10 @@
 import EventList from '../../../components/EventList';
-import { Flex } from '@adobe/react-spectrum';
 import { GetServerSideProps } from 'next';
 import OrgLayout from '../../../layout/OrgLayout';
 import { dehydrate } from 'react-query/hydration';
 import getEvents from '../../../fetching/getEvents';
 import getOrg from '../../../fetching/getOrg';
+import { Flex, Text } from '@adobe/react-spectrum';
 import { QueryClient, useQuery } from 'react-query';
 
 export const getServerSideProps : GetServerSideProps = async (context) => {
@@ -43,10 +43,16 @@ export default function OrgEventsPage(props : OrgEventsPageProps) : JSX.Element 
 
     return (
         <Flex marginY='size-500'>
-            <EventList
-                events={ eventsQuery.data }
-                org={ orgQuery.data }
-            />
+            { eventsQuery.data.length > 0 ? (
+                <EventList
+                    events={ eventsQuery.data }
+                    org={ orgQuery.data }
+                />
+            ) : (
+                <Text>
+                    Sorry, there are no planned events at the moment.
+                </Text>
+            ) }
         </Flex>
     );
 }
