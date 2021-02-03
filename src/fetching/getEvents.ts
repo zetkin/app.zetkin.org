@@ -1,5 +1,12 @@
 export default function getEvents(orgId : string) {
-    return async () : Promise<{ id: number, title: string }[]> => {
+    return async () : Promise<{
+        campaign: { title: string },
+        end_time: string,
+        id: number,
+        location: { title: string },
+        start_time: string,
+        title: string
+    }[]> => {
         const cRes = await fetch(`http://localhost:3000/api/orgs/${orgId}/campaigns`);
         const cData = await cRes.json();
 

@@ -1,3 +1,5 @@
+import EventList from '../../../components/EventList';
+import { Flex } from '@adobe/react-spectrum';
 import { GetServerSideProps } from 'next';
 import OrgLayout from '../../../layout/OrgLayout';
 import { dehydrate } from 'react-query/hydration';
@@ -37,15 +39,15 @@ type OrgEventsPageProps = {
 export default function OrgEventsPage(props : OrgEventsPageProps) : JSX.Element {
     const { orgId } = props;
     const eventsQuery = useQuery('events', getEvents(orgId));
+    const orgQuery = useQuery(['org', orgId], getOrg(orgId));
 
     return (
-        <>
-            <ul>
-                { eventsQuery.data.map((e) => (
-                    <li key={ e.id }>{ e.title }</li>
-                )) }
-            </ul>
-        </>
+        <Flex marginY='size-500'>
+            <EventList
+                events={ eventsQuery.data }
+                org={ orgQuery.data }
+            />
+        </Flex>
     );
 }
 
