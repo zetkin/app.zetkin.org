@@ -1,5 +1,6 @@
 export default function getEvents(orgId : string) {
     return async () : Promise<{
+        activity: { title: string },
         campaign: { title: string },
         end_time: string,
         id: number,
