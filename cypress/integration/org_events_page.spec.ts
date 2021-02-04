@@ -15,28 +15,8 @@ describe('/o/[orgId]/events', () => {
         });
 
         it('contains an event-list with existing events', () => {
-            cy.intercept({
-                method: 'GET',
-                url: /\/api\/orgs\/1\/campaigns\/941\/actions$/,
-            }, {
-                data: [
-                    {
-                        id: 1,
-                        title: 'Mocked event',
-                        campaign: {
-                            title: 'Mocked campaign'
-                        },
-                        start_time: '0000 00 00, 00:00',
-                        end_time: '1111 11 11, 11:11',
-                        location: {
-                            title: 'Mocked location'
-                        }
-                    },
-                ]
-            });
-             //finns en eventlista? innehåller det de events jag hämtar?
             cy.visit('/o/1/events');
-            cy.get('[data-test="event-list"]>li').should('be.visible');
+            cy.get('[data-test="event-list"]>[data-test="event"]').should('be.visible');
         });
 
         it('contains placeholder if there are no events', () => {
