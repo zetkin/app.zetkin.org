@@ -1,11 +1,13 @@
+import { Button, Flex, View } from '@adobe/react-spectrum';
+
 interface EventListProps {
-    events: { 
+    events: {
             campaign: { title: string },
             end_time: string,
             id: number,
             location: { title: string },
             start_time: string,
-            title: string  
+            title: string
     }[],
     org: {
         id: number,
@@ -16,18 +18,19 @@ interface EventListProps {
 const EventList = ({ events, org } : EventListProps) : JSX.Element => {
     return (
         <>
-            <ul data-test='event-list'>
+            <Flex data-test='event-list' direction='row' gap='100' wrap>
                 { events.map((e) => (
-                    <li key={ e.id }>
-                        { e.title }<br/>
-                        { org.title }<br/>
-                        { e.campaign.title }<br/>
-                        { e.start_time }<br/>
-                        { e.end_time }<br/>
-                        { e.location.title }
-                    </li>
+                    <Flex data-test='event' direction='column' margin='size-200' key={ e.id }>
+                        <View data-test='event-title'>{ e.title }</View>
+                        <View data-test='org-title'>{ org.title }</View>
+                        <View data-test='campaign-title'>{ e.campaign.title }</View>
+                        <View data-test='start-time'>{ e.start_time }</View>
+                        <View data-test='end-time'>{ e.end_time }</View>
+                        <View data-test='location-title'>{ e.location.title }</View>
+                        <Button data-test='sign-up-button' variant="cta">Sign-up</Button>
+                    </Flex>
                 )) }
-            </ul>
+            </Flex>
         </>
     );
 };
