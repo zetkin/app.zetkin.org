@@ -1,15 +1,7 @@
 describe('/o/[orgId]/events', () => {
 
         it('contains name of organization', () => {
-            cy.intercept({
-                method: 'GET',
-                url: /\/api\/orgs\/1$/,
-            }, {
-                data: {
-                    id: 1,
-                    title: 'Mocked org',
-                },
-            });
+            cy.intercept('GET', /\/api\/orgs\/1$/, { fixture: 'dummyOrg' });
             cy.visit('/o/1/events');
             cy.contains('Mocked org');
         });
@@ -20,12 +12,10 @@ describe('/o/[orgId]/events', () => {
         });
 
         it('contains placeholder if there are no events', () => {
-            cy.intercept({
-                method: 'GET',
-                url: /\/api\/orgs\/1\/campaigns\/941\/actions$/,
-            }, {
-                data: []
-            });
+            cy.fixture('dummyEvents.json').then((dummyEvents)  => {
+                dummyEvents.data = [];
+                cy.intercept('GET', /\/api\/orgs\/1\/campaigns\/941\/actions$/, dummyEvents);
+            })
             cy.visit('/o/1/events');
             cy.contains('Sorry, there are no planned events at the moment.');
         });
