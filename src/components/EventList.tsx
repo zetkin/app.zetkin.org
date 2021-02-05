@@ -22,9 +22,9 @@ const EventList = ({ events, org } : EventListProps) : JSX.Element => {
             <Flex data-test='event-list' direction='row' gap='100' wrap>
                 { events.map((e) => (
                     <Flex data-test='event' direction='column' margin='size-200' key={ e.id }>
-                        { e.title ? <View data-test='event-title'>{ e.title }</View>
-                            : <View data-test='event-activity-title'>{ e.activity.title }</View> 
-                        }
+                        <View data-test='event-title'>
+                            { e.title ? e.title : e.activity.title }
+                        </View>
                         <View data-test='org-title'>{ org.title }</View>
                         <View data-test='campaign-title'>{ e.campaign.title }</View>
                         <View data-test='start-time'>{ e.start_time }</View>

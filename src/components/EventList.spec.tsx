@@ -20,9 +20,8 @@ describe('EventList', () => {
     it('contains data for each event', () => {
         mount(<EventList events={ dummyEvents.data } org={ dummyOrg.data }/>);
 
-        cy.get('[data-test="event-list"]>[data-test="event"]').each((item) => {
-            cy
-                .wrap(item)
+        cy.get('[data-test="event"]').each((item) => {
+            cy.wrap(item)
                 .get('[data-test="event-title"]').should('be.visible')
                 .get('[data-test="org-title"]').should('be.visible')
                 .get('[data-test="campaign-title"]').should('be.visible')
@@ -34,9 +33,11 @@ describe('EventList', () => {
 
     it('contains an activity title instead of missing event title', () => {
         dummyEvents.data[0].title = undefined;
-
         mount(<EventList events={ dummyEvents.data } org={ dummyOrg }/>);
-        cy.get('[data-test="event-activity-title"]').should('be.visible');
+
+        cy.get('[data-test="event"]')
+            .should('contain', dummyEvents.data[0].activity.title)
+            .should('not.contain', 'undefined');
     });
 
     it('contains a sign-up button for each event', () => {

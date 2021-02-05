@@ -13,9 +13,8 @@ describe('/o/[orgId]/events', () => {
 
         it('contains a placeholder if there are no events', () => {
             cy.fixture('dummyEvents.json').then((dummyEvents)  => {
-                dummyEvents.data = [];
-                cy.intercept('GET', /\/api\/orgs\/1\/campaigns\/941\/actions$/, dummyEvents);
-            })
+                cy.intercept('GET', /\/api\/orgs\/1\/campaigns\/941\/actions$/, { data: [] });
+            });
             cy.visit('/o/1/events');
             cy.get('[data-test="no-events-placeholder"]').should('be.visible');
         });
