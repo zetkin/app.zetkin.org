@@ -32,16 +32,16 @@ describe('EventList', () => {
         });
     });
 
-    it('has a sign-up button', () => {
-        mount(<EventList events={ dummyEvents.data } org={ dummyOrg }/>);
-
-        cy.get('[data-test="sign-up-button"]').should('be.visible');
-    });
-
     it('contains an activity title instead of missing event title', () => {
         dummyEvents.data[0].title = undefined;
 
         mount(<EventList events={ dummyEvents.data } org={ dummyOrg }/>);
         cy.get('[data-test="event-activity-title"]').should('be.visible');
+    });
+
+    it('contains a sign-up button for each event', () => {
+        mount(<EventList events={ dummyEvents.data } org={ dummyOrg }/>);
+
+        cy.get('[data-test="sign-up-button"]').should('be.visible');
     });
 });

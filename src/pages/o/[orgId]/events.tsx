@@ -49,7 +49,7 @@ export default function OrgEventsPage(props : OrgEventsPageProps) : JSX.Element 
                     org={ orgQuery.data }
                 />
             ) : (
-                <Text>
+                <Text data-test='no-events-placeholder'>
                     Sorry, there are no planned events at the moment.
                 </Text>
             ) }

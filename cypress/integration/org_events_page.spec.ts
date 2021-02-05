@@ -6,18 +6,18 @@ describe('/o/[orgId]/events', () => {
             cy.contains('Mocked org');
         });
 
-        it('contains an event-list with existing events', () => {
+        it('contains events', () => {
             cy.visit('/o/1/events');
-            cy.get('[data-test="event-list"]>[data-test="event"]').should('be.visible');
+            cy.get('[data-test="event"]').should('be.visible');
         });
 
-        it('contains placeholder if there are no events', () => {
+        it('contains a placeholder if there are no events', () => {
             cy.fixture('dummyEvents.json').then((dummyEvents)  => {
                 dummyEvents.data = [];
                 cy.intercept('GET', /\/api\/orgs\/1\/campaigns\/941\/actions$/, dummyEvents);
             })
             cy.visit('/o/1/events');
-            cy.contains('Sorry, there are no planned events at the moment.');
+            cy.get('[data-test="no-events-placeholder"]').should('be.visible');
         });
 
 });
