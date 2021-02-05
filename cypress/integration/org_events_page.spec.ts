@@ -1,21 +1,24 @@
 describe('/o/[orgId]/events', () => {
-    beforeEach(() => {
-        cy.intercept({
-            method: 'GET',
-            url: /\/api\/orgs\/1$/,
-        }, {
-            data: {
-                id: 1,
-                title: 'Mocked org',
-            },
+
+        it('contains name of organization', () => {
+            cy.intercept('GET', /\/api\/orgs\/1$/, { fixture: 'dummyOrg' });
+            cy.visit('/o/1/events');
+            cy.contains('Mocked org');
         });
-    });
 
-    it('contains name of organization', () => {
-        cy.visit('/o/1/events');
-        cy.contains('Mocked org');
-    });
+        it('contains events', () => {
+            cy.visit('/o/1/events');
+            cy.get('[data-test="event"]').should('be.visible');
+        });
+
+        it('contains a placeholder if there are no events', () => {
+            cy.fixture('dummyEvents.json').then((dummyEvents)  => {
+                cy.intercept('GET', /\/api\/orgs\/1\/campaigns\/941\/actions$/, { data: [] });
+            });
+            cy.visit('/o/1/events');
+            cy.get('[data-test="no-events-placeholder"]').should('be.visible');
+        });
+
 });
-
 // Hack to flag for typescript as module
 export {};
