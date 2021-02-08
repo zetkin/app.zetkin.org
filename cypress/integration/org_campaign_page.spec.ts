@@ -1,20 +1,19 @@
 describe('/o/[orgId]/campaigns/[campId]', () => {
-    beforeEach(() => {
-        cy.intercept('GET', /\/api\/orgs\/1\/campaigns\/941\/actions$/, { fixture: 'dummyEvents' });
-        cy.intercept('GET', /\/api\/orgs\/1\/campaigns\/941$/, { fixture: 'dummyCampaign' });
-    });
 
-        it('contains a campaign title', () => {
-            cy.visit('/o/1/campaigns/941');
-            cy.get('[data-test="campaign-heading"]').should('be.visible');
-        });
+        it('contains campaign content', () => {
+            cy.fixture('dummyCampaign.json')
+            .then((dummyCampaign) => {
+                cy.intercept('GET', /\/api\/orgs\/1\/campaigns\/941$/, dummyCampaign);
 
-        it('contains campaign information', () => {
-            cy.visit('/o/1/campaigns/941');
-            cy.get('[data-test="campaign-information"]').should('be.visible');
+                cy.visit('/o/1/campaigns/941');
+                cy.contains(`${dummyCampaign.data.title}`);
+                cy.contains(`${dummyCampaign.data.info_text.substring(0, 50)}`);
+            })
         });
 
         it('contains campaign events', () => {
+            cy.intercept('GET', /\/api\/orgs\/1\/campaigns\/941\/actions$/, { fixture: 'dummyEvents' });
+
             cy.visit('/o/1/campaigns/941');
             cy.get('[data-test="event"]').should('be.visible');
         });

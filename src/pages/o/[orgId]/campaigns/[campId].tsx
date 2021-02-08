@@ -48,7 +48,7 @@ export default function OrgCampaignPage(props : OrgCampaignPageProps) : JSX.Elem
 
     return (
         <Flex marginY='size-500' direction='column'>
-            <Heading level={ 1 } data-test='campaign-heading'>
+            <Heading level={ 1 }>
                 { campaignQuery.data.title }
             </Heading>
             <Text data-test='campaign-information'>
