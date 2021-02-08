@@ -1,12 +1,4 @@
-interface ZetkinEvent {
-    activity: { title: string },
-    campaign: { title: string },
-    end_time: string,
-    id: number,
-    location: { title: string },
-    start_time: string,
-    title: string
-}
+import { ZetkinEvent } from '../interfaces/ZetkinEvent';
 
 export default function getCampaignEvents(orgId : string, campId : string) {
     return async () : Promise<ZetkinEvent[]> => {
