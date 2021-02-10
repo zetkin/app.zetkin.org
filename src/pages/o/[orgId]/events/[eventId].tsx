@@ -38,12 +38,16 @@ type OrgEventPageProps = {
 export default function OrgEventPage(props : OrgEventPageProps) : JSX.Element {
     const { orgId, eventId } = props;
     const eventQuery = useQuery(['event', eventId], getEvent(orgId, eventId));
-    const orgQuery = useQuery(['org', orgId], getOrg(orgId));
 
     return (
         <>
-            <h1>{ orgQuery.data.title }</h1>
-            <h1>{ eventQuery.data.title }</h1>
+            <h1 data-test='event-title'>
+                { eventQuery.data.title ? eventQuery.data.title : eventQuery.data.activity.title }
+            </h1>
+            <p data-test='start-time'>{ eventQuery.data.start_time }</p>
+            <p data-test='end-time'>{ eventQuery.data.end_time }</p>
+            <p data-test='info-text'>{ eventQuery.data.info_text }</p>
+            <p data-test='location'>{ eventQuery.data.location.title }</p>
         </>
     );
 }
