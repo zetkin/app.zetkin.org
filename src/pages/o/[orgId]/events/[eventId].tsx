@@ -1,9 +1,9 @@
 import { GetServerSideProps } from 'next';
-import { Link } from '@adobe/react-spectrum';
 import NextLink from 'next/link';
 import { dehydrate } from 'react-query/hydration';
 import getEvent from '../../../../fetching/getEvent';
 import getOrg from '../../../../fetching/getOrg';
+import { Button, Link } from '@adobe/react-spectrum';
 import { QueryClient, useQuery } from 'react-query';
 
 export const getServerSideProps : GetServerSideProps = async (context) => {
@@ -61,6 +61,7 @@ export default function OrgEventPage(props : OrgEventPageProps) : JSX.Element {
             <p data-test='end-time'>{ eventQuery.data.end_time }</p>
             <p data-test='info-text'>{ eventQuery.data.info_text }</p>
             <p data-test='location'>{ eventQuery.data.location.title }</p>
+            <Button data-test='sign-up-button' variant="cta">Sign-up</Button>
         </>
     );
 }

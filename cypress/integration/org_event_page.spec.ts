@@ -39,6 +39,11 @@ describe('/o/[orgId]/events/[eventId]', () => {
         cy.contains(dummyEvents.data[0].campaign.title).click();
         cy.url().should('eq', `http://localhost:3000/o/1/campaigns/${dummyEvents.data[0].campaign.id}`);
     });
+
+    it('contains a sign-up button', () => {
+        cy.visit('/o/1/events/16831');
+        cy.get('[data-test="sign-up-button"]').should('be.visible');
+    });
 });
 
 // Hack to flag for typescript as module
