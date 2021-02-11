@@ -1,7 +1,7 @@
 {
     "baseUrl": "http://localhost:3000",
     "componentFolder": "src",
-    "defaultCommandTimeout": 2000,
+    "defaultCommandTimeout": 5000,
     "experimentalComponentTesting": true,
     "testFiles": "**/*.spec.*"
 }
