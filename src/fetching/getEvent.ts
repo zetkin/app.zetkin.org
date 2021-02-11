@@ -1,5 +1,7 @@
+import { ZetkinEvent } from '../interfaces/ZetkinEvent';
+
 export default function getEvent(orgId : string, eventId : string) {
-    return async () : Promise<{ title: string }> => {
+    return async () : Promise<ZetkinEvent> => {
         const cRes = await fetch(`http://localhost:3000/api/orgs/${orgId}/campaigns`);
         const cData = await cRes.json();
 
