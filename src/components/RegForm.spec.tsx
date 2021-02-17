@@ -12,14 +12,27 @@ const mountWithTheme = (elem) : any => mount(
 
 describe('RegForm', () => {
 
-    it('contains form with inputs and button', () => {
-        mountWithTheme(<RegForm/>);
+    it('contains a form and input is submitted onClick', () => {
+        const spyOnSubmit = cy.spy();
 
-        cy.get('[data-test="first-name"]').type('Kristoffer');
-        cy.get('[data-test="last-name"]').type('Larberg');
-        cy.get('[data-test="email-address"]').type('mail@kristofferlarberg.se');
-        cy.get('[data-test="phone-number"]').type('0736767638');
-        cy.get('[data-test="password"]').type('abc123');
-        cy.get('[data-test="submit-button"]');
+        const dummyInput = {
+            email: 'mail@kristofferlarberg.se',
+            first_name: 'Kristoffer',
+            last_name: 'Larberg',
+            password: 'abc123',
+            phone: '0736767638',
+        };
+
+        mountWithTheme(<RegForm onValidSubmit={ spyOnSubmit } />);
+
+        cy.get('[data-test="first-name"]').type(dummyInput.first_name);
+        cy.get('[data-test="last-name"]').type(dummyInput.last_name);
+        cy.get('[data-test="email-address"]').type(dummyInput.email);
+        cy.get('[data-test="phone-number"]').type(dummyInput.phone);
+        cy.get('[data-test="password"]').type(dummyInput.password);
+        cy.get('[data-test="submit-button"]').click().then(() => {
+            expect(spyOnSubmit).to.be.calledOnce;
+            expect(spyOnSubmit).to.be.calledWith(dummyInput);
+        });
     });
 });
