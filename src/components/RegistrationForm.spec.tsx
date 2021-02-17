@@ -16,11 +16,11 @@ describe('Registration Form', () => {
         const spyOnSubmit = cy.spy();
 
         const dummyInput = {
-            email: 'mail@kristofferlarberg.se',
-            first_name: 'Kristoffer',
-            last_name: 'Larberg',
+            email: 'user@domain.se',
+            first_name: 'Firstname',
+            last_name: 'Lastname',
             password: 'abc123',
-            phone: '0736767638',
+            phone: '123123123',
         };
 
         mountWithTheme(<RegistrationForm onValidSubmit={ spyOnSubmit } />);
