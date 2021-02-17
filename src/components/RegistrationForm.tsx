@@ -6,7 +6,7 @@ import {
     TextField
 } from '@adobe/react-spectrum';
 
-interface RegFormUserData {
+interface RegistrationFormUserData {
     email: string;
     first_name: string;
     last_name: string;
@@ -14,13 +14,13 @@ interface RegFormUserData {
     phone: string;
 }
 
-interface RegFormProps {
+interface RegistrationFormProps {
     onValidSubmit: {
-        (user : RegFormUserData) : void;
+        (user : RegistrationFormUserData) : void;
     }
 }
 
-const RegForm = ({ onValidSubmit } : RegFormProps) : JSX.Element => {
+const RegistrationForm = ({ onValidSubmit } : RegistrationFormProps) : JSX.Element => {
     const [firstName, setFirstName] = React.useState('');
     const [lastName, setLastName] = React.useState('');
     const [email, setEmail] = React.useState('');
@@ -93,4 +93,4 @@ const RegForm = ({ onValidSubmit } : RegFormProps) : JSX.Element => {
     );
 };
 
-export default RegForm;
+export default RegistrationForm;

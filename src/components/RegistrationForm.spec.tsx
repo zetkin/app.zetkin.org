@@ -1,7 +1,7 @@
 import { mount } from '@cypress/react';
 import { Provider, defaultTheme } from '@adobe/react-spectrum';
 
-import RegForm from './RegForm';
+import RegistrationForm from './RegistrationForm';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const mountWithTheme = (elem) : any => mount(
@@ -10,7 +10,7 @@ const mountWithTheme = (elem) : any => mount(
     </Provider>
 );
 
-describe('RegForm', () => {
+describe('Registration Form', () => {
 
     it('contains a form and input is submitted onClick', () => {
         const spyOnSubmit = cy.spy();
@@ -23,7 +23,7 @@ describe('RegForm', () => {
             phone: '0736767638',
         };
 
-        mountWithTheme(<RegForm onValidSubmit={ spyOnSubmit } />);
+        mountWithTheme(<RegistrationForm onValidSubmit={ spyOnSubmit } />);
 
         cy.get('[data-test="first-name"]').type(dummyInput.first_name);
         cy.get('[data-test="last-name"]').type(dummyInput.last_name);
