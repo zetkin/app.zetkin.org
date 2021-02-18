@@ -7,7 +7,7 @@ import { SSRProvider } from '@react-aria/ssr';
 import { defaultTheme, Provider } from '@adobe/react-spectrum';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
-import DefaultLayout from '../layout/DefaultLayout';
+import DefaultLayout from '../components/layout/DefaultLayout';
 
 const queryClient = new QueryClient();
 

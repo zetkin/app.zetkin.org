@@ -6,7 +6,7 @@ import { QueryClient, useQuery } from 'react-query';
 import EventList from '../../../components/EventList';
 import getEvents from '../../../fetching/getEvents';
 import getOrg from '../../../fetching/getOrg';
-import OrgLayout from '../../../layout/OrgLayout';
+import OrgLayout from '../../../components/layout/OrgLayout';
 
 export const getServerSideProps : GetServerSideProps = async (context) => {
     const queryClient = new QueryClient();
