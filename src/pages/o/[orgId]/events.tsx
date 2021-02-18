@@ -43,14 +43,14 @@ export default function OrgEventsPage(props : OrgEventsPageProps) : JSX.Element 
     const orgQuery = useQuery(['org', orgId], getOrg(orgId));
 
     return (
-        <Flex marginY='size-500'>
+        <Flex marginY="size-500">
             { eventsQuery.data.length > 0 ? (
                 <EventList
                     events={ eventsQuery.data }
                     org={ orgQuery.data }
                 />
             ) : (
-                <Text data-test='no-events-placeholder'>
+                <Text data-test="no-events-placeholder">
                     Sorry, there are no planned events at the moment.
                 </Text>
             ) }

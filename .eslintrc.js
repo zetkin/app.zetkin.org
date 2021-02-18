@@ -39,8 +39,10 @@ module.exports = {
         ],
 
         'brace-style': ['error', 'stroustrup'],
+        'quotes': ['error', 'single', { 'allowTemplateLiterals': true, 'avoidEscape': true }],
         'indent': ['error', 4],
         'jsx-a11y/anchor-is-valid': 'off',
+        'jsx-quotes': ['error', 'prefer-double'],
         'keyword-spacing': ['error', {}],
         'no-console': 'error',
         'no-switch-statements/no-switch': 'error',

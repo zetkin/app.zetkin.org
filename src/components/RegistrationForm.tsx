@@ -41,51 +41,51 @@ const RegistrationForm = ({ onValidSubmit } : RegistrationFormProps) : JSX.Eleme
 
     return (
         <Flex>
-            <Form data-test='reg-form' onSubmit={ onSubmit }>
+            <Form data-test="reg-form" onSubmit={ onSubmit }>
                 <TextField
-                    label='First name'
-                    placeholder='First name'
-                    type='text'
+                    label="First name"
+                    placeholder="First name"
+                    type="text"
                     value={ firstName }
                     onChange={ setFirstName }
-                    data-test='first-name'
+                    data-test="first-name"
                 />
                 <TextField
-                    label='Last name'
-                    placeholder='Last name'
-                    type='text'
+                    label="Last name"
+                    placeholder="Last name"
+                    type="text"
                     value={ lastName }
                     onChange={ setLastName }
-                    data-test='last-name'
+                    data-test="last-name"
                 />
                 <TextField
-                    label='E-mail'
-                    placeholder='E-mail'
-                    type='email' 
+                    label="E-mail"
+                    placeholder="E-mail"
+                    type="email" 
                     value={ email }
                     onChange={ setEmail }
-                    data-test='email-address'
+                    data-test="email-address"
                 />
                 <TextField 
-                    label='Phone number'
-                    placeholder='Phone number'
-                    type='tel'
+                    label="Phone number"
+                    placeholder="Phone number"
+                    type="tel"
                     value={ phone }
                     onChange={ setPhone }
-                    data-test='phone-number'
+                    data-test="phone-number"
                 />
                 <TextField 
-                    label='Password'
-                    placeholder='Password'
-                    type='password'
+                    label="Password"
+                    placeholder="Password"
+                    type="password"
                     value={ password }
                     onChange={ setPassword }
-                    data-test='password'
+                    data-test="password"
                 />
                 <Button
                     variant="cta"
-                    type='submit'
-                    data-test='submit-button'>
+                    type="submit"
+                    data-test="submit-button">
                     Submit
                 </Button>
             </Form>
