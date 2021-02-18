@@ -18,7 +18,8 @@
     "next": "^10.0.3",
     "react": "17.0.1",
     "react-dom": "17.0.1",
-    "react-query": "^3.5.11"
+    "react-query": "^3.5.11",
+    "zetkin": "^1.2.1"
   },
   "devDependencies": {
     "@cypress/react": "^4.16.3",
