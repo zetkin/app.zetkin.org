@@ -1,11 +1,13 @@
+import { dehydrate } from 'react-query/hydration';
 import EventList from '../../../../components/EventList';
 import { GetServerSideProps } from 'next';
-import { dehydrate } from 'react-query/hydration';
+import { Flex, Heading, Text } from '@adobe/react-spectrum';
+import { QueryClient, useQuery } from 'react-query';
+
 import getCampaign from '../../../../fetching/getCampaign';
 import getCampaignEvents from '../../../../fetching/getCampaignEvents';
 import getOrg from '../../../../fetching/getOrg';
-import { Flex, Heading, Text } from '@adobe/react-spectrum';
-import { QueryClient, useQuery } from 'react-query';
+
 
 export const getServerSideProps : GetServerSideProps = async (context) => {
     const queryClient = new QueryClient();

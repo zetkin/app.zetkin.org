@@ -1,10 +1,11 @@
+import { dehydrate } from 'react-query/hydration';
 import { GetServerSideProps } from 'next';
 import NextLink from 'next/link';
-import { dehydrate } from 'react-query/hydration';
-import getEvent from '../../../../fetching/getEvent';
-import getOrg from '../../../../fetching/getOrg';
 import { Button, Flex, Heading, Link, Text } from '@adobe/react-spectrum';
 import { QueryClient, useQuery } from 'react-query';
+
+import getEvent from '../../../../fetching/getEvent';
+import getOrg from '../../../../fetching/getOrg';
 
 export const getServerSideProps : GetServerSideProps = async (context) => {
     const queryClient = new QueryClient();

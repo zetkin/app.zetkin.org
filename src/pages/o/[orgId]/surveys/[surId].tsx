@@ -1,8 +1,9 @@
-import { GetServerSideProps } from 'next';
 import { dehydrate } from 'react-query/hydration';
+import { GetServerSideProps } from 'next';
+import { QueryClient, useQuery } from 'react-query';
+
 import getOrg from '../../../../fetching/getOrg';
 import getSurvey from '../../../../fetching/getSurvey';
-import { QueryClient, useQuery } from 'react-query';
 
 export const getServerSideProps : GetServerSideProps = async (context) => {
     const queryClient = new QueryClient();

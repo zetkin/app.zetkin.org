@@ -1,12 +1,13 @@
 import '../styles.css';
 import { AppProps } from 'next/app';
-import DefaultLayout from '../layout/DefaultLayout';
 import { Hydrate } from 'react-query/hydration';
 import { NextPage } from 'next/types';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { SSRProvider } from '@react-aria/ssr';
-import { Provider, defaultTheme } from '@adobe/react-spectrum';
+import { defaultTheme, Provider } from '@adobe/react-spectrum';
 import { QueryClient, QueryClientProvider } from 'react-query';
+
+import DefaultLayout from '../layout/DefaultLayout';
 
 const queryClient = new QueryClient();
 

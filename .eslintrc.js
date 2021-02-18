@@ -96,6 +96,7 @@ module.exports = {
         'react/react-in-jsx-scope': 'off',
         'semi': ['error', 'always'],
         'sort-imports': ['error', {
+            'ignoreCase': true,
             allowSeparatedGroups: true,
             memberSyntaxSortOrder: ['none', 'all', 'single', 'multiple'],
         }],

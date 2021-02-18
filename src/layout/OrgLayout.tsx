@@ -4,9 +4,8 @@ import { useRouter } from 'next/router';
 import { Item, Tabs } from '@react-spectrum/tabs';
 
 import DefaultLayout from './DefaultLayout';
-import OrgHeader from './OrgHeader';
 import getOrg from '../fetching/getOrg';
-
+import OrgHeader from './OrgHeader';
 
 interface OrgLayoutProps {
     children: JSX.Element;

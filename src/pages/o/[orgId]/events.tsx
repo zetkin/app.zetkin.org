@@ -1,11 +1,12 @@
-import EventList from '../../../components/EventList';
-import { GetServerSideProps } from 'next';
-import OrgLayout from '../../../layout/OrgLayout';
 import { dehydrate } from 'react-query/hydration';
-import getEvents from '../../../fetching/getEvents';
-import getOrg from '../../../fetching/getOrg';
+import { GetServerSideProps } from 'next';
 import { Flex, Text } from '@adobe/react-spectrum';
 import { QueryClient, useQuery } from 'react-query';
+
+import EventList from '../../../components/EventList';
+import getEvents from '../../../fetching/getEvents';
+import getOrg from '../../../fetching/getOrg';
+import OrgLayout from '../../../layout/OrgLayout';
 
 export const getServerSideProps : GetServerSideProps = async (context) => {
     const queryClient = new QueryClient();
