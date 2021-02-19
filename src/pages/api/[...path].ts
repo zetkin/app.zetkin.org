@@ -18,6 +18,27 @@ type NextApiRequestWithSession = NextApiRequest & {
 }
 
 export default async function handle(req : NextApiRequestWithSession, res : NextApiResponse) : Promise<void> {
+    const path = req.query.path as string[];
+    const pathStr = path.join('/');
+
+    if (path[path.length-1] === 'avatar') {
+        const protocol = stringToBool(process.env.ZETKIN_USE_TLS)? 'https' : 'http';
+        const host = process.env.ZETKIN_API_HOST;
+
+        try {
+            const url = `${protocol}://api.${host}/v1/${pathStr}`;
+            const result = await fetch(url, { redirect: 'manual' });
+            res.writeHead(result.status, {
+                location: result.headers.get('location'),
+            });
+
+            return res.end();
+        }
+        catch (err) {
+            return res.status(500).json(err);
+        }
+    }
+
     const z = Z.construct({
         clientId: process.env.ZETKIN_CLIENT_ID,
         clientSecret: process.env.ZETKIN_CLIENT_SECRET,
@@ -25,8 +46,7 @@ export default async function handle(req : NextApiRequestWithSession, res : Next
         zetkinDomain: process.env.ZETKIN_API_HOST,
     });
 
-    const path = req.query.path as string[];
-    const resource = z.resource(path.join('/'));
+    const resource = z.resource(pathStr);
 
     try {
         await applySession(req, res);
