@@ -27,15 +27,15 @@ const OrgLayout = ({ children, orgId } : OrgLayoutProps) : JSX.Element => {
             <OrgHeader org={ orgQuery.data }/>
             <Tabs
                 aria-label="Organization submenu"
-                selectedKey={ currentTab }
-                onSelectionChange={ onSelectTab }>
-                <Item title="Coming up" key="events">
+                onSelectionChange={ onSelectTab }
+                selectedKey={ currentTab }>
+                <Item key="events" title="Coming up">
                     <Content>{ children }</Content>
                 </Item>
-                <Item title="Contact" key="contact">
+                <Item key="contact" title="Contact">
                     <Content>{ children }</Content>
                 </Item>
-                <Item title="Some Custom Page" key="custom">
+                <Item key="custom" title="Some Custom Page">
                     <Content>{ children }</Content>
                 </Item>
             </Tabs>

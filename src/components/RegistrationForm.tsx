@@ -43,49 +43,49 @@ const RegistrationForm = ({ onValidSubmit } : RegistrationFormProps) : JSX.Eleme
         <Flex>
             <Form data-test="reg-form" onSubmit={ onSubmit }>
                 <TextField
+                    data-test="first-name"
                     label="First name"
+                    onChange={ setFirstName }
                     placeholder="First name"
                     type="text"
                     value={ firstName }
-                    onChange={ setFirstName }
-                    data-test="first-name"
                 />
                 <TextField
+                    data-test="last-name"
                     label="Last name"
+                    onChange={ setLastName }
                     placeholder="Last name"
                     type="text"
                     value={ lastName }
-                    onChange={ setLastName }
-                    data-test="last-name"
                 />
                 <TextField
+                    data-test="email-address"
                     label="E-mail"
+                    onChange={ setEmail }
                     placeholder="E-mail"
                     type="email" 
                     value={ email }
-                    onChange={ setEmail }
-                    data-test="email-address"
                 />
-                <TextField 
+                <TextField
+                    data-test="phone-number"
                     label="Phone number"
+                    onChange={ setPhone }
                     placeholder="Phone number"
                     type="tel"
                     value={ phone }
-                    onChange={ setPhone }
-                    data-test="phone-number"
                 />
-                <TextField 
+                <TextField
+                    data-test="password"
                     label="Password"
+                    onChange={ setPassword }
                     placeholder="Password"
                     type="password"
                     value={ password }
-                    onChange={ setPassword }
-                    data-test="password"
                 />
                 <Button
-                    variant="cta"
+                    data-test="submit-button"
                     type="submit"
-                    data-test="submit-button">
+                    variant="cta">
                     Submit
                 </Button>
             </Form>

@@ -6,7 +6,7 @@ module.exports = {
   },
   parserOptions: { ecmaVersion: 8 }, // to enable features such as async/await
   ignorePatterns: ['node_modules/*', '.next/*', '.out/*', '!.prettierrc.js'], // We don't want to lint generated files nor node_modules, but we want to lint .prettierrc.js (ignored by default by eslint)
-  extends: ['eslint:recommended'],
+  extends: ['eslint:recommended', 'plugin:react/recommended'],
   overrides: [
     // This configuration will apply only to TypeScript files
     {
@@ -92,6 +92,10 @@ module.exports = {
         'react/jsx-indent-props': 'error',
         'react/jsx-no-target-blank': 'error',
         'react/jsx-props-no-multi-spaces': 'error',
+        'react/jsx-sort-props': ['error', {
+          'ignoreCase': true,
+          'reservedFirst': true,
+        }],
         'react/jsx-tag-spacing': ['error', {
             'beforeClosing': 'never',
             'beforeSelfClosing': 'allow',

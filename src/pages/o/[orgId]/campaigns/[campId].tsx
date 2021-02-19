@@ -49,7 +49,7 @@ export default function OrgCampaignPage(props : OrgCampaignPageProps) : JSX.Elem
     const campaignEventsQuery = useQuery(['campaignEvents', campId], getCampaignEvents(orgId, campId));
 
     return (
-        <Flex marginY="size-500" direction="column">
+        <Flex direction="column" marginY="size-500">
             <Heading level={ 1 }>
                 { campaignQuery.data.title }
             </Heading>

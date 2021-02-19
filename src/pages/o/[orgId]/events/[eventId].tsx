@@ -100,7 +100,7 @@ export default function OrgEventPage(props : OrgEventPageProps) : JSX.Element {
                     { eventQuery.data.location.title }
                 </Text>
             </Flex>
-            <Button data-test="sign-up-button" variant="cta" marginY="size-200">
+            <Button data-test="sign-up-button" marginY="size-200" variant="cta">
                 Sign-up
             </Button>
         </Flex>

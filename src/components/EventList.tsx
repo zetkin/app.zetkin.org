@@ -21,7 +21,7 @@ const EventList = ({ events, org } : EventListProps) : JSX.Element => {
         <>
             <Flex data-test="event-list" direction="row" gap="100" wrap>
                 { events.map((e) => (
-                    <Flex data-test="event" direction="column" margin="size-200" key={ e.id }>
+                    <Flex key={ e.id } data-test="event" direction="column" margin="size-200">
                         <View data-test="event-title">
                             { e.title ? e.title : e.activity.title }
                         </View>

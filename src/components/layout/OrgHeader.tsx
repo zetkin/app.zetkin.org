@@ -20,25 +20,26 @@ const OrgHeader = ({ org } : OrgHeaderProps) : JSX.Element => {
     return (
         <Header>
             <Image
-                src="/cover.jpg"
                 alt="Cover image"
                 objectFit="cover"
+                src="/cover.jpg"
                 width="100%"
             />
             <Flex
-                direction="row"
                 alignItems="center"
+                direction="row"
                 justifyContent="space-between"
                 marginX="size-200">
                 <Image
-                    src={ `https://api.zetk.in/v1/orgs/${org.id}/avatar` }
                     alt="Organization avatar"
-                    objectFit="cover"
                     height="size-800"
+                    objectFit="cover"
+                    src={ `https://api.zetk.in/v1/orgs/${org.id}/avatar` }
+
                 />
                 <Flex
-                    direction="row"
                     alignItems="center"
+                    direction="row"
                     marginX="size-200">
                     <View marginX="size-200">
                         <Link>
@@ -47,7 +48,7 @@ const OrgHeader = ({ org } : OrgHeaderProps) : JSX.Element => {
                             </NextLink>
                         </Link>
                     </View>
-                    <Button variant="cta" data-test="unfollow-button">Unfollow</Button>
+                    <Button data-test="unfollow-button" variant="cta">Unfollow</Button>
                 </Flex>
             </Flex>
             <View>
