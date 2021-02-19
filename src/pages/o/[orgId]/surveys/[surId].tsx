@@ -32,9 +32,9 @@ export const getServerSideProps : GetServerSideProps = async (context) => {
 };
 
 type OrgSurveyPageProps = {
-    surId: string,
-    orgId: string,
-}
+    surId: string;
+    orgId: string
+};
 
 export default function OrgSurveyPage(props : OrgSurveyPageProps) : JSX.Element {
     const { surId, orgId } = props;

@@ -34,8 +34,8 @@ export const getServerSideProps : GetServerSideProps = async (context) => {
 };
 
 type OrgEventsPageProps = {
-    orgId: string,
-}
+    orgId: string
+};
 
 export default function OrgEventsPage(props : OrgEventsPageProps) : JSX.Element {
     const { orgId } = props;

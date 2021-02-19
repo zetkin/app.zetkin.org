@@ -37,6 +37,17 @@ module.exports = {
             allowConciseArrowFunctionExpressionsStartingWithVoid: true,
           },
         ],
+        '@typescript-eslint/member-delimiter-style': ['error', {
+          'multiline': {
+            'delimiter': 'semi',
+            'requireLast': false
+          },
+          'singleline': {
+            'delimiter': 'semi',
+            'requireLast': false
+          }
+        }],
+        '@typescript-eslint/semi': 'error',
 
         'brace-style': ['error', 'stroustrup'],
         'quotes': ['error', 'single', { 'allowTemplateLiterals': true, 'avoidEscape': true }],
@@ -96,9 +107,9 @@ module.exports = {
         'react/prefer-stateless-function': 'error',
         'react/prop-types': 'off',
         'react/react-in-jsx-scope': 'off',
-        'semi': ['error', 'always'],
+        'semi': 'off',
         'sort-imports': ['error', {
-            'ignoreCase': true,
+            ignoreCase: true,
             allowSeparatedGroups: true,
             memberSyntaxSortOrder: ['none', 'all', 'single', 'multiple'],
         }],

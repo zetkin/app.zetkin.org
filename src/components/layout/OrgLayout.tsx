@@ -9,7 +9,7 @@ import OrgHeader from './OrgHeader';
 
 interface OrgLayoutProps {
     children: JSX.Element;
-    orgId: string;
+    orgId: string
 }
 
 const OrgLayout = ({ children, orgId } : OrgLayoutProps) : JSX.Element => {

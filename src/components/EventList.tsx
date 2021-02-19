@@ -2,16 +2,16 @@ import { Button, Flex, View } from '@adobe/react-spectrum';
 
 interface EventListProps {
     events: {
-        activity: { title: string },
-        campaign: { title: string },
-        end_time: string,
-        id: number,
-        location: { title: string },
-        start_time: string,
+        activity: { title: string };
+        campaign: { title: string };
+        end_time: string;
+        id: number;
+        location: { title: string };
+        start_time: string;
         title: string
-    }[],
+    }[];
     org: {
-        id: number,
+        id: number;
         title: string
     }
 }

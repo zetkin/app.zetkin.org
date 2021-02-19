@@ -11,12 +11,12 @@ interface RegistrationFormUserData {
     first_name: string;
     last_name: string;
     password: string;
-    phone: string;
+    phone: string
 }
 
 interface RegistrationFormProps {
     onValidSubmit: {
-        (user : RegistrationFormUserData) : void;
+        (user : RegistrationFormUserData) : void
     }
 }
 

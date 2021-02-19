@@ -1,6 +1,6 @@
 interface ZetkinOrganization {
-    id: number,
-    title: string,
+    id: number;
+    title: string
 }
 
 export default function getOrg(orgId : string) {

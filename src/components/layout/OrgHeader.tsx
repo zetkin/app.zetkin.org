@@ -11,7 +11,7 @@ import {
 
 interface OrgHeaderProps {
     org: {
-        id: number,
+        id: number;
         title: string
     }
 }

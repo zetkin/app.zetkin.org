@@ -1,5 +1,5 @@
 export interface ZetkinCampaign {
-    info_text: string,
+    info_text: string;
     title: string
 }
 

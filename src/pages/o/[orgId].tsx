@@ -29,8 +29,8 @@ export const getServerSideProps : GetServerSideProps = async (context) => {
 };
 
 type OrgPageProps = {
-    orgId: string,
-}
+    orgId: string
+};
 
 export default function OrgPage(props : OrgPageProps) : JSX.Element {
     const { orgId } = props;
