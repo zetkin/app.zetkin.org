@@ -5,6 +5,7 @@ import { GetServerSideProps, GetServerSidePropsContext, GetServerSidePropsResult
 
 import { AppSession } from '../types';
 import stringToBool from './stringToBool';
+import { ZetkinUser } from '../interfaces/ZetkinUser';
 import { ZetkinZ } from '../types/sdk';
 
 //TODO: Create module definition and revert to import.
@@ -13,6 +14,7 @@ const Z = require('zetkin');
 export type ScaffoldedProps = {
     /* eslint-disable @typescript-eslint/no-explicit-any */
     [key: string]: any;
+    user?: ZetkinUser;
 };
 
 export type ScaffoldedContext = GetServerSidePropsContext & {
@@ -21,6 +23,14 @@ export type ScaffoldedContext = GetServerSidePropsContext & {
 
 export type ScaffoldedGetServerSideProps = (context: ScaffoldedContext) =>
     Promise<GetServerSidePropsResult<ScaffoldedProps>>;
+
+interface ResultWithProps {
+    props: ScaffoldedProps;
+}
+
+const hasProps = (result : any) : result is ResultWithProps => {
+    return (result as ResultWithProps).props !== undefined;
+};
 
 export const scaffold = (wrapped : ScaffoldedGetServerSideProps) : GetServerSideProps => {
     const getServerSideProps : GetServerSideProps = async (contextFromNext : GetServerSidePropsContext) => {
@@ -41,7 +51,15 @@ export const scaffold = (wrapped : ScaffoldedGetServerSideProps) : GetServerSide
             ctx.z.setTokenData(reqWithSession.session.tokenData);
         }
 
-        return wrapped(ctx);
+        const user = await ctx.z.resource('users', 'me').get();
+
+        const result = await wrapped(ctx);
+
+        if (hasProps(result)) {
+            result.props.user = user.data.data as ZetkinUser;
+        }
+
+        return result;
     };
 
     return getServerSideProps;
