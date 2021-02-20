@@ -9,7 +9,7 @@
     "tdd": "concurrently 'npm run devserver' 'npx cypress open'",
     "cypress-ci": "concurrently 'npm start' 'npx cypress run'",
     "watch": "chokidar 'src/**/*' -c 'npm run lint'",
-    "start": "next start"
+    "start": "next start -p 80"
   },
   "dependencies": {
     "@adobe/react-spectrum": "^3.7.0",
