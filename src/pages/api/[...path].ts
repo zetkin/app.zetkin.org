@@ -50,7 +50,9 @@ export default async function handle(req : NextApiRequestWithSession, res : Next
 
     try {
         await applySession(req, res);
-        z.setTokenData(req.session.tokenData);
+        if (req.session.tokenData) {
+            z.setTokenData(req.session.tokenData);
+        }
     }
     catch (err) {
         // No problem if the session could not be found
