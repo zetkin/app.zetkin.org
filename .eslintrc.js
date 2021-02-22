@@ -30,13 +30,6 @@ module.exports = {
       ],
       rules: {
         '@typescript-eslint/no-unused-vars': ['error'],
-        '@typescript-eslint/explicit-function-return-type': [
-          'error',
-          {
-            allowExpressions: true,
-            allowConciseArrowFunctionExpressionsStartingWithVoid: true
-          }
-        ],
         '@typescript-eslint/member-delimiter-style': ['error', {
           'multiline': {
             'delimiter': 'semi',
