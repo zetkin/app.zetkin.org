@@ -4,21 +4,23 @@
   "private": true,
   "scripts": {
     "build": "next build",
-    "devserver": "next dev",
+    "devserver": "next dev -p 80",
     "lint": "eslint src && tsc --noEmit && echo 'Finished linting without errors!'",
     "tdd": "concurrently 'npm run devserver' 'npx cypress open'",
     "cypress-ci": "concurrently 'npm start' 'npx cypress run'",
     "watch": "chokidar 'src/**/*' -c 'npm run lint'",
-    "start": "next start"
+    "start": "next start -p 80"
   },
   "dependencies": {
     "@adobe/react-spectrum": "^3.7.0",
     "@cypress/webpack-preprocessor": "^5.5.0",
     "@react-spectrum/tabs": "^3.0.0-alpha.3",
     "next": "^10.0.3",
+    "next-session": "^3.4.0",
     "react": "17.0.1",
     "react-dom": "17.0.1",
-    "react-query": "^3.5.11"
+    "react-query": "^3.5.11",
+    "zetkin": "^1.2.1"
   },
   "devDependencies": {
     "@cypress/react": "^4.16.3",

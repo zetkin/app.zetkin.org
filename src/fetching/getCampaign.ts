@@ -1,3 +1,5 @@
+import apiUrl from "../utils/apiUrl";
+
 export interface ZetkinCampaign {
     info_text: string,
     title: string
@@ -5,7 +7,7 @@ export interface ZetkinCampaign {
 
 export default function getCampaign(orgId : string, campId : string) {
     return async () : Promise<ZetkinCampaign> => {
-        const cIdRes = await fetch(`http://localhost:3000/api/orgs/${orgId}/campaigns/${campId}`);
+        const cIdRes = await fetch(apiUrl(`/orgs/${orgId}/campaigns/${campId}`));
         const cIdData = await cIdRes.json();
         return cIdData.data;
     };

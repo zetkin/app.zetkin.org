@@ -23,7 +23,12 @@ jobs:
             - uses: actions/checkout@v2
             - run: npm ci
             - run: npm run build
+            - name: Add host to /etc/hosts
+              run: |
+                sudo echo "127.0.0.1 www.dev.zetkin.org" | sudo tee -a /etc/hosts
+            - name: Copy environment files
+              run: cp .env.test .env.production
             - name: Cypress run
               uses: cypress-io/github-action@v2
               with:
-                start: npm start
+                start: sudo npm start
