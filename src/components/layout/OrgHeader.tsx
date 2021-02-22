@@ -9,6 +9,8 @@ import {
     View
 } from '@adobe/react-spectrum';
 
+import apiUrl from '../../utils/apiUrl';
+
 interface OrgHeaderProps {
     org: {
         id: number;
@@ -32,10 +34,8 @@ const OrgHeader = ({ org } : OrgHeaderProps) : JSX.Element => {
                 marginX="size-200">
                 <Image
                     alt="Organization avatar"
-                    height="size-800"
                     objectFit="cover"
-                    src={ `https://api.zetk.in/v1/orgs/${org.id}/avatar` }
-
+                    src={ apiUrl(`/orgs/${org.id}/avatar`) }
                 />
                 <Flex
                     alignItems="center"

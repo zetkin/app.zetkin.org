@@ -1,3 +1,5 @@
+import apiUrl from '../utils/apiUrl';
+
 interface ZetkinOrganization {
     id: number;
     title: string
@@ -5,7 +7,8 @@ interface ZetkinOrganization {
 
 export default function getOrg(orgId : string) {
     return async () : Promise<ZetkinOrganization> => {
-        const oRes = await fetch(`http://localhost:3000/api/orgs/${orgId}`);
+        const url = apiUrl(`/orgs/${orgId}`);
+        const oRes = await fetch(url);
         const oData = await oRes.json();
         return oData.data;
     };
