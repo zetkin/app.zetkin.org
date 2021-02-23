@@ -15,14 +15,14 @@ jobs:
               uses: actions/setup-node@v1
               with:
                   node-version: 14.x
-            - run: npm ci
-            - run: npm run lint
+            - run: yarn install --frozen-lockfile
+            - run: yarn lint
     cypress:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v2
-            - run: npm ci
-            - run: npm run build
+            - run: yarn install --frozen-lockfile
+            - run: yarn build
             - name: Add host to /etc/hosts
               run: |
                 sudo echo "127.0.0.1 www.dev.zetkin.org" | sudo tee -a /etc/hosts
@@ -31,4 +31,4 @@ jobs:
             - name: Cypress run
               uses: cypress-io/github-action@v2
               with:
-                start: sudo npm start
+                start: sudo yarn start
