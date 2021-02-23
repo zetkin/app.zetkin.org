@@ -1,5 +1,5 @@
-import { ZetkinEvent } from '../interfaces/ZetkinEvent';
 import apiUrl from '../utils/apiUrl';
+import { ZetkinEvent } from '../interfaces/ZetkinEvent';
 
 export default function getEvent(orgId : string, eventId : string) {
     return async () : Promise<ZetkinEvent> => {

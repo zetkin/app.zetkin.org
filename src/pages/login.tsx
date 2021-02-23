@@ -1,7 +1,7 @@
-import { GetServerSideProps } from "next";
+import { GetServerSideProps } from 'next';
 import Z from 'zetkin';
 
-import stringToBool from "../utils/stringToBool";
+import stringToBool from '../utils/stringToBool';
 
 export const getServerSideProps : GetServerSideProps = async () => {
     const z = Z.construct({
@@ -18,7 +18,7 @@ export const getServerSideProps : GetServerSideProps = async () => {
         redirect: {
             destination: z.getLoginUrl(`${protocol}://${host}`),
             permanent: true,
-        }
+        },
     };
 };
 

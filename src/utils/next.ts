@@ -1,10 +1,10 @@
+import { applySession } from 'next-session';
 import Z from 'zetkin';
-import { applySession } from "next-session";
-import { GetServerSideProps, GetServerSidePropsContext, GetServerSidePropsResult } from "next";
+import { GetServerSideProps, GetServerSidePropsContext, GetServerSidePropsResult } from 'next';
 
-import { AppSession } from "../types";
-import { ZetkinZ } from "../types/sdk";
-import stringToBool from "./stringToBool";
+import { AppSession } from '../types';
+import stringToBool from './stringToBool';
+import { ZetkinZ } from '../types/sdk';
 
 export type ScaffoldedProps = {
     /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -13,11 +13,11 @@ export type ScaffoldedProps = {
 
 export type ScaffoldedContext = GetServerSidePropsContext<ScaffoldedProps> & {
     z: ZetkinZ;
-}
+};
 
 export type ScaffoldedGetServerSideProps = GetServerSideProps<ScaffoldedProps> & {
     (context: ScaffoldedContext): Promise<GetServerSidePropsResult<ScaffoldedProps>>;
-}
+};
 
 export const scaffold = (wrapped : ScaffoldedGetServerSideProps) : GetServerSideProps => {
     const getServerSideProps : ScaffoldedGetServerSideProps = async (context) => {

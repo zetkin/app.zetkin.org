@@ -6,50 +6,49 @@ import {
     Heading,
     Image,
     Link,
-    View
+    View,
 } from '@adobe/react-spectrum';
 
-import apiUrl from '../utils/apiUrl';
+import apiUrl from '../../utils/apiUrl';
 
 interface OrgHeaderProps {
     org: {
-        id: number,
-        title: string
-    }
+        id: number;
+        title: string;
+    };
 }
 
 const OrgHeader = ({ org } : OrgHeaderProps) : JSX.Element => {
     return (
         <Header>
             <Image
-                src='/cover.jpg'
-                alt='Cover image'
+                alt="Cover image"
                 objectFit="cover"
-                width='100%'
+                src="/cover.jpg"
+                width="100%"
             />
             <Flex
-                direction='row'
-                alignItems='center'
-                justifyContent='space-between'
-                marginX='size-200'>
+                alignItems="center"
+                direction="row"
+                justifyContent="space-between"
+                marginX="size-200">
                 <Image
-                    src={ apiUrl(`/orgs/${org.id}/avatar`) }
-                    alt='Organization avatar'
+                    alt="Organization avatar"
                     objectFit="cover"
-                    height='size-800'
+                    src={ apiUrl(`/orgs/${org.id}/avatar`) }
                 />
                 <Flex
-                    direction='row'
-                    alignItems='center'
-                    marginX='size-200'>
-                    <View marginX='size-200'>
+                    alignItems="center"
+                    direction="row"
+                    marginX="size-200">
+                    <View marginX="size-200">
                         <Link>
-                            <NextLink href='/'>
+                            <NextLink href="/">
                                 <a>Edit Page</a>
                             </NextLink>
                         </Link>
                     </View>
-                    <Button variant='cta' data-test='unfollow-button'>Unfollow</Button>
+                    <Button data-test="unfollow-button" variant="cta">Unfollow</Button>
                 </Flex>
             </Flex>
             <View>

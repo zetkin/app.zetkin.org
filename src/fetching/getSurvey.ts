@@ -1,4 +1,4 @@
-import apiUrl from "../utils/apiUrl";
+import apiUrl from '../utils/apiUrl';
 
 export default function getSurvey(orgId : string, surId : string) {
     return async () : Promise<{ title: string }> => {

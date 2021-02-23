@@ -1,5 +1,5 @@
-import Z from 'zetkin';
 import { applySession } from 'next-session';
+import Z from 'zetkin';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { AppSession } from '../../types';
@@ -15,7 +15,7 @@ const HTTP_VERBS_TO_ZETKIN_METHODS = {
 
 type NextApiRequestWithSession = NextApiRequest & {
     session: AppSession;
-}
+};
 
 export default async function handle(req : NextApiRequestWithSession, res : NextApiResponse) : Promise<void> {
     const path = req.query.path as string[];

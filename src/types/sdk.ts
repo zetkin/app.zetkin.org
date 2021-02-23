@@ -2,8 +2,8 @@
 
 export interface ZetkinZResult {
     data: {
-        data: unknown,
-    }
+        data: unknown;
+    };
 }
 
 export interface ZetkinZResource {

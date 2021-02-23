@@ -1,8 +1,8 @@
+import { applySession } from 'next-session';
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
-import Z from 'zetkin';
-import { applySession } from 'next-session';
 import stringToBool from '../utils/stringToBool';
+import Z from 'zetkin';
 
 import { AppSession } from '../types';
 import { Content, Heading } from '@adobe/react-spectrum';

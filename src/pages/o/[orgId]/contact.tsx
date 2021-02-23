@@ -1,9 +1,9 @@
+import { dehydrate } from 'react-query/hydration';
 import { GetServerSideProps } from 'next';
 import { QueryClient } from 'react-query';
-import { dehydrate } from 'react-query/hydration';
 
-import OrgLayout from '../../../layout/OrgLayout';
 import getOrg from '../../../fetching/getOrg';
+import OrgLayout from '../../../components/layout/OrgLayout';
 
 export const getServerSideProps : GetServerSideProps = async (context) => {
     const queryClient = new QueryClient();
@@ -17,7 +17,7 @@ export const getServerSideProps : GetServerSideProps = async (context) => {
         return {
             props: {
                 dehydratedState: dehydrate(queryClient),
-                orgId
+                orgId,
             },
         };
     }

@@ -1,5 +1,5 @@
 import { mount } from '@cypress/react';
-import { Provider, defaultTheme } from '@adobe/react-spectrum';
+import { defaultTheme, Provider } from '@adobe/react-spectrum';
 
 import RegistrationForm from './RegistrationForm';
 
@@ -7,7 +7,7 @@ import RegistrationForm from './RegistrationForm';
 const mountWithTheme = (elem) : any => mount(
     <Provider theme={ defaultTheme }>
         { elem }
-    </Provider>
+    </Provider>,
 );
 
 describe('Registration Form', () => {

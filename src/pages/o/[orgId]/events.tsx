@@ -1,11 +1,12 @@
-import EventList from '../../../components/EventList';
-import { GetServerSideProps } from 'next';
-import OrgLayout from '../../../layout/OrgLayout';
 import { dehydrate } from 'react-query/hydration';
-import getEvents from '../../../fetching/getEvents';
-import getOrg from '../../../fetching/getOrg';
+import { GetServerSideProps } from 'next';
 import { Flex, Text } from '@adobe/react-spectrum';
 import { QueryClient, useQuery } from 'react-query';
+
+import EventList from '../../../components/EventList';
+import getEvents from '../../../fetching/getEvents';
+import getOrg from '../../../fetching/getOrg';
+import OrgLayout from '../../../components/layout/OrgLayout';
 
 export const getServerSideProps : GetServerSideProps = async (context) => {
     const queryClient = new QueryClient();
@@ -21,7 +22,7 @@ export const getServerSideProps : GetServerSideProps = async (context) => {
         return {
             props: {
                 dehydratedState: dehydrate(queryClient),
-                orgId
+                orgId,
             },
         };
     }
@@ -33,8 +34,8 @@ export const getServerSideProps : GetServerSideProps = async (context) => {
 };
 
 type OrgEventsPageProps = {
-    orgId: string,
-}
+    orgId: string;
+};
 
 export default function OrgEventsPage(props : OrgEventsPageProps) : JSX.Element {
     const { orgId } = props;
@@ -42,14 +43,14 @@ export default function OrgEventsPage(props : OrgEventsPageProps) : JSX.Element 
     const orgQuery = useQuery(['org', orgId], getOrg(orgId));
 
     return (
-        <Flex marginY='size-500'>
+        <Flex marginY="size-500">
             { eventsQuery.data.length > 0 ? (
                 <EventList
                     events={ eventsQuery.data }
                     org={ orgQuery.data }
                 />
             ) : (
-                <Text data-test='no-events-placeholder'>
+                <Text data-test="no-events-placeholder">
                     Sorry, there are no planned events at the moment.
                 </Text>
             ) }

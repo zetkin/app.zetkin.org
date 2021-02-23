@@ -1,6 +1,6 @@
-import { GetServerSideProps } from "next";
+import { GetServerSideProps } from 'next';
+import { scaffold } from '../utils/next';
 import { ZetkinUser } from '../interfaces/ZetkinUser';
-import { scaffold } from "../utils/next";
 
 export const getServerSideProps : GetServerSideProps = scaffold(async (context) => {
     const user = await context.z.resource('users', 'me').get();
@@ -8,7 +8,7 @@ export const getServerSideProps : GetServerSideProps = scaffold(async (context) 
     return {
         props: {
             user: user.data.data,
-        }
+        },
     };
 });
 

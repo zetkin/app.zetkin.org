@@ -1,8 +1,9 @@
-import { GetServerSideProps } from 'next';
 import { dehydrate } from 'react-query/hydration';
+import { GetServerSideProps } from 'next';
+import { QueryClient, useQuery } from 'react-query';
+
 import getCampaigns from '../../../fetching/getCampaigns';
 import getOrg from '../../../fetching/getOrg';
-import { QueryClient, useQuery } from 'react-query';
 
 export const getServerSideProps : GetServerSideProps = async (context) => {
     const queryClient = new QueryClient();
@@ -18,7 +19,7 @@ export const getServerSideProps : GetServerSideProps = async (context) => {
         return {
             props: {
                 dehydratedState: dehydrate(queryClient),
-                orgId
+                orgId,
             },
         };
     }
@@ -30,8 +31,8 @@ export const getServerSideProps : GetServerSideProps = async (context) => {
 };
 
 type OrgCampaignsPageProps = {
-    orgId: string,
-}
+    orgId: string;
+};
 
 export default function OrgCampaignsPage(props : OrgCampaignsPageProps) : JSX.Element {
     const { orgId } = props;

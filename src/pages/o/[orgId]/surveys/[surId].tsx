@@ -1,8 +1,9 @@
-import { GetServerSideProps } from 'next';
 import { dehydrate } from 'react-query/hydration';
+import { GetServerSideProps } from 'next';
+import { QueryClient, useQuery } from 'react-query';
+
 import getOrg from '../../../../fetching/getOrg';
 import getSurvey from '../../../../fetching/getSurvey';
-import { QueryClient, useQuery } from 'react-query';
 
 export const getServerSideProps : GetServerSideProps = async (context) => {
     const queryClient = new QueryClient();
@@ -19,7 +20,7 @@ export const getServerSideProps : GetServerSideProps = async (context) => {
             props: {
                 dehydratedState: dehydrate(queryClient),
                 orgId,
-                surId
+                surId,
             },
         };
     }
@@ -31,9 +32,9 @@ export const getServerSideProps : GetServerSideProps = async (context) => {
 };
 
 type OrgSurveyPageProps = {
-    surId: string,
-    orgId: string,
-}
+    surId: string;
+    orgId: string;
+};
 
 export default function OrgSurveyPage(props : OrgSurveyPageProps) : JSX.Element {
     const { surId, orgId } = props;

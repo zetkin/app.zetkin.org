@@ -6,7 +6,7 @@ module.exports = {
   },
   parserOptions: { ecmaVersion: 8 }, // to enable features such as async/await
   ignorePatterns: ['node_modules/*', '.next/*', '.out/*', '!.prettierrc.js'], // We don't want to lint generated files nor node_modules, but we want to lint .prettierrc.js (ignored by default by eslint)
-  extends: ['eslint:recommended'],
+  extends: ['eslint:recommended', 'plugin:react/recommended'],
   overrides: [
     // This configuration will apply only to TypeScript files
     {
@@ -30,17 +30,23 @@ module.exports = {
       ],
       rules: {
         '@typescript-eslint/no-unused-vars': ['error'],
-        '@typescript-eslint/explicit-function-return-type': [
-          'error',
-          {
-            allowExpressions: true,
-            allowConciseArrowFunctionExpressionsStartingWithVoid: true,
+        '@typescript-eslint/member-delimiter-style': ['error', {
+          'multiline': {
+            'delimiter': 'semi',
+            'requireLast': true,
           },
-        ],
+          'singleline': {
+            'delimiter': 'semi',
+            'requireLast': false,
+          },
+        }],
 
         'brace-style': ['error', 'stroustrup'],
+        'comma-dangle': ['error', 'always-multiline'],
+        'quotes': ['error', 'single', { 'allowTemplateLiterals': true, 'avoidEscape': true }],
         'indent': ['error', 4],
         'jsx-a11y/anchor-is-valid': 'off',
+        'jsx-quotes': ['error', 'prefer-double'],
         'keyword-spacing': ['error', {}],
         'no-console': 'error',
         'no-switch-statements/no-switch': 'error',
@@ -79,6 +85,10 @@ module.exports = {
         'react/jsx-indent-props': 'error',
         'react/jsx-no-target-blank': 'error',
         'react/jsx-props-no-multi-spaces': 'error',
+        'react/jsx-sort-props': ['error', {
+          'ignoreCase': true,
+          'reservedFirst': true,
+        }],
         'react/jsx-tag-spacing': ['error', {
             'beforeClosing': 'never',
             'beforeSelfClosing': 'allow',
@@ -96,8 +106,9 @@ module.exports = {
         'react/react-in-jsx-scope': 'off',
         'semi': ['error', 'always'],
         'sort-imports': ['error', {
-            allowSeparatedGroups: true,
-            memberSyntaxSortOrder: ['none', 'all', 'single', 'multiple'],
+            'ignoreCase': true,
+            'allowSeparatedGroups': true,
+            'memberSyntaxSortOrder': ['none', 'all', 'single', 'multiple'],
         }],
         'sort-keys': 'error',
         'sort-vars': 'error',

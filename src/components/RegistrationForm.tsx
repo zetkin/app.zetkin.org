@@ -3,7 +3,7 @@ import {
     Button,
     Flex,
     Form, 
-    TextField
+    TextField,
 } from '@adobe/react-spectrum';
 
 interface RegistrationFormUserData {
@@ -17,7 +17,7 @@ interface RegistrationFormUserData {
 interface RegistrationFormProps {
     onValidSubmit: {
         (user : RegistrationFormUserData) : void;
-    }
+    };
 }
 
 const RegistrationForm = ({ onValidSubmit } : RegistrationFormProps) : JSX.Element => {
@@ -33,7 +33,7 @@ const RegistrationForm = ({ onValidSubmit } : RegistrationFormProps) : JSX.Eleme
             first_name: firstName,
             last_name: lastName,
             password: password,
-            phone: phone
+            phone: phone,
         });
 
         ev.preventDefault();
@@ -41,51 +41,51 @@ const RegistrationForm = ({ onValidSubmit } : RegistrationFormProps) : JSX.Eleme
 
     return (
         <Flex>
-            <Form data-test='reg-form' onSubmit={ onSubmit }>
+            <Form data-test="reg-form" onSubmit={ onSubmit }>
                 <TextField
-                    label='First name'
-                    placeholder='First name'
-                    type='text'
-                    value={ firstName }
+                    data-test="first-name"
+                    label="First name"
                     onChange={ setFirstName }
-                    data-test='first-name'
+                    placeholder="First name"
+                    type="text"
+                    value={ firstName }
                 />
                 <TextField
-                    label='Last name'
-                    placeholder='Last name'
-                    type='text'
-                    value={ lastName }
+                    data-test="last-name"
+                    label="Last name"
                     onChange={ setLastName }
-                    data-test='last-name'
+                    placeholder="Last name"
+                    type="text"
+                    value={ lastName }
                 />
                 <TextField
-                    label='E-mail'
-                    placeholder='E-mail'
-                    type='email' 
-                    value={ email }
+                    data-test="email-address"
+                    label="E-mail"
                     onChange={ setEmail }
-                    data-test='email-address'
+                    placeholder="E-mail"
+                    type="email" 
+                    value={ email }
                 />
-                <TextField 
-                    label='Phone number'
-                    placeholder='Phone number'
-                    type='tel'
-                    value={ phone }
+                <TextField
+                    data-test="phone-number"
+                    label="Phone number"
                     onChange={ setPhone }
-                    data-test='phone-number'
+                    placeholder="Phone number"
+                    type="tel"
+                    value={ phone }
                 />
-                <TextField 
-                    label='Password'
-                    placeholder='Password'
-                    type='password'
-                    value={ password }
+                <TextField
+                    data-test="password"
+                    label="Password"
                     onChange={ setPassword }
-                    data-test='password'
+                    placeholder="Password"
+                    type="password"
+                    value={ password }
                 />
                 <Button
-                    variant="cta"
-                    type='submit'
-                    data-test='submit-button'>
+                    data-test="submit-button"
+                    type="submit"
+                    variant="cta">
                     Submit
                 </Button>
             </Form>
