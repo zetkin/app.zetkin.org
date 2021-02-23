@@ -7,7 +7,7 @@ describe('PublicHeader', () => {
     const dummyUser = {
         first_name: 'Firstname',
         id: 100,
-        last_name: 'Lastname'
+        last_name: 'Lastname',
     };
 
     it('contains a login button when not logged in', () => {

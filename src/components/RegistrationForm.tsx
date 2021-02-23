@@ -3,7 +3,7 @@ import {
     Button,
     Flex,
     Form, 
-    TextField
+    TextField,
 } from '@adobe/react-spectrum';
 
 interface RegistrationFormUserData {
@@ -11,13 +11,13 @@ interface RegistrationFormUserData {
     first_name: string;
     last_name: string;
     password: string;
-    phone: string
+    phone: string;
 }
 
 interface RegistrationFormProps {
     onValidSubmit: {
-        (user : RegistrationFormUserData) : void
-    }
+        (user : RegistrationFormUserData) : void;
+    };
 }
 
 const RegistrationForm = ({ onValidSubmit } : RegistrationFormProps) : JSX.Element => {
@@ -33,7 +33,7 @@ const RegistrationForm = ({ onValidSubmit } : RegistrationFormProps) : JSX.Eleme
             first_name: firstName,
             last_name: lastName,
             password: password,
-            phone: phone
+            phone: phone,
         });
 
         ev.preventDefault();

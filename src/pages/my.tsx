@@ -8,12 +8,12 @@ export const getServerSideProps : GetServerSideProps = scaffold(async (context) 
     return {
         props: {
             user: user.data.data,
-        }
+        },
     };
 });
 
 interface MyPageProps {
-    user: ZetkinUser
+    user: ZetkinUser;
 }
 
 export default function MyPage({ user } : MyPageProps) : JSX.Element {

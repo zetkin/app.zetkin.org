@@ -8,15 +8,15 @@ import { ZetkinZ } from '../types/sdk';
 
 export type ScaffoldedProps = {
     /* eslint-disable @typescript-eslint/no-explicit-any */
-    [key: string]: any
+    [key: string]: any;
 };
 
 export type ScaffoldedContext = GetServerSidePropsContext<ScaffoldedProps> & {
-    z: ZetkinZ
+    z: ZetkinZ;
 };
 
 export type ScaffoldedGetServerSideProps = GetServerSideProps<ScaffoldedProps> & {
-    (context: ScaffoldedContext): Promise<GetServerSidePropsResult<ScaffoldedProps>>
+    (context: ScaffoldedContext): Promise<GetServerSidePropsResult<ScaffoldedProps>>;
 };
 
 export const scaffold = (wrapped : ScaffoldedGetServerSideProps) : GetServerSideProps => {

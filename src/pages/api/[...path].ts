@@ -14,7 +14,7 @@ const HTTP_VERBS_TO_ZETKIN_METHODS = {
 };
 
 type NextApiRequestWithSession = NextApiRequest & {
-    session: AppSession
+    session: AppSession;
 };
 
 export default async function handle(req : NextApiRequestWithSession, res : NextApiResponse) : Promise<void> {

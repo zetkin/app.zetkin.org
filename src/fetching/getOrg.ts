@@ -2,7 +2,7 @@ import apiUrl from '../utils/apiUrl';
 
 interface ZetkinOrganization {
     id: number;
-    title: string
+    title: string;
 }
 
 export default function getOrg(orgId : string) {

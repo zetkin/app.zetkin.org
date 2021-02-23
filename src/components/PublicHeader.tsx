@@ -4,15 +4,15 @@ import {
     Header,
     Image,
     Text,
-    View
+    View,
 } from '@adobe/react-spectrum';
 
 interface PublicHeaderProps {
     user: {
         first_name: string;
         id: number;
-        last_name: string
-    }
+        last_name: string;
+    };
 }
 
 const PublicHeader = ({ user } : PublicHeaderProps) : JSX.Element => {

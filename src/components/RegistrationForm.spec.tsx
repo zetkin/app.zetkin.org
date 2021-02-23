@@ -7,7 +7,7 @@ import RegistrationForm from './RegistrationForm';
 const mountWithTheme = (elem) : any => mount(
     <Provider theme={ defaultTheme }>
         { elem }
-    </Provider>
+    </Provider>,
 );
 
 describe('Registration Form', () => {

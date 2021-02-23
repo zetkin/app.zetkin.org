@@ -12,7 +12,7 @@ import DefaultLayout from '../components/layout/DefaultLayout';
 const queryClient = new QueryClient();
 
 interface WithLayout {
-    getLayout(page, props): JSX.Element
+    getLayout(page, props): JSX.Element;
 }
 
 type PageWithLayout = NextPage & WithLayout;

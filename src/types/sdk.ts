@@ -2,8 +2,8 @@
 
 export interface ZetkinZResult {
     data: {
-        data: unknown
-    }
+        data: unknown;
+    };
 }
 
 export interface ZetkinZResource {
@@ -11,10 +11,10 @@ export interface ZetkinZResource {
     get: () => Promise<ZetkinZResult>;
     patch: () => Promise<ZetkinZResult>;
     post: () => Promise<ZetkinZResult>;
-    put: () => Promise<ZetkinZResult>
+    put: () => Promise<ZetkinZResult>;
 }
 
 export interface ZetkinZ {
     resource: (...args : string[]) => ZetkinZResource;
-    setTokenData: (data : Record<string,unknown>) => void
+    setTokenData: (data : Record<string,unknown>) => void;
 }

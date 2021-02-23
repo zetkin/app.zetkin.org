@@ -8,12 +8,12 @@ interface EventListProps {
         id: number;
         location: { title: string };
         start_time: string;
-        title: string
+        title: string;
     }[];
     org: {
         id: number;
-        title: string
-    }
+        title: string;
+    };
 }
 
 const EventList = ({ events, org } : EventListProps) : JSX.Element => {

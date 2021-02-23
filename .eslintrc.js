@@ -16,33 +16,33 @@ module.exports = {
       env: {
         browser: true,
         node: true,
-        es6: true
+        es6: true,
       },
       extends: [
         'eslint:recommended',
         'plugin:@typescript-eslint/recommended', // TypeScript rules
         'plugin:react/recommended', // React rules
         'plugin:react-hooks/recommended', // React hooks rules
-        'plugin:jsx-a11y/recommended' // Accessibility rules
+        'plugin:jsx-a11y/recommended', // Accessibility rules
       ],
       plugins: [
-          'no-switch-statements'
+          'no-switch-statements',
       ],
       rules: {
         '@typescript-eslint/no-unused-vars': ['error'],
         '@typescript-eslint/member-delimiter-style': ['error', {
           'multiline': {
             'delimiter': 'semi',
-            'requireLast': false
+            'requireLast': true,
           },
           'singleline': {
             'delimiter': 'semi',
-            'requireLast': false
-          }
+            'requireLast': false,
+          },
         }],
-        '@typescript-eslint/semi': 'error',
 
         'brace-style': ['error', 'stroustrup'],
+        'comma-dangle': ['error', 'always-multiline'],
         'quotes': ['error', 'single', { 'allowTemplateLiterals': true, 'avoidEscape': true }],
         'indent': ['error', 4],
         'jsx-a11y/anchor-is-valid': 'off',
@@ -65,21 +65,21 @@ module.exports = {
         'prefer-const': ['error', {}],
         'react/jsx-closing-bracket-location': ['error', {
             'nonEmpty': 'after-props',
-            'selfClosing': 'line-aligned'
+            'selfClosing': 'line-aligned',
         }],
         'react/jsx-closing-tag-location': 'error',
         'react/jsx-curly-brace-presence': 'error',
         'react/jsx-curly-spacing': ['error', {
             'children': true,
             'spacing': {
-                'objectLiterals': 'never'
+                'objectLiterals': 'never',
             },
-            'when': 'always'
+            'when': 'always',
         }],
         'react/jsx-equals-spacing': 'error',
         'react/jsx-handler-names': ['error', {
             'eventHandlerPrefix': 'on',
-            'eventHandlerPropPrefix': 'on'
+            'eventHandlerPropPrefix': 'on',
         }],
         'react/jsx-indent': 'error',
         'react/jsx-indent-props': 'error',
@@ -87,32 +87,32 @@ module.exports = {
         'react/jsx-props-no-multi-spaces': 'error',
         'react/jsx-sort-props': ['error', {
           'ignoreCase': true,
-          'reservedFirst': true
+          'reservedFirst': true,
         }],
         'react/jsx-tag-spacing': ['error', {
             'beforeClosing': 'never',
-            'beforeSelfClosing': 'allow'
+            'beforeSelfClosing': 'allow',
         }],
         'react/jsx-wrap-multilines': 'error',
         'react/no-deprecated': 'error',
         'react/no-typos': 'error',
         'react/no-unknown-property': 'error',
         'react/no-unsafe': ['error', {
-            'checkAliases': true
+            'checkAliases': true,
         }],
         'react/no-unused-prop-types': 'error',
         'react/prefer-stateless-function': 'error',
         'react/prop-types': 'off',
         'react/react-in-jsx-scope': 'off',
-        'semi': 'off',
+        'semi': ['error', 'always'],
         'sort-imports': ['error', {
             'ignoreCase': true,
             'allowSeparatedGroups': true,
-            'memberSyntaxSortOrder': ['none', 'all', 'single', 'multiple']
+            'memberSyntaxSortOrder': ['none', 'all', 'single', 'multiple'],
         }],
         'sort-keys': 'error',
         'sort-vars': 'error',
-        'space-before-blocks': ['error', 'always']
+        'space-before-blocks': ['error', 'always'],
       },
     },
   ],

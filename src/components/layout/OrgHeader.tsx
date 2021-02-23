@@ -6,7 +6,7 @@ import {
     Heading,
     Image,
     Link,
-    View
+    View,
 } from '@adobe/react-spectrum';
 
 import apiUrl from '../../utils/apiUrl';
@@ -14,8 +14,8 @@ import apiUrl from '../../utils/apiUrl';
 interface OrgHeaderProps {
     org: {
         id: number;
-        title: string
-    }
+        title: string;
+    };
 }
 
 const OrgHeader = ({ org } : OrgHeaderProps) : JSX.Element => {

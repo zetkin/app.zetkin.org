@@ -2,7 +2,7 @@ import apiUrl from '../utils/apiUrl';
 
 export interface ZetkinCampaign {
     info_text: string;
-    title: string
+    title: string;
 }
 
 export default function getCampaign(orgId : string, campId : string) {

@@ -22,7 +22,7 @@ export const getServerSideProps : GetServerSideProps = async (context) => {
         return {
             props: {
                 dehydratedState: dehydrate(queryClient),
-                orgId
+                orgId,
             },
         };
     }
@@ -34,7 +34,7 @@ export const getServerSideProps : GetServerSideProps = async (context) => {
 };
 
 type OrgEventsPageProps = {
-    orgId: string
+    orgId: string;
 };
 
 export default function OrgEventsPage(props : OrgEventsPageProps) : JSX.Element {
