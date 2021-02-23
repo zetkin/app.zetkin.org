@@ -23,6 +23,21 @@ $ yarn tdd           # Use this for test-driven development with Cypress
 $ yarn devserver     # Use this if you don't want to do TDD
 ```
 
+For API authentication using OAuth to work you must use the application at an
+approved domain, which you can add to your operating systems hosts file.
+
+* On Linux or Mac OSX edit `/etc/hosts`
+* On Windows edit `c:\windows\system32\drivers\etc\hosts` ([Read more](https://www.howtogeek.com/howto/27350/beginner-geek-how-to-edit-your-hosts-file/))
+
+Make sure that the following line exists somewhere in the file
+
+```
+127.0.0.1   www.dev.zetkin.org
+```
+
+Once it's configured, you can access the app at http://www.dev.zetkin.org.
+
+## Contributing
 The CI server will run eslint and typescript to verify type safety and code
 style. You can run the linter yourself like this:
 
