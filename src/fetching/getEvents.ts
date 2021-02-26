@@ -6,7 +6,7 @@ export default function getEvents(orgId : string) {
         const cRes = await fetch(apiUrl(`/orgs/${orgId}/campaigns`));
         const cData = await cRes.json();
 
-        let allEventsData = [];
+        let allEventsData : ZetkinEvent[] = [];
 
         for (const obj of cData.data) {
             const eventsRes = await fetch(apiUrl(`/orgs/${orgId}/campaigns/${obj.id}/actions`));

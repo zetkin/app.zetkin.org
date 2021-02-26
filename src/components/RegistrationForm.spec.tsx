@@ -4,7 +4,7 @@ import { defaultTheme, Provider } from '@adobe/react-spectrum';
 import RegistrationForm from './RegistrationForm';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const mountWithTheme = (elem) : any => mount(
+const mountWithTheme = (elem : any) : any => mount(
     <Provider theme={ defaultTheme }>
         { elem }
     </Provider>,

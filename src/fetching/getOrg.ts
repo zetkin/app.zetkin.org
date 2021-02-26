@@ -1,9 +1,6 @@
 import apiUrl from '../utils/apiUrl';
 
-interface ZetkinOrganization {
-    id: number;
-    title: string;
-}
+import { ZetkinOrganization } from '../interfaces/ZetkinOrganization';
 
 export default function getOrg(orgId : string) {
     return async () : Promise<ZetkinOrganization> => {

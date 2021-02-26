@@ -1,3 +1,5 @@
+//TODO: Enable eslint rule and fix errors
+/* eslint-disable  @typescript-eslint/no-non-null-assertion */
 import { dehydrate } from 'react-query/hydration';
 import EventList from '../../../../components/EventList';
 import { GetServerSideProps } from 'next';
@@ -11,7 +13,7 @@ import getOrg from '../../../../fetching/getOrg';
 
 export const getServerSideProps : GetServerSideProps = async (context) => {
     const queryClient = new QueryClient();
-    const { campId, orgId } = context.params;
+    const { campId, orgId } = context.params!;
 
     await queryClient.prefetchQuery(['campaign', campId], getCampaign(orgId as string, campId as string));
     await queryClient.prefetchQuery(['org', orgId], getOrg(orgId as string));
@@ -21,7 +23,7 @@ export const getServerSideProps : GetServerSideProps = async (context) => {
     const orgState = queryClient.getQueryState(['org', orgId]);
     const campaignEvents = queryClient.getQueryState(['campaignEvents', campId]);
 
-    if (campaignEvents.status === 'success' && campaignState.status === 'success' && orgState.status === 'success') {
+    if (campaignEvents!.status === 'success' && campaignState!.status === 'success' && orgState!.status === 'success') {
         return {
             props: {
                 campId,
@@ -51,14 +53,14 @@ export default function OrgCampaignPage(props : OrgCampaignPageProps) : JSX.Elem
     return (
         <Flex direction="column" marginY="size-500">
             <Heading level={ 1 }>
-                { campaignQuery.data.title }
+                { campaignQuery.data!.title }
             </Heading>
             <Text data-test="campaign-information">
-                { campaignQuery.data.info_text }
+                { campaignQuery.data!.info_text }
             </Text>
             <EventList
-                events={ campaignEventsQuery.data }
-                org={ orgQuery.data }
+                events={ campaignEventsQuery.data! }
+                org={ orgQuery.data! }
             />
         </Flex>
     );

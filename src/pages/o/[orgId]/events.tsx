@@ -1,3 +1,5 @@
+//TODO: Enable eslint rule and fix errors
+/* eslint-disable  @typescript-eslint/no-non-null-assertion */
 import { dehydrate } from 'react-query/hydration';
 import { GetServerSideProps } from 'next';
 import { Flex, Text } from '@adobe/react-spectrum';
@@ -6,11 +8,12 @@ import { QueryClient, useQuery } from 'react-query';
 import EventList from '../../../components/EventList';
 import getEvents from '../../../fetching/getEvents';
 import getOrg from '../../../fetching/getOrg';
+import { LayoutParams } from '../../../interfaces/LayoutParams';
 import OrgLayout from '../../../components/layout/OrgLayout';
 
 export const getServerSideProps : GetServerSideProps = async (context) => {
     const queryClient = new QueryClient();
-    const { orgId } = context.params;
+    const { orgId } = context.params!;
 
     await queryClient.prefetchQuery('events', getEvents(orgId as string));
     await queryClient.prefetchQuery(['org', orgId], getOrg(orgId as string));
@@ -18,7 +21,7 @@ export const getServerSideProps : GetServerSideProps = async (context) => {
     const eventsState = queryClient.getQueryState('events');
     const orgState = queryClient.getQueryState(['org', orgId]);
 
-    if (eventsState.status === 'success' && orgState.status === 'success') {
+    if (eventsState!.status === 'success' && orgState!.status === 'success') {
         return {
             props: {
                 dehydratedState: dehydrate(queryClient),
@@ -44,10 +47,10 @@ export default function OrgEventsPage(props : OrgEventsPageProps) : JSX.Element 
 
     return (
         <Flex marginY="size-500">
-            { eventsQuery.data.length > 0 ? (
+            { eventsQuery.data!.length > 0 ? (
                 <EventList
-                    events={ eventsQuery.data }
-                    org={ orgQuery.data }
+                    events={ eventsQuery.data! }
+                    org={ orgQuery.data! }
                 />
             ) : (
                 <Text data-test="no-events-placeholder">
@@ -58,9 +61,10 @@ export default function OrgEventsPage(props : OrgEventsPageProps) : JSX.Element 
     );
 }
 
-OrgEventsPage.getLayout = function getLayout(page, props) {
+OrgEventsPage.getLayout = function getLayout({ page, props } : LayoutParams) {
+
     return (
-        <OrgLayout orgId={ props.orgId }>
+        <OrgLayout orgId={ props.orgId as string }>
             { page }
         </OrgLayout>
     );

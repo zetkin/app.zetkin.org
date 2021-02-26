@@ -9,7 +9,7 @@ export default function getEvent(orgId : string, eventId : string) {
         for (const obj of cData.data) {
             const eventsRes = await fetch(apiUrl(`/orgs/${orgId}/campaigns/${obj.id}/actions`));
             const campaignEvents = await eventsRes.json();
-            const eventData = campaignEvents.data.find(event => event.id == eventId);
+            const eventData = campaignEvents.data.find((event : ZetkinEvent) => event.id.toString() === eventId);
             if (eventData) {
                 return eventData;
             }

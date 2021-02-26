@@ -12,7 +12,8 @@ import DefaultLayout from '../components/layout/DefaultLayout';
 const queryClient = new QueryClient();
 
 interface WithLayout {
-    getLayout(page, props): JSX.Element;
+    //TODO: Get LayoutParams interface to work instead of argument types.
+    getLayout(page : JSX.Element, props : Record<string, unknown>): JSX.Element;
 }
 
 type PageWithLayout = NextPage & WithLayout;

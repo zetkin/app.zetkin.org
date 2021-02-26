@@ -9,5 +9,5 @@ export interface ZetkinEvent {
     info_text: string;
     location: { title: string };
     start_time: string;
-    title: string;
+    title?: string;
 }

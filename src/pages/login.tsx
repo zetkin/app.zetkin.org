@@ -1,7 +1,11 @@
+//TODO: Enable eslint rules and fix errors
+/* eslint-disable  @typescript-eslint/no-non-null-assertion, @typescript-eslint/no-var-requires */
 import { GetServerSideProps } from 'next';
-import Z from 'zetkin';
 
 import stringToBool from '../utils/stringToBool';
+
+//TODO: Create module definition and revert to import.
+const Z = require('zetkin');
 
 export const getServerSideProps : GetServerSideProps = async () => {
     const z = Z.construct({
@@ -22,6 +26,6 @@ export const getServerSideProps : GetServerSideProps = async () => {
     };
 };
 
-export default function NotUsed() : JSX.Element {
+export default function NotUsed() : null {
     return null;
 }

@@ -1,18 +1,20 @@
 import { mount } from '@cypress/react';
 
 import EventList from './EventList';
+import { ZetkinEvent } from '../interfaces/ZetkinEvent';
+import { ZetkinOrganization } from '../interfaces/ZetkinOrganization';
 
 describe('EventList', () => {
-    let dummyOrg;
-    let dummyEvents;
+    let dummyOrg : {data: ZetkinOrganization};
+    let dummyEvents : {data: ZetkinEvent[]};
 
     beforeEach(()=> {
         cy.fixture('dummyOrg.json')
-            .then((data) => {
+            .then((data : {data: {id: number; title: string}}) => {
                 dummyOrg = data;
             });
         cy.fixture('dummyEvents.json')
-            .then((data) => {
+            .then((data : {data: ZetkinEvent[]}) => {
                 dummyEvents = data;
             });
     });
@@ -33,7 +35,7 @@ describe('EventList', () => {
 
     it('contains an activity title instead of missing event title', () => {
         dummyEvents.data[0].title = undefined;
-        mount(<EventList events={ dummyEvents.data } org={ dummyOrg }/>);
+        mount(<EventList events={ dummyEvents.data } org={ dummyOrg.data }/>);
 
         cy.get('[data-test="event"]')
             .should('contain', dummyEvents.data[0].activity.title)
@@ -41,7 +43,7 @@ describe('EventList', () => {
     });
 
     it('contains a sign-up button for each event', () => {
-        mount(<EventList events={ dummyEvents.data } org={ dummyOrg }/>);
+        mount(<EventList events={ dummyEvents.data } org={ dummyOrg.data }/>);
 
         cy.get('[data-test="sign-up-button"]').should('be.visible');
     });

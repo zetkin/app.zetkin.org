@@ -1,3 +1,5 @@
+//TODO: Enable eslint rule and fix errors
+/* eslint-disable  @typescript-eslint/no-non-null-assertion */
 import { dehydrate } from 'react-query/hydration';
 import { GetServerSideProps } from 'next';
 import Link from 'next/link';
@@ -7,13 +9,13 @@ import getOrg from '../../fetching/getOrg';
 
 export const getServerSideProps : GetServerSideProps = async (context) => {
     const queryClient = new QueryClient();
-    const { orgId } = context.params;
+    const { orgId } = context.params!;
 
     await queryClient.prefetchQuery(['org', orgId], getOrg(orgId as string));
 
     const orgState = queryClient.getQueryState(['org', orgId]);
 
-    if (orgState.status === 'success') {
+    if (orgState?.status === 'success') {
         return {
             props: {
                 dehydratedState: dehydrate(queryClient),
@@ -38,7 +40,7 @@ export default function OrgPage(props : OrgPageProps) : JSX.Element {
 
     return ( 
         <>
-            <h1>{ orgQuery.data.title }</h1>
+            <h1>{ orgQuery.data!.title }</h1>
             <ul>
                 <li><Link href={ `/o/${orgId}/campaigns` }>Campaigns</Link></li>
                 <li><Link href={ `/o/${orgId}/events` }>Events</Link></li>

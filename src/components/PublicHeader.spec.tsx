@@ -8,6 +8,7 @@ describe('PublicHeader', () => {
         first_name: 'Firstname',
         id: 100,
         last_name: 'Lastname',
+        username: 'Username',
     };
 
     it('contains a login button when not logged in', () => {

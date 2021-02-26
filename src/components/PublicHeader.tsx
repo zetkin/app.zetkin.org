@@ -7,12 +7,10 @@ import {
     View,
 } from '@adobe/react-spectrum';
 
+import { ZetkinUser } from '../interfaces/ZetkinUser';
+
 interface PublicHeaderProps {
-    user: {
-        first_name: string;
-        id: number;
-        last_name: string;
-    };
+    user: ZetkinUser | null;
 }
 
 const PublicHeader = ({ user } : PublicHeaderProps) : JSX.Element => {
@@ -30,7 +28,6 @@ const PublicHeader = ({ user } : PublicHeaderProps) : JSX.Element => {
                     objectFit="contain"
                     src="/logo-zetkin.png"
                 />
-                { !user ? <Button data-test="login-button" variant="cta">Login</Button> : null }
                 { user ?
                     <View>
                         <Text>{ user.first_name } { user.last_name }</Text>
@@ -40,7 +37,8 @@ const PublicHeader = ({ user } : PublicHeaderProps) : JSX.Element => {
                             src={ `/api/users/${user.id}/avatar` }
                         />
                     </View>
-                    : null }
+                    : <Button data-test="login-button" variant="cta">Login</Button>
+                }
             </Flex>
         </Header>
     );

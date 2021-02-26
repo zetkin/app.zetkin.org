@@ -1,19 +1,11 @@
 import { Button, Flex, View } from '@adobe/react-spectrum';
 
+import { ZetkinEvent } from '../interfaces/ZetkinEvent';
+import { ZetkinOrganization } from '../interfaces/ZetkinOrganization';
+
 interface EventListProps {
-    events: {
-        activity: { title: string };
-        campaign: { title: string };
-        end_time: string;
-        id: number;
-        location: { title: string };
-        start_time: string;
-        title: string;
-    }[];
-    org: {
-        id: number;
-        title: string;
-    };
+    events: ZetkinEvent[];
+    org: ZetkinOrganization;
 }
 
 const EventList = ({ events, org } : EventListProps) : JSX.Element => {

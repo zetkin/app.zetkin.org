@@ -1,16 +1,25 @@
+//TODO: Enable eslint rules and fix errors
+/* eslint-disable  @typescript-eslint/no-non-null-assertion, @typescript-eslint/no-var-requires */
 import { applySession } from 'next-session';
-import Z from 'zetkin';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { AppSession } from '../../types';
 import stringToBool from '../../utils/stringToBool';
+import { ZetkinZResource, ZetkinZResult } from '../../types/sdk';
 
-const HTTP_VERBS_TO_ZETKIN_METHODS = {
-    'DELETE': (resource) => resource.del(),
-    'GET': (resource) => resource.get(),
-    'PATCH': (resource, req) => resource.path(req.body),
-    'POST': (resource, req) => resource.post(req.body),
-    'PUT': (resource, req) => resource.put(req.body),
+//TODO: Create module definition and revert to import.
+const Z = require('zetkin');
+
+interface HttpVerbMethod {
+    (resource : ZetkinZResource, req: NextApiRequestWithSession): Promise<ZetkinZResult>;
+}
+
+const HTTP_VERBS_TO_ZETKIN_METHODS : Record<string,HttpVerbMethod> = {
+    'DELETE': (resource : ZetkinZResource) => resource.del(),
+    'GET': (resource : ZetkinZResource) => resource.get(),
+    'PATCH': (resource : ZetkinZResource, req : NextApiRequestWithSession) => resource.patch(req.body),
+    'POST': (resource : ZetkinZResource, req : NextApiRequestWithSession) => resource.post(req.body),
+    'PUT': (resource : ZetkinZResource, req : NextApiRequestWithSession) => resource.put(req.body),
 };
 
 type NextApiRequestWithSession = NextApiRequest & {
@@ -28,9 +37,11 @@ export default async function handle(req : NextApiRequestWithSession, res : Next
         try {
             const url = `${protocol}://api.${host}/v1/${pathStr}`;
             const result = await fetch(url, { redirect: 'manual' });
-            res.writeHead(result.status, {
-                location: result.headers.get('location'),
-            });
+            const location = result.headers.get('location');
+            const headers = location ? {
+                location: location,
+            } : undefined;
+            res.writeHead(result.status, headers);
 
             return res.end();
         }
@@ -59,7 +70,7 @@ export default async function handle(req : NextApiRequestWithSession, res : Next
     }
 
     try {
-        const method = HTTP_VERBS_TO_ZETKIN_METHODS[req.method];
+        const method = HTTP_VERBS_TO_ZETKIN_METHODS[req.method!];
         const result = await method(resource, req);
         res.status(result.httpStatus).json(result.data);
     }
