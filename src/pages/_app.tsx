@@ -7,7 +7,7 @@ import { defaultTheme, Provider } from '@adobe/react-spectrum';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
 import DefaultLayout from '../components/layout/DefaultLayout';
-import { PageWithLayout } from '../types/index';
+import { PageWithLayout } from '../types';
 
 const queryClient = new QueryClient();
 

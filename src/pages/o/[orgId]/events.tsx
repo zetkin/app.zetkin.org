@@ -7,7 +7,7 @@ import EventList from '../../../components/EventList';
 import getEvents from '../../../fetching/getEvents';
 import getOrg from '../../../fetching/getOrg';
 import OrgLayout from '../../../components/layout/OrgLayout';
-import { PageWithLayout } from '../../../types/index';
+import { PageWithLayout } from '../../../types';
 
 export const getServerSideProps : GetServerSideProps = async (context) => {
     const queryClient = new QueryClient();

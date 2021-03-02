@@ -56,9 +56,7 @@ describe('EventList', () => {
     });
 
     it('shows a placeholder when the list is undefined', () => {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        dummyEvents = undefined!;
-        mount(<EventList events={ dummyEvents } org={ dummyOrg }/>);
+        mount(<EventList events={ undefined } org={ dummyOrg }/>);
 
         cy.get('[data-test="no-events-placeholder"]').should('be.visible');
     });
