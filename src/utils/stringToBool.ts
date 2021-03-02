@@ -1,4 +1,8 @@
-export default function stringToBool(str : string) : boolean {
+export default function stringToBool(str : string | undefined) : boolean {
+    if (!str) {
+        return false;
+    }
+
     const n = parseInt(str);
 
     if (!isNaN(n)) {

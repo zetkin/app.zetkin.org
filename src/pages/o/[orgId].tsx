@@ -7,13 +7,14 @@ import getOrg from '../../fetching/getOrg';
 
 export const getServerSideProps : GetServerSideProps = async (context) => {
     const queryClient = new QueryClient();
-    const { orgId } = context.params;
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const { orgId } = context.params!;
 
     await queryClient.prefetchQuery(['org', orgId], getOrg(orgId as string));
 
     const orgState = queryClient.getQueryState(['org', orgId]);
 
-    if (orgState.status === 'success') {
+    if (orgState?.status === 'success') {
         return {
             props: {
                 dehydratedState: dehydrate(queryClient),
@@ -38,7 +39,7 @@ export default function OrgPage(props : OrgPageProps) : JSX.Element {
 
     return ( 
         <>
-            <h1>{ orgQuery.data.title }</h1>
+            <h1>{ orgQuery.data?.title }</h1>
             <ul>
                 <li><Link href={ `/o/${orgId}/campaigns` }>Campaigns</Link></li>
                 <li><Link href={ `/o/${orgId}/events` }>Events</Link></li>

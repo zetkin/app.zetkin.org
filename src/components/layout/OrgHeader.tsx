@@ -10,12 +10,10 @@ import {
 } from '@adobe/react-spectrum';
 
 import apiUrl from '../../utils/apiUrl';
+import { ZetkinOrganization } from '../../interfaces/ZetkinOrganization';
 
 interface OrgHeaderProps {
-    org: {
-        id: number;
-        title: string;
-    };
+    org: ZetkinOrganization;
 }
 
 const OrgHeader = ({ org } : OrgHeaderProps) : JSX.Element => {

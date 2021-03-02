@@ -27,7 +27,7 @@ const RegistrationForm = ({ onValidSubmit } : RegistrationFormProps) : JSX.Eleme
     const [phone, setPhone] = React.useState('');
     const [password, setPassword] = React.useState('');
 
-    const onSubmit = (ev) : void => {
+    const onSubmit = (ev: React.ChangeEvent<HTMLInputElement>) : void => {
         onValidSubmit({
             email: email,
             first_name: firstName,

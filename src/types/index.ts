@@ -1,3 +1,4 @@
+import { NextPage } from 'next/types';
 import { Session } from 'next-session/dist/types';
 
 export type AppSession = Session & {
@@ -7,4 +8,12 @@ export type AppSession = Session & {
         refresh_token: string;
         token_type: string;
     };
+};
+
+interface GetLayout {
+    (page: JSX.Element, props: Record<string, unknown>): JSX.Element;
+}
+
+export type PageWithLayout = NextPage & {
+    getLayout: GetLayout;
 };

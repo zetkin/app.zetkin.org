@@ -8,7 +8,8 @@ import getOrg from '../../../../../fetching/getOrg';
 
 export const getServerSideProps : GetServerSideProps = async (context) => {
     const queryClient = new QueryClient();
-    const { orgId, campId } = context.params;
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const { orgId, campId } = context.params!;
 
     await queryClient.prefetchQuery(['campaignEvents', campId], getCampaignEvents(orgId as string, campId as string));
     await queryClient.prefetchQuery(['campaign', campId], getCampaign(orgId as string, campId as string));
@@ -18,7 +19,7 @@ export const getServerSideProps : GetServerSideProps = async (context) => {
     const campaignState = queryClient.getQueryState(['campaign', campId]);
     const orgState = queryClient.getQueryState(['org', orgId]);
 
-    if (campaignEvents.status === 'success' && campaignState.status === 'success' && orgState.status === 'success') {
+    if (campaignEvents?.status === 'success' && campaignState?.status === 'success' && orgState?.status === 'success') {
         return {
             props: {
                 campId,
@@ -47,10 +48,10 @@ export default function OrgCampaignEventsPage(props : OrgCampaignEventsPageProps
 
     return (
         <>
-            <h1>{ orgQuery.data.title }</h1>
-            <h1>{ campaignQuery.data.title }</h1>
+            <h1>{ orgQuery.data?.title }</h1>
+            <h1>{ campaignQuery.data?.title }</h1>
             <ul>
-                { campaignEventsQuery.data.map((e) => (
+                { campaignEventsQuery.data?.map((e) => (
                     <li key={ e.id }>{ e.activity.title }</li>
                 )) }
             </ul>

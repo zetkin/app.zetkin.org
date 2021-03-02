@@ -9,7 +9,8 @@ import getOrg from '../../../../fetching/getOrg';
 
 export const getServerSideProps : GetServerSideProps = async (context) => {
     const queryClient = new QueryClient();
-    const { orgId, eventId } = context.params;
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const { orgId, eventId } = context.params!;
 
     await queryClient.prefetchQuery(['event', eventId], getEvent(orgId as string, eventId as string));
     await queryClient.prefetchQuery(['org', orgId], getOrg(orgId as string));
@@ -17,7 +18,7 @@ export const getServerSideProps : GetServerSideProps = async (context) => {
     const eventState = queryClient.getQueryState(['event', eventId]);
     const orgState = queryClient.getQueryState(['org', orgId]);
 
-    if (eventState.status === 'success' && orgState.status === 'success') {
+    if (eventState?.status === 'success' && orgState?.status === 'success') {
         return {
             props: {
                 dehydratedState: dehydrate(queryClient),
@@ -42,11 +43,12 @@ export default function OrgEventPage(props : OrgEventPageProps) : JSX.Element {
     const { orgId, eventId } = props;
     const eventQuery = useQuery(['event', eventId], getEvent(orgId, eventId));
     const orgQuery = useQuery(['org', orgId], getOrg(orgId));
+    const eventQueryData = eventQuery.data;
 
     return (
         <Flex direction="column">
             <Heading data-test="event-title" level={ 1 }>
-                { eventQuery.data.title ? eventQuery.data.title : eventQuery.data.activity.title }
+                { eventQueryData?.title ? eventQueryData.title : eventQueryData?.activity.title }
             </Heading>
             <Flex>
                 <Text marginEnd="size-50">
@@ -54,7 +56,7 @@ export default function OrgEventPage(props : OrgEventPageProps) : JSX.Element {
                 </Text>
                 <Link>
                     <NextLink href={ `/o/${orgId}` }>
-                        <a>{ orgQuery.data.title }</a>
+                        <a>{ orgQuery.data?.title }</a>
                     </NextLink>
                 </Link>
             </Flex>
@@ -63,8 +65,8 @@ export default function OrgEventPage(props : OrgEventPageProps) : JSX.Element {
                     Campaign:
                 </Text>
                 <Link>
-                    <NextLink href={ `/o/${orgId}/campaigns/${eventQuery.data.campaign.id}` }>
-                        <a>{ eventQuery.data.campaign.title }</a>
+                    <NextLink href={ `/o/${orgId}/campaigns/${eventQueryData?.campaign.id}` }>
+                        <a>{ eventQueryData?.campaign.title }</a>
                     </NextLink>
                 </Link>
             </Flex>
@@ -73,7 +75,7 @@ export default function OrgEventPage(props : OrgEventPageProps) : JSX.Element {
                     Start:
                 </Text>
                 <Text data-test="start-time">
-                    { eventQuery.data.start_time }
+                    { eventQueryData?.start_time }
                 </Text>
             </Flex>
             <Flex>
@@ -81,7 +83,7 @@ export default function OrgEventPage(props : OrgEventPageProps) : JSX.Element {
                     End:
                 </Text>
                 <Text data-test="end-time">
-                    { eventQuery.data.end_time }
+                    { eventQueryData?.end_time }
                 </Text>
             </Flex>
             <Flex>
@@ -89,7 +91,7 @@ export default function OrgEventPage(props : OrgEventPageProps) : JSX.Element {
                     Information:
                 </Text>
                 <Text data-test="info-text">
-                    { eventQuery.data.info_text }
+                    { eventQueryData?.info_text }
                 </Text>
             </Flex>
             <Flex>
@@ -97,7 +99,7 @@ export default function OrgEventPage(props : OrgEventPageProps) : JSX.Element {
                     Location:
                 </Text>
                 <Text data-test="location">
-                    { eventQuery.data.location.title }
+                    { eventQueryData?.location.title }
                 </Text>
             </Flex>
             <Button data-test="sign-up-button" marginY="size-200" variant="cta">
