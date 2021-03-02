@@ -1,22 +1,21 @@
-//TODO: Enable eslint rule and fix errors
-/* eslint-disable  @typescript-eslint/no-non-null-assertion */
 import { dehydrate } from 'react-query/hydration';
 import { GetServerSideProps } from 'next';
 import { QueryClient } from 'react-query';
 
 import getOrg from '../../../fetching/getOrg';
-import { LayoutParams } from '../../../interfaces/LayoutParams';
 import OrgLayout from '../../../components/layout/OrgLayout';
+import { PageWithLayout } from '../../../types/index';
 
 export const getServerSideProps : GetServerSideProps = async (context) => {
     const queryClient = new QueryClient();
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const { orgId } = context.params!;
 
     await queryClient.prefetchQuery(['org', orgId], getOrg(orgId as string));
 
     const orgState = queryClient.getQueryState(['org', orgId]);
 
-    if (orgState!.status === 'success') {
+    if (orgState?.status === 'success') {
         return {
             props: {
                 dehydratedState: dehydrate(queryClient),
@@ -31,18 +30,20 @@ export const getServerSideProps : GetServerSideProps = async (context) => {
     }
 };
 
-export default function OrgContactPage() : JSX.Element {
+const OrgContactPage : PageWithLayout = () => {
     return (
         <>
             <h1>Test</h1>
         </>
     );
-}
+};
 
-OrgContactPage.getLayout = function getLayout({ page, props } : LayoutParams) {
+OrgContactPage.getLayout = function getLayout(page, props) {
     return (
         <OrgLayout orgId={ props.orgId as string }>
             { page }
         </OrgLayout>
     );
 };
+
+export default OrgContactPage;

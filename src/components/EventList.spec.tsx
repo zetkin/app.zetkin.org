@@ -5,22 +5,22 @@ import { ZetkinEvent } from '../interfaces/ZetkinEvent';
 import { ZetkinOrganization } from '../interfaces/ZetkinOrganization';
 
 describe('EventList', () => {
-    let dummyOrg : {data: ZetkinOrganization};
-    let dummyEvents : {data: ZetkinEvent[]};
+    let dummyOrg : ZetkinOrganization;
+    let dummyEvents : ZetkinEvent[];
 
     beforeEach(()=> {
         cy.fixture('dummyOrg.json')
-            .then((data : {data: {id: number; title: string}}) => {
+            .then((data : ZetkinOrganization) => {
                 dummyOrg = data;
             });
         cy.fixture('dummyEvents.json')
             .then((data : {data: ZetkinEvent[]}) => {
-                dummyEvents = data;
+                dummyEvents = data.data;
             });
     });
 
     it('contains data for each event', () => {
-        mount(<EventList events={ dummyEvents.data } org={ dummyOrg.data }/>);
+        mount(<EventList events={ dummyEvents } org={ dummyOrg }/>);
 
         cy.get('[data-test="event"]').each((item) => {
             cy.wrap(item)
@@ -34,16 +34,16 @@ describe('EventList', () => {
     });
 
     it('contains an activity title instead of missing event title', () => {
-        dummyEvents.data[0].title = undefined;
-        mount(<EventList events={ dummyEvents.data } org={ dummyOrg.data }/>);
+        dummyEvents[0].title = undefined;
+        mount(<EventList events={ dummyEvents } org={ dummyOrg }/>);
 
         cy.get('[data-test="event"]')
-            .should('contain', dummyEvents.data[0].activity.title)
+            .should('contain', dummyEvents[0].activity.title)
             .should('not.contain', 'undefined');
     });
 
     it('contains a sign-up button for each event', () => {
-        mount(<EventList events={ dummyEvents.data } org={ dummyOrg.data }/>);
+        mount(<EventList events={ dummyEvents } org={ dummyOrg }/>);
 
         cy.get('[data-test="sign-up-button"]').should('be.visible');
     });

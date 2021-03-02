@@ -1,10 +1,9 @@
-//TODO: Enable eslint rules and fix errors
-/* eslint-disable  @typescript-eslint/no-non-null-assertion, @typescript-eslint/no-var-requires */
 import { GetServerSideProps } from 'next';
 
 import stringToBool from '../utils/stringToBool';
 
 //TODO: Create module definition and revert to import.
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const Z = require('zetkin');
 
 export const getServerSideProps : GetServerSideProps = async () => {

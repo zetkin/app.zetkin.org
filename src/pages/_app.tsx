@@ -1,22 +1,15 @@
 import '../styles.css';
 import { AppProps } from 'next/app';
 import { Hydrate } from 'react-query/hydration';
-import { NextPage } from 'next/types';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { SSRProvider } from '@react-aria/ssr';
 import { defaultTheme, Provider } from '@adobe/react-spectrum';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
 import DefaultLayout from '../components/layout/DefaultLayout';
+import { PageWithLayout } from '../types/index';
 
 const queryClient = new QueryClient();
-
-interface WithLayout {
-    //TODO: Get LayoutParams interface to work instead of argument types.
-    getLayout(page : JSX.Element, props : Record<string, unknown>): JSX.Element;
-}
-
-type PageWithLayout = NextPage & WithLayout;
 
 function MyApp({ Component, pageProps } : AppProps) : JSX.Element {
     const { dehydratedState, ...restProps } = pageProps;

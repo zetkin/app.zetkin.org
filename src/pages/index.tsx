@@ -1,5 +1,3 @@
-//TODO: Enable eslint rules and fix errors
-/* eslint-disable  @typescript-eslint/no-non-null-assertion, @typescript-eslint/no-var-requires */
 import { applySession } from 'next-session';
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
@@ -9,6 +7,7 @@ import { AppSession } from '../types';
 import { Content, Heading } from '@adobe/react-spectrum';
 
 //TODO: Create module definition and revert to import.
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const Z = require('zetkin');
 
 export const getServerSideProps : GetServerSideProps = async (context) => {

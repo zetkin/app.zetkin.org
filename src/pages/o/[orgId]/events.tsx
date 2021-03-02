@@ -1,18 +1,17 @@
-//TODO: Enable eslint rule and fix errors
-/* eslint-disable  @typescript-eslint/no-non-null-assertion */
 import { dehydrate } from 'react-query/hydration';
+import { Flex } from '@adobe/react-spectrum';
 import { GetServerSideProps } from 'next';
-import { Flex, Text } from '@adobe/react-spectrum';
 import { QueryClient, useQuery } from 'react-query';
 
 import EventList from '../../../components/EventList';
 import getEvents from '../../../fetching/getEvents';
 import getOrg from '../../../fetching/getOrg';
-import { LayoutParams } from '../../../interfaces/LayoutParams';
 import OrgLayout from '../../../components/layout/OrgLayout';
+import { PageWithLayout } from '../../../types/index';
 
 export const getServerSideProps : GetServerSideProps = async (context) => {
     const queryClient = new QueryClient();
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const { orgId } = context.params!;
 
     await queryClient.prefetchQuery('events', getEvents(orgId as string));
@@ -21,7 +20,7 @@ export const getServerSideProps : GetServerSideProps = async (context) => {
     const eventsState = queryClient.getQueryState('events');
     const orgState = queryClient.getQueryState(['org', orgId]);
 
-    if (eventsState!.status === 'success' && orgState!.status === 'success') {
+    if (eventsState?.status === 'success' && orgState?.status === 'success') {
         return {
             props: {
                 dehydratedState: dehydrate(queryClient),
@@ -36,36 +35,27 @@ export const getServerSideProps : GetServerSideProps = async (context) => {
     }
 };
 
-type OrgEventsPageProps = {
-    orgId: string;
-};
-
-export default function OrgEventsPage(props : OrgEventsPageProps) : JSX.Element {
+const OrgEventsPage : PageWithLayout = (page, props) => {
     const { orgId } = props;
     const eventsQuery = useQuery('events', getEvents(orgId));
     const orgQuery = useQuery(['org', orgId], getOrg(orgId));
 
     return (
         <Flex marginY="size-500">
-            { eventsQuery.data!.length > 0 ? (
-                <EventList
-                    events={ eventsQuery.data! }
-                    org={ orgQuery.data! }
-                />
-            ) : (
-                <Text data-test="no-events-placeholder">
-                    Sorry, there are no planned events at the moment.
-                </Text>
-            ) }
+            <EventList
+                events={ eventsQuery.data }
+                org={ orgQuery.data }
+            />
         </Flex>
     );
-}
+};
 
-OrgEventsPage.getLayout = function getLayout({ page, props } : LayoutParams) {
-
+OrgEventsPage.getLayout = function getLayout(page, props) {
     return (
         <OrgLayout orgId={ props.orgId as string }>
             { page }
         </OrgLayout>
     );
 };
+
+export default OrgEventsPage;

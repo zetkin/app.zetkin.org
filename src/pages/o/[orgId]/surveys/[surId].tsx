@@ -1,5 +1,3 @@
-//TODO: Enable eslint rule and fix errors
-/* eslint-disable  @typescript-eslint/no-non-null-assertion */
 import { dehydrate } from 'react-query/hydration';
 import { GetServerSideProps } from 'next';
 import { QueryClient, useQuery } from 'react-query';
@@ -9,6 +7,7 @@ import getSurvey from '../../../../fetching/getSurvey';
 
 export const getServerSideProps : GetServerSideProps = async (context) => {
     const queryClient = new QueryClient();
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const { surId, orgId } = context.params!;
 
     await queryClient.prefetchQuery(['survey', surId], getSurvey(orgId as string, surId as string));
@@ -17,7 +16,7 @@ export const getServerSideProps : GetServerSideProps = async (context) => {
     const surveyState = queryClient.getQueryState(['survey', surId]);
     const orgState = queryClient.getQueryState(['org', orgId]);
 
-    if (surveyState!.status === 'success' && orgState!.status === 'success') {
+    if (surveyState?.status === 'success' && orgState?.status === 'success') {
         return {
             props: {
                 dehydratedState: dehydrate(queryClient),
@@ -45,8 +44,8 @@ export default function OrgSurveyPage(props : OrgSurveyPageProps) : JSX.Element 
 
     return (
         <>
-            <h1>{ orgQuery.data!.title }</h1>
-            <h1>{ surveyQuery.data!.title }</h1>
+            <h1>{ orgQuery.data?.title }</h1>
+            <h1>{ surveyQuery.data?.title }</h1>
         </>
     );
 }

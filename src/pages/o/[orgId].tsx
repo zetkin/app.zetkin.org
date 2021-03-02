@@ -1,5 +1,3 @@
-//TODO: Enable eslint rule and fix errors
-/* eslint-disable  @typescript-eslint/no-non-null-assertion */
 import { dehydrate } from 'react-query/hydration';
 import { GetServerSideProps } from 'next';
 import Link from 'next/link';
@@ -9,6 +7,7 @@ import getOrg from '../../fetching/getOrg';
 
 export const getServerSideProps : GetServerSideProps = async (context) => {
     const queryClient = new QueryClient();
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const { orgId } = context.params!;
 
     await queryClient.prefetchQuery(['org', orgId], getOrg(orgId as string));
@@ -40,7 +39,7 @@ export default function OrgPage(props : OrgPageProps) : JSX.Element {
 
     return ( 
         <>
-            <h1>{ orgQuery.data!.title }</h1>
+            <h1>{ orgQuery.data?.title }</h1>
             <ul>
                 <li><Link href={ `/o/${orgId}/campaigns` }>Campaigns</Link></li>
                 <li><Link href={ `/o/${orgId}/events` }>Events</Link></li>
