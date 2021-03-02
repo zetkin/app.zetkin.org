@@ -3,5 +3,7 @@
     "componentFolder": "src",
     "defaultCommandTimeout": 5000,
     "experimentalComponentTesting": true,
-    "testFiles": "**/*.spec.*"
+    "screenshotOnRunFailure": false,
+    "testFiles": "**/*.spec.*",
+    "video": false
 }
