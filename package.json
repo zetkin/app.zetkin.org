@@ -5,7 +5,7 @@
   "scripts": {
     "build": "next build",
     "devserver": "next dev -p 80",
-    "lint": "eslint src && tsc --noEmit && echo 'Finished linting without errors!'",
+    "lint": "eslint src cypress && tsc --noEmit && echo 'Finished linting without errors!'",
     "tdd": "concurrently 'npm run devserver' 'npx cypress open'",
     "cypress-ci": "concurrently 'npm start' 'npx cypress run'",
     "watch": "chokidar 'src/**/*' -c 'npm run lint'",
