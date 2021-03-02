@@ -9,9 +9,9 @@ interface EventListProps {
 }
 
 const EventList = ({ events, org } : EventListProps) : JSX.Element => {
-    if (events === undefined) {
+    if (!events || events.length === 0) {
         return (
-            <Text>
+            <Text data-test="no-events-placeholder">
                 Sorry, there are no planned events at the moment.
             </Text>
         );

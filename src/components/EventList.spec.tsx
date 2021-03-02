@@ -47,4 +47,19 @@ describe('EventList', () => {
 
         cy.get('[data-test="sign-up-button"]').should('be.visible');
     });
+
+    it('shows a placeholder when the list is empty', () => {
+        dummyEvents = [];
+        mount(<EventList events={ dummyEvents } org={ dummyOrg }/>);
+
+        cy.get('[data-test="no-events-placeholder"]').should('be.visible');
+    });
+
+    it('shows a placeholder when the list is undefined', () => {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        dummyEvents = undefined!;
+        mount(<EventList events={ dummyEvents } org={ dummyOrg }/>);
+
+        cy.get('[data-test="no-events-placeholder"]').should('be.visible');
+    });
 });
