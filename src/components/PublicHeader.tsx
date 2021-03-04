@@ -32,7 +32,9 @@ const PublicHeader = ({ user } : PublicHeaderProps) : JSX.Element => {
                 />
                 { user ? (
                     <View>
-                        <Text>{ user.first_name } { user.last_name }</Text>
+                        <Text data-test="username">
+                            { user.first_name } { user.last_name }
+                        </Text>
                         <Image
                             alt="User avatar"
                             data-test="user-avatar"
