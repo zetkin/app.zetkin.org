@@ -35,6 +35,7 @@ const OrgHeader = ({ org } : OrgHeaderProps) : JSX.Element => {
                     height="size-600"
                     objectFit="contain"
                     src={ apiUrl(`/orgs/${org.id}/avatar`) }
+                    width="size-600"
                 />
                 <Flex
                     alignItems="center"
