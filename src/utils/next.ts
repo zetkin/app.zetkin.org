@@ -1,5 +1,3 @@
-//TODO: Enable eslint rule and fix errors
-/* eslint-disable  @typescript-eslint/no-var-requires */
 import { applySession } from 'next-session';
 import { GetServerSideProps, GetServerSidePropsContext, GetServerSidePropsResult } from 'next';
 
@@ -9,12 +7,16 @@ import { ZetkinUser } from '../interfaces/ZetkinUser';
 import { ZetkinZ } from '../types/sdk';
 
 //TODO: Create module definition and revert to import.
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const Z = require('zetkin');
 
-export type ScaffoldedProps = {
+type RegularProps = {
     /* eslint-disable @typescript-eslint/no-explicit-any */
     [key: string]: any;
-    user?: ZetkinUser;
+};
+
+export type ScaffoldedProps = RegularProps & {
+    user: ZetkinUser | null;
 };
 
 export type ScaffoldedContext = GetServerSidePropsContext & {
@@ -22,7 +24,7 @@ export type ScaffoldedContext = GetServerSidePropsContext & {
 };
 
 export type ScaffoldedGetServerSideProps = (context: ScaffoldedContext) =>
-    Promise<GetServerSidePropsResult<ScaffoldedProps>>;
+    Promise<GetServerSidePropsResult<RegularProps>>;
 
 interface ResultWithProps {
     props: ScaffoldedProps;
@@ -32,8 +34,8 @@ const hasProps = (result : any) : result is ResultWithProps => {
     return (result as ResultWithProps).props !== undefined;
 };
 
-export const scaffold = (wrapped : ScaffoldedGetServerSideProps) : GetServerSideProps => {
-    const getServerSideProps : GetServerSideProps = async (contextFromNext : GetServerSidePropsContext) => {
+export const scaffold = (wrapped : ScaffoldedGetServerSideProps) : GetServerSideProps<ScaffoldedProps> => {
+    const getServerSideProps : GetServerSideProps<ScaffoldedProps> = async (contextFromNext : GetServerSidePropsContext) => {
         const ctx = contextFromNext as ScaffoldedContext;
 
         ctx.z = Z.construct({
@@ -56,10 +58,15 @@ export const scaffold = (wrapped : ScaffoldedGetServerSideProps) : GetServerSide
         const result = await wrapped(ctx);
 
         if (hasProps(result)) {
-            result.props.user = user.data.data as ZetkinUser;
+            const scaffoldedProps : ScaffoldedProps = {
+                ...result.props,
+                user: user.data.data as ZetkinUser,
+            };
+
+            result.props = scaffoldedProps;
         }
 
-        return result;
+        return result as GetServerSidePropsResult<ScaffoldedProps>;
     };
 
     return getServerSideProps;
