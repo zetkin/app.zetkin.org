@@ -15,7 +15,7 @@ interface PublicHeaderProps {
 
 const PublicHeader = ({ user } : PublicHeaderProps) : JSX.Element => {
     return (
-        <Header>
+        <Header margin="size-200">
             <Flex
                 alignItems="center"
                 direction="row"
