@@ -21,6 +21,7 @@ const OrgHeader = ({ org } : OrgHeaderProps) : JSX.Element => {
         <Header>
             <Image
                 alt="Cover image"
+                height="size-2000"
                 objectFit="cover"
                 src="/cover.jpg"
                 width="100%"
@@ -28,17 +29,16 @@ const OrgHeader = ({ org } : OrgHeaderProps) : JSX.Element => {
             <Flex
                 alignItems="center"
                 direction="row"
-                justifyContent="space-between"
-                marginX="size-200">
+                justifyContent="space-between">
                 <Image
                     alt="Organization avatar"
-                    objectFit="cover"
+                    height="size-600"
+                    objectFit="contain"
                     src={ apiUrl(`/orgs/${org.id}/avatar`) }
                 />
                 <Flex
                     alignItems="center"
-                    direction="row"
-                    marginX="size-200">
+                    direction="row">
                     <View marginX="size-200">
                         <Link>
                             <NextLink href="/">
