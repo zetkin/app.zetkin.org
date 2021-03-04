@@ -10,10 +10,9 @@ const DefaultLayout : FunctionComponent = ({ children }) => {
     return (
         <Flex
             direction="column"
-            gap="size-100"
-            margin="size-200">
+            gap="size-100">
             <PublicHeader user={ user }/>
-            <Content>
+            <Content margin="size-200">
                 { children }
             </Content>
         </Flex>
