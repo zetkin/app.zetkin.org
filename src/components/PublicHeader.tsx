@@ -1,3 +1,4 @@
+import NextLink from 'next/link';
 import {
     Button,
     Flex,
@@ -27,20 +28,29 @@ const PublicHeader = ({ user } : PublicHeaderProps) : JSX.Element => {
                     height="size-600"
                     objectFit="contain"
                     src="/logo-zetkin.png"
+                    width="size-600"
                 />
-                { user ?
+                { user ? (
                     <View>
-                        <Text>{ user.first_name } { user.last_name }</Text>
+                        <Text data-test="username">
+                            { user.first_name } { user.last_name }
+                        </Text>
                         <Image
                             alt="User avatar"
                             data-test="user-avatar"
                             height="size-600"
                             objectFit="contain"
                             src={ `/api/users/${user.id}/avatar` }
+                            width="size-600"
                         />
                     </View>
-                    : <Button data-test="login-button" variant="cta">Login</Button>
-                }
+                ) : (
+                    <NextLink href="/login">
+                        <Button data-test="login-button" variant="cta">
+                            Login
+                        </Button>
+                    </NextLink>
+                ) }
             </Flex>
         </Header>
     );
