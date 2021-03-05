@@ -5,8 +5,9 @@ import { QueryClient, useQuery } from 'react-query';
 import getCampaign from '../../../../../fetching/getCampaign';
 import getCampaignEvents from '../../../../../fetching/getCampaignEvents';
 import getOrg from '../../../../../fetching/getOrg';
+import { scaffold } from '../../../../../utils/next';
 
-export const getServerSideProps : GetServerSideProps = async (context) => {
+export const getServerSideProps : GetServerSideProps = scaffold(async (context) => {
     const queryClient = new QueryClient();
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const { orgId, campId } = context.params!;
@@ -33,7 +34,7 @@ export const getServerSideProps : GetServerSideProps = async (context) => {
             notFound: true,
         };
     }
-};
+});
 
 type OrgCampaignEventsPageProps = {
     campId: string;
