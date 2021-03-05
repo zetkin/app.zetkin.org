@@ -55,7 +55,7 @@ export const scaffold = (wrapped : ScaffoldedGetServerSideProps) : GetServerSide
 
         const result = await wrapped(ctx);
 
-        const resultProps = (user : ZetkinUser | null) => {
+        const augmentProps = (user : ZetkinUser | null) => {
             if (hasProps(result)) {
                 const scaffoldedProps : ScaffoldedProps = {
                     ...result.props,
@@ -67,10 +67,10 @@ export const scaffold = (wrapped : ScaffoldedGetServerSideProps) : GetServerSide
 
         try {
             const user = await ctx.z.resource('users', 'me').get();
-            resultProps(user.data.data as ZetkinUser);
+            augmentProps(user.data.data as ZetkinUser);
         }
         catch (error) {
-            resultProps(null);
+            augmentProps(null);
         }
 
         return result as GetServerSidePropsResult<ScaffoldedProps>;
