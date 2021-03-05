@@ -6,8 +6,9 @@ import { QueryClient, useQuery } from 'react-query';
 
 import getEvent from '../../../../fetching/getEvent';
 import getOrg from '../../../../fetching/getOrg';
+import { scaffold } from '../../../../utils/next';
 
-export const getServerSideProps : GetServerSideProps = async (context) => {
+export const getServerSideProps : GetServerSideProps = scaffold(async (context) => {
     const queryClient = new QueryClient();
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const { orgId, eventId } = context.params!;
@@ -32,7 +33,7 @@ export const getServerSideProps : GetServerSideProps = async (context) => {
             notFound: true,
         };
     }
-};
+});
 
 type OrgEventPageProps = {
     eventId: string;

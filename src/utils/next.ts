@@ -53,17 +53,24 @@ export const scaffold = (wrapped : ScaffoldedGetServerSideProps) : GetServerSide
             ctx.z.setTokenData(reqWithSession.session.tokenData);
         }
 
-        const user = await ctx.z.resource('users', 'me').get();
-
         const result = await wrapped(ctx);
 
-        if (hasProps(result)) {
-            const scaffoldedProps : ScaffoldedProps = {
-                ...result.props,
-                user: user.data.data as ZetkinUser,
-            };
+        const augmentProps = (user : ZetkinUser | null) => {
+            if (hasProps(result)) {
+                const scaffoldedProps : ScaffoldedProps = {
+                    ...result.props,
+                    user,
+                };
+                result.props = scaffoldedProps;
+            }
+        };
 
-            result.props = scaffoldedProps;
+        try {
+            const user = await ctx.z.resource('users', 'me').get();
+            augmentProps(user.data.data as ZetkinUser);
+        }
+        catch (error) {
+            augmentProps(null);
         }
 
         return result as GetServerSidePropsResult<ScaffoldedProps>;

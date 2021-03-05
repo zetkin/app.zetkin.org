@@ -15,8 +15,6 @@ describe('Login process', () => {
             .should('be.visible')
             .click();
         cy.url().should('match', /\/$/);
-        //TODO: Remove cy.visit('/my'); when user is visible in homepage header
-        cy.visit('/my');
         cy.get('[data-test="username"]').should('be.visible');
         cy.get('[data-test="user-avatar"]').should('be.visible');
     });

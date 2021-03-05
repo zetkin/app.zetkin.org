@@ -2,15 +2,16 @@ import { applySession } from 'next-session';
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import stringToBool from '../utils/stringToBool';
+import { Content, Heading } from '@adobe/react-spectrum';
 
 import { AppSession } from '../types';
-import { Content, Heading } from '@adobe/react-spectrum';
+import { scaffold } from '../utils/next';
 
 //TODO: Create module definition and revert to import.
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Z = require('zetkin');
 
-export const getServerSideProps : GetServerSideProps = async (context) => {
+export const getServerSideProps : GetServerSideProps = scaffold(async (context) => {
     const { query, req, res } = context;
 
     const z = Z.construct({
@@ -50,7 +51,7 @@ export const getServerSideProps : GetServerSideProps = async (context) => {
             props: {},
         };
     }
-};
+});
 
 export default function Home() : JSX.Element {
     return (

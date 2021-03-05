@@ -8,8 +8,9 @@ import getEvents from '../../../fetching/getEvents';
 import getOrg from '../../../fetching/getOrg';
 import OrgLayout from '../../../components/layout/OrgLayout';
 import { PageWithLayout } from '../../../types';
+import { scaffold } from '../../../utils/next';
 
-export const getServerSideProps : GetServerSideProps = async (context) => {
+export const getServerSideProps : GetServerSideProps = scaffold(async (context) => {
     const queryClient = new QueryClient();
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const { orgId } = context.params!;
@@ -33,7 +34,7 @@ export const getServerSideProps : GetServerSideProps = async (context) => {
             notFound: true,
         };
     }
-};
+});
 
 const OrgEventsPage : PageWithLayout = (page, props) => {
     const { orgId } = props;
