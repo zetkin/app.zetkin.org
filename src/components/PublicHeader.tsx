@@ -9,6 +9,7 @@ import {
 } from '@adobe/react-spectrum';
 
 import { ZetkinUser } from '../interfaces/ZetkinUser';
+import { FormattedMessage } from 'react-intl';
 
 interface PublicHeaderProps {
     user: ZetkinUser | null;
@@ -47,7 +48,7 @@ const PublicHeader = ({ user } : PublicHeaderProps) : JSX.Element => {
                 ) : (
                     <NextLink href="/login">
                         <Button data-test="login-button" variant="cta">
-                            Login
+                            <FormattedMessage id="header.loginButton"/>
                         </Button>
                     </NextLink>
                 ) }

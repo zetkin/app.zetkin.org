@@ -1,10 +1,12 @@
 import { applySession } from 'next-session';
+import Negotiator from 'negotiator';
 import { GetServerSideProps, GetServerSidePropsContext, GetServerSidePropsResult } from 'next';
 
 import { AppSession } from '../types';
 import stringToBool from './stringToBool';
 import { ZetkinUser } from '../interfaces/ZetkinUser';
 import { ZetkinZ } from '../types/sdk';
+import { getMessages } from './locale';
 
 //TODO: Create module definition and revert to import.
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -34,7 +36,11 @@ const hasProps = (result : any) : result is ResultWithProps => {
     return (result as ResultWithProps).props !== undefined;
 };
 
-export const scaffold = (wrapped : ScaffoldedGetServerSideProps) : GetServerSideProps<ScaffoldedProps> => {
+interface ScaffoldOptions {
+    localeScope?: string[];
+};
+
+export const scaffold = (wrapped : ScaffoldedGetServerSideProps, options? : ScaffoldOptions) : GetServerSideProps<ScaffoldedProps> => {
     const getServerSideProps : GetServerSideProps<ScaffoldedProps> = async (contextFromNext : GetServerSidePropsContext) => {
         const ctx = contextFromNext as ScaffoldedContext;
 
@@ -55,10 +61,18 @@ export const scaffold = (wrapped : ScaffoldedGetServerSideProps) : GetServerSide
 
         const result = await wrapped(ctx);
 
+        const negotiator = new Negotiator(contextFromNext.req);
+        const languages = negotiator.languages(['en', 'sv']);
+        const lang = languages.length? languages[0] : 'en';
+
+        const messages = await getMessages(lang, options?.localeScope ?? []);
+
         const augmentProps = (user : ZetkinUser | null) => {
             if (hasProps(result)) {
                 const scaffoldedProps : ScaffoldedProps = {
                     ...result.props,
+                    lang,
+                    messages,
                     user,
                 };
                 result.props = scaffoldedProps;

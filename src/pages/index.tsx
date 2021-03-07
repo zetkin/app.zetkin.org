@@ -1,4 +1,5 @@
 import { applySession } from 'next-session';
+import { FormattedDate, FormattedMessage } from 'react-intl';
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import stringToBool from '../utils/stringToBool';
@@ -51,6 +52,8 @@ export const getServerSideProps : GetServerSideProps = scaffold(async (context) 
             props: {},
         };
     }
+}, {
+    localeScope: ['pages.home', 'header']
 });
 
 export default function Home() : JSX.Element {
@@ -60,7 +63,7 @@ export default function Home() : JSX.Element {
                 <title>Zetkin</title>
             </Head>
             <Content>
-                <Heading level={ 1 }>This will become Zetkin</Heading>
+                <Heading level={ 1 }><FormattedMessage id="pages.home.welcome"/></Heading>
             </Content>
         </>
     );
