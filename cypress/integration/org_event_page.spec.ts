@@ -9,6 +9,7 @@ describe('/o/[orgId]/events/[eventId]', () => {
 
     it('contains clickable org name that leads to org page', () => {
         cy.visit('/o/1/events/22');
+        cy.waitUntilReactRendered();
         cy.contains('My Organization');
         cy.findByText('My Organization').click();
         cy.url().should('match', /\/o\/1$/);
@@ -16,6 +17,7 @@ describe('/o/[orgId]/events/[eventId]', () => {
 
     it('contains clickable campaign name that leads to campaign page', () => {
         cy.visit('/o/1/events/22');
+        cy.waitUntilReactRendered();
         cy.contains('Second campaign').click();
         cy.url().should('match', /\/o\/1\/campaigns\/2$/);
     });
