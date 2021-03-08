@@ -58,6 +58,19 @@ async function loadMessages() : Promise<MessageDB> {
         }
     }
 
+    // Fall back to English for any strings that is missing from other languages
+    Object.keys(messages).forEach(lang => {
+        if (lang !== 'en') {
+            const messagesWithFallbacks : MessageList = {};
+            Object.keys(messages.en).forEach(id => {
+                const val = messages[lang][id];
+                messagesWithFallbacks[id] = val || messages.en[id];
+            });
+
+            messages[lang] = messagesWithFallbacks;
+        }
+    });
+
     return messages;
 }
 
