@@ -17,6 +17,7 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
+    "types": ["cypress", "@testing-library/cypress", "./cypress/support"],
     "jsx": "react-jsx"
   },
   "include": [

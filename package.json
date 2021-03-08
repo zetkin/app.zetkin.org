@@ -11,8 +11,12 @@
     "watch": "chokidar 'src/**/*' -c 'npm run lint'",
     "start": "next start -p 80"
   },
+  "nyc": {
+    "reporter": ["html"]
+  },
   "dependencies": {
     "@adobe/react-spectrum": "^3.7.0",
+    "@cypress/code-coverage": "^3.9.2",
     "@cypress/webpack-preprocessor": "^5.5.0",
     "@react-spectrum/tabs": "^3.0.0-alpha.3",
     "next": "^10.0.3",
@@ -24,6 +28,7 @@
   },
   "devDependencies": {
     "@cypress/react": "^4.16.3",
+    "@testing-library/cypress": "^7.0.4",
     "@types/node": "^14.14.14",
     "@types/react": "^17.0.0",
     "@typescript-eslint/eslint-plugin": "^4.10.0",

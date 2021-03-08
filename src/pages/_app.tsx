@@ -12,10 +12,20 @@ import { PageWithLayout } from '../types';
 
 const queryClient = new QueryClient();
 
+declare global {
+    interface Window {
+        __reactRendered: boolean;
+    }
+}
+
 function MyApp({ Component, pageProps } : AppProps) : JSX.Element {
     const { dehydratedState, ...restProps } = pageProps;
     const c = Component as PageWithLayout;
     const getLayout = c.getLayout || (page => <DefaultLayout>{ page }</DefaultLayout>);
+
+    if (typeof window !== 'undefined') {
+        window.__reactRendered = true;
+    }
 
     return (
         <UserContext.Provider value={ pageProps.user }>
