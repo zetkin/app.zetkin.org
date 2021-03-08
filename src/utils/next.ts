@@ -2,6 +2,7 @@ import { applySession } from 'next-session';
 import { GetServerSideProps, GetServerSidePropsContext, GetServerSidePropsResult } from 'next';
 
 import { AppSession } from '../types';
+import { getMessages } from './locale';
 import stringToBool from './stringToBool';
 import { ZetkinUser } from '../interfaces/ZetkinUser';
 import { ZetkinZ } from '../types/sdk';
@@ -17,6 +18,8 @@ type RegularProps = {
 
 export type ScaffoldedProps = RegularProps & {
     user: ZetkinUser | null;
+    lang: string;
+    messages: Record<string,string>;
 };
 
 export type ScaffoldedContext = GetServerSidePropsContext & {
@@ -55,10 +58,15 @@ export const scaffold = (wrapped : ScaffoldedGetServerSideProps) : GetServerSide
 
         const result = await wrapped(ctx);
 
+        const lang = 'en';
+        const messages = await getMessages(lang);
+
         const augmentProps = (user : ZetkinUser | null) => {
             if (hasProps(result)) {
                 const scaffoldedProps : ScaffoldedProps = {
                     ...result.props,
+                    lang,
+                    messages,
                     user,
                 };
                 result.props = scaffoldedProps;

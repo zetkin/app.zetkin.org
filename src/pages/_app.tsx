@@ -20,7 +20,7 @@ declare global {
 }
 
 function MyApp({ Component, pageProps } : AppProps) : JSX.Element {
-    const { dehydratedState, ...restProps } = pageProps;
+    const { dehydratedState, lang, messages, ...restProps } = pageProps;
     const c = Component as PageWithLayout;
     const getLayout = c.getLayout || (page => <DefaultLayout>{ page }</DefaultLayout>);
 
@@ -34,8 +34,8 @@ function MyApp({ Component, pageProps } : AppProps) : JSX.Element {
                 <Provider theme={ defaultTheme }>
                     <IntlProvider
                         defaultLocale="en"
-                        locale="en"
-                        messages={{}}>
+                        locale={ lang }
+                        messages={ messages }>
                         <QueryClientProvider client={ queryClient }>
                             <Hydrate state={ dehydratedState }>
                                 { getLayout(<Component { ...restProps } />, restProps) }
