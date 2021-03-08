@@ -1,4 +1,5 @@
 import { applySession } from 'next-session';
+import Negotiator from 'negotiator';
 import { GetServerSideProps, GetServerSidePropsContext, GetServerSidePropsResult } from 'next';
 
 import { AppSession } from '../types';
@@ -58,7 +59,11 @@ export const scaffold = (wrapped : ScaffoldedGetServerSideProps) : GetServerSide
 
         const result = await wrapped(ctx);
 
-        const lang = 'en';
+        // Figure out browser's preferred language
+        const negotiator = new Negotiator(contextFromNext.req);
+        const languages = negotiator.languages(['en', 'sv']);
+        const lang = languages.length? languages[0] : 'en';
+
         const messages = await getMessages(lang);
 
         const augmentProps = (user : ZetkinUser | null) => {
