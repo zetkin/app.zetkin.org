@@ -74,10 +74,24 @@ async function loadMessages() : Promise<MessageDB> {
     return messages;
 }
 
-export async function getMessages(lang : string) : Promise<MessageList> {
+export async function getMessages(lang : string, scope : string[] = []) : Promise<MessageList> {
     if (!MESSAGES) {
         MESSAGES = await loadMessages();
     }
 
-    return MESSAGES? (MESSAGES[lang] || MESSAGES.en) : {};
+    const localizedMessages = MESSAGES? (MESSAGES[lang] || MESSAGES.en) : {};
+
+    if (scope.length) {
+        const scoped : MessageList = {};
+        Object.entries(localizedMessages).forEach(([key, val]) => {
+            if (scope.some(s => key.startsWith(s))) {
+                scoped[key] = val;
+            }
+        });
+
+        return scoped;
+    }
+    else {
+        return localizedMessages;
+    }
 }

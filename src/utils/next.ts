@@ -34,11 +34,15 @@ interface ResultWithProps {
     props: ScaffoldedProps;
 }
 
+interface ScaffoldOptions {
+    localeScope?: string[];
+}
+
 const hasProps = (result : any) : result is ResultWithProps => {
     return (result as ResultWithProps).props !== undefined;
 };
 
-export const scaffold = (wrapped : ScaffoldedGetServerSideProps) : GetServerSideProps<ScaffoldedProps> => {
+export const scaffold = (wrapped : ScaffoldedGetServerSideProps, options? : ScaffoldOptions) : GetServerSideProps<ScaffoldedProps> => {
     const getServerSideProps : GetServerSideProps<ScaffoldedProps> = async (contextFromNext : GetServerSidePropsContext) => {
         const ctx = contextFromNext as ScaffoldedContext;
 
@@ -64,7 +68,7 @@ export const scaffold = (wrapped : ScaffoldedGetServerSideProps) : GetServerSide
         const languages = negotiator.languages(['en', 'sv']);
         const lang = languages.length? languages[0] : 'en';
 
-        const messages = await getMessages(lang);
+        const messages = await getMessages(lang, options?.localeScope ?? []);
 
         const augmentProps = (user : ZetkinUser | null) => {
             if (hasProps(result)) {

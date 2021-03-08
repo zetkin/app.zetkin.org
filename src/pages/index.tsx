@@ -12,6 +12,10 @@ import { scaffold } from '../utils/next';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Z = require('zetkin');
 
+const scaffoldOptions = {
+    localeScope: ['pages.home'],
+};
+
 export const getServerSideProps : GetServerSideProps = scaffold(async (context) => {
     const { query, req, res } = context;
 
@@ -52,7 +56,7 @@ export const getServerSideProps : GetServerSideProps = scaffold(async (context) 
             props: {},
         };
     }
-});
+}, scaffoldOptions);
 
 export default function Home() : JSX.Element {
     return (
