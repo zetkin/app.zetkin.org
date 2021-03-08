@@ -4,6 +4,8 @@ import { QueryClient, useQuery } from 'react-query';
 
 import getCampaigns from '../../../fetching/getCampaigns';
 import getOrg from '../../../fetching/getOrg';
+import OrgLayout from '../../../components/layout/OrgLayout';
+import { PageWithLayout } from '../../../types';
 import { scaffold } from '../../../utils/next';
 
 export const getServerSideProps : GetServerSideProps = scaffold(async (context) => {
@@ -32,11 +34,7 @@ export const getServerSideProps : GetServerSideProps = scaffold(async (context) 
     }
 });
 
-type OrgCampaignsPageProps = {
-    orgId: string;
-};
-
-export default function OrgCampaignsPage(props : OrgCampaignsPageProps) : JSX.Element {
+const OrgCampaignsPage : PageWithLayout = (page, props) => {
     const { orgId } = props;
     const campaignsQuery = useQuery(['campaigns', orgId], getCampaigns(orgId));
     const orgQuery = useQuery(['org', orgId], getOrg(orgId));
@@ -51,4 +49,14 @@ export default function OrgCampaignsPage(props : OrgCampaignsPageProps) : JSX.El
             </ul>
         </>
     );
-}
+};
+
+OrgCampaignsPage.getLayout = function getLayout(page, props) {
+    return (
+        <OrgLayout orgId={ props.orgId as string }>
+            { page }
+        </OrgLayout>
+    );
+};
+
+export default OrgCampaignsPage;

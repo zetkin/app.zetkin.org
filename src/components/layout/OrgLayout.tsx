@@ -35,10 +35,7 @@ const OrgLayout = ({ children, orgId } : OrgLayoutProps) : JSX.Element => {
                 <Item key="events" title="Coming up">
                     <Content>{ children }</Content>
                 </Item>
-                <Item key="contact" title="Contact">
-                    <Content>{ children }</Content>
-                </Item>
-                <Item key="custom" title="Some Custom Page">
+                <Item key="campaigns" title="Campaigns">
                     <Content>{ children }</Content>
                 </Item>
             </Tabs>
