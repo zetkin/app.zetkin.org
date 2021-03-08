@@ -1,5 +1,10 @@
 {
     "baseUrl": "http://www.dev.zetkin.org",
+    "env": {
+        "codeCoverage": {
+            "url": "/api/coverage"
+        }
+    },
     "componentFolder": "src",
     "defaultCommandTimeout": 5000,
     "experimentalComponentTesting": true,

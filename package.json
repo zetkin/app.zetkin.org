@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@adobe/react-spectrum": "^3.7.0",
+    "@cypress/code-coverage": "^3.9.2",
     "@cypress/webpack-preprocessor": "^5.5.0",
     "@react-spectrum/tabs": "^3.0.0-alpha.3",
     "next": "^10.0.3",
