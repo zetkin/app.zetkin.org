@@ -1,7 +1,9 @@
 import { applySession } from 'next-session';
+import Negotiator from 'negotiator';
 import { GetServerSideProps, GetServerSidePropsContext, GetServerSidePropsResult } from 'next';
 
 import { AppSession } from '../types';
+import { getMessages } from './locale';
 import stringToBool from './stringToBool';
 import { ZetkinUser } from '../interfaces/ZetkinUser';
 import { ZetkinZ } from '../types/sdk';
@@ -17,6 +19,8 @@ type RegularProps = {
 
 export type ScaffoldedProps = RegularProps & {
     user: ZetkinUser | null;
+    lang: string;
+    messages: Record<string,string>;
 };
 
 export type ScaffoldedContext = GetServerSidePropsContext & {
@@ -30,11 +34,15 @@ interface ResultWithProps {
     props: ScaffoldedProps;
 }
 
+interface ScaffoldOptions {
+    localeScope?: string[];
+}
+
 const hasProps = (result : any) : result is ResultWithProps => {
     return (result as ResultWithProps).props !== undefined;
 };
 
-export const scaffold = (wrapped : ScaffoldedGetServerSideProps) : GetServerSideProps<ScaffoldedProps> => {
+export const scaffold = (wrapped : ScaffoldedGetServerSideProps, options? : ScaffoldOptions) : GetServerSideProps<ScaffoldedProps> => {
     const getServerSideProps : GetServerSideProps<ScaffoldedProps> = async (contextFromNext : GetServerSidePropsContext) => {
         const ctx = contextFromNext as ScaffoldedContext;
 
@@ -55,10 +63,19 @@ export const scaffold = (wrapped : ScaffoldedGetServerSideProps) : GetServerSide
 
         const result = await wrapped(ctx);
 
+        // Figure out browser's preferred language
+        const negotiator = new Negotiator(contextFromNext.req);
+        const languages = negotiator.languages(['en', 'sv']);
+        const lang = languages.length? languages[0] : 'en';
+
+        const messages = await getMessages(lang, options?.localeScope ?? []);
+
         const augmentProps = (user : ZetkinUser | null) => {
             if (hasProps(result)) {
                 const scaffoldedProps : ScaffoldedProps = {
                     ...result.props,
+                    lang,
+                    messages,
                     user,
                 };
                 result.props = scaffoldedProps;

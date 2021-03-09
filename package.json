@@ -19,11 +19,15 @@
     "@cypress/code-coverage": "^3.9.2",
     "@cypress/webpack-preprocessor": "^5.5.0",
     "@react-spectrum/tabs": "^3.0.0-alpha.3",
+    "@types/negotiator": "^0.6.1",
+    "negotiator": "^0.6.2",
     "next": "^10.0.3",
     "next-session": "^3.4.0",
     "react": "17.0.1",
     "react-dom": "17.0.1",
+    "react-intl": "^5.13.2",
     "react-query": "^3.5.11",
+    "yaml": "^1.10.0",
     "zetkin": "^1.2.1"
   },
   "devDependencies": {

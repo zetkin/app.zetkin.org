@@ -1,6 +1,7 @@
 import '../styles.css';
 import { AppProps } from 'next/app';
 import { Hydrate } from 'react-query/hydration';
+import { IntlProvider } from 'react-intl';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { SSRProvider } from '@react-aria/ssr';
 import { UserContext } from '../hooks';
@@ -19,7 +20,7 @@ declare global {
 }
 
 function MyApp({ Component, pageProps } : AppProps) : JSX.Element {
-    const { dehydratedState, ...restProps } = pageProps;
+    const { dehydratedState, lang, messages, ...restProps } = pageProps;
     const c = Component as PageWithLayout;
     const getLayout = c.getLayout || (page => <DefaultLayout>{ page }</DefaultLayout>);
 
@@ -31,12 +32,17 @@ function MyApp({ Component, pageProps } : AppProps) : JSX.Element {
         <UserContext.Provider value={ pageProps.user }>
             <SSRProvider>
                 <Provider theme={ defaultTheme }>
-                    <QueryClientProvider client={ queryClient }>
-                        <Hydrate state={ dehydratedState }>
-                            { getLayout(<Component { ...restProps } />, restProps) }
-                        </Hydrate>
-                        <ReactQueryDevtools initialIsOpen={ false } />
-                    </QueryClientProvider>
+                    <IntlProvider
+                        defaultLocale="en"
+                        locale={ lang }
+                        messages={ messages }>
+                        <QueryClientProvider client={ queryClient }>
+                            <Hydrate state={ dehydratedState }>
+                                { getLayout(<Component { ...restProps } />, restProps) }
+                            </Hydrate>
+                            <ReactQueryDevtools initialIsOpen={ false } />
+                        </QueryClientProvider>
+                    </IntlProvider>
                 </Provider>
             </SSRProvider>
         </UserContext.Provider>
