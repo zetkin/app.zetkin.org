@@ -18,12 +18,21 @@ interface OrgLayoutProps {
 const OrgLayout = ({ children, orgId } : OrgLayoutProps) : JSX.Element => {
     const orgQuery = useQuery(['org', orgId], getOrg(orgId));
     const router = useRouter();
+    const path =  router.pathname.split('/');
+    let currentTab = path.pop();
+
+    if (currentTab === '[orgId]') {
+        currentTab = 'home';
+    }
 
     const onSelectTab = (key : ReactText) : void => {
-        router.push(`/o/${orgId}/${key}`);
+        if (key === 'home') {
+            router.push(`/o/${orgId}`);
+        }
+        else {
+            router.push(`/o/${orgId}/${key}`);
+        }
     };
-
-    const currentTab = router.pathname.split('/').pop();
 
     return (
         <DefaultLayout org={ orgQuery.data! }>
@@ -32,6 +41,9 @@ const OrgLayout = ({ children, orgId } : OrgLayoutProps) : JSX.Element => {
                 aria-label="Organization submenu"
                 onSelectionChange={ onSelectTab }
                 selectedKey={ currentTab }>
+                <Item key="home" title="Home">
+                    <Content>{ children }</Content>
+                </Item>
                 <Item key="events" title="Coming up">
                     <Content>{ children }</Content>
                 </Item>
