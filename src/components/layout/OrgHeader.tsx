@@ -9,11 +9,10 @@ import {
     View,
 } from '@adobe/react-spectrum';
 
-import apiUrl from '../../utils/apiUrl';
 import { ZetkinOrganization } from '../../interfaces/ZetkinOrganization';
 
 interface OrgHeaderProps {
-    org: ZetkinOrganization;
+    org?: ZetkinOrganization;
 }
 
 const OrgHeader = ({ org } : OrgHeaderProps) : JSX.Element => {
@@ -30,13 +29,6 @@ const OrgHeader = ({ org } : OrgHeaderProps) : JSX.Element => {
                 alignItems="center"
                 direction="row"
                 justifyContent="space-between">
-                <Image
-                    alt="Organization avatar"
-                    height="size-600"
-                    objectFit="contain"
-                    src={ apiUrl(`/orgs/${org.id}/avatar`) }
-                    width="size-600"
-                />
                 <Flex
                     alignItems="center"
                     direction="row">
@@ -52,7 +44,7 @@ const OrgHeader = ({ org } : OrgHeaderProps) : JSX.Element => {
             </Flex>
             <View>
                 <Heading level={ 1 }>
-                    { org.title }
+                    { org?.title }
                 </Heading>
             </View>
         </Header>

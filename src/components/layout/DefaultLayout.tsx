@@ -3,15 +3,20 @@ import { Content, Flex } from '@adobe/react-spectrum';
 
 import PublicHeader from '../PublicHeader';
 import { useUser } from '../../hooks';
+import { ZetkinOrganization } from '../../interfaces/ZetkinOrganization';
 
-const DefaultLayout : FunctionComponent = ({ children }) => {
+interface DefaultLayoutProps {
+    org?: ZetkinOrganization;
+}
+
+const DefaultLayout : FunctionComponent<DefaultLayoutProps> = ({ children, org }) => {
     const user = useUser();
 
     return (
         <Flex
             direction="column"
             gap="size-100">
-            <PublicHeader user={ user }/>
+            <PublicHeader org={ org || null } user={ user }/>
             <Content margin="size-200">
                 { children }
             </Content>

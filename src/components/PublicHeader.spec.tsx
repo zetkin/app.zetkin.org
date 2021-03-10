@@ -1,6 +1,7 @@
 import { mount } from '@cypress/react';
 
 import PublicHeader from './PublicHeader';
+import { ZetkinOrganization } from '../interfaces/ZetkinOrganization';
 
 describe('PublicHeader', () => {
 
@@ -29,5 +30,21 @@ describe('PublicHeader', () => {
     it('contains user avatar if logged in', () => {
         mount(<PublicHeader user={ dummyUser }/>);
         cy.get('[data-test="user-avatar"]').should('be.visible');
+    });
+
+    it('contains a zetkin logo when component has no org prop', () => {
+        mount(<PublicHeader user={ dummyUser }/>);
+        cy.get('[data-test="zetkin-logotype"]').should('be.visible');
+    });
+
+    it('contains org avatar instead of zetkin logo when component has an org prop', () => {
+        cy.fixture('dummyOrg.json')
+            .then((data : ZetkinOrganization) => {
+                const dummyOrg = data;
+                mount(<PublicHeader org={ dummyOrg } user={ dummyUser }/>);
+
+                cy.get('[data-test="zetkin-logotype"]').should('not.exist');
+                cy.get('[data-test="org-avatar"]').should('be.visible');
+            });
     });
 }); 

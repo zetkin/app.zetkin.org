@@ -26,7 +26,7 @@ const OrgLayout = ({ children, orgId } : OrgLayoutProps) : JSX.Element => {
     const currentTab = router.pathname.split('/').pop();
 
     return (
-        <DefaultLayout>
+        <DefaultLayout org={ orgQuery.data! }>
             <OrgHeader org={ orgQuery.data! }/>
             <Tabs
                 aria-label="Organization submenu"
