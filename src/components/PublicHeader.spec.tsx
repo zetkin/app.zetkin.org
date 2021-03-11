@@ -40,8 +40,7 @@ describe('PublicHeader', () => {
     it('contains org avatar instead of zetkin logo when component has an org prop', () => {
         cy.fixture('dummyOrg.json')
             .then((data : ZetkinOrganization) => {
-                const dummyOrg = data;
-                mount(<PublicHeader org={ dummyOrg } user={ dummyUser }/>);
+                mount(<PublicHeader org={ data } user={ dummyUser }/>);
 
                 cy.get('[data-test="zetkin-logotype"]').should('not.exist');
                 cy.get('[data-test="org-avatar"]').should('be.visible');

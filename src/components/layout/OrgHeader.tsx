@@ -12,7 +12,7 @@ import {
 import { ZetkinOrganization } from '../../interfaces/ZetkinOrganization';
 
 interface OrgHeaderProps {
-    org?: ZetkinOrganization;
+    org: ZetkinOrganization;
 }
 
 const OrgHeader = ({ org } : OrgHeaderProps) : JSX.Element => {
@@ -44,7 +44,7 @@ const OrgHeader = ({ org } : OrgHeaderProps) : JSX.Element => {
             </Flex>
             <View>
                 <Heading level={ 1 }>
-                    { org?.title }
+                    { org.title }
                 </Heading>
             </View>
         </Header>
