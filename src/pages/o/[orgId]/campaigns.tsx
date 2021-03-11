@@ -34,7 +34,11 @@ export const getServerSideProps : GetServerSideProps = scaffold(async (context) 
     }
 });
 
-const OrgCampaignsPage : PageWithLayout = (page, props) => {
+type OrgCampaignsPageProps = {
+    orgId: string;
+};
+
+const OrgCampaignsPage : PageWithLayout<OrgCampaignsPageProps> = (props) => {
     const { orgId } = props;
     const campaignsQuery = useQuery(['campaigns', orgId], getCampaigns(orgId));
     const orgQuery = useQuery(['org', orgId], getOrg(orgId));

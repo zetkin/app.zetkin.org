@@ -31,11 +31,15 @@ export const getServerSideProps : GetServerSideProps = scaffold(async (context) 
     }
 });
 
-const OrgPage : PageWithLayout = (page, props) => {
+type OrgPageProps = {
+    orgId: string;
+};
+
+const OrgPage : PageWithLayout<OrgPageProps> = (props) =>{
     const { orgId } = props;
     const orgQuery = useQuery(['org', orgId], getOrg(orgId));
 
-    return ( 
+    return (
         <>
             <h1>{ orgQuery.data?.title }</h1>
         </>

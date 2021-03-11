@@ -14,6 +14,6 @@ interface GetLayout {
     (page: JSX.Element, props: Record<string, unknown>): JSX.Element;
 }
 
-export type PageWithLayout = NextPage & {
+export type PageWithLayout<P = Record<string, unknown>> = NextPage<P> & {
     getLayout: GetLayout;
 };
