@@ -8,13 +8,16 @@ import {
     View,
 } from '@adobe/react-spectrum';
 
+import apiUrl from '../utils/apiUrl';
+import { ZetkinOrganization } from '../interfaces/ZetkinOrganization';
 import { ZetkinUser } from '../interfaces/ZetkinUser';
 
 interface PublicHeaderProps {
     user: ZetkinUser | null;
+    org?: ZetkinOrganization | null;
 }
 
-const PublicHeader = ({ user } : PublicHeaderProps) : JSX.Element => {
+const PublicHeader = ({ user, org } : PublicHeaderProps) : JSX.Element => {
     return (
         <Header margin="size-200">
             <Flex
@@ -22,14 +25,25 @@ const PublicHeader = ({ user } : PublicHeaderProps) : JSX.Element => {
                 direction="row"
                 height="size-600"
                 justifyContent="space-between">
-                <Image
-                    alt="Zetkin logo"
-                    data-test="zetkin-logotype"
-                    height="size-600"
-                    objectFit="contain"
-                    src="/logo-zetkin.png"
-                    width="size-600"
-                />
+                { org ? (
+                    <Image
+                        alt="Organization avatar"
+                        data-test="org-avatar"
+                        height="size-600"
+                        objectFit="contain"
+                        src={ apiUrl(`/orgs/${org.id}/avatar`) }
+                        width="size-600"
+                    />
+                ) : (
+                    <Image
+                        alt="Zetkin logo"
+                        data-test="zetkin-logotype"
+                        height="size-600"
+                        objectFit="contain"
+                        src="/logo-zetkin.png"
+                        width="size-600"
+                    />
+                ) }
                 { user ? (
                     <View>
                         <Text data-test="username">

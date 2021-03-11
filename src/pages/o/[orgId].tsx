@@ -1,9 +1,10 @@
 import { dehydrate } from 'react-query/hydration';
 import { GetServerSideProps } from 'next';
-import Link from 'next/link';
 import { QueryClient, useQuery } from 'react-query';
 
 import getOrg from '../../fetching/getOrg';
+import OrgLayout from '../../components/layout/OrgLayout';
+import { PageWithLayout } from '../../types';
 import { scaffold } from '../../utils/next';
 
 export const getServerSideProps : GetServerSideProps = scaffold(async (context) => {
@@ -34,17 +35,23 @@ type OrgPageProps = {
     orgId: string;
 };
 
-export default function OrgPage(props : OrgPageProps) : JSX.Element {
+const OrgPage : PageWithLayout<OrgPageProps> = (props) =>{
     const { orgId } = props;
     const orgQuery = useQuery(['org', orgId], getOrg(orgId));
 
-    return ( 
+    return (
         <>
             <h1>{ orgQuery.data?.title }</h1>
-            <ul>
-                <li><Link href={ `/o/${orgId}/campaigns` }>Campaigns</Link></li>
-                <li><Link href={ `/o/${orgId}/events` }>Events</Link></li>
-            </ul>
         </>
     );
-}
+};
+
+OrgPage.getLayout = function getLayout(page, props) {
+    return (
+        <OrgLayout orgId={ props.orgId as string }>
+            { page }
+        </OrgLayout>
+    );
+};
+
+export default OrgPage;

@@ -36,7 +36,11 @@ export const getServerSideProps : GetServerSideProps = scaffold(async (context) 
     }
 });
 
-const OrgEventsPage : PageWithLayout = (page, props) => {
+type OrgEventsPageProps = {
+    orgId: string;
+};
+
+const OrgEventsPage : PageWithLayout<OrgEventsPageProps> = (props) => {
     const { orgId } = props;
     const eventsQuery = useQuery('events', getEvents(orgId));
     const orgQuery = useQuery(['org', orgId], getOrg(orgId));
