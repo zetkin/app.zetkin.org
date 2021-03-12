@@ -1,4 +1,3 @@
-import { FormattedMessage as Msg } from 'react-intl';
 import React from 'react';
 import {
     Button,
@@ -6,6 +5,7 @@ import {
     Form, 
     TextField,
 } from '@adobe/react-spectrum';
+import { FormattedMessage as Msg, useIntl } from 'react-intl';
 
 interface RegistrationFormUserData {
     email: string;
@@ -46,6 +46,8 @@ const RegistrationForm = ({ onValidSubmit } : RegistrationFormProps) : JSX.Eleme
     const inputFieldPhone = <Msg id="components.registrationForm.input_field_phone"/>;
     const inputFieldPassword = <Msg id="components.registrationForm.input_field_password"/>;
 
+    const messageToString = useIntl().formatMessage;
+
     return (
         <Flex>
             <Form data-test="reg-form" onSubmit={ onSubmit }>
@@ -53,8 +55,9 @@ const RegistrationForm = ({ onValidSubmit } : RegistrationFormProps) : JSX.Eleme
                     data-test="first-name"
                     label={ inputFieldFirstName }
                     onChange={ setFirstName }
-                    //TODO: Get string from Msg
-                    /* placeholder={ inputFieldFirstName } */
+                    placeholder={
+                        messageToString({ id: inputFieldFirstName.props.id })
+                    }
                     type="text"
                     value={ firstName }
                 />
@@ -62,8 +65,9 @@ const RegistrationForm = ({ onValidSubmit } : RegistrationFormProps) : JSX.Eleme
                     data-test="last-name"
                     label={ inputFieldLastName }
                     onChange={ setLastName }
-                    //TODO: Get string from Msg
-                    /* placeholder={ inputFieldLastName } */
+                    placeholder={
+                        messageToString({ id: inputFieldLastName.props.id })
+                    }
                     type="text"
                     value={ lastName }
                 />
@@ -71,8 +75,9 @@ const RegistrationForm = ({ onValidSubmit } : RegistrationFormProps) : JSX.Eleme
                     data-test="email-address"
                     label={ inputFieldEmail }
                     onChange={ setEmail }
-                    //TODO: Get string from Msg
-                    /* placeholder={ inputFieldEmail } */
+                    placeholder={
+                        messageToString({ id: inputFieldEmail.props.id })
+                    }
                     type="email" 
                     value={ email }
                 />
@@ -80,8 +85,9 @@ const RegistrationForm = ({ onValidSubmit } : RegistrationFormProps) : JSX.Eleme
                     data-test="phone-number"
                     label={ inputFieldPhone }
                     onChange={ setPhone }
-                    //TODO: Get string from Msg
-                    /* placeholder={ inputFieldPhone } */
+                    placeholder={
+                        messageToString({ id: inputFieldPhone.props.id })
+                    }
                     type="tel"
                     value={ phone }
                 />
@@ -89,8 +95,9 @@ const RegistrationForm = ({ onValidSubmit } : RegistrationFormProps) : JSX.Eleme
                     data-test="password"
                     label={ inputFieldPassword }
                     onChange={ setPassword }
-                    //TODO: Get string from Msg
-                    /* placeholder={ inputFieldPassword } */
+                    placeholder={
+                        messageToString({ id: inputFieldPassword.props.id })
+                    }
                     type="password"
                     value={ password }
                 />
