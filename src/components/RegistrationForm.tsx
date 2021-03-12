@@ -1,3 +1,4 @@
+import { FormattedMessage as Msg } from 'react-intl';
 import React from 'react';
 import {
     Button,
@@ -39,46 +40,57 @@ const RegistrationForm = ({ onValidSubmit } : RegistrationFormProps) : JSX.Eleme
         ev.preventDefault();
     };
 
+    const inputFieldFirstName = <Msg id="components.registrationForm.input_field_first_name"/>;
+    const inputFieldLastName = <Msg id="components.registrationForm.input_field_last_name"/>;
+    const inputFieldEmail = <Msg id="components.registrationForm.input_field_email"/>;
+    const inputFieldPhone = <Msg id="components.registrationForm.input_field_phone"/>;
+    const inputFieldPassword = <Msg id="components.registrationForm.input_field_password"/>;
+
     return (
         <Flex>
             <Form data-test="reg-form" onSubmit={ onSubmit }>
                 <TextField
                     data-test="first-name"
-                    label="First name"
+                    label={ inputFieldFirstName }
                     onChange={ setFirstName }
-                    placeholder="First name"
+                    //TODO: Get string from Msg
+                    /* placeholder={ inputFieldFirstName } */
                     type="text"
                     value={ firstName }
                 />
                 <TextField
                     data-test="last-name"
-                    label="Last name"
+                    label={ inputFieldLastName }
                     onChange={ setLastName }
-                    placeholder="Last name"
+                    //TODO: Get string from Msg
+                    /* placeholder={ inputFieldLastName } */
                     type="text"
                     value={ lastName }
                 />
                 <TextField
                     data-test="email-address"
-                    label="E-mail"
+                    label={ inputFieldEmail }
                     onChange={ setEmail }
-                    placeholder="E-mail"
+                    //TODO: Get string from Msg
+                    /* placeholder={ inputFieldEmail } */
                     type="email" 
                     value={ email }
                 />
                 <TextField
                     data-test="phone-number"
-                    label="Phone number"
+                    label={ inputFieldPhone }
                     onChange={ setPhone }
-                    placeholder="Phone number"
+                    //TODO: Get string from Msg
+                    /* placeholder={ inputFieldPhone } */
                     type="tel"
                     value={ phone }
                 />
                 <TextField
                     data-test="password"
-                    label="Password"
+                    label={ inputFieldPassword }
                     onChange={ setPassword }
-                    placeholder="Password"
+                    //TODO: Get string from Msg
+                    /* placeholder={ inputFieldPassword } */
                     type="password"
                     value={ password }
                 />
@@ -86,7 +98,7 @@ const RegistrationForm = ({ onValidSubmit } : RegistrationFormProps) : JSX.Eleme
                     data-test="submit-button"
                     type="submit"
                     variant="cta">
-                    Submit
+                    <Msg id="components.registrationForm.submit_button"/>
                 </Button>
             </Form>
         </Flex>

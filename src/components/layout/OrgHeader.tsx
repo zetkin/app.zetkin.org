@@ -1,3 +1,4 @@
+import { FormattedMessage as Msg } from 'react-intl';
 import NextLink from 'next/link';
 import {
     Button,
@@ -35,11 +36,13 @@ const OrgHeader = ({ org } : OrgHeaderProps) : JSX.Element => {
                     <View marginX="size-200">
                         <Link>
                             <NextLink href="/">
-                                <a>Edit Page</a>
+                                <a><Msg id="components.layout.orgHeader.edit_link"/></a>
                             </NextLink>
                         </Link>
                     </View>
-                    <Button data-test="unfollow-button" variant="cta">Unfollow</Button>
+                    <Button data-test="unfollow-button" variant="cta">
+                        <Msg id="components.layout.orgHeader.unfollow_button"/>
+                    </Button>
                 </Flex>
             </Flex>
             <View>

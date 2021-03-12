@@ -1,5 +1,7 @@
 import { dehydrate } from 'react-query/hydration';
 import { GetServerSideProps } from 'next';
+import { Heading } from '@adobe/react-spectrum';
+import { FormattedMessage as Msg } from 'react-intl';
 import { QueryClient, useQuery } from 'react-query';
 
 import getCampaigns from '../../../fetching/getCampaigns';
@@ -45,7 +47,9 @@ const OrgCampaignsPage : PageWithLayout<OrgCampaignsPageProps> = (props) => {
 
     return (
         <>
-            <h1>Campaigns for { orgQuery.data?.title }</h1>
+            <Heading level={ 1 }>
+                <Msg id="pages.o.orgId.campaigns.title"/> { orgQuery.data?.title }
+            </Heading>
             <ul>
                 { campaignsQuery.data?.map((c) => (
                     <li key={ c.id }>{ c.title }</li>

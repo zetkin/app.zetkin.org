@@ -1,3 +1,4 @@
+import { FormattedMessage as Msg } from 'react-intl';
 import NextLink from 'next/link';
 import {
     Button,
@@ -61,7 +62,7 @@ const PublicHeader = ({ user, org } : PublicHeaderProps) : JSX.Element => {
                 ) : (
                     <NextLink href="/login">
                         <Button data-test="login-button" variant="cta">
-                            Login
+                            <Msg id="components.publicHeader.login_button"/>
                         </Button>
                     </NextLink>
                 ) }

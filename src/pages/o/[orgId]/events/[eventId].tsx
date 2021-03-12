@@ -1,5 +1,6 @@
 import { dehydrate } from 'react-query/hydration';
 import { GetServerSideProps } from 'next';
+import { FormattedMessage as Msg } from 'react-intl';
 import NextLink from 'next/link';
 import { Button, Flex, Heading, Link, Text } from '@adobe/react-spectrum';
 import { QueryClient, useQuery } from 'react-query';
@@ -53,7 +54,7 @@ export default function OrgEventPage(props : OrgEventPageProps) : JSX.Element {
             </Heading>
             <Flex>
                 <Text marginEnd="size-50">
-                    Organization:
+                    <Msg id="pages.o.orgId.events.eventId.list_title_org"/>:
                 </Text>
                 <Link>
                     <NextLink href={ `/o/${orgId}` }>
@@ -63,7 +64,7 @@ export default function OrgEventPage(props : OrgEventPageProps) : JSX.Element {
             </Flex>
             <Flex>
                 <Text marginEnd="size-50">
-                    Campaign:
+                    <Msg id="pages.o.orgId.events.eventId.list_title_campaign"/>:
                 </Text>
                 <Link>
                     <NextLink href={ `/o/${orgId}/campaigns/${eventQueryData?.campaign.id}` }>
@@ -73,7 +74,7 @@ export default function OrgEventPage(props : OrgEventPageProps) : JSX.Element {
             </Flex>
             <Flex>
                 <Text marginEnd="size-50">
-                    Start:
+                    <Msg id="pages.o.orgId.events.eventId.list_title_start"/>:
                 </Text>
                 <Text data-test="start-time">
                     { eventQueryData?.start_time }
@@ -81,7 +82,7 @@ export default function OrgEventPage(props : OrgEventPageProps) : JSX.Element {
             </Flex>
             <Flex>
                 <Text marginEnd="size-50">
-                    End:
+                    <Msg id="pages.o.orgId.events.eventId.list_title_end"/>:
                 </Text>
                 <Text data-test="end-time">
                     { eventQueryData?.end_time }
@@ -89,7 +90,7 @@ export default function OrgEventPage(props : OrgEventPageProps) : JSX.Element {
             </Flex>
             <Flex>
                 <Text marginEnd="size-50">
-                    Information:
+                    <Msg id="pages.o.orgId.events.eventId.list_title_info"/>:
                 </Text>
                 <Text data-test="info-text">
                     { eventQueryData?.info_text }
@@ -97,14 +98,14 @@ export default function OrgEventPage(props : OrgEventPageProps) : JSX.Element {
             </Flex>
             <Flex>
                 <Text marginEnd="size-50">
-                    Location:
+                    <Msg id="pages.o.orgId.events.eventId.list_title_location"/>:
                 </Text>
                 <Text data-test="location">
                     { eventQueryData?.location.title }
                 </Text>
             </Flex>
             <Button data-test="sign-up-button" marginY="size-200" variant="cta">
-                Sign-up
+                <Msg id="pages.o.orgId.events.eventId.signup_button"/>
             </Button>
         </Flex>
     );

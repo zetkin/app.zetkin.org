@@ -1,6 +1,7 @@
 //TODO: Enable eslint rule and fix errors
 /* eslint-disable  @typescript-eslint/no-non-null-assertion */
 import { Content } from '@react-spectrum/view';
+import { FormattedMessage as Msg } from 'react-intl';
 import { ReactText } from 'react';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
@@ -34,6 +35,10 @@ const OrgLayout = ({ children, orgId } : OrgLayoutProps) : JSX.Element => {
         }
     };
 
+    const firstTab = <Msg id="components.layout.orgLayout.tab_1"/>;
+    const secondTab = <Msg id="components.layout.orgLayout.tab_2"/>;
+    const thirdTab = <Msg id="components.layout.orgLayout.tab_3"/>;
+
     return (
         <DefaultLayout org={ orgQuery.data! }>
             <OrgHeader org={ orgQuery.data! }/>
@@ -41,13 +46,13 @@ const OrgLayout = ({ children, orgId } : OrgLayoutProps) : JSX.Element => {
                 aria-label="Organization submenu"
                 onSelectionChange={ onSelectTab }
                 selectedKey={ currentTab }>
-                <Item key="home" title="Home">
+                <Item key="home" title={ firstTab }>
                     <Content>{ children }</Content>
                 </Item>
-                <Item key="events" title="Coming up">
+                <Item key="events" title={ secondTab }>
                     <Content>{ children }</Content>
                 </Item>
-                <Item key="campaigns" title="Campaigns">
+                <Item key="campaigns" title={ thirdTab }>
                     <Content>{ children }</Content>
                 </Item>
             </Tabs>

@@ -1,3 +1,4 @@
+import { FormattedMessage as Msg } from 'react-intl';
 import { Button, Flex, Text, View } from '@adobe/react-spectrum';
 
 import { ZetkinEvent } from '../interfaces/ZetkinEvent';
@@ -12,7 +13,7 @@ const EventList = ({ events, org } : EventListProps) : JSX.Element => {
     if (!events || events.length === 0) {
         return (
             <Text data-test="no-events-placeholder">
-                Sorry, there are no planned events at the moment.
+                <Msg id="components.eventList.placeholder"/>
             </Text>
         );
     }
@@ -30,7 +31,9 @@ const EventList = ({ events, org } : EventListProps) : JSX.Element => {
                         <View data-test="start-time">{ e.start_time }</View>
                         <View data-test="end-time">{ e.end_time }</View>
                         <View data-test="location-title">{ e.location.title }</View>
-                        <Button data-test="sign-up-button" variant="cta">Sign-up</Button>
+                        <Button data-test="sign-up-button" variant="cta">
+                            <Msg id="components.eventList.signup_button"/>
+                        </Button>
                     </Flex>
                 )) }
             </Flex>
