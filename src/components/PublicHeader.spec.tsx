@@ -1,3 +1,4 @@
+import { IntlProvider } from 'react-intl';
 import { mount } from '@cypress/react';
 
 import PublicHeader from './PublicHeader';
@@ -13,7 +14,13 @@ describe('PublicHeader', () => {
     };
 
     it('contains a login button when not logged in', () => {
-        mount(<PublicHeader user={ null }/>);
+        mount(
+            <IntlProvider
+                locale="en"
+                messages={{ 'components.publicHeader.login_button': 'Login' }}>
+                <PublicHeader user={ null } />
+            </IntlProvider>,
+        );
         cy.get('[data-test="login-button"]').should('be.visible');
     });
 

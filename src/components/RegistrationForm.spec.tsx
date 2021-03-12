@@ -1,3 +1,4 @@
+import { IntlProvider } from 'react-intl';
 import { mount } from '@cypress/react';
 import { defaultTheme, Provider } from '@adobe/react-spectrum';
 
@@ -23,7 +24,20 @@ describe('Registration Form', () => {
             phone: '123123123',
         };
 
-        mountWithTheme(<RegistrationForm onValidSubmit={ spyOnSubmit } />);
+        const dummyIntl = {
+            'components.registrationForm.input_field_email': 'E-mail',
+            'components.registrationForm.input_field_first_name': 'First name',
+            'components.registrationForm.input_field_last_name': 'Last name',
+            'components.registrationForm.input_field_password': 'Password',
+            'components.registrationForm.input_field_phone': 'Phone number',
+            'components.registrationForm.submit_button': 'Submit',
+        };
+
+        mountWithTheme(
+            <IntlProvider locale="en" messages={ dummyIntl }>
+                <RegistrationForm onValidSubmit={ spyOnSubmit } />
+            </IntlProvider>,
+        );
 
         cy.get('[data-test="first-name"]').type(dummyInput.first_name);
         cy.get('[data-test="last-name"]').type(dummyInput.last_name);
