@@ -1,0 +1,8 @@
+details:
+  org: Organization
+  campaign: Campaign
+  start: Start
+  end: End
+  info: Information
+  location: Location
+signUpButton: Sign-up

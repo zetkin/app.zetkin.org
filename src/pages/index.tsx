@@ -13,7 +13,10 @@ import { scaffold } from '../utils/next';
 const Z = require('zetkin');
 
 const scaffoldOptions = {
-    localeScope: ['pages.home'],
+    localeScope: [
+        'pages.home',
+        'misc.publicHeader',
+    ],
 };
 
 export const getServerSideProps : GetServerSideProps = scaffold(async (context) => {

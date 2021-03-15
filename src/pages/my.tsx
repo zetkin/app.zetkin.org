@@ -5,11 +5,15 @@ import { FormattedMessage as Msg } from 'react-intl';
 import { scaffold } from '../utils/next';
 import { ZetkinUser } from '../interfaces/ZetkinUser';
 
+const scaffoldOptions = {
+    localeScope: ['pages.my'],
+};
+
 export const getServerSideProps : GetServerSideProps = scaffold(async () => {
     return {
         props: {},
     };
-});
+}, scaffoldOptions);
 
 interface MyPageProps {
     user: ZetkinUser;
@@ -18,7 +22,7 @@ interface MyPageProps {
 export default function MyPage({ user } : MyPageProps) : JSX.Element {
     return (
         <Heading level={ 1 }>
-            <Msg id="pages.my.welcome"/>, { user.first_name }
+            <Msg id="pages.my.welcome" values={{ userName: user.first_name }}/>
         </Heading>
     );
 }

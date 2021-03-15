@@ -13,7 +13,7 @@ const EventList = ({ events, org } : EventListProps) : JSX.Element => {
     if (!events || events.length === 0) {
         return (
             <Text data-test="no-events-placeholder">
-                <Msg id="components.eventList.placeholder"/>
+                <Msg id="misc.eventList.placeholder"/>
             </Text>
         );
     }
@@ -32,7 +32,7 @@ const EventList = ({ events, org } : EventListProps) : JSX.Element => {
                         <View data-test="end-time">{ e.end_time }</View>
                         <View data-test="location-title">{ e.location.title }</View>
                         <Button data-test="sign-up-button" variant="cta">
-                            <Msg id="components.eventList.signup_button"/>
+                            <Msg id="misc.eventList.signupButton"/>
                         </Button>
                     </Flex>
                 )) }

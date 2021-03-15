@@ -36,12 +36,12 @@ const OrgHeader = ({ org } : OrgHeaderProps) : JSX.Element => {
                     <View marginX="size-200">
                         <Link>
                             <NextLink href="/">
-                                <a><Msg id="components.layout.orgHeader.edit_link"/></a>
+                                <a><Msg id="layout.orgHeader.editLink"/></a>
                             </NextLink>
                         </Link>
                     </View>
                     <Button data-test="unfollow-button" variant="cta">
-                        <Msg id="components.layout.orgHeader.unfollow_button"/>
+                        <Msg id="layout.orgHeader.unfollowButton"/>
                     </Button>
                 </Flex>
             </Flex>

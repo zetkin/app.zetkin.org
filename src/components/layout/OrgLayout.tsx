@@ -35,9 +35,9 @@ const OrgLayout = ({ children, orgId } : OrgLayoutProps) : JSX.Element => {
         }
     };
 
-    const firstTab = <Msg id="components.layout.orgLayout.tab_1"/>;
-    const secondTab = <Msg id="components.layout.orgLayout.tab_2"/>;
-    const thirdTab = <Msg id="components.layout.orgLayout.tab_3"/>;
+    const tab1 = <Msg id="layout.org.tabs.home"/>;
+    const tab2 = <Msg id="layout.org.tabs.comingUp"/>;
+    const tab3 = <Msg id="layout.org.tabs.campaigns"/>;
 
     return (
         <DefaultLayout org={ orgQuery.data! }>
@@ -46,13 +46,13 @@ const OrgLayout = ({ children, orgId } : OrgLayoutProps) : JSX.Element => {
                 aria-label="Organization submenu"
                 onSelectionChange={ onSelectTab }
                 selectedKey={ currentTab }>
-                <Item key="home" title={ firstTab }>
+                <Item key="home" title={ tab1 }>
                     <Content>{ children }</Content>
                 </Item>
-                <Item key="events" title={ secondTab }>
+                <Item key="events" title={ tab2 }>
                     <Content>{ children }</Content>
                 </Item>
-                <Item key="campaigns" title={ thirdTab }>
+                <Item key="campaigns" title={ tab3 }>
                     <Content>{ children }</Content>
                 </Item>
             </Tabs>

@@ -25,12 +25,12 @@ describe('Registration Form', () => {
         };
 
         const dummyIntl = {
-            'components.registrationForm.input_field_email': 'E-mail',
-            'components.registrationForm.input_field_first_name': 'First name',
-            'components.registrationForm.input_field_last_name': 'Last name',
-            'components.registrationForm.input_field_password': 'Password',
-            'components.registrationForm.input_field_phone': 'Phone number',
-            'components.registrationForm.submit_button': 'Submit',
+            'forms.reg.fields.email': 'E-mail',
+            'forms.reg.fields.firstName': 'First name',
+            'forms.reg.fields.lastName': 'Last name',
+            'forms.reg.fields.password': 'Password',
+            'forms.reg.fields.phone': 'Phone number',
+            'forms.reg.submitButton': 'Submit',
         };
 
         mountWithTheme(

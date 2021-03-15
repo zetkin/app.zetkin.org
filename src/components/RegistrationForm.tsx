@@ -40,11 +40,11 @@ const RegistrationForm = ({ onValidSubmit } : RegistrationFormProps) : JSX.Eleme
         ev.preventDefault();
     };
 
-    const inputFieldFirstName = <Msg id="components.registrationForm.input_field_first_name"/>;
-    const inputFieldLastName = <Msg id="components.registrationForm.input_field_last_name"/>;
-    const inputFieldEmail = <Msg id="components.registrationForm.input_field_email"/>;
-    const inputFieldPhone = <Msg id="components.registrationForm.input_field_phone"/>;
-    const inputFieldPassword = <Msg id="components.registrationForm.input_field_password"/>;
+    const field1 = <Msg id="forms.reg.fields.firstName"/>;
+    const field2 = <Msg id="forms.reg.fields.lastName"/>;
+    const field3 = <Msg id="forms.reg.fields.email"/>;
+    const field4 = <Msg id="forms.reg.fields.phone"/>;
+    const field5 = <Msg id="forms.reg.fields.password"/>;
 
     const messageToString = useIntl().formatMessage;
 
@@ -53,50 +53,50 @@ const RegistrationForm = ({ onValidSubmit } : RegistrationFormProps) : JSX.Eleme
             <Form data-test="reg-form" onSubmit={ onSubmit }>
                 <TextField
                     data-test="first-name"
-                    label={ inputFieldFirstName }
+                    label={ field1 }
                     onChange={ setFirstName }
                     placeholder={
-                        messageToString({ id: inputFieldFirstName.props.id })
+                        messageToString({ id: field1.props.id })
                     }
                     type="text"
                     value={ firstName }
                 />
                 <TextField
                     data-test="last-name"
-                    label={ inputFieldLastName }
+                    label={ field2 }
                     onChange={ setLastName }
                     placeholder={
-                        messageToString({ id: inputFieldLastName.props.id })
+                        messageToString({ id: field2.props.id })
                     }
                     type="text"
                     value={ lastName }
                 />
                 <TextField
                     data-test="email-address"
-                    label={ inputFieldEmail }
+                    label={ field3 }
                     onChange={ setEmail }
                     placeholder={
-                        messageToString({ id: inputFieldEmail.props.id })
+                        messageToString({ id: field3.props.id })
                     }
                     type="email" 
                     value={ email }
                 />
                 <TextField
                     data-test="phone-number"
-                    label={ inputFieldPhone }
+                    label={ field4 }
                     onChange={ setPhone }
                     placeholder={
-                        messageToString({ id: inputFieldPhone.props.id })
+                        messageToString({ id: field4.props.id })
                     }
                     type="tel"
                     value={ phone }
                 />
                 <TextField
                     data-test="password"
-                    label={ inputFieldPassword }
+                    label={ field5 }
                     onChange={ setPassword }
                     placeholder={
-                        messageToString({ id: inputFieldPassword.props.id })
+                        messageToString({ id: field5.props.id })
                     }
                     type="password"
                     value={ password }
@@ -105,7 +105,7 @@ const RegistrationForm = ({ onValidSubmit } : RegistrationFormProps) : JSX.Eleme
                     data-test="submit-button"
                     type="submit"
                     variant="cta">
-                    <Msg id="components.registrationForm.submit_button"/>
+                    <Msg id="forms.reg.submitButton"/>
                 </Button>
             </Form>
         </Flex>

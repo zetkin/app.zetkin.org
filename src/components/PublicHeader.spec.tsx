@@ -17,7 +17,7 @@ describe('PublicHeader', () => {
         mount(
             <IntlProvider
                 locale="en"
-                messages={{ 'components.publicHeader.login_button': 'Login' }}>
+                messages={{ 'components.publicHeader.loginButton': 'Login' }}>
                 <PublicHeader user={ null } />
             </IntlProvider>,
         );

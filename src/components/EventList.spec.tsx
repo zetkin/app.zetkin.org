@@ -25,7 +25,7 @@ describe('EventList', () => {
         <IntlProvider
             locale="en"
             messages={{
-                'components.eventList.placeholder':
+                'misc.eventList.placeholder':
                 'Sorry, there are no planned events at the moment.',
             }}>
             { elem }

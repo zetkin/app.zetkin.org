@@ -10,6 +10,15 @@ import OrgLayout from '../../../components/layout/OrgLayout';
 import { PageWithLayout } from '../../../types';
 import { scaffold } from '../../../utils/next';
 
+const scaffoldOptions = {
+    localeScope: [
+        'layout.org',
+        'layout.orgHeader',
+        'misc.eventList',
+        'misc.publicHeader',
+    ],
+};
+
 export const getServerSideProps : GetServerSideProps = scaffold(async (context) => {
     const queryClient = new QueryClient();
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -34,7 +43,7 @@ export const getServerSideProps : GetServerSideProps = scaffold(async (context) 
             notFound: true,
         };
     }
-});
+}, scaffoldOptions);
 
 type OrgEventsPageProps = {
     orgId: string;

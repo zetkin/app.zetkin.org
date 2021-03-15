@@ -62,7 +62,7 @@ const PublicHeader = ({ user, org } : PublicHeaderProps) : JSX.Element => {
                 ) : (
                     <NextLink href="/login">
                         <Button data-test="login-button" variant="cta">
-                            <Msg id="components.publicHeader.login_button"/>
+                            <Msg id="misc.publicHeader.loginButton"/>
                         </Button>
                     </NextLink>
                 ) }

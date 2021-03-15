@@ -10,6 +10,15 @@ import OrgLayout from '../../../components/layout/OrgLayout';
 import { PageWithLayout } from '../../../types';
 import { scaffold } from '../../../utils/next';
 
+const scaffoldOptions = {
+    localeScope: [
+        'layout.org',
+        'layout.orgHeader',
+        'misc.publicHeader',
+        'pages.orgCampaigns',
+    ],
+};
+
 export const getServerSideProps : GetServerSideProps = scaffold(async (context) => {
     const queryClient = new QueryClient();
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -34,7 +43,7 @@ export const getServerSideProps : GetServerSideProps = scaffold(async (context) 
             notFound: true,
         };
     }
-});
+}, scaffoldOptions);
 
 type OrgCampaignsPageProps = {
     orgId: string;
@@ -48,7 +57,7 @@ const OrgCampaignsPage : PageWithLayout<OrgCampaignsPageProps> = (props) => {
     return (
         <>
             <Heading level={ 1 }>
-                <Msg id="pages.o.orgId.campaigns.title"/> { orgQuery.data?.title }
+                <Msg id="pages.orgCampaigns.title"/> { orgQuery.data?.title }
             </Heading>
             <ul>
                 { campaignsQuery.data?.map((c) => (

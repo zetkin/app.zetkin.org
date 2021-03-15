@@ -9,6 +9,13 @@ import getEvent from '../../../../fetching/getEvent';
 import getOrg from '../../../../fetching/getOrg';
 import { scaffold } from '../../../../utils/next';
 
+const scaffoldOptions = {
+    localeScope: [
+        'misc.publicHeader',
+        'pages.orgEvent',
+    ],
+};
+
 export const getServerSideProps : GetServerSideProps = scaffold(async (context) => {
     const queryClient = new QueryClient();
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -34,7 +41,7 @@ export const getServerSideProps : GetServerSideProps = scaffold(async (context) 
             notFound: true,
         };
     }
-});
+}, scaffoldOptions);
 
 type OrgEventPageProps = {
     eventId: string;
@@ -54,7 +61,7 @@ export default function OrgEventPage(props : OrgEventPageProps) : JSX.Element {
             </Heading>
             <Flex>
                 <Text marginEnd="size-50">
-                    <Msg id="pages.o.orgId.events.eventId.list_title_org"/>:
+                    <Msg id="pages.orgEvent.details.org"/>:
                 </Text>
                 <Link>
                     <NextLink href={ `/o/${orgId}` }>
@@ -64,7 +71,7 @@ export default function OrgEventPage(props : OrgEventPageProps) : JSX.Element {
             </Flex>
             <Flex>
                 <Text marginEnd="size-50">
-                    <Msg id="pages.o.orgId.events.eventId.list_title_campaign"/>:
+                    <Msg id="pages.orgEvent.details.campaign"/>:
                 </Text>
                 <Link>
                     <NextLink href={ `/o/${orgId}/campaigns/${eventQueryData?.campaign.id}` }>
@@ -74,7 +81,7 @@ export default function OrgEventPage(props : OrgEventPageProps) : JSX.Element {
             </Flex>
             <Flex>
                 <Text marginEnd="size-50">
-                    <Msg id="pages.o.orgId.events.eventId.list_title_start"/>:
+                    <Msg id="pages.orgEvent.details.start"/>:
                 </Text>
                 <Text data-test="start-time">
                     { eventQueryData?.start_time }
@@ -82,7 +89,7 @@ export default function OrgEventPage(props : OrgEventPageProps) : JSX.Element {
             </Flex>
             <Flex>
                 <Text marginEnd="size-50">
-                    <Msg id="pages.o.orgId.events.eventId.list_title_end"/>:
+                    <Msg id="pages.orgEvent.details.end"/>:
                 </Text>
                 <Text data-test="end-time">
                     { eventQueryData?.end_time }
@@ -90,7 +97,7 @@ export default function OrgEventPage(props : OrgEventPageProps) : JSX.Element {
             </Flex>
             <Flex>
                 <Text marginEnd="size-50">
-                    <Msg id="pages.o.orgId.events.eventId.list_title_info"/>:
+                    <Msg id="pages.orgEvent.details.info"/>:
                 </Text>
                 <Text data-test="info-text">
                     { eventQueryData?.info_text }
@@ -98,14 +105,14 @@ export default function OrgEventPage(props : OrgEventPageProps) : JSX.Element {
             </Flex>
             <Flex>
                 <Text marginEnd="size-50">
-                    <Msg id="pages.o.orgId.events.eventId.list_title_location"/>:
+                    <Msg id="pages.orgEvent.details.location"/>:
                 </Text>
                 <Text data-test="location">
                     { eventQueryData?.location.title }
                 </Text>
             </Flex>
             <Button data-test="sign-up-button" marginY="size-200" variant="cta">
-                <Msg id="pages.o.orgId.events.eventId.signup_button"/>
+                <Msg id="pages.orgEvent.signUpButton"/>
             </Button>
         </Flex>
     );

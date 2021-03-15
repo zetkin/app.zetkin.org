@@ -1,0 +1,7 @@
+fields:
+  firstName: First name
+  lastName: Last name
+  email: E-mail
+  phone: Phone number
+  password: Password
+submitButton: Submit
