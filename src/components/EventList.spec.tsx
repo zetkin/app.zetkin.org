@@ -20,23 +20,22 @@ describe('EventList', () => {
             });
     });
 
-    const withIntl = (
-        events : ZetkinEvent[] | undefined,
-        org : ZetkinOrganization) => {
-        return (
-            <IntlProvider
-                locale="en"
-                messages={{
-                    'components.eventList.placeholder':
-                    'Sorry, there are no planned events at the moment.',
-                }}>
-                <EventList events={ events } org={ org }/>
-            </IntlProvider>
-        );
-    };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const mountWithIntl = (elem : any) : any => mount(
+        <IntlProvider
+            locale="en"
+            messages={{
+                'components.eventList.placeholder':
+                'Sorry, there are no planned events at the moment.',
+            }}>
+            { elem }
+        </IntlProvider>,
+    );
 
     it('contains data for each event', () => {
-        mount(withIntl(dummyEvents, dummyOrg));
+        mountWithIntl(
+            <EventList events={ dummyEvents } org={ dummyOrg }/>,
+        );
 
         cy.get('[data-test="event"]').each((item) => {
             cy.wrap(item)
@@ -51,7 +50,9 @@ describe('EventList', () => {
 
     it('contains an activity title instead of missing event title', () => {
         dummyEvents[0].title = undefined;
-        mount(withIntl(dummyEvents, dummyOrg));
+        mountWithIntl(
+            <EventList events={ dummyEvents } org={ dummyOrg }/>,
+        );
 
         cy.get('[data-test="event"]')
             .should('contain', dummyEvents[0].activity.title)
@@ -59,20 +60,26 @@ describe('EventList', () => {
     });
 
     it('contains a sign-up button for each event', () => {
-        mount(withIntl(dummyEvents, dummyOrg));
+        mountWithIntl(
+            <EventList events={ dummyEvents } org={ dummyOrg }/>,
+        );
 
         cy.get('[data-test="sign-up-button"]').should('be.visible');
     });
 
     it('shows a placeholder when the list is empty', () => {
         dummyEvents = [];
-        mount(withIntl(dummyEvents, dummyOrg));
+        mountWithIntl(
+            <EventList events={ dummyEvents } org={ dummyOrg }/>,
+        );
 
         cy.get('[data-test="no-events-placeholder"]').should('be.visible');
     });
 
     it('shows a placeholder when the list is undefined', () => {
-        mount(withIntl(undefined, dummyOrg));
+        mountWithIntl(
+            <EventList events={ undefined } org={ dummyOrg }/>,
+        );
 
         cy.get('[data-test="no-events-placeholder"]').should('be.visible');
     });
