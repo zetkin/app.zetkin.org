@@ -50,7 +50,7 @@ describe('EventList', () => {
             <EventList events={ dummyEvents } org={ dummyOrg }/>,
         );
 
-        cy.get('[data-test="sign-up-button"]').should('be.visible');
+        cy.contains('misc.eventList.signupButton');
     });
 
     it('shows a placeholder when the list is empty', () => {
@@ -59,7 +59,7 @@ describe('EventList', () => {
             <EventList events={ dummyEvents } org={ dummyOrg }/>,
         );
 
-        cy.get('[data-test="no-events-placeholder"]').should('be.visible');
+        cy.contains('misc.eventList.placeholder');
     });
 
     it('shows a placeholder when the list is undefined', () => {
@@ -67,6 +67,6 @@ describe('EventList', () => {
             <EventList events={ undefined } org={ dummyOrg }/>,
         );
 
-        cy.get('[data-test="no-events-placeholder"]').should('be.visible');
+        cy.contains('misc.eventList.placeholder');
     });
 });
