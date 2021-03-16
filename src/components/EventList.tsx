@@ -1,5 +1,9 @@
-import { FormattedMessage as Msg } from 'react-intl';
 import { Button, Flex, Text, View } from '@adobe/react-spectrum';
+import {
+    FormattedDate,
+    FormattedTime,
+    FormattedMessage as Msg,
+} from 'react-intl';
 
 import { ZetkinEvent } from '../interfaces/ZetkinEvent';
 import { ZetkinOrganization } from '../interfaces/ZetkinOrganization';
@@ -28,8 +32,26 @@ const EventList = ({ events, org } : EventListProps) : JSX.Element => {
                         </View>
                         <View data-test="org-title">{ org?.title }</View>
                         <View data-test="campaign-title">{ e.campaign.title }</View>
-                        <View data-test="start-time">{ e.start_time }</View>
-                        <View data-test="end-time">{ e.end_time }</View>
+                        <View data-test="start-time">
+                            <FormattedDate
+                                day="2-digit"
+                                month="long"
+                                value={ Date.parse(e.start_time) }
+                            />
+                            , <FormattedTime
+                                value={ Date.parse(e.start_time) }
+                            />
+                        </View>
+                        <View data-test="end-time">
+                            <FormattedDate
+                                day="2-digit"
+                                month="long"
+                                value={ Date.parse(e.end_time) }
+                            />
+                            , <FormattedTime
+                                value={ Date.parse(e.end_time) }
+                            />
+                        </View>
                         <View data-test="location-title">{ e.location.title }</View>
                         <Button data-test="sign-up-button" variant="cta">
                             <Msg id="misc.eventList.signupButton"/>

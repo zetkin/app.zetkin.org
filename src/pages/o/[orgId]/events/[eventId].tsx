@@ -1,8 +1,12 @@
 import { dehydrate } from 'react-query/hydration';
 import { GetServerSideProps } from 'next';
-import { FormattedMessage as Msg } from 'react-intl';
 import NextLink from 'next/link';
 import { Button, Flex, Heading, Link, Text } from '@adobe/react-spectrum';
+import {
+    FormattedDate,
+    FormattedTime,
+    FormattedMessage as Msg,
+} from 'react-intl';
 import { QueryClient, useQuery } from 'react-query';
 
 import getEvent from '../../../../fetching/getEvent';
@@ -55,6 +59,7 @@ export default function OrgEventPage(props : OrgEventPageProps) : JSX.Element {
     const eventQueryData = eventQuery.data;
 
     return (
+        //TODO: Break out eventinfo-component and test placeholder text when missing info?
         <Flex direction="column">
             <Heading data-test="event-title" level={ 1 }>
                 { eventQueryData?.title ? eventQueryData.title : eventQueryData?.activity.title }
@@ -83,17 +88,35 @@ export default function OrgEventPage(props : OrgEventPageProps) : JSX.Element {
                 <Text marginEnd="size-50">
                     <Msg id="pages.orgEvent.details.start"/>:
                 </Text>
-                <Text data-test="start-time">
-                    { eventQueryData?.start_time }
-                </Text>
+                { eventQueryData ? (
+                    <Text data-test="start-time">
+                        <FormattedDate
+                            day="2-digit"
+                            month="long"
+                            value={ Date.parse(eventQueryData.start_time) }
+                        />
+                        , <FormattedTime
+                            value={ Date.parse(eventQueryData.start_time) }
+                        />
+                    </Text>
+                ) : <Msg id="pages.orgEvent.details.org"/> }
             </Flex>
             <Flex>
                 <Text marginEnd="size-50">
                     <Msg id="pages.orgEvent.details.end"/>:
                 </Text>
-                <Text data-test="end-time">
-                    { eventQueryData?.end_time }
-                </Text>
+                { eventQueryData ? (
+                    <Text data-test="end-time">
+                        <FormattedDate
+                            day="2-digit"
+                            month="long"
+                            value={ Date.parse(eventQueryData.end_time) }
+                        />
+                        , <FormattedTime
+                            value={ Date.parse(eventQueryData.end_time) }
+                        />
+                    </Text>
+                ) : <Msg id="pages.orgEvent.details.org"/> }
             </Flex>
             <Flex>
                 <Text marginEnd="size-50">
