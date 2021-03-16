@@ -1,7 +1,5 @@
-import { IntlProvider } from 'react-intl';
-import { mount } from '@cypress/react';
-
 import EventList from './EventList';
+import { mountWithProviders } from '../utils/testing';
 import { ZetkinEvent } from '../interfaces/ZetkinEvent';
 import { ZetkinOrganization } from '../interfaces/ZetkinOrganization';
 
@@ -20,20 +18,8 @@ describe('EventList', () => {
             });
     });
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const mountWithIntl = (elem : any) : any => mount(
-        <IntlProvider
-            locale="en"
-            messages={{
-                'misc.eventList.placeholder':
-                'Sorry, there are no planned events at the moment.',
-            }}>
-            { elem }
-        </IntlProvider>,
-    );
-
     it('contains data for each event', () => {
-        mountWithIntl(
+        mountWithProviders(
             <EventList events={ dummyEvents } org={ dummyOrg }/>,
         );
 
@@ -50,7 +36,7 @@ describe('EventList', () => {
 
     it('contains an activity title instead of missing event title', () => {
         dummyEvents[0].title = undefined;
-        mountWithIntl(
+        mountWithProviders(
             <EventList events={ dummyEvents } org={ dummyOrg }/>,
         );
 
@@ -60,7 +46,7 @@ describe('EventList', () => {
     });
 
     it('contains a sign-up button for each event', () => {
-        mountWithIntl(
+        mountWithProviders(
             <EventList events={ dummyEvents } org={ dummyOrg }/>,
         );
 
@@ -69,7 +55,7 @@ describe('EventList', () => {
 
     it('shows a placeholder when the list is empty', () => {
         dummyEvents = [];
-        mountWithIntl(
+        mountWithProviders(
             <EventList events={ dummyEvents } org={ dummyOrg }/>,
         );
 
@@ -77,7 +63,7 @@ describe('EventList', () => {
     });
 
     it('shows a placeholder when the list is undefined', () => {
-        mountWithIntl(
+        mountWithProviders(
             <EventList events={ undefined } org={ dummyOrg }/>,
         );
 

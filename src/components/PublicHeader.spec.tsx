@@ -1,6 +1,6 @@
-import { IntlProvider } from 'react-intl';
 import { mount } from '@cypress/react';
 
+import { mountWithProviders } from '../utils/testing';
 import PublicHeader from './PublicHeader';
 import { ZetkinOrganization } from '../interfaces/ZetkinOrganization';
 
@@ -14,13 +14,7 @@ describe('PublicHeader', () => {
     };
 
     it('contains a login button when not logged in', () => {
-        mount(
-            <IntlProvider
-                locale="en"
-                messages={{ 'components.publicHeader.loginButton': 'Login' }}>
-                <PublicHeader user={ null } />
-            </IntlProvider>,
-        );
+        mountWithProviders(<PublicHeader user={ null } />);
         cy.get('[data-test="login-button"]').should('be.visible');
     });
 
