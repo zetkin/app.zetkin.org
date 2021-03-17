@@ -4,4 +4,5 @@ fields:
   email: E-mail
   phone: Phone number
   password: Password
-submitButton: Submit
+actions:
+  submit: Submit
