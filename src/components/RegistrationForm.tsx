@@ -27,6 +27,7 @@ const RegistrationForm = ({ onValidSubmit } : RegistrationFormProps) : JSX.Eleme
     const [email, setEmail] = React.useState('');
     const [phone, setPhone] = React.useState('');
     const [password, setPassword] = React.useState('');
+    const intl = useIntl();
 
     const onSubmit = (ev: React.ChangeEvent<HTMLInputElement>) : void => {
         onValidSubmit({
@@ -40,64 +41,48 @@ const RegistrationForm = ({ onValidSubmit } : RegistrationFormProps) : JSX.Eleme
         ev.preventDefault();
     };
 
-    const field1 = <Msg id="forms.reg.fields.firstName"/>;
-    const field2 = <Msg id="forms.reg.fields.lastName"/>;
-    const field3 = <Msg id="forms.reg.fields.email"/>;
-    const field4 = <Msg id="forms.reg.fields.phone"/>;
-    const field5 = <Msg id="forms.reg.fields.password"/>;
-
-    const messageToString = useIntl().formatMessage;
+    const msg = (prop : string) => intl.formatMessage({ id: 'forms.reg.fields.' + prop });
 
     return (
         <Flex>
             <Form data-test="reg-form" onSubmit={ onSubmit }>
                 <TextField
                     data-test="first-name"
-                    label={ field1 }
+                    label={ msg('firstName') }
                     onChange={ setFirstName }
-                    placeholder={
-                        messageToString({ id: field1.props.id })
-                    }
+                    placeholder={ msg('firstName') }
                     type="text"
                     value={ firstName }
                 />
                 <TextField
                     data-test="last-name"
-                    label={ field2 }
+                    label={ msg('lastName') }
                     onChange={ setLastName }
-                    placeholder={
-                        messageToString({ id: field2.props.id })
-                    }
+                    placeholder={ msg('lastName')  }
                     type="text"
                     value={ lastName }
                 />
                 <TextField
                     data-test="email-address"
-                    label={ field3 }
+                    label={ msg('email') }
                     onChange={ setEmail }
-                    placeholder={
-                        messageToString({ id: field3.props.id })
-                    }
+                    placeholder={ msg('email') }
                     type="email" 
                     value={ email }
                 />
                 <TextField
                     data-test="phone-number"
-                    label={ field4 }
+                    label={ msg('phone') }
                     onChange={ setPhone }
-                    placeholder={
-                        messageToString({ id: field4.props.id })
-                    }
+                    placeholder={ msg('phone') }
                     type="tel"
                     value={ phone }
                 />
                 <TextField
                     data-test="password"
-                    label={ field5 }
+                    label={ msg('password') }
                     onChange={ setPassword }
-                    placeholder={
-                        messageToString({ id: field5.props.id })
-                    }
+                    placeholder={ msg('password') }
                     type="password"
                     value={ password }
                 />
