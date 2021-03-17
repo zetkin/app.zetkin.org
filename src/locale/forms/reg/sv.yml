@@ -4,4 +4,5 @@ fields:
   email: E-mail
   phone: Telefonnummer
   password: Lösenord
-submitButton: Skicka
+actions:
+  submit: Skicka

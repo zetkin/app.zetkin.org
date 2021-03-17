@@ -105,7 +105,7 @@ const RegistrationForm = ({ onValidSubmit } : RegistrationFormProps) : JSX.Eleme
                     data-test="submit-button"
                     type="submit"
                     variant="cta">
-                    <Msg id="forms.reg.submitButton"/>
+                    <Msg id="forms.reg.actions.submit"/>
                 </Button>
             </Form>
         </Flex>

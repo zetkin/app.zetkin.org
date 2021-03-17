@@ -15,12 +15,12 @@ describe('PublicHeader', () => {
 
     it('contains a login button when not logged in', () => {
         mountWithProviders(<PublicHeader user={ null } />);
-        cy.contains('misc.publicHeader.loginButton');
+        cy.contains('misc.publicHeader.login');
     });
 
     it('contains no login button when logged in', () => {
         mount(<PublicHeader user={ dummyUser }/>);
-        cy.contains('misc.publicHeader.loginButton').should('not.exist');
+        cy.contains('misc.publicHeader.login').should('not.exist');
     });
 
     it('contains user name if logged in', () => {

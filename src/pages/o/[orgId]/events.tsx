@@ -13,7 +13,6 @@ import { scaffold } from '../../../utils/next';
 const scaffoldOptions = {
     localeScope: [
         'layout.org',
-        'layout.orgHeader',
         'misc.eventList',
         'misc.publicHeader',
     ],

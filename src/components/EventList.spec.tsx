@@ -50,7 +50,7 @@ describe('EventList', () => {
             <EventList events={ dummyEvents } org={ dummyOrg }/>,
         );
 
-        cy.contains('misc.eventList.signupButton');
+        cy.contains('misc.eventList.signup');
     });
 
     it('shows a placeholder when the list is empty', () => {

@@ -135,7 +135,7 @@ export default function OrgEventPage(props : OrgEventPageProps) : JSX.Element {
                 </Text>
             </Flex>
             <Button data-test="sign-up-button" marginY="size-200" variant="cta">
-                <Msg id="pages.orgEvent.signUpButton"/>
+                <Msg id="pages.orgEvent.actions.signUp"/>
             </Button>
         </Flex>
     );

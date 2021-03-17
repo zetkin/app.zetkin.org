@@ -54,7 +54,7 @@ const EventList = ({ events, org } : EventListProps) : JSX.Element => {
                         </View>
                         <View data-test="location-title">{ e.location.title }</View>
                         <Button data-test="sign-up-button" variant="cta">
-                            <Msg id="misc.eventList.signupButton"/>
+                            <Msg id="misc.eventList.signup"/>
                         </Button>
                     </Flex>
                 )) }
