@@ -1,5 +1,7 @@
 import { dehydrate } from 'react-query/hydration';
 import { GetServerSideProps } from 'next';
+import { Heading } from '@adobe/react-spectrum';
+import { FormattedMessage as Msg } from 'react-intl';
 import { QueryClient, useQuery } from 'react-query';
 
 import getCampaigns from '../../../fetching/getCampaigns';
@@ -7,6 +9,14 @@ import getOrg from '../../../fetching/getOrg';
 import OrgLayout from '../../../components/layout/OrgLayout';
 import { PageWithLayout } from '../../../types';
 import { scaffold } from '../../../utils/next';
+
+const scaffoldOptions = {
+    localeScope: [
+        'layout.org',
+        'misc.publicHeader',
+        'pages.orgCampaigns',
+    ],
+};
 
 export const getServerSideProps : GetServerSideProps = scaffold(async (context) => {
     const queryClient = new QueryClient();
@@ -32,7 +42,7 @@ export const getServerSideProps : GetServerSideProps = scaffold(async (context) 
             notFound: true,
         };
     }
-});
+}, scaffoldOptions);
 
 type OrgCampaignsPageProps = {
     orgId: string;
@@ -45,7 +55,9 @@ const OrgCampaignsPage : PageWithLayout<OrgCampaignsPageProps> = (props) => {
 
     return (
         <>
-            <h1>Campaigns for { orgQuery.data?.title }</h1>
+            <Heading level={ 1 }>
+                <Msg id="pages.orgCampaigns.title"/> { orgQuery.data?.title }
+            </Heading>
             <ul>
                 { campaignsQuery.data?.map((c) => (
                     <li key={ c.id }>{ c.title }</li>

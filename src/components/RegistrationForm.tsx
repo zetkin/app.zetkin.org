@@ -5,6 +5,7 @@ import {
     Form, 
     TextField,
 } from '@adobe/react-spectrum';
+import { FormattedMessage as Msg, useIntl } from 'react-intl';
 
 interface RegistrationFormUserData {
     email: string;
@@ -26,6 +27,7 @@ const RegistrationForm = ({ onValidSubmit } : RegistrationFormProps) : JSX.Eleme
     const [email, setEmail] = React.useState('');
     const [phone, setPhone] = React.useState('');
     const [password, setPassword] = React.useState('');
+    const intl = useIntl();
 
     const onSubmit = (ev: React.ChangeEvent<HTMLInputElement>) : void => {
         onValidSubmit({
@@ -39,46 +41,48 @@ const RegistrationForm = ({ onValidSubmit } : RegistrationFormProps) : JSX.Eleme
         ev.preventDefault();
     };
 
+    const msg = (prop : string) => intl.formatMessage({ id: 'forms.reg.fields.' + prop });
+
     return (
         <Flex>
             <Form data-test="reg-form" onSubmit={ onSubmit }>
                 <TextField
                     data-test="first-name"
-                    label="First name"
+                    label={ msg('firstName') }
                     onChange={ setFirstName }
-                    placeholder="First name"
+                    placeholder={ msg('firstName') }
                     type="text"
                     value={ firstName }
                 />
                 <TextField
                     data-test="last-name"
-                    label="Last name"
+                    label={ msg('lastName') }
                     onChange={ setLastName }
-                    placeholder="Last name"
+                    placeholder={ msg('lastName')  }
                     type="text"
                     value={ lastName }
                 />
                 <TextField
                     data-test="email-address"
-                    label="E-mail"
+                    label={ msg('email') }
                     onChange={ setEmail }
-                    placeholder="E-mail"
+                    placeholder={ msg('email') }
                     type="email" 
                     value={ email }
                 />
                 <TextField
                     data-test="phone-number"
-                    label="Phone number"
+                    label={ msg('phone') }
                     onChange={ setPhone }
-                    placeholder="Phone number"
+                    placeholder={ msg('phone') }
                     type="tel"
                     value={ phone }
                 />
                 <TextField
                     data-test="password"
-                    label="Password"
+                    label={ msg('password') }
                     onChange={ setPassword }
-                    placeholder="Password"
+                    placeholder={ msg('password') }
                     type="password"
                     value={ password }
                 />
@@ -86,7 +90,7 @@ const RegistrationForm = ({ onValidSubmit } : RegistrationFormProps) : JSX.Eleme
                     data-test="submit-button"
                     type="submit"
                     variant="cta">
-                    Submit
+                    <Msg id="forms.reg.actions.submit"/>
                 </Button>
             </Form>
         </Flex>

@@ -1,0 +1,8 @@
+fields:
+  firstName: Förnamn
+  lastName: Efternamn
+  email: E-mail
+  phone: Telefonnummer
+  password: Lösenord
+actions:
+  submit: Skicka

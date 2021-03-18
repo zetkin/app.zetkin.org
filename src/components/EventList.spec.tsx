@@ -1,6 +1,5 @@
-import { mount } from '@cypress/react';
-
 import EventList from './EventList';
+import { mountWithProviders } from '../utils/testing';
 import { ZetkinEvent } from '../interfaces/ZetkinEvent';
 import { ZetkinOrganization } from '../interfaces/ZetkinOrganization';
 
@@ -20,7 +19,9 @@ describe('EventList', () => {
     });
 
     it('contains data for each event', () => {
-        mount(<EventList events={ dummyEvents } org={ dummyOrg }/>);
+        mountWithProviders(
+            <EventList events={ dummyEvents } org={ dummyOrg }/>,
+        );
 
         cy.get('[data-test="event"]').each((item) => {
             cy.wrap(item)
@@ -35,7 +36,9 @@ describe('EventList', () => {
 
     it('contains an activity title instead of missing event title', () => {
         dummyEvents[0].title = undefined;
-        mount(<EventList events={ dummyEvents } org={ dummyOrg }/>);
+        mountWithProviders(
+            <EventList events={ dummyEvents } org={ dummyOrg }/>,
+        );
 
         cy.get('[data-test="event"]')
             .should('contain', dummyEvents[0].activity.title)
@@ -43,21 +46,27 @@ describe('EventList', () => {
     });
 
     it('contains a sign-up button for each event', () => {
-        mount(<EventList events={ dummyEvents } org={ dummyOrg }/>);
+        mountWithProviders(
+            <EventList events={ dummyEvents } org={ dummyOrg }/>,
+        );
 
-        cy.get('[data-test="sign-up-button"]').should('be.visible');
+        cy.contains('misc.eventList.signup');
     });
 
     it('shows a placeholder when the list is empty', () => {
         dummyEvents = [];
-        mount(<EventList events={ dummyEvents } org={ dummyOrg }/>);
+        mountWithProviders(
+            <EventList events={ dummyEvents } org={ dummyOrg }/>,
+        );
 
-        cy.get('[data-test="no-events-placeholder"]').should('be.visible');
+        cy.contains('misc.eventList.placeholder');
     });
 
     it('shows a placeholder when the list is undefined', () => {
-        mount(<EventList events={ undefined } org={ dummyOrg }/>);
+        mountWithProviders(
+            <EventList events={ undefined } org={ dummyOrg }/>,
+        );
 
-        cy.get('[data-test="no-events-placeholder"]').should('be.visible');
+        cy.contains('misc.eventList.placeholder');
     });
 });

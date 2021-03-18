@@ -1,0 +1,9 @@
+actions:
+  signUp: Anmälan
+details:
+  org: Organisation
+  campaign: Kampanj
+  start: Start
+  end: Slut
+  info: Information
+  location: Plats
