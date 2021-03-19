@@ -53,6 +53,14 @@ describe('EventList', () => {
         cy.contains('misc.eventList.signup');
     });
 
+    it('contains a button for more info on each event', () => {
+        mountWithProviders(
+            <EventList events={ dummyEvents } org={ dummyOrg }/>,
+        );
+
+        cy.contains('misc.eventList.moreInfo');
+    });
+
     it('shows a placeholder when the list is empty', () => {
         dummyEvents = [];
         mountWithProviders(

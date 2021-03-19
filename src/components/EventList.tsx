@@ -1,4 +1,10 @@
-import { Button, Flex, Text, View } from '@adobe/react-spectrum';
+import NextLink from 'next/link';
+import {
+    Button,
+    Flex,
+    Text,
+    View,
+} from '@adobe/react-spectrum';
 import {
     FormattedDate,
     FormattedTime,
@@ -53,9 +59,16 @@ const EventList = ({ events, org } : EventListProps) : JSX.Element => {
                             />
                         </View>
                         <View data-test="location-title">{ e.location.title }</View>
-                        <Button data-test="sign-up-button" variant="cta">
+                        <Button data-test="sign-up-button" marginTop="size-50" variant="cta">
                             <Msg id="misc.eventList.signup"/>
                         </Button>
+                        <NextLink href={ `/o/${org?.id}/events/${e.id}` }>
+                            <a>
+                                <Button marginTop="size-50" variant="cta">
+                                    <Msg id="misc.eventList.moreInfo"/>
+                                </Button>
+                            </a>
+                        </NextLink>
                     </Flex>
                 )) }
             </Flex>
