@@ -7,6 +7,8 @@ import { QueryClient, useQuery } from 'react-query';
 import getCampaign from '../../../../fetching/getCampaign';
 import getCampaignEvents from '../../../../fetching/getCampaignEvents';
 import getOrg from '../../../../fetching/getOrg';
+import OrgLayout from '../../../../components/layout/OrgLayout';
+import { PageWithLayout } from '../../../../types';
 import { scaffold } from '../../../../utils/next';
 
 export const getServerSideProps : GetServerSideProps = scaffold(async (context) => {
@@ -43,7 +45,7 @@ type OrgCampaignPageProps = {
     orgId: string;
 };
 
-export default function OrgCampaignPage(props : OrgCampaignPageProps) : JSX.Element {
+const OrgCampaignPage : PageWithLayout<OrgCampaignPageProps> = (props) => {
     const { campId, orgId } = props;
     const campaignQuery = useQuery(['campaign', campId], getCampaign(orgId, campId));
     const orgQuery = useQuery(['org', orgId], getOrg(orgId));
@@ -63,4 +65,14 @@ export default function OrgCampaignPage(props : OrgCampaignPageProps) : JSX.Elem
             />
         </Flex>
     );
-}
+};
+
+OrgCampaignPage.getLayout = function getLayout(page, props) {
+    return (
+        <OrgLayout mainPage={ false } orgId={ props.orgId as string }>
+            { page }
+        </OrgLayout>
+    );
+};
+
+export default OrgCampaignPage;

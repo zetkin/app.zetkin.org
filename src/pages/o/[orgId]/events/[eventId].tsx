@@ -1,6 +1,8 @@
 import { dehydrate } from 'react-query/hydration';
 import { GetServerSideProps } from 'next';
 import NextLink from 'next/link';
+import OrgLayout from '../../../../components/layout/OrgLayout';
+import { PageWithLayout } from '../../../../types';
 import { Button, Flex, Heading, Link, Text } from '@adobe/react-spectrum';
 import {
     FormattedDate,
@@ -54,7 +56,7 @@ type OrgEventPageProps = {
     orgId: string;
 };
 
-export default function OrgEventPage(props : OrgEventPageProps) : JSX.Element | null {
+const OrgEventPage : PageWithLayout<OrgEventPageProps> = (props) => {
     const { orgId, eventId } = props;
     const eventQuery = useQuery(['event', eventId], getEvent(orgId, eventId));
     const orgQuery = useQuery(['org', orgId], getOrg(orgId));
@@ -142,4 +144,14 @@ export default function OrgEventPage(props : OrgEventPageProps) : JSX.Element | 
             </Button>
         </Flex>
     );
-}
+};
+
+OrgEventPage.getLayout = function getLayout(page, props) {
+    return (
+        <OrgLayout mainPage={ false } orgId={ props.orgId as string }>
+            { page }
+        </OrgLayout>
+    );
+};
+
+export default OrgEventPage;

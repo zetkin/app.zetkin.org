@@ -48,7 +48,7 @@ const OrgPage : PageWithLayout<OrgPageProps> = (props) =>{
 
 OrgPage.getLayout = function getLayout(page, props) {
     return (
-        <OrgLayout orgId={ props.orgId as string }>
+        <OrgLayout mainPage={ true } orgId={ props.orgId as string }>
             { page }
         </OrgLayout>
     );

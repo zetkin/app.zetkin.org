@@ -41,7 +41,7 @@ const OrgContactPage : PageWithLayout = () => {
 
 OrgContactPage.getLayout = function getLayout(page, props) {
     return (
-        <OrgLayout orgId={ props.orgId as string }>
+        <OrgLayout mainPage={ false } orgId={ props.orgId as string }>
             { page }
         </OrgLayout>
     );

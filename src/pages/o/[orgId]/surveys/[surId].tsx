@@ -4,6 +4,8 @@ import { QueryClient, useQuery } from 'react-query';
 
 import getOrg from '../../../../fetching/getOrg';
 import getSurvey from '../../../../fetching/getSurvey';
+import OrgLayout from '../../../../components/layout/OrgLayout';
+import { PageWithLayout } from '../../../../types';
 import { scaffold } from '../../../../utils/next';
 
 export const getServerSideProps : GetServerSideProps = scaffold(async (context) => {
@@ -38,7 +40,7 @@ type OrgSurveyPageProps = {
     orgId: string;
 };
 
-export default function OrgSurveyPage(props : OrgSurveyPageProps) : JSX.Element {
+const OrgSurveyPage : PageWithLayout<OrgSurveyPageProps> = (props) => {
     const { surId, orgId } = props;
     const surveyQuery = useQuery(['survey', surId], getSurvey(orgId, surId));
     const orgQuery = useQuery(['org', orgId], getOrg(orgId));
@@ -49,4 +51,14 @@ export default function OrgSurveyPage(props : OrgSurveyPageProps) : JSX.Element 
             <h1>{ surveyQuery.data?.title }</h1>
         </>
     );
-}
+};
+
+OrgSurveyPage.getLayout = function getLayout(page, props) {
+    return (
+        <OrgLayout mainPage={ false } orgId={ props.orgId as string }>
+            { page }
+        </OrgLayout>
+    );
+};
+
+export default OrgSurveyPage;
