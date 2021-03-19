@@ -64,7 +64,7 @@ const EventList = ({ events, org } : EventListProps) : JSX.Element => {
                         </Button>
                         <NextLink href={ `/o/${org?.id}/events/${e.id}` }>
                             <a>
-                                <Button data-test={ `more-info-button-${e.id}` } marginTop="size-50" variant="cta">
+                                <Button marginTop="size-50" variant="cta">
                                     <Msg id="misc.eventList.moreInfo"/>
                                 </Button>
                             </a>
