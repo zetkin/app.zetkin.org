@@ -40,7 +40,6 @@ const OrgLayout = ({ children, orgId } : OrgLayoutProps) : JSX.Element => {
     const tab3 = <Msg id="layout.org.tabs.campaigns"/>;
 
     return (
-        //TODO: Break out into separate meta layout component
         <DefaultLayout org={ orgQuery.data! }>
             <OrgHeader org={ orgQuery.data! }/>
             <Tabs
