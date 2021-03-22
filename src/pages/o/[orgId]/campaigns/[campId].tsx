@@ -7,9 +7,9 @@ import { QueryClient, useQuery } from 'react-query';
 import getCampaign from '../../../../fetching/getCampaign';
 import getCampaignEvents from '../../../../fetching/getCampaignEvents';
 import getOrg from '../../../../fetching/getOrg';
-import OrgLayout from '../../../../components/layout/OrgLayout';
 import { PageWithLayout } from '../../../../types';
 import { scaffold } from '../../../../utils/next';
+import SimpleOrgLayout from '../../../../components/layout/SimpleOrgLayout';
 
 export const getServerSideProps : GetServerSideProps = scaffold(async (context) => {
     const queryClient = new QueryClient();
@@ -69,9 +69,9 @@ const OrgCampaignPage : PageWithLayout<OrgCampaignPageProps> = (props) => {
 
 OrgCampaignPage.getLayout = function getLayout(page, props) {
     return (
-        <OrgLayout mainPage={ false } orgId={ props.orgId as string }>
+        <SimpleOrgLayout orgId={ props.orgId as string }>
             { page }
-        </OrgLayout>
+        </SimpleOrgLayout>
     );
 };
 

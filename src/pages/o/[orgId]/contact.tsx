@@ -3,9 +3,9 @@ import { GetServerSideProps } from 'next';
 import { QueryClient } from 'react-query';
 
 import getOrg from '../../../fetching/getOrg';
-import OrgLayout from '../../../components/layout/OrgLayout';
 import { PageWithLayout } from '../../../types';
 import { scaffold } from '../../../utils/next';
+import SimpleOrgLayout from '../../../components/layout/SimpleOrgLayout';
 
 export const getServerSideProps : GetServerSideProps = scaffold(async (context) => {
     const queryClient = new QueryClient();
@@ -41,9 +41,9 @@ const OrgContactPage : PageWithLayout = () => {
 
 OrgContactPage.getLayout = function getLayout(page, props) {
     return (
-        <OrgLayout mainPage={ false } orgId={ props.orgId as string }>
+        <SimpleOrgLayout orgId={ props.orgId as string }>
             { page }
-        </OrgLayout>
+        </SimpleOrgLayout>
     );
 };
 

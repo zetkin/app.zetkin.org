@@ -1,8 +1,6 @@
 import { dehydrate } from 'react-query/hydration';
 import { GetServerSideProps } from 'next';
 import NextLink from 'next/link';
-import OrgLayout from '../../../../components/layout/OrgLayout';
-import { PageWithLayout } from '../../../../types';
 import { Button, Flex, Heading, Link, Text } from '@adobe/react-spectrum';
 import {
     FormattedDate,
@@ -13,7 +11,9 @@ import { QueryClient, useQuery } from 'react-query';
 
 import getEvent from '../../../../fetching/getEvent';
 import getOrg from '../../../../fetching/getOrg';
+import { PageWithLayout } from '../../../../types';
 import { scaffold } from '../../../../utils/next';
+import SimpleOrgLayout from '../../../../components/layout/SimpleOrgLayout';
 import { ZetkinEvent } from '../../../../interfaces/ZetkinEvent';
 import { ZetkinOrganization } from '../../../../interfaces/ZetkinOrganization';
 
@@ -148,9 +148,9 @@ const OrgEventPage : PageWithLayout<OrgEventPageProps> = (props) => {
 
 OrgEventPage.getLayout = function getLayout(page, props) {
     return (
-        <OrgLayout mainPage={ false } orgId={ props.orgId as string }>
+        <SimpleOrgLayout orgId={ props.orgId as string }>
             { page }
-        </OrgLayout>
+        </SimpleOrgLayout>
     );
 };
 
