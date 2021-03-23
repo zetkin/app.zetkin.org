@@ -11,12 +11,12 @@ import DefaultLayout from './DefaultLayout';
 import getOrg from '../../fetching/getOrg';
 import OrgHeader from './OrgHeader';
 
-interface OrgLayoutProps {
+interface MainOrgLayoutProps {
     children: JSX.Element;
     orgId: string;
 }
 
-const OrgLayout = ({ children, orgId } : OrgLayoutProps) : JSX.Element => {
+const MainOrgLayout = ({ children, orgId } : MainOrgLayoutProps) : JSX.Element => {
     const orgQuery = useQuery(['org', orgId], getOrg(orgId));
     const router = useRouter();
     const path =  router.pathname.split('/');
@@ -60,4 +60,4 @@ const OrgLayout = ({ children, orgId } : OrgLayoutProps) : JSX.Element => {
     );
 };
 
-export default OrgLayout;
+export default MainOrgLayout;
