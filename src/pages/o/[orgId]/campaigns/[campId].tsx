@@ -4,12 +4,12 @@ import { GetServerSideProps } from 'next';
 import { Flex, Heading, Text } from '@adobe/react-spectrum';
 import { QueryClient, useQuery } from 'react-query';
 
+import DefaultOrgLayout from '../../../../components/layout/DefaultOrgLayout';
 import getCampaign from '../../../../fetching/getCampaign';
 import getCampaignEvents from '../../../../fetching/getCampaignEvents';
 import getOrg from '../../../../fetching/getOrg';
 import { PageWithLayout } from '../../../../types';
 import { scaffold } from '../../../../utils/next';
-import SimpleOrgLayout from '../../../../components/layout/SimpleOrgLayout';
 
 export const getServerSideProps : GetServerSideProps = scaffold(async (context) => {
     const queryClient = new QueryClient();
@@ -69,9 +69,9 @@ const OrgCampaignPage : PageWithLayout<OrgCampaignPageProps> = (props) => {
 
 OrgCampaignPage.getLayout = function getLayout(page, props) {
     return (
-        <SimpleOrgLayout orgId={ props.orgId as string }>
+        <DefaultOrgLayout orgId={ props.orgId as string }>
             { page }
-        </SimpleOrgLayout>
+        </DefaultOrgLayout>
     );
 };
 

@@ -7,7 +7,7 @@ import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 import { Item, Tabs } from '@react-spectrum/tabs';
 
-import DefaultLayout from './DefaultLayout';
+import DefaultOrgLayout from './DefaultOrgLayout';
 import getOrg from '../../fetching/getOrg';
 import OrgHeader from './OrgHeader';
 
@@ -40,23 +40,25 @@ const MainOrgLayout = ({ children, orgId } : MainOrgLayoutProps) : JSX.Element =
     const tab3 = <Msg id="layout.org.tabs.campaigns"/>;
 
     return (
-        <DefaultLayout org={ orgQuery.data! }>
-            <OrgHeader org={ orgQuery.data! }/>
-            <Tabs
-                aria-label="Organization submenu"
-                onSelectionChange={ onSelectTab }
-                selectedKey={ currentTab }>
-                <Item key="home" title={ tab1 }>
-                    <Content>{ children }</Content>
-                </Item>
-                <Item key="events" title={ tab2 }>
-                    <Content>{ children }</Content>
-                </Item>
-                <Item key="campaigns" title={ tab3 }>
-                    <Content>{ children }</Content>
-                </Item>
-            </Tabs>
-        </DefaultLayout>
+        <DefaultOrgLayout orgId={ orgId }>
+            <>
+                <OrgHeader org={ orgQuery.data! }/>
+                <Tabs
+                    aria-label="Organization submenu"
+                    onSelectionChange={ onSelectTab }
+                    selectedKey={ currentTab }>
+                    <Item key="home" title={ tab1 }>
+                        <Content>{ children }</Content>
+                    </Item>
+                    <Item key="events" title={ tab2 }>
+                        <Content>{ children }</Content>
+                    </Item>
+                    <Item key="campaigns" title={ tab3 }>
+                        <Content>{ children }</Content>
+                    </Item>
+                </Tabs>
+            </>
+        </DefaultOrgLayout>
     );
 };
 

@@ -2,11 +2,11 @@ import { dehydrate } from 'react-query/hydration';
 import { GetServerSideProps } from 'next';
 import { QueryClient, useQuery } from 'react-query';
 
+import DefaultOrgLayout from '../../../../components/layout/DefaultOrgLayout';
 import getOrg from '../../../../fetching/getOrg';
 import getSurvey from '../../../../fetching/getSurvey';
 import { PageWithLayout } from '../../../../types';
 import { scaffold } from '../../../../utils/next';
-import SimpleOrgLayout from '../../../../components/layout/SimpleOrgLayout';
 
 export const getServerSideProps : GetServerSideProps = scaffold(async (context) => {
     const queryClient = new QueryClient();
@@ -55,9 +55,9 @@ const OrgSurveyPage : PageWithLayout<OrgSurveyPageProps> = (props) => {
 
 OrgSurveyPage.getLayout = function getLayout(page, props) {
     return (
-        <SimpleOrgLayout orgId={ props.orgId as string }>
+        <DefaultOrgLayout orgId={ props.orgId as string }>
             { page }
-        </SimpleOrgLayout>
+        </DefaultOrgLayout>
     );
 };
 

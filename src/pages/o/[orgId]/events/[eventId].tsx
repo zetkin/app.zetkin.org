@@ -9,11 +9,11 @@ import {
 } from 'react-intl';
 import { QueryClient, useQuery } from 'react-query';
 
+import DefaultOrgLayout from '../../../../components/layout/DefaultOrgLayout';
 import getEvent from '../../../../fetching/getEvent';
 import getOrg from '../../../../fetching/getOrg';
 import { PageWithLayout } from '../../../../types';
 import { scaffold } from '../../../../utils/next';
-import SimpleOrgLayout from '../../../../components/layout/SimpleOrgLayout';
 import { ZetkinEvent } from '../../../../interfaces/ZetkinEvent';
 import { ZetkinOrganization } from '../../../../interfaces/ZetkinOrganization';
 
@@ -148,9 +148,9 @@ const OrgEventPage : PageWithLayout<OrgEventPageProps> = (props) => {
 
 OrgEventPage.getLayout = function getLayout(page, props) {
     return (
-        <SimpleOrgLayout orgId={ props.orgId as string }>
+        <DefaultOrgLayout orgId={ props.orgId as string }>
             { page }
-        </SimpleOrgLayout>
+        </DefaultOrgLayout>
     );
 };
 
