@@ -6,7 +6,6 @@ import { useUser } from '../../hooks';
 import { ZetkinOrganization } from '../../interfaces/ZetkinOrganization';
 
 interface DefaultLayoutProps {
-    children: JSX.Element;
     org?: ZetkinOrganization;
 }
 
@@ -18,7 +17,7 @@ const DefaultLayout : FunctionComponent<DefaultLayoutProps> = ({ children, org }
             direction="column"
             gap="size-100">
             <PublicHeader org={ org } user={ user }/>
-            { children }
+            { children as JSX.Element }
         </Flex>
     );
 };
