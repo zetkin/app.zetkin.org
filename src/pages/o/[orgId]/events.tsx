@@ -6,7 +6,7 @@ import { QueryClient, useQuery } from 'react-query';
 import EventList from '../../../components/EventList';
 import getEvents from '../../../fetching/getEvents';
 import getOrg from '../../../fetching/getOrg';
-import OrgLayout from '../../../components/layout/OrgLayout';
+import MainOrgLayout from '../../../components/layout/MainOrgLayout';
 import { PageWithLayout } from '../../../types';
 import { scaffold } from '../../../utils/next';
 
@@ -65,9 +65,9 @@ const OrgEventsPage : PageWithLayout<OrgEventsPageProps> = (props) => {
 
 OrgEventsPage.getLayout = function getLayout(page, props) {
     return (
-        <OrgLayout orgId={ props.orgId as string }>
+        <MainOrgLayout orgId={ props.orgId as string }>
             { page }
-        </OrgLayout>
+        </MainOrgLayout>
     );
 };
 

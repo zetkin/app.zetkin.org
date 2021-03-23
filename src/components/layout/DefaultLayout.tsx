@@ -1,5 +1,5 @@
+import { Flex } from '@adobe/react-spectrum';
 import { FunctionComponent } from 'react';
-import { Content, Flex } from '@adobe/react-spectrum';
 
 import PublicHeader from '../PublicHeader';
 import { useUser } from '../../hooks';
@@ -17,9 +17,7 @@ const DefaultLayout : FunctionComponent<DefaultLayoutProps> = ({ children, org }
             direction="column"
             gap="size-100">
             <PublicHeader org={ org } user={ user }/>
-            <Content margin="size-200">
-                { children }
-            </Content>
+            { children as JSX.Element }
         </Flex>
     );
 };

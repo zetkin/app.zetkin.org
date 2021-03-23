@@ -2,8 +2,8 @@ import { dehydrate } from 'react-query/hydration';
 import { GetServerSideProps } from 'next';
 import { QueryClient } from 'react-query';
 
+import DefaultOrgLayout from '../../../components/layout/DefaultOrgLayout';
 import getOrg from '../../../fetching/getOrg';
-import OrgLayout from '../../../components/layout/OrgLayout';
 import { PageWithLayout } from '../../../types';
 import { scaffold } from '../../../utils/next';
 
@@ -41,9 +41,9 @@ const OrgContactPage : PageWithLayout = () => {
 
 OrgContactPage.getLayout = function getLayout(page, props) {
     return (
-        <OrgLayout orgId={ props.orgId as string }>
+        <DefaultOrgLayout orgId={ props.orgId as string }>
             { page }
-        </OrgLayout>
+        </DefaultOrgLayout>
     );
 };
 

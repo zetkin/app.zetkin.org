@@ -9,8 +9,10 @@ import {
 } from 'react-intl';
 import { QueryClient, useQuery } from 'react-query';
 
+import DefaultOrgLayout from '../../../../components/layout/DefaultOrgLayout';
 import getEvent from '../../../../fetching/getEvent';
 import getOrg from '../../../../fetching/getOrg';
+import { PageWithLayout } from '../../../../types';
 import { scaffold } from '../../../../utils/next';
 import { ZetkinEvent } from '../../../../interfaces/ZetkinEvent';
 import { ZetkinOrganization } from '../../../../interfaces/ZetkinOrganization';
@@ -54,7 +56,7 @@ type OrgEventPageProps = {
     orgId: string;
 };
 
-export default function OrgEventPage(props : OrgEventPageProps) : JSX.Element | null {
+const OrgEventPage : PageWithLayout<OrgEventPageProps> = (props) => {
     const { orgId, eventId } = props;
     const eventQuery = useQuery(['event', eventId], getEvent(orgId, eventId));
     const orgQuery = useQuery(['org', orgId], getOrg(orgId));
@@ -142,4 +144,14 @@ export default function OrgEventPage(props : OrgEventPageProps) : JSX.Element | 
             </Button>
         </Flex>
     );
-}
+};
+
+OrgEventPage.getLayout = function getLayout(page, props) {
+    return (
+        <DefaultOrgLayout orgId={ props.orgId as string }>
+            { page }
+        </DefaultOrgLayout>
+    );
+};
+
+export default OrgEventPage;

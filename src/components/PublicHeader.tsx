@@ -27,14 +27,18 @@ const PublicHeader = ({ user, org } : PublicHeaderProps) : JSX.Element => {
                 height="size-600"
                 justifyContent="space-between">
                 { org ? (
-                    <Image
-                        alt="Organization avatar"
-                        data-test="org-avatar"
-                        height="size-600"
-                        objectFit="contain"
-                        src={ apiUrl(`/orgs/${org.id}/avatar`) }
-                        width="size-600"
-                    />
+                    <NextLink href={ `/o/${org.id}` }>
+                        <a>
+                            <Image
+                                alt="Organization avatar"
+                                data-test="org-avatar"
+                                height="size-600"
+                                objectFit="contain"
+                                src={ apiUrl(`/orgs/${org.id}/avatar`) }
+                                width="size-600"
+                            />
+                        </a>
+                    </NextLink>
                 ) : (
                     <Image
                         alt="Zetkin logo"
