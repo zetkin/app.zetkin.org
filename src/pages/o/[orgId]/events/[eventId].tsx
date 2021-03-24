@@ -101,7 +101,7 @@ const OrgEventPage : PageWithLayout<OrgEventPageProps> = (props) => {
                 </Link>
             </Header>
             <Flex marginBottom="size-100">
-                <Flag aria-label="S Flag" marginEnd="size-100" size="S"/>
+                <Flag marginEnd="size-100" size="S"/>
                 <Link>
                     <NextLink href={ `/o/${orgId}/campaigns/${event.campaign.id}` }>
                         <a>{ event.campaign.title }</a>
@@ -109,9 +109,9 @@ const OrgEventPage : PageWithLayout<OrgEventPageProps> = (props) => {
                 </Link>
             </Flex>
             <Flex alignItems="center" data-test="duration" marginBottom="size-100">
-                <Calendar aria-label="S Calender" marginEnd="size-100" size="S"/>
+                <Calendar marginEnd="size-100" size="S"/>
                 <Flex direction="column">
-                    <Text data-test="start-time">
+                    <Text>
                         <FormattedDate
                             day="2-digit"
                             month="long"
@@ -124,7 +124,7 @@ const OrgEventPage : PageWithLayout<OrgEventPageProps> = (props) => {
                             value={ Date.parse(event.end_time) }
                         />
                     </Text>
-                    <Text data-test="start-time">
+                    <Text>
                         <FormattedTime
                             value={ Date.parse(event.start_time) }
                         />
@@ -136,7 +136,7 @@ const OrgEventPage : PageWithLayout<OrgEventPageProps> = (props) => {
                 </Flex>
             </Flex>
             <Flex marginBottom="size-300">
-                <Location aria-label="S Location" marginEnd="size-100" size="S"/>
+                <Location marginEnd="size-100" size="S"/>
                 <Text data-test="location">
                     { event.location.title }
                 </Text>
