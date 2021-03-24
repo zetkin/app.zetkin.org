@@ -1,7 +1,20 @@
+import Calendar from '@spectrum-icons/workflow/Calendar';
 import { dehydrate } from 'react-query/hydration';
+import Flag from '@spectrum-icons/workflow/Flag';
 import { GetServerSideProps } from 'next';
+import Location from '@spectrum-icons/workflow/Location';
 import NextLink from 'next/link';
-import { Button, Flex, Heading, Link, Text } from '@adobe/react-spectrum';
+import {
+    Button,
+    Divider,
+    Flex,
+    Header,
+    Heading,
+    Image,
+    Link,
+    Text,
+    View,
+} from '@adobe/react-spectrum';
 import {
     FormattedDate,
     FormattedTime,
@@ -69,80 +82,80 @@ const OrgEventPage : PageWithLayout<OrgEventPageProps> = (props) => {
     const org = orgQuery.data as ZetkinOrganization;
 
     return (
-        <Flex direction="column">
-            <Heading data-test="event-title" level={ 1 }>
-                { event.title ? event.title : event.activity.title }
-            </Heading>
-            <Flex>
-                <Text marginEnd="size-50">
-                    <Msg id="pages.orgEvent.details.org"/>:
-                </Text>
+        <>
+            <Header marginBottom="size-300">
+                <Image
+                    alt="Cover image"
+                    height="size-2000"
+                    objectFit="cover"
+                    src="/cover.jpg"
+                    width="100%"
+                />
+                <Heading data-test="event-title" level={ 1 } marginBottom="size-50">
+                    { event.title ? event.title : event.activity.title }
+                </Heading>
                 <Link>
                     <NextLink href={ `/o/${orgId}` }>
                         <a>{ org.title }</a>
                     </NextLink>
                 </Link>
-            </Flex>
-            <Flex>
-                <Text marginEnd="size-50">
-                    <Msg id="pages.orgEvent.details.campaign"/>:
-                </Text>
+            </Header>
+            <Flex marginBottom="size-100">
+                <Flag aria-label="S Flag" marginEnd="size-100" size="S"/>
                 <Link>
                     <NextLink href={ `/o/${orgId}/campaigns/${event.campaign.id}` }>
                         <a>{ event.campaign.title }</a>
                     </NextLink>
                 </Link>
             </Flex>
-            <Flex>
-                <Text marginEnd="size-50">
-                    <Msg id="pages.orgEvent.details.start"/>:
-                </Text>
-                <Text data-test="start-time">
-                    <FormattedDate
-                        day="2-digit"
-                        month="long"
-                        value={ Date.parse(event.start_time) }
-                    />
-                    , <FormattedTime
-                        value={ Date.parse(event.start_time) }
-                    />
-                </Text>
+            <Flex alignItems="center" data-test="duration" marginBottom="size-100">
+                <Calendar aria-label="S Calender" marginEnd="size-100" size="S"/>
+                <Flex direction="column">
+                    <Text data-test="start-time">
+                        <FormattedDate
+                            day="2-digit"
+                            month="long"
+                            value={ Date.parse(event.start_time) }
+                        />
+                        –
+                        <FormattedDate
+                            day="2-digit"
+                            month="long"
+                            value={ Date.parse(event.end_time) }
+                        />
+                    </Text>
+                    <Text data-test="start-time">
+                        <FormattedTime
+                            value={ Date.parse(event.start_time) }
+                        />
+                        –
+                        <FormattedTime
+                            value={ Date.parse(event.end_time) }
+                        />
+                    </Text>
+                </Flex>
             </Flex>
-            <Flex>
-                <Text marginEnd="size-50">
-                    <Msg id="pages.orgEvent.details.end"/>:
-                </Text>
-                <Text data-test="end-time">
-                    <FormattedDate
-                        day="2-digit"
-                        month="long"
-                        value={ Date.parse(event.end_time) }
-                    />
-                    , <FormattedTime
-                        value={ Date.parse(event.end_time) }
-                    />
-                </Text>
-            </Flex>
-            <Flex>
-                <Text marginEnd="size-50">
-                    <Msg id="pages.orgEvent.details.info"/>:
-                </Text>
-                <Text data-test="info-text">
-                    { event.info_text }
-                </Text>
-            </Flex>
-            <Flex>
-                <Text marginEnd="size-50">
-                    <Msg id="pages.orgEvent.details.location"/>:
-                </Text>
+            <Flex marginBottom="size-300">
+                <Location aria-label="S Location" marginEnd="size-100" size="S"/>
                 <Text data-test="location">
                     { event.location.title }
                 </Text>
             </Flex>
-            <Button data-test="sign-up-button" marginY="size-200" variant="cta">
-                <Msg id="pages.orgEvent.actions.signUp"/>
-            </Button>
-        </Flex>
+            <Divider />
+            <Text data-test="info-text" marginY="size-300">
+                { event.info_text }
+            </Text>
+            <View
+                bottom="size-200"
+                left="size-200"
+                marginTop="size-200"
+                position="absolute"
+                right="size-200">
+                <Button data-test="sign-up-button" variant="cta" width="100%">
+                    <Msg id="pages.orgEvent.actions.signUp"/>
+                </Button>
+            </View>
+        </>
     );
 };
 
