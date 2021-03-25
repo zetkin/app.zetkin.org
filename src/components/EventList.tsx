@@ -11,6 +11,8 @@ import {
     FormattedMessage as Msg,
 } from 'react-intl';
 
+import putEventResponse from '../fetching/putEventResponse';
+import putUndoEventResponse from '../fetching/putUndoEventResponse';
 import { ZetkinEvent } from '../interfaces/ZetkinEvent';
 import { ZetkinOrganization } from '../interfaces/ZetkinOrganization';
 
@@ -20,6 +22,7 @@ interface EventListProps {
 }
 
 const EventList = ({ events, org } : EventListProps) : JSX.Element => {
+
     if (!events || events.length === 0) {
         return (
             <Text data-test="no-events-placeholder">
@@ -59,8 +62,19 @@ const EventList = ({ events, org } : EventListProps) : JSX.Element => {
                             />
                         </View>
                         <View data-test="location-title">{ e.location.title }</View>
-                        <Button data-test="sign-up-button" marginTop="size-50" variant="cta">
+                        <Button
+                            data-test="sign-up-button"
+                            marginTop="size-50"
+                            onPress={ () => putEventResponse(e.id, org?.id) }
+                            variant="cta">
                             <Msg id="misc.eventList.signup"/>
+                        </Button>
+                        <Button
+                            data-test="undo-sign-up-button"
+                            marginTop="size-50"
+                            onPress={ () => putUndoEventResponse(e.id, org?.id) }
+                            variant="cta">
+                            <Msg id="misc.eventList.undoSignup"/>
                         </Button>
                         <NextLink href={ `/o/${org?.id}/events/${e.id}` }>
                             <a>
