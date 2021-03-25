@@ -15,7 +15,9 @@ const DefaultLayout : FunctionComponent<DefaultLayoutProps> = ({ children, org }
     return (
         <Flex
             direction="column"
-            gap="size-100">
+            gap="size-100"
+            marginX="size-200"
+            minHeight="100vh">
             <PublicHeader org={ org } user={ user }/>
             { children as JSX.Element }
         </Flex>
