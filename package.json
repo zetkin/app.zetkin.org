@@ -44,7 +44,7 @@
     "babel-loader": "^8.2.2",
     "chokidar-cli": "^2.1.0",
     "concurrently": "^5.3.0",
-    "cypress": "^6.3.0",
+    "cypress": "6.8.0",
     "eslint": "^7.15.0",
     "eslint-loader": "^4.0.2",
     "eslint-plugin-jsx-a11y": "^6.4.1",
