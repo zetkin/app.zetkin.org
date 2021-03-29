@@ -51,6 +51,7 @@
     "eslint-plugin-no-switch-statements": "^1.0.0",
     "eslint-plugin-react": "^7.22.0",
     "eslint-plugin-react-hooks": "^4.2.0",
+    "moxy": "git+https://github.com/zetkin/moxy.git",
     "next-compose-plugins": "^2.2.0",
     "next-transpile-modules": "^4.1.0",
     "ts-loader": "^8.0.14",
