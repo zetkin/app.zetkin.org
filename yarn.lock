@@ -7233,9 +7233,9 @@ move-concurrently@^1.0.1:
     rimraf "^2.5.4"
     run-queue "^1.0.3"
 
-"moxy@git+https://github.com/zetkin/moxy.git":
+"moxy@git+https://github.com/zetkin/moxy.git#dev":
   version "1.0.0-dev"
-  resolved "git+https://github.com/zetkin/moxy.git#a18039a6899ae5916c50687c229642578824422c"
+  resolved "git+https://github.com/zetkin/moxy.git#4669984951a5a0e910f182085a20b9863c909b81"
   dependencies:
     "@types/cors" "^2.8.10"
     "@types/express" "^4.17.11"
