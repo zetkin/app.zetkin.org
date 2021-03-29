@@ -31,4 +31,4 @@ jobs:
             - name: Cypress run
               uses: cypress-io/github-action@v2
               with:
-                start: sudo yarn start
+                start: sudo yarn ci-start
