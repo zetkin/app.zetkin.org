@@ -57,7 +57,8 @@ const OrgEventsPage : PageWithLayout<OrgEventsPageProps> = (props) => {
         <Flex marginY="size-500">
             <EventList
                 events={ eventsQuery.data }
-                org={ orgQuery.data }
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                org={ orgQuery.data! }
             />
         </Flex>
     );

@@ -61,7 +61,8 @@ const OrgCampaignPage : PageWithLayout<OrgCampaignPageProps> = (props) => {
             </Text>
             <EventList
                 events={ campaignEventsQuery.data }
-                org={ orgQuery.data }
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                org={ orgQuery.data! }
             />
         </Flex>
     );
