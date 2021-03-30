@@ -1,4 +1,3 @@
-/* eslint-disable  @typescript-eslint/no-non-null-assertion */
 import NextLink from 'next/link';
 import {
     Button,
