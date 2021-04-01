@@ -46,8 +46,6 @@ describe('/o/[orgId]/events', () => {
             },
         });
 
-        cy.intercept('GET', /\/api\/orgs\/1\/campaigns\/[0-9]+\/actions$/, { data: [] });
-
         cy.visit('/o/1/events');
         cy.get('[data-test="no-events-placeholder"]').should('be.visible');
     });
