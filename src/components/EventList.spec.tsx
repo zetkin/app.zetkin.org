@@ -1,11 +1,13 @@
 import EventList from './EventList';
 import { mountWithProviders } from '../utils/testing';
 import { ZetkinEvent } from '../interfaces/ZetkinEvent';
+import { ZetkinEventResponse } from '../types/zetkin';
 import { ZetkinOrganization } from '../interfaces/ZetkinOrganization';
 
 describe('EventList', () => {
     let dummyOrg : ZetkinOrganization;
     let dummyEvents : ZetkinEvent[];
+    let eventResponses : ZetkinEventResponse[];
 
     beforeEach(()=> {
         cy.fixture('dummyOrg.json')
@@ -16,11 +18,15 @@ describe('EventList', () => {
             .then((data : {data: ZetkinEvent[]}) => {
                 dummyEvents = data.data;
             });
+        cy.fixture('dummyEventResponses.json')
+            .then((data : {data: ZetkinEvent[]}) => {
+                dummyEvents = data.data;
+            });
     });
 
     it('contains data for each event', () => {
         mountWithProviders(
-            <EventList events={ dummyEvents } org={ dummyOrg }/>,
+            <EventList eventResponses={ eventResponses } events={ dummyEvents } org={ dummyOrg }/>,
         );
 
         cy.get('[data-test="event"]').each((item) => {
@@ -37,7 +43,7 @@ describe('EventList', () => {
     it('contains an activity title instead of missing event title', () => {
         dummyEvents[0].title = undefined;
         mountWithProviders(
-            <EventList events={ dummyEvents } org={ dummyOrg }/>,
+            <EventList eventResponses={ eventResponses } events={ dummyEvents } org={ dummyOrg }/>,
         );
 
         cy.get('[data-test="event"]')
@@ -47,7 +53,7 @@ describe('EventList', () => {
 
     it('contains a sign-up button for each event', () => {
         mountWithProviders(
-            <EventList events={ dummyEvents } org={ dummyOrg }/>,
+            <EventList eventResponses={ eventResponses } events={ dummyEvents } org={ dummyOrg }/>,
         );
 
         cy.contains('misc.eventList.signup');
@@ -55,7 +61,7 @@ describe('EventList', () => {
 
     it('contains a button for more info on each event', () => {
         mountWithProviders(
-            <EventList events={ dummyEvents } org={ dummyOrg }/>,
+            <EventList eventResponses={ eventResponses } events={ dummyEvents } org={ dummyOrg }/>,
         );
 
         cy.contains('misc.eventList.moreInfo');
@@ -64,7 +70,7 @@ describe('EventList', () => {
     it('shows a placeholder when the list is empty', () => {
         dummyEvents = [];
         mountWithProviders(
-            <EventList events={ dummyEvents } org={ dummyOrg }/>,
+            <EventList eventResponses={ eventResponses } events={ dummyEvents } org={ dummyOrg }/>,
         );
 
         cy.contains('misc.eventList.placeholder');
@@ -72,7 +78,7 @@ describe('EventList', () => {
 
     it('shows a placeholder when the list is undefined', () => {
         mountWithProviders(
-            <EventList events={ undefined } org={ dummyOrg }/>,
+            <EventList eventResponses={ eventResponses } events={ undefined } org={ dummyOrg }/>,
         );
 
         cy.contains('misc.eventList.placeholder');

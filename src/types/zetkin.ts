@@ -10,10 +10,15 @@ export interface ZetkinMembership {
 
 export interface ZetkinEventResponse {
     action_id: number;
-    respone_date: string;
+    response_date: string;
     person: {
         name: string;
         id: number;
     };
     id: number;
+}
+
+export interface ZetkinEventSignup{
+    eventId: number;
+    orgId: number;
 }

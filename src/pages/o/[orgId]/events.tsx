@@ -4,6 +4,7 @@ import { GetServerSideProps } from 'next';
 import { QueryClient, useQuery } from 'react-query';
 
 import EventList from '../../../components/EventList';
+import getEventResponses from '../../../fetching/getEventResponses';
 import getEvents from '../../../fetching/getEvents';
 import getOrg from '../../../fetching/getOrg';
 import MainOrgLayout from '../../../components/layout/MainOrgLayout';
@@ -52,10 +53,12 @@ const OrgEventsPage : PageWithLayout<OrgEventsPageProps> = (props) => {
     const { orgId } = props;
     const eventsQuery = useQuery('events', getEvents(orgId));
     const orgQuery = useQuery(['org', orgId], getOrg(orgId));
+    const responseQuery = useQuery('eventResponses', getEventResponses);
 
     return (
         <Flex marginY="size-500">
             <EventList
+                eventResponses={ responseQuery.data }
                 events={ eventsQuery.data }
                 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 org={ orgQuery.data! }

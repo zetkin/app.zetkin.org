@@ -1,15 +1,15 @@
 import apiUrl from '../utils/apiUrl';
 
-import { ZetkinEventResponse, ZetkinMembership } from '../types/zetkin';
+import { ZetkinEventResponse, ZetkinEventSignup, ZetkinMembership } from '../types/zetkin';
 
-export default async function putEventResponse(event : number, orgId : number) : Promise<ZetkinEventResponse> {
+export default async function putEventResponse({ eventId, orgId } : ZetkinEventSignup) : Promise<ZetkinEventResponse> {
     const mUrl = apiUrl('/users/me/memberships');
     const mRes = await fetch(mUrl);
     const mData = await mRes.json();
     const orgMembership = mData.data.find((m : ZetkinMembership ) => m.organization.id === orgId);
 
     if (orgMembership) {
-        const eventUrl = apiUrl(`/orgs/${orgId}/actions/${event}/responses/${orgMembership.profile.id}`);
+        const eventUrl = apiUrl(`/orgs/${orgId}/actions/${eventId}/responses/${orgMembership.profile.id}`);
         const eventRes = await fetch(eventUrl, {
             method: 'PUT',
         });

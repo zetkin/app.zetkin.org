@@ -10,18 +10,35 @@ import {
     FormattedTime,
     FormattedMessage as Msg,
 } from 'react-intl';
+import { useMutation, useQueryClient } from 'react-query';
 
 import deleteEventResponse from '../fetching/deleteEventResponse';
 import putEventResponse from '../fetching/putEventResponse';
+import ResponseButton from './ResponseButton';
 import { ZetkinEvent } from '../interfaces/ZetkinEvent';
+import { ZetkinEventResponse } from '../types/zetkin';
 import { ZetkinOrganization } from '../interfaces/ZetkinOrganization';
 
 interface EventListProps {
     events: ZetkinEvent[] | undefined;
     org: ZetkinOrganization;
+    eventResponses: ZetkinEventResponse[] | undefined;
 }
 
-const EventList = ({ events, org } : EventListProps) : JSX.Element => {
+const EventList = ({ events, org, eventResponses } : EventListProps) : JSX.Element => {
+    const queryClient = useQueryClient();
+
+    const mutationAdd = useMutation(putEventResponse, {
+        onSettled: () => {
+            queryClient.invalidateQueries('eventResponses');
+        },
+    });
+
+    const mutationRemove = useMutation(deleteEventResponse, {
+        onSettled: () => {
+            queryClient.invalidateQueries('eventResponses');
+        },
+    });
 
     if (!events || events.length === 0) {
         return (
@@ -62,20 +79,13 @@ const EventList = ({ events, org } : EventListProps) : JSX.Element => {
                             />
                         </View>
                         <View data-test="location-title">{ e.location.title }</View>
-                        <Button
-                            data-test="sign-up-button"
-                            marginTop="size-50"
-                            onPress={ () => putEventResponse(e.id, org.id) }
-                            variant="cta">
-                            <Msg id="misc.eventList.signup"/>
-                        </Button>
-                        <Button
-                            data-test="undo-sign-up-button"
-                            marginTop="size-50"
-                            onPress={ () => deleteEventResponse(e.id, org.id) }
-                            variant="cta">
-                            <Msg id="misc.eventList.undoSignup"/>
-                        </Button>
+                        <ResponseButton
+                            eventId={ e.id }
+                            eventResponses={ eventResponses }
+                            mutationAdd={ mutationAdd }
+                            mutationRemove={ mutationRemove }
+                            orgId={ org.id }
+                        />
                         <NextLink href={ `/o/${org.id}/events/${e.id}` }>
                             <a>
                                 <Button marginTop="size-50" variant="cta">
