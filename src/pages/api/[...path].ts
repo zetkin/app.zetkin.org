@@ -33,9 +33,10 @@ export default async function handle(req : NextApiRequestWithSession, res : Next
     if (path[path.length-1] === 'avatar') {
         const protocol = stringToBool(process.env.ZETKIN_USE_TLS)? 'https' : 'http';
         const host = process.env.ZETKIN_API_HOST;
+        const port = process.env.ZETKIN_API_PORT;
 
         try {
-            const url = `${protocol}://api.${host}/v1/${pathStr}`;
+            const url = `${protocol}://${host}:${port}/v1/${pathStr}`;
             const result = await fetch(url, { redirect: 'manual' });
             const location = result.headers.get('location');
             const headers = location ? {
@@ -53,8 +54,9 @@ export default async function handle(req : NextApiRequestWithSession, res : Next
     const z = Z.construct({
         clientId: process.env.ZETKIN_CLIENT_ID,
         clientSecret: process.env.ZETKIN_CLIENT_SECRET,
+        host: process.env.ZETKIN_API_HOST,
+        port: process.env.ZETKIN_API_PORT,
         ssl: stringToBool(process.env.ZETKIN_USE_TLS),
-        zetkinDomain: process.env.ZETKIN_API_HOST,
     });
 
     const resource = z.resource(pathStr);

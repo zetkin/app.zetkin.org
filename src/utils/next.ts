@@ -49,8 +49,9 @@ export const scaffold = (wrapped : ScaffoldedGetServerSideProps, options? : Scaf
         ctx.z = Z.construct({
             clientId: process.env.ZETKIN_CLIENT_ID,
             clientSecret: process.env.ZETKIN_CLIENT_SECRET,
+            host: process.env.ZETKIN_API_HOST,
+            port: process.env.ZETKIN_API_PORT,
             ssl: stringToBool(process.env.ZETKIN_USE_TLS),
-            zetkinDomain: process.env.ZETKIN_API_HOST,
         });
 
         const { req, res } = contextFromNext;
