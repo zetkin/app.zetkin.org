@@ -32,8 +32,9 @@ export default async function handle(req : NextApiRequestWithSession, res : Next
 
     if (path[path.length-1] === 'avatar') {
         const protocol = stringToBool(process.env.ZETKIN_USE_TLS)? 'https' : 'http';
+        const protocolPort = stringToBool(process.env.ZETKIN_USE_TLS)? 443 : 80;
         const host = process.env.ZETKIN_API_HOST;
-        const port = process.env.ZETKIN_API_PORT;
+        const port = process.env.ZETKIN_API_PORT || protocolPort;
 
         try {
             const url = `${protocol}://${host}:${port}/v1/${pathStr}`;
