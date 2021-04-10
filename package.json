@@ -24,6 +24,7 @@
     "@react-spectrum/tabs": "^3.0.0-alpha.3",
     "@spectrum-icons/workflow": "^3.2.0",
     "@types/negotiator": "^0.6.1",
+    "cookies": "^0.8.0",
     "negotiator": "^0.6.2",
     "next": "^10.0.3",
     "next-session": "^3.4.0",
