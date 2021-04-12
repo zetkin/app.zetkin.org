@@ -22,6 +22,16 @@ describe('/o/[orgId]/events', () => {
         cy.visit('/o/1/events');
         cy.get('[data-test="no-events-placeholder"]').should('be.visible');
     });
+
+    //TODO: Figure out how to make this work. Requires login?
+    xit('contains conditional sign-up/undo sign-up button functionality for event sign-up', () => {
+        cy.visit('/o/1/events');
+        cy.get('[data-test="sign-up-button"]')
+            .eq(5)
+            .contains('Sign-up')
+            .click()
+            .contains('Undo sign-up');
+    });
 });
 
 // Hack to flag for typescript as module

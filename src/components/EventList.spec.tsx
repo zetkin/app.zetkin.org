@@ -7,7 +7,7 @@ import { ZetkinOrganization } from '../interfaces/ZetkinOrganization';
 describe('EventList', () => {
     let dummyOrg : ZetkinOrganization;
     let dummyEvents : ZetkinEvent[];
-    let eventResponses : ZetkinEventResponse[];
+    let dummyEventResponses : ZetkinEventResponse[];
 
     beforeEach(()=> {
         cy.fixture('dummyOrg.json')
@@ -19,14 +19,21 @@ describe('EventList', () => {
                 dummyEvents = data.data;
             });
         cy.fixture('dummyEventResponses.json')
-            .then((data : {data: ZetkinEvent[]}) => {
-                dummyEvents = data.data;
+            .then((data : {data: ZetkinEventResponse[]}) => {
+                dummyEventResponses = data.data;
             });
     });
 
     it('contains data for each event', () => {
+        const spyOnSubmit = cy.spy();
+
         mountWithProviders(
-            <EventList eventResponses={ eventResponses } events={ dummyEvents } org={ dummyOrg }/>,
+            <EventList
+                eventResponses={ dummyEventResponses }
+                events={ dummyEvents }
+                onEventResponse={ spyOnSubmit }
+                org={ dummyOrg }
+            />,
         );
 
         cy.get('[data-test="event"]').each((item) => {
@@ -42,8 +49,15 @@ describe('EventList', () => {
 
     it('contains an activity title instead of missing event title', () => {
         dummyEvents[0].title = undefined;
+        const spyOnSubmit = cy.spy();
+
         mountWithProviders(
-            <EventList eventResponses={ eventResponses } events={ dummyEvents } org={ dummyOrg }/>,
+            <EventList
+                eventResponses={ dummyEventResponses }
+                events={ dummyEvents }
+                onEventResponse={ spyOnSubmit }
+                org={ dummyOrg }
+            />,
         );
 
         cy.get('[data-test="event"]')
@@ -52,33 +66,70 @@ describe('EventList', () => {
     });
 
     it('contains a sign-up button for each event', () => {
+        const spyOnSubmit = cy.spy();
+
         mountWithProviders(
-            <EventList eventResponses={ eventResponses } events={ dummyEvents } org={ dummyOrg }/>,
+            <EventList
+                eventResponses={ dummyEventResponses }
+                events={ dummyEvents }
+                onEventResponse={ spyOnSubmit }
+                org={ dummyOrg }
+            />,
         );
 
-        cy.contains('misc.eventList.signup');
+        //Checks for buttons on all events
+        cy.findByText('misc.eventList.signup');
+
+        //Tests button on a single event
+        cy.findByText('misc.eventList.signup')
+            .eq(0)
+            .click()
+            .then(() => {
+                expect(spyOnSubmit).to.be.calledOnce;
+            });
     });
 
     it('contains a button for more info on each event', () => {
+        const spyOnSubmit = cy.spy();
+
         mountWithProviders(
-            <EventList eventResponses={ eventResponses } events={ dummyEvents } org={ dummyOrg }/>,
+            <EventList
+                eventResponses={ dummyEventResponses }
+                events={ dummyEvents }
+                onEventResponse={ spyOnSubmit }
+                org={ dummyOrg }
+            />,
         );
 
         cy.contains('misc.eventList.moreInfo');
     });
 
     it('shows a placeholder when the list is empty', () => {
+        const spyOnSubmit = cy.spy();
+
         dummyEvents = [];
         mountWithProviders(
-            <EventList eventResponses={ eventResponses } events={ dummyEvents } org={ dummyOrg }/>,
+            <EventList
+                eventResponses={ dummyEventResponses }
+                events={ dummyEvents }
+                onEventResponse={ spyOnSubmit }
+                org={ dummyOrg }
+            />,
         );
 
         cy.contains('misc.eventList.placeholder');
     });
 
     it('shows a placeholder when the list is undefined', () => {
+        const spyOnSubmit = cy.spy();
+
         mountWithProviders(
-            <EventList eventResponses={ eventResponses } events={ undefined } org={ dummyOrg }/>,
+            <EventList
+                eventResponses={ dummyEventResponses }
+                events={ undefined }
+                onEventResponse={ spyOnSubmit }
+                org={ dummyOrg }
+            />,
         );
 
         cy.contains('misc.eventList.placeholder');

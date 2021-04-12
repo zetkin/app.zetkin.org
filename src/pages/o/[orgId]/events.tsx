@@ -1,14 +1,17 @@
 import { dehydrate } from 'react-query/hydration';
 import { Flex } from '@adobe/react-spectrum';
 import { GetServerSideProps } from 'next';
-import { QueryClient, useQuery } from 'react-query';
+import { QueryClient, useMutation, useQuery, useQueryClient } from 'react-query';
 
+import deleteEventResponse from '../../../fetching/deleteEventResponse';
 import EventList from '../../../components/EventList';
 import getEventResponses from '../../../fetching/getEventResponses';
 import getEvents from '../../../fetching/getEvents';
 import getOrg from '../../../fetching/getOrg';
 import MainOrgLayout from '../../../components/layout/MainOrgLayout';
+import { OnEventResponse } from '../../../types/misc';
 import { PageWithLayout } from '../../../types';
+import putEventResponse from '../../../fetching/putEventResponse';
 import { scaffold } from '../../../utils/next';
 
 const scaffoldOptions = {
@@ -54,12 +57,35 @@ const OrgEventsPage : PageWithLayout<OrgEventsPageProps> = (props) => {
     const eventsQuery = useQuery('events', getEvents(orgId));
     const orgQuery = useQuery(['org', orgId], getOrg(orgId));
     const responseQuery = useQuery('eventResponses', getEventResponses);
+    const eventResponses = responseQuery.data;
+
+    const queryClient = useQueryClient();
+
+    const mutationAdd = useMutation(putEventResponse, {
+        onSettled: () => {
+            queryClient.invalidateQueries('eventResponses');
+        },
+    });
+
+    const mutationRemove = useMutation(deleteEventResponse, {
+        onSettled: () => {
+            queryClient.invalidateQueries('eventResponses');
+        },
+    });
+
+    const onEventResponse : OnEventResponse = (eventId, orgId, response) => {
+        if (response) {
+            return mutationRemove.mutate({ eventId, orgId });
+        }
+        return mutationAdd.mutate({ eventId, orgId });
+    };
 
     return (
         <Flex marginY="size-500">
             <EventList
-                eventResponses={ responseQuery.data }
+                eventResponses={ eventResponses }
                 events={ eventsQuery.data }
+                onEventResponse={ (eventId : number, orgId : number, response : boolean) => onEventResponse(eventId, orgId, response) }
                 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 org={ orgQuery.data! }
             />

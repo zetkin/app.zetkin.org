@@ -2,14 +2,17 @@ import { dehydrate } from 'react-query/hydration';
 import EventList from '../../../../components/EventList';
 import { GetServerSideProps } from 'next';
 import { Flex, Heading, Text } from '@adobe/react-spectrum';
-import { QueryClient, useQuery } from 'react-query';
+import { QueryClient, useMutation, useQuery, useQueryClient } from 'react-query';
 
 import DefaultOrgLayout from '../../../../components/layout/DefaultOrgLayout';
+import deleteEventResponse from '../../../../fetching/deleteEventResponse';
 import getCampaign from '../../../../fetching/getCampaign';
 import getCampaignEvents from '../../../../fetching/getCampaignEvents';
 import getEventResponses from '../../../../fetching/getEventResponses';
 import getOrg from '../../../../fetching/getOrg';
+import { OnEventResponse } from '../../../../types/misc';
 import { PageWithLayout } from '../../../../types';
+import putEventResponse from '../../../../fetching/putEventResponse';
 import { scaffold } from '../../../../utils/next';
 
 export const getServerSideProps : GetServerSideProps = scaffold(async (context) => {
@@ -52,6 +55,28 @@ const OrgCampaignPage : PageWithLayout<OrgCampaignPageProps> = (props) => {
     const orgQuery = useQuery(['org', orgId], getOrg(orgId));
     const campaignEventsQuery = useQuery(['campaignEvents', campId], getCampaignEvents(orgId, campId));
     const responseQuery = useQuery('eventResponses', getEventResponses);
+    const eventResponses = responseQuery.data;
+
+    const queryClient = useQueryClient();
+
+    const mutationAdd = useMutation(putEventResponse, {
+        onSettled: () => {
+            queryClient.invalidateQueries('eventResponses');
+        },
+    });
+
+    const mutationRemove = useMutation(deleteEventResponse, {
+        onSettled: () => {
+            queryClient.invalidateQueries('eventResponses');
+        },
+    });
+
+    const onEventResponse : OnEventResponse = (eventId, orgId, response) => {
+        if (response) {
+            return mutationRemove.mutate({ eventId, orgId });
+        }
+        return mutationAdd.mutate({ eventId, orgId });
+    };
 
     return (
         <Flex direction="column" marginY="size-500">
@@ -62,8 +87,9 @@ const OrgCampaignPage : PageWithLayout<OrgCampaignPageProps> = (props) => {
                 { campaignQuery.data?.info_text }
             </Text>
             <EventList
-                eventResponses={ responseQuery.data }
+                eventResponses={ eventResponses }
                 events={ campaignEventsQuery.data }
+                onEventResponse={ (eventId : number, orgId : number, response : boolean) => onEventResponse(eventId, orgId, response) }
                 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 org={ orgQuery.data! }
             />
