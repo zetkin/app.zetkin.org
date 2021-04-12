@@ -1,3 +1,4 @@
+import apiUrl from './apiUrl';
 import { applySession } from 'next-session';
 import Negotiator from 'negotiator';
 import { GetServerSideProps, GetServerSidePropsContext, GetServerSidePropsResult } from 'next';
@@ -24,6 +25,7 @@ export type ScaffoldedProps = RegularProps & {
 };
 
 export type ScaffoldedContext = GetServerSidePropsContext & {
+    apiFetch: (path : string, init? : RequestInit) => Promise<Response>;
     z: ZetkinZ;
 };
 
@@ -45,6 +47,16 @@ const hasProps = (result : any) : result is ResultWithProps => {
 export const scaffold = (wrapped : ScaffoldedGetServerSideProps, options? : ScaffoldOptions) : GetServerSideProps<ScaffoldedProps> => {
     const getServerSideProps : GetServerSideProps<ScaffoldedProps> = async (contextFromNext : GetServerSidePropsContext) => {
         const ctx = contextFromNext as ScaffoldedContext;
+
+        ctx.apiFetch = (path, init?) => {
+            return fetch(apiUrl(path), {
+                ...init,
+                headers: {
+                    cookie: contextFromNext.req.headers.cookie || '',
+                    ...init?.headers,
+                },
+            });
+        };
 
         ctx.z = Z.construct({
             clientId: process.env.ZETKIN_CLIENT_ID,
