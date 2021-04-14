@@ -25,13 +25,11 @@ describe('EventList', () => {
     });
 
     it('contains data for each event', () => {
-        const spyOnSubmit = cy.spy();
-
         mountWithProviders(
             <EventList
                 eventResponses={ dummyEventResponses }
                 events={ dummyEvents }
-                onEventResponse={ spyOnSubmit }
+                onEventResponse={ () => null }
                 org={ dummyOrg }
             />,
         );
@@ -49,13 +47,12 @@ describe('EventList', () => {
 
     it('contains an activity title instead of missing event title', () => {
         dummyEvents[0].title = undefined;
-        const spyOnSubmit = cy.spy();
 
         mountWithProviders(
             <EventList
                 eventResponses={ dummyEventResponses }
                 events={ dummyEvents }
-                onEventResponse={ spyOnSubmit }
+                onEventResponse={ () => null }
                 org={ dummyOrg }
             />,
         );
@@ -105,14 +102,13 @@ describe('EventList', () => {
     });
 
     it('shows a placeholder when the list is empty', () => {
-        const spyOnSubmit = cy.spy();
-
         dummyEvents = [];
+
         mountWithProviders(
             <EventList
                 eventResponses={ dummyEventResponses }
                 events={ dummyEvents }
-                onEventResponse={ spyOnSubmit }
+                onEventResponse={ () => null }
                 org={ dummyOrg }
             />,
         );
@@ -121,13 +117,11 @@ describe('EventList', () => {
     });
 
     it('shows a placeholder when the list is undefined', () => {
-        const spyOnSubmit = cy.spy();
-
         mountWithProviders(
             <EventList
                 eventResponses={ dummyEventResponses }
                 events={ undefined }
-                onEventResponse={ spyOnSubmit }
+                onEventResponse={ () => null }
                 org={ dummyOrg }
             />,
         );
