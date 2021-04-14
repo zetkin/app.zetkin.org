@@ -23,8 +23,12 @@ describe('/o/[orgId]/events', () => {
         cy.get('[data-test="no-events-placeholder"]').should('be.visible');
     });
 
-    //TODO: Figure out how to make this work. Requires login?
-    xit('contains conditional sign-up/undo sign-up button functionality for event sign-up', () => {
+    it('contains conditional functionality for sign-up button', () => {
+        cy.visit('/login');
+        cy.get('input[aria-label="E-mail address"]').type('testadmin@example.com');
+        cy.get('input[aria-label="Password"]').type('password');
+        cy.get('input[aria-label="Log in"]')
+            .click();
         cy.visit('/o/1/events');
         cy.get('[data-test="sign-up-button"]')
             .eq(5)
