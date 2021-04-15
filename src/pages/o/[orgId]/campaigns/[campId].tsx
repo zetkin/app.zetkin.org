@@ -2,18 +2,16 @@ import { dehydrate } from 'react-query/hydration';
 import EventList from '../../../../components/EventList';
 import { GetServerSideProps } from 'next';
 import { Flex, Heading, Text } from '@adobe/react-spectrum';
-import { QueryClient, useMutation, useQuery, useQueryClient } from 'react-query';
+import { QueryClient, useQuery } from 'react-query';
 
 import DefaultOrgLayout from '../../../../components/layout/DefaultOrgLayout';
-import deleteEventResponse from '../../../../fetching/deleteEventResponse';
 import getCampaign from '../../../../fetching/getCampaign';
 import getCampaignEvents from '../../../../fetching/getCampaignEvents';
 import getEventResponses from '../../../../fetching/getEventResponses';
 import getOrg from '../../../../fetching/getOrg';
-import { OnEventResponse } from '../../../../types/misc';
 import { PageWithLayout } from '../../../../types';
-import putEventResponse from '../../../../fetching/putEventResponse';
 import { scaffold } from '../../../../utils/next';
+import { useOnEventResponse } from '../../../../hooks';
 
 export const getServerSideProps : GetServerSideProps = scaffold(async (context) => {
     const queryClient = new QueryClient();
@@ -57,26 +55,7 @@ const OrgCampaignPage : PageWithLayout<OrgCampaignPageProps> = (props) => {
     const responseQuery = useQuery('eventResponses', getEventResponses);
     const eventResponses = responseQuery.data;
 
-    const queryClient = useQueryClient();
-
-    const mutationAdd = useMutation(putEventResponse, {
-        onSettled: () => {
-            queryClient.invalidateQueries('eventResponses');
-        },
-    });
-
-    const mutationRemove = useMutation(deleteEventResponse, {
-        onSettled: () => {
-            queryClient.invalidateQueries('eventResponses');
-        },
-    });
-
-    const onEventResponse : OnEventResponse = (eventId, orgId, response) => {
-        if (response) {
-            return mutationRemove.mutate({ eventId, orgId });
-        }
-        return mutationAdd.mutate({ eventId, orgId });
-    };
+    const onEventResponse = useOnEventResponse();
 
     return (
         <Flex direction="column" marginY="size-500">

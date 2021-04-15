@@ -11,7 +11,6 @@ import {
     FormattedMessage as Msg,
 } from 'react-intl';
 
-import { OnEventResponse } from '../types/misc';
 import { ZetkinEvent } from '../interfaces/ZetkinEvent';
 import { ZetkinEventResponse } from '../types/zetkin';
 import { ZetkinOrganization } from '../interfaces/ZetkinOrganization';
@@ -20,7 +19,7 @@ interface EventListProps {
     events: ZetkinEvent[] | undefined;
     org: ZetkinOrganization;
     eventResponses: ZetkinEventResponse[] | undefined;
-    onEventResponse: OnEventResponse;
+    onEventResponse: (eventId: number, orgId: number, response: boolean) => void;
 }
 
 const EventList = ({ eventResponses, events, onEventResponse, org } : EventListProps) : JSX.Element => {
