@@ -1,8 +1,10 @@
 import React from 'react';
-import { useMutation, useQueryClient } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 
 import deleteEventResponse from '../fetching/deleteEventResponse';
+import getEventResponses from '../fetching/getEventResponses';
 import putEventResponse from '../fetching/putEventResponse';
+import { ZetkinEventResponse } from '../types/zetkin';
 import { ZetkinUser } from '../interfaces/ZetkinUser';
 
 export const UserContext = React.createContext(null);
@@ -13,7 +15,15 @@ export const useUser = () : ZetkinUser | null => {
 
 type OnEventResponse = (eventId : number, orgId : number, response : boolean) => void;
 
-export const useOnEventResponse = () : OnEventResponse => {
+type EventResponses = {
+    eventResponses: ZetkinEventResponse[] | undefined;
+    onEventResponse: OnEventResponse;
+}
+
+export const useEventResponses = () : EventResponses => {
+    const responseQuery = useQuery('eventResponses', getEventResponses);
+    const eventResponses = responseQuery.data;
+
     const queryClient = useQueryClient();
 
     const removeFunc = useMutation(deleteEventResponse, {
@@ -28,11 +38,14 @@ export const useOnEventResponse = () : OnEventResponse => {
         },
     });
 
-    return (eventId : number, orgId : number, response : boolean) => {
+    function onEventResponse (eventId : number, orgId : number, response : boolean) {
         if (response) {
             removeFunc.mutate({ eventId, orgId });
-            return;
         }
-        addFunc.mutate({ eventId, orgId });
-    };
+        else {
+            addFunc.mutate({ eventId, orgId });
+        }
+    }
+
+    return { eventResponses, onEventResponse };
 };

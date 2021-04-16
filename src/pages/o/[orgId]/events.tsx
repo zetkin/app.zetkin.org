@@ -4,13 +4,12 @@ import { GetServerSideProps } from 'next';
 import { QueryClient, useQuery } from 'react-query';
 
 import EventList from '../../../components/EventList';
-import getEventResponses from '../../../fetching/getEventResponses';
 import getEvents from '../../../fetching/getEvents';
 import getOrg from '../../../fetching/getOrg';
 import MainOrgLayout from '../../../components/layout/MainOrgLayout';
 import { PageWithLayout } from '../../../types';
 import { scaffold } from '../../../utils/next';
-import { useOnEventResponse } from '../../../hooks';
+import { useEventResponses } from '../../../hooks';
 
 const scaffoldOptions = {
     localeScope: [
@@ -54,10 +53,8 @@ const OrgEventsPage : PageWithLayout<OrgEventsPageProps> = (props) => {
     const { orgId } = props;
     const eventsQuery = useQuery('events', getEvents(orgId));
     const orgQuery = useQuery(['org', orgId], getOrg(orgId));
-    const responseQuery = useQuery('eventResponses', getEventResponses);
-    const eventResponses = responseQuery.data;
 
-    const onEventResponse = useOnEventResponse();
+    const { eventResponses, onEventResponse } = useEventResponses();
 
     return (
         <Flex marginY="size-500">

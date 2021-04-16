@@ -7,11 +7,10 @@ import { QueryClient, useQuery } from 'react-query';
 import DefaultOrgLayout from '../../../../components/layout/DefaultOrgLayout';
 import getCampaign from '../../../../fetching/getCampaign';
 import getCampaignEvents from '../../../../fetching/getCampaignEvents';
-import getEventResponses from '../../../../fetching/getEventResponses';
 import getOrg from '../../../../fetching/getOrg';
 import { PageWithLayout } from '../../../../types';
 import { scaffold } from '../../../../utils/next';
-import { useOnEventResponse } from '../../../../hooks';
+import { useEventResponses } from '../../../../hooks';
 
 export const getServerSideProps : GetServerSideProps = scaffold(async (context) => {
     const queryClient = new QueryClient();
@@ -52,10 +51,8 @@ const OrgCampaignPage : PageWithLayout<OrgCampaignPageProps> = (props) => {
     const campaignQuery = useQuery(['campaign', campId], getCampaign(orgId, campId));
     const orgQuery = useQuery(['org', orgId], getOrg(orgId));
     const campaignEventsQuery = useQuery(['campaignEvents', campId], getCampaignEvents(orgId, campId));
-    const responseQuery = useQuery('eventResponses', getEventResponses);
-    const eventResponses = responseQuery.data;
 
-    const onEventResponse = useOnEventResponse();
+    const { eventResponses, onEventResponse } = useEventResponses();
 
     return (
         <Flex direction="column" marginY="size-500">
@@ -68,7 +65,7 @@ const OrgCampaignPage : PageWithLayout<OrgCampaignPageProps> = (props) => {
             <EventList
                 eventResponses={ eventResponses }
                 events={ campaignEventsQuery.data }
-                onEventResponse={ (eventId : number, orgId : number, response : boolean) => onEventResponse(eventId, orgId, response) }
+                onEventResponse={ onEventResponse }
                 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 org={ orgQuery.data! }
             />
