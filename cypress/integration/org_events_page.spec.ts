@@ -31,10 +31,13 @@ describe('/o/[orgId]/events', () => {
             .click();
         cy.visit('/o/1/events');
         cy.waitUntilReactRendered();
-        cy.get('[data-test="sign-up-button"]')
+        cy.get('[data-test="event-response-button"]')
             .eq(5)
             .contains('Sign-up')
-            .click()
+            .click();
+        cy.waitUntilReactRendered();
+        cy.get('[data-test="event-response-button"]')
+            .eq(5)
             .contains('Undo sign-up');
     });
 });

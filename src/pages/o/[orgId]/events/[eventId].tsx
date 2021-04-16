@@ -157,14 +157,14 @@ const OrgEventPage : PageWithLayout<OrgEventPageProps> = (props) => {
                 right="size-200">
                 { response ? (
                     <Button
-                        data-test="undo-sign-up-button"
+                        data-test="event-response-button"
                         onPress={ () => onEventResponse(event.id, org.id, true) }
                         variant="cta" width="100%">
                         <Msg id="pages.orgEvent.actions.undoSignup"/>
                     </Button>
                 ) : (
                     <Button
-                        data-test="sign-up-button"
+                        data-test="event-response-button"
                         onPress={ () => onEventResponse(event.id, org.id, false) }
                         variant="cta" width="100%">
                         <Msg id="pages.orgEvent.actions.signup"/>

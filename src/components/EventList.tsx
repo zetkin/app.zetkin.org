@@ -67,7 +67,7 @@ const EventList = ({ eventResponses, events, onEventResponse, org } : EventListP
                             <View data-test="location-title">{ e.location.title }</View>
                             { response ? (
                                 <Button
-                                    data-test="undo-sign-up-button"
+                                    data-test="event-response-button"
                                     marginTop="size-50"
                                     onPress={ () => onEventResponse(e.id, org.id, true) }
                                     variant="cta">
@@ -75,7 +75,7 @@ const EventList = ({ eventResponses, events, onEventResponse, org } : EventListP
                                 </Button>
                             ) : (
                                 <Button
-                                    data-test="sign-up-button"
+                                    data-test="event-response-button"
                                     marginTop="size-50"
                                     onPress={ () => onEventResponse(e.id, org.id, false) }
                                     variant="cta">
