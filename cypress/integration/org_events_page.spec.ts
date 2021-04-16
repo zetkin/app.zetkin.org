@@ -23,13 +23,14 @@ describe('/o/[orgId]/events', () => {
         cy.get('[data-test="no-events-placeholder"]').should('be.visible');
     });
 
-    it('contains conditional functionality for sign-up button', () => {
+    it.only('shows sign up button if not signed up, and undo button when signed up', () => {
         cy.visit('/login');
         cy.get('input[aria-label="E-mail address"]').type('testadmin@example.com');
         cy.get('input[aria-label="Password"]').type('password');
         cy.get('input[aria-label="Log in"]')
             .click();
         cy.visit('/o/1/events');
+        cy.waitUntilReactRendered();
         cy.get('[data-test="sign-up-button"]')
             .eq(5)
             .contains('Sign-up')

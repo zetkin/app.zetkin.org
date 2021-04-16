@@ -74,10 +74,6 @@ describe('EventList', () => {
             />,
         );
 
-        //Checks for buttons on all events
-        cy.findByText('misc.eventList.signup');
-
-        //Tests button on a single event
         cy.findByText('misc.eventList.signup')
             .eq(0)
             .click()
@@ -87,13 +83,11 @@ describe('EventList', () => {
     });
 
     it('contains a button for more info on each event', () => {
-        const spyOnSubmit = cy.spy();
-
         mountWithProviders(
             <EventList
                 eventResponses={ dummyEventResponses }
                 events={ dummyEvents }
-                onEventResponse={ spyOnSubmit }
+                onEventResponse={ () => null  }
                 org={ dummyOrg }
             />,
         );
