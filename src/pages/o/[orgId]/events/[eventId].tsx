@@ -27,6 +27,7 @@ import getEvent from '../../../../fetching/getEvent';
 import getOrg from '../../../../fetching/getOrg';
 import { PageWithLayout } from '../../../../types';
 import { scaffold } from '../../../../utils/next';
+import { useEventResponses } from '../../../../hooks';
 import { ZetkinEvent } from '../../../../interfaces/ZetkinEvent';
 import { ZetkinOrganization } from '../../../../interfaces/ZetkinOrganization';
 
@@ -73,6 +74,7 @@ const OrgEventPage : PageWithLayout<OrgEventPageProps> = (props) => {
     const { orgId, eventId } = props;
     const eventQuery = useQuery(['event', eventId], getEvent(orgId, eventId));
     const orgQuery = useQuery(['org', orgId], getOrg(orgId));
+    const { eventResponses, onEventResponse } = useEventResponses();
 
     if (!eventQuery.data) {
         return null;
@@ -80,6 +82,8 @@ const OrgEventPage : PageWithLayout<OrgEventPageProps> = (props) => {
 
     const event = eventQuery.data as ZetkinEvent;
     const org = orgQuery.data as ZetkinOrganization;
+
+    const response = eventResponses?.find(response => response.action_id === event.id);
 
     return (
         <>
@@ -151,9 +155,21 @@ const OrgEventPage : PageWithLayout<OrgEventPageProps> = (props) => {
                 marginTop="size-200"
                 position="absolute"
                 right="size-200">
-                <Button data-test="sign-up-button" variant="cta" width="100%">
-                    <Msg id="pages.orgEvent.actions.signUp"/>
-                </Button>
+                { response ? (
+                    <Button
+                        data-test="undo-sign-up-button"
+                        onPress={ () => onEventResponse(event.id, org.id, true) }
+                        variant="cta" width="100%">
+                        <Msg id="pages.orgEvent.actions.undoSignup"/>
+                    </Button>
+                ) : (
+                    <Button
+                        data-test="sign-up-button"
+                        onPress={ () => onEventResponse(event.id, org.id, false) }
+                        variant="cta" width="100%">
+                        <Msg id="pages.orgEvent.actions.signup"/>
+                    </Button>
+                ) }
             </View>
         </>
     );
