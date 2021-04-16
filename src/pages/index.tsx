@@ -26,7 +26,7 @@ export const getServerSideProps : GetServerSideProps = scaffold(async (context) 
         clientId: process.env.ZETKIN_CLIENT_ID,
         clientSecret: process.env.ZETKIN_CLIENT_SECRET,
         ssl: stringToBool(process.env.ZETKIN_USE_TLS),
-        zetkinDomain: process.env.ZETKIN_API_HOST,
+        zetkinDomain: process.env.ZETKIN_API_DOMAIN,
     });
 
     const code = query?.code;

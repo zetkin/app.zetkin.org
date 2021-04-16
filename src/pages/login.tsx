@@ -11,7 +11,7 @@ export const getServerSideProps : GetServerSideProps = async () => {
         clientId: process.env.ZETKIN_CLIENT_ID,
         clientSecret: process.env.ZETKIN_CLIENT_SECRET,
         ssl: stringToBool(process.env.ZETKIN_USE_TLS),
-        zetkinDomain: process.env.ZETKIN_API_HOST,
+        zetkinDomain: process.env.ZETKIN_API_DOMAIN,
     });
 
     const protocol = stringToBool(process.env.NEXT_PUBLIC_APP_USE_TLS)? 'https' : 'http';
