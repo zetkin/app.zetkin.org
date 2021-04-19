@@ -7,7 +7,7 @@
     "devproxy": "moxy -f http://api.dev.zetkin.org",
     "devserver": "next dev -p 80",
     "lint": "eslint src cypress && tsc --noEmit && echo 'Finished linting without errors!'",
-    "tdd": "concurrently \"NODE_ENV=test yarn devserver\" \"yarn devproxy\" \"yarn cypress open\"",
+    "tdd": "concurrently 'NODE_ENV=test yarn devserver' 'yarn devproxy' 'yarn cypress open'",
     "watch": "chokidar 'src/**/*' -c 'npm run lint'",
     "ci-start": "concurrently 'next start -p 80' 'yarn devproxy'",
     "start": "next start -p 80"
