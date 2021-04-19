@@ -38,6 +38,10 @@ Make sure that the following line exists somewhere in the file
 Once it's configured, you can access the app at http://www.dev.zetkin.org.
 
 ## Contributing
+This repository has an `.editorconfig` file which can automatically configure
+your editor to the correct style. Make sure [your editor supports](https://editorconfig.org/#pre-installed)
+`.editorconfig` files, or [install a plugin](https://editorconfig.org/#download).
+
 The CI server will run eslint and typescript to verify type safety and code
 style. You can run the linter yourself like this:
 
