@@ -7,7 +7,7 @@ import { AppSession } from '../types';
 import { getMessages } from './locale';
 import stringToBool from './stringToBool';
 import { ZetkinUser } from '../interfaces/ZetkinUser';
-import { ZetkinZ } from '../types/sdk';
+import { ZetkinZ, ZetkinZResult } from '../types/sdk';
 
 //TODO: Create module definition and revert to import.
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -26,6 +26,7 @@ export type ScaffoldedProps = RegularProps & {
 
 export type ScaffoldedContext = GetServerSidePropsContext & {
     apiFetch: (path : string, init? : RequestInit) => Promise<Response>;
+    user: ZetkinZResult | null;
     z: ZetkinZ;
 };
 
@@ -65,6 +66,13 @@ export const scaffold = (wrapped : ScaffoldedGetServerSideProps, options? : Scaf
             port: process.env.ZETKIN_API_PORT,
             ssl: stringToBool(process.env.ZETKIN_USE_TLS),
         });
+
+        try {
+            ctx.user = await ctx.z.resource('users', 'me').get();
+        }
+        catch (error) {
+            ctx.user = null;
+        }
 
         const { req, res } = contextFromNext;
         await applySession(req, res);
