@@ -17,8 +17,3 @@ export interface ZetkinEventResponse {
     };
     id: number;
 }
-
-export interface ZetkinEventSignup {
-    eventId: number;
-    orgId: number;
-}

@@ -1,21 +1,34 @@
 import apiUrl from '../utils/apiUrl';
 
-import { ZetkinEventResponse, ZetkinEventSignup, ZetkinMembership } from '../types/zetkin';
+import { ZetkinEventResponse, ZetkinMembership } from '../types/zetkin';
 
-export default async function putEventResponse({ eventId, orgId } : ZetkinEventSignup) : Promise<ZetkinEventResponse> {
-    const mUrl = apiUrl('/users/me/memberships');
-    const mRes = await fetch(mUrl);
-    const mData = await mRes.json();
-    const orgMembership = mData.data.find((m : ZetkinMembership ) => m.organization.id === orgId);
+function defaultFetch(path : string, init? : RequestInit) {
+    const url = apiUrl(path);
+    return fetch(url, init);
+}
 
-    if (orgMembership) {
-        const eventUrl = apiUrl(`/orgs/${orgId}/actions/${eventId}/responses/${orgMembership.profile.id}`);
-        const eventRes = await fetch(eventUrl, {
-            method: 'PUT',
-        });
-        const eventData = await eventRes.json();
-        return eventData.data;
-    }
+interface MutationVariables {
+    eventId: number;
+    orgId: number;
+}
 
-    throw 'no membership';
+export default function putEventResponse(fetch = defaultFetch) {
+    return async ({ eventId, orgId } : MutationVariables) : Promise<ZetkinEventResponse> => {
+        const mRes = await fetch('/users/me/memberships');
+        const mData = await mRes.json();
+        //TODO: Memberships should be cached.
+        const orgMembership = mData.data.find((m : ZetkinMembership ) => m.organization.id === orgId);
+
+        if (orgMembership) {
+            const eventRes = await fetch(`/orgs/${orgId}/actions/${eventId}/responses/${orgMembership.profile.id}`, {
+                method: 'PUT',
+            });
+            const eventResData = await eventRes.json();
+
+            return eventResData.data;
+        }
+
+        throw 'no membership';
+    };
+
 }

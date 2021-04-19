@@ -4,6 +4,7 @@ import { GetServerSideProps } from 'next';
 import { QueryClient, useQuery } from 'react-query';
 
 import EventList from '../../../components/EventList';
+import getEventResponses from '../../../fetching/getEventResponses';
 import getEvents from '../../../fetching/getEvents';
 import getOrg from '../../../fetching/getOrg';
 import MainOrgLayout from '../../../components/layout/MainOrgLayout';
@@ -23,9 +24,17 @@ export const getServerSideProps : GetServerSideProps = scaffold(async (context) 
     const queryClient = new QueryClient();
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const { orgId } = context.params!;
+    const { user } = context;
 
-    await queryClient.prefetchQuery('events', getEvents(orgId as string));
-    await queryClient.prefetchQuery(['org', orgId], getOrg(orgId as string));
+    await queryClient.prefetchQuery('events', getEvents(orgId as string, context.apiFetch));
+    await queryClient.prefetchQuery(['org', orgId], getOrg(orgId as string, context.apiFetch));
+
+    if (user) {
+        await queryClient.prefetchQuery('eventResponses', getEventResponses(context.apiFetch));
+    }
+    else {
+        null;
+    }
 
     const eventsState = queryClient.getQueryState('events');
     const orgState = queryClient.getQueryState(['org', orgId]);
