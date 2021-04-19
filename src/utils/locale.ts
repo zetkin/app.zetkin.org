@@ -1,5 +1,5 @@
 import { promises as fs } from 'fs';
-import { resolve } from 'path';
+import path from 'path';
 import yaml from 'yaml';
 
 type MessageList = Record<string,string>;
@@ -24,7 +24,7 @@ function flattenObject(obj : Record<string,unknown>, baseKey : string | null = n
 async function* findYMLFiles(dir : string) : AsyncIterable<string> {
     const dirEnts = await fs.readdir(dir, { withFileTypes: true });
     for (const dirEnt of dirEnts) {
-        const res = resolve(dir, dirEnt.name);
+        const res = path.resolve(dir, dirEnt.name);
         if (dirEnt.isDirectory()) {
             yield* findYMLFiles(res);
         }
@@ -35,17 +35,16 @@ async function* findYMLFiles(dir : string) : AsyncIterable<string> {
 }
 
 async function loadMessages() : Promise<MessageDB> {
-    const basePath = resolve('./src/locale');
-    const pathEx = /\/([a-zA-Z0-9/]+)\/([a-z]{2}).yml$/;
-
+    const basePath = path.resolve('./src/locale');
     const messages : MessageDB = {};
 
     for await (const fullPath of findYMLFiles('./src/locale')) {
         const localPath = fullPath.replace(basePath, '');
-        const match = pathEx.exec(localPath);
-        if (match) {
-            const dotPath = match[1].split('/').join('.');
-            const lang = match[2];
+        const pathElems = localPath.split(path.sep).filter(elem => elem.length);
+        const fileName = pathElems.pop();
+        if (fileName) {
+            const dotPath = pathElems.join('.');
+            const lang = fileName.replace('.yml', '');
 
             const content = await fs.readFile(fullPath, 'utf8');
             const data = yaml.parse(content);
