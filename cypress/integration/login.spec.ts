@@ -18,6 +18,16 @@ describe('Login process', () => {
         cy.get('[data-test="username"]').should('be.visible');
         cy.get('[data-test="user-avatar"]').should('be.visible');
     });
+
+    it('clicking on user avatar takes you to My Page', () => {
+        cy.visit('/login');
+        cy.get('input[aria-label="E-mail address"]').type('testadmin@example.com');
+        cy.get('input[aria-label="Password"]').type('password');
+        cy.get('input[aria-label="Log in"]').click();
+        cy.get('[data-test="username"').click();
+        cy.url().should('match', /\/my$/);
+    });
+
 });
     
 // Hack to flag for typescript as module

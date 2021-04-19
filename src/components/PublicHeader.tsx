@@ -51,17 +51,21 @@ const PublicHeader = ({ user, org } : PublicHeaderProps) : JSX.Element => {
                 ) }
                 { user ? (
                     <View>
-                        <Text data-test="username">
-                            { user.first_name } { user.last_name }
-                        </Text>
-                        <Image
-                            alt="User avatar"
-                            data-test="user-avatar"
-                            height="size-600"
-                            objectFit="contain"
-                            src={ `/api/users/${user.id}/avatar` }
-                            width="size-600"
-                        />
+                        <NextLink href="/my">
+                            <a>
+                                <Text data-test="username">
+                                    { user.first_name } { user.last_name }
+                                </Text>
+                                <Image
+                                    alt="User avatar"
+                                    data-test="user-avatar"
+                                    height="size-600"
+                                    objectFit="contain"
+                                    src={ `/api/users/${user.id}/avatar` }
+                                    width="size-600"
+                                />
+                            </a>
+                        </NextLink>
                     </View>
                 ) : (
                     <NextLink href="/login">
