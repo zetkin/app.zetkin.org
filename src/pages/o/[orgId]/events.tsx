@@ -32,9 +32,6 @@ export const getServerSideProps : GetServerSideProps = scaffold(async (context) 
     if (user) {
         await queryClient.prefetchQuery('eventResponses', getEventResponses(context.apiFetch));
     }
-    else {
-        null;
-    }
 
     const eventsState = queryClient.getQueryState('events');
     const orgState = queryClient.getQueryState(['org', orgId]);

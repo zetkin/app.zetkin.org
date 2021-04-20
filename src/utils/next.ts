@@ -67,19 +67,19 @@ export const scaffold = (wrapped : ScaffoldedGetServerSideProps, options? : Scaf
             ssl: stringToBool(process.env.ZETKIN_USE_TLS),
         });
 
-        try {
-            ctx.user = await ctx.z.resource('users', 'me').get();
-        }
-        catch (error) {
-            ctx.user = null;
-        }
-
         const { req, res } = contextFromNext;
         await applySession(req, res);
 
         const reqWithSession = req as { session? : AppSession };
         if (reqWithSession.session?.tokenData) {
             ctx.z.setTokenData(reqWithSession.session.tokenData);
+        }
+
+        try {
+            ctx.user = await ctx.z.resource('users', 'me').get();
+        }
+        catch (error) {
+            ctx.user = null;
         }
 
         const result = await wrapped(ctx);
