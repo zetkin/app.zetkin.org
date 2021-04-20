@@ -1,10 +1,5 @@
-import apiUrl from '../utils/apiUrl';
+import { defaultFetch } from '.';
 import { ZetkinEvent } from '../interfaces/ZetkinEvent';
-
-function defaultFetch(path : string, init? : RequestInit) {
-    const url = apiUrl(path);
-    return fetch(url, init);
-}
 
 export default function getEvent(orgId : string, eventId : string, fetch = defaultFetch) {
     return async () : Promise<ZetkinEvent> => {
