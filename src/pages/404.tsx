@@ -30,7 +30,7 @@ export default function Custom404() : JSX.Element {
                     <Heading level={ 1 }>
                         <Msg id="pages.404.pageNotFound"/>
                     </Heading>
-                    <Link>
+                    <Link data-test="back-home-link">
                         <a href="/">
                             <Msg id="pages.404.backToHomePage"/>
                         </a>
