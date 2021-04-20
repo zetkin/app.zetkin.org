@@ -1,8 +1,9 @@
-import { getMessages } from '../utils/locale';
 import { GetStaticProps } from 'next';
 import Head from 'next/head';
 import { FormattedMessage as Msg } from 'react-intl';
 import { Content, Flex, Heading, Link } from '@adobe/react-spectrum';
+
+import { getMessages } from '../utils/locale';
 
 export const getStaticProps: GetStaticProps = async () => {
     const lang = 'en';
