@@ -43,7 +43,8 @@ export default function EventList ({ eventResponses, events, onEventResponse, or
                         event={ event }
                         onEventResponse={ onEventResponse }
                         org={ org }
-                        response={ response } />
+                        response={ response }
+                    />
                     );
                 })
                 }
@@ -96,7 +97,7 @@ const EventListItem = ({ event, response, onEventResponse, org }: EventListItemP
                     marginTop="size-50"
                     onPress={ () => onEventResponse(event.id, org.id, true) }
                     variant="cta">
-                    <Msg id="misc.eventList.undoSignup"/>
+                    <Msg id="misc.eventList.undoSignup" />
                 </Button>
             ) : (
                 <Button
