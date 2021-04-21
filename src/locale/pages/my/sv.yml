@@ -1,1 +1,11 @@
-welcome: Hej {userName}
+feed:
+  welcome: Hej, {userName}
+
+toDo:
+  heading: Att göra
+
+orgs:
+  heading: Organisationer
+
+settings:
+  heading: Inställningar
