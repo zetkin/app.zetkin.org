@@ -22,16 +22,45 @@ interface EventListProps {
     onEventResponse: (eventId: number, orgId: number, response: boolean) => void;
 }
 
+export default function EventList ({ eventResponses, events, onEventResponse, org } : EventListProps) : JSX.Element {
+
+    if (!events || events.length === 0) {
+        return (
+            <Text data-test="no-events-placeholder">
+                <Msg id="misc.eventList.placeholder"/>
+            </Text>
+        );
+    }
+
+    return (
+        <>
+            <Flex data-test="event-list" direction="row" gap="100" wrap>
+                { events?.map((event) => {
+                    const response = eventResponses?.find(response => response.action_id === event.id);
+
+                    return (<EventListItem
+                        key=""
+                        event={ event }
+                        onEventResponse={ onEventResponse }
+                        org={ org }
+                        response={ response } />
+                    );
+                })
+                }
+            </Flex>
+        </>
+    );
+
+}
+
 interface EventListItemProps {
     event: ZetkinEvent;
     org: ZetkinOrganization;
-    eventResponses: ZetkinEventResponse[] | undefined;
+    response: ZetkinEventResponse | undefined;
     onEventResponse: (eventId: number, orgId: number, response: boolean) => void;
 }
 
-const EventListItem = ( { event, eventResponses, onEventResponse, org } : EventListItemProps): JSX.Element => {
-
-    const response = eventResponses?.find(response => response.action_id === event.id);
+const EventListItem = ({ event, response, onEventResponse, org }: EventListItemProps): JSX.Element => {
 
     return (
         <Flex key={ event.id } data-test="event" direction="column" margin="size-200">
@@ -75,43 +104,16 @@ const EventListItem = ( { event, eventResponses, onEventResponse, org } : EventL
                     marginTop="size-50"
                     onPress={ () => onEventResponse(event.id, org.id, false) }
                     variant="cta">
-                    <Msg id="misc.eventList.signup"/>
+                    <Msg id="misc.eventList.signup" />
                 </Button>
             ) }
-            <NextLink href={ `/o/${org.id}/events/${event.id}` }>
+            <NextLink href={ `/o/${org.id}/events/${ event.id }` }>
                 <a>
                     <Button marginTop="size-50" variant="cta">
-                        <Msg id="misc.eventList.moreInfo"/>
+                        <Msg id="misc.eventList.moreInfo" />
                     </Button>
                 </a>
             </NextLink>
         </Flex>
     );
-}
-
-const EventList = ({ eventResponses, events, onEventResponse, org } : EventListProps) : JSX.Element => {
-
-    if (!events || events.length === 0) {
-        return (
-            <Text data-test="no-events-placeholder">
-                <Msg id="misc.eventList.placeholder"/>
-            </Text>
-        );
-    }
-
-    return (
-        <>
-            <Flex data-test="event-list" direction="row" gap="100" wrap>
-                {events?.map((e) => {
-                    return <EventListItem
-                        event={e}
-                        eventResponses={eventResponses}
-                        onEventResponse={onEventResponse}
-                        org={org} />
-                })}
-            </Flex>
-        </>
-    );
 };
-
-export default EventList;
