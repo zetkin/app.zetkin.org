@@ -26,7 +26,7 @@ export type ScaffoldedProps = RegularProps & {
 
 export type ScaffoldedContext = GetServerSidePropsContext & {
     apiFetch: (path : string, init? : RequestInit) => Promise<Response>;
-    user: unknown;
+    user: ZetkinUser | null;
     z: ZetkinZ;
 };
 
@@ -76,12 +76,14 @@ export const scaffold = (wrapped : ScaffoldedGetServerSideProps, options? : Scaf
         }
 
         try {
-            const user = await ctx.z.resource('users', 'me').get();
-            ctx.user = user.data.data;
+            const userRes = await ctx.z.resource('users', 'me').get();
+            ctx.user = userRes.data.data as ZetkinUser;
         }
         catch (error) {
             ctx.user = null;
         }
+
+        const user = ctx.user;
 
         const result = await wrapped(ctx);
 
@@ -92,23 +94,14 @@ export const scaffold = (wrapped : ScaffoldedGetServerSideProps, options? : Scaf
 
         const messages = await getMessages(lang, options?.localeScope ?? []);
 
-        const augmentProps = (user : ZetkinUser | null) => {
-            if (hasProps(result)) {
-                const scaffoldedProps : ScaffoldedProps = {
-                    ...result.props,
-                    lang,
-                    messages,
-                    user,
-                };
-                result.props = scaffoldedProps;
-            }
-        };
-
-        try {
-            augmentProps(ctx.user as ZetkinUser);
-        }
-        catch (error) {
-            augmentProps(null);
+        if (hasProps(result)) {
+            const scaffoldedProps : ScaffoldedProps = {
+                ...result.props,
+                lang,
+                messages,
+                user,
+            };
+            result.props = scaffoldedProps;
         }
 
         return result as GetServerSidePropsResult<ScaffoldedProps>;
