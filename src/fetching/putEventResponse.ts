@@ -6,23 +6,20 @@ interface MutationVariables {
     orgId: number;
 }
 
-export default function putEventResponse() {
-    return async ({ eventId, orgId } : MutationVariables) : Promise<ZetkinEventResponse> => {
-        const mRes = await fetch(apiUrl('/users/me/memberships'));
-        const mData = await mRes.json();
-        //TODO: Memberships should be cached.
-        const orgMembership = mData.data.find((m : ZetkinMembership ) => m.organization.id === orgId);
+export default async function putEventResponse({ eventId, orgId } : MutationVariables) : Promise<ZetkinEventResponse> {
+    const mRes = await fetch(apiUrl('/users/me/memberships'));
+    const mData = await mRes.json();
+    //TODO: Memberships should be cached.
+    const orgMembership = mData.data.find((m : ZetkinMembership ) => m.organization.id === orgId);
 
-        if (orgMembership) {
-            const eventRes = await fetch(apiUrl(`/orgs/${orgId}/actions/${eventId}/responses/${orgMembership.profile.id}`), {
-                method: 'PUT',
-            });
-            const eventResData = await eventRes.json();
+    if (orgMembership) {
+        const eventRes = await fetch(apiUrl(`/orgs/${orgId}/actions/${eventId}/responses/${orgMembership.profile.id}`), {
+            method: 'PUT',
+        });
+        const eventResData = await eventRes.json();
 
-            return eventResData.data;
-        }
+        return eventResData.data;
+    }
 
-        throw 'no membership';
-    };
-
+    throw 'no membership';
 }

@@ -26,13 +26,13 @@ export const useEventResponses = () : EventResponses => {
 
     const queryClient = useQueryClient();
 
-    const removeFunc = useMutation(deleteEventResponse(), {
+    const removeFunc = useMutation(deleteEventResponse, {
         onSettled: () => {
             queryClient.invalidateQueries('eventResponses');
         },
     });
 
-    const addFunc = useMutation(putEventResponse(), {
+    const addFunc = useMutation(putEventResponse, {
         onSettled: () => {
             queryClient.invalidateQueries('eventResponses');
         },
