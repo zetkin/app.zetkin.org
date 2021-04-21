@@ -10,6 +10,7 @@ import getCampaignEvents from '../../../../fetching/getCampaignEvents';
 import getOrg from '../../../../fetching/getOrg';
 import { PageWithLayout } from '../../../../types';
 import { scaffold } from '../../../../utils/next';
+import { useEventResponses } from '../../../../hooks';
 
 export const getServerSideProps : GetServerSideProps = scaffold(async (context) => {
     const queryClient = new QueryClient();
@@ -51,6 +52,8 @@ const OrgCampaignPage : PageWithLayout<OrgCampaignPageProps> = (props) => {
     const orgQuery = useQuery(['org', orgId], getOrg(orgId));
     const campaignEventsQuery = useQuery(['campaignEvents', campId], getCampaignEvents(orgId, campId));
 
+    const { eventResponses, onEventResponse } = useEventResponses();
+
     return (
         <Flex direction="column" marginY="size-500">
             <Heading level={ 1 }>
@@ -60,8 +63,11 @@ const OrgCampaignPage : PageWithLayout<OrgCampaignPageProps> = (props) => {
                 { campaignQuery.data?.info_text }
             </Text>
             <EventList
+                eventResponses={ eventResponses }
                 events={ campaignEventsQuery.data }
-                org={ orgQuery.data }
+                onEventResponse={ onEventResponse }
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                org={ orgQuery.data! }
             />
         </Flex>
     );

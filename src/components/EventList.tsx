@@ -12,14 +12,18 @@ import {
 } from 'react-intl';
 
 import { ZetkinEvent } from '../interfaces/ZetkinEvent';
+import { ZetkinEventResponse } from '../types/zetkin';
 import { ZetkinOrganization } from '../interfaces/ZetkinOrganization';
 
 interface EventListProps {
     events: ZetkinEvent[] | undefined;
-    org: ZetkinOrganization | undefined;
+    org: ZetkinOrganization;
+    eventResponses: ZetkinEventResponse[] | undefined;
+    onEventResponse: (eventId: number, orgId: number, response: boolean) => void;
 }
 
-const EventList = ({ events, org } : EventListProps) : JSX.Element => {
+const EventList = ({ eventResponses, events, onEventResponse, org } : EventListProps) : JSX.Element => {
+
     if (!events || events.length === 0) {
         return (
             <Text data-test="no-events-placeholder">
@@ -31,46 +35,63 @@ const EventList = ({ events, org } : EventListProps) : JSX.Element => {
     return (
         <>
             <Flex data-test="event-list" direction="row" gap="100" wrap>
-                { events?.map((e) => (
-                    <Flex key={ e.id } data-test="event" direction="column" margin="size-200">
-                        <View data-test="event-title">
-                            { e.title ? e.title : e.activity.title }
-                        </View>
-                        <View data-test="org-title">{ org?.title }</View>
-                        <View data-test="campaign-title">{ e.campaign.title }</View>
-                        <View data-test="start-time">
-                            <FormattedDate
-                                day="2-digit"
-                                month="long"
-                                value={ Date.parse(e.start_time) }
-                            />
-                            , <FormattedTime
-                                value={ Date.parse(e.start_time) }
-                            />
-                        </View>
-                        <View data-test="end-time">
-                            <FormattedDate
-                                day="2-digit"
-                                month="long"
-                                value={ Date.parse(e.end_time) }
-                            />
-                            , <FormattedTime
-                                value={ Date.parse(e.end_time) }
-                            />
-                        </View>
-                        <View data-test="location-title">{ e.location.title }</View>
-                        <Button data-test="sign-up-button" marginTop="size-50" variant="cta">
-                            <Msg id="misc.eventList.signup"/>
-                        </Button>
-                        <NextLink href={ `/o/${org?.id}/events/${e.id}` }>
-                            <a>
-                                <Button marginTop="size-50" variant="cta">
-                                    <Msg id="misc.eventList.moreInfo"/>
+                { events?.map((e) => {
+                    const response = eventResponses?.find(response => response.action_id === e.id);
+                    return (
+                        <Flex key={ e.id } data-test="event" direction="column" margin="size-200">
+                            <View data-test="event-title">
+                                { e.title ? e.title : e.activity.title }
+                            </View>
+                            <View data-test="org-title">{ org.title }</View>
+                            <View data-test="campaign-title">{ e.campaign.title }</View>
+                            <View data-test="start-time">
+                                <FormattedDate
+                                    day="2-digit"
+                                    month="long"
+                                    value={ Date.parse(e.start_time) }
+                                />
+                                , <FormattedTime
+                                    value={ Date.parse(e.start_time) }
+                                />
+                            </View>
+                            <View data-test="end-time">
+                                <FormattedDate
+                                    day="2-digit"
+                                    month="long"
+                                    value={ Date.parse(e.end_time) }
+                                />
+                                , <FormattedTime
+                                    value={ Date.parse(e.end_time) }
+                                />
+                            </View>
+                            <View data-test="location-title">{ e.location.title }</View>
+                            { response ? (
+                                <Button
+                                    data-test="event-response-button"
+                                    marginTop="size-50"
+                                    onPress={ () => onEventResponse(e.id, org.id, true) }
+                                    variant="cta">
+                                    <Msg id="misc.eventList.undoSignup"/>
                                 </Button>
-                            </a>
-                        </NextLink>
-                    </Flex>
-                )) }
+                            ) : (
+                                <Button
+                                    data-test="event-response-button"
+                                    marginTop="size-50"
+                                    onPress={ () => onEventResponse(e.id, org.id, false) }
+                                    variant="cta">
+                                    <Msg id="misc.eventList.signup"/>
+                                </Button>
+                            ) }
+                            <NextLink href={ `/o/${org.id}/events/${e.id}` }>
+                                <a>
+                                    <Button marginTop="size-50" variant="cta">
+                                        <Msg id="misc.eventList.moreInfo"/>
+                                    </Button>
+                                </a>
+                            </NextLink>
+                        </Flex>
+                    );
+                }) }
             </Flex>
         </>
     );
