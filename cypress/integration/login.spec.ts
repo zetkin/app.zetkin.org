@@ -28,7 +28,7 @@ describe('Login process', () => {
         cy.url().should('match', /\/my$/);
     });
 
-    it('contains a logout button wich logs you out and takes you back to the login page', () => {
+    it('contains a logout button wich logs you out and takes you back to the home page', () => {
         cy.visit('/login');
         cy.get('input[aria-label="E-mail address"]').type('testadmin@example.com');
         cy.get('input[aria-label="Password"]').type('password');

@@ -31,6 +31,11 @@ describe('PublicHeader', () => {
         cy.get('[data-test="user-avatar"]').should('be.visible');
     });
 
+    it('contains logout button if logged in', () => {
+        mountWithProviders(<PublicHeader user={ dummyUser } />);
+        cy.get('[data-test="logout-button"]').should('be.visible');
+    });
+
     it('contains a zetkin logo when component has no org prop', () => {
         mountWithProviders(<PublicHeader user={ dummyUser }/>);
         cy.get('[data-test="zetkin-logotype"]').should('be.visible');
