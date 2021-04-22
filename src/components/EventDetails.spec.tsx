@@ -97,11 +97,11 @@ describe('EventDetails', () => {
     });
 
     it('contains a sign-up button for the event', () => {
-        const spyOnSubmit = cy.spy();
+        const spyOnEventResponse = cy.spy();
         mountWithProviders(
             <EventDetails
                 event={ dummyEvent }
-                onEventResponse={ spyOnSubmit }
+                onEventResponse={ spyOnEventResponse }
                 org={ dummyOrg }
                 response={ undefined }
             />,
@@ -111,17 +111,17 @@ describe('EventDetails', () => {
             .eq(0)
             .click()
             .then(() => {
-                expect(spyOnSubmit).to.be.calledOnce;
+                expect(spyOnEventResponse).to.be.calledOnceWith(dummyEvent.id, dummyOrg.id, true);
             });
     });
 
     it('contains a cancel sign-up button for the event if there is no response', () => {
-        const spyOnSubmit = cy.spy();
+        const spyOnEventResponse = cy.spy();
         
         mountWithProviders(
             <EventDetails
                 event={ dummyEvent }
-                onEventResponse={ spyOnSubmit }
+                onEventResponse={ spyOnEventResponse }
                 org={ dummyOrg }
                 response={ dummyEventResponse }
             />,
@@ -131,7 +131,7 @@ describe('EventDetails', () => {
             .eq(0)
             .click()
             .then(() => {
-                expect(spyOnSubmit).to.be.calledOnce;
+                expect(spyOnEventResponse).to.be.calledOnceWith(dummyEvent.id, dummyOrg.id, true);
             });
     });
 });
