@@ -60,14 +60,15 @@ const OrgEventsPage : PageWithLayout<OrgEventsPageProps> = (props) => {
     const eventsQuery = useQuery('events', getEvents(orgId));
     const orgQuery = useQuery(['org', orgId], getOrg(orgId));
 
-    const { eventResponses, onEventResponse } = useEventResponses();
+    const { eventResponses, onSignup, onUndoSignup } = useEventResponses();
 
     return (
         <Flex marginY="size-500">
             <EventList
                 eventResponses={ eventResponses }
                 events={ eventsQuery.data }
-                onEventResponse={ onEventResponse }
+                onSignup={ onSignup }
+                onUndoSignup={ onUndoSignup }
                 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 org={ orgQuery.data! }
             />

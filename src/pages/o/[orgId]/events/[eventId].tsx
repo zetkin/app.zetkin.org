@@ -76,7 +76,7 @@ const OrgEventPage: PageWithLayout<OrgEventPageProps> = (props) => {
     const { orgId, eventId } = props;
     const eventQuery = useQuery(['event', eventId], getEvent(orgId, eventId));
     const orgQuery = useQuery(['org', orgId], getOrg(orgId));
-    const { eventResponses, onEventResponse } = useEventResponses();
+    const { eventResponses, onSignup, onUndoSignup } = useEventResponses();
 
     if (!eventQuery.data) {
         return null;
@@ -92,7 +92,8 @@ const OrgEventPage: PageWithLayout<OrgEventPageProps> = (props) => {
     return (
         <EventDetails
             event={ event }
-            onEventResponse={ onEventResponse }
+            onSignup={ onSignup }
+            onUndoSignup={ onUndoSignup }
             org={ org }
             response={ response } 
         />

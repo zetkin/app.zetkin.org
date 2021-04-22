@@ -19,10 +19,11 @@ interface EventListProps {
     events: ZetkinEvent[] | undefined;
     org: ZetkinOrganization;
     eventResponses: ZetkinEventResponse[] | undefined;
-    onEventResponse: (eventId: number, orgId: number, response: boolean) => void;
+    onSignup: (eventId: number, orgId: number) => void;
+    onUndoSignup: (eventId: number, orgId: number) => void;
 }
 
-const EventList = ({ eventResponses, events, onEventResponse, org } : EventListProps) : JSX.Element => {
+const EventList = ({ eventResponses, events, onSignup, onUndoSignup, org } : EventListProps) : JSX.Element => {
 
     if (!events || events.length === 0) {
         return (
@@ -69,7 +70,7 @@ const EventList = ({ eventResponses, events, onEventResponse, org } : EventListP
                                 <Button
                                     data-test="event-response-button"
                                     marginTop="size-50"
-                                    onPress={ () => onEventResponse(e.id, org.id, true) }
+                                    onPress={ () => onUndoSignup(e.id, org.id) }
                                     variant="cta">
                                     <Msg id="misc.eventList.undoSignup"/>
                                 </Button>
@@ -77,7 +78,7 @@ const EventList = ({ eventResponses, events, onEventResponse, org } : EventListP
                                 <Button
                                     data-test="event-response-button"
                                     marginTop="size-50"
-                                    onPress={ () => onEventResponse(e.id, org.id, false) }
+                                    onPress={ () => onSignup(e.id, org.id) }
                                     variant="cta">
                                     <Msg id="misc.eventList.signup"/>
                                 </Button>

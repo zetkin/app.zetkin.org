@@ -28,7 +28,8 @@ describe('EventDetails', () => {
         mountWithProviders(
             <EventDetails
                 event={ dummyEvent }
-                onEventResponse={ () => null }
+                onSignup={ () => null }
+                onUndoSignup={ () => null }
                 org={ dummyOrg }
                 response={ dummyEventResponse }
             />,
@@ -47,7 +48,8 @@ describe('EventDetails', () => {
         mountWithProviders(
             <EventDetails
                 event={ dummyEvent }
-                onEventResponse={ () => null }
+                onSignup={ () => null }
+                onUndoSignup={ () => null }
                 org={ dummyOrg }
                 response={ dummyEventResponse }
             />,
@@ -60,7 +62,8 @@ describe('EventDetails', () => {
         mountWithProviders(
             <EventDetails
                 event={ dummyEvent }
-                onEventResponse={ () => null }
+                onSignup={ () => null }
+                onUndoSignup={ () => null }
                 org={ dummyOrg }
                 response={ dummyEventResponse }
             />,
@@ -74,7 +77,8 @@ describe('EventDetails', () => {
         mountWithProviders(
             <EventDetails
                 event={ dummyEvent }
-                onEventResponse={ () => null }
+                onSignup={ () => null }
+                onUndoSignup={ () => null }
                 org={ dummyOrg }
                 response={ dummyEventResponse }
             />,
@@ -87,7 +91,8 @@ describe('EventDetails', () => {
         mountWithProviders(
             <EventDetails
                 event={ dummyEvent }
-                onEventResponse={ () => null }
+                onSignup={ () => null }
+                onUndoSignup={ () => null }
                 org={ dummyOrg }
                 response={ dummyEventResponse }
             />,
@@ -97,11 +102,12 @@ describe('EventDetails', () => {
     });
 
     it('contains a sign-up button for the event', () => {
-        const spyOnEventResponse = cy.spy();
+        const spyOnSignup = cy.spy();
         mountWithProviders(
             <EventDetails
                 event={ dummyEvent }
-                onEventResponse={ spyOnEventResponse }
+                onSignup={ spyOnSignup }
+                onUndoSignup={ () => null }
                 org={ dummyOrg }
                 response={ undefined }
             />,
@@ -111,17 +117,18 @@ describe('EventDetails', () => {
             .eq(0)
             .click()
             .then(() => {
-                expect(spyOnEventResponse).to.be.calledOnceWith(dummyEvent.id, dummyOrg.id, true);
+                expect(spyOnSignup).to.be.calledOnceWith(dummyEvent.id, dummyOrg.id);
             });
     });
 
     it('contains a cancel sign-up button for the event if there is no response', () => {
-        const spyOnEventResponse = cy.spy();
+        const spyOnUndoSignup = cy.spy();
         
         mountWithProviders(
             <EventDetails
                 event={ dummyEvent }
-                onEventResponse={ spyOnEventResponse }
+                onSignup={ () => null }
+                onUndoSignup={ spyOnUndoSignup }
                 org={ dummyOrg }
                 response={ dummyEventResponse }
             />,
@@ -131,7 +138,7 @@ describe('EventDetails', () => {
             .eq(0)
             .click()
             .then(() => {
-                expect(spyOnEventResponse).to.be.calledOnceWith(dummyEvent.id, dummyOrg.id, true);
+                expect(spyOnUndoSignup).to.be.calledOnceWith(dummyEvent.id, dummyOrg.id);
             });
     });
 });

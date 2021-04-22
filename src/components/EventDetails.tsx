@@ -26,11 +26,12 @@ import { ZetkinOrganization } from '../interfaces/ZetkinOrganization';
 interface EventDetailsProps {
     event: ZetkinEvent;
     org: ZetkinOrganization;
-    onEventResponse: (eventId: number, orgId: number, response: boolean) => void;
+    onSignup: (eventId: number, orgId: number) => void;
+    onUndoSignup: (eventId: number, orgId: number) => void;
     response: ZetkinEventResponse | undefined;
 }
 
-const EventDetails = ({ event, org, onEventResponse, response } : EventDetailsProps) : JSX.Element => {
+const EventDetails = ({ event, org, onSignup, onUndoSignup, response } : EventDetailsProps) : JSX.Element => {
     return (
         <>
             <Header marginBottom="size-300">
@@ -110,7 +111,7 @@ const EventDetails = ({ event, org, onEventResponse, response } : EventDetailsPr
                 { response ? (
                     <Button
                         data-test="event-response-button"
-                        onPress={ () => onEventResponse(event.id, org.id, true) }
+                        onPress={ () => onUndoSignup(event.id, org.id) }
                         variant="cta"
                         width="100%">
                         <Msg id="pages.orgEvent.actions.undoSignup" />
@@ -118,7 +119,7 @@ const EventDetails = ({ event, org, onEventResponse, response } : EventDetailsPr
                 ) : (
                     <Button
                         data-test="event-response-button"
-                        onPress={ () => onEventResponse(event.id, org.id, false) }
+                        onPress={ () => onSignup(event.id, org.id) }
                         variant="cta"
                         width="100%">
                         <Msg id="pages.orgEvent.actions.signup" />
