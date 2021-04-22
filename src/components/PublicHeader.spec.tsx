@@ -31,6 +31,24 @@ describe('PublicHeader', () => {
         cy.get('[data-test="user-avatar"]').should('be.visible');
     });
 
+    it('contains an organize button if user has one or more official roles', () => {
+        mountWithProviders(
+            <PublicHeader canOrganize={ true } user={ dummyUser } />,
+        );
+        cy.get('[data-test="organize-button"]').should('be.visible');
+    });
+
+    it('does not contain an organize button if logged out', () => {
+        mountWithProviders(<PublicHeader user={ null } />);
+        cy.get('[data-test="organize-button"]').should('not.exist');
+    });
+
+    it('does not contain an organize button if logged in and has no official roles', () => {
+        mountWithProviders(
+            <PublicHeader canOrganize={ false } user={ dummyUser } />);
+        cy.get('[data-test="organize-button"]').should('not.exist');
+    });
+
     it('contains logout button if logged in', () => {
         mountWithProviders(<PublicHeader user={ dummyUser } />);
         cy.get('[data-test="logout-button"]').should('be.visible');
