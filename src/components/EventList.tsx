@@ -19,10 +19,11 @@ interface EventListProps {
     events: ZetkinEvent[] | undefined;
     org: ZetkinOrganization;
     eventResponses: ZetkinEventResponse[] | undefined;
-    onEventResponse: (eventId: number, orgId: number, response: boolean) => void;
+    onSignup: (eventId: number, orgId: number) => void;
+    onUndoSignup: (eventId: number, orgId: number) => void;
 }
 
-export default function EventList ({ eventResponses, events, onEventResponse, org } : EventListProps) : JSX.Element {
+export default function EventList ({ eventResponses, events, onSignup, onUndoSignup, org } : EventListProps) : JSX.Element {
 
     if (!events || events.length === 0) {
         return (
@@ -40,7 +41,8 @@ export default function EventList ({ eventResponses, events, onEventResponse, or
                     return (<EventListItem
                         key={ event.id }
                         event={ event }
-                        onEventResponse={ onEventResponse }
+                        onSignup={ onSignup }
+                        onUndoSignup={ onUndoSignup }
                         org={ org }
                         response={ response }
                     />
@@ -57,10 +59,11 @@ interface EventListItemProps {
     event: ZetkinEvent;
     org: ZetkinOrganization;
     response: ZetkinEventResponse | undefined;
-    onEventResponse: (eventId: number, orgId: number, response: boolean) => void;
+    onSignup: (eventId: number, orgId: number) => void;
+    onUndoSignup: (eventId: number, orgId: number) => void;
 }
 
-const EventListItem = ({ event, response, onEventResponse, org }: EventListItemProps): JSX.Element => {
+const EventListItem = ({ event, response, onSignup, onUndoSignup, org }: EventListItemProps): JSX.Element => {
 
     return (
         <Flex data-test="event" direction="column" margin="size-200">
@@ -94,7 +97,7 @@ const EventListItem = ({ event, response, onEventResponse, org }: EventListItemP
                 <Button
                     data-test="event-response-button"
                     marginTop="size-50"
-                    onPress={ () => onEventResponse(event.id, org.id, true) }
+                    onPress={ () => onUndoSignup(event.id, org.id) }
                     variant="cta">
                     <Msg id="misc.eventList.undoSignup" />
                 </Button>
@@ -102,7 +105,7 @@ const EventListItem = ({ event, response, onEventResponse, org }: EventListItemP
                 <Button
                     data-test="event-response-button"
                     marginTop="size-50"
-                    onPress={ () => onEventResponse(event.id, org.id, false) }
+                    onPress={ () => onSignup(event.id, org.id) }
                     variant="cta">
                     <Msg id="misc.eventList.signup" />
                 </Button>
