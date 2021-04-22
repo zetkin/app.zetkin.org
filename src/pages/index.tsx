@@ -10,7 +10,6 @@ import { scaffold } from '../utils/next';
 
 //TODO: Create module definition and revert to import.
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const Z = require('zetkin');
 
 const scaffoldOptions = {
     localeScope: [
@@ -22,25 +21,19 @@ const scaffoldOptions = {
 export const getServerSideProps : GetServerSideProps = scaffold(async (context) => {
     const { query, req, res } = context;
 
-    const z = Z.construct({
-        clientId: process.env.ZETKIN_CLIENT_ID,
-        clientSecret: process.env.ZETKIN_CLIENT_SECRET,
-        ssl: stringToBool(process.env.ZETKIN_USE_TLS),
-        zetkinDomain: process.env.ZETKIN_API_DOMAIN,
-    });
-
     const code = query?.code;
+
     if (code) {
         const protocol = stringToBool(process.env.NEXT_PUBLIC_APP_USE_TLS)? 'https' : 'http';
         const host = process.env.NEXT_PUBLIC_APP_HOST;
 
         try {
-            await z.authenticate(`${protocol}://${host}/?code=${code}`);
+            await context.z.authenticate(`${protocol}://${host}/?code=${code}`);
             await applySession(req, res);
 
             const reqWithSession = req as { session? : AppSession };
             if (reqWithSession.session) {
-                reqWithSession.session.tokenData = z.getTokenData();
+                reqWithSession.session.tokenData = context.z.getTokenData();
             }
         }
         catch (err) {
