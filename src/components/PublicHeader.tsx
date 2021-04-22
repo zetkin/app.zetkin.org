@@ -16,9 +16,10 @@ import { ZetkinUser } from '../interfaces/ZetkinUser';
 interface PublicHeaderProps {
     user: ZetkinUser | null;
     org?: ZetkinOrganization | null;
+    canOrganize?: boolean;
 }
 
-const PublicHeader = ({ user, org } : PublicHeaderProps) : JSX.Element => {
+const PublicHeader = ({ canOrganize, user, org  } : PublicHeaderProps) : JSX.Element => {
     return (
         <Header margin="size-200">
             <Flex
@@ -68,6 +69,15 @@ const PublicHeader = ({ user, org } : PublicHeaderProps) : JSX.Element => {
                                 </a>
                             </NextLink>
                         </View>
+                        <>
+                            { canOrganize && (
+                                <NextLink href="https://organize.zetk.in">
+                                    <Button data-test="organize-button" variant="cta">
+                                        <Msg id="misc.publicHeader.organize"/>
+                                    </Button>
+                                </NextLink>)
+                            }
+                        </>
                         <NextLink href="/logout">
                             <Button data-test="logout-button" variant="cta">
                                 <Msg id="misc.publicHeader.logout"/>
