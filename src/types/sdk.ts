@@ -16,7 +16,16 @@ export interface ZetkinZResource {
     put: (data : any) => Promise<ZetkinZResult>;
 }
 
+export interface ZetkinTokenData {
+    access_token: string;
+    expires_in: number;
+    refresh_token: string;
+    token_type: string;
+}
+
 export interface ZetkinZ {
     resource: (...args : string[]) => ZetkinZResource;
-    setTokenData: (data : Record<string,unknown>) => void;
+    setTokenData: (data: ZetkinTokenData) => void;
+    authenticate: (callbackUrl: string) => Promise<void>;
+    getTokenData: () => ZetkinTokenData | null;
 }
