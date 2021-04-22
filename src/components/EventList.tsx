@@ -37,9 +37,8 @@ export default function EventList ({ eventResponses, events, onEventResponse, or
             <Flex data-test="event-list" direction="row" gap="100" wrap>
                 { events?.map((event) => {
                     const response = eventResponses?.find(response => response.action_id === event.id);
-
                     return (<EventListItem
-                        key=""
+                        key={ event.id }
                         event={ event }
                         onEventResponse={ onEventResponse }
                         org={ org }
@@ -64,7 +63,7 @@ interface EventListItemProps {
 const EventListItem = ({ event, response, onEventResponse, org }: EventListItemProps): JSX.Element => {
 
     return (
-        <Flex key={ event.id } data-test="event" direction="column" margin="size-200">
+        <Flex data-test="event" direction="column" margin="size-200">
             <View data-test="event-title">
                 { event.title ? event.title : event.activity.title }
             </View>
