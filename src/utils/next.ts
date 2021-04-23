@@ -6,6 +6,7 @@ import { GetServerSideProps, GetServerSidePropsContext, GetServerSidePropsResult
 import { AppSession } from '../types';
 import { getMessages } from './locale';
 import stringToBool from './stringToBool';
+import { ZetkinSession } from '../types/zetkin';
 import { ZetkinUser } from '../interfaces/ZetkinUser';
 import { ZetkinZ } from '../types/sdk';
 
@@ -38,6 +39,7 @@ interface ResultWithProps {
 }
 
 interface ScaffoldOptions {
+    authLevelRequired?: number;
     localeScope?: string[];
 }
 
@@ -84,7 +86,24 @@ export const scaffold = (wrapped : ScaffoldedGetServerSideProps, options? : Scaf
             ctx.user = null;
         }
 
-        const user = ctx.user;
+        if (options?.authLevelRequired) {
+            try {
+                const apiSessionRes = await ctx.z.resource('session').get();
+                const apiSession = apiSessionRes.data.data as ZetkinSession;
+
+                if (options.authLevelRequired < apiSession.level) {
+                    throw new Error('Authentication level too low');
+                }
+            }
+            catch (err) {
+                return {
+                    redirect: {
+                        destination: '/login',
+                        permanent: false,
+                    },
+                };
+            }
+        }
 
         const result = await wrapped(ctx);
 
@@ -100,7 +119,7 @@ export const scaffold = (wrapped : ScaffoldedGetServerSideProps, options? : Scaf
                 ...result.props,
                 lang,
                 messages,
-                user,
+                user: ctx.user,
             };
             result.props = scaffoldedProps;
         }
