@@ -50,6 +50,7 @@ module.exports = {
         'keyword-spacing': ['error', {}],
         'no-console': 'error',
         'no-switch-statements/no-switch': 'error',
+        'no-trailing-spaces': 'error',
         'object-curly-spacing': ['error', 'always'],
         'padding-line-between-statements': ['error',
             // imports go together, but last import must be followed by newline

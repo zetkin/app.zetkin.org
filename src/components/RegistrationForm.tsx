@@ -2,7 +2,7 @@ import React from 'react';
 import {
     Button,
     Flex,
-    Form, 
+    Form,
     TextField,
 } from '@adobe/react-spectrum';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
@@ -67,7 +67,7 @@ const RegistrationForm = ({ onValidSubmit } : RegistrationFormProps) : JSX.Eleme
                     label={ msg('email') }
                     onChange={ setEmail }
                     placeholder={ msg('email') }
-                    type="email" 
+                    type="email"
                     value={ email }
                 />
                 <TextField

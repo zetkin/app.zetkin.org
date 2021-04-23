@@ -46,6 +46,6 @@ describe('Login process', () => {
     });
 
 });
-    
+
 // Hack to flag for typescript as module
 export {};

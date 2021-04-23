@@ -50,4 +50,4 @@ describe('PublicHeader', () => {
                 cy.get('[data-test="org-avatar"]').should('be.visible');
             });
     });
-}); 
+});
