@@ -104,7 +104,7 @@ const OrgEventPage : PageWithLayout<OrgEventPageProps> = (props) => {
                     src="/cover.jpg"
                     width="100%"
                 />
-                <Heading data-test="event-title" level={ 1 } marginBottom="size-50">
+                <Heading data-testid="event-title" level={ 1 } marginBottom="size-50">
                     { event.title ? event.title : event.activity.title }
                 </Heading>
                 <Link>
@@ -121,7 +121,7 @@ const OrgEventPage : PageWithLayout<OrgEventPageProps> = (props) => {
                     </NextLink>
                 </Link>
             </Flex>
-            <Flex alignItems="center" data-test="duration" marginBottom="size-100">
+            <Flex alignItems="center" data-testid="duration" marginBottom="size-100">
                 <Calendar marginEnd="size-100" size="S"/>
                 <Flex direction="column">
                     <Text>
@@ -150,12 +150,12 @@ const OrgEventPage : PageWithLayout<OrgEventPageProps> = (props) => {
             </Flex>
             <Flex marginBottom="size-300">
                 <Location marginEnd="size-100" size="S"/>
-                <Text data-test="location">
+                <Text data-testid="location">
                     { event.location.title }
                 </Text>
             </Flex>
             <Divider />
-            <Text data-test="info-text" marginY="size-300">
+            <Text data-testid="info-text" marginY="size-300">
                 { event.info_text }
             </Text>
             <View
@@ -166,14 +166,14 @@ const OrgEventPage : PageWithLayout<OrgEventPageProps> = (props) => {
                 right="size-200">
                 { response ? (
                     <Button
-                        data-test="event-response-button"
+                        data-testid="event-response-button"
                         onPress={ () => onEventResponse(event.id, org.id, true) }
                         variant="cta" width="100%">
                         <Msg id="pages.orgEvent.actions.undoSignup"/>
                     </Button>
                 ) : (
                     <Button
-                        data-test="event-response-button"
+                        data-testid="event-response-button"
                         onPress={ () => onEventResponse(event.id, org.id, false) }
                         variant="cta" width="100%">
                         <Msg id="pages.orgEvent.actions.signup"/>

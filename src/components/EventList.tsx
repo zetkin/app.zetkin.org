@@ -26,7 +26,7 @@ const EventList = ({ eventResponses, events, onEventResponse, org } : EventListP
 
     if (!events || events.length === 0) {
         return (
-            <Text data-test="no-events-placeholder">
+            <Text data-testid="no-events-placeholder">
                 <Msg id="misc.eventList.placeholder"/>
             </Text>
         );
@@ -34,17 +34,17 @@ const EventList = ({ eventResponses, events, onEventResponse, org } : EventListP
 
     return (
         <>
-            <Flex data-test="event-list" direction="row" gap="100" wrap>
+            <Flex data-testid="event-list" direction="row" gap="100" wrap>
                 { events?.map((e) => {
                     const response = eventResponses?.find(response => response.action_id === e.id);
                     return (
-                        <Flex key={ e.id } data-test="event" direction="column" margin="size-200">
-                            <View data-test="event-title">
+                        <Flex key={ e.id } data-testid="event" direction="column" margin="size-200">
+                            <View data-testid="event-title">
                                 { e.title ? e.title : e.activity.title }
                             </View>
-                            <View data-test="org-title">{ org.title }</View>
-                            <View data-test="campaign-title">{ e.campaign.title }</View>
-                            <View data-test="start-time">
+                            <View data-testid="org-title">{ org.title }</View>
+                            <View data-testid="campaign-title">{ e.campaign.title }</View>
+                            <View data-testid="start-time">
                                 <FormattedDate
                                     day="2-digit"
                                     month="long"
@@ -54,7 +54,7 @@ const EventList = ({ eventResponses, events, onEventResponse, org } : EventListP
                                     value={ Date.parse(e.start_time) }
                                 />
                             </View>
-                            <View data-test="end-time">
+                            <View data-testid="end-time">
                                 <FormattedDate
                                     day="2-digit"
                                     month="long"
@@ -64,10 +64,10 @@ const EventList = ({ eventResponses, events, onEventResponse, org } : EventListP
                                     value={ Date.parse(e.end_time) }
                                 />
                             </View>
-                            <View data-test="location-title">{ e.location.title }</View>
+                            <View data-testid="location-title">{ e.location.title }</View>
                             { response ? (
                                 <Button
-                                    data-test="event-response-button"
+                                    data-testid="event-response-button"
                                     marginTop="size-50"
                                     onPress={ () => onEventResponse(e.id, org.id, true) }
                                     variant="cta">
@@ -75,7 +75,7 @@ const EventList = ({ eventResponses, events, onEventResponse, org } : EventListP
                                 </Button>
                             ) : (
                                 <Button
-                                    data-test="event-response-button"
+                                    data-testid="event-response-button"
                                     marginTop="size-50"
                                     onPress={ () => onEventResponse(e.id, org.id, false) }
                                     variant="cta">

@@ -45,9 +45,9 @@ const RegistrationForm = ({ onValidSubmit } : RegistrationFormProps) : JSX.Eleme
 
     return (
         <Flex>
-            <Form data-test="reg-form" onSubmit={ onSubmit }>
+            <Form data-testid="reg-form" onSubmit={ onSubmit }>
                 <TextField
-                    data-test="first-name"
+                    data-testid="first-name"
                     label={ msg('firstName') }
                     onChange={ setFirstName }
                     placeholder={ msg('firstName') }
@@ -55,7 +55,7 @@ const RegistrationForm = ({ onValidSubmit } : RegistrationFormProps) : JSX.Eleme
                     value={ firstName }
                 />
                 <TextField
-                    data-test="last-name"
+                    data-testid="last-name"
                     label={ msg('lastName') }
                     onChange={ setLastName }
                     placeholder={ msg('lastName')  }
@@ -63,7 +63,7 @@ const RegistrationForm = ({ onValidSubmit } : RegistrationFormProps) : JSX.Eleme
                     value={ lastName }
                 />
                 <TextField
-                    data-test="email-address"
+                    data-testid="email-address"
                     label={ msg('email') }
                     onChange={ setEmail }
                     placeholder={ msg('email') }
@@ -71,7 +71,7 @@ const RegistrationForm = ({ onValidSubmit } : RegistrationFormProps) : JSX.Eleme
                     value={ email }
                 />
                 <TextField
-                    data-test="phone-number"
+                    data-testid="phone-number"
                     label={ msg('phone') }
                     onChange={ setPhone }
                     placeholder={ msg('phone') }
@@ -79,7 +79,7 @@ const RegistrationForm = ({ onValidSubmit } : RegistrationFormProps) : JSX.Eleme
                     value={ phone }
                 />
                 <TextField
-                    data-test="password"
+                    data-testid="password"
                     label={ msg('password') }
                     onChange={ setPassword }
                     placeholder={ msg('password') }
@@ -87,7 +87,7 @@ const RegistrationForm = ({ onValidSubmit } : RegistrationFormProps) : JSX.Eleme
                     value={ password }
                 />
                 <Button
-                    data-test="submit-button"
+                    data-testid="submit-button"
                     type="submit"
                     variant="cta">
                     <Msg id="forms.reg.actions.submit"/>

@@ -59,7 +59,7 @@ const OrgCampaignPage : PageWithLayout<OrgCampaignPageProps> = (props) => {
             <Heading level={ 1 }>
                 { campaignQuery.data?.title }
             </Heading>
-            <Text data-test="campaign-information">
+            <Text data-testid="campaign-information">
                 { campaignQuery.data?.info_text }
             </Text>
             <EventList

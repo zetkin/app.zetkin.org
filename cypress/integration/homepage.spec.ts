@@ -1,7 +1,7 @@
 describe('/', () => {
     it('contains zetkin logo', () => {
         cy.visit('/');
-        cy.get('[data-test="zetkin-logotype"]').should('be.visible');
+        cy.get('[data-testid="zetkin-logotype"]').should('be.visible');
     });
 });
 

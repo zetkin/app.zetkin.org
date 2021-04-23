@@ -31,7 +31,7 @@ const PublicHeader = ({ user, org } : PublicHeaderProps) : JSX.Element => {
                         <a>
                             <Image
                                 alt="Organization avatar"
-                                data-test="org-avatar"
+                                data-testid="org-avatar"
                                 height="size-600"
                                 objectFit="contain"
                                 src={ apiUrl(`/orgs/${org.id}/avatar`) }
@@ -42,7 +42,7 @@ const PublicHeader = ({ user, org } : PublicHeaderProps) : JSX.Element => {
                 ) : (
                     <Image
                         alt="Zetkin logo"
-                        data-test="zetkin-logotype"
+                        data-testid="zetkin-logotype"
                         height="size-600"
                         objectFit="contain"
                         src="/logo-zetkin.png"
@@ -54,12 +54,12 @@ const PublicHeader = ({ user, org } : PublicHeaderProps) : JSX.Element => {
                         <View>
                             <NextLink href="/my">
                                 <a>
-                                    <Text data-test="username">
+                                    <Text data-testid="username">
                                         { user.first_name } { user.last_name }
                                     </Text>
                                     <Image
                                         alt="User avatar"
-                                        data-test="user-avatar"
+                                        data-testid="user-avatar"
                                         height="size-600"
                                         objectFit="contain"
                                         src={ `/api/users/${ user.id }/avatar` }
@@ -69,14 +69,14 @@ const PublicHeader = ({ user, org } : PublicHeaderProps) : JSX.Element => {
                             </NextLink>
                         </View>
                         <NextLink href="/logout">
-                            <Button data-test="logout-button" variant="cta">
+                            <Button data-testid="logout-button" variant="cta">
                                 <Msg id="misc.publicHeader.logout"/>
                             </Button>
                         </NextLink>
                     </Flex>
                 ) : (
                     <NextLink href="/login">
-                        <Button data-test="login-button" variant="cta">
+                        <Button data-testid="login-button" variant="cta">
                             <Msg id="misc.publicHeader.login"/>
                         </Button>
                     </NextLink>

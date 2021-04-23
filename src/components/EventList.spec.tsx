@@ -34,14 +34,14 @@ describe('EventList', () => {
             />,
         );
 
-        cy.get('[data-test="event"]').each((item) => {
+        cy.get('[data-testid="event"]').each((item) => {
             cy.wrap(item)
-                .get('[data-test="event-title"]').should('be.visible')
-                .get('[data-test="org-title"]').should('be.visible')
-                .get('[data-test="campaign-title"]').should('be.visible')
-                .get('[data-test="start-time"]').should('be.visible')
-                .get('[data-test="end-time"]').should('be.visible')
-                .get('[data-test="location-title"]').should('be.visible');
+                .get('[data-testid="event-title"]').should('be.visible')
+                .get('[data-testid="org-title"]').should('be.visible')
+                .get('[data-testid="campaign-title"]').should('be.visible')
+                .get('[data-testid="start-time"]').should('be.visible')
+                .get('[data-testid="end-time"]').should('be.visible')
+                .get('[data-testid="location-title"]').should('be.visible');
         });
     });
 
@@ -57,7 +57,7 @@ describe('EventList', () => {
             />,
         );
 
-        cy.get('[data-test="event"]')
+        cy.get('[data-testid="event"]')
             .should('contain', dummyEvents[0].activity.title)
             .should('not.contain', 'undefined');
     });

@@ -11,7 +11,7 @@ describe('404 Page', () => {
         });
         cy.visit(BAD_PATH, { failOnStatusCode: false });
         cy.contains(EXPECTED_ENGLISH);
-        cy.get('[data-test="back-home-link"]')
+        cy.get('[data-testid="back-home-link"]')
             .should('be.visible')
             .click();
         cy.url().should('match', /http:\/\/www\.dev\.zetkin\.org\//);

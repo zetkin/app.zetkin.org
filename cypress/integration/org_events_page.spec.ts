@@ -34,7 +34,7 @@ describe('/o/[orgId]/events', () => {
 
             cy.visit('/o/1/events');
             cy.waitUntilReactRendered();
-            cy.get('[data-test="event"]')
+            cy.get('[data-testid="event"]')
                 .eq(0)
                 .findByText('More info')
                 .click();
@@ -52,7 +52,7 @@ describe('/o/[orgId]/events', () => {
         });
 
         cy.visit('/o/1/events');
-        cy.get('[data-test="no-events-placeholder"]').should('be.visible');
+        cy.get('[data-testid="no-events-placeholder"]').should('be.visible');
     });
 
     it('shows a sign-up button if user is not signed up to an event', () => {
@@ -72,7 +72,7 @@ describe('/o/[orgId]/events', () => {
 
         cy.visit('/o/1/events');
         cy.waitUntilReactRendered();
-        cy.get('[data-test="event-response-button"]')
+        cy.get('[data-testid="event-response-button"]')
             .eq(4)
             .click();
         //TODO: Verify that API request is done corrently.
