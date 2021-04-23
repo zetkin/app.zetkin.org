@@ -5,7 +5,7 @@ import { QueryClient } from 'react-query';
 import { GetServerSideProps, GetServerSidePropsContext, GetServerSidePropsResult } from 'next';
 
 import { AppSession } from '../types';
-import { dehydrate } from 'react-query/types/hydration';
+import { dehydrate, DehydratedState } from 'react-query/types/hydration';
 import { getMessages } from './locale';
 import stringToBool from './stringToBool';
 import { ZetkinUser } from '../interfaces/ZetkinUser';
@@ -23,7 +23,8 @@ type RegularProps = {
 export type ScaffoldedProps = RegularProps & {
     user: ZetkinUser | null;
     lang: string;
-    messages: Record<string,string>;
+    messages: Record<string, string>;
+    dehydratedState: DehydratedState;
 };
 
 export type ScaffoldedContext = GetServerSidePropsContext & {
