@@ -2,16 +2,16 @@ import { GetServerSideProps } from 'next';
 import { Heading } from '@adobe/react-spectrum';
 import { FormattedMessage as Msg } from 'react-intl';
 
+import MyHomeLayout from '../../components/layout/MyHomeLayout';
 import { PageWithLayout } from '../../types';
 import { scaffold } from '../../utils/next';
-import UserHomeLayout from '../../components/layout/UserHomeLayout';
 import { ZetkinUser } from '../../interfaces/ZetkinUser';
 
 const scaffoldOptions = {
     localeScope: [
-        'layout.userHome',
+        'layout.my',
         'misc.publicHeader',
-        'pages.my.feed',
+        'pages.my',
     ],
 };
 
@@ -21,26 +21,26 @@ export const getServerSideProps : GetServerSideProps = scaffold(async () => {
     };
 }, scaffoldOptions);
 
-interface FeedProps {
+interface MyPageProps {
     user: ZetkinUser;
 }
 
-const Feed : PageWithLayout<FeedProps> = (props) => {
+const MyPage : PageWithLayout<MyPageProps> = (props) => {
     const { user } = props;
 
     return (
         <Heading level={ 1 }>
-            <Msg id="pages.my.feed.welcome" values={{ userName: user.first_name }}/>
+            <Msg id="pages.my.welcome" values={{ userName: user.first_name }}/>
         </Heading>
     );
 };
 
-Feed.getLayout = function getLayout(page) {
+MyPage.getLayout = function getLayout(page) {
     return (
-        <UserHomeLayout>
+        <MyHomeLayout>
             { page }
-        </UserHomeLayout>
+        </MyHomeLayout>
     );
 };
 
-export default Feed;
+export default MyPage;

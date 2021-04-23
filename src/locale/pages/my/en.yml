@@ -1,11 +1,1 @@
-feed:
-  welcome: Hello, {userName}
-
-toDo:
-  heading: To do
-
-orgs:
-  heading: Organizations
-
-settings:
-  heading: Settings
+welcome: Hello, {userName}

@@ -1,17 +1,17 @@
 import { FunctionComponent } from 'react';
 
 import DefaultLayout from './DefaultLayout';
-import UserHomeMenu from '../UserHomeMenu';
+import MyHomeMenu from '../MyHomeMenu';
 
-const UserHomeLayout : FunctionComponent = ({ children }) => {
+const MyHomeLayout : FunctionComponent = ({ children }) => {
     return (
         <>
             <DefaultLayout>
                 { children }
-                <UserHomeMenu/>
+                <MyHomeMenu/>
             </DefaultLayout>
         </>
     );
 };
 
-export default UserHomeLayout;
+export default MyHomeLayout;

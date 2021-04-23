@@ -2,15 +2,15 @@ import { GetServerSideProps } from 'next';
 import { Heading } from '@adobe/react-spectrum';
 import { FormattedMessage as Msg } from 'react-intl';
 
+import MyHomeLayout from '../../components/layout/MyHomeLayout';
 import { PageWithLayout } from '../../types';
 import { scaffold } from '../../utils/next';
-import UserHomeLayout from '../../components/layout/UserHomeLayout';
 
 const scaffoldOptions = {
     localeScope: [
-        'layout.userHome',
+        'layout.my',
         'misc.publicHeader',
-        'pages.my.toDo',
+        'pages.myTodo',
     ],
 };
 
@@ -20,20 +20,20 @@ export const getServerSideProps : GetServerSideProps = scaffold(async () => {
     };
 }, scaffoldOptions);
 
-const Todo : PageWithLayout = () => {
+const MyTodoPage : PageWithLayout = () => {
     return (
         <Heading level={ 1 }>
-            <Msg id="pages.my.toDo.heading"/>
+            <Msg id="pages.myTodo.heading"/>
         </Heading>
     );
 };
 
-Todo.getLayout = function getLayout(page) {
+MyTodoPage.getLayout = function getLayout(page) {
     return (
-        <UserHomeLayout>
+        <MyHomeLayout>
             { page }
-        </UserHomeLayout>
+        </MyHomeLayout>
     );
 };
 
-export default Todo;
+export default MyTodoPage;

@@ -2,15 +2,15 @@ import { GetServerSideProps } from 'next';
 import { Heading } from '@adobe/react-spectrum';
 import { FormattedMessage as Msg } from 'react-intl';
 
+import MyHomeLayout from '../../components/layout/MyHomeLayout';
 import { PageWithLayout } from '../../types';
 import { scaffold } from '../../utils/next';
-import UserHomeLayout from '../../components/layout/UserHomeLayout';
 
 const scaffoldOptions = {
     localeScope: [
-        'layout.userHome',
+        'layout.my',
         'misc.publicHeader',
-        'pages.my.orgs',
+        'pages.myOrgs',
     ],
 };
 
@@ -20,21 +20,21 @@ export const getServerSideProps : GetServerSideProps = scaffold(async () => {
     };
 }, scaffoldOptions);
 
-const Organizations : PageWithLayout = () => {
+const MyOrgsPage : PageWithLayout = () => {
 
     return (
         <Heading level={ 1 }>
-            <Msg id="pages.my.orgs.heading"/>
+            <Msg id="pages.myOrgs.heading"/>
         </Heading>
     );
 };
 
-Organizations.getLayout = function getLayout(page) {
+MyOrgsPage.getLayout = function getLayout(page) {
     return (
-        <UserHomeLayout>
+        <MyHomeLayout>
             { page }
-        </UserHomeLayout>
+        </MyHomeLayout>
     );
 };
 
-export default Organizations;
+export default MyOrgsPage;

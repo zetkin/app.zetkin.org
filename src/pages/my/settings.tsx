@@ -2,15 +2,15 @@ import { GetServerSideProps } from 'next';
 import { Heading } from '@adobe/react-spectrum';
 import { FormattedMessage as Msg } from 'react-intl';
 
+import MyHomeLayout from '../../components/layout/MyHomeLayout';
 import { PageWithLayout } from '../../types';
 import { scaffold } from '../../utils/next';
-import UserHomeLayout from '../../components/layout/UserHomeLayout';
 
 const scaffoldOptions = {
     localeScope: [
-        'layout.userHome',
+        'layout.my',
         'misc.publicHeader',
-        'pages.my.settings',
+        'pages.mySettings',
     ],
 };
 
@@ -20,20 +20,20 @@ export const getServerSideProps : GetServerSideProps = scaffold(async () => {
     };
 }, scaffoldOptions);
 
-const Settings : PageWithLayout = () => {
+const MySettingsPage : PageWithLayout = () => {
     return (
         <Heading level={ 1 }>
-            <Msg id="pages.my.settings.heading"/>
+            <Msg id="pages.mySettings.heading"/>
         </Heading>
     );
 };
 
-Settings.getLayout = function getLayout(page) {
+MySettingsPage.getLayout = function getLayout(page) {
     return (
-        <UserHomeLayout>
+        <MyHomeLayout>
             { page }
-        </UserHomeLayout>
+        </MyHomeLayout>
     );
 };
 
-export default Settings;
+export default MySettingsPage;
