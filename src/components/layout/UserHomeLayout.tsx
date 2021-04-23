@@ -1,5 +1,3 @@
-//TODO: Enable eslint rule and fix errors
-/* eslint-disable  @typescript-eslint/no-non-null-assertion */
 import { FunctionComponent } from 'react';
 
 import DefaultLayout from './DefaultLayout';
@@ -10,8 +8,8 @@ const UserHomeLayout : FunctionComponent = ({ children }) => {
         <>
             <DefaultLayout>
                 { children }
+                <UserHomeMenu/>
             </DefaultLayout>
-            <UserHomeMenu/>
         </>
     );
 };

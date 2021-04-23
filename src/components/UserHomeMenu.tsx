@@ -1,5 +1,3 @@
-//TODO: Enable eslint rule and fix errors
-/* eslint-disable  @typescript-eslint/no-non-null-assertion */
 import { FunctionComponent } from 'react';
 import { FormattedMessage as Msg } from 'react-intl';
 import NextLink from 'next/link';
