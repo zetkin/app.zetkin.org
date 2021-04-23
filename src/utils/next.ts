@@ -5,6 +5,7 @@ import { QueryClient } from 'react-query';
 import { GetServerSideProps, GetServerSidePropsContext, GetServerSidePropsResult } from 'next';
 
 import { AppSession } from '../types';
+import { dehydrate } from 'react-query/types/hydration';
 import { getMessages } from './locale';
 import stringToBool from './stringToBool';
 import { ZetkinUser } from '../interfaces/ZetkinUser';
@@ -50,6 +51,8 @@ const hasProps = (result : any) : result is ResultWithProps => {
 export const scaffold = (wrapped : ScaffoldedGetServerSideProps, options? : ScaffoldOptions) : GetServerSideProps<ScaffoldedProps> => {
     const getServerSideProps : GetServerSideProps<ScaffoldedProps> = async (contextFromNext : GetServerSidePropsContext) => {
         const ctx = contextFromNext as ScaffoldedContext;
+
+        ctx.queryClient = new QueryClient();
 
         ctx.apiFetch = (path, init?) => {
             return fetch(apiUrl(path), {
@@ -100,6 +103,7 @@ export const scaffold = (wrapped : ScaffoldedGetServerSideProps, options? : Scaf
         if (hasProps(result)) {
             const scaffoldedProps : ScaffoldedProps = {
                 ...result.props,
+                dehydratedState: dehydrate(ctx.queryClient),
                 lang,
                 messages,
                 user,
