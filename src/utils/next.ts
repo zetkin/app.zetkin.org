@@ -6,7 +6,7 @@ import { GetServerSideProps, GetServerSidePropsContext, GetServerSidePropsResult
 import { AppSession } from '../types';
 import { getMessages } from './locale';
 import stringToBool from './stringToBool';
-import { ZetkinUser } from '../interfaces/ZetkinUser';
+import { ZetkinUser } from '../types/zetkin';
 import { ZetkinZ } from '../types/sdk';
 
 //TODO: Create module definition and revert to import.

@@ -11,9 +11,9 @@ import {
     FormattedMessage as Msg,
 } from 'react-intl';
 
-import { ZetkinEvent } from '../interfaces/ZetkinEvent';
+import { ZetkinEvent } from '../types/zetkin';
 import { ZetkinEventResponse } from '../types/zetkin';
-import { ZetkinOrganization } from '../interfaces/ZetkinOrganization';
+import { ZetkinOrganization } from '../types/zetkin';
 
 interface EventListProps {
     events: ZetkinEvent[] | undefined;

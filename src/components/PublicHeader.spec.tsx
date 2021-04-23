@@ -1,6 +1,6 @@
 import { mountWithProviders } from '../utils/testing';
 import PublicHeader from './PublicHeader';
-import { ZetkinOrganization } from '../interfaces/ZetkinOrganization';
+import { ZetkinOrganization } from '../types/zetkin';
 
 describe('PublicHeader', () => {
 

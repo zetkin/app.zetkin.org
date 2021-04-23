@@ -3,7 +3,7 @@ import { FunctionComponent } from 'react';
 
 import PublicHeader from '../PublicHeader';
 import { useUser } from '../../hooks';
-import { ZetkinOrganization } from '../../interfaces/ZetkinOrganization';
+import { ZetkinOrganization } from '../../types/zetkin';
 
 interface DefaultLayoutProps {
     org?: ZetkinOrganization;

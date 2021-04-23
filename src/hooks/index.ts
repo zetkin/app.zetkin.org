@@ -5,7 +5,7 @@ import deleteEventResponse from '../fetching/deleteEventResponse';
 import getEventResponses from '../fetching/getEventResponses';
 import putEventResponse from '../fetching/putEventResponse';
 import { ZetkinEventResponse } from '../types/zetkin';
-import { ZetkinUser } from '../interfaces/ZetkinUser';
+import { ZetkinUser } from '../types/zetkin';
 
 export const UserContext = React.createContext(null);
 

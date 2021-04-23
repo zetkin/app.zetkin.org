@@ -1,8 +1,8 @@
 import EventList from './EventList';
 import { mountWithProviders } from '../utils/testing';
-import { ZetkinEvent } from '../interfaces/ZetkinEvent';
+import { ZetkinEvent } from '../types/zetkin';
 import { ZetkinEventResponse } from '../types/zetkin';
-import { ZetkinOrganization } from '../interfaces/ZetkinOrganization';
+import { ZetkinOrganization } from '../types/zetkin';
 
 describe('EventList', () => {
     let dummyOrg : ZetkinOrganization;

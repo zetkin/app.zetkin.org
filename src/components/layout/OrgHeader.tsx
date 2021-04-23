@@ -10,7 +10,7 @@ import {
     View,
 } from '@adobe/react-spectrum';
 
-import { ZetkinOrganization } from '../../interfaces/ZetkinOrganization';
+import { ZetkinOrganization } from '../../types/zetkin';
 
 interface OrgHeaderProps {
     org: ZetkinOrganization;

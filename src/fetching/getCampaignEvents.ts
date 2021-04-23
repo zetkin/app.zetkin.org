@@ -1,5 +1,5 @@
 import apiUrl from '../utils/apiUrl';
-import { ZetkinEvent } from '../interfaces/ZetkinEvent';
+import { ZetkinEvent } from '../types/zetkin';
 
 export default function getCampaignEvents(orgId : string, campId : string) {
     return async () : Promise<ZetkinEvent[]> => {
