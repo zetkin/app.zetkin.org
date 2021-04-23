@@ -33,6 +33,14 @@ describe('Login process', () => {
         cy.url().should('match', /login.dev.zetkin.org/);
     });
 
+    it('redirects to tried page after logging in', () => {
+        cy.visit('/my');
+        cy.get('input[aria-label="E-mail address"]').type('testadmin@example.com');
+        cy.get('input[aria-label="Password"]').type('password');
+        cy.get('input[aria-label="Log in"]').click();
+        cy.url().should('match', /\/my$/);
+    });
+
     it('contains a logout button wich logs you out and takes you back to the home page', () => {
         cy.visit('/login');
         cy.get('input[aria-label="E-mail address"]').type('testadmin@example.com');

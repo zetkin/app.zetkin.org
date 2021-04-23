@@ -87,15 +87,23 @@ export const scaffold = (wrapped : ScaffoldedGetServerSideProps, options? : Scaf
         }
 
         if (options?.authLevelRequired) {
+            let authLevel;
+
             try {
                 const apiSessionRes = await ctx.z.resource('session').get();
                 const apiSession = apiSessionRes.data.data as ZetkinSession;
-
-                if (options.authLevelRequired < apiSession.level) {
-                    throw new Error('Authentication level too low');
-                }
+                authLevel = apiSession.level;
             }
             catch (err) {
+                // Not logged in, so auth level is zero (anonymous)
+                authLevel = 0;
+            }
+
+            if (authLevel < options.authLevelRequired) {
+                if (reqWithSession.session) {
+                    reqWithSession.session.redirAfterLogin = req.url || null;
+                }
+
                 return {
                     redirect: {
                         destination: '/login',
