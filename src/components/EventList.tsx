@@ -19,10 +19,11 @@ interface EventListProps {
     events: ZetkinEvent[] | undefined;
     org: ZetkinOrganization;
     eventResponses: ZetkinEventResponse[] | undefined;
-    onEventResponse: (eventId: number, orgId: number, response: boolean) => void;
+    onSignup: (eventId: number, orgId: number) => void;
+    onUndoSignup: (eventId: number, orgId: number) => void;
 }
 
-const EventList = ({ eventResponses, events, onEventResponse, org } : EventListProps) : JSX.Element => {
+export default function EventList ({ eventResponses, events, onSignup, onUndoSignup, org } : EventListProps) : JSX.Element {
 
     if (!events || events.length === 0) {
         return (
@@ -35,66 +36,87 @@ const EventList = ({ eventResponses, events, onEventResponse, org } : EventListP
     return (
         <>
             <Flex data-testid="event-list" direction="row" gap="100" wrap>
-                { events?.map((e) => {
-                    const response = eventResponses?.find(response => response.action_id === e.id);
-                    return (
-                        <Flex key={ e.id } data-testid="event" direction="column" margin="size-200">
-                            <View data-testid="event-title">
-                                { e.title ? e.title : e.activity.title }
-                            </View>
-                            <View data-testid="org-title">{ org.title }</View>
-                            <View data-testid="campaign-title">{ e.campaign.title }</View>
-                            <View data-testid="start-time">
-                                <FormattedDate
-                                    day="2-digit"
-                                    month="long"
-                                    value={ Date.parse(e.start_time) }
-                                />
-                                , <FormattedTime
-                                    value={ Date.parse(e.start_time) }
-                                />
-                            </View>
-                            <View data-testid="end-time">
-                                <FormattedDate
-                                    day="2-digit"
-                                    month="long"
-                                    value={ Date.parse(e.end_time) }
-                                />
-                                , <FormattedTime
-                                    value={ Date.parse(e.end_time) }
-                                />
-                            </View>
-                            <View data-testid="location-title">{ e.location.title }</View>
-                            { response ? (
-                                <Button
-                                    data-testid="event-response-button"
-                                    marginTop="size-50"
-                                    onPress={ () => onEventResponse(e.id, org.id, true) }
-                                    variant="cta">
-                                    <Msg id="misc.eventList.undoSignup"/>
-                                </Button>
-                            ) : (
-                                <Button
-                                    data-testid="event-response-button"
-                                    marginTop="size-50"
-                                    onPress={ () => onEventResponse(e.id, org.id, false) }
-                                    variant="cta">
-                                    <Msg id="misc.eventList.signup"/>
-                                </Button>
-                            ) }
-                            <NextLink href={ `/o/${org.id}/events/${e.id}` }>
-                                <a>
-                                    <Button marginTop="size-50" variant="cta">
-                                        <Msg id="misc.eventList.moreInfo"/>
-                                    </Button>
-                                </a>
-                            </NextLink>
-                        </Flex>
+                { events?.map((event) => {
+                    const response = eventResponses?.find(response => response.action_id === event.id);
+                    return (<EventListItem
+                        key={ event.id }
+                        event={ event }
+                        onSignup={ onSignup }
+                        onUndoSignup={ onUndoSignup }
+                        org={ org }
+                        response={ response }
+                    />
                     );
-                }) }
+                })
+                }
             </Flex>
         </>
     );
-};
 
-export default EventList;
+}
+
+interface EventListItemProps {
+    event: ZetkinEvent;
+    org: ZetkinOrganization;
+    response: ZetkinEventResponse | undefined;
+    onSignup: (eventId: number, orgId: number) => void;
+    onUndoSignup: (eventId: number, orgId: number) => void;
+}
+
+const EventListItem = ({ event, response, onSignup, onUndoSignup, org }: EventListItemProps): JSX.Element => {
+
+    return (
+        <Flex data-testid="event" direction="column" margin="size-200">
+            <View data-testid="event-title">
+                { event.title ? event.title : event.activity.title }
+            </View>
+            <View data-testid="org-title">{ org.title }</View>
+            <View data-testid="campaign-title">{ event.campaign.title }</View>
+            <View data-testid="start-time">
+                <FormattedDate
+                    day="2-digit"
+                    month="long"
+                    value={ Date.parse(event.start_time) }
+                />
+                , <FormattedTime
+                    value={ Date.parse(event.start_time) }
+                />
+            </View>
+            <View data-testid="end-time">
+                <FormattedDate
+                    day="2-digit"
+                    month="long"
+                    value={ Date.parse(event.end_time) }
+                />
+                , <FormattedTime
+                    value={ Date.parse(event.end_time) }
+                />
+            </View>
+            <View data-testid="location-title">{ event.location.title }</View>
+            { response ? (
+                <Button
+                    data-testid="event-response-button"
+                    marginTop="size-50"
+                    onPress={ () => onUndoSignup(event.id, org.id) }
+                    variant="cta">
+                    <Msg id="misc.eventList.undoSignup" />
+                </Button>
+            ) : (
+                <Button
+                    data-testid="event-response-button"
+                    marginTop="size-50"
+                    onPress={ () => onSignup(event.id, org.id) }
+                    variant="cta">
+                    <Msg id="misc.eventList.signup" />
+                </Button>
+            ) }
+            <NextLink href={ `/o/${org.id}/events/${ event.id }` }>
+                <a>
+                    <Button marginTop="size-50" variant="cta">
+                        <Msg id="misc.eventList.moreInfo" />
+                    </Button>
+                </a>
+            </NextLink>
+        </Flex>
+    );
+};

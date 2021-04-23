@@ -29,7 +29,8 @@ describe('EventList', () => {
             <EventList
                 eventResponses={ dummyEventResponses }
                 events={ dummyEvents }
-                onEventResponse={ () => null }
+                onSignup={ () => null }
+                onUndoSignup={ () => null }
                 org={ dummyOrg }
             />,
         );
@@ -52,7 +53,8 @@ describe('EventList', () => {
             <EventList
                 eventResponses={ dummyEventResponses }
                 events={ dummyEvents }
-                onEventResponse={ () => null }
+                onSignup={ () => null }
+                onUndoSignup={ () => null }
                 org={ dummyOrg }
             />,
         );
@@ -63,13 +65,14 @@ describe('EventList', () => {
     });
 
     it('contains a sign-up button for each event', () => {
-        const spyOnSubmit = cy.spy();
+        const spyOnSignup = cy.spy();
 
         mountWithProviders(
             <EventList
                 eventResponses={ dummyEventResponses }
                 events={ dummyEvents }
-                onEventResponse={ spyOnSubmit }
+                onSignup={ spyOnSignup }
+                onUndoSignup={ () => null }
                 org={ dummyOrg }
             />,
         );
@@ -78,7 +81,7 @@ describe('EventList', () => {
             .eq(0)
             .click()
             .then(() => {
-                expect(spyOnSubmit).to.be.calledOnce;
+                expect(spyOnSignup).to.be.calledOnce;
             });
     });
 
@@ -87,7 +90,8 @@ describe('EventList', () => {
             <EventList
                 eventResponses={ dummyEventResponses }
                 events={ dummyEvents }
-                onEventResponse={ () => null  }
+                onSignup={ () => null  }
+                onUndoSignup={ () => null  }
                 org={ dummyOrg }
             />,
         );
@@ -102,7 +106,8 @@ describe('EventList', () => {
             <EventList
                 eventResponses={ dummyEventResponses }
                 events={ dummyEvents }
-                onEventResponse={ () => null }
+                onSignup={ () => null  }
+                onUndoSignup={ () => null  }
                 org={ dummyOrg }
             />,
         );
@@ -115,7 +120,8 @@ describe('EventList', () => {
             <EventList
                 eventResponses={ dummyEventResponses }
                 events={ undefined }
-                onEventResponse={ () => null }
+                onSignup={ () => null  }
+                onUndoSignup={ () => null  }
                 org={ dummyOrg }
             />,
         );

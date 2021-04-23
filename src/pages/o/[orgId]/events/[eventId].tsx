@@ -1,28 +1,9 @@
-import Calendar from '@spectrum-icons/workflow/Calendar';
 import { dehydrate } from 'react-query/hydration';
-import Flag from '@spectrum-icons/workflow/Flag';
 import { GetServerSideProps } from 'next';
-import Location from '@spectrum-icons/workflow/Location';
-import NextLink from 'next/link';
-import {
-    Button,
-    Divider,
-    Flex,
-    Header,
-    Heading,
-    Image,
-    Link,
-    Text,
-    View,
-} from '@adobe/react-spectrum';
-import {
-    FormattedDate,
-    FormattedTime,
-    FormattedMessage as Msg,
-} from 'react-intl';
 import { QueryClient, useQuery } from 'react-query';
 
 import DefaultOrgLayout from '../../../../components/layout/DefaultOrgLayout';
+import EventDetails from '../../../../components/EventDetails';
 import getEvent from '../../../../fetching/getEvent';
 import getEventResponses from '../../../../fetching/getEventResponses';
 import getOrg from '../../../../fetching/getOrg';
@@ -33,57 +14,69 @@ import { ZetkinEvent } from '../../../../types/zetkin';
 import { ZetkinOrganization } from '../../../../types/zetkin';
 
 const scaffoldOptions = {
-    localeScope: [
-        'misc.publicHeader',
-        'pages.orgEvent',
-    ],
+    localeScope: ['misc.publicHeader', 'pages.orgEvent'],
 };
 
-export const getServerSideProps : GetServerSideProps = scaffold(async (context) => {
-    const queryClient = new QueryClient();
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const { orgId, eventId } = context.params!;
-    const { user } = context;
+export const getServerSideProps: GetServerSideProps = scaffold(
+    async (context) => {
+        const queryClient = new QueryClient();
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        const { orgId, eventId } = context.params!;
+        const { user } = context;
 
-    await queryClient.prefetchQuery(['event', eventId], getEvent(orgId as string, eventId as string, context.apiFetch));
-    await queryClient.prefetchQuery(['org', orgId], getOrg(orgId as string, context.apiFetch));
+        await queryClient.prefetchQuery(
+            ['event', eventId],
+            getEvent(orgId as string, eventId as string, context.apiFetch),
+        );
+        await queryClient.prefetchQuery(
+            ['org', orgId],
+            getOrg(orgId as string, context.apiFetch),
+        );
 
-    if (user) {
-        await queryClient.prefetchQuery('eventResponses', getEventResponses(context.apiFetch));
-    }
-    else {
-        null;
-    }
+        if (user) {
+            await queryClient.prefetchQuery(
+                'eventResponses',
+                getEventResponses(context.apiFetch),
+            );
+        }
+        else {
+            null;
+        }
 
-    const eventState = queryClient.getQueryState(['event', eventId]);
-    const orgState = queryClient.getQueryState(['org', orgId]);
+        const eventState = queryClient.getQueryState(['event', eventId]);
+        const orgState = queryClient.getQueryState(['org', orgId]);
 
-    if (eventState?.status === 'success' && orgState?.status === 'success') {
-        return {
-            props: {
-                dehydratedState: dehydrate(queryClient),
-                eventId,
-                orgId,
-            },
-        };
-    }
-    else {
-        return {
-            notFound: true,
-        };
-    }
-}, scaffoldOptions);
+        if (
+            eventState?.status === 'success' &&
+            orgState?.status === 'success'
+        ) {
+            return {
+                props: {
+                    dehydratedState: dehydrate(queryClient),
+                    eventId,
+                    orgId,
+                },
+            };
+        }
+        else {
+            return {
+                notFound: true,
+            };
+        }
+    },
+    scaffoldOptions,
+);
 
 type OrgEventPageProps = {
     eventId: string;
     orgId: string;
 };
 
-const OrgEventPage : PageWithLayout<OrgEventPageProps> = (props) => {
+const OrgEventPage: PageWithLayout<OrgEventPageProps> = (props) => {
     const { orgId, eventId } = props;
     const eventQuery = useQuery(['event', eventId], getEvent(orgId, eventId));
     const orgQuery = useQuery(['org', orgId], getOrg(orgId));
-    const { eventResponses, onEventResponse } = useEventResponses();
+    const { eventResponses, onSignup, onUndoSignup } = useEventResponses();
 
     if (!eventQuery.data) {
         return null;
@@ -92,95 +85,18 @@ const OrgEventPage : PageWithLayout<OrgEventPageProps> = (props) => {
     const event = eventQuery.data as ZetkinEvent;
     const org = orgQuery.data as ZetkinOrganization;
 
-    const response = eventResponses?.find(response => response.action_id === event.id);
+    const response = eventResponses?.find(
+        (response) => response.action_id === event.id,
+    );
 
     return (
-        <>
-            <Header marginBottom="size-300">
-                <Image
-                    alt="Cover image"
-                    height="size-2000"
-                    objectFit="cover"
-                    src="/cover.jpg"
-                    width="100%"
-                />
-                <Heading data-testid="event-title" level={ 1 } marginBottom="size-50">
-                    { event.title ? event.title : event.activity.title }
-                </Heading>
-                <Link>
-                    <NextLink href={ `/o/${orgId}` }>
-                        <a>{ org.title }</a>
-                    </NextLink>
-                </Link>
-            </Header>
-            <Flex marginBottom="size-100">
-                <Flag marginEnd="size-100" size="S"/>
-                <Link>
-                    <NextLink href={ `/o/${orgId}/campaigns/${event.campaign.id}` }>
-                        <a>{ event.campaign.title }</a>
-                    </NextLink>
-                </Link>
-            </Flex>
-            <Flex alignItems="center" data-testid="duration" marginBottom="size-100">
-                <Calendar marginEnd="size-100" size="S"/>
-                <Flex direction="column">
-                    <Text>
-                        <FormattedDate
-                            day="2-digit"
-                            month="long"
-                            value={ Date.parse(event.start_time) }
-                        />
-                        –
-                        <FormattedDate
-                            day="2-digit"
-                            month="long"
-                            value={ Date.parse(event.end_time) }
-                        />
-                    </Text>
-                    <Text>
-                        <FormattedTime
-                            value={ Date.parse(event.start_time) }
-                        />
-                        –
-                        <FormattedTime
-                            value={ Date.parse(event.end_time) }
-                        />
-                    </Text>
-                </Flex>
-            </Flex>
-            <Flex marginBottom="size-300">
-                <Location marginEnd="size-100" size="S"/>
-                <Text data-testid="location">
-                    { event.location.title }
-                </Text>
-            </Flex>
-            <Divider />
-            <Text data-testid="info-text" marginY="size-300">
-                { event.info_text }
-            </Text>
-            <View
-                bottom="size-200"
-                left="size-200"
-                marginTop="size-200"
-                position="absolute"
-                right="size-200">
-                { response ? (
-                    <Button
-                        data-testid="event-response-button"
-                        onPress={ () => onEventResponse(event.id, org.id, true) }
-                        variant="cta" width="100%">
-                        <Msg id="pages.orgEvent.actions.undoSignup"/>
-                    </Button>
-                ) : (
-                    <Button
-                        data-testid="event-response-button"
-                        onPress={ () => onEventResponse(event.id, org.id, false) }
-                        variant="cta" width="100%">
-                        <Msg id="pages.orgEvent.actions.signup"/>
-                    </Button>
-                ) }
-            </View>
-        </>
+        <EventDetails
+            event={ event }
+            onSignup={ onSignup }
+            onUndoSignup={ onUndoSignup }
+            org={ org }
+            response={ response }
+        />
     );
 };
 

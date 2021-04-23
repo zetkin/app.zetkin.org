@@ -52,7 +52,7 @@ const OrgCampaignPage : PageWithLayout<OrgCampaignPageProps> = (props) => {
     const orgQuery = useQuery(['org', orgId], getOrg(orgId));
     const campaignEventsQuery = useQuery(['campaignEvents', campId], getCampaignEvents(orgId, campId));
 
-    const { eventResponses, onEventResponse } = useEventResponses();
+    const { eventResponses, onSignup, onUndoSignup } = useEventResponses();
 
     return (
         <Flex direction="column" marginY="size-500">
@@ -65,7 +65,8 @@ const OrgCampaignPage : PageWithLayout<OrgCampaignPageProps> = (props) => {
             <EventList
                 eventResponses={ eventResponses }
                 events={ campaignEventsQuery.data }
-                onEventResponse={ onEventResponse }
+                onSignup={ onSignup }
+                onUndoSignup={ onUndoSignup }
                 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 org={ orgQuery.data! }
             />

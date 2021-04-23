@@ -1,9 +1,8 @@
 export interface ZetkinMembership {
-    organization: {
-        id: number;
-        title: string;
-    };
+    role : string | null;
+    organization: ZetkinOrganization;
     profile: {
+        name: string;
         id: number;
     };
 }

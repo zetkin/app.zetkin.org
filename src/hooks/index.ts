@@ -13,11 +13,13 @@ export const useUser = () : ZetkinUser | null => {
     return React.useContext(UserContext);
 };
 
-type OnEventResponse = (eventId : number, orgId : number, response : boolean) => void;
+type OnSignup = (eventId : number, orgId : number) => void;
+type OnUndoSignup = (eventId : number, orgId : number) => void;
 
 type EventResponses = {
     eventResponses: ZetkinEventResponse[] | undefined;
-    onEventResponse: OnEventResponse;
+    onSignup: OnSignup;
+    onUndoSignup: OnUndoSignup;
 }
 
 export const useEventResponses = () : EventResponses => {
@@ -38,14 +40,13 @@ export const useEventResponses = () : EventResponses => {
         },
     });
 
-    function onEventResponse (eventId : number, orgId : number, response : boolean) {
-        if (response) {
-            removeFunc.mutate({ eventId, orgId });
-        }
-        else {
-            addFunc.mutate({ eventId, orgId });
-        }
+    function onSignup (eventId : number, orgId : number) {
+        addFunc.mutate({ eventId, orgId });
     }
 
-    return { eventResponses, onEventResponse };
+    function onUndoSignup (eventId : number, orgId : number) {
+        removeFunc.mutate({ eventId, orgId });
+    }
+
+    return { eventResponses, onSignup, onUndoSignup };
 };
