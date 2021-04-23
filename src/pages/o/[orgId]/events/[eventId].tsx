@@ -67,12 +67,12 @@ export const getServerSideProps: GetServerSideProps = scaffold(
     scaffoldOptions,
 );
 
-type OrgEventPageProps = {
+type EventPageProps = {
     eventId: string;
     orgId: string;
 };
 
-const OrgEventPage: PageWithLayout<OrgEventPageProps> = (props) => {
+const EventPage: PageWithLayout<EventPageProps> = (props) => {
     const { orgId, eventId } = props;
     const eventQuery = useQuery(['event', eventId], getEvent(orgId, eventId));
     const orgQuery = useQuery(['org', orgId], getOrg(orgId));
@@ -100,7 +100,7 @@ const OrgEventPage: PageWithLayout<OrgEventPageProps> = (props) => {
     );
 };
 
-OrgEventPage.getLayout = function getLayout(page, props) {
+EventPage.getLayout = function getLayout(page, props) {
     return (
         <DefaultOrgLayout orgId={ props.orgId as string }>
             { page }
@@ -108,4 +108,4 @@ OrgEventPage.getLayout = function getLayout(page, props) {
     );
 };
 
-export default OrgEventPage;
+export default EventPage;
