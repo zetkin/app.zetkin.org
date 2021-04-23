@@ -28,6 +28,11 @@ describe('Login process', () => {
         cy.url().should('match', /\/my$/);
     });
 
+    it('redirects from /my to login when not already logged in', () => {
+        cy.visit('/my');
+        cy.url().should('match', /login.dev.zetkin.org/);
+    });
+
     it('contains a logout button wich logs you out and takes you back to the home page', () => {
         cy.visit('/login');
         cy.get('input[aria-label="E-mail address"]').type('testadmin@example.com');
