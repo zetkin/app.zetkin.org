@@ -1,6 +1,5 @@
-import { dehydrate } from 'react-query/hydration';
 import { GetServerSideProps } from 'next';
-import { QueryClient, useQuery } from 'react-query';
+import { useQuery } from 'react-query';
 
 import DefaultOrgLayout from '../../../../components/layout/DefaultOrgLayout';
 import getOrg from '../../../../fetching/getOrg';
@@ -9,20 +8,18 @@ import { PageWithLayout } from '../../../../types';
 import { scaffold } from '../../../../utils/next';
 
 export const getServerSideProps : GetServerSideProps = scaffold(async (context) => {
-    const queryClient = new QueryClient();
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const { surId, orgId } = context.params!;
 
-    await queryClient.prefetchQuery(['survey', surId], getSurvey(orgId as string, surId as string));
-    await queryClient.prefetchQuery(['org', orgId], getOrg(orgId as string));
+    await context.queryClient.prefetchQuery(['survey', surId], getSurvey(orgId as string, surId as string));
+    await context.queryClient.prefetchQuery(['org', orgId], getOrg(orgId as string));
 
-    const surveyState = queryClient.getQueryState(['survey', surId]);
-    const orgState = queryClient.getQueryState(['org', orgId]);
+    const surveyState = context.queryClient.getQueryState(['survey', surId]);
+    const orgState = context.queryClient.getQueryState(['org', orgId]);
 
     if (surveyState?.status === 'success' && orgState?.status === 'success') {
         return {
             props: {
-                dehydratedState: dehydrate(queryClient),
                 orgId,
                 surId,
             },

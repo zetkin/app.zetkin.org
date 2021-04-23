@@ -5,11 +5,11 @@ import { QueryClient } from 'react-query';
 import { GetServerSideProps, GetServerSidePropsContext, GetServerSidePropsResult } from 'next';
 
 import { AppSession } from '../types';
-import { dehydrate, DehydratedState } from 'react-query/types/hydration';
 import { getMessages } from './locale';
 import stringToBool from './stringToBool';
 import { ZetkinUser } from '../interfaces/ZetkinUser';
 import { ZetkinZ } from '../types/sdk';
+import { dehydrate, DehydratedState } from 'react-query/hydration';
 
 //TODO: Create module definition and revert to import.
 // eslint-disable-next-line @typescript-eslint/no-var-requires
