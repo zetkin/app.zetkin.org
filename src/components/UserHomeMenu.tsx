@@ -13,7 +13,7 @@ const UserHomeMenu : FunctionComponent = () => {
             position="absolute"
             right={ 0 }>
             <Flex justifyContent="center">
-                <NextLink href="/my/feed">
+                <NextLink href="/my">
                     <Button data-test="feed-button" margin="size-200" variant="cta">
                         <Msg id="layout.userHome.tabs.feed"/>
                     </Button>
