@@ -1,6 +1,7 @@
 import apiUrl from './apiUrl';
 import { applySession } from 'next-session';
 import Negotiator from 'negotiator';
+import { QueryClient } from 'react-query';
 import { GetServerSideProps, GetServerSidePropsContext, GetServerSidePropsResult } from 'next';
 
 import { AppSession } from '../types';
@@ -28,6 +29,7 @@ export type ScaffoldedContext = GetServerSidePropsContext & {
     apiFetch: (path : string, init? : RequestInit) => Promise<Response>;
     user: ZetkinUser | null;
     z: ZetkinZ;
+    queryClient: QueryClient;
 };
 
 export type ScaffoldedGetServerSideProps = (context: ScaffoldedContext) =>
