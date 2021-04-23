@@ -39,6 +39,7 @@ interface ResultWithProps {
 }
 
 interface ScaffoldOptions {
+    // Level can be 1 (simple sign-in) or 2 (two-factor authentication)
     authLevelRequired?: number;
     localeScope?: string[];
 }
@@ -101,6 +102,8 @@ export const scaffold = (wrapped : ScaffoldedGetServerSideProps, options? : Scaf
 
             if (authLevel < options.authLevelRequired) {
                 if (reqWithSession.session) {
+                    // Store the URL that the user tried to access, so that they
+                    // can be redirected back here after logging in
                     reqWithSession.session.redirAfterLogin = req.url || null;
                 }
 
