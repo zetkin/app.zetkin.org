@@ -10,8 +10,7 @@ import {
 } from '@adobe/react-spectrum';
 
 import apiUrl from '../utils/apiUrl';
-import { ZetkinOrganization } from '../types/zetkin';
-import { ZetkinUser } from '../types/zetkin';
+import { ZetkinOrganization, ZetkinUser } from '../types/zetkin';
 
 interface PublicHeaderProps {
     user: ZetkinUser | null;

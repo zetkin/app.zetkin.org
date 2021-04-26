@@ -10,8 +10,7 @@ import getOrg from '../../../../fetching/getOrg';
 import { PageWithLayout } from '../../../../types';
 import { scaffold } from '../../../../utils/next';
 import { useEventResponses } from '../../../../hooks';
-import { ZetkinEvent } from '../../../../types/zetkin';
-import { ZetkinOrganization } from '../../../../types/zetkin';
+import { ZetkinEvent, ZetkinOrganization } from '../../../../types/zetkin';
 
 const scaffoldOptions = {
     localeScope: ['misc.publicHeader', 'pages.orgEvent'],
