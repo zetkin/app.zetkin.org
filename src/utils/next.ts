@@ -46,7 +46,7 @@ interface ScaffoldOptions {
 }
 
 const hasProps = (result: any): result is ResultWithProps => {
-    const resultObj = result as Record<string, unknown>
+    const resultObj = result as Record<string, unknown>;
     if (resultObj.notFound) {
         return false;
     }
