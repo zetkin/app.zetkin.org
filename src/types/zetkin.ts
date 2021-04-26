@@ -1,3 +1,5 @@
+import { ZetkinUser } from '../interfaces/ZetkinUser';
+
 export interface ZetkinMembership {
     organization: {
         id: number;
@@ -16,4 +18,10 @@ export interface ZetkinEventResponse {
         id: number;
     };
     id: number;
+}
+
+export interface ZetkinSession {
+    created: string;
+    level: number;
+    user: ZetkinUser;
 }

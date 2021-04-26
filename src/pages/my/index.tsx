@@ -8,6 +8,7 @@ import { scaffold } from '../../utils/next';
 import { ZetkinUser } from '../../interfaces/ZetkinUser';
 
 const scaffoldOptions = {
+    authLevelRequired: 1,
     localeScope: [
         'layout.my',
         'misc.publicHeader',
