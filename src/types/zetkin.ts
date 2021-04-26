@@ -42,3 +42,9 @@ export interface ZetkinOrganization {
     id: number;
     title: string;
 }
+
+export interface ZetkinSession {
+    created: string;
+    level: number;
+    user: ZetkinUser;
+}

@@ -27,6 +27,8 @@ export const getServerSideProps : GetServerSideProps = scaffold(async (context) 
         const protocol = stringToBool(process.env.NEXT_PUBLIC_APP_USE_TLS)? 'https' : 'http';
         const host = process.env.NEXT_PUBLIC_APP_HOST;
 
+        let destination = '/';
+
         try {
             await context.z.authenticate(`${protocol}://${host}/?code=${code}`);
             await applySession(req, res);
@@ -34,6 +36,13 @@ export const getServerSideProps : GetServerSideProps = scaffold(async (context) 
             const reqWithSession = req as { session? : AppSession };
             if (reqWithSession.session) {
                 reqWithSession.session.tokenData = context.z.getTokenData();
+
+                if (reqWithSession.session.redirAfterLogin) {
+                    // User logged in after trying to access some URL, and
+                    // should be redirected to that URL once authenticated.
+                    destination = reqWithSession.session.redirAfterLogin;
+                    reqWithSession.session.redirAfterLogin = null;
+                }
             }
         }
         catch (err) {
@@ -42,7 +51,7 @@ export const getServerSideProps : GetServerSideProps = scaffold(async (context) 
 
         return {
             redirect: {
-                destination: '/',
+                destination,
                 permanent: false,
             },
         };
