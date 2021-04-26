@@ -19,9 +19,9 @@ type RegularProps = {
 };
 
 export type ScaffoldedProps = RegularProps & {
-    user: ZetkinUser | null;
     lang: string;
     messages: Record<string,string>;
+    user: ZetkinUser | null;
 };
 
 export type ScaffoldedContext = GetServerSidePropsContext & {

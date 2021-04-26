@@ -40,6 +40,10 @@ module.exports = {
             'requireLast': false,
           },
         }],
+        '@typescript-eslint/member-ordering': ['error', {
+          'default': { 'memberTypes': 'never', 'order': 'alphabetically' },
+          'interfaces': ['signature', 'method', 'constructor', 'field'],
+        }],
 
         'brace-style': ['error', 'stroustrup'],
         'comma-dangle': ['error', 'always-multiline'],

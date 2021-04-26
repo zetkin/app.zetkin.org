@@ -1,20 +1,20 @@
 export interface ZetkinMembership {
-    role : string | null;
     organization: ZetkinOrganization;
     profile: {
-        name: string;
         id: number;
+        name: string;
     };
+    role : string | null;
 }
 
 export interface ZetkinEventResponse {
     action_id: number;
-    response_date: string;
-    person: {
-        name: string;
-        id: number;
-    };
     id: number;
+    person: {
+        id: number;
+        name: string;
+    };
+    response_date: string;
 }
 
 export interface ZetkinEvent {

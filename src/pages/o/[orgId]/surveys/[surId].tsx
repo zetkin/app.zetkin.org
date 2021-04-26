@@ -36,8 +36,8 @@ export const getServerSideProps : GetServerSideProps = scaffold(async (context) 
 });
 
 type SurveyPageProps = {
-    surId: string;
     orgId: string;
+    surId: string;
 };
 
 const SurveyPage : PageWithLayout<SurveyPageProps> = (props) => {
