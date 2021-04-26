@@ -130,17 +130,17 @@ describe('EventDetails', () => {
             });
     });
 
-    it('contains a cancel sign-up button for the event if there is no response', () => {
+    it('contains a cancel sign-up button for the event if already signed up', () => {
         const spyOnUndoSignup = cy.spy();
         
         mountWithProviders(
-            <UserContext.Provider value={ null }>
+            <UserContext.Provider value={ dummyUser }>
                 <EventDetails
                     event={ dummyEvent }
                     onSignup={ () => null }
                     onUndoSignup={ spyOnUndoSignup }
                     org={ dummyOrg }
-                    response={ undefined }
+                    response={ dummyEventResponse }
                 />
             </UserContext.Provider>,
         );
