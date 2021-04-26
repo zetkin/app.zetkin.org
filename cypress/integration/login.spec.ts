@@ -24,6 +24,7 @@ describe('Login process', () => {
         cy.get('input[aria-label="E-mail address"]').type('testadmin@example.com');
         cy.get('input[aria-label="Password"]').type('password');
         cy.get('input[aria-label="Log in"]').click();
+        cy.waitUntilReactRendered();
         cy.get('[data-testid="username"]').click();
         cy.url().should('match', /\/my$/);
     });
