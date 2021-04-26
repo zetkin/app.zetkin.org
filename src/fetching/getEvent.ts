@@ -1,5 +1,5 @@
 import { defaultFetch } from '.';
-import { ZetkinEvent } from '../interfaces/ZetkinEvent';
+import { ZetkinEvent } from '../types/zetkin';
 
 export default function getEvent(orgId : string, eventId : string, fetch = defaultFetch) {
     return async () : Promise<ZetkinEvent> => {

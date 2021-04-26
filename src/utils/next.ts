@@ -6,9 +6,8 @@ import { GetServerSideProps, GetServerSidePropsContext, GetServerSidePropsResult
 import { AppSession } from '../types';
 import { getMessages } from './locale';
 import stringToBool from './stringToBool';
-import { ZetkinSession } from '../types/zetkin';
-import { ZetkinUser } from '../interfaces/ZetkinUser';
 import { ZetkinZ } from '../types/sdk';
+import { ZetkinSession, ZetkinUser } from '../types/zetkin';
 
 //TODO: Create module definition and revert to import.
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -20,9 +19,9 @@ type RegularProps = {
 };
 
 export type ScaffoldedProps = RegularProps & {
-    user: ZetkinUser | null;
     lang: string;
     messages: Record<string,string>;
+    user: ZetkinUser | null;
 };
 
 export type ScaffoldedContext = GetServerSidePropsContext & {

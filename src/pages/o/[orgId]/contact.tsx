@@ -31,7 +31,7 @@ export const getServerSideProps : GetServerSideProps = scaffold(async (context) 
     }
 });
 
-const OrgContactPage : PageWithLayout = () => {
+const ContactPage : PageWithLayout = () => {
     return (
         <>
             <h1>Test</h1>
@@ -39,7 +39,7 @@ const OrgContactPage : PageWithLayout = () => {
     );
 };
 
-OrgContactPage.getLayout = function getLayout(page, props) {
+ContactPage.getLayout = function getLayout(page, props) {
     return (
         <DefaultOrgLayout orgId={ props.orgId as string }>
             { page }
@@ -47,4 +47,4 @@ OrgContactPage.getLayout = function getLayout(page, props) {
     );
 };
 
-export default OrgContactPage;
+export default ContactPage;

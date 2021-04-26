@@ -41,12 +41,12 @@ export const getServerSideProps : GetServerSideProps = scaffold(async (context) 
     }
 });
 
-type OrgCampaignPageProps = {
+type CampaignPageProps = {
     campId: string;
     orgId: string;
 };
 
-const OrgCampaignPage : PageWithLayout<OrgCampaignPageProps> = (props) => {
+const CampaignPage : PageWithLayout<CampaignPageProps> = (props) => {
     const { campId, orgId } = props;
     const campaignQuery = useQuery(['campaign', campId], getCampaign(orgId, campId));
     const orgQuery = useQuery(['org', orgId], getOrg(orgId));
@@ -59,7 +59,7 @@ const OrgCampaignPage : PageWithLayout<OrgCampaignPageProps> = (props) => {
             <Heading level={ 1 }>
                 { campaignQuery.data?.title }
             </Heading>
-            <Text data-test="campaign-information">
+            <Text data-testid="campaign-information">
                 { campaignQuery.data?.info_text }
             </Text>
             <EventList
@@ -74,7 +74,7 @@ const OrgCampaignPage : PageWithLayout<OrgCampaignPageProps> = (props) => {
     );
 };
 
-OrgCampaignPage.getLayout = function getLayout(page, props) {
+CampaignPage.getLayout = function getLayout(page, props) {
     return (
         <DefaultOrgLayout orgId={ props.orgId as string }>
             { page }
@@ -82,4 +82,4 @@ OrgCampaignPage.getLayout = function getLayout(page, props) {
     );
 };
 
-export default OrgCampaignPage;
+export default CampaignPage;

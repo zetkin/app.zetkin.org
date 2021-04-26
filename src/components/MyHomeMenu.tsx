@@ -12,22 +12,22 @@ const MyHomeMenu : FunctionComponent = () => {
             right={ 0 }>
             <Flex justifyContent="center">
                 <NextLink href="/my">
-                    <Button data-test="feed-button" margin="size-200" variant="cta">
+                    <Button data-testid="feed-button" margin="size-200" variant="cta">
                         <Msg id="layout.my.tabs.feed"/>
                     </Button>
                 </NextLink>
                 <NextLink href="/my/todo">
-                    <Button data-test="todo-button" margin="size-200" variant="cta">
+                    <Button data-testid="todo-button" margin="size-200" variant="cta">
                         <Msg id="layout.my.tabs.todo"/>
                     </Button>
                 </NextLink>
                 <NextLink href="/my/orgs">
-                    <Button data-test="orgs-button" margin="size-200" variant="cta">
+                    <Button data-testid="orgs-button" margin="size-200" variant="cta">
                         <Msg id="layout.my.tabs.orgs"/>
                     </Button>
                 </NextLink>
                 <NextLink href="/my/settings">
-                    <Button data-test="settings-button" margin="size-200" variant="cta">
+                    <Button data-testid="settings-button" margin="size-200" variant="cta">
                         <Msg id="layout.my.tabs.settings"/>
                     </Button>
                 </NextLink>

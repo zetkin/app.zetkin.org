@@ -1,6 +1,6 @@
 import { mountWithProviders } from '../utils/testing';
 import PublicHeader from './PublicHeader';
-import { ZetkinOrganization } from '../interfaces/ZetkinOrganization';
+import { ZetkinOrganization } from '../types/zetkin';
 
 describe('PublicHeader', () => {
 
@@ -28,35 +28,35 @@ describe('PublicHeader', () => {
 
     it('contains user avatar if logged in', () => {
         mountWithProviders(<PublicHeader user={ dummyUser }/>);
-        cy.get('[data-test="user-avatar"]').should('be.visible');
+        cy.get('[data-testid="user-avatar"]').should('be.visible');
     });
 
     it('contains an organize button if user has one or more official roles', () => {
         mountWithProviders(
             <PublicHeader canOrganize={ true } user={ dummyUser } />,
         );
-        cy.get('[data-test="organize-button"]').should('be.visible');
+        cy.get('[data-testid="organize-button"]').should('be.visible');
     });
 
     it('does not contain an organize button if logged out', () => {
         mountWithProviders(<PublicHeader user={ null } />);
-        cy.get('[data-test="organize-button"]').should('not.exist');
+        cy.get('[data-testid="organize-button"]').should('not.exist');
     });
 
     it('does not contain an organize button if logged in and has no official roles', () => {
         mountWithProviders(
             <PublicHeader canOrganize={ false } user={ dummyUser } />);
-        cy.get('[data-test="organize-button"]').should('not.exist');
+        cy.get('[data-testid="organize-button"]').should('not.exist');
     });
 
     it('contains logout button if logged in', () => {
         mountWithProviders(<PublicHeader user={ dummyUser } />);
-        cy.get('[data-test="logout-button"]').should('be.visible');
+        cy.get('[data-testid="logout-button"]').should('be.visible');
     });
 
     it('contains a zetkin logo when component has no org prop', () => {
         mountWithProviders(<PublicHeader user={ dummyUser }/>);
-        cy.get('[data-test="zetkin-logotype"]').should('be.visible');
+        cy.get('[data-testid="zetkin-logotype"]').should('be.visible');
     });
 
     it('contains org avatar instead of zetkin logo when component has an org prop', () => {
@@ -64,8 +64,8 @@ describe('PublicHeader', () => {
             .then((data : ZetkinOrganization) => {
                 mountWithProviders(<PublicHeader org={ data } user={ dummyUser }/>);
 
-                cy.get('[data-test="zetkin-logotype"]').should('not.exist');
-                cy.get('[data-test="org-avatar"]').should('be.visible');
+                cy.get('[data-testid="zetkin-logotype"]').should('not.exist');
+                cy.get('[data-testid="org-avatar"]').should('be.visible');
             });
     });
-}); 
+});

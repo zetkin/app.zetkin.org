@@ -11,9 +11,11 @@ import {
     FormattedMessage as Msg,
 } from 'react-intl';
 
-import { ZetkinEvent } from '../interfaces/ZetkinEvent';
-import { ZetkinEventResponse } from '../types/zetkin';
-import { ZetkinOrganization } from '../interfaces/ZetkinOrganization';
+import {
+    ZetkinEvent,
+    ZetkinEventResponse,
+    ZetkinOrganization,
+} from '../types/zetkin';
 
 interface EventListProps {
     events: ZetkinEvent[] | undefined;
@@ -27,7 +29,7 @@ export default function EventList ({ eventResponses, events, onSignup, onUndoSig
 
     if (!events || events.length === 0) {
         return (
-            <Text data-test="no-events-placeholder">
+            <Text data-testid="no-events-placeholder">
                 <Msg id="misc.eventList.placeholder"/>
             </Text>
         );
@@ -35,7 +37,7 @@ export default function EventList ({ eventResponses, events, onSignup, onUndoSig
 
     return (
         <>
-            <Flex data-test="event-list" direction="row" gap="100" wrap>
+            <Flex data-testid="event-list" direction="row" gap="100" wrap>
                 { events?.map((event) => {
                     const response = eventResponses?.find(response => response.action_id === event.id);
                     return (<EventListItem
@@ -66,13 +68,13 @@ interface EventListItemProps {
 const EventListItem = ({ event, response, onSignup, onUndoSignup, org }: EventListItemProps): JSX.Element => {
 
     return (
-        <Flex data-test="event" direction="column" margin="size-200">
-            <View data-test="event-title">
+        <Flex data-testid="event" direction="column" margin="size-200">
+            <View data-testid="event-title">
                 { event.title ? event.title : event.activity.title }
             </View>
-            <View data-test="org-title">{ org.title }</View>
-            <View data-test="campaign-title">{ event.campaign.title }</View>
-            <View data-test="start-time">
+            <View data-testid="org-title">{ org.title }</View>
+            <View data-testid="campaign-title">{ event.campaign.title }</View>
+            <View data-testid="start-time">
                 <FormattedDate
                     day="2-digit"
                     month="long"
@@ -82,7 +84,7 @@ const EventListItem = ({ event, response, onSignup, onUndoSignup, org }: EventLi
                     value={ Date.parse(event.start_time) }
                 />
             </View>
-            <View data-test="end-time">
+            <View data-testid="end-time">
                 <FormattedDate
                     day="2-digit"
                     month="long"
@@ -92,10 +94,10 @@ const EventListItem = ({ event, response, onSignup, onUndoSignup, org }: EventLi
                     value={ Date.parse(event.end_time) }
                 />
             </View>
-            <View data-test="location-title">{ event.location.title }</View>
+            <View data-testid="location-title">{ event.location.title }</View>
             { response ? (
                 <Button
-                    data-test="event-response-button"
+                    data-testid="event-response-button"
                     marginTop="size-50"
                     onPress={ () => onUndoSignup(event.id, org.id) }
                     variant="cta">
@@ -103,7 +105,7 @@ const EventListItem = ({ event, response, onSignup, onUndoSignup, org }: EventLi
                 </Button>
             ) : (
                 <Button
-                    data-test="event-response-button"
+                    data-testid="event-response-button"
                     marginTop="size-50"
                     onPress={ () => onSignup(event.id, org.id) }
                     variant="cta">
