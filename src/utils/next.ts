@@ -46,9 +46,14 @@ interface ScaffoldOptions {
 }
 
 const hasProps = (result: any): result is ResultWithProps => {
-    const is404: boolean = Object.prototype.hasOwnProperty.call((result as Record<string, unknown>), 'notFound');
-    const isRedirect: boolean = Object.prototype.hasOwnProperty.call((result as Record<string, unknown>), 'redirect');
-    return is404 || isRedirect ? false : true;
+    const resultObj = result as Record<string, unknown>
+    if (resultObj.notFound) {
+        return false;
+    }
+    if (resultObj.redirect) {
+        return false;
+    }
+    return true;
 };
 
 export const scaffold = (wrapped : ScaffoldedGetServerSideProps, options? : ScaffoldOptions) : GetServerSideProps<ScaffoldedProps> => {
@@ -94,7 +99,7 @@ export const scaffold = (wrapped : ScaffoldedGetServerSideProps, options? : Scaf
 
         const user = ctx.user;
 
-        const result = await wrapped(ctx);
+        const result = await wrapped(ctx) || {};
 
         // Figure out browser's preferred language
         const negotiator = new Negotiator(contextFromNext.req);
