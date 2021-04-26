@@ -35,12 +35,12 @@ export const getServerSideProps : GetServerSideProps = scaffold(async (context) 
     }
 });
 
-type OrgCampaignEventsPageProps = {
+type CampaignEventsPageProps = {
     campId: string;
     orgId: string;
 };
 
-const OrgCampaignEventsPage : PageWithLayout<OrgCampaignEventsPageProps> = (props) => {
+const CampaignEventsPage : PageWithLayout<CampaignEventsPageProps> = (props) => {
     const { orgId, campId } = props;
     const campaignEventsQuery = useQuery(['campaignEvents', campId], getCampaignEvents(orgId, campId));
     const campaignQuery = useQuery(['campaign', campId], getCampaign(orgId, campId));
@@ -59,7 +59,7 @@ const OrgCampaignEventsPage : PageWithLayout<OrgCampaignEventsPageProps> = (prop
     );
 };
 
-OrgCampaignEventsPage.getLayout = function getLayout(page, props) {
+CampaignEventsPage.getLayout = function getLayout(page, props) {
     return (
         <DefaultOrgLayout orgId={ props.orgId as string }>
             { page }
@@ -67,4 +67,4 @@ OrgCampaignEventsPage.getLayout = function getLayout(page, props) {
     );
 };
 
-export default OrgCampaignEventsPage;
+export default CampaignEventsPage;

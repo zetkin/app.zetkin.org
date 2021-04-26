@@ -10,7 +10,7 @@ import {
     View,
 } from '@adobe/react-spectrum';
 
-import { ZetkinOrganization } from '../../interfaces/ZetkinOrganization';
+import { ZetkinOrganization } from '../../types/zetkin';
 
 interface OrgHeaderProps {
     org: ZetkinOrganization;
@@ -40,7 +40,7 @@ const OrgHeader = ({ org } : OrgHeaderProps) : JSX.Element => {
                             </NextLink>
                         </Link>
                     </View>
-                    <Button data-test="unfollow-button" variant="cta">
+                    <Button data-testid="unfollow-button" variant="cta">
                         <Msg id="layout.org.actions.unfollow"/>
                     </Button>
                 </Flex>

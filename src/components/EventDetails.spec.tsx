@@ -1,8 +1,10 @@
 import EventDetails from './EventDetails';
 import { mountWithProviders } from '../utils/testing';
-import { ZetkinEvent } from '../interfaces/ZetkinEvent';
-import { ZetkinEventResponse } from '../types/zetkin';
-import { ZetkinOrganization } from '../interfaces/ZetkinOrganization';
+import {
+    ZetkinEvent,
+    ZetkinEventResponse,
+    ZetkinOrganization,
+} from '../types/zetkin';
 
 describe('EventDetails', () => {
     let dummyOrg : ZetkinOrganization;
@@ -34,13 +36,13 @@ describe('EventDetails', () => {
                 response={ dummyEventResponse }
             />,
         );
-        cy.get('[data-test="event-title"]').should('be.visible');
-        cy.get('[data-test="org-title"]').should('be.visible');
-        cy.get('[data-test="campaign-title"]').should('be.visible');
-        cy.get('[data-test="event-dates"]').should('be.visible');
-        cy.get('[data-test="event-times"]').should('be.visible');
-        cy.get('[data-test="location"]').should('be.visible');
-        cy.get('[data-test="info-text"]').should('be.visible');
+        cy.get('[data-testid="event-title"]').should('be.visible');
+        cy.get('[data-testid="org-title"]').should('be.visible');
+        cy.get('[data-testid="campaign-title"]').should('be.visible');
+        cy.get('[data-testid="event-dates"]').should('be.visible');
+        cy.get('[data-testid="event-times"]').should('be.visible');
+        cy.get('[data-testid="location"]').should('be.visible');
+        cy.get('[data-testid="info-text"]').should('be.visible');
     });
 
     it('does not show event info if none is provided', () => {
@@ -54,7 +56,7 @@ describe('EventDetails', () => {
                 response={ dummyEventResponse }
             />,
         );
-        cy.get('[data-test="info-text"]').should('not.be.visible');
+        cy.get('[data-testid="info-text"]').should('not.be.visible');
     });
 
     it('contains an activity title instead of missing event title', () => {
@@ -68,7 +70,7 @@ describe('EventDetails', () => {
                 response={ dummyEventResponse }
             />,
         );
-        cy.get('[data-test="event-title"]')
+        cy.get('[data-testid="event-title"]')
             .should('contain', dummyEvent.activity.title)
             .should('not.contain', 'undefined');
     });
@@ -83,7 +85,7 @@ describe('EventDetails', () => {
                 response={ dummyEventResponse }
             />,
         );
-        cy.get('[data-test="org-title"]')
+        cy.get('[data-testid="org-title"]')
             .should('have.attr', 'href', `/o/${dummyOrg.id}`);
     });
 
@@ -97,7 +99,7 @@ describe('EventDetails', () => {
                 response={ dummyEventResponse }
             />,
         );
-        cy.get('[data-test="campaign-title"]')
+        cy.get('[data-testid="campaign-title"]')
             .should('have.attr', 'href', `/o/${dummyOrg.id}/campaigns/${dummyEvent.campaign.id}`);
     });
 
@@ -123,7 +125,7 @@ describe('EventDetails', () => {
 
     it('contains a cancel sign-up button for the event if there is no response', () => {
         const spyOnUndoSignup = cy.spy();
-        
+
         mountWithProviders(
             <EventDetails
                 event={ dummyEvent }

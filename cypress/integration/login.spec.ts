@@ -1,7 +1,7 @@
 describe('Login process', () => {
     it('contains a login button which leads to the login page', () => {
         cy.visit('/');
-        cy.get('[data-test="login-button"]')
+        cy.get('[data-testid="login-button"]')
             .should('be.visible')
             .click();
         cy.url().should('match', /http:\/\/login\.dev\.zetkin\.org\//);
@@ -15,8 +15,8 @@ describe('Login process', () => {
             .should('be.visible')
             .click();
         cy.url().should('match', /\/$/);
-        cy.get('[data-test="username"]').should('be.visible');
-        cy.get('[data-test="user-avatar"]').should('be.visible');
+        cy.get('[data-testid="username"]').should('be.visible');
+        cy.get('[data-testid="user-avatar"]').should('be.visible');
     });
 
     it('takes you to My Page when clicking on user avatar', () => {
@@ -24,7 +24,21 @@ describe('Login process', () => {
         cy.get('input[aria-label="E-mail address"]').type('testadmin@example.com');
         cy.get('input[aria-label="Password"]').type('password');
         cy.get('input[aria-label="Log in"]').click();
-        cy.get('[data-test="username"]').click();
+        cy.waitUntilReactRendered();
+        cy.get('[data-testid="username"]').click();
+        cy.url().should('match', /\/my$/);
+    });
+
+    it('redirects from /my to login when not already logged in', () => {
+        cy.visit('/my');
+        cy.url().should('match', /login.dev.zetkin.org/);
+    });
+
+    it('redirects to tried page after logging in', () => {
+        cy.visit('/my');
+        cy.get('input[aria-label="E-mail address"]').type('testadmin@example.com');
+        cy.get('input[aria-label="Password"]').type('password');
+        cy.get('input[aria-label="Log in"]').click();
         cy.url().should('match', /\/my$/);
     });
 
@@ -36,7 +50,7 @@ describe('Login process', () => {
         cy.getCookie('sid')
             .should('have.property', 'value')
             .then((cookie) => {
-                cy.get('[data-test="logout-button"]')
+                cy.get('[data-testid="logout-button"]')
                     .should('be.visible')
                     .click();
                 cy.url().should('match', /\/$/);
@@ -46,6 +60,6 @@ describe('Login process', () => {
     });
 
 });
-    
+
 // Hack to flag for typescript as module
 export {};

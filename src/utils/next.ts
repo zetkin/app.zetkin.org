@@ -2,14 +2,14 @@ import apiUrl from './apiUrl';
 import { applySession } from 'next-session';
 import Negotiator from 'negotiator';
 import { QueryClient } from 'react-query';
+import { dehydrate, DehydratedState } from 'react-query/hydration';
 import { GetServerSideProps, GetServerSidePropsContext, GetServerSidePropsResult } from 'next';
 
 import { AppSession } from '../types';
 import { getMessages } from './locale';
 import stringToBool from './stringToBool';
-import { ZetkinUser } from '../interfaces/ZetkinUser';
 import { ZetkinZ } from '../types/sdk';
-import { dehydrate, DehydratedState } from 'react-query/hydration';
+import { ZetkinSession, ZetkinUser } from '../types/zetkin';
 
 //TODO: Create module definition and revert to import.
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -21,10 +21,10 @@ type RegularProps = {
 };
 
 export type ScaffoldedProps = RegularProps & {
-    user: ZetkinUser | null;
     lang: string;
     messages: Record<string, string>;
     dehydratedState: DehydratedState;
+    user: ZetkinUser | null;
 };
 
 export type ScaffoldedContext = GetServerSidePropsContext & {
@@ -42,6 +42,8 @@ interface ResultWithProps {
 }
 
 interface ScaffoldOptions {
+    // Level can be 1 (simple sign-in) or 2 (two-factor authentication)
+    authLevelRequired?: number;
     localeScope?: string[];
 }
 
@@ -97,7 +99,34 @@ export const scaffold = (wrapped : ScaffoldedGetServerSideProps, options? : Scaf
             ctx.user = null;
         }
 
-        const user = ctx.user;
+        if (options?.authLevelRequired) {
+            let authLevel;
+
+            try {
+                const apiSessionRes = await ctx.z.resource('session').get();
+                const apiSession = apiSessionRes.data.data as ZetkinSession;
+                authLevel = apiSession.level;
+            }
+            catch (err) {
+                // Not logged in, so auth level is zero (anonymous)
+                authLevel = 0;
+            }
+
+            if (authLevel < options.authLevelRequired) {
+                if (reqWithSession.session) {
+                    // Store the URL that the user tried to access, so that they
+                    // can be redirected back here after logging in
+                    reqWithSession.session.redirAfterLogin = req.url || null;
+                }
+
+                return {
+                    redirect: {
+                        destination: '/login',
+                        permanent: false,
+                    },
+                };
+            }
+        }
 
         const result = await wrapped(ctx) || {};
 
@@ -114,7 +143,7 @@ export const scaffold = (wrapped : ScaffoldedGetServerSideProps, options? : Scaf
                 dehydratedState: dehydrate(ctx.queryClient),
                 lang,
                 messages,
-                user,
+                user: ctx.user,
             };
             result.props = scaffoldedProps;
         }

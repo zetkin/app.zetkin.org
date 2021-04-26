@@ -40,6 +40,10 @@ module.exports = {
             'requireLast': false,
           },
         }],
+        '@typescript-eslint/member-ordering': ['error', {
+          'default': { 'memberTypes': 'never', 'order': 'alphabetically' },
+          'interfaces': ['signature', 'method', 'constructor', 'field'],
+        }],
 
         'brace-style': ['error', 'stroustrup'],
         'comma-dangle': ['error', 'always-multiline'],
@@ -50,6 +54,7 @@ module.exports = {
         'keyword-spacing': ['error', {}],
         'no-console': 'error',
         'no-switch-statements/no-switch': 'error',
+        'no-trailing-spaces': 'error',
         'object-curly-spacing': ['error', 'always'],
         'padding-line-between-statements': ['error',
             // imports go together, but last import must be followed by newline

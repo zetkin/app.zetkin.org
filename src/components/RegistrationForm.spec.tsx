@@ -16,12 +16,12 @@ describe('Registration Form', () => {
 
         mountWithProviders(<RegistrationForm onValidSubmit={ spyOnSubmit } />);
 
-        cy.get('[data-test="first-name"]').type(dummyInput.first_name);
-        cy.get('[data-test="last-name"]').type(dummyInput.last_name);
-        cy.get('[data-test="email-address"]').type(dummyInput.email);
-        cy.get('[data-test="phone-number"]').type(dummyInput.phone);
-        cy.get('[data-test="password"]').type(dummyInput.password);
-        cy.get('[data-test="submit-button"]').click().then(() => {
+        cy.get('[data-testid="first-name"]').type(dummyInput.first_name);
+        cy.get('[data-testid="last-name"]').type(dummyInput.last_name);
+        cy.get('[data-testid="email-address"]').type(dummyInput.email);
+        cy.get('[data-testid="phone-number"]').type(dummyInput.phone);
+        cy.get('[data-testid="password"]').type(dummyInput.password);
+        cy.get('[data-testid="submit-button"]').click().then(() => {
             expect(spyOnSubmit).to.be.calledOnce;
             expect(spyOnSubmit).to.be.calledWith(dummyInput);
         });

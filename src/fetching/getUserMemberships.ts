@@ -1,5 +1,5 @@
 import { defaultFetch } from '.';
-import { ZetkinMembership } from '../interfaces/ZetkinMembership';
+import { ZetkinMembership } from '../types/zetkin';
 
 export default function getUserMemberships(fetch = defaultFetch) {
     return async () : Promise<ZetkinMembership[]> => {

@@ -5,6 +5,7 @@ import { ZetkinTokenData } from './sdk';
 
 
 export type AppSession = Session & {
+    redirAfterLogin: string | null;
     tokenData?: ZetkinTokenData | null;
 };
 

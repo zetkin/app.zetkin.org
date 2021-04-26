@@ -10,8 +10,7 @@ import getOrg from '../../../../fetching/getOrg';
 import { PageWithLayout } from '../../../../types';
 import { scaffold } from '../../../../utils/next';
 import { useEventResponses } from '../../../../hooks';
-import { ZetkinEvent } from '../../../../interfaces/ZetkinEvent';
-import { ZetkinOrganization } from '../../../../interfaces/ZetkinOrganization';
+import { ZetkinEvent, ZetkinOrganization } from '../../../../types/zetkin';
 
 const scaffoldOptions = {
     localeScope: ['misc.publicHeader', 'pages.orgEvent'],
@@ -67,12 +66,12 @@ export const getServerSideProps: GetServerSideProps = scaffold(
     scaffoldOptions,
 );
 
-type OrgEventPageProps = {
+type EventPageProps = {
     eventId: string;
     orgId: string;
 };
 
-const OrgEventPage: PageWithLayout<OrgEventPageProps> = (props) => {
+const EventPage: PageWithLayout<EventPageProps> = (props) => {
     const { orgId, eventId } = props;
     const eventQuery = useQuery(['event', eventId], getEvent(orgId, eventId));
     const orgQuery = useQuery(['org', orgId], getOrg(orgId));
@@ -95,12 +94,12 @@ const OrgEventPage: PageWithLayout<OrgEventPageProps> = (props) => {
             onSignup={ onSignup }
             onUndoSignup={ onUndoSignup }
             org={ org }
-            response={ response } 
+            response={ response }
         />
     );
 };
 
-OrgEventPage.getLayout = function getLayout(page, props) {
+EventPage.getLayout = function getLayout(page, props) {
     return (
         <DefaultOrgLayout orgId={ props.orgId as string }>
             { page }
@@ -108,4 +107,4 @@ OrgEventPage.getLayout = function getLayout(page, props) {
     );
 };
 
-export default OrgEventPage;
+export default EventPage;

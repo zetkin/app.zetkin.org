@@ -32,12 +32,12 @@ export const getServerSideProps : GetServerSideProps = scaffold(async (context) 
     }
 });
 
-type OrgSurveyPageProps = {
-    surId: string;
+type SurveyPageProps = {
     orgId: string;
+    surId: string;
 };
 
-const OrgSurveyPage : PageWithLayout<OrgSurveyPageProps> = (props) => {
+const SurveyPage : PageWithLayout<SurveyPageProps> = (props) => {
     const { surId, orgId } = props;
     const surveyQuery = useQuery(['survey', surId], getSurvey(orgId, surId));
     const orgQuery = useQuery(['org', orgId], getOrg(orgId));
@@ -50,7 +50,7 @@ const OrgSurveyPage : PageWithLayout<OrgSurveyPageProps> = (props) => {
     );
 };
 
-OrgSurveyPage.getLayout = function getLayout(page, props) {
+SurveyPage.getLayout = function getLayout(page, props) {
     return (
         <DefaultOrgLayout orgId={ props.orgId as string }>
             { page }
@@ -58,4 +58,4 @@ OrgSurveyPage.getLayout = function getLayout(page, props) {
     );
 };
 
-export default OrgSurveyPage;
+export default SurveyPage;

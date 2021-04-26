@@ -7,7 +7,7 @@ describe('/o/[orgId]/campaigns/[campId]', () => {
 
     it('contains campaign events', () => {
         cy.visit('/o/1/campaigns/2');
-        cy.get('[data-test="event"]').should('be.visible');
+        cy.get('[data-testid="event"]').should('be.visible');
     });
 });
 

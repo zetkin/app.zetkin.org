@@ -3,7 +3,7 @@ import { Heading } from '@adobe/react-spectrum';
 import { FormattedMessage as Msg } from 'react-intl';
 
 import { scaffold } from '../utils/next';
-import { ZetkinUser } from '../interfaces/ZetkinUser';
+import { ZetkinUser } from '../types/zetkin';
 
 const scaffoldOptions = {
     localeScope: ['pages.my'],
