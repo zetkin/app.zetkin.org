@@ -45,8 +45,10 @@ interface ScaffoldOptions {
     localeScope?: string[];
 }
 
-const hasProps = (result : any) : result is ResultWithProps => {
-    return (result as ResultWithProps).props !== undefined;
+const hasProps = (result: any): result is ResultWithProps => {
+    const is404: boolean = Object.prototype.hasOwnProperty.call((result as Record<string, unknown>), 'notFound');
+    const isRedirect: boolean = Object.prototype.hasOwnProperty.call((result as Record<string, unknown>), 'redirect');
+    return is404 || isRedirect ? false : true;
 };
 
 export const scaffold = (wrapped : ScaffoldedGetServerSideProps, options? : ScaffoldOptions) : GetServerSideProps<ScaffoldedProps> => {
@@ -102,7 +104,7 @@ export const scaffold = (wrapped : ScaffoldedGetServerSideProps, options? : Scaf
         const messages = await getMessages(lang, options?.localeScope ?? []);
 
         if (hasProps(result)) {
-            const scaffoldedProps : ScaffoldedProps = {
+            const scaffoldedProps: ScaffoldedProps = {
                 ...result.props,
                 dehydratedState: dehydrate(ctx.queryClient),
                 lang,
