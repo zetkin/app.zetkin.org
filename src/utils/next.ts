@@ -21,17 +21,17 @@ type RegularProps = {
 };
 
 export type ScaffoldedProps = RegularProps & {
+    dehydratedState: DehydratedState;
     lang: string;
     messages: Record<string, string>;
-    dehydratedState: DehydratedState;
     user: ZetkinUser | null;
 };
 
 export type ScaffoldedContext = GetServerSidePropsContext & {
-    apiFetch: (path : string, init? : RequestInit) => Promise<Response>;
+    apiFetch: (path: string, init?: RequestInit) => Promise<Response>;
+    queryClient: QueryClient;
     user: ZetkinUser | null;
     z: ZetkinZ;
-    queryClient: QueryClient;
 };
 
 export type ScaffoldedGetServerSideProps = (context: ScaffoldedContext) =>
