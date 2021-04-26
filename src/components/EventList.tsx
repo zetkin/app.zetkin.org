@@ -11,6 +11,8 @@ import {
     FormattedMessage as Msg,
 } from 'react-intl';
 
+import SignupDialogTrigger from './SignupDialog';
+import { useUser } from '../hooks';
 import { ZetkinEvent } from '../interfaces/ZetkinEvent';
 import { ZetkinEventResponse } from '../types/zetkin';
 import { ZetkinOrganization } from '../interfaces/ZetkinOrganization';
@@ -64,7 +66,7 @@ interface EventListItemProps {
 }
 
 const EventListItem = ({ event, response, onSignup, onUndoSignup, org }: EventListItemProps): JSX.Element => {
-
+    const user = useUser();
     return (
         <Flex data-test="event" direction="column" margin="size-200">
             <View data-test="event-title">
@@ -93,7 +95,7 @@ const EventListItem = ({ event, response, onSignup, onUndoSignup, org }: EventLi
                 />
             </View>
             <View data-test="location-title">{ event.location.title }</View>
-            { response ? (
+            { user ? response ? (
                 <Button
                     data-test="event-response-button"
                     marginTop="size-50"
@@ -109,7 +111,7 @@ const EventListItem = ({ event, response, onSignup, onUndoSignup, org }: EventLi
                     variant="cta">
                     <Msg id="misc.eventList.signup" />
                 </Button>
-            ) }
+            ) : <SignupDialogTrigger /> }
             <NextLink href={ `/o/${org.id}/events/${ event.id }` }>
                 <a>
                     <Button marginTop="size-50" variant="cta">

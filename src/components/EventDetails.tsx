@@ -19,6 +19,8 @@ import {
     FormattedMessage as Msg,
 } from 'react-intl';
 
+import SignupDialog from './SignupDialog';
+import { useUser } from '../hooks';
 import { ZetkinEvent } from '../interfaces/ZetkinEvent';
 import { ZetkinEventResponse } from '../types/zetkin';
 import { ZetkinOrganization } from '../interfaces/ZetkinOrganization';
@@ -32,6 +34,8 @@ interface EventDetailsProps {
 }
 
 const EventDetails = ({ event, org, onSignup, onUndoSignup, response } : EventDetailsProps) : JSX.Element => {
+    const user = useUser();
+
     return (
         <>
             <Header marginBottom="size-300">
@@ -108,7 +112,7 @@ const EventDetails = ({ event, org, onSignup, onUndoSignup, response } : EventDe
                 marginTop="size-200"
                 position="absolute"
                 right="size-200">
-                { response ? (
+                { user ? response ? (
                     <Button
                         data-test="event-response-button"
                         onPress={ () => onUndoSignup(event.id, org.id) }
@@ -124,8 +128,9 @@ const EventDetails = ({ event, org, onSignup, onUndoSignup, response } : EventDe
                         width="100%">
                         <Msg id="pages.orgEvent.actions.signup" />
                     </Button>
-                ) }
+                ) : <SignupDialog /> }
             </View>
+            
         </>
     );
 };

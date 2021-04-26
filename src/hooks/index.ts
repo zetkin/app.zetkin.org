@@ -7,7 +7,7 @@ import putEventResponse from '../fetching/putEventResponse';
 import { ZetkinEventResponse } from '../types/zetkin';
 import { ZetkinUser } from '../interfaces/ZetkinUser';
 
-export const UserContext = React.createContext(null);
+export const UserContext = React.createContext<ZetkinUser | null>(null);
 
 export const useUser = () : ZetkinUser | null => {
     return React.useContext(UserContext);
