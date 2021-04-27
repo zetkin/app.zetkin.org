@@ -1,7 +1,6 @@
-import { dehydrate } from 'react-query/hydration';
 import { Flex } from '@adobe/react-spectrum';
 import { GetServerSideProps } from 'next';
-import { QueryClient, useQuery } from 'react-query';
+import { useQuery } from 'react-query';
 
 import EventList from '../../../components/EventList';
 import getEventResponses from '../../../fetching/getEventResponses';
@@ -21,25 +20,23 @@ const scaffoldOptions = {
 };
 
 export const getServerSideProps : GetServerSideProps = scaffold(async (context) => {
-    const queryClient = new QueryClient();
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const { orgId } = context.params!;
     const { user } = context;
 
-    await queryClient.prefetchQuery('events', getEvents(orgId as string, context.apiFetch));
-    await queryClient.prefetchQuery(['org', orgId], getOrg(orgId as string, context.apiFetch));
+    await context.queryClient.prefetchQuery('events', getEvents(orgId as string, context.apiFetch));
+    await context.queryClient.prefetchQuery(['org', orgId], getOrg(orgId as string, context.apiFetch));
 
     if (user) {
-        await queryClient.prefetchQuery('eventResponses', getEventResponses(context.apiFetch));
+        await context.queryClient.prefetchQuery('eventResponses', getEventResponses(context.apiFetch));
     }
 
-    const eventsState = queryClient.getQueryState('events');
-    const orgState = queryClient.getQueryState(['org', orgId]);
+    const eventsState = context.queryClient.getQueryState('events');
+    const orgState = context.queryClient.getQueryState(['org', orgId]);
 
     if (eventsState?.status === 'success' && orgState?.status === 'success') {
         return {
             props: {
-                dehydratedState: dehydrate(queryClient),
                 orgId,
             },
         };

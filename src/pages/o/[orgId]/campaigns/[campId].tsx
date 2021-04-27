@@ -1,10 +1,9 @@
-import { dehydrate } from 'react-query/hydration';
-import EventList from '../../../../components/EventList';
 import { GetServerSideProps } from 'next';
+import { useQuery } from 'react-query';
 import { Flex, Heading, Text } from '@adobe/react-spectrum';
-import { QueryClient, useQuery } from 'react-query';
 
 import DefaultOrgLayout from '../../../../components/layout/DefaultOrgLayout';
+import EventList from '../../../../components/EventList';
 import getCampaign from '../../../../fetching/getCampaign';
 import getCampaignEvents from '../../../../fetching/getCampaignEvents';
 import getOrg from '../../../../fetching/getOrg';
@@ -13,23 +12,21 @@ import { scaffold } from '../../../../utils/next';
 import { useEventResponses } from '../../../../hooks';
 
 export const getServerSideProps : GetServerSideProps = scaffold(async (context) => {
-    const queryClient = new QueryClient();
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const { campId, orgId } = context.params!;
 
-    await queryClient.prefetchQuery(['campaign', campId], getCampaign(orgId as string, campId as string));
-    await queryClient.prefetchQuery(['org', orgId], getOrg(orgId as string));
-    await queryClient.prefetchQuery(['campaignEvents', campId], getCampaignEvents(orgId as string, campId as string));
+    await context.queryClient.prefetchQuery(['campaign', campId], getCampaign(orgId as string, campId as string));
+    await context.queryClient.prefetchQuery(['org', orgId], getOrg(orgId as string));
+    await context.queryClient.prefetchQuery(['campaignEvents', campId], getCampaignEvents(orgId as string, campId as string));
 
-    const campaignState = queryClient.getQueryState(['campaign', campId]);
-    const orgState = queryClient.getQueryState(['org', orgId]);
-    const campaignEvents = queryClient.getQueryState(['campaignEvents', campId]);
+    const campaignState = context.queryClient.getQueryState(['campaign', campId]);
+    const orgState = context.queryClient.getQueryState(['org', orgId]);
+    const campaignEvents = context.queryClient.getQueryState(['campaignEvents', campId]);
 
     if (campaignEvents?.status === 'success' && campaignState?.status === 'success' && orgState?.status === 'success') {
         return {
             props: {
                 campId,
-                dehydratedState: dehydrate(queryClient),
                 orgId,
             },
         };

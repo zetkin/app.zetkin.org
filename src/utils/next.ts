@@ -1,6 +1,8 @@
 import apiUrl from './apiUrl';
 import { applySession } from 'next-session';
 import Negotiator from 'negotiator';
+import { QueryClient } from 'react-query';
+import { dehydrate, DehydratedState } from 'react-query/hydration';
 import { GetServerSideProps, GetServerSidePropsContext, GetServerSidePropsResult } from 'next';
 
 import { AppSession } from '../types';
@@ -19,13 +21,15 @@ type RegularProps = {
 };
 
 export type ScaffoldedProps = RegularProps & {
+    dehydratedState: DehydratedState;
     lang: string;
-    messages: Record<string,string>;
+    messages: Record<string, string>;
     user: ZetkinUser | null;
 };
 
 export type ScaffoldedContext = GetServerSidePropsContext & {
-    apiFetch: (path : string, init? : RequestInit) => Promise<Response>;
+    apiFetch: (path: string, init?: RequestInit) => Promise<Response>;
+    queryClient: QueryClient;
     user: ZetkinUser | null;
     z: ZetkinZ;
 };
@@ -43,13 +47,22 @@ interface ScaffoldOptions {
     localeScope?: string[];
 }
 
-const hasProps = (result : any) : result is ResultWithProps => {
-    return (result as ResultWithProps).props !== undefined;
+const hasProps = (result: any): result is ResultWithProps => {
+    const resultObj = result as Record<string, unknown>;
+    if (resultObj.notFound) {
+        return false;
+    }
+    if (resultObj.redirect) {
+        return false;
+    }
+    return true;
 };
 
 export const scaffold = (wrapped : ScaffoldedGetServerSideProps, options? : ScaffoldOptions) : GetServerSideProps<ScaffoldedProps> => {
     const getServerSideProps : GetServerSideProps<ScaffoldedProps> = async (contextFromNext : GetServerSidePropsContext) => {
         const ctx = contextFromNext as ScaffoldedContext;
+
+        ctx.queryClient = new QueryClient();
 
         ctx.apiFetch = (path, init?) => {
             return fetch(apiUrl(path), {
@@ -115,7 +128,7 @@ export const scaffold = (wrapped : ScaffoldedGetServerSideProps, options? : Scaf
             }
         }
 
-        const result = await wrapped(ctx);
+        const result = await wrapped(ctx) || {};
 
         // Figure out browser's preferred language
         const negotiator = new Negotiator(contextFromNext.req);
@@ -125,8 +138,9 @@ export const scaffold = (wrapped : ScaffoldedGetServerSideProps, options? : Scaf
         const messages = await getMessages(lang, options?.localeScope ?? []);
 
         if (hasProps(result)) {
-            const scaffoldedProps : ScaffoldedProps = {
+            const scaffoldedProps: ScaffoldedProps = {
                 ...result.props,
+                dehydratedState: dehydrate(ctx.queryClient),
                 lang,
                 messages,
                 user: ctx.user,

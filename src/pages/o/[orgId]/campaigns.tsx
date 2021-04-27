@@ -1,8 +1,7 @@
-import { dehydrate } from 'react-query/hydration';
 import { GetServerSideProps } from 'next';
 import { Heading } from '@adobe/react-spectrum';
 import { FormattedMessage as Msg } from 'react-intl';
-import { QueryClient, useQuery } from 'react-query';
+import { useQuery } from 'react-query';
 
 import getCampaigns from '../../../fetching/getCampaigns';
 import getOrg from '../../../fetching/getOrg';
@@ -19,20 +18,18 @@ const scaffoldOptions = {
 };
 
 export const getServerSideProps : GetServerSideProps = scaffold(async (context) => {
-    const queryClient = new QueryClient();
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const { orgId } = context.params!;
 
-    await queryClient.prefetchQuery(['campaigns', orgId], getCampaigns(orgId as string));
-    await queryClient.prefetchQuery(['org', orgId], getOrg(orgId as string));
+    await context.queryClient.prefetchQuery(['campaigns', orgId], getCampaigns(orgId as string));
+    await context.queryClient.prefetchQuery(['org', orgId], getOrg(orgId as string));
 
-    const campaignsState = queryClient.getQueryState(['campaigns', orgId]);
-    const orgState = queryClient.getQueryState(['org', orgId]);
+    const campaignsState = context.queryClient.getQueryState(['campaigns', orgId]);
+    const orgState = context.queryClient.getQueryState(['org', orgId]);
 
     if (campaignsState?.status === 'success' && orgState?.status === 'success') {
         return {
             props: {
-                dehydratedState: dehydrate(queryClient),
                 orgId,
             },
         };
