@@ -29,6 +29,10 @@ export interface ZetkinEvent {
     location: { title: string };
     start_time: string;
     title?: string;
+    organization?: {
+        id: number;
+        title: string;
+    };
 }
 
 export interface ZetkinUser {
