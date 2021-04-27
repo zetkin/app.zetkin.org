@@ -1,9 +1,11 @@
 import EventList from './EventList';
 import { mountWithProviders } from '../utils/testing';
 import { UserContext } from '../hooks';
-import { ZetkinEvent } from '../interfaces/ZetkinEvent';
-import { ZetkinEventResponse } from '../types/zetkin';
-import { ZetkinOrganization } from '../interfaces/ZetkinOrganization';
+import {
+    ZetkinEvent,
+    ZetkinEventResponse,
+    ZetkinOrganization,
+} from '../types/zetkin';
 
 describe('EventList', () => {
     let dummyOrg : ZetkinOrganization;
@@ -44,14 +46,14 @@ describe('EventList', () => {
             />,
         );
 
-        cy.get('[data-test="event"]').each((item) => {
+        cy.get('[data-testid="event"]').each((item) => {
             cy.wrap(item)
-                .get('[data-test="event-title"]').should('be.visible')
-                .get('[data-test="org-title"]').should('be.visible')
-                .get('[data-test="campaign-title"]').should('be.visible')
-                .get('[data-test="start-time"]').should('be.visible')
-                .get('[data-test="end-time"]').should('be.visible')
-                .get('[data-test="location-title"]').should('be.visible');
+                .get('[data-testid="event-title"]').should('be.visible')
+                .get('[data-testid="org-title"]').should('be.visible')
+                .get('[data-testid="campaign-title"]').should('be.visible')
+                .get('[data-testid="start-time"]').should('be.visible')
+                .get('[data-testid="end-time"]').should('be.visible')
+                .get('[data-testid="location-title"]').should('be.visible');
         });
     });
 
@@ -68,7 +70,7 @@ describe('EventList', () => {
             />,
         );
 
-        cy.get('[data-test="event"]')
+        cy.get('[data-testid="event"]')
             .should('contain', dummyEvents[0].activity.title)
             .should('not.contain', 'undefined');
     });

@@ -23,7 +23,7 @@ const SignupDialogTrigger = (): JSX.Element => {
                 <Dialog size="L">
                     <Heading>
                         <Msg id="misc.signupDialog.heading" />
-                    </Heading>                       
+                    </Heading>
                     <Divider />
                     <Content>
                         <Content marginBottom="size-400">
@@ -53,7 +53,7 @@ const SignupDialogTrigger = (): JSX.Element => {
                             </Flex>
                         </Flex>
                     </Content>
-                    <ButtonGroup>        
+                    <ButtonGroup>
                         <Button aria-label="close" data-test="close-button" onPress={ close } variant="negative">
                             <Msg id="misc.signupDialog.actions.cancel" />
                         </Button>

@@ -9,9 +9,9 @@ describe('/o/[orgId]/events/[eventId]', () => {
 
     it('contains non-interactive event content', () => {
         cy.visit('/o/1/events/25');
-        cy.get('[data-test="event-title"]').should('be.visible');
-        cy.get('[data-test="duration"]').should('be.visible');
-        cy.get('[data-test="location"]').should('be.visible');
+        cy.get('[data-testid="event-title"]').should('be.visible');
+        cy.get('[data-testid="duration"]').should('be.visible');
+        cy.get('[data-testid="location"]').should('be.visible');
     });
 
     it('contains clickable org name that leads to org page', () => {

@@ -5,7 +5,7 @@ import { FormattedMessage as Msg } from 'react-intl';
 import MyHomeLayout from '../../components/layout/MyHomeLayout';
 import { PageWithLayout } from '../../types';
 import { scaffold } from '../../utils/next';
-import { ZetkinUser } from '../../interfaces/ZetkinUser';
+import { ZetkinUser } from '../../types/zetkin';
 
 const scaffoldOptions = {
     authLevelRequired: 1,

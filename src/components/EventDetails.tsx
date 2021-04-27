@@ -21,9 +21,11 @@ import {
 
 import SignupDialog from './SignupDialog';
 import { useUser } from '../hooks';
-import { ZetkinEvent } from '../interfaces/ZetkinEvent';
-import { ZetkinEventResponse } from '../types/zetkin';
-import { ZetkinOrganization } from '../interfaces/ZetkinOrganization';
+import {
+    ZetkinEvent,
+    ZetkinEventResponse,
+    ZetkinOrganization,
+} from '../types/zetkin';
 
 interface EventDetailsProps {
     event: ZetkinEvent;
@@ -47,7 +49,7 @@ const EventDetails = ({ event, org, onSignup, onUndoSignup, response } : EventDe
                     width="100%"
                 />
                 <Heading
-                    data-test="event-title"
+                    data-testid="event-title"
                     level={ 1 }
                     marginBottom="size-50">
                     { event.title ? event.title : event.activity.title }
@@ -55,7 +57,7 @@ const EventDetails = ({ event, org, onSignup, onUndoSignup, response } : EventDe
                 <Link>
                     <NextLink
                         href={ `/o/${org.id}` }>
-                        <a data-test="org-title">{ org.title }</a>
+                        <a data-testid="org-title">{ org.title }</a>
                     </NextLink>
                 </Link>
             </Header>
@@ -64,17 +66,17 @@ const EventDetails = ({ event, org, onSignup, onUndoSignup, response } : EventDe
                 <Link>
                     <NextLink
                         href={ `/o/${org.id}/campaigns/${event.campaign.id}` }>
-                        <a data-test="campaign-title">{ event.campaign.title } </a>
+                        <a data-testid="campaign-title">{ event.campaign.title } </a>
                     </NextLink>
                 </Link>
             </Flex>
             <Flex
                 alignItems="center"
-                data-test="duration"
+                data-testid="duration"
                 marginBottom="size-100">
                 <Calendar marginEnd="size-100" size="S" />
                 <Flex direction="column">
-                    <Text data-test="event-dates">
+                    <Text data-testid="event-dates">
                         <FormattedDate
                             day="2-digit"
                             month="long"
@@ -87,7 +89,7 @@ const EventDetails = ({ event, org, onSignup, onUndoSignup, response } : EventDe
                             value={ Date.parse(event.end_time) }
                         />
                     </Text>
-                    <Text data-test="event-times">
+                    <Text data-testid="event-times">
                         <FormattedTime
                             value={ Date.parse(event.start_time) }
                         />
@@ -100,10 +102,10 @@ const EventDetails = ({ event, org, onSignup, onUndoSignup, response } : EventDe
             </Flex>
             <Flex marginBottom="size-300">
                 <Location marginEnd="size-100" size="S" />
-                <Text data-test="location">{ event.location.title }</Text>
+                <Text data-testid="location">{ event.location.title }</Text>
             </Flex>
             <Divider />
-            <Text data-test="info-text" marginY="size-300">
+            <Text data-testid="info-text" marginY="size-300">
                 { event.info_text }
             </Text>
             <View
@@ -114,7 +116,7 @@ const EventDetails = ({ event, org, onSignup, onUndoSignup, response } : EventDe
                 right="size-200">
                 { user ? response ? (
                     <Button
-                        data-test="event-response-button"
+                        data-testid="event-response-button"
                         onPress={ () => onUndoSignup(event.id, org.id) }
                         variant="cta"
                         width="100%">
@@ -122,7 +124,7 @@ const EventDetails = ({ event, org, onSignup, onUndoSignup, response } : EventDe
                     </Button>
                 ) : (
                     <Button
-                        data-test="event-response-button"
+                        data-testid="event-response-button"
                         onPress={ () => onSignup(event.id, org.id) }
                         variant="cta"
                         width="100%">
@@ -130,7 +132,6 @@ const EventDetails = ({ event, org, onSignup, onUndoSignup, response } : EventDe
                     </Button>
                 ) : <SignupDialog /> }
             </View>
-            
         </>
     );
 };

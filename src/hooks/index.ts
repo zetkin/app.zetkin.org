@@ -4,8 +4,7 @@ import { useMutation, useQuery, useQueryClient } from 'react-query';
 import deleteEventResponse from '../fetching/deleteEventResponse';
 import getEventResponses from '../fetching/getEventResponses';
 import putEventResponse from '../fetching/putEventResponse';
-import { ZetkinEventResponse } from '../types/zetkin';
-import { ZetkinUser } from '../interfaces/ZetkinUser';
+import { ZetkinEventResponse, ZetkinUser } from '../types/zetkin';
 
 export const UserContext = React.createContext<ZetkinUser | null>(null);
 

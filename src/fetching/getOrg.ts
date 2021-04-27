@@ -1,5 +1,5 @@
 import { defaultFetch } from '.';
-import { ZetkinOrganization } from '../interfaces/ZetkinOrganization';
+import { ZetkinOrganization } from '../types/zetkin';
 
 export default function getOrg(orgId : string, fetch = defaultFetch) {
     return async () : Promise<ZetkinOrganization> => {

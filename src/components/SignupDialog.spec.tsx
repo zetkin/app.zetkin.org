@@ -16,7 +16,7 @@ describe('SignupDialog', () => {
                 cy.get('[data-test="register-button"]').should('be.visible');
                 cy.get('[data-test="login-button"]').should('be.visible');
                 cy.get('[data-test="close-button"]').should('be.visible');
-            });   
+            });
     });
 
     it('should close on clicking the close button', () => {
@@ -30,6 +30,6 @@ describe('SignupDialog', () => {
                     .click().then(() => {
                         cy.get('[data-test="register-button"]').should('not.exist');
                     });
-            });   
+            });
     });
 });
