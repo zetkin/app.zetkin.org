@@ -65,7 +65,7 @@ interface EventListItemProps {
     onUndoSignup: (eventId: number, orgId: number) => void;
 }
 
-const EventListItem = ({ event, response, onSignup, onUndoSignup, org }: EventListItemProps): JSX.Element => {
+export const EventListItem = ({ event, response, onSignup, onUndoSignup, org }: EventListItemProps): JSX.Element => {
 
     return (
         <Flex data-testid="event" direction="column" margin="size-200">
