@@ -12,7 +12,7 @@ import { useEventResponses } from '../../../../hooks';
 import { ZetkinEvent, ZetkinOrganization } from '../../../../types/zetkin';
 
 const scaffoldOptions = {
-    localeScope: ['misc.publicHeader', 'pages.orgEvent'],
+    localeScope: ['misc.publicHeader', 'pages.orgEvent', 'misc.signupDialog'],
 };
 
 export const getServerSideProps: GetServerSideProps = scaffold(

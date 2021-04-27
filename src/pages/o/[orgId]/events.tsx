@@ -16,6 +16,7 @@ const scaffoldOptions = {
         'layout.org',
         'misc.eventList',
         'misc.publicHeader',
+        'misc.signupDialog',
     ],
 };
 

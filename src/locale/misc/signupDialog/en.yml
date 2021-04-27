@@ -1,0 +1,8 @@
+heading: Almost done!
+cta: Great that you want to help. To sign up, you need log in with a Zetkin user account.
+registerCopy: First time using Zetkin? Register a new account
+loginCopy: If you already have an account, log in and register to the event directly.
+actions:
+    register: Register
+    login: Log in
+    cancel: Cancel

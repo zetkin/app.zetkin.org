@@ -1,5 +1,6 @@
 import EventDetails from './EventDetails';
 import { mountWithProviders } from '../utils/testing';
+import { UserContext } from '../hooks';
 import {
     ZetkinEvent,
     ZetkinEventResponse,
@@ -10,6 +11,12 @@ describe('EventDetails', () => {
     let dummyOrg : ZetkinOrganization;
     let dummyEvent : ZetkinEvent;
     let dummyEventResponse : ZetkinEventResponse | undefined;
+    const dummyUser = {
+        first_name: 'Firstname',
+        id: 100,
+        last_name: 'Lastname',
+        username: 'Username',
+    };
 
     beforeEach(()=> {
         cy.fixture('dummyOrg.json')
@@ -106,13 +113,15 @@ describe('EventDetails', () => {
     it('contains a sign-up button for the event', () => {
         const spyOnSignup = cy.spy();
         mountWithProviders(
-            <EventDetails
-                event={ dummyEvent }
-                onSignup={ spyOnSignup }
-                onUndoSignup={ () => null }
-                org={ dummyOrg }
-                response={ undefined }
-            />,
+            <UserContext.Provider value={ dummyUser }>
+                <EventDetails
+                    event={ dummyEvent }
+                    onSignup={ spyOnSignup }
+                    onUndoSignup={ () => null }
+                    org={ dummyOrg }
+                    response={ undefined }
+                />
+            </UserContext.Provider>,
         );
 
         cy.findByText('pages.orgEvent.actions.signup')
@@ -123,17 +132,19 @@ describe('EventDetails', () => {
             });
     });
 
-    it('contains a cancel sign-up button for the event if there is no response', () => {
+    it('contains a cancel sign-up button for the event if already signed up', () => {
         const spyOnUndoSignup = cy.spy();
 
         mountWithProviders(
-            <EventDetails
-                event={ dummyEvent }
-                onSignup={ () => null }
-                onUndoSignup={ spyOnUndoSignup }
-                org={ dummyOrg }
-                response={ dummyEventResponse }
-            />,
+            <UserContext.Provider value={ dummyUser }>
+                <EventDetails
+                    event={ dummyEvent }
+                    onSignup={ () => null }
+                    onUndoSignup={ spyOnUndoSignup }
+                    org={ dummyOrg }
+                    response={ dummyEventResponse }
+                />
+            </UserContext.Provider>,
         );
 
         cy.findByText('pages.orgEvent.actions.undoSignup')
@@ -142,5 +153,22 @@ describe('EventDetails', () => {
             .then(() => {
                 expect(spyOnUndoSignup).to.be.calledOnceWith(dummyEvent.id, dummyOrg.id);
             });
+    });
+
+    it('contains a sign-up button for the event when not logged in', () => {
+        mountWithProviders(
+            <UserContext.Provider value={ null }>
+                <EventDetails
+                    event={ dummyEvent }
+                    onSignup={ () => null }
+                    onUndoSignup={ () => null }
+                    org={ dummyOrg }
+                    response={ undefined }
+                />
+            </UserContext.Provider>,
+        );
+
+        cy.get('[data-test="dialog-trigger-button"]').should('exist');
+        cy.get('[data-test="signup-button"]').should('not.exist');
     });
 });
