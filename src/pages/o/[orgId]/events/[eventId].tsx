@@ -1,6 +1,5 @@
-import { dehydrate } from 'react-query/hydration';
 import { GetServerSideProps } from 'next';
-import { QueryClient, useQuery } from 'react-query';
+import { useQuery } from 'react-query';
 
 import DefaultOrgLayout from '../../../../components/layout/DefaultOrgLayout';
 import EventDetails from '../../../../components/EventDetails';
@@ -18,22 +17,21 @@ const scaffoldOptions = {
 
 export const getServerSideProps: GetServerSideProps = scaffold(
     async (context) => {
-        const queryClient = new QueryClient();
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const { orgId, eventId } = context.params!;
         const { user } = context;
 
-        await queryClient.prefetchQuery(
+        await context.queryClient.prefetchQuery(
             ['event', eventId],
             getEvent(orgId as string, eventId as string, context.apiFetch),
         );
-        await queryClient.prefetchQuery(
+        await context.queryClient.prefetchQuery(
             ['org', orgId],
             getOrg(orgId as string, context.apiFetch),
         );
 
         if (user) {
-            await queryClient.prefetchQuery(
+            await context.queryClient.prefetchQuery(
                 'eventResponses',
                 getEventResponses(context.apiFetch),
             );
@@ -42,8 +40,8 @@ export const getServerSideProps: GetServerSideProps = scaffold(
             null;
         }
 
-        const eventState = queryClient.getQueryState(['event', eventId]);
-        const orgState = queryClient.getQueryState(['org', orgId]);
+        const eventState = context.queryClient.getQueryState(['event', eventId]);
+        const orgState = context.queryClient.getQueryState(['org', orgId]);
 
         if (
             eventState?.status === 'success' &&
@@ -51,7 +49,6 @@ export const getServerSideProps: GetServerSideProps = scaffold(
         ) {
             return {
                 props: {
-                    dehydratedState: dehydrate(queryClient),
                     eventId,
                     orgId,
                 },
