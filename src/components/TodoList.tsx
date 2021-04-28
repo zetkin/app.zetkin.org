@@ -35,21 +35,25 @@ export default function TodoList ({ eventResponses, onSignup, onUndoSignup, todo
                 { todoEvents?.map((todo) => {
                     const response = eventResponses?.find(response => response.action_id === todo.event.id);
                     return (
-                        <EventListItem
-                            key={ todo.event.id }
-                            activityTitle={ todo.event.activity.title }
-                            campaignTitle={ todo.event.campaign.title }
-                            endTime={ todo.event.end_time }
-                            eventId={ todo.event.id }
-                            location={ todo.event.location.title }
-                            onSignup={ onSignup }
-                            onUndoSignup={ onUndoSignup }
-                            orgId={ todo.org.id }
-                            orgTitle={ todo.org.title }
-                            response={ response }
-                            startTime={ todo.event.start_time }
-                            title={ todo.event.title }
-                        />
+                        <>
+                            { response ? (
+                                <EventListItem
+                                    key={ todo.event.id }
+                                    activityTitle={ todo.event.activity.title }
+                                    campaignTitle={ todo.event.campaign.title }
+                                    endTime={ todo.event.end_time }
+                                    eventId={ todo.event.id }
+                                    location={ todo.event.location.title }
+                                    onSignup={ onSignup }
+                                    onUndoSignup={ onUndoSignup }
+                                    orgId={ todo.org.id }
+                                    orgTitle={ todo.org.title }
+                                    response={ response }
+                                    startTime={ todo.event.start_time }
+                                    title={ todo.event.title }
+                                />
+                            ) : null }
+                        </>
                     );
                 }) }
             </Flex>
