@@ -1,13 +1,8 @@
 import { defaultFetch } from '.';
-import { ZetkinEvent, ZetkinEventResponse, ZetkinOrganization } from '../types/zetkin';
-
-interface TodoEvent {
-    event: ZetkinEvent;
-    org: ZetkinOrganization;
-}
+import { ZetkinEventResponse, ZetkinTodoEvent } from '../types/zetkin';
 
 export default function getTodoEvents(fetch = defaultFetch) {
-    return async () : Promise<TodoEvent[]> => {
+    return async () : Promise<ZetkinTodoEvent[]> => {
 
         const membershipsRes = await fetch(`/users/me/memberships`);
         const membershipsData = await membershipsRes.json();

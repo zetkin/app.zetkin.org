@@ -15,6 +15,7 @@ const scaffoldOptions = {
     localeScope: [
         'layout.org',
         'misc.eventList',
+        'misc.eventListItem',
         'misc.publicHeader',
     ],
 };

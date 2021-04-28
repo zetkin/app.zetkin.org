@@ -48,3 +48,8 @@ export interface ZetkinSession {
     level: number;
     user: ZetkinUser;
 }
+
+export interface ZetkinTodoEvent {
+    event: ZetkinEvent;
+    org: ZetkinOrganization;
+}

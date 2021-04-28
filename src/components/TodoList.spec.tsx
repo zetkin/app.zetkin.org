@@ -1,24 +1,18 @@
-import EventList from './EventList';
 import { mountWithProviders } from '../utils/testing';
+import TodoList from './TodoList';
 import {
-    ZetkinEvent,
     ZetkinEventResponse,
-    ZetkinOrganization,
+    ZetkinTodoEvent,
 } from '../types/zetkin';
 
-describe('EventList', () => {
-    let dummyOrg : ZetkinOrganization;
-    let dummyEvents : ZetkinEvent[];
+describe('TodoList', () => {
+    let dummyTodoEvents : ZetkinTodoEvent[];
     let dummyEventResponses : ZetkinEventResponse[];
 
     beforeEach(()=> {
-        cy.fixture('dummyOrg.json')
-            .then((data : ZetkinOrganization) => {
-                dummyOrg = data;
-            });
-        cy.fixture('dummyEvents.json')
-            .then((data : {data: ZetkinEvent[]}) => {
-                dummyEvents = data.data;
+        cy.fixture('dummyTodoEvents.json')
+            .then((data : {data: ZetkinTodoEvent[]}) => {
+                dummyTodoEvents = data.data;
             });
         cy.fixture('dummyEventResponses.json')
             .then((data : {data: ZetkinEventResponse[]}) => {
@@ -28,12 +22,11 @@ describe('EventList', () => {
 
     it('contains data for each event', () => {
         mountWithProviders(
-            <EventList
+            <TodoList
                 eventResponses={ dummyEventResponses }
-                events={ dummyEvents }
                 onSignup={ () => null }
                 onUndoSignup={ () => null }
-                org={ dummyOrg }
+                todoEvents={ dummyTodoEvents }
             />,
         );
 
@@ -49,20 +42,19 @@ describe('EventList', () => {
     });
 
     it('contains an activity title instead of missing event title', () => {
-        dummyEvents[0].title = undefined;
+        dummyTodoEvents[0].event.title = undefined;
 
         mountWithProviders(
-            <EventList
+            <TodoList
                 eventResponses={ dummyEventResponses }
-                events={ dummyEvents }
                 onSignup={ () => null }
                 onUndoSignup={ () => null }
-                org={ dummyOrg }
+                todoEvents={ dummyTodoEvents }
             />,
         );
 
         cy.get('[data-testid="event"]')
-            .should('contain', dummyEvents[0].activity.title)
+            .should('contain', dummyTodoEvents[0].event.activity.title)
             .should('not.contain', 'undefined');
     });
 
@@ -70,12 +62,11 @@ describe('EventList', () => {
         const spyOnSignup = cy.spy();
 
         mountWithProviders(
-            <EventList
+            <TodoList
                 eventResponses={ dummyEventResponses }
-                events={ dummyEvents }
                 onSignup={ spyOnSignup }
                 onUndoSignup={ () => null }
-                org={ dummyOrg }
+                todoEvents={ dummyTodoEvents }
             />,
         );
 
@@ -89,12 +80,11 @@ describe('EventList', () => {
 
     it('contains a button for more info on each event', () => {
         mountWithProviders(
-            <EventList
+            <TodoList
                 eventResponses={ dummyEventResponses }
-                events={ dummyEvents }
                 onSignup={ () => null  }
                 onUndoSignup={ () => null  }
-                org={ dummyOrg }
+                todoEvents={ dummyTodoEvents }
             />,
         );
 
@@ -102,32 +92,30 @@ describe('EventList', () => {
     });
 
     it('shows a placeholder when the list is empty', () => {
-        dummyEvents = [];
+        dummyTodoEvents = [];
 
         mountWithProviders(
-            <EventList
+            <TodoList
                 eventResponses={ dummyEventResponses }
-                events={ dummyEvents }
                 onSignup={ () => null  }
                 onUndoSignup={ () => null  }
-                org={ dummyOrg }
+                todoEvents={ dummyTodoEvents }
             />,
         );
 
-        cy.contains('misc.eventListItem.placeholder');
+        cy.contains('misc.todoList.placeholder');
     });
 
     it('shows a placeholder when the list is undefined', () => {
         mountWithProviders(
-            <EventList
+            <TodoList
                 eventResponses={ dummyEventResponses }
-                events={ undefined }
                 onSignup={ () => null  }
                 onUndoSignup={ () => null  }
-                org={ dummyOrg }
+                todoEvents={ undefined }
             />,
         );
 
-        cy.contains('misc.eventListItem.placeholder');
+        cy.contains('misc.todoList.placeholder');
     });
 });

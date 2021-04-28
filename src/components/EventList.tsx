@@ -30,7 +30,7 @@ export default function EventList ({ eventResponses, events, onSignup, onUndoSig
     if (!events || events.length === 0) {
         return (
             <Text data-testid="no-events-placeholder">
-                <Msg id="misc.eventList.placeholder"/>
+                <Msg id="misc.eventListItem.placeholder"/>
             </Text>
         );
     }
@@ -65,7 +65,7 @@ interface EventListItemProps {
     onUndoSignup: (eventId: number, orgId: number) => void;
 }
 
-export const EventListItem = ({ event, response, onSignup, onUndoSignup, org }: EventListItemProps): JSX.Element => {
+const EventListItem = ({ event, response, onSignup, onUndoSignup, org }: EventListItemProps): JSX.Element => {
 
     return (
         <Flex data-testid="event" direction="column" margin="size-200">
@@ -101,7 +101,7 @@ export const EventListItem = ({ event, response, onSignup, onUndoSignup, org }: 
                     marginTop="size-50"
                     onPress={ () => onUndoSignup(event.id, org.id) }
                     variant="cta">
-                    <Msg id="misc.eventList.undoSignup" />
+                    <Msg id="misc.eventListItem.undoSignup" />
                 </Button>
             ) : (
                 <Button
@@ -109,13 +109,13 @@ export const EventListItem = ({ event, response, onSignup, onUndoSignup, org }: 
                     marginTop="size-50"
                     onPress={ () => onSignup(event.id, org.id) }
                     variant="cta">
-                    <Msg id="misc.eventList.signup" />
+                    <Msg id="misc.eventListItem.signup" />
                 </Button>
             ) }
             <NextLink href={ `/o/${org.id}/events/${ event.id }` }>
                 <a>
                     <Button marginTop="size-50" variant="cta">
-                        <Msg id="misc.eventList.moreInfo" />
+                        <Msg id="misc.eventListItem.moreInfo" />
                     </Button>
                 </a>
             </NextLink>
