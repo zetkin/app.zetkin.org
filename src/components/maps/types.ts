@@ -8,7 +8,9 @@ export interface MapMarker {
 }
 
 export interface MapProps {
+    height?: string | number;
     markers: MapMarker[];
+    width?: string | number;
 }
 
 export type MapComponent = FunctionComponent<MapProps>;

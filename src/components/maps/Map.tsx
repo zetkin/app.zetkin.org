@@ -5,7 +5,7 @@ const DynamicMap = dynamic(() => {
     return import('./BrowserMap');
 }, { ssr: false });
 
-export default function Map({ markers }: MapProps): JSX.Element {
+export default function Map({ height, markers , width }: MapProps): JSX.Element {
     const CastMap = DynamicMap as MapComponent;
-    return (<CastMap markers={ markers }/>);
+    return (<CastMap height={ height } markers={ markers } width={ width }/>);
 }

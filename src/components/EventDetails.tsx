@@ -108,7 +108,7 @@ const EventDetails = ({ event, org, onSignup, onUndoSignup, response } : EventDe
                 <Location marginEnd="size-100" size="S" />
                 <Text data-testid="location">{ event.location.title }</Text>
             </Flex>
-            <Map markers={ [ event.location ] } />
+            <Map height={ 500 } markers={ [event.location] }/>
             <Divider />
             <Text data-testid="info-text" marginY="size-300">
                 { event.info_text }
