@@ -113,12 +113,7 @@ const EventDetails = ({ event, org, onSignup, onUndoSignup, response } : EventDe
             <Text data-testid="info-text" marginY="size-300">
                 { event.info_text }
             </Text>
-            <View
-                bottom="size-200"
-                left="size-200"
-                marginTop="size-200"
-                position="absolute"
-                right="size-200">
+            <View>
                 { response ? (
                     <Button
                         data-testid="event-response-button"
