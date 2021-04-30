@@ -18,8 +18,8 @@ interface OrganizeSidebarProps {
 const OrganizeSidebar = ({ orgId  } : OrganizeSidebarProps) : JSX.Element =>{
     const router = useRouter();
     const key = router.pathname.split('[orgId]')[1];
-    
-    return ( 
+
+    return (
         <Flex direction="column" height="100%" justifyContent="space-between">
             <Flex direction="column">
                 <NextLink href={ `/organize/${orgId}` }>
@@ -29,13 +29,13 @@ const OrganizeSidebar = ({ orgId  } : OrganizeSidebarProps) : JSX.Element =>{
                 </NextLink>
                 <NextLink href={ `/organize/${orgId}/people` }>
                     <Button isDisabled={ key.startsWith('/people') } margin="size-100" variant="primary">
-                        <PeopleGroup aria-label="People" /> 
+                        <PeopleGroup aria-label="People" />
                     </Button>
                 </NextLink>
                 <NextLink href={ `/organize/${orgId}/area` }>
                     <Button isDisabled={ key.startsWith('/area') } margin="size-100" variant="primary">
                         <MapView aria-label="Areas" />
-                    </Button> 
+                    </Button>
                 </NextLink>
                 <NextLink href={ `/organize/${orgId}/projects/calendar` }>
                     <Button isDisabled={ key.startsWith('/projects') } margin="size-100" variant="primary">
@@ -43,15 +43,15 @@ const OrganizeSidebar = ({ orgId  } : OrganizeSidebarProps) : JSX.Element =>{
                     </Button>
                 </NextLink>
             </Flex>
-            <Flex direction="column">             
+            <Flex direction="column">
                 <Button margin="size-100" variant="secondary">
                     <Inbox aria-label="Inbox" />
-                </Button>              
+                </Button>
                 <Button margin="size-100" variant="secondary">
                     <User aria-label="User" />
                 </Button>
-            </Flex>          
-        </Flex> 
+            </Flex>
+        </Flex>
     );
 };
 

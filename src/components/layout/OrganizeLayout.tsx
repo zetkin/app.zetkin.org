@@ -10,10 +10,10 @@ interface OrganizeLayoutProps {
 
 const OrganizeLayout : FunctionComponent<OrganizeLayoutProps> = ({ children, orgId }) => {
     return (
-        <Flex>        
+        <Flex>
             <View backgroundColor="gray-600" height="100vh">
                 <OrganizeSidebar orgId={ orgId }  />
-            </View>   
+            </View>
             <View backgroundColor="gray-200" width="100%">
                 <View backgroundColor="gray-100" margin={ 0 }>
                     <Flex justifyContent="space-between">
@@ -24,7 +24,7 @@ const OrganizeLayout : FunctionComponent<OrganizeLayoutProps> = ({ children, org
                             search drawer goes here
                         </View>
                     </Flex>
-                </View>              
+                </View>
                 <View>
                     { children as JSX.Element }
                 </View>

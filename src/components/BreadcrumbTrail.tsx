@@ -6,8 +6,8 @@ import { useEffect, useState } from 'react';
 
 type Breadcrumb = {
     href: string;
-    labelMsg?: string;
     label?: string;
+    labelMsg?: string;
 }
 
 type QueryData = {[key: string]: string}
@@ -25,7 +25,7 @@ const BreadcrumbTrail = () : JSX.Element | null => {
     };
 
     useEffect(() => {
-        const params = { path: router.pathname, ...router.query };     
+        const params = { path: router.pathname, ...router.query };
         fetchBreadcrumbs(params);
     }, [router]);
 
@@ -40,7 +40,7 @@ const BreadcrumbTrail = () : JSX.Element | null => {
                         <a>
                             { crumb.labelMsg ? <Msg id={ crumb.labelMsg }/> :
                                 crumb.label }
-                            
+
                         </a>
                     </NextLink>
                 </Item>

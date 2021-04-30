@@ -18,7 +18,7 @@ const pathToCrumbs = (path: string, data: ReturnedData) => {
     const pathArray = path.split('/').slice(1);
     const matchedPath = path.match(regexp);
 
-    const realPath = pathArray.map((path) => {     
+    const realPath = pathArray.map((path) => {
         if (matchedPath) {
             return data[matchedPath[1]].id;
         }
@@ -57,9 +57,9 @@ const fetchData = async (query: QueryObject) => {
         const person = await fetch(
             apiUrl(`/orgs/${orgId}/people/${query.personId}`),
         ).then((res) => res.json());
-        data.personId = { 
+        data.personId = {
             id: person.data.id,
-            label: `${person.data.first_name} ${person.data.last_name}`, 
+            label: `${person.data.first_name} ${person.data.last_name}`,
         };
     }
 
