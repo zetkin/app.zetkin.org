@@ -75,6 +75,17 @@ describe('/o/[orgId]/events/[eventId]', () => {
             //TODO: Verify that API request is done corrently.
         });
     });
+
+    it('contains a map with marker that shows title of event when clicked', () => {
+        cy.visit('/o/1/events/25');
+        cy.waitUntilReactRendered();
+        cy.get('.leaflet-container').should('be.visible');
+        cy.get('.leaflet-marker-icon').should('be.visible').click().then(() => {
+            cy.get('.leaflet-popup-content')
+                .should('be.visible')
+                .should('contain.text', 'Haubtstrasse');
+        });
+    });
 });
 
 // Hack to flag for typescript as module
