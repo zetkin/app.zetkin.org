@@ -21,6 +21,8 @@ import {
 } from 'react-intl';
 
 import Map from './maps/Map';
+import SignupDialog from './SignupDialog';
+import { useUser } from '../hooks';
 import {
     ZetkinEvent,
     ZetkinEventResponse,
@@ -36,6 +38,8 @@ interface EventDetailsProps {
 }
 
 const EventDetails = ({ event, org, onSignup, onUndoSignup, response } : EventDetailsProps) : JSX.Element => {
+    const user = useUser();
+
     return (
         <>
             <Head>
@@ -114,7 +118,7 @@ const EventDetails = ({ event, org, onSignup, onUndoSignup, response } : EventDe
                 { event.info_text }
             </Text>
             <View>
-                { response ? (
+                { user ? response ? (
                     <Button
                         data-testid="event-response-button"
                         onPress={ () => onUndoSignup(event.id, org.id) }
@@ -130,7 +134,7 @@ const EventDetails = ({ event, org, onSignup, onUndoSignup, response } : EventDe
                         width="100%">
                         <Msg id="pages.orgEvent.actions.signup" />
                     </Button>
-                ) }
+                ) : <SignupDialog /> }
             </View>
         </>
     );
