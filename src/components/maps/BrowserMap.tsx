@@ -7,7 +7,7 @@ export default function BrowserMap({ height, markers, width }: MapProps): JSX.El
 
     const avgPos: [number, number] = [latSum/markers.length, lngSum/markers.length];
 
-    return (  
+    return (
         <MapContainer center={ avgPos } scrollWheelZoom={ false }
             style={{ height: height || '20rem', width: width || '100%' }} zoom={ 13 }>
             <TileLayer
