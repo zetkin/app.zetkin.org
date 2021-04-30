@@ -4,7 +4,7 @@ import { useQuery } from 'react-query';
 import { Flex, Heading, Text } from '@adobe/react-spectrum';
 
 import EventList from '../../components/EventList';
-import getEventResponses from '../../fetching/getEventResponses';
+import getBookedEvents from '../../fetching/getBookedEvents';
 import getTodoEvents from '../../fetching/getTodoEvents';
 import MyHomeLayout from '../../components/layout/MyHomeLayout';
 import { PageWithLayout } from '../../types';
@@ -23,15 +23,20 @@ const scaffoldOptions = {
 export const getServerSideProps : GetServerSideProps = scaffold(async (context) => {
     const { user } = context;
 
-    await context.queryClient.prefetchQuery('todoEvents', getTodoEvents(context.apiFetch));
-
-    const todoEventsState = context.queryClient.getQueryState('todoEvents');
+    let todoEventsState;
+    let bookedEventsState;
 
     if (user) {
-        await context.queryClient.prefetchQuery('eventResponses', getEventResponses(context.apiFetch));
+        await context.queryClient.prefetchQuery('todoEvents', getTodoEvents(context.apiFetch));
+        await context.queryClient.prefetchQuery('bookedEvents', getBookedEvents(context.apiFetch));
+
+        todoEventsState = context.queryClient.getQueryState('todoEvents');
+        bookedEventsState = context.queryClient.getQueryState('bookedEvents');
     }
 
-    if (todoEventsState?.status === 'success') {
+    if (todoEventsState?.status === 'success'
+        && bookedEventsState?.status === 'success') {
+
         return {
             props: {},
         };
@@ -45,6 +50,7 @@ export const getServerSideProps : GetServerSideProps = scaffold(async (context) 
 
 const MyTodoPage : PageWithLayout = () => {
     const todoEventsQuery = useQuery('todoEvents', getTodoEvents());
+    const bookedEventsQuery = useQuery('bookedEvents', getBookedEvents());
 
     const { onSignup, onUndoSignup } = useEventResponses();
 
@@ -63,6 +69,7 @@ const MyTodoPage : PageWithLayout = () => {
             </Heading>
             <Flex marginY="size-500">
                 <EventList
+                    bookedEvents={ bookedEventsQuery.data }
                     events={ todoEventsQuery.data }
                     onSignup={ onSignup }
                     onUndoSignup={ onUndoSignup }

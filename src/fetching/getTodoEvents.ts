@@ -12,18 +12,20 @@ export default function getTodoEvents(fetch = defaultFetch) {
 
         const todoEvents = [];
 
-        for (const mObj of membershipsData.data) {
-            const oEventsRes = await fetch(`/orgs/${mObj.organization.id}/actions`);
-            const oEventsData = await oEventsRes.json();
+        if (responsesData.data) {
+            for (const mObj of membershipsData.data) {
+                const oEventsRes = await fetch(`/orgs/${mObj.organization.id}/actions`);
+                const oEventsData = await oEventsRes.json();
 
-            const org = {
-                id: mObj.organization.id,
-                title: mObj.organization.title,
-            };
+                const org = {
+                    id: mObj.organization.id,
+                    title: mObj.organization.title,
+                };
 
-            for (const eObj of oEventsData.data) {
-                if (responsesData.data.find((r : ZetkinEventResponse) => r.action_id  === eObj.id)) {
-                    todoEvents.push({ ...eObj, organization: org });
+                for (const eObj of oEventsData.data) {
+                    if (responsesData.data.find((r : ZetkinEventResponse) => r.action_id  === eObj.id)) {
+                        todoEvents.push({ ...eObj, organization: org });
+                    }
                 }
             }
         }

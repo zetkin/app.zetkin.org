@@ -1,3 +1,4 @@
+import Checkmark from '@spectrum-icons/workflow/Checkmark';
 import NextLink from 'next/link';
 import {
     Button,
@@ -12,12 +13,14 @@ import {
 } from 'react-intl';
 
 import {
+    ZetkinBookedEvent,
     ZetkinEvent,
     ZetkinEventResponse,
     ZetkinOrganization,
 } from '../types/zetkin';
 
 interface EventListProps {
+    bookedEvents: ZetkinBookedEvent[] | undefined;
     events: ZetkinEvent[] | undefined;
     onSignup: (eventId: number, orgId: number) => void;
     onUndoSignup: (eventId: number, orgId: number) => void;
@@ -25,15 +28,7 @@ interface EventListProps {
     eventResponses?: ZetkinEventResponse[];
 }
 
-export default function EventList ({ eventResponses, events, onSignup, onUndoSignup, org } : EventListProps) : JSX.Element {
-    let todo : boolean;
-
-    if (!org) {
-        todo = true;
-    }
-    else {
-        todo = false;
-    }
+export default function EventList ({ bookedEvents, eventResponses, events, onSignup, onUndoSignup, org } : EventListProps) : JSX.Element {
 
     if (!events || events.length === 0) {
         return (
@@ -48,14 +43,15 @@ export default function EventList ({ eventResponses, events, onSignup, onUndoSig
             <Flex data-testid="event-list" direction="row" gap="100" wrap>
                 { events?.map((event) => {
                     const response = eventResponses?.find(response => response.action_id === event.id);
+                    const booked = bookedEvents?.find(booked => booked.id === event.id);
                     return (<EventListItem
                         key={ event.id }
+                        booked={ booked }
                         event={ event }
                         onSignup={ onSignup }
                         onUndoSignup={ onUndoSignup }
                         org={ org }
                         response={ response }
-                        todo={ todo }
                     />
                     );
                 })
@@ -67,19 +63,24 @@ export default function EventList ({ eventResponses, events, onSignup, onUndoSig
 }
 
 interface EventListItemProps {
+    booked: ZetkinBookedEvent | undefined;
     event: ZetkinEvent;
     onSignup: (eventId: number, orgId: number) => void;
     onUndoSignup: (eventId: number, orgId: number) => void;
     org?: ZetkinOrganization;
     response: ZetkinEventResponse | undefined;
-    todo: boolean;
 }
 
-const EventListItem = ({ event, response, onSignup, onUndoSignup, org, todo }: EventListItemProps): JSX.Element => {
+const EventListItem = ({ booked, event, response, onSignup, onUndoSignup, org }: EventListItemProps): JSX.Element => {
+    let todo : boolean;
 
-    if (org === undefined) {
+    if (!org) {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         org = event.organization!;
+        todo = true;
+    }
+    else {
+        todo = false;
     }
 
     return (
@@ -111,6 +112,7 @@ const EventListItem = ({ event, response, onSignup, onUndoSignup, org, todo }: E
             </View>
             <View data-testid="location-title">{ event.location.title }</View>
             <EventResponseButton
+                booked={ booked }
                 event={ event }
                 onSignup={ onSignup }
                 onUndoSignup={ onUndoSignup }
@@ -130,6 +132,7 @@ const EventListItem = ({ event, response, onSignup, onUndoSignup, org, todo }: E
 };
 
 interface EventResponseButtonProps {
+    booked: ZetkinBookedEvent | undefined;
     event: ZetkinEvent;
     onSignup: (eventId: number, orgId: number) => void;
     onUndoSignup: (eventId: number, orgId: number) => void;
@@ -138,7 +141,20 @@ interface EventResponseButtonProps {
     todo: boolean;
 }
 
-const EventResponseButton = ({ event, onSignup, onUndoSignup, org, response, todo }: EventResponseButtonProps): JSX.Element => {
+const EventResponseButton = ({ booked, event, onSignup, onUndoSignup, org, response, todo }: EventResponseButtonProps): JSX.Element => {
+
+    if (booked) {
+        return (
+            <Flex
+                alignItems="center"
+                data-testid="booked"
+                marginTop="3px"
+                minHeight="32px">
+                <Checkmark aria-label="Inbokad" color="positive" />
+                <Msg id="misc.eventList.booked" />
+            </Flex>
+        );
+    }
 
     if (todo) {
         return (

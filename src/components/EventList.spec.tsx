@@ -1,6 +1,7 @@
 import EventList from './EventList';
 import { mountWithProviders } from '../utils/testing';
 import {
+    ZetkinBookedEvent,
     ZetkinEvent,
     ZetkinEventResponse,
     ZetkinOrganization,
@@ -10,6 +11,7 @@ describe('EventList', () => {
     let dummyOrg : ZetkinOrganization;
     let dummyEvents : ZetkinEvent[];
     let dummyEventResponses : ZetkinEventResponse[];
+    let dummyBookedEvents : ZetkinBookedEvent[];
 
     beforeEach(()=> {
         cy.fixture('dummyOrg.json')
@@ -24,11 +26,16 @@ describe('EventList', () => {
             .then((data : {data: ZetkinEventResponse[]}) => {
                 dummyEventResponses = data.data;
             });
+        cy.fixture('dummyBookedEvents.json')
+            .then((data : {data: ZetkinBookedEvent[]}) => {
+                dummyBookedEvents = data.data;
+            });
     });
 
     it('contains data for each event', () => {
         mountWithProviders(
             <EventList
+                bookedEvents={ dummyBookedEvents }
                 eventResponses={ dummyEventResponses }
                 events={ dummyEvents }
                 onSignup={ () => null }
@@ -53,6 +60,7 @@ describe('EventList', () => {
 
         mountWithProviders(
             <EventList
+                bookedEvents={ dummyBookedEvents }
                 eventResponses={ dummyEventResponses }
                 events={ dummyEvents }
                 onSignup={ () => null }
@@ -71,7 +79,7 @@ describe('EventList', () => {
 
         mountWithProviders(
             <EventList
-                eventResponses={ dummyEventResponses }
+                bookedEvents={ undefined }
                 events={ dummyEvents }
                 onSignup={ spyOnSignup }
                 onUndoSignup={ () => null }
@@ -90,6 +98,7 @@ describe('EventList', () => {
     it('contains a button for more info on each event', () => {
         mountWithProviders(
             <EventList
+                bookedEvents={ dummyBookedEvents }
                 eventResponses={ dummyEventResponses }
                 events={ dummyEvents }
                 onSignup={ () => null  }
@@ -106,6 +115,7 @@ describe('EventList', () => {
 
         mountWithProviders(
             <EventList
+                bookedEvents={ dummyBookedEvents }
                 eventResponses={ dummyEventResponses }
                 events={ dummyEvents }
                 onSignup={ () => null  }
@@ -120,6 +130,7 @@ describe('EventList', () => {
     it('shows a placeholder when the list is undefined', () => {
         mountWithProviders(
             <EventList
+                bookedEvents={ dummyBookedEvents }
                 eventResponses={ dummyEventResponses }
                 events={ undefined }
                 onSignup={ () => null  }
@@ -129,5 +140,20 @@ describe('EventList', () => {
         );
 
         cy.contains('misc.eventList.placeholder');
+    });
+
+    it('confirms a booked event', () => {
+        mountWithProviders(
+            <EventList
+                bookedEvents={ dummyBookedEvents }
+                eventResponses={ dummyEventResponses }
+                events={ dummyEvents }
+                onSignup={ () => null  }
+                onUndoSignup={ () => null  }
+                org={ dummyOrg }
+            />,
+        );
+
+        cy.contains('misc.eventList.booked');
     });
 });

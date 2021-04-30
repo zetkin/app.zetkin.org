@@ -62,6 +62,7 @@ const EventsPage : PageWithLayout<EventsPageProps> = (props) => {
     return (
         <Flex marginY="size-500">
             <EventList
+                bookedEvents={ undefined }
                 eventResponses={ eventResponses }
                 events={ eventsQuery.data }
                 onSignup={ onSignup }

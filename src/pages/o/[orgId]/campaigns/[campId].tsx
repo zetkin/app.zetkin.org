@@ -60,6 +60,7 @@ const CampaignPage : PageWithLayout<CampaignPageProps> = (props) => {
                 { campaignQuery.data?.info_text }
             </Text>
             <EventList
+                bookedEvents={ undefined }
                 eventResponses={ eventResponses }
                 events={ campaignEventsQuery.data }
                 onSignup={ onSignup }

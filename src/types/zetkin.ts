@@ -52,3 +52,17 @@ export interface ZetkinSession {
     level: number;
     user: ZetkinUser;
 }
+
+export interface ZetkinBookedEvent {
+    activity: { id: number; title: string };
+    campaign: { id: number; title: string };
+    contact: string | null;
+    end_time: string;
+    id: number;
+    info_text: string;
+    location: { id: number; lat: number; lng: number; title: string };
+    num_participants_required: number;
+    num_participants_available: number;
+    start_time: string;
+    title: string | null;
+}
