@@ -1,6 +1,6 @@
 import Calendar from '@spectrum-icons/workflow/Calendar';
 import Flag from '@spectrum-icons/workflow/Flag';
-import Head from 'next/Head';
+import Head from 'next/head';
 import Location from '@spectrum-icons/workflow/Location';
 import NextLink from 'next/link';
 import {
