@@ -26,7 +26,12 @@ export interface ZetkinEvent {
     end_time: string;
     id: number;
     info_text: string;
-    location: { title: string };
+    location: {
+        id: number;
+        lat: number;
+        lng: number;
+        title: string;
+    };
     start_time: string;
     title?: string;
 }
