@@ -1,11 +1,11 @@
 import dynamic from 'next/dynamic';
 import { MapComponent, MapProps } from './types';
 
-const DynamicMap = dynamic(() => {
+const BrowserMap = dynamic(() => {
     return import('./BrowserMap');
 }, { ssr: false });
 
 export default function Map({ height, markers , width }: MapProps): JSX.Element {
-    const CastMap = DynamicMap as MapComponent;
+    const CastMap = BrowserMap as MapComponent;
     return (<CastMap height={ height } markers={ markers } width={ width }/>);
 }
