@@ -14,7 +14,6 @@ const scaffoldOptions = {
 };
 
 export const getServerSideProps : GetServerSideProps = scaffold(async (ctx) => {
-
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const { orgId } = ctx.params!;
 
@@ -36,20 +35,19 @@ export const getServerSideProps : GetServerSideProps = scaffold(async (ctx) => {
     }
 }, scaffoldOptions);
 
-type OrganizePageProps = {
+type OrganizeAreaPageProps = {
     orgId: string;
 };
 
-const OrganizePage : PageWithLayout<OrganizePageProps> = () => {
-
+const OrganizeAreaPage : PageWithLayout<OrganizeAreaPageProps> = () => {
     return (
         <Heading level={ 1 }>
-            hello
+            area page content
         </Heading>
     );
 };
 
-OrganizePage.getLayout = function getLayout(page, props) {
+OrganizeAreaPage.getLayout = function getLayout(page, props) {
     return (
         <OrganizeLayout orgId={ props.orgId as string }>
             { page }
@@ -57,4 +55,4 @@ OrganizePage.getLayout = function getLayout(page, props) {
     );
 };
 
-export default OrganizePage;
+export default OrganizeAreaPage;

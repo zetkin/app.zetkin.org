@@ -1,10 +1,10 @@
 import { GetServerSideProps } from 'next';
 import { Heading } from '@adobe/react-spectrum';
 
-import getOrg from '../../../fetching/getOrg';
-import OrganizeLayout from '../../../components/layout/OrganizeLayout';
-import { PageWithLayout } from '../../../types';
-import { scaffold } from '../../../utils/next';
+import getOrg from '../../../../fetching/getOrg';
+import OrganizeLayout from '../../../../components/layout/OrganizeLayout';
+import { PageWithLayout } from '../../../../types';
+import { scaffold } from '../../../../utils/next';
 
 const scaffoldOptions = {
     authLevelRequired: 1,
@@ -14,7 +14,6 @@ const scaffoldOptions = {
 };
 
 export const getServerSideProps : GetServerSideProps = scaffold(async (ctx) => {
-
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const { orgId } = ctx.params!;
 
@@ -36,20 +35,19 @@ export const getServerSideProps : GetServerSideProps = scaffold(async (ctx) => {
     }
 }, scaffoldOptions);
 
-type OrganizePageProps = {
+type OrganizeCalendarPageProps = {
     orgId: string;
 };
 
-const OrganizePage : PageWithLayout<OrganizePageProps> = () => {
-
+const OrganizeCalendarPage : PageWithLayout<OrganizeCalendarPageProps> = () => {
     return (
         <Heading level={ 1 }>
-            hello
+            calendar page content
         </Heading>
     );
 };
 
-OrganizePage.getLayout = function getLayout(page, props) {
+OrganizeCalendarPage.getLayout = function getLayout(page, props) {
     return (
         <OrganizeLayout orgId={ props.orgId as string }>
             { page }
@@ -57,4 +55,4 @@ OrganizePage.getLayout = function getLayout(page, props) {
     );
 };
 
-export default OrganizePage;
+export default OrganizeCalendarPage;

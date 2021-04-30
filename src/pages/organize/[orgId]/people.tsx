@@ -1,7 +1,5 @@
-import { dehydrate } from 'react-query/hydration';
 import { GetServerSideProps } from 'next';
 import { Heading } from '@adobe/react-spectrum';
-import { QueryClient } from 'react-query';
 
 import getOrg from '../../../fetching/getOrg';
 import OrganizeLayout from '../../../components/layout/OrganizeLayout';
@@ -15,19 +13,17 @@ const scaffoldOptions = {
     ],
 };
 
-export const getServerSideProps : GetServerSideProps = scaffold(async (context) => {
-    const queryClient = new QueryClient();
+export const getServerSideProps : GetServerSideProps = scaffold(async (ctx) => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const { orgId } = context.params!;
+    const { orgId } = ctx.params!;
 
-    await queryClient.prefetchQuery(['org', orgId], getOrg(orgId as string, context.apiFetch));
+    await ctx.queryClient.prefetchQuery(['org', orgId], getOrg(orgId as string, ctx.apiFetch));
 
-    const orgState = queryClient.getQueryState(['org', orgId]);
+    const orgState = ctx.queryClient.getQueryState(['org', orgId]);
 
     if (orgState?.status === 'success') {
         return {
             props: {
-                dehydratedState: dehydrate(queryClient),
                 orgId,
             },
         };
