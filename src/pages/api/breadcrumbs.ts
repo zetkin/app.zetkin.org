@@ -16,9 +16,9 @@ export default async (
 const pathToCrumbs = (path: string, data: ReturnedData) => {
     const regexp = new RegExp(/\[(.*?)\]/);
     const pathArray = path.split('/').slice(1);
-    const matchedPath = path.match(regexp);
 
     const realPath = pathArray.map((path) => {
+        const matchedPath = path.match(regexp);
         if (matchedPath) {
             return data[matchedPath[1]].id;
         }
@@ -27,7 +27,7 @@ const pathToCrumbs = (path: string, data: ReturnedData) => {
 
     const breadcrumbs = pathArray.map((path: string, i: number) => {
         let href, label, labelMsg;
-
+        const matchedPath = path.match(regexp);
         if (matchedPath) {
             label = data[matchedPath[1]].label;
             href = '/' + realPath.slice(0, i + 1).join('/');

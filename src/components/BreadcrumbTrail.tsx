@@ -27,6 +27,7 @@ const BreadcrumbTrail = () : JSX.Element | null => {
     useEffect(() => {
         const params = { path: router.pathname, ...router.query };
         fetchBreadcrumbs(params);
+
     }, [router]);
 
 
@@ -38,9 +39,7 @@ const BreadcrumbTrail = () : JSX.Element | null => {
                 <Item key={ crumb.href }>
                     <NextLink href={ crumb.href }>
                         <a>
-                            { crumb.labelMsg ? <Msg id={ crumb.labelMsg }/> :
-                                crumb.label }
-
+                            { crumb.labelMsg ? <Msg id={ crumb.labelMsg }/>: crumb.label }
                         </a>
                     </NextLink>
                 </Item>
