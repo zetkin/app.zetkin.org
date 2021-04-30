@@ -5,6 +5,7 @@ import MapView from '@spectrum-icons/workflow/MapView';
 import NextLink from 'next/link';
 import PeopleGroup from '@spectrum-icons/workflow/PeopleGroup';
 import User from '@spectrum-icons/workflow/User';
+import { useRouter } from 'next/router';
 import {
     Button, Flex,
 } from '@adobe/react-spectrum';
@@ -15,26 +16,29 @@ interface OrganizeSidebarProps {
 }
 
 const OrganizeSidebar = ({ orgId  } : OrganizeSidebarProps) : JSX.Element =>{
+    const router = useRouter();
+    const key = router.pathname.split('[orgId]')[1];
+    
     return ( 
         <Flex direction="column" height="100%" justifyContent="space-between">
             <Flex direction="column">
                 <NextLink href={ `/organize/${orgId}` }>
-                    <Button margin="size-100" variant="primary" width="size-00">
+                    <Button isDisabled={ key === '' } margin="size-100" variant="primary" width="size-00">
                         <Home aria-label="Home" />
                     </Button>
                 </NextLink>
                 <NextLink href={ `/organize/${orgId}/people` }>
-                    <Button margin="size-100" variant="primary">
+                    <Button isDisabled={ key.startsWith('/people') } margin="size-100" variant="primary">
                         <PeopleGroup aria-label="People" /> 
                     </Button>
                 </NextLink>
                 <NextLink href={ `/organize/${orgId}/area` }>
-                    <Button margin="size-100" variant="primary">
+                    <Button isDisabled={ key.startsWith('/area') } margin="size-100" variant="primary">
                         <MapView aria-label="Areas" />
                     </Button> 
                 </NextLink>
                 <NextLink href={ `/organize/${orgId}/projects/calendar` }>
-                    <Button margin="size-100" variant="primary">
+                    <Button isDisabled={ key.startsWith('/projects') } margin="size-100" variant="primary">
                         <Calendar aria-label="Calendar" />
                     </Button>
                 </NextLink>

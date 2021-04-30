@@ -11,16 +11,17 @@ import { scaffold } from '../../../utils/next';
 const scaffoldOptions = {
     authLevelRequired: 1,
     localeScope: [
-        'layout.organize',
+        'layout.organize', 'misc.breadcrumbs',
     ],
 };
 
 export const getServerSideProps : GetServerSideProps = scaffold(async (context) => {
+    
     const queryClient = new QueryClient();
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const { orgId } = context.params!;
 
-    await queryClient.prefetchQuery(['org', orgId], getOrg(orgId as string));
+    await queryClient.prefetchQuery(['org', orgId], getOrg(orgId as string, context.apiFetch));
 
     const orgState = queryClient.getQueryState(['org', orgId]);
 
@@ -47,7 +48,7 @@ const OrganizePage : PageWithLayout<OrganizePageProps> = () => {
 
     return (
         <Heading level={ 1 }>
-            page content here
+            hello
         </Heading>
     );
 };
