@@ -5,10 +5,10 @@ import { dehydrate, DehydratedState } from 'react-query/hydration';
 import { GetServerSideProps, GetServerSidePropsContext, GetServerSidePropsResult } from 'next';
 
 import { AppSession } from '../types';
-import createApiFetch from './apiFetch';
 import { getMessages } from './locale';
 import stringToBool from './stringToBool';
 import { ZetkinZ } from '../types/sdk';
+import { ApiFetch, createApiFetch, RequestWithHeaders } from './apiFetch';
 import { ZetkinSession, ZetkinUser } from '../types/zetkin';
 
 //TODO: Create module definition and revert to import.
@@ -37,7 +37,6 @@ export type ScaffoldedContext = GetServerSidePropsContext & {
 export type ScaffoldedGetServerSideProps = (context: ScaffoldedContext) =>
     Promise<GetServerSidePropsResult<RegularProps>>;
 
-export type ApiFetch = (path: string, init?: RequestInit) => Promise<Response>;
 
 interface ResultWithProps {
     props: ScaffoldedProps;
@@ -65,8 +64,7 @@ export const scaffold = (wrapped : ScaffoldedGetServerSideProps, options? : Scaf
         const ctx = contextFromNext as ScaffoldedContext;
 
         ctx.queryClient = new QueryClient();
-
-        ctx.apiFetch = createApiFetch(ctx.req);
+        ctx.apiFetch = createApiFetch(ctx.req as RequestWithHeaders);
 
         ctx.z = Z.construct({
             clientId: process.env.ZETKIN_CLIENT_ID,

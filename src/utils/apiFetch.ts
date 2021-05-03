@@ -1,12 +1,13 @@
 import apiUrl from './apiUrl';
-import { IncomingMessage } from 'node:http';
-import { NextApiRequest } from 'next';
 
-const createApiFetch = (req: NextApiRequest | IncomingMessage) => {
-    return (
-        path: string,
-        init?: RequestInit,
-    ) : Promise<Response> => {
+export interface RequestWithHeaders {
+    headers: Record<string, string>;
+}
+
+export type ApiFetch = (path: string, init?: RequestInit) => Promise<Response>;
+
+export const createApiFetch = (req: RequestWithHeaders): ApiFetch => {
+    return (path,init) => {
         return fetch(apiUrl(path), {
             ...init,
             headers: {
@@ -16,5 +17,3 @@ const createApiFetch = (req: NextApiRequest | IncomingMessage) => {
         });
     };
 };
-
-export default createApiFetch;

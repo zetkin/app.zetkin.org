@@ -1,11 +1,6 @@
-import { ApiFetch } from '../../utils/next';
 import apiUrl from '../../utils/apiUrl';
-import createApiFetch from '../../utils/apiFetch';
+import { ApiFetch, createApiFetch, RequestWithHeaders } from '../../utils/apiFetch';
 import { NextApiRequest, NextApiResponse } from 'next';
-
-type QueryData = { [key: string]: string }
-
-let apiFetch: ApiFetch;
 
 export default async (
     req: NextApiRequest,
@@ -17,41 +12,43 @@ export default async (
         return res.status(400).json({ error: 'orgId not provided' });
     }
 
-    apiFetch = createApiFetch(req);
+    const apiFetch = createApiFetch(req as RequestWithHeaders);
 
-    const breadcrumbs = await pathToCrumbs(req.query as QueryData, orgId as string);
-    res.status(200).json({ breadcrumbs });
-};
+    const { query } = req;
+    const pathname  = query.pathname as string;
 
-const pathToCrumbs = async (query: QueryData, orgId: string) => {
-    const pathFields = query.pathname.split('/').slice(1);
-    const crumbs = [];
+    const pathFields = pathname.split('/').slice(1);
+    const breadcrumbs = [];
     const curPath = [];
 
     for (const field of pathFields) {
         if (field.startsWith('[') && field.endsWith(']')) {
             const fieldName = field.slice(1, -1);
-            const fieldValue = query[fieldName];
+            const fieldValue = req.query[fieldName];
 
-            const label = await fetchLabel(fieldName, fieldValue, orgId);
+            const label = await fetchLabel(
+                fieldName, fieldValue as string,
+                orgId as string,
+                apiFetch,
+            );
             curPath.push(fieldValue);
-            crumbs.push({
+            breadcrumbs.push({
                 href: '/' + curPath.join('/'),
                 label: label,
             });
         }
         else {
             curPath.push(field);
-            crumbs.push({
+            breadcrumbs.push({
                 href: '/' + curPath.join('/'),
                 labelMsg: `misc.breadcrumbs.${field}`,
             });
         }
     }
-    return crumbs;
+    res.status(200).json({ breadcrumbs });
 };
 
-async function fetchLabel (fieldName: string, fieldValue: string, orgId: string) {
+async function fetchLabel (fieldName: string, fieldValue: string, orgId: string, apiFetch: ApiFetch) {
     if (fieldName === 'orgId') {
         const org = await fetch(apiUrl(`/orgs/${orgId}`))
             .then((res) => res.json());
