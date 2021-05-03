@@ -3,6 +3,7 @@ import { GetServerSideProps } from 'next';
 import { useQuery } from 'react-query';
 
 import EventList from '../../../components/EventList';
+import getBookedEvents from '../../../fetching/getBookedEvents';
 import getEventResponses from '../../../fetching/getEventResponses';
 import getEvents from '../../../fetching/getEvents';
 import getOrg from '../../../fetching/getOrg';
@@ -29,12 +30,14 @@ export const getServerSideProps : GetServerSideProps = scaffold(async (context) 
 
     if (user) {
         await context.queryClient.prefetchQuery('eventResponses', getEventResponses(context.apiFetch));
+        await context.queryClient.prefetchQuery('bookedEvents', getBookedEvents(context.apiFetch));
     }
 
     const eventsState = context.queryClient.getQueryState('events');
     const orgState = context.queryClient.getQueryState(['org', orgId]);
 
-    if (eventsState?.status === 'success' && orgState?.status === 'success') {
+    if (eventsState?.status === 'success'
+        && orgState?.status === 'success') {
         return {
             props: {
                 orgId,
@@ -56,13 +59,14 @@ const EventsPage : PageWithLayout<EventsPageProps> = (props) => {
     const { orgId } = props;
     const eventsQuery = useQuery('events', getEvents(orgId));
     const orgQuery = useQuery(['org', orgId], getOrg(orgId));
+    const bookedEventsQuery = useQuery('bookedEvents', getBookedEvents());
 
     const { eventResponses, onSignup, onUndoSignup } = useEventResponses();
 
     return (
         <Flex marginY="size-500">
             <EventList
-                bookedEvents={ undefined }
+                bookedEvents={ bookedEventsQuery.data }
                 eventResponses={ eventResponses }
                 events={ eventsQuery.data }
                 onSignup={ onSignup }
