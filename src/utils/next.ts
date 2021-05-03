@@ -1,4 +1,3 @@
-import apiUrl from './apiUrl';
 import { applySession } from 'next-session';
 import Negotiator from 'negotiator';
 import { QueryClient } from 'react-query';
@@ -6,6 +5,7 @@ import { dehydrate, DehydratedState } from 'react-query/hydration';
 import { GetServerSideProps, GetServerSidePropsContext, GetServerSidePropsResult } from 'next';
 
 import { AppSession } from '../types';
+import createApiFetch from './apiFetch';
 import { getMessages } from './locale';
 import stringToBool from './stringToBool';
 import { ZetkinZ } from '../types/sdk';
@@ -28,7 +28,7 @@ export type ScaffoldedProps = RegularProps & {
 };
 
 export type ScaffoldedContext = GetServerSidePropsContext & {
-    apiFetch: (path: string, init?: RequestInit) => Promise<Response>;
+    apiFetch: ApiFetch;
     queryClient: QueryClient;
     user: ZetkinUser | null;
     z: ZetkinZ;
@@ -36,6 +36,8 @@ export type ScaffoldedContext = GetServerSidePropsContext & {
 
 export type ScaffoldedGetServerSideProps = (context: ScaffoldedContext) =>
     Promise<GetServerSidePropsResult<RegularProps>>;
+
+export type ApiFetch = (path: string, init?: RequestInit) => Promise<Response>;
 
 interface ResultWithProps {
     props: ScaffoldedProps;
@@ -64,15 +66,7 @@ export const scaffold = (wrapped : ScaffoldedGetServerSideProps, options? : Scaf
 
         ctx.queryClient = new QueryClient();
 
-        ctx.apiFetch = (path, init?) => {
-            return fetch(apiUrl(path), {
-                ...init,
-                headers: {
-                    cookie: contextFromNext.req.headers.cookie || '',
-                    ...init?.headers,
-                },
-            });
-        };
+        ctx.apiFetch = createApiFetch(ctx.req);
 
         ctx.z = Z.construct({
             clientId: process.env.ZETKIN_CLIENT_ID,

@@ -1,16 +1,23 @@
+import { ApiFetch } from '../../utils/next';
 import apiUrl from '../../utils/apiUrl';
+import createApiFetch from '../../utils/apiFetch';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 type QueryData = { [key: string]: string }
+
+let apiFetch: ApiFetch;
 
 export default async (
     req: NextApiRequest,
     res: NextApiResponse,
 ): Promise<void> => {
     const orgId = req.query.orgId;
+
     if (!orgId) {
         return res.status(400).json({ error: 'orgId not provided' });
     }
+
+    apiFetch = createApiFetch(req);
 
     const breadcrumbs = await pathToCrumbs(req.query as QueryData, orgId as string);
     res.status(200).json({ breadcrumbs });
@@ -51,7 +58,7 @@ async function fetchLabel (fieldName: string, fieldValue: string, orgId: string)
         return `${org.data.title}`;
     }
     if (fieldName === 'personId') {
-        const person = await fetch(apiUrl(`/orgs/${orgId}/people/${fieldValue}`))
+        const person = await apiFetch(`/orgs/${orgId}/people/${fieldValue}`)
             .then((res) => res.json());
         return `${person.data.first_name} ${person.data.last_name}`;
     }
@@ -62,5 +69,7 @@ async function fetchLabel (fieldName: string, fieldValue: string, orgId: string)
     }
     return `${fieldValue}`;
 }
+
+
 
 
