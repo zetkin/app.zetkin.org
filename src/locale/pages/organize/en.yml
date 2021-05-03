@@ -1,0 +1,13 @@
+linkGroup:
+  public: Public Page
+  manage: Manage Organization
+  settings: Edit Settings
+currentProjects:
+  title: Current Projects & Campaigns
+  all: All projects & campaigns
+  new: New Campaign
+people:
+  title: Do you know this member?
+  all: All People
+  skip: Skip
+  profile: profile
