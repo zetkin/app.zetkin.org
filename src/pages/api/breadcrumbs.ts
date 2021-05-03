@@ -1,74 +1,66 @@
 import apiUrl from '../../utils/apiUrl';
 import { NextApiRequest, NextApiResponse } from 'next';
 
-type QueryObject = {[key: string]: string | string[]}
-type ReturnedData = {[key: string]: {[key: string]: string}}
+type QueryData = { [key: string]: string }
 
 export default async (
     req: NextApiRequest,
     res: NextApiResponse,
 ): Promise<void> => {
-    const returnedData = await fetchData(req.query);
-    const breadcrumbs = pathToCrumbs(req.query.path as string, returnedData);
+    const orgId = req.query.orgId;
+    if (!orgId) {
+        return res.status(400).json({ error: 'orgId not provided' });
+    }
+
+    const breadcrumbs = await pathToCrumbs(req.query as QueryData, orgId as string);
     res.status(200).json({ breadcrumbs });
 };
 
-const pathToCrumbs = (path: string, data: ReturnedData) => {
-    const regexp = new RegExp(/\[(.*?)\]/);
-    const pathArray = path.split('/').slice(1);
+const pathToCrumbs = async (query: QueryData, orgId: string) => {
+    const pathFields = query.pathname.split('/').slice(1);
+    const crumbs = [];
+    const curPath = [];
 
-    const realPath = pathArray.map((path) => {
-        const matchedPath = path.match(regexp);
-        if (matchedPath) {
-            return data[matchedPath[1]].id;
-        }
-        else return path;
-    });
+    for (const field of pathFields) {
+        if (field.startsWith('[') && field.endsWith(']')) {
+            const fieldName = field.slice(1, -1);
+            const fieldValue = query[fieldName];
 
-    const breadcrumbs = pathArray.map((path: string, i: number) => {
-        let href, label, labelMsg;
-        const matchedPath = path.match(regexp);
-        if (matchedPath) {
-            label = data[matchedPath[1]].label;
-            href = '/' + realPath.slice(0, i + 1).join('/');
+            const label = await fetchLabel(fieldName, fieldValue, orgId);
+            curPath.push(fieldValue);
+            crumbs.push({
+                href: '/' + curPath.join('/'),
+                label: label,
+            });
         }
         else {
-            labelMsg = `misc.breadcrumbs.${path}`;
-            href = '/' + realPath.slice(0, i + 1).join('/');
+            curPath.push(field);
+            crumbs.push({
+                href: '/' + curPath.join('/'),
+                labelMsg: `misc.breadcrumbs.${field}`,
+            });
         }
-
-        return {
-            href,
-            label,
-            labelMsg,
-        };
-    });
-    return breadcrumbs;
+    }
+    return crumbs;
 };
 
-const fetchData = async (query: QueryObject) => {
-    const data= {} as ReturnedData;
-
-    const { orgId } = query;
-    const org = await fetch(apiUrl(`/orgs/${orgId}`)).then((res) => res.json());
-    data.orgId = { id: org.data.id, label: org.data.title };
-
-    if (query.personId) {
-        const person = await fetch(
-            apiUrl(`/orgs/${orgId}/people/${query.personId}`),
-        ).then((res) => res.json());
-        data.personId = {
-            id: person.data.id,
-            label: `${person.data.first_name} ${person.data.last_name}`,
-        };
+async function fetchLabel (fieldName: string, fieldValue: string, orgId: string) {
+    if (fieldName === 'orgId') {
+        const org = await fetch(apiUrl(`/orgs/${orgId}`))
+            .then((res) => res.json());
+        return `${org.data.title}`;
     }
-
-    if (query.campaignId) {
-        const campaign = await fetch(
-            apiUrl(`/orgs/${orgId}/campaigns/${query.campaignId}`),
-        ).then((res) => res.json());
-        data.campaignId = { id: campaign.data.id, label: campaign.data.title };
+    if (fieldName === 'personId') {
+        const person = await fetch(apiUrl(`/orgs/${orgId}/people/${fieldValue}`))
+            .then((res) => res.json());
+        return `${person.data.first_name} ${person.data.last_name}`;
     }
+    if (fieldName === 'campaignId') {
+        const campaign = await fetch(apiUrl(`/orgs/${orgId}/campaigns/${fieldValue}`))
+            .then((res) => res.json());
+        return `${campaign.data.title}`;
+    }
+    return `${fieldValue}`;
+}
 
-    return data;
-};
+
