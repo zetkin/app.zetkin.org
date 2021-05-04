@@ -1,18 +1,8 @@
 import SurveyElement from './SurveyElement';
+import { ZetkinSurvey } from '../../../../types/zetkin';
 
 interface SurveyFormProps {
-    survey: {
-        elements: {
-            id: number;
-            text_block: {
-                content: string;
-                header: string;
-            };
-            type: string;
-        }[];
-        info_text: string;
-        title: string;
-    };
+    survey: ZetkinSurvey;
 }
 
 export default function SurveyForm({ survey }: SurveyFormProps): JSX.Element {

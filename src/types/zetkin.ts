@@ -53,3 +53,20 @@ export interface ZetkinSession {
     level: number;
     user: ZetkinUser;
 }
+
+export interface ZetkinSurvey {
+    elements: ZetkinSurveyElement[];
+    info_text: string;
+    title: string;
+}
+
+export interface ZetkinSurveyElement {
+    id: number;
+    text_block: ZetkinSurveyTextblock;
+    type: string;
+}
+
+export interface ZetkinSurveyTextblock {
+    content: string;
+    header: string;
+}
