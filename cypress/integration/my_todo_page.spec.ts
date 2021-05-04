@@ -64,6 +64,33 @@ describe('/users/my/todo', () => {
         cy.waitUntilReactRendered();
         cy.get('[data-testid="booked"]').should('have.length', 1);
     });
+
+    it.only('contains a placeholder if there are neither call assignments nor to-do events', () => {
+        cy.request('put', 'http://localhost:8001/v1/users/me/call_assignments/_mocks/get', {
+            response: {
+                data: {
+                    data: [],
+                },
+            },
+        });
+
+        cy.request('put', 'http://localhost:8001/v1/users/me/action_responses/_mocks/get', {
+            response: {
+                data: {
+                    data: [],
+                },
+            },
+        });
+
+        cy.visit('/login');
+        cy.get('input[aria-label="E-mail address"]').type('testadmin@example.com');
+        cy.get('input[aria-label="Password"]').type('password');
+        cy.get('input[aria-label="Log in"]')
+            .click();
+
+        cy.visit('/my/todo');
+        cy.contains('You have nothing planned at the moment.');
+    });
 });
 
 // Hack to flag for typescript as module
