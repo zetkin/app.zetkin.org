@@ -1,7 +1,7 @@
+import { BookedEvent } from '../../src/types';
 import EventList from './EventList';
 import { mountWithProviders } from '../utils/testing';
 import {
-    ZetkinBookedEvent,
     ZetkinEvent,
     ZetkinEventResponse,
     ZetkinOrganization,
@@ -11,7 +11,7 @@ describe('EventList', () => {
     let dummyOrg : ZetkinOrganization;
     let dummyEvents : ZetkinEvent[];
     let dummyEventResponses : ZetkinEventResponse[];
-    let dummyBookedEvents : ZetkinBookedEvent[];
+    let dummyBookedEvents : BookedEvent[];
 
     beforeEach(()=> {
         cy.fixture('dummyOrg.json')
@@ -27,7 +27,7 @@ describe('EventList', () => {
                 dummyEventResponses = data.data;
             });
         cy.fixture('dummyBookedEvents.json')
-            .then((data : {data: ZetkinBookedEvent[]}) => {
+            .then((data : {data: BookedEvent[]}) => {
                 dummyBookedEvents = data.data;
             });
     });

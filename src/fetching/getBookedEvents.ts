@@ -1,8 +1,8 @@
+import { BookedEvent } from '../types';
 import { defaultFetch } from '.';
-import { ZetkinBookedEvent } from '../types/zetkin';
 
 export default function getBookedEvents(fetch = defaultFetch) {
-    return async () : Promise<ZetkinBookedEvent[]> => {
+    return async () : Promise<BookedEvent[]> => {
         const cRes = await fetch('/users/me/actions');
         const cData = await cRes.json();
         return cData.data;

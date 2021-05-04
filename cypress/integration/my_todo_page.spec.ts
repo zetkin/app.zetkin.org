@@ -1,7 +1,5 @@
-import {
-    ZetkinBookedEvent,
-    ZetkinEventResponse,
-} from '../../src/types/zetkin';
+import { BookedEvent } from '../../src/types';
+import { ZetkinEventResponse } from '../../src/types/zetkin';
 
 describe('/users/my/todo', () => {
     beforeEach(() => {
@@ -9,7 +7,7 @@ describe('/users/my/todo', () => {
     });
 
     let dummyEventResponses : {data: ZetkinEventResponse[]};
-    let dummyBookedEvents : {data: ZetkinBookedEvent[]};
+    let dummyBookedEvents : {data: BookedEvent[]};
 
     before(() => {
         cy.fixture('dummyEventResponses.json')
@@ -17,7 +15,7 @@ describe('/users/my/todo', () => {
                 dummyEventResponses = data;
             });
         cy.fixture('dummyBookedEvents.json')
-            .then((data : {data: ZetkinBookedEvent[]}) => {
+            .then((data : {data: BookedEvent[]}) => {
                 dummyBookedEvents = data;
             });
     });

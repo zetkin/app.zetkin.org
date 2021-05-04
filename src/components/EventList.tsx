@@ -12,15 +12,15 @@ import {
     FormattedMessage as Msg,
 } from 'react-intl';
 
+import { BookedEvent } from '../../src/types';
 import {
-    ZetkinBookedEvent,
     ZetkinEvent,
     ZetkinEventResponse,
     ZetkinOrganization,
 } from '../types/zetkin';
 
 interface EventListProps {
-    bookedEvents: ZetkinBookedEvent[] | undefined;
+    bookedEvents: BookedEvent[] | undefined;
     events: ZetkinEvent[] | undefined;
     onSignup: (eventId: number, orgId: number) => void;
     onUndoSignup: (eventId: number, orgId: number) => void;
@@ -63,7 +63,7 @@ export default function EventList ({ bookedEvents, eventResponses, events, onSig
 }
 
 interface EventListItemProps {
-    booked: ZetkinBookedEvent | undefined;
+    booked: BookedEvent | undefined;
     event: ZetkinEvent;
     onSignup: (eventId: number, orgId: number) => void;
     onUndoSignup: (eventId: number, orgId: number) => void;
@@ -132,7 +132,7 @@ const EventListItem = ({ booked, event, response, onSignup, onUndoSignup, org }:
 };
 
 interface EventResponseButtonProps {
-    booked: ZetkinBookedEvent | undefined;
+    booked: BookedEvent | undefined;
     event: ZetkinEvent;
     onSignup: (eventId: number, orgId: number) => void;
     onUndoSignup: (eventId: number, orgId: number) => void;
