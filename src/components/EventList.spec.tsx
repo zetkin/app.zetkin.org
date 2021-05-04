@@ -1,6 +1,7 @@
 import { BookedEvent } from '../../src/types';
 import EventList from './EventList';
 import { mountWithProviders } from '../utils/testing';
+import { UserContext } from '../hooks';
 import {
     ZetkinEvent,
     ZetkinEventResponse,
@@ -12,6 +13,12 @@ describe('EventList', () => {
     let dummyEvents : ZetkinEvent[];
     let dummyEventResponses : ZetkinEventResponse[];
     let dummyBookedEvents : BookedEvent[];
+    const dummyUser = {
+        first_name: 'Firstname',
+        id: 100,
+        last_name: 'Lastname',
+        username: 'Username',
+    };
 
     beforeEach(()=> {
         cy.fixture('dummyOrg.json')
@@ -74,26 +81,44 @@ describe('EventList', () => {
             .should('not.contain', 'undefined');
     });
 
-    it('contains a sign-up button for each event', () => {
+    it('contains a sign-up button for each event if user is logged in', () => {
         const spyOnSignup = cy.spy();
-
         mountWithProviders(
-            <EventList
-                bookedEvents={ undefined }
-                events={ dummyEvents }
-                onSignup={ spyOnSignup }
-                onUndoSignup={ () => null }
-                org={ dummyOrg }
-            />,
+            <UserContext.Provider value={ dummyUser }>
+                <EventList
+                    bookedEvents={ undefined }
+                    events={ dummyEvents }
+                    onSignup={ spyOnSignup }
+                    onUndoSignup={ () => null }
+                    org={ dummyOrg }
+                />
+            </UserContext.Provider>,
         );
 
         cy.findByText('misc.eventList.signup')
-            .eq(0)
             .click()
             .then(() => {
                 expect(spyOnSignup).to.be.calledOnce;
             });
     });
+
+    it('contains an account signup button when user is not logged in', () => {
+        mountWithProviders(
+            <UserContext.Provider value={ null }>
+                <EventList
+                    bookedEvents={ undefined }
+                    eventResponses={ dummyEventResponses }
+                    events={ dummyEvents }
+                    onSignup={ () => null }
+                    onUndoSignup={ () => null }
+                    org={ dummyOrg }
+                />
+            </UserContext.Provider>,
+        );
+        cy.get('[data-test="dialog-trigger-button"]').should('exist');
+        cy.get('[data-test="signup-button"]').should('not.exist');
+    });
+
 
     it('contains a button for more info on each event', () => {
         mountWithProviders(
@@ -144,14 +169,16 @@ describe('EventList', () => {
 
     it('confirms a booked event', () => {
         mountWithProviders(
-            <EventList
-                bookedEvents={ dummyBookedEvents }
-                eventResponses={ dummyEventResponses }
-                events={ dummyEvents }
-                onSignup={ () => null  }
-                onUndoSignup={ () => null  }
-                org={ dummyOrg }
-            />,
+            <UserContext.Provider value={ dummyUser }>
+                <EventList
+                    bookedEvents={ dummyBookedEvents }
+                    eventResponses={ dummyEventResponses }
+                    events={ dummyEvents }
+                    onSignup={ () => null  }
+                    onUndoSignup={ () => null  }
+                    org={ dummyOrg }
+                />
+            </UserContext.Provider>,
         );
 
         cy.contains('misc.eventList.booked');

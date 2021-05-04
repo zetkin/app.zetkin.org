@@ -13,6 +13,8 @@ import {
 } from 'react-intl';
 
 import { BookedEvent } from '../../src/types';
+import SignupDialogTrigger from './SignupDialog';
+import { useUser } from '../hooks';
 import {
     ZetkinEvent,
     ZetkinEventResponse,
@@ -72,6 +74,7 @@ interface EventListItemProps {
 }
 
 const EventListItem = ({ booked, event, response, onSignup, onUndoSignup, org }: EventListItemProps): JSX.Element => {
+    const user = useUser();
     let todo : boolean;
 
     if (!org) {
@@ -111,15 +114,17 @@ const EventListItem = ({ booked, event, response, onSignup, onUndoSignup, org }:
                 />
             </View>
             <View data-testid="location-title">{ event.location.title }</View>
-            <EventResponseButton
-                booked={ booked }
-                event={ event }
-                onSignup={ onSignup }
-                onUndoSignup={ onUndoSignup }
-                org={ org }
-                response={ response }
-                todo={ todo }
-            />
+            { user ? (
+                <EventResponseButton
+                    booked={ booked }
+                    event={ event }
+                    onSignup={ onSignup }
+                    onUndoSignup={ onUndoSignup }
+                    org={ org }
+                    response={ response }
+                    todo={ todo }
+                />
+            ) : <SignupDialogTrigger /> }
             <NextLink href={ `/o/${org.id}/events/${ event.id }` }>
                 <a>
                     <Button marginTop="size-50" variant="cta">

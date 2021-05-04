@@ -1,5 +1,6 @@
 import Calendar from '@spectrum-icons/workflow/Calendar';
 import Flag from '@spectrum-icons/workflow/Flag';
+import Head from 'next/head';
 import Location from '@spectrum-icons/workflow/Location';
 import NextLink from 'next/link';
 import {
@@ -19,6 +20,9 @@ import {
     FormattedMessage as Msg,
 } from 'react-intl';
 
+import Map from './maps/Map';
+import SignupDialog from './SignupDialog';
+import { useUser } from '../hooks';
 import {
     ZetkinEvent,
     ZetkinEventResponse,
@@ -34,8 +38,16 @@ interface EventDetailsProps {
 }
 
 const EventDetails = ({ event, org, onSignup, onUndoSignup, response } : EventDetailsProps) : JSX.Element => {
+    const user = useUser();
+
     return (
         <>
+            <Head>
+                <link crossOrigin="" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+                    integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+                    rel="stylesheet"
+                />
+            </Head>
             <Header marginBottom="size-300">
                 <Image
                     alt="Cover image"
@@ -100,17 +112,13 @@ const EventDetails = ({ event, org, onSignup, onUndoSignup, response } : EventDe
                 <Location marginEnd="size-100" size="S" />
                 <Text data-testid="location">{ event.location.title }</Text>
             </Flex>
+            <Map height={ 500 } markers={ [event.location] }/>
             <Divider />
             <Text data-testid="info-text" marginY="size-300">
                 { event.info_text }
             </Text>
-            <View
-                bottom="size-200"
-                left="size-200"
-                marginTop="size-200"
-                position="absolute"
-                right="size-200">
-                { response ? (
+            <View>
+                { user ? response ? (
                     <Button
                         data-testid="event-response-button"
                         onPress={ () => onUndoSignup(event.id, org.id) }
@@ -126,7 +134,7 @@ const EventDetails = ({ event, org, onSignup, onUndoSignup, response } : EventDe
                         width="100%">
                         <Msg id="pages.orgEvent.actions.signup" />
                     </Button>
-                ) }
+                ) : <SignupDialog /> }
             </View>
         </>
     );

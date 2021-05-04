@@ -1,0 +1,8 @@
+heading: Nästan färdig!
+cta: Kul att du vill hjälpa till! För att kunna anmäla dig måste du logga in med ett användarkonto i Zetkin.
+registerCopy: Om detta är första gången du använder Zetkin måste du skapa ett nytt användarkonto.
+loginCopy: Om du redan har ett konto kan du logga in och anmäla dig direkt.
+actions:
+    register: Skapa användarkonto
+    login: Logga in
+    cancel: Avbryt

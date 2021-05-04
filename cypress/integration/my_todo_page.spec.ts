@@ -65,7 +65,7 @@ describe('/users/my/todo', () => {
         cy.get('[data-testid="booked"]').should('have.length', 1);
     });
 
-    it.only('contains a placeholder if there are neither call assignments nor to-do events', () => {
+    it('contains a placeholder if there are neither call assignments nor to-do events', () => {
         cy.request('put', 'http://localhost:8001/v1/users/me/call_assignments/_mocks/get', {
             response: {
                 data: {
