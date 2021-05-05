@@ -1,9 +1,9 @@
-import apiUrl from '../utils/apiUrl';
+import { defaultFetch } from '.';
 import { ZetkinCampaign } from '../types/zetkin';
 
-export default function getCampaigns(orgId : string) {
+export default function getCampaigns(orgId : string, fetch = defaultFetch) {
     return async () : Promise<ZetkinCampaign[]> => {
-        const cRes = await fetch(apiUrl(`/orgs/${orgId}/campaigns`));
+        const cRes = await fetch(`/orgs/${orgId}/campaigns`);
         const cData = await cRes.json();
         return cData.data;
     };

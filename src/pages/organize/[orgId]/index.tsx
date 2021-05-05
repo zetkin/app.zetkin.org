@@ -29,8 +29,8 @@ export const getServerSideProps : GetServerSideProps = scaffold(async (context) 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const { orgId } = context.params!;
 
-    await context.queryClient.prefetchQuery(['campaigns', orgId], getCampaigns(orgId as string));
-    await context.queryClient.prefetchQuery(['org', orgId], getOrg(orgId as string));
+    await context.queryClient.prefetchQuery(['campaigns', orgId], getCampaigns(orgId as string, context.apiFetch));
+    await context.queryClient.prefetchQuery(['org', orgId], getOrg(orgId as string, context.apiFetch));
 
     const campaignsState = context.queryClient.getQueryState(['campaigns', orgId]);
     const orgState = context.queryClient.getQueryState(['org', orgId]);
