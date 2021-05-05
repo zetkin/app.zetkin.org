@@ -1,4 +1,3 @@
-
 import Actions from '@spectrum-icons/workflow/Actions';
 import Cloud from '@spectrum-icons/workflow/Cloud';
 import { GetServerSideProps } from 'next';
@@ -16,7 +15,6 @@ import getOrg from '../../../fetching/getOrg';
 import OrganizeLayout from '../../../components/layout/OrganizeLayout';
 import { PageWithLayout } from '../../../types';
 import { scaffold } from '../../../utils/next';
-
 
 const scaffoldOptions = {
     authLevelRequired: 1,
