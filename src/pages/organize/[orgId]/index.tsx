@@ -1,9 +1,11 @@
+
 import Actions from '@spectrum-icons/workflow/Actions';
 import Cloud from '@spectrum-icons/workflow/Cloud';
 import { GetServerSideProps } from 'next';
 import { FormattedMessage as Msg } from 'react-intl';
 import NextLink from 'next/link';
 import Settings from '@spectrum-icons/workflow/Settings';
+import { useQuery } from 'react-query';
 import { Flex, Header, Heading, Image, View } from '@adobe/react-spectrum';
 
 import apiUrl from '../../../utils/apiUrl';
@@ -11,9 +13,10 @@ import DashboardCampaigns from '../../../components/DashboardCampaigns';
 import DashboardPeople from '../../../components/DashboardPeople';
 import getCampaigns from '../../../fetching/getCampaigns';
 import getOrg from '../../../fetching/getOrg';
+import OrganizeLayout from '../../../components/layout/OrganizeLayout';
 import { PageWithLayout } from '../../../types';
 import { scaffold } from '../../../utils/next';
-import { useQuery } from 'react-query';
+
 
 const scaffoldOptions = {
     authLevelRequired: 1,
@@ -50,7 +53,7 @@ type OrganizePageProps = {
     orgId: string;
 };
 
-const OrganizePage: PageWithLayout<OrganizePageProps> = ({ orgId  }) => {
+const OrganizePage: PageWithLayout<OrganizePageProps> = ({ orgId }) => {
 
     const orgQuery = useQuery(['org', orgId], getOrg(orgId));
 
@@ -116,11 +119,11 @@ const OrganizePage: PageWithLayout<OrganizePageProps> = ({ orgId  }) => {
     );
 };
 
-OrganizePage.getLayout = function getLayout(page) {
+OrganizePage.getLayout = function getLayout(page, props) {
     return (
-        <div>
+        <OrganizeLayout orgId={ props.orgId as string }>
             { page }
-        </div>
+        </OrganizeLayout>
     );
 };
 
