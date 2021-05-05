@@ -60,13 +60,26 @@ export interface ZetkinSurvey {
     title: string;
 }
 
-export interface ZetkinSurveyElement {
+export type ZetkinSurveyElement = ZetkinSurveyQuestionElement | ZetkinSurveyTextblockElement;
+
+export interface ZetkinSurveyQuestionElement {
     id: number;
+    type: 'question';
+    question: ZetkinSurveyQuestion;
+}
+
+export interface ZetkinSurveyTextblockElement {
+    id: number;
+    type: 'text';
     text_block: ZetkinSurveyTextblock;
-    type: string;
 }
 
 export interface ZetkinSurveyTextblock {
     content: string;
     header: string;
+}
+
+export interface ZetkinSurveyQuestion {
+    description?: string;
+    question: string;
 }
