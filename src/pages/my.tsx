@@ -6,6 +6,7 @@ import { scaffold } from '../utils/next';
 import { ZetkinUser } from '../types/zetkin';
 
 const scaffoldOptions = {
+    authLevelRequired: 1,
     localeScope: ['pages.my'],
 };
 
