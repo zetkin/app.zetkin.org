@@ -1,22 +1,14 @@
 import CallAssignmentList from './CallAssignmentList';
 import { mountWithProviders } from '../utils/testing';
-import {
-    ZetkinCallAssignment,
-    ZetkinMembership,
-} from '../types/zetkin';
+import { ZetkinCallAssignment } from '../types/zetkin';
 
 describe('CallAssignmentList', () => {
     let dummyCallAssignments : ZetkinCallAssignment[];
-    let dummyMemberships : ZetkinMembership[];
 
     beforeEach(()=> {
         cy.fixture('dummyCallAssignments.json')
             .then((data : {data: ZetkinCallAssignment[]}) => {
                 dummyCallAssignments = data.data;
-            });
-        cy.fixture('dummyMemberships.json')
-            .then((data : {data: ZetkinMembership[]}) => {
-                dummyMemberships = data.data;
             });
     });
 
@@ -24,14 +16,13 @@ describe('CallAssignmentList', () => {
         mountWithProviders(
             <CallAssignmentList
                 callAssignments={ dummyCallAssignments }
-                memberships={ dummyMemberships }
             />,
         );
 
         cy.get('[data-testid="call-assignment"]').each((item) => {
             cy.wrap(item)
-                .get('[data-testid="call-title"]').should('be.visible')
-                .get('[data-testid="call-org"]').should('be.visible');
+                .get('[data-testid="call-assignment-title"]').should('be.visible')
+                .get('[data-testid="call-assignment-org"]').should('be.visible');
         });
     });
 
@@ -41,7 +32,6 @@ describe('CallAssignmentList', () => {
         mountWithProviders(
             <CallAssignmentList
                 callAssignments={ dummyCallAssignments }
-                memberships={ dummyMemberships }
             />,
         );
 
@@ -52,7 +42,6 @@ describe('CallAssignmentList', () => {
         mountWithProviders(
             <CallAssignmentList
                 callAssignments={ undefined }
-                memberships={ dummyMemberships }
             />,
         );
 

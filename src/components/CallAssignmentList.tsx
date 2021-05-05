@@ -1,43 +1,29 @@
-import { FormattedMessage as Msg } from 'react-intl';
-import { Flex, Text, View } from '@adobe/react-spectrum';
+import { Flex, View } from '@adobe/react-spectrum';
 
-import { ZetkinCallAssignment, ZetkinMembership } from '../types/zetkin';
+import { ZetkinCallAssignment } from '../types/zetkin';
 
 interface CallAssignmentListProps {
     callAssignments: ZetkinCallAssignment[] | undefined;
-    memberships: ZetkinMembership[] | undefined;
 }
 
-export default function CallAssignmentList ({ callAssignments, memberships } : CallAssignmentListProps) : JSX.Element {
+export default function CallAssignmentList ({ callAssignments } : CallAssignmentListProps) : JSX.Element | null {
 
     if (!callAssignments || callAssignments.length === 0) {
-        return (
-            <Text data-testid="no-assignments-placeholder">
-                <Msg id="misc.callAssignmentList.placeholder"/>
-            </Text>
-        );
+        return null;
     }
 
     return (
         <>
-            { callAssignments.map((call) => {
-                let orgTitle;
-                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                for (const obj of memberships!) {
-                    if (obj.organization.id === call.organization_id) {
-                        orgTitle = obj.organization.title;
-                    }
-                }
+            { callAssignments.map((ass) => {
                 return (
-                    <Flex key={ call.id } data-testid="call-assignment" direction="column" margin="size-200">
-                        <View data-testid="call-title">
-                            { call.title }
+                    <Flex key={ ass.id } data-testid="call-assignment" direction="column" margin="size-200">
+                        <View data-testid="call-assignment-title">
+                            { ass.title }
                         </View>
-                        <View data-testid="call-org">{ orgTitle }</View>
+                        <View data-testid="call-assignment-org">{ ass.organization.title }</View>
                     </Flex>
                 );
             }) }
         </>
     );
 }
-

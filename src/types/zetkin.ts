@@ -70,6 +70,10 @@ export interface ZetkinCallAssignment {
     };
     id: number;
     instructions: string;
+    organization: {
+        id: number;
+        title: string;
+    };
     organization_id: number;
     start_date: string;
     target: {

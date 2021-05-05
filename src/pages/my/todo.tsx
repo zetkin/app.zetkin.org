@@ -8,7 +8,6 @@ import EventList from '../../components/EventList';
 import getBookedEvents from '../../fetching/getBookedEvents';
 import getCallAssignments from '../../fetching/getCallAssignments';
 import getRespondEvents from '../../fetching/getRespondEvents';
-import getUserMemberships from '../../fetching/getUserMemberships';
 import MyHomeLayout from '../../components/layout/MyHomeLayout';
 import { PageWithLayout } from '../../types';
 import { scaffold } from '../../utils/next';
@@ -30,24 +29,20 @@ export const getServerSideProps : GetServerSideProps = scaffold(async (context) 
     let respondEventsState;
     let bookedEventsState;
     let callAssignmentsState;
-    let membershipsState;
 
     if (user) {
         await context.queryClient.prefetchQuery('respondEvents', getRespondEvents(context.apiFetch));
         await context.queryClient.prefetchQuery('bookedEvents', getBookedEvents(context.apiFetch));
         await context.queryClient.prefetchQuery('callAssignments', getCallAssignments(context.apiFetch));
-        await context.queryClient.prefetchQuery('memberships', getUserMemberships(context.apiFetch));
 
         respondEventsState = context.queryClient.getQueryState('respondEvents');
         bookedEventsState = context.queryClient.getQueryState('bookedEvents');
         callAssignmentsState = context.queryClient.getQueryState('callAssignments');
-        membershipsState = context.queryClient.getQueryState('memberships');
     }
 
     if (respondEventsState?.status === 'success'
         && bookedEventsState?.status === 'success'
-        && callAssignmentsState?.status === 'success'
-        && membershipsState?.status === 'success') {
+        && callAssignmentsState?.status === 'success') {
 
         return {
             props: {},
@@ -64,7 +59,6 @@ const MyTodoPage : PageWithLayout = () => {
     const respondEventsQuery = useQuery('respondEvents', getRespondEvents());
     const bookedEventsQuery = useQuery('bookedEvents', getBookedEvents());
     const callAssignmentsQuery = useQuery('callAssignments', getCallAssignments());
-    const membershipsQuery = useQuery('memberships', getUserMemberships());
 
     const { onSignup, onUndoSignup } = useEventResponses();
 
@@ -88,7 +82,6 @@ const MyTodoPage : PageWithLayout = () => {
             <Flex marginBottom="0">
                 <CallAssignmentList
                     callAssignments={ callAssignmentsQuery.data }
-                    memberships={ membershipsQuery.data }
                 />
             </Flex>
             <Heading level={ 2 } marginBottom="0">
