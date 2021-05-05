@@ -1,9 +1,6 @@
 import apiUrl from '../utils/apiUrl';
+import { ZetkinCampaign } from '../types/zetkin';
 
-export interface ZetkinCampaign {
-    info_text: string;
-    title: string;
-}
 
 export default function getCampaign(orgId : string, campId : string) {
     return async () : Promise<ZetkinCampaign> => {
