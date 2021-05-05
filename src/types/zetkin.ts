@@ -34,7 +34,7 @@ export interface ZetkinEvent {
     };
     start_time: string;
     title?: string;
-    organization?: {
+    organization: {
         id: number;
         title: string;
     };

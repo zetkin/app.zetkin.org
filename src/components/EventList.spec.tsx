@@ -5,11 +5,9 @@ import { UserContext } from '../hooks';
 import {
     ZetkinEvent,
     ZetkinEventResponse,
-    ZetkinOrganization,
 } from '../types/zetkin';
 
 describe('EventList', () => {
-    let dummyOrg : ZetkinOrganization;
     let dummyEvents : ZetkinEvent[];
     let dummyEventResponses : ZetkinEventResponse[];
     let dummyBookedEvents : BookedEvent[];
@@ -21,10 +19,6 @@ describe('EventList', () => {
     };
 
     beforeEach(()=> {
-        cy.fixture('dummyOrg.json')
-            .then((data : ZetkinOrganization) => {
-                dummyOrg = data;
-            });
         cy.fixture('dummyEvents.json')
             .then((data : {data: ZetkinEvent[]}) => {
                 dummyEvents = data.data;
@@ -47,7 +41,6 @@ describe('EventList', () => {
                 events={ dummyEvents }
                 onSignup={ () => null }
                 onUndoSignup={ () => null }
-                org={ dummyOrg }
             />,
         );
 
@@ -72,7 +65,6 @@ describe('EventList', () => {
                 events={ dummyEvents }
                 onSignup={ () => null }
                 onUndoSignup={ () => null }
-                org={ dummyOrg }
             />,
         );
 
@@ -90,7 +82,6 @@ describe('EventList', () => {
                     events={ dummyEvents }
                     onSignup={ spyOnSignup }
                     onUndoSignup={ () => null }
-                    org={ dummyOrg }
                 />
             </UserContext.Provider>,
         );
@@ -111,7 +102,6 @@ describe('EventList', () => {
                     events={ dummyEvents }
                     onSignup={ () => null }
                     onUndoSignup={ () => null }
-                    org={ dummyOrg }
                 />
             </UserContext.Provider>,
         );
@@ -128,7 +118,6 @@ describe('EventList', () => {
                 events={ dummyEvents }
                 onSignup={ () => null  }
                 onUndoSignup={ () => null  }
-                org={ dummyOrg }
             />,
         );
 
@@ -145,7 +134,6 @@ describe('EventList', () => {
                 events={ dummyEvents }
                 onSignup={ () => null  }
                 onUndoSignup={ () => null  }
-                org={ dummyOrg }
             />,
         );
 
@@ -160,7 +148,6 @@ describe('EventList', () => {
                 events={ undefined }
                 onSignup={ () => null  }
                 onUndoSignup={ () => null  }
-                org={ dummyOrg }
             />,
         );
 
@@ -176,7 +163,6 @@ describe('EventList', () => {
                     events={ dummyEvents }
                     onSignup={ () => null  }
                     onUndoSignup={ () => null  }
-                    org={ dummyOrg }
                 />
             </UserContext.Provider>,
         );

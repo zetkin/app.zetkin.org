@@ -15,7 +15,11 @@
                 "title": "Dummy location"
             },
             "start_time": "2021-05-01T13:37:00+00:00",
-            "title": "Dummy event"
+            "title": "Dummy event",
+            "organization": {
+                "id": 1,
+                "title": "Dummy Org"
+            }
         }
     ]
 }

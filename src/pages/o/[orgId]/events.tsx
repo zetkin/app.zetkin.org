@@ -59,7 +59,6 @@ type EventsPageProps = {
 const EventsPage : PageWithLayout<EventsPageProps> = (props) => {
     const { orgId } = props;
     const eventsQuery = useQuery('events', getEvents(orgId));
-    const orgQuery = useQuery(['org', orgId], getOrg(orgId));
     const bookedEventsQuery = useQuery('bookedEvents', getBookedEvents());
 
     const { eventResponses, onSignup, onUndoSignup } = useEventResponses();
@@ -72,8 +71,6 @@ const EventsPage : PageWithLayout<EventsPageProps> = (props) => {
                 events={ eventsQuery.data }
                 onSignup={ onSignup }
                 onUndoSignup={ onUndoSignup }
-                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                org={ orgQuery.data! }
             />
         </Flex>
     );
