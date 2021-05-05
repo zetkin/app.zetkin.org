@@ -56,38 +56,37 @@ const OrganizePage: PageWithLayout<OrganizePageProps> = ({ orgId  }) => {
 
     return (
         <>
-            <View borderColor="celery-400" borderWidth="thick">
-                <Header height="size-1200">
+            <View borderColor="gray-400" borderWidth="thick" margin="1rem" padding="1rem">
+                <Header>
                     <Flex height="100%" justifyContent="start" width="100%">
                         <Image
                             alt="Organization avatar"
                             data-testid="org-avatar"
-                            height="size-1200"
                             objectFit="contain"
                             src={ apiUrl(`/orgs/${orgId}/avatar`) }
                             width="size-1200"
                         />
                         <View>
-                            <Flex direction="column">
+                            <Flex direction="column" margin="0 1rem">
                                 <Heading level={ 1 }>
                                     { orgQuery.data?.title }
                                 </Heading>
                                 <View>
                                     <Cloud aria-label="Cloud" size="XS" />
                                     <NextLink href={ `/o/${orgId}` }>
-                                        <a>
+                                        <a style={{ margin:'0.5rem' }}>
                                             <Msg id="pages.organize.linkGroup.public"/>
                                         </a>
                                     </NextLink>
                                     <Actions aria-label="Actions" size="XS" />
                                     <NextLink href={ `/organize/${orgId}/organization` }>
-                                        <a>
+                                        <a style={{ margin:'0.5rem' }}>
                                             <Msg id="pages.organize.linkGroup.manage"/>
                                         </a>
                                     </NextLink>
                                     <Settings aria-label="Settings" size="XS" />
                                     <NextLink href={ `/organize/${orgId}/settings` }>
-                                        <a>
+                                        <a style={{ margin:'0.5rem' }}>
                                             <Msg id="pages.organize.linkGroup.settings"/>
                                         </a>
                                     </NextLink>
@@ -98,17 +97,19 @@ const OrganizePage: PageWithLayout<OrganizePageProps> = ({ orgId  }) => {
                 </Header>
             </View>
             <View>
-                <Flex wrap>
+                <Flex>
                     <View width="50%">
-                        <View borderWidth="thick">
+                        <View borderColor="gray-400" borderWidth="thick" margin="size-200" padding="size-200">
                             <DashboardCampaigns orgId={ orgId }/>
                         </View>
-                        <View borderWidth="thick">
+                        <View borderColor="gray-400" borderWidth="thick" margin="size-200" padding="size-200">
                             <DashboardPeople orgId={ orgId }/>
                         </View>
-                        <View borderWidth="thick">Areas</View>
+                        <View borderColor="gray-400" borderWidth="thick" margin="size-200">
+                            Areas
+                        </View>
                     </View>
-                    <View borderColor="celery-400" borderWidth="thick" height="size-1200" width="50%">Inbox</View>
+                    <View borderColor="gray-400" borderWidth="thick" height="size-1200" margin="size-200" width="50%">Inbox</View>
                 </Flex>
             </View>
         </>
