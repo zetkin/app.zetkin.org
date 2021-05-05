@@ -113,7 +113,7 @@ export const scaffold = (wrapped : ScaffoldedGetServerSideProps, options? : Scaf
 
                 return {
                     redirect: {
-                        destination: '/login',
+                        destination: `/login?level=${options.authLevelRequired}`,
                         permanent: false,
                     },
                 };
