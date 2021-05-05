@@ -64,4 +64,28 @@ describe('SurveyForm', () => {
         cy.get('[data-testid="question-description"]').should('be.visible');
 
     });
+
+    it('renders a question with single line text input', () => {
+        type QuestionType = 'question';
+
+        const dummySurvey = {
+            elements: [
+                {
+                    id: 1,
+                    question: {
+                        question: 'This is a question?',
+                    },
+                    type: 'question' as QuestionType,
+                },
+            ],
+            info_text: 'My description of the survey',
+            title: 'My survey',
+        };
+
+        mountWithProviders(<SurveyForm survey={ dummySurvey } />);
+
+        cy.get('[data-testid="question"]').should('be.visible');
+        cy.get('[data-testid="response"]').should('be.visible');
+    });
+
 });
