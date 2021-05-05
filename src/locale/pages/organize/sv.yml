@@ -3,8 +3,8 @@ linkGroup:
   manage: Hantera organisation
   settings: Ändra inställningar
 currentProjects:
-  title: Nuvarande projekter och kampanjer
-  all: Alla projekter och kampanjer
+  title: Nuvarande projekt och kampanjer
+  all: Alla projekt och kampanjer
   new: Skapa kampanj
 people:
   title: Känner du det har medlem?
