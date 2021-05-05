@@ -1,5 +1,9 @@
 import { mountWithProviders } from '../../utils/testing';
 import SurveyForm from '../../pages/o/[orgId]/surveys/SurveyForm';
+import {
+    ZetkinSurveyQuestionElement,
+    ZetkinSurveyTextblockElement,
+} from '../../types/zetkin';
 
 describe('SurveyForm', () => {
     it('renders header and info_text', () => {
@@ -16,8 +20,6 @@ describe('SurveyForm', () => {
     });
 
     it('renders a text block with header and content', () => {
-        type TextType = 'text';
-
         const dummySurvey = {
             elements: [
                 {
@@ -26,8 +28,8 @@ describe('SurveyForm', () => {
                         content: 'This is the content of the text block',
                         header: 'Text block header',
                     },
-                    type: 'text' as TextType,
-                },
+                    type: 'text',
+                } as ZetkinSurveyTextblockElement,
             ],
             info_text: 'My description of the survey',
             title: 'My survey',
@@ -41,8 +43,6 @@ describe('SurveyForm', () => {
 
 
     it('renders a question with description', () => {
-        type QuestionType = 'question';
-
         const dummySurvey = {
             elements: [
                 {
@@ -53,9 +53,10 @@ describe('SurveyForm', () => {
                         response_config: {
                             multiline: false,
                         },
+                        response_type: 'text',
                     },
-                    type: 'question' as QuestionType,
-                },
+                    type: 'question',
+                } as ZetkinSurveyQuestionElement,
             ],
             info_text: 'My description of the survey',
             title: 'My survey',
@@ -69,8 +70,6 @@ describe('SurveyForm', () => {
     });
 
     it('renders a question with single line text input', () => {
-        type QuestionType = 'question';
-
         const dummySurvey = {
             elements: [
                 {
@@ -80,9 +79,10 @@ describe('SurveyForm', () => {
                         response_config: {
                             multiline: false,
                         },
+                        response_type: 'text',
                     },
-                    type: 'question' as QuestionType,
-                },
+                    type: 'question',
+                }  as ZetkinSurveyQuestionElement,
             ],
             info_text: 'My description of the survey',
             title: 'My survey',
@@ -95,8 +95,6 @@ describe('SurveyForm', () => {
     });
 
     it('renders a question with a multi-line text input', () => {
-        type QuestionType = 'question';
-
         const dummySurvey = {
             elements: [
                 {
@@ -106,9 +104,10 @@ describe('SurveyForm', () => {
                         response_config: {
                             multiline: true,
                         },
+                        response_type: 'text',
                     },
-                    type: 'question' as QuestionType,
-                },
+                    type: 'question',
+                }  as ZetkinSurveyQuestionElement,
             ],
             info_text: 'My description of the survey',
             title: 'My survey',
