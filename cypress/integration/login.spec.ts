@@ -9,11 +9,7 @@ describe('Login process', () => {
 
     it('contains a login form where you can login and see your details', () => {
         cy.visit('/login');
-        cy.get('input[aria-label="E-mail address"]').type('testadmin@example.com');
-        cy.get('input[aria-label="Password"]').type('password');
-        cy.get('input[aria-label="Log in"]')
-            .should('be.visible')
-            .click();
+        cy.fillLoginForm();
         cy.url().should('match', /\/$/);
         cy.get('[data-testid="username"]').should('be.visible');
         cy.get('[data-testid="user-avatar"]').should('be.visible');
@@ -21,9 +17,7 @@ describe('Login process', () => {
 
     it('takes you to My Page when clicking on user avatar', () => {
         cy.visit('/login');
-        cy.get('input[aria-label="E-mail address"]').type('testadmin@example.com');
-        cy.get('input[aria-label="Password"]').type('password');
-        cy.get('input[aria-label="Log in"]').click();
+        cy.fillLoginForm();
         cy.waitUntilReactRendered();
         cy.get('[data-testid="username"]').click();
         cy.url().should('match', /\/my$/);
@@ -36,17 +30,13 @@ describe('Login process', () => {
 
     it('redirects to tried page after logging in', () => {
         cy.visit('/my');
-        cy.get('input[aria-label="E-mail address"]').type('testadmin@example.com');
-        cy.get('input[aria-label="Password"]').type('password');
-        cy.get('input[aria-label="Log in"]').click();
+        cy.fillLoginForm();
         cy.url().should('match', /\/my$/);
     });
 
     it('contains a logout button wich logs you out and takes you back to the home page', () => {
         cy.visit('/login');
-        cy.get('input[aria-label="E-mail address"]').type('testadmin@example.com');
-        cy.get('input[aria-label="Password"]').type('password');
-        cy.get('input[aria-label="Log in"]').click();
+        cy.fillLoginForm();
         cy.getCookie('sid')
             .should('have.property', 'value')
             .then((cookie) => {
