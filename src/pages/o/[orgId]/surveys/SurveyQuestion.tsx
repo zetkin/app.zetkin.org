@@ -1,20 +1,18 @@
+import SurveyOptionsQuestion from './SurveyOptionsQuestion';
+import SurveyTextQuestion from './SurveyTextQuestion';
 import { ZetkinSurveyQuestion } from '../../../../types/zetkin';
 
 interface SurveyQuestionProps {
-    question_props: ZetkinSurveyQuestion;
+    question: ZetkinSurveyQuestion;
 }
 
-export default function SurveyQuestion({ question_props }: SurveyQuestionProps): JSX.Element {
-    const { question, description, response_config } = question_props;
-    const { multiline } = response_config;
+export default function SurveyQuestion({ question }: SurveyQuestionProps): JSX.Element {
+    const { response_type } = question;
 
-    return (
-        <>
-            <h2 data-testid="question">{ question }</h2>
-            <h3 data-testid="question-description">{ description }</h3>
-            { multiline ?
-                (<textarea data-testid="response-multiline" />) : (<input data-testid="response-singleline" type="text" />)
-            }
-        </>
-    );
+    if (response_type === 'text') {
+        return <SurveyTextQuestion question={ question }/>;
+    }
+    else {
+        return <SurveyOptionsQuestion question={ question }/>;
+    }
 }

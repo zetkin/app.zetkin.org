@@ -118,4 +118,46 @@ describe('SurveyForm', () => {
         cy.get('[data-testid="response-multiline"]').should('be.visible');
     });
 
+    it('can render a question with multiple checkbox options', () => {
+        const dummySurvey = {
+            elements: [
+                {
+                    id: 1,
+                    question: {
+                        options: [{
+                            id: 1 ,
+                            text: 'Option one',
+                        },
+                        {
+                            id: 2,
+                            text: 'Option two',
+                        }],
+                        question: 'This is a question?',
+                        response_config: {},
+                        response_type: 'options',
+                    },
+                    type: 'question',
+                } as ZetkinSurveyQuestionElement,
+            ],
+            info_text: 'My description of the survey',
+            title: 'My survey',
+        };
+
+        mountWithProviders(<SurveyForm survey={ dummySurvey } />);
+
+        cy.get('[data-testid="response-checkbox"]').should('be.visible');
+        cy.findByLabelText('Option one')
+            .should('be.visible')
+            .click().then(() => {
+                cy.get('#option-1')
+                    .should('be.checked').then(() => {
+                        cy.findByLabelText('Option two').should('be.visible')
+                            .click().then(() => {
+                                cy.get('#option-2')
+                                    .should('be.checked');
+                            });
+                    });
+            });
+    });
+
 });

@@ -81,8 +81,13 @@ export interface ZetkinSurveyTextblock {
 
 export interface ZetkinSurveyQuestion {
     description?: string;
+    options?: {
+        id: number;
+        text: string;
+    }[];
     question: string;
     response_config: {
-        multiline: boolean;
+        multiline?: boolean;
     };
+    response_type: string;
 }
