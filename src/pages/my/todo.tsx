@@ -7,7 +7,7 @@ import CallAssignmentList from '../../components/CallAssignmentList';
 import EventList from '../../components/EventList';
 import getBookedEvents from '../../fetching/getBookedEvents';
 import getCallAssignments from '../../fetching/getCallAssignments';
-import getTodoEvents from '../../fetching/getTodoEvents';
+import getRespondEvents from '../../fetching/getRespondEvents';
 import getUserMemberships from '../../fetching/getUserMemberships';
 import MyHomeLayout from '../../components/layout/MyHomeLayout';
 import { PageWithLayout } from '../../types';
@@ -27,24 +27,24 @@ const scaffoldOptions = {
 export const getServerSideProps : GetServerSideProps = scaffold(async (context) => {
     const { user } = context;
 
-    let todoEventsState;
+    let respondEventsState;
     let bookedEventsState;
     let callAssignmentsState;
     let membershipsState;
 
     if (user) {
-        await context.queryClient.prefetchQuery('todoEvents', getTodoEvents(context.apiFetch));
+        await context.queryClient.prefetchQuery('respondEvents', getRespondEvents(context.apiFetch));
         await context.queryClient.prefetchQuery('bookedEvents', getBookedEvents(context.apiFetch));
         await context.queryClient.prefetchQuery('callAssignments', getCallAssignments(context.apiFetch));
         await context.queryClient.prefetchQuery('memberships', getUserMemberships(context.apiFetch));
 
-        todoEventsState = context.queryClient.getQueryState('todoEvents');
+        respondEventsState = context.queryClient.getQueryState('respondEvents');
         bookedEventsState = context.queryClient.getQueryState('bookedEvents');
         callAssignmentsState = context.queryClient.getQueryState('callAssignments');
         membershipsState = context.queryClient.getQueryState('memberships');
     }
 
-    if (todoEventsState?.status === 'success'
+    if (respondEventsState?.status === 'success'
         && bookedEventsState?.status === 'success'
         && callAssignmentsState?.status === 'success'
         && membershipsState?.status === 'success') {
@@ -61,14 +61,14 @@ export const getServerSideProps : GetServerSideProps = scaffold(async (context) 
 }, scaffoldOptions);
 
 const MyTodoPage : PageWithLayout = () => {
-    const todoEventsQuery = useQuery('todoEvents', getTodoEvents());
+    const respondEventsQuery = useQuery('respondEvents', getRespondEvents());
     const bookedEventsQuery = useQuery('bookedEvents', getBookedEvents());
     const callAssignmentsQuery = useQuery('callAssignments', getCallAssignments());
     const membershipsQuery = useQuery('memberships', getUserMemberships());
 
     const { onSignup, onUndoSignup } = useEventResponses();
 
-    if (!todoEventsQuery.data || todoEventsQuery.data.length === 0
+    if (!respondEventsQuery.data || respondEventsQuery.data.length === 0
         && !callAssignmentsQuery.data || callAssignmentsQuery.data?.length === 0) {
         return (
             <Text data-testid="no-events-placeholder">
@@ -97,7 +97,7 @@ const MyTodoPage : PageWithLayout = () => {
             <Flex marginBottom="size-500">
                 <EventList
                     bookedEvents={ bookedEventsQuery.data }
-                    events={ todoEventsQuery.data }
+                    events={ respondEventsQuery.data }
                     onSignup={ onSignup }
                     onUndoSignup={ onUndoSignup }
                 />

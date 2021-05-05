@@ -1,7 +1,7 @@
 import { defaultFetch } from '.';
-import { ZetkinEvent, ZetkinEventResponse } from '../types/zetkin';
+import { ZetkinEvent } from '../types/zetkin';
 
-export default function getTodoEvents(fetch = defaultFetch) {
+export default function getRespondEvents(fetch = defaultFetch) {
     return async () : Promise<ZetkinEvent[]> => {
 
         const membershipsRes = await fetch(`/users/me/memberships`);
@@ -10,25 +10,24 @@ export default function getTodoEvents(fetch = defaultFetch) {
         const responsesRes = await fetch('/users/me/action_responses');
         const responsesData = await responsesRes.json();
 
-        const todoEvents = [];
+        const respondEvents = [];
 
         if (responsesData.data) {
             for (const mObj of membershipsData.data) {
-                const oEventsRes = await fetch(`/orgs/${mObj.organization.id}/actions`);
-                const oEventsData = await oEventsRes.json();
+                const eventsRes = await fetch(`/orgs/${mObj.organization.id}/actions`);
+                const eventsData = await eventsRes.json();
 
                 const org = {
                     id: mObj.organization.id,
                     title: mObj.organization.title,
                 };
 
-                for (const eObj of oEventsData.data) {
-                    if (responsesData.data.find((r : ZetkinEventResponse) => r.action_id  === eObj.id)) {
-                        todoEvents.push({ ...eObj, organization: org });
-                    }
+                for (const rObj of responsesData.data) {
+                    const event = eventsData.data.find((event : ZetkinEvent) => event.id === rObj.action_id);
+                    respondEvents.push({ ...event, organization: org });
                 }
             }
         }
-        return todoEvents;
+        return respondEvents;
     };
 }
