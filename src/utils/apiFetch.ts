@@ -1,17 +1,14 @@
 import apiUrl from './apiUrl';
-
-export interface RequestWithHeaders {
-    headers: Record<string, string>;
-}
+import { IncomingHttpHeaders } from 'node:http';
 
 export type ApiFetch = (path: string, init?: RequestInit) => Promise<Response>;
 
-export const createApiFetch = (req: RequestWithHeaders): ApiFetch => {
+export const createApiFetch = (headers: IncomingHttpHeaders): ApiFetch => {
     return (path,init) => {
         return fetch(apiUrl(path), {
             ...init,
             headers: {
-                cookie: req.headers.cookie ||'',
+                cookie: headers.cookie ||'',
                 ...init?.headers,
             },
         });

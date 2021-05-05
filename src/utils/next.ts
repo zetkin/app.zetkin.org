@@ -8,7 +8,7 @@ import { AppSession } from '../types';
 import { getMessages } from './locale';
 import stringToBool from './stringToBool';
 import { ZetkinZ } from '../types/sdk';
-import { ApiFetch, createApiFetch, RequestWithHeaders } from './apiFetch';
+import { ApiFetch, createApiFetch } from './apiFetch';
 import { ZetkinSession, ZetkinUser } from '../types/zetkin';
 
 //TODO: Create module definition and revert to import.
@@ -64,7 +64,7 @@ export const scaffold = (wrapped : ScaffoldedGetServerSideProps, options? : Scaf
         const ctx = contextFromNext as ScaffoldedContext;
 
         ctx.queryClient = new QueryClient();
-        ctx.apiFetch = createApiFetch(ctx.req as RequestWithHeaders);
+        ctx.apiFetch = createApiFetch(ctx.req.headers);
 
         ctx.z = Z.construct({
             clientId: process.env.ZETKIN_CLIENT_ID,
