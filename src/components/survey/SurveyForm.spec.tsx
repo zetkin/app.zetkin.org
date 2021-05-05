@@ -50,6 +50,9 @@ describe('SurveyForm', () => {
                     question: {
                         description: 'Here is the description of the question.',
                         question: 'This is a question?',
+                        response_config: {
+                            multiline: false,
+                        },
                     },
                     type: 'question' as QuestionType,
                 },
@@ -74,6 +77,9 @@ describe('SurveyForm', () => {
                     id: 1,
                     question: {
                         question: 'This is a question?',
+                        response_config: {
+                            multiline: false,
+                        },
                     },
                     type: 'question' as QuestionType,
                 },
@@ -85,7 +91,32 @@ describe('SurveyForm', () => {
         mountWithProviders(<SurveyForm survey={ dummySurvey } />);
 
         cy.get('[data-testid="question"]').should('be.visible');
-        cy.get('[data-testid="response"]').should('be.visible');
+        cy.get('[data-testid="response-singleline"]').should('be.visible');
+    });
+
+    it('renders a question with a multi-line text input', () => {
+        type QuestionType = 'question';
+
+        const dummySurvey = {
+            elements: [
+                {
+                    id: 1,
+                    question: {
+                        question: 'This is a question?',
+                        response_config: {
+                            multiline: true,
+                        },
+                    },
+                    type: 'question' as QuestionType,
+                },
+            ],
+            info_text: 'My description of the survey',
+            title: 'My survey',
+        };
+
+        mountWithProviders(<SurveyForm survey={ dummySurvey } />);
+
+        cy.get('[data-testid="response-multiline"]').should('be.visible');
     });
 
 });

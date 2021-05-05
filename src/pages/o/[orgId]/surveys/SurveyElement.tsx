@@ -1,3 +1,4 @@
+import SurveyQuestion from './SurveyQuestion';
 import {
     ZetkinSurveyElement,
     ZetkinSurveyTextblockElement,
@@ -24,11 +25,7 @@ export default function SurveyElement({ element }: SurveyElementProps) : JSX.Ele
     else {
         const { question } = element;
         return (
-            <>
-                <h2 data-testid="question">{ question.question }</h2>
-                <h3 data-testid="question-description">{ question.description }</h3>
-                <input data-testid="response" type="text"/>
-            </>
+            <SurveyQuestion question_props={ question }/>
         );
     }
 }
