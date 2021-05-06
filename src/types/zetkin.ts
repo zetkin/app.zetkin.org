@@ -88,6 +88,7 @@ export interface ZetkinSurveyQuestion {
     question: string;
     response_config: {
         multiline?: boolean;
+        widget_type?: string;
     };
     response_type: string;
 }

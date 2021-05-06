@@ -133,7 +133,9 @@ describe('SurveyForm', () => {
                             text: 'Option two',
                         }],
                         question: 'This is a question?',
-                        response_config: {},
+                        response_config: {
+                            widget_type: 'checkbox',
+                        },
                         response_type: 'options',
                     },
                     type: 'question',
@@ -149,12 +151,62 @@ describe('SurveyForm', () => {
         cy.findByLabelText('Option one')
             .should('be.visible')
             .click().then(() => {
-                cy.get('#option-1')
+                cy.get('#1-checkbox-1')
                     .should('be.checked').then(() => {
                         cy.findByLabelText('Option two').should('be.visible')
                             .click().then(() => {
-                                cy.get('#option-2')
-                                    .should('be.checked');
+                                cy.get('#1-checkbox-2')
+                                    .should('be.checked').then(() => {
+                                        cy.get('#1-checkbox-1')
+                                            .should('be.checked');
+                                    });
+                            });
+                    });
+            });
+    });
+
+    it('can render a question with multiple options where only one option can be checked', () => {
+        const dummySurvey = {
+            elements: [
+                {
+                    id: 1,
+                    question: {
+                        options: [{
+                            id: 1 ,
+                            text: 'Option one',
+                        },
+                        {
+                            id: 2,
+                            text: 'Option two',
+                        }],
+                        question: 'This is a question?',
+                        response_config: {
+                            widget_type: 'radio',
+                        },
+                        response_type: 'options',
+                    },
+                    type: 'question',
+                } as ZetkinSurveyQuestionElement,
+            ],
+            info_text: 'My description of the survey',
+            title: 'My survey',
+        };
+
+        mountWithProviders(<SurveyForm survey={ dummySurvey } />);
+
+        cy.get('[data-testid="response-radio"]').should('be.visible');
+        cy.findByLabelText('Option one')
+            .should('be.visible')
+            .click().then(() => {
+                cy.get('#1-radio-1')
+                    .should('be.checked').then(() => {
+                        cy.findByLabelText('Option two').should('be.visible')
+                            .click().then(() => {
+                                cy.get('#1-radio-2')
+                                    .should('be.checked').then(() => {
+                                        cy.get('#1-radio-1')
+                                            .should('not.be.checked');
+                                    });
                             });
                     });
             });
