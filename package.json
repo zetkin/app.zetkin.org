@@ -9,7 +9,7 @@
     "lint": "eslint src cypress && tsc --noEmit && echo 'Finished linting without errors!'",
     "tdd": "concurrently \"cross-env NODE_ENV=test yarn devserver\" \"yarn devproxy\" \"yarn cypress open\"",
     "watch": "chokidar 'src/**/*' -c 'npm run lint'",
-    "ci-start": "concurrently 'next start -p 80' 'yarn devproxy'",
+    "ci-start": "concurrently 'next start -p 3000' 'yarn devproxy'",
     "start": "next start -p 80"
   },
   "nyc": {
