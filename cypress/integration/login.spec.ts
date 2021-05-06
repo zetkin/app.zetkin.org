@@ -32,7 +32,6 @@ describe('Login process', () => {
         cy.login();
         cy.visit('/');
         cy.getCookie('sid')
-            //.should('have.property', 'value')
             .then((cookie) => {
                 cy.get('[data-testid="logout-button"]')
                     .should('be.visible')
