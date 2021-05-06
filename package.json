@@ -5,7 +5,7 @@
   "scripts": {
     "build": "next build",
     "devproxy": "moxy -f http://api.dev.zetkin.org",
-    "devserver": "next dev -p 80",
+    "devserver": "next dev -p 3000",
     "lint": "eslint src cypress && tsc --noEmit && echo 'Finished linting without errors!'",
     "tdd": "concurrently \"cross-env NODE_ENV=test yarn devserver\" \"yarn devproxy\" \"yarn cypress open\"",
     "watch": "chokidar 'src/**/*' -c 'npm run lint'",

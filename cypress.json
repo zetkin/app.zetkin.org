@@ -1,5 +1,5 @@
 {
-    "baseUrl": "http://www.dev.zetkin.org",
+    "baseUrl": "http://localhost:3000",
     "env": {
         "codeCoverage": {
             "url": "/api/coverage"
