@@ -1,5 +1,6 @@
 import SurveyOptionsCheckbox from './SurveyOptionsCheckbox';
 import SurveyOptionsRadio from './SurveyOptionsRadio';
+import SurveyOptionsSelect from './SurveyOptionsSelect';
 import { ZetkinSurveyQuestion } from '../../../../types/zetkin';
 
 interface SurveyOptionsQuestionProps {
@@ -14,7 +15,10 @@ export default function SurveyOptionsQuestion( props : SurveyOptionsQuestionProp
     if (widget_type === 'radio') {
         return <SurveyOptionsRadio elementId={ props.elementId } question={ props.question } />;
     }
-    else {
+    else if (widget_type === 'checkbox') {
         return <SurveyOptionsCheckbox elementId={ props.elementId } question={ props.question } />;
+    }
+    else {
+        return <SurveyOptionsSelect elementId={ props.elementId } question={ props.question } />;
     }
 }

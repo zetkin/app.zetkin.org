@@ -212,4 +212,38 @@ describe('SurveyForm', () => {
             });
     });
 
+    it('can render a question with a drop-down menu of options where only one can be selected', () => {
+        const dummySurvey = {
+            elements: [
+                {
+                    id: 1,
+                    question: {
+                        options: [{
+                            id: 1,
+                            text: 'Option one',
+                        },
+                        {
+                            id: 2,
+                            text: 'Option two',
+                        }],
+                        question: 'This is a question?',
+                        response_config: {
+                            widget_type: 'select',
+                        },
+                        response_type: 'options',
+                    },
+                    type: 'question',
+                } as ZetkinSurveyQuestionElement,
+            ],
+            info_text: 'My description of the survey',
+            title: 'My survey',
+        };
+
+        mountWithProviders(<SurveyForm survey={ dummySurvey } />);
+
+        cy.get('[data-testid="response-select"]')
+            .should('be.visible')
+            .select('Option one')
+            .should('have.value', 'Option one');
+    });
 });
