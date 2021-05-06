@@ -150,19 +150,13 @@ describe('SurveyForm', () => {
         cy.get('[data-testid="response-checkbox"]').should('be.visible');
         cy.findByLabelText('Option one')
             .should('be.visible')
-            .click().then(() => {
-                cy.get('#1-checkbox-1')
-                    .should('be.checked').then(() => {
-                        cy.findByLabelText('Option two').should('be.visible')
-                            .click().then(() => {
-                                cy.get('#1-checkbox-2')
-                                    .should('be.checked').then(() => {
-                                        cy.get('#1-checkbox-1')
-                                            .should('be.checked');
-                                    });
-                            });
-                    });
-            });
+            .click();
+        cy.get('#1-checkbox-1').should('be.checked');
+        cy.findByLabelText('Option two')
+            .should('be.visible')
+            .click();
+        cy.get('#1-checkbox-2').should('be.checked');
+        cy.get('#1-checkbox-1').should('be.checked');
     });
 
     it('can render a question with multiple options where only one option can be checked', () => {
@@ -197,19 +191,13 @@ describe('SurveyForm', () => {
         cy.get('[data-testid="response-radio"]').should('be.visible');
         cy.findByLabelText('Option one')
             .should('be.visible')
-            .click().then(() => {
-                cy.get('#1-radio-1')
-                    .should('be.checked').then(() => {
-                        cy.findByLabelText('Option two').should('be.visible')
-                            .click().then(() => {
-                                cy.get('#1-radio-2')
-                                    .should('be.checked').then(() => {
-                                        cy.get('#1-radio-1')
-                                            .should('not.be.checked');
-                                    });
-                            });
-                    });
-            });
+            .click();
+        cy.get('#1-radio-1').should('be.checked');
+        cy.findByLabelText('Option two')
+            .should('be.visible')
+            .click();
+        cy.get('#1-radio-2').should('be.checked');
+        cy.get('#1-radio-1').should('not.be.checked');
     });
 
     it('can render a question with a drop-down menu of options where only one can be selected', () => {

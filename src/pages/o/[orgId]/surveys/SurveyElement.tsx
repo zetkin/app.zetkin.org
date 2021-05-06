@@ -23,9 +23,8 @@ export default function SurveyElement({ element }: SurveyElementProps) : JSX.Ele
         );
     }
     else {
-        const { question, id } = element;
         return (
-            <SurveyQuestion elementId={ id } question={ question }/>
+            <SurveyQuestion element={ element }/>
         );
     }
 }
