@@ -14,10 +14,10 @@ export default function SurveyOptionsQuestion( { element } : SurveyOptionsQuesti
     if (widget_type === 'radio') {
         return <SurveyOptionsRadio element={ element } />;
     }
-    else if (widget_type === 'checkbox') {
-        return <SurveyOptionsCheckbox element={ element } />;
+    else if (widget_type === 'select') {
+        return <SurveyOptionsSelect element={ element } />;
     }
     else {
-        return <SurveyOptionsSelect element={ element } />;
+        return <SurveyOptionsCheckbox element={ element } />;
     }
 }

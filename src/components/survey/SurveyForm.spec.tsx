@@ -234,4 +234,45 @@ describe('SurveyForm', () => {
             .select('Option one')
             .should('have.value', 'Option one');
     });
+
+    it('can handle questions with an empty response_config object'
+        + 'and default to checkbox or single line responses', () => {
+        const dummySurvey = {
+            elements: [
+                {
+                    id: 1,
+                    question: {
+                        options: [{
+                            id: 1,
+                            text: 'Option one',
+                        },
+                        {
+                            id: 2,
+                            text: 'Option two',
+                        }],
+                        question: 'This is a question?',
+                        response_config: {},
+                        response_type: 'options',
+                    },
+                    type: 'question',
+                } as ZetkinSurveyQuestionElement,
+                {
+                    id: 2,
+                    question: {
+                        question: 'Is this also a question?',
+                        response_config: {},
+                        response_type: 'text',
+                    },
+                    type: 'question',
+                } as ZetkinSurveyQuestionElement,
+            ],
+            info_text: 'My description of the survey',
+            title: 'My survey',
+        };
+
+        mountWithProviders(<SurveyForm survey={ dummySurvey } />);
+
+        cy.get('[data-testid="response-checkbox"]').should('be.visible');
+        cy.get('[data-testid="response-singleline"]').should('be.visible');
+    });
 });
