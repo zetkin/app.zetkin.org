@@ -2,8 +2,6 @@
 require('@cypress/react/support');
 require('@testing-library/cypress/add-commands');
 
-const COOKIE_NAME = 'sid';
-
 Cypress.Commands.add('waitUntilReactRendered', (timeout = 10000) => {
     cy.window().its('__reactRendered', { timeout }).then(initialized => {
         return initialized;
@@ -11,16 +9,27 @@ Cypress.Commands.add('waitUntilReactRendered', (timeout = 10000) => {
 });
 
 Cypress.Commands.add('login', () => {
-    Cypress.Cookies.preserveOnce(COOKIE_NAME);
+    // Request the login route which will redirect to login page
+    cy.request('/login').then(res => {
+        // Find the URL to which we were redirected
+        const redirect = res.redirects.pop();
+        const loginUri = redirect.split(' ')[1];
 
-    cy.getCookie(COOKIE_NAME).then(cookie => {
-        if (!cookie) {
-            cy.visit('/login');
-            cy.fillLoginForm();
-        }
-        else {
-            cy.getCookie(COOKIE_NAME).should('have.property', 'value');
-        }
+        // Parse login page HTML to find the session data in form field
+        const $html = Cypress.$(res.body);
+        const session = $html.find('input[name=session]').val();
+
+        // Simulate posting the form, including credentials and session data
+        cy.request({
+            body: {
+                email: 'testadmin@example.com',
+                password: 'password',
+                session: session,
+            },
+            form: true,
+            method: 'POST',
+            url: loginUri,
+        });
     });
 });
 

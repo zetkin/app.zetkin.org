@@ -14,7 +14,7 @@ describe('404 Page', () => {
         cy.get('[data-testid="back-home-link"]')
             .should('be.visible')
             .click();
-        cy.url().should('match', /http:\/\/www\.dev\.zetkin\.org\//);
+        cy.url().should('satisfy', url => url.startsWith(Cypress.config().baseUrl));
     });
 });
 
