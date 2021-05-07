@@ -37,11 +37,7 @@ describe('/o/[orgId]/events/[eventId]', () => {
             },
         });
 
-        cy.visit('/login');
-        cy.get('input[aria-label="E-mail address"]').type('testadmin@example.com');
-        cy.get('input[aria-label="Password"]').type('password');
-        cy.get('input[aria-label="Log in"]')
-            .click();
+        cy.login();
 
         cy.visit('/o/1/events/25');
         cy.waitUntilReactRendered();
@@ -63,11 +59,7 @@ describe('/o/[orgId]/events/[eventId]', () => {
                 },
             });
 
-            cy.visit('/login');
-            cy.get('input[aria-label="E-mail address"]').type('testadmin@example.com');
-            cy.get('input[aria-label="Password"]').type('password');
-            cy.get('input[aria-label="Log in"]')
-                .click();
+            cy.login();
 
             cy.visit('/o/1/events/26');
             cy.waitUntilReactRendered();

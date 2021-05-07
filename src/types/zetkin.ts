@@ -1,3 +1,9 @@
+export interface ZetkinCampaign {
+    info_text: string;
+    title: string;
+    id: string;
+}
+
 export interface ZetkinMembership {
     organization: ZetkinOrganization;
     profile: {

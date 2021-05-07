@@ -1,4 +1,3 @@
-import apiUrl from './apiUrl';
 import { applySession } from 'next-session';
 import Negotiator from 'negotiator';
 import { QueryClient } from 'react-query';
@@ -9,6 +8,7 @@ import { AppSession } from '../types';
 import { getMessages } from './locale';
 import stringToBool from './stringToBool';
 import { ZetkinZ } from '../types/sdk';
+import { ApiFetch, createApiFetch } from './apiFetch';
 import { ZetkinSession, ZetkinUser } from '../types/zetkin';
 
 //TODO: Create module definition and revert to import.
@@ -28,7 +28,7 @@ export type ScaffoldedProps = RegularProps & {
 };
 
 export type ScaffoldedContext = GetServerSidePropsContext & {
-    apiFetch: (path: string, init?: RequestInit) => Promise<Response>;
+    apiFetch: ApiFetch;
     queryClient: QueryClient;
     user: ZetkinUser | null;
     z: ZetkinZ;
@@ -36,6 +36,7 @@ export type ScaffoldedContext = GetServerSidePropsContext & {
 
 export type ScaffoldedGetServerSideProps = (context: ScaffoldedContext) =>
     Promise<GetServerSidePropsResult<RegularProps>>;
+
 
 interface ResultWithProps {
     props: ScaffoldedProps;
@@ -63,16 +64,7 @@ export const scaffold = (wrapped : ScaffoldedGetServerSideProps, options? : Scaf
         const ctx = contextFromNext as ScaffoldedContext;
 
         ctx.queryClient = new QueryClient();
-
-        ctx.apiFetch = (path, init?) => {
-            return fetch(apiUrl(path), {
-                ...init,
-                headers: {
-                    cookie: contextFromNext.req.headers.cookie || '',
-                    ...init?.headers,
-                },
-            });
-        };
+        ctx.apiFetch = createApiFetch(ctx.req.headers);
 
         ctx.z = Z.construct({
             clientId: process.env.ZETKIN_CLIENT_ID,
@@ -121,7 +113,7 @@ export const scaffold = (wrapped : ScaffoldedGetServerSideProps, options? : Scaf
 
                 return {
                     redirect: {
-                        destination: '/login',
+                        destination: `/login?level=${options.authLevelRequired}`,
                         permanent: false,
                     },
                 };
