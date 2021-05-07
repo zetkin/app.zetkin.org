@@ -1,7 +1,7 @@
-import { ZetkinSurveyQuestionElement } from '../../../../types/zetkin';
+import { ZetkinSurveyOptionsQuestionElement } from '../../../../types/zetkin';
 
 interface SurveyOptionsSelectProps {
-    element: ZetkinSurveyQuestionElement;
+    element: ZetkinSurveyOptionsQuestionElement;
 }
 
 export default function SurveyOptionsRadio( { element } : SurveyOptionsSelectProps): JSX.Element {
@@ -10,7 +10,7 @@ export default function SurveyOptionsRadio( { element } : SurveyOptionsSelectPro
     return (
         <select data-testid="response-select">
             {
-                options?.map((option) => {
+                options.map((option) => {
                     const htmlId = `${ element.id }-select-${ option.id }`;
                     return (
                         <option key={ htmlId } value={ option.text }>{ option.text }</option>

@@ -1,10 +1,10 @@
 import SurveyOptionsCheckbox from './SurveyOptionsCheckbox';
 import SurveyOptionsRadio from './SurveyOptionsRadio';
 import SurveyOptionsSelect from './SurveyOptionsSelect';
-import { ZetkinSurveyQuestionElement } from '../../../../types/zetkin';
+import { ZetkinSurveyOptionsQuestionElement } from '../../../../types/zetkin';
 
 interface SurveyOptionsQuestionProps {
-    element: ZetkinSurveyQuestionElement;
+    element: ZetkinSurveyOptionsQuestionElement;
 }
 
 export default function SurveyOptionsQuestion( { element } : SurveyOptionsQuestionProps): JSX.Element {

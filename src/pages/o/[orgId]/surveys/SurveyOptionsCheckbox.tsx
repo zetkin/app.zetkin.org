@@ -1,7 +1,7 @@
-import { ZetkinSurveyQuestionElement } from '../../../../types/zetkin';
+import { ZetkinSurveyOptionsQuestionElement } from '../../../../types/zetkin';
 
 interface SurveyOptionsCheckboxProps {
-    element: ZetkinSurveyQuestionElement;
+    element: ZetkinSurveyOptionsQuestionElement;
 }
 
 
@@ -11,7 +11,7 @@ export default function SurveyOptionsCheckbox( { element } : SurveyOptionsCheckb
     return (
         <div data-testid="response-checkbox">
             {
-                options?.map((option) => {
+                options.map((option) => {
                     const htmlId = `${ element.id }-checkbox-${ option.id }`;
                     return (
                         <div key={ htmlId }>

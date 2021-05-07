@@ -1,7 +1,7 @@
-import { ZetkinSurveyQuestionElement } from '../../../../types/zetkin';
+import { ZetkinSurveyTextQuestionElement } from '../../../../types/zetkin';
 
 interface SurveyTextQuestionProps {
-    element: ZetkinSurveyQuestionElement;
+    element: ZetkinSurveyTextQuestionElement;
 }
 
 export default function SurveyTextQuestion( { element } : SurveyTextQuestionProps ): JSX.Element {

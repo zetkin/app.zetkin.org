@@ -1,16 +1,23 @@
 import SurveyOptionsQuestion from './SurveyOptionsQuestion';
 import SurveyTextQuestion from './SurveyTextQuestion';
-import { ZetkinSurveyQuestionElement } from '../../../../types/zetkin';
+import {
+    ZetkinSurveyQuestionElement,
+    ZetkinSurveyTextQuestionElement,
+} from '../../../../types/zetkin';
 
 interface SurveyQuestionProps {
     element: ZetkinSurveyQuestionElement;
 }
 
-export default function SurveyQuestion( { element } : SurveyQuestionProps): JSX.Element {
-    const { question: questionObject } = element;
-    const { description, question, response_type } = questionObject;
+function isText(elem : ZetkinSurveyQuestionElement) : elem is ZetkinSurveyTextQuestionElement {
+    return elem.question.response_type === 'text';
+}
 
-    if (response_type === 'text') {
+export default function SurveyQuestion( { element } : SurveyQuestionProps) : JSX.Element {
+    const { question: questionObject } = element;
+    const { description, question } = questionObject;
+
+    if (isText(element)) {
         return (
             <>
                 <h2 data-testid="question">{ question }</h2>

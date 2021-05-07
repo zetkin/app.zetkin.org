@@ -1,7 +1,7 @@
-import { ZetkinSurveyQuestionElement } from '../../../../types/zetkin';
+import { ZetkinSurveyOptionsQuestionElement } from '../../../../types/zetkin';
 
 interface SurveyOptionsRadioProps {
-    element: ZetkinSurveyQuestionElement;
+    element: ZetkinSurveyOptionsQuestionElement;
 }
 
 export default function SurveyOptionsRadio({ element }: SurveyOptionsRadioProps): JSX.Element {
@@ -10,7 +10,7 @@ export default function SurveyOptionsRadio({ element }: SurveyOptionsRadioProps)
     return (
         <div data-testid="response-radio">
             {
-                options?.map((option) => {
+                options.map((option) => {
                     const htmlId = `${ element.id }-radio-${ option.id }`;
                     return (
                         <div key={ htmlId }>

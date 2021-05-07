@@ -54,19 +54,43 @@ export interface ZetkinSession {
     user: ZetkinUser;
 }
 
-export interface ZetkinSurvey {
-    elements: ZetkinSurveyElement[];
-    info_text: string;
-    title: string;
+export interface ZetkinSurveyTextQuestion {
+    description?: string;
+    question: string;
+    response_config: {
+        multiline: boolean;
+    };
+    response_type: 'text';
 }
 
-export type ZetkinSurveyElement = ZetkinSurveyQuestionElement | ZetkinSurveyTextblockElement;
+export interface ZetkinSurveyOptionsQuestion {
+    description?: string;
+    options: {
+        id: number;
+        text: string;
+    }[];
+    question: string;
+    response_config: {
+        widget_type: string;
+    };
+    response_type: 'options';
+}
 
-export interface ZetkinSurveyQuestionElement {
+export type ZetkinSurveyQuestion = ZetkinSurveyTextQuestion | ZetkinSurveyOptionsQuestion;
+
+export interface ZetkinSurveyTextQuestionElement {
     id: number;
     type: 'question';
-    question: ZetkinSurveyQuestion;
+    question: ZetkinSurveyTextQuestion;
 }
+
+export interface ZetkinSurveyOptionsQuestionElement {
+    id: number;
+    type: 'question';
+    question: ZetkinSurveyOptionsQuestion;
+}
+
+export type ZetkinSurveyQuestionElement = ZetkinSurveyTextQuestionElement | ZetkinSurveyOptionsQuestionElement;
 
 export interface ZetkinSurveyTextblockElement {
     id: number;
@@ -79,16 +103,10 @@ export interface ZetkinSurveyTextblock {
     header: string;
 }
 
-export interface ZetkinSurveyQuestion {
-    description?: string;
-    options?: {
-        id: number;
-        text: string;
-    }[];
-    question: string;
-    response_config: {
-        multiline?: boolean;
-        widget_type?: string;
-    };
-    response_type: string;
+export type ZetkinSurveyElement = ZetkinSurveyQuestionElement | ZetkinSurveyTextblockElement;
+
+export interface ZetkinSurvey {
+    elements: ZetkinSurveyElement[];
+    info_text: string;
+    title: string;
 }
