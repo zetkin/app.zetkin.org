@@ -1,4 +1,3 @@
-import { BookedEvent } from '../../src/types';
 import EventList from './EventList';
 import { mountWithProviders } from '../utils/testing';
 import { UserContext } from '../hooks';
@@ -10,7 +9,7 @@ import {
 describe('EventList', () => {
     let dummyEvents : ZetkinEvent[];
     let dummyEventResponses : ZetkinEventResponse[];
-    let dummyBookedEvents : BookedEvent[];
+    let dummyBookedEvents : ZetkinEvent[];
     const dummyUser = {
         first_name: 'Firstname',
         id: 100,
@@ -28,7 +27,7 @@ describe('EventList', () => {
                 dummyEventResponses = data.data;
             });
         cy.fixture('dummyBookedEvents.json')
-            .then((data : {data: BookedEvent[]}) => {
+            .then((data : {data: ZetkinEvent[]}) => {
                 dummyBookedEvents = data.data;
             });
     });

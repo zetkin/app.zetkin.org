@@ -12,7 +12,6 @@ import {
     FormattedMessage as Msg,
 } from 'react-intl';
 
-import { BookedEvent } from '../../src/types';
 import SignupDialogTrigger from './SignupDialog';
 import { useUser } from '../hooks';
 import {
@@ -21,7 +20,7 @@ import {
 } from '../types/zetkin';
 
 interface EventListProps {
-    bookedEvents: BookedEvent[] | undefined;
+    bookedEvents: ZetkinEvent[] | undefined;
     events: ZetkinEvent[] | undefined;
     onSignup: (eventId: number, orgId: number) => void;
     onUndoSignup: (eventId: number, orgId: number) => void;
@@ -45,7 +44,7 @@ export default function EventList ({ bookedEvents, eventResponses, events, onSig
             <Flex data-testid="event-list" direction="row" gap="100" wrap>
                 { events?.map((event) => {
                     const response = eventResponses?.find(response => response.action_id === event.id);
-                    const booked = bookedEvents?.find(booked => booked.id === event.id);
+                    const booked = bookedEvents?.some(booked => booked.id === event.id);
                     return (<EventListItem
                         key={ event.id }
                         booked={ booked }
@@ -64,7 +63,7 @@ export default function EventList ({ bookedEvents, eventResponses, events, onSig
 }
 
 interface EventListItemProps {
-    booked: BookedEvent | undefined;
+    booked: boolean | undefined;
     event: ZetkinEvent;
     onSignup: (eventId: number, orgId: number) => void;
     onUndoSignup: (eventId: number, orgId: number) => void;
@@ -132,7 +131,7 @@ const EventListItem = ({ booked, event, response, onSignup, onUndoSignup }: Even
 };
 
 interface EventResponseButtonProps {
-    booked: BookedEvent | undefined;
+    booked: boolean | undefined;
     event: ZetkinEvent;
     onSignup: (eventId: number, orgId: number) => void;
     onUndoSignup: (eventId: number, orgId: number) => void;
