@@ -71,10 +71,34 @@ const MyTodoPage : PageWithLayout = () => {
         );
     }
 
+    if (!callAssignmentsQuery.data || callAssignmentsQuery.data?.length === 0) {
+        return (
+            <>
+                <Heading level={ 1 }>
+                    <Msg id="pages.myTodo.heading"/>
+                </Heading>
+                <View marginBottom="size-500">
+                    <Heading level={ 2 } marginBottom="0">
+                        <Msg id="pages.myTodo.events"/>
+                    </Heading>
+                    <EventList
+                        bookedEvents={ bookedEventsQuery.data }
+                        events={ respondEventsQuery.data }
+                        onSignup={ onSignup }
+                        onUndoSignup={ onUndoSignup }
+                    />
+                </View>
+            </>
+        );
+    }
+
     return (
         <>
             <Heading level={ 1 }>
                 <Msg id="pages.myTodo.heading"/>
+            </Heading>
+            <Heading level={ 2 } marginBottom="0">
+                <Msg id="pages.myTodo.callAssignments"/>
             </Heading>
             <View marginBottom="0">
                 <CallAssignmentList
@@ -82,6 +106,9 @@ const MyTodoPage : PageWithLayout = () => {
                 />
             </View>
             <View marginBottom="size-500">
+                <Heading level={ 2 } marginBottom="0">
+                    <Msg id="pages.myTodo.events"/>
+                </Heading>
                 <EventList
                     bookedEvents={ bookedEventsQuery.data }
                     events={ respondEventsQuery.data }
