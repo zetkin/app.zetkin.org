@@ -18,7 +18,7 @@ describe('EventList', () => {
         username: 'Username',
     };
 
-    beforeEach(()=> {
+    before(()=> {
         cy.fixture('dummyEvents.json')
             .then((data : {data: ZetkinEvent[]}) => {
                 dummyEvents = data.data;
@@ -125,13 +125,11 @@ describe('EventList', () => {
     });
 
     it('shows a placeholder when the list is empty', () => {
-        dummyEvents = [];
-
         mountWithProviders(
             <EventList
                 bookedEvents={ dummyBookedEvents }
                 eventResponses={ dummyEventResponses }
-                events={ dummyEvents }
+                events={ [] }
                 onSignup={ () => null  }
                 onUndoSignup={ () => null  }
             />,
@@ -154,7 +152,7 @@ describe('EventList', () => {
         cy.contains('misc.eventList.placeholder');
     });
 
-    it('confirms a booked event', () => {
+    it('contains a booked event', () => {
         mountWithProviders(
             <UserContext.Provider value={ dummyUser }>
                 <EventList

@@ -1,10 +1,6 @@
 import { ZetkinEvent, ZetkinEventResponse } from '../../src/types/zetkin';
 
 describe('/o/[orgId]/events', () => {
-    beforeEach(() => {
-        cy.request('delete', 'http://localhost:8001/_mocks');
-    });
-
     let dummyEventResponses : {data: ZetkinEventResponse[]};
     let dummyEvents : {data: ZetkinEvent[]};
 
@@ -17,6 +13,10 @@ describe('/o/[orgId]/events', () => {
             .then((data : {data: ZetkinEvent[]}) => {
                 dummyEvents = data;
             });
+    });
+
+    beforeEach(() => {
+        cy.request('delete', 'http://localhost:8001/_mocks');
     });
 
     after(() => {

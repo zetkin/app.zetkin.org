@@ -5,7 +5,7 @@ import { ZetkinCallAssignment } from '../types/zetkin';
 describe('CallAssignmentList', () => {
     let dummyCallAssignments : ZetkinCallAssignment[];
 
-    beforeEach(()=> {
+    before(()=> {
         cy.fixture('dummyCallAssignments.json')
             .then((data : {data: ZetkinCallAssignment[]}) => {
                 dummyCallAssignments = data.data;

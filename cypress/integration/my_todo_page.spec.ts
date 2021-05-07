@@ -1,11 +1,7 @@
 import { BookedEvent } from '../../src/types';
 import { ZetkinEventResponse } from '../../src/types/zetkin';
 
-describe('/users/my/todo', () => {
-    beforeEach(() => {
-        cy.request('delete', 'http://localhost:8001/_mocks');
-    });
-
+describe('/my/todo', () => {
     let dummyEventResponses : {data: ZetkinEventResponse[]};
     let dummyBookedEvents : {data: BookedEvent[]};
 
@@ -18,6 +14,10 @@ describe('/users/my/todo', () => {
             .then((data : {data: BookedEvent[]}) => {
                 dummyBookedEvents = data;
             });
+    });
+
+    beforeEach(() => {
+        cy.request('delete', 'http://localhost:8001/_mocks');
     });
 
     after(() => {
