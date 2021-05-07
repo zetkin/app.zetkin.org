@@ -22,7 +22,7 @@ export default function SurveyQuestion( { element } : SurveyQuestionProps) : JSX
             <>
                 <h2 data-testid="question">{ question }</h2>
                 <h3 data-testid="question-description">{ description }</h3>
-                <SurveyTextQuestion element={ element } />;
+                <SurveyTextQuestion element={ element } />
             </>
         );
     }
@@ -31,7 +31,7 @@ export default function SurveyQuestion( { element } : SurveyQuestionProps) : JSX
             <>
                 <h2 data-testid="question">{ question }</h2>
                 <h3 data-testid="question-description">{ description }</h3>
-                <SurveyOptionsQuestion element={ element } />;
+                <SurveyOptionsQuestion element={ element } />
             </>
         );
     }
