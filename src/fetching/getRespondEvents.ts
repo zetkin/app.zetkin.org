@@ -25,7 +25,7 @@ export default function getRespondEvents(fetch = defaultFetch) {
                 for (const rObj of responsesData.data) {
                     const event = eventsData.data.find((event : ZetkinEvent) => event.id === rObj.action_id);
                     if (event) {
-                        respondEvents.push({ ...event, organization: org });
+                        respondEvents.push({ ...event, organization: org, respond: rObj });
                     }
                 }
             }

@@ -29,8 +29,7 @@ export const useEventResponses = () : EventResponses => {
 
     const removeFunc = useMutation(deleteEventResponse, {
         onSettled: () => {
-            queryClient.invalidateQueries('eventResponses');
-            queryClient.invalidateQueries('todoEvents');
+            queryClient.invalidateQueries('respondEvents');
         },
     });
 

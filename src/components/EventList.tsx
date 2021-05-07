@@ -45,12 +45,22 @@ export default function EventList ({ bookedEvents, eventResponses, events, onSig
                 { events?.map((event) => {
                     const response = eventResponses?.find(response => response.action_id === event.id);
                     const booked = bookedEvents?.some(booked => booked.id === event.id);
+                    let respondEvent;
+
+                    if (event.respond) {
+                        respondEvent = true;
+                    }
+                    else {
+                        respondEvent = false;
+                    }
+
                     return (<EventListItem
                         key={ event.id }
                         booked={ booked }
                         event={ event }
                         onSignup={ onSignup }
                         onUndoSignup={ onUndoSignup }
+                        respondEvent={ respondEvent }
                         response={ response }
                     />
                     );
@@ -67,19 +77,65 @@ interface EventListItemProps {
     event: ZetkinEvent;
     onSignup: (eventId: number, orgId: number) => void;
     onUndoSignup: (eventId: number, orgId: number) => void;
+    respondEvent: boolean | undefined;
     response: ZetkinEventResponse | undefined;
 }
 
-const EventListItem = ({ booked, event, response, onSignup, onUndoSignup }: EventListItemProps): JSX.Element => {
+const EventListItem = ({ booked, event, response, onSignup, onUndoSignup, respondEvent }: EventListItemProps): JSX.Element => {
     const user = useUser();
-    // let todo: false;
 
-    // if (!org) {
-    //     todo = true;
-    // }
-    // else {
-    //     todo = false;
-    // }
+    if (respondEvent) {
+        return (
+            <>
+                { response ? (
+                    <Flex data-testid="event" direction="column" margin="size-200">
+                        <View data-testid="event-title">
+                            { event.title ? event.title : event.activity.title }
+                        </View>
+                        <View data-testid="org-title">{ event.organization.title }</View>
+                        <View data-testid="campaign-title">{ event.campaign.title }</View>
+                        <View data-testid="start-time">
+                            <FormattedDate
+                                day="2-digit"
+                                month="long"
+                                value={ Date.parse(event.start_time) }
+                            />
+                            , <FormattedTime
+                                value={ Date.parse(event.start_time) }
+                            />
+                        </View>
+                        <View data-testid="end-time">
+                            <FormattedDate
+                                day="2-digit"
+                                month="long"
+                                value={ Date.parse(event.end_time) }
+                            />
+                            , <FormattedTime
+                                value={ Date.parse(event.end_time) }
+                            />
+                        </View>
+                        <View data-testid="location-title">{ event.location.title }</View>
+                        { user ? (
+                            <EventResponseButton
+                                booked={ booked }
+                                event={ event }
+                                onSignup={ onSignup }
+                                onUndoSignup={ onUndoSignup }
+                                response={ response }
+                            />
+                        ) : <SignupDialogTrigger /> }
+                        <NextLink href={ `/o/${event.organization.id}/events/${ event.id }` }>
+                            <a>
+                                <Button marginTop="size-50" variant="cta">
+                                    <Msg id="misc.eventList.moreInfo" />
+                                </Button>
+                            </a>
+                        </NextLink>
+                    </Flex>
+                ) : null }
+            </>
+        );
+    }
 
     return (
         <Flex data-testid="event" direction="column" margin="size-200">
@@ -116,7 +172,6 @@ const EventListItem = ({ booked, event, response, onSignup, onUndoSignup }: Even
                     onSignup={ onSignup }
                     onUndoSignup={ onUndoSignup }
                     response={ response }
-                    // todo={ todo }
                 />
             ) : <SignupDialogTrigger /> }
             <NextLink href={ `/o/${event.organization.id}/events/${ event.id }` }>
@@ -136,10 +191,9 @@ interface EventResponseButtonProps {
     onSignup: (eventId: number, orgId: number) => void;
     onUndoSignup: (eventId: number, orgId: number) => void;
     response: ZetkinEventResponse | undefined;
-    // todo: boolean;
 }
 
-const EventResponseButton = ({ booked, event, onSignup, onUndoSignup, response /* todo */ } : EventResponseButtonProps): JSX.Element => {
+const EventResponseButton = ({ booked, event, onSignup, onUndoSignup, response } : EventResponseButtonProps): JSX.Element => {
 
     if (booked) {
         return (
@@ -154,26 +208,12 @@ const EventResponseButton = ({ booked, event, onSignup, onUndoSignup, response /
         );
     }
 
-    // if (todo) {
-    //     return (
-    //         <Button
-    //             data-testid="event-response-button"
-    //             marginTop="size-50"
-    //             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    //             onPress={ () => onUndoSignup(event.id, event.organization.id) }
-    //             variant="cta">
-    //             <Msg id="misc.eventList.undoSignup" />
-    //         </Button>
-    //     );
-    // }
-
     return (
         <>
             { response ? (
                 <Button
                     data-testid="event-response-button"
                     marginTop="size-50"
-                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                     onPress={ () => onUndoSignup(event.id, event.organization.id) }
                     variant="cta">
                     <Msg id="misc.eventList.undoSignup" />
@@ -182,7 +222,6 @@ const EventResponseButton = ({ booked, event, onSignup, onUndoSignup, response /
                 <Button
                     data-testid="event-response-button"
                     marginTop="size-50"
-                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                     onPress={ () => onSignup(event.id, event.organization.id) }
                     variant="cta">
                     <Msg id="misc.eventList.signup" />

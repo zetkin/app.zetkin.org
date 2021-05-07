@@ -60,7 +60,7 @@ const MyTodoPage : PageWithLayout = () => {
     const bookedEventsQuery = useQuery('bookedEvents', getBookedEvents());
     const callAssignmentsQuery = useQuery('callAssignments', getCallAssignments());
 
-    const { onSignup, onUndoSignup } = useEventResponses();
+    const { eventResponses, onSignup, onUndoSignup } = useEventResponses();
 
     if ((!respondEventsQuery.data || respondEventsQuery.data.length === 0)
         && (!callAssignmentsQuery.data || callAssignmentsQuery.data?.length === 0)) {
@@ -83,6 +83,7 @@ const MyTodoPage : PageWithLayout = () => {
                     </Heading>
                     <EventList
                         bookedEvents={ bookedEventsQuery.data }
+                        eventResponses={ eventResponses }
                         events={ respondEventsQuery.data }
                         onSignup={ onSignup }
                         onUndoSignup={ onUndoSignup }
@@ -111,6 +112,7 @@ const MyTodoPage : PageWithLayout = () => {
                 </Heading>
                 <EventList
                     bookedEvents={ bookedEventsQuery.data }
+                    eventResponses={ eventResponses }
                     events={ respondEventsQuery.data }
                     onSignup={ onSignup }
                     onUndoSignup={ onUndoSignup }
