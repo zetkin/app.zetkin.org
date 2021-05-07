@@ -1,4 +1,5 @@
-import { Flex, View } from '@adobe/react-spectrum';
+import { FormattedMessage as Msg } from 'react-intl';
+import { Flex, Heading, View } from '@adobe/react-spectrum';
 
 import { ZetkinCallAssignment } from '../types/zetkin';
 
@@ -14,6 +15,9 @@ export default function CallAssignmentList ({ callAssignments } : CallAssignment
 
     return (
         <>
+            <Heading level={ 2 } marginBottom="0">
+                <Msg id="pages.myTodo.callAssignments"/>
+            </Heading>
             { callAssignments.map((ass) => {
                 return (
                     <Flex key={ ass.id } data-testid="call-assignment" direction="column" margin="size-200">

@@ -3,6 +3,7 @@ import NextLink from 'next/link';
 import {
     Button,
     Flex,
+    Heading,
     Text,
     View,
 } from '@adobe/react-spectrum';
@@ -32,14 +33,22 @@ export default function EventList ({ bookedEvents, eventResponses, events, onSig
 
     if (!events || events.length === 0) {
         return (
-            <Text data-testid="no-events-placeholder">
-                <Msg id="misc.eventList.placeholder"/>
-            </Text>
+            <>
+                <Heading level={ 2 }>
+                    <Msg id="pages.myTodo.events"/>
+                </Heading>
+                <Text data-testid="no-events-placeholder">
+                    <Msg id="misc.eventList.placeholder"/>
+                </Text>
+            </>
         );
     }
 
     return (
         <>
+            <Heading level={ 2 } marginBottom="0">
+                <Msg id="pages.myTodo.events"/>
+            </Heading>
             <Flex data-testid="event-list" direction="row" gap="100" wrap>
                 { events?.map((event) => {
                     const response = eventResponses?.find(response => response.action_id === event.id);

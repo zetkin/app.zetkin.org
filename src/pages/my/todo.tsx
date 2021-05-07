@@ -1,7 +1,7 @@
 import { GetServerSideProps } from 'next';
 import { FormattedMessage as Msg } from 'react-intl';
 import { useQuery } from 'react-query';
-import { Flex, Heading, Text } from '@adobe/react-spectrum';
+import { Heading, Text, View } from '@adobe/react-spectrum';
 
 import CallAssignmentList from '../../components/CallAssignmentList';
 import EventList from '../../components/EventList';
@@ -62,8 +62,8 @@ const MyTodoPage : PageWithLayout = () => {
 
     const { onSignup, onUndoSignup } = useEventResponses();
 
-    if (!respondEventsQuery.data || respondEventsQuery.data.length === 0
-        && !callAssignmentsQuery.data || callAssignmentsQuery.data?.length === 0) {
+    if ((!respondEventsQuery.data || respondEventsQuery.data.length === 0)
+        && (!callAssignmentsQuery.data || callAssignmentsQuery.data?.length === 0)) {
         return (
             <Text data-testid="no-events-placeholder">
                 <Msg id="pages.myTodo.placeholder"/>
@@ -76,25 +76,19 @@ const MyTodoPage : PageWithLayout = () => {
             <Heading level={ 1 }>
                 <Msg id="pages.myTodo.heading"/>
             </Heading>
-            <Heading level={ 2 } marginBottom="0">
-                <Msg id="pages.myTodo.callAssignments"/>
-            </Heading>
-            <Flex marginBottom="0">
+            <View marginBottom="0">
                 <CallAssignmentList
                     callAssignments={ callAssignmentsQuery.data }
                 />
-            </Flex>
-            <Heading level={ 2 } marginBottom="0">
-                <Msg id="pages.myTodo.events"/>
-            </Heading>
-            <Flex marginBottom="size-500">
+            </View>
+            <View marginBottom="size-500">
                 <EventList
                     bookedEvents={ bookedEventsQuery.data }
                     events={ respondEventsQuery.data }
                     onSignup={ onSignup }
                     onUndoSignup={ onUndoSignup }
                 />
-            </Flex>
+            </View>
         </>
     );
 };
