@@ -5,10 +5,10 @@ interface SurveyOptionsSelectProps {
 }
 
 export default function SurveyOptionsRadio( { element } : SurveyOptionsSelectProps): JSX.Element {
-    const { options } = element.question;
+    const { options, required } = element.question;
 
     return (
-        <select data-testid="response-select">
+        <select data-testid="response-select" required={ required }>
             {
                 options.map((option) => {
                     const htmlId = `${ element.id }-select-${ option.id }`;

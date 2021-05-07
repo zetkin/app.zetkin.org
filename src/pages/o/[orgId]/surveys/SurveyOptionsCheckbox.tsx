@@ -6,7 +6,7 @@ interface SurveyOptionsCheckboxProps {
 
 
 export default function SurveyOptionsCheckbox( { element } : SurveyOptionsCheckboxProps): JSX.Element {
-    const { options } = element.question;
+    const { options, required } = element.question;
 
     return (
         <div data-testid="response-checkbox">
@@ -15,7 +15,7 @@ export default function SurveyOptionsCheckbox( { element } : SurveyOptionsCheckb
                     const htmlId = `${ element.id }-checkbox-${ option.id }`;
                     return (
                         <div key={ htmlId }>
-                            <input id={ htmlId } name="options" type="checkbox"/>
+                            <input id={ htmlId } name="options" required={ required } type="checkbox"/>
                             <label htmlFor={ htmlId }>{ option.text }</label>
                         </div>
                     );

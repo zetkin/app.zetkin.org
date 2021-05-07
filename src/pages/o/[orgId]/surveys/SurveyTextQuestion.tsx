@@ -5,10 +5,13 @@ interface SurveyTextQuestionProps {
 }
 
 export default function SurveyTextQuestion( { element } : SurveyTextQuestionProps ): JSX.Element {
-    const { response_config } = element.question;
+    const { response_config, required } = element.question;
     const { multiline } = response_config;
 
-    return (multiline ?
-        (<textarea data-testid="response-multiline" />) : (<input data-testid="response-singleline" type="text" />)
-    );
+    if (multiline) {
+        return <textarea data-testid="response-multiline" required={ required }/>;
+    }
+    else {
+        return <input data-testid="response-singleline" required={ required } type="text"/>;
+    }
 }

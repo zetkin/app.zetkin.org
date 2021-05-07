@@ -61,6 +61,7 @@ export interface ZetkinSurveyTextQuestion {
         multiline: boolean;
     };
     response_type: 'text';
+    required?: boolean;
 }
 
 export interface ZetkinSurveyOptionsQuestion {
@@ -74,6 +75,7 @@ export interface ZetkinSurveyOptionsQuestion {
         widget_type: string;
     };
     response_type: 'options';
+    required?: boolean;
 }
 
 export type ZetkinSurveyQuestion = ZetkinSurveyTextQuestion | ZetkinSurveyOptionsQuestion;

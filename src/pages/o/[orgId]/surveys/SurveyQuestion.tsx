@@ -15,12 +15,14 @@ function isText(elem : ZetkinSurveyQuestionElement) : elem is ZetkinSurveyTextQu
 
 export default function SurveyQuestion( { element } : SurveyQuestionProps) : JSX.Element {
     const { question: questionObject } = element;
-    const { description, question } = questionObject;
+    const { description, question, required } = questionObject;
 
     if (isText(element)) {
         return (
             <>
-                <h2 data-testid="question">{ question }</h2>
+                <h2 data-testid="question">{ question }
+                    { required ? (<span data-testid="required">*</span>) : null }
+                </h2>
                 <h3 data-testid="question-description">{ description }</h3>
                 <SurveyTextQuestion element={ element } />
             </>
@@ -29,7 +31,9 @@ export default function SurveyQuestion( { element } : SurveyQuestionProps) : JSX
     else {
         return (
             <>
-                <h2 data-testid="question">{ question }</h2>
+                <h2 data-testid="question">{ question }
+                    { required ? (<span data-testid="required">*</span>) : null }
+                </h2>
                 <h3 data-testid="question-description">{ description }</h3>
                 <SurveyOptionsQuestion element={ element } />
             </>

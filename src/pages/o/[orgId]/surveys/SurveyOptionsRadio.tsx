@@ -5,7 +5,7 @@ interface SurveyOptionsRadioProps {
 }
 
 export default function SurveyOptionsRadio({ element }: SurveyOptionsRadioProps): JSX.Element {
-    const { options } = element.question;
+    const { options, required } = element.question;
 
     return (
         <div data-testid="response-radio">
@@ -14,7 +14,7 @@ export default function SurveyOptionsRadio({ element }: SurveyOptionsRadioProps)
                     const htmlId = `${ element.id }-radio-${ option.id }`;
                     return (
                         <div key={ htmlId }>
-                            <input id={ htmlId } name="options" type="radio" />
+                            <input id={ htmlId } name="options" required={ required } type="radio"/>
                             <label htmlFor={ htmlId }>{ option.text }</label>
                         </div>
                     );

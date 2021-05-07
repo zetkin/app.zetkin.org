@@ -275,4 +275,38 @@ describe('SurveyForm', () => {
         cy.get('[data-testid="response-checkbox"]').should('be.visible');
         cy.get('[data-testid="response-singleline"]').should('be.visible');
     });
+
+    it('signifies if a question is required', () => {
+        const dummySurvey = {
+            elements: [
+                {
+                    id: 1,
+                    question: {
+                        options: [{
+                            id: 1,
+                            text: 'Option one',
+                        },
+                        {
+                            id: 2,
+                            text: 'Option two',
+                        }],
+                        question: 'This is a question?',
+                        required: true,
+                        response_config: {
+                            widget_type: 'select',
+                        },
+                        response_type: 'options',
+                    },
+                    type: 'question',
+                } as ZetkinSurveyQuestionElement,
+            ],
+            info_text: 'My description of the survey',
+            title: 'My survey',
+        };
+
+        mountWithProviders(<SurveyForm survey={ dummySurvey } />);
+
+        cy.get('[data-testid="required"]').should('be.visible');
+        cy.get('[data-testid="response-select"]').should('have.attr', 'required');
+    });
 });
