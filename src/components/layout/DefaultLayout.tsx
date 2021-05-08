@@ -31,6 +31,7 @@ const DefaultLayout : FunctionComponent<DefaultLayoutProps> = ({ children, org }
                 canOrganize={ canOrganize }
                 org={ org }
                 user={ user }
+                officials = { officialMemberships }
             />
             { children as JSX.Element }
         </Flex>
