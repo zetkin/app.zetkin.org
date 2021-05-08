@@ -57,3 +57,21 @@ way to set it up is to just configure git to use hooks from there:
 ```
 $ git config core.hooksPath .githooks
 ```
+
+## Submit your contribution
+If you don't yet have write access to the repository, you can create a fork
+on your own GitHub and work there.
+
+Pick an issue from [the list](https://github.com/zetkin/app.zetkin.org/issues)
+and write a short message on the issue to let us know that you intened to work
+on it.
+
+Create a git branch for your work named `issue-<number>/some-description`, e.g.
+`issue-99/event-component` for [issue #99](https://github.com/zetkin/app.zetkin.org/issues/99).
+
+As a general style, we write our commit messages as short sentences in
+[imperative mood](https://en.wikipedia.org/wiki/Imperative_mood), e.g. "_Add_
+MyList component" rather than "_Added_ MyList component".
+
+When you're ready, create a pull request and expect it to be reviewed within
+a few days.
