@@ -3,8 +3,9 @@ import { useMutation, useQuery, useQueryClient } from 'react-query';
 
 import deleteEventResponse from '../fetching/deleteEventResponse';
 import getEventResponses from '../fetching/getEventResponses';
+import getRespondEvents from '../fetching/getRespondEvents';
 import putEventResponse from '../fetching/putEventResponse';
-import { ZetkinEventResponse, ZetkinUser } from '../types/zetkin';
+import { ZetkinEvent, ZetkinEventResponse, ZetkinUser } from '../types/zetkin';
 
 export const UserContext = React.createContext<ZetkinUser | null>(null);
 
@@ -29,7 +30,7 @@ export const useEventResponses = () : EventResponses => {
 
     const removeFunc = useMutation(deleteEventResponse, {
         onSettled: () => {
-            queryClient.invalidateQueries('respondEvents');
+            queryClient.invalidateQueries('eventResponses');
         },
     });
 
@@ -48,4 +49,28 @@ export const useEventResponses = () : EventResponses => {
     }
 
     return { eventResponses, onSignup, onUndoSignup };
+};
+
+type RespondEvents = {
+    onUndoSignup: OnUndoSignup;
+    respondEvents: ZetkinEvent[] | undefined;
+}
+
+export const useRespondEvents = () : RespondEvents => {
+    const respondEventsQuery = useQuery('respondEvents', getRespondEvents());
+    const respondEvents = respondEventsQuery.data;
+
+    const queryClient = useQueryClient();
+
+    const removeFunc = useMutation(deleteEventResponse, {
+        onSettled: () => {
+            queryClient.invalidateQueries('respondEvents');
+        },
+    });
+
+    function onUndoSignup (eventId : number, orgId : number) {
+        removeFunc.mutate({ eventId, orgId });
+    }
+
+    return { onUndoSignup, respondEvents };
 };

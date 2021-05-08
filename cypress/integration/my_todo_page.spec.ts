@@ -30,11 +30,8 @@ describe('/my/todo', () => {
             },
         });
 
-        cy.visit('/login');
-        cy.get('input[aria-label="E-mail address"]').type('testadmin@example.com');
-        cy.get('input[aria-label="Password"]').type('password');
-        cy.get('input[aria-label="Log in"]')
-            .click();
+        cy.login();
+
         cy.visit('/my/todo');
         cy.waitUntilReactRendered();
         cy.get('a[href*="/o/1/events"]').should('have.length', 1);
@@ -53,18 +50,14 @@ describe('/my/todo', () => {
             },
         });
 
-        cy.visit('/login');
-        cy.get('input[aria-label="E-mail address"]').type('testadmin@example.com');
-        cy.get('input[aria-label="Password"]').type('password');
-        cy.get('input[aria-label="Log in"]')
-            .click();
+        cy.login();
 
         cy.visit('/my/todo');
         cy.waitUntilReactRendered();
         cy.get('[data-testid="booked"]').should('have.length', 1);
     });
 
-    it('contains a placeholder if there are neither call assignments nor respond-events', () => {
+    it.only('contains a placeholder if there are neither call assignments nor respond-events', () => {
         cy.request('put', 'http://localhost:8001/v1/users/me/call_assignments/_mocks/get', {
             response: {
                 data: {
@@ -81,11 +74,7 @@ describe('/my/todo', () => {
             },
         });
 
-        cy.visit('/login');
-        cy.get('input[aria-label="E-mail address"]').type('testadmin@example.com');
-        cy.get('input[aria-label="Password"]').type('password');
-        cy.get('input[aria-label="Log in"]')
-            .click();
+        cy.login();
 
         cy.visit('/my/todo');
         cy.contains('You have nothing planned at the moment.');

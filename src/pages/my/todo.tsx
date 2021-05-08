@@ -11,7 +11,7 @@ import getRespondEvents from '../../fetching/getRespondEvents';
 import MyHomeLayout from '../../components/layout/MyHomeLayout';
 import { PageWithLayout } from '../../types';
 import { scaffold } from '../../utils/next';
-import { useEventResponses } from '../../hooks';
+import { useRespondEvents } from '../../hooks';
 
 const scaffoldOptions = {
     localeScope: [
@@ -56,13 +56,12 @@ export const getServerSideProps : GetServerSideProps = scaffold(async (context) 
 }, scaffoldOptions);
 
 const MyTodoPage : PageWithLayout = () => {
-    const respondEventsQuery = useQuery('respondEvents', getRespondEvents());
     const bookedEventsQuery = useQuery('bookedEvents', getBookedEvents());
     const callAssignmentsQuery = useQuery('callAssignments', getCallAssignments());
 
-    const { eventResponses, onSignup, onUndoSignup } = useEventResponses();
+    const { respondEvents, onUndoSignup } = useRespondEvents();
 
-    if ((!respondEventsQuery.data || respondEventsQuery.data.length === 0)
+    if ((!respondEvents || respondEvents.length === 0)
         && (!callAssignmentsQuery.data || callAssignmentsQuery.data?.length === 0)) {
         return (
             <Text data-testid="no-events-placeholder">
@@ -83,9 +82,7 @@ const MyTodoPage : PageWithLayout = () => {
                     </Heading>
                     <EventList
                         bookedEvents={ bookedEventsQuery.data }
-                        eventResponses={ eventResponses }
-                        events={ respondEventsQuery.data }
-                        onSignup={ onSignup }
+                        events={ respondEvents }
                         onUndoSignup={ onUndoSignup }
                     />
                 </View>
@@ -112,9 +109,7 @@ const MyTodoPage : PageWithLayout = () => {
                 </Heading>
                 <EventList
                     bookedEvents={ bookedEventsQuery.data }
-                    eventResponses={ eventResponses }
-                    events={ respondEventsQuery.data }
-                    onSignup={ onSignup }
+                    events={ respondEvents }
                     onUndoSignup={ onUndoSignup }
                 />
             </View>

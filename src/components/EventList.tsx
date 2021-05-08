@@ -22,7 +22,7 @@ import {
 interface EventListProps {
     bookedEvents: ZetkinEvent[] | undefined;
     events: ZetkinEvent[] | undefined;
-    onSignup: (eventId: number, orgId: number) => void;
+    onSignup?: (eventId: number, orgId: number) => void;
     onUndoSignup: (eventId: number, orgId: number) => void;
     eventResponses?: ZetkinEventResponse[];
 }
@@ -45,14 +45,6 @@ export default function EventList ({ bookedEvents, eventResponses, events, onSig
                 { events?.map((event) => {
                     const response = eventResponses?.find(response => response.action_id === event.id);
                     const booked = bookedEvents?.some(booked => booked.id === event.id);
-                    let respondEvent;
-
-                    if (event.respond) {
-                        respondEvent = true;
-                    }
-                    else {
-                        respondEvent = false;
-                    }
 
                     return (<EventListItem
                         key={ event.id }
@@ -60,82 +52,25 @@ export default function EventList ({ bookedEvents, eventResponses, events, onSig
                         event={ event }
                         onSignup={ onSignup }
                         onUndoSignup={ onUndoSignup }
-                        respondEvent={ respondEvent }
                         response={ response }
                     />
                     );
-                })
-                }
+                }) }
             </Flex>
         </>
     );
-
 }
 
 interface EventListItemProps {
     booked: boolean | undefined;
     event: ZetkinEvent;
-    onSignup: (eventId: number, orgId: number) => void;
+    onSignup?: (eventId: number, orgId: number) => void;
     onUndoSignup: (eventId: number, orgId: number) => void;
-    respondEvent: boolean | undefined;
     response: ZetkinEventResponse | undefined;
 }
 
-const EventListItem = ({ booked, event, response, onSignup, onUndoSignup, respondEvent }: EventListItemProps): JSX.Element => {
+const EventListItem = ({ booked, event, response, onSignup, onUndoSignup }: EventListItemProps): JSX.Element => {
     const user = useUser();
-
-    if (respondEvent) {
-        return (
-            <>
-                { response ? (
-                    <Flex data-testid="event" direction="column" margin="size-200">
-                        <View data-testid="event-title">
-                            { event.title ? event.title : event.activity.title }
-                        </View>
-                        <View data-testid="org-title">{ event.organization.title }</View>
-                        <View data-testid="campaign-title">{ event.campaign.title }</View>
-                        <View data-testid="start-time">
-                            <FormattedDate
-                                day="2-digit"
-                                month="long"
-                                value={ Date.parse(event.start_time) }
-                            />
-                            , <FormattedTime
-                                value={ Date.parse(event.start_time) }
-                            />
-                        </View>
-                        <View data-testid="end-time">
-                            <FormattedDate
-                                day="2-digit"
-                                month="long"
-                                value={ Date.parse(event.end_time) }
-                            />
-                            , <FormattedTime
-                                value={ Date.parse(event.end_time) }
-                            />
-                        </View>
-                        <View data-testid="location-title">{ event.location.title }</View>
-                        { user ? (
-                            <EventResponseButton
-                                booked={ booked }
-                                event={ event }
-                                onSignup={ onSignup }
-                                onUndoSignup={ onUndoSignup }
-                                response={ response }
-                            />
-                        ) : <SignupDialogTrigger /> }
-                        <NextLink href={ `/o/${event.organization.id}/events/${ event.id }` }>
-                            <a>
-                                <Button marginTop="size-50" variant="cta">
-                                    <Msg id="misc.eventList.moreInfo" />
-                                </Button>
-                            </a>
-                        </NextLink>
-                    </Flex>
-                ) : null }
-            </>
-        );
-    }
 
     return (
         <Flex data-testid="event" direction="column" margin="size-200">
@@ -188,7 +123,7 @@ const EventListItem = ({ booked, event, response, onSignup, onUndoSignup, respon
 interface EventResponseButtonProps {
     booked: boolean | undefined;
     event: ZetkinEvent;
-    onSignup: (eventId: number, orgId: number) => void;
+    onSignup?: (eventId: number, orgId: number) => void;
     onUndoSignup: (eventId: number, orgId: number) => void;
     response: ZetkinEventResponse | undefined;
 }
@@ -205,6 +140,18 @@ const EventResponseButton = ({ booked, event, onSignup, onUndoSignup, response }
                 <Checkmark aria-label="Inbokad" color="positive" />
                 <Msg id="misc.eventList.booked" />
             </Flex>
+        );
+    }
+
+    if (!onSignup) {
+        return (
+            <Button
+                data-testid="event-response-button"
+                marginTop="size-50"
+                onPress={ () => onUndoSignup(event.id, event.organization.id) }
+                variant="cta">
+                <Msg id="misc.eventList.undoSignup" />
+            </Button>
         );
     }
 
