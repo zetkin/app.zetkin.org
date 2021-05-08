@@ -29,9 +29,9 @@ const DefaultLayout : FunctionComponent<DefaultLayoutProps> = ({ children, org }
             minHeight="100vh">
             <PublicHeader
                 canOrganize={ canOrganize }
+                officials={ officialMemberships }
                 org={ org }
                 user={ user }
-                officials = { officialMemberships }
             />
             { children as JSX.Element }
         </Flex>
