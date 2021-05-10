@@ -61,7 +61,7 @@ describe('/o/[orgId]/events/[eventId]', () => {
 
             cy.login();
 
-            cy.visit('/o/1/events/25');
+            cy.visit('/o/1/events/26');
             cy.waitUntilReactRendered();
             cy.findByText('Undo sign-up').click();
             //TODO: Verify that API request is done corrently.

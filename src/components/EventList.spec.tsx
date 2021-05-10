@@ -4,13 +4,12 @@ import { UserContext } from '../hooks';
 import {
     ZetkinEvent,
     ZetkinEventResponse,
-    ZetkinOrganization,
 } from '../types/zetkin';
 
 describe('EventList', () => {
-    let dummyOrg : ZetkinOrganization;
     let dummyEvents : ZetkinEvent[];
     let dummyEventResponses : ZetkinEventResponse[];
+    let dummyBookedEvents : ZetkinEvent[];
     const dummyUser = {
         first_name: 'Firstname',
         id: 100,
@@ -18,13 +17,7 @@ describe('EventList', () => {
         username: 'Username',
     };
 
-
-
-    beforeEach(()=> {
-        cy.fixture('dummyOrg.json')
-            .then((data : ZetkinOrganization) => {
-                dummyOrg = data;
-            });
+    before(()=> {
         cy.fixture('dummyEvents.json')
             .then((data : {data: ZetkinEvent[]}) => {
                 dummyEvents = data.data;
@@ -33,16 +26,20 @@ describe('EventList', () => {
             .then((data : {data: ZetkinEventResponse[]}) => {
                 dummyEventResponses = data.data;
             });
+        cy.fixture('dummyBookedEvents.json')
+            .then((data : {data: ZetkinEvent[]}) => {
+                dummyBookedEvents = data.data;
+            });
     });
 
     it('contains data for each event', () => {
         mountWithProviders(
             <EventList
+                bookedEvents={ dummyBookedEvents }
                 eventResponses={ dummyEventResponses }
                 events={ dummyEvents }
                 onSignup={ () => null }
                 onUndoSignup={ () => null }
-                org={ dummyOrg }
             />,
         );
 
@@ -62,11 +59,11 @@ describe('EventList', () => {
 
         mountWithProviders(
             <EventList
+                bookedEvents={ dummyBookedEvents }
                 eventResponses={ dummyEventResponses }
                 events={ dummyEvents }
                 onSignup={ () => null }
                 onUndoSignup={ () => null }
-                org={ dummyOrg }
             />,
         );
 
@@ -80,11 +77,10 @@ describe('EventList', () => {
         mountWithProviders(
             <UserContext.Provider value={ dummyUser }>
                 <EventList
-                    eventResponses={ dummyEventResponses }
+                    bookedEvents={ undefined }
                     events={ dummyEvents }
                     onSignup={ spyOnSignup }
                     onUndoSignup={ () => null }
-                    org={ dummyOrg }
                 />
             </UserContext.Provider>,
         );
@@ -96,15 +92,15 @@ describe('EventList', () => {
             });
     });
 
-    it('contains a signup button when user is not logged in', () => {
+    it('contains a sign-up button when user is not logged in', () => {
         mountWithProviders(
             <UserContext.Provider value={ null }>
                 <EventList
+                    bookedEvents={ undefined }
                     eventResponses={ dummyEventResponses }
                     events={ dummyEvents }
                     onSignup={ () => null }
                     onUndoSignup={ () => null }
-                    org={ dummyOrg }
                 />
             </UserContext.Provider>,
         );
@@ -116,11 +112,11 @@ describe('EventList', () => {
     it('contains a button for more info on each event', () => {
         mountWithProviders(
             <EventList
+                bookedEvents={ dummyBookedEvents }
                 eventResponses={ dummyEventResponses }
                 events={ dummyEvents }
                 onSignup={ () => null  }
                 onUndoSignup={ () => null  }
-                org={ dummyOrg }
             />,
         );
 
@@ -128,15 +124,13 @@ describe('EventList', () => {
     });
 
     it('shows a placeholder when the list is empty', () => {
-        dummyEvents = [];
-
         mountWithProviders(
             <EventList
+                bookedEvents={ dummyBookedEvents }
                 eventResponses={ dummyEventResponses }
-                events={ dummyEvents }
+                events={ [] }
                 onSignup={ () => null  }
                 onUndoSignup={ () => null  }
-                org={ dummyOrg }
             />,
         );
 
@@ -146,14 +140,30 @@ describe('EventList', () => {
     it('shows a placeholder when the list is undefined', () => {
         mountWithProviders(
             <EventList
+                bookedEvents={ dummyBookedEvents }
                 eventResponses={ dummyEventResponses }
                 events={ undefined }
                 onSignup={ () => null  }
                 onUndoSignup={ () => null  }
-                org={ dummyOrg }
             />,
         );
 
         cy.contains('misc.eventList.placeholder');
+    });
+
+    it('contains a booked event', () => {
+        mountWithProviders(
+            <UserContext.Provider value={ dummyUser }>
+                <EventList
+                    bookedEvents={ dummyBookedEvents }
+                    eventResponses={ dummyEventResponses }
+                    events={ dummyEvents }
+                    onSignup={ () => null  }
+                    onUndoSignup={ () => null  }
+                />
+            </UserContext.Provider>,
+        );
+
+        cy.contains('misc.eventList.booked');
     });
 });

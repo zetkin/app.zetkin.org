@@ -1,4 +1,20 @@
+import { ZetkinEvent, ZetkinEventResponse } from '../../src/types/zetkin';
+
 describe('/o/[orgId]/events', () => {
+    let dummyEventResponses : {data: ZetkinEventResponse[]};
+    let dummyEvents : {data: ZetkinEvent[]};
+
+    before(() => {
+        cy.fixture('dummyEventResponses.json')
+            .then((data : {data: ZetkinEventResponse[]}) => {
+                dummyEventResponses = data;
+            });
+        cy.fixture('dummyEvents.json')
+            .then((data : {data: ZetkinEvent[]}) => {
+                dummyEvents = data;
+            });
+    });
+
     beforeEach(() => {
         cy.request('delete', 'http://localhost:8001/_mocks');
     });
@@ -25,21 +41,19 @@ describe('/o/[orgId]/events', () => {
             },
         });
 
-        cy.fixture('dummyEvents').then(json => {
-            cy.request('put', 'http://localhost:8001/v1/orgs/1/campaigns/2/actions/_mocks/get', {
-                response: {
-                    data: json,
-                },
-            });
-
-            cy.visit('/o/1/events');
-            cy.waitUntilReactRendered();
-            cy.get('[data-testid="event"]')
-                .eq(0)
-                .findByText('More info')
-                .click();
-            cy.url().should('match', new RegExp(`/o/1/events/${json.data[0].id}$`));
+        cy.request('put', 'http://localhost:8001/v1/orgs/1/campaigns/2/actions/_mocks/get', {
+            response: {
+                data: dummyEvents,
+            },
         });
+
+        cy.visit('/o/1/events');
+        cy.waitUntilReactRendered();
+        cy.get('[data-testid="event"]')
+            .eq(0)
+            .findByText('More info')
+            .click();
+        cy.url().should('match', new RegExp(`/o/1/events/${dummyEvents.data[0].id}$`));
     });
 
     it('contains a placeholder if there are no events', () => {
@@ -75,26 +89,24 @@ describe('/o/[orgId]/events', () => {
     });
 
     it('shows an undo sign-up button if user is signed up to an event', () => {
-        cy.fixture('dummyEventResponses').then(json => {
-            cy.request('put', 'http://localhost:8001/v1/users/me/action_responses/_mocks/get', {
-                response: {
-                    data: json,
-                },
-            });
-
-            cy.request('put', 'http://localhost:8001/v1/orgs/1/actions/25/responses/2/_mocks/delete', {
-                response: {
-                    status: 204,
-                },
-            });
-
-            cy.login();
-
-            cy.visit('/o/1/events');
-            cy.waitUntilReactRendered();
-            cy.findByText('Undo sign-up').click();
-            //TODO: Verify that API request is done corrently.
+        cy.request('put', 'http://localhost:8001/v1/users/me/action_responses/_mocks/get', {
+            response: {
+                data: dummyEventResponses,
+            },
         });
+
+        cy.request('put', 'http://localhost:8001/v1/orgs/1/actions/25/responses/2/_mocks/delete', {
+            response: {
+                status: 204,
+            },
+        });
+
+        cy.login();
+
+        cy.visit('/o/1/events');
+        cy.waitUntilReactRendered();
+        cy.findByText('Undo sign-up').click();
+        //TODO: Verify that API request is done corrently.
     });
 });
 

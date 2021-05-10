@@ -1,0 +1,15 @@
+{
+    "data": [
+        {
+            "role": "admin",
+            "organization": {
+                "id": 1,
+                "title": "My Dummy Organization"
+            },
+            "profile": {
+                "name": "Dummy User",
+                "id": 2
+            }
+        }
+    ]
+}

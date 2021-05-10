@@ -7,6 +7,7 @@ import { PageWithLayout } from '../../types';
 import { scaffold } from '../../utils/next';
 
 const scaffoldOptions = {
+    authLevelRequired: 1,
     localeScope: [
         'layout.my',
         'misc.publicHeader',
