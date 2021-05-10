@@ -54,7 +54,7 @@ const MyOrgsPage : PageWithLayout = () => {
                     <Msg id="pages.myOrgs.heading"/>
                 </Heading>
                 <Text data-testid="no-orgs-placeholder">
-                    You are not connected to any organizations yet.
+                    <Msg id="pages.myOrgs.orgsPlaceholder"/>
                 </Text>
             </>
         );
@@ -82,7 +82,7 @@ const MyOrgsPage : PageWithLayout = () => {
                                     <Text marginX="size-200">{ membership.organization.title }</Text>
                                     { membership.role
                                         ? <Text marginX="size-200">{ membership.role }</Text>
-                                        : <Text marginX="size-200">You do not have a role yet</Text>
+                                        : <Text marginX="size-200"><Msg id="pages.myOrgs.rolePlaceholder"/></Text>
                                     }
                                 </Flex>
                             </Flex>
