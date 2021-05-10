@@ -143,6 +143,7 @@ const EventResponseButton = ({ booked, event, onSignup, onUndoSignup, response }
         );
     }
 
+    //TODO: Remove when getRespondEvents and eventResponses has been refactored.
     if (!onSignup) {
         return (
             <Button

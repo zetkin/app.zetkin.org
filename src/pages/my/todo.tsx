@@ -14,6 +14,7 @@ import { scaffold } from '../../utils/next';
 import { useRespondEvents } from '../../hooks';
 
 const scaffoldOptions = {
+    authLevelRequired: 1,
     localeScope: [
         'layout.my',
         'misc.callAssignmentList',
@@ -64,28 +65,13 @@ const MyTodoPage : PageWithLayout = () => {
     if ((!respondEvents || respondEvents.length === 0)
         && (!callAssignmentsQuery.data || callAssignmentsQuery.data?.length === 0)) {
         return (
-            <Text data-testid="no-events-placeholder">
-                <Msg id="pages.myTodo.placeholder"/>
-            </Text>
-        );
-    }
-
-    if (!callAssignmentsQuery.data || callAssignmentsQuery.data?.length === 0) {
-        return (
             <>
                 <Heading level={ 1 }>
                     <Msg id="pages.myTodo.heading"/>
                 </Heading>
-                <View marginBottom="size-500">
-                    <Heading level={ 2 } marginBottom="0">
-                        <Msg id="pages.myTodo.events"/>
-                    </Heading>
-                    <EventList
-                        bookedEvents={ bookedEventsQuery.data }
-                        events={ respondEvents }
-                        onUndoSignup={ onUndoSignup }
-                    />
-                </View>
+                <Text data-testid="no-events-placeholder">
+                    <Msg id="pages.myTodo.placeholder"/>
+                </Text>
             </>
         );
     }
@@ -95,14 +81,21 @@ const MyTodoPage : PageWithLayout = () => {
             <Heading level={ 1 }>
                 <Msg id="pages.myTodo.heading"/>
             </Heading>
-            <Heading level={ 2 } marginBottom="0">
-                <Msg id="pages.myTodo.callAssignments"/>
-            </Heading>
-            <View marginBottom="0">
-                <CallAssignmentList
-                    callAssignments={ callAssignmentsQuery.data }
-                />
-            </View>
+            { !callAssignmentsQuery.data || callAssignmentsQuery.data?.length === 0
+                ? null
+                : (
+                    <>
+                        <Heading level={ 2 } marginBottom="0">
+                            <Msg id="pages.myTodo.callAssignments"/>
+                        </Heading>
+                        <View marginBottom="0">
+                            <CallAssignmentList
+                                callAssignments={ callAssignmentsQuery.data }
+                            />
+                        </View>
+                    </>
+                )
+            }
             <View marginBottom="size-500">
                 <Heading level={ 2 } marginBottom="0">
                     <Msg id="pages.myTodo.events"/>

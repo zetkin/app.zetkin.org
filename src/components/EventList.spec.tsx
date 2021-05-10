@@ -92,7 +92,7 @@ describe('EventList', () => {
             });
     });
 
-    it('contains an account signup button when user is not logged in', () => {
+    it('contains a sign-up button when user is not logged in', () => {
         mountWithProviders(
             <UserContext.Provider value={ null }>
                 <EventList
