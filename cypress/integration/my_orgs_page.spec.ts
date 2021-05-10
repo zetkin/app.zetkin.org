@@ -1,12 +1,12 @@
 import { ZetkinMembership } from '../../src/types/zetkin';
 
 describe('/my/orgs', () => {
-    let dummyMemberships : {data: ZetkinMembership[]};
+    let dummyFollowing : {data: ZetkinMembership[]};
 
     before(() => {
-        cy.fixture('dummyMemberships.json')
+        cy.fixture('dummyFollowing.json')
             .then((data : {data: ZetkinMembership[]}) => {
-                dummyMemberships = data;
+                dummyFollowing = data;
             });
     });
 
@@ -18,10 +18,10 @@ describe('/my/orgs', () => {
         cy.request('delete', 'http://localhost:8001/_mocks');
     });
 
-    it('contains membership orgs', () => {
-        cy.request('put', 'http://localhost:8001/v1/users/me/memberships/_mocks/get', {
+    it('contains followed organizations', () => {
+        cy.request('put', 'http://localhost:8001/v1/users/me/following/_mocks/get', {
             response: {
-                data: dummyMemberships,
+                data: dummyFollowing,
             },
         });
 
@@ -32,8 +32,8 @@ describe('/my/orgs', () => {
         cy.get('a[href*="/o/"]').should('have.length', 1);
     });
 
-    it('contains a placeholder if there are no memberships', () => {
-        cy.request('put', 'http://localhost:8001/v1/users/me/memberships/_mocks/get', {
+    it('contains a placeholder if there are no followed organizations', () => {
+        cy.request('put', 'http://localhost:8001/v1/users/me/following/_mocks/get', {
             response: {
                 data: {
                     data: [],
@@ -45,6 +45,19 @@ describe('/my/orgs', () => {
 
         cy.visit('/my/orgs');
         cy.contains('You are not connected to any organizations yet.');
+    });
+
+    it('contains an unfollow button for each organization', () => {
+        cy.request('put', 'http://localhost:8001/v1/users/me/following/_mocks/get', {
+            response: {
+                data: dummyFollowing,
+            },
+        });
+
+        cy.login();
+
+        cy.visit('/my/orgs');
+        cy.contains('Unfollow');
     });
 });
 

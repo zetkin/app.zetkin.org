@@ -6,10 +6,12 @@ export interface ZetkinCampaign {
 
 export interface ZetkinMembership {
     organization: ZetkinOrganization;
+    follow?: boolean;
     profile: {
         id: number;
         name: string;
     };
+    inherited?: false;
     role : string | null;
 }
 
