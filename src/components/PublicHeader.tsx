@@ -16,10 +16,14 @@ interface PublicHeaderProps {
     user: ZetkinUser | null;
     org?: ZetkinOrganization | null;
     canOrganize?: boolean;
-    officials: ZetkinMembership[];
+    officialMemberships: ZetkinMembership[];
 }
 
-const PublicHeader = ({ canOrganize, user, org, officials: memberships  } : PublicHeaderProps) : JSX.Element => {
+const PublicHeader = ({ canOrganize, user, org, officialMemberships: memberships  } : PublicHeaderProps) : JSX.Element => {
+    const officialMemberships = memberships?.filter(
+        membership => membership.role) || [];
+
+    canOrganize = officialMemberships.length > 0;
 
     return (
         <Header margin="size-200">
@@ -72,7 +76,7 @@ const PublicHeader = ({ canOrganize, user, org, officials: memberships  } : Publ
                         </View>
                         <>
                             { canOrganize && (
-                                <NextLink href={ `/organize/${memberships[0].organization.id}` }>
+                                <NextLink href={ `/organize/${officialMemberships[0].organization.id}` }>
                                     <a data-testid="organize-link">
                                         <Button data-testid="organize-button" variant="cta">
                                             <Msg id="misc.publicHeader.organize"/>
