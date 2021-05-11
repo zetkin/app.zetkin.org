@@ -2,8 +2,10 @@
     "data": [
         {
             "activity": {
+                "id": 941,
                 "title": "Dummy activity title"
             },
+            "contact": "Dummy Person",
             "campaign": {
                 "id": 941,
                 "title": "Dummy campaign"
@@ -12,17 +14,15 @@
             "id": 26,
             "info_text": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
             "location": {
-                "id": 1,
-                "lat": 55,
-                "lng": 13,
-                "title": "Dummy location"
+                "title": "Dummy location",
+                "lng": 12.288026,
+                "id": 2,
+                "lat": 51.193744
             },
+            "num_participants_available": 1,
+            "num_participants_required": 2,
             "start_time": "2021-05-01T13:37:00+00:00",
-            "title": "Dummy event",
-            "organization": {
-                "id": 1,
-                "title": "Dummy Org"
-            }
+            "title": "Dummy event"
         }
     ]
 }

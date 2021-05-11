@@ -5,11 +5,11 @@
   "scripts": {
     "build": "next build",
     "devproxy": "moxy -f http://api.dev.zetkin.org",
-    "devserver": "next dev -p 80",
+    "devserver": "next dev -p 3000",
     "lint": "eslint src cypress && tsc --noEmit && echo 'Finished linting without errors!'",
     "tdd": "concurrently \"cross-env NODE_ENV=test yarn devserver\" \"yarn devproxy\" \"yarn cypress open\"",
     "watch": "chokidar 'src/**/*' -c 'npm run lint'",
-    "ci-start": "concurrently 'next start -p 80' 'yarn devproxy'",
+    "ci-start": "concurrently 'next start -p 3000' 'yarn devproxy'",
     "start": "next start -p 80"
   },
   "nyc": {
@@ -34,7 +34,7 @@
     "react-leaflet": "^3.1.0",
     "react-query": "^3.5.11",
     "yaml": "^1.10.0",
-    "zetkin": "^1.2.1"
+    "zetkin": "1.3.0"
   },
   "devDependencies": {
     "@cypress/react": "^4.16.3",

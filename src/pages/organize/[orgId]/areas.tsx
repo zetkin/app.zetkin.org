@@ -7,7 +7,7 @@ import { PageWithLayout } from '../../../types';
 import { scaffold } from '../../../utils/next';
 
 const scaffoldOptions = {
-    authLevelRequired: 1,
+    authLevelRequired: 2,
     localeScope: [
         'layout.organize', 'misc.breadcrumbs',
     ],
