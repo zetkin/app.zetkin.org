@@ -1,16 +1,16 @@
 {
     "data": [
         {
+            "follow": true,
+            "inherited": false,
             "organization": {
                 "title": "My Dummy Organization",
                 "id": 1
             },
-            "follow": true,
             "profile": {
                 "name": "Dummy User",
                 "id": 2
             },
-            "inherited": false,
             "role": "admin"
         }
     ]
