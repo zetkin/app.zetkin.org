@@ -23,10 +23,9 @@ const DefaultLayout : FunctionComponent<DefaultLayoutProps> = ({ children, org }
             marginX="size-200"
             minHeight="100vh">
             <PublicHeader
-                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                officialMemberships={ memberships! }
                 org={ org }
                 user={ user }
+                userMemberships={ memberships || [] }
             />
             { children as JSX.Element }
         </Flex>

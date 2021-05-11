@@ -15,15 +15,14 @@ import { ZetkinMembership, ZetkinOrganization, ZetkinUser } from '../types/zetki
 interface PublicHeaderProps {
     user: ZetkinUser | null;
     org?: ZetkinOrganization | null;
-    canOrganize?: boolean;
-    officialMemberships: ZetkinMembership[];
+    userMemberships?: ZetkinMembership[];
 }
 
-const PublicHeader = ({ canOrganize, user, org, officialMemberships: memberships  } : PublicHeaderProps) : JSX.Element => {
-    const officialMemberships = memberships?.filter(
+const PublicHeader = ({ user, org, userMemberships } : PublicHeaderProps) : JSX.Element => {
+    userMemberships = userMemberships?.filter(
         membership => membership.role) || [];
 
-    canOrganize = officialMemberships.length > 0;
+    const canOrganize = userMemberships.length > 0;
 
     return (
         <Header margin="size-200">
@@ -76,7 +75,7 @@ const PublicHeader = ({ canOrganize, user, org, officialMemberships: memberships
                         </View>
                         <>
                             { canOrganize && (
-                                <NextLink href={ `/organize/${officialMemberships[0].organization.id}` }>
+                                <NextLink href={ `/organize/${userMemberships[0].organization.id}` }>
                                     <a data-testid="organize-link">
                                         <Button data-testid="organize-button" variant="cta">
                                             <Msg id="misc.publicHeader.organize"/>
