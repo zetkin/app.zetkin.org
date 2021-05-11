@@ -10,6 +10,7 @@ import { Item, Tabs } from '@react-spectrum/tabs';
 import DefaultOrgLayout from './DefaultOrgLayout';
 import getOrg from '../../fetching/getOrg';
 import OrgHeader from './OrgHeader';
+import { useUserFollowing } from '../../hooks';
 
 interface MainOrgLayoutProps {
     orgId: string;
@@ -17,6 +18,9 @@ interface MainOrgLayoutProps {
 
 const MainOrgLayout : FunctionComponent<MainOrgLayoutProps> = ({ children, orgId }) => {
     const orgQuery = useQuery(['org', orgId], getOrg(orgId));
+
+    const { following, onFollow, onUnfollow } = useUserFollowing();
+
     const router = useRouter();
     const path =  router.pathname.split('/');
     let currentTab = path.pop();
@@ -40,7 +44,12 @@ const MainOrgLayout : FunctionComponent<MainOrgLayoutProps> = ({ children, orgId
 
     return (
         <DefaultOrgLayout orgId={ orgId }>
-            <OrgHeader org={ orgQuery.data! }/>
+            <OrgHeader
+                following={ following }
+                onFollow={ onFollow }
+                onUnfollow={ onUnfollow }
+                org={ orgQuery.data! }
+            />
             <Tabs
                 aria-label="Organization submenu"
                 onSelectionChange={ onSelectTab }

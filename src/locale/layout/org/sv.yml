@@ -1,5 +1,6 @@
 actions:
   edit: Redigera sida
+  follow: Följ
   unfollow: Sluta följa
 tabs:
   home: Hem
