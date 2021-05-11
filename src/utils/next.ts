@@ -120,6 +120,11 @@ export const scaffold = (wrapped : ScaffoldedGetServerSideProps, options? : Scaf
             }
         }
 
+        // Update token data in session, in case it was refreshed
+        if (reqWithSession.session) {
+            reqWithSession.session.tokenData = ctx.z.getTokenData();
+        }
+
         const result = await wrapped(ctx) || {};
 
         // Figure out browser's preferred language
