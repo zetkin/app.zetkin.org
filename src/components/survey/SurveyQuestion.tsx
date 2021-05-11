@@ -3,7 +3,7 @@ import SurveyTextQuestion from './SurveyTextQuestion';
 import {
     ZetkinSurveyQuestionElement,
     ZetkinSurveyTextQuestionElement,
-} from '../../../../types/zetkin';
+} from '../../types/zetkin';
 
 interface SurveyQuestionProps {
     element: ZetkinSurveyQuestionElement;

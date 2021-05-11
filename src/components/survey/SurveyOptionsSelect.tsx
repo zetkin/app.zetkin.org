@@ -1,4 +1,4 @@
-import { ZetkinSurveyOptionsQuestionElement } from '../../../../types/zetkin';
+import { ZetkinSurveyOptionsQuestionElement } from '../../types/zetkin';
 
 interface SurveyOptionsSelectProps {
     element: ZetkinSurveyOptionsQuestionElement;

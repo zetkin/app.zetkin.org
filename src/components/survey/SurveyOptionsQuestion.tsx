@@ -1,7 +1,7 @@
 import SurveyOptionsCheckbox from './SurveyOptionsCheckbox';
 import SurveyOptionsRadio from './SurveyOptionsRadio';
 import SurveyOptionsSelect from './SurveyOptionsSelect';
-import { ZetkinSurveyOptionsQuestionElement } from '../../../../types/zetkin';
+import { ZetkinSurveyOptionsQuestionElement } from '../../types/zetkin';
 
 interface SurveyOptionsQuestionProps {
     element: ZetkinSurveyOptionsQuestionElement;

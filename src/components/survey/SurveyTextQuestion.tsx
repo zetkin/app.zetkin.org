@@ -1,4 +1,4 @@
-import { ZetkinSurveyTextQuestionElement } from '../../../../types/zetkin';
+import { ZetkinSurveyTextQuestionElement } from '../../types/zetkin';
 
 interface SurveyTextQuestionProps {
     element: ZetkinSurveyTextQuestionElement;

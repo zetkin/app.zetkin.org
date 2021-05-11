@@ -2,7 +2,7 @@ import SurveyQuestion from './SurveyQuestion';
 import {
     ZetkinSurveyElement,
     ZetkinSurveyTextblockElement,
-} from '../../../../types/zetkin';
+} from '../../types/zetkin';
 
 interface SurveyElementProps {
     element: ZetkinSurveyElement;

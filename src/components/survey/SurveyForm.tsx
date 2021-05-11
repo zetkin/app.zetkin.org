@@ -1,5 +1,5 @@
 import SurveyElement from './SurveyElement';
-import { ZetkinSurvey } from '../../../../types/zetkin';
+import { ZetkinSurvey } from '../../types/zetkin';
 
 interface SurveyFormProps {
     survey: ZetkinSurvey;

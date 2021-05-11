@@ -1,5 +1,5 @@
 import { mountWithProviders } from '../../utils/testing';
-import SurveyForm from '../../pages/o/[orgId]/surveys/SurveyForm';
+import SurveyForm from './SurveyForm';
 import {
     ZetkinSurveyQuestionElement,
     ZetkinSurveyTextblockElement,
