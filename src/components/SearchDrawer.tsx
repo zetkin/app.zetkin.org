@@ -1,3 +1,4 @@
+import { FocusEventHandler } from 'react';
 import { FormattedMessage as Msg } from 'react-intl';
 import { useIntl } from 'react-intl';
 import { useState } from 'react';
@@ -8,55 +9,57 @@ const SearchDrawer = (): JSX.Element | null => {
     const [currentText, setCurrentText] = useState('');
     const [drawerOpen, setDrawerOpen] = useState(false);
 
-    const collapse = () => {
+    const collapse:FocusEventHandler<Element> = (e) => {
+        e.stopPropagation();
         setDrawerOpen(false);
     };
 
-    const expand = () => {
+    const expand:FocusEventHandler<Element> = (e) => {
+        e.stopPropagation();
         setDrawerOpen(true);
     };
 
     return (
         <>
-            <div className={ `overlay ${drawerOpen ? null : 'hidden'}` }
-                onClick={ collapse }
-                onKeyDown={ e => {
-                    if (e.key === 'Escape') {
-                        collapse();
-                    }
-                } }
-                role="button"
-                tabIndex={ -1 }>
-            </div>
             <div
-                className={ drawerOpen? 'expanded' : 'collapsed' }
-                style={{
-                }}>
-                <SearchField
-                    aria-label={ intl.formatMessage({
-                        id: 'layout.organize.search.label',
-                    }) }
-                    onChange={ setCurrentText }
-                    onFocus={ expand }
-                    placeholder={ intl.formatMessage({
-                        id: 'layout.organize.search.placeholder',
-                    }) }
-                    value={ currentText }
-                    width="100%"
-                />
-                <View isHidden={ !drawerOpen }>
-                    <Text>
-                        <Msg id="layout.organize.search.drawerLabel"/>
-                    </Text>
-                </View>
-
+                className={ `overlay ${drawerOpen ? null : 'hidden'}` }
+                onFocus={ collapse } tabIndex={ -1 }>
+                <div
+                    className={ `drawer ${drawerOpen ? 'expanded' : 'collapsed'}` }>
+                    <SearchField
+                        aria-label={ intl.formatMessage({
+                            id: 'layout.organize.search.label',
+                        }) }
+                        onChange={ text => {
+                            setCurrentText(text);
+                            if (!drawerOpen) {
+                                setDrawerOpen(true);
+                            }
+                        } }
+                        onFocus={ expand }
+                        onKeyUp={ e => {
+                            if (e.key === 'Escape') {
+                                setDrawerOpen(false);
+                            }
+                        } }
+                        placeholder={ intl.formatMessage({
+                            id: 'layout.organize.search.placeholder',
+                        }) }
+                        value={ currentText }
+                        width="100%"
+                    />
+                    <View isHidden={ !drawerOpen }>
+                        <Text>
+                            <Msg id="layout.organize.search.drawerLabel"/>
+                        </Text>
+                    </View>
+                </div>
             </div>
+
             <style jsx>{ `
                 div {
-                    width: 25vw;
                     position: absolute;
                     padding: 0 0 0 1rem;
-                    transition: width 500ms;
                 }
                 .overlay {
                     width: 100vw;
@@ -67,7 +70,14 @@ const SearchDrawer = (): JSX.Element | null => {
                     z-index: 2;
                 }
                 .hidden {
-                    display: none;
+                    width: 0; height: 0;
+                }
+
+                .drawer {
+                    width: 25vw;
+                    transition: width 500ms;
+                    top: 1rem;
+                    right: 1rem;
                 }
                 .expanded {
                     background: white;

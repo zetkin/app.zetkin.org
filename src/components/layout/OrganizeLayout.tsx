@@ -3,7 +3,7 @@ import { Flex, View } from '@adobe/react-spectrum';
 
 import BreadcrumbTrail from '../BreadcrumbTrail';
 import OrganizeSidebar from '../OrganizeSidebar';
-import SearchDrawer from '../SearchDrawer';
+import SearchDrawer from '../../components/SearchDrawer';
 
 interface OrganizeLayoutProps {
     orgId: string;
