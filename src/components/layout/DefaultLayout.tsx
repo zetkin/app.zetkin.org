@@ -16,11 +16,6 @@ const DefaultLayout : FunctionComponent<DefaultLayoutProps> = ({ children, org }
     const membershipsQuery = useQuery(['memberships'], getUserMemberships());
     const memberships = membershipsQuery.data;
 
-    const officialMemberships = memberships?.filter(
-        membership => membership.role) || [];
-
-    const canOrganize = officialMemberships.length > 0;
-
     return (
         <Flex
             direction="column"
@@ -28,9 +23,9 @@ const DefaultLayout : FunctionComponent<DefaultLayoutProps> = ({ children, org }
             marginX="size-200"
             minHeight="100vh">
             <PublicHeader
-                canOrganize={ canOrganize }
                 org={ org }
                 user={ user }
+                userMemberships={ memberships || [] }
             />
             { children as JSX.Element }
         </Flex>
