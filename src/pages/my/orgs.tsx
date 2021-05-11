@@ -2,14 +2,13 @@ import { GetServerSideProps } from 'next';
 import { FormattedMessage as Msg } from 'react-intl';
 import NextLink from 'next/link';
 import { Button, Flex, Heading, Image, Text } from '@adobe/react-spectrum';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
 
 import apiUrl from '../../utils/apiUrl';
-import deleteUserFollowing from '../../fetching/deleteUserFollowing';
 import getUserFollowing from '../../fetching/getUserFollowing';
 import MyHomeLayout from '../../components/layout/MyHomeLayout';
 import { PageWithLayout } from '../../types';
 import { scaffold } from '../../utils/next';
+import { useUserFollowing } from '../../hooks';
 
 const scaffoldOptions = {
     authLevelRequired: 1,
@@ -44,20 +43,8 @@ export const getServerSideProps : GetServerSideProps = scaffold(async (context) 
 }, scaffoldOptions);
 
 const MyOrgsPage : PageWithLayout = () => {
-    const followingQuery = useQuery('following', getUserFollowing());
-    const following = followingQuery.data;
 
-    const queryClient = useQueryClient();
-
-    const removeFunc = useMutation(deleteUserFollowing, {
-        onSettled: () => {
-            queryClient.invalidateQueries('following');
-        },
-    });
-
-    function onDisconnect (orgId : number) {
-        removeFunc.mutate(orgId);
-    }
+    const { following, onUnfollow } = useUserFollowing();
 
     if (!following || following.length === 0) {
         return (
@@ -110,9 +97,9 @@ const MyOrgsPage : PageWithLayout = () => {
                         </Flex>
                         <Button
                             isQuiet
-                            onPress={ () => onDisconnect(follow.organization.id) }
+                            onPress={ () => onUnfollow(follow.organization.id) }
                             variant="negative">
-                            <Msg id="pages.myOrgs.disconnect"/>
+                            <Msg id="pages.myOrgs.unfollow"/>
                         </Button>
                     </Flex>
                 )) }
