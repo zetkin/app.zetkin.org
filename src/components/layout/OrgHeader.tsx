@@ -10,6 +10,7 @@ import {
     View,
 } from '@adobe/react-spectrum';
 
+import SignupDialogTrigger from '../SignupDialog';
 import { useUser } from '../../hooks/';
 import { ZetkinMembership, ZetkinOrganization } from '../../types/zetkin';
 
@@ -65,8 +66,7 @@ const OrgHeader = ({ following, onFollow, onUnfollow, org } : OrgHeaderProps) : 
                                 </Button>
                             ) }
                         </>
-                    //TODO: Add account sign-up button or other JSX.Element
-                    ) : <></> }
+                    ) : <SignupDialogTrigger />  }
                 </Flex>
             </Flex>
             <View>
