@@ -26,7 +26,11 @@ export default function SurveyElement({ element, onValueChange, value }: SurveyE
     }
     else {
         return (
-            <SurveyQuestion element={ element } onValueChange={ onValueChange } value={ value }/>
+            <SurveyQuestion
+                element={ element }
+                onValueChange={ onValueChange }
+                value={ value }
+            />
         );
     }
 }

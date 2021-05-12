@@ -6,7 +6,7 @@ import { ZetkinSurveyOptionsQuestionElement } from '../../types/zetkin';
 interface SurveyOptionsQuestionProps {
     element: ZetkinSurveyOptionsQuestionElement;
     name: string;
-    onValueChange: (name: string, val: number | number[]) => void;
+    onValueChange: (name: string, val: string | number | number[]) => void;
     value: number | number[];
 }
 
@@ -15,12 +15,27 @@ export default function SurveyOptionsQuestion( { element, name, onValueChange, v
     const { widget_type } = response_config;
 
     if (widget_type === 'radio') {
-        return <SurveyOptionsRadio element={ element } name={ name } onValueChange={ onValueChange } value={ value as number }/>;
+        return (<SurveyOptionsRadio
+            element={ element }
+            name={ name }
+            onValueChange={ onValueChange }
+            value={ value as number }
+        />);
     }
     else if (widget_type === 'select') {
-        return <SurveyOptionsSelect element={ element } name={ name } onValueChange={ onValueChange } value={ value as number }/>;
+        return (<SurveyOptionsSelect
+            element={ element }
+            name={ name }
+            onValueChange={ onValueChange }
+            value={ value as number }
+        />);
     }
     else {
-        return <SurveyOptionsCheckbox element={ element } name={ name } onValueChange={ onValueChange } value={ value as number[] }/>;
+        return (<SurveyOptionsCheckbox
+            element={ element }
+            name={ name }
+            onValueChange={ onValueChange }
+            value={ value as number[] }
+        />);
     }
 }

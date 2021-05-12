@@ -28,7 +28,12 @@ export default function SurveyQuestion( { element, onValueChange, value } : Surv
                     { required ? (<span data-testid="required">*</span>) : null }
                 </h2>
                 <h3 data-testid="question-description">{ description }</h3>
-                <SurveyTextQuestion element={ element } name={ name } onValueChange={ onValueChange } value={ value as string }/>
+                <SurveyTextQuestion
+                    element={ element }
+                    name={ name }
+                    onValueChange={ onValueChange }
+                    value={ value as string }
+                />
             </>
         );
     }
@@ -39,7 +44,12 @@ export default function SurveyQuestion( { element, onValueChange, value } : Surv
                     { required ? (<span data-testid="required">*</span>) : null }
                 </h2>
                 <h3 data-testid="question-description">{ description }</h3>
-                <SurveyOptionsQuestion element={ element } name={ name } onValueChange={ onValueChange } value={ value as number | number[] } />
+                <SurveyOptionsQuestion
+                    element={ element }
+                    name={ name }
+                    onValueChange={ onValueChange }
+                    value={ value as number | number[] }
+                />
             </>
         );
     }

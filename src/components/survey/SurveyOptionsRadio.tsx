@@ -3,7 +3,7 @@ import { ZetkinSurveyOptionsQuestionElement } from '../../types/zetkin';
 interface SurveyOptionsRadioProps {
     element: ZetkinSurveyOptionsQuestionElement;
     name: string;
-    onValueChange: (name: string, val: number | number[]) => void;
+    onValueChange: (name: string, val: string | number | number[]) => void;
     value: number;
 }
 
@@ -14,7 +14,7 @@ export default function SurveyOptionsRadio({ element, name, onValueChange, value
         <div data-testid="response-radio">
             {
                 options.map((option) => {
-                    const htmlId = `${element.id}-radio-${option.id}`;
+                    const htmlId = `${ element.id }-radio-${ option.id }`;
                     const checked = option.id === value;
 
                     const onChange = () => {

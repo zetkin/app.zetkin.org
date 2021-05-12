@@ -3,7 +3,7 @@ import { ZetkinSurveyOptionsQuestionElement } from '../../types/zetkin';
 interface SurveyOptionsCheckboxProps {
     element: ZetkinSurveyOptionsQuestionElement;
     name: string;
-    onValueChange: (name: string, val: number | number[]) => void;
+    onValueChange: (name: string, val: string | number | number[]) => void;
     value: number[];
 }
 
@@ -15,7 +15,7 @@ export default function SurveyOptionsCheckbox( { element, name, onValueChange, v
         <div data-testid="response-checkbox">
             {
                 options.map((option) => {
-                    const htmlId = `${element.id}-checkbox-${option.id}`;
+                    const htmlId = `${ element.id }-checkbox-${ option.id }`;
                     const checked = value?.includes(option.id);
                     const onChange = () => {
                         if (value) {
