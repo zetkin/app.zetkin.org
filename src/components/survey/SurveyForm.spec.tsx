@@ -232,7 +232,7 @@ describe('SurveyForm', () => {
         cy.get('[data-testid="response-select"]')
             .should('be.visible')
             .select('Option one')
-            .should('have.value', 'Option one');
+            .should('have.value', '1');
     });
 
     it('can handle questions with an empty response_config object'
@@ -351,5 +351,47 @@ describe('SurveyForm', () => {
 
         cy.findByLabelText('Option one').should('be.checked');
         cy.findByLabelText('Option three').should('be.checked');
+    });
+
+    it('can render a select element with initial valiues', () => {
+        const dummySurvey = {
+            elements: [
+                {
+                    id: 1,
+                    question: {
+                        options: [{
+                            id: 1,
+                            text: 'Option one',
+                        },
+                        {
+                            id: 2,
+                            text: 'Option two',
+                        },
+                        {
+                            id: 3,
+                            text: 'Option three',
+                        }],
+                        question: 'This is a question?',
+                        response_config: {
+                            widget_type: 'select',
+                        },
+                        response_type: 'options',
+                    },
+                    type: 'question',
+                } as ZetkinSurveyQuestionElement,
+            ],
+            info_text: 'My description of the survey',
+            title: 'My survey',
+        };
+
+
+        mountWithProviders(<SurveyForm
+            initialState={{
+                'question-1': 2,
+            }}
+            survey={ dummySurvey }
+        />);
+
+        cy.get('[data-testid="response-select"]').should('have.value', '2');
     });
 });

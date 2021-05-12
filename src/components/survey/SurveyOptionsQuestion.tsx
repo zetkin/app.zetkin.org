@@ -6,8 +6,8 @@ import { ZetkinSurveyOptionsQuestionElement } from '../../types/zetkin';
 interface SurveyOptionsQuestionProps {
     element: ZetkinSurveyOptionsQuestionElement;
     name: string;
-    onValueChange: (name: string, val: number[]) => void;
-    value: number[];
+    onValueChange: (name: string, val: number | number[]) => void;
+    value: number | number[];
 }
 
 export default function SurveyOptionsQuestion( { element, name, onValueChange, value } : SurveyOptionsQuestionProps): JSX.Element {
@@ -18,9 +18,9 @@ export default function SurveyOptionsQuestion( { element, name, onValueChange, v
         return <SurveyOptionsRadio element={ element } />;
     }
     else if (widget_type === 'select') {
-        return <SurveyOptionsSelect element={ element } />;
+        return <SurveyOptionsSelect element={ element } name={ name } onValueChange={ onValueChange } value={ value as number }/>;
     }
     else {
-        return <SurveyOptionsCheckbox element={ element } name={ name } onValueChange={ onValueChange } value={ value }/>;
+        return <SurveyOptionsCheckbox element={ element } name={ name } onValueChange={ onValueChange } value={ value as number[] }/>;
     }
 }

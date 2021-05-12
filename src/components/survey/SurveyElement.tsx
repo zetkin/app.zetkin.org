@@ -6,8 +6,8 @@ import {
 
 interface SurveyElementProps {
     element: ZetkinSurveyElement;
-    onValueChange: (name: string, val: number[]) => void;
-    value: number[];
+    onValueChange: (name: string, val: number | number[]) => void;
+    value: number | number[];
 }
 
 function isText(elem : ZetkinSurveyElement) : elem is ZetkinSurveyTextblockElement {
