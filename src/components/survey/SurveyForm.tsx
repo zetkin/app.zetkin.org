@@ -5,7 +5,7 @@ import { ZetkinSurvey } from '../../types/zetkin';
 
 interface SurveyFormProps {
     survey: ZetkinSurvey;
-    initialState: Record<string, number | number[]>;
+    initialState: Record<string, string | number | number[]>;
 }
 
 export default function SurveyForm({ initialState, survey }: SurveyFormProps): JSX.Element {

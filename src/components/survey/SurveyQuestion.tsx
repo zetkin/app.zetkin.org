@@ -7,8 +7,8 @@ import {
 
 interface SurveyQuestionProps {
     element: ZetkinSurveyQuestionElement;
-    onValueChange: (name: string, val: number | number[]) => void;
-    value: number | number[];
+    onValueChange: (name: string, val: string | number | number[]) => void;
+    value: string | number | number[];
 }
 
 function isText(elem : ZetkinSurveyQuestionElement) : elem is ZetkinSurveyTextQuestionElement {
@@ -28,7 +28,7 @@ export default function SurveyQuestion( { element, onValueChange, value } : Surv
                     { required ? (<span data-testid="required">*</span>) : null }
                 </h2>
                 <h3 data-testid="question-description">{ description }</h3>
-                <SurveyTextQuestion element={ element } />
+                <SurveyTextQuestion element={ element } name={ name } onValueChange={ onValueChange } value={ value as string }/>
             </>
         );
     }
@@ -39,7 +39,7 @@ export default function SurveyQuestion( { element, onValueChange, value } : Surv
                     { required ? (<span data-testid="required">*</span>) : null }
                 </h2>
                 <h3 data-testid="question-description">{ description }</h3>
-                <SurveyOptionsQuestion element={ element } name={ name } onValueChange={ onValueChange } value={ value } />
+                <SurveyOptionsQuestion element={ element } name={ name } onValueChange={ onValueChange } value={ value as number | number[] } />
             </>
         );
     }

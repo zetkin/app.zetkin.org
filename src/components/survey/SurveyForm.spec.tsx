@@ -437,4 +437,34 @@ describe('SurveyForm', () => {
         cy.findByLabelText('Option three').should('be.checked');
     });
 
+    it('can render a multiline text input with an initial value', () => {
+        const dummySurvey = {
+            elements: [
+                {
+                    id: 1,
+                    question: {
+                        question: 'This is a question?',
+                        response_config: {
+                            multiline: true,
+                        },
+                        response_type: 'text',
+                    },
+                    type: 'question',
+                } as ZetkinSurveyQuestionElement,
+            ],
+            info_text: 'My description of the survey',
+            title: 'My survey',
+        };
+
+
+        mountWithProviders(<SurveyForm
+            initialState={{
+                'question-1': 'Text from initialState',
+            }}
+            survey={ dummySurvey }
+        />);
+
+        cy.get('[data-testid="response-multiline"]').should('have.value', 'Text from initialState');
+    });
+
 });
