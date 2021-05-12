@@ -52,7 +52,7 @@ const CampaignCalendarPage: PageWithLayout<CampaignCalendarPageProps> = ({ orgId
     const events = eventsQuery.data || [];
 
     return (
-        <View borderColor="gray-400" borderWidth="thick" height="80vh" margin="auto" marginTop="size-300" padding="size-100" width="95%">
+        <View borderColor="gray-400" borderWidth="thick" height="90vh" margin="auto" marginTop="size-300" padding="size-100" width="95%">
             <Calendar events={ events } focusDate={ new Date('March 12 2021') } />
         </View>
     );

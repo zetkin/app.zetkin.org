@@ -1,5 +1,5 @@
 import { FormattedMessage as Msg } from 'react-intl';
-import { Flex, Heading, Text, View } from '@adobe/react-spectrum';
+import { Heading, Text } from '@adobe/react-spectrum';
 
 import { ZetkinEvent } from '../types/zetkin';
 
@@ -36,39 +36,121 @@ const Calendar = ({ focusDate = new Date(Date.now()), events }: CalendarProps): 
 
     return (
         <>
-            <Flex gap="size-100" height="100%" justifyContent="space-between" width="100%">
-                { week.map((day, index) => (
-                    <Flex key={ day } alignItems="center" direction="column" justifyContent="start" minHeight="100%" width="100%">
-                        <Heading level={ 3 }>
-                            <Msg id={ day }/>
-                        </Heading>
-                        <Text data-testid={ day }>
-                            { new Date(new Date(monday).setDate(monday.getDate() + index)).getDate() }
-                        </Text>
-                        <View backgroundColor="gray-100" flexGrow={ 1 } height="100%" margin="size-100" padding="size-100" width="100%">
-                            <ul data-testid={ `${day}-events` } style={{ minHeight: '100%' }}>
+            <div style={{
+                height: '100%',
+                overflow: 'scroll',
+                width: '100%',
+
+            }}>
+                <div style={{
+                    background: 'rgb(234, 234, 234)',
+                    display:'flex',
+                    gap:'1rem',
+                    justifyContent: 'space-between',
+                    position: 'sticky',
+                    top: 0,
+                    width: '100%',
+                    zIndex: 1,
+
+                }}>
+                    { week.map((day, index) => (
+                        <div key={ day } style={{
+                            alignItems: 'center',
+                            display:'flex',
+                            flexDirection: 'column',
+                            gap:'1rem',
+                            height: '100%',
+                            justifyContent: 'start',
+                            width: '100%',
+                        }}>
+                            <Heading level={ 3 }>
+                                <Msg id={ day }/>
+                            </Heading>
+                            <Text data-testid={ day }>
+                                { new Date(new Date(monday).setDate(monday.getDate() + index)).getDate() }
+                            </Text>
+                        </div>
+                    )) }
+                </div>
+                <div  style={{
+                    alignItems: 'center',
+                    display:'flex',
+                    gap:'0.5rem',
+                    height: '200vh',
+                    justifyContent: 'start',
+                    width: '100%',
+                }}>
+                    { week.map((day, index) => (
+                        <div key={ day } style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: '1rem',
+                            height: '100%',
+                            justifyContent: 'space-between',
+                            padding: '0',
+                            width: '100%',
+                        }}>
+                            <ul data-testid={ `${day}-events` } style={{
+                                background:'lightgray',
+                                height: '100%',
+                                listStyle: 'none',
+                                margin: 0,
+                                padding:0 ,
+                                position: 'relative',
+                                width: '100%',
+                            }}>
                                 { getEventsOfTheDay(index + 1)?.map(event => (
-                                    <li key={ event.id }>
-                                        { `event with id ${event.id}` }
-                                    </li>
+                                    <CalendarEvent
+                                        key={ event.id }
+                                        endTime={ event.end_time }
+                                        id={ event.id }
+                                        startTime={ event.start_time }
+                                    />
                                 )) }
                             </ul>
-                        </View>
-                    </Flex>
-                )) }
-            </Flex>
-            <style jsx>{ `
-                ul {
-                    list-style: none;
-                    padding: 0;
-                }
-                li {
-                    background-color: lightgray;
-                    padding: 1rem;
-                    margin: 1rem 0;
-                }
-                ` }
-            </style>
+                        </div>
+                    )) }
+                </div>
+            </div>
+        </>
+    );
+};
+
+interface CalendarEventProps {
+    startTime: string;
+    endTime: string;
+    id: number;
+}
+
+const CalendarEvent = ({ startTime, endTime, id }: CalendarEventProps): JSX.Element => {
+
+    const getPos = (start: string, end: string) => {
+        const oneMinute = 100 / 1440;
+        const startTime = new Date(start);
+        const endTime = new Date(end);
+        const startFromMidnight = (startTime.getTime() - startTime.setHours(0, 0, 0, 0)) / 60000;
+        const endFromMidnight = (endTime.getTime() - endTime.setHours(0, 0, 0, 0)) / 60000;
+        const diff = endFromMidnight - startFromMidnight;
+
+        return {
+            height: `${diff * oneMinute}%`,
+            top: `${startFromMidnight * oneMinute}%`,
+        };
+    };
+
+    return (
+        <>
+            <li style={{
+                background: 'gray',
+                height: getPos(startTime, endTime).height,
+                margin: '1rem 0',
+                padding:'1rem',
+                position: 'absolute',
+                top: getPos(startTime, endTime).top,
+                width: '100%',
+            }}>
+                { `event with id ${id}` }
+            </li>
         </>
     );
 };
