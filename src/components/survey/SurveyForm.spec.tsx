@@ -394,4 +394,47 @@ describe('SurveyForm', () => {
 
         cy.get('[data-testid="response-select"]').should('have.value', '2');
     });
+
+    it('can render a radio element with an initial value', () => {
+        const dummySurvey = {
+            elements: [
+                {
+                    id: 1,
+                    question: {
+                        options: [{
+                            id: 1,
+                            text: 'Option one',
+                        },
+                        {
+                            id: 2,
+                            text: 'Option two',
+                        },
+                        {
+                            id: 3,
+                            text: 'Option three',
+                        }],
+                        question: 'This is a question?',
+                        response_config: {
+                            widget_type: 'radio',
+                        },
+                        response_type: 'options',
+                    },
+                    type: 'question',
+                } as ZetkinSurveyQuestionElement,
+            ],
+            info_text: 'My description of the survey',
+            title: 'My survey',
+        };
+
+
+        mountWithProviders(<SurveyForm
+            initialState={{
+                'question-1': 3,
+            }}
+            survey={ dummySurvey }
+        />);
+
+        cy.findByLabelText('Option three').should('be.checked');
+    });
+
 });

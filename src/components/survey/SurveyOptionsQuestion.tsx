@@ -15,7 +15,7 @@ export default function SurveyOptionsQuestion( { element, name, onValueChange, v
     const { widget_type } = response_config;
 
     if (widget_type === 'radio') {
-        return <SurveyOptionsRadio element={ element } />;
+        return <SurveyOptionsRadio element={ element } name={ name } onValueChange={ onValueChange } value={ value as number }/>;
     }
     else if (widget_type === 'select') {
         return <SurveyOptionsSelect element={ element } name={ name } onValueChange={ onValueChange } value={ value as number }/>;
