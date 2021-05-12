@@ -13,7 +13,7 @@ describe('SurveyForm', () => {
             title: 'My Survey',
         };
 
-        mountWithProviders(<SurveyForm survey={ dummySurvey }/>);
+        mountWithProviders(<SurveyForm initialState={{}} survey={ dummySurvey }/>);
 
         cy.contains(dummySurvey.title);
         cy.contains(dummySurvey.info_text);
@@ -35,7 +35,7 @@ describe('SurveyForm', () => {
             title: 'My survey',
         };
 
-        mountWithProviders(<SurveyForm survey={ dummySurvey } />);
+        mountWithProviders(<SurveyForm initialState={{}} survey={ dummySurvey } />);
 
         cy.get('[data-testid="textblock-header"]').should('be.visible');
         cy.get('[data-testid="textblock-content"]').should('be.visible');
@@ -62,7 +62,7 @@ describe('SurveyForm', () => {
             title: 'My survey',
         };
 
-        mountWithProviders(<SurveyForm survey={ dummySurvey } />);
+        mountWithProviders(<SurveyForm initialState={{}} survey={ dummySurvey } />);
 
         cy.get('[data-testid="question"]').should('be.visible');
         cy.get('[data-testid="question-description"]').should('be.visible');
@@ -88,7 +88,7 @@ describe('SurveyForm', () => {
             title: 'My survey',
         };
 
-        mountWithProviders(<SurveyForm survey={ dummySurvey } />);
+        mountWithProviders(<SurveyForm initialState={{}} survey={ dummySurvey } />);
 
         cy.get('[data-testid="question"]').should('be.visible');
         cy.get('[data-testid="response-singleline"]').should('be.visible');
@@ -113,7 +113,7 @@ describe('SurveyForm', () => {
             title: 'My survey',
         };
 
-        mountWithProviders(<SurveyForm survey={ dummySurvey } />);
+        mountWithProviders(<SurveyForm initialState={{}} survey={ dummySurvey } />);
 
         cy.get('[data-testid="response-multiline"]').should('be.visible');
     });
@@ -145,7 +145,7 @@ describe('SurveyForm', () => {
             title: 'My survey',
         };
 
-        mountWithProviders(<SurveyForm survey={ dummySurvey } />);
+        mountWithProviders(<SurveyForm initialState={{}} survey={ dummySurvey } />);
 
         cy.get('[data-testid="response-checkbox"]').should('be.visible');
         cy.findByLabelText('Option one')
@@ -186,7 +186,7 @@ describe('SurveyForm', () => {
             title: 'My survey',
         };
 
-        mountWithProviders(<SurveyForm survey={ dummySurvey } />);
+        mountWithProviders(<SurveyForm initialState={{}} survey={ dummySurvey } />);
 
         cy.get('[data-testid="response-radio"]').should('be.visible');
         cy.findByLabelText('Option one')
@@ -227,7 +227,7 @@ describe('SurveyForm', () => {
             title: 'My survey',
         };
 
-        mountWithProviders(<SurveyForm survey={ dummySurvey } />);
+        mountWithProviders(<SurveyForm initialState={{}} survey={ dummySurvey } />);
 
         cy.get('[data-testid="response-select"]')
             .should('be.visible')
@@ -270,7 +270,7 @@ describe('SurveyForm', () => {
             title: 'My survey',
         };
 
-        mountWithProviders(<SurveyForm survey={ dummySurvey } />);
+        mountWithProviders(<SurveyForm initialState={{}} survey={ dummySurvey } />);
 
         cy.get('[data-testid="response-checkbox"]').should('be.visible');
         cy.get('[data-testid="response-singleline"]').should('be.visible');
@@ -304,9 +304,52 @@ describe('SurveyForm', () => {
             title: 'My survey',
         };
 
-        mountWithProviders(<SurveyForm survey={ dummySurvey } />);
+        mountWithProviders(<SurveyForm initialState={{}} survey={ dummySurvey } />);
 
         cy.get('[data-testid="required"]').should('be.visible');
         cy.get('[data-testid="response-select"]').should('have.attr', 'required');
+    });
+
+    it('can render a checkbox element with initial valiues', () => {
+        const dummySurvey = {
+            elements: [
+                {
+                    id: 1,
+                    question: {
+                        options: [{
+                            id: 1,
+                            text: 'Option one',
+                        },
+                        {
+                            id: 2,
+                            text: 'Option two',
+                        },
+                        {
+                            id: 3,
+                            text: 'Option three',
+                        }],
+                        question: 'This is a question?',
+                        response_config: {
+                            widget_type: 'checkbox',
+                        },
+                        response_type: 'options',
+                    },
+                    type: 'question',
+                } as ZetkinSurveyQuestionElement,
+            ],
+            info_text: 'My description of the survey',
+            title: 'My survey',
+        };
+
+
+        mountWithProviders(<SurveyForm
+            initialState={{
+                'question-1': [1, 3],
+            }}
+            survey={ dummySurvey }
+        />);
+
+        cy.findByLabelText('Option one').should('be.checked');
+        cy.findByLabelText('Option three').should('be.checked');
     });
 });

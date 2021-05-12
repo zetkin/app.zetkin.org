@@ -6,13 +6,15 @@ import {
 
 interface SurveyElementProps {
     element: ZetkinSurveyElement;
+    onValueChange: (name: string, val: number[]) => void;
+    value: number[];
 }
 
 function isText(elem : ZetkinSurveyElement) : elem is ZetkinSurveyTextblockElement {
     return elem.type === 'text';
 }
 
-export default function SurveyElement({ element }: SurveyElementProps) : JSX.Element {
+export default function SurveyElement({ element, onValueChange, value }: SurveyElementProps) : JSX.Element {
     if (isText(element)) {
         const { text_block } = element;
         return (
@@ -24,7 +26,7 @@ export default function SurveyElement({ element }: SurveyElementProps) : JSX.Ele
     }
     else {
         return (
-            <SurveyQuestion element={ element }/>
+            <SurveyQuestion element={ element } onValueChange={ onValueChange } value={ value }/>
         );
     }
 }

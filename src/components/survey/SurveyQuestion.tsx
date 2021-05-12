@@ -7,15 +7,19 @@ import {
 
 interface SurveyQuestionProps {
     element: ZetkinSurveyQuestionElement;
+    onValueChange: (name: string, val: number[]) => void;
+    value: number[];
 }
 
 function isText(elem : ZetkinSurveyQuestionElement) : elem is ZetkinSurveyTextQuestionElement {
     return elem.question.response_type === 'text';
 }
 
-export default function SurveyQuestion( { element } : SurveyQuestionProps) : JSX.Element {
+export default function SurveyQuestion( { element, onValueChange, value } : SurveyQuestionProps) : JSX.Element {
     const { question: questionObject } = element;
     const { description, question, required } = questionObject;
+
+    const name = `question-${ element.id }`;
 
     if (isText(element)) {
         return (
@@ -35,7 +39,7 @@ export default function SurveyQuestion( { element } : SurveyQuestionProps) : JSX
                     { required ? (<span data-testid="required">*</span>) : null }
                 </h2>
                 <h3 data-testid="question-description">{ description }</h3>
-                <SurveyOptionsQuestion element={ element } />
+                <SurveyOptionsQuestion element={ element } name={ name } onValueChange={ onValueChange } value={ value } />
             </>
         );
     }
