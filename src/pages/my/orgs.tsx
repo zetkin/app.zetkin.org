@@ -21,15 +21,9 @@ const scaffoldOptions = {
 export const getServerSideProps : GetServerSideProps = scaffold(async (context) => {
     const { user } = context;
 
-    let followingState;
-
     if (user) {
         await context.queryClient.prefetchQuery('following', getUserFollowing(context.apiFetch));
 
-        followingState = context.queryClient.getQueryState('following');
-    }
-
-    if (followingState?.status === 'success') {
         return {
             props: {},
         };
