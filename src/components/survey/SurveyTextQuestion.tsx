@@ -27,6 +27,13 @@ export default function SurveyTextQuestion( { element, name, onValueChange, valu
         />);
     }
     else {
-        return <input data-testid="response-singleline" required={ required } type="text"/>;
+        return (<input
+            data-testid="response-singleline"
+            name={ name }
+            onChange={ onChange }
+            required={ required }
+            type="text"
+            value={ value }
+        />);
     }
 }

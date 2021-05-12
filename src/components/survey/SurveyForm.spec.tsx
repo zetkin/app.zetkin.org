@@ -467,4 +467,33 @@ describe('SurveyForm', () => {
         cy.get('[data-testid="response-multiline"]').should('have.value', 'Text from initialState');
     });
 
+    it('can render a single line text input with an initial value', () => {
+        const dummySurvey = {
+            elements: [
+                {
+                    id: 1,
+                    question: {
+                        question: 'This is a question?',
+                        response_config: {
+                            multiline: false,
+                        },
+                        response_type: 'text',
+                    },
+                    type: 'question',
+                } as ZetkinSurveyQuestionElement,
+            ],
+            info_text: 'My description of the survey',
+            title: 'My survey',
+        };
+
+
+        mountWithProviders(<SurveyForm
+            initialState={{
+                'question-1': 'Text from initialState',
+            }}
+            survey={ dummySurvey }
+        />);
+
+        cy.get('[data-testid="response-singleline"]').should('have.value', 'Text from initialState');
+    });
 });
