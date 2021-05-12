@@ -67,18 +67,4 @@ describe('OrgHeader', () => {
                 expect(spyOnSignup).to.be.calledOnce;
             });
     });
-
-    it('contains a sign-up button when user is not logged in', () => {
-        mountWithProviders(
-            <OrgHeader
-                following={ [] }
-                onFollow={ () => null }
-                onUnfollow={ () => null }
-                org={ dummyOrg }
-            />,
-        );
-        cy.get('[data-test="dialog-trigger-button"]').should('exist');
-        cy.get('[data-test="follow-button"]').should('not.exist');
-        cy.get('[data-test="unfollow-button"]').should('not.exist');
-    });
 });
