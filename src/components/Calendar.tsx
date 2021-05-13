@@ -1,7 +1,7 @@
 import { FormattedMessage as Msg } from 'react-intl';
-import { Heading, Text } from '@adobe/react-spectrum';
-
 import { ZetkinEvent } from '../types/zetkin';
+import { Heading, Text } from '@adobe/react-spectrum';
+import { useEffect, useRef } from 'react';
 
 interface CalendarProps {
     focusDate?: Date;
@@ -9,6 +9,15 @@ interface CalendarProps {
 }
 
 const Calendar = ({ focusDate = new Date(Date.now()), events }: CalendarProps): JSX.Element => {
+    const calendar = useRef<HTMLDivElement>(null);
+    const calendarWrapper = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const height = calendar.current?.clientHeight || 0;
+        const y = height / 24 * 8; // approx 8am
+        calendarWrapper.current?.scrollTo(0, y);
+    }, []);
+
     const week = [
         'misc.calendar.weeks.mon', 'misc.calendar.weeks.tue',
         'misc.calendar.weeks.wed', 'misc.calendar.weeks.thu',
@@ -36,11 +45,10 @@ const Calendar = ({ focusDate = new Date(Date.now()), events }: CalendarProps): 
 
     return (
         <>
-            <div style={{
+            <div ref={ calendarWrapper } style={{
                 height: '100%',
                 overflow: 'scroll',
                 width: '100%',
-
             }}>
                 <div style={{
                     background: 'rgb(234, 234, 234)',
@@ -72,7 +80,7 @@ const Calendar = ({ focusDate = new Date(Date.now()), events }: CalendarProps): 
                         </div>
                     )) }
                 </div>
-                <div  style={{
+                <div ref={ calendar } style={{
                     alignItems: 'center',
                     display:'flex',
                     gap:'0.5rem',
