@@ -87,7 +87,7 @@ describe('Calendar', () => {
         });
     });
 
-    it('renders a scrollable calendar when events are spread out', () => {
+    it('works with events on the edge of days', () => {
         dummyEvents[0].start_time = '2021-05-10T00:00:00+02:00';
         dummyEvents[0].end_time = '2021-05-10T01:00:00+02:00';
         dummyEvents[1].start_time = '2021-05-10T23:00:00+02:00';
@@ -95,8 +95,33 @@ describe('Calendar', () => {
         mountWithProviders(
             <Calendar events={ dummyEvents } focusDate={ new Date(dummyDate) } />,
         );
-
         cy.get('ul').first().children().first().should('be.visible');
         cy.get('ul').first().children().last().should('be.visible');
+    });
+
+    it('scrolls when the viewport is small', () => {
+        cy.viewport(800, 500);
+        mountWithProviders(
+            <div style={{ padding: 0, position: 'absolute', top: 0, bottom: 0, left: 0, right: 0 }}>
+                <Calendar events={ dummyEvents } focusDate={ new Date(dummyDate) } />
+            </div>,
+        );
+        cy.get('[data-testid="calendar-wrapper"]').then(el => {
+            const scrollPos = el[0].scrollTop;
+            expect(scrollPos).to.be.greaterThan(0);
+        });
+    });
+
+    it('does not scroll when the viewport is big', () => {
+        cy.viewport(800, 2000);
+        mountWithProviders(
+            <div style={{ padding: 0, position: 'absolute', top: 0, bottom: 0, left: 0, right: 0 }}>
+                <Calendar events={ dummyEvents } focusDate={ new Date(dummyDate) } />
+            </div>,
+        );
+        cy.get('[data-testid="calendar-wrapper"]').then(el => {
+            const scrollPos = el[0].scrollTop;
+            expect(scrollPos).to.eq(0);
+        });
     });
 });

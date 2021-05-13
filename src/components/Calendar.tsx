@@ -45,7 +45,7 @@ const Calendar = ({ focusDate = new Date(Date.now()), events }: CalendarProps): 
 
     return (
         <>
-            <div ref={ calendarWrapper } style={{
+            <div ref={ calendarWrapper } data-testid="calendar-wrapper" style={{
                 height: '100%',
                 overflow: 'scroll',
                 width: '100%',
@@ -84,7 +84,7 @@ const Calendar = ({ focusDate = new Date(Date.now()), events }: CalendarProps): 
                     alignItems: 'center',
                     display:'flex',
                     gap:'0.5rem',
-                    height: '200vh',
+                    height: '100rem',
                     justifyContent: 'start',
                     width: '100%',
                 }}>
