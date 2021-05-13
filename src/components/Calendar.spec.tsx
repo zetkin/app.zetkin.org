@@ -102,7 +102,14 @@ describe('Calendar', () => {
     it('scrolls when the viewport is small', () => {
         cy.viewport(800, 500);
         mountWithProviders(
-            <div style={{ padding: 0, position: 'absolute', top: 0, bottom: 0, left: 0, right: 0 }}>
+            <div style={{
+                bottom: 0,
+                left: 0,
+                padding: 0,
+                position: 'absolute',
+                right: 0,
+                top: 0,
+            }}>
                 <Calendar events={ dummyEvents } focusDate={ new Date(dummyDate) } />
             </div>,
         );
@@ -115,7 +122,14 @@ describe('Calendar', () => {
     it('does not scroll when the viewport is big', () => {
         cy.viewport(800, 2000);
         mountWithProviders(
-            <div style={{ padding: 0, position: 'absolute', top: 0, bottom: 0, left: 0, right: 0 }}>
+            <div style={{
+                bottom: 0,
+                left: 0,
+                padding: 0,
+                position: 'absolute',
+                right: 0,
+                top: 0,
+            }}>
                 <Calendar events={ dummyEvents } focusDate={ new Date(dummyDate) } />
             </div>,
         );
