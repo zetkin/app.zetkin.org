@@ -25,7 +25,7 @@ const UserFollowingList = ({ following, onUnfollow } : UserFollowingListProps) :
         <Flex data-testid="following-list" direction="column">
             { following.map(follow => (
                 <Flex
-                    key="follow.organization.id"
+                    key={ follow.organization.id }
                     alignItems="center"
                     marginY="size-200">
                     <Flex data-testid="following-item">
