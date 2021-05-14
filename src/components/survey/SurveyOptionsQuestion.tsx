@@ -6,8 +6,8 @@ import { ZetkinSurveyOptionsQuestionElement } from '../../types/zetkin';
 interface SurveyOptionsQuestionProps {
     element: ZetkinSurveyOptionsQuestionElement;
     name: string;
-    onValueChange: (name: string, val: string | number | number[]) => void;
-    value: number | number[];
+    onValueChange: (name: string, val: string | number[]) => void;
+    value: number[];
 }
 
 export default function SurveyOptionsQuestion( { element, name, onValueChange, value } : SurveyOptionsQuestionProps): JSX.Element {
@@ -19,7 +19,7 @@ export default function SurveyOptionsQuestion( { element, name, onValueChange, v
             element={ element }
             name={ name }
             onValueChange={ onValueChange }
-            value={ value as number }
+            value={ value }
         />);
     }
     else if (widget_type === 'select') {
@@ -27,7 +27,7 @@ export default function SurveyOptionsQuestion( { element, name, onValueChange, v
             element={ element }
             name={ name }
             onValueChange={ onValueChange }
-            value={ value as number }
+            value={ value }
         />);
     }
     else {
@@ -35,7 +35,7 @@ export default function SurveyOptionsQuestion( { element, name, onValueChange, v
             element={ element }
             name={ name }
             onValueChange={ onValueChange }
-            value={ value as number[] }
+            value={ value }
         />);
     }
 }

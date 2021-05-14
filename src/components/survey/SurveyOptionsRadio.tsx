@@ -1,10 +1,11 @@
+import { ChangeEvent } from 'react';
 import { ZetkinSurveyOptionsQuestionElement } from '../../types/zetkin';
 
 interface SurveyOptionsRadioProps {
     element: ZetkinSurveyOptionsQuestionElement;
     name: string;
-    onValueChange: (name: string, val: string | number | number[]) => void;
-    value: number;
+    onValueChange: (name: string, val: string | number[]) => void;
+    value: number[];
 }
 
 export default function SurveyOptionsRadio({ element, name, onValueChange, value }: SurveyOptionsRadioProps): JSX.Element {
@@ -15,11 +16,11 @@ export default function SurveyOptionsRadio({ element, name, onValueChange, value
             {
                 options.map((option) => {
                     const htmlId = `${ element.id }-radio-${ option.id }`;
-                    const checked = option.id === value;
+                    const checked = value?.includes(option.id);
 
-                    const onChange = () => {
-                        value = option.id;
-                        onValueChange(name, value);
+                    const onChange = (ev: ChangeEvent<HTMLInputElement>) => {
+                        const newValue = [parseInt(ev.target.value)];
+                        onValueChange(name, newValue);
                     };
 
                     return (
@@ -31,7 +32,7 @@ export default function SurveyOptionsRadio({ element, name, onValueChange, value
                                 onChange={ onChange }
                                 required={ required }
                                 type="radio"
-                                value={ value }
+                                value={ option.id }
                             />
                             <label htmlFor={ htmlId }>{ option.text }</label>
                         </div>

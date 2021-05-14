@@ -5,7 +5,7 @@ import { ZetkinSurveyTextQuestionElement } from '../../types/zetkin';
 interface SurveyTextQuestionProps {
     element: ZetkinSurveyTextQuestionElement;
     name: string;
-    onValueChange: (name: string, val: string | number | number[]) => void;
+    onValueChange: (name: string, val: string | number[]) => void;
     value: string;
 }
 

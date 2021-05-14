@@ -7,7 +7,7 @@ import {
 
 interface SurveyQuestionProps {
     element: ZetkinSurveyQuestionElement;
-    onValueChange: (name: string, val: string | number | number[]) => void;
+    onValueChange: (name: string, val: string | number[]) => void;
     value: string | number | number[];
 }
 
@@ -48,7 +48,7 @@ export default function SurveyQuestion( { element, onValueChange, value } : Surv
                     element={ element }
                     name={ name }
                     onValueChange={ onValueChange }
-                    value={ value as number | number[] }
+                    value={ value as number[] }
                 />
             </>
         );
