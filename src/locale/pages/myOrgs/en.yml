@@ -1,4 +1,6 @@
+admin: Admin
 heading: Organizations
-rolePlaceholder: You don't have a role.
+organizer: Organizer
 orgsPlaceholder: You are not connected to any organizations yet.
+rolePlaceholder: You don't have a role.
 unfollow: Unfollow

@@ -44,8 +44,11 @@ const UserFollowingList = ({ following, onUnfollow } : UserFollowingListProps) :
                                 </a>
                             </NextLink>
                             { follow.role
-                                ? <Text data-testid="user-role" marginX="size-200">{ follow.role }</Text>
-                                : (
+                                ? (
+                                    <Text data-testid="user-role" marginX="size-200">
+                                        <Msg id={ `pages.myOrgs.${follow.role}` }/>
+                                    </Text>
+                                ) : (
                                     <Text marginX="size-200">
                                         <Msg id="pages.myOrgs.rolePlaceholder"/>
                                     </Text>

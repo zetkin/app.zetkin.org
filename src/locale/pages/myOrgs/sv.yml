@@ -1,4 +1,6 @@
+admin: Administratör
 heading: Organisationer
-rolePlaceholder: Du har ingen funktionärsroll.
+organizer: Organisatör
 orgsPlaceholder: Du är inte kopplad till några organisationer ännu.
+rolePlaceholder: Du har ingen funktionärsroll.
 unfollow: Sluta följa
