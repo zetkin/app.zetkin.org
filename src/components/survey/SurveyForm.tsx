@@ -9,14 +9,14 @@ interface OnValidSubmitProps {
 }
 
 interface SurveyFormProps {
-    initialState: Record<string, string | number[]>;
+    initialState?: Record<string, string | number[]>;
     onValidSubmit: (data: OnValidSubmitProps) => void;
     survey: ZetkinSurvey;
 }
 
 export default function SurveyForm({ initialState, onValidSubmit, survey }: SurveyFormProps): JSX.Element {
     const { title, info_text, elements } = survey;
-    const [state, setState] = useState(initialState);
+    const [state, setState] = useState(initialState || {});
 
     const onSubmit = (ev: ChangeEvent<HTMLFormElement>) => {
         onValidSubmit({

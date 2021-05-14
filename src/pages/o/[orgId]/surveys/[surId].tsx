@@ -6,6 +6,7 @@ import getOrg from '../../../../fetching/getOrg';
 import getSurvey from '../../../../fetching/getSurvey';
 import { PageWithLayout } from '../../../../types';
 import { scaffold } from '../../../../utils/next';
+import SurveyForm from '../../../../components/survey/SurveyForm';
 
 export const getServerSideProps : GetServerSideProps = scaffold(async (context) => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -42,10 +43,14 @@ const SurveyPage : PageWithLayout<SurveyPageProps> = (props) => {
     const surveyQuery = useQuery(['survey', surId], getSurvey(orgId, surId));
     const orgQuery = useQuery(['org', orgId], getOrg(orgId));
 
+    if (!surveyQuery.data) {
+        return null;
+    }
+
     return (
         <>
             <h1>{ orgQuery.data?.title }</h1>
-            <h1>{ surveyQuery.data?.title }</h1>
+            <SurveyForm onValidSubmit={ () => 'ziggi e bäst' } survey={ surveyQuery.data } />
         </>
     );
 };
