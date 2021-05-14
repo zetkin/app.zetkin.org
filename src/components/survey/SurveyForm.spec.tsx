@@ -778,4 +778,61 @@ describe('SurveyForm', () => {
             });
         });
     });
+
+    it('does not submit survey if required fields are not filled in', () => {
+        const spyOnSubmit = cy.spy();
+        const dummySurvey = {
+            elements: [
+                {
+                    id: 1,
+                    question: {
+                        question: 'This is a question?',
+                        required: true,
+                        response_config: {
+                            multiline: false,
+                        },
+                        response_type: 'text',
+                    },
+                    type: 'question',
+                } as ZetkinSurveyQuestionElement,
+                {
+                    id: 2,
+                    question: {
+                        options: [{
+                            id: 1,
+                            text: 'Option one',
+                        },
+                        {
+                            id: 2,
+                            text: 'Option two',
+                        },
+                        {
+                            id: 3,
+                            text: 'Option three',
+                        }],
+                        question: 'This is a question?',
+                        required: true,
+                        response_config: {
+                            widget_type: 'radio',
+                        },
+                        response_type: 'options',
+                    },
+                    type: 'question',
+                } as ZetkinSurveyQuestionElement,
+            ],
+            info_text: 'My description of the survey',
+            title: 'My survey',
+        };
+
+        mountWithProviders(<SurveyForm
+            initialState={{}}
+            onValidSubmit={ spyOnSubmit }
+            survey={ dummySurvey }
+        />);
+
+        cy.get('[data-testid="submit-button"]').click().then(() => {
+            expect(spyOnSubmit).to.not.be.called;
+        });
+
+    });
 });
