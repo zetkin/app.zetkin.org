@@ -1,7 +1,8 @@
 import { GetServerSideProps } from 'next';
 import { FormattedMessage as Msg } from 'react-intl';
 import { useQuery } from 'react-query';
-import { Heading, Text, View } from '@adobe/react-spectrum';
+import { Content, Heading, Text, View } from '@adobe/react-spectrum';
+import { Item, Tabs } from '@react-spectrum/tabs';
 
 import CallAssignmentList from '../../components/CallAssignmentList';
 import EventList from '../../components/EventList';
@@ -11,7 +12,7 @@ import getRespondEvents from '../../fetching/getRespondEvents';
 import MyHomeLayout from '../../components/layout/MyHomeLayout';
 import { PageWithLayout } from '../../types';
 import { scaffold } from '../../utils/next';
-import { useRespondEvents } from '../../hooks';
+import { useEventsFilter, useRespondEvents } from '../../hooks';
 
 const scaffoldOptions = {
     authLevelRequired: 1,
@@ -61,6 +62,7 @@ const MyTodoPage : PageWithLayout = () => {
     const callAssignmentsQuery = useQuery('callAssignments', getCallAssignments());
 
     const { respondEvents, onUndoSignup } = useRespondEvents();
+    const { today, tomorrow, week, later } = useEventsFilter(respondEvents);
 
     if ((!respondEvents || respondEvents.length === 0)
         && (!callAssignmentsQuery.data || callAssignmentsQuery.data?.length === 0)) {
@@ -73,6 +75,72 @@ const MyTodoPage : PageWithLayout = () => {
                     <Msg id="pages.myTodo.placeholder"/>
                 </Text>
             </>
+        );
+    }
+
+    const tabItems = [];
+
+    if (today && today.length > 0) {
+        tabItems.push(
+            <Item
+                key="today"
+                title={ <Msg id="pages.myTodo.tabs.today"/> }>
+                <Content>
+                    <EventList
+                        bookedEvents={ bookedEventsQuery.data }
+                        events={ today }
+                        onUndoSignup={ onUndoSignup }
+                    />
+                </Content>
+            </Item>,
+        );
+    }
+
+    if (tomorrow && tomorrow.length > 0) {
+        tabItems.push(
+            <Item
+                key="tomorrow"
+                title={ <Msg id="pages.myTodo.tabs.tomorrow"/> }>
+                <Content>
+                    <EventList
+                        bookedEvents={ bookedEventsQuery.data }
+                        events={ tomorrow }
+                        onUndoSignup={ onUndoSignup }
+                    />
+                </Content>
+            </Item>,
+        );
+    }
+
+    if (week && week.length > 0) {
+        tabItems.push(
+            <Item
+                key="week"
+                title={ <Msg id="pages.myTodo.tabs.thisWeek"/> }>
+                <Content>
+                    <EventList
+                        bookedEvents={ bookedEventsQuery.data }
+                        events={ week }
+                        onUndoSignup={ onUndoSignup }
+                    />
+                </Content>
+            </Item>,
+        );
+    }
+
+    if (later && later.length > 0) {
+        tabItems.push(
+            <Item
+                key="later"
+                title={ <Msg id="pages.myTodo.tabs.later"/> }>
+                <Content>
+                    <EventList
+                        bookedEvents={ bookedEventsQuery.data }
+                        events={ later }
+                        onUndoSignup={ onUndoSignup }
+                    />
+                </Content>
+            </Item>,
         );
     }
 
@@ -100,11 +168,18 @@ const MyTodoPage : PageWithLayout = () => {
                 <Heading level={ 2 } marginBottom="0">
                     <Msg id="pages.myTodo.events"/>
                 </Heading>
-                <EventList
-                    bookedEvents={ bookedEventsQuery.data }
-                    events={ respondEvents }
-                    onUndoSignup={ onUndoSignup }
-                />
+                { tabItems.length !== 0 ? (
+                    <Tabs
+                        aria-label="Options for events time filtering"
+                        data-testid="event-tabs"
+                        defaultSelectedKey="today">
+                        { tabItems }
+                    </Tabs>
+                ) : (
+                    <Text>
+                        <Msg id="pages.myTodo.eventsPlaceholder"/>
+                    </Text>
+                ) }
             </View>
         </>
     );

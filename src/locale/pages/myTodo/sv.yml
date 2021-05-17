@@ -1,4 +1,10 @@
+eventsPlaceholder: Tyvärr finns inget planerat för tillfället.
 heading: Att göra
 placeholder: Du har inget planerat för tillfället.
 callAssignments: Ringuppdrag
 events: Händelser
+tabs:
+  today: Idag
+  tomorrow: I morgon
+  thisWeek: Denna vecka
+  later: Senare
