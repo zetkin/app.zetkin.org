@@ -56,6 +56,21 @@ const MyPage : PageWithLayout<MyPageProps> = (props) => {
     const { eventResponses, onSignup, onUndoSignup } = useEventResponses();
     const userEvents = userEventsQuery.data;
 
+    function sliceString(string : string) {
+        return string.slice(0, 10);
+    }
+
+    function newDate(days? : number) {
+        const today = new Date();
+
+        if (days) {
+            today.setDate(today.getDate() + days);
+        }
+
+        const date = sliceString(today.toISOString());
+        return date;
+    }
+
     if (!userEvents || userEvents.length === 0) {
         return (
             <>
@@ -69,64 +84,110 @@ const MyPage : PageWithLayout<MyPageProps> = (props) => {
         );
     }
 
-    const today = <Msg id="pages.my.tabs.today"/>;
-    const tomorrow = <Msg id="pages.my.tabs.tomorrow"/>;
-    const week = <Msg id="pages.my.tabs.thisWeek"/>;
-    const later = <Msg id="pages.my.tabs.later"/>;
+    const today = userEvents.filter(event =>
+        sliceString(event.start_time) === newDate());
+
+    const tomorrow = userEvents.filter(event =>
+        sliceString(event.start_time) === newDate(1));
+
+    const week = userEvents.filter(event =>
+        sliceString(event.start_time) <= newDate(7)
+        && sliceString(event.start_time) >= newDate());
+
+    const later = userEvents.filter(event =>
+        sliceString(event.start_time) > newDate(7));
+
+    const tabItems = [];
+
+    if (today.length > 0) {
+        tabItems.push(
+            <Item
+                key="today"
+                title={ <Msg id="pages.my.tabs.today"/> }>
+                <Content>
+                    <EventList
+                        bookedEvents={ bookedEventsQuery.data }
+                        eventResponses={ eventResponses }
+                        events={ today }
+                        onSignup={ onSignup }
+                        onUndoSignup={ onUndoSignup }
+                    />
+                </Content>
+            </Item>,
+        );
+    }
+
+    if (tomorrow.length > 0) {
+        tabItems.push(
+            <Item
+                key="tomorrow"
+                title={ <Msg id="pages.my.tabs.tomorrow"/> }>
+                <Content>
+                    <EventList
+                        bookedEvents={ bookedEventsQuery.data }
+                        eventResponses={ eventResponses }
+                        events={ tomorrow }
+                        onSignup={ onSignup }
+                        onUndoSignup={ onUndoSignup }
+                    />
+                </Content>
+            </Item>,
+        );
+    }
+
+    if (week.length > 0) {
+        tabItems.push(
+            <Item
+                key="week"
+                title={ <Msg id="pages.my.tabs.thisWeek"/> }>
+                <Content>
+                    <EventList
+                        bookedEvents={ bookedEventsQuery.data }
+                        eventResponses={ eventResponses }
+                        events={ week }
+                        onSignup={ onSignup }
+                        onUndoSignup={ onUndoSignup }
+                    />
+                </Content>
+            </Item>,
+        );
+    }
+
+    if (later.length > 0) {
+        tabItems.push(
+            <Item
+                key="later"
+                title={ <Msg id="pages.my.tabs.later"/> }>
+                <Content>
+                    <EventList
+                        bookedEvents={ bookedEventsQuery.data }
+                        eventResponses={ eventResponses }
+                        events={ later }
+                        onSignup={ onSignup }
+                        onUndoSignup={ onUndoSignup }
+                    />
+                </Content>
+            </Item>,
+        );
+    }
 
     return (
         <>
             <Heading level={ 1 }>
                 <Msg id="pages.my.welcome" values={{ userName: user.first_name }}/>
             </Heading>
-            <Tabs
-                aria-label="Options for events time filtering"
-                defaultSelectedKey="today">
-                <Item key="today" title={ today }>
-                    <Content>
-                        <EventList
-                            bookedEvents={ bookedEventsQuery.data }
-                            eventResponses={ eventResponses }
-                            events={ userEvents }
-                            onSignup={ onSignup }
-                            onUndoSignup={ onUndoSignup }
-                        />
-                    </Content>
-                </Item>
-                <Item key="tomorrow" title={ tomorrow }>
-                    <Content>
-                        <EventList
-                            bookedEvents={ bookedEventsQuery.data }
-                            eventResponses={ eventResponses }
-                            events={ userEvents }
-                            onSignup={ onSignup }
-                            onUndoSignup={ onUndoSignup }
-                        />
-                    </Content>
-                </Item>
-                <Item key="week" title={ week }>
-                    <Content>
-                        <EventList
-                            bookedEvents={ bookedEventsQuery.data }
-                            eventResponses={ eventResponses }
-                            events={ userEvents }
-                            onSignup={ onSignup }
-                            onUndoSignup={ onUndoSignup }
-                        />
-                    </Content>
-                </Item>
-                <Item key="later" title={ later }>
-                    <Content>
-                        <EventList
-                            bookedEvents={ bookedEventsQuery.data }
-                            eventResponses={ eventResponses }
-                            events={ userEvents }
-                            onSignup={ onSignup }
-                            onUndoSignup={ onUndoSignup }
-                        />
-                    </Content>
-                </Item>
-            </Tabs>
+            { tabItems.length !== 0 ? (
+                <Tabs
+                    aria-label="Options for events time filtering"
+                    data-testid="event-tabs"
+                    defaultSelectedKey="today">
+                    { tabItems }
+                </Tabs>
+            ) : (
+                <Text>
+                    <Msg id="pages.my.placeholder"/>
+                </Text>
+            ) }
         </>
     );
 };

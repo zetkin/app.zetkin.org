@@ -36,6 +36,8 @@ describe('/my', () => {
             },
         });
 
+        dummyEvents.data[0].start_time = Date();
+
         cy.login();
 
         cy.visit('/my');
@@ -43,7 +45,7 @@ describe('/my', () => {
         cy.get('a[href*="/o/1"]').should('have.length', 1);
     });
 
-    it('contains tabs', () => {
+    it('contains tabs for time filtering', () => {
         cy.request('put', 'http://localhost:8001/v1/orgs/1/actions/_mocks/get', {
             response: {
                 data: dummyEvents,
@@ -55,6 +57,8 @@ describe('/my', () => {
                 data: dummyFollowing,
             },
         });
+
+        dummyEvents.data[0].start_time = Date();
 
         cy.login();
 
