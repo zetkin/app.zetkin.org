@@ -1,0 +1,11 @@
+menu:
+    home: Home
+    people: People
+    areas: Areas
+    calendar: Calendar
+    inbox: Inbox
+    manage: Manage
+search:
+    label: Search
+    placeholder: Type to search
+    drawerLabel: Press Enter to show full results.

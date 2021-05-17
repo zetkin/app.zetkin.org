@@ -6,7 +6,7 @@ import stringToBool from '../utils/stringToBool';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Z = require('zetkin');
 
-export const getServerSideProps : GetServerSideProps = async () => {
+export const getServerSideProps : GetServerSideProps = async (context) => {
     const z = Z.construct({
         clientId: process.env.ZETKIN_CLIENT_ID,
         clientSecret: process.env.ZETKIN_CLIENT_SECRET,
@@ -17,9 +17,17 @@ export const getServerSideProps : GetServerSideProps = async () => {
     const protocol = stringToBool(process.env.NEXT_PUBLIC_APP_USE_TLS)? 'https' : 'http';
     const host = process.env.NEXT_PUBLIC_APP_HOST;
 
+    let scopes;
+    const { level } = context.query;
+    if (level && typeof level === 'string') {
+        if (parseInt(level) > 1) {
+            scopes = [`level${level}`];
+        }
+    }
+
     return {
         redirect: {
-            destination: z.getLoginUrl(`${protocol}://${host}`),
+            destination: z.getLoginUrl(`${protocol}://${host}/`, scopes),
             permanent: true,
         },
     };

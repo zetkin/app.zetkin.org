@@ -1,0 +1,11 @@
+menu:
+    home: Hem
+    people: Personer
+    areas: Karta
+    calendar: Kalender
+    inbox: Inkorg
+    manage: Hantera
+search:
+    label: Sök
+    placeholder: Skriv för att söka
+    drawerLabel: Tryck Enter för att visa fullständiga resultat.

@@ -23,19 +23,20 @@ $ yarn tdd           # Use this for test-driven development with Cypress
 $ yarn devserver     # Use this if you don't want to do TDD
 ```
 
-For API authentication using OAuth to work you must use the application at an
-approved domain, which you can add to your operating systems hosts file.
+You should now be able to access the app on http://localhost:3000. It will
+communicate with the Zetkin API running on our public development server.
 
-* On Linux or Mac OSX edit `/etc/hosts`
-* On Windows edit `c:\windows\system32\drivers\etc\hosts` ([Read more](https://www.howtogeek.com/howto/27350/beginner-geek-how-to-edit-your-hosts-file/))
+## Development server login credentials
+You can log in using the dummy user accounts to access dummy data from the
+development server.
 
-Make sure that the following line exists somewhere in the file
+Role/access    | Username                | Password  | SMS code
+---------------|-------------------------|-----------|--------------
+Administrator  | testadmin@example.com   | password  | 999999
+Caller         | testcaller@example.com  | password  | 999999
+Basic user     | testuser@example.com    | password  | 999999
 
-```
-127.0.0.1   www.dev.zetkin.org
-```
-
-Once it's configured, you can access the app at http://www.dev.zetkin.org.
+The SMS one-time password is only required in some parts of the app.
 
 ## Contributing
 This repository has an `.editorconfig` file which can automatically configure
@@ -56,3 +57,21 @@ way to set it up is to just configure git to use hooks from there:
 ```
 $ git config core.hooksPath .githooks
 ```
+
+## Submit your contribution
+If you don't yet have write access to the repository, you can create a fork
+on your own GitHub and work there.
+
+Pick an issue from [the list](https://github.com/zetkin/app.zetkin.org/issues)
+and write a short message on the issue to let us know that you intened to work
+on it.
+
+Create a git branch for your work named `issue-<number>/some-description`, e.g.
+`issue-99/event-component` for [issue #99](https://github.com/zetkin/app.zetkin.org/issues/99).
+
+As a general style, we write our commit messages as short sentences in
+[imperative mood](https://en.wikipedia.org/wiki/Imperative_mood), e.g. "_Add_
+MyList component" rather than "_Added_ MyList component".
+
+When you're ready, create a pull request and expect it to be reviewed within
+a few days.

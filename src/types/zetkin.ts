@@ -1,3 +1,9 @@
+export interface ZetkinCampaign {
+    info_text: string;
+    title: string;
+    id: string;
+}
+
 export interface ZetkinMembership {
     organization: ZetkinOrganization;
     profile: {
@@ -23,6 +29,7 @@ export interface ZetkinEvent {
         id: number;
         title: string;
     };
+    contact?: string | null;
     end_time: string;
     id: number;
     info_text: string;
@@ -32,8 +39,15 @@ export interface ZetkinEvent {
         lng: number;
         title: string;
     };
+    num_participants_required?: number;
+    num_participants_available?: number;
     start_time: string;
     title?: string;
+    organization: {
+        id: number;
+        title: string;
+    };
+    respond?: boolean;
 }
 
 export interface ZetkinUser {
@@ -110,5 +124,40 @@ export type ZetkinSurveyElement = ZetkinSurveyQuestionElement | ZetkinSurveyText
 export interface ZetkinSurvey {
     elements: ZetkinSurveyElement[];
     info_text: string;
+    title: string;
+}
+
+export interface ZetkinCallAssignment {
+    cooldown: number;
+    description: string;
+    disable_caller_notes: boolean;
+    end_date: string;
+    goal: {
+        filter_spec: undefined;
+        id: number;
+        type: string;
+    };
+    id: number;
+    instructions: string;
+    organization: {
+        id: number;
+        title: string;
+    };
+    organization_id: number;
+    start_date: string;
+    target: {
+        filter_spec: [
+            {
+                config: {
+                    after: string;
+                    campaign: number;
+                    operator: string;
+                };
+                type: string;
+            }
+        ];
+        id: number;
+        type: string;
+    };
     title: string;
 }
