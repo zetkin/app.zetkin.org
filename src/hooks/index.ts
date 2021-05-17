@@ -115,3 +115,42 @@ export const useUserFollowing = () : UserFollowing => {
 
     return { following, onFollow, onUnfollow };
 };
+
+type EventsFilter = {
+    later: ZetkinEvent[] | undefined;
+    today: ZetkinEvent[] | undefined;
+    tomorrow: ZetkinEvent[] | undefined;
+    week: ZetkinEvent[] | undefined;
+}
+
+export const useEventsFilter = (events : ZetkinEvent[] | undefined) : EventsFilter => {
+    function sliceString(string : string) {
+        return string.slice(0, 10);
+    }
+
+    function newDate(days? : number) {
+        const today = new Date();
+
+        if (days) {
+            today.setDate(today.getDate() + days);
+        }
+
+        const date = sliceString(today.toISOString());
+        return date;
+    }
+
+    const today = events?.filter(event =>
+        sliceString(event.start_time) === newDate());
+
+    const tomorrow = events?.filter(event =>
+        sliceString(event.start_time) === newDate(1));
+
+    const week = events?.filter(event =>
+        sliceString(event.start_time) <= newDate(7)
+        && sliceString(event.start_time) >= newDate());
+
+    const later = events?.filter(event =>
+        sliceString(event.start_time) > newDate(7));
+
+    return { later, today, tomorrow, week };
+};

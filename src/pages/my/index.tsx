@@ -21,8 +21,8 @@ import getUserEvents from '../../fetching/getUserEvents';
 import MyHomeLayout from '../../components/layout/MyHomeLayout';
 import { PageWithLayout } from '../../types';
 import { scaffold } from '../../utils/next';
-import { useEventResponses } from '../../hooks';
 import { ZetkinUser } from '../../types/zetkin';
+import { useEventResponses, useEventsFilter } from '../../hooks';
 
 const scaffoldOptions = {
     authLevelRequired: 1,
@@ -61,27 +61,14 @@ interface MyPageProps {
 const MyPage : PageWithLayout<MyPageProps> = (props) => {
     const { user } = props;
 
-    const userEventsQuery = useQuery('userEvents', getUserEvents());
     const bookedEventsQuery = useQuery('bookedEvents', getBookedEvents());
     const userCampaignsQuery = useQuery('userCampaigns', getUserCampaigns());
+    const userEventsQuery = useQuery('userEvents', getUserEvents());
 
-    const { eventResponses, onSignup, onUndoSignup } = useEventResponses();
     const userEvents = userEventsQuery.data;
 
-    function sliceString(string : string) {
-        return string.slice(0, 10);
-    }
-
-    function newDate(days? : number) {
-        const today = new Date();
-
-        if (days) {
-            today.setDate(today.getDate() + days);
-        }
-
-        const date = sliceString(today.toISOString());
-        return date;
-    }
+    const { eventResponses, onSignup, onUndoSignup } = useEventResponses();
+    const { today, tomorrow, week, later } = useEventsFilter(userEvents);
 
     if (!userEvents || userEvents.length === 0) {
         return (
@@ -96,22 +83,9 @@ const MyPage : PageWithLayout<MyPageProps> = (props) => {
         );
     }
 
-    const today = userEvents.filter(event =>
-        sliceString(event.start_time) === newDate());
-
-    const tomorrow = userEvents.filter(event =>
-        sliceString(event.start_time) === newDate(1));
-
-    const week = userEvents.filter(event =>
-        sliceString(event.start_time) <= newDate(7)
-        && sliceString(event.start_time) >= newDate());
-
-    const later = userEvents.filter(event =>
-        sliceString(event.start_time) > newDate(7));
-
     const tabItems = [];
 
-    if (today.length > 0) {
+    if (today && today.length > 0) {
         tabItems.push(
             <Item
                 key="today"
@@ -129,7 +103,7 @@ const MyPage : PageWithLayout<MyPageProps> = (props) => {
         );
     }
 
-    if (tomorrow.length > 0) {
+    if (tomorrow && tomorrow.length > 0) {
         tabItems.push(
             <Item
                 key="tomorrow"
@@ -147,7 +121,7 @@ const MyPage : PageWithLayout<MyPageProps> = (props) => {
         );
     }
 
-    if (week.length > 0) {
+    if (week && week.length > 0) {
         tabItems.push(
             <Item
                 key="week"
@@ -165,7 +139,7 @@ const MyPage : PageWithLayout<MyPageProps> = (props) => {
         );
     }
 
-    if (later.length > 0) {
+    if (later && later.length > 0) {
         tabItems.push(
             <Item
                 key="later"
