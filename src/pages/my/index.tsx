@@ -1,12 +1,22 @@
 import { GetServerSideProps } from 'next';
 import { FormattedMessage as Msg } from 'react-intl';
+import NextLink from 'next/link';
 import { useQuery } from 'react-query';
-import { Content, Heading, Text } from '@adobe/react-spectrum';
+import {
+    Content,
+    Flex,
+    Grid,
+    Heading,
+    repeat,
+    Text,
+    View,
+} from '@adobe/react-spectrum';
 import { Item, Tabs } from '@react-spectrum/tabs';
 
 import EventList from '../../components/EventList';
 import getBookedEvents from '../../fetching/getBookedEvents';
 import getEventResponses from '../../fetching/getEventResponses';
+import getUserCampaigns from '../../fetching/getUserCampaigns';
 import getUserEvents from '../../fetching/getUserEvents';
 import MyHomeLayout from '../../components/layout/MyHomeLayout';
 import { PageWithLayout } from '../../types';
@@ -31,6 +41,7 @@ export const getServerSideProps : GetServerSideProps = scaffold(async (context) 
         await context.queryClient.prefetchQuery('userEvents', getUserEvents(context.apiFetch));
         await context.queryClient.prefetchQuery('bookedEvents', getBookedEvents(context.apiFetch));
         await context.queryClient.prefetchQuery('eventResponses', getEventResponses(context.apiFetch));
+        await context.queryClient.prefetchQuery('userCampaigns', getUserCampaigns(context.apiFetch));
 
         return {
             props: {},
@@ -52,6 +63,7 @@ const MyPage : PageWithLayout<MyPageProps> = (props) => {
 
     const userEventsQuery = useQuery('userEvents', getUserEvents());
     const bookedEventsQuery = useQuery('bookedEvents', getBookedEvents());
+    const userCampaignsQuery = useQuery('userCampaigns', getUserCampaigns());
 
     const { eventResponses, onSignup, onUndoSignup } = useEventResponses();
     const userEvents = userEventsQuery.data;
@@ -172,9 +184,12 @@ const MyPage : PageWithLayout<MyPageProps> = (props) => {
     }
 
     return (
-        <>
+        <View marginBottom="size-1000" marginX="5vw">
             <Heading level={ 1 }>
                 <Msg id="pages.my.welcome" values={{ userName: user.first_name }}/>
+            </Heading>
+            <Heading level={ 2 } marginBottom="0" marginTop="size-600">
+                <Msg id="pages.my.events"/>
             </Heading>
             { tabItems.length !== 0 ? (
                 <Tabs
@@ -188,7 +203,33 @@ const MyPage : PageWithLayout<MyPageProps> = (props) => {
                     <Msg id="pages.my.placeholder"/>
                 </Text>
             ) }
-        </>
+            <Heading level={ 2 } marginTop="size-300">
+                <Msg id="pages.my.campaigns"/>
+            </Heading>
+            { userCampaignsQuery.data &&
+                <Grid
+                    autoRows="size-1200"
+                    columns={ repeat('auto-fit', 'size-3600') }
+                    gap="size-100">
+                    { userCampaignsQuery.data.map(campaign => (
+                        <View key={ campaign.id } data-testid="campaign-link">
+                            <NextLink
+                                href={ `/o/${campaign.organization?.id}/campaigns/${campaign.id}` }>
+                                <a>
+                                    <View backgroundColor="gray-300" height="100%">
+                                        <Flex alignItems="center" height="100%" justifyContent="center">
+                                            <Heading level={ 3 }>
+                                                { campaign.title }
+                                            </Heading>
+                                        </Flex>
+                                    </View>
+                                </a>
+                            </NextLink>
+                        </View>
+                    )) }
+                </Grid>
+            }
+        </View>
     );
 };
 

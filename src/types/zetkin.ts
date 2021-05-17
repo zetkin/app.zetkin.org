@@ -2,6 +2,7 @@ export interface ZetkinCampaign {
     info_text: string;
     title: string;
     id: string;
+    organization?: ZetkinOrganization;
 }
 
 export interface ZetkinMembership {

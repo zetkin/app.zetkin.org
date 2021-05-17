@@ -1,8 +1,9 @@
-import { ZetkinEvent, ZetkinMembership } from '../../src/types/zetkin';
+import { ZetkinCampaign, ZetkinEvent, ZetkinMembership } from '../../src/types/zetkin';
 
 describe('/my', () => {
     let dummyEvents : {data: ZetkinEvent[]};
     let dummyFollowing : {data: ZetkinMembership[]};
+    let dummyCampaigns : {data: ZetkinCampaign[]};
 
     before(() => {
         cy.fixture('dummyEvents.json')
@@ -12,6 +13,10 @@ describe('/my', () => {
         cy.fixture('dummyFollowing.json')
             .then((data : {data: ZetkinMembership[]}) => {
                 dummyFollowing = data;
+            });
+        cy.fixture('dummyCampaigns.json')
+            .then((data : {data: ZetkinCampaign[]}) => {
+                dummyCampaigns = data;
             });
     });
 
@@ -23,7 +28,7 @@ describe('/my', () => {
         cy.request('delete', 'http://localhost:8001/_mocks');
     });
 
-    it('contains events', () => {
+    it('contains event previews', () => {
         cy.request('put', 'http://localhost:8001/v1/orgs/1/actions/_mocks/get', {
             response: {
                 data: dummyEvents,
@@ -42,7 +47,7 @@ describe('/my', () => {
 
         cy.visit('/my');
         cy.waitUntilReactRendered();
-        cy.get('a[href*="/o/1"]').should('have.length', 1);
+        cy.get('a[href*="/o/1/events/"]').should('have.length', 1);
     });
 
     it('contains tabs for time filtering', () => {
@@ -78,6 +83,26 @@ describe('/my', () => {
 
         cy.visit('/my');
         cy.contains('Sorry, there is nothing planned at the moment.');
+    });
+
+    it('contains campaign links', () => {
+        cy.request('put', 'http://localhost:8001/v1/orgs/1/campaigns/_mocks/get', {
+            response: {
+                data: dummyCampaigns,
+            },
+        });
+
+        cy.request('put', 'http://localhost:8001/v1/users/me/following/_mocks/get', {
+            response: {
+                data: dummyFollowing,
+            },
+        });
+
+        cy.login();
+
+        cy.visit('/my');
+        cy.waitUntilReactRendered();
+        cy.get('[data-testid="campaign-link"]').should('have.length', 1);
     });
 
 });
