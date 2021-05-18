@@ -28,23 +28,10 @@ const scaffoldOptions = {
 export const getServerSideProps : GetServerSideProps = scaffold(async (context) => {
     const { user } = context;
 
-    let respondEventsState;
-    let bookedEventsState;
-    let callAssignmentsState;
-
     if (user) {
         await context.queryClient.prefetchQuery('respondEvents', getRespondEvents(context.apiFetch));
         await context.queryClient.prefetchQuery('bookedEvents', getBookedEvents(context.apiFetch));
         await context.queryClient.prefetchQuery('callAssignments', getCallAssignments(context.apiFetch));
-
-        respondEventsState = context.queryClient.getQueryState('respondEvents');
-        bookedEventsState = context.queryClient.getQueryState('bookedEvents');
-        callAssignmentsState = context.queryClient.getQueryState('callAssignments');
-    }
-
-    if (respondEventsState?.status === 'success'
-        && bookedEventsState?.status === 'success'
-        && callAssignmentsState?.status === 'success') {
 
         return {
             props: {},
