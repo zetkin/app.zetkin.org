@@ -88,7 +88,19 @@ describe('/o/[orgId]/events', () => {
         //TODO: Verify that API request is done corrently.
     });
 
-    it('shows an undo sign-up button if user is signed up to an event', () => {
+    it.only('shows an undo sign-up button if user is signed up to an event', () => {
+        cy.request('put', 'http://localhost:8001/v1/orgs/1/campaigns/2/actions/_mocks/get', {
+            response: {
+                data: dummyEvents,
+            },
+        });
+
+        cy.request('put', 'http://localhost:8001/v1/users/me/actions/_mocks/get', {
+            response: {
+                data: { data: [] },
+            },
+        });
+
         cy.request('put', 'http://localhost:8001/v1/users/me/action_responses/_mocks/get', {
             response: {
                 data: dummyEventResponses,
