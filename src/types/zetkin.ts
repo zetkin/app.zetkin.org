@@ -50,7 +50,6 @@ export interface ZetkinEvent {
         id: number;
         title: string;
     };
-    respond?: boolean;
 }
 
 export interface ZetkinUser {
