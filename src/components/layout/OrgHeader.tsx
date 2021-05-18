@@ -10,13 +10,20 @@ import {
     View,
 } from '@adobe/react-spectrum';
 
-import { ZetkinOrganization } from '../../types/zetkin';
+import { useUser } from '../../hooks/';
+import { ZetkinMembership, ZetkinOrganization } from '../../types/zetkin';
 
 interface OrgHeaderProps {
+    following: ZetkinMembership[] | undefined;
+    onFollow: (orgId: number) => void;
+    onUnfollow: (orgId: number) => void;
     org: ZetkinOrganization;
 }
 
-const OrgHeader = ({ org } : OrgHeaderProps) : JSX.Element => {
+const OrgHeader = ({ following, onFollow, onUnfollow, org } : OrgHeaderProps) : JSX.Element => {
+    const follows = following?.some(follow => follow.organization.id === org.id);
+    const user = useUser();
+
     return (
         <Header>
             <Image
@@ -40,9 +47,24 @@ const OrgHeader = ({ org } : OrgHeaderProps) : JSX.Element => {
                             </NextLink>
                         </Link>
                     </View>
-                    <Button data-testid="unfollow-button" variant="cta">
-                        <Msg id="layout.org.actions.unfollow"/>
-                    </Button>
+                    { user ? (
+                        follows ? (
+                            <Button
+                                data-testid="unfollow-button"
+                                onPress={ () => onUnfollow(org.id) }
+                                variant="cta">
+                                <Msg id="layout.org.actions.unfollow"/>
+                            </Button>
+                        ) : (
+                            <Button
+                                data-testid="follow-button"
+                                onPress={ () => onFollow(org.id) }
+                                variant="cta">
+                                <Msg id="layout.org.actions.follow"/>
+                            </Button>
+                        )
+                    //TODO: Create button alternative for non-users
+                    ) : <></> }
                 </Flex>
             </Flex>
             <View>
