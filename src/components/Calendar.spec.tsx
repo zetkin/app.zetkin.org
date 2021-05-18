@@ -28,21 +28,31 @@ describe('Calendar', () => {
         mountWithProviders(
             <Calendar events={ dummyEvents } focusDate={ new Date(dummyDate) } />,
         );
-        cy.get('h3').first().contains('misc.calendar.weeks.mon');
-        cy.get('[data-testid="misc.calendar.weeks.mon"]').contains(10);
-        cy.get('[data-testid="misc.calendar.weeks.tue"]').contains(11);
-        cy.get('[data-testid="misc.calendar.weeks.wed"]').contains(12);
-        cy.get('[data-testid="misc.calendar.weeks.thu"]').contains(13);
-        cy.get('[data-testid="misc.calendar.weeks.fri"]').contains(14);
-        cy.get('[data-testid="misc.calendar.weeks.sat"]').contains(15);
-        cy.get('[data-testid="misc.calendar.weeks.sun"]').contains(16);
+
+        cy.get('[data-testid="weekday-0"]').should('be.visible');
+        cy.get('[data-testid="weekday-1"]').should('be.visible');
+        cy.get('[data-testid="weekday-2"]').should('be.visible');
+        cy.get('[data-testid="weekday-3"]').should('be.visible');
+        cy.get('[data-testid="weekday-4"]').should('be.visible');
+        cy.get('[data-testid="weekday-5"]').should('be.visible');
+        cy.get('[data-testid="weekday-6"]').should('be.visible');
+
+        cy.get('[data-testid="weekdays"]').first().contains('Mon');
+        cy.get('[data-testid="date-0"]').contains(10);
+        cy.get('[data-testid="date-1"]').contains(11);
+        cy.get('[data-testid="date-2"]').contains(12);
+        cy.get('[data-testid="date-3"]').contains(13);
+        cy.get('[data-testid="date-4"]').contains(14);
+        cy.get('[data-testid="date-5"]').contains(15);
+        cy.get('[data-testid="date-6"]').contains(16);
     });
 
     it('shows events that occur on the specified date', () => {
         mountWithProviders(
             <Calendar events={ dummyEvents } focusDate={ new Date(dummyDate) } />,
         );
-        cy.get('[data-testid="misc.calendar.weeks.mon-events"]').children().should('be.visible');
+        cy.get('[data-testid="day-0-events"]').contains('event with id 25');
+        cy.get('[data-testid="day-0-events"]').contains('event with id 26');
     });
 
     it('displays year and month boundaries correctly', () => {
@@ -54,25 +64,27 @@ describe('Calendar', () => {
             <Calendar events={ dummyEvents } focusDate={ new Date(dummyDate) } />,
         );
 
-        cy.get('[data-testid="misc.calendar.weeks.mon"]').contains(28);
-        cy.get('[data-testid="misc.calendar.weeks.tue"]').contains(29);
-        cy.get('[data-testid="misc.calendar.weeks.wed"]').contains(30);
-        cy.get('[data-testid="misc.calendar.weeks.thu"]').contains(31);
-        cy.get('[data-testid="misc.calendar.weeks.fri"]').contains(1);
-        cy.get('[data-testid="misc.calendar.weeks.sat"]').contains(2);
-        cy.get('[data-testid="misc.calendar.weeks.sun"]').contains(3);
+        cy.get('[data-testid="date-0"]').contains(28);
+        cy.get('[data-testid="date-1"]').contains(29);
+        cy.get('[data-testid="date-2"]').contains(30);
+        cy.get('[data-testid="date-3"]').contains(31);
+        cy.get('[data-testid="date-4"]').contains(1);
+        cy.get('[data-testid="date-5"]').contains(2);
+        cy.get('[data-testid="date-6"]').contains(3);
 
-        cy.get('[data-testid="misc.calendar.weeks.thu-events"]').children().should('be.visible');
+        cy.get('[data-testid="event-26"]').should('be.visible');
     });
 
     it('shows the days events in the correct order', () => {
         mountWithProviders(
             <Calendar events={ dummyEvents } focusDate={ new Date(dummyDate) } />,
         );
-        cy.get('ul').first().children().then(ul => {
-            const firstEventYPos = ul[0].getBoundingClientRect().top;
-            const secondEventYPos = ul[1].getBoundingClientRect().top;
-            expect(firstEventYPos).to.be.lessThan(secondEventYPos);
+        cy.get('[data-testid="event-26"]').then(el => {
+            const firstEventYPos = el[0].getBoundingClientRect().top;
+            cy.get('[data-testid="event-25"]').then(el => {
+                const secondEventYPos = el[0].getBoundingClientRect().top;
+                expect(firstEventYPos).to.be.lessThan(secondEventYPos);
+            });
         });
     });
 
@@ -80,10 +92,12 @@ describe('Calendar', () => {
         mountWithProviders(
             <Calendar events={ dummyEvents } focusDate={ new Date(dummyDate) } />,
         );
-        cy.get('ul').first().children().then(ul => {
-            const firstEventHeight = ul[0].clientHeight;
-            const secondEventHeight = ul[1].clientHeight;
-            expect(firstEventHeight).to.be.lessThan(secondEventHeight);
+        cy.get('[data-testid="event-26"]').then(el => {
+            const firstEventHeight = el[0].getBoundingClientRect().top;
+            cy.get('[data-testid="event-25"]').then(el => {
+                const secondEventHeight = el[0].getBoundingClientRect().top;
+                expect(firstEventHeight).to.be.lessThan(secondEventHeight);
+            });
         });
     });
 
@@ -95,8 +109,8 @@ describe('Calendar', () => {
         mountWithProviders(
             <Calendar events={ dummyEvents } focusDate={ new Date(dummyDate) } />,
         );
-        cy.get('ul').first().children().first().should('be.visible');
-        cy.get('ul').first().children().last().should('be.visible');
+        cy.get('[data-testid="day-0-events"]').contains('event with id 25');
+        cy.get('[data-testid="day-0-events"]').contains('event with id 26');
     });
 
     it('scrolls when the viewport is small', () => {
