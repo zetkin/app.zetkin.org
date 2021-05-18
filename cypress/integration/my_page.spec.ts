@@ -50,7 +50,7 @@ describe('/my', () => {
         cy.get('a[href*="/o/1/events/"]').should('have.length', 1);
     });
 
-    it('contains tabs for time filtering', () => {
+    it('contains a tabs menu', () => {
         cy.request('put', 'http://localhost:8001/v1/orgs/1/actions/_mocks/get', {
             response: {
                 data: dummyEvents,
@@ -72,7 +72,7 @@ describe('/my', () => {
         cy.contains('Today');
     });
 
-    it('contains a placeholder if there is no content', () => {
+    it('contains a placeholder for all content if there are no events', () => {
         cy.request('put', 'http://localhost:8001/v1/users/me/following/_mocks/get', {
             response: {
                 data: [],

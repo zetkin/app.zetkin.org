@@ -3,7 +3,6 @@ import { FormattedMessage as Msg } from 'react-intl';
 import NextLink from 'next/link';
 import { useQuery } from 'react-query';
 import {
-    Content,
     Flex,
     Grid,
     Heading,
@@ -11,9 +10,8 @@ import {
     Text,
     View,
 } from '@adobe/react-spectrum';
-import { Item, Tabs } from '@react-spectrum/tabs';
 
-import EventList from '../../components/EventList';
+import EventTabs from '../../components/EventTabs';
 import getBookedEvents from '../../fetching/getBookedEvents';
 import getEventResponses from '../../fetching/getEventResponses';
 import getUserCampaigns from '../../fetching/getUserCampaigns';
@@ -68,7 +66,7 @@ const MyPage : PageWithLayout<MyPageProps> = (props) => {
     const userEvents = userEventsQuery.data;
 
     const { eventResponses, onSignup, onUndoSignup } = useEventResponses();
-    const { today, tomorrow, week, later } = useEventsFilter(userEvents);
+    const { later, today, tomorrow, week } = useEventsFilter(userEvents);
 
     if (!userEvents || userEvents.length === 0) {
         return (
@@ -83,80 +81,6 @@ const MyPage : PageWithLayout<MyPageProps> = (props) => {
         );
     }
 
-    const tabItems = [];
-
-    if (today && today.length > 0) {
-        tabItems.push(
-            <Item
-                key="today"
-                title={ <Msg id="pages.my.tabs.today"/> }>
-                <Content>
-                    <EventList
-                        bookedEvents={ bookedEventsQuery.data }
-                        eventResponses={ eventResponses }
-                        events={ today }
-                        onSignup={ onSignup }
-                        onUndoSignup={ onUndoSignup }
-                    />
-                </Content>
-            </Item>,
-        );
-    }
-
-    if (tomorrow && tomorrow.length > 0) {
-        tabItems.push(
-            <Item
-                key="tomorrow"
-                title={ <Msg id="pages.my.tabs.tomorrow"/> }>
-                <Content>
-                    <EventList
-                        bookedEvents={ bookedEventsQuery.data }
-                        eventResponses={ eventResponses }
-                        events={ tomorrow }
-                        onSignup={ onSignup }
-                        onUndoSignup={ onUndoSignup }
-                    />
-                </Content>
-            </Item>,
-        );
-    }
-
-    if (week && week.length > 0) {
-        tabItems.push(
-            <Item
-                key="week"
-                title={ <Msg id="pages.my.tabs.thisWeek"/> }>
-                <Content>
-                    <EventList
-                        bookedEvents={ bookedEventsQuery.data }
-                        eventResponses={ eventResponses }
-                        events={ week }
-                        onSignup={ onSignup }
-                        onUndoSignup={ onUndoSignup }
-                    />
-                </Content>
-            </Item>,
-        );
-    }
-
-    if (later && later.length > 0) {
-        tabItems.push(
-            <Item
-                key="later"
-                title={ <Msg id="pages.my.tabs.later"/> }>
-                <Content>
-                    <EventList
-                        bookedEvents={ bookedEventsQuery.data }
-                        eventResponses={ eventResponses }
-                        events={ later }
-                        onSignup={ onSignup }
-                        onUndoSignup={ onUndoSignup }
-                    />
-                </Content>
-            </Item>,
-        );
-    }
-
     return (
         <View marginBottom="size-1000" marginX="5vw">
             <Heading level={ 1 }>
@@ -165,18 +89,16 @@ const MyPage : PageWithLayout<MyPageProps> = (props) => {
             <Heading level={ 2 } marginBottom="0" marginTop="size-600">
                 <Msg id="pages.my.events"/>
             </Heading>
-            { tabItems.length !== 0 ? (
-                <Tabs
-                    aria-label="Options for events time filtering"
-                    data-testid="event-tabs"
-                    defaultSelectedKey="today">
-                    { tabItems }
-                </Tabs>
-            ) : (
-                <Text>
-                    <Msg id="pages.my.placeholder"/>
-                </Text>
-            ) }
+            <EventTabs
+                bookedEvents={ bookedEventsQuery.data }
+                eventResponses={ eventResponses }
+                later={ later }
+                onSignup={ onSignup }
+                onUndoSignup={ onUndoSignup }
+                today={ today }
+                tomorrow={ tomorrow }
+                week={ week }
+            />
             <Heading level={ 2 } marginTop="size-300">
                 <Msg id="pages.my.campaigns"/>
             </Heading>
