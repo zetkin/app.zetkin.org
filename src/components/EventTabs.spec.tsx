@@ -39,7 +39,7 @@ describe('EventTabs', () => {
             />,
         );
 
-        cy.contains('pages.my.placeholder');
+        cy.contains('misc.eventTabs.placeholder');
     });
 
     it('contains different tabs for time filtering', () => {
@@ -56,10 +56,10 @@ describe('EventTabs', () => {
             />,
         );
 
-        cy.contains('pages.my.tabs.today');
-        cy.contains('pages.my.tabs.tomorrow');
-        cy.contains('pages.my.tabs.thisWeek');
-        cy.contains('pages.my.tabs.later');
+        cy.contains('misc.eventTabs.tabs.today');
+        cy.contains('misc.eventTabs.tabs.tomorrow');
+        cy.contains('misc.eventTabs.tabs.thisWeek');
+        cy.contains('misc.eventTabs.tabs.later');
     });
 
     it('contains event previews', () => {

@@ -2,8 +2,3 @@ campaigns: Kampanjer
 events: Händelser
 welcome: Hej, {userName}
 placeholder: Tyvärr finns inget planerat för tillfället.
-tabs:
-  today: Idag
-  tomorrow: I morgon
-  thisWeek: Denna vecka
-  later: Senare

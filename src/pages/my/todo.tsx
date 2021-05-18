@@ -1,11 +1,10 @@
 import { GetServerSideProps } from 'next';
 import { FormattedMessage as Msg } from 'react-intl';
 import { useQuery } from 'react-query';
-import { Content, Heading, Text, View } from '@adobe/react-spectrum';
-import { Item, Tabs } from '@react-spectrum/tabs';
+import { Heading, Text, View } from '@adobe/react-spectrum';
 
 import CallAssignmentList from '../../components/CallAssignmentList';
-import EventList from '../../components/EventList';
+import EventTabs from '../../components/EventTabs';
 import getBookedEvents from '../../fetching/getBookedEvents';
 import getCallAssignments from '../../fetching/getCallAssignments';
 import getRespondEvents from '../../fetching/getRespondEvents';
@@ -20,6 +19,7 @@ const scaffoldOptions = {
         'layout.my',
         'misc.callAssignmentList',
         'misc.eventList',
+        'misc.eventTabs',
         'misc.publicHeader',
         'pages.myTodo',
     ],
@@ -65,72 +65,6 @@ const MyTodoPage : PageWithLayout = () => {
         );
     }
 
-    const tabItems = [];
-
-    if (today && today.length > 0) {
-        tabItems.push(
-            <Item
-                key="today"
-                title={ <Msg id="pages.myTodo.tabs.today"/> }>
-                <Content>
-                    <EventList
-                        bookedEvents={ bookedEventsQuery.data }
-                        events={ today }
-                        onUndoSignup={ onUndoSignup }
-                    />
-                </Content>
-            </Item>,
-        );
-    }
-
-    if (tomorrow && tomorrow.length > 0) {
-        tabItems.push(
-            <Item
-                key="tomorrow"
-                title={ <Msg id="pages.myTodo.tabs.tomorrow"/> }>
-                <Content>
-                    <EventList
-                        bookedEvents={ bookedEventsQuery.data }
-                        events={ tomorrow }
-                        onUndoSignup={ onUndoSignup }
-                    />
-                </Content>
-            </Item>,
-        );
-    }
-
-    if (week && week.length > 0) {
-        tabItems.push(
-            <Item
-                key="week"
-                title={ <Msg id="pages.myTodo.tabs.thisWeek"/> }>
-                <Content>
-                    <EventList
-                        bookedEvents={ bookedEventsQuery.data }
-                        events={ week }
-                        onUndoSignup={ onUndoSignup }
-                    />
-                </Content>
-            </Item>,
-        );
-    }
-
-    if (later && later.length > 0) {
-        tabItems.push(
-            <Item
-                key="later"
-                title={ <Msg id="pages.myTodo.tabs.later"/> }>
-                <Content>
-                    <EventList
-                        bookedEvents={ bookedEventsQuery.data }
-                        events={ later }
-                        onUndoSignup={ onUndoSignup }
-                    />
-                </Content>
-            </Item>,
-        );
-    }
-
     return (
         <>
             <Heading level={ 1 }>
@@ -155,18 +89,14 @@ const MyTodoPage : PageWithLayout = () => {
                 <Heading level={ 2 } marginBottom="0">
                     <Msg id="pages.myTodo.events"/>
                 </Heading>
-                { tabItems.length !== 0 ? (
-                    <Tabs
-                        aria-label="Options for events time filtering"
-                        data-testid="event-tabs"
-                        defaultSelectedKey="today">
-                        { tabItems }
-                    </Tabs>
-                ) : (
-                    <Text>
-                        <Msg id="pages.myTodo.eventsPlaceholder"/>
-                    </Text>
-                ) }
+                <EventTabs
+                    bookedEvents={ bookedEventsQuery.data }
+                    later={ later }
+                    onUndoSignup={ onUndoSignup }
+                    today={ today }
+                    tomorrow={ tomorrow }
+                    week={ week }
+                />
             </View>
         </>
     );

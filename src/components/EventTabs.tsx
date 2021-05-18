@@ -37,7 +37,7 @@ const EventTabs = (
         tabItems.push(
             <Item
                 key="today"
-                title={ <Msg id="pages.my.tabs.today"/> }>
+                title={ <Msg id="misc.eventTabs.tabs.today"/> }>
                 <Content>
                     <EventList
                         bookedEvents={ bookedEvents }
@@ -55,7 +55,7 @@ const EventTabs = (
         tabItems.push(
             <Item
                 key="tomorrow"
-                title={ <Msg id="pages.my.tabs.tomorrow"/> }>
+                title={ <Msg id="misc.eventTabs.tabs.tomorrow"/> }>
                 <Content>
                     <EventList
                         bookedEvents={ bookedEvents }
@@ -73,7 +73,7 @@ const EventTabs = (
         tabItems.push(
             <Item
                 key="week"
-                title={ <Msg id="pages.my.tabs.thisWeek"/> }>
+                title={ <Msg id="misc.eventTabs.tabs.thisWeek"/> }>
                 <Content>
                     <EventList
                         bookedEvents={ bookedEvents }
@@ -91,7 +91,7 @@ const EventTabs = (
         tabItems.push(
             <Item
                 key="later"
-                title={ <Msg id="pages.my.tabs.later"/> }>
+                title={ <Msg id="misc.eventTabs.tabs.later"/> }>
                 <Content>
                     <EventList
                         bookedEvents={ bookedEvents }
@@ -116,7 +116,7 @@ const EventTabs = (
                 </Tabs>
             ) : (
                 <Text>
-                    <Msg id="pages.my.placeholder"/>
+                    <Msg id="misc.eventTabs.placeholder"/>
                 </Text>
             ) }
         </>
