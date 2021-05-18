@@ -101,11 +101,11 @@ describe('Calendar', () => {
         });
     });
 
-    it('works with events on the edge of days', () => {
-        dummyEvents[0].start_time = '2021-05-10T00:00:00+02:00';
-        dummyEvents[0].end_time = '2021-05-10T01:00:00+02:00';
-        dummyEvents[1].start_time = '2021-05-10T23:00:00+02:00';
-        dummyEvents[1].end_time = '2021-05-10T23:59:00+02:00';
+    it.only('works with events on the edge of days', () => {
+        dummyEvents[0].start_time = '2021-05-10T00:00:00+00:00';
+        dummyEvents[0].end_time = '2021-05-10T01:00:00+00:00';
+        dummyEvents[1].start_time = '2021-05-10T23:00:00+00:00';
+        dummyEvents[1].end_time = '2021-05-10T23:59:00+00:00';
         mountWithProviders(
             <Calendar events={ dummyEvents } focusDate={ new Date(dummyDate) } />,
         );

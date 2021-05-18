@@ -14,9 +14,11 @@ const Calendar = ({ focusDate = new Date(Date.now()), events }: CalendarProps): 
 
     useEffect(() => {
         const height = calendar.current?.clientHeight || 0;
-        const y = height / 24 * 8; // approx 8am
+        const y = height / 24 * 7; // approx 7am
         calendarWrapper.current?.scrollTo(0, y);
     }, []);
+
+    focusDate.setUTCHours(0,0,0,0);
 
     const monday = new Date(new Date(focusDate)
         .setDate(focusDate.getDate() - focusDate.getDay() + 1));
@@ -24,25 +26,25 @@ const Calendar = ({ focusDate = new Date(Date.now()), events }: CalendarProps): 
         .setDate(monday.getDate() + 7));
 
     const eventsOfTheWeek = events.filter(event => {
-        return new Date(event.start_time) > monday &&
+        return new Date(event.start_time) >= monday &&
             new Date(event.start_time) < nextMonday ||
             new Date(event.end_time) > monday &&
-            new Date(event.end_time) < nextMonday;
+            new Date(event.end_time) <= nextMonday;
     });
 
     const getEventsOfTheDay = (day: number) => {
         if (day === 7) day = 0; // sunday has index 0 in the Date object
         return eventsOfTheWeek.filter(event => (
-            new Date(event.start_time).getDay() === day ||
-            new Date(event.end_time).getDay() === day));
+            new Date(event.start_time).getUTCDay() === day ||
+            new Date(event.end_time).getUTCDay() === day));
     };
 
     const getEventPos = (start: string, end: string) => {
         const oneMinute = 100 / 1440;
         const startTime = new Date(start);
         const endTime = new Date(end);
-        const startFromMidnight = (startTime.getTime() - startTime.setHours(0, 0, 0, 0)) / 60000;
-        const endFromMidnight = (endTime.getTime() - endTime.setHours(0, 0, 0, 0)) / 60000;
+        const startFromMidnight = (startTime.getTime() - startTime.setUTCHours(0, 0, 0, 0)) / 60000;
+        const endFromMidnight = (endTime.getTime() - endTime.setUTCHours(0, 0, 0, 0)) / 60000;
         const diff = endFromMidnight - startFromMidnight;
 
         return {
