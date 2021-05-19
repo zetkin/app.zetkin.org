@@ -2,7 +2,9 @@ import Checkmark from '@spectrum-icons/workflow/Checkmark';
 import NextLink from 'next/link';
 import {
     Button,
+    Divider,
     Flex,
+    Heading,
     Text,
     View,
 } from '@adobe/react-spectrum';
@@ -41,7 +43,12 @@ export default function EventList ({ bookedEvents, eventResponses, events, onSig
 
     return (
         <>
-            <Flex data-testid="event-list" direction="row" gap="100" wrap>
+            <Flex
+                data-testid="event-list"
+                direction="column"
+                gap="100"
+                marginBottom="size-200"
+                width="100%">
                 { events?.map((event) => {
                     const response = eventResponses?.find(response => response.action_id === event.id);
                     const booked = bookedEvents?.some(booked => booked.id === event.id);
@@ -73,50 +80,51 @@ const EventListItem = ({ booked, event, response, onSignup, onUndoSignup }: Even
     const user = useUser();
 
     return (
-        <Flex data-testid="event" direction="column" margin="size-200">
-            <View data-testid="event-title">
-                { event.title ? event.title : event.activity.title }
-            </View>
-            <View data-testid="org-title">{ event.organization.title }</View>
-            <View data-testid="campaign-title">{ event.campaign.title }</View>
-            <View data-testid="start-time">
-                <FormattedDate
-                    day="2-digit"
-                    month="long"
-                    value={ Date.parse(event.start_time) }
-                />
-                , <FormattedTime
-                    value={ Date.parse(event.start_time) }
-                />
-            </View>
-            <View data-testid="end-time">
-                <FormattedDate
-                    day="2-digit"
-                    month="long"
-                    value={ Date.parse(event.end_time) }
-                />
-                , <FormattedTime
-                    value={ Date.parse(event.end_time) }
-                />
-            </View>
-            <View data-testid="location-title">{ event.location.title }</View>
-            { user ? (
-                <EventResponseButton
-                    booked={ booked }
-                    event={ event }
-                    onSignup={ onSignup }
-                    onUndoSignup={ onUndoSignup }
-                    response={ response }
-                />
-            ) : <SignupDialogTrigger /> }
-            <NextLink href={ `/o/${event.organization.id}/events/${ event.id }` }>
-                <a>
-                    <Button marginTop="size-50" variant="cta">
-                        <Msg id="misc.eventList.moreInfo" />
-                    </Button>
-                </a>
-            </NextLink>
-        </Flex>
+        <>
+            <Flex
+                alignItems="center"
+                data-testid="event"
+                direction="row"
+                justifyContent="space-between"
+                marginY="size-200"
+                wrap>
+                <View width="60%">
+                    <Heading data-testid="event-title" level={ 3 } marginBottom="0">
+                        { event.title ? event.title : event.activity.title }
+                    </Heading>
+                    <Heading data-testid="org-title" level={ 5 } marginY="size-100">{ event.organization.title }</Heading>
+                    <Heading data-testid="start-time" level={ 5 } marginTop="0">
+                        <FormattedDate
+                            day="2-digit"
+                            month="long"
+                            value={ Date.parse(event.start_time) }
+                        />
+                        , <FormattedTime
+                            value={ Date.parse(event.start_time) }
+                        />
+                    </Heading>
+                </View>
+                <Flex direction="column" width="size-2000">
+                    { user ? (
+                        <EventResponseButton
+                            booked={ booked }
+                            event={ event }
+                            onSignup={ onSignup }
+                            onUndoSignup={ onUndoSignup }
+                            response={ response }
+                        />
+                    ) : <SignupDialogTrigger /> }
+                    <NextLink href={ `/o/${event.organization.id}/events/${ event.id }` }>
+                        <a>
+                            <Button marginTop="size-50" variant="primary" width="100%">
+                                <Msg id="misc.eventList.moreInfo" />
+                            </Button>
+                        </a>
+                    </NextLink>
+                </Flex>
+            </Flex>
+            <Divider size="S" />
+        </>
     );
 };
 
@@ -150,7 +158,7 @@ const EventResponseButton = ({ booked, event, onSignup, onUndoSignup, response }
                 data-testid="event-response-button"
                 marginTop="size-50"
                 onPress={ () => onUndoSignup(event.id, event.organization.id) }
-                variant="cta">
+                variant="negative">
                 <Msg id="misc.eventList.undoSignup" />
             </Button>
         );
@@ -163,7 +171,8 @@ const EventResponseButton = ({ booked, event, onSignup, onUndoSignup, response }
                     data-testid="event-response-button"
                     marginTop="size-50"
                     onPress={ () => onUndoSignup(event.id, event.organization.id) }
-                    variant="cta">
+                    variant="negative"
+                    width="100%">
                     <Msg id="misc.eventList.undoSignup" />
                 </Button>
             ) : (
@@ -171,7 +180,8 @@ const EventResponseButton = ({ booked, event, onSignup, onUndoSignup, response }
                     data-testid="event-response-button"
                     marginTop="size-50"
                     onPress={ () => onSignup(event.id, event.organization.id) }
-                    variant="cta">
+                    variant="primary"
+                    width="100%">
                     <Msg id="misc.eventList.signup" />
                 </Button>
             ) }

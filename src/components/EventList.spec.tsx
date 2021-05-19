@@ -47,10 +47,7 @@ describe('EventList', () => {
             cy.wrap(item)
                 .get('[data-testid="event-title"]').should('be.visible')
                 .get('[data-testid="org-title"]').should('be.visible')
-                .get('[data-testid="campaign-title"]').should('be.visible')
-                .get('[data-testid="start-time"]').should('be.visible')
-                .get('[data-testid="end-time"]').should('be.visible')
-                .get('[data-testid="location-title"]').should('be.visible');
+                .get('[data-testid="start-time"]').should('be.visible');
         });
     });
 
