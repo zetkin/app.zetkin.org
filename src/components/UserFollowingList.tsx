@@ -25,7 +25,7 @@ const UserFollowingList = ({ following, onUnfollow } : UserFollowingListProps) :
         <Flex data-testid="following-list" direction="column">
             { following.map(follow => (
                 <Flex
-                    key="follow.profile.id"
+                    key={ follow.organization.id }
                     alignItems="center"
                     marginY="size-200">
                     <Flex data-testid="following-item">
@@ -44,8 +44,11 @@ const UserFollowingList = ({ following, onUnfollow } : UserFollowingListProps) :
                                 </a>
                             </NextLink>
                             { follow.role
-                                ? <Text data-testid="user-role" marginX="size-200">{ follow.role }</Text>
-                                : (
+                                ? (
+                                    <Text data-testid="user-role" marginX="size-200">
+                                        <Msg id={ `pages.myOrgs.roles.${follow.role}` }/>
+                                    </Text>
+                                ) : (
                                     <Text marginX="size-200">
                                         <Msg id="pages.myOrgs.rolePlaceholder"/>
                                     </Text>

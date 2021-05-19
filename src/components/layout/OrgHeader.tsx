@@ -48,25 +48,23 @@ const OrgHeader = ({ following, onFollow, onUnfollow, org } : OrgHeaderProps) : 
                         </Link>
                     </View>
                     { user ? (
-                        <>
-                            { follows ? (
-                                <Button
-                                    data-testid="unfollow-button"
-                                    onPress={ () => onUnfollow(org.id) }
-                                    variant="cta">
-                                    <Msg id="layout.org.actions.unfollow"/>
-                                </Button>
-                            ) : (
-                                <Button
-                                    data-testid="follow-button"
-                                    onPress={ () => onFollow(org.id) }
-                                    variant="cta">
-                                    <Msg id="layout.org.actions.follow"/>
-                                </Button>
-                            ) }
-                        </>
+                        follows ? (
+                            <Button
+                                data-testid="unfollow-button"
+                                onPress={ () => onUnfollow(org.id) }
+                                variant="cta">
+                                <Msg id="layout.org.actions.unfollow"/>
+                            </Button>
+                        ) : (
+                            <Button
+                                data-testid="follow-button"
+                                onPress={ () => onFollow(org.id) }
+                                variant="cta">
+                                <Msg id="layout.org.actions.follow"/>
+                            </Button>
+                        )
                     //TODO: Create button alternative for non-users
-                    ) : <></>  }
+                    ) : <></> }
                 </Flex>
             </Flex>
             <View>
