@@ -599,9 +599,12 @@ describe('SurveyForm', () => {
         cy.get('[data-testid="submit-button"]').click().then(() => {
             expect(spyOnSubmit).to.be.calledOnce;
             expect(spyOnSubmit).to.be.calledWith({
-                responses: {
-                    'question-1': [2],
-                },
+                responses: [
+                    {
+                        options: [2],
+                        question_id: 1,
+                    },
+                ],
             });
         });
     });
@@ -649,9 +652,12 @@ describe('SurveyForm', () => {
         cy.get('[data-testid="submit-button"]').click().then(() => {
             expect(spyOnSubmit).to.be.calledOnce;
             expect(spyOnSubmit).to.be.calledWith({
-                responses: {
-                    'question-1': [1, 3],
-                },
+                responses: [
+                    {
+                        options: [1, 3],
+                        question_id: 1,
+                    },
+                ],
             });
         });
     });
@@ -698,9 +704,12 @@ describe('SurveyForm', () => {
         cy.get('[data-testid="submit-button"]').click().then(() => {
             expect(spyOnSubmit).to.be.calledOnce;
             expect(spyOnSubmit).to.be.calledWith({
-                responses: {
-                    'question-1': [3],
-                },
+                responses: [
+                    {
+                        options: [3],
+                        question_id: 1,
+                    },
+                ],
             });
         });
     });
@@ -735,9 +744,12 @@ describe('SurveyForm', () => {
         cy.get('[data-testid="submit-button"]').click().then(() => {
             expect(spyOnSubmit).to.be.calledOnce;
             expect(spyOnSubmit).to.be.calledWith({
-                responses: {
-                    'question-1': 'This is input text',
-                },
+                responses: [
+                    {
+                        question_id: 1,
+                        response: 'This is input text',
+                    },
+                ],
             });
         });
     });
@@ -772,9 +784,12 @@ describe('SurveyForm', () => {
         cy.get('[data-testid="submit-button"]').click().then(() => {
             expect(spyOnSubmit).to.be.calledOnce;
             expect(spyOnSubmit).to.be.calledWith({
-                responses: {
-                    'question-1': 'This is input text',
-                },
+                responses: [
+                    {
+                        question_id: 1,
+                        response: 'This is input text',
+                    },
+                ],
             });
         });
     });

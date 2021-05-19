@@ -1,0 +1,42 @@
+{
+    "elements": [
+        {
+            "id": 1,
+            "question": {
+                "question": "Is this the first question?",
+                "required": true,
+                "response_config": {
+                    "multiline": false
+                },
+                "response_type": "text"
+            },
+            "type": "question"
+        },
+        {
+            "id": 2,
+            "question": {
+                "options": [{
+                    "id": 1,
+                    "text": "Option one"
+                },
+                {
+                    "id": 2,
+                    "text": "Option two"
+                },
+                {
+                    "id": 3,
+                    "text": "Option three"
+                }],
+                "question": "Is this also a question?",
+                "required": true,
+                "response_config": {
+                    "widget_type": "radio"
+                },
+                "response_type": "options"
+            },
+            "type": "question"
+        }
+    ],
+    "info_text": "My description of the survey",
+    "title": "My survey"
+}

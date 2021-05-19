@@ -1,6 +1,7 @@
 import { GetServerSideProps } from 'next';
 import { useQuery } from 'react-query';
 
+import apiUrl from '../../../../utils/apiUrl';
 import DefaultOrgLayout from '../../../../components/layout/DefaultOrgLayout';
 import getOrg from '../../../../fetching/getOrg';
 import getSurvey from '../../../../fetching/getSurvey';
@@ -38,6 +39,16 @@ type SurveyPageProps = {
     surId: string;
 };
 
+interface SurveyResponse {
+    options?: number[];
+    response?: string;
+    question_id: number;
+}
+
+interface OnValidSubmitProps {
+    responses: SurveyResponse[];
+}
+
 const SurveyPage : PageWithLayout<SurveyPageProps> = (props) => {
     const { surId, orgId } = props;
     const surveyQuery = useQuery(['survey', surId], getSurvey(orgId, surId));
@@ -47,10 +58,25 @@ const SurveyPage : PageWithLayout<SurveyPageProps> = (props) => {
         return null;
     }
 
+    const onValidSubmit = (data: OnValidSubmitProps) => {
+        fetch(apiUrl(`/orgs/${orgId}/surveys/${surId}/submissions`), {
+            body: JSON.stringify({
+                ...data,
+                signature: {
+                    email: 'liten@katt.se',
+                    first_name: 'Jonny',
+                    last_name: 'Katt',
+                },
+            }),
+            headers: { 'Content-Type': 'application/json' },
+            method: 'POST',
+        });
+    };
+
     return (
         <>
             <h1>{ orgQuery.data?.title }</h1>
-            <SurveyForm onValidSubmit={ () => 'ziggi e bäst' } survey={ surveyQuery.data } />
+            <SurveyForm onValidSubmit={ onValidSubmit } survey={ surveyQuery.data } />
         </>
     );
 };
