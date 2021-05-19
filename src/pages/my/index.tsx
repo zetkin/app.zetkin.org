@@ -67,7 +67,7 @@ const MyPage : PageWithLayout<MyPageProps> = (props) => {
     const userEvents = userEventsQuery.data;
 
     const { eventResponses, onSignup, onUndoSignup } = useEventResponses();
-    const { later, today, tomorrow, week } = useEventsFilter(userEvents);
+    const timeRange = useEventsFilter(userEvents);
 
     if (!userEvents || userEvents.length === 0) {
         return (
@@ -93,12 +93,9 @@ const MyPage : PageWithLayout<MyPageProps> = (props) => {
             <EventTabs
                 bookedEvents={ bookedEventsQuery.data }
                 eventResponses={ eventResponses }
-                later={ later }
                 onSignup={ onSignup }
                 onUndoSignup={ onUndoSignup }
-                today={ today }
-                tomorrow={ tomorrow }
-                week={ week }
+                timeRange={ timeRange }
             />
             <Heading level={ 2 } marginTop="size-300">
                 <Msg id="pages.my.campaigns"/>

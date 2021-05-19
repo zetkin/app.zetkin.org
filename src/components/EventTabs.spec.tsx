@@ -6,15 +6,16 @@ import {
 } from '../types/zetkin';
 
 describe('EventTabs', () => {
-    let dummyEvents : ZetkinEvent[];
+    let dummyTimeRange : {
+        later: ZetkinEvent[] | undefined;
+        today: ZetkinEvent[] | undefined;
+        tomorrow: ZetkinEvent[] | undefined;
+        week: ZetkinEvent[] | undefined;
+    };
     let dummyEventResponses : ZetkinEventResponse[];
     let dummyBookedEvents : ZetkinEvent[];
 
     before(()=> {
-        cy.fixture('dummyEvents.json')
-            .then((data : {data: ZetkinEvent[]}) => {
-                dummyEvents = data.data;
-            });
         cy.fixture('dummyEventResponses.json')
             .then((data : {data: ZetkinEventResponse[]}) => {
                 dummyEventResponses = data.data;
@@ -25,19 +26,33 @@ describe('EventTabs', () => {
             });
     });
 
+    beforeEach(()=> {
+        cy.fixture('dummyEvents.json')
+            .then((data : {data: ZetkinEvent[]}) => {
+                dummyTimeRange = {
+                    later: data.data,
+                    today: data.data,
+                    tomorrow: data.data,
+                    week: data.data,
+                };
+            });
+    });
+
     it('only shows a placeholder if there are no upcoming events', () => {
         mountWithProviders(
             <EventTabs
                 bookedEvents={ dummyBookedEvents }
                 eventResponses={ dummyEventResponses }
-                later={ [] }
                 onSignup={ () => null  }
                 onUndoSignup={ () => null  }
-                today={ [] }
-                tomorrow={ [] }
-                week={ [] }
+                timeRange={ dummyTimeRange }
             />,
         );
+
+        dummyTimeRange.later = undefined;
+        dummyTimeRange.today = undefined;
+        dummyTimeRange.tomorrow = undefined;
+        dummyTimeRange.week = undefined;
 
         cy.contains('misc.eventTabs.placeholder');
     });
@@ -47,12 +62,9 @@ describe('EventTabs', () => {
             <EventTabs
                 bookedEvents={ dummyBookedEvents }
                 eventResponses={ dummyEventResponses }
-                later={ dummyEvents }
                 onSignup={ () => null  }
                 onUndoSignup={ () => null  }
-                today={ dummyEvents }
-                tomorrow={ dummyEvents }
-                week={ dummyEvents }
+                timeRange={ dummyTimeRange }
             />,
         );
 
@@ -67,12 +79,9 @@ describe('EventTabs', () => {
             <EventTabs
                 bookedEvents={ dummyBookedEvents }
                 eventResponses={ dummyEventResponses }
-                later={ dummyEvents }
                 onSignup={ () => null  }
                 onUndoSignup={ () => null  }
-                today={ dummyEvents }
-                tomorrow={ dummyEvents }
-                week={ dummyEvents }
+                timeRange={ dummyTimeRange }
             />,
         );
 

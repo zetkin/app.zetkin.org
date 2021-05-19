@@ -49,7 +49,7 @@ const MyTodoPage : PageWithLayout = () => {
     const callAssignmentsQuery = useQuery('callAssignments', getCallAssignments());
 
     const { respondEvents, onUndoSignup } = useRespondEvents();
-    const { today, tomorrow, week, later } = useEventsFilter(respondEvents);
+    const timeRange = useEventsFilter(respondEvents);
 
     if ((!respondEvents || respondEvents.length === 0)
         && (!callAssignmentsQuery.data || callAssignmentsQuery.data?.length === 0)) {
@@ -91,11 +91,8 @@ const MyTodoPage : PageWithLayout = () => {
                 </Heading>
                 <EventTabs
                     bookedEvents={ bookedEventsQuery.data }
-                    later={ later }
                     onUndoSignup={ onUndoSignup }
-                    today={ today }
-                    tomorrow={ tomorrow }
-                    week={ week }
+                    timeRange={ timeRange }
                 />
             </View>
         </>

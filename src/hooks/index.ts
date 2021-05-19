@@ -152,5 +152,12 @@ export const useEventsFilter = (events : ZetkinEvent[] | undefined) : EventsFilt
     const later = events?.filter(event =>
         sliceString(event.start_time) > newDate(7));
 
-    return { later, today, tomorrow, week };
+    const timeRange = {
+        later,
+        today,
+        tomorrow,
+        week,
+    };
+
+    return timeRange;
 };

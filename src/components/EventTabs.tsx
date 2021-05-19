@@ -11,25 +11,26 @@ import { ZetkinEvent, ZetkinEventResponse } from '../types/zetkin';
 interface EventTabsProps {
     bookedEvents: ZetkinEvent[] | undefined;
     eventResponses?: ZetkinEventResponse[] | undefined;
-    later: ZetkinEvent[] | undefined;
     onSignup?: (eventId: number, orgId: number) => void;
     onUndoSignup: (eventId: number, orgId: number) => void;
-    today: ZetkinEvent[] | undefined;
-    tomorrow: ZetkinEvent[] | undefined;
-    week: ZetkinEvent[] | undefined;
+    timeRange: {
+        later: ZetkinEvent[] | undefined;
+        today: ZetkinEvent[] | undefined;
+        tomorrow: ZetkinEvent[] | undefined;
+        week: ZetkinEvent[] | undefined;
+    };
 }
 
 const EventTabs = (
     {
         bookedEvents,
         eventResponses,
-        later,
         onSignup,
         onUndoSignup,
-        today,
-        tomorrow,
-        week,
+        timeRange,
     } : EventTabsProps) : JSX.Element => {
+
+    const { later, today, tomorrow, week } = timeRange;
 
     const tabItems = [];
 
