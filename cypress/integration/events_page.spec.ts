@@ -89,6 +89,18 @@ describe('/o/[orgId]/events', () => {
     });
 
     it('shows an undo sign-up button if user is signed up to an event', () => {
+        cy.request('put', 'http://localhost:8001/v1/orgs/1/campaigns/2/actions/_mocks/get', {
+            response: {
+                data: dummyEvents,
+            },
+        });
+
+        cy.request('put', 'http://localhost:8001/v1/users/me/actions/_mocks/get', {
+            response: {
+                data: { data: [] },
+            },
+        });
+
         cy.request('put', 'http://localhost:8001/v1/users/me/action_responses/_mocks/get', {
             response: {
                 data: dummyEventResponses,
@@ -100,6 +112,20 @@ describe('/o/[orgId]/events', () => {
                 status: 204,
             },
         });
+
+        cy.request('put', 'http://localhost:8001/v1/orgs/1/campaigns/_mocks/get', {
+            response: {
+                data: {
+                    data: [{
+                        id: 2,
+                        title: 'The campaign',
+                    }],
+                },
+            },
+        });
+
+        dummyEventResponses.data[0].action_id = 1;
+        dummyEvents.data[0].id = 1;
 
         cy.login();
 

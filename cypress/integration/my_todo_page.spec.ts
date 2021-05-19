@@ -42,7 +42,7 @@ describe('/my/todo', () => {
 
         cy.request('put', 'http://localhost:8001/v1/users/me/actions/_mocks/get', {
             response: {
-                data: dummyBookedEvents,
+                data: { data: [] },
             },
         });
 
@@ -59,7 +59,6 @@ describe('/my/todo', () => {
         });
 
         dummyEventResponses.data[0].action_id = 1;
-        dummyBookedEvents.data[0].id = 2;
         dummyEvents.data[0].id = 1;
         dummyEvents.data[0].start_time = Date();
 
