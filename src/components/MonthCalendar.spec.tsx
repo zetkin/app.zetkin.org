@@ -3,15 +3,11 @@ import { mountWithProviders } from '../utils/testing';
 import { ZetkinEvent } from '../types/zetkin';
 
 describe('MonthCalendar', () => {
-    let dummyMonth : number;
-    let dummyYear: number;
     let dummyEvents: ZetkinEvent[];
     const dummyStartTime = '2021-05-10T13:37:00+00:00';
     const dummyEndTime = '2021-05-10T14:37:00+00:00';
 
     beforeEach(() => {
-        dummyMonth = 4;
-        dummyYear = 2021;
         cy.fixture('dummyEvents.json')
             .then((data: { data: ZetkinEvent[] }) => {
                 dummyEvents = data.data;
@@ -32,12 +28,68 @@ describe('MonthCalendar', () => {
             });
     });
 
-    it('shows a grid with 6 rows and 7 columns', () => {
+    it('shows a grid with 5 rows and 7 columns', () => {
         mountWithProviders(
-            <MonthCalendar events={ dummyEvents } month={ dummyMonth } year={ dummyYear } />,
+            <MonthCalendar events={ dummyEvents } month={ 3 } year={ 2021 } />,
+        );
+        cy.get('[data-testid="calendar-wrapper"]').should('have.css', 'display', 'grid');
+        cy.get('[data-testid="calendar-wrapper"]').children().should('have.length', 35);
+
+        cy.get('[data-testid="griditem-3"]').contains('01');
+        cy.get('[data-testid="griditem-32"]').contains('30');
+
+        cy.get('[data-testid="griditem-0"]').then(el => {
+            const topLeft = el[0].getBoundingClientRect().left;
+            cy.get('[data-testid="griditem-6"]').then(el => {
+                const topRight = el[0].getBoundingClientRect().left;
+                cy.get('[data-testid="griditem-28"]').then(el => {
+                    const bottomLeft = el[0].getBoundingClientRect().left;
+                    cy.get('[data-testid="griditem-34"]').then(el => {
+                        const bottomRight = el[0].getBoundingClientRect().left;
+                        expect(topLeft).to.eq(bottomLeft);
+                        expect(topRight).to.eq(bottomRight);
+                    });
+                });
+            });
+        });
+    });
+
+    it('shows a grid with 4 rows when the month is exactly 4 weeks starting on Monday', () => {
+        mountWithProviders(
+            <MonthCalendar events={ dummyEvents } month={ 1 } year={ 2021 } />,
+        );
+        cy.get('[data-testid="calendar-wrapper"]').should('have.css', 'display', 'grid');
+        cy.get('[data-testid="calendar-wrapper"]').children().should('have.length', 28);
+
+        cy.get('[data-testid="griditem-0"]').contains('01');
+        cy.get('[data-testid="griditem-27"]').contains('28');
+
+        cy.get('[data-testid="griditem-0"]').then(el => {
+            const topLeft = el[0].getBoundingClientRect().left;
+            cy.get('[data-testid="griditem-6"]').then(el => {
+                const topRight = el[0].getBoundingClientRect().left;
+                cy.get('[data-testid="griditem-21"]').then(el => {
+                    const bottomLeft = el[0].getBoundingClientRect().left;
+                    cy.get('[data-testid="griditem-27"]').then(el => {
+                        const bottomRight = el[0].getBoundingClientRect().left;
+                        expect(topLeft).to.eq(bottomLeft);
+                        expect(topRight).to.eq(bottomRight);
+                    });
+                });
+            });
+        });
+    });
+
+    it('shows a grid with 6 rows when the month takes up more than 5 rows', () => {
+        mountWithProviders(
+            <MonthCalendar events={ dummyEvents } month={ 4 } year={ 2021 } />,
         );
         cy.get('[data-testid="calendar-wrapper"]').should('have.css', 'display', 'grid');
         cy.get('[data-testid="calendar-wrapper"]').children().should('have.length', 42);
+
+        cy.get('[data-testid="griditem-5"]').contains('01');
+        cy.get('[data-testid="griditem-35"]').contains('31');
+
         cy.get('[data-testid="griditem-0"]').then(el => {
             const topLeft = el[0].getBoundingClientRect().left;
             cy.get('[data-testid="griditem-6"]').then(el => {
@@ -56,7 +108,7 @@ describe('MonthCalendar', () => {
 
     it('displays the correct date on each grid square', () => {
         mountWithProviders(
-            <MonthCalendar events={ dummyEvents } month={ dummyMonth } year={ dummyYear } />,
+            <MonthCalendar events={ dummyEvents } month={ 4 } year={ 2021 } />,
         );
         cy.get('[data-testid="griditem-5"]').contains('01');
         cy.get('[data-testid="griditem-35"]').contains('31');
@@ -64,15 +116,16 @@ describe('MonthCalendar', () => {
 
     it('displays the correct events on the corresponding date', () => {
         mountWithProviders(
-            <MonthCalendar events={ dummyEvents } month={ dummyMonth } year={ dummyYear } />,
+            <MonthCalendar events={ dummyEvents } month={ 4 } year={ 2021 } />,
         );
-        cy.get('[data-testid="griditem-5"]').contains('01');
-        cy.get('[data-testid="griditem-35"]').contains('31');
+        cy.get('[data-testid="griditem-1"]').contains('id 24');
+        cy.get('[data-testid="griditem-14"]').contains('id 26');
+        cy.get('[data-testid="griditem-14"]').contains('id 25');
     });
 
     it('shows out of range dates with another colour', () => {
         mountWithProviders(
-            <MonthCalendar events={ dummyEvents } month={ dummyMonth } year={ dummyYear } />,
+            <MonthCalendar events={ dummyEvents } month={ 4 } year={ 2021 } />,
         );
 
         cy.get('[data-testid="griditem-4"]').then(el => {
@@ -88,31 +141,17 @@ describe('MonthCalendar', () => {
         });
     });
 
-    it('works with a month exactly 4 weeks long starting on Monday', () => {
-        dummyMonth = 1;
-        dummyYear = 2021;
-        mountWithProviders(
-            <MonthCalendar events={ dummyEvents } month={ dummyMonth } year={ dummyYear } />,
-        );
-        cy.get('[data-testid="griditem-0"]').contains('01');
-        cy.get('[data-testid="griditem-27"]').contains('28');
-    });
-
     it('works with a leap year february', () => {
-        dummyMonth = 1;
-        dummyYear = 2020;
         mountWithProviders(
-            <MonthCalendar events={ dummyEvents } month={ dummyMonth } year={ dummyYear } />,
+            <MonthCalendar events={ dummyEvents } month={ 1 } year={ 2020 } />,
         );
         cy.get('[data-testid="griditem-5"]').contains('01');
         cy.get('[data-testid="griditem-33"]').contains('29');
     });
 
     it('works across year boundaries', () => {
-        dummyMonth = 11;
-        dummyYear = 2020;
         mountWithProviders(
-            <MonthCalendar events={ dummyEvents } month={ dummyMonth } year={ dummyYear } />,
+            <MonthCalendar events={ dummyEvents } month={ 11 } year={ 2020 } />,
         );
         cy.get('[data-testid="griditem-1"]').contains('01');
         cy.get('[data-testid="griditem-31"]').contains('31');
@@ -120,7 +159,7 @@ describe('MonthCalendar', () => {
 
     it('displays events in chronological order within a day', () => {
         mountWithProviders(
-            <MonthCalendar events={ dummyEvents } month={ dummyMonth } year={ dummyYear } />,
+            <MonthCalendar events={ dummyEvents } month={ 4 } year={ 2021 } />,
         );
         cy.get('[data-testid="event-26"]').then(el => {
             const firstEventYPos = el[0].getBoundingClientRect().top;
