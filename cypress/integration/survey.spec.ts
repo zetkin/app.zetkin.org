@@ -9,7 +9,7 @@ describe('/o/[orgId]/surveys/[surId]', () => {
         cy.request('delete', 'http://localhost:8001/_log/');
     });
 
-    it('sends a POST request to the API', () => {
+    it('sends a request to the API with correct data', () => {
         cy.fixture('dummySurvey').then(json => {
             cy.request('put', 'http://localhost:8001/v1/orgs/1/surveys/1/_mocks/get', {
                 response: {
@@ -30,29 +30,6 @@ describe('/o/[orgId]/surveys/[surId]', () => {
                 .then((response) => {
                     expect(response.body.log).to.have.length.above(0);
                     expect(response.body.log[0]).to.have.property('method', 'POST');
-                });
-        });
-    });
-
-    it('sends correct data to the API', () => {
-        cy.fixture('dummySurvey').then(json => {
-            cy.request('put', 'http://localhost:8001/v1/orgs/1/surveys/1/_mocks/get', {
-                response: {
-                    data: {
-                        data: json,
-                    },
-                },
-            });
-            cy.visit('http://localhost:3000/o/1/surveys/1');
-            cy.waitUntilReactRendered();
-            cy.get('[data-testid="response-singleline"]').type('This is my response');
-            cy.findByLabelText('Option three').click();
-            cy.get('[data-testid="submit-button"]').click();
-
-            cy.wait(10000);
-
-            cy.request('get', 'http://localhost:8001/v1/orgs/1/surveys/1/submissions/_log')
-                .then((response) => {
                     expect(response.body.log[0].data.responses).to.have.lengthOf(2);
                     expect(response.body.log[0].data.responses[0]).to.have.property('question_id', 1);
                     expect(response.body.log[0].data.responses[0]).to.have.property('response', 'This is my response');
