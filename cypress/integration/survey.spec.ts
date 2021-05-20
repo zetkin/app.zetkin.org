@@ -24,7 +24,7 @@ describe('/o/[orgId]/surveys/[surId]', () => {
             cy.findByLabelText('Option three').click();
             cy.get('[data-testid="submit-button"]').click();
 
-            cy.wait(200);
+            cy.wait(10000);
 
             cy.request('get', 'http://localhost:8001/v1/orgs/1/surveys/1/submissions/_log')
                 .then((response) => {
@@ -49,7 +49,7 @@ describe('/o/[orgId]/surveys/[surId]', () => {
             cy.findByLabelText('Option three').click();
             cy.get('[data-testid="submit-button"]').click();
 
-            cy.wait(200);
+            cy.wait(10000);
 
             cy.request('get', 'http://localhost:8001/v1/orgs/1/surveys/1/submissions/_log')
                 .then((response) => {
