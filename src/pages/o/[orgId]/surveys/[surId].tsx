@@ -62,11 +62,7 @@ const SurveyPage : PageWithLayout<SurveyPageProps> = (props) => {
         fetch(apiUrl(`/orgs/${orgId}/surveys/${surId}/submissions`), {
             body: JSON.stringify({
                 ...data,
-                signature: {
-                    email: 'liten@katt.se',
-                    first_name: 'Jonny',
-                    last_name: 'Katt',
-                },
+                signature: null,
             }),
             headers: { 'Content-Type': 'application/json' },
             method: 'POST',
