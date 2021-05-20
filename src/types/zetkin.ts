@@ -70,6 +70,65 @@ export interface ZetkinSession {
     user: ZetkinUser;
 }
 
+export interface ZetkinSurveyTextQuestion {
+    description?: string;
+    question: string;
+    response_config: {
+        multiline: boolean;
+    };
+    response_type: 'text';
+    required?: boolean;
+}
+
+export interface ZetkinSurveyOptionsQuestion {
+    description?: string;
+    options: {
+        id: number;
+        text: string;
+    }[];
+    question: string;
+    response_config: {
+        widget_type: string;
+    };
+    response_type: 'options';
+    required?: boolean;
+}
+
+export type ZetkinSurveyQuestion = ZetkinSurveyTextQuestion | ZetkinSurveyOptionsQuestion;
+
+export interface ZetkinSurveyTextQuestionElement {
+    id: number;
+    type: 'question';
+    question: ZetkinSurveyTextQuestion;
+}
+
+export interface ZetkinSurveyOptionsQuestionElement {
+    id: number;
+    type: 'question';
+    question: ZetkinSurveyOptionsQuestion;
+}
+
+export type ZetkinSurveyQuestionElement = ZetkinSurveyTextQuestionElement | ZetkinSurveyOptionsQuestionElement;
+
+export interface ZetkinSurveyTextblockElement {
+    id: number;
+    type: 'text';
+    text_block: ZetkinSurveyTextblock;
+}
+
+export interface ZetkinSurveyTextblock {
+    content: string;
+    header: string;
+}
+
+export type ZetkinSurveyElement = ZetkinSurveyQuestionElement | ZetkinSurveyTextblockElement;
+
+export interface ZetkinSurvey {
+    elements: ZetkinSurveyElement[];
+    info_text: string;
+    title: string;
+}
+
 export interface ZetkinCallAssignment {
     cooldown: number;
     description: string;
