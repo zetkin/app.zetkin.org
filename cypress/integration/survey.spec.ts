@@ -6,7 +6,9 @@ describe('/o/[orgId]/surveys/[surId]', () => {
 
     after(() => {
         cy.request('delete', 'http://localhost:8001/_mocks/');
+        cy.wait(1000);
         cy.request('delete', 'http://localhost:8001/_log/');
+        cy.wait(1000);
     });
 
     it('sends a request to the API with correct data', () => {
