@@ -1,4 +1,5 @@
 import { FormattedMessage as Msg } from 'react-intl';
+
 import SurveyElement from './SurveyElement';
 import { ZetkinSurvey } from '../../types/zetkin';
 

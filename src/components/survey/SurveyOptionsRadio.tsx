@@ -1,4 +1,5 @@
 import { ChangeEvent } from 'react';
+
 import { ZetkinSurveyOptionsQuestionElement } from '../../types/zetkin';
 
 interface SurveyOptionsRadioProps {
