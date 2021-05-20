@@ -2681,9 +2681,9 @@
   integrity sha512-c4mvXFByghezQ/eVGN5HvH/jI63vm3B7FiE81BUzDAWmuiohRecCO6ddU60dfq29oKUMiQujsoB2h0JQC7JHKA==
 
 "@types/node@*":
-  version "15.3.0"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-15.3.0.tgz#d6fed7d6bc6854306da3dea1af9f874b00783e26"
-  integrity sha512-8/bnjSZD86ZfpBsDlCIkNXIvm+h6wi9g7IqL+kmFkQ+Wvu3JrasgLElfiPgoo8V8vVfnEi0QVS12gbl94h9YsQ==
+  version "15.3.1"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-15.3.1.tgz#23a06b87eedb524016616e886b116b8fdcb180af"
+  integrity sha512-weaeiP4UF4XgF++3rpQhpIJWsCTS4QJw5gvBhQu6cFIxTwyxWIe3xbnrY/o2lTCQ0lsdb8YIUDUvLR4Vuz5rbw==
 
 "@types/node@12.12.50":
   version "12.12.50"
@@ -7283,7 +7283,7 @@ move-concurrently@^1.0.1:
 
 "moxy@git+https://github.com/zetkin/moxy.git#dev":
   version "1.0.0-dev"
-  resolved "git+https://github.com/zetkin/moxy.git#68b5f737d3a8d2593195bd732972c135e3081eaf"
+  resolved "git+https://github.com/zetkin/moxy.git#ee3875c5bb3e3c0d8ff00b26a71351ae7503fd2a"
   dependencies:
     "@types/cors" "^2.8.10"
     "@types/express" "^4.17.11"
