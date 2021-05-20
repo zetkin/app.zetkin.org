@@ -1,5 +1,6 @@
 actions:
   edit: Edit Page
+  follow: Follow
   unfollow: Unfollow
 tabs:
   home: Home
