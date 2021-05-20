@@ -48,7 +48,7 @@ const MonthCalendar = ({ month, events, year }: MonthCalendarProps): JSX.Element
             gap: '0.5rem',
             gridTemplateColumns: 'repeat(7, minmax(125px, 1fr))',
             gridTemplateRows: `repeat(${calendarRows}, minmax(125px, 1fr))`,
-            height: calendarRows === 6 ? '100%': calendarRows === 5 ? '80%' : '70%',
+            height: '100%',
             overflow: 'scroll',
         }}>
             { Array.from(Array(calendarRows * 7).keys()).map((_, index) => {
