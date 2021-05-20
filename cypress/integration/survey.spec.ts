@@ -28,6 +28,7 @@ describe('/o/[orgId]/surveys/[surId]', () => {
 
             cy.request('get', 'http://localhost:8001/v1/orgs/1/surveys/1/submissions/_log')
                 .then((response) => {
+                    cy.wait(1000);
                     expect(response.body.log).to.have.length.above(0);
                     expect(response.body.log[0]).to.have.property('method', 'POST');
                     expect(response.body.log[0].data.responses).to.have.lengthOf(2);
