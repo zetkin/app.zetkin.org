@@ -60,7 +60,7 @@ const Calendar = ({ focusDate = new Date(Date.now()), events }: CalendarProps): 
             width: '100%',
         }}>
             <div style={{
-                background: 'rgb(234, 234, 234)',
+                background: '#f5f5f5',
                 display:'flex',
                 gap:'1rem',
                 justifyContent: 'space-between',
