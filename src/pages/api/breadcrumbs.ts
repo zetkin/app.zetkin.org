@@ -1,4 +1,3 @@
-import apiUrl from '../../utils/apiUrl';
 import { ApiFetch, createApiFetch } from '../../utils/apiFetch';
 import { NextApiRequest, NextApiResponse } from 'next';
 
@@ -60,7 +59,7 @@ async function fetchLabel(
     apiFetch: ApiFetch,
 ) {
     if (fieldName === 'orgId') {
-        const org = await fetch(apiUrl(`/orgs/${orgId}`)).then((res) =>
+        const org = await apiFetch(`/orgs/${orgId}`).then((res) =>
             res.json(),
         );
         return org.data.title;
@@ -71,9 +70,9 @@ async function fetchLabel(
         ).then((res) => res.json());
         return `${person.data.first_name} ${person.data.last_name}`;
     }
-    if (fieldName === 'campaignId') {
-        const campaign = await fetch(
-            apiUrl(`/orgs/${orgId}/campaigns/${fieldValue}`),
+    if (fieldName === 'campId') {
+        const campaign = await apiFetch(
+            `/orgs/${orgId}/campaigns/${fieldValue}`,
         ).then((res) => res.json());
         return campaign.data.title;
     }
