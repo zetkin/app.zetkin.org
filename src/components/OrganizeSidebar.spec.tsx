@@ -40,7 +40,7 @@ describe('OrganizeSidebar', () => {
 
     it('disables calendar button when on the calendar page', () => {
         cy.stub(Router, 'useRouter').callsFake(() => {
-            return { pathname: `/organize/[orgId]/projects/calendar` };
+            return { pathname: `/organize/[orgId]/campaigns/calendar` };
         });
 
         mountWithProviders(<OrganizeSidebar orgId={ dummyOrgId }/>);
