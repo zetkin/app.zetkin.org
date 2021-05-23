@@ -11,7 +11,7 @@ describe('PublicHeader', () => {
         username: 'Username',
     };
 
-    const dummyMemberships = [{ organization: { id: 1 }, role: 'admin' }] as ZetkinMembership[];
+    const dummyMemberships = [{ organization: { id: 1 }, role: 'admin' }, { organization: { id: 2 }, role: 'admin' }, { organization: { id: 5 }, role: '' }] as ZetkinMembership[];
     const dummyMembershipsNoOrganize = [{}] as ZetkinMembership[];
 
     it('contains a login button when not logged in', () => {
@@ -52,11 +52,33 @@ describe('PublicHeader', () => {
         cy.get('[data-testid="organize-button"]').should('not.exist');
     });
 
-    it('organize button leads to proper organization page', () => {
+    it('leads to organization page to pick organization', () => {
         mountWithProviders(
             <PublicHeader user={ dummyUser } userMemberships={ dummyMemberships }/>,
         );
-        cy.get('[data-testid="organize-link"]').should('attr', 'href', '/organize/1');
+        cy.get('[data-testid="organize-link"]').should('attr', 'href', '/organize');
+    });
+
+    it('links the organize button directly to the right organization', () => {
+        cy.fixture('dummyOrg.json')
+            .then((data : ZetkinOrganization) => {
+                data.id = 2;
+                mountWithProviders(
+                    <PublicHeader org={ data } user={ dummyUser } userMemberships={ dummyMemberships } />,
+                );
+                cy.get('[data-testid="organize-link"]').should('attr', 'href', '/organize/2');
+            });
+    });
+
+    it('links the organize button to pick organization if user is not admin in current organization', () => {
+        cy.fixture('dummyOrg.json')
+            .then((data: ZetkinOrganization) => {
+                data.id = 5;
+                mountWithProviders(
+                    <PublicHeader org={ data } user={ dummyUser } userMemberships={ dummyMemberships } />,
+                );
+                cy.get('[data-testid="organize-link"]').should('attr', 'href', '/organize');
+            });
     });
 
     it('contains logout button if logged in', () => {
