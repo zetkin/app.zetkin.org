@@ -38,25 +38,6 @@ describe('EventTabs', () => {
             });
     });
 
-    it('only shows a placeholder if there are no upcoming events', () => {
-        mountWithProviders(
-            <EventTabs
-                bookedEvents={ dummyBookedEvents }
-                eventResponses={ dummyEventResponses }
-                onSignup={ () => null  }
-                onUndoSignup={ () => null  }
-                timeRange={ dummyTimeRange }
-            />,
-        );
-
-        dummyTimeRange.later = undefined;
-        dummyTimeRange.today = undefined;
-        dummyTimeRange.tomorrow = undefined;
-        dummyTimeRange.week = undefined;
-
-        cy.contains('misc.eventTabs.placeholder');
-    });
-
     it('contains different tabs for time filtering', () => {
         mountWithProviders(
             <EventTabs

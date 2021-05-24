@@ -1,8 +1,5 @@
+import { Content } from '@adobe/react-spectrum';
 import { FormattedMessage as Msg } from 'react-intl';
-import {
-    Content,
-    Text,
-} from '@adobe/react-spectrum';
 import { Item, Tabs } from '@react-spectrum/tabs';
 
 import EventList from './EventList';
@@ -107,20 +104,12 @@ const EventTabs = (
     }
 
     return (
-        <>
-            { tabItems.length > 0 ? (
-                <Tabs
-                    aria-label="Options for events time filtering"
-                    data-testid="event-tabs"
-                    defaultSelectedKey="today">
-                    { tabItems }
-                </Tabs>
-            ) : (
-                <Text>
-                    <Msg id="misc.eventTabs.placeholder"/>
-                </Text>
-            ) }
-        </>
+        <Tabs
+            aria-label="Options for events time filtering"
+            data-testid="event-tabs"
+            defaultSelectedKey="today">
+            { tabItems }
+        </Tabs>
     );
 };
 
