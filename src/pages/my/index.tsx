@@ -19,8 +19,8 @@ import getUserEvents from '../../fetching/getUserEvents';
 import MyHomeLayout from '../../components/layout/MyHomeLayout';
 import { PageWithLayout } from '../../types';
 import { scaffold } from '../../utils/next';
+import { useEventResponses } from '../../hooks';
 import { ZetkinUser } from '../../types/zetkin';
-import { useEventResponses, useEventsFilter } from '../../hooks';
 
 const scaffoldOptions = {
     authLevelRequired: 1,
@@ -67,7 +67,6 @@ const MyPage : PageWithLayout<MyPageProps> = (props) => {
     const userEvents = userEventsQuery.data;
 
     const { eventResponses, onSignup, onUndoSignup } = useEventResponses();
-    const timeRange = useEventsFilter(userEvents);
 
     if (!userEvents || userEvents.length === 0) {
         return (
@@ -93,9 +92,9 @@ const MyPage : PageWithLayout<MyPageProps> = (props) => {
             <EventTabs
                 bookedEvents={ bookedEventsQuery.data }
                 eventResponses={ eventResponses }
+                events={ userEvents }
                 onSignup={ onSignup }
                 onUndoSignup={ onUndoSignup }
-                timeRange={ timeRange }
             />
             <Heading level={ 2 } marginTop="size-300">
                 <Msg id="pages.my.campaigns"/>

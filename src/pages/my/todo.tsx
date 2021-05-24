@@ -11,7 +11,7 @@ import getRespondEvents from '../../fetching/getRespondEvents';
 import MyHomeLayout from '../../components/layout/MyHomeLayout';
 import { PageWithLayout } from '../../types';
 import { scaffold } from '../../utils/next';
-import { useEventsFilter, useRespondEvents } from '../../hooks';
+import { useRespondEvents } from '../../hooks';
 
 const scaffoldOptions = {
     authLevelRequired: 1,
@@ -49,7 +49,6 @@ const MyTodoPage : PageWithLayout = () => {
     const callAssignmentsQuery = useQuery('callAssignments', getCallAssignments());
 
     const { respondEvents, onUndoSignup } = useRespondEvents();
-    const timeRange = useEventsFilter(respondEvents);
 
     if ((!respondEvents || respondEvents.length === 0)
         && (!callAssignmentsQuery.data || callAssignmentsQuery.data?.length === 0)) {
@@ -91,8 +90,8 @@ const MyTodoPage : PageWithLayout = () => {
                 </Heading>
                 <EventTabs
                     bookedEvents={ bookedEventsQuery.data }
+                    events={ respondEvents }
                     onUndoSignup={ onUndoSignup }
-                    timeRange={ timeRange }
                 />
             </View>
         </>

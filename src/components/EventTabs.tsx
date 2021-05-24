@@ -8,26 +8,47 @@ import { ZetkinEvent, ZetkinEventResponse } from '../types/zetkin';
 interface EventTabsProps {
     bookedEvents: ZetkinEvent[] | undefined;
     eventResponses?: ZetkinEventResponse[] | undefined;
+    events: ZetkinEvent[] | undefined;
     onSignup?: (eventId: number, orgId: number) => void;
     onUndoSignup: (eventId: number, orgId: number) => void;
-    timeRange: {
-        later: ZetkinEvent[] | undefined;
-        today: ZetkinEvent[] | undefined;
-        tomorrow: ZetkinEvent[] | undefined;
-        week: ZetkinEvent[] | undefined;
-    };
 }
 
 const EventTabs = (
     {
         bookedEvents,
         eventResponses,
+        events,
         onSignup,
         onUndoSignup,
-        timeRange,
     } : EventTabsProps) : JSX.Element => {
 
-    const { later, today, tomorrow, week } = timeRange;
+    function extractISODate(string : string) {
+        return string.slice(0, 10);
+    }
+
+    function createDateString(increment? : number) {
+        const today = new Date();
+
+        if (increment) {
+            today.setDate(today.getDate() + increment);
+        }
+
+        const date = extractISODate(today.toISOString());
+        return date;
+    }
+
+    const today = events?.filter(event =>
+        extractISODate(event.start_time) === createDateString());
+
+    const tomorrow = events?.filter(event =>
+        extractISODate(event.start_time) === createDateString(1));
+
+    const week = events?.filter(event =>
+        extractISODate(event.start_time) <= createDateString(7)
+        && extractISODate(event.start_time) >= createDateString());
+
+    const later = events?.filter(event =>
+        extractISODate(event.start_time) > createDateString(7));
 
     const tabItems = [];
 
