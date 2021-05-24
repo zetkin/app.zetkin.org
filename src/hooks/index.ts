@@ -124,33 +124,33 @@ type EventsFilter = {
 }
 
 export const useEventsFilter = (events : ZetkinEvent[] | undefined) : EventsFilter => {
-    function sliceString(string : string) {
+    function extractISODate(string : string) {
         return string.slice(0, 10);
     }
 
-    function newDate(days? : number) {
+    function createDateString(increment? : number) {
         const today = new Date();
 
-        if (days) {
-            today.setDate(today.getDate() + days);
+        if (increment) {
+            today.setDate(today.getDate() + increment);
         }
 
-        const date = sliceString(today.toISOString());
+        const date = extractISODate(today.toISOString());
         return date;
     }
 
     const today = events?.filter(event =>
-        sliceString(event.start_time) === newDate());
+        extractISODate(event.start_time) === createDateString());
 
     const tomorrow = events?.filter(event =>
-        sliceString(event.start_time) === newDate(1));
+        extractISODate(event.start_time) === createDateString(1));
 
     const week = events?.filter(event =>
-        sliceString(event.start_time) <= newDate(7)
-        && sliceString(event.start_time) >= newDate());
+        extractISODate(event.start_time) <= createDateString(7)
+        && extractISODate(event.start_time) >= createDateString());
 
     const later = events?.filter(event =>
-        sliceString(event.start_time) > newDate(7));
+        extractISODate(event.start_time) > createDateString(7));
 
     const timeRange = {
         later,
