@@ -1,5 +1,5 @@
 import { mountWithProviders } from '../utils/testing';
-import WeekCalendar from './Calendar';
+import WeekCalendar from './WeekCalendar';
 import { ZetkinEvent } from '../types/zetkin';
 
 describe('WeekCalendar', () => {
