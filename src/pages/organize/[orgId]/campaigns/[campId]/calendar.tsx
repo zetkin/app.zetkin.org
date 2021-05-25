@@ -59,16 +59,11 @@ const CampaignCalendarPage : PageWithLayout<OrganizeCalendarPageProps> = ({ orgI
     const intl = useIntl();
 
     const items = [
-        {
-            name: intl.formatMessage(
-                { id: 'misc.calendar.month' }),
-        },
-        {
-            name: intl.formatMessage(
-                { id: 'misc.calendar.week' }),
-        },
+        { id: 'week', name: intl.formatMessage({ id: 'misc.calendar.week' }) },
+        { id: 'month', name: intl.formatMessage({ id: 'misc.calendar.month' }) },
     ];
-    const [calendarView, setCalendarView] = useState(items[0].name);
+
+    const [calendarView, setCalendarView] = useState('month');
 
     return (
         <View position="relative">
@@ -79,12 +74,12 @@ const CampaignCalendarPage : PageWithLayout<OrganizeCalendarPageProps> = ({ orgI
                     items={ items }
                     onSelectionChange={ (selected) => setCalendarView(selected as string) }
                     selectedKey={ calendarView }>
-                    { (item) => <Item key={ item.name }>{ item.name }</Item> }
+                    { (item) => <Item key={ item.id }>{ item.name }</Item> }
                 </Picker>
             </Flex>
             <View height="80vh">
-                { calendarView === items[0].name && 'month calendar' }
-                { calendarView === items[1].name && <Calendar events={ events } focusDate={ new Date('March 18 2021') } /> }
+                { calendarView === 'month' && 'month calendar' }
+                { calendarView === 'week' && <Calendar events={ events } focusDate={ new Date('March 18 2021') } /> }
             </View>
         </View>
     );
