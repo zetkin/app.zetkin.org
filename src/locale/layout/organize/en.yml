@@ -9,3 +9,7 @@ search:
     label: Search
     placeholder: Type to search
     drawerLabel: Press Enter to show full results.
+campaigns:
+    summary: Summary
+    calendar: Calendar
+    insights: Insights

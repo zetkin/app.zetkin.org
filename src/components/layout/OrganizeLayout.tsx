@@ -15,20 +15,20 @@ const OrganizeLayout : FunctionComponent<OrganizeLayoutProps> = ({ children, org
             <View backgroundColor="gray-600" height="100vh">
                 <OrganizeSidebar orgId={ orgId }  />
             </View>
-            <View backgroundColor="gray-100" width="100%">
-                <View backgroundColor="gray-100" borderColor="transparent" borderWidth="thick" margin="1rem">
-                    <Flex justifyContent="space-between">
-                        <View width="50%">
-                            <BreadcrumbTrail/>
-                        </View>
-                        <Flex justifyContent="end" width="50%">
-                            <SearchDrawer />
+            <View flexGrow={ 1 } height="100vh" overflow="scroll">
+                <Flex direction="column" height="100%" width="100%">
+                    <View margin="1rem 1rem 0 1rem">
+                        <Flex>
+                            <View width="50%">
+                                <BreadcrumbTrail/>
+                            </View>
+                            <Flex justifyContent="end" width="50%">
+                                <SearchDrawer />
+                            </Flex>
                         </Flex>
-                    </Flex>
-                </View>
-                <View>
+                    </View>
                     { children as JSX.Element }
-                </View>
+                </Flex>
             </View>
         </Flex>
     );

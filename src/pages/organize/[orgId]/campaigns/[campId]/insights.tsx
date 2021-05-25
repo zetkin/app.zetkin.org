@@ -1,21 +1,17 @@
 import { GetServerSideProps } from 'next';
-import { useState } from 'react';
-import { Flex, Item, Picker, View } from '@adobe/react-spectrum';
 
-import Calendar from '../../../../../components/Calendar';
+
 import getCampaign from '../../../../../fetching/getCampaign';
 import getCampaignEvents from '../../../../../fetching/getCampaignEvents';
 import getOrg from '../../../../../fetching/getOrg';
 import OrganizeCampaignLayout from '../../../../../components/layout/OrganizeCampaignLayout';
 import { PageWithLayout } from '../../../../../types';
 import { scaffold } from '../../../../../utils/next';
-import { useIntl } from 'react-intl';
-import { useQuery } from 'react-query';
 
 const scaffoldOptions = {
     authLevelRequired: 2,
     localeScope: [
-        'layout.organize', 'misc.breadcrumbs', 'misc.calendar',
+        'layout.organize', 'misc.breadcrumbs',
     ],
 };
 
@@ -48,44 +44,20 @@ export const getServerSideProps : GetServerSideProps = scaffold(async (ctx) => {
     }
 }, scaffoldOptions);
 
-type OrganizeCalendarPageProps = {
+type CampaignCalendarPageProps = {
     campId: string;
     orgId: string;
 };
 
-const CampaignCalendarPage : PageWithLayout<OrganizeCalendarPageProps> = ({ orgId, campId }) => {
-    const eventsQuery = useQuery(['campaignEvents', orgId, campId], getCampaignEvents(orgId, campId));
-    const events = eventsQuery.data || [];
-    const intl = useIntl();
-
-    const items = [
-        { id: 'week', name: intl.formatMessage({ id: 'misc.calendar.week' }) },
-        { id: 'month', name: intl.formatMessage({ id: 'misc.calendar.month' }) },
-    ];
-
-    const [calendarView, setCalendarView] = useState('month');
-
+const CampaignInsightsPage: PageWithLayout<CampaignCalendarPageProps> = () => {
     return (
-        <View position="relative">
-            <Flex justifyContent="end" position="absolute" right="0px" top="-2.5rem">
-                <Picker
-                    aria-label={ intl.formatMessage(
-                        { id: 'misc.calendar.label' }) }
-                    items={ items }
-                    onSelectionChange={ (selected) => setCalendarView(selected as string) }
-                    selectedKey={ calendarView }>
-                    { (item) => <Item key={ item.id }>{ item.name }</Item> }
-                </Picker>
-            </Flex>
-            <View height="80vh">
-                { calendarView === 'month' && 'month calendar' }
-                { calendarView === 'week' && <Calendar events={ events } focusDate={ new Date('March 18 2021') } /> }
-            </View>
-        </View>
+        <>
+            campaign insights
+        </>
     );
 };
 
-CampaignCalendarPage.getLayout = function getLayout(page, props) {
+CampaignInsightsPage.getLayout = function getLayout(page, props) {
     return (
         <OrganizeCampaignLayout campId={ props.campId as string } orgId={ props.orgId as string }>
             { page }
@@ -93,4 +65,4 @@ CampaignCalendarPage.getLayout = function getLayout(page, props) {
     );
 };
 
-export default CampaignCalendarPage;
+export default CampaignInsightsPage;

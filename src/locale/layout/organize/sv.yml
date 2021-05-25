@@ -9,3 +9,7 @@ search:
     label: Sök
     placeholder: Skriv för att söka
     drawerLabel: Tryck Enter för att visa fullständiga resultat.
+campaigns:
+    summary: Översikt
+    calendar: Kalendar
+    insights: Insikter

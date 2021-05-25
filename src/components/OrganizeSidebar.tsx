@@ -37,8 +37,8 @@ const OrganizeSidebar = ({ orgId  } : OrganizeSidebarProps) : JSX.Element =>{
                         <MapView aria-label="Areas" />
                     </Button>
                 </NextLink>
-                <NextLink href={ `/organize/${orgId}/projects/calendar` }>
-                    <Button data-test="calendar-button" isDisabled={ key.startsWith('/projects') } margin="size-100" variant="primary">
+                <NextLink href={ `/organize/${orgId}/campaigns/calendar` }>
+                    <Button data-test="calendar-button" isDisabled={ key.startsWith('/campaigns') } margin="size-100" variant="primary">
                         <Calendar aria-label="Calendar" />
                     </Button>
                 </NextLink>
