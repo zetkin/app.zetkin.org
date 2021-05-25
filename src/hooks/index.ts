@@ -117,13 +117,10 @@ export const useUserFollowing = () : UserFollowing => {
 };
 
 type CalendarNavigation = {
-    goBackAMonth: () => void;
-    goBackAWeek: () => void;
-    goFwdAMonth: () => void;
-    goFwdAWeek: () => void;
     selectedMonday: Date;
     selectedMonth: number;
     selectedYear: number;
+    setSelectedDate: (offset: number) => void;
 }
 
 export const useFocusDate = (): CalendarNavigation => {
@@ -139,29 +136,11 @@ export const useFocusDate = (): CalendarNavigation => {
     const selectedMonth = new Date(focusDate).getUTCMonth();
     const selectedYear = new Date(focusDate).getUTCFullYear();
 
-    const goBackAMonth = () => {
+    const setSelectedDate = (offset: number) => {
         setFocusDate(
-            new Date(new Date(focusDate).setDate(focusDate.getDate() - 30)),
+            new Date(new Date(focusDate).setDate(focusDate.getDate() + offset)),
         );
     };
 
-    const goFwdAMonth = () => {
-        setFocusDate(
-            new Date(new Date(focusDate).setDate(focusDate.getDate() + 30)),
-        );
-    };
-
-    const goBackAWeek = () => {
-        setFocusDate(
-            new Date(new Date(focusDate).setDate(focusDate.getDate() - 7)),
-        );
-    };
-
-    const goFwdAWeek = () => {
-        setFocusDate(
-            new Date(new Date(focusDate).setDate(focusDate.getDate() + 7)),
-        );
-    };
-
-    return { goBackAMonth, goBackAWeek, goFwdAMonth, goFwdAWeek, selectedMonday, selectedMonth, selectedYear };
+    return { selectedMonday, selectedMonth, selectedYear, setSelectedDate };
 };

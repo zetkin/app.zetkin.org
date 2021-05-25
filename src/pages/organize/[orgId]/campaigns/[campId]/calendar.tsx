@@ -1,7 +1,6 @@
 import { GetServerSideProps } from 'next';
 import { useState } from 'react';
-import { ActionButton, Flex, Item, Picker, View } from '@adobe/react-spectrum';
-import { FormattedDate, FormattedMessage as Msg } from 'react-intl';
+import { Flex, Item, Picker, View } from '@adobe/react-spectrum';
 
 import getCampaign from '../../../../../fetching/getCampaign';
 import getCampaignEvents from '../../../../../fetching/getCampaignEvents';
@@ -61,7 +60,7 @@ const CampaignCalendarPage : PageWithLayout<OrganizeCalendarPageProps> = ({ orgI
     const events = eventsQuery.data || [];
     const intl = useIntl();
     const [calendarView, setCalendarView] = useState('week');
-    const { goBackAMonth, goBackAWeek, goFwdAMonth, goFwdAWeek, selectedMonday, selectedMonth, selectedYear } = useFocusDate();
+    const { selectedMonday, selectedMonth, selectedYear, setSelectedDate } = useFocusDate();
 
     const items = [
         { id: 'week', name: intl.formatMessage({ id: 'misc.calendar.week' }) },
@@ -81,30 +80,8 @@ const CampaignCalendarPage : PageWithLayout<OrganizeCalendarPageProps> = ({ orgI
                 </Picker>
             </Flex>
             <View height="80vh">
-                <View position="absolute" right="15rem" top="-2.6rem">
-                    <Flex alignItems="center">
-                        <ActionButton onPress={ calendarView === 'month' ? goBackAMonth : goBackAWeek }>
-                            <Msg id="misc.calendar.prev" />
-                        </ActionButton>
-                        <View padding="size-100">
-                            { calendarView === 'month' ? <FormattedDate
-                                month="long"
-                                value={ new Date(selectedYear, selectedMonth + 1, 0) }
-                                year="numeric"
-                            /> : <FormattedDate
-                                day="2-digit"
-                                month="short"
-                                value={ selectedMonday }
-                            /> }
-                        </View>
-                        <ActionButton onPress={ calendarView === 'month' ? goFwdAMonth : goFwdAWeek }>
-                            <Msg id="misc.calendar.next" />
-                        </ActionButton>
-                    </Flex>
-                </View>
-
-                { calendarView === 'month' && <MonthCalendar events={ events } month={ selectedMonth } year={ selectedYear } /> }
-                { calendarView === 'week' && <WeekCalendar events={ events } focusMonday={ selectedMonday } /> }
+                { calendarView === 'month' && <MonthCalendar events={ events } month={ selectedMonth } setSelectedDate={ setSelectedDate } year={ selectedYear }/> }
+                { calendarView === 'week' && <WeekCalendar events={ events } setSelectedDate={ setSelectedDate } thisMonday={ selectedMonday }/> }
             </View>
         </View>
     );

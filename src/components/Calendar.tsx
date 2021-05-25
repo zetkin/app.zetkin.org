@@ -1,14 +1,17 @@
-import { FormattedDate } from 'react-intl';
 import { ZetkinEvent } from '../types/zetkin';
+import { ActionButton, Flex, View } from '@adobe/react-spectrum';
+import { FormattedDate, FormattedMessage as Msg } from 'react-intl';
 import { Heading, Text } from '@adobe/react-spectrum';
 import { useEffect, useRef } from 'react';
 
+
 interface CalendarProps {
-    focusMonday: Date;
+    thisMonday: Date;
     events: ZetkinEvent[];
+    setSelectedDate: (offset:number) => void;
 }
 
-const WeekCalendar = ({ focusMonday, events }: CalendarProps): JSX.Element => {
+const WeekCalendar = ({ thisMonday: focusMonday, events, setSelectedDate }: CalendarProps): JSX.Element => {
     const calendar = useRef<HTMLDivElement>(null);
     const calendarWrapper = useRef<HTMLDivElement>(null);
 
@@ -50,92 +53,111 @@ const WeekCalendar = ({ focusMonday, events }: CalendarProps): JSX.Element => {
     };
 
     return (
-        <div ref={ calendarWrapper } data-testid="calendar-wrapper" style={{
-            height: '100%',
-            overflow: 'scroll',
-            width: '100%',
-        }}>
-            <div style={{
-                background: '#f5f5f5',
-                display:'flex',
-                gap:'1rem',
-                justifyContent: 'space-between',
-                position: 'sticky',
-                top: 0,
+        <>
+            <View position="absolute" right="15rem" top="-2.6rem">
+                <Flex alignItems="center">
+                    <ActionButton onPress={ () => setSelectedDate(-7) }>
+                        <Msg id="misc.calendar.prev" />
+                    </ActionButton>
+                    <View padding="size-100">
+                        <FormattedDate
+                            day="2-digit"
+                            month="short"
+                            value={ focusMonday }
+                        />
+                    </View>
+                    <ActionButton onPress={ () => setSelectedDate(7) }>
+                        <Msg id="misc.calendar.next" />
+                    </ActionButton>
+                </Flex>
+            </View>
+            <div ref={ calendarWrapper } data-testid="calendar-wrapper" style={{
+                height: '100%',
+                overflow: 'scroll',
                 width: '100%',
-                zIndex: 1,
+            }}>
+                <div style={{
+                    background: '#f5f5f5',
+                    display:'flex',
+                    gap:'1rem',
+                    justifyContent: 'space-between',
+                    position: 'sticky',
+                    top: 0,
+                    width: '100%',
+                    zIndex: 1,
 
-            }}>
-                { Array.from(Array(7).keys()).map((_, index) => (
-                    <div key={ index } data-testid="weekdays" style={{
-                        alignItems: 'center',
-                        display:'flex',
-                        flexDirection: 'column',
-                        gap:'1rem',
-                        height: '100%',
-                        justifyContent: 'start',
-                        width: '100%',
-                    }}>
-                        <Heading data-testid={ `weekday-${index}` } level={ 3 }>
-                            <FormattedDate
-                                value={ new Date(new Date(focusMonday).setDate(focusMonday.getDate() + index)) }
-                                weekday="short"
-                            />
-                        </Heading>
-                        <Text data-testid={ `date-${index}` }>
-                            <FormattedDate
-                                day="2-digit"
-                                value={ new Date(new Date(focusMonday).setDate(focusMonday.getDate() + index)) }
-                            />
-                        </Text>
-                    </div>
-                )) }
-            </div>
-            <div ref={ calendar } style={{
-                alignItems: 'center',
-                display:'flex',
-                gap:'0.5rem',
-                height: '100rem',
-                justifyContent: 'start',
-                width: '100%',
-            }}>
-                { Array.from(Array(7).keys()).map((_, index) => (
-                    <div key={ index } style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: '1rem',
-                        height: '100%',
-                        justifyContent: 'space-between',
-                        padding: '0',
-                        width: '100%',
-                    }}>
-                        <ul data-testid={ `day-${index}-events` } style={{
-                            background:'lightgray',
+                }}>
+                    { Array.from(Array(7).keys()).map((_, index) => (
+                        <div key={ index } data-testid="weekdays" style={{
+                            alignItems: 'center',
+                            display:'flex',
+                            flexDirection: 'column',
+                            gap:'1rem',
                             height: '100%',
-                            listStyle: 'none',
-                            margin: 0,
-                            padding:0 ,
-                            position: 'relative',
+                            justifyContent: 'start',
                             width: '100%',
                         }}>
-                            { getEventsOfTheDay(index + 1)?.map(event => (
-                                <li key={ event.id } data-testid={ `event-${event.id}` } style={{
-                                    background: 'gray',
-                                    height: getEventPos(event.start_time, event.end_time).height,
-                                    margin: '1rem 0',
-                                    padding: '1rem',
-                                    position: 'absolute',
-                                    top: getEventPos(event.start_time, event.end_time).top,
-                                    width: '100%',
-                                }}>
-                                    { `event with id ${event.id}` }
-                                </li>
-                            )) }
-                        </ul>
-                    </div>
-                )) }
+                            <Heading data-testid={ `weekday-${index}` } level={ 3 }>
+                                <FormattedDate
+                                    value={ new Date(new Date(focusMonday).setDate(focusMonday.getDate() + index)) }
+                                    weekday="short"
+                                />
+                            </Heading>
+                            <Text data-testid={ `date-${index}` }>
+                                <FormattedDate
+                                    day="2-digit"
+                                    value={ new Date(new Date(focusMonday).setDate(focusMonday.getDate() + index)) }
+                                />
+                            </Text>
+                        </div>
+                    )) }
+                </div>
+                <div ref={ calendar } style={{
+                    alignItems: 'center',
+                    display:'flex',
+                    gap:'0.5rem',
+                    height: '100rem',
+                    justifyContent: 'start',
+                    width: '100%',
+                }}>
+                    { Array.from(Array(7).keys()).map((_, index) => (
+                        <div key={ index } style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: '1rem',
+                            height: '100%',
+                            justifyContent: 'space-between',
+                            padding: '0',
+                            width: '100%',
+                        }}>
+                            <ul data-testid={ `day-${index}-events` } style={{
+                                background:'lightgray',
+                                height: '100%',
+                                listStyle: 'none',
+                                margin: 0,
+                                padding:0 ,
+                                position: 'relative',
+                                width: '100%',
+                            }}>
+                                { getEventsOfTheDay(index + 1)?.map(event => (
+                                    <li key={ event.id } data-testid={ `event-${event.id}` } style={{
+                                        background: 'gray',
+                                        height: getEventPos(event.start_time, event.end_time).height,
+                                        margin: '1rem 0',
+                                        padding: '1rem',
+                                        position: 'absolute',
+                                        top: getEventPos(event.start_time, event.end_time).top,
+                                        width: '100%',
+                                    }}>
+                                        { `event with id ${event.id}` }
+                                    </li>
+                                )) }
+                            </ul>
+                        </div>
+                    )) }
+                </div>
             </div>
-        </div>
+        </>
     );
 };
 
