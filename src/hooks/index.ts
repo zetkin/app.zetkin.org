@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 
 import deleteEventResponse from '../fetching/deleteEventResponse';
@@ -114,4 +114,54 @@ export const useUserFollowing = () : UserFollowing => {
     }
 
     return { following, onFollow, onUnfollow };
+};
+
+type CalendarNavigation = {
+    goBackAMonth: () => void;
+    goBackAWeek: () => void;
+    goFwdAMonth: () => void;
+    goFwdAWeek: () => void;
+    selectedMonday: Date;
+    selectedMonth: number;
+    selectedYear: number;
+}
+
+export const useFocusDate = (): CalendarNavigation => {
+    const [focusDate, setFocusDate] = useState(new Date(Date.now()));
+
+    const selectedMonday = new Date(
+        new Date(focusDate).setDate(
+            new Date(focusDate).getDate() - new Date(focusDate).getDay() + 1,
+        ),
+    );
+    selectedMonday.setUTCHours(0, 0, 0, 0);
+
+    const selectedMonth = new Date(focusDate).getUTCMonth();
+    const selectedYear = new Date(focusDate).getUTCFullYear();
+
+    const goBackAMonth = () => {
+        setFocusDate(
+            new Date(new Date(focusDate).setDate(focusDate.getDate() - 30)),
+        );
+    };
+
+    const goFwdAMonth = () => {
+        setFocusDate(
+            new Date(new Date(focusDate).setDate(focusDate.getDate() + 30)),
+        );
+    };
+
+    const goBackAWeek = () => {
+        setFocusDate(
+            new Date(new Date(focusDate).setDate(focusDate.getDate() - 7)),
+        );
+    };
+
+    const goFwdAWeek = () => {
+        setFocusDate(
+            new Date(new Date(focusDate).setDate(focusDate.getDate() + 7)),
+        );
+    };
+
+    return { goBackAMonth, goBackAWeek, goFwdAMonth, goFwdAWeek, selectedMonday, selectedMonth, selectedYear };
 };

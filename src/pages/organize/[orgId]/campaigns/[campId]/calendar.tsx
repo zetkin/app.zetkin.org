@@ -10,6 +10,7 @@ import MonthCalendar from '../../../../../components/MonthCalendar';
 import OrganizeCampaignLayout from '../../../../../components/layout/OrganizeCampaignLayout';
 import { PageWithLayout } from '../../../../../types';
 import { scaffold } from '../../../../../utils/next';
+import { useFocusDate } from '../../../../../hooks';
 import { useIntl } from 'react-intl';
 import { useQuery } from 'react-query';
 import WeekCalendar from '../../../../../components/Calendar';
@@ -59,37 +60,8 @@ const CampaignCalendarPage : PageWithLayout<OrganizeCalendarPageProps> = ({ orgI
     const eventsQuery = useQuery(['campaignEvents', orgId, campId], getCampaignEvents(orgId, campId));
     const events = eventsQuery.data || [];
     const intl = useIntl();
-
     const [calendarView, setCalendarView] = useState('week');
-    const [focusDate, setFocusDate] = useState(new Date(Date.now()));
-
-    const monday = new Date(new Date(focusDate)
-        .setDate(new Date(focusDate).getDate() - new Date(focusDate).getDay() + 1));
-    monday.setUTCHours(0,0,0,0);
-
-    const selectedMonth = new Date(focusDate).getUTCMonth();
-    const selectedYear = new Date(focusDate).getUTCFullYear();
-
-
-    const goBackAMonth = () => {
-        setFocusDate(new Date(new Date(focusDate)
-            .setDate(focusDate.getDate() - 30)));
-    };
-
-    const goFwdAMonth = () => {
-        setFocusDate(new Date(new Date(focusDate)
-            .setDate(focusDate.getDate() + 30)));
-    };
-
-    const goBackAWeek = () => {
-        setFocusDate(new Date(new Date(focusDate)
-            .setDate(focusDate.getDate() - 7)));
-    };
-
-    const goFwdAWeek = () => {
-        setFocusDate(new Date(new Date(focusDate)
-            .setDate(focusDate.getDate() + 7)));
-    };
+    const { goBackAMonth, goBackAWeek, goFwdAMonth, goFwdAWeek, selectedMonday, selectedMonth, selectedYear } = useFocusDate();
 
     const items = [
         { id: 'week', name: intl.formatMessage({ id: 'misc.calendar.week' }) },
@@ -122,7 +94,7 @@ const CampaignCalendarPage : PageWithLayout<OrganizeCalendarPageProps> = ({ orgI
                             /> : <FormattedDate
                                 day="2-digit"
                                 month="short"
-                                value={ monday }
+                                value={ selectedMonday }
                             /> }
                         </View>
                         <ActionButton onPress={ calendarView === 'month' ? goFwdAMonth : goFwdAWeek }>
@@ -132,7 +104,7 @@ const CampaignCalendarPage : PageWithLayout<OrganizeCalendarPageProps> = ({ orgI
                 </View>
 
                 { calendarView === 'month' && <MonthCalendar events={ events } month={ selectedMonth } year={ selectedYear } /> }
-                { calendarView === 'week' && <WeekCalendar events={ events } focusMonday={ monday } /> }
+                { calendarView === 'week' && <WeekCalendar events={ events } focusMonday={ selectedMonday } /> }
             </View>
         </View>
     );
