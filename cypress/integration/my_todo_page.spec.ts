@@ -6,8 +6,6 @@ describe('/my/todo', () => {
     let dummyEvents : {data: ZetkinEvent[]};
     let dummyMemberships : {data: ZetkinMembership[]};
 
-    const date = new Date();
-
     before(() => {
         cy.fixture('dummyEventResponses.json')
             .then((data : {data: ZetkinEventResponse[]}) => {
@@ -62,7 +60,7 @@ describe('/my/todo', () => {
 
         dummyEventResponses.data[0].action_id = 1;
         dummyEvents.data[0].id = 1;
-        dummyEvents.data[0].start_time = date.toISOString();
+        dummyEvents.data[0].start_time = (new Date()).toISOString();
 
         cy.login();
 
@@ -122,7 +120,7 @@ describe('/my/todo', () => {
         dummyEventResponses.data[0].action_id = 1;
         dummyBookedEvents.data[0].id = 1;
         dummyEvents.data[0].id = 1;
-        dummyEvents.data[0].start_time = date.toISOString();
+        dummyEvents.data[0].start_time = (new Date()).toISOString();
 
         cy.login();
 

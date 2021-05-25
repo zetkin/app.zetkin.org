@@ -10,8 +10,6 @@ describe('EventTabs', () => {
     let dummyEvents : ZetkinEvent[];
     let dummyBookedEvents : ZetkinEvent[];
 
-    const today = new Date();
-
     before(()=> {
         cy.fixture('dummyEventResponses.json')
             .then((data : {data: ZetkinEventResponse[]}) => {
@@ -28,7 +26,7 @@ describe('EventTabs', () => {
     });
 
     it('contains tabs for time filtering on today and whis week', () => {
-        const filterDummyEvents = [
+        const multipleDummyEvents = [
             { ...dummyEvents[0] },
             { ...dummyEvents[0] },
             { ...dummyEvents[0] },
@@ -40,15 +38,15 @@ describe('EventTabs', () => {
         const later = new Date();
         later.setDate(later.getDate()+8);
 
-        filterDummyEvents[0].start_time = today.toISOString();
-        filterDummyEvents[1].start_time = tomorrow.toISOString();
-        filterDummyEvents[2].start_time = later.toISOString();
+        multipleDummyEvents[0].start_time = (new Date()).toISOString();
+        multipleDummyEvents[1].start_time = tomorrow.toISOString();
+        multipleDummyEvents[2].start_time = later.toISOString();
 
         mountWithProviders(
             <EventTabs
                 bookedEvents={ dummyBookedEvents }
                 eventResponses={ dummyEventResponses }
-                events={ filterDummyEvents }
+                events={ multipleDummyEvents }
                 onSignup={ () => null  }
                 onUndoSignup={ () => null  }
             />,
@@ -62,7 +60,7 @@ describe('EventTabs', () => {
 
 
     it('contains event previews', () => {
-        dummyEvents[0].start_time = today.toISOString();
+        dummyEvents[0].start_time = (new Date()).toISOString();
 
         mountWithProviders(
             <EventTabs
