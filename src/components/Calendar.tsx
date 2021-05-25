@@ -4,11 +4,11 @@ import { Heading, Text } from '@adobe/react-spectrum';
 import { useEffect, useRef } from 'react';
 
 interface CalendarProps {
-    focusDate?: Date;
+    focusMonday: Date;
     events: ZetkinEvent[];
 }
 
-const Calendar = ({ focusDate = new Date(Date.now()), events }: CalendarProps): JSX.Element => {
+const WeekCalendar = ({ focusMonday, events }: CalendarProps): JSX.Element => {
     const calendar = useRef<HTMLDivElement>(null);
     const calendarWrapper = useRef<HTMLDivElement>(null);
 
@@ -18,17 +18,13 @@ const Calendar = ({ focusDate = new Date(Date.now()), events }: CalendarProps): 
         calendarWrapper.current?.scrollTo(0, y);
     }, []);
 
-    focusDate.setUTCHours(0,0,0,0);
-
-    const monday = new Date(new Date(focusDate)
-        .setDate(focusDate.getDate() - focusDate.getDay() + 1));
-    const nextMonday = new Date(new Date(monday)
-        .setDate(monday.getDate() + 7));
+    const nextMonday = new Date(new Date(focusMonday)
+        .setDate(focusMonday.getDate() + 7));
 
     const eventsOfTheWeek = events.filter(event => {
-        return new Date(event.start_time) >= monday &&
+        return new Date(event.start_time) >= focusMonday &&
             new Date(event.start_time) < nextMonday ||
-            new Date(event.end_time) > monday &&
+            new Date(event.end_time) > focusMonday &&
             new Date(event.end_time) <= nextMonday;
     });
 
@@ -82,14 +78,14 @@ const Calendar = ({ focusDate = new Date(Date.now()), events }: CalendarProps): 
                     }}>
                         <Heading data-testid={ `weekday-${index}` } level={ 3 }>
                             <FormattedDate
-                                value={ new Date(new Date(monday).setDate(monday.getDate() + index)) }
+                                value={ new Date(new Date(focusMonday).setDate(focusMonday.getDate() + index)) }
                                 weekday="short"
                             />
                         </Heading>
                         <Text data-testid={ `date-${index}` }>
                             <FormattedDate
                                 day="2-digit"
-                                value={ new Date(new Date(monday).setDate(monday.getDate() + index)) }
+                                value={ new Date(new Date(focusMonday).setDate(focusMonday.getDate() + index)) }
                             />
                         </Text>
                     </div>
@@ -143,4 +139,4 @@ const Calendar = ({ focusDate = new Date(Date.now()), events }: CalendarProps): 
     );
 };
 
-export default Calendar;
+export default WeekCalendar;

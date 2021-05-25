@@ -1,15 +1,15 @@
-import Calendar from './Calendar';
 import { mountWithProviders } from '../utils/testing';
+import WeekCalendar from './Calendar';
 import { ZetkinEvent } from '../types/zetkin';
 
-describe('Calendar', () => {
-    let dummyDate : Date;
+describe('WeekCalendar', () => {
+    let dummyMonday : Date;
     let dummyEvents: ZetkinEvent[];
     const dummyStartTime = '2021-05-10T13:37:00+00:00';
     const dummyEndTime = '2021-05-10T14:37:00+00:00';
 
     beforeEach(() => {
-        dummyDate = new Date('May 12, 2021');
+        dummyMonday = new Date('May 10, 2021');
         cy.fixture('dummyEvents.json')
             .then((data : {data: ZetkinEvent[]}) => {
                 dummyEvents = data.data;
@@ -26,7 +26,7 @@ describe('Calendar', () => {
 
     it('shows seven days of the current week starting on Monday', () => {
         mountWithProviders(
-            <Calendar events={ dummyEvents } focusDate={ new Date(dummyDate) } />,
+            <WeekCalendar events={ dummyEvents } focusMonday={ new Date(dummyMonday) } />,
         );
 
         cy.get('[data-testid="weekday-0"]').should('be.visible');
@@ -49,19 +49,19 @@ describe('Calendar', () => {
 
     it('shows events that occur on the specified date', () => {
         mountWithProviders(
-            <Calendar events={ dummyEvents } focusDate={ new Date(dummyDate) } />,
+            <WeekCalendar events={ dummyEvents } focusMonday={ new Date(dummyMonday) } />,
         );
         cy.get('[data-testid="day-0-events"]').contains('event with id 25');
         cy.get('[data-testid="day-0-events"]').contains('event with id 26');
     });
 
     it('displays year and month boundaries correctly', () => {
-        dummyDate = new Date('December 31, 2020');
+        dummyMonday = new Date('December 28, 2020');
         dummyEvents[0].start_time = '2020-12-31T13:37:00+00:00';
         dummyEvents[0].end_time = '2020-12-31T14:37:00+00:00';
 
         mountWithProviders(
-            <Calendar events={ dummyEvents } focusDate={ new Date(dummyDate) } />,
+            <WeekCalendar events={ dummyEvents } focusMonday={ new Date(dummyMonday) } />,
         );
 
         cy.get('[data-testid="date-0"]').contains(28);
@@ -77,7 +77,7 @@ describe('Calendar', () => {
 
     it('shows the days events in the correct order', () => {
         mountWithProviders(
-            <Calendar events={ dummyEvents } focusDate={ new Date(dummyDate) } />,
+            <WeekCalendar events={ dummyEvents } focusMonday={ new Date(dummyMonday) } />,
         );
         cy.get('[data-testid="event-26"]').then(el => {
             const firstEventYPos = el[0].getBoundingClientRect().top;
@@ -90,7 +90,7 @@ describe('Calendar', () => {
 
     it('shows longer events with more height than shorter events', () => {
         mountWithProviders(
-            <Calendar events={ dummyEvents } focusDate={ new Date(dummyDate) } />,
+            <WeekCalendar events={ dummyEvents } focusMonday={ new Date(dummyMonday) } />,
         );
         cy.get('[data-testid="event-26"]').then(el => {
             const firstEventHeight = el[0].getBoundingClientRect().top;
@@ -107,7 +107,7 @@ describe('Calendar', () => {
         dummyEvents[1].start_time = '2021-05-10T23:00:00+00:00';
         dummyEvents[1].end_time = '2021-05-10T23:59:00+00:00';
         mountWithProviders(
-            <Calendar events={ dummyEvents } focusDate={ new Date(dummyDate) } />,
+            <WeekCalendar events={ dummyEvents } focusMonday={ new Date(dummyMonday) } />,
         );
         cy.get('[data-testid="day-0-events"]').contains('event with id 25');
         cy.get('[data-testid="day-0-events"]').contains('event with id 26');
@@ -124,7 +124,7 @@ describe('Calendar', () => {
                 right: 0,
                 top: 0,
             }}>
-                <Calendar events={ dummyEvents } focusDate={ new Date(dummyDate) } />
+                <WeekCalendar events={ dummyEvents } focusMonday={ new Date(dummyMonday) } />
             </div>,
         );
         cy.get('[data-testid="calendar-wrapper"]').then(el => {
@@ -144,7 +144,7 @@ describe('Calendar', () => {
                 right: 0,
                 top: 0,
             }}>
-                <Calendar events={ dummyEvents } focusDate={ new Date(dummyDate) } />
+                <WeekCalendar events={ dummyEvents } focusMonday={ new Date(dummyMonday) } />
             </div>,
         );
         cy.get('[data-testid="calendar-wrapper"]').then(el => {

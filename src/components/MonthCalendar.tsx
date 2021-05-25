@@ -3,15 +3,12 @@ import { FormattedDate } from 'react-intl';
 import { ZetkinEvent } from '../types/zetkin';
 
 interface MonthCalendarProps {
-    month?: number;
-    year?: number;
+    month: number;
+    year: number;
     events: ZetkinEvent[];
 }
 
 const MonthCalendar = ({ month, events, year }: MonthCalendarProps): JSX.Element => {
-
-    month ||= new Date(Date.now()).getMonth();
-    year ||= new Date(Date.now()).getFullYear();
 
     const totalDaysInMonth = new Date(year, 1 + month, 0).getDate();
 
