@@ -10,8 +10,8 @@ interface MonthCalendarProps {
 
 const MonthCalendar = ({ month, events, year }: MonthCalendarProps): JSX.Element => {
 
-    if (!month) month = new Date(Date.now()).getMonth();
-    if (!year) year = new Date(Date.now()).getFullYear();
+    month ||= new Date(Date.now()).getMonth();
+    year ||= new Date(Date.now()).getFullYear();
 
     const totalDaysInMonth = new Date(year, 1 + month, 0).getDate();
 
