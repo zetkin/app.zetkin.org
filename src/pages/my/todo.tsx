@@ -4,7 +4,7 @@ import { useQuery } from 'react-query';
 import { Heading, Text, View } from '@adobe/react-spectrum';
 
 import CallAssignmentList from '../../components/CallAssignmentList';
-import EventList from '../../components/EventList';
+import EventTabs from '../../components/EventTabs';
 import getBookedEvents from '../../fetching/getBookedEvents';
 import getCallAssignments from '../../fetching/getCallAssignments';
 import getRespondEvents from '../../fetching/getRespondEvents';
@@ -19,6 +19,7 @@ const scaffoldOptions = {
         'layout.my',
         'misc.callAssignmentList',
         'misc.eventList',
+        'misc.eventTabs',
         'misc.publicHeader',
         'pages.myTodo',
     ],
@@ -27,23 +28,10 @@ const scaffoldOptions = {
 export const getServerSideProps : GetServerSideProps = scaffold(async (context) => {
     const { user } = context;
 
-    let respondEventsState;
-    let bookedEventsState;
-    let callAssignmentsState;
-
     if (user) {
         await context.queryClient.prefetchQuery('respondEvents', getRespondEvents(context.apiFetch));
         await context.queryClient.prefetchQuery('bookedEvents', getBookedEvents(context.apiFetch));
         await context.queryClient.prefetchQuery('callAssignments', getCallAssignments(context.apiFetch));
-
-        respondEventsState = context.queryClient.getQueryState('respondEvents');
-        bookedEventsState = context.queryClient.getQueryState('bookedEvents');
-        callAssignmentsState = context.queryClient.getQueryState('callAssignments');
-    }
-
-    if (respondEventsState?.status === 'success'
-        && bookedEventsState?.status === 'success'
-        && callAssignmentsState?.status === 'success') {
 
         return {
             props: {},
@@ -100,7 +88,7 @@ const MyTodoPage : PageWithLayout = () => {
                 <Heading level={ 2 } marginBottom="0">
                     <Msg id="pages.myTodo.events"/>
                 </Heading>
-                <EventList
+                <EventTabs
                     bookedEvents={ bookedEventsQuery.data }
                     events={ respondEvents }
                     onUndoSignup={ onUndoSignup }

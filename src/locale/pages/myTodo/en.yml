@@ -2,3 +2,8 @@ heading: To-do
 placeholder: You have nothing planned at the moment.
 callAssignments: Call assignments
 events: Events
+tabs:
+  today: Today
+  tomorrow: Tomorrow
+  thisWeek: This week
+  later: Later
