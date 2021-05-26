@@ -27,11 +27,18 @@ export default function getEvents(orgId : string, fetch = defaultFetch) {
             const campaignEvents = await eventsRes.json();
 
             for (const eObj of campaignEvents.data) {
-                const isBookedEvent = bookedData.data.some((booked : ZetkinEvent) =>
-                    booked.id === eObj.id);
+                let isBookedEvent = false;
+                let hasEventResponse = false;
 
-                const hasEventResponse = rData.data.some((response : ZetkinEventResponse) =>
-                    response.action_id === eObj.id);
+                if (bookedData.data) {
+                    isBookedEvent = bookedData.data.some((booked : ZetkinEvent) =>
+                        booked.id === eObj.id);
+                }
+
+                if (rData.data) {
+                    hasEventResponse = rData.data.some((response : ZetkinEventResponse) =>
+                        response.action_id === eObj.id);
+                }
 
                 allEventsData.push({
                     ...eObj,

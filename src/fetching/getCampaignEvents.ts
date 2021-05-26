@@ -26,11 +26,18 @@ export default function getCampaignEvents(
         const campaignEventsData : ZetkinEvent[] = [];
 
         for (const eObj of eventsData.data) {
-            const isBookedEvent = bookedData.data.some((booked : ZetkinEvent) =>
-                booked.id === eObj.id);
+            let isBookedEvent = false;
+            let hasEventResponse = false;
 
-            const hasEventResponse = rData.data.some((response : ZetkinEventResponse) =>
-                response.action_id === eObj.id);
+            if (bookedData.data) {
+                isBookedEvent = bookedData.data.some((booked : ZetkinEvent) =>
+                    booked.id === eObj.id);
+            }
+
+            if (rData.data) {
+                hasEventResponse = rData.data.some((response : ZetkinEventResponse) =>
+                    response.action_id === eObj.id);
+            }
 
             campaignEventsData.push({
                 ...eObj,
