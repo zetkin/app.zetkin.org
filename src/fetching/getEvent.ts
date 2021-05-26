@@ -40,7 +40,6 @@ export default function getEvent(orgId : string, eventId : string, fetch = defau
                     userBooked: isBookedEvent,
                     userResponse: hasEventResponse,
                 };
-
                 return eventData;
             }
         }

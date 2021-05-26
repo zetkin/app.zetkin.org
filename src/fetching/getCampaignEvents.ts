@@ -39,6 +39,7 @@ export default function getCampaignEvents(
                 userResponse: hasEventResponse,
             });
         }
+
         return campaignEventsData;
     };
 }
