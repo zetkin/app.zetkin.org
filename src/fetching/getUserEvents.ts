@@ -1,10 +1,16 @@
 import { defaultFetch } from '.';
-import { ZetkinEvent } from '../types/zetkin';
+import { ZetkinEvent, ZetkinEventResponse } from '../types/zetkin';
 
 export default function getUserEvents(fetch = defaultFetch) {
     return async () : Promise<ZetkinEvent[]> => {
         const fRes = await fetch(`/users/me/following`);
         const fData = await fRes.json();
+
+        const bookedRes = await fetch('/users/me/actions');
+        const bookedData = await bookedRes.json();
+
+        const rRes = await fetch('/users/me/action_responses');
+        const rData = await rRes.json();
 
         const userEventsData = [];
 
@@ -20,7 +26,18 @@ export default function getUserEvents(fetch = defaultFetch) {
 
                 if (eventsData.data && eventsData.data.length > 0) {
                     for (const eObj of eventsData.data) {
-                        userEventsData.push({ ...eObj, organization: org });
+                        const isBookedEvent = bookedData.data.some((booked : ZetkinEvent) =>
+                            booked.id === eObj.id);
+
+                        const hasEventResponse = rData.data.some((response : ZetkinEventResponse) =>
+                            response.action_id === eObj.id);
+
+                        userEventsData.push({
+                            ...eObj,
+                            organization: org,
+                            userBooked: isBookedEvent,
+                            userResponse: hasEventResponse,
+                        });
                     }
                 }
             }

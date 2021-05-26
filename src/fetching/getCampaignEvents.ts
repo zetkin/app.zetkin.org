@@ -1,5 +1,5 @@
 import { defaultFetch } from '.';
-import { ZetkinEvent } from '../types/zetkin';
+import { ZetkinEvent, ZetkinEventResponse } from '../types/zetkin';
 
 export default function getCampaignEvents(
     orgId : string,
