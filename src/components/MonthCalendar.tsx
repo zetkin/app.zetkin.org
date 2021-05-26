@@ -3,14 +3,14 @@ import { ActionButton, Flex, View } from '@adobe/react-spectrum';
 import { FormattedDate, FormattedMessage as Msg } from 'react-intl';
 
 interface MonthCalendarProps {
-    month: number;
-    year: number;
     events: ZetkinEvent[];
-    setSelectedDate: (offset: number) => void;
+    focusDate: Date;
+    onFocusDate: (date: Date) => void;
 }
 
-const MonthCalendar = ({ month, events, year, setSelectedDate }: MonthCalendarProps): JSX.Element => {
-
+const MonthCalendar = ({ events, onFocusDate, focusDate }: MonthCalendarProps): JSX.Element => {
+    const month = focusDate.getUTCMonth();
+    const year = focusDate.getUTCFullYear();
     const totalDaysInMonth = new Date(year, 1 + month, 0).getDate();
 
     const firstMonthDay = new Date(year, month, 1);
@@ -78,17 +78,21 @@ const MonthCalendar = ({ month, events, year, setSelectedDate }: MonthCalendarPr
         <>
             <View position="absolute" right="15rem" top="-2.6rem">
                 <Flex alignItems="center">
-                    <ActionButton onPress={ () => setSelectedDate(-30) }>
+                    <ActionButton data-testid="back-button" onPress={
+                        () => onFocusDate(new Date(new Date(focusDate).setDate(focusDate.getDate() - 30)))
+                    }>
                         <Msg id="misc.calendar.prev" />
                     </ActionButton>
-                    <View padding="size-100">
+                    <View data-testid="selected-month" padding="size-100">
                         <FormattedDate
                             month="long"
                             value={ new Date(year, month + 1, 0) }
                             year="numeric"
                         />
                     </View>
-                    <ActionButton onPress={ () => setSelectedDate(30) }>
+                    <ActionButton data-testid="fwd-button" onPress={
+                        () => onFocusDate(new Date(new Date(focusDate).setDate(focusDate.getDate() + 30)))
+                    }>
                         <Msg id="misc.calendar.next" />
                     </ActionButton>
                 </Flex>

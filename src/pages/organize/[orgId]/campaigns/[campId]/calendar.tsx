@@ -60,7 +60,7 @@ const CampaignCalendarPage : PageWithLayout<OrganizeCalendarPageProps> = ({ orgI
     const events = eventsQuery.data || [];
     const intl = useIntl();
     const [calendarView, setCalendarView] = useState('week');
-    const { selectedMonday, selectedMonth, selectedYear, setSelectedDate } = useFocusDate();
+    const [focusDate, setFocusDate] = useFocusDate();
 
     const items = [
         { id: 'week', name: intl.formatMessage({ id: 'misc.calendar.week' }) },
@@ -80,8 +80,8 @@ const CampaignCalendarPage : PageWithLayout<OrganizeCalendarPageProps> = ({ orgI
                 </Picker>
             </Flex>
             <View height="80vh">
-                { calendarView === 'month' && <MonthCalendar events={ events } month={ selectedMonth } setSelectedDate={ setSelectedDate } year={ selectedYear }/> }
-                { calendarView === 'week' && <WeekCalendar events={ events } setSelectedDate={ setSelectedDate } thisMonday={ selectedMonday }/> }
+                { calendarView === 'month' && <MonthCalendar events={ events } focusDate={ focusDate } onFocusDate={ date => setFocusDate(date) } /> }
+                { calendarView === 'week' && <WeekCalendar events={ events } focusDate={ focusDate } onFocusDate={ date => setFocusDate(date) }/> }
             </View>
         </View>
     );

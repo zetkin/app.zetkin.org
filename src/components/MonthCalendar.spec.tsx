@@ -30,7 +30,7 @@ describe('MonthCalendar', () => {
 
     it('shows a grid with 5 rows and 7 columns', () => {
         mountWithProviders(
-            <MonthCalendar events={ dummyEvents } month={ 3 } setSelectedDate={ () => null } year={ 2021 } />,
+            <MonthCalendar events={ dummyEvents } focusDate={ new Date(2021, 3, 10) } onFocusDate={ () => null }  />,
         );
         cy.get('[data-testid="calendar-wrapper"]').should('have.css', 'display', 'grid');
         cy.get('[data-testid="calendar-wrapper"]').children().should('have.length', 35);
@@ -56,7 +56,7 @@ describe('MonthCalendar', () => {
 
     it('shows a grid with 4 rows when the month is exactly 4 weeks starting on Monday', () => {
         mountWithProviders(
-            <MonthCalendar events={ dummyEvents } month={ 1 } setSelectedDate={ () => null } year={ 2021 }/>,
+            <MonthCalendar events={ dummyEvents } focusDate={ new Date(2021, 1, 10) } onFocusDate={ () => null }  />,
         );
         cy.get('[data-testid="calendar-wrapper"]').should('have.css', 'display', 'grid');
         cy.get('[data-testid="calendar-wrapper"]').children().should('have.length', 28);
@@ -82,7 +82,7 @@ describe('MonthCalendar', () => {
 
     it('shows a grid with 6 rows when the month takes up more than 5 rows', () => {
         mountWithProviders(
-            <MonthCalendar events={ dummyEvents } month={ 4 } setSelectedDate={ () => null } year={ 2021 }/>,
+            <MonthCalendar events={ dummyEvents } focusDate={ new Date(2021, 4, 10) } onFocusDate={ () => null }  />,
         );
         cy.get('[data-testid="calendar-wrapper"]').should('have.css', 'display', 'grid');
         cy.get('[data-testid="calendar-wrapper"]').children().should('have.length', 42);
@@ -108,7 +108,7 @@ describe('MonthCalendar', () => {
 
     it('displays the correct date on each grid square', () => {
         mountWithProviders(
-            <MonthCalendar events={ dummyEvents } month={ 4 } setSelectedDate={ () => null } year={ 2021 }/>,
+            <MonthCalendar events={ dummyEvents } focusDate={ new Date(2021, 4, 10) } onFocusDate={ () => null }  />,
         );
         cy.get('[data-testid="griditem-5"]').contains('01');
         cy.get('[data-testid="griditem-35"]').contains('31');
@@ -116,7 +116,7 @@ describe('MonthCalendar', () => {
 
     it('displays the correct events on the corresponding date', () => {
         mountWithProviders(
-            <MonthCalendar events={ dummyEvents } month={ 4 } setSelectedDate={ () => null } year={ 2021 } />,
+            <MonthCalendar events={ dummyEvents } focusDate={ new Date(2021, 4, 10) } onFocusDate={ () => null }  />,
         );
         cy.get('[data-testid="griditem-1"]').contains('id 24');
         cy.get('[data-testid="griditem-14"]').contains('id 26');
@@ -125,7 +125,7 @@ describe('MonthCalendar', () => {
 
     it('shows out of range dates with another colour', () => {
         mountWithProviders(
-            <MonthCalendar events={ dummyEvents } month={ 4 } setSelectedDate={ () => null } year={ 2021 }/>,
+            <MonthCalendar events={ dummyEvents } focusDate={ new Date(2021, 4, 10) } onFocusDate={ () => null }  />,
         );
 
         cy.get('[data-testid="griditem-4"]').then(el => {
@@ -143,7 +143,7 @@ describe('MonthCalendar', () => {
 
     it('works with a leap year february', () => {
         mountWithProviders(
-            <MonthCalendar events={ dummyEvents } month={ 1 } setSelectedDate={ () => null } year={ 2020 }/>,
+            <MonthCalendar events={ dummyEvents } focusDate={ new Date(2020, 1, 10) } onFocusDate={ () => null }  />,
         );
         cy.get('[data-testid="griditem-5"]').contains('01');
         cy.get('[data-testid="griditem-33"]').contains('29');
@@ -151,7 +151,7 @@ describe('MonthCalendar', () => {
 
     it('works across year boundaries', () => {
         mountWithProviders(
-            <MonthCalendar events={ dummyEvents } month={ 11 } setSelectedDate={ () => null } year={ 2020 }/>,
+            <MonthCalendar events={ dummyEvents } focusDate={ new Date(2020, 11, 10) } onFocusDate={ () => null }  />,
         );
         cy.get('[data-testid="griditem-1"]').contains('01');
         cy.get('[data-testid="griditem-31"]').contains('31');
@@ -159,7 +159,7 @@ describe('MonthCalendar', () => {
 
     it('displays events in chronological order within a day', () => {
         mountWithProviders(
-            <MonthCalendar events={ dummyEvents } month={ 4 } setSelectedDate={ () => null } year={ 2021 }/>,
+            <MonthCalendar events={ dummyEvents } focusDate={ new Date(2021, 4, 10) } onFocusDate={ () => null }  />,
         );
         cy.get('[data-testid="event-26"]').then(el => {
             const firstEventYPos = el[0].getBoundingClientRect().top;
@@ -168,5 +168,53 @@ describe('MonthCalendar', () => {
                 expect(firstEventYPos).to.be.lessThan(secondEventYPos);
             });
         });
+    });
+
+    it('shows back and forward widget buttons', () => {
+        mountWithProviders(
+            <MonthCalendar events={ dummyEvents } focusDate={ new Date(2021, 4, 10) } onFocusDate={ () => null }  />,
+        );
+        cy.get('[data-testid="back-button"]').should('be.visible');
+        cy.get('[data-testid="fwd-button"]').should('be.visible');
+    });
+
+    it('shows the current displayed month in the widget', () => {
+        mountWithProviders(
+            <MonthCalendar events={ dummyEvents } focusDate={ new Date(2021, 4, 10) } onFocusDate={ () => null }  />,
+        );
+        cy.get('[data-testid="selected-month"]').contains('May');
+        cy.get('[data-testid="selected-month"]').contains('2021');
+    });
+
+    it('sets the focus date a month ago when back is clicked', () => {
+        const spyOnFocusDate = cy.spy();
+        mountWithProviders(
+            <MonthCalendar events={ dummyEvents } focusDate={ new Date(2021, 4, 10) } onFocusDate={ spyOnFocusDate }  />,
+        );
+
+        cy.findByText('misc.calendar.prev')
+            .click({ force: true })
+            .then(() => {
+                const date = new Date(2021, 3, 10);
+                expect(spyOnFocusDate).to.be.calledOnce;
+                expect(spyOnFocusDate.args[0][0] instanceof Date).to.be.true;
+                expect(spyOnFocusDate.args[0][0].toString()).to.eq(date.toString());
+            });
+    });
+
+    it('sets the focus date a month forward when next is clicked', () => {
+        const spyOnFocusDate = cy.spy();
+        mountWithProviders(
+            <MonthCalendar events={ dummyEvents } focusDate={ new Date(2021, 4, 10) } onFocusDate={ spyOnFocusDate }  />,
+        );
+
+        cy.findByText('misc.calendar.next')
+            .click({ force: true })
+            .then(() => {
+                const date = new Date(2021, 5, 9);
+                expect(spyOnFocusDate).to.be.calledOnce;
+                expect(spyOnFocusDate.args[0][0] instanceof Date).to.be.true;
+                expect(spyOnFocusDate.args[0][0].toString()).to.eq(date.toString());
+            });
     });
 });

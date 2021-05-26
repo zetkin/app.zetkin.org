@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { Dispatch, SetStateAction, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 
 import deleteEventResponse from '../fetching/deleteEventResponse';
@@ -116,31 +116,7 @@ export const useUserFollowing = () : UserFollowing => {
     return { following, onFollow, onUnfollow };
 };
 
-type CalendarNavigation = {
-    selectedMonday: Date;
-    selectedMonth: number;
-    selectedYear: number;
-    setSelectedDate: (offset: number) => void;
-}
-
-export const useFocusDate = (): CalendarNavigation => {
+export const useFocusDate = (): [Date, Dispatch<SetStateAction<Date>>] => {
     const [focusDate, setFocusDate] = useState(new Date(Date.now()));
-
-    const selectedMonday = new Date(
-        new Date(focusDate).setDate(
-            new Date(focusDate).getDate() - new Date(focusDate).getDay() + 1,
-        ),
-    );
-    selectedMonday.setUTCHours(0, 0, 0, 0);
-
-    const selectedMonth = new Date(focusDate).getUTCMonth();
-    const selectedYear = new Date(focusDate).getUTCFullYear();
-
-    const setSelectedDate = (offset: number) => {
-        setFocusDate(
-            new Date(new Date(focusDate).setDate(focusDate.getDate() + offset)),
-        );
-    };
-
-    return { selectedMonday, selectedMonth, selectedYear, setSelectedDate };
+    return  [focusDate, setFocusDate];
 };

@@ -5,13 +5,14 @@ import { Heading, Text } from '@adobe/react-spectrum';
 import { useEffect, useRef } from 'react';
 
 
-interface CalendarProps {
-    thisMonday: Date;
+interface WeekCalendarProps {
     events: ZetkinEvent[];
-    setSelectedDate: (offset:number) => void;
+    focusDate: Date;
+    onFocusDate: (date: Date)=> void;
 }
 
-const WeekCalendar = ({ thisMonday: focusMonday, events, setSelectedDate }: CalendarProps): JSX.Element => {
+const WeekCalendar = ({ events, focusDate, onFocusDate }: WeekCalendarProps): JSX.Element => {
+
     const calendar = useRef<HTMLDivElement>(null);
     const calendarWrapper = useRef<HTMLDivElement>(null);
 
@@ -21,14 +22,20 @@ const WeekCalendar = ({ thisMonday: focusMonday, events, setSelectedDate }: Cale
         calendarWrapper.current?.scrollTo(0, y);
     }, []);
 
-    const nextMonday = new Date(new Date(focusMonday)
-        .setDate(focusMonday.getDate() + 7));
+    const calendarStartDate = new Date(
+        new Date(focusDate).setDate(
+            new Date(focusDate).getDate() - new Date(focusDate).getDay() + 1,
+        ),
+    );
+
+    const calendarEndDate = new Date(new Date(calendarStartDate)
+        .setDate(calendarStartDate.getDate() + 7));
 
     const eventsOfTheWeek = events.filter(event => {
-        return new Date(event.start_time) >= focusMonday &&
-            new Date(event.start_time) < nextMonday ||
-            new Date(event.end_time) > focusMonday &&
-            new Date(event.end_time) <= nextMonday;
+        return new Date(event.start_time) >= calendarStartDate &&
+            new Date(event.start_time) < calendarEndDate ||
+            new Date(event.end_time) > calendarStartDate &&
+            new Date(event.end_time) <= calendarEndDate;
     });
 
     const getEventsOfTheDay = (day: number) => {
@@ -56,17 +63,21 @@ const WeekCalendar = ({ thisMonday: focusMonday, events, setSelectedDate }: Cale
         <>
             <View position="absolute" right="15rem" top="-2.6rem">
                 <Flex alignItems="center">
-                    <ActionButton onPress={ () => setSelectedDate(-7) }>
+                    <ActionButton data-testid="back-button" onPress={
+                        () => onFocusDate(new Date(new Date(focusDate).setDate(focusDate.getDate() - 7)))
+                    }>
                         <Msg id="misc.calendar.prev" />
                     </ActionButton>
-                    <View padding="size-100">
+                    <View data-testid="selected-date" padding="size-100">
                         <FormattedDate
                             day="2-digit"
                             month="short"
-                            value={ focusMonday }
+                            value={ calendarStartDate }
                         />
                     </View>
-                    <ActionButton onPress={ () => setSelectedDate(7) }>
+                    <ActionButton data-testid="fwd-button" onPress={
+                        () => onFocusDate(new Date(new Date(focusDate).setDate(focusDate.getDate() + 7)))
+                    }>
                         <Msg id="misc.calendar.next" />
                     </ActionButton>
                 </Flex>
@@ -99,14 +110,14 @@ const WeekCalendar = ({ thisMonday: focusMonday, events, setSelectedDate }: Cale
                         }}>
                             <Heading data-testid={ `weekday-${index}` } level={ 3 }>
                                 <FormattedDate
-                                    value={ new Date(new Date(focusMonday).setDate(focusMonday.getDate() + index)) }
+                                    value={ new Date(new Date(calendarStartDate).setDate(calendarStartDate.getDate() + index)) }
                                     weekday="short"
                                 />
                             </Heading>
                             <Text data-testid={ `date-${index}` }>
                                 <FormattedDate
                                     day="2-digit"
-                                    value={ new Date(new Date(focusMonday).setDate(focusMonday.getDate() + index)) }
+                                    value={ new Date(new Date(calendarStartDate).setDate(calendarStartDate.getDate() + index)) }
                                 />
                             </Text>
                         </div>
