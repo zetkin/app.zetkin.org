@@ -14,34 +14,31 @@ export default function getUserEvents(fetch = defaultFetch) {
 
         const userEventsData = [];
 
-        if (fData.data) {
-            for (const fObj of fData.data) {
-                const eventsRes = await fetch(`/orgs/${fObj.organization.id}/actions`);
-                const eventsData = await eventsRes.json();
+        for (const fObj of fData.data) {
+            const eventsRes = await fetch(`/orgs/${fObj.organization.id}/actions`);
+            const eventsData = await eventsRes.json();
 
-                const org = {
-                    id: fObj.organization.id,
-                    title: fObj.organization.title,
-                };
+            const org = {
+                id: fObj.organization.id,
+                title: fObj.organization.title,
+            };
 
-                if (eventsData.data && eventsData.data.length > 0) {
-                    for (const eObj of eventsData.data) {
-                        const isBookedEvent = bookedData.data.some((booked : ZetkinEvent) =>
-                            booked.id === eObj.id);
+            for (const eObj of eventsData.data) {
+                const isBookedEvent = bookedData.data.some((booked : ZetkinEvent) =>
+                    booked.id === eObj.id);
 
-                        const hasEventResponse = rData.data.some((response : ZetkinEventResponse) =>
-                            response.action_id === eObj.id);
+                const hasEventResponse = rData.data.some((response : ZetkinEventResponse) =>
+                    response.action_id === eObj.id);
 
-                        userEventsData.push({
-                            ...eObj,
-                            organization: org,
-                            userBooked: isBookedEvent,
-                            userResponse: hasEventResponse,
-                        });
-                    }
-                }
+                userEventsData.push({
+                    ...eObj,
+                    organization: org,
+                    userBooked: isBookedEvent,
+                    userResponse: hasEventResponse,
+                });
             }
         }
+
         return userEventsData;
     };
 }
