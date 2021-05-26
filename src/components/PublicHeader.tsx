@@ -23,13 +23,8 @@ const PublicHeader = ({ user, org, userMemberships } : PublicHeaderProps) : JSX.
         membership => membership.role) || [];
 
     const canOrganize = userMemberships.length > 0;
-    let currentOrg = '';
-
-    for (let i = 0 ; i < userMemberships.length ; i++) {
-        if (userMemberships[i].organization.id == org?.id && userMemberships[i].role == 'admin') {
-            currentOrg = org?.id.toString();
-        }
-    }
+    const currentOrg = userMemberships.find(membership => membership.organization.id == org?.id);
+    const organizeUrl = currentOrg ? `/organize/${ currentOrg?.organization.id }` : '/organize';
 
     return (
         <Header margin="size-200">
@@ -82,7 +77,7 @@ const PublicHeader = ({ user, org, userMemberships } : PublicHeaderProps) : JSX.
                         </View>
                         <>
                             { canOrganize && (
-                                <NextLink href={ `/organize/${currentOrg}` }>
+                                <NextLink href={ `${organizeUrl}` }>
                                     <a data-testid="organize-link">
                                         <Button data-testid="organize-button" variant="cta">
                                             <Msg id="misc.publicHeader.organize"/>
