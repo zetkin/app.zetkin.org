@@ -1,44 +1,43 @@
 import { defaultFetch } from '.';
-import { ZetkinEvent } from '../types/zetkin';
+import { ZetkinEvent, ZetkinEventResponse } from '../types/zetkin';
 
 export default function getRespondEvents(fetch = defaultFetch) {
     return async () : Promise<ZetkinEvent[]> => {
+        const fRes = await fetch(`/users/me/following`);
+        const fData = await fRes.json();
 
-        const membershipsRes = await fetch(`/users/me/memberships`);
-        const membershipsData = await membershipsRes.json();
-
-        const responsesRes = await fetch('/users/me/action_responses');
-        const responsesData = await responsesRes.json();
+        const rRes = await fetch('/users/me/action_responses');
+        const rData = await rRes.json();
 
         const bookedRes = await fetch('/users/me/actions');
         const bookedData = await bookedRes.json();
-        const booked = bookedData.data;
 
         const respondEvents = [];
 
-        if (responsesData.data) {
-            for (const mObj of membershipsData.data) {
-                const eventsRes = await fetch(`/orgs/${mObj.organization.id}/actions`);
+        if (fData.data) {
+            for (const fObj of fData.data) {
+                const eventsRes = await fetch(`/orgs/${fObj.organization.id}/actions`);
                 const eventsData = await eventsRes.json();
 
                 const org = {
-                    id: mObj.organization.id,
-                    title: mObj.organization.title,
+                    id: fObj.organization.id,
+                    title: fObj.organization.title,
                 };
 
-                for (const rObj of responsesData.data) {
+                for (const eObj of eventsData.data) {
+                    const isBookedEvent = bookedData.data.some((booked : ZetkinEvent) =>
+                        booked.id === eObj.id);
 
-                    if (booked && booked.length > 0) {
-                        const onlyBooked = booked.find((event : ZetkinEvent) => event.id !== rObj.id);
-                        if (onlyBooked) {
-                            respondEvents.push({ ...onlyBooked, organization: org });
-                            booked.shift();
-                        }
-                    }
+                    const hasEventResponse = rData.data.some((response : ZetkinEventResponse) =>
+                        response.action_id === eObj.id);
 
-                    const event = eventsData.data.find((event : ZetkinEvent) => event.id === rObj.action_id);
-                    if (event) {
-                        respondEvents.push({ ...event, organization: org });
+                    if (isBookedEvent || hasEventResponse) {
+                        respondEvents.push({
+                            ...eObj,
+                            organization: org,
+                            userBooked: isBookedEvent,
+                            userResponse: hasEventResponse,
+                        });
                     }
                 }
             }
