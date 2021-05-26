@@ -50,6 +50,8 @@ export interface ZetkinEvent {
         id: number;
         title: string;
     };
+    userBooked?: boolean;
+    userResponse?: boolean;
 }
 
 export interface ZetkinUser {
