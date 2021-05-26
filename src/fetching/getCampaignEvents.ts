@@ -8,8 +8,15 @@ export default function getCampaignEvents(
     return async () : Promise<ZetkinEvent[]> => {
         const eventsRes = await fetch(`/orgs/${orgId}/campaigns/${campId}/actions`);
         const eventsData = await eventsRes.json();
+
         const oRes = await fetch(`/orgs/${orgId}`);
         const oData = await oRes.json();
+
+        const bookedRes = await fetch('/users/me/actions');
+        const bookedData = await bookedRes.json();
+
+        const rRes = await fetch('/users/me/action_responses');
+        const rData = await rRes.json();
 
         const org = {
             id: oData.data.id,
@@ -19,7 +26,18 @@ export default function getCampaignEvents(
         const campaignEventsData : ZetkinEvent[] = [];
 
         for (const eObj of eventsData.data) {
-            campaignEventsData.push({ ...eObj, organization: org });
+            const isBookedEvent = bookedData.data.some((booked : ZetkinEvent) =>
+                booked.id === eObj.id);
+
+            const hasEventResponse = rData.data.some((response : ZetkinEventResponse) =>
+                response.action_id === eObj.id);
+
+            campaignEventsData.push({
+                ...eObj,
+                organization: org,
+                userBooked: isBookedEvent,
+                userResponse: hasEventResponse,
+            });
         }
         return campaignEventsData;
     };
