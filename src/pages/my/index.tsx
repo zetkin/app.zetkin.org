@@ -12,8 +12,6 @@ import {
 } from '@adobe/react-spectrum';
 
 import EventTabs from '../../components/EventTabs';
-import getBookedEvents from '../../fetching/getBookedEvents';
-import getEventResponses from '../../fetching/getEventResponses';
 import getUserCampaigns from '../../fetching/getUserCampaigns';
 import getUserEvents from '../../fetching/getUserEvents';
 import MyHomeLayout from '../../components/layout/MyHomeLayout';
@@ -39,8 +37,6 @@ export const getServerSideProps : GetServerSideProps = scaffold(async (context) 
 
     if (user) {
         await context.queryClient.prefetchQuery('userEvents', getUserEvents(context.apiFetch));
-        await context.queryClient.prefetchQuery('bookedEvents', getBookedEvents(context.apiFetch));
-        await context.queryClient.prefetchQuery('eventResponses', getEventResponses(context.apiFetch));
         await context.queryClient.prefetchQuery('userCampaigns', getUserCampaigns(context.apiFetch));
 
         return {

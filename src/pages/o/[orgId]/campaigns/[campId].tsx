@@ -4,10 +4,8 @@ import { Flex, Heading, Text } from '@adobe/react-spectrum';
 
 import DefaultOrgLayout from '../../../../components/layout/DefaultOrgLayout';
 import EventList from '../../../../components/EventList';
-import getBookedEvents from '../../../../fetching/getBookedEvents';
 import getCampaign from '../../../../fetching/getCampaign';
 import getCampaignEvents from '../../../../fetching/getCampaignEvents';
-import getEventResponses from '../../../../fetching/getEventResponses';
 import { PageWithLayout } from '../../../../types';
 import { scaffold } from '../../../../utils/next';
 import { useEventResponses } from '../../../../hooks';
@@ -15,17 +13,11 @@ import { useEventResponses } from '../../../../hooks';
 export const getServerSideProps : GetServerSideProps = scaffold(async (context) => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const { campId, orgId } = context.params!;
-    const { user } = context;
 
     await context.queryClient.prefetchQuery(['campaign', campId], getCampaign(orgId as string, campId as string));
     await context.queryClient.prefetchQuery(
         ['campaignEvents', campId],
         getCampaignEvents(orgId as string, campId as string, context.apiFetch));
-
-    if (user) {
-        await context.queryClient.prefetchQuery('eventResponses', getEventResponses(context.apiFetch));
-        await context.queryClient.prefetchQuery('bookedEvents', getBookedEvents(context.apiFetch));
-    }
 
     const campaignState = context.queryClient.getQueryState(['campaign', campId]);
     const campaignEvents = context.queryClient.getQueryState(['campaignEvents', campId]);

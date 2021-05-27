@@ -5,7 +5,6 @@ import { Heading, Text, View } from '@adobe/react-spectrum';
 
 import CallAssignmentList from '../../components/CallAssignmentList';
 import EventTabs from '../../components/EventTabs';
-import getBookedEvents from '../../fetching/getBookedEvents';
 import getCallAssignments from '../../fetching/getCallAssignments';
 import getRespondEvents from '../../fetching/getRespondEvents';
 import MyHomeLayout from '../../components/layout/MyHomeLayout';
@@ -31,7 +30,6 @@ export const getServerSideProps : GetServerSideProps = scaffold(async (context) 
 
     if (user) {
         await context.queryClient.prefetchQuery('respondEvents', getRespondEvents(context.apiFetch));
-        await context.queryClient.prefetchQuery('bookedEvents', getBookedEvents(context.apiFetch));
         await context.queryClient.prefetchQuery('callAssignments', getCallAssignments(context.apiFetch));
 
         return {

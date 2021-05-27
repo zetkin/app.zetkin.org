@@ -4,7 +4,6 @@ import { useQuery } from 'react-query';
 import DefaultOrgLayout from '../../../../components/layout/DefaultOrgLayout';
 import EventDetails from '../../../../components/EventDetails';
 import getEvent from '../../../../fetching/getEvent';
-import getEventResponses from '../../../../fetching/getEventResponses';
 import getOrg from '../../../../fetching/getOrg';
 import { PageWithLayout } from '../../../../types';
 import { scaffold } from '../../../../utils/next';
@@ -23,7 +22,6 @@ export const getServerSideProps: GetServerSideProps = scaffold(
     async (context) => {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const { orgId, eventId } = context.params!;
-        const { user } = context;
 
         await context.queryClient.prefetchQuery(
             ['event', eventId],
@@ -33,16 +31,6 @@ export const getServerSideProps: GetServerSideProps = scaffold(
             ['org', orgId],
             getOrg(orgId as string, context.apiFetch),
         );
-
-        if (user) {
-            await context.queryClient.prefetchQuery(
-                'eventResponses',
-                getEventResponses(context.apiFetch),
-            );
-        }
-        else {
-            null;
-        }
 
         const eventState = context.queryClient.getQueryState(['event', eventId]);
         const orgState = context.queryClient.getQueryState(['org', orgId]);
