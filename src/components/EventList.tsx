@@ -22,7 +22,7 @@ import {
 
 interface EventListProps {
     events: ZetkinEvent[] | undefined;
-    onSignup?: (eventId: number, orgId: number) => void;
+    onSignup: (eventId: number, orgId: number) => void;
     onUndoSignup: (eventId: number, orgId: number) => void;
 }
 
@@ -62,7 +62,7 @@ export default function EventList ({ events, onSignup, onUndoSignup } : EventLis
 
 interface EventListItemProps {
     event: ZetkinEvent;
-    onSignup?: (eventId: number, orgId: number) => void;
+    onSignup: (eventId: number, orgId: number) => void;
     onUndoSignup: (eventId: number, orgId: number) => void;
 }
 

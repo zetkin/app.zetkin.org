@@ -6,7 +6,7 @@ import { ZetkinEvent } from '../types/zetkin';
 
 interface EventResponseButtonProps {
     event: ZetkinEvent;
-    onSignup?: (eventId: number, orgId: number) => void;
+    onSignup: (eventId: number, orgId: number) => void;
     onUndoSignup: (eventId: number, orgId: number) => void;
 }
 
@@ -23,20 +23,6 @@ export default function EventResponseButton ({ event, onSignup, onUndoSignup } :
             </Flex>
         );
     }
-
-    //TODO: Remove when getRespondEvents and eventResponses has been refactored.
-    if (!onSignup) {
-        return (
-            <Button
-                data-testid="event-response-button"
-                marginTop="size-50"
-                onPress={ () => onUndoSignup(event.id, event.organization.id) }
-                variant="negative">
-                <Msg id="misc.eventResponseButton.actions.undoSignup" />
-            </Button>
-        );
-    }
-
     return (
         <>
             { event.userResponse ? (

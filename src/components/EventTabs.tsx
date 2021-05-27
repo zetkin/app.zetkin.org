@@ -7,7 +7,7 @@ import { ZetkinEvent } from '../types/zetkin';
 
 interface EventTabsProps {
     events: ZetkinEvent[] | undefined;
-    onSignup?: (eventId: number, orgId: number) => void;
+    onSignup: (eventId: number, orgId: number) => void;
     onUndoSignup: (eventId: number, orgId: number) => void;
 }
 
