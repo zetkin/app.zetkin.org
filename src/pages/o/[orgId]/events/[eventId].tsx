@@ -9,7 +9,7 @@ import getOrg from '../../../../fetching/getOrg';
 import { PageWithLayout } from '../../../../types';
 import { scaffold } from '../../../../utils/next';
 import { useEventResponses } from '../../../../hooks';
-import { ZetkinEvent, ZetkinOrganization } from '../../../../types/zetkin';
+import { ZetkinEvent } from '../../../../types/zetkin';
 
 const scaffoldOptions = {
     localeScope: ['misc.publicHeader', 'pages.orgEvent', 'misc.signupDialog'],
@@ -71,27 +71,19 @@ type EventPageProps = {
 const EventPage: PageWithLayout<EventPageProps> = (props) => {
     const { orgId, eventId } = props;
     const eventQuery = useQuery(['event', eventId], getEvent(orgId, eventId));
-    const orgQuery = useQuery(['org', orgId], getOrg(orgId));
-    const { eventResponses, onSignup, onUndoSignup } = useEventResponses();
+    const { onSignup, onUndoSignup } = useEventResponses();
 
     if (!eventQuery.data) {
         return null;
     }
 
     const event = eventQuery.data as ZetkinEvent;
-    const org = orgQuery.data as ZetkinOrganization;
-
-    const response = eventResponses?.find(
-        (response) => response.action_id === event.id,
-    );
 
     return (
         <EventDetails
             event={ event }
             onSignup={ onSignup }
             onUndoSignup={ onUndoSignup }
-            org={ org }
-            response={ response }
         />
     );
 };

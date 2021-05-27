@@ -23,21 +23,15 @@ import {
 import Map from './maps/Map';
 import SignupDialog from './SignupDialog';
 import { useUser } from '../hooks';
-import {
-    ZetkinEvent,
-    ZetkinEventResponse,
-    ZetkinOrganization,
-} from '../types/zetkin';
+import { ZetkinEvent } from '../types/zetkin';
 
 interface EventDetailsProps {
     event: ZetkinEvent;
-    org: ZetkinOrganization;
     onSignup: (eventId: number, orgId: number) => void;
     onUndoSignup: (eventId: number, orgId: number) => void;
-    response: ZetkinEventResponse | undefined;
 }
 
-const EventDetails = ({ event, org, onSignup, onUndoSignup, response } : EventDetailsProps) : JSX.Element => {
+const EventDetails = ({ event, onSignup, onUndoSignup } : EventDetailsProps) : JSX.Element => {
     const user = useUser();
 
     return (
@@ -64,8 +58,8 @@ const EventDetails = ({ event, org, onSignup, onUndoSignup, response } : EventDe
                 </Heading>
                 <Link>
                     <NextLink
-                        href={ `/o/${org.id}` }>
-                        <a data-testid="org-title">{ org.title }</a>
+                        href={ `/o/${event.organization.id}` }>
+                        <a data-testid="org-title">{ event.organization.title }</a>
                     </NextLink>
                 </Link>
             </Header>
@@ -73,7 +67,7 @@ const EventDetails = ({ event, org, onSignup, onUndoSignup, response } : EventDe
                 <Flag marginEnd="size-100" size="S" />
                 <Link>
                     <NextLink
-                        href={ `/o/${org.id}/campaigns/${event.campaign.id}` }>
+                        href={ `/o/${event.organization.id}/campaigns/${event.campaign.id}` }>
                         <a data-testid="campaign-title">{ event.campaign.title } </a>
                     </NextLink>
                 </Link>
@@ -118,10 +112,10 @@ const EventDetails = ({ event, org, onSignup, onUndoSignup, response } : EventDe
                 { event.info_text }
             </Text>
             <View>
-                { user ? response ? (
+                { user ? event.userResponse ? (
                     <Button
                         data-testid="event-response-button"
-                        onPress={ () => onUndoSignup(event.id, org.id) }
+                        onPress={ () => onUndoSignup(event.id, event.organization.id) }
                         variant="cta"
                         width="100%">
                         <Msg id="pages.orgEvent.actions.undoSignup" />
@@ -129,7 +123,7 @@ const EventDetails = ({ event, org, onSignup, onUndoSignup, response } : EventDe
                 ) : (
                     <Button
                         data-testid="event-response-button"
-                        onPress={ () => onSignup(event.id, org.id) }
+                        onPress={ () => onSignup(event.id, event.organization.id) }
                         variant="cta"
                         width="100%">
                         <Msg id="pages.orgEvent.actions.signup" />
