@@ -61,7 +61,7 @@ const EventsPage : PageWithLayout<EventsPageProps> = (props) => {
     const { orgId } = props;
     const eventsQuery = useQuery('events', getEvents(orgId));
 
-    const { onSignup, onUndoSignup } = useEventResponses();
+    const { onSignup, onUndoSignup } = useEventResponses('events');
 
     return (
         <Flex marginY="size-500">

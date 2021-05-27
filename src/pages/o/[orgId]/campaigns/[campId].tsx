@@ -56,7 +56,7 @@ const CampaignPage : PageWithLayout<CampaignPageProps> = (props) => {
     const campaignQuery = useQuery(['campaign', campId], getCampaign(orgId, campId));
     const campaignEventsQuery = useQuery(['campaignEvents', campId], getCampaignEvents(orgId, campId));
 
-    const { onSignup, onUndoSignup } = useEventResponses();
+    const { onSignup, onUndoSignup } = useEventResponses('campaignEvents');
 
     return (
         <Flex direction="column" marginY="size-500">

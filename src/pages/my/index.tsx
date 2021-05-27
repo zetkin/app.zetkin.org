@@ -66,7 +66,7 @@ const MyPage : PageWithLayout<MyPageProps> = (props) => {
 
     const userEvents = userEventsQuery.data;
 
-    const { onSignup, onUndoSignup } = useEventResponses();
+    const { onSignup, onUndoSignup } = useEventResponses('userEvents');
 
     if (!userEvents || userEvents.length === 0) {
         return (

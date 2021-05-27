@@ -75,7 +75,7 @@ type EventPageProps = {
 const EventPage: PageWithLayout<EventPageProps> = (props) => {
     const { orgId, eventId } = props;
     const eventQuery = useQuery(['event', eventId], getEvent(orgId, eventId));
-    const { onSignup, onUndoSignup } = useEventResponses();
+    const { onSignup, onUndoSignup } = useEventResponses('event');
 
     if (!eventQuery.data) {
         return null;
