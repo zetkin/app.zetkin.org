@@ -60,13 +60,12 @@ interface MyPageProps {
 const MyPage : PageWithLayout<MyPageProps> = (props) => {
     const { user } = props;
 
-    const bookedEventsQuery = useQuery('bookedEvents', getBookedEvents());
     const userCampaignsQuery = useQuery('userCampaigns', getUserCampaigns());
     const userEventsQuery = useQuery('userEvents', getUserEvents());
 
     const userEvents = userEventsQuery.data;
 
-    const { eventResponses, onSignup, onUndoSignup } = useEventResponses();
+    const { onSignup, onUndoSignup } = useEventResponses();
 
     if (!userEvents || userEvents.length === 0) {
         return (
@@ -90,8 +89,6 @@ const MyPage : PageWithLayout<MyPageProps> = (props) => {
                 <Msg id="pages.my.events"/>
             </Heading>
             <EventTabs
-                bookedEvents={ bookedEventsQuery.data }
-                eventResponses={ eventResponses }
                 events={ userEvents }
                 onSignup={ onSignup }
                 onUndoSignup={ onUndoSignup }

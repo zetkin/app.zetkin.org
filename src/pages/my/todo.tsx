@@ -45,7 +45,6 @@ export const getServerSideProps : GetServerSideProps = scaffold(async (context) 
 }, scaffoldOptions);
 
 const MyTodoPage : PageWithLayout = () => {
-    const bookedEventsQuery = useQuery('bookedEvents', getBookedEvents());
     const callAssignmentsQuery = useQuery('callAssignments', getCallAssignments());
 
     const { respondEvents, onUndoSignup } = useRespondEvents();
@@ -89,7 +88,6 @@ const MyTodoPage : PageWithLayout = () => {
                     <Msg id="pages.myTodo.events"/>
                 </Heading>
                 <EventTabs
-                    bookedEvents={ bookedEventsQuery.data }
                     events={ respondEvents }
                     onUndoSignup={ onUndoSignup }
                 />

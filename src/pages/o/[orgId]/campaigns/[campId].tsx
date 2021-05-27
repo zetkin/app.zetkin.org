@@ -55,9 +55,8 @@ const CampaignPage : PageWithLayout<CampaignPageProps> = (props) => {
     const { campId, orgId } = props;
     const campaignQuery = useQuery(['campaign', campId], getCampaign(orgId, campId));
     const campaignEventsQuery = useQuery(['campaignEvents', campId], getCampaignEvents(orgId, campId));
-    const bookedEventsQuery = useQuery('bookedEvents', getBookedEvents());
 
-    const { eventResponses, onSignup, onUndoSignup } = useEventResponses();
+    const { onSignup, onUndoSignup } = useEventResponses();
 
     return (
         <Flex direction="column" marginY="size-500">
@@ -68,8 +67,6 @@ const CampaignPage : PageWithLayout<CampaignPageProps> = (props) => {
                 { campaignQuery.data?.info_text }
             </Text>
             <EventList
-                bookedEvents={ bookedEventsQuery.data }
-                eventResponses={ eventResponses }
                 events={ campaignEventsQuery.data }
                 onSignup={ onSignup }
                 onUndoSignup={ onUndoSignup }

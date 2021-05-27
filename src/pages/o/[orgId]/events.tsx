@@ -59,15 +59,12 @@ type EventsPageProps = {
 const EventsPage : PageWithLayout<EventsPageProps> = (props) => {
     const { orgId } = props;
     const eventsQuery = useQuery('events', getEvents(orgId));
-    const bookedEventsQuery = useQuery('bookedEvents', getBookedEvents());
 
-    const { eventResponses, onSignup, onUndoSignup } = useEventResponses();
+    const { onSignup, onUndoSignup } = useEventResponses();
 
     return (
         <Flex marginY="size-500">
             <EventList
-                bookedEvents={ bookedEventsQuery.data }
-                eventResponses={ eventResponses }
                 events={ eventsQuery.data }
                 onSignup={ onSignup }
                 onUndoSignup={ onUndoSignup }

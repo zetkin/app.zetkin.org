@@ -18,18 +18,15 @@ import SignupDialogTrigger from './SignupDialog';
 import { useUser } from '../hooks';
 import {
     ZetkinEvent,
-    ZetkinEventResponse,
 } from '../types/zetkin';
 
 interface EventListProps {
-    bookedEvents: ZetkinEvent[] | undefined;
     events: ZetkinEvent[] | undefined;
     onSignup?: (eventId: number, orgId: number) => void;
     onUndoSignup: (eventId: number, orgId: number) => void;
-    eventResponses?: ZetkinEventResponse[];
 }
 
-export default function EventList ({ bookedEvents, eventResponses, events, onSignup, onUndoSignup } : EventListProps) : JSX.Element {
+export default function EventList ({ events, onSignup, onUndoSignup } : EventListProps) : JSX.Element {
 
     if (!events || events.length === 0) {
         return (
@@ -50,16 +47,11 @@ export default function EventList ({ bookedEvents, eventResponses, events, onSig
                 marginBottom="size-200"
                 width="100%">
                 { events?.map((event) => {
-                    const response = eventResponses?.find(response => response.action_id === event.id);
-                    const booked = bookedEvents?.some(booked => booked.id === event.id);
-
                     return (<EventListItem
                         key={ event.id }
-                        booked={ booked }
                         event={ event }
                         onSignup={ onSignup }
                         onUndoSignup={ onUndoSignup }
-                        response={ response }
                     />
                     );
                 }) }
@@ -69,14 +61,12 @@ export default function EventList ({ bookedEvents, eventResponses, events, onSig
 }
 
 interface EventListItemProps {
-    booked: boolean | undefined;
     event: ZetkinEvent;
     onSignup?: (eventId: number, orgId: number) => void;
     onUndoSignup: (eventId: number, orgId: number) => void;
-    response: ZetkinEventResponse | undefined;
 }
 
-const EventListItem = ({ booked, event, response, onSignup, onUndoSignup }: EventListItemProps): JSX.Element => {
+const EventListItem = ({ event, onSignup, onUndoSignup }: EventListItemProps): JSX.Element => {
     const user = useUser();
 
     return (
@@ -107,11 +97,9 @@ const EventListItem = ({ booked, event, response, onSignup, onUndoSignup }: Even
                 <Flex direction="column" width="size-2000">
                     { user ? (
                         <EventResponseButton
-                            booked={ booked }
                             event={ event }
                             onSignup={ onSignup }
                             onUndoSignup={ onUndoSignup }
-                            response={ response }
                         />
                     ) : <SignupDialogTrigger /> }
                     <NextLink href={ `/o/${event.organization.id}/events/${ event.id }` }>
@@ -129,16 +117,14 @@ const EventListItem = ({ booked, event, response, onSignup, onUndoSignup }: Even
 };
 
 interface EventResponseButtonProps {
-    booked: boolean | undefined;
     event: ZetkinEvent;
     onSignup?: (eventId: number, orgId: number) => void;
     onUndoSignup: (eventId: number, orgId: number) => void;
-    response: ZetkinEventResponse | undefined;
 }
 
-const EventResponseButton = ({ booked, event, onSignup, onUndoSignup, response } : EventResponseButtonProps): JSX.Element => {
+const EventResponseButton = ({ event, onSignup, onUndoSignup } : EventResponseButtonProps): JSX.Element => {
 
-    if (booked) {
+    if (event.userBooked) {
         return (
             <Flex
                 alignItems="center"
@@ -166,7 +152,7 @@ const EventResponseButton = ({ booked, event, onSignup, onUndoSignup, response }
 
     return (
         <>
-            { response ? (
+            { event.userResponse ? (
                 <Button
                     data-testid="event-response-button"
                     marginTop="size-50"

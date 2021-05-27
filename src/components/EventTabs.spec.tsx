@@ -1,24 +1,11 @@
 import EventTabs from './EventTabs';
 import { mountWithProviders } from '../utils/testing';
-import {
-    ZetkinEvent,
-    ZetkinEventResponse,
-} from '../types/zetkin';
+import { ZetkinEvent } from '../types/zetkin';
 
 describe('EventTabs', () => {
-    let dummyEventResponses : ZetkinEventResponse[];
     let dummyEvents : ZetkinEvent[];
-    let dummyBookedEvents : ZetkinEvent[];
 
     before(()=> {
-        cy.fixture('dummyEventResponses.json')
-            .then((data : {data: ZetkinEventResponse[]}) => {
-                dummyEventResponses = data.data;
-            });
-        cy.fixture('dummyBookedEvents.json')
-            .then((data : {data: ZetkinEvent[]}) => {
-                dummyBookedEvents = data.data;
-            });
         cy.fixture('dummyEvents.json')
             .then((data : {data: ZetkinEvent[]}) => {
                 dummyEvents = data.data;
@@ -44,8 +31,6 @@ describe('EventTabs', () => {
 
         mountWithProviders(
             <EventTabs
-                bookedEvents={ dummyBookedEvents }
-                eventResponses={ dummyEventResponses }
                 events={ multipleDummyEvents }
                 onSignup={ () => null  }
                 onUndoSignup={ () => null  }
@@ -64,8 +49,6 @@ describe('EventTabs', () => {
 
         mountWithProviders(
             <EventTabs
-                bookedEvents={ dummyBookedEvents }
-                eventResponses={ dummyEventResponses }
                 events={ dummyEvents }
                 onSignup={ () => null  }
                 onUndoSignup={ () => null  }

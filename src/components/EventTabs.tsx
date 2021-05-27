@@ -3,11 +3,9 @@ import { FormattedMessage as Msg } from 'react-intl';
 import { Item, Tabs } from '@react-spectrum/tabs';
 
 import EventList from './EventList';
-import { ZetkinEvent, ZetkinEventResponse } from '../types/zetkin';
+import { ZetkinEvent } from '../types/zetkin';
 
 interface EventTabsProps {
-    bookedEvents: ZetkinEvent[] | undefined;
-    eventResponses?: ZetkinEventResponse[] | undefined;
     events: ZetkinEvent[] | undefined;
     onSignup?: (eventId: number, orgId: number) => void;
     onUndoSignup: (eventId: number, orgId: number) => void;
@@ -15,8 +13,6 @@ interface EventTabsProps {
 
 const EventTabs = (
     {
-        bookedEvents,
-        eventResponses,
         events,
         onSignup,
         onUndoSignup,
@@ -59,8 +55,6 @@ const EventTabs = (
                 title={ <Msg id="misc.eventTabs.tabs.today"/> }>
                 <Content>
                     <EventList
-                        bookedEvents={ bookedEvents }
-                        eventResponses={ eventResponses }
                         events={ today }
                         onSignup={ onSignup }
                         onUndoSignup={ onUndoSignup }
@@ -77,8 +71,6 @@ const EventTabs = (
                 title={ <Msg id="misc.eventTabs.tabs.tomorrow"/> }>
                 <Content>
                     <EventList
-                        bookedEvents={ bookedEvents }
-                        eventResponses={ eventResponses }
                         events={ tomorrow }
                         onSignup={ onSignup }
                         onUndoSignup={ onUndoSignup }
@@ -95,8 +87,6 @@ const EventTabs = (
                 title={ <Msg id="misc.eventTabs.tabs.thisWeek"/> }>
                 <Content>
                     <EventList
-                        bookedEvents={ bookedEvents }
-                        eventResponses={ eventResponses }
                         events={ week }
                         onSignup={ onSignup }
                         onUndoSignup={ onUndoSignup }
@@ -113,8 +103,6 @@ const EventTabs = (
                 title={ <Msg id="misc.eventTabs.tabs.later"/> }>
                 <Content>
                     <EventList
-                        bookedEvents={ bookedEvents }
-                        eventResponses={ eventResponses }
                         events={ later }
                         onSignup={ onSignup }
                         onUndoSignup={ onUndoSignup }
