@@ -11,7 +11,7 @@ import getRespondEvents from '../../fetching/getRespondEvents';
 import MyHomeLayout from '../../components/layout/MyHomeLayout';
 import { PageWithLayout } from '../../types';
 import { scaffold } from '../../utils/next';
-import { useRespondEvents } from '../../hooks';
+import { useEventResponses } from '../../hooks';
 
 const scaffoldOptions = {
     authLevelRequired: 1,
@@ -47,10 +47,11 @@ export const getServerSideProps : GetServerSideProps = scaffold(async (context) 
 
 const MyTodoPage : PageWithLayout = () => {
     const callAssignmentsQuery = useQuery('callAssignments', getCallAssignments());
+    const respondEventsQuery = useQuery('respondEvents', getRespondEvents());
 
-    const { respondEvents, onUndoSignup } = useRespondEvents();
+    const { onUndoSignup } = useEventResponses('respondEvents');
 
-    if ((!respondEvents || respondEvents.length === 0)
+    if ((!respondEventsQuery.data || respondEventsQuery.data.length === 0)
         && (!callAssignmentsQuery.data || callAssignmentsQuery.data?.length === 0)) {
         return (
             <>
@@ -89,7 +90,7 @@ const MyTodoPage : PageWithLayout = () => {
                     <Msg id="pages.myTodo.events"/>
                 </Heading>
                 <EventTabs
-                    events={ respondEvents }
+                    events={ respondEventsQuery.data }
                     onUndoSignup={ onUndoSignup }
                 />
             </View>
