@@ -16,6 +16,7 @@ const scaffoldOptions = {
     localeScope: [
         'layout.org',
         'misc.eventList',
+        'misc.eventResponseButton',
         'misc.publicHeader',
         'misc.signupDialog',
     ],

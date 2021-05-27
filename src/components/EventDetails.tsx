@@ -4,7 +4,6 @@ import Head from 'next/head';
 import Location from '@spectrum-icons/workflow/Location';
 import NextLink from 'next/link';
 import {
-    Button,
     Divider,
     Flex,
     Header,
@@ -17,9 +16,9 @@ import {
 import {
     FormattedDate,
     FormattedTime,
-    FormattedMessage as Msg,
 } from 'react-intl';
 
+import EventResponseButton from './EventResponseButton';
 import Map from './maps/Map';
 import SignupDialog from './SignupDialog';
 import { useUser } from '../hooks';
@@ -112,22 +111,12 @@ const EventDetails = ({ event, onSignup, onUndoSignup } : EventDetailsProps) : J
                 { event.info_text }
             </Text>
             <View>
-                { user ? event.userResponse ? (
-                    <Button
-                        data-testid="event-response-button"
-                        onPress={ () => onUndoSignup(event.id, event.organization.id) }
-                        variant="cta"
-                        width="100%">
-                        <Msg id="pages.orgEvent.actions.undoSignup" />
-                    </Button>
-                ) : (
-                    <Button
-                        data-testid="event-response-button"
-                        onPress={ () => onSignup(event.id, event.organization.id) }
-                        variant="cta"
-                        width="100%">
-                        <Msg id="pages.orgEvent.actions.signup" />
-                    </Button>
+                { user ? (
+                    <EventResponseButton
+                        event={ event }
+                        onSignup={ onSignup }
+                        onUndoSignup={ onUndoSignup }
+                    />
                 ) : <SignupDialog /> }
             </View>
         </>

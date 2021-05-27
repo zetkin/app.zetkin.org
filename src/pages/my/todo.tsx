@@ -19,6 +19,7 @@ const scaffoldOptions = {
         'layout.my',
         'misc.callAssignmentList',
         'misc.eventList',
+        'misc.eventResponseButton',
         'misc.eventTabs',
         'misc.publicHeader',
         'pages.myTodo',

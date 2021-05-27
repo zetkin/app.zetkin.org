@@ -27,6 +27,7 @@ const scaffoldOptions = {
     localeScope: [
         'layout.my',
         'misc.eventList',
+        'misc.eventResponseButton',
         'misc.eventTabs',
         'misc.publicHeader',
         'pages.my',

@@ -1,4 +1,3 @@
-import Checkmark from '@spectrum-icons/workflow/Checkmark';
 import NextLink from 'next/link';
 import {
     Button,
@@ -14,6 +13,7 @@ import {
     FormattedMessage as Msg,
 } from 'react-intl';
 
+import EventResponseButton from './EventResponseButton';
 import SignupDialogTrigger from './SignupDialog';
 import { useUser } from '../hooks';
 import {
@@ -112,65 +112,6 @@ const EventListItem = ({ event, onSignup, onUndoSignup }: EventListItemProps): J
                 </Flex>
             </Flex>
             <Divider size="S" />
-        </>
-    );
-};
-
-interface EventResponseButtonProps {
-    event: ZetkinEvent;
-    onSignup?: (eventId: number, orgId: number) => void;
-    onUndoSignup: (eventId: number, orgId: number) => void;
-}
-
-const EventResponseButton = ({ event, onSignup, onUndoSignup } : EventResponseButtonProps): JSX.Element => {
-
-    if (event.userBooked) {
-        return (
-            <Flex
-                alignItems="center"
-                data-testid="booked"
-                marginTop="3px"
-                minHeight="32px">
-                <Checkmark aria-label="Inbokad" color="positive" />
-                <Msg id="misc.eventList.booked" />
-            </Flex>
-        );
-    }
-
-    //TODO: Remove when getRespondEvents and eventResponses has been refactored.
-    if (!onSignup) {
-        return (
-            <Button
-                data-testid="event-response-button"
-                marginTop="size-50"
-                onPress={ () => onUndoSignup(event.id, event.organization.id) }
-                variant="negative">
-                <Msg id="misc.eventList.undoSignup" />
-            </Button>
-        );
-    }
-
-    return (
-        <>
-            { event.userResponse ? (
-                <Button
-                    data-testid="event-response-button"
-                    marginTop="size-50"
-                    onPress={ () => onUndoSignup(event.id, event.organization.id) }
-                    variant="negative"
-                    width="100%">
-                    <Msg id="misc.eventList.undoSignup" />
-                </Button>
-            ) : (
-                <Button
-                    data-testid="event-response-button"
-                    marginTop="size-50"
-                    onPress={ () => onSignup(event.id, event.organization.id) }
-                    variant="primary"
-                    width="100%">
-                    <Msg id="misc.eventList.signup" />
-                </Button>
-            ) }
         </>
     );
 };

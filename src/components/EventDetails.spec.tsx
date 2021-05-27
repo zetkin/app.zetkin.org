@@ -98,7 +98,7 @@ describe('EventDetails', () => {
             </UserContext.Provider>,
         );
 
-        cy.findByText('pages.orgEvent.actions.signup')
+        cy.findByText('misc.eventResponseButton.actions.signup')
             .eq(0)
             .click()
             .then(() => {
@@ -123,7 +123,7 @@ describe('EventDetails', () => {
             </UserContext.Provider>,
         );
 
-        cy.findByText('pages.orgEvent.actions.undoSignup')
+        cy.findByText('misc.eventResponseButton.actions.undoSignup')
             .eq(0)
             .click()
             .then(() => {
@@ -132,6 +132,22 @@ describe('EventDetails', () => {
                     dummyEvent.organization.id,
                 );
             });
+    });
+
+    it('contains an indicator that the user has been booked', () => {
+        dummyEvent.userBooked = true;
+
+        mountWithProviders(
+            <UserContext.Provider value={ dummyUser }>
+                <EventDetails
+                    event={ dummyEvent }
+                    onSignup={ () => null }
+                    onUndoSignup={ () => null }
+                />
+            </UserContext.Provider>,
+        );
+
+        cy.contains('misc.eventResponseButton.booked');
     });
 
     it('contains a sign-up button for the event when not logged in', () => {

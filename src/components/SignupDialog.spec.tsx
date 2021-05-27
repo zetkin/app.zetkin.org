@@ -10,7 +10,7 @@ describe('SignupDialog', () => {
         cy.get('[data-test="login-button"]').should('not.exist');
         cy.get('[data-test="close-button"]').should('not.exist');
 
-        cy.findByText('pages.orgEvent.actions.signup')
+        cy.findByText('misc.eventResponseButton.actions.signup')
             .click()
             .then(() => {
                 cy.get('[data-test="register-button"]').should('be.visible');
@@ -23,7 +23,7 @@ describe('SignupDialog', () => {
         mountWithProviders(
             <SignupDialogTrigger/>,
         );
-        cy.findByText('pages.orgEvent.actions.signup')
+        cy.findByText('misc.eventResponseButton.actions.signup')
             .click()
             .then(() => {
                 cy.get('[data-test="close-button"]').should('be.visible')

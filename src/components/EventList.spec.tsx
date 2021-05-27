@@ -64,7 +64,7 @@ describe('EventList', () => {
             </UserContext.Provider>,
         );
 
-        cy.findByText('misc.eventList.signup')
+        cy.findByText('misc.eventResponseButton.actions.signup')
             .click()
             .then(() => {
                 expect(spyOnSignup).to.be.calledOnce;
@@ -135,6 +135,6 @@ describe('EventList', () => {
             </UserContext.Provider>,
         );
 
-        cy.contains('misc.eventList.booked');
+        cy.contains('misc.eventResponseButton.booked');
     });
 });
