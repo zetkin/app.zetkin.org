@@ -1,15 +1,10 @@
 import EventList from './EventList';
 import { mountWithProviders } from '../utils/testing';
 import { UserContext } from '../hooks';
-import {
-    ZetkinEvent,
-    ZetkinEventResponse,
-} from '../types/zetkin';
+import { ZetkinEvent } from '../types/zetkin';
 
 describe('EventList', () => {
     let dummyEvents : ZetkinEvent[];
-    let dummyEventResponses : ZetkinEventResponse[];
-    let dummyBookedEvents : ZetkinEvent[];
     const dummyUser = {
         first_name: 'Firstname',
         id: 100,
@@ -22,21 +17,11 @@ describe('EventList', () => {
             .then((data : {data: ZetkinEvent[]}) => {
                 dummyEvents = data.data;
             });
-        cy.fixture('dummyEventResponses.json')
-            .then((data : {data: ZetkinEventResponse[]}) => {
-                dummyEventResponses = data.data;
-            });
-        cy.fixture('dummyBookedEvents.json')
-            .then((data : {data: ZetkinEvent[]}) => {
-                dummyBookedEvents = data.data;
-            });
     });
 
     it('contains data for each event', () => {
         mountWithProviders(
             <EventList
-                bookedEvents={ dummyBookedEvents }
-                eventResponses={ dummyEventResponses }
                 events={ dummyEvents }
                 onSignup={ () => null }
                 onUndoSignup={ () => null }
@@ -56,8 +41,6 @@ describe('EventList', () => {
 
         mountWithProviders(
             <EventList
-                bookedEvents={ dummyBookedEvents }
-                eventResponses={ dummyEventResponses }
                 events={ dummyEvents }
                 onSignup={ () => null }
                 onUndoSignup={ () => null }
@@ -74,7 +57,6 @@ describe('EventList', () => {
         mountWithProviders(
             <UserContext.Provider value={ dummyUser }>
                 <EventList
-                    bookedEvents={ undefined }
                     events={ dummyEvents }
                     onSignup={ spyOnSignup }
                     onUndoSignup={ () => null }
@@ -82,7 +64,7 @@ describe('EventList', () => {
             </UserContext.Provider>,
         );
 
-        cy.findByText('misc.eventList.signup')
+        cy.findByText('misc.eventResponseButton.actions.signup')
             .click()
             .then(() => {
                 expect(spyOnSignup).to.be.calledOnce;
@@ -93,8 +75,6 @@ describe('EventList', () => {
         mountWithProviders(
             <UserContext.Provider value={ null }>
                 <EventList
-                    bookedEvents={ undefined }
-                    eventResponses={ dummyEventResponses }
                     events={ dummyEvents }
                     onSignup={ () => null }
                     onUndoSignup={ () => null }
@@ -109,8 +89,6 @@ describe('EventList', () => {
     it('contains a button for more info on each event', () => {
         mountWithProviders(
             <EventList
-                bookedEvents={ dummyBookedEvents }
-                eventResponses={ dummyEventResponses }
                 events={ dummyEvents }
                 onSignup={ () => null  }
                 onUndoSignup={ () => null  }
@@ -123,8 +101,6 @@ describe('EventList', () => {
     it('shows a placeholder when the list is empty', () => {
         mountWithProviders(
             <EventList
-                bookedEvents={ dummyBookedEvents }
-                eventResponses={ dummyEventResponses }
                 events={ [] }
                 onSignup={ () => null  }
                 onUndoSignup={ () => null  }
@@ -137,8 +113,6 @@ describe('EventList', () => {
     it('shows a placeholder when the list is undefined', () => {
         mountWithProviders(
             <EventList
-                bookedEvents={ dummyBookedEvents }
-                eventResponses={ dummyEventResponses }
                 events={ undefined }
                 onSignup={ () => null  }
                 onUndoSignup={ () => null  }
@@ -149,11 +123,11 @@ describe('EventList', () => {
     });
 
     it('contains a booked event', () => {
+        dummyEvents[0].userBooked = true;
+
         mountWithProviders(
             <UserContext.Provider value={ dummyUser }>
                 <EventList
-                    bookedEvents={ dummyBookedEvents }
-                    eventResponses={ dummyEventResponses }
                     events={ dummyEvents }
                     onSignup={ () => null  }
                     onUndoSignup={ () => null  }
@@ -161,6 +135,6 @@ describe('EventList', () => {
             </UserContext.Provider>,
         );
 
-        cy.contains('misc.eventList.booked');
+        cy.contains('misc.eventResponseButton.booked');
     });
 });

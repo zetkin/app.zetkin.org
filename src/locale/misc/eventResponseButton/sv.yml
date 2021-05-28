@@ -1,0 +1,4 @@
+actions:
+  signup: Anmälan
+  undoSignup: Ångra anmälan
+booked: Bokad

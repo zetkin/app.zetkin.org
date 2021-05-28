@@ -1,16 +1,10 @@
 import EventDetails from './EventDetails';
 import { mountWithProviders } from '../utils/testing';
 import { UserContext } from '../hooks';
-import {
-    ZetkinEvent,
-    ZetkinEventResponse,
-    ZetkinOrganization,
-} from '../types/zetkin';
+import { ZetkinEvent } from '../types/zetkin';
 
 describe('EventDetails', () => {
-    let dummyOrg : ZetkinOrganization;
     let dummyEvent : ZetkinEvent;
-    let dummyEventResponse : ZetkinEventResponse | undefined;
     const dummyUser = {
         first_name: 'Firstname',
         id: 100,
@@ -19,17 +13,9 @@ describe('EventDetails', () => {
     };
 
     beforeEach(()=> {
-        cy.fixture('dummyOrg.json')
-            .then((data : ZetkinOrganization) => {
-                dummyOrg = data;
-            });
         cy.fixture('dummyEvents.json')
             .then((data : {data: ZetkinEvent[]}) => {
                 dummyEvent = data.data[0];
-            });
-        cy.fixture('dummyEventResponses.json')
-            .then((data : {data: ZetkinEventResponse[]}) => {
-                dummyEventResponse = data.data[0];
             });
     });
 
@@ -39,8 +25,6 @@ describe('EventDetails', () => {
                 event={ dummyEvent }
                 onSignup={ () => null }
                 onUndoSignup={ () => null }
-                org={ dummyOrg }
-                response={ dummyEventResponse }
             />,
         );
         cy.get('[data-testid="event-title"]').should('be.visible');
@@ -59,8 +43,6 @@ describe('EventDetails', () => {
                 event={ dummyEvent }
                 onSignup={ () => null }
                 onUndoSignup={ () => null }
-                org={ dummyOrg }
-                response={ dummyEventResponse }
             />,
         );
         cy.get('[data-testid="info-text"]').should('not.be.visible');
@@ -73,8 +55,6 @@ describe('EventDetails', () => {
                 event={ dummyEvent }
                 onSignup={ () => null }
                 onUndoSignup={ () => null }
-                org={ dummyOrg }
-                response={ dummyEventResponse }
             />,
         );
         cy.get('[data-testid="event-title"]')
@@ -88,12 +68,10 @@ describe('EventDetails', () => {
                 event={ dummyEvent }
                 onSignup={ () => null }
                 onUndoSignup={ () => null }
-                org={ dummyOrg }
-                response={ dummyEventResponse }
             />,
         );
         cy.get('[data-testid="org-title"]')
-            .should('have.attr', 'href', `/o/${dummyOrg.id}`);
+            .should('have.attr', 'href', `/o/${dummyEvent.organization.id}`);
     });
 
     it('contains a link back to the campaign page', () => {
@@ -102,12 +80,10 @@ describe('EventDetails', () => {
                 event={ dummyEvent }
                 onSignup={ () => null }
                 onUndoSignup={ () => null }
-                org={ dummyOrg }
-                response={ dummyEventResponse }
             />,
         );
         cy.get('[data-testid="campaign-title"]')
-            .should('have.attr', 'href', `/o/${dummyOrg.id}/campaigns/${dummyEvent.campaign.id}`);
+            .should('have.attr', 'href', `/o/${dummyEvent.organization.id}/campaigns/${dummyEvent.campaign.id}`);
     });
 
     it('contains a sign-up button for the event', () => {
@@ -118,22 +94,24 @@ describe('EventDetails', () => {
                     event={ dummyEvent }
                     onSignup={ spyOnSignup }
                     onUndoSignup={ () => null }
-                    org={ dummyOrg }
-                    response={ undefined }
                 />
             </UserContext.Provider>,
         );
 
-        cy.findByText('pages.orgEvent.actions.signup')
+        cy.findByText('misc.eventResponseButton.actions.signup')
             .eq(0)
             .click()
             .then(() => {
-                expect(spyOnSignup).to.be.calledOnceWith(dummyEvent.id, dummyOrg.id);
+                expect(spyOnSignup).to.be.calledOnceWith(
+                    dummyEvent.id,
+                    dummyEvent.organization.id,
+                );
             });
     });
 
     it('contains a cancel sign-up button for the event if already signed up', () => {
         const spyOnUndoSignup = cy.spy();
+        dummyEvent.userResponse = true;
 
         mountWithProviders(
             <UserContext.Provider value={ dummyUser }>
@@ -141,18 +119,35 @@ describe('EventDetails', () => {
                     event={ dummyEvent }
                     onSignup={ () => null }
                     onUndoSignup={ spyOnUndoSignup }
-                    org={ dummyOrg }
-                    response={ dummyEventResponse }
                 />
             </UserContext.Provider>,
         );
 
-        cy.findByText('pages.orgEvent.actions.undoSignup')
+        cy.findByText('misc.eventResponseButton.actions.undoSignup')
             .eq(0)
             .click()
             .then(() => {
-                expect(spyOnUndoSignup).to.be.calledOnceWith(dummyEvent.id, dummyOrg.id);
+                expect(spyOnUndoSignup).to.be.calledOnceWith(
+                    dummyEvent.id,
+                    dummyEvent.organization.id,
+                );
             });
+    });
+
+    it('contains an indicator that the user has been booked', () => {
+        dummyEvent.userBooked = true;
+
+        mountWithProviders(
+            <UserContext.Provider value={ dummyUser }>
+                <EventDetails
+                    event={ dummyEvent }
+                    onSignup={ () => null }
+                    onUndoSignup={ () => null }
+                />
+            </UserContext.Provider>,
+        );
+
+        cy.contains('misc.eventResponseButton.booked');
     });
 
     it('contains a sign-up button for the event when not logged in', () => {
@@ -162,8 +157,6 @@ describe('EventDetails', () => {
                     event={ dummyEvent }
                     onSignup={ () => null }
                     onUndoSignup={ () => null }
-                    org={ dummyOrg }
-                    response={ undefined }
                 />
             </UserContext.Provider>,
         );
