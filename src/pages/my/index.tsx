@@ -12,8 +12,8 @@ import {
 } from '@adobe/react-spectrum';
 
 import EventTabs from '../../components/EventTabs';
+import getEventsFromFollowedOrgs from '../../fetching/getEventsFromFollowedOrgs';
 import getUserCampaigns from '../../fetching/getUserCampaigns';
-import getUserEvents from '../../fetching/getUserEvents';
 import MyHomeLayout from '../../components/layout/MyHomeLayout';
 import { PageWithLayout } from '../../types';
 import { scaffold } from '../../utils/next';
@@ -36,7 +36,7 @@ export const getServerSideProps : GetServerSideProps = scaffold(async (context) 
     const { user } = context;
 
     if (user) {
-        await context.queryClient.prefetchQuery('userEvents', getUserEvents(context.apiFetch));
+        await context.queryClient.prefetchQuery('eventsFromFollowedOrgs', getEventsFromFollowedOrgs(context.apiFetch));
         await context.queryClient.prefetchQuery('userCampaigns', getUserCampaigns(context.apiFetch));
 
         return {
@@ -58,13 +58,13 @@ const MyPage : PageWithLayout<MyPageProps> = (props) => {
     const { user } = props;
 
     const userCampaignsQuery = useQuery('userCampaigns', getUserCampaigns());
-    const userEventsQuery = useQuery('userEvents', getUserEvents());
+    const eventsFromFollowedOrgsQuery = useQuery('eventsFromFollowedOrgs', getEventsFromFollowedOrgs());
 
-    const userEvents = userEventsQuery.data;
+    const eventsFromFollowedOrgs = eventsFromFollowedOrgsQuery.data;
 
-    const { onSignup, onUndoSignup } = useEventResponses('userEvents');
+    const { onSignup, onUndoSignup } = useEventResponses('eventsFromFollowedOrgs');
 
-    if (!userEvents || userEvents.length === 0) {
+    if (!eventsFromFollowedOrgs || eventsFromFollowedOrgs.length === 0) {
         return (
             <>
                 <Heading level={ 1 }>
@@ -86,7 +86,7 @@ const MyPage : PageWithLayout<MyPageProps> = (props) => {
                 <Msg id="pages.my.events"/>
             </Heading>
             <EventTabs
-                events={ userEvents }
+                events={ eventsFromFollowedOrgs }
                 onSignup={ onSignup }
                 onUndoSignup={ onUndoSignup }
             />

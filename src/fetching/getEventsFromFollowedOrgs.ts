@@ -1,18 +1,18 @@
 import { defaultFetch } from '.';
 import { ZetkinEvent, ZetkinEventResponse } from '../types/zetkin';
 
-export default function getRespondEvents(fetch = defaultFetch) {
+export default function getEventsFromFollowedOrgs(fetch = defaultFetch) {
     return async () : Promise<ZetkinEvent[]> => {
         const fRes = await fetch(`/users/me/following`);
         const fData = await fRes.json();
 
-        const rRes = await fetch('/users/me/action_responses');
-        const rData = await rRes.json();
-
         const bookedRes = await fetch('/users/me/actions');
         const bookedData = await bookedRes.json();
 
-        const respondEvents = [];
+        const rRes = await fetch('/users/me/action_responses');
+        const rData = await rRes.json();
+
+        const eventsFromFollowedOrgsData = [];
 
         for (const fObj of fData.data) {
             const eventsRes = await fetch(`/orgs/${fObj.organization.id}/actions`);
@@ -30,17 +30,15 @@ export default function getRespondEvents(fetch = defaultFetch) {
                 const hasEventResponse = rData.data.some((response : ZetkinEventResponse) =>
                     response.action_id === eObj.id);
 
-                if (isBookedEvent || hasEventResponse) {
-                    respondEvents.push({
-                        ...eObj,
-                        organization: org,
-                        userBooked: isBookedEvent,
-                        userResponse: hasEventResponse,
-                    });
-                }
+                eventsFromFollowedOrgsData.push({
+                    ...eObj,
+                    organization: org,
+                    userBooked: isBookedEvent,
+                    userResponse: hasEventResponse,
+                });
             }
         }
 
-        return respondEvents;
+        return eventsFromFollowedOrgsData;
     };
 }

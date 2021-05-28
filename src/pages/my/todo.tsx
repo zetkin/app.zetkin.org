@@ -6,7 +6,7 @@ import { Heading, Text, View } from '@adobe/react-spectrum';
 import CallAssignmentList from '../../components/CallAssignmentList';
 import EventTabs from '../../components/EventTabs';
 import getCallAssignments from '../../fetching/getCallAssignments';
-import getRespondEvents from '../../fetching/getRespondEvents';
+import getUserEvents from '../../fetching/getUserEvents';
 import MyHomeLayout from '../../components/layout/MyHomeLayout';
 import { PageWithLayout } from '../../types';
 import { scaffold } from '../../utils/next';
@@ -29,7 +29,7 @@ export const getServerSideProps : GetServerSideProps = scaffold(async (context) 
     const { user } = context;
 
     if (user) {
-        await context.queryClient.prefetchQuery('respondEvents', getRespondEvents(context.apiFetch));
+        await context.queryClient.prefetchQuery('userEvents', getUserEvents(context.apiFetch));
         await context.queryClient.prefetchQuery('callAssignments', getCallAssignments(context.apiFetch));
 
         return {
@@ -45,11 +45,11 @@ export const getServerSideProps : GetServerSideProps = scaffold(async (context) 
 
 const MyTodoPage : PageWithLayout = () => {
     const callAssignmentsQuery = useQuery('callAssignments', getCallAssignments());
-    const respondEventsQuery = useQuery('respondEvents', getRespondEvents());
+    const userEventsQuery = useQuery('userEvents', getUserEvents());
 
-    const { onSignup, onUndoSignup } = useEventResponses('respondEvents');
+    const { onSignup, onUndoSignup } = useEventResponses('userEvents');
 
-    if ((!respondEventsQuery.data || respondEventsQuery.data.length === 0)
+    if ((!userEventsQuery.data || userEventsQuery.data.length === 0)
         && (!callAssignmentsQuery.data || callAssignmentsQuery.data?.length === 0)) {
         return (
             <>
@@ -88,7 +88,7 @@ const MyTodoPage : PageWithLayout = () => {
                     <Msg id="pages.myTodo.events"/>
                 </Heading>
                 <EventTabs
-                    events={ respondEventsQuery.data }
+                    events={ userEventsQuery.data }
                     onSignup={ onSignup }
                     onUndoSignup={ onUndoSignup }
                 />

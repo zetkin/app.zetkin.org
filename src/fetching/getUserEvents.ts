@@ -6,11 +6,11 @@ export default function getUserEvents(fetch = defaultFetch) {
         const fRes = await fetch(`/users/me/following`);
         const fData = await fRes.json();
 
-        const bookedRes = await fetch('/users/me/actions');
-        const bookedData = await bookedRes.json();
-
         const rRes = await fetch('/users/me/action_responses');
         const rData = await rRes.json();
+
+        const bookedRes = await fetch('/users/me/actions');
+        const bookedData = await bookedRes.json();
 
         const userEventsData = [];
 
@@ -30,12 +30,14 @@ export default function getUserEvents(fetch = defaultFetch) {
                 const hasEventResponse = rData.data.some((response : ZetkinEventResponse) =>
                     response.action_id === eObj.id);
 
-                userEventsData.push({
-                    ...eObj,
-                    organization: org,
-                    userBooked: isBookedEvent,
-                    userResponse: hasEventResponse,
-                });
+                if (isBookedEvent || hasEventResponse) {
+                    userEventsData.push({
+                        ...eObj,
+                        organization: org,
+                        userBooked: isBookedEvent,
+                        userResponse: hasEventResponse,
+                    });
+                }
             }
         }
 
