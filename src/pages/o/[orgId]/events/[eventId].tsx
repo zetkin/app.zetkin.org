@@ -4,7 +4,6 @@ import { useQuery } from 'react-query';
 import DefaultOrgLayout from '../../../../components/layout/DefaultOrgLayout';
 import EventDetails from '../../../../components/EventDetails';
 import getEvent from '../../../../fetching/getEvent';
-import getOrg from '../../../../fetching/getOrg';
 import { PageWithLayout } from '../../../../types';
 import { scaffold } from '../../../../utils/next';
 import { useEventResponses } from '../../../../hooks';
@@ -27,18 +26,10 @@ export const getServerSideProps: GetServerSideProps = scaffold(
             ['event', eventId],
             getEvent(orgId as string, eventId as string, context.apiFetch),
         );
-        await context.queryClient.prefetchQuery(
-            ['org', orgId],
-            getOrg(orgId as string, context.apiFetch),
-        );
 
         const eventState = context.queryClient.getQueryState(['event', eventId]);
-        const orgState = context.queryClient.getQueryState(['org', orgId]);
 
-        if (
-            eventState?.status === 'success' &&
-            orgState?.status === 'success'
-        ) {
+        if (eventState?.status === 'success') {
             return {
                 props: {
                     eventId,
