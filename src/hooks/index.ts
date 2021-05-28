@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useState } from 'react';
+import React, { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 
 import deleteEventResponse from '../fetching/deleteEventResponse';
@@ -8,24 +8,29 @@ import getRespondEvents from '../fetching/getRespondEvents';
 import getUserFollowing from '../fetching/getUserFollowing';
 import putEventResponse from '../fetching/putEventResponse';
 import putUserFollowing from '../fetching/putUserFollowing';
-import { ZetkinEvent, ZetkinEventResponse, ZetkinMembership, ZetkinUser } from '../types/zetkin';
+import {
+    ZetkinEvent,
+    ZetkinEventResponse,
+    ZetkinMembership,
+    ZetkinUser,
+} from '../types/zetkin';
 
 export const UserContext = React.createContext<ZetkinUser | null>(null);
 
-export const useUser = () : ZetkinUser | null => {
+export const useUser = (): ZetkinUser | null => {
     return React.useContext(UserContext);
 };
 
-type OnSignup = (eventId : number, orgId : number) => void;
-type OnUndoSignup = (eventId : number, orgId : number) => void;
+type OnSignup = (eventId: number, orgId: number) => void;
+type OnUndoSignup = (eventId: number, orgId: number) => void;
 
 type EventResponses = {
     eventResponses: ZetkinEventResponse[] | undefined;
     onSignup: OnSignup;
     onUndoSignup: OnUndoSignup;
-}
+};
 
-export const useEventResponses = () : EventResponses => {
+export const useEventResponses = (): EventResponses => {
     const responseQuery = useQuery('eventResponses', getEventResponses());
     const eventResponses = responseQuery.data;
 
@@ -43,11 +48,11 @@ export const useEventResponses = () : EventResponses => {
         },
     });
 
-    function onSignup (eventId : number, orgId : number) {
+    function onSignup(eventId: number, orgId: number) {
         addFunc.mutate({ eventId, orgId });
     }
 
-    function onUndoSignup (eventId : number, orgId : number) {
+    function onUndoSignup(eventId: number, orgId: number) {
         removeFunc.mutate({ eventId, orgId });
     }
 
@@ -57,9 +62,9 @@ export const useEventResponses = () : EventResponses => {
 type RespondEvents = {
     onUndoSignup: OnUndoSignup;
     respondEvents: ZetkinEvent[] | undefined;
-}
+};
 
-export const useRespondEvents = () : RespondEvents => {
+export const useRespondEvents = (): RespondEvents => {
     const respondEventsQuery = useQuery('respondEvents', getRespondEvents());
     const respondEvents = respondEventsQuery.data;
 
@@ -71,23 +76,23 @@ export const useRespondEvents = () : RespondEvents => {
         },
     });
 
-    function onUndoSignup (eventId : number, orgId : number) {
+    function onUndoSignup(eventId: number, orgId: number) {
         removeFunc.mutate({ eventId, orgId });
     }
 
     return { onUndoSignup, respondEvents };
 };
 
-type OnFollow = (orgId : number) => void;
-type OnUnfollow = (orgId : number) => void;
+type OnFollow = (orgId: number) => void;
+type OnUnfollow = (orgId: number) => void;
 
 type UserFollowing = {
     following: ZetkinMembership[] | undefined;
     onFollow: OnFollow;
     onUnfollow: OnUnfollow;
-}
+};
 
-export const useUserFollowing = () : UserFollowing => {
+export const useUserFollowing = (): UserFollowing => {
     const followingQuery = useQuery('following', getUserFollowing());
     const following = followingQuery.data;
 
@@ -105,18 +110,23 @@ export const useUserFollowing = () : UserFollowing => {
         },
     });
 
-    function onUnfollow (orgId : number) {
+    function onUnfollow(orgId: number) {
         removeFunc.mutate(orgId);
     }
 
-    function onFollow (orgId : number) {
+    function onFollow(orgId: number) {
         addFunc.mutate(orgId);
     }
 
     return { following, onFollow, onUnfollow };
 };
 
-export const useFocusDate = (): [Date, Dispatch<SetStateAction<Date>>] => {
+type focusDateState = {
+    focusDate: Date;
+    setFocusDate: (date: Date) => void;
+};
+
+export const useFocusDate = (): focusDateState => {
     const [focusDate, setFocusDate] = useState(new Date(Date.now()));
-    return  [focusDate, setFocusDate];
+    return { focusDate, setFocusDate };
 };

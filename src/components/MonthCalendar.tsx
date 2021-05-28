@@ -79,7 +79,7 @@ const MonthCalendar = ({ events, onFocusDate, focusDate }: MonthCalendarProps): 
             <View position="absolute" right="15rem" top="-2.6rem">
                 <Flex alignItems="center">
                     <ActionButton data-testid="back-button" onPress={
-                        () => onFocusDate(new Date(new Date(focusDate).setDate(focusDate.getDate() - 30)))
+                        () => onFocusDate(new Date(focusDate.getFullYear(), focusDate.getMonth() - 1, focusDate.getDate()))
                     }>
                         <Msg id="misc.calendar.prev" />
                     </ActionButton>
@@ -91,7 +91,7 @@ const MonthCalendar = ({ events, onFocusDate, focusDate }: MonthCalendarProps): 
                         />
                     </View>
                     <ActionButton data-testid="fwd-button" onPress={
-                        () => onFocusDate(new Date(new Date(focusDate).setDate(focusDate.getDate() + 30)))
+                        () => onFocusDate(new Date(focusDate.getFullYear(), focusDate.getMonth() + 1, focusDate.getDate()))
                     }>
                         <Msg id="misc.calendar.next" />
                     </ActionButton>

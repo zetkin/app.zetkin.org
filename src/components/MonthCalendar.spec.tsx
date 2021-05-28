@@ -197,7 +197,7 @@ describe('MonthCalendar', () => {
             .then(() => {
                 const date = new Date(2021, 3, 10);
                 expect(spyOnFocusDate).to.be.calledOnce;
-                expect(spyOnFocusDate.args[0][0] instanceof Date).to.be.true;
+                expect(spyOnFocusDate.args[0][0]).to.be.an.instanceof(Date);
                 expect(spyOnFocusDate.args[0][0].toString()).to.eq(date.toString());
             });
     });
@@ -211,9 +211,9 @@ describe('MonthCalendar', () => {
         cy.findByText('misc.calendar.next')
             .click({ force: true })
             .then(() => {
-                const date = new Date(2021, 5, 9);
+                const date = new Date(2021, 5, 10);
                 expect(spyOnFocusDate).to.be.calledOnce;
-                expect(spyOnFocusDate.args[0][0] instanceof Date).to.be.true;
+                expect(spyOnFocusDate.args[0][0]).to.be.an.instanceof(Date);
                 expect(spyOnFocusDate.args[0][0].toString()).to.eq(date.toString());
             });
     });

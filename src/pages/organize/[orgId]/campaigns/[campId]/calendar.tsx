@@ -60,7 +60,7 @@ const CampaignCalendarPage : PageWithLayout<OrganizeCalendarPageProps> = ({ orgI
     const events = eventsQuery.data || [];
     const intl = useIntl();
     const [calendarView, setCalendarView] = useState('week');
-    const [focusDate, setFocusDate] = useFocusDate();
+    const { focusDate, setFocusDate } = useFocusDate();
 
     const items = [
         { id: 'week', name: intl.formatMessage({ id: 'misc.calendar.week' }) },
