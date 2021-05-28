@@ -23,6 +23,8 @@ const PublicHeader = ({ user, org, userMemberships } : PublicHeaderProps) : JSX.
         membership => membership.role) || [];
 
     const canOrganize = userMemberships.length > 0;
+    const currentOrg = userMemberships.find(membership => membership.organization.id == org?.id);
+    const organizeUrl = currentOrg ? `/organize/${ currentOrg?.organization.id }` : '/organize';
 
     return (
         <Header margin="size-200">
@@ -75,7 +77,7 @@ const PublicHeader = ({ user, org, userMemberships } : PublicHeaderProps) : JSX.
                         </View>
                         <>
                             { canOrganize && (
-                                <NextLink href={ `/organize/${userMemberships[0].organization.id}` }>
+                                <NextLink href={ `${organizeUrl}` }>
                                     <a data-testid="organize-link">
                                         <Button data-testid="organize-button" variant="cta">
                                             <Msg id="misc.publicHeader.organize"/>
