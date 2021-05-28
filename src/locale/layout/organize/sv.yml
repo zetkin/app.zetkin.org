@@ -10,6 +10,7 @@ search:
     placeholder: Skriv för att söka
     drawerLabel: Tryck Enter för att visa fullständiga resultat.
 campaigns:
+    allCampaigns: Alla projekt och kampanjer
     summary: Översikt
     calendar: Kalendar
     insights: Insikter
