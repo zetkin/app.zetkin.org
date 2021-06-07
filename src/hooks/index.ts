@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 
 import deleteEventResponse from '../fetching/deleteEventResponse';
@@ -10,17 +10,17 @@ import { ZetkinMembership, ZetkinUser } from '../types/zetkin';
 
 export const UserContext = React.createContext<ZetkinUser | null>(null);
 
-export const useUser = () : ZetkinUser | null => {
+export const useUser = (): ZetkinUser | null => {
     return React.useContext(UserContext);
 };
 
-type OnSignup = (eventId : number, orgId : number) => void;
-type OnUndoSignup = (eventId : number, orgId : number) => void;
+type OnSignup = (eventId: number, orgId: number) => void;
+type OnUndoSignup = (eventId: number, orgId: number) => void;
 
 type EventResponses = {
     onSignup: OnSignup;
     onUndoSignup: OnUndoSignup;
-}
+};
 
 export const useEventResponses = (key : string) : EventResponses => {
 
@@ -38,27 +38,27 @@ export const useEventResponses = (key : string) : EventResponses => {
         },
     });
 
-    function onSignup (eventId : number, orgId : number) {
+    function onSignup(eventId: number, orgId: number) {
         addFunc.mutate({ eventId, orgId });
     }
 
-    function onUndoSignup (eventId : number, orgId : number) {
+    function onUndoSignup(eventId: number, orgId: number) {
         removeFunc.mutate({ eventId, orgId });
     }
 
     return { onSignup, onUndoSignup };
 };
 
-type OnFollow = (orgId : number) => void;
-type OnUnfollow = (orgId : number) => void;
+type OnFollow = (orgId: number) => void;
+type OnUnfollow = (orgId: number) => void;
 
 type UserFollowing = {
     following: ZetkinMembership[] | undefined;
     onFollow: OnFollow;
     onUnfollow: OnUnfollow;
-}
+};
 
-export const useUserFollowing = () : UserFollowing => {
+export const useUserFollowing = (): UserFollowing => {
     const followingQuery = useQuery('following', getUserFollowing());
     const following = followingQuery.data;
 
@@ -76,13 +76,23 @@ export const useUserFollowing = () : UserFollowing => {
         },
     });
 
-    function onUnfollow (orgId : number) {
+    function onUnfollow(orgId: number) {
         removeFunc.mutate(orgId);
     }
 
-    function onFollow (orgId : number) {
+    function onFollow(orgId: number) {
         addFunc.mutate(orgId);
     }
 
     return { following, onFollow, onUnfollow };
+};
+
+type focusDateState = {
+    focusDate: Date;
+    setFocusDate: (date: Date) => void;
+};
+
+export const useFocusDate = (): focusDateState => {
+    const [focusDate, setFocusDate] = useState(new Date(Date.now()));
+    return { focusDate, setFocusDate };
 };
