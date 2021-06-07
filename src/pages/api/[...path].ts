@@ -28,7 +28,7 @@ type NextApiRequestWithSession = NextApiRequest & {
 
 export default async function handle(req : NextApiRequestWithSession, res : NextApiResponse) : Promise<void> {
     const path = req.query.path as string[];
-    const pathStr = path.join('/');
+    const pathStr = req.url?.replace(/^\/api/, '');
 
     if (path[path.length-1] === 'avatar') {
         const protocol = stringToBool(process.env.ZETKIN_USE_TLS)? 'https' : 'http';
