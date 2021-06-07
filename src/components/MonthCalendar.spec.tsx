@@ -251,6 +251,13 @@ describe('MonthCalendar', () => {
             'id': 27,
             'start_time': '2021-04-27T15:37:00+00:00',
         };
+        dummyEvents[5] = {
+            ...dummyEvents[0],
+            'campaign': { 'id': 942,'title': 'test-campaign' },
+            'end_time': '2021-04-29T17:37:00+00:00',
+            'id': 30,
+            'start_time': '2021-04-29T15:37:00+00:00',
+        };
         mountWithProviders(
             <div style={{
                 bottom: 0,

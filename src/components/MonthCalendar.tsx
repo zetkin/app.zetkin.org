@@ -44,7 +44,7 @@ const MonthCalendar = ({ events, onFocusDate, focusDate }: MonthCalendarProps): 
 
     const lastCalendarDay = new Date(new Date(firstCalendarDay).setDate(firstCalendarDay.getDate() + gridItems));
 
-    const campIdsArray = Array.from(new Set(getEventsInRange(firstCalendarDay, lastCalendarDay).map(e => e.campaign.id)));
+    const campIds = Array.from(new Set(events.map(e => e.campaign.id)));
 
     const getBarPos = (currentMonth: number, campId: number) => {
 
@@ -64,16 +64,39 @@ const MonthCalendar = ({ events, onFocusDate, focusDate }: MonthCalendarProps): 
             return 0;
         };
 
-        const calendarEvents = getEventsInRange(firstCalendarDay, lastCalendarDay).filter(e => e.campaign.id === campId);
+        const campaignEvents = events.filter(e => e.campaign.id === campId)
+            .sort((a, b) => {
+                return new Date(a.start_time).getTime() - new Date(b.start_time).getTime();
+            });
 
-        if (calendarEvents.length === 0) return { height: 0, top: 0 };
+        if (campaignEvents.length === 0) return { height: 0, top: 0 };
 
-        const firstEventDate = new Date(calendarEvents[0].start_time);
-        const lastEventDate = new Date(calendarEvents[calendarEvents.length - 1].end_time);
+        const firstEventDate = new Date(campaignEvents[0].start_time);
+        const lastEventDate = new Date(campaignEvents[campaignEvents.length - 1].end_time);
 
-        const top = getGridNumber(new Date(firstEventDate)) * barUnit;
-        let height = (getGridNumber(new Date(lastEventDate)) * barUnit) - top;
-        if (height === 0) height = barUnit;
+        let bottom, top;
+        if (firstEventDate < firstCalendarDay ) {
+            top = 0;
+        }
+        else if (firstEventDate > lastCalendarDay) {
+            top = 100;
+        }
+        else {
+            top = getGridNumber(new Date(firstEventDate)) * barUnit;
+        }
+
+        if (lastEventDate > lastCalendarDay) {
+            bottom = 100;
+        }
+        else if (lastEventDate < firstCalendarDay) {
+            bottom = 0;
+        }
+        else {
+            bottom = getGridNumber(new Date(lastEventDate)) * barUnit;
+        }
+        if (bottom > 100) bottom = 100;
+
+        const height = bottom - top;
         return { height, top };
     };
 
@@ -133,7 +156,7 @@ const MonthCalendar = ({ events, onFocusDate, focusDate }: MonthCalendarProps): 
                         height: '100%',
                         marginRight: '0.5rem',
                     }}>
-                    { campIdsArray.map(campId => (
+                    { campIds.map(campId => (
                         <div key={ campId } style={{
                             height: '100%',
                             position: 'relative',
@@ -143,10 +166,9 @@ const MonthCalendar = ({ events, onFocusDate, focusDate }: MonthCalendarProps): 
                                 data-testid={ `calendar-bar-${campId}` }
                                 style={{
                                     backgroundColor: getCampColors(campId).bg,
-                                    bottom: '2%',
                                     height: `${getBarPos(month, campId).height}%`,
                                     position: 'absolute',
-                                    top: `${getBarPos(month, campId).top + 2}%`,
+                                    top: `${getBarPos(month, campId).top}%`,
                                     width: '100%',
                                 }}>
                             </div>
