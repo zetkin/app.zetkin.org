@@ -4,8 +4,8 @@ import { Flex, Heading, View } from '@adobe/react-spectrum';
 import { FunctionComponent, ReactText } from 'react';
 
 import getCampaign from '../../fetching/getCampaign';
+import OrganizeCampaignTabs from '../OrganizeCampaignTabs';
 import OrganizeLayout from './OrganizeLayout';
-import OrganizeTabs from '../../components/OrganizeTabs';
 
 interface OrganizeCampaignLayoutProps {
     campId: string;
@@ -39,7 +39,7 @@ const OrganizeCampaignLayout : FunctionComponent<OrganizeCampaignLayoutProps> = 
                 <View flexShrink={ 0 } padding="0 2rem">
                     <Heading level={ 2 }>{ campQuery.data?.title }</Heading>
                 </View>
-                <OrganizeTabs currentTab={ currentTab } onSelectTab={ onSelectTab }> { children }</OrganizeTabs>
+                <OrganizeCampaignTabs currentTab={ currentTab } onSelectTab={ onSelectTab }> { children }</OrganizeCampaignTabs>
             </Flex>
         </OrganizeLayout>
     );

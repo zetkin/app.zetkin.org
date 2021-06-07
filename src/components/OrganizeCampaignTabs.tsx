@@ -3,11 +3,11 @@ import { Content, View } from '@adobe/react-spectrum';
 import { FunctionComponent, ReactText } from 'react';
 import { Item, Tabs } from '@react-spectrum/tabs';
 
-interface OrganizeTabsProps {
+interface OrganizeCampaignTabsProps {
     currentTab?: string;
     onSelectTab: (key : ReactText) => void;
 }
-const OrganizeTabs: FunctionComponent<OrganizeTabsProps> = ({ children, currentTab, onSelectTab }) => {
+const OrganizeCampaignTabs: FunctionComponent<OrganizeCampaignTabsProps> = ({ children, currentTab, onSelectTab }) => {
     const intl = useIntl();
 
     return (
@@ -37,4 +37,4 @@ const OrganizeTabs: FunctionComponent<OrganizeTabsProps> = ({ children, currentT
     );
 };
 
-export default OrganizeTabs;
+export default OrganizeCampaignTabs;

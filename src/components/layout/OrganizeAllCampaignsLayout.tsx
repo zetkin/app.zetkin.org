@@ -3,8 +3,8 @@ import { useRouter } from 'next/router';
 import { Flex, Heading, View } from '@adobe/react-spectrum';
 import { FunctionComponent, ReactText } from 'react';
 
+import OrganizeCampaignTabs from '../OrganizeCampaignTabs';
 import OrganizeLayout from './OrganizeLayout';
-import OrganizeTabs from '../../components/OrganizeTabs';
 
 interface OrganizeAllCampaignsLayoutProps {
     orgId: string;
@@ -37,7 +37,7 @@ const OrganizeAllCampaignsLayout : FunctionComponent<OrganizeAllCampaignsLayoutP
                         <Msg id="layout.organize.campaigns.allCampaigns"/>
                     </Heading>
                 </View>
-                <OrganizeTabs currentTab={ currentTab } onSelectTab={ onSelectTab }> { children }</OrganizeTabs>
+                <OrganizeCampaignTabs currentTab={ currentTab } onSelectTab={ onSelectTab }> { children }</OrganizeCampaignTabs>
             </Flex>
         </OrganizeLayout>
     );
