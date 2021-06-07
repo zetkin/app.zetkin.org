@@ -1,3 +1,4 @@
+import randomSeed from 'random-seed';
 import { ZetkinEvent } from '../types/zetkin';
 import { ActionButton, Flex, View } from '@adobe/react-spectrum';
 import { FormattedDate, FormattedMessage as Msg } from 'react-intl';
@@ -41,7 +42,11 @@ const MonthCalendar = ({ events, onFocusDate, focusDate }: MonthCalendarProps): 
             date < end;
     };
 
-    const getBarPos = (currentMonth: number) => {
+    const lastCalendarDay = new Date(new Date(firstCalendarDay).setDate(firstCalendarDay.getDate() + gridItems));
+
+    const campIdsArray = Array.from(new Set(getEventsInRange(firstCalendarDay, lastCalendarDay).map(e => e.campaign.id)));
+
+    const getBarPos = (currentMonth: number, campId: number) => {
 
         const barUnit = 100 / gridItems;
 
@@ -59,9 +64,7 @@ const MonthCalendar = ({ events, onFocusDate, focusDate }: MonthCalendarProps): 
             return 0;
         };
 
-        const lastCalendarDay = new Date(new Date(firstCalendarDay).setDate(firstCalendarDay.getDate() + gridItems));
-
-        const calendarEvents = getEventsInRange(firstCalendarDay, lastCalendarDay);
+        const calendarEvents = getEventsInRange(firstCalendarDay, lastCalendarDay).filter(e => e.campaign.id === campId);
 
         if (calendarEvents.length === 0) return { height: 0, top: 0 };
 
@@ -69,9 +72,32 @@ const MonthCalendar = ({ events, onFocusDate, focusDate }: MonthCalendarProps): 
         const lastEventDate = new Date(calendarEvents[calendarEvents.length - 1].end_time);
 
         const top = getGridNumber(new Date(firstEventDate)) * barUnit;
-        const height = (getGridNumber(new Date(lastEventDate)) * barUnit) - top;
-
+        let height = (getGridNumber(new Date(lastEventDate)) * barUnit) - top;
+        if (height === 0) height = barUnit;
         return { height, top };
+    };
+
+    const getCampColors = (campId: number) => {
+        if (!campId) return {
+            bg: 'lightgrey',
+            fg: 'black',
+        };
+        const rand = randomSeed.create(campId.toString());
+        const bgR = rand(256);
+        const bgG = 0;
+        const bgB = rand(256);
+        let fgB = 255, fgG = 255, fgR = 255;
+
+        // Use black text on light backgrounds (when color component
+        // average is greater than 180).
+        const bgAvg = (bgR + bgG + bgB) / 3.0;
+        if (bgAvg > 180) {
+            fgR = fgG = fgB = 0;
+        }
+        return {
+            bg: `rgb(${bgR},${bgG},${bgB})`,
+            fg: `rgb(${fgR},${fgG},${fgB})`,
+        };
     };
 
     return (
@@ -103,21 +129,29 @@ const MonthCalendar = ({ events, onFocusDate, focusDate }: MonthCalendarProps): 
             }}>
                 <div
                     style={{
+                        display: 'flex',
+                        height: '100%',
                         marginRight: '0.5rem',
-                        position: 'relative',
-                        width: '1rem',
                     }}>
-                    <div
-                        data-testid="calendar-bar"
-                        style={{
-                            backgroundColor: 'lightgray',
-                            bottom: '2%',
-                            height: `${getBarPos(month).height}%`,
-                            position: 'absolute',
-                            top: `${getBarPos(month).top + 2}%`,
-                            width: '100%',
+                    { campIdsArray.map(campId => (
+                        <div key={ campId } style={{
+                            height: '100%',
+                            position: 'relative',
+                            width: '0.5rem',
                         }}>
-                    </div>
+                            <div
+                                data-testid="calendar-bar"
+                                style={{
+                                    backgroundColor: getCampColors(campId).bg,
+                                    bottom: '2%',
+                                    height: `${getBarPos(month, campId).height}%`,
+                                    position: 'absolute',
+                                    top: `${getBarPos(month, campId).top + 2}%`,
+                                    width: '100%',
+                                }}>
+                            </div>
+                        </div>
+                    )) }
                 </div>
                 <div data-testid="calendar-wrapper" style={{
                     display: 'grid',
@@ -154,13 +188,14 @@ const MonthCalendar = ({ events, onFocusDate, focusDate }: MonthCalendarProps): 
                                         <li
                                             key={ event.id } data-testid={ `event-${event.id}` } style={{
                                                 alignItems: 'center',
-                                                background: 'lightgray',
+                                                background: getCampColors(event.campaign.id).bg,
+                                                color: getCampColors(event.campaign.id).fg,
                                                 display: 'flex',
                                                 justifyContent: 'center',
                                                 margin: '0.5rem 0',
                                                 padding: '0 1rem',
                                                 width: '100%',
-                                            }}>{ `event with id ${event.id}` }
+                                            }}>{ `event with id ${event.id} and campaign ${event.campaign.id}` }
                                         </li>
                                     )) }
                                 </ul>

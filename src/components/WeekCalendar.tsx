@@ -1,3 +1,4 @@
+import randomSeed from 'random-seed';
 import { ZetkinEvent } from '../types/zetkin';
 import { ActionButton, Flex, View } from '@adobe/react-spectrum';
 import { FormattedDate, FormattedMessage as Msg } from 'react-intl';
@@ -56,6 +57,29 @@ const WeekCalendar = ({ events, focusDate, onFocusDate }: WeekCalendarProps): JS
         return {
             height: `${diff * oneMinute}%`,
             top: `${startFromMidnight * oneMinute}%`,
+        };
+    };
+
+    const getCampColors = (campId: number) => {
+        if (!campId) return {
+            bg: 'lightgrey',
+            fg: 'black',
+        };
+        const rand = randomSeed.create(campId.toString());
+        const bgR = rand(256);
+        const bgG = 0;
+        const bgB = rand(256);
+        let fgB = 255, fgG = 255, fgR = 255;
+
+        // Use black text on light backgrounds (when color component
+        // average is greater than 180).
+        const bgAvg = (bgR + bgG + bgB) / 3.0;
+        if (bgAvg > 180) {
+            fgR = fgG = fgB = 0;
+        }
+        return {
+            bg: `rgb(${bgR},${bgG},${bgB})`,
+            fg: `rgb(${fgR},${fgG},${fgB})`,
         };
     };
 
@@ -152,7 +176,8 @@ const WeekCalendar = ({ events, focusDate, onFocusDate }: WeekCalendarProps): JS
                             }}>
                                 { getEventsOfTheDay(index + 1)?.map(event => (
                                     <li key={ event.id } data-testid={ `event-${event.id}` } style={{
-                                        background: 'gray',
+                                        background: getCampColors(event.campaign.id).bg,
+                                        color: getCampColors(event.campaign.id).fg,
                                         height: getEventPos(event.start_time, event.end_time).height,
                                         margin: '1rem 0',
                                         padding: '1rem',
@@ -160,7 +185,7 @@ const WeekCalendar = ({ events, focusDate, onFocusDate }: WeekCalendarProps): JS
                                         top: getEventPos(event.start_time, event.end_time).top,
                                         width: '100%',
                                     }}>
-                                        { `event with id ${event.id}` }
+                                        { `event with id ${event.id} and campaign ${event.campaign.id}` }
                                     </li>
                                 )) }
                             </ul>
