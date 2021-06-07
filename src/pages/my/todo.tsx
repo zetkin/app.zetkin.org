@@ -5,13 +5,12 @@ import { Heading, Text, View } from '@adobe/react-spectrum';
 
 import CallAssignmentList from '../../components/CallAssignmentList';
 import EventTabs from '../../components/EventTabs';
-import getBookedEvents from '../../fetching/getBookedEvents';
 import getCallAssignments from '../../fetching/getCallAssignments';
-import getRespondEvents from '../../fetching/getRespondEvents';
+import getUserEvents from '../../fetching/getUserEvents';
 import MyHomeLayout from '../../components/layout/MyHomeLayout';
 import { PageWithLayout } from '../../types';
 import { scaffold } from '../../utils/next';
-import { useRespondEvents } from '../../hooks';
+import { useEventResponses } from '../../hooks';
 
 const scaffoldOptions = {
     authLevelRequired: 1,
@@ -19,6 +18,7 @@ const scaffoldOptions = {
         'layout.my',
         'misc.callAssignmentList',
         'misc.eventList',
+        'misc.eventResponseButton',
         'misc.eventTabs',
         'misc.publicHeader',
         'pages.myTodo',
@@ -29,8 +29,7 @@ export const getServerSideProps : GetServerSideProps = scaffold(async (context) 
     const { user } = context;
 
     if (user) {
-        await context.queryClient.prefetchQuery('respondEvents', getRespondEvents(context.apiFetch));
-        await context.queryClient.prefetchQuery('bookedEvents', getBookedEvents(context.apiFetch));
+        await context.queryClient.prefetchQuery('userEvents', getUserEvents(context.apiFetch));
         await context.queryClient.prefetchQuery('callAssignments', getCallAssignments(context.apiFetch));
 
         return {
@@ -45,12 +44,12 @@ export const getServerSideProps : GetServerSideProps = scaffold(async (context) 
 }, scaffoldOptions);
 
 const MyTodoPage : PageWithLayout = () => {
-    const bookedEventsQuery = useQuery('bookedEvents', getBookedEvents());
     const callAssignmentsQuery = useQuery('callAssignments', getCallAssignments());
+    const userEventsQuery = useQuery('userEvents', getUserEvents());
 
-    const { respondEvents, onUndoSignup } = useRespondEvents();
+    const { onSignup, onUndoSignup } = useEventResponses('userEvents');
 
-    if ((!respondEvents || respondEvents.length === 0)
+    if ((!userEventsQuery.data || userEventsQuery.data.length === 0)
         && (!callAssignmentsQuery.data || callAssignmentsQuery.data?.length === 0)) {
         return (
             <>
@@ -89,8 +88,8 @@ const MyTodoPage : PageWithLayout = () => {
                     <Msg id="pages.myTodo.events"/>
                 </Heading>
                 <EventTabs
-                    bookedEvents={ bookedEventsQuery.data }
-                    events={ respondEvents }
+                    events={ userEventsQuery.data }
+                    onSignup={ onSignup }
                     onUndoSignup={ onUndoSignup }
                 />
             </View>

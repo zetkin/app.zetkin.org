@@ -17,7 +17,7 @@ const SignupDialogTrigger = (): JSX.Element => {
     return (
         <DialogTrigger>
             <Button data-test="dialog-trigger-button" variant="cta" width="100%">
-                <Msg id="pages.orgEvent.actions.signup" />
+                <Msg id="misc.eventResponseButton.actions.signup" />
             </Button>
             { (close) => (
                 <Dialog size="L">

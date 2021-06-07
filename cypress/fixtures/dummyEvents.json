@@ -22,7 +22,9 @@
             "organization": {
                 "id": 1,
                 "title": "Dummy Org"
-            }
+            },
+            "userBooked": false,
+            "userResponse": false
         }
     ]
 }

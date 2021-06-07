@@ -12,10 +12,8 @@ import {
 } from '@adobe/react-spectrum';
 
 import EventTabs from '../../components/EventTabs';
-import getBookedEvents from '../../fetching/getBookedEvents';
-import getEventResponses from '../../fetching/getEventResponses';
+import getEventsFromFollowedOrgs from '../../fetching/getEventsFromFollowedOrgs';
 import getUserCampaigns from '../../fetching/getUserCampaigns';
-import getUserEvents from '../../fetching/getUserEvents';
 import MyHomeLayout from '../../components/layout/MyHomeLayout';
 import { PageWithLayout } from '../../types';
 import { scaffold } from '../../utils/next';
@@ -27,6 +25,7 @@ const scaffoldOptions = {
     localeScope: [
         'layout.my',
         'misc.eventList',
+        'misc.eventResponseButton',
         'misc.eventTabs',
         'misc.publicHeader',
         'pages.my',
@@ -37,9 +36,7 @@ export const getServerSideProps : GetServerSideProps = scaffold(async (context) 
     const { user } = context;
 
     if (user) {
-        await context.queryClient.prefetchQuery('userEvents', getUserEvents(context.apiFetch));
-        await context.queryClient.prefetchQuery('bookedEvents', getBookedEvents(context.apiFetch));
-        await context.queryClient.prefetchQuery('eventResponses', getEventResponses(context.apiFetch));
+        await context.queryClient.prefetchQuery('eventsFromFollowedOrgs', getEventsFromFollowedOrgs(context.apiFetch));
         await context.queryClient.prefetchQuery('userCampaigns', getUserCampaigns(context.apiFetch));
 
         return {
@@ -60,15 +57,14 @@ interface MyPageProps {
 const MyPage : PageWithLayout<MyPageProps> = (props) => {
     const { user } = props;
 
-    const bookedEventsQuery = useQuery('bookedEvents', getBookedEvents());
     const userCampaignsQuery = useQuery('userCampaigns', getUserCampaigns());
-    const userEventsQuery = useQuery('userEvents', getUserEvents());
+    const eventsFromFollowedOrgsQuery = useQuery('eventsFromFollowedOrgs', getEventsFromFollowedOrgs());
 
-    const userEvents = userEventsQuery.data;
+    const eventsFromFollowedOrgs = eventsFromFollowedOrgsQuery.data;
 
-    const { eventResponses, onSignup, onUndoSignup } = useEventResponses();
+    const { onSignup, onUndoSignup } = useEventResponses('eventsFromFollowedOrgs');
 
-    if (!userEvents || userEvents.length === 0) {
+    if (!eventsFromFollowedOrgs || eventsFromFollowedOrgs.length === 0) {
         return (
             <>
                 <Heading level={ 1 }>
@@ -90,9 +86,7 @@ const MyPage : PageWithLayout<MyPageProps> = (props) => {
                 <Msg id="pages.my.events"/>
             </Heading>
             <EventTabs
-                bookedEvents={ bookedEventsQuery.data }
-                eventResponses={ eventResponses }
-                events={ userEvents }
+                events={ eventsFromFollowedOrgs }
                 onSignup={ onSignup }
                 onUndoSignup={ onUndoSignup }
             />
