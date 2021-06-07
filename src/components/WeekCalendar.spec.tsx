@@ -199,4 +199,29 @@ describe('WeekCalendar', () => {
                 expect(spyOnFocusDate.args[0][0].toString()).to.eq(date.toString());
             });
     });
+
+    it('shows different colors for different campaigns', () => {
+        dummyEvents[2] = {
+            ...dummyEvents[0],
+            'campaign': { ...dummyEvents[0].campaign, 'id': 942 },
+            'end_time': '2021-05-11T17:37:00+00:00',
+            'id': 29,
+            'start_time': '2021-05-11T15:37:00+00:00',
+        };
+        mountWithProviders(
+            <WeekCalendar events={ dummyEvents } focusDate={ new Date(2021, 4, 10) } onFocusDate={ () => null }  />,
+        );
+
+        cy.get('[data-testid="event-26"]').then(el => {
+            const firstEventBgColor = el[0].style.backgroundColor;
+            cy.get('[data-testid="event-29"]').then(el => {
+                const secondEventBgColor = el[0].style.backgroundColor;
+                cy.get('[data-testid="event-25"]').then(el => {
+                    const thirdEventBgColor = el[0].style.backgroundColor;
+                    expect(firstEventBgColor).to.not.eq(secondEventBgColor);
+                    expect(firstEventBgColor).to.eq(thirdEventBgColor);
+                });
+            });
+        });
+    });
 });

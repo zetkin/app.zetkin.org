@@ -217,4 +217,62 @@ describe('MonthCalendar', () => {
                 expect(spyOnFocusDate.args[0][0].toString()).to.eq(date.toString());
             });
     });
+
+    it('shows different colors for different campaigns', () => {
+        dummyEvents[4] = {
+            ...dummyEvents[0],
+            'campaign': { 'id': 942,'title': 'test-campaign' },
+            'end_time': '2021-04-27T17:37:00+00:00',
+            'id': 27,
+            'start_time': '2021-04-27T15:37:00+00:00',
+        };
+        mountWithProviders(
+            <MonthCalendar events={ dummyEvents } focusDate={ new Date(2021, 4, 10) } onFocusDate={ () => null }  />,
+        );
+
+        cy.get('[data-testid="event-26"]').then(el => {
+            const firstEventBgColor = el[0].style.backgroundColor;
+            cy.get('[data-testid="event-27"]').then(el => {
+                const secondEventBgColor = el[0].style.backgroundColor;
+                cy.get('[data-testid="event-24"]').then(el => {
+                    const thirdEventBgColor = el[0].style.backgroundColor;
+                    expect(firstEventBgColor).to.not.eq(secondEventBgColor);
+                    expect(firstEventBgColor).to.eq(thirdEventBgColor);
+                });
+            });
+        });
+    });
+
+    it('shows a uniquely coloured sidebar for each campaign', () => {
+        dummyEvents[4] = {
+            ...dummyEvents[0],
+            'campaign': { 'id': 942,'title': 'test-campaign' },
+            'end_time': '2021-04-27T17:37:00+00:00',
+            'id': 27,
+            'start_time': '2021-04-27T15:37:00+00:00',
+        };
+        mountWithProviders(
+            <div style={{
+                bottom: 0,
+                left: 0,
+                padding: 0,
+                position: 'absolute',
+                right: 0,
+                top: 0,
+            }}>
+                <MonthCalendar events={ dummyEvents } focusDate={ new Date(2021, 4, 10) } onFocusDate={ () => null }/>,
+            </div>,
+        );
+
+        cy.get('[data-testid="calendar-bar-941"]').should('be.visible');
+        cy.get('[data-testid="calendar-bar-942"]').should('be.visible');
+
+        cy.get('[data-testid="calendar-bar-941"]').then(el => {
+            const firstBarBgColor = el[0].style.backgroundColor;
+            cy.get('[data-testid="calendar-bar-942"]').then(el => {
+                const secondBarBgColor = el[0].style.backgroundColor;
+                expect(firstBarBgColor).to.not.eq(secondBarBgColor);
+            });
+        });
+    });
 });

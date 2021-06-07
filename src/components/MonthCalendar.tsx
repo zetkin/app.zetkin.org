@@ -140,7 +140,7 @@ const MonthCalendar = ({ events, onFocusDate, focusDate }: MonthCalendarProps): 
                             width: '0.5rem',
                         }}>
                             <div
-                                data-testid="calendar-bar"
+                                data-testid={ `calendar-bar-${campId}` }
                                 style={{
                                     backgroundColor: getCampColors(campId).bg,
                                     bottom: '2%',
