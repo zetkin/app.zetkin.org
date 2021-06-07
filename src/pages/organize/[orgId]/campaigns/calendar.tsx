@@ -2,6 +2,7 @@ import { GetServerSideProps } from 'next';
 import { useState } from 'react';
 import { Flex, Item, Picker, View } from '@adobe/react-spectrum';
 
+import getCampaigns from '../../../../fetching/getCampaigns';
 import getEvents from '../../../../fetching/getEvents';
 import getOrg from '../../../../fetching/getOrg';
 import MonthCalendar from '../../../../components/MonthCalendar';
@@ -30,7 +31,10 @@ export const getServerSideProps : GetServerSideProps = scaffold(async (ctx) => {
     await ctx.queryClient.prefetchQuery(['events', orgId], getEvents(orgId as string, ctx.apiFetch));
     const eventsState = ctx.queryClient.getQueryState(['events', orgId]);
 
-    if (orgState?.status === 'success' && eventsState?.status === 'success') {
+    await ctx.queryClient.prefetchQuery(['campaigns', orgId], getCampaigns(orgId as string, ctx.apiFetch));
+    const campaignsState = ctx.queryClient.getQueryState(['campaigns', orgId]);
+
+    if (orgState?.status === 'success' && eventsState?.status === 'success' &&campaignsState?.status === 'success') {
         return {
             props: {
                 orgId,
@@ -50,7 +54,9 @@ type AllCampaignsCalendarPageProps = {
 
 const AllCampaignsCalendarPage : PageWithLayout<AllCampaignsCalendarPageProps> = ({ orgId }) => {
     const eventsQuery = useQuery(['events', orgId], getEvents(orgId));
+    const campaignsQuery = useQuery(['campaigns', orgId], getCampaigns(orgId));
     const events = eventsQuery.data || [];
+    const campaigns = campaignsQuery.data || [];
     const intl = useIntl();
     const { focusDate, setFocusDate } = useFocusDate();
 
@@ -74,8 +80,8 @@ const AllCampaignsCalendarPage : PageWithLayout<AllCampaignsCalendarPageProps> =
                 </Picker>
             </Flex>
             <View height="80vh">
-                { calendarView === 'month' && <MonthCalendar events={ events } focusDate={ focusDate } onFocusDate={ date => setFocusDate(date) } /> }
-                { calendarView === 'week' && <WeekCalendar events={ events } focusDate={ focusDate } onFocusDate={ date => setFocusDate(date) }/> }
+                { calendarView === 'month' && <MonthCalendar campaigns={ campaigns } events={ events } focusDate={ focusDate } onFocusDate={ date => setFocusDate(date) } /> }
+                { calendarView === 'week' && <WeekCalendar campaigns={ campaigns } events={ events } focusDate={ focusDate } onFocusDate={ date => setFocusDate(date) }/> }
             </View>
         </View>
     );

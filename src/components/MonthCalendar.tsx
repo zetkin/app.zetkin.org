@@ -1,15 +1,15 @@
-import randomSeed from 'random-seed';
-import { ZetkinEvent } from '../types/zetkin';
 import { ActionButton, Flex, View } from '@adobe/react-spectrum';
 import { FormattedDate, FormattedMessage as Msg } from 'react-intl';
+import { ZetkinCampaign, ZetkinEvent } from '../types/zetkin';
 
 interface MonthCalendarProps {
+    campaigns: ZetkinCampaign[];
     events: ZetkinEvent[];
     focusDate: Date;
     onFocusDate: (date: Date) => void;
 }
 
-const MonthCalendar = ({ events, onFocusDate, focusDate }: MonthCalendarProps): JSX.Element => {
+const MonthCalendar = ({ campaigns, events, onFocusDate, focusDate }: MonthCalendarProps): JSX.Element => {
     const month = focusDate.getUTCMonth();
     const year = focusDate.getUTCFullYear();
     const totalDaysInMonth = new Date(year, 1 + month, 0).getDate();
@@ -44,7 +44,7 @@ const MonthCalendar = ({ events, onFocusDate, focusDate }: MonthCalendarProps): 
 
     const lastCalendarDay = new Date(new Date(firstCalendarDay).setDate(firstCalendarDay.getDate() + gridItems));
 
-    const campIds = Array.from(new Set(events.map(e => e.campaign.id)));
+    const campIds = campaigns.map(c => +c.id);
 
     const getBarPos = (currentMonth: number, campId: number) => {
 
@@ -100,27 +100,9 @@ const MonthCalendar = ({ events, onFocusDate, focusDate }: MonthCalendarProps): 
         return { height, top };
     };
 
-    const getCampColors = (campId: number) => {
-        if (!campId) return {
-            bg: 'lightgrey',
-            fg: 'black',
-        };
-        const rand = randomSeed.create(campId.toString());
-        const bgR = rand(256);
-        const bgG = 0;
-        const bgB = rand(256);
-        let fgB = 255, fgG = 255, fgR = 255;
-
-        // Use black text on light backgrounds (when color component
-        // average is greater than 180).
-        const bgAvg = (bgR + bgG + bgB) / 3.0;
-        if (bgAvg > 180) {
-            fgR = fgG = fgB = 0;
-        }
-        return {
-            bg: `rgb(${bgR},${bgG},${bgB})`,
-            fg: `rgb(${fgR},${fgG},${fgB})`,
-        };
+    const getCampColors = (campId?: number) => {
+        const currentCampaign = campaigns.find(c => c.id === campId);
+        return currentCampaign?.color || { bg: 'lightgrey', fg: 'black' };
     };
 
     return (

@@ -1,18 +1,18 @@
-import randomSeed from 'random-seed';
-import { ZetkinEvent } from '../types/zetkin';
 import { ActionButton, Flex, View } from '@adobe/react-spectrum';
 import { FormattedDate, FormattedMessage as Msg } from 'react-intl';
 import { Heading, Text } from '@adobe/react-spectrum';
 import { useEffect, useRef } from 'react';
+import { ZetkinCampaign, ZetkinEvent } from '../types/zetkin';
 
 
 interface WeekCalendarProps {
+    campaigns: ZetkinCampaign[];
     events: ZetkinEvent[];
     focusDate: Date;
     onFocusDate: (date: Date)=> void;
 }
 
-const WeekCalendar = ({ events, focusDate, onFocusDate }: WeekCalendarProps): JSX.Element => {
+const WeekCalendar = ({ campaigns, events, focusDate, onFocusDate }: WeekCalendarProps): JSX.Element => {
 
     const calendar = useRef<HTMLDivElement>(null);
     const calendarWrapper = useRef<HTMLDivElement>(null);
@@ -60,27 +60,9 @@ const WeekCalendar = ({ events, focusDate, onFocusDate }: WeekCalendarProps): JS
         };
     };
 
-    const getCampColors = (campId: number) => {
-        if (!campId) return {
-            bg: 'lightgrey',
-            fg: 'black',
-        };
-        const rand = randomSeed.create(campId.toString());
-        const bgR = rand(256);
-        const bgG = 0;
-        const bgB = rand(256);
-        let fgB = 255, fgG = 255, fgR = 255;
-
-        // Use black text on light backgrounds (when color component
-        // average is greater than 180).
-        const bgAvg = (bgR + bgG + bgB) / 3.0;
-        if (bgAvg > 180) {
-            fgR = fgG = fgB = 0;
-        }
-        return {
-            bg: `rgb(${bgR},${bgG},${bgB})`,
-            fg: `rgb(${fgR},${fgG},${fgB})`,
-        };
+    const getCampColors = (campId?: number) => {
+        const currentCampaign = campaigns.find(c => c.id === campId);
+        return currentCampaign?.color || { bg: 'lightgrey', fg: 'black' };
     };
 
     return (
