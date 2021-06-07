@@ -6,11 +6,6 @@ export type SeededColorCombination = {
 }
 
 export function generateColors(seed: string): SeededColorCombination {
-    if (!seed)
-        return {
-            bg: 'lightgrey',
-            fg: 'black',
-        };
     const rand = randomSeed.create(seed.toString());
     const bgR = rand(256);
     const bgG = 0;
