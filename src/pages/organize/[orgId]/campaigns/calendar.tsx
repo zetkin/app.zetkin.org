@@ -2,14 +2,16 @@ import { GetServerSideProps } from 'next';
 import { useState } from 'react';
 import { Flex, Item, Picker, View } from '@adobe/react-spectrum';
 
-import Calendar from '../../../../components/Calendar';
 import getEvents from '../../../../fetching/getEvents';
 import getOrg from '../../../../fetching/getOrg';
+import MonthCalendar from '../../../../components/MonthCalendar';
 import OrganizeAllCampaignsLayout from '../../../../components/layout/OrganizeAllCampaignsLayout';
 import { PageWithLayout } from '../../../../types';
 import { scaffold } from '../../../../utils/next';
+import { useFocusDate } from '../../../../hooks';
 import { useIntl } from 'react-intl';
 import { useQuery } from 'react-query';
+import WeekCalendar from '../../../../components/WeekCalendar';
 
 const scaffoldOptions = {
     authLevelRequired: 2,
@@ -50,6 +52,7 @@ const AllCampaignsCalendarPage : PageWithLayout<AllCampaignsCalendarPageProps> =
     const eventsQuery = useQuery(['events', orgId], getEvents(orgId));
     const events = eventsQuery.data || [];
     const intl = useIntl();
+    const { focusDate, setFocusDate } = useFocusDate();
 
     const items = [
         { id: 'week', name: intl.formatMessage({ id: 'misc.calendar.week' }) },
@@ -71,8 +74,8 @@ const AllCampaignsCalendarPage : PageWithLayout<AllCampaignsCalendarPageProps> =
                 </Picker>
             </Flex>
             <View height="80vh">
-                { calendarView === 'month' && 'month calendar' }
-                { calendarView === 'week' && <Calendar events={ events } focusDate={ new Date('May 18 2021') } /> }
+                { calendarView === 'month' && <MonthCalendar events={ events } focusDate={ focusDate } onFocusDate={ date => setFocusDate(date) } /> }
+                { calendarView === 'week' && <WeekCalendar events={ events } focusDate={ focusDate } onFocusDate={ date => setFocusDate(date) }/> }
             </View>
         </View>
     );
