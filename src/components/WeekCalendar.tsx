@@ -62,7 +62,24 @@ const WeekCalendar = ({ campaigns, events, focusDate, onFocusDate }: WeekCalenda
 
     const getCampColors = (campId?: number) => {
         const currentCampaign = campaigns.find(c => c.id === campId);
-        return currentCampaign?.color || { bg: 'lightgrey', fg: 'black' };
+        if (!currentCampaign?.color) {
+            return { bg: '#d3d3d3', fg: '#00000' };
+        }
+        const bgColor = parseInt(currentCampaign.color.slice(1), 16);
+        const bgR = bgColor >> 16;
+        const bgG = bgColor >> 8 & 255;
+        const bgB = bgColor & 255;
+        let fgB = 255, fgG = 255, fgR = 255;
+        const bgAvg = (bgR + bgG + bgB) / 3.0;
+        if (bgAvg > 150) {
+            fgR = fgG = fgB = 0;
+        }
+        const bg = '#' + ((bgR << 16) | (bgG << 8) | bgB)
+            .toString(16).padStart(6, '0');
+        const fg = '#' + ((fgR << 16) | (fgG << 8) | fgB)
+            .toString(16).padStart(6, '0');
+
+        return { bg, fg };
     };
 
     return (

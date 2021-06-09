@@ -79,7 +79,7 @@ const AllCampaignsCalendarPage : PageWithLayout<AllCampaignsCalendarPageProps> =
                     { (item) => <Item key={ item.id }>{ item.name }</Item> }
                 </Picker>
             </Flex>
-            <View height="80vh">
+            <View height="80vh" overflow="scroll">
                 { calendarView === 'month' && <MonthCalendar campaigns={ campaigns } events={ events } focusDate={ focusDate } onFocusDate={ date => setFocusDate(date) } /> }
                 { calendarView === 'week' && <WeekCalendar campaigns={ campaigns } events={ events } focusDate={ focusDate } onFocusDate={ date => setFocusDate(date) }/> }
             </View>

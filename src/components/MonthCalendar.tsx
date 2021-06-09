@@ -69,7 +69,9 @@ const MonthCalendar = ({ campaigns, events, onFocusDate, focusDate }: MonthCalen
                 return new Date(a.start_time).getTime() - new Date(b.start_time).getTime();
             });
 
-        if (campaignEvents.length === 0) return { height: 0, top: 0 };
+        if (campaignEvents.length === 0) {
+            return { height: 0, top: 0 };
+        }
 
         const firstEventDate = new Date(campaignEvents[0].start_time);
         const lastEventDate = new Date(campaignEvents[campaignEvents.length - 1].end_time);
@@ -94,7 +96,9 @@ const MonthCalendar = ({ campaigns, events, onFocusDate, focusDate }: MonthCalen
         else {
             bottom = getGridNumber(new Date(lastEventDate)) * barUnit;
         }
-        if (bottom > 100) bottom = 100;
+        if (bottom > 100) {
+            bottom = 100;
+        }
 
         const height = bottom - top;
         return { height, top };
@@ -102,7 +106,24 @@ const MonthCalendar = ({ campaigns, events, onFocusDate, focusDate }: MonthCalen
 
     const getCampColors = (campId?: number) => {
         const currentCampaign = campaigns.find(c => c.id === campId);
-        return currentCampaign?.color || { bg: 'lightgrey', fg: 'black' };
+        if (!currentCampaign?.color) {
+            return { bg: '#d3d3d3', fg: '#00000' };
+        }
+        const bgColor = parseInt(currentCampaign.color.slice(1), 16);
+        const bgR = bgColor >> 16;
+        const bgG = bgColor >> 8 & 255;
+        const bgB = bgColor & 255;
+        let fgB = 255, fgG = 255, fgR = 255;
+        const bgAvg = (bgR + bgG + bgB) / 3.0;
+        if (bgAvg > 150) {
+            fgR = fgG = fgB = 0;
+        }
+        const bg = '#' + ((bgR << 16) | (bgG << 8) | bgB)
+            .toString(16).padStart(6, '0');
+        const fg = '#' + ((fgR << 16) | (fgG << 8) | fgB)
+            .toString(16).padStart(6, '0');
+
+        return { bg, fg };
     };
 
     return (
@@ -130,12 +151,11 @@ const MonthCalendar = ({ campaigns, events, onFocusDate, focusDate }: MonthCalen
             </View>
             <div style={{
                 display: 'flex',
-                height: '100%',
+                minHeight: '100%',
             }}>
                 <div
                     style={{
                         display: 'flex',
-                        height: '100%',
                         marginRight: '0.5rem',
                     }}>
                     { campIds.map(campId => (
@@ -148,6 +168,7 @@ const MonthCalendar = ({ campaigns, events, onFocusDate, focusDate }: MonthCalen
                                 data-testid={ `calendar-bar-${campId}` }
                                 style={{
                                     backgroundColor: getCampColors(campId).bg,
+                                    display: getBarPos(month, campId).height? 'block' : 'none',
                                     height: `${getBarPos(month, campId).height}%`,
                                     position: 'absolute',
                                     top: `${getBarPos(month, campId).top}%`,
@@ -163,8 +184,6 @@ const MonthCalendar = ({ campaigns, events, onFocusDate, focusDate }: MonthCalen
                     gap: '0.5rem',
                     gridTemplateColumns: 'repeat(7, minmax(125px, 1fr))',
                     gridTemplateRows: `repeat(${calendarRows}, minmax(125px, 1fr))`,
-                    height: '100%',
-                    overflow: 'scroll',
                 }}>
                     { Array.from(Array(gridItems).keys()).map((_, index) => {
                         const currentDate = new Date(new Date(firstCalendarDay).setDate(firstCalendarDay.getDate() + index));

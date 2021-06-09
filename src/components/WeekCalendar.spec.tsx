@@ -28,12 +28,11 @@ describe('WeekCalendar', () => {
                 dummyCampaigns = data.data;
                 dummyCampaigns[0] = {
                     ...dummyCampaigns[0],
-                    'color': { bg: 'blue', fg: 'white' },
                     'id': 941,
                 };
                 dummyCampaigns[1] = {
                     ...dummyCampaigns[0],
-                    'color': { bg: 'red', fg: 'black' },
+                    'color': '#ff0000',
                     'id': 942,
                 };
             });

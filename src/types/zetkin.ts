@@ -1,7 +1,5 @@
-import { SeededColorCombination } from '../utils/generateColors';
-
 export interface ZetkinCampaign {
-    color: SeededColorCombination;
+    color: string;
     info_text: string;
     title: string;
     id: number;
