@@ -1,7 +1,8 @@
+import grey from '@material-ui/core/colors/grey';
 import { FormattedMessage as Msg } from 'react-intl';
 import NextLink from 'next/link';
 import { useQuery } from 'react-query';
-import { Button, Flex, Heading, Link, View } from '@adobe/react-spectrum';
+import { Box, Button, Link, List, ListItem, makeStyles, Typography } from '@material-ui/core';
 
 import getCampaigns from '../fetching/getCampaigns';
 import { ZetkinCampaign } from '../types/zetkin';
@@ -10,46 +11,56 @@ interface DashboardCampaignProps {
     orgId: string;
 }
 
+const useStyles = makeStyles((theme) => ({
+    responsiveFlexBox: {
+        alignItems: 'center',
+        display: 'flex',
+        gap: '5%',
+        justifyContent: 'flex-end',
+        [theme.breakpoints.down('sm')]: {
+            flexDirection: 'column',
+        },
+    },
+}));
+
 const DashboardCampaigns = ({ orgId } : DashboardCampaignProps) : JSX.Element => {
     const campaignsQuery = useQuery(['campaigns', orgId], getCampaigns(orgId));
     const campaigns = campaignsQuery.data;
+    const classes = useStyles();
 
     return (
-        <View>
-            <Heading level={ 2 }>
+        <Box border={ 1 } m={ 2 } p={ 2 }>
+            <Typography component="h2" variant="body1">
                 <Msg id="pages.organize.currentProjects.title"/>
-            </Heading>
+            </Typography>
             { campaigns && (
-                <ul style={{ padding: 0 }}>
-                    { campaigns.map((item: ZetkinCampaign) => (
-                        <li key={ item.id } style={{
-                            border: '2px solid gray',
-                            listStyle: 'none',
-                            padding: '1rem',
-                        }}>
-                            <Link>
+                <Typography variant="h5">
+                    <List>
+                        { campaigns.map((item: ZetkinCampaign) => (
+                            <ListItem key={ item.id } style={{ background: grey[200], border: '1px solid', margin: '1rem 0'  }}>
                                 <NextLink href={ `/organize/${orgId}/campaigns/${item.id}` }>
-                                    <a>{ item.title }</a>
+                                    <Link color="inherit" href="#">
+                                        { item.title }
+                                    </Link>
                                 </NextLink>
-                            </Link>
-                        </li>
-                    )) }
-                </ul>) }
-            <Flex alignItems="center" justifyContent="end" margin="1rem 0rem">
-                <Link>
-                    <NextLink href={ `/organize/${orgId}/campaigns` }>
-                        <a style={{ color: 'mediumpurple', margin:'0 2rem' }}>
-                            <Msg id="pages.organize.currentProjects.all"/>
-                        </a>
-                    </NextLink>
-                </Link>
+                            </ListItem>
+                        )) }
+                    </List>
+                </Typography>
+            ) }
+            <Box className={ classes.responsiveFlexBox }>
+                <NextLink href={ `/organize/${orgId}/campaigns` }>
+                    <Link href="#">
+                        <Msg id="pages.organize.currentProjects.all"/>
+                    </Link>
+                </NextLink>
                 <NextLink href={ `/organize/${orgId}/campaigns/new` }>
-                    <Button variant="cta">
+                    <Button color="primary" href="#" variant="outlined">
                         <Msg id="pages.organize.currentProjects.new"/>
                     </Button>
                 </NextLink>
-            </Flex>
-        </View>
+            </Box>
+        </Box>
     );
 };
 

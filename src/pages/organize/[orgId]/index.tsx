@@ -52,7 +52,7 @@ type OrganizePageProps = {
 const useStyles = makeStyles((theme) => ({
     responsiveFlexBox: {
         display: 'flex',
-        [theme.breakpoints.down('md')]: {
+        [theme.breakpoints.down('sm')]: {
             flexDirection: 'column',
         },
     },
@@ -73,7 +73,7 @@ const OrganizePage: PageWithLayout<OrganizePageProps> = ({ orgId }) => {
                         { orgQuery.data?.title }
                     </Typography>
                     <Typography color="primary">
-                        <Box display="flex" p={ 0 }>
+                        <Box className={ classes.responsiveFlexBox } p={ 0 }>
                             <Box display="flex" p={ 1 } pl={ 0 }>
                                 <Public />
                                 <NextLink href={ `/o/${orgId}` }>
@@ -104,15 +104,11 @@ const OrganizePage: PageWithLayout<OrganizePageProps> = ({ orgId }) => {
             </Box>
             <Box className={ classes.responsiveFlexBox } p={ 2 }>
                 <Box flex={ 1 } width="100%">
-                    <Box border={ 1 } m={ 2 } p={ 2 }>
-                        <DashboardCampaigns orgId={ orgId }/>
-                    </Box>
-                    <Box border={ 1 } m={ 2 } p={ 2 }>
-                        <DashboardPeople orgId={ orgId }/>
-                    </Box>
+                    <DashboardCampaigns orgId={ orgId }/>
+                    <DashboardPeople orgId={ orgId }/>
                     <Box border={ 1 } m={ 2 } p={ 2 }>Areas</Box>
                 </Box>
-                <Box border={ 1 } flex={ 1 } p={ 2 } width="100%">inbox</Box>
+                <Box border={ 1 } flex={ 1 } m={ 2 } p={ 2 } width="100%">inbox</Box>
             </Box>
         </>
     );

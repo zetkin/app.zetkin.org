@@ -1,5 +1,5 @@
 import { FormattedMessage as Msg } from 'react-intl';
-import { Heading, View } from '@adobe/react-spectrum';
+import { Box, Typography } from '@material-ui/core';
 
 
 interface DashboardPeopleProps {
@@ -9,12 +9,12 @@ interface DashboardPeopleProps {
 const DashboardPeople = ({ orgId } : DashboardPeopleProps) : JSX.Element => {
 
     return (
-        <View>
-            <Heading level={ 2 }>
+        <Box border={ 1 } m={ 2 } p={ 2 }>
+            <Typography component="h2" variant="body1">
                 <Msg id="pages.organize.people.title"/>
-            </Heading>
+            </Typography>
             { orgId }
-        </View>
+        </Box>
     );
 };
 
