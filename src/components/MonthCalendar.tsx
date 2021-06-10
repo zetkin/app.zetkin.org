@@ -43,66 +43,6 @@ const MonthCalendar = ({ campaigns, events, onFocusDate, focusDate }: MonthCalen
             date < end;
     };
 
-    const lastCalendarDay = new Date(new Date(firstCalendarDay).setDate(firstCalendarDay.getDate() + gridItems));
-
-    const getBarPos = (currentMonth: number, campId: number) => {
-
-        const barUnit = 100 / gridItems;
-
-        const getGridNumber = (event: Date) => {
-            const offset = (firstMonthDay.getDay() || 7) - 2;
-            if (event.getMonth() === month) {
-                return new Date(event).getDate() + offset;
-            }
-            if (event.getMonth() < currentMonth) {
-                return (new Date(event).getDay() || 7) - 1;
-            }
-            if (event.getMonth() > currentMonth) {
-                return (new Date(event).getDay() || 7) - 3 + offset + totalDaysInMonth;
-            }
-            return 0;
-        };
-
-        const campaignEvents = events.filter(e => e.campaign.id === campId)
-            .sort((a, b) => {
-                return new Date(a.start_time).getTime() - new Date(b.start_time).getTime();
-            });
-
-        if (campaignEvents.length === 0) {
-            return { height: 0, top: 0 };
-        }
-
-        const firstEventDate = new Date(campaignEvents[0].start_time);
-        const lastEventDate = new Date(campaignEvents[campaignEvents.length - 1].end_time);
-
-        let bottom, top;
-        if (firstEventDate < firstCalendarDay ) {
-            top = 0;
-        }
-        else if (firstEventDate > lastCalendarDay) {
-            top = 100;
-        }
-        else {
-            top = getGridNumber(new Date(firstEventDate)) * barUnit;
-        }
-
-        if (lastEventDate > lastCalendarDay) {
-            bottom = 100;
-        }
-        else if (lastEventDate < firstCalendarDay) {
-            bottom = 0;
-        }
-        else {
-            bottom = getGridNumber(new Date(lastEventDate)) * barUnit;
-        }
-        if (bottom > 100) {
-            bottom = 100;
-        }
-
-        const height = bottom - top;
-        return { height, top };
-    };
-
     return (
         <>
             <View position="absolute" right="15rem" top="-2.6rem">
@@ -135,25 +75,15 @@ const MonthCalendar = ({ campaigns, events, onFocusDate, focusDate }: MonthCalen
                         display: 'flex',
                         marginRight: '0.5rem',
                     }}>
-                    { campaigns.map(c => (
-                        <div key={ c.id } style={{
-                            height: '100%',
-                            position: 'relative',
-                            width: '0.5rem',
-                        }}>
-                            <div
-                                data-testid={ `calendar-bar-${c.id}` }
-                                style={{
-                                    backgroundColor: c.color,
-                                    display: getBarPos(month, c.id).height? 'block' : 'none',
-                                    height: `${getBarPos(month, c.id).height}%`,
-                                    position: 'absolute',
-                                    top: `${getBarPos(month, c.id).top}%`,
-                                    width: '100%',
-                                }}>
-                            </div>
-                        </div>
-                    )) }
+                    { campaigns.map(c => {
+                        const campaignEvents = events.filter(e => e.campaign.id === c.id)
+                            .sort((a, b) => {
+                                return new Date(a.start_time).getTime() - new Date(b.start_time).getTime();
+                            });
+                        return campaignEvents.length && (
+                            <CalendarBar key={ c.id } campaign={ c } events={ campaignEvents } firstCalendarDay={ firstCalendarDay } firstMonthDay={ firstMonthDay } gridItems={ gridItems } month={ month } totalDaysInMonth={ totalDaysInMonth }/>
+                        );
+                    }) }
                 </div>
                 <div data-testid="calendar-wrapper" style={{
                     display: 'grid',
@@ -212,3 +142,80 @@ const MonthCalendar = ({ campaigns, events, onFocusDate, focusDate }: MonthCalen
 };
 
 export default MonthCalendar;
+
+interface CalendarBarProps {
+    campaign: ZetkinCampaign;
+    month: number;
+    events: ZetkinEvent[];
+    firstCalendarDay: Date;
+    firstMonthDay: Date;
+    totalDaysInMonth: number;
+    gridItems: number;
+}
+
+const CalendarBar = ({ campaign, events, month, gridItems, firstCalendarDay, firstMonthDay, totalDaysInMonth }: CalendarBarProps): JSX.Element | null => {
+    const { id, color } = campaign;
+
+    const lastCalendarDay = new Date(new Date(firstCalendarDay).setDate(firstCalendarDay.getDate() + gridItems));
+
+    const barUnit = 100 / gridItems;
+
+    const getGridNumber = (event: Date) => {
+        const offset = (firstMonthDay.getDay() || 7) - 2;
+        if (event.getMonth() === month) {
+            return new Date(event).getDate() + offset;
+        }
+        if (event.getMonth() < month) {
+            return (new Date(event).getDay() || 7) - 1;
+        }
+        if (event.getMonth() > month) {
+            return (new Date(event).getDay() || 7) - 3 + offset + totalDaysInMonth;
+        }
+        return 0;
+    };
+
+    const firstEventDate = new Date(events[0].start_time);
+    const lastEventDate = new Date(events[events.length - 1].end_time);
+
+    if (firstEventDate > lastCalendarDay || lastEventDate < firstCalendarDay) {
+        return null;
+    }
+
+    let bottom, top;
+    if (firstEventDate < firstCalendarDay ) {
+        top = 0;
+    }
+    else {
+        top = getGridNumber(new Date(firstEventDate)) * barUnit;
+    }
+    if (lastEventDate > lastCalendarDay) {
+        bottom = 100;
+    }
+    else {
+        bottom = getGridNumber(new Date(lastEventDate)) * barUnit;
+    }
+    if (bottom > 100) {
+        bottom = 100;
+    }
+
+    const height = bottom - top;
+
+    return (
+        <div  style={{
+            height: '100%',
+            position: 'relative',
+            width: '0.5rem',
+        }}>
+            <div
+                data-testid={ `calendar-bar-${id}` }
+                style={{
+                    backgroundColor: color,
+                    height: `${height}%`,
+                    position: 'absolute',
+                    top: `${top}%`,
+                    width: '100%',
+                }}>
+            </div>
+        </div>
+    );
+};
