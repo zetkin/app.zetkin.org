@@ -1,17 +1,19 @@
-import { ZetkinEvent } from '../types/zetkin';
+import { getContrastColor } from '../utils/colorUtils';
 import { ActionButton, Flex, View } from '@adobe/react-spectrum';
 import { FormattedDate, FormattedMessage as Msg } from 'react-intl';
 import { Heading, Text } from '@adobe/react-spectrum';
 import { useEffect, useRef } from 'react';
+import { ZetkinCampaign, ZetkinEvent } from '../types/zetkin';
 
 
 interface WeekCalendarProps {
+    campaigns: ZetkinCampaign[];
     events: ZetkinEvent[];
     focusDate: Date;
     onFocusDate: (date: Date)=> void;
 }
 
-const WeekCalendar = ({ events, focusDate, onFocusDate }: WeekCalendarProps): JSX.Element => {
+const WeekCalendar = ({ campaigns, events, focusDate, onFocusDate }: WeekCalendarProps): JSX.Element => {
 
     const calendar = useRef<HTMLDivElement>(null);
     const calendarWrapper = useRef<HTMLDivElement>(null);
@@ -150,19 +152,23 @@ const WeekCalendar = ({ events, focusDate, onFocusDate }: WeekCalendarProps): JS
                                 position: 'relative',
                                 width: '100%',
                             }}>
-                                { getEventsOfTheDay(index + 1)?.map(event => (
-                                    <li key={ event.id } data-testid={ `event-${event.id}` } style={{
-                                        background: 'gray',
-                                        height: getEventPos(event.start_time, event.end_time).height,
-                                        margin: '1rem 0',
-                                        padding: '1rem',
-                                        position: 'absolute',
-                                        top: getEventPos(event.start_time, event.end_time).top,
-                                        width: '100%',
-                                    }}>
-                                        { `event with id ${event.id}` }
-                                    </li>
-                                )) }
+                                { getEventsOfTheDay(index + 1)?.map(event => {
+                                    const campaign = campaigns.find(c => c.id === event.campaign.id);
+                                    return (
+                                        <li key={ event.id } data-testid={ `event-${event.id}` } style={{
+                                            background: campaign?.color || '#d3d3d3',
+                                            color: getContrastColor(campaign?.color|| '#d3d3d3'),
+                                            height: getEventPos(event.start_time, event.end_time).height,
+                                            margin: '1rem 0',
+                                            padding: '1rem',
+                                            position: 'absolute',
+                                            top: getEventPos(event.start_time, event.end_time).top,
+                                            width: '100%',
+                                        }}>
+                                            { `event with id ${event.id} and campaign ${event.campaign.id}` }
+                                        </li>
+                                    );
+                                }) }
                             </ul>
                         </div>
                     )) }

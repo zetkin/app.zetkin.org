@@ -1,7 +1,8 @@
 export interface ZetkinCampaign {
+    color: string;
     info_text: string;
     title: string;
-    id: string;
+    id: number;
     organization?: ZetkinOrganization;
 }
 

@@ -2,17 +2,17 @@ import { GetServerSideProps } from 'next';
 import { useState } from 'react';
 import { Flex, Item, Picker, View } from '@adobe/react-spectrum';
 
-import getCampaign from '../../../../../fetching/getCampaign';
-import getCampaignEvents from '../../../../../fetching/getCampaignEvents';
-import getOrg from '../../../../../fetching/getOrg';
-import MonthCalendar from '../../../../../components/MonthCalendar';
-import OrganizeCampaignLayout from '../../../../../components/layout/OrganizeCampaignLayout';
-import { PageWithLayout } from '../../../../../types';
-import { scaffold } from '../../../../../utils/next';
-import { useFocusDate } from '../../../../../hooks';
+import getCampaigns from '../../../../fetching/getCampaigns';
+import getEvents from '../../../../fetching/getEvents';
+import getOrg from '../../../../fetching/getOrg';
+import MonthCalendar from '../../../../components/MonthCalendar';
+import OrganizeAllCampaignsLayout from '../../../../components/layout/OrganizeAllCampaignsLayout';
+import { PageWithLayout } from '../../../../types';
+import { scaffold } from '../../../../utils/next';
+import { useFocusDate } from '../../../../hooks';
 import { useIntl } from 'react-intl';
 import { useQuery } from 'react-query';
-import WeekCalendar from '../../../../../components/WeekCalendar';
+import WeekCalendar from '../../../../components/WeekCalendar';
 
 const scaffoldOptions = {
     authLevelRequired: 2,
@@ -23,22 +23,20 @@ const scaffoldOptions = {
 
 export const getServerSideProps : GetServerSideProps = scaffold(async (ctx) => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const { orgId, campId } = ctx.params!;
-
+    const { orgId } = ctx.params!;
 
     await ctx.queryClient.prefetchQuery(['org', orgId], getOrg(orgId as string, ctx.apiFetch));
     const orgState = ctx.queryClient.getQueryState(['org', orgId]);
 
-    await ctx.queryClient.prefetchQuery(['campaignEvents', orgId, campId], getCampaignEvents(orgId as string, campId as string, ctx.apiFetch));
-    const campaignEventsState = ctx.queryClient.getQueryState(['campaignEvents', orgId, campId]);
+    await ctx.queryClient.prefetchQuery(['events', orgId], getEvents(orgId as string, ctx.apiFetch));
+    const eventsState = ctx.queryClient.getQueryState(['events', orgId]);
 
-    await ctx.queryClient.prefetchQuery(['campaign', orgId, campId], getCampaign(orgId as string, campId as string, ctx.apiFetch));
-    const campaignState = ctx.queryClient.getQueryState(['campaign', orgId, campId]);
+    await ctx.queryClient.prefetchQuery(['campaigns', orgId], getCampaigns(orgId as string, ctx.apiFetch));
+    const campaignsState = ctx.queryClient.getQueryState(['campaigns', orgId]);
 
-    if (orgState?.status === 'success' && campaignEventsState?.status === 'success' && campaignState?.status === 'success' ) {
+    if (orgState?.status === 'success' && eventsState?.status === 'success' &&campaignsState?.status === 'success') {
         return {
             props: {
-                campId,
                 orgId,
             },
         };
@@ -50,24 +48,24 @@ export const getServerSideProps : GetServerSideProps = scaffold(async (ctx) => {
     }
 }, scaffoldOptions);
 
-type OrganizeCalendarPageProps = {
-    campId: string;
+type AllCampaignsCalendarPageProps = {
     orgId: string;
 };
 
-const CampaignCalendarPage : PageWithLayout<OrganizeCalendarPageProps> = ({ orgId, campId }) => {
-    const eventsQuery = useQuery(['campaignEvents', orgId, campId], getCampaignEvents(orgId, campId));
-    const campaignQuery = useQuery(['campaign', orgId, campId], getCampaign(orgId, campId));
+const AllCampaignsCalendarPage : PageWithLayout<AllCampaignsCalendarPageProps> = ({ orgId }) => {
+    const eventsQuery = useQuery(['events', orgId], getEvents(orgId));
+    const campaignsQuery = useQuery(['campaigns', orgId], getCampaigns(orgId));
     const events = eventsQuery.data || [];
-    const campaigns = campaignQuery.data ? [campaignQuery.data] : [];
+    const campaigns = campaignsQuery.data || [];
     const intl = useIntl();
-    const [calendarView, setCalendarView] = useState('week');
     const { focusDate, setFocusDate } = useFocusDate();
 
     const items = [
         { id: 'week', name: intl.formatMessage({ id: 'misc.calendar.week' }) },
         { id: 'month', name: intl.formatMessage({ id: 'misc.calendar.month' }) },
     ];
+
+    const [calendarView, setCalendarView] = useState('month');
 
     return (
         <View position="relative">
@@ -81,7 +79,7 @@ const CampaignCalendarPage : PageWithLayout<OrganizeCalendarPageProps> = ({ orgI
                     { (item) => <Item key={ item.id }>{ item.name }</Item> }
                 </Picker>
             </Flex>
-            <View height="80vh">
+            <View height="80vh" overflow="scroll">
                 { calendarView === 'month' && <MonthCalendar campaigns={ campaigns } events={ events } focusDate={ focusDate } onFocusDate={ date => setFocusDate(date) } /> }
                 { calendarView === 'week' && <WeekCalendar campaigns={ campaigns } events={ events } focusDate={ focusDate } onFocusDate={ date => setFocusDate(date) }/> }
             </View>
@@ -89,12 +87,12 @@ const CampaignCalendarPage : PageWithLayout<OrganizeCalendarPageProps> = ({ orgI
     );
 };
 
-CampaignCalendarPage.getLayout = function getLayout(page, props) {
+AllCampaignsCalendarPage.getLayout = function getLayout(page, props) {
     return (
-        <OrganizeCampaignLayout campId={ props.campId as string } orgId={ props.orgId as string }>
+        <OrganizeAllCampaignsLayout orgId={ props.orgId as string }>
             { page }
-        </OrganizeCampaignLayout>
+        </OrganizeAllCampaignsLayout>
     );
 };
 
-export default CampaignCalendarPage;
+export default AllCampaignsCalendarPage;

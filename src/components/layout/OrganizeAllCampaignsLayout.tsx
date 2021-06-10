@@ -1,35 +1,31 @@
-import { useQuery } from 'react-query';
+import { FormattedMessage as Msg } from 'react-intl';
 import { useRouter } from 'next/router';
 import { Flex, Heading, View } from '@adobe/react-spectrum';
 import { FunctionComponent, ReactText } from 'react';
 
-import getCampaign from '../../fetching/getCampaign';
 import OrganizeCampaignTabs from '../OrganizeCampaignTabs';
 import OrganizeLayout from './OrganizeLayout';
 
-interface OrganizeCampaignLayoutProps {
-    campId: string;
+interface OrganizeAllCampaignsLayoutProps {
     orgId: string;
 }
 
-const OrganizeCampaignLayout : FunctionComponent<OrganizeCampaignLayoutProps> = ({ orgId, campId, children }) => {
+const OrganizeAllCampaignsLayout : FunctionComponent<OrganizeAllCampaignsLayoutProps> = ({ orgId, children }) => {
     const router = useRouter();
-
-    const campQuery = useQuery(['campaign', orgId, campId], getCampaign(orgId, campId));
 
     const path =  router.pathname.split('/');
     let currentTab = path.pop();
 
-    if (currentTab === '[campId]') {
+    if (currentTab === 'campaigns') {
         currentTab = 'summary';
     }
 
     const onSelectTab = (key : ReactText) : void => {
         if (key === 'summary') {
-            router.push(`/organize/${orgId}/campaigns/${campId}`);
+            router.push(`/organize/${orgId}/campaigns`);
         }
         else {
-            router.push(`/organize/${orgId}/campaigns/${campId}/${key}`);
+            router.push(`/organize/${orgId}/campaigns/${key}`);
         }
     };
 
@@ -37,7 +33,9 @@ const OrganizeCampaignLayout : FunctionComponent<OrganizeCampaignLayoutProps> = 
         <OrganizeLayout orgId={ orgId }>
             <Flex direction="column" flexGrow={ 1 }>
                 <View flexShrink={ 0 } padding="0 2rem">
-                    <Heading level={ 2 }>{ campQuery.data?.title }</Heading>
+                    <Heading level={ 2 }>
+                        <Msg id="layout.organize.campaigns.allCampaigns"/>
+                    </Heading>
                 </View>
                 <OrganizeCampaignTabs currentTab={ currentTab } onSelectTab={ onSelectTab }> { children }</OrganizeCampaignTabs>
             </Flex>
@@ -45,4 +43,4 @@ const OrganizeCampaignLayout : FunctionComponent<OrganizeCampaignLayoutProps> = 
     );
 };
 
-export default OrganizeCampaignLayout;
+export default OrganizeAllCampaignsLayout;

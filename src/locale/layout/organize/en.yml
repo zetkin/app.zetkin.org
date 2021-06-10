@@ -10,6 +10,7 @@ search:
     placeholder: Type to search
     drawerLabel: Press Enter to show full results.
 campaigns:
+    allCampaigns: All Projects and Campaigns
     summary: Summary
     calendar: Calendar
     insights: Insights

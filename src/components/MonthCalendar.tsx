@@ -1,14 +1,16 @@
-import { ZetkinEvent } from '../types/zetkin';
+import { getContrastColor } from '../utils/colorUtils';
 import { ActionButton, Flex, View } from '@adobe/react-spectrum';
 import { FormattedDate, FormattedMessage as Msg } from 'react-intl';
+import { ZetkinCampaign, ZetkinEvent } from '../types/zetkin';
 
 interface MonthCalendarProps {
+    campaigns: ZetkinCampaign[];
     events: ZetkinEvent[];
     focusDate: Date;
     onFocusDate: (date: Date) => void;
 }
 
-const MonthCalendar = ({ events, onFocusDate, focusDate }: MonthCalendarProps): JSX.Element => {
+const MonthCalendar = ({ campaigns, events, onFocusDate, focusDate }: MonthCalendarProps): JSX.Element => {
     const month = focusDate.getUTCMonth();
     const year = focusDate.getUTCFullYear();
     const totalDaysInMonth = new Date(year, 1 + month, 0).getDate();
@@ -41,39 +43,6 @@ const MonthCalendar = ({ events, onFocusDate, focusDate }: MonthCalendarProps): 
             date < end;
     };
 
-    const getBarPos = (currentMonth: number) => {
-
-        const barUnit = 100 / gridItems;
-
-        const getGridNumber = (event: Date) => {
-            const offset = (firstMonthDay.getDay() || 7) - 2;
-            if (event.getMonth() === month) {
-                return new Date(event).getDate() + offset;
-            }
-            if (event.getMonth() < currentMonth) {
-                return (new Date(event).getDay() || 7) - 1;
-            }
-            if (event.getMonth() > currentMonth) {
-                return (new Date(event).getDay() || 7) - 3 + offset + totalDaysInMonth;
-            }
-            return 0;
-        };
-
-        const lastCalendarDay = new Date(new Date(firstCalendarDay).setDate(firstCalendarDay.getDate() + gridItems));
-
-        const calendarEvents = getEventsInRange(firstCalendarDay, lastCalendarDay);
-
-        if (calendarEvents.length === 0) return { height: 0, top: 0 };
-
-        const firstEventDate = new Date(calendarEvents[0].start_time);
-        const lastEventDate = new Date(calendarEvents[calendarEvents.length - 1].end_time);
-
-        const top = getGridNumber(new Date(firstEventDate)) * barUnit;
-        const height = (getGridNumber(new Date(lastEventDate)) * barUnit) - top;
-
-        return { height, top };
-    };
-
     return (
         <>
             <View position="absolute" right="15rem" top="-2.6rem">
@@ -99,25 +68,22 @@ const MonthCalendar = ({ events, onFocusDate, focusDate }: MonthCalendarProps): 
             </View>
             <div style={{
                 display: 'flex',
-                height: '100%',
+                minHeight: '100%',
             }}>
                 <div
                     style={{
+                        display: 'flex',
                         marginRight: '0.5rem',
-                        position: 'relative',
-                        width: '1rem',
                     }}>
-                    <div
-                        data-testid="calendar-bar"
-                        style={{
-                            backgroundColor: 'lightgray',
-                            bottom: '2%',
-                            height: `${getBarPos(month).height}%`,
-                            position: 'absolute',
-                            top: `${getBarPos(month).top + 2}%`,
-                            width: '100%',
-                        }}>
-                    </div>
+                    { campaigns.map(c => {
+                        const campaignEvents = events.filter(e => e.campaign.id === c.id)
+                            .sort((a, b) => {
+                                return new Date(a.start_time).getTime() - new Date(b.start_time).getTime();
+                            });
+                        return campaignEvents.length && (
+                            <CalendarBar key={ c.id } campaign={ c } events={ campaignEvents } firstCalendarDay={ firstCalendarDay } firstMonthDay={ firstMonthDay } gridItems={ gridItems } month={ month } totalDaysInMonth={ totalDaysInMonth }/>
+                        );
+                    }) }
                 </div>
                 <div data-testid="calendar-wrapper" style={{
                     display: 'grid',
@@ -125,8 +91,6 @@ const MonthCalendar = ({ events, onFocusDate, focusDate }: MonthCalendarProps): 
                     gap: '0.5rem',
                     gridTemplateColumns: 'repeat(7, minmax(125px, 1fr))',
                     gridTemplateRows: `repeat(${calendarRows}, minmax(125px, 1fr))`,
-                    height: '100%',
-                    overflow: 'scroll',
                 }}>
                     { Array.from(Array(gridItems).keys()).map((_, index) => {
                         const currentDate = new Date(new Date(firstCalendarDay).setDate(firstCalendarDay.getDate() + index));
@@ -150,19 +114,23 @@ const MonthCalendar = ({ events, onFocusDate, focusDate }: MonthCalendarProps): 
                                     padding:0 ,
                                     width: '100%',
                                 }}>
-                                    { getEventsInRange(currentDate, new Date (new Date(currentDate).setDate(currentDate.getDate() + 1))).map(event => (
-                                        <li
-                                            key={ event.id } data-testid={ `event-${event.id}` } style={{
-                                                alignItems: 'center',
-                                                background: 'lightgray',
-                                                display: 'flex',
-                                                justifyContent: 'center',
-                                                margin: '0.5rem 0',
-                                                padding: '0 1rem',
-                                                width: '100%',
-                                            }}>{ `event with id ${event.id}` }
-                                        </li>
-                                    )) }
+                                    { getEventsInRange(currentDate, new Date(new Date(currentDate).setDate(currentDate.getDate() + 1))).map(event => {
+                                        const campaign = campaigns.find(c => c.id === event.campaign.id);
+                                        return (
+                                            <li
+                                                key={ event.id } data-testid={ `event-${event.id}` } style={{
+                                                    alignItems: 'center',
+                                                    background: campaign?.color || '#d3d3d3',
+                                                    color: getContrastColor(campaign?.color|| '#d3d3d3'),
+                                                    display: 'flex',
+                                                    justifyContent: 'center',
+                                                    margin: '0.5rem 0',
+                                                    padding: '0 1rem',
+                                                    width: '100%',
+                                                }}>{ `event with id ${event.id} and campaign ${event.campaign.id}` }
+                                            </li>
+                                        );
+                                    }) }
                                 </ul>
                             </div>
                         );
@@ -174,3 +142,80 @@ const MonthCalendar = ({ events, onFocusDate, focusDate }: MonthCalendarProps): 
 };
 
 export default MonthCalendar;
+
+interface CalendarBarProps {
+    campaign: ZetkinCampaign;
+    month: number;
+    events: ZetkinEvent[];
+    firstCalendarDay: Date;
+    firstMonthDay: Date;
+    totalDaysInMonth: number;
+    gridItems: number;
+}
+
+const CalendarBar = ({ campaign, events, month, gridItems, firstCalendarDay, firstMonthDay, totalDaysInMonth }: CalendarBarProps): JSX.Element | null => {
+    const { id, color } = campaign;
+
+    const lastCalendarDay = new Date(new Date(firstCalendarDay).setDate(firstCalendarDay.getDate() + gridItems));
+
+    const barUnit = 100 / gridItems;
+
+    const getGridNumber = (event: Date) => {
+        const offset = (firstMonthDay.getDay() || 7) - 2;
+        if (event.getMonth() === month) {
+            return new Date(event).getDate() + offset;
+        }
+        if (event.getMonth() < month) {
+            return (new Date(event).getDay() || 7) - 1;
+        }
+        if (event.getMonth() > month) {
+            return (new Date(event).getDay() || 7) - 3 + offset + totalDaysInMonth;
+        }
+        return 0;
+    };
+
+    const firstEventDate = new Date(events[0].start_time);
+    const lastEventDate = new Date(events[events.length - 1].end_time);
+
+    if (firstEventDate > lastCalendarDay || lastEventDate < firstCalendarDay) {
+        return null;
+    }
+
+    let bottom, top;
+    if (firstEventDate < firstCalendarDay ) {
+        top = 0;
+    }
+    else {
+        top = getGridNumber(new Date(firstEventDate)) * barUnit;
+    }
+    if (lastEventDate > lastCalendarDay) {
+        bottom = 100;
+    }
+    else {
+        bottom = getGridNumber(new Date(lastEventDate)) * barUnit;
+    }
+    if (bottom > 100) {
+        bottom = 100;
+    }
+
+    const height = bottom - top;
+
+    return (
+        <div  style={{
+            height: '100%',
+            position: 'relative',
+            width: '0.5rem',
+        }}>
+            <div
+                data-testid={ `calendar-bar-${id}` }
+                style={{
+                    backgroundColor: color,
+                    height: `${height}%`,
+                    position: 'absolute',
+                    top: `${top}%`,
+                    width: '100%',
+                }}>
+            </div>
+        </div>
+    );
+};
