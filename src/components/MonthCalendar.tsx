@@ -1,3 +1,4 @@
+import { getContrastColor } from '../utils/colorUtils';
 import { ActionButton, Flex, View } from '@adobe/react-spectrum';
 import { FormattedDate, FormattedMessage as Msg } from 'react-intl';
 import { ZetkinCampaign, ZetkinEvent } from '../types/zetkin';
@@ -43,8 +44,6 @@ const MonthCalendar = ({ campaigns, events, onFocusDate, focusDate }: MonthCalen
     };
 
     const lastCalendarDay = new Date(new Date(firstCalendarDay).setDate(firstCalendarDay.getDate() + gridItems));
-
-    const campIds = campaigns.map(c => +c.id);
 
     const getBarPos = (currentMonth: number, campId: number) => {
 
@@ -104,28 +103,6 @@ const MonthCalendar = ({ campaigns, events, onFocusDate, focusDate }: MonthCalen
         return { height, top };
     };
 
-    const getCampColors = (campId?: number) => {
-        const currentCampaign = campaigns.find(c => c.id === campId);
-        if (!currentCampaign?.color) {
-            return { bg: '#d3d3d3', fg: '#00000' };
-        }
-        const bgColor = parseInt(currentCampaign.color.slice(1), 16);
-        const bgR = bgColor >> 16;
-        const bgG = bgColor >> 8 & 255;
-        const bgB = bgColor & 255;
-        let fgB = 255, fgG = 255, fgR = 255;
-        const bgAvg = (bgR + bgG + bgB) / 3.0;
-        if (bgAvg > 150) {
-            fgR = fgG = fgB = 0;
-        }
-        const bg = '#' + ((bgR << 16) | (bgG << 8) | bgB)
-            .toString(16).padStart(6, '0');
-        const fg = '#' + ((fgR << 16) | (fgG << 8) | fgB)
-            .toString(16).padStart(6, '0');
-
-        return { bg, fg };
-    };
-
     return (
         <>
             <View position="absolute" right="15rem" top="-2.6rem">
@@ -158,20 +135,20 @@ const MonthCalendar = ({ campaigns, events, onFocusDate, focusDate }: MonthCalen
                         display: 'flex',
                         marginRight: '0.5rem',
                     }}>
-                    { campIds.map(campId => (
-                        <div key={ campId } style={{
+                    { campaigns.map(c => (
+                        <div key={ c.id } style={{
                             height: '100%',
                             position: 'relative',
                             width: '0.5rem',
                         }}>
                             <div
-                                data-testid={ `calendar-bar-${campId}` }
+                                data-testid={ `calendar-bar-${c.id}` }
                                 style={{
-                                    backgroundColor: getCampColors(campId).bg,
-                                    display: getBarPos(month, campId).height? 'block' : 'none',
-                                    height: `${getBarPos(month, campId).height}%`,
+                                    backgroundColor: c.color,
+                                    display: getBarPos(month, c.id).height? 'block' : 'none',
+                                    height: `${getBarPos(month, c.id).height}%`,
                                     position: 'absolute',
-                                    top: `${getBarPos(month, campId).top}%`,
+                                    top: `${getBarPos(month, c.id).top}%`,
                                     width: '100%',
                                 }}>
                             </div>
@@ -207,20 +184,23 @@ const MonthCalendar = ({ campaigns, events, onFocusDate, focusDate }: MonthCalen
                                     padding:0 ,
                                     width: '100%',
                                 }}>
-                                    { getEventsInRange(currentDate, new Date (new Date(currentDate).setDate(currentDate.getDate() + 1))).map(event => (
-                                        <li
-                                            key={ event.id } data-testid={ `event-${event.id}` } style={{
-                                                alignItems: 'center',
-                                                background: getCampColors(event.campaign.id).bg,
-                                                color: getCampColors(event.campaign.id).fg,
-                                                display: 'flex',
-                                                justifyContent: 'center',
-                                                margin: '0.5rem 0',
-                                                padding: '0 1rem',
-                                                width: '100%',
-                                            }}>{ `event with id ${event.id} and campaign ${event.campaign.id}` }
-                                        </li>
-                                    )) }
+                                    { getEventsInRange(currentDate, new Date(new Date(currentDate).setDate(currentDate.getDate() + 1))).map(event => {
+                                        const campaign = campaigns.find(c => c.id === event.campaign.id);
+                                        return (
+                                            <li
+                                                key={ event.id } data-testid={ `event-${event.id}` } style={{
+                                                    alignItems: 'center',
+                                                    background: campaign?.color || '#d3d3d3',
+                                                    color: getContrastColor(campaign?.color|| '#d3d3d3'),
+                                                    display: 'flex',
+                                                    justifyContent: 'center',
+                                                    margin: '0.5rem 0',
+                                                    padding: '0 1rem',
+                                                    width: '100%',
+                                                }}>{ `event with id ${event.id} and campaign ${event.campaign.id}` }
+                                            </li>
+                                        );
+                                    }) }
                                 </ul>
                             </div>
                         );

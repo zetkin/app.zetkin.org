@@ -1,5 +1,5 @@
 import { defaultFetch } from '.';
-import { generateRandomColor } from '../utils/generateRandomColor';
+import { generateRandomColor } from '../utils/colorUtils';
 import { ZetkinCampaign } from '../types/zetkin';
 
 export default function getCampaigns(orgId : string, fetch = defaultFetch) {

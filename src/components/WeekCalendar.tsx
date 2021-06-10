@@ -1,3 +1,4 @@
+import { getContrastColor } from '../utils/colorUtils';
 import { ActionButton, Flex, View } from '@adobe/react-spectrum';
 import { FormattedDate, FormattedMessage as Msg } from 'react-intl';
 import { Heading, Text } from '@adobe/react-spectrum';
@@ -58,28 +59,6 @@ const WeekCalendar = ({ campaigns, events, focusDate, onFocusDate }: WeekCalenda
             height: `${diff * oneMinute}%`,
             top: `${startFromMidnight * oneMinute}%`,
         };
-    };
-
-    const getCampColors = (campId?: number) => {
-        const currentCampaign = campaigns.find(c => c.id === campId);
-        if (!currentCampaign?.color) {
-            return { bg: '#d3d3d3', fg: '#00000' };
-        }
-        const bgColor = parseInt(currentCampaign.color.slice(1), 16);
-        const bgR = bgColor >> 16;
-        const bgG = bgColor >> 8 & 255;
-        const bgB = bgColor & 255;
-        let fgB = 255, fgG = 255, fgR = 255;
-        const bgAvg = (bgR + bgG + bgB) / 3.0;
-        if (bgAvg > 150) {
-            fgR = fgG = fgB = 0;
-        }
-        const bg = '#' + ((bgR << 16) | (bgG << 8) | bgB)
-            .toString(16).padStart(6, '0');
-        const fg = '#' + ((fgR << 16) | (fgG << 8) | fgB)
-            .toString(16).padStart(6, '0');
-
-        return { bg, fg };
     };
 
     return (
@@ -173,20 +152,23 @@ const WeekCalendar = ({ campaigns, events, focusDate, onFocusDate }: WeekCalenda
                                 position: 'relative',
                                 width: '100%',
                             }}>
-                                { getEventsOfTheDay(index + 1)?.map(event => (
-                                    <li key={ event.id } data-testid={ `event-${event.id}` } style={{
-                                        background: getCampColors(event.campaign.id).bg,
-                                        color: getCampColors(event.campaign.id).fg,
-                                        height: getEventPos(event.start_time, event.end_time).height,
-                                        margin: '1rem 0',
-                                        padding: '1rem',
-                                        position: 'absolute',
-                                        top: getEventPos(event.start_time, event.end_time).top,
-                                        width: '100%',
-                                    }}>
-                                        { `event with id ${event.id} and campaign ${event.campaign.id}` }
-                                    </li>
-                                )) }
+                                { getEventsOfTheDay(index + 1)?.map(event => {
+                                    const campaign = campaigns.find(c => c.id === event.campaign.id);
+                                    return (
+                                        <li key={ event.id } data-testid={ `event-${event.id}` } style={{
+                                            background: campaign?.color || '#d3d3d3',
+                                            color: getContrastColor(campaign?.color|| '#d3d3d3'),
+                                            height: getEventPos(event.start_time, event.end_time).height,
+                                            margin: '1rem 0',
+                                            padding: '1rem',
+                                            position: 'absolute',
+                                            top: getEventPos(event.start_time, event.end_time).top,
+                                            width: '100%',
+                                        }}>
+                                            { `event with id ${event.id} and campaign ${event.campaign.id}` }
+                                        </li>
+                                    );
+                                }) }
                             </ul>
                         </div>
                     )) }
