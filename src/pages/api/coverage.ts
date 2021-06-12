@@ -6,7 +6,8 @@ const globalAny: any = global;
 export default (req: NextApiRequest, res: NextApiResponse): void => {
     if (process.env.NODE_ENV === 'production') {
         res.status(404);
-    } else {
+    }
+    else {
         res.status(200).json({
             coverage: globalAny.__coverage__ || null,
         });
