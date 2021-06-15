@@ -6,11 +6,13 @@ import OrganizeSidebar from './OrganizeSidebar';
 describe('OrganizeSidebar', () => {
     const dummyOrgId= '1';
 
-    it('contains navigation buttons', () => {
+    beforeEach(() => {
         cy.stub(Router, 'useRouter').callsFake(() => {
-            return { pathname: `/organize/[orgId]` };
+            return { pathname: `/organize/[orgId]`, prefetch: async () => null };
         });
+    });
 
+    it('contains navigation buttons', () => {
         mountWithProviders(<OrganizeSidebar orgId={ dummyOrgId }/>);
         cy.get('[data-test="home-button"]').should('be.visible');
         cy.get('[data-test="people-button"]').should('be.visible');
@@ -20,30 +22,25 @@ describe('OrganizeSidebar', () => {
         cy.get('[data-test="user-button"]').should('be.visible');
     });
 
-    it('disables people button when on the people page', () => {
-        cy.stub(Router, 'useRouter').callsFake(() => {
-            return { pathname: `/organize/[orgId]/people` };
-        });
-
+    it('is hidden when the viewport is narrow', () => {
+        cy.viewport(500, 800);
         mountWithProviders(<OrganizeSidebar orgId={ dummyOrgId }/>);
-        cy.get('[data-test="people-button"]').should('be.disabled');
+        cy.get('[data-test="home-button"]').should('not.be.visible');
+        cy.get('[data-test="people-button"]').should('not.be.visible');
+        cy.get('[data-test="area-button"]').should('not.be.visible');
+        cy.get('[data-test="calendar-button"]').should('not.be.visible');
     });
 
-    it('disables map button when on the areas page', () => {
-        cy.stub(Router, 'useRouter').callsFake(() => {
-            return { pathname: `/organize/[orgId]/areas` };
-        });
-
+    it('toggles with the menu button when the viewport is narrow', () => {
+        cy.viewport(500, 800);
         mountWithProviders(<OrganizeSidebar orgId={ dummyOrgId }/>);
-        cy.get('[data-test="area-button"]').should('be.disabled');
-    });
-
-    it('disables calendar button when on the calendar page', () => {
-        cy.stub(Router, 'useRouter').callsFake(() => {
-            return { pathname: `/organize/[orgId]/campaigns/calendar` };
-        });
-
-        mountWithProviders(<OrganizeSidebar orgId={ dummyOrgId }/>);
-        cy.get('[data-test="calendar-button"]').should('be.disabled');
+        cy.get('[data-test="menu-button"]')
+            .click()
+            .then(() => {
+                cy.get('[data-test="home-button"]').should('be.visible');
+                cy.get('[data-test="people-button"]').should('be.visible');
+                cy.get('[data-test="area-button"]').should('be.visible');
+                cy.get('[data-test="calendar-button"]').should('be.visible');
+            });
     });
 });

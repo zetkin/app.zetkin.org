@@ -1,11 +1,9 @@
-import Actions from '@spectrum-icons/workflow/Actions';
-import Cloud from '@spectrum-icons/workflow/Cloud';
 import { GetServerSideProps } from 'next';
 import { FormattedMessage as Msg } from 'react-intl';
 import NextLink from 'next/link';
-import Settings from '@spectrum-icons/workflow/Settings';
 import { useQuery } from 'react-query';
-import { Flex, Header, Heading, Image, View } from '@adobe/react-spectrum';
+import { Avatar, Box, Link, makeStyles, Typography } from '@material-ui/core';
+import { Public, Settings, SupervisorAccount } from '@material-ui/icons';
 
 import apiUrl from '../../../utils/apiUrl';
 import DashboardCampaigns from '../../../components/DashboardCampaigns';
@@ -51,68 +49,67 @@ type OrganizePageProps = {
     orgId: string;
 };
 
+const useStyles = makeStyles((theme) => ({
+    responsiveFlexBox: {
+        display: 'flex',
+        [theme.breakpoints.down('sm')]: {
+            flexDirection: 'column',
+        },
+    },
+}));
+
 const OrganizePage: PageWithLayout<OrganizePageProps> = ({ orgId }) => {
 
     const orgQuery = useQuery(['org', orgId], getOrg(orgId));
-
+    const classes = useStyles();
     return (
         <>
-            <View borderColor="gray-400" borderWidth="thick" margin="1rem" padding="1rem">
-                <Header>
-                    <Flex height="100%" justifyContent="start" width="100%">
-                        <Image
-                            alt="Organization avatar"
-                            data-testid="org-avatar"
-                            objectFit="contain"
-                            src={ apiUrl(`/orgs/${orgId}/avatar`) }
-                            width="size-1200"
-                        />
-                        <View>
-                            <Flex direction="column" margin="0 1rem">
-                                <Heading level={ 1 }>
-                                    { orgQuery.data?.title }
-                                </Heading>
-                                <View>
-                                    <Cloud aria-label="Cloud" size="XS" />
-                                    <NextLink href={ `/o/${orgId}` }>
-                                        <a style={{ margin:'0.5rem' }}>
-                                            <Msg id="pages.organize.linkGroup.public"/>
-                                        </a>
-                                    </NextLink>
-                                    <Actions aria-label="Actions" size="XS" />
-                                    <NextLink href={ `/organize/${orgId}/organization` }>
-                                        <a style={{ margin:'0.5rem' }}>
-                                            <Msg id="pages.organize.linkGroup.manage"/>
-                                        </a>
-                                    </NextLink>
-                                    <Settings aria-label="Settings" size="XS" />
-                                    <NextLink href={ `/organize/${orgId}/settings` }>
-                                        <a style={{ margin:'0.5rem' }}>
-                                            <Msg id="pages.organize.linkGroup.settings"/>
-                                        </a>
-                                    </NextLink>
-                                </View>
-                            </Flex>
-                        </View>
-                    </Flex>
-                </Header>
-            </View>
-            <View>
-                <Flex>
-                    <View width="50%">
-                        <View borderColor="gray-400" borderWidth="thick" margin="size-200" padding="size-200">
-                            <DashboardCampaigns orgId={ orgId }/>
-                        </View>
-                        <View borderColor="gray-400" borderWidth="thick" margin="size-200" padding="size-200">
-                            <DashboardPeople orgId={ orgId }/>
-                        </View>
-                        <View borderColor="gray-400" borderWidth="thick" margin="size-200">
-                            Areas
-                        </View>
-                    </View>
-                    <View borderColor="gray-400" borderWidth="thick" height="size-1200" margin="size-200" width="50%">Inbox</View>
-                </Flex>
-            </View>
+            <Box className={ classes.responsiveFlexBox } p={ 3 }>
+                <Box p={ 2 }>
+                    <Avatar src={ apiUrl(`/orgs/${orgId}/avatar`) } style={{ height: '100px', width: '100px' }}></Avatar>
+                </Box>
+                <Box display="flex" flexDirection="column" p={ 2 }>
+                    <Typography component="h1" variant="h3">
+                        { orgQuery.data?.title }
+                    </Typography>
+                    <Typography color="primary">
+                        <Box className={ classes.responsiveFlexBox } p={ 0 }>
+                            <Box display="flex" p={ 1 } pl={ 0 }>
+                                <Public />
+                                <NextLink href={ `/o/${orgId}` } passHref>
+                                    <Link color="inherit">
+                                        <Msg id="pages.organize.linkGroup.public"/>
+                                    </Link>
+                                </NextLink>
+                            </Box>
+                            <Box display="flex" p={ 1 }>
+                                <SupervisorAccount />
+                                <NextLink href={ `/organize/${orgId}/organization` } passHref>
+                                    <Link color="inherit">
+                                        <Msg id="pages.organize.linkGroup.manage"/>
+                                    </Link>
+                                </NextLink>
+                            </Box>
+                            <Box display="flex" p={ 1 }>
+                                <Settings />
+                                <NextLink href={ `/organize/${orgId}/settings` } passHref>
+                                    <Link color="inherit">
+                                        <Msg id="pages.organize.linkGroup.settings"/>
+                                    </Link>
+                                </NextLink>
+                            </Box>
+                        </Box>
+                    </Typography>
+                </Box>
+            </Box>
+            <Box className={ classes.responsiveFlexBox } p={ 2 }>
+                <Box flex={ 1 } width="100%">
+                    <DashboardCampaigns orgId={ orgId }/>
+                    <DashboardPeople orgId={ orgId }/>
+                    <Box border={ 1 } m={ 2 } p={ 2 }>Areas</Box>
+                </Box>
+                <Box border={ 1 } flex={ 1 } m={ 2 } p={ 2 } width="100%">inbox</Box>
+            </Box>
         </>
     );
 };
