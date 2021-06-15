@@ -76,24 +76,24 @@ const OrganizePage: PageWithLayout<OrganizePageProps> = ({ orgId }) => {
                         <Box className={ classes.responsiveFlexBox } p={ 0 }>
                             <Box display="flex" p={ 1 } pl={ 0 }>
                                 <Public />
-                                <NextLink href={ `/o/${orgId}` }>
-                                    <Link color="inherit" href="#">
+                                <NextLink href={ `/o/${orgId}` } passHref>
+                                    <Link color="inherit">
                                         <Msg id="pages.organize.linkGroup.public"/>
                                     </Link>
                                 </NextLink>
                             </Box>
                             <Box display="flex" p={ 1 }>
                                 <SupervisorAccount />
-                                <NextLink href={ `/organize/${orgId}/organization` }>
-                                    <Link color="inherit" href="#">
+                                <NextLink href={ `/organize/${orgId}/organization` } passHref>
+                                    <Link color="inherit">
                                         <Msg id="pages.organize.linkGroup.manage"/>
                                     </Link>
                                 </NextLink>
                             </Box>
                             <Box display="flex" p={ 1 }>
                                 <Settings />
-                                <NextLink href={ `/organize/${orgId}/settings` }>
-                                    <Link color="inherit" href="#">
+                                <NextLink href={ `/organize/${orgId}/settings` } passHref>
+                                    <Link color="inherit">
                                         <Msg id="pages.organize.linkGroup.settings"/>
                                     </Link>
                                 </NextLink>

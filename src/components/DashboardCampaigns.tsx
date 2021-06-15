@@ -38,8 +38,8 @@ const DashboardCampaigns = ({ orgId } : DashboardCampaignProps) : JSX.Element =>
                     <List>
                         { campaigns.map((item: ZetkinCampaign) => (
                             <ListItem key={ item.id } style={{ background: grey[200], border: '1px solid', margin: '1rem 0'  }}>
-                                <NextLink href={ `/organize/${orgId}/campaigns/${item.id}` }>
-                                    <Link color="inherit" href="#">
+                                <NextLink href={ `/organize/${orgId}/campaigns/${item.id}` } passHref>
+                                    <Link color="inherit">
                                         { item.title }
                                     </Link>
                                 </NextLink>
@@ -49,13 +49,13 @@ const DashboardCampaigns = ({ orgId } : DashboardCampaignProps) : JSX.Element =>
                 </Typography>
             ) }
             <Box className={ classes.responsiveFlexBox }>
-                <NextLink href={ `/organize/${orgId}/campaigns` }>
-                    <Link href="#">
+                <NextLink href={ `/organize/${orgId}/campaigns` } passHref>
+                    <Link>
                         <Msg id="pages.organize.currentProjects.all"/>
                     </Link>
                 </NextLink>
-                <NextLink href={ `/organize/${orgId}/campaigns/new` }>
-                    <Button color="primary" href="#" variant="outlined">
+                <NextLink href={ `/organize/${orgId}/campaigns/new` } passHref>
+                    <Button color="primary" variant="outlined">
                         <Msg id="pages.organize.currentProjects.new"/>
                     </Button>
                 </NextLink>

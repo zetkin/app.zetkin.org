@@ -67,29 +67,29 @@ const OrganizeSidebar = ({ orgId  } : OrganizeSidebarProps) : JSX.Element =>{
             <List>
                 <Box display="flex" flexDirection="column">
                     <ListItem>
-                        <NextLink href={ `/organize/${orgId}` }>
-                            <Button aria-label="Home" className={ classes.roundButton } color={ key === '' ?  'primary' : 'secondary' } data-test="home-button" href="#">
+                        <NextLink href={ `/organize/${orgId}` } passHref>
+                            <Button aria-label="Home" className={ classes.roundButton } color={ key === '' ?  'primary' : 'secondary' } data-test="home-button">
                                 <Home />
                             </Button>
                         </NextLink>
                     </ListItem>
                     <ListItem>
-                        <NextLink href={ `/organize/${orgId}/people` }>
-                            <Button aria-label="People" className={ classes.roundButton } color={ key.startsWith('/people') ?  'primary' : 'secondary' } data-test="people-button" href="#">
+                        <NextLink href={ `/organize/${orgId}/people` } passHref>
+                            <Button aria-label="People" className={ classes.roundButton } color={ key.startsWith('/people') ?  'primary' : 'secondary' } data-test="people-button">
                                 <People />
                             </Button>
                         </NextLink>
                     </ListItem>
                     <ListItem>
-                        <NextLink href={ `/organize/${orgId}/areas` }>
-                            <Button aria-label="Areas" className={ classes.roundButton } color={ key.startsWith('/areas') ?  'primary' : 'secondary' } data-test="area-button" href="#">
+                        <NextLink href={ `/organize/${orgId}/areas` } passHref>
+                            <Button aria-label="Areas" className={ classes.roundButton } color={ key.startsWith('/areas') ?  'primary' : 'secondary' } data-test="area-button">
                                 <Map />
                             </Button>
                         </NextLink>
                     </ListItem>
                     <ListItem>
-                        <NextLink href={ `/organize/${orgId}/campaigns/calendar` }>
-                            <Button aria-label="Campaigns" className={ classes.roundButton } color={ key.startsWith('/campaigns') ?  'primary' : 'secondary' } data-test="calendar-button" href="#">
+                        <NextLink href={ `/organize/${orgId}/campaigns/calendar` } passHref>
+                            <Button aria-label="Campaigns" className={ classes.roundButton } color={ key.startsWith('/campaigns') ?  'primary' : 'secondary' } data-test="calendar-button">
                                 <Event />
                             </Button>
                         </NextLink>
