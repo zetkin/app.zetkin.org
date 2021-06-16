@@ -38,9 +38,6 @@ const useStyles = makeStyles(() => ({
         backgroundColor: grey[100],
         flexGrow: 1,
     },
-    tab: {
-        textTransform: 'none',
-    },
 }));
 
 const OrganizeCampaignTabs: FunctionComponent<OrganizeCampaignTabsProps> = ({ children, currentTab, onSelectTab }) => {
@@ -56,15 +53,15 @@ const OrganizeCampaignTabs: FunctionComponent<OrganizeCampaignTabsProps> = ({ ch
     return (
         <div className={ classes.root }>
             <Tabs aria-label="campaign tabs" indicatorColor="primary" onChange={ handleChange } textColor="primary" value={ value }>
-                <Tab className={ classes.tab } label={ intl.formatMessage({
+                <Tab label={ intl.formatMessage({
                     id: 'layout.organize.campaigns.summary',
                 }) } value="summary"
                 />
-                <Tab className={ classes.tab } label={ intl.formatMessage({
+                <Tab label={ intl.formatMessage({
                     id: 'layout.organize.campaigns.calendar',
                 }) } value="calendar"
                 />
-                <Tab className={ classes.tab } label={ intl.formatMessage({
+                <Tab label={ intl.formatMessage({
                     id: 'layout.organize.campaigns.insights',
                 }) } value="insights"
                 />
