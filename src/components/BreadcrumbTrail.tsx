@@ -1,8 +1,10 @@
 import { FormattedMessage as Msg } from 'react-intl';
+import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import NextLink from 'next/link';
 import { ParsedUrlQuery } from 'node:querystring';
 import { useRouter } from 'next/router';
-import { Breadcrumbs, Item } from '@adobe/react-spectrum';
+import { Breadcrumbs, Link, Typography } from '@material-ui/core';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { useEffect, useState } from 'react';
 
 type Breadcrumb = {
@@ -11,8 +13,19 @@ type Breadcrumb = {
     labelMsg?: string;
 }
 
+const useStyles = makeStyles((theme: Theme) =>
+    createStyles({
+        root: {
+            '& > * + *': {
+                marginTop: theme.spacing(2),
+            },
+        },
+    }),
+);
+
 const BreadcrumbTrail = () : JSX.Element | null => {
     const router = useRouter();
+    const classes = useStyles();
     const [breadcrumbs, setBreadcrumbs] = useState<Breadcrumb[] | null>(null);
 
     const fetchBreadcrumbs = async (
@@ -34,17 +47,28 @@ const BreadcrumbTrail = () : JSX.Element | null => {
     if (!breadcrumbs) return null;
 
     return (
-        <Breadcrumbs>
-            { breadcrumbs.map(crumb => (
-                <Item key={ crumb.href }>
-                    <NextLink href={ crumb.href }>
-                        <a>
-                            { crumb.labelMsg ? <Msg id={ crumb.labelMsg }/>: crumb.label }
-                        </a>
-                    </NextLink>
-                </Item>
-            )) }
-        </Breadcrumbs>
+        <div className={ classes.root }>
+            <Breadcrumbs aria-label="breadcrumb" separator={ <NavigateNextIcon fontSize="small" /> }>
+                { breadcrumbs.map((crumb, index) => {
+                    if (index < breadcrumbs.length - 1) {
+                        return (
+                            <NextLink key={ crumb.href } href={ crumb.href } passHref>
+                                <Link>
+                                    { crumb.labelMsg ? <Msg id={ crumb.labelMsg } /> : crumb.label }
+                                </Link>
+                            </NextLink>
+                        );
+                    }
+                    else {
+                        return (
+                            <Typography>
+                                { crumb.labelMsg ? <Msg id={ crumb.labelMsg } /> : crumb.label }
+                            </Typography>
+                        );
+                    }
+                }) }
+            </Breadcrumbs>
+        </div>
     );
 };
 
