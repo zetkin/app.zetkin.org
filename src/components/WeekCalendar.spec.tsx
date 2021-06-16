@@ -226,16 +226,19 @@ describe('WeekCalendar', () => {
             <WeekCalendar campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ new Date(2021, 4, 10) } onFocusDate={ () => null }  />,
         );
 
-        cy.get('[data-testid="event-26"]').then(el => {
-            const firstEventBgColor = el[0].style.backgroundColor;
-            cy.get('[data-testid="event-29"]').then(el => {
-                const secondEventBgColor = el[0].style.backgroundColor;
-                cy.get('[data-testid="event-25"]').then(el => {
-                    const thirdEventBgColor = el[0].style.backgroundColor;
-                    expect(firstEventBgColor).to.not.eq(secondEventBgColor);
-                    expect(firstEventBgColor).to.eq(thirdEventBgColor);
-                });
+        cy.get('[data-testid="event-26"]')
+            .invoke('css', 'background-color').then(color => {
+                const firstEventBgColor = color;
+                cy.get('[data-testid="event-29"]')
+                    .invoke('css', 'background-color').then(color => {
+                        const secondEventBgColor = color;
+                        cy.get('[data-testid="event-25"]')
+                            .invoke('css', 'background-color').then(color => {
+                                const thirdEventBgColor = color;
+                                expect(firstEventBgColor).to.not.eq(secondEventBgColor);
+                                expect(firstEventBgColor).to.eq(thirdEventBgColor);
+                            });
+                    });
             });
-        });
     });
 });

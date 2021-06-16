@@ -142,17 +142,20 @@ describe('MonthCalendar', () => {
             <MonthCalendar campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ new Date(2021, 4, 10) } onFocusDate={ () => null }  />,
         );
 
-        cy.get('[data-testid="griditem-4"]').then(el => {
-            const beforeRangeBackgroundColor = el[0].style.backgroundColor;
-            cy.get('[data-testid="griditem-36"]').then(el => {
-                const afterRangeBackgroundColor = el[0].style.backgroundColor;
-                cy.get('[data-testid="griditem-20"]').then(el => {
-                    const inRangeBackgroundColor = el[0].style.backgroundColor;
-                    expect(inRangeBackgroundColor).to.not.eq(beforeRangeBackgroundColor);
-                    expect(afterRangeBackgroundColor).to.eq(beforeRangeBackgroundColor);
-                });
+        cy.get('[data-testid="griditem-4"]')
+            .invoke('css', 'background-color').then(color => {
+                const beforeRangeBackgroundColor = color;
+                cy.get('[data-testid="griditem-36"]')
+                    .invoke('css', 'background-color').then(color => {
+                        const afterRangeBackgroundColor = color;
+                        cy.get('[data-testid="griditem-20"]')
+                            .invoke('css', 'background-color').then(color => {
+                                const inRangeBackgroundColor = color;
+                                expect(inRangeBackgroundColor).to.not.eq(beforeRangeBackgroundColor);
+                                expect(afterRangeBackgroundColor).to.eq(beforeRangeBackgroundColor);
+                            });
+                    });
             });
-        });
     });
 
     it('works with a leap year february', () => {
@@ -244,17 +247,20 @@ describe('MonthCalendar', () => {
             <MonthCalendar campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ new Date(2021, 4, 10) } onFocusDate={ () => null }  />,
         );
 
-        cy.get('[data-testid="event-26"]').then(el => {
-            const firstEventBgColor = el[0].style.backgroundColor;
-            cy.get('[data-testid="event-27"]').then(el => {
-                const secondEventBgColor = el[0].style.backgroundColor;
-                cy.get('[data-testid="event-24"]').then(el => {
-                    const thirdEventBgColor = el[0].style.backgroundColor;
-                    expect(firstEventBgColor).to.not.eq(secondEventBgColor);
-                    expect(firstEventBgColor).to.eq(thirdEventBgColor);
-                });
+        cy.get('[data-testid="event-26"]')
+            .invoke('css', 'background-color').then(color => {
+                const firstEventBgColor = color;
+                cy.get('[data-testid="event-27"]')
+                    .invoke('css', 'background-color').then(color => {
+                        const secondEventBgColor = color;
+                        cy.get('[data-testid="event-24"]')
+                            .invoke('css', 'background-color').then(color => {
+                                const thirdEventBgColor = color;
+                                expect(firstEventBgColor).to.not.eq(secondEventBgColor);
+                                expect(firstEventBgColor).to.eq(thirdEventBgColor);
+                            });
+                    });
             });
-        });
     });
 
     it('shows a uniquely coloured sidebar for each campaign', () => {
@@ -273,27 +279,20 @@ describe('MonthCalendar', () => {
             'start_time': '2021-04-29T15:37:00+00:00',
         };
         mountWithProviders(
-            <div style={{
-                bottom: 0,
-                left: 0,
-                padding: 0,
-                position: 'absolute',
-                right: 0,
-                top: 0,
-            }}>
-                <MonthCalendar campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ new Date(2021, 4, 10) } onFocusDate={ () => null }/>,
-            </div>,
+            <MonthCalendar campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ new Date(2021, 4, 10) } onFocusDate={ () => null }/>,
         );
 
         cy.get('[data-testid="calendar-bar-941"]').should('be.visible');
         cy.get('[data-testid="calendar-bar-942"]').should('be.visible');
 
-        cy.get('[data-testid="calendar-bar-941"]').then(el => {
-            const firstBarBgColor = el[0].style.backgroundColor;
-            cy.get('[data-testid="calendar-bar-942"]').then(el => {
-                const secondBarBgColor = el[0].style.backgroundColor;
-                expect(firstBarBgColor).to.not.eq(secondBarBgColor);
+        cy.get('[data-testid="calendar-bar-941"]')
+            .invoke('css', 'background-color').then(color => {
+                const firstBarBgColor = color;
+                cy.get('[data-testid="calendar-bar-942"]')
+                    .invoke('css', 'background-color').then(color => {
+                        const secondBarBgColor = color;
+                        expect(firstBarBgColor).to.not.eq(secondBarBgColor);
+                    });
             });
-        });
     });
 });
