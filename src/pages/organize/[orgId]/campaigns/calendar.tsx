@@ -1,6 +1,6 @@
 import { GetServerSideProps } from 'next';
 import { useState } from 'react';
-import { Flex, Item, Picker, View } from '@adobe/react-spectrum';
+import { Box , FormControl, MenuItem, Select } from '@material-ui/core';
 
 import getCampaigns from '../../../../fetching/getCampaigns';
 import getEvents from '../../../../fetching/getEvents';
@@ -67,23 +67,34 @@ const AllCampaignsCalendarPage : PageWithLayout<AllCampaignsCalendarPageProps> =
 
     const [calendarView, setCalendarView] = useState('month');
 
+    const handleChange = (event: React.ChangeEvent<{ name?: string; value: unknown}>) => {
+        setCalendarView(event.target.value as string);
+    };
+
     return (
-        <View position="relative">
-            <Flex justifyContent="end" position="absolute" right="0px" top="-2.5rem">
-                <Picker
+        <Box p={ 2 } position="relative">
+            <Box display="flex" justifyContent="flex-end" mr={ 3 } position="absolute" right={ 0 } top="-2.5rem">
+                <FormControl
                     aria-label={ intl.formatMessage(
                         { id: 'misc.calendar.label' }) }
-                    items={ items }
-                    onSelectionChange={ (selected) => setCalendarView(selected as string) }
-                    selectedKey={ calendarView }>
-                    { (item) => <Item key={ item.id }>{ item.name }</Item> }
-                </Picker>
-            </Flex>
-            <View height="80vh" overflow="scroll">
+                    variant="outlined">
+                    <Select id="demo-simple-select-outlined"
+                        labelId="demo-simple-select-outlined-label"
+                        onChange={ handleChange }
+                        value={ calendarView }>
+                        { items.map(item => (
+                            <MenuItem key={ item.id } value={ item.id }>
+                                { item.name }
+                            </MenuItem>
+                        )) }
+                    </Select>
+                </FormControl>
+            </Box>
+            <Box height="78vh" overflow="scroll">
                 { calendarView === 'month' && <MonthCalendar campaigns={ campaigns } events={ events } focusDate={ focusDate } onFocusDate={ date => setFocusDate(date) } /> }
                 { calendarView === 'week' && <WeekCalendar campaigns={ campaigns } events={ events } focusDate={ focusDate } onFocusDate={ date => setFocusDate(date) }/> }
-            </View>
-        </View>
+            </Box>
+        </Box>
     );
 };
 

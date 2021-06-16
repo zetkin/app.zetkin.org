@@ -1,5 +1,6 @@
 import { getContrastColor } from '../utils/colorUtils';
-import { ActionButton, Flex, View } from '@adobe/react-spectrum';
+import { grey } from '@material-ui/core/colors';
+import { Box, Button, List, Typography } from '@material-ui/core';
 import { FormattedDate, FormattedMessage as Msg } from 'react-intl';
 import { ZetkinCampaign, ZetkinEvent } from '../types/zetkin';
 
@@ -45,36 +46,27 @@ const MonthCalendar = ({ campaigns, events, onFocusDate, focusDate }: MonthCalen
 
     return (
         <>
-            <View position="absolute" right="15rem" top="-2.6rem">
-                <Flex alignItems="center">
-                    <ActionButton data-testid="back-button" onPress={
-                        () => onFocusDate(new Date(focusDate.getFullYear(), focusDate.getMonth() - 1, focusDate.getDate()))
-                    }>
-                        <Msg id="misc.calendar.prev" />
-                    </ActionButton>
-                    <View data-testid="selected-month" padding="size-100">
-                        <FormattedDate
-                            month="long"
-                            value={ new Date(year, month + 1, 0) }
-                            year="numeric"
-                        />
-                    </View>
-                    <ActionButton data-testid="fwd-button" onPress={
-                        () => onFocusDate(new Date(focusDate.getFullYear(), focusDate.getMonth() + 1, focusDate.getDate()))
-                    }>
-                        <Msg id="misc.calendar.next" />
-                    </ActionButton>
-                </Flex>
-            </View>
-            <div style={{
-                display: 'flex',
-                minHeight: '100%',
-            }}>
-                <div
-                    style={{
-                        display: 'flex',
-                        marginRight: '0.5rem',
-                    }}>
+            <Box alignItems="center" display="flex" position="absolute" right="15rem" top="-2.6rem">
+                <Button color="primary" data-testid="back-button" onClick={
+                    () => onFocusDate(new Date(focusDate.getFullYear(), focusDate.getMonth() - 1, focusDate.getDate()))
+                }>
+                    <Msg id="misc.calendar.prev" />
+                </Button>
+                <Box data-testid="selected-month" p={ 1 }>
+                    <FormattedDate
+                        month="long"
+                        value={ new Date(year, month + 1, 0) }
+                        year="numeric"
+                    />
+                </Box>
+                <Button color="primary" data-testid="fwd-button" onClick={
+                    () => onFocusDate(new Date(focusDate.getFullYear(), focusDate.getMonth() + 1, focusDate.getDate()))
+                }>
+                    <Msg id="misc.calendar.next" />
+                </Button>
+            </Box>
+            <Box display="flex" minHeight={ 1 }>
+                <Box display="flex" mr={ 0.5 }>
                     { campaigns.map(c => {
                         const campaignEvents = events.filter(e => e.campaign.id === c.id)
                             .sort((a, b) => {
@@ -84,44 +76,30 @@ const MonthCalendar = ({ campaigns, events, onFocusDate, focusDate }: MonthCalen
                             <CalendarBar key={ c.id } campaign={ c } events={ campaignEvents } firstCalendarDay={ firstCalendarDay } firstMonthDay={ firstMonthDay } gridItems={ gridItems } month={ month } totalDaysInMonth={ totalDaysInMonth }/>
                         );
                     }) }
-                </div>
-                <div data-testid="calendar-wrapper" style={{
-                    display: 'grid',
-                    flexGrow: 1,
-                    gap: '0.5rem',
-                    gridTemplateColumns: 'repeat(7, minmax(125px, 1fr))',
-                    gridTemplateRows: `repeat(${calendarRows}, minmax(125px, 1fr))`,
-                }}>
+                </Box>
+                <Box data-testid="calendar-wrapper" display="grid" gridTemplateColumns="repeat(7, minmax(125px, 1fr))" gridTemplateRows={ `repeat(${calendarRows}, minmax(125px, 1fr))` }>
                     { Array.from(Array(gridItems).keys()).map((_, index) => {
                         const currentDate = new Date(new Date(firstCalendarDay).setDate(firstCalendarDay.getDate() + index));
 
                         return (
-                            <div key={ index } data-testid={ `griditem-${index}` } style={{
-                                background: isInRange(currentDate, firstMonthDay, lastMonthDay) ? 'grey' : 'whitesmoke',
-                                position: 'relative',
-                            }}>
-                                <div style={{
-                                    top: 0,
-                                }}>
-                                    <FormattedDate
-                                        day="2-digit"
-                                        value={ currentDate }
-                                    />
-                                </div>
-                                <ul data-testid={ `day-${index}-events` } style={{
-                                    listStyle: 'none',
-                                    margin: 0,
-                                    padding:0 ,
-                                    width: '100%',
-                                }}>
+                            <Box key={ index } bgcolor={ isInRange(currentDate, firstMonthDay, lastMonthDay) ? grey[300] : grey[200] } data-testid={ `griditem-${index}` } m={ 0.5 } position="relative">
+                                <Typography>
+                                    <Box p={ 1 }>
+                                        <FormattedDate
+                                            day="2-digit"
+                                            value={ currentDate }
+                                        />
+                                    </Box>
+                                </Typography>
+                                <List data-testid={ `day-${index}-events` }>
                                     { getEventsInRange(currentDate, new Date(new Date(currentDate).setDate(currentDate.getDate() + 1))).map(event => {
                                         const campaign = campaigns.find(c => c.id === event.campaign.id);
                                         return (
                                             <li
                                                 key={ event.id } data-testid={ `event-${event.id}` } style={{
                                                     alignItems: 'center',
-                                                    background: campaign?.color || '#d3d3d3',
-                                                    color: getContrastColor(campaign?.color|| '#d3d3d3'),
+                                                    background: campaign?.color || grey[400],
+                                                    color: getContrastColor(campaign?.color|| grey[400]),
                                                     display: 'flex',
                                                     justifyContent: 'center',
                                                     margin: '0.5rem 0',
@@ -131,12 +109,12 @@ const MonthCalendar = ({ campaigns, events, onFocusDate, focusDate }: MonthCalen
                                             </li>
                                         );
                                     }) }
-                                </ul>
-                            </div>
+                                </List>
+                            </Box>
                         );
                     }) }
-                </div>
-            </div>
+                </Box>
+            </Box>
         </>
     );
 };
@@ -201,21 +179,11 @@ const CalendarBar = ({ campaign, events, month, gridItems, firstCalendarDay, fir
     const height = bottom - top;
 
     return (
-        <div  style={{
-            height: '100%',
-            position: 'relative',
-            width: '0.5rem',
-        }}>
-            <div
-                data-testid={ `calendar-bar-${id}` }
-                style={{
-                    backgroundColor: color,
-                    height: `${height}%`,
-                    position: 'absolute',
-                    top: `${top}%`,
-                    width: '100%',
-                }}>
-            </div>
-        </div>
+        <Box height={ 1 } position="relative" width="0.5rem">
+            <Box
+                bgcolor={ color }
+                data-testid={ `calendar-bar-${id}` } height={ `${height}%` } position="absolute" top={ `${top}%` } width={ 1 }>
+            </Box>
+        </Box>
     );
 };
