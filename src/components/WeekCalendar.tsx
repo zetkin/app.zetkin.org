@@ -92,23 +92,36 @@ const WeekCalendar = ({ campaigns, events, focusDate, onFocusDate }: WeekCalenda
                 </Button>
             </Box>
             <Box { ...{ ref: calendarWrapper } } data-testid="calendar-wrapper" height={ 1 } overflow="scroll" width={ 1 }>
-                <Box bgcolor={ grey[100] } display="flex" justifyContent="space-between" position="sticky" top={ 0 } width={ 1 } zIndex={ 1 }>
-                    { Array.from(Array(7).keys()).map((_, index) => (
-                        <Box key={ index } alignItems="center" data-testid="weekdays" display="flex" flexDirection="column" justifyContent="flex-start" width="100%">
-                            <Typography component="h2" data-testid={ `weekday-${index}` } variant="subtitle2">
-                                <FormattedDate
-                                    value={ new Date(new Date(calendarStartDate).setDate(calendarStartDate.getDate() + index)) }
-                                    weekday="short"
-                                />
-                            </Typography>
-                            <Typography data-testid={ `date-${index}` }>
-                                <FormattedDate
-                                    day="2-digit"
-                                    value={ new Date(new Date(calendarStartDate).setDate(calendarStartDate.getDate() + index)) }
-                                />
-                            </Typography>
-                        </Box>
-                    )) }
+                <Box bgcolor={ grey[100] } display="flex" flexDirection="column" justifyContent="space-between" position="sticky" top={ 0 } width={ 1 } zIndex={ 1 }>
+                    <Box display="flex">
+                        { Array.from(Array(7).keys()).map((_, index) => (
+                            <Box key={ index } alignItems="center" data-testid="weekdays" display="flex" flexDirection="column" justifyContent="flex-start" width="100%">
+                                <Typography component="h2" data-testid={ `weekday-${index}` } variant="subtitle2">
+                                    <FormattedDate
+                                        value={ new Date(new Date(calendarStartDate).setDate(calendarStartDate.getDate() + index)) }
+                                        weekday="short"
+                                    />
+                                </Typography>
+                                <Typography data-testid={ `date-${index}` }>
+                                    <FormattedDate
+                                        day="2-digit"
+                                        value={ new Date(new Date(calendarStartDate).setDate(calendarStartDate.getDate() + index)) }
+                                    />
+                                </Typography>
+                            </Box>
+                        )) }
+                    </Box>
+                    <Box display="flex" flexDirection="column" mb={ 0.5 }>
+                        { campaigns.map(c => {
+                            const campaignEvents = events.filter(e => e.campaign.id === c.id)
+                                .sort((a, b) => {
+                                    return new Date(a.start_time).getTime() - new Date(b.start_time).getTime();
+                                });
+                            return campaignEvents.length && (
+                                <CalendarBar key={ c.id } campaign={ c } events={ campaignEvents } firstCalendarDay={ calendarStartDate }/>
+                            );
+                        }) }
+                    </Box>
                 </Box>
                 <Box { ...{ ref: calendar } } alignItems="center" display="flex" height="100rem" justifyContent="start" width={ 1 }>
                     { Array.from(Array(7).keys()).map((_, index) => (
@@ -141,3 +154,52 @@ const WeekCalendar = ({ campaigns, events, focusDate, onFocusDate }: WeekCalenda
 };
 
 export default WeekCalendar;
+
+interface CalendarBarProps {
+    campaign: ZetkinCampaign;
+    events: ZetkinEvent[];
+    firstCalendarDay: Date;
+}
+
+const CalendarBar = ({ campaign, events, firstCalendarDay }: CalendarBarProps): JSX.Element | null => {
+    const { id, color } = campaign;
+
+    const lastCalendarDay = new Date(new Date(firstCalendarDay).setDate(firstCalendarDay.getDate() + 7));
+
+    const barUnit = 100 / 7;
+
+    const firstEventDate = new Date(events[0].start_time);
+    const lastEventDate = new Date(events[events.length - 1].end_time);
+
+    if (firstEventDate > lastCalendarDay || lastEventDate < firstCalendarDay) {
+        return null;
+    }
+
+    let left, right;
+    if (firstEventDate < firstCalendarDay ) {
+        left = 0;
+    }
+    else {
+        left = ((new Date(firstEventDate).getDay() || 7) - 1) * barUnit;
+    }
+    if (lastEventDate > lastCalendarDay) {
+        right = 100;
+    }
+    else {
+        right = ((new Date(lastEventDate).getDay() || 7) - 1)  * barUnit + barUnit;
+    }
+    if (right > 100) {
+        right = 100;
+    }
+
+    const width = right - left;
+
+    return (
+        <Box height="0.5rem" position="relative" width={ 1 }>
+            <Box
+                bgcolor={ color }
+                data-testid={ `calendar-bar-${id}` } height={ 1 } left={ `${left}%` } position="absolute" width={ `${width}%` }>
+            </Box>
+        </Box>
+    );
+};

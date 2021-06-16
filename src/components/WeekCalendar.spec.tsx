@@ -241,4 +241,30 @@ describe('WeekCalendar', () => {
                     });
             });
     });
+
+    it('shows a uniquely coloured sidebar for each campaign', () => {
+        dummyEvents[2] = {
+            ...dummyEvents[0],
+            'campaign': { ...dummyEvents[0].campaign, 'id': 942 },
+            'end_time': '2021-05-11T17:37:00+00:00',
+            'id': 29,
+            'start_time': '2021-05-11T15:37:00+00:00',
+        };
+        mountWithProviders(
+            <WeekCalendar campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ new Date(2021, 4, 10) } onFocusDate={ () => null }/>,
+        );
+
+        cy.get('[data-testid="calendar-bar-941"]').should('be.visible');
+        cy.get('[data-testid="calendar-bar-942"]').should('be.visible');
+
+        cy.get('[data-testid="calendar-bar-941"]')
+            .invoke('css', 'background-color').then(color => {
+                const firstBarBgColor = color;
+                cy.get('[data-testid="calendar-bar-942"]')
+                    .invoke('css', 'background-color').then(color => {
+                        const secondBarBgColor = color;
+                        expect(firstBarBgColor).to.not.eq(secondBarBgColor);
+                    });
+            });
+    });
 });
