@@ -77,7 +77,7 @@ const MonthCalendar = ({ campaigns, events, onFocusDate, focusDate }: MonthCalen
                         );
                     }) }
                 </Box>
-                <Box data-testid="calendar-wrapper" display="grid" gridTemplateColumns="repeat(7, minmax(125px, 1fr))" gridTemplateRows={ `repeat(${calendarRows}, minmax(125px, 1fr))` }>
+                <Box data-testid="calendar-wrapper" display="grid" gridTemplateColumns="repeat(7, minmax(125px, 1fr))" gridTemplateRows={ `repeat(${calendarRows}, minmax(125px, 1fr))` } width={ 1 }>
                     { Array.from(Array(gridItems).keys()).map((_, index) => {
                         const currentDate = new Date(new Date(firstCalendarDay).setDate(firstCalendarDay.getDate() + index));
 
