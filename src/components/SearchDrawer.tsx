@@ -108,6 +108,11 @@ const SearchDrawer = (): JSX.Element | null => {
                     right: 0;
                     z-index: 3;
                 }
+                @media screen and (max-width: 600px) {
+                    .drawer {
+                        width: 40vw;
+                    }
+                }
                 ` }
             </style>
         </>
