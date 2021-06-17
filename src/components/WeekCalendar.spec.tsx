@@ -1,3 +1,4 @@
+import '../utils/polyfills';
 import { mountWithProviders } from '../utils/testing';
 import WeekCalendar from './WeekCalendar';
 import { ZetkinCampaign, ZetkinEvent } from '../types/zetkin';
@@ -179,7 +180,7 @@ describe('WeekCalendar', () => {
         mountWithProviders(
             <WeekCalendar campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ dummyDate } onFocusDate={ () => null }/>,
         );
-        cy.get('[data-testid="selected-date"]').contains('10');
+        cy.get('[data-testid="selected-date"]').contains('19');
     });
 
     it('sets the focus date a week ago when back is clicked', () => {
