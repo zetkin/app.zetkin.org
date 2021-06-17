@@ -1,6 +1,6 @@
 import { getContrastColor } from '../utils/colorUtils';
 import { grey } from '@material-ui/core/colors';
-import { Box, Button, List, Typography } from '@material-ui/core';
+import { Box, Button, List, makeStyles, Typography } from '@material-ui/core';
 import { FormattedDate, FormattedMessage as Msg } from 'react-intl';
 import { ZetkinCampaign, ZetkinEvent } from '../types/zetkin';
 
@@ -11,7 +11,16 @@ interface MonthCalendarProps {
     onFocusDate: (date: Date) => void;
 }
 
+const useStyles = makeStyles((theme) => ({
+    responsiveFlexBox: {
+        [theme.breakpoints.down('sm')]: {
+            justifyContent: 'flex-start',
+        },
+    },
+}));
+
 const MonthCalendar = ({ campaigns, events, onFocusDate, focusDate }: MonthCalendarProps): JSX.Element => {
+    const classes = useStyles();
     const month = focusDate.getUTCMonth();
     const year = focusDate.getUTCFullYear();
     const totalDaysInMonth = new Date(year, 1 + month, 0).getDate();
@@ -46,26 +55,28 @@ const MonthCalendar = ({ campaigns, events, onFocusDate, focusDate }: MonthCalen
 
     return (
         <>
-            <Box alignItems="center" display="flex" position="absolute" right="15rem" top="-2.6rem">
-                <Button color="primary" data-testid="back-button" onClick={
-                    () => onFocusDate(new Date(focusDate.getFullYear(), focusDate.getMonth() - 1, focusDate.getDate()))
-                }>
-                    <Msg id="misc.calendar.prev" />
-                </Button>
-                <Box data-testid="selected-month" p={ 1 }>
-                    <FormattedDate
-                        month="long"
-                        value={ new Date(year, month + 1, 0) }
-                        year="numeric"
-                    />
+            <Box alignItems="center" bgcolor={ grey[100] } position="sticky" top={ 0 } zIndex={ 1 }>
+                <Box alignItems="center" className={ classes.responsiveFlexBox } display="flex" justifyContent="center">
+                    <Button color="primary" data-testid="back-button" onClick={
+                        () => onFocusDate(new Date(focusDate.getFullYear(), focusDate.getMonth() - 1, focusDate.getDate()))
+                    }>
+                        <Msg id="misc.calendar.prev" />
+                    </Button>
+                    <Box data-testid="selected-month" p={ 1 } textAlign="center" width="8rem">
+                        <FormattedDate
+                            month="long"
+                            value={ new Date(year, month + 1, 0) }
+                            year="numeric"
+                        />
+                    </Box>
+                    <Button color="primary" data-testid="fwd-button" onClick={
+                        () => onFocusDate(new Date(focusDate.getFullYear(), focusDate.getMonth() + 1, focusDate.getDate()))
+                    }>
+                        <Msg id="misc.calendar.next" />
+                    </Button>
                 </Box>
-                <Button color="primary" data-testid="fwd-button" onClick={
-                    () => onFocusDate(new Date(focusDate.getFullYear(), focusDate.getMonth() + 1, focusDate.getDate()))
-                }>
-                    <Msg id="misc.calendar.next" />
-                </Button>
             </Box>
-            <Box display="flex" minHeight={ 1 }>
+            <Box display="flex" height={ 1 }>
                 <Box display="flex" mr={ 0.5 }>
                     { campaigns.map(c => {
                         const campaignEvents = events.filter(e => e.campaign.id === c.id)
