@@ -75,7 +75,7 @@ const CampaignCalendarPage : PageWithLayout<OrganizeCalendarPageProps> = ({ orgI
 
     return (
         <Box p={ 2 } position="relative">
-            <Box display="flex" justifyContent="flex-end" mr={ 3 } position="absolute" right={ 0 } top="-2.5rem">
+            <Box display="flex" justifyContent="flex-end" mr={ 3 } position="absolute" right={ 0 } top="1.2rem" zIndex={ 2 }>
                 <FormControl
                     aria-label={ intl.formatMessage(
                         { id: 'misc.calendar.label' }) }
