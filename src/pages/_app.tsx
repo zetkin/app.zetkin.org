@@ -1,4 +1,5 @@
 import '../styles.css';
+import '../utils/polyfills';
 import { AppProps } from 'next/app';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { Hydrate } from 'react-query/hydration';
@@ -20,6 +21,9 @@ const queryClient = new QueryClient();
 declare global {
     interface Window {
         __reactRendered: boolean;
+    }
+    interface Date {
+        getWeekNumber: () => number;
     }
 }
 
