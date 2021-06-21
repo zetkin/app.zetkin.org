@@ -22,9 +22,6 @@ declare global {
     interface Window {
         __reactRendered: boolean;
     }
-    interface Date {
-        getWeekNumber: () => number;
-    }
 }
 
 function MyApp({ Component, pageProps } : AppProps) : JSX.Element {

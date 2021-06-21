@@ -5,4 +5,10 @@ Date.prototype.getWeekNumber = function() {
     return Math.ceil((((d.getTime()-new Date(d.getUTCFullYear(),0,1).getTime())/8.64e7)+1)/7);
 };
 
+declare global {
+    interface Date {
+        getWeekNumber: () => number;
+    }
+}
+
 export { };
