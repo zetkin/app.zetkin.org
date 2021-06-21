@@ -4,33 +4,9 @@ import { Box,  makeStyles, Tab, Tabs } from '@material-ui/core';
 import { ChangeEvent, useState } from 'react';
 import { FunctionComponent, ReactText } from 'react';
 
-interface TabPanelProps {
-    children?: React.ReactNode;
-    index: string;
-    value: string | undefined;
-}
-
 interface OrganizeCampaignTabsProps {
     currentTab?: string;
     onSelectTab: (key : ReactText) => void;
-}
-
-function TabPanel(props:TabPanelProps) {
-    const { children, value, index, ...other } = props;
-    return (
-        <div
-            aria-labelledby={ index }
-            hidden={ value !== index }
-            id={ `tabpanel-${index}` }
-            role="tabpanel"
-            { ...other }>
-            { value === index && (
-                <Box>
-                    { children }
-                </Box>
-            ) }
-        </div>
-    );
 }
 
 const useStyles = makeStyles(() => ({
@@ -66,15 +42,9 @@ const OrganizeCampaignTabs: FunctionComponent<OrganizeCampaignTabsProps> = ({ ch
                 }) } value="insights"
                 />
             </Tabs>
-            <TabPanel index="summary" value={ value }>
+            <Box role="tabpanel">
                 { children }
-            </TabPanel>
-            <TabPanel index="calendar" value={ value }>
-                { children }
-            </TabPanel>
-            <TabPanel index="insights" value={ value }>
-                { children }
-            </TabPanel>
+            </Box>
         </div>
     );
 };

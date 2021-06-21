@@ -61,7 +61,7 @@ const BreadcrumbTrail = () : JSX.Element | null => {
                     }
                     else {
                         return (
-                            <Typography>
+                            <Typography key={ crumb.href }>
                                 { crumb.labelMsg ? <Msg id={ crumb.labelMsg } /> : crumb.label }
                             </Typography>
                         );
