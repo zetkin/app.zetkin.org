@@ -295,4 +295,53 @@ describe('MonthCalendar', () => {
                     });
             });
     });
+
+    it.only('does not overflow the calendar grid when there are too many events', () => {
+        cy.viewport(800, 500);
+        dummyEvents[4] = {
+            ...dummyEvents[0],
+            'campaign': { 'id': 942,'title': 'test-campaign' },
+            'end_time': '2021-04-29T17:37:00+00:00',
+            'id': 27,
+            'start_time': '2021-04-29T15:37:00+00:00',
+        };
+        dummyEvents[5] = {
+            ...dummyEvents[0],
+            'campaign': { 'id': 942,'title': 'test-campaign' },
+            'end_time': '2021-04-29T17:37:00+00:00',
+            'id': 30,
+            'start_time': '2021-04-29T15:37:00+00:00',
+        };
+        dummyEvents[6] = {
+            ...dummyEvents[0],
+            'campaign': { 'id': 942,'title': 'test-campaign' },
+            'end_time': '2021-04-29T17:37:00+00:00',
+            'id': 31,
+            'start_time': '2021-04-29T15:37:00+00:00',
+        };
+        dummyEvents[7] = {
+            ...dummyEvents[0],
+            'campaign': { 'id': 942,'title': 'test-campaign' },
+            'end_time': '2021-04-29T17:37:00+00:00',
+            'id': 32,
+            'start_time': '2021-04-29T15:37:00+00:00',
+        };
+        mountWithProviders(
+            <MonthCalendar campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ new Date(2021, 4, 10) } onFocusDate={ () => null }/>,
+        );
+
+        cy.get('[data-testid="griditem-3"]').should('be.visible');
+        cy.get('[data-testid="day-3-events"]').should('be.visible');
+
+        cy.get('[data-testid="griditem-3"]')
+            .invoke('height').then(height => {
+                const boxHeight = height;
+                cy.get('[data-testid="day-3-events"]')
+                    .invoke('height').then(height => {
+                        const ulHeight = height;
+                        expect(boxHeight).to.be.greaterThan(ulHeight as number);
+                    });
+            });
+    });
+
 });
