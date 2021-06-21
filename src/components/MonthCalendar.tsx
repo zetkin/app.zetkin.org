@@ -112,9 +112,9 @@ const MonthCalendar = ({ campaigns, events, onFocusDate, focusDate }: MonthCalen
                             .sort((a, b) => {
                                 return new Date(a.start_time).getTime() - new Date(b.start_time).getTime();
                             });
-                        return campaignEvents.length && (
+                        return campaignEvents.length ? (
                             <CalendarBar key={ c.id } campaign={ c } events={ campaignEvents } firstCalendarDay={ firstCalendarDay } firstMonthDay={ firstMonthDay } gridItems={ gridItems } month={ month } totalDaysInMonth={ totalDaysInMonth }/>
-                        );
+                        ) : null;
                     }) }
                 </Box>
                 <Box data-testid="calendar-wrapper" display="grid" gridTemplateColumns="repeat(7, minmax(125px, 1fr))" gridTemplateRows={ `repeat(${calendarRows}, minmax(125px, 1fr))` } width={ 1 }>

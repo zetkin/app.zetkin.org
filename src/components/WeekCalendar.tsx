@@ -117,9 +117,9 @@ const WeekCalendar = ({ campaigns, events, focusDate, onFocusDate }: WeekCalenda
                             .sort((a, b) => {
                                 return new Date(a.start_time).getTime() - new Date(b.start_time).getTime();
                             });
-                        return campaignEvents.length && (
+                        return campaignEvents.length ? (
                             <CalendarBar key={ c.id } campaign={ c } events={ campaignEvents } firstCalendarDay={ calendarStartDate }/>
-                        );
+                        ): null;
                     }) }
                 </Box>
             </Box>
