@@ -1,7 +1,8 @@
 import { getContrastColor } from '../utils/colorUtils';
 import { grey } from '@material-ui/core/colors';
-import { Box, Button, List, makeStyles, Typography } from '@material-ui/core';
+import { Box, Button, makeStyles, Typography } from '@material-ui/core';
 import { FormattedDate, FormattedMessage as Msg } from 'react-intl';
+import  { useEffect, useRef, useState } from 'react';
 import { ZetkinCampaign, ZetkinEvent } from '../types/zetkin';
 
 interface MonthCalendarProps {
@@ -11,7 +12,24 @@ interface MonthCalendarProps {
     onFocusDate: (date: Date) => void;
 }
 
+const useWindowHeight = (): number | undefined => {
+    const [windowHeight, setWindowHeight] = useState<number | undefined>(undefined);
+    useEffect(() => {
+        const handleResize = () =>  setWindowHeight(window.innerHeight);
+        window.addEventListener('resize', handleResize);
+        handleResize();
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+    return windowHeight;
+};
+
 const useStyles = makeStyles((theme) => ({
+    list: {
+        flexGrow: 1,
+        listStyle: 'none',
+        margin: 0,
+        padding: 0,
+    },
     responsiveFlexBox: {
         [theme.breakpoints.down('sm')]: {
             justifyContent: 'flex-start',
@@ -20,6 +38,17 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const MonthCalendar = ({ campaigns, events, onFocusDate, focusDate }: MonthCalendarProps): JSX.Element => {
+    const gridItem = useRef<HTMLUListElement>(null);
+    const listItem = useRef<HTMLLIElement>(null);
+    const windowHeight = useWindowHeight();
+    const [maxNoOfEvents, setMaxNoOfEvents] = useState(1);
+
+    useEffect(() => {
+        const gridItemHeight = gridItem.current?.offsetHeight || 0;
+        const listItemHeight = listItem.current?.offsetHeight || 0 * 1.5;
+        setMaxNoOfEvents(listItemHeight ? Math.floor((gridItemHeight - listItemHeight * 2) / listItemHeight) : 1);
+    }, [focusDate, windowHeight]);
+
     const classes = useStyles();
     const month = focusDate.getUTCMonth();
     const year = focusDate.getUTCFullYear();
@@ -91,36 +120,51 @@ const MonthCalendar = ({ campaigns, events, onFocusDate, focusDate }: MonthCalen
                 <Box data-testid="calendar-wrapper" display="grid" gridTemplateColumns="repeat(7, minmax(125px, 1fr))" gridTemplateRows={ `repeat(${calendarRows}, minmax(125px, 1fr))` } width={ 1 }>
                     { Array.from(Array(gridItems).keys()).map((_, index) => {
                         const currentDate = new Date(new Date(firstCalendarDay).setDate(firstCalendarDay.getDate() + index));
-
+                        const daysEvents = getEventsInRange(currentDate, new Date(new Date(currentDate).setDate(currentDate.getDate() + 1)));
+                        const totalEvents = daysEvents.length;
                         return (
-                            <Box key={ index } bgcolor={ isInRange(currentDate, firstMonthDay, lastMonthDay) ? grey[300] : grey[200] } data-testid={ `griditem-${index}` } m={ 0.5 } position="relative">
-                                <Typography>
-                                    <Box p={ 1 }>
+                            <Box key={ index } bgcolor={ isInRange(currentDate, firstMonthDay, lastMonthDay) ? grey[300] : grey[200] } data-testid={ `griditem-${index}` } display="flex" flexDirection="column" m={ 0.5 } position="relative">
+                                <Box p={ 0.5 } pb={ 0 }>
+                                    <Typography>
                                         <FormattedDate
                                             day="2-digit"
                                             value={ currentDate }
                                         />
-                                    </Box>
-                                </Typography>
-                                <List data-testid={ `day-${index}-events` }>
-                                    { getEventsInRange(currentDate, new Date(new Date(currentDate).setDate(currentDate.getDate() + 1))).map(event => {
+                                    </Typography>
+                                </Box>
+                                <ul { ...( index === 0 && { ref: gridItem } ) } className={ classes.list } data-testid={ `day-${index}-events` }>
+                                    { daysEvents.map((event, i) => {
                                         const campaign = campaigns.find(c => c.id === event.campaign.id);
                                         return (
                                             <li
-                                                key={ event.id } data-testid={ `event-${event.id}` } style={{
-                                                    alignItems: 'center',
+                                                key={ event.id }
+                                                { ...( i === 0 && { ref: listItem } ) }
+                                                data-testid={ `event-${event.id}` } style={{
                                                     background: campaign?.color || grey[400],
                                                     color: getContrastColor(campaign?.color|| grey[400]),
-                                                    display: 'flex',
-                                                    justifyContent: 'center',
-                                                    margin: '0.5rem 0',
-                                                    padding: '0 1rem',
+                                                    display: i < maxNoOfEvents ? 'block' : 'none',
+                                                    margin: '0 0 0.2rem 0',
+                                                    padding: '0 0.5rem',
                                                     width: '100%',
-                                                }}>{ `event with id ${event.id} and campaign ${event.campaign.id}` }
+                                                }}>
+                                                <Typography noWrap={ true } variant="body2">
+                                                    { `event with id ${event.id} and campaign ${event.campaign.id}` }
+                                                </Typography>
                                             </li>
                                         );
                                     }) }
-                                </List>
+                                    { totalEvents - maxNoOfEvents > 0 && (
+                                        <li style={{
+                                            margin: '0 0 0.2rem 0',
+                                            padding: '0 0.5rem',
+                                            width: '100%',
+                                        }}>
+                                            <Typography>
+                                                { totalEvents - maxNoOfEvents } more events
+                                            </Typography>
+                                        </li>
+                                    ) }
+                                </ul>
                             </Box>
                         );
                     }) }
