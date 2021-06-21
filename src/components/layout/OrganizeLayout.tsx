@@ -32,10 +32,10 @@ const OrganizeLayout: FunctionComponent<OrganizeLayoutProps> = ({ children, orgI
             </Box>
             <Box display="flex" flexDirection="column" height="100vh" overflow="hidden" width={ 1 }>
                 <Box display="flex" m={ 1 } mb={ 0 }>
-                    <Box className={ classes.breadcrumbs } width={ 0.5 }>
+                    <Box className={ classes.breadcrumbs } mt="0.5rem" width={ 1 }>
                         <BreadcrumbTrail/>
                     </Box>
-                    <Box display="flex" justifyContent="end" width={ 0.5 } zIndex={ 10000 }>
+                    <Box display="flex" justifyContent="end" position="absolute" right={ 0 } top={ 0 } width={ 0.5 } zIndex={ 10000 }>
                         <SearchDrawer />
                     </Box>
                 </Box>
