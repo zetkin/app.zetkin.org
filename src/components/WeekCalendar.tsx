@@ -78,7 +78,7 @@ const WeekCalendar = ({ campaigns, events, focusDate, onFocusDate }: WeekCalenda
     };
 
     return (
-        <Box { ...{ ref: calendarWrapper } } data-testid="calendar-wrapper" height={ 1 } overflow="scroll" width={ 1 }>
+        <Box { ...{ ref: calendarWrapper } } data-testid="calendar-wrapper" height={ 1 } overflow="auto" width={ 1 }>
             <Box bgcolor={ grey[100] } display="flex" flexDirection="column" justifyContent="space-between" position="sticky" top={ 0 } width={ 1 } zIndex={ 1 }>
                 <Box alignItems="center" className={ classes.responsiveFlexBox } display="flex" justifyContent="center">
                     <Button color="primary" data-testid="back-button" onClick={

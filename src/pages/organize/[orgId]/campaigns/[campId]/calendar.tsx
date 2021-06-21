@@ -75,7 +75,7 @@ const CampaignCalendarPage : PageWithLayout<OrganizeCalendarPageProps> = ({ orgI
 
     return (
         <Box p={ 2 } position="relative">
-            <Box display="flex" justifyContent="flex-end" mr={ 3 } position="absolute" right={ 0 } top="1.2rem" zIndex={ 2 }>
+            <Box display="flex" justifyContent="flex-end" mr={ 4 } position="absolute" right={ 0 } top="1.2rem" zIndex={ 2 }>
                 <FormControl
                     aria-label={ intl.formatMessage(
                         { id: 'misc.calendar.label' }) }
@@ -92,7 +92,7 @@ const CampaignCalendarPage : PageWithLayout<OrganizeCalendarPageProps> = ({ orgI
                     </Select>
                 </FormControl>
             </Box>
-            <Box height="78vh" overflow="scroll">
+            <Box height="80vh" overflow="auto">
                 { calendarView === 'month' && <MonthCalendar campaigns={ campaigns } events={ events } focusDate={ focusDate } onFocusDate={ date => setFocusDate(date) } /> }
                 { calendarView === 'week' && <WeekCalendar campaigns={ campaigns } events={ events } focusDate={ focusDate } onFocusDate={ date => setFocusDate(date) }/> }
             </Box>
