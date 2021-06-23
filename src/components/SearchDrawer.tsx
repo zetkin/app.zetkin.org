@@ -1,13 +1,23 @@
 import { FocusEventHandler } from 'react';
 import { FormattedMessage as Msg } from 'react-intl';
+import Search from '@material-ui/icons/Search';
 import { useIntl } from 'react-intl';
 import { useState } from 'react';
-import { SearchField, Text, View } from '@adobe/react-spectrum';
+import { Box, InputAdornment, makeStyles, TextField, Typography } from '@material-ui/core';
+import { Flex } from '@react-spectrum/layout';
+
+
+const useStyles = makeStyles(() => ({
+    textField: {
+        width: '100%',
+    },
+}));
 
 const SearchDrawer = (): JSX.Element | null => {
     const intl = useIntl();
     const [currentText, setCurrentText] = useState('');
     const [drawerOpen, setDrawerOpen] = useState(false);
+    const classes = useStyles();
 
     const collapse:FocusEventHandler<Element> = (e) => {
         e.stopPropagation();
@@ -26,12 +36,21 @@ const SearchDrawer = (): JSX.Element | null => {
                 onFocus={ collapse } tabIndex={ -1 }>
                 <div
                     className={ `drawer ${drawerOpen ? 'expanded' : 'collapsed'}` }>
-                    <SearchField
+                    <TextField
                         aria-label={ intl.formatMessage({
                             id: 'layout.organize.search.label',
                         }) }
-                        onChange={ text => {
-                            setCurrentText(text);
+                        className={ classes.textField }
+                        id="input-with-icon-textfield"
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <Search />
+                                </InputAdornment>
+                            ),
+                        }}
+                        onChange={ e => {
+                            setCurrentText(e.target.value);
                             if (!drawerOpen) {
                                 setDrawerOpen(true);
                             }
@@ -46,13 +65,17 @@ const SearchDrawer = (): JSX.Element | null => {
                             id: 'layout.organize.search.placeholder',
                         }) }
                         value={ currentText }
-                        width="100%"
+                        variant="outlined"
+                        size="small"
                     />
-                    <View isHidden={ !drawerOpen }>
-                        <Text>
-                            <Msg id="layout.organize.search.drawerLabel"/>
-                        </Text>
-                    </View>
+                    {/* Search Drawer Content */}
+                    <Box display={ drawerOpen ? 'block' : 'none' }>
+                        <Flex direction="row-reverse">
+                            <Typography variant="body2">
+                                <Msg id="layout.organize.search.drawerLabel"/>
+                            </Typography>
+                        </Flex>
+                    </Box>
                 </div>
             </div>
 
@@ -72,7 +95,6 @@ const SearchDrawer = (): JSX.Element | null => {
                 .hidden {
                     width: 0; height: 0;
                 }
-
                 .drawer {
                     width: 25vw;
                     transition: width 500ms;
@@ -89,6 +111,11 @@ const SearchDrawer = (): JSX.Element | null => {
                     top: 0;
                     right: 0;
                     z-index: 3;
+                }
+                @media screen and (max-width: 600px) {
+                    .drawer {
+                        width: 40vw;
+                    }
                 }
                 ` }
             </style>
