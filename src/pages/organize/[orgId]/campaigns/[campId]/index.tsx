@@ -1,3 +1,4 @@
+import { FormattedDate } from 'react-intl';
 import { GetServerSideProps } from 'next';
 import { grey } from '@material-ui/core/colors';
 import { FormattedMessage as Msg } from 'react-intl';
@@ -76,6 +77,13 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({ orgId,
     const events = eventsQuery.data || [];
     const campaign = campaignQuery.data;
 
+    const sortedEvents = [...events].sort((a, b) => {
+        return new Date(a.start_time).getTime() - new Date(b.start_time).getTime();
+    });
+
+    const startDate = sortedEvents[0].start_time;
+    const endDate = sortedEvents[sortedEvents.length - 1].start_time;
+
     return (
         <>
             <Box className={ classes.responsiveFlexBox }>
@@ -93,6 +101,19 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({ orgId,
                     <Box display="flex" flexDirection="column" p={ 1 }>
                         <Typography variant="h6">
                             { campaign?.manager || <Msg id="pages.organizeCampaigns.noManager" /> }
+                        </Typography>
+                        <Typography variant="subtitle2">
+                            <FormattedDate
+                                day="2-digit"
+                                month="long"
+                                value={ startDate }
+                            />{ ` - ` }
+                            <FormattedDate
+                                day="2-digit"
+                                month="long"
+                                value={ endDate }
+                                year="numeric"
+                            />
                         </Typography>
                         <Box display="flex" p={ 1 } pl={ 0 }>
                             <Box display="flex" p={ 1 } pl={ 0 }>
@@ -131,7 +152,7 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({ orgId,
                         <List disablePadding={ true }>
                             { events.map(event => (
                                 <ListItem key={ event.id } style={{ background: grey[200], height: '4rem', margin: '1rem 0', paddingLeft:'0.5rem' }}>
-                                    <NextLink href={ `/o/${orgId}/events/${event.id}` } passHref>
+                                    <NextLink href={ `/organize/${orgId}/campaigns/${campId}/events/${event.id}` } passHref>
                                         <Link color="inherit" variant="subtitle2">
                                             { event.activity.title || `Event ${event.id}` }
                                         </Link>
@@ -153,8 +174,8 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({ orgId,
                                     <Msg id="pages.organizeCampaigns.mobilization.copy" />
                                 </Typography>
                             </Box>
-                            <NextLink href={ `/organize/${orgId}/call-assignments/new` } passHref>
-                                <Button color="primary" variant="contained">
+                            <NextLink href={ `/organize/${orgId}/campaigns/${campId}/call-assignments/new` } passHref>
+                                <Button color="primary" disabled={ true } variant="contained">
                                     <Msg id="pages.organizeCampaigns.mobilization.create" />
                                 </Button>
                             </NextLink>
@@ -171,8 +192,8 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({ orgId,
                                     <Msg id="pages.organizeCampaigns.feedback.copy" />
                                 </Typography>
                             </Box>
-                            <NextLink href={ `/organize/${orgId}/surveys/new` } passHref>
-                                <Button color="primary" variant="contained">
+                            <NextLink href={ `/organize/${orgId}/campaigns/${campId}/surveys/new` } passHref>
+                                <Button color="primary" disabled={ true } variant="contained">
                                     <Msg id="pages.organizeCampaigns.feedback.create" />
                                 </Button>
                             </NextLink>
