@@ -4,7 +4,6 @@ import Search from '@material-ui/icons/Search';
 import { useIntl } from 'react-intl';
 import { useState } from 'react';
 import { Box, InputAdornment, makeStyles, TextField, Typography } from '@material-ui/core';
-import { Flex } from '@react-spectrum/layout';
 
 
 const useStyles = makeStyles(() => ({
@@ -70,11 +69,11 @@ const SearchDrawer = (): JSX.Element | null => {
                     />
                     {/* Search Drawer Content */}
                     <Box display={ drawerOpen ? 'block' : 'none' }>
-                        <Flex direction="row-reverse">
+                        <Box display="flex" flexDirection="row-reverse">
                             <Typography variant="body2">
                                 <Msg id="layout.organize.search.drawerLabel"/>
                             </Typography>
-                        </Flex>
+                        </Box>
                     </Box>
                 </div>
             </div>
