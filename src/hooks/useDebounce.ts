@@ -1,7 +1,13 @@
 import { useCallback, useRef, useEffect } from 'react';
 import debounce from 'lodash.debounce';
 
-export default (callback: () => any, delay: number) => {
+type DefaultCallbackArgs = Array<any>
+type CallbackFn<Args extends DefaultCallbackArgs> =(...args: Args) => Promise<void>
+
+/**
+ * Runs the callback function only if the delay time has passed.
+ */
+export default <Args extends DefaultCallbackArgs>(callback: CallbackFn<Args>, delay: number) => {
   // Memoizing the callback because if it's an arrow function
   // it would be different on each render
   const memoizedCallback = useCallback(callback, []);

@@ -1,10 +1,9 @@
-import { FocusEventHandler } from 'react';
-import { FormattedMessage as Msg } from 'react-intl';
-import Search from '@material-ui/icons/Search';
-import { useIntl } from 'react-intl';
-import { useState } from 'react';
+import { useState, FocusEventHandler } from 'react';
+import { useIntl, FormattedMessage as Msg } from 'react-intl';
 import { Box, InputAdornment, makeStyles, TextField, Typography } from '@material-ui/core';
+import Search from '@material-ui/icons/Search';
 
+import useDebounce from '../hooks/useDebounce';
 
 const useStyles = makeStyles(() => ({
     textField: {
@@ -14,9 +13,13 @@ const useStyles = makeStyles(() => ({
 
 const SearchDrawer = (): JSX.Element | null => {
     const intl = useIntl();
-    const [currentText, setCurrentText] = useState('');
     const [drawerOpen, setDrawerOpen] = useState(false);
     const classes = useStyles();
+
+    // Gets the search results if user stops typing
+    const debouncedSearch = useDebounce(async (searchQuery: string) => {
+        console.log(searchQuery)
+    }, 600);
 
     const collapse:FocusEventHandler<Element> = (e) => {
         e.stopPropagation();
@@ -49,10 +52,10 @@ const SearchDrawer = (): JSX.Element | null => {
                             ),
                         }}
                         onChange={ e => {
-                            setCurrentText(e.target.value);
                             if (!drawerOpen) {
                                 setDrawerOpen(true);
                             }
+                            debouncedSearch(e.target.value)
                         } }
                         onFocus={ expand }
                         onKeyUp={ e => {
@@ -63,7 +66,6 @@ const SearchDrawer = (): JSX.Element | null => {
                         placeholder={ intl.formatMessage({
                             id: 'layout.organize.search.placeholder',
                         }) }
-                        value={ currentText }
                         variant="outlined"
                         size="small"
                     />
