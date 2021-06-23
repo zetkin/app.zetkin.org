@@ -1,24 +1,33 @@
-import { useState, FocusEventHandler } from 'react';
+import { useState, FocusEventHandler, FunctionComponent } from 'react';
 import { useIntl, FormattedMessage as Msg } from 'react-intl';
+import { useQuery } from 'react-query';
 import { Box, InputAdornment, makeStyles, TextField, Typography } from '@material-ui/core';
 import Search from '@material-ui/icons/Search';
 
+import getSearchDrawerResults from '../fetching/getSearchDrawerResults';
 import useDebounce from '../hooks/useDebounce';
-
 const useStyles = makeStyles(() => ({
     textField: {
         width: '100%',
     },
 }));
 
-const SearchDrawer = (): JSX.Element | null => {
+interface SearchDrawerProps {
+    orgId: string
+}
+
+const SearchDrawer: FunctionComponent<SearchDrawerProps> = ({ orgId }): JSX.Element | null => {
     const intl = useIntl();
+    const [searchQuery, setSearchQuery] = useState<string>('');
     const [drawerOpen, setDrawerOpen] = useState(false);
     const classes = useStyles();
 
     // Gets the search results if user stops typing
     const debouncedSearch = useDebounce(async (searchQuery: string) => {
-        console.log(searchQuery)
+        if (searchQuery.length > 0) {
+            const data = getSearchDrawerResults(searchQuery, orgId)
+            console.log(data)
+        }
     }, 600);
 
     const collapse:FocusEventHandler<Element> = (e) => {
