@@ -7,13 +7,13 @@ export default async function getSearchDrawerResults(
     fetch = defaultFetch
 ) {
     const body = JSON.stringify({
-        "q": searchQuery,
+        q: searchQuery,
     });
 
     const res = await fetch(`/orgs/${orgId}/search/campaign`, {
         method: "POST",
         headers: {
-          "Content-Type": 'application/json'
+            "Content-Type": "application/json",
         },
         body,
     });

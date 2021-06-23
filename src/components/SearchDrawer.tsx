@@ -18,15 +18,14 @@ interface SearchDrawerProps {
 
 const SearchDrawer: FunctionComponent<SearchDrawerProps> = ({ orgId }): JSX.Element | null => {
     const intl = useIntl();
-    const [searchQuery, setSearchQuery] = useState<string>('');
+    const [searchQuery, setSearchQuery] = useState<string>('')
     const [drawerOpen, setDrawerOpen] = useState(false);
     const classes = useStyles();
 
     // Gets the search results if user stops typing
-    const debouncedSearch = useDebounce(async (searchQuery: string) => {
+    const debouncedSearch = useDebounce(async (debouncedSearchQuery: string) => {
         if (searchQuery.length > 0) {
-            const data = getSearchDrawerResults(searchQuery, orgId)
-            console.log(data)
+            getSearchDrawerResults(searchQuery, orgId)
         }
     }, 600);
 
