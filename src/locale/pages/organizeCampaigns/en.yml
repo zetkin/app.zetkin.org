@@ -1,0 +1,14 @@
+linkGroup:
+  public: Public Page
+  settings: Edit Settings
+noManager: No Campaign Manager
+events: Events
+calendarView: See all in calendar
+mobilization: 
+  heading: Mobilization and outreach (none configured)
+  copy: Organizing a phone bank to mobilize your organization will increase participation manifold
+  create: Create call assignment
+feedback:
+  heading: Feedback and Surveys (none configured)
+  copy: Collecting feedback (during phonebanks or standalone) can help you work more efficiently
+  create: Create survey

@@ -1,5 +1,10 @@
+import { FormattedDate } from 'react-intl';
 import { GetServerSideProps } from 'next';
-
+import { grey } from '@material-ui/core/colors';
+import { FormattedMessage as Msg } from 'react-intl';
+import NextLink from 'next/link';
+import { Avatar, Box, Button, Link, List, ListItem, makeStyles, Typography } from '@material-ui/core';
+import { Phone, PlaylistAddCheck, Public, Settings } from '@material-ui/icons';
 
 import getCampaign from '../../../../../fetching/getCampaign';
 import getCampaignEvents from '../../../../../fetching/getCampaignEvents';
@@ -7,11 +12,12 @@ import getOrg from '../../../../../fetching/getOrg';
 import OrganizeCampaignLayout from '../../../../../components/layout/OrganizeCampaignLayout';
 import { PageWithLayout } from '../../../../../types';
 import { scaffold } from '../../../../../utils/next';
+import { useQuery } from 'react-query';
 
 const scaffoldOptions = {
     authLevelRequired: 2,
     localeScope: [
-        'layout.organize', 'misc.breadcrumbs',
+        'layout.organize', 'misc.breadcrumbs', 'pages.organizeCampaigns',
     ],
 };
 
@@ -49,10 +55,152 @@ type CampaignCalendarPageProps = {
     orgId: string;
 };
 
-const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = () => {
+const useStyles = makeStyles((theme) => ({
+    responsiveFlexBox: {
+        display: 'flex',
+        [theme.breakpoints.down('sm')]: {
+            flexDirection: 'column',
+        },
+    },
+    responsiveText: {
+        width: '70%',
+        [theme.breakpoints.down('sm')]: {
+            width: '100%',
+        },
+    },
+}));
+
+const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({ orgId, campId }) => {
+    const classes = useStyles();
+    const eventsQuery = useQuery(['campaignEvents', orgId, campId], getCampaignEvents(orgId, campId));
+    const campaignQuery = useQuery(['campaign', orgId, campId], getCampaign(orgId, campId));
+    const events = eventsQuery.data || [];
+    const campaign = campaignQuery.data;
+
+    const sortedEvents = [...events].sort((a, b) => {
+        return new Date(a.start_time).getTime() - new Date(b.start_time).getTime();
+    });
+
+    const startDate = sortedEvents[0].start_time;
+    const endDate = sortedEvents[sortedEvents.length - 1].start_time;
+
     return (
         <>
-            campaign summary
+            <Box className={ classes.responsiveFlexBox }>
+                <Box flex={ 1 } p={ 1 }>
+                    <Box className={ classes.responsiveText } p={ 1 }>
+                        <Typography variant="body1">
+                            { campaign?.info_text }
+                        </Typography>
+                    </Box>
+                </Box>
+                <Box display="flex" flex={ 1 } p={ 1 }>
+                    <Box p={ 1 }>
+                        <Avatar></Avatar>
+                    </Box>
+                    <Box display="flex" flexDirection="column" p={ 1 }>
+                        <Typography variant="h6">
+                            { campaign?.manager || <Msg id="pages.organizeCampaigns.noManager" /> }
+                        </Typography>
+                        <Typography variant="subtitle2">
+                            <FormattedDate
+                                day="2-digit"
+                                month="long"
+                                value={ startDate }
+                            />{ ` - ` }
+                            <FormattedDate
+                                day="2-digit"
+                                month="long"
+                                value={ endDate }
+                                year="numeric"
+                            />
+                        </Typography>
+                        <Box display="flex" p={ 1 } pl={ 0 }>
+                            <Box display="flex" p={ 1 } pl={ 0 }>
+                                <Public color="primary" />
+                                <NextLink href={ `/o/${orgId}/campaigns/${campId}` } passHref>
+                                    <Link underline="always">
+                                        <Msg id="pages.organizeCampaigns.linkGroup.public"/>
+                                    </Link>
+                                </NextLink>
+                            </Box>
+                            <Box display="flex" p={ 1 }>
+                                <Settings color="primary"/>
+                                <NextLink href={ `/organize/${orgId}/campaigns/${campId}/settings` } passHref>
+                                    <Link underline="always">
+                                        <Msg id="pages.organizeCampaigns.linkGroup.settings"/>
+                                    </Link>
+                                </NextLink>
+                            </Box>
+                        </Box>
+                    </Box>
+                </Box>
+            </Box>
+            <Box className={ classes.responsiveFlexBox }>
+                <Box border={ 1 } display="flex" flex={ 1 } flexDirection="column" m={ 1 } mt={ 2 }>
+                    <Box display="flex" justifyContent="space-between" p={ 3 } pb={ 0 }>
+                        <Typography variant="h6">
+                            <Msg id="pages.organizeCampaigns.events"/>
+                        </Typography>
+                        <NextLink href={ `/organize/${orgId}/campaigns/${campId}/calendar` } passHref>
+                            <Link underline="always" variant="h6">
+                                <Msg id="pages.organizeCampaigns.calendarView"/>
+                            </Link>
+                        </NextLink>
+                    </Box>
+                    <Box p={ 3 } pt={ 0 }>
+                        <List disablePadding={ true }>
+                            { events.map(event => (
+                                <ListItem key={ event.id } style={{ background: grey[200], height: '4rem', margin: '1rem 0', paddingLeft:'0.5rem' }}>
+                                    <NextLink href={ `/organize/${orgId}/campaigns/${campId}/events/${event.id}` } passHref>
+                                        <Link color="inherit" variant="subtitle2">
+                                            { event.activity.title || `Event ${event.id}` }
+                                        </Link>
+                                    </NextLink>
+                                </ListItem>
+                            )) }
+                        </List>
+                    </Box>
+                </Box>
+                <Box display="flex" flex={ 1 } flexDirection="column" m={ 1 }>
+                    <Box border={ 1 } m={ 1 } p={ 3 } pb={ 5 }>
+                        <Typography component="h3" variant="h6">
+                            <Msg id="pages.organizeCampaigns.mobilization.heading" />
+                        </Typography>
+                        <Box alignItems="center" display="flex" flexDirection="column">
+                            <Phone style={{ color:grey[500], fontSize: 100  }}/>
+                            <Box p={ 2 } textAlign="center" width={ 0.5 }>
+                                <Typography color="textSecondary" variant="body1">
+                                    <Msg id="pages.organizeCampaigns.mobilization.copy" />
+                                </Typography>
+                            </Box>
+                            <NextLink href={ `/organize/${orgId}/campaigns/${campId}/call-assignments/new` } passHref>
+                                <Button color="primary" disabled={ true } variant="contained">
+                                    <Msg id="pages.organizeCampaigns.mobilization.create" />
+                                </Button>
+                            </NextLink>
+                        </Box>
+                    </Box>
+                    <Box border={ 1 } m={ 1 } p={ 3 } pb={ 5 }>
+                        <Typography component="h3" variant="h6">
+                            <Msg id="pages.organizeCampaigns.feedback.heading" />
+                        </Typography>
+                        <Box alignItems="center" display="flex" flexDirection="column">
+                            <PlaylistAddCheck style={{ color:grey[500], fontSize: 100  }}/>
+                            <Box p={ 2 } textAlign="center" width={ 0.5 }>
+                                <Typography color="textSecondary" variant="body1">
+                                    <Msg id="pages.organizeCampaigns.feedback.copy" />
+                                </Typography>
+                            </Box>
+                            <NextLink href={ `/organize/${orgId}/campaigns/${campId}/surveys/new` } passHref>
+                                <Button color="primary" disabled={ true } variant="contained">
+                                    <Msg id="pages.organizeCampaigns.feedback.create" />
+                                </Button>
+                            </NextLink>
+                        </Box>
+                    </Box>
+                </Box>
+            </Box>
         </>
     );
 };
