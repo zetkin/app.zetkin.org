@@ -1,6 +1,6 @@
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
-import { Flex, Heading, View } from '@adobe/react-spectrum';
+import { Box, Typography } from '@material-ui/core';
 import { FunctionComponent, ReactText } from 'react';
 
 import getCampaign from '../../fetching/getCampaign';
@@ -35,12 +35,12 @@ const OrganizeCampaignLayout : FunctionComponent<OrganizeCampaignLayoutProps> = 
 
     return (
         <OrganizeLayout orgId={ orgId }>
-            <Flex direction="column" flexGrow={ 1 }>
-                <View flexShrink={ 0 } padding="0 2rem">
-                    <Heading level={ 2 }>{ campQuery.data?.title }</Heading>
-                </View>
-                <OrganizeCampaignTabs currentTab={ currentTab } onSelectTab={ onSelectTab }> { children }</OrganizeCampaignTabs>
-            </Flex>
+            <Box m={ 2 }>
+                <Typography component="h1" variant="h4">
+                    { campQuery.data?.title }
+                </Typography>
+            </Box>
+            <OrganizeCampaignTabs currentTab={ currentTab } onSelectTab={ onSelectTab }> { children }</OrganizeCampaignTabs>
         </OrganizeLayout>
     );
 };

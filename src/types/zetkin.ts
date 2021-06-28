@@ -4,6 +4,7 @@ export interface ZetkinCampaign {
     title: string;
     id: number;
     organization?: ZetkinOrganization;
+    manager: string | null;
 }
 
 export interface ZetkinMembership {

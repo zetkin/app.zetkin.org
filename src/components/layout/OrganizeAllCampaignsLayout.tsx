@@ -1,6 +1,6 @@
 import { FormattedMessage as Msg } from 'react-intl';
 import { useRouter } from 'next/router';
-import { Flex, Heading, View } from '@adobe/react-spectrum';
+import { Box, Typography } from '@material-ui/core';
 import { FunctionComponent, ReactText } from 'react';
 
 import OrganizeCampaignTabs from '../OrganizeCampaignTabs';
@@ -31,14 +31,12 @@ const OrganizeAllCampaignsLayout : FunctionComponent<OrganizeAllCampaignsLayoutP
 
     return (
         <OrganizeLayout orgId={ orgId }>
-            <Flex direction="column" flexGrow={ 1 }>
-                <View flexShrink={ 0 } padding="0 2rem">
-                    <Heading level={ 2 }>
-                        <Msg id="layout.organize.campaigns.allCampaigns"/>
-                    </Heading>
-                </View>
-                <OrganizeCampaignTabs currentTab={ currentTab } onSelectTab={ onSelectTab }> { children }</OrganizeCampaignTabs>
-            </Flex>
+            <Box m={ 2 }>
+                <Typography component="h1" variant="h4">
+                    <Msg id="layout.organize.campaigns.allCampaigns"/>
+                </Typography>
+            </Box>
+            <OrganizeCampaignTabs currentTab={ currentTab } onSelectTab={ onSelectTab }> { children }</OrganizeCampaignTabs>
         </OrganizeLayout>
     );
 };

@@ -1,6 +1,8 @@
 import { getContrastColor } from '../utils/colorUtils';
-import { ActionButton, Flex, View } from '@adobe/react-spectrum';
+import { grey } from '@material-ui/core/colors';
+import { Box, Button, makeStyles, Typography } from '@material-ui/core';
 import { FormattedDate, FormattedMessage as Msg } from 'react-intl';
+import  { useEffect, useRef, useState } from 'react';
 import { ZetkinCampaign, ZetkinEvent } from '../types/zetkin';
 
 interface MonthCalendarProps {
@@ -10,7 +12,44 @@ interface MonthCalendarProps {
     onFocusDate: (date: Date) => void;
 }
 
+const useWindowHeight = (): number | undefined => {
+    const [windowHeight, setWindowHeight] = useState<number | undefined>(undefined);
+    useEffect(() => {
+        const handleResize = () =>  setWindowHeight(window.innerHeight);
+        window.addEventListener('resize', handleResize);
+        handleResize();
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+    return windowHeight;
+};
+
+const useStyles = makeStyles((theme) => ({
+    list: {
+        flexGrow: 1,
+        listStyle: 'none',
+        margin: 0,
+        padding: 0,
+    },
+    responsiveFlexBox: {
+        [theme.breakpoints.down('sm')]: {
+            justifyContent: 'flex-start',
+        },
+    },
+}));
+
 const MonthCalendar = ({ campaigns, events, onFocusDate, focusDate }: MonthCalendarProps): JSX.Element => {
+    const gridItem = useRef<HTMLUListElement>(null);
+    const listItem = useRef<HTMLLIElement>(null);
+    const windowHeight = useWindowHeight();
+    const [maxNoOfEvents, setMaxNoOfEvents] = useState(1);
+
+    useEffect(() => {
+        const gridItemHeight = gridItem.current?.offsetHeight || 0;
+        const listItemHeight = listItem.current?.offsetHeight || 0 * 1.5;
+        setMaxNoOfEvents(listItemHeight ? Math.floor((gridItemHeight - listItemHeight * 2) / listItemHeight) : 1);
+    }, [focusDate, windowHeight]);
+
+    const classes = useStyles();
     const month = focusDate.getUTCMonth();
     const year = focusDate.getUTCFullYear();
     const totalDaysInMonth = new Date(year, 1 + month, 0).getDate();
@@ -45,98 +84,92 @@ const MonthCalendar = ({ campaigns, events, onFocusDate, focusDate }: MonthCalen
 
     return (
         <>
-            <View position="absolute" right="15rem" top="-2.6rem">
-                <Flex alignItems="center">
-                    <ActionButton data-testid="back-button" onPress={
+            <Box alignItems="center" bgcolor={ grey[100] } position="sticky" top={ 0 } zIndex={ 1 }>
+                <Box alignItems="center" className={ classes.responsiveFlexBox } display="flex" justifyContent="center">
+                    <Button color="primary" data-testid="back-button" onClick={
                         () => onFocusDate(new Date(focusDate.getFullYear(), focusDate.getMonth() - 1, focusDate.getDate()))
                     }>
                         <Msg id="misc.calendar.prev" />
-                    </ActionButton>
-                    <View data-testid="selected-month" padding="size-100">
+                    </Button>
+                    <Box data-testid="selected-month" p={ 1 } textAlign="center" width="8rem">
                         <FormattedDate
                             month="long"
                             value={ new Date(year, month + 1, 0) }
                             year="numeric"
                         />
-                    </View>
-                    <ActionButton data-testid="fwd-button" onPress={
+                    </Box>
+                    <Button color="primary" data-testid="fwd-button" onClick={
                         () => onFocusDate(new Date(focusDate.getFullYear(), focusDate.getMonth() + 1, focusDate.getDate()))
                     }>
                         <Msg id="misc.calendar.next" />
-                    </ActionButton>
-                </Flex>
-            </View>
-            <div style={{
-                display: 'flex',
-                minHeight: '100%',
-            }}>
-                <div
-                    style={{
-                        display: 'flex',
-                        marginRight: '0.5rem',
-                    }}>
+                    </Button>
+                </Box>
+            </Box>
+            <Box display="flex" height={ 1 }>
+                <Box display="flex" mr={ 0.5 }>
                     { campaigns.map(c => {
                         const campaignEvents = events.filter(e => e.campaign.id === c.id)
                             .sort((a, b) => {
                                 return new Date(a.start_time).getTime() - new Date(b.start_time).getTime();
                             });
-                        return campaignEvents.length && (
+                        return campaignEvents.length ? (
                             <CalendarBar key={ c.id } campaign={ c } events={ campaignEvents } firstCalendarDay={ firstCalendarDay } firstMonthDay={ firstMonthDay } gridItems={ gridItems } month={ month } totalDaysInMonth={ totalDaysInMonth }/>
-                        );
+                        ) : null;
                     }) }
-                </div>
-                <div data-testid="calendar-wrapper" style={{
-                    display: 'grid',
-                    flexGrow: 1,
-                    gap: '0.5rem',
-                    gridTemplateColumns: 'repeat(7, minmax(125px, 1fr))',
-                    gridTemplateRows: `repeat(${calendarRows}, minmax(125px, 1fr))`,
-                }}>
+                </Box>
+                <Box data-testid="calendar-wrapper" display="grid" gridTemplateColumns="repeat(7, minmax(125px, 1fr))" gridTemplateRows={ `repeat(${calendarRows}, minmax(125px, 1fr))` } width={ 1 }>
                     { Array.from(Array(gridItems).keys()).map((_, index) => {
                         const currentDate = new Date(new Date(firstCalendarDay).setDate(firstCalendarDay.getDate() + index));
-
+                        const daysEvents = getEventsInRange(currentDate, new Date(new Date(currentDate).setDate(currentDate.getDate() + 1)));
+                        const totalEvents = daysEvents.length;
                         return (
-                            <div key={ index } data-testid={ `griditem-${index}` } style={{
-                                background: isInRange(currentDate, firstMonthDay, lastMonthDay) ? 'grey' : 'whitesmoke',
-                                position: 'relative',
-                            }}>
-                                <div style={{
-                                    top: 0,
-                                }}>
-                                    <FormattedDate
-                                        day="2-digit"
-                                        value={ currentDate }
-                                    />
-                                </div>
-                                <ul data-testid={ `day-${index}-events` } style={{
-                                    listStyle: 'none',
-                                    margin: 0,
-                                    padding:0 ,
-                                    width: '100%',
-                                }}>
-                                    { getEventsInRange(currentDate, new Date(new Date(currentDate).setDate(currentDate.getDate() + 1))).map(event => {
+                            <Box key={ index } bgcolor={ isInRange(currentDate, firstMonthDay, lastMonthDay) ? grey[300] : grey[200] } data-testid={ `griditem-${index}` } display="flex" flexDirection="column" m={ 0.5 } position="relative">
+                                <Box p={ 0.5 } pb={ 0 }>
+                                    <Typography>
+                                        <FormattedDate
+                                            day="2-digit"
+                                            value={ currentDate }
+                                        />
+                                    </Typography>
+                                </Box>
+                                <ul { ...( index === 0 && { ref: gridItem } ) } className={ classes.list } data-testid={ `day-${index}-events` }>
+                                    { daysEvents.map((event, i) => {
                                         const campaign = campaigns.find(c => c.id === event.campaign.id);
                                         return (
                                             <li
-                                                key={ event.id } data-testid={ `event-${event.id}` } style={{
-                                                    alignItems: 'center',
-                                                    background: campaign?.color || '#d3d3d3',
-                                                    color: getContrastColor(campaign?.color|| '#d3d3d3'),
-                                                    display: 'flex',
-                                                    justifyContent: 'center',
-                                                    margin: '0.5rem 0',
-                                                    padding: '0 1rem',
+                                                key={ event.id }
+                                                { ...( i === 0 && { ref: listItem } ) }
+                                                data-testid={ `event-${event.id}` } style={{
+                                                    background: campaign?.color || grey[400],
+                                                    color: getContrastColor(campaign?.color|| grey[400]),
+                                                    display: i < maxNoOfEvents ? 'block' : 'none',
+                                                    margin: '0 0 0.2rem 0',
+                                                    padding: '0 0.5rem',
                                                     width: '100%',
-                                                }}>{ `event with id ${event.id} and campaign ${event.campaign.id}` }
+                                                }}>
+                                                <Typography noWrap={ true } variant="body2">
+                                                    { `event with id ${event.id} and campaign ${event.campaign.id}` }
+                                                </Typography>
                                             </li>
                                         );
                                     }) }
+                                    { totalEvents - maxNoOfEvents > 0 && (
+                                        <li style={{
+                                            margin: '0 0 0.2rem 0',
+                                            padding: '0 0.5rem',
+                                            width: '100%',
+                                        }}>
+                                            <Typography>
+                                                { totalEvents - maxNoOfEvents } more events
+                                            </Typography>
+                                        </li>
+                                    ) }
                                 </ul>
-                            </div>
+                            </Box>
                         );
                     }) }
-                </div>
-            </div>
+                </Box>
+            </Box>
         </>
     );
 };
@@ -201,21 +234,11 @@ const CalendarBar = ({ campaign, events, month, gridItems, firstCalendarDay, fir
     const height = bottom - top;
 
     return (
-        <div  style={{
-            height: '100%',
-            position: 'relative',
-            width: '0.5rem',
-        }}>
-            <div
-                data-testid={ `calendar-bar-${id}` }
-                style={{
-                    backgroundColor: color,
-                    height: `${height}%`,
-                    position: 'absolute',
-                    top: `${top}%`,
-                    width: '100%',
-                }}>
-            </div>
-        </div>
+        <Box height={ 1 } position="relative" width="0.5rem">
+            <Box
+                bgcolor={ color }
+                data-testid={ `calendar-bar-${id}` } height={ `${height}%` } position="absolute" top={ `${top}%` } width={ 1 }>
+            </Box>
+        </Box>
     );
 };

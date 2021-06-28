@@ -17,6 +17,21 @@ const theme = createMuiTheme({
                 justifyContent: 'flex-end',
             },
         },
+        MuiFormControl: {
+            root: {
+                minWidth: 120,
+            },
+        },
+        MuiInputBase: {
+            root: {
+                maxHeight: '2rem',
+            },
+        },
+        MuiTab: {
+            root: {
+                textTransform: 'none',
+            },
+        },
     },
     palette: {
         background: {
@@ -30,6 +45,9 @@ const theme = createMuiTheme({
         },
         secondary: {
             main: '#585858',
+        },
+        text: {
+            secondary: grey[500],
         },
     },
 });

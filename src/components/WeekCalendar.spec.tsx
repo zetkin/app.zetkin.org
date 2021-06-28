@@ -1,3 +1,4 @@
+import '../utils/polyfills';
 import { mountWithProviders } from '../utils/testing';
 import WeekCalendar from './WeekCalendar';
 import { ZetkinCampaign, ZetkinEvent } from '../types/zetkin';
@@ -179,7 +180,7 @@ describe('WeekCalendar', () => {
         mountWithProviders(
             <WeekCalendar campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ dummyDate } onFocusDate={ () => null }/>,
         );
-        cy.get('[data-testid="selected-date"]').contains('10');
+        cy.get('[data-testid="selected-date"]').contains('19');
     });
 
     it('sets the focus date a week ago when back is clicked', () => {
@@ -226,16 +227,45 @@ describe('WeekCalendar', () => {
             <WeekCalendar campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ new Date(2021, 4, 10) } onFocusDate={ () => null }  />,
         );
 
-        cy.get('[data-testid="event-26"]').then(el => {
-            const firstEventBgColor = el[0].style.backgroundColor;
-            cy.get('[data-testid="event-29"]').then(el => {
-                const secondEventBgColor = el[0].style.backgroundColor;
-                cy.get('[data-testid="event-25"]').then(el => {
-                    const thirdEventBgColor = el[0].style.backgroundColor;
-                    expect(firstEventBgColor).to.not.eq(secondEventBgColor);
-                    expect(firstEventBgColor).to.eq(thirdEventBgColor);
-                });
+        cy.get('[data-testid="event-26"]')
+            .invoke('css', 'background-color').then(color => {
+                const firstEventBgColor = color;
+                cy.get('[data-testid="event-29"]')
+                    .invoke('css', 'background-color').then(color => {
+                        const secondEventBgColor = color;
+                        cy.get('[data-testid="event-25"]')
+                            .invoke('css', 'background-color').then(color => {
+                                const thirdEventBgColor = color;
+                                expect(firstEventBgColor).to.not.eq(secondEventBgColor);
+                                expect(firstEventBgColor).to.eq(thirdEventBgColor);
+                            });
+                    });
             });
-        });
+    });
+
+    it('shows a uniquely coloured sidebar for each campaign', () => {
+        dummyEvents[2] = {
+            ...dummyEvents[0],
+            'campaign': { ...dummyEvents[0].campaign, 'id': 942 },
+            'end_time': '2021-05-11T17:37:00+00:00',
+            'id': 29,
+            'start_time': '2021-05-11T15:37:00+00:00',
+        };
+        mountWithProviders(
+            <WeekCalendar campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ new Date(2021, 4, 10) } onFocusDate={ () => null }/>,
+        );
+
+        cy.get('[data-testid="calendar-bar-941"]').should('be.visible');
+        cy.get('[data-testid="calendar-bar-942"]').should('be.visible');
+
+        cy.get('[data-testid="calendar-bar-941"]')
+            .invoke('css', 'background-color').then(color => {
+                const firstBarBgColor = color;
+                cy.get('[data-testid="calendar-bar-942"]')
+                    .invoke('css', 'background-color').then(color => {
+                        const secondBarBgColor = color;
+                        expect(firstBarBgColor).to.not.eq(secondBarBgColor);
+                    });
+            });
     });
 });

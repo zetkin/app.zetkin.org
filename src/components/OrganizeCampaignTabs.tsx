@@ -1,39 +1,51 @@
+import { grey } from '@material-ui/core/colors';
 import { useIntl } from 'react-intl';
-import { Content, View } from '@adobe/react-spectrum';
+import { Box,  makeStyles, Tab, Tabs } from '@material-ui/core';
+import { ChangeEvent, useState } from 'react';
 import { FunctionComponent, ReactText } from 'react';
-import { Item, Tabs } from '@react-spectrum/tabs';
 
 interface OrganizeCampaignTabsProps {
     currentTab?: string;
     onSelectTab: (key : ReactText) => void;
 }
+
+const useStyles = makeStyles(() => ({
+    root: {
+        backgroundColor: grey[100],
+        flexGrow: 1,
+    },
+}));
+
 const OrganizeCampaignTabs: FunctionComponent<OrganizeCampaignTabsProps> = ({ children, currentTab, onSelectTab }) => {
     const intl = useIntl();
+    const classes = useStyles();
+    const [value, setValue] = useState(currentTab);
+
+    const handleChange = (event: ChangeEvent<unknown>, newValue: string) => {
+        setValue(newValue);
+        onSelectTab(newValue);
+    };
 
     return (
-        <View flexGrow={ 1 } padding="0 1rem" width="100%">
-            <Tabs aria-label="Campaign Menu"
-                onSelectionChange={ onSelectTab }
-                selectedKey={ currentTab }>
-                <Item key="summary" title={ intl.formatMessage({
+        <div className={ classes.root }>
+            <Tabs aria-label="campaign tabs" indicatorColor="primary" onChange={ handleChange } textColor="primary" value={ value }>
+                <Tab label={ intl.formatMessage({
                     id: 'layout.organize.campaigns.summary',
-                }) }>
-                    <Content>{ children }</Content>
-                </Item>
-                <Item key="calendar" title={ intl.formatMessage({
+                }) } value="summary"
+                />
+                <Tab label={ intl.formatMessage({
                     id: 'layout.organize.campaigns.calendar',
-                }) }>
-                    <View flexGrow={ 1 } maxHeight="90vh">
-                        { children }
-                    </View>
-                </Item>
-                <Item key="insights" title={ intl.formatMessage({
+                }) } value="calendar"
+                />
+                <Tab label={ intl.formatMessage({
                     id: 'layout.organize.campaigns.insights',
-                }) }>
-                    <Content>{ children }</Content>
-                </Item>
+                }) } value="insights"
+                />
             </Tabs>
-        </View>
+            <Box role="tabpanel">
+                { children }
+            </Box>
+        </div>
     );
 };
 
