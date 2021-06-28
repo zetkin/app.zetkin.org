@@ -2,8 +2,9 @@ import { GetServerSideProps } from 'next';
 import { grey } from '@material-ui/core/colors';
 import NextLink from 'next/link';
 import { Box, Button, Card, CardActions, CardContent, Checkbox, Collapse, FormControl, FormControlLabel, FormGroup, FormLabel, Link, List, ListItem, makeStyles, Typography } from '@material-ui/core';
-import { ExpandLess, ExpandMore } from '@material-ui/icons';
+import { Event, ExpandLess, ExpandMore, People } from '@material-ui/icons';
 import { FormattedDate, FormattedMessage as Msg, useIntl } from 'react-intl';
+import { SpeedDial, SpeedDialAction, SpeedDialIcon } from '@material-ui/lab';
 import { useEffect, useRef, useState } from 'react';
 
 import getAllCallAssignments from '../../../../fetching/getAllCallAssignments';
@@ -60,10 +61,15 @@ export const getServerSideProps : GetServerSideProps = scaffold(async (ctx) => {
     }
 }, scaffoldOptions);
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
     expandButton: {
         textDecoration: 'underline',
         textTransform: 'none',
+    },
+    speedDial: {
+        bottom: theme.spacing(4),
+        position: 'fixed',
+        right: theme.spacing(4),
     },
 }));
 
@@ -81,6 +87,7 @@ const AllCampaignsSummaryPage: PageWithLayout<AllCampaignsSummaryPageProps> = ({
     const canvassesQuery = useQuery(['canvasses', orgId], getCanvasses(orgId));
 
     const [expandedList, setExpandedList] = useState(false);
+    const [speedDialOpen, setSpeedDialOpen] = useState(false);
     const [filtered, setfiltered] = useState({
         callAssignments: false,
         canvasses: false,
@@ -121,6 +128,15 @@ const AllCampaignsSummaryPage: PageWithLayout<AllCampaignsSummaryPageProps> = ({
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setfiltered({ ...filtered, [event.target.name]: event.target.checked });
+    };
+
+    const actions = [
+        { icon: <Event />, name: 'Create new Event' },
+        { icon: <People />, name: 'Create new Campaign' },
+    ];
+
+    const handleClose = () => {
+        setSpeedDialOpen(false);
     };
 
     return (
@@ -246,6 +262,22 @@ const AllCampaignsSummaryPage: PageWithLayout<AllCampaignsSummaryPageProps> = ({
                     </FormControl>
                 </Box>
             </Box>
+            <SpeedDial
+                ariaLabel="SpeedDial example"
+                className={ classes.speedDial }
+                icon={ <SpeedDialIcon /> }
+                onClose={ handleClose }
+                onOpen={ () => setSpeedDialOpen(true) }
+                open={ speedDialOpen }>
+                { actions.map((action) => (
+                    <SpeedDialAction
+                        key={ action.name }
+                        icon={ action.icon }
+                        onClick={ handleClose }
+                        tooltipTitle={ action.name }
+                    />
+                )) }
+            </SpeedDial>
         </>
     );
 };
