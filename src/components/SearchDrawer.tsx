@@ -1,11 +1,12 @@
-import { useState, FocusEventHandler, FunctionComponent } from 'react';
-import { useIntl, FormattedMessage as Msg } from 'react-intl';
+import { FocusEventHandler, FunctionComponent, useState } from 'react';
+import { FormattedMessage as Msg, useIntl } from 'react-intl';
 import { useQuery } from 'react-query';
 import { Box, InputAdornment, makeStyles, TextField, Typography } from '@material-ui/core';
 import Search from '@material-ui/icons/Search';
 
 import getSearchDrawerResults from '../fetching/getSearchDrawerResults';
 import useDebounce from '../hooks/useDebounce';
+
 const useStyles = makeStyles(() => ({
     textField: {
         width: '100%',
@@ -13,19 +14,19 @@ const useStyles = makeStyles(() => ({
 }));
 
 interface SearchDrawerProps {
-    orgId: string
+    orgId: string;
 }
 
 const SearchDrawer: FunctionComponent<SearchDrawerProps> = ({ orgId }): JSX.Element | null => {
     const intl = useIntl();
-    const [searchQuery, setSearchQuery] = useState<string>('')
+    const [searchQuery, setSearchQuery] = useState<string>('');
     const [drawerOpen, setDrawerOpen] = useState(false);
     const classes = useStyles();
 
     // Gets the search results if user stops typing
     const debouncedSearch = useDebounce(async (debouncedSearchQuery: string) => {
         if (searchQuery.length > 0) {
-            getSearchDrawerResults(searchQuery, orgId)
+            getSearchDrawerResults(searchQuery, orgId);
         }
     }, 600);
 
@@ -63,7 +64,7 @@ const SearchDrawer: FunctionComponent<SearchDrawerProps> = ({ orgId }): JSX.Elem
                             if (!drawerOpen) {
                                 setDrawerOpen(true);
                             }
-                            debouncedSearch(e.target.value)
+                            debouncedSearch(e.target.value);
                         } }
                         onFocus={ expand }
                         onKeyUp={ e => {
@@ -74,10 +75,10 @@ const SearchDrawer: FunctionComponent<SearchDrawerProps> = ({ orgId }): JSX.Elem
                         placeholder={ intl.formatMessage({
                             id: 'layout.organize.search.placeholder',
                         }) }
-                        variant="outlined"
                         size="small"
+                        variant="outlined"
                     />
-                    {/* Search Drawer Content */}
+                    { /* Search Drawer Content */ }
                     <Box display={ drawerOpen ? 'block' : 'none' }>
                         <Box display="flex" flexDirection="row-reverse">
                             <Typography variant="body2">

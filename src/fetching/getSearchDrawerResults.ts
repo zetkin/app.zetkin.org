@@ -1,19 +1,19 @@
-import { defaultFetch } from ".";
-import apiUrl from "../utils/apiUrl";
+import { defaultFetch } from '.';
+import apiUrl from '../utils/apiUrl';
 
 export default async function getSearchDrawerResults(
     searchQuery: string,
     orgId: string,
-    fetch = defaultFetch
+    fetch = defaultFetch,
 ) {
     const body = JSON.stringify({
         q: searchQuery,
     });
 
     const res = await fetch(`/orgs/${orgId}/search/campaign`, {
-        method: "POST",
+        method: 'POST',
         headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
         },
         body,
     });

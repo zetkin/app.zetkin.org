@@ -1,5 +1,5 @@
-import { useCallback, useRef, useEffect } from "react";
-import debounce from "lodash.debounce";
+import { useCallback, useEffect, useRef } from 'react';
+import debounce from 'lodash.debounce';
 
 type DefaultCallbackArgs = Array<any>;
 type CallbackFn<Args extends DefaultCallbackArgs> = (
@@ -11,7 +11,7 @@ type CallbackFn<Args extends DefaultCallbackArgs> = (
  */
 export default function useDebounce<Args extends DefaultCallbackArgs>(
     callback: CallbackFn<Args>,
-    delay: number
+    delay: number,
 ) {
     // Memoizing the callback because if it's an arrow function
     // it would be different on each render

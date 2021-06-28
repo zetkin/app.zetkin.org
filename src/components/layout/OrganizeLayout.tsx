@@ -23,7 +23,7 @@ const OrganizeLayout : FunctionComponent<OrganizeLayoutProps> = ({ children, org
                                 <BreadcrumbTrail/>
                             </View>
                             <Flex justifyContent="end" width="50%">
-                                <SearchDrawer {...{orgId}} />
+                                <SearchDrawer { ...{ orgId } } />
                             </Flex>
                         </Flex>
                     </View>
