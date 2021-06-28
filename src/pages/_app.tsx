@@ -1,4 +1,5 @@
 import '../styles.css';
+import '../utils/polyfills';
 import { AppProps } from 'next/app';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { Hydrate } from 'react-query/hydration';
