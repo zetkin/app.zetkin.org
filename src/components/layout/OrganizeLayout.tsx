@@ -1,5 +1,6 @@
 import { FunctionComponent } from 'react';
-import { Flex, View } from '@adobe/react-spectrum';
+import { grey } from '@material-ui/core/colors';
+import { Box, makeStyles } from '@material-ui/core';
 
 import BreadcrumbTrail from '../BreadcrumbTrail';
 import OrganizeSidebar from '../OrganizeSidebar';
@@ -9,28 +10,38 @@ interface OrganizeLayoutProps {
     orgId: string;
 }
 
-const OrganizeLayout : FunctionComponent<OrganizeLayoutProps> = ({ children, orgId }) => {
+const useStyles = makeStyles((theme) => ({
+    breadcrumbs: {
+        [theme.breakpoints.down('xs')]: {
+            width: '100%',
+        },
+    },
+    root: {
+        [theme.breakpoints.down('xs')]: {
+            paddingTop: '4rem',
+        },
+    },
+}));
+
+const OrganizeLayout: FunctionComponent<OrganizeLayoutProps> = ({ children, orgId }) => {
+    const classes = useStyles();
     return (
-        <Flex>
-            <View backgroundColor="gray-600" height="100vh">
+        <Box className={ classes.root } display="flex">
+            <Box bgcolor={ grey[200] } height="100vh">
                 <OrganizeSidebar orgId={ orgId }  />
-            </View>
-            <View flexGrow={ 1 } height="100vh" overflow="scroll">
-                <Flex direction="column" height="100%" width="100%">
-                    <View margin="1rem 1rem 0 1rem">
-                        <Flex>
-                            <View width="50%">
-                                <BreadcrumbTrail/>
-                            </View>
-                            <Flex justifyContent="end" width="50%">
-                                <SearchDrawer { ...{ orgId } } />
-                            </Flex>
-                        </Flex>
-                    </View>
-                    { children as JSX.Element }
-                </Flex>
-            </View>
-        </Flex>
+            </Box>
+            <Box display="flex" flexDirection="column" height="100vh" overflow="hidden" width={ 1 }>
+                <Box display="flex" m={ 1 } mb={ 0 }>
+                    <Box className={ classes.breadcrumbs } mt="0.5rem" width={ 1 }>
+                        <BreadcrumbTrail/>
+                    </Box>
+                    <Box display="flex" justifyContent="end" position="absolute" right={ 0 } top={ 0 } width={ 0.5 } zIndex={ 10000 }>
+                        <SearchDrawer { ...{ orgId } } />
+                    </Box>
+                </Box>
+                { children as JSX.Element }
+            </Box>
+        </Box>
     );
 };
 
