@@ -1,8 +1,23 @@
 import { createMuiTheme } from '@material-ui/core/styles';
-import { red } from '@material-ui/core/colors';
+import { grey, red } from '@material-ui/core/colors';
 
 // Create a theme instance.
 const theme = createMuiTheme({
+    overrides: {
+        MuiCard: {
+            root: {
+                backgroundColor: 'transparent',
+                borderColor: grey[400],
+                borderWidth: 2,
+            },
+        },
+        MuiCardActions: {
+            root: {
+                display: 'flex',
+                justifyContent: 'flex-end',
+            },
+        },
+    },
     palette: {
         background: {
             default: '#fff',

@@ -1,0 +1,13 @@
+heading: Current campaigns
+create: Create new campaign
+cardCTA: Go to campaign
+showAll: Show All
+collapse: Show Less
+indefinite: Indefinite
+unsorted: Unsorted projects
+filter:
+    filter: Filter results
+    standalones: Standalone events
+    calls: Call assignments
+    surveys: Surveys
+    canvasses: Canvass assignments
