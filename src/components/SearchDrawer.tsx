@@ -27,10 +27,10 @@ interface SearchDrawerProps {
 }
 
 const SearchDrawer: FunctionComponent<SearchDrawerProps> = ({ orgId }): JSX.Element | null => {
-    const intl = useIntl();
-    const [searchFieldValue, setSearchFieldValue] = useState<string>('');
-    const [drawerOpen, setDrawerOpen] = useState(false);
     const classes = useStyles();
+    const intl = useIntl();
+    const [drawerOpen, setDrawerOpen] = useState(false);
+    const [searchFieldValue, setSearchFieldValue] = useState<string>('');
 
     // Gets the search results if user stops typing
     const debouncedSearch = useDebounce(async (debouncedSearchQuery: string) => {
