@@ -139,6 +139,9 @@ const SearchDrawer: FunctionComponent<SearchDrawerProps> = ({ orgId }): JSX.Elem
                     right: 0;
                     z-index: 3;
                 }
+                .collapsed {
+                    overflow-y: hidden;
+                }
                 @media screen and (max-width: 600px) {
                     .drawer {
                         width: 40vw;
