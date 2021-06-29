@@ -1,4 +1,5 @@
 import { FunctionComponent } from 'react';
+import Link from 'next/link';
 
 import {
     Avatar,
@@ -16,9 +17,10 @@ interface ResultsListProps {
     searchFieldValue: string;
     results: ZetkinPerson[];
     loading: boolean;
+    orgId: string;
 }
 
-const ResultsList: FunctionComponent<ResultsListProps> = ({ searchFieldValue, results, loading }): JSX.Element => {
+const ResultsList: FunctionComponent<ResultsListProps> = ({ searchFieldValue, results, loading, orgId }): JSX.Element => {
     return (
         <List>
             { /* Keep typing prompts */ }
@@ -39,11 +41,18 @@ const ResultsList: FunctionComponent<ResultsListProps> = ({ searchFieldValue, re
             { /* Results */ }
             { searchFieldValue.length >= 3 && (
                 <>
-                    <ListItem button component="a">
-                        <ListItemText>
-                            See all results for &quot;{ searchFieldValue }&quot;
-                        </ListItemText>
-                    </ListItem>
+                    <Link
+                        href={{
+                            pathname: `/organize/${orgId}/search`,
+                            query: { q: encodeURIComponent(searchFieldValue) },
+                        }}
+                        passHref>
+                        <ListItem button component="a">
+                            <ListItemText>
+                                See all results for &quot;{ searchFieldValue }&quot;
+                            </ListItemText>
+                        </ListItem>
+                    </Link>
                     { /* People List */ }
                     <List
                         subheader={
@@ -76,14 +85,16 @@ const ResultsList: FunctionComponent<ResultsListProps> = ({ searchFieldValue, re
                             !loading && results.length > 0 && (
                                 <>
                                     { results.map((person) => (
-                                        <ListItem key={ person.id } button component="a">
-                                            <ListItemAvatar>
-                                                <Avatar></Avatar>
-                                            </ListItemAvatar>
-                                            <ListItemText>
-                                                { person.first_name } { person.last_name }
-                                            </ListItemText>
-                                        </ListItem>
+                                        <Link key={ person.id } href={ `/organize/${orgId}/people/${person.id}` } passHref>
+                                            <ListItem button component="a">
+                                                <ListItemAvatar>
+                                                    <Avatar></Avatar>
+                                                </ListItemAvatar>
+                                                <ListItemText>
+                                                    { person.first_name } { person.last_name }
+                                                </ListItemText>
+                                            </ListItem>
+                                        </Link>
                                     )) }
                                 </>
 

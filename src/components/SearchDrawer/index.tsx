@@ -95,6 +95,7 @@ const SearchDrawer: FunctionComponent<SearchDrawerProps> = ({ orgId }): JSX.Elem
                         <Container>
                             <ResultsList
                                 loading={ isIdle || isFetching }
+                                orgId={ orgId }
                                 results={ searchResults }
                                 searchFieldValue={ searchFieldValue }
                             />
