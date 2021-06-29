@@ -13,6 +13,7 @@ import getCanvasses from '../../../../fetching/getCanvasses';
 import getEvents from '../../../../fetching/getEvents';
 import getOrg from '../../../../fetching/getOrg';
 import getSurveys from '../../../../fetching/getSurveys';
+import getUpcomingEvents from '../../../../fetching/getUpcomingEvents';
 import OrganizeAllCampaignsLayout from '../../../../components/layout/OrganizeAllCampaignsLayout';
 import { PageWithLayout } from '../../../../types';
 import { scaffold } from '../../../../utils/next';
@@ -35,6 +36,9 @@ export const getServerSideProps : GetServerSideProps = scaffold(async (ctx) => {
     await ctx.queryClient.prefetchQuery(['campaigns', orgId], getCampaigns(orgId as string, ctx.apiFetch));
     const campaignsState = ctx.queryClient.getQueryState(['campaigns', orgId]);
 
+    await ctx.queryClient.prefetchQuery(['upcomingEvents', orgId], getUpcomingEvents(orgId as string, ctx.apiFetch));
+    const upcomingEventsState = ctx.queryClient.getQueryState(['upcomingEvents', orgId]);
+
     await ctx.queryClient.prefetchQuery(['events', orgId], getEvents(orgId as string, ctx.apiFetch));
     const eventsState = ctx.queryClient.getQueryState(['events', orgId]);
 
@@ -47,7 +51,7 @@ export const getServerSideProps : GetServerSideProps = scaffold(async (ctx) => {
     await ctx.queryClient.prefetchQuery(['canvasses', orgId], getCanvasses(orgId as string, ctx.apiFetch));
     const canvassesState = ctx.queryClient.getQueryState(['canvasses', orgId]);
 
-    if (orgState?.status === 'success' && campaignsState?.status === 'success' && eventsState?.status === 'success'  && allCallAssignmentsState?.status === 'success' && canvassesState?.status === 'success' && surveysState?.status === 'success') {
+    if (orgState?.status === 'success' && campaignsState?.status === 'success' && eventsState?.status === 'success'  && allCallAssignmentsState?.status === 'success' && canvassesState?.status === 'success' && surveysState?.status === 'success' && upcomingEventsState?.status === 'success') {
         return {
             props: {
                 orgId,
@@ -81,6 +85,7 @@ const AllCampaignsSummaryPage: PageWithLayout<AllCampaignsSummaryPageProps> = ({
     const classes = useStyles();
     const intl = useIntl();
     const campaignsQuery = useQuery(['campaigns', orgId], getCampaigns(orgId));
+    const upcomingEventsQuery = useQuery(['upcomingEvents', orgId], getUpcomingEvents(orgId));
     const eventsQuery = useQuery(['events', orgId], getEvents(orgId));
     const surveysQuery = useQuery(['surveys', orgId], getSurveys(orgId));
     const callsQuery = useQuery(['calls', orgId], getAllCallAssignments(orgId));
@@ -105,6 +110,7 @@ const AllCampaignsSummaryPage: PageWithLayout<AllCampaignsSummaryPageProps> = ({
     campaigns = Array.from({ length: 7 }, () => [...campaigns]).flat();
     //TODO : data has been multiplied here don't do that IRL
 
+    const upcomingEvents = upcomingEventsQuery.data || [];
     const events = eventsQuery.data || [];
     const surveys = surveysQuery.data || [];
     const callAssignments = callsQuery.data || [];
@@ -121,10 +127,6 @@ const AllCampaignsSummaryPage: PageWithLayout<AllCampaignsSummaryPageProps> = ({
     if (Object.values(filtered).every(v => !v)) {
         unsorted = [...surveys, ...canvasses, ...callAssignments, ...standalones];
     }
-
-    const sortedEvents = [...events].sort((a, b) => {
-        return new Date(a.start_time).getTime() - new Date(b.start_time).getTime();
-    });
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setfiltered({ ...filtered, [event.target.name]: event.target.checked });
@@ -150,7 +152,8 @@ const AllCampaignsSummaryPage: PageWithLayout<AllCampaignsSummaryPageProps> = ({
                 <Collapse collapsedHeight={ cardHeight + 18 } in={ expandedList }>
                     <Box display="grid" gridGap={ 20 } gridTemplateColumns="repeat( auto-fit, minmax(450px, 1fr) )">
                         { campaigns.map(camp => {
-                            const campaignEvents = sortedEvents.filter(e => e.campaign.id === camp.id);
+                            const campaignEvents = events.filter(e => e.campaign.id === camp.id);
+                            const campaignUpcomingEvents = upcomingEvents.filter(e => e.campaign.id === camp.id);
                             const startDate = campaignEvents[0]?.start_time;
                             const endDate = campaignEvents[campaignEvents.length - 1]?.start_time;
                             return (
@@ -177,7 +180,9 @@ const AllCampaignsSummaryPage: PageWithLayout<AllCampaignsSummaryPageProps> = ({
                                             ) : <Msg id="pages.organizeAllCampaigns.indefinite" /> }
                                         </Typography>
                                         <Typography>
-                                            { `${campaignEvents.length} upcoming events` }
+                                            <Msg id="pages.organizeAllCampaigns.upcoming" values={{ numEvents:campaignUpcomingEvents.length,
+                                            }}
+                                            />
                                         </Typography>
                                         { /*TODO: labels for calls and surveys*/ }
                                     </CardContent>

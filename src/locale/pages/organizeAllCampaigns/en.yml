@@ -5,6 +5,8 @@ showAll: Show All
 collapse: Show Less
 indefinite: Indefinite
 unsorted: Unsorted projects
+upcoming: |
+  {numEvents, number} upcoming events.
 filter:
     filter: Filter results
     standalones: Standalone events

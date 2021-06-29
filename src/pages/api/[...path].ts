@@ -14,9 +14,45 @@ interface HttpVerbMethod {
     (resource : ZetkinZResource, req: NextApiRequestWithSession): Promise<ZetkinZResult>;
 }
 
+const getFilters = (req: NextApiRequest) => {
+    let filterArray = req.query.filter;
+    if (!filterArray) {
+        return;
+    }
+    else {
+        if (typeof filterArray === 'string') {
+            filterArray = [filterArray];
+        }
+        const operators = [
+            '==',
+            '>=',
+            '<=',
+            '>',
+            '<',
+            '!=',
+            '*=',
+        ];
+        return filterArray.map((filter) => {
+            const operator = operators.find(o => filter.includes(o));
+            if (!operator) {
+                throw new Error('Bad filter query');
+            }
+            const triplet = filter.split(operator);
+            triplet.splice(1, 0, operator);
+            if (triplet.length !== 3) {
+                throw new Error('Bad filter query');
+            }
+            return triplet as [string, string, string];
+        });
+    }
+};
+
 const HTTP_VERBS_TO_ZETKIN_METHODS : Record<string,HttpVerbMethod> = {
     'DELETE': (resource : ZetkinZResource) => resource.del(),
-    'GET': (resource : ZetkinZResource) => resource.get(),
+    'GET': (resource : ZetkinZResource, req: NextApiRequest) => {
+        const filters = getFilters(req);
+        return resource.get(null, null, filters);
+    },
     'PATCH': (resource : ZetkinZResource, req : NextApiRequestWithSession) => resource.patch(req.body),
     'POST': (resource : ZetkinZResource, req : NextApiRequestWithSession) => resource.post(req.body),
     'PUT': (resource : ZetkinZResource, req : NextApiRequestWithSession) => resource.put(req.body),
