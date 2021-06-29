@@ -106,16 +106,14 @@ const AllCampaignsSummaryPage: PageWithLayout<AllCampaignsSummaryPageProps> = ({
         setCardHeight(card.current?.offsetHeight || 0);
     }, []);
 
-    let campaigns = campaignsQuery.data || [];
-    campaigns = Array.from({ length: 7 }, () => [...campaigns]).flat();
-    //TODO : data has been multiplied here don't do that IRL
+    const campaigns = campaignsQuery.data || [];
 
     const upcomingEvents = upcomingEventsQuery.data || [];
     const events = eventsQuery.data || [];
-    const surveys = surveysQuery.data || [];
-    const callAssignments = callsQuery.data || [];
-    const canvasses = canvassesQuery.data || [];
-    const standalones = events.filter(e => !e.campaign.id);
+    const surveys = surveysQuery.data?.map(s => ({ ...s, key: `survey-${s.id}` })) || [];
+    const callAssignments = callsQuery.data?.map(c => ({ ...c, key: `call-${c.id}` })) || [];
+    const canvasses = canvassesQuery.data?.map(c => ({ ...c, key: `canvass-${c.id}` })) || [];
+    const standalones = events.filter(e => !e.campaign.id).map(s => ({ ...s, key: `standalone-${s.id}` }));
 
     let unsorted = [
         ... filtered.surveys ? [...surveys] : [],
@@ -223,10 +221,10 @@ const AllCampaignsSummaryPage: PageWithLayout<AllCampaignsSummaryPageProps> = ({
                 <Box flexGrow={ 0 } width={ 0.5 }>
                     <List disablePadding={ true }>
                         { unsorted.map(item => (
-                            <ListItem key={ item.id } style={{ background: grey[200], height: '4rem', margin: '1rem 0', paddingLeft:'0.5rem' }}>
+                            <ListItem key={ item.key } style={{ background: grey[200], height: '4rem', margin: '1rem 0', paddingLeft:'0.5rem' }}>
                                 <NextLink href="/" passHref>
                                     <Link color="inherit" variant="subtitle2">
-                                        { `${item.title} ID: ${item.id}` }
+                                        { `${item.title} ID: ${item.key}` }
                                     </Link>
                                 </NextLink>
                             </ListItem>
