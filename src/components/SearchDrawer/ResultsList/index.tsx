@@ -53,7 +53,7 @@ const ResultsList: FunctionComponent<ResultsListProps> = ({ searchFieldValue, re
                         }>
                         { /* Loading indicator */ }
                         {
-                            loading && (
+                            loading && results.length == 0 && (
                                 <ListItem>
                                     <ListItemText>
                                         Loading...
