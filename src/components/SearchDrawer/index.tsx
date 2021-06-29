@@ -1,13 +1,7 @@
 import { FormattedMessage as Msg } from 'react-intl';
 import {
-    Avatar,
     Box,
     Container,
-    List,
-    ListItem,
-    ListItemAvatar,
-    ListItemText,
-    ListSubheader,
     Typography,
 } from '@material-ui/core';
 import { FocusEventHandler, FunctionComponent, useState } from 'react';
@@ -15,6 +9,7 @@ import { FocusEventHandler, FunctionComponent, useState } from 'react';
 import getSearchDrawerResults from '../../fetching/getSearchDrawerResults';
 import useDebounce from '../../hooks/useDebounce';
 
+import ResultsList from './ResultsList';
 import SearchField from './SearchField';
 
 interface SearchDrawerProps {
@@ -73,47 +68,11 @@ const SearchDrawer: FunctionComponent<SearchDrawerProps> = ({ orgId }): JSX.Elem
                             </Typography>
                         </Box>
                         <Container>
-                            <List>
+                            <ResultsList
+                                results={ [] }
+                                searchFieldValue={ searchFieldValue }
+                            />
 
-                                { /* Keep typing prompts */ }
-                                { searchFieldValue.length === 0 && (
-                                    <ListItem>
-                                        <ListItemText>
-                                            Start typing to search.
-                                        </ListItemText>
-                                    </ListItem>
-                                ) }
-                                { searchFieldValue.length > 0 && searchFieldValue.length < 3 && (
-                                    <ListItem>
-                                        <ListItemText>
-                                            Keep typing to search.
-                                        </ListItemText>
-                                    </ListItem>
-                                ) }
-                                { /* Results */ }
-                                { searchFieldValue.length >= 3 && (
-                                    <>
-                                        <ListItem button component="a">
-                                            <ListItemText>
-                                                See all results for &quot;{ searchFieldValue }&quot;
-                                            </ListItemText>
-                                        </ListItem>
-                                        <List
-                                            subheader={
-                                                <ListSubheader component="div" id="nested-list-subheader">
-                                                    People
-                                                </ListSubheader>
-                                            }>
-                                            <ListItem button component="a">
-                                                <ListItemAvatar>
-                                                    <Avatar />
-                                                </ListItemAvatar>
-                                                <ListItemText>Richard</ListItemText>
-                                            </ListItem>
-                                        </List>
-                                    </>
-                                ) }
-                            </List>
                         </Container>
                     </Box>
                 </div>
