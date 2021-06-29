@@ -1,34 +1,27 @@
-import Search from '@material-ui/icons/Search';
+import { FormattedMessage as Msg } from 'react-intl';
 import {
+    Avatar,
     Box,
     Container,
-    InputAdornment,
     List,
     ListItem,
+    ListItemAvatar,
     ListItemText,
-    makeStyles,
-    TextField,
+    ListSubheader,
     Typography,
 } from '@material-ui/core';
 import { FocusEventHandler, FunctionComponent, useState } from 'react';
-import { FormattedMessage as Msg, useIntl } from 'react-intl';
 
-import getSearchDrawerResults from '../fetching/getSearchDrawerResults';
-import useDebounce from '../hooks/useDebounce';
+import getSearchDrawerResults from '../../fetching/getSearchDrawerResults';
+import useDebounce from '../../hooks/useDebounce';
 
-const useStyles = makeStyles(() => ({
-    textField: {
-        width: '100%',
-    },
-}));
+import SearchField from './SearchField';
 
 interface SearchDrawerProps {
     orgId: string;
 }
 
 const SearchDrawer: FunctionComponent<SearchDrawerProps> = ({ orgId }): JSX.Element | null => {
-    const classes = useStyles();
-    const intl = useIntl();
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [searchFieldValue, setSearchFieldValue] = useState<string>('');
 
@@ -56,19 +49,7 @@ const SearchDrawer: FunctionComponent<SearchDrawerProps> = ({ orgId }): JSX.Elem
                 onFocus={ collapse } tabIndex={ -1 }>
                 <div
                     className={ `drawer ${drawerOpen ? 'expanded' : 'collapsed'}` }>
-                    <TextField
-                        aria-label={ intl.formatMessage({
-                            id: 'layout.organize.search.label',
-                        }) }
-                        className={ classes.textField }
-                        id="input-with-icon-textfield"
-                        InputProps={{
-                            startAdornment: (
-                                <InputAdornment position="start">
-                                    <Search />
-                                </InputAdornment>
-                            ),
-                        }}
+                    <SearchField
                         onChange={ e => {
                             if (!drawerOpen) {
                                 setDrawerOpen(true);
@@ -82,11 +63,7 @@ const SearchDrawer: FunctionComponent<SearchDrawerProps> = ({ orgId }): JSX.Elem
                                 setDrawerOpen(false);
                             }
                         } }
-                        placeholder={ intl.formatMessage({
-                            id: 'layout.organize.search.placeholder',
-                        }) }
-                        size="small"
-                        variant="outlined"
+
                     />
                     { /* Search Drawer Content */ }
                     <Box display={ drawerOpen ? 'block' : 'none' }>
@@ -115,11 +92,26 @@ const SearchDrawer: FunctionComponent<SearchDrawerProps> = ({ orgId }): JSX.Elem
                                 ) }
                                 { /* Results */ }
                                 { searchFieldValue.length >= 3 && (
-                                    <ListItem button component="a">
-                                        <ListItemText>
-                                            See all results for &quot;{ searchFieldValue }&quot;
-                                        </ListItemText>
-                                    </ListItem>
+                                    <>
+                                        <ListItem button component="a">
+                                            <ListItemText>
+                                                See all results for &quot;{ searchFieldValue }&quot;
+                                            </ListItemText>
+                                        </ListItem>
+                                        <List
+                                            subheader={
+                                                <ListSubheader component="div" id="nested-list-subheader">
+                                                    People
+                                                </ListSubheader>
+                                            }>
+                                            <ListItem button component="a">
+                                                <ListItemAvatar>
+                                                    <Avatar />
+                                                </ListItemAvatar>
+                                                <ListItemText>Richard</ListItemText>
+                                            </ListItem>
+                                        </List>
+                                    </>
                                 ) }
                             </List>
                         </Container>
