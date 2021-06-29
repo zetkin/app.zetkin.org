@@ -1,4 +1,5 @@
 import { FormattedMessage as Msg } from 'react-intl';
+import { useQuery } from 'react-query';
 import {
     Box,
     Container,
@@ -11,6 +12,7 @@ import useDebounce from '../../hooks/useDebounce';
 
 import ResultsList from './ResultsList';
 import SearchField from './SearchField';
+import { useEffect } from 'react';
 
 interface SearchDrawerProps {
     orgId: string;
@@ -20,12 +22,21 @@ const SearchDrawer: FunctionComponent<SearchDrawerProps> = ({ orgId }): JSX.Elem
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [searchFieldValue, setSearchFieldValue] = useState<string>('');
 
-    // Gets the search results if user stops typing
-    const debouncedSearch = useDebounce(async (debouncedSearchQuery: string) => {
-        if (debouncedSearchQuery.length > 3) {
-            getSearchDrawerResults(debouncedSearchQuery, orgId);
-        }
+    const { refetch, data: searchResults } = useQuery(
+        ['searchDrawerResults', searchFieldValue],
+        getSearchDrawerResults(searchFieldValue, orgId),
+        { enabled: false },
+    );
+
+    const debouncedQuery = useDebounce(async () => {
+        refetch();
     }, 600);
+
+    // Watch for changes on the search field value
+    useEffect(() => {
+        if (searchFieldValue.length > 3) debouncedQuery();
+    }, [searchFieldValue, debouncedQuery]);
+
 
     const collapse:FocusEventHandler<Element> = (e) => {
         e.stopPropagation();
@@ -36,6 +47,7 @@ const SearchDrawer: FunctionComponent<SearchDrawerProps> = ({ orgId }): JSX.Elem
         e.stopPropagation();
         setDrawerOpen(true);
     };
+
 
     return (
         <>
@@ -50,7 +62,6 @@ const SearchDrawer: FunctionComponent<SearchDrawerProps> = ({ orgId }): JSX.Elem
                                 setDrawerOpen(true);
                             }
                             setSearchFieldValue(e.target.value);
-                            debouncedSearch(e.target.value);
                         } }
                         onFocus={ expand }
                         onKeyUp={ e => {
@@ -69,7 +80,7 @@ const SearchDrawer: FunctionComponent<SearchDrawerProps> = ({ orgId }): JSX.Elem
                         </Box>
                         <Container>
                             <ResultsList
-                                results={ [] }
+                                results={ searchResults ?? [] }
                                 searchFieldValue={ searchFieldValue }
                             />
 

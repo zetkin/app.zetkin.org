@@ -9,26 +9,12 @@ import {
     ListSubheader,
 } from '@material-ui/core';
 
-interface PersonSearchResult {
-    alt_phone: string;
-    is_user: boolean;
-    zip_code: string; // Need to check
-    last_name: string;
-    city: null; // Need to check
-    first_name: string;
-    gender: 'm'; // Check gender options
-    street_address: null; // Need to check
-    co_address: null; // Need to check
-    ext_id: null; // Str or num
-    email: string;
-    country: null; // Check
-    id: number;
-    phone: string;
-}
+import { ZetkinPerson } from '../../../types/zetkin';
+
 
 interface ResultsListProps {
     searchFieldValue: string;
-    results: PersonSearchResult[];
+    results: ZetkinPerson[];
 }
 
 const ResultsList: FunctionComponent<ResultsListProps> = ({ searchFieldValue }): JSX.Element => {
