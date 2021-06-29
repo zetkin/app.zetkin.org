@@ -32,11 +32,10 @@ const SearchDrawer: FunctionComponent<SearchDrawerProps> = ({ orgId }): JSX.Elem
         refetch();
     }, 600);
 
-    // Watch for changes on the search field value
+    // Watch for changes on the search field value and debounce search if changed
     useEffect(() => {
         if (searchFieldValue.length > 3) debouncedQuery();
     }, [searchFieldValue, debouncedQuery]);
-
 
     const collapse:FocusEventHandler<Element> = (e) => {
         e.stopPropagation();
@@ -111,6 +110,7 @@ const SearchDrawer: FunctionComponent<SearchDrawerProps> = ({ orgId }): JSX.Elem
                     transition: width 500ms;
                     top: 1rem;
                     right: 1rem;
+                    overflow-y: scroll;
                 }
                 .expanded {
                     background: white;
