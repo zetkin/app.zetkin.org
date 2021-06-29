@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import debounce from 'lodash.debounce';
 import { useCallback, useEffect, useRef } from 'react';
 
@@ -16,7 +17,7 @@ export default function useDebounce<Args extends DefaultCallbackArgs, ReturnType
 ): (...args: Args) => Promise<ReturnType> | undefined {
     // Memoizing the callback because if it's an arrow function
     // it would be different on each render
-    const memoizedCallback = useCallback(callback, [callback]);
+    const memoizedCallback = useCallback(callback, []);
     const debouncedFn = useRef(debounce(memoizedCallback, delay));
 
     useEffect(() => {
