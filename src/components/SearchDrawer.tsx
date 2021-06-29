@@ -1,5 +1,15 @@
 import Search from '@material-ui/icons/Search';
-import { Box, InputAdornment, makeStyles, TextField, Typography } from '@material-ui/core';
+import {
+    Box,
+    Container,
+    InputAdornment,
+    List,
+    ListItem,
+    ListItemText,
+    makeStyles,
+    TextField,
+    Typography,
+} from '@material-ui/core';
 import { FocusEventHandler, FunctionComponent, useState } from 'react';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
 
@@ -18,13 +28,13 @@ interface SearchDrawerProps {
 
 const SearchDrawer: FunctionComponent<SearchDrawerProps> = ({ orgId }): JSX.Element | null => {
     const intl = useIntl();
-    // const [searchQuery, setSearchQuery] = useState<string>('');
+    const [searchFieldValue, setSearchFieldValue] = useState<string>('');
     const [drawerOpen, setDrawerOpen] = useState(false);
     const classes = useStyles();
 
     // Gets the search results if user stops typing
     const debouncedSearch = useDebounce(async (debouncedSearchQuery: string) => {
-        if (debouncedSearchQuery.length > 0) {
+        if (debouncedSearchQuery.length > 3) {
             getSearchDrawerResults(debouncedSearchQuery, orgId);
         }
     }, 600);
@@ -63,6 +73,7 @@ const SearchDrawer: FunctionComponent<SearchDrawerProps> = ({ orgId }): JSX.Elem
                             if (!drawerOpen) {
                                 setDrawerOpen(true);
                             }
+                            setSearchFieldValue(e.target.value);
                             debouncedSearch(e.target.value);
                         } }
                         onFocus={ expand }
@@ -84,6 +95,34 @@ const SearchDrawer: FunctionComponent<SearchDrawerProps> = ({ orgId }): JSX.Elem
                                 <Msg id="layout.organize.search.drawerLabel"/>
                             </Typography>
                         </Box>
+                        <Container>
+                            <List>
+
+                                { /* Keep typing prompts */ }
+                                { searchFieldValue.length === 0 && (
+                                    <ListItem>
+                                        <ListItemText>
+                                            Start typing to search.
+                                        </ListItemText>
+                                    </ListItem>
+                                ) }
+                                { searchFieldValue.length > 0 && searchFieldValue.length < 3 && (
+                                    <ListItem>
+                                        <ListItemText>
+                                            Keep typing to search.
+                                        </ListItemText>
+                                    </ListItem>
+                                ) }
+                                { /* Results */ }
+                                { searchFieldValue.length >= 3 && (
+                                    <ListItem button component="a">
+                                        <ListItemText>
+                                            See all results for &quot;{ searchFieldValue }&quot;
+                                        </ListItemText>
+                                    </ListItem>
+                                ) }
+                            </List>
+                        </Container>
                     </Box>
                 </div>
             </div>
