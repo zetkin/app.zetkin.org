@@ -22,7 +22,7 @@ const SearchDrawer: FunctionComponent<SearchDrawerProps> = ({ orgId }): JSX.Elem
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [searchFieldValue, setSearchFieldValue] = useState<string>('');
 
-    const { refetch, data: searchResults } = useQuery(
+    const { refetch, data: searchResults, isLoading } = useQuery(
         ['searchDrawerResults', searchFieldValue],
         getSearchDrawerResults(searchFieldValue, orgId),
         { enabled: false },
@@ -80,6 +80,7 @@ const SearchDrawer: FunctionComponent<SearchDrawerProps> = ({ orgId }): JSX.Elem
                         </Box>
                         <Container>
                             <ResultsList
+                                loading={ isLoading }
                                 results={ searchResults ?? [] }
                                 searchFieldValue={ searchFieldValue }
                             />

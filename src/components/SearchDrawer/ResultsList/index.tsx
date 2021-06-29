@@ -15,9 +15,10 @@ import { ZetkinPerson } from '../../../types/zetkin';
 interface ResultsListProps {
     searchFieldValue: string;
     results: ZetkinPerson[];
+    loading: boolean;
 }
 
-const ResultsList: FunctionComponent<ResultsListProps> = ({ searchFieldValue }): JSX.Element => {
+const ResultsList: FunctionComponent<ResultsListProps> = ({ searchFieldValue, results, loading }): JSX.Element => {
     return (
         <List>
             { /* Keep typing prompts */ }
@@ -43,18 +44,52 @@ const ResultsList: FunctionComponent<ResultsListProps> = ({ searchFieldValue }):
                             See all results for &quot;{ searchFieldValue }&quot;
                         </ListItemText>
                     </ListItem>
+                    { /* People List */ }
                     <List
                         subheader={
                             <ListSubheader component="div" id="nested-list-subheader">
                                 People
                             </ListSubheader>
                         }>
-                        <ListItem button component="a">
-                            <ListItemAvatar>
-                                <Avatar />
-                            </ListItemAvatar>
-                            <ListItemText>Richard</ListItemText>
-                        </ListItem>
+                        { /* Loading indicator */ }
+                        {
+                            loading && (
+                                <ListItem>
+                                    <ListItemText>
+                                        Loading...
+                                    </ListItemText>
+                                </ListItem>
+                            )
+                        }
+                        { /* If results empty */ }
+                        {
+                            !loading && results.length === 0 && (
+                                <ListItem>
+                                    <ListItemText>
+                                        No results
+                                    </ListItemText>
+                                </ListItem>
+                            )
+                        }
+                        { /* If results */ }
+                        {
+                            !loading && results.length > 0 && (
+                                <>
+                                    { results.map((person) => (
+                                        <ListItem key={ person.id } button component="a">
+                                            <ListItemAvatar>
+                                                <Avatar></Avatar>
+                                            </ListItemAvatar>
+                                            <ListItemText>
+                                                { person.first_name } { person.last_name }
+                                            </ListItemText>
+                                        </ListItem>
+                                    )) }
+                                </>
+
+                            )
+                        }
+
                     </List>
                 </>
             ) }
