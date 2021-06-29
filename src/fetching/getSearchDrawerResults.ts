@@ -1,4 +1,3 @@
-import apiUrl from '../utils/apiUrl';
 import { defaultFetch } from '.';
 
 export default async function getSearchDrawerResults(
@@ -10,7 +9,7 @@ export default async function getSearchDrawerResults(
         q: searchQuery,
     });
 
-    const res = await fetch(apiUrl(`/orgs/${orgId}/search/people`), {
+    const res = await fetch(`/orgs/${orgId}/search/person`, {
         body,
         headers: {
             'Content-Type': 'application/json',
