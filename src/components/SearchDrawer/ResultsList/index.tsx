@@ -88,7 +88,9 @@ const ResultsList: FunctionComponent<ResultsListProps> = ({ searchFieldValue, re
                                         <Link key={ person.id } href={ `/organize/${orgId}/people/${person.id}` } passHref>
                                             <ListItem button component="a">
                                                 <ListItemAvatar>
-                                                    <Avatar></Avatar>
+                                                    <Avatar
+                                                        src={ `/api/orgs/${orgId}/people/${person.id}/avatar` }>
+                                                    </Avatar>
                                                 </ListItemAvatar>
                                                 <ListItemText>
                                                     { person.first_name } { person.last_name }
