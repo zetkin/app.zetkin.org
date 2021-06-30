@@ -1,29 +1,39 @@
+import { useQuery } from 'react-query';
 import { useState } from 'react';
 import { Button, MenuItem, TextField } from '@material-ui/core';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
 
+import getActivities from '../fetching/getActivities';
+import getCampaigns from '../fetching/getCampaigns';
+import getLocations from '../fetching/getLocations';
+
 interface CreateEventFormProps {
     onSubmit: () => void;
     onCancel: () => void;
+    orgId: string;
 }
 
-const CreateEventForm = ({ onSubmit, onCancel }: CreateEventFormProps): JSX.Element => {
+const CreateEventForm = ({ onSubmit, onCancel, orgId }: CreateEventFormProps): JSX.Element => {
+    const campaignsQuery = useQuery(['campaigns', orgId], getCampaigns(orgId));
+    const activitiesQuery = useQuery(['actvities', orgId], getActivities(orgId));
+    const locationsQuery = useQuery(['locations', orgId], getLocations(orgId));
+
+    const activities = activitiesQuery.data?.map(a => a.title) || [];
+    const locations = locationsQuery.data?.map(l => l.title) || [];
+    const campIds = campaignsQuery.data?.map(c => c.title) || [];
+
     const intl = useIntl();
     const [title, setTitle] = useState('');
     const [link, setLink] = useState('');
     const [info, setInfo] = useState('');
     const [start, setStart] = useState('');
     const [end, setEnd] = useState('');
-    const [place, setPlace] = useState('');
+    const [location, setLocation] = useState('');
     const [activity, setActivity] = useState('');
     const [campId, setCampId] = useState<number| undefined>();
 
-    const activities = ['activity one', 'activity 2'];
-    const places = ['dorfplatz', 'alexanderplatz'];
-    const campIds = [1, 2];
-
     const handleSubmit = () => {
-        alert(`${title} ${link} ${info} ${start} ${end} ${place} ${activity} ${campId}`);
+        alert(`${title} ${link} ${info} ${start} ${end} ${location} ${activity} ${campId}`);
         //TO DO : handle form submit
         onSubmit();
     };
@@ -57,9 +67,9 @@ const CreateEventForm = ({ onSubmit, onCancel }: CreateEventFormProps): JSX.Elem
             <TextField fullWidth id="place"
                 label={ intl.formatMessage({ id: 'misc.formDialog.createNew.event.place' }) }
                 margin="normal"
-                onChange={ (e) => setPlace(e.target.value) }
+                onChange={ (e) => setLocation(e.target.value) }
                 select>
-                { places.map(p => (
+                { locations.map(p => (
                     <MenuItem key={ p } value={ p }>
                         { p }
                     </MenuItem>

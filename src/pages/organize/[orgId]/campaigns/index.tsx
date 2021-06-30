@@ -10,10 +10,12 @@ import { useEffect, useRef, useState } from 'react';
 
 import CreateCampaignForm from '../../../../components/CreateCampaignForm';
 import CreateEventForm from '../../../../components/CreateEventForm';
+import getActivities from '../../../../fetching/getActivities';
 import getAllCallAssignments from '../../../../fetching/getAllCallAssignments';
 import getCampaigns from '../../../../fetching/getCampaigns';
 import getCanvasses from '../../../../fetching/getCanvasses';
 import getEvents from '../../../../fetching/getEvents';
+import getLocations from '../../../../fetching/getLocations';
 import getOrg from '../../../../fetching/getOrg';
 import getSurveys from '../../../../fetching/getSurveys';
 import getUpcomingEvents from '../../../../fetching/getUpcomingEvents';
@@ -55,7 +57,13 @@ export const getServerSideProps : GetServerSideProps = scaffold(async (ctx) => {
     await ctx.queryClient.prefetchQuery(['canvasses', orgId], getCanvasses(orgId as string, ctx.apiFetch));
     const canvassesState = ctx.queryClient.getQueryState(['canvasses', orgId]);
 
-    if (orgState?.status === 'success' && campaignsState?.status === 'success' && eventsState?.status === 'success'  && allCallAssignmentsState?.status === 'success' && canvassesState?.status === 'success' && surveysState?.status === 'success' && upcomingEventsState?.status === 'success') {
+    await ctx.queryClient.prefetchQuery(['activities', orgId], getActivities(orgId as string, ctx.apiFetch));
+    const activitiesState = ctx.queryClient.getQueryState(['activities', orgId]);
+
+    await ctx.queryClient.prefetchQuery(['locations', orgId], getLocations(orgId as string, ctx.apiFetch));
+    const locationsState = ctx.queryClient.getQueryState(['locations', orgId]);
+
+    if (orgState?.status === 'success' && campaignsState?.status === 'success' && eventsState?.status === 'success'  && allCallAssignmentsState?.status === 'success' && canvassesState?.status === 'success' && surveysState?.status === 'success' && upcomingEventsState?.status === 'success' && activitiesState?.status === 'success' && locationsState?.status === 'success') {
         return {
             props: {
                 orgId,
@@ -315,7 +323,7 @@ const AllCampaignsSummaryPage: PageWithLayout<AllCampaignsSummaryPageProps> = ({
                 open={ !!dialogOpen }
                 title={ intl.formatMessage({ id: 'misc.formDialog.createNew.heading' }, { resource: dialogOpen }) }>
                 { dialogOpen === 'campaign' && <CreateCampaignForm onCancel={ handleDialogClose } onSubmit={ handleDialogClose }/> }
-                { dialogOpen === 'event' && <CreateEventForm onCancel={ handleDialogClose } onSubmit={ handleDialogClose }/> }
+                { dialogOpen === 'event' && <CreateEventForm onCancel={ handleDialogClose } onSubmit={ handleDialogClose } orgId={ orgId.toString() }/> }
             </ZetKinDialog>
         </>
     );

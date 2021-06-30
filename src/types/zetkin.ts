@@ -134,3 +134,17 @@ export interface ZetkinCanvassAssignment {
     id: string;
     title: string;
 }
+
+export interface ZetkinLocation {
+    id: number;
+    lat: number;
+    lng: number;
+    title: string;
+    info_text: string;
+}
+
+export interface ZetkinActivity {
+    id: number;
+    title: string;
+    info_text: string | null;
+}
