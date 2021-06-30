@@ -1,0 +1,26 @@
+createNew: 
+    heading: Create new {resource}
+    campaign:
+        name: Name
+        description: Description
+        visibility:
+            heading: Visibility
+            private: Private
+            public: Public
+        status:
+            heading: Status
+            published: Published
+            draft: Draft
+    event:
+        campaign: Campaign
+        title: Title
+        link: Link
+        start: Start Time
+        end: End Time
+        activity: Activity
+        place: Place
+        info: Information on signup
+        minNo: Mininum participants
+submit: Submit
+cancel: Cancel
+required: Required

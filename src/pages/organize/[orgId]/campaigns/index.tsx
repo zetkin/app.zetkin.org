@@ -1,12 +1,15 @@
 import { GetServerSideProps } from 'next';
 import { grey } from '@material-ui/core/colors';
 import NextLink from 'next/link';
+import { useRouter } from 'next/router';
 import { Box, Button, Card, CardActions, CardContent, Checkbox, Collapse, FormControl, FormControlLabel, FormGroup, FormLabel, Link, List, ListItem, makeStyles, Typography } from '@material-ui/core';
 import { Event, ExpandLess, ExpandMore, People } from '@material-ui/icons';
 import { FormattedDate, FormattedMessage as Msg, useIntl } from 'react-intl';
 import { SpeedDial, SpeedDialAction, SpeedDialIcon } from '@material-ui/lab';
 import { useEffect, useRef, useState } from 'react';
 
+import CreateCampaignForm from '../../../../components/CreateCampaignForm';
+import CreateEventForm from '../../../../components/CreateEventForm';
 import getAllCallAssignments from '../../../../fetching/getAllCallAssignments';
 import getCampaigns from '../../../../fetching/getCampaigns';
 import getCanvasses from '../../../../fetching/getCanvasses';
@@ -18,11 +21,12 @@ import OrganizeAllCampaignsLayout from '../../../../components/layout/OrganizeAl
 import { PageWithLayout } from '../../../../types';
 import { scaffold } from '../../../../utils/next';
 import { useQuery } from 'react-query';
+import ZetKinDialog from '../../../../components/ZetkinDialog';
 
 const scaffoldOptions = {
     authLevelRequired: 2,
     localeScope: [
-        'layout.organize', 'misc.breadcrumbs', 'pages.organizeAllCampaigns',
+        'layout.organize', 'misc.breadcrumbs', 'pages.organizeAllCampaigns', 'misc.formDialog',
     ],
 };
 
@@ -82,6 +86,7 @@ type AllCampaignsSummaryPageProps = {
 };
 
 const AllCampaignsSummaryPage: PageWithLayout<AllCampaignsSummaryPageProps> = ({ orgId }) => {
+    const router = useRouter();
     const classes = useStyles();
     const intl = useIntl();
     const campaignsQuery = useQuery(['campaigns', orgId], getCampaigns(orgId));
@@ -93,6 +98,7 @@ const AllCampaignsSummaryPage: PageWithLayout<AllCampaignsSummaryPageProps> = ({
 
     const [expandedList, setExpandedList] = useState(false);
     const [speedDialOpen, setSpeedDialOpen] = useState(false);
+    const [dialogOpen, setDialogOpen] = useState<null | string>(null);
     const [filtered, setfiltered] = useState({
         callAssignments: false,
         canvasses: false,
@@ -131,13 +137,36 @@ const AllCampaignsSummaryPage: PageWithLayout<AllCampaignsSummaryPageProps> = ({
     };
 
     const actions = [
-        { icon: <Event />, name: 'Create new Event' },
-        { icon: <People />, name: 'Create new Campaign' },
+        { icon: <Event />, id: 'event', name: intl.formatMessage({ id: 'pages.organizeAllCampaigns.createEvent' }) },
+        { icon: <People />, id: 'campaign', name: intl.formatMessage({ id: 'pages.organizeAllCampaigns.createCampaign' }) },
     ];
 
-    const handleClose = () => {
+    const handleSpeedDialClose = (id: string) => {
         setSpeedDialOpen(false);
+        if (id === 'campaign') {
+            router.push(`/organize/${orgId}/campaigns#new_campaign`, undefined, { shallow: true });
+            setDialogOpen('campaign');
+        }
+        else if (id === 'event') {
+            router.push(`/organize/${orgId}/campaigns#new_event`, undefined, { shallow: true });
+            setDialogOpen('event');
+        }
     };
+
+    const handleDialogClose = () => {
+        setDialogOpen(null);
+        router.push(`/organize/${orgId}/campaigns`, undefined, { shallow: true });
+    };
+
+    useEffect(() => {
+        const current = router.asPath.split('/').pop();
+        if (current?.includes('#new_campaign')) {
+            setDialogOpen('campaign');
+        }
+        else if (current?.includes('#new_event')) {
+            setDialogOpen('event');
+        }
+    }, [router.asPath]);
 
     return (
         <>
@@ -269,18 +298,25 @@ const AllCampaignsSummaryPage: PageWithLayout<AllCampaignsSummaryPageProps> = ({
                 ariaLabel="SpeedDial example"
                 className={ classes.speedDial }
                 icon={ <SpeedDialIcon /> }
-                onClose={ handleClose }
+                onClose={ () => setSpeedDialOpen(false) }
                 onOpen={ () => setSpeedDialOpen(true) }
                 open={ speedDialOpen }>
                 { actions.map((action) => (
                     <SpeedDialAction
-                        key={ action.name }
+                        key={ action.id }
                         icon={ action.icon }
-                        onClick={ handleClose }
+                        onClick={ () => handleSpeedDialClose(action.id) }
                         tooltipTitle={ action.name }
                     />
                 )) }
             </SpeedDial>
+            <ZetKinDialog
+                onClose={ handleDialogClose }
+                open={ !!dialogOpen }
+                title={ intl.formatMessage({ id: 'misc.formDialog.createNew.heading' }, { resource: dialogOpen }) }>
+                { dialogOpen === 'campaign' && <CreateCampaignForm onCancel={ handleDialogClose } onSubmit={ handleDialogClose }/> }
+                { dialogOpen === 'event' && <CreateEventForm onCancel={ handleDialogClose } onSubmit={ handleDialogClose }/> }
+            </ZetKinDialog>
         </>
     );
 };
