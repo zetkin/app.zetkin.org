@@ -23,7 +23,7 @@ import OrganizeAllCampaignsLayout from '../../../../components/layout/OrganizeAl
 import { PageWithLayout } from '../../../../types';
 import { scaffold } from '../../../../utils/next';
 import { useQuery } from 'react-query';
-import ZetKinDialog from '../../../../components/ZetkinDialog';
+import ZetkinDialog from '../../../../components/ZetkinDialog';
 
 const scaffoldOptions = {
     authLevelRequired: 2,
@@ -318,13 +318,13 @@ const AllCampaignsSummaryPage: PageWithLayout<AllCampaignsSummaryPageProps> = ({
                     />
                 )) }
             </SpeedDial>
-            <ZetKinDialog
+            <ZetkinDialog
                 onClose={ handleDialogClose }
                 open={ !!dialogOpen }
                 title={ intl.formatMessage({ id: 'misc.formDialog.createNew.heading' }, { resource: dialogOpen }) }>
                 { dialogOpen === 'campaign' && <CreateCampaignForm onCancel={ handleDialogClose } onSubmit={ handleDialogClose }/> }
                 { dialogOpen === 'event' && <CreateEventForm onCancel={ handleDialogClose } onSubmit={ handleDialogClose } orgId={ orgId.toString() }/> }
-            </ZetKinDialog>
+            </ZetkinDialog>
         </>
     );
 };

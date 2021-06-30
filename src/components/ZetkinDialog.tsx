@@ -8,7 +8,7 @@ interface ZetkinDialogProps {
     title?: string;
 }
 
-const ZetKinDialog: FunctionComponent<ZetkinDialogProps> = ({ children, open, onClose, title }): JSX.Element => {
+const ZetkinDialog: FunctionComponent<ZetkinDialogProps> = ({ children, open, onClose, title }): JSX.Element => {
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -24,4 +24,4 @@ const ZetKinDialog: FunctionComponent<ZetkinDialogProps> = ({ children, open, on
     );
 };
 
-export default ZetKinDialog;
+export default ZetkinDialog;
