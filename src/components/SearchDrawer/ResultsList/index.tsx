@@ -1,10 +1,11 @@
-import { FunctionComponent } from 'react';
 import Link from 'next/link';
 import { useQuery } from 'react-query';
+import { FunctionComponent, useEffect, useState } from 'react';
 
 import Search from '@material-ui/icons/Search';
 import {
     Avatar,
+    ButtonBase,
     List,
     ListItem,
     ListItemAvatar,
@@ -24,11 +25,17 @@ interface ResultsListProps {
 }
 
 const ResultsList: FunctionComponent<ResultsListProps> = ({ searchFieldValue, results, loading, orgId }): JSX.Element => {
-    const { data: org } = useQuery(['org', orgId], getOrg(orgId));
+    const [numResultsToDisplay, setNumResultsToDisplay] = useState<number>(5);
+    const { data: org } = useQuery(['org', orgId], getOrg(orgId), { enabled: false });
+
+    // If results change, reset the max number
+    useEffect(() => {
+        setNumResultsToDisplay(5);
+    }, [results]);
 
     return (
         <List>
-            { /* Keep typing prompts */ }
+            { /* Typing prompts */ }
             { searchFieldValue.length === 0 && (
                 <ListItem>
                     <ListItemText>
@@ -88,33 +95,45 @@ const ResultsList: FunctionComponent<ResultsListProps> = ({ searchFieldValue, re
                                 </ListItem>
                             )
                         }
-                        { /* If results */ }
+                        { /* People */ }
                         {
                             results.length > 0 && (
                                 <>
-                                    { results.slice(0, 5).map((person) => (
-                                        <Link key={ person.id } href={ `/organize/${orgId}/people/${person.id}` } passHref>
-                                            <ListItem button component="a">
-                                                <ListItemAvatar>
-                                                    <Avatar
-                                                        src={ `/api/orgs/${orgId}/people/${person.id}/avatar` }>
-                                                    </Avatar>
-                                                </ListItemAvatar>
-                                                <ListItemText>
-                                                    { person.first_name } { person.last_name }
-                                                </ListItemText>
-                                            </ListItem>
-                                        </Link>
-                                    )) }
+                                    { results.map((person, index) => {
+                                        // Show more results if the user clicks the show more button
+                                        if (index < numResultsToDisplay)
+                                            return (
+                                                <Link key={ person.id } href={ `/organize/${orgId}/people/${person.id}` } passHref>
+                                                    <ListItem button component="a">
+                                                        <ListItemAvatar>
+                                                            <Avatar
+                                                                src={ `/api/orgs/${orgId}/people/${person.id}/avatar` }>
+                                                            </Avatar>
+                                                        </ListItemAvatar>
+                                                        <ListItemText>
+                                                            { person.first_name } { person.last_name }
+                                                        </ListItemText>
+                                                    </ListItem>
+                                                </Link>
+                                            );
+                                    }) }
                                 </>
 
                             )
                         }
-                        <ListItem>
-                            <ListItemText>
-                                Show more...
-                            </ListItemText>
-                        </ListItem>
+                        { /* Show more button */ }
+                        { results.length > numResultsToDisplay && (
+                            <ListItem>
+                                <ListItemText>
+                                    <ButtonBase onClick={ () => {
+                                        setNumResultsToDisplay(numResultsToDisplay + 5);
+                                    } }>
+                                        Show more...
+                                    </ButtonBase>
+                                </ListItemText>
+                            </ListItem>
+                        ) }
+
                     </List>
                 </>
             ) }
