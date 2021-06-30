@@ -13,7 +13,6 @@ import useDebounce from '../../hooks/useDebounce';
 import ResultsList from './ResultsList';
 import SearchField from './SearchField';
 import { useEffect } from 'react';
-import { ZetkinPerson } from '../../types/zetkin';
 
 interface SearchDrawerProps {
     orgId: string;
@@ -22,9 +21,8 @@ interface SearchDrawerProps {
 const SearchDrawer: FunctionComponent<SearchDrawerProps> = ({ orgId }): JSX.Element | null => {
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [searchFieldValue, setSearchFieldValue] = useState<string>('');
-    const [searchResults, setSearchResults] = useState<ZetkinPerson[]>([]);
 
-    const { refetch, data, isIdle, isFetching } = useQuery(
+    const { refetch, data: results, isIdle, isFetching } = useQuery(
         ['searchDrawerResults', searchFieldValue],
         getSearchDrawerResults(searchFieldValue, orgId),
         { enabled: false },
@@ -36,21 +34,8 @@ const SearchDrawer: FunctionComponent<SearchDrawerProps> = ({ orgId }): JSX.Elem
 
     // Watch for changes on the search field value and debounce search if changed
     useEffect(() => {
-        if (searchFieldValue.length > 3) debouncedQuery();
+        if (searchFieldValue.length >= 3) debouncedQuery();
     }, [searchFieldValue, debouncedQuery]);
-
-    // Set the display results
-    useEffect(() => {
-        // If data gets a new value, set it to results
-        if (data !== undefined) {
-            setSearchResults(data);
-        }
-        // If searchFieldValue goes below 3, remove results
-        if (searchFieldValue.length < 3) {
-            setSearchResults([]);
-        }
-
-    }, [data, searchFieldValue]);
 
     const collapse:FocusEventHandler<Element> = (e) => {
         e.stopPropagation();
@@ -62,7 +47,6 @@ const SearchDrawer: FunctionComponent<SearchDrawerProps> = ({ orgId }): JSX.Elem
         setDrawerOpen(true);
     };
 
-
     return (
         <>
             <div
@@ -71,6 +55,7 @@ const SearchDrawer: FunctionComponent<SearchDrawerProps> = ({ orgId }): JSX.Elem
                 <div
                     className={ `drawer ${drawerOpen ? 'expanded' : 'collapsed'}` }>
                     <SearchField
+                        data-testid="search-field"
                         onChange={ e => {
                             if (!drawerOpen) {
                                 setDrawerOpen(true);
@@ -96,7 +81,7 @@ const SearchDrawer: FunctionComponent<SearchDrawerProps> = ({ orgId }): JSX.Elem
                             <ResultsList
                                 loading={ isIdle || isFetching }
                                 orgId={ orgId }
-                                results={ searchResults }
+                                results={ results ?? [] }
                                 searchFieldValue={ searchFieldValue }
                             />
 

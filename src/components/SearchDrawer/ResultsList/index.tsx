@@ -1,6 +1,8 @@
 import { FunctionComponent } from 'react';
 import Link from 'next/link';
+import { useQuery } from 'react-query';
 
+import Search from '@material-ui/icons/Search';
 import {
     Avatar,
     List,
@@ -10,6 +12,7 @@ import {
     ListSubheader,
 } from '@material-ui/core';
 
+import getOrg from '../../../fetching/getOrg';
 import { ZetkinPerson } from '../../../types/zetkin';
 
 
@@ -21,6 +24,8 @@ interface ResultsListProps {
 }
 
 const ResultsList: FunctionComponent<ResultsListProps> = ({ searchFieldValue, results, loading, orgId }): JSX.Element => {
+    const { data: org } = useQuery(['org', orgId], getOrg(orgId));
+
     return (
         <List>
             { /* Keep typing prompts */ }
@@ -48,8 +53,11 @@ const ResultsList: FunctionComponent<ResultsListProps> = ({ searchFieldValue, re
                         }}
                         passHref>
                         <ListItem button component="a">
+                            <ListItemAvatar>
+                                <Search />
+                            </ListItemAvatar>
                             <ListItemText>
-                                See all results for &quot;{ searchFieldValue }&quot;
+                                See all results in <b>{ org?.title }</b> for &quot;{ searchFieldValue }&quot;
                             </ListItemText>
                         </ListItem>
                     </Link>
@@ -82,9 +90,9 @@ const ResultsList: FunctionComponent<ResultsListProps> = ({ searchFieldValue, re
                         }
                         { /* If results */ }
                         {
-                            !loading && results.length > 0 && (
+                            results.length > 0 && (
                                 <>
-                                    { results.map((person) => (
+                                    { results.slice(0, 5).map((person) => (
                                         <Link key={ person.id } href={ `/organize/${orgId}/people/${person.id}` } passHref>
                                             <ListItem button component="a">
                                                 <ListItemAvatar>
@@ -102,7 +110,11 @@ const ResultsList: FunctionComponent<ResultsListProps> = ({ searchFieldValue, re
 
                             )
                         }
-
+                        <ListItem>
+                            <ListItemText>
+                                Show more...
+                            </ListItemText>
+                        </ListItem>
                     </List>
                 </>
             ) }
