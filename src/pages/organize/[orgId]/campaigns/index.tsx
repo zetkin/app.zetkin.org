@@ -28,7 +28,7 @@ import ZetkinDialog from '../../../../components/ZetkinDialog';
 const scaffoldOptions = {
     authLevelRequired: 2,
     localeScope: [
-        'layout.organize', 'misc.breadcrumbs', 'pages.organizeAllCampaigns', 'misc.formDialog',
+        'layout.organize', 'misc.breadcrumbs', 'pages.organizeAllCampaigns', 'misc.formDialog', 'misc.speedDial',
     ],
 };
 
@@ -145,8 +145,8 @@ const AllCampaignsSummaryPage: PageWithLayout<AllCampaignsSummaryPageProps> = ({
     };
 
     const actions = [
-        { icon: <Event />, id: 'event', name: intl.formatMessage({ id: 'pages.organizeAllCampaigns.createEvent' }) },
-        { icon: <People />, id: 'campaign', name: intl.formatMessage({ id: 'pages.organizeAllCampaigns.createCampaign' }) },
+        { icon: <Event />, id: 'event', name: intl.formatMessage({ id: 'misc.speedDial.createEvent' }) },
+        { icon: <People />, id: 'campaign', name: intl.formatMessage({ id: 'misc.speedDial.createCampaign' }) },
     ];
 
     const handleSpeedDialClose = (id: string) => {
