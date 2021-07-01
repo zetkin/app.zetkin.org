@@ -22,6 +22,7 @@ import getSurveys from '../../../../fetching/getSurveys';
 import getUpcomingEvents from '../../../../fetching/getUpcomingEvents';
 import OrganizeAllCampaignsLayout from '../../../../components/layout/OrganizeAllCampaignsLayout';
 import { PageWithLayout } from '../../../../types';
+import postCampaign from '../../../../fetching/postCampaign';
 import postEvent from '../../../../fetching/postEvent';
 import { scaffold } from '../../../../utils/next';
 import ZetkinDialog from '../../../../components/ZetkinDialog';
@@ -106,6 +107,7 @@ const AllCampaignsSummaryPage: PageWithLayout<AllCampaignsSummaryPageProps> = ({
     const canvassesQuery = useQuery(['canvasses', orgId], getCanvasses(orgId));
 
     const eventMutation = useMutation(postEvent(orgId));
+    const campaignMutation = useMutation(postCampaign(orgId));
 
     const [expandedList, setExpandedList] = useState(false);
     const [speedDialOpen, setSpeedDialOpen] = useState(false);
@@ -179,6 +181,11 @@ const AllCampaignsSummaryPage: PageWithLayout<AllCampaignsSummaryPageProps> = ({
 
     const handleCreateEventFormSubmit = (data: Record<string,unknown>) => {
         eventMutation.mutate(data);
+        closeDialog();
+    };
+
+    const handleCreateCampaignFormSubmit = (data: Record<string,unknown>) => {
+        campaignMutation.mutate(data);
         closeDialog();
     };
 
@@ -338,7 +345,7 @@ const AllCampaignsSummaryPage: PageWithLayout<AllCampaignsSummaryPageProps> = ({
                 onClose={ handleDialogClose }
                 open={ !!dialogOpen }
                 title={ intl.formatMessage({ id: 'misc.formDialog.createNew.heading' }, { resource: dialogOpen }) }>
-                { dialogOpen === 'campaign' && <CreateCampaignForm onCancel={ handleFormCancel } onSubmit={ closeDialog }/> }
+                { dialogOpen === 'campaign' && <CreateCampaignForm onCancel={ handleFormCancel } onSubmit={ handleCreateCampaignFormSubmit }/> }
                 { dialogOpen === 'event' && <CreateEventForm onCancel={ handleFormCancel } onSubmit={ handleCreateEventFormSubmit } orgId={ orgId.toString() }/> }
             </ZetkinDialog>
         </>
