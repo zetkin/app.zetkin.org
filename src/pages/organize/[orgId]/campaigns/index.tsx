@@ -7,6 +7,7 @@ import { Event, ExpandLess, ExpandMore, People } from '@material-ui/icons';
 import { FormattedDate, FormattedMessage as Msg, useIntl } from 'react-intl';
 import { SpeedDial, SpeedDialAction, SpeedDialIcon } from '@material-ui/lab';
 import { useEffect, useRef, useState } from 'react';
+import { useMutation, useQuery } from 'react-query';
 
 import CreateCampaignForm from '../../../../components/CreateCampaignForm';
 import CreateEventForm from '../../../../components/CreateEventForm';
@@ -21,8 +22,8 @@ import getSurveys from '../../../../fetching/getSurveys';
 import getUpcomingEvents from '../../../../fetching/getUpcomingEvents';
 import OrganizeAllCampaignsLayout from '../../../../components/layout/OrganizeAllCampaignsLayout';
 import { PageWithLayout } from '../../../../types';
+import postEvent from '../../../../fetching/postEvent';
 import { scaffold } from '../../../../utils/next';
-import { useQuery } from 'react-query';
 import ZetkinDialog from '../../../../components/ZetkinDialog';
 
 const scaffoldOptions = {
@@ -104,6 +105,8 @@ const AllCampaignsSummaryPage: PageWithLayout<AllCampaignsSummaryPageProps> = ({
     const callsQuery = useQuery(['calls', orgId], getAllCallAssignments(orgId));
     const canvassesQuery = useQuery(['canvasses', orgId], getCanvasses(orgId));
 
+    const eventMutation = useMutation(postEvent(orgId));
+
     const [expandedList, setExpandedList] = useState(false);
     const [speedDialOpen, setSpeedDialOpen] = useState(false);
     const [dialogOpen, setDialogOpen] = useState<null | string>(null);
@@ -149,6 +152,11 @@ const AllCampaignsSummaryPage: PageWithLayout<AllCampaignsSummaryPageProps> = ({
         { icon: <People />, id: 'campaign', name: intl.formatMessage({ id: 'misc.speedDial.createCampaign' }) },
     ];
 
+    const closeDialog = () => {
+        setDialogOpen(null);
+        router.push(`/organize/${orgId}/campaigns`, undefined, { shallow: true });
+    };
+
     const handleSpeedDialClose = (id: string) => {
         setSpeedDialOpen(false);
         if (id === 'campaign') {
@@ -162,8 +170,16 @@ const AllCampaignsSummaryPage: PageWithLayout<AllCampaignsSummaryPageProps> = ({
     };
 
     const handleDialogClose = () => {
-        setDialogOpen(null);
-        router.push(`/organize/${orgId}/campaigns`, undefined, { shallow: true });
+        closeDialog();
+    };
+
+    const handleFormCancel = () => {
+        closeDialog();
+    };
+
+    const handleCreateEventFormSubmit = (data: Record<string,unknown>) => {
+        eventMutation.mutate(data);
+        closeDialog();
     };
 
     useEffect(() => {
@@ -188,7 +204,7 @@ const AllCampaignsSummaryPage: PageWithLayout<AllCampaignsSummaryPageProps> = ({
                     <Box display="grid" gridGap={ 20 } gridTemplateColumns="repeat( auto-fit, minmax(450px, 1fr) )">
                         { campaigns.map(camp => {
                             const campaignEvents = events.filter(e => e.campaign.id === camp.id);
-                            const campaignUpcomingEvents = upcomingEvents.filter(e => e.campaign.id === camp.id);
+                            const campaignUpcomingEvents = upcomingEvents.filter(e => e.campaign?.id === camp.id);
                             const startDate = campaignEvents[0]?.start_time;
                             const endDate = campaignEvents[campaignEvents.length - 1]?.start_time;
                             return (
@@ -322,8 +338,8 @@ const AllCampaignsSummaryPage: PageWithLayout<AllCampaignsSummaryPageProps> = ({
                 onClose={ handleDialogClose }
                 open={ !!dialogOpen }
                 title={ intl.formatMessage({ id: 'misc.formDialog.createNew.heading' }, { resource: dialogOpen }) }>
-                { dialogOpen === 'campaign' && <CreateCampaignForm onCancel={ handleDialogClose } onSubmit={ handleDialogClose }/> }
-                { dialogOpen === 'event' && <CreateEventForm onCancel={ handleDialogClose } onSubmit={ handleDialogClose } orgId={ orgId.toString() }/> }
+                { dialogOpen === 'campaign' && <CreateCampaignForm onCancel={ handleFormCancel } onSubmit={ closeDialog }/> }
+                { dialogOpen === 'event' && <CreateEventForm onCancel={ handleFormCancel } onSubmit={ handleCreateEventFormSubmit } orgId={ orgId.toString() }/> }
             </ZetkinDialog>
         </>
     );

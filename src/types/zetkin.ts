@@ -54,6 +54,7 @@ export interface ZetkinEvent {
     };
     userBooked?: boolean;
     userResponse?: boolean;
+    url?: string;
 }
 
 export interface ZetkinUser {

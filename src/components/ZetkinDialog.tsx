@@ -1,5 +1,5 @@
 import { FunctionComponent } from 'react';
-import { Dialog, DialogContent, DialogTitle, useMediaQuery, useTheme } from '@material-ui/core';
+import { Box, Dialog, DialogContent, DialogTitle, useMediaQuery, useTheme } from '@material-ui/core';
 
 
 interface ZetkinDialogProps {
@@ -13,13 +13,15 @@ const ZetkinDialog: FunctionComponent<ZetkinDialogProps> = ({ children, open, on
     const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
     return (
-        <Dialog fullScreen={ fullScreen } fullWidth onClose={ onClose } open={ open } style={{ maxHeight: '80vh' }}>
-            <DialogTitle>
-                { title || null }
-            </DialogTitle>
-            <DialogContent>
-                { children }
-            </DialogContent>
+        <Dialog fullScreen={ fullScreen } fullWidth onClose={ onClose } open={ open }>
+            <Box p={ 2 }>
+                <DialogTitle>
+                    { title || null }
+                </DialogTitle>
+                <DialogContent>
+                    { children }
+                </DialogContent>
+            </Box>
         </Dialog>
     );
 };

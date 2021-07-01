@@ -1,6 +1,6 @@
 import { useQuery } from 'react-query';
 import { useState } from 'react';
-import { Button, MenuItem, TextField } from '@material-ui/core';
+import { Box, Button, MenuItem, TextField } from '@material-ui/core';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
 
 import getActivities from '../fetching/getActivities';
@@ -8,7 +8,7 @@ import getCampaigns from '../fetching/getCampaigns';
 import getLocations from '../fetching/getLocations';
 
 interface CreateEventFormProps {
-    onSubmit: () => void;
+    onSubmit: (data: Record<string, unknown>) => void;
     onCancel: () => void;
     orgId: string;
 }
@@ -18,100 +18,125 @@ const CreateEventForm = ({ onSubmit, onCancel, orgId }: CreateEventFormProps): J
     const activitiesQuery = useQuery(['actvities', orgId], getActivities(orgId));
     const locationsQuery = useQuery(['locations', orgId], getLocations(orgId));
 
-    const activities = activitiesQuery.data?.map(a => a.title) || [];
-    const locations = locationsQuery.data?.map(l => l.title) || [];
-    const campIds = campaignsQuery.data?.map(c => c.title) || [];
-
+    const activities = activitiesQuery.data || [];
+    const locations = locationsQuery.data || [];
+    const campaigns = campaignsQuery.data || [];
     const intl = useIntl();
     const [title, setTitle] = useState('');
-    const [link, setLink] = useState('');
+    const [url, setUrl] = useState('');
     const [info, setInfo] = useState('');
     const [start, setStart] = useState('');
     const [end, setEnd] = useState('');
-    const [location, setLocation] = useState('');
-    const [activity, setActivity] = useState('');
-    const [campId, setCampId] = useState<number| undefined>();
+    const [locationId, setLocationId] = useState<string | undefined>();
+    const [activityId, setActivityId] = useState<string | undefined>();
+    const [campId, setCampId] = useState<string | undefined>();
+    const [numParticpants, setNumParticipants] = useState(0);
 
     const handleSubmit = () => {
-        alert(`${title} ${link} ${info} ${start} ${end} ${location} ${activity} ${campId}`);
-        //TO DO : handle form submit
-        onSubmit();
+        onSubmit({
+            activity_id: activityId,
+            campaign_id: campId,
+            end_time: new Date(end).toISOString(),
+            info_text: info,
+            location_id: locationId,
+            num_participants_required: numParticpants,
+            start_time: new Date(start).toISOString(),
+            title: title || null,
+            url: url || null,
+        });
     };
-
-    const required = intl.formatMessage({ id: 'misc.formDialog.required' });
 
     return (
         <form onSubmit={ handleSubmit }>
-            <TextField fullWidth id="campId"
+            <TextField fullWidth id="title" label={ intl.formatMessage({ id: 'misc.formDialog.createNew.event.title' }) } margin="normal" onChange={ (e) => setTitle(e.target.value) } />
+
+            <TextField fullWidth id="camp"
                 label={ intl.formatMessage({ id: 'misc.formDialog.createNew.event.campaign' }) }
                 margin="normal"
-                onChange={ (e) => setCampId(+e.target.value) }
-                select value={ campId }>
-                { campIds.map(c => (
-                    <MenuItem key={ c } value={ c }>
-                        { c }
+                onChange={ (e) => setCampId(e.target.value) }
+                select>
+                { campaigns.map(c => (
+                    <MenuItem key={ c.id } value={ c.id }>
+                        { c.title }
                     </MenuItem>
                 )) }
             </TextField>
             <TextField fullWidth id="activity"
                 label={ intl.formatMessage({ id: 'misc.formDialog.createNew.event.activity' }) }
                 margin="normal"
-                onChange={ (e) => setActivity(e.target.value) }
-                select value={ activity }>
+                onChange={ (e) => setActivityId(e.target.value) }
+                select>
                 { activities.map(a => (
-                    <MenuItem key={ a } value={ a }>
-                        { a }
+                    <MenuItem key={ a.id } value={ a.id }>
+                        { a.title }
                     </MenuItem>
                 )) }
             </TextField>
-            <TextField fullWidth id="place"
+            <TextField fullWidth id="location"
                 label={ intl.formatMessage({ id: 'misc.formDialog.createNew.event.place' }) }
                 margin="normal"
-                onChange={ (e) => setLocation(e.target.value) }
+                onChange={ (e) => setLocationId(e.target.value) }
                 select>
-                { locations.map(p => (
-                    <MenuItem key={ p } value={ p }>
-                        { p }
+                { locations.map(l => (
+                    <MenuItem key={ l.id } value={ l.id }>
+                        { l.title }
                     </MenuItem>
                 )) }
             </TextField>
-            <TextField defaultValue={ new Date(Date.now()).toISOString() }
-                fullWidth
-                id="start-time"
-                InputLabelProps={{
-                    shrink: true,
-                }}
-                label={ intl.formatMessage({ id: 'misc.formDialog.createNew.event.start' }) }
-                onChange={ (e) => setStart(e.target.value) }
-                type="datetime-local"
-            />
+            <Box display="flex">
+                <Box m={ 1 } ml={ 0 }>
+                    <TextField defaultValue={ new Date(Date.now()).toISOString().slice(0, 16) } id="start-time"
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                        label={ intl.formatMessage({ id: 'misc.formDialog.createNew.event.start' }) }
+                        margin="normal"
+                        onChange={ (e) => setStart(e.target.value + 'Z') }
+                        required
+                        type="datetime-local"
+                    />
+                </Box>
+                <Box m={ 1 }>
+                    <TextField
+                        defaultValue={ new Date(Date.now()).toISOString().slice(0, 16) }
+                        id="end-time"
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                        label={ intl.formatMessage({ id: 'misc.formDialog.createNew.event.end' }) }
+                        margin="normal"
+                        onChange={ (e) => setEnd(e.target.value + 'Z') }
+                        required
+                        type="datetime-local"
+                    />
+                </Box>
+            </Box>
             <TextField
-                defaultValue={ new Date(Date.now()).toISOString() }
-                id="end-time"
-                InputLabelProps={{
-                    shrink: true,
-                }}
-                label={ intl.formatMessage({ id: 'misc.formDialog.createNew.event.end' }) }
-                onChange={ (e) => setEnd(e.target.value) }
-                type="datetime-local"
-            />
-            <TextField
-                defaultValue={ 2 }
+                defaultValue={ 0 }
                 InputLabelProps={{
                     shrink: true,
                 }}
                 label={ intl.formatMessage({ id: 'misc.formDialog.createNew.event.minNo' }) }
+                onChange={ (e) => setNumParticipants(+e.target.value) }
                 type="number"
             />
-            <TextField defaultValue={ intl.formatMessage({ id: 'misc.formDialog.createNew.event.title' }) } fullWidth id="title" label={ required } margin="normal" onChange={ (e) => setTitle(e.target.value) } required/>
-            <TextField defaultValue={ intl.formatMessage({ id: 'misc.formDialog.createNew.event.info' }) } fullWidth id="info" label={ required } margin="normal" multiline onChange={ (e) => setInfo(e.target.value) } required />
-            <TextField defaultValue={ intl.formatMessage({ id: 'misc.formDialog.createNew.event.link' }) } fullWidth id="link" label={ required } margin="normal" onChange={ (e) => setLink(e.target.value) } required />
-            <Button color="primary" onClick={ onCancel }>
-                <Msg id="misc.formDialog.cancel" />
-            </Button>
-            <Button color="primary" type="submit" variant="contained">
-                <Msg id="misc.formDialog.submit" />
-            </Button>
+
+            <TextField fullWidth id="info" label={ intl.formatMessage({ id: 'misc.formDialog.createNew.event.info' }) } margin="normal" multiline onChange={ (e) => setInfo(e.target.value) } />
+
+            <TextField fullWidth id="link" label={ intl.formatMessage({ id: 'misc.formDialog.createNew.event.link' }) } margin="normal" onChange={ (e) => setUrl(e.target.value) } />
+
+            <Box display="flex" justifyContent="flex-end">
+                <Box m={ 1 }>
+                    <Button color="primary" onClick={ onCancel }>
+                        <Msg id="misc.formDialog.cancel" />
+                    </Button>
+                </Box>
+                <Box m={ 1 }>
+                    <Button color="primary" type="submit" variant="contained">
+                        <Msg id="misc.formDialog.submit" />
+                    </Button>
+                </Box>
+            </Box>
         </form>
     );
 };
