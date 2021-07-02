@@ -16,6 +16,7 @@ import {
 } from '@material-ui/core';
 
 import getOrg from '../../fetching/getOrg';
+import { MINIMUM_CHARACTERS } from './constants';
 import { ZetkinPerson } from '../../types/zetkin';
 
 
@@ -48,7 +49,7 @@ const ResultsList: FunctionComponent<ResultsListProps> = ({ searchFieldValue, re
                     </ListItemText>
                 </ListItem>
             ) }
-            { searchFieldValue.length > 0 && searchFieldValue.length < 3 && (
+            { searchFieldValue.length > 0 && searchFieldValue.length < MINIMUM_CHARACTERS && (
                 <ListItem>
                     <ListItemText>
                         { intl.formatMessage({
@@ -58,7 +59,7 @@ const ResultsList: FunctionComponent<ResultsListProps> = ({ searchFieldValue, re
                 </ListItem>
             ) }
             { /* Results */ }
-            { searchFieldValue.length >= 3 && (
+            { searchFieldValue.length >= MINIMUM_CHARACTERS && (
                 <>
                     <Link
                         href={{

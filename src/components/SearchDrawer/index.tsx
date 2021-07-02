@@ -11,6 +11,7 @@ import { FunctionComponent, useEffect, useRef, useState } from 'react';
 import getSearchDrawerResults from '../../fetching/getSearchDrawerResults';
 import useDebounce from '../../hooks/useDebounce';
 
+import { MINIMUM_CHARACTERS } from './constants';
 import ResultsList from './ResultsList';
 import SearchField from './SearchField';
 
@@ -37,7 +38,7 @@ const SearchDrawer: FunctionComponent<SearchDrawerProps> = ({ orgId }): JSX.Elem
 
     // Watch for changes on the search field value and debounce search if changed
     useEffect(() => {
-        if (searchFieldValue.length >= 3) debouncedQuery();
+        if (searchFieldValue.length >= MINIMUM_CHARACTERS) debouncedQuery();
     }, [searchFieldValue, debouncedQuery]);
 
 
@@ -103,7 +104,7 @@ const SearchDrawer: FunctionComponent<SearchDrawerProps> = ({ orgId }): JSX.Elem
                         onSubmit={ (e) => {
                             e.preventDefault();
                             // If user presses enter while focussed, navigate to full results
-                            if (searchFieldValue.length >=3) {
+                            if (searchFieldValue.length >= MINIMUM_CHARACTERS) {
                                 router.push({
                                     pathname: `/organize/${orgId}/search`,
                                     query: { q: encodeURIComponent(searchFieldValue) },
