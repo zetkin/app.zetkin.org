@@ -61,14 +61,22 @@ const SearchDrawer: FunctionComponent<SearchDrawerProps> = ({ orgId }): JSX.Elem
             }
         }
 
+        // Route Change Events
+        const handleRouteChange = () => {
+            // Close search on route change
+            setDrawerOpen(false);
+        };
+
+        router.events.on('routeChangeStart', handleRouteChange);
         document.addEventListener('keyup', handleKeyUp);
         document.addEventListener('click', handleClick);
         return () => {
+            router.events.off('routeChangeStart', handleRouteChange);
             document.removeEventListener('keyup', handleKeyUp);
             document.removeEventListener('click', handleClick);
         };
 
-    }, [drawerOpen],
+    }, [drawerOpen, router],
     );
 
     return (
@@ -94,7 +102,7 @@ const SearchDrawer: FunctionComponent<SearchDrawerProps> = ({ orgId }): JSX.Elem
                         } }
                         onSubmit={ (e) => {
                             e.preventDefault();
-                            // If user presses enter, navigate to full results
+                            // If user presses enter while focussed, navigate to full results
                             if (searchFieldValue.length >=3) {
                                 router.push({
                                     pathname: `/organize/${orgId}/search`,
