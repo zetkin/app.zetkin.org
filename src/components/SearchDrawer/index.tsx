@@ -1,5 +1,6 @@
 import { FormattedMessage as Msg } from 'react-intl';
 import { useQuery } from 'react-query';
+import { useRouter } from 'next/router';
 import {
     Box,
     Container,
@@ -18,6 +19,8 @@ interface SearchDrawerProps {
 }
 
 const SearchDrawer: FunctionComponent<SearchDrawerProps> = ({ orgId }): JSX.Element | null => {
+    const router = useRouter();
+
     const drawer = useRef<HTMLDivElement>(null);
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [searchFieldValue, setSearchFieldValue] = useState<string>('');
@@ -56,7 +59,6 @@ const SearchDrawer: FunctionComponent<SearchDrawerProps> = ({ orgId }): JSX.Elem
                     setDrawerOpen(false);
                 }
             }
-
         }
 
         document.addEventListener('keyup', handleKeyUp);
@@ -89,6 +91,16 @@ const SearchDrawer: FunctionComponent<SearchDrawerProps> = ({ orgId }): JSX.Elem
                         onFocus={ (e) => {
                             e.stopPropagation();
                             if (!drawerOpen) setDrawerOpen(true);
+                        } }
+                        onSubmit={ (e) => {
+                            e.preventDefault();
+                            // If user presses enter, navigate to full results
+                            if (searchFieldValue.length >=3) {
+                                router.push({
+                                    pathname: `/organize/${orgId}/search`,
+                                    query: { q: encodeURIComponent(searchFieldValue) },
+                                });
+                            }
                         } }
                     />
                     { /* Search Drawer Content */ }

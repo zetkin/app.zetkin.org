@@ -69,7 +69,7 @@ const ResultsList: FunctionComponent<ResultsListProps> = ({ searchFieldValue, re
                         </ListItem>
                     </Link>
                     { /* People List */ }
-                    <List
+                    <List area-label="people"
                         subheader={
                             <ListSubheader component="div" id="nested-list-subheader">
                                 People
