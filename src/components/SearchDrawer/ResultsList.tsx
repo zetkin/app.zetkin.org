@@ -1,4 +1,6 @@
+/* eslint-disable react/display-name */
 import Link from 'next/link';
+import { useIntl } from 'react-intl';
 import { useQuery } from 'react-query';
 import { FunctionComponent, useEffect, useState } from 'react';
 
@@ -25,6 +27,7 @@ interface ResultsListProps {
 }
 
 const ResultsList: FunctionComponent<ResultsListProps> = ({ searchFieldValue, results, loading, orgId }): JSX.Element => {
+    const intl = useIntl();
     const [numResultsToDisplay, setNumResultsToDisplay] = useState<number>(5);
     const { data: org } = useQuery(['org', orgId], getOrg(orgId), { enabled: false });
 
@@ -39,14 +42,18 @@ const ResultsList: FunctionComponent<ResultsListProps> = ({ searchFieldValue, re
             { searchFieldValue.length === 0 && (
                 <ListItem>
                     <ListItemText>
-                        Start typing to search.
+                        { intl.formatMessage({
+                            id: 'layout.organize.search.startTypingPrompt',
+                        }) }
                     </ListItemText>
                 </ListItem>
             ) }
             { searchFieldValue.length > 0 && searchFieldValue.length < 3 && (
                 <ListItem>
                     <ListItemText>
-                        Keep typing to search.
+                        { intl.formatMessage({
+                            id: 'layout.organize.search.keepTypingPrompt',
+                        }) }
                     </ListItemText>
                 </ListItem>
             ) }
@@ -64,7 +71,17 @@ const ResultsList: FunctionComponent<ResultsListProps> = ({ searchFieldValue, re
                                 <Search />
                             </ListItemAvatar>
                             <ListItemText>
-                                See all results in <b>{ org?.title }</b> for &quot;{ searchFieldValue }&quot;
+                                { intl.formatMessage(
+                                    {
+                                        id: 'layout.organize.search.seeAllResultsInOrg',
+                                    },
+                                    {
+                                        b: word => <b>{ word }</b>,
+                                        orgName: `${org?.title}`,
+                                        searchQuery: searchFieldValue,
+                                    },
+                                )
+                                }
                             </ListItemText>
                         </ListItem>
                     </Link>
@@ -72,7 +89,9 @@ const ResultsList: FunctionComponent<ResultsListProps> = ({ searchFieldValue, re
                     <List area-label="people"
                         subheader={
                             <ListSubheader component="div" id="nested-list-subheader">
-                                People
+                                { intl.formatMessage({
+                                    id: 'layout.organize.search.peopleListSubheader',
+                                }) }
                             </ListSubheader>
                         }>
                         { /* Loading indicator */ }
@@ -80,7 +99,9 @@ const ResultsList: FunctionComponent<ResultsListProps> = ({ searchFieldValue, re
                             loading && results.length == 0 && (
                                 <ListItem>
                                     <ListItemText>
-                                        Loading...
+                                        { intl.formatMessage({
+                                            id: 'layout.organize.search.loading',
+                                        }) }
                                     </ListItemText>
                                 </ListItem>
                             )
@@ -90,7 +111,9 @@ const ResultsList: FunctionComponent<ResultsListProps> = ({ searchFieldValue, re
                             !loading && results.length === 0 && (
                                 <ListItem>
                                     <ListItemText>
-                                        No results
+                                        { intl.formatMessage({
+                                            id: 'layout.organize.search.noResults',
+                                        }) }
                                     </ListItemText>
                                 </ListItem>
                             )
@@ -128,7 +151,9 @@ const ResultsList: FunctionComponent<ResultsListProps> = ({ searchFieldValue, re
                                     <Button onClick={ () => {
                                         setNumResultsToDisplay(numResultsToDisplay + 5);
                                     } }>
-                                        Show more...
+                                        { intl.formatMessage({
+                                            id: 'layout.organize.search.showMore',
+                                        }) }
                                     </Button>
                                 </ListItemText>
                             </ListItem>
