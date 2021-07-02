@@ -148,7 +148,8 @@ const ResultsList: FunctionComponent<ResultsListProps> = ({ searchFieldValue, re
                         { results.length > numResultsToDisplay && (
                             <ListItem>
                                 <ListItemText>
-                                    <Button onClick={ () => {
+                                    <Button onClick={ (e) => {
+                                        e.stopPropagation();
                                         setNumResultsToDisplay(numResultsToDisplay + 5);
                                     } }>
                                         { intl.formatMessage({
