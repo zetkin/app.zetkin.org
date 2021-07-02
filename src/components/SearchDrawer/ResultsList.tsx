@@ -5,7 +5,7 @@ import { FunctionComponent, useEffect, useState } from 'react';
 import Search from '@material-ui/icons/Search';
 import {
     Avatar,
-    ButtonBase,
+    Button,
     List,
     ListItem,
     ListItemAvatar,
@@ -125,11 +125,11 @@ const ResultsList: FunctionComponent<ResultsListProps> = ({ searchFieldValue, re
                         { results.length > numResultsToDisplay && (
                             <ListItem>
                                 <ListItemText>
-                                    <ButtonBase onClick={ () => {
+                                    <Button onClick={ () => {
                                         setNumResultsToDisplay(numResultsToDisplay + 5);
                                     } }>
                                         Show more...
-                                    </ButtonBase>
+                                    </Button>
                                 </ListItemText>
                             </ListItem>
                         ) }
