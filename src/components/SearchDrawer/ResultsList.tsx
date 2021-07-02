@@ -13,8 +13,8 @@ import {
     ListSubheader,
 } from '@material-ui/core';
 
-import getOrg from '../../../fetching/getOrg';
-import { ZetkinPerson } from '../../../types/zetkin';
+import getOrg from '../../fetching/getOrg';
+import { ZetkinPerson } from '../../types/zetkin';
 
 
 interface ResultsListProps {
@@ -28,7 +28,7 @@ const ResultsList: FunctionComponent<ResultsListProps> = ({ searchFieldValue, re
     const [numResultsToDisplay, setNumResultsToDisplay] = useState<number>(5);
     const { data: org } = useQuery(['org', orgId], getOrg(orgId), { enabled: false });
 
-    // If results change, reset the max number
+    // If results change, reset the max number back to 5
     useEffect(() => {
         setNumResultsToDisplay(5);
     }, [results]);
