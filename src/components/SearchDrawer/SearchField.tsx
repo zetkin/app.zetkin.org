@@ -1,4 +1,4 @@
-import { ChangeEventHandler, FocusEventHandler, FunctionComponent, KeyboardEventHandler  } from 'react';
+import { ChangeEventHandler, FocusEventHandler, FunctionComponent, MouseEventHandler  } from 'react';
 
 import Search from '@material-ui/icons/Search';
 import { useIntl } from 'react-intl';
@@ -12,7 +12,7 @@ import {
 interface SearchFieldProps {
     onChange: ChangeEventHandler<HTMLInputElement>;
     onFocus: FocusEventHandler<HTMLInputElement>;
-    onKeyUp: KeyboardEventHandler<HTMLInputElement>;
+    onClick: MouseEventHandler<HTMLInputElement>;
 }
 
 
@@ -24,8 +24,8 @@ const useStyles = makeStyles(() => ({
 
 const SearchField: FunctionComponent<SearchFieldProps> = ({
     onChange,
+    onClick,
     onFocus,
-    onKeyUp,
 }): JSX.Element => {
     const classes = useStyles();
     const intl = useIntl();
@@ -44,8 +44,8 @@ const SearchField: FunctionComponent<SearchFieldProps> = ({
                 ),
             }}
             onChange={ onChange }
+            onClick={ onClick }
             onFocus={ onFocus }
-            onKeyUp={ onKeyUp }
             placeholder={ intl.formatMessage({
                 id: 'layout.organize.search.placeholder',
             }) }
