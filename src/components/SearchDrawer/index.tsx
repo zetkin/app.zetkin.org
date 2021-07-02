@@ -5,20 +5,20 @@ import {
     Container,
     Typography,
 } from '@material-ui/core';
-import { FocusEventHandler, FunctionComponent, useState } from 'react';
+import { FunctionComponent, useEffect, useRef, useState } from 'react';
 
 import getSearchDrawerResults from '../../fetching/getSearchDrawerResults';
 import useDebounce from '../../hooks/useDebounce';
 
 import ResultsList from './ResultsList';
 import SearchField from './SearchField';
-import { useEffect } from 'react';
 
 interface SearchDrawerProps {
     orgId: string;
 }
 
 const SearchDrawer: FunctionComponent<SearchDrawerProps> = ({ orgId }): JSX.Element | null => {
+    const drawer = useRef<HTMLDivElement>(null);
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [searchFieldValue, setSearchFieldValue] = useState<string>('');
 
@@ -37,38 +37,59 @@ const SearchDrawer: FunctionComponent<SearchDrawerProps> = ({ orgId }): JSX.Elem
         if (searchFieldValue.length >= 3) debouncedQuery();
     }, [searchFieldValue, debouncedQuery]);
 
-    const collapse:FocusEventHandler<Element> = (e) => {
-        e.stopPropagation();
-        setDrawerOpen(false);
-    };
 
-    const expand:FocusEventHandler<Element> = (e) => {
-        e.stopPropagation();
-        setDrawerOpen(true);
-    };
+    /** Event Listeners **/
+    useEffect( () => {
+        // Keypress Events
+        const handleKeyUp = (e: KeyboardEvent) => {
+            // Close drawer if pressing escape
+            if (e.key === 'Escape') {
+                setDrawerOpen(false);
+            }
+        };
+
+        // Click Events
+        function handleClick(e: MouseEvent) {
+            // If user clicks outside of open drawer, close it
+            if (drawer.current != null) {
+                if (!drawer.current.contains(e.target as Node)) {
+                    setDrawerOpen(false);
+                }
+            }
+
+        }
+
+        document.addEventListener('keyup', handleKeyUp);
+        document.addEventListener('click', handleClick);
+        return () => {
+            document.removeEventListener('keyup', handleKeyUp);
+            document.removeEventListener('click', handleClick);
+        };
+
+    }, [drawerOpen],
+    );
 
     return (
         <>
             <div
                 className={ `overlay ${drawerOpen ? null : 'hidden'}` }
-                onFocus={ collapse } tabIndex={ -1 }>
+                tabIndex={ -1 }>
                 <div
+                    ref={ drawer }
                     className={ `drawer ${drawerOpen ? 'expanded' : 'collapsed'}` }>
                     <SearchField
                         data-testid="search-field"
                         onChange={ e => {
-                            if (!drawerOpen) {
-                                setDrawerOpen(true);
-                            }
+                            if (!drawerOpen) setDrawerOpen(true);
                             setSearchFieldValue(e.target.value);
                         } }
-                        onFocus={ expand }
-                        onKeyUp={ e => {
-                            if (e.key === 'Escape') {
-                                setDrawerOpen(false);
-                            }
+                        onClick={ () => {
+                            if (!drawerOpen) setDrawerOpen(true);
                         } }
-
+                        onFocus={ (e) => {
+                            e.stopPropagation();
+                            if (!drawerOpen) setDrawerOpen(true);
+                        } }
                     />
                     { /* Search Drawer Content */ }
                     <Box display={ drawerOpen ? 'block' : 'none' }>
