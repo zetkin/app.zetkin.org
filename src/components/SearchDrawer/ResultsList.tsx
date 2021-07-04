@@ -16,7 +16,7 @@ import {
 } from '@material-ui/core';
 
 import getOrg from '../../fetching/getOrg';
-import { MINIMUM_CHARACTERS } from './constants';
+import { MINIMUM_CHARACTERS } from './index';
 import { ZetkinPerson } from '../../types/zetkin';
 
 

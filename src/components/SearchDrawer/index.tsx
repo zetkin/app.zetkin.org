@@ -11,9 +11,10 @@ import { FunctionComponent, useEffect, useRef, useState } from 'react';
 import getSearchDrawerResults from '../../fetching/getSearchDrawerResults';
 import useDebounce from '../../hooks/useDebounce';
 
-import { MINIMUM_CHARACTERS } from './constants';
 import ResultsList from './ResultsList';
 import SearchField from './SearchField';
+
+export const MINIMUM_CHARACTERS = 3;
 
 interface SearchDrawerProps {
     orgId: string;
