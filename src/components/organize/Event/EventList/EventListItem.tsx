@@ -39,18 +39,17 @@ const EventListItem = ({ event, hrefBase }: EventListItemProps): JSX.Element => 
                                 value={ new Date(start_time) }
                                 year="2-digit"
                             />
-                            { ` - ` }
+                            { `  ` }
                             <FormattedTime
                                 value={ new Date(start_time) }
                             />
-                        </Typography>
-                        <Typography color="textPrimary">
+                            { ` - ` }
                             <FormattedDate
                                 month="long"
                                 value={ new Date(end_time) }
                                 year="2-digit"
                             />
-                            { ` - ` }
+                            { `  ` }
                             <FormattedTime
                                 value={ new Date(end_time) }
                             />
