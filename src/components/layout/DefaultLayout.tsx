@@ -1,10 +1,10 @@
 import { Flex } from '@adobe/react-spectrum';
-import { FunctionComponent } from 'react';
+import { FunctionComponent, useContext } from 'react';
 
 import getUserMemberships from '../../fetching/getUserMemberships';
 import PublicHeader from '../PublicHeader';
 import { useQuery } from 'react-query';
-import { useUser } from '../../hooks';
+import UserContext from '../../hooks/user/UserContext';
 import { ZetkinOrganization } from '../../types/zetkin';
 
 interface DefaultLayoutProps {
@@ -12,7 +12,7 @@ interface DefaultLayoutProps {
 }
 
 const DefaultLayout : FunctionComponent<DefaultLayoutProps> = ({ children, org }) => {
-    const user = useUser();
+    const user = useContext(UserContext);
     const membershipsQuery = useQuery(['memberships'], getUserMemberships());
     const memberships = membershipsQuery.data;
 

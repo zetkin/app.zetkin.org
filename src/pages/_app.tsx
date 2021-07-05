@@ -9,7 +9,7 @@ import { SSRProvider } from '@react-aria/ssr';
 import theme from '../theme';
 import { ThemeProvider } from '@material-ui/core/styles';
 import { useEffect } from 'react';
-import { UserContext } from '../hooks';
+import UserContext  from '../hooks/user/UserContext';
 import { defaultTheme, Provider } from '@adobe/react-spectrum';
 import { QueryClient, QueryClientProvider } from 'react-query';
 

@@ -1,4 +1,5 @@
 import NextLink from 'next/link';
+import { useContext } from 'react';
 import {
     Button,
     Divider,
@@ -15,7 +16,7 @@ import {
 
 import EventResponseButton from './EventResponseButton';
 import SignupDialogTrigger from './SignupDialog';
-import { useUser } from '../hooks';
+import UserContext from '../hooks/user/UserContext';
 import {
     ZetkinEvent,
 } from '../types/zetkin';
@@ -67,7 +68,7 @@ interface EventListItemProps {
 }
 
 const EventListItem = ({ event, onSignup, onUndoSignup }: EventListItemProps): JSX.Element => {
-    const user = useUser();
+    const user = useContext(UserContext);
 
     return (
         <>

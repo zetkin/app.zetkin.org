@@ -1,5 +1,6 @@
 import { FormattedMessage as Msg } from 'react-intl';
 import NextLink from 'next/link';
+import { useContext } from 'react';
 import {
     Button,
     Flex,
@@ -10,7 +11,7 @@ import {
     View,
 } from '@adobe/react-spectrum';
 
-import { useUser } from '../../hooks/';
+import UserContext from '../../hooks/user/UserContext';
 import { ZetkinMembership, ZetkinOrganization } from '../../types/zetkin';
 
 interface OrgHeaderProps {
@@ -22,7 +23,7 @@ interface OrgHeaderProps {
 
 const OrgHeader = ({ following, onFollow, onUnfollow, org } : OrgHeaderProps) : JSX.Element => {
     const follows = following?.some(follow => follow.organization.id === org.id);
-    const user = useUser();
+    const user = useContext(UserContext);
 
     return (
         <Header>

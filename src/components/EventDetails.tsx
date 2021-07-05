@@ -3,6 +3,7 @@ import Flag from '@spectrum-icons/workflow/Flag';
 import Head from 'next/head';
 import Location from '@spectrum-icons/workflow/Location';
 import NextLink from 'next/link';
+import { useContext } from 'react';
 import {
     Divider,
     Flex,
@@ -21,7 +22,7 @@ import {
 import EventResponseButton from './EventResponseButton';
 import Map from './maps/Map';
 import SignupDialog from './SignupDialog';
-import { useUser } from '../hooks';
+import UserContext from '../hooks/user/UserContext';
 import { ZetkinEvent } from '../types/zetkin';
 
 interface EventDetailsProps {
@@ -31,7 +32,7 @@ interface EventDetailsProps {
 }
 
 const EventDetails = ({ event, onSignup, onUndoSignup } : EventDetailsProps) : JSX.Element => {
-    const user = useUser();
+    const user = useContext(UserContext);
 
     return (
         <>
