@@ -22,11 +22,6 @@ const theme = createMuiTheme({
                 minWidth: 120,
             },
         },
-        MuiInputBase: {
-            root: {
-                maxHeight: '2rem',
-            },
-        },
         MuiTab: {
             root: {
                 textTransform: 'none',
