@@ -14,6 +14,7 @@ import { defaultTheme, Provider } from '@adobe/react-spectrum';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
 import DefaultLayout from '../components/layout/DefaultLayout';
+import OrganizationContext from '../hooks/OrganizationContext';
 import { PageWithLayout } from '../types';
 
 const queryClient = new QueryClient();
@@ -51,11 +52,13 @@ function MyApp({ Component, pageProps } : AppProps) : JSX.Element {
                             locale={ lang }
                             messages={ messages }>
                             <QueryClientProvider client={ queryClient }>
-                                <Hydrate state={ dehydratedState }>
-                                    <CssBaseline />
-                                    { getLayout(<Component { ...restProps } />, restProps) }
-                                </Hydrate>
-                                <ReactQueryDevtools initialIsOpen={ false } />
+                                <OrganizationContext.Provider value={{ orgId: pageProps.orgId }}>
+                                    <Hydrate state={ dehydratedState }>
+                                        <CssBaseline />
+                                        { getLayout(<Component { ...restProps } />, restProps) }
+                                    </Hydrate>
+                                    <ReactQueryDevtools initialIsOpen={ false } />
+                                </OrganizationContext.Provider>
                             </QueryClientProvider>
                         </IntlProvider>
                     </Provider>
