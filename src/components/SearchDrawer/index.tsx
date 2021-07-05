@@ -24,6 +24,8 @@ const SearchDrawer: FunctionComponent<SearchDrawerProps> = ({ orgId }): JSX.Elem
     const router = useRouter();
 
     const drawer = useRef<HTMLDivElement>(null);
+    const searchField = useRef<HTMLInputElement>(null);
+
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [searchFieldValue, setSearchFieldValue] = useState<string>('');
 
@@ -49,6 +51,7 @@ const SearchDrawer: FunctionComponent<SearchDrawerProps> = ({ orgId }): JSX.Elem
         const handleKeyUp = (e: KeyboardEvent) => {
             // Close drawer if pressing escape
             if (e.key === 'Escape') {
+                searchField.current?.blur();
                 setDrawerOpen(false);
             }
         };
@@ -78,7 +81,7 @@ const SearchDrawer: FunctionComponent<SearchDrawerProps> = ({ orgId }): JSX.Elem
             document.removeEventListener('click', handleClick);
         };
 
-    }, [drawerOpen, router],
+    }, [drawerOpen, router, searchField],
     );
 
     return (
@@ -90,13 +93,11 @@ const SearchDrawer: FunctionComponent<SearchDrawerProps> = ({ orgId }): JSX.Elem
                     ref={ drawer }
                     className={ `drawer ${drawerOpen ? 'expanded' : 'collapsed'}` }>
                     <SearchField
+                        ref={ searchField }
                         data-testid="search-field"
                         onChange={ e => {
                             if (!drawerOpen) setDrawerOpen(true);
                             setSearchFieldValue(e.target.value);
-                        } }
-                        onClick={ () => {
-                            if (!drawerOpen) setDrawerOpen(true);
                         } }
                         onFocus={ (e) => {
                             e.stopPropagation();

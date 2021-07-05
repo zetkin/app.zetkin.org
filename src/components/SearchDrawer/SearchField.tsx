@@ -1,4 +1,5 @@
-import { ChangeEventHandler, FocusEventHandler, FormEventHandler, FunctionComponent, MouseEventHandler  } from 'react';
+/* eslint-disable react/display-name */
+import { ChangeEventHandler, FocusEventHandler, FormEventHandler, forwardRef  } from 'react';
 
 import Search from '@material-ui/icons/Search';
 import { useIntl } from 'react-intl';
@@ -11,7 +12,6 @@ import {
 interface SearchFieldProps {
     onChange: ChangeEventHandler<HTMLInputElement>;
     onFocus: FocusEventHandler<HTMLInputElement>;
-    onClick: MouseEventHandler<HTMLInputElement>;
     onSubmit: FormEventHandler<HTMLFormElement>;
 }
 
@@ -21,12 +21,11 @@ const useStyles = makeStyles(() => ({
     },
 }));
 
-const SearchField: FunctionComponent<SearchFieldProps> = ({
+const SearchField = forwardRef<HTMLInputElement, SearchFieldProps>(({
     onChange,
-    onClick,
     onFocus,
     onSubmit,
-}): JSX.Element => {
+}, ref) => {
     const classes = useStyles();
     const intl = useIntl();
 
@@ -44,8 +43,8 @@ const SearchField: FunctionComponent<SearchFieldProps> = ({
                         </InputAdornment>
                     ),
                 }}
+                inputRef={ ref }
                 onChange={ onChange }
-                onClick={ onClick }
                 onFocus={ onFocus }
                 placeholder={ intl.formatMessage({
                     id: 'layout.organize.search.placeholder',
@@ -55,6 +54,6 @@ const SearchField: FunctionComponent<SearchFieldProps> = ({
             />
         </form>
     );
-};
+});
 
 export default SearchField;
