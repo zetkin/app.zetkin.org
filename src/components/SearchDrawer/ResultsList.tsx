@@ -1,6 +1,6 @@
 /* eslint-disable react/display-name */
 import Link from 'next/link';
-import { useIntl } from 'react-intl';
+import { FormattedMessage as Msg } from 'react-intl';
 import { useQuery } from 'react-query';
 import { FunctionComponent, useEffect, useState } from 'react';
 
@@ -28,7 +28,6 @@ interface ResultsListProps {
 }
 
 const ResultsList: FunctionComponent<ResultsListProps> = ({ searchFieldValue, results, loading, orgId }): JSX.Element => {
-    const intl = useIntl();
     const [numResultsToDisplay, setNumResultsToDisplay] = useState<number>(5);
     const { data: org } = useQuery(['org', orgId], getOrg(orgId), { enabled: false });
 
@@ -43,18 +42,14 @@ const ResultsList: FunctionComponent<ResultsListProps> = ({ searchFieldValue, re
             { searchFieldValue.length === 0 && (
                 <ListItem>
                     <ListItemText>
-                        { intl.formatMessage({
-                            id: 'layout.organize.search.startTypingPrompt',
-                        }) }
+                        <Msg id="layout.organize.search.startTypingPrompt" />
                     </ListItemText>
                 </ListItem>
             ) }
             { searchFieldValue.length > 0 && searchFieldValue.length < MINIMUM_CHARACTERS && (
                 <ListItem>
                     <ListItemText>
-                        { intl.formatMessage({
-                            id: 'layout.organize.search.keepTypingPrompt',
-                        }) }
+                        <Msg id="layout.organize.search.keepTypingPrompt" />
                     </ListItemText>
                 </ListItem>
             ) }
@@ -72,17 +67,12 @@ const ResultsList: FunctionComponent<ResultsListProps> = ({ searchFieldValue, re
                                 <Search />
                             </ListItemAvatar>
                             <ListItemText>
-                                { intl.formatMessage(
-                                    {
-                                        id: 'layout.organize.search.seeAllResultsInOrg',
-                                    },
-                                    {
-                                        b: word => <b>{ word }</b>,
-                                        orgName: `${org?.title}`,
-                                        searchQuery: searchFieldValue,
-                                    },
-                                )
-                                }
+                                <Msg id="layout.organize.search.seeAllResultsInOrg" values={{
+                                    b: (word: string) => <b>{ word }</b>,
+                                    orgName: `${org?.title}`,
+                                    searchQuery: searchFieldValue,
+                                }}
+                                />
                             </ListItemText>
                         </ListItem>
                     </Link>
@@ -90,9 +80,7 @@ const ResultsList: FunctionComponent<ResultsListProps> = ({ searchFieldValue, re
                     <List area-label="people"
                         subheader={
                             <ListSubheader component="div" id="nested-list-subheader">
-                                { intl.formatMessage({
-                                    id: 'layout.organize.search.peopleListSubheader',
-                                }) }
+                                <Msg id="layout.organize.search.peopleListSubheader" />
                             </ListSubheader>
                         }>
                         { /* Loading indicator */ }
@@ -100,9 +88,7 @@ const ResultsList: FunctionComponent<ResultsListProps> = ({ searchFieldValue, re
                             loading && results.length == 0 && (
                                 <ListItem>
                                     <ListItemText>
-                                        { intl.formatMessage({
-                                            id: 'layout.organize.search.loading',
-                                        }) }
+                                        <Msg id="layout.organize.search.loading" />
                                     </ListItemText>
                                 </ListItem>
                             )
@@ -112,9 +98,7 @@ const ResultsList: FunctionComponent<ResultsListProps> = ({ searchFieldValue, re
                             !loading && results.length === 0 && (
                                 <ListItem>
                                     <ListItemText>
-                                        { intl.formatMessage({
-                                            id: 'layout.organize.search.noResults',
-                                        }) }
+                                        <Msg id="layout.organize.search.noResults" />
                                     </ListItemText>
                                 </ListItem>
                             )
@@ -153,9 +137,7 @@ const ResultsList: FunctionComponent<ResultsListProps> = ({ searchFieldValue, re
                                         e.stopPropagation();
                                         setNumResultsToDisplay(numResultsToDisplay + 5);
                                     } }>
-                                        { intl.formatMessage({
-                                            id: 'layout.organize.search.showMore',
-                                        }) }
+                                        <Msg id="layout.organize.search.showMore" />
                                     </Button>
                                 </ListItemText>
                             </ListItem>
