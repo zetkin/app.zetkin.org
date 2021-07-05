@@ -9,7 +9,7 @@ import MonthCalendar from '../../../../components/MonthCalendar';
 import OrganizeAllCampaignsLayout from '../../../../components/layout/OrganizeAllCampaignsLayout';
 import { PageWithLayout } from '../../../../types';
 import { scaffold } from '../../../../utils/next';
-import { useFocusDate } from '../../../../hooks';
+import useFocusDate from '../../../../hooks/useFocusDate';
 import { useIntl } from 'react-intl';
 import { useQuery } from 'react-query';
 import WeekCalendar from '../../../../components/WeekCalendar';
