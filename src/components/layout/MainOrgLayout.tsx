@@ -10,7 +10,7 @@ import { Item, Tabs } from '@react-spectrum/tabs';
 import DefaultOrgLayout from './DefaultOrgLayout';
 import getOrg from '../../fetching/getOrg';
 import OrgHeader from './OrgHeader';
-import useUserFollowing from '../../hooks/User/useUserFollowing';
+import useUserFollowing from '../../hooks/user/useUserFollowing';
 
 interface MainOrgLayoutProps {
     orgId: string;
