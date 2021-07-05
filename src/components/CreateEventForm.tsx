@@ -1,6 +1,7 @@
+import { Form } from 'react-final-form';
+import { TextField } from 'mui-rff';
 import { useQuery } from 'react-query';
-import { useState } from 'react';
-import { Box, Button, MenuItem, TextField } from '@material-ui/core';
+import { Box, Button, Grid, GridSize, MenuItem } from '@material-ui/core';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
 
 import getActivities from '../fetching/getActivities';
@@ -22,122 +23,177 @@ const CreateEventForm = ({ onSubmit, onCancel, orgId }: CreateEventFormProps): J
     const locations = locationsQuery.data || [];
     const campaigns = campaignsQuery.data || [];
     const intl = useIntl();
-    const [title, setTitle] = useState('');
-    const [url, setUrl] = useState('');
-    const [info, setInfo] = useState('');
-    const [start, setStart] = useState('');
-    const [end, setEnd] = useState('');
-    const [locationId, setLocationId] = useState<string | undefined>();
-    const [activityId, setActivityId] = useState<string | undefined>();
-    const [campId, setCampId] = useState<string | undefined>();
-    const [numParticpants, setNumParticipants] = useState(0);
 
-    const handleSubmit = () => {
+    const validate = (values: Record<string, string>) => {
+        const errors:Record<string, string> = {};
+        if (!values.title) {
+            errors.title = intl.formatMessage({ id: 'misc.formDialog.required' });
+        }
+        return errors;
+    };
+
+    const handleSubmit = (values: Record<string, string>) => {
+        const { activity_id, campaign_id, end_time, info_text, start_time, location_id, num_participants_required, title, url } = values;
+
         onSubmit({
-            activity_id: activityId,
-            campaign_id: campId,
-            end_time: new Date(end).toISOString(),
-            info_text: info,
-            location_id: locationId,
-            num_participants_required: numParticpants,
-            start_time: new Date(start).toISOString(),
+            activity_id,
+            campaign_id,
+            end_time: new Date(end_time + 'Z').toISOString(),
+            info_text,
+            location_id,
+            num_participants_required: +num_participants_required,
+            start_time: new Date(start_time + 'Z').toISOString(),
             title: title || null,
             url: url || null,
         });
     };
 
+    const formFields = [
+        {
+            field: (
+                <TextField fullWidth id="title" label={ intl.formatMessage({ id: 'misc.formDialog.createNew.event.title' }) } margin="normal" name="title" />
+            ),
+            size: 12,
+        },
+        {
+            field: (
+                <TextField fullWidth id="camp" label={ intl.formatMessage({ id: 'misc.formDialog.createNew.event.campaign' }) }
+                    margin="normal"
+                    name="campaign_id"
+                    select>
+                    { campaigns.map(c => (
+                        <MenuItem key={ c.id } value={ c.id }>
+                            { c.title }
+                        </MenuItem>
+                    )) }
+                </TextField>
+            ),
+            size: 12,
+        },
+        {
+            field: (
+                <TextField fullWidth id="activity"
+                    label={ intl.formatMessage({ id: 'misc.formDialog.createNew.event.activity' }) }
+                    margin="normal"
+                    name="activity_id"
+                    select>
+                    { activities.map(a => (
+                        <MenuItem key={ a.id } value={ a.id }>
+                            { a.title }
+                        </MenuItem>
+                    )) }
+                </TextField>
+            ),
+            size: 12,
+        },
+        {
+            field: (
+                <TextField fullWidth id="location"
+                    label={ intl.formatMessage({ id: 'misc.formDialog.createNew.event.place' }) }
+                    margin="normal"
+                    name="location_id"
+                    select>
+                    { locations.map(l => (
+                        <MenuItem key={ l.id } value={ l.id }>
+                            { l.title }
+                        </MenuItem>
+                    )) }
+                </TextField>
+            ),
+            size: 12,
+        },
+        {
+            field: (
+                <TextField id="start-time"
+                    InputLabelProps={{
+                        shrink: true,
+                    }}
+                    label={ intl.formatMessage({ id: 'misc.formDialog.createNew.event.start' }) }
+                    margin="normal"
+                    name="start_time"
+                    required
+                    type="datetime-local"
+                />
+            ),
+            size: 6,
+        },
+        {
+            field: (
+                <TextField
+                    id="end-time"
+                    InputLabelProps={{
+                        shrink: true,
+                    }}
+                    label={ intl.formatMessage({ id: 'misc.formDialog.createNew.event.end' }) }
+                    margin="normal"
+                    name="end_time"
+                    required
+                    type="datetime-local"
+                />
+            ),
+            size: 6,
+        },
+        {
+            field: (
+                <TextField
+                    defaultValue={ 0 }
+                    InputLabelProps={{
+                        shrink: true,
+                    }}
+                    label={ intl.formatMessage({ id: 'misc.formDialog.createNew.event.minNo' }) }
+                    name="num_participants_required"
+                    type="number"
+                />
+            ), size: 12,
+        },
+        {
+            field: (
+                <TextField fullWidth id="info" label={ intl.formatMessage({ id: 'misc.formDialog.createNew.event.info' }) } margin="normal" multiline name="info_text" rows={ 3 } variant="outlined" />
+            ),
+            size: 12,
+        },
+        {
+            field: (
+                <TextField fullWidth id="link" label={ intl.formatMessage({ id: 'misc.formDialog.createNew.event.link' }) } margin="normal" name="url" />
+            ),
+            size: 12,
+        },
+    ];
+
+    const now = new Date(Date.now());
+    const today = new Date( Date.UTC(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), now.getMinutes(), 0));
+
     return (
-        <form onSubmit={ handleSubmit }>
-            <TextField fullWidth id="title" label={ intl.formatMessage({ id: 'misc.formDialog.createNew.event.title' }) } margin="normal" onChange={ (e) => setTitle(e.target.value) } />
-
-            <TextField fullWidth id="camp"
-                label={ intl.formatMessage({ id: 'misc.formDialog.createNew.event.campaign' }) }
-                margin="normal"
-                onChange={ (e) => setCampId(e.target.value) }
-                select>
-                { campaigns.map(c => (
-                    <MenuItem key={ c.id } value={ c.id }>
-                        { c.title }
-                    </MenuItem>
-                )) }
-            </TextField>
-            <TextField fullWidth id="activity"
-                label={ intl.formatMessage({ id: 'misc.formDialog.createNew.event.activity' }) }
-                margin="normal"
-                onChange={ (e) => setActivityId(e.target.value) }
-                select>
-                { activities.map(a => (
-                    <MenuItem key={ a.id } value={ a.id }>
-                        { a.title }
-                    </MenuItem>
-                )) }
-            </TextField>
-            <TextField fullWidth id="location"
-                label={ intl.formatMessage({ id: 'misc.formDialog.createNew.event.place' }) }
-                margin="normal"
-                onChange={ (e) => setLocationId(e.target.value) }
-                select>
-                { locations.map(l => (
-                    <MenuItem key={ l.id } value={ l.id }>
-                        { l.title }
-                    </MenuItem>
-                )) }
-            </TextField>
-            <Box display="flex">
-                <Box m={ 1 } ml={ 0 }>
-                    <TextField defaultValue={ new Date(Date.now()).toISOString().slice(0, 16) } id="start-time"
-                        InputLabelProps={{
-                            shrink: true,
-                        }}
-                        label={ intl.formatMessage({ id: 'misc.formDialog.createNew.event.start' }) }
-                        margin="normal"
-                        onChange={ (e) => setStart(e.target.value + 'Z') }
-                        required
-                        type="datetime-local"
-                    />
-                </Box>
-                <Box m={ 1 }>
-                    <TextField
-                        defaultValue={ new Date(Date.now()).toISOString().slice(0, 16) }
-                        id="end-time"
-                        InputLabelProps={{
-                            shrink: true,
-                        }}
-                        label={ intl.formatMessage({ id: 'misc.formDialog.createNew.event.end' }) }
-                        margin="normal"
-                        onChange={ (e) => setEnd(e.target.value + 'Z') }
-                        required
-                        type="datetime-local"
-                    />
-                </Box>
-            </Box>
-            <TextField
-                defaultValue={ 0 }
-                InputLabelProps={{
-                    shrink: true,
-                }}
-                label={ intl.formatMessage({ id: 'misc.formDialog.createNew.event.minNo' }) }
-                onChange={ (e) => setNumParticipants(+e.target.value) }
-                type="number"
-            />
-
-            <TextField fullWidth id="info" label={ intl.formatMessage({ id: 'misc.formDialog.createNew.event.info' }) } margin="normal" multiline onChange={ (e) => setInfo(e.target.value) } />
-
-            <TextField fullWidth id="link" label={ intl.formatMessage({ id: 'misc.formDialog.createNew.event.link' }) } margin="normal" onChange={ (e) => setUrl(e.target.value) } />
-
-            <Box display="flex" justifyContent="flex-end">
-                <Box m={ 1 }>
-                    <Button color="primary" onClick={ onCancel }>
-                        <Msg id="misc.formDialog.cancel" />
-                    </Button>
-                </Box>
-                <Box m={ 1 }>
-                    <Button color="primary" type="submit" variant="contained">
-                        <Msg id="misc.formDialog.submit" />
-                    </Button>
-                </Box>
-            </Box>
-        </form>
+        <Form
+            initialValues={{ end_time: today.toISOString().slice(0, 16), start_time: today.toISOString().slice(0, 16)  }}
+            onSubmit={ handleSubmit }
+            render={ ({ handleSubmit, submitting }) => (
+                <form noValidate onSubmit={ handleSubmit }>
+                    <Grid alignItems="flex-start" container spacing={ 2 }>
+                        { formFields.map((item, idx) => (
+                            <Grid key={ idx } item xs={ item.size as GridSize }>
+                                { item.field }
+                            </Grid>
+                        )) }
+                        <Grid item style={{ marginTop: 16 }}>
+                        </Grid>
+                        <Box display="flex" justifyContent="flex-end" width={ 1 }>
+                            <Box m={ 1 }>
+                                <Button color="primary" onClick={ onCancel }>
+                                    <Msg id="misc.formDialog.cancel" />
+                                </Button>
+                            </Box>
+                            <Box m={ 1 }>
+                                <Button color="primary" disabled={ submitting } type="submit" variant="contained">
+                                    <Msg id="misc.formDialog.submit" />
+                                </Button>
+                            </Box>
+                        </Box>
+                    </Grid>
+                </form>
+            ) }
+            validate={ validate }
+        />
     );
 };
 
