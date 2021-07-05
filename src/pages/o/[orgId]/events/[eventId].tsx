@@ -6,7 +6,7 @@ import EventDetails from '../../../../components/EventDetails';
 import getEvent from '../../../../fetching/getEvent';
 import { PageWithLayout } from '../../../../types';
 import { scaffold } from '../../../../utils/next';
-import { useEventResponses } from '../../../../hooks';
+import useEventResponses from '../../../../hooks/useEventResponses';
 import { ZetkinEvent } from '../../../../types/zetkin';
 
 const scaffoldOptions = {

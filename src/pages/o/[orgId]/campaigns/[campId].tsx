@@ -8,7 +8,7 @@ import getCampaign from '../../../../fetching/getCampaign';
 import getCampaignEvents from '../../../../fetching/getCampaignEvents';
 import { PageWithLayout } from '../../../../types';
 import { scaffold } from '../../../../utils/next';
-import { useEventResponses } from '../../../../hooks';
+import  useEventResponses from '../../../../hooks/useEventResponses';
 
 export const getServerSideProps : GetServerSideProps = scaffold(async (context) => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

@@ -10,7 +10,7 @@ import getUserEvents from '../../fetching/getUserEvents';
 import MyHomeLayout from '../../components/layout/MyHomeLayout';
 import { PageWithLayout } from '../../types';
 import { scaffold } from '../../utils/next';
-import { useEventResponses } from '../../hooks';
+import useEventResponses from '../../hooks/useEventResponses';
 
 const scaffoldOptions = {
     authLevelRequired: 1,

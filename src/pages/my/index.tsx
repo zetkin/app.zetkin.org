@@ -17,7 +17,7 @@ import getUserCampaigns from '../../fetching/getUserCampaigns';
 import MyHomeLayout from '../../components/layout/MyHomeLayout';
 import { PageWithLayout } from '../../types';
 import { scaffold } from '../../utils/next';
-import { useEventResponses } from '../../hooks';
+import useEventResponses from '../../hooks/useEventResponses';
 import { ZetkinUser } from '../../types/zetkin';
 
 const scaffoldOptions = {
