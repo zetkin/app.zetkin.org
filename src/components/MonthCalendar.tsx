@@ -1,6 +1,7 @@
 import { getContrastColor } from '../utils/colorUtils';
 import { grey } from '@material-ui/core/colors';
-import { Box, Button, makeStyles, Typography } from '@material-ui/core';
+import NextLink from 'next/link';
+import { Box, Button, Link, makeStyles, Tooltip, Typography } from '@material-ui/core';
 import { FormattedDate, FormattedMessage as Msg } from 'react-intl';
 import  { useEffect, useRef, useState } from 'react';
 import { ZetkinCampaign, ZetkinEvent } from '../types/zetkin';
@@ -9,6 +10,7 @@ interface MonthCalendarProps {
     campaigns: ZetkinCampaign[];
     events: ZetkinEvent[];
     focusDate: Date;
+    orgId: string;
     onFocusDate: (date: Date) => void;
 }
 
@@ -37,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const MonthCalendar = ({ campaigns, events, onFocusDate, focusDate }: MonthCalendarProps): JSX.Element => {
+const MonthCalendar = ({ orgId, campaigns, events, onFocusDate, focusDate }: MonthCalendarProps): JSX.Element => {
     const gridItem = useRef<HTMLUListElement>(null);
     const listItem = useRef<HTMLLIElement>(null);
     const windowHeight = useWindowHeight();
@@ -113,7 +115,7 @@ const MonthCalendar = ({ campaigns, events, onFocusDate, focusDate }: MonthCalen
                                 return new Date(a.start_time).getTime() - new Date(b.start_time).getTime();
                             });
                         return campaignEvents.length ? (
-                            <CalendarBar key={ c.id } campaign={ c } events={ campaignEvents } firstCalendarDay={ firstCalendarDay } firstMonthDay={ firstMonthDay } gridItems={ gridItems } month={ month } totalDaysInMonth={ totalDaysInMonth }/>
+                            <CalendarBar key={ c.id } campaign={ c } events={ campaignEvents } firstCalendarDay={ firstCalendarDay } firstMonthDay={ firstMonthDay } gridItems={ gridItems } month={ month } orgId={ orgId } totalDaysInMonth={ totalDaysInMonth }/>
                         ) : null;
                     }) }
                 </Box>
@@ -184,10 +186,11 @@ interface CalendarBarProps {
     firstMonthDay: Date;
     totalDaysInMonth: number;
     gridItems: number;
+    orgId: string;
 }
 
-const CalendarBar = ({ campaign, events, month, gridItems, firstCalendarDay, firstMonthDay, totalDaysInMonth }: CalendarBarProps): JSX.Element | null => {
-    const { id, color } = campaign;
+const CalendarBar = ({ orgId, campaign, events, month, gridItems, firstCalendarDay, firstMonthDay, totalDaysInMonth }: CalendarBarProps): JSX.Element | null => {
+    const { id, color, title } = campaign;
 
     const lastCalendarDay = new Date(new Date(firstCalendarDay).setDate(firstCalendarDay.getDate() + gridItems));
 
@@ -235,10 +238,16 @@ const CalendarBar = ({ campaign, events, month, gridItems, firstCalendarDay, fir
 
     return (
         <Box height={ 1 } position="relative" width="0.5rem">
-            <Box
-                bgcolor={ color }
-                data-testid={ `calendar-bar-${id}` } height={ `${height}%` } position="absolute" top={ `${top}%` } width={ 1 }>
-            </Box>
+            <NextLink href={ `/organize/${orgId}/campaigns/${id}` } passHref>
+                <Link>
+                    <Tooltip arrow data-testid={ `calendar-bar-popover-${id}` } placement="top" title={ title }>
+                        <Box
+                            bgcolor={ color }
+                            data-testid={ `calendar-bar-${id}` } height={ `${height}%` } position="absolute" top={ `${top}%` } width={ 1 }>
+                        </Box>
+                    </Tooltip>
+                </Link>
+            </NextLink>
         </Box>
     );
 };

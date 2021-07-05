@@ -1,6 +1,7 @@
 import { getContrastColor } from '../utils/colorUtils';
 import { grey } from '@material-ui/core/colors';
-import { Box, Button, List, makeStyles, Typography } from '@material-ui/core';
+import NextLink from 'next/link';
+import { Box, Button, Link, List, makeStyles, Tooltip, Typography } from '@material-ui/core';
 import { FormattedDate, FormattedMessage as Msg } from 'react-intl';
 import { useEffect, useRef } from 'react';
 import { ZetkinCampaign, ZetkinEvent } from '../types/zetkin';
@@ -11,6 +12,7 @@ interface WeekCalendarProps {
     events: ZetkinEvent[];
     focusDate: Date;
     onFocusDate: (date: Date)=> void;
+    orgId: string;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -29,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const WeekCalendar = ({ campaigns, events, focusDate, onFocusDate }: WeekCalendarProps): JSX.Element => {
+const WeekCalendar = ({ orgId, campaigns, events, focusDate, onFocusDate }: WeekCalendarProps): JSX.Element => {
     const classes = useStyles();
     const calendar = useRef<HTMLDivElement>(null);
     const calendarWrapper = useRef<HTMLDivElement>(null);
@@ -118,7 +120,7 @@ const WeekCalendar = ({ campaigns, events, focusDate, onFocusDate }: WeekCalenda
                                 return new Date(a.start_time).getTime() - new Date(b.start_time).getTime();
                             });
                         return campaignEvents.length ? (
-                            <CalendarBar key={ c.id } campaign={ c } events={ campaignEvents } firstCalendarDay={ calendarStartDate }/>
+                            <CalendarBar key={ c.id } campaign={ c } events={ campaignEvents } firstCalendarDay={ calendarStartDate } orgId={ orgId }/>
                         ): null;
                     }) }
                 </Box>
@@ -155,13 +157,14 @@ const WeekCalendar = ({ campaigns, events, focusDate, onFocusDate }: WeekCalenda
 export default WeekCalendar;
 
 interface CalendarBarProps {
+    orgId: string;
     campaign: ZetkinCampaign;
     events: ZetkinEvent[];
     firstCalendarDay: Date;
 }
 
-const CalendarBar = ({ campaign, events, firstCalendarDay }: CalendarBarProps): JSX.Element | null => {
-    const { id, color } = campaign;
+const CalendarBar = ({ orgId, campaign, events, firstCalendarDay }: CalendarBarProps): JSX.Element | null => {
+    const { id, color, title } = campaign;
 
     const lastCalendarDay = new Date(new Date(firstCalendarDay).setDate(firstCalendarDay.getDate() + 7));
 
@@ -195,10 +198,16 @@ const CalendarBar = ({ campaign, events, firstCalendarDay }: CalendarBarProps): 
 
     return (
         <Box height="0.5rem" position="relative" width={ 1 }>
-            <Box
-                bgcolor={ color }
-                data-testid={ `calendar-bar-${id}` } height={ 1 } left={ `${left}%` } position="absolute" width={ `${width}%` }>
-            </Box>
+            <NextLink href={ `/organize/${orgId}/campaigns/${id}` } passHref>
+                <Link>
+                    <Tooltip arrow data-testid={ `calendar-bar-popover-${id}` } title={ title }>
+                        <Box
+                            bgcolor={ color }
+                            data-testid={ `calendar-bar-${id}` } height={ 1 } left={ `${left}%` } position="absolute" width={ `${width}%` }>
+                        </Box>
+                    </Tooltip>
+                </Link>
+            </NextLink>
         </Box>
     );
 };
