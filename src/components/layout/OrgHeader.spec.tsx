@@ -1,6 +1,6 @@
 import { mountWithProviders } from '../../utils/testing';
 import OrgHeader from './OrgHeader';
-import { UserContext } from '../../hooks';
+import UserContext from '../../hooks/user/UserContext';
 import {
     ZetkinMembership,
     ZetkinOrganization,
