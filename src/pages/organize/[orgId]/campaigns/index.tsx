@@ -160,15 +160,23 @@ const AllCampaignsSummaryPage: PageWithLayout<AllCampaignsSummaryPageProps> = ({
         router.push(`/organize/${orgId}/campaigns`, undefined, { shallow: true });
     };
 
+    const openCreateCampaignDialog = () => {
+        router.push(`/organize/${orgId}/campaigns#new_campaign`, undefined, { shallow: true });
+        setFormDialogOpen('campaign');
+    };
+
+    const openCreateEventDialog = () => {
+        router.push(`/organize/${orgId}/campaigns#new_event`, undefined, { shallow: true });
+        setFormDialogOpen('event');
+    };
+
     const handleSpeedDialClose = (id: string) => {
         setSpeedDialOpen(false);
         if (id === 'campaign') {
-            router.push(`/organize/${orgId}/campaigns#new_campaign`, undefined, { shallow: true });
-            setFormDialogOpen('campaign');
+            openCreateCampaignDialog();
         }
         else if (id === 'event') {
-            router.push(`/organize/${orgId}/campaigns#new_event`, undefined, { shallow: true });
-            setFormDialogOpen('event');
+            openCreateEventDialog();
         }
     };
 
@@ -329,6 +337,7 @@ const AllCampaignsSummaryPage: PageWithLayout<AllCampaignsSummaryPageProps> = ({
             <SpeedDial
                 ariaLabel="SpeedDial example"
                 className={ classes.speedDial }
+                FabProps={{ onClick: () => handleSpeedDialClose('campaign') }}
                 icon={ <SpeedDialIcon /> }
                 onClose={ () => setSpeedDialOpen(false) }
                 onOpen={ () => setSpeedDialOpen(true) }
