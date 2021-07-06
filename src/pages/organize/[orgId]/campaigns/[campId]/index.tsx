@@ -1,12 +1,12 @@
 import { GetServerSideProps } from 'next';
 import { grey } from '@material-ui/core/colors';
 import NextLink from 'next/link';
-import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 import { Avatar, Box, Button, Link, makeStyles, Typography } from '@material-ui/core';
 import { FormattedDate, FormattedMessage as Msg, useIntl } from 'react-intl';
 import { Phone, PlaylistAddCheck, Public, Settings } from '@material-ui/icons';
 import { useEffect, useState } from 'react';
+import { useMutation, useQuery } from 'react-query';
 
 import CampaignForm from '../../../../../components/CampaignForm';
 import EventList from '../../../../../components/organize/EventList';
@@ -16,6 +16,7 @@ import getOrg from '../../../../../fetching/getOrg';
 import getPeople from '../../../../../fetching/getPeople';
 import OrganizeCampaignLayout from '../../../../../components/layout/OrganizeCampaignLayout';
 import { PageWithLayout } from '../../../../../types';
+import patchCampaign from '../../../../../fetching/patchCampaign';
 import { scaffold } from '../../../../../utils/next';
 import ZetkinDialog from '../../../../../components/ZetkinDialog';
 
@@ -88,6 +89,8 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({ orgId,
     const campaign = campaignQuery.data;
     const [formDialogOpen, setFormDialogOpen] = useState<null | string>(null);
 
+    const campaignMutation = useMutation(patchCampaign(orgId, campId));
+
     const sortedEvents = [...events].sort((a, b) => {
         return new Date(a.start_time).getTime() - new Date(b.start_time).getTime();
     });
@@ -114,7 +117,7 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({ orgId,
     };
 
     const handleEditCampaignFormSubmit = (data: Record<string, unknown>) => {
-        alert(data);
+        campaignMutation.mutate(data);
         closeDialog();
     };
 
