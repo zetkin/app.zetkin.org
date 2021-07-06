@@ -30,7 +30,7 @@ const OrganizeAllCampaignsLayout : FunctionComponent<OrganizeAllCampaignsLayoutP
     };
 
     return (
-        <OrganizeLayout orgId={ orgId }>
+        <OrganizeLayout>
             <Box m={ 2 }>
                 <Typography component="h1" variant="h4">
                     <Msg id="layout.organize.campaigns.allCampaigns"/>

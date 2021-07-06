@@ -16,12 +16,9 @@ import SearchField from './SearchField';
 
 export const MINIMUM_CHARACTERS = 3;
 
-interface SearchDrawerProps {
-    orgId: string;
-}
-
-const SearchDrawer: FunctionComponent<SearchDrawerProps> = ({ orgId }): JSX.Element | null => {
+const SearchDrawer: FunctionComponent = (): JSX.Element | null => {
     const router = useRouter();
+    const { orgId } = router.query as {orgId: string};
 
     const drawer = useRef<HTMLDivElement>(null);
     const searchField = useRef<HTMLInputElement>(null);

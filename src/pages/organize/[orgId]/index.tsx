@@ -59,7 +59,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const OrganizePage: PageWithLayout<OrganizePageProps> = ({ orgId }) => {
-
     const orgQuery = useQuery(['org', orgId], getOrg(orgId));
     const classes = useStyles();
     return (
@@ -104,8 +103,8 @@ const OrganizePage: PageWithLayout<OrganizePageProps> = ({ orgId }) => {
             </Box>
             <Box className={ classes.responsiveFlexBox } p={ 2 }>
                 <Box flex={ 1 } width="100%">
-                    <DashboardCampaigns orgId={ orgId }/>
-                    <DashboardPeople orgId={ orgId }/>
+                    <DashboardCampaigns />
+                    <DashboardPeople />
                     <Box border={ 1 } m={ 2 } p={ 2 }>Areas</Box>
                 </Box>
                 <Box border={ 1 } flex={ 1 } m={ 2 } p={ 2 } width="100%">inbox</Box>
@@ -114,9 +113,9 @@ const OrganizePage: PageWithLayout<OrganizePageProps> = ({ orgId }) => {
     );
 };
 
-OrganizePage.getLayout = function getLayout(page, props) {
+OrganizePage.getLayout = function getLayout(page) {
     return (
-        <OrganizeLayout orgId={ props.orgId as string }>
+        <OrganizeLayout>
             { page }
         </OrganizeLayout>
     );
