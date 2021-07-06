@@ -1,10 +1,14 @@
 import { GetServerSideProps } from 'next';
 import { grey } from '@material-ui/core/colors';
 import NextLink from 'next/link';
+import { useQuery } from 'react-query';
+import { useRouter } from 'next/router';
 import { Avatar, Box, Button, Link, makeStyles, Typography } from '@material-ui/core';
 import { FormattedDate, FormattedMessage as Msg } from 'react-intl';
 import { Phone, PlaylistAddCheck, Public, Settings } from '@material-ui/icons';
+import { useEffect, useState } from 'react';
 
+import CampaignForm from '../../../../../components/CreateCampaignForm';
 import EventList from '../../../../../components/organize/EventList';
 import getCampaign from '../../../../../fetching/getCampaign';
 import getCampaignEvents from '../../../../../fetching/getCampaignEvents';
@@ -13,12 +17,12 @@ import getPeople from '../../../../../fetching/getPeople';
 import OrganizeCampaignLayout from '../../../../../components/layout/OrganizeCampaignLayout';
 import { PageWithLayout } from '../../../../../types';
 import { scaffold } from '../../../../../utils/next';
-import { useQuery } from 'react-query';
+import ZetkinDialog from '../../../../../components/ZetkinDialog';
 
 const scaffoldOptions = {
     authLevelRequired: 2,
     localeScope: [
-        'layout.organize', 'misc.breadcrumbs', 'pages.organizeCampaigns',
+        'layout.organize', 'misc.breadcrumbs', 'pages.organizeCampaigns', 'misc.formDialog',
     ],
 };
 
@@ -75,11 +79,13 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({ orgId, campId }) => {
+    const router = useRouter();
     const classes = useStyles();
     const eventsQuery = useQuery(['campaignEvents', orgId, campId], getCampaignEvents(orgId, campId));
     const campaignQuery = useQuery(['campaign', orgId, campId], getCampaign(orgId, campId));
     const events = eventsQuery.data || [];
     const campaign = campaignQuery.data;
+    const [formDialogOpen, setFormDialogOpen] = useState<null | string>(null);
 
     const sortedEvents = [...events].sort((a, b) => {
         return new Date(a.start_time).getTime() - new Date(b.start_time).getTime();
@@ -87,6 +93,39 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({ orgId,
 
     const startDate = sortedEvents[0].start_time;
     const endDate = sortedEvents[sortedEvents.length - 1].start_time;
+
+    const closeDialog = () => {
+        setFormDialogOpen(null);
+        router.push(`/organize/${orgId}/campaigns/${campId}`, undefined, { shallow: true });
+    };
+
+    const openEditCampaignDialog = () => {
+        router.push(`/organize/${orgId}/campaigns/${campId}#edit`, undefined, { shallow: true });
+        setFormDialogOpen('campaign');
+    };
+
+    const handleDialogClose = () => {
+        closeDialog();
+    };
+
+    const handleFormCancel = () => {
+        closeDialog();
+    };
+
+    const handleEditCampaignFormSubmit = (data: Record<string, unknown>) => {
+        alert(data);
+        closeDialog();
+    };
+
+    useEffect(() => {
+        const current = router.asPath.split('/').pop();
+        if (current?.includes('#new_campaign')) {
+            setFormDialogOpen('campaign');
+        }
+        else if (current?.includes('#new_event')) {
+            setFormDialogOpen('event');
+        }
+    }, [router.asPath]);
 
     return (
         <>
@@ -129,12 +168,9 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({ orgId,
                                 </NextLink>
                             </Box>
                             <Box display="flex" p={ 1 }>
-                                <Settings color="primary"/>
-                                <NextLink href={ `/organize/${orgId}/campaigns/${campId}/settings` } passHref>
-                                    <Link underline="always">
-                                        <Msg id="pages.organizeCampaigns.linkGroup.settings"/>
-                                    </Link>
-                                </NextLink>
+                                <Button onClick={ openEditCampaignDialog } startIcon={ <Settings color="primary" /> } variant="contained">
+                                    <Msg id="pages.organizeCampaigns.linkGroup.settings"/>
+                                </Button>
                             </Box>
                         </Box>
                     </Box>
@@ -195,6 +231,12 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({ orgId,
                     </Box>
                 </Box>
             </Box>
+            <ZetkinDialog
+                onClose={ handleDialogClose }
+                open={ !!formDialogOpen }
+                title="edit campaign">
+                { formDialogOpen === 'campaign' && <CampaignForm campaign={ campaign } onCancel={ handleFormCancel } onSubmit={ handleEditCampaignFormSubmit }/> }
+            </ZetkinDialog>
         </>
     );
 };
