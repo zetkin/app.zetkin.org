@@ -59,7 +59,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const OrganizePage: PageWithLayout<OrganizePageProps> = ({ orgId }) => {
-
     const orgQuery = useQuery(['org', orgId], getOrg(orgId));
     const classes = useStyles();
     return (
@@ -114,9 +113,9 @@ const OrganizePage: PageWithLayout<OrganizePageProps> = ({ orgId }) => {
     );
 };
 
-OrganizePage.getLayout = function getLayout(page, props) {
+OrganizePage.getLayout = function getLayout(page) {
     return (
-        <OrganizeLayout orgId={ props.orgId as string }>
+        <OrganizeLayout>
             { page }
         </OrganizeLayout>
     );

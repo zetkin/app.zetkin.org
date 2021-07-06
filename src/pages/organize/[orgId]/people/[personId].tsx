@@ -47,9 +47,9 @@ const OrganizePersonPage : PageWithLayout<OrganizePersonPageProps> = () => {
     );
 };
 
-OrganizePersonPage.getLayout = function getLayout(page, props) {
+OrganizePersonPage.getLayout = function getLayout(page) {
     return (
-        <OrganizeLayout orgId={ props.orgId as string }>
+        <OrganizeLayout>
             { page }
         </OrganizeLayout>
     );
