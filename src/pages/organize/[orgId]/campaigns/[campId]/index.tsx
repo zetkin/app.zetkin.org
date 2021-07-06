@@ -5,7 +5,7 @@ import { Avatar, Box, Button, Link, makeStyles, Typography } from '@material-ui/
 import { FormattedDate, FormattedMessage as Msg } from 'react-intl';
 import { Phone, PlaylistAddCheck, Public, Settings } from '@material-ui/icons';
 
-import EventList from '../../../../../components/organize/Event/EventList';
+import EventList from '../../../../../components/organize/EventList';
 import getCampaign from '../../../../../fetching/getCampaign';
 import getCampaignEvents from '../../../../../fetching/getCampaignEvents';
 import getOrg from '../../../../../fetching/getOrg';

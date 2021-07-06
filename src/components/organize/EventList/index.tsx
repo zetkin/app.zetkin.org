@@ -2,7 +2,7 @@ import { List } from '@material-ui/core';
 import { useIntl } from 'react-intl';
 
 import EventListItem from './EventListItem';
-import { ZetkinEvent } from '../../../../types/zetkin';
+import { ZetkinEvent } from '../../../types/zetkin';
 
 interface EventListProps {
     events: ZetkinEvent[];

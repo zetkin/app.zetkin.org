@@ -4,7 +4,7 @@ import { Theme } from '@material-ui/core/styles';
 import { Card, Link, ListItem, makeStyles, Typography } from '@material-ui/core';
 import { FormattedDate, FormattedTime } from 'react-intl';
 
-import { ZetkinEvent } from '../../../../types/zetkin';
+import { ZetkinEvent } from '../../../types/zetkin';
 
 interface EventListItemProps {
     event: ZetkinEvent;
