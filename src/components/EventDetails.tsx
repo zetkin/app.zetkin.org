@@ -22,7 +22,7 @@ import {
 import EventResponseButton from './EventResponseButton';
 import Map from './maps/Map';
 import SignupDialog from './SignupDialog';
-import UserContext from '../hooks/user/UserContext';
+import UserContext from '../contexts/UserContext';
 import { ZetkinEvent } from '../types/zetkin';
 
 interface EventDetailsProps {

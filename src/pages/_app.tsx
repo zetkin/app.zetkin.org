@@ -9,12 +9,12 @@ import { SSRProvider } from '@react-aria/ssr';
 import theme from '../theme';
 import { ThemeProvider } from '@material-ui/core/styles';
 import { useEffect } from 'react';
-import UserContext  from '../hooks/user/UserContext';
+import UserContext from '../contexts/UserContext';
 import { defaultTheme, Provider } from '@adobe/react-spectrum';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
 import DefaultLayout from '../components/layout/DefaultLayout';
-import OrganizationContext from '../hooks/OrganizationContext';
+import OrganizationContext from '../contexts/OrganizationContext';
 import { PageWithLayout } from '../types';
 
 const queryClient = new QueryClient();
@@ -44,26 +44,26 @@ function MyApp({ Component, pageProps } : AppProps) : JSX.Element {
 
     return (
         <UserContext.Provider value={ pageProps.user }>
-            <SSRProvider>
-                <ThemeProvider theme={ theme }>
-                    <Provider theme={ defaultTheme }>
-                        <IntlProvider
-                            defaultLocale="en"
-                            locale={ lang }
-                            messages={ messages }>
-                            <QueryClientProvider client={ queryClient }>
-                                <OrganizationContext.Provider value={{ orgId: pageProps.orgId }}>
+            <OrganizationContext.Provider value={{ orgId: pageProps.orgId }}>
+                <SSRProvider>
+                    <ThemeProvider theme={ theme }>
+                        <Provider theme={ defaultTheme }>
+                            <IntlProvider
+                                defaultLocale="en"
+                                locale={ lang }
+                                messages={ messages }>
+                                <QueryClientProvider client={ queryClient }>
                                     <Hydrate state={ dehydratedState }>
                                         <CssBaseline />
                                         { getLayout(<Component { ...restProps } />, restProps) }
                                     </Hydrate>
                                     <ReactQueryDevtools initialIsOpen={ false } />
-                                </OrganizationContext.Provider>
-                            </QueryClientProvider>
-                        </IntlProvider>
-                    </Provider>
-                </ThemeProvider>
-            </SSRProvider>
+                                </QueryClientProvider>
+                            </IntlProvider>
+                        </Provider>
+                    </ThemeProvider>
+                </SSRProvider>
+            </OrganizationContext.Provider>
         </UserContext.Provider>
     );
 }

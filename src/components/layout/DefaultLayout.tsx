@@ -4,7 +4,7 @@ import { FunctionComponent, useContext } from 'react';
 import getUserMemberships from '../../fetching/getUserMemberships';
 import PublicHeader from '../PublicHeader';
 import { useQuery } from 'react-query';
-import UserContext from '../../hooks/user/UserContext';
+import UserContext from '../../contexts/UserContext';
 import { ZetkinOrganization } from '../../types/zetkin';
 
 interface DefaultLayoutProps {

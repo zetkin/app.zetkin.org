@@ -1,10 +1,10 @@
 
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 
-import deleteUserFollowing from '../../fetching/deleteUserFollowing';
-import getUserFollowing from '../../fetching/getUserFollowing';
-import putUserFollowing from '../../fetching/putUserFollowing';
-import { ZetkinMembership } from '../../types/zetkin';
+import deleteUserFollowing from '../fetching/deleteUserFollowing';
+import getUserFollowing from '../fetching/getUserFollowing';
+import putUserFollowing from '../fetching/putUserFollowing';
+import { ZetkinMembership } from '../types/zetkin';
 
 type OnFollow = (orgId: number) => void;
 type OnUnfollow = (orgId: number) => void;

@@ -11,7 +11,7 @@ import {
     View,
 } from '@adobe/react-spectrum';
 
-import UserContext from '../../hooks/user/UserContext';
+import UserContext from '../../contexts/UserContext';
 import { ZetkinMembership, ZetkinOrganization } from '../../types/zetkin';
 
 interface OrgHeaderProps {

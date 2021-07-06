@@ -1,6 +1,6 @@
 import EventList from './EventList';
 import { mountWithProviders } from '../utils/testing';
-import UserContext from '../hooks/user/UserContext';
+import UserContext from '../contexts/UserContext';
 import { ZetkinEvent } from '../types/zetkin';
 
 describe('EventList', () => {
