@@ -9,6 +9,13 @@ search:
     label: Search
     placeholder: Type to search
     drawerLabel: Press Enter to show full results.
+    startTypingPrompt: Start typing to search.
+    keepTypingPrompt: Keep typing to search.
+    seeAllResultsInOrg: See all results in <b>{orgName}</b> for "{searchQuery}"
+    loading: Loading...
+    noResults: No results
+    showMore: Show more...
+    peopleListSubheader: People
 campaigns:
     allCampaigns: All Projects and Campaigns
     summary: Summary

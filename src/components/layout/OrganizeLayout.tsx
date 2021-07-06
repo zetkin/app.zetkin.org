@@ -36,7 +36,7 @@ const OrganizeLayout: FunctionComponent<OrganizeLayoutProps> = ({ children, orgI
                         <BreadcrumbTrail/>
                     </Box>
                     <Box display="flex" justifyContent="end" position="absolute" right={ 0 } top={ 0 } width={ 0.5 } zIndex={ 10000 }>
-                        <SearchDrawer />
+                        <SearchDrawer { ...{ orgId } } />
                     </Box>
                 </Box>
                 { children as JSX.Element }
