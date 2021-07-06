@@ -13,8 +13,8 @@ import CreateCampaignForm from '../../../../components/CreateCampaignForm';
 import CreateEventForm from '../../../../components/CreateEventForm';
 import getActivities from '../../../../fetching/getActivities';
 import getAllCallAssignments from '../../../../fetching/getAllCallAssignments';
+import getAllCanvassAssignments from '../../../../fetching/getAllCanvassAssignments';
 import getCampaigns from '../../../../fetching/getCampaigns';
-import getCanvasses from '../../../../fetching/getCanvasses';
 import getEvents from '../../../../fetching/getEvents';
 import getLocations from '../../../../fetching/getLocations';
 import getOrg from '../../../../fetching/getOrg';
@@ -56,7 +56,7 @@ export const getServerSideProps : GetServerSideProps = scaffold(async (ctx) => {
     await ctx.queryClient.prefetchQuery(['calls', orgId], getAllCallAssignments(orgId as string, ctx.apiFetch));
     const allCallAssignmentsState = ctx.queryClient.getQueryState(['calls', orgId]);
 
-    await ctx.queryClient.prefetchQuery(['canvasses', orgId], getCanvasses(orgId as string, ctx.apiFetch));
+    await ctx.queryClient.prefetchQuery(['canvasses', orgId], getAllCanvassAssignments(orgId as string, ctx.apiFetch));
     const canvassesState = ctx.queryClient.getQueryState(['canvasses', orgId]);
 
     await ctx.queryClient.prefetchQuery(['activities', orgId], getActivities(orgId as string, ctx.apiFetch));
@@ -104,15 +104,15 @@ const AllCampaignsSummaryPage: PageWithLayout<AllCampaignsSummaryPageProps> = ({
     const eventsQuery = useQuery(['events', orgId], getEvents(orgId));
     const surveysQuery = useQuery(['surveys', orgId], getSurveys(orgId));
     const callsQuery = useQuery(['calls', orgId], getAllCallAssignments(orgId));
-    const canvassesQuery = useQuery(['canvasses', orgId], getCanvasses(orgId));
+    const canvassesQuery = useQuery(['canvasses', orgId], getAllCanvassAssignments(orgId));
 
     const eventMutation = useMutation(postEvent(orgId));
     const campaignMutation = useMutation(postCampaign(orgId));
 
-    const [expandedList, setExpandedList] = useState(false);
+    const [CampaignListExpanded, setCampaignListExpanded] = useState(false);
     const [speedDialOpen, setSpeedDialOpen] = useState(false);
-    const [dialogOpen, setDialogOpen] = useState<null | string>(null);
-    const [filtered, setfiltered] = useState({
+    const [formDialogOpen, setFormDialogOpen] = useState<null | string>(null);
+    const [filters, setFilters] = useState({
         callAssignments: false,
         canvasses: false,
         standalones: false,
@@ -134,19 +134,20 @@ const AllCampaignsSummaryPage: PageWithLayout<AllCampaignsSummaryPageProps> = ({
     const canvasses = canvassesQuery.data?.map(c => ({ ...c, key: `canvass-${c.id}` })) || [];
     const standalones = events.filter(e => !e.campaign.id).map(s => ({ ...s, key: `standalone-${s.id}` }));
 
-    let unsorted = [
-        ... filtered.surveys ? [...surveys] : [],
-        ... filtered.canvasses ? [...canvasses] : [],
-        ... filtered.callAssignments ? [...callAssignments] : [],
-        ... filtered.standalones ? [...standalones] : [],
+    let unsortedProjects = [
+        ... filters.surveys ? [...surveys] : [],
+        ... filters.canvasses ? [...canvasses] : [],
+        ... filters.callAssignments ? [...callAssignments] : [],
+        ... filters.standalones ? [...standalones] : [],
     ];
 
-    if (Object.values(filtered).every(v => !v)) {
-        unsorted = [...surveys, ...canvasses, ...callAssignments, ...standalones];
+    // if no filters are applied show all unsorted items
+    if (Object.values(filters).every(v => !v)) {
+        unsortedProjects = [...surveys, ...canvasses, ...callAssignments, ...standalones];
     }
 
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setfiltered({ ...filtered, [event.target.name]: event.target.checked });
+    const handleFilterBoxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setFilters({ ...filters, [event.target.name]: event.target.checked });
     };
 
     const actions = [
@@ -155,7 +156,7 @@ const AllCampaignsSummaryPage: PageWithLayout<AllCampaignsSummaryPageProps> = ({
     ];
 
     const closeDialog = () => {
-        setDialogOpen(null);
+        setFormDialogOpen(null);
         router.push(`/organize/${orgId}/campaigns`, undefined, { shallow: true });
     };
 
@@ -163,11 +164,11 @@ const AllCampaignsSummaryPage: PageWithLayout<AllCampaignsSummaryPageProps> = ({
         setSpeedDialOpen(false);
         if (id === 'campaign') {
             router.push(`/organize/${orgId}/campaigns#new_campaign`, undefined, { shallow: true });
-            setDialogOpen('campaign');
+            setFormDialogOpen('campaign');
         }
         else if (id === 'event') {
             router.push(`/organize/${orgId}/campaigns#new_event`, undefined, { shallow: true });
-            setDialogOpen('event');
+            setFormDialogOpen('event');
         }
     };
 
@@ -192,10 +193,10 @@ const AllCampaignsSummaryPage: PageWithLayout<AllCampaignsSummaryPageProps> = ({
     useEffect(() => {
         const current = router.asPath.split('/').pop();
         if (current?.includes('#new_campaign')) {
-            setDialogOpen('campaign');
+            setFormDialogOpen('campaign');
         }
         else if (current?.includes('#new_event')) {
-            setDialogOpen('event');
+            setFormDialogOpen('event');
         }
     }, [router.asPath]);
 
@@ -207,7 +208,7 @@ const AllCampaignsSummaryPage: PageWithLayout<AllCampaignsSummaryPageProps> = ({
                 </Typography>
             </Box>
             <Box m={ 1 } p={ 1 }>
-                <Collapse collapsedHeight={ cardHeight + 18 } in={ expandedList }>
+                <Collapse collapsedHeight={ cardHeight + 18 } in={ CampaignListExpanded }>
                     <Box display="grid" gridGap={ 20 } gridTemplateColumns="repeat( auto-fit, minmax(450px, 1fr) )">
                         { campaigns.map(camp => {
                             const campaignEvents = events.filter(e => e.campaign.id === camp.id);
@@ -261,10 +262,10 @@ const AllCampaignsSummaryPage: PageWithLayout<AllCampaignsSummaryPageProps> = ({
                         className={ classes.expandButton }
                         color="primary"
                         disableRipple={ true }
-                        onClick={ () => setExpandedList(!expandedList) }
-                        startIcon={ expandedList ? <ExpandLess /> : <ExpandMore /> } variant="text">
+                        onClick={ () => setCampaignListExpanded(!CampaignListExpanded) }
+                        startIcon={ CampaignListExpanded ? <ExpandLess /> : <ExpandMore /> } variant="text">
                         <Typography variant="subtitle1">
-                            { expandedList ? (
+                            { CampaignListExpanded ? (
                                 <Msg id="pages.organizeAllCampaigns.collapse" />
                             ) :
                                 <Msg id="pages.organizeAllCampaigns.showAll" /> }
@@ -280,7 +281,7 @@ const AllCampaignsSummaryPage: PageWithLayout<AllCampaignsSummaryPageProps> = ({
             <Box alignItems="start" display="flex" justifyContent="flex-start" m={ 1 } p={ 1 } pt={ 0 }>
                 <Box flexGrow={ 0 } width={ 0.5 }>
                     <List disablePadding={ true }>
-                        { unsorted.map(item => (
+                        { unsortedProjects.map(item => (
                             <ListItem key={ item.key } style={{ background: grey[200], height: '4rem', margin: '1rem 0', paddingLeft:'0.5rem' }}>
                                 <NextLink href="/" passHref>
                                     <Link color="inherit" variant="subtitle2">
@@ -300,23 +301,23 @@ const AllCampaignsSummaryPage: PageWithLayout<AllCampaignsSummaryPageProps> = ({
                         </FormLabel>
                         <FormGroup>
                             <FormControlLabel
-                                control={ <Checkbox checked={ filtered.standalones } color="primary" name="standalones" onChange={ handleChange }/> }
+                                control={ <Checkbox checked={ filters.standalones } color="primary" name="standalones" onChange={ handleFilterBoxChange }/> }
                                 label={ intl.formatMessage(
                                     { id: 'pages.organizeAllCampaigns.filter.standalones' }) }
                             />
                             <FormControlLabel
-                                control={ <Checkbox checked={ filtered.surveys } color="primary" name="surveys" onChange={ handleChange } /> }
+                                control={ <Checkbox checked={ filters.surveys } color="primary" name="surveys" onChange={ handleFilterBoxChange } /> }
                                 label={ intl.formatMessage(
                                     { id: 'pages.organizeAllCampaigns.filter.surveys' }) }
                             />
                             <FormControlLabel
-                                control={ <Checkbox checked={ filtered.callAssignments } color="primary" name="callAssignments" onChange={ handleChange } /> }
+                                control={ <Checkbox checked={ filters.callAssignments } color="primary" name="callAssignments" onChange={ handleFilterBoxChange } /> }
                                 label={ intl.formatMessage(
                                     { id: 'pages.organizeAllCampaigns.filter.calls' }) }
                             />
                             <FormControlLabel
-                                control={ <Checkbox checked={ filtered.canvasses } color="primary"
-                                    name="canvasses" onChange={ handleChange }
+                                control={ <Checkbox checked={ filters.canvasses } color="primary"
+                                    name="canvasses" onChange={ handleFilterBoxChange }
                                 /> }
                                 label={ intl.formatMessage(
                                     { id: 'pages.organizeAllCampaigns.filter.canvasses' }) }
@@ -343,10 +344,10 @@ const AllCampaignsSummaryPage: PageWithLayout<AllCampaignsSummaryPageProps> = ({
             </SpeedDial>
             <ZetkinDialog
                 onClose={ handleDialogClose }
-                open={ !!dialogOpen }
-                title={ intl.formatMessage({ id: 'misc.formDialog.createNew.heading' }, { resource: dialogOpen }) }>
-                { dialogOpen === 'campaign' && <CreateCampaignForm onCancel={ handleFormCancel } onSubmit={ handleCreateCampaignFormSubmit }/> }
-                { dialogOpen === 'event' && <CreateEventForm onCancel={ handleFormCancel } onSubmit={ handleCreateEventFormSubmit } orgId={ orgId.toString() }/> }
+                open={ !!formDialogOpen }
+                title={ intl.formatMessage({ id: 'misc.formDialog.createNew.heading' }, { resource: formDialogOpen }) }>
+                { formDialogOpen === 'campaign' && <CreateCampaignForm onCancel={ handleFormCancel } onSubmit={ handleCreateCampaignFormSubmit }/> }
+                { formDialogOpen === 'event' && <CreateEventForm onCancel={ handleFormCancel } onSubmit={ handleCreateEventFormSubmit } orgId={ orgId.toString() }/> }
             </ZetkinDialog>
         </>
     );

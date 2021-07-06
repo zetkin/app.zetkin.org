@@ -23,13 +23,28 @@ const CreateCampaignForm = ({ onSubmit, onCancel }: CreateCampaignFormProps): JS
     const formFields = [
         {
             field: (
-                <TextField fullWidth id={ intl.formatMessage({ id: 'misc.formDialog.createNew.campaign.name' }) } label={ intl.formatMessage({ id: 'misc.formDialog.createNew.campaign.name' }) } margin="normal" name="title" required/>
+                <TextField
+                    fullWidth
+                    id="title"
+                    label={ intl.formatMessage({ id: 'misc.formDialog.createNew.campaign.name' }) }
+                    margin="normal"
+                    name="title"
+                    required
+                />
             ),
             size: 12,
         },
         {
             field: (
-                <TextField fullWidth id={ intl.formatMessage({ id: 'misc.formDialog.createNew.campaign.description' }) } label={ intl.formatMessage({ id: 'misc.formDialog.createNew.campaign.description' }) } margin="normal" multiline name="info_text" rows={ 5 } variant="outlined" />
+                <TextField
+                    fullWidth id="info_text"
+                    label={ intl.formatMessage({ id: 'misc.formDialog.createNew.campaign.description' }) }
+                    margin="normal"
+                    multiline
+                    name="info_text"
+                    rows={ 5 }
+                    variant="outlined"
+                />
             ),
             size: 12,
         },

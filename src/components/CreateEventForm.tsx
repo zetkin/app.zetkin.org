@@ -51,7 +51,13 @@ const CreateEventForm = ({ onSubmit, onCancel, orgId }: CreateEventFormProps): J
     const formFields = [
         {
             field: (
-                <TextField fullWidth id="title" label={ intl.formatMessage({ id: 'misc.formDialog.createNew.event.title' }) } margin="normal" name="title" />
+                <TextField
+                    fullWidth
+                    id="title"
+                    label={ intl.formatMessage({ id: 'misc.formDialog.createNew.event.title' }) }
+                    margin="normal"
+                    name="title"
+                />
             ),
             size: 12,
         },
@@ -148,13 +154,28 @@ const CreateEventForm = ({ onSubmit, onCancel, orgId }: CreateEventFormProps): J
         },
         {
             field: (
-                <TextField fullWidth id="info" label={ intl.formatMessage({ id: 'misc.formDialog.createNew.event.info' }) } margin="normal" multiline name="info_text" rows={ 3 } variant="outlined" />
+                <TextField
+                    fullWidth
+                    id="info"
+                    label={ intl.formatMessage({ id: 'misc.formDialog.createNew.event.info' }) }
+                    margin="normal"
+                    multiline
+                    name="info_text"
+                    rows={ 3 }
+                    variant="outlined"
+                />
             ),
             size: 12,
         },
         {
             field: (
-                <TextField fullWidth id="link" label={ intl.formatMessage({ id: 'misc.formDialog.createNew.event.link' }) } margin="normal" name="url" />
+                <TextField
+                    fullWidth
+                    id="link"
+                    label={ intl.formatMessage({ id: 'misc.formDialog.createNew.event.link' }) }
+                    margin="normal"
+                    name="url"
+                />
             ),
             size: 12,
         },
