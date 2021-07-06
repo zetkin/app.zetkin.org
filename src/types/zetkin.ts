@@ -72,16 +72,16 @@ export interface ZetkinOrganization {
 export interface ZetkinPerson {
     alt_phone: string;
     is_user: boolean;
-    zip_code: string; // Need to check
+    zip_code: string;
     last_name: string;
-    city: null; // Need to check
+    city: string;
     first_name: string;
-    gender: 'm'; // Check gender options
-    street_address: null; // Need to check
-    co_address: null; // Need to check
-    ext_id: null; // Str or num
+    gender: string;
+    street_address: string;
+    co_address: string;
+    ext_id: string;
     email: string;
-    country: null; // Check
+    country: string;
     id: number;
     phone: string;
 }
