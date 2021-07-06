@@ -105,7 +105,7 @@ const OrganizePage: PageWithLayout<OrganizePageProps> = ({ orgId }) => {
             <Box className={ classes.responsiveFlexBox } p={ 2 }>
                 <Box flex={ 1 } width="100%">
                     <DashboardCampaigns />
-                    <DashboardPeople orgId={ orgId }/>
+                    <DashboardPeople />
                     <Box border={ 1 } m={ 2 } p={ 2 }>Areas</Box>
                 </Box>
                 <Box border={ 1 } flex={ 1 } m={ 2 } p={ 2 } width="100%">inbox</Box>
