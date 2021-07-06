@@ -1,8 +1,12 @@
 import { Form } from 'react-final-form';
-import { TextField } from 'mui-rff';
+import { useQuery } from 'react-query';
+import { useRouter } from 'next/router';
+import {  Autocomplete, TextField } from 'mui-rff';
 import { Box, Button, MenuItem } from '@material-ui/core';
 import { Grid, GridSize } from '@material-ui/core';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
+
+import getPeople from '../fetching/getPeople';
 
 interface CreateCampaignFormProps {
     onSubmit: (data: Record<string, unknown>) => void;
@@ -10,6 +14,9 @@ interface CreateCampaignFormProps {
 }
 
 const CreateCampaignForm = ({ onSubmit, onCancel }: CreateCampaignFormProps): JSX.Element => {
+    const { orgId } = useRouter().query;
+    const peopleQuery = useQuery(['people', orgId], getPeople(orgId as string));
+    const people = peopleQuery.data || [];
     const intl = useIntl();
 
     const validate = (values: Record<string, string>) => {
@@ -44,6 +51,18 @@ const CreateCampaignForm = ({ onSubmit, onCancel }: CreateCampaignFormProps): JS
                     name="info_text"
                     rows={ 5 }
                     variant="outlined"
+                />
+            ),
+            size: 12,
+        },
+        {
+            field: (
+                <Autocomplete
+                    getOptionLabel={ person => `${person.first_name} ${person.last_name}` }
+                    getOptionValue={ person => person.id }
+                    label={ intl.formatMessage({ id: 'misc.formDialog.createNew.campaign.manager' }) }
+                    name="manager_id"
+                    options={ people }
                 />
             ),
             size: 12,
@@ -86,9 +105,10 @@ const CreateCampaignForm = ({ onSubmit, onCancel }: CreateCampaignFormProps): JS
     ];
 
     const handleSubmit = (values: Record<string, string>) => {
-        const { info_text, status, title, visibility } = values;
+        const { info_text, status, title, visibility, manager_id } = values;
         onSubmit({
             ...info_text ? { info_text } : null,
+            ...manager_id ? { manager_id } : null,
             published:status === 'draft' ? false : true,
             title: title,
             visibility,

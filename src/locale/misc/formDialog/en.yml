@@ -1,8 +1,9 @@
 createNew: 
-    heading: Create new {resource}
+    heading: Create new {resource} 
     campaign:
         name: Name
         description: Description
+        manager: Campaign manager
         visibility:
             heading: Visibility
             private: Private

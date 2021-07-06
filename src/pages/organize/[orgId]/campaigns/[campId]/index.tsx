@@ -9,6 +9,7 @@ import EventList from '../../../../../components/organize/EventList';
 import getCampaign from '../../../../../fetching/getCampaign';
 import getCampaignEvents from '../../../../../fetching/getCampaignEvents';
 import getOrg from '../../../../../fetching/getOrg';
+import getPeople from '../../../../../fetching/getPeople';
 import OrganizeCampaignLayout from '../../../../../components/layout/OrganizeCampaignLayout';
 import { PageWithLayout } from '../../../../../types';
 import { scaffold } from '../../../../../utils/next';
@@ -29,13 +30,16 @@ export const getServerSideProps : GetServerSideProps = scaffold(async (ctx) => {
     await ctx.queryClient.prefetchQuery(['org', orgId], getOrg(orgId as string, ctx.apiFetch));
     const orgState = ctx.queryClient.getQueryState(['org', orgId]);
 
+    await ctx.queryClient.prefetchQuery(['people', orgId], getPeople(orgId as string, ctx.apiFetch));
+    const peopleState = ctx.queryClient.getQueryState(['people', orgId]);
+
     await ctx.queryClient.prefetchQuery(['campaignEvents', orgId, campId], getCampaignEvents(orgId as string, campId as string, ctx.apiFetch));
     const campaignEventsState = ctx.queryClient.getQueryState(['campaignEvents', orgId, campId]);
 
     await ctx.queryClient.prefetchQuery(['campaign', orgId, campId], getCampaign(orgId as string, campId as string, ctx.apiFetch));
     const campaignState = ctx.queryClient.getQueryState(['campaign', orgId, campId]);
 
-    if (orgState?.status === 'success' && campaignEventsState?.status === 'success' && campaignState?.status === 'success' ) {
+    if (orgState?.status === 'success' && campaignEventsState?.status === 'success' && campaignState?.status === 'success' && peopleState?.status === 'success' ) {
         return {
             props: {
                 campId,
