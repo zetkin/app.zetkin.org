@@ -4,10 +4,9 @@ import { mountWithProviders } from '../utils/testing';
 import OrganizeSidebar from './OrganizeSidebar';
 
 describe('OrganizeSidebar', () => {
-
     beforeEach(() => {
         cy.stub(Router, 'useRouter').callsFake(() => {
-            return { pathname: `/organize/[orgId]`, prefetch: async () => null };
+            return { pathname: `/organize/[orgId]`, prefetch: async () => null, query: { orgId: 1 } };
         });
     });
 
