@@ -8,7 +8,7 @@ import { FormattedDate, FormattedMessage as Msg } from 'react-intl';
 import { Phone, PlaylistAddCheck, Public, Settings } from '@material-ui/icons';
 import { useEffect, useState } from 'react';
 
-import CampaignForm from '../../../../../components/CreateCampaignForm';
+import CampaignForm from '../../../../../components/CampaignForm';
 import EventList from '../../../../../components/organize/EventList';
 import getCampaign from '../../../../../fetching/getCampaign';
 import getCampaignEvents from '../../../../../fetching/getCampaignEvents';

@@ -9,7 +9,7 @@ import { SpeedDial, SpeedDialAction, SpeedDialIcon } from '@material-ui/lab';
 import { useEffect, useRef, useState } from 'react';
 import { useMutation, useQuery } from 'react-query';
 
-import CreateCampaignForm from '../../../../components/CreateCampaignForm';
+import CampaignForm from '../../../../components/CampaignForm';
 import CreateEventForm from '../../../../components/CreateEventForm';
 import getActivities from '../../../../fetching/getActivities';
 import getAllCallAssignments from '../../../../fetching/getAllCallAssignments';
@@ -355,7 +355,7 @@ const AllCampaignsSummaryPage: PageWithLayout<AllCampaignsSummaryPageProps> = ({
                 onClose={ handleDialogClose }
                 open={ !!formDialogOpen }
                 title={ intl.formatMessage({ id: 'misc.formDialog.createNew.heading' }, { resource: formDialogOpen }) }>
-                { formDialogOpen === 'campaign' && <CreateCampaignForm onCancel={ handleFormCancel } onSubmit={ handleCreateCampaignFormSubmit }/> }
+                { formDialogOpen === 'campaign' && <CampaignForm onCancel={ handleFormCancel } onSubmit={ handleCreateCampaignFormSubmit }/> }
                 { formDialogOpen === 'event' && <CreateEventForm onCancel={ handleFormCancel } onSubmit={ handleCreateEventFormSubmit } orgId={ orgId.toString() }/> }
             </ZetkinDialog>
         </>
