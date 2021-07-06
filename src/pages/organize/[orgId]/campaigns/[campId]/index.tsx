@@ -1,11 +1,11 @@
-import { FormattedDate } from 'react-intl';
 import { GetServerSideProps } from 'next';
 import { grey } from '@material-ui/core/colors';
-import { FormattedMessage as Msg } from 'react-intl';
 import NextLink from 'next/link';
-import { Avatar, Box, Button, Link, List, ListItem, makeStyles, Typography } from '@material-ui/core';
+import { Avatar, Box, Button, Link, makeStyles, Typography } from '@material-ui/core';
+import { FormattedDate, FormattedMessage as Msg } from 'react-intl';
 import { Phone, PlaylistAddCheck, Public, Settings } from '@material-ui/icons';
 
+import EventList from '../../../../../components/organize/EventList';
 import getCampaign from '../../../../../fetching/getCampaign';
 import getCampaignEvents from '../../../../../fetching/getCampaignEvents';
 import getOrg from '../../../../../fetching/getOrg';
@@ -149,17 +149,7 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({ orgId,
                         </NextLink>
                     </Box>
                     <Box p={ 3 } pt={ 0 }>
-                        <List disablePadding={ true }>
-                            { events.map(event => (
-                                <ListItem key={ event.id } style={{ background: grey[200], height: '4rem', margin: '1rem 0', paddingLeft:'0.5rem' }}>
-                                    <NextLink href={ `/organize/${orgId}/campaigns/${campId}/events/${event.id}` } passHref>
-                                        <Link color="inherit" variant="subtitle2">
-                                            { event.activity.title || `Event ${event.id}` }
-                                        </Link>
-                                    </NextLink>
-                                </ListItem>
-                            )) }
-                        </List>
+                        <EventList events={ events } hrefBase={ `/organize/${orgId}/campaigns/${campId}` } />
                     </Box>
                 </Box>
                 <Box display="flex" flex={ 1 } flexDirection="column" m={ 1 }>
