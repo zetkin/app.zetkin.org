@@ -43,7 +43,7 @@ const CampaignForm = ({ onSubmit, onCancel, campaign }: CampaignFormProps): JSX.
                 <TextField
                     fullWidth
                     id="title"
-                    label={ intl.formatMessage({ id: 'misc.formDialog.createNew.campaign.name' }) }
+                    label={ intl.formatMessage({ id: 'misc.formDialog.campaign.name' }) }
                     margin="normal"
                     name="title"
                     required
@@ -55,7 +55,7 @@ const CampaignForm = ({ onSubmit, onCancel, campaign }: CampaignFormProps): JSX.
             field: (
                 <TextField
                     fullWidth id="info_text"
-                    label={ intl.formatMessage({ id: 'misc.formDialog.createNew.campaign.description' }) }
+                    label={ intl.formatMessage({ id: 'misc.formDialog.campaign.description' }) }
                     margin="normal"
                     multiline
                     name="info_text"
@@ -70,7 +70,7 @@ const CampaignForm = ({ onSubmit, onCancel, campaign }: CampaignFormProps): JSX.
                 <Autocomplete
                     getOptionLabel={ person => `${person.first_name} ${person.last_name}` }
                     getOptionValue={ person => person.id }
-                    label={ intl.formatMessage({ id: 'misc.formDialog.createNew.campaign.manager' }) }
+                    label={ intl.formatMessage({ id: 'misc.formDialog.campaign.manager' }) }
                     name="manager_id"
                     options={ people }
                 />
@@ -81,14 +81,14 @@ const CampaignForm = ({ onSubmit, onCancel, campaign }: CampaignFormProps): JSX.
             field: (
                 <TextField
                     fullWidth id="status"
-                    label={ intl.formatMessage({ id: 'misc.formDialog.createNew.campaign.status.heading' }) }
+                    label={ intl.formatMessage({ id: 'misc.formDialog.campaign.status.heading' }) }
                     margin="normal"
                     name="status" select>
                     <MenuItem value="published">
-                        <Msg id="misc.formDialog.createNew.campaign.status.published" />
+                        <Msg id="misc.formDialog.campaign.status.published" />
                     </MenuItem>
                     <MenuItem value="draft">
-                        <Msg id="misc.formDialog.createNew.campaign.status.draft" />
+                        <Msg id="misc.formDialog.campaign.status.draft" />
                     </MenuItem>
                 </TextField>
             ),
@@ -97,15 +97,15 @@ const CampaignForm = ({ onSubmit, onCancel, campaign }: CampaignFormProps): JSX.
         {
             field: (
                 <TextField fullWidth id="visibility"
-                    label={ intl.formatMessage({ id: 'misc.formDialog.createNew.campaign.visibility.heading' }) }
+                    label={ intl.formatMessage({ id: 'misc.formDialog.campaign.visibility.heading' }) }
                     margin="normal"
                     name="visibility"
                     select>
                     <MenuItem value="hidden">
-                        <Msg id="misc.formDialog.createNew.campaign.visibility.private" />
+                        <Msg id="misc.formDialog.campaign.visibility.private" />
                     </MenuItem>
                     <MenuItem value="open">
-                        <Msg id="misc.formDialog.createNew.campaign.visibility.public" />
+                        <Msg id="misc.formDialog.campaign.visibility.public" />
                     </MenuItem>
                 </TextField>
             ),

@@ -354,7 +354,7 @@ const AllCampaignsSummaryPage: PageWithLayout<AllCampaignsSummaryPageProps> = ({
             <ZetkinDialog
                 onClose={ handleDialogClose }
                 open={ !!formDialogOpen }
-                title={ intl.formatMessage({ id: 'misc.formDialog.createNew.heading' }, { resource: formDialogOpen }) }>
+                title={ intl.formatMessage({ id: 'misc.formDialog.create' }, { resource: formDialogOpen }) }>
                 { formDialogOpen === 'campaign' && <CampaignForm onCancel={ handleFormCancel } onSubmit={ handleCreateCampaignFormSubmit }/> }
                 { formDialogOpen === 'event' && <CreateEventForm onCancel={ handleFormCancel } onSubmit={ handleCreateEventFormSubmit } orgId={ orgId.toString() }/> }
             </ZetkinDialog>
