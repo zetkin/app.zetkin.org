@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import { FormattedMessage as Msg } from 'react-intl';
 import { useQuery } from 'react-query';
-import { FunctionComponent, useEffect, useState } from 'react';
+import { FunctionComponent, useContext, useEffect, useState } from 'react';
 
 import Search from '@material-ui/icons/Search';
 import {
@@ -17,6 +17,7 @@ import {
 
 import getOrg from '../../fetching/getOrg';
 import { MINIMUM_CHARACTERS } from './index';
+import OrganizationContext from '../../contexts/OrganizationContext';
 import { ZetkinPerson } from '../../types/zetkin';
 
 
@@ -24,10 +25,10 @@ interface ResultsListProps {
     searchFieldValue: string;
     results: ZetkinPerson[];
     loading: boolean;
-    orgId: string;
 }
 
-const ResultsList: FunctionComponent<ResultsListProps> = ({ searchFieldValue, results, loading, orgId }): JSX.Element => {
+const ResultsList: FunctionComponent<ResultsListProps> = ({ searchFieldValue, results, loading }): JSX.Element => {
+    const { orgId } = useContext(OrganizationContext);
     const [numResultsToDisplay, setNumResultsToDisplay] = useState<number>(5);
     const { data: org } = useQuery(['org', orgId], getOrg(orgId), { enabled: false });
 

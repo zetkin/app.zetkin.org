@@ -1,4 +1,5 @@
 import { FormattedMessage as Msg } from 'react-intl';
+import { useContext } from 'react';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 import {
@@ -9,6 +10,7 @@ import {
 import { FunctionComponent, useEffect, useRef, useState } from 'react';
 
 import getSearchDrawerResults from '../../fetching/getSearchDrawerResults';
+import OrganizationContext from '../../contexts/OrganizationContext';
 import useDebounce from '../../hooks/useDebounce';
 
 import ResultsList from './ResultsList';
@@ -16,11 +18,8 @@ import SearchField from './SearchField';
 
 export const MINIMUM_CHARACTERS = 3;
 
-interface SearchDrawerProps {
-    orgId: string;
-}
-
-const SearchDrawer: FunctionComponent<SearchDrawerProps> = ({ orgId }): JSX.Element | null => {
+const SearchDrawer: FunctionComponent = (): JSX.Element | null => {
+    const { orgId } = useContext(OrganizationContext);
     const router = useRouter();
 
     const drawer = useRef<HTMLDivElement>(null);
@@ -124,7 +123,6 @@ const SearchDrawer: FunctionComponent<SearchDrawerProps> = ({ orgId }): JSX.Elem
                         <Container>
                             <ResultsList
                                 loading={ isIdle || isFetching }
-                                orgId={ orgId }
                                 results={ results ?? [] }
                                 searchFieldValue={ searchFieldValue }
                             />
