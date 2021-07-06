@@ -4,7 +4,7 @@ import NextLink from 'next/link';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 import { Avatar, Box, Button, Link, makeStyles, Typography } from '@material-ui/core';
-import { FormattedDate, FormattedMessage as Msg } from 'react-intl';
+import { FormattedDate, FormattedMessage as Msg, useIntl } from 'react-intl';
 import { Phone, PlaylistAddCheck, Public, Settings } from '@material-ui/icons';
 import { useEffect, useState } from 'react';
 
@@ -79,6 +79,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({ orgId, campId }) => {
+    const intl = useIntl();
     const router = useRouter();
     const classes = useStyles();
     const eventsQuery = useQuery(['campaignEvents', orgId, campId], getCampaignEvents(orgId, campId));
@@ -234,7 +235,7 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({ orgId,
             <ZetkinDialog
                 onClose={ handleDialogClose }
                 open={ !!formDialogOpen }
-                title="edit campaign">
+                title={ intl.formatMessage({ id: 'misc.formDialog.edit' }, { resource: formDialogOpen }) }>
                 { formDialogOpen === 'campaign' && <CampaignForm campaign={ campaign } onCancel={ handleFormCancel } onSubmit={ handleEditCampaignFormSubmit }/> }
             </ZetkinDialog>
         </>
