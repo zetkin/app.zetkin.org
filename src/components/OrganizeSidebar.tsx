@@ -6,10 +6,6 @@ import { AppBar, Box, Button, Drawer, Hidden, IconButton, List, ListItem, Toolba
 import { Event,  Home, Inbox, Map, Menu, People, Person } from '@material-ui/icons/';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 
-interface OrganizeSidebarProps {
-    orgId: string;
-}
-
 const drawerWidth = '5rem';
 
 const useStyles = makeStyles((theme) => ({
@@ -50,7 +46,7 @@ const useStyles = makeStyles((theme) => ({
     toolbar: theme.mixins.toolbar,
 }));
 
-const OrganizeSidebar = ({ orgId  } : OrganizeSidebarProps) : JSX.Element =>{
+const OrganizeSidebar = () : JSX.Element =>{
     const classes = useStyles();
     const theme = useTheme();
     const [mobileOpen, setMobileOpen] = useState(false);
@@ -61,6 +57,7 @@ const OrganizeSidebar = ({ orgId  } : OrganizeSidebarProps) : JSX.Element =>{
 
     const router = useRouter();
     const key = router.pathname.split('[orgId]')[1];
+    const { orgId } = router.query as {orgId: string};
 
     const drawer = (
         <Box alignItems="center" bgcolor={ grey[100] } display="flex" flexDirection="column" height="100%" justifyContent="space-between">

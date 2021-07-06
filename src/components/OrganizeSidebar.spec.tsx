@@ -4,7 +4,6 @@ import { mountWithProviders } from '../utils/testing';
 import OrganizeSidebar from './OrganizeSidebar';
 
 describe('OrganizeSidebar', () => {
-    const dummyOrgId= '1';
 
     beforeEach(() => {
         cy.stub(Router, 'useRouter').callsFake(() => {
@@ -13,7 +12,7 @@ describe('OrganizeSidebar', () => {
     });
 
     it('contains navigation buttons', () => {
-        mountWithProviders(<OrganizeSidebar orgId={ dummyOrgId }/>);
+        mountWithProviders(<OrganizeSidebar />);
         cy.get('[data-test="home-button"]').should('be.visible');
         cy.get('[data-test="people-button"]').should('be.visible');
         cy.get('[data-test="area-button"]').should('be.visible');
@@ -24,7 +23,7 @@ describe('OrganizeSidebar', () => {
 
     it('is hidden when the viewport is narrow', () => {
         cy.viewport(500, 800);
-        mountWithProviders(<OrganizeSidebar orgId={ dummyOrgId }/>);
+        mountWithProviders(<OrganizeSidebar />);
         cy.get('[data-test="home-button"]').should('not.be.visible');
         cy.get('[data-test="people-button"]').should('not.be.visible');
         cy.get('[data-test="area-button"]').should('not.be.visible');
@@ -33,7 +32,7 @@ describe('OrganizeSidebar', () => {
 
     it('toggles with the menu button when the viewport is narrow', () => {
         cy.viewport(500, 800);
-        mountWithProviders(<OrganizeSidebar orgId={ dummyOrgId }/>);
+        mountWithProviders(<OrganizeSidebar />);
         cy.get('[data-test="menu-button"]')
             .click()
             .then(() => {

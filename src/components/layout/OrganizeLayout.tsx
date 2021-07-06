@@ -28,7 +28,7 @@ const OrganizeLayout: FunctionComponent<OrganizeLayoutProps> = ({ children, orgI
     return (
         <Box className={ classes.root } display="flex">
             <Box bgcolor={ grey[200] } height="100vh">
-                <OrganizeSidebar orgId={ orgId }  />
+                <OrganizeSidebar />
             </Box>
             <Box display="flex" flexDirection="column" height="100vh" overflow="hidden" width={ 1 }>
                 <Box display="flex" m={ 1 } mb={ 0 }>
