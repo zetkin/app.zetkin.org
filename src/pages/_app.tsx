@@ -14,7 +14,6 @@ import { defaultTheme, Provider } from '@adobe/react-spectrum';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
 import DefaultLayout from '../components/layout/DefaultLayout';
-import OrganizationContext from '../contexts/OrganizationContext';
 import { PageWithLayout } from '../types';
 
 const queryClient = new QueryClient();
@@ -42,28 +41,27 @@ function MyApp({ Component, pageProps } : AppProps) : JSX.Element {
         }
     }, []);
 
+
     return (
         <UserContext.Provider value={ pageProps.user }>
-            <OrganizationContext.Provider value={{ orgId: pageProps.orgId }}>
-                <SSRProvider>
-                    <ThemeProvider theme={ theme }>
-                        <Provider theme={ defaultTheme }>
-                            <IntlProvider
-                                defaultLocale="en"
-                                locale={ lang }
-                                messages={ messages }>
-                                <QueryClientProvider client={ queryClient }>
-                                    <Hydrate state={ dehydratedState }>
-                                        <CssBaseline />
-                                        { getLayout(<Component { ...restProps } />, restProps) }
-                                    </Hydrate>
-                                    <ReactQueryDevtools initialIsOpen={ false } />
-                                </QueryClientProvider>
-                            </IntlProvider>
-                        </Provider>
-                    </ThemeProvider>
-                </SSRProvider>
-            </OrganizationContext.Provider>
+            <SSRProvider>
+                <ThemeProvider theme={ theme }>
+                    <Provider theme={ defaultTheme }>
+                        <IntlProvider
+                            defaultLocale="en"
+                            locale={ lang }
+                            messages={ messages }>
+                            <QueryClientProvider client={ queryClient }>
+                                <Hydrate state={ dehydratedState }>
+                                    <CssBaseline />
+                                    { getLayout(<Component { ...restProps } />, restProps) }
+                                </Hydrate>
+                                <ReactQueryDevtools initialIsOpen={ false } />
+                            </QueryClientProvider>
+                        </IntlProvider>
+                    </Provider>
+                </ThemeProvider>
+            </SSRProvider>
         </UserContext.Provider>
     );
 }

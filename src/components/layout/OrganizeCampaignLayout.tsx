@@ -34,7 +34,7 @@ const OrganizeCampaignLayout : FunctionComponent<OrganizeCampaignLayoutProps> = 
     };
 
     return (
-        <OrganizeLayout>
+        <OrganizeLayout orgId={ orgId }>
             <Box m={ 2 }>
                 <Typography component="h1" variant="h4">
                     { campQuery.data?.title }
