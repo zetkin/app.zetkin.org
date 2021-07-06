@@ -7,17 +7,27 @@ import { Grid, GridSize } from '@material-ui/core';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
 
 import getPeople from '../fetching/getPeople';
+import { ZetkinCampaign } from '../types/zetkin';
 
-interface CreateCampaignFormProps {
+interface CampaignFormProps {
+    campaign?: ZetkinCampaign;
     onSubmit: (data: Record<string, unknown>) => void;
     onCancel: () => void;
 }
 
-const CreateCampaignForm = ({ onSubmit, onCancel }: CreateCampaignFormProps): JSX.Element => {
+const CampaignForm = ({ onSubmit, onCancel, campaign }: CampaignFormProps): JSX.Element => {
     const { orgId } = useRouter().query;
     const peopleQuery = useQuery(['people', orgId], getPeople(orgId as string));
     const people = peopleQuery.data || [];
     const intl = useIntl();
+
+    const initialValues = {
+        info_text: campaign?.info_text,
+        manager_id: campaign?.manager?.id,
+        status: campaign?.published,
+        title: campaign?.title,
+        visibility: campaign?.visibility,
+    };
 
     const validate = (values: Record<string, string>) => {
         const errors:Record<string, string> = {};
@@ -117,7 +127,7 @@ const CreateCampaignForm = ({ onSubmit, onCancel }: CreateCampaignFormProps): JS
 
     return (
         <Form
-            initialValues={{ }}
+            initialValues={ initialValues }
             onSubmit={ handleSubmit }
             render={ ({ handleSubmit, submitting }) => (
                 <form noValidate onSubmit={ handleSubmit }>
@@ -149,4 +159,4 @@ const CreateCampaignForm = ({ onSubmit, onCancel }: CreateCampaignFormProps): JS
     );
 };
 
-export default CreateCampaignForm;
+export default CampaignForm;
