@@ -3,7 +3,7 @@ import { grey } from '@material-ui/core/colors';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import { Box, Button, Card, CardActions, CardContent, Checkbox, Collapse, FormControl, FormControlLabel, FormGroup, FormLabel, Link, List, ListItem, makeStyles, Typography } from '@material-ui/core';
-import { Event, ExpandLess, ExpandMore, People } from '@material-ui/icons';
+import { Event, ExpandLess, ExpandMore, Flag } from '@material-ui/icons';
 import { FormattedDate, FormattedMessage as Msg, useIntl } from 'react-intl';
 import { SpeedDial, SpeedDialAction, SpeedDialIcon } from '@material-ui/lab';
 import { useEffect, useRef, useState } from 'react';
@@ -152,7 +152,7 @@ const AllCampaignsSummaryPage: PageWithLayout<AllCampaignsSummaryPageProps> = ({
 
     const actions = [
         { icon: <Event />, id: 'event', name: intl.formatMessage({ id: 'misc.speedDial.createEvent' }) },
-        { icon: <People />, id: 'campaign', name: intl.formatMessage({ id: 'misc.speedDial.createCampaign' }) },
+        { icon: <Flag />, id: 'campaign', name: intl.formatMessage({ id: 'misc.speedDial.createCampaign' }) },
     ];
 
     const closeDialog = () => {
