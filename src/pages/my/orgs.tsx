@@ -7,7 +7,7 @@ import MyHomeLayout from '../../components/layout/MyHomeLayout';
 import { PageWithLayout } from '../../types';
 import { scaffold } from '../../utils/next';
 import UserFollowingList from '../../components/UserFollowingList';
-import useUserFollowing from '../../hooks/user/useUserFollowing';
+import useUserFollowing from '../../hooks/useUserFollowing';
 
 const scaffoldOptions = {
     authLevelRequired: 1,
