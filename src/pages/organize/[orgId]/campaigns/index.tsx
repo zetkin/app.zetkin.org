@@ -129,10 +129,10 @@ const AllCampaignsSummaryPage: PageWithLayout<AllCampaignsSummaryPageProps> = ({
 
     const upcomingEvents = upcomingEventsQuery.data || [];
     const events = eventsQuery.data || [];
-    const surveys = surveysQuery.data?.map(s => ({ ...s, key: `survey-${s.id}` })) || [];
-    const callAssignments = callsQuery.data?.map(c => ({ ...c, key: `call-${c.id}` })) || [];
-    const canvasses = canvassesQuery.data?.map(c => ({ ...c, key: `canvass-${c.id}` })) || [];
-    const standalones = events.filter(e => !e.campaign.id).map(s => ({ ...s, key: `standalone-${s.id}` }));
+    const surveys = surveysQuery.data?.map(s => ({ data: s, type: 'survey' })) || [];
+    const callAssignments = callsQuery.data?.map(c => ({ data: c, type: 'call_assignment' })) || [];
+    const canvasses = canvassesQuery.data?.map(c => ({ data: c, type: 'canvass_assignment' })) || [];
+    const standalones = events.filter(e => !e.campaign.id).map(s => ({ data: s, type: 'standalone_event' }));
 
     let unsortedProjects = [
         ... filters.surveys ? [...surveys] : [],
@@ -290,10 +290,10 @@ const AllCampaignsSummaryPage: PageWithLayout<AllCampaignsSummaryPageProps> = ({
                 <Box flexGrow={ 0 } width={ 0.5 }>
                     <List disablePadding={ true }>
                         { unsortedProjects.map(item => (
-                            <ListItem key={ item.key } style={{ background: grey[200], height: '4rem', margin: '1rem 0', paddingLeft:'0.5rem' }}>
+                            <ListItem key={ `${item.type}-${item.data.id}` } style={{ background: grey[200], height: '4rem', margin: '1rem 0', paddingLeft:'0.5rem' }}>
                                 <NextLink href="/" passHref>
                                     <Link color="inherit" variant="subtitle2">
-                                        { `${item.title} ID: ${item.key}` }
+                                        { `${item.type} ID: ${item.data.id}` }
                                     </Link>
                                 </NextLink>
                             </ListItem>
