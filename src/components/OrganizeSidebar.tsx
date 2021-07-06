@@ -1,14 +1,11 @@
 import grey from '@material-ui/core/colors/grey';
 import NextLink from 'next/link';
+import OrganizationContext from '../contexts/OrganizationContext';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
 import { AppBar, Box, Button, Drawer, Hidden, IconButton, List, ListItem, Toolbar } from '@material-ui/core';
 import { Event,  Home, Inbox, Map, Menu, People, Person } from '@material-ui/icons/';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
-
-interface OrganizeSidebarProps {
-    orgId: string;
-}
+import { useContext, useState } from 'react';
 
 const drawerWidth = '5rem';
 
@@ -50,7 +47,8 @@ const useStyles = makeStyles((theme) => ({
     toolbar: theme.mixins.toolbar,
 }));
 
-const OrganizeSidebar = ({ orgId  } : OrganizeSidebarProps) : JSX.Element =>{
+const OrganizeSidebar = () : JSX.Element => {
+    const { orgId } = useContext(OrganizationContext);
     const classes = useStyles();
     const theme = useTheme();
     const [mobileOpen, setMobileOpen] = useState(false);
