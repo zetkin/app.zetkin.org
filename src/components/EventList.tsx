@@ -16,7 +16,7 @@ import {
 
 import EventResponseButton from './EventResponseButton';
 import SignupDialogTrigger from './SignupDialog';
-import UserContext from '../hooks/user/UserContext';
+import UserContext from '../contexts/UserContext';
 import {
     ZetkinEvent,
 } from '../types/zetkin';
