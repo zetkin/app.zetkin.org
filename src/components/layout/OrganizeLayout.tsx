@@ -30,7 +30,7 @@ const OrganizeLayout: FunctionComponent<OrganizeLayoutProps> = ({ children, orgI
             <Box bgcolor={ grey[200] } height="100vh">
                 <OrganizeSidebar orgId={ orgId }  />
             </Box>
-            <Box display="flex" flexDirection="column" height="100vh" overflow="hidden" width={ 1 }>
+            <Box display="flex" flexDirection="column" width={ 1 }>
                 <Box display="flex" m={ 1 } mb={ 0 }>
                     <Box className={ classes.breadcrumbs } mt="0.5rem" width={ 1 }>
                         <BreadcrumbTrail/>

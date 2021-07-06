@@ -4,14 +4,22 @@ import { grey, red } from '@material-ui/core/colors';
 // Create a theme instance.
 const theme = createMuiTheme({
     overrides: {
+        MuiCard: {
+            root: {
+                backgroundColor: 'transparent',
+                borderColor: grey[400],
+                borderWidth: 2,
+            },
+        },
+        MuiCardActions: {
+            root: {
+                display: 'flex',
+                justifyContent: 'flex-end',
+            },
+        },
         MuiFormControl: {
             root: {
                 minWidth: 120,
-            },
-        },
-        MuiInputBase: {
-            root: {
-                maxHeight: '2rem',
             },
         },
         MuiTab: {

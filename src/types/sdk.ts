@@ -10,7 +10,7 @@ export interface ZetkinZResult {
 
 export interface ZetkinZResource {
     del: () => Promise<ZetkinZResult>;
-    get: () => Promise<ZetkinZResult>;
+    get: (page?: any, perPage?: any, filters?: [string, string, string][]) => Promise<ZetkinZResult>;
     patch: (data : any) => Promise<ZetkinZResult>;
     post: (data : any) => Promise<ZetkinZResult>;
     put: (data : any) => Promise<ZetkinZResult>;

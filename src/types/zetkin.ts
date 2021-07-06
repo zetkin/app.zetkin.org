@@ -54,6 +54,7 @@ export interface ZetkinEvent {
     };
     userBooked?: boolean;
     userResponse?: boolean;
+    url?: string;
 }
 
 export interface ZetkinUser {
@@ -124,4 +125,44 @@ export interface ZetkinCallAssignment {
         type: string;
     };
     title: string;
+}
+
+export interface ZetkinSurvey {
+    title: string;
+    id: number;
+    info_text: string;
+    organization: {
+        id: number;
+        title: string;
+    };
+    allow_anonymous: boolean;
+    access: string;
+    callers_only: boolean;
+}
+
+export interface ZetkinCanvassAssignment {
+    start_data: string;
+    end_date: string;
+    description: string;
+    organization: {
+        id: string;
+        title: string;
+    };
+    instructions: string;
+    id: string;
+    title: string;
+}
+
+export interface ZetkinLocation {
+    id: number;
+    lat: number;
+    lng: number;
+    title: string;
+    info_text: string;
+}
+
+export interface ZetkinActivity {
+    id: number;
+    title: string;
+    info_text: string | null;
 }
