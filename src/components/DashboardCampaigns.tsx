@@ -2,14 +2,11 @@ import grey from '@material-ui/core/colors/grey';
 import { FormattedMessage as Msg } from 'react-intl';
 import NextLink from 'next/link';
 import { useQuery } from 'react-query';
+import { useRouter } from 'next/router';
 import { Box, Button, Link, List, ListItem, makeStyles, Typography } from '@material-ui/core';
 
 import getCampaigns from '../fetching/getCampaigns';
 import { ZetkinCampaign } from '../types/zetkin';
-
-interface DashboardCampaignProps {
-    orgId: string;
-}
 
 const useStyles = makeStyles((theme) => ({
     responsiveFlexBox: {
@@ -23,7 +20,9 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const DashboardCampaigns = ({ orgId } : DashboardCampaignProps) : JSX.Element => {
+const DashboardCampaigns = () : JSX.Element => {
+    const router = useRouter();
+    const { orgId } = router.query as {orgId: string};
     const campaignsQuery = useQuery(['campaigns', orgId], getCampaigns(orgId));
     const campaigns = campaignsQuery.data;
     const classes = useStyles();
