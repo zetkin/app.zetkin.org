@@ -5,9 +5,11 @@ import {  Autocomplete, TextField } from 'mui-rff';
 import { Box, Button, MenuItem } from '@material-ui/core';
 import { Grid, GridSize } from '@material-ui/core';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
+import { useEffect, useState } from 'react';
 
-import getPeople from '../fetching/getPeople';
-import { ZetkinCampaign } from '../types/zetkin';
+import getSearchDrawerResults from '../fetching/getSearchDrawerResults';
+import useDebounce from '../hooks/useDebounce';
+import { ZetkinCampaign, ZetkinPerson } from '../types/zetkin';
 
 interface CampaignFormProps {
     campaign?: ZetkinCampaign;
@@ -17,13 +19,32 @@ interface CampaignFormProps {
 
 const CampaignForm = ({ onSubmit, onCancel, campaign }: CampaignFormProps): JSX.Element => {
     const { orgId } = useRouter().query;
-    const peopleQuery = useQuery(['people', orgId], getPeople(orgId as string));
-    const people = peopleQuery.data || [];
     const intl = useIntl();
+
+    const [people, setPeople] = useState<ZetkinPerson[]>([]);
+
+    const [searchFieldValue, setSearchFieldValue] = useState<string>('');
+    const { refetch, data: results } = useQuery(
+        ['searchDrawerResults', searchFieldValue],
+        getSearchDrawerResults(searchFieldValue, orgId as string),
+        { enabled: false },
+    );
+
+    const debouncedQuery = useDebounce(async () => {
+        refetch();
+    }, 600);
+
+    // Watch for changes on the search field value and debounce search if changed
+    useEffect(() => {
+        if (searchFieldValue.length >= 3)
+            debouncedQuery();
+        if (results) {
+            setPeople(results);
+        }
+    }, [searchFieldValue, debouncedQuery, results]);
 
     const initialValues = {
         info_text: campaign?.info_text,
-        manager_id: campaign?.manager?.id,
         status: campaign?.published,
         title: campaign?.title,
         visibility: campaign?.visibility,
@@ -68,10 +89,14 @@ const CampaignForm = ({ onSubmit, onCancel, campaign }: CampaignFormProps): JSX.
         {
             field: (
                 <Autocomplete
-                    getOptionLabel={ person => `${person.first_name} ${person.last_name}` }
-                    getOptionValue={ person => person.id }
+                    defaultValue={{ first_name:campaign?.manager?.name.split(' ')[0], id: campaign?.manager?.id, last_name: campaign?.manager?.name.split(' ')[1] } as Partial<ZetkinPerson>  || null}
+                    getOptionLabel={ person => `${person.first_name || ''} ${person.last_name || ''}` }
+                    getOptionValue={ person => person.id || 0 }
                     label={ intl.formatMessage({ id: 'misc.formDialog.campaign.manager' }) }
                     name="manager_id"
+                    onInputChange={ (_, v) => {
+                        setSearchFieldValue(v);
+                    } }
                     options={ people }
                 />
             ),

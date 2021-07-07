@@ -150,7 +150,7 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({ orgId,
                     </Box>
                     <Box display="flex" flexDirection="column" p={ 1 }>
                         <Typography variant="h6">
-                            { campaign?.manager || <Msg id="pages.organizeCampaigns.noManager" /> }
+                            { campaign?.manager?.name || <Msg id="pages.organizeCampaigns.noManager" /> }
                         </Typography>
                         <Typography variant="subtitle2">
                             <FormattedDate
