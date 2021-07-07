@@ -7,7 +7,7 @@ import { Event, ExpandLess, ExpandMore, Flag } from '@material-ui/icons';
 import { FormattedDate, FormattedMessage as Msg, useIntl } from 'react-intl';
 import { SpeedDial, SpeedDialAction, SpeedDialIcon } from '@material-ui/lab';
 import { useEffect, useRef, useState } from 'react';
-import { useMutation, useQuery } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 
 import CampaignForm from '../../../../components/CampaignForm';
 import CreateEventForm from '../../../../components/CreateEventForm';
@@ -97,6 +97,7 @@ type AllCampaignsSummaryPageProps = {
 
 const AllCampaignsSummaryPage: PageWithLayout<AllCampaignsSummaryPageProps> = ({ orgId }) => {
     const router = useRouter();
+    const queryClient = useQueryClient();
     const classes = useStyles();
     const intl = useIntl();
     const campaignsQuery = useQuery(['campaigns', orgId], getCampaigns(orgId));
@@ -106,8 +107,12 @@ const AllCampaignsSummaryPage: PageWithLayout<AllCampaignsSummaryPageProps> = ({
     const callsQuery = useQuery(['calls', orgId], getAllCallAssignments(orgId));
     const canvassesQuery = useQuery(['canvasses', orgId], getAllCanvassAssignments(orgId));
 
-    const eventMutation = useMutation(postEvent(orgId));
-    const campaignMutation = useMutation(postCampaign(orgId));
+    const eventMutation = useMutation(postEvent(orgId), {
+        onSettled: () => queryClient.invalidateQueries('events'),
+    });
+    const campaignMutation = useMutation(postCampaign(orgId), {
+        onSettled: () => queryClient.invalidateQueries('campaigns'),
+    });
 
     const [CampaignListExpanded, setCampaignListExpanded] = useState(false);
     const [speedDialOpen, setSpeedDialOpen] = useState(false);
