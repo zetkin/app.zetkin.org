@@ -6,7 +6,7 @@ import { Avatar, Box, Button, Link, makeStyles, Typography } from '@material-ui/
 import { FormattedDate, FormattedMessage as Msg, useIntl } from 'react-intl';
 import { Phone, PlaylistAddCheck, Public, Settings } from '@material-ui/icons';
 import { useEffect, useState } from 'react';
-import { useMutation, useQuery } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 
 import CampaignForm from '../../../../../components/CampaignForm';
 import EventList from '../../../../../components/organize/EventList';
@@ -81,6 +81,7 @@ const useStyles = makeStyles((theme) => ({
 
 const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({ orgId, campId }) => {
     const intl = useIntl();
+    const queryClient = useQueryClient();
     const router = useRouter();
     const classes = useStyles();
     const eventsQuery = useQuery(['campaignEvents', orgId, campId], getCampaignEvents(orgId, campId));
@@ -89,7 +90,9 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({ orgId,
     const campaign = campaignQuery.data;
     const [formDialogOpen, setFormDialogOpen] = useState<null | string>(null);
 
-    const campaignMutation = useMutation(patchCampaign(orgId, campId));
+    const campaignMutation = useMutation(patchCampaign(orgId, campId), {
+        onSettled: () => queryClient.invalidateQueries('campaign'),
+    });
 
     const sortedEvents = [...events].sort((a, b) => {
         return new Date(a.start_time).getTime() - new Date(b.start_time).getTime();
