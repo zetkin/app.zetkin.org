@@ -2,7 +2,7 @@ import { Form } from 'react-final-form';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 import {  Autocomplete, TextField } from 'mui-rff';
-import { Box, Button, MenuItem } from '@material-ui/core';
+import { Avatar, Box, Button, MenuItem, Typography } from '@material-ui/core';
 import { Grid, GridSize } from '@material-ui/core';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
 import { useEffect, useState } from 'react';
@@ -98,6 +98,18 @@ const CampaignForm = ({ onSubmit, onCancel, campaign }: CampaignFormProps): JSX.
                         setSearchFieldValue(v);
                     } }
                     options={ people }
+                    renderOption={ (person) => (
+                        <Box alignItems="center" display="flex">
+                            <Box m={ 1 }>
+                                <Avatar
+                                    src={ `/api/orgs/${orgId}/people/${person.id}/avatar` }>
+                                </Avatar>
+                            </Box>
+                            <Typography>
+                                { `${ person.first_name } ${ person.last_name }` }
+                            </Typography>
+                        </Box>
+                    ) }
                 />
             ),
             size: 12,
