@@ -1,6 +1,9 @@
 create: Create new {resource} 
 edit: Edit {resource} 
 campaign:
+    searching: Searching...
+    noResult: No matching person found
+    noOptions: Type to start searching
     name: Name
     description: Description
     manager: Campaign manager
