@@ -24,7 +24,7 @@ const CampaignForm = ({ onSubmit, onCancel, campaign }: CampaignFormProps): JSX.
     const [people, setPeople] = useState<ZetkinPerson[]>([]);
 
     const [searchFieldValue, setSearchFieldValue] = useState<string>('');
-    const { refetch, data: results } = useQuery(
+    const { isFetching, isIdle, refetch, data: results } = useQuery(
         ['searchDrawerResults', searchFieldValue],
         getSearchDrawerResults(searchFieldValue, orgId as string),
         { enabled: false },
@@ -36,7 +36,7 @@ const CampaignForm = ({ onSubmit, onCancel, campaign }: CampaignFormProps): JSX.
 
     // Watch for changes on the search field value and debounce search if changed
     useEffect(() => {
-        if (searchFieldValue.length >= 3)
+        if (searchFieldValue.length >= 0)
             debouncedQuery();
         if (results) {
             setPeople(results);
@@ -94,6 +94,10 @@ const CampaignForm = ({ onSubmit, onCancel, campaign }: CampaignFormProps): JSX.
                     getOptionValue={ person => person.id || 0 }
                     label={ intl.formatMessage({ id: 'misc.formDialog.campaign.manager' }) }
                     name="manager_id"
+                    noOptionsText={
+                        isFetching ? intl.formatMessage({ id: 'misc.formDialog.campaign.searching' })
+                            : (people.length < 1 && !isIdle) ? intl.formatMessage({ id: 'misc.formDialog.campaign.noResult' })
+                                : intl.formatMessage({ id: 'misc.formDialog.campaign.noOptions' }) }
                     onInputChange={ (_, v) => {
                         setSearchFieldValue(v);
                     } }
