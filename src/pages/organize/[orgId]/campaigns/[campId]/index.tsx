@@ -237,7 +237,7 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({ orgId,
             <ZetkinDialog
                 onClose={ handleDialogClose }
                 open={ !!formDialogOpen }
-                title={ intl.formatMessage({ id: 'misc.formDialog.edit' }, { resource: formDialogOpen }) }>
+                title={ intl.formatMessage({ id: 'misc.formDialog.campaign.edit' }) }>
                 { formDialogOpen === 'campaign' && <CampaignForm campaign={ campaign } onCancel={ handleFormCancel } onSubmit={ handleEditCampaignFormSubmit }/> }
             </ZetkinDialog>
         </>

@@ -1,0 +1,16 @@
+create: Create new campaign
+edit: Edit campaign
+searching: Searching...
+noResult: No matching person found
+noOptions: Type to start searching
+name: Name
+description: Description
+manager: Campaign manager
+visibility:
+    heading: Visibility
+    private: Private
+    public: Public
+status:
+    heading: Status
+    published: Published
+    draft: Draft
