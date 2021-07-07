@@ -9,6 +9,7 @@ describe('WeekCalendar', () => {
     let dummyEvents: ZetkinEvent[];
     const dummyStartTime = '2021-05-10T13:37:00+00:00';
     const dummyEndTime = '2021-05-10T14:37:00+00:00';
+    const dummyHref = '/organize/1/campaigns/calendar';
 
     beforeEach(() => {
         dummyDate = new Date('May 12, 2021');
@@ -41,7 +42,7 @@ describe('WeekCalendar', () => {
 
     it('shows seven days of the current week starting on Monday', () => {
         mountWithProviders(
-            <WeekCalendar campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ dummyDate } onFocusDate={ () => null } orgId="1"/>,
+            <WeekCalendar baseHref={ dummyHref } campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ dummyDate } onFocusDate={ () => null } orgId="1"/>,
         );
 
         cy.get('[data-testid="weekday-0"]').should('be.visible');
@@ -64,7 +65,7 @@ describe('WeekCalendar', () => {
 
     it('shows events that occur on the specified date', () => {
         mountWithProviders(
-            <WeekCalendar campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ dummyDate } onFocusDate={ () => null } orgId="1"/>,
+            <WeekCalendar baseHref={ dummyHref } campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ dummyDate } onFocusDate={ () => null } orgId="1"/>,
         );
         cy.get('[data-testid="day-0-events"]').contains('event with id 25');
         cy.get('[data-testid="day-0-events"]').contains('event with id 26');
@@ -76,7 +77,7 @@ describe('WeekCalendar', () => {
         dummyEvents[0].end_time = '2020-12-31T14:37:00+00:00';
 
         mountWithProviders(
-            <WeekCalendar campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ dummyDate } onFocusDate={ () => null } orgId="1"/>,
+            <WeekCalendar baseHref={ dummyHref } campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ dummyDate } onFocusDate={ () => null } orgId="1"/>,
         );
 
         cy.get('[data-testid="date-0"]').contains(28);
@@ -92,7 +93,7 @@ describe('WeekCalendar', () => {
 
     it('shows the days events in the correct order', () => {
         mountWithProviders(
-            <WeekCalendar campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ dummyDate } onFocusDate={ () => null } orgId="1"/>,
+            <WeekCalendar baseHref={ dummyHref } campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ dummyDate } onFocusDate={ () => null } orgId="1"/>,
         );
         cy.get('[data-testid="event-26"]').then(el => {
             const firstEventYPos = el[0].getBoundingClientRect().top;
@@ -105,7 +106,7 @@ describe('WeekCalendar', () => {
 
     it('shows longer events with more height than shorter events', () => {
         mountWithProviders(
-            <WeekCalendar campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ dummyDate } onFocusDate={ () => null } orgId="1"/>,
+            <WeekCalendar baseHref={ dummyHref } campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ dummyDate } onFocusDate={ () => null } orgId="1"/>,
         );
         cy.get('[data-testid="event-26"]').then(el => {
             const firstEventHeight = el[0].getBoundingClientRect().top;
@@ -122,7 +123,7 @@ describe('WeekCalendar', () => {
         dummyEvents[1].start_time = '2021-05-10T23:00:00+00:00';
         dummyEvents[1].end_time = '2021-05-10T23:59:00+00:00';
         mountWithProviders(
-            <WeekCalendar campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ dummyDate } onFocusDate={ () => null } orgId="1" />,
+            <WeekCalendar baseHref={ dummyHref } campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ dummyDate } onFocusDate={ () => null } orgId="1" />,
         );
         cy.get('[data-testid="day-0-events"]').contains('event with id 25');
         cy.get('[data-testid="day-0-events"]').contains('event with id 26');
@@ -139,7 +140,7 @@ describe('WeekCalendar', () => {
                 right: 0,
                 top: 0,
             }}>
-                <WeekCalendar campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ dummyDate } onFocusDate={ () => null } orgId="1"/>,
+                <WeekCalendar baseHref={ dummyHref } campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ dummyDate } onFocusDate={ () => null } orgId="1"/>,
             </div>,
         );
         cy.get('[data-testid="calendar-wrapper"]').then(el => {
@@ -159,7 +160,7 @@ describe('WeekCalendar', () => {
                 right: 0,
                 top: 0,
             }}>
-                <WeekCalendar campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ dummyDate } onFocusDate={ () => null } orgId="1"/>,
+                <WeekCalendar baseHref={ dummyHref } campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ dummyDate } onFocusDate={ () => null } orgId="1"/>,
             </div>,
         );
         cy.get('[data-testid="calendar-wrapper"]').then(el => {
@@ -170,7 +171,7 @@ describe('WeekCalendar', () => {
 
     it('shows back and forward widget buttons', () => {
         mountWithProviders(
-            <WeekCalendar campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ dummyDate } onFocusDate={ () => null } orgId="1"/>,
+            <WeekCalendar baseHref={ dummyHref } campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ dummyDate } onFocusDate={ () => null } orgId="1"/>,
         );
         cy.get('[data-testid="back-button"]').should('be.visible');
         cy.get('[data-testid="fwd-button"]').should('be.visible');
@@ -178,7 +179,7 @@ describe('WeekCalendar', () => {
 
     it('shows the correct calendar start date in the widget', () => {
         mountWithProviders(
-            <WeekCalendar campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ dummyDate } onFocusDate={ () => null } orgId="1"/>,
+            <WeekCalendar baseHref={ dummyHref } campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ dummyDate } onFocusDate={ () => null } orgId="1"/>,
         );
         cy.get('[data-testid="selected-date"]').contains('19');
     });
@@ -186,7 +187,7 @@ describe('WeekCalendar', () => {
     it('sets the focus date a week ago when back is clicked', () => {
         const spyOnFocusDate = cy.spy();
         mountWithProviders(
-            <WeekCalendar campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ dummyDate } onFocusDate={ spyOnFocusDate } orgId="1"/>,
+            <WeekCalendar baseHref={ dummyHref } campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ dummyDate } onFocusDate={ spyOnFocusDate } orgId="1"/>,
         );
 
         cy.findByText('misc.calendar.prev')
@@ -202,7 +203,7 @@ describe('WeekCalendar', () => {
     it('sets the focus date a week forward when next is clicked', () => {
         const spyOnFocusDate = cy.spy();
         mountWithProviders(
-            <WeekCalendar campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ dummyDate } onFocusDate={ spyOnFocusDate } orgId="1" />,
+            <WeekCalendar baseHref={ dummyHref } campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ dummyDate } onFocusDate={ spyOnFocusDate } orgId="1" />,
         );
 
         cy.findByText('misc.calendar.next')
@@ -224,7 +225,7 @@ describe('WeekCalendar', () => {
             'start_time': '2021-05-11T15:37:00+00:00',
         };
         mountWithProviders(
-            <WeekCalendar campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ new Date(2021, 4, 10) } onFocusDate={ () => null } orgId="1"  />,
+            <WeekCalendar baseHref={ dummyHref } campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ new Date(2021, 4, 10) } onFocusDate={ () => null } orgId="1"  />,
         );
 
         cy.get('[data-testid="event-26"]')
@@ -252,7 +253,7 @@ describe('WeekCalendar', () => {
             'start_time': '2021-05-11T15:37:00+00:00',
         };
         mountWithProviders(
-            <WeekCalendar campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ new Date(2021, 4, 10) } onFocusDate={ () => null } orgId="1"/>,
+            <WeekCalendar baseHref={ dummyHref } campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ new Date(2021, 4, 10) } onFocusDate={ () => null } orgId="1"/>,
         );
 
         cy.get('[data-testid="calendar-bar-941"]').should('be.visible');
@@ -271,7 +272,7 @@ describe('WeekCalendar', () => {
 
     it('shows a tooltip when hovering over the weekly bar with campaign name', () => {
         mountWithProviders(
-            <WeekCalendar campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ new Date(2021, 4, 10) } onFocusDate={ () => null } orgId="1"/>,
+            <WeekCalendar baseHref={ dummyHref } campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ new Date(2021, 4, 10) } onFocusDate={ () => null } orgId="1"/>,
         );
 
         cy.get('[data-testid="calendar-bar-941"]').should('be.visible');

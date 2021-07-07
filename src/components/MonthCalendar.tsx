@@ -7,6 +7,7 @@ import  { useEffect, useRef, useState } from 'react';
 import { ZetkinCampaign, ZetkinEvent } from '../types/zetkin';
 
 interface MonthCalendarProps {
+    baseHref: string;
     campaigns: ZetkinCampaign[];
     events: ZetkinEvent[];
     focusDate: Date;
@@ -39,9 +40,9 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const MonthCalendar = ({ orgId, campaigns, events, onFocusDate, focusDate }: MonthCalendarProps): JSX.Element => {
+const MonthCalendar = ({ orgId, campaigns, baseHref, events, onFocusDate, focusDate }: MonthCalendarProps): JSX.Element => {
     const gridItem = useRef<HTMLUListElement>(null);
-    const listItem = useRef<HTMLLIElement>(null);
+    const listItem = useRef<HTMLDivElement>(null);
     const windowHeight = useWindowHeight();
     const [maxNoOfEvents, setMaxNoOfEvents] = useState(1);
 
@@ -138,20 +139,25 @@ const MonthCalendar = ({ orgId, campaigns, events, onFocusDate, focusDate }: Mon
                                     { daysEvents.map((event, i) => {
                                         const campaign = campaigns.find(c => c.id === event.campaign.id);
                                         return (
-                                            <li
-                                                key={ event.id }
-                                                { ...( i === 0 && { ref: listItem } ) }
-                                                data-testid={ `event-${event.id}` } style={{
-                                                    background: campaign?.color || grey[400],
-                                                    color: getContrastColor(campaign?.color|| grey[400]),
-                                                    display: i < maxNoOfEvents ? 'block' : 'none',
-                                                    margin: '0 0 0.2rem 0',
-                                                    padding: '0 0.5rem',
-                                                    width: '100%',
-                                                }}>
-                                                <Typography noWrap={ true } variant="body2">
-                                                    { `event with id ${event.id} and campaign ${event.campaign.id}` }
-                                                </Typography>
+                                            <li key={ event.id }>
+                                                <NextLink href={  baseHref + `/calendar/events/${event.id}` } passHref>
+                                                    <Link>
+                                                        <div
+                                                            { ...( i === 0 && { ref: listItem } ) }
+                                                            data-testid={ `event-${event.id}` } style={{
+                                                                background: campaign?.color || grey[400],
+                                                                color: getContrastColor(campaign?.color|| grey[400]),
+                                                                display: i < maxNoOfEvents ? 'block' : 'none',
+                                                                margin: '0 0 0.2rem 0',
+                                                                padding: '0 0.5rem',
+                                                                width: '100%',
+                                                            }}>
+                                                            <Typography noWrap={ true } variant="body2">
+                                                                { `event with id ${event.id} and campaign ${event.campaign.id}` }
+                                                            </Typography>
+                                                        </div>
+                                                    </Link>
+                                                </NextLink>
                                             </li>
                                         );
                                     }) }

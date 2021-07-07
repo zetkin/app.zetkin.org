@@ -8,6 +8,7 @@ import { ZetkinCampaign, ZetkinEvent } from '../types/zetkin';
 
 
 interface WeekCalendarProps {
+    baseHref: string;
     campaigns: ZetkinCampaign[];
     events: ZetkinEvent[];
     focusDate: Date;
@@ -31,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const WeekCalendar = ({ orgId, campaigns, events, focusDate, onFocusDate }: WeekCalendarProps): JSX.Element => {
+const WeekCalendar = ({ orgId, baseHref, campaigns, events, focusDate, onFocusDate }: WeekCalendarProps): JSX.Element => {
     const classes = useStyles();
     const calendar = useRef<HTMLDivElement>(null);
     const calendarWrapper = useRef<HTMLDivElement>(null);
@@ -132,17 +133,23 @@ const WeekCalendar = ({ orgId, campaigns, events, focusDate, onFocusDate }: Week
                             { getEventsOfTheDay(index + 1)?.map(event => {
                                 const campaign = campaigns.find(c => c.id === event.campaign.id);
                                 return (
-                                    <li key={ event.id } data-testid={ `event-${event.id}` } style={{
-                                        background: campaign?.color || grey[400],
-                                        borderBottom: `2px solid ${grey[200]}`,
-                                        color: getContrastColor(campaign?.color|| grey[400]),
-                                        height: getEventPos(event.start_time, event.end_time).height,
-                                        padding: '1rem',
-                                        position: 'absolute',
-                                        top: getEventPos(event.start_time, event.end_time).top,
-                                        width: '100%',
-                                    }}>
-                                        { `event with id ${event.id} and campaign ${event.campaign.id}` }
+                                    <li key={ event.id }>
+                                        <NextLink href={  baseHref + `/calendar/events/${event.id}` } passHref>
+                                            <Link>
+                                                <div data-testid={ `event-${event.id}` } style={{
+                                                    background: campaign?.color || grey[400],
+                                                    borderBottom: `2px solid ${grey[200]}`,
+                                                    color: getContrastColor(campaign?.color|| grey[400]),
+                                                    height: getEventPos(event.start_time, event.end_time).height,
+                                                    padding: '1rem',
+                                                    position: 'absolute',
+                                                    top: getEventPos(event.start_time, event.end_time).top,
+                                                    width: '100%',
+                                                }}>
+                                                    { `event with id ${event.id} and campaign ${event.campaign.id}` }
+                                                </div>
+                                            </Link>
+                                        </NextLink>
                                     </li>
                                 );
                             }) }

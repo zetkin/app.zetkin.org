@@ -91,8 +91,10 @@ const AllCampaignsCalendarPage : PageWithLayout<AllCampaignsCalendarPageProps> =
                 </FormControl>
             </Box>
             <Box height="80vh" overflow="auto">
-                { calendarView === 'month' && <MonthCalendar campaigns={ campaigns } events={ events } focusDate={ focusDate } onFocusDate={ date => setFocusDate(date) } orgId={ orgId } /> }
-                { calendarView === 'week' && <WeekCalendar campaigns={ campaigns } events={ events } focusDate={ focusDate } onFocusDate={ date => setFocusDate(date) } orgId={ orgId }/> }
+                { calendarView === 'month' &&
+                    <MonthCalendar baseHref={ `/organize/${orgId}/campaigns` } campaigns={ campaigns } events={ events } focusDate={ focusDate } onFocusDate={ date => setFocusDate(date) } orgId={ orgId } /> }
+                { calendarView === 'week' &&
+                    <WeekCalendar baseHref={ `/organize/${orgId}/campaigns` } campaigns={ campaigns } events={ events } focusDate={ focusDate } onFocusDate={ date => setFocusDate(date) } orgId={ orgId }/> }
             </Box>
         </Box>
     );
