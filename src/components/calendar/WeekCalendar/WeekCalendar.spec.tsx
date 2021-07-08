@@ -1,7 +1,7 @@
 import '../utils/polyfills';
-import { mountWithProviders } from '../utils/testing';
+import { mountWithProviders } from '../../../utils/testing';
 import WeekCalendar from './WeekCalendar';
-import { ZetkinCampaign, ZetkinEvent } from '../types/zetkin';
+import { ZetkinCampaign, ZetkinEvent } from '../../../types/zetkin';
 
 describe('WeekCalendar', () => {
     let dummyCampaigns: ZetkinCampaign[];

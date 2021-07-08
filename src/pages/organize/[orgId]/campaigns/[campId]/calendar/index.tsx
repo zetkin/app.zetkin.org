@@ -12,7 +12,7 @@ import { scaffold } from '../../../../../../utils/next';
 import { useFocusDate } from '../../../../../../hooks';
 import { useIntl } from 'react-intl';
 import { useQuery } from 'react-query';
-import WeekCalendar from '../../../../../../components/WeekCalendar';
+import WeekCalendar from '../../../../../../components/calendar/WeekCalendar/WeekCalendar';
 
 const scaffoldOptions = {
     authLevelRequired: 2,
