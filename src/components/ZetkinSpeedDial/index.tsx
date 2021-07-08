@@ -48,7 +48,7 @@ const ZetkinSpeedDial: React.FunctionComponent<ZetkinSpeedDialProps> = ({ action
         // Import the specified actions
         if (actionKeys) {
             const importActions = async () => {
-                const importedActions = await Promise.all(actions.map(async (action) => {
+                const importedActions = await Promise.all(actionKeys.map(async (action) => {
                     const { config, DialogContent }: Action = await import(`./actions/${action}.tsx`);
                     return {
                         DialogContent, config,
