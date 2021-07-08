@@ -121,10 +121,28 @@ const WeekCalendar = ({ orgId, baseHref, campaigns, events, focusDate, onFocusDa
                     return (
                         <Box key={ index } display="flex" flexDirection="column" height={ 1 } justifyContent="space-between" mx={ 0.5 } width={ 1 }>
                             <List className={ classes.list } data-testid={ `day-${index}-events` }>
-                                { getEventsOnThisDate(startOfDay.getDate())?.map(event => {
+                                { getEventsOnThisDate(startOfDay.getDate())?.reduce((acc: [number, ZetkinEvent][], event: ZetkinEvent, index, array) => {
+                                    const prevEvents = array.slice(0, index);
+                                    const reversedPrevEvents = prevEvents.reverse();
+                                    let shiftValue;
+                                    const lastOverlappingEvent =
+                                        reversedPrevEvents.find(prev => new Date(event.start_time) < new Date(prev.end_time));
+                                    if (!lastOverlappingEvent) {
+                                        shiftValue = 0;
+                                    }
+                                    else {
+                                        const overlapIndex = acc.findIndex(e => e[1].id === lastOverlappingEvent.id);
+                                        shiftValue = lastOverlappingEvent ? acc[overlapIndex][0] + 1 : 0;
+                                    }
+                                    return [
+                                        ...acc,
+                                        [shiftValue, event],
+                                    ] as [number, ZetkinEvent][];
+                                }, [] ).map(eventWithShiftValue => {
+                                    const [shiftValue, event] = eventWithShiftValue;
                                     const campaign = campaigns.find(c => c.id === event.campaign.id);
                                     return (
-                                        <WeekCalendarEvent key={ event.id } baseHref={ baseHref } campaign={ campaign } event={ event } startOfDay={ startOfDay } />
+                                        <WeekCalendarEvent key={ event.id } baseHref={ baseHref } campaign={ campaign } event={ event } shiftValue={ shiftValue } startOfDay={ startOfDay } />
                                     );
                                 }) }
                             </List>
