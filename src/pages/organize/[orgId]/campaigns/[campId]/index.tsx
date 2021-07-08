@@ -5,6 +5,7 @@ import { Avatar, Box, Button, Link, makeStyles, Typography } from '@material-ui/
 import { FormattedDate, FormattedMessage as Msg } from 'react-intl';
 import { Phone, PlaylistAddCheck, Public, Settings } from '@material-ui/icons';
 
+import  { ACTIONS } from '../../../../../components/ZetkinSpeedDial/constants';
 import EventList from '../../../../../components/organize/EventList';
 import getCampaign from '../../../../../fetching/getCampaign';
 import getCampaignEvents from '../../../../../fetching/getCampaignEvents';
@@ -13,6 +14,7 @@ import OrganizeCampaignLayout from '../../../../../components/layout/OrganizeCam
 import { PageWithLayout } from '../../../../../types';
 import { scaffold } from '../../../../../utils/next';
 import { useQuery } from 'react-query';
+import ZetkinSpeedDial from '../../../../../components/ZetkinSpeedDial';
 
 const scaffoldOptions = {
     authLevelRequired: 2,
@@ -191,6 +193,7 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({ orgId,
                     </Box>
                 </Box>
             </Box>
+            <ZetkinSpeedDial actions={ [ACTIONS.CREATE_EVENT] } />
         </>
     );
 };
