@@ -3,5 +3,6 @@
  * in the enum to match the filename in `actions`.
  */
 export enum ACTIONS {
-    CREATE_EVENT = 'createEvent'
+    CREATE_EVENT = 'createEvent',
+    CREATE_CAMPAIGN = 'createCampaign'
 }

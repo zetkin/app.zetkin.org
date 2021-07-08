@@ -1,6 +1,6 @@
-import { makeStyles } from '@material-ui/core';
-// import { FormattedMessage as Msg, useIntl } from 'react-intl';
 import { Action } from './actions/types';
+import { makeStyles } from '@material-ui/core';
+import { useIntl } from 'react-intl';
 import React, { useEffect, useState } from 'react';
 import { SpeedDial, SpeedDialAction, SpeedDialIcon } from '@material-ui/lab';
 
@@ -39,6 +39,7 @@ interface ZetkinSpeedDialProps {
 
 const ZetkinSpeedDial: React.FunctionComponent<ZetkinSpeedDialProps> = ({ actions: actionKeys }) => {
     const classes = useStyles();
+    const intl = useIntl();
 
     const [speedDialOpen, setSpeedDialOpen ] = useState<boolean>(false);
     const [actions, setActions] = useState<Action[]>([]);
@@ -90,7 +91,7 @@ const ZetkinSpeedDial: React.FunctionComponent<ZetkinSpeedDialProps> = ({ action
                                     [action.key]: true,
                                 });
                             } }
-                            tooltipTitle={ action.name }
+                            tooltipTitle={ intl.formatMessage({ id: action.name }) }
                         />
                     );
                 }) }
@@ -102,7 +103,8 @@ const ZetkinSpeedDial: React.FunctionComponent<ZetkinSpeedDialProps> = ({ action
                         onClose={ () => {
                             setDialogsOpenState(allDialogsClosed(actionKeys));
                         } }
-                        open={ dialogsOpenState[action.key] === true }>
+                        open={ dialogsOpenState[action.key] === true }
+                        title={ intl.formatMessage({ id: action.name }) }>
                         <DialogContent closeDialog={ () => {
                             setDialogsOpenState(allDialogsClosed(actionKeys));
                         } }

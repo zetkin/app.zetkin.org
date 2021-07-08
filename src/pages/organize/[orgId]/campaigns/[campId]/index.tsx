@@ -193,7 +193,7 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({ orgId,
                     </Box>
                 </Box>
             </Box>
-            <ZetkinSpeedDial actions={ [ACTIONS.CREATE_EVENT] } />
+            <ZetkinSpeedDial actions={ [ACTIONS.CREATE_EVENT, ACTIONS.CREATE_CAMPAIGN] } />
         </>
     );
 };
