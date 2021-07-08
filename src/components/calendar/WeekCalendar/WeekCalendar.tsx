@@ -1,9 +1,10 @@
-import { getContrastColor } from '../../../utils/colorUtils';
 import { grey } from '@material-ui/core/colors';
 import NextLink from 'next/link';
 import { Box, Button, Link, List, makeStyles, Tooltip, Typography } from '@material-ui/core';
 import { FormattedDate, FormattedMessage as Msg } from 'react-intl';
 import { useEffect, useRef } from 'react';
+
+import WeekCalendarEvent from './WeekCalendarEvent';
 import { ZetkinCampaign, ZetkinEvent } from '../../../types/zetkin';
 
 
@@ -59,25 +60,12 @@ const WeekCalendar = ({ orgId, baseHref, campaigns, events, focusDate, onFocusDa
             new Date(event.end_time) <= calendarEndDate;
     });
 
-    const getEventsOfTheDay = (day: number) => {
-        if (day === 7) day = 0; // sunday has index 0 in the Date object
-        return eventsOfTheWeek.filter(event => (
-            new Date(event.start_time).getUTCDay() === day ||
-            new Date(event.end_time).getUTCDay() === day));
-    };
-
-    const getEventPos = (start: string, end: string) => {
-        const oneMinute = 100 / 1440;
-        const startTime = new Date(start);
-        const endTime = new Date(end);
-        const startFromMidnight = (startTime.getTime() - startTime.setUTCHours(0, 0, 0, 0)) / 60000;
-        const endFromMidnight = (endTime.getTime() - endTime.setUTCHours(0, 0, 0, 0)) / 60000;
-        const diff = endFromMidnight - startFromMidnight;
-
-        return {
-            height: `${diff * oneMinute}%`,
-            top: `${startFromMidnight * oneMinute}%`,
-        };
+    const getEventsOnThisDate = (date: number) => {
+        return eventsOfTheWeek.filter(event => {
+            return (
+                new Date(event.start_time).getUTCDate() === date ||
+                new Date(event.end_time).getUTCDate() === date);
+        });
     };
 
     return (
@@ -127,35 +115,22 @@ const WeekCalendar = ({ orgId, baseHref, campaigns, events, focusDate, onFocusDa
                 </Box>
             </Box>
             <Box { ...{ ref: calendar } } alignItems="center" display="flex" height="100rem" justifyContent="start" width={ 1 }>
-                { Array.from(Array(7).keys()).map((_, index) => (
-                    <Box key={ index } display="flex" flexDirection="column" height={ 1 } justifyContent="space-between" mx={ 0.5 } width={ 1 }>
-                        <List className={ classes.list } data-testid={ `day-${index}-events` }>
-                            { getEventsOfTheDay(index + 1)?.map(event => {
-                                const campaign = campaigns.find(c => c.id === event.campaign.id);
-                                return (
-                                    <li key={ event.id }>
-                                        <NextLink href={  baseHref + `/calendar/events/${event.id}` } passHref>
-                                            <Link>
-                                                <div data-testid={ `event-${event.id}` } style={{
-                                                    background: campaign?.color || grey[400],
-                                                    borderBottom: `2px solid ${grey[200]}`,
-                                                    color: getContrastColor(campaign?.color|| grey[400]),
-                                                    height: getEventPos(event.start_time, event.end_time).height,
-                                                    padding: '1rem',
-                                                    position: 'absolute',
-                                                    top: getEventPos(event.start_time, event.end_time).top,
-                                                    width: '100%',
-                                                }}>
-                                                    { `event with id ${event.id} and campaign ${event.campaign.id}` }
-                                                </div>
-                                            </Link>
-                                        </NextLink>
-                                    </li>
-                                );
-                            }) }
-                        </List>
-                    </Box>
-                )) }
+                { Array.from(Array(7).keys()).map((_, index) => {
+                    const startOfDay = new Date(new Date(new Date(calendarStartDate)
+                        .setDate(calendarStartDate.getDate() + index)).setUTCHours(0, 0, 0, 0));
+                    return (
+                        <Box key={ index } display="flex" flexDirection="column" height={ 1 } justifyContent="space-between" mx={ 0.5 } width={ 1 }>
+                            <List className={ classes.list } data-testid={ `day-${index}-events` }>
+                                { getEventsOnThisDate(startOfDay.getDate())?.map(event => {
+                                    const campaign = campaigns.find(c => c.id === event.campaign.id);
+                                    return (
+                                        <WeekCalendarEvent key={ event.id } baseHref={ baseHref } campaign={ campaign } event={ event } startOfDay={ startOfDay } />
+                                    );
+                                }) }
+                            </List>
+                        </Box>
+                    );
+                }) }
             </Box>
         </Box>
     );
