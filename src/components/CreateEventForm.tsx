@@ -186,7 +186,7 @@ const CreateEventForm = ({ onSubmit, onCancel, orgId }: CreateEventFormProps): J
 
     return (
         <Form
-            initialValues={{ end_time: today.toISOString().slice(0, 16), start_time: today.toISOString().slice(0, 16)  }}
+            initialValues={{ end_time: today.toISOString().slice(0, 16), num_participants_required:0, start_time: today.toISOString().slice(0, 16) }}
             onSubmit={ handleSubmit }
             render={ ({ handleSubmit, submitting }) => (
                 <form noValidate onSubmit={ handleSubmit }>
