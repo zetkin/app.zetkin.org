@@ -44,11 +44,11 @@ const WeekCalendar = ({ orgId, baseHref, campaigns, events, focusDate, onFocusDa
         calendarWrapper.current?.scrollTo(0, y);
     }, []);
 
-    const calendarStartDate = new Date(
+    const calendarStartDate = new Date(new Date(
         new Date(focusDate).setDate(
             new Date(focusDate).getDate() - new Date(focusDate).getDay() + 1,
         ),
-    );
+    ).setUTCHours(0, 0, 0, 0));
 
     const calendarEndDate = new Date(new Date(calendarStartDate)
         .setDate(calendarStartDate.getDate() + 7));

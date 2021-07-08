@@ -71,6 +71,10 @@ const AllCampaignsCalendarPage : PageWithLayout<AllCampaignsCalendarPageProps> =
         setCalendarView(event.target.value as string);
     };
 
+    const sortedEvents = [...events].sort((a, b) => {
+        return new Date(a.start_time).getTime() - new Date(b.start_time).getTime();
+    });
+
     return (
         <Box p={ 2 } position="relative">
             <Box display="flex" justifyContent="flex-end" mr={ 4 } position="absolute" right={ 0 } top="1.2rem" zIndex={ 2 }>
@@ -92,9 +96,9 @@ const AllCampaignsCalendarPage : PageWithLayout<AllCampaignsCalendarPageProps> =
             </Box>
             <Box height="80vh" overflow="auto">
                 { calendarView === 'month' &&
-                    <MonthCalendar baseHref={ `/organize/${orgId}/campaigns` } campaigns={ campaigns } events={ events } focusDate={ focusDate } onFocusDate={ date => setFocusDate(date) } orgId={ orgId } /> }
+                    <MonthCalendar baseHref={ `/organize/${orgId}/campaigns` } campaigns={ campaigns } events={ sortedEvents } focusDate={ focusDate } onFocusDate={ date => setFocusDate(date) } orgId={ orgId } /> }
                 { calendarView === 'week' &&
-                    <WeekCalendar baseHref={ `/organize/${orgId}/campaigns` } campaigns={ campaigns } events={ events } focusDate={ focusDate } onFocusDate={ date => setFocusDate(date) } orgId={ orgId }/> }
+                    <WeekCalendar baseHref={ `/organize/${orgId}/campaigns` } campaigns={ campaigns } events={ sortedEvents } focusDate={ focusDate } onFocusDate={ date => setFocusDate(date) } orgId={ orgId }/> }
             </Box>
         </Box>
     );
