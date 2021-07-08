@@ -1,10 +1,10 @@
-import { getContrastColor } from '../utils/colorUtils';
+import { getContrastColor } from '../../../utils/colorUtils';
 import { grey } from '@material-ui/core/colors';
 import NextLink from 'next/link';
 import { Box, Button, Link, List, makeStyles, Tooltip, Typography } from '@material-ui/core';
 import { FormattedDate, FormattedMessage as Msg } from 'react-intl';
 import { useEffect, useRef } from 'react';
-import { ZetkinCampaign, ZetkinEvent } from '../types/zetkin';
+import { ZetkinCampaign, ZetkinEvent } from '../../../types/zetkin';
 
 
 interface WeekCalendarProps {
