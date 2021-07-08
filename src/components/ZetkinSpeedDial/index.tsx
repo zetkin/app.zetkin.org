@@ -32,6 +32,13 @@ const allDialogsClosed = (actions: Array<ACTIONS>) => (
     }, {})
 );
 
+interface ActionConfig {
+    DialogContent: React.FunctionComponent<DialogContentBaseProps>;
+    config: SpeedDialActionConfig;
+}
+
+type DialogsOpenState = {[key in ACTIONS]?: boolean};
+
 interface ZetkinSpeedDialProps {
     actions: Array<ACTIONS>;
 }
@@ -40,28 +47,19 @@ const ZetkinSpeedDial: React.FunctionComponent<ZetkinSpeedDialProps> = ({ action
     const classes = useStyles();
 
     const [speedDialOpen, setSpeedDialOpen ] = useState<boolean>(false);
-    const [actionConfigs, setActionConfigs] = useState<{
-        [key in ACTIONS]?: {
-            DialogContent: React.FunctionComponent<DialogContentBaseProps>;
-            config: SpeedDialActionConfig;
-        }
-    }>({});
-    const [dialogsOpenState, setDialogsOpenState] = useState<{[key: string]: boolean}>({});
+    const [actionConfigs, setActionConfigs] = useState<ActionConfig[]>([]);
+    const [dialogsOpenState, setDialogsOpenState] = useState<DialogsOpenState>({});
 
     useEffect(() => {
         // Import the specified actions
         if (actions) {
             const importActions = async () => {
-                const importedActions = await  actions.reduce(async (acc, action) => {
-                    const { actionConfig, DialogContent } = await import(`./actions/${action}.tsx`);
+                const importedActions = await Promise.all(actions.map(async (action) => {
+                    const { config, DialogContent }: ActionConfig = await import(`./actions/${action}.tsx`);
                     return {
-                        ...acc,
-                        [actionConfig.key]: {
-                            DialogContent,
-                            config: actionConfig,
-                        },
+                        DialogContent, config,
                     };
-                }, {});
+                }));
                 setActionConfigs(importedActions);
             };
             importActions();
@@ -85,7 +83,7 @@ const ZetkinSpeedDial: React.FunctionComponent<ZetkinSpeedDialProps> = ({ action
                     setSpeedDialOpen(true);
                 } }
                 open={ speedDialOpen }>
-                { Object.values(actionConfigs).map(({ config: action }) => {
+                { actionConfigs.map(({ config: action }) => {
                     return (
                         <SpeedDialAction
                             key={ action.key }
@@ -105,7 +103,7 @@ const ZetkinSpeedDial: React.FunctionComponent<ZetkinSpeedDialProps> = ({ action
                     );
                 }) }
             </SpeedDial>
-            { Object.values(actionConfigs).map(({ config: action, DialogContent }) => {
+            { actionConfigs.map(({ config: action, DialogContent }) => {
                 return (
                     <ZetkinDialog
                         key={ action.key }

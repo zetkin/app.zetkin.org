@@ -26,13 +26,13 @@ const DialogContent: React.FunctionComponent<DialogContentBaseProps> = ({ closeD
     );
 };
 
-const actionConfig = {
+const config = {
     icon: <Event />,
     key: ACTIONS.CREATE_EVENT,
     name: 'Create Event',
 };
 
 export {
-    actionConfig,
+    config,
     DialogContent,
 };

@@ -19,7 +19,7 @@ import ZetkinSpeedDial from '../../../../../components/ZetkinSpeedDial';
 const scaffoldOptions = {
     authLevelRequired: 2,
     localeScope: [
-        'layout.organize', 'misc.breadcrumbs', 'pages.organizeCampaigns',
+        'layout.organize', 'misc.breadcrumbs', 'pages.organizeCampaigns', 'misc.formDialog', 'misc.speedDial',
     ],
 };
 
