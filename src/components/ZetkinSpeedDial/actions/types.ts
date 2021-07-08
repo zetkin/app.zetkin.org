@@ -1,11 +1,17 @@
 import { ACTIONS } from '../constants';
 
-export interface SpeedDialActionConfig {
+
+export interface DialogContentBaseProps {
+    closeDialog: () => void;
+}
+
+export interface ActionConfig {
     key: ACTIONS;
     icon: React.ReactNode;
     name: string;
 }
 
-export interface DialogContentBaseProps {
-    closeDialog: () => void;
+export interface Action {
+    DialogContent: React.FunctionComponent<DialogContentBaseProps>;
+    config: ActionConfig;
 }
