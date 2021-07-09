@@ -25,6 +25,13 @@ const EventListItem = ({ event, hrefBase }: EventListItemProps): JSX.Element => 
     const classes = useStyles();
     const { id, title, activity, location, start_time, end_time } = event;
 
+    const naiveStartTime = new Date(start_time);
+    const naiveEndTime = new Date(end_time);
+
+    const startTime = new Date(naiveStartTime.getUTCFullYear(), naiveStartTime.getUTCMonth(), naiveStartTime.getUTCDate(), naiveStartTime.getUTCHours(), naiveStartTime.getUTCMinutes());
+
+    const endTime = new Date(naiveEndTime.getUTCFullYear(), naiveEndTime.getUTCMonth(), naiveEndTime.getUTCDate(), naiveEndTime.getUTCHours(), naiveEndTime.getUTCMinutes());
+
     return (
         <NextLink href={ hrefBase + `/events/${id}` } passHref>
             <Link color="inherit" underline="none" variant="subtitle2">
@@ -35,23 +42,23 @@ const EventListItem = ({ event, hrefBase }: EventListItemProps): JSX.Element => 
                         </Typography>
                         <Typography color="textPrimary">
                             <FormattedDate
+                                day="numeric"
                                 month="long"
-                                value={ new Date(start_time) }
-                                year="2-digit"
+                                value={ startTime }
                             />
                             { `  ` }
                             <FormattedTime
-                                value={ new Date(start_time) }
+                                value={ startTime }
                             />
                             { ` - ` }
                             <FormattedDate
+                                day="numeric"
                                 month="long"
-                                value={ new Date(end_time) }
-                                year="2-digit"
+                                value={ endTime }
                             />
                             { `  ` }
                             <FormattedTime
-                                value={ new Date(end_time) }
+                                value={ endTime }
                             />
                         </Typography>
                         <Typography color="textPrimary">
