@@ -48,7 +48,7 @@ const WeekCalendar = ({ orgId, baseHref, campaigns, events, focusDate, onFocusDa
         new Date(focusDate).setDate(
             new Date(focusDate).getDate() - new Date(focusDate).getDay() + 1,
         ),
-    ).setUTCHours(0, 0, 0, 0));
+    ).setHours(0, 0, 0, 0));
 
     const calendarEndDate = new Date(new Date(calendarStartDate)
         .setDate(calendarStartDate.getDate() + 7));
@@ -117,11 +117,11 @@ const WeekCalendar = ({ orgId, baseHref, campaigns, events, focusDate, onFocusDa
             <Box { ...{ ref: calendar } } alignItems="center" display="flex" height="100rem" justifyContent="start" width={ 1 }>
                 { Array.from(Array(7).keys()).map((_, index) => {
                     const startOfDay = new Date(new Date(new Date(calendarStartDate)
-                        .setDate(calendarStartDate.getDate() + index)).setUTCHours(0, 0, 0, 0));
+                        .setUTCDate(calendarStartDate.getDate() + index)).setUTCHours(0, 0, 0, 0));
                     return (
                         <Box key={ index } display="flex" flexDirection="column" height={ 1 } justifyContent="space-between" mx={ 0.5 } width={ 1 }>
                             <List className={ classes.list } data-testid={ `day-${index}-events` }>
-                                { getEventsOnThisDate(startOfDay.getDate())?.reduce((acc: [number, ZetkinEvent][], event: ZetkinEvent, index, array) => {
+                                { getEventsOnThisDate(startOfDay.getUTCDate())?.reduce((acc: [number, ZetkinEvent][], event: ZetkinEvent, index, array) => {
                                     const prevEvents = array.slice(0, index);
                                     const reversedPrevEvents = prevEvents.reverse();
                                     let shiftValue;
