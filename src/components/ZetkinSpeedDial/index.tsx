@@ -37,9 +37,7 @@ const ZetkinSpeedDial: React.FunctionComponent<ZetkinSpeedDialProps> = ({ action
     const [actions, setActions] = useState<Action[]>([]);
     const [dialogsOpenState, setDialogsOpenState] = useState<DialogsOpenState>({});
 
-    // Set the dialogs display state to false
     const closeAllDialogs = () => {
-        // Close dialogs
         const closedDialogsState = actionKeys.reduce((acc: DialogsOpenState, actionKey) => {
             return {
                 [actionKey]: false,
@@ -84,7 +82,7 @@ const ZetkinSpeedDial: React.FunctionComponent<ZetkinSpeedDialProps> = ({ action
                 const [, dialogUrlKey] = current.split('#');
                 // Get action for key
                 const action = actions.find((action) => action.config.urlKey === dialogUrlKey);
-                // If not open in dialogsOpenState, set open
+                // If action in url not open, set open
                 if (action && dialogsOpenState[action?.config.key] === false) {
                     setDialogsOpenState({
                         ...dialogsOpenState,
