@@ -38,12 +38,12 @@ const WeekCalendarEvent = ({ shiftValue, baseHref, startOfDay, campaign, event }
     const endOfDay = new Date(new Date(startOfDay)
         .setDate(startOfDay.getDate() + 1));
 
-    const startDate = new Date(event.start_time);
-    const endDate = new Date(event.end_time);
+    const naiveStartDate = new Date(event.start_time);
+    const naiveEndDate = new Date(event.end_time);
 
-    const startTime = new Date(startDate.getUTCFullYear(), startDate.getUTCMonth(), startDate.getUTCDate(), startDate.getUTCHours(), startDate.getUTCMinutes());
+    const startTime = new Date(naiveStartDate.getUTCFullYear(), naiveStartDate.getUTCMonth(), naiveStartDate.getUTCDate(), naiveStartDate.getUTCHours(), naiveStartDate.getUTCMinutes());
 
-    const endTime = new Date(endDate.getUTCFullYear(), endDate.getUTCMonth(), endDate.getUTCDate(), endDate.getUTCHours(), endDate.getUTCMinutes());
+    const endTime = new Date(naiveEndDate.getUTCFullYear(), naiveEndDate.getUTCMonth(), naiveEndDate.getUTCDate(), naiveEndDate.getUTCHours(), naiveEndDate.getUTCMinutes());
 
     const startsBeforeToday = startTime <= startOfDay;
     const endsAfterToday = endTime >= endOfDay;
