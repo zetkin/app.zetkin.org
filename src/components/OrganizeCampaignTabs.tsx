@@ -1,7 +1,7 @@
 import { grey } from '@material-ui/core/colors';
 import { useIntl } from 'react-intl';
 import { Box,  makeStyles, Tab, Tabs } from '@material-ui/core';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { FunctionComponent, ReactText } from 'react';
 
 interface OrganizeCampaignTabsProps {
@@ -25,6 +25,8 @@ const OrganizeCampaignTabs: FunctionComponent<OrganizeCampaignTabsProps> = ({ ch
         setValue(newValue);
         onSelectTab(newValue);
     };
+
+    useEffect(() => setValue(currentTab), [currentTab]);
 
     return (
         <div className={ classes.root }>
