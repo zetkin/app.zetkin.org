@@ -1,4 +1,4 @@
-import '../utils/polyfills';
+import '../../../utils/polyfills';
 import { mountWithProviders } from '../../../utils/testing';
 import WeekCalendar from './WeekCalendar';
 import { ZetkinCampaign, ZetkinEvent } from '../../../types/zetkin';
@@ -67,8 +67,10 @@ describe('WeekCalendar', () => {
         mountWithProviders(
             <WeekCalendar baseHref={ dummyHref } campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ dummyDate } onFocusDate={ () => null } orgId="1"/>,
         );
-        cy.get('[data-testid="day-0-events"]').contains('event with id 25');
-        cy.get('[data-testid="day-0-events"]').contains('event with id 26');
+        cy.get('[data-testid="day-0-events"]').within(() => {
+            cy.get('[data-testid="event-25"]').should('be.visible');
+            cy.get('[data-testid="event-26"]').should('be.visible');
+        });
     });
 
     it('displays year and month boundaries correctly', () => {
@@ -125,8 +127,10 @@ describe('WeekCalendar', () => {
         mountWithProviders(
             <WeekCalendar baseHref={ dummyHref } campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ dummyDate } onFocusDate={ () => null } orgId="1" />,
         );
-        cy.get('[data-testid="day-0-events"]').contains('event with id 25');
-        cy.get('[data-testid="day-0-events"]').contains('event with id 26');
+        cy.get('[data-testid="day-0-events"]').within(() => {
+            cy.get('[data-testid="event-25"]').should('be.visible');
+            cy.get('[data-testid="event-26"]').should('be.visible');
+        });
     });
 
     it('scrolls when the viewport is small', () => {
