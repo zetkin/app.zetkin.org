@@ -22,9 +22,10 @@ const CampaignForm = ({ onSubmit, onCancel, campaign }: CampaignFormProps): JSX.
     const intl = useIntl();
 
     const [people, setPeople] = useState<ZetkinPerson[]>([]);
+    const [searchLabel, setSearchLabel] = useState(intl.formatMessage({ id: 'misc.formDialog.campaign.noOptions' }));
 
     const [searchFieldValue, setSearchFieldValue] = useState<string>('');
-    const { isFetching, isIdle, refetch, data: results } = useQuery(
+    const { isIdle, refetch, data: results } = useQuery(
         ['searchDrawerResults', searchFieldValue],
         getPeopleSearchResults(searchFieldValue, orgId as string),
         { enabled: false },
@@ -36,12 +37,13 @@ const CampaignForm = ({ onSubmit, onCancel, campaign }: CampaignFormProps): JSX.
 
     // Watch for changes on the search field value and debounce search if changed
     useEffect(() => {
-        if (searchFieldValue.length >= 0)
-            debouncedQuery();
+        if (searchFieldValue.length >= 3)
+            setSearchLabel(intl.formatMessage({ id: 'misc.formDialog.campaign.searching' }));
+        debouncedQuery();
         if (results) {
             setPeople(results);
         }
-    }, [searchFieldValue, debouncedQuery, results]);
+    }, [searchFieldValue, debouncedQuery, results, intl]);
 
     const initialValues = {
         info_text: campaign?.info_text,
@@ -95,9 +97,8 @@ const CampaignForm = ({ onSubmit, onCancel, campaign }: CampaignFormProps): JSX.
                     label={ intl.formatMessage({ id: 'misc.formDialog.campaign.manager' }) }
                     name="manager_id"
                     noOptionsText={
-                        isFetching ? intl.formatMessage({ id: 'misc.formDialog.campaign.searching' })
-                            : (people.length < 1 && !isIdle) ? intl.formatMessage({ id: 'misc.formDialog.campaign.noResult' })
-                                : intl.formatMessage({ id: 'misc.formDialog.campaign.noOptions' }) }
+                        (!people.length && !isIdle) ? intl.formatMessage({ id: 'misc.formDialog.campaign.noResult' })
+                            : searchLabel }
                     onInputChange={ (_, v) => {
                         setSearchFieldValue(v);
                     } }
