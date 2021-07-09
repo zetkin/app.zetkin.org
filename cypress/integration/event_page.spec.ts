@@ -1,6 +1,6 @@
 import { ZetkinEvent, ZetkinEventResponse } from '../../src/types/zetkin';
 
-describe('/o/[orgId]/events/[eventId]', () => {
+describe.skip('/o/[orgId]/events/[eventId]', () => {
     let dummyBookedEvents : {data: ZetkinEvent[]};
     let dummyEventResponses : {data: ZetkinEventResponse[]};
     let dummyEvents : {data: ZetkinEvent[]};

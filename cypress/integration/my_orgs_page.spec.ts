@@ -1,6 +1,6 @@
 import { ZetkinMembership } from '../../src/types/zetkin';
 
-describe('/my/orgs', () => {
+describe.skip('/my/orgs', () => {
     let dummyFollowing : {data: ZetkinMembership[]};
 
     before(() => {

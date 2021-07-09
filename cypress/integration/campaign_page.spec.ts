@@ -1,4 +1,4 @@
-describe('/o/[orgId]/campaigns/[campId]', () => {
+describe.skip('/o/[orgId]/campaigns/[campId]', () => {
 
     it('contains campaign content', () => {
         cy.visit('/o/1/campaigns/2');

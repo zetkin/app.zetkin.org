@@ -1,6 +1,6 @@
 import { ZetkinCampaign, ZetkinEvent, ZetkinMembership } from '../../src/types/zetkin';
 
-describe('/my', () => {
+describe.skip('/my', () => {
     let dummyEvents : {data: ZetkinEvent[]};
     let dummyFollowing : {data: ZetkinMembership[]};
     let dummyCampaigns : {data: ZetkinCampaign[]};
