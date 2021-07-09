@@ -9,5 +9,4 @@
  */
 export enum ACTIONS {
     CREATE_EVENT = 'createEvent',
-    CREATE_CAMPAIGN = 'createCampaign'
 }
