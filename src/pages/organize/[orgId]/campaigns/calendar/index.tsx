@@ -5,14 +5,14 @@ import { Box , FormControl, MenuItem, Select } from '@material-ui/core';
 import getCampaigns from '../../../../../fetching/getCampaigns';
 import getEvents from '../../../../../fetching/getEvents';
 import getOrg from '../../../../../fetching/getOrg';
-import MonthCalendar from '../../../../../components/MonthCalendar';
+import MonthCalendar from '../../../../../components/calendar/MonthCalendar';
 import OrganizeAllCampaignsLayout from '../../../../../components/layout/OrganizeAllCampaignsLayout';
 import { PageWithLayout } from '../../../../../types';
 import { scaffold } from '../../../../../utils/next';
 import { useFocusDate } from '../../../../../hooks';
 import { useIntl } from 'react-intl';
 import { useQuery } from 'react-query';
-import WeekCalendar from '../../../../../components/calendar/WeekCalendar/WeekCalendar';
+import WeekCalendar from '../../../../../components/calendar/WeekCalendar';
 
 const scaffoldOptions = {
     authLevelRequired: 2,
