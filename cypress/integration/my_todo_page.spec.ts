@@ -1,6 +1,6 @@
 import { ZetkinEvent, ZetkinEventResponse, ZetkinMembership } from '../../src/types/zetkin';
 
-describe('/my/todo', () => {
+describe.skip('/my/todo', () => {
     let dummyEventResponses : {data: ZetkinEventResponse[]};
     let dummyBookedEvents : {data: ZetkinEvent[]};
     let dummyEvents : {data: ZetkinEvent[]};

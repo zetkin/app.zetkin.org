@@ -1,4 +1,4 @@
-describe('Reocurring functionality', () => {
+describe.skip('Reocurring functionality', () => {
 
     it('contains a clickable org logo which leads to org page', () => {
         cy.visit('/o/1/events');
