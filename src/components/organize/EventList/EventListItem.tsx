@@ -4,6 +4,7 @@ import { Theme } from '@material-ui/core/styles';
 import { Card, Link, ListItem, makeStyles, Typography } from '@material-ui/core';
 import { FormattedDate, FormattedTime } from 'react-intl';
 
+import { getNaiveDate } from '../../../utils/getNaiveDate';
 import { ZetkinEvent } from '../../../types/zetkin';
 
 interface EventListItemProps {
@@ -25,12 +26,8 @@ const EventListItem = ({ event, hrefBase }: EventListItemProps): JSX.Element => 
     const classes = useStyles();
     const { id, title, activity, location, start_time, end_time } = event;
 
-    const naiveStartTime = new Date(start_time);
-    const naiveEndTime = new Date(end_time);
-
-    const startTime = new Date(naiveStartTime.getUTCFullYear(), naiveStartTime.getUTCMonth(), naiveStartTime.getUTCDate(), naiveStartTime.getUTCHours(), naiveStartTime.getUTCMinutes());
-
-    const endTime = new Date(naiveEndTime.getUTCFullYear(), naiveEndTime.getUTCMonth(), naiveEndTime.getUTCDate(), naiveEndTime.getUTCHours(), naiveEndTime.getUTCMinutes());
+    const startTime = getNaiveDate(start_time);
+    const endTime = getNaiveDate(end_time);
 
     return (
         <NextLink href={ hrefBase + `/events/${id}` } passHref>
