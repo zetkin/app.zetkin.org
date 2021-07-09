@@ -2,6 +2,7 @@
 import { Action } from './actions/types';
 import { makeStyles } from '@material-ui/core';
 import { useIntl } from 'react-intl';
+import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { SpeedDial, SpeedDialAction, SpeedDialIcon } from '@material-ui/lab';
 
@@ -30,6 +31,7 @@ interface ZetkinSpeedDialProps {
 const ZetkinSpeedDial: React.FunctionComponent<ZetkinSpeedDialProps> = ({ actions: actionKeys }) => {
     const classes = useStyles();
     const intl = useIntl();
+    const router = useRouter();
 
     const [speedDialOpen, setSpeedDialOpen ] = useState<boolean>(false);
     const [actions, setActions] = useState<Action[]>([]);
@@ -44,6 +46,14 @@ const ZetkinSpeedDial: React.FunctionComponent<ZetkinSpeedDialProps> = ({ action
             };
         }, {});
         setDialogsOpenState(closedDialogsState);
+        // Set dialog state closed
+        const lastRouteItem = router.asPath.split('/').pop();
+        if (lastRouteItem?.includes('#')) {
+            const [baseRoute, dialogId] = router.asPath.split('#');
+            if (dialogId) {
+                router.push(baseRoute, undefined, { shallow: true });
+            }
+        }
     };
 
     useEffect(() => {
@@ -62,6 +72,16 @@ const ZetkinSpeedDial: React.FunctionComponent<ZetkinSpeedDialProps> = ({ action
             closeAllDialogs();
         }
     }, []);
+
+    // useEffect(() => {
+    //     const current = router.asPath.split('/').pop();
+    //     if (current?.includes('#new_campaign')) {
+    //         setFormDialogOpen('campaign');
+    //     }
+    //     else if (current?.includes('#new_event')) {
+    //         setFormDialogOpen('event');
+    //     }
+    // }, [router.asPath]);
 
     return (
         <>
@@ -83,13 +103,15 @@ const ZetkinSpeedDial: React.FunctionComponent<ZetkinSpeedDialProps> = ({ action
                             icon={ action.icon }
                             // Open actions dialog
                             onClick={ () => {
-                            // Close open dialogs
+                                // Close open dialogs
                                 closeAllDialogs();
                                 // Open the selected dialog
                                 setDialogsOpenState({
                                     ...dialogsOpenState,
                                     [action.key]: true,
                                 });
+                                // Set URL
+                                router.push(`${router.asPath}#${action.urlKey}`, undefined, { shallow: true });
                             } }
                             tooltipTitle={ intl.formatMessage({ id: action.name }) }
                         />
