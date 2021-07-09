@@ -1,8 +1,9 @@
+import { FormattedTime } from 'react-intl';
 import { getContrastColor } from '../../../utils/colorUtils';
 import { grey } from '@material-ui/core/colors';
 import NextLink from 'next/link';
-import { useRef } from 'react';
-import { Box,  Link } from '@material-ui/core';
+import { Box,  Link, Tooltip, Typography } from '@material-ui/core';
+import { useEffect, useRef, useState } from 'react';
 import { ZetkinCampaign, ZetkinEvent } from '../../../types/zetkin';
 
 const DEFAULT_COLOR = grey[900];
@@ -16,26 +17,43 @@ interface WeekCalendarEventProps {
 }
 
 const WeekCalendarEvent = ({ shiftValue, baseHref, startOfDay, campaign, event }: WeekCalendarEventProps): JSX.Element => {
-    const eventItem = useRef<HTMLDivElement>(null);
+    const label = useRef<HTMLParagraphElement>(null);
+    const eventDiv = useRef<HTMLDivElement>(null);
+    const [maxNoOfLabels, setMaxNoOfLabels] = useState(2);
+    const [focussed, setFocussed] = useState(false);
+
+    useEffect(() => {
+        const labelHeight = (label.current?.offsetHeight || 0)  + 5;
+        const eventDivHeight = eventDiv.current?.offsetHeight || 0;
+        if (eventDivHeight < labelHeight * 2) {
+            setMaxNoOfLabels(1);
+        }
+        if (eventDivHeight < labelHeight) {
+            setMaxNoOfLabels(0);
+        }
+    }, []);
+
+    startOfDay = new Date(startOfDay.getUTCFullYear(), startOfDay.getUTCMonth(), startOfDay.getUTCDate(), startOfDay.getUTCHours(), startOfDay.getUTCMinutes());
+
     const endOfDay = new Date(new Date(startOfDay)
         .setDate(startOfDay.getDate() + 1));
-    const getEventPos = (start: string, end: string) => {
+
+    const startDate = new Date(event.start_time);
+    const endDate = new Date(event.end_time);
+
+    const startTime = new Date(startDate.getUTCFullYear(), startDate.getUTCMonth(), startDate.getUTCDate(), startDate.getUTCHours(), startDate.getUTCMinutes());
+
+    const endTime = new Date(endDate.getUTCFullYear(), endDate.getUTCMonth(), endDate.getUTCDate(), endDate.getUTCHours(), endDate.getUTCMinutes());
+
+    const startsBeforeToday = startTime <= startOfDay;
+    const endsAfterToday = endTime >= endOfDay;
+
+    const getEventPos = () => {
         const oneMinute = 100 / 1440;
-        const startTime = new Date(start);
-        const endTime = new Date(end);
 
-        let startFromMidnight = (startTime.getTime() - new Date(startTime).setUTCHours(0, 0, 0, 0)) / 60000;
+        const startFromMidnight = startsBeforeToday ? 0 : (startTime.getTime() - new Date(startTime).setHours(0, 0, 0, 0)) / 60000;
 
-        if (startTime < startOfDay) {
-            startFromMidnight = 0;
-        }
-
-        let endFromMidnight = (endTime.getTime() - new Date(endTime).setUTCHours(0, 0, 0, 0)) / 60000;
-
-        if (endTime > endOfDay) {
-            endFromMidnight = 24 * 60;
-        }
-
+        const endFromMidnight = endsAfterToday ? 24 * 60 : (endTime.getTime() - new Date(endTime).setHours(0, 0, 0, 0)) / 60000;
         const diff = endFromMidnight - startFromMidnight;
 
         return {
@@ -44,26 +62,50 @@ const WeekCalendarEvent = ({ shiftValue, baseHref, startOfDay, campaign, event }
         };
     };
 
+    const getEventTimeLabel = () => {
+        return (
+            <>
+                <FormattedTime value={ new Date(startsBeforeToday? startOfDay: startTime) }/>{ ` - ` }
+            </>
+        );
+    };
+
     return (
         <li>
             <NextLink href={  baseHref + `/calendar/events/${event.id}` } passHref>
                 <Link>
                     <Box
+                        { ...( focussed && { zIndex: 10 } ) }
                         display="flex"
-                        height={ getEventPos(event.start_time, event.end_time).height }
+                        height={ getEventPos().height }
                         justifyContent="flex-end"
                         position="absolute"
-                        top={ getEventPos(event.start_time, event.end_time).top }>
-                        <Box
-                            { ...{ ref: eventItem } }
-                            bgcolor={ (campaign?.color + '55' || DEFAULT_COLOR)  }
-                            borderLeft={ `5px solid ${campaign?.color || DEFAULT_COLOR}` }
-                            color={ getContrastColor(campaign?.color || DEFAULT_COLOR) }
-                            data-testid={ `event-${event.id}` }
-                            padding={ 1 }
-                            width={ `${100 - 5 * (shiftValue || 0)}%` }>
-                            { `event with id ${event.id} and campaign ${event.campaign.id}` }
-                        </Box>
+                        top={ getEventPos().top }
+                        width={ 1 }>
+                        <Tooltip arrow placement="left" title={ event.title || event.activity.title }>
+                            <Box
+                                { ...{ ref: eventDiv } }
+                                bgcolor={ (campaign?.color
+                                    || DEFAULT_COLOR) + `${focussed? '': '55'}` }
+                                borderLeft={ `5px solid ${campaign?.color || DEFAULT_COLOR}` }
+                                color={ getContrastColor(campaign?.color || DEFAULT_COLOR) }
+                                data-testid={ `event-${event.id}` }
+                                height={ 1 }
+                                onMouseEnter={ () => setFocussed(true) }
+                                onMouseLeave={ () => setFocussed(false) }
+                                padding={ 1 }
+                                width={ `${100 - 5 * (shiftValue || 0)}%` }>
+                                { maxNoOfLabels > 0 && (
+                                    <Typography ref={ label } noWrap variant="body2">
+                                        { getEventTimeLabel() }
+                                        { event.title || event.activity.title }
+                                    </Typography>) }
+                                { maxNoOfLabels > 1 && event.location.title && (
+                                    <Typography noWrap variant="body2">
+                                        { event.location.title }
+                                    </Typography>) }
+                            </Box>
+                        </Tooltip>
                     </Box>
                 </Link>
             </NextLink>
