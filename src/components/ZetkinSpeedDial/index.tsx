@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Action } from './actions/types';
 import { makeStyles } from '@material-ui/core';
 import { useIntl } from 'react-intl';
@@ -20,17 +21,6 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-
-// Set the dialogs display state to false
-const allDialogsClosed = (actionKeys: Array<ACTIONS>) => (
-    actionKeys.reduce((acc, actionKey) => {
-        return {
-            [actionKey]: false,
-            ...acc,
-        };
-    }, {})
-);
-
 type DialogsOpenState = {[key in ACTIONS]?: boolean};
 
 interface ZetkinSpeedDialProps {
@@ -45,8 +35,19 @@ const ZetkinSpeedDial: React.FunctionComponent<ZetkinSpeedDialProps> = ({ action
     const [actions, setActions] = useState<Action[]>([]);
     const [dialogsOpenState, setDialogsOpenState] = useState<DialogsOpenState>({});
 
+    // Set the dialogs display state to false
+    const closeAllDialogs = () => {
+        const closedDialogsState = actionKeys.reduce((acc: DialogsOpenState, actionKey) => {
+            return {
+                [actionKey]: false,
+                ...acc,
+            };
+        }, {});
+        setDialogsOpenState(closedDialogsState);
+    };
+
     useEffect(() => {
-        // Import the specified actions
+        // Import the actions specified in props
         if (actionKeys) {
             const importActions = async () => {
                 const importedActions = await Promise.all(actionKeys.map(async (action) => {
@@ -58,9 +59,8 @@ const ZetkinSpeedDial: React.FunctionComponent<ZetkinSpeedDialProps> = ({ action
                 setActions(importedActions);
             };
             importActions();
-            setDialogsOpenState(allDialogsClosed(actionKeys));
+            closeAllDialogs();
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (
@@ -84,7 +84,7 @@ const ZetkinSpeedDial: React.FunctionComponent<ZetkinSpeedDialProps> = ({ action
                             // Open actions dialog
                             onClick={ () => {
                             // Close open dialogs
-                                setDialogsOpenState(allDialogsClosed(actionKeys));
+                                closeAllDialogs();
                                 // Open the selected dialog
                                 setDialogsOpenState({
                                     ...dialogsOpenState,
@@ -101,12 +101,12 @@ const ZetkinSpeedDial: React.FunctionComponent<ZetkinSpeedDialProps> = ({ action
                     <ZetkinDialog
                         key={ action.key }
                         onClose={ () => {
-                            setDialogsOpenState(allDialogsClosed(actionKeys));
+                            closeAllDialogs();
                         } }
                         open={ dialogsOpenState[action.key] === true }
                         title={ intl.formatMessage({ id: action.name }) }>
                         <DialogContent closeDialog={ () => {
-                            setDialogsOpenState(allDialogsClosed(actionKeys));
+                            closeAllDialogs();
                         } }
                         />
                     </ZetkinDialog>
@@ -120,3 +120,4 @@ const ZetkinSpeedDial: React.FunctionComponent<ZetkinSpeedDialProps> = ({ action
 
 export default ZetkinSpeedDial;
 
+export { ACTIONS };

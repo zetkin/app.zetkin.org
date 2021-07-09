@@ -1,4 +1,3 @@
-
 /* eslint-disable react/display-name */
 import { ACTIONS } from '../constants';
 import CreateCampaignForm from '../../CreateCampaignForm';

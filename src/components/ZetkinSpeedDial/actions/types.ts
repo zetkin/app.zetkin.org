@@ -1,6 +1,5 @@
 import { ACTIONS } from '../constants';
 
-
 export interface DialogContentBaseProps {
     closeDialog: () => void;
 }
