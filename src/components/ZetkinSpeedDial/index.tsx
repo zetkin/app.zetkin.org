@@ -39,6 +39,7 @@ const ZetkinSpeedDial: React.FunctionComponent<ZetkinSpeedDialProps> = ({ action
 
     // Set the dialogs display state to false
     const closeAllDialogs = () => {
+        // Close dialogs
         const closedDialogsState = actionKeys.reduce((acc: DialogsOpenState, actionKey) => {
             return {
                 [actionKey]: false,
@@ -46,13 +47,15 @@ const ZetkinSpeedDial: React.FunctionComponent<ZetkinSpeedDialProps> = ({ action
             };
         }, {});
         setDialogsOpenState(closedDialogsState);
-        // Set dialog state closed
-        const lastRouteItem = router.asPath.split('/').pop();
-        if (lastRouteItem?.includes('#')) {
-            const [baseRoute, dialogId] = router.asPath.split('#');
-            if (dialogId) {
-                router.push(baseRoute, undefined, { shallow: true });
-            }
+    };
+
+    const cleanUrl = () => {
+        // Set URL to dialog closed
+        const current = router.asPath.split('/').pop();
+        if (current?.includes('#')) {
+            // Assumes there is only one # in route
+            const [baseRoute] = router.asPath.split('#');
+            router.push(baseRoute, undefined, { shallow: true });
         }
     };
 
@@ -73,15 +76,24 @@ const ZetkinSpeedDial: React.FunctionComponent<ZetkinSpeedDialProps> = ({ action
         }
     }, []);
 
-    // useEffect(() => {
-    //     const current = router.asPath.split('/').pop();
-    //     if (current?.includes('#new_campaign')) {
-    //         setFormDialogOpen('campaign');
-    //     }
-    //     else if (current?.includes('#new_event')) {
-    //         setFormDialogOpen('event');
-    //     }
-    // }, [router.asPath]);
+    useEffect(() => {
+        // Set dialog open if #<action> in path
+        if (actions) {
+            const current = router.asPath.split('/').pop();
+            if (current?.includes('#')) {
+                const [, dialogUrlKey] = current.split('#');
+                // Get action for key
+                const action = actions.find((action) => action.config.urlKey === dialogUrlKey);
+                // If not open in dialogsOpenState, set open
+                if (action && dialogsOpenState[action?.config.key] === false) {
+                    setDialogsOpenState({
+                        ...dialogsOpenState,
+                        [action.config.key]: true,
+                    });
+                }
+            }
+        }
+    }, [actions, router.asPath]);
 
     return (
         <>
@@ -110,7 +122,7 @@ const ZetkinSpeedDial: React.FunctionComponent<ZetkinSpeedDialProps> = ({ action
                                     ...dialogsOpenState,
                                     [action.key]: true,
                                 });
-                                // Set URL
+                                // Set URL to dialog open
                                 router.push(`${router.asPath}#${action.urlKey}`, undefined, { shallow: true });
                             } }
                             tooltipTitle={ intl.formatMessage({ id: action.name }) }
@@ -123,11 +135,13 @@ const ZetkinSpeedDial: React.FunctionComponent<ZetkinSpeedDialProps> = ({ action
                     <ZetkinDialog
                         key={ action.key }
                         onClose={ () => {
+                            cleanUrl();
                             closeAllDialogs();
                         } }
                         open={ dialogsOpenState[action.key] === true }
                         title={ intl.formatMessage({ id: action.name }) }>
                         <DialogContent closeDialog={ () => {
+                            cleanUrl();
                             closeAllDialogs();
                         } }
                         />
