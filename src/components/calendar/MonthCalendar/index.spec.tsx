@@ -1,6 +1,6 @@
-import MonthCalendar from './MonthCalendar';
-import { mountWithProviders } from '../utils/testing';
-import { ZetkinCampaign, ZetkinEvent } from '../types/zetkin';
+import MonthCalendar from '.';
+import { mountWithProviders } from '../../../utils/testing';
+import { ZetkinCampaign, ZetkinEvent } from '../../../types/zetkin';
 
 describe('MonthCalendar', () => {
     let dummyEvents: ZetkinEvent[];

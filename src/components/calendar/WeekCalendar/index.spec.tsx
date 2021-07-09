@@ -1,6 +1,6 @@
 import '../../../utils/polyfills';
 import { mountWithProviders } from '../../../utils/testing';
-import WeekCalendar from './WeekCalendar';
+import WeekCalendar from '.';
 import { ZetkinCampaign, ZetkinEvent } from '../../../types/zetkin';
 
 describe('WeekCalendar', () => {
