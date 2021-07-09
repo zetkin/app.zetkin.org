@@ -2,7 +2,7 @@ import { getContrastColor } from '../../../utils/colorUtils';
 import { grey } from '@material-ui/core/colors';
 import NextLink from 'next/link';
 import { Box, Button, Link, makeStyles, Tooltip, Typography } from '@material-ui/core';
-import { FormattedDate, FormattedMessage as Msg } from 'react-intl';
+import { FormattedDate, FormattedTime, FormattedMessage as Msg } from 'react-intl';
 import  { useEffect, useRef, useState } from 'react';
 import { ZetkinCampaign, ZetkinEvent } from '../../../types/zetkin';
 
@@ -126,7 +126,7 @@ const MonthCalendar = ({ orgId, campaigns, baseHref, events, onFocusDate, focusD
                         const daysEvents = getEventsInRange(currentDate, new Date(new Date(currentDate).setDate(currentDate.getDate() + 1)));
                         const totalEvents = daysEvents.length;
                         return (
-                            <Box key={ index } bgcolor={ isInRange(currentDate, firstMonthDay, lastMonthDay) ? grey[300] : grey[200] } data-testid={ `griditem-${index}` } display="flex" flexDirection="column" m={ 0.5 } position="relative">
+                            <Box key={ index } bgcolor={ isInRange(currentDate, firstMonthDay, lastMonthDay) ? grey[200] : grey[300] } data-testid={ `griditem-${index}` } display="flex" flexDirection="column" m={ 0.1 } position="relative">
                                 <Box p={ 0.5 } pb={ 0 }>
                                     <Typography>
                                         <FormattedDate
@@ -138,10 +138,14 @@ const MonthCalendar = ({ orgId, campaigns, baseHref, events, onFocusDate, focusD
                                 <ul { ...( index === 0 && { ref: gridItem } ) } className={ classes.list } data-testid={ `day-${index}-events` }>
                                     { daysEvents.map((event, i) => {
                                         const campaign = campaigns.find(c => c.id === event.campaign.id);
+                                        const naiveStartTime = new Date(event.start_time);
+
+                                        const startTime = new Date(naiveStartTime.getUTCFullYear(), naiveStartTime.getUTCMonth(), naiveStartTime.getUTCDate(), naiveStartTime.getUTCHours(), naiveStartTime.getUTCMinutes());
+                                        const startsBeforeToday = startTime <= currentDate;
                                         return (
                                             <li key={ event.id }>
                                                 <NextLink href={  baseHref + `/calendar/events/${event.id}` } passHref>
-                                                    <Link>
+                                                    <Link underline="none">
                                                         <div
                                                             { ...( i === 0 && { ref: listItem } ) }
                                                             data-testid={ `event-${event.id}` } style={{
@@ -153,7 +157,8 @@ const MonthCalendar = ({ orgId, campaigns, baseHref, events, onFocusDate, focusD
                                                                 width: '100%',
                                                             }}>
                                                             <Typography noWrap={ true } variant="body2">
-                                                                { `event with id ${event.id} and campaign ${event.campaign.id}` }
+                                                                <FormattedTime value={ new Date(startsBeforeToday? currentDate: startTime) }/>{ ` - ` }
+                                                                { event.title || event.activity.title }
                                                             </Typography>
                                                         </div>
                                                     </Link>
