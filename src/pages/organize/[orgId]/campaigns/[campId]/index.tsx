@@ -13,11 +13,12 @@ import OrganizeCampaignLayout from '../../../../../components/layout/OrganizeCam
 import { PageWithLayout } from '../../../../../types';
 import { scaffold } from '../../../../../utils/next';
 import { useQuery } from 'react-query';
+import ZetkinSpeedDial, { ACTIONS } from '../../../../../components/ZetkinSpeedDial';
 
 const scaffoldOptions = {
     authLevelRequired: 2,
     localeScope: [
-        'layout.organize', 'misc.breadcrumbs', 'pages.organizeCampaigns',
+        'layout.organize', 'misc.breadcrumbs', 'pages.organizeCampaigns', 'misc.formDialog', 'misc.speedDial',
     ],
 };
 
@@ -191,6 +192,7 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({ orgId,
                     </Box>
                 </Box>
             </Box>
+            <ZetkinSpeedDial actions={ [ACTIONS.CREATE_EVENT] } />
         </>
     );
 };
