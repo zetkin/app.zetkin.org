@@ -160,7 +160,7 @@ const CampaignForm = ({ onSubmit, onCancel, campaign }: CampaignFormProps): JSX.
         const { info_text, status, title, visibility, manager_id } = values;
         onSubmit({
             ...info_text ? { info_text } : null,
-            ...manager_id ? { manager_id } : null,
+            manager_id,
             published:status === 'draft' ? false : true,
             title: title,
             visibility,
