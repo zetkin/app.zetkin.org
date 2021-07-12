@@ -375,4 +375,44 @@ describe('MonthCalendar', () => {
         cy.get('[data-testid="calendar-bar-941"]').trigger('mouseover');
         cy.findByText('Dummy campaign').should('be.visible');
     });
+
+    it('shows event title or activity title and event time', () => {
+        mountWithProviders(
+            <MonthCalendar baseHref={ dummyHref } campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ new Date(2021, 4, 10) } onFocusDate={ () => null } orgId="1" />,
+        );
+
+        cy.get('[data-testid="event-25"]').within(() => {
+            cy.get('[data-testid="start-time-25"]').should('be.visible');
+            cy.get('[data-testid="title-25"]').should('be.visible');
+        });
+
+        cy.get('[data-testid="event-24"]').within(() => {
+            cy.get('[data-testid="start-time-24"]').should('be.visible');
+            cy.get('[data-testid="title-24"]').should('be.visible');
+        });
+    });
+
+    it('handles multiday events', () => {
+        dummyEvents[4] = {
+            ...dummyEvents[0],
+            'campaign': { 'id': 942, 'title': 'test-campaign' },
+            'end_time': '2021-04-28T17:37:00+00:00',
+            'id': 27,
+            'start_time': '2021-04-27T15:37:00+00:00',
+        };
+        mountWithProviders(
+            <MonthCalendar baseHref={ dummyHref } campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ new Date(2021, 4, 10) } onFocusDate={ () => null } orgId="1" />,
+        );
+
+        cy.get('[data-testid="griditem-1"]').within(() => {
+            cy.get('[data-testid="event-27"]').should('be.visible');
+            cy.get('[data-testid="fwd-icon-27"]').should('be.visible');
+        });
+
+        cy.get('[data-testid="griditem-2"]').within(() => {
+            cy.get('[data-testid="event-27"]').should('be.visible');
+            cy.get('[data-testid="back-icon-27"]').should('be.visible');
+        });
+
+    });
 });

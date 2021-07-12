@@ -59,12 +59,16 @@ const MonthCalendarEvent = ({ baseHref, index, startOfDay, campaign, event, onLo
                         mt={ 0.5 }
                         px={ 0.5 }
                         width={ 1 }>
-                        { startsBeforeToday && <ArrowBackIos fontSize="inherit"/> }
-                        <Typography noWrap={ true } variant="body2">
+                        { startsBeforeToday && (
+                            <ArrowBackIos data-testid={ `back-icon-${event.id}` } fontSize="inherit"/>
+                        ) }
+                        <Typography data-testid={ `start-time-${event.id}` } noWrap={ true } variant="body2">
                             <FormattedTime value={ new Date(startsBeforeToday? startOfDay: startTime) }/>{ ` - ` }
-                            { event.title || event.activity.title }
+                            <span data-testid={ `title-${event.id}` }>{ event.title || event.activity.title }</span>
                         </Typography>
-                        { endsAfterToday && <ArrowForwardIos fontSize="inherit"/> }
+                        { endsAfterToday && (
+                            <ArrowForwardIos data-testid={ `fwd-icon-${event.id}` } fontSize="inherit"/>
+                        ) }
                     </Box>
                 </Link>
             </NextLink>
