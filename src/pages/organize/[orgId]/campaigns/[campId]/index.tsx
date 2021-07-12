@@ -94,8 +94,8 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({ orgId,
         return new Date(a.start_time).getTime() - new Date(b.start_time).getTime();
     });
 
-    const startDate = sortedEvents[0].start_time;
-    const endDate = sortedEvents[sortedEvents.length - 1].start_time;
+    const startDate = sortedEvents[0]?.start_time;
+    const endDate = sortedEvents[sortedEvents.length - 1]?.start_time;
 
     const closeDialog = () => {
         setFormDialogOpen(null);
@@ -149,17 +149,24 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({ orgId,
                             { campaign?.manager?.name || <Msg id="pages.organizeCampaigns.noManager" /> }
                         </Typography>
                         <Typography variant="subtitle2">
-                            <FormattedDate
-                                day="2-digit"
-                                month="long"
-                                value={ startDate }
-                            />{ ` - ` }
-                            <FormattedDate
-                                day="2-digit"
-                                month="long"
-                                value={ endDate }
-                                year="numeric"
-                            />
+                            { startDate && endDate ? (
+                                <>
+                                    <FormattedDate
+                                        day="2-digit"
+                                        month="long"
+                                        value={ startDate }
+                                    />
+                                    { ` - ` }
+                                    <FormattedDate
+                                        day="2-digit"
+                                        month="long"
+                                        value={ endDate }
+                                        year="numeric"
+                                    />
+                                </>
+                            ) : (
+                                <Msg id="pages.organizeCampaigns.indefinite" />
+                            ) }
                         </Typography>
                         <Box display="flex" p={ 1 } pl={ 0 }>
                             <Box display="flex" p={ 1 } pl={ 0 }>
