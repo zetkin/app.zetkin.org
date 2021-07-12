@@ -142,7 +142,9 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({ orgId,
                 </Box>
                 <Box display="flex" flex={ 1 } p={ 1 }>
                     <Box p={ 1 }>
-                        <Avatar></Avatar>
+                        <Avatar
+                            { ...(campaign?.manager && { src: `/api/orgs/${orgId}/people/${campaign?.manager.id}/avatar` }) }>
+                        </Avatar>
                     </Box>
                     <Box display="flex" flexDirection="column" p={ 1 }>
                         <Typography variant="h6">
