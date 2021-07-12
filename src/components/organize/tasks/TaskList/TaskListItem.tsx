@@ -1,4 +1,5 @@
 import { createStyles } from '@material-ui/core/styles';
+import { FormattedMessage } from 'react-intl';
 import NextLink from 'next/link';
 import { Theme } from '@material-ui/core/styles';
 import { Card, Link, ListItem, makeStyles, Typography } from '@material-ui/core';
@@ -6,14 +7,8 @@ import { Card, Link, ListItem, makeStyles, Typography } from '@material-ui/core'
 import ZetkinRelativeTime from '../../../ZetkinRelativeTime';
 import { ZetkinTask } from '../../../../types/zetkin';
 
-import getTaskStatus from '../getTaskStatus';
 import TaskStatusChip from '../TaskStatusChip';
-
-// If no publish date say "draft"
-// If not yet published: "Will be published in 3 days"
-// If published with deadline that has not passed: "Deadline [relative time]"
-// If published with no deadline or one that passed: "Expires [relative time]"
-// If published with no deadline or expiry date: "Published [relative time]"
+import getTaskStatus, { TASK_STATUS } from '../getTaskStatus';
 
 interface TaskListItemProps {
     task: ZetkinTask;
@@ -32,7 +27,7 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
 
 const TaskListItem = ({ task, hrefBase }: TaskListItemProps): JSX.Element => {
     const classes = useStyles();
-    const { id, title, published: publishedDate, deadline, expires } = task;
+    const { id, title, published, deadline, expires } = task;
     const taskStatus = getTaskStatus(task);
 
     return (
@@ -46,11 +41,42 @@ const TaskListItem = ({ task, hrefBase }: TaskListItemProps): JSX.Element => {
                             { title }
                         </Typography>
 
-                        { /* <Typography color="textPrimary">
-                            { published && (
-                                <ZetkinRelativeTime datetime={ published } />
+                        <Typography color="textPrimary">
+                            { /* Closed */ }
+                            { taskStatus === TASK_STATUS.CLOSED && (
+                                <>
+                                    <FormattedMessage id="misc.tasks.taskListItem.relativeTimes.closed" />
+                                    { ' ' }
+                                    <ZetkinRelativeTime datetime={ expires } />
+                                </>
                             ) }
-                        </Typography> */ }
+
+                            { /* Scheduled */ }
+                            { taskStatus === TASK_STATUS.SCHEDULED && (
+                                <>
+                                    <FormattedMessage id="misc.tasks.taskListItem.relativeTimes.scheduled" />
+                                    { ' ' }
+                                    <ZetkinRelativeTime datetime={ published } />
+                                </>
+                            ) }
+
+                            { /* Active and definite*/ }
+                            { taskStatus === TASK_STATUS.ACTIVE && deadline && (
+                                <>
+                                    <FormattedMessage id="misc.tasks.taskListItem.relativeTimes.active" />
+                                    { ' ' }
+                                    <ZetkinRelativeTime datetime={ deadline } />
+                                </>
+                            ) }
+                            { /* Active and indefinite */ }
+                            { taskStatus === TASK_STATUS.ACTIVE && !deadline && (
+                                <>
+                                    <FormattedMessage id="misc.tasks.taskListItem.relativeTimes.indefinite" />
+                                    { ' ' }
+                                    <ZetkinRelativeTime datetime={ published } />
+                                </>
+                            ) }
+                        </Typography>
                     </Card>
                 </ListItem>
             </Link>

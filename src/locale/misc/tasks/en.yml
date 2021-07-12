@@ -1,12 +1,11 @@
 statuses:
-    draft: "Draft"
-    ready: "Ready"
     active: "Active"
     closed: "Closed"
-    expired: "Expired"
+    draft: "Draft"
+    scheduled: "Scheduled"
 taskListItem:
     relativeTimes:
-        notYetPublished: "Will be published in"
-        active: "Closes in"
-        closed: "Expires in"
+        active: "Closes"
+        closed: "Expires"
+        scheduled: "Will be published"
         indefinite: "Published"

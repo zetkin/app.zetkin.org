@@ -8,7 +8,7 @@ enum ChipColors {
     closed = '#FF4242',
     draft = '',
     expired= 'black',
-    ready = '#4A8FE7',
+    scheduled = '#4A8FE7',
 }
 
 interface TaskStatusChipProps {
