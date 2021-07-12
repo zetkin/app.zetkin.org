@@ -97,11 +97,11 @@ const WeekCalendarEvent = ({ shiftValue, baseHref, startOfDay, campaign, event }
                                 width={ `${100 - 5 * (shiftValue || 0)}%` }>
                                 { maxNoOfLabels > 0 && (
                                     <Typography ref={ label } noWrap variant="body2">
-                                        { getEventTimeLabel() }
-                                        { event.title || event.activity.title }
+                                        <span data-testid={ `start-time-${event.id}` }>{ getEventTimeLabel() }</span>
+                                        <span data-testid={ `title-${event.id}` }>{ event.title || event.activity.title }</span>
                                     </Typography>) }
                                 { maxNoOfLabels > 1 && event.location.title && (
-                                    <Typography noWrap variant="body2">
+                                    <Typography data-testid={ `location-${event.id}` } noWrap variant="body2">
                                         { event.location.title }
                                     </Typography>) }
                             </Box>

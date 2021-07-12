@@ -284,4 +284,54 @@ describe('WeekCalendar', () => {
         cy.get('[data-testid="calendar-bar-941"]').trigger('mouseover');
         cy.findByText('Dummy campaign').should('be.visible');
     });
+
+    it('shows start time and event title and location', () => {
+        mountWithProviders(
+            <WeekCalendar baseHref={ dummyHref } campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ new Date(2021, 4, 10) } onFocusDate={ () => null } orgId="1"/>,
+        );
+
+        cy.get('[data-testid="event-25"]').within(() => {
+            cy.get('[data-testid="start-time-25"]').should('be.visible');
+            cy.get('[data-testid="title-25"]').should('be.visible');
+            cy.get('[data-testid="location-25"]').should('be.visible');
+        });
+    });
+
+    it('does not show location when the event is too short', () => {
+        dummyEvents[1] = {
+            ...dummyEvents[0],
+            'end_time': '2021-05-10T15:57:00+00:00',
+            'id': 25,
+            'start_time': '2021-05-10T15:37:00+00:00',
+        };
+        mountWithProviders(
+            <WeekCalendar baseHref={ dummyHref } campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ new Date(2021, 4, 10) } onFocusDate={ () => null } orgId="1"/>,
+        );
+
+        cy.get('[data-testid="event-25"]').within(() => {
+            cy.get('[data-testid="start-time-25"]').should('be.visible');
+            cy.get('[data-testid="title-25"]').should('be.visible');
+            cy.get('[data-testid="location-25"]').should('not.exist');
+        });
+    });
+
+    it('handles multi-day events', () => {
+        dummyEvents[1] = {
+            ...dummyEvents[0],
+            'end_time': '2021-05-11T14:00:00+00:00',
+            'id': 25,
+            'start_time': '2021-05-10T15:37:00+00:00',
+        };
+        mountWithProviders(
+            <WeekCalendar baseHref={ dummyHref } campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ new Date(2021, 4, 10) } onFocusDate={ () => null } orgId="1"/>,
+        );
+
+        cy.get('[data-testid="day-0-events"]').within(() => {
+            cy.get('[data-testid="event-25"]').should('be.visible');
+        });
+
+        cy.get('[data-testid="day-1-events"]').within(() => {
+            cy.get('[data-testid="event-25"]').should('be.visible');
+        });
+    });
 });
