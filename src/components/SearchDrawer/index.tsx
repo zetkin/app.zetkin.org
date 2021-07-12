@@ -8,7 +8,7 @@ import {
 } from '@material-ui/core';
 import { FunctionComponent, useEffect, useRef, useState } from 'react';
 
-import getSearchDrawerResults from '../../fetching/getSearchDrawerResults';
+import getPeopleSearchResults from '../../fetching/getPeopleSearchResults';
 import useDebounce from '../../hooks/useDebounce';
 
 import ResultsList from './ResultsList';
@@ -28,7 +28,7 @@ const SearchDrawer: FunctionComponent = (): JSX.Element | null => {
 
     const { refetch, data: results, isIdle, isFetching } = useQuery(
         ['searchDrawerResults', searchFieldValue],
-        getSearchDrawerResults(searchFieldValue, orgId),
+        getPeopleSearchResults(searchFieldValue, orgId),
         { enabled: false },
     );
 

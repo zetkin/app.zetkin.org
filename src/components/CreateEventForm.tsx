@@ -54,7 +54,7 @@ const CreateEventForm = ({ onSubmit, onCancel, orgId }: CreateEventFormProps): J
                 <TextField
                     fullWidth
                     id="title"
-                    label={ intl.formatMessage({ id: 'misc.formDialog.createNew.event.title' }) }
+                    label={ intl.formatMessage({ id: 'misc.formDialog.event.title' }) }
                     margin="normal"
                     name="title"
                 />
@@ -63,7 +63,7 @@ const CreateEventForm = ({ onSubmit, onCancel, orgId }: CreateEventFormProps): J
         },
         {
             field: (
-                <TextField fullWidth id="camp" label={ intl.formatMessage({ id: 'misc.formDialog.createNew.event.campaign' }) }
+                <TextField fullWidth id="camp" label={ intl.formatMessage({ id: 'misc.formDialog.event.campaign' }) }
                     margin="normal"
                     name="campaign_id"
                     select>
@@ -79,7 +79,7 @@ const CreateEventForm = ({ onSubmit, onCancel, orgId }: CreateEventFormProps): J
         {
             field: (
                 <TextField fullWidth id="activity"
-                    label={ intl.formatMessage({ id: 'misc.formDialog.createNew.event.activity' }) }
+                    label={ intl.formatMessage({ id: 'misc.formDialog.event.activity' }) }
                     margin="normal"
                     name="activity_id"
                     select>
@@ -95,7 +95,7 @@ const CreateEventForm = ({ onSubmit, onCancel, orgId }: CreateEventFormProps): J
         {
             field: (
                 <TextField fullWidth id="location"
-                    label={ intl.formatMessage({ id: 'misc.formDialog.createNew.event.place' }) }
+                    label={ intl.formatMessage({ id: 'misc.formDialog.event.place' }) }
                     margin="normal"
                     name="location_id"
                     select>
@@ -114,7 +114,7 @@ const CreateEventForm = ({ onSubmit, onCancel, orgId }: CreateEventFormProps): J
                     InputLabelProps={{
                         shrink: true,
                     }}
-                    label={ intl.formatMessage({ id: 'misc.formDialog.createNew.event.start' }) }
+                    label={ intl.formatMessage({ id: 'misc.formDialog.event.start' }) }
                     margin="normal"
                     name="start_time"
                     required
@@ -130,7 +130,7 @@ const CreateEventForm = ({ onSubmit, onCancel, orgId }: CreateEventFormProps): J
                     InputLabelProps={{
                         shrink: true,
                     }}
-                    label={ intl.formatMessage({ id: 'misc.formDialog.createNew.event.end' }) }
+                    label={ intl.formatMessage({ id: 'misc.formDialog.event.end' }) }
                     margin="normal"
                     name="end_time"
                     required
@@ -146,7 +146,7 @@ const CreateEventForm = ({ onSubmit, onCancel, orgId }: CreateEventFormProps): J
                     InputLabelProps={{
                         shrink: true,
                     }}
-                    label={ intl.formatMessage({ id: 'misc.formDialog.createNew.event.minNo' }) }
+                    label={ intl.formatMessage({ id: 'misc.formDialog.event.minNo' }) }
                     name="num_participants_required"
                     type="number"
                 />
@@ -157,7 +157,7 @@ const CreateEventForm = ({ onSubmit, onCancel, orgId }: CreateEventFormProps): J
                 <TextField
                     fullWidth
                     id="info"
-                    label={ intl.formatMessage({ id: 'misc.formDialog.createNew.event.info' }) }
+                    label={ intl.formatMessage({ id: 'misc.formDialog.event.info' }) }
                     margin="normal"
                     multiline
                     name="info_text"
@@ -172,7 +172,7 @@ const CreateEventForm = ({ onSubmit, onCancel, orgId }: CreateEventFormProps): J
                 <TextField
                     fullWidth
                     id="link"
-                    label={ intl.formatMessage({ id: 'misc.formDialog.createNew.event.link' }) }
+                    label={ intl.formatMessage({ id: 'misc.formDialog.event.link' }) }
                     margin="normal"
                     name="url"
                 />

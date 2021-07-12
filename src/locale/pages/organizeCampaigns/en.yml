@@ -3,7 +3,11 @@ linkGroup:
   settings: Edit Settings
 noManager: No Campaign Manager
 events: Events
+<<<<<<< HEAD
 tasks: Tasks
+=======
+indefinite: Indefinite timeline
+>>>>>>> main
 calendarView: See all in calendar
 mobilization: 
   heading: Mobilization and outreach (none configured)

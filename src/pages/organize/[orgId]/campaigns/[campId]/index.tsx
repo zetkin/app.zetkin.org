@@ -1,10 +1,14 @@
 import { GetServerSideProps } from 'next';
 import { grey } from '@material-ui/core/colors';
 import NextLink from 'next/link';
+import { useRouter } from 'next/router';
 import { Avatar, Box, Button, Link, makeStyles, Typography } from '@material-ui/core';
-import { FormattedDate, FormattedMessage as Msg } from 'react-intl';
+import { FormattedDate, FormattedMessage as Msg, useIntl } from 'react-intl';
 import { Phone, PlaylistAddCheck, Public, Settings } from '@material-ui/icons';
+import { useEffect, useState } from 'react';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 
+import CampaignForm from '../../../../../components/CampaignForm';
 import EventList from '../../../../../components/organize/EventList';
 import getCampaign from '../../../../../fetching/getCampaign';
 import getCampaignEvents from '../../../../../fetching/getCampaignEvents';
@@ -12,15 +16,16 @@ import getCampaignTasks from '../../../../../fetching/tasks/getCampaignTasks';
 import getOrg from '../../../../../fetching/getOrg';
 import OrganizeCampaignLayout from '../../../../../components/layout/OrganizeCampaignLayout';
 import { PageWithLayout } from '../../../../../types';
+import patchCampaign from '../../../../../fetching/patchCampaign';
 import { scaffold } from '../../../../../utils/next';
 import TaskList from '../../../../../components/organize/TaskList';
-import { useQuery } from 'react-query';
+import ZetkinDialog from '../../../../../components/ZetkinDialog';
 import ZetkinSpeedDial, { ACTIONS } from '../../../../../components/ZetkinSpeedDial';
 
 const scaffoldOptions = {
     authLevelRequired: 2,
     localeScope: [
-        'layout.organize', 'misc.breadcrumbs', 'pages.organizeCampaigns', 'misc.formDialog', 'misc.speedDial',
+        'layout.organize', 'misc.breadcrumbs', 'pages.organizeCampaigns', 'misc.formDialog',
     ],
 };
 
@@ -82,6 +87,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({ orgId, campId }) => {
+    const intl = useIntl();
+    const queryClient = useQueryClient();
+    const router = useRouter();
     const classes = useStyles();
     const eventsQuery = useQuery(['campaignEvents', orgId, campId], getCampaignEvents(orgId, campId));
     const tasksQuery = useQuery(['campaignTasks', orgId, campId], getCampaignTasks(orgId, campId));
@@ -89,13 +97,51 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({ orgId,
     const events = eventsQuery.data || [];
     const tasks = tasksQuery.data || [];
     const campaign = campaignQuery.data;
+    const [formDialogOpen, setFormDialogOpen] = useState<null | string>(null);
+
+    const campaignMutation = useMutation(patchCampaign(orgId, campId), {
+        onSettled: () => queryClient.invalidateQueries('campaign'),
+    });
 
     const sortedEvents = [...events].sort((a, b) => {
         return new Date(a.start_time).getTime() - new Date(b.start_time).getTime();
     });
 
-    const startDate = sortedEvents[0].start_time;
-    const endDate = sortedEvents[sortedEvents.length - 1].start_time;
+    const startDate = sortedEvents[0]?.start_time;
+    const endDate = sortedEvents[sortedEvents.length - 1]?.start_time;
+
+    const closeDialog = () => {
+        setFormDialogOpen(null);
+        router.push(`/organize/${orgId}/campaigns/${campId}`, undefined, { shallow: true });
+    };
+
+    const openEditCampaignDialog = () => {
+        router.push(`/organize/${orgId}/campaigns/${campId}#edit`, undefined, { shallow: true });
+        setFormDialogOpen('campaign');
+    };
+
+    const handleDialogClose = () => {
+        closeDialog();
+    };
+
+    const handleFormCancel = () => {
+        closeDialog();
+    };
+
+    const handleEditCampaignFormSubmit = (data: Record<string, unknown>) => {
+        campaignMutation.mutate(data);
+        closeDialog();
+    };
+
+    useEffect(() => {
+        const current = router.asPath.split('/').pop();
+        if (current?.includes('#new_campaign')) {
+            setFormDialogOpen('campaign');
+        }
+        else if (current?.includes('#new_event')) {
+            setFormDialogOpen('event');
+        }
+    }, [router.asPath]);
 
     return (
         <>
@@ -113,20 +159,27 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({ orgId,
                     </Box>
                     <Box display="flex" flexDirection="column" p={ 1 }>
                         <Typography variant="h6">
-                            { campaign?.manager || <Msg id="pages.organizeCampaigns.noManager" /> }
+                            { campaign?.manager?.name || <Msg id="pages.organizeCampaigns.noManager" /> }
                         </Typography>
                         <Typography variant="subtitle2">
-                            <FormattedDate
-                                day="2-digit"
-                                month="long"
-                                value={ startDate }
-                            />{ ` - ` }
-                            <FormattedDate
-                                day="2-digit"
-                                month="long"
-                                value={ endDate }
-                                year="numeric"
-                            />
+                            { startDate && endDate ? (
+                                <>
+                                    <FormattedDate
+                                        day="2-digit"
+                                        month="long"
+                                        value={ startDate }
+                                    />
+                                    { ` - ` }
+                                    <FormattedDate
+                                        day="2-digit"
+                                        month="long"
+                                        value={ endDate }
+                                        year="numeric"
+                                    />
+                                </>
+                            ) : (
+                                <Msg id="pages.organizeCampaigns.indefinite" />
+                            ) }
                         </Typography>
                         <Box display="flex" p={ 1 } pl={ 0 }>
                             <Box display="flex" p={ 1 } pl={ 0 }>
@@ -138,12 +191,9 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({ orgId,
                                 </NextLink>
                             </Box>
                             <Box display="flex" p={ 1 }>
-                                <Settings color="primary"/>
-                                <NextLink href={ `/organize/${orgId}/campaigns/${campId}/settings` } passHref>
-                                    <Link underline="always">
-                                        <Msg id="pages.organizeCampaigns.linkGroup.settings"/>
-                                    </Link>
-                                </NextLink>
+                                <Button onClick={ openEditCampaignDialog } startIcon={ <Settings color="primary" /> } variant="contained">
+                                    <Msg id="pages.organizeCampaigns.linkGroup.settings"/>
+                                </Button>
                             </Box>
                         </Box>
                     </Box>
@@ -222,6 +272,12 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({ orgId,
                 </Box>
             </Box>
             <ZetkinSpeedDial actions={ [ACTIONS.CREATE_EVENT] } />
+            <ZetkinDialog
+                onClose={ handleDialogClose }
+                open={ !!formDialogOpen }
+                title={ intl.formatMessage({ id: 'misc.formDialog.campaign.edit' }) }>
+                { formDialogOpen === 'campaign' && <CampaignForm campaign={ campaign } onCancel={ handleFormCancel } onSubmit={ handleEditCampaignFormSubmit }/> }
+            </ZetkinDialog>
         </>
     );
 };

@@ -1,7 +1,7 @@
 import { defaultFetch } from '.';
 import { ZetkinPerson } from '../types/zetkin';
 
-export default function getSearchDrawerResults(
+export default function getPeopleSearchResults(
     searchQuery: string,
     orgId: string,
     fetch = defaultFetch,
