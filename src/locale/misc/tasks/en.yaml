@@ -1,0 +1,12 @@
+statuses:
+    draft: "Draft"
+    ready: "Ready"
+    active: "Active"
+    closed: "Closed"
+    expired: "Expired"
+taskListItem:
+    relativeTimes:
+        notYetPublished: "Will be published in"
+        active: "Closes in"
+        closed: "Expires in"
+        indefinite: "Published"
