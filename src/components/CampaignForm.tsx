@@ -95,6 +95,7 @@ const CampaignForm = ({ onSubmit, onCancel, campaign }: CampaignFormProps): JSX.
             field: (
                 <Autocomplete
                     defaultValue={{ first_name:campaign?.manager?.name.split(' ')[0], id: campaign?.manager?.id, last_name: campaign?.manager?.name.split(' ')[1] } as Partial<ZetkinPerson>  || null}
+                    filterOptions={ (options) => options } // override filtering
                     getOptionLabel={ person => person.first_name ? `${person.first_name} ${person.last_name}` : '' }
                     getOptionValue={ person => person.id || null }
                     label={ intl.formatMessage({ id: 'misc.formDialog.campaign.manager' }) }
