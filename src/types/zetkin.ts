@@ -185,13 +185,13 @@ export interface ZetkinTask {
     id: number;
     title: string;
     instructions: string;
-    publish_date: string; // iso string
-    expiry_date: string; // iso string
+    published: string; // iso string
+    expires: string; // iso string
     deadline: string; // iso string
     type: TaskType;
     config: Record<string, unknown >;
     target: {
-        filter_spec: string;
+        filter_spec: Array<{type: string}>;
         id: number;
     };
     campaign: {

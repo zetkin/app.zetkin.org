@@ -230,8 +230,9 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({ orgId,
                         </Box>
                     </Box>
                 </Box>
-                { /* Mobilizations & Outreach */ }
+                { /* Right Column */ }
                 <Box display="flex" flex={ 1 } flexDirection="column" m={ 1 }>
+                    { /* Mobilizations & Outreach */ }
                     <Box border={ 1 } m={ 1 } p={ 3 } pb={ 5 }>
                         <Typography component="h3" variant="h6">
                             <Msg id="pages.organizeCampaigns.mobilization.heading" />
@@ -272,6 +273,7 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({ orgId,
                 </Box>
             </Box>
             <ZetkinSpeedDial actions={ [ACTIONS.CREATE_EVENT] } />
+            { /* Edit Campaign Form */ }
             <ZetkinDialog
                 onClose={ handleDialogClose }
                 open={ !!formDialogOpen }
