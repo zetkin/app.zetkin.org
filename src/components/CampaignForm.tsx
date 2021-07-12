@@ -28,7 +28,9 @@ const CampaignForm = ({ onSubmit, onCancel, campaign }: CampaignFormProps): JSX.
         { enabled: false },
     );
 
-    let searchLabel = searchFieldValue.length? intl.formatMessage({ id: 'misc.formDialog.campaign.keepSearch' }) : intl.formatMessage({ id: 'misc.formDialog.campaign.search' });
+    let searchLabel = searchFieldValue.length ?
+        intl.formatMessage({ id: 'misc.formDialog.campaign.keepSearch' }) :
+        intl.formatMessage({ id: 'misc.formDialog.campaign.search' });
 
     if (isLoading) {
         searchLabel = intl.formatMessage({ id: 'misc.formDialog.campaign.searching' });
@@ -46,7 +48,7 @@ const CampaignForm = ({ onSubmit, onCancel, campaign }: CampaignFormProps): JSX.
         if (searchFieldValue.length >= 3) {
             debouncedQuery();
         }
-    }, [searchFieldValue.length, debouncedQuery, intl]);
+    }, [searchFieldValue.length, debouncedQuery]);
 
     const initialValues = {
         info_text: campaign?.info_text,
