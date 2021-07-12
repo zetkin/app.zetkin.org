@@ -1,9 +1,10 @@
-import { getContrastColor } from '../../../utils/colorUtils';
 import { grey } from '@material-ui/core/colors';
 import NextLink from 'next/link';
 import { Box, Button, Link, makeStyles, Tooltip, Typography } from '@material-ui/core';
-import { FormattedDate, FormattedTime, FormattedMessage as Msg } from 'react-intl';
+import { FormattedDate, FormattedMessage as Msg } from 'react-intl';
 import  { useEffect, useRef, useState } from 'react';
+
+import MonthCalendarEvent from './MonthCalendarEvent';
 import { ZetkinCampaign, ZetkinEvent } from '../../../types/zetkin';
 
 interface MonthCalendarProps {
@@ -42,15 +43,14 @@ const useStyles = makeStyles((theme) => ({
 
 const MonthCalendar = ({ orgId, campaigns, baseHref, events, onFocusDate, focusDate }: MonthCalendarProps): JSX.Element => {
     const gridItem = useRef<HTMLUListElement>(null);
-    const listItem = useRef<HTMLDivElement>(null);
     const windowHeight = useWindowHeight();
     const [maxNoOfEvents, setMaxNoOfEvents] = useState(1);
+    const [listItemHeight, setListItemHeight] = useState(0);
 
     useEffect(() => {
         const gridItemHeight = gridItem.current?.offsetHeight || 0;
-        const listItemHeight = listItem.current?.offsetHeight || 0 * 1.5;
         setMaxNoOfEvents(listItemHeight ? Math.floor((gridItemHeight - listItemHeight * 2) / listItemHeight) : 1);
-    }, [focusDate, windowHeight]);
+    }, [focusDate, windowHeight, listItemHeight]);
 
     const classes = useStyles();
     const month = focusDate.getUTCMonth();
@@ -138,32 +138,8 @@ const MonthCalendar = ({ orgId, campaigns, baseHref, events, onFocusDate, focusD
                                 <ul { ...( index === 0 && { ref: gridItem } ) } className={ classes.list } data-testid={ `day-${index}-events` }>
                                     { daysEvents.map((event, i) => {
                                         const campaign = campaigns.find(c => c.id === event.campaign.id);
-                                        const naiveStartTime = new Date(event.start_time);
-
-                                        const startTime = new Date(naiveStartTime.getUTCFullYear(), naiveStartTime.getUTCMonth(), naiveStartTime.getUTCDate(), naiveStartTime.getUTCHours(), naiveStartTime.getUTCMinutes());
-                                        const startsBeforeToday = startTime <= currentDate;
                                         return (
-                                            <li key={ event.id }>
-                                                <NextLink href={  baseHref + `/calendar/events/${event.id}` } passHref>
-                                                    <Link underline="none">
-                                                        <div
-                                                            { ...( i === 0 && { ref: listItem } ) }
-                                                            data-testid={ `event-${event.id}` } style={{
-                                                                background: campaign?.color || grey[400],
-                                                                color: getContrastColor(campaign?.color|| grey[400]),
-                                                                display: i < maxNoOfEvents ? 'block' : 'none',
-                                                                margin: '0 0 0.2rem 0',
-                                                                padding: '0 0.5rem',
-                                                                width: '100%',
-                                                            }}>
-                                                            <Typography noWrap={ true } variant="body2">
-                                                                <FormattedTime value={ new Date(startsBeforeToday? currentDate: startTime) }/>{ ` - ` }
-                                                                { event.title || event.activity.title }
-                                                            </Typography>
-                                                        </div>
-                                                    </Link>
-                                                </NextLink>
-                                            </li>
+                                            <MonthCalendarEvent key={ event.id } baseHref={ baseHref } campaign={ campaign } event={ event } index={ i } isVisible={ i < maxNoOfEvents } onLoad={ (listItemHeight) => setListItemHeight(listItemHeight) } startOfDay={ currentDate }/>
                                         );
                                     }) }
                                     { totalEvents - maxNoOfEvents > 0 && (
