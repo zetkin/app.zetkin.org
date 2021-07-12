@@ -142,18 +142,29 @@ const MonthCalendar = ({ orgId, campaigns, baseHref, events, onFocusDate, focusD
                                             <MonthCalendarEvent key={ event.id } baseHref={ baseHref } campaign={ campaign } event={ event } index={ i } isVisible={ i < maxNoOfEvents } onLoad={ (listItemHeight) => setListItemHeight(listItemHeight) } startOfDay={ currentDate }/>
                                         );
                                     }) }
-                                    { totalEvents - maxNoOfEvents > 0 && (
-                                        <li style={{
-                                            margin: '0 0 0.2rem 0',
-                                            padding: '0 0.5rem',
-                                            width: '100%',
-                                        }}>
-                                            <Typography>
-                                                { totalEvents - maxNoOfEvents } more events
-                                            </Typography>
-                                        </li>
-                                    ) }
                                 </ul>
+                                { totalEvents - maxNoOfEvents > 0 && (
+                                    <Tooltip arrow interactive title={ (
+                                        <>
+                                            <Box>
+                                                <ul className={ classes.list } data-testid={ `day-${index}-events` }>
+                                                    { daysEvents.map((event, i) => {
+                                                        const campaign = campaigns.find(c => c.id === event.campaign.id);
+                                                        return (
+                                                            <MonthCalendarEvent key={ event.id } baseHref={ baseHref } campaign={ campaign } event={ event } index={ i } isVisible={ i >= maxNoOfEvents } onLoad={ () => null } startOfDay={ currentDate }/>
+                                                        );
+                                                    }) }
+                                                </ul>
+                                            </Box>
+                                        </>
+                                    ) }>
+                                        <Button disableRipple style={{ padding: 0 }}>
+                                            <Typography variant="body1">
+                                                <Msg id="misc.calendar.moreEvents" values={{ numEvents: totalEvents - maxNoOfEvents }} />
+                                            </Typography>
+                                        </Button>
+                                    </Tooltip>
+                                ) }
                             </Box>
                         );
                     }) }

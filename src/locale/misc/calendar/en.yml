@@ -3,3 +3,5 @@ week: Week
 label: Pick an option
 prev: PREV
 next: NEXT
+moreEvents: |
+  {numEvents, number} more events
