@@ -2,7 +2,7 @@ import { useIntl } from 'react-intl';
 import { List, Typography } from '@material-ui/core';
 
 import TaskListItem from './TaskListItem';
-import { ZetkinTask } from '../../../types/zetkin';
+import { ZetkinTask } from '../../../../types/zetkin';
 
 interface TaskListProps {
     tasks: ZetkinTask[];

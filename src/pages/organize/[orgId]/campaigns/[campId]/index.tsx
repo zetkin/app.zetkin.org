@@ -18,7 +18,7 @@ import OrganizeCampaignLayout from '../../../../../components/layout/OrganizeCam
 import { PageWithLayout } from '../../../../../types';
 import patchCampaign from '../../../../../fetching/patchCampaign';
 import { scaffold } from '../../../../../utils/next';
-import TaskList from '../../../../../components/organize/TaskList';
+import TaskList from '../../../../../components/organize/tasks/TaskList';
 import ZetkinDialog from '../../../../../components/ZetkinDialog';
 import ZetkinSpeedDial, { ACTIONS } from '../../../../../components/ZetkinSpeedDial';
 
