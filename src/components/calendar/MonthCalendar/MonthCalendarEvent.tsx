@@ -4,7 +4,7 @@ import { grey } from '@material-ui/core/colors';
 import NextLink from 'next/link';
 import { ArrowBackIos, ArrowForwardIos } from '@material-ui/icons';
 import { Box,  Link, Typography } from '@material-ui/core';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { getNaiveDate } from '../../../utils/getNaiveDate';
 import { ZetkinCampaign, ZetkinEvent } from '../../../types/zetkin';
@@ -23,6 +23,7 @@ interface MonthCalendarEventProps {
 
 const MonthCalendarEvent = ({ baseHref, index, startOfDay, campaign, event, onLoad, isVisible }: MonthCalendarEventProps): JSX.Element => {
     const listItem = useRef<HTMLDivElement>(null);
+    const [focussed, setFocussed] = useState(false);
 
     useEffect(() => {
         if (listItem.current) {
@@ -45,9 +46,13 @@ const MonthCalendarEvent = ({ baseHref, index, startOfDay, campaign, event, onLo
             <NextLink href={  baseHref + `/calendar/events/${event.id}` } passHref>
                 <Link underline="none">
                     <Box
+                        onMouseEnter={ () => setFocussed(true) }
+                        onMouseLeave={ () => setFocussed(false) }
                         { ...( index === 0 && { ref: listItem } ) }
                         alignItems="center"
-                        bgcolor={ campaign?.color || DEFAULT_COLOR }
+                        bgcolor={ (campaign?.color
+                            || DEFAULT_COLOR) + `${focussed? '': '55'}` }
+                        borderLeft={ `5px solid ${campaign?.color || DEFAULT_COLOR}` }
                         color={ getContrastColor(campaign?.color || DEFAULT_COLOR) }
                         data-testid={ `event-${event.id}` }
                         display={ isVisible ? 'flex' : 'none' }
