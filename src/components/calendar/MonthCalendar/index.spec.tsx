@@ -133,9 +133,15 @@ describe('MonthCalendar', () => {
         mountWithProviders(
             <MonthCalendar baseHref={ dummyHref } campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ new Date(2021, 4, 10) } onFocusDate={ () => null } orgId="1"  />,
         );
-        cy.get('[data-testid="griditem-1"]').contains('id 24');
-        cy.get('[data-testid="griditem-14"]').contains('id 26');
-        cy.get('[data-testid="griditem-14"]').contains('id 25');
+        cy.get('[data-testid="griditem-1"]').within(() => {
+            cy.get('[data-testid="event-24"]').should('be.visible');
+        });
+        cy.get('[data-testid="griditem-14"]').within(() => {
+            cy.get('[data-testid="event-26"]').should('be.visible');
+        });
+        cy.get('[data-testid="griditem-14"]').within(() => {
+            cy.get('[data-testid="event-25"]').should('be.visible');
+        });
     });
 
     it('shows out of range dates with another colour', () => {
