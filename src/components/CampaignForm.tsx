@@ -21,15 +21,21 @@ const CampaignForm = ({ onSubmit, onCancel, campaign }: CampaignFormProps): JSX.
     const { orgId } = useRouter().query;
     const intl = useIntl();
 
-    const [people, setPeople] = useState<ZetkinPerson[]>([]);
-    const [searchLabel, setSearchLabel] = useState(intl.formatMessage({ id: 'misc.formDialog.campaign.noOptions' }));
-
     const [searchFieldValue, setSearchFieldValue] = useState<string>('');
-    const { isIdle, refetch, data: results } = useQuery(
+    const { isLoading, refetch, data: results } = useQuery(
         ['searchDrawerResults', searchFieldValue],
         getPeopleSearchResults(searchFieldValue, orgId as string),
         { enabled: false },
     );
+
+    let searchLabel = searchFieldValue.length? intl.formatMessage({ id: 'misc.formDialog.campaign.keepSearch' }) : intl.formatMessage({ id: 'misc.formDialog.campaign.search' });
+
+    if (isLoading) {
+        searchLabel = intl.formatMessage({ id: 'misc.formDialog.campaign.searching' });
+    }
+    else if (results?.length == 0) {
+        searchLabel = intl.formatMessage({ id: 'misc.formDialog.campaign.noResult' });
+    }
 
     const debouncedQuery = useDebounce(async () => {
         refetch();
@@ -37,13 +43,10 @@ const CampaignForm = ({ onSubmit, onCancel, campaign }: CampaignFormProps): JSX.
 
     // Watch for changes on the search field value and debounce search if changed
     useEffect(() => {
-        if (searchFieldValue.length >= 3)
-            setSearchLabel(intl.formatMessage({ id: 'misc.formDialog.campaign.searching' }));
-        debouncedQuery();
-        if (results) {
-            setPeople(results);
+        if (searchFieldValue.length >= 3) {
+            debouncedQuery();
         }
-    }, [searchFieldValue, debouncedQuery, results, intl]);
+    }, [searchFieldValue.length, debouncedQuery, intl]);
 
     const initialValues = {
         info_text: campaign?.info_text,
@@ -92,17 +95,15 @@ const CampaignForm = ({ onSubmit, onCancel, campaign }: CampaignFormProps): JSX.
             field: (
                 <Autocomplete
                     defaultValue={{ first_name:campaign?.manager?.name.split(' ')[0], id: campaign?.manager?.id, last_name: campaign?.manager?.name.split(' ')[1] } as Partial<ZetkinPerson>  || null}
-                    getOptionLabel={ person => `${person.first_name || ''} ${person.last_name || ''}` }
-                    getOptionValue={ person => person.id || 0 }
+                    getOptionLabel={ person => person.first_name ? `${person.first_name} ${person.last_name}` : '' }
+                    getOptionValue={ person => person.id || null }
                     label={ intl.formatMessage({ id: 'misc.formDialog.campaign.manager' }) }
                     name="manager_id"
-                    noOptionsText={
-                        (!people.length && !isIdle) ? intl.formatMessage({ id: 'misc.formDialog.campaign.noResult' })
-                            : searchLabel }
+                    noOptionsText={ searchLabel }
                     onInputChange={ (_, v) => {
                         setSearchFieldValue(v);
                     } }
-                    options={ people }
+                    options={ results || [] }
                     renderOption={ (person) => (
                         <Box alignItems="center" display="flex">
                             <Box m={ 1 }>
