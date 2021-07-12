@@ -177,6 +177,7 @@ export enum TaskType {
 }
 
 export interface ZetkinTask {
+    id: number;
     title: string;
     instructions: string;
     publish_date: string; // iso string
