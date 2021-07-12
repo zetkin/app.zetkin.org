@@ -17,7 +17,7 @@ import WeekCalendar from '../../../../../../components/calendar/WeekCalendar';
 const scaffoldOptions = {
     authLevelRequired: 2,
     localeScope: [
-        'layout.organize', 'misc.breadcrumbs', 'misc.calendar',
+        'layout.organize', 'misc.breadcrumbs', 'misc.calendar', 'misc.formDialog', 'misc.speedDial',
     ],
 };
 
