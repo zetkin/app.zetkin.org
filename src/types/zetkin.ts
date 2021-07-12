@@ -4,7 +4,12 @@ export interface ZetkinCampaign {
     title: string;
     id: number;
     organization?: ZetkinOrganization;
-    manager: string | null;
+    manager: null | {
+        id: number;
+        name: string;
+    };
+    visibility: string;
+    published: boolean;
 }
 
 export interface ZetkinMembership {
