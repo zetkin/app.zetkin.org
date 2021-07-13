@@ -8,7 +8,7 @@ export function generateRandomColor(seed: string): string {
     const b = rand(256);
 
     const rgb = (r << 16) | (g << 8) | b;
-    return `#${rgb.toString(16)}`;
+    return `#${rgb.toString(16).padStart(6, '0')}`;
 }
 
 export function getContrastColor(color: string):string {

@@ -7,7 +7,7 @@ describe('Login process', () => {
         cy.url().should('match', /http:\/\/login\.dev\.zetkin\.org\//);
     });
 
-    it('takes you to My Page when clicking on user avatar', () => {
+    xit('takes you to My Page when clicking on user avatar', () => {
         cy.login();
         cy.visit('/');
         cy.waitUntilReactRendered();

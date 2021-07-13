@@ -4,6 +4,11 @@ import { grey, red } from '@material-ui/core/colors';
 // Create a theme instance.
 const theme = createMuiTheme({
     overrides: {
+        MuiButton: {
+            root: {
+                textTransform: 'none',
+            },
+        },
         MuiCard: {
             root: {
                 backgroundColor: 'transparent',
