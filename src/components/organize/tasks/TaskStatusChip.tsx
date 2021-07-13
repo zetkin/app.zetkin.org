@@ -14,6 +14,7 @@ enum ChipColors {
 interface TaskStatusChipProps {
     status: TASK_STATUS;
 }
+
 const TaskStatusChip: React.FunctionComponent<TaskStatusChipProps> = ({ status }) => {
     const intl = useIntl();
     return (

@@ -192,9 +192,9 @@ export interface ZetkinTask {
     config?: Record<string, unknown >;
     target: {
         filter_spec: {
-            'config': Record<string, unknown>;
-            'op': 'sub' | 'add';
-            'type': string;
+            config?: Record<string, unknown>;
+            op: 'sub' | 'add';
+            type: string;
         };
         id: number;
     };
