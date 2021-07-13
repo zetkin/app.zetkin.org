@@ -23,7 +23,7 @@ const CampaignForm = ({ onSubmit, onCancel, campaign }: CampaignFormProps): JSX.
 
     const [searchFieldValue, setSearchFieldValue] = useState<string>('');
     const { isLoading, refetch, data: results } = useQuery(
-        ['searchDrawerResults', searchFieldValue],
+        ['peopleSearchResults', searchFieldValue],
         getPeopleSearchResults(searchFieldValue, orgId as string),
         { enabled: false },
     );
