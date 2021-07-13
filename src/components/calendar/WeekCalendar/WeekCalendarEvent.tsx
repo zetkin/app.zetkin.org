@@ -20,7 +20,7 @@ const WeekCalendarEvent = ({ shiftValue, baseHref, startOfDay, campaign, event }
     const label = useRef<HTMLParagraphElement>(null);
     const eventDiv = useRef<HTMLDivElement>(null);
     const [maxNoOfLabels, setMaxNoOfLabels] = useState(2);
-    const [focussed, setFocussed] = useState(false);
+    const [focused, setFocused] = useState(false);
 
     useEffect(() => {
         const labelHeight = (label.current?.offsetHeight || 0)  + 5;
@@ -75,7 +75,7 @@ const WeekCalendarEvent = ({ shiftValue, baseHref, startOfDay, campaign, event }
             <NextLink href={  baseHref + `/calendar/events/${event.id}` } passHref>
                 <Link>
                     <Box
-                        { ...( focussed && { zIndex: 10 } ) }
+                        { ...( focused && { zIndex: 10 } ) }
                         display="flex"
                         height={ getEventPos().height }
                         justifyContent="flex-end"
@@ -86,13 +86,13 @@ const WeekCalendarEvent = ({ shiftValue, baseHref, startOfDay, campaign, event }
                             <Box
                                 { ...{ ref: eventDiv } }
                                 bgcolor={ (campaign?.color
-                                    || DEFAULT_COLOR) + `${focussed? '': '55'}` }
+                                    || DEFAULT_COLOR) + `${focused? '': '55'}` }
                                 borderLeft={ `5px solid ${campaign?.color || DEFAULT_COLOR}` }
                                 color={ getContrastColor(campaign?.color || DEFAULT_COLOR) }
                                 data-testid={ `event-${event.id}` }
                                 height={ 1 }
-                                onMouseEnter={ () => setFocussed(true) }
-                                onMouseLeave={ () => setFocussed(false) }
+                                onMouseEnter={ () => setFocused(true) }
+                                onMouseLeave={ () => setFocused(false) }
                                 padding={ 1 }
                                 width={ `${100 - 5 * (shiftValue || 0)}%` }>
                                 { maxNoOfLabels > 0 && (

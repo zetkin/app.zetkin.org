@@ -22,12 +22,12 @@ interface MonthCalendarEventProps {
 }
 
 const MonthCalendarEvent = ({ baseHref, index, startOfDay, campaign, event, onLoad, isVisible }: MonthCalendarEventProps): JSX.Element => {
-    const listItem = useRef<HTMLDivElement>(null);
-    const [focussed, setFocussed] = useState(false);
+    const eventDiv = useRef<HTMLDivElement>(null);
+    const [focused, setFocused] = useState(false);
 
     useEffect(() => {
-        if (listItem.current) {
-            const listItemHeight = listItem.current.offsetHeight || 0 * 1.5;
+        if (eventDiv.current) {
+            const listItemHeight = eventDiv.current.offsetHeight || 0 * 1.5;
             onLoad(listItemHeight);
         }
     }, [onLoad]);
@@ -46,12 +46,12 @@ const MonthCalendarEvent = ({ baseHref, index, startOfDay, campaign, event, onLo
             <NextLink href={  baseHref + `/calendar/events/${event.id}` } passHref>
                 <Link underline="none">
                     <Box
-                        onMouseEnter={ () => setFocussed(true) }
-                        onMouseLeave={ () => setFocussed(false) }
-                        { ...( index === 0 && { ref: listItem } ) }
+                        onMouseEnter={ () => setFocused(true) }
+                        onMouseLeave={ () => setFocused(false) }
+                        { ...( index === 0 && { ref: eventDiv } ) }
                         alignItems="center"
                         bgcolor={ (campaign?.color
-                            || DEFAULT_COLOR) + `${focussed? '': '55'}` }
+                            || DEFAULT_COLOR) + `${focused? '': '55'}` }
                         borderLeft={ `5px solid ${campaign?.color || DEFAULT_COLOR}` }
                         color={ getContrastColor(campaign?.color || DEFAULT_COLOR) }
                         data-testid={ `event-${event.id}` }
