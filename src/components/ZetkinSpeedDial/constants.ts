@@ -8,5 +8,6 @@
  * the `DialogContent` component's base props.
  */
 export enum ACTIONS {
+    CREATE_CAMPAIGN = 'createCampaign',
     CREATE_EVENT = 'createEvent',
 }

@@ -20,6 +20,7 @@ import patchCampaign from '../../../../../fetching/patchCampaign';
 import { scaffold } from '../../../../../utils/next';
 import TaskList from '../../../../../components/organize/tasks/TaskList';
 import ZetkinDialog from '../../../../../components/ZetkinDialog';
+import ZetkinSpeedDial, { ACTIONS } from '../../../../../components/ZetkinSpeedDial';
 
 const scaffoldOptions = {
     authLevelRequired: 2,
@@ -29,6 +30,7 @@ const scaffoldOptions = {
         'pages.organizeCampaigns',
         'misc.formDialog',
         'misc.tasks',
+        'misc.speedDial',
     ],
 };
 
@@ -158,7 +160,10 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({ orgId,
                 </Box>
                 <Box display="flex" flex={ 1 } p={ 1 }>
                     <Box p={ 1 }>
-                        <Avatar></Avatar>
+                        <Avatar
+                            src={ campaign?.manager ?
+                                `/api/orgs/${orgId}/people/${campaign?.manager.id}/avatar` : undefined }>
+                        </Avatar>
                     </Box>
                     <Box display="flex" flexDirection="column" p={ 1 }>
                         <Typography variant="h6">
@@ -282,6 +287,7 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({ orgId,
                 title={ intl.formatMessage({ id: 'misc.formDialog.campaign.edit' }) }>
                 { formDialogOpen === 'campaign' && <CampaignForm campaign={ campaign } onCancel={ handleFormCancel } onSubmit={ handleEditCampaignFormSubmit }/> }
             </ZetkinDialog>
+            <ZetkinSpeedDial actions={ [ACTIONS.CREATE_EVENT] }/>
         </>
     );
 };
