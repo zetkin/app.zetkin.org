@@ -31,15 +31,22 @@ const DatetimeTooltipContents: React.FunctionComponent<ZetkinRelativeTimeProps> 
 };
 
 const ZetkinRelativeTime: React.FunctionComponent<ZetkinRelativeTimeProps> = ({ datetime }) => {
+    if (!datetime) {
+        return null;
+    }
+
     const now = dayjs();
     const absoluteDatetime = dayjs(datetime);
     // Time difference in epoch time
-    const difference =  absoluteDatetime.unix() - now.unix();
+    const difference: number =  absoluteDatetime.unix() - now.unix();
 
     return (
-        <DatetimeTooltip title={ <DatetimeTooltipContents datetime={ datetime } /> }>
+        <DatetimeTooltip arrow title={ <DatetimeTooltipContents datetime={ datetime } /> }>
             <span>
-                <FormattedRelativeTime numeric="auto" updateIntervalInSeconds={ 0 } value={ difference } />
+                {
+                    !isNaN(difference) &&
+                    <FormattedRelativeTime numeric="auto" updateIntervalInSeconds={ 300 } value={ difference } />
+                }
             </span>
         </DatetimeTooltip>
     );

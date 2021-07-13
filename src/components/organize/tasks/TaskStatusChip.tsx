@@ -1,7 +1,7 @@
 import { Chip } from '@material-ui/core';
 import { useIntl } from 'react-intl';
 
-import { TASK_STATUS } from '../getTaskStatus';
+import { TASK_STATUS } from '../../../utils/getTaskStatus';
 
 enum ChipColors {
     active = '#6CC551',

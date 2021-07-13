@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { ZetkinTask } from '../../../types/zetkin';
+import { ZetkinTask } from '../types/zetkin';
 
 export enum TASK_STATUS {
     ACTIVE= 'active',

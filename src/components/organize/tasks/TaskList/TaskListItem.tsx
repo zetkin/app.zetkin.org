@@ -8,7 +8,7 @@ import ZetkinRelativeTime from '../../../ZetkinRelativeTime';
 import { ZetkinTask } from '../../../../types/zetkin';
 
 import TaskStatusChip from '../TaskStatusChip';
-import getTaskStatus, { TASK_STATUS } from '../getTaskStatus';
+import getTaskStatus, { TASK_STATUS } from '../../../../utils/getTaskStatus';
 
 interface TaskListItemProps {
     task: ZetkinTask;
