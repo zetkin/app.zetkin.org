@@ -14,11 +14,9 @@ const getTaskStatus = (task: ZetkinTask): TASK_STATUS => {
     const now = dayjs();
     const publishedDate = dayjs(published);
     const deadlineDate = dayjs(deadline);
-    // const expirationDate = dayjs(expires);
 
     const isPublished = publishedDate.isBefore(now);
     const isDeadlinePassed = deadlineDate.isBefore(now);
-    // const isExpired = expirationDate.isBefore(now);
 
     if (isDeadlinePassed) {
         return TASK_STATUS.CLOSED;
