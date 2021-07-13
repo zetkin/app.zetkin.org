@@ -176,27 +176,25 @@ const MonthCalendar = ({ orgId, campaigns, baseHref, events, onFocusDate, focusD
                                 </ul>
                                 { totalEvents - maxNoOfEvents > 0 && (
                                     <Tooltip arrow interactive title={ (
-                                        <>
-                                            <Box>
-                                                <ul className={ classes.list } data-testid={ `day-${index}-events` }>
-                                                    { daysEvents.map((event, i) => {
-                                                        const campaign = campaigns.find(c => c.id === event.campaign.id);
-                                                        return (
-                                                            <MonthCalendarEvent
-                                                                key={ event.id }
-                                                                baseHref={ baseHref }
-                                                                campaign={ campaign }
-                                                                event={ event }
-                                                                index={ i }
-                                                                isVisible={ i >= maxNoOfEvents }
-                                                                onLoad={ () => null }
-                                                                startOfDay={ currentDate }
-                                                            />
-                                                        );
-                                                    }) }
-                                                </ul>
-                                            </Box>
-                                        </>
+                                        <Box>
+                                            <ul className={ classes.list } data-testid={ `day-${index}-events` }>
+                                                { daysEvents.map((event, i) => {
+                                                    const campaign = campaigns.find(c => c.id === event.campaign.id);
+                                                    return (
+                                                        <MonthCalendarEvent
+                                                            key={ event.id }
+                                                            baseHref={ baseHref }
+                                                            campaign={ campaign }
+                                                            event={ event }
+                                                            index={ i }
+                                                            isVisible={ i >= maxNoOfEvents }
+                                                            onLoad={ () => null }
+                                                            startOfDay={ currentDate }
+                                                        />
+                                                    );
+                                                }) }
+                                            </ul>
+                                        </Box>
                                     ) }>
                                         <Button disableRipple style={{ padding: 0 }}>
                                             <Typography variant="body1">
