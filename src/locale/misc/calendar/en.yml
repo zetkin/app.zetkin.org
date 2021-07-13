@@ -4,4 +4,4 @@ label: Pick an option
 prev: PREV
 next: NEXT
 moreEvents: |
-  {numEvents, number} more events
+  {numEvents, plural, one {# more event} other {# more events}}
