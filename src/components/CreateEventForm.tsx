@@ -33,6 +33,7 @@ const CreateEventForm = ({ onSubmit, onCancel, orgId }: CreateEventFormProps): J
     const initialValues = {
         campaign_id: campId,
         end_time: formattedNow,
+        num_participants_required: 0,
         start_time: formattedNow,
     };
 
