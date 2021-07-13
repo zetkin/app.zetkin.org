@@ -2,18 +2,17 @@ import { GetServerSideProps } from 'next';
 import { useState } from 'react';
 import { Box, FormControl, MenuItem, Select } from '@material-ui/core';
 
-import getCampaign from '../../../../../fetching/getCampaign';
-import getCampaignEvents from '../../../../../fetching/getCampaignEvents';
-import getOrg from '../../../../../fetching/getOrg';
-import MonthCalendar from '../../../../../components/MonthCalendar';
-import OrganizeCampaignLayout from '../../../../../components/layout/OrganizeCampaignLayout';
-import { PageWithLayout } from '../../../../../types';
-import { scaffold } from '../../../../../utils/next';
-import { useFocusDate } from '../../../../../hooks';
+import getCampaign from '../../../../../../fetching/getCampaign';
+import getCampaignEvents from '../../../../../../fetching/getCampaignEvents';
+import getOrg from '../../../../../../fetching/getOrg';
+import MonthCalendar from '../../../../../../components/calendar/MonthCalendar';
+import OrganizeCampaignLayout from '../../../../../../components/layout/OrganizeCampaignLayout';
+import { PageWithLayout } from '../../../../../../types';
+import { scaffold } from '../../../../../../utils/next';
+import { useFocusDate } from '../../../../../../hooks';
 import { useIntl } from 'react-intl';
 import { useQuery } from 'react-query';
-import WeekCalendar from '../../../../../components/WeekCalendar';
-import ZetkinSpeedDial, { ACTIONS } from '../../../../../components/ZetkinSpeedDial';
+import WeekCalendar from '../../../../../../components/calendar/WeekCalendar';
 
 const scaffoldOptions = {
     authLevelRequired: 2,
@@ -75,32 +74,45 @@ const CampaignCalendarPage : PageWithLayout<OrganizeCalendarPageProps> = ({ orgI
     };
 
     return (
-        <>
-            <Box p={ 2 } position="relative">
-                <Box display="flex" justifyContent="flex-end" mr={ 4 } position="absolute" right={ 0 } top="1.2rem" zIndex={ 2 }>
-                    <FormControl
-                        aria-label={ intl.formatMessage(
-                            { id: 'misc.calendar.label' }) }
-                        variant="outlined">
-                        <Select id="demo-simple-select-outlined"
-                            labelId="demo-simple-select-outlined-label"
-                            onChange={ handleChange }
-                            value={ calendarView }>
-                            { items.map(item => (
-                                <MenuItem key={ item.id } value={ item.id }>
-                                    { item.name }
-                                </MenuItem>
-                            )) }
-                        </Select>
-                    </FormControl>
-                </Box>
-                <Box height="80vh" overflow="auto">
-                    { calendarView === 'month' && <MonthCalendar campaigns={ campaigns } events={ events } focusDate={ focusDate } onFocusDate={ date => setFocusDate(date) } orgId={ orgId } /> }
-                    { calendarView === 'week' && <WeekCalendar campaigns={ campaigns } events={ events } focusDate={ focusDate } onFocusDate={ date => setFocusDate(date) } orgId={ orgId }/> }
-                </Box>
+        <Box p={ 2 } position="relative">
+            <Box display="flex" justifyContent="flex-end" mr={ 4 } position="absolute" right={ 0 } top="1.2rem" zIndex={ 12 }>
+                <FormControl
+                    aria-label={ intl.formatMessage(
+                        { id: 'misc.calendar.label' }) }
+                    variant="outlined">
+                    <Select id="demo-simple-select-outlined"
+                        labelId="demo-simple-select-outlined-label"
+                        onChange={ handleChange }
+                        value={ calendarView }>
+                        { items.map(item => (
+                            <MenuItem key={ item.id } value={ item.id }>
+                                { item.name }
+                            </MenuItem>
+                        )) }
+                    </Select>
+                </FormControl>
             </Box>
-            <ZetkinSpeedDial actions={ [ACTIONS.CREATE_EVENT] } />
-        </>
+            <Box height="80vh" overflow="auto">
+                { calendarView === 'month' &&
+                    <MonthCalendar
+                        baseHref={ `/organize/${orgId}/campaigns/${campId}` }
+                        campaigns={ campaigns }
+                        events={ events }
+                        focusDate={ focusDate }
+                        onFocusDate={ date => setFocusDate(date) }
+                        orgId={ orgId }
+                    /> }
+                { calendarView === 'week' &&
+                    <WeekCalendar
+                        baseHref={ `/organize/${orgId}/campaigns/${campId}` }
+                        campaigns={ campaigns }
+                        events={ events }
+                        focusDate={ focusDate }
+                        onFocusDate={ date => setFocusDate(date) }
+                        orgId={ orgId }
+                    /> }
+            </Box>
+        </Box>
     );
 };
 
