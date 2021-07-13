@@ -116,17 +116,39 @@ const MonthCalendar = ({ orgId, campaigns, baseHref, events, onFocusDate, focusD
                                 return new Date(a.start_time).getTime() - new Date(b.start_time).getTime();
                             });
                         return campaignEvents.length ? (
-                            <CalendarBar key={ c.id } campaign={ c } events={ campaignEvents } firstCalendarDay={ firstCalendarDay } firstMonthDay={ firstMonthDay } gridItems={ gridItems } month={ month } orgId={ orgId } totalDaysInMonth={ totalDaysInMonth }/>
+                            <CalendarBar
+                                key={ c.id }
+                                campaign={ c }
+                                events={ campaignEvents }
+                                firstCalendarDay={ firstCalendarDay }
+                                firstMonthDay={ firstMonthDay }
+                                gridItems={ gridItems }
+                                month={ month }
+                                orgId={ orgId }
+                                totalDaysInMonth={ totalDaysInMonth }
+                            />
                         ) : null;
                     }) }
                 </Box>
-                <Box data-testid="calendar-wrapper" display="grid" gridTemplateColumns="repeat(7, minmax(125px, 1fr))" gridTemplateRows={ `repeat(${calendarRows}, minmax(125px, 1fr))` } width={ 1 }>
+                <Box
+                    data-testid="calendar-wrapper"
+                    display="grid"
+                    gridTemplateColumns="repeat(7, minmax(125px, 1fr))"
+                    gridTemplateRows={ `repeat(${calendarRows}, minmax(125px, 1fr))` }
+                    width={ 1 }>
                     { Array.from(Array(gridItems).keys()).map((_, index) => {
                         const currentDate = new Date(new Date(firstCalendarDay).setDate(firstCalendarDay.getDate() + index));
                         const daysEvents = getEventsInRange(currentDate, new Date(new Date(currentDate).setDate(currentDate.getDate() + 1)));
                         const totalEvents = daysEvents.length;
                         return (
-                            <Box key={ index } bgcolor={ isInRange(currentDate, firstMonthDay, lastMonthDay) ? grey[200] : grey[300] } data-testid={ `griditem-${index}` } display="flex" flexDirection="column" m={ 0.1 } position="relative">
+                            <Box
+                                key={ index }
+                                bgcolor={ isInRange(currentDate, firstMonthDay, lastMonthDay) ? grey[200] : grey[300] }
+                                data-testid={ `griditem-${index}` }
+                                display="flex"
+                                flexDirection="column"
+                                m={ 0.1 }
+                                position="relative">
                                 <Box p={ 0.5 } pb={ 0 }>
                                     <Typography>
                                         <FormattedDate
@@ -139,7 +161,16 @@ const MonthCalendar = ({ orgId, campaigns, baseHref, events, onFocusDate, focusD
                                     { daysEvents.map((event, i) => {
                                         const campaign = campaigns.find(c => c.id === event.campaign.id);
                                         return (
-                                            <MonthCalendarEvent key={ event.id } baseHref={ baseHref } campaign={ campaign } event={ event } index={ i } isVisible={ i < maxNoOfEvents } onLoad={ (listItemHeight) => setListItemHeight(listItemHeight) } startOfDay={ currentDate }/>
+                                            <MonthCalendarEvent
+                                                key={ event.id }
+                                                baseHref={ baseHref }
+                                                campaign={ campaign }
+                                                event={ event }
+                                                index={ i }
+                                                isVisible={ i < maxNoOfEvents }
+                                                onLoad={ (listItemHeight) => setListItemHeight(listItemHeight) }
+                                                startOfDay={ currentDate }
+                                            />
                                         );
                                     }) }
                                 </ul>
@@ -151,7 +182,16 @@ const MonthCalendar = ({ orgId, campaigns, baseHref, events, onFocusDate, focusD
                                                     { daysEvents.map((event, i) => {
                                                         const campaign = campaigns.find(c => c.id === event.campaign.id);
                                                         return (
-                                                            <MonthCalendarEvent key={ event.id } baseHref={ baseHref } campaign={ campaign } event={ event } index={ i } isVisible={ i >= maxNoOfEvents } onLoad={ () => null } startOfDay={ currentDate }/>
+                                                            <MonthCalendarEvent
+                                                                key={ event.id }
+                                                                baseHref={ baseHref }
+                                                                campaign={ campaign }
+                                                                event={ event }
+                                                                index={ i }
+                                                                isVisible={ i >= maxNoOfEvents }
+                                                                onLoad={ () => null }
+                                                                startOfDay={ currentDate }
+                                                            />
                                                         );
                                                     }) }
                                                 </ul>

@@ -94,9 +94,23 @@ const CampaignCalendarPage : PageWithLayout<OrganizeCalendarPageProps> = ({ orgI
             </Box>
             <Box height="80vh" overflow="auto">
                 { calendarView === 'month' &&
-                    <MonthCalendar baseHref={ `/organize/${orgId}/campaigns/${campId}` } campaigns={ campaigns } events={ events } focusDate={ focusDate } onFocusDate={ date => setFocusDate(date) } orgId={ orgId } /> }
+                    <MonthCalendar
+                        baseHref={ `/organize/${orgId}/campaigns/${campId}` }
+                        campaigns={ campaigns }
+                        events={ events }
+                        focusDate={ focusDate }
+                        onFocusDate={ date => setFocusDate(date) }
+                        orgId={ orgId }
+                    /> }
                 { calendarView === 'week' &&
-                    <WeekCalendar baseHref={ `/organize/${orgId}/campaigns/${campId}` } campaigns={ campaigns } events={ events } focusDate={ focusDate } onFocusDate={ date => setFocusDate(date) } orgId={ orgId }/> }
+                    <WeekCalendar
+                        baseHref={ `/organize/${orgId}/campaigns/${campId}` }
+                        campaigns={ campaigns }
+                        events={ events }
+                        focusDate={ focusDate }
+                        onFocusDate={ date => setFocusDate(date) }
+                        orgId={ orgId }
+                    /> }
             </Box>
         </Box>
     );
