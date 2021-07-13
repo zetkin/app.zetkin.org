@@ -18,11 +18,12 @@ import { PageWithLayout } from '../../../../../types';
 import patchCampaign from '../../../../../fetching/patchCampaign';
 import { scaffold } from '../../../../../utils/next';
 import ZetkinDialog from '../../../../../components/ZetkinDialog';
+import ZetkinSpeedDial, { ACTIONS } from '../../../../../components/ZetkinSpeedDial';
 
 const scaffoldOptions = {
     authLevelRequired: 2,
     localeScope: [
-        'layout.organize', 'misc.breadcrumbs', 'pages.organizeCampaigns', 'misc.formDialog',
+        'layout.organize', 'misc.breadcrumbs', 'pages.organizeCampaigns', 'misc.formDialog', 'misc.speedDial',
     ],
 };
 
@@ -250,6 +251,7 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({ orgId,
                 title={ intl.formatMessage({ id: 'misc.formDialog.campaign.edit' }) }>
                 { formDialogOpen === 'campaign' && <CampaignForm campaign={ campaign } onCancel={ handleFormCancel } onSubmit={ handleEditCampaignFormSubmit }/> }
             </ZetkinDialog>
+            <ZetkinSpeedDial actions={ [ACTIONS.CREATE_EVENT] }/>
         </>
     );
 };
