@@ -166,9 +166,8 @@ const MonthCalendar = ({ orgId, campaigns, baseHref, events, onFocusDate, focusD
                                                 baseHref={ baseHref }
                                                 campaign={ campaign }
                                                 event={ event }
-                                                index={ i }
                                                 isVisible={ i < maxNoOfEvents }
-                                                onLoad={ (listItemHeight) => setListItemHeight(listItemHeight) }
+                                                onLoad={ i === 0 ? (listItemHeight) => setListItemHeight(listItemHeight) : undefined }
                                                 startOfDay={ currentDate }
                                             />
                                         );
@@ -186,9 +185,7 @@ const MonthCalendar = ({ orgId, campaigns, baseHref, events, onFocusDate, focusD
                                                             baseHref={ baseHref }
                                                             campaign={ campaign }
                                                             event={ event }
-                                                            index={ i }
                                                             isVisible={ i >= maxNoOfEvents }
-                                                            onLoad={ () => null }
                                                             startOfDay={ currentDate }
                                                         />
                                                     );

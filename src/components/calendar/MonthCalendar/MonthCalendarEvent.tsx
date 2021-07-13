@@ -17,16 +17,15 @@ interface MonthCalendarEventProps {
     campaign?: ZetkinCampaign;
     event: ZetkinEvent;
     startOfDay: Date;
-    index: number;
-    onLoad: (listItemHeight: number) => void;
+    onLoad?: (listItemHeight: number) => void;
 }
 
-const MonthCalendarEvent = ({ baseHref, index, startOfDay, campaign, event, onLoad, isVisible }: MonthCalendarEventProps): JSX.Element => {
+const MonthCalendarEvent = ({ baseHref, startOfDay, campaign, event, onLoad, isVisible }: MonthCalendarEventProps): JSX.Element => {
     const eventDiv = useRef<HTMLDivElement>(null);
     const [focused, setFocused] = useState(false);
 
     useEffect(() => {
-        if (eventDiv.current) {
+        if (eventDiv.current && onLoad) {
             const listItemHeight = eventDiv.current.offsetHeight || 0 * 1.5;
             onLoad(listItemHeight);
         }
@@ -48,7 +47,7 @@ const MonthCalendarEvent = ({ baseHref, index, startOfDay, campaign, event, onLo
                     <Box
                         onMouseEnter={ () => setFocused(true) }
                         onMouseLeave={ () => setFocused(false) }
-                        { ...( index === 0 && { ref: eventDiv } ) }
+                        { ... { ref: eventDiv }  }
                         alignItems="center"
                         bgcolor={ (campaign?.color
                             || DEFAULT_COLOR) + `${focused? '': '55'}` }
