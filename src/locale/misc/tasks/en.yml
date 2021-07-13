@@ -1,0 +1,12 @@
+statuses:
+    active: "Active"
+    closed: "Closed"
+    draft: "Draft"
+    scheduled: "Scheduled"
+taskListItem:
+    relativeTimes:
+        active: "Closes {time}"
+        expires: "Expires {time}"
+        closed: "Closed {time}"
+        scheduled: "Will be published {time}"
+        indefinite: "Published {time}"

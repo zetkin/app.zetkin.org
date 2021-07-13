@@ -171,3 +171,39 @@ export interface ZetkinActivity {
     title: string;
     info_text: string | null;
 }
+
+export enum TaskType {
+    demographic = 'demographic',
+    offline = 'offline',
+    share_link = 'share_link',
+    share_image = 'share_image',
+    visit_link = 'visit_link',
+    watch_video = 'watch_video',
+}
+
+export interface ZetkinTask {
+    id: number;
+    title: string;
+    instructions: string;
+    published?: string; // iso string
+    expires?: string; // iso string
+    deadline?: string; // iso string
+    type: TaskType;
+    config?: Record<string, unknown >;
+    target: {
+        filter_spec: {
+            config?: Record<string, unknown>;
+            op: 'sub' | 'add';
+            type: string;
+        };
+        id: number;
+    };
+    campaign: {
+        id: number;
+        title: string;
+    };
+    organization: {
+        id: number;
+        title: string;
+    };
+}

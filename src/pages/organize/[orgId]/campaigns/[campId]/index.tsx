@@ -12,18 +12,25 @@ import CampaignForm from '../../../../../components/CampaignForm';
 import EventList from '../../../../../components/organize/EventList';
 import getCampaign from '../../../../../fetching/getCampaign';
 import getCampaignEvents from '../../../../../fetching/getCampaignEvents';
+import getCampaignTasks from '../../../../../fetching/tasks/getCampaignTasks';
 import getOrg from '../../../../../fetching/getOrg';
 import OrganizeCampaignLayout from '../../../../../components/layout/OrganizeCampaignLayout';
 import { PageWithLayout } from '../../../../../types';
 import patchCampaign from '../../../../../fetching/patchCampaign';
 import { scaffold } from '../../../../../utils/next';
+import TaskList from '../../../../../components/organize/tasks/TaskList';
 import ZetkinDialog from '../../../../../components/ZetkinDialog';
 import ZetkinSpeedDial, { ACTIONS } from '../../../../../components/ZetkinSpeedDial';
 
 const scaffoldOptions = {
     authLevelRequired: 2,
     localeScope: [
-        'layout.organize', 'misc.breadcrumbs', 'pages.organizeCampaigns', 'misc.formDialog', 'misc.speedDial',
+        'layout.organize',
+        'misc.breadcrumbs',
+        'pages.organizeCampaigns',
+        'misc.formDialog',
+        'misc.tasks',
+        'misc.speedDial',
     ],
 };
 
@@ -38,10 +45,18 @@ export const getServerSideProps : GetServerSideProps = scaffold(async (ctx) => {
     await ctx.queryClient.prefetchQuery(['campaignEvents', orgId, campId], getCampaignEvents(orgId as string, campId as string, ctx.apiFetch));
     const campaignEventsState = ctx.queryClient.getQueryState(['campaignEvents', orgId, campId]);
 
+    await ctx.queryClient.prefetchQuery(['campaignTasks', orgId, campId], getCampaignTasks(orgId as string, campId as string, ctx.apiFetch));
+    const campaignTasksState = ctx.queryClient.getQueryState(['campaignTasks', orgId, campId]);
+
     await ctx.queryClient.prefetchQuery(['campaign', orgId, campId], getCampaign(orgId as string, campId as string, ctx.apiFetch));
     const campaignState = ctx.queryClient.getQueryState(['campaign', orgId, campId]);
 
-    if (orgState?.status === 'success' && campaignEventsState?.status === 'success' && campaignState?.status === 'success') {
+    if (
+        orgState?.status === 'success' &&
+        campaignEventsState?.status === 'success' &&
+        campaignState?.status === 'success' &&
+        campaignTasksState?.status === 'success'
+    ) {
         return {
             props: {
                 campId,
@@ -82,8 +97,10 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({ orgId,
     const router = useRouter();
     const classes = useStyles();
     const eventsQuery = useQuery(['campaignEvents', orgId, campId], getCampaignEvents(orgId, campId));
+    const tasksQuery = useQuery(['campaignTasks', orgId, campId], getCampaignTasks(orgId, campId));
     const campaignQuery = useQuery(['campaign', orgId, campId], getCampaign(orgId, campId));
     const events = eventsQuery.data || [];
+    const tasks = tasksQuery.data || [];
     const campaign = campaignQuery.data;
     const [formDialogOpen, setFormDialogOpen] = useState<null | string>(null);
 
@@ -191,22 +208,39 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({ orgId,
                 </Box>
             </Box>
             <Box className={ classes.responsiveFlexBox }>
-                <Box border={ 1 } display="flex" flex={ 1 } flexDirection="column" m={ 1 } mt={ 2 }>
-                    <Box display="flex" justifyContent="space-between" p={ 3 } pb={ 0 }>
-                        <Typography variant="h6">
-                            <Msg id="pages.organizeCampaigns.events"/>
-                        </Typography>
-                        <NextLink href={ `/organize/${orgId}/campaigns/${campId}/calendar` } passHref>
-                            <Link underline="always" variant="h6">
-                                <Msg id="pages.organizeCampaigns.calendarView"/>
-                            </Link>
-                        </NextLink>
+                { /* Left Column */ }
+                <Box display="flex" flex={ 1 } flexDirection="column">
+                    { /* Events */ }
+                    <Box border={ 1 } display="flex" flex={ 1 } flexDirection="column" m={ 1 } mt={ 2 }>
+                        <Box display="flex" justifyContent="space-between" p={ 3 } pb={ 0 }>
+                            <Typography variant="h6">
+                                <Msg id="pages.organizeCampaigns.events"/>
+                            </Typography>
+                            <NextLink href={ `/organize/${orgId}/campaigns/${campId}/calendar` } passHref>
+                                <Link underline="always" variant="h6">
+                                    <Msg id="pages.organizeCampaigns.calendarView"/>
+                                </Link>
+                            </NextLink>
+                        </Box>
+                        <Box p={ 3 } pt={ 0 }>
+                            <EventList events={ events } hrefBase={ `/organize/${orgId}/campaigns/${campId}` } />
+                        </Box>
                     </Box>
-                    <Box p={ 3 } pt={ 0 }>
-                        <EventList events={ events } hrefBase={ `/organize/${orgId}/campaigns/${campId}` } />
+                    { /* Tasks */ }
+                    <Box border={ 1 } display="flex" flex={ 1 } flexDirection="column" m={ 1 } mt={ 2 }>
+                        <Box display="flex" justifyContent="space-between" p={ 3 } pb={ 0 }>
+                            <Typography variant="h6">
+                                <Msg id="pages.organizeCampaigns.tasks"/>
+                            </Typography>
+                        </Box>
+                        <Box p={ 3 } pt={ 0 }>
+                            <TaskList hrefBase={ `/organize/${orgId}/campaigns/${campId}` } tasks={ tasks } />
+                        </Box>
                     </Box>
                 </Box>
+                { /* Right Column */ }
                 <Box display="flex" flex={ 1 } flexDirection="column" m={ 1 }>
+                    { /* Mobilizations & Outreach */ }
                     <Box border={ 1 } m={ 1 } p={ 3 } pb={ 5 }>
                         <Typography component="h3" variant="h6">
                             <Msg id="pages.organizeCampaigns.mobilization.heading" />
@@ -225,6 +259,7 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({ orgId,
                             </NextLink>
                         </Box>
                     </Box>
+                    { /* Feedback and Surveys */ }
                     <Box border={ 1 } m={ 1 } p={ 3 } pb={ 5 }>
                         <Typography component="h3" variant="h6">
                             <Msg id="pages.organizeCampaigns.feedback.heading" />
@@ -245,6 +280,7 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({ orgId,
                     </Box>
                 </Box>
             </Box>
+            { /* Edit Campaign Form */ }
             <ZetkinDialog
                 onClose={ handleDialogClose }
                 open={ !!formDialogOpen }
