@@ -20,7 +20,6 @@ import patchCampaign from '../../../../../fetching/patchCampaign';
 import { scaffold } from '../../../../../utils/next';
 import TaskList from '../../../../../components/organize/tasks/TaskList';
 import ZetkinDialog from '../../../../../components/ZetkinDialog';
-import ZetkinSpeedDial, { ACTIONS } from '../../../../../components/ZetkinSpeedDial';
 
 const scaffoldOptions = {
     authLevelRequired: 2,
@@ -29,7 +28,6 @@ const scaffoldOptions = {
         'misc.breadcrumbs',
         'pages.organizeCampaigns',
         'misc.formDialog',
-        'misc.speedDial',
         'misc.tasks',
     ],
 };
@@ -277,7 +275,6 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({ orgId,
                     </Box>
                 </Box>
             </Box>
-            <ZetkinSpeedDial actions={ [ACTIONS.CREATE_EVENT] } />
             { /* Edit Campaign Form */ }
             <ZetkinDialog
                 onClose={ handleDialogClose }
