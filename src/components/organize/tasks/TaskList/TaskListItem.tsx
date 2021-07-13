@@ -45,42 +45,47 @@ const TaskListItem = ({ task, hrefBase }: TaskListItemProps): JSX.Element => {
                             { /* Scheduled */ }
                             { taskStatus === TASK_STATUS.SCHEDULED && published && (
                                 <>
-                                    <FormattedMessage id="misc.tasks.taskListItem.relativeTimes.scheduled" />
-                                    { ' ' }
-                                    <ZetkinRelativeTime datetime={ published } />
+                                    <FormattedMessage
+                                        id="misc.tasks.taskListItem.relativeTimes.scheduled"
+                                        values={{ time:  <ZetkinRelativeTime datetime={ published } /> }}
+                                    />
                                 </>
                             ) }
 
                             { /* Active and definite*/ }
                             { taskStatus === TASK_STATUS.ACTIVE && deadline && (
                                 <>
-                                    <FormattedMessage id="misc.tasks.taskListItem.relativeTimes.active" />
-                                    { ' ' }
-                                    <ZetkinRelativeTime datetime={ deadline } />
+                                    <FormattedMessage
+                                        id="misc.tasks.taskListItem.relativeTimes.active"
+                                        values={{ time: <ZetkinRelativeTime datetime={ deadline } /> }}
+                                    />
                                 </>
                             ) }
                             { /* Active and indefinite */ }
                             { taskStatus === TASK_STATUS.ACTIVE && !deadline && published && (
                                 <>
-                                    <FormattedMessage id="misc.tasks.taskListItem.relativeTimes.indefinite" />
-                                    { ' ' }
-                                    <ZetkinRelativeTime datetime={ published } />
+                                    <FormattedMessage
+                                        id="misc.tasks.taskListItem.relativeTimes.indefinite"
+                                        values={{ time: <ZetkinRelativeTime datetime={ published } /> }}
+                                    />
                                 </>
                             ) }
                             { /* Closed and has expiry date */ }
                             { taskStatus === TASK_STATUS.CLOSED && expires && (
                                 <>
-                                    <FormattedMessage id="misc.tasks.taskListItem.relativeTimes.expires" />
-                                    { ' ' }
-                                    <ZetkinRelativeTime datetime={ expires } />
+                                    <FormattedMessage
+                                        id="misc.tasks.taskListItem.relativeTimes.expires"
+                                        values={{ time: <ZetkinRelativeTime datetime={ expires } /> }}
+                                    />
                                 </>
                             ) }
                             { /* Closed and no expiry date */ }
                             { taskStatus === TASK_STATUS.CLOSED && !expires && deadline && (
                                 <>
-                                    <FormattedMessage id="misc.tasks.taskListItem.relativeTimes.closed" />
-                                    { ' ' }
-                                    <ZetkinRelativeTime datetime={ deadline } />
+                                    <FormattedMessage
+                                        id="misc.tasks.taskListItem.relativeTimes.closed"
+                                        values={{ time: <ZetkinRelativeTime datetime={ deadline } /> }}
+                                    />
                                 </>
                             ) }
                         </Typography>

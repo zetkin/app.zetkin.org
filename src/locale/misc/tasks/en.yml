@@ -5,8 +5,8 @@ statuses:
     scheduled: "Scheduled"
 taskListItem:
     relativeTimes:
-        active: "Closes"
-        expires: "Expires"
-        closed: "Closed"
-        scheduled: "Will be published"
-        indefinite: "Published"
+        active: "Closes {time}"
+        expires: "Expires {time}"
+        closed: "Closed {time}"
+        scheduled: "Will be published {time}"
+        indefinite: "Published {time}"
