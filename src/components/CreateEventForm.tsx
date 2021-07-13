@@ -1,6 +1,8 @@
+import dayjs from 'dayjs';
 import { Form } from 'react-final-form';
 import { TextField } from 'mui-rff';
 import { useQuery } from 'react-query';
+import { useRouter } from 'next/router';
 import { Box, Button, Grid, GridSize, MenuItem } from '@material-ui/core';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
 
@@ -15,6 +17,8 @@ interface CreateEventFormProps {
 }
 
 const CreateEventForm = ({ onSubmit, onCancel, orgId }: CreateEventFormProps): JSX.Element => {
+    const router = useRouter();
+    const { campId } = router.query;
     const campaignsQuery = useQuery(['campaigns', orgId], getCampaigns(orgId));
     const activitiesQuery = useQuery(['actvities', orgId], getActivities(orgId));
     const locationsQuery = useQuery(['locations', orgId], getLocations(orgId));
@@ -23,6 +27,15 @@ const CreateEventForm = ({ onSubmit, onCancel, orgId }: CreateEventFormProps): J
     const locations = locationsQuery.data || [];
     const campaigns = campaignsQuery.data || [];
     const intl = useIntl();
+
+    const formattedNow = dayjs().format('YYYY-MM-DDThh:mm');
+
+    const initialValues = {
+        campaign_id: campId,
+        end_time: formattedNow,
+        num_participants_required: 0,
+        start_time: formattedNow,
+    };
 
     const validate = (values: Record<string, string>) => {
         const errors:Record<string, string> = {};
@@ -63,7 +76,11 @@ const CreateEventForm = ({ onSubmit, onCancel, orgId }: CreateEventFormProps): J
         },
         {
             field: (
-                <TextField fullWidth id="camp" label={ intl.formatMessage({ id: 'misc.formDialog.event.campaign' }) }
+                <TextField
+                    disabled={ campId ? true : false }
+                    fullWidth
+                    id="camp"
+                    label={ intl.formatMessage({ id: 'misc.formDialog.event.campaign' }) }
                     margin="normal"
                     name="campaign_id"
                     select>
@@ -181,16 +198,9 @@ const CreateEventForm = ({ onSubmit, onCancel, orgId }: CreateEventFormProps): J
         },
     ];
 
-    const now = new Date(Date.now());
-    const today = new Date( Date.UTC(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), now.getMinutes(), 0));
-
     return (
         <Form
-            initialValues={{
-                end_time: today.toISOString().slice(0, 16),
-                num_participants_required: 0,
-                start_time: today.toISOString().slice(0, 16),
-            }}
+            initialValues={ initialValues }
             onSubmit={ handleSubmit }
             render={ ({ handleSubmit, submitting }) => (
                 <form noValidate onSubmit={ handleSubmit }>
