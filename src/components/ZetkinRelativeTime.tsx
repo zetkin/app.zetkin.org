@@ -34,16 +34,17 @@ const ZetkinRelativeTime: React.FunctionComponent<ZetkinRelativeTimeProps> = ({ 
     const absoluteDatetime = dayjs(datetime);
     const difference: number =  absoluteDatetime.unix() - now.unix();
 
-    if (!isNaN(difference)) {
-        return (
-            <DatetimeTooltip arrow title={ <DatetimeTooltipContents datetime={ datetime } /> }>
-                <span>
-                    <FormattedRelativeTime numeric="auto" updateIntervalInSeconds={ 300 } value={ difference } />
-                </span>
-            </DatetimeTooltip>
-        );
+    if (isNaN(difference)) {
+        return null;
     }
-    return null;
+
+    return (
+        <DatetimeTooltip arrow title={ <DatetimeTooltipContents datetime={ datetime } /> }>
+            <span>
+                <FormattedRelativeTime numeric="auto" updateIntervalInSeconds={ 300 } value={ difference } />
+            </span>
+        </DatetimeTooltip>
+    );
 };
 
 export default ZetkinRelativeTime;

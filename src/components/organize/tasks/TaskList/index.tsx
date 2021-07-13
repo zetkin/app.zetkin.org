@@ -1,5 +1,5 @@
-import { useIntl } from 'react-intl';
 import { List } from '@material-ui/core';
+import { useIntl } from 'react-intl';
 
 import TaskListItem from './TaskListItem';
 import { ZetkinTask } from '../../../../types/zetkin';
