@@ -42,17 +42,8 @@ const TaskListItem = ({ task, hrefBase }: TaskListItemProps): JSX.Element => {
                         </Typography>
 
                         <Typography color="textPrimary">
-                            { /* Closed */ }
-                            { taskStatus === TASK_STATUS.CLOSED && (
-                                <>
-                                    <FormattedMessage id="misc.tasks.taskListItem.relativeTimes.closed" />
-                                    { ' ' }
-                                    <ZetkinRelativeTime datetime={ expires } />
-                                </>
-                            ) }
-
                             { /* Scheduled */ }
-                            { taskStatus === TASK_STATUS.SCHEDULED && (
+                            { taskStatus === TASK_STATUS.SCHEDULED && published && (
                                 <>
                                     <FormattedMessage id="misc.tasks.taskListItem.relativeTimes.scheduled" />
                                     { ' ' }
@@ -69,11 +60,27 @@ const TaskListItem = ({ task, hrefBase }: TaskListItemProps): JSX.Element => {
                                 </>
                             ) }
                             { /* Active and indefinite */ }
-                            { taskStatus === TASK_STATUS.ACTIVE && !deadline && (
+                            { taskStatus === TASK_STATUS.ACTIVE && !deadline && published && (
                                 <>
                                     <FormattedMessage id="misc.tasks.taskListItem.relativeTimes.indefinite" />
                                     { ' ' }
                                     <ZetkinRelativeTime datetime={ published } />
+                                </>
+                            ) }
+                            { /* Closed and has expiry date */ }
+                            { taskStatus === TASK_STATUS.CLOSED && expires && (
+                                <>
+                                    <FormattedMessage id="misc.tasks.taskListItem.relativeTimes.expires" />
+                                    { ' ' }
+                                    <ZetkinRelativeTime datetime={ expires } />
+                                </>
+                            ) }
+                            { /* Closed and no expiry date */ }
+                            { taskStatus === TASK_STATUS.CLOSED && !expires && deadline && (
+                                <>
+                                    <FormattedMessage id="misc.tasks.taskListItem.relativeTimes.closed" />
+                                    { ' ' }
+                                    <ZetkinRelativeTime datetime={ deadline } />
                                 </>
                             ) }
                         </Typography>
