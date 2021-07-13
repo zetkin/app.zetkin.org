@@ -74,39 +74,34 @@ const WeekCalendarEvent = ({ shiftValue, baseHref, startOfDay, campaign, event }
         <li>
             <NextLink href={  baseHref + `/calendar/events/${event.id}` } passHref>
                 <Link>
-                    <Box
-                        { ...( focused && { zIndex: 10 } ) }
-                        display="flex"
-                        height={ getEventPos().height }
-                        justifyContent="flex-end"
-                        position="absolute"
-                        top={ getEventPos().top }
-                        width={ 1 }>
-                        <Tooltip arrow placement="left" title={ event.title || event.activity.title }>
-                            <Box
-                                { ...{ ref: eventDiv } }
-                                bgcolor={ (campaign?.color
-                                    || DEFAULT_COLOR) + `${focused? '': '55'}` }
-                                borderLeft={ `5px solid ${campaign?.color || DEFAULT_COLOR}` }
-                                color={ getContrastColor(campaign?.color || DEFAULT_COLOR) }
-                                data-testid={ `event-${event.id}` }
-                                height={ 1 }
-                                onMouseEnter={ () => setFocused(true) }
-                                onMouseLeave={ () => setFocused(false) }
-                                padding={ 1 }
-                                width={ `${100 - 5 * (shiftValue || 0)}%` }>
-                                { maxNoOfLabels > 0 && (
-                                    <Typography ref={ label } noWrap variant="body2">
-                                        <span data-testid={ `start-time-${event.id}` }>{ getEventTimeLabel() }</span>
-                                        <span data-testid={ `title-${event.id}` }>{ event.title || event.activity.title }</span>
-                                    </Typography>) }
-                                { maxNoOfLabels > 1 && event.location.title && (
-                                    <Typography data-testid={ `location-${event.id}` } noWrap variant="body2">
-                                        { event.location.title }
-                                    </Typography>) }
-                            </Box>
-                        </Tooltip>
-                    </Box>
+                    <Tooltip arrow placement="left" title={ event.title || event.activity.title }>
+                        <Box
+                            { ...{ ref: eventDiv } }
+                            { ...( focused && { zIndex: 10 } ) }
+                            bgcolor={ (campaign?.color
+                                || DEFAULT_COLOR) + `${focused? '': '55'}` }
+                            borderLeft={ `5px solid ${campaign?.color || DEFAULT_COLOR}` }
+                            color={ getContrastColor(campaign?.color || DEFAULT_COLOR) }
+                            data-testid={ `event-${event.id}` }
+                            height={ getEventPos().height }
+                            onMouseEnter={ () => setFocused(true) }
+                            onMouseLeave={ () => setFocused(false) }
+                            padding={ 1 }
+                            position="absolute"
+                            right={ 0 }
+                            top={ getEventPos().top }
+                            width={ `${100 - 5 * (shiftValue || 0)}%` }>
+                            { maxNoOfLabels > 0 && (
+                                <Typography ref={ label } noWrap variant="body2">
+                                    <span data-testid={ `start-time-${event.id}` }>{ getEventTimeLabel() }</span>
+                                    <span data-testid={ `title-${event.id}` }>{ event.title || event.activity.title }</span>
+                                </Typography>) }
+                            { maxNoOfLabels > 1 && event.location.title && (
+                                <Typography data-testid={ `location-${event.id}` } noWrap variant="body2">
+                                    { event.location.title }
+                                </Typography>) }
+                        </Box>
+                    </Tooltip>
                 </Link>
             </NextLink>
         </li>
