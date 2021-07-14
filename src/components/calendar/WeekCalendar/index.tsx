@@ -69,8 +69,8 @@ const WeekCalendar = ({ orgId, baseHref, campaigns, events, focusDate, onFocusDa
     };
 
     return (
-        <Box { ...{ ref: calendarWrapper } } data-testid="calendar-wrapper" height={ 1 } overflow="auto" width={ 1 }>
-            <Box bgcolor={ grey[100] } display="flex" flexDirection="column" justifyContent="space-between" position="sticky" top={ 0 } width={ 1 } zIndex={ 11 }>
+        <Box display="flex" flexDirection="column" height={ 1 }>
+            <Box bgcolor={ grey[100] } display="flex" flexDirection="column" flexGrow={ 0 } justifyContent="space-between">
                 <Box alignItems="center" className={ classes.responsiveFlexBox } display="flex" justifyContent="center">
                     <Button color="primary" data-testid="back-button" onClick={
                         () => onFocusDate(new Date(new Date(focusDate).setDate(focusDate.getDate() - 7))) }>
@@ -114,41 +114,43 @@ const WeekCalendar = ({ orgId, baseHref, campaigns, events, focusDate, onFocusDa
                     }) }
                 </Box>
             </Box>
-            <Box { ...{ ref: calendar } } alignItems="center" display="flex" height="100rem" justifyContent="start" width={ 1 }>
-                { Array.from(Array(7).keys()).map((_, index) => {
-                    const startOfDay = new Date(new Date(new Date(calendarStartDate)
-                        .setUTCDate(calendarStartDate.getDate() + index)).setUTCHours(0, 0, 0, 0));
-                    return (
-                        <Box key={ index } display="flex" flexDirection="column" height={ 1 } justifyContent="space-between" mx={ 0.5 } width={ 1 }>
-                            <List className={ classes.list } data-testid={ `day-${index}-events` }>
-                                { getEventsOnThisDate(startOfDay.getUTCDate())?.reduce((acc: [number, ZetkinEvent][], event: ZetkinEvent, index, array) => {
-                                    const prevEvents = array.slice(0, index);
-                                    const reversedPrevEvents = prevEvents.reverse();
-                                    let shiftValue;
-                                    const lastOverlappingEvent =
+            <Box data-testid="calendar-wrapper" { ...{ ref: calendarWrapper } } alignItems="center" flexGrow={ 1 } overflow="auto">
+                <Box { ...{ ref: calendar } } display="flex" height="100rem" justifyContent="start">
+                    { Array.from(Array(7).keys()).map((_, index) => {
+                        const startOfDay = new Date(new Date(new Date(calendarStartDate)
+                            .setUTCDate(calendarStartDate.getDate() + index)).setUTCHours(0, 0, 0, 0));
+                        return (
+                            <Box key={ index } display="flex" flexDirection="column" height={ 1 } justifyContent="space-between" mx={ 0.5 } width={ 1 }>
+                                <List className={ classes.list } data-testid={ `day-${index}-events` }>
+                                    { getEventsOnThisDate(startOfDay.getUTCDate())?.reduce((acc: [number, ZetkinEvent][], event: ZetkinEvent, index, array) => {
+                                        const prevEvents = array.slice(0, index);
+                                        const reversedPrevEvents = prevEvents.reverse();
+                                        let shiftValue;
+                                        const lastOverlappingEvent =
                                         reversedPrevEvents.find(prev => new Date(event.start_time) < new Date(prev.end_time));
-                                    if (!lastOverlappingEvent) {
-                                        shiftValue = 0;
-                                    }
-                                    else {
-                                        const overlapIndex = acc.findIndex(e => e[1].id === lastOverlappingEvent.id);
-                                        shiftValue = lastOverlappingEvent ? acc[overlapIndex][0] + 1 : 0;
-                                    }
-                                    return [
-                                        ...acc,
-                                        [shiftValue, event],
-                                    ] as [number, ZetkinEvent][];
-                                }, [] ).map(eventWithShiftValue => {
-                                    const [shiftValue, event] = eventWithShiftValue;
-                                    const campaign = campaigns.find(c => c.id === event.campaign.id);
-                                    return (
-                                        <WeekCalendarEvent key={ event.id } baseHref={ baseHref } campaign={ campaign } event={ event } shiftValue={ shiftValue } startOfDay={ startOfDay } />
-                                    );
-                                }) }
-                            </List>
-                        </Box>
-                    );
-                }) }
+                                        if (!lastOverlappingEvent) {
+                                            shiftValue = 0;
+                                        }
+                                        else {
+                                            const overlapIndex = acc.findIndex(e => e[1].id === lastOverlappingEvent.id);
+                                            shiftValue = lastOverlappingEvent ? acc[overlapIndex][0] + 1 : 0;
+                                        }
+                                        return [
+                                            ...acc,
+                                            [shiftValue, event],
+                                        ] as [number, ZetkinEvent][];
+                                    }, [] ).map(eventWithShiftValue => {
+                                        const [shiftValue, event] = eventWithShiftValue;
+                                        const campaign = campaigns.find(c => c.id === event.campaign.id);
+                                        return (
+                                            <WeekCalendarEvent key={ event.id } baseHref={ baseHref } campaign={ campaign } event={ event } shiftValue={ shiftValue } startOfDay={ startOfDay } />
+                                        );
+                                    }) }
+                                </List>
+                            </Box>
+                        );
+                    }) }
+                </Box>
             </Box>
         </Box>
     );
