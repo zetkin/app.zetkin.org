@@ -1,0 +1,11 @@
+createTask:
+    title: Create new task
+    fields:
+        title: Title
+        type: Task Type
+        types:
+            offline: Offline
+            share_link: Share Link
+            open_link: Open Link
+        instructions: Instructions
+        campaign: Campaign

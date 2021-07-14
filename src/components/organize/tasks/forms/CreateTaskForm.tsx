@@ -4,7 +4,7 @@ import { TextField } from 'mui-rff';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 import { Box, Button, MenuItem } from '@material-ui/core';
-import { FormattedMessage as Msg, useIntl } from 'react-intl';
+import { FormattedMessage, FormattedMessage as Msg, useIntl } from 'react-intl';
 
 import getCampaigns from '../../../../fetching/getCampaigns';
 import { ZetkinTaskReqBody, ZetkinTaskType } from '../../../../types/zetkin';
@@ -53,7 +53,7 @@ const CreateTaskForm = ({ onSubmit, onCancel }: CreateTaskFormProps): JSX.Elemen
                     <TextField
                         fullWidth
                         id="title"
-                        label="Title"
+                        label={ intl.formatMessage({ id: 'misc.tasks.forms.createTask.fields.title' }) }
                         margin="normal"
                         name="title"
                         required
@@ -62,19 +62,19 @@ const CreateTaskForm = ({ onSubmit, onCancel }: CreateTaskFormProps): JSX.Elemen
                     <TextField
                         fullWidth
                         id="task_type"
-                        label="Task Type"
+                        label={ intl.formatMessage({ id: 'misc.tasks.forms.createTask.fields.type' }) }
                         margin="normal"
                         name="type"
                         required
                         select>
                         <MenuItem value={ ZetkinTaskType.offline }>
-                            { ZetkinTaskType.offline }
+                            <FormattedMessage id="misc.tasks.forms.createTask.fields.types.offline" />
                         </MenuItem>
                         <MenuItem value={ ZetkinTaskType.share_link }>
-                            { ZetkinTaskType.share_link }
+                            <FormattedMessage id="misc.tasks.forms.createTask.fields.types.share_link" />
                         </MenuItem>
                         <MenuItem value={ ZetkinTaskType.visit_link }>
-                            { ZetkinTaskType.visit_link }
+                            <FormattedMessage id="misc.tasks.forms.createTask.fields.types.open_link" />
                         </MenuItem>
                     </TextField>
 
@@ -82,7 +82,7 @@ const CreateTaskForm = ({ onSubmit, onCancel }: CreateTaskFormProps): JSX.Elemen
                         disabled={ campId ? true : false }
                         fullWidth
                         id="campaign"
-                        label="Campaign"
+                        label={ intl.formatMessage({ id: 'misc.tasks.forms.createTask.fields.campaign' }) }
                         margin="normal"
                         name="campaign_id"
                         required
@@ -97,7 +97,7 @@ const CreateTaskForm = ({ onSubmit, onCancel }: CreateTaskFormProps): JSX.Elemen
                     <TextField
                         fullWidth
                         id="instructions"
-                        label="Instructions"
+                        label={ intl.formatMessage({ id: 'misc.tasks.forms.createTask.fields.instructions' }) }
                         margin="normal"
                         multiline
                         name="instructions"

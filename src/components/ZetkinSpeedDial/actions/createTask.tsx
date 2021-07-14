@@ -30,7 +30,7 @@ const DialogContent: React.FunctionComponent<DialogContentBaseProps> = ({ closeD
 const config = {
     icon: <CheckBox />,
     key: ACTIONS.CREATE_TASK,
-    name: 'misc.speedDial.createTask',
+    name: 'misc.tasks.forms.createTask.title',
     urlKey: 'create-task',
 } as ActionConfig;
 
