@@ -86,6 +86,7 @@ const CampaignCalendarPage : PageWithLayout<OrganizeCalendarPageProps> = ({ orgI
                         <Select id="demo-simple-select-outlined"
                             labelId="demo-simple-select-outlined-label"
                             onChange={ handleChange }
+                            style={{ height: '2rem', padding: 0 }}
                             value={ calendarView }>
                             { items.map(item => (
                                 <MenuItem key={ item.id } value={ item.id }>
