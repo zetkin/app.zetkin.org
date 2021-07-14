@@ -40,7 +40,8 @@ const useStyles = makeStyles((theme) => ({
     roundButton: {
         background: 'white',
         borderRadius: '50%',
-        height: '4rem',
+        height: '3rem',
+        width: '3rem',
     },
     // necessary for content to be below app bar
     toolbar: theme.mixins.toolbar,
@@ -61,30 +62,30 @@ const OrganizeSidebar = () : JSX.Element =>{
 
     const drawer = (
         <Box alignItems="center" bgcolor={ grey[100] } display="flex" flexDirection="column" height="100%" justifyContent="space-between">
-            <List>
+            <List disablePadding>
                 <Box display="flex" flexDirection="column">
-                    <ListItem>
+                    <ListItem disableGutters>
                         <NextLink href={ `/organize/${orgId}` } passHref>
                             <Button aria-label="Home" className={ classes.roundButton } color={ key === '' ?  'primary' : 'secondary' } data-test="home-button">
                                 <Home />
                             </Button>
                         </NextLink>
                     </ListItem>
-                    <ListItem>
+                    <ListItem disableGutters>
                         <NextLink href={ `/organize/${orgId}/people` } passHref>
                             <Button aria-label="People" className={ classes.roundButton } color={ key.startsWith('/people') ?  'primary' : 'secondary' } data-test="people-button">
                                 <People />
                             </Button>
                         </NextLink>
                     </ListItem>
-                    <ListItem>
+                    <ListItem disableGutters>
                         <NextLink href={ `/organize/${orgId}/areas` } passHref>
                             <Button aria-label="Areas" className={ classes.roundButton } color={ key.startsWith('/areas') ?  'primary' : 'secondary' } data-test="area-button">
                                 <Map />
                             </Button>
                         </NextLink>
                     </ListItem>
-                    <ListItem>
+                    <ListItem disableGutters>
                         <NextLink href={ `/organize/${orgId}/campaigns/calendar` } passHref>
                             <Button aria-label="Campaigns" className={ classes.roundButton } color={ key.startsWith('/campaigns') ?  'primary' : 'secondary' } data-test="calendar-button">
                                 <Event />
@@ -95,12 +96,12 @@ const OrganizeSidebar = () : JSX.Element =>{
             </List>
             <Box display="flex" flexDirection="column">
                 <List>
-                    <ListItem>
+                    <ListItem disableGutters>
                         <Button aria-label="Inbox" className={ classes.roundButton } color="secondary" data-test="inbox-button">
                             <Inbox />
                         </Button>
                     </ListItem>
-                    <ListItem>
+                    <ListItem disableGutters>
                         <Button aria-label="Organize" className={ classes.roundButton } color="secondary" data-test="user-button">
                             <Person />
                         </Button>
