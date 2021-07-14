@@ -22,15 +22,20 @@ const CreateTaskForm = ({ onSubmit, onCancel }: CreateTaskFormProps): JSX.Elemen
 
     // const formattedNow = dayjs().format('YYYY-MM-DDThh:mm');
 
-    const initialValues = {
-        campaign_id: parseInt(campId),
-    };
-
     const validate = (values: ZetkinTaskReqBody) => {
         const errors: Record<string, string> = {};
 
         if (!values.title) {
             errors.title = intl.formatMessage({ id: 'misc.formDialog.required' });
+        }
+        if (!values.type) {
+            errors.type = intl.formatMessage({ id: 'misc.formDialog.required' });
+        }
+        if (!values.instructions) {
+            errors.instructions = intl.formatMessage({ id: 'misc.formDialog.required' });
+        }
+        if (!values.campaign_id) {
+            errors.campaign_id = intl.formatMessage({ id: 'misc.formDialog.required' });
         }
 
         return errors;
@@ -38,7 +43,9 @@ const CreateTaskForm = ({ onSubmit, onCancel }: CreateTaskFormProps): JSX.Elemen
 
     return (
         <Form
-            initialValues={ initialValues }
+            initialValues={{
+                campaign_id: parseInt(campId),
+            }}
             onSubmit={ (values) => onSubmit(values) }
             render={ ({ handleSubmit, submitting }) => (
                 <form noValidate onSubmit={ handleSubmit }>
@@ -49,6 +56,7 @@ const CreateTaskForm = ({ onSubmit, onCancel }: CreateTaskFormProps): JSX.Elemen
                         label="Title"
                         margin="normal"
                         name="title"
+                        required
                     />
 
                     <TextField
@@ -57,6 +65,7 @@ const CreateTaskForm = ({ onSubmit, onCancel }: CreateTaskFormProps): JSX.Elemen
                         label="Task Type"
                         margin="normal"
                         name="type"
+                        required
                         select>
                         <MenuItem value={ ZetkinTaskType.offline }>
                             { ZetkinTaskType.offline }
@@ -76,6 +85,7 @@ const CreateTaskForm = ({ onSubmit, onCancel }: CreateTaskFormProps): JSX.Elemen
                         label="Campaign"
                         margin="normal"
                         name="campaign_id"
+                        required
                         select>
                         { campaigns && campaigns.map(c => (
                             <MenuItem key={ c.id } value={ c.id }>
@@ -91,8 +101,10 @@ const CreateTaskForm = ({ onSubmit, onCancel }: CreateTaskFormProps): JSX.Elemen
                         margin="normal"
                         multiline
                         name="instructions"
+                        required
                         rows={ 2 }
                         variant="filled"
+
                     />
 
 

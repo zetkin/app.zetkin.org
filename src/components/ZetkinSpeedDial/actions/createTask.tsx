@@ -12,13 +12,15 @@ import { ActionConfig, DialogContentBaseProps } from './types';
 
 const DialogContent: React.FunctionComponent<DialogContentBaseProps> = ({ closeDialog }) => {
     const router = useRouter();
-    const { orgId } = router.query as {campId: string; orgId: string};
+    const { campId, orgId } = router.query as {campId: string; orgId: string};
 
     const eventMutation = useMutation(postTask(orgId));
 
-    const handleFormSubmit = (data: ZetkinTaskReqBody) => {
-        eventMutation.mutate(data);
+    const handleFormSubmit = async (data: ZetkinTaskReqBody) => {
         closeDialog();
+        const newTask = await eventMutation.mutateAsync(data);
+        // Redirect to task page
+        router.push(`/organize/${orgId}/campiagns/${campId}/tasks/${newTask.id}`);
     };
 
     return (<CreateTaskForm onCancel={ closeDialog } onSubmit={ handleFormSubmit } />
