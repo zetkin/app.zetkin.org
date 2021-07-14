@@ -86,8 +86,8 @@ const MonthCalendar = ({ orgId, campaigns, baseHref, events, onFocusDate, focusD
     };
 
     return (
-        <>
-            <Box alignItems="center" bgcolor={ grey[100] } position="sticky" top={ 0 } zIndex={ 1 }>
+        <Box display="flex" flexDirection="column" height={ 1 }>
+            <Box alignItems="center" bgcolor={ grey[100] } flexGrow={ 0 } position="sticky" top={ 0 } zIndex={ 1 }>
                 <Box alignItems="center" className={ classes.responsiveFlexBox } display="flex" justifyContent="center">
                     <Button color="primary" data-testid="back-button" onClick={
                         () => onFocusDate(new Date(focusDate.getFullYear(), focusDate.getMonth() - 1, focusDate.getDate()))
@@ -108,7 +108,7 @@ const MonthCalendar = ({ orgId, campaigns, baseHref, events, onFocusDate, focusD
                     </Button>
                 </Box>
             </Box>
-            <Box display="flex" height={ 1 }>
+            <Box display="flex" flexGrow={ 1 } height={ 1 } overflow="auto">
                 <Box display="flex" mr={ 0.5 }>
                     { campaigns.map(c => {
                         const campaignEvents = events.filter(e => e.campaign.id === c.id)
@@ -205,7 +205,7 @@ const MonthCalendar = ({ orgId, campaigns, baseHref, events, onFocusDate, focusD
                     }) }
                 </Box>
             </Box>
-        </>
+        </Box>
     );
 };
 
