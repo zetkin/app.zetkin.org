@@ -6,7 +6,7 @@ import getCampaign from '../../../../../../fetching/getCampaign';
 import getCampaignEvents from '../../../../../../fetching/getCampaignEvents';
 import getOrg from '../../../../../../fetching/getOrg';
 import MonthCalendar from '../../../../../../components/calendar/MonthCalendar';
-import OrganizeCampaignLayout from '../../../../../../components/layout/OrganizeCampaignLayout';
+import OrganizeTabbedLayout from '../../../../../../components/layout/OrganizeTabbedLayout';
 import { PageWithLayout } from '../../../../../../types';
 import { scaffold } from '../../../../../../utils/next';
 import { useFocusDate } from '../../../../../../hooks';
@@ -123,9 +123,9 @@ const CampaignCalendarPage : PageWithLayout<OrganizeCalendarPageProps> = ({ orgI
 
 CampaignCalendarPage.getLayout = function getLayout(page) {
     return (
-        <OrganizeCampaignLayout fixedHeight>
+        <OrganizeTabbedLayout fixedHeight>
             { page }
-        </OrganizeCampaignLayout>
+        </OrganizeTabbedLayout>
     );
 };
 

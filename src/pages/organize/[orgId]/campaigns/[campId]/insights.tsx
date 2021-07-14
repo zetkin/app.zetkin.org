@@ -4,7 +4,7 @@ import { GetServerSideProps } from 'next';
 import getCampaign from '../../../../../fetching/getCampaign';
 import getCampaignEvents from '../../../../../fetching/getCampaignEvents';
 import getOrg from '../../../../../fetching/getOrg';
-import OrganizeCampaignLayout from '../../../../../components/layout/OrganizeCampaignLayout';
+import OrganizeTabbedLayout from '../../../../../components/layout/OrganizeTabbedLayout';
 import { PageWithLayout } from '../../../../../types';
 import { scaffold } from '../../../../../utils/next';
 
@@ -59,9 +59,9 @@ const CampaignInsightsPage: PageWithLayout<CampaignCalendarPageProps> = () => {
 
 CampaignInsightsPage.getLayout = function getLayout(page) {
     return (
-        <OrganizeCampaignLayout>
+        <OrganizeTabbedLayout>
             { page }
-        </OrganizeCampaignLayout>
+        </OrganizeTabbedLayout>
     );
 };
 

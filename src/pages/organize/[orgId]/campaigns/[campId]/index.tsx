@@ -14,7 +14,7 @@ import getCampaign from '../../../../../fetching/getCampaign';
 import getCampaignEvents from '../../../../../fetching/getCampaignEvents';
 import getCampaignTasks from '../../../../../fetching/tasks/getCampaignTasks';
 import getOrg from '../../../../../fetching/getOrg';
-import OrganizeCampaignLayout from '../../../../../components/layout/OrganizeCampaignLayout';
+import OrganizeTabbedLayout from '../../../../../components/layout/OrganizeTabbedLayout';
 import { PageWithLayout } from '../../../../../types';
 import patchCampaign from '../../../../../fetching/patchCampaign';
 import { scaffold } from '../../../../../utils/next';
@@ -294,9 +294,9 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({ orgId,
 
 CampaignSummaryPage.getLayout = function getLayout(page) {
     return (
-        <OrganizeCampaignLayout>
+        <OrganizeTabbedLayout>
             { page }
-        </OrganizeCampaignLayout>
+        </OrganizeTabbedLayout>
     );
 };
 

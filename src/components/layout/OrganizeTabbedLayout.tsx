@@ -7,7 +7,7 @@ import { Box, makeStyles, Tab, Tabs, Typography } from '@material-ui/core';
 import BreadcrumbTrail from '../BreadcrumbTrail';
 import getCampaign from '../../fetching/getCampaign';
 import OrganizeSidebar from '../OrganizeSidebar';
-import SearchDrawer from '../../components/SearchDrawer';
+import SearchDrawer from '../SearchDrawer';
 
 const useStyles = makeStyles((theme) => ({
     breadcrumbs: {
@@ -22,11 +22,11 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-interface OrganizeCampaignLayoutProps {
+interface OrganizeTabbedLayoutProps {
     fixedHeight?: boolean;
 }
 
-const OrganizeCampaignLayout: FunctionComponent<OrganizeCampaignLayoutProps> = ({ children, fixedHeight }) => {
+const OrganizeTabbedLayout: FunctionComponent<OrganizeTabbedLayoutProps> = ({ children, fixedHeight }) => {
     const intl = useIntl();
     const classes = useStyles();
     const router = useRouter();
@@ -98,4 +98,4 @@ const OrganizeCampaignLayout: FunctionComponent<OrganizeCampaignLayoutProps> = (
     );
 };
 
-export default OrganizeCampaignLayout;
+export default OrganizeTabbedLayout;
