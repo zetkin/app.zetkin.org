@@ -86,7 +86,14 @@ const WeekCalendar = ({ orgId, baseHref, campaigns, events, focusDate, onFocusDa
                 </Box>
                 <Box display="flex">
                     { Array.from(Array(7).keys()).map((_, index) => (
-                        <Box key={ index } alignItems="center" data-testid="weekdays" display="flex" flexDirection="column" justifyContent="flex-start" width="100%">
+                        <Box
+                            key={ index }
+                            alignItems="center"
+                            data-testid="weekdays"
+                            display="flex"
+                            flexDirection="column"
+                            justifyContent="flex-start"
+                            width="100%">
                             <Typography component="h2" data-testid={ `weekday-${index}` } variant="subtitle2">
                                 <FormattedDate
                                     value={ new Date(new Date(calendarStartDate).setDate(calendarStartDate.getDate() + index)) }
@@ -143,7 +150,14 @@ const WeekCalendar = ({ orgId, baseHref, campaigns, events, focusDate, onFocusDa
                                         const [shiftValue, event] = eventWithShiftValue;
                                         const campaign = campaigns.find(c => c.id === event.campaign.id);
                                         return (
-                                            <WeekCalendarEvent key={ event.id } baseHref={ baseHref } campaign={ campaign } event={ event } shiftValue={ shiftValue } startOfDay={ startOfDay } />
+                                            <WeekCalendarEvent
+                                                key={ event.id }
+                                                baseHref={ baseHref }
+                                                campaign={ campaign }
+                                                event={ event }
+                                                shiftValue={ shiftValue }
+                                                startOfDay={ startOfDay }
+                                            />
                                         );
                                     }) }
                                 </List>
