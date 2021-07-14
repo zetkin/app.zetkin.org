@@ -78,8 +78,8 @@ const AllCampaignsCalendarPage : PageWithLayout<AllCampaignsCalendarPageProps> =
 
     return (
         <>
-            <Box position="relative">
-                <Box display="flex" justifyContent="flex-end" mr={ 4 } position="absolute" right={ 0 } top="1.2rem" zIndex={ 12 }>
+            <Box height={ 1 } position="relative">
+                <Box display="flex" justifyContent="flex-end" mr={ 4 } position="absolute" right={ 0 } top={ 1 } zIndex={ 12 }>
                     <FormControl
                         aria-label={ intl.formatMessage(
                             { id: 'misc.calendar.label' }) }
@@ -87,6 +87,7 @@ const AllCampaignsCalendarPage : PageWithLayout<AllCampaignsCalendarPageProps> =
                         <Select id="demo-simple-select-outlined"
                             labelId="demo-simple-select-outlined-label"
                             onChange={ handleChange }
+                            style={{ height: '2rem', padding: 0 }}
                             value={ calendarView }>
                             { items.map(item => (
                                 <MenuItem key={ item.id } value={ item.id }>
@@ -96,7 +97,7 @@ const AllCampaignsCalendarPage : PageWithLayout<AllCampaignsCalendarPageProps> =
                         </Select>
                     </FormControl>
                 </Box>
-                <Box height="80vh" overflow="auto">
+                <Box height={ 1 }>
                     { calendarView === 'month' &&
                     <MonthCalendar
                         baseHref={ `/organize/${orgId}/campaigns` }

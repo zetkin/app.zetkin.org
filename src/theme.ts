@@ -6,6 +6,7 @@ const theme = createMuiTheme({
     overrides: {
         MuiButton: {
             root: {
+                minWidth: '1rem',
                 textTransform: 'none',
             },
         },
