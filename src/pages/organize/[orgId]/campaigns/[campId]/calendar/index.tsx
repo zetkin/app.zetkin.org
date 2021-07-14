@@ -121,9 +121,9 @@ const CampaignCalendarPage : PageWithLayout<OrganizeCalendarPageProps> = ({ orgI
     );
 };
 
-CampaignCalendarPage.getLayout = function getLayout(page, props) {
+CampaignCalendarPage.getLayout = function getLayout(page) {
     return (
-        <OrganizeCampaignLayout campId={ props.campId as string } orgId={ props.orgId as string }>
+        <OrganizeCampaignLayout fixedHeight>
             { page }
         </OrganizeCampaignLayout>
     );

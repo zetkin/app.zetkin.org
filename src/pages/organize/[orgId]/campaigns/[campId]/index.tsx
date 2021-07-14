@@ -292,9 +292,9 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({ orgId,
     );
 };
 
-CampaignSummaryPage.getLayout = function getLayout(page, props) {
+CampaignSummaryPage.getLayout = function getLayout(page) {
     return (
-        <OrganizeCampaignLayout campId={ props.campId as string } orgId={ props.orgId as string }>
+        <OrganizeCampaignLayout>
             { page }
         </OrganizeCampaignLayout>
     );

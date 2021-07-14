@@ -42,9 +42,9 @@ const EventPage: PageWithLayout = () => {
     );
 };
 
-EventPage.getLayout = function getLayout(page, props) {
+EventPage.getLayout = function getLayout(page) {
     return (
-        <OrganizeCampaignLayout campId={ props.campId as string } orgId={ props.orgId as string }>
+        <OrganizeCampaignLayout>
             { page }
         </OrganizeCampaignLayout>
     );
