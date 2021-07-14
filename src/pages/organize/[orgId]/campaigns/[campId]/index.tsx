@@ -287,7 +287,7 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({ orgId,
                 title={ intl.formatMessage({ id: 'misc.formDialog.campaign.edit' }) }>
                 { formDialogOpen === 'campaign' && <CampaignForm campaign={ campaign } onCancel={ handleFormCancel } onSubmit={ handleEditCampaignFormSubmit }/> }
             </ZetkinDialog>
-            <ZetkinSpeedDial actions={ [ACTIONS.CREATE_EVENT] }/>
+            <ZetkinSpeedDial actions={ [ACTIONS.CREATE_EVENT, ACTIONS.CREATE_TASK] }/>
         </>
     );
 };

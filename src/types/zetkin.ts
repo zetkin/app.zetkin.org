@@ -172,7 +172,7 @@ export interface ZetkinActivity {
     info_text: string | null;
 }
 
-export enum TaskType {
+export enum ZetkinTaskType {
     demographic = 'demographic',
     offline = 'offline',
     share_link = 'share_link',
@@ -188,7 +188,7 @@ export interface ZetkinTask {
     published?: string; // iso string
     expires?: string; // iso string
     deadline?: string; // iso string
-    type: TaskType;
+    type: ZetkinTaskType;
     config?: Record<string, unknown >;
     target: {
         filter_spec: {
