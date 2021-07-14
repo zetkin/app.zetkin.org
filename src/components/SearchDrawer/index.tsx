@@ -152,7 +152,7 @@ const SearchDrawer: FunctionComponent = (): JSX.Element | null => {
                     transition: width 500ms;
                     top: 1rem;
                     right: 1rem;
-                    overflow-y: scroll;
+                    overflow: auto;
                 }
                 .expanded {
                     background: white;

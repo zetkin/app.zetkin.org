@@ -60,14 +60,14 @@ const OrganizeTabbedLayout: FunctionComponent<OrganizeTabbedLayoutProps> = ({ ch
     return (
         <Box className={ classes.root } display="flex" height="100vh">
             <OrganizeSidebar />
-            <Box display="flex" flexDirection="column" height="100vh" overflow="auto" width={ 1 }>
+            <Box display="flex" flexDirection="column" height="100vh" overflow="auto" position="relative" width={ 1 }>
                 <Box display={ fixedHeight ? 'flex' :'block' } flexDirection="column" height={ fixedHeight ? 1 : 'auto' }>
                     <Box flexGrow={ 0 } flexShrink={ 0 } p={ 2 } pb={ 0 }>
-                        <Box display="flex" position="relative">
+                        <Box display="flex" justifyContent="space-between">
                             <Box className={ classes.breadcrumbs }>
                                 <BreadcrumbTrail/>
                             </Box>
-                            <Box display="flex" justifyContent="end" position="absolute" right={ 0 } top={ 0 } width={ 0.5 } zIndex={ 10000 }>
+                            <Box display="flex" position="absolute" right={ 0 } top={ 0 } zIndex={ 10000 }>
                                 <SearchDrawer />
                             </Box>
                         </Box>
