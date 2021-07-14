@@ -172,6 +172,7 @@ export interface ZetkinActivity {
     info_text: string | null;
 }
 
+//  Tasks
 export enum ZetkinTaskType {
     demographic = 'demographic',
     offline = 'offline',
@@ -189,13 +190,13 @@ export interface ZetkinTask {
     expires?: string; // iso string
     deadline?: string; // iso string
     type: ZetkinTaskType;
-    config?: Record<string, unknown >;
+    config: Record<string, unknown >; // Will find out configs for different types later
     target: {
-        filter_spec: {
+        filter_spec: Array<{
             config?: Record<string, unknown>;
             op: 'sub' | 'add';
             type: string;
-        };
+        }>;
         id: number;
     };
     campaign: {
@@ -206,4 +207,12 @@ export interface ZetkinTask {
         id: number;
         title: string;
     };
+}
+
+export interface ZetkinTaskReqBody extends Partial<ZetkinTask> {
+    title: string;
+    instructions: string;
+    type: ZetkinTaskType;
+    campaign_id: number;
+    target_filters: Array<unknown>; // What could they be?
 }

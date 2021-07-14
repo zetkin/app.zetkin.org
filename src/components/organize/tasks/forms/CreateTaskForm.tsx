@@ -7,10 +7,10 @@ import { Box, Button, MenuItem } from '@material-ui/core';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
 
 import getCampaigns from '../../../../fetching/getCampaigns';
-import { ZetkinTask, ZetkinTaskType } from '../../../../types/zetkin';
+import { ZetkinTaskReqBody, ZetkinTaskType } from '../../../../types/zetkin';
 
 interface CreateTaskFormProps {
-    onSubmit: (data: Partial<ZetkinTask>) => void;
+    onSubmit: (data: ZetkinTaskReqBody) => void;
     onCancel: () => void;
 }
 
@@ -23,10 +23,10 @@ const CreateTaskForm = ({ onSubmit, onCancel }: CreateTaskFormProps): JSX.Elemen
     // const formattedNow = dayjs().format('YYYY-MM-DDThh:mm');
 
     const initialValues = {
-        campaign_id: campId,
+        campaign_id: parseInt(campId),
     };
 
-    const validate = (values: Partial<ZetkinTask>) => {
+    const validate = (values: ZetkinTaskReqBody) => {
         const errors: Record<string, string> = {};
 
         if (!values.title) {
@@ -36,18 +36,10 @@ const CreateTaskForm = ({ onSubmit, onCancel }: CreateTaskFormProps): JSX.Elemen
         return errors;
     };
 
-    const handleSubmit = (values: Partial<ZetkinTask>) => {
-        const { title } = values;
-
-        onSubmit({
-            title,
-        });
-    };
-
     return (
         <Form
             initialValues={ initialValues }
-            onSubmit={ handleSubmit }
+            onSubmit={ (values) => onSubmit(values) }
             render={ ({ handleSubmit, submitting }) => (
                 <form noValidate onSubmit={ handleSubmit }>
                     { /* Fields */ }
@@ -64,7 +56,7 @@ const CreateTaskForm = ({ onSubmit, onCancel }: CreateTaskFormProps): JSX.Elemen
                         id="task_type"
                         label="Task Type"
                         margin="normal"
-                        name="task_type"
+                        name="type"
                         select>
                         <MenuItem value={ ZetkinTaskType.offline }>
                             { ZetkinTaskType.offline }
@@ -91,6 +83,18 @@ const CreateTaskForm = ({ onSubmit, onCancel }: CreateTaskFormProps): JSX.Elemen
                             </MenuItem>
                         )) }
                     </TextField>
+
+                    <TextField
+                        fullWidth
+                        id="instructions"
+                        label="Instructions"
+                        margin="normal"
+                        multiline
+                        name="instructions"
+                        rows={ 2 }
+                        variant="filled"
+                    />
+
 
                     { /* Actions */ }
                     <Box display="flex" justifyContent="flex-end" width={ 1 }>
