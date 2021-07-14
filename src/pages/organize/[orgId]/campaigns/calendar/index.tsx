@@ -6,13 +6,12 @@ import getCampaigns from '../../../../../fetching/getCampaigns';
 import getEvents from '../../../../../fetching/getEvents';
 import getOrg from '../../../../../fetching/getOrg';
 import MonthCalendar from '../../../../../components/calendar/MonthCalendar';
-import OrganizeAllCampaignsLayout from '../../../../../components/layout/OrganizeAllCampaignsLayout';
+import OrganizeTabbedLayout from '../../../../../components/layout/OrganizeTabbedLayout';
 import { PageWithLayout } from '../../../../../types';
 import { scaffold } from '../../../../../utils/next';
 import { useFocusDate } from '../../../../../hooks';
 import { useIntl } from 'react-intl';
 import { useQuery } from 'react-query';
-
 import WeekCalendar from '../../../../../components/calendar/WeekCalendar';
 import ZetkinSpeedDial, { ACTIONS } from '../../../../../components/ZetkinSpeedDial';
 
@@ -79,7 +78,7 @@ const AllCampaignsCalendarPage : PageWithLayout<AllCampaignsCalendarPageProps> =
 
     return (
         <>
-            <Box p={ 2 } position="relative">
+            <Box position="relative">
                 <Box display="flex" justifyContent="flex-end" mr={ 4 } position="absolute" right={ 0 } top="1.2rem" zIndex={ 12 }>
                     <FormControl
                         aria-label={ intl.formatMessage(
@@ -123,11 +122,11 @@ const AllCampaignsCalendarPage : PageWithLayout<AllCampaignsCalendarPageProps> =
     );
 };
 
-AllCampaignsCalendarPage.getLayout = function getLayout(page, props) {
+AllCampaignsCalendarPage.getLayout = function getLayout(page) {
     return (
-        <OrganizeAllCampaignsLayout orgId={ props.orgId as string }>
+        <OrganizeTabbedLayout fixedHeight>
             { page }
-        </OrganizeAllCampaignsLayout>
+        </OrganizeTabbedLayout>
     );
 };
 

@@ -6,7 +6,7 @@ import getCampaign from '../../../../../../fetching/getCampaign';
 import getCampaignEvents from '../../../../../../fetching/getCampaignEvents';
 import getOrg from '../../../../../../fetching/getOrg';
 import MonthCalendar from '../../../../../../components/calendar/MonthCalendar';
-import OrganizeCampaignLayout from '../../../../../../components/layout/OrganizeCampaignLayout';
+import OrganizeTabbedLayout from '../../../../../../components/layout/OrganizeTabbedLayout';
 import { PageWithLayout } from '../../../../../../types';
 import { scaffold } from '../../../../../../utils/next';
 import { useFocusDate } from '../../../../../../hooks';
@@ -77,7 +77,7 @@ const CampaignCalendarPage : PageWithLayout<OrganizeCalendarPageProps> = ({ orgI
 
     return (
         <>
-            <Box p={ 2 } position="relative">
+            <Box position="relative">
                 <Box display="flex" justifyContent="flex-end" mr={ 4 } position="absolute" right={ 0 } top="1.2rem" zIndex={ 12 }>
                     <FormControl
                         aria-label={ intl.formatMessage(
@@ -121,11 +121,11 @@ const CampaignCalendarPage : PageWithLayout<OrganizeCalendarPageProps> = ({ orgI
     );
 };
 
-CampaignCalendarPage.getLayout = function getLayout(page, props) {
+CampaignCalendarPage.getLayout = function getLayout(page) {
     return (
-        <OrganizeCampaignLayout campId={ props.campId as string } orgId={ props.orgId as string }>
+        <OrganizeTabbedLayout fixedHeight>
             { page }
-        </OrganizeCampaignLayout>
+        </OrganizeTabbedLayout>
     );
 };
 

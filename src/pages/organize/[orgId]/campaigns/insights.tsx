@@ -1,7 +1,7 @@
 import { GetServerSideProps } from 'next';
 
 import getOrg from '../../../../fetching/getOrg';
-import OrganizeAllCampaignsLayout from '../../../../components/layout/OrganizeAllCampaignsLayout';
+import OrganizeTabbedLayout from '../../../../components/layout/OrganizeTabbedLayout';
 import { PageWithLayout } from '../../../../types';
 import { scaffold } from '../../../../utils/next';
 
@@ -45,11 +45,11 @@ const AllCampaignsInsightsPage: PageWithLayout<AllCampaignsInsightsPageProps> = 
     );
 };
 
-AllCampaignsInsightsPage.getLayout = function getLayout(page, props) {
+AllCampaignsInsightsPage.getLayout = function getLayout(page) {
     return (
-        <OrganizeAllCampaignsLayout orgId={ props.orgId as string }>
+        <OrganizeTabbedLayout>
             { page }
-        </OrganizeAllCampaignsLayout>
+        </OrganizeTabbedLayout>
     );
 };
 

@@ -1,7 +1,7 @@
 import { GetServerSideProps } from 'next';
 
 import getOrg from '../../../../../../../../fetching/getOrg';
-import OrganizeCampaignLayout from '../../../../../../../../components/layout/OrganizeCampaignLayout';
+import OrganizeTabbedLayout from '../../../../../../../../components/layout/OrganizeTabbedLayout';
 import { PageWithLayout } from '../../../../../../../../types';
 import { scaffold } from '../../../../../../../../utils/next';
 
@@ -42,11 +42,11 @@ const EventPage: PageWithLayout = () => {
     );
 };
 
-EventPage.getLayout = function getLayout(page, props) {
+EventPage.getLayout = function getLayout(page) {
     return (
-        <OrganizeCampaignLayout campId={ props.campId as string } orgId={ props.orgId as string }>
+        <OrganizeTabbedLayout>
             { page }
-        </OrganizeCampaignLayout>
+        </OrganizeTabbedLayout>
     );
 };
 
