@@ -1,8 +1,8 @@
 import { FunctionComponent } from 'react';
-import { useIntl } from 'react-intl';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 import { Box, makeStyles, Tab, Tabs, Typography } from '@material-ui/core';
+import { FormattedMessage as Msg, useIntl } from 'react-intl';
 
 import BreadcrumbTrail from '../BreadcrumbTrail';
 import getCampaign from '../../fetching/getCampaign';
@@ -37,18 +37,25 @@ const OrganizeTabbedLayout: FunctionComponent<OrganizeTabbedLayoutProps> = ({ ch
     const path =  router.pathname.split('/');
     let currentTab = path.pop();
 
-    if (currentTab === '[campId]') {
+    if (currentTab === '[campId]' || currentTab === 'campaigns') {
         currentTab = 'summary';
     }
 
     const selectTab = (key : string) : void => {
         if (key === 'summary') {
-            router.push(`/organize/${orgId}/campaigns/${campId}`);
+            campId ? router.push(`/organize/${orgId}/campaigns/${campId}`) :
+                router.push(`/organize/${orgId}/campaigns/`);
         }
         else {
-            router.push(`/organize/${orgId}/campaigns/${campId}/${key}`);
+            campId ? router.push(`/organize/${orgId}/campaigns/${campId}/${key}`) :
+                router.push(`/organize/${orgId}/campaigns/${key}`);
         }
     };
+
+    const singleCampaignPageTabs = ['summary', 'calendar', 'insights'];
+    const allCampaignPageTabs = ['summary', 'calendar', 'archive'];
+
+    const tabs = campId ? singleCampaignPageTabs : allCampaignPageTabs;
 
     return (
         <Box className={ classes.root } display="flex" height="100vh">
@@ -66,7 +73,7 @@ const OrganizeTabbedLayout: FunctionComponent<OrganizeTabbedLayoutProps> = ({ ch
                         </Box>
                         <Box py={ 1 }>
                             <Typography component="h1" variant="h4">
-                                { campQuery.data?.title }
+                                { campQuery.data?.title || <Msg id="layout.organize.campaigns.allCampaigns"/> }
                             </Typography>
                         </Box>
                         <Tabs
@@ -75,18 +82,12 @@ const OrganizeTabbedLayout: FunctionComponent<OrganizeTabbedLayoutProps> = ({ ch
                             onChange={ (_, value) => selectTab(value) }
                             textColor="primary"
                             value={ currentTab }>
-                            <Tab label={ intl.formatMessage({
-                                id: 'layout.organize.campaigns.summary',
-                            }) } value="summary"
-                            />
-                            <Tab  label={ intl.formatMessage({
-                                id: `layout.organize.campaigns.calendar`,
-                            }) } value="calendar"
-                            />
-                            <Tab label={ intl.formatMessage({
-                                id: `layout.organize.campaigns.insights`,
-                            }) } value="insights"
-                            />
+                            { tabs.map(tab => (
+                                <Tab key={ tab } label={ intl.formatMessage({
+                                    id: `layout.organize.campaigns.${tab}`,
+                                }) } value={ tab }
+                                />
+                            )) }
                         </Tabs>
                     </Box>
                     <Box flexGrow={ 1 } minHeight={ 0 } position="relative" role="tabpanel">
