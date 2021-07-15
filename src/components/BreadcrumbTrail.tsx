@@ -61,7 +61,7 @@ const BreadcrumbTrail = () : JSX.Element | null => {
                     if (index < breadcrumbs.length - 1) {
                         return (
                             <NextLink key={ crumb.href } href={ crumb.href } passHref>
-                                <Link className={ classes.breadcrumb }>
+                                <Link className={ classes.breadcrumb } color="inherit">
                                     { crumb.labelMsg ? <Msg id={ crumb.labelMsg } /> : crumb.label }
                                 </Link>
                             </NextLink>

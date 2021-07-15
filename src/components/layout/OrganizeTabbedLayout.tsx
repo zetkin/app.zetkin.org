@@ -62,17 +62,17 @@ const OrganizeTabbedLayout: FunctionComponent<OrganizeTabbedLayoutProps> = ({ ch
             <OrganizeSidebar />
             <Box display="flex" flexDirection="column" height="100vh" overflow="auto" position="relative" width={ 1 }>
                 <Box display={ fixedHeight ? 'flex' :'block' } flexDirection="column" height={ fixedHeight ? 1 : 'auto' }>
-                    <Box flexGrow={ 0 } flexShrink={ 0 } p={ 2 } pb={ 0 }>
+                    <Box flexGrow={ 0 } flexShrink={ 0 }>
                         <Box display="flex" justifyContent="space-between">
-                            <Box className={ classes.breadcrumbs }>
+                            <Box className={ classes.breadcrumbs } p={ 2 } pl={ 3 }>
                                 <BreadcrumbTrail/>
                             </Box>
                             <Box display="flex" position="absolute" right={ 0 } top={ 0 } zIndex={ 10000 }>
                                 <SearchDrawer />
                             </Box>
                         </Box>
-                        <Box py={ 1 }>
-                            <Typography component="h1" variant="h4">
+                        <Box p={ 3 } pt={ 1 }>
+                            <Typography component="h1" noWrap variant="h2">
                                 { campQuery.data?.title || <Msg id="layout.organize.campaigns.allCampaigns"/> }
                             </Typography>
                         </Box>
