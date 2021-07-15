@@ -19,8 +19,6 @@ const CreateTaskForm = ({ onSubmit, onCancel }: CreateTaskFormProps): JSX.Elemen
     const intl = useIntl();
     const { data: campaigns } = useQuery(['campaigns', orgId], getCampaigns(orgId));
 
-    // const formattedNow = dayjs().format('YYYY-MM-DDThh:mm');
-
     const validate = (values: ZetkinTaskReqBody) => {
         const errors: Record<string, string> = {};
 
@@ -36,7 +34,6 @@ const CreateTaskForm = ({ onSubmit, onCancel }: CreateTaskFormProps): JSX.Elemen
         if (!values.campaign_id) {
             errors.campaign_id = intl.formatMessage({ id: 'misc.formDialog.required' });
         }
-
         return errors;
     };
 

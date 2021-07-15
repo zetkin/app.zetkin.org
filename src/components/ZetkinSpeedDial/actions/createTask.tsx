@@ -1,5 +1,4 @@
 /* eslint-disable react/display-name */
-import { ACTIONS } from '../constants';
 import { CheckBox } from '@material-ui/icons';
 import { useMutation } from 'react-query';
 import { useRouter } from 'next/router';
@@ -7,8 +6,9 @@ import { useRouter } from 'next/router';
 import CreateTaskForm from '../../organize/tasks/forms/CreateTaskForm';
 import postTask from '../../../fetching/tasks/postTask';
 import { ZetkinTaskReqBody } from '../../../types/zetkin';
-import { ActionConfig, DialogContentBaseProps } from './types';
 
+import { ACTIONS } from '../constants';
+import { ActionConfig, DialogContentBaseProps } from './types';
 
 const DialogContent: React.FunctionComponent<DialogContentBaseProps> = ({ closeDialog }) => {
     const router = useRouter();
@@ -23,7 +23,11 @@ const DialogContent: React.FunctionComponent<DialogContentBaseProps> = ({ closeD
         router.push(`/organize/${orgId}/campiagns/${campId}/tasks/${newTask.id}`);
     };
 
-    return (<CreateTaskForm onCancel={ closeDialog } onSubmit={ handleFormSubmit } />
+    return (
+        <CreateTaskForm
+            onCancel={ closeDialog }
+            onSubmit={ handleFormSubmit }
+        />
     );
 };
 

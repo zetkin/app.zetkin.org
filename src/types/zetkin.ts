@@ -172,6 +172,12 @@ export interface ZetkinActivity {
     info_text: string | null;
 }
 
+interface ZetkinSmartSearchFilter {
+    config?: Record<string, unknown>;
+    op: 'sub' | 'add';
+    type: string;
+}
+
 //  Tasks
 export enum ZetkinTaskType {
     demographic = 'demographic',
@@ -192,11 +198,7 @@ export interface ZetkinTask {
     type: ZetkinTaskType;
     config: Record<string, unknown >; // Will find out configs for different types later
     target: {
-        filter_spec: Array<{
-            config?: Record<string, unknown>;
-            op: 'sub' | 'add';
-            type: string;
-        }>;
+        filter_spec: ZetkinSmartSearchFilter[];
         id: number;
     };
     campaign: {
@@ -214,5 +216,5 @@ export interface ZetkinTaskReqBody extends Partial<ZetkinTask> {
     instructions: string;
     type: ZetkinTaskType;
     campaign_id: number;
-    target_filters: Array<unknown>; // What could they be?
+    target_filters: ZetkinSmartSearchFilter[];
 }
