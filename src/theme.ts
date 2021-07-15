@@ -28,6 +28,24 @@ const theme = createMuiTheme({
                 minWidth: 120,
             },
         },
+        MuiIconButton: {
+            colorPrimary: {
+                '&:hover': {
+                    backgroundColor: 'transparent',
+                },
+            },
+            colorSecondary: {
+                '&:hover': {
+                    backgroundColor: 'transparent',
+                },
+            },
+            root: {
+                '&:hover': {
+                    backgroundColor: 'transparent',
+                    color: '#ED1C55',
+                },
+            },
+        },
         MuiTab: {
             root: {
                 textTransform: 'none',

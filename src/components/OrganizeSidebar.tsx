@@ -1,10 +1,11 @@
-import grey from '@material-ui/core/colors/grey';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import { AppBar, Box, Button, Drawer, Hidden, IconButton, List, ListItem, Toolbar } from '@material-ui/core';
+import { AppBar, Box, Drawer, Hidden, IconButton, List, ListItem, Toolbar } from '@material-ui/core';
 import { Event,  Home, Inbox, Map, Menu, People, Person } from '@material-ui/icons/';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
+
+import ZetkinLogo from '../icons/ZetkinLogo';
 
 const drawerWidth = '5rem';
 
@@ -57,39 +58,47 @@ const OrganizeSidebar = () : JSX.Element =>{
     };
 
     const router = useRouter();
-    const key = router.pathname.split('[orgId]')[1];
     const { orgId } = router.query as {orgId: string};
 
+    const key = orgId ? router.pathname.split('[orgId]')[1] : 'organize';
+
     const drawer = (
-        <Box alignItems="center" bgcolor={ grey[100] } display="flex" flexDirection="column" height="100%" justifyContent="space-between">
+        <Box alignItems="center" display="flex" flexDirection="column" height="100%" justifyContent="space-between">
             <List disablePadding>
                 <Box display="flex" flexDirection="column">
                     <ListItem disableGutters>
+                        <NextLink href="/organize" passHref>
+                            <IconButton aria-label="Home" className={ classes.roundButton } color={ key === 'organize' ?  'primary' : 'secondary' } data-test="logo-button" style={{ marginBottom:'2rem' }}>
+                                <ZetkinLogo size={ 50 } />
+                            </IconButton>
+                        </NextLink>
+                    </ListItem>
+                    <ListItem disableGutters>
                         <NextLink href={ `/organize/${orgId}` } passHref>
-                            <Button aria-label="Home" className={ classes.roundButton } color={ key === '' ?  'primary' : 'secondary' } data-test="home-button">
+                            <IconButton aria-label="Home" className={ classes.roundButton } color={ key === '' ?  'primary' : 'secondary' } data-test="home-button">
                                 <Home />
-                            </Button>
+                            </IconButton>
                         </NextLink>
                     </ListItem>
                     <ListItem disableGutters>
                         <NextLink href={ `/organize/${orgId}/people` } passHref>
-                            <Button aria-label="People" className={ classes.roundButton } color={ key.startsWith('/people') ?  'primary' : 'secondary' } data-test="people-button">
+                            <IconButton aria-label="People" className={ classes.roundButton } color={ key.startsWith('/people') ?  'primary' : 'secondary' } data-test="people-button">
                                 <People />
-                            </Button>
+                            </IconButton>
                         </NextLink>
                     </ListItem>
                     <ListItem disableGutters>
                         <NextLink href={ `/organize/${orgId}/areas` } passHref>
-                            <Button aria-label="Areas" className={ classes.roundButton } color={ key.startsWith('/areas') ?  'primary' : 'secondary' } data-test="area-button">
+                            <IconButton aria-label="Areas" className={ classes.roundButton } color={ key.startsWith('/areas') ?  'primary' : 'secondary' } data-test="area-button">
                                 <Map />
-                            </Button>
+                            </IconButton>
                         </NextLink>
                     </ListItem>
                     <ListItem disableGutters>
                         <NextLink href={ `/organize/${orgId}/campaigns` } passHref>
-                            <Button aria-label="Campaigns" className={ classes.roundButton } color={ key.startsWith('/campaigns') ?  'primary' : 'secondary' } data-test="calendar-button">
+                            <IconButton aria-label="Campaigns" className={ classes.roundButton } color={ key.startsWith('/campaigns') ?  'primary' : 'secondary' } data-test="calendar-button">
                                 <Event />
-                            </Button>
+                            </IconButton>
                         </NextLink>
                     </ListItem>
                 </Box>
@@ -97,14 +106,14 @@ const OrganizeSidebar = () : JSX.Element =>{
             <Box display="flex" flexDirection="column">
                 <List>
                     <ListItem disableGutters>
-                        <Button aria-label="Inbox" className={ classes.roundButton } color="secondary" data-test="inbox-button">
+                        <IconButton aria-label="Inbox" className={ classes.roundButton } color="secondary" data-test="inbox-button">
                             <Inbox />
-                        </Button>
+                        </IconButton>
                     </ListItem>
                     <ListItem disableGutters>
-                        <Button aria-label="Organize" className={ classes.roundButton } color="secondary" data-test="user-button">
+                        <IconButton aria-label="Organize" className={ classes.roundButton } color="secondary" data-test="user-button">
                             <Person />
-                        </Button>
+                        </IconButton>
                     </ListItem>
                 </List>
             </Box>
