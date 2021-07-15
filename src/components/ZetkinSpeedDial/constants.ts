@@ -10,4 +10,5 @@
 export enum ACTIONS {
     CREATE_CAMPAIGN = 'createCampaign',
     CREATE_EVENT = 'createEvent',
+    CREATE_TASK = 'createTask',
 }

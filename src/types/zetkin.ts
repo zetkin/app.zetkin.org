@@ -172,7 +172,14 @@ export interface ZetkinActivity {
     info_text: string | null;
 }
 
-export enum TaskType {
+interface ZetkinSmartSearchFilter {
+    config?: Record<string, unknown>;
+    op: 'sub' | 'add';
+    type: string;
+}
+
+//  Tasks
+export enum ZetkinTaskType {
     demographic = 'demographic',
     offline = 'offline',
     share_link = 'share_link',
@@ -188,14 +195,10 @@ export interface ZetkinTask {
     published?: string; // iso string
     expires?: string; // iso string
     deadline?: string; // iso string
-    type: TaskType;
-    config?: Record<string, unknown >;
+    type: ZetkinTaskType;
+    config: Record<string, unknown >; // Will find out configs for different types later
     target: {
-        filter_spec: {
-            config?: Record<string, unknown>;
-            op: 'sub' | 'add';
-            type: string;
-        };
+        filter_spec: ZetkinSmartSearchFilter[];
         id: number;
     };
     campaign: {
@@ -206,4 +209,12 @@ export interface ZetkinTask {
         id: number;
         title: string;
     };
+}
+
+export interface ZetkinTaskReqBody extends Partial<ZetkinTask> {
+    title: string;
+    instructions: string;
+    type: ZetkinTaskType;
+    campaign_id: number;
+    target_filters: ZetkinSmartSearchFilter[];
 }
