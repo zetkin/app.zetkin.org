@@ -1,3 +1,4 @@
+import { createElement } from 'react';
 import { createMuiTheme } from '@material-ui/core/styles';
 import { grey } from '@material-ui/core/colors';
 
@@ -46,9 +47,19 @@ const theme = createMuiTheme({
                 },
             },
         },
-        MuiTab: {
+        MuiTabs: {
+            indicator: {
+                '& > span': {
+                    backgroundColor: '#ED1C55',
+                    maxWidth: 100,
+                    width: '100%',
+                },
+                backgroundColor: 'transparent',
+                display: 'flex',
+                justifyContent: 'center',
+            },
             root: {
-                textTransform: 'none',
+                borderBottom: '1px solid rgba(0, 0, 0, 0.12)',
             },
         },
     },
@@ -67,6 +78,15 @@ const theme = createMuiTheme({
         },
         text: {
             secondary: 'rgba(0, 0, 0, 0.6)',
+        },
+    },
+    props: {
+        MuiTabs: {
+            TabIndicatorProps: {
+                children: createElement('span'),
+            },
+            indicatorColor: 'primary',
+            textColor: 'primary',
         },
     },
     typography: {

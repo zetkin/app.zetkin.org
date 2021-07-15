@@ -78,9 +78,7 @@ const OrganizeTabbedLayout: FunctionComponent<OrganizeTabbedLayoutProps> = ({ ch
                         </Box>
                         <Tabs
                             aria-label="campaign tabs"
-                            indicatorColor="primary"
                             onChange={ (_, value) => selectTab(value) }
-                            textColor="primary"
                             value={ currentTab }>
                             { tabs.map(tab => (
                                 <Tab key={ tab } label={ intl.formatMessage({
