@@ -19,6 +19,7 @@ import getUpcomingEvents from '../../../../fetching/getUpcomingEvents';
 import OrganizeTabbedLayout from '../../../../components/layout/OrganizeTabbedLayout';
 import { PageWithLayout } from '../../../../types';
 import { scaffold } from '../../../../utils/next';
+import ZetkinSection from '../../../../components/ZetkinSection';
 import ZetkinSpeedDial, { ACTIONS } from '../../../../components/ZetkinSpeedDial';
 
 const scaffoldOptions = {
@@ -140,12 +141,7 @@ const AllCampaignsSummaryPage: PageWithLayout<AllCampaignsSummaryPageProps> = ({
 
     return (
         <>
-            <Box m={ 1 } p={ 1 }>
-                <Typography variant="h5">
-                    <Msg id="pages.organizeAllCampaigns.heading"/>
-                </Typography>
-            </Box>
-            <Box m={ 1 } p={ 1 }>
+            <ZetkinSection title={ intl.formatMessage({ id: 'pages.organizeAllCampaigns.heading' }) }>
                 <Collapse collapsedHeight={ cardHeight + 18 } in={ CampaignListExpanded }>
                     <Box display="grid" gridGap={ 20 } gridTemplateColumns="repeat( auto-fit, minmax(450px, 1fr) )">
                         { campaigns.map(camp => {
@@ -210,7 +206,7 @@ const AllCampaignsSummaryPage: PageWithLayout<AllCampaignsSummaryPageProps> = ({
                         </Typography>
                     </Button>
                 </Box>
-            </Box>
+            </ZetkinSection>
             <Box m={ 1 } p={ 1 }>
                 <Typography variant="h5">
                     <Msg id="pages.organizeAllCampaigns.unsorted"/>
