@@ -3,9 +3,10 @@ import { grey } from '@material-ui/core/colors';
 import NextLink from 'next/link';
 import { useQuery } from 'react-query';
 import { useState } from 'react';
-import { Box, Card, CardActions, CardContent, Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, Link, List, ListItem, Typography } from '@material-ui/core';
-import { FormattedDate, FormattedMessage as Msg, useIntl } from 'react-intl';
+import { Box, Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, Link, List, ListItem, Typography } from '@material-ui/core';
+import { FormattedMessage as Msg, useIntl } from 'react-intl';
 
+import CampaignCard from '../../../../components/CamapignCard';
 import getActivities from '../../../../fetching/getActivities';
 import getAllCallAssignments from '../../../../fetching/getAllCallAssignments';
 import getAllCanvassAssignments from '../../../../fetching/getAllCanvassAssignments';
@@ -122,51 +123,9 @@ const AllCampaignsSummaryPage: PageWithLayout<AllCampaignsSummaryPageProps> = ({
         <>
             <ZetkinSection title={ intl.formatMessage({ id: 'pages.organizeAllCampaigns.heading' }) }>
                 <Box display="grid" gridGap={ 20 } gridTemplateColumns="repeat( auto-fit, minmax(450px, 1fr) )">
-                    { campaigns.map(camp => {
-                        const campaignEvents = events.filter(e => e.campaign.id === camp.id);
-                        const campaignUpcomingEvents = upcomingEvents.filter(e => e.campaign?.id === camp.id);
-                        const startDate = campaignEvents[0]?.start_time;
-                        const endDate = campaignEvents[campaignEvents.length - 1]?.start_time;
-                        return (
-                            <Card key={ camp.id } square style={{  padding: '1rem', width:'100%' }} variant="outlined">
-                                <CardContent>
-                                    <Typography gutterBottom noWrap variant="h6">
-                                        { camp.title }
-                                    </Typography>
-                                    <Typography gutterBottom variant="body2">
-                                        { startDate && endDate ? (
-                                            <>
-                                                <FormattedDate
-                                                    day="numeric"
-                                                    month="long"
-                                                    value={ new Date(startDate)
-                                                    }
-                                                /> { ' - ' }
-                                                <FormattedDate
-                                                    day="numeric"
-                                                    month="long"
-                                                    value={ new Date(endDate) }
-                                                />
-                                            </>
-                                        ) : <Msg id="pages.organizeAllCampaigns.indefinite" /> }
-                                    </Typography>
-                                    <Typography>
-                                        <Msg id="pages.organizeAllCampaigns.upcoming" values={{ numEvents:campaignUpcomingEvents.length,
-                                        }}
-                                        />
-                                    </Typography>
-                                    { /*TODO: labels for calls and surveys*/ }
-                                </CardContent>
-                                <CardActions>
-                                    <NextLink href={ `/organize/${orgId}/campaigns/${camp.id}` } passHref>
-                                        <Link underline="always" variant="subtitle1">
-                                            <Msg id="pages.organizeAllCampaigns.cardCTA" />
-                                        </Link>
-                                    </NextLink>
-                                </CardActions>
-                            </Card>
-                        );
-                    }) }
+                    { campaigns.map(campaign => (
+                        <CampaignCard key={ campaign.id } campaign={ campaign } events={ events } upcomingEvents={ upcomingEvents }/>
+                    )) }
                 </Box>
             </ZetkinSection>
             <Box m={ 1 } p={ 1 }>
