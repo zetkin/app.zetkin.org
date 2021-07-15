@@ -3,7 +3,7 @@ import { grey } from '@material-ui/core/colors';
 import NextLink from 'next/link';
 import { useQuery } from 'react-query';
 import { useState } from 'react';
-import { Box, Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, Link, List, ListItem, Typography } from '@material-ui/core';
+import { Box, Checkbox, Container, FormControl, FormControlLabel, FormGroup, FormLabel, Link, List, ListItem, Typography } from '@material-ui/core';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
 
 import CampaignCard from '../../../../components/CamapignCard';
@@ -121,66 +121,68 @@ const AllCampaignsSummaryPage: PageWithLayout<AllCampaignsSummaryPageProps> = ({
 
     return (
         <>
-            <ZetkinSection title={ intl.formatMessage({ id: 'pages.organizeAllCampaigns.heading' }) }>
-                <Box display="grid" gridGap={ 20 } gridTemplateColumns="repeat( auto-fit, minmax(450px, 1fr) )">
-                    { campaigns.map(campaign => (
-                        <CampaignCard key={ campaign.id } campaign={ campaign } events={ events } upcomingEvents={ upcomingEvents }/>
-                    )) }
-                </Box>
-            </ZetkinSection>
-            <Box m={ 1 } p={ 1 }>
-                <Typography variant="h5">
-                    <Msg id="pages.organizeAllCampaigns.unsorted"/>
-                </Typography>
-            </Box>
-            <Box alignItems="start" display="flex" justifyContent="flex-start" m={ 1 } p={ 1 } pt={ 0 }>
-                <Box flexGrow={ 0 } width={ 0.5 }>
-                    <List disablePadding={ true }>
-                        { unsortedProjects.map(item => (
-                            <ListItem key={ `${item.type}-${item.data.id}` } style={{ background: grey[200], height: '4rem', margin: '1rem 0', paddingLeft:'0.5rem' }}>
-                                <NextLink href="/" passHref>
-                                    <Link color="inherit" variant="subtitle2">
-                                        { `${item.type} ID: ${item.data.id}` }
-                                    </Link>
-                                </NextLink>
-                            </ListItem>
+            <Container maxWidth={ false }>
+                <ZetkinSection title={ intl.formatMessage({ id: 'pages.organizeAllCampaigns.heading' }) }>
+                    <Box display="grid" gridGap={ 20 } gridTemplateColumns="repeat( auto-fit, minmax(450px, 1fr) )">
+                        { campaigns.map(campaign => (
+                            <CampaignCard key={ campaign.id } campaign={ campaign } events={ events } upcomingEvents={ upcomingEvents }/>
                         )) }
-                    </List>
+                    </Box>
+                </ZetkinSection>
+                <Box m={ 1 } p={ 1 }>
+                    <Typography variant="h5">
+                        <Msg id="pages.organizeAllCampaigns.unsorted"/>
+                    </Typography>
                 </Box>
-                <Box border={ 1 } borderColor={ grey[400] } flexGrow={ 0 } m={ 3 } mt={ 2 } p={ 2 }>
-                    <FormControl component="fieldset">
-                        <FormLabel component="legend">
-                            <Typography color="textPrimary" variant="subtitle1">
-                                <Msg id="pages.organizeAllCampaigns.filter.filter" />
-                            </Typography>
-                        </FormLabel>
-                        <FormGroup>
-                            <FormControlLabel
-                                control={ <Checkbox checked={ filters.standalones } color="primary" name="standalones" onChange={ handleFilterBoxChange }/> }
-                                label={ intl.formatMessage(
-                                    { id: 'pages.organizeAllCampaigns.filter.standalones' }) }
-                            />
-                            <FormControlLabel
-                                control={ <Checkbox checked={ filters.surveys } color="primary" name="surveys" onChange={ handleFilterBoxChange } /> }
-                                label={ intl.formatMessage(
-                                    { id: 'pages.organizeAllCampaigns.filter.surveys' }) }
-                            />
-                            <FormControlLabel
-                                control={ <Checkbox checked={ filters.callAssignments } color="primary" name="callAssignments" onChange={ handleFilterBoxChange } /> }
-                                label={ intl.formatMessage(
-                                    { id: 'pages.organizeAllCampaigns.filter.calls' }) }
-                            />
-                            <FormControlLabel
-                                control={ <Checkbox checked={ filters.canvasses } color="primary"
-                                    name="canvasses" onChange={ handleFilterBoxChange }
-                                /> }
-                                label={ intl.formatMessage(
-                                    { id: 'pages.organizeAllCampaigns.filter.canvasses' }) }
-                            />
-                        </FormGroup>
-                    </FormControl>
+                <Box alignItems="start" display="flex" justifyContent="flex-start" m={ 1 } p={ 1 } pt={ 0 }>
+                    <Box flexGrow={ 0 } width={ 0.5 }>
+                        <List disablePadding={ true }>
+                            { unsortedProjects.map(item => (
+                                <ListItem key={ `${item.type}-${item.data.id}` } style={{ background: grey[200], height: '4rem', margin: '1rem 0', paddingLeft:'0.5rem' }}>
+                                    <NextLink href="/" passHref>
+                                        <Link color="inherit" variant="subtitle2">
+                                            { `${item.type} ID: ${item.data.id}` }
+                                        </Link>
+                                    </NextLink>
+                                </ListItem>
+                            )) }
+                        </List>
+                    </Box>
+                    <Box border={ 1 } borderColor={ grey[400] } flexGrow={ 0 } m={ 3 } mt={ 2 } p={ 2 }>
+                        <FormControl component="fieldset">
+                            <FormLabel component="legend">
+                                <Typography color="textPrimary" variant="subtitle1">
+                                    <Msg id="pages.organizeAllCampaigns.filter.filter" />
+                                </Typography>
+                            </FormLabel>
+                            <FormGroup>
+                                <FormControlLabel
+                                    control={ <Checkbox checked={ filters.standalones } color="primary" name="standalones" onChange={ handleFilterBoxChange }/> }
+                                    label={ intl.formatMessage(
+                                        { id: 'pages.organizeAllCampaigns.filter.standalones' }) }
+                                />
+                                <FormControlLabel
+                                    control={ <Checkbox checked={ filters.surveys } color="primary" name="surveys" onChange={ handleFilterBoxChange } /> }
+                                    label={ intl.formatMessage(
+                                        { id: 'pages.organizeAllCampaigns.filter.surveys' }) }
+                                />
+                                <FormControlLabel
+                                    control={ <Checkbox checked={ filters.callAssignments } color="primary" name="callAssignments" onChange={ handleFilterBoxChange } /> }
+                                    label={ intl.formatMessage(
+                                        { id: 'pages.organizeAllCampaigns.filter.calls' }) }
+                                />
+                                <FormControlLabel
+                                    control={ <Checkbox checked={ filters.canvasses } color="primary"
+                                        name="canvasses" onChange={ handleFilterBoxChange }
+                                    /> }
+                                    label={ intl.formatMessage(
+                                        { id: 'pages.organizeAllCampaigns.filter.canvasses' }) }
+                                />
+                            </FormGroup>
+                        </FormControl>
+                    </Box>
                 </Box>
-            </Box>
+            </Container>
             <ZetkinSpeedDial actions={ [ACTIONS.CREATE_EVENT, ACTIONS.CREATE_CAMPAIGN] } />
         </>
     );
