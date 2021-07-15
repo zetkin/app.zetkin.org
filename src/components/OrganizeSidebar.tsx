@@ -86,7 +86,7 @@ const OrganizeSidebar = () : JSX.Element =>{
                         </NextLink>
                     </ListItem>
                     <ListItem disableGutters>
-                        <NextLink href={ `/organize/${orgId}/campaigns/calendar` } passHref>
+                        <NextLink href={ `/organize/${orgId}/campaigns` } passHref>
                             <Button aria-label="Campaigns" className={ classes.roundButton } color={ key.startsWith('/campaigns') ?  'primary' : 'secondary' } data-test="calendar-button">
                                 <Event />
                             </Button>
