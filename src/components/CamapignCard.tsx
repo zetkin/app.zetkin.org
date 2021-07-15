@@ -29,7 +29,7 @@ const CamapignCard = ({ campaign, events, upcomingEvents }: CampaignCardProps) :
     }
 
     return (
-        <Card style={{  padding: '1rem', width:'100%' }}>
+        <Card>
             <CardContent>
                 <Typography gutterBottom noWrap variant="h6">
                     { title }
@@ -51,7 +51,7 @@ const CamapignCard = ({ campaign, events, upcomingEvents }: CampaignCardProps) :
                         </>
                     ) : <Msg id="pages.organizeAllCampaigns.indefinite" /> }
                 </Typography>
-                <Typography>
+                <Typography color="secondary" gutterBottom variant="body2">
                     <Msg id="pages.organizeAllCampaigns.upcoming" values={{ numEvents:campaignUpcomingEvents.length,
                     }}
                     />
@@ -60,7 +60,7 @@ const CamapignCard = ({ campaign, events, upcomingEvents }: CampaignCardProps) :
             </CardContent>
             <CardActions>
                 <NextLink href={ `/organize/${orgId}/campaigns/${id}` } passHref>
-                    <Link underline="always" variant="subtitle1">
+                    <Link variant="button">
                         <Msg id="pages.organizeAllCampaigns.cardCTA" />
                     </Link>
                 </NextLink>

@@ -1,6 +1,5 @@
 import { createElement } from 'react';
 import { createMuiTheme } from '@material-ui/core/styles';
-import { grey } from '@material-ui/core/colors';
 
 // Create a theme instance.
 const theme = createMuiTheme({
@@ -9,19 +8,6 @@ const theme = createMuiTheme({
             root: {
                 minWidth: '1rem',
                 textTransform: 'none',
-            },
-        },
-        MuiCard: {
-            root: {
-                backgroundColor: 'transparent',
-                borderColor: grey[400],
-                borderWidth: 2,
-            },
-        },
-        MuiCardActions: {
-            root: {
-                display: 'flex',
-                justifyContent: 'flex-end',
             },
         },
         MuiFormControl: {
@@ -81,6 +67,9 @@ const theme = createMuiTheme({
         },
     },
     props: {
+        MuiCard: {
+            elevation: 2,
+        },
         MuiTabs: {
             TabIndicatorProps: {
                 children: createElement('span'),
