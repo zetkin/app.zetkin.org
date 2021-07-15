@@ -12,10 +12,8 @@ export default class MyDocument extends Document {
                 <Head>
                     { /* PWA primary color */ }
                     <meta content={ theme.palette.primary.main } name="theme-color" />
-                    <link
-                        href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
-                        rel="stylesheet"
-                    />
+                    <script src="https://use.typekit.net/tqq3ylv.js"></script>
+                    <script>{ 'try{Typekit.load({ async: true })}catch(e){}' }</script>
                 </Head>
                 <body>
                     <Main />

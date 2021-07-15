@@ -1,5 +1,5 @@
 import { createMuiTheme } from '@material-ui/core/styles';
-import { grey, red } from '@material-ui/core/colors';
+import { grey } from '@material-ui/core/colors';
 
 // Create a theme instance.
 const theme = createMuiTheme({
@@ -28,6 +28,24 @@ const theme = createMuiTheme({
                 minWidth: 120,
             },
         },
+        MuiIconButton: {
+            colorPrimary: {
+                '&:hover': {
+                    backgroundColor: 'transparent',
+                },
+            },
+            colorSecondary: {
+                '&:hover': {
+                    backgroundColor: 'transparent',
+                },
+            },
+            root: {
+                '&:hover': {
+                    backgroundColor: 'transparent',
+                    color: '#ED1C55',
+                },
+            },
+        },
         MuiTab: {
             root: {
                 textTransform: 'none',
@@ -39,17 +57,20 @@ const theme = createMuiTheme({
             default: '#fff',
         },
         error: {
-            main: red.A400,
+            main: '#B3002D',
         },
         primary: {
-            main: '#553cd6',
+            main: '#ED1C55',
         },
         secondary: {
-            main: '#585858',
+            main: 'rgba(0, 0, 0, 0.6)',
         },
         text: {
-            secondary: grey[500],
+            secondary: 'rgba(0, 0, 0, 0.6)',
         },
+    },
+    typography: {
+        fontFamily: 'azo-sans-web',
     },
 });
 
