@@ -90,7 +90,7 @@ const theme = createMuiTheme({
         },
     },
     typography: {
-        fontFamily: 'azo-sans-web',
+        fontFamily: 'azo-sans-web, sans-serif',
     },
 });
 
