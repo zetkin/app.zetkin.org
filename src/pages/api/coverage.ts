@@ -4,7 +4,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 const globalAny: any = global;
 
 export default (req: NextApiRequest, res: NextApiResponse): void => {
-    if (process.env.NODE_ENV === 'production' && !process.env.NEXT_PUBLIC_CYPRESS) {
+    if (process.env.NODE_ENV === 'production' && !process.env.CYPRESS) {
         res.status(404);
     }
     else {
