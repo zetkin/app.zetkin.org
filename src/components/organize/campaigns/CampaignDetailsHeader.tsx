@@ -61,43 +61,48 @@ const CampaignDetailsHeader: React.FunctionComponent<CampaignDetailsHeaderProps>
 
     return (
         <>
-            { /* First Row */ }
-            <Box className={ classes.responsiveFlexBox } p={ 5 }>
-                { /* Campaign Dates */ }
-                <Box flexGrow={ 1 }>
-                    <Typography variant="h4">
-                        { startDate && endDate ? (
-                            <>
-                                <FormattedDate
-                                    day="2-digit"
-                                    month="long"
-                                    value={ startDate }
-                                />
-                                { ` - ` }
-                                <FormattedDate
-                                    day="2-digit"
-                                    month="long"
-                                    value={ endDate }
-                                    year="numeric"
-                                />
-                            </>
-                        ) : (
-                            <Msg id="pages.organizeCampaigns.indefinite" />
-                        ) }
-                    </Typography>
-                </Box>
-                { /* Action Buttons */ }
-                <Box alignItems="center" display="flex">
-                    { /* Public Page Link */ }
-                    <NextLink href={ `/o/${orgId}/campaigns/${campId}` } passHref>
-                        <Button color="primary">
-                            <Msg id="pages.organizeCampaigns.linkGroup.public"/>
+            <Box p={ 5 }>
+                <Typography variant="body1">
+                    { campaign.info_text }
+                </Typography>
+                { /* First Row */ }
+                <Box className={ classes.responsiveFlexBox }>
+                    { /* Campaign Dates */ }
+                    <Box flexGrow={ 1 }>
+                        <Typography variant="h4">
+                            { startDate && endDate ? (
+                                <>
+                                    <FormattedDate
+                                        day="2-digit"
+                                        month="long"
+                                        value={ startDate }
+                                    />
+                                    { ` - ` }
+                                    <FormattedDate
+                                        day="2-digit"
+                                        month="long"
+                                        value={ endDate }
+                                        year="numeric"
+                                    />
+                                </>
+                            ) : (
+                                <Msg id="pages.organizeCampaigns.indefinite" />
+                            ) }
+                        </Typography>
+                    </Box>
+                    { /* Action Buttons */ }
+                    <Box alignItems="center" display="flex">
+                        { /* Public Page Link */ }
+                        <NextLink href={ `/o/${orgId}/campaigns/${campId}` } passHref>
+                            <Button color="primary">
+                                <Msg id="pages.organizeCampaigns.linkGroup.public"/>
+                            </Button>
+                        </NextLink>
+                        { /* Edit Campiagn Activator */ }
+                        <Button color="primary" onClick={ () => setEditCampaignDialogOpen(true) } variant="contained">
+                            <Msg id="pages.organizeCampaigns.linkGroup.settings"/>
                         </Button>
-                    </NextLink>
-                    { /* Edit Campiagn Activator */ }
-                    <Button color="primary" onClick={ () => setEditCampaignDialogOpen(true) } variant="contained">
-                        <Msg id="pages.organizeCampaigns.linkGroup.settings"/>
-                    </Button>
+                    </Box>
                 </Box>
             </Box>
             <ZetkinDialog
