@@ -2,6 +2,7 @@ import { GetServerSideProps } from 'next';
 import { useState } from 'react';
 import { Box , FormControl, MenuItem, Select } from '@material-ui/core';
 
+import getAllTasks from '../../../../../fetching/tasks/getAllTasks';
 import getCampaigns from '../../../../../fetching/getCampaigns';
 import getEvents from '../../../../../fetching/getEvents';
 import getOrg from '../../../../../fetching/getOrg';
@@ -35,7 +36,10 @@ export const getServerSideProps : GetServerSideProps = scaffold(async (ctx) => {
     await ctx.queryClient.prefetchQuery(['campaigns', orgId], getCampaigns(orgId as string, ctx.apiFetch));
     const campaignsState = ctx.queryClient.getQueryState(['campaigns', orgId]);
 
-    if (orgState?.status === 'success' && eventsState?.status === 'success' &&campaignsState?.status === 'success') {
+    await ctx.queryClient.prefetchQuery(['tasks', orgId], getAllTasks(orgId as string, ctx.apiFetch));
+    const allTasksState = ctx.queryClient.getQueryState(['tasks', orgId]);
+
+    if (orgState?.status === 'success' && eventsState?.status === 'success' &&campaignsState?.status === 'success' && allTasksState?.status === 'success') {
         return {
             props: {
                 orgId,

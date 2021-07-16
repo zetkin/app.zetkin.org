@@ -13,6 +13,7 @@ import { useFocusDate } from '../../../../../../hooks';
 import { useIntl } from 'react-intl';
 import { useQuery } from 'react-query';
 
+import getCampaignTasks from '../../../../../../fetching/tasks/getCampaignTasks';
 import WeekCalendar from '../../../../../../components/calendar/WeekCalendar';
 import ZetkinSpeedDial, { ACTIONS } from '../../../../../../components/ZetkinSpeedDial';
 
@@ -37,7 +38,10 @@ export const getServerSideProps : GetServerSideProps = scaffold(async (ctx) => {
     await ctx.queryClient.prefetchQuery(['campaign', orgId, campId], getCampaign(orgId as string, campId as string, ctx.apiFetch));
     const campaignState = ctx.queryClient.getQueryState(['campaign', orgId, campId]);
 
-    if (orgState?.status === 'success' && campaignEventsState?.status === 'success' && campaignState?.status === 'success' ) {
+    await ctx.queryClient.prefetchQuery(['tasks', orgId, campId], getCampaignTasks(orgId as string, campId as string, ctx.apiFetch));
+    const campaignTasksState = ctx.queryClient.getQueryState(['tasks', orgId, campId]);
+
+    if (orgState?.status === 'success' && campaignEventsState?.status === 'success' && campaignState?.status === 'success' && campaignTasksState?.status === 'success' ) {
         return {
             props: {
                 campId,
