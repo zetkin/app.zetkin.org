@@ -6,7 +6,7 @@ import { useQuery } from 'react-query';
 import { Box, Button, Link, makeStyles, Typography } from '@material-ui/core';
 import { Phone, PlaylistAddCheck } from '@material-ui/icons';
 
-import CampaignDetailsHeader from '../../../../../components/organize/campaigns/CampaignDetailsHeader';
+import CampaignDetailsHeader from '../../../../../components/organize/CampaignDetailsHeader';
 import EventList from '../../../../../components/organize/EventList';
 import getCampaign from '../../../../../fetching/getCampaign';
 import getCampaignEvents from '../../../../../fetching/getCampaignEvents';
