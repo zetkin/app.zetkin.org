@@ -1,8 +1,6 @@
-import { createStyles } from '@material-ui/core/styles';
 import { FormattedMessage } from 'react-intl';
-import NextLink from 'next/link';
-import { Theme } from '@material-ui/core/styles';
-import { Card, Link, ListItem, makeStyles, Typography } from '@material-ui/core';
+import Link from 'next/link';
+import { Box, Divider, ListItem, ListItemText, Typography } from '@material-ui/core';
 
 import ZetkinRelativeTime from '../../../ZetkinRelativeTime';
 import { ZetkinTask } from '../../../../types/zetkin';
@@ -15,33 +13,29 @@ interface TaskListItemProps {
     hrefBase: string;
 }
 
-const useStyles = makeStyles((theme: Theme) => createStyles({
-    MuiCard: {
-        '&:hover': {
-            color: theme.palette.primary.main,
-        },
-        padding: '1rem',
-        width: '100%',
-    },
-}));
 
 const TaskListItem = ({ task, hrefBase }: TaskListItemProps): JSX.Element => {
-    const classes = useStyles();
     const { id, title, published, deadline, expires } = task;
     const taskStatus = getTaskStatus(task);
 
     return (
-        <NextLink href={ hrefBase + `/tasks/${id}` } passHref>
-            <Link color="inherit" underline="none" variant="subtitle2">
-                <ListItem>
-                    <Card className={ classes.MuiCard }>
-                        <TaskStatusChip status={ taskStatus }/>
-
-                        <Typography component="h3" variant="h5">
-                            { title }
-                        </Typography>
-
-                        <Typography color="textPrimary">
+        <>
+            <Link
+                href={ hrefBase + `/tasks/${id}` }
+                passHref>
+                <ListItem button component="a">
+                    <ListItemText>
+                        { /* Title and Chip */ }
+                        <Box alignItems="center" display="flex">
+                            <Typography component="h5" variant="body1">
+                                { title }
+                            </Typography>
+                            <Box ml={ 1 }>
+                                <TaskStatusChip status={ taskStatus }/>
+                            </Box>
+                        </Box>
+                        { /* Description */ }
+                        <Typography color="textPrimary" variant="body2">
                             { /* Scheduled */ }
                             { taskStatus === TASK_STATUS.SCHEDULED && published && (
                                 <FormattedMessage
@@ -78,10 +72,11 @@ const TaskListItem = ({ task, hrefBase }: TaskListItemProps): JSX.Element => {
                                 />
                             ) }
                         </Typography>
-                    </Card>
+                    </ListItemText>
                 </ListItem>
             </Link>
-        </NextLink>
+            <Divider />
+        </>
     );
 };
 
