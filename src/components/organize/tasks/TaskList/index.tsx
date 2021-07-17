@@ -1,8 +1,9 @@
-import { List } from '@material-ui/core';
 import { useIntl } from 'react-intl';
+import { Card, List } from '@material-ui/core';
 
 import TaskListItem from './TaskListItem';
 import { ZetkinTask } from '../../../../types/zetkin';
+
 
 interface TaskListProps {
     tasks: ZetkinTask[];
@@ -12,14 +13,17 @@ interface TaskListProps {
 const TaskList = ({ tasks, hrefBase }: TaskListProps): JSX.Element => {
     const intl = useIntl();
 
+    // Sort tasks by status
+
     return (
-        <List
-            aria-label={ intl.formatMessage({ id: 'pages.organizeCampaigns.tasks' }) }
-            disablePadding>
-            { tasks.map(task => (
-                <TaskListItem key={ task.id } hrefBase={ hrefBase } task={ task } />
-            )) }
-        </List>
+        <Card>
+            <List
+                aria-label={ intl.formatMessage({ id: 'pages.organizeCampaigns.tasks' }) }>
+                { tasks.map(task => (
+                    <TaskListItem key={ task.id } hrefBase={ hrefBase } task={ task } />
+                )) }
+            </List>
+        </Card>
     );
 };
 

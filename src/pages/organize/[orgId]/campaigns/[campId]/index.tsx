@@ -1,10 +1,7 @@
 import { GetServerSideProps } from 'next';
-import { grey } from '@material-ui/core/colors';
-import { FormattedMessage as Msg } from 'react-intl';
-import NextLink from 'next/link';
+
 import { useQuery } from 'react-query';
-import { Box, Button, Link, makeStyles, Typography } from '@material-ui/core';
-import { Phone, PlaylistAddCheck } from '@material-ui/icons';
+import { Box, makeStyles } from '@material-ui/core';
 
 import CampaignDetailsHeader from '../../../../../components/organize/CampaignDetailsHeader';
 import EventList from '../../../../../components/organize/EventList';
@@ -16,6 +13,7 @@ import OrganizeTabbedLayout from '../../../../../components/layout/OrganizeTabbe
 import { PageWithLayout } from '../../../../../types';
 import { scaffold } from '../../../../../utils/next';
 import TaskList from '../../../../../components/organize/tasks/TaskList';
+import ZetkinSection from '../../../../../components/ZetkinSection';
 import ZetkinSpeedDial, { ACTIONS } from '../../../../../components/ZetkinSpeedDial';
 
 const scaffoldOptions = {
@@ -104,79 +102,16 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({ orgId,
             ) }
             { /* Page Content */ }
             <Box className={ classes.responsiveFlexBox }>
-                { /* Left Column */ }
-                <Box display="flex" flex={ 1 } flexDirection="column">
-                    { /* Events */ }
-                    <Box border={ 1 } display="flex" flex={ 1 } flexDirection="column" m={ 1 } mt={ 2 }>
-                        <Box display="flex" justifyContent="space-between" p={ 3 } pb={ 0 }>
-                            <Typography variant="h6">
-                                <Msg id="pages.organizeCampaigns.events"/>
-                            </Typography>
-                            <NextLink href={ `/organize/${orgId}/campaigns/${campId}/calendar` } passHref>
-                                <Link underline="always" variant="h6">
-                                    <Msg id="pages.organizeCampaigns.calendarView"/>
-                                </Link>
-                            </NextLink>
-                        </Box>
-                        <Box p={ 3 } pt={ 0 }>
-                            <EventList events={ events } hrefBase={ `/organize/${orgId}/campaigns/${campId}` } />
-                        </Box>
-                    </Box>
-                    { /* Tasks */ }
-                    <Box border={ 1 } display="flex" flex={ 1 } flexDirection="column" m={ 1 } mt={ 2 }>
-                        <Box display="flex" justifyContent="space-between" p={ 3 } pb={ 0 }>
-                            <Typography variant="h6">
-                                <Msg id="pages.organizeCampaigns.tasks"/>
-                            </Typography>
-                        </Box>
-                        <Box p={ 3 } pt={ 0 }>
-                            <TaskList hrefBase={ `/organize/${orgId}/campaigns/${campId}` } tasks={ tasks } />
-                        </Box>
-                    </Box>
-                </Box>
-                { /* Right Column */ }
-                <Box display="flex" flex={ 1 } flexDirection="column" m={ 1 }>
-                    { /* Mobilizations & Outreach */ }
-                    <Box border={ 1 } m={ 1 } p={ 3 } pb={ 5 }>
-                        <Typography component="h3" variant="h6">
-                            <Msg id="pages.organizeCampaigns.mobilization.heading" />
-                        </Typography>
-                        <Box alignItems="center" display="flex" flexDirection="column">
-                            <Phone style={{ color:grey[500], fontSize: 100  }}/>
-                            <Box p={ 2 } textAlign="center" width={ 0.5 }>
-                                <Typography color="textSecondary" variant="body1">
-                                    <Msg id="pages.organizeCampaigns.mobilization.copy" />
-                                </Typography>
-                            </Box>
-                            <NextLink href={ `/organize/${orgId}/campaigns/${campId}/call-assignments/new` } passHref>
-                                <Button color="primary" disabled={ true } variant="contained">
-                                    <Msg id="pages.organizeCampaigns.mobilization.create" />
-                                </Button>
-                            </NextLink>
-                        </Box>
-                    </Box>
-                    { /* Feedback and Surveys */ }
-                    <Box border={ 1 } m={ 1 } p={ 3 } pb={ 5 }>
-                        <Typography component="h3" variant="h6">
-                            <Msg id="pages.organizeCampaigns.feedback.heading" />
-                        </Typography>
-                        <Box alignItems="center" display="flex" flexDirection="column">
-                            <PlaylistAddCheck style={{ color:grey[500], fontSize: 100  }}/>
-                            <Box p={ 2 } textAlign="center" width={ 0.5 }>
-                                <Typography color="textSecondary" variant="body1">
-                                    <Msg id="pages.organizeCampaigns.feedback.copy" />
-                                </Typography>
-                            </Box>
-                            <NextLink href={ `/organize/${orgId}/campaigns/${campId}/surveys/new` } passHref>
-                                <Button color="primary" disabled={ true } variant="contained">
-                                    <Msg id="pages.organizeCampaigns.feedback.create" />
-                                </Button>
-                            </NextLink>
-                        </Box>
-                    </Box>
-                </Box>
+                { /* Events */ }
+                <ZetkinSection title="Events">
+                    <EventList events={ events } hrefBase={ `/organize/${orgId}/campaigns/${campId}` } />
+                </ZetkinSection>
+
+                { /* Tasks */ }
+                <ZetkinSection title="Tasks">
+                    <TaskList hrefBase={ `/organize/${orgId}/campaigns/${campId}` } tasks={ tasks } />
+                </ZetkinSection>
             </Box>
-            { /* Edit Campaign Form */ }
             <ZetkinSpeedDial actions={ [ACTIONS.CREATE_EVENT, ACTIONS.CREATE_TASK] }/>
         </>
     );
