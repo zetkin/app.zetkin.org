@@ -5,12 +5,12 @@ import { Avatar, Box, Button, makeStyles, Typography } from '@material-ui/core';
 import { FormattedDate, FormattedMessage as Msg, useIntl } from 'react-intl';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 
-import CampaignForm from '../../CampaignForm';
-import ZetkinDialog from '../../ZetkinDialog';
+import CampaignForm from '../CampaignForm';
+import ZetkinDialog from '../ZetkinDialog';
 
-import getCampaignEvents from '../../../fetching/getCampaignEvents';
-import patchCampaign from '../../../fetching/patchCampaign';
-import { ZetkinCampaign } from '../../../types/zetkin';
+import getCampaignEvents from '../../fetching/getCampaignEvents';
+import patchCampaign from '../../fetching/patchCampaign';
+import { ZetkinCampaign } from '../../types/zetkin';
 
 const useStyles = makeStyles((theme) => ({
     personContainer: {
