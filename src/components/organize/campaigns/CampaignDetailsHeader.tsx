@@ -13,6 +13,12 @@ import patchCampaign from '../../../fetching/patchCampaign';
 import { ZetkinCampaign } from '../../../types/zetkin';
 
 const useStyles = makeStyles((theme) => ({
+    personContainer: {
+        '&:hover': {
+            cursor: 'pointer',
+            textDecoration: 'underline',
+        },
+    },
     responsiveFlexBox: {
         display: 'flex',
         [theme.breakpoints.down('sm')]: {
@@ -97,7 +103,7 @@ const CampaignDetailsHeader: React.FunctionComponent<CampaignDetailsHeaderProps>
                     { /* Action Buttons */ }
                     <Box alignItems="center" display="flex" mb={ 2 }>
                         { /* Public Page Link */ }
-                        <Box mr={ 1 }>
+                        <Box mr={ 2 }>
                             <NextLink href={ `/o/${orgId}/campaigns/${campId}` } passHref>
                                 <Button color="primary">
                                     <Msg id="pages.organizeCampaigns.linkGroup.public"/>
@@ -113,7 +119,7 @@ const CampaignDetailsHeader: React.FunctionComponent<CampaignDetailsHeaderProps>
                 { /* Campaign Manager */ }
                 { campaign.manager ? (
                     <NextLink href={ `/organize/${orgId}/people/${campaign.manager.id}` }>
-                        <Box alignItems="center" display="flex">
+                        <Box alignItems="center" className={ classes.personContainer } display="flex">
                             <Box mr={ 2 }>
                                 <Avatar
                                     src={ `/api/orgs/${orgId}/people/${campaign.manager.id}/avatar` }
