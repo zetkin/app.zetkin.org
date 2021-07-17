@@ -1,7 +1,7 @@
+import { FormattedDate } from 'react-intl';
 import { grey } from '@material-ui/core/colors';
 import NextLink from 'next/link';
-import { Box, Button, Link, List, makeStyles, Tooltip, Typography } from '@material-ui/core';
-import { FormattedDate, FormattedMessage as Msg } from 'react-intl';
+import { Box, Link, List, makeStyles, Tooltip, Typography } from '@material-ui/core';
 import { useEffect, useRef } from 'react';
 
 import WeekCalendarEvent from './WeekCalendarEvent';
@@ -13,11 +13,10 @@ interface WeekCalendarProps {
     campaigns: ZetkinCampaign[];
     events: ZetkinEvent[];
     focusDate: Date;
-    onFocusDate: (date: Date)=> void;
     orgId: string;
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
     list: {
         background:grey[200],
         height: '100%',
@@ -26,14 +25,9 @@ const useStyles = makeStyles((theme) => ({
         position: 'relative',
         width: '100%',
     },
-    responsiveFlexBox: {
-        [theme.breakpoints.down('sm')]: {
-            justifyContent: 'flex-start',
-        },
-    },
 }));
 
-const WeekCalendar = ({ orgId, baseHref, campaigns, events, focusDate, onFocusDate }: WeekCalendarProps): JSX.Element => {
+const WeekCalendar = ({ orgId, baseHref, campaigns, events, focusDate }: WeekCalendarProps): JSX.Element => {
     const classes = useStyles();
     const calendar = useRef<HTMLDivElement>(null);
     const calendarWrapper = useRef<HTMLDivElement>(null);
@@ -71,19 +65,6 @@ const WeekCalendar = ({ orgId, baseHref, campaigns, events, focusDate, onFocusDa
     return (
         <Box display="flex" flexDirection="column" height={ 1 }>
             <Box bgcolor={ grey[100] } display="flex" flexDirection="column" flexGrow={ 0 } justifyContent="space-between">
-                <Box alignItems="center" className={ classes.responsiveFlexBox } display="flex" justifyContent="center">
-                    <Button color="primary" data-testid="back-button" onClick={
-                        () => onFocusDate(new Date(new Date(focusDate).setDate(focusDate.getDate() - 7))) }>
-                        <Msg id="misc.calendar.prev" />
-                    </Button>
-                    <Box data-testid="selected-date" px={ 1 }>
-                        { calendarStartDate.getWeekNumber() }
-                    </Box>
-                    <Button color="primary" data-testid="fwd-button" onClick={
-                        () => onFocusDate(new Date(new Date(focusDate).setDate(focusDate.getDate() + 7))) }>
-                        <Msg id="misc.calendar.next" />
-                    </Button>
-                </Box>
                 <Box display="flex">
                     { Array.from(Array(7).keys()).map((_, index) => (
                         <Box

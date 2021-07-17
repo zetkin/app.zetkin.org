@@ -13,7 +13,6 @@ interface MonthCalendarProps {
     events: ZetkinEvent[];
     focusDate: Date;
     orgId: string;
-    onFocusDate: (date: Date) => void;
 }
 
 const useWindowHeight = (): number | undefined => {
@@ -27,21 +26,16 @@ const useWindowHeight = (): number | undefined => {
     return windowHeight;
 };
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
     list: {
         flexGrow: 1,
         listStyle: 'none',
         margin: 0,
         padding: 0,
     },
-    responsiveFlexBox: {
-        [theme.breakpoints.down('sm')]: {
-            justifyContent: 'flex-start',
-        },
-    },
 }));
 
-const MonthCalendar = ({ orgId, campaigns, baseHref, events, onFocusDate, focusDate }: MonthCalendarProps): JSX.Element => {
+const MonthCalendar = ({ orgId, campaigns, baseHref, events, focusDate }: MonthCalendarProps): JSX.Element => {
     const gridItem = useRef<HTMLUListElement>(null);
     const windowHeight = useWindowHeight();
     const [maxNoOfEvents, setMaxNoOfEvents] = useState(1);
@@ -86,124 +80,101 @@ const MonthCalendar = ({ orgId, campaigns, baseHref, events, onFocusDate, focusD
     };
 
     return (
-        <Box display="flex" flexDirection="column" height={ 1 }>
-            <Box alignItems="center" bgcolor={ grey[100] } flexGrow={ 0 } position="sticky" top={ 0 } zIndex={ 1 }>
-                <Box alignItems="center" className={ classes.responsiveFlexBox } display="flex" justifyContent="center">
-                    <Button color="primary" data-testid="back-button" onClick={
-                        () => onFocusDate(new Date(focusDate.getFullYear(), focusDate.getMonth() - 1, focusDate.getDate()))
-                    }>
-                        <Msg id="misc.calendar.prev" />
-                    </Button>
-                    <Box data-testid="selected-month" p={ 1 } textAlign="center" width="8rem">
-                        <FormattedDate
-                            month="long"
-                            value={ new Date(year, month + 1, 0) }
-                            year="numeric"
+        <Box display="flex" flexGrow={ 1 } height={ 1 } overflow="auto">
+            <Box display="flex" mr={ 0.5 }>
+                { campaigns.map(c => {
+                    const campaignEvents = events.filter(e => e.campaign.id === c.id)
+                        .sort((a, b) => {
+                            return new Date(a.start_time).getTime() - new Date(b.start_time).getTime();
+                        });
+                    return campaignEvents.length ? (
+                        <CalendarBar
+                            key={ c.id }
+                            campaign={ c }
+                            events={ campaignEvents }
+                            firstCalendarDay={ firstCalendarDay }
+                            firstMonthDay={ firstMonthDay }
+                            gridItems={ gridItems }
+                            month={ month }
+                            orgId={ orgId }
+                            totalDaysInMonth={ totalDaysInMonth }
                         />
-                    </Box>
-                    <Button color="primary" data-testid="fwd-button" onClick={
-                        () => onFocusDate(new Date(focusDate.getFullYear(), focusDate.getMonth() + 1, focusDate.getDate()))
-                    }>
-                        <Msg id="misc.calendar.next" />
-                    </Button>
-                </Box>
+                    ) : null;
+                }) }
             </Box>
-            <Box display="flex" flexGrow={ 1 } height={ 1 } overflow="auto">
-                <Box display="flex" mr={ 0.5 }>
-                    { campaigns.map(c => {
-                        const campaignEvents = events.filter(e => e.campaign.id === c.id)
-                            .sort((a, b) => {
-                                return new Date(a.start_time).getTime() - new Date(b.start_time).getTime();
-                            });
-                        return campaignEvents.length ? (
-                            <CalendarBar
-                                key={ c.id }
-                                campaign={ c }
-                                events={ campaignEvents }
-                                firstCalendarDay={ firstCalendarDay }
-                                firstMonthDay={ firstMonthDay }
-                                gridItems={ gridItems }
-                                month={ month }
-                                orgId={ orgId }
-                                totalDaysInMonth={ totalDaysInMonth }
-                            />
-                        ) : null;
-                    }) }
-                </Box>
-                <Box
-                    data-testid="calendar-wrapper"
-                    display="grid"
-                    gridTemplateColumns="repeat(7, minmax(125px, 1fr))"
-                    gridTemplateRows={ `repeat(${calendarRows}, minmax(125px, 1fr))` }
-                    width={ 1 }>
-                    { Array.from(Array(gridItems).keys()).map((_, index) => {
-                        const currentDate = new Date(new Date(firstCalendarDay).setDate(firstCalendarDay.getDate() + index));
-                        const daysEvents = getEventsInRange(currentDate, new Date(new Date(currentDate).setDate(currentDate.getDate() + 1)));
-                        const totalEvents = daysEvents.length;
-                        return (
-                            <Box
-                                key={ index }
-                                bgcolor={ isInRange(currentDate, firstMonthDay, lastMonthDay) ? grey[200] : grey[300] }
-                                data-testid={ `griditem-${index}` }
-                                display="flex"
-                                flexDirection="column"
-                                m={ 0.1 }
-                                position="relative">
-                                <Box p={ 0.5 } pb={ 0 }>
-                                    <Typography>
-                                        <FormattedDate
-                                            day="2-digit"
-                                            value={ currentDate }
-                                        />
-                                    </Typography>
-                                </Box>
-                                <ul { ...( index === 0 && { ref: gridItem } ) } className={ classes.list } data-testid={ `day-${index}-events` }>
-                                    { daysEvents.map((event, i) => {
-                                        const campaign = campaigns.find(c => c.id === event.campaign.id);
-                                        return (
-                                            <MonthCalendarEvent
-                                                key={ event.id }
-                                                baseHref={ baseHref }
-                                                campaign={ campaign }
-                                                event={ event }
-                                                isVisible={ i < maxNoOfEvents }
-                                                onLoad={ i === 0 ? (listItemHeight) => setListItemHeight(listItemHeight) : undefined }
-                                                startOfDay={ currentDate }
-                                            />
-                                        );
-                                    }) }
-                                </ul>
-                                { totalEvents - maxNoOfEvents > 0 && (
-                                    <Tooltip arrow interactive title={ (
-                                        <Box>
-                                            <ul className={ classes.list } data-testid={ `day-${index}-events` }>
-                                                { daysEvents.map((event, i) => {
-                                                    const campaign = campaigns.find(c => c.id === event.campaign.id);
-                                                    return (
-                                                        <MonthCalendarEvent
-                                                            key={ event.id }
-                                                            baseHref={ baseHref }
-                                                            campaign={ campaign }
-                                                            event={ event }
-                                                            isVisible={ i >= maxNoOfEvents }
-                                                            startOfDay={ currentDate }
-                                                        />
-                                                    );
-                                                }) }
-                                            </ul>
-                                        </Box>
-                                    ) }>
-                                        <Button disableRipple style={{ padding: 0 }}>
-                                            <Typography variant="body1">
-                                                <Msg id="misc.calendar.moreEvents" values={{ numEvents: totalEvents - maxNoOfEvents }} />
-                                            </Typography>
-                                        </Button>
-                                    </Tooltip>
-                                ) }
+            <Box
+                data-testid="calendar-wrapper"
+                display="grid"
+                gridTemplateColumns="repeat(7, minmax(125px, 1fr))"
+                gridTemplateRows={ `repeat(${calendarRows}, minmax(125px, 1fr))` }
+                width={ 1 }>
+                { Array.from(Array(gridItems).keys()).map((_, index) => {
+                    const currentDate = new Date(new Date(firstCalendarDay).setDate(firstCalendarDay.getDate() + index));
+                    const daysEvents = getEventsInRange(currentDate, new Date(new Date(currentDate).setDate(currentDate.getDate() + 1)));
+                    const totalEvents = daysEvents.length;
+                    return (
+                        <Box
+                            key={ index }
+                            bgcolor={ isInRange(currentDate, firstMonthDay, lastMonthDay) ? grey[200] : grey[300] }
+                            data-testid={ `griditem-${index}` }
+                            display="flex"
+                            flexDirection="column"
+                            m={ 0.1 }
+                            position="relative">
+                            <Box p={ 0.5 } pb={ 0 }>
+                                <Typography>
+                                    <FormattedDate
+                                        day="2-digit"
+                                        value={ currentDate }
+                                    />
+                                </Typography>
                             </Box>
-                        );
-                    }) }
-                </Box>
+                            <ul { ...( index === 0 && { ref: gridItem }) } className={ classes.list } data-testid={ `day-${index}-events` }>
+                                { daysEvents.map((event, i) => {
+                                    const campaign = campaigns.find(c => c.id === event.campaign.id);
+                                    return (
+                                        <MonthCalendarEvent
+                                            key={ event.id }
+                                            baseHref={ baseHref }
+                                            campaign={ campaign }
+                                            event={ event }
+                                            isVisible={ i < maxNoOfEvents }
+                                            onLoad={ i === 0 ? (listItemHeight) => setListItemHeight(listItemHeight) : undefined }
+                                            startOfDay={ currentDate }
+                                        />
+                                    );
+                                }) }
+                            </ul>
+                            { totalEvents - maxNoOfEvents > 0 && (
+                                <Tooltip arrow interactive title={ (
+                                    <Box>
+                                        <ul className={ classes.list } data-testid={ `day-${index}-events` }>
+                                            { daysEvents.map((event, i) => {
+                                                const campaign = campaigns.find(c => c.id === event.campaign.id);
+                                                return (
+                                                    <MonthCalendarEvent
+                                                        key={ event.id }
+                                                        baseHref={ baseHref }
+                                                        campaign={ campaign }
+                                                        event={ event }
+                                                        isVisible={ i >= maxNoOfEvents }
+                                                        startOfDay={ currentDate }
+                                                    />
+                                                );
+                                            }) }
+                                        </ul>
+                                    </Box>
+                                ) }>
+                                    <Button disableRipple style={{ padding: 0 }}>
+                                        <Typography variant="body1">
+                                            <Msg id="misc.calendar.moreEvents" values={{ numEvents: totalEvents - maxNoOfEvents }} />
+                                        </Typography>
+                                    </Button>
+                                </Tooltip>
+                            ) }
+                        </Box>
+                    );
+                }) }
             </Box>
         </Box>
     );
