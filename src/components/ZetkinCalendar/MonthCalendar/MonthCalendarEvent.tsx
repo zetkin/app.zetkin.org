@@ -41,8 +41,8 @@ const MonthCalendarEvent = ({ baseHref, startOfDay, campaign, event, onLoad, isV
     const endsAfterToday = endTime >= endOfDay;
 
     return (
-        <li key={ event.id }>
-            <NextLink href={  baseHref + `/calendar/events/${event.id}` } passHref>
+        <li>
+            <NextLink href={  baseHref + `/events/${event.id}` } passHref>
                 <Link underline="none">
                     <Box
                         onMouseEnter={ () => setFocused(true) }
