@@ -177,14 +177,6 @@ describe('WeekCalendar', () => {
         });
     });
 
-    xit('shows back and forward widget buttons', () => {
-        mountWithProviders(
-            <WeekCalendar baseHref="" campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ dummyDate } orgId="1" tasks={ dummyTasks }/>,
-        );
-        cy.get('[data-testid="back-button"]').should('be.visible');
-        cy.get('[data-testid="fwd-button"]').should('be.visible');
-    });
-
     xit('shows the correct calendar week in the widget', () => {
         mountWithProviders(
             <WeekCalendar baseHref="" campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ dummyDate } orgId="1" tasks={ dummyTasks }/>,
