@@ -1,7 +1,7 @@
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import { Box, Button, makeStyles, Typography } from '@material-ui/core';
+import { Avatar, Box, Button, makeStyles, Typography } from '@material-ui/core';
 import { FormattedDate, FormattedMessage as Msg, useIntl } from 'react-intl';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 
@@ -61,14 +61,17 @@ const CampaignDetailsHeader: React.FunctionComponent<CampaignDetailsHeaderProps>
 
     return (
         <>
-            <Box p={ 5 }>
-                <Typography variant="body1">
-                    { campaign.info_text }
-                </Typography>
+            <Box p={ 4 }>
+                { campaign.info_text && (
+                    <Typography variant="body1">
+                        { campaign.info_text }
+                    </Typography>
+                ) }
+
                 { /* First Row */ }
-                <Box className={ classes.responsiveFlexBox }>
+                <Box className={ classes.responsiveFlexBox } mt={ 2 }>
                     { /* Campaign Dates */ }
-                    <Box flexGrow={ 1 }>
+                    <Box flexGrow={ 1 } mb={ 2 }>
                         <Typography variant="h4">
                             { startDate && endDate ? (
                                 <>
@@ -91,20 +94,45 @@ const CampaignDetailsHeader: React.FunctionComponent<CampaignDetailsHeaderProps>
                         </Typography>
                     </Box>
                     { /* Action Buttons */ }
-                    <Box alignItems="center" display="flex">
+                    <Box alignItems="center" display="flex" mb={ 2 }>
                         { /* Public Page Link */ }
-                        <NextLink href={ `/o/${orgId}/campaigns/${campId}` } passHref>
-                            <Button color="primary">
-                                <Msg id="pages.organizeCampaigns.linkGroup.public"/>
-                            </Button>
-                        </NextLink>
+                        <Box mr={ 1 }>
+                            <NextLink href={ `/o/${orgId}/campaigns/${campId}` } passHref>
+                                <Button color="primary">
+                                    <Msg id="pages.organizeCampaigns.linkGroup.public"/>
+                                </Button>
+                            </NextLink>
+                        </Box>
                         { /* Edit Campiagn Activator */ }
                         <Button color="primary" onClick={ () => setEditCampaignDialogOpen(true) } variant="contained">
                             <Msg id="pages.organizeCampaigns.linkGroup.settings"/>
                         </Button>
                     </Box>
                 </Box>
+                { /* Campaign Manager */ }
+                { campaign.manager ? (
+                    <NextLink href={ `/organize/${orgId}/people/${campaign.manager.id}` }>
+                        <Box alignItems="center" display="flex">
+                            <Box mr={ 1 }>
+                                <Avatar
+                                    src={ `/api/orgs/${orgId}/people/${campaign.manager.id}/avatar` }
+                                />
+                            </Box>
+                            <Box display="flex" flexDirection="column">
+                                <Typography variant="h6">{ campaign.manager.name }</Typography>
+                                <Typography variant="body2">Role</Typography>
+                            </Box>
+                        </Box>
+                    </NextLink>
+                ) :
+                    // If no campaign manager
+                    <Typography variant="body1">
+                        <Msg id="No campaign manager" />
+                    </Typography>
+                }
+
             </Box>
+
             <ZetkinDialog
                 onClose={ () => setEditCampaignDialogOpen(false) }
                 open={ editCampaignDialogOpen }
