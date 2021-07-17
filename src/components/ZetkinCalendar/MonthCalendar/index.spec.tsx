@@ -1,13 +1,13 @@
 import MonthCalendar from '.';
 import { mountWithProviders } from '../../../utils/testing';
-import { ZetkinCampaign, ZetkinEvent } from '../../../types/zetkin';
+import { ZetkinCampaign, ZetkinEvent, ZetkinTask } from '../../../types/zetkin';
 
 describe('MonthCalendar', () => {
     let dummyEvents: ZetkinEvent[];
     let dummyCampaigns: ZetkinCampaign[];
+    let dummyTasks: ZetkinTask[];
     const dummyStartTime = '2021-05-10T13:37:00+00:00';
     const dummyEndTime = '2021-05-10T14:37:00+00:00';
-    const dummyHref = '/organize/1/campaigns/calendar';
 
     beforeEach(() => {
         cy.fixture('dummyEvents.json')
@@ -41,11 +41,15 @@ describe('MonthCalendar', () => {
                     'id': 942,
                 };
             });
+        cy.fixture('dummyTasks.json')
+            .then((data: { data: ZetkinTask[] }) => {
+                dummyTasks = data.data;
+            });
     });
 
     it('shows a grid with 5 rows and 7 columns', () => {
         mountWithProviders(
-            <MonthCalendar baseHref={ dummyHref } campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ new Date(2021, 3, 10) } onFocusDate={ () => null } orgId="1"  />,
+            <MonthCalendar baseHref="" campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ new Date(2021, 3, 10) } orgId="1" tasks={ dummyTasks } />,
         );
         cy.get('[data-testid="calendar-wrapper"]').should('have.css', 'display', 'grid');
         cy.get('[data-testid="calendar-wrapper"]').children().should('have.length', 35);
@@ -71,7 +75,7 @@ describe('MonthCalendar', () => {
 
     it('shows a grid with 4 rows when the month is exactly 4 weeks starting on Monday', () => {
         mountWithProviders(
-            <MonthCalendar baseHref={ dummyHref } campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ new Date(2021, 1, 10) } onFocusDate={ () => null } orgId="1"  />,
+            <MonthCalendar baseHref="" campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ new Date(2021, 1, 10) } orgId="1" tasks={ dummyTasks }  />,
         );
         cy.get('[data-testid="calendar-wrapper"]').should('have.css', 'display', 'grid');
         cy.get('[data-testid="calendar-wrapper"]').children().should('have.length', 28);
@@ -97,7 +101,7 @@ describe('MonthCalendar', () => {
 
     it('shows a grid with 6 rows when the month takes up more than 5 rows', () => {
         mountWithProviders(
-            <MonthCalendar baseHref={ dummyHref } campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ new Date(2021, 4, 10) } onFocusDate={ () => null } orgId="1"  />,
+            <MonthCalendar baseHref="" campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ new Date(2021, 4, 10) } orgId="1" tasks={ dummyTasks }  />,
         );
         cy.get('[data-testid="calendar-wrapper"]').should('have.css', 'display', 'grid');
         cy.get('[data-testid="calendar-wrapper"]').children().should('have.length', 42);
@@ -123,7 +127,7 @@ describe('MonthCalendar', () => {
 
     it('displays the correct date on each grid square', () => {
         mountWithProviders(
-            <MonthCalendar baseHref={ dummyHref } campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ new Date(2021, 4, 10) } onFocusDate={ () => null } orgId="1"  />,
+            <MonthCalendar baseHref="" campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ new Date(2021, 4, 10) } orgId="1" tasks={ dummyTasks } />,
         );
         cy.get('[data-testid="griditem-5"]').contains('01');
         cy.get('[data-testid="griditem-35"]').contains('31');
@@ -131,7 +135,7 @@ describe('MonthCalendar', () => {
 
     it('displays the correct events on the corresponding date', () => {
         mountWithProviders(
-            <MonthCalendar baseHref={ dummyHref } campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ new Date(2021, 4, 10) } onFocusDate={ () => null } orgId="1"  />,
+            <MonthCalendar baseHref="" campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ new Date(2021, 4, 10) } orgId="1" tasks={ dummyTasks } />,
         );
         cy.get('[data-testid="griditem-1"]').within(() => {
             cy.get('[data-testid="event-24"]').should('be.visible');
@@ -146,7 +150,7 @@ describe('MonthCalendar', () => {
 
     it('shows out of range dates with another colour', () => {
         mountWithProviders(
-            <MonthCalendar baseHref={ dummyHref } campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ new Date(2021, 4, 10) } onFocusDate={ () => null } orgId="1"  />,
+            <MonthCalendar baseHref="" campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ new Date(2021, 4, 10) } orgId="1" tasks={ dummyTasks }  />,
         );
 
         cy.get('[data-testid="griditem-4"]')
@@ -167,7 +171,7 @@ describe('MonthCalendar', () => {
 
     it('works with a leap year february', () => {
         mountWithProviders(
-            <MonthCalendar baseHref={ dummyHref } campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ new Date(2020, 1, 10) } onFocusDate={ () => null } orgId="1"  />,
+            <MonthCalendar baseHref="" campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ new Date(2020, 1, 10) } orgId="1" tasks={ dummyTasks }  />,
         );
         cy.get('[data-testid="griditem-5"]').contains('01');
         cy.get('[data-testid="griditem-33"]').contains('29');
@@ -175,7 +179,7 @@ describe('MonthCalendar', () => {
 
     it('works across year boundaries', () => {
         mountWithProviders(
-            <MonthCalendar baseHref={ dummyHref } campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ new Date(2020, 11, 10) } onFocusDate={ () => null } orgId="1"  />,
+            <MonthCalendar baseHref="" campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ new Date(2020, 11, 10) } orgId="1" tasks={ dummyTasks }  />,
         );
         cy.get('[data-testid="griditem-1"]').contains('01');
         cy.get('[data-testid="griditem-31"]').contains('31');
@@ -183,7 +187,7 @@ describe('MonthCalendar', () => {
 
     it('displays events in chronological order within a day', () => {
         mountWithProviders(
-            <MonthCalendar baseHref={ dummyHref } campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ new Date(2021, 4, 10) } onFocusDate={ () => null } orgId="1"  />,
+            <MonthCalendar baseHref="" campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ new Date(2021, 4, 10) } orgId="1" tasks={ dummyTasks }  />,
         );
         cy.get('[data-testid="event-26"]').then(el => {
             const firstEventYPos = el[0].getBoundingClientRect().top;
@@ -194,26 +198,26 @@ describe('MonthCalendar', () => {
         });
     });
 
-    it('shows back and forward widget buttons', () => {
+    xit('shows back and forward widget buttons', () => {
         mountWithProviders(
-            <MonthCalendar baseHref={ dummyHref } campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ new Date(2021, 4, 10) } onFocusDate={ () => null } orgId="1"  />,
+            <MonthCalendar baseHref="" campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ new Date(2021, 4, 10) } orgId="1" tasks={ dummyTasks }  />,
         );
         cy.get('[data-testid="back-button"]').should('be.visible');
         cy.get('[data-testid="fwd-button"]').should('be.visible');
     });
 
-    it('shows the current displayed month in the widget', () => {
+    xit('shows the current displayed month in the widget', () => {
         mountWithProviders(
-            <MonthCalendar baseHref={ dummyHref } campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ new Date(2021, 4, 10) } onFocusDate={ () => null } orgId="1"  />,
+            <MonthCalendar baseHref="" campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ new Date(2021, 4, 10) } orgId="1" tasks={ dummyTasks }  />,
         );
         cy.get('[data-testid="selected-month"]').contains('May');
         cy.get('[data-testid="selected-month"]').contains('2021');
     });
 
-    it('sets the focus date a month ago when back is clicked', () => {
+    xit('sets the focus date a month ago when back is clicked', () => {
         const spyOnFocusDate = cy.spy();
         mountWithProviders(
-            <MonthCalendar baseHref={ dummyHref } campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ new Date(2021, 4, 10) } onFocusDate={ spyOnFocusDate } orgId="1"  />,
+            <MonthCalendar baseHref="" campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ new Date(2021, 4, 10) } orgId="1" tasks={ dummyTasks }  />,
         );
 
         cy.findByText('misc.calendar.prev')
@@ -226,10 +230,10 @@ describe('MonthCalendar', () => {
             });
     });
 
-    it('sets the focus date a month forward when next is clicked', () => {
+    xit('sets the focus date a month forward when next is clicked', () => {
         const spyOnFocusDate = cy.spy();
         mountWithProviders(
-            <MonthCalendar baseHref={ dummyHref } campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ new Date(2021, 4, 10) } onFocusDate={ spyOnFocusDate } orgId="1"  />,
+            <MonthCalendar baseHref="" campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ new Date(2021, 4, 10) } orgId="1" tasks={ dummyTasks }  />,
         );
 
         cy.findByText('misc.calendar.next')
@@ -251,7 +255,7 @@ describe('MonthCalendar', () => {
             'start_time': '2021-04-27T15:37:00+00:00',
         };
         mountWithProviders(
-            <MonthCalendar baseHref={ dummyHref } campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ new Date(2021, 4, 10) } onFocusDate={ () => null } orgId="1"  />,
+            <MonthCalendar baseHref="" campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ new Date(2021, 4, 10) } orgId="1" tasks={ dummyTasks }  />,
         );
 
         cy.get('[data-testid="event-26"]')
@@ -286,7 +290,7 @@ describe('MonthCalendar', () => {
             'start_time': '2021-04-29T15:37:00+00:00',
         };
         mountWithProviders(
-            <MonthCalendar baseHref={ dummyHref } campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ new Date(2021, 4, 10) } onFocusDate={ () => null } orgId="1"/>,
+            <MonthCalendar baseHref="" campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ new Date(2021, 4, 10) } orgId="1" tasks={ dummyTasks }/>,
         );
 
         cy.get('[data-testid="calendar-bar-941"]').should('be.visible');
@@ -334,7 +338,7 @@ describe('MonthCalendar', () => {
             'start_time': '2021-04-29T15:37:00+00:00',
         };
         mountWithProviders(
-            <MonthCalendar baseHref={ dummyHref } campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ new Date(2021, 4, 10) } onFocusDate={ () => null } orgId="1"/>,
+            <MonthCalendar baseHref="" campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ new Date(2021, 4, 10) } orgId="1" tasks={ dummyTasks }/>,
         );
 
         cy.get('[data-testid="griditem-3"]').should('be.visible');
@@ -367,7 +371,7 @@ describe('MonthCalendar', () => {
             'start_time': '2021-04-29T15:37:00+00:00',
         };
         mountWithProviders(
-            <MonthCalendar baseHref={ dummyHref } campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ new Date(2021, 4, 10) } onFocusDate={ () => null } orgId="1"/>,
+            <MonthCalendar baseHref="" campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ new Date(2021, 4, 10) } orgId="1" tasks={ dummyTasks }/>,
         );
 
         cy.get('[data-testid="calendar-bar-941"]').should('be.visible');
@@ -378,7 +382,7 @@ describe('MonthCalendar', () => {
 
     it('shows event title or activity title and event time', () => {
         mountWithProviders(
-            <MonthCalendar baseHref={ dummyHref } campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ new Date(2021, 4, 10) } onFocusDate={ () => null } orgId="1" />,
+            <MonthCalendar baseHref="" campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ new Date(2021, 4, 10) } orgId="1" tasks={ dummyTasks } />,
         );
 
         cy.get('[data-testid="event-25"]').within(() => {
@@ -401,7 +405,7 @@ describe('MonthCalendar', () => {
             'start_time': '2021-04-27T15:37:00+00:00',
         };
         mountWithProviders(
-            <MonthCalendar baseHref={ dummyHref } campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ new Date(2021, 4, 10) } onFocusDate={ () => null } orgId="1" />,
+            <MonthCalendar baseHref="" campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ new Date(2021, 4, 10) } orgId="1" tasks={ dummyTasks } />,
         );
 
         cy.get('[data-testid="griditem-1"]').within(() => {
