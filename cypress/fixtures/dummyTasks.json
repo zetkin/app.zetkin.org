@@ -1,0 +1,30 @@
+{
+    "data": [
+        {
+            "instructions": "",
+            "deadline": null,
+            "target": {
+                "id": 5,
+                "filter_spec": [
+                    {
+                        "type": "all"
+                    }
+                ]
+            },
+            "published": "2022-01-01T00:00:00",
+            "title": "Scheduled task",
+            "organization": {
+                "id": 1,
+                "title": "My Organization"
+            },
+            "id": 3,
+            "expires": null,
+            "config": null,
+            "campaign": {
+                "id": 1,
+                "title": "First campaign (#1)"
+            },
+            "type": "offline"
+        }
+    ]
+}
