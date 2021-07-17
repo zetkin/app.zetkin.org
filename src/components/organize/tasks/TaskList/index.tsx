@@ -1,25 +1,28 @@
 import { useIntl } from 'react-intl';
+import { useQuery } from 'react-query';
+import { useRouter } from 'next/router';
 import { Card, List } from '@material-ui/core';
 
+import getCampaignTasks from '../../../../fetching/tasks/getCampaignTasks';
 import TaskListItem from './TaskListItem';
-import { ZetkinTask } from '../../../../types/zetkin';
-
 
 interface TaskListProps {
-    tasks: ZetkinTask[];
     hrefBase: string;
 }
 
-const TaskList = ({ tasks, hrefBase }: TaskListProps): JSX.Element => {
+const TaskList = ({ hrefBase }: TaskListProps): JSX.Element => {
     const intl = useIntl();
-
-    // Sort tasks by status
+    const { campId, orgId } = useRouter().query;
+    const { data: tasks } = useQuery(
+        ['campaignTasks', orgId, campId],
+        getCampaignTasks(orgId as string, campId as string),
+    );
 
     return (
         <Card>
             <List
                 aria-label={ intl.formatMessage({ id: 'pages.organizeCampaigns.tasks' }) }>
-                { tasks.map(task => (
+                { tasks && tasks.map(task => (
                     <TaskListItem key={ task.id } hrefBase={ hrefBase } task={ task } />
                 )) }
             </List>

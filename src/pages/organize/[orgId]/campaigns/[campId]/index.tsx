@@ -88,10 +88,8 @@ const useStyles = makeStyles((theme) => ({
 const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({ orgId, campId }) => {
     const classes = useStyles();
     const eventsQuery = useQuery(['campaignEvents', orgId, campId], getCampaignEvents(orgId, campId));
-    const tasksQuery = useQuery(['campaignTasks', orgId, campId], getCampaignTasks(orgId, campId));
     const campaignQuery = useQuery(['campaign', orgId, campId], getCampaign(orgId, campId));
     const events = eventsQuery.data || [];
-    const tasks = tasksQuery.data || [];
     const campaign = campaignQuery.data;
 
     return (
@@ -109,7 +107,7 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({ orgId,
 
                 { /* Tasks */ }
                 <ZetkinSection title="Tasks">
-                    <TaskList hrefBase={ `/organize/${orgId}/campaigns/${campId}` } tasks={ tasks } />
+                    <TaskList hrefBase={ `/organize/${orgId}/campaigns/${campId}` } />
                 </ZetkinSection>
             </Box>
             <ZetkinSpeedDial actions={ [ACTIONS.CREATE_EVENT, ACTIONS.CREATE_TASK] }/>
