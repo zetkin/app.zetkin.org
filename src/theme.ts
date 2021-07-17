@@ -48,6 +48,11 @@ const theme = createMuiTheme({
                 borderBottom: '1px solid rgba(0, 0, 0, 0.12)',
             },
         },
+        MuiTooltip: {
+            tooltip: {
+                fontSize: '14px',
+            },
+        },
     },
     palette: {
         background: {
