@@ -87,9 +87,7 @@ const useStyles = makeStyles((theme) => ({
 
 const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({ orgId, campId }) => {
     const classes = useStyles();
-    const eventsQuery = useQuery(['campaignEvents', orgId, campId], getCampaignEvents(orgId, campId));
     const campaignQuery = useQuery(['campaign', orgId, campId], getCampaign(orgId, campId));
-    const events = eventsQuery.data || [];
     const campaign = campaignQuery.data;
 
     return (
@@ -102,7 +100,7 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({ orgId,
             <Box className={ classes.responsiveFlexBox }>
                 { /* Events */ }
                 <ZetkinSection title="Events">
-                    <EventList events={ events } hrefBase={ `/organize/${orgId}/campaigns/${campId}` } />
+                    <EventList hrefBase={ `/organize/${orgId}/campaigns/${campId}` } />
                 </ZetkinSection>
 
                 { /* Tasks */ }
