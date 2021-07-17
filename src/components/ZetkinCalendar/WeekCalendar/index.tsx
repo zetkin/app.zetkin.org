@@ -5,7 +5,8 @@ import { Box, Link, List, makeStyles, Tooltip, Typography } from '@material-ui/c
 import { useEffect, useRef } from 'react';
 
 import WeekCalendarEvent from './WeekCalendarEvent';
-import { ZetkinCampaign, ZetkinEvent } from '../../../types/zetkin';
+import WeekCalendarTask from './WeekCalendarTask';
+import { ZetkinCampaign, ZetkinEvent, ZetkinTask } from '../../../types/zetkin';
 
 
 interface WeekCalendarProps {
@@ -14,6 +15,7 @@ interface WeekCalendarProps {
     events: ZetkinEvent[];
     focusDate: Date;
     orgId: string;
+    tasks: ZetkinTask[];
 }
 
 const useStyles = makeStyles(() => ({
@@ -27,7 +29,7 @@ const useStyles = makeStyles(() => ({
     },
 }));
 
-const WeekCalendar = ({ orgId, baseHref, campaigns, events, focusDate }: WeekCalendarProps): JSX.Element => {
+const WeekCalendar = ({ orgId, baseHref, campaigns, events, focusDate, tasks }: WeekCalendarProps): JSX.Element => {
     const classes = useStyles();
     const calendar = useRef<HTMLDivElement>(null);
     const calendarWrapper = useRef<HTMLDivElement>(null);
@@ -54,6 +56,11 @@ const WeekCalendar = ({ orgId, baseHref, campaigns, events, focusDate }: WeekCal
             new Date(event.end_time) <= calendarEndDate;
     });
 
+    const tasksOfTheWeek = tasks.filter(task => {
+        return new Date(task.deadline as string) >= calendarStartDate &&
+        new Date(task.deadline as string) < calendarEndDate;
+    });
+
     const getEventsOnThisDate = (date: number) => {
         return eventsOfTheWeek.filter(event => {
             return (
@@ -62,9 +69,15 @@ const WeekCalendar = ({ orgId, baseHref, campaigns, events, focusDate }: WeekCal
         });
     };
 
+    const getTasksOnThisDate = (date: number) => {
+        return tasksOfTheWeek.filter(task => (
+            new Date(task.deadline as string).getDate() === date
+        ));
+    };
+
     return (
         <Box display="flex" flexDirection="column" height={ 1 }>
-            <Box bgcolor={ grey[100] } display="flex" flexDirection="column" flexGrow={ 0 } justifyContent="space-between">
+            <Box display="flex" flexDirection="column" flexGrow={ 0 } justifyContent="space-between">
                 <Box display="flex">
                     { Array.from(Array(7).keys()).map((_, index) => (
                         <Box
@@ -101,6 +114,21 @@ const WeekCalendar = ({ orgId, baseHref, campaigns, events, focusDate }: WeekCal
                         ): null;
                     }) }
                 </Box>
+            </Box>
+            <Box display="flex" justifyItems="space-between" pr={ 1.5 }>
+                { Array.from(Array(7).keys()).map((_, index) => {
+                    const startOfDay = new Date(new Date(new Date(calendarStartDate)
+                        .setUTCDate(calendarStartDate.getDate() + index)).setUTCHours(0, 0, 0, 0));
+                    return (
+                        <Box key={ index } bgcolor={ grey[200] } flexBasis={ `${100 / 7}%` } flexGrow={ 0 } flexShrink={ 1 } mb={ 0.5 } overflow="hidden">
+                            <List disablePadding>
+                                { getTasksOnThisDate(startOfDay.getDate()).map(task => {
+                                    const campaign = campaigns.find(c => c.id === task.campaign.id);
+                                    return <WeekCalendarTask key={ task.id } baseHref={ baseHref } campaign={ campaign } task={ task } />;
+                                }) }
+                            </List>
+                        </Box>);
+                }) }
             </Box>
             <Box data-testid="calendar-wrapper" { ...{ ref: calendarWrapper } } alignItems="center" flexGrow={ 1 } overflow="auto">
                 <Box { ...{ ref: calendar } } display="flex" height="100rem" justifyContent="start">
