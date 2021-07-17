@@ -1,7 +1,5 @@
-import { createStyles } from '@material-ui/core/styles';
-import NextLink from 'next/link';
-import { Theme } from '@material-ui/core/styles';
-import { Card, Link, ListItem, makeStyles, Typography } from '@material-ui/core';
+import Link from 'next/link';
+import { Divider, ListItem, ListItemText, Typography } from '@material-ui/core';
 import { FormattedDate, FormattedTime } from 'react-intl';
 
 import { getNaiveDate } from '../../../utils/getNaiveDate';
@@ -12,32 +10,21 @@ interface EventListItemProps {
     hrefBase: string;
 }
 
-const useStyles = makeStyles((theme: Theme) => createStyles({
-    MuiCard: {
-        '&:hover': {
-            color: theme.palette.primary.main,
-        },
-        padding: '1rem',
-        width: '100%',
-    },
-}));
-
 const EventListItem = ({ event, hrefBase }: EventListItemProps): JSX.Element => {
-    const classes = useStyles();
     const { id, title, activity, location, start_time, end_time } = event;
 
     const startTime = getNaiveDate(start_time);
     const endTime = getNaiveDate(end_time);
 
     return (
-        <NextLink href={ hrefBase + `/events/${id}` } passHref>
-            <Link color="inherit" underline="none" variant="subtitle2">
-                <ListItem>
-                    <Card className={ classes.MuiCard }>
-                        <Typography component="h3" variant="h5">
+        <>
+            <Link href={ hrefBase + `/events/${id}` } passHref>
+                <ListItem button component="a">
+                    <ListItemText>
+                        <Typography component="h5" variant="body1">
                             { title || activity.title }
                         </Typography>
-                        <Typography color="textPrimary">
+                        <Typography color="textPrimary" variant="body2">
                             <FormattedDate
                                 day="numeric"
                                 month="long"
@@ -58,13 +45,14 @@ const EventListItem = ({ event, hrefBase }: EventListItemProps): JSX.Element => 
                                 value={ endTime }
                             />
                         </Typography>
-                        <Typography color="textPrimary">
+                        <Typography color="textPrimary" variant="body2">
                             { location.title }
                         </Typography>
-                    </Card>
+                    </ListItemText>
                 </ListItem>
             </Link>
-        </NextLink>
+            <Divider />
+        </>
     );
 };
 
