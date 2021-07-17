@@ -7,7 +7,7 @@ import MonthCalendar from './MonthCalendar';
 import { useFocusDate } from '../../hooks';
 import { useIntl } from 'react-intl';
 import WeekCalendar from './WeekCalendar';
-import { ZetkinCampaign, ZetkinEvent } from '../../types/zetkin';
+import { ZetkinCampaign, ZetkinEvent, ZetkinTask } from '../../types/zetkin';
 
 enum CALENDAR_RANGES {
     MONTH = 'month',
@@ -18,9 +18,10 @@ interface ZetkinCalendarProps {
     baseHref: string;
     events: ZetkinEvent[];
     campaigns: ZetkinCampaign[];
+    tasks: ZetkinTask[];
 }
 
-const ZetkinCalendar = ({ baseHref, events, campaigns }: ZetkinCalendarProps) : JSX.Element => {
+const ZetkinCalendar = ({ baseHref, events, campaigns , tasks }: ZetkinCalendarProps) : JSX.Element => {
     const { orgId } = useRouter().query;
     const intl = useIntl();
     const { focusDate, setFocusDate } = useFocusDate();
@@ -29,6 +30,8 @@ const ZetkinCalendar = ({ baseHref, events, campaigns }: ZetkinCalendarProps) : 
     const sortedEvents = [...events].sort((a, b) => {
         return new Date(a.start_time).getTime() - new Date(b.start_time).getTime();
     });
+
+    const filteredTasks = tasks.filter(task => task.deadline);
 
     const calendars = [
         { id: CALENDAR_RANGES.WEEK, name: intl.formatMessage({ id: 'misc.calendar.week' }) },
@@ -97,7 +100,7 @@ const ZetkinCalendar = ({ baseHref, events, campaigns }: ZetkinCalendarProps) : 
             <Box flexGrow={ 1 } overflow="auto">
                 { range === CALENDAR_RANGES.MONTH && (
                     <MonthCalendar
-                        baseHref={ baseHref } campaigns={ campaigns } events={ sortedEvents } focusDate={ focusDate } orgId={ orgId as string }
+                        baseHref={ baseHref } campaigns={ campaigns } events={ sortedEvents } focusDate={ focusDate } orgId={ orgId as string } tasks={ filteredTasks }
                     />) }
                 { range === CALENDAR_RANGES.WEEK && (
                     <WeekCalendar

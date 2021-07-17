@@ -5,7 +5,8 @@ import { FormattedDate, FormattedMessage as Msg } from 'react-intl';
 import  { useEffect, useRef, useState } from 'react';
 
 import MonthCalendarEvent from './MonthCalendarEvent';
-import { ZetkinCampaign, ZetkinEvent } from '../../../types/zetkin';
+import MonthCalendarTask from './MonthCalendarTask';
+import { ZetkinCampaign, ZetkinEvent , ZetkinTask } from '../../../types/zetkin';
 
 interface MonthCalendarProps {
     baseHref: string;
@@ -13,6 +14,7 @@ interface MonthCalendarProps {
     events: ZetkinEvent[];
     focusDate: Date;
     orgId: string;
+    tasks: ZetkinTask[];
 }
 
 const useWindowHeight = (): number | undefined => {
@@ -35,7 +37,7 @@ const useStyles = makeStyles(() => ({
     },
 }));
 
-const MonthCalendar = ({ orgId, campaigns, baseHref, events, focusDate }: MonthCalendarProps): JSX.Element => {
+const MonthCalendar = ({ orgId, campaigns, baseHref, events, focusDate, tasks }: MonthCalendarProps): JSX.Element => {
     const gridItem = useRef<HTMLUListElement>(null);
     const windowHeight = useWindowHeight();
     const [maxNoOfEvents, setMaxNoOfEvents] = useState(1);
@@ -74,6 +76,11 @@ const MonthCalendar = ({ orgId, campaigns, baseHref, events, focusDate }: MonthC
             new Date(event.end_time) <= end;
     });
 
+    const getTasksInRange = (start: Date, end: Date) => tasks.filter(task => {
+        return new Date(task.deadline as string) > start &&
+        new Date(task.deadline as string) <= end;
+    });
+
     const isInRange = (date: Date, start: Date, end: Date) => {
         return date >= start &&
             date < end;
@@ -110,8 +117,14 @@ const MonthCalendar = ({ orgId, campaigns, baseHref, events, focusDate }: MonthC
                 width={ 1 }>
                 { Array.from(Array(gridItems).keys()).map((_, index) => {
                     const currentDate = new Date(new Date(firstCalendarDay).setDate(firstCalendarDay.getDate() + index));
-                    const daysEvents = getEventsInRange(currentDate, new Date(new Date(currentDate).setDate(currentDate.getDate() + 1)));
-                    const totalEvents = daysEvents.length;
+                    const tomorrow = new Date(new Date(currentDate).setDate(currentDate.getDate() + 1));
+                    const daysEvents = getEventsInRange(currentDate, tomorrow );
+                    const daysTasks = getTasksInRange(currentDate, tomorrow);
+                    const tasksAndEvents = [
+                        ...daysTasks.map(t => ({ data: t, id: 'task' })),
+                        ...daysEvents.map(e => ({ data: e, id: 'event' })),
+                    ];
+                    const totalTasksAndEvents = tasksAndEvents.length;
                     return (
                         <Box
                             key={ index }
@@ -130,44 +143,63 @@ const MonthCalendar = ({ orgId, campaigns, baseHref, events, focusDate }: MonthC
                                 </Typography>
                             </Box>
                             <ul { ...( index === 0 && { ref: gridItem }) } className={ classes.list } data-testid={ `day-${index}-events` }>
-                                { daysEvents.map((event, i) => {
-                                    const campaign = campaigns.find(c => c.id === event.campaign.id);
+                                { tasksAndEvents.map((item, i) => {
+                                    const campaign = campaigns.find(c => c.id === item.data.campaign.id);
                                     return (
-                                        <MonthCalendarEvent
-                                            key={ event.id }
-                                            baseHref={ baseHref }
-                                            campaign={ campaign }
-                                            event={ event }
-                                            isVisible={ i < maxNoOfEvents }
-                                            onLoad={ i === 0 ? (listItemHeight) => setListItemHeight(listItemHeight) : undefined }
-                                            startOfDay={ currentDate }
-                                        />
+                                        <>
+                                            { item.id === 'task' && <MonthCalendarTask
+                                                key={ `${item.id}-${item.data.id}` }
+                                                baseHref={ baseHref }
+                                                campaign={ campaign }
+                                                isVisible={ i < maxNoOfEvents }
+                                                onLoad={ i === 0 ? (listItemHeight) => setListItemHeight(listItemHeight) : undefined }
+                                                task={ item.data as ZetkinTask }
+                                            /> }
+                                            { item.id === 'event' && <MonthCalendarEvent
+                                                key={ `${item.id}-${item.data.id}` }
+                                                baseHref={ baseHref }
+                                                campaign={ campaign }
+                                                event={ item.data as ZetkinEvent }
+                                                isVisible={ i < maxNoOfEvents }
+                                                onLoad={ i === 0 ? (listItemHeight) => setListItemHeight(listItemHeight) : undefined }
+                                                startOfDay={ currentDate }
+                                            /> }
+                                        </>
                                     );
                                 }) }
                             </ul>
-                            { totalEvents - maxNoOfEvents > 0 && (
+                            { totalTasksAndEvents - maxNoOfEvents > 0 && (
                                 <Tooltip arrow interactive title={ (
                                     <Box>
                                         <ul className={ classes.list } data-testid={ `day-${index}-events` }>
-                                            { daysEvents.map((event, i) => {
-                                                const campaign = campaigns.find(c => c.id === event.campaign.id);
+                                            { tasksAndEvents.map((item, i) => {
+                                                const campaign = campaigns.find(c => c.id === item.data.campaign.id);
                                                 return (
-                                                    <MonthCalendarEvent
-                                                        key={ event.id }
-                                                        baseHref={ baseHref }
-                                                        campaign={ campaign }
-                                                        event={ event }
-                                                        isVisible={ i >= maxNoOfEvents }
-                                                        startOfDay={ currentDate }
-                                                    />
-                                                );
+                                                    <>
+                                                        { item.id === 'task' && <MonthCalendarTask
+                                                            key={ `${item.id}-${item.data.id}` }
+                                                            baseHref={ baseHref }
+                                                            campaign={ campaign }
+                                                            isVisible={ i >= maxNoOfEvents }
+                                                            onLoad={ i === 0 ? (listItemHeight) => setListItemHeight(listItemHeight) : undefined }
+                                                            task={ item.data as ZetkinTask }
+                                                        /> }
+                                                        { item.id === 'event' && <MonthCalendarEvent
+                                                            key={ item.id }
+                                                            baseHref={ baseHref }
+                                                            campaign={ campaign }
+                                                            event={ item.data as ZetkinEvent }
+                                                            isVisible={ i >= maxNoOfEvents }
+                                                            startOfDay={ currentDate }
+                                                        /> }
+                                                    </>);
                                             }) }
                                         </ul>
                                     </Box>
                                 ) }>
                                     <Button disableRipple style={{ padding: 0 }}>
                                         <Typography variant="body1">
-                                            <Msg id="misc.calendar.moreEvents" values={{ numEvents: totalEvents - maxNoOfEvents }} />
+                                            <Msg id="misc.calendar.moreEvents" values={{ numEvents: totalTasksAndEvents - maxNoOfEvents }} />
                                         </Typography>
                                     </Button>
                                 </Tooltip>
