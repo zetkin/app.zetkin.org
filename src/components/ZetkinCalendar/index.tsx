@@ -104,7 +104,7 @@ const ZetkinCalendar = ({ baseHref, events, campaigns , tasks }: ZetkinCalendarP
                     />) }
                 { range === CALENDAR_RANGES.WEEK && (
                     <WeekCalendar
-                        baseHref={ baseHref } campaigns={ campaigns } events={ sortedEvents } focusDate={ focusDate } orgId={ orgId as string }
+                        baseHref={ baseHref } campaigns={ campaigns } events={ sortedEvents } focusDate={ focusDate } orgId={ orgId as string } tasks={ filteredTasks }
                     />) }
             </Box>
         </Box>
