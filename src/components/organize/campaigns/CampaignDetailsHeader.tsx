@@ -62,13 +62,14 @@ const CampaignDetailsHeader: React.FunctionComponent<CampaignDetailsHeaderProps>
     return (
         <>
             <Box p={ 4 }>
+                { /* Description */ }
                 { campaign.info_text && (
                     <Typography variant="body1">
                         { campaign.info_text }
                     </Typography>
                 ) }
 
-                { /* First Row */ }
+                { /* Dades / Buttons  */ }
                 <Box className={ classes.responsiveFlexBox } mt={ 2 }>
                     { /* Campaign Dates */ }
                     <Box flexGrow={ 1 } mb={ 2 }>
@@ -113,24 +114,23 @@ const CampaignDetailsHeader: React.FunctionComponent<CampaignDetailsHeaderProps>
                 { campaign.manager ? (
                     <NextLink href={ `/organize/${orgId}/people/${campaign.manager.id}` }>
                         <Box alignItems="center" display="flex">
-                            <Box mr={ 1 }>
+                            <Box mr={ 2 }>
                                 <Avatar
                                     src={ `/api/orgs/${orgId}/people/${campaign.manager.id}/avatar` }
                                 />
                             </Box>
                             <Box display="flex" flexDirection="column">
                                 <Typography variant="h6">{ campaign.manager.name }</Typography>
-                                <Typography variant="body2">Role</Typography>
+                                <Typography variant="body2"><Msg id="pages.organizeCampaigns.campaignManager" /></Typography>
                             </Box>
                         </Box>
                     </NextLink>
                 ) :
                     // If no campaign manager
                     <Typography variant="body1">
-                        <Msg id="No campaign manager" />
+                        <Msg id="pages.organizeCampaigns.noCampaignManager" />
                     </Typography>
                 }
-
             </Box>
 
             <ZetkinDialog
