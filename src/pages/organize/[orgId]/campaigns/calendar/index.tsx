@@ -9,7 +9,7 @@ import getOrg from '../../../../../fetching/getOrg';
 import OrganizeTabbedLayout from '../../../../../components/layout/OrganizeTabbedLayout';
 import { PageWithLayout } from '../../../../../types';
 import { scaffold } from '../../../../../utils/next';
-import ZetkinCalendar from '../../../../../components/calendar';
+import ZetkinCalendar from '../../../../../components/ZetkinCalendar';
 import ZetkinSpeedDial, { ACTIONS } from '../../../../../components/ZetkinSpeedDial';
 
 const scaffoldOptions = {
