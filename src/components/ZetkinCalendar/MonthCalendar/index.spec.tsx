@@ -198,14 +198,6 @@ describe('MonthCalendar', () => {
         });
     });
 
-    xit('shows back and forward widget buttons', () => {
-        mountWithProviders(
-            <MonthCalendar baseHref="" campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ new Date(2021, 4, 10) } orgId="1" tasks={ dummyTasks }  />,
-        );
-        cy.get('[data-testid="back-button"]').should('be.visible');
-        cy.get('[data-testid="fwd-button"]').should('be.visible');
-    });
-
     xit('shows the current displayed month in the widget', () => {
         mountWithProviders(
             <MonthCalendar baseHref="" campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ new Date(2021, 4, 10) } orgId="1" tasks={ dummyTasks }  />,
