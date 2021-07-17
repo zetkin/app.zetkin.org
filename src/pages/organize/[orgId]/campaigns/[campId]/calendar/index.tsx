@@ -59,13 +59,15 @@ type OrganizeCalendarPageProps = {
 const CampaignCalendarPage : PageWithLayout<OrganizeCalendarPageProps> = ({ orgId, campId }) => {
     const eventsQuery = useQuery(['campaignEvents', orgId, campId], getCampaignEvents(orgId, campId));
     const campaignQuery = useQuery(['campaign', orgId, campId], getCampaign(orgId, campId));
+    const tasksQuery = useQuery(['tasks', orgId, campId], getCampaignTasks(orgId, campId));
     const events = eventsQuery.data || [];
+    const tasks = tasksQuery.data || [];
     const campaigns = campaignQuery.data ? [campaignQuery.data] : [];
 
     return (
         <>
             <Box height={ 1 }>
-                <ZetkinCalendar baseHref={ `/organize/${orgId}/campaigns/${campId}/calendar` } campaigns={ campaigns } events={ events } />
+                <ZetkinCalendar baseHref={ `/organize/${orgId}/campaigns/${campId}/calendar` } campaigns={ campaigns } events={ events } tasks={ tasks } />
             </Box>
             <ZetkinSpeedDial actions={ [ACTIONS.CREATE_EVENT] }/>
         </>
