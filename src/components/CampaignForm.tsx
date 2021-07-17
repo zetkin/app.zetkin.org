@@ -163,7 +163,7 @@ const CampaignForm = ({ onSubmit, onCancel, campaign }: CampaignFormProps): JSX.
     const handleSubmit = (values: Record<string, string>) => {
         const { info_text, status, title, visibility, manager_id } = values;
         onSubmit({
-            ...info_text ? { info_text } : null,
+            info_text: info_text == undefined ? '' : info_text,
             manager_id,
             published:status === 'draft' ? false : true,
             title: title,
