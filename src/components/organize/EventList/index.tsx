@@ -1,5 +1,5 @@
 import { useIntl } from 'react-intl';
-import { Card, List } from '@material-ui/core';
+import { Card, Divider, List } from '@material-ui/core';
 
 import EventListItem from './EventListItem';
 import { ZetkinEvent } from '../../../types/zetkin';
@@ -16,8 +16,16 @@ const EventList = ({ hrefBase, events }: EventListProps): JSX.Element => {
             <List aria-label={ intl.formatMessage({
                 id: 'pages.organizeCampaigns.events',
             }) }>
-                { events.map(event => (
-                    <EventListItem key={ event.id } event={ event } hrefBase={ hrefBase } />
+                { events.map((event, index) => (
+                    <>
+                        <EventListItem key={ event.id } event={ event } hrefBase={ hrefBase } />
+                        {
+                            // Show divider under all items except last
+                            index !== events.length - 1 && (
+                                <Divider />
+                            )
+                        }
+                    </>
                 )) }
             </List>
         </Card>
