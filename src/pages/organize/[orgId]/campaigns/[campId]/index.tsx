@@ -87,8 +87,15 @@ const useStyles = makeStyles((theme) => ({
 
 const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({ orgId, campId }) => {
     const classes = useStyles();
-    const campaignQuery = useQuery(['campaign', orgId, campId], getCampaign(orgId, campId));
-    const campaign = campaignQuery.data;
+    const { data: campaign } = useQuery(['campaign', orgId, campId], getCampaign(orgId, campId));
+    const { data: events } = useQuery(
+        ['campaignEvents', orgId, campId],
+        getCampaignEvents(orgId as string, campId as string),
+    );
+    const { data: tasks } = useQuery(
+        ['campaignTasks', orgId, campId],
+        getCampaignTasks(orgId as string, campId as string),
+    );
 
     return (
         <>
@@ -100,12 +107,12 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({ orgId,
             <Box className={ classes.responsiveFlexBox }>
                 { /* Events */ }
                 <ZetkinSection title="Events">
-                    <EventList hrefBase={ `/organize/${orgId}/campaigns/${campId}` } />
+                    <EventList events={ events ?? [] } hrefBase={ `/organize/${orgId}/campaigns/${campId}` } />
                 </ZetkinSection>
 
                 { /* Tasks */ }
                 <ZetkinSection title="Tasks">
-                    <TaskList hrefBase={ `/organize/${orgId}/campaigns/${campId}` } />
+                    <TaskList hrefBase={ `/organize/${orgId}/campaigns/${campId}` } tasks={ tasks ?? [] } />
                 </ZetkinSection>
             </Box>
             <ZetkinSpeedDial actions={ [ACTIONS.CREATE_EVENT, ACTIONS.CREATE_TASK] }/>
