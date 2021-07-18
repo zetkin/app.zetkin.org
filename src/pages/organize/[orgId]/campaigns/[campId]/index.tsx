@@ -1,7 +1,7 @@
 import { GetServerSideProps } from 'next';
 
 import { useQuery } from 'react-query';
-import { Box, makeStyles } from '@material-ui/core';
+import { Box, Grid } from '@material-ui/core';
 
 import CampaignDetailsHeader from '../../../../../components/organize/CampaignDetailsHeader';
 import EventList from '../../../../../components/organize/EventList';
@@ -70,23 +70,7 @@ type CampaignCalendarPageProps = {
     orgId: string;
 };
 
-const useStyles = makeStyles((theme) => ({
-    responsiveFlexBox: {
-        display: 'flex',
-        [theme.breakpoints.down('sm')]: {
-            flexDirection: 'column',
-        },
-    },
-    responsiveText: {
-        width: '70%',
-        [theme.breakpoints.down('sm')]: {
-            width: '100%',
-        },
-    },
-}));
-
 const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({ orgId, campId }) => {
-    const classes = useStyles();
     const { data: campaign } = useQuery(['campaign', orgId, campId], getCampaign(orgId, campId));
     const { data: events } = useQuery(
         ['campaignEvents', orgId, campId],
@@ -98,25 +82,31 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({ orgId,
     );
 
     return (
-        <>
+        <Box p={ 4 }>
             { /* Details Header */ }
             { campaign && (
-                <CampaignDetailsHeader campaign={ campaign } />
+                <Box mb={ 4 }>
+                    <CampaignDetailsHeader campaign={ campaign } />
+                </Box>
             ) }
             { /* Page Content */ }
-            <Box className={ classes.responsiveFlexBox }>
-                { /* Events */ }
-                <ZetkinSection title="Events">
-                    <EventList events={ events ?? [] } hrefBase={ `/organize/${orgId}/campaigns/${campId}` } />
-                </ZetkinSection>
+            <Grid container spacing={ 2 }>
+                <Grid item md={ 6 } sm={ 12 }>
+                    { /* Events */ }
+                    <ZetkinSection title="Events">
+                        <EventList events={ events ?? [] } hrefBase={ `/organize/${orgId}/campaigns/${campId}` } />
+                    </ZetkinSection>
+                </Grid>
 
                 { /* Tasks */ }
-                <ZetkinSection title="Tasks">
-                    <TaskList hrefBase={ `/organize/${orgId}/campaigns/${campId}` } tasks={ tasks ?? [] } />
-                </ZetkinSection>
-            </Box>
+                <Grid item md={ 6 } sm={ 12 }>
+                    <ZetkinSection title="Tasks">
+                        <TaskList hrefBase={ `/organize/${orgId}/campaigns/${campId}` } tasks={ tasks ?? [] } />
+                    </ZetkinSection>
+                </Grid>
+            </Grid>
             <ZetkinSpeedDial actions={ [ACTIONS.CREATE_EVENT, ACTIONS.CREATE_TASK] }/>
-        </>
+        </Box>
     );
 };
 
