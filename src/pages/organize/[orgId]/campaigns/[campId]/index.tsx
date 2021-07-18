@@ -1,5 +1,6 @@
 import { GetServerSideProps } from 'next';
 
+import { useIntl } from 'react-intl';
 import { useQuery } from 'react-query';
 import { Box, Grid } from '@material-ui/core';
 
@@ -71,6 +72,7 @@ type CampaignCalendarPageProps = {
 };
 
 const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({ orgId, campId }) => {
+    const intl = useIntl();
     const { data: campaign } = useQuery(['campaign', orgId, campId], getCampaign(orgId, campId));
     const { data: events } = useQuery(
         ['campaignEvents', orgId, campId],
@@ -92,14 +94,14 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({ orgId,
             <Grid container spacing={ 2 }>
                 { /* Events */ }
                 <Grid item md={ 6 } sm={ 12 } xs={ 12 }>
-                    <ZetkinSection title="Events">
+                    <ZetkinSection title={ intl.formatMessage({ id: 'pages.organizeCampaigns.events' }) }>
                         <EventList events={ events ?? [] } hrefBase={ `/organize/${orgId}/campaigns/${campId}` } />
                     </ZetkinSection>
                 </Grid>
 
                 { /* Tasks */ }
                 <Grid item md={ 6 } sm={ 12 } xs={ 12 }>
-                    <ZetkinSection title="Tasks">
+                    <ZetkinSection title={ intl.formatMessage({ id: 'pages.organizeCampaigns.tasks' }) }>
                         <TaskList hrefBase={ `/organize/${orgId}/campaigns/${campId}` } tasks={ tasks ?? [] } />
                     </ZetkinSection>
                 </Grid>
