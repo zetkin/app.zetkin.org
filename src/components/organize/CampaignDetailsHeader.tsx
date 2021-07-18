@@ -67,7 +67,7 @@ const CampaignDetailsHeader: React.FunctionComponent<CampaignDetailsHeaderProps>
 
     return (
         <>
-            <Box p={ 4 }>
+            <Box>
                 { /* Description */ }
                 { campaign.info_text && (
                     <Typography variant="body1">
