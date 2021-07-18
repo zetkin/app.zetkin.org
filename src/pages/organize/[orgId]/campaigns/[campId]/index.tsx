@@ -89,17 +89,16 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({ orgId,
                     <CampaignDetailsHeader campaign={ campaign } />
                 </Box>
             ) }
-            { /* Page Content */ }
             <Grid container spacing={ 2 }>
-                <Grid item md={ 6 } sm={ 12 }>
-                    { /* Events */ }
+                { /* Events */ }
+                <Grid item md={ 6 } sm={ 12 } xs={ 12 }>
                     <ZetkinSection title="Events">
                         <EventList events={ events ?? [] } hrefBase={ `/organize/${orgId}/campaigns/${campId}` } />
                     </ZetkinSection>
                 </Grid>
 
                 { /* Tasks */ }
-                <Grid item md={ 6 } sm={ 12 }>
+                <Grid item md={ 6 } sm={ 12 } xs={ 12 }>
                     <ZetkinSection title="Tasks">
                         <TaskList hrefBase={ `/organize/${orgId}/campaigns/${campId}` } tasks={ tasks ?? [] } />
                     </ZetkinSection>
