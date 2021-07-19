@@ -52,7 +52,7 @@ module.exports = {
         'jsx-a11y/anchor-is-valid': 'off',
         'jsx-quotes': ['error', 'prefer-double'],
         'keyword-spacing': ['error', {}],
-        'no-console': 'error',
+        'no-console': ['error', { allow: ['warn'] }],
         'no-switch-statements/no-switch': 'error',
         'no-trailing-spaces': 'error',
         'object-curly-spacing': ['error', 'always'],
