@@ -33,11 +33,6 @@ const ZetkinCalendar = ({ baseHref, events, campaigns , tasks }: ZetkinCalendarP
 
     const tasksWithDeadlines = tasks.filter(task => task.deadline);
 
-    const calendars = [
-        { id: CALENDAR_RANGES.WEEK, name: intl.formatMessage({ id: 'misc.calendar.week' }) },
-        { id: CALENDAR_RANGES.MONTH, name: intl.formatMessage({ id: 'misc.calendar.month' }) },
-    ];
-
     const handleForwardButtonClick = () => {
         if (range === CALENDAR_RANGES.MONTH) {
             setFocusDate(new Date(focusDate.getFullYear(), focusDate.getMonth() + 1, focusDate.getDate()));
@@ -89,9 +84,9 @@ const ZetkinCalendar = ({ baseHref, events, campaigns , tasks }: ZetkinCalendarP
                         onChange={ e => setRange(e.target.value as CALENDAR_RANGES) }
                         select
                         value={ range }>
-                        { calendars.map(item => (
-                            <MenuItem key={ item.id } value={ item.id }>
-                                { item.name }
+                        { Object.values(CALENDAR_RANGES).map(range => (
+                            <MenuItem key={ range } value={ range }>
+                                <Msg id={ `misc.calendar.${range}` } />
                             </MenuItem>
                         )) }
                     </TextField>
