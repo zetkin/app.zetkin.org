@@ -2,10 +2,10 @@ import { Box } from '@material-ui/core';
 import { GetServerSideProps } from 'next';
 import { useQuery } from 'react-query';
 
-import getAllTasks from '../../../../../fetching/tasks/getAllTasks';
 import getCampaigns from '../../../../../fetching/getCampaigns';
 import getEvents from '../../../../../fetching/getEvents';
 import getOrg from '../../../../../fetching/getOrg';
+import getOrganizationTasks from '../../../../../fetching/tasks/getOrganizationTasks';
 import OrganizeTabbedLayout from '../../../../../components/layout/OrganizeTabbedLayout';
 import { PageWithLayout } from '../../../../../types';
 import { scaffold } from '../../../../../utils/next';
@@ -32,7 +32,7 @@ export const getServerSideProps : GetServerSideProps = scaffold(async (ctx) => {
     await ctx.queryClient.prefetchQuery(['campaigns', orgId], getCampaigns(orgId as string, ctx.apiFetch));
     const campaignsState = ctx.queryClient.getQueryState(['campaigns', orgId]);
 
-    await ctx.queryClient.prefetchQuery(['tasks', orgId], getAllTasks(orgId as string, ctx.apiFetch));
+    await ctx.queryClient.prefetchQuery(['tasks', orgId], getOrganizationTasks(orgId as string, ctx.apiFetch));
     const allTasksState = ctx.queryClient.getQueryState(['tasks', orgId]);
 
     if (orgState?.status === 'success' && eventsState?.status === 'success' &&campaignsState?.status === 'success' && allTasksState?.status === 'success') {
@@ -56,7 +56,7 @@ type AllCampaignsCalendarPageProps = {
 const AllCampaignsCalendarPage : PageWithLayout<AllCampaignsCalendarPageProps> = ({ orgId }) => {
     const eventsQuery = useQuery(['events', orgId], getEvents(orgId));
     const campaignsQuery = useQuery(['campaigns', orgId], getCampaigns(orgId));
-    const tasksQuery = useQuery(['tasks', orgId], getAllTasks(orgId));
+    const tasksQuery = useQuery(['tasks', orgId], getOrganizationTasks(orgId));
     const events = eventsQuery.data || [];
     const tasks = tasksQuery.data || [];
     const campaigns = campaignsQuery.data || [];

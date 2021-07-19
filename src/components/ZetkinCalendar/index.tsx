@@ -31,7 +31,7 @@ const ZetkinCalendar = ({ baseHref, events, campaigns , tasks }: ZetkinCalendarP
         return new Date(a.start_time).getTime() - new Date(b.start_time).getTime();
     });
 
-    const filteredTasks = tasks.filter(task => task.deadline);
+    const tasksWithDeadlines = tasks.filter(task => task.deadline);
 
     const calendars = [
         { id: CALENDAR_RANGES.WEEK, name: intl.formatMessage({ id: 'misc.calendar.week' }) },
@@ -100,11 +100,11 @@ const ZetkinCalendar = ({ baseHref, events, campaigns , tasks }: ZetkinCalendarP
             <Box flexGrow={ 1 } overflow="auto">
                 { range === CALENDAR_RANGES.MONTH && (
                     <MonthCalendar
-                        baseHref={ baseHref } campaigns={ campaigns } events={ sortedEvents } focusDate={ focusDate } orgId={ orgId as string } tasks={ filteredTasks }
+                        baseHref={ baseHref } campaigns={ campaigns } events={ sortedEvents } focusDate={ focusDate } orgId={ orgId as string } tasks={ tasksWithDeadlines }
                     />) }
                 { range === CALENDAR_RANGES.WEEK && (
                     <WeekCalendar
-                        baseHref={ baseHref } campaigns={ campaigns } events={ sortedEvents } focusDate={ focusDate } orgId={ orgId as string } tasks={ filteredTasks }
+                        baseHref={ baseHref } campaigns={ campaigns } events={ sortedEvents } focusDate={ focusDate } orgId={ orgId as string } tasks={ tasksWithDeadlines }
                     />) }
             </Box>
         </Box>
