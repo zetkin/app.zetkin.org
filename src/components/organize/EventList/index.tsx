@@ -1,3 +1,4 @@
+import React from 'react';
 import { useIntl } from 'react-intl';
 import { Card, Divider, List } from '@material-ui/core';
 
@@ -17,7 +18,7 @@ const EventList = ({ hrefBase, events }: EventListProps): JSX.Element => {
                 id: 'pages.organizeCampaigns.events',
             }) }>
                 { events.map((event, index) => (
-                    <>
+                    <React.Fragment key={ index }>
                         <EventListItem key={ event.id } event={ event } hrefBase={ hrefBase } />
                         {
                             // Show divider under all items except last
@@ -25,7 +26,7 @@ const EventList = ({ hrefBase, events }: EventListProps): JSX.Element => {
                                 <Divider />
                             )
                         }
-                    </>
+                    </React.Fragment>
                 )) }
             </List>
         </Card>

@@ -1,3 +1,4 @@
+import React from 'react';
 import { useIntl } from 'react-intl';
 import { Card, Divider, List } from '@material-ui/core';
 
@@ -34,7 +35,7 @@ const TaskList = ({ hrefBase, tasks }: TaskListProps): JSX.Element => {
             <List
                 aria-label={ intl.formatMessage({ id: 'pages.organizeCampaigns.tasks' }) }>
                 { tasksOrderedByStatus.map((task, index) => (
-                    <>
+                    <React.Fragment key={ index }>
                         <TaskListItem key={ task.id } hrefBase={ hrefBase } task={ task } />
                         {
                             // Show divider under all items except last
@@ -42,7 +43,7 @@ const TaskList = ({ hrefBase, tasks }: TaskListProps): JSX.Element => {
                                 <Divider />
                             )
                         }
-                    </>
+                    </React.Fragment>
                 )) }
             </List>
         </Card>
