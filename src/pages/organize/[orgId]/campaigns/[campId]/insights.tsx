@@ -4,9 +4,9 @@ import { GetServerSideProps } from 'next';
 import getCampaign from '../../../../../fetching/getCampaign';
 import getCampaignEvents from '../../../../../fetching/getCampaignEvents';
 import getOrg from '../../../../../fetching/getOrg';
-import OrganizeTabbedLayout from '../../../../../components/layout/OrganizeTabbedLayout';
 import { PageWithLayout } from '../../../../../types';
 import { scaffold } from '../../../../../utils/next';
+import TabbedLayout from '../../../../../components/layout/organize/TabbedLayout';
 
 const scaffoldOptions = {
     authLevelRequired: 2,
@@ -59,9 +59,9 @@ const CampaignInsightsPage: PageWithLayout<CampaignCalendarPageProps> = () => {
 
 CampaignInsightsPage.getLayout = function getLayout(page) {
     return (
-        <OrganizeTabbedLayout>
+        <TabbedLayout>
             { page }
-        </OrganizeTabbedLayout>
+        </TabbedLayout>
     );
 };
 

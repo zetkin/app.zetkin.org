@@ -14,10 +14,10 @@ import getCampaign from '../../../../../fetching/getCampaign';
 import getCampaignEvents from '../../../../../fetching/getCampaignEvents';
 import getCampaignTasks from '../../../../../fetching/tasks/getCampaignTasks';
 import getOrg from '../../../../../fetching/getOrg';
-import OrganizeTabbedLayout from '../../../../../components/layout/OrganizeTabbedLayout';
 import { PageWithLayout } from '../../../../../types';
 import patchCampaign from '../../../../../fetching/patchCampaign';
 import { scaffold } from '../../../../../utils/next';
+import TabbedLayout from '../../../../../components/layout/organize/TabbedLayout';
 import TaskList from '../../../../../components/organize/tasks/TaskList';
 import ZetkinDialog from '../../../../../components/ZetkinDialog';
 import ZetkinSpeedDial, { ACTIONS } from '../../../../../components/ZetkinSpeedDial';
@@ -294,9 +294,9 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({ orgId,
 
 CampaignSummaryPage.getLayout = function getLayout(page) {
     return (
-        <OrganizeTabbedLayout>
+        <TabbedLayout>
             { page }
-        </OrganizeTabbedLayout>
+        </TabbedLayout>
     );
 };
 

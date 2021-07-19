@@ -16,9 +16,9 @@ import getLocations from '../../../../fetching/getLocations';
 import getOrg from '../../../../fetching/getOrg';
 import getSurveys from '../../../../fetching/getSurveys';
 import getUpcomingEvents from '../../../../fetching/getUpcomingEvents';
-import OrganizeTabbedLayout from '../../../../components/layout/OrganizeTabbedLayout';
 import { PageWithLayout } from '../../../../types';
 import { scaffold } from '../../../../utils/next';
+import TabbedLayout from '../../../../components/layout/organize/TabbedLayout';
 import ZetkinSection from '../../../../components/ZetkinSection';
 import ZetkinSpeedDial, { ACTIONS } from '../../../../components/ZetkinSpeedDial';
 
@@ -190,9 +190,9 @@ const AllCampaignsSummaryPage: PageWithLayout<AllCampaignsSummaryPageProps> = ({
 
 AllCampaignsSummaryPage.getLayout = function getLayout(page) {
     return (
-        <OrganizeTabbedLayout>
+        <TabbedLayout>
             { page }
-        </OrganizeTabbedLayout>
+        </TabbedLayout>
     );
 };
 

@@ -5,9 +5,9 @@ import getCampaigns from '../../../../../fetching/getCampaigns';
 import getEvents from '../../../../../fetching/getEvents';
 import getOrg from '../../../../../fetching/getOrg';
 import getOrganizationTasks from '../../../../../fetching/tasks/getOrganizationTasks';
-import OrganizeTabbedLayout from '../../../../../components/layout/OrganizeTabbedLayout';
 import { PageWithLayout } from '../../../../../types';
 import { scaffold } from '../../../../../utils/next';
+import TabbedLayout from '../../../../../components/layout/organize/TabbedLayout';
 import ZetkinCalendar from '../../../../../components/ZetkinCalendar';
 import ZetkinSpeedDial, { ACTIONS } from '../../../../../components/ZetkinSpeedDial';
 
@@ -70,9 +70,9 @@ const AllCampaignsCalendarPage : PageWithLayout<AllCampaignsCalendarPageProps> =
 
 AllCampaignsCalendarPage.getLayout = function getLayout(page) {
     return (
-        <OrganizeTabbedLayout fixedHeight>
+        <TabbedLayout fixedHeight>
             { page }
-        </OrganizeTabbedLayout>
+        </TabbedLayout>
     );
 };
 

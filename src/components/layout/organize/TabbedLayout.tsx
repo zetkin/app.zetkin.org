@@ -4,10 +4,10 @@ import { useRouter } from 'next/router';
 import { Box, makeStyles, Tab, Tabs, Typography } from '@material-ui/core';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
 
-import BreadcrumbTrail from '../BreadcrumbTrail';
-import getCampaign from '../../fetching/getCampaign';
-import OrganizeSidebar from '../OrganizeSidebar';
-import SearchDrawer from '../SearchDrawer';
+import BreadcrumbTrail from '../../BreadcrumbTrail';
+import getCampaign from '../../../fetching/getCampaign';
+import OrganizeSidebar from '../../OrganizeSidebar';
+import SearchDrawer from '../../SearchDrawer';
 
 const useStyles = makeStyles((theme) => ({
     breadcrumbs: {
@@ -22,11 +22,11 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-interface OrganizeTabbedLayoutProps {
+interface TabbedLayoutProps {
     fixedHeight?: boolean;
 }
 
-const OrganizeTabbedLayout: FunctionComponent<OrganizeTabbedLayoutProps> = ({ children, fixedHeight }) => {
+const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({ children, fixedHeight }) => {
     const intl = useIntl();
     const classes = useStyles();
     const router = useRouter();
@@ -97,4 +97,4 @@ const OrganizeTabbedLayout: FunctionComponent<OrganizeTabbedLayoutProps> = ({ ch
     );
 };
 
-export default OrganizeTabbedLayout;
+export default TabbedLayout;
