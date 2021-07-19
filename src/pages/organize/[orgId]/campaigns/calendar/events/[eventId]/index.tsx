@@ -3,7 +3,6 @@ import { GetServerSideProps } from 'next';
 import getOrg from '../../../../../../../fetching/getOrg';
 import { PageWithLayout } from '../../../../../../../types';
 import { scaffold } from '../../../../../../../utils/next';
-import TabbedLayout from '../../../../../../../components/layout/organize/TabbedLayout';
 
 const scaffoldOptions = {
     authLevelRequired: 2,
@@ -43,9 +42,9 @@ const EventPage: PageWithLayout = () => {
 
 EventPage.getLayout = function getLayout(page) {
     return (
-        <TabbedLayout>
+        <>
             { page }
-        </TabbedLayout>
+        </>
     );
 };
 
