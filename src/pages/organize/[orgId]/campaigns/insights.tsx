@@ -1,9 +1,9 @@
 import { GetServerSideProps } from 'next';
 
+import AllCampaignsLayout from '../../../../components/layout/organize/AllCampaignsLayout';
 import getOrg from '../../../../fetching/getOrg';
 import { PageWithLayout } from '../../../../types';
 import { scaffold } from '../../../../utils/next';
-import TabbedLayout from '../../../../components/layout/organize/TabbedLayout';
 
 const scaffoldOptions = {
     authLevelRequired: 2,
@@ -47,9 +47,9 @@ const AllCampaignsInsightsPage: PageWithLayout<AllCampaignsInsightsPageProps> = 
 
 AllCampaignsInsightsPage.getLayout = function getLayout(page) {
     return (
-        <TabbedLayout>
+        <AllCampaignsLayout>
             { page }
-        </TabbedLayout>
+        </AllCampaignsLayout>
     );
 };
 

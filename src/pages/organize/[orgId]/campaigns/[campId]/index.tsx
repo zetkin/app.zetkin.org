@@ -17,7 +17,7 @@ import getOrg from '../../../../../fetching/getOrg';
 import { PageWithLayout } from '../../../../../types';
 import patchCampaign from '../../../../../fetching/patchCampaign';
 import { scaffold } from '../../../../../utils/next';
-import TabbedLayout from '../../../../../components/layout/organize/TabbedLayout';
+import SingleCampaignLayout from '../../../../../components/layout/organize/SingleCampaignLayout';
 import TaskList from '../../../../../components/organize/tasks/TaskList';
 import ZetkinDialog from '../../../../../components/ZetkinDialog';
 import ZetkinSpeedDial, { ACTIONS } from '../../../../../components/ZetkinSpeedDial';
@@ -294,9 +294,9 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({ orgId,
 
 CampaignSummaryPage.getLayout = function getLayout(page) {
     return (
-        <TabbedLayout>
+        <SingleCampaignLayout>
             { page }
-        </TabbedLayout>
+        </SingleCampaignLayout>
     );
 };
 

@@ -6,7 +6,7 @@ import getCampaignEvents from '../../../../../fetching/getCampaignEvents';
 import getOrg from '../../../../../fetching/getOrg';
 import { PageWithLayout } from '../../../../../types';
 import { scaffold } from '../../../../../utils/next';
-import TabbedLayout from '../../../../../components/layout/organize/TabbedLayout';
+import SingleCampaignLayout from '../../../../../components/layout/organize/SingleCampaignLayout';
 
 const scaffoldOptions = {
     authLevelRequired: 2,
@@ -59,9 +59,9 @@ const CampaignInsightsPage: PageWithLayout<CampaignCalendarPageProps> = () => {
 
 CampaignInsightsPage.getLayout = function getLayout(page) {
     return (
-        <TabbedLayout>
+        <SingleCampaignLayout>
             { page }
-        </TabbedLayout>
+        </SingleCampaignLayout>
     );
 };
 

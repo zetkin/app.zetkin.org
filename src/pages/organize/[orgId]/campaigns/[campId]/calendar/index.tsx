@@ -6,7 +6,7 @@ import getCampaignTasks from '../../../../../../fetching/tasks/getCampaignTasks'
 import getOrg from '../../../../../../fetching/getOrg';
 import { PageWithLayout } from '../../../../../../types';
 import { scaffold } from '../../../../../../utils/next';
-import TabbedLayout from '../../../../../../components/layout/organize/TabbedLayout';
+import SingleCampaignLayout from '../../../../../../components/layout/organize/SingleCampaignLayout';
 import { useQuery } from 'react-query';
 import ZetkinCalendar from '../../../../../../components/ZetkinCalendar';
 import ZetkinSpeedDial, { ACTIONS } from '../../../../../../components/ZetkinSpeedDial';
@@ -73,9 +73,9 @@ const CampaignCalendarPage : PageWithLayout<OrganizeCalendarPageProps> = ({ orgI
 
 CampaignCalendarPage.getLayout = function getLayout(page) {
     return (
-        <TabbedLayout fixedHeight>
+        <SingleCampaignLayout fixedHeight>
             { page }
-        </TabbedLayout>
+        </SingleCampaignLayout>
     );
 };
 
