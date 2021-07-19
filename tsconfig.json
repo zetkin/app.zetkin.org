@@ -21,7 +21,8 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "types": ["cypress", "@testing-library/cypress", "./cypress/support"],
-    "jsx": "preserve"
+    "jsx": "preserve",
+    "baseUrl": "./src"
   },
   "include": [
     "next-env.d.ts",
