@@ -198,46 +198,6 @@ describe('MonthCalendar', () => {
         });
     });
 
-    xit('shows the current displayed month in the widget', () => {
-        mountWithProviders(
-            <MonthCalendar baseHref="" campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ new Date(2021, 4, 10) } orgId="1" tasks={ dummyTasks }  />,
-        );
-        cy.get('[data-testid="selected-month"]').contains('May');
-        cy.get('[data-testid="selected-month"]').contains('2021');
-    });
-
-    xit('sets the focus date a month ago when back is clicked', () => {
-        const spyOnFocusDate = cy.spy();
-        mountWithProviders(
-            <MonthCalendar baseHref="" campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ new Date(2021, 4, 10) } orgId="1" tasks={ dummyTasks }  />,
-        );
-
-        cy.findByText('misc.calendar.prev')
-            .click({ force: true })
-            .then(() => {
-                const date = new Date(2021, 3, 10);
-                expect(spyOnFocusDate).to.be.calledOnce;
-                expect(spyOnFocusDate.args[0][0]).to.be.an.instanceof(Date);
-                expect(spyOnFocusDate.args[0][0].toString()).to.eq(date.toString());
-            });
-    });
-
-    xit('sets the focus date a month forward when next is clicked', () => {
-        const spyOnFocusDate = cy.spy();
-        mountWithProviders(
-            <MonthCalendar baseHref="" campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ new Date(2021, 4, 10) } orgId="1" tasks={ dummyTasks }  />,
-        );
-
-        cy.findByText('misc.calendar.next')
-            .click({ force: true })
-            .then(() => {
-                const date = new Date(2021, 5, 10);
-                expect(spyOnFocusDate).to.be.calledOnce;
-                expect(spyOnFocusDate.args[0][0]).to.be.an.instanceof(Date);
-                expect(spyOnFocusDate.args[0][0].toString()).to.eq(date.toString());
-            });
-    });
-
     it('shows different colors for different campaigns', () => {
         dummyEvents[4] = {
             ...dummyEvents[0],

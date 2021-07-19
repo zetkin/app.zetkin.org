@@ -177,45 +177,6 @@ describe('WeekCalendar', () => {
         });
     });
 
-    xit('shows the correct calendar week in the widget', () => {
-        mountWithProviders(
-            <WeekCalendar baseHref="" campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ dummyDate } orgId="1" tasks={ dummyTasks }/>,
-        );
-        cy.get('[data-testid="selected-date"]').contains('19');
-    });
-
-    xit('sets the focus date a week ago when back is clicked', () => {
-        const spyOnFocusDate = cy.spy();
-        mountWithProviders(
-            <WeekCalendar baseHref="" campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ dummyDate } orgId="1" tasks={ dummyTasks }/>,
-        );
-
-        cy.findByText('misc.calendar.prev')
-            .click({ force: true })
-            .then(() => {
-                const date = new Date(2021, 4, 5);
-                expect(spyOnFocusDate).to.be.calledOnce;
-                expect(spyOnFocusDate.args[0][0]).to.be.an.instanceof(Date);
-                expect(spyOnFocusDate.args[0][0].toString()).to.eq(date.toString());
-            });
-    });
-
-    xit('sets the focus date a week forward when next is clicked', () => {
-        const spyOnFocusDate = cy.spy();
-        mountWithProviders(
-            <WeekCalendar baseHref="" campaigns={ dummyCampaigns } events={ dummyEvents } focusDate={ dummyDate } orgId="1" tasks={ dummyTasks } />,
-        );
-
-        cy.findByText('misc.calendar.next')
-            .click({ force: true })
-            .then(() => {
-                const date = new Date(2021, 4, 19);
-                expect(spyOnFocusDate).to.be.calledOnce;
-                expect(spyOnFocusDate.args[0][0]).to.be.an.instanceof(Date);
-                expect(spyOnFocusDate.args[0][0].toString()).to.eq(date.toString());
-            });
-    });
-
     it('shows different colors for different campaigns', () => {
         dummyEvents[2] = {
             ...dummyEvents[0],
