@@ -1,4 +1,3 @@
-import { Box } from '@material-ui/core';
 import { GetServerSideProps } from 'next';
 
 import getCampaign from '../../../../../../fetching/getCampaign';
@@ -66,9 +65,7 @@ const CampaignCalendarPage : PageWithLayout<OrganizeCalendarPageProps> = ({ orgI
 
     return (
         <>
-            <Box height={ 1 }>
-                <ZetkinCalendar baseHref={ `/organize/${orgId}/campaigns/${campId}/calendar` } campaigns={ campaigns } events={ events } tasks={ tasks } />
-            </Box>
+            <ZetkinCalendar baseHref={ `/organize/${orgId}/campaigns/${campId}/calendar` } campaigns={ campaigns } events={ events } tasks={ tasks } />
             <ZetkinSpeedDial actions={ [ACTIONS.CREATE_EVENT] }/>
         </>
     );

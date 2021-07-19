@@ -1,4 +1,3 @@
-import { Box } from '@material-ui/core';
 import { GetServerSideProps } from 'next';
 import { useQuery } from 'react-query';
 
@@ -63,9 +62,7 @@ const AllCampaignsCalendarPage : PageWithLayout<AllCampaignsCalendarPageProps> =
 
     return (
         <>
-            <Box height={ 1 }>
-                <ZetkinCalendar baseHref={ `/organize/${orgId}/campaigns/calendar` } campaigns={ campaigns } events={ events } tasks={ tasks } />
-            </Box>
+            <ZetkinCalendar baseHref={ `/organize/${orgId}/campaigns/calendar` } campaigns={ campaigns } events={ events } tasks={ tasks } />
             <ZetkinSpeedDial actions={ [ACTIONS.CREATE_EVENT, ACTIONS.CREATE_CAMPAIGN] } />
         </>
     );
