@@ -1,6 +1,7 @@
 linkGroup:
     public: Public Page
     settings: Edit Settings
+campaignManager: Campaign Manager
 noManager: No Campaign Manager
 events: Events
 tasks: Tasks
@@ -14,5 +15,3 @@ feedback:
     heading: Feedback and Surveys (none configured)
     copy: Collecting feedback (during phonebanks or standalone) can help you work more efficiently
     create: Create survey
-campaignManager: Campaign Manager
-noCampaignManager: No campaign manager

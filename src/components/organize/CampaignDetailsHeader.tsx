@@ -1,7 +1,7 @@
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import { Avatar, Box, Button, makeStyles, Typography } from '@material-ui/core';
+import { Avatar, Box, Button, Grid, makeStyles, Typography } from '@material-ui/core';
 import { FormattedDate, FormattedMessage as Msg, useIntl } from 'react-intl';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 
@@ -70,12 +70,16 @@ const CampaignDetailsHeader: React.FunctionComponent<CampaignDetailsHeaderProps>
             <Box p={ 4 }>
                 { /* Description */ }
                 { campaign.info_text && (
-                    <Typography variant="body1">
-                        { campaign.info_text }
-                    </Typography>
+                    <Grid container>
+                        <Grid item lg={ 6 } md={ 8 } sm={ 12 } xs={ 12 }>
+                            <Typography variant="body1">
+                                { campaign.info_text }
+                            </Typography>
+                        </Grid>
+                    </Grid>
                 ) }
 
-                { /* Dades / Buttons  */ }
+                { /* Dates / Buttons  */ }
                 <Box className={ classes.responsiveFlexBox } mt={ 2 }>
                     { /* Campaign Dates */ }
                     <Box flexGrow={ 1 } mb={ 2 }>
@@ -134,7 +138,7 @@ const CampaignDetailsHeader: React.FunctionComponent<CampaignDetailsHeaderProps>
                 ) :
                     // If no campaign manager
                     <Typography variant="body1">
-                        <Msg id="pages.organizeCampaigns.noCampaignManager" />
+                        <Msg id="pages.organizeCampaigns.noManager" />
                     </Typography>
                 }
             </Box>
