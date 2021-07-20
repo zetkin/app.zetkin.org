@@ -10,7 +10,6 @@ import theme from '../theme';
 import { ThemeProvider } from '@material-ui/core/styles';
 import { useEffect } from 'react';
 import { UserContext } from '../hooks';
-import { defaultTheme, Provider } from '@adobe/react-spectrum';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
 import { PageWithLayout } from '../types';
@@ -44,20 +43,18 @@ function MyApp({ Component, pageProps } : AppProps) : JSX.Element {
         <UserContext.Provider value={ pageProps.user }>
             <SSRProvider>
                 <ThemeProvider theme={ theme }>
-                    <Provider theme={ defaultTheme }>
-                        <IntlProvider
-                            defaultLocale="en"
-                            locale={ lang }
-                            messages={ messages }>
-                            <QueryClientProvider client={ queryClient }>
-                                <Hydrate state={ dehydratedState }>
-                                    <CssBaseline />
-                                    { getLayout(<Component { ...restProps } />, restProps) }
-                                </Hydrate>
-                                <ReactQueryDevtools initialIsOpen={ false } />
-                            </QueryClientProvider>
-                        </IntlProvider>
-                    </Provider>
+                    <IntlProvider
+                        defaultLocale="en"
+                        locale={ lang }
+                        messages={ messages }>
+                        <QueryClientProvider client={ queryClient }>
+                            <Hydrate state={ dehydratedState }>
+                                <CssBaseline />
+                                { getLayout(<Component { ...restProps } />, restProps) }
+                            </Hydrate>
+                            <ReactQueryDevtools initialIsOpen={ false } />
+                        </QueryClientProvider>
+                    </IntlProvider>
                 </ThemeProvider>
             </SSRProvider>
         </UserContext.Provider>
