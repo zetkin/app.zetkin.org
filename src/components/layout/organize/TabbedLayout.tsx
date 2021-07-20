@@ -1,7 +1,7 @@
-import { FunctionComponent } from 'react';
 import { useIntl } from 'react-intl';
 import { useRouter } from 'next/router';
 import { Box, makeStyles, Tab, Tabs, Typography } from '@material-ui/core';
+import { FunctionComponent, ReactElement } from 'react';
 
 import BreadcrumbTrail from '../../BreadcrumbTrail';
 import OrganizeSidebar from '../../OrganizeSidebar';
@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
 interface TabbedLayoutProps {
     fixedHeight?: boolean;
     title?: string;
-    subtitle?: string;
+    subtitle?: string | ReactElement;
     baseHref: string;
     tabs: { defaultTab?:boolean; href: string; label: string}[];
 }
