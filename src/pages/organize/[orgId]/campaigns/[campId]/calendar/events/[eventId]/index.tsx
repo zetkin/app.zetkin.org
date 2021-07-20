@@ -1,7 +1,6 @@
 import { GetServerSideProps } from 'next';
 
 import getOrg from '../../../../../../../../fetching/getOrg';
-import OrganizeTabbedLayout from '../../../../../../../../components/layout/OrganizeTabbedLayout';
 import { PageWithLayout } from '../../../../../../../../types';
 import { scaffold } from '../../../../../../../../utils/next';
 
@@ -44,9 +43,9 @@ const EventPage: PageWithLayout = () => {
 
 EventPage.getLayout = function getLayout(page) {
     return (
-        <OrganizeTabbedLayout>
+        <>
             { page }
-        </OrganizeTabbedLayout>
+        </>
     );
 };
 

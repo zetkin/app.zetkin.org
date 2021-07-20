@@ -1,11 +1,11 @@
 import { GetServerSideProps } from 'next';
 import { useQuery } from 'react-query';
 
+import AllCampaignsLayout from '../../../../../components/layout/organize/AllCampaignsLayout';
 import getCampaigns from '../../../../../fetching/getCampaigns';
 import getEvents from '../../../../../fetching/getEvents';
 import getOrg from '../../../../../fetching/getOrg';
 import getOrganizationTasks from '../../../../../fetching/tasks/getOrganizationTasks';
-import OrganizeTabbedLayout from '../../../../../components/layout/OrganizeTabbedLayout';
 import { PageWithLayout } from '../../../../../types';
 import { scaffold } from '../../../../../utils/next';
 import ZetkinCalendar from '../../../../../components/ZetkinCalendar';
@@ -70,9 +70,9 @@ const AllCampaignsCalendarPage : PageWithLayout<AllCampaignsCalendarPageProps> =
 
 AllCampaignsCalendarPage.getLayout = function getLayout(page) {
     return (
-        <OrganizeTabbedLayout fixedHeight>
+        <AllCampaignsLayout fixedHeight>
             { page }
-        </OrganizeTabbedLayout>
+        </AllCampaignsLayout>
     );
 };
 

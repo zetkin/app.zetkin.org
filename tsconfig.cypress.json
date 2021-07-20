@@ -19,7 +19,7 @@
     "isolatedModules": true,
     "types": ["cypress", "@testing-library/cypress", "./cypress/support"],
     "jsx": "react-jsx",
-    "baseUrl": "./src",
+    "baseUrl": "./src"
   },
   "include": [
     "next-env.d.ts",

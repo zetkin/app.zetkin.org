@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { Box, Checkbox, Container, FormControl, FormControlLabel, FormGroup, FormLabel, Link, List, ListItem, Typography } from '@material-ui/core';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
 
+import AllCampaignsLayout from '../../../../components/layout/organize/AllCampaignsLayout';
 import CampaignCard from '../../../../components/CamapignCard';
 import getActivities from '../../../../fetching/getActivities';
 import getAllCallAssignments from '../../../../fetching/getAllCallAssignments';
@@ -16,7 +17,6 @@ import getLocations from '../../../../fetching/getLocations';
 import getOrg from '../../../../fetching/getOrg';
 import getSurveys from '../../../../fetching/getSurveys';
 import getUpcomingEvents from '../../../../fetching/getUpcomingEvents';
-import OrganizeTabbedLayout from '../../../../components/layout/OrganizeTabbedLayout';
 import { PageWithLayout } from '../../../../types';
 import { scaffold } from '../../../../utils/next';
 import ZetkinSection from '../../../../components/ZetkinSection';
@@ -190,9 +190,9 @@ const AllCampaignsSummaryPage: PageWithLayout<AllCampaignsSummaryPageProps> = ({
 
 AllCampaignsSummaryPage.getLayout = function getLayout(page) {
     return (
-        <OrganizeTabbedLayout>
+        <AllCampaignsLayout>
             { page }
-        </OrganizeTabbedLayout>
+        </AllCampaignsLayout>
     );
 };
 

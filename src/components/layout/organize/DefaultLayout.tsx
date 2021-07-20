@@ -2,9 +2,9 @@ import { FunctionComponent } from 'react';
 import { grey } from '@material-ui/core/colors';
 import { Box, makeStyles } from '@material-ui/core';
 
-import BreadcrumbTrail from '../BreadcrumbTrail';
-import OrganizeSidebar from '../OrganizeSidebar';
-import SearchDrawer from '../../components/SearchDrawer';
+import BreadcrumbTrail from '../../BreadcrumbTrail';
+import OrganizeSidebar from '../../OrganizeSidebar';
+import SearchDrawer from '../../SearchDrawer';
 
 const useStyles = makeStyles((theme) => ({
     breadcrumbs: {
@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const OrganizeLayout: FunctionComponent = ({ children }) => {
+const DefaultLayout: FunctionComponent = ({ children }) => {
     const classes = useStyles();
     return (
         <Box className={ classes.root } display="flex">
@@ -41,4 +41,4 @@ const OrganizeLayout: FunctionComponent = ({ children }) => {
     );
 };
 
-export default OrganizeLayout;
+export default DefaultLayout;

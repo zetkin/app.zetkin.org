@@ -1,13 +1,11 @@
-import { FunctionComponent } from 'react';
-import { useQuery } from 'react-query';
+import { useIntl } from 'react-intl';
 import { useRouter } from 'next/router';
 import { Box, makeStyles, Tab, Tabs, Typography } from '@material-ui/core';
-import { FormattedMessage as Msg, useIntl } from 'react-intl';
+import { FunctionComponent, ReactElement } from 'react';
 
-import BreadcrumbTrail from '../BreadcrumbTrail';
-import getCampaign from '../../fetching/getCampaign';
-import OrganizeSidebar from '../OrganizeSidebar';
-import SearchDrawer from '../SearchDrawer';
+import BreadcrumbTrail from '../../BreadcrumbTrail';
+import OrganizeSidebar from '../../OrganizeSidebar';
+import SearchDrawer from '../../SearchDrawer';
 
 const useStyles = makeStyles((theme) => ({
     breadcrumbs: {
@@ -22,40 +20,32 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-interface OrganizeTabbedLayoutProps {
+interface TabbedLayoutProps {
     fixedHeight?: boolean;
+    title?: string;
+    subtitle?: string | ReactElement;
+    baseHref: string;
+    defaultTab: string;
+    tabs: {href: string; messageId: string}[];
 }
 
-const OrganizeTabbedLayout: FunctionComponent<OrganizeTabbedLayoutProps> = ({ children, fixedHeight }) => {
+const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({ children, fixedHeight, title, subtitle, tabs, baseHref, defaultTab }) => {
     const intl = useIntl();
     const classes = useStyles();
     const router = useRouter();
-    const { campId, orgId } = router.query;
 
-    const campQuery = useQuery(['campaign', orgId, campId ], getCampaign(orgId  as string, campId as string));
+    const currentTab = router.asPath === baseHref ? defaultTab :
+        `/${router.pathname.split('/').pop()}`;
 
-    const path =  router.pathname.split('/');
-    let currentTab = path.pop();
-
-    if (currentTab === '[campId]' || currentTab === 'campaigns') {
-        currentTab = 'summary';
-    }
-
-    const selectTab = (key : string) : void => {
-        if (key === 'summary') {
-            campId ? router.push(`/organize/${orgId}/campaigns/${campId}`) :
-                router.push(`/organize/${orgId}/campaigns/`);
+    const selectTab = (selected: string) : void => {
+        const href = tabs.find(tab => tab.href === selected)?.href;
+        if (href) {
+            router.push(baseHref + href);
         }
-        else {
-            campId ? router.push(`/organize/${orgId}/campaigns/${campId}/${key}`) :
-                router.push(`/organize/${orgId}/campaigns/${key}`);
+        else if (process.env.NODE_ENV === 'development') {
+            throw new Error (`Tab with label ${selected} wasn't found`);
         }
     };
-
-    const singleCampaignPageTabs = ['summary', 'calendar', 'insights'];
-    const allCampaignPageTabs = ['summary', 'calendar', 'archive'];
-
-    const tabs = campId ? singleCampaignPageTabs : allCampaignPageTabs;
 
     return (
         <Box className={ classes.root } display="flex" height="100vh">
@@ -73,19 +63,24 @@ const OrganizeTabbedLayout: FunctionComponent<OrganizeTabbedLayoutProps> = ({ ch
                         </Box>
                         <Box p={ 3 } pt={ 1 }>
                             <Typography component="h1" noWrap variant="h2">
-                                { campQuery.data?.title || <Msg id="layout.organize.campaigns.allCampaigns"/> }
+                                { title }
+                            </Typography>
+                            <Typography component="h2" noWrap variant="h5">
+                                { subtitle }
                             </Typography>
                         </Box>
                         <Tabs
                             aria-label="campaign tabs"
-                            onChange={ (_, value) => selectTab(value) }
+                            onChange={ (_, selected) => selectTab(selected) }
                             value={ currentTab }>
-                            { tabs.map(tab => (
-                                <Tab key={ tab } label={ intl.formatMessage({
-                                    id: `layout.organize.campaigns.${tab}`,
-                                }) } value={ tab }
-                                />
-                            )) }
+                            { tabs.map(tab => {
+                                return (
+                                    <Tab key={ tab.href } label={ intl.formatMessage({
+                                        id: tab.messageId,
+                                    }) } value={ tab.href }
+                                    />
+                                );
+                            }) }
                         </Tabs>
                     </Box>
                     <Box flexGrow={ 1 } minHeight={ 0 } position="relative" role="tabpanel">
@@ -97,4 +92,4 @@ const OrganizeTabbedLayout: FunctionComponent<OrganizeTabbedLayoutProps> = ({ ch
     );
 };
 
-export default OrganizeTabbedLayout;
+export default TabbedLayout;
