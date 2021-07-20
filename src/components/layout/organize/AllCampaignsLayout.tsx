@@ -16,7 +16,6 @@ const AllCampaignsLayout: FunctionComponent<AllCampaignsLayoutProps> = ({ childr
         <TabbedLayout
             baseHref={ `/organize/${orgId}/campaigns` }
             fixedHeight={ fixedHeight }
-            subtitle="subtitle for all campaigns tabs" //TODO: generate subtitle
             tabs={ [
                 {  defaultTab: true, href: `/`, label: 'summary' },
                 { href: `/calendar`, label: 'calendar' },
