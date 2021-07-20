@@ -223,7 +223,6 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({ orgId,
                         </ZetkinSection>
                     </Grid>
                 </Grid>
-                <ZetkinSpeedDial actions={ [ACTIONS.CREATE_EVENT, ACTIONS.CREATE_TASK] }/>
             </Box>
             { /* Edit Campaign Form */ }
             <ZetkinDialog
