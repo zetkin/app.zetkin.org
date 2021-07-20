@@ -1,8 +1,7 @@
 import { GetStaticProps } from 'next';
 import Head from 'next/head';
-import Link from 'next/link';
 import { FormattedMessage as Msg } from 'react-intl';
-import { Box, Container, Typography } from '@material-ui/core';
+import {  Container, Typography } from '@material-ui/core';
 
 import { getMessages } from '../utils/locale';
 
