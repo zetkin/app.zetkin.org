@@ -1,8 +1,8 @@
 import { GetServerSideProps } from 'next';
 import { Heading } from '@adobe/react-spectrum';
 
+import DefaultLayout from '../../../components/layout/organize/DefaultLayout';
 import getOrg from '../../../fetching/getOrg';
-import OrganizeLayout from '../../../components/layout/OrganizeLayout';
 import { PageWithLayout } from '../../../types';
 import { scaffold } from '../../../utils/next';
 
@@ -49,9 +49,9 @@ const OrganizePeoplePage : PageWithLayout<OrganizePeoplePageProps> = () => {
 
 OrganizePeoplePage.getLayout = function getLayout(page) {
     return (
-        <OrganizeLayout>
+        <DefaultLayout>
             { page }
-        </OrganizeLayout>
+        </DefaultLayout>
     );
 };
 

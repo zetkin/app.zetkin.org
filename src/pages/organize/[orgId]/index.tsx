@@ -8,9 +8,9 @@ import { Public, Settings, SupervisorAccount } from '@material-ui/icons';
 import apiUrl from '../../../utils/apiUrl';
 import DashboardCampaigns from '../../../components/DashboardCampaigns';
 import DashboardPeople from '../../../components/DashboardPeople';
+import DefaultLayout from '../../../components/layout/organize/DefaultLayout';
 import getCampaigns from '../../../fetching/getCampaigns';
 import getOrg from '../../../fetching/getOrg';
-import OrganizeLayout from '../../../components/layout/OrganizeLayout';
 import { PageWithLayout } from '../../../types';
 import { scaffold } from '../../../utils/next';
 
@@ -115,9 +115,9 @@ const OrganizePage: PageWithLayout<OrganizePageProps> = ({ orgId }) => {
 
 OrganizePage.getLayout = function getLayout(page) {
     return (
-        <OrganizeLayout>
+        <DefaultLayout>
             { page }
-        </OrganizeLayout>
+        </DefaultLayout>
     );
 };
 
