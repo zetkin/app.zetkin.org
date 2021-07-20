@@ -37,8 +37,8 @@ const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({ children, fixedHei
 
     if (router.asPath === baseHref) {
         currentTab = tabs.find(tab => tab.defaultTab)?.label;
-        if (!currentTab) {
-            console.warn('No default tab selected.');
+        if (!currentTab && process.env.NODE_ENV === 'development') {
+            throw new Error('No default tab selected!');
         }
     }
 
@@ -47,8 +47,8 @@ const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({ children, fixedHei
         if (href) {
             router.push(baseHref + href);
         }
-        else {
-            console.warn(`Tab with label ${selected} wasn't found`);
+        else if (process.env.NODE_ENV === 'development') {
+            throw new Error (`Tab with label ${selected} wasn't found`);
         }
     };
 
