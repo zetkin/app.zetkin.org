@@ -20,7 +20,9 @@ const TaskStatusChip: React.FunctionComponent<TaskStatusChipProps> = ({ status }
     return (
         <Chip
             label={ intl.formatMessage( { id: `misc.tasks.statuses.${status}` }) }
+            size="small"
             style={{ backgroundColor: ChipColors[status] }}
+            variant="outlined"
         />
     );
 };

@@ -1,10 +1,9 @@
 import { GetServerSideProps } from 'next';
-import { grey } from '@material-ui/core/colors';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
-import { Avatar, Box, Button, Link, makeStyles, Typography } from '@material-ui/core';
+import { Avatar, Box, Button, Grid, Link, makeStyles, Typography } from '@material-ui/core';
 import { FormattedDate, FormattedMessage as Msg, useIntl } from 'react-intl';
-import { Phone, PlaylistAddCheck, Public, Settings } from '@material-ui/icons';
+import { Public, Settings } from '@material-ui/icons';
 import { useEffect, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 
@@ -20,6 +19,7 @@ import { scaffold } from '../../../../../utils/next';
 import SingleCampaignLayout from '../../../../../components/layout/organize/SingleCampaignLayout';
 import TaskList from '../../../../../components/organize/tasks/TaskList';
 import ZetkinDialog from '../../../../../components/ZetkinDialog';
+import ZetkinSection from '../../../../../components/ZetkinSection';
 import ZetkinSpeedDial, { ACTIONS } from '../../../../../components/ZetkinSpeedDial';
 
 const scaffoldOptions = {
@@ -207,78 +207,22 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({ orgId,
                     </Box>
                 </Box>
             </Box>
-            <Box className={ classes.responsiveFlexBox }>
-                { /* Left Column */ }
-                <Box display="flex" flex={ 1 } flexDirection="column">
+            <Box p={ 4 }>
+                <Grid container spacing={ 2 }>
                     { /* Events */ }
-                    <Box border={ 1 } display="flex" flex={ 1 } flexDirection="column" m={ 1 } mt={ 2 }>
-                        <Box display="flex" justifyContent="space-between" p={ 3 } pb={ 0 }>
-                            <Typography variant="h6">
-                                <Msg id="pages.organizeCampaigns.events"/>
-                            </Typography>
-                            <NextLink href={ `/organize/${orgId}/campaigns/${campId}/calendar` } passHref>
-                                <Link underline="always" variant="h6">
-                                    <Msg id="pages.organizeCampaigns.calendarView"/>
-                                </Link>
-                            </NextLink>
-                        </Box>
-                        <Box p={ 3 } pt={ 0 }>
-                            <EventList events={ events } hrefBase={ `/organize/${orgId}/campaigns/${campId}` } />
-                        </Box>
-                    </Box>
+                    <Grid item md={ 6 } sm={ 12 } xs={ 12 }>
+                        <ZetkinSection title={ intl.formatMessage({ id: 'pages.organizeCampaigns.events' }) }>
+                            <EventList events={ events ?? [] } hrefBase={ `/organize/${orgId}/campaigns/${campId}` } />
+                        </ZetkinSection>
+                    </Grid>
+
                     { /* Tasks */ }
-                    <Box border={ 1 } display="flex" flex={ 1 } flexDirection="column" m={ 1 } mt={ 2 }>
-                        <Box display="flex" justifyContent="space-between" p={ 3 } pb={ 0 }>
-                            <Typography variant="h6">
-                                <Msg id="pages.organizeCampaigns.tasks"/>
-                            </Typography>
-                        </Box>
-                        <Box p={ 3 } pt={ 0 }>
-                            <TaskList hrefBase={ `/organize/${orgId}/campaigns/${campId}` } tasks={ tasks } />
-                        </Box>
-                    </Box>
-                </Box>
-                { /* Right Column */ }
-                <Box display="flex" flex={ 1 } flexDirection="column" m={ 1 }>
-                    { /* Mobilizations & Outreach */ }
-                    <Box border={ 1 } m={ 1 } p={ 3 } pb={ 5 }>
-                        <Typography component="h3" variant="h6">
-                            <Msg id="pages.organizeCampaigns.mobilization.heading" />
-                        </Typography>
-                        <Box alignItems="center" display="flex" flexDirection="column">
-                            <Phone style={{ color:grey[500], fontSize: 100  }}/>
-                            <Box p={ 2 } textAlign="center" width={ 0.5 }>
-                                <Typography color="textSecondary" variant="body1">
-                                    <Msg id="pages.organizeCampaigns.mobilization.copy" />
-                                </Typography>
-                            </Box>
-                            <NextLink href={ `/organize/${orgId}/campaigns/${campId}/call-assignments/new` } passHref>
-                                <Button color="primary" disabled={ true } variant="contained">
-                                    <Msg id="pages.organizeCampaigns.mobilization.create" />
-                                </Button>
-                            </NextLink>
-                        </Box>
-                    </Box>
-                    { /* Feedback and Surveys */ }
-                    <Box border={ 1 } m={ 1 } p={ 3 } pb={ 5 }>
-                        <Typography component="h3" variant="h6">
-                            <Msg id="pages.organizeCampaigns.feedback.heading" />
-                        </Typography>
-                        <Box alignItems="center" display="flex" flexDirection="column">
-                            <PlaylistAddCheck style={{ color:grey[500], fontSize: 100  }}/>
-                            <Box p={ 2 } textAlign="center" width={ 0.5 }>
-                                <Typography color="textSecondary" variant="body1">
-                                    <Msg id="pages.organizeCampaigns.feedback.copy" />
-                                </Typography>
-                            </Box>
-                            <NextLink href={ `/organize/${orgId}/campaigns/${campId}/surveys/new` } passHref>
-                                <Button color="primary" disabled={ true } variant="contained">
-                                    <Msg id="pages.organizeCampaigns.feedback.create" />
-                                </Button>
-                            </NextLink>
-                        </Box>
-                    </Box>
-                </Box>
+                    <Grid item md={ 6 } sm={ 12 } xs={ 12 }>
+                        <ZetkinSection title={ intl.formatMessage({ id: 'pages.organizeCampaigns.tasks' }) }>
+                            <TaskList hrefBase={ `/organize/${orgId}/campaigns/${campId}` } tasks={ tasks ?? [] } />
+                        </ZetkinSection>
+                    </Grid>
+                </Grid>
             </Box>
             { /* Edit Campaign Form */ }
             <ZetkinDialog
