@@ -36,7 +36,7 @@ const ZetkinList: React.FunctionComponent<ZetkinListProps> = ({ children, initia
                     setNumResultsToDisplay(numResultsToDisplay + (showMoreStep || 5));
                 } }>
                     <ListItemText>
-                        <Msg id="layout.organize.search.showMore" />
+                        <Msg id="layout.organize.lists.showMore" />
                     </ListItemText>
                 </ListItem>
             ) }
