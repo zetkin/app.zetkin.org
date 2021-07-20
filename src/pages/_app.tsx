@@ -5,7 +5,6 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import { Hydrate } from 'react-query/hydration';
 import { IntlProvider } from 'react-intl';
 import { ReactQueryDevtools } from 'react-query/devtools';
-import { SSRProvider } from '@react-aria/ssr';
 import theme from '../theme';
 import { ThemeProvider } from '@material-ui/core/styles';
 import { useEffect } from 'react';
@@ -41,22 +40,20 @@ function MyApp({ Component, pageProps } : AppProps) : JSX.Element {
 
     return (
         <UserContext.Provider value={ pageProps.user }>
-            <SSRProvider>
-                <ThemeProvider theme={ theme }>
-                    <IntlProvider
-                        defaultLocale="en"
-                        locale={ lang }
-                        messages={ messages }>
-                        <QueryClientProvider client={ queryClient }>
-                            <Hydrate state={ dehydratedState }>
-                                <CssBaseline />
-                                { getLayout(<Component { ...restProps } />, restProps) }
-                            </Hydrate>
-                            <ReactQueryDevtools initialIsOpen={ false } />
-                        </QueryClientProvider>
-                    </IntlProvider>
-                </ThemeProvider>
-            </SSRProvider>
+            <ThemeProvider theme={ theme }>
+                <IntlProvider
+                    defaultLocale="en"
+                    locale={ lang }
+                    messages={ messages }>
+                    <QueryClientProvider client={ queryClient }>
+                        <Hydrate state={ dehydratedState }>
+                            <CssBaseline />
+                            { getLayout(<Component { ...restProps } />, restProps) }
+                        </Hydrate>
+                        <ReactQueryDevtools initialIsOpen={ false } />
+                    </QueryClientProvider>
+                </IntlProvider>
+            </ThemeProvider>
         </UserContext.Provider>
     );
 }
