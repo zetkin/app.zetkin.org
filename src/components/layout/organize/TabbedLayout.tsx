@@ -26,7 +26,7 @@ interface TabbedLayoutProps {
     subtitle?: string | ReactElement;
     baseHref: string;
     defaultTab: string;
-    tabs: {href: string; label: string; messageId: string}[];
+    tabs: {href: string; messageId: string}[];
 }
 
 const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({ children, fixedHeight, title, subtitle, tabs, baseHref, defaultTab }) => {
@@ -35,10 +35,10 @@ const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({ children, fixedHei
     const router = useRouter();
 
     const currentTab = router.asPath === baseHref ? defaultTab :
-        router.pathname.split('/').pop();
+        `/${router.pathname.split('/').pop()}`;
 
     const selectTab = (selected: string) : void => {
-        const href = tabs.find(tab => tab.label === selected)?.href;
+        const href = tabs.find(tab => tab.href === selected)?.href;
         if (href) {
             router.push(baseHref + href);
         }
@@ -75,9 +75,9 @@ const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({ children, fixedHei
                             value={ currentTab }>
                             { tabs.map(tab => {
                                 return (
-                                    <Tab key={ tab.label } label={ intl.formatMessage({
+                                    <Tab key={ tab.href } label={ intl.formatMessage({
                                         id: tab.messageId,
-                                    }) } value={ tab.label }
+                                    }) } value={ tab.href }
                                     />
                                 );
                             }) }

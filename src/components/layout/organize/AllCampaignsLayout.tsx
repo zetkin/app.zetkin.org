@@ -15,12 +15,12 @@ const AllCampaignsLayout: FunctionComponent<AllCampaignsLayoutProps> = ({ childr
     return (
         <TabbedLayout
             baseHref={ `/organize/${orgId}/campaigns` }
-            defaultTab="summary"
+            defaultTab="/"
             fixedHeight={ fixedHeight }
             tabs={ [
-                { href: `/`, label: 'summary', messageId: 'layout.organize.campaigns.summary' },
-                { href: `/calendar`, label: 'calendar', messageId: 'layout.organize.campaigns.calendar' },
-                { href: `/archive`, label: 'archive', messageId: 'layout.organize.campaigns.archive' },
+                { href: `/`, messageId: 'layout.organize.campaigns.summary' },
+                { href: `/calendar`, messageId: 'layout.organize.campaigns.calendar' },
+                { href: `/archive`, messageId: 'layout.organize.campaigns.archive' },
             ] }
             title={ intl.formatMessage({ id: 'layout.organize.campaigns.allCampaigns' }) }>
             { children }
