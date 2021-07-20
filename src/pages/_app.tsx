@@ -13,7 +13,6 @@ import { UserContext } from '../hooks';
 import { defaultTheme, Provider } from '@adobe/react-spectrum';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
-import DefaultLayout from '../components/layout/DefaultLayout';
 import { PageWithLayout } from '../types';
 
 const queryClient = new QueryClient();
@@ -27,7 +26,7 @@ declare global {
 function MyApp({ Component, pageProps } : AppProps) : JSX.Element {
     const { dehydratedState, lang, messages, ...restProps } = pageProps;
     const c = Component as PageWithLayout;
-    const getLayout = c.getLayout || (page => <DefaultLayout>{ page }</DefaultLayout>);
+    const getLayout = c.getLayout || (page => <>{ page }</>);
 
     if (typeof window !== 'undefined') {
         window.__reactRendered = true;
