@@ -1,9 +1,4 @@
-const withPlugins = require('next-compose-plugins')
-
-module.exports = withPlugins([], {
-  webpack: (config) => {
-    return config;
-    },
+module.exports = {
     async redirects() {
         return [
             {
@@ -17,5 +12,5 @@ module.exports = withPlugins([], {
                 permanent: false,
             },
         ]
-      },
-});
+    },
+};
