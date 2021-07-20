@@ -31,6 +31,7 @@ const SingleCampaignLayout: FunctionComponent<SingleCampaignLayoutProps> = ({ ch
     return (
         <TabbedLayout
             baseHref={ `/organize/${orgId}/campaigns/${campId}` }
+            defaultTab="summary"
             fixedHeight={ fixedHeight }
             subtitle={ startDate && endDate ? (
                 <>
@@ -51,9 +52,9 @@ const SingleCampaignLayout: FunctionComponent<SingleCampaignLayoutProps> = ({ ch
                 <Msg id="pages.organizeCampaigns.indefinite" />
             ) }
             tabs={ [
-                {  defaultTab: true, href: `/`, label: 'summary' },
-                { href: `/calendar`, label: 'calendar' },
-                { href: `/insights`, label: 'insights' },
+                { href: `/`, label: 'summary', messageId: 'layout.organize.campaigns.summary' },
+                { href: `/calendar`, label: 'calendar', messageId: 'layout.organize.campaigns.calendar' },
+                { href: `/insights`, label: 'insights', messageId: 'layout.organize.campaigns.insights' },
             ] }
             title={ campaign?.title }>
             { children }

@@ -25,22 +25,17 @@ interface TabbedLayoutProps {
     title?: string;
     subtitle?: string | ReactElement;
     baseHref: string;
-    tabs: { defaultTab?:boolean; href: string; label: string}[];
+    defaultTab: string;
+    tabs: {href: string; label: string; messageId: string}[];
 }
 
-const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({ children, fixedHeight, title, subtitle, tabs, baseHref }) => {
+const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({ children, fixedHeight, title, subtitle, tabs, baseHref, defaultTab }) => {
     const intl = useIntl();
     const classes = useStyles();
     const router = useRouter();
 
-    let currentTab = router.pathname.split('/').pop();
-
-    if (router.asPath === baseHref) {
-        currentTab = tabs.find(tab => tab.defaultTab)?.label;
-        if (!currentTab && process.env.NODE_ENV === 'development') {
-            throw new Error('No default tab selected!');
-        }
-    }
+    const currentTab = router.asPath === baseHref ? defaultTab :
+        router.pathname.split('/').pop();
 
     const selectTab = (selected: string) : void => {
         const href = tabs.find(tab => tab.label === selected)?.href;
@@ -81,7 +76,7 @@ const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({ children, fixedHei
                             { tabs.map(tab => {
                                 return (
                                     <Tab key={ tab.label } label={ intl.formatMessage({
-                                        id: `layout.organize.campaigns.${tab.label}`,
+                                        id: tab.messageId,
                                     }) } value={ tab.label }
                                     />
                                 );
