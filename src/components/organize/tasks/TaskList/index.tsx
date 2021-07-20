@@ -37,7 +37,8 @@ const TaskList = ({ hrefBase, tasks }: TaskListProps): JSX.Element => {
     return (
         <Card>
             <List
-                aria-label={ intl.formatMessage({ id: 'pages.organizeCampaigns.tasks' }) }>
+                aria-label={ intl.formatMessage({ id: 'pages.organizeCampaigns.tasks' }) }
+                disablePadding>
                 { tasks.length === 0 && (
                     <ListItem button component="a" onClick={ () => {
                         router.push(`${router.asPath}#${createTaskAction.urlKey}`);

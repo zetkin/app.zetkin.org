@@ -19,9 +19,11 @@ const EventList = ({ hrefBase, events }: EventListProps): JSX.Element => {
 
     return (
         <Card>
-            <List aria-label={ intl.formatMessage({
-                id: 'pages.organizeCampaigns.events',
-            }) }>
+            <List
+                aria-label={ intl.formatMessage({
+                    id: 'pages.organizeCampaigns.events',
+                }) }
+                disablePadding>
                 { events.length === 0 && (
                     <ListItem button component="a" onClick={ () => {
                         router.push(`${router.asPath}#${createEventAction.urlKey}`);
