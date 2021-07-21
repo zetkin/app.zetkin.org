@@ -1,3 +1,4 @@
+import { useIntl } from 'react-intl';
 import { Box, Button, Card, CardContent, Typography } from '@material-ui/core';
 
 import { ZetkinTask } from 'types/zetkin';
@@ -21,6 +22,7 @@ interface TaskDetailsCardProps {
 }
 
 const TaskDetailsCard: React.FunctionComponent<TaskDetailsCardProps> = ({ task }) => {
+    const intl = useIntl();
     return (
         <Card>
             <CardContent>
@@ -29,9 +31,18 @@ const TaskDetailsCard: React.FunctionComponent<TaskDetailsCardProps> = ({ task }
                     <Typography variant="h6">Task Details</Typography>
                     <Button color="primary" variant="contained">Edit</Button>
                 </Box>
-                <TaskDetailsSection title="Title" value={ task.title } />
-                <TaskDetailsSection title="Instructions" value={ task.instructions } />
-                <TaskDetailsSection title="Type" value={ task.type }/>
+                <TaskDetailsSection
+                    title={ intl.formatMessage({ id: 'misc.tasks.taskDetailsCard.titleLabel' }) }
+                    value={ task.title }
+                />
+                <TaskDetailsSection
+                    title={ intl.formatMessage({ id: 'misc.tasks.taskDetailsCard.instructionsLabel' }) }
+                    value={ task.instructions }
+                />
+                <TaskDetailsSection
+                    title={ intl.formatMessage({ id: 'misc.tasks.taskDetailsCard.typeLabel' }) }
+                    value={ intl.formatMessage({ id: `misc.tasks.types.${task.type}` }) }
+                />
             </CardContent>
         </Card>
     );
