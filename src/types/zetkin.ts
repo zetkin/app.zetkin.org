@@ -172,7 +172,7 @@ export interface ZetkinActivity {
     info_text: string | null;
 }
 
-interface ZetkinSmartSearchFilter {
+export interface ZetkinSmartSearchFilter {
     config?: Record<string, unknown>;
     op: 'sub' | 'add';
     type: string;
