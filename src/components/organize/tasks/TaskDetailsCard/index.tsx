@@ -5,7 +5,7 @@ import { ZetkinTask } from 'types/zetkin';
 
 interface TaskDetailsSectionProps {
     title: string;
-    value: string;
+    value: string | React.ReactNode;
 }
 
 const TaskDetailsSection: React.FunctionComponent<TaskDetailsSectionProps> = ({ title, value }) => {
