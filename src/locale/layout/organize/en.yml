@@ -22,3 +22,5 @@ campaigns:
     calendar: Calendar
     insights: Insights
     archive: Archive
+lists:
+    showMore: Show more...

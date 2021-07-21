@@ -1,16 +1,10 @@
 import dayjs from 'dayjs';
+import { Tooltip } from '@material-ui/core';
 import { FormattedDate, FormattedRelativeTime, FormattedTime } from 'react-intl';
-import { Theme, Tooltip, withStyles } from '@material-ui/core';
 
 interface ZetkinRelativeTimeProps {
     datetime: string; // iso datetime string
 }
-
-const DatetimeTooltip = withStyles((theme: Theme) => ({
-    tooltip: {
-        fontSize: theme.typography.pxToRem(14),
-    },
-}))(Tooltip);
 
 const DatetimeTooltipContents: React.FunctionComponent<ZetkinRelativeTimeProps> = ({ datetime }) => {
     return (
@@ -39,11 +33,11 @@ const ZetkinRelativeTime: React.FunctionComponent<ZetkinRelativeTimeProps> = ({ 
     }
 
     return (
-        <DatetimeTooltip arrow title={ <DatetimeTooltipContents datetime={ datetime } /> }>
+        <Tooltip arrow title={ <DatetimeTooltipContents datetime={ datetime } /> }>
             <span>
                 <FormattedRelativeTime numeric="auto" updateIntervalInSeconds={ 300 } value={ difference } />
             </span>
-        </DatetimeTooltip>
+        </Tooltip>
     );
 };
 

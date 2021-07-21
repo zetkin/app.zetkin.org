@@ -3,7 +3,9 @@ linkGroup:
     settings: Edit Settings
 noManager: No Campaign Manager
 events: Events
+noEventsCreatePrompt: No events... Click here to create one.
 tasks: Tasks
+noTasksCreatePrompt: No tasks... Click here to create one.
 indefinite: Indefinite timeline
 calendarView: See all in calendar
 mobilization:

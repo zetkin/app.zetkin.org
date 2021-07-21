@@ -1,8 +1,8 @@
 import { createElement } from 'react';
-import { createMuiTheme } from '@material-ui/core/styles';
+import { createTheme } from '@material-ui/core/styles';
 
 // Create a theme instance.
-const theme = createMuiTheme({
+const theme = createTheme({
     overrides: {
         MuiButton: {
             root: {
@@ -46,6 +46,11 @@ const theme = createMuiTheme({
             },
             root: {
                 borderBottom: '1px solid rgba(0, 0, 0, 0.12)',
+            },
+        },
+        MuiTooltip: {
+            tooltip: {
+                fontSize: '14px',
             },
         },
     },
