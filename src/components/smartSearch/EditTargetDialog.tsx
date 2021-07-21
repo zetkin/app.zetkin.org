@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Box, Button, ButtonBase, Card, CardContent, Dialog, DialogContent, Typography } from '@material-ui/core';
 
 import All from './filters/All';
+import MostActive from './filters/MostActive';
 import patchTaskItem from 'fetching/tasks/patchTaskItem';
 import { useRouter } from 'next/router';
 import { ZetkinSmartSearchFilter } from 'types/zetkin';
@@ -16,6 +17,7 @@ interface EditTargetDialogProps {
 
 enum FILTER_TYPE {
     ALL ='all',
+    MOST_ACTIVE ='most_active',
 }
 
 interface ZetkinSmartSearchFilterWithId extends ZetkinSmartSearchFilter {
@@ -102,6 +104,7 @@ const EditTargetDialog = ({ onDialogClose, open, filterSpec }: EditTargetDialogP
                     </>
                 ) }
                 { selectedType === FILTER_TYPE.ALL && <All onCancel={ handleCancelFilter } onSubmit={ handleAddFilter }/> }
+                { selectedType === FILTER_TYPE.MOST_ACTIVE && <MostActive onCancel={ handleCancelFilter } onSubmit={ handleAddFilter }/> }
             </DialogContent>
         </Dialog>
     );
