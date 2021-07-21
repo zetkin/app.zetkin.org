@@ -1,11 +1,12 @@
 import { GetServerSideProps } from 'next';
 import { useQuery } from 'react-query';
-import { Box, Button, Card, CardContent, Container, Grid, Typography } from '@material-ui/core';
+import { Box, Container, Grid } from '@material-ui/core';
 
 import getTask from 'fetching/tasks/getTask';
 import { PageWithLayout } from 'types';
 import { scaffold } from 'utils/next';
 import SingleTaskLayout from 'components/layout/organize/SingleTaskLayout';
+import TaskDetailsCard from 'components/organize/tasks/TaskDetailsCard';
 
 const scaffoldOptions = {
     authLevelRequired: 2,
@@ -59,21 +60,16 @@ type TaskDetailPageProps = {
 
 const TaskDetailPage: PageWithLayout<TaskDetailPageProps> = ({ taskId, orgId }) => {
     const { data: task } = useQuery(['task', taskId], getTask(orgId, taskId));
+
+    if (!task) return null;
+
     return (
         <Box mt={ 4 }>
             <Container>
                 <Grid container>
+                    { /* Details Card */ }
                     <Grid item xs={ 12 }>
-                        <Card>
-                            <CardContent>
-                                { /* Title and Edit Row */ }
-                                <Box alignItems="center" display="flex" justifyContent="space-between">
-                                    <Typography variant="h5">Task Details</Typography>
-                                    <Button>Edit</Button>
-                                </Box>
-                                <Typography>Title: { task?.title }</Typography>
-                            </CardContent>
-                        </Card>
+                        <TaskDetailsCard task={ task } />
                     </Grid>
                 </Grid>
             </Container>
