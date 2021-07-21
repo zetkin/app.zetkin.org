@@ -1,11 +1,11 @@
 import { GetServerSideProps } from 'next';
+import { useQuery } from 'react-query';
 import { Box, Button, Card, CardContent, Container, Grid, Typography } from '@material-ui/core';
 
 import getTask from 'fetching/tasks/getTask';
-import OrganizeTabbedLayout from 'components/layout/OrganizeTabbedLayout';
 import { PageWithLayout } from 'types';
 import { scaffold } from 'utils/next';
-import { useQuery } from 'react-query';
+import SingleTaskLayout from 'components/layout/organize/SingleTaskLayout';
 
 const scaffoldOptions = {
     authLevelRequired: 2,
@@ -83,9 +83,9 @@ const TaskDetailPage: PageWithLayout<TaskDetailPageProps> = ({ taskId, orgId }) 
 
 TaskDetailPage.getLayout = function getLayout(page) {
     return (
-        <OrganizeTabbedLayout>
+        <SingleTaskLayout>
             { page }
-        </OrganizeTabbedLayout>
+        </SingleTaskLayout>
     );
 };
 

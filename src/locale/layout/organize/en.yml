@@ -24,3 +24,7 @@ campaigns:
     archive: Archive
 lists:
     showMore: Show more...
+tasks:
+    tabs:
+        summary: Summary
+        assignees: Assignees
