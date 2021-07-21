@@ -1,0 +1,11 @@
+headers:
+    current: Current target group
+    add: Add a new filter
+buttonLabels:
+    cancel: Cancel
+    save: Save
+    add: Add filter to target group
+filterTitles:
+    all: All people
+all:
+    simpleString: Add all the people in the organization.
