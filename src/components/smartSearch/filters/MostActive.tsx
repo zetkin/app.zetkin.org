@@ -41,26 +41,18 @@ const MostActive = ({ onSubmit, onCancel, filter }: MostActiveProps): JSX.Elemen
         setSubmittable(canSubmit);
     };
 
-    const handleOpChange = (op: string) => {
-        if (op === 'add') {
-            setOp('add');
-        } if (op === 'remove') {
-            setOp('sub');
-        }
-    };
-
     return (
         <form onSubmit={ e => handleAddFilter(e) }>
             <Typography style={{ lineHeight: 'unset', marginBottom: '2rem' }} variant="h4">
                 <Msg id="misc.smartSearch.most_active.inputString" values={{
                     addRemoveSelect: (
-                        <StyledSelect onChange={ e => handleOpChange(e.target.value) }
-                            value={ op === 'add' ? 'add' : 'remove' }>
+                        <StyledSelect onChange={ e => setOp(e.target.value as 'add' | 'sub') }
+                            value={ op }>
                             <MenuItem key="add" value="add">
                                 <Msg id="misc.smartSearch.most_active.addRemoveSelect.add"/>
                             </MenuItem>
-                            <MenuItem key="remove" value="remove">
-                                <Msg id="misc.smartSearch.most_active.addRemoveSelect.remove" />
+                            <MenuItem key="sub" value="sub">
+                                <Msg id="misc.smartSearch.most_active.addRemoveSelect.sub" />
                             </MenuItem>
                         </StyledSelect>
                     ),

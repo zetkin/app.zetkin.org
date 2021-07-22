@@ -16,7 +16,7 @@ most_active:
     inputString: "{addRemoveSelect} the {numPeopleSelect} most active {numPeople, plural, one {person} other {people}} in the organization {timeFrame}." 
     addRemoveSelect:
         add: Add
-        remove: Remove
+        sub: Remove
     examples:
         one: Add the 100 most active members of the organization before today.
         two: Remove the 5 most active members of the organization at any point in time.
