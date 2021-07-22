@@ -1,9 +1,13 @@
 import DateFnsUtils from '@date-io/date-fns';
 import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
-import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
-import { MenuItem, TextField, Typography } from '@material-ui/core';
+import { MuiPickersUtilsProvider } from '@material-ui/pickers';
+import { MenuItem, Typography } from '@material-ui/core';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
 import { useEffect, useState } from 'react';
+
+import StyledDatePicker from '../inputs/StyledDatePicker';
+import StyledNumberInput from '../inputs/StyledNumberInput';
+import StyledSelect from '../inputs/StyledSelect';
 
 enum RANGES {
     EVER='ever',
@@ -56,14 +60,16 @@ const TimeFrame = ({ onChange }: TimeFrameProps): JSX.Element => {
 
     return (
         <MuiPickersUtilsProvider utils={ DateFnsUtils }>
-            <Typography variant="h4">
+            <Typography display="inline" variant="h4">
                 <Msg id="misc.smartSearch.timeFrame.inputString" values={{
                     timeFrameSelect: (
-                        <TextField InputProps={{ style: { fontSize: '2.215rem' } }} onChange={ e => setSelected(e.target.value as RANGES) }
-                            select SelectProps={{ renderValue: function getLabel(value) {
-                                return (<Msg
-                                    id={ `misc.smartSearch.timeFrame.timeFrameRender.${value}` }
-                                />);
+                        <StyledSelect
+                            onChange={ e => setSelected(e.target.value as RANGES) }
+                            SelectProps={{ renderValue: function getLabel(value) {
+                                return (
+                                    <Msg
+                                        id={ `misc.smartSearch.timeFrame.timeFrameRender.${value}` }
+                                    />);
                             } }}
                             value={ selected }>
                             { Object.values(RANGES).map(value => (
@@ -71,7 +77,7 @@ const TimeFrame = ({ onChange }: TimeFrameProps): JSX.Element => {
                                     <Msg id={ `misc.smartSearch.timeFrame.timeFrameSelect.${value}` }/>
                                 </MenuItem>
                             )) }
-                        </TextField>
+                        </StyledSelect>
                     ),
                 }}
                 />
@@ -79,55 +85,35 @@ const TimeFrame = ({ onChange }: TimeFrameProps): JSX.Element => {
                     <Msg id="misc.smartSearch.timeFrame.beforeDate" values={{
                         before: before,
                         beforeDate: (
-                            <DatePicker
-                                disableToolbar
+                            <StyledDatePicker
                                 emptyLabel={ intl.formatMessage({ id: 'misc.smartSearch.timeFrame.defaultValue' }) }
-                                format="yyyy-MM-dd"
-                                id="date-picker-inline"
-                                InputProps={{ style: { fontSize: '2.215rem'  } }}
                                 onChange={ (date) => setBefore(date) }
                                 value={ before }
-                                variant="inline"
                             />) }}
                     />)  }
                 { selected === RANGES.AFTER_DATE && (
                     <Msg id="misc.smartSearch.timeFrame.afterDate" values={{
                         after: after,
                         afterDate: (
-                            <DatePicker
-                                disableToolbar
+                            <StyledDatePicker
                                 emptyLabel={ intl.formatMessage({ id: 'misc.smartSearch.timeFrame.defaultValue' }) }
-                                format="yyyy-MM-dd"
-                                id="date-picker-inline"
-                                InputProps={{ style: { fontSize: '2.215rem'  } }}
                                 onChange={ (date) => setAfter(date) }
                                 value={ after }
-                                variant="inline"
                             />) }}
                     />)  }
                 { selected === RANGES.BETWEEN && (
                     <Msg id="misc.smartSearch.timeFrame.between" values={{
                         endDate: (
-                            <DatePicker
-                                disableToolbar
+                            <StyledDatePicker
                                 emptyLabel={ intl.formatMessage({ id: 'misc.smartSearch.timeFrame.defaultValue' }) }
-                                format="yyyy-MM-dd"
-                                id="date-picker-inline"
-                                InputProps={{ style: { fontSize: '2.215rem'  } }}
                                 onChange={ (date) => setBefore(date) }
                                 value={ before }
-                                variant="inline"
                             />),
                         startDate: (
-                            <DatePicker
-                                disableToolbar
+                            <StyledDatePicker
                                 emptyLabel={ intl.formatMessage({ id: 'misc.smartSearch.timeFrame.defaultValue' }) }
-                                format="yyyy-MM-dd"
-                                id="date-picker-inline"
-                                InputProps={{ style: { fontSize: '2.215rem'  } }}
                                 onChange={ (date) => setAfter(date) }
                                 value={ after }
-                                variant="inline"
                             />) }}
                     />
                 )  }
@@ -135,11 +121,8 @@ const TimeFrame = ({ onChange }: TimeFrameProps): JSX.Element => {
                     <Msg id="misc.smartSearch.timeFrame.lastFew" values={{
                         numDays: numDays,
                         numDaysSelect: (
-                            <TextField
-                                InputProps={{ style: { fontSize: '2.215rem'  } }}
+                            <StyledNumberInput
                                 onChange={ (e) => setNumDays(+e.target.value) }
-                                style={{ width: '2rem' }}
-                                type="number"
                                 value={ numDays }
                             />) }}
                     />

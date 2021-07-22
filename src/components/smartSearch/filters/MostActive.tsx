@@ -1,8 +1,10 @@
 import { FormattedMessage as Msg } from 'react-intl';
 import { ZetkinSmartSearchFilter } from 'types/zetkin';
-import { Box, Button, Divider, MenuItem, TextField, Typography } from '@material-ui/core';
+import { Box, Button, Divider, MenuItem, Typography } from '@material-ui/core';
 import { FormEvent, useState } from 'react';
 
+import StyledNumberInput from '../inputs/StyledNumberInput';
+import StyledSelect from '../inputs/StyledSelect';
 import TimeFrame from './TimeFrame';
 
 interface MostActiveProps {
@@ -46,26 +48,24 @@ const MostActive = ({ onSubmit, onCancel }: MostActiveProps): JSX.Element => {
 
     return (
         <form onSubmit={ e => handleAddFilter(e) }>
-            <Typography variant="h4">
+            <Typography style={{ lineHeight: 'unset', marginBottom: '2rem' }} variant="h4">
                 <Msg id="misc.smartSearch.most_active.inputString" values={{
                     addRemoveSelect: (
-                        <TextField defaultValue="add"
-                            InputProps={{ style: { fontSize: '2.215rem' } }}
-                            onChange={ e => handleOpChange(e.target.value) } select>
+                        <StyledSelect defaultValue="add"
+                            onChange={ e => handleOpChange(e.target.value) }>
                             <MenuItem key="add" value="add">
                                 <Msg id="misc.smartSearch.most_active.addRemoveSelect.add"/>
                             </MenuItem>
                             <MenuItem key="remove" value="remove">
                                 <Msg id="misc.smartSearch.most_active.addRemoveSelect.remove" />
                             </MenuItem>
-                        </TextField>
+                        </StyledSelect>
                     ),
                     numPeople: numPeople,
                     numPeopleSelect: (
-                        <TextField
+                        <StyledNumberInput
                             defaultValue={ numPeople }
-                            InputProps={{ style: { fontSize: '2.215rem'  } }} onChange={ (e) => setNumPeople(+e.target.value) } style={{ width: '2rem' }}
-                            type="number"
+                            onChange={ (e) => setNumPeople(+e.target.value) }
                         />
                     ),
                     timeFrame: (
