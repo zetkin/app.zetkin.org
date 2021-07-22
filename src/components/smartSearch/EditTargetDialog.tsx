@@ -27,7 +27,7 @@ const EditTargetDialog = ({ onDialogClose, open, filterSpec }: EditTargetDialogP
     const [selectedFilter, setSelectedFilter] = useState<ZetkinSmartSearchFilterWithId| null>(null);
 
     const taskMutation = useMutation(patchTaskTarget(orgId as string, taskId as string),{
-        onSettled: () => queryClient.invalidateQueries('tasks'),
+        onSettled: () => queryClient.invalidateQueries(['filter_spec', orgId, taskId]),
     } );
 
     const handleDialogClose = () => {
