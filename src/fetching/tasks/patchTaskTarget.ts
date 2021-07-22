@@ -1,7 +1,7 @@
 import { defaultFetch } from '..';
 import { ZetkinSmartSearchFilter, ZetkinTask } from '../../types/zetkin';
 
-const patchTaskItem = (orgId : string, taskId: string, fetch = defaultFetch) => {
+const patchTaskTarget = (orgId : string, taskId: string, fetch = defaultFetch) => {
     return async (data: ZetkinSmartSearchFilter[]):Promise<ZetkinTask> => {
         const url = `/orgs/${orgId}/tasks/${taskId}/target`;
         const body = {
@@ -20,4 +20,4 @@ const patchTaskItem = (orgId : string, taskId: string, fetch = defaultFetch) => 
     };
 };
 
-export default patchTaskItem;
+export default patchTaskTarget;

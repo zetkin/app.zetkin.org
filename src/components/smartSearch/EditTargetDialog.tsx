@@ -6,7 +6,7 @@ import All from './filters/All';
 import Filter from './Filter';
 import { isFilterWithId } from './utils';
 import MostActive from './filters/MostActive';
-import patchTaskItem from 'fetching/tasks/patchTaskItem';
+import patchTaskTarget from 'fetching/tasks/patchTaskTarget';
 import { useRouter } from 'next/router';
 import { ZetkinSmartSearchFilter } from 'types/zetkin';
 import { FILTER_TYPE, ZetkinSmartSearchFilterWithId } from 'types/smartSearch';
@@ -26,7 +26,7 @@ const EditTargetDialog = ({ onDialogClose, open, filterSpec }: EditTargetDialogP
     const [selectedType, setSelectedType] = useState<FILTER_TYPE | null>(null);
     const [selectedFilter, setSelectedFilter] = useState<ZetkinSmartSearchFilterWithId| null>(null);
 
-    const taskMutation = useMutation(patchTaskItem(orgId as string, taskId as string),{
+    const taskMutation = useMutation(patchTaskTarget(orgId as string, taskId as string),{
         onSettled: () => queryClient.invalidateQueries('tasks'),
     } );
 
