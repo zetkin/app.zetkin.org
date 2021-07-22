@@ -2,11 +2,12 @@ import { FormattedMessage as Msg } from 'react-intl';
 import { Box, Button, Divider, MenuItem, Typography } from '@material-ui/core';
 import { FormEvent, useState } from 'react';
 
+import { isFilterWithId } from '../utils';
 import StyledNumberInput from '../inputs/StyledNumberInput';
 import StyledSelect from '../inputs/StyledSelect';
 import TimeFrame from './TimeFrame';
 import { ZetkinSmartSearchFilter } from 'types/zetkin';
-import { isFilterWithId, ZetkinSmartSearchFilterWithId } from '../EditTargetDialog';
+import { ZetkinSmartSearchFilterWithId } from 'types/smartSearch';
 
 interface MostActiveProps {
     filter: ZetkinSmartSearchFilterWithId | ZetkinSmartSearchFilter | null;

@@ -1,32 +1,21 @@
 import { FormattedMessage as Msg } from 'react-intl';
 import { useState } from 'react';
-import { Box, Button, ButtonBase, Card, CardContent, Dialog, DialogContent, IconButton, Typography } from '@material-ui/core';
-import { Delete, Edit } from '@material-ui/icons';
+import { Box, Button, ButtonBase, Card, CardContent, Dialog, DialogContent, Typography } from '@material-ui/core';
 
 import All from './filters/All';
+import Filter from './Filter';
+import { isFilterWithId } from './utils';
 import MostActive from './filters/MostActive';
 import patchTaskItem from 'fetching/tasks/patchTaskItem';
 import { useRouter } from 'next/router';
 import { ZetkinSmartSearchFilter } from 'types/zetkin';
+import { FILTER_TYPE, ZetkinSmartSearchFilterWithId } from 'types/smartSearch';
 import { useMutation, useQueryClient } from 'react-query';
 
 interface EditTargetDialogProps {
     filterSpec: ZetkinSmartSearchFilter[];
     onDialogClose: () => void;
     open: boolean;
-}
-
-enum FILTER_TYPE {
-    ALL ='all',
-    MOST_ACTIVE ='most_active',
-}
-
-export interface ZetkinSmartSearchFilterWithId extends ZetkinSmartSearchFilter {
-    id: number;
-}
-
-export function isFilterWithId(filter: ZetkinSmartSearchFilterWithId | ZetkinSmartSearchFilter): filter is ZetkinSmartSearchFilterWithId {
-    return (filter as ZetkinSmartSearchFilterWithId).id !== undefined;
 }
 
 const EditTargetDialog = ({ onDialogClose, open, filterSpec }: EditTargetDialogProps) : JSX.Element => {
@@ -96,27 +85,7 @@ const EditTargetDialog = ({ onDialogClose, open, filterSpec }: EditTargetDialogP
                             </Typography>
                             { filterArray.map(filter => {
                                 return (
-                                    <Box
-                                        key={ filter.id }
-                                        border={ 1 }
-                                        borderColor={ filter.op === 'sub' ? 'error.light' : 'success.light' }
-                                        display="flex"
-                                        justifyContent="space-between"
-                                        m={ 1 }
-                                        p={ 1 }>
-                                        <Box>{ JSON.stringify(filter) }</Box>
-                                        <Box display="flex" style={{ gap: '1rem' }}>
-                                            { filter.type !== 'all' && (
-                                                <IconButton
-                                                    onClick={ () => handleEditButtonClick(filter) }>
-                                                    <Edit />
-                                                </IconButton>
-                                            ) }
-                                            <IconButton onClick={ () => handleDeleteButtonClick(filter) }>
-                                                <Delete />
-                                            </IconButton>
-                                        </Box>
-                                    </Box>
+                                    <Filter key={ filter.id } filter={ filter } onDelete={ handleDeleteButtonClick } onEdit={ handleEditButtonClick } />
                                 );
                             }) }
                         </Box>

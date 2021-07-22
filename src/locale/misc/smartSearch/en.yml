@@ -11,7 +11,7 @@ filterTitles:
     all: All people
     most_active: A selection of the most active people
 all:
-    simpleString: Add all the people in the organization.
+    inputString: Add all the people in the organization.
 most_active:
     inputString: "{addRemoveSelect} the {numPeopleSelect} most active {numPeople, plural, one {person} other {people}} in the organization {timeFrame}." 
     addRemoveSelect:
@@ -23,6 +23,14 @@ most_active:
 timeFrame:
     inputString: '{timeFrameSelect}'
     defaultValue: a certain date
+    renderedStrings:
+        ever: at any point in time
+        future: in the future
+        between: between {afterDate} and {beforeDate}
+        beforeToday: before today
+        beforeDate: before {beforeDate}
+        afterDate: after {afterDate}
+        lastFew: during the last {days} {days, plural, one {day} other {days}}
     timeFrameRender:
         ever: at any point in time
         future: in the future

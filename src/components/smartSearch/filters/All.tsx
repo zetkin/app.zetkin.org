@@ -18,7 +18,7 @@ const All = ({ onSubmit, onCancel }: AllProps): JSX.Element => {
     return (
         <form onSubmit={ e => handleSubmitFilter(e) }>
             <Typography variant="h4">
-                <Msg id="misc.smartSearch.all.simpleString"/>
+                <Msg id="misc.smartSearch.all.inputString"/>
             </Typography>
             <Divider />
             <Box display="flex" justifyContent="flex-end" m={ 1 } style={{ gap: '1rem' }}>
