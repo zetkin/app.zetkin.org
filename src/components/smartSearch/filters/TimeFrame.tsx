@@ -21,15 +21,45 @@ enum RANGES {
 
 interface TimeFrameProps {
     onChange: (range: {after?: string; before?: string}, canSubmit: boolean) => void;
+    filterConfig?: {after?: string; before?: string};
 }
 
-const TimeFrame = ({ onChange }: TimeFrameProps): JSX.Element => {
+const TimeFrame = ({ onChange, filterConfig }: TimeFrameProps): JSX.Element => {
     const intl = useIntl();
     const [selected, setSelected] = useState<RANGES>(RANGES.EVER);
     const [before, setBefore] = useState<MaterialUiPickersDate  | null>(null);
     const [after, setAfter] = useState<MaterialUiPickersDate  | null>(null);
     const [numDays, setNumDays] = useState(30);
 
+    useEffect(() => {
+        if (filterConfig) {
+            const { after, before } = filterConfig;
+            if (after && after.slice(0, 1) === '-') {
+                setSelected(RANGES.LAST_FEW_DAYS);
+                setNumDays(+after.substring(1, after.length - 1));
+                return;
+            }
+            if (after === 'now') {
+                setSelected(RANGES.FUTURE);
+            }
+            else if (before === 'now') {
+                setSelected(RANGES.BEFORE_TODAY);
+            }
+            else if (after && before) {
+                setSelected(RANGES.BETWEEN);
+                setAfter(new Date(after));
+                setBefore(new Date(before));
+            }
+            else if (after && !before) {
+                setSelected(RANGES.AFTER_DATE);
+                setAfter(new Date(after));
+            }
+            else if (!after && before) {
+                setSelected(RANGES.BEFORE_DATE);
+                setBefore(new Date(before));
+            }
+        }
+    }, []);// eslint-disable-line react-hooks/exhaustive-deps
     useEffect(() => {
         onChange({}, false);
         if (selected ===  RANGES.EVER) {

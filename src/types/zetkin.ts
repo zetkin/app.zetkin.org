@@ -173,7 +173,11 @@ export interface ZetkinActivity {
 }
 
 export interface ZetkinSmartSearchFilter {
-    config?: Record<string, unknown>;
+    config?: {
+        after?: string;
+        before?: string;
+        size?: number;
+    };
     op: 'sub' | 'add';
     type: string;
 }

@@ -6,6 +6,7 @@ buttonLabels:
     cancel: Cancel
     save: Save
     add: Add filter to target group
+    edit: Edit filter
 filterTitles:
     all: All people
     most_active: A selection of the most active people

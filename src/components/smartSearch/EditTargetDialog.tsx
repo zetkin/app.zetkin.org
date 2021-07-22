@@ -21,8 +21,12 @@ enum FILTER_TYPE {
     MOST_ACTIVE ='most_active',
 }
 
-interface ZetkinSmartSearchFilterWithId extends ZetkinSmartSearchFilter {
+export interface ZetkinSmartSearchFilterWithId extends ZetkinSmartSearchFilter {
     id: number;
+}
+
+export function isFilterWithId(filter: ZetkinSmartSearchFilterWithId | ZetkinSmartSearchFilter): filter is ZetkinSmartSearchFilterWithId {
+    return (filter as ZetkinSmartSearchFilterWithId).id !== undefined;
 }
 
 const EditTargetDialog = ({ onDialogClose, open, filterSpec }: EditTargetDialogProps) : JSX.Element => {
@@ -31,6 +35,7 @@ const EditTargetDialog = ({ onDialogClose, open, filterSpec }: EditTargetDialogP
     const filtersWithIds = filterSpec.map((filter, index) => ({ ...filter, id: index }));
     const [filterArray, setFilterArray] = useState<ZetkinSmartSearchFilterWithId[]>(filtersWithIds);
     const [selectedType, setSelectedType] = useState<FILTER_TYPE | null>(null);
+    const [selectedFilter, setSelectedFilter] = useState<ZetkinSmartSearchFilterWithId| null>(null);
 
     const taskMutation = useMutation(patchTaskItem(orgId as string, taskId as string),{
         onSettled: () => queryClient.invalidateQueries('tasks'),
@@ -43,8 +48,22 @@ const EditTargetDialog = ({ onDialogClose, open, filterSpec }: EditTargetDialogP
 
     const handleCancelFilter = () => setSelectedType(null);
 
-    const handleAddFilter = (filter:ZetkinSmartSearchFilter) => {
-        setFilterArray(filterArray.concat({ ...filter, id: Math.max.apply(null, filterArray.map(f => f.id)) + 1 }));
+    const handleOnSubmit = (filter:ZetkinSmartSearchFilterWithId | ZetkinSmartSearchFilter) => {
+        if (isFilterWithId(filter)) {
+            setFilterArray(filterArray.map(f => {
+                if (f.id === filter.id) {
+                    return filter;
+                }
+                else {
+                    return f;
+                }
+            }));
+        }
+        else {
+            const newId = 1 + (filterArray.length ? Math.max(...filterArray.map(f => f.id)) : 0);
+            setFilterArray(filterArray.concat({ ...filter, id: newId }));
+        }
+        setSelectedFilter(null);
         setSelectedType(null);
     };
 
@@ -57,8 +76,13 @@ const EditTargetDialog = ({ onDialogClose, open, filterSpec }: EditTargetDialogP
         onDialogClose();
     };
 
-    const handleDeleteFilter = (filter: ZetkinSmartSearchFilterWithId) => {
+    const handleDeleteButtonClick = (filter: ZetkinSmartSearchFilterWithId) => {
         setFilterArray(filterArray.filter(f => f.id !== filter.id));
+    };
+
+    const handleEditButtonClick = (filter: ZetkinSmartSearchFilterWithId) => {
+        setSelectedFilter(filter);
+        setSelectedType(filter.type as FILTER_TYPE);
     };
 
     return (
@@ -82,10 +106,13 @@ const EditTargetDialog = ({ onDialogClose, open, filterSpec }: EditTargetDialogP
                                         p={ 1 }>
                                         <Box>{ JSON.stringify(filter) }</Box>
                                         <Box display="flex" style={{ gap: '1rem' }}>
-                                            <IconButton>
-                                                <Edit />
-                                            </IconButton>
-                                            <IconButton onClick={ () => handleDeleteFilter(filter) }>
+                                            { filter.type !== 'all' && (
+                                                <IconButton
+                                                    onClick={ () => handleEditButtonClick(filter) }>
+                                                    <Edit />
+                                                </IconButton>
+                                            ) }
+                                            <IconButton onClick={ () => handleDeleteButtonClick(filter) }>
                                                 <Delete />
                                             </IconButton>
                                         </Box>
@@ -122,8 +149,8 @@ const EditTargetDialog = ({ onDialogClose, open, filterSpec }: EditTargetDialogP
                         </Box>
                     </>
                 ) }
-                { selectedType === FILTER_TYPE.ALL && <All onCancel={ handleCancelFilter } onSubmit={ handleAddFilter }/> }
-                { selectedType === FILTER_TYPE.MOST_ACTIVE && <MostActive onCancel={ handleCancelFilter } onSubmit={ handleAddFilter }/> }
+                { selectedType === FILTER_TYPE.ALL && <All onCancel={ handleCancelFilter } onSubmit={ handleOnSubmit }/> }
+                { selectedType === FILTER_TYPE.MOST_ACTIVE && <MostActive filter={ selectedFilter } onCancel={ handleCancelFilter } onSubmit={ handleOnSubmit }/> }
             </DialogContent>
         </Dialog>
     );
