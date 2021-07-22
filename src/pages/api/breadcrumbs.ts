@@ -76,6 +76,12 @@ async function fetchLabel(
         ).then((res) => res.json());
         return campaign.data.title;
     }
+    if (fieldName === 'taskId') {
+        const campaign = await apiFetch(
+            `/orgs/${orgId}/tasks/${fieldValue}`,
+        ).then((res) => res.json());
+        return campaign.data.title;
+    }
     return fieldValue;
 }
 
