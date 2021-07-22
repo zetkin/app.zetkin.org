@@ -20,26 +20,21 @@ const MostActive = ({ onSubmit, onCancel, filter }: MostActiveProps): JSX.Elemen
     const [timeFrame, setTimeFrame] = useState({});
     const [op, setOp] = useState<'add' | 'sub'>(filter?.op || 'add');
 
-    const [submittable, setSubmittable] = useState(true);
-
     const handleAddFilter = (e: FormEvent) => {
         e.preventDefault();
-        if (submittable) {
-            onSubmit({
-                config: {
-                    size: numPeople,
-                    ...timeFrame,
-                },
-                ...(filter && isFilterWithId(filter) && { id: filter.id }),
-                op,
-                type: 'most_active',
-            });
-        }
+        onSubmit({
+            config: {
+                size: numPeople,
+                ...timeFrame,
+            },
+            ...(filter && isFilterWithId(filter) && { id: filter.id }),
+            op,
+            type: 'most_active',
+        });
     };
 
-    const handleTimeFrameChange = (range: {after?: string; before?: string}, canSubmit: boolean) => {
+    const handleTimeFrameChange = (range: {after?: string; before?: string}) => {
         setTimeFrame(range);
-        setSubmittable(canSubmit);
     };
 
     return (
@@ -87,7 +82,7 @@ const MostActive = ({ onSubmit, onCancel, filter }: MostActiveProps): JSX.Elemen
                 <Button color="primary" onClick={ onCancel }>
                     <Msg id="misc.smartSearch.buttonLabels.cancel"/>
                 </Button>
-                <Button color="primary" disabled={ !submittable } type="submit" variant="contained">
+                <Button color="primary" type="submit" variant="contained">
                     { filter ? <Msg id="misc.smartSearch.buttonLabels.edit"/>: <Msg id="misc.smartSearch.buttonLabels.add"/> }
                 </Button>
             </Box>

@@ -1,10 +1,10 @@
 import DateFnsUtils from '@date-io/date-fns';
-import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
 import { FormattedMessage as Msg } from 'react-intl';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import { MenuItem, Typography } from '@material-ui/core';
 import { useEffect, useState } from 'react';
 
+import { getNewDateWithOffset } from 'utils/dateUtils';
 import { getTimeFrame } from '../utils';
 import StyledDatePicker from '../inputs/StyledDatePicker';
 import StyledNumberInput from '../inputs/StyledNumberInput';
@@ -12,14 +12,15 @@ import StyledSelect from '../inputs/StyledSelect';
 import { TIME_FRAME } from 'types/smartSearch';
 
 interface TimeFrameProps {
-    onChange: (range: {after?: string; before?: string}, canSubmit: boolean) => void;
+    onChange: (range: {after?: string; before?: string}) => void;
     filterConfig?: {after?: string; before?: string};
 }
 
 const TimeFrame = ({ onChange, filterConfig }: TimeFrameProps): JSX.Element => {
     const [selected, setSelected] = useState<TIME_FRAME>(TIME_FRAME.EVER);
-    const [before, setBefore] = useState<MaterialUiPickersDate  | null>(null);
-    const [after, setAfter] = useState<MaterialUiPickersDate  | null>(null);
+    const today = new Date();
+    const [before, setBefore] = useState(today);
+    const [after, setAfter] = useState(getNewDateWithOffset(today, -30));
     const [numDays, setNumDays] = useState(30);
 
     useEffect(() => {
@@ -44,30 +45,29 @@ const TimeFrame = ({ onChange, filterConfig }: TimeFrameProps): JSX.Element => {
         }
     }, []);// eslint-disable-line react-hooks/exhaustive-deps
     useEffect(() => {
-        onChange({}, false);
         if (selected ===  TIME_FRAME.EVER) {
-            onChange({}, true);
+            onChange({});
         }
         if (selected === TIME_FRAME.BEFORE_TODAY) {
-            onChange({ before: 'now' }, true);
+            onChange({ before: 'now' });
         }
         if (selected === TIME_FRAME.FUTURE) {
-            onChange({ after: 'now' }, true);
+            onChange({ after: 'now' });
         }
         if (selected === TIME_FRAME.LAST_FEW_DAYS) {
-            onChange({ after: `-${numDays}d` }, true);
+            onChange({ after: `-${numDays}d` });
         }
-        if (selected === TIME_FRAME.BEFORE_DATE && before) {
-            onChange({ before: before.toISOString().slice(0, 10) }, true);
+        if (selected === TIME_FRAME.BEFORE_DATE) {
+            onChange({ before: before.toISOString().slice(0, 10) });
         }
-        if (selected === TIME_FRAME.AFTER_DATE && after) {
-            onChange({ after: after.toISOString().slice(0, 10) }, true);
+        if (selected === TIME_FRAME.AFTER_DATE) {
+            onChange({ after: after.toISOString().slice(0, 10) });
         }
-        if (selected === TIME_FRAME.BETWEEN && after && before) {
+        if (selected === TIME_FRAME.BETWEEN) {
             onChange({
                 after: after.toISOString().slice(0, 10),
                 before: before.toISOString().slice(0, 10),
-            }, true);
+            });
         }
     }, [before, after, selected, numDays]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -77,13 +77,13 @@ const TimeFrame = ({ onChange, filterConfig }: TimeFrameProps): JSX.Element => {
                 <Msg id={ `misc.smartSearch.timeFrame.edit.${selected}` } values={{
                     afterDateSelect: (
                         <StyledDatePicker
-                            onChange={ (date) => setAfter(date) }
+                            onChange={ (date) => setAfter(date as Date) }
                             value={ after }
                         />
                     ),
                     beforeDateSelect: (
                         <StyledDatePicker
-                            onChange={ (date) => setBefore(date) }
+                            onChange={ (date) => setBefore(date as Date) }
                             value={ before }
                         />
                     ),

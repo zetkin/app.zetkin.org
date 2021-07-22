@@ -9,7 +9,7 @@ const useStyles = makeStyles((theme) => ({
     input: {
         fontSize: theme.typography.h4.fontSize,
         padding: 0,
-        width: '14rem',
+        width: '12rem',
     },
 }));
 
