@@ -19,7 +19,7 @@ const TaskListItem = ({ task, hrefBase }: TaskListItemProps): JSX.Element => {
 
     return (
         <Link
-            href={ hrefBase + `/tasks/${id}` }
+            href={ hrefBase + `/calendar/tasks/${id}` }
             passHref>
             <ListItem button component="a">
                 <ListItemText>
