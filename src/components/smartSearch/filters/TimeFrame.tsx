@@ -5,19 +5,11 @@ import { MenuItem, Typography } from '@material-ui/core';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
 import { useEffect, useState } from 'react';
 
+import { getTimeFrame } from '../utils';
 import StyledDatePicker from '../inputs/StyledDatePicker';
 import StyledNumberInput from '../inputs/StyledNumberInput';
 import StyledSelect from '../inputs/StyledSelect';
-
-enum RANGES {
-    EVER='ever',
-    FUTURE='future',
-    BEFORE_TODAY='beforeToday',
-    BEFORE_DATE='beforeDate',
-    AFTER_DATE='afterDate',
-    BETWEEN='between',
-    LAST_FEW_DAYS='lastFew',
-}
+import { TIME_FRAME } from 'types/smartSearch';
 
 interface TimeFrameProps {
     onChange: (range: {after?: string; before?: string}, canSubmit: boolean) => void;
@@ -26,61 +18,53 @@ interface TimeFrameProps {
 
 const TimeFrame = ({ onChange, filterConfig }: TimeFrameProps): JSX.Element => {
     const intl = useIntl();
-    const [selected, setSelected] = useState<RANGES>(RANGES.EVER);
+    const [selected, setSelected] = useState<TIME_FRAME>(TIME_FRAME.EVER);
     const [before, setBefore] = useState<MaterialUiPickersDate  | null>(null);
     const [after, setAfter] = useState<MaterialUiPickersDate  | null>(null);
     const [numDays, setNumDays] = useState(30);
 
     useEffect(() => {
         if (filterConfig) {
+            const timeFrame = getTimeFrame(filterConfig);
             const { after, before } = filterConfig;
-            if (after && after.slice(0, 1) === '-') {
-                setSelected(RANGES.LAST_FEW_DAYS);
+            setSelected(timeFrame);
+            if (timeFrame === TIME_FRAME.LAST_FEW_DAYS && after) {
                 setNumDays(+after.substring(1, after.length - 1));
                 return;
             }
-            if (after === 'now') {
-                setSelected(RANGES.FUTURE);
-            }
-            else if (before === 'now') {
-                setSelected(RANGES.BEFORE_TODAY);
-            }
-            else if (after && before) {
-                setSelected(RANGES.BETWEEN);
+            else if (timeFrame === TIME_FRAME.BETWEEN && after && before) {
                 setAfter(new Date(after));
                 setBefore(new Date(before));
             }
-            else if (after && !before) {
-                setSelected(RANGES.AFTER_DATE);
+            else if (timeFrame === TIME_FRAME.AFTER_DATE && after) {
                 setAfter(new Date(after));
             }
-            else if (!after && before) {
-                setSelected(RANGES.BEFORE_DATE);
+            else if (timeFrame === TIME_FRAME.BEFORE_DATE && before) {
                 setBefore(new Date(before));
             }
         }
     }, []);// eslint-disable-line react-hooks/exhaustive-deps
     useEffect(() => {
         onChange({}, false);
-        if (selected ===  RANGES.EVER) {
+        if (selected ===  TIME_FRAME.EVER) {
             onChange({}, true);
         }
-        if (selected === RANGES.BEFORE_TODAY) {
+        if (selected === TIME_FRAME.BEFORE_TODAY) {
             onChange({ before: 'now' }, true);
         }
-        if (selected === RANGES.FUTURE) {
+        if (selected === TIME_FRAME.FUTURE) {
             onChange({ after: 'now' }, true);
         }
-        if (selected === RANGES.LAST_FEW_DAYS) {
+        if (selected === TIME_FRAME.LAST_FEW_DAYS) {
             onChange({ after: `-${numDays}d` }, true);
         }
-        if (selected === RANGES.BEFORE_DATE && before) {
+        if (selected === TIME_FRAME.BEFORE_DATE && before) {
             onChange({ before: before.toISOString().slice(0, 10) }, true);
         }
-        if (selected === RANGES.AFTER_DATE && after) {
+        if (selected === TIME_FRAME.AFTER_DATE && after) {
             onChange({ after: after.toISOString().slice(0, 10) }, true);
         }
-        if (selected === RANGES.BETWEEN && after && before) {
+        if (selected === TIME_FRAME.BETWEEN && after && before) {
             onChange({
                 after: after.toISOString().slice(0, 10),
                 before: before.toISOString().slice(0, 10),
@@ -94,7 +78,7 @@ const TimeFrame = ({ onChange, filterConfig }: TimeFrameProps): JSX.Element => {
                 <Msg id="misc.smartSearch.timeFrame.inputString" values={{
                     timeFrameSelect: (
                         <StyledSelect
-                            onChange={ e => setSelected(e.target.value as RANGES) }
+                            onChange={ e => setSelected(e.target.value as TIME_FRAME) }
                             SelectProps={{ renderValue: function getLabel(value) {
                                 return (
                                     <Msg
@@ -102,7 +86,7 @@ const TimeFrame = ({ onChange, filterConfig }: TimeFrameProps): JSX.Element => {
                                     />);
                             } }}
                             value={ selected }>
-                            { Object.values(RANGES).map(value => (
+                            { Object.values(TIME_FRAME).map(value => (
                                 <MenuItem key={ value } value={ value }>
                                     <Msg id={ `misc.smartSearch.timeFrame.timeFrameSelect.${value}` }/>
                                 </MenuItem>
@@ -111,7 +95,7 @@ const TimeFrame = ({ onChange, filterConfig }: TimeFrameProps): JSX.Element => {
                     ),
                 }}
                 />
-                { selected === RANGES.BEFORE_DATE && (
+                { selected === TIME_FRAME.BEFORE_DATE && (
                     <Msg id="misc.smartSearch.timeFrame.beforeDate" values={{
                         before: before,
                         beforeDate: (
@@ -121,7 +105,7 @@ const TimeFrame = ({ onChange, filterConfig }: TimeFrameProps): JSX.Element => {
                                 value={ before }
                             />) }}
                     />)  }
-                { selected === RANGES.AFTER_DATE && (
+                { selected === TIME_FRAME.AFTER_DATE && (
                     <Msg id="misc.smartSearch.timeFrame.afterDate" values={{
                         after: after,
                         afterDate: (
@@ -131,7 +115,7 @@ const TimeFrame = ({ onChange, filterConfig }: TimeFrameProps): JSX.Element => {
                                 value={ after }
                             />) }}
                     />)  }
-                { selected === RANGES.BETWEEN && (
+                { selected === TIME_FRAME.BETWEEN && (
                     <Msg id="misc.smartSearch.timeFrame.between" values={{
                         endDate: (
                             <StyledDatePicker
@@ -147,7 +131,7 @@ const TimeFrame = ({ onChange, filterConfig }: TimeFrameProps): JSX.Element => {
                             />) }}
                     />
                 )  }
-                { selected === RANGES.LAST_FEW_DAYS && (
+                { selected === TIME_FRAME.LAST_FEW_DAYS && (
                     <Msg id="misc.smartSearch.timeFrame.lastFew" values={{
                         numDays: numDays,
                         numDaysSelect: (
