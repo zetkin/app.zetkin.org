@@ -48,7 +48,7 @@ const EditTargetDialog = ({ onDialogClose, open, filterSpec }: EditTargetDialogP
 
     const handleCancelFilter = () => setSelectedType(null);
 
-    const handleOnSubmit = (filter:ZetkinSmartSearchFilterWithId | ZetkinSmartSearchFilter) => {
+    const handleSubmitFilter = (filter:ZetkinSmartSearchFilterWithId | ZetkinSmartSearchFilter) => {
         if (isFilterWithId(filter)) {
             setFilterArray(filterArray.map(f => {
                 if (f.id === filter.id) {
@@ -149,8 +149,8 @@ const EditTargetDialog = ({ onDialogClose, open, filterSpec }: EditTargetDialogP
                         </Box>
                     </>
                 ) }
-                { selectedType === FILTER_TYPE.ALL && <All onCancel={ handleCancelFilter } onSubmit={ handleOnSubmit }/> }
-                { selectedType === FILTER_TYPE.MOST_ACTIVE && <MostActive filter={ selectedFilter } onCancel={ handleCancelFilter } onSubmit={ handleOnSubmit }/> }
+                { selectedType === FILTER_TYPE.ALL && <All onCancel={ handleCancelFilter } onSubmit={ handleSubmitFilter }/> }
+                { selectedType === FILTER_TYPE.MOST_ACTIVE && <MostActive filter={ selectedFilter } onCancel={ handleCancelFilter } onSubmit={ handleSubmitFilter }/> }
             </DialogContent>
         </Dialog>
     );
