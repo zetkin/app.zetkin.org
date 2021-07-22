@@ -1,6 +1,7 @@
 import { FormattedMessage as Msg } from 'react-intl';
 import { useState } from 'react';
-import { Box, Button, ButtonBase, Card, CardContent, Dialog, DialogContent, Typography } from '@material-ui/core';
+import { Box, Button, ButtonBase, Card, CardContent, Dialog, DialogContent, IconButton, Typography } from '@material-ui/core';
+import { Delete, Edit } from '@material-ui/icons';
 
 import All from './filters/All';
 import MostActive from './filters/MostActive';
@@ -56,6 +57,10 @@ const EditTargetDialog = ({ onDialogClose, open, filterSpec }: EditTargetDialogP
         onDialogClose();
     };
 
+    const handleDeleteFilter = (filter: ZetkinSmartSearchFilterWithId) => {
+        setFilterArray(filterArray.filter(f => f.id !== filter.id));
+    };
+
     return (
         <Dialog fullWidth maxWidth="xl" onClose={ handleDialogClose } open={ open }>
             <DialogContent>
@@ -67,9 +72,23 @@ const EditTargetDialog = ({ onDialogClose, open, filterSpec }: EditTargetDialogP
                             </Typography>
                             { filterArray.map(filter => {
                                 return (
-                                    <Box key={ filter.id } bgcolor="success.light" m={ 1 } p={ 1 }>
-                                        { filter.type }
-                                        { JSON.stringify(filter.config) }
+                                    <Box
+                                        key={ filter.id }
+                                        border={ 1 }
+                                        borderColor={ filter.op === 'sub' ? 'error.light' : 'success.light' }
+                                        display="flex"
+                                        justifyContent="space-between"
+                                        m={ 1 }
+                                        p={ 1 }>
+                                        <Box>{ JSON.stringify(filter) }</Box>
+                                        <Box display="flex" style={{ gap: '1rem' }}>
+                                            <IconButton>
+                                                <Edit />
+                                            </IconButton>
+                                            <IconButton onClick={ () => handleDeleteFilter(filter) }>
+                                                <Delete />
+                                            </IconButton>
+                                        </Box>
                                     </Box>
                                 );
                             }) }
