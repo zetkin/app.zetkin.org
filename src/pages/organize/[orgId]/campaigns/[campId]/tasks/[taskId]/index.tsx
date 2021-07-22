@@ -6,7 +6,7 @@ import getTask from 'fetching/tasks/getTask';
 import { PageWithLayout } from 'types';
 import { scaffold } from 'utils/next';
 import SingleTaskLayout from 'components/layout/organize/SingleTaskLayout';
-import TaskDetailsCard from 'components/organize/tasks/TaskDetailsCard';
+import TaskDetailsSection from 'components/organize/tasks/TaskDetailsSection';
 
 const scaffoldOptions = {
     authLevelRequired: 2,
@@ -67,9 +67,8 @@ const TaskDetailPage: PageWithLayout<TaskDetailPageProps> = ({ taskId, orgId }) 
         <Box mt={ 4 }>
             <Container>
                 <Grid container>
-                    { /* Details Card */ }
                     <Grid item xs={ 12 }>
-                        <TaskDetailsCard task={ task } />
+                        <TaskDetailsSection task={ task } />
                     </Grid>
                 </Grid>
             </Container>

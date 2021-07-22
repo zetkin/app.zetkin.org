@@ -14,8 +14,8 @@ taskListItem:
         closed: "Closed {time}"
         scheduled: "Will be published {time}"
         indefinite: "Published {time}"
-taskDetailsCard:
-    title: Task Details
+taskDetails:
+    title: Details
     editButton: Edit
     titleLabel: Title
     instructionsLabel: Instructions
