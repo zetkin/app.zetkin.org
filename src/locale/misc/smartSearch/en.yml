@@ -34,7 +34,7 @@ timeFrame:
     timeFrameSelect:
         ever: at any point in time
         future: in the future
-        between: between a certain datea and a certain date
+        between: between a certain date and a certain date
         beforeToday: before today
         beforeDate: before a certain date
         afterDate: after a certain date
