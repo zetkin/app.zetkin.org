@@ -1,8 +1,8 @@
 import DateFnsUtils from '@date-io/date-fns';
 import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
+import { FormattedMessage as Msg } from 'react-intl';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import { MenuItem, Typography } from '@material-ui/core';
-import { FormattedMessage as Msg, useIntl } from 'react-intl';
 import { useEffect, useState } from 'react';
 
 import { getTimeFrame } from '../utils';
@@ -17,7 +17,6 @@ interface TimeFrameProps {
 }
 
 const TimeFrame = ({ onChange, filterConfig }: TimeFrameProps): JSX.Element => {
-    const intl = useIntl();
     const [selected, setSelected] = useState<TIME_FRAME>(TIME_FRAME.EVER);
     const [before, setBefore] = useState<MaterialUiPickersDate  | null>(null);
     const [after, setAfter] = useState<MaterialUiPickersDate  | null>(null);
@@ -75,72 +74,44 @@ const TimeFrame = ({ onChange, filterConfig }: TimeFrameProps): JSX.Element => {
     return (
         <MuiPickersUtilsProvider utils={ DateFnsUtils }>
             <Typography display="inline" variant="h4">
-                <Msg id="misc.smartSearch.timeFrame.inputString" values={{
+                <Msg id={ `misc.smartSearch.timeFrame.edit.${selected}` } values={{
+                    afterDateSelect: (
+                        <StyledDatePicker
+                            onChange={ (date) => setAfter(date) }
+                            value={ after }
+                        />
+                    ),
+                    beforeDateSelect: (
+                        <StyledDatePicker
+                            onChange={ (date) => setBefore(date) }
+                            value={ before }
+                        />
+                    ),
+                    daysInput: (
+                        <StyledNumberInput
+                            onChange={ (e) => setNumDays(+e.target.value) }
+                            value={ numDays }
+                        />
+                    ),
                     timeFrameSelect: (
                         <StyledSelect
                             onChange={ e => setSelected(e.target.value as TIME_FRAME) }
                             SelectProps={{ renderValue: function getLabel(value) {
                                 return (
                                     <Msg
-                                        id={ `misc.smartSearch.timeFrame.timeFrameRender.${value}` }
+                                        id={ `misc.smartSearch.timeFrame.timeFrameSelectLabel.${value}` }
                                     />);
                             } }}
                             value={ selected }>
                             { Object.values(TIME_FRAME).map(value => (
                                 <MenuItem key={ value } value={ value }>
-                                    <Msg id={ `misc.smartSearch.timeFrame.timeFrameSelect.${value}` }/>
+                                    <Msg id={ `misc.smartSearch.timeFrame.timeFrameSelectOptions.${value}` }/>
                                 </MenuItem>
                             )) }
                         </StyledSelect>
                     ),
                 }}
                 />
-                { selected === TIME_FRAME.BEFORE_DATE && (
-                    <Msg id="misc.smartSearch.timeFrame.beforeDate" values={{
-                        before: before,
-                        beforeDate: (
-                            <StyledDatePicker
-                                emptyLabel={ intl.formatMessage({ id: 'misc.smartSearch.timeFrame.defaultValue' }) }
-                                onChange={ (date) => setBefore(date) }
-                                value={ before }
-                            />) }}
-                    />)  }
-                { selected === TIME_FRAME.AFTER_DATE && (
-                    <Msg id="misc.smartSearch.timeFrame.afterDate" values={{
-                        after: after,
-                        afterDate: (
-                            <StyledDatePicker
-                                emptyLabel={ intl.formatMessage({ id: 'misc.smartSearch.timeFrame.defaultValue' }) }
-                                onChange={ (date) => setAfter(date) }
-                                value={ after }
-                            />) }}
-                    />)  }
-                { selected === TIME_FRAME.BETWEEN && (
-                    <Msg id="misc.smartSearch.timeFrame.between" values={{
-                        endDate: (
-                            <StyledDatePicker
-                                emptyLabel={ intl.formatMessage({ id: 'misc.smartSearch.timeFrame.defaultValue' }) }
-                                onChange={ (date) => setBefore(date) }
-                                value={ before }
-                            />),
-                        startDate: (
-                            <StyledDatePicker
-                                emptyLabel={ intl.formatMessage({ id: 'misc.smartSearch.timeFrame.defaultValue' }) }
-                                onChange={ (date) => setAfter(date) }
-                                value={ after }
-                            />) }}
-                    />
-                )  }
-                { selected === TIME_FRAME.LAST_FEW_DAYS && (
-                    <Msg id="misc.smartSearch.timeFrame.lastFew" values={{
-                        numDays: numDays,
-                        numDaysSelect: (
-                            <StyledNumberInput
-                                onChange={ (e) => setNumDays(+e.target.value) }
-                                value={ numDays }
-                            />) }}
-                    />
-                ) }
             </Typography>
         </MuiPickersUtilsProvider>
     );

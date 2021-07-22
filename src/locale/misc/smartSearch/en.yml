@@ -21,9 +21,7 @@ most_active:
         one: Add the 100 most active members of the organization before today.
         two: Remove the 5 most active members of the organization at any point in time.
 timeFrame:
-    inputString: '{timeFrameSelect}'
-    defaultValue: a certain date
-    renderedStrings:
+    preview:
         ever: at any point in time
         future: in the future
         between: between {afterDate} and {beforeDate}
@@ -31,7 +29,15 @@ timeFrame:
         beforeDate: before {beforeDate}
         afterDate: after {afterDate}
         lastFew: during the last {days} {days, plural, one {day} other {days}}
-    timeFrameRender:
+    edit:
+        ever: '{timeFrameSelect}'
+        future: '{timeFrameSelect}'
+        beforeToday: '{timeFrameSelect}'
+        afterDate: "{timeFrameSelect} {afterDateSelect}"
+        beforeDate: "{timeFrameSelect} {beforeDateSelect}"
+        between: "{timeFrameSelect} {afterDateSelect} and {beforeDateSelect}"
+        lastFew: "{timeFrameSelect} {daysInput} {daysInput, plural, one {day} other {days}}"
+    timeFrameSelectLabel:
         ever: at any point in time
         future: in the future
         between: between
@@ -39,15 +45,11 @@ timeFrame:
         beforeDate: before
         afterDate: after
         lastFew: during the last 
-    timeFrameSelect:
+    timeFrameSelectOptions:
         ever: at any point in time
         future: in the future
-        between: between a certain date and a certain date
+        between: between two dates
         beforeToday: before today
         beforeDate: before a certain date
         afterDate: after a certain date
-        lastFew: during the last few days
-    lastFew: '{numDaysSelect} {numDays, plural, one {day} other {days}}'
-    between: '{startDate} and {endDate}'
-    beforeDate: '{beforeDate}'
-    afterDate: '{afterDate}'
+        lastFew: recently

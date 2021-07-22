@@ -31,7 +31,7 @@ const Filter = ({ filter, onDelete, onEdit }:FilterProps): JSX.Element => {
                             numPeopleSelect: config?.size,
                             timeFrame: (
                                 <Msg
-                                    id={ `misc.smartSearch.timeFrame.renderedStrings.${timeFrame}` }
+                                    id={ `misc.smartSearch.timeFrame.preview.${timeFrame}` }
                                     values={{
                                         afterDate: (
                                             config?.after
