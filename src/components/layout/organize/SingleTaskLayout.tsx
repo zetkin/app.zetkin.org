@@ -16,7 +16,7 @@ const SingleCampaignLayout: FunctionComponent = ({ children }) => {
 
     return (
         <TabbedLayout
-            baseHref={ `/organize/${orgId}/campaigns/${campId}/tasks/${taskId}` }
+            baseHref={ `/organize/${orgId}/campaigns/${campId}/calendar/tasks/${taskId}` }
             defaultTab="/"
             subtitle={
                 <TaskStatusText task={ task } />
