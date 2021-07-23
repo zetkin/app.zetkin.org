@@ -23,7 +23,7 @@ const EditTargetDialog = ({ onDialogClose, open, filterSpec }: EditTargetDialogP
     const queryClient = useQueryClient();
     const { orgId, taskId } = useRouter().query;
 
-    const [filterArray, addFilter, editFilter, deleteFilter ] = useSmartSearch(filterSpec);
+    const { filtersWithIds: filterArray, filters, addFilter, editFilter, deleteFilter } = useSmartSearch(filterSpec);
     const [selectedFilter, setSelectedFilter] = useState<SelectedSmartSearchFilter>(null);
 
     const taskMutation = useMutation(patchTaskTarget(orgId as string, taskId as string),{
@@ -50,9 +50,7 @@ const EditTargetDialog = ({ onDialogClose, open, filterSpec }: EditTargetDialogP
     };
 
     const handleSave = () => {
-        taskMutation.mutate(filterArray.map(filter => ({
-            config: filter.config, op: filter.op, type: filter.type,
-        })));
+        taskMutation.mutate(filters);
         onDialogClose();
     };
 

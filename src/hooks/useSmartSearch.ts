@@ -3,48 +3,56 @@ import { SmartSearchFilterWithId, ZetkinSmartSearchFilter } from 'types/smartSea
 
 type InitialFilters = ZetkinSmartSearchFilter[] | SmartSearchFilterWithId[]
 
-type UseSmartSearch = [
-    SmartSearchFilterWithId[],
-    (filter: ZetkinSmartSearchFilter) => void, // addSmartSearchFilter
-    (id: number, newFilterValue: SmartSearchFilterWithId) => void, // editSmartSearchFilter
-    (id: number) => void // removeSmartSearchFilter
-]
+type UseSmartSearch = {
+    addFilter: (filter: ZetkinSmartSearchFilter) => void; // addSmartSearchFilter
+    editFilter: (id: number, newFilterValue: SmartSearchFilterWithId) => void; // editSmartSearchFilter
+    filters: ZetkinSmartSearchFilter[];
+    filtersWithIds: SmartSearchFilterWithId[];
+    deleteFilter: (id: number) => void; // removeSmartSearchFilter
+}
 
 const useSmartSearch = (initialFilters: InitialFilters = []): UseSmartSearch => {
-    const filtersWithIds = initialFilters.map((filter, index) => ({ ...filter, id: index }));
-    const [smartSearchFilters, setSmartSearchFilters] = useState<SmartSearchFilterWithId[]>(filtersWithIds);
+    const intialFiltersWithIds = initialFilters.map((filter, index) => ({ ...filter, id: index }));
+    const [filtersWithIds, setFiltersWithIds] = useState<SmartSearchFilterWithId[]>(intialFiltersWithIds);
 
-    const addSmartSearchFilter = (filter: ZetkinSmartSearchFilter) => {
+    const addFilter = (filter: ZetkinSmartSearchFilter) => {
         const newFilterWithId: SmartSearchFilterWithId = {
             ...filter,
-            id: smartSearchFilters.length,
+            id: filtersWithIds.length,
         };
-        setSmartSearchFilters([
-            ...smartSearchFilters,
+        setFiltersWithIds([
+            ...filtersWithIds,
             newFilterWithId,
         ]);
     };
 
-    const editSmartSearchFilter = (id: number, newFilterValue: SmartSearchFilterWithId) => {
-        const filtersWithEditedFilter = smartSearchFilters.map(filter => {
+    const editFilter = (id: number, newFilterValue: SmartSearchFilterWithId) => {
+        const filtersWithEditedFilter = filtersWithIds.map(filter => {
             if (id === filter.id) return newFilterValue;
             else return filter;
         });
-        setSmartSearchFilters(filtersWithEditedFilter);
+        setFiltersWithIds(filtersWithEditedFilter);
     };
 
-    const removeSmartSearchFilter = (id: number) => {
-        const filtersWithoutSelected = smartSearchFilters.filter(filter => filter.id !== id);
-        setSmartSearchFilters(filtersWithoutSelected);
+    const deleteFilter = (id: number) => {
+        const filtersWithoutSelected = filtersWithIds.filter(filter => filter.id !== id);
+        setFiltersWithIds(filtersWithoutSelected);
     };
 
+    const filters = filtersWithIds.map(filterWithId => {
+        const { config, op, type } = filterWithId;
+        return {
+            config, op, type,
+        };
+    });
 
-    return [
-        smartSearchFilters,
-        addSmartSearchFilter,
-        editSmartSearchFilter,
-        removeSmartSearchFilter,
-    ];
+    return {
+        addFilter,
+        editFilter,
+        filters,
+        filtersWithIds,
+        deleteFilter,
+    };
 };
 
 export default useSmartSearch;
