@@ -3,12 +3,12 @@ import { Box, Card, CardActions, IconButton, Typography } from '@material-ui/cor
 import { Delete, Edit } from '@material-ui/icons';
 
 import { getTimeFrame } from './utils';
-import { ZetkinSmartSearchFilterWithId } from 'types/smartSearch';
+import { SmartSearchFilterWithId } from 'types/smartSearch';
 
 interface FilterProps {
-    filter: ZetkinSmartSearchFilterWithId;
-    onDelete: (filter: ZetkinSmartSearchFilterWithId) => void;
-    onEdit: (filter: ZetkinSmartSearchFilterWithId) => void;
+    filter: SmartSearchFilterWithId;
+    onDelete: (filter: SmartSearchFilterWithId) => void;
+    onEdit: (filter: SmartSearchFilterWithId) => void;
 }
 
 

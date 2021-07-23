@@ -6,12 +6,11 @@ import { isFilterWithId } from '../utils';
 import StyledNumberInput from '../inputs/StyledNumberInput';
 import StyledSelect from '../inputs/StyledSelect';
 import TimeFrame from './TimeFrame';
-import { ZetkinSmartSearchFilter } from 'types/zetkin';
-import { ZetkinSmartSearchFilterWithId } from 'types/smartSearch';
+import { FILTER_TYPE, SmartSearchFilterWithId, ZetkinSmartSearchFilter } from 'types/smartSearch';
 
 interface MostActiveProps {
-    filter: ZetkinSmartSearchFilterWithId | ZetkinSmartSearchFilter | null;
-    onSubmit: (filter: ZetkinSmartSearchFilterWithId | ZetkinSmartSearchFilter) => void;
+    filter: SmartSearchFilterWithId | ZetkinSmartSearchFilter | { type: FILTER_TYPE };
+    onSubmit: (filter: SmartSearchFilterWithId | ZetkinSmartSearchFilter) => void;
     onCancel: () => void;
 }
 
@@ -29,7 +28,7 @@ const MostActive = ({ onSubmit, onCancel, filter }: MostActiveProps): JSX.Elemen
             },
             ...(filter && isFilterWithId(filter) && { id: filter.id }),
             op,
-            type: 'most_active',
+            type: FILTER_TYPE.MOST_ACTIVE,
         });
     };
 
@@ -83,7 +82,7 @@ const MostActive = ({ onSubmit, onCancel, filter }: MostActiveProps): JSX.Elemen
                     <Msg id="misc.smartSearch.buttonLabels.cancel"/>
                 </Button>
                 <Button color="primary" type="submit" variant="contained">
-                    { filter ? <Msg id="misc.smartSearch.buttonLabels.edit"/>: <Msg id="misc.smartSearch.buttonLabels.add"/> }
+                    { filter.config ? <Msg id="misc.smartSearch.buttonLabels.edit"/>: <Msg id="misc.smartSearch.buttonLabels.add"/> }
                 </Button>
             </Box>
         </form>
