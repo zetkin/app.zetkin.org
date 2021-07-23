@@ -9,7 +9,7 @@ import useSmartSearchFilter from 'hooks/useSmartSearchFilter';
 import { MostActiveFilterConfig, NewSmartSearchFilter, OPERATION, SmartSearchFilterWithId, ZetkinSmartSearchFilter } from 'types/smartSearch';
 
 interface MostActiveProps {
-    filter:  ZetkinSmartSearchFilter<MostActiveFilterConfig> | SmartSearchFilterWithId<MostActiveFilterConfig> |  NewSmartSearchFilter ;
+    filter:  SmartSearchFilterWithId<MostActiveFilterConfig> |  NewSmartSearchFilter ;
     onSubmit: (filter: SmartSearchFilterWithId<MostActiveFilterConfig> | ZetkinSmartSearchFilter<MostActiveFilterConfig>) => void;
     onCancel: () => void;
 }
