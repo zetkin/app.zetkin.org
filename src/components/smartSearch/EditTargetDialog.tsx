@@ -38,9 +38,9 @@ const EditTargetDialog = ({ onDialogClose, open, filterSpec }: EditTargetDialogP
     const handleCancelFilter = () => setSelectedFilter(null);
 
     const handleSubmitFilter = (filter: SmartSearchFilterWithId | ZetkinSmartSearchFilter) => {
-        // If editing a filter
-        if (isFilterWithId(filter)) {
-            editFilter((filter as SmartSearchFilterWithId).id, filter as SmartSearchFilterWithId);
+        // If editing existing filter
+        if ('id' in filter) {
+            editFilter(filter.id, filter);
         }
         // If creating a new filter
         else {

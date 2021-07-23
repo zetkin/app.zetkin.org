@@ -4,6 +4,11 @@ export enum FILTER_TYPE {
     MOST_ACTIVE ='most_active',
 }
 
+export enum OPERATION {
+    ADD = 'add',
+    SUB = 'sub'
+}
+
 export enum TIME_FRAME {
     EVER='ever',
     FUTURE='future',
@@ -20,7 +25,7 @@ export interface ZetkinSmartSearchFilter {
         before?: string;
         size?: number;
     };
-    op: 'sub' | 'add';
+    op: OPERATION;
     type: FILTER_TYPE;
 }
 

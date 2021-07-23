@@ -1,7 +1,7 @@
 import { FormEvent } from 'react';
 import { FormattedMessage as Msg } from 'react-intl';
 import { Box, Button, Divider, Typography } from '@material-ui/core';
-import { FILTER_TYPE, ZetkinSmartSearchFilter } from 'types/smartSearch';
+import { FILTER_TYPE, OPERATION, ZetkinSmartSearchFilter } from 'types/smartSearch';
 
 interface AllProps {
     onSubmit: (filter: ZetkinSmartSearchFilter) => void;
@@ -12,7 +12,7 @@ const All = ({ onSubmit, onCancel }: AllProps): JSX.Element => {
 
     const handleSubmitFilter = (e: FormEvent) => {
         e.preventDefault();
-        onSubmit({ op: 'add', type: FILTER_TYPE.ALL  });
+        onSubmit({ op: OPERATION.ADD, type: FILTER_TYPE.ALL  });
     };
 
     return (

@@ -5,10 +5,10 @@ type InitialFilters = ZetkinSmartSearchFilter[] | SmartSearchFilterWithId[]
 
 type UseSmartSearch = {
     addFilter: (filter: ZetkinSmartSearchFilter) => void; // addSmartSearchFilter
+    deleteFilter: (id: number) => void; // removeSmartSearchFilter
     editFilter: (id: number, newFilterValue: SmartSearchFilterWithId) => void; // editSmartSearchFilter
     filters: ZetkinSmartSearchFilter[];
     filtersWithIds: SmartSearchFilterWithId[];
-    deleteFilter: (id: number) => void; // removeSmartSearchFilter
 }
 
 const useSmartSearch = (initialFilters: InitialFilters = []): UseSmartSearch => {

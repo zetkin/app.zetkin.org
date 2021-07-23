@@ -6,10 +6,10 @@ import { isFilterWithId } from '../utils';
 import StyledNumberInput from '../inputs/StyledNumberInput';
 import StyledSelect from '../inputs/StyledSelect';
 import TimeFrame from './TimeFrame';
-import { FILTER_TYPE, SmartSearchFilterWithId, ZetkinSmartSearchFilter } from 'types/smartSearch';
+import { FILTER_TYPE, OPERATION, SelectedSmartSearchFilter, SmartSearchFilterWithId, ZetkinSmartSearchFilter } from 'types/smartSearch';
 
 interface MostActiveProps {
-    filter: SmartSearchFilterWithId | ZetkinSmartSearchFilter | { type: FILTER_TYPE };
+    filter: SelectedSmartSearchFilter;
     onSubmit: (filter: SmartSearchFilterWithId | ZetkinSmartSearchFilter) => void;
     onCancel: () => void;
 }
@@ -17,7 +17,7 @@ interface MostActiveProps {
 const MostActive = ({ onSubmit, onCancel, filter }: MostActiveProps): JSX.Element => {
     const [numPeople, setNumPeople] = useState(filter?.config?.size || 10);
     const [timeFrame, setTimeFrame] = useState({});
-    const [op, setOp] = useState<'add' | 'sub'>(filter?.op || 'add');
+    const [op, setOp] = useState<OPERATION>(filter?.op || OPERATION.ADD);
 
     const handleAddFilter = (e: FormEvent) => {
         e.preventDefault();
@@ -41,12 +41,12 @@ const MostActive = ({ onSubmit, onCancel, filter }: MostActiveProps): JSX.Elemen
             <Typography style={{ lineHeight: 'unset', marginBottom: '2rem' }} variant="h4">
                 <Msg id="misc.smartSearch.most_active.inputString" values={{
                     addRemoveSelect: (
-                        <StyledSelect onChange={ e => setOp(e.target.value as 'add' | 'sub') }
+                        <StyledSelect onChange={ e => setOp(e.target.value as OPERATION) }
                             value={ op }>
-                            <MenuItem key="add" value="add">
+                            <MenuItem key={ OPERATION.ADD } value={ OPERATION.ADD }>
                                 <Msg id="misc.smartSearch.most_active.addRemoveSelect.add"/>
                             </MenuItem>
-                            <MenuItem key="sub" value="sub">
+                            <MenuItem key={ OPERATION.SUB } value={ OPERATION.SUB }>
                                 <Msg id="misc.smartSearch.most_active.addRemoveSelect.sub" />
                             </MenuItem>
                         </StyledSelect>
