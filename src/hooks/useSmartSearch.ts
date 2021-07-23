@@ -48,10 +48,10 @@ const useSmartSearch = (initialFilters: InitialFilters = []): UseSmartSearch => 
 
     return {
         addFilter,
+        deleteFilter,
         editFilter,
         filters,
         filtersWithIds,
-        deleteFilter,
     };
 };
 

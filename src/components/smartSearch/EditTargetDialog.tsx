@@ -4,7 +4,6 @@ import { Box, Button, ButtonBase, Card, CardContent, Dialog, DialogContent, Typo
 
 import All from './filters/All';
 import Filter from './Filter';
-import { isFilterWithId } from './utils';
 import MostActive from './filters/MostActive';
 import patchTaskTarget from 'fetching/tasks/patchTaskTarget';
 import { useRouter } from 'next/router';
@@ -37,7 +36,7 @@ const EditTargetDialog = ({ onDialogClose, open, filterSpec }: EditTargetDialogP
 
     const handleCancelFilter = () => setSelectedFilter(null);
 
-    const handleSubmitFilter = (filter: SmartSearchFilterWithId | ZetkinSmartSearchFilter) => {
+    const handleSubmitFilter = (filter: ZetkinSmartSearchFilter | SmartSearchFilterWithId) => {
         // If editing existing filter
         if ('id' in filter) {
             editFilter(filter.id, filter);

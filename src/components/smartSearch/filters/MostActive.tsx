@@ -1,39 +1,33 @@
+import { FormEvent } from 'react';
 import { FormattedMessage as Msg } from 'react-intl';
 import { Box, Button, Divider, MenuItem, Typography } from '@material-ui/core';
-import { FormEvent, useState } from 'react';
 
-import { isFilterWithId } from '../utils';
 import StyledNumberInput from '../inputs/StyledNumberInput';
 import StyledSelect from '../inputs/StyledSelect';
 import TimeFrame from './TimeFrame';
-import { FILTER_TYPE, OPERATION, SelectedSmartSearchFilter, SmartSearchFilterWithId, ZetkinSmartSearchFilter } from 'types/smartSearch';
+import useSmartSearchFilter from 'hooks/useSmartSearchFilter';
+import { MostActiveFilterConfig, NewSmartSearchFilter, OPERATION, SmartSearchFilterWithId, ZetkinSmartSearchFilter } from 'types/smartSearch';
 
 interface MostActiveProps {
-    filter: SelectedSmartSearchFilter;
-    onSubmit: (filter: SmartSearchFilterWithId | ZetkinSmartSearchFilter) => void;
+    filter:  ZetkinSmartSearchFilter<MostActiveFilterConfig> | SmartSearchFilterWithId<MostActiveFilterConfig> |  NewSmartSearchFilter ;
+    onSubmit: (filter: SmartSearchFilterWithId<MostActiveFilterConfig> | ZetkinSmartSearchFilter<MostActiveFilterConfig>) => void;
     onCancel: () => void;
 }
 
-const MostActive = ({ onSubmit, onCancel, filter }: MostActiveProps): JSX.Element => {
-    const [numPeople, setNumPeople] = useState(filter?.config?.size || 10);
-    const [timeFrame, setTimeFrame] = useState({});
-    const [op, setOp] = useState<OPERATION>(filter?.op || OPERATION.ADD);
+const MostActive = ({ onSubmit, onCancel, filter: initialFilter }: MostActiveProps): JSX.Element => {
+    const { filter, setConfig, setOp } = useSmartSearchFilter<MostActiveFilterConfig>(initialFilter);
 
     const handleAddFilter = (e: FormEvent) => {
         e.preventDefault();
-        onSubmit({
-            config: {
-                size: numPeople,
-                ...timeFrame,
-            },
-            ...(filter && isFilterWithId(filter) && { id: filter.id }),
-            op,
-            type: FILTER_TYPE.MOST_ACTIVE,
-        });
+        onSubmit(filter);
     };
 
     const handleTimeFrameChange = (range: {after?: string; before?: string}) => {
-        setTimeFrame(range);
+        // Add time frame to config
+        setConfig({
+            ...filter.config,
+            ...range,
+        });
     };
 
     return (
@@ -42,7 +36,7 @@ const MostActive = ({ onSubmit, onCancel, filter }: MostActiveProps): JSX.Elemen
                 <Msg id="misc.smartSearch.most_active.inputString" values={{
                     addRemoveSelect: (
                         <StyledSelect onChange={ e => setOp(e.target.value as OPERATION) }
-                            value={ op }>
+                            value={ filter.op }>
                             <MenuItem key={ OPERATION.ADD } value={ OPERATION.ADD }>
                                 <Msg id="misc.smartSearch.most_active.addRemoveSelect.add"/>
                             </MenuItem>
@@ -51,11 +45,16 @@ const MostActive = ({ onSubmit, onCancel, filter }: MostActiveProps): JSX.Elemen
                             </MenuItem>
                         </StyledSelect>
                     ),
-                    numPeople: numPeople,
+                    numPeople: filter.config?.size,
                     numPeopleSelect: (
                         <StyledNumberInput
-                            defaultValue={ numPeople }
-                            onChange={ (e) => setNumPeople(+e.target.value) }
+                            defaultValue={ filter.config?.size }
+                            onChange={ (e) => {
+                                setConfig({
+                                    ...filter.config,
+                                    size: +e.target.value,
+                                });
+                            } }
                         />
                     ),
                     timeFrame: (
