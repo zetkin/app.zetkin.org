@@ -12,8 +12,8 @@ type UseSmartSearch = {
 }
 
 const useSmartSearch = (initialFilters: InitialFilters = []): UseSmartSearch => {
-    const intialFiltersWithIds = initialFilters.map((filter, index) => ({ ...filter, id: index }));
-    const [filtersWithIds, setFiltersWithIds] = useState<SmartSearchFilterWithId[]>(intialFiltersWithIds);
+    const initialFiltersWithIds = initialFilters.map((filter, index) => ({ ...filter, id: index }));
+    const [filtersWithIds, setFiltersWithIds] = useState<SmartSearchFilterWithId[]>(initialFiltersWithIds);
 
     const addFilter = (filter: ZetkinSmartSearchFilter) => {
         const newFilterWithId: SmartSearchFilterWithId = {
