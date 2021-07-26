@@ -184,6 +184,11 @@ export enum ZetkinTaskType {
     watch_video = 'watch_video',
 }
 
+export interface ZetkinQuery {
+    filter_spec: ZetkinSmartSearchFilter[];
+    id: number;
+}
+
 export interface ZetkinTask {
     id: number;
     title: string;
@@ -193,10 +198,7 @@ export interface ZetkinTask {
     deadline?: string; // iso string
     type: ZetkinTaskType;
     config: Record<string, unknown >; // Will find out configs for different types later
-    target: {
-        filter_spec: ZetkinSmartSearchFilter[];
-        id: number;
-    };
+    target: ZetkinQuery;
     campaign: {
         id: number;
         title: string;

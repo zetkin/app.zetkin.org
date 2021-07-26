@@ -5,28 +5,29 @@ import { Box, Button, ButtonBase, Card, CardContent, Dialog, DialogContent, Typo
 import All from './filters/All';
 import Filter from './Filter';
 import MostActive from './filters/MostActive';
-import patchTaskTarget from 'fetching/tasks/patchTaskTarget';
+import patchQuery from 'fetching/patchQuery';
 import { useRouter } from 'next/router';
 import { FILTER_TYPE, SelectedSmartSearchFilter, SmartSearchFilterWithId, ZetkinSmartSearchFilter } from 'types/smartSearch';
 import { useMutation, useQueryClient } from 'react-query';
 
 import useSmartSearch from 'hooks/useSmartSearch';
+import { ZetkinQuery } from 'types/zetkin';
 
 interface TaskAssigneesSmartSearchDialogProps {
-    filterSpec: ZetkinSmartSearchFilter[];
+    query?: ZetkinQuery;
     onDialogClose: () => void;
     open: boolean;
 }
 
-const TaskAssigneesSmartSearchDialog = ({ onDialogClose, open, filterSpec }: TaskAssigneesSmartSearchDialogProps) : JSX.Element => {
+const TaskAssigneesSmartSearchDialog = ({ onDialogClose, open, query }: TaskAssigneesSmartSearchDialogProps) : JSX.Element => {
     const queryClient = useQueryClient();
     const { orgId, taskId } = useRouter().query;
 
-    const { filtersWithIds: filterArray, filters, addFilter, editFilter, deleteFilter } = useSmartSearch(filterSpec);
+    const { filtersWithIds: filterArray, filters, addFilter, editFilter, deleteFilter } = useSmartSearch(query?.filter_spec);
     const [selectedFilter, setSelectedFilter] = useState<SelectedSmartSearchFilter>(null);
 
-    const taskMutation = useMutation(patchTaskTarget(orgId as string, taskId as string),{
-        onSettled: () => queryClient.invalidateQueries(['filter_spec', orgId, taskId]),
+    const taskMutation = useMutation(patchQuery(orgId as string, query?.id as number),{
+        onSettled: () => queryClient.invalidateQueries(['task', orgId, taskId]),
     } );
 
     const handleDialogClose = () => {
@@ -49,7 +50,7 @@ const TaskAssigneesSmartSearchDialog = ({ onDialogClose, open, filterSpec }: Tas
     };
 
     const handleSave = () => {
-        taskMutation.mutate(filters);
+        taskMutation.mutate({ filter_spec: filters });
         onDialogClose();
     };
 

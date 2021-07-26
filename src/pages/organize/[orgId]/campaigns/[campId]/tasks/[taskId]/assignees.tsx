@@ -50,7 +50,7 @@ const TaskAssigneesPage: PageWithLayout = () => {
     const taskQuery = useQuery(['task', orgId, taskId], getTask(orgId as string, taskId as string));
     const task = taskQuery?.data;
 
-    const filterSpec = task?.target.filter_spec || [];
+    const query = task?.target;
 
     const [dialogOpen, setDialogOpen] = useState(false);
 
@@ -61,7 +61,7 @@ const TaskAssigneesPage: PageWithLayout = () => {
             <Button color="primary" onClick={ () => setDialogOpen(true) } variant="contained">
                 Edit
             </Button>
-            <TaskAssigneesSmartSearchDialog filterSpec={ filterSpec } onDialogClose={ handleDialogClose } open={ dialogOpen }/>
+            <TaskAssigneesSmartSearchDialog onDialogClose={ handleDialogClose } open={ dialogOpen } query={ query }/>
         </>
     );
 };
