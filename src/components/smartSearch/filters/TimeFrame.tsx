@@ -100,6 +100,9 @@ const TimeFrame = ({ onChange, filterConfig }: TimeFrameProps): JSX.Element => {
                                 return (
                                     <Msg
                                         id={ `misc.smartSearch.timeFrame.timeFrameSelectLabel.${value}` }
+                                        values={{
+                                            daysInput: numDays,
+                                        }}
                                     />);
                             } }}
                             value={ selected }>

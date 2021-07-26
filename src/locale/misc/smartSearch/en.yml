@@ -28,7 +28,7 @@ timeFrame:
         beforeToday: before today
         beforeDate: before {beforeDate}
         afterDate: after {afterDate}
-        lastFew: during the last {days} {days, plural, one {day} other {days}}
+        lastFew: during {days, plural, one {the last} other {the last}} {days} {days, plural, one {day} other {days}}
     edit:
         ever: '{timeFrameSelect}'
         future: '{timeFrameSelect}'
@@ -44,7 +44,7 @@ timeFrame:
         beforeToday: before today
         beforeDate: before
         afterDate: after
-        lastFew: during the last 
+        lastFew: during {daysInput, plural, one {the last} other {the last}}
     timeFrameSelectOptions:
         ever: at any point in time
         future: in the future
