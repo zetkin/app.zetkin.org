@@ -81,7 +81,7 @@ const MostActive = ({ onSubmit, onCancel, filter: initialFilter }: MostActivePro
                     <Msg id="misc.smartSearch.buttonLabels.cancel"/>
                 </Button>
                 <Button color="primary" type="submit" variant="contained">
-                    { filter.config ? <Msg id="misc.smartSearch.buttonLabels.edit"/>: <Msg id="misc.smartSearch.buttonLabels.add"/> }
+                    { ('id' in filter) ? <Msg id="misc.smartSearch.buttonLabels.edit"/>: <Msg id="misc.smartSearch.buttonLabels.add"/> }
                 </Button>
             </Box>
         </form>
