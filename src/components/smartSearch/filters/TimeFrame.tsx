@@ -87,6 +87,7 @@ const TimeFrame = ({ onChange, filterConfig }: TimeFrameProps): JSX.Element => {
                             value={ before }
                         />
                     ),
+                    days: numDays,
                     daysInput: (
                         <StyledNumberInput
                             inputProps={{ min: '1' }}
@@ -102,7 +103,7 @@ const TimeFrame = ({ onChange, filterConfig }: TimeFrameProps): JSX.Element => {
                                     <Msg
                                         id={ `misc.smartSearch.timeFrame.timeFrameSelectLabel.${value}` }
                                         values={{
-                                            daysInput: numDays,
+                                            days: numDays,
                                         }}
                                     />);
                             } }}
