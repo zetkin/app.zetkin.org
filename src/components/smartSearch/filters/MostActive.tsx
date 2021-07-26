@@ -49,6 +49,7 @@ const MostActive = ({ onSubmit, onCancel, filter: initialFilter }: MostActivePro
                     numPeopleSelect: (
                         <StyledNumberInput
                             defaultValue={ filter.config?.size }
+                            inputProps={{ min: '1' }}
                             onChange={ (e) => {
                                 setConfig({
                                     ...filter.config,

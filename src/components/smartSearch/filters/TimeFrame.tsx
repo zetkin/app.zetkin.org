@@ -89,6 +89,7 @@ const TimeFrame = ({ onChange, filterConfig }: TimeFrameProps): JSX.Element => {
                     ),
                     daysInput: (
                         <StyledNumberInput
+                            inputProps={{ min: '1' }}
                             onChange={ (e) => setNumDays(+e.target.value) }
                             value={ numDays }
                         />

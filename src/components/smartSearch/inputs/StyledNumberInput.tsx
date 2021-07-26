@@ -22,9 +22,9 @@ const StyledNumberInput: React.FC<TextFieldProps> = (props): JSX.Element => {
     return (
         <TextField
             className={ classes.MuiTextField }
-            inputProps={{ className: classes.MuiInput }}
             type="number"
             { ...props }
+            inputProps={{ ...props.inputProps, className: classes.MuiInput }}
         />
     );
 };
