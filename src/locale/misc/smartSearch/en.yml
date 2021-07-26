@@ -1,12 +1,12 @@
 headers:
     current: Current target group
-    add: Add a new filter
+    add: Add a new selection
     examples: Examples
 buttonLabels:
     cancel: Cancel
     save: Save
-    add: Add filter to target group
-    edit: Edit filter
+    add: Add selection to target group
+    edit: Update selection
 filterTitles:
     all: All people
     most_active: A selection of the most active people
