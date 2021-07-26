@@ -204,11 +204,13 @@ const CreateEventForm = ({ onSubmit, onCancel, orgId }: CreateEventFormProps): J
             render={ ({ handleSubmit, submitting }) => (
                 <form noValidate onSubmit={ handleSubmit }>
                     <Grid alignItems="flex-start" container spacing={ 2 }>
-                        { formFields.map((item, idx) => item? (
-                            <Grid key={ idx } item xs={ item.size as GridSize }>
-                                { item.field }
-                            </Grid>
-                        ) : null) }
+                        { formFields.map((item, idx) => {
+                            if (item) {
+                                <Grid key={ idx } item xs={ item.size as GridSize }>
+                                    { item.field }
+                                </Grid>
+                            }
+                        } }
                         <Grid item style={{ marginTop: 16 }}>
                         </Grid>
                         <Box display="flex" justifyContent="flex-end" width={ 1 }>
