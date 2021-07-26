@@ -2,7 +2,7 @@ import { FormattedMessage as Msg } from 'react-intl';
 import { Box, Card, CardActions, IconButton, Typography } from '@material-ui/core';
 import { Delete, Edit } from '@material-ui/icons';
 
-import { getTimeFrame } from './utils';
+import { getTimeFrameWithConfig } from './utils';
 import { FILTER_TYPE, OPERATION, SmartSearchFilterWithId } from 'types/smartSearch';
 
 interface FilterProps {
@@ -15,7 +15,7 @@ interface FilterProps {
 const Filter = ({ filter, onDelete, onEdit }:FilterProps): JSX.Element => {
     const { config, type } = filter;
     const op = filter.op || OPERATION.ADD;
-    const timeFrame = getTimeFrame({ after: config?.after, before: config?.before });
+    const { timeFrame, after, before, numDays } = getTimeFrameWithConfig({ after: config?.after, before: config?.before });
 
     return (
         <Card style={{ margin: '1rem', padding: 0, paddingLeft: '1rem' }}>
@@ -34,12 +34,12 @@ const Filter = ({ filter, onDelete, onEdit }:FilterProps): JSX.Element => {
                                     id={ `misc.smartSearch.timeFrame.preview.${timeFrame}` }
                                     values={{
                                         afterDate: (
-                                            config?.after
+                                            after?.toISOString().slice(0,10)
                                         ),
                                         beforeDate: (
-                                            config?.before
+                                            before?.toISOString().slice(0, 10)
                                         ),
-                                        days: config?.after?.slice(1, config?.after.length - 1),
+                                        days: numDays,
                                     }}
                                 />
                             ) }}

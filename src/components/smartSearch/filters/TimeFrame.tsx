@@ -5,7 +5,7 @@ import { MenuItem, Typography } from '@material-ui/core';
 import { useEffect, useState } from 'react';
 
 import { getNewDateWithOffset } from 'utils/dateUtils';
-import { getTimeFrame } from '../utils';
+import { getTimeFrameWithConfig } from '../utils';
 import StyledDatePicker from '../inputs/StyledDatePicker';
 import StyledNumberInput from '../inputs/StyledNumberInput';
 import StyledSelect from '../inputs/StyledSelect';
@@ -13,37 +13,17 @@ import { TIME_FRAME } from 'types/smartSearch';
 
 interface TimeFrameProps {
     onChange: (range: {after?: string; before?: string}) => void;
-    filterConfig?: {after?: string; before?: string};
+    filterConfig: {after?: string; before?: string};
 }
 
 const TimeFrame = ({ onChange, filterConfig }: TimeFrameProps): JSX.Element => {
-    const [selected, setSelected] = useState<TIME_FRAME>(TIME_FRAME.EVER);
+    const timeFrame = getTimeFrameWithConfig(filterConfig);
+    const [selected, setSelected] = useState<TIME_FRAME>(timeFrame.timeFrame);
     const today = new Date();
-    const [before, setBefore] = useState(today);
-    const [after, setAfter] = useState(getNewDateWithOffset(today, -30));
-    const [numDays, setNumDays] = useState(30);
+    const [before, setBefore] = useState(timeFrame.before || today);
+    const [after, setAfter] = useState(timeFrame.after || getNewDateWithOffset(today, -30));
+    const [numDays, setNumDays] = useState(timeFrame.numDays || 30);
 
-    useEffect(() => {
-        if (filterConfig) {
-            const timeFrame = getTimeFrame(filterConfig);
-            const { after, before } = filterConfig;
-            setSelected(timeFrame);
-            if (timeFrame === TIME_FRAME.LAST_FEW_DAYS && after) {
-                setNumDays(+after.substring(1, after.length - 1));
-                return;
-            }
-            else if (timeFrame === TIME_FRAME.BETWEEN && after && before) {
-                setAfter(new Date(after));
-                setBefore(new Date(before));
-            }
-            else if (timeFrame === TIME_FRAME.AFTER_DATE && after) {
-                setAfter(new Date(after));
-            }
-            else if (timeFrame === TIME_FRAME.BEFORE_DATE && before) {
-                setBefore(new Date(before));
-            }
-        }
-    }, []);// eslint-disable-line react-hooks/exhaustive-deps
     useEffect(() => {
         if (selected ===  TIME_FRAME.EVER) {
             onChange({});

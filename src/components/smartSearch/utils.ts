@@ -1,24 +1,43 @@
 import { TIME_FRAME } from 'types/smartSearch';
 
-export const getTimeFrame = (config: {after?: string; before?: string }): TIME_FRAME => {
+interface timeFrameConfig {
+    after?: Date;
+    before?: Date;
+    numDays?: number;
+    timeFrame: TIME_FRAME;
+}
+
+export const getTimeFrameWithConfig = (config: {after?: string; before?: string }): timeFrameConfig => {
     const { after, before } = config;
     if (after && after.slice(0, 1) === '-') {
-        return TIME_FRAME.LAST_FEW_DAYS;
+        return {
+            numDays: +after.substring(1, after.length - 1),
+            timeFrame:TIME_FRAME.LAST_FEW_DAYS,
+        };
     }
     if (after === 'now') {
-        return TIME_FRAME.FUTURE;
+        return { timeFrame: TIME_FRAME.FUTURE };
     }
     else if (before === 'now') {
-        return TIME_FRAME.BEFORE_TODAY;
+        return { timeFrame: TIME_FRAME.BEFORE_TODAY };
     }
     else if (after && before) {
-        return TIME_FRAME.BETWEEN;
+        return {
+            after: new Date(after),
+            before: new Date(before),
+            timeFrame: TIME_FRAME.BETWEEN,
+        };
     }
     else if (after && !before) {
-        return TIME_FRAME.AFTER_DATE;
+        return {
+            after: new Date(after),
+            timeFrame: TIME_FRAME.AFTER_DATE };
     }
     else if (!after && before) {
-        return TIME_FRAME.BEFORE_DATE;
+        return {
+            before: new Date(before),
+            timeFrame: TIME_FRAME.BEFORE_DATE,
+        };
     }
-    return TIME_FRAME.EVER;
+    return { timeFrame: TIME_FRAME.EVER };
 };
