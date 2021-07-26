@@ -1,18 +1,18 @@
 import { Dispatch } from 'react';
-import { DefaultFilterConfig, FilterConfig, NewSmartSearchFilter, OPERATION, SmartSearchFilterWithId, ZetkinSmartSearchFilter } from 'types/smartSearch';
+import { DefaultFilterConfig, NewSmartSearchFilter, OPERATION, SmartSearchFilterWithId, ZetkinSmartSearchFilter } from 'types/smartSearch';
 import { SetStateAction, useState } from 'react';
 
-interface UseSmartSearchFilter<T extends FilterConfig> {
+interface UseSmartSearchFilter<T> {
     filter: ZetkinSmartSearchFilter<T> | SmartSearchFilterWithId<T>;
     setConfig: Dispatch<SetStateAction<T>>;
     setOp: Dispatch<SetStateAction<OPERATION>>;
 }
 
-type InitialFilter<T extends FilterConfig> = ZetkinSmartSearchFilter<T> | SmartSearchFilterWithId<T> | NewSmartSearchFilter;
+type InitialFilter<T> = ZetkinSmartSearchFilter<T> | SmartSearchFilterWithId<T> | NewSmartSearchFilter;
 
-export const useSmartSearchFilter = <C extends FilterConfig>(initialFilter: InitialFilter<C>): UseSmartSearchFilter<C> => {
+export const useSmartSearchFilter = <C>(initialFilter: InitialFilter<C>, defaultConfig?: C): UseSmartSearchFilter<C> => {
     // Set config to initial value, or empty
-    const [config, setConfig] = useState<C | DefaultFilterConfig>('config' in initialFilter && initialFilter.config || {});
+    const [config, setConfig] = useState<C | DefaultFilterConfig>('config' in initialFilter && initialFilter.config || defaultConfig || {});
     // Set operation to initial value or ADD
     const [op, setOp] = useState('op' in initialFilter && initialFilter.op || OPERATION.ADD);
 

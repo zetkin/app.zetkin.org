@@ -12,7 +12,7 @@ const All = ({ onSubmit, onCancel }: AllProps): JSX.Element => {
 
     const handleSubmitFilter = (e: FormEvent) => {
         e.preventDefault();
-        onSubmit({ op: OPERATION.ADD, type: FILTER_TYPE.ALL  });
+        onSubmit({ config: {}, op: OPERATION.ADD, type: FILTER_TYPE.ALL });
     };
 
     return (

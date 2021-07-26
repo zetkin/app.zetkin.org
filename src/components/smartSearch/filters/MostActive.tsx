@@ -15,8 +15,8 @@ interface MostActiveProps {
 }
 
 const MostActive = ({ onSubmit, onCancel, filter: initialFilter }: MostActiveProps): JSX.Element => {
-    const { filter, setConfig, setOp } = useSmartSearchFilter<MostActiveFilterConfig>(initialFilter);
 
+    const { filter, setConfig, setOp } = useSmartSearchFilter<MostActiveFilterConfig>(initialFilter, { size: 20 });
     const handleAddFilter = (e: FormEvent) => {
         e.preventDefault();
         onSubmit(filter);

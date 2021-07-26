@@ -22,26 +22,24 @@ export enum TIME_FRAME {
 /**
  * Filter Configs
  */
-export type FilterConfig = Record<string, unknown> // Filter Configs are objects
-
 export type DefaultFilterConfig = Record<string, never> // Default filter config is an empty object
 
-export interface MostActiveFilterConfig extends FilterConfig {
+export interface MostActiveFilterConfig {
     after?: string;
     before?: string;
-    size?: number;
+    size: number;
 }
 
 export type AnyFilterConfig = DefaultFilterConfig | MostActiveFilterConfig // Add all filter objects here
 
 /** Filters */
-export interface ZetkinSmartSearchFilter<C extends FilterConfig = AnyFilterConfig> {
-    config?: C;
+export interface ZetkinSmartSearchFilter<C = AnyFilterConfig> {
+    config: C;
     op: OPERATION;
     type: FILTER_TYPE;
 }
 
-export interface SmartSearchFilterWithId<C extends FilterConfig = AnyFilterConfig> extends ZetkinSmartSearchFilter<C> {
+export interface SmartSearchFilterWithId<C = AnyFilterConfig> extends ZetkinSmartSearchFilter<C> {
     id: number;
 }
 
@@ -50,7 +48,7 @@ export interface NewSmartSearchFilter {
 }
 
 // Used for `selectedFilter` handling
-export type SelectedSmartSearchFilter<C extends FilterConfig = AnyFilterConfig> =
+export type SelectedSmartSearchFilter<C = AnyFilterConfig> =
     SmartSearchFilterWithId<C> | // When existing filter is being edited
     NewSmartSearchFilter | // When a new filter is being created
     null // When no filter selected
