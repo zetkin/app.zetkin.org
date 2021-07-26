@@ -10,9 +10,11 @@ import { ZetkinTaskReqBody } from '../../../types/zetkin';
 import { ACTIONS } from '../constants';
 import { ActionConfig, DialogContentBaseProps } from './types';
 
-const DialogContent: React.FunctionComponent<DialogContentBaseProps> = ({ closeDialog }) => {
+const DialogContent: React.FunctionComponent<DialogContentBaseProps> = ({
+    closeDialog,
+}) => {
     const router = useRouter();
-    const { campId, orgId } = router.query as {campId: string; orgId: string};
+    const { campId, orgId } = router.query as { campId: string; orgId: string };
 
     const eventMutation = useMutation(postTask(orgId));
 
@@ -20,14 +22,13 @@ const DialogContent: React.FunctionComponent<DialogContentBaseProps> = ({ closeD
         closeDialog();
         const newTask = await eventMutation.mutateAsync(data);
         // Redirect to task page
-        router.push(`/organize/${orgId}/campiagns/${campId}/tasks/${newTask.id}`);
+        router.push(
+            `/organize/${orgId}/campaigns/${campId}/tasks/${newTask.id}`,
+        );
     };
 
     return (
-        <CreateTaskForm
-            onCancel={ closeDialog }
-            onSubmit={ handleFormSubmit }
-        />
+        <CreateTaskForm onCancel={ closeDialog } onSubmit={ handleFormSubmit } />
     );
 };
 
@@ -38,7 +39,4 @@ const config = {
     urlKey: 'create-task',
 } as ActionConfig;
 
-export {
-    config,
-    DialogContent,
-};
+export { config, DialogContent };
