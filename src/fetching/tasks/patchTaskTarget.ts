@@ -1,5 +1,6 @@
 import { defaultFetch } from '..';
-import { ZetkinSmartSearchFilter, ZetkinTask } from '../../types/zetkin';
+import { ZetkinSmartSearchFilter } from 'types/smartSearch';
+import { ZetkinTask } from 'types/zetkin';
 
 const patchTaskTarget = (orgId : string, taskId: string, fetch = defaultFetch) => {
     return async (data: ZetkinSmartSearchFilter[]):Promise<ZetkinTask> => {

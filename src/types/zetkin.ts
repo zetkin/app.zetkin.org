@@ -1,3 +1,5 @@
+import { ZetkinSmartSearchFilter } from './smartSearch';
+
 export interface ZetkinCampaign {
     color: string;
     info_text: string;
@@ -170,16 +172,6 @@ export interface ZetkinActivity {
     id: number;
     title: string;
     info_text: string | null;
-}
-
-export interface ZetkinSmartSearchFilter {
-    config?: {
-        after?: string;
-        before?: string;
-        size?: number;
-    };
-    op: 'sub' | 'add';
-    type: string;
 }
 
 //  Tasks

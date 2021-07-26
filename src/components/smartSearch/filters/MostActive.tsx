@@ -1,40 +1,33 @@
+import { FormEvent } from 'react';
 import { FormattedMessage as Msg } from 'react-intl';
 import { Box, Button, Divider, MenuItem, Typography } from '@material-ui/core';
-import { FormEvent, useState } from 'react';
 
-import { isFilterWithId } from '../utils';
 import StyledNumberInput from '../inputs/StyledNumberInput';
 import StyledSelect from '../inputs/StyledSelect';
 import TimeFrame from './TimeFrame';
-import { ZetkinSmartSearchFilter } from 'types/zetkin';
-import { ZetkinSmartSearchFilterWithId } from 'types/smartSearch';
+import useSmartSearchFilter from 'hooks/useSmartSearchFilter';
+import { MostActiveFilterConfig, NewSmartSearchFilter, OPERATION, SmartSearchFilterWithId, ZetkinSmartSearchFilter } from 'types/smartSearch';
 
 interface MostActiveProps {
-    filter: ZetkinSmartSearchFilterWithId | ZetkinSmartSearchFilter | null;
-    onSubmit: (filter: ZetkinSmartSearchFilterWithId | ZetkinSmartSearchFilter) => void;
+    filter:  SmartSearchFilterWithId<MostActiveFilterConfig> |  NewSmartSearchFilter ;
+    onSubmit: (filter: SmartSearchFilterWithId<MostActiveFilterConfig> | ZetkinSmartSearchFilter<MostActiveFilterConfig>) => void;
     onCancel: () => void;
 }
 
-const MostActive = ({ onSubmit, onCancel, filter }: MostActiveProps): JSX.Element => {
-    const [numPeople, setNumPeople] = useState(filter?.config?.size || 10);
-    const [timeFrame, setTimeFrame] = useState({});
-    const [op, setOp] = useState<'add' | 'sub'>(filter?.op || 'add');
+const MostActive = ({ onSubmit, onCancel, filter: initialFilter }: MostActiveProps): JSX.Element => {
+    const { filter, setConfig, setOp } = useSmartSearchFilter<MostActiveFilterConfig>(initialFilter);
 
     const handleAddFilter = (e: FormEvent) => {
         e.preventDefault();
-        onSubmit({
-            config: {
-                size: numPeople,
-                ...timeFrame,
-            },
-            ...(filter && isFilterWithId(filter) && { id: filter.id }),
-            op,
-            type: 'most_active',
-        });
+        onSubmit(filter);
     };
 
     const handleTimeFrameChange = (range: {after?: string; before?: string}) => {
-        setTimeFrame(range);
+        // Add time frame to config
+        setConfig({
+            ...filter.config,
+            ...range,
+        });
     };
 
     return (
@@ -42,21 +35,26 @@ const MostActive = ({ onSubmit, onCancel, filter }: MostActiveProps): JSX.Elemen
             <Typography style={{ lineHeight: 'unset', marginBottom: '2rem' }} variant="h4">
                 <Msg id="misc.smartSearch.most_active.inputString" values={{
                     addRemoveSelect: (
-                        <StyledSelect onChange={ e => setOp(e.target.value as 'add' | 'sub') }
-                            value={ op }>
-                            <MenuItem key="add" value="add">
+                        <StyledSelect onChange={ e => setOp(e.target.value as OPERATION) }
+                            value={ filter.op }>
+                            <MenuItem key={ OPERATION.ADD } value={ OPERATION.ADD }>
                                 <Msg id="misc.smartSearch.most_active.addRemoveSelect.add"/>
                             </MenuItem>
-                            <MenuItem key="sub" value="sub">
+                            <MenuItem key={ OPERATION.SUB } value={ OPERATION.SUB }>
                                 <Msg id="misc.smartSearch.most_active.addRemoveSelect.sub" />
                             </MenuItem>
                         </StyledSelect>
                     ),
-                    numPeople: numPeople,
+                    numPeople: filter.config?.size,
                     numPeopleSelect: (
                         <StyledNumberInput
-                            defaultValue={ numPeople }
-                            onChange={ (e) => setNumPeople(+e.target.value) }
+                            defaultValue={ filter.config?.size }
+                            onChange={ (e) => {
+                                setConfig({
+                                    ...filter.config,
+                                    size: +e.target.value,
+                                });
+                            } }
                         />
                     ),
                     timeFrame: (
@@ -83,7 +81,7 @@ const MostActive = ({ onSubmit, onCancel, filter }: MostActiveProps): JSX.Elemen
                     <Msg id="misc.smartSearch.buttonLabels.cancel"/>
                 </Button>
                 <Button color="primary" type="submit" variant="contained">
-                    { filter ? <Msg id="misc.smartSearch.buttonLabels.edit"/>: <Msg id="misc.smartSearch.buttonLabels.add"/> }
+                    { filter.config ? <Msg id="misc.smartSearch.buttonLabels.edit"/>: <Msg id="misc.smartSearch.buttonLabels.add"/> }
                 </Button>
             </Box>
         </form>

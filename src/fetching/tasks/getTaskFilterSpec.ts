@@ -1,5 +1,5 @@
 import { defaultFetch } from '..';
-import { ZetkinSmartSearchFilter } from '../../types/zetkin';
+import { ZetkinSmartSearchFilter } from 'types/smartSearch';
 
 export default function getTaskFilterSpec(orgId : string, taskId: string, fetch = defaultFetch) {
     return async () : Promise<ZetkinSmartSearchFilter[]> => {

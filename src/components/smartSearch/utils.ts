@@ -1,9 +1,8 @@
 import { TIME_FRAME } from 'types/smartSearch';
-import { ZetkinSmartSearchFilter } from 'types/zetkin';
-import { ZetkinSmartSearchFilterWithId } from 'types/smartSearch';
+import { SmartSearchFilterWithId, ZetkinSmartSearchFilter } from 'types/smartSearch';
 
-export function isFilterWithId(filter: ZetkinSmartSearchFilterWithId | ZetkinSmartSearchFilter): filter is ZetkinSmartSearchFilterWithId {
-    return (filter as ZetkinSmartSearchFilterWithId).id !== undefined;
+export function isFilterWithId(filter: SmartSearchFilterWithId | ZetkinSmartSearchFilter): filter is SmartSearchFilterWithId {
+    return (filter as SmartSearchFilterWithId).id !== undefined;
 }
 
 export const getTimeFrame = (config: {after?: string; before?: string }): TIME_FRAME => {

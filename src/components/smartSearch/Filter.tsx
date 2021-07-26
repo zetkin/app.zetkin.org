@@ -3,18 +3,18 @@ import { Box, Card, CardActions, IconButton, Typography } from '@material-ui/cor
 import { Delete, Edit } from '@material-ui/icons';
 
 import { getTimeFrame } from './utils';
-import { ZetkinSmartSearchFilterWithId } from 'types/smartSearch';
+import { FILTER_TYPE, OPERATION, SmartSearchFilterWithId } from 'types/smartSearch';
 
 interface FilterProps {
-    filter: ZetkinSmartSearchFilterWithId;
-    onDelete: (filter: ZetkinSmartSearchFilterWithId) => void;
-    onEdit: (filter: ZetkinSmartSearchFilterWithId) => void;
+    filter: SmartSearchFilterWithId;
+    onDelete: (filter: SmartSearchFilterWithId) => void;
+    onEdit: (filter: SmartSearchFilterWithId) => void;
 }
 
 
 const Filter = ({ filter, onDelete, onEdit }:FilterProps): JSX.Element => {
     const { config, type } = filter;
-    const op = filter.op || 'add';
+    const op = filter.op || OPERATION.ADD;
     const timeFrame = getTimeFrame({ after: config?.after, before: config?.before });
 
     return (
@@ -46,7 +46,7 @@ const Filter = ({ filter, onDelete, onEdit }:FilterProps): JSX.Element => {
                     />
                 </Typography>
                 <CardActions>
-                    { filter.type !== 'all' && (
+                    { filter.type !== FILTER_TYPE.ALL && (
                         <IconButton
                             onClick={ () => onEdit(filter) }>
                             <Edit />
