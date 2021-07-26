@@ -25,7 +25,7 @@ const MostActive = ({ onSubmit, onCancel, filter: initialFilter }: MostActivePro
     const handleTimeFrameChange = (range: {after?: string; before?: string}) => {
         // Add time frame to config
         setConfig({
-            ...filter.config,
+            size: filter.config.size,
             ...range,
         });
     };
