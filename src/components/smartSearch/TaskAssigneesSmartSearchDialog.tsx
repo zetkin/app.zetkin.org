@@ -12,13 +12,13 @@ import { useMutation, useQueryClient } from 'react-query';
 
 import useSmartSearch from 'hooks/useSmartSearch';
 
-interface EditTargetDialogProps {
+interface TaskAssigneesSmartSearchDialogProps {
     filterSpec: ZetkinSmartSearchFilter[];
     onDialogClose: () => void;
     open: boolean;
 }
 
-const EditTargetDialog = ({ onDialogClose, open, filterSpec }: EditTargetDialogProps) : JSX.Element => {
+const TaskAssigneesSmartSearchDialog = ({ onDialogClose, open, filterSpec }: TaskAssigneesSmartSearchDialogProps) : JSX.Element => {
     const queryClient = useQueryClient();
     const { orgId, taskId } = useRouter().query;
 
@@ -113,4 +113,4 @@ const EditTargetDialog = ({ onDialogClose, open, filterSpec }: EditTargetDialogP
     );
 };
 
-export default EditTargetDialog;
+export default TaskAssigneesSmartSearchDialog;

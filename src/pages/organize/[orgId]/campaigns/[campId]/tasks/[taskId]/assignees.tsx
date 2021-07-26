@@ -3,11 +3,11 @@ import { GetServerSideProps } from 'next';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 
-import EditTargetDialog from 'components/smartSearch/EditTargetDialog';
 import getOrg from 'fetching/getOrg';
 import getTaskFilterSpec from 'fetching/tasks/getTaskFilterSpec';
 import { PageWithLayout } from 'types';
 import { scaffold } from 'utils/next';
+import TaskAssigneesSmartSearchDialog from 'components/smartSearch/TaskAssigneesSmartSearchDialog';
 import { useState } from 'react';
 
 const scaffoldOptions = {
@@ -56,7 +56,7 @@ const TaskAssigneesPage: PageWithLayout = () => {
             <Button color="primary" onClick={ () => setDialogOpen(true) } variant="contained">
                 Edit
             </Button>
-            <EditTargetDialog filterSpec={ filterSpec } onDialogClose={ handleDialogClose } open={ dialogOpen }/>
+            <TaskAssigneesSmartSearchDialog filterSpec={ filterSpec } onDialogClose={ handleDialogClose } open={ dialogOpen }/>
         </>
     );
 };
