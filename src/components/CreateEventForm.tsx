@@ -74,10 +74,9 @@ const CreateEventForm = ({ onSubmit, onCancel, orgId }: CreateEventFormProps): J
             ),
             size: 12,
         },
-        {
+        campId ? null : {
             field: (
                 <TextField
-                    disabled={ campId ? true : false }
                     fullWidth
                     id="camp"
                     label={ intl.formatMessage({ id: 'misc.formDialog.event.campaign' }) }
@@ -205,11 +204,11 @@ const CreateEventForm = ({ onSubmit, onCancel, orgId }: CreateEventFormProps): J
             render={ ({ handleSubmit, submitting }) => (
                 <form noValidate onSubmit={ handleSubmit }>
                     <Grid alignItems="flex-start" container spacing={ 2 }>
-                        { formFields.map((item, idx) => (
+                        { formFields.map((item, idx) => item? (
                             <Grid key={ idx } item xs={ item.size as GridSize }>
                                 { item.field }
                             </Grid>
-                        )) }
+                        ) : null) }
                         <Grid item style={{ marginTop: 16 }}>
                         </Grid>
                         <Box display="flex" justifyContent="flex-end" width={ 1 }>
