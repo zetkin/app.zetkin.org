@@ -20,7 +20,7 @@ const DialogContent: React.FunctionComponent<DialogContentBaseProps> = ({ closeD
         closeDialog();
         const newTask = await eventMutation.mutateAsync(data);
         // Redirect to task page
-        router.push(`/organize/${orgId}/campiagns/${campId}/tasks/${newTask.id}`);
+        router.push(`/organize/${orgId}/campaigns/${campId}/tasks/${newTask.id}`);
     };
 
     return (
