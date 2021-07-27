@@ -21,6 +21,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 interface TabbedLayoutProps {
+    actionButtons?: React.ReactElement | React.ReactElement[];
     fixedHeight?: boolean;
     title?: string;
     subtitle?: string | ReactElement;
@@ -29,7 +30,16 @@ interface TabbedLayoutProps {
     tabs: {href: string; messageId: string}[];
 }
 
-const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({ children, fixedHeight, title, subtitle, tabs, baseHref, defaultTab }) => {
+const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
+    children,
+    actionButtons,
+    fixedHeight,
+    title,
+    subtitle,
+    tabs,
+    baseHref,
+    defaultTab,
+}) => {
     const intl = useIntl();
     const classes = useStyles();
     const router = useRouter();
@@ -61,10 +71,23 @@ const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({ children, fixedHei
                                 <SearchDrawer />
                             </Box>
                         </Box>
+                        { /* Title, subtitle, and action buttons */ }
                         <Box p={ 3 } pt={ 1 }>
-                            <Typography component="h1" noWrap variant="h2">
-                                { title }
-                            </Typography>
+                            <Box alignItems="center" display="flex">
+                                { /* Title */ }
+                                <Box flexGrow={ 1 }>
+                                    <Typography component="h1" noWrap variant="h2">
+                                        { title }
+                                    </Typography>
+                                </Box>
+                                { /* Action Buttons */ }
+                                { actionButtons && (
+                                    <Box>
+                                        { actionButtons }
+                                    </Box>
+                                ) }
+                            </Box>
+                            { /* Subtitle */ }
                             <Typography component="h2" noWrap variant="h5">
                                 { subtitle }
                             </Typography>
