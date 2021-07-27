@@ -8,19 +8,19 @@ interface DisplayMostActiveProps {
 }
 
 const DisplayMostActive = ({ filter }: DisplayMostActiveProps) : JSX.Element => {
-    const { config, type } = filter;
+    const { config } = filter;
     const op = filter.op || OPERATION.ADD;
-    const { timeFrame, after, before, numDays } = getTimeFrameWithConfig({ after: config?.after, before: config?.before });
+    const { timeFrame, after, before, numDays } = getTimeFrameWithConfig({ after: config.after, before: config.before });
 
     return (
         <Msg
-            id={ `misc.smartSearch.${type}.inputString` }
+            id="misc.smartSearch.most_active.inputString"
             values={{
                 addRemoveSelect: (
-                    <Msg id={ `misc.smartSearch.${type}.addRemoveSelect.${op}` }/>
+                    <Msg id={ `misc.smartSearch.most_active.addRemoveSelect.${op}` }/>
                 ),
-                numPeople: config?.size,
-                numPeopleSelect: config?.size,
+                numPeople: config.size,
+                numPeopleSelect: config.size,
                 timeFrame: (
                     <Msg
                         id={ `misc.smartSearch.timeFrame.preview.${timeFrame}` }
