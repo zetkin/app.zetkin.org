@@ -3,9 +3,10 @@ import { useState } from 'react';
 import { Box, Button, ButtonBase, Card, CardContent, Dialog, DialogContent, Typography } from '@material-ui/core';
 
 import All from './filters/All';
-import Filter from './Filter';
+import DisplayFilter from './DisplayFilter';
 import MostActive from './filters/MostActive';
 import patchQuery from 'fetching/patchQuery';
+import User from './filters/User';
 import { useRouter } from 'next/router';
 import { FILTER_TYPE, SelectedSmartSearchFilter, SmartSearchFilterWithId, ZetkinSmartSearchFilter } from 'types/smartSearch';
 import { useMutation, useQueryClient } from 'react-query';
@@ -73,7 +74,7 @@ const TaskAssigneesSmartSearchDialog = ({ onDialogClose, open, query }: TaskAssi
                             </Typography>
                             { filterArray.map(filter => {
                                 return (
-                                    <Filter key={ filter.id } filter={ filter } onDelete={ handleDeleteButtonClick } onEdit={ handleEditButtonClick } />
+                                    <DisplayFilter key={ filter.id } filter={ filter } onDelete={ handleDeleteButtonClick } onEdit={ handleEditButtonClick } />
                                 );
                             }) }
                         </Box>
@@ -109,6 +110,7 @@ const TaskAssigneesSmartSearchDialog = ({ onDialogClose, open, query }: TaskAssi
                 ) }
                 { selectedFilter?.type === FILTER_TYPE.ALL && <All onCancel={ handleCancelFilter } onSubmit={ handleSubmitFilter }/> }
                 { selectedFilter?.type === FILTER_TYPE.MOST_ACTIVE && <MostActive filter={ selectedFilter } onCancel={ handleCancelFilter } onSubmit={ handleSubmitFilter }/> }
+                { selectedFilter?.type === FILTER_TYPE.USER && <User filter={ selectedFilter } onCancel={ handleCancelFilter } onSubmit={ handleSubmitFilter }/> }
             </DialogContent>
         </Dialog>
     );

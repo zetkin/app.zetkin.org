@@ -2,67 +2,55 @@ import { FormEvent } from 'react';
 import { FormattedMessage as Msg } from 'react-intl';
 import { Box, Button, Divider, MenuItem, Typography } from '@material-ui/core';
 
-import StyledNumberInput from '../inputs/StyledNumberInput';
-import StyledSelect from '../inputs/StyledSelect';
-import TimeFrame from './TimeFrame';
+import StyledSelect from '../../inputs/StyledSelect';
 import useSmartSearchFilter from 'hooks/useSmartSearchFilter';
-import { MostActiveFilterConfig, NewSmartSearchFilter, OPERATION, SmartSearchFilterWithId, ZetkinSmartSearchFilter } from 'types/smartSearch';
+import { NewSmartSearchFilter, OPERATION, SmartSearchFilterWithId, UserFilterConfig, ZetkinSmartSearchFilter } from 'types/smartSearch';
 
-interface MostActiveProps {
-    filter:  SmartSearchFilterWithId<MostActiveFilterConfig> |  NewSmartSearchFilter ;
-    onSubmit: (filter: SmartSearchFilterWithId<MostActiveFilterConfig> | ZetkinSmartSearchFilter<MostActiveFilterConfig>) => void;
+interface UserProps {
+    filter:  SmartSearchFilterWithId<UserFilterConfig> |  NewSmartSearchFilter ;
+    onSubmit: (filter: SmartSearchFilterWithId<UserFilterConfig> | ZetkinSmartSearchFilter<UserFilterConfig>) => void;
     onCancel: () => void;
 }
 
-const MostActive = ({ onSubmit, onCancel, filter: initialFilter }: MostActiveProps): JSX.Element => {
+const User = ({ onSubmit, onCancel, filter: initialFilter }: UserProps): JSX.Element => {
 
-    const { filter, setConfig, setOp } = useSmartSearchFilter<MostActiveFilterConfig>(initialFilter, { size: 20 });
+    const { filter, setConfig, setOp } = useSmartSearchFilter<UserFilterConfig>(initialFilter, { is_user: true });
     const handleAddFilter = (e: FormEvent) => {
         e.preventDefault();
         onSubmit(filter);
     };
 
-    const handleTimeFrameChange = (range: {after?: string; before?: string}) => {
-        // Add time frame to config
-        setConfig({
-            size: filter.config.size,
-            ...range,
-        });
-    };
-
     return (
         <form onSubmit={ e => handleAddFilter(e) }>
             <Typography style={{ lineHeight: 'unset', marginBottom: '2rem' }} variant="h4">
-                <Msg id="misc.smartSearch.most_active.inputString" values={{
+                <Msg id="misc.smartSearch.user.inputString" values={{
                     addRemoveSelect: (
                         <StyledSelect onChange={ e => setOp(e.target.value as OPERATION) }
                             value={ filter.op }>
                             <MenuItem key={ OPERATION.ADD } value={ OPERATION.ADD }>
-                                <Msg id="misc.smartSearch.most_active.addRemoveSelect.add"/>
+                                <Msg id="misc.smartSearch.user.addRemoveSelect.add"/>
                             </MenuItem>
                             <MenuItem key={ OPERATION.SUB } value={ OPERATION.SUB }>
-                                <Msg id="misc.smartSearch.most_active.addRemoveSelect.sub" />
+                                <Msg id="misc.smartSearch.user.addRemoveSelect.sub" />
                             </MenuItem>
                         </StyledSelect>
                     ),
-                    numPeople: filter.config?.size,
-                    numPeopleSelect: (
-                        <StyledNumberInput
-                            defaultValue={ filter.config?.size }
-                            inputProps={{ min: '1' }}
+                    connectedSelect: (
+                        <StyledSelect
                             onChange={ (e) => {
                                 setConfig({
                                     ...filter.config,
-                                    size: +e.target.value,
+                                    is_user: !!e.target.value, // convert numbers to boolean since MenuItem cannot take boolean as props
                                 });
                             } }
-                        />
-                    ),
-                    timeFrame: (
-                        <TimeFrame filterConfig={{
-                            ...(filter.config.after && { after: filter.config.after }),
-                            ...(filter.config.before && { before: filter.config.before }) }} onChange={ handleTimeFrameChange }
-                        />
+                            value={ +filter.config.is_user }>
+                            <MenuItem key={ 1 } value={ 1 }>
+                                <Msg id="misc.smartSearch.user.connectedSelect.true"/>
+                            </MenuItem>
+                            <MenuItem key={ 0 } value={ 0 }>
+                                <Msg id="misc.smartSearch.user.connectedSelect.false"/>
+                            </MenuItem>
+                        </StyledSelect>
                     ),
                 }}
                 />
@@ -72,9 +60,9 @@ const MostActive = ({ onSubmit, onCancel, filter: initialFilter }: MostActivePro
                 <Msg id="misc.smartSearch.headers.examples"/>
             </Typography>
             <Typography color="textSecondary">
-                <Msg id="misc.smartSearch.most_active.examples.one"/>
+                <Msg id="misc.smartSearch.user.examples.one"/>
                 <br />
-                <Msg id="misc.smartSearch.most_active.examples.two"/>
+                <Msg id="misc.smartSearch.user.examples.two"/>
             </Typography>
 
             <Box display="flex" justifyContent="flex-end" m={ 1 } style={{ gap: '1rem' }}>
@@ -89,4 +77,4 @@ const MostActive = ({ onSubmit, onCancel, filter: initialFilter }: MostActivePro
     );
 };
 
-export default MostActive;
+export default User;
