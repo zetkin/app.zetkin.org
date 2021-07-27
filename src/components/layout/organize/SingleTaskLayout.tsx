@@ -6,6 +6,7 @@ import getTask from 'fetching/tasks/getTask';
 import TabbedLayout from './TabbedLayout';
 
 import TaskStatusText from 'components/organize/tasks/TaskStatusText';
+import ZetkinActionButtons, { MENU_ITEMS } from 'components/ZetkinActionButtons';
 
 
 const SingleCampaignLayout: FunctionComponent = ({ children }) => {
@@ -16,6 +17,9 @@ const SingleCampaignLayout: FunctionComponent = ({ children }) => {
 
     return (
         <TabbedLayout
+            actionButtons={
+                <ZetkinActionButtons menuItems={ [MENU_ITEMS.EDIT_TASK] } />
+            }
             baseHref={ `/organize/${orgId}/campaigns/${campId}/calendar/tasks/${taskId}` }
             defaultTab="/"
             subtitle={

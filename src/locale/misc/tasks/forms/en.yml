@@ -9,3 +9,7 @@ createTask:
             open_link: Open Link
         instructions: Instructions
         campaign: Campaign
+editTask:
+    title: Edit task
+deleteTask:
+    title: Delete task
