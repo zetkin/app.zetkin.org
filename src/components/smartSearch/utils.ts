@@ -1,10 +1,15 @@
-import { TIME_FRAME } from 'types/smartSearch';
+import { QUANTITY, TIME_FRAME } from 'types/smartSearch';
 
 interface timeFrameConfig {
     after?: Date;
     before?: Date;
     numDays?: number;
     timeFrame: TIME_FRAME;
+}
+
+interface QuantityConfig {
+    quantity: QUANTITY;
+    size: number;
 }
 
 export const getTimeFrameWithConfig = (config: {after?: string; before?: string }): timeFrameConfig => {
@@ -40,4 +45,17 @@ export const getTimeFrameWithConfig = (config: {after?: string; before?: string 
         };
     }
     return { timeFrame: TIME_FRAME.EVER };
+};
+
+export const getQuantityWithConfig = (size: number): QuantityConfig => {
+    if (size % 1 === 0) {
+        return {
+            quantity: QUANTITY.INT,
+            size,
+        };
+    }
+    return {
+        quantity: QUANTITY.PERCENT,
+        size: size * 100,
+    };
 };

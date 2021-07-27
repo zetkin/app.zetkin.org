@@ -10,6 +10,7 @@ buttonLabels:
 filterTitles:
     all: All people
     most_active: A selection of the most active people
+    random: A random selection of people
     user: People who used Zetkin
 all:
     inputString: Add all the people in the organization.
@@ -21,6 +22,14 @@ most_active:
     examples:
         one: Add the 100 most active members of the organization before today.
         two: Remove the 5 most active members of the organization at any point in time.
+random:
+    inputString: Randomly {addRemoveSelect} {quantity} in the organization.
+    addRemoveSelect:
+        add: add
+        sub: remove
+    examples:
+        one: Randomly add 20 people in the organization.
+        two: Randomly remove 15% of the people in the organization.
 user:
     inputString: "{addRemoveSelect} all people who are {connectedSelect} to a Zetkin user."
     addRemoveSelect:
@@ -32,3 +41,16 @@ user:
     examples:
         one: Remove all people who are connected to a Zetkin user.
         two: Add all people who are not connected to a Zetkin user.
+quantity:
+    preview:
+        integer: "{people} {people, plural, one {person} other {people}}"
+        percent: "{people} % of the people"
+    edit:
+        integer: "{numInput} {quantitySelect}"
+        percent: "{numInput} {quantitySelect}"
+    quantitySelectOptions:
+        integer: a number of people
+        percent: a percentage of people
+    quantitySelectLabel:
+        integer: "{people, plural, one {person} other {people}}"
+        percent: "% of the people"
