@@ -5,9 +5,8 @@ import { useRouter } from 'next/router';
 import getTask from 'fetching/tasks/getTask';
 import TabbedLayout from './TabbedLayout';
 
+import TaskActionButtons from 'components/organize/tasks/TaskActionButtons';
 import TaskStatusText from 'components/organize/tasks/TaskStatusText';
-import ZetkinActionButtons, { MENU_ITEMS } from 'components/ZetkinActionButtons';
-
 
 const SingleCampaignLayout: FunctionComponent = ({ children }) => {
     const { taskId, orgId, campId } = useRouter().query;
@@ -18,7 +17,7 @@ const SingleCampaignLayout: FunctionComponent = ({ children }) => {
     return (
         <TabbedLayout
             actionButtons={
-                <ZetkinActionButtons menuItems={ [MENU_ITEMS.EDIT_TASK] } />
+                <TaskActionButtons task={ task } />
             }
             baseHref={ `/organize/${orgId}/campaigns/${campId}/calendar/tasks/${taskId}` }
             defaultTab="/"

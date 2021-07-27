@@ -6,14 +6,15 @@ import { Box, Button, MenuItem } from '@material-ui/core';
 import { FormattedMessage, FormattedMessage as Msg, useIntl } from 'react-intl';
 
 import getCampaigns from '../../../../fetching/getCampaigns';
-import { ZetkinTaskReqBody, ZetkinTaskType } from '../../../../types/zetkin';
+import { ZetkinTask, ZetkinTaskReqBody, ZetkinTaskType } from '../../../../types/zetkin';
 
-interface CreateTaskFormProps {
+interface TaskDetailsFormProps {
     onSubmit: (data: ZetkinTaskReqBody) => void;
     onCancel: () => void;
+    task?: ZetkinTask;
 }
 
-const CreateTaskForm = ({ onSubmit, onCancel }: CreateTaskFormProps): JSX.Element => {
+const TaskDetailsForm = ({ onSubmit, onCancel, task }: TaskDetailsFormProps): JSX.Element => {
     const router = useRouter();
     const { campId, orgId } = router.query as {campId: string; orgId: string};
     const intl = useIntl();
@@ -41,6 +42,9 @@ const CreateTaskForm = ({ onSubmit, onCancel }: CreateTaskFormProps): JSX.Elemen
         <Form
             initialValues={{
                 campaign_id: parseInt(campId),
+                instructions: task?.instructions,
+                title: task?.title,
+                type: task?.type,
             }}
             onSubmit={ (values) => onSubmit(values) }
             render={ ({ handleSubmit, submitting }) => (
@@ -124,4 +128,4 @@ const CreateTaskForm = ({ onSubmit, onCancel }: CreateTaskFormProps): JSX.Elemen
     );
 };
 
-export default CreateTaskForm;
+export default TaskDetailsForm;
