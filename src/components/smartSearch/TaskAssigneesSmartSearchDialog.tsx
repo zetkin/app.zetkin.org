@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Box, Button, ButtonBase, Card, CardContent, Dialog, DialogContent, Typography } from '@material-ui/core';
 
 import All from './filters/All';
-import Filter from './Filter';
+import DisplayFilter from './DisplayFilter';
 import MostActive from './filters/MostActive';
 import patchQuery from 'fetching/patchQuery';
 import { useRouter } from 'next/router';
@@ -73,7 +73,7 @@ const TaskAssigneesSmartSearchDialog = ({ onDialogClose, open, query }: TaskAssi
                             </Typography>
                             { filterArray.map(filter => {
                                 return (
-                                    <Filter key={ filter.id } filter={ filter } onDelete={ handleDeleteButtonClick } onEdit={ handleEditButtonClick } />
+                                    <DisplayFilter key={ filter.id } filter={ filter } onDelete={ handleDeleteButtonClick } onEdit={ handleEditButtonClick } />
                                 );
                             }) }
                         </Box>

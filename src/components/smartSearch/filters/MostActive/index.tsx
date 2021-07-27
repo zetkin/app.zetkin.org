@@ -2,9 +2,9 @@ import { FormEvent } from 'react';
 import { FormattedMessage as Msg } from 'react-intl';
 import { Box, Button, Divider, MenuItem, Typography } from '@material-ui/core';
 
-import StyledNumberInput from '../inputs/StyledNumberInput';
-import StyledSelect from '../inputs/StyledSelect';
-import TimeFrame from './TimeFrame';
+import StyledNumberInput from '../../inputs/StyledNumberInput';
+import StyledSelect from '../../inputs/StyledSelect';
+import TimeFrame from '../TimeFrame';
 import useSmartSearchFilter from 'hooks/useSmartSearchFilter';
 import { MostActiveFilterConfig, NewSmartSearchFilter, OPERATION, SmartSearchFilterWithId, ZetkinSmartSearchFilter } from 'types/smartSearch';
 
