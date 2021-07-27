@@ -10,7 +10,7 @@ buttonLabels:
 filterTitles:
     all: All people
     most_active: A selection of the most active people
-    user: People who with a connection to a Zetkin user
+    user: People who used Zetkin
 all:
     inputString: Add all the people in the organization.
 most_active:
