@@ -10,6 +10,7 @@ buttonLabels:
 filterTitles:
     all: All people
     most_active: A selection of the most active people
+    user: People who with a connection to a Zetkin user
 all:
     inputString: Add all the people in the organization.
 most_active:
@@ -20,6 +21,17 @@ most_active:
     examples:
         one: Add the 100 most active members of the organization before today.
         two: Remove the 5 most active members of the organization at any point in time.
+user:
+    inputString: "{addRemoveSelect} all people who are {connectedSelect} to a Zetkin user."
+    addRemoveSelect:
+        add: Add
+        sub: Remove
+    connectedSelect:
+        true: connected
+        false: not connected
+    examples:
+        one: Remove all people who are connected to a Zetkin user.
+        two: Add all people who are not connected to a Zetkin user.
 timeFrame:
     preview:
         ever: at any point in time

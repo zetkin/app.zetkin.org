@@ -6,6 +6,7 @@ import All from './filters/All';
 import DisplayFilter from './DisplayFilter';
 import MostActive from './filters/MostActive';
 import patchQuery from 'fetching/patchQuery';
+import User from './filters/User';
 import { useRouter } from 'next/router';
 import { FILTER_TYPE, SelectedSmartSearchFilter, SmartSearchFilterWithId, ZetkinSmartSearchFilter } from 'types/smartSearch';
 import { useMutation, useQueryClient } from 'react-query';
@@ -109,6 +110,7 @@ const TaskAssigneesSmartSearchDialog = ({ onDialogClose, open, query }: TaskAssi
                 ) }
                 { selectedFilter?.type === FILTER_TYPE.ALL && <All onCancel={ handleCancelFilter } onSubmit={ handleSubmitFilter }/> }
                 { selectedFilter?.type === FILTER_TYPE.MOST_ACTIVE && <MostActive filter={ selectedFilter } onCancel={ handleCancelFilter } onSubmit={ handleSubmitFilter }/> }
+                { selectedFilter?.type === FILTER_TYPE.USER && <User filter={ selectedFilter } onCancel={ handleCancelFilter } onSubmit={ handleSubmitFilter }/> }
             </DialogContent>
         </Dialog>
     );

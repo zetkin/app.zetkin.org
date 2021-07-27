@@ -2,6 +2,7 @@
 export enum FILTER_TYPE {
     ALL ='all',
     MOST_ACTIVE ='most_active',
+    USER = 'user'
 }
 
 export enum OPERATION {
@@ -30,7 +31,12 @@ export interface MostActiveFilterConfig {
     size: number;
 }
 
-export type AnyFilterConfig = DefaultFilterConfig | MostActiveFilterConfig // Add all filter objects here
+export interface UserFilterConfig {
+    is_user: boolean;
+}
+
+export type AnyFilterConfig = DefaultFilterConfig | MostActiveFilterConfig |
+    UserFilterConfig// Add all filter objects here
 
 /** Filters */
 export interface ZetkinSmartSearchFilter<C = AnyFilterConfig> {

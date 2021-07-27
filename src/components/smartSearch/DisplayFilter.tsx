@@ -3,7 +3,8 @@ import { Delete, Edit } from '@material-ui/icons';
 
 import DisplayAll from './filters/All/DisplayAll';
 import DisplayMostActive from './filters/MostActive/DisplayMostActive';
-import { FILTER_TYPE, MostActiveFilterConfig, SmartSearchFilterWithId } from 'types/smartSearch';
+import DisplayUser from './filters/User/DisplayUser';
+import { FILTER_TYPE, MostActiveFilterConfig, SmartSearchFilterWithId, UserFilterConfig } from 'types/smartSearch';
 
 interface DisplayFilterProps {
     filter: SmartSearchFilterWithId;
@@ -19,6 +20,7 @@ const DisplayFilter = ({ filter, onDelete, onEdit }:DisplayFilterProps): JSX.Ele
                     <Typography noWrap variant="h5">
                         { filter.type === FILTER_TYPE.ALL && <DisplayAll /> }
                         { filter.type === FILTER_TYPE.MOST_ACTIVE && <DisplayMostActive filter={ filter as SmartSearchFilterWithId<MostActiveFilterConfig>  }/> }
+                        { filter.type === FILTER_TYPE.USER && <DisplayUser filter={ filter as SmartSearchFilterWithId<UserFilterConfig>  }/> }
                     </Typography>
                     <CardActions>
                         { filter.type !== FILTER_TYPE.ALL && (
