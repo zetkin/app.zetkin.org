@@ -20,3 +20,7 @@ taskDetails:
     titleLabel: Title
     instructionsLabel: Instructions
     typeLabel: Type
+publishButton:
+    publish: Publish
+    active: Published
+    closed: Closed
