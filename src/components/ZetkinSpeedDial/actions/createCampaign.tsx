@@ -18,7 +18,6 @@ const DialogContent: React.FunctionComponent<DialogContentBaseProps> = ({ closeD
 
     const handleCreateCampaignFormSubmit = async (data: Record<string,unknown>) => {
         const newCampaign = await campaignMutation.mutateAsync(data);
-        closeDialog();
 
         // Redirect to campaign page
         router.push(`/organize/${orgId}/campaigns/${newCampaign.id}`);

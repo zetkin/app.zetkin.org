@@ -17,7 +17,6 @@ const DialogContent: React.FunctionComponent<DialogContentBaseProps> = ({ closeD
     const eventMutation = useMutation(postTask(orgId));
 
     const handleFormSubmit = async (data: ZetkinTaskReqBody) => {
-        closeDialog();
         const newTask = await eventMutation.mutateAsync(data);
         // Redirect to task page
         router.push(`/organize/${orgId}/campaigns/${campId}/calendar/tasks/${newTask.id}`);
