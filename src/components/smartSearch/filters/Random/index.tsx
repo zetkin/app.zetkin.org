@@ -9,6 +9,7 @@ import useSmartSearchFilter from 'hooks/useSmartSearchFilter';
 import { NewSmartSearchFilter , OPERATION, QUANTITY, RandomFilterConfig, SmartSearchFilterWithId, ZetkinSmartSearchFilter } from 'types/smartSearch';
 
 const shouldGenerateSeed = (
+    // refresh the random selection if the type of quanity has changed, or if the selection size has increased
     filter: ZetkinSmartSearchFilter<RandomFilterConfig>,
     initialFilter: SmartSearchFilterWithId<RandomFilterConfig>) => {
     const isInt = (num: number) => num % 1 === 0;
@@ -16,8 +17,7 @@ const shouldGenerateSeed = (
     const initialSize = initialFilter.config.size;
     return (
         (isInt(currentSize) !== isInt(initialSize)) ||
-        (isInt(currentSize) && isInt(initialSize) && currentSize > initialSize) ||
-        (!isInt(currentSize) && !isInt(initialSize) && currentSize > initialSize)
+        currentSize > initialSize
     );
 };
 
