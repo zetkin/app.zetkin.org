@@ -12,6 +12,6 @@ export default function postCampaign(orgId : string, fetch = defaultFetch) {
             method: 'POST',
         });
         const resData = await res.json();
-        return resData;
+        return resData?.data;
     };
 }
