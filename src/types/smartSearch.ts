@@ -2,12 +2,18 @@
 export enum FILTER_TYPE {
     ALL ='all',
     MOST_ACTIVE ='most_active',
+    RANDOM = 'random',
     USER = 'user'
 }
 
 export enum OPERATION {
     ADD = 'add',
     SUB = 'sub'
+}
+
+export enum QUANTITY {
+    INT = 'integer',
+    PERCENT = 'percent'
 }
 
 export enum TIME_FRAME {
@@ -31,12 +37,17 @@ export interface MostActiveFilterConfig {
     size: number;
 }
 
+export interface RandomFilterConfig {
+    size: number;
+    seed: string;
+}
+
 export interface UserFilterConfig {
     is_user: boolean;
 }
 
 export type AnyFilterConfig = DefaultFilterConfig | MostActiveFilterConfig |
-    UserFilterConfig// Add all filter objects here
+    RandomFilterConfig | UserFilterConfig// Add all filter objects here
 
 /** Filters */
 export interface ZetkinSmartSearchFilter<C = AnyFilterConfig> {

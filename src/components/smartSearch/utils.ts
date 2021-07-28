@@ -1,13 +1,18 @@
-import { TIME_FRAME } from 'types/smartSearch';
+import { QUANTITY, TIME_FRAME } from 'types/smartSearch';
 
-interface timeFrameConfig {
+interface TimeFrameConfig {
     after?: Date;
     before?: Date;
     numDays?: number;
     timeFrame: TIME_FRAME;
 }
 
-export const getTimeFrameWithConfig = (config: {after?: string; before?: string }): timeFrameConfig => {
+interface QuantityConfig {
+    quantity: QUANTITY;
+    size: number;
+}
+
+export const getTimeFrameWithConfig = (config: {after?: string; before?: string }): TimeFrameConfig => {
     const { after, before } = config;
     if (after && after.slice(0, 1) === '-') {
         return {
@@ -40,4 +45,17 @@ export const getTimeFrameWithConfig = (config: {after?: string; before?: string 
         };
     }
     return { timeFrame: TIME_FRAME.EVER };
+};
+
+export const getQuantityWithConfig = (size: number): QuantityConfig => {
+    if (size % 1 === 0) {
+        return {
+            quantity: QUANTITY.INT,
+            size,
+        };
+    }
+    return {
+        quantity: QUANTITY.PERCENT,
+        size: size * 100,
+    };
 };

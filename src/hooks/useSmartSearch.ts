@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { SmartSearchFilterWithId, ZetkinSmartSearchFilter } from 'types/smartSearch';
 
-type InitialFilters = ZetkinSmartSearchFilter[] | SmartSearchFilterWithId[]
+type InitialFilters = ZetkinSmartSearchFilter[]
 
 type UseSmartSearch = {
     addFilter: (filter: ZetkinSmartSearchFilter) => void; // addSmartSearchFilter
