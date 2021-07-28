@@ -1,12 +1,15 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Settings } from '@material-ui/icons';
+import { useMutation } from 'react-query';
 import { Box, Button, Menu, MenuItem } from '@material-ui/core';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
 import React, { useState } from 'react';
 
+import patchTask from 'fetching/tasks/patchTask';
 import ZetkinDialog from 'components/ZetkinDialog';
 import { ZetkinTask, ZetkinTaskReqBody } from 'types/zetkin';
 
+import PublishButton from './PublishButton';
 import TaskDetailsForm from '../forms/TaskDetailsForm';
 
 enum TASK_MENU_ITEMS {
@@ -25,15 +28,23 @@ const TaskActionButtons: React.FunctionComponent<TaskActionButtonsProps> = ({ ta
     const [currentOpenDialog, setCurrentOpenDialog] = useState<TASK_MENU_ITEMS>();
     const closeDialog = () => setCurrentOpenDialog(undefined);
 
+    const patchTaskMutation = useMutation(patchTask(task.organization.id, task.id));
+
     const handleEditTask = (task: ZetkinTaskReqBody) => {
-        return task;
+        patchTaskMutation.mutate(task);
+        closeDialog();
     };
 
     return (
-        <>
-            <Button color="secondary" disableElevation onClick={ (e) => setMenuActivator(e.currentTarget) } variant="contained">
-                <Settings />
-            </Button>
+        <Box display="flex">
+            <Box mr={ 1 }>
+                <PublishButton task={ task }/>
+            </Box>
+            <Box>
+                <Button color="secondary" disableElevation onClick={ (e) => setMenuActivator(e.currentTarget) } variant="contained">
+                    <Settings />
+                </Button>
+            </Box>
             <Menu
                 anchorEl={ menuActivator }
                 keepMounted
@@ -62,7 +73,7 @@ const TaskActionButtons: React.FunctionComponent<TaskActionButtonsProps> = ({ ta
                     task={ task }
                 />
             </ZetkinDialog>
-        </>
+        </Box>
 
     );
 };
