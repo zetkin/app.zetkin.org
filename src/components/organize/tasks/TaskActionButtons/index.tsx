@@ -1,9 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Settings } from '@material-ui/icons';
-import { useMutation } from 'react-query';
 import { Box, Button, Menu, MenuItem } from '@material-ui/core';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
 import React, { useState } from 'react';
+import { useMutation, useQueryClient } from 'react-query';
 
 import patchTask from 'fetching/tasks/patchTask';
 import ZetkinDialog from 'components/ZetkinDialog';
@@ -22,13 +22,16 @@ interface TaskActionButtonsProps {
 
 const TaskActionButtons: React.FunctionComponent<TaskActionButtonsProps> = ({ task }) => {
     const intl = useIntl();
+    const queryClient = useQueryClient();
     // Menu
     const [menuActivator, setMenuActivator] = React.useState<null | HTMLElement>(null);
     // Dialogs
     const [currentOpenDialog, setCurrentOpenDialog] = useState<TASK_MENU_ITEMS>();
     const closeDialog = () => setCurrentOpenDialog(undefined);
 
-    const patchTaskMutation = useMutation(patchTask(task.organization.id, task.id));
+    const patchTaskMutation = useMutation(patchTask(task.organization.id, task.id), {
+        onSettled: () => queryClient.invalidateQueries('task'),
+    });
 
     const handleEditTask = (task: ZetkinTaskReqBody) => {
         patchTaskMutation.mutate(task);

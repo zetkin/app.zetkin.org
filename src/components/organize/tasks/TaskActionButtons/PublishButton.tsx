@@ -1,7 +1,7 @@
 import { Button } from '@material-ui/core';
 import dayjs from 'dayjs';
 // import { FormattedMessage as Msg } from 'react-intl';
-import { useMutation } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
 
 import patchTask from 'fetching/tasks/patchTask';
 import { ZetkinTask } from 'types/zetkin';
@@ -11,18 +11,29 @@ interface PublishButtonProps {
 }
 
 const PublishButton: React.FunctionComponent<PublishButtonProps> = ({ task }) => {
-    const eventMutation = useMutation(patchTask(task.organization.id, task.id));
+    const queryClient = useQueryClient();
 
-    // const isPublished = task.published;
+    const { published, deadline, expires } = task;
+    const now = dayjs();
+    const publishedDate = dayjs(published);
+    const deadlineDate = dayjs(deadline);
+    const expiryDate = dayjs(expires);
+
+    const patchTaskMutation = useMutation(patchTask(task.organization.id, task.id), {
+        onSettled: () => queryClient.invalidateQueries('task'),
+    });
+
+    // Publish Button is active if published doesn't exist or has not passed, and the deadline or expiry haven't been passed
+    const canBePublished = now.isBefore(deadlineDate) && now.isBefore(expiryDate) && (!published || now.isBefore(publishedDate));
 
     const publishTask = () => {
-        eventMutation.mutate({
+        patchTaskMutation.mutate({
             published: dayjs().toISOString(),
         });
     };
 
     return (
-        <Button color="primary" disabled={ true } onClick={ publishTask } variant="contained">Publish</Button>
+        <Button color="primary" disabled={ !canBePublished } onClick={ publishTask } variant="contained">Publish</Button>
     );
 };
 
