@@ -9,6 +9,9 @@ createTask:
             open_link: Open Link
         instructions: Instructions
         campaign: Campaign
+        published: Publish Time
+        deadline: Completion Deadline
+        expires: Expiration Date
 editTask:
     title: Edit task
 deleteTask:
