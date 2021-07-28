@@ -16,9 +16,12 @@ const DialogContent: React.FunctionComponent<DialogContentBaseProps> = ({ closeD
         onSettled: () => queryClient.invalidateQueries('campaigns'),
     });
 
-    const handleCreateCampaignFormSubmit = (data: Record<string,unknown>) => {
-        campaignMutation.mutate(data);
+    const handleCreateCampaignFormSubmit = async (data: Record<string,unknown>) => {
+        const newCampaign = await campaignMutation.mutateAsync(data);
         closeDialog();
+
+        // Redirect to campaign page
+        router.push(`/organize/${orgId}/campaigns/${newCampaign.id}`);
     };
 
     return (<CampaignForm
