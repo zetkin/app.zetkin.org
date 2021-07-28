@@ -1,6 +1,7 @@
 
 export enum FILTER_TYPE {
     ALL ='all',
+    CAMPAIGN_PARTICIPATION = 'campaign_participation',
     MOST_ACTIVE ='most_active',
     RANDOM = 'random',
     USER = 'user'
@@ -46,8 +47,18 @@ export interface UserFilterConfig {
     is_user: boolean;
 }
 
+export interface CampaignParticipationConfig {
+    state: 'booked' | 'signed_up';
+    operator: 'in' | 'notin';
+    campaign?: number;
+    activity?: number;
+    location?: number;
+    after?: string;
+    before?: string;
+}
+
 export type AnyFilterConfig = DefaultFilterConfig | MostActiveFilterConfig |
-    RandomFilterConfig | UserFilterConfig// Add all filter objects here
+    RandomFilterConfig | UserFilterConfig | CampaignParticipationConfig // Add all filter objects here
 
 /** Filters */
 export interface ZetkinSmartSearchFilter<C = AnyFilterConfig> {
