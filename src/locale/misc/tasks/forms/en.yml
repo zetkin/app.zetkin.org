@@ -17,4 +17,5 @@ editTask:
 deleteTask:
     title: Delete task
     warning: Are you sure you want to delete this task? This action is permanent and cannot be undone.
+    cancel: Cancel
     submitButton: Confirm deletion

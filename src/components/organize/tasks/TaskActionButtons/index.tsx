@@ -106,6 +106,7 @@ const TaskActionButtons: React.FunctionComponent<TaskActionButtonsProps> = ({ ta
                 open={ currentOpenDialog === TASK_MENU_ITEMS.DELETE_TASK }
                 title={ intl.formatMessage({ id: 'misc.tasks.forms.deleteTask.title' }) }>
                 <DeleteTaskForm
+                    onCancel={ closeDialog }
                     onSubmit={ handleDeleteTask }
                 />
             </ZetkinDialog>
