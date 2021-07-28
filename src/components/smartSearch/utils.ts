@@ -1,6 +1,6 @@
 import { QUANTITY, TIME_FRAME } from 'types/smartSearch';
 
-interface timeFrameConfig {
+interface TimeFrameConfig {
     after?: Date;
     before?: Date;
     numDays?: number;
@@ -12,7 +12,7 @@ interface QuantityConfig {
     size: number;
 }
 
-export const getTimeFrameWithConfig = (config: {after?: string; before?: string }): timeFrameConfig => {
+export const getTimeFrameWithConfig = (config: {after?: string; before?: string }): TimeFrameConfig => {
     const { after, before } = config;
     if (after && after.slice(0, 1) === '-') {
         return {
