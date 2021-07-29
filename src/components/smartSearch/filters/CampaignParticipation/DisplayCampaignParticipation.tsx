@@ -21,7 +21,7 @@ const DisplayCampaignParticipation = ({ filter }: DisplayCampaignParticipationPr
 
     const campaignQuery = useQuery(['campaign', orgId, campId ], getCampaign(orgId as string, campId?.toString() as string), { enabled: !!campId });
     const activityQuery = useQuery(['activity', orgId, activityId ], getActivity(orgId as string, activityId?.toString() as string), { enabled: !!activityId });
-    const locationQuery = useQuery(['campaign', orgId, locationId ], getLocation(orgId as string, locationId?.toString() as string), { enabled: !!locationId });
+    const locationQuery = useQuery(['location', orgId, locationId ], getLocation(orgId as string, locationId?.toString() as string), { enabled: !!locationId });
 
     const campaignTitle = campaignQuery?.data?.title || null;
     const activityTitle = activityQuery?.data?.title || null;

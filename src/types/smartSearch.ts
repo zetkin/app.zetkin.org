@@ -57,8 +57,13 @@ export interface CampaignParticipationConfig {
     before?: string;
 }
 
-export type AnyFilterConfig = DefaultFilterConfig | MostActiveFilterConfig |
-    RandomFilterConfig | UserFilterConfig | CampaignParticipationConfig // Add all filter objects here
+export type AnyFilterConfig = (
+    CampaignParticipationConfig |
+    DefaultFilterConfig |
+    MostActiveFilterConfig |
+    RandomFilterConfig |
+    UserFilterConfig
+    ) // Add all filter objects here
 
 /** Filters */
 export interface ZetkinSmartSearchFilter<C = AnyFilterConfig> {
