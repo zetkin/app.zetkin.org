@@ -12,6 +12,7 @@ filterTitles:
     campaign_participation: People who have participated in a campaign
     most_active: A selection of the most active people
     random: A random selection of people
+    survey_submission: People who have responded to a survey
     user: People who used Zetkin
 all:
     inputString: Add all the people in the organization.
@@ -54,6 +55,18 @@ random:
     examples:
         one: Randomly add 20 people in the organization.
         two: Randomly remove 15% of the people in the organization.
+survey_submission:
+    inputString: "{addRemoveSelect} people who have submitted responses to {surveySelect} {timeFrame}."
+    addRemoveSelect:
+        add: Add
+        sub: Remove
+    surveySelect:
+        any: a survey
+        none: This organization has no surveys yet
+        survey: survey "{surveyTitle}"
+    examples:
+        one: People who have submitted responses to survey 'Member survey 2020' before today.
+        two: People who have submitted responses to survey 'Member survey' during the last 30 days.
 user:
     inputString: "{addRemoveSelect} all people who are {connectedSelect} to a Zetkin user."
     addRemoveSelect:

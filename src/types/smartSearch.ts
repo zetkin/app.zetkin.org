@@ -4,6 +4,7 @@ export enum FILTER_TYPE {
     CAMPAIGN_PARTICIPATION = 'campaign_participation',
     MOST_ACTIVE ='most_active',
     RANDOM = 'random',
+    SURVEY_SUBMISSION = 'survey_submission',
     USER = 'user'
 }
 
@@ -43,6 +44,13 @@ export interface RandomFilterConfig {
     seed: string;
 }
 
+export interface SurveySubmissionFilterConfig {
+    after?: string;
+    before?: string;
+    operator: 'submitted';
+    survey: number;
+}
+
 export interface UserFilterConfig {
     is_user: boolean;
 }
@@ -62,6 +70,7 @@ export type AnyFilterConfig = (
     DefaultFilterConfig |
     MostActiveFilterConfig |
     RandomFilterConfig |
+    SurveySubmissionFilterConfig |
     UserFilterConfig
     ) // Add all filter objects here
 
