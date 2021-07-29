@@ -17,10 +17,12 @@ interface WeekCalendarProps {
     orgId: string;
     tasks: ZetkinTask[];
 }
+const ONE_HOUR = 100 / 24;
 
 const useStyles = makeStyles(() => ({
     list: {
-        background:grey[200],
+        // show lighter background color from 6am to 7pm
+        background:`linear-gradient(${grey[300]} ${ONE_HOUR * 6}%, ${grey[200]} ${ONE_HOUR * 6}%, ${grey[200]} ${ONE_HOUR * 19}%, ${grey[300]} ${ONE_HOUR * 19}%)`,
         height: '100%',
         margin: 0,
         padding:0 ,
