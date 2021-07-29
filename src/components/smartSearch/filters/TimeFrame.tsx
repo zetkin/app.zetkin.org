@@ -14,9 +14,10 @@ import { TIME_FRAME } from 'types/smartSearch';
 interface TimeFrameProps {
     onChange: (range: {after?: string; before?: string}) => void;
     filterConfig: {after?: string; before?: string};
+    options?: TIME_FRAME[];
 }
 
-const TimeFrame = ({ onChange, filterConfig }: TimeFrameProps): JSX.Element => {
+const TimeFrame = ({ onChange, filterConfig, options = Object.values(TIME_FRAME) }: TimeFrameProps): JSX.Element => {
     const timeFrame = getTimeFrameWithConfig(filterConfig);
     const [selected, setSelected] = useState<TIME_FRAME>(timeFrame.timeFrame);
     const today = new Date();
@@ -88,7 +89,7 @@ const TimeFrame = ({ onChange, filterConfig }: TimeFrameProps): JSX.Element => {
                                     />);
                             } }}
                             value={ selected }>
-                            { Object.values(TIME_FRAME).map(value => (
+                            { options.map(value => (
                                 <MenuItem key={ value } value={ value }>
                                     <Msg id={ `misc.smartSearch.timeFrame.timeFrameSelectOptions.${value}` }/>
                                 </MenuItem>

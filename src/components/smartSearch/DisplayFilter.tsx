@@ -5,8 +5,9 @@ import DisplayAll from './filters/All/DisplayAll';
 import DisplayCampaignParticipation from './filters/CampaignParticipation/DisplayCampaignParticipation';
 import DisplayMostActive from './filters/MostActive/DisplayMostActive';
 import DisplayRandom from './filters/Random/DisplayRandom';
+import DisplaySurveySubmission from './filters/SurveySubmission/DisplaySurveySubmission';
 import DisplayUser from './filters/User/DisplayUser';
-import { CampaignParticipationConfig, FILTER_TYPE, MostActiveFilterConfig, RandomFilterConfig, SmartSearchFilterWithId, UserFilterConfig } from 'types/smartSearch';
+import { CampaignParticipationConfig, FILTER_TYPE, MostActiveFilterConfig, RandomFilterConfig, SmartSearchFilterWithId, SurveySubmissionFilterConfig, UserFilterConfig } from 'types/smartSearch';
 
 interface DisplayFilterProps {
     filter: SmartSearchFilterWithId;
@@ -24,6 +25,7 @@ const DisplayFilter = ({ filter, onDelete, onEdit }:DisplayFilterProps): JSX.Ele
                         { filter.type === FILTER_TYPE.MOST_ACTIVE && <DisplayMostActive filter={ filter as SmartSearchFilterWithId<MostActiveFilterConfig>  }/> }
                         { filter.type === FILTER_TYPE.CAMPAIGN_PARTICIPATION && <DisplayCampaignParticipation filter={ filter as SmartSearchFilterWithId<CampaignParticipationConfig> }/> }
                         { filter.type === FILTER_TYPE.RANDOM && <DisplayRandom filter={ filter as SmartSearchFilterWithId<RandomFilterConfig>  }/> }
+                        { filter.type === FILTER_TYPE.SURVEY_SUBMISSION && <DisplaySurveySubmission filter={ filter as SmartSearchFilterWithId<SurveySubmissionFilterConfig>  }/> }
                         { filter.type === FILTER_TYPE.USER && <DisplayUser filter={ filter as SmartSearchFilterWithId<UserFilterConfig>  }/> }
                     </Typography>
                     <CardActions>
