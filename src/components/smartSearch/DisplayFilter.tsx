@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Box, Card, CardActions, IconButton, Typography } from '@material-ui/core';
 import { Delete, Edit } from '@material-ui/icons';
 
@@ -17,12 +16,6 @@ interface DisplayFilterProps {
 }
 
 const DisplayFilter = ({ filter, onDelete, onEdit }:DisplayFilterProps): JSX.Element => {
-    const [broken, setBroken] = useState(false);
-
-    const handleFilterBreak = () => {
-        setBroken(true);
-    };
-
     return (
         <>
             <Card style={{ margin: '1rem', padding: 0, paddingLeft: '1rem' }}>
@@ -32,11 +25,11 @@ const DisplayFilter = ({ filter, onDelete, onEdit }:DisplayFilterProps): JSX.Ele
                         { filter.type === FILTER_TYPE.MOST_ACTIVE && <DisplayMostActive filter={ filter as SmartSearchFilterWithId<MostActiveFilterConfig>  }/> }
                         { filter.type === FILTER_TYPE.CAMPAIGN_PARTICIPATION && <DisplayCampaignParticipation filter={ filter as SmartSearchFilterWithId<CampaignParticipationConfig> }/> }
                         { filter.type === FILTER_TYPE.RANDOM && <DisplayRandom filter={ filter as SmartSearchFilterWithId<RandomFilterConfig>  }/> }
-                        { filter.type === FILTER_TYPE.SURVEY_SUBMISSION && <DisplaySurveySubmission filter={ filter as SmartSearchFilterWithId<SurveySubmissionFilterConfig>  } onBreak={ handleFilterBreak }/> }
+                        { filter.type === FILTER_TYPE.SURVEY_SUBMISSION && <DisplaySurveySubmission filter={ filter as SmartSearchFilterWithId<SurveySubmissionFilterConfig>  }/> }
                         { filter.type === FILTER_TYPE.USER && <DisplayUser filter={ filter as SmartSearchFilterWithId<UserFilterConfig>  }/> }
                     </Typography>
                     <CardActions>
-                        { filter.type !== FILTER_TYPE.ALL && !broken && (
+                        { filter.type !== FILTER_TYPE.ALL && (
                             <IconButton
                                 onClick={ () => onEdit(filter) }>
                                 <Edit />

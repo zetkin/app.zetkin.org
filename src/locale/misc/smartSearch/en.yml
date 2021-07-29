@@ -56,7 +56,6 @@ random:
         one: Randomly add 20 people in the organization.
         two: Randomly remove 15% of the people in the organization.
 survey_submission:
-    broken: (Deleted survey).
     inputString: "{addRemoveSelect} people who have submitted responses to {surveySelect} {timeFrame}."
     addRemoveSelect:
         add: Add

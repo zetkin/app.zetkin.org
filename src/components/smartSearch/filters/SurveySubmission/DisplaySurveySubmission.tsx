@@ -1,5 +1,4 @@
 import { FormattedMessage as Msg } from 'react-intl';
-import { useEffect } from 'react';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 
@@ -9,10 +8,9 @@ import { OPERATION, SmartSearchFilterWithId, SurveySubmissionFilterConfig } from
 
 interface DisplaySurveySubmissionProps {
     filter: SmartSearchFilterWithId<SurveySubmissionFilterConfig>;
-    onBreak: () => void;
 }
 
-const DisplaySurveySubmission = ({ filter, onBreak }: DisplaySurveySubmissionProps) : JSX.Element => {
+const DisplaySurveySubmission = ({ filter }: DisplaySurveySubmissionProps) : JSX.Element => {
     const { orgId } = useRouter().query;
     const { config } = filter;
     const { survey: surveyId } = config;
@@ -22,13 +20,7 @@ const DisplaySurveySubmission = ({ filter, onBreak }: DisplaySurveySubmissionPro
     const surveyQuery = useQuery(['survey', orgId, surveyId], getSurvey(orgId as string, surveyId.toString()));
     const surveyTitle = surveyQuery?.data?.title;
 
-    useEffect(() => {
-        if (!surveyTitle) {
-            onBreak();
-        }
-    }, [surveyTitle]); // eslint-disable-line react-hooks/exhaustive-deps
-
-    return surveyTitle ? (
+    return (
         <Msg
             id="misc.smartSearch.survey_submission.inputString"
             values={{
@@ -54,7 +46,7 @@ const DisplaySurveySubmission = ({ filter, onBreak }: DisplaySurveySubmissionPro
                     />
                 ) }}
         />
-    ) : <Msg id="misc.smartSearch.survey_submission.broken" />;
+    );
 };
 
 export default DisplaySurveySubmission;
