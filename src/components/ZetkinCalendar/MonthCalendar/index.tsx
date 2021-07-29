@@ -35,6 +35,16 @@ const useStyles = makeStyles(() => ({
         margin: 0,
         padding: 0,
     },
+    today: {
+        background: 'blue',
+        borderRadius: '50%',
+        color: 'white',
+        display: 'flex',
+        height: 'max-content',
+        justifyContent: 'center',
+        minWidth: '24px',
+        width: 'max-content',
+    },
 }));
 
 const MonthCalendar = ({ orgId, campaigns, baseHref, events, focusDate, tasks }: MonthCalendarProps): JSX.Element => {
@@ -68,6 +78,7 @@ const MonthCalendar = ({ orgId, campaigns, baseHref, events, focusDate, tasks }:
     }
 
     const gridItems = calendarRows * 7;
+    const today = new Date();
 
     const getEventsInRange = (start: Date, end:Date) => events.filter(event => {
         return new Date(event.start_time) >= start &&
@@ -125,6 +136,7 @@ const MonthCalendar = ({ orgId, campaigns, baseHref, events, focusDate, tasks }:
                         ...daysEvents.map(e => ({ data: e, id: 'event' })),
                     ];
                     const totalTasksAndEvents = tasksAndEvents.length;
+                    const isToday = isInRange(today, currentDate, tomorrow);
                     return (
                         <Box
                             key={ index }
@@ -135,7 +147,9 @@ const MonthCalendar = ({ orgId, campaigns, baseHref, events, focusDate, tasks }:
                             m={ 0.1 }
                             position="relative">
                             <Box p={ 0.5 } pb={ 0 }>
-                                <Typography>
+                                <Typography className={
+                                    isToday ? classes.today : ''
+                                }>
                                     <FormattedDate
                                         day="2-digit"
                                         value={ currentDate }
