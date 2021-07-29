@@ -59,10 +59,7 @@ const MostActive = ({ onSubmit, onCancel, filter: initialFilter }: MostActivePro
                         />
                     ),
                     timeFrame: (
-                        <TimeFrame filterConfig={{
-                            ...(filter.config.after && { after: filter.config.after }),
-                            ...(filter.config.before && { before: filter.config.before }) }} onChange={ handleTimeFrameChange }
-                        />
+                        <TimeFrame filterConfig={{ after: filter.config.after, before: filter.config.before }} onChange={ handleTimeFrameChange }/>
                     ),
                 }}
                 />

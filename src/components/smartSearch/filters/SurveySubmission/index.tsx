@@ -98,9 +98,7 @@ const SurveySubmission = ({ onSubmit, onCancel, filter: initialFilter }: SurveyS
                     ),
                     timeFrame: (
                         <TimeFrame
-                            filterConfig={{
-                                ...(filter.config.after && { after: filter.config.after }),
-                                ...(filter.config.before && { before: filter.config.before }) }}
+                            filterConfig={{ after: filter.config.after, before: filter.config.before }}
                             onChange={ handleTimeFrameChange }
                             options={ [
                                 TIME_FRAME.EVER,
