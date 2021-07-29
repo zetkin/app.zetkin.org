@@ -9,11 +9,35 @@ buttonLabels:
     edit: Update selection
 filterTitles:
     all: All people
+    campaign_participation: People who have participated in a campaign
     most_active: A selection of the most active people
     random: A random selection of people
     user: People who used Zetkin
 all:
     inputString: Add all the people in the organization.
+campaign_participation:
+    inputString: "{addRemoveSelect} people who {haveSelect} {bookedSelect} for events in {campaignSelect} with {activitySelect} at {locationSelect} {timeFrame}"
+    addRemoveSelect:
+        add: Add
+        sub: Remove
+    haveSelect:
+        in: have
+        notin: have not
+    bookedSelect:
+        booked: been booked
+        signed_up: signed up
+    examples:
+        one: Add people who have signed up for events in any campaign with any activity at location 'Dorfplatz' at any point in time
+        two: Remove people who have not been booked for events in any campaign with activity 'Put up posters' at any location before today.
+    campaignSelect:
+        any: any campaign
+        campaign: campaign "{campaign}"
+    locationSelect:
+        any: any location
+        location: location "{location}"
+    activitySelect:
+        any: any activity
+        activity: activity "{activity}"
 most_active:
     inputString: "{addRemoveSelect} the {numPeopleSelect} most active {numPeople, plural, one {person} other {people}} in the organization {timeFrame}." 
     addRemoveSelect:
