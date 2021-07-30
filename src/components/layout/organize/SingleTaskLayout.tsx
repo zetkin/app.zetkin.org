@@ -5,8 +5,8 @@ import { useRouter } from 'next/router';
 import getTask from 'fetching/tasks/getTask';
 import TabbedLayout from './TabbedLayout';
 
+import TaskActionButtons from 'components/organize/tasks/TaskActionButtons';
 import TaskStatusText from 'components/organize/tasks/TaskStatusText';
-
 
 const SingleCampaignLayout: FunctionComponent = ({ children }) => {
     const { taskId, orgId, campId } = useRouter().query;
@@ -16,6 +16,9 @@ const SingleCampaignLayout: FunctionComponent = ({ children }) => {
 
     return (
         <TabbedLayout
+            actionButtons={
+                <TaskActionButtons task={ task } />
+            }
             baseHref={ `/organize/${orgId}/campaigns/${campId}/calendar/tasks/${taskId}` }
             defaultTab="/"
             subtitle={

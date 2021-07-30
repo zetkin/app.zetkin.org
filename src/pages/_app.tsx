@@ -2,8 +2,10 @@ import '../styles.css';
 import '../utils/polyfills';
 import { AppProps } from 'next/app';
 import CssBaseline from '@material-ui/core/CssBaseline';
+import DateUtils from '@date-io/dayjs';
 import { Hydrate } from 'react-query/hydration';
 import { IntlProvider } from 'react-intl';
+import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import theme from '../theme';
 import { ThemeProvider } from '@material-ui/core/styles';
@@ -41,18 +43,20 @@ function MyApp({ Component, pageProps } : AppProps) : JSX.Element {
     return (
         <UserContext.Provider value={ pageProps.user }>
             <ThemeProvider theme={ theme }>
-                <IntlProvider
-                    defaultLocale="en"
-                    locale={ lang }
-                    messages={ messages }>
-                    <QueryClientProvider client={ queryClient }>
-                        <Hydrate state={ dehydratedState }>
-                            <CssBaseline />
-                            { getLayout(<Component { ...restProps } />, restProps) }
-                        </Hydrate>
-                        <ReactQueryDevtools initialIsOpen={ false } />
-                    </QueryClientProvider>
-                </IntlProvider>
+                <MuiPickersUtilsProvider utils={ DateUtils }>
+                    <IntlProvider
+                        defaultLocale="en"
+                        locale={ lang }
+                        messages={ messages }>
+                        <QueryClientProvider client={ queryClient }>
+                            <Hydrate state={ dehydratedState }>
+                                <CssBaseline />
+                                { getLayout(<Component { ...restProps } />, restProps) }
+                            </Hydrate>
+                            <ReactQueryDevtools initialIsOpen={ false } />
+                        </QueryClientProvider>
+                    </IntlProvider>
+                </MuiPickersUtilsProvider>
             </ThemeProvider>
         </UserContext.Provider>
     );
