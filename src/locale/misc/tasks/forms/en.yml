@@ -6,7 +6,7 @@ createTask:
         types:
             offline: Offline
             share_link: Share Link
-            open_link: Open Link
+            visit_link: Visit Link
         instructions: Instructions
         campaign: Campaign
         published: Publish Time

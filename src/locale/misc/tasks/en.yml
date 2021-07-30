@@ -6,7 +6,7 @@ statuses:
 types:
     offline: Offline
     share_link: Share Link
-    visit_link: Open Link
+    visit_link: Visit Link
 taskListItem:
     relativeTimes:
         active: "Closes {time}"
@@ -15,11 +15,16 @@ taskListItem:
         scheduled: "Will be published {time}"
         indefinite: "Published {time}"
 taskDetails:
-    title: Details
+    title: Task Details
     editButton: Edit
     titleLabel: Title
     instructionsLabel: Instructions
     typeLabel: Type
+taskTypeDetails:
+    share_link:
+        title: Share Link Settings
+    visit_link:
+        title: Visit Link Settings
 publishButton:
     publish: Publish
     active: Published

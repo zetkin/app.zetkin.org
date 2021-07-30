@@ -1,22 +1,9 @@
 import { useIntl } from 'react-intl';
-import { Box, Typography } from '@material-ui/core';
 
 import ZetkinSection from 'components/ZetkinSection';
 import { ZetkinTask } from 'types/zetkin';
 
-interface TaskDetailsSectionProps {
-    title: string;
-    value: string | React.ReactNode;
-}
-
-const TaskDetailsSection: React.FunctionComponent<TaskDetailsSectionProps> = ({ title, value }) => {
-    return (
-        <Box mt={ 2 }>
-            <Typography variant="subtitle2">{ title }</Typography>
-            <Typography variant="body1">{ value }</Typography>
-        </Box>
-    );
-};
+import TaskProperty from './TaskProperty';
 
 interface TaskDetailsCardProps {
     task: ZetkinTask;
@@ -26,15 +13,15 @@ const TaskDetailsCard: React.FunctionComponent<TaskDetailsCardProps> = ({ task }
     const intl = useIntl();
     return (
         <ZetkinSection title={ intl.formatMessage({ id: 'misc.tasks.taskDetails.title' }) }>
-            <TaskDetailsSection
+            <TaskProperty
                 title={ intl.formatMessage({ id: 'misc.tasks.taskDetails.titleLabel' }) }
                 value={ task.title }
             />
-            <TaskDetailsSection
+            <TaskProperty
                 title={ intl.formatMessage({ id: 'misc.tasks.taskDetails.instructionsLabel' }) }
                 value={ task.instructions }
             />
-            <TaskDetailsSection
+            <TaskProperty
                 title={ intl.formatMessage({ id: 'misc.tasks.taskDetails.typeLabel' }) }
                 value={ intl.formatMessage({ id: `misc.tasks.types.${task.type}` }) }
             />
