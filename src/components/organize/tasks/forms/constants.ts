@@ -9,7 +9,10 @@ export enum TASK_DETAILS_FIELDS {
     EXPIRES= 'expires',
 }
 
-export enum SHARE_LINK_FIELDS {}
+export enum SHARE_LINK_FIELDS {
+    DEFAULT_MESSAGE= 'default_message',
+    URL= 'url'
+}
 
 export enum VISIT_LINK_FIELDS {
     URL= 'url'

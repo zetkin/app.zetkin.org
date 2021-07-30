@@ -28,3 +28,8 @@ visitLinkConfig:
     title: Visit Link Config
     fields:
         url: URL to visit
+shareLinkConfig:
+    title: Share Link Config
+    fields:
+        url: URL to share
+        default_message: Default message user will send
