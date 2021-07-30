@@ -41,6 +41,14 @@ const TaskDetailsForm = ({ onSubmit, onCancel, task }: TaskDetailsFormProps): JS
         return errors;
     };
 
+    const submit = (taskValues: ZetkinTaskRequestBody) => {
+        onSubmit({
+            ...taskValues,
+            // If the task type changes, set the config to an empty object
+            config: task?.type && taskValues.type !== task?.type ? {} : taskValues.config,
+        });
+    };
+
     return (
         <Form
             initialValues={{
@@ -52,7 +60,7 @@ const TaskDetailsForm = ({ onSubmit, onCancel, task }: TaskDetailsFormProps): JS
                 title: task?.title,
                 type: task?.type,
             }}
-            onSubmit={ (values) => onSubmit(values) }
+            onSubmit={ (values) => submit(values) }
             render={ ({ handleSubmit, submitting }) => (
                 <form noValidate onSubmit={ handleSubmit }>
                     { /* Fields */ }

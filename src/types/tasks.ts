@@ -22,7 +22,7 @@ export interface VisitLinkConfig {
     url: string;
 }
 
-export type AnyTaskTypeConfig = ShareLinkConfig | VisitLinkConfig;
+export type AnyTaskTypeConfig = ShareLinkConfig | VisitLinkConfig | Record<string, never>;
 
 // Task object from backend
 export interface ZetkinTask<TaskTypeConfig = AnyTaskTypeConfig> {
