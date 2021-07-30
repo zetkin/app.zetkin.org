@@ -11,4 +11,6 @@ export enum TASK_DETAILS_FIELDS {
 
 export enum SHARE_LINK_FIELDS {}
 
-export enum OPEN_LINK_FIELDS {}
+export enum VISIT_LINK_FIELDS {
+    URL= 'url'
+}

@@ -1,36 +1,64 @@
+import { Button } from '@material-ui/core';
 import { useIntl } from 'react-intl';
+import { useState } from 'react';
+import { useMutation, useQueryClient } from 'react-query';
 
+import patchTask from 'fetching/tasks/patchTask';
+import ZetkinDialog from 'components/ZetkinDialog';
 import ZetkinSection from 'components/ZetkinSection';
 import { ZetkinTask } from 'types/zetkin';
+import { AnyTaskTypeConfig, TASK_TYPE } from 'types/tasks';
 
-import { TASK_TYPE } from 'types/tasks';
-import TaskProperty from '../TaskProperty';
+import VisitLinkConfigForm from '../forms/VisitLinkConfigForm';
+
+// import TaskProperty from '../TaskProperty';
 
 interface TaskTypeDetailsProps {
     task: ZetkinTask;
 }
 
 const TaskTypeDetailsSection: React.FunctionComponent<TaskTypeDetailsProps> = ({ task }) => {
+    const queryClient = useQueryClient();
     const intl = useIntl();
-    const { type } = task;
+    const [editConfigDialog, setEditConfigDialog] = useState<TASK_TYPE>();
+    const closeDialog = () => setEditConfigDialog(undefined);
 
-    if (type === TASK_TYPE.OFFLINE) return null;
+    const patchTaskMutation = useMutation(patchTask(task.organization.id, task.id), {
+        onSettled: () => queryClient.invalidateQueries('task'),
+    });
+
+    const handlePatchTaskConfig = (config: AnyTaskTypeConfig) => {
+        patchTaskMutation.mutate({ config });
+        closeDialog();
+    };
+
+    if (task.type === TASK_TYPE.OFFLINE) return null;
 
     return (
-        <ZetkinSection title={ intl.formatMessage({ id: `misc.tasks.taskTypeDetails.${type}.title` }) }>
-            <TaskProperty
-                title={ intl.formatMessage({ id: 'misc.tasks.taskDetails.titleLabel' }) }
-                value={ task.title }
-            />
-            <TaskProperty
-                title={ intl.formatMessage({ id: 'misc.tasks.taskDetails.instructionsLabel' }) }
-                value={ task.instructions }
-            />
-            <TaskProperty
-                title={ intl.formatMessage({ id: 'misc.tasks.taskDetails.typeLabel' }) }
-                value={ intl.formatMessage({ id: `misc.tasks.types.${task.type}` }) }
-            />
-        </ZetkinSection>
+        <>
+            <ZetkinSection title={ intl.formatMessage({ id: `misc.tasks.taskTypeDetails.${task.type}.title` }) }>
+                <Button
+                    color="primary"
+                    onClick={ () => {
+                        setEditConfigDialog(task.type);
+                    } }
+                    variant="contained">
+                    Edit Settings
+                </Button>
+                { JSON.stringify(task.config) }
+            </ZetkinSection>
+            { /* Dialog */ }
+            <ZetkinDialog onClose={ closeDialog } open={ Boolean(editConfigDialog) }>
+                { task.type === TASK_TYPE.VISIT_LINK && (
+                    <VisitLinkConfigForm
+                        onCancel={ closeDialog }
+                        onSubmit={ (config) => handlePatchTaskConfig(config) }
+                        taskConfig={ task.config }
+                    />
+                ) }
+
+            </ZetkinDialog>
+        </>
     );
 };
 

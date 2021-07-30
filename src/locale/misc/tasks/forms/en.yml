@@ -24,3 +24,7 @@ publishTask:
     warning: Please confirm you are ready to publish this task. It will be sent to all assignees.
     cancel: Cancel
     submitButton: Publish task now
+visitLinkConfig:
+    title: Visit Link Config
+    fields:
+        url: URL to visit

@@ -18,11 +18,11 @@ export interface ShareLinkConfig {
     url: string;
 }
 
-export interface OpenLinkConfig {
+export interface VisitLinkConfig {
     url: string;
 }
 
-export type AnyTaskTypeConfig = ShareLinkConfig | OpenLinkConfig;
+export type AnyTaskTypeConfig = ShareLinkConfig | VisitLinkConfig;
 
 // Task object from backend
 export interface ZetkinTask<TaskTypeConfig = AnyTaskTypeConfig> {
