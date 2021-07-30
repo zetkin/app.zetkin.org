@@ -8,3 +8,7 @@ export enum TASK_DETAILS_FIELDS {
     DEADLINE= 'deadline',
     EXPIRES= 'expires',
 }
+
+export enum SHARE_LINK_FIELDS {}
+
+export enum OPEN_LINK_FIELDS {}

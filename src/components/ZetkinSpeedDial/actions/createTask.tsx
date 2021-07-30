@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 
 import postTask from '../../../fetching/tasks/postTask';
 import TaskDetailsForm from '../../organize/tasks/forms/TaskDetailsForm';
-import { ZetkinTaskReqBody } from '../../../types/zetkin';
+import { ZetkinTaskRequestBody } from '../../../types/tasks';
 
 import { ACTIONS } from '../constants';
 import { ActionConfig, DialogContentBaseProps } from './types';
@@ -16,8 +16,8 @@ const DialogContent: React.FunctionComponent<DialogContentBaseProps> = ({ closeD
 
     const eventMutation = useMutation(postTask(orgId));
 
-    const handleFormSubmit = async (data: ZetkinTaskReqBody) => {
-        const newTask = await eventMutation.mutateAsync(data);
+    const handleFormSubmit = async (task: ZetkinTaskRequestBody) => {
+        const newTask = await eventMutation.mutateAsync(task);
         // Redirect to task page
         router.push(`/organize/${orgId}/campaigns/${campId}/calendar/tasks/${newTask.id}`);
     };

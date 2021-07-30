@@ -9,7 +9,7 @@ import { useMutation, useQueryClient } from 'react-query';
 import deleteTask from 'fetching/tasks/deleteTask';
 import patchTask from 'fetching/tasks/patchTask';
 import ZetkinDialog from 'components/ZetkinDialog';
-import { ZetkinTask, ZetkinTaskReqBody } from 'types/zetkin';
+import { ZetkinTask } from 'types/zetkin';
 
 import DeleteTaskForm from '../forms/DeleteTaskForm';
 import PublishButton from './PublishButton';
@@ -41,7 +41,7 @@ const TaskActionButtons: React.FunctionComponent<TaskActionButtonsProps> = ({ ta
     const deleteTaskMutation = useMutation(deleteTask(task.organization.id, task.id));
 
     // Event Handlers
-    const handleEditTask = (task: ZetkinTaskReqBody) => {
+    const handleEditTask = (task: Partial<ZetkinTask>) => {
         patchTaskMutation.mutate(task);
         closeDialog();
     };

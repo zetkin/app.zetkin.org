@@ -1,8 +1,9 @@
 import { defaultFetch } from '..';
-import { ZetkinTask, ZetkinTaskReqBody } from '../../types/zetkin';
+import { ZetkinTask } from '../../types/zetkin';
+import { ZetkinTaskRequestBody } from 'types/tasks';
 
 const postTask = (orgId : string, fetch = defaultFetch) => {
-    return async (data: ZetkinTaskReqBody):Promise<ZetkinTask> => {
+    return async (data: ZetkinTaskRequestBody): Promise<ZetkinTask> => {
         const url = `/orgs/${orgId}/tasks`;
 
         const body = {

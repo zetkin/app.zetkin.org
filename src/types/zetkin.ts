@@ -1,3 +1,5 @@
+export type { ZetkinTask } from './tasks';
+
 export interface ZetkinCampaign {
     color: string;
     info_text: string;
@@ -170,51 +172,4 @@ export interface ZetkinActivity {
     id: number;
     title: string;
     info_text: string | null;
-}
-
-interface ZetkinSmartSearchFilter {
-    config?: Record<string, unknown>;
-    op: 'sub' | 'add';
-    type: string;
-}
-
-//  Tasks
-export enum ZetkinTaskType {
-    demographic = 'demographic',
-    offline = 'offline',
-    share_link = 'share_link',
-    share_image = 'share_image',
-    visit_link = 'visit_link',
-    watch_video = 'watch_video',
-}
-
-export interface ZetkinTask {
-    id: number;
-    title: string;
-    instructions: string;
-    published?: string; // iso string
-    expires?: string; // iso string
-    deadline?: string; // iso string
-    type: ZetkinTaskType;
-    config: Record<string, unknown >; // Will find out configs for different types later
-    target: {
-        filter_spec: ZetkinSmartSearchFilter[];
-        id: number;
-    };
-    campaign: {
-        id: number;
-        title: string;
-    };
-    organization: {
-        id: number;
-        title: string;
-    };
-}
-
-export interface ZetkinTaskReqBody extends Partial<ZetkinTask> {
-    title: string;
-    instructions: string;
-    type: ZetkinTaskType;
-    campaign_id: number;
-    target_filters: ZetkinSmartSearchFilter[];
 }

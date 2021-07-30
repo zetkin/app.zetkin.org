@@ -6,12 +6,14 @@ import { DateTimePicker, TextField } from 'mui-rff';
 import { FormattedMessage, FormattedMessage as Msg, useIntl } from 'react-intl';
 
 import getCampaigns from 'fetching/getCampaigns';
-import { ZetkinTask, ZetkinTaskReqBody, ZetkinTaskType } from 'types/zetkin';
+import { TASK_TYPE } from 'types/tasks';
+import { ZetkinTask } from 'types/zetkin';
+import { ZetkinTaskRequestBody } from 'types/tasks';
 
 import { TASK_DETAILS_FIELDS } from './constants';
 
 interface TaskDetailsFormProps {
-    onSubmit: (data: ZetkinTaskReqBody) => void;
+    onSubmit: (task: ZetkinTaskRequestBody) => void;
     onCancel: () => void;
     task?: ZetkinTask;
 }
@@ -22,7 +24,7 @@ const TaskDetailsForm = ({ onSubmit, onCancel, task }: TaskDetailsFormProps): JS
     const intl = useIntl();
     const { data: campaigns } = useQuery(['campaigns', orgId], getCampaigns(orgId));
 
-    const validate = (values: ZetkinTaskReqBody) => {
+    const validate = (values: ZetkinTaskRequestBody) => {
         const errors: Record<string, string> = {};
         if (!values.title) {
             errors.title = intl.formatMessage({ id: 'misc.formDialog.required' });
@@ -71,13 +73,13 @@ const TaskDetailsForm = ({ onSubmit, onCancel, task }: TaskDetailsFormProps): JS
                         name={ TASK_DETAILS_FIELDS.TYPE }
                         required
                         select>
-                        <MenuItem value={ ZetkinTaskType.offline }>
+                        <MenuItem value={ TASK_TYPE.OFFLINE }>
                             <FormattedMessage id="misc.tasks.forms.createTask.fields.types.offline" />
                         </MenuItem>
-                        <MenuItem value={ ZetkinTaskType.share_link }>
+                        <MenuItem value={ TASK_TYPE.SHARE_LINK }>
                             <FormattedMessage id="misc.tasks.forms.createTask.fields.types.share_link" />
                         </MenuItem>
-                        <MenuItem value={ ZetkinTaskType.visit_link }>
+                        <MenuItem value={ TASK_TYPE.VISIT_LINK }>
                             <FormattedMessage id="misc.tasks.forms.createTask.fields.types.open_link" />
                         </MenuItem>
                     </TextField>
