@@ -8,7 +8,8 @@ import StyledTextInput from '../../inputs/StyledTextInput';
 import useSmartSearchFilter from 'hooks/useSmartSearchFilter';
 import { DATA_FIELD , NewSmartSearchFilter, OPERATION, PersonDataFilterConfig, SmartSearchFilterWithId, ZetkinSmartSearchFilter } from 'types/smartSearch';
 
-const DEFAULT_VALUE = 'none';
+// set default select option
+const REMOVE_FIELD = 'none';
 
 interface PersonDataProps {
     filter:  SmartSearchFilterWithId<PersonDataFilterConfig> |  NewSmartSearchFilter ;
@@ -45,7 +46,7 @@ const PersonData = ({ onSubmit, onCancel, filter: initialFilter }: PersonDataPro
     }, [criteria]);
 
     const addCriteria = (field: string) => {
-        if (field !== DEFAULT_VALUE) {
+        if (field !== REMOVE_FIELD) {
             setCriteria([...criteria, { field: field as DATA_FIELD, value: '' }]);
         }
     };
@@ -64,7 +65,7 @@ const PersonData = ({ onSubmit, onCancel, filter: initialFilter }: PersonDataPro
     };
 
     const handleSelectChange = (field: string, c: Criterion) => {
-        if (field === DEFAULT_VALUE) {
+        if (field === REMOVE_FIELD) {
             setCriteria(criteria.filter(criterion => criterion.field !== c.field));
         }
         else {
@@ -101,7 +102,7 @@ const PersonData = ({ onSubmit, onCancel, filter: initialFilter }: PersonDataPro
                             onChange={ e => handleSelectChange(e.target.value, c) }
                             value={ c.field }>
                             { criteria.length > 1 && (
-                                <MenuItem key={ DEFAULT_VALUE } value={ DEFAULT_VALUE }>
+                                <MenuItem key={ REMOVE_FIELD } value={ REMOVE_FIELD }>
                                     <Msg id="misc.smartSearch.criteria.criteriaSelect.remove" />
                                 </MenuItem>
                             ) }
@@ -150,10 +151,10 @@ const PersonData = ({ onSubmit, onCancel, filter: initialFilter }: PersonDataPro
                             { criteria.length < ALL_FIELDS.length && (
                                 <StyledSelect
                                     onChange={ e => addCriteria(e.target.value) }
-                                    value={ DEFAULT_VALUE }>
+                                    value={ REMOVE_FIELD }>
                                     <MenuItem
-                                        key={ DEFAULT_VALUE }
-                                        value={ DEFAULT_VALUE }>
+                                        key={ REMOVE_FIELD }
+                                        value={ REMOVE_FIELD }>
                                         <Msg id="misc.smartSearch.person_data.ellipsis"/>
                                     </MenuItem>
                                     { ALL_FIELDS.filter(f => !criteria.map(c => c.field).includes(f)).map(o => (
