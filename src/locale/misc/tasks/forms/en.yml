@@ -13,6 +13,10 @@ createTask:
         published: Publish Time
         deadline: Completion Deadline
         expires: Expiration Date
+        timeValidationErrors:
+            publishedNotFirst: This must be scheduled first
+            deadlineNotSecond: This must be scheduled after the Published Date, and before the Expiry Date
+            expiresNotThird: This must be scheduled last
 editTask:
     title: Edit task
 deleteTask:

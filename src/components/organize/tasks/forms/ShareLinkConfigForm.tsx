@@ -22,7 +22,7 @@ const ShareLinkConfigForm = ({ onSubmit, onCancel, taskConfig }: ShareLinkConfig
             errors.url = intl.formatMessage({ id: 'misc.formDialog.required' });
         }
         if (!values.default_message) {
-            errors.url = intl.formatMessage({ id: 'misc.formDialog.required' });
+            errors.default_message = intl.formatMessage({ id: 'misc.formDialog.required' });
         }
         return errors;
     };

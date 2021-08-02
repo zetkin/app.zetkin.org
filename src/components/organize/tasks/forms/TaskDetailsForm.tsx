@@ -11,6 +11,7 @@ import { ZetkinTask } from 'types/zetkin';
 import { ZetkinTaskRequestBody } from 'types/tasks';
 
 import { TASK_DETAILS_FIELDS } from './constants';
+import { isDeadlineSecond, isExpiresThird, isPublishedFirst } from './utils';
 
 interface TaskDetailsFormProps {
     onSubmit: (task: ZetkinTaskRequestBody) => void;
@@ -38,14 +39,26 @@ const TaskDetailsForm = ({ onSubmit, onCancel, task }: TaskDetailsFormProps): JS
         if (!values.campaign_id) {
             errors.campaign_id = intl.formatMessage({ id: 'misc.formDialog.required' });
         }
+
+        // Validate dates are in correct order
+        if (!isPublishedFirst(values)) {
+            errors.published = intl.formatMessage({ id: 'misc.tasks.forms.createTask.fields.timeValidationErrors.publishedNotFirst' });
+        }
+        if (!isDeadlineSecond(values)) {
+            errors.deadline = intl.formatMessage({ id: 'misc.tasks.forms.createTask.fields.timeValidationErrors.deadlineNotSecond' });
+        }
+        if (!isExpiresThird(values)) {
+            errors.expires = intl.formatMessage({ id: 'misc.tasks.forms.createTask.fields.timeValidationErrors.expiresNotThird' });
+        }
+
         return errors;
     };
 
-    const submit = (taskValues: ZetkinTaskRequestBody) => {
+    const submit = (newTaskValues: ZetkinTaskRequestBody) => {
         onSubmit({
-            ...taskValues,
+            ...newTaskValues,
             // If the task type changes, set the config to an empty object
-            config: task?.type && taskValues.type !== task?.type ? {} : taskValues.config,
+            config: task?.type && newTaskValues.type !== task?.type ? {} : newTaskValues.config,
         });
     };
 
@@ -125,33 +138,32 @@ const TaskDetailsForm = ({ onSubmit, onCancel, task }: TaskDetailsFormProps): JS
                     />
 
                     { /* Date Selectors */ }
-                    <Box mt={ 2 }>
-                        <DateTimePicker
-                            ampm={ false }
-                            clearable={ true }
-                            fullWidth={ true }
-                            label={ intl.formatMessage({ id: 'misc.tasks.forms.createTask.fields.published' }) }
-                            name={ TASK_DETAILS_FIELDS.PUBLISHED }
-                        />
-                    </Box>
-                    <Box mt={ 2 }>
-                        <DateTimePicker
-                            ampm={ false }
-                            clearable={ true }
-                            fullWidth={ true }
-                            label={ intl.formatMessage({ id: 'misc.tasks.forms.createTask.fields.deadline' }) }
-                            name={ TASK_DETAILS_FIELDS.DEADLINE }
-                        />
-                    </Box>
-                    <Box mt={ 2 }>
-                        <DateTimePicker
-                            ampm={ false }
-                            clearable={ true }
-                            fullWidth={ true }
-                            label={ intl.formatMessage({ id: 'misc.tasks.forms.createTask.fields.expires' }) }
-                            name={ TASK_DETAILS_FIELDS.EXPIRES }
-                        />
-                    </Box>
+                    <DateTimePicker
+                        ampm={ false }
+                        clearable={ true }
+                        fullWidth={ true }
+                        label={ intl.formatMessage({ id: 'misc.tasks.forms.createTask.fields.published' }) }
+                        margin="normal"
+                        name={ TASK_DETAILS_FIELDS.PUBLISHED }
+                    />
+
+                    <DateTimePicker
+                        ampm={ false }
+                        clearable={ true }
+                        fullWidth={ true }
+                        label={ intl.formatMessage({ id: 'misc.tasks.forms.createTask.fields.deadline' }) }
+                        margin="normal"
+                        name={ TASK_DETAILS_FIELDS.DEADLINE }
+                    />
+
+                    <DateTimePicker
+                        ampm={ false }
+                        clearable={ true }
+                        fullWidth={ true }
+                        label={ intl.formatMessage({ id: 'misc.tasks.forms.createTask.fields.expires' }) }
+                        margin="normal"
+                        name={ TASK_DETAILS_FIELDS.EXPIRES }
+                    />
 
                     { /* Actions */ }
                     <Box display="flex" justifyContent="flex-end" mt={ 2 } width={ 1 }>
