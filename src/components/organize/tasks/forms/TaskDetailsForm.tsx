@@ -74,7 +74,7 @@ const TaskDetailsForm = ({ onSubmit, onCancel, task }: TaskDetailsFormProps): JS
                 type: task?.type,
             }}
             onSubmit={ (values) => submit(values) }
-            render={ ({ handleSubmit, submitting }) => (
+            render={ ({ handleSubmit, submitting, valid }) => (
                 <form noValidate onSubmit={ handleSubmit }>
                     { /* Fields */ }
                     <TextField
@@ -173,7 +173,7 @@ const TaskDetailsForm = ({ onSubmit, onCancel, task }: TaskDetailsFormProps): JS
                             </Button>
                         </Box>
                         <Box m={ 1 }>
-                            <Button color="primary" disabled={ submitting } type="submit" variant="contained">
+                            <Button color="primary" disabled={ submitting || !valid } type="submit" variant="contained">
                                 <Msg id="misc.formDialog.submit" />
                             </Button>
                         </Box>
