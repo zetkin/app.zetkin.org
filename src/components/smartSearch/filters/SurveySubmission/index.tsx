@@ -29,7 +29,9 @@ const SurveySubmission = ({ onSubmit, onCancel, filter: initialFilter }: SurveyS
 
     useEffect(() => {
         if (surveys.length) {
-            setConfig({ ...filter.config, operator: 'submitted', survey: surveys[0].id });
+            setConfig({
+                operator: 'submitted',
+                survey: filter.config.survey || surveys[0].id });
             setSubmittable(true);
         }
     }, [surveys]); // eslint-disable-line react-hooks/exhaustive-deps
