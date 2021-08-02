@@ -1,6 +1,6 @@
 import { Button } from '@material-ui/core';
-import { useIntl } from 'react-intl';
 import { useState } from 'react';
+import { FormattedMessage as Msg, useIntl } from 'react-intl';
 import { useMutation, useQueryClient } from 'react-query';
 
 import patchTask from 'fetching/tasks/patchTask';
@@ -41,16 +41,17 @@ const TaskTypeDetailsSection: React.FunctionComponent<TaskTypeDetailsProps> = ({
 
     return (
         <>
-            <ZetkinSection title={ intl.formatMessage({ id: `misc.tasks.taskTypeDetails.${task.type}.title` }) }>
-                <Button
-                    color="primary"
-                    onClick={ () => {
-                        setEditConfigDialog(task.type);
-                    } }
-                    variant="contained">
-                    Edit Settings
-                </Button>
-
+            <ZetkinSection
+                action={
+                    <Button
+                        color="primary"
+                        onClick={ () => {
+                            setEditConfigDialog(task.type);
+                        } }>
+                        <Msg id="misc.tasks.taskTypeDetails.editButton" />
+                    </Button>
+                }
+                title={ intl.formatMessage({ id: `misc.tasks.taskTypeDetails.${task.type}.title` }) }>
                 { /* Config Properties */ }
                 { task.type === TASK_TYPE.VISIT_LINK && (
                     <VisitLinkDetails taskConfig={ task.config as VisitLinkConfig } />

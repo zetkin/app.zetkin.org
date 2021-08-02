@@ -28,6 +28,7 @@ taskTypeDetails:
         title: Visit Link Settings
     demographic:
         title: Collect Demographics Settings
+    editButton: Edit Settings
 publishButton:
     publish: Publish
     active: Published
