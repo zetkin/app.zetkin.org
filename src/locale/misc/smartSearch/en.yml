@@ -11,6 +11,7 @@ filterTitles:
     all: All people
     campaign_participation: People who have participated in a campaign
     most_active: A selection of the most active people
+    person_data: Search based on name, address or similar fields
     random: A random selection of people
     survey_submission: People who have responded to a survey
     user: People who used Zetkin
@@ -47,6 +48,29 @@ most_active:
     examples:
         one: Add the 100 most active members of the organization before today.
         two: Remove the 5 most active members of the organization at any point in time.
+person_data:
+    inputString: "{addRemoveSelect} any person whose {criteria}."
+    ellipsis: "..."
+    addRemoveSelect:
+        add: Add
+        sub: remove
+    examples:
+        one: Add any person whose first name is 'Clara' and whose last name is 'Zetkin'.
+        two: Remove any person whose city is Stockholm.
+criteria:
+    criterion: "{field} matches {value}"
+    tuple: "{first} and {second}"
+    criteriaSelect:
+        first_name: first name
+        last_name: last name
+        gender: gender
+        co_address: co-address
+        city: city
+        zip_code: zip code
+        street_address: street address
+        alt_phone: alternative phone number
+        phone: phone number
+        remove: Remove this criteria
 random:
     inputString: Randomly {addRemoveSelect} {quantity} in the organization.
     addRemoveSelect:

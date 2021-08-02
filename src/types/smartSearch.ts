@@ -3,6 +3,7 @@ export enum FILTER_TYPE {
     ALL ='all',
     CAMPAIGN_PARTICIPATION = 'campaign_participation',
     MOST_ACTIVE ='most_active',
+    PERSON_DATA = 'person_data',
     RANDOM = 'random',
     SURVEY_SUBMISSION = 'survey_submission',
     USER = 'user'
@@ -28,6 +29,18 @@ export enum TIME_FRAME {
     LAST_FEW_DAYS='lastFew',
 }
 
+export enum DATA_FIELD {
+    FIRST_NAME = 'first_name',
+    LAST_NAME = 'last_name',
+    GENDER = 'gender',
+    CITY = 'city',
+    STREET_ADDRESS = 'street_address',
+    CO_ADDRESS = 'co_address',
+    ZIP_CODE = 'zip_code',
+    PHONE = 'phone',
+    ALT_PHONE = 'alt_phone'
+}
+
 /**
  * Filter Configs
  */
@@ -37,6 +50,20 @@ export interface MostActiveFilterConfig {
     after?: string;
     before?: string;
     size: number;
+}
+
+export interface PersonDataFilterConfig {
+    fields: {
+        alt_phone?: string;
+        city?: string;
+        co_address?: string;
+        first_name?: string;
+        gender?: string;
+        last_name?: string;
+        phone?: string;
+        street_address?: string;
+        zip_code?: string;
+    };
 }
 
 export interface RandomFilterConfig {
@@ -69,6 +96,7 @@ export type AnyFilterConfig = (
     CampaignParticipationConfig |
     DefaultFilterConfig |
     MostActiveFilterConfig |
+    PersonDataFilterConfig |
     RandomFilterConfig |
     SurveySubmissionFilterConfig |
     UserFilterConfig
