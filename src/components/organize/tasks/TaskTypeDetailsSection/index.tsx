@@ -1,11 +1,9 @@
-import { Button } from '@material-ui/core';
+import { useIntl } from 'react-intl';
 import { useState } from 'react';
-import { FormattedMessage as Msg, useIntl } from 'react-intl';
 import { useMutation, useQueryClient } from 'react-query';
 
 import patchTask from 'fetching/tasks/patchTask';
 import ZetkinDialog from 'components/ZetkinDialog';
-import ZetkinSection from 'components/ZetkinSection';
 import { ZetkinTask } from 'types/zetkin';
 import { AnyTaskTypeConfig, CollectDemographicsConfig, ShareLinkConfig, TASK_TYPE, VisitLinkConfig } from 'types/tasks';
 
@@ -41,30 +39,17 @@ const TaskTypeDetailsSection: React.FunctionComponent<TaskTypeDetailsProps> = ({
 
     return (
         <>
-            <ZetkinSection
-                action={
-                    <Button
-                        color="primary"
-                        onClick={ () => {
-                            setEditConfigDialog(task.type);
-                        } }>
-                        <Msg id="misc.tasks.taskTypeDetails.editButton" />
-                    </Button>
-                }
-                title={ intl.formatMessage({ id: `misc.tasks.taskTypeDetails.${task.type}.title` }) }>
-                { /* Config Properties */ }
-                { task.type === TASK_TYPE.VISIT_LINK && (
-                    <VisitLinkDetails taskConfig={ task.config as VisitLinkConfig } />
-                ) }
-                { task.type === TASK_TYPE.SHARE_LINK && (
-                    <ShareLinkDetails taskConfig={ task.config as ShareLinkConfig } />
-                ) }
-                { task.type === TASK_TYPE.COLLECT_DEMOGRAPHICS && (
-                    <CollectDemographicsDetails taskConfig={ task.config as CollectDemographicsConfig } />
-                ) }
 
-
-            </ZetkinSection>
+            { /* Config Properties */ }
+            { task.type === TASK_TYPE.VISIT_LINK && (
+                <VisitLinkDetails taskConfig={ task.config as VisitLinkConfig } />
+            ) }
+            { task.type === TASK_TYPE.SHARE_LINK && (
+                <ShareLinkDetails taskConfig={ task.config as ShareLinkConfig } />
+            ) }
+            { task.type === TASK_TYPE.COLLECT_DEMOGRAPHICS && (
+                <CollectDemographicsDetails taskConfig={ task.config as CollectDemographicsConfig } />
+            ) }
 
             { /* Dialogs */ }
             <ZetkinDialog

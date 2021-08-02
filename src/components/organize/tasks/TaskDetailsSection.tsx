@@ -1,9 +1,10 @@
 import { useIntl } from 'react-intl';
 
-import ZetkinSection from 'components/ZetkinSection';
+import getTaskStatus from 'utils/getTaskStatus';
 import { ZetkinTask } from 'types/zetkin';
 
 import TaskProperty from './TaskProperty';
+import TaskTypeDetailsSection from './TaskTypeDetailsSection';
 
 interface TaskDetailsCardProps {
     task: ZetkinTask;
@@ -11,11 +12,12 @@ interface TaskDetailsCardProps {
 
 const TaskDetailsCard: React.FunctionComponent<TaskDetailsCardProps> = ({ task }) => {
     const intl = useIntl();
+    const status = getTaskStatus(task);
     return (
-        <ZetkinSection title={ intl.formatMessage({ id: 'misc.tasks.taskDetails.title' }) }>
+        <>
             <TaskProperty
-                title={ intl.formatMessage({ id: 'misc.tasks.taskDetails.titleLabel' }) }
-                value={ task.title }
+                title={ intl.formatMessage({ id: 'misc.tasks.taskDetails.statusLabel' }) }
+                value={ intl.formatMessage({ id: `misc.tasks.statuses.${status}` }) }
             />
             <TaskProperty
                 title={ intl.formatMessage({ id: 'misc.tasks.taskDetails.typeLabel' }) }
@@ -25,7 +27,8 @@ const TaskDetailsCard: React.FunctionComponent<TaskDetailsCardProps> = ({ task }
                 title={ intl.formatMessage({ id: 'misc.tasks.taskDetails.instructionsLabel' }) }
                 value={ task.instructions }
             />
-        </ZetkinSection>
+            <TaskTypeDetailsSection task={ task }/>
+        </>
     );
 };
 

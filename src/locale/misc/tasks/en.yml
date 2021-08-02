@@ -18,6 +18,7 @@ taskListItem:
 taskDetails:
     title: Task Details
     editButton: Edit
+    statusLabel: Status
     titleLabel: Title
     instructionsLabel: Instructions
     typeLabel: Type
@@ -28,7 +29,6 @@ taskTypeDetails:
         title: Visit Link Settings
     demographic:
         title: Collect Demographics Settings
-    editButton: Edit Settings
 publishButton:
     publish: Publish
     active: Published
