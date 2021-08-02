@@ -27,12 +27,14 @@ const PersonData = ({ onSubmit, onCancel, filter: initialFilter }: PersonDataPro
 
     const ALL_FIELDS = Object.values(DATA_FIELD);
 
+    // check which fields are present in the filter config, and load their key-value pairs into an array
     const initialCriteria = ALL_FIELDS
         .filter(f => f in filter.config.fields)
         .map(f => ({ field: f, value: filter.config.fields[f] || '' }));
 
     const [criteria, setCriteria] = useState<Criterion[]>(initialCriteria);
 
+    // check that there are no blank fields before submitting
     const isSubmittable = criteria.every(c => c.value.length);
 
     useEffect(() => {
