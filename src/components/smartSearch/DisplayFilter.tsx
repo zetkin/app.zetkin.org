@@ -6,9 +6,10 @@ import DisplayCampaignParticipation from './filters/CampaignParticipation/Displa
 import DisplayMostActive from './filters/MostActive/DisplayMostActive';
 import DisplayPersonData from './filters/PersonData/DisplayPersonData';
 import DisplayRandom from './filters/Random/DisplayRandom';
+import DisplaySurveyResponse from './filters/SurveyResponse/DisplaySurveyResponse';
 import DisplaySurveySubmission from './filters/SurveySubmission/DisplaySurveySubmission';
 import DisplayUser from './filters/User/DisplayUser';
-import { CampaignParticipationConfig, FILTER_TYPE, MostActiveFilterConfig, PersonDataFilterConfig, RandomFilterConfig, SmartSearchFilterWithId, SurveySubmissionFilterConfig, UserFilterConfig } from 'types/smartSearch';
+import { CampaignParticipationConfig, FILTER_TYPE, MostActiveFilterConfig, PersonDataFilterConfig, RandomFilterConfig, SmartSearchFilterWithId, SurveyResponseFilterConfig, SurveySubmissionFilterConfig, UserFilterConfig } from 'types/smartSearch';
 
 interface DisplayFilterProps {
     filter: SmartSearchFilterWithId;
@@ -27,6 +28,7 @@ const DisplayFilter = ({ filter, onDelete, onEdit }:DisplayFilterProps): JSX.Ele
                         { filter.type === FILTER_TYPE.CAMPAIGN_PARTICIPATION && <DisplayCampaignParticipation filter={ filter as SmartSearchFilterWithId<CampaignParticipationConfig> }/> }
                         { filter.type === FILTER_TYPE.RANDOM && <DisplayRandom filter={ filter as SmartSearchFilterWithId<RandomFilterConfig>  }/> }
                         { filter.type === FILTER_TYPE.SURVEY_SUBMISSION && <DisplaySurveySubmission filter={ filter as SmartSearchFilterWithId<SurveySubmissionFilterConfig>  }/> }
+                        { filter.type === FILTER_TYPE.SURVEY_RESPONSE && <DisplaySurveyResponse filter={ filter as SmartSearchFilterWithId<SurveyResponseFilterConfig>  }/> }
                         { filter.type === FILTER_TYPE.PERSON_DATA && <DisplayPersonData filter={ filter as SmartSearchFilterWithId<PersonDataFilterConfig>  }/> }
                         { filter.type === FILTER_TYPE.USER && <DisplayUser filter={ filter as SmartSearchFilterWithId<UserFilterConfig>  }/> }
                     </Typography>

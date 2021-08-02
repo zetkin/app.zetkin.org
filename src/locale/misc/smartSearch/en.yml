@@ -13,6 +13,7 @@ filterTitles:
     most_active: A selection of the most active people
     person_data: Search based on name, address or similar fields
     random: A random selection of people
+    survey_response: Search based on responses to survey questions
     survey_submission: People who have responded to a survey
     user: People who used Zetkin
 all:
@@ -79,6 +80,27 @@ random:
     examples:
         one: Randomly add 20 people in the organization.
         two: Randomly remove 15% of the people in the organization.
+survey_response:
+    inputString: "{addRemoveSelect} people whose response to {surveySelect} ({questionSelect}) {matchSelect} {freeTextInput}"
+    addRemoveSelect:
+        add: Add
+        sub: Remove
+    matchSelect:
+        in: includes
+        notin: does not include
+        eq: exactly matches
+        noteq: is not
+    surveySelect:
+        any: a survey
+        none: This organization has no surveys yet
+        survey: survey "{surveyTitle}"
+    questionSelect:
+        any: any question
+        none: There are no free text questions in this survey
+        question: question "{question}"
+    examples:
+        one: People whose responses to survey 'Member survey' (any question) include 'organize'.
+        two: People whose responses to survey 'Member survey' (question 'Question one') exactly match 'organize'.
 survey_submission:
     inputString: "{addRemoveSelect} people who have submitted responses to {surveySelect} {timeFrame}."
     addRemoveSelect:
@@ -115,3 +137,6 @@ quantity:
     quantitySelectLabel:
         integer: "{people, plural, one {person} other {people}}"
         percent: "% of the people"
+
+
+

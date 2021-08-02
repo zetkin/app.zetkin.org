@@ -5,9 +5,17 @@ export enum FILTER_TYPE {
     MOST_ACTIVE ='most_active',
     PERSON_DATA = 'person_data',
     RANDOM = 'random',
+    SURVEY_RESPONSE = 'survey_response',
     SURVEY_SUBMISSION = 'survey_submission',
     USER = 'user'
 }
+
+export enum MATCH_OPERATORS {
+    IN = 'in',
+    NOT_IN = 'notin',
+    EQUALS = 'eq',
+    NOT_EQUALS = 'noteq',
+  }
 
 export enum OPERATION {
     ADD = 'add',
@@ -71,6 +79,13 @@ export interface RandomFilterConfig {
     seed: string;
 }
 
+export interface SurveyResponseFilterConfig {
+    operator: MATCH_OPERATORS;
+    value: string;
+    question?: number;
+    survey?: number;
+}
+
 export interface SurveySubmissionFilterConfig {
     after?: string;
     before?: string;
@@ -98,6 +113,7 @@ export type AnyFilterConfig = (
     MostActiveFilterConfig |
     PersonDataFilterConfig |
     RandomFilterConfig |
+    SurveyResponseFilterConfig |
     SurveySubmissionFilterConfig |
     UserFilterConfig
     ) // Add all filter objects here
