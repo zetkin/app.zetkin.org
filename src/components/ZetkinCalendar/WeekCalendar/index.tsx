@@ -29,6 +29,16 @@ const useStyles = makeStyles(() => ({
         position: 'relative',
         width: '100%',
     },
+    today: {
+        background: 'blue',
+        borderRadius: '50%',
+        color: 'white',
+        display: 'flex',
+        height: 'max-content',
+        justifyContent: 'center',
+        minWidth: '24px',
+        width: 'max-content',
+    },
 }));
 
 const WeekCalendar = ({ orgId, baseHref, campaigns, events, focusDate, tasks }: WeekCalendarProps): JSX.Element => {
@@ -82,33 +92,41 @@ const WeekCalendar = ({ orgId, baseHref, campaigns, events, focusDate, tasks }: 
             date <= end;
     };
 
+    const today = new Date();
+
     return (
         <Box display="flex" flexDirection="column" height={ 1 }>
             <Box display="flex" flexDirection="column" flexGrow={ 0 } justifyContent="space-between">
                 <Box display="flex">
-                    { Array.from(Array(7).keys()).map((_, index) => (
-                        <Box
-                            key={ index }
-                            alignItems="center"
-                            data-testid="weekdays"
-                            display="flex"
-                            flexDirection="column"
-                            justifyContent="flex-start"
-                            width="100%">
-                            <Typography component="h2" data-testid={ `weekday-${index}` } variant="subtitle2">
-                                <FormattedDate
-                                    value={ new Date(new Date(calendarStartDate).setDate(calendarStartDate.getDate() + index)) }
-                                    weekday="short"
-                                />
-                            </Typography>
-                            <Typography data-testid={ `date-${index}` }>
-                                <FormattedDate
-                                    day="2-digit"
-                                    value={ new Date(new Date(calendarStartDate).setDate(calendarStartDate.getDate() + index)) }
-                                />
-                            </Typography>
-                        </Box>
-                    )) }
+                    { Array.from(Array(7).keys()).map((_, index) => {
+                        const currentDate = new Date (new Date(calendarStartDate).setDate(calendarStartDate.getDate() + index));
+                        const tomorrow = new Date (new Date(currentDate).setDate(currentDate.getDate() + 1));
+                        const isToday = isInRange(today, currentDate, tomorrow);
+                        return (
+                            <Box
+                                key={ index }
+                                alignItems="center"
+                                data-testid="weekdays"
+                                display="flex"
+                                flexDirection="column"
+                                justifyContent="flex-start"
+                                width="100%">
+                                <Typography component="h2" data-testid={ `weekday-${index}` } variant="subtitle2">
+                                    <FormattedDate
+                                        value={ new Date(new Date(calendarStartDate).setDate(calendarStartDate.getDate() + index)) }
+                                        weekday="short"
+                                    />
+                                </Typography>
+                                <Typography className={ isToday ? classes.today : '' } data-testid={ `date-${index}` }>
+                                    <FormattedDate
+                                        day="2-digit"
+                                        value={ new Date(new Date(calendarStartDate).setDate(calendarStartDate.getDate() + index)) }
+                                    />
+                                </Typography>
+                            </Box>
+                        );
+                    },
+                    ) }
                 </Box>
                 <Box display="flex" flexDirection="column" mb={ 0.5 }>
                     { campaigns.map(c => {
