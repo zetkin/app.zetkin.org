@@ -13,6 +13,10 @@ import CollectDemographicsConfigForm from '../forms/CollectDemographicsConfigFor
 import ShareLinkConfigForm from '../forms/ShareLinkConfigForm';
 import VisitLinkConfigForm from '../forms/VisitLinkConfigForm';
 
+import CollectDemographicsDetails from './CollectDemographicsDetails';
+import ShareLinkDetails from './ShareLinkDetails';
+import VisitLinkDetails from './VisitLinkDetails';
+
 
 interface TaskTypeDetailsProps {
     task: ZetkinTask;
@@ -46,7 +50,19 @@ const TaskTypeDetailsSection: React.FunctionComponent<TaskTypeDetailsProps> = ({
                     variant="contained">
                     Edit Settings
                 </Button>
-                { JSON.stringify(task.config) }
+
+                { /* Config Properties */ }
+                { task.type === TASK_TYPE.VISIT_LINK && (
+                    <VisitLinkDetails taskConfig={ task.config as VisitLinkConfig } />
+                ) }
+                { task.type === TASK_TYPE.SHARE_LINK && (
+                    <ShareLinkDetails taskConfig={ task.config as ShareLinkConfig } />
+                ) }
+                { task.type === TASK_TYPE.COLLECT_DEMOGRAPHICS && (
+                    <CollectDemographicsDetails taskConfig={ task.config as CollectDemographicsConfig } />
+                ) }
+
+
             </ZetkinSection>
 
             { /* Dialogs */ }

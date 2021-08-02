@@ -18,12 +18,12 @@ const TaskDetailsCard: React.FunctionComponent<TaskDetailsCardProps> = ({ task }
                 value={ task.title }
             />
             <TaskProperty
-                title={ intl.formatMessage({ id: 'misc.tasks.taskDetails.instructionsLabel' }) }
-                value={ task.instructions }
-            />
-            <TaskProperty
                 title={ intl.formatMessage({ id: 'misc.tasks.taskDetails.typeLabel' }) }
                 value={ intl.formatMessage({ id: `misc.tasks.types.${task.type}` }) }
+            />
+            <TaskProperty
+                title={ intl.formatMessage({ id: 'misc.tasks.taskDetails.instructionsLabel' }) }
+                value={ task.instructions }
             />
         </ZetkinSection>
     );

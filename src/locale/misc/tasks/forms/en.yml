@@ -45,3 +45,5 @@ collectDemographicsConfig:
             country: Country
             gender: Gender Identity
             street_address: Street Address
+common:
+    notSet: Not set
