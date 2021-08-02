@@ -37,6 +37,8 @@ const PersonData = ({ onSubmit, onCancel, filter: initialFilter }: PersonDataPro
     // check that there are no blank fields before submitting
     const isSubmittable = criteria.every(c => c.value.length);
 
+    const currentFields = criteria.map(c => c.field);
+
     useEffect(() => {
         const fields = criteria.reduce((acc, c) => {
             return { ...acc, [c.field]: c.value };
@@ -94,8 +96,9 @@ const PersonData = ({ onSubmit, onCancel, filter: initialFilter }: PersonDataPro
     const getCriteriaString = () => {
         let existing;
         let criteriaString: JSX.Element | null = null;
+        const globalOptions = ALL_FIELDS.filter(f => !currentFields.includes(f));
         criteria.forEach(c => {
-            const options = ALL_FIELDS.filter(f => f === c.field || !criteria.map(c => c.field).includes(f));
+            const options = [c.field].concat(globalOptions);
             existing = (<Msg
                 id="misc.smartSearch.criteria.criterion"
                 values={{
@@ -159,7 +162,7 @@ const PersonData = ({ onSubmit, onCancel, filter: initialFilter }: PersonDataPro
                                         value={ REMOVE_FIELD }>
                                         <Msg id="misc.smartSearch.person_data.ellipsis"/>
                                     </MenuItem>
-                                    { ALL_FIELDS.filter(f => !criteria.map(c => c.field).includes(f)).map(o => (
+                                    { ALL_FIELDS.filter(f => !currentFields.includes(f)).map(o => (
                                         <MenuItem key={ o } value={ o }>
                                             <Msg
                                                 id={ `misc.smartSearch.criteria.criteriaSelect.${o}` }
