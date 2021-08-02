@@ -48,29 +48,37 @@ const TaskTypeDetailsSection: React.FunctionComponent<TaskTypeDetailsProps> = ({
                 </Button>
                 { JSON.stringify(task.config) }
             </ZetkinSection>
-            { /* Dialog */ }
-            <ZetkinDialog onClose={ closeDialog } open={ Boolean(editConfigDialog) }>
-                { task.type === TASK_TYPE.VISIT_LINK && (
-                    <VisitLinkConfigForm
-                        onCancel={ closeDialog }
-                        onSubmit={ (config) => handlePatchTaskConfig(config) }
-                        taskConfig={ task.config as VisitLinkConfig }
-                    />
-                ) }
-                { task.type === TASK_TYPE.SHARE_LINK && (
-                    <ShareLinkConfigForm
-                        onCancel={ closeDialog }
-                        onSubmit={ (config) => handlePatchTaskConfig(config) }
-                        taskConfig={ task.config as ShareLinkConfig }
-                    />
-                ) }
-                { task.type === TASK_TYPE.COLLECT_DEMOGRAPHICS && (
-                    <CollectDemographicsConfigForm
-                        onCancel={ closeDialog }
-                        onSubmit={ (config) => handlePatchTaskConfig(config) }
-                        taskConfig={ task.config as CollectDemographicsConfig }
-                    />
-                ) }
+
+            { /* Dialogs */ }
+            <ZetkinDialog
+                onClose={ closeDialog }
+                open={ editConfigDialog === TASK_TYPE.VISIT_LINK }
+                title={ intl.formatMessage({ id: 'misc.tasks.forms.visitLinkConfig.title' }) }>
+                <VisitLinkConfigForm
+                    onCancel={ closeDialog }
+                    onSubmit={ (config) => handlePatchTaskConfig(config) }
+                    taskConfig={ task.config as VisitLinkConfig }
+                />
+            </ZetkinDialog>
+            <ZetkinDialog
+                onClose={ closeDialog }
+                open={ editConfigDialog === TASK_TYPE.SHARE_LINK }
+                title={ intl.formatMessage({ id: 'misc.tasks.forms.shareLinkConfig.title' }) }>
+                <ShareLinkConfigForm
+                    onCancel={ closeDialog }
+                    onSubmit={ (config) => handlePatchTaskConfig(config) }
+                    taskConfig={ task.config as ShareLinkConfig }
+                />
+            </ZetkinDialog>
+            <ZetkinDialog
+                onClose={ closeDialog }
+                open={ editConfigDialog === TASK_TYPE.COLLECT_DEMOGRAPHICS }
+                title={ intl.formatMessage({ id: 'misc.tasks.forms.collectDemographicsConfig.title' }) }>
+                <CollectDemographicsConfigForm
+                    onCancel={ closeDialog }
+                    onSubmit={ (config) => handlePatchTaskConfig(config) }
+                    taskConfig={ task.config as CollectDemographicsConfig }
+                />
             </ZetkinDialog>
         </>
     );
