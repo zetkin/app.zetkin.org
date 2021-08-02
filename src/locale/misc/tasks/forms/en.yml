@@ -7,6 +7,7 @@ createTask:
             offline: Offline
             share_link: Share Link
             visit_link: Visit Link
+            demographic: Collect Demographics
         instructions: Instructions
         campaign: Campaign
         published: Publish Time
@@ -33,3 +34,14 @@ shareLinkConfig:
     fields:
         url: URL to share
         default_message: Default message user will send
+collectDemographicsConfig:
+    title: Collect Demographics Config
+    fields:
+        demographicField: Data to request
+        demographicFieldOptions:
+            email: Email Address
+            zip_code: Postcode
+            city: City
+            country: Country
+            gender: Gender Identity
+            street_address: Street Address

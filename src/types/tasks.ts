@@ -5,7 +5,7 @@ interface ZetkinSmartSearchFilter {
 }
 
 export enum TASK_TYPE {
-    DEMOGRAPHIC = 'demographic',
+    COLLECT_DEMOGRAPHICS = 'demographic',
     OFFLINE = 'offline',
     SHARE_LINK = 'share_link',
     SHARE_IMAGE = 'share_image',
@@ -22,7 +22,20 @@ export interface VisitLinkConfig {
     url: string;
 }
 
-export type AnyTaskTypeConfig = ShareLinkConfig | VisitLinkConfig | Record<string, never>;
+export enum DEMOGRAPHICS_FIELD {
+    EMAIL= 'email',
+    GENDER= 'gender',
+    STREET_ADDRESS= 'street_address',
+    CITY= 'city',
+    COUNTRY= 'country',
+    ZIP_CODE= 'zip_code',
+}
+
+export interface CollectDemographicsConfig {
+    fields: DEMOGRAPHICS_FIELD[];
+}
+
+export type AnyTaskTypeConfig = ShareLinkConfig | VisitLinkConfig | CollectDemographicsConfig | Record<string, never>;
 
 // Task object from backend
 export interface ZetkinTask<TaskTypeConfig = AnyTaskTypeConfig> {

@@ -7,10 +7,12 @@ import patchTask from 'fetching/tasks/patchTask';
 import ZetkinDialog from 'components/ZetkinDialog';
 import ZetkinSection from 'components/ZetkinSection';
 import { ZetkinTask } from 'types/zetkin';
-import { AnyTaskTypeConfig, ShareLinkConfig, TASK_TYPE, VisitLinkConfig } from 'types/tasks';
+import { AnyTaskTypeConfig, CollectDemographicsConfig, ShareLinkConfig, TASK_TYPE, VisitLinkConfig } from 'types/tasks';
 
+import CollectDemographicsConfigForm from '../forms/CollectDemographicsConfigForm';
 import ShareLinkConfigForm from '../forms/ShareLinkConfigForm';
 import VisitLinkConfigForm from '../forms/VisitLinkConfigForm';
+
 
 interface TaskTypeDetailsProps {
     task: ZetkinTask;
@@ -60,6 +62,13 @@ const TaskTypeDetailsSection: React.FunctionComponent<TaskTypeDetailsProps> = ({
                         onCancel={ closeDialog }
                         onSubmit={ (config) => handlePatchTaskConfig(config) }
                         taskConfig={ task.config as ShareLinkConfig }
+                    />
+                ) }
+                { task.type === TASK_TYPE.COLLECT_DEMOGRAPHICS && (
+                    <CollectDemographicsConfigForm
+                        onCancel={ closeDialog }
+                        onSubmit={ (config) => handlePatchTaskConfig(config) }
+                        taskConfig={ task.config as CollectDemographicsConfig }
                     />
                 ) }
             </ZetkinDialog>

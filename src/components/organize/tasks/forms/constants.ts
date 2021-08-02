@@ -17,3 +17,7 @@ export enum SHARE_LINK_FIELDS {
 export enum VISIT_LINK_FIELDS {
     URL= 'url'
 }
+
+export enum COLLECT_DEMOGRAPHICS_FIELDS {
+    FIELD= 'field'
+}
