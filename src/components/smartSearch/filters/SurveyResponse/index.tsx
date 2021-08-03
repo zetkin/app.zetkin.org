@@ -62,7 +62,7 @@ const SurveyResponse = ({ onSubmit, onCancel, filter: initialFilter }: SurveyRes
         .find(s => s.id === internalConfig.survey)?.elements
         .filter(e => e.type === ELEMENT_TYPE.QUESTION && e.question.response_type === RESPONSE_TYPE.TEXT) || [];
 
-    //submit if there is valid survey, valid quesitons and search field filled in
+    //submit if there is valid survey, valid questions and search field filled in
     const submittable = internalConfig.survey && validQuestions.length && internalConfig.value.length;
 
     //event handlers
