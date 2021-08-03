@@ -81,7 +81,7 @@ random:
         one: Randomly add 20 people in the organization.
         two: Randomly remove 15% of the people in the organization.
 survey_response:
-    inputString: "{addRemoveSelect} people whose response to {surveySelect} ({questionSelect}) {matchSelect} {freeTextInput}"
+    inputString: '{addRemoveSelect} people whose response to {surveySelect} ({questionSelect}) {matchSelect} "{freeTextInput}"'
     addRemoveSelect:
         add: Add
         sub: Remove
