@@ -12,7 +12,9 @@ interface DisplaySurveyResponseProps {
 const DisplaySurveyResponse = ({ filter }: DisplaySurveyResponseProps) : JSX.Element => {
     const { orgId } = useRouter().query;
     const { config } = filter;
-    const { question: questionId, operator, value, survey: surveyId } = config;
+    const { operator, value  } = config;
+    const questionId = 'question' in config ? config.question : undefined;
+    const surveyId = 'survey' in config ? config.survey : undefined;
     const op = filter.op || OPERATION.ADD;
 
     const surveysQuery = useQuery(['surveysWithElements', orgId], getSurveysWithElements(orgId as string));

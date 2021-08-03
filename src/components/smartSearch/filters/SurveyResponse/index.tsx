@@ -9,8 +9,8 @@ import getSurveysWithElements from 'fetching/getSurveysWithElements';
 import StyledSelect from '../../inputs/StyledSelect';
 import StyledTextInput from 'components/smartSearch/inputs/StyledTextInput';
 import useSmartSearchFilter from 'hooks/useSmartSearchFilter';
-import {  ELEMENT_TYPE, RESPONSE_TYPE, ZetkinSurveyElement } from 'types/zetkin';
-import { MATCH_OPERATORS, NewSmartSearchFilter, OPERATION, SmartSearchFilterWithId, SurveyResponseFilterConfig, ZetkinSmartSearchFilter } from 'types/smartSearch';
+import {  ELEMENT_TYPE, RESPONSE_TYPE } from 'types/zetkin';
+import { MATCH_OPERATORS, NewSmartSearchFilter, OPERATION, SmartSearchFilterWithId, SurveyResponseBase, SurveyResponseFilterConfig, ZetkinSmartSearchFilter } from 'types/smartSearch';
 
 const DEFAULT_VALUE = 'none';
 
@@ -20,66 +20,84 @@ interface SurveyResponseProps {
     onCancel: () => void;
 }
 
+interface InternalConfig extends SurveyResponseBase {
+    survey?: number;
+    question?: number;
+}
+
 const SurveyResponse = ({ onSubmit, onCancel, filter: initialFilter }: SurveyResponseProps): JSX.Element => {
     const { orgId } = useRouter().query;
     const surveysQuery = useQuery(['surveysWithElements', orgId], getSurveysWithElements(orgId as string));
     const surveys = surveysQuery.data || [];
-    const [validQuestions, setValidQuestions] = useState<ZetkinSurveyElement[]>([]);
-    const { filter, setConfig, setOp } = useSmartSearchFilter<SurveyResponseFilterConfig>(initialFilter);
 
     const getSurveyIdfromQuestionId = (questionId?: number) => {
         return questionId? surveys.map(s => ({ elements: s.elements.map(e => e.id), id: s.id  })).find(s => s.elements.includes(questionId))?.id : undefined;
     };
 
-    // only submit if there are surveys with valid questions
-    const submittable = surveys.length && validQuestions.length;
+    const { filter, setOp } = useSmartSearchFilter<SurveyResponseFilterConfig>(initialFilter);
+
+    const questionId = 'question' in filter.config ? filter.config.question : undefined;
+    const surveyId = 'survey' in filter.config ? filter.config.survey : getSurveyIdfromQuestionId(questionId);
+
+    const [internalConfig, setInternalConfig] = useState<InternalConfig>({
+        ...filter.config, question: questionId, survey: surveyId,
+    });
 
     useEffect(() => {
         if (surveys.length) {
-            setConfig({
-                operator: filter.config.operator || MATCH_OPERATORS.IN,
-                question: filter.config.question,
-                survey: filter.config.survey || getSurveyIdfromQuestionId(filter.config.question) || surveys[0].id,
-                value: filter.config.value || '' });
+            setInternalConfig({
+                operator: internalConfig.operator || MATCH_OPERATORS.IN,
+                question: internalConfig.question,
+                survey: internalConfig.survey || surveys[0].id,
+                value: internalConfig.value || '' });
         }
     }, [surveys]);
 
-    useEffect(() => {
-        //check whether selected survey has questions of 'text' type
-        setValidQuestions(surveys
-            .find(s => s.id === filter.config.survey)?.elements
-            .filter(e => e.type === ELEMENT_TYPE.QUESTION && e.question.response_type === RESPONSE_TYPE.TEXT) || []);
-    }, [filter.config]);
+    // check if there are questions with response type of 'text'
+    const validQuestions = surveys
+        .find(s => s.id === internalConfig.survey)?.elements
+        .filter(e => e.type === ELEMENT_TYPE.QUESTION && e.question.response_type === RESPONSE_TYPE.TEXT) || [];
 
+    //submit if there is valid survey, valid quesitons and search field filled in
+    const submittable = internalConfig.survey && validQuestions.length && internalConfig.value.length;
 
     //event handlers
     const handleAddFilter = (e: FormEvent) => {
         e.preventDefault();
-        onSubmit({ ...filter, config: {
-            ...filter.config,
-            survey: filter.config.question ? undefined : filter.config.survey,
-        } });
+        if (internalConfig.question) {
+            onSubmit({ ...filter, config: {
+                operator: internalConfig.operator,
+                question: internalConfig.question,
+                value: internalConfig.value,
+            } });
+        }
+        else if (internalConfig.survey) {
+            onSubmit({ ...filter, config: {
+                ...internalConfig,
+                survey: internalConfig.survey,
+            } });
+        }
     };
 
     const handleQuestionSelectChange = (questionValue: string) => {
         if (questionValue === DEFAULT_VALUE) {
-            setConfig({ ...filter.config, question: undefined });
+            setInternalConfig({ ...internalConfig, question: undefined });
         }
         else {
-            setConfig({ ...filter.config, question: +questionValue });
+            setInternalConfig({ ...internalConfig, question: +questionValue });
         }
     };
 
     const handleSurveySelectChange = (surveyValue: string) => {
-        setConfig({ ...filter.config, question: undefined, survey: +surveyValue });
+        setInternalConfig({ ...internalConfig, question: undefined, survey: +surveyValue });
     };
 
     const handleMatchSelectChange = (matchValue: string) => {
-        setConfig({ ...filter.config, operator: matchValue as MATCH_OPERATORS });
+        setInternalConfig({ ...internalConfig, operator: matchValue as MATCH_OPERATORS });
     };
 
     const handleValueChange = (value: string) => {
-        setConfig({ ...filter.config, value: value });
+        setInternalConfig({ ...internalConfig, value: value });
     };
 
 
@@ -100,15 +118,15 @@ const SurveyResponse = ({ onSubmit, onCancel, filter: initialFilter }: SurveyRes
                     ),
                     freeTextInput: (
                         <StyledTextInput
-                            inputString={ filter.config.value } // dynamic width
+                            inputString={ internalConfig.value } // dynamic width
                             onChange={ e => handleValueChange(e.target.value) }
-                            value={ filter.config.value }
+                            value={ internalConfig.value }
                         />
                     ),
                     matchSelect: (
                         <StyledSelect
                             onChange={ e => handleMatchSelectChange(e.target.value) }
-                            value={ filter.config.operator || MATCH_OPERATORS.IN }>
+                            value={ internalConfig.operator || MATCH_OPERATORS.IN }>
                             { Object.values(MATCH_OPERATORS).map(o => (
                                 <MenuItem key={ o } value={ o }>
                                     <Msg id={ `misc.smartSearch.survey_response.matchSelect.${o}` }/>
@@ -129,7 +147,7 @@ const SurveyResponse = ({ onSubmit, onCancel, filter: initialFilter }: SurveyRes
                                             question: validQuestions.find(q=> q.id === value)?.question.question }}
                                     />;
                             } }}
-                            value={ filter.config.question || DEFAULT_VALUE }>
+                            value={ internalConfig.question || DEFAULT_VALUE }>
                             { !validQuestions.length && (
                                 <MenuItem key={ DEFAULT_VALUE } value={ DEFAULT_VALUE }>
                                     <Msg id="misc.smartSearch.survey_response.questionSelect.none" />
@@ -158,7 +176,7 @@ const SurveyResponse = ({ onSubmit, onCancel, filter: initialFilter }: SurveyRes
                                             surveyTitle: surveys.find(s=> s.id === value)?.title }}
                                     />;
                             } }}
-                            value={ filter.config.survey || DEFAULT_VALUE }>
+                            value={ internalConfig.survey || DEFAULT_VALUE }>
                             { !surveys.length && (
                                 <MenuItem key={ DEFAULT_VALUE } value={ DEFAULT_VALUE }>
                                     <Msg id="misc.smartSearch.survey_response.surveySelect.none" />

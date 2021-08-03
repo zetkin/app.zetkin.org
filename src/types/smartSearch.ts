@@ -79,12 +79,15 @@ export interface RandomFilterConfig {
     seed: string;
 }
 
-export interface SurveyResponseFilterConfig {
+export interface SurveyResponseBase {
     operator: MATCH_OPERATORS;
     value: string;
-    question?: number;
-    survey?: number;
 }
+
+type SurveyResponseWithQuestion = SurveyResponseBase & { question: number }
+type SurveyResponseWithSurvey = SurveyResponseBase & { survey: number }
+
+export type SurveyResponseFilterConfig = SurveyResponseWithQuestion | SurveyResponseWithSurvey
 
 export interface SurveySubmissionFilterConfig {
     after?: string;
