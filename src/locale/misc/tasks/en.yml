@@ -22,6 +22,9 @@ taskDetails:
     titleLabel: Title
     instructionsLabel: Instructions
     typeLabel: Type
+    publishedTime: Publish Time
+    deadlineTime: Deadline Time
+    expiresTime: Expires Time
 taskTypeDetails:
     share_link:
         title: Share Link Settings

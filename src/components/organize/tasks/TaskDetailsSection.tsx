@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import { useIntl } from 'react-intl';
 
 import getTaskStatus from 'utils/getTaskStatus';
@@ -28,6 +29,18 @@ const TaskDetailsCard: React.FunctionComponent<TaskDetailsCardProps> = ({ task }
                 value={ task.instructions }
             />
             <TaskTypeDetailsSection task={ task }/>
+            <TaskProperty
+                title={ intl.formatMessage({ id: 'misc.tasks.taskDetails.publishedTime' }) }
+                value={ task.published && dayjs(task.published) }
+            />
+            <TaskProperty
+                title={ intl.formatMessage({ id: 'misc.tasks.taskDetails.deadlineTime' }) }
+                value={ task.deadline && dayjs(task.deadline) }
+            />
+            <TaskProperty
+                title={ intl.formatMessage({ id: 'misc.tasks.taskDetails.expiresTime' }) }
+                value={ task.expires && dayjs(task.expires) }
+            />
         </>
     );
 };
