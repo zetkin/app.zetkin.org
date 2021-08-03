@@ -10,6 +10,7 @@ import { TASK_TYPE } from 'types/tasks';
 import { ZetkinTask } from 'types/zetkin';
 import { ZetkinTaskRequestBody } from 'types/tasks';
 
+import CollectDemographicsFields from './typeConfigFields/CollectDemographicsFields';
 import { TASK_DETAILS_FIELDS } from './constants';
 import { isDeadlineSecond, isExpiresThird, isPublishedFirst } from './utils';
 
@@ -57,8 +58,13 @@ const TaskDetailsForm = ({ onSubmit, onCancel, task }: TaskDetailsFormProps): JS
     const submit = (newTaskValues: ZetkinTaskRequestBody) => {
         onSubmit({
             ...newTaskValues,
-            // If the task type changes, set the config to an empty object
-            config: task?.type && newTaskValues.type !== task?.type ? {} : newTaskValues.config,
+            config:
+                // If task type changes and no new config values
+                task?.type && newTaskValues.type !== task?.type && !newTaskValues.config ?
+                    // Set empty config
+                    {} :
+                    // Else use current config
+                    newTaskValues.config,
         });
     };
 
@@ -66,6 +72,7 @@ const TaskDetailsForm = ({ onSubmit, onCancel, task }: TaskDetailsFormProps): JS
         <Form
             initialValues={{
                 campaign_id: parseInt(campId),
+                config: { ...task?.config, fields: [] },
                 deadline: task?.deadline,
                 expires: task?.expires,
                 instructions: task?.instructions,
@@ -74,7 +81,7 @@ const TaskDetailsForm = ({ onSubmit, onCancel, task }: TaskDetailsFormProps): JS
                 type: task?.type,
             }}
             onSubmit={ (values) => submit(values) }
-            render={ ({ handleSubmit, submitting, valid }) => (
+            render={ ({ handleSubmit, submitting, valid, values }) => (
                 <form noValidate onSubmit={ handleSubmit }>
                     <TextField
                         disabled={ campId ? true : false }
@@ -135,6 +142,10 @@ const TaskDetailsForm = ({ onSubmit, onCancel, task }: TaskDetailsFormProps): JS
                             <FormattedMessage id="misc.tasks.forms.createTask.fields.types.demographic" />
                         </MenuItem>
                     </TextField>
+
+                    { values.type === TASK_TYPE.COLLECT_DEMOGRAPHICS && (
+                        <CollectDemographicsFields />
+                    ) }
 
                     { /* Date Selectors */ }
                     <DateTimePicker

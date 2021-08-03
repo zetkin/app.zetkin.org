@@ -10,14 +10,14 @@ export enum TASK_DETAILS_FIELDS {
 }
 
 export enum SHARE_LINK_FIELDS {
-    DEFAULT_MESSAGE= 'default_message',
-    URL= 'url'
+    DEFAULT_MESSAGE= 'config.default_message',
+    URL= 'config.url'
 }
 
 export enum VISIT_LINK_FIELDS {
-    URL= 'url'
+    URL= 'config.url'
 }
 
 export enum COLLECT_DEMOGRAPHICS_FIELDS {
-    FIELD= 'field'
+    FIELDS= 'config.fields'
 }
