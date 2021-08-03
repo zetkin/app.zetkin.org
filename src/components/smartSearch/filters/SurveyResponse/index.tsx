@@ -10,13 +10,15 @@ import StyledSelect from '../../inputs/StyledSelect';
 import StyledTextInput from 'components/smartSearch/inputs/StyledTextInput';
 import useSmartSearchFilter from 'hooks/useSmartSearchFilter';
 import {  ELEMENT_TYPE, RESPONSE_TYPE } from 'types/zetkin';
-import { MATCH_OPERATORS, NewSmartSearchFilter, OPERATION, SmartSearchFilterWithId, SurveyResponseBase, SurveyResponseFilterConfig, ZetkinSmartSearchFilter } from 'types/smartSearch';
+import { MATCH_OPERATORS, NewSmartSearchFilter, OPERATION, SmartSearchFilterWithId,
+    SurveyResponseBase, SurveyResponseFilterConfig, ZetkinSmartSearchFilter } from 'types/smartSearch';
 
 const DEFAULT_VALUE = 'none';
 
 interface SurveyResponseProps {
     filter:  SmartSearchFilterWithId<SurveyResponseFilterConfig> |  NewSmartSearchFilter ;
-    onSubmit: (filter: SmartSearchFilterWithId<SurveyResponseFilterConfig> | ZetkinSmartSearchFilter<SurveyResponseFilterConfig>) => void;
+    onSubmit: (filter: SmartSearchFilterWithId<SurveyResponseFilterConfig>
+        | ZetkinSmartSearchFilter<SurveyResponseFilterConfig>) => void;
     onCancel: () => void;
 }
 
@@ -31,7 +33,9 @@ const SurveyResponse = ({ onSubmit, onCancel, filter: initialFilter }: SurveyRes
     const surveys = surveysQuery.data || [];
 
     const getSurveyIdfromQuestionId = (questionId?: number) => {
-        return questionId? surveys.map(s => ({ elements: s.elements.map(e => e.id), id: s.id  })).find(s => s.elements.includes(questionId))?.id : undefined;
+        return questionId? surveys.map(
+            s => ({ elements: s.elements.map(e => e.id), id: s.id  }))
+            .find(s => s.elements.includes(questionId))?.id : undefined;
     };
 
     const { filter, setOp } = useSmartSearchFilter<SurveyResponseFilterConfig>(initialFilter);
