@@ -1,7 +1,7 @@
 import { defaultFetch } from '.';
 import { ZetkinSurvey, ZetkinSurveyExtended } from '../types/zetkin';
 
-export default function getSurveys(orgId : string, fetch = defaultFetch) {
+export default function getSurveysWithElements(orgId : string, fetch = defaultFetch) {
     return async (): Promise<ZetkinSurveyExtended[]> => {
 
         const res = await fetch(`/orgs/${orgId}/surveys`);
