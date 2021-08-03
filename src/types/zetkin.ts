@@ -147,6 +147,37 @@ export interface ZetkinSurvey {
     callers_only: boolean;
 }
 
+export interface ZetkinSurveyExtended extends ZetkinSurvey {
+    elements: ZetkinSurveyElement[];
+}
+
+export interface ZetkinSurveyElement {
+    id: number;
+    question: ZetkinQuestion;
+    type: ELEMENT_TYPE;
+}
+
+export enum RESPONSE_TYPE {
+    OPTIONS = 'options',
+    TEXT = 'text'
+}
+
+export enum ELEMENT_TYPE {
+    QUESTION = 'question',
+    TEXT = 'text'
+}
+
+interface ZetkinQuestion {
+    description: string | null;
+    options?: Array<unknown>;
+    question: string;
+    required: boolean;
+    response_config: {
+        multiline: boolean;
+    };
+    response_type: RESPONSE_TYPE;
+}
+
 export interface ZetkinCanvassAssignment {
     start_data: string;
     end_date: string;

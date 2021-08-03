@@ -9,6 +9,7 @@ import MostActive from './filters/MostActive';
 import patchQuery from 'fetching/patchQuery';
 import PersonData from './filters/PersonData';
 import Random from './filters/Random';
+import SurveyResponse from './filters/SurveyResponse';
 import SurveySubmission from './filters/SurveySubmission';
 import User from './filters/User';
 import { useRouter } from 'next/router';
@@ -119,6 +120,7 @@ const TaskAssigneesSmartSearchDialog = ({ onDialogClose, open, query }: TaskAssi
                 { selectedFilter?.type === FILTER_TYPE.USER && <User filter={ selectedFilter } onCancel={ handleCancelFilter } onSubmit={ handleSubmitFilter }/> }
                 { selectedFilter?.type === FILTER_TYPE.CAMPAIGN_PARTICIPATION && <CampaignParticipation filter={ selectedFilter } onCancel={ handleCancelFilter } onSubmit={ handleSubmitFilter }/> }
                 { selectedFilter?.type === FILTER_TYPE.PERSON_DATA && <PersonData filter={ selectedFilter } onCancel={ handleCancelFilter } onSubmit={ handleSubmitFilter }/> }
+                { selectedFilter?.type === FILTER_TYPE.SURVEY_RESPONSE && <SurveyResponse filter={ selectedFilter } onCancel={ handleCancelFilter } onSubmit={ handleSubmitFilter }/> }
             </DialogContent>
         </Dialog>
     );
