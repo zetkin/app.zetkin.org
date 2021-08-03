@@ -1,6 +1,7 @@
 
 export enum FILTER_TYPE {
     ALL ='all',
+    CALL_HISTORY = 'call_history',
     CAMPAIGN_PARTICIPATION = 'campaign_participation',
     MOST_ACTIVE ='most_active',
     PERSON_DATA = 'person_data',
@@ -16,6 +17,12 @@ export enum MATCH_OPERATORS {
     EQUALS = 'eq',
     NOT_EQUALS = 'noteq',
   }
+
+export enum CALL_OPERATOR {
+    CALLED = 'called',
+    REACHED = 'reached',
+    NOTREACHED = 'notreached',
+}
 
 export enum OPERATION {
     ADD = 'add',
@@ -53,6 +60,14 @@ export enum DATA_FIELD {
  * Filter Configs
  */
 export type DefaultFilterConfig = Record<string, never> // Default filter config is an empty object
+
+export interface CallHistoryFilterConfig {
+    operator: CALL_OPERATOR;
+    assignment?: number;
+    minTimes?: number;
+    before?: string;
+    after?: string;
+}
 
 export interface MostActiveFilterConfig {
     after?: string;
@@ -111,6 +126,7 @@ export interface CampaignParticipationConfig {
 }
 
 export type AnyFilterConfig = (
+    CallHistoryFilterConfig |
     CampaignParticipationConfig |
     DefaultFilterConfig |
     MostActiveFilterConfig |

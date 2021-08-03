@@ -9,6 +9,7 @@ buttonLabels:
     edit: Update selection
 filterTitles:
     all: All people
+    call_history: People who have been called
     campaign_participation: People who have participated in a campaign
     most_active: A selection of the most active people
     person_data: Search based on name, address or similar fields
@@ -18,6 +19,22 @@ filterTitles:
     user: People who used Zetkin
 all:
     inputString: Add all the people in the organization.
+call_history:
+    inputString: "{addRemoveSelect} people who {callSelect} at least {minTimesInput} {minTimes, plural, one {time} other {times}} in {assignmentSelect} {timeFrame}."
+    addRemoveSelect:
+        add: Add
+        sub: Remove
+    assignmentSelect:
+        any: any assignment
+        none: This organization doesn't have any call assignments yet
+        assignment: assignment "{assignmentTitle}"
+    callSelect:
+        called: have been called
+        reached: have been successfully reached
+        notreached: have been unsuccessfully tried
+    examples:
+        one: Add people who have been successfully reached at least 2 times in any assignment at any point in time.
+        two: Remove people who have been called at least 1 time in assignment 'Campaign 2020' during the last 30 days.  
 campaign_participation:
     inputString: "{addRemoveSelect} people who {haveSelect} {bookedSelect} for events in {campaignSelect} with {activitySelect} at {locationSelect} {timeFrame}"
     addRemoveSelect:
