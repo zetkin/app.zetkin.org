@@ -31,15 +31,15 @@ const TaskDetailsCard: React.FunctionComponent<TaskDetailsCardProps> = ({ task }
             <TaskTypeDetailsSection task={ task }/>
             <TaskProperty
                 title={ intl.formatMessage({ id: 'misc.tasks.taskDetails.publishedTime' }) }
-                value={ task.published && dayjs(task.published) }
+                value={ task.published && dayjs(task.published).toISOString() }
             />
             <TaskProperty
                 title={ intl.formatMessage({ id: 'misc.tasks.taskDetails.deadlineTime' }) }
-                value={ task.deadline && dayjs(task.deadline) }
+                value={ task.deadline && dayjs(task.deadline).toISOString() }
             />
             <TaskProperty
                 title={ intl.formatMessage({ id: 'misc.tasks.taskDetails.expiresTime' }) }
-                value={ task.expires && dayjs(task.expires) }
+                value={ task.expires && dayjs(task.expires).toISOString() }
             />
         </>
     );

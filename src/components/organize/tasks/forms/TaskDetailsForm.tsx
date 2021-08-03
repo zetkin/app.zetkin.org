@@ -76,7 +76,22 @@ const TaskDetailsForm = ({ onSubmit, onCancel, task }: TaskDetailsFormProps): JS
             onSubmit={ (values) => submit(values) }
             render={ ({ handleSubmit, submitting, valid }) => (
                 <form noValidate onSubmit={ handleSubmit }>
-                    { /* Fields */ }
+                    <TextField
+                        disabled={ campId ? true : false }
+                        fullWidth
+                        id="campaign"
+                        label={ intl.formatMessage({ id: 'misc.tasks.forms.createTask.fields.campaign' }) }
+                        margin="normal"
+                        name={ TASK_DETAILS_FIELDS.CAMPAIGN_ID }
+                        required
+                        select>
+                        { campaigns && campaigns.map(c => (
+                            <MenuItem key={ c.id } value={ c.id }>
+                                { c.title }
+                            </MenuItem>
+                        )) }
+                    </TextField>
+
                     <TextField
                         fullWidth
                         id="title"
@@ -84,6 +99,19 @@ const TaskDetailsForm = ({ onSubmit, onCancel, task }: TaskDetailsFormProps): JS
                         margin="normal"
                         name={ TASK_DETAILS_FIELDS.TITLE }
                         required
+                    />
+
+                    <TextField
+                        fullWidth
+                        id="instructions"
+                        label={ intl.formatMessage({ id: 'misc.tasks.forms.createTask.fields.instructions' }) }
+                        margin="normal"
+                        multiline
+                        name={ TASK_DETAILS_FIELDS.INSTRUCTIONS }
+                        required
+                        rows={ 2 }
+                        variant="filled"
+
                     />
 
                     <TextField
@@ -107,35 +135,6 @@ const TaskDetailsForm = ({ onSubmit, onCancel, task }: TaskDetailsFormProps): JS
                             <FormattedMessage id="misc.tasks.forms.createTask.fields.types.demographic" />
                         </MenuItem>
                     </TextField>
-
-                    <TextField
-                        disabled={ campId ? true : false }
-                        fullWidth
-                        id="campaign"
-                        label={ intl.formatMessage({ id: 'misc.tasks.forms.createTask.fields.campaign' }) }
-                        margin="normal"
-                        name={ TASK_DETAILS_FIELDS.CAMPAIGN_ID }
-                        required
-                        select>
-                        { campaigns && campaigns.map(c => (
-                            <MenuItem key={ c.id } value={ c.id }>
-                                { c.title }
-                            </MenuItem>
-                        )) }
-                    </TextField>
-
-                    <TextField
-                        fullWidth
-                        id="instructions"
-                        label={ intl.formatMessage({ id: 'misc.tasks.forms.createTask.fields.instructions' }) }
-                        margin="normal"
-                        multiline
-                        name={ TASK_DETAILS_FIELDS.INSTRUCTIONS }
-                        required
-                        rows={ 2 }
-                        variant="filled"
-
-                    />
 
                     { /* Date Selectors */ }
                     <DateTimePicker
