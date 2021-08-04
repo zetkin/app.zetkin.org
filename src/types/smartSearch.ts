@@ -5,10 +5,17 @@ export enum FILTER_TYPE {
     CAMPAIGN_PARTICIPATION = 'campaign_participation',
     MOST_ACTIVE ='most_active',
     PERSON_DATA = 'person_data',
+    PERSON_TAGS = 'person_tags',
     RANDOM = 'random',
     SURVEY_RESPONSE = 'survey_response',
     SURVEY_SUBMISSION = 'survey_submission',
     USER = 'user'
+}
+
+export enum CONDITION_OPERATOR {
+    ALL = 'all',
+    ANY = 'any',
+    NONE = 'none',
 }
 
 export enum MATCH_OPERATORS {
@@ -89,6 +96,12 @@ export interface PersonDataFilterConfig {
     };
 }
 
+export interface PersonTagsFilterConfig {
+    condition: CONDITION_OPERATOR;
+    tags: number[];
+    min_matching?: number;
+}
+
 export interface RandomFilterConfig {
     size: number;
     seed: string;
@@ -131,6 +144,7 @@ export type AnyFilterConfig = (
     DefaultFilterConfig |
     MostActiveFilterConfig |
     PersonDataFilterConfig |
+    PersonTagsFilterConfig |
     RandomFilterConfig |
     SurveyResponseFilterConfig |
     SurveySubmissionFilterConfig |
