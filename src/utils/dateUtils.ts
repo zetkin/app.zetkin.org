@@ -8,3 +8,7 @@ export const getNaiveDate = (dateString: string): Date => {
         date.getUTCMinutes(),
     );
 };
+
+export const getNewDateWithOffset = (date: Date, offset: number ):Date => {
+    return new Date(new Date(date).setDate(date.getDate() + offset));
+};

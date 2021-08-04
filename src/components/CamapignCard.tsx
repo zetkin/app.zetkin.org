@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { Card, CardActions, CardContent, Link, Typography } from '@material-ui/core';
 import { FormattedDate, FormattedMessage as Msg } from 'react-intl';
 
-import { getNaiveDate } from '../utils/getNaiveDate';
+import { getNaiveDate } from '../utils/dateUtils';
 import { ZetkinCampaign, ZetkinEvent } from '../types/zetkin';
 
 interface CampaignCardProps {

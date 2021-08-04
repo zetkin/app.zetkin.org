@@ -1,0 +1,186 @@
+headers:
+    current: Current target group
+    add: Add a new selection
+    examples: Examples
+buttonLabels:
+    cancel: Cancel
+    save: Save
+    add: Add selection to target group
+    edit: Update selection
+misc:
+    noOptions: No matching tags
+filterTitles:
+    all: All people
+    call_history: People who have been called
+    campaign_participation: People who have participated in a campaign
+    most_active: A selection of the most active people
+    person_data: Search based on name, address or similar fields
+    person_tags: Search for people based on tags
+    random: A random selection of people
+    survey_response: Search based on responses to survey questions
+    survey_submission: People who have responded to a survey
+    user: People who used Zetkin
+all:
+    inputString: Add all the people in the organization.
+call_history:
+    inputString: "{addRemoveSelect} people who {callSelect} at least {minTimesInput} {minTimes, plural, one {time} other {times}} in {assignmentSelect} {timeFrame}."
+    addRemoveSelect:
+        add: Add
+        sub: Remove
+    assignmentSelect:
+        any: any assignment
+        none: This organization doesn't have any call assignments yet
+        assignment: assignment "{assignmentTitle}"
+    callSelect:
+        called: have been called
+        reached: have been successfully reached
+        notreached: have been unsuccessfully tried
+    examples:
+        one: Add people who have been successfully reached at least 2 times in any assignment at any point in time.
+        two: Remove people who have been called at least 1 time in assignment 'Campaign 2020' during the last 30 days.  
+campaign_participation:
+    inputString: "{addRemoveSelect} people who {haveSelect} {bookedSelect} for events in {campaignSelect} with {activitySelect} at {locationSelect} {timeFrame}"
+    addRemoveSelect:
+        add: Add
+        sub: Remove
+    haveSelect:
+        in: have
+        notin: have not
+    bookedSelect:
+        booked: been booked
+        signed_up: signed up
+    examples:
+        one: Add people who have signed up for events in any campaign with any activity at location 'Dorfplatz' at any point in time
+        two: Remove people who have not been booked for events in any campaign with activity 'Put up posters' at any location before today.
+    campaignSelect:
+        any: any campaign
+        campaign: campaign "{campaign}"
+    locationSelect:
+        any: any location
+        location: location "{location}"
+    activitySelect:
+        any: any activity
+        activity: activity "{activity}"
+most_active:
+    inputString: "{addRemoveSelect} the {numPeopleSelect} most active {numPeople, plural, one {person} other {people}} in the organization {timeFrame}." 
+    addRemoveSelect:
+        add: Add
+        sub: Remove
+    examples:
+        one: Add the 100 most active members of the organization before today.
+        two: Remove the 5 most active members of the organization at any point in time.
+person_data:
+    inputString: "{addRemoveSelect} any person whose {criteria}."
+    ellipsis: "..."
+    addRemoveSelect:
+        add: Add
+        sub: remove
+    examples:
+        one: Add any person whose first name is 'Clara' and whose last name is 'Zetkin'.
+        two: Remove any person whose city is Stockholm.
+criteria:
+    criterion: "{field} matches {value}"
+    tuple: "{first} and {second}"
+    criteriaSelect:
+        first_name: first name
+        last_name: last name
+        gender: gender
+        co_address: co-address
+        city: city
+        zip_code: zip code
+        street_address: street address
+        alt_phone: alternative phone number
+        phone: phone number
+        remove: Remove this criteria
+person_tags:
+    inputString:  "{addRemoveSelect} people with {condition} of the following tags: {tags}"
+    addRemoveSelect:
+        add: Add
+        sub: Remove
+    examples:
+        one: "Add people with at least one of the following tags: 'Member', 'Activist'"
+        two: "Remove people with all of the following tags: 'Board member'"
+condition:
+    preview:
+        all: all
+        any: any
+        none: none
+        min_matching: "at least {minMatching}"
+    edit:
+        all: "{conditionSelect}"
+        any: "{conditionSelect}"
+        none: "{conditionSelect}"
+        min_matching: "{conditionSelect} {minMatchingInput}"
+    conditionSelect:
+        all: all
+        any: any
+        none: none
+        min_matching: at least
+random:
+    inputString: Randomly {addRemoveSelect} {quantity} in the organization.
+    addRemoveSelect:
+        add: add
+        sub: remove
+    examples:
+        one: Randomly add 20 people in the organization.
+        two: Randomly remove 15% of the people in the organization.
+survey_response:
+    inputString: '{addRemoveSelect} people whose response to {surveySelect} ({questionSelect}) {matchSelect} "{freeTextInput}"'
+    addRemoveSelect:
+        add: Add
+        sub: Remove
+    matchSelect:
+        in: includes
+        notin: does not include
+        eq: exactly matches
+        noteq: is not
+    surveySelect:
+        any: a survey
+        none: This organization has no surveys yet
+        survey: survey "{surveyTitle}"
+    questionSelect:
+        any: any question
+        none: There are no free text questions in this survey
+        question: question "{question}"
+    examples:
+        one: People whose responses to survey 'Member survey' (any question) include 'organize'.
+        two: People whose responses to survey 'Member survey' (question 'Question one') exactly match 'organize'.
+survey_submission:
+    inputString: "{addRemoveSelect} people who have submitted responses to {surveySelect} {timeFrame}."
+    addRemoveSelect:
+        add: Add
+        sub: Remove
+    surveySelect:
+        any: a survey
+        none: This organization has no surveys yet
+        survey: survey "{surveyTitle}"
+    examples:
+        one: People who have submitted responses to survey 'Member survey 2020' before today.
+        two: People who have submitted responses to survey 'Member survey' during the last 30 days.
+user:
+    inputString: "{addRemoveSelect} all people who are {connectedSelect} to a Zetkin user."
+    addRemoveSelect:
+        add: Add
+        sub: Remove
+    connectedSelect:
+        true: connected
+        false: not connected
+    examples:
+        one: Remove all people who are connected to a Zetkin user.
+        two: Add all people who are not connected to a Zetkin user.
+quantity:
+    preview:
+        integer: "{people} {people, plural, one {person} other {people}}"
+        percent: "{people} % of the people"
+    edit:
+        integer: "{numInput} {quantitySelect}"
+        percent: "{numInput} {quantitySelect}"
+    quantitySelectOptions:
+        integer: a number of people
+        percent: a percentage of people
+    quantitySelectLabel:
+        integer: "{people, plural, one {person} other {people}}"
+        percent: "% of the people"
+
+
+

@@ -1,3 +1,5 @@
+import { ZetkinSmartSearchFilter } from './smartSearch';
+
 export interface ZetkinCampaign {
     color: string;
     info_text: string;
@@ -145,6 +147,37 @@ export interface ZetkinSurvey {
     callers_only: boolean;
 }
 
+export interface ZetkinSurveyExtended extends ZetkinSurvey {
+    elements: ZetkinSurveyElement[];
+}
+
+export interface ZetkinSurveyElement {
+    id: number;
+    question: ZetkinQuestion;
+    type: ELEMENT_TYPE;
+}
+
+export enum RESPONSE_TYPE {
+    OPTIONS = 'options',
+    TEXT = 'text'
+}
+
+export enum ELEMENT_TYPE {
+    QUESTION = 'question',
+    TEXT = 'text'
+}
+
+interface ZetkinQuestion {
+    description: string | null;
+    options?: Array<unknown>;
+    question: string;
+    required: boolean;
+    response_config: {
+        multiline: boolean;
+    };
+    response_type: RESPONSE_TYPE;
+}
+
 export interface ZetkinCanvassAssignment {
     start_data: string;
     end_date: string;
@@ -172,12 +205,6 @@ export interface ZetkinActivity {
     info_text: string | null;
 }
 
-interface ZetkinSmartSearchFilter {
-    config?: Record<string, unknown>;
-    op: 'sub' | 'add';
-    type: string;
-}
-
 //  Tasks
 export enum ZetkinTaskType {
     demographic = 'demographic',
@@ -186,6 +213,11 @@ export enum ZetkinTaskType {
     share_image = 'share_image',
     visit_link = 'visit_link',
     watch_video = 'watch_video',
+}
+
+export interface ZetkinQuery {
+    filter_spec: ZetkinSmartSearchFilter[];
+    id: number;
 }
 
 export interface ZetkinTask {
@@ -197,10 +229,7 @@ export interface ZetkinTask {
     deadline?: string; // iso string
     type: ZetkinTaskType;
     config: Record<string, unknown >; // Will find out configs for different types later
-    target: {
-        filter_spec: ZetkinSmartSearchFilter[];
-        id: number;
-    };
+    target: ZetkinQuery;
     campaign: {
         id: number;
         title: string;
@@ -217,4 +246,11 @@ export interface ZetkinTaskReqBody extends Partial<ZetkinTask> {
     type: ZetkinTaskType;
     campaign_id: number;
     target_filters: ZetkinSmartSearchFilter[];
+}
+
+export interface ZetkinTag {
+    id: number;
+    title: string;
+    hidden: boolean;
+    description: string;
 }
