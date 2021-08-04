@@ -2,7 +2,7 @@
 import { FormattedMessage as Msg } from 'react-intl';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
-import { Box, Button, Divider, MenuItem, Typography } from '@material-ui/core';
+import { Box, Button, Chip, Divider, MenuItem, Typography } from '@material-ui/core';
 import { FormEvent, useEffect, useState } from 'react';
 
 import getTags from 'fetching/getTags';
@@ -46,7 +46,14 @@ const PersonTags = (
             setConfig({ ...filter.config, min_matching: minMatching });
     }, [minMatching]);
 
-    const availableTags = tags.filter(t => !filter.config.tags.includes(t.id));
+    // preserve the order of the tag array
+    const selectedTags = filter.config.tags.reduce((acc: ZetkinTag[], id) => {
+        const tag = tags.find(tag => tag.id === id);
+        if (tag) {
+            return acc.concat(tag);
+        }
+        return acc;
+    }, []);
 
     const selected = filter.config.min_matching ?
         MIN_MATCHING : filter.config.condition;
@@ -79,6 +86,10 @@ const PersonTags = (
 
     const handleTagChange = (tags: ZetkinTag[]) => {
         setConfig({ ...filter.config, tags: tags.map(t => t.id) });
+    };
+
+    const handleTagDelete = (tag: ZetkinTag) => {
+        setConfig({ ...filter.config, tags: filter.config.tags.filter(t => t !== tag.id ) });
     };
 
     return (
@@ -128,12 +139,30 @@ const PersonTags = (
                         />
                     ),
                     tags: (
-                        <StyledTagSelect
-                            getOptionLabel={ t => t.title }
-                            onChange={ (_, v) => handleTagChange(v) }
-                            options={ availableTags }
-                            value={ tags.filter(t => filter.config.tags.includes(t.id)) }
-                        />
+                        <Box
+                            alignItems="center"
+                            display="inline-flex"
+                            style={{ verticalAlign: 'middle' }}>
+                            { selectedTags.map((tag) => {
+                                return (
+                                    <Chip
+                                        key={ tag.id }
+                                        label={ tag.title }
+                                        onDelete={ () => handleTagDelete(tag) }
+                                        style={{ margin: '3px' }}
+                                        variant="outlined"
+                                    />
+                                );
+                            }) }
+                            { selectedTags.length < tags.length && (
+                                <StyledTagSelect
+                                    getOptionDisabled={ t => selectedTags.includes(t) }
+                                    getOptionLabel={ t => t.title }
+                                    onChange={ (_, v) => handleTagChange(v) }
+                                    options={ tags }
+                                    value={ tags.filter(t => filter.config.tags.includes(t.id)) }
+                                />) }
+                        </Box>
                     ),
                 }}
                 />

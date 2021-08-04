@@ -16,13 +16,14 @@ const useStyles = makeStyles<Theme>((theme) => ({
     },
 }));
 
-type StyledTagSelectProps = Omit<AutocompleteProps<ZetkinTag, true, undefined, false>, 'renderInput'>
+type StyledTagSelectProps = Omit<AutocompleteProps<ZetkinTag, true, true, false>, 'renderInput'>
 
 const StyledTagSelect = (props: StyledTagSelectProps): JSX.Element => {
     const classes = useStyles();
     return (
         <Autocomplete
             className={ classes.autocomplete }
+            disableClearable
             multiple
             renderInput={ (params) => (
                 <StyledTextInput { ...params } className={ classes.input }/>
@@ -34,16 +35,7 @@ const StyledTagSelect = (props: StyledTagSelectProps): JSX.Element => {
                     label={ tag.title }
                     variant="outlined"
                 />) }
-            renderTags={ (value, getTagProps) =>
-                value.map((tag, index) => (
-                    <Chip
-                        key={ tag.id }
-                        label={ tag.title }
-                        variant="outlined"
-                        { ...getTagProps({ index }) }
-                    />
-                ))
-            }
+            renderTags={ () => null }
             { ...props }
         />
     );

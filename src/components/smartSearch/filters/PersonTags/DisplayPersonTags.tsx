@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import { Box, Chip } from '@material-ui/core';
 
 import getTags from 'fetching/getTags';
+import { ZetkinTag } from 'types/zetkin';
 import { OPERATION, PersonTagsFilterConfig, SmartSearchFilterWithId } from 'types/smartSearch';
 
 interface DisplayPersonTagProps {
@@ -18,7 +19,14 @@ const DisplayPersonTags = ({ filter }: DisplayPersonTagProps) : JSX.Element => {
     const tagsQuery = useQuery(['tags', orgId], getTags(orgId as string));
     const tags = tagsQuery?.data || [];
 
-    const selectedTags = tags.filter(t => tagIds.includes(t.id));
+    // preserve the order of the tag array
+    const selectedTags = tagIds.reduce((acc: ZetkinTag[], id) => {
+        const tag = tags.find(tag => tag.id === id);
+        if (tag) {
+            return acc.concat(tag);
+        }
+        return acc;
+    }, []);
 
     return (
         <Msg
