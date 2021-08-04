@@ -13,7 +13,7 @@ filterTitles:
     campaign_participation: People who have participated in a campaign
     most_active: A selection of the most active people
     person_data: Search based on name, address or similar fields
-    person_tags: Search for people with specific tags
+    person_tags: Search for people based on tags
     random: A random selection of people
     survey_response: Search based on responses to survey questions
     survey_submission: People who have responded to a survey
