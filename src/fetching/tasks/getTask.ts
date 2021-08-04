@@ -1,10 +1,13 @@
 import { defaultFetch } from '..';
 import { ZetkinTask } from 'types/zetkin';
 
-export default function getTask(orgId : string, taskId: string, fetch = defaultFetch) {
-    return async () : Promise<ZetkinTask> => {
-        const res = await fetch(`/orgs/${orgId}/tasks/${taskId}`);
-        const body = await res.json();
-        return body?.data;
+const getTask = (orgId : string, taskId: string, fetch = defaultFetch) => {
+    return async (): Promise<ZetkinTask> => {
+        const url = `/orgs/${orgId}/tasks/${taskId}`;
+        const res = await fetch(url);
+        const resData = await res.json();
+        return resData?.data;
     };
-}
+};
+
+export default getTask;

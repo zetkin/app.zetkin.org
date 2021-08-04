@@ -12,15 +12,27 @@ const useStyles = makeStyles((theme) => ({
         [theme.breakpoints.down('xs')]: {
             width: '100%',
         },
+
+    },
+    header: {
+        display: 'grid',
+        gap: '1rem',
+        gridTemplateColumns:'1fr auto',
+        gridTemplateRows:'auto',
+        [theme.breakpoints.down('sm')]: {
+            gridTemplateColumns: '1fr',
+        },
     },
     root: {
         [theme.breakpoints.down('xs')]: {
             paddingTop: '4rem',
         },
     },
+
 }));
 
 interface TabbedLayoutProps {
+    actionButtons?: React.ReactElement | React.ReactElement[];
     fixedHeight?: boolean;
     title?: string;
     subtitle?: string | ReactElement;
@@ -29,7 +41,16 @@ interface TabbedLayoutProps {
     tabs: {href: string; messageId: string}[];
 }
 
-const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({ children, fixedHeight, title, subtitle, tabs, baseHref, defaultTab }) => {
+const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
+    children,
+    actionButtons,
+    fixedHeight,
+    title,
+    subtitle,
+    tabs,
+    baseHref,
+    defaultTab,
+}) => {
     const intl = useIntl();
     const classes = useStyles();
     const router = useRouter();
@@ -61,13 +82,20 @@ const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({ children, fixedHei
                                 <SearchDrawer />
                             </Box>
                         </Box>
-                        <Box p={ 3 } pt={ 1 }>
-                            <Typography component="h1" noWrap variant="h2">
-                                { title }
-                            </Typography>
-                            <Typography component="h2" noWrap variant="h5">
-                                { subtitle }
-                            </Typography>
+                        { /* Title, subtitle, and action buttons */ }
+                        <Box alignItems="center" className={ classes.header } p={ 3 } width="100%">
+                            <Box overflow="hidden">
+                                <Typography component="h1" noWrap variant="h2">
+                                    { title }
+                                </Typography>
+                                <Typography component="h2" variant="h5">
+                                    { subtitle }
+                                </Typography>
+                            </Box>
+                            { /* Action Buttons */ }
+                            <Box>
+                                { actionButtons }
+                            </Box>
                         </Box>
                         <Tabs
                             aria-label="campaign tabs"

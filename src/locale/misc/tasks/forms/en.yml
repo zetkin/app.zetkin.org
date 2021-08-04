@@ -9,3 +9,18 @@ createTask:
             open_link: Open Link
         instructions: Instructions
         campaign: Campaign
+        published: Publish Time
+        deadline: Completion Deadline
+        expires: Expiration Date
+editTask:
+    title: Edit task
+deleteTask:
+    title: Delete task
+    warning: Are you sure you want to delete this task? This action is permanent and cannot be undone.
+    cancel: Cancel
+    submitButton: Confirm deletion
+publishTask:
+    title: Publish task
+    warning: Please confirm you are ready to publish this task. It will be sent to all assignees.
+    cancel: Cancel
+    submitButton: Publish task now

@@ -3,8 +3,8 @@ import { CheckBox } from '@material-ui/icons';
 import { useMutation } from 'react-query';
 import { useRouter } from 'next/router';
 
-import CreateTaskForm from '../../organize/tasks/forms/CreateTaskForm';
 import postTask from '../../../fetching/tasks/postTask';
+import TaskDetailsForm from '../../organize/tasks/forms/TaskDetailsForm';
 import { ZetkinTaskReqBody } from '../../../types/zetkin';
 
 import { ACTIONS } from '../constants';
@@ -17,14 +17,13 @@ const DialogContent: React.FunctionComponent<DialogContentBaseProps> = ({ closeD
     const eventMutation = useMutation(postTask(orgId));
 
     const handleFormSubmit = async (data: ZetkinTaskReqBody) => {
-        closeDialog();
         const newTask = await eventMutation.mutateAsync(data);
         // Redirect to task page
-        router.push(`/organize/${orgId}/campiagns/${campId}/tasks/${newTask.id}`);
+        router.push(`/organize/${orgId}/campaigns/${campId}/calendar/tasks/${newTask.id}`);
     };
 
     return (
-        <CreateTaskForm
+        <TaskDetailsForm
             onCancel={ closeDialog }
             onSubmit={ handleFormSubmit }
         />

@@ -3,6 +3,10 @@ statuses:
     closed: "Closed"
     draft: "Draft"
     scheduled: "Scheduled"
+types:
+    offline: Offline
+    share_link: Share Link
+    visit_link: Open Link
 taskListItem:
     relativeTimes:
         active: "Closes {time}"
@@ -10,3 +14,13 @@ taskListItem:
         closed: "Closed {time}"
         scheduled: "Will be published {time}"
         indefinite: "Published {time}"
+taskDetails:
+    title: Details
+    editButton: Edit
+    titleLabel: Title
+    instructionsLabel: Instructions
+    typeLabel: Type
+publishButton:
+    publish: Publish
+    active: Published
+    closed: Closed

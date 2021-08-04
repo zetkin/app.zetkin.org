@@ -21,6 +21,7 @@
     "@cypress/code-coverage": "^3.9.2",
     "@cypress/webpack-preprocessor": "^5.5.0",
     "@date-io/date-fns": "1.x",
+    "@date-io/dayjs": "1.x",
     "@material-ui/core": "^4.11.4",
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.58",

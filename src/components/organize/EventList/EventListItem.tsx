@@ -17,7 +17,7 @@ const EventListItem = ({ event, hrefBase }: EventListItemProps): JSX.Element => 
     const endTime = getNaiveDate(end_time);
 
     return (
-        <Link href={ hrefBase + `/events/${id}` } passHref>
+        <Link href={ hrefBase + `/calendar/events/${id}` } passHref>
             <ListItem button component="a">
                 <ListItemText>
                     <Typography component="h5" variant="body1">
