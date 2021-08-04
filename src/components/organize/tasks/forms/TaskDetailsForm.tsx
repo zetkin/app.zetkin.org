@@ -9,7 +9,7 @@ import getCampaigns from 'fetching/getCampaigns';
 import { ZetkinTask } from 'types/zetkin';
 import { TASK_TYPE, ZetkinTaskRequestBody } from 'types/tasks';
 
-// import CollectDemographicsFields from './typeConfigFields/CollectDemographicsFields';
+import CollectDemographicsFields from './typeConfigFields/CollectDemographicsFields';
 import ShareLinkFields from './typeConfigFields/ShareLinkFields';
 import VisitLinkFields from './typeConfigFields/VisitLinkFields';
 
@@ -59,14 +59,7 @@ const TaskDetailsForm = ({ onSubmit, onCancel, task }: TaskDetailsFormProps): JS
     };
 
     const submit = (newTaskValues: ZetkinTaskRequestBody) => {
-        const config =
-            // If task type changes
-            task?.type && newTaskValues.type !== task?.type ?
-                // Only keep properties with values that are needed for the task type
-                configForTaskType(newTaskValues.type, newTaskValues.config) :
-                // If it doesn't change, keep same config
-                newTaskValues.config;
-
+        const config = configForTaskType(newTaskValues.type, newTaskValues.config);
         onSubmit({
             ...newTaskValues,
             config,
@@ -77,7 +70,11 @@ const TaskDetailsForm = ({ onSubmit, onCancel, task }: TaskDetailsFormProps): JS
         <Form
             initialValues={{
                 campaign_id: parseInt(campId),
-                config: task?.config,
+                config: {
+                    ...task?.config,
+                    // Set fields for multi select to empty list if doesn't exist
+                    fields: task?.config && 'fields' in task?.config && task?.config?.fields || [],
+                },
                 deadline: task?.deadline,
                 expires: task?.expires,
                 instructions: task?.instructions,
@@ -85,9 +82,10 @@ const TaskDetailsForm = ({ onSubmit, onCancel, task }: TaskDetailsFormProps): JS
                 title: task?.title,
                 type: task?.type,
             }}
-            onSubmit={ (values) => submit(values) }
+            onSubmit={ submit }
             render={ ({ handleSubmit, submitting, valid, values }) => (
                 <form noValidate onSubmit={ handleSubmit }>
+                    { /* Required fields */ }
                     <TextField
                         disabled={ campId ? true : false }
                         fullWidth
@@ -123,7 +121,6 @@ const TaskDetailsForm = ({ onSubmit, onCancel, task }: TaskDetailsFormProps): JS
                         required
                         rows={ 2 }
                         variant="filled"
-
                     />
 
                     <TextField
@@ -148,9 +145,10 @@ const TaskDetailsForm = ({ onSubmit, onCancel, task }: TaskDetailsFormProps): JS
                         </MenuItem>
                     </TextField>
 
-                    { /* { values.type === TASK_TYPE.COLLECT_DEMOGRAPHICS && (
+                    { /* Custom fields for task type config */ }
+                    { values.type === TASK_TYPE.COLLECT_DEMOGRAPHICS && (
                         <CollectDemographicsFields />
-                    ) } */ }
+                    ) }
                     { values.type === TASK_TYPE.SHARE_LINK && (
                         <ShareLinkFields />
                     ) }
