@@ -1,27 +1,12 @@
 import dayjs from 'dayjs';
+import { FormattedRelativeTime } from 'react-intl';
 import { Tooltip } from '@material-ui/core';
-import { FormattedDate, FormattedRelativeTime, FormattedTime } from 'react-intl';
+
+import ZetkinDateTime from './ZetkinDateTime';
 
 interface ZetkinRelativeTimeProps {
     datetime: string; // iso datetime string
 }
-
-const DatetimeTooltipContents: React.FunctionComponent<ZetkinRelativeTimeProps> = ({ datetime }) => {
-    return (
-        <>
-            <FormattedDate
-                day="numeric"
-                month="long"
-                value={ datetime }
-                year="numeric"
-            />
-            { ' ' }
-            <FormattedTime
-                value={ datetime }
-            />
-        </>
-    );
-};
 
 const ZetkinRelativeTime: React.FunctionComponent<ZetkinRelativeTimeProps> = ({ datetime }) => {
     const now = dayjs();
@@ -33,7 +18,7 @@ const ZetkinRelativeTime: React.FunctionComponent<ZetkinRelativeTimeProps> = ({ 
     }
 
     return (
-        <Tooltip arrow title={ <DatetimeTooltipContents datetime={ datetime } /> }>
+        <Tooltip arrow title={ <ZetkinDateTime datetime={ datetime } /> }>
             <span>
                 <FormattedRelativeTime numeric="auto" updateIntervalInSeconds={ 300 } value={ difference } />
             </span>

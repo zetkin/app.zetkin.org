@@ -1,4 +1,4 @@
-import dayjs from 'dayjs';
+
 import { useIntl } from 'react-intl';
 
 import getTaskStatus from 'utils/getTaskStatus';
@@ -6,6 +6,7 @@ import { ZetkinTask } from 'types/zetkin';
 
 import TaskProperty from './TaskProperty';
 import TaskTypeDetailsSection from './TaskTypeDetailsSection';
+import ZetkinDateTime from 'components/ZetkinDateTime';
 
 interface TaskDetailsCardProps {
     task: ZetkinTask;
@@ -31,15 +32,21 @@ const TaskDetailsCard: React.FunctionComponent<TaskDetailsCardProps> = ({ task }
             <TaskTypeDetailsSection task={ task }/>
             <TaskProperty
                 title={ intl.formatMessage({ id: 'misc.tasks.taskDetails.publishedTime' }) }
-                value={ task.published && dayjs(task.published).toISOString() }
+                value={ task.published && (
+                    <ZetkinDateTime datetime={ task.published } />
+                ) }
             />
             <TaskProperty
                 title={ intl.formatMessage({ id: 'misc.tasks.taskDetails.deadlineTime' }) }
-                value={ task.deadline && dayjs(task.deadline).toISOString() }
+                value={ task.deadline && (
+                    <ZetkinDateTime datetime={ task.deadline } />
+                ) }
             />
             <TaskProperty
                 title={ intl.formatMessage({ id: 'misc.tasks.taskDetails.expiresTime' }) }
-                value={ task.expires && dayjs(task.expires).toISOString() }
+                value={ task.expires && (
+                    <ZetkinDateTime datetime={ task.expires } />
+                ) }
             />
         </>
     );
