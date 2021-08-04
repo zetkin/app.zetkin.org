@@ -9,6 +9,7 @@ import DisplayFilter from './DisplayFilter';
 import MostActive from './filters/MostActive';
 import patchQuery from 'fetching/patchQuery';
 import PersonData from './filters/PersonData';
+import PersonTags from './filters/PersonTags';
 import Random from './filters/Random';
 import SurveyResponse from './filters/SurveyResponse';
 import SurveySubmission from './filters/SurveySubmission';
@@ -121,6 +122,7 @@ const TaskAssigneesSmartSearchDialog = ({ onDialogClose, open, query }: TaskAssi
                 { selectedFilter?.type === FILTER_TYPE.USER && <User filter={ selectedFilter } onCancel={ handleCancelFilter } onSubmit={ handleSubmitFilter }/> }
                 { selectedFilter?.type === FILTER_TYPE.CAMPAIGN_PARTICIPATION && <CampaignParticipation filter={ selectedFilter } onCancel={ handleCancelFilter } onSubmit={ handleSubmitFilter }/> }
                 { selectedFilter?.type === FILTER_TYPE.PERSON_DATA && <PersonData filter={ selectedFilter } onCancel={ handleCancelFilter } onSubmit={ handleSubmitFilter }/> }
+                { selectedFilter?.type === FILTER_TYPE.PERSON_TAGS && <PersonTags filter={ selectedFilter } onCancel={ handleCancelFilter } onSubmit={ handleSubmitFilter }/> }
                 { selectedFilter?.type === FILTER_TYPE.SURVEY_RESPONSE && <SurveyResponse filter={ selectedFilter } onCancel={ handleCancelFilter } onSubmit={ handleSubmitFilter }/> }
                 { selectedFilter?.type === FILTER_TYPE.CALL_HISTORY && <CallHistory filter={ selectedFilter } onCancel={ handleCancelFilter } onSubmit={ handleSubmitFilter }/> }
             </DialogContent>

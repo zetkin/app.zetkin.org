@@ -247,3 +247,10 @@ export interface ZetkinTaskReqBody extends Partial<ZetkinTask> {
     campaign_id: number;
     target_filters: ZetkinSmartSearchFilter[];
 }
+
+export interface ZetkinTag {
+    id: number;
+    title: string;
+    hidden: boolean;
+    description: string;
+}
