@@ -12,13 +12,13 @@ misc:
     noOptions: No matching tags
 filterTitles:
     all: All people
-    call_history: People who have been called
-    campaign_participation: People who have participated in a campaign
-    most_active: A selection of the most active people
-    person_data: Search based on name, address or similar fields
-    person_tags: Search for people based on tags
+    call_history: People based on their call history
+    campaign_participation: People based on their campaign participation
+    most_active: The most active people
+    person_data: People based on their name, address or other data
+    person_tags: People based on their tags
     random: A random selection of people
-    survey_response: Search based on responses to survey questions
+    survey_response: People based on their responses to survey questions
     survey_submission: People who have responded to a survey
     user: People who used Zetkin
 all:
