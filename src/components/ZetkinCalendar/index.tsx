@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import { Box, Button, MenuItem, TextField, Typography } from '@material-ui/core';
+import { Box, Button, makeStyles, MenuItem, TextField, Typography } from '@material-ui/core';
 import { FormattedDate, FormattedMessage as Msg } from 'react-intl';
 
 import MonthCalendar from './MonthCalendar';
@@ -26,11 +26,27 @@ interface ZetkinCalendarProps {
     tasks: ZetkinTask[];
 }
 
+const useStyles = makeStyles(() => ({
+    today: {
+        '&:hover':{
+            backgroundColor: 'royalblue',
+        },
+        background: 'blue',
+        borderRadius: '50%',
+        color: 'white',
+        display: 'flex',
+        justifyContent: 'center',
+        minHeight: '18px',
+        minWidth: '18px',
+    },
+}));
+
 const ZetkinCalendar = ({ baseHref, events, campaigns , tasks }: ZetkinCalendarProps) : JSX.Element => {
     const { orgId } = useRouter().query;
     const intl = useIntl();
     const { focusDate, setFocusDate } = useFocusDate();
     const [range, setRange] = useState(CALENDAR_RANGES.MONTH);
+    const classes = useStyles();
 
     const sortedEvents = [...events].sort((a, b) => {
         return new Date(a.start_time).getTime() - new Date(b.start_time).getTime();
@@ -90,7 +106,7 @@ const ZetkinCalendar = ({ baseHref, events, campaigns , tasks }: ZetkinCalendarP
             <Box display="grid" flexGrow={ 0 } gridTemplateAreas={ `". nav view"` } gridTemplateColumns="repeat(3, minmax(0, 1fr))">
                 <Box alignItems="center" display="flex" gridArea="nav" justifyContent="center">
                     {
-                        isTodayBeforeView() && (<Button onClick={ handleTodayBtnClick }>Today</Button>)
+                        isTodayBeforeView() && (<Button className={ classes.today } onClick={ handleTodayBtnClick }></Button>)
                     }
                     <Button color="primary" data-testid="back-button" onClick={ handleBackButtonClick }>
                         <Msg id="misc.calendar.prev" />
@@ -113,7 +129,7 @@ const ZetkinCalendar = ({ baseHref, events, campaigns , tasks }: ZetkinCalendarP
                         <Msg id="misc.calendar.next" />
                     </Button>
                     {
-                        isTodayAfterView() && (<Button onClick={ handleTodayBtnClick }>Today</Button>)
+                        isTodayAfterView() && (<Button className={ classes.today } onClick={ handleTodayBtnClick }></Button>)
                     }
                 </Box>
                 <Box alignItems="center" display="flex" gridArea="view" justifySelf="end" mr={ 1 }>
