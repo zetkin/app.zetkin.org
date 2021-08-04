@@ -7,6 +7,7 @@ buttonLabels:
     save: Save
     add: Add selection to target group
     edit: Update selection
+    addNewFilter: Add / remove people
 misc:
     noOptions: No matching tags
 filterTitles:
