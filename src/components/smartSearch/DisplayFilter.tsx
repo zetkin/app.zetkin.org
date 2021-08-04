@@ -2,6 +2,7 @@ import { Box, Card, CardActions, IconButton, Typography } from '@material-ui/cor
 import { Delete, Edit } from '@material-ui/icons';
 
 import DisplayAll from './filters/All/DisplayAll';
+import DisplayCallHistory from './filters/CallHistory/DisplayCallHistory';
 import DisplayCampaignParticipation from './filters/CampaignParticipation/DisplayCampaignParticipation';
 import DisplayMostActive from './filters/MostActive/DisplayMostActive';
 import DisplayPersonData from './filters/PersonData/DisplayPersonData';
@@ -9,7 +10,7 @@ import DisplayRandom from './filters/Random/DisplayRandom';
 import DisplaySurveyResponse from './filters/SurveyResponse/DisplaySurveyResponse';
 import DisplaySurveySubmission from './filters/SurveySubmission/DisplaySurveySubmission';
 import DisplayUser from './filters/User/DisplayUser';
-import { CampaignParticipationConfig, FILTER_TYPE, MostActiveFilterConfig, PersonDataFilterConfig, RandomFilterConfig, SmartSearchFilterWithId, SurveyResponseFilterConfig, SurveySubmissionFilterConfig, UserFilterConfig } from 'types/smartSearch';
+import { CallHistoryFilterConfig, CampaignParticipationConfig, FILTER_TYPE, MostActiveFilterConfig, PersonDataFilterConfig, RandomFilterConfig, SmartSearchFilterWithId, SurveyResponseFilterConfig, SurveySubmissionFilterConfig, UserFilterConfig } from 'types/smartSearch';
 
 interface DisplayFilterProps {
     filter: SmartSearchFilterWithId;
@@ -24,6 +25,7 @@ const DisplayFilter = ({ filter, onDelete, onEdit }:DisplayFilterProps): JSX.Ele
                 <Box alignItems="center" display="flex" justifyContent="space-between">
                     <Typography noWrap variant="h5">
                         { filter.type === FILTER_TYPE.ALL && <DisplayAll /> }
+                        { filter.type === FILTER_TYPE.CALL_HISTORY && <DisplayCallHistory filter={ filter as SmartSearchFilterWithId<CallHistoryFilterConfig> }/> }
                         { filter.type === FILTER_TYPE.MOST_ACTIVE && <DisplayMostActive filter={ filter as SmartSearchFilterWithId<MostActiveFilterConfig>  }/> }
                         { filter.type === FILTER_TYPE.CAMPAIGN_PARTICIPATION && <DisplayCampaignParticipation filter={ filter as SmartSearchFilterWithId<CampaignParticipationConfig> }/> }
                         { filter.type === FILTER_TYPE.RANDOM && <DisplayRandom filter={ filter as SmartSearchFilterWithId<RandomFilterConfig>  }/> }

@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Box, Button, ButtonBase, Card, CardContent, Dialog, DialogContent, Typography } from '@material-ui/core';
 
 import All from './filters/All';
+import CallHistory from './filters/CallHistory';
 import CampaignParticipation from './filters/CampaignParticipation';
 import DisplayFilter from './DisplayFilter';
 import MostActive from './filters/MostActive';
@@ -121,6 +122,7 @@ const TaskAssigneesSmartSearchDialog = ({ onDialogClose, open, query }: TaskAssi
                 { selectedFilter?.type === FILTER_TYPE.CAMPAIGN_PARTICIPATION && <CampaignParticipation filter={ selectedFilter } onCancel={ handleCancelFilter } onSubmit={ handleSubmitFilter }/> }
                 { selectedFilter?.type === FILTER_TYPE.PERSON_DATA && <PersonData filter={ selectedFilter } onCancel={ handleCancelFilter } onSubmit={ handleSubmitFilter }/> }
                 { selectedFilter?.type === FILTER_TYPE.SURVEY_RESPONSE && <SurveyResponse filter={ selectedFilter } onCancel={ handleCancelFilter } onSubmit={ handleSubmitFilter }/> }
+                { selectedFilter?.type === FILTER_TYPE.CALL_HISTORY && <CallHistory filter={ selectedFilter } onCancel={ handleCancelFilter } onSubmit={ handleSubmitFilter }/> }
             </DialogContent>
         </Dialog>
     );
