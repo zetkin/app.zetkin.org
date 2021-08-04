@@ -6,13 +6,16 @@ import { DateTimePicker, TextField } from 'mui-rff';
 import { FormattedMessage, FormattedMessage as Msg, useIntl } from 'react-intl';
 
 import getCampaigns from 'fetching/getCampaigns';
-import { TASK_TYPE } from 'types/tasks';
 import { ZetkinTask } from 'types/zetkin';
-import { ZetkinTaskRequestBody } from 'types/tasks';
+import { TASK_TYPE, ZetkinTaskRequestBody } from 'types/tasks';
 
-import CollectDemographicsFields from './typeConfigFields/CollectDemographicsFields';
+// import CollectDemographicsFields from './typeConfigFields/CollectDemographicsFields';
+import ShareLinkFields from './typeConfigFields/ShareLinkFields';
+import VisitLinkFields from './typeConfigFields/VisitLinkFields';
+
 import { TASK_DETAILS_FIELDS } from './constants';
-import { isDeadlineSecond, isExpiresThird, isPublishedFirst } from './utils';
+import { configForTaskType, isDeadlineSecond, isExpiresThird, isPublishedFirst } from './utils';
+
 
 interface TaskDetailsFormProps {
     onSubmit: (task: ZetkinTaskRequestBody) => void;
@@ -56,15 +59,17 @@ const TaskDetailsForm = ({ onSubmit, onCancel, task }: TaskDetailsFormProps): JS
     };
 
     const submit = (newTaskValues: ZetkinTaskRequestBody) => {
+        const config =
+            // If task type changes
+            task?.type && newTaskValues.type !== task?.type ?
+                // Only keep properties with values that are needed for the task type
+                configForTaskType(newTaskValues.type, newTaskValues.config) :
+                // If it doesn't change, keep same config
+                newTaskValues.config;
+
         onSubmit({
             ...newTaskValues,
-            config:
-                // If task type changes and no new config values
-                task?.type && newTaskValues.type !== task?.type && !newTaskValues.config ?
-                    // Set empty config
-                    {} :
-                    // Else use current config
-                    newTaskValues.config,
+            config,
         });
     };
 
@@ -72,7 +77,7 @@ const TaskDetailsForm = ({ onSubmit, onCancel, task }: TaskDetailsFormProps): JS
         <Form
             initialValues={{
                 campaign_id: parseInt(campId),
-                config: { ...task?.config, fields: [] },
+                config: task?.config,
                 deadline: task?.deadline,
                 expires: task?.expires,
                 instructions: task?.instructions,
@@ -143,8 +148,14 @@ const TaskDetailsForm = ({ onSubmit, onCancel, task }: TaskDetailsFormProps): JS
                         </MenuItem>
                     </TextField>
 
-                    { values.type === TASK_TYPE.COLLECT_DEMOGRAPHICS && (
+                    { /* { values.type === TASK_TYPE.COLLECT_DEMOGRAPHICS && (
                         <CollectDemographicsFields />
+                    ) } */ }
+                    { values.type === TASK_TYPE.SHARE_LINK && (
+                        <ShareLinkFields />
+                    ) }
+                    { values.type === TASK_TYPE.VISIT_LINK && (
+                        <VisitLinkFields />
                     ) }
 
                     { /* Date Selectors */ }

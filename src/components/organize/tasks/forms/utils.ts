@@ -1,5 +1,12 @@
 import dayjs from 'dayjs';
-import { ZetkinTaskRequestBody } from 'types/tasks';
+import {
+    AnyTaskTypeConfig,
+    CollectDemographicsConfig,
+    ShareLinkConfig,
+    TASK_TYPE,
+    VisitLinkConfig,
+    ZetkinTaskRequestBody }
+    from 'types/tasks';
 
 export const isPublishedFirst = (values: ZetkinTaskRequestBody): boolean => {
     const [publishedTime, deadlineTime, expiresTime] = [dayjs(values?.published) ,dayjs(values?.deadline), dayjs(values?.expires)];
@@ -42,4 +49,40 @@ export const isExpiresThird = (values: ZetkinTaskRequestBody): boolean => {
         // And it is after deadline
         (!values.deadline || values?.expires && expiresTime.isAfter(deadlineTime)),
     );
+};
+
+/**
+ *
+ * @param type
+ * @param config
+ * @returns
+ *
+ * Returns a task config object with only the fields which exist on that type's config, and only fields with values
+ */
+export const configForTaskType = (type: TASK_TYPE | undefined, config: AnyTaskTypeConfig | undefined): AnyTaskTypeConfig => {
+    if (type === undefined || config === undefined) return {};
+
+    if (type === TASK_TYPE.COLLECT_DEMOGRAPHICS) {
+        const collectDemographicsConfig = config as CollectDemographicsConfig;
+        return {
+            ...(collectDemographicsConfig.fields && { fields: collectDemographicsConfig.fields }),
+        };
+    }
+
+    if (type === TASK_TYPE.SHARE_LINK) {
+        const shareLinkConfig = config as ShareLinkConfig;
+        return {
+            ...(shareLinkConfig.url && { url: shareLinkConfig.url }),
+            ...(shareLinkConfig.default_message && { default_message: shareLinkConfig.default_message }),
+        };
+    }
+
+    if (type === TASK_TYPE.VISIT_LINK) {
+        const visitLinkConfig = config as VisitLinkConfig;
+        return {
+            ...(visitLinkConfig.url && { url: visitLinkConfig.url }),
+        };
+    }
+
+    return {};
 };

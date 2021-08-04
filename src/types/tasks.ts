@@ -14,12 +14,12 @@ export enum TASK_TYPE {
 }
 
 export interface ShareLinkConfig {
-    default_message: string;
-    url: string;
+    default_message?: string;
+    url?: string;
 }
 
 export interface VisitLinkConfig {
-    url: string;
+    url?: string;
 }
 
 export enum DEMOGRAPHICS_FIELD {
@@ -32,7 +32,7 @@ export enum DEMOGRAPHICS_FIELD {
 }
 
 export interface CollectDemographicsConfig {
-    fields: DEMOGRAPHICS_FIELD[];
+    fields?: DEMOGRAPHICS_FIELD[];
 }
 
 export type AnyTaskTypeConfig = ShareLinkConfig | VisitLinkConfig | CollectDemographicsConfig | Record<string, never>;
