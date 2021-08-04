@@ -102,74 +102,70 @@ const QueryOverviewDialog = (
         setSelectedFilter(null);
     };
 
-    const handleSave = () => {
-        taskMutation.mutate({ filter_spec: filters });
-        onDialogClose();
-    };
-
-    const handleDeleteButtonClick = (filter: SmartSearchFilterWithId) => {
-        deleteFilter(filter.id);
-    };
-
-    const handleEditButtonClick = (filter: SmartSearchFilterWithId) => {
-        setSelectedFilter(filter);
-    };
-
     return (
-        <Dialog fullWidth maxWidth="xl" onClose={ handleDialogClose } open={ open }>
+        <Dialog
+            fullWidth
+            keepMounted={ false }
+            maxWidth="xl"
+            onClose={ handleDialogClose }
+            open={ open }>
             <DialogContent>
-                { !selectedFilter && (
+                { dialogState === QUERY_DIALOG_STATE.PREVIEW && (
                     <>
-                        <Box p={ 1 }>
-                            <Typography variant="h6">
-                                <Msg id="misc.smartSearch.headers.current"/>
-                            </Typography>
-                            { filterArray.map(filter => {
-                                return (
-                                    <DisplayFilter key={ filter.id } filter={ filter } onDelete={ handleDeleteButtonClick } onEdit={ handleEditButtonClick } />
-                                );
-                            }) }
-                        </Box>
-                        <Box p={ 1 }>
-                            <Typography variant="h6">
-                                <Msg id="misc.smartSearch.headers.add"/>
-                            </Typography>
-                            { /* Buttons to add new filter */ }
-                            { Object.values(FILTER_TYPE).map(value => (
-                                <ButtonBase
-                                    key={ value }
-                                    disableRipple
-                                    onClick={ () => setSelectedFilter({ type: value }) }>
-                                    <Card style={{ margin: '1rem', width: '250px' }}>
-                                        <CardContent>
-                                            <Typography>
-                                                <Msg id={ `misc.smartSearch.filterTitles.${value}` }/>
-                                            </Typography>
-                                        </CardContent>
-                                    </Card>
-                                </ButtonBase>
-                            )) }
-                            <Box display="flex" justifyContent="flex-end" m={ 1 } style={{ gap: '1rem' }}>
-                                <Button color="primary" onClick={ handleDialogClose }>
-                                    <Msg id="misc.smartSearch.buttonLabels.cancel"/>
-                                </Button>
-                                <Button color="primary" onClick={ handleSave } variant="contained">
-                                    <Msg id="misc.smartSearch.buttonLabels.save"/>
+                        <Box margin="auto" maxWidth="500px" minWidth={ 0.5 }>
+                            <List disablePadding>
+                                { filterArray.map(filter => (
+                                    <ListItem key={ filter.id }
+                                        style={{ paddingBottom: '1rem' }}>
+                                        <FilterPreview
+                                            filter={ filter }
+                                            onDeleteFilter={ handleDeleteFilter }
+                                            onEditFilter={ handleEditFilter }
+                                        />
+                                    </ListItem>
+                                )) }
+                            </List>
+                            <Box display="flex" justifyContent="center">
+                                <Button
+                                    color="primary"
+                                    onClick={ handleOpenFilterGallery }
+                                    variant="contained">
+                                    <Msg id="misc.smartSearch.buttonLabels.addNewFilter"/>
                                 </Button>
                             </Box>
                         </Box>
+                        <DialogActions>
+                            <Box display="flex" justifyContent="flex-end" m={ 1 } style={{ gap: '1rem' }}>
+                                <Button color="primary" onClick={ handleDialogClose } variant="outlined">
+                                    <Msg id="misc.smartSearch.buttonLabels.cancel"/>
+                                </Button>
+                                <Button color="primary" onClick={ handleSaveQuery } variant="contained">
+                                    <Msg id="misc.smartSearch.buttonLabels.save"/>
+                                </Button>
+                            </Box>
+                        </DialogActions>
                     </>
                 ) }
-                { selectedFilter?.type === FILTER_TYPE.ALL && <All onCancel={ handleCancelFilter } onSubmit={ handleSubmitFilter }/> }
-                { selectedFilter?.type === FILTER_TYPE.MOST_ACTIVE && <MostActive filter={ selectedFilter } onCancel={ handleCancelFilter } onSubmit={ handleSubmitFilter }/> }
-                { selectedFilter?.type === FILTER_TYPE.RANDOM && <Random filter={ selectedFilter } onCancel={ handleCancelFilter } onSubmit={ handleSubmitFilter }/> }
-                { selectedFilter?.type === FILTER_TYPE.SURVEY_SUBMISSION && <SurveySubmission filter={ selectedFilter } onCancel={ handleCancelFilter } onSubmit={ handleSubmitFilter }/> }
-                { selectedFilter?.type === FILTER_TYPE.USER && <User filter={ selectedFilter } onCancel={ handleCancelFilter } onSubmit={ handleSubmitFilter }/> }
-                { selectedFilter?.type === FILTER_TYPE.CAMPAIGN_PARTICIPATION && <CampaignParticipation filter={ selectedFilter } onCancel={ handleCancelFilter } onSubmit={ handleSubmitFilter }/> }
-                { selectedFilter?.type === FILTER_TYPE.PERSON_DATA && <PersonData filter={ selectedFilter } onCancel={ handleCancelFilter } onSubmit={ handleSubmitFilter }/> }
-                { selectedFilter?.type === FILTER_TYPE.PERSON_TAGS && <PersonTags filter={ selectedFilter } onCancel={ handleCancelFilter } onSubmit={ handleSubmitFilter }/> }
-                { selectedFilter?.type === FILTER_TYPE.SURVEY_RESPONSE && <SurveyResponse filter={ selectedFilter } onCancel={ handleCancelFilter } onSubmit={ handleSubmitFilter }/> }
-                { selectedFilter?.type === FILTER_TYPE.CALL_HISTORY && <CallHistory filter={ selectedFilter } onCancel={ handleCancelFilter } onSubmit={ handleSubmitFilter }/> }
+                { dialogState === QUERY_DIALOG_STATE.GALLERY && (
+                    <FilterGallery
+                        onAddNewFilter={ handleAddNewFilter }
+                        onCancelAddNewFilter={ handleCancelAddNewFilter }
+                    />
+                ) }
+                { dialogState === QUERY_DIALOG_STATE.EDIT && (
+                    <>
+                        { selectedFilter?.type === FILTER_TYPE.ALL && <All onCancel={ handleCancelFilter } onSubmit={ handleSubmitFilter }/> }
+                        { selectedFilter?.type === FILTER_TYPE.CALL_HISTORY && <CallHistory filter={ selectedFilter } onCancel={ handleCancelFilter } onSubmit={ handleSubmitFilter }/> }
+                        { selectedFilter?.type === FILTER_TYPE.CAMPAIGN_PARTICIPATION && <CampaignParticipation filter={ selectedFilter } onCancel={ handleCancelFilter } onSubmit={ handleSubmitFilter }/> }
+                        { selectedFilter?.type === FILTER_TYPE.MOST_ACTIVE && <MostActive filter={ selectedFilter } onCancel={ handleCancelFilter } onSubmit={ handleSubmitFilter }/> }
+                        { selectedFilter?.type === FILTER_TYPE.PERSON_DATA && <PersonData filter={ selectedFilter } onCancel={ handleCancelFilter } onSubmit={ handleSubmitFilter }/> }
+                        { selectedFilter?.type === FILTER_TYPE.PERSON_TAGS && <PersonTags filter={ selectedFilter } onCancel={ handleCancelFilter } onSubmit={ handleSubmitFilter }/> }
+                        { selectedFilter?.type === FILTER_TYPE.RANDOM && <Random filter={ selectedFilter } onCancel={ handleCancelFilter } onSubmit={ handleSubmitFilter }/> }
+                        { selectedFilter?.type === FILTER_TYPE.SURVEY_RESPONSE && <SurveyResponse filter={ selectedFilter } onCancel={ handleCancelFilter } onSubmit={ handleSubmitFilter }/> }
+                        { selectedFilter?.type === FILTER_TYPE.SURVEY_SUBMISSION && <SurveySubmission filter={ selectedFilter } onCancel={ handleCancelFilter } onSubmit={ handleSubmitFilter }/> }
+                        { selectedFilter?.type === FILTER_TYPE.USER && <User filter={ selectedFilter } onCancel={ handleCancelFilter } onSubmit={ handleSubmitFilter }/> }
+                    </>
+                ) }
             </DialogContent>
         </Dialog>
     );
