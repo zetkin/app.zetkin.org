@@ -6,8 +6,8 @@ import { useRouter } from 'next/router';
 import getOrg from 'fetching/getOrg';
 import getTask from 'fetching/tasks/getTask';
 import { PageWithLayout } from 'types';
-import QueryOverviewDialog from 'components/smartSearch/QueryOverviewDialog';
 import { scaffold } from 'utils/next';
+import SmartSearchDialog from 'components/smartSearch/SmartSearchDialog';
 import { useState } from 'react';
 import { ZetkinTask } from 'types/zetkin';
 
@@ -62,7 +62,7 @@ const TaskAssigneesPage: PageWithLayout = () => {
                 Edit
             </Button>
             { dialogOpen &&
-            <QueryOverviewDialog onDialogClose={ handleDialogClose } query={ query }/> }
+            <SmartSearchDialog onDialogClose={ handleDialogClose } query={ query }/> }
         </>
     );
 };
