@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { Box, Button, MenuItem, TextField, Typography } from '@material-ui/core';
@@ -8,6 +9,10 @@ import { useFocusDate } from '../../hooks';
 import { useIntl } from 'react-intl';
 import WeekCalendar from './WeekCalendar';
 import { ZetkinCampaign, ZetkinEvent, ZetkinTask } from '../../types/zetkin';
+
+import weekOfYear from 'dayjs/plugin/weekOfYear';
+
+dayjs.extend(weekOfYear);
 
 enum CALENDAR_RANGES {
     MONTH = 'month',
@@ -51,10 +56,42 @@ const ZetkinCalendar = ({ baseHref, events, campaigns , tasks }: ZetkinCalendarP
         }
     };
 
+    const isTodayBeforeView = () =>{
+        if (focusDate.getFullYear() > dayjs().get('year')) return true;
+        if (focusDate.getFullYear() < dayjs().get('year')) return false;
+        //only needed if same year
+        if (range === CALENDAR_RANGES.MONTH) {
+            if (focusDate.getMonth() > dayjs().get('month')) return true;
+        }
+        else if (range === CALENDAR_RANGES.WEEK) {
+            if (focusDate.getWeekNumber() > dayjs().week()) return true;
+        }
+        return false;
+    };
+
+    const isTodayAfterView = () =>{
+        if (focusDate.getFullYear() < dayjs().get('year')) return true;
+        if (focusDate.getFullYear() > dayjs().get('year')) return false;
+        if (range === CALENDAR_RANGES.MONTH) {
+            if (focusDate.getMonth() < dayjs().get('month')) return true;
+        }
+        else if (range === CALENDAR_RANGES.WEEK) {
+            if (focusDate.getWeekNumber() < dayjs().week()) return true;
+        }
+        return false;
+    };
+
+    const handleTodayBtnClick = () => {
+        setFocusDate(new Date());
+    };
+
     return (
         <Box display="flex" flexDirection="column" height={ 1 }>
             <Box display="grid" flexGrow={ 0 } gridTemplateAreas={ `". nav view"` } gridTemplateColumns="repeat(3, minmax(0, 1fr))">
                 <Box alignItems="center" display="flex" gridArea="nav" justifyContent="center">
+                    {
+                        isTodayBeforeView() && (<Button onClick={ handleTodayBtnClick }>Today</Button>)
+                    }
                     <Button color="primary" data-testid="back-button" onClick={ handleBackButtonClick }>
                         <Msg id="misc.calendar.prev" />
                     </Button>
@@ -75,6 +112,9 @@ const ZetkinCalendar = ({ baseHref, events, campaigns , tasks }: ZetkinCalendarP
                     <Button color="primary" data-testid="fwd-button" onClick={ handleForwardButtonClick }>
                         <Msg id="misc.calendar.next" />
                     </Button>
+                    {
+                        isTodayAfterView() && (<Button onClick={ handleTodayBtnClick }>Today</Button>)
+                    }
                 </Box>
                 <Box alignItems="center" display="flex" gridArea="view" justifySelf="end" mr={ 1 }>
                     <TextField
