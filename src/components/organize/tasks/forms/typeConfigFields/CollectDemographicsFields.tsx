@@ -16,10 +16,7 @@ const CollectDemographicsFields: React.FunctionComponent = (): JSX.Element => {
             label={ intl.formatMessage({ id: 'misc.tasks.forms.collectDemographicsConfig.fields.demographicField' }) }
             margin="normal"
             name={ COLLECT_DEMOGRAPHICS_FIELDS.FIELDS }
-            select
-            SelectProps={{
-                multiple: true,
-            }}>
+            select>
             { Object.values(DEMOGRAPHICS_FIELD).map(field => {
                 return (
                     <MenuItem key={ field } value={ field }>

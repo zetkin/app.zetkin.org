@@ -7,7 +7,7 @@ import { FormattedMessage, FormattedMessage as Msg, useIntl } from 'react-intl';
 
 import getCampaigns from 'fetching/getCampaigns';
 import { ZetkinTask } from 'types/zetkin';
-import { TASK_TYPE, ZetkinTaskRequestBody } from 'types/tasks';
+import { AnyTaskTypeConfig, TASK_TYPE, ZetkinTaskRequestBody } from 'types/tasks';
 
 import CollectDemographicsFields from './typeConfigFields/CollectDemographicsFields';
 import ShareLinkFields from './typeConfigFields/ShareLinkFields';
@@ -59,7 +59,12 @@ const TaskDetailsForm = ({ onSubmit, onCancel, task }: TaskDetailsFormProps): JS
     };
 
     const submit = (newTaskValues: ZetkinTaskRequestBody) => {
-        const config = configForTaskType(newTaskValues.type, newTaskValues.config);
+        // Change shape of fields to array
+        const configWithFieldsArray = {
+            ...newTaskValues.config,
+            ...(newTaskValues?.config && 'fields' in newTaskValues?.config && newTaskValues?.config.fields && { fields: [newTaskValues?.config?.fields] }),
+        };
+        const config = configForTaskType(newTaskValues.type, configWithFieldsArray as AnyTaskTypeConfig);
         onSubmit({
             ...newTaskValues,
             config,
@@ -72,8 +77,8 @@ const TaskDetailsForm = ({ onSubmit, onCancel, task }: TaskDetailsFormProps): JS
                 campaign_id: parseInt(campId),
                 config: {
                     ...task?.config,
-                    // Set fields for multi select to empty list if doesn't exist
-                    fields: task?.config && 'fields' in task?.config && task?.config?.fields || [],
+                    // Set first value from fields array
+                    ...(task?.config && 'fields' in task?.config && task?.config.fields && { fields: task?.config?.fields[0] }),
                 },
                 deadline: task?.deadline,
                 expires: task?.expires,

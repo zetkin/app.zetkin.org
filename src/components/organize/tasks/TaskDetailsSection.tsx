@@ -2,11 +2,11 @@
 import { useIntl } from 'react-intl';
 
 import getTaskStatus from 'utils/getTaskStatus';
+import ZetkinDateTime from 'components/ZetkinDateTime';
 import { ZetkinTask } from 'types/zetkin';
 
 import TaskProperty from './TaskProperty';
 import TaskTypeDetailsSection from './TaskTypeDetailsSection';
-import ZetkinDateTime from 'components/ZetkinDateTime';
 
 interface TaskDetailsCardProps {
     task: ZetkinTask;
@@ -29,7 +29,9 @@ const TaskDetailsCard: React.FunctionComponent<TaskDetailsCardProps> = ({ task }
                 title={ intl.formatMessage({ id: 'misc.tasks.taskDetails.instructionsLabel' }) }
                 value={ task.instructions }
             />
+
             <TaskTypeDetailsSection task={ task }/>
+
             <TaskProperty
                 title={ intl.formatMessage({ id: 'misc.tasks.taskDetails.publishedTime' }) }
                 value={ task.published && (
