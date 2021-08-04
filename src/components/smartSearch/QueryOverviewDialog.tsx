@@ -21,13 +21,13 @@ import { useMutation, useQueryClient } from 'react-query';
 import useSmartSearch from 'hooks/useSmartSearch';
 import { ZetkinQuery } from 'types/zetkin';
 
-interface TaskAssigneesSmartSearchDialogProps {
+interface QueryOverviewDialogProps {
     query?: ZetkinQuery;
     onDialogClose: () => void;
     open: boolean;
 }
 
-const TaskAssigneesSmartSearchDialog = ({ onDialogClose, open, query }: TaskAssigneesSmartSearchDialogProps) : JSX.Element => {
+const QueryOverviewDialog = ({ onDialogClose, open, query }: QueryOverviewDialogProps) : JSX.Element => {
     const queryClient = useQueryClient();
     const { orgId, taskId } = useRouter().query;
 
@@ -130,4 +130,4 @@ const TaskAssigneesSmartSearchDialog = ({ onDialogClose, open, query }: TaskAssi
     );
 };
 
-export default TaskAssigneesSmartSearchDialog;
+export default QueryOverviewDialog;
