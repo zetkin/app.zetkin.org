@@ -25,7 +25,6 @@ import { useMutation, useQueryClient } from 'react-query';
 interface QueryOverviewDialogProps {
     query?: ZetkinQuery;
     onDialogClose: () => void;
-    open: boolean;
 }
 
 enum QUERY_DIALOG_STATE {
@@ -35,7 +34,7 @@ enum QUERY_DIALOG_STATE {
 }
 
 const QueryOverviewDialog = (
-    { onDialogClose, open, query }: QueryOverviewDialogProps,
+    { onDialogClose, query }: QueryOverviewDialogProps,
 ) : JSX.Element => {
     const queryClient = useQueryClient();
     const { orgId, taskId } = useRouter().query;
@@ -54,8 +53,6 @@ const QueryOverviewDialog = (
     };
 
     const handleDialogClose = () => {
-        setSelectedFilter(null);
-        setDialogState(QUERY_DIALOG_STATE.PREVIEW);
         onDialogClose();
     };
 
@@ -105,10 +102,9 @@ const QueryOverviewDialog = (
     return (
         <Dialog
             fullWidth
-            keepMounted={ false }
             maxWidth="xl"
             onClose={ handleDialogClose }
-            open={ open }>
+            open>
             <DialogContent>
                 { dialogState === QUERY_DIALOG_STATE.PREVIEW && (
                     <>

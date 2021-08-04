@@ -61,7 +61,8 @@ const TaskAssigneesPage: PageWithLayout = () => {
             <Button color="primary" onClick={ () => setDialogOpen(true) } variant="contained">
                 Edit
             </Button>
-            <QueryOverviewDialog onDialogClose={ handleDialogClose } open={ dialogOpen } query={ query }/>
+            { dialogOpen &&
+            <QueryOverviewDialog onDialogClose={ handleDialogClose } query={ query }/> }
         </>
     );
 };
