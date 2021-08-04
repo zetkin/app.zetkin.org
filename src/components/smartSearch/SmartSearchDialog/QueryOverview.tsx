@@ -1,4 +1,5 @@
 import { FormattedMessage as Msg } from 'react-intl';
+import { useState } from 'react';
 import { Box, Button, DialogActions, IconButton, List, ListItem, Typography } from '@material-ui/core';
 import { DeleteOutline, Settings } from '@material-ui/icons';
 
@@ -28,65 +29,72 @@ interface QueryOverviewProps {
 const QueryOverview = (
     { filters, onCloseDialog, onSaveQuery, onOpenFilterGallery, onEditFilter, onDeleteFilter }:QueryOverviewProps,
 ): JSX.Element => {
+    const [hovered, setHovered] = useState<number | null>(null);
+
     return (
         <>
             <Box margin="auto" maxWidth="500px" minWidth={ 0.5 }>
-                <List disablePadding>
+                <List>
                     { filters.map(filter => (
                         <ListItem key={ filter.id }
-                            style={{ paddingBottom: '1rem' }}>
-                            <Box display="flex" width={ 1 }>
-                                <Box alignItems="center" display="flex" flex={ 20 } justifyContent="center">
-                                    <Typography align="center" variant="body2">
-                                        { filter.type === FILTER_TYPE.ALL &&
+                            style={{ padding: 0 }}>
+                            <Box
+                                alignItems="center"
+                                display="flex"
+                                flexDirection="column"
+                                justifyContent="center"
+                                onMouseEnter={ () => setHovered(filter.id) }
+                                onMouseLeave={ () => setHovered(null) }
+                                width={ 1 }>
+                                <Typography align="center" variant="body2">
+                                    { filter.type === FILTER_TYPE.ALL &&
                                         <DisplayAll /> }
-                                        { filter.type === FILTER_TYPE.CALL_HISTORY &&
+                                    { filter.type === FILTER_TYPE.CALL_HISTORY &&
                                         <DisplayCallHistory
                                             filter={ filter as SmartSearchFilterWithId<CallHistoryFilterConfig> }
                                         /> }
-                                        { filter.type === FILTER_TYPE.CAMPAIGN_PARTICIPATION &&
+                                    { filter.type === FILTER_TYPE.CAMPAIGN_PARTICIPATION &&
                                         <DisplayCampaignParticipation
                                             filter={ filter as SmartSearchFilterWithId<CampaignParticipationConfig> }
                                         /> }
-                                        { filter.type === FILTER_TYPE.MOST_ACTIVE &&
+                                    { filter.type === FILTER_TYPE.MOST_ACTIVE &&
                                         <DisplayMostActive
                                             filter={ filter as SmartSearchFilterWithId<MostActiveFilterConfig>  }
                                         /> }
-                                        { filter.type === FILTER_TYPE.PERSON_DATA &&
+                                    { filter.type === FILTER_TYPE.PERSON_DATA &&
                                         <DisplayPersonData
                                             filter={ filter as SmartSearchFilterWithId<PersonDataFilterConfig>  }
                                         /> }
-                                        { filter.type === FILTER_TYPE.PERSON_TAGS &&
+                                    { filter.type === FILTER_TYPE.PERSON_TAGS &&
                                         <DisplayPersonTags
                                             filter={ filter as SmartSearchFilterWithId<PersonTagsFilterConfig>  }
                                         /> }
-                                        { filter.type === FILTER_TYPE.RANDOM &&
+                                    { filter.type === FILTER_TYPE.RANDOM &&
                                         <DisplayRandom
                                             filter={ filter as SmartSearchFilterWithId<RandomFilterConfig>  }
                                         /> }
-                                        { filter.type === FILTER_TYPE.SURVEY_RESPONSE &&
+                                    { filter.type === FILTER_TYPE.SURVEY_RESPONSE &&
                                         <DisplaySurveyResponse
                                             filter={ filter as SmartSearchFilterWithId<SurveyResponseFilterConfig>  }
                                         /> }
-                                        { filter.type === FILTER_TYPE.SURVEY_SUBMISSION &&
+                                    { filter.type === FILTER_TYPE.SURVEY_SUBMISSION &&
                                         <DisplaySurveySubmission
                                             filter={ filter as SmartSearchFilterWithId<SurveySubmissionFilterConfig>  }
                                         /> }
-                                        { filter.type === FILTER_TYPE.USER &&
+                                    { filter.type === FILTER_TYPE.USER &&
                                         <DisplayUser
                                             filter={ filter as SmartSearchFilterWithId<UserFilterConfig>  }
                                         /> }
-                                    </Typography>
-                                </Box>
-                                <Box flex={ 1 }>
+                                </Typography>
+                                <Box flex={ 1 } visibility={ hovered === filter.id ? 'visible' : 'hidden' }>
                                     <IconButton
-                                        onClick={ () => onEditFilter(filter) }>
+                                        onClick={ () => onEditFilter(filter) }
+                                        size="small">
                                         <Settings />
                                     </IconButton>
-                                </Box>
-                                <Box flex={ 1 } width="1rem">
                                     { filter.type !== FILTER_TYPE.ALL && (
-                                        <IconButton onClick={ () => onDeleteFilter(filter) }>
+                                        <IconButton
+                                            onClick={ () => onDeleteFilter(filter) } size="small">
                                             <DeleteOutline />
                                         </IconButton>
                                     ) }
