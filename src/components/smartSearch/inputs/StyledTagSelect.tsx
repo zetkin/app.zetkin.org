@@ -1,18 +1,22 @@
+import { FormattedMessage as Msg } from 'react-intl';
 import { Theme } from '@material-ui/core';
 import { Autocomplete, AutocompleteProps } from '@material-ui/lab';
-import { Chip, makeStyles } from '@material-ui/core';
+import { Chip, makeStyles, TextField } from '@material-ui/core';
 
-import StyledTextInput from './StyledTextInput';
 import { ZetkinTag } from 'types/zetkin';
 
 const useStyles = makeStyles<Theme>((theme) => ({
+    MuiInput: {
+        fontSize: theme.typography.h4.fontSize,
+        padding: 0,
+        width: '8rem',
+    },
+    MuiTextField: {
+        display: 'inline',
+        verticalAlign: 'inherit',
+    },
     autocomplete: {
         display: 'inline',
-    },
-    input: {
-        lineHeight: theme.typography.h4.lineHeight,
-        verticalAlign: 'middle',
-        width: 'auto',
     },
 }));
 
@@ -25,8 +29,13 @@ const StyledTagSelect = (props: StyledTagSelectProps): JSX.Element => {
             className={ classes.autocomplete }
             disableClearable
             multiple
+            noOptionsText={ <Msg id="misc.smartSearch.misc.noOptions"/> }
             renderInput={ (params) => (
-                <StyledTextInput { ...params } className={ classes.input }/>
+                <TextField
+                    className={ classes.MuiTextField }
+                    { ...params }
+                    inputProps={{ ...params.inputProps , className: classes.MuiInput }}
+                />
             ) }
             renderOption={ (tag) => (
                 <Chip

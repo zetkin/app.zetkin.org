@@ -7,6 +7,8 @@ buttonLabels:
     save: Save
     add: Add selection to target group
     edit: Update selection
+misc:
+    noOptions: No options
 filterTitles:
     all: All people
     call_history: People who have been called
