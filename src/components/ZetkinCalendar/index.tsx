@@ -1,4 +1,3 @@
-import dayjs from 'dayjs';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { Box, Button, makeStyles, MenuItem, TextField, Tooltip, Typography } from '@material-ui/core';
@@ -8,16 +7,9 @@ import MonthCalendar from './MonthCalendar';
 import { useFocusDate } from '../../hooks';
 import { useIntl } from 'react-intl';
 import WeekCalendar from './WeekCalendar';
+import { CALENDAR_RANGES, getViewRange } from './utils';
 import { ZetkinCampaign, ZetkinEvent, ZetkinTask } from '../../types/zetkin';
 
-import weekOfYear from 'dayjs/plugin/weekOfYear';
-
-dayjs.extend(weekOfYear);
-
-enum CALENDAR_RANGES {
-    MONTH = 'month',
-    WEEK = 'week',
-}
 
 interface ZetkinCalendarProps {
     baseHref: string;
@@ -75,29 +67,16 @@ const ZetkinCalendar = ({ baseHref, events, campaigns , tasks }: ZetkinCalendarP
         }
     };
 
+
+    const today = new Date();
+    const { firstDayInView, lastDayInView } = getViewRange(focusDate, range);
+
     const isTodayBeforeView = () =>{
-        if (focusDate.getFullYear() > dayjs().get('year')) return true;
-        if (focusDate.getFullYear() < dayjs().get('year')) return false;
-        //only needed if same year
-        if (range === CALENDAR_RANGES.MONTH) {
-            if (focusDate.getMonth() > dayjs().get('month')) return true;
-        }
-        else if (range === CALENDAR_RANGES.WEEK) {
-            if (focusDate.getWeekNumber() > dayjs().week()) return true;
-        }
-        return false;
+        return today < firstDayInView;
     };
 
     const isTodayAfterView = () =>{
-        if (focusDate.getFullYear() < dayjs().get('year')) return true;
-        if (focusDate.getFullYear() > dayjs().get('year')) return false;
-        if (range === CALENDAR_RANGES.MONTH) {
-            if (focusDate.getMonth() < dayjs().get('month')) return true;
-        }
-        else if (range === CALENDAR_RANGES.WEEK) {
-            if (focusDate.getWeekNumber() < dayjs().week()) return true;
-        }
-        return false;
+        return today > lastDayInView;
     };
 
     const handleTodayBtnClick = () => {
