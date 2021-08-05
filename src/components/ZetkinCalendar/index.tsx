@@ -27,6 +27,9 @@ interface ZetkinCalendarProps {
 }
 
 const useStyles = makeStyles(() => ({
+    hide: {
+        display:'hidden',
+    },
     today: {
         '&:hover':{
             backgroundColor: 'royalblue',
@@ -106,7 +109,7 @@ const ZetkinCalendar = ({ baseHref, events, campaigns , tasks }: ZetkinCalendarP
             <Box display="grid" flexGrow={ 0 } gridTemplateAreas={ `". nav view"` } gridTemplateColumns="repeat(3, minmax(0, 1fr))">
                 <Box alignItems="center" display="flex" gridArea="nav" justifyContent="center">
                     {
-                        isTodayBeforeView() && (<Tooltip arrow placement="top" title="Today"><Button className={ classes.today } onClick={ handleTodayBtnClick }></Button></Tooltip>)
+                        isTodayBeforeView() ? <Tooltip arrow placement="top" title="Today"><Button className={ classes.today } onClick={ handleTodayBtnClick }></Button></Tooltip> : <Button className={ classes.hide } disabled></Button>
                     }
                     <Button color="primary" data-testid="back-button" onClick={ handleBackButtonClick }>
                         <Msg id="misc.calendar.prev" />
@@ -129,7 +132,7 @@ const ZetkinCalendar = ({ baseHref, events, campaigns , tasks }: ZetkinCalendarP
                         <Msg id="misc.calendar.next" />
                     </Button>
                     {
-                        isTodayAfterView() && (<Tooltip arrow placement="top" title="Today"><Button className={ classes.today } onClick={ handleTodayBtnClick }></Button></Tooltip>)
+                        isTodayAfterView() ? <Tooltip arrow placement="top" title="Today"><Button className={ classes.today } onClick={ handleTodayBtnClick }></Button></Tooltip> : <Button className={ classes.hide } disabled></Button>
                     }
                 </Box>
                 <Box alignItems="center" display="flex" gridArea="view" justifySelf="end" mr={ 1 }>
