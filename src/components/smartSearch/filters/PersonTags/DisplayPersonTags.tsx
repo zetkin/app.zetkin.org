@@ -49,6 +49,7 @@ const DisplayPersonTags = ({ filter }: DisplayPersonTagProps) : JSX.Element => {
                             <Chip
                                 key={ t.id }
                                 label={ t.title }
+                                size="small"
                                 style={{ margin: '2px' }}
                                 variant="outlined"
                             />

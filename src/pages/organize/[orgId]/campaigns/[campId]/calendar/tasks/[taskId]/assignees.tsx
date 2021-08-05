@@ -7,7 +7,7 @@ import getOrg from 'fetching/getOrg';
 import getTask from 'fetching/tasks/getTask';
 import { PageWithLayout } from 'types';
 import { scaffold } from 'utils/next';
-import TaskAssigneesSmartSearchDialog from 'components/smartSearch/TaskAssigneesSmartSearchDialog';
+import SmartSearchDialog from 'components/smartSearch/SmartSearchDialog';
 import { useState } from 'react';
 import { ZetkinTask } from 'types/zetkin';
 
@@ -61,7 +61,8 @@ const TaskAssigneesPage: PageWithLayout = () => {
             <Button color="primary" onClick={ () => setDialogOpen(true) } variant="contained">
                 Edit
             </Button>
-            <TaskAssigneesSmartSearchDialog onDialogClose={ handleDialogClose } open={ dialogOpen } query={ query }/>
+            { dialogOpen &&
+            <SmartSearchDialog onDialogClose={ handleDialogClose } query={ query }/> }
         </>
     );
 };

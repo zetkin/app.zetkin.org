@@ -1,0 +1,88 @@
+import All from '../filters/All';
+import CallHistory from '../filters/CallHistory';
+import CampaignParticipation from '../filters/CampaignParticipation';
+import MostActive from '../filters/MostActive';
+import PersonData from '../filters/PersonData';
+import PersonTags from '../filters/PersonTags';
+import Random from '../filters/Random';
+import SurveyResponse from '../filters/SurveyResponse';
+import SurveySubmission from '../filters/SurveySubmission';
+import User from '../filters/User';
+import { AnyFilterConfig, FILTER_TYPE, NewSmartSearchFilter, SmartSearchFilterWithId,
+    ZetkinSmartSearchFilter } from 'types/smartSearch';
+
+interface FilterEditorProps {
+    onCancelSubmitFilter: () => void;
+    onSubmitFilter: (filter: ZetkinSmartSearchFilter | SmartSearchFilterWithId) => void;
+    filter: SmartSearchFilterWithId<AnyFilterConfig> | NewSmartSearchFilter;
+}
+
+const FilterEditor = (
+    { filter, onSubmitFilter, onCancelSubmitFilter }:FilterEditorProps,
+): JSX.Element => {
+    return (
+        <>
+            { filter.type === FILTER_TYPE.ALL &&
+            <All
+                onCancel={ onCancelSubmitFilter }
+                onSubmit={ onSubmitFilter }
+            /> }
+            { filter.type === FILTER_TYPE.CALL_HISTORY &&
+            <CallHistory
+                filter={ filter }
+                onCancel={ onCancelSubmitFilter }
+                onSubmit={ onSubmitFilter }
+            /> }
+            { filter.type === FILTER_TYPE.CAMPAIGN_PARTICIPATION &&
+            <CampaignParticipation
+                filter={ filter }
+                onCancel={ onCancelSubmitFilter }
+                onSubmit={ onSubmitFilter }
+            /> }
+            { filter.type === FILTER_TYPE.MOST_ACTIVE &&
+            <MostActive
+                filter={ filter }
+                onCancel={ onCancelSubmitFilter }
+                onSubmit={ onSubmitFilter }
+            /> }
+            { filter.type === FILTER_TYPE.PERSON_DATA &&
+            <PersonData
+                filter={ filter }
+                onCancel={ onCancelSubmitFilter }
+                onSubmit={ onSubmitFilter }
+            /> }
+            { filter.type === FILTER_TYPE.PERSON_TAGS &&
+            <PersonTags
+                filter={ filter }
+                onCancel={ onCancelSubmitFilter }
+                onSubmit={ onSubmitFilter }
+            /> }
+            { filter.type === FILTER_TYPE.RANDOM &&
+            <Random
+                filter={ filter }
+                onCancel={ onCancelSubmitFilter }
+                onSubmit={ onSubmitFilter }
+            /> }
+            { filter.type === FILTER_TYPE.SURVEY_RESPONSE &&
+            <SurveyResponse
+                filter={ filter }
+                onCancel={ onCancelSubmitFilter }
+                onSubmit={ onSubmitFilter }
+            /> }
+            { filter.type === FILTER_TYPE.SURVEY_SUBMISSION &&
+            <SurveySubmission
+                filter={ filter }
+                onCancel={ onCancelSubmitFilter }
+                onSubmit={ onSubmitFilter }
+            /> }
+            { filter.type === FILTER_TYPE.USER &&
+            <User
+                filter={ filter }
+                onCancel={ onCancelSubmitFilter }
+                onSubmit={ onSubmitFilter }
+            /> }
+        </>
+    );
+};
+
+export default FilterEditor;
