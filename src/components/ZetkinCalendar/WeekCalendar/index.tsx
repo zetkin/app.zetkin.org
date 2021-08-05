@@ -103,8 +103,8 @@ const WeekCalendar = ({ orgId, baseHref, campaigns, events, focusDate, tasks }: 
                 <Box display="flex">
                     { Array.from(Array(7).keys()).map((_, index) => {
                         const currentDate = new Date (new Date(calendarStartDate).setDate(calendarStartDate.getDate() + index));
-                        const tomorrow = new Date (new Date(currentDate).setDate(currentDate.getDate() + 1));
-                        const isToday = isInRange(today, currentDate, tomorrow);
+                        const nextDate = new Date (new Date(currentDate).setDate(currentDate.getDate() + 1));
+                        const isToday = isInRange(today, currentDate, nextDate);
                         const isPast = currentDate < today && !isToday;
                         return (
                             <Box
@@ -118,14 +118,14 @@ const WeekCalendar = ({ orgId, baseHref, campaigns, events, focusDate, tasks }: 
                                 width="100%">
                                 <Typography component="h2" data-testid={ `weekday-${index}` } variant="subtitle2">
                                     <FormattedDate
-                                        value={ new Date(new Date(calendarStartDate).setDate(calendarStartDate.getDate() + index)) }
+                                        value={ currentDate }
                                         weekday="short"
                                     />
                                 </Typography>
                                 <Typography className={ isToday ? classes.today : '' } data-testid={ `date-${index}` }>
                                     <FormattedDate
                                         day="2-digit"
-                                        value={ new Date(new Date(calendarStartDate).setDate(calendarStartDate.getDate() + index)) }
+                                        value={ currentDate }
                                     />
                                 </Typography>
                             </Box>
