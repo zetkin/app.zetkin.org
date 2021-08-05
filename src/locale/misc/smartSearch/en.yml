@@ -11,7 +11,6 @@ buttonLabels:
 misc:
     noOptions: No matching tags
 filterTitles:
-    all: All people
     call_history: People based on their call history
     campaign_participation: People based on their campaign participation
     most_active: The most active people
@@ -22,7 +21,10 @@ filterTitles:
     survey_submission: People who have responded to a survey
     user: People who used Zetkin
 all:
-    inputString: Add all the people in the organization.
+    inputString: Start with {startWithSelect}.
+    startWithSelect:
+        false: an empty list
+        true: a list of all the people in the organization
 call_history:
     inputString: "{addRemoveSelect} people who {callSelect} at least {minTimesInput} {minTimes, plural, one {time} other {times}} in {assignmentSelect} {timeFrame}."
     addRemoveSelect:

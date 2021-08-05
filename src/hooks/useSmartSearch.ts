@@ -5,6 +5,7 @@ type InitialFilters = ZetkinSmartSearchFilter[]
 
 type UseSmartSearch = {
     addFilter: (filter: ZetkinSmartSearchFilter) => void; // addSmartSearchFilter
+    addFilterToStart: (filter: ZetkinSmartSearchFilter) => void; // add All Filter to start
     deleteFilter: (id: number) => void; // removeSmartSearchFilter
     editFilter: (id: number, newFilterValue: SmartSearchFilterWithId) => void; // editSmartSearchFilter
     filters: ZetkinSmartSearchFilter[];
@@ -23,6 +24,17 @@ const useSmartSearch = (initialFilters: InitialFilters = []): UseSmartSearch => 
         setFiltersWithIds([
             ...filtersWithIds,
             newFilterWithId,
+        ]);
+    };
+
+    const addFilterToStart = (filter: ZetkinSmartSearchFilter) => {
+        const newFilterWithId: SmartSearchFilterWithId = {
+            ...filter,
+            id: filtersWithIds.length,
+        };
+        setFiltersWithIds([
+            newFilterWithId,
+            ...filtersWithIds,
         ]);
     };
 
@@ -48,6 +60,7 @@ const useSmartSearch = (initialFilters: InitialFilters = []): UseSmartSearch => 
 
     return {
         addFilter,
+        addFilterToStart,
         deleteFilter,
         editFilter,
         filters,

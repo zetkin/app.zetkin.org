@@ -29,7 +29,14 @@ const SmartSearchDialog = (
     const queryClient = useQueryClient();
     const { orgId, taskId } = useRouter().query;
 
-    const { filtersWithIds: filterArray, filters, addFilter, editFilter, deleteFilter } = useSmartSearch(query?.filter_spec);
+    const {
+        filtersWithIds: filterArray,
+        filters,
+        addFilter,
+        addFilterToStart,
+        editFilter,
+        deleteFilter } = useSmartSearch(query?.filter_spec);
+
     const [selectedFilter, setSelectedFilter] = useState<SelectedSmartSearchFilter>(null);
     const [dialogState, setDialogState] = useState(QUERY_DIALOG_STATE.PREVIEW);
 
@@ -52,6 +59,7 @@ const SmartSearchDialog = (
     };
 
     const handleDeleteFilter = (filter: SmartSearchFilterWithId) => {
+        setDialogState(QUERY_DIALOG_STATE.PREVIEW);
         deleteFilter(filter.id);
     };
 
@@ -73,6 +81,11 @@ const SmartSearchDialog = (
     //event handlers for filter editor
     const handleCancelSubmitFilter = () => {
         setDialogState(QUERY_DIALOG_STATE.PREVIEW);
+    };
+
+    const handleSubmitAllFilter = (filter: ZetkinSmartSearchFilter) => {
+        setDialogState(QUERY_DIALOG_STATE.PREVIEW);
+        addFilterToStart(filter);
     };
 
     const handleSubmitFilter = (filter: ZetkinSmartSearchFilter | SmartSearchFilterWithId) => {
@@ -97,6 +110,7 @@ const SmartSearchDialog = (
                 { dialogState === QUERY_DIALOG_STATE.PREVIEW && (
                     <QueryOverview
                         filters={ filterArray }
+                        onAddNewFilter={ handleAddNewFilter }
                         onCloseDialog={ handleDialogClose }
                         onDeleteFilter={ handleDeleteFilter }
                         onEditFilter={ handleEditFilter }
@@ -114,6 +128,8 @@ const SmartSearchDialog = (
                     <FilterEditor
                         filter={ selectedFilter }
                         onCancelSubmitFilter={ handleCancelSubmitFilter }
+                        onDeleteAllFilter={ handleDeleteFilter }
+                        onSubmitAllFilter={ handleSubmitAllFilter }
                         onSubmitFilter={ handleSubmitFilter }
                     />
                 ) }

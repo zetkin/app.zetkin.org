@@ -13,19 +13,23 @@ import { AnyFilterConfig, FILTER_TYPE, NewSmartSearchFilter, SmartSearchFilterWi
 
 interface FilterEditorProps {
     onCancelSubmitFilter: () => void;
+    onDeleteAllFilter: (filter: SmartSearchFilterWithId) => void;
     onSubmitFilter: (filter: ZetkinSmartSearchFilter | SmartSearchFilterWithId) => void;
+    onSubmitAllFilter: (filter: ZetkinSmartSearchFilter) => void;
     filter: SmartSearchFilterWithId<AnyFilterConfig> | NewSmartSearchFilter;
 }
 
 const FilterEditor = (
-    { filter, onSubmitFilter, onCancelSubmitFilter }:FilterEditorProps,
+    { filter, onSubmitFilter, onDeleteAllFilter, onCancelSubmitFilter, onSubmitAllFilter }:FilterEditorProps,
 ): JSX.Element => {
     return (
         <>
             { filter.type === FILTER_TYPE.ALL &&
             <All
+                filter={ filter }
                 onCancel={ onCancelSubmitFilter }
-                onSubmit={ onSubmitFilter }
+                onDelete={ onDeleteAllFilter }
+                onSubmit={ onSubmitAllFilter }
             /> }
             { filter.type === FILTER_TYPE.CALL_HISTORY &&
             <CallHistory

@@ -17,9 +17,12 @@ import { AnyFilterConfig, CallHistoryFilterConfig, CampaignParticipationConfig, 
     PersonDataFilterConfig, PersonTagsFilterConfig, RandomFilterConfig, SmartSearchFilterWithId,
     SurveyResponseFilterConfig, SurveySubmissionFilterConfig, UserFilterConfig } from 'types/smartSearch';
 
+const FIRST_FILTER = 'all';
+
 interface QueryOverviewProps {
     filters: SmartSearchFilterWithId<AnyFilterConfig>[];
     onCloseDialog: () => void;
+    onAddNewFilter: (type: FILTER_TYPE) => void;
     onSaveQuery: () => void;
     onOpenFilterGallery: () => void;
     onEditFilter: (filter: SmartSearchFilterWithId) => void;
@@ -27,81 +30,114 @@ interface QueryOverviewProps {
 }
 
 const QueryOverview = (
-    { filters, onCloseDialog, onSaveQuery, onOpenFilterGallery, onEditFilter, onDeleteFilter }:QueryOverviewProps,
+    { filters, onCloseDialog, onAddNewFilter, onSaveQuery, onOpenFilterGallery, onEditFilter, onDeleteFilter }:QueryOverviewProps,
 ): JSX.Element => {
-    const [hovered, setHovered] = useState<number | null>(null);
+    const [hovered, setHovered] = useState<number | null | string>(null);
+    const firstFilter = filters[0];
+    const startWithEveryone =  firstFilter?.type === FILTER_TYPE.ALL && firstFilter.op === 'add';
+
+    const handleEditAllFilter = () => {
+        if (startWithEveryone) {
+            onEditFilter(firstFilter);
+        }
+        else {
+            onAddNewFilter(FILTER_TYPE.ALL);
+        }
+    };
 
     return (
         <>
             <Box margin="auto" maxWidth="500px" minWidth={ 0.5 }>
                 <List>
-                    { filters.map(filter => (
-                        <ListItem key={ filter.id }
-                            style={{ padding: 0 }}>
+                    <ListItem key={ FIRST_FILTER } style={{ padding: 0 }}>
+                        <Box
+                            alignItems="center"
+                            display="flex"
+                            flexDirection="column"
+                            justifyContent="center"
+                            onMouseEnter={ () => setHovered(FIRST_FILTER) }
+                            onMouseLeave={ () => setHovered(null) }
+                            width={ 1 }>
+                            <Typography align="center" variant="body2">
+                                <DisplayAll startWithEveryone={ startWithEveryone } />
+                            </Typography>
                             <Box
-                                alignItems="center"
-                                display="flex"
-                                flexDirection="column"
-                                justifyContent="center"
-                                onMouseEnter={ () => setHovered(filter.id) }
-                                onMouseLeave={ () => setHovered(null) }
-                                width={ 1 }>
-                                <Typography align="center" variant="body2">
-                                    { filter.type === FILTER_TYPE.ALL &&
-                                        <DisplayAll /> }
-                                    { filter.type === FILTER_TYPE.CALL_HISTORY &&
+                                flex={ 1 }
+                                visibility={ hovered === FIRST_FILTER ? 'visible' : 'hidden' }>
+                                <IconButton
+                                    onClick={ handleEditAllFilter }
+                                    size="small">
+                                    <Settings />
+                                </IconButton>
+                            </Box>
+                        </Box>
+                    </ListItem>
+                    { filters.filter(f => f.type !== FILTER_TYPE.ALL)
+                        .map(filter => (
+                            <ListItem key={ filter.id }
+                                style={{ padding: 0 }}>
+                                <Box
+                                    alignItems="center"
+                                    display="flex"
+                                    flexDirection="column"
+                                    justifyContent="center"
+                                    onMouseEnter={ () => setHovered(filter.id) }
+                                    onMouseLeave={ () => setHovered(null) }
+                                    width={ 1 }>
+                                    <Typography align="center" variant="body2">
+                                        { filter.type === FILTER_TYPE.CALL_HISTORY &&
                                         <DisplayCallHistory
                                             filter={ filter as SmartSearchFilterWithId<CallHistoryFilterConfig> }
                                         /> }
-                                    { filter.type === FILTER_TYPE.CAMPAIGN_PARTICIPATION &&
+                                        { filter.type === FILTER_TYPE.CAMPAIGN_PARTICIPATION &&
                                         <DisplayCampaignParticipation
                                             filter={ filter as SmartSearchFilterWithId<CampaignParticipationConfig> }
                                         /> }
-                                    { filter.type === FILTER_TYPE.MOST_ACTIVE &&
+                                        { filter.type === FILTER_TYPE.MOST_ACTIVE &&
                                         <DisplayMostActive
                                             filter={ filter as SmartSearchFilterWithId<MostActiveFilterConfig>  }
                                         /> }
-                                    { filter.type === FILTER_TYPE.PERSON_DATA &&
+                                        { filter.type === FILTER_TYPE.PERSON_DATA &&
                                         <DisplayPersonData
                                             filter={ filter as SmartSearchFilterWithId<PersonDataFilterConfig>  }
                                         /> }
-                                    { filter.type === FILTER_TYPE.PERSON_TAGS &&
+                                        { filter.type === FILTER_TYPE.PERSON_TAGS &&
                                         <DisplayPersonTags
                                             filter={ filter as SmartSearchFilterWithId<PersonTagsFilterConfig>  }
                                         /> }
-                                    { filter.type === FILTER_TYPE.RANDOM &&
+                                        { filter.type === FILTER_TYPE.RANDOM &&
                                         <DisplayRandom
                                             filter={ filter as SmartSearchFilterWithId<RandomFilterConfig>  }
                                         /> }
-                                    { filter.type === FILTER_TYPE.SURVEY_RESPONSE &&
+                                        { filter.type === FILTER_TYPE.SURVEY_RESPONSE &&
                                         <DisplaySurveyResponse
                                             filter={ filter as SmartSearchFilterWithId<SurveyResponseFilterConfig>  }
                                         /> }
-                                    { filter.type === FILTER_TYPE.SURVEY_SUBMISSION &&
+                                        { filter.type === FILTER_TYPE.SURVEY_SUBMISSION &&
                                         <DisplaySurveySubmission
                                             filter={ filter as SmartSearchFilterWithId<SurveySubmissionFilterConfig>  }
                                         /> }
-                                    { filter.type === FILTER_TYPE.USER &&
+                                        { filter.type === FILTER_TYPE.USER &&
                                         <DisplayUser
                                             filter={ filter as SmartSearchFilterWithId<UserFilterConfig>  }
                                         /> }
-                                </Typography>
-                                <Box flex={ 1 } visibility={ hovered === filter.id ? 'visible' : 'hidden' }>
-                                    <IconButton
-                                        onClick={ () => onEditFilter(filter) }
-                                        size="small">
-                                        <Settings />
-                                    </IconButton>
-                                    { filter.type !== FILTER_TYPE.ALL && (
+                                    </Typography>
+                                    <Box
+                                        flex={ 1 }
+                                        visibility={ hovered === filter.id ? 'visible' : 'hidden' }>
+                                        <IconButton
+                                            onClick={ () => onEditFilter(filter) }
+                                            size="small">
+                                            <Settings />
+                                        </IconButton>
                                         <IconButton
                                             onClick={ () => onDeleteFilter(filter) } size="small">
                                             <DeleteOutline />
                                         </IconButton>
-                                    ) }
+                                    </Box>
                                 </Box>
-                            </Box>
-                        </ListItem>
-                    )) }
+                            </ListItem>
+                        )) }
                 </List>
                 <Box display="flex" justifyContent="center">
                     <Button

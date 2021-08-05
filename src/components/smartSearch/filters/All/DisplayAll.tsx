@@ -1,8 +1,19 @@
 import { FormattedMessage as Msg } from 'react-intl';
 
-const DisplayAll = () : JSX.Element => {
+interface DisplayAllProps {
+    startWithEveryone: boolean;
+}
+
+const DisplayAll = ({ startWithEveryone }: DisplayAllProps) : JSX.Element => {
     return (
-        <Msg id="misc.smartSearch.all.inputString" />
+        <Msg
+            id="misc.smartSearch.all.inputString"
+            values={{
+                startWithSelect: (
+                    <Msg id={ `misc.smartSearch.all.startWithSelect.${startWithEveryone}` }/>
+                ),
+            }}
+        />
     );
 };
 
