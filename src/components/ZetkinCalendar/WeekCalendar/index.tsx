@@ -21,8 +21,8 @@ const ONE_HOUR = 100 / 24;
 
 const useStyles = makeStyles(() => ({
     list: {
-        // show lighter background color from 6am to 7pm
-        background:`linear-gradient(${grey[300]} ${ONE_HOUR * 6}%, ${grey[200]} ${ONE_HOUR * 6}%, ${grey[200]} ${ONE_HOUR * 19}%, ${grey[300]} ${ONE_HOUR * 19}%)`,
+        // show lighter background color from 8am to 10pm
+        background:`linear-gradient(${grey[300]} ${ONE_HOUR * 8}%, ${grey[200]} ${ONE_HOUR * 8}%, ${grey[200]} ${ONE_HOUR * 22}%, ${grey[300]} ${ONE_HOUR * 22}%)`,
         height: '100%',
         margin: 0,
         padding:0 ,
@@ -51,7 +51,7 @@ const WeekCalendar = ({ orgId, baseHref, campaigns, events, focusDate, tasks }: 
 
     useEffect(() => {
         const height = calendar.current?.clientHeight || 0;
-        const y = height / 24 * 7; // approx 7am
+        const y = height / 24 * 8; // approx 8am
         calendarWrapper.current?.scrollTo(0, y);
     }, []);
 
