@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import { Box, Button, makeStyles, MenuItem, TextField, Typography } from '@material-ui/core';
+import { Box, Button, makeStyles, MenuItem, TextField, Tooltip, Typography } from '@material-ui/core';
 import { FormattedDate, FormattedMessage as Msg } from 'react-intl';
 
 import MonthCalendar from './MonthCalendar';
@@ -106,7 +106,7 @@ const ZetkinCalendar = ({ baseHref, events, campaigns , tasks }: ZetkinCalendarP
             <Box display="grid" flexGrow={ 0 } gridTemplateAreas={ `". nav view"` } gridTemplateColumns="repeat(3, minmax(0, 1fr))">
                 <Box alignItems="center" display="flex" gridArea="nav" justifyContent="center">
                     {
-                        isTodayBeforeView() && (<Button className={ classes.today } onClick={ handleTodayBtnClick }></Button>)
+                        isTodayBeforeView() && (<Tooltip arrow placement="top" title="Today"><Button className={ classes.today } onClick={ handleTodayBtnClick }></Button></Tooltip>)
                     }
                     <Button color="primary" data-testid="back-button" onClick={ handleBackButtonClick }>
                         <Msg id="misc.calendar.prev" />
@@ -129,7 +129,7 @@ const ZetkinCalendar = ({ baseHref, events, campaigns , tasks }: ZetkinCalendarP
                         <Msg id="misc.calendar.next" />
                     </Button>
                     {
-                        isTodayAfterView() && (<Button className={ classes.today } onClick={ handleTodayBtnClick }></Button>)
+                        isTodayAfterView() && (<Tooltip arrow placement="top" title="Today"><Button className={ classes.today } onClick={ handleTodayBtnClick }></Button></Tooltip>)
                     }
                 </Box>
                 <Box alignItems="center" display="flex" gridArea="view" justifySelf="end" mr={ 1 }>
