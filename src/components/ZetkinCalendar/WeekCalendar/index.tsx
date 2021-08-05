@@ -29,6 +29,9 @@ const useStyles = makeStyles(() => ({
         position: 'relative',
         width: '100%',
     },
+    pastDays: {
+        color: '#bbb',
+    },
     today: {
         background: 'blue',
         borderRadius: '50%',
@@ -102,10 +105,12 @@ const WeekCalendar = ({ orgId, baseHref, campaigns, events, focusDate, tasks }: 
                         const currentDate = new Date (new Date(calendarStartDate).setDate(calendarStartDate.getDate() + index));
                         const tomorrow = new Date (new Date(currentDate).setDate(currentDate.getDate() + 1));
                         const isToday = isInRange(today, currentDate, tomorrow);
+                        const isPast = currentDate < today && !isToday;
                         return (
                             <Box
                                 key={ index }
                                 alignItems="center"
+                                className={ isPast ? classes.pastDays : '' }
                                 data-testid="weekdays"
                                 display="flex"
                                 flexDirection="column"
