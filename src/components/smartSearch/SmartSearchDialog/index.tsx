@@ -37,8 +37,14 @@ const SmartSearchDialog = (
         editFilter,
         deleteFilter } = useSmartSearch(query?.filter_spec);
 
-    const [selectedFilter, setSelectedFilter] = useState<SelectedSmartSearchFilter>(null);
-    const [dialogState, setDialogState] = useState(QUERY_DIALOG_STATE.PREVIEW);
+    const isEmptyQuery = !filterArray.length;
+
+    const [selectedFilter, setSelectedFilter] = useState<SelectedSmartSearchFilter>(
+        isEmptyQuery ? { type: FILTER_TYPE.ALL } : null,
+    );
+    const [dialogState, setDialogState] = useState(
+        isEmptyQuery ? QUERY_DIALOG_STATE.EDIT : QUERY_DIALOG_STATE.PREVIEW,
+    );
 
     const taskMutation = useMutation(patchQuery(orgId as string, query?.id as number),{
         onSettled: () => queryClient.invalidateQueries(['task', orgId, taskId]),
