@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { SmartSearchFilterWithId, ZetkinSmartSearchFilter } from 'types/smartSearch';
+import { FILTER_TYPE, OPERATION, SmartSearchFilterWithId, ZetkinSmartSearchFilter } from 'types/smartSearch';
 
 type InitialFilters = ZetkinSmartSearchFilter[]
 
@@ -13,8 +13,15 @@ type UseSmartSearch = {
 }
 
 const useSmartSearch = (initialFilters: InitialFilters = []): UseSmartSearch => {
-    const initialFiltersWithIds = initialFilters.map((filter, index) => ({ ...filter, id: index }));
-    const [filtersWithIds, setFiltersWithIds] = useState<SmartSearchFilterWithId[]>(initialFiltersWithIds);
+
+    // correctly configure legacy queries to only have the All filter in the first position with op: 'add'
+    const indexOfAllFilter = initialFilters.findIndex(f => f.type === FILTER_TYPE.ALL);
+    const normalizedFiltersWithIds = initialFilters
+        .filter((filter, index) => index > indexOfAllFilter ||
+        (index === indexOfAllFilter && filter.op === OPERATION.ADD))
+        .map((filter, index) => ({ ...filter, id: index }));
+
+    const [filtersWithIds, setFiltersWithIds] = useState<SmartSearchFilterWithId[]>(normalizedFiltersWithIds);
 
     const addFilter = (filter: ZetkinSmartSearchFilter) => {
         const newFilterWithId: SmartSearchFilterWithId = {
