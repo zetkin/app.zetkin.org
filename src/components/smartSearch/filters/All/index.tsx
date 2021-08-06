@@ -3,34 +3,19 @@ import { Box, Button, Divider, MenuItem, Typography } from '@material-ui/core';
 import { FormEvent, useState } from 'react';
 
 import StyledSelect from 'components/smartSearch/inputs/StyledSelect';
-import useSmartSearchFilter from 'hooks/useSmartSearchFilter';
-import { DefaultFilterConfig, NewSmartSearchFilter, SmartSearchFilterWithId,
-    ZetkinSmartSearchFilter } from 'types/smartSearch';
 
-interface AllProps {
-    filter:  SmartSearchFilterWithId<DefaultFilterConfig> | NewSmartSearchFilter;
-    onSubmit: (filter: ZetkinSmartSearchFilter<DefaultFilterConfig> |
-        SmartSearchFilterWithId<DefaultFilterConfig>) => void;
-    onDelete: (filter: SmartSearchFilterWithId<DefaultFilterConfig>) => void;
+interface StartsWithProps {
+    startsWithAll: boolean;
+    onSubmit: (startsWithAll: boolean) => void;
     onCancel: () => void;
 }
 
-const All = ({ onSubmit, onCancel, onDelete, filter: initialFilter }: AllProps): JSX.Element => {
-    const isNewFilter = !('id' in initialFilter);
-    const [startWithEveryone, setStartWithEveryone] = useState(!isNewFilter);
-    const { filter } = useSmartSearchFilter<DefaultFilterConfig>(initialFilter);
+const StartsWith = ({ startsWithAll, onSubmit, onCancel }: StartsWithProps): JSX.Element => {
+    const [shouldStartWithAll, setShouldStartWithAll] = useState(startsWithAll);
 
     const handleSubmitFilter = (e: FormEvent) => {
         e.preventDefault();
-        if (!isNewFilter === startWithEveryone) { // if there's no change
-            onCancel();
-        }
-        if (!isNewFilter && !startWithEveryone) { // delete exisiting filter
-            onDelete(filter as SmartSearchFilterWithId<DefaultFilterConfig>);
-        }
-        if (isNewFilter && startWithEveryone) { // create new filter
-            onSubmit(filter as ZetkinSmartSearchFilter<DefaultFilterConfig>);
-        }
+        onSubmit(shouldStartWithAll);
     };
 
     return (
@@ -41,8 +26,8 @@ const All = ({ onSubmit, onCancel, onDelete, filter: initialFilter }: AllProps):
                     values={{
                         startWithSelect: (
                             // convert numbers to boolean since MenuItem cannot take boolean as props
-                            <StyledSelect onChange={ e => setStartWithEveryone(!!e.target.value) }
-                                value={ +startWithEveryone }>
+                            <StyledSelect onChange={ e => setShouldStartWithAll(!!e.target.value) }
+                                value={ +shouldStartWithAll }>
                                 <MenuItem key={ 1 } value={ 1 }>
                                     <Msg id="misc.smartSearch.all.startWithSelect.true"/>
                                 </MenuItem>
@@ -67,4 +52,4 @@ const All = ({ onSubmit, onCancel, onDelete, filter: initialFilter }: AllProps):
     );
 };
 
-export default All;
+export default StartsWith;

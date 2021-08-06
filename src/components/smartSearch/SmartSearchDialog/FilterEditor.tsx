@@ -1,4 +1,3 @@
-import All from '../filters/All';
 import CallHistory from '../filters/CallHistory';
 import CampaignParticipation from '../filters/CampaignParticipation';
 import MostActive from '../filters/MostActive';
@@ -13,24 +12,15 @@ import { AnyFilterConfig, FILTER_TYPE, NewSmartSearchFilter, SmartSearchFilterWi
 
 interface FilterEditorProps {
     onCancelSubmitFilter: () => void;
-    onDeleteAllFilter: (filter: SmartSearchFilterWithId) => void;
     onSubmitFilter: (filter: ZetkinSmartSearchFilter | SmartSearchFilterWithId) => void;
-    onSubmitAllFilter: (filter: ZetkinSmartSearchFilter) => void;
     filter: SmartSearchFilterWithId<AnyFilterConfig> | NewSmartSearchFilter;
 }
 
 const FilterEditor = (
-    { filter, onSubmitFilter, onDeleteAllFilter, onCancelSubmitFilter, onSubmitAllFilter }:FilterEditorProps,
+    { filter, onSubmitFilter, onCancelSubmitFilter }:FilterEditorProps,
 ): JSX.Element => {
     return (
         <>
-            { filter.type === FILTER_TYPE.ALL &&
-            <All
-                filter={ filter }
-                onCancel={ onCancelSubmitFilter }
-                onDelete={ onDeleteAllFilter }
-                onSubmit={ onSubmitAllFilter }
-            /> }
             { filter.type === FILTER_TYPE.CALL_HISTORY &&
             <CallHistory
                 filter={ filter }

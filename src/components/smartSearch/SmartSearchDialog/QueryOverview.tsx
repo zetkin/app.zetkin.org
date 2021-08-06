@@ -17,34 +17,31 @@ import { AnyFilterConfig, CallHistoryFilterConfig, CampaignParticipationConfig, 
     PersonDataFilterConfig, PersonTagsFilterConfig, RandomFilterConfig, SmartSearchFilterWithId,
     SurveyResponseFilterConfig, SurveySubmissionFilterConfig, UserFilterConfig } from 'types/smartSearch';
 
-const FIRST_FILTER = 'all';
+const FIRST_FILTER = 'first_filter';
 
 interface QueryOverviewProps {
     filters: SmartSearchFilterWithId<AnyFilterConfig>[];
     onCloseDialog: () => void;
-    onAddNewFilter: (type: FILTER_TYPE) => void;
     onSaveQuery: () => void;
     onOpenFilterGallery: () => void;
     onEditFilter: (filter: SmartSearchFilterWithId) => void;
     onDeleteFilter: (filter: SmartSearchFilterWithId) => void;
+    onOpenStartsWithEditor: () => void;
+    startsWithAll: boolean;
 }
 
 const QueryOverview = (
-    { filters, onCloseDialog, onAddNewFilter, onSaveQuery, onOpenFilterGallery, onEditFilter, onDeleteFilter }:QueryOverviewProps,
+    {
+        filters,
+        onCloseDialog,
+        onSaveQuery,
+        onOpenFilterGallery,
+        onEditFilter,
+        onDeleteFilter,
+        onOpenStartsWithEditor,
+        startsWithAll }:QueryOverviewProps,
 ): JSX.Element => {
     const [hovered, setHovered] = useState<number | null | string>(null);
-    const firstFilter = filters[0];
-    const startWithEveryone =  firstFilter?.type === FILTER_TYPE.ALL && firstFilter.op === 'add';
-
-    const handleEditAllFilter = () => {
-        if (startWithEveryone) {
-            onEditFilter(firstFilter);
-        }
-        else {
-            onAddNewFilter(FILTER_TYPE.ALL);
-        }
-    };
-
     return (
         <>
             <Box margin="auto" maxWidth="500px" minWidth={ 0.5 }>
@@ -59,13 +56,13 @@ const QueryOverview = (
                             onMouseLeave={ () => setHovered(null) }
                             width={ 1 }>
                             <Typography align="center" variant="body2">
-                                <DisplayAll startWithEveryone={ startWithEveryone } />
+                                <DisplayAll startsWithAll={ startsWithAll } />
                             </Typography>
                             <Box
                                 flex={ 1 }
                                 visibility={ hovered === FIRST_FILTER ? 'visible' : 'hidden' }>
                                 <IconButton
-                                    onClick={ handleEditAllFilter }
+                                    onClick={ onOpenStartsWithEditor }
                                     size="small">
                                     <Settings />
                                 </IconButton>

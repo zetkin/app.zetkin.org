@@ -5,20 +5,21 @@ type InitialFilters = ZetkinSmartSearchFilter[]
 
 type UseSmartSearch = {
     addFilter: (filter: ZetkinSmartSearchFilter) => void; // addSmartSearchFilter
-    addFilterToStart: (filter: ZetkinSmartSearchFilter) => void; // add All Filter to start
     deleteFilter: (id: number) => void; // removeSmartSearchFilter
     editFilter: (id: number, newFilterValue: SmartSearchFilterWithId) => void; // editSmartSearchFilter
     filters: ZetkinSmartSearchFilter[];
     filtersWithIds: SmartSearchFilterWithId[];
+    setStartsWithAll: (startsWithAll: boolean) => void;
+    startsWithAll: boolean;
 }
 
 const useSmartSearch = (initialFilters: InitialFilters = []): UseSmartSearch => {
 
     // correctly configure legacy queries to only have the All filter in the first position with op: 'add'
-    const indexOfAllFilter = initialFilters.findIndex(f => f.type === FILTER_TYPE.ALL);
+    const indexOfAllFilter = initialFilters.map(f => f.type).lastIndexOf(FILTER_TYPE.ALL);
     const normalizedFiltersWithIds = initialFilters
         .filter((filter, index) => index > indexOfAllFilter ||
-        (index === indexOfAllFilter && filter.op === OPERATION.ADD))
+        (index === indexOfAllFilter && filter.op !== OPERATION.SUB))
         .map((filter, index) => ({ ...filter, id: index }));
 
     const [filtersWithIds, setFiltersWithIds] = useState<SmartSearchFilterWithId[]>(normalizedFiltersWithIds);
@@ -31,17 +32,6 @@ const useSmartSearch = (initialFilters: InitialFilters = []): UseSmartSearch => 
         setFiltersWithIds([
             ...filtersWithIds,
             newFilterWithId,
-        ]);
-    };
-
-    const addFilterToStart = (filter: ZetkinSmartSearchFilter) => {
-        const newFilterWithId: SmartSearchFilterWithId = {
-            ...filter,
-            id: filtersWithIds.length,
-        };
-        setFiltersWithIds([
-            newFilterWithId,
-            ...filtersWithIds,
         ]);
     };
 
@@ -65,13 +55,28 @@ const useSmartSearch = (initialFilters: InitialFilters = []): UseSmartSearch => 
         };
     });
 
+    const startsWithAll = filtersWithIds[0]?.type === FILTER_TYPE.ALL;
+
+    const setStartsWithAll = (shouldStartWithAll: boolean) => {
+        if (startsWithAll && !shouldStartWithAll) {
+            setFiltersWithIds(filtersWithIds.slice(1));
+        }
+        if (!startsWithAll && shouldStartWithAll) {
+            setFiltersWithIds([
+                { config: {}, id: filtersWithIds.length, op: OPERATION.ADD, type: FILTER_TYPE.ALL },
+                ...filtersWithIds,
+            ]);
+        }
+    };
+
     return {
         addFilter,
-        addFilterToStart,
         deleteFilter,
         editFilter,
         filters,
         filtersWithIds,
+        setStartsWithAll,
+        startsWithAll,
     };
 };
 
