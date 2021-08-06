@@ -8,7 +8,7 @@ import TabbedLayout from './TabbedLayout';
 import TaskActionButtons from 'components/organize/tasks/TaskActionButtons';
 import TaskStatusText from 'components/organize/tasks/TaskStatusText';
 
-const SingleCampaignLayout: FunctionComponent = ({ children }) => {
+const SingleTaskLayout: FunctionComponent = ({ children }) => {
     const { taskId, orgId, campId } = useRouter().query;
     const { data: task } = useQuery(['task', taskId ], getTask(orgId  as string, taskId as string));
 
@@ -34,4 +34,4 @@ const SingleCampaignLayout: FunctionComponent = ({ children }) => {
     );
 };
 
-export default SingleCampaignLayout;
+export default SingleTaskLayout;

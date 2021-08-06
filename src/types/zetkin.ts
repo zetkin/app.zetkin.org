@@ -254,3 +254,23 @@ export interface ZetkinTag {
     hidden: boolean;
     description: string;
 }
+
+enum ASSIGNED_STATUS {
+    ASSIGNED='assigned',
+    COMPLETED='completed',
+    EXPIRED='expired',
+    OVERDUE='overdue',
+}
+
+export interface ZetkinAssignedTask {
+    id: number;
+    status: ASSIGNED_STATUS;
+    task: Pick<ZetkinTask, 'id' | 'deadline' | 'expires' | 'title'>;
+    completed: string | null;
+    assignee: {
+        first_name: string;
+        id: number;
+        last_name: string;
+    };
+    assigned: string;
+}
