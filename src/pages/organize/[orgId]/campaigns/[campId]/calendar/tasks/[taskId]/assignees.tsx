@@ -51,9 +51,9 @@ export const getServerSideProps : GetServerSideProps = scaffold(async (ctx) => {
 }, scaffoldOptions);
 
 enum QUERY_STATUS {
-    EDITABLE='editable',
-    PUBLISHED='published',
-    PUBLISHING='publishing',
+    EDITABLE='editable', // draft or scheduled task
+    PUBLISHED='published', // published but not yet assigned
+    ASSIGNED='assigned', // published and assigned
 }
 
 const TaskAssigneesPage: PageWithLayout = () => {
@@ -73,31 +73,31 @@ const TaskAssigneesPage: PageWithLayout = () => {
     const taskStatus = task ? getTaskStatus(task) : undefined;
 
     const getQueryStatus = () => {
-        let queryStatus = QUERY_STATUS.PUBLISHED;
+        let queryStatus = QUERY_STATUS.ASSIGNED;
         if (taskStatus === TASK_STATUS.DRAFT || taskStatus === TASK_STATUS.SCHEDULED) {
             queryStatus = QUERY_STATUS.EDITABLE;
         }
         // we don't want 'publishing' state to appear on page load while the data is being fetched
         else if (assignedTasks && !assignedTasks.length) {
-            queryStatus = QUERY_STATUS.PUBLISHING;
+            queryStatus = QUERY_STATUS.PUBLISHED;
         }
         return queryStatus;
     };
 
     const queryStatus = getQueryStatus();
 
-    const readOnly = queryStatus === QUERY_STATUS.PUBLISHING ||
-        queryStatus === QUERY_STATUS.PUBLISHED;
+    const readOnly = queryStatus === QUERY_STATUS.PUBLISHED ||
+        queryStatus === QUERY_STATUS.ASSIGNED;
 
     return (
         <>
             <Box p={ 2 }>
                 <Alert severity={
                     queryStatus === QUERY_STATUS.EDITABLE ?
-                        'warning' : queryStatus === QUERY_STATUS.PUBLISHING ?
+                        'warning' : queryStatus === QUERY_STATUS.PUBLISHED ?
                             'info' : 'success' }>
                     <AlertTitle>
-                        <Msg id={ `pages.assignees.taskStates.${queryStatus}` }/>
+                        <Msg id={ `pages.assignees.queryStates.${queryStatus}` }/>
                     </AlertTitle>
                     <Link
                         color="inherit"
