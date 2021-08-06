@@ -4,7 +4,7 @@ import { Box, Button, Typography } from '@material-ui/core';
 
 interface FilterFormProps {
     renderSentence: () => JSX.Element;
-    renderExamples: () => JSX.Element;
+    renderExamples?: () => JSX.Element;
     disableSubmit?: boolean;
     onSubmit: (e: FormEvent) => void;
     onCancel: () => void;
@@ -30,12 +30,16 @@ const FilterForm = (
                 <Box>
                     <Box display="flex" flex={ 1 } justifyContent="space-between">
                         <Box display="flex" flexDirection="column">
-                            <Typography variant="h5">
-                                <Msg id="misc.smartSearch.headers.examples"/>
-                            </Typography>
-                            <Typography color="textSecondary">
-                                { renderExamples() }
-                            </Typography>
+                            { renderExamples && (
+                                <>
+                                    <Typography variant="h5">
+                                        <Msg id="misc.smartSearch.headers.examples"/>
+                                    </Typography>
+                                    <Typography color="textSecondary">
+                                        { renderExamples() }
+                                    </Typography>
+                                </>
+                            ) }
                         </Box>
                         <Box
                             alignItems="flex-end"

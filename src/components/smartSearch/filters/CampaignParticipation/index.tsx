@@ -1,7 +1,8 @@
 import { FormEvent } from 'react';
+import { MenuItem } from '@material-ui/core';
 import { FormattedMessage as Msg } from 'react-intl';
-import { Box, Button, Divider, MenuItem, Typography } from '@material-ui/core';
 
+import FilterForm from '../../FilterForm';
 import getActivities from 'fetching/getActivities';
 import getCampaigns from 'fetching/getCampaigns';
 import getLocations from 'fetching/getLocations';
@@ -46,7 +47,7 @@ const CampaignParticipation = ({ onSubmit, onCancel, filter: initialFilter }:Cam
         operator: 'in', state: 'booked',
     });
 
-    const handleAddFilter = (e: FormEvent) => {
+    const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
         onSubmit(filter);
     };
@@ -87,8 +88,17 @@ const CampaignParticipation = ({ onSubmit, onCancel, filter: initialFilter }:Cam
     };
 
     return (
-        <form onSubmit={ e => handleAddFilter(e) }>
-            <Typography style={{ lineHeight: 'unset', marginBottom: '2rem' }} variant="h4">
+        <FilterForm
+            onCancel={ onCancel }
+            onSubmit={ e => handleSubmit(e) }
+            renderExamples={ ()=> (
+                <>
+                    <Msg id="misc.smartSearch.most_active.examples.one"/>
+                    <br />
+                    <Msg id="misc.smartSearch.most_active.examples.two"/>
+                </>
+            ) }
+            renderSentence={ () => (
                 <Msg id="misc.smartSearch.campaign_participation.inputString" values={{
                     activitySelect: (
                         <StyledSelect
@@ -165,7 +175,10 @@ const CampaignParticipation = ({ onSubmit, onCancel, filter: initialFilter }:Cam
                     haveSelect: (
                         <StyledSelect
                             onChange={
-                                e => setConfig({ ...filter.config, operator: e.target.value as 'in' | 'notin' }) }
+                                e => setConfig({
+                                    ...filter.config,
+                                    operator: e.target.value as 'in' | 'notin',
+                                }) }
                             value={ filter.config.operator }>
                             <MenuItem key="in" value="in">
                                 <Msg id="misc.smartSearch.campaign_participation.haveSelect.in" />
@@ -180,9 +193,10 @@ const CampaignParticipation = ({ onSubmit, onCancel, filter: initialFilter }:Cam
                             onChange={ e => handleLocationSelectChange(e.target.value) }
                             SelectProps={{ renderValue: function getLabel(value) {
                                 return value === DEFAULT_VALUE ?
-                                    <Msg id="misc.smartSearch.campaign_participation.locationSelect.any" />
-                                    : <Msg id="misc.smartSearch.campaign_participation.locationSelect.location" values={{
-                                        location: locations.find(l=> l.id === value)?.title }}
+                                    <Msg id="misc.smartSearch.campaign_participation.locationSelect.any" /> :
+                                    <Msg id="misc.smartSearch.campaign_participation.locationSelect.location"
+                                        values={{
+                                            location: locations.find(l=> l.id === value)?.title }}
                                     />;
                             } }}
                             value={ filter.config.location || DEFAULT_VALUE }>
@@ -197,30 +211,15 @@ const CampaignParticipation = ({ onSubmit, onCancel, filter: initialFilter }:Cam
                         </StyledSelect>
                     ),
                     timeFrame: (
-                        <TimeFrame filterConfig={{ after: filter.config.after, before: filter.config.before }} onChange={ handleTimeFrameChange }/>
-                    ),
-                }}
-                />
-            </Typography>
-            <Divider />
-            <Typography variant="h6">
-                <Msg id="misc.smartSearch.headers.examples"/>
-            </Typography>
-            <Typography color="textSecondary">
-                <Msg id="misc.smartSearch.most_active.examples.one"/>
-                <br />
-                <Msg id="misc.smartSearch.most_active.examples.two"/>
-            </Typography>
-
-            <Box display="flex" justifyContent="flex-end" m={ 1 } style={{ gap: '1rem' }}>
-                <Button color="primary" onClick={ onCancel }>
-                    <Msg id="misc.smartSearch.buttonLabels.cancel"/>
-                </Button>
-                <Button color="primary" type="submit" variant="contained">
-                    { ('id' in filter) ? <Msg id="misc.smartSearch.buttonLabels.edit"/>: <Msg id="misc.smartSearch.buttonLabels.add"/> }
-                </Button>
-            </Box>
-        </form>
+                        <TimeFrame
+                            filterConfig={{
+                                after: filter.config.after,
+                                before: filter.config.before,
+                            }}
+                            onChange={ handleTimeFrameChange }
+                        />) }}
+                />) }
+        />
     );
 };
 

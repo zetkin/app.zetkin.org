@@ -1,7 +1,8 @@
+import { MenuItem } from '@material-ui/core';
 import { FormattedMessage as Msg } from 'react-intl';
-import { Box, Button, Divider, MenuItem, Typography } from '@material-ui/core';
 import { FormEvent, useEffect, useState } from 'react';
 
+import FilterForm from '../../FilterForm';
 import { getQuantityWithConfig } from 'components/smartSearch/utils';
 import StyledNumberInput from '../../inputs/StyledNumberInput';
 import StyledSelect from '../../inputs/StyledSelect';
@@ -48,7 +49,7 @@ const Random = ({ onSubmit, onCancel, filter: initialFilter }: RandomProps): JSX
         }
     }, [selected, quantityDisplay]); // eslint-disable-line react-hooks/exhaustive-deps
 
-    const handleAddFilter = (e: FormEvent) => {
+    const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
         const newSeed = 'config' in initialFilter && shouldGenerateSeed(filter, initialFilter) ?
             Math.random().toString() :
@@ -57,8 +58,17 @@ const Random = ({ onSubmit, onCancel, filter: initialFilter }: RandomProps): JSX
     };
 
     return (
-        <form onSubmit={ e => handleAddFilter(e) }>
-            <Typography style={{ lineHeight: 'unset', marginBottom: '2rem' }} variant="h4">
+        <FilterForm
+            onCancel={ onCancel }
+            onSubmit={ e => handleSubmit(e) }
+            renderExamples={ () => (
+                <>
+                    <Msg id="misc.smartSearch.random.examples.one"/>
+                    <br />
+                    <Msg id="misc.smartSearch.random.examples.two"/>
+                </>
+            ) }
+            renderSentence={ () => (
                 <Msg id="misc.smartSearch.random.inputString" values={{
                     addRemoveSelect: (
                         <StyledSelect onChange={ e => setOp(e.target.value as OPERATION) }
@@ -108,37 +118,16 @@ const Random = ({ onSubmit, onCancel, filter: initialFilter }: RandomProps): JSX
                                         value={ selected }>
                                         { Object.values(QUANTITY).map(q => (
                                             <MenuItem key={ q } value={ q }>
-                                                <Msg id={ `misc.smartSearch.quantity.quantitySelectOptions.${q}` }/>
+                                                <Msg
+                                                    id={ `misc.smartSearch.quantity.quantitySelectOptions.${q}` }
+                                                />
                                             </MenuItem>
                                         )) }
                                     </StyledSelect>
-                                ),
-                            }}
-                        />
-                    ),
-                }}
-                />
-            </Typography>
-            <Divider />
-            <Typography variant="h6">
-                <Msg id="misc.smartSearch.headers.examples"/>
-            </Typography>
-            <Typography color="textSecondary">
-                <Msg id="misc.smartSearch.random.examples.one"/>
-                <br />
-                <Msg id="misc.smartSearch.random.examples.two"/>
-            </Typography>
-
-            <Box display="flex" justifyContent="flex-end" m={ 1 } style={{ gap: '1rem' }}>
-                <Button color="primary" onClick={ onCancel }>
-                    <Msg id="misc.smartSearch.buttonLabels.cancel"/>
-                </Button>
-                <Button color="primary" type="submit" variant="contained">
-                    { ('id' in filter) ? <Msg id="misc.smartSearch.buttonLabels.edit"/>: <Msg id="misc.smartSearch.buttonLabels.add"/> }
-                </Button>
-            </Box>
-        </form>
-    );
+                                ) }}
+                        />) }}
+                />) }
+        />);
 };
 
 export default Random;
