@@ -7,6 +7,7 @@ import FilterEditor from './FilterEditor';
 import FilterGallery from './FilterGallery';
 import patchQuery from 'fetching/patchQuery';
 import QueryOverview from './QueryOverview';
+import StartsWith from '../StartsWith';
 import useSmartSearch from 'hooks/useSmartSearch';
 import { ZetkinQuery } from 'types/zetkin';
 import { FILTER_TYPE, SelectedSmartSearchFilter, SmartSearchFilterWithId,
@@ -20,7 +21,8 @@ interface SmartSearchDialog {
 enum QUERY_DIALOG_STATE {
     PREVIEW='preview',
     EDIT='edit',
-    GALLERY='gallery'
+    GALLERY='gallery',
+    START_WITH='start_with'
 }
 
 const SmartSearchDialog = (
@@ -29,9 +31,21 @@ const SmartSearchDialog = (
     const queryClient = useQueryClient();
     const { orgId, taskId } = useRouter().query;
 
-    const { filtersWithIds: filterArray, filters, addFilter, editFilter, deleteFilter } = useSmartSearch(query?.filter_spec);
+    const {
+        filtersWithIds: filterArray,
+        filters,
+        addFilter,
+        editFilter,
+        startsWithAll,
+        setStartsWithAll,
+        deleteFilter } = useSmartSearch(query?.filter_spec);
+
+    const isEmptyQuery = !filterArray.length;
+
     const [selectedFilter, setSelectedFilter] = useState<SelectedSmartSearchFilter>(null);
-    const [dialogState, setDialogState] = useState(QUERY_DIALOG_STATE.PREVIEW);
+    const [dialogState, setDialogState] = useState(
+        isEmptyQuery ? QUERY_DIALOG_STATE.START_WITH : QUERY_DIALOG_STATE.PREVIEW,
+    );
 
     const taskMutation = useMutation(patchQuery(orgId as string, query?.id as number),{
         onSettled: () => queryClient.invalidateQueries(['task', orgId, taskId]),
@@ -40,6 +54,10 @@ const SmartSearchDialog = (
     // event handlers for query overview
     const handleOpenFilterGallery = () => {
         setDialogState(QUERY_DIALOG_STATE.GALLERY);
+    };
+
+    const handleEditStartsWith = () => {
+        setDialogState(QUERY_DIALOG_STATE.START_WITH);
     };
 
     const handleDialogClose = () => {
@@ -52,6 +70,7 @@ const SmartSearchDialog = (
     };
 
     const handleDeleteFilter = (filter: SmartSearchFilterWithId) => {
+        setDialogState(QUERY_DIALOG_STATE.PREVIEW);
         deleteFilter(filter.id);
     };
 
@@ -73,6 +92,11 @@ const SmartSearchDialog = (
     //event handlers for filter editor
     const handleCancelSubmitFilter = () => {
         setDialogState(QUERY_DIALOG_STATE.PREVIEW);
+    };
+
+    const handleSubmitStartsWith = (shouldStartWithAll: boolean) => {
+        setDialogState(QUERY_DIALOG_STATE.PREVIEW);
+        setStartsWithAll(shouldStartWithAll);
     };
 
     const handleSubmitFilter = (filter: ZetkinSmartSearchFilter | SmartSearchFilterWithId) => {
@@ -101,7 +125,9 @@ const SmartSearchDialog = (
                         onDeleteFilter={ handleDeleteFilter }
                         onEditFilter={ handleEditFilter }
                         onOpenFilterGallery={ handleOpenFilterGallery }
+                        onOpenStartsWithEditor={ handleEditStartsWith }
                         onSaveQuery={ handleSaveQuery }
+                        startsWithAll={ startsWithAll }
                     />
                 ) }
                 { dialogState === QUERY_DIALOG_STATE.GALLERY && (
@@ -115,6 +141,13 @@ const SmartSearchDialog = (
                         filter={ selectedFilter }
                         onCancelSubmitFilter={ handleCancelSubmitFilter }
                         onSubmitFilter={ handleSubmitFilter }
+                    />
+                ) }
+                { dialogState === QUERY_DIALOG_STATE.START_WITH && (
+                    <StartsWith
+                        onCancel={ handleCancelSubmitFilter }
+                        onSubmit={ handleSubmitStartsWith }
+                        startsWithAll={ startsWithAll }
                     />
                 ) }
             </DialogContent>

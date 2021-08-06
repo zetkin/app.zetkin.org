@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { SmartSearchFilterWithId, ZetkinSmartSearchFilter } from 'types/smartSearch';
+import { FILTER_TYPE, OPERATION, SmartSearchFilterWithId, ZetkinSmartSearchFilter } from 'types/smartSearch';
 
 type InitialFilters = ZetkinSmartSearchFilter[]
 
@@ -9,11 +9,20 @@ type UseSmartSearch = {
     editFilter: (id: number, newFilterValue: SmartSearchFilterWithId) => void; // editSmartSearchFilter
     filters: ZetkinSmartSearchFilter[];
     filtersWithIds: SmartSearchFilterWithId[];
+    setStartsWithAll: (startsWithAll: boolean) => void;
+    startsWithAll: boolean;
 }
 
 const useSmartSearch = (initialFilters: InitialFilters = []): UseSmartSearch => {
-    const initialFiltersWithIds = initialFilters.map((filter, index) => ({ ...filter, id: index }));
-    const [filtersWithIds, setFiltersWithIds] = useState<SmartSearchFilterWithId[]>(initialFiltersWithIds);
+
+    // correctly configure legacy queries to only have the All filter in the first position with op: 'add'
+    const indexOfAllFilter = initialFilters.map(f => f.type).lastIndexOf(FILTER_TYPE.ALL);
+    const normalizedFiltersWithIds = initialFilters
+        .filter((filter, index) => index > indexOfAllFilter ||
+        (index === indexOfAllFilter && filter.op !== OPERATION.SUB))
+        .map((filter, index) => ({ ...filter, id: index }));
+
+    const [filtersWithIds, setFiltersWithIds] = useState<SmartSearchFilterWithId[]>(normalizedFiltersWithIds);
 
     const addFilter = (filter: ZetkinSmartSearchFilter) => {
         const newFilterWithId: SmartSearchFilterWithId = {
@@ -46,12 +55,33 @@ const useSmartSearch = (initialFilters: InitialFilters = []): UseSmartSearch => 
         };
     });
 
+    const startsWithAll = filtersWithIds[0]?.type === FILTER_TYPE.ALL;
+
+    const setStartsWithAll = (shouldStartWithAll: boolean) => {
+        if (startsWithAll && !shouldStartWithAll) {
+            setFiltersWithIds(filtersWithIds.slice(1));
+        }
+        else if (!startsWithAll && shouldStartWithAll) {
+            setFiltersWithIds([
+                {
+                    config: {},
+                    id: filtersWithIds.length,
+                    op: OPERATION.ADD,
+                    type: FILTER_TYPE.ALL,
+                },
+                ...filtersWithIds,
+            ]);
+        }
+    };
+
     return {
         addFilter,
         deleteFilter,
         editFilter,
         filters,
         filtersWithIds,
+        setStartsWithAll,
+        startsWithAll,
     };
 };
 
