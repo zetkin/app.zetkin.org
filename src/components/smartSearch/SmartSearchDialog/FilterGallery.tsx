@@ -11,7 +11,7 @@ interface FilterGalleryProps {
 
 const FilterGallery = ({ onCancelAddNewFilter, onAddNewFilter }:FilterGalleryProps): JSX.Element => {
     return (
-        <Box display="flex" flexDirection="column" height={ 1 } justifyContent="space-between">
+        <Box display="flex" flexDirection="column" height={ 1 }>
             <Box>
                 <Button
                     color="primary"
