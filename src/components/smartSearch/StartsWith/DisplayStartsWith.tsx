@@ -1,10 +1,10 @@
 import { FormattedMessage as Msg } from 'react-intl';
 
-interface DisplayAllProps {
+interface DisplayStartsWithProps {
     startsWithAll: boolean;
 }
 
-const DisplayAll = ({ startsWithAll }: DisplayAllProps) : JSX.Element => {
+const DisplayStartsWith = ({ startsWithAll }: DisplayStartsWithProps) : JSX.Element => {
     return (
         <Msg
             id="misc.smartSearch.all.inputString"
@@ -17,4 +17,4 @@ const DisplayAll = ({ startsWithAll }: DisplayAllProps) : JSX.Element => {
     );
 };
 
-export default DisplayAll;
+export default DisplayStartsWith;

@@ -7,7 +7,7 @@ import FilterEditor from './FilterEditor';
 import FilterGallery from './FilterGallery';
 import patchQuery from 'fetching/patchQuery';
 import QueryOverview from './QueryOverview';
-import StartsWith from '../filters/All';
+import StartsWith from '../StartsWith';
 import useSmartSearch from 'hooks/useSmartSearch';
 import { ZetkinQuery } from 'types/zetkin';
 import { FILTER_TYPE, SelectedSmartSearchFilter, SmartSearchFilterWithId,

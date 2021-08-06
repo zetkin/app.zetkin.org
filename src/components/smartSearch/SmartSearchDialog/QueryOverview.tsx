@@ -3,13 +3,13 @@ import { useState } from 'react';
 import { Box, Button, DialogActions, IconButton, List, ListItem, Typography } from '@material-ui/core';
 import { DeleteOutline, Settings } from '@material-ui/icons';
 
-import DisplayAll from '../filters/All/DisplayAll';
 import DisplayCallHistory from '../filters/CallHistory/DisplayCallHistory';
 import DisplayCampaignParticipation from '../filters/CampaignParticipation/DisplayCampaignParticipation';
 import DisplayMostActive from '../filters/MostActive/DisplayMostActive';
 import DisplayPersonData from '../filters/PersonData/DisplayPersonData';
 import DisplayPersonTags from '../filters/PersonTags/DisplayPersonTags';
 import DisplayRandom from '../filters/Random/DisplayRandom';
+import DisplayStartsWith from '../StartsWith/DisplayStartsWith';
 import DisplaySurveyResponse from '../filters/SurveyResponse/DisplaySurveyResponse';
 import DisplaySurveySubmission from '../filters/SurveySubmission/DisplaySurveySubmission';
 import DisplayUser from '../filters/User/DisplayUser';
@@ -56,7 +56,7 @@ const QueryOverview = (
                             onMouseLeave={ () => setHovered(null) }
                             width={ 1 }>
                             <Typography align="center" variant="body2">
-                                <DisplayAll startsWithAll={ startsWithAll } />
+                                <DisplayStartsWith startsWithAll={ startsWithAll } />
                             </Typography>
                             <Box
                                 flex={ 1 }
