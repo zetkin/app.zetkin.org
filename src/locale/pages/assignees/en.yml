@@ -1,7 +1,9 @@
 queryStates:
+    error: This task must have a Smart Search query defined before it can be published.
     editable: When published, this task will be assigned to the people matching the targeting Smart Search query
     published: This task is currently being assigned to all that match the targeting Smart Search query...
     assigned: This task has been assigned to all people that match the targeting Smart Search query.
 links:
+    create: Create a Smart Search
     readOnly: View Smart Search
     edit: Edit Smart Search

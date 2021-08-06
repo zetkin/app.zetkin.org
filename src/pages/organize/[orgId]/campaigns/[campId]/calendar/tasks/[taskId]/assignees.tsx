@@ -3,7 +3,7 @@ import { FormattedMessage as Msg } from 'react-intl';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 import { Alert, AlertTitle } from '@material-ui/lab';
-import { Box, Link , Typography } from '@material-ui/core';
+import { Box, Button , Link, Typography } from '@material-ui/core';
 
 import getAssignedTasks from 'fetching/tasks/getAssignedTasks';
 import getOrg from 'fetching/getOrg';
@@ -51,6 +51,7 @@ export const getServerSideProps : GetServerSideProps = scaffold(async (ctx) => {
 }, scaffoldOptions);
 
 enum QUERY_STATUS {
+    ERROR='error', // no smart search query created yet
     EDITABLE='editable', // draft or scheduled task
     PUBLISHED='published', // published but not yet assigned
     ASSIGNED='assigned', // published and assigned
@@ -76,6 +77,9 @@ const TaskAssigneesPage: PageWithLayout = () => {
         let queryStatus = QUERY_STATUS.ASSIGNED;
         if (taskStatus === TASK_STATUS.DRAFT || taskStatus === TASK_STATUS.SCHEDULED) {
             queryStatus = QUERY_STATUS.EDITABLE;
+            if (!task?.target.filter_spec.length) {
+                queryStatus = QUERY_STATUS.ERROR;
+            }
         }
         // we don't want 'publishing' state to appear on page load while the data is being fetched
         else if (assignedTasks && !assignedTasks.length) {
@@ -93,12 +97,14 @@ const TaskAssigneesPage: PageWithLayout = () => {
         <>
             <Box p={ 2 }>
                 <Alert severity={
-                    queryStatus === QUERY_STATUS.EDITABLE ?
-                        'warning' : queryStatus === QUERY_STATUS.PUBLISHED ?
-                            'info' : 'success' }>
+                    queryStatus ===  QUERY_STATUS.ERROR ?
+                        'error' : queryStatus === QUERY_STATUS.EDITABLE ?
+                            'warning' : queryStatus === QUERY_STATUS.PUBLISHED ?
+                                'info' : 'success' }>
                     <AlertTitle>
                         <Msg id={ `pages.assignees.queryStates.${queryStatus}` }/>
                     </AlertTitle>
+                    { queryStatus !== QUERY_STATUS.ERROR &&
                     <Link
                         color="inherit"
                         component="button"
@@ -110,7 +116,15 @@ const TaskAssigneesPage: PageWithLayout = () => {
                                 <Msg id="pages.assignees.links.edit"/>
                             }
                         </Typography>
-                    </Link>
+                    </Link> }
+                    { queryStatus === QUERY_STATUS.ERROR &&
+                    <Button
+                        color="primary"
+                        onClick={ () => setDialogOpen(true) }
+                        variant="contained">
+                        <Msg id="pages.assignees.links.create" />
+                    </Button>
+                    }
                 </Alert>
             </Box>
             { dialogOpen &&
