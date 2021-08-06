@@ -1,0 +1,7 @@
+taskStates:
+    editable: When published, this task will be assigned to the people matching the targeting Smart Search query
+    publishing: This task is currently being assigned to all that match the targeting Smart Search query...
+    published: This task has been assigned to all people that match the targeting Smart Search query.
+links:
+    readOnly: View the query in read-only mode.
+    edit: Edit the query.
