@@ -1,3 +1,4 @@
+import { Alert } from '@material-ui/lab';
 import { FormattedMessage as Msg } from 'react-intl';
 import { useState } from 'react';
 import { Box, Button, DialogActions, IconButton, List, ListItem, Typography } from '@material-ui/core';
@@ -28,11 +29,13 @@ interface QueryOverviewProps {
     onDeleteFilter: (filter: SmartSearchFilterWithId) => void;
     onOpenStartsWithEditor: () => void;
     startsWithAll: boolean;
+    readOnly?: boolean;
 }
 
 const QueryOverview = (
     {
         filters,
+        readOnly,
         onCloseDialog,
         onSaveQuery,
         onOpenFilterGallery,
@@ -44,6 +47,11 @@ const QueryOverview = (
     const [hovered, setHovered] = useState<number | null | string>(null);
     return (
         <Box display="flex" flexDirection="column" height={ 1 } justifyContent="space-between">
+            { readOnly && (
+                <Alert severity="info">
+                    <Msg id="misc.smartSearch.readOnly"/>
+                </Alert>
+            ) }
             <Box margin="auto" maxWidth="500px" minWidth={ 0.5 }>
                 <List>
                     <ListItem key={ FIRST_FILTER } style={{ padding: 0 }}>
@@ -52,8 +60,8 @@ const QueryOverview = (
                             display="flex"
                             flexDirection="column"
                             justifyContent="center"
-                            onMouseEnter={ () => setHovered(FIRST_FILTER) }
-                            onMouseLeave={ () => setHovered(null) }
+                            onMouseEnter={ () => readOnly ? null : setHovered(FIRST_FILTER) }
+                            onMouseLeave={ () => readOnly ? null: setHovered(null) }
                             width={ 1 }>
                             <Typography align="center" variant="body2">
                                 <DisplayStartsWith startsWithAll={ startsWithAll } />
@@ -78,8 +86,8 @@ const QueryOverview = (
                                     display="flex"
                                     flexDirection="column"
                                     justifyContent="center"
-                                    onMouseEnter={ () => setHovered(filter.id) }
-                                    onMouseLeave={ () => setHovered(null) }
+                                    onMouseEnter={ () => readOnly ? null : setHovered(filter.id) }
+                                    onMouseLeave={ () => readOnly ? null : setHovered(null) }
                                     width={ 1 }>
                                     <Typography align="center" variant="body2">
                                         { filter.type === FILTER_TYPE.CALL_HISTORY &&
@@ -139,6 +147,7 @@ const QueryOverview = (
                 <Box display="flex" justifyContent="center">
                     <Button
                         color="primary"
+                        disabled={ readOnly }
                         onClick={ onOpenFilterGallery }
                         variant="contained">
                         <Msg id="misc.smartSearch.buttonLabels.addNewFilter"/>
@@ -147,12 +156,21 @@ const QueryOverview = (
             </Box>
             <DialogActions>
                 <Box display="flex" justifyContent="flex-end" m={ 1 } style={{ gap: '1rem' }}>
-                    <Button color="primary" onClick={ onCloseDialog } variant="outlined">
-                        <Msg id="misc.smartSearch.buttonLabels.cancel"/>
-                    </Button>
-                    <Button color="primary" onClick={ onSaveQuery } variant="contained">
-                        <Msg id="misc.smartSearch.buttonLabels.save"/>
-                    </Button>
+                    { readOnly && (
+                        <Button color="primary" onClick={ onCloseDialog } variant="outlined">
+                            <Msg id="misc.smartSearch.buttonLabels.close"/>
+                        </Button>
+                    ) }
+                    { !readOnly && (
+                        <>
+                            <Button color="primary" onClick={ onCloseDialog } variant="outlined">
+                                <Msg id="misc.smartSearch.buttonLabels.cancel"/>
+                            </Button>
+                            <Button color="primary" onClick={ onSaveQuery } variant="contained">
+                                <Msg id="misc.smartSearch.buttonLabels.save"/>
+                            </Button>
+                        </>
+                    ) }
                 </Box>
             </DialogActions>
         </Box>

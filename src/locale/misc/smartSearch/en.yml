@@ -1,8 +1,10 @@
+readOnly: This Smart Search query is in read-only mode and cannot be edited.
 headers:
     gallery: How would you like to select people?
     examples: Examples
 buttonLabels:
     cancel: Cancel
+    close: Close
     save: Save
     add: Save selection
     goBack: Go back to query
