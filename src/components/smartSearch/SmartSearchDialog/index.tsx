@@ -16,6 +16,7 @@ import { FILTER_TYPE, SelectedSmartSearchFilter, SmartSearchFilterWithId,
 interface SmartSearchDialog {
     query?: ZetkinQuery;
     onDialogClose: () => void;
+    readOnly?: boolean;
 }
 
 enum QUERY_DIALOG_STATE {
@@ -26,7 +27,7 @@ enum QUERY_DIALOG_STATE {
 }
 
 const SmartSearchDialog = (
-    { onDialogClose, query }: SmartSearchDialog,
+    { onDialogClose, query, readOnly }: SmartSearchDialog,
 ) : JSX.Element => {
     const queryClient = useQueryClient();
     const { orgId, taskId } = useRouter().query;
@@ -40,7 +41,7 @@ const SmartSearchDialog = (
         setStartsWithAll,
         deleteFilter } = useSmartSearch(query?.filter_spec);
 
-    const isEmptyQuery = !filterArray.length;
+    const isEmptyQuery = !filterArray.length && !readOnly;
 
     const [selectedFilter, setSelectedFilter] = useState<SelectedSmartSearchFilter>(null);
     const [dialogState, setDialogState] = useState(
@@ -128,6 +129,7 @@ const SmartSearchDialog = (
                         onOpenFilterGallery={ handleOpenFilterGallery }
                         onOpenStartsWithEditor={ handleEditStartsWith }
                         onSaveQuery={ handleSaveQuery }
+                        readOnly={ readOnly }
                         startsWithAll={ startsWithAll }
                     />
                 ) }
