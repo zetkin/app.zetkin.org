@@ -13,8 +13,8 @@ import { scaffold } from 'utils/next';
 import SingleTaskLayout from 'components/layout/organize/SingleTaskLayout';
 import SmartSearchDialog from 'components/smartSearch/SmartSearchDialog';
 import { useState } from 'react';
-import { ZetkinTask } from 'types/zetkin';
 import getTaskStatus, { TASK_STATUS } from 'utils/getTaskStatus';
+import { ZetkinAssignedTask, ZetkinTask } from 'types/zetkin';
 
 const scaffoldOptions = {
     authLevelRequired: 2,
@@ -57,6 +57,24 @@ enum QUERY_STATUS {
     ASSIGNED='assigned', // published and assigned
 }
 
+const getQueryStatus = (
+    task?: ZetkinTask,
+    assignedTasks?: ZetkinAssignedTask[]) => {
+    const taskStatus = task ? getTaskStatus(task) : undefined;
+    let queryStatus = QUERY_STATUS.ASSIGNED;
+    if (taskStatus === TASK_STATUS.DRAFT || taskStatus === TASK_STATUS.SCHEDULED) {
+        queryStatus = QUERY_STATUS.EDITABLE;
+        if (!task?.target.filter_spec.length) {
+            queryStatus = QUERY_STATUS.ERROR;
+        }
+    }
+    // we don't want 'publishing' state to appear on page load while the data is being fetched
+    else if (assignedTasks && !assignedTasks.length) {
+        queryStatus = QUERY_STATUS.PUBLISHED;
+    }
+    return queryStatus;
+};
+
 const TaskAssigneesPage: PageWithLayout = () => {
     const { taskId, orgId } = useRouter().query;
     const taskQuery = useQuery(['task', orgId, taskId], getTask(orgId as string, taskId as string));
@@ -71,24 +89,7 @@ const TaskAssigneesPage: PageWithLayout = () => {
 
     const handleDialogClose = () => setDialogOpen(false);
 
-    const taskStatus = task ? getTaskStatus(task) : undefined;
-
-    const getQueryStatus = () => {
-        let queryStatus = QUERY_STATUS.ASSIGNED;
-        if (taskStatus === TASK_STATUS.DRAFT || taskStatus === TASK_STATUS.SCHEDULED) {
-            queryStatus = QUERY_STATUS.EDITABLE;
-            if (!task?.target.filter_spec.length) {
-                queryStatus = QUERY_STATUS.ERROR;
-            }
-        }
-        // we don't want 'publishing' state to appear on page load while the data is being fetched
-        else if (assignedTasks && !assignedTasks.length) {
-            queryStatus = QUERY_STATUS.PUBLISHED;
-        }
-        return queryStatus;
-    };
-
-    const queryStatus = getQueryStatus();
+    const queryStatus = getQueryStatus(task, assignedTasks);
 
     const readOnly = queryStatus === QUERY_STATUS.PUBLISHED ||
         queryStatus === QUERY_STATUS.ASSIGNED;
