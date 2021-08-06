@@ -5,9 +5,9 @@ import { useRouter } from 'next/router';
 import { Alert, AlertTitle } from '@material-ui/lab';
 import { Box, Link , Typography } from '@material-ui/core';
 
+import getAssignedTasks from 'fetching/tasks/getAssignedTasks';
 import getOrg from 'fetching/getOrg';
 import getTask from 'fetching/tasks/getTask';
-import getTaskAssignments from 'fetching/tasks/getTaskAssignments';
 import { PageWithLayout } from 'types';
 import { scaffold } from 'utils/next';
 import SingleTaskLayout from 'components/layout/organize/SingleTaskLayout';
@@ -59,11 +59,11 @@ enum QUERY_STATUS {
 const TaskAssigneesPage: PageWithLayout = () => {
     const { taskId, orgId } = useRouter().query;
     const taskQuery = useQuery(['task', orgId, taskId], getTask(orgId as string, taskId as string));
-    const assignmentsQuery = useQuery(['assignments', orgId, taskId], getTaskAssignments(
+    const assignedTasksQuery = useQuery(['assignedTasks', orgId, taskId], getAssignedTasks(
         orgId as string, taskId as string,
     ));
     const task = taskQuery?.data;
-    const assignments = assignmentsQuery?.data;
+    const assignedTasks = assignedTasksQuery?.data;
     const query = task?.target;
 
     const [dialogOpen, setDialogOpen] = useState(false);
@@ -78,7 +78,7 @@ const TaskAssigneesPage: PageWithLayout = () => {
             queryStatus = QUERY_STATUS.EDITABLE;
         }
         // we don't want 'publishing' state to appear on page load while the data is being fetched
-        else if (assignments && !assignments.length) {
+        else if (assignedTasks && !assignedTasks.length) {
             queryStatus = QUERY_STATUS.PUBLISHING;
         }
         return queryStatus;
