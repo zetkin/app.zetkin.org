@@ -117,7 +117,8 @@ const SmartSearchDialog = (
             maxWidth="xl"
             onClose={ handleDialogClose }
             open>
-            <DialogContent>
+            <DialogContent
+                style={{ height: '85vh' }}>
                 { dialogState === QUERY_DIALOG_STATE.PREVIEW && (
                     <QueryOverview
                         filters={ filterArray }

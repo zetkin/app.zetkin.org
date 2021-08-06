@@ -1,7 +1,8 @@
 import { FormEvent } from 'react';
+import { MenuItem } from '@material-ui/core';
 import { FormattedMessage as Msg } from 'react-intl';
-import { Box, Button, Divider, MenuItem, Typography } from '@material-ui/core';
 
+import FilterForm from '../../FilterForm';
 import StyledNumberInput from '../../inputs/StyledNumberInput';
 import StyledSelect from '../../inputs/StyledSelect';
 import TimeFrame from '../TimeFrame';
@@ -17,7 +18,7 @@ interface MostActiveProps {
 const MostActive = ({ onSubmit, onCancel, filter: initialFilter }: MostActiveProps): JSX.Element => {
 
     const { filter, setConfig, setOp } = useSmartSearchFilter<MostActiveFilterConfig>(initialFilter, { size: 20 });
-    const handleAddFilter = (e: FormEvent) => {
+    const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
         onSubmit(filter);
     };
@@ -31,8 +32,17 @@ const MostActive = ({ onSubmit, onCancel, filter: initialFilter }: MostActivePro
     };
 
     return (
-        <form onSubmit={ e => handleAddFilter(e) }>
-            <Typography style={{ lineHeight: 'unset', marginBottom: '2rem' }} variant="h4">
+        <FilterForm
+            onCancel={ onCancel }
+            onSubmit={ e => handleSubmit(e) }
+            renderExamples={ () => (
+                <>
+                    <Msg id="misc.smartSearch.most_active.examples.one"/>
+                    <br />
+                    <Msg id="misc.smartSearch.most_active.examples.two"/>
+                </>
+            ) }
+            renderSentence={ () => (
                 <Msg id="misc.smartSearch.most_active.inputString" values={{
                     addRemoveSelect: (
                         <StyledSelect onChange={ e => setOp(e.target.value as OPERATION) }
@@ -59,30 +69,18 @@ const MostActive = ({ onSubmit, onCancel, filter: initialFilter }: MostActivePro
                         />
                     ),
                     timeFrame: (
-                        <TimeFrame filterConfig={{ after: filter.config.after, before: filter.config.before }} onChange={ handleTimeFrameChange }/>
+                        <TimeFrame
+                            filterConfig={{
+                                after: filter.config.after,
+                                before: filter.config.before,
+                            }}
+                            onChange={ handleTimeFrameChange }
+                        />
                     ),
                 }}
                 />
-            </Typography>
-            <Divider />
-            <Typography variant="h6">
-                <Msg id="misc.smartSearch.headers.examples"/>
-            </Typography>
-            <Typography color="textSecondary">
-                <Msg id="misc.smartSearch.most_active.examples.one"/>
-                <br />
-                <Msg id="misc.smartSearch.most_active.examples.two"/>
-            </Typography>
-
-            <Box display="flex" justifyContent="flex-end" m={ 1 } style={{ gap: '1rem' }}>
-                <Button color="primary" onClick={ onCancel }>
-                    <Msg id="misc.smartSearch.buttonLabels.cancel"/>
-                </Button>
-                <Button color="primary" type="submit" variant="contained">
-                    { ('id' in filter) ? <Msg id="misc.smartSearch.buttonLabels.edit"/>: <Msg id="misc.smartSearch.buttonLabels.add"/> }
-                </Button>
-            </Box>
-        </form>
+            ) }
+        />
     );
 };
 

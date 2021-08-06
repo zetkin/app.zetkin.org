@@ -1,5 +1,6 @@
+import { ChevronLeft } from '@material-ui/icons';
 import { FormattedMessage as Msg } from 'react-intl';
-import { Box, Button, ButtonBase, Card, DialogActions, Typography } from '@material-ui/core';
+import { Box, Button, ButtonBase, Card, Typography } from '@material-ui/core';
 
 import { FILTER_TYPE } from 'types/smartSearch';
 
@@ -10,7 +11,18 @@ interface FilterGalleryProps {
 
 const FilterGallery = ({ onCancelAddNewFilter, onAddNewFilter }:FilterGalleryProps): JSX.Element => {
     return (
-        <>
+        <Box display="flex" flexDirection="column" height={ 1 }>
+            <Box>
+                <Button
+                    color="primary"
+                    onClick={ onCancelAddNewFilter }
+                    startIcon={ <ChevronLeft/> }>
+                    <Msg id="misc.smartSearch.buttonLabels.goBack"/>
+                </Button>
+                <Typography align="center" variant="h5">
+                    <Msg id="misc.smartSearch.headers.gallery"/>
+                </Typography>
+            </Box>
             <Box
                 display="grid"
                 gridGap={ 0 }
@@ -37,14 +49,8 @@ const FilterGallery = ({ onCancelAddNewFilter, onAddNewFilter }:FilterGalleryPro
                         </ButtonBase>
                     )) }
             </Box>
-            <DialogActions>
-                <Box display="flex" justifyContent="flex-end" m={ 1 } style={{ gap: '1rem' }}>
-                    <Button color="primary" onClick={ onCancelAddNewFilter } variant="outlined">
-                        <Msg id="misc.smartSearch.buttonLabels.cancel"/>
-                    </Button>
-                </Box>
-            </DialogActions>
-        </>
+
+        </Box>
     );
 };
 

@@ -43,7 +43,7 @@ const QueryOverview = (
 ): JSX.Element => {
     const [hovered, setHovered] = useState<number | null | string>(null);
     return (
-        <>
+        <Box display="flex" flexDirection="column" height={ 1 } justifyContent="space-between">
             <Box margin="auto" maxWidth="500px" minWidth={ 0.5 }>
                 <List>
                     <ListItem key={ FIRST_FILTER } style={{ padding: 0 }}>
@@ -155,7 +155,7 @@ const QueryOverview = (
                     </Button>
                 </Box>
             </DialogActions>
-        </>
+        </Box>
     );
 };
 

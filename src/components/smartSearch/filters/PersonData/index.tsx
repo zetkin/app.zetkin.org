@@ -1,8 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import {  MenuItem } from '@material-ui/core';
 import { FormattedMessage as Msg } from 'react-intl';
-import { Box, Button, Divider, MenuItem, Typography } from '@material-ui/core';
 import { FormEvent, useEffect, useState } from 'react';
 
+import FilterForm from '../../FilterForm';
 import StyledSelect from '../../inputs/StyledSelect';
 import StyledTextInput from '../../inputs/StyledTextInput';
 import useSmartSearchFilter from 'hooks/useSmartSearchFilter';
@@ -35,7 +36,7 @@ const PersonData = ({ onSubmit, onCancel, filter: initialFilter }: PersonDataPro
     const [criteria, setCriteria] = useState<Criterion[]>(initialCriteria);
 
     // check that there are no blank fields before submitting
-    const isSubmittable = criteria.every(c => c.value.length);
+    const submittable = criteria.every(c => c.value.length);
 
     const currentFields = criteria.map(c => c.field);
 
@@ -56,7 +57,7 @@ const PersonData = ({ onSubmit, onCancel, filter: initialFilter }: PersonDataPro
     };
 
     // event handlers
-    const handleAddFilter = (e: FormEvent) => {
+    const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
         onSubmit(filter);
     };
@@ -146,8 +147,18 @@ const PersonData = ({ onSubmit, onCancel, filter: initialFilter }: PersonDataPro
     };
 
     return (
-        <form onSubmit={ e => handleAddFilter(e) }>
-            <Typography style={{ lineHeight: 'unset', marginBottom: '2rem' }} variant="h4">
+        <FilterForm
+            disableSubmit={ !submittable }
+            onCancel={ onCancel }
+            onSubmit={ e => handleSubmit(e) }
+            renderExamples={ () => (
+                <>
+                    <Msg id="misc.smartSearch.person_data.examples.one"/>
+                    <br />
+                    <Msg id="misc.smartSearch.person_data.examples.two"/>
+                </>
+            ) }
+            renderSentence={ () => (
                 <Msg id="misc.smartSearch.person_data.inputString" values={{
                     addRemoveSelect,
                     criteria: (
@@ -175,26 +186,8 @@ const PersonData = ({ onSubmit, onCancel, filter: initialFilter }: PersonDataPro
                     ),
                 }}
                 />
-            </Typography>
-            <Divider />
-            <Typography variant="h6">
-                <Msg id="misc.smartSearch.headers.examples"/>
-            </Typography>
-            <Typography color="textSecondary">
-                <Msg id="misc.smartSearch.person_data.examples.one"/>
-                <br />
-                <Msg id="misc.smartSearch.person_data.examples.two"/>
-            </Typography>
-
-            <Box display="flex" justifyContent="flex-end" m={ 1 } style={{ gap: '1rem' }}>
-                <Button color="primary" onClick={ onCancel }>
-                    <Msg id="misc.smartSearch.buttonLabels.cancel"/>
-                </Button>
-                <Button color="primary" disabled={ !isSubmittable } type="submit" variant="contained">
-                    { ('id' in filter) ? <Msg id="misc.smartSearch.buttonLabels.edit"/>: <Msg id="misc.smartSearch.buttonLabels.add"/> }
-                </Button>
-            </Box>
-        </form>
+            ) }
+        />
     );
 };
 

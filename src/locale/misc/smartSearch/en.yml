@@ -1,23 +1,22 @@
 headers:
-    current: Current target group
-    add: Add a new selection
+    gallery: How would you like to select people?
     examples: Examples
 buttonLabels:
     cancel: Cancel
     save: Save
-    add: Add selection to target group
-    edit: Update selection
+    add: Save selection
+    goBack: Go back to query
     addNewFilter: Add / remove people
 misc:
     noOptions: No matching tags
 filterTitles:
-    call_history: People based on their call history
-    campaign_participation: People based on their campaign participation
+    call_history: Based on their call history
+    campaign_participation: Based on their campaign participation
     most_active: The most active people
-    person_data: People based on their name, address or other data
-    person_tags: People based on their tags
+    person_data: Based on their name, address or other data
+    person_tags: Based on their tags
     random: A random selection of people
-    survey_response: People based on their responses to survey questions
+    survey_response: Based on their responses to survey questions
     survey_submission: People who have responded to a survey
     user: People who used Zetkin
 all:

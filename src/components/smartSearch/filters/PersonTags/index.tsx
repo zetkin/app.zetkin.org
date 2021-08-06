@@ -2,9 +2,10 @@
 import { FormattedMessage as Msg } from 'react-intl';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
-import { Box, Button, Chip, Divider, MenuItem, Typography } from '@material-ui/core';
+import { Box, Chip, MenuItem } from '@material-ui/core';
 import { FormEvent, useEffect, useState } from 'react';
 
+import FilterForm from '../../FilterForm';
 import getTags from 'fetching/getTags';
 import StyledNumberInput from '../../inputs/StyledNumberInput';
 import StyledSelect from '../../inputs/StyledSelect';
@@ -62,7 +63,7 @@ const PersonTags = (
     const submittable = !!filter.config.tags.length;
 
     // event handlers
-    const handleAddFilter = (e: FormEvent) => {
+    const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
         onSubmit(filter);
     };
@@ -93,8 +94,18 @@ const PersonTags = (
     };
 
     return (
-        <form onSubmit={ e => handleAddFilter(e) }>
-            <Typography style={{ lineHeight: 'unset', marginBottom: '2rem' }} variant="h4">
+        <FilterForm
+            disableSubmit={ !submittable }
+            onCancel={ onCancel }
+            onSubmit={ e => handleSubmit(e) }
+            renderExamples={ () => (
+                <>
+                    <Msg id="misc.smartSearch.person_tags.examples.one"/>
+                    <br />
+                    <Msg id="misc.smartSearch.person_tags.examples.two"/>
+                </>
+            ) }
+            renderSentence={ () => (
                 <Msg id="misc.smartSearch.person_tags.inputString" values={{
                     addRemoveSelect: (
                         <StyledSelect onChange={ e => setOp(e.target.value as OPERATION) }
@@ -166,28 +177,8 @@ const PersonTags = (
                     ),
                 }}
                 />
-            </Typography>
-            <Divider />
-            <Typography variant="h6">
-                <Msg id="misc.smartSearch.headers.examples"/>
-            </Typography>
-            <Typography color="textSecondary">
-                <Msg id="misc.smartSearch.person_tags.examples.one"/>
-                <br />
-                <Msg id="misc.smartSearch.person_tags.examples.two"/>
-            </Typography>
-
-            <Box display="flex" justifyContent="flex-end" m={ 1 } style={{ gap: '1rem' }}>
-                <Button color="primary" onClick={ onCancel }>
-                    <Msg id="misc.smartSearch.buttonLabels.cancel"/>
-                </Button>
-                <Button color="primary" disabled={ !submittable } type="submit" variant="contained">
-                    { ('id' in filter) ?
-                        <Msg id="misc.smartSearch.buttonLabels.edit"/>:
-                        <Msg id="misc.smartSearch.buttonLabels.add"/> }
-                </Button>
-            </Box>
-        </form>
+            ) }
+        />
     );
 };
 
