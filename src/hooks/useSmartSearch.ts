@@ -61,9 +61,14 @@ const useSmartSearch = (initialFilters: InitialFilters = []): UseSmartSearch => 
         if (startsWithAll && !shouldStartWithAll) {
             setFiltersWithIds(filtersWithIds.slice(1));
         }
-        if (!startsWithAll && shouldStartWithAll) {
+        else if (!startsWithAll && shouldStartWithAll) {
             setFiltersWithIds([
-                { config: {}, id: filtersWithIds.length, op: OPERATION.ADD, type: FILTER_TYPE.ALL },
+                {
+                    config: {},
+                    id: filtersWithIds.length,
+                    op: OPERATION.ADD,
+                    type: FILTER_TYPE.ALL,
+                },
                 ...filtersWithIds,
             ]);
         }
