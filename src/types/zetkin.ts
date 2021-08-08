@@ -104,11 +104,7 @@ export interface ZetkinCallAssignment {
     description: string;
     disable_caller_notes: boolean;
     end_date: string;
-    goal: {
-        filter_spec: undefined;
-        id: number;
-        type: string;
-    };
+    goal: ZetkinQuery;
     id: number;
     instructions: string;
     organization: {
@@ -117,20 +113,7 @@ export interface ZetkinCallAssignment {
     };
     organization_id: number;
     start_date: string;
-    target: {
-        filter_spec: [
-            {
-                config: {
-                    after: string;
-                    campaign: number;
-                    operator: string;
-                };
-                type: string;
-            }
-        ];
-        id: number;
-        type: string;
-    };
+    target: ZetkinQuery;
     title: string;
 }
 
@@ -215,9 +198,18 @@ export enum ZetkinTaskType {
     watch_video = 'watch_video',
 }
 
+export enum QUERY_TYPE {
+    STANDALONE='standalone',
+    PURPOSE='callassignment_goal',
+    TARGET='callassignment_target',
+}
+
 export interface ZetkinQuery {
-    filter_spec: ZetkinSmartSearchFilter[];
     id: number;
+    type: QUERY_TYPE;
+    filter_spec: ZetkinSmartSearchFilter[];
+    title?: string;
+    info_text?: string;
 }
 
 export interface ZetkinTask {

@@ -7,6 +7,7 @@ export enum FILTER_TYPE {
     PERSON_DATA = 'person_data',
     PERSON_TAGS = 'person_tags',
     RANDOM = 'random',
+    SUB_QUERY='sub_query',
     SURVEY_RESPONSE = 'survey_response',
     SURVEY_SUBMISSION = 'survey_submission',
     USER = 'user'
@@ -138,6 +139,10 @@ export interface CampaignParticipationConfig {
     before?: string;
 }
 
+export interface SubQueryFilterConfig {
+    query_id: number;
+}
+
 export type AnyFilterConfig = (
     CallHistoryFilterConfig |
     CampaignParticipationConfig |
@@ -146,6 +151,7 @@ export type AnyFilterConfig = (
     PersonDataFilterConfig |
     PersonTagsFilterConfig |
     RandomFilterConfig |
+    SubQueryFilterConfig |
     SurveyResponseFilterConfig |
     SurveySubmissionFilterConfig |
     UserFilterConfig
@@ -154,7 +160,7 @@ export type AnyFilterConfig = (
 /** Filters */
 export interface ZetkinSmartSearchFilter<C = AnyFilterConfig> {
     config: C;
-    op: OPERATION;
+    op?: OPERATION;
     type: FILTER_TYPE;
 }
 

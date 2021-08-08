@@ -18,6 +18,7 @@ filterTitles:
     person_data: Based on their name, address or other data
     person_tags: Based on their tags
     random: A random selection of people
+    sub_query: Based on another Smart Search query
     survey_response: Based on their responses to survey questions
     survey_submission: People who have responded to a survey
     user: People who used Zetkin
@@ -128,6 +129,34 @@ random:
     examples:
         one: Randomly add 20 people in the organization.
         two: Randomly remove 15% of the people in the organization.
+sub_query:
+    inputString: "{addRemoveSelect} people that match {query}."
+    addRemoveSelect:
+        add: Add
+        sub: Sub
+    examples:
+        one: Remove people who match Smart Search Query 'People who live in Stockholm'.
+        two: Add people who match the target group of call Assignment 'Assignment one'.
+query:
+    preview:
+        standalone: Smart Search query "{queryTitle}"
+        callassignment_target: the target group of call assignment "{queryTitle}"
+        callassignment_goal: the purpose group of call assignment "{queryTitle}"
+    edit:
+        none: '{querySelect}'
+        standalone: '{querySelect} "{titleSelect}"'
+        callassignment_target: '{querySelect} of call assignment "{titleSelect}"'
+        callassignment_goal: '{querySelect} of call assignment "{titleSelect}"'
+    querySelectLabel:
+        none: a Smart Search query
+        standalone: Smart Search query
+        callassignment_target: the target group
+        callassignment_goal: the purpose group
+    querySelectOptions:
+        none: This organization doesn't have any call assignments or Smart Search queries yet.
+        standalone: a standalone Smart Search query
+        callassignment_target: the target group of a call assignment
+        callassignment_goal: the purpose group of a call assignment
 survey_response:
     inputString: '{addRemoveSelect} people whose response to {surveySelect} ({questionSelect}) {matchSelect} "{freeTextInput}"'
     addRemoveSelect:
