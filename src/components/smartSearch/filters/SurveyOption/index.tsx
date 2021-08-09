@@ -7,8 +7,8 @@ import { FormEvent, useEffect } from 'react';
 
 import FilterForm from '../../FilterForm';
 import getSurveysWithElements from 'fetching/getSurveysWithElements';
+import StyledItemSelect from '../../inputs/StyledItemSelect';
 import StyledSelect from '../../inputs/StyledSelect';
-import StyledTagSelect from '../../inputs/StyledTagSelect';
 import useSmartSearchFilter from 'hooks/useSmartSearchFilter';
 import { CONDITION_OPERATOR, NewSmartSearchFilter, OPERATION, SmartSearchFilterWithId,
     SurveyOptionFilterConfig, ZetkinSmartSearchFilter } from 'types/smartSearch';
@@ -70,6 +70,9 @@ const SurveyOption = (
     const selectedOptions = filter.config.options.map(option => validOptions.find(o => o?.id === option))
         .filter(o => o) as ZetkinSurveyOption[];
 
+    const styledValidOptions = validOptions.map(o => ({ id: o.id , title: o.text }));
+    const styledSelectedOptions = selectedOptions.map(o => ({ id: o.id , title: o.text }));
+
     //submit if there is valid survey, valid questions and at least one option chosen
     const submittable = filter.config.survey && filter.config.question && filter.config.options.length;
 
@@ -110,7 +113,7 @@ const SurveyOption = (
         setConfig({ ...filter.config, operator: conditionValue as CONDITION_OPERATOR });
     };
 
-    const handleOptionChange = (options: ZetkinSurveyOption[]) => {
+    const handleOptionChange = (options: {id: number; title: string}[]) => {
         setConfig({ ...filter.config, options: options.map(t => t.id) });
     };
 
@@ -175,12 +178,12 @@ const SurveyOption = (
                                 );
                             }) }
                             { selectedOptions.length < validOptions.length && (
-                                <StyledTagSelect
-                                    getOptionDisabled={ o => selectedOptions.includes(o as ZetkinSurveyOption) }
-                                    getOptionLabel={ o => o.text as string }
-                                    onChange={ (_, v) => handleOptionChange(v as ZetkinSurveyOption[]) }
-                                    options={ validOptions }
-                                    value={ validOptions.filter(t => filter.config.options?.includes(t.id)) }
+                                <StyledItemSelect
+                                    getOptionDisabled={ o => styledSelectedOptions.includes(o) }
+                                    getOptionLabel={ o => o.title }
+                                    onChange={ (_, v) => handleOptionChange(v) }
+                                    options={ styledValidOptions }
+                                    value={ styledValidOptions.filter(t => filter.config.options?.includes(t.id)) }
                                 />) }
                         </Box>
                     ) ,

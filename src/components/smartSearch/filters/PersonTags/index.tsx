@@ -7,9 +7,9 @@ import { FormEvent, useEffect, useState } from 'react';
 
 import FilterForm from '../../FilterForm';
 import getTags from 'fetching/getTags';
+import StyledItemSelect from 'components/smartSearch/inputs/StyledItemSelect';
 import StyledNumberInput from '../../inputs/StyledNumberInput';
 import StyledSelect from '../../inputs/StyledSelect';
-import StyledTagSelect from 'components/smartSearch/inputs/StyledTagSelect';
 import useSmartSearchFilter from 'hooks/useSmartSearchFilter';
 import { ZetkinTag } from 'types/zetkin';
 import { CONDITION_OPERATOR, NewSmartSearchFilter, OPERATION, PersonTagsFilterConfig,
@@ -85,7 +85,7 @@ const PersonTags = (
         }
     };
 
-    const handleTagChange = (tags: ZetkinTag[]) => {
+    const handleTagChange = (tags: {id: number; title: string}[]) => {
         setConfig({ ...filter.config, tags: tags.map(t => t.id) });
     };
 
@@ -166,11 +166,13 @@ const PersonTags = (
                                 );
                             }) }
                             { selectedTags.length < tags.length && (
-                                <StyledTagSelect
-                                    getOptionDisabled={ t => selectedTags.includes(t as ZetkinTag) }
+                                <StyledItemSelect
+                                    getOptionDisabled={ t => selectedTags.map(
+                                        t => ({ id: t.id, title: t.title }),
+                                    ).includes(t) }
                                     getOptionLabel={ t => t.title as string }
-                                    onChange={ (_, v) => handleTagChange(v as ZetkinTag[]) }
-                                    options={ tags }
+                                    onChange={ (_, v) => handleTagChange(v) }
+                                    options={ tags.map(t => ({ id: t.id, title: t.title })) }
                                     value={ tags.filter(t => filter.config.tags.includes(t.id)) }
                                 />) }
                         </Box>

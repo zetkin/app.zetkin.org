@@ -1,6 +1,6 @@
 import { GetServerSideProps } from 'next';
 
-import stringToBool from '../utils/stringToBool';
+import { stringToBool } from '../utils/stringUtils';
 
 //TODO: Create module definition and revert to import.
 // eslint-disable-next-line @typescript-eslint/no-var-requires

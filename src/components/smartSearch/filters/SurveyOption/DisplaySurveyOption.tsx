@@ -4,6 +4,7 @@ import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 import { Box, Chip, Tooltip } from '@material-ui/core';
 
+import { getEllipsedString } from 'utils/stringUtils';
 import getSurveysWithElements from 'fetching/getSurveysWithElements';
 import { ZetkinSurveyOption } from 'types/zetkin';
 import { OPERATION, SmartSearchFilterWithId, SurveyOptionFilterConfig } from 'types/smartSearch';
@@ -39,20 +40,32 @@ const DisplaySurveyOption = ({ filter }: DisplaySurveyOptionProps) : JSX.Element
                 conditionSelect: <Msg id={ `misc.smartSearch.survey_option.conditionSelect.${operator}` }/>,
                 options: (
                     <Box alignItems="start" display="inline-flex">
-                        { options.map(o => (
-                            <Tooltip
-                                key={ o.id }
-                                title={ o.text }>
-                                <Chip
-                                    icon={ <DoneAll/> }
-                                    label={ o.text }
-                                    size="small"
-                                    style={{ margin: '2px',
-                                        maxWidth: '10rem' }}
-                                    variant="outlined"
-                                />
-                            </Tooltip>
-                        )) }
+                        { options.map(o => {
+                            const shortenedLabel = getEllipsedString(o.text, 15);
+                            return (
+                                shortenedLabel.length === o.text.length ?
+                                    <Chip
+                                        icon={ <DoneAll/> }
+                                        label={ o.text }
+                                        size="small"
+                                        style={{ margin: '2px',
+                                            maxWidth: '10rem' }}
+                                        variant="outlined"
+                                    /> :
+                                    <Tooltip
+                                        key={ o.id }
+                                        title={ o.text }>
+                                        <Chip
+                                            icon={ <DoneAll/> }
+                                            label={ o.text }
+                                            size="small"
+                                            style={{ margin: '2px',
+                                                maxWidth: '10rem' }}
+                                            variant="outlined"
+                                        />
+                                    </Tooltip>
+                            );
+                        }) }
                     </Box>),
                 questionSelect: question ? <Msg
                     id="misc.smartSearch.survey_option.questionSelect.question"
