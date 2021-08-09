@@ -49,7 +49,7 @@ const StyledItemSelect = (props: StyledItemSelectProps): JSX.Element => {
                         <Chip
                             key={ item.id }
                             color="primary"
-                            label={ shortenedLabel }
+                            label={ item.title }
                             variant="outlined"
                         /> :
                         <Tooltip

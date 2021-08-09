@@ -48,8 +48,7 @@ const DisplaySurveyOption = ({ filter }: DisplaySurveyOptionProps) : JSX.Element
                                         icon={ <DoneAll/> }
                                         label={ o.text }
                                         size="small"
-                                        style={{ margin: '2px',
-                                            maxWidth: '10rem' }}
+                                        style={{ margin: '2px' }}
                                         variant="outlined"
                                     /> :
                                     <Tooltip
@@ -57,10 +56,9 @@ const DisplaySurveyOption = ({ filter }: DisplaySurveyOptionProps) : JSX.Element
                                         title={ o.text }>
                                         <Chip
                                             icon={ <DoneAll/> }
-                                            label={ o.text }
+                                            label={ shortenedLabel }
                                             size="small"
-                                            style={{ margin: '2px',
-                                                maxWidth: '10rem' }}
+                                            style={{ margin: '2px' }}
                                             variant="outlined"
                                         />
                                     </Tooltip>
