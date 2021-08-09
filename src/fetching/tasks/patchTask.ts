@@ -1,8 +1,8 @@
 import { defaultFetch } from '..';
-import { ZetkinTask, ZetkinTaskReqBody } from '../../types/zetkin';
+import { ZetkinTask } from '../../types/zetkin';
 
 const patchTask = (orgId : string | number, taskId: string | number, fetch = defaultFetch) => {
-    return async (task: Partial<ZetkinTaskReqBody>): Promise<ZetkinTask> => {
+    return async (task: Partial<ZetkinTask>): Promise<ZetkinTask> => {
         const url = `/orgs/${orgId}/tasks/${taskId}`;
         const res = await fetch(url, {
             body: JSON.stringify(task),

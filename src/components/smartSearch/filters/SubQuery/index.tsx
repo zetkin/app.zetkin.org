@@ -10,9 +10,15 @@ import getAllCallAssignments from 'fetching/getAllCallAssignments';
 import getStandaloneQueries from 'fetching/getStandaloneQueries';
 import StyledSelect from '../../inputs/StyledSelect';
 import useSmartSearchFilter from 'hooks/useSmartSearchFilter';
-import { NewSmartSearchFilter, OPERATION, SmartSearchFilterWithId,
-    SubQueryFilterConfig, ZetkinSmartSearchFilter } from 'types/smartSearch';
-import { QUERY_TYPE, ZetkinQuery } from 'types/zetkin';
+import {
+    NewSmartSearchFilter,
+    OPERATION,
+    QUERY_TYPE,
+    SmartSearchFilterWithId,
+    SubQueryFilterConfig,
+    ZetkinQuery,
+    ZetkinSmartSearchFilter,
+} from 'types/smartSearch';
 
 const NO_QUERY_SELECTED = 'none';
 

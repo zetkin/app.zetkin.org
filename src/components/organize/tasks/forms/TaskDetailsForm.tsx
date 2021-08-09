@@ -6,12 +6,19 @@ import { DateTimePicker, TextField } from 'mui-rff';
 import { FormattedMessage, FormattedMessage as Msg, useIntl } from 'react-intl';
 
 import getCampaigns from 'fetching/getCampaigns';
-import { ZetkinTask, ZetkinTaskReqBody, ZetkinTaskType } from 'types/zetkin';
+import { ZetkinTask } from 'types/zetkin';
+import { AnyTaskTypeConfig, TASK_TYPE, ZetkinTaskRequestBody } from 'types/tasks';
+
+import CollectDemographicsFields from './typeConfigFields/CollectDemographicsFields';
+import ShareLinkFields from './typeConfigFields/ShareLinkFields';
+import VisitLinkFields from './typeConfigFields/VisitLinkFields';
 
 import { TASK_DETAILS_FIELDS } from './constants';
+import { configForTaskType, isDeadlineSecond, isExpiresThird, isPublishedFirst } from './utils';
+
 
 interface TaskDetailsFormProps {
-    onSubmit: (data: ZetkinTaskReqBody) => void;
+    onSubmit: (task: ZetkinTaskRequestBody) => void;
     onCancel: () => void;
     task?: ZetkinTask;
 }
@@ -22,7 +29,7 @@ const TaskDetailsForm = ({ onSubmit, onCancel, task }: TaskDetailsFormProps): JS
     const intl = useIntl();
     const { data: campaigns } = useQuery(['campaigns', orgId], getCampaigns(orgId));
 
-    const validate = (values: ZetkinTaskReqBody) => {
+    const validate = (values: ZetkinTaskRequestBody) => {
         const errors: Record<string, string> = {};
         if (!values.title) {
             errors.title = intl.formatMessage({ id: 'misc.formDialog.required' });
@@ -36,13 +43,43 @@ const TaskDetailsForm = ({ onSubmit, onCancel, task }: TaskDetailsFormProps): JS
         if (!values.campaign_id) {
             errors.campaign_id = intl.formatMessage({ id: 'misc.formDialog.required' });
         }
+
+        // Validate dates are in correct order
+        if (!isPublishedFirst(values)) {
+            errors.published = intl.formatMessage({ id: 'misc.tasks.forms.createTask.fields.timeValidationErrors.publishedNotFirst' });
+        }
+        if (!isDeadlineSecond(values)) {
+            errors.deadline = intl.formatMessage({ id: 'misc.tasks.forms.createTask.fields.timeValidationErrors.deadlineNotSecond' });
+        }
+        if (!isExpiresThird(values)) {
+            errors.expires = intl.formatMessage({ id: 'misc.tasks.forms.createTask.fields.timeValidationErrors.expiresNotThird' });
+        }
+
         return errors;
+    };
+
+    const submit = (newTaskValues: ZetkinTaskRequestBody) => {
+        // Change shape of fields to array
+        const configWithFieldsArray = {
+            ...newTaskValues.config,
+            ...(newTaskValues?.config && 'fields' in newTaskValues?.config && newTaskValues?.config.fields && { fields: [newTaskValues?.config?.fields] }),
+        };
+        const config = configForTaskType(newTaskValues.type, configWithFieldsArray as AnyTaskTypeConfig);
+        onSubmit({
+            ...newTaskValues,
+            config,
+        });
     };
 
     return (
         <Form
             initialValues={{
                 campaign_id: parseInt(campId),
+                config: {
+                    ...task?.config,
+                    // Set first value from fields array
+                    ...(task?.config && 'fields' in task?.config && task?.config.fields && { fields: task?.config?.fields[0] }),
+                },
                 deadline: task?.deadline,
                 expires: task?.expires,
                 instructions: task?.instructions,
@@ -50,38 +87,10 @@ const TaskDetailsForm = ({ onSubmit, onCancel, task }: TaskDetailsFormProps): JS
                 title: task?.title,
                 type: task?.type,
             }}
-            onSubmit={ (values) => onSubmit(values) }
-            render={ ({ handleSubmit, submitting }) => (
+            onSubmit={ submit }
+            render={ ({ handleSubmit, submitting, valid, values }) => (
                 <form noValidate onSubmit={ handleSubmit }>
-                    { /* Fields */ }
-                    <TextField
-                        fullWidth
-                        id="title"
-                        label={ intl.formatMessage({ id: 'misc.tasks.forms.createTask.fields.title' }) }
-                        margin="normal"
-                        name={ TASK_DETAILS_FIELDS.TITLE }
-                        required
-                    />
-
-                    <TextField
-                        fullWidth
-                        id="task_type"
-                        label={ intl.formatMessage({ id: 'misc.tasks.forms.createTask.fields.type' }) }
-                        margin="normal"
-                        name={ TASK_DETAILS_FIELDS.TYPE }
-                        required
-                        select>
-                        <MenuItem value={ ZetkinTaskType.offline }>
-                            <FormattedMessage id="misc.tasks.forms.createTask.fields.types.offline" />
-                        </MenuItem>
-                        <MenuItem value={ ZetkinTaskType.share_link }>
-                            <FormattedMessage id="misc.tasks.forms.createTask.fields.types.share_link" />
-                        </MenuItem>
-                        <MenuItem value={ ZetkinTaskType.visit_link }>
-                            <FormattedMessage id="misc.tasks.forms.createTask.fields.types.open_link" />
-                        </MenuItem>
-                    </TextField>
-
+                    { /* Required fields */ }
                     <TextField
                         disabled={ campId ? true : false }
                         fullWidth
@@ -100,6 +109,15 @@ const TaskDetailsForm = ({ onSubmit, onCancel, task }: TaskDetailsFormProps): JS
 
                     <TextField
                         fullWidth
+                        id="title"
+                        label={ intl.formatMessage({ id: 'misc.tasks.forms.createTask.fields.title' }) }
+                        margin="normal"
+                        name={ TASK_DETAILS_FIELDS.TITLE }
+                        required
+                    />
+
+                    <TextField
+                        fullWidth
                         id="instructions"
                         label={ intl.formatMessage({ id: 'misc.tasks.forms.createTask.fields.instructions' }) }
                         margin="normal"
@@ -108,37 +126,68 @@ const TaskDetailsForm = ({ onSubmit, onCancel, task }: TaskDetailsFormProps): JS
                         required
                         rows={ 2 }
                         variant="filled"
-
                     />
 
+                    <TextField
+                        fullWidth
+                        id="task_type"
+                        label={ intl.formatMessage({ id: 'misc.tasks.forms.createTask.fields.type' }) }
+                        margin="normal"
+                        name={ TASK_DETAILS_FIELDS.TYPE }
+                        required
+                        select>
+                        <MenuItem value={ TASK_TYPE.OFFLINE }>
+                            <FormattedMessage id="misc.tasks.forms.createTask.fields.types.offline" />
+                        </MenuItem>
+                        <MenuItem value={ TASK_TYPE.SHARE_LINK }>
+                            <FormattedMessage id="misc.tasks.forms.createTask.fields.types.share_link" />
+                        </MenuItem>
+                        <MenuItem value={ TASK_TYPE.VISIT_LINK }>
+                            <FormattedMessage id="misc.tasks.forms.createTask.fields.types.visit_link" />
+                        </MenuItem>
+                        <MenuItem value={ TASK_TYPE.COLLECT_DEMOGRAPHICS }>
+                            <FormattedMessage id="misc.tasks.forms.createTask.fields.types.demographic" />
+                        </MenuItem>
+                    </TextField>
+
+                    { /* Custom fields for task type config */ }
+                    { values.type === TASK_TYPE.COLLECT_DEMOGRAPHICS && (
+                        <CollectDemographicsFields />
+                    ) }
+                    { values.type === TASK_TYPE.SHARE_LINK && (
+                        <ShareLinkFields />
+                    ) }
+                    { values.type === TASK_TYPE.VISIT_LINK && (
+                        <VisitLinkFields />
+                    ) }
+
                     { /* Date Selectors */ }
-                    <Box mt={ 2 }>
-                        <DateTimePicker
-                            ampm={ false }
-                            clearable={ true }
-                            fullWidth={ true }
-                            label={ intl.formatMessage({ id: 'misc.tasks.forms.createTask.fields.published' }) }
-                            name={ TASK_DETAILS_FIELDS.PUBLISHED }
-                        />
-                    </Box>
-                    <Box mt={ 2 }>
-                        <DateTimePicker
-                            ampm={ false }
-                            clearable={ true }
-                            fullWidth={ true }
-                            label={ intl.formatMessage({ id: 'misc.tasks.forms.createTask.fields.deadline' }) }
-                            name={ TASK_DETAILS_FIELDS.DEADLINE }
-                        />
-                    </Box>
-                    <Box mt={ 2 }>
-                        <DateTimePicker
-                            ampm={ false }
-                            clearable={ true }
-                            fullWidth={ true }
-                            label={ intl.formatMessage({ id: 'misc.tasks.forms.createTask.fields.expires' }) }
-                            name={ TASK_DETAILS_FIELDS.EXPIRES }
-                        />
-                    </Box>
+                    <DateTimePicker
+                        ampm={ false }
+                        clearable={ true }
+                        fullWidth={ true }
+                        label={ intl.formatMessage({ id: 'misc.tasks.forms.createTask.fields.published' }) }
+                        margin="normal"
+                        name={ TASK_DETAILS_FIELDS.PUBLISHED }
+                    />
+
+                    <DateTimePicker
+                        ampm={ false }
+                        clearable={ true }
+                        fullWidth={ true }
+                        label={ intl.formatMessage({ id: 'misc.tasks.forms.createTask.fields.deadline' }) }
+                        margin="normal"
+                        name={ TASK_DETAILS_FIELDS.DEADLINE }
+                    />
+
+                    <DateTimePicker
+                        ampm={ false }
+                        clearable={ true }
+                        fullWidth={ true }
+                        label={ intl.formatMessage({ id: 'misc.tasks.forms.createTask.fields.expires' }) }
+                        margin="normal"
+                        name={ TASK_DETAILS_FIELDS.EXPIRES }
+                    />
 
                     { /* Actions */ }
                     <Box display="flex" justifyContent="flex-end" mt={ 2 } width={ 1 }>
@@ -148,7 +197,7 @@ const TaskDetailsForm = ({ onSubmit, onCancel, task }: TaskDetailsFormProps): JS
                             </Button>
                         </Box>
                         <Box m={ 1 }>
-                            <Button color="primary" disabled={ submitting } type="submit" variant="contained">
+                            <Button color="primary" disabled={ submitting || !valid } type="submit" variant="contained">
                                 <Msg id="misc.formDialog.submit" />
                             </Button>
                         </Box>

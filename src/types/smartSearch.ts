@@ -177,3 +177,18 @@ export type SelectedSmartSearchFilter<C = AnyFilterConfig> =
     SmartSearchFilterWithId<C> | // When existing filter is being edited
     NewSmartSearchFilter | // When a new filter is being created
     null // When no filter selected
+
+
+export enum QUERY_TYPE {
+    STANDALONE='standalone',
+    PURPOSE='callassignment_goal',
+    TARGET='callassignment_target',
+}
+
+export interface ZetkinQuery {
+    id: number;
+    type: QUERY_TYPE;
+    filter_spec: ZetkinSmartSearchFilter[];
+    title?: string;
+    info_text?: string;
+}

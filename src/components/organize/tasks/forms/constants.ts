@@ -8,3 +8,16 @@ export enum TASK_DETAILS_FIELDS {
     DEADLINE= 'deadline',
     EXPIRES= 'expires',
 }
+
+export enum SHARE_LINK_FIELDS {
+    DEFAULT_MESSAGE= 'config.default_message',
+    URL= 'config.url'
+}
+
+export enum VISIT_LINK_FIELDS {
+    URL= 'config.url'
+}
+
+export enum COLLECT_DEMOGRAPHICS_FIELDS {
+    FIELDS= 'config.fields'
+}

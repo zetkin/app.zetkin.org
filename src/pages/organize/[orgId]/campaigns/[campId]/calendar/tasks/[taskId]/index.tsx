@@ -1,6 +1,6 @@
+import { Box } from '@material-ui/core';
 import { GetServerSideProps } from 'next';
 import { useQuery } from 'react-query';
-import { Box, Container, Grid } from '@material-ui/core';
 
 import getTask from 'fetching/tasks/getTask';
 import { PageWithLayout } from 'types';
@@ -64,14 +64,8 @@ const TaskDetailPage: PageWithLayout<TaskDetailPageProps> = ({ taskId, orgId }) 
     if (!task) return null;
 
     return (
-        <Box mt={ 4 }>
-            <Container>
-                <Grid container>
-                    <Grid item xs={ 12 }>
-                        <TaskDetailsSection task={ task } />
-                    </Grid>
-                </Grid>
-            </Container>
+        <Box p={ 3 }>
+            <TaskDetailsSection task={ task } />
         </Box>
     );
 };

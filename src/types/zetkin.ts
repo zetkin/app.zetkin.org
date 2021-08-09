@@ -1,4 +1,5 @@
-import { ZetkinSmartSearchFilter } from './smartSearch';
+import { ZetkinAssignedTask, ZetkinTask } from './tasks';
+import { ZetkinQuery, ZetkinSmartSearchFilter } from './smartSearch';
 
 export interface ZetkinCampaign {
     color: string;
@@ -188,58 +189,6 @@ export interface ZetkinActivity {
     info_text: string | null;
 }
 
-//  Tasks
-export enum ZetkinTaskType {
-    demographic = 'demographic',
-    offline = 'offline',
-    share_link = 'share_link',
-    share_image = 'share_image',
-    visit_link = 'visit_link',
-    watch_video = 'watch_video',
-}
-
-export enum QUERY_TYPE {
-    STANDALONE='standalone',
-    PURPOSE='callassignment_goal',
-    TARGET='callassignment_target',
-}
-
-export interface ZetkinQuery {
-    id: number;
-    type: QUERY_TYPE;
-    filter_spec: ZetkinSmartSearchFilter[];
-    title?: string;
-    info_text?: string;
-}
-
-export interface ZetkinTask {
-    id: number;
-    title: string;
-    instructions: string;
-    published?: string; // iso string
-    expires?: string; // iso string
-    deadline?: string; // iso string
-    type: ZetkinTaskType;
-    config: Record<string, unknown >; // Will find out configs for different types later
-    target: ZetkinQuery;
-    campaign: {
-        id: number;
-        title: string;
-    };
-    organization: {
-        id: number;
-        title: string;
-    };
-}
-
-export interface ZetkinTaskReqBody extends Partial<ZetkinTask> {
-    title: string;
-    instructions: string;
-    type: ZetkinTaskType;
-    campaign_id: number;
-    target_filters: ZetkinSmartSearchFilter[];
-}
-
 export interface ZetkinTag {
     id: number;
     title: string;
@@ -247,22 +196,4 @@ export interface ZetkinTag {
     description: string;
 }
 
-enum ASSIGNED_STATUS {
-    ASSIGNED='assigned',
-    COMPLETED='completed',
-    EXPIRED='expired',
-    OVERDUE='overdue',
-}
-
-export interface ZetkinAssignedTask {
-    id: number;
-    status: ASSIGNED_STATUS;
-    task: Pick<ZetkinTask, 'id' | 'deadline' | 'expires' | 'title'>;
-    completed: string | null;
-    assignee: {
-        first_name: string;
-        id: number;
-        last_name: string;
-    };
-    assigned: string;
-}
+export type { ZetkinTask, ZetkinAssignedTask, ZetkinQuery, ZetkinSmartSearchFilter };
