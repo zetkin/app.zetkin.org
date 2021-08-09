@@ -167,9 +167,9 @@ const PersonTags = (
                             }) }
                             { selectedTags.length < tags.length && (
                                 <StyledTagSelect
-                                    getOptionDisabled={ t => selectedTags.includes(t) }
-                                    getOptionLabel={ t => t.title }
-                                    onChange={ (_, v) => handleTagChange(v) }
+                                    getOptionDisabled={ t => selectedTags.includes(t as ZetkinTag) }
+                                    getOptionLabel={ t => t.title as string }
+                                    onChange={ (_, v) => handleTagChange(v as ZetkinTag[]) }
                                     options={ tags }
                                     value={ tags.filter(t => filter.config.tags.includes(t.id)) }
                                 />) }

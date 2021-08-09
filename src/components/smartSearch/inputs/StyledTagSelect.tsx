@@ -3,8 +3,6 @@ import { Theme } from '@material-ui/core';
 import { Autocomplete, AutocompleteProps } from '@material-ui/lab';
 import { Chip, makeStyles, TextField } from '@material-ui/core';
 
-import { ZetkinTag } from 'types/zetkin';
-
 const useStyles = makeStyles<Theme>((theme) => ({
     MuiInput: {
         fontSize: theme.typography.h4.fontSize,
@@ -20,7 +18,13 @@ const useStyles = makeStyles<Theme>((theme) => ({
     },
 }));
 
-type StyledTagSelectProps = Omit<AutocompleteProps<ZetkinTag, true, true, false>, 'renderInput'>
+interface StyledSelectTag {
+    id: number;
+    title?: string;
+    text?: string;
+}
+
+type StyledTagSelectProps = Omit<AutocompleteProps<StyledSelectTag, true, true, false>, 'renderInput'>
 
 const StyledTagSelect = (props: StyledTagSelectProps): JSX.Element => {
     const classes = useStyles();
@@ -41,7 +45,7 @@ const StyledTagSelect = (props: StyledTagSelectProps): JSX.Element => {
                 <Chip
                     key={ tag.id }
                     color="primary"
-                    label={ tag.title }
+                    label={ tag.title || tag.text }
                     variant="outlined"
                 />) }
             renderTags={ () => null }

@@ -19,6 +19,7 @@ filterTitles:
     person_tags: Based on their tags
     random: A random selection of people
     sub_query: Based on another Smart Search query
+    survey_option: Based on the options they have selected in survey questions
     survey_response: Based on their responses to survey questions
     survey_submission: People who have responded to a survey
     user: People who used Zetkin
@@ -157,6 +158,26 @@ query:
         standalone: a standalone Smart Search query
         callassignment_target: the target group of a call assignment
         callassignment_goal: the purpose group of a call assignment
+survey_option:
+    inputString: "{addRemoveSelect} people who have chosen {conditionSelect} of the following options in {surveySelect} ({questionSelect}): {options}"
+    addRemoveSelect:
+        add: Add
+        sub: Remove
+    conditionSelect:
+        any: any
+        all: all
+        none: none        
+    surveySelect:
+        any: a survey
+        none: This organization has no surveys yet
+        survey: survey "{surveyTitle}"
+    questionSelect:
+        any: a question
+        none: There are no option questions in this survey
+        question: question "{question}"
+    examples:
+        one: "Remove all people who have chosen all of the following options in survey 'Member survey 2020' (question 'Question one'): 'Sometimes', 'Never'"
+        two: "Add all people who have chosen any of the following options in survey 'Member survey' (question 'Question two'): 'Option two'"
 survey_response:
     inputString: '{addRemoveSelect} people whose response to {surveySelect} ({questionSelect}) {matchSelect} "{freeTextInput}"'
     addRemoveSelect:

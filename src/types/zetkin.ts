@@ -152,13 +152,18 @@ export enum ELEMENT_TYPE {
 
 interface ZetkinQuestion {
     description: string | null;
-    options?: Array<unknown>;
+    options?: ZetkinOption[];
     question: string;
     required: boolean;
     response_config: {
         multiline: boolean;
     };
     response_type: RESPONSE_TYPE;
+}
+
+export interface ZetkinOption {
+    id: number;
+    text: string;
 }
 
 export interface ZetkinCanvassAssignment {
