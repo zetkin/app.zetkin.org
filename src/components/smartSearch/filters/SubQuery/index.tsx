@@ -12,7 +12,8 @@ import StyledSelect from '../../inputs/StyledSelect';
 import useSmartSearchFilter from 'hooks/useSmartSearchFilter';
 import {
     NewSmartSearchFilter,
-    OPERATION, QUERY_TYPE,
+    OPERATION,
+    QUERY_TYPE,
     SmartSearchFilterWithId,
     SubQueryFilterConfig,
     ZetkinQuery,
