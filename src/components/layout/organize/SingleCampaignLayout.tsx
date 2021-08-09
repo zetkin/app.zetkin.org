@@ -5,7 +5,7 @@ import { FormattedDate, FormattedMessage as Msg } from 'react-intl';
 
 import getCampaign from '../../../fetching/getCampaign';
 import getCampaignEvents from '../../../fetching/getCampaignEvents';
-import { getNaiveDate } from '../../../utils/getNaiveDate';
+import { getNaiveDate } from '../../../utils/dateUtils';
 import TabbedLayout from './TabbedLayout';
 
 interface SingleCampaignLayoutProps {

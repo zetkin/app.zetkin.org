@@ -1,8 +1,4 @@
-interface ZetkinSmartSearchFilter {
-    config?: Record<string, unknown>;
-    op: 'sub' | 'add';
-    type: string;
-}
+import { ZetkinQuery, ZetkinSmartSearchFilter } from './smartSearch';
 
 export enum TASK_TYPE {
     COLLECT_DEMOGRAPHICS = 'demographic',
@@ -47,10 +43,7 @@ export interface ZetkinTask<TaskTypeConfig = AnyTaskTypeConfig> {
     deadline?: string; // iso string
     type: TASK_TYPE;
     config: TaskTypeConfig;
-    target: {
-        filter_spec: ZetkinSmartSearchFilter[];
-        id: number;
-    };
+    target: ZetkinQuery;
     campaign: {
         id: number;
         title: string;
@@ -83,4 +76,24 @@ export interface ZetkinTaskPostBody extends ZetkinTaskRequestBody {
     instructions: string;
     title: string;
     type: TASK_TYPE;
+}
+
+enum ASSIGNED_STATUS {
+    ASSIGNED='assigned',
+    COMPLETED='completed',
+    EXPIRED='expired',
+    OVERDUE='overdue',
+}
+
+export interface ZetkinAssignedTask {
+    id: number;
+    status: ASSIGNED_STATUS;
+    task: Pick<ZetkinTask, 'id' | 'deadline' | 'expires' | 'title'>;
+    completed: string | null;
+    assignee: {
+        first_name: string;
+        id: number;
+        last_name: string;
+    };
+    assigned: string;
 }

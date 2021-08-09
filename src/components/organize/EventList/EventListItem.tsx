@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { FormattedDate, FormattedTime } from 'react-intl';
 import { ListItem, ListItemText, Typography } from '@material-ui/core';
 
-import { getNaiveDate } from '../../../utils/getNaiveDate';
+import { getNaiveDate } from '../../../utils/dateUtils';
 import { ZetkinEvent } from '../../../types/zetkin';
 
 interface EventListItemProps {

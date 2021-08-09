@@ -1,4 +1,5 @@
-export type { ZetkinTask } from './tasks';
+import { ZetkinAssignedTask, ZetkinTask } from './tasks';
+import { ZetkinQuery, ZetkinSmartSearchFilter } from './smartSearch';
 
 export interface ZetkinCampaign {
     color: string;
@@ -104,11 +105,7 @@ export interface ZetkinCallAssignment {
     description: string;
     disable_caller_notes: boolean;
     end_date: string;
-    goal: {
-        filter_spec: undefined;
-        id: number;
-        type: string;
-    };
+    goal: ZetkinQuery;
     id: number;
     instructions: string;
     organization: {
@@ -117,20 +114,7 @@ export interface ZetkinCallAssignment {
     };
     organization_id: number;
     start_date: string;
-    target: {
-        filter_spec: [
-            {
-                config: {
-                    after: string;
-                    campaign: number;
-                    operator: string;
-                };
-                type: string;
-            }
-        ];
-        id: number;
-        type: string;
-    };
+    target: ZetkinQuery;
     title: string;
 }
 
@@ -145,6 +129,37 @@ export interface ZetkinSurvey {
     allow_anonymous: boolean;
     access: string;
     callers_only: boolean;
+}
+
+export interface ZetkinSurveyExtended extends ZetkinSurvey {
+    elements: ZetkinSurveyElement[];
+}
+
+export interface ZetkinSurveyElement {
+    id: number;
+    question: ZetkinQuestion;
+    type: ELEMENT_TYPE;
+}
+
+export enum RESPONSE_TYPE {
+    OPTIONS = 'options',
+    TEXT = 'text'
+}
+
+export enum ELEMENT_TYPE {
+    QUESTION = 'question',
+    TEXT = 'text'
+}
+
+interface ZetkinQuestion {
+    description: string | null;
+    options?: Array<unknown>;
+    question: string;
+    required: boolean;
+    response_config: {
+        multiline: boolean;
+    };
+    response_type: RESPONSE_TYPE;
 }
 
 export interface ZetkinCanvassAssignment {
@@ -173,3 +188,12 @@ export interface ZetkinActivity {
     title: string;
     info_text: string | null;
 }
+
+export interface ZetkinTag {
+    id: number;
+    title: string;
+    hidden: boolean;
+    description: string;
+}
+
+export type { ZetkinTask, ZetkinAssignedTask, ZetkinQuery, ZetkinSmartSearchFilter };
