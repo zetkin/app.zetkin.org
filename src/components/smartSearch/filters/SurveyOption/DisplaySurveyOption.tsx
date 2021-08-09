@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 import { Box, Chip, Tooltip } from '@material-ui/core';
 
 import getSurveysWithElements from 'fetching/getSurveysWithElements';
-import { ZetkinOption } from 'types/zetkin';
+import { ZetkinSurveyOption } from 'types/zetkin';
 import { OPERATION, SmartSearchFilterWithId, SurveyOptionFilterConfig } from 'types/smartSearch';
 
 interface DisplaySurveyOptionProps {
@@ -26,7 +26,7 @@ const DisplaySurveyOption = ({ filter }: DisplaySurveyOptionProps) : JSX.Element
     const question = survey?.elements.find(e => e.id === questionId)?.question;
 
     const options = question ? optionIds
-        .map(oId => question.options?.find(option => option.id === oId)) as ZetkinOption[] : [];
+        .map(oId => question.options?.find(option => option.id === oId)) as ZetkinSurveyOption[] : [];
 
 
     return (

@@ -152,7 +152,7 @@ export enum ELEMENT_TYPE {
 
 interface ZetkinQuestion {
     description: string | null;
-    options?: ZetkinOption[];
+    options?: ZetkinSurveyOption[];
     question: string;
     required: boolean;
     response_config: {
@@ -161,7 +161,7 @@ interface ZetkinQuestion {
     response_type: RESPONSE_TYPE;
 }
 
-export interface ZetkinOption {
+export interface ZetkinSurveyOption {
     id: number;
     text: string;
 }

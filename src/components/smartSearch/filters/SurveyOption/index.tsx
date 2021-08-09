@@ -12,7 +12,7 @@ import StyledTagSelect from '../../inputs/StyledTagSelect';
 import useSmartSearchFilter from 'hooks/useSmartSearchFilter';
 import { CONDITION_OPERATOR, NewSmartSearchFilter, OPERATION, SmartSearchFilterWithId,
     SurveyOptionFilterConfig, ZetkinSmartSearchFilter } from 'types/smartSearch';
-import {  ELEMENT_TYPE, RESPONSE_TYPE, ZetkinOption } from 'types/zetkin';
+import {  ELEMENT_TYPE, RESPONSE_TYPE, ZetkinSurveyOption } from 'types/zetkin';
 
 const DEFAULT_VALUE = 'none';
 
@@ -68,7 +68,7 @@ const SurveyOption = (
 
     // convert filter.config.options to an array of Zetkin option objects keeping the correct order
     const selectedOptions = filter.config.options.map(option => validOptions.find(o => o?.id === option))
-        .filter(o => o) as ZetkinOption[];
+        .filter(o => o) as ZetkinSurveyOption[];
 
     //submit if there is valid survey, valid questions and at least one option chosen
     const submittable = filter.config.survey && filter.config.question && filter.config.options.length;
@@ -110,11 +110,11 @@ const SurveyOption = (
         setConfig({ ...filter.config, operator: conditionValue as CONDITION_OPERATOR });
     };
 
-    const handleOptionChange = (options: ZetkinOption[]) => {
+    const handleOptionChange = (options: ZetkinSurveyOption[]) => {
         setConfig({ ...filter.config, options: options.map(t => t.id) });
     };
 
-    const handleOptionDelete = (option: ZetkinOption) => {
+    const handleOptionDelete = (option: ZetkinSurveyOption) => {
         setConfig({ ...filter.config, options: filter.config.options.filter(o => o !== option.id ) });
     };
 
@@ -176,9 +176,9 @@ const SurveyOption = (
                             }) }
                             { selectedOptions.length < validOptions.length && (
                                 <StyledTagSelect
-                                    getOptionDisabled={ o => selectedOptions.includes(o as ZetkinOption) }
+                                    getOptionDisabled={ o => selectedOptions.includes(o as ZetkinSurveyOption) }
                                     getOptionLabel={ o => o.text as string }
-                                    onChange={ (_, v) => handleOptionChange(v as ZetkinOption[]) }
+                                    onChange={ (_, v) => handleOptionChange(v as ZetkinSurveyOption[]) }
                                     options={ validOptions }
                                     value={ validOptions.filter(t => filter.config.options?.includes(t.id)) }
                                 />) }
