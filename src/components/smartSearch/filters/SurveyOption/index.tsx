@@ -71,7 +71,7 @@ const SurveyOption = (
         .filter(o => o) as ZetkinOption[];
 
     //submit if there is valid survey, valid questions and at least one option chosen
-    const submittable = filter.config.survey && filter.config.question && filter.config.options?.length;
+    const submittable = filter.config.survey && filter.config.question && filter.config.options.length;
 
     //event handlers
     const handleSubmit = (e: FormEvent) => {
@@ -81,10 +81,17 @@ const SurveyOption = (
 
     const handleQuestionSelectChange = (questionValue: string) => {
         if (questionValue === DEFAULT_VALUE) {
-            setConfig({ ...filter.config, question: undefined });
+            setConfig({
+                ...filter.config,
+                options: [],
+                question: undefined,
+            });
         }
         else {
-            setConfig({ ...filter.config, question: +questionValue });
+            setConfig({
+                ...filter.config,
+                options: [],
+                question: +questionValue });
         }
     };
 
@@ -92,7 +99,11 @@ const SurveyOption = (
         const newQuestion = surveys.find(s => s.id === +surveyValue)?.elements
             .find(e => e.type === ELEMENT_TYPE.QUESTION &&
             e.question.response_type === RESPONSE_TYPE.OPTIONS);
-        setConfig({ ...filter.config, question: newQuestion?.id, survey: +surveyValue });
+        setConfig({
+            ...filter.config,
+            options: [],
+            question: newQuestion?.id,
+            survey: +surveyValue });
     };
 
     const handleConditionSelectChange = (conditionValue: string) => {
