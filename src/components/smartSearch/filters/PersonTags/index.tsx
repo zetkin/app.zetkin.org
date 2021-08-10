@@ -167,10 +167,8 @@ const PersonTags = (
                             }) }
                             { selectedTags.length < tags.length && (
                                 <StyledItemSelect
-                                    getOptionDisabled={ t => selectedTags.map(
-                                        t => ({ id: t.id, title: t.title }),
-                                    ).includes(t) }
-                                    getOptionLabel={ t => t.title as string }
+                                    getOptionDisabled={ t => selectedTags
+                                        .some(selected => selected.id === t.id) }
                                     onChange={ (_, v) => handleTagChange(v) }
                                     options={ tags.map(t => ({ id: t.id, title: t.title })) }
                                     value={ tags.filter(t => filter.config.tags.includes(t.id)) }
