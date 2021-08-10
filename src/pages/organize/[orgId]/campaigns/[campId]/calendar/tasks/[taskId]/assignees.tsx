@@ -12,6 +12,7 @@ import { PageWithLayout } from 'types';
 import { scaffold } from 'utils/next';
 import SingleTaskLayout from 'components/layout/organize/SingleTaskLayout';
 import SmartSearchDialog from 'components/smartSearch/SmartSearchDialog';
+import TaskAssigneesList from 'components/organize/tasks/TaskAssigneesList';
 import { useState } from 'react';
 import getTaskStatus, { TASK_STATUS } from 'utils/getTaskStatus';
 import { ZetkinAssignedTask, ZetkinTask } from 'types/zetkin';
@@ -127,6 +128,10 @@ const TaskAssigneesPage: PageWithLayout = () => {
                     </Button>
                     }
                 </Alert>
+
+                { assignedTasks && (
+                    <TaskAssigneesList assignedTasks={ assignedTasks } />
+                ) }
             </Box>
             { dialogOpen &&
             <SmartSearchDialog
