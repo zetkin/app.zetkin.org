@@ -168,6 +168,7 @@ const TaskDetailsForm = ({ onSubmit, onCancel, task }: TaskDetailsFormProps): JS
                         ampm={ false }
                         clearable={ true }
                         disabled={ taskStatus === TASK_STATUS.ACTIVE || taskStatus === TASK_STATUS.CLOSED }
+                        disablePast
                         fullWidth={ true }
                         label={ intl.formatMessage({ id: 'misc.tasks.forms.createTask.fields.published' }) }
                         margin="normal"
@@ -177,6 +178,7 @@ const TaskDetailsForm = ({ onSubmit, onCancel, task }: TaskDetailsFormProps): JS
                     <DateTimePicker
                         ampm={ false }
                         clearable={ true }
+                        disablePast
                         fullWidth={ true }
                         label={ intl.formatMessage({ id: 'misc.tasks.forms.createTask.fields.deadline' }) }
                         margin="normal"
@@ -186,6 +188,7 @@ const TaskDetailsForm = ({ onSubmit, onCancel, task }: TaskDetailsFormProps): JS
                     <DateTimePicker
                         ampm={ false }
                         clearable={ true }
+                        disablePast
                         fullWidth={ true }
                         label={ intl.formatMessage({ id: 'misc.tasks.forms.createTask.fields.expires' }) }
                         margin="normal"
