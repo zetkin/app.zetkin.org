@@ -34,5 +34,8 @@ taskTypeDetails:
         title: Collect Demographics Settings
 publishButton:
     publish: Publish
-    active: Published
-    closed: Closed
+    tooltip:
+        missingFields: Missing required fields
+        missingAssignees: Missing assignees
+        missingFieldsAndAssignees: Missing required fields and assignees
+        alreadyPublished: Already Published
