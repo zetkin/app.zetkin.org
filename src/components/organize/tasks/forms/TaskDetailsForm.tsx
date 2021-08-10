@@ -8,6 +8,7 @@ import { FormattedMessage, FormattedMessage as Msg, useIntl } from 'react-intl';
 import getCampaigns from 'fetching/getCampaigns';
 import { ZetkinTask } from 'types/zetkin';
 import { AnyTaskTypeConfig, TASK_TYPE, ZetkinTaskRequestBody } from 'types/tasks';
+import getTaskStatus, { TASK_STATUS } from 'utils/getTaskStatus';
 
 import CollectDemographicsFields from './typeConfigFields/CollectDemographicsFields';
 import ShareLinkFields from './typeConfigFields/ShareLinkFields';
@@ -28,6 +29,7 @@ const TaskDetailsForm = ({ onSubmit, onCancel, task }: TaskDetailsFormProps): JS
     const { campId, orgId } = router.query as {campId: string; orgId: string};
     const intl = useIntl();
     const { data: campaigns } = useQuery(['campaigns', orgId], getCampaigns(orgId));
+    const taskStatus = task ? getTaskStatus(task) : null;
 
     const validate = (values: ZetkinTaskRequestBody) => {
         const errors: Record<string, string> = {};
@@ -165,6 +167,7 @@ const TaskDetailsForm = ({ onSubmit, onCancel, task }: TaskDetailsFormProps): JS
                     <DateTimePicker
                         ampm={ false }
                         clearable={ true }
+                        disabled={ taskStatus === TASK_STATUS.ACTIVE || taskStatus === TASK_STATUS.CLOSED }
                         fullWidth={ true }
                         label={ intl.formatMessage({ id: 'misc.tasks.forms.createTask.fields.published' }) }
                         margin="normal"
