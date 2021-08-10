@@ -16,6 +16,7 @@ filterTitles:
     campaign_participation: Based on their campaign participation
     most_active: The most active people
     person_data: Based on their name, address or other data
+    person_field: Based on custom fields
     person_tags: Based on their tags
     random: A random selection of people
     sub_query: Based on another Smart Search query
@@ -97,6 +98,23 @@ criteria:
         alt_phone: alternative phone number
         phone: phone number
         remove: Remove this criteria
+person_field: 
+    inputString: "{addRemoveSelect} any person whose {field}."
+    addRemoveSelect:
+        add: Add
+        sub: Remove
+field:
+    preview:
+        text: "{fieldName} matches {searchTerm}"
+        url: "{fieldName} matches {searchTerm}"
+        date: "{fieldName} is {timeFrame}"
+    edit:
+        none: This organization doesn't have any custom fields yet.
+        text: "{fieldSelect} matches {freeTextInput}" 
+        url: "{fieldSelect} matches {freeTextInput}" 
+        date: "{fieldSelect} is {timeFrame}"
+    fieldSelect:
+        any: custom field
 person_tags:
     inputString:  "{addRemoveSelect} people with {condition} of the following tags: {tags}"
     addRemoveSelect:

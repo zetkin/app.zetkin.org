@@ -5,6 +5,7 @@ export enum FILTER_TYPE {
     CAMPAIGN_PARTICIPATION = 'campaign_participation',
     MOST_ACTIVE ='most_active',
     PERSON_DATA = 'person_data',
+    PERSON_FIELD = 'person_field',
     PERSON_TAGS = 'person_tags',
     RANDOM = 'random',
     SUB_QUERY='sub_query',
@@ -97,6 +98,13 @@ export interface PersonDataFilterConfig {
     };
 }
 
+export interface PersonFieldFilterConfig {
+    after?: string;
+    before?: string;
+    field: string;
+    search?: string;
+}
+
 export interface PersonTagsFilterConfig {
     condition: CONDITION_OPERATOR;
     tags: number[];
@@ -149,6 +157,7 @@ export type AnyFilterConfig = (
     DefaultFilterConfig |
     MostActiveFilterConfig |
     PersonDataFilterConfig |
+    PersonFieldFilterConfig |
     PersonTagsFilterConfig |
     RandomFilterConfig |
     SubQueryFilterConfig |

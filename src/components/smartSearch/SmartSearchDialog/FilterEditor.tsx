@@ -2,6 +2,7 @@ import CallHistory from '../filters/CallHistory';
 import CampaignParticipation from '../filters/CampaignParticipation';
 import MostActive from '../filters/MostActive';
 import PersonData from '../filters/PersonData';
+import PersonField from '../filters/PersonField';
 import PersonTags from '../filters/PersonTags';
 import Random from '../filters/Random';
 import SubQuery from '../filters/SubQuery';
@@ -42,6 +43,12 @@ const FilterEditor = (
             /> }
             { filter.type === FILTER_TYPE.PERSON_DATA &&
             <PersonData
+                filter={ filter }
+                onCancel={ onCancelSubmitFilter }
+                onSubmit={ onSubmitFilter }
+            /> }
+            { filter.type === FILTER_TYPE.PERSON_FIELD &&
+            <PersonField
                 filter={ filter }
                 onCancel={ onCancelSubmitFilter }
                 onSubmit={ onSubmitFilter }
