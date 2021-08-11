@@ -8,6 +8,7 @@ import DisplayCallHistory from '../filters/CallHistory/DisplayCallHistory';
 import DisplayCampaignParticipation from '../filters/CampaignParticipation/DisplayCampaignParticipation';
 import DisplayMostActive from '../filters/MostActive/DisplayMostActive';
 import DisplayPersonData from '../filters/PersonData/DisplayPersonData';
+import DisplayPersonField from '../filters/PersonField/DisplayPersonField';
 import DisplayPersonTags from '../filters/PersonTags/DisplayPersonTags';
 import DisplayRandom from '../filters/Random/DisplayRandom';
 import DisplayStartsWith from '../StartsWith/DisplayStartsWith';
@@ -16,10 +17,23 @@ import DisplaySurveyOption from '../filters/SurveyOption/DisplaySurveyOption';
 import DisplaySurveyResponse from '../filters/SurveyResponse/DisplaySurveyResponse';
 import DisplaySurveySubmission from '../filters/SurveySubmission/DisplaySurveySubmission';
 import DisplayUser from '../filters/User/DisplayUser';
-import { AnyFilterConfig, CallHistoryFilterConfig, CampaignParticipationConfig, FILTER_TYPE,
-    MostActiveFilterConfig, PersonDataFilterConfig, PersonTagsFilterConfig, RandomFilterConfig,
-    SmartSearchFilterWithId, SubQueryFilterConfig, SurveyOptionFilterConfig,
-    SurveyResponseFilterConfig, SurveySubmissionFilterConfig, UserFilterConfig } from 'types/smartSearch';
+import {
+    AnyFilterConfig,
+    CallHistoryFilterConfig,
+    CampaignParticipationConfig,
+    FILTER_TYPE,
+    MostActiveFilterConfig,
+    PersonDataFilterConfig,
+    PersonFieldFilterConfig,
+    PersonTagsFilterConfig,
+    RandomFilterConfig,
+    SmartSearchFilterWithId,
+    SubQueryFilterConfig,
+    SurveyOptionFilterConfig,
+    SurveyResponseFilterConfig,
+    SurveySubmissionFilterConfig,
+    UserFilterConfig,
+} from 'types/smartSearch';
 
 const FIRST_FILTER = 'first_filter';
 
@@ -108,6 +122,10 @@ const QueryOverview = (
                                         { filter.type === FILTER_TYPE.PERSON_DATA &&
                                         <DisplayPersonData
                                             filter={ filter as SmartSearchFilterWithId<PersonDataFilterConfig>  }
+                                        /> }
+                                        { filter.type === FILTER_TYPE.PERSON_FIELD &&
+                                        <DisplayPersonField
+                                            filter={ filter as SmartSearchFilterWithId<PersonFieldFilterConfig>  }
                                         /> }
                                         { filter.type === FILTER_TYPE.PERSON_TAGS &&
                                         <DisplayPersonTags

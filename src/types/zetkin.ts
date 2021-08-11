@@ -201,4 +201,19 @@ export interface ZetkinTag {
     description: string;
 }
 
+export enum CUSTOM_FIELD_TYPE {
+    URL='url',
+    DATE='date',
+    TEXT='text',
+    JSON='json'
+}
+
+export interface ZetkinDataField {
+    id: number;
+    title: string;
+    description: string;
+    type: CUSTOM_FIELD_TYPE;
+    slug: string;
+}
+
 export type { ZetkinTask, ZetkinAssignedTask, ZetkinQuery, ZetkinSmartSearchFilter };
