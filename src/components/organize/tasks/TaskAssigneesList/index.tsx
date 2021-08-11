@@ -1,4 +1,4 @@
-import { Grid } from '@material-ui/core';
+import { Box, Card, Grid } from '@material-ui/core';
 
 import { ZetkinAssignedTask } from 'types/tasks';
 import ZetkinPerson from 'components/ZetkinPerson';
@@ -10,11 +10,15 @@ const TaskAssigneesList: React.FunctionComponent<{
 
     return (
         <ZetkinSection title="Assigned to">
-            <Grid container spacing={ 3 }>
+            <Grid container spacing={ 4 }>
                 { assignedTasks.map(task => {
                     return (
                         <Grid key={ task.id } item lg={ 3 } md={ 4 } sm={ 6 } xs={ 12 }>
-                            <ZetkinPerson person={ task.assignee } subtitle={ task.completed ? 'Completed' : 'Not Completed' } />
+                            <Card>
+                                <Box p={ 3 }>
+                                    <ZetkinPerson person={ task.assignee } subtitle={ task.completed ? 'Completed' : 'Not Completed' } />
+                                </Box>
+                            </Card>
                         </Grid>
                     );
                 }) }
