@@ -180,7 +180,6 @@ const SurveyOption = (
                             { selectedOptions.length < validOptions.length && (
                                 <StyledItemSelect
                                     getOptionDisabled={ o => styledSelectedOptions.includes(o) }
-                                    getOptionLabel={ o => o.title }
                                     onChange={ (_, v) => handleOptionChange(v) }
                                     options={ styledValidOptions }
                                     value={ styledValidOptions.filter(t => filter.config.options?.includes(t.id)) }

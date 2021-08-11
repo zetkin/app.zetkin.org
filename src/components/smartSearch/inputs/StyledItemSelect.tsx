@@ -33,6 +33,7 @@ const StyledItemSelect = (props: StyledItemSelectProps): JSX.Element => {
         <Autocomplete
             className={ classes.autocomplete }
             disableClearable
+            getOptionLabel={ item => item.title }
             multiple
             noOptionsText={ <Msg id="misc.smartSearch.misc.noOptions"/> }
             renderInput={ (params) => (
