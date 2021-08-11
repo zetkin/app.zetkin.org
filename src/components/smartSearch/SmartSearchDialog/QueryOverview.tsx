@@ -13,13 +13,27 @@ import DisplayPersonTags from '../filters/PersonTags/DisplayPersonTags';
 import DisplayRandom from '../filters/Random/DisplayRandom';
 import DisplayStartsWith from '../StartsWith/DisplayStartsWith';
 import DisplaySubQuery from '../filters/SubQuery/DisplaySubQuery';
+import DisplaySurveyOption from '../filters/SurveyOption/DisplaySurveyOption';
 import DisplaySurveyResponse from '../filters/SurveyResponse/DisplaySurveyResponse';
 import DisplaySurveySubmission from '../filters/SurveySubmission/DisplaySurveySubmission';
 import DisplayUser from '../filters/User/DisplayUser';
-import { AnyFilterConfig, CallHistoryFilterConfig, CampaignParticipationConfig, FILTER_TYPE,
-    MostActiveFilterConfig, PersonDataFilterConfig, PersonFieldFilterConfig, PersonTagsFilterConfig,
-    RandomFilterConfig, SmartSearchFilterWithId, SubQueryFilterConfig,
-    SurveyResponseFilterConfig, SurveySubmissionFilterConfig, UserFilterConfig } from 'types/smartSearch';
+import {
+    AnyFilterConfig,
+    CallHistoryFilterConfig,
+    CampaignParticipationConfig,
+    FILTER_TYPE,
+    MostActiveFilterConfig,
+    PersonDataFilterConfig,
+    PersonFieldFilterConfig,
+    PersonTagsFilterConfig,
+    RandomFilterConfig,
+    SmartSearchFilterWithId,
+    SubQueryFilterConfig,
+    SurveyOptionFilterConfig,
+    SurveyResponseFilterConfig,
+    SurveySubmissionFilterConfig,
+    UserFilterConfig,
+} from 'types/smartSearch';
 
 const FIRST_FILTER = 'first_filter';
 
@@ -124,6 +138,10 @@ const QueryOverview = (
                                         { filter.type === FILTER_TYPE.SUB_QUERY &&
                                         <DisplaySubQuery
                                             filter={ filter as SmartSearchFilterWithId<SubQueryFilterConfig>  }
+                                        /> }
+                                        { filter.type === FILTER_TYPE.SURVEY_OPTION &&
+                                        <DisplaySurveyOption
+                                            filter={ filter as SmartSearchFilterWithId<SurveyOptionFilterConfig>  }
                                         /> }
                                         { filter.type === FILTER_TYPE.SURVEY_RESPONSE &&
                                         <DisplaySurveyResponse
