@@ -1,3 +1,4 @@
+import { useIntl } from 'react-intl';
 import { Box, Card, Grid } from '@material-ui/core';
 
 import { ZetkinAssignedTask } from 'types/tasks';
@@ -7,9 +8,9 @@ import ZetkinSection from 'components/ZetkinSection';
 const TaskAssigneesList: React.FunctionComponent<{
     assignedTasks: ZetkinAssignedTask[];
 }> = ({ assignedTasks }) => {
-
+    const intl = useIntl();
     return (
-        <ZetkinSection title="Assigned to">
+        <ZetkinSection title={ intl.formatMessage({ id: 'misc.tasks.taskAssigneesList.title' }, { numPeople: assignedTasks.length }) }>
             <Grid container spacing={ 4 }>
                 { assignedTasks.map(task => {
                     return (
