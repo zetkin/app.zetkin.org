@@ -1,5 +1,7 @@
-import { useIntl } from 'react-intl';
+import dayjs from 'dayjs';
+import { Done } from '@material-ui/icons';
 import { Box, Card, Grid } from '@material-ui/core';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 import { ZetkinAssignedTask } from 'types/tasks';
 import ZetkinPerson from 'components/ZetkinPerson';
@@ -11,17 +13,39 @@ const TaskAssigneesList: React.FunctionComponent<{
 }> = ({ assignedTasks }) => {
     const intl = useIntl();
 
+    const sortedAssignedTasks = assignedTasks.sort((first, second) => {
+        const firstDate = dayjs(first.completed);
+        const secondDate = dayjs(second.completed);
+
+        if (!first.completed && second.completed) return 1;
+        if (first.completed && !second.completed) return -1;
+
+        if (firstDate.isBefore(secondDate)) return 1;
+        if (firstDate.isAfter(secondDate)) return -1;
+
+        return 0;
+    });
+
     return (
         <ZetkinSection title={ intl.formatMessage({ id: 'misc.tasks.taskAssigneesList.title' }, { numPeople: assignedTasks.length }) }>
             <Grid container spacing={ 4 }>
-                { assignedTasks.map(task => {
+                { sortedAssignedTasks.map(task => {
                     const completedText = task.completed ?
+                        (
+                            <Box alignItems="center" display="flex">
+                                <Done fontSize="small"/>
+                                <Box>
+                                    <FormattedMessage
+                                        id="misc.tasks.taskAssigneesList.completedStates.completed"
+                                        values={{
+                                            time: <ZetkinRelativeTime datetime={ task.completed as string } />,
+                                        }}
+                                    />
+                                </Box>
+                            </Box>
+                        )
                         // Relative completed time
-                        intl.formatMessage({
-                            id: 'misc.tasks.taskAssigneesList.completedStates.completed',
-                        }, {
-                            time:  <ZetkinRelativeTime datetime={ task.completed as string } />,
-                        }) :
+                        :
                         intl.formatMessage({ id: 'misc.tasks.taskAssigneesList.completedStates.notCompleted' });
 
                     return (
