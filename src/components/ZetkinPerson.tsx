@@ -3,7 +3,7 @@ import { Avatar, Box, Typography } from '@material-ui/core';
 
 const ZetkinPerson: React.FunctionComponent<{
   person: {first_name: string; id: number; last_name: string };
-  subtitle?: string;
+  subtitle?: string | React.ReactNode;
 }> = ({ person, subtitle  }) => {
     const router = useRouter();
     const { orgId } = router.query;

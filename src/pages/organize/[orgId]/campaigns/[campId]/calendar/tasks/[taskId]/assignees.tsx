@@ -130,7 +130,9 @@ const TaskAssigneesPage: PageWithLayout = () => {
                 </Alert>
 
                 { assignedTasks && (
-                    <TaskAssigneesList assignedTasks={ assignedTasks } />
+                    <Box mt={ 3 }>
+                        <TaskAssigneesList assignedTasks={ assignedTasks } />
+                    </Box>
                 ) }
             </Box>
             { dialogOpen &&

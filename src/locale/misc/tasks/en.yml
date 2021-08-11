@@ -41,3 +41,6 @@ publishButton:
         alreadyPublished: Already Published
 taskAssigneesList:
     title: Assigned to {numPeople} {numPeople, plural, one {person} other {people}}
+    completedStates:
+        notCompleted: Not yet completed
+        completed: Completed {time}
