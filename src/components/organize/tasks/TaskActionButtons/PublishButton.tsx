@@ -5,6 +5,7 @@ import { FormattedMessage as Msg, useIntl } from 'react-intl';
 import { useMutation, useQueryClient } from 'react-query';
 
 import patchTask from 'fetching/tasks/patchTask';
+import { useRouter } from 'next/router';
 import ZetkinDialog from 'components/ZetkinDialog';
 import { ZetkinTask } from 'types/zetkin';
 import getTaskStatus, { TASK_STATUS } from 'utils/getTaskStatus';
@@ -40,9 +41,10 @@ const PublishButton: React.FunctionComponent<PublishButtonProps> = ({ task }) =>
     const intl = useIntl();
     const queryClient = useQueryClient();
     const [dialogOpen, setDialogOpen] = useState(false);
+    const { orgId, taskId } = useRouter().query;
 
     const patchTaskMutation = useMutation(patchTask(task.organization.id, task.id), {
-        onSettled: () => queryClient.invalidateQueries('task'),
+        onSettled: () => queryClient.invalidateQueries(['task', orgId, taskId]),
     });
 
     const publishTask = () => {
