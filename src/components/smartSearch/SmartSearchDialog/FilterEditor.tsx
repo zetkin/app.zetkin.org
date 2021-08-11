@@ -5,6 +5,7 @@ import PersonData from '../filters/PersonData';
 import PersonTags from '../filters/PersonTags';
 import Random from '../filters/Random';
 import SubQuery from '../filters/SubQuery';
+import SurveyOption from '../filters/SurveyOption';
 import SurveyResponse from '../filters/SurveyResponse';
 import SurveySubmission from '../filters/SurveySubmission';
 import User from '../filters/User';
@@ -60,6 +61,12 @@ const FilterEditor = (
             /> }
             { filter.type === FILTER_TYPE.SUB_QUERY &&
             <SubQuery
+                filter={ filter }
+                onCancel={ onCancelSubmitFilter }
+                onSubmit={ onSubmitFilter }
+            /> }
+            { filter.type === FILTER_TYPE.SURVEY_OPTION &&
+            <SurveyOption
                 filter={ filter }
                 onCancel={ onCancelSubmitFilter }
                 onSubmit={ onSubmitFilter }

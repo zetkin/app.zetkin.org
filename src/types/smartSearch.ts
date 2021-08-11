@@ -8,6 +8,7 @@ export enum FILTER_TYPE {
     PERSON_TAGS = 'person_tags',
     RANDOM = 'random',
     SUB_QUERY='sub_query',
+    SURVEY_OPTION='survey_option',
     SURVEY_RESPONSE = 'survey_response',
     SURVEY_SUBMISSION = 'survey_submission',
     USER = 'user'
@@ -108,6 +109,13 @@ export interface RandomFilterConfig {
     seed: string;
 }
 
+export interface SurveyOptionFilterConfig {
+    survey: number;
+    question: number;
+    options: number[];
+    operator: CONDITION_OPERATOR;
+}
+
 export interface SurveyResponseBase {
     operator: MATCH_OPERATORS;
     value: string;
@@ -152,6 +160,7 @@ export type AnyFilterConfig = (
     PersonTagsFilterConfig |
     RandomFilterConfig |
     SubQueryFilterConfig |
+    SurveyOptionFilterConfig |
     SurveyResponseFilterConfig |
     SurveySubmissionFilterConfig |
     UserFilterConfig

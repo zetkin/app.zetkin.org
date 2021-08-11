@@ -5,7 +5,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { AppSession } from '../../types';
 import getFilters from '../../utils/getFilters';
-import stringToBool from '../../utils/stringToBool';
+import { stringToBool } from '../../utils/stringUtils';
 import { ZetkinZResource, ZetkinZResult } from '../../types/sdk';
 
 //TODO: Create module definition and revert to import.
