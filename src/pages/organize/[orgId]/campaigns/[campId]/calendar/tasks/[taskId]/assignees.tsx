@@ -31,7 +31,7 @@ export const getServerSideProps : GetServerSideProps = scaffold(async (ctx) => {
     await ctx.queryClient.prefetchQuery(['org', orgId], getOrg(orgId as string, ctx.apiFetch));
     const orgState = ctx.queryClient.getQueryState(['org', orgId]);
 
-    await ctx.queryClient.prefetchQuery(['task', orgId, taskId], getTask(orgId as string, taskId as string, ctx.apiFetch));
+    await ctx.queryClient.prefetchQuery(['task', taskId], getTask(orgId as string, taskId as string, ctx.apiFetch));
     const taskState = ctx.queryClient.getQueryState(['task', orgId, taskId]);
     const taskData: ZetkinTask | undefined = ctx.queryClient.getQueryData(['task', orgId, taskId]);
 
@@ -78,7 +78,7 @@ const getQueryStatus = (
 
 const TaskAssigneesPage: PageWithLayout = () => {
     const { taskId, orgId } = useRouter().query;
-    const taskQuery = useQuery(['task', orgId, taskId], getTask(orgId as string, taskId as string));
+    const taskQuery = useQuery(['task', taskId], getTask(orgId as string, taskId as string));
     const assignedTasksQuery = useQuery(['assignedTasks', orgId, taskId], getAssignedTasks(
         orgId as string, taskId as string,
     ));
