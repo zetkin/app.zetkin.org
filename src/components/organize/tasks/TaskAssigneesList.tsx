@@ -43,9 +43,7 @@ const TaskAssigneesList: React.FunctionComponent<{
                                     />
                                 </Box>
                             </Box>
-                        )
-                        // Relative completed time
-                        :
+                        ) :
                         intl.formatMessage({ id: 'misc.tasks.taskAssigneesList.completedStates.notCompleted' });
 
                     return (
