@@ -6,7 +6,7 @@ import { GetServerSideProps, GetServerSidePropsContext, GetServerSidePropsResult
 
 import { AppSession } from '../types';
 import { getMessages } from './locale';
-import stringToBool from './stringToBool';
+import { stringToBool } from './stringUtils';
 import { ZetkinZ } from '../types/sdk';
 import { ApiFetch, createApiFetch } from './apiFetch';
 import { ZetkinSession, ZetkinUser } from '../types/zetkin';

@@ -153,13 +153,18 @@ export enum ELEMENT_TYPE {
 
 interface ZetkinQuestion {
     description: string | null;
-    options?: Array<unknown>;
+    options?: ZetkinSurveyOption[];
     question: string;
     required: boolean;
     response_config: {
         multiline: boolean;
     };
     response_type: RESPONSE_TYPE;
+}
+
+export interface ZetkinSurveyOption {
+    id: number;
+    text: string;
 }
 
 export interface ZetkinCanvassAssignment {
@@ -194,6 +199,21 @@ export interface ZetkinTag {
     title: string;
     hidden: boolean;
     description: string;
+}
+
+export enum CUSTOM_FIELD_TYPE {
+    URL='url',
+    DATE='date',
+    TEXT='text',
+    JSON='json'
+}
+
+export interface ZetkinDataField {
+    id: number;
+    title: string;
+    description: string;
+    type: CUSTOM_FIELD_TYPE;
+    slug: string;
 }
 
 export type { ZetkinTask, ZetkinAssignedTask, ZetkinQuery, ZetkinSmartSearchFilter };
