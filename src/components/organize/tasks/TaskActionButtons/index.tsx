@@ -28,7 +28,7 @@ const TaskActionButtons: React.FunctionComponent<TaskActionButtonsProps> = ({ ta
     const intl = useIntl();
     const queryClient = useQueryClient();
     const router = useRouter();
-    const { orgId, taskId } = router.query;
+    const { taskId } = router.query;
     // Menu
     const [menuActivator, setMenuActivator] = React.useState<null | HTMLElement>(null);
     // Dialogs
@@ -37,7 +37,7 @@ const TaskActionButtons: React.FunctionComponent<TaskActionButtonsProps> = ({ ta
 
     // Mutations
     const patchTaskMutation = useMutation(patchTask(task.organization.id, task.id), {
-        onSettled: () => queryClient.invalidateQueries(['task', orgId, taskId]),
+        onSettled: () => queryClient.invalidateQueries(['task', taskId]),
     });
     const deleteTaskMutation = useMutation(deleteTask(task.organization.id, task.id));
 

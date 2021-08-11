@@ -41,10 +41,10 @@ const PublishButton: React.FunctionComponent<PublishButtonProps> = ({ task }) =>
     const intl = useIntl();
     const queryClient = useQueryClient();
     const [dialogOpen, setDialogOpen] = useState(false);
-    const { orgId, taskId } = useRouter().query;
+    const { taskId } = useRouter().query;
 
     const patchTaskMutation = useMutation(patchTask(task.organization.id, task.id), {
-        onSettled: () => queryClient.invalidateQueries(['task', orgId, taskId]),
+        onSettled: () => queryClient.invalidateQueries(['task', taskId]),
     });
 
     const publishTask = () => {

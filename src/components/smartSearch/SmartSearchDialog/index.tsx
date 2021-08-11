@@ -49,7 +49,7 @@ const SmartSearchDialog = (
     );
 
     const taskMutation = useMutation(patchQuery(orgId as string, query?.id as number),{
-        onSettled: () => queryClient.invalidateQueries(['task', orgId, taskId]),
+        onSettled: () => queryClient.invalidateQueries(['task', taskId]),
     } );
 
     // event handlers for query overview
