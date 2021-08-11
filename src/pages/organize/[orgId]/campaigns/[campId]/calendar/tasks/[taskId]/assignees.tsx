@@ -20,7 +20,7 @@ import { ZetkinAssignedTask, ZetkinTask } from 'types/zetkin';
 const scaffoldOptions = {
     authLevelRequired: 2,
     localeScope: [
-        'layout.organize', 'misc.breadcrumbs', 'misc.smartSearch', 'pages.assignees', 'misc.tasks',
+        'layout.organize', 'misc.breadcrumbs', 'misc.smartSearch', 'pages.assignees', 'misc.tasks', 'misc.formDialog',
     ],
 };
 
@@ -32,8 +32,8 @@ export const getServerSideProps : GetServerSideProps = scaffold(async (ctx) => {
     const orgState = ctx.queryClient.getQueryState(['org', orgId]);
 
     await ctx.queryClient.prefetchQuery(['task', taskId], getTask(orgId as string, taskId as string, ctx.apiFetch));
-    const taskState = ctx.queryClient.getQueryState(['task', orgId, taskId]);
-    const taskData: ZetkinTask | undefined = ctx.queryClient.getQueryData(['task', orgId, taskId]);
+    const taskState = ctx.queryClient.getQueryState(['task', taskId]);
+    const taskData: ZetkinTask | undefined = ctx.queryClient.getQueryData(['task', taskId]);
 
     if (orgState?.status === 'success' && taskState?.status === 'success') {
         if (campId && +campId === taskData?.campaign.id) {
