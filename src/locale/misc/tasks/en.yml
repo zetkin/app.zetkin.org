@@ -39,3 +39,8 @@ publishButton:
         missingAssignees: Missing assignees
         missingFieldsAndAssignees: Missing required fields and assignees
         alreadyPublished: Already Published
+taskAssigneesList:
+    title: Assigned to {numPeople, plural, one {# person} other {# people}}
+    completedStates:
+        notCompleted: Not yet completed
+        completed: Completed {time}

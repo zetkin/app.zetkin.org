@@ -85,15 +85,17 @@ enum ASSIGNED_STATUS {
     OVERDUE='overdue',
 }
 
+export interface TaskAssignee {
+    first_name: string;
+    id: number;
+    last_name: string;
+}
+
 export interface ZetkinAssignedTask {
     id: number;
     status: ASSIGNED_STATUS;
     task: Pick<ZetkinTask, 'id' | 'deadline' | 'expires' | 'title'>;
     completed: string | null;
-    assignee: {
-        first_name: string;
-        id: number;
-        last_name: string;
-    };
+    assignee:TaskAssignee;
     assigned: string;
 }

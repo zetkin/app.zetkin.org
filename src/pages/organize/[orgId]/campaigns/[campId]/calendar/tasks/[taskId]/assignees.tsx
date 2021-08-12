@@ -12,6 +12,7 @@ import { PageWithLayout } from 'types';
 import { scaffold } from 'utils/next';
 import SingleTaskLayout from 'components/layout/organize/SingleTaskLayout';
 import SmartSearchDialog from 'components/smartSearch/SmartSearchDialog';
+import TaskAssigneesList from 'components/organize/tasks/TaskAssigneesList';
 import { useState } from 'react';
 import getTaskStatus, { TASK_STATUS } from 'utils/getTaskStatus';
 import { ZetkinAssignedTask, ZetkinTask } from 'types/zetkin';
@@ -19,7 +20,7 @@ import { ZetkinAssignedTask, ZetkinTask } from 'types/zetkin';
 const scaffoldOptions = {
     authLevelRequired: 2,
     localeScope: [
-        'layout.organize', 'misc.breadcrumbs', 'misc.smartSearch', 'pages.assignees', 'misc.tasks',
+        'layout.organize', 'misc.breadcrumbs', 'misc.smartSearch', 'pages.assignees', 'misc.tasks', 'misc.formDialog',
     ],
 };
 
@@ -30,9 +31,9 @@ export const getServerSideProps : GetServerSideProps = scaffold(async (ctx) => {
     await ctx.queryClient.prefetchQuery(['org', orgId], getOrg(orgId as string, ctx.apiFetch));
     const orgState = ctx.queryClient.getQueryState(['org', orgId]);
 
-    await ctx.queryClient.prefetchQuery(['task', orgId, taskId], getTask(orgId as string, taskId as string, ctx.apiFetch));
-    const taskState = ctx.queryClient.getQueryState(['task', orgId, taskId]);
-    const taskData: ZetkinTask | undefined = ctx.queryClient.getQueryData(['task', orgId, taskId]);
+    await ctx.queryClient.prefetchQuery(['task', taskId], getTask(orgId as string, taskId as string, ctx.apiFetch));
+    const taskState = ctx.queryClient.getQueryState(['task', taskId]);
+    const taskData: ZetkinTask | undefined = ctx.queryClient.getQueryData(['task', taskId]);
 
     if (orgState?.status === 'success' && taskState?.status === 'success') {
         if (campId && +campId === taskData?.campaign.id) {
@@ -77,7 +78,7 @@ const getQueryStatus = (
 
 const TaskAssigneesPage: PageWithLayout = () => {
     const { taskId, orgId } = useRouter().query;
-    const taskQuery = useQuery(['task', orgId, taskId], getTask(orgId as string, taskId as string));
+    const taskQuery = useQuery(['task', taskId], getTask(orgId as string, taskId as string));
     const assignedTasksQuery = useQuery(['assignedTasks', orgId, taskId], getAssignedTasks(
         orgId as string, taskId as string,
     ));
@@ -127,6 +128,12 @@ const TaskAssigneesPage: PageWithLayout = () => {
                     </Button>
                     }
                 </Alert>
+
+                { assignedTasks && (
+                    <Box mt={ 3 }>
+                        <TaskAssigneesList assignedTasks={ assignedTasks } />
+                    </Box>
+                ) }
             </Box>
             { dialogOpen &&
             <SmartSearchDialog
