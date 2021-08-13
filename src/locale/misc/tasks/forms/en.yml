@@ -13,6 +13,11 @@ createTask:
         published: Publish Time
         deadline: Completion Deadline
         expires: Expiration Date
+        time_estimate: Estimated time to complete
+        time_estimate_options:
+            noEstimate: No estimate
+            lessThanOneMinute: Less than one minute
+            hoursAndMinutes: "{hours, plural, =0{} one{# hour} other{# hours}} {minutes, plural, =0{} one {# minute} other {# minutes}}"
         timeValidationErrors:
             publishedNotFirst: This must be scheduled first
             deadlineNotSecond: This must be scheduled after the Published Date, and before the Expiry Date

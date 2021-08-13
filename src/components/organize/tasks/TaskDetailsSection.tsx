@@ -30,6 +30,14 @@ const TaskDetailsCard: React.FunctionComponent<TaskDetailsCardProps> = ({ task }
                 value={ task.instructions }
             />
 
+            <TaskProperty
+                title={ intl.formatMessage({ id: 'misc.tasks.taskDetails.timeEstimateLabel' }) }
+                value={ task.time_estimate ?
+                    intl.formatMessage({ id: 'misc.tasks.forms.createTask.fields.time_estimate_options.hoursAndMinutes' }, { hours: Math.floor(task.time_estimate / 60), minutes: task.time_estimate % 60 }):
+                    intl.formatMessage({ id: 'misc.tasks.forms.createTask.fields.time_estimate_options.noEstimate' })
+                }
+            />
+
             <TaskTypeDetailsSection task={ task }/>
 
             <TaskProperty
