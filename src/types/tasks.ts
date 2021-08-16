@@ -20,7 +20,6 @@ export interface VisitLinkConfig {
 
 export enum DEMOGRAPHICS_FIELD {
     EMAIL= 'email',
-    GENDER= 'gender',
     STREET_ADDRESS= 'street_address',
     CITY= 'city',
     COUNTRY= 'country',
