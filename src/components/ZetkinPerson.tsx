@@ -2,17 +2,18 @@ import { useRouter } from 'next/router';
 import { Avatar, Box, Typography } from '@material-ui/core';
 
 const ZetkinPerson: React.FunctionComponent<{
-  person: {first_name: string; id: number; last_name: string };
+    id: number;
+  name: string;
   subtitle?: string | React.ReactNode;
-}> = ({ person, subtitle  }) => {
+}> = ({ id, name, subtitle  }) => {
     const router = useRouter();
     const { orgId } = router.query;
 
     return (
         <Box display="flex">
-            <Avatar src={ orgId ? `/api/orgs/${orgId}/people/${person.id}/avatar` : '' } />
+            <Avatar src={ orgId ? `/api/orgs/${orgId}/people/${id}/avatar` : '' } />
             <Box alignItems="start" display="flex" flexDirection="column" justifyContent="center" ml={ 1 }>
-                <Typography variant="body1">{ person.first_name } { person.last_name }</Typography>
+                <Typography variant="body1">{ name }</Typography>
                 { subtitle && (
                     <Typography variant="body2">{ subtitle }</Typography>
                 ) }
