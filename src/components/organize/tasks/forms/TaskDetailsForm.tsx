@@ -10,12 +10,13 @@ import { ZetkinTask } from 'types/zetkin';
 import { AnyTaskTypeConfig, TASK_TYPE, ZetkinTaskRequestBody } from 'types/tasks';
 import getTaskStatus, { TASK_STATUS } from 'utils/getTaskStatus';
 
-import CollectDemographicsFields from './typeConfigFields/CollectDemographicsFields';
-import ShareLinkFields from './typeConfigFields/ShareLinkFields';
-import VisitLinkFields from './typeConfigFields/VisitLinkFields';
+import CollectDemographicsFields from './fields/CollectDemographicsFields';
+import ShareLinkFields from './fields/ShareLinkFields';
+import TimeEstimateField from './fields/TimeEstimateField';
+import VisitLinkFields from './fields/VisitLinkFields';
 
-import { TASK_DETAILS_FIELDS } from './constants';
 import { configForTaskType, isDeadlineSecond, isExpiresThird, isPublishedFirst } from './utils';
+import { DEFAULT_TIME_ESTIMATE, TASK_DETAILS_FIELDS } from './constants';
 
 
 interface TaskDetailsFormProps {
@@ -67,9 +68,14 @@ const TaskDetailsForm = ({ onSubmit, onCancel, task }: TaskDetailsFormProps): JS
             ...(newTaskValues?.config && 'fields' in newTaskValues?.config && newTaskValues?.config.fields && { fields: [newTaskValues?.config?.fields] }),
         };
         const config = configForTaskType(newTaskValues.type, configWithFieldsArray as AnyTaskTypeConfig);
+
+        // If time estimate is 'No estimate', set to null
+        const time_estimate = newTaskValues.time_estimate as number | string === DEFAULT_TIME_ESTIMATE ? null : newTaskValues.time_estimate;
+
         onSubmit({
             ...newTaskValues,
             config,
+            time_estimate,
         });
     };
 
@@ -86,6 +92,7 @@ const TaskDetailsForm = ({ onSubmit, onCancel, task }: TaskDetailsFormProps): JS
                 expires: task?.expires,
                 instructions: task?.instructions,
                 published: task?.published,
+                time_estimate: task?.time_estimate || DEFAULT_TIME_ESTIMATE,
                 title: task?.title,
                 type: task?.type,
             }}
@@ -129,6 +136,8 @@ const TaskDetailsForm = ({ onSubmit, onCancel, task }: TaskDetailsFormProps): JS
                         rows={ 2 }
                         variant="filled"
                     />
+
+                    <TimeEstimateField />
 
                     <TextField
                         fullWidth

@@ -41,6 +41,7 @@ export interface ZetkinTask<TaskTypeConfig = AnyTaskTypeConfig> {
     published?: string; // iso string
     expires?: string; // iso string
     deadline?: string; // iso string
+    time_estimate?: number | null; // Time in minutes to complete
     type: TASK_TYPE;
     config: TaskTypeConfig;
     target: ZetkinQuery;

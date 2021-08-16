@@ -21,6 +21,7 @@ taskDetails:
     statusLabel: Status
     titleLabel: Title
     instructionsLabel: Instructions
+    timeEstimateLabel: Estimated time to complete
     typeLabel: Type
     publishedTime: Publish Time
     deadlineTime: Deadline Time
