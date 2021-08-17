@@ -83,7 +83,7 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({ orgId,
     return (
         <Box p={ 4 }>
             <Grid container spacing={ 2 }>
-                <Grid item xs={ 12 }>
+                <Grid item lg={ 6 } md={ 12 } xs={ 12 }>
                     <Typography variant="body1">
                         { campaign?.info_text }
                     </Typography>
@@ -93,7 +93,7 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({ orgId,
                         <ZetkinPerson
                             id={ campaign.manager.id }
                             name={ campaign.manager.name }
-                            subtitle="Campaign Manager"
+                            subtitle={ intl.formatMessage({ id: 'pages.organizeCampaigns.campaignManager' }) }
                         />
                     </Grid>
                 ) }
