@@ -9,7 +9,6 @@ import WeekCalendarEvent from './WeekCalendarEvent';
 import WeekCalendarTask from './WeekCalendarTask';
 import { ZetkinCampaign, ZetkinEvent, ZetkinTask } from '../../../types/zetkin';
 
-
 interface WeekCalendarProps {
     baseHref: string;
     campaigns: ZetkinCampaign[];
@@ -59,15 +58,15 @@ const WeekCalendar = ({ orgId, baseHref, campaigns, events, focusDate, tasks }: 
     const { firstDayInView, lastDayInView } = getViewRange(focusDate, CALENDAR_RANGES.WEEK);
 
     const eventsOfTheWeek = events.filter(event => {
-        return new Date(event.start_time) >= calendarStartDate &&
-            new Date(event.start_time) < calendarEndDate ||
-            new Date(event.end_time) > calendarStartDate &&
-            new Date(event.end_time) <= calendarEndDate;
+        return new Date(event.start_time) >= firstDayInView &&
+            new Date(event.start_time) < lastDayInView ||
+            new Date(event.end_time) > firstDayInView &&
+            new Date(event.end_time) <= lastDayInView;
     });
 
     const tasksOfTheWeek = tasks.filter(task => {
-        return new Date(task.deadline as string) >= calendarStartDate &&
-        new Date(task.deadline as string) < calendarEndDate;
+        return new Date(task.deadline as string) >= firstDayInView &&
+        new Date(task.deadline as string) < lastDayInView;
     });
 
     const getEventsOnThisDate = (date: number) => {
@@ -96,7 +95,7 @@ const WeekCalendar = ({ orgId, baseHref, campaigns, events, focusDate, tasks }: 
             <Box display="flex" flexDirection="column" flexGrow={ 0 } justifyContent="space-between">
                 <Box display="flex">
                     { Array.from(Array(7).keys()).map((_, index) => {
-                        const currentDate = new Date (new Date(calendarStartDate).setDate(calendarStartDate.getDate() + index));
+                        const currentDate = new Date (new Date(firstDayInView).setDate(firstDayInView.getDate() + index));
                         const nextDate = new Date (new Date(currentDate).setDate(currentDate.getDate() + 1));
                         const isToday = isInRange(today, currentDate, nextDate);
                         const isPast = currentDate < today && !isToday;
@@ -134,15 +133,15 @@ const WeekCalendar = ({ orgId, baseHref, campaigns, events, focusDate, tasks }: 
                                 return new Date(a.start_time).getTime() - new Date(b.start_time).getTime();
                             });
                         return campaignEvents.length ? (
-                            <CalendarBar key={ c.id } campaign={ c } events={ campaignEvents } firstCalendarDay={ calendarStartDate } orgId={ orgId }/>
+                            <CalendarBar key={ c.id } campaign={ c } events={ campaignEvents } firstCalendarDay={ firstDayInView } orgId={ orgId }/>
                         ): null;
                     }) }
                 </Box>
             </Box>
             <Box display="flex" justifyItems="space-between" pr={ 1.5 }>
                 { Array.from(Array(7).keys()).map((_, index) => {
-                    const startOfDay = new Date(new Date(new Date(calendarStartDate)
-                        .setUTCDate(calendarStartDate.getDate() + index)).setUTCHours(0, 0, 0, 0));
+                    const startOfDay = new Date(new Date(new Date(firstDayInView)
+                        .setUTCDate(firstDayInView.getDate() + index)).setUTCHours(0, 0, 0, 0));
                     const endOfDay = new Date(new Date(startOfDay).setDate(startOfDay.getDate() + 1));
                     return (
                         <Box key={ index } bgcolor={ grey[200] } flexBasis={ `${100 / 7}%` } flexGrow={ 0 } flexShrink={ 1 } mb={ 0.5 } overflow="hidden">
@@ -158,8 +157,8 @@ const WeekCalendar = ({ orgId, baseHref, campaigns, events, focusDate, tasks }: 
             <Box data-testid="calendar-wrapper" { ...{ ref: calendarWrapper } } alignItems="center" flexGrow={ 1 } overflow="auto">
                 <Box { ...{ ref: calendar } } display="flex" height="100rem" justifyContent="start">
                     { Array.from(Array(7).keys()).map((_, index) => {
-                        const startOfDay = new Date(new Date(new Date(calendarStartDate)
-                            .setUTCDate(calendarStartDate.getDate() + index)).setUTCHours(0, 0, 0, 0));
+                        const startOfDay = new Date(new Date(new Date(firstDayInView)
+                            .setUTCDate(firstDayInView.getDate() + index)).setUTCHours(0, 0, 0, 0));
                         return (
                             <Box key={ index } display="flex" flexDirection="column" height={ 1 } justifyContent="space-between" mx={ 0.5 } width={ 1 }>
                                 <List className={ classes.list } data-testid={ `day-${index}-events` }>

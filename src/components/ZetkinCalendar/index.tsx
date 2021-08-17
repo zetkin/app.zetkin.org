@@ -80,7 +80,7 @@ const ZetkinCalendar = ({ baseHref, events, campaigns , tasks }: ZetkinCalendarP
     };
 
     const handleTodayBtnClick = () => {
-        setFocusDate(new Date());
+        setFocusDate(today);
     };
 
     return (
