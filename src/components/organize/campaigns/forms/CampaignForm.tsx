@@ -52,7 +52,7 @@ const CampaignForm = ({ onSubmit, onCancel, campaign }: CampaignFormProps): JSX.
 
     const initialValues = {
         info_text: campaign?.info_text,
-        status: campaign?.published,
+        status: campaign?.published ? 'published' : 'draft',
         title: campaign?.title,
         visibility: campaign?.visibility,
     };

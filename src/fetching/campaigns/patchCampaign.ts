@@ -1,5 +1,5 @@
-import { defaultFetch } from '.';
-import { ZetkinCampaign } from '../types/zetkin';
+import { defaultFetch } from '..';
+import { ZetkinCampaign } from 'types/zetkin';
 
 export default function patchCampaign(orgId: string | number, campId: string | number, fetch = defaultFetch) {
     return async (campaign: Record<string, unknown>):Promise<ZetkinCampaign> => {
