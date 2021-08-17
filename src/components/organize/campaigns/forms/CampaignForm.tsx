@@ -7,9 +7,9 @@ import { Grid, GridSize } from '@material-ui/core';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
 import { useEffect, useState } from 'react';
 
-import getPeopleSearchResults from '../fetching/getPeopleSearchResults';
-import useDebounce from '../hooks/useDebounce';
-import { ZetkinCampaign, ZetkinPerson } from '../types/zetkin';
+import getPeopleSearchResults from 'fetching/getPeopleSearchResults';
+import useDebounce from 'hooks/useDebounce';
+import { ZetkinCampaign, ZetkinPerson } from 'types/zetkin';
 
 interface CampaignFormProps {
     campaign?: ZetkinCampaign;

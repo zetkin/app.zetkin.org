@@ -3,6 +3,7 @@ import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 import { FormattedDate, FormattedMessage as Msg } from 'react-intl';
 
+import CampaignActionButtons from 'components/organize/campaigns/CampaignActionButtons';
 import getCampaign from '../../../fetching/getCampaign';
 import getCampaignEvents from '../../../fetching/getCampaignEvents';
 import { getNaiveDate } from '../../../utils/dateUtils';
@@ -28,8 +29,13 @@ const SingleCampaignLayout: FunctionComponent<SingleCampaignLayoutProps> = ({ ch
         endDate = getNaiveDate(lastEvent.end_time);
     }
 
+    if (!campaign) return null;
+
     return (
         <TabbedLayout
+            actionButtons={
+                <CampaignActionButtons campaign={ campaign } />
+            }
             baseHref={ `/organize/${orgId}/campaigns/${campId}` }
             defaultTab="/"
             fixedHeight={ fixedHeight }
