@@ -3,7 +3,7 @@ import { grey } from '@material-ui/core/colors';
 import NextLink from 'next/link';
 import { useQuery } from 'react-query';
 import { useState } from 'react';
-import { Box, Checkbox, Container, FormControl, FormControlLabel, FormGroup, FormLabel, Link, List, ListItem, Typography } from '@material-ui/core';
+import { Box, Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, Link, List, ListItem, Typography } from '@material-ui/core';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
 
 import AllCampaignsLayout from '../../../../components/layout/organize/AllCampaignsLayout';
@@ -121,7 +121,7 @@ const AllCampaignsSummaryPage: PageWithLayout<AllCampaignsSummaryPageProps> = ({
 
     return (
         <>
-            <Container maxWidth={ false }>
+            <Box p={ 4 }>
                 <ZetkinSection title={ intl.formatMessage({ id: 'pages.organizeAllCampaigns.heading' }) }>
                     <Box display="grid" gridGap={ 20 } gridTemplateColumns="repeat( auto-fit, minmax(450px, 1fr) )">
                         { campaigns.map(campaign => (
@@ -182,7 +182,7 @@ const AllCampaignsSummaryPage: PageWithLayout<AllCampaignsSummaryPageProps> = ({
                         </FormControl>
                     </Box>
                 </Box>
-            </Container>
+            </Box>
             <ZetkinSpeedDial actions={ [ACTIONS.CREATE_EVENT, ACTIONS.CREATE_CAMPAIGN] } />
         </>
     );
