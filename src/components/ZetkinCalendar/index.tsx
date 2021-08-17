@@ -104,11 +104,7 @@ const ZetkinCalendar = ({ baseHref, events, campaigns , tasks }: ZetkinCalendarP
                                 value={ new Date(focusDate.getUTCFullYear(), focusDate.getUTCMonth() + 1, 0) }
                                 year="numeric"
                             />) }
-                            { range === CALENDAR_RANGES.WEEK && (new Date(new Date(
-                                new Date(focusDate).setDate(
-                                    new Date(focusDate).getDate() - new Date(focusDate).getDay() + 1,
-                                ),
-                            ).setHours(0, 0, 0, 0))).getWeekNumber() }
+                            { range === CALENDAR_RANGES.WEEK && focusDate.getWeekNumber() }
                         </Typography>
                     </Box>
                     <Button color="primary" data-testid="fwd-button" onClick={ handleForwardButtonClick }>

@@ -2,6 +2,7 @@ import { FormattedDate } from 'react-intl';
 import { grey } from '@material-ui/core/colors';
 import NextLink from 'next/link';
 import { Box, Link, List, makeStyles, Tooltip, Typography } from '@material-ui/core';
+import { CALENDAR_RANGES, getViewRange } from '../utils';
 import { useEffect, useRef } from 'react';
 
 import WeekCalendarEvent from './WeekCalendarEvent';
@@ -55,14 +56,7 @@ const WeekCalendar = ({ orgId, baseHref, campaigns, events, focusDate, tasks }: 
         calendarWrapper.current?.scrollTo(0, y);
     }, []);
 
-    const calendarStartDate = new Date(new Date(
-        new Date(focusDate).setDate(
-            new Date(focusDate).getDate() - new Date(focusDate).getDay() + 1,
-        ),
-    ).setHours(0, 0, 0, 0));
-
-    const calendarEndDate = new Date(new Date(calendarStartDate)
-        .setDate(calendarStartDate.getDate() + 7));
+    const { firstDayInView, lastDayInView } = getViewRange(focusDate, CALENDAR_RANGES.WEEK);
 
     const eventsOfTheWeek = events.filter(event => {
         return new Date(event.start_time) >= calendarStartDate &&
