@@ -60,7 +60,6 @@ const SingleCampaignLayout: FunctionComponent<SingleCampaignLayoutProps> = ({ ch
             tabs={ [
                 { href: `/`, messageId: 'layout.organize.campaigns.summary' },
                 { href: `/calendar`, messageId: 'layout.organize.campaigns.calendar' },
-                { href: `/insights`, messageId: 'layout.organize.campaigns.insights' },
             ] }
             title={ campaign?.title }>
             { children }
