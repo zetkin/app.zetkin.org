@@ -2,7 +2,7 @@ import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { AppBar, Box, Drawer, Hidden, IconButton, List, ListItem, Toolbar } from '@material-ui/core';
-import { Event,  Home, Inbox, Map, Menu, People, Person } from '@material-ui/icons/';
+import { Event,  Home, Map, Menu, People } from '@material-ui/icons/';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 
 import ZetkinLogo from '../icons/ZetkinLogo';
@@ -103,20 +103,6 @@ const OrganizeSidebar = () : JSX.Element =>{
                     </ListItem>
                 </Box>
             </List>
-            <Box display="flex" flexDirection="column">
-                <List>
-                    <ListItem disableGutters>
-                        <IconButton aria-label="Inbox" className={ classes.roundButton } color="secondary" data-test="inbox-button">
-                            <Inbox />
-                        </IconButton>
-                    </ListItem>
-                    <ListItem disableGutters>
-                        <IconButton aria-label="Organize" className={ classes.roundButton } color="secondary" data-test="user-button">
-                            <Person />
-                        </IconButton>
-                    </ListItem>
-                </List>
-            </Box>
         </Box>
     );
 
