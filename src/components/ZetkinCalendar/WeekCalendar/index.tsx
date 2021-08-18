@@ -2,12 +2,12 @@ import { FormattedDate } from 'react-intl';
 import { grey } from '@material-ui/core/colors';
 import NextLink from 'next/link';
 import { Box, Link, List, makeStyles, Tooltip, Typography } from '@material-ui/core';
+import { CALENDAR_RANGES, getViewRange } from '../utils';
 import { useEffect, useRef } from 'react';
 
 import WeekCalendarEvent from './WeekCalendarEvent';
 import WeekCalendarTask from './WeekCalendarTask';
 import { ZetkinCampaign, ZetkinEvent, ZetkinTask } from '../../../types/zetkin';
-
 
 interface WeekCalendarProps {
     baseHref: string;
@@ -17,15 +17,30 @@ interface WeekCalendarProps {
     orgId: string;
     tasks: ZetkinTask[];
 }
+const ONE_HOUR = 100 / 24;
 
 const useStyles = makeStyles(() => ({
     list: {
-        background:grey[200],
+        // show lighter background color from 8am to 10pm
+        background:`linear-gradient(${grey[300]} ${ONE_HOUR * 8}%, ${grey[200]} ${ONE_HOUR * 8}%, ${grey[200]} ${ONE_HOUR * 22}%, ${grey[300]} ${ONE_HOUR * 22}%)`,
         height: '100%',
         margin: 0,
         padding:0 ,
         position: 'relative',
         width: '100%',
+    },
+    pastDays: {
+        color: '#bbb',
+    },
+    today: {
+        background: 'blue',
+        borderRadius: '50%',
+        color: 'white',
+        display: 'flex',
+        height: 'max-content',
+        justifyContent: 'center',
+        minWidth: '24px',
+        width: 'max-content',
     },
 }));
 
@@ -36,29 +51,22 @@ const WeekCalendar = ({ orgId, baseHref, campaigns, events, focusDate, tasks }: 
 
     useEffect(() => {
         const height = calendar.current?.clientHeight || 0;
-        const y = height / 24 * 7; // approx 7am
+        const y = height / 24 * 8; // approx 8am
         calendarWrapper.current?.scrollTo(0, y);
     }, []);
 
-    const calendarStartDate = new Date(new Date(
-        new Date(focusDate).setDate(
-            new Date(focusDate).getDate() - new Date(focusDate).getDay() + 1,
-        ),
-    ).setHours(0, 0, 0, 0));
-
-    const calendarEndDate = new Date(new Date(calendarStartDate)
-        .setDate(calendarStartDate.getDate() + 7));
+    const { firstDayInView, lastDayInView } = getViewRange(focusDate, CALENDAR_RANGES.WEEK);
 
     const eventsOfTheWeek = events.filter(event => {
-        return new Date(event.start_time) >= calendarStartDate &&
-            new Date(event.start_time) < calendarEndDate ||
-            new Date(event.end_time) > calendarStartDate &&
-            new Date(event.end_time) <= calendarEndDate;
+        return new Date(event.start_time) >= firstDayInView &&
+            new Date(event.start_time) < lastDayInView ||
+            new Date(event.end_time) > firstDayInView &&
+            new Date(event.end_time) <= lastDayInView;
     });
 
     const tasksOfTheWeek = tasks.filter(task => {
-        return new Date(task.deadline as string) >= calendarStartDate &&
-        new Date(task.deadline as string) < calendarEndDate;
+        return new Date(task.deadline as string) >= firstDayInView &&
+        new Date(task.deadline as string) < lastDayInView;
     });
 
     const getEventsOnThisDate = (date: number) => {
@@ -80,33 +88,43 @@ const WeekCalendar = ({ orgId, baseHref, campaigns, events, focusDate, tasks }: 
             date <= end;
     };
 
+    const today = new Date();
+
     return (
         <Box display="flex" flexDirection="column" height={ 1 }>
             <Box display="flex" flexDirection="column" flexGrow={ 0 } justifyContent="space-between">
                 <Box display="flex">
-                    { Array.from(Array(7).keys()).map((_, index) => (
-                        <Box
-                            key={ index }
-                            alignItems="center"
-                            data-testid="weekdays"
-                            display="flex"
-                            flexDirection="column"
-                            justifyContent="flex-start"
-                            width="100%">
-                            <Typography component="h2" data-testid={ `weekday-${index}` } variant="subtitle2">
-                                <FormattedDate
-                                    value={ new Date(new Date(calendarStartDate).setDate(calendarStartDate.getDate() + index)) }
-                                    weekday="short"
-                                />
-                            </Typography>
-                            <Typography data-testid={ `date-${index}` }>
-                                <FormattedDate
-                                    day="2-digit"
-                                    value={ new Date(new Date(calendarStartDate).setDate(calendarStartDate.getDate() + index)) }
-                                />
-                            </Typography>
-                        </Box>
-                    )) }
+                    { Array.from(Array(7).keys()).map((_, index) => {
+                        const currentDate = new Date (new Date(firstDayInView).setDate(firstDayInView.getDate() + index));
+                        const nextDate = new Date (new Date(currentDate).setDate(currentDate.getDate() + 1));
+                        const isToday = isInRange(today, currentDate, nextDate);
+                        const isPast = currentDate < today && !isToday;
+                        return (
+                            <Box
+                                key={ index }
+                                alignItems="center"
+                                className={ isPast ? classes.pastDays : '' }
+                                data-testid="weekdays"
+                                display="flex"
+                                flexDirection="column"
+                                justifyContent="flex-start"
+                                width="100%">
+                                <Typography component="h2" data-testid={ `weekday-${index}` } variant="subtitle2">
+                                    <FormattedDate
+                                        value={ currentDate }
+                                        weekday="short"
+                                    />
+                                </Typography>
+                                <Typography className={ isToday ? classes.today : '' } data-testid={ `date-${index}` }>
+                                    <FormattedDate
+                                        day="2-digit"
+                                        value={ currentDate }
+                                    />
+                                </Typography>
+                            </Box>
+                        );
+                    },
+                    ) }
                 </Box>
                 <Box display="flex" flexDirection="column" mb={ 0.5 }>
                     { campaigns.map(c => {
@@ -115,15 +133,15 @@ const WeekCalendar = ({ orgId, baseHref, campaigns, events, focusDate, tasks }: 
                                 return new Date(a.start_time).getTime() - new Date(b.start_time).getTime();
                             });
                         return campaignEvents.length ? (
-                            <CalendarBar key={ c.id } campaign={ c } events={ campaignEvents } firstCalendarDay={ calendarStartDate } orgId={ orgId }/>
+                            <CalendarBar key={ c.id } campaign={ c } events={ campaignEvents } firstCalendarDay={ firstDayInView } orgId={ orgId }/>
                         ): null;
                     }) }
                 </Box>
             </Box>
             <Box display="flex" justifyItems="space-between" pr={ 1.5 }>
                 { Array.from(Array(7).keys()).map((_, index) => {
-                    const startOfDay = new Date(new Date(new Date(calendarStartDate)
-                        .setUTCDate(calendarStartDate.getDate() + index)).setUTCHours(0, 0, 0, 0));
+                    const startOfDay = new Date(new Date(new Date(firstDayInView)
+                        .setUTCDate(firstDayInView.getDate() + index)).setUTCHours(0, 0, 0, 0));
                     const endOfDay = new Date(new Date(startOfDay).setDate(startOfDay.getDate() + 1));
                     return (
                         <Box key={ index } bgcolor={ grey[200] } flexBasis={ `${100 / 7}%` } flexGrow={ 0 } flexShrink={ 1 } mb={ 0.5 } overflow="hidden">
@@ -139,8 +157,8 @@ const WeekCalendar = ({ orgId, baseHref, campaigns, events, focusDate, tasks }: 
             <Box data-testid="calendar-wrapper" { ...{ ref: calendarWrapper } } alignItems="center" flexGrow={ 1 } overflow="auto">
                 <Box { ...{ ref: calendar } } display="flex" height="100rem" justifyContent="start">
                     { Array.from(Array(7).keys()).map((_, index) => {
-                        const startOfDay = new Date(new Date(new Date(calendarStartDate)
-                            .setUTCDate(calendarStartDate.getDate() + index)).setUTCHours(0, 0, 0, 0));
+                        const startOfDay = new Date(new Date(new Date(firstDayInView)
+                            .setUTCDate(firstDayInView.getDate() + index)).setUTCHours(0, 0, 0, 0));
                         return (
                             <Box key={ index } display="flex" flexDirection="column" height={ 1 } justifyContent="space-between" mx={ 0.5 } width={ 1 }>
                                 <List className={ classes.list } data-testid={ `day-${index}-events` }>

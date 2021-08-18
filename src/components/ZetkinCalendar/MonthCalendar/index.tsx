@@ -6,6 +6,7 @@ import  { useEffect, useRef, useState } from 'react';
 
 import MonthCalendarEvent from './MonthCalendarEvent';
 import MonthCalendarTask from './MonthCalendarTask';
+import { CALENDAR_RANGES, getViewRange } from '../utils';
 import { ZetkinCampaign, ZetkinEvent , ZetkinTask } from '../../../types/zetkin';
 
 interface MonthCalendarProps {
@@ -35,6 +36,16 @@ const useStyles = makeStyles(() => ({
         margin: 0,
         padding: 0,
     },
+    today: {
+        background: 'blue',
+        borderRadius: '50%',
+        color: 'white',
+        display: 'flex',
+        height: 'max-content',
+        justifyContent: 'center',
+        minWidth: '24px',
+        width: 'max-content',
+    },
 }));
 
 const MonthCalendar = ({ orgId, campaigns, baseHref, events, focusDate, tasks }: MonthCalendarProps): JSX.Element => {
@@ -55,7 +66,7 @@ const MonthCalendar = ({ orgId, campaigns, baseHref, events, focusDate, tasks }:
 
     const firstMonthDay = new Date(year, month, 1);
     const lastMonthDay = new Date(year, month, totalDaysInMonth + 1);
-    const firstCalendarDay = new Date(new Date(firstMonthDay).setDate(firstMonthDay.getDate() - (firstMonthDay.getDay() || 7) + 1 ));
+    const { firstDayInView } = getViewRange(focusDate, CALENDAR_RANGES.MONTH);
 
     let calendarRows = 5;
 
@@ -68,6 +79,7 @@ const MonthCalendar = ({ orgId, campaigns, baseHref, events, focusDate, tasks }:
     }
 
     const gridItems = calendarRows * 7;
+    const today = new Date();
 
     const getEventsInRange = (start: Date, end:Date) => events.filter(event => {
         return new Date(event.start_time) >= start &&
@@ -99,7 +111,7 @@ const MonthCalendar = ({ orgId, campaigns, baseHref, events, focusDate, tasks }:
                             key={ c.id }
                             campaign={ c }
                             events={ campaignEvents }
-                            firstCalendarDay={ firstCalendarDay }
+                            firstCalendarDay={ firstDayInView }
                             firstMonthDay={ firstMonthDay }
                             gridItems={ gridItems }
                             month={ month }
@@ -116,7 +128,7 @@ const MonthCalendar = ({ orgId, campaigns, baseHref, events, focusDate, tasks }:
                 gridTemplateRows={ `repeat(${calendarRows}, minmax(125px, 1fr))` }
                 width={ 1 }>
                 { Array.from(Array(gridItems).keys()).map((_, index) => {
-                    const currentDate = new Date(new Date(firstCalendarDay).setDate(firstCalendarDay.getDate() + index));
+                    const currentDate = new Date(new Date(firstDayInView).setDate(firstDayInView.getDate() + index));
                     const tomorrow = new Date(new Date(currentDate).setDate(currentDate.getDate() + 1));
                     const daysEvents = getEventsInRange(currentDate, tomorrow );
                     const daysTasks = getTasksInRange(currentDate, tomorrow);
@@ -125,6 +137,7 @@ const MonthCalendar = ({ orgId, campaigns, baseHref, events, focusDate, tasks }:
                         ...daysEvents.map(e => ({ data: e, id: 'event' })),
                     ];
                     const totalTasksAndEvents = tasksAndEvents.length;
+                    const isToday = isInRange(today, currentDate, tomorrow);
                     return (
                         <Box
                             key={ index }
@@ -135,7 +148,9 @@ const MonthCalendar = ({ orgId, campaigns, baseHref, events, focusDate, tasks }:
                             m={ 0.1 }
                             position="relative">
                             <Box p={ 0.5 } pb={ 0 }>
-                                <Typography>
+                                <Typography className={
+                                    isToday ? classes.today : ''
+                                }>
                                     <FormattedDate
                                         day="2-digit"
                                         value={ currentDate }
