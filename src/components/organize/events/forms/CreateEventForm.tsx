@@ -6,9 +6,9 @@ import { useRouter } from 'next/router';
 import { Box, Button, Grid, GridSize, MenuItem } from '@material-ui/core';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
 
-import getActivities from '../fetching/getActivities';
-import getCampaigns from '../fetching/getCampaigns';
-import getLocations from '../fetching/getLocations';
+import getActivities from '../../../../fetching/getActivities';
+import getCampaigns from '../../../../fetching/getCampaigns';
+import getLocations from '../../../../fetching/getLocations';
 
 interface CreateEventFormProps {
     onSubmit: (data: Record<string, unknown>) => void;

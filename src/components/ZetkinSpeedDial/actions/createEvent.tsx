@@ -1,6 +1,6 @@
 /* eslint-disable react/display-name */
 import { ACTIONS } from '../constants';
-import CreateEventForm from '../../CreateEventForm';
+import CreateEventForm from '../../organize/events/forms/CreateEventForm';
 import { Event } from '@material-ui/icons';
 import postEvent from '../../../fetching/postEvent';
 import { useMutation } from 'react-query';

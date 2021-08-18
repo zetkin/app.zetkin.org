@@ -20,7 +20,6 @@ const AllCampaignsLayout: FunctionComponent<AllCampaignsLayoutProps> = ({ childr
             tabs={ [
                 { href: `/`, messageId: 'layout.organize.campaigns.summary' },
                 { href: `/calendar`, messageId: 'layout.organize.campaigns.calendar' },
-                { href: `/archive`, messageId: 'layout.organize.campaigns.archive' },
             ] }
             title={ intl.formatMessage({ id: 'layout.organize.campaigns.allCampaigns' }) }>
             { children }

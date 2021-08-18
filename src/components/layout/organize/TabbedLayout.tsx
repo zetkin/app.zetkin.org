@@ -4,8 +4,7 @@ import { Box, makeStyles, Tab, Tabs, Typography } from '@material-ui/core';
 import { FunctionComponent, ReactElement } from 'react';
 
 import BreadcrumbTrail from '../../BreadcrumbTrail';
-import OrganizeSidebar from '../../OrganizeSidebar';
-import SearchDrawer from '../../SearchDrawer';
+import OrganizeSidebar from 'components/organize/OrganizeSidebar';
 
 const useStyles = makeStyles((theme) => ({
     breadcrumbs: {
@@ -77,9 +76,6 @@ const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
                         <Box display="flex" justifyContent="space-between">
                             <Box className={ classes.breadcrumbs } p={ 2 } pl={ 3 }>
                                 <BreadcrumbTrail/>
-                            </Box>
-                            <Box display="flex" position="absolute" right={ 0 } top={ 0 } zIndex={ 10000 }>
-                                <SearchDrawer />
                             </Box>
                         </Box>
                         { /* Title, subtitle, and action buttons */ }

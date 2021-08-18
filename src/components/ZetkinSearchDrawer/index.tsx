@@ -16,7 +16,7 @@ import SearchField from './SearchField';
 
 export const MINIMUM_CHARACTERS = 3;
 
-const SearchDrawer: FunctionComponent = (): JSX.Element | null => {
+const ZetkinSearchDrawer: FunctionComponent = (): JSX.Element | null => {
     const router = useRouter();
     const { orgId } = router.query as {orgId: string};
 
@@ -179,4 +179,4 @@ const SearchDrawer: FunctionComponent = (): JSX.Element | null => {
     );
 };
 
-export default SearchDrawer;
+export default ZetkinSearchDrawer;

@@ -3,7 +3,7 @@ import { useIntl } from 'react-intl';
 import { useQuery } from 'react-query';
 import { Box, Grid, Typography } from '@material-ui/core';
 
-import EventList from 'components/organize/EventList';
+import EventList from 'components/organize/events/EventList';
 import getCampaign from 'fetching/getCampaign';
 import getCampaignEvents from 'fetching/getCampaignEvents';
 import getCampaignTasks from 'fetching/tasks/getCampaignTasks';
