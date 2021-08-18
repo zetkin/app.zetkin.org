@@ -1,18 +1,15 @@
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import { Box, Button, MenuItem, TextField, Typography } from '@material-ui/core';
+import { Box, Button, makeStyles, MenuItem, TextField, Tooltip, Typography } from '@material-ui/core';
 import { FormattedDate, FormattedMessage as Msg } from 'react-intl';
 
 import MonthCalendar from './MonthCalendar';
 import { useFocusDate } from '../../hooks';
 import { useIntl } from 'react-intl';
 import WeekCalendar from './WeekCalendar';
+import { CALENDAR_RANGES, getViewRange } from './utils';
 import { ZetkinCampaign, ZetkinEvent, ZetkinTask } from '../../types/zetkin';
 
-enum CALENDAR_RANGES {
-    MONTH = 'month',
-    WEEK = 'week',
-}
 
 interface ZetkinCalendarProps {
     baseHref: string;
@@ -21,11 +18,30 @@ interface ZetkinCalendarProps {
     tasks: ZetkinTask[];
 }
 
+const useStyles = makeStyles(() => ({
+    hide: {
+        display:'hidden',
+    },
+    today: {
+        '&:hover':{
+            backgroundColor: 'royalblue',
+        },
+        background: 'blue',
+        borderRadius: '50%',
+        color: 'white',
+        display: 'flex',
+        justifyContent: 'center',
+        minHeight: '18px',
+        minWidth: '18px',
+    },
+}));
+
 const ZetkinCalendar = ({ baseHref, events, campaigns , tasks }: ZetkinCalendarProps) : JSX.Element => {
     const { orgId } = useRouter().query;
     const intl = useIntl();
     const { focusDate, setFocusDate } = useFocusDate();
     const [range, setRange] = useState(CALENDAR_RANGES.MONTH);
+    const classes = useStyles();
 
     const sortedEvents = [...events].sort((a, b) => {
         return new Date(a.start_time).getTime() - new Date(b.start_time).getTime();
@@ -51,10 +67,33 @@ const ZetkinCalendar = ({ baseHref, events, campaigns , tasks }: ZetkinCalendarP
         }
     };
 
+
+    const today = new Date();
+    const { firstDayInView, lastDayInView } = getViewRange(focusDate, range);
+
+    const isTodayBeforeView = () =>{
+        return today < firstDayInView;
+    };
+
+    const isTodayAfterView = () =>{
+        return today > lastDayInView;
+    };
+
+    const handleTodayBtnClick = () => {
+        setFocusDate(today);
+    };
+
     return (
         <Box display="flex" flexDirection="column" height={ 1 }>
             <Box display="grid" flexGrow={ 0 } gridTemplateAreas={ `". nav view"` } gridTemplateColumns="repeat(3, minmax(0, 1fr))">
                 <Box alignItems="center" display="flex" gridArea="nav" justifyContent="center">
+                    {
+                        isTodayBeforeView() ?
+                            <Tooltip arrow placement="top" title="Today">
+                                <Button className={ classes.today } onClick={ handleTodayBtnClick } />
+                            </Tooltip>
+                            : <Button className={ classes.hide } disabled />
+                    }
                     <Button color="primary" data-testid="back-button" onClick={ handleBackButtonClick }>
                         <Msg id="misc.calendar.prev" />
                     </Button>
@@ -65,16 +104,19 @@ const ZetkinCalendar = ({ baseHref, events, campaigns , tasks }: ZetkinCalendarP
                                 value={ new Date(focusDate.getUTCFullYear(), focusDate.getUTCMonth() + 1, 0) }
                                 year="numeric"
                             />) }
-                            { range === CALENDAR_RANGES.WEEK && (new Date(new Date(
-                                new Date(focusDate).setDate(
-                                    new Date(focusDate).getDate() - new Date(focusDate).getDay() + 1,
-                                ),
-                            ).setHours(0, 0, 0, 0))).getWeekNumber() }
+                            { range === CALENDAR_RANGES.WEEK && focusDate.getWeekNumber() }
                         </Typography>
                     </Box>
                     <Button color="primary" data-testid="fwd-button" onClick={ handleForwardButtonClick }>
                         <Msg id="misc.calendar.next" />
                     </Button>
+                    {
+                        isTodayAfterView() ?
+                            <Tooltip arrow placement="top" title="Today">
+                                <Button className={ classes.today } onClick={ handleTodayBtnClick } />
+                            </Tooltip>
+                            : <Button className={ classes.hide } disabled />
+                    }
                 </Box>
                 <Box alignItems="center" display="flex" gridArea="view" justifySelf="end" mr={ 1 }>
                     <TextField

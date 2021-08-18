@@ -15,7 +15,13 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 
 import { PageWithLayout } from '../types';
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+    defaultOptions: {
+        queries: {
+            refetchOnWindowFocus: false,
+        },
+    },
+});
 
 declare global {
     interface Window {
