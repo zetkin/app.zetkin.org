@@ -82,24 +82,26 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({ orgId,
 
     return (
         <Box p={ 4 }>
-            <Grid container spacing={ 2 }>
-                { campaign?.info_text && (
-                    <Grid item lg={ 6 } md={ 12 } xs={ 12 }>
-                        <Typography variant="body1">
-                            { campaign?.info_text }
-                        </Typography>
-                    </Grid>
-                ) }
-                { campaign?.manager && (
-                    <Grid item xs={ 12 }>
-                        <ZetkinPerson
-                            id={ campaign.manager.id }
-                            name={ campaign.manager.name }
-                            subtitle={ intl.formatMessage({ id: 'pages.organizeCampaigns.campaignManager' }) }
-                        />
-                    </Grid>
-                ) }
-            </Grid>
+            <Box mb={ campaign?.info_text || campaign?.manager ? 2 : 0 }>
+                <Grid container spacing={ 2 }>
+                    { campaign?.info_text && (
+                        <Grid item lg={ 6 } md={ 12 } xs={ 12 }>
+                            <Typography variant="body1">
+                                { campaign?.info_text }
+                            </Typography>
+                        </Grid>
+                    ) }
+                    { campaign?.manager && (
+                        <Grid item xs={ 12 }>
+                            <ZetkinPerson
+                                id={ campaign.manager.id }
+                                name={ campaign.manager.name }
+                                subtitle={ intl.formatMessage({ id: 'pages.organizeCampaigns.campaignManager' }) }
+                            />
+                        </Grid>
+                    ) }
+                </Grid>
+            </Box>
 
             <Grid container spacing={ 2 }>
                 { /* Events */ }
