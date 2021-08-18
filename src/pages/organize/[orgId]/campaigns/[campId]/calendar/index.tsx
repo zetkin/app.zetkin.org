@@ -14,7 +14,7 @@ import ZetkinSpeedDial, { ACTIONS } from '../../../../../../components/ZetkinSpe
 const scaffoldOptions = {
     authLevelRequired: 2,
     localeScope: [
-        'layout.organize', 'misc.breadcrumbs', 'misc.calendar', 'misc.formDialog', 'misc.speedDial',
+        'layout.organize', 'misc.breadcrumbs', 'misc.calendar', 'misc.formDialog', 'misc.speedDial', 'misc.tasks', 'pages.organizeCampaigns',
     ],
 };
 
@@ -66,7 +66,7 @@ const CampaignCalendarPage : PageWithLayout<OrganizeCalendarPageProps> = ({ orgI
     return (
         <>
             <ZetkinCalendar baseHref={ `/organize/${orgId}/campaigns/${campId}/calendar` } campaigns={ campaigns } events={ events } tasks={ tasks } />
-            <ZetkinSpeedDial actions={ [ACTIONS.CREATE_EVENT] }/>
+            <ZetkinSpeedDial actions={ [ACTIONS.CREATE_EVENT, ACTIONS.CREATE_TASK] }/>
         </>
     );
 };
