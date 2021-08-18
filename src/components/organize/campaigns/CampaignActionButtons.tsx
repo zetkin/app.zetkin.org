@@ -1,4 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { Box, Button, Menu, MenuItem } from '@material-ui/core';
 import { Delete, Settings } from '@material-ui/icons';
@@ -55,7 +56,11 @@ const CampaignActionButtons: React.FunctionComponent<CampaignActionButtonsProps>
     return (
         <Box display="flex">
             <Box mr={ 1 }>
-                <Button color="primary">Public Page</Button>
+                <Link href={ `/o/${orgId}/campaigns/${campaign.id}` } passHref>
+                    <Button color="primary">
+                        <Msg id="pages.organizeCampaigns.linkGroup.public"/>
+                    </Button>
+                </Link>
             </Box>
             <Box>
                 <Button color="secondary" disableElevation onClick={ (e) => setMenuActivator(e.currentTarget) } variant="contained">
