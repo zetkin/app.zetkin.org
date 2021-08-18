@@ -16,8 +16,6 @@ describe('OrganizeSidebar', () => {
         cy.get('[data-test="people-button"]').should('be.visible');
         cy.get('[data-test="area-button"]').should('be.visible');
         cy.get('[data-test="calendar-button"]').should('be.visible');
-        cy.get('[data-test="inbox-button"]').should('be.visible');
-        cy.get('[data-test="user-button"]').should('be.visible');
     });
 
     it('is hidden when the viewport is narrow', () => {
