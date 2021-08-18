@@ -5,7 +5,7 @@ import { useIntl } from 'react-intl';
 import { useQuery } from 'react-query';
 
 import AllCampaignsLayout from '../../../../components/layout/organize/AllCampaignsLayout';
-import CampaignCard from '../../../../components/CamapignCard';
+import CampaignCard from 'components/organize/campaigns/CamapignCard';
 import getActivities from '../../../../fetching/getActivities';
 import getAllCallAssignments from '../../../../fetching/getAllCallAssignments';
 import getAllCanvassAssignments from '../../../../fetching/getAllCanvassAssignments';

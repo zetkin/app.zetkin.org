@@ -1,6 +1,6 @@
 import * as Router from 'next/router';
 
-import { mountWithProviders } from '../utils/testing';
+import { mountWithProviders } from 'utils/testing';
 import OrganizeSidebar from './OrganizeSidebar';
 
 describe('OrganizeSidebar', () => {

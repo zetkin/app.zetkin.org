@@ -5,7 +5,7 @@ import { AppBar, Box, Drawer, Hidden, IconButton, List, ListItem, Toolbar } from
 import { Event,  Home, Map, Menu, People } from '@material-ui/icons/';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 
-import ZetkinLogo from '../icons/ZetkinLogo';
+import ZetkinLogo from 'icons/ZetkinLogo';
 
 const drawerWidth = '5rem';
 
