@@ -1,12 +1,13 @@
 /* eslint-disable react/display-name */
-import { ACTIONS } from '../constants';
-import CampaignForm from '../../CampaignForm';
 import { Flag } from '@material-ui/icons';
-import postCampaign from '../../../fetching/postCampaign';
 import { useRouter } from 'next/router';
-import { ActionConfig, DialogContentBaseProps } from './types';
 import { useMutation, useQueryClient } from 'react-query';
 
+import CampaignForm from 'components/organize/campaigns/forms/CampaignForm';
+import postCampaign from 'fetching/postCampaign';
+
+import { ACTIONS } from '../constants';
+import { ActionConfig, DialogContentBaseProps } from './types';
 
 const DialogContent: React.FunctionComponent<DialogContentBaseProps> = ({ closeDialog }) => {
     const queryClient = useQueryClient();

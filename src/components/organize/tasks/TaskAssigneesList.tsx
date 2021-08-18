@@ -50,7 +50,11 @@ const TaskAssigneesList: React.FunctionComponent<{
                         <Grid key={ task.id } item lg={ 3 } md={ 4 } sm={ 6 } xs={ 12 }>
                             <Card>
                                 <Box p={ 3 }>
-                                    <ZetkinPerson person={ task.assignee } subtitle={ completedText } />
+                                    <ZetkinPerson
+                                        id={ task.assignee.id }
+                                        name={ `${task.assignee.first_name} ${task.assignee.last_name}` }
+                                        subtitle={ completedText }
+                                    />
                                 </Box>
                             </Card>
                         </Grid>

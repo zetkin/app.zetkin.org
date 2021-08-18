@@ -7,7 +7,7 @@ interface ZetkinSectionProps {
 
 const ZetkinSection:FunctionComponent<ZetkinSectionProps> = ({ children, title }) => {
     return (
-        <Box height={ 1 } p={ 1 } width={ 1 }>
+        <Box height={ 1 } width={ 1 }>
             <Box mb={ 2 }>
                 <Typography color="secondary" component="h2" variant="h6">
                     { title }
