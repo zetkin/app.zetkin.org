@@ -83,11 +83,13 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({ orgId,
     return (
         <Box p={ 4 }>
             <Grid container spacing={ 2 }>
-                <Grid item lg={ 6 } md={ 12 } xs={ 12 }>
-                    <Typography variant="body1">
-                        { campaign?.info_text }
-                    </Typography>
-                </Grid>
+                { campaign?.info_text && (
+                    <Grid item lg={ 6 } md={ 12 } xs={ 12 }>
+                        <Typography variant="body1">
+                            { campaign?.info_text }
+                        </Typography>
+                    </Grid>
+                ) }
                 { campaign?.manager && (
                     <Grid item xs={ 12 }>
                         <ZetkinPerson
