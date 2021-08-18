@@ -98,7 +98,7 @@ const AllCampaignsSummaryPage: PageWithLayout<AllCampaignsSummaryPageProps> = ({
                     </Box>
                 </ZetkinSection>
             </Box>
-            <ZetkinSpeedDial actions={ [ACTIONS.CREATE_EVENT, ACTIONS.CREATE_CAMPAIGN] } />
+            <ZetkinSpeedDial actions={ [ACTIONS.CREATE_CAMPAIGN] } />
         </>
     );
 };
