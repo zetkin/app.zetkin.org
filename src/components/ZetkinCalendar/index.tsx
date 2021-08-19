@@ -1,3 +1,5 @@
+import dayjs from 'dayjs';
+import isoWeek from 'dayjs/plugin/isoWeek';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { Box, Button, makeStyles, MenuItem, TextField, Tooltip, Typography } from '@material-ui/core';
@@ -10,6 +12,7 @@ import WeekCalendar from './WeekCalendar';
 import { CALENDAR_RANGES, getViewRange } from './utils';
 import { ZetkinCampaign, ZetkinEvent, ZetkinTask } from '../../types/zetkin';
 
+dayjs.extend(isoWeek);
 
 interface ZetkinCalendarProps {
     baseHref: string;
@@ -82,6 +85,7 @@ const ZetkinCalendar = ({ baseHref, events, campaigns , tasks }: ZetkinCalendarP
     const handleTodayBtnClick = () => {
         setFocusDate(today);
     };
+    const weekNumber = dayjs(firstDayInView).isoWeek();
 
     return (
         <Box display="flex" flexDirection="column" height={ 1 }>
@@ -104,7 +108,7 @@ const ZetkinCalendar = ({ baseHref, events, campaigns , tasks }: ZetkinCalendarP
                                 value={ new Date(focusDate.getUTCFullYear(), focusDate.getUTCMonth() + 1, 0) }
                                 year="numeric"
                             />) }
-                            { range === CALENDAR_RANGES.WEEK && focusDate.getWeekNumber() }
+                            { range === CALENDAR_RANGES.WEEK && weekNumber }
                         </Typography>
                     </Box>
                     <Button color="primary" data-testid="fwd-button" onClick={ handleForwardButtonClick }>
