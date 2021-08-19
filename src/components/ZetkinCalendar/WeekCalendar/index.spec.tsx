@@ -1,4 +1,3 @@
-import '../../../utils/polyfills';
 import { mountWithProviders } from '../../../utils/testing';
 import WeekCalendar from '.';
 import { ZetkinCampaign, ZetkinEvent, ZetkinTask } from '../../../types/zetkin';
