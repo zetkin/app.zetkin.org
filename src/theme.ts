@@ -56,7 +56,7 @@ const theme = createTheme({
     },
     palette: {
         background: {
-            default: '#fff',
+            default: '#F9F9F9',
         },
         error: {
             main: '#B3002D',
