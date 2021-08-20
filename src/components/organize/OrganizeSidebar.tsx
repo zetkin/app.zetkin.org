@@ -69,7 +69,7 @@ const OrganizeSidebar = () : JSX.Element =>{
                     <ListItem disableGutters>
                         <NextLink href="/organize" passHref>
                             <IconButton aria-label="Home" className={ classes.roundButton } color={ key === 'organize' ?  'primary' : 'secondary' } data-test="logo-button" style={{ marginBottom:'2rem' }}>
-                                <ZetkinLogo size={ 50 } />
+                                <ZetkinLogo color="primary" size={ 40 } />
                             </IconButton>
                         </NextLink>
                     </ListItem>
