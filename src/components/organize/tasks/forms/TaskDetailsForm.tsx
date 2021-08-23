@@ -96,6 +96,7 @@ const TaskDetailsForm = ({ onSubmit, onCancel, task }: TaskDetailsFormProps): JS
                 title: task?.title,
                 type: task?.type,
             }}
+            keepDirtyOnReinitialize
             onSubmit={ submit }
             render={ ({ handleSubmit, submitting, valid, values }) => (
                 <form noValidate onSubmit={ handleSubmit }>
