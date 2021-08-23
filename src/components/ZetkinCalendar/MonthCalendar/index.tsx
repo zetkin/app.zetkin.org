@@ -2,7 +2,7 @@ import { grey } from '@material-ui/core/colors';
 import NextLink from 'next/link';
 import { Box, Button, Link, makeStyles, Tooltip, Typography } from '@material-ui/core';
 import { FormattedDate, FormattedMessage as Msg } from 'react-intl';
-import  { useEffect, useRef, useState } from 'react';
+import  React, { useEffect, useRef, useState } from 'react';
 
 import MonthCalendarEvent from './MonthCalendarEvent';
 import MonthCalendarTask from './MonthCalendarTask';
@@ -161,9 +161,8 @@ const MonthCalendar = ({ orgId, campaigns, baseHref, events, focusDate, tasks }:
                                 { tasksAndEvents.map((item, i) => {
                                     const campaign = campaigns.find(c => c.id === item.data.campaign.id);
                                     return (
-                                        <>
+                                        <React.Fragment key={ i }>
                                             { item.id === 'task' && <MonthCalendarTask
-                                                key={ `${item.id}-${item.data.id}` }
                                                 baseHref={ baseHref }
                                                 campaign={ campaign }
                                                 isVisible={ i < maxNoOfEvents }
@@ -171,7 +170,6 @@ const MonthCalendar = ({ orgId, campaigns, baseHref, events, focusDate, tasks }:
                                                 task={ item.data as ZetkinTask }
                                             /> }
                                             { item.id === 'event' && <MonthCalendarEvent
-                                                key={ `${item.id}-${item.data.id}` }
                                                 baseHref={ baseHref }
                                                 campaign={ campaign }
                                                 event={ item.data as ZetkinEvent }
@@ -179,7 +177,7 @@ const MonthCalendar = ({ orgId, campaigns, baseHref, events, focusDate, tasks }:
                                                 onLoad={ i === 0 ? (listItemHeight) => setListItemHeight(listItemHeight) : undefined }
                                                 startOfDay={ currentDate }
                                             /> }
-                                        </>
+                                        </React.Fragment>
                                     );
                                 }) }
                             </ul>
@@ -190,9 +188,8 @@ const MonthCalendar = ({ orgId, campaigns, baseHref, events, focusDate, tasks }:
                                             { tasksAndEvents.map((item, i) => {
                                                 const campaign = campaigns.find(c => c.id === item.data.campaign.id);
                                                 return (
-                                                    <>
+                                                    <React.Fragment key={ i }>
                                                         { item.id === 'task' && <MonthCalendarTask
-                                                            key={ `${item.id}-${item.data.id}` }
                                                             baseHref={ baseHref }
                                                             campaign={ campaign }
                                                             isVisible={ i >= maxNoOfEvents }
@@ -200,14 +197,13 @@ const MonthCalendar = ({ orgId, campaigns, baseHref, events, focusDate, tasks }:
                                                             task={ item.data as ZetkinTask }
                                                         /> }
                                                         { item.id === 'event' && <MonthCalendarEvent
-                                                            key={ item.id }
                                                             baseHref={ baseHref }
                                                             campaign={ campaign }
                                                             event={ item.data as ZetkinEvent }
                                                             isVisible={ i >= maxNoOfEvents }
                                                             startOfDay={ currentDate }
                                                         /> }
-                                                    </>);
+                                                    </React.Fragment>);
                                             }) }
                                         </ul>
                                     </Box>
