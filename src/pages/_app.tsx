@@ -1,7 +1,7 @@
 import '../styles.css';
 import { AppProps } from 'next/app';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import DateUtils from '@date-io/dayjs';
+import CustomDateUtils from 'extensions/CustomDateUtils';
 import { Hydrate } from 'react-query/hydration';
 import { IntlProvider } from 'react-intl';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
@@ -48,7 +48,7 @@ function MyApp({ Component, pageProps } : AppProps) : JSX.Element {
     return (
         <UserContext.Provider value={ pageProps.user }>
             <ThemeProvider theme={ theme }>
-                <MuiPickersUtilsProvider utils={ DateUtils }>
+                <MuiPickersUtilsProvider utils={ CustomDateUtils }>
                     <IntlProvider
                         defaultLocale="en"
                         locale={ lang }
