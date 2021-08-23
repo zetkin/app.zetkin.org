@@ -1,32 +1,40 @@
 import dayjs from 'dayjs';
-import { ZetkinTask } from '../types/zetkin';
+import { ZetkinTask } from 'types/zetkin';
 
 export enum TASK_STATUS {
     ACTIVE= 'active',
     CLOSED= 'closed',
     DRAFT = 'draft',
+    EXPIRED = 'expired',
     SCHEDULED = 'scheduled',
 }
 
 const getTaskStatus = (task: ZetkinTask): TASK_STATUS => {
-    const { published, deadline } = task;
-
+    const { published, deadline, expires } = task;
     const now = dayjs();
-    const publishedDate = dayjs(published);
-    const deadlineDate = dayjs(deadline);
 
-    const isPublished = publishedDate.isBefore(now);
+    const expiresDate = dayjs(expires);
+    const isExpiresPassed = expiresDate.isBefore(now);
+
+    if (isExpiresPassed) {
+        return TASK_STATUS.EXPIRED;
+    }
+
+    const deadlineDate = dayjs(deadline);
     const isDeadlinePassed = deadlineDate.isBefore(now);
 
     if (isDeadlinePassed) {
         return TASK_STATUS.CLOSED;
     }
 
-    if (isPublished) {
+    const publishedDate = dayjs(published);
+    const isPublishedPassed = publishedDate.isBefore(now);
+
+    if (isPublishedPassed) {
         return TASK_STATUS.ACTIVE;
     }
 
-    if (published && !isPublished) {
+    if (published && !isPublishedPassed) {
         return TASK_STATUS.SCHEDULED;
     }
 

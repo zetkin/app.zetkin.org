@@ -3,6 +3,7 @@ statuses:
     closed: "Closed"
     draft: "Draft"
     scheduled: "Scheduled"
+    expired: "Expired"
 types:
     offline: Offline
     share_link: Share Link
@@ -15,6 +16,7 @@ taskListItem:
         closed: "Closed {time}"
         scheduled: "Will be published {time}"
         indefinite: "Published {time}"
+        expired: "Expired {time}"
 taskDetails:
     title: Task Details
     editButton: Edit
