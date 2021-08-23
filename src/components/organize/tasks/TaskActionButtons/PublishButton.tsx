@@ -14,7 +14,9 @@ import PublishTaskForm from '../forms/PublishTaskForm';
 import validateTaskConfig from 'utils/validateTaskConfig';
 
 const getTooltipContents = (taskStatus: TASK_STATUS, isTaskConfigValid: boolean, hasAssignees: boolean): string | null => {
-    if (taskStatus === TASK_STATUS.ACTIVE || taskStatus === TASK_STATUS.CLOSED) {
+    if (taskStatus === TASK_STATUS.ACTIVE ||
+        taskStatus === TASK_STATUS.CLOSED ||
+        taskStatus === TASK_STATUS.EXPIRED) {
         return  'misc.tasks.publishButton.tooltip.alreadyPublished';
     }
 

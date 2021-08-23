@@ -15,6 +15,7 @@ const TASK_STATUS_ORDER: {[key in TASK_STATUS]: number} = {
     [TASK_STATUS.ACTIVE]: 1,
     [TASK_STATUS.SCHEDULED]: 2,
     [TASK_STATUS.CLOSED]: 3,
+    [TASK_STATUS.EXPIRED]: 4,
 };
 
 const sortTasksByStatus = (firstTask: ZetkinTask, secondTask: ZetkinTask): number => {
