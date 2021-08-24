@@ -16,12 +16,12 @@ export const getNewDateWithOffset = (date: Date, offset: number ):Date => {
 };
 
 /**
- * Plugin for DayJs which overrides default `dayjs.toJson()` method to return an ISO
- * datetime which uses the local time.
+ * Plugin for dayjs which overrides default `dayjs.toJson()` method to return an ISO
+ * datetime string which uses the local time.
  *
- * Default behaviour returns UTC time.
+ * Default behaviour returns an ISO datetime string in UTC time.
  */
-export const LocalTimeToJsonPlugin = (option: unknown, dayjsClass: typeof Dayjs): void => {
+export const LocalTimeToJsonPlugin = (options: never, dayjsClass: typeof Dayjs): void => {
     dayjsClass.prototype.toJSON = function() {
         return this.format('YYYY-MM-DDTHH:mm:ss');
     };
