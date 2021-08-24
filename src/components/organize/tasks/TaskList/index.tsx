@@ -1,22 +1,21 @@
 import { FormattedMessage as Msg } from 'react-intl';
-import React from 'react';
 import { useRouter } from 'next/router';
-import { Card, Divider, List, ListItem, ListItemText, ListSubheader } from '@material-ui/core';
+import { Card, Divider, List, ListItem, ListItemText } from '@material-ui/core';
+import React, { useState } from 'react';
 
 import { config as createTaskAction } from 'components/ZetkinSpeedDial/actions/createTask';
 import { ZetkinTask } from 'types/zetkin';
 import getTaskStatus, { TASK_STATUS } from 'utils/getTaskStatus';
 
-import TaskListItem from './TaskListItem';
-
+import TaskStatusSublist from './TaskStatusSublist';
 
 interface TaskListProps {
-    hrefBase: string;
     tasks: ZetkinTask[];
 }
 
-const TaskList = ({ hrefBase, tasks }: TaskListProps): JSX.Element => {
+const TaskList: React.FunctionComponent<TaskListProps> = ({ tasks }) => {
     const router = useRouter();
+    const [showClosedTasks, setShowClosedTasks] = useState(false);
 
     const tasksGroupedByStatus = tasks.reduce((acc, task) => {
         const taskStatus = getTaskStatus(task);
@@ -30,8 +29,8 @@ const TaskList = ({ hrefBase, tasks }: TaskListProps): JSX.Element => {
 
     return (
         <Card>
-            <List>
-                { tasks.length === 0 ? (
+            <List disablePadding>
+                { tasks.length === 0 && ( // If no tasks, show button to create a new one
                     <ListItem button component="a" onClick={ () => {
                         router.push(`${router.asPath}#${createTaskAction.urlKey}`);
                     } }>
@@ -39,34 +38,75 @@ const TaskList = ({ hrefBase, tasks }: TaskListProps): JSX.Element => {
                             <Msg id="pages.organizeCampaigns.noTasksCreatePrompt" />
                         </ListItemText>
                     </ListItem>
-                ) :
-                    Object.entries(tasksGroupedByStatus).map(([status, tasks]) => {
-                        return (
-                            <List
-                                key={ status }
-                                disablePadding
-                                subheader={
-                                    <ListSubheader>
-                                        <Msg id={ `misc.tasks.statuses.${status}` } />
-                                    </ListSubheader>
-                                }>
-                                { tasks.map((task, index) => {
-                                    return (
-                                        <React.Fragment
-                                            key={ task.id }>
-                                            <TaskListItem
-                                                hrefBase={ hrefBase }
-                                                task={ task }
-                                            />
-                                            { index !== tasks.length - 1 && (
-                                                <Divider />
-                                            ) }
-                                        </React.Fragment>
-                                    );
-                                }) }
-                            </List>
-                        );
-                    })
+                ) }
+
+                {
+                    TASK_STATUS.DRAFT in tasksGroupedByStatus && (
+                        <TaskStatusSublist
+                            status={ TASK_STATUS.DRAFT }
+                            tasks={ tasksGroupedByStatus[TASK_STATUS.DRAFT] }
+                        />
+                    )
+                }
+
+                {
+                    TASK_STATUS.SCHEDULED in tasksGroupedByStatus && (
+                        <TaskStatusSublist
+                            status={ TASK_STATUS.SCHEDULED }
+                            tasks={ tasksGroupedByStatus[TASK_STATUS.SCHEDULED] }
+                        />
+                    )
+                }
+
+                {
+                    TASK_STATUS.ACTIVE in tasksGroupedByStatus && (
+                        <TaskStatusSublist
+                            status={ TASK_STATUS.ACTIVE }
+                            tasks={ tasksGroupedByStatus[TASK_STATUS.ACTIVE] }
+                        />
+                    )
+                }
+
+                {
+                    showClosedTasks && (
+                        TASK_STATUS.CLOSED in tasksGroupedByStatus ||
+                        TASK_STATUS.EXPIRED in tasksGroupedByStatus
+                    ) && (
+                        <>
+                            {
+                                TASK_STATUS.CLOSED in tasksGroupedByStatus && (
+                                    <TaskStatusSublist
+                                        status={ TASK_STATUS.CLOSED }
+                                        tasks={ tasksGroupedByStatus[TASK_STATUS.CLOSED] }
+                                    />
+                                )
+                            }
+                            {
+                                TASK_STATUS.EXPIRED in tasksGroupedByStatus && (
+                                    <TaskStatusSublist
+                                        status={ TASK_STATUS.EXPIRED }
+                                        tasks={ tasksGroupedByStatus[TASK_STATUS.EXPIRED] }
+                                    />
+                                )
+                            }
+                        </>
+                    )
+                }
+
+                {
+                    !showClosedTasks && (
+                        TASK_STATUS.CLOSED in tasksGroupedByStatus ||
+                        TASK_STATUS.EXPIRED in tasksGroupedByStatus
+                    ) && (
+                        <>
+                            <Divider />
+                            <ListItem button component="a" onClick={ () => setShowClosedTasks(true) }>
+                                <ListItemText>
+                                    Show closed...
+                                </ListItemText>
+                            </ListItem>
+                        </>
+                    )
                 }
             </List>
         </Card>

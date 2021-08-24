@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { FormatListNumbered, Link as LinkIcon, NaturePeople, Share, VideoLibrary } from '@material-ui/icons';
 import { ListItem, ListItemIcon, ListItemText, Typography } from '@material-ui/core';
 
@@ -18,15 +19,15 @@ const TASK_TYPE_ICONS: {[key in TASK_TYPE]: React.ReactNode} = {
 
 interface TaskListItemProps {
     task: ZetkinTask;
-    hrefBase: string;
 }
 
-const TaskListItem = ({ task, hrefBase }: TaskListItemProps): JSX.Element => {
+const TaskListItem = ({ task }: TaskListItemProps): JSX.Element => {
     const { id, title } = task;
+    const { orgId, campId } = useRouter().query;
 
     return (
         <Link
-            href={ hrefBase + `/calendar/tasks/${id}` }
+            href={ `/organize/${orgId}/campaigns/${campId}/calendar/tasks/${id}` }
             passHref>
             <ListItem button component="a">
                 <ListItemIcon>
