@@ -1,46 +1,36 @@
+import { FormattedMessage as Msg } from 'react-intl';
 import React from 'react';
 import { useRouter } from 'next/router';
-import { Card, Divider, ListItem, ListItemText } from '@material-ui/core';
-import { FormattedMessage as Msg, useIntl } from 'react-intl';
+import { Card, Divider, List, ListItem, ListItemText, ListSubheader } from '@material-ui/core';
 
 import { config as createTaskAction } from 'components/ZetkinSpeedDial/actions/createTask';
-import ZetkinList from 'components/ZetkinList';
 import { ZetkinTask } from 'types/zetkin';
 import getTaskStatus, { TASK_STATUS } from 'utils/getTaskStatus';
 
 import TaskListItem from './TaskListItem';
 
-const TASK_STATUS_ORDER: {[key in TASK_STATUS]: number} = {
-    [TASK_STATUS.DRAFT]: 0,
-    [TASK_STATUS.ACTIVE]: 1,
-    [TASK_STATUS.SCHEDULED]: 2,
-    [TASK_STATUS.CLOSED]: 3,
-    [TASK_STATUS.EXPIRED]: 4,
-};
-
-const sortTasksByStatus = (firstTask: ZetkinTask, secondTask: ZetkinTask): number => {
-    const firstTaskStatus = getTaskStatus(firstTask);
-    const secondTaskStatus = getTaskStatus(secondTask);
-    return TASK_STATUS_ORDER[firstTaskStatus] - TASK_STATUS_ORDER[secondTaskStatus];
-};
 
 interface TaskListProps {
     hrefBase: string;
     tasks: ZetkinTask[];
 }
 
-
 const TaskList = ({ hrefBase, tasks }: TaskListProps): JSX.Element => {
-    const intl = useIntl();
     const router = useRouter();
 
-    const tasksOrderedByStatus = [...tasks].sort(sortTasksByStatus);
+    const tasksGroupedByStatus = tasks.reduce((acc, task) => {
+        const taskStatus = getTaskStatus(task);
+        if (taskStatus in acc) {
+            return { ...acc, [taskStatus]: [...acc[taskStatus], task] };
+        }
+        else {
+            return { ...acc, [taskStatus]: [task] };
+        }
+    }, {} as {[key in TASK_STATUS]: ZetkinTask[]});
 
     return (
         <Card>
-            <ZetkinList
-                aria-label={ intl.formatMessage({ id: 'pages.organizeCampaigns.tasks' }) }
-                initialLength={ 5 }>
+            <List>
                 { tasks.length === 0 ? (
                     <ListItem button component="a" onClick={ () => {
                         router.push(`${router.asPath}#${createTaskAction.urlKey}`);
@@ -50,19 +40,35 @@ const TaskList = ({ hrefBase, tasks }: TaskListProps): JSX.Element => {
                         </ListItemText>
                     </ListItem>
                 ) :
-                    tasksOrderedByStatus.map((task, index) => (
-                        <React.Fragment key={ index }>
-                            <TaskListItem key={ task.id } hrefBase={ hrefBase } task={ task } />
-                            {
-                            // Show divider under all items except last
-                                index !== tasks.length - 1 && (
-                                    <Divider />
-                                )
-                            }
-                        </React.Fragment>
-                    ))
+                    Object.entries(tasksGroupedByStatus).map(([status, tasks]) => {
+                        return (
+                            <List
+                                key={ status }
+                                disablePadding
+                                subheader={
+                                    <ListSubheader>
+                                        <Msg id={ `misc.tasks.statuses.${status}` } />
+                                    </ListSubheader>
+                                }>
+                                { tasks.map((task, index) => {
+                                    return (
+                                        <React.Fragment
+                                            key={ task.id }>
+                                            <TaskListItem
+                                                hrefBase={ hrefBase }
+                                                task={ task }
+                                            />
+                                            { index !== tasks.length - 1 && (
+                                                <Divider />
+                                            ) }
+                                        </React.Fragment>
+                                    );
+                                }) }
+                            </List>
+                        );
+                    })
                 }
-            </ZetkinList>
+            </List>
         </Card>
     );
 };

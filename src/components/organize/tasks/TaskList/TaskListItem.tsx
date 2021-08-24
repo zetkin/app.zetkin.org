@@ -1,12 +1,10 @@
 import Link from 'next/link';
-import { Box, ListItem, ListItemIcon, ListItemText, Typography } from '@material-ui/core';
 import { FormatListNumbered, Link as LinkIcon, NaturePeople, Share, VideoLibrary } from '@material-ui/icons';
+import { ListItem, ListItemIcon, ListItemText, Typography } from '@material-ui/core';
 
-import getTaskStatus from 'utils/getTaskStatus';
 import { TASK_TYPE } from 'types/tasks';
 import { ZetkinTask } from 'types/zetkin';
 
-import TaskStatusChip from '../TaskStatusChip';
 import TaskStatusText from '../TaskStatusText';
 
 const TASK_TYPE_ICONS: {[key in TASK_TYPE]: React.ReactNode} = {
@@ -25,7 +23,6 @@ interface TaskListItemProps {
 
 const TaskListItem = ({ task, hrefBase }: TaskListItemProps): JSX.Element => {
     const { id, title } = task;
-    const taskStatus = getTaskStatus(task);
 
     return (
         <Link
@@ -36,15 +33,10 @@ const TaskListItem = ({ task, hrefBase }: TaskListItemProps): JSX.Element => {
                     { TASK_TYPE_ICONS[task.type] }
                 </ListItemIcon>
                 <ListItemText>
-                    { /* Title and Chip */ }
-                    <Box alignItems="center" display="flex">
-                        <Typography component="h5" variant="body1">
-                            { title }
-                        </Typography>
-                        <Box ml={ 1 }>
-                            <TaskStatusChip status={ taskStatus }/>
-                        </Box>
-                    </Box>
+                    { /* Title */ }
+                    <Typography component="h5" variant="body1">
+                        { title }
+                    </Typography>
                     { /* Description */ }
                     <Typography color="textPrimary" variant="body2">
                         <TaskStatusText task={ task }/>
