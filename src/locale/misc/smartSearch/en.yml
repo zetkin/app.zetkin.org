@@ -91,6 +91,7 @@ criteria:
     criteriaSelect:
         first_name: first name
         last_name: last name
+        email: email
         gender: gender
         co_address: co-address
         city: city

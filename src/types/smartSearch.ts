@@ -57,6 +57,7 @@ export enum TIME_FRAME {
 export enum DATA_FIELD {
     FIRST_NAME = 'first_name',
     LAST_NAME = 'last_name',
+    EMAIL = 'email',
     GENDER = 'gender',
     CITY = 'city',
     STREET_ADDRESS = 'street_address',
@@ -90,6 +91,7 @@ export interface PersonDataFilterConfig {
         alt_phone?: string;
         city?: string;
         co_address?: string;
+        email?: string;
         first_name?: string;
         gender?: string;
         last_name?: string;
