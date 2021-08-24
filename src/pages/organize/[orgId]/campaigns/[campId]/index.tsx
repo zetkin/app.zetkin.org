@@ -114,7 +114,7 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({ orgId,
                 { /* Tasks */ }
                 <Grid item md={ 6 } sm={ 12 } xs={ 12 }>
                     <ZetkinSection title={ intl.formatMessage({ id: 'pages.organizeCampaigns.tasks' }) }>
-                        <TaskList hrefBase={ `/organize/${orgId}/campaigns/${campId}` } tasks={ tasks ?? [] } />
+                        <TaskList tasks={ tasks ?? [] } />
                     </ZetkinSection>
                 </Grid>
             </Grid>

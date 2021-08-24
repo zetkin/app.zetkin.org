@@ -1,47 +1,36 @@
-import React from 'react';
+import { FormattedMessage as Msg } from 'react-intl';
 import { useRouter } from 'next/router';
-import { Card, Divider, ListItem, ListItemText } from '@material-ui/core';
-import { FormattedMessage as Msg, useIntl } from 'react-intl';
+import { Card, Divider, List, ListItem, ListItemText } from '@material-ui/core';
+import React, { useState } from 'react';
 
 import { config as createTaskAction } from 'components/ZetkinSpeedDial/actions/createTask';
-import ZetkinList from 'components/ZetkinList';
 import { ZetkinTask } from 'types/zetkin';
 import getTaskStatus, { TASK_STATUS } from 'utils/getTaskStatus';
 
-import TaskListItem from './TaskListItem';
-
-const TASK_STATUS_ORDER: {[key in TASK_STATUS]: number} = {
-    [TASK_STATUS.DRAFT]: 0,
-    [TASK_STATUS.ACTIVE]: 1,
-    [TASK_STATUS.SCHEDULED]: 2,
-    [TASK_STATUS.CLOSED]: 3,
-    [TASK_STATUS.EXPIRED]: 4,
-};
-
-const sortTasksByStatus = (firstTask: ZetkinTask, secondTask: ZetkinTask): number => {
-    const firstTaskStatus = getTaskStatus(firstTask);
-    const secondTaskStatus = getTaskStatus(secondTask);
-    return TASK_STATUS_ORDER[firstTaskStatus] - TASK_STATUS_ORDER[secondTaskStatus];
-};
+import TaskStatusSublist from './TaskStatusSublist';
 
 interface TaskListProps {
-    hrefBase: string;
     tasks: ZetkinTask[];
 }
 
-
-const TaskList = ({ hrefBase, tasks }: TaskListProps): JSX.Element => {
-    const intl = useIntl();
+const TaskList: React.FunctionComponent<TaskListProps> = ({ tasks }) => {
     const router = useRouter();
+    const [showClosedTasks, setShowClosedTasks] = useState(false);
 
-    const tasksOrderedByStatus = [...tasks].sort(sortTasksByStatus);
+    const tasksGroupedByStatus = tasks.reduce((acc, task) => {
+        const taskStatus = getTaskStatus(task);
+        if (taskStatus in acc) {
+            return { ...acc, [taskStatus]: [...acc[taskStatus], task] };
+        }
+        else {
+            return { ...acc, [taskStatus]: [task] };
+        }
+    }, {} as {[key in TASK_STATUS]: ZetkinTask[]});
 
     return (
         <Card>
-            <ZetkinList
-                aria-label={ intl.formatMessage({ id: 'pages.organizeCampaigns.tasks' }) }
-                initialLength={ 5 }>
-                { tasks.length === 0 ? (
+            <List disablePadding>
+                { tasks.length === 0 && ( // If no tasks, show button to create a new one
                     <ListItem button component="a" onClick={ () => {
                         router.push(`${router.asPath}#${createTaskAction.urlKey}`);
                     } }>
@@ -49,20 +38,77 @@ const TaskList = ({ hrefBase, tasks }: TaskListProps): JSX.Element => {
                             <Msg id="pages.organizeCampaigns.noTasksCreatePrompt" />
                         </ListItemText>
                     </ListItem>
-                ) :
-                    tasksOrderedByStatus.map((task, index) => (
-                        <React.Fragment key={ index }>
-                            <TaskListItem key={ task.id } hrefBase={ hrefBase } task={ task } />
+                ) }
+
+                {
+                    TASK_STATUS.DRAFT in tasksGroupedByStatus && (
+                        <TaskStatusSublist
+                            status={ TASK_STATUS.DRAFT }
+                            tasks={ tasksGroupedByStatus[TASK_STATUS.DRAFT] }
+                        />
+                    )
+                }
+
+                {
+                    TASK_STATUS.SCHEDULED in tasksGroupedByStatus && (
+                        <TaskStatusSublist
+                            status={ TASK_STATUS.SCHEDULED }
+                            tasks={ tasksGroupedByStatus[TASK_STATUS.SCHEDULED] }
+                        />
+                    )
+                }
+
+                {
+                    TASK_STATUS.ACTIVE in tasksGroupedByStatus && (
+                        <TaskStatusSublist
+                            status={ TASK_STATUS.ACTIVE }
+                            tasks={ tasksGroupedByStatus[TASK_STATUS.ACTIVE] }
+                        />
+                    )
+                }
+
+                {
+                    showClosedTasks && (
+                        TASK_STATUS.CLOSED in tasksGroupedByStatus ||
+                        TASK_STATUS.EXPIRED in tasksGroupedByStatus
+                    ) && (
+                        <>
                             {
-                            // Show divider under all items except last
-                                index !== tasks.length - 1 && (
-                                    <Divider />
+                                TASK_STATUS.CLOSED in tasksGroupedByStatus && (
+                                    <TaskStatusSublist
+                                        status={ TASK_STATUS.CLOSED }
+                                        tasks={ tasksGroupedByStatus[TASK_STATUS.CLOSED] }
+                                    />
                                 )
                             }
-                        </React.Fragment>
-                    ))
+                            {
+                                TASK_STATUS.EXPIRED in tasksGroupedByStatus && (
+                                    <TaskStatusSublist
+                                        status={ TASK_STATUS.EXPIRED }
+                                        tasks={ tasksGroupedByStatus[TASK_STATUS.EXPIRED] }
+                                    />
+                                )
+                            }
+                        </>
+                    )
                 }
-            </ZetkinList>
+
+                {
+                    !showClosedTasks && (
+                        TASK_STATUS.CLOSED in tasksGroupedByStatus ||
+                        TASK_STATUS.EXPIRED in tasksGroupedByStatus
+                    ) && (
+                        <>
+                            <Divider />
+                            <ListItem button component="a" onClick={ () => setShowClosedTasks(true) }>
+                                <ListItemText>
+                                    <Msg id="pages.organizeCampaigns.showClosedTasksPrompt" />
+                                </ListItemText>
+                            </ListItem>
+                        </>
+                    )
+                }
+            </List>
         </Card>
     );
 };
