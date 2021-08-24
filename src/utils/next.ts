@@ -1,5 +1,6 @@
 import { applySession } from 'next-session';
 import Negotiator from 'negotiator';
+import { ParsedUrlQuery } from 'querystring';
 import { QueryClient } from 'react-query';
 import { dehydrate, DehydratedState } from 'react-query/hydration';
 import { GetServerSideProps, GetServerSidePropsContext, GetServerSidePropsResult } from 'next';
@@ -59,6 +60,17 @@ const hasProps = (result: any): result is ResultWithProps => {
     return true;
 };
 
+const stripParams = (relativePath: string, params?: ParsedUrlQuery) => {
+    if (!params) {
+        return relativePath;
+    }
+    /* use fake base since the WHATWG url API does not support
+    incomplete urls and legacy API is depracated */
+    const url = new URL(relativePath, 'https://fake-base');
+    Object.keys(params).forEach(p => url.searchParams.delete(p));
+    return url.pathname + url.search;
+};
+
 export const scaffold = (wrapped : ScaffoldedGetServerSideProps, options? : ScaffoldOptions) : GetServerSideProps<ScaffoldedProps> => {
     const getServerSideProps : GetServerSideProps<ScaffoldedProps> = async (contextFromNext : GetServerSidePropsContext) => {
         const ctx = contextFromNext as ScaffoldedContext;
@@ -108,7 +120,8 @@ export const scaffold = (wrapped : ScaffoldedGetServerSideProps, options? : Scaf
                 if (reqWithSession.session) {
                     // Store the URL that the user tried to access, so that they
                     // can be redirected back here after logging in
-                    reqWithSession.session.redirAfterLogin = req.url || null;
+                    const attemptedPath = stripParams(ctx.resolvedUrl, ctx.params);
+                    reqWithSession.session.redirAfterLogin =  attemptedPath;
                 }
 
                 return {
