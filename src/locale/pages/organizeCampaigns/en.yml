@@ -4,6 +4,7 @@ linkGroup:
 noManager: No Campaign Manager
 events: Events
 noEventsCreatePrompt: No events... Click here to create one.
+showClosedTasksPrompt: Show closed tasks...
 tasks: Tasks
 noTasksCreatePrompt: No tasks... Click here to create one.
 indefinite: Indefinite timeline

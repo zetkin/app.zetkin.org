@@ -102,7 +102,7 @@ const TaskList: React.FunctionComponent<TaskListProps> = ({ tasks }) => {
                             <Divider />
                             <ListItem button component="a" onClick={ () => setShowClosedTasks(true) }>
                                 <ListItemText>
-                                    Show closed...
+                                    <Msg id="pages.organizeCampaigns.showClosedTasksPrompt" />
                                 </ListItemText>
                             </ListItem>
                         </>
