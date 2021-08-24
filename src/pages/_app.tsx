@@ -1,18 +1,23 @@
 import '../styles.css';
+
 import { AppProps } from 'next/app';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import DateUtils from '@date-io/dayjs';
+import dayjs from 'dayjs';
 import { Hydrate } from 'react-query/hydration';
 import { IntlProvider } from 'react-intl';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import { ReactQueryDevtools } from 'react-query/devtools';
-import theme from '../theme';
 import { ThemeProvider } from '@material-ui/core/styles';
 import { useEffect } from 'react';
-import { UserContext } from '../hooks';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
+import { LocalTimeToJsonPlugin } from 'utils/dateUtils';
 import { PageWithLayout } from '../types';
+import theme from '../theme';
+import { UserContext } from '../hooks';
+
+dayjs.extend(LocalTimeToJsonPlugin);
 
 const queryClient = new QueryClient({
     defaultOptions: {
@@ -48,7 +53,7 @@ function MyApp({ Component, pageProps } : AppProps) : JSX.Element {
     return (
         <UserContext.Provider value={ pageProps.user }>
             <ThemeProvider theme={ theme }>
-                <MuiPickersUtilsProvider utils={ DateUtils }>
+                <MuiPickersUtilsProvider libInstance={ dayjs } utils={ DateUtils }>
                     <IntlProvider
                         defaultLocale="en"
                         locale={ lang }

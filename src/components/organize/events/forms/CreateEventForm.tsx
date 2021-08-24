@@ -28,7 +28,7 @@ const CreateEventForm = ({ onSubmit, onCancel, orgId }: CreateEventFormProps): J
     const campaigns = campaignsQuery.data || [];
     const intl = useIntl();
 
-    const formattedNow = dayjs().format('YYYY-MM-DDThh:mm');
+    const formattedNow = dayjs().format('YYYY-MM-DDTHH:mm:ss');
 
     const initialValues = {
         campaign_id: campId,
