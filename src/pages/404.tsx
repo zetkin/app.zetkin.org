@@ -1,9 +1,11 @@
 import { GetStaticProps } from 'next';
 import Head from 'next/head';
+import Link from 'next/link';
 import { FormattedMessage as Msg } from 'react-intl';
-import {  Container, Typography } from '@material-ui/core';
+import {  AppBar, Box, Container, Toolbar, Typography } from '@material-ui/core';
 
 import { getMessages } from '../utils/locale';
+import ZetkinLogo from 'icons/ZetkinLogo';
 
 export const getStaticProps: GetStaticProps = async () => {
     const lang = 'en';
@@ -22,16 +24,34 @@ export default function Custom404() : JSX.Element {
             <Head>
                 <title>Zetkin</title>
             </Head>
-            <Container>
-                <Typography align="center" variant="h4">
-                    <Msg id="pages.404.pageNotFound"/>
-                </Typography>
-                <Typography align="center" variant="h6">
-                    <a data-testid="back-home-link" href="/">
-                        <Msg id="pages.404.backToHomePage"/>
-                    </a>
-                </Typography>
-            </Container>
+            <AppBar color="transparent" elevation={ 0 } position="static">
+                <Toolbar>
+                    <Link href="/">
+                        <a>
+                            <ZetkinLogo />
+                        </a>
+                    </Link>
+                </Toolbar>
+            </AppBar>
+            <Box mt={ 4 }>
+                <Container>
+                    <Typography align="center" variant="h1">
+                        404
+                    </Typography>
+                    <Typography align="center" variant="h4">
+                        <Msg id="pages.404.pageNotFound"/>
+                    </Typography>
+                    <Box mt={ 2 }>
+                        <Typography align="center" variant="h6">
+                            <Link data-testid="back-home-link" href="/">
+                                <a>
+                                    <Msg id="pages.404.backToHomePage"/>
+                                </a>
+                            </Link>
+                        </Typography>
+                    </Box>
+                </Container>
+            </Box>
         </>
     );
 }
