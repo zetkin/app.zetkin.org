@@ -44,7 +44,7 @@ const GROUPED_FILTERS: {[key in FILTER_CATEGORY]: FILTER_TYPE[]} = {
 
 const FilterGallery = ({ onCancelAddNewFilter, onAddNewFilter }:FilterGalleryProps): JSX.Element => {
     const theme = useTheme();
-    const isMobile = useMediaQuery(theme.breakpoints.down('xs'));
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
     return (
         <Box display="flex" flexDirection="column" pb={ 2 }>
