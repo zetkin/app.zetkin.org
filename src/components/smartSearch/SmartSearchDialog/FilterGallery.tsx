@@ -17,29 +17,28 @@ enum FILTER_CATEGORY {
     MISC = 'misc',
 }
 
-const isFilterInCategory = (filter: FILTER_TYPE, category: FILTER_CATEGORY) => {
-    if (category === FILTER_CATEGORY.PEOPLE) {
-        return filter === FILTER_TYPE.PERSON_DATA ||
-            filter === FILTER_TYPE.PERSON_FIELD ||
-            filter === FILTER_TYPE.PERSON_TAGS;
-    }
-    if (category === FILTER_CATEGORY.PHONE_BANKING) {
-        return filter === FILTER_TYPE.CALL_HISTORY;
-    }
-    if (category === FILTER_CATEGORY.CAMPAIGN_ACTIVITY) {
-        return filter === FILTER_TYPE.MOST_ACTIVE ||
-            filter === FILTER_TYPE.CAMPAIGN_PARTICIPATION;
-    }
-    if (category === FILTER_CATEGORY.SURVEYS) {
-        return filter === FILTER_TYPE.SURVEY_SUBMISSION ||
-            filter === FILTER_TYPE.SURVEY_RESPONSE ||
-            filter === FILTER_TYPE.SURVEY_OPTION;
-    }
-    if (category === FILTER_CATEGORY.MISC) {
-        return filter === FILTER_TYPE.RANDOM ||
-            filter === FILTER_TYPE.USER ||
-            filter === FILTER_TYPE.SUB_QUERY;
-    }
+const GROUPED_FILTERS: {[key in FILTER_CATEGORY]: FILTER_TYPE[]} = {
+    [FILTER_CATEGORY.PEOPLE]: [
+        FILTER_TYPE.PERSON_DATA,
+        FILTER_TYPE.PERSON_FIELD,
+        FILTER_TYPE.PERSON_TAGS,
+    ],
+    [FILTER_CATEGORY.CAMPAIGN_ACTIVITY]: [
+        FILTER_TYPE.CAMPAIGN_PARTICIPATION,
+    ],
+    [FILTER_CATEGORY.PHONE_BANKING]: [
+        FILTER_TYPE.CALL_HISTORY,
+    ],
+    [FILTER_CATEGORY.SURVEYS]: [
+        FILTER_TYPE.SURVEY_SUBMISSION,
+        FILTER_TYPE.SURVEY_RESPONSE,
+        FILTER_TYPE.SURVEY_OPTION,
+    ],
+    [FILTER_CATEGORY.MISC]: [
+        FILTER_TYPE.RANDOM,
+        FILTER_TYPE.USER,
+        FILTER_TYPE.SUB_QUERY,
+    ],
 };
 
 
@@ -69,19 +68,18 @@ const FilterGallery = ({ onCancelAddNewFilter, onAddNewFilter }:FilterGalleryPro
                 <Box flex={ 1 }>
                 </Box>
             </Box>
-            { Object.values(FILTER_CATEGORY).map(c => (
-                <Box key={ c } margin="auto" width={ 0.9 }>
+            { Object.entries(GROUPED_FILTERS).map(([category, filters]) => (
+                <Box key={ category } margin="auto" width={ 0.9 }>
                     <Box pl={ 2 }>
                         <Typography variant="h6">
-                            <Msg id={ `misc.smartSearch.filterCategories.${c}` }/>
+                            <Msg id={ `misc.smartSearch.filterCategories.${category}` }/>
                         </Typography>
                     </Box>
                     <Box
                         display="flex"
                         flexWrap="wrap"
                         justifyContent={ isMobile ? 'center' : 'start' }>
-                        { Object.values(FILTER_TYPE)
-                            .filter(filter => isFilterInCategory(filter, c))
+                        { filters
                             .map(filter => (
                                 <ButtonBase
                                     key={ filter }
