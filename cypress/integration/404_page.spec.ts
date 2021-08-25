@@ -1,6 +1,6 @@
 describe('404 Page', () => {
     const BAD_PATH = '/bad_path';
-    const EXPECTED_ENGLISH = '404 | Page not found';
+    const EXPECTED_ENGLISH = 'Page not found';
 
     it('loads custom 404 page on response status 404, and links back to the home page', () => {
         cy.request({

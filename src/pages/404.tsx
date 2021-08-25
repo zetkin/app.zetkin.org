@@ -43,8 +43,8 @@ export default function Custom404() : JSX.Element {
                     </Typography>
                     <Box mt={ 2 }>
                         <Typography align="center" variant="h6">
-                            <Link data-testid="back-home-link" href="/">
-                                <a>
+                            <Link href="/">
+                                <a data-testid="back-home-link">
                                     <Msg id="pages.404.backToHomePage"/>
                                 </a>
                             </Link>
