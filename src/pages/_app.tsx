@@ -6,6 +6,7 @@ import DateUtils from '@date-io/dayjs';
 import dayjs from 'dayjs';
 import { Hydrate } from 'react-query/hydration';
 import { IntlProvider } from 'react-intl';
+import isoWeek from 'dayjs/plugin/isoWeek';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { ThemeProvider } from '@material-ui/core/styles';
@@ -18,6 +19,7 @@ import theme from '../theme';
 import { UserContext } from '../hooks';
 
 dayjs.extend(LocalTimeToJsonPlugin);
+dayjs.extend(isoWeek);
 
 const queryClient = new QueryClient({
     defaultOptions: {
