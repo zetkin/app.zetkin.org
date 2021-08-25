@@ -63,7 +63,7 @@ const AllCampaignsCalendarPage : PageWithLayout<AllCampaignsCalendarPageProps> =
     return (
         <>
             <ZetkinCalendar baseHref={ `/organize/${orgId}/campaigns/calendar` } campaigns={ campaigns } events={ events } tasks={ tasks } />
-            <ZetkinSpeedDial actions={ [ACTIONS.CREATE_EVENT, ACTIONS.CREATE_CAMPAIGN] } />
+            <ZetkinSpeedDial actions={ [ACTIONS.CREATE_CAMPAIGN] } />
         </>
     );
 };
