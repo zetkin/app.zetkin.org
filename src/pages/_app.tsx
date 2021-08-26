@@ -1,9 +1,9 @@
 import '../styles.css';
 
-import * as dayjs from 'dayjs';
 import { AppProps } from 'next/app';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import DateUtils from '@date-io/dayjs';
+import dayjs from 'dayjs';
 import { Hydrate } from 'react-query/hydration';
 import { IntlProvider } from 'react-intl';
 import isoWeek from 'dayjs/plugin/isoWeek';
