@@ -1,8 +1,9 @@
+import { AlertTitle } from '@material-ui/lab';
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
-import { Alert, AlertTitle } from '@material-ui/lab';
+import ZetkinAlert from 'components/ZetkinAlert';
 import { Box, Button , Link, Typography } from '@material-ui/core';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
 
@@ -103,9 +104,8 @@ const TaskAssigneesPage: PageWithLayout = () => {
                 <title>{ `${task?.title} - ${intl.formatMessage({ id: 'layout.organize.tasks.tabs.assignees' })}` }</title>
             </Head>
             <Box p={ 2 }>
-                <Alert
-                    elevation={ 1 }
-                    severity={
+                <ZetkinAlert
+                    alertSeverity={
                         queryStatus ===  QUERY_STATUS.ERROR ?
                             'error' : queryStatus === QUERY_STATUS.EDITABLE ?
                                 'warning' : queryStatus === QUERY_STATUS.PUBLISHED ?
@@ -134,7 +134,7 @@ const TaskAssigneesPage: PageWithLayout = () => {
                         <Msg id="pages.assignees.links.create" />
                     </Button>
                     }
-                </Alert>
+                </ZetkinAlert>
 
                 { assignedTasks && (
                     <Box mt={ 3 }>
