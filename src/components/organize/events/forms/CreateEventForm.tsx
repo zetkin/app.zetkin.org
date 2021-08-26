@@ -13,28 +13,34 @@ import getLocations from '../../../../fetching/getLocations';
 interface CreateEventFormProps {
     onSubmit: (data: Record<string, unknown>) => void;
     onCancel: () => void;
-    orgId: string;
+    start?: Date;
+    end?: Date;
 }
 
-const CreateEventForm = ({ onSubmit, onCancel, orgId }: CreateEventFormProps): JSX.Element => {
+const CreateEventForm = ({ onSubmit, onCancel, start, end }: CreateEventFormProps): JSX.Element => {
     const router = useRouter();
-    const { campId } = router.query;
-    const campaignsQuery = useQuery(['campaigns', orgId], getCampaigns(orgId));
-    const activitiesQuery = useQuery(['actvities', orgId], getActivities(orgId));
-    const locationsQuery = useQuery(['locations', orgId], getLocations(orgId));
+    const { campId, orgId } = router.query;
+    const campaignsQuery = useQuery(['campaigns', orgId], getCampaigns(orgId as string));
+    const activitiesQuery = useQuery(['actvities', orgId], getActivities(orgId as string));
+    const locationsQuery = useQuery(['locations', orgId], getLocations(orgId as string));
 
     const activities = activitiesQuery.data || [];
     const locations = locationsQuery.data || [];
     const campaigns = campaignsQuery.data || [];
     const intl = useIntl();
 
-    const formattedNow = dayjs().format('YYYY-MM-DDTHH:mm:ss');
+    const now = dayjs();
+    const startTime = dayjs(start);
+    const endTime = dayjs(end);
+
+    const formattedStart = (startTime || now).format('YYYY-MM-DDTHH:mm:ss');
+    const formattedEnd = (endTime || now).format('YYYY-MM-DDTHH:mm:ss');
 
     const initialValues = {
         campaign_id: campId,
-        end_time: formattedNow,
+        end_time: formattedEnd,
         num_participants_required: 0,
-        start_time: formattedNow,
+        start_time: formattedStart,
     };
 
     const validate = (values: Record<string, string>) => {

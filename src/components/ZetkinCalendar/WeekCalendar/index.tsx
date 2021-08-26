@@ -3,10 +3,12 @@ import { grey } from '@material-ui/core/colors';
 import NextLink from 'next/link';
 import { Box, Link, List, makeStyles, Tooltip, Typography } from '@material-ui/core';
 import { CALENDAR_RANGES, getViewRange } from '../utils';
-import { useEffect, useRef } from 'react';
+import { MouseEventHandler, useEffect, useRef, useState } from 'react';
 
+import CreateEventForm from 'components/organize/events/forms/CreateEventForm';
 import WeekCalendarEvent from './WeekCalendarEvent';
 import WeekCalendarTask from './WeekCalendarTask';
+import ZetkinDialog from 'components/ZetkinDialog';
 import { ZetkinCampaign, ZetkinEvent, ZetkinTask } from '../../../types/zetkin';
 
 interface WeekCalendarProps {
@@ -90,6 +92,39 @@ const WeekCalendar = ({ orgId, baseHref, campaigns, events, focusDate, tasks }: 
 
     const today = new Date();
 
+    const [startPos, setStartPos] = useState(0);
+    const [endPos, setEndPos] = useState(0);
+    const [pressed, setPressed] = useState(false);
+    const [pressedDate, setPressedDate] = useState<Date | null>(null);
+    const [formOpen, setFormOpen] = useState(false);
+
+    const handleMouseDown = (e: MouseEvent, date: Date) => {
+        setPressed(true);
+        setPressedDate(date);
+        const scrollable = e.target?.parentNode?.parentNode.parentNode;
+        setStartPos(e.clientY - scrollable.getBoundingClientRect().y + scrollable.scrollTop);
+        setEndPos(e.clientY - scrollable.getBoundingClientRect().y + scrollable.scrollTop);
+    };
+
+    const handleMouseMove: MouseEventHandler = (e) => {
+        if (pressed) {
+            const scrollable = e.target.parentNode?.parentNode.parentNode;
+            setEndPos(e.clientY - scrollable.getBoundingClientRect().y + scrollable.scrollTop);
+        }
+    };
+    const handleMouseUp: MouseEventHandler = (e) => {
+        setPressed(false);
+        if (startPos !== endPos) {
+            setFormOpen(true);
+        }
+    };
+
+    const getTimeFromPixels = (pixels: number) => {
+        const oneMinute = calendar?.current?.offsetHeight / 1440;
+        return new Date(new Date(pressedDate).setUTCMinutes(oneMinute * pixels));
+    };
+
+
     return (
         <Box display="flex" flexDirection="column" height={ 1 }>
             <Box display="flex" flexDirection="column" flexGrow={ 0 } justifyContent="space-between">
@@ -160,8 +195,27 @@ const WeekCalendar = ({ orgId, baseHref, campaigns, events, focusDate, tasks }: 
                         const startOfDay = new Date(new Date(new Date(firstDayInView)
                             .setUTCDate(firstDayInView.getDate() + index)).setUTCHours(0, 0, 0, 0));
                         return (
-                            <Box key={ index } display="flex" flexDirection="column" height={ 1 } justifyContent="space-between" mx={ 0.5 } width={ 1 }>
+                            <Box
+                                key={ index }
+                                display="flex"
+                                flexDirection="column"
+                                height={ 1 }
+                                justifyContent="space-between"
+                                mx={ 0.5 }
+                                onMouseDown={ e => handleMouseDown(e, startOfDay) }
+                                onMouseMove={ handleMouseMove }
+                                onMouseUp={ handleMouseUp }
+                                width={ 1 }>
                                 <List className={ classes.list } data-testid={ `day-${index}-events` }>
+                                    { pressedDate?.getDay() === startOfDay.getDay() &&
+                                    <Box
+                                        bgcolor={ grey[500] }
+                                        borderLeft={ `5px solid ${grey[900]}` }
+                                        height={ endPos - startPos }
+                                        position="absolute"
+                                        top={ startPos }
+                                        width={ 1 }>
+                                    </Box> }
                                     { getEventsOnThisDate(startOfDay.getUTCDate())?.reduce((acc: [number, ZetkinEvent][], event: ZetkinEvent, index, array) => {
                                         const prevEvents = array.slice(0, index);
                                         const reversedPrevEvents = prevEvents.reverse();
@@ -199,6 +253,16 @@ const WeekCalendar = ({ orgId, baseHref, campaigns, events, focusDate, tasks }: 
                     }) }
                 </Box>
             </Box>
+            <ZetkinDialog
+                onClose={ () => setFormOpen(false) }
+                open={ formOpen }>
+                <CreateEventForm
+                    end={ getTimeFromPixels(endPos) }
+                    onCancel={ () => setFormOpen(false) }
+                    onSubmit={ () => null }
+                    start={ getTimeFromPixels(startPos) }
+                />
+            </ZetkinDialog>
         </Box>
     );
 };
