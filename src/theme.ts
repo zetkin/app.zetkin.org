@@ -85,6 +85,9 @@ const theme = createTheme({
     },
     typography: {
         fontFamily: 'azo-sans-web, sans-serif',
+        h2: {
+            lineHeight: 'unset',
+        },
     },
 });
 
