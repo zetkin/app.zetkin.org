@@ -1,10 +1,6 @@
 /* eslint-disable no-undef */
 require('@cypress/react/support');
 require('@testing-library/cypress/add-commands');
-import dayjs from 'dayjs';
-import isoWeek from 'dayjs/plugin/isoWeek';
-
-dayjs.extend(isoWeek);
 
 Cypress.Commands.add('waitUntilReactRendered', (timeout = 10000) => {
     cy.window().its('__reactRendered', { timeout }).then(initialized => {
