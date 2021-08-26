@@ -98,11 +98,13 @@ const TaskAssigneesPage: PageWithLayout = () => {
     return (
         <>
             <Box p={ 2 }>
-                <Alert severity={
-                    queryStatus ===  QUERY_STATUS.ERROR ?
-                        'error' : queryStatus === QUERY_STATUS.EDITABLE ?
-                            'warning' : queryStatus === QUERY_STATUS.PUBLISHED ?
-                                'info' : 'success' }>
+                <Alert
+                    elevation={ 1 }
+                    severity={
+                        queryStatus ===  QUERY_STATUS.ERROR ?
+                            'error' : queryStatus === QUERY_STATUS.EDITABLE ?
+                                'warning' : queryStatus === QUERY_STATUS.PUBLISHED ?
+                                    'info' : 'success' }>
                     <AlertTitle>
                         <Msg id={ `pages.assignees.queryStates.${queryStatus}` }/>
                     </AlertTitle>
