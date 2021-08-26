@@ -1,6 +1,6 @@
-import { Alert } from '@material-ui/lab';
 import { FormattedMessage as Msg } from 'react-intl';
 import { useState } from 'react';
+import ZetkinAlert from 'components/ZetkinAlert';
 import { Box, Button, DialogActions, IconButton, List, ListItem, Typography } from '@material-ui/core';
 import { DeleteOutline, Settings } from '@material-ui/icons';
 
@@ -65,9 +65,9 @@ const QueryOverview = (
     return (
         <Box display="flex" flexDirection="column" height={ 1 } justifyContent="space-between">
             { readOnly && (
-                <Alert severity="info">
+                <ZetkinAlert alertSeverity="info">
                     <Msg id="misc.smartSearch.readOnly"/>
-                </Alert>
+                </ZetkinAlert>
             ) }
             <Box margin="auto" maxWidth="500px" minWidth={ 0.5 }>
                 <List>
