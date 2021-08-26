@@ -1,5 +1,4 @@
 import dayjs from 'dayjs';
-import isoWeek from 'dayjs/plugin/isoWeek';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { Box, Button, makeStyles, MenuItem, TextField, Tooltip, Typography } from '@material-ui/core';
@@ -11,8 +10,6 @@ import { useIntl } from 'react-intl';
 import WeekCalendar from './WeekCalendar';
 import { CALENDAR_RANGES, getViewRange } from './utils';
 import { ZetkinCampaign, ZetkinEvent, ZetkinTask } from '../../types/zetkin';
-
-dayjs.extend(isoWeek);
 
 interface ZetkinCalendarProps {
     baseHref: string;

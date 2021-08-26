@@ -1,7 +1,11 @@
 import * as Router from 'next/router';
+import dayjs from 'dayjs';
+import isoWeek from 'dayjs/plugin/isoWeek';
 import { mountWithProviders } from '../../utils/testing';
 import ZetkinCalendar from '.';
 import { ZetkinCampaign, ZetkinEvent, ZetkinTask } from '../../types/zetkin';
+
+dayjs.extend(isoWeek);
 
 describe('ZetkinCalendar', () => {
     let dummyCampaigns: ZetkinCampaign[];
