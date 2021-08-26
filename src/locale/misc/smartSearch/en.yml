@@ -11,6 +11,12 @@ buttonLabels:
     addNewFilter: Add / remove people
 misc:
     noOptions: No matching tags
+filterCategories:
+    peopleDatabase: People
+    phoneBanking: Phone banking
+    campaignActivity: Campaign activity
+    surveys: Surveys
+    misc: Misc
 filterTitles:
     call_history: Based on their call history
     campaign_participation: Based on their campaign participation
@@ -22,7 +28,7 @@ filterTitles:
     sub_query: Based on another Smart Search query
     survey_option: Based on the options they have selected in survey questions
     survey_response: Based on their responses to survey questions
-    survey_submission: People who have responded to a survey
+    survey_submission: People who have submitted a survey
     user: People who used Zetkin
 all:
     inputString: Start with {startWithSelect}.
