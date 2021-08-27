@@ -7,11 +7,16 @@ interface ZetkinAlertProps {
 }
 
 const useStyles = makeStyles(() => ({
+    zetkinAlert:{
+        '& > .MuiAlert-message':{
+            width:'100%',
+        },
+    },
     zetkinAlertBright: {
-        color: '#555',
+        color: '#464646',
     },
     zetkinAlertDark: {
-        color: '#fff',
+        color: '#F9F9F9',
     },
 }));
 
@@ -21,10 +26,11 @@ const ZetkinAlert: FunctionComponent<ZetkinAlertProps> = ({
 
     return (
         <Alert
-            className={
+            className={ [
                 alertSeverity == 'info' ?
                     classes.zetkinAlertDark :
-                    classes.zetkinAlertBright }
+                    classes.zetkinAlertBright,
+                classes.zetkinAlert].join(' ') }
             elevation={ 2 }
             severity={ alertSeverity }
             variant="filled">
