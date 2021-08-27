@@ -3,11 +3,12 @@ import SvgIcon from '@material-ui/core/SvgIcon';
 interface ZetkinLogoProps {
     size?: number;
     color?: 'inherit' | 'disabled' | 'action' | 'secondary' | 'primary' | 'error';
+    htmlColor?: string;
 }
 
-const ZetkinLogo = ({ size, color }: ZetkinLogoProps):JSX.Element => {
+const ZetkinLogo = ({ size, color, htmlColor }: ZetkinLogoProps):JSX.Element => {
     return (
-        <SvgIcon color={ color } style={{ fontSize: size }} viewBox="0 0 39 32">
+        <SvgIcon color={ color } htmlColor={ htmlColor } style={{ fontSize: size }} viewBox="0 0 39 32">
             <path d="M11.8315 3.72506C12.8601 3.72506 13.694 2.89117 13.694 1.86253C13.694 0.833882 12.8601 0 11.8315 0C10.8028 0 9.96893 0.833882 9.96893 1.86253C9.96893 2.89117 10.8028 3.72506 11.8315 3.72506Z"/>
             <path d="M18.4677 4.58636C19.6357 4.58636 20.5825 3.63953 20.5825 2.47156C20.5825 1.30358 19.6357 0.35675 18.4677 0.35675C17.2997 0.35675 16.3529 1.30358 16.3529 2.47156C16.3529 3.63953 17.2997 4.58636 18.4677 4.58636Z" />
             <path d="M25.2714 5.21903C26.435 5.21903 27.3783 4.27573 27.3783 3.11211C27.3783 1.94849 26.435 1.00519 25.2714 1.00519C24.1077 1.00519 23.1644 1.94849 23.1644 3.11211C23.1644 4.27573 24.1077 5.21903 25.2714 5.21903Z"/>
