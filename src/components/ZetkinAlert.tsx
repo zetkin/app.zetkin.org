@@ -1,9 +1,13 @@
+import { Alert, AlertTitle } from '@material-ui/lab';
 import { FunctionComponent } from 'react';
 import { makeStyles } from '@material-ui/core';
-import { Alert, Color } from '@material-ui/lab';
+import { Box, Button , Link, Typography } from '@material-ui/core';
 
 interface ZetkinAlertProps {
-    alertSeverity: Color;
+    severity: string;
+    title: string;
+    onAction?: Function;
+    actionLabel?: string;
 }
 
 const useStyles = makeStyles(() => ({
@@ -20,21 +24,39 @@ const useStyles = makeStyles(() => ({
     },
 }));
 
-const ZetkinAlert: FunctionComponent<ZetkinAlertProps> = ({
-    children, alertSeverity }) : JSX.Element => {
+const ZetkinAlert: FunctionComponent<ZetkinAlertProps> = ({ title, actionLabel, onAction, severity }): JSX.Element => {
     const classes = useStyles();
 
     return (
         <Alert
             className={ [
-                alertSeverity == 'info' ?
+                severity == 'info' ?
                     classes.zetkinAlertDark :
                     classes.zetkinAlertBright,
-                classes.zetkinAlert].join(' ') }
-            elevation={ 2 }
-            severity={ alertSeverity }
+                classes.zetkinAlert].join(' ')
+            }
             variant="filled">
-            { children }
+
+            <Box
+                display="flex"
+                justifyContent="space-between"
+                width="100%">
+                <AlertTitle>
+                    { title }
+                </AlertTitle>
+                { actionLabel &&
+                    <Typography
+                        align="left">
+                        <Link
+                            color="inherit"
+                            underline="never"
+                            onClick={ onAction }
+                            >
+                            { actionLabel }
+                        </Link>
+                    </Typography>
+                }
+            </Box>
         </Alert>
     );
 };

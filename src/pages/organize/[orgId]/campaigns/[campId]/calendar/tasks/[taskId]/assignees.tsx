@@ -1,10 +1,9 @@
-import { AlertTitle } from '@material-ui/lab';
+import { Box } from '@material-ui/core';
 import { GetServerSideProps } from 'next';
-import { FormattedMessage as Msg } from 'react-intl';
+import { useIntl } from 'react-intl';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 import ZetkinAlert from 'components/ZetkinAlert';
-import { Box, Button , Link, Typography } from '@material-ui/core';
 
 import getAssignedTasks from 'fetching/tasks/getAssignedTasks';
 import getOrg from 'fetching/getOrg';
@@ -78,6 +77,8 @@ const getQueryStatus = (
 };
 
 const TaskAssigneesPage: PageWithLayout = () => {
+    const intl = useIntl();
+
     const { taskId, orgId } = useRouter().query;
     const taskQuery = useQuery(['task', taskId], getTask(orgId as string, taskId as string));
     const assignedTasksQuery = useQuery(['assignedTasks', orgId, taskId], getAssignedTasks(
@@ -96,45 +97,34 @@ const TaskAssigneesPage: PageWithLayout = () => {
     const readOnly = queryStatus === QUERY_STATUS.PUBLISHED ||
         queryStatus === QUERY_STATUS.ASSIGNED;
 
+    let alertActionLabel;
+
+    if (queryStatus == QUERY_STATUS.ERROR) {
+        if (readOnly) {
+            alertActionLabel = 'pages.assignees.links.readOnly';
+        }
+        else {
+            alertActionLabel = 'pages.assignees.links.edit';
+        }
+    }
+    else {
+        alertActionLabel = 'pages.assignees.links.create';
+    }
+
+    const alertSeverity = queryStatus ===  QUERY_STATUS.ERROR ?
+        'error' : queryStatus === QUERY_STATUS.EDITABLE ?
+            'warning' : queryStatus === QUERY_STATUS.PUBLISHED ?
+                'info' : 'success';
+
     return (
         <>
             <Box p={ 2 }>
                 <ZetkinAlert
-                    alertSeverity={
-                        queryStatus ===  QUERY_STATUS.ERROR ?
-                            'error' : queryStatus === QUERY_STATUS.EDITABLE ?
-                                'warning' : queryStatus === QUERY_STATUS.PUBLISHED ?
-                                    'info' : 'success' }>
-                    <Box
-                        display="flex"
-                        justifyContent="space-between"
-                        width="100%">
-                        <AlertTitle>
-                            <Msg id={ `pages.assignees.queryStates.${queryStatus}` }/>
-                        </AlertTitle>
-                        { queryStatus !== QUERY_STATUS.ERROR &&
-                            <Link
-                                color="inherit"
-                                component="button"
-                                onClick={ () => setDialogOpen(true) }
-                                underline="always">
-                                <Typography align="left">
-                                    { readOnly ?
-                                        <Msg id="pages.assignees.links.readOnly"/> :
-                                        <Msg id="pages.assignees.links.edit"/>
-                                    }
-                                </Typography>
-                            </Link> }
-                        { queryStatus === QUERY_STATUS.ERROR &&
-                            <Button
-                                color="primary"
-                                onClick={ () => setDialogOpen(true) }
-                                variant="contained">
-                                <Msg id="pages.assignees.links.create" />
-                            </Button>
-                        }
-                    </Box>
-                </ZetkinAlert>
+                    actionLabel={ intl.formatMessage({ id: alertActionLabel }) }
+                    onAction={ () => setDialogOpen(true) }
+                    severity={ alertSeverity }
+                    title={ intl.formatMessage({ id: `pages.assignees.queryStates.${queryStatus}` }) }
+                />
 
                 { assignedTasks && (
                     <Box mt={ 3 }>
