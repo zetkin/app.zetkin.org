@@ -14,6 +14,7 @@ export default class MyDocument extends Document {
                     <meta content={ theme.palette.primary.main } name="theme-color" />
                     <script src="https://use.typekit.net/tqq3ylv.js"></script>
                     <script>{ 'try{Typekit.load({ async: true })}catch(e){}' }</script>
+                    <link href="/logo-zetkin.png" rel="shortcut icon" />
                 </Head>
                 <body>
                     <Main />

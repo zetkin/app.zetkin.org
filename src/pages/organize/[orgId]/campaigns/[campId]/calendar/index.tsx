@@ -1,4 +1,6 @@
 import { GetServerSideProps } from 'next';
+import Head from 'next/head';
+import { useIntl } from 'react-intl';
 
 import getCampaign from '../../../../../../fetching/getCampaign';
 import getCampaignEvents from '../../../../../../fetching/getCampaignEvents';
@@ -56,6 +58,7 @@ type OrganizeCalendarPageProps = {
 };
 
 const CampaignCalendarPage : PageWithLayout<OrganizeCalendarPageProps> = ({ orgId, campId }) => {
+    const intl = useIntl();
     const eventsQuery = useQuery(['campaignEvents', orgId, campId], getCampaignEvents(orgId, campId));
     const campaignQuery = useQuery(['campaign', orgId, campId], getCampaign(orgId, campId));
     const tasksQuery = useQuery(['tasks', orgId, campId], getCampaignTasks(orgId, campId));
@@ -65,6 +68,9 @@ const CampaignCalendarPage : PageWithLayout<OrganizeCalendarPageProps> = ({ orgI
 
     return (
         <>
+            <Head>
+                <title>{ `${campaignQuery.data?.title} - ${intl.formatMessage({ id:'layout.organize.campaigns.calendar' })}`  }</title>
+            </Head>
             <ZetkinCalendar baseHref={ `/organize/${orgId}/campaigns/${campId}/calendar` } campaigns={ campaigns } events={ events } tasks={ tasks } />
             <ZetkinSpeedDial actions={ [ACTIONS.CREATE_TASK] }/>
         </>

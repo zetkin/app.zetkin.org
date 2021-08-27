@@ -1,9 +1,10 @@
 import { GetServerSideProps } from 'next';
-import { FormattedMessage as Msg } from 'react-intl';
+import Head from 'next/head';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 import { Alert, AlertTitle } from '@material-ui/lab';
 import { Box, Button , Link, Typography } from '@material-ui/core';
+import { FormattedMessage as Msg, useIntl } from 'react-intl';
 
 import getAssignedTasks from 'fetching/tasks/getAssignedTasks';
 import getOrg from 'fetching/getOrg';
@@ -77,6 +78,7 @@ const getQueryStatus = (
 };
 
 const TaskAssigneesPage: PageWithLayout = () => {
+    const intl = useIntl();
     const { taskId, orgId } = useRouter().query;
     const taskQuery = useQuery(['task', taskId], getTask(orgId as string, taskId as string));
     const assignedTasksQuery = useQuery(['assignedTasks', orgId, taskId], getAssignedTasks(
@@ -97,6 +99,9 @@ const TaskAssigneesPage: PageWithLayout = () => {
 
     return (
         <>
+            <Head>
+                <title>{ `${task?.title} - ${intl.formatMessage({ id: 'layout.organize.tasks.tabs.assignees' })}` }</title>
+            </Head>
             <Box p={ 2 }>
                 <Alert severity={
                     queryStatus ===  QUERY_STATUS.ERROR ?
