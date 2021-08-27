@@ -105,30 +105,35 @@ const TaskAssigneesPage: PageWithLayout = () => {
                             'error' : queryStatus === QUERY_STATUS.EDITABLE ?
                                 'warning' : queryStatus === QUERY_STATUS.PUBLISHED ?
                                     'info' : 'success' }>
-                    <AlertTitle>
-                        <Msg id={ `pages.assignees.queryStates.${queryStatus}` }/>
-                    </AlertTitle>
-                    { queryStatus !== QUERY_STATUS.ERROR &&
-                    <Link
-                        color="inherit"
-                        component="button"
-                        onClick={ () => setDialogOpen(true) }
-                        underline="always">
-                        <Typography align="left">
-                            { readOnly ?
-                                <Msg id="pages.assignees.links.readOnly"/> :
-                                <Msg id="pages.assignees.links.edit"/>
-                            }
-                        </Typography>
-                    </Link> }
-                    { queryStatus === QUERY_STATUS.ERROR &&
-                    <Button
-                        color="primary"
-                        onClick={ () => setDialogOpen(true) }
-                        variant="contained">
-                        <Msg id="pages.assignees.links.create" />
-                    </Button>
-                    }
+                    <Box
+                        display="flex"
+                        justifyContent="space-between"
+                        width="100%">
+                        <AlertTitle>
+                            <Msg id={ `pages.assignees.queryStates.${queryStatus}` }/>
+                        </AlertTitle>
+                        { queryStatus !== QUERY_STATUS.ERROR &&
+                            <Link
+                                color="inherit"
+                                component="button"
+                                onClick={ () => setDialogOpen(true) }
+                                underline="always">
+                                <Typography align="left">
+                                    { readOnly ?
+                                        <Msg id="pages.assignees.links.readOnly"/> :
+                                        <Msg id="pages.assignees.links.edit"/>
+                                    }
+                                </Typography>
+                            </Link> }
+                        { queryStatus === QUERY_STATUS.ERROR &&
+                            <Button
+                                color="primary"
+                                onClick={ () => setDialogOpen(true) }
+                                variant="contained">
+                                <Msg id="pages.assignees.links.create" />
+                            </Button>
+                        }
+                    </Box>
                 </ZetkinAlert>
 
                 { assignedTasks && (
