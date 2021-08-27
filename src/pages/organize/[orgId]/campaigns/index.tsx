@@ -1,6 +1,7 @@
 import { GetServerSideProps } from 'next';
 
 import { Box } from '@material-ui/core';
+import Head from 'next/head';
 import { useIntl } from 'react-intl';
 import { useQuery } from 'react-query';
 
@@ -89,6 +90,9 @@ const AllCampaignsSummaryPage: PageWithLayout<AllCampaignsSummaryPageProps> = ({
 
     return (
         <>
+            <Head>
+                <title>{ intl.formatMessage({ id:'layout.organize.campaigns.allCampaigns' }) }</title>
+            </Head>
             <Box p={ 4 }>
                 <ZetkinSection title={ intl.formatMessage({ id: 'pages.organizeAllCampaigns.heading' }) }>
                     <Box display="grid" gridGap={ 20 } gridTemplateColumns="repeat( auto-fit, minmax(450px, 1fr) )">
