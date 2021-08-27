@@ -28,7 +28,7 @@ export default function Custom404() : JSX.Element {
                 <Toolbar>
                     <Link href="/">
                         <a>
-                            <ZetkinLogo />
+                            <ZetkinLogo htmlColor="#EE323E" />
                         </a>
                     </Link>
                 </Toolbar>
