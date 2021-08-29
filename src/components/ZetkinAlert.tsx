@@ -1,16 +1,25 @@
 import { Alert, AlertTitle } from '@material-ui/lab';
 import { FunctionComponent } from 'react';
 import { makeStyles } from '@material-ui/core';
-import { Box, Button , Link, Typography } from '@material-ui/core';
+import { Box, Button, Color, Link, Typography } from '@material-ui/core';
+
+type Severity = 'error' | 'success' | 'warning' | 'info';
 
 interface ZetkinAlertProps {
-    severity: string;
-    title: string;
-    onAction?: Function;
     actionLabel?: string;
+    onAction?: Function;
+    severity: Severity;
+    title: string;
 }
 
 const useStyles = makeStyles(() => ({
+    link: {
+        '&:hover': {
+            cursor: 'pointer',
+        },
+        color: 'inherit',
+        textTransform: 'uppercase',
+    },
     zetkinAlert:{
         '& > .MuiAlert-message':{
             width:'100%',
@@ -24,6 +33,9 @@ const useStyles = makeStyles(() => ({
     },
 }));
 
+
+
+
 const ZetkinAlert: FunctionComponent<ZetkinAlertProps> = ({ title, actionLabel, onAction, severity }): JSX.Element => {
     const classes = useStyles();
 
@@ -35,6 +47,7 @@ const ZetkinAlert: FunctionComponent<ZetkinAlertProps> = ({ title, actionLabel, 
                     classes.zetkinAlertBright,
                 classes.zetkinAlert].join(' ')
             }
+            severity={ severity }
             variant="filled">
 
             <Box
@@ -45,16 +58,12 @@ const ZetkinAlert: FunctionComponent<ZetkinAlertProps> = ({ title, actionLabel, 
                     { title }
                 </AlertTitle>
                 { actionLabel &&
-                    <Typography
-                        align="left">
-                        <Link
-                            color="inherit"
-                            underline="never"
-                            onClick={ onAction }
-                            >
-                            { actionLabel }
-                        </Link>
-                    </Typography>
+                    <Link
+                        className={ classes.link }
+                        onClick={ onAction }
+                        underline="none">
+                        { actionLabel }
+                    </Link>
                 }
             </Box>
         </Alert>
