@@ -5,8 +5,6 @@ import { useIntl } from 'react-intl';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 import ZetkinAlert from 'components/ZetkinAlert';
-import { Box, Button , Link, Typography } from '@material-ui/core';
-import { FormattedMessage as Msg, useIntl } from 'react-intl';
 
 import getAssignedTasks from 'fetching/tasks/getAssignedTasks';
 import getOrg from 'fetching/getOrg';
