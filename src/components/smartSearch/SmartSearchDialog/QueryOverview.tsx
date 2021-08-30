@@ -1,8 +1,8 @@
-import { FormattedMessage as Msg } from 'react-intl';
 import { useState } from 'react';
 import ZetkinAlert from 'components/ZetkinAlert';
 import { Box, Button, DialogActions, IconButton, List, ListItem, Typography } from '@material-ui/core';
 import { DeleteOutline, Settings } from '@material-ui/icons';
+import { FormattedMessage as Msg, useIntl } from 'react-intl';
 
 import DisplayCallHistory from '../filters/CallHistory/DisplayCallHistory';
 import DisplayCampaignParticipation from '../filters/CampaignParticipation/DisplayCampaignParticipation';
@@ -61,14 +61,14 @@ const QueryOverview = (
         onOpenStartsWithEditor,
         startsWithAll }:QueryOverviewProps,
 ): JSX.Element => {
+    const intl = useIntl();
+
     const [hovered, setHovered] = useState<number | null | string>(null);
     return (
         <Box display="flex" flexDirection="column" height={ 1 } justifyContent="space-between">
-            { readOnly && (
-                <ZetkinAlert alertSeverity="info">
-                    <Msg id="misc.smartSearch.readOnly"/>
-                </ZetkinAlert>
-            ) }
+            { readOnly &&
+                <ZetkinAlert severity="info" title={ intl.formatMessage({ id: 'misc.smartSearch.readOnly' }) } />
+            }
             <Box margin="auto" maxWidth="500px" minWidth={ 0.5 }>
                 <List>
                     <ListItem key={ FIRST_FILTER } style={{ padding: 0 }}>
