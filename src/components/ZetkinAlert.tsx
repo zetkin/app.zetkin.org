@@ -1,13 +1,13 @@
-import { Alert, AlertTitle } from '@material-ui/lab';
 import { FunctionComponent } from 'react';
 import { makeStyles } from '@material-ui/core';
-import { Box, Button, Color, Link, Typography } from '@material-ui/core';
+import { Alert, AlertTitle } from '@material-ui/lab';
+import { Box, Link } from '@material-ui/core';
 
 type Severity = 'error' | 'success' | 'warning' | 'info';
 
 interface ZetkinAlertProps {
     actionLabel?: string;
-    onAction?: Function;
+    onAction?: () => void;
     severity: Severity;
     title: string;
 }
