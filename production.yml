@@ -1,0 +1,21 @@
+version: "3"
+volumes:
+  certs:
+services:
+  frontend:
+    build:
+      context: ./
+      dockerfile: env/frontend/Dockerfile
+    environment:
+      NODE_ENV: production
+  nginx:
+    build:
+      context: ./env/nginx
+    volumes:
+      - certs:/etc/certificates
+    ports:
+      - 80:80
+      - 443:443
+    environment:
+      APP_DOMAIN: app.zetkin.org
+      APP_USE_TLS: 1
