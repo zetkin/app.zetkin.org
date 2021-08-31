@@ -18,4 +18,4 @@ services:
       - 443:443
     environment:
       APP_DOMAIN: app.zetkin.org
-      APP_USE_TLS: ${APP_USE_TLS}
+      APP_USE_TLS: 1
