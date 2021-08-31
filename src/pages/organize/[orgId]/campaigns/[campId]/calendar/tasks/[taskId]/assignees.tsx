@@ -4,17 +4,18 @@ import Head from 'next/head';
 import { useIntl } from 'react-intl';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
-import ZetkinAlert from 'components/ZetkinAlert';
+import { useState } from 'react';
 
 import getAssignedTasks from 'fetching/tasks/getAssignedTasks';
 import getOrg from 'fetching/getOrg';
 import getTask from 'fetching/tasks/getTask';
 import { PageWithLayout } from 'types';
+import { QUERY_STATUS } from 'types/smartSearch';
+import QueryStatusAlert from 'components/smartSearch/QueryStatusAlert';
 import { scaffold } from 'utils/next';
 import SingleTaskLayout from 'components/layout/organize/SingleTaskLayout';
 import SmartSearchDialog from 'components/smartSearch/SmartSearchDialog';
 import TaskAssigneesList from 'components/organize/tasks/TaskAssigneesList';
-import { useState } from 'react';
 import getTaskStatus, { TASK_STATUS } from 'utils/getTaskStatus';
 import { ZetkinAssignedTask, ZetkinTask } from 'types/zetkin';
 
@@ -52,12 +53,6 @@ export const getServerSideProps : GetServerSideProps = scaffold(async (ctx) => {
     };
 }, scaffoldOptions);
 
-enum QUERY_STATUS {
-    ERROR='error', // no smart search query created yet
-    EDITABLE='editable', // draft or scheduled task
-    PUBLISHED='published', // published but not yet assigned
-    ASSIGNED='assigned', // published and assigned
-}
 
 const getQueryStatus = (
     task?: ZetkinTask,
@@ -67,7 +62,7 @@ const getQueryStatus = (
     if (taskStatus === TASK_STATUS.DRAFT || taskStatus === TASK_STATUS.SCHEDULED) {
         queryStatus = QUERY_STATUS.EDITABLE;
         if (!task?.target.filter_spec.length) {
-            queryStatus = QUERY_STATUS.ERROR;
+            queryStatus = QUERY_STATUS.NEW;
         }
     }
     // we don't want 'publishing' state to appear on page load while the data is being fetched
@@ -90,7 +85,6 @@ const TaskAssigneesPage: PageWithLayout = () => {
     const query = task?.target;
 
     const [dialogOpen, setDialogOpen] = useState(false);
-
     const handleDialogClose = () => setDialogOpen(false);
 
     const queryStatus = getQueryStatus(task, assignedTasks);
@@ -98,24 +92,6 @@ const TaskAssigneesPage: PageWithLayout = () => {
     const readOnly = queryStatus === QUERY_STATUS.PUBLISHED ||
         queryStatus === QUERY_STATUS.ASSIGNED;
 
-    let alertActionLabel;
-
-    if (queryStatus == QUERY_STATUS.ERROR) {
-        if (readOnly) {
-            alertActionLabel = 'pages.assignees.links.readOnly';
-        }
-        else {
-            alertActionLabel = 'pages.assignees.links.edit';
-        }
-    }
-    else {
-        alertActionLabel = 'pages.assignees.links.create';
-    }
-
-    const alertSeverity = queryStatus ===  QUERY_STATUS.ERROR ?
-        'error' : queryStatus === QUERY_STATUS.EDITABLE ?
-            'warning' : queryStatus === QUERY_STATUS.PUBLISHED ?
-                'info' : 'success';
 
     return (
         <>
@@ -123,13 +99,10 @@ const TaskAssigneesPage: PageWithLayout = () => {
                 <title>{ `${task?.title} - ${intl.formatMessage({ id: 'layout.organize.tasks.tabs.assignees' })}` }</title>
             </Head>
             <Box p={ 2 }>
-                <ZetkinAlert
-                    actionLabel={ intl.formatMessage({ id: alertActionLabel }) }
-                    onAction={ () => setDialogOpen(true) }
-                    severity={ alertSeverity }
-                    title={ intl.formatMessage({ id: `pages.assignees.queryStates.${queryStatus}` }) }
+                <QueryStatusAlert
+                    openDialog={ () => setDialogOpen(true) }
+                    status={ queryStatus }
                 />
-
                 { assignedTasks && (
                     <Box mt={ 3 }>
                         <TaskAssigneesList assignedTasks={ assignedTasks } />

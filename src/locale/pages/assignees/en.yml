@@ -1,5 +1,5 @@
 queryStates:
-    error: This task will be targeted to people matching a Smart Search query. Before you can publish, you must create a target group using Smart Search.
+    new: This task will be targeted to people matching a Smart Search query. Before you can publish, you must create a target group using Smart Search.
     editable: When published, this task will be assigned to the people matching the targeting Smart Search query
     published: This task is currently being assigned to all that match the targeting Smart Search query...
     assigned: This task has been assigned to all people that match the targeting Smart Search query.
