@@ -5,13 +5,13 @@ module.exports = {
     es6: true,
   },
   parserOptions: { ecmaVersion: 8 }, // to enable features such as async/await
-  ignorePatterns: ['node_modules/*', '.next/*', '.out/*', '!.prettierrc.js', 'cypress/plugins/index.js'], // We don't want to lint generated files nor node_modules, but we want to lint .prettierrc.js (ignored by default by eslint)
+  ignorePatterns: ['node_modules/*', '.next/*', '.out/*', '!.prettierrc.js', ], // We don't want to lint generated files nor node_modules, but we want to lint .prettierrc.js (ignored by default by eslint)
   extends: ['eslint:recommended', 'plugin:react/recommended'],
   settings: { react: { version: 'detect' } },
   overrides: [
     // This configuration will apply only to TypeScript files
     {
-      files: ['**/*.ts', '**/*.tsx', 'cypress/**/*.js', 'src/**/*.js'],
+      files: ['**/*.ts', '**/*.tsx', 'src/**/*.js'],
       parser: '@typescript-eslint/parser',
       env: {
         browser: true,

@@ -2,9 +2,9 @@ name: Main service CI
 
 on:
     push:
-        branches: [ main ]
+        branches: [main]
     pull_request:
-        branches: [ main ]
+        branches: [main]
 
 jobs:
     build:
@@ -17,18 +17,3 @@ jobs:
                   node-version: 14.x
             - run: yarn install --frozen-lockfile
             - run: yarn lint
-    cypress:
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v2
-            - run: yarn install --frozen-lockfile
-            - run: yarn build
-            - name: Add host to /etc/hosts
-              run: |
-                sudo echo "127.0.0.1 www.dev.zetkin.org" | sudo tee -a /etc/hosts
-            - name: Copy environment files
-              run: cp .env.test .env.production
-            - name: Cypress run
-              uses: cypress-io/github-action@v2
-              with:
-                start: sudo yarn ci-start
