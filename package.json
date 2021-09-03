@@ -4,12 +4,14 @@
     "private": true,
     "scripts": {
         "build": "next build",
-        "devproxy": "moxy -f http://api.dev.zetkin.org",
+        "start": "next start -p 80",
         "devserver": "next dev -p 3000",
         "lint": "eslint src && tsc --noEmit && echo 'Finished linting without errors!'",
-        "watch": "chokidar 'src/**/*' -c 'npm run lint'",
+        "devproxy": "moxy -f http://api.dev.zetkin.org",
         "ci-start": "concurrently 'next start -p 3000' 'yarn devproxy'",
-        "start": "next start -p 80"
+        "watch": "chokidar 'src/**/*' -c 'npm run lint'",
+        "playwright": "playwright test --headed",
+        "playwright:skipbuild": "SKIP_BUILD=1 playwright test --headed"
     },
     "nyc": {
         "reporter": [
