@@ -49,25 +49,29 @@ const ZetkinCalendar = ({ baseHref, events, campaigns , tasks }: ZetkinCalendarP
 
     const tasksWithDeadlines = tasks.filter(task => task.deadline);
 
-    const handleForwardButtonClick = () => {
+    const navigateCalendar = (step : 1 | -1) => {
         if (range === CALENDAR_RANGES.MONTH) {
-            //Instead of determining day of the month based on focusDate.getDate()
-            //Hardcode it to remain day 1. To avoid error in months less than 31 days.
-            setFocusDate(new Date(focusDate.getFullYear(), focusDate.getMonth() + 1, 1, 12));
+            setFocusDate(new Date(
+                focusDate.getFullYear(),
+                focusDate.getMonth() + step,
+                // Always use day 1 of the month to avoid error when navigating between
+                // months with different number of days, ex: Aug = 31, Sep = 30, Feb = 28
+                1,
+                // Always use 12' noon to avoid timezone issues, ex: September 1st
+                // midnight in Sweden is interpreted as 31 of August in UTC
+                12));
         }
         else if (range === CALENDAR_RANGES.WEEK) {
-            setFocusDate(new Date(new Date(focusDate).setDate(focusDate.getDate() + 7)));
+            setFocusDate(new Date(new Date(focusDate).setDate(focusDate.getDate() + step * 7)));
         }
     };
 
+    const handleForwardButtonClick = () => {
+        navigateCalendar(1);
+    };
+
     const handleBackButtonClick = () => {
-        if (range === CALENDAR_RANGES.MONTH) {
-            //Hardcode day 1 of the month, then hour.
-            setFocusDate(new Date(focusDate.getFullYear(), focusDate.getMonth() - 1, 1, 12));
-        }
-        else if (range === CALENDAR_RANGES.WEEK) {
-            setFocusDate(new Date(new Date(focusDate).setDate(focusDate.getDate() - 7)));
-        }
+        navigateCalendar(-1);
     };
 
     const today = new Date();
