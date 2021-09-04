@@ -34,7 +34,7 @@
         "lodash.debounce": "^4.0.8",
         "mui-rff": "^3.0.9",
         "negotiator": "^0.6.2",
-        "next": "^10.0.3",
+        "next": "^11.1.2",
         "next-session": "^3.4.0",
         "random-seed": "^0.3.0",
         "react": "17.0.1",

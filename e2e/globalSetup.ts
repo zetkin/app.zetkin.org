@@ -6,7 +6,7 @@ import path from 'path';
 
 async function globalSetup() {
     // @ts-ignore
-    process.env.NODE_ENV = 'test';
+    process.env.NODE_ENV = 'production';
     process.env.PLAYWRIGHT = '1';
 
     if (process.env.SKIP_BUILD === '1') {

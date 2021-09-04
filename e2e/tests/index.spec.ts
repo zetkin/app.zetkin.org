@@ -1,5 +1,5 @@
-import { test } from '@playwright/test';
+import test from '../fixtures/next';
 
-test('loads index page', async ({ page }) => {
-    await page.goto('http://localhost:3000');
+test('loads index page', async ({ page, port }) => {
+    await page.goto(`http://localhost:${port}`);
 });
