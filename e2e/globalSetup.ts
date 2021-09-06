@@ -6,8 +6,6 @@ import { nextBuild } from 'next/dist/cli/next-build';
 import path from 'path';
 
 async function globalSetup() {
-    // @ts-ignore
-    process.env.NODE_ENV = 'production';
     process.env.PLAYWRIGHT = '1';
 
     // Copy env file .env.test to .env.production
