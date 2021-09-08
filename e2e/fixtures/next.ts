@@ -1,3 +1,4 @@
+/* eslint-disable sort-keys */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable no-empty-pattern */
 
@@ -19,20 +20,74 @@ interface Mock<G> {
     status?: number;
 }
 
+interface NextTestFixtures {
+    login: () => Promise<void>;
+}
+
 interface NextWorkerFixtures {
-    appUri: string;
-    moxy: {
-        removeMock: (method?: MoxyHTTPMethod, path?: string) => Promise<void>;
-        setMock: <G>(method: MoxyHTTPMethod, path: string, response?: Mock<G>) => Promise<void>;
+    next: {
+        appUri: string;
+        moxy: {
+            removeMock: (method?: MoxyHTTPMethod, path?: string) => Promise<void>;
+            setMock: <G>(method: MoxyHTTPMethod, path: string, response?: Mock<G>) => Promise<void>;
+        };
     };
 }
 
-const test = base.extend<Record<string, unknown>, NextWorkerFixtures>({
-    appUri: [ // Start a next server which serves the application, exposing the port to the tests
-        async ({}, use) => {
+const test = base.extend<NextTestFixtures, NextWorkerFixtures>({
+    next: [ // Start a next server which serves the application, exposing the port to the tests
+        async ({}, use, workerInfo) => {
+            /**
+             * Setup Moxy
+             */
+            const PROXY_FORWARD_URI = 'http://api.dev.zetkin.org';
+            const MOXY_PORT = 30000 - workerInfo.workerIndex;
+
+            const { start: startMoxy, stop: stopMoxy } = moxy({ forward: PROXY_FORWARD_URI, port: MOXY_PORT });
+            startMoxy();
+
+            const setMock = async <G>(method: MoxyHTTPMethod, path: string, response?: Mock<G>) => {
+                const url = `http://localhost:${MOXY_PORT}${path}/_mocks/${method}`;
+
+                const res = await fetch(url, {
+                    body: JSON.stringify(response),
+                    headers: [
+                        ['Content-Type', 'application/json'],
+                    ],
+                    method: 'PUT',
+                });
+
+                if (res.status === 409) {
+                    throw Error(`
+                        Mock already exists with method ${method} at path ${path}. 
+                        You must delete it before you can assign a new mock with these parameters
+                    `);
+                }
+            };
+
+            const removeMock = async(method?: MoxyHTTPMethod, path?: string) => {
+                const url = method != null && path != null ?
+                    `http://localhost:${MOXY_PORT}${path}/_mocks/${method}` : // If path and method, remove specific mock
+                    path != null ?
+                        `http://localhost:${MOXY_PORT}${path}/_mocks` : // If no method, remove all on path
+                        `http://localhost:${MOXY_PORT}$/_mocks/`; // If method and path, remove specific one
+
+                await fetch(url, {
+                    method: 'DELETE',
+                });
+            };
+
+            /**
+             * Setup Next App
+             */
             const app = next({
                 dev: false,
                 dir: path.resolve(__dirname, '../..'), // Find production build
+                conf: {
+                    env: {
+                        ZETKIN_API_PORT: MOXY_PORT.toString(),
+                    },
+                },
             });
 
             await app.prepare();
@@ -53,69 +108,52 @@ const test = base.extend<Record<string, unknown>, NextWorkerFixtures>({
             });
 
             // Get the port from the next server
-            const port = String((server.address() as AddressInfo).port);
-
-            await use(`http://localhost:${port}`);
-
-            // Close server when worker stops
-            await new Promise(cb => server.close(cb));
-        },
-        {
-            auto: true,
-            scope: 'worker',
-        },
-    ],
-    moxy: [ // Start a moxy proxy on port 8001, exposing functions to set and remove mocks
-        async ({}, use, workerInfo) => {
-            const PROXY_FORWARD_URI = 'http://api.dev.zetkin.org';
-            const PORT = 30000 - workerInfo.workerIndex;
-
-            const { start, stop } = moxy({ forward: PROXY_FORWARD_URI, port: PORT });
-            start();
-
-            const setMock = async <G>(method: MoxyHTTPMethod, path: string, response?: Mock<G>) => {
-                const url = `localhost:${PORT}${path}/_mocks/${method}`;
-
-                const res = await fetch(url, {
-                    body: JSON.stringify(response),
-                    headers: [
-                        ['Content-Type', 'application/json'],
-                    ],
-                    method: 'PUT',
-                });
-
-                if (res.status === 409) {
-                    throw Error(`
-                        Mock already exists with method ${method} at path ${path}. 
-                        You must delete it before you can assign a new mock with these parameters
-                    `);
-                }
-            };
-
-            const removeMock = async(method?: MoxyHTTPMethod, path?: string) => {
-                const url = method != null && path != null ?
-                    `localhost:${PORT}${path}/_mocks/${method}` : // If path and method, remove specific mock
-                    path != null ?
-                        `localhost:${PORT}${path}/_mocks` : // If no method, remove all on path
-                        `localhost:${PORT}$/_mocks/`; // If method and path, remove specific one
-
-                await fetch(url, {
-                    method: 'DELETE',
-                });
-            };
+            const NEXT_PORT = String((server.address() as AddressInfo).port);
 
             await use({
-                removeMock,
-                setMock,
+                appUri: `http://localhost:${NEXT_PORT}`,
+                moxy: {
+                    setMock,
+                    removeMock,
+                },
             });
 
-            stop();
+            // Close server when worker stops
+            await new Promise(cb => {
+                server.close(cb);
+                stopMoxy();
+            });
+
         },
         {
             auto: true,
             scope: 'worker',
         },
     ],
+    // login: async ({ context, appUri }, use) => {
+    //     const login = async () => {
+    //         const page = await context.newPage();
+    //         await page.goto(appUri + '/login');
+
+    //         await page.fill('.LoginForm-emailInput', 'testadmin@example.com');
+    //         await page.fill('.LoginForm-passwordInput', 'password');
+    //         page.waitForTimeout(10000);
+
+    //         await page.click('.LoginForm-submitButton');
+
+
+    //         await context.storageState({ path: 'auth-state.json' });
+
+
+
+    //         // await page.fill('.LoginForm-emailInput', 'testadmin@example.com');
+    //         // await page.fill('.LoginForm-passwordInput', 'password');
+    //         // await page.click('.LoginForm-submitButton');
+
+    //     };
+
+    //     await use(login);
+    // },
 });
 
 export default test;
