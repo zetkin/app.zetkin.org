@@ -12,6 +12,10 @@ import { parse } from 'url';
 import path from 'path';
 import { createServer, Server } from 'http';
 
+import RosaLuxemburg from '../mockData/users/RosaLuxemburg';
+import { ZetkinAPIResponse } from '../types';
+import { ZetkinSession, ZetkinUser } from '../../src/types/zetkin';
+
 type MoxyHTTPMethod = 'get' | 'post' | 'put' | 'patch' | 'delete'
 
 interface Mock<G> {
@@ -35,15 +39,17 @@ interface NextWorkerFixtures {
 }
 
 const test = base.extend<NextTestFixtures, NextWorkerFixtures>({
-    next: [ // Start a next server which serves the application, exposing the port to the tests
+    next: [
         async ({}, use, workerInfo) => {
             /**
              * Setup Moxy
              */
+
             const PROXY_FORWARD_URI = 'http://api.dev.zetkin.org';
-            const MOXY_PORT = 30000 - workerInfo.workerIndex;
+            const MOXY_PORT = 60000 - workerInfo.workerIndex;
 
             const { start: startMoxy, stop: stopMoxy } = moxy({ forward: PROXY_FORWARD_URI, port: MOXY_PORT });
+
             startMoxy();
 
             const setMock = async <G>(method: MoxyHTTPMethod, path: string, response?: Mock<G>) => {
@@ -81,7 +87,6 @@ const test = base.extend<NextTestFixtures, NextWorkerFixtures>({
              * Setup Next App
              */
 
-            // Port where Zetkin API is served from (moxy)
             process.env.ZETKIN_API_PORT= MOXY_PORT.toString();
 
             const app = next({
@@ -94,12 +99,10 @@ const test = base.extend<NextTestFixtures, NextWorkerFixtures>({
 
             // Start next server on arbitrary port
             const server: Server = await new Promise((resolve) => {
-
                 const server = createServer((req, res) => {
                     const parsedUrl = parse(req.url as string, true);
                     handle(req, res, parsedUrl);
                 });
-
                 server.listen((error: unknown) => {
                     if (error) throw error;
                     resolve(server);
@@ -131,22 +134,18 @@ const test = base.extend<NextTestFixtures, NextWorkerFixtures>({
     ],
     login: async ({ next: { moxy } }, use) => {
         const login = async () => {
-            await moxy.setMock('get', '/v1/users/me', {
+            await moxy.setMock<ZetkinAPIResponse<ZetkinUser>>('get', '/v1/users/me', {
                 data: {
-                    data: {
-                        id: 2,
-                    },
+                    data: RosaLuxemburg,
                 },
             });
 
-            await moxy.setMock('get', '/v1/session', {
+            await moxy.setMock<ZetkinAPIResponse<ZetkinSession>>('get', '/v1/session', {
                 data: {
                     data: {
                         created: '2020-01-01T00:00:00',
                         level: 2,
-                        user: {
-                            id: 2,
-                        },
+                        user: RosaLuxemburg,
                     },
                 },
             });
