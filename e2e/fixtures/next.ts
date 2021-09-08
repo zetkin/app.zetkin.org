@@ -50,7 +50,7 @@ const test = base.extend<NextTestFixtures, NextWorkerFixtures>({
                 const url = `http://localhost:${MOXY_PORT}${path}/_mocks/${method}`;
 
                 const res = await fetch(url, {
-                    body: JSON.stringify(response),
+                    body: JSON.stringify({ response }),
                     headers: [
                         ['Content-Type', 'application/json'],
                     ],
@@ -80,14 +80,13 @@ const test = base.extend<NextTestFixtures, NextWorkerFixtures>({
             /**
              * Setup Next App
              */
+
+            // Port where Zetkin API is served from (moxy)
+            process.env.ZETKIN_API_PORT= MOXY_PORT.toString();
+
             const app = next({
                 dev: false,
                 dir: path.resolve(__dirname, '../..'), // Find production build
-                conf: {
-                    env: {
-                        ZETKIN_API_PORT: MOXY_PORT.toString(),
-                    },
-                },
             });
 
             await app.prepare();
@@ -130,30 +129,31 @@ const test = base.extend<NextTestFixtures, NextWorkerFixtures>({
             scope: 'worker',
         },
     ],
-    // login: async ({ context, appUri }, use) => {
-    //     const login = async () => {
-    //         const page = await context.newPage();
-    //         await page.goto(appUri + '/login');
+    login: async ({ next: { moxy } }, use) => {
+        const login = async () => {
+            await moxy.setMock('get', '/v1/users/me', {
+                data: {
+                    data: {
+                        id: 2,
+                    },
+                },
+            });
 
-    //         await page.fill('.LoginForm-emailInput', 'testadmin@example.com');
-    //         await page.fill('.LoginForm-passwordInput', 'password');
-    //         page.waitForTimeout(10000);
+            await moxy.setMock('get', '/v1/session', {
+                data: {
+                    data: {
+                        created: '2020-01-01T00:00:00',
+                        level: 2,
+                        user: {
+                            id: 2,
+                        },
+                    },
+                },
+            });
 
-    //         await page.click('.LoginForm-submitButton');
-
-
-    //         await context.storageState({ path: 'auth-state.json' });
-
-
-
-    //         // await page.fill('.LoginForm-emailInput', 'testadmin@example.com');
-    //         // await page.fill('.LoginForm-passwordInput', 'password');
-    //         // await page.click('.LoginForm-submitButton');
-
-    //     };
-
-    //     await use(login);
-    // },
+        };
+        await use(login);
+    },
 });
 
 export default test;
