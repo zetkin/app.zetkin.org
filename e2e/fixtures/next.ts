@@ -32,8 +32,8 @@ interface NextWorkerFixtures {
     next: {
         appUri: string;
         moxy: {
-            removeMock: (method?: MoxyHTTPMethod, path?: string) => Promise<void>;
-            setMock: <G>(method: MoxyHTTPMethod, path: string, response?: Mock<G>) => Promise<void>;
+            removeMock: (path?: string, method?: MoxyHTTPMethod, ) => Promise<void>;
+            setMock: <G>(path: string, method: MoxyHTTPMethod, response?: Mock<G>) => Promise<void>;
         };
     };
 }
@@ -47,13 +47,14 @@ const test = base.extend<NextTestFixtures, NextWorkerFixtures>({
 
             const PROXY_FORWARD_URI = 'http://api.dev.zetkin.org';
             const MOXY_PORT = 60000 - workerInfo.workerIndex;
+            const URL_BASE = `http://localhost:${MOXY_PORT}/v1`;
 
             const { start: startMoxy, stop: stopMoxy } = moxy({ forward: PROXY_FORWARD_URI, port: MOXY_PORT });
 
             startMoxy();
 
-            const setMock = async <G>(method: MoxyHTTPMethod, path: string, response?: Mock<G>) => {
-                const url = `http://localhost:${MOXY_PORT}${path}/_mocks/${method}`;
+            const setMock = async <G>(path: string, method: MoxyHTTPMethod, response?: Mock<G>) => {
+                const url = `${URL_BASE}${path}/_mocks/${method}`;
 
                 const res = await fetch(url, {
                     body: JSON.stringify({ response }),
@@ -65,19 +66,16 @@ const test = base.extend<NextTestFixtures, NextWorkerFixtures>({
 
                 if (res.status === 409) {
                     throw Error(`
-                        Mock already exists with method ${method} at path ${path}. 
-                        You must delete it before you can assign a new mock with these parameters
+                        Mock already exists with method ${method} at path ${path}.
+                        You must delete it with removeMock before you can assign a new mock with these parameters
                     `);
                 }
             };
 
-            const removeMock = async(method?: MoxyHTTPMethod, path?: string) => {
-                const url = method != null && path != null ?
-                    `http://localhost:${MOXY_PORT}${path}/_mocks/${method}` : // If path and method, remove specific mock
-                    path != null ?
-                        `http://localhost:${MOXY_PORT}${path}/_mocks` : // If no method, remove all on path
-                        `http://localhost:${MOXY_PORT}$/_mocks/`; // If method and path, remove specific one
-
+            const removeMock = async(path?: string, method?: MoxyHTTPMethod) => {
+                let url = `${URL_BASE}/_mocks`; // Remove all mocks
+                if (path && method) url = `${URL_BASE}${path}/_mocks/${method}`; // Remove mock from path and method
+                if (path) url = `${URL_BASE}${path}/_mocks`; // Remove all mocks on path
                 await fetch(url, {
                     method: 'DELETE',
                 });
@@ -133,19 +131,24 @@ const test = base.extend<NextTestFixtures, NextWorkerFixtures>({
         },
     ],
     login: async ({ next: { moxy } }, use) => {
-        const login = async () => {
-            await moxy.setMock<ZetkinAPIResponse<ZetkinUser>>('get', '/v1/users/me', {
+        /**
+         * Mocks the responses for getting the current user and the user session.
+         *
+         * The default user is Rosa Luxumburg. Pass in a ZetkinUser object to override.
+         */
+        const login = async (userObject?: ZetkinUser) => {
+            await moxy.setMock<ZetkinAPIResponse<ZetkinUser>>( '/users/me', 'get', {
                 data: {
-                    data: RosaLuxemburg,
+                    data: userObject || RosaLuxemburg,
                 },
             });
 
-            await moxy.setMock<ZetkinAPIResponse<ZetkinSession>>('get', '/v1/session', {
+            await moxy.setMock<ZetkinAPIResponse<ZetkinSession>>('/session', 'get', {
                 data: {
                     data: {
                         created: '2020-01-01T00:00:00',
                         level: 2,
-                        user: RosaLuxemburg,
+                        user: userObject || RosaLuxemburg,
                     },
                 },
             });
