@@ -136,10 +136,10 @@ const test = base.extend<NextTestFixtures, NextWorkerFixtures>({
          *
          * The default user is Rosa Luxumburg. Pass in a ZetkinUser object to override.
          */
-        const login = async (userObject?: ZetkinUser) => {
+        const login = async (user: ZetkinUser = RosaLuxemburg) => {
             await moxy.setMock<ZetkinAPIResponse<ZetkinUser>>( '/users/me', 'get', {
                 data: {
-                    data: userObject || RosaLuxemburg,
+                    data: user,
                 },
             });
 
@@ -148,7 +148,7 @@ const test = base.extend<NextTestFixtures, NextWorkerFixtures>({
                     data: {
                         created: '2020-01-01T00:00:00',
                         level: 2,
-                        user: userObject || RosaLuxemburg,
+                        user: user,
                     },
                 },
             });
