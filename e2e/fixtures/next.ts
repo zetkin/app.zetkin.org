@@ -109,6 +109,7 @@ const test = base.extend<NextTestFixtures, NextWorkerFixtures>({
 
             // Get the port from the next server
             const NEXT_PORT = String((server.address() as AddressInfo).port);
+            process.env.ZETKIN_APP_HOST = `localhost:${NEXT_PORT}`;
 
             await use({
                 appUri: `http://localhost:${NEXT_PORT}`,
