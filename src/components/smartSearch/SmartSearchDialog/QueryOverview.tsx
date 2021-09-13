@@ -61,14 +61,13 @@ const QueryOverview = (
         onOpenStartsWithEditor,
         startsWithAll }:QueryOverviewProps,
 ): JSX.Element => {
+
     const [hovered, setHovered] = useState<number | null | string>(null);
     return (
         <Box display="flex" flexDirection="column" height={ 1 } justifyContent="space-between">
-            { readOnly && (
-                <Alert severity="info">
-                    <Msg id="misc.smartSearch.readOnly"/>
-                </Alert>
-            ) }
+            { readOnly &&
+                <Alert severity="info"><Msg id="misc.smartSearch.readOnly" /></Alert>
+            }
             <Box margin="auto" maxWidth="500px" minWidth={ 0.5 }>
                 <List>
                     <ListItem key={ FIRST_FILTER } style={{ padding: 0 }}>

@@ -59,7 +59,10 @@ const theme = createTheme({
             default: '#F9F9F9',
         },
         error: {
-            main: '#B3002D',
+            main: '#EE323E',
+        },
+        info: {
+            main: '#3598c5',
         },
         primary: {
             main: '#ED1C55',
@@ -67,8 +70,14 @@ const theme = createTheme({
         secondary: {
             main: 'rgba(0, 0, 0, 0.6)',
         },
+        success: {
+            main: '#0eae4e',
+        },
         text: {
             secondary: 'rgba(0, 0, 0, 0.6)',
+        },
+        warning: {
+            main: '#ee8432',
         },
     },
     props: {
