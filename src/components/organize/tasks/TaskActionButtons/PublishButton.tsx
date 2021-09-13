@@ -51,7 +51,7 @@ const PublishButton: React.FunctionComponent<PublishButtonProps> = ({ task }) =>
 
     const publishTask = () => {
         patchTaskMutation.mutate({
-            published: dayjs().toISOString(),
+            published: dayjs().format('YYYY-MM-DDTHH:mm:ss'),
         });
         setDialogOpen(false);
     };
