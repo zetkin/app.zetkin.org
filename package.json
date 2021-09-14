@@ -55,8 +55,6 @@
         "@typescript-eslint/parser": "^4.10.0",
         "babel-loader": "^8.2.2",
         "chokidar-cli": "^2.1.0",
-        "concurrently": "^5.3.0",
-        "cross-env": "^7.0.3",
         "eslint": "^7.15.0",
         "eslint-loader": "^4.0.2",
         "eslint-plugin-jsx-a11y": "^6.4.1",
