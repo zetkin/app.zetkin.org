@@ -12,11 +12,6 @@
         "playwright:skipbuild": "NODE_ENV=production SKIP_BUILD=1 playwright test --headed",
         "playwright:ci": "NODE_ENV=production playwright test"
     },
-    "nyc": {
-        "reporter": [
-            "html"
-        ]
-    },
     "dependencies": {
         "@date-io/date-fns": "1.x",
         "@date-io/dayjs": "1.x",
