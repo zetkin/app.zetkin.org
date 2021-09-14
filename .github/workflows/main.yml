@@ -21,8 +21,11 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v2
-            - run: yarn install --frozen-lockfile
-            - name: Playwright run
-              uses: cypress-io/github-action@v2
+            - uses: actions/setup-node@v1
               with:
-                  start: sudo yarn run playwright:ci
+                  node-version: "16"
+            - uses: microsoft/playwright-github-action@v1
+            - name: Install dependencies
+              run: yarn install --frozen-lockfile && npx playwright install
+            - name: Run tests
+              run: yarn playwright:ci
