@@ -29,7 +29,7 @@ const CamapignCard = ({ campaign, events, upcomingEvents }: CampaignCardProps) :
     }
 
     return (
-        <Card>
+        <Card data-testid="campaign-card">
             <CardContent>
                 <Typography gutterBottom noWrap variant="h6">
                     { title }
