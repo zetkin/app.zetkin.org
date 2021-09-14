@@ -7,11 +7,10 @@
         "start": "next start -p 80",
         "devserver": "next dev -p 3000",
         "lint": "eslint src && tsc --noEmit && echo 'Finished linting without errors!'",
-        "devproxy": "moxy -f http://api.dev.zetkin.org",
-        "ci-start": "concurrently 'next start -p 3000' 'yarn devproxy'",
         "watch": "chokidar 'src/**/*' -c 'npm run lint'",
         "playwright": "NODE_ENV=production playwright test --headed",
-        "playwright:skipbuild": "NODE_ENV=production SKIP_BUILD=1 playwright test --headed"
+        "playwright:skipbuild": "NODE_ENV=production SKIP_BUILD=1 playwright test --headed",
+        "playwright:ci": "NODE_ENV=production playwright test"
     },
     "nyc": {
         "reporter": [
