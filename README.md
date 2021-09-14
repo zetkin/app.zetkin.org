@@ -39,7 +39,7 @@ yarn playwright
 This will also build the next.js application. You can save time and not rebuild the application (if only working on tests, for example), using:
 
 ```
-yarl playwright:skipbuild
+yarn playwright:skipbuild
 ```
 
 ## Development server login credentials

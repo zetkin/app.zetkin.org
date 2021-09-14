@@ -13,16 +13,9 @@ import path from 'path';
 import { createServer, Server } from 'http';
 
 import RosaLuxemburg from '../mockData/users/RosaLuxemburg';
-import { ZetkinAPIResponse } from '../types';
+import { Mock, MoxyHTTPMethod, ZetkinAPIResponse } from '../types';
 import { ZetkinSession, ZetkinUser } from '../../src/types/zetkin';
 
-type MoxyHTTPMethod = 'get' | 'post' | 'put' | 'patch' | 'delete'
-
-interface Mock<G> {
-    data?: G;
-    headers?: Record<string, string>;
-    status?: number;
-}
 
 interface NextTestFixtures {
     login: () => Promise<void>;
