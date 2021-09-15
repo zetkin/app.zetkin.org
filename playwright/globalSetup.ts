@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable no-console */
 
-import fs from 'fs';
+import { copyFile } from 'fs/promises';
 import { nextBuild } from 'next/dist/cli/next-build';
 import path from 'path';
 
@@ -9,12 +9,7 @@ async function globalSetup() {
     process.env.PLAYWRIGHT = '1';
 
     // Copy env file .env.test to .env.production
-    fs.copyFile(path.join(__dirname, '..', '.env.test'), path.join(__dirname, '..', '.env.production'), (err) => {
-        if (err) {
-            console.error('Error copying env.test to env.production');
-            throw err;
-        }
-    });
+    await copyFile(path.join(__dirname, '..', '.env.test'), path.join(__dirname, '..', '.env.production'));
 
     // Skip build if flag is set to 1
     if (process.env.SKIP_BUILD === '1') {
