@@ -1,5 +1,4 @@
 import '../styles.css';
-import 'nprogress/nprogress.css';
 
 import { AppProps } from 'next/app';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -24,6 +23,8 @@ import { UserContext } from '../hooks';
 dayjs.extend(LocalTimeToJsonPlugin);
 dayjs.extend(isoWeek);
 
+// Progress bar
+NProgress.configure({ showSpinner: false });
 Router.events.on('routeChangeStart', () => NProgress.start());
 Router.events.on('routeChangeComplete', () => NProgress.done());
 Router.events.on('routeChangeError', () => NProgress.done());
