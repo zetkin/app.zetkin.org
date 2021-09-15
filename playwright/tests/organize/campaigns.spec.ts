@@ -7,7 +7,7 @@ import WelcomeNewMembers from '../../mockData/orgs/KPD/campaigns/WelcomeNewMembe
 
 test.describe('All campaigns page', () => {
 
-    test.beforeAll(async ({ next: { moxy } }) => {
+    test.beforeAll(async ({ moxy }) => {
         await moxy.setMock( '/orgs/1', 'get', {
             data: {
                 data: KPD,
@@ -15,7 +15,7 @@ test.describe('All campaigns page', () => {
         });
     });
 
-    test('shows list of campaigns ', async ({ page, next: { appUri, moxy }, login }) => {
+    test('shows list of campaigns ', async ({ page, appUri, moxy, login }) => {
         await moxy.setMock( '/orgs/1/campaigns', 'get', {
             data: {
                 data: [ReferendumSignatures, WelcomeNewMembers],

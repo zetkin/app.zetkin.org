@@ -22,69 +22,18 @@ interface NextTestFixtures {
 }
 
 interface NextWorkerFixtures {
-    next: {
-        appUri: string;
-        moxy: {
-            removeMock: (path?: string, method?: MoxyHTTPMethod, ) => Promise<void>;
-            setMock: <G>(path: string, method: MoxyHTTPMethod, response?: Mock<G>) => Promise<void>;
-        };
+    appUri: string;
+    moxy: {
+        port: number;
+        removeMock: (path?: string, method?: MoxyHTTPMethod, ) => Promise<void>;
+        setMock: <G>(path: string, method: MoxyHTTPMethod, response?: Mock<G>) => Promise<void>;
     };
 }
 
 const test = base.extend<NextTestFixtures, NextWorkerFixtures>({
-    next: [
-        async ({}, use, workerInfo) => {
-            /**
-             * Setup Moxy
-             */
-
-            const PROXY_FORWARD_URI = 'http://api.dev.zetkin.org';
-            const MOXY_PORT = 60000 - workerInfo.workerIndex;
-            const URL_BASE = `http://localhost:${MOXY_PORT}/v1`;
-
-            const { start: startMoxy, stop: stopMoxy } = moxy({ forward: PROXY_FORWARD_URI, port: MOXY_PORT });
-
-            startMoxy();
-
-            const setMock = async <G>(path: string, method: MoxyHTTPMethod, response?: Mock<G>) => {
-                const url = `${URL_BASE}${path}/_mocks/${method}`;
-
-                const res = await fetch(url, {
-                    body: JSON.stringify({ response }),
-                    headers: [
-                        ['Content-Type', 'application/json'],
-                    ],
-                    method: 'PUT',
-                });
-
-                if (res.status === 409) {
-                    throw Error(`
-                        Mock already exists with method ${method} at path ${path}.
-                        You must delete it with removeMock before you can assign a new mock with these parameters
-                    `);
-                }
-            };
-
-            const removeMock = async(path?: string, method?: MoxyHTTPMethod) => {
-                let url = `${URL_BASE}/_mocks`; // Remove all mocks
-                // Remove mock from path and method
-                if (path && method) {
-                    url = `${URL_BASE}${path}/_mocks/${method}`;
-                }
-                // Remove all mocks on path
-                if (path) {
-                    url = `${URL_BASE}${path}/_mocks`;
-                }
-                await fetch(url, {
-                    method: 'DELETE',
-                });
-            };
-
-            /**
-             * Setup Next App
-             */
-
-            process.env.ZETKIN_API_PORT= MOXY_PORT.toString();
+    appUri: [
+        async ({ moxy }, use) => {
+            process.env.ZETKIN_API_PORT= moxy.port.toString();
 
             const app = next({
                 dev: false,
@@ -110,18 +59,11 @@ const test = base.extend<NextTestFixtures, NextWorkerFixtures>({
             const NEXT_PORT = String((server.address() as AddressInfo).port);
             process.env.ZETKIN_APP_HOST = `localhost:${NEXT_PORT}`;
 
-            await use({
-                appUri: `http://localhost:${NEXT_PORT}`,
-                moxy: {
-                    setMock,
-                    removeMock,
-                },
-            });
+            await use(`http://localhost:${NEXT_PORT}`);
 
             // Close server when worker stops
             await new Promise(cb => {
                 server.close(cb);
-                stopMoxy();
             });
 
         },
@@ -130,7 +72,65 @@ const test = base.extend<NextTestFixtures, NextWorkerFixtures>({
             scope: 'worker',
         },
     ],
-    login: async ({ next: { moxy } }, use) => {
+    moxy: [async ({}, use, workerInfo) => {
+        const PROXY_FORWARD_URI = 'http://api.dev.zetkin.org';
+        const MOXY_PORT = 3000 + workerInfo.workerIndex;
+        const URL_BASE = `http://localhost:${MOXY_PORT}/v1`;
+
+        const { start: startMoxy, stop: stopMoxy } = moxy({ forward: PROXY_FORWARD_URI, port: MOXY_PORT });
+
+        startMoxy();
+
+        const setMock = async <G>(path: string, method: MoxyHTTPMethod, response?: Mock<G>) => {
+            const url = `${URL_BASE}${path}/_mocks/${method}`;
+
+            const res = await fetch(url, {
+                body: JSON.stringify({ response }),
+                headers: [
+                    ['Content-Type', 'application/json'],
+                ],
+                method: 'PUT',
+            });
+
+            if (res.status === 409) {
+                throw Error(`
+                     Mock already exists with method ${method} at path ${path}.
+                     You must delete it with removeMock before you can assign a new mock with these parameters
+                 `);
+            }
+        };
+
+        const removeMock = async(path?: string, method?: MoxyHTTPMethod) => {
+            let url = `${URL_BASE}/_mocks`; // Remove all mocks
+            // Remove mock from path and method
+            if (path && method) {
+                url = `${URL_BASE}${path}/_mocks/${method}`;
+            }
+            // Remove all mocks on path
+            if (path) {
+                url = `${URL_BASE}${path}/_mocks`;
+            }
+            await fetch(url, {
+                method: 'DELETE',
+            });
+        };
+
+        await use({
+            port: MOXY_PORT,
+            setMock,
+            removeMock,
+        });
+
+        // Close server when worker stops
+        await new Promise(() => {
+            stopMoxy();
+        });
+
+    }, {
+        auto: true,
+        scope: 'worker',
+    }],
+    login: async ({ moxy }, use) => {
         /**
          * Mocks the responses for getting the current user and the user session.
          *
