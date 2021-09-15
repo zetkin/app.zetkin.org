@@ -1,4 +1,5 @@
 import '../styles.css';
+import 'nprogress/nprogress.css';
 
 import { AppProps } from 'next/app';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -8,7 +9,9 @@ import { Hydrate } from 'react-query/hydration';
 import { IntlProvider } from 'react-intl';
 import isoWeek from 'dayjs/plugin/isoWeek';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
+import NProgress from 'nprogress';
 import { ReactQueryDevtools } from 'react-query/devtools';
+import Router from 'next/router';
 import { ThemeProvider } from '@material-ui/core/styles';
 import { useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
@@ -20,6 +23,10 @@ import { UserContext } from '../hooks';
 
 dayjs.extend(LocalTimeToJsonPlugin);
 dayjs.extend(isoWeek);
+
+Router.events.on('routeChangeStart', () => NProgress.start());
+Router.events.on('routeChangeComplete', () => NProgress.done());
+Router.events.on('routeChangeError', () => NProgress.done());
 
 const queryClient = new QueryClient({
     defaultOptions: {
