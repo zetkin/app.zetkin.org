@@ -12,6 +12,7 @@ const VisitLinkFields = (): JSX.Element => {
             label={ intl.formatMessage({ id: 'misc.tasks.forms.visitLinkConfig.fields.url' }) }
             margin="normal"
             name={ VISIT_LINK_FIELDS.URL }
+            required
         />
     );
 };

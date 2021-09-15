@@ -13,6 +13,7 @@ const ShareLinkFields = (): JSX.Element => {
                 label={ intl.formatMessage({ id: 'misc.tasks.forms.shareLinkConfig.fields.url' }) }
                 margin="normal"
                 name={ SHARE_LINK_FIELDS.URL }
+                required
             />
 
             <TextField
