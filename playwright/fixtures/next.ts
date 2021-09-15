@@ -67,8 +67,14 @@ const test = base.extend<NextTestFixtures, NextWorkerFixtures>({
 
             const removeMock = async(path?: string, method?: MoxyHTTPMethod) => {
                 let url = `${URL_BASE}/_mocks`; // Remove all mocks
-                if (path && method) url = `${URL_BASE}${path}/_mocks/${method}`; // Remove mock from path and method
-                if (path) url = `${URL_BASE}${path}/_mocks`; // Remove all mocks on path
+                // Remove mock from path and method
+                if (path && method) {
+                    url = `${URL_BASE}${path}/_mocks/${method}`;
+                }
+                // Remove all mocks on path
+                if (path) {
+                    url = `${URL_BASE}${path}/_mocks`;
+                }
                 await fetch(url, {
                     method: 'DELETE',
                 });
