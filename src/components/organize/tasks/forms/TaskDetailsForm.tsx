@@ -1,6 +1,7 @@
 import { Form } from 'react-final-form';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
+import validator from 'validator';
 import { Box, Button, MenuItem } from '@material-ui/core';
 import { DateTimePicker, TextField } from 'mui-rff';
 import { FormattedMessage, FormattedMessage as Msg, useIntl } from 'react-intl';
@@ -47,12 +48,19 @@ const TaskDetailsForm = ({ onSubmit, onCancel, task }: TaskDetailsFormProps): JS
             errors.campaign_id = intl.formatMessage({ id: 'misc.formDialog.required' });
         }
         if (values.type === TASK_TYPE.VISIT_LINK || values.type === TASK_TYPE.SHARE_LINK) {
-            if (values.config) {
-                const config = values.config as VisitLinkConfig;
-                if (!config.url) {
-                    errors.config = {};
-                    errors.config.url = intl.formatMessage({ id: 'misc.formDialog.required' });
+            const config = values.config as VisitLinkConfig;
+            if (config?.url) {
+                const valid = validator.isURL(config.url);
+                if (!valid) {
+                    errors.config = {
+                        url: intl.formatMessage({ id: 'misc.formDialog.invalidUrl' }),
+                    };
                 }
+            }
+            else {
+                errors.config = {
+                    url: intl.formatMessage({ id: 'misc.formDialog.required' }),
+                };
             }
         }
 
