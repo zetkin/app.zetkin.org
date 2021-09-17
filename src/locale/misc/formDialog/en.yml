@@ -1,3 +1,4 @@
 submit: Submit
 cancel: Cancel
 required: Required
+invalidUrl: Please enter a valid URL 
