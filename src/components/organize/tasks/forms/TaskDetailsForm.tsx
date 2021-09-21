@@ -49,18 +49,15 @@ const TaskDetailsForm = ({ onSubmit, onCancel, task }: TaskDetailsFormProps): JS
         }
         if (values.type === TASK_TYPE.VISIT_LINK || values.type === TASK_TYPE.SHARE_LINK) {
             const config = values.config as VisitLinkConfig;
-            if (config?.url) {
-                const valid = validator.isURL(config.url, { protocols: ['http','https','ftp', 'ftps'], require_protocol: true });
-                if (!valid) {
-                    errors.config = {
-                        url: intl.formatMessage({ id: 'misc.formDialog.invalidUrl' }),
-                    };
-                }
+            errors.config = {};
+            if (!config?.url) {
+                errors.config.url = intl.formatMessage({ id: 'misc.formDialog.required' });
             }
-            else {
-                errors.config = {
-                    url: intl.formatMessage({ id: 'misc.formDialog.required' }),
-                };
+            else if (!validator.isURL(config.url, {
+                protocols: ['http','https','ftp', 'ftps'],
+                require_protocol: true,
+            })) {
+                errors.config.url =  intl.formatMessage({ id: 'misc.formDialog.invalidUrl' });
             }
         }
 
