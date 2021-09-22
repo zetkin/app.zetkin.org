@@ -1,20 +1,21 @@
+import { Box } from '@material-ui/core';
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
+import { useIntl } from 'react-intl';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
-import { Alert, AlertTitle } from '@material-ui/lab';
-import { Box, Button , Link, Typography } from '@material-ui/core';
-import { FormattedMessage as Msg, useIntl } from 'react-intl';
+import { useState } from 'react';
 
 import getAssignedTasks from 'fetching/tasks/getAssignedTasks';
 import getOrg from 'fetching/getOrg';
 import getTask from 'fetching/tasks/getTask';
 import { PageWithLayout } from 'types';
+import { QUERY_STATUS } from 'types/smartSearch';
+import QueryStatusAlert from 'components/smartSearch/QueryStatusAlert';
 import { scaffold } from 'utils/next';
 import SingleTaskLayout from 'components/layout/organize/SingleTaskLayout';
 import SmartSearchDialog from 'components/smartSearch/SmartSearchDialog';
 import TaskAssigneesList from 'components/organize/tasks/TaskAssigneesList';
-import { useState } from 'react';
 import getTaskStatus, { TASK_STATUS } from 'utils/getTaskStatus';
 import { ZetkinAssignedTask, ZetkinTask } from 'types/zetkin';
 
@@ -52,12 +53,6 @@ export const getServerSideProps : GetServerSideProps = scaffold(async (ctx) => {
     };
 }, scaffoldOptions);
 
-enum QUERY_STATUS {
-    ERROR='error', // no smart search query created yet
-    EDITABLE='editable', // draft or scheduled task
-    PUBLISHED='published', // published but not yet assigned
-    ASSIGNED='assigned', // published and assigned
-}
 
 const getQueryStatus = (
     task?: ZetkinTask,
@@ -67,7 +62,7 @@ const getQueryStatus = (
     if (taskStatus === TASK_STATUS.DRAFT || taskStatus === TASK_STATUS.SCHEDULED) {
         queryStatus = QUERY_STATUS.EDITABLE;
         if (!task?.target.filter_spec.length) {
-            queryStatus = QUERY_STATUS.ERROR;
+            queryStatus = QUERY_STATUS.NEW;
         }
     }
     // we don't want 'publishing' state to appear on page load while the data is being fetched
@@ -79,6 +74,7 @@ const getQueryStatus = (
 
 const TaskAssigneesPage: PageWithLayout = () => {
     const intl = useIntl();
+
     const { taskId, orgId } = useRouter().query;
     const taskQuery = useQuery(['task', taskId], getTask(orgId as string, taskId as string));
     const assignedTasksQuery = useQuery(['assignedTasks', orgId, taskId], getAssignedTasks(
@@ -89,7 +85,6 @@ const TaskAssigneesPage: PageWithLayout = () => {
     const query = task?.target;
 
     const [dialogOpen, setDialogOpen] = useState(false);
-
     const handleDialogClose = () => setDialogOpen(false);
 
     const queryStatus = getQueryStatus(task, assignedTasks);
@@ -97,43 +92,17 @@ const TaskAssigneesPage: PageWithLayout = () => {
     const readOnly = queryStatus === QUERY_STATUS.PUBLISHED ||
         queryStatus === QUERY_STATUS.ASSIGNED;
 
+
     return (
         <>
             <Head>
                 <title>{ `${task?.title} - ${intl.formatMessage({ id: 'layout.organize.tasks.tabs.assignees' })}` }</title>
             </Head>
             <Box p={ 2 }>
-                <Alert severity={
-                    queryStatus ===  QUERY_STATUS.ERROR ?
-                        'error' : queryStatus === QUERY_STATUS.EDITABLE ?
-                            'warning' : queryStatus === QUERY_STATUS.PUBLISHED ?
-                                'info' : 'success' }>
-                    <AlertTitle>
-                        <Msg id={ `pages.assignees.queryStates.${queryStatus}` }/>
-                    </AlertTitle>
-                    { queryStatus !== QUERY_STATUS.ERROR &&
-                    <Link
-                        color="inherit"
-                        component="button"
-                        onClick={ () => setDialogOpen(true) }
-                        underline="always">
-                        <Typography align="left">
-                            { readOnly ?
-                                <Msg id="pages.assignees.links.readOnly"/> :
-                                <Msg id="pages.assignees.links.edit"/>
-                            }
-                        </Typography>
-                    </Link> }
-                    { queryStatus === QUERY_STATUS.ERROR &&
-                    <Button
-                        color="primary"
-                        onClick={ () => setDialogOpen(true) }
-                        variant="contained">
-                        <Msg id="pages.assignees.links.create" />
-                    </Button>
-                    }
-                </Alert>
-
+                <QueryStatusAlert
+                    openDialog={ () => setDialogOpen(true) }
+                    status={ queryStatus }
+                />
                 { assignedTasks && (
                     <Box mt={ 3 }>
                         <TaskAssigneesList assignedTasks={ assignedTasks } />

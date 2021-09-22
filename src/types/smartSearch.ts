@@ -212,3 +212,10 @@ export interface ZetkinQuery {
     title?: string;
     info_text?: string;
 }
+
+export enum QUERY_STATUS {
+    NEW='new', // no smart search query created yet
+    EDITABLE='editable', // draft or scheduled task
+    PUBLISHED='published', // published but not yet assigned
+    ASSIGNED='assigned', // published and assigned
+}

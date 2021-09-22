@@ -1,44 +1,62 @@
 # Zetkin
+
 This is the new Zetkin front-end application, currently under development. It
 will run at app.zetkin.org and replace the current www.zetk.in, call.zetk.in and
 organize.zetk.in applications.
 
-__NOTE__: This is extremely early stages of development. The plan is to launch a
+**NOTE**: This is extremely early stages of development. The plan is to launch a
 public beta in the spring of 2021.
 
 ## Technology
+
 The new Zetkin app is built on [NEXT.js](https://nextjs.org) with TypeScript.
 
 ## Development
+
 Install all the dependencies using [`yarn` (Classic)](https://classic.yarnpkg.com):
 
 ```
 $ yarn install
 ```
 
-Then start the devserver in one of two ways:
+Then start the devserver:
 
 ```
-$ yarn tdd           # Use this for test-driven development with Cypress
-$ yarn devserver     # Use this if you don't want to do TDD
+$ yarn devserver
 ```
 
 You should now be able to access the app on http://localhost:3000. It will
 communicate with the Zetkin API running on our public development server.
 
+### Integration tests
+
+Integration tests are run with [Playwright](https://playwright.dev/docs/intro). To run tests:
+
+```
+yarn playwright
+```
+
+This will also build the next.js application. You can save time and not rebuild the application (if only working on tests, for example), using:
+
+```
+yarn playwright:skipbuild
+```
+
 ## Development server login credentials
+
 You can log in using the dummy user accounts to access dummy data from the
 development server.
 
-Role/access    | Username                | Password  | SMS code
----------------|-------------------------|-----------|--------------
-Administrator  | testadmin@example.com   | password  | 999999
-Caller         | testcaller@example.com  | password  | 999999
-Basic user     | testuser@example.com    | password  | 999999
+| Role/access   | Username               | Password | SMS code |
+| ------------- | ---------------------- | -------- | -------- |
+| Administrator | testadmin@example.com  | password | 999999   |
+| Caller        | testcaller@example.com | password | 999999   |
+| Basic user    | testuser@example.com   | password | 999999   |
 
 The SMS one-time password is only required in some parts of the app.
 
 ## Contributing
+
 This repository has an `.editorconfig` file which can automatically configure
 your editor to the correct style. Make sure [your editor supports](https://editorconfig.org/#pre-installed)
 `.editorconfig` files, or [install a plugin](https://editorconfig.org/#download).
@@ -59,6 +77,7 @@ $ git config core.hooksPath .githooks
 ```
 
 ## Submit your contribution
+
 If you don't yet have write access to the repository, you can create a fork
 on your own GitHub and work there.
 

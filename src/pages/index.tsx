@@ -24,8 +24,8 @@ export const getServerSideProps : GetServerSideProps = scaffold(async (context) 
     const code = query?.code;
 
     if (code) {
-        const protocol = stringToBool(process.env.NEXT_PUBLIC_APP_USE_TLS)? 'https' : 'http';
-        const host = process.env.NEXT_PUBLIC_APP_HOST;
+        const protocol = stringToBool(process.env.ZETKIN_USE_TLS)? 'https' : 'http';
+        const host = process.env.ZETKIN_APP_HOST;
 
         let destination = '/';
 

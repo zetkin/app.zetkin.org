@@ -20,7 +20,7 @@ const ZetkinRelativeTime: React.FunctionComponent<ZetkinRelativeTimeProps> = ({ 
     return (
         <Tooltip arrow title={ <ZetkinDateTime datetime={ datetime } /> }>
             <span>
-                <FormattedRelativeTime numeric="auto" updateIntervalInSeconds={ 300 } value={ difference } />
+                <FormattedRelativeTime numeric="auto" updateIntervalInSeconds={ 60 } value={ difference } />
             </span>
         </Tooltip>
     );
