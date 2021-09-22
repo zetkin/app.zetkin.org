@@ -53,10 +53,7 @@ const TaskDetailsForm = ({ onSubmit, onCancel, task }: TaskDetailsFormProps): JS
             if (!config?.url) {
                 errors.config.url = intl.formatMessage({ id: 'misc.formDialog.required' });
             }
-            else if (!validator.isURL(config.url, {
-                protocols: ['http','https','ftp', 'ftps'],
-                require_protocol: true,
-            })) {
+            else if (!validator.isURL(config.url, { require_protocol: true })) {
                 errors.config.url =  intl.formatMessage({ id: 'misc.formDialog.invalidUrl' });
             }
         }
