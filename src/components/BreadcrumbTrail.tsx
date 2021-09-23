@@ -34,7 +34,7 @@ const BreadcrumbTrail = () : JSX.Element | null => {
     const router = useRouter();
     const classes = useStyles();
     const [breadcrumbs, setBreadcrumbs] = useState<Breadcrumb[] | null>(null);
-    const isSmallScreen = useMediaQuery('(max-width:1200px)');
+    const isSmallScreen = useMediaQuery('(max-width:1280px)');
 
     const fetchBreadcrumbs = async (
         pathname: string,
