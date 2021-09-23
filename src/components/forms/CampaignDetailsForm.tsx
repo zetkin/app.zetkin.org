@@ -11,13 +11,13 @@ import getPeopleSearchResults from 'fetching/getPeopleSearchResults';
 import useDebounce from 'hooks/useDebounce';
 import { ZetkinCampaign, ZetkinPerson } from 'types/zetkin';
 
-interface CampaignFormProps {
+interface CampaignDetailsFormProps {
     campaign?: ZetkinCampaign;
     onSubmit: (data: Record<string, unknown>) => void;
     onCancel: () => void;
 }
 
-const CampaignForm = ({ onSubmit, onCancel, campaign }: CampaignFormProps): JSX.Element => {
+const CampaignDetailsForm = ({ onSubmit, onCancel, campaign }: CampaignDetailsFormProps): JSX.Element => {
     const { orgId } = useRouter().query;
     const intl = useIntl();
 
@@ -205,4 +205,4 @@ const CampaignForm = ({ onSubmit, onCancel, campaign }: CampaignFormProps): JSX.
     );
 };
 
-export default CampaignForm;
+export default CampaignDetailsForm;

@@ -8,9 +8,9 @@ import React, { useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 
 
-import CampaignForm from 'components/organize/campaigns/forms/CampaignForm';
+import CampaignDeleteForm from 'components/forms/CampaignDeleteForm';
+import CampaignDetailsForm from 'components/forms/CampaignDetailsForm';
 import deleteCampaign from 'fetching/campaigns/deleteCampaign';
-import DeleteCampaignForm from './forms/DeleteCampaignForm';
 import patchCampaign from 'fetching/campaigns/patchCampaign';
 import { ZetkinCampaign } from 'types/zetkin';
 import ZetkinDialog from 'components/ZetkinDialog';
@@ -98,13 +98,13 @@ const CampaignActionButtons: React.FunctionComponent<CampaignActionButtonsProps>
                 onClose={ closeDialog }
                 open={ currentOpenDialog === CAMPAIGN_MENU_ITEMS.EDIT_CAMPAIGN }
                 title={ intl.formatMessage({ id: 'misc.formDialog.campaign.edit' }) }>
-                <CampaignForm campaign={ campaign } onCancel={ closeDialog } onSubmit={ handleEditCampaign }/>
+                <CampaignDetailsForm campaign={ campaign } onCancel={ closeDialog } onSubmit={ handleEditCampaign }/>
             </ZetkinDialog>
             <ZetkinDialog
                 onClose={ closeDialog }
                 open={ currentOpenDialog === CAMPAIGN_MENU_ITEMS.DELETE_CAMPAIGN }
                 title={ intl.formatMessage({ id: 'misc.formDialog.campaign.deleteCampaign.title' }) }>
-                <DeleteCampaignForm onCancel={ closeDialog } onSubmit={ handleDeleteCampaign } />
+                <CampaignDeleteForm onCancel={ closeDialog } onSubmit={ handleDeleteCampaign } />
             </ZetkinDialog>
         </Box>
     );

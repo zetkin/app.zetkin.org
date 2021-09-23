@@ -3,7 +3,7 @@ import { Flag } from '@material-ui/icons';
 import { useRouter } from 'next/router';
 import { useMutation, useQueryClient } from 'react-query';
 
-import CampaignForm from 'components/organize/campaigns/forms/CampaignForm';
+import CampaignDetailsForm from 'components/forms/CampaignDetailsForm';
 import postCampaign from 'fetching/postCampaign';
 
 import { ACTIONS } from '../constants';
@@ -17,16 +17,15 @@ const DialogContent: React.FunctionComponent<DialogContentBaseProps> = ({ closeD
         onSettled: () => queryClient.invalidateQueries('campaigns'),
     });
 
-    const handleCreateCampaignFormSubmit = async (data: Record<string,unknown>) => {
+    const handleCreateCampaignDetailsFormSubmit = async (data: Record<string,unknown>) => {
         const newCampaign = await campaignMutation.mutateAsync(data);
-
         // Redirect to campaign page
         router.push(`/organize/${orgId}/campaigns/${newCampaign.id}`);
     };
 
-    return (<CampaignForm
+    return (<CampaignDetailsForm
         onCancel={ closeDialog }
-        onSubmit={ handleCreateCampaignFormSubmit }
+        onSubmit={ handleCreateCampaignDetailsFormSubmit }
     />
     );
 };

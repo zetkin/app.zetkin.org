@@ -1,12 +1,12 @@
 import { FormattedMessage as Msg } from 'react-intl';
 import { Box, Button, Typography } from '@material-ui/core';
 
-interface DeleteCampaignFormProps {
+interface CampaignDeleteFormProps {
     onSubmit: () => void;
     onCancel: () => void;
 }
 
-const DeleteCampaignForm: React.FunctionComponent<DeleteCampaignFormProps> = ({ onCancel, onSubmit }) => {
+const CampaignDeleteForm: React.FunctionComponent<CampaignDeleteFormProps> = ({ onCancel, onSubmit }) => {
     return (
         <>
             <Typography variant="body1">
@@ -26,4 +26,4 @@ const DeleteCampaignForm: React.FunctionComponent<DeleteCampaignFormProps> = ({ 
     );
 };
 
-export default DeleteCampaignForm;
+export default CampaignDeleteForm;

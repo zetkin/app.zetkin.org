@@ -4,7 +4,7 @@ import { useMutation } from 'react-query';
 import { useRouter } from 'next/router';
 
 import postTask from '../../../fetching/tasks/postTask';
-import TaskDetailsForm from '../../organize/tasks/forms/TaskDetailsForm';
+import TaskDetailsForm from 'components/forms/TaskDetailsForm';
 import { ZetkinTaskRequestBody } from '../../../types/tasks';
 
 import { ACTIONS } from '../constants';

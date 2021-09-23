@@ -11,9 +11,9 @@ import patchTask from 'fetching/tasks/patchTask';
 import ZetkinDialog from 'components/ZetkinDialog';
 import { ZetkinTask } from 'types/zetkin';
 
-import DeleteTaskForm from '../forms/DeleteTaskForm';
+import DeleteTaskForm from 'components/forms/TaskDeleteForm';
 import PublishButton from './PublishButton';
-import TaskDetailsForm from '../forms/TaskDetailsForm';
+import TaskDetailsForm from 'components/forms/TaskDetailsForm';
 
 enum TASK_MENU_ITEMS {
     EDIT_TASK = 'editTask',

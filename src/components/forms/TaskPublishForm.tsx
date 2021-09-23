@@ -1,12 +1,12 @@
 import { FormattedMessage as Msg } from 'react-intl';
 import { Box, Button, Typography } from '@material-ui/core';
 
-interface PublishTaskFormProps {
+interface TaskPublishFormProps {
     onSubmit: () => void;
     onCancel: () => void;
 }
 
-const PublishTaskForm: React.FunctionComponent<PublishTaskFormProps> = ({ onCancel, onSubmit }) => {
+const TaskPublishForm: React.FunctionComponent<TaskPublishFormProps> = ({ onCancel, onSubmit }) => {
     return (
         <>
             <Typography variant="body1">
@@ -26,4 +26,4 @@ const PublishTaskForm: React.FunctionComponent<PublishTaskFormProps> = ({ onCanc
     );
 };
 
-export default PublishTaskForm;
+export default TaskPublishForm;

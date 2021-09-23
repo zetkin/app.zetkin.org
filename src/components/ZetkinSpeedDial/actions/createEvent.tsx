@@ -1,7 +1,7 @@
 /* eslint-disable react/display-name */
 import { ACTIONS } from '../constants';
-import CreateEventForm from '../../organize/events/forms/CreateEventForm';
 import { Event } from '@material-ui/icons';
+import EventDetailsForm from 'components/forms/EventDetailsForm';
 import postEvent from '../../../fetching/postEvent';
 import { useMutation } from 'react-query';
 import { useRouter } from 'next/router';
@@ -13,14 +13,14 @@ const DialogContent: React.FunctionComponent<DialogContentBaseProps> = ({ closeD
     const { orgId } = router.query as {orgId: string};
     const eventMutation = useMutation(postEvent(orgId));
 
-    const handleCreateEventFormSubmit = (data: Record<string,unknown>) => {
+    const handleEventDetailsFormSubmit = (data: Record<string,unknown>) => {
         eventMutation.mutate(data);
         closeDialog();
     };
 
-    return (<CreateEventForm
+    return (<EventDetailsForm
         onCancel={ closeDialog }
-        onSubmit={ handleCreateEventFormSubmit }
+        onSubmit={ handleEventDetailsFormSubmit }
         orgId={ orgId }
     />
     );
