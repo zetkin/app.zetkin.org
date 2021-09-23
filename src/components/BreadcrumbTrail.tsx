@@ -56,7 +56,7 @@ const BreadcrumbTrail = () : JSX.Element | null => {
 
     return (
         <div className={ classes.root }>
-            <Breadcrumbs aria-label="breadcrumb" maxItems={ isSmallScreen ? 2 : 6 } separator={ <NavigateNextIcon fontSize="small" /> }>
+            <Breadcrumbs aria-label="breadcrumb" maxItems={ isSmallScreen ? 2 : 8 } separator={ <NavigateNextIcon fontSize="small" /> }>
                 { breadcrumbs.map((crumb, index) => {
                     if (index < breadcrumbs.length - 1) {
                         return (
