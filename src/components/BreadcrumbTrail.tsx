@@ -34,7 +34,9 @@ const BreadcrumbTrail = () : JSX.Element | null => {
     const router = useRouter();
     const classes = useStyles();
     const [breadcrumbs, setBreadcrumbs] = useState<Breadcrumb[] | null>(null);
-    const isSmallScreen = useMediaQuery('(max-width:1280px)');
+    const smallScreen= useMediaQuery('(max-width:700px)');
+    const mediumScreen = useMediaQuery('(max-width:960px)');
+    const largeScreen = useMediaQuery('(max-width:1200px)');
 
     const fetchBreadcrumbs = async (
         pathname: string,
@@ -56,7 +58,12 @@ const BreadcrumbTrail = () : JSX.Element | null => {
 
     return (
         <div className={ classes.root }>
-            <Breadcrumbs aria-label="breadcrumb" maxItems={ isSmallScreen ? 2 : 8 } separator={ <NavigateNextIcon fontSize="small" /> }>
+            <Breadcrumbs
+                aria-label="breadcrumb"
+                itemsAfterCollapse={ smallScreen ? 1 : mediumScreen ? 2 : 3 }
+                itemsBeforeCollapse={ smallScreen ? 1 : mediumScreen ? 2 : 3 }
+                maxItems={ smallScreen ? 2 : mediumScreen ? 4 : largeScreen ? 6 : 10 }
+                separator={ <NavigateNextIcon fontSize="small" /> }>
                 { breadcrumbs.map((crumb, index) => {
                     if (index < breadcrumbs.length - 1) {
                         return (
