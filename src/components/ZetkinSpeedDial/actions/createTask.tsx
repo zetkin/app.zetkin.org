@@ -1,5 +1,6 @@
-/* eslint-disable react/display-name */
+import { Alert } from '@material-ui/lab';
 import { CheckBox } from '@material-ui/icons';
+import { FormattedMessage } from 'react-intl';
 import { useMutation } from 'react-query';
 import { useRouter } from 'next/router';
 
@@ -14,20 +15,30 @@ const DialogContent: React.FunctionComponent<DialogContentBaseProps> = ({ closeD
     const router = useRouter();
     const { campId, orgId } = router.query as {campId: string; orgId: string};
 
-    const eventMutation = useMutation(postTask(orgId));
+    const { mutateAsync: sendTaskRequest, isError } = useMutation(postTask(orgId));
 
     const handleFormSubmit = async (task: ZetkinTaskRequestBody) => {
-        const newTask = await eventMutation.mutateAsync(task);
-        closeDialog();
-        // Redirect to task page
-        router.push(`/organize/${orgId}/campaigns/${campId}/calendar/tasks/${newTask.id}`);
+        await sendTaskRequest(task, {
+            onSuccess: async (newTask) => {
+                closeDialog();
+                // Redirect to task page
+                router.push(`/organize/${orgId}/campaigns/${campId}/calendar/tasks/${newTask.id}`);
+            },
+        });
     };
 
     return (
-        <TaskDetailsForm
-            onCancel={ closeDialog }
-            onSubmit={ handleFormSubmit }
-        />
+        <>
+            { isError &&
+                <Alert color="error" data-testid="error-alert">
+                    <FormattedMessage id="misc.formDialog.requestError" />
+                </Alert>
+            }
+            <TaskDetailsForm
+                onCancel={ closeDialog }
+                onSubmit={ handleFormSubmit }
+            />
+        </>
     );
 };
 

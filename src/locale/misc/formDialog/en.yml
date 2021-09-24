@@ -1,4 +1,5 @@
 submit: Submit
 cancel: Cancel
 required: Required
-invalidUrl: Please enter a valid URL 
+invalidUrl: Please enter a valid URL
+requestError: There was an error. Please try again.

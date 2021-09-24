@@ -8,31 +8,31 @@ import SpeakToFriend from '../../mockData/orgs/KPD/campaigns/ReferendumSignature
 test.describe('Single campaign page', () => {
 
     test.beforeAll(async ({ moxy }) => {
-        await moxy.setMock( '/orgs/1', 'get', {
+        await moxy.setMock('/orgs/1', 'get', {
             data: {
                 data: KPD,
             },
         });
 
-        await moxy.setMock( '/orgs/1/campaigns/1', 'get', {
+        await moxy.setMock('/orgs/1/campaigns/1', 'get', {
             data: {
                 data: ReferendumSignatures,
             },
         });
 
-        await moxy.setMock( '/orgs/1/campaigns/1/actions', 'get', {
+        await moxy.setMock('/orgs/1/campaigns/1/actions', 'get', {
             data: {
                 data: [],
             },
         });
 
-        await moxy.setMock( '/orgs/1/campaigns/1/tasks', 'get', {
+        await moxy.setMock('/orgs/1/campaigns/1/tasks', 'get', {
             data: {
                 data: [],
             },
         });
 
-        await moxy.setMock( '/orgs/1/tasks', 'get', {
+        await moxy.setMock('/orgs/1/tasks', 'get', {
             data: {
                 data: [],
             },
@@ -51,7 +51,7 @@ test.describe('Single campaign page', () => {
 
         test('user can create an offline task', async ({ page, appUri, login, moxy }) => {
             // Submit create task form response
-            await moxy.setMock( '/orgs/1/tasks', 'post', {
+            await moxy.setMock('/orgs/1/tasks', 'post', {
                 data: {
                     data: SpeakToFriend,
                 },
@@ -59,7 +59,7 @@ test.describe('Single campaign page', () => {
             });
 
             // Response for task detail page
-            await moxy.setMock( '/orgs/1/tasks/1', 'get', {
+            await moxy.setMock('/orgs/1/tasks/1', 'get', {
                 data: {
                     data: SpeakToFriend,
                 },
@@ -79,12 +79,41 @@ test.describe('Single campaign page', () => {
             await page.fill('input:near(#type)', SpeakToFriend.type);
 
             await page.click('button > :text("Submit")');
+
             await page.waitForNavigation(); // Closing the modal
             await page.waitForNavigation(); // Redirecting to new page
             await expect(page.url()).toEqual(appUri + '/organize/1/campaigns/1/calendar/tasks/' + SpeakToFriend.id);
+
+            await moxy.removeMock('/orgs/1/tasks');
+            await moxy.removeMock('/orgs/1/tasks/1');
         });
 
-        // test.skip('shows error alert when response error', async () => {});
+        test('shows error alert when response error', async ({ page, moxy, login, appUri }) => {
+            await moxy.setMock('/orgs/1/tasks', 'post', {
+                data: {
+                    data: {},
+                },
+                status: 400,
+            });
+
+            await login();
+
+            await page.goto(appUri + '/organize/1/campaigns/1#create-task');
+
+            // No error alert on page load
+            await expect(await page.isHidden('data-testid=error-alert'));
+
+            // Fill form
+            await page.fill('#title', SpeakToFriend.title);
+            await page.fill('#instructions', SpeakToFriend.instructions);
+            await page.fill('input:near(#type)', SpeakToFriend.type);
+            await page.click('button > :text("Submit")');
+
+            // Shows alert
+            await expect(await page.isVisible('data-testid=error-alert'));
+            // Does not navigate and keeps open modal
+            await expect(page.url()).toEqual(appUri + '/organize/1/campaigns/1#create-task');
+        });
     });
 
 
