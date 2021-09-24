@@ -81,6 +81,7 @@ const TaskDetailsForm = ({ onSubmit, onCancel, task }: TaskDetailsFormProps): JS
 
     return (
         <Form
+            data-testid="task-details-form"
             initialValues={{
                 campaign_id: parseInt(campId),
                 config: {
@@ -104,7 +105,7 @@ const TaskDetailsForm = ({ onSubmit, onCancel, task }: TaskDetailsFormProps): JS
                     <TextField
                         disabled={ campId ? true : false }
                         fullWidth
-                        id="campaign"
+                        id={ TASK_DETAILS_FIELDS.CAMPAIGN_ID }
                         label={ intl.formatMessage({ id: 'misc.tasks.forms.createTask.fields.campaign' }) }
                         margin="normal"
                         name={ TASK_DETAILS_FIELDS.CAMPAIGN_ID }
@@ -128,7 +129,7 @@ const TaskDetailsForm = ({ onSubmit, onCancel, task }: TaskDetailsFormProps): JS
 
                     <TextField
                         fullWidth
-                        id="instructions"
+                        id={ TASK_DETAILS_FIELDS.INSTRUCTIONS }
                         label={ intl.formatMessage({ id: 'misc.tasks.forms.createTask.fields.instructions' }) }
                         margin="normal"
                         multiline
@@ -142,7 +143,7 @@ const TaskDetailsForm = ({ onSubmit, onCancel, task }: TaskDetailsFormProps): JS
 
                     <TextField
                         fullWidth
-                        id="task_type"
+                        id={ TASK_DETAILS_FIELDS.TYPE }
                         label={ intl.formatMessage({ id: 'misc.tasks.forms.createTask.fields.type' }) }
                         margin="normal"
                         name={ TASK_DETAILS_FIELDS.TYPE }
@@ -180,6 +181,7 @@ const TaskDetailsForm = ({ onSubmit, onCancel, task }: TaskDetailsFormProps): JS
                         disabled={ taskStatus === TASK_STATUS.ACTIVE || taskStatus === TASK_STATUS.CLOSED }
                         disablePast
                         fullWidth={ true }
+                        id={ TASK_DETAILS_FIELDS.PUBLISHED }
                         label={ intl.formatMessage({ id: 'misc.tasks.forms.createTask.fields.published' }) }
                         margin="normal"
                         name={ TASK_DETAILS_FIELDS.PUBLISHED }
@@ -190,6 +192,7 @@ const TaskDetailsForm = ({ onSubmit, onCancel, task }: TaskDetailsFormProps): JS
                         clearable={ true }
                         disablePast
                         fullWidth={ true }
+                        id={ TASK_DETAILS_FIELDS.DEADLINE }
                         label={ intl.formatMessage({ id: 'misc.tasks.forms.createTask.fields.deadline' }) }
                         margin="normal"
                         name={ TASK_DETAILS_FIELDS.DEADLINE }
@@ -200,6 +203,7 @@ const TaskDetailsForm = ({ onSubmit, onCancel, task }: TaskDetailsFormProps): JS
                         clearable={ true }
                         disablePast
                         fullWidth={ true }
+                        id={ TASK_DETAILS_FIELDS.EXPIRES }
                         label={ intl.formatMessage({ id: 'misc.tasks.forms.createTask.fields.expires' }) }
                         margin="normal"
                         name={ TASK_DETAILS_FIELDS.EXPIRES }
