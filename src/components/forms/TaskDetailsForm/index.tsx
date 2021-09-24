@@ -1,13 +1,14 @@
 import { Form } from 'react-final-form';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
+import validator from 'validator';
 import { Box, Button, MenuItem } from '@material-ui/core';
 import { DateTimePicker, TextField } from 'mui-rff';
 import { FormattedMessage, FormattedMessage as Msg, useIntl } from 'react-intl';
 
 import getCampaigns from 'fetching/getCampaigns';
 import { ZetkinTask } from 'types/zetkin';
-import { AnyTaskTypeConfig, TASK_TYPE, ZetkinTaskRequestBody } from 'types/tasks';
+import { AnyTaskTypeConfig, TASK_TYPE, VisitLinkConfig, ZetkinTaskRequestBody } from 'types/tasks';
 import getTaskStatus, { TASK_STATUS } from 'utils/getTaskStatus';
 
 import CollectDemographicsFields from './fields/CollectDemographicsFields';
@@ -33,7 +34,7 @@ const TaskDetailsForm = ({ onSubmit, onCancel, task }: TaskDetailsFormProps): JS
     const taskStatus = task ? getTaskStatus(task) : null;
 
     const validate = (values: ZetkinTaskRequestBody) => {
-        const errors: Record<string, string> = {};
+        const errors: Record<string, string | Record<string, string>> = {};
         if (!values.title) {
             errors.title = intl.formatMessage({ id: 'misc.formDialog.required' });
         }
@@ -45,6 +46,16 @@ const TaskDetailsForm = ({ onSubmit, onCancel, task }: TaskDetailsFormProps): JS
         }
         if (!values.campaign_id) {
             errors.campaign_id = intl.formatMessage({ id: 'misc.formDialog.required' });
+        }
+        if (values.type === TASK_TYPE.VISIT_LINK || values.type === TASK_TYPE.SHARE_LINK) {
+            const config = values.config as VisitLinkConfig;
+            errors.config = {};
+            if (!config?.url) {
+                errors.config.url = intl.formatMessage({ id: 'misc.formDialog.required' });
+            }
+            else if (!validator.isURL(config.url, { require_protocol: true })) {
+                errors.config.url =  intl.formatMessage({ id: 'misc.formDialog.invalidUrl' });
+            }
         }
 
         // Validate dates are in correct order
