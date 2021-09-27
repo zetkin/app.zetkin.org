@@ -30,4 +30,8 @@ test.describe('All campaigns page', () => {
         expect(numCampaignCards).toEqual(2);
     });
 
+    // test.describe('creating a campaign from the speed dial', async ({ moxy }) => {
+
+    // });
+
 });

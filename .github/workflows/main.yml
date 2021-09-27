@@ -24,7 +24,6 @@ jobs:
             - uses: actions/setup-node@v1
               with:
                   node-version: "16"
-            - uses: microsoft/playwright-github-action@v1
             - name: Install dependencies
               run: yarn install --frozen-lockfile && npx playwright install
             - name: Run tests
