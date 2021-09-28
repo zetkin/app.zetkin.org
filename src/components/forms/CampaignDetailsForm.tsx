@@ -2,11 +2,12 @@ import { Form } from 'react-final-form';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 import {  Autocomplete, TextField } from 'mui-rff';
-import { Avatar, Box, Button, MenuItem, Typography } from '@material-ui/core';
+import { Avatar, Box, MenuItem, Typography } from '@material-ui/core';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
 import { useEffect, useState } from 'react';
 
 import getPeopleSearchResults from 'fetching/getPeopleSearchResults';
+import SubmitCancelButtons from './common/SubmitCancelButtons';
 import useDebounce from 'hooks/useDebounce';
 import { ZetkinCampaign, ZetkinPerson } from 'types/zetkin';
 
@@ -80,7 +81,7 @@ const CampaignDetailsForm = ({ onSubmit, onCancel, campaign }: CampaignDetailsFo
             data-testid="campaign-details-form"
             initialValues={ initialValues }
             onSubmit={ handleSubmit }
-            render={ ({ handleSubmit, submitting }) => (
+            render={ ({ handleSubmit, submitting, valid }) => (
                 <form noValidate onSubmit={ handleSubmit }>
                     <TextField
                         fullWidth
@@ -166,18 +167,7 @@ const CampaignDetailsForm = ({ onSubmit, onCancel, campaign }: CampaignDetailsFo
                         </MenuItem>
                     </TextField>
 
-                    <Box display="flex" justifyContent="flex-end" width={ 1 }>
-                        <Box m={ 1 }>
-                            <Button color="primary" onClick={ onCancel }>
-                                <Msg id="misc.formDialog.cancel" />
-                            </Button>
-                        </Box>
-                        <Box m={ 1 }>
-                            <Button color="primary" disabled={ submitting } type="submit" variant="contained">
-                                <Msg id="misc.formDialog.submit" />
-                            </Button>
-                        </Box>
-                    </Box>
+                    <SubmitCancelButtons onCancel={ onCancel } submitDisabled={ submitting || !valid } />
                 </form>
             ) }
             validate={ validate }
