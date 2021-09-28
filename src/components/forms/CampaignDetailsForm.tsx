@@ -78,11 +78,12 @@ const CampaignDetailsForm = ({ onSubmit, onCancel, campaign }: CampaignDetailsFo
 
     return (
         <Form
-            data-testid="campaign-details-form"
             initialValues={ initialValues }
             onSubmit={ handleSubmit }
             render={ ({ handleSubmit, submitting, valid }) => (
-                <form noValidate onSubmit={ handleSubmit }>
+                <form
+                    noValidate
+                    onSubmit={ handleSubmit }>
                     <TextField
                         fullWidth
                         id="title"

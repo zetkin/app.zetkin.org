@@ -77,9 +77,6 @@ test.describe('All campaigns page', () => {
 
             await page.goto(appUri + '/organize/1/campaigns#create-campaign');
 
-            // Check form is open
-            await expect(await page.isVisible('data-testid=campaign-details-form'));
-
             // Fill form
             await page.fill('#title', ReferendumSignatures.title);
             await page.fill('#info_text', ReferendumSignatures.info_text);
@@ -88,6 +85,7 @@ test.describe('All campaigns page', () => {
             await page.click('button > :text("Submit")');
 
             // Check for redirect
+            await page.waitForNavigation();
             await page.waitForNavigation();
             await expect(page.url()).toEqual(appUri + '/organize/1/campaigns/' + ReferendumSignatures.id);
         });
