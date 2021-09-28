@@ -2,12 +2,13 @@ import { Form } from 'react-final-form';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 import {  Autocomplete, TextField } from 'mui-rff';
-import { Avatar, Box, Button, MenuItem, Typography } from '@material-ui/core';
+import { Avatar, Box, Button, Link, MenuItem, Typography } from '@material-ui/core';
 import { Grid, GridSize } from '@material-ui/core';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
 import { useEffect, useState } from 'react';
 
 import getPeopleSearchResults from 'fetching/getPeopleSearchResults';
+import getUserMemberships from 'fetching/getUserMemberships';
 import useDebounce from 'hooks/useDebounce';
 import { ZetkinCampaign, ZetkinPerson } from 'types/zetkin';
 
@@ -20,6 +21,10 @@ interface CampaignFormProps {
 const CampaignForm = ({ onSubmit, onCancel, campaign }: CampaignFormProps): JSX.Element => {
     const { orgId } = useRouter().query;
     const intl = useIntl();
+
+    const membershipsQuery = useQuery('userMemberships', getUserMemberships());
+    const activeMembership = membershipsQuery?.data?.find(m => m.organization.id.toString() == orgId);
+    const userProfile = activeMembership?.profile;
 
     const [searchFieldValue, setSearchFieldValue] = useState<string>('');
     const [selectedManager, setSelectedManager] = useState<Partial<ZetkinPerson> | null>(campaign?.manager? {
@@ -106,35 +111,54 @@ const CampaignForm = ({ onSubmit, onCancel, campaign }: CampaignFormProps): JSX.
         },
         {
             field: (
-                <Autocomplete
-                    filterOptions={ (options) => options } // override filtering
-                    getOptionLabel={ person => person.first_name ? `${person.first_name} ${person.last_name}` : '' }
-                    getOptionSelected={ (option, value) => option?.id == value?.id }
-                    getOptionValue={ person => person.id || null }
-                    label={ intl.formatMessage({ id: 'misc.formDialog.campaign.manager' }) }
-                    name="manager_id"
-                    noOptionsText={ searchLabel }
-                    onChange={ (_, v) => {
-                        setSelectedManager(v as Partial<ZetkinPerson>);
-                    } }
-                    onInputChange={ (_, v) => {
-                        setSearchFieldValue(v);
-                    } }
-                    options={ managerOptions }
-                    renderOption={ (person) => (
-                        <Box alignItems="center" display="flex">
-                            <Box m={ 1 }>
-                                <Avatar
-                                    src={ `/api/orgs/${orgId}/people/${person.id}/avatar` }>
-                                </Avatar>
+                <>
+                    <Autocomplete
+                        filterOptions={ (options) => options } // override filtering
+                        getOptionLabel={ person => person.first_name ? `${person.first_name} ${person.last_name}` : '' }
+                        getOptionSelected={ (option, value) => option?.id == value?.id }
+                        getOptionValue={ person => person.id || null }
+                        label={ intl.formatMessage({ id: 'misc.formDialog.campaign.manager.label' }) }
+                        name="manager_id"
+                        noOptionsText={ searchLabel }
+                        onChange={ (_, v) => {
+                            setSelectedManager(v as Partial<ZetkinPerson>);
+                        } }
+                        onInputChange={ (_, v) => {
+                            setSearchFieldValue(v);
+                        } }
+                        options={ managerOptions }
+                        renderOption={ (person) => (
+                            <Box alignItems="center" display="flex">
+                                <Box m={ 1 }>
+                                    <Avatar
+                                        src={ `/api/orgs/${orgId}/people/${person.id}/avatar` }>
+                                    </Avatar>
+                                </Box>
+                                <Typography>
+                                    { `${ person.first_name } ${ person.last_name }` }
+                                </Typography>
                             </Box>
-                            <Typography>
-                                { `${ person.first_name } ${ person.last_name }` }
-                            </Typography>
-                        </Box>
-                    ) }
-                    value={ selectedManager }
-                />
+                        ) }
+                        value={ selectedManager }
+                    />
+                    { (userProfile && userProfile.id != selectedManager?.id) ? (
+                        <Link
+                            color="textPrimary"
+                            component="button"
+                            onClick={ () => {
+                                // Select profile beloning to current user. We only need the ID
+                                // to be correct, and the name to be reflected by first_name+last_name,
+                                // so for simplicity we pass the entire name as first name.
+                                setSelectedManager({
+                                    first_name: userProfile.name,
+                                    id: userProfile.id,
+                                    last_name: '',
+                                });
+                            } }>
+                            <Msg id="misc.formDialog.campaign.manager.selectSelf"/>
+                        </Link>
+                    ) : null }
+                </>
             ),
             size: 12,
         },
