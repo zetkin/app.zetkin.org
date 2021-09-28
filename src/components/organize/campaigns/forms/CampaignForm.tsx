@@ -22,6 +22,12 @@ const CampaignForm = ({ onSubmit, onCancel, campaign }: CampaignFormProps): JSX.
     const intl = useIntl();
 
     const [searchFieldValue, setSearchFieldValue] = useState<string>('');
+    const [selectedManager, setSelectedManager] = useState<Partial<ZetkinPerson> | null>(campaign?.manager? {
+        first_name: campaign.manager.name.split(' ')[0],
+        id: campaign.manager.id,
+        last_name: campaign?.manager.name.split(' ')[1],
+    } as Partial<ZetkinPerson> : null);
+
     const { isLoading, refetch, data: results } = useQuery(
         ['peopleSearchResults', searchFieldValue],
         getPeopleSearchResults(searchFieldValue, orgId as string),
@@ -65,6 +71,11 @@ const CampaignForm = ({ onSubmit, onCancel, campaign }: CampaignFormProps): JSX.
         return errors;
     };
 
+    let managerOptions = (results || []) as Partial<ZetkinPerson>[];
+    if (selectedManager && !managerOptions.some(o => o.id === selectedManager.id)) {
+        managerOptions = [selectedManager].concat(managerOptions);
+    }
+
     const formFields = [
         {
             field: (
@@ -96,17 +107,20 @@ const CampaignForm = ({ onSubmit, onCancel, campaign }: CampaignFormProps): JSX.
         {
             field: (
                 <Autocomplete
-                    defaultValue={{ first_name:campaign?.manager?.name.split(' ')[0], id: campaign?.manager?.id, last_name: campaign?.manager?.name.split(' ')[1] } as Partial<ZetkinPerson>  || null}
                     filterOptions={ (options) => options } // override filtering
                     getOptionLabel={ person => person.first_name ? `${person.first_name} ${person.last_name}` : '' }
+                    getOptionSelected={ (option, value) => option?.id == value?.id }
                     getOptionValue={ person => person.id || null }
                     label={ intl.formatMessage({ id: 'misc.formDialog.campaign.manager' }) }
                     name="manager_id"
                     noOptionsText={ searchLabel }
+                    onChange={ (_, v) => {
+                        setSelectedManager(v as Partial<ZetkinPerson>);
+                    } }
                     onInputChange={ (_, v) => {
                         setSearchFieldValue(v);
                     } }
-                    options={ results || [] }
+                    options={ managerOptions }
                     renderOption={ (person) => (
                         <Box alignItems="center" display="flex">
                             <Box m={ 1 }>
@@ -119,6 +133,7 @@ const CampaignForm = ({ onSubmit, onCancel, campaign }: CampaignFormProps): JSX.
                             </Typography>
                         </Box>
                     ) }
+                    value={ selectedManager }
                 />
             ),
             size: 12,
@@ -161,10 +176,10 @@ const CampaignForm = ({ onSubmit, onCancel, campaign }: CampaignFormProps): JSX.
     ];
 
     const handleSubmit = (values: Record<string, string>) => {
-        const { info_text, status, title, visibility, manager_id } = values;
+        const { info_text, status, title, visibility } = values;
         onSubmit({
             info_text: info_text ?? '',
-            manager_id,
+            manager_id: selectedManager? selectedManager.id : null,
             published:status === 'draft' ? false : true,
             title: title,
             visibility,
