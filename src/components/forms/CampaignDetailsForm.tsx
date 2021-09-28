@@ -3,7 +3,6 @@ import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 import {  Autocomplete, TextField } from 'mui-rff';
 import { Avatar, Box, Button, MenuItem, Typography } from '@material-ui/core';
-import { Grid, GridSize } from '@material-ui/core';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
 import { useEffect, useState } from 'react';
 
@@ -65,101 +64,6 @@ const CampaignDetailsForm = ({ onSubmit, onCancel, campaign }: CampaignDetailsFo
         return errors;
     };
 
-    const formFields = [
-        {
-            field: (
-                <TextField
-                    fullWidth
-                    id="title"
-                    label={ intl.formatMessage({ id: 'misc.formDialog.campaign.name' }) }
-                    margin="normal"
-                    name="title"
-                    required
-                />
-            ),
-            size: 12,
-        },
-        {
-            field: (
-                <TextField
-                    fullWidth id="info_text"
-                    label={ intl.formatMessage({ id: 'misc.formDialog.campaign.description' }) }
-                    margin="normal"
-                    multiline
-                    name="info_text"
-                    rows={ 5 }
-                    variant="outlined"
-                />
-            ),
-            size: 12,
-        },
-        {
-            field: (
-                <Autocomplete
-                    defaultValue={{ first_name:campaign?.manager?.name.split(' ')[0], id: campaign?.manager?.id, last_name: campaign?.manager?.name.split(' ')[1] } as Partial<ZetkinPerson>  || null}
-                    filterOptions={ (options) => options } // override filtering
-                    getOptionLabel={ person => person.first_name ? `${person.first_name} ${person.last_name}` : '' }
-                    getOptionValue={ person => person.id || null }
-                    label={ intl.formatMessage({ id: 'misc.formDialog.campaign.manager' }) }
-                    name="manager_id"
-                    noOptionsText={ searchLabel }
-                    onInputChange={ (_, v) => {
-                        setSearchFieldValue(v);
-                    } }
-                    options={ results || [] }
-                    renderOption={ (person) => (
-                        <Box alignItems="center" display="flex">
-                            <Box m={ 1 }>
-                                <Avatar
-                                    src={ `/api/orgs/${orgId}/people/${person.id}/avatar` }>
-                                </Avatar>
-                            </Box>
-                            <Typography>
-                                { `${ person.first_name } ${ person.last_name }` }
-                            </Typography>
-                        </Box>
-                    ) }
-                />
-            ),
-            size: 12,
-        },
-        {
-            field: (
-                <TextField
-                    fullWidth id="status"
-                    label={ intl.formatMessage({ id: 'misc.formDialog.campaign.status.heading' }) }
-                    margin="normal"
-                    name="status" select>
-                    <MenuItem value="published">
-                        <Msg id="misc.formDialog.campaign.status.published" />
-                    </MenuItem>
-                    <MenuItem value="draft">
-                        <Msg id="misc.formDialog.campaign.status.draft" />
-                    </MenuItem>
-                </TextField>
-            ),
-            size: 12,
-        },
-        {
-            field: (
-                <TextField fullWidth id="visibility"
-                    label={ intl.formatMessage({ id: 'misc.formDialog.campaign.visibility.heading' }) }
-                    margin="normal"
-                    name="visibility"
-                    select>
-                    <MenuItem value="hidden">
-                        <Msg id="misc.formDialog.campaign.visibility.private" />
-                    </MenuItem>
-                    <MenuItem value="open">
-                        <Msg id="misc.formDialog.campaign.visibility.public" />
-                    </MenuItem>
-                </TextField>
-            ),
-            size: 12,
-        },
-
-    ];
-
     const handleSubmit = (values: Record<string, string>) => {
         const { info_text, status, title, visibility, manager_id } = values;
         onSubmit({
@@ -173,31 +77,107 @@ const CampaignDetailsForm = ({ onSubmit, onCancel, campaign }: CampaignDetailsFo
 
     return (
         <Form
+            data-testid="campaign-details-form"
             initialValues={ initialValues }
             onSubmit={ handleSubmit }
             render={ ({ handleSubmit, submitting }) => (
                 <form noValidate onSubmit={ handleSubmit }>
-                    <Grid alignItems="flex-start" container spacing={ 2 }>
-                        { formFields.map((item, idx) => (
-                            <Grid key={ idx } item xs={ item.size as GridSize }>
-                                { item.field }
-                            </Grid>
-                        )) }
-                        <Grid item style={{ marginTop: 16 }}>
-                        </Grid>
-                        <Box display="flex" justifyContent="flex-end" width={ 1 }>
-                            <Box m={ 1 }>
-                                <Button color="primary" onClick={ onCancel }>
-                                    <Msg id="misc.formDialog.cancel" />
-                                </Button>
+                    <TextField
+                        fullWidth
+                        id="title"
+                        label={ intl.formatMessage({ id: 'misc.formDialog.campaign.name' }) }
+                        margin="normal"
+                        name="title"
+                        required
+                    />
+
+
+                    <TextField
+                        fullWidth
+                        id="info_text"
+                        label={ intl.formatMessage({ id: 'misc.formDialog.campaign.description' }) }
+                        margin="normal"
+                        multiline
+                        name="info_text"
+                        rows={ 5 }
+                        variant="outlined"
+                    />
+
+                    <Autocomplete
+                        defaultValue={
+                            {
+                                first_name:campaign?.manager?.name.split(' ')[0],
+                                id: campaign?.manager?.id,
+                                last_name: campaign?.manager?.name.split(' ')[1],
+                            } as Partial<ZetkinPerson>  || null
+                        }
+                        filterOptions={ (options) => options } // override filtering
+                        getOptionLabel={ person => person.first_name ? `${person.first_name} ${person.last_name}` : '' }
+                        getOptionValue={ person => person.id || null }
+                        id="manager_id"
+                        label={ intl.formatMessage({ id: 'misc.formDialog.campaign.manager' }) }
+                        name="manager_id"
+                        noOptionsText={ searchLabel }
+                        onInputChange={ (_, v) => {
+                            setSearchFieldValue(v);
+                        } }
+                        options={ results || [] }
+                        renderOption={ (person) => (
+                            <Box alignItems="center" display="flex">
+                                <Box m={ 1 }>
+                                    <Avatar
+                                        src={ `/api/orgs/${orgId}/people/${person.id}/avatar` }>
+                                    </Avatar>
+                                </Box>
+                                <Typography>
+                                    { `${ person.first_name } ${ person.last_name }` }
+                                </Typography>
                             </Box>
-                            <Box m={ 1 }>
-                                <Button color="primary" disabled={ submitting } type="submit" variant="contained">
-                                    <Msg id="misc.formDialog.submit" />
-                                </Button>
-                            </Box>
+                        ) }
+                    />
+
+                    <TextField
+                        fullWidth
+                        id="status"
+                        label={ intl.formatMessage({ id: 'misc.formDialog.campaign.status.heading' }) }
+                        margin="normal"
+                        name="status"
+                        select>
+                        <MenuItem value="published">
+                            <Msg id="misc.formDialog.campaign.status.published" />
+                        </MenuItem>
+                        <MenuItem value="draft">
+                            <Msg id="misc.formDialog.campaign.status.draft" />
+                        </MenuItem>
+                    </TextField>
+
+                    <TextField
+                        fullWidth
+                        id="visibility"
+                        label={ intl.formatMessage({ id: 'misc.formDialog.campaign.visibility.heading' }) }
+                        margin="normal"
+                        name="visibility"
+                        select>
+                        <MenuItem value="hidden">
+                            <Msg id="misc.formDialog.campaign.visibility.private" />
+                        </MenuItem>
+                        <MenuItem value="open">
+                            <Msg id="misc.formDialog.campaign.visibility.public" />
+                        </MenuItem>
+                    </TextField>
+
+                    <Box display="flex" justifyContent="flex-end" width={ 1 }>
+                        <Box m={ 1 }>
+                            <Button color="primary" onClick={ onCancel }>
+                                <Msg id="misc.formDialog.cancel" />
+                            </Button>
                         </Box>
-                    </Grid>
+                        <Box m={ 1 }>
+                            <Button color="primary" disabled={ submitting } type="submit" variant="contained">
+                                <Msg id="misc.formDialog.submit" />
+                            </Button>
+                        </Box>
+                    </Box>
                 </form>
             ) }
             validate={ validate }
