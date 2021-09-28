@@ -93,7 +93,6 @@ const TaskDetailsForm = ({ onSubmit, onCancel, task }: TaskDetailsFormProps): JS
 
     return (
         <Form
-            data-testid="task-details-form"
             initialValues={{
                 campaign_id: parseInt(campId),
                 config: {

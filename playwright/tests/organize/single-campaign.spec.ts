@@ -74,9 +74,6 @@ test.describe('Single campaign page', () => {
             // Open create task modal with URL
             await page.goto(appUri + '/organize/1/campaigns/1#create-task');
 
-            // Check form is open
-            await expect(await page.isVisible('data-testid=task-details-form'));
-
             // Fill form
             await page.fill('#title', SpeakToFriend.title);
             await page.fill('#instructions', SpeakToFriend.instructions);
@@ -102,7 +99,7 @@ test.describe('Single campaign page', () => {
             await page.goto(appUri + '/organize/1/campaigns/1#create-task');
 
             // No error alert on page load
-            await expect(await page.isHidden('data-testid=error-alert'));
+            await expect(page.locator('data-testid=error-alert')).toBeHidden();
 
             // Fill form
             await page.fill('#title', SpeakToFriend.title);
@@ -111,7 +108,7 @@ test.describe('Single campaign page', () => {
             await page.click('button > :text("Submit")');
 
             // Shows alert
-            await expect(await page.isVisible('data-testid=error-alert'));
+            await expect(page.locator('data-testid=error-alert')).toBeVisible();
             // Does not navigate and keeps open modal
             await expect(page.url()).toEqual(appUri + '/organize/1/campaigns/1#create-task');
         });
