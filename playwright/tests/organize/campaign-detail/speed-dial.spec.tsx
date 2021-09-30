@@ -1,9 +1,9 @@
 import { expect } from '@playwright/test';
-import test from '../../fixtures/next';
+import test from '../../../fixtures/next';
 
-import KPD from '../../mockData/orgs/KPD';
-import ReferendumSignatures  from '../../mockData/orgs/KPD/campaigns/ReferendumSignatures';
-import SpeakToFriend from '../../mockData/orgs/KPD/campaigns/ReferendumSignatures/tasks/SpeakToFriend';
+import KPD from '../../../mockData/orgs/KPD';
+import ReferendumSignatures  from '../../../mockData/orgs/KPD/campaigns/ReferendumSignatures';
+import SpeakToFriend from '../../../mockData/orgs/KPD/campaigns/ReferendumSignatures/tasks/SpeakToFriend';
 
 test.describe('Single campaign page', () => {
     test.beforeAll(async ({ moxy }) => {

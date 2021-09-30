@@ -1,14 +1,14 @@
 import { expect } from '@playwright/test';
-import test from '../../fixtures/next';
+import test from '../../../fixtures/next';
 
-import KPD from '../../mockData/orgs/KPD';
-import ReferendumSignatures  from '../../mockData/orgs/KPD/campaigns/ReferendumSignatures';
-import WelcomeNewMembers from '../../mockData/orgs/KPD/campaigns/WelcomeNewMembers';
+import KPD from '../../../mockData/orgs/KPD';
+import ReferendumSignatures  from '../../../mockData/orgs/KPD/campaigns/ReferendumSignatures';
+import WelcomeNewMembers from '../../../mockData/orgs/KPD/campaigns/WelcomeNewMembers';
 
-test.describe('All campaigns page', () => {
+test.describe('All campaigns page action buttons', () => {
 
-    test.beforeAll(async ({ moxy }) => {
-        await moxy.removeMock();
+    test.beforeAll(async ({ moxy, login }) => {
+        await login();
 
         await moxy.setMock( '/orgs/1', 'get', {
             data: {
@@ -17,28 +17,11 @@ test.describe('All campaigns page', () => {
         });
     });
 
-    test.afterEach(async ({ logout }) => {
-        await logout();
+    test.afterAll(async ({ moxy }) => {
+        await moxy.removeMock();
     });
 
-    test('shows list of campaigns ', async ({ page, appUri, moxy, login }) => {
-        const removeCampaignsMock = await moxy.setMock( '/orgs/1/campaigns', 'get', {
-            data: {
-                data: [ReferendumSignatures, WelcomeNewMembers],
-            },
-        });
-
-        await login();
-
-        await page.goto(appUri + '/organize/1/campaigns');
-
-        const numCampaignCards = await page.$$eval('data-testid=campaign-card', (items) => items.length);
-        expect(numCampaignCards).toEqual(2);
-
-        await removeCampaignsMock();
-    });
-
-    test.describe('creating a campaign from the speed dial', async () => {
+    test.describe('allows user to create a campiagn', async () => {
         test.beforeAll(async ({ moxy }) => {
             await moxy.setMock( '/orgs/1/campaigns', 'get', {
                 data: {
@@ -55,7 +38,7 @@ test.describe('All campaigns page', () => {
             moxy.removeMock('/orgs/1/campaigns', 'post');
         });
 
-        test('user can create a new campaign', async ({ appUri, page, moxy, login }) => {
+        test('user can create a new campaign', async ({ appUri, page, moxy }) => {
             await moxy.setMock('/orgs/1/campaigns', 'post', {
                 data: {
                     data: ReferendumSignatures,
@@ -75,8 +58,6 @@ test.describe('All campaigns page', () => {
                 },
             });
 
-            await login();
-
             await page.goto(appUri + '/organize/1/campaigns#create-campaign');
 
             // Fill form
@@ -92,15 +73,13 @@ test.describe('All campaigns page', () => {
             await expect(page.url()).toEqual(appUri + '/organize/1/campaigns/' + ReferendumSignatures.id);
         });
 
-        test('shows error alert when response error', async ({ page, moxy, login, appUri }) => {
+        test('shows error alert when response error', async ({ page, moxy, appUri }) => {
             await moxy.setMock('/orgs/1/tasks', 'post', {
                 data: {
                     data: {},
                 },
                 status: 400,
             });
-
-            await login();
 
             await page.goto(appUri + '/organize/1/campaigns#create-campaign');
 
@@ -120,5 +99,4 @@ test.describe('All campaigns page', () => {
             await expect(page.url()).toEqual(appUri + '/organize/1/campaigns#create-campaign');
         });
     });
-
 });
