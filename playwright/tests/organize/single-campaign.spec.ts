@@ -7,6 +7,8 @@ import SpeakToFriend from '../../mockData/orgs/KPD/campaigns/ReferendumSignature
 
 test.describe('Single campaign page', () => {
     test.beforeAll(async ({ moxy }) => {
+        await moxy.removeMock();
+
         await moxy.setMock('/orgs/1', 'get', {
             data: {
                 data: KPD,
