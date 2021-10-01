@@ -1,9 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import { Alert } from '@material-ui/lab';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { Box, Button, Menu, MenuItem } from '@material-ui/core';
 import { Delete, Settings } from '@material-ui/icons';
-import { FormattedMessage as Msg, useIntl } from 'react-intl';
+import { FormattedMessage, FormattedMessage as Msg, useIntl } from 'react-intl';
 import React, { useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 
@@ -36,15 +37,15 @@ const CampaignActionButtons: React.FunctionComponent<CampaignActionButtonsProps>
     const closeDialog = () => setCurrentOpenDialog(undefined);
 
     // Mutations
-    const patchCampaignMutation = useMutation(patchCampaign(orgId as string, campaign.id), {
-        onSettled: () => queryClient.invalidateQueries(['campaign' ]),
-    });
+    const patchCampaignMutation = useMutation(patchCampaign(orgId as string, campaign.id));
     const deleteCampaignMutation = useMutation(deleteCampaign(orgId as string, campaign.id));
 
     // Event Handlers
     const handleEditCampaign = (campaign: Partial<ZetkinCampaign>) => {
-        patchCampaignMutation.mutate(campaign);
-        closeDialog();
+        patchCampaignMutation.mutate(campaign, {
+            onSettled: () => queryClient.invalidateQueries(['campaign' ]),
+            onSuccess: () => closeDialog(),
+        });
     };
     const handleDeleteCampaign = () => {
         deleteCampaignMutation.mutate();
@@ -63,7 +64,12 @@ const CampaignActionButtons: React.FunctionComponent<CampaignActionButtonsProps>
                 </Link>
             </Box>
             <Box>
-                <Button color="secondary" disableElevation onClick={ (e) => setMenuActivator(e.currentTarget) } variant="contained">
+                <Button
+                    color="secondary"
+                    data-testid="campaign-action-buttons-menu-activator"
+                    disableElevation
+                    onClick={ (e) => setMenuActivator(e.currentTarget) }
+                    variant="contained">
                     <Settings />
                 </Button>
             </Box>
@@ -75,6 +81,7 @@ const CampaignActionButtons: React.FunctionComponent<CampaignActionButtonsProps>
                 { /* Edit Campaign */ }
                 <MenuItem
                     key={ CAMPAIGN_MENU_ITEMS.EDIT_CAMPAIGN }
+                    data-testid="campaign-action-buttons-edit-campaign"
                     onClick={ () => {
                         setMenuActivator(null);
                         setCurrentOpenDialog(CAMPAIGN_MENU_ITEMS.EDIT_CAMPAIGN);
@@ -98,6 +105,12 @@ const CampaignActionButtons: React.FunctionComponent<CampaignActionButtonsProps>
                 onClose={ closeDialog }
                 open={ currentOpenDialog === CAMPAIGN_MENU_ITEMS.EDIT_CAMPAIGN }
                 title={ intl.formatMessage({ id: 'misc.formDialog.campaign.edit' }) }>
+                {
+                    patchCampaignMutation.isError &&
+                    <Alert color="error" data-testid="error-alert">
+                        <FormattedMessage id="misc.formDialog.requestError" />
+                    </Alert>
+                }
                 <CampaignDetailsForm campaign={ campaign } onCancel={ closeDialog } onSubmit={ handleEditCampaign }/>
             </ZetkinDialog>
             <ZetkinDialog

@@ -11,6 +11,9 @@ export default function patchCampaign(orgId: string | number, campId: string | n
             },
             method: 'PATCH',
         });
+        if (!res.ok) {
+            throw new Error(`Error making PATCH request to ${url}`);
+        }
         const resData = await res.json();
         return resData;
     };
