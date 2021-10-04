@@ -9,7 +9,7 @@ const TimeEstimateField: React.FunctionComponent = () => {
     return (
         <TextField
             fullWidth
-            id="estimated_time"
+            id="estimated-time"
             label={ intl.formatMessage({ id: 'misc.tasks.forms.createTask.fields.time_estimate' }) }
             margin="normal"
             name={ TASK_DETAILS_FIELDS.TIME_ESTIMATE }

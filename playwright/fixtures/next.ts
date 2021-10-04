@@ -16,9 +16,9 @@ import RosaLuxemburg from '../mockData/users/RosaLuxemburg';
 import { Mock, MoxyHTTPMethod, ZetkinAPIResponse } from '../types';
 import { ZetkinSession, ZetkinUser } from '../../src/types/zetkin';
 
-
 interface NextTestFixtures {
     login: () => Promise<void>;
+    logout: () => Promise<void>;
 }
 
 interface NextWorkerFixtures {
@@ -26,7 +26,7 @@ interface NextWorkerFixtures {
     moxy: {
         port: number;
         removeMock: (path?: string, method?: MoxyHTTPMethod, ) => Promise<void>;
-        setMock: <G>(path: string, method: MoxyHTTPMethod, response?: Mock<G>) => Promise<void>;
+        setMock: <G>(path: string, method: MoxyHTTPMethod, response?: Mock<G>) => Promise<() => Promise<void>>;
     };
 }
 
@@ -98,17 +98,22 @@ const test = base.extend<NextTestFixtures, NextWorkerFixtures>({
                      You must delete it with removeMock before you can assign a new mock with these parameters
                  `);
             }
+
+            // Return function which removes the mock
+            return async () => {
+                removeMock(path, method);
+            };
         };
 
         const removeMock = async(path?: string, method?: MoxyHTTPMethod) => {
-            let url = `${URL_BASE}/_mocks`; // Remove all mocks
+            let url = `http://localhost:${MOXY_PORT}/_mocks`; // Remove all mocks
+            // Remove all mocks on path
+            if (path && !method) {
+                url = `${URL_BASE}${path}/_mocks`;
+            }
             // Remove mock from path and method
             if (path && method) {
                 url = `${URL_BASE}${path}/_mocks/${method}`;
-            }
-            // Remove all mocks on path
-            if (path) {
-                url = `${URL_BASE}${path}/_mocks`;
             }
             await fetch(url, {
                 method: 'DELETE',
@@ -155,6 +160,17 @@ const test = base.extend<NextTestFixtures, NextWorkerFixtures>({
 
         };
         await use(login);
+    },
+    logout: async({ moxy }, use) => {
+        /**
+         * Removes mock responses for getting the current user and session. Does not navigate user to log out,
+         * this is only used for handling the mocks, which unauthenticates the user.
+         */
+        const logout = async () => {
+            await moxy.removeMock('/users/me', 'get');
+            await moxy.removeMock('/session', 'get');
+        };
+        await use(logout);
     },
 });
 
