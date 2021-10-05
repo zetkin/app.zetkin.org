@@ -6,7 +6,9 @@ search: Type to start searching
 keepSearch: Keep typing to start searching
 name: Name
 description: Description
-manager: Campaign manager
+manager:
+    label: Campaign manager
+    selectSelf: Set yourself as manager
 visibility:
     heading: Visibility
     private: Private
