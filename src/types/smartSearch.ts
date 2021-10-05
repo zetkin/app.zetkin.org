@@ -207,7 +207,7 @@ export enum QUERY_TYPE {
 
 export interface ZetkinQuery {
     id: number;
-    type: QUERY_TYPE;
+    type?: QUERY_TYPE;
     filter_spec: ZetkinSmartSearchFilter[];
     title?: string;
     info_text?: string;

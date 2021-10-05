@@ -10,7 +10,7 @@ import ZetkinDialog from 'components/ZetkinDialog';
 import { ZetkinTask } from 'types/zetkin';
 import getTaskStatus, { TASK_STATUS } from 'utils/getTaskStatus';
 
-import PublishTaskForm from '../forms/PublishTaskForm';
+import TaskPublishForm from 'components/forms/TaskPublishForm';
 import validateTaskConfig from 'utils/validateTaskConfig';
 
 const getTooltipContents = (taskStatus: TASK_STATUS, isTaskConfigValid: boolean, hasAssignees: boolean): string | null => {
@@ -89,7 +89,7 @@ const PublishButton: React.FunctionComponent<PublishButtonProps> = ({ task }) =>
                 } }
                 open={ dialogOpen }
                 title="Publish task">
-                <PublishTaskForm
+                <TaskPublishForm
                     onCancel={ () => {
                         setDialogOpen(false);
                     } }

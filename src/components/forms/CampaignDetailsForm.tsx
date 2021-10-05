@@ -1,24 +1,24 @@
 import { Form } from 'react-final-form';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
-import {  Autocomplete, TextField } from 'mui-rff';
-import { Avatar, Box, Button, Link, MenuItem, Typography } from '@material-ui/core';
-import { Grid, GridSize } from '@material-ui/core';
+import { Autocomplete, TextField } from 'mui-rff';
+import { Avatar, Box, Link, MenuItem, Typography } from '@material-ui/core';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
 import { useEffect, useState } from 'react';
 
 import getPeopleSearchResults from 'fetching/getPeopleSearchResults';
 import getUserMemberships from 'fetching/getUserMemberships';
+import SubmitCancelButtons from './common/SubmitCancelButtons';
 import useDebounce from 'hooks/useDebounce';
 import { ZetkinCampaign, ZetkinPerson } from 'types/zetkin';
 
-interface CampaignFormProps {
+interface CampaignDetailsFormProps {
     campaign?: ZetkinCampaign;
     onSubmit: (data: Record<string, unknown>) => void;
     onCancel: () => void;
 }
 
-const CampaignForm = ({ onSubmit, onCancel, campaign }: CampaignFormProps): JSX.Element => {
+const CampaignDetailsForm = ({ onSubmit, onCancel, campaign }: CampaignDetailsFormProps): JSX.Element => {
     const { orgId } = useRouter().query;
     const intl = useIntl();
 
@@ -27,6 +27,7 @@ const CampaignForm = ({ onSubmit, onCancel, campaign }: CampaignFormProps): JSX.
     const userProfile = activeMembership?.profile;
 
     const [searchFieldValue, setSearchFieldValue] = useState<string>('');
+
     const [selectedManager, setSelectedManager] = useState<Partial<ZetkinPerson> | null>(campaign?.manager? {
         first_name: campaign.manager.name.split(' ')[0],
         id: campaign.manager.id,
@@ -76,42 +77,51 @@ const CampaignForm = ({ onSubmit, onCancel, campaign }: CampaignFormProps): JSX.
         return errors;
     };
 
+    const handleSubmit = (values: Record<string, string>) => {
+        const { info_text, status, title, visibility } = values;
+        onSubmit({
+            info_text: info_text ?? '',
+            manager_id: selectedManager? selectedManager.id : null,
+            published:status === 'draft' ? false : true,
+            title: title,
+            visibility,
+        });
+    };
+
     let managerOptions = (results || []) as Partial<ZetkinPerson>[];
     if (selectedManager && !managerOptions.some(o => o.id === selectedManager.id)) {
         managerOptions = [selectedManager].concat(managerOptions);
     }
 
-    const formFields = [
-        {
-            field: (
-                <TextField
-                    fullWidth
-                    id="title"
-                    label={ intl.formatMessage({ id: 'misc.formDialog.campaign.name' }) }
-                    margin="normal"
-                    name="title"
-                    required
-                />
-            ),
-            size: 12,
-        },
-        {
-            field: (
-                <TextField
-                    fullWidth id="info_text"
-                    label={ intl.formatMessage({ id: 'misc.formDialog.campaign.description' }) }
-                    margin="normal"
-                    multiline
-                    name="info_text"
-                    rows={ 5 }
-                    variant="outlined"
-                />
-            ),
-            size: 12,
-        },
-        {
-            field: (
-                <>
+    return (
+        <Form
+            initialValues={ initialValues }
+            onSubmit={ handleSubmit }
+            render={ ({ handleSubmit, submitting, valid }) => (
+                <form
+                    noValidate
+                    onSubmit={ handleSubmit }>
+                    <TextField
+                        fullWidth
+                        id="title"
+                        label={ intl.formatMessage({ id: 'misc.formDialog.campaign.name' }) }
+                        margin="normal"
+                        name="title"
+                        required
+                    />
+
+
+                    <TextField
+                        fullWidth
+                        id="info_text"
+                        label={ intl.formatMessage({ id: 'misc.formDialog.campaign.description' }) }
+                        margin="normal"
+                        multiline
+                        name="info_text"
+                        rows={ 5 }
+                        variant="outlined"
+                    />
+
                     <Autocomplete
                         filterOptions={ (options) => options } // override filtering
                         getOptionLabel={ person => person.first_name ? `${person.first_name} ${person.last_name}` : '' }
@@ -141,7 +151,7 @@ const CampaignForm = ({ onSubmit, onCancel, campaign }: CampaignFormProps): JSX.
                         ) }
                         value={ selectedManager }
                     />
-                    { (userProfile && userProfile.id != selectedManager?.id) ? (
+                    { (userProfile && userProfile.id != selectedManager?.id) && (
                         <Link
                             color="textPrimary"
                             component="button"
@@ -157,86 +167,39 @@ const CampaignForm = ({ onSubmit, onCancel, campaign }: CampaignFormProps): JSX.
                             } }>
                             <Msg id="misc.formDialog.campaign.manager.selectSelf"/>
                         </Link>
-                    ) : null }
-                </>
-            ),
-            size: 12,
-        },
-        {
-            field: (
-                <TextField
-                    fullWidth id="status"
-                    label={ intl.formatMessage({ id: 'misc.formDialog.campaign.status.heading' }) }
-                    margin="normal"
-                    name="status" select>
-                    <MenuItem value="published">
-                        <Msg id="misc.formDialog.campaign.status.published" />
-                    </MenuItem>
-                    <MenuItem value="draft">
-                        <Msg id="misc.formDialog.campaign.status.draft" />
-                    </MenuItem>
-                </TextField>
-            ),
-            size: 12,
-        },
-        {
-            field: (
-                <TextField fullWidth id="visibility"
-                    label={ intl.formatMessage({ id: 'misc.formDialog.campaign.visibility.heading' }) }
-                    margin="normal"
-                    name="visibility"
-                    select>
-                    <MenuItem value="hidden">
-                        <Msg id="misc.formDialog.campaign.visibility.private" />
-                    </MenuItem>
-                    <MenuItem value="open">
-                        <Msg id="misc.formDialog.campaign.visibility.public" />
-                    </MenuItem>
-                </TextField>
-            ),
-            size: 12,
-        },
+                    ) }
 
-    ];
+                    <TextField
+                        fullWidth
+                        id="status"
+                        label={ intl.formatMessage({ id: 'misc.formDialog.campaign.status.heading' }) }
+                        margin="normal"
+                        name="status"
+                        select>
+                        <MenuItem value="published">
+                            <Msg id="misc.formDialog.campaign.status.published" />
+                        </MenuItem>
+                        <MenuItem value="draft">
+                            <Msg id="misc.formDialog.campaign.status.draft" />
+                        </MenuItem>
+                    </TextField>
 
-    const handleSubmit = (values: Record<string, string>) => {
-        const { info_text, status, title, visibility } = values;
-        onSubmit({
-            info_text: info_text ?? '',
-            manager_id: selectedManager? selectedManager.id : null,
-            published:status === 'draft' ? false : true,
-            title: title,
-            visibility,
-        });
-    };
+                    <TextField
+                        fullWidth
+                        id="visibility"
+                        label={ intl.formatMessage({ id: 'misc.formDialog.campaign.visibility.heading' }) }
+                        margin="normal"
+                        name="visibility"
+                        select>
+                        <MenuItem value="hidden">
+                            <Msg id="misc.formDialog.campaign.visibility.private" />
+                        </MenuItem>
+                        <MenuItem value="open">
+                            <Msg id="misc.formDialog.campaign.visibility.public" />
+                        </MenuItem>
+                    </TextField>
 
-    return (
-        <Form
-            initialValues={ initialValues }
-            onSubmit={ handleSubmit }
-            render={ ({ handleSubmit, submitting }) => (
-                <form noValidate onSubmit={ handleSubmit }>
-                    <Grid alignItems="flex-start" container spacing={ 2 }>
-                        { formFields.map((item, idx) => (
-                            <Grid key={ idx } item xs={ item.size as GridSize }>
-                                { item.field }
-                            </Grid>
-                        )) }
-                        <Grid item style={{ marginTop: 16 }}>
-                        </Grid>
-                        <Box display="flex" justifyContent="flex-end" width={ 1 }>
-                            <Box m={ 1 }>
-                                <Button color="primary" onClick={ onCancel }>
-                                    <Msg id="misc.formDialog.cancel" />
-                                </Button>
-                            </Box>
-                            <Box m={ 1 }>
-                                <Button color="primary" disabled={ submitting } type="submit" variant="contained">
-                                    <Msg id="misc.formDialog.submit" />
-                                </Button>
-                            </Box>
-                        </Box>
-                    </Grid>
+                    <SubmitCancelButtons onCancel={ onCancel } submitDisabled={ submitting || !valid } />
                 </form>
             ) }
             validate={ validate }
@@ -244,4 +207,4 @@ const CampaignForm = ({ onSubmit, onCancel, campaign }: CampaignFormProps): JSX.
     );
 };
 
-export default CampaignForm;
+export default CampaignDetailsForm;

@@ -1,10 +1,10 @@
 import { Form } from 'react-final-form';
+import { MenuItem } from '@material-ui/core';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 import validator from 'validator';
-import { Box, Button, MenuItem } from '@material-ui/core';
 import { DateTimePicker, TextField } from 'mui-rff';
-import { FormattedMessage, FormattedMessage as Msg, useIntl } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 import getCampaigns from 'fetching/getCampaigns';
 import { ZetkinTask } from 'types/zetkin';
@@ -16,6 +16,7 @@ import ShareLinkFields from './fields/ShareLinkFields';
 import TimeEstimateField from './fields/TimeEstimateField';
 import VisitLinkFields from './fields/VisitLinkFields';
 
+import SubmitCancelButtons from '../common/SubmitCancelButtons';
 import { configForTaskType, isDeadlineSecond, isExpiresThird, isPublishedFirst } from './utils';
 import { DEFAULT_TIME_ESTIMATE, TASK_DETAILS_FIELDS } from './constants';
 
@@ -115,7 +116,7 @@ const TaskDetailsForm = ({ onSubmit, onCancel, task }: TaskDetailsFormProps): JS
                     <TextField
                         disabled={ campId ? true : false }
                         fullWidth
-                        id="campaign"
+                        id={ TASK_DETAILS_FIELDS.CAMPAIGN_ID }
                         label={ intl.formatMessage({ id: 'misc.tasks.forms.createTask.fields.campaign' }) }
                         margin="normal"
                         name={ TASK_DETAILS_FIELDS.CAMPAIGN_ID }
@@ -139,7 +140,7 @@ const TaskDetailsForm = ({ onSubmit, onCancel, task }: TaskDetailsFormProps): JS
 
                     <TextField
                         fullWidth
-                        id="instructions"
+                        id={ TASK_DETAILS_FIELDS.INSTRUCTIONS }
                         label={ intl.formatMessage({ id: 'misc.tasks.forms.createTask.fields.instructions' }) }
                         margin="normal"
                         multiline
@@ -153,7 +154,7 @@ const TaskDetailsForm = ({ onSubmit, onCancel, task }: TaskDetailsFormProps): JS
 
                     <TextField
                         fullWidth
-                        id="task_type"
+                        id={ TASK_DETAILS_FIELDS.TYPE }
                         label={ intl.formatMessage({ id: 'misc.tasks.forms.createTask.fields.type' }) }
                         margin="normal"
                         name={ TASK_DETAILS_FIELDS.TYPE }
@@ -191,6 +192,7 @@ const TaskDetailsForm = ({ onSubmit, onCancel, task }: TaskDetailsFormProps): JS
                         disabled={ taskStatus === TASK_STATUS.ACTIVE || taskStatus === TASK_STATUS.CLOSED }
                         disablePast
                         fullWidth={ true }
+                        id={ TASK_DETAILS_FIELDS.PUBLISHED }
                         label={ intl.formatMessage({ id: 'misc.tasks.forms.createTask.fields.published' }) }
                         margin="normal"
                         name={ TASK_DETAILS_FIELDS.PUBLISHED }
@@ -201,6 +203,7 @@ const TaskDetailsForm = ({ onSubmit, onCancel, task }: TaskDetailsFormProps): JS
                         clearable={ true }
                         disablePast
                         fullWidth={ true }
+                        id={ TASK_DETAILS_FIELDS.DEADLINE }
                         label={ intl.formatMessage({ id: 'misc.tasks.forms.createTask.fields.deadline' }) }
                         margin="normal"
                         name={ TASK_DETAILS_FIELDS.DEADLINE }
@@ -211,24 +214,13 @@ const TaskDetailsForm = ({ onSubmit, onCancel, task }: TaskDetailsFormProps): JS
                         clearable={ true }
                         disablePast
                         fullWidth={ true }
+                        id={ TASK_DETAILS_FIELDS.EXPIRES }
                         label={ intl.formatMessage({ id: 'misc.tasks.forms.createTask.fields.expires' }) }
                         margin="normal"
                         name={ TASK_DETAILS_FIELDS.EXPIRES }
                     />
 
-                    { /* Actions */ }
-                    <Box display="flex" justifyContent="flex-end" mt={ 2 } width={ 1 }>
-                        <Box m={ 1 }>
-                            <Button color="primary" onClick={ onCancel }>
-                                <Msg id="misc.formDialog.cancel" />
-                            </Button>
-                        </Box>
-                        <Box m={ 1 }>
-                            <Button color="primary" disabled={ submitting || !valid } type="submit" variant="contained">
-                                <Msg id="misc.formDialog.submit" />
-                            </Button>
-                        </Box>
-                    </Box>
+                    <SubmitCancelButtons onCancel={ onCancel } submitDisabled={ submitting || !valid } />
                 </form>
             ) }
             validate={ validate }

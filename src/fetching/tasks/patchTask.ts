@@ -11,6 +11,9 @@ const patchTask = (orgId : string | number, taskId: string | number, fetch = def
             },
             method: 'PATCH',
         });
+        if (!res.ok) {
+            throw new Error(`Error making PATCH request to ${url}`);
+        }
         const resData = await res.json();
         return resData?.data;
     };
