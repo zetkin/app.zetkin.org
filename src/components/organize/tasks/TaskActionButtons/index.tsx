@@ -3,7 +3,7 @@ import { Alert } from '@material-ui/lab';
 import { useRouter } from 'next/router';
 import { Box, Button, Menu, MenuItem } from '@material-ui/core';
 import { Delete, Settings } from '@material-ui/icons';
-import { FormattedMessage, FormattedMessage as Msg, useIntl } from 'react-intl';
+import { FormattedMessage as Msg, useIntl } from 'react-intl';
 import React, { useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 
@@ -104,7 +104,7 @@ const TaskActionButtons: React.FunctionComponent<TaskActionButtonsProps> = ({ ta
                 {
                     patchTaskMutation.isError &&
                     <Alert color="error" data-testid="error-alert">
-                        <FormattedMessage id="misc.formDialog.requestError" />
+                        <Msg id="misc.formDialog.requestError" />
                     </Alert>
                 }
                 <TaskDetailsForm
