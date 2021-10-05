@@ -6,17 +6,17 @@ import { useRouter } from 'next/router';
 import { Box, Button, Grid, GridSize, MenuItem } from '@material-ui/core';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
 
-import getActivities from '../../../../fetching/getActivities';
-import getCampaigns from '../../../../fetching/getCampaigns';
-import getLocations from '../../../../fetching/getLocations';
+import getActivities from 'fetching/getActivities';
+import getCampaigns from 'fetching/getCampaigns';
+import getLocations from 'fetching/getLocations';
 
-interface CreateEventFormProps {
+interface EventDetailsFormProps {
     onSubmit: (data: Record<string, unknown>) => void;
     onCancel: () => void;
     orgId: string;
 }
 
-const CreateEventForm = ({ onSubmit, onCancel, orgId }: CreateEventFormProps): JSX.Element => {
+const EventDetailsForm = ({ onSubmit, onCancel, orgId }: EventDetailsFormProps): JSX.Element => {
     const router = useRouter();
     const { campId } = router.query;
     const campaignsQuery = useQuery(['campaigns', orgId], getCampaigns(orgId));
@@ -232,4 +232,4 @@ const CreateEventForm = ({ onSubmit, onCancel, orgId }: CreateEventFormProps): J
     );
 };
 
-export default CreateEventForm;
+export default EventDetailsForm;

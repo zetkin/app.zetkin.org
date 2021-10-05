@@ -1,12 +1,12 @@
 import { FormattedMessage as Msg } from 'react-intl';
 import { Box, Button, Typography } from '@material-ui/core';
 
-interface DeleteTaskFormProps {
+interface TaskDeleteFormProps {
     onSubmit: () => void;
     onCancel: () => void;
 }
 
-const DeleteTaskForm: React.FunctionComponent<DeleteTaskFormProps> = ({ onCancel, onSubmit }) => {
+const TaskDeleteForm: React.FunctionComponent<TaskDeleteFormProps> = ({ onCancel, onSubmit }) => {
     return (
         <>
             <Typography variant="body1">
@@ -26,4 +26,4 @@ const DeleteTaskForm: React.FunctionComponent<DeleteTaskFormProps> = ({ onCancel
     );
 };
 
-export default DeleteTaskForm;
+export default TaskDeleteForm;

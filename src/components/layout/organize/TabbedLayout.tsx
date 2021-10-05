@@ -81,7 +81,7 @@ const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
                         { /* Title, subtitle, and action buttons */ }
                         <Box alignItems="center" className={ classes.header } p={ 3 } width="100%">
                             <Box overflow="hidden">
-                                <Typography component="h1" noWrap variant="h2">
+                                <Typography component="h1" data-testid="page-title" noWrap variant="h2">
                                     { title }
                                 </Typography>
                                 <Typography component="h2" variant="h5">

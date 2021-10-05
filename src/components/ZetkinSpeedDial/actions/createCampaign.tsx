@@ -1,9 +1,11 @@
 /* eslint-disable react/display-name */
+import { Alert } from '@material-ui/lab';
 import { Flag } from '@material-ui/icons';
+import { FormattedMessage } from 'react-intl';
 import { useRouter } from 'next/router';
 import { useMutation, useQueryClient } from 'react-query';
 
-import CampaignForm from 'components/organize/campaigns/forms/CampaignForm';
+import CampaignDetailsForm from 'components/forms/CampaignDetailsForm';
 import postCampaign from 'fetching/postCampaign';
 
 import { ACTIONS } from '../constants';
@@ -13,21 +15,33 @@ const DialogContent: React.FunctionComponent<DialogContentBaseProps> = ({ closeD
     const queryClient = useQueryClient();
     const router = useRouter();
     const { orgId } = router.query as {orgId: string};
-    const campaignMutation = useMutation(postCampaign(orgId), {
-        onSettled: () => queryClient.invalidateQueries('campaigns'),
-    });
 
-    const handleCreateCampaignFormSubmit = async (data: Record<string,unknown>) => {
-        const newCampaign = await campaignMutation.mutateAsync(data);
+    const { mutateAsync: sendCampaignRequest, isError } = useMutation(postCampaign(orgId));
 
-        // Redirect to campaign page
-        router.push(`/organize/${orgId}/campaigns/${newCampaign.id}`);
+    const handleFormSubmit = async (data: Record<string,unknown>) => {
+        await sendCampaignRequest(data, {
+            onSuccess: async (newCampaign) => {
+                queryClient.invalidateQueries('campaigns');
+                closeDialog();
+                // Redirect to campaign page
+                router.push(`/organize/${orgId}/campaigns/${newCampaign.id}`);
+            },
+        });
+
     };
 
-    return (<CampaignForm
-        onCancel={ closeDialog }
-        onSubmit={ handleCreateCampaignFormSubmit }
-    />
+    return (
+        <>
+            { isError &&
+                <Alert color="error" data-testid="error-alert">
+                    <FormattedMessage id="misc.formDialog.requestError" />
+                </Alert>
+            }
+            <CampaignDetailsForm
+                onCancel={ closeDialog }
+                onSubmit={ handleFormSubmit }
+            />
+        </>
     );
 };
 

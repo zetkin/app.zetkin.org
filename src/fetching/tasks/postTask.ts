@@ -19,6 +19,11 @@ const postTask = (orgId : string, fetch = defaultFetch) => {
             },
             method: 'POST',
         });
+
+        if (!res.ok) {
+            throw new Error(`Error making POST request to ${url}`);
+        }
+
         const resData = await res.json();
         return resData?.data;
     };

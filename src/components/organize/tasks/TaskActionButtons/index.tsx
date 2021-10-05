@@ -1,4 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import { Alert } from '@material-ui/lab';
 import { useRouter } from 'next/router';
 import { Box, Button, Menu, MenuItem } from '@material-ui/core';
 import { Delete, Settings } from '@material-ui/icons';
@@ -11,9 +12,9 @@ import patchTask from 'fetching/tasks/patchTask';
 import ZetkinDialog from 'components/ZetkinDialog';
 import { ZetkinTask } from 'types/zetkin';
 
-import DeleteTaskForm from '../forms/DeleteTaskForm';
+import DeleteTaskForm from 'components/forms/TaskDeleteForm';
 import PublishButton from './PublishButton';
-import TaskDetailsForm from '../forms/TaskDetailsForm';
+import TaskDetailsForm from 'components/forms/TaskDetailsForm';
 
 enum TASK_MENU_ITEMS {
     EDIT_TASK = 'editTask',
@@ -36,15 +37,15 @@ const TaskActionButtons: React.FunctionComponent<TaskActionButtonsProps> = ({ ta
     const closeDialog = () => setCurrentOpenDialog(undefined);
 
     // Mutations
-    const patchTaskMutation = useMutation(patchTask(task.organization.id, task.id), {
-        onSettled: () => queryClient.invalidateQueries(['task', taskId]),
-    });
+    const patchTaskMutation = useMutation(patchTask(task.organization.id, task.id) );
     const deleteTaskMutation = useMutation(deleteTask(task.organization.id, task.id));
 
     // Event Handlers
     const handleEditTask = (task: Partial<ZetkinTask>) => {
-        patchTaskMutation.mutate(task);
-        closeDialog();
+        patchTaskMutation.mutate(task, {
+            onSettled: () => queryClient.invalidateQueries(['task', taskId]),
+            onSuccess: () => closeDialog(),
+        });
     };
     const handleDeleteTask = () => {
         deleteTaskMutation.mutate();
@@ -59,7 +60,12 @@ const TaskActionButtons: React.FunctionComponent<TaskActionButtonsProps> = ({ ta
                 <PublishButton task={ task }/>
             </Box>
             <Box>
-                <Button color="secondary" disableElevation onClick={ (e) => setMenuActivator(e.currentTarget) } variant="contained">
+                <Button
+                    color="secondary"
+                    data-testid="task-action-buttons-menu-activator"
+                    disableElevation
+                    onClick={ (e) => setMenuActivator(e.currentTarget) }
+                    variant="contained">
                     <Settings />
                 </Button>
             </Box>
@@ -71,6 +77,7 @@ const TaskActionButtons: React.FunctionComponent<TaskActionButtonsProps> = ({ ta
                 { /* Edit Task */ }
                 <MenuItem
                     key={ TASK_MENU_ITEMS.EDIT_TASK }
+                    data-testid="task-action-buttons-edit-task"
                     onClick={ () => {
                         setMenuActivator(null);
                         setCurrentOpenDialog(TASK_MENU_ITEMS.EDIT_TASK);
@@ -94,6 +101,12 @@ const TaskActionButtons: React.FunctionComponent<TaskActionButtonsProps> = ({ ta
                 onClose={ closeDialog }
                 open={ currentOpenDialog === TASK_MENU_ITEMS.EDIT_TASK }
                 title={ intl.formatMessage({ id: 'misc.tasks.forms.editTask.title' }) }>
+                {
+                    patchTaskMutation.isError &&
+                    <Alert color="error" data-testid="error-alert">
+                        <Msg id="misc.formDialog.requestError" />
+                    </Alert>
+                }
                 <TaskDetailsForm
                     onCancel={ closeDialog }
                     onSubmit={ (task)=>{
