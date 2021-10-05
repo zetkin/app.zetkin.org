@@ -4,7 +4,7 @@ import test from '../../../fixtures/next';
 import KPD from '../../../mockData/orgs/KPD';
 import ReferendumSignatures from '../../../mockData/orgs/KPD/campaigns/ReferendumSignatures';
 
-test.describe.only('Campaign action buttons', async () => {
+test.describe('Campaign action buttons', async () => {
 
     test.beforeAll(async ({ login, moxy }) => {
         await moxy.removeMock();
@@ -80,6 +80,7 @@ test.describe.only('Campaign action buttons', async () => {
             // Clean up mocks
             await removePatchTaskMock();
             await removeEditedTaskMock();
+            // Reset campaign mock back to "pre edit" state
             await moxy.setMock('/orgs/1/campaigns/1', 'get', {
                 data: {
                     data: ReferendumSignatures,
