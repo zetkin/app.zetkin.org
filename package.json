@@ -8,9 +8,9 @@
         "devserver": "next dev -p 3000",
         "lint": "eslint src && tsc --noEmit && echo 'Finished linting without errors!'",
         "watch": "chokidar 'src/**/*' -c 'npm run lint'",
-        "playwright": "NODE_ENV=production playwright test --headed",
-        "playwright:skipbuild": "NODE_ENV=production SKIP_BUILD=1 playwright test --headed",
-        "playwright:ci": "NODE_ENV=production playwright test"
+        "playwright": "cross-env NODE_ENV=production playwright test --headed",
+        "playwright:skipbuild": "cross-env NODE_ENV=production SKIP_BUILD=1 playwright test --headed",
+        "playwright:ci": "cross-env NODE_ENV=production playwright test"
     },
     "dependencies": {
         "@date-io/date-fns": "1.x",
@@ -22,6 +22,7 @@
         "@types/negotiator": "^0.6.1",
         "@types/random-seed": "^0.3.3",
         "@types/validator": "^13.6.3",
+        "cross-env": "^7.0.3",
         "date-fns": "^2.22.1",
         "dayjs": "^1.10.6",
         "final-form": "^4.20.2",
