@@ -29,12 +29,12 @@ module.exports = {
             }, 
             {
                 source: '/organize/:orgId(\\d{1,})/campaigns/calendar/events/:eventId(\\d{1,})',
-                destination: 'https://organize.zetk.in/campaigns/action%3A:eventId?org=:orgId', 
+                destination: 'https://organize.zetk.in/campaign/action%3A:eventId?org=:orgId', 
                 permanent: false,
             }, 
             {
                 source: '/organize/:orgId(\\d{1,})/campaigns/:campId(\\d{1,})/calendar/events/:eventId(\\d{1,})',
-                destination: 'https://organize.zetk.in/campaigns/action%3A:eventId?org=:orgId', 
+                destination: 'https://organize.zetk.in/campaign/action%3A:eventId?org=:orgId', 
                 permanent: false,
             },
             // all paths with /o redirected to Gen2
