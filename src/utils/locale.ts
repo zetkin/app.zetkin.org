@@ -2,7 +2,8 @@ import { promises as fs } from 'fs';
 import path from 'path';
 import yaml from 'yaml';
 
-type MessageList = Record<string,string>;
+export type MessageList = Record<string,string>;
+
 type MessageDB = Record<string,MessageList>;
 
 let MESSAGES : MessageDB | null = null;
