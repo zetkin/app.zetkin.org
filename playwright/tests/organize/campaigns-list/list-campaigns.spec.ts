@@ -8,6 +8,7 @@ import WelcomeNewMembers from '../../../mockData/orgs/KPD/campaigns/WelcomeNewMe
 test.describe('All campaigns page', () => {
 
     test.beforeAll(async ({ moxy, login }) => {
+        await moxy.removeMock();
         await login();
 
         await moxy.setMock( '/orgs/1', 'get', {

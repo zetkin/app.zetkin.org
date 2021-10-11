@@ -8,9 +8,9 @@
         "devserver": "next dev -p 3000",
         "lint": "eslint src && tsc --noEmit && echo 'Finished linting without errors!'",
         "watch": "chokidar 'src/**/*' -c 'npm run lint'",
-        "playwright": "NODE_ENV=production playwright test --headed",
-        "playwright:skipbuild": "NODE_ENV=production SKIP_BUILD=1 playwright test --headed",
-        "playwright:ci": "NODE_ENV=production playwright test"
+        "playwright": "cross-env NODE_ENV=production playwright test --headed",
+        "playwright:skipbuild": "cross-env NODE_ENV=production SKIP_BUILD=1 playwright test --headed",
+        "playwright:ci": "cross-env NODE_ENV=production playwright test"
     },
     "dependencies": {
         "@date-io/date-fns": "1.x",
@@ -54,6 +54,7 @@
         "@typescript-eslint/parser": "^4.10.0",
         "babel-loader": "^8.2.2",
         "chokidar-cli": "^2.1.0",
+        "cross-env": "^7.0.3",
         "eslint": "^7.15.0",
         "eslint-loader": "^4.0.2",
         "eslint-plugin-jsx-a11y": "^6.4.1",
