@@ -5,9 +5,10 @@ import KPD from '../../../mockData/orgs/KPD';
 import ReferendumSignatures  from '../../../mockData/orgs/KPD/campaigns/ReferendumSignatures';
 import WelcomeNewMembers from '../../../mockData/orgs/KPD/campaigns/WelcomeNewMembers';
 
-test.describe('All campaigns page action buttons', () => {
+test.describe('All campaigns page speed dial', () => {
 
     test.beforeAll(async ({ moxy, login }) => {
+        await moxy.removeMock();
         await login();
 
         await moxy.setMock( '/orgs/1', 'get', {

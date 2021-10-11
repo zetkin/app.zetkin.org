@@ -1,4 +1,3 @@
-import { Box } from '@material-ui/core';
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { useQuery } from 'react-query';
@@ -69,9 +68,7 @@ const TaskDetailPage: PageWithLayout<TaskDetailPageProps> = ({ taskId, orgId }) 
             <Head>
                 <title>{ task?.title }</title>
             </Head>
-            <Box p={ 3 }>
-                <TaskDetailsSection task={ task } />
-            </Box>
+            <TaskDetailsSection task={ task } />
         </>
     );
 };
