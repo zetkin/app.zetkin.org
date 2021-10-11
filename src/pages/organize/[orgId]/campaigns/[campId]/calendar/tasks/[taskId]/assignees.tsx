@@ -98,7 +98,7 @@ const TaskAssigneesPage: PageWithLayout = () => {
             <Head>
                 <title>{ `${task?.title} - ${intl.formatMessage({ id: 'layout.organize.tasks.tabs.assignees' })}` }</title>
             </Head>
-            <Box p={ 2 }>
+            <>
                 <QueryStatusAlert
                     openDialog={ () => setDialogOpen(true) }
                     status={ queryStatus }
@@ -108,7 +108,7 @@ const TaskAssigneesPage: PageWithLayout = () => {
                         <TaskAssigneesList assignedTasks={ assignedTasks } />
                     </Box>
                 ) }
-            </Box>
+            </>
             { dialogOpen &&
             <SmartSearchDialog
                 onDialogClose={ handleDialogClose }
