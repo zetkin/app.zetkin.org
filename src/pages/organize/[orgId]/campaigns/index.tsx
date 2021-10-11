@@ -77,15 +77,13 @@ const AllCampaignsSummaryPage: PageWithLayout<AllCampaignsSummaryPageProps> = ({
             <Head>
                 <title>{ intl.formatMessage({ id:'layout.organize.campaigns.allCampaigns' }) }</title>
             </Head>
-            <Box p={ 4 }>
-                <ZetkinSection title={ intl.formatMessage({ id: 'pages.organizeAllCampaigns.heading' }) }>
-                    <Box display="grid" gridGap={ 20 } gridTemplateColumns="repeat( auto-fit, minmax(450px, 1fr) )">
-                        { campaigns.map(campaign => (
-                            <CampaignCard key={ campaign.id } campaign={ campaign } events={ events } upcomingEvents={ upcomingEvents }/>
-                        )) }
-                    </Box>
-                </ZetkinSection>
-            </Box>
+            <ZetkinSection title={ intl.formatMessage({ id: 'pages.organizeAllCampaigns.heading' }) }>
+                <Box display="grid" gridGap={ 20 } gridTemplateColumns="repeat( auto-fit, minmax(450px, 1fr) )">
+                    { campaigns.map(campaign => (
+                        <CampaignCard key={ campaign.id } campaign={ campaign } events={ events } upcomingEvents={ upcomingEvents }/>
+                    )) }
+                </Box>
+            </ZetkinSection>
             <ZetkinSpeedDial actions={ [ACTIONS.CREATE_CAMPAIGN] } />
         </>
     );

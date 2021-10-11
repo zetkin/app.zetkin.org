@@ -86,7 +86,7 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({ orgId,
             <Head>
                 <title>{ campaign?.title }</title>
             </Head>
-            <Box p={ 4 }>
+            <>
                 <Box mb={ campaign?.info_text || campaign?.manager ? 2 : 0 }>
                     <Grid container spacing={ 2 }>
                         { campaign?.info_text && (
@@ -124,7 +124,7 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({ orgId,
                     </Grid>
                 </Grid>
                 <ZetkinSpeedDial actions={ [ACTIONS.CREATE_TASK] }/>
-            </Box>
+            </>
         </>
     );
 };

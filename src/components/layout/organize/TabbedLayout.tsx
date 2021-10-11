@@ -27,7 +27,6 @@ const useStyles = makeStyles((theme) => ({
             paddingTop: '4rem',
         },
     },
-
 }));
 
 interface TabbedLayoutProps {
@@ -107,7 +106,7 @@ const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
                             }) }
                         </Tabs>
                     </Box>
-                    <Box flexGrow={ 1 } minHeight={ 0 } position="relative" role="tabpanel">
+                    <Box flexGrow={ 1 } minHeight={ 0 } p={ fixedHeight ? 0 : 3 } position="relative" role="tabpanel">
                         { children }
                     </Box>
                 </Box>
