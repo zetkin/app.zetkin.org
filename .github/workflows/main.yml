@@ -1,3 +1,5 @@
+name: CI
+
 on:
     push:
         branches: [main]
@@ -13,8 +15,10 @@ jobs:
               with:
                   node-version: 16.x
                   cache: "yarn"
-            - run: yarn install --frozen-lockfile
-            - run: yarn lint
+            - name: Install dependencies
+              run: yarn install --frozen-lockfile
+            - name: Lint codebase
+              run: yarn lint
     check-types:
         runs-on: ubuntu-latest
         steps:
@@ -23,8 +27,10 @@ jobs:
               with:
                   node-version: 16.x
                   cache: "yarn"
-            - run: yarn install --frozen-lockfile
-            - run: yarn tsc --noEmit
+            - name: Install dependencies
+              run: yarn install --frozen-lockfile
+            - name: Check type validity
+              run: yarn tsc --noEmit
     build:
         needs: [lint, check-types]
         runs-on: ubuntu-latest
@@ -42,9 +48,11 @@ jobs:
                   # If source files changed but packages didn't, rebuild from a prior cache.
                   restore-keys: |
                       ${{ runner.os }}-nextjs-${{ hashFiles('**/yarn.lock') }}-
-            - run: yarn install --frozen-lockfile
-            - run: yarn build
-    playwright:
+            - name: Install dependencies
+              run: yarn install --frozen-lockfile
+            - name: Build Next app
+              run: yarn build
+    playwright-test:
         needs: build
         runs-on: ubuntu-latest
         steps:
@@ -65,5 +73,7 @@ jobs:
               with:
                   node-version: 16.x
                   cache: "yarn"
-            - run: yarn install --frozen-lockfile
-            - run: yarn test
+            - name: Install dependencies
+              run: yarn install --frozen-lockfile
+            - name: Run unit tests
+              run: yarn test
