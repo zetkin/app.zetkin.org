@@ -7,7 +7,6 @@
         "start": "next start -p 80",
         "devserver": "next dev -p 3000",
         "lint": "eslint src && tsc --noEmit && echo 'Finished linting without errors!'",
-        "watch": "chokidar 'src/**/*' -c 'npm run lint'",
         "playwright": "cross-env NODE_ENV=production playwright test --headed",
         "playwright:skipbuild": "cross-env NODE_ENV=production SKIP_BUILD=1 playwright test --headed",
         "playwright:ci": "cross-env NODE_ENV=production playwright test"
@@ -19,9 +18,6 @@
         "@material-ui/icons": "^4.11.2",
         "@material-ui/lab": "^4.0.0-alpha.58",
         "@material-ui/pickers": "^3.3.10",
-        "@types/negotiator": "^0.6.1",
-        "@types/random-seed": "^0.3.3",
-        "@types/validator": "^13.6.3",
         "date-fns": "^2.22.1",
         "dayjs": "^1.10.6",
         "final-form": "^4.20.2",
@@ -47,13 +43,15 @@
         "@playwright/test": "^1.14.1",
         "@types/leaflet": "^1.7.0",
         "@types/lodash.debounce": "^4.0.6",
+        "@types/negotiator": "^0.6.1",
         "@types/node": "^16.3.3",
         "@types/nprogress": "^0.2.0",
+        "@types/random-seed": "^0.3.3",
         "@types/react": "^17.0.0",
-        "@typescript-eslint/eslint-plugin": "^4.10.0",
-        "@typescript-eslint/parser": "^4.10.0",
+        "@types/validator": "^13.6.3",
+        "@typescript-eslint/eslint-plugin": "^4.33.0",
+        "@typescript-eslint/parser": "^4.33.0",
         "babel-loader": "^8.2.2",
-        "chokidar-cli": "^2.1.0",
         "cross-env": "^7.0.3",
         "eslint": "^7.15.0",
         "eslint-loader": "^4.0.2",
@@ -64,8 +62,8 @@
         "moxy": "git+https://github.com/zetkin/moxy.git#dev",
         "next-compose-plugins": "^2.2.0",
         "next-transpile-modules": "^4.1.0",
-        "ts-loader": "^8.0.14",
-        "typescript": "^4.1.3",
-        "webpack": "^4.44.2"
+        "ts-loader": "^9.2.6",
+        "typescript": "^4.4.3",
+        "webpack": "^5.58.1"
     }
 }
