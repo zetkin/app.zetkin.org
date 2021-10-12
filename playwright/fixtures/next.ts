@@ -126,10 +126,8 @@ const test = base.extend<NextTestFixtures, NextWorkerFixtures>({
             removeMock,
         });
 
-        // Close server when worker stops
-        await new Promise(() => {
-            stopMoxy();
-        });
+        // Stop moxy when tests finish
+        stopMoxy();
 
     }, {
         auto: true,

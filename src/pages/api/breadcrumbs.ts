@@ -5,51 +5,51 @@ export default async (
     req: NextApiRequest,
     res: NextApiResponse,
 ): Promise<void> => {
-    let query: Record<string, string>;
-    try {
-        query = validateQuery(req.query);
-    }
-    catch (err) {
-        return res.status(400).json({ error: err.message });
-    }
+    const { query, error } = validateQuery(req.query);
 
-    const { orgId, pathname } = query;
+    if (query) {
+        const { orgId, pathname } = query;
 
-    if (!orgId) {
-        return res.status(400).json({ error: 'orgId not provided' });
-    }
-
-    const apiFetch = createApiFetch(req.headers);
-    const pathFields = pathname.split('/').slice(1);
-    const breadcrumbs = [];
-    const curPath = [];
-
-    for (const field of pathFields) {
-        if (field.startsWith('[') && field.endsWith(']')) {
-            const fieldName = field.slice(1, -1);
-            const fieldValue = query[fieldName];
-
-            const label = await fetchLabel(
-                fieldName,
-                fieldValue,
-                orgId,
-                apiFetch,
-            );
-            curPath.push(fieldValue);
-            breadcrumbs.push({
-                href: '/' + curPath.join('/'),
-                label: label,
-            });
+        if (!orgId) {
+            return res.status(400).json({ error: 'orgId not provided' });
         }
-        else {
-            curPath.push(field);
-            breadcrumbs.push({
-                href: '/' + curPath.join('/'),
-                labelMsg: `misc.breadcrumbs.${field}`,
-            });
+
+        const apiFetch = createApiFetch(req.headers);
+        const pathFields = pathname.split('/').slice(1);
+        const breadcrumbs = [];
+        const curPath = [];
+
+        for (const field of pathFields) {
+            if (field.startsWith('[') && field.endsWith(']')) {
+                const fieldName = field.slice(1, -1);
+                const fieldValue = query[fieldName];
+
+                const label = await fetchLabel(
+                    fieldName,
+                    fieldValue,
+                    orgId,
+                    apiFetch,
+                );
+                curPath.push(fieldValue);
+                breadcrumbs.push({
+                    href: '/' + curPath.join('/'),
+                    label: label,
+                });
+            }
+            else {
+                curPath.push(field);
+                breadcrumbs.push({
+                    href: '/' + curPath.join('/'),
+                    labelMsg: `misc.breadcrumbs.${field}`,
+                });
+            }
         }
+        res.status(200).json({ breadcrumbs });
     }
-    res.status(200).json({ breadcrumbs });
+    else {
+        return res.status(400).json({ error });
+    }
+
 };
 
 async function fetchLabel(
@@ -85,16 +85,21 @@ async function fetchLabel(
     return fieldValue;
 }
 
-function validateQuery(query: {
-    [key: string]: string | string[];
-}): Record<string, string> {
+const validateQuery =(query: Record<string, string | string[]>): {
+    error?: string;
+    query?: Record<string, string>;
+ } => {
     for (const key of Object.keys(query)) {
         if (typeof query[key] !== 'string') {
-            throw new Error('Bad request');
+            return {
+                error: 'Bad request',
+            };
         }
     }
     if (!query.pathname) {
-        throw new Error('invalid path');
+        return {
+            error: 'Invalid path',
+        };
     }
     const pathname = query.pathname as string;
     const pathFields = pathname.split('/').slice(1);
@@ -102,12 +107,14 @@ function validateQuery(query: {
         if (field.startsWith('[') && field.endsWith(']')) {
             const fieldName = field.slice(1, -1);
             if (!query[fieldName]) {
-                throw new Error('Request missing parameters');
+                return {
+                    error: 'Request missing parameters',
+                };
             }
         }
     }
-    return query as Record<string, string>;
-}
+    return { query: query as Record<string, string> };
+};
 
 
 
