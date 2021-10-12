@@ -31,8 +31,7 @@ jobs:
               run: yarn install --frozen-lockfile
             - name: Check type validity
               run: yarn tsc --noEmit
-    build:
-        needs: [lint, check-types]
+    playwright-test:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v2
@@ -48,19 +47,6 @@ jobs:
                   # If source files changed but packages didn't, rebuild from a prior cache.
                   restore-keys: |
                       ${{ runner.os }}-nextjs-${{ hashFiles('**/yarn.lock') }}-
-            - name: Install dependencies
-              run: yarn install --frozen-lockfile
-            - name: Build Next app
-              run: yarn build
-    playwright-test:
-        needs: build
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v2
-            - uses: actions/setup-node@v2
-              with:
-                  node-version: 16.x
-                  cache: "yarn"
             - name: Install dependencies
               run: yarn install --frozen-lockfile && npx playwright install
             - name: Run playwright tests
