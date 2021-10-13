@@ -73,14 +73,14 @@ const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
                 <Box display={ fixedHeight ? 'flex' :'block' } flexDirection="column" height={ fixedHeight ? 1 : 'auto' }>
                     <Box flexGrow={ 0 } flexShrink={ 0 }>
                         <Box display="flex" justifyContent="space-between">
-                            <Box className={ classes.breadcrumbs } p={ 2 } pl={ 3 }>
+                            <Box className={ classes.breadcrumbs } pt={ 3 } px={ 3 }>
                                 <BreadcrumbTrail/>
                             </Box>
                         </Box>
                         { /* Title, subtitle, and action buttons */ }
-                        <Box alignItems="center" className={ classes.header } p={ 3 } width="100%">
+                        <Box alignItems="center" className={ classes.header } px={ 3 } py={ 3 } width="100%">
                             <Box overflow="hidden">
-                                <Typography component="h1" data-testid="page-title" noWrap variant="h2">
+                                <Typography component="h1" data-testid="page-title" noWrap variant="h3">
                                     { title }
                                 </Typography>
                                 <Typography component="h2" variant="h5">
