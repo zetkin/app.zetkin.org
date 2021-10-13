@@ -82,8 +82,9 @@ export default async function handle(req : NextApiRequestWithSession, res : Next
         res.status(result.httpStatus).json(result.data);
     }
     catch (err) {
-        if (err.httpStatus) {
-            res.status(err.httpStatus).json(err.data);
+        if (err && typeof err === 'object' && 'httpStatus' in err) {
+            const errRes = err as ZetkinZResult;
+            res.status(errRes.httpStatus).json(errRes.data);
         }
         else {
             // Not an API error, i.e. this is a bug!
