@@ -1,9 +1,7 @@
 import React from 'react';
-import { useRouter } from 'next/router';
 import { Card, Divider, ListItem, ListItemText } from '@material-ui/core';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
 
-import { config as createEventAction } from 'components/ZetkinSpeedDial/actions/createEvent';
 import { ZetkinEvent } from 'types/zetkin';
 import ZetkinList from 'components/ZetkinList';
 
@@ -16,7 +14,6 @@ interface EventListProps {
 
 const EventList = ({ hrefBase, events }: EventListProps): JSX.Element => {
     const intl = useIntl();
-    const router = useRouter();
 
     return (
         <Card>
@@ -26,11 +23,9 @@ const EventList = ({ hrefBase, events }: EventListProps): JSX.Element => {
                 }) }
                 initialLength={ 5 }>
                 { events.length === 0 ? (
-                    <ListItem button component="a" onClick={ () => {
-                        router.push(`${router.asPath}#${createEventAction.urlKey}`);
-                    } }>
+                    <ListItem>
                         <ListItemText>
-                            <Msg id="pages.organizeCampaigns.noEventsCreatePrompt" />
+                            <Msg id="pages.organizeCampaigns.noEvents" />
                         </ListItemText>
                     </ListItem>
                 ) :
