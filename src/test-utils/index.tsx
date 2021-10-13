@@ -1,4 +1,3 @@
-/* eslint-disable react/display-name */
 import { CssBaseline } from '@material-ui/core';
 import DateUtils from '@date-io/dayjs';
 import dayjs from 'dayjs';
@@ -33,7 +32,13 @@ const ZetkinAppProviders: FC = ({ children }) => {
                     <IntlProvider
                         defaultLocale="en"
                         locale="en"
-                        messages={{}}>
+                        messages={{}}
+                        onError={ (err) => {
+                            if (err.code === 'MISSING_TRANSLATION') {
+                                return;
+                            }
+                            throw err;
+                        } }>
                         <QueryClientProvider client={ queryClient }>
                             <CssBaseline />
                             { children }
