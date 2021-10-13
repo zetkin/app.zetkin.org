@@ -26,6 +26,9 @@ const useStyles = makeStyles((theme: Theme) =>
             '& > * + *': {
                 marginTop: theme.spacing(2),
             },
+            [theme.breakpoints.down('xs')]: {
+                width: '100%',
+            },
         },
     }),
 );
