@@ -1,3 +1,4 @@
+/* eslint-disable react/display-name */
 import { CssBaseline } from '@material-ui/core';
 import DateUtils from '@date-io/dayjs';
 import dayjs from 'dayjs';
@@ -45,7 +46,11 @@ const ZetkinAppProviders: FC = ({ children }) => {
 };
 
 /**
- * Replaces the default "render" function from `@testing-library` to include any required context providers and other configuration.
+ * Render into a container which is appended to document.body.
+ *
+ * Replaces the default `render()` function from `@testing-library`
+ * to include any required context providers and other configuration
+ * specific to our application.
  */
 const customRender = (
     ui: ReactElement| FC<unknown>,
