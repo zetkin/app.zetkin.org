@@ -12,6 +12,9 @@ const useStyles = makeStyles((theme) => ({
             paddingTop: '3.5rem',
         },
     },
+    title: {
+        marginBottom: '8px',
+    },
     titleGrid: {
         alignItems: 'center',
         display: 'grid',
@@ -73,7 +76,7 @@ const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
                             { /* Title, subtitle, and action buttons */ }
                             <Box className={ classes.titleGrid } mt={ 2 }>
                                 <Box overflow="hidden">
-                                    <Typography component="h1" data-testid="page-title" noWrap variant="h3">
+                                    <Typography className={ classes.title } component="h1" data-testid="page-title" noWrap variant="h3">
                                         { title }
                                     </Typography>
                                     <Typography component="h2" variant="h5">
