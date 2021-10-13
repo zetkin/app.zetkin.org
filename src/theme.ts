@@ -97,6 +97,9 @@ const theme = createTheme({
         h2: {
             lineHeight: 'unset',
         },
+        h3: {
+            fontWeight: 'lighter',
+        },
     },
 });
 
