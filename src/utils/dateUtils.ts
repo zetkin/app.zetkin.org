@@ -16,6 +16,16 @@ export const getNewDateWithOffset = (date: Date, offset: number ):Date => {
 };
 
 /**
+ * Removes the offset part of an ISO datetime string.
+ *
+ * This is needed because event objects send an offset of +00:00 (UTC Time) from the server.
+ * It is not needed if the datetime string coming from the server doesn't contain an offset.
+ */
+export const removeOffset = (datetime: string): string => {
+    return datetime.split('+')[0];
+};
+
+/**
  * Plugin for dayjs which overrides default `dayjs.toJson()` method to return an ISO
  * datetime string which uses the local time.
  *

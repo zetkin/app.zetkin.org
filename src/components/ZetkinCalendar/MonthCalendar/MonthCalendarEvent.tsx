@@ -6,7 +6,7 @@ import { ArrowBackIos, ArrowForwardIos } from '@material-ui/icons';
 import { Box,  Link, Typography } from '@material-ui/core';
 import { useEffect, useRef, useState } from 'react';
 
-import { getNaiveDate } from '../../../utils/dateUtils';
+import { getNaiveDate } from 'utils/dateUtils';
 import { ZetkinCampaign, ZetkinEvent } from '../../../types/zetkin';
 
 const DEFAULT_COLOR = grey[900];

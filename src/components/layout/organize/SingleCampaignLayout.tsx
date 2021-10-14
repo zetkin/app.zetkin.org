@@ -6,7 +6,7 @@ import { FormattedDate, FormattedMessage as Msg } from 'react-intl';
 import CampaignActionButtons from 'components/organize/campaigns/CampaignActionButtons';
 import getCampaign from '../../../fetching/getCampaign';
 import getCampaignEvents from '../../../fetching/getCampaignEvents';
-import { getNaiveDate } from '../../../utils/dateUtils';
+import { removeOffset } from 'utils/dateUtils';
 import TabbedLayout from './TabbedLayout';
 
 interface SingleCampaignLayoutProps {
@@ -21,13 +21,8 @@ const SingleCampaignLayout: FunctionComponent<SingleCampaignLayoutProps> = ({ ch
     const campaign = campaignQuery.data;
     const campaignEvents = campaignEventsQuery.data || [];
 
-    let endDate, startDate;
     const firstEvent = campaignEvents[0];
     const lastEvent = campaignEvents[campaignEvents.length - 1];
-    if (firstEvent && lastEvent) {
-        startDate = getNaiveDate(firstEvent.start_time) ;
-        endDate = getNaiveDate(lastEvent.end_time);
-    }
 
     if (!campaign) return null;
 
@@ -39,18 +34,18 @@ const SingleCampaignLayout: FunctionComponent<SingleCampaignLayoutProps> = ({ ch
             baseHref={ `/organize/${orgId}/campaigns/${campId}` }
             defaultTab="/"
             fixedHeight={ fixedHeight }
-            subtitle={ startDate && endDate ? (
+            subtitle={ firstEvent.start_time && lastEvent.end_time ? (
                 <>
                     <FormattedDate
                         day="2-digit"
                         month="long"
-                        value={ startDate }
+                        value={ removeOffset(firstEvent.start_time) }
                     />
                     { ` - ` }
                     <FormattedDate
                         day="2-digit"
                         month="long"
-                        value={ endDate }
+                        value={ removeOffset(lastEvent.end_time) }
                         year="numeric"
                     />
                 </>

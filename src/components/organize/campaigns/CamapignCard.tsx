@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { Card, CardActions, CardContent, Link, Typography } from '@material-ui/core';
 import { FormattedDate, FormattedMessage as Msg } from 'react-intl';
 
-import { getNaiveDate } from 'utils/dateUtils';
+import { removeOffset } from 'utils/dateUtils';
 import { ZetkinCampaign, ZetkinEvent } from 'types/zetkin';
 
 interface CampaignCardProps {
@@ -19,14 +19,8 @@ const CamapignCard = ({ campaign, events, upcomingEvents }: CampaignCardProps) :
     const campaignEvents = events.filter(e => e.campaign.id === id);
     const campaignUpcomingEvents = upcomingEvents.filter(e => e.campaign?.id === id);
 
-    let endDate, startDate;
-
     const firstEvent = campaignEvents[0];
     const lastEvent = campaignEvents[campaignEvents.length - 1];
-    if (firstEvent && lastEvent) {
-        startDate = getNaiveDate(firstEvent.start_time) ;
-        endDate = getNaiveDate(lastEvent.end_time);
-    }
 
     return (
         <Card data-testid="campaign-card">
@@ -35,18 +29,17 @@ const CamapignCard = ({ campaign, events, upcomingEvents }: CampaignCardProps) :
                     { title }
                 </Typography>
                 <Typography gutterBottom variant="body2">
-                    { startDate && endDate ? (
+                    { firstEvent.start_time && lastEvent.end_time ? (
                         <>
                             <FormattedDate
                                 day="numeric"
                                 month="long"
-                                value={ new Date(startDate)
-                                }
+                                value={ removeOffset(firstEvent.start_time) }
                             /> { ' - ' }
                             <FormattedDate
                                 day="numeric"
                                 month="long"
-                                value={ new Date(endDate) }
+                                value={ removeOffset(lastEvent.end_time) }
                             />
                         </>
                     ) : <Msg id="pages.organizeAllCampaigns.indefinite" /> }
