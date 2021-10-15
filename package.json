@@ -66,6 +66,7 @@
         "jest": "^27.2.4",
         "moxy": "git+https://github.com/zetkin/moxy.git#dev",
         "next-compose-plugins": "^2.2.0",
+        "next-router-mock": "^0.5.2",
         "next-transpile-modules": "^4.1.0",
         "ts-jest": "^27.0.5",
         "ts-loader": "^9.2.6",

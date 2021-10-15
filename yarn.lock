@@ -5054,6 +5054,11 @@ next-compose-plugins@^2.2.0:
   resolved "https://registry.yarnpkg.com/next-compose-plugins/-/next-compose-plugins-2.2.1.tgz#020fc53f275a7e719d62521bef4300fbb6fde5ab"
   integrity sha512-OjJ+fV15FXO2uQXQagLD4C0abYErBjyjE0I0FHpOEIB8upw0hg1ldFP6cqHTJBH1cZqy96OeR3u1dJ+Ez2D4Bg==
 
+next-router-mock@^0.5.2:
+  version "0.5.2"
+  resolved "https://registry.yarnpkg.com/next-router-mock/-/next-router-mock-0.5.2.tgz#911c27f9f774c5326aca1a84f0fa6231f5665c4c"
+  integrity sha512-YmF3eoL/Zc1yEoW02f6Ahg9SsqOl/Lj2XVvwcoZixdH1IyNafBGFVmhcGOk/KAsitPKh2UQ61ul/B99n6pQXsg==
+
 next-session@^3.4.0:
   version "3.4.3"
   resolved "https://registry.yarnpkg.com/next-session/-/next-session-3.4.3.tgz#4ad2f5c8b44b07bb586359a00cfabab8710a30f4"

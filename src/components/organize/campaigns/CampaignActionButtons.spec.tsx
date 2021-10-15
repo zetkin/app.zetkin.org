@@ -1,4 +1,5 @@
-import { render, useRouterMock } from 'test-utils';
+import singletonRouter from 'next/router';
+import { fireEvent, render } from 'test-utils';
 
 import CampaignActionButtons from './CampaignActionButtons';
 
@@ -12,13 +13,19 @@ const mockCampaign = {
     visibility: 'private',
 };
 
+jest.mock('next/dist/client/router', () => require('next-router-mock'));
+
 describe('CampaignActionButtons.tsx', () => {
     describe('Public campaign page button', () => {
         it('navigates to the correct url when clicked', () => {
-            useRouterMock.mockImplementation(() => ({
-                query: { orgId: 1 },
-            }));
-            render(<CampaignActionButtons campaign={ mockCampaign } />);
+            singletonRouter.query = {
+                orgId: '1',
+            };
+            const { getByText } = render(<CampaignActionButtons campaign={ mockCampaign } />);
+            fireEvent.click(getByText('pages.organizeCampaigns.linkGroup.public'));
+            expect(singletonRouter).toMatchObject({
+                asPath: '/o/1/campaigns/1',
+            });
         } );
     });
 });

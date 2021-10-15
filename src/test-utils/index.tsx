@@ -64,8 +64,6 @@ const customRender = (
 
 export * from '@testing-library/react';
 
-export { default as useRouterMock } from './useRouterMock';
-
 export { customRender as render };
 
 
