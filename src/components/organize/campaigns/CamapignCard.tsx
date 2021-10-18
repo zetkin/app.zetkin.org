@@ -8,19 +8,14 @@ import { ZetkinCampaign, ZetkinEvent } from 'types/zetkin';
 
 interface CampaignCardProps {
     campaign: ZetkinCampaign;
-    events: ZetkinEvent[];
-    upcomingEvents: ZetkinEvent[];
+    firstEvent?: ZetkinEvent;
+    lastEvent?: ZetkinEvent;
+    numOfUpcomingEvents?: number;
 }
 
-const CamapignCard = ({ campaign, events, upcomingEvents }: CampaignCardProps) : JSX.Element => {
+const CamapignCard = ({ campaign, firstEvent, lastEvent, numOfUpcomingEvents }: CampaignCardProps) : JSX.Element => {
     const { orgId } = useRouter().query;
     const { id, title } = campaign;
-
-    const campaignEvents = events.filter(e => e.campaign.id === id);
-    const campaignUpcomingEvents = upcomingEvents.filter(e => e.campaign?.id === id);
-
-    const firstEvent = campaignEvents[0];
-    const lastEvent = campaignEvents[campaignEvents.length - 1];
 
     return (
         <Card data-testid="campaign-card">
@@ -29,7 +24,7 @@ const CamapignCard = ({ campaign, events, upcomingEvents }: CampaignCardProps) :
                     { title }
                 </Typography>
                 <Typography gutterBottom variant="body2">
-                    { firstEvent.start_time && lastEvent.end_time ? (
+                    { firstEvent?.start_time && lastEvent?.end_time ? (
                         <>
                             <FormattedDate
                                 day="numeric"
@@ -45,9 +40,7 @@ const CamapignCard = ({ campaign, events, upcomingEvents }: CampaignCardProps) :
                     ) : <Msg id="pages.organizeAllCampaigns.indefinite" /> }
                 </Typography>
                 <Typography color="secondary" gutterBottom variant="body2">
-                    <Msg id="pages.organizeAllCampaigns.upcoming" values={{ numEvents:campaignUpcomingEvents.length,
-                    }}
-                    />
+                    <Msg id="pages.organizeAllCampaigns.upcoming" values={{ numEvents: numOfUpcomingEvents }}/>
                 </Typography>
                 { /*TODO: labels for calls and surveys*/ }
             </CardContent>
