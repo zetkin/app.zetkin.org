@@ -34,18 +34,18 @@ const SingleCampaignLayout: FunctionComponent<SingleCampaignLayoutProps> = ({ ch
             baseHref={ `/organize/${orgId}/campaigns/${campId}` }
             defaultTab="/"
             fixedHeight={ fixedHeight }
-            subtitle={ firstEvent.start_time && lastEvent.end_time ? (
+            subtitle={ firstEvent && lastEvent ? (
                 <>
                     <FormattedDate
                         day="2-digit"
                         month="long"
-                        value={ removeOffset(firstEvent.start_time) }
+                        value={ firstEvent.start_time? removeOffset(firstEvent.start_time) : undefined }
                     />
                     { ` - ` }
                     <FormattedDate
                         day="2-digit"
                         month="long"
-                        value={ removeOffset(lastEvent.end_time) }
+                        value={ lastEvent.start_time? removeOffset(lastEvent.end_time) : undefined }
                         year="numeric"
                     />
                 </>
