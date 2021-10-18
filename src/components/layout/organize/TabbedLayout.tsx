@@ -7,24 +7,23 @@ import BreadcrumbTrail from '../../BreadcrumbTrail';
 import OrganizeSidebar from 'components/organize/OrganizeSidebar';
 
 const useStyles = makeStyles((theme) => ({
-    breadcrumbs: {
+    root: {
         [theme.breakpoints.down('xs')]: {
-            width: '100%',
+            paddingTop: '3.5rem',
         },
-
     },
-    header: {
+    title: {
+        marginBottom: '8px',
+    },
+    titleGrid: {
+        alignItems: 'center',
         display: 'grid',
         gap: '1rem',
         gridTemplateColumns:'1fr auto',
         gridTemplateRows:'auto',
+        width: '100%',
         [theme.breakpoints.down('sm')]: {
             gridTemplateColumns: '1fr',
-        },
-    },
-    root: {
-        [theme.breakpoints.down('xs')]: {
-            paddingTop: '4rem',
         },
     },
 }));
@@ -71,25 +70,22 @@ const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
             <OrganizeSidebar />
             <Box display="flex" flexDirection="column" height="100vh" overflow="auto" position="relative" width={ 1 }>
                 <Box display={ fixedHeight ? 'flex' :'block' } flexDirection="column" height={ fixedHeight ? 1 : 'auto' }>
-                    <Box flexGrow={ 0 } flexShrink={ 0 }>
-                        <Box display="flex" justifyContent="space-between">
-                            <Box className={ classes.breadcrumbs } p={ 2 } pl={ 3 }>
-                                <BreadcrumbTrail/>
-                            </Box>
-                        </Box>
-                        { /* Title, subtitle, and action buttons */ }
-                        <Box alignItems="center" className={ classes.header } p={ 3 } width="100%">
-                            <Box overflow="hidden">
-                                <Typography component="h1" data-testid="page-title" noWrap variant="h2">
-                                    { title }
-                                </Typography>
-                                <Typography component="h2" variant="h5">
-                                    { subtitle }
-                                </Typography>
-                            </Box>
-                            { /* Action Buttons */ }
-                            <Box>
-                                { actionButtons }
+                    <Box component="header" flexGrow={ 0 } flexShrink={ 0 }>
+                        <Box mb={ 2 } pt={ 3 } px={ 3 }>
+                            <BreadcrumbTrail/>
+                            { /* Title, subtitle, and action buttons */ }
+                            <Box className={ classes.titleGrid } mt={ 2 }>
+                                <Box overflow="hidden">
+                                    <Typography className={ classes.title } component="h1" data-testid="page-title" noWrap variant="h3">
+                                        { title }
+                                    </Typography>
+                                    <Typography component="h2" variant="h5">
+                                        { subtitle }
+                                    </Typography>
+                                </Box>
+                                <Box>
+                                    { actionButtons }
+                                </Box>
                             </Box>
                         </Box>
                         <Tabs
@@ -106,7 +102,8 @@ const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
                             }) }
                         </Tabs>
                     </Box>
-                    <Box flexGrow={ 1 } minHeight={ 0 } p={ fixedHeight ? 0 : 3 } position="relative" role="tabpanel">
+                    { /* Page Content */ }
+                    <Box component="main" flexGrow={ 1 } minHeight={ 0 } p={ fixedHeight ? 0 : 3 } position="relative" role="tabpanel">
                         { children }
                     </Box>
                 </Box>
