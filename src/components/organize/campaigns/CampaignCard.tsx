@@ -1,21 +1,28 @@
+import dayjs from 'dayjs';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import { Card, CardActions, CardContent, Link, Typography } from '@material-ui/core';
 import { FormattedDate, FormattedMessage as Msg } from 'react-intl';
 
-import { removeOffset } from 'utils/dateUtils';
+import { getFirstAndLastEvent, removeOffset } from 'utils/dateUtils';
 import { ZetkinCampaign, ZetkinEvent } from 'types/zetkin';
 
 interface CampaignCardProps {
     campaign: ZetkinCampaign;
-    firstEvent?: ZetkinEvent;
-    lastEvent?: ZetkinEvent;
-    numOfUpcomingEvents?: number;
+    events: ZetkinEvent[];
 }
 
-const CamapignCard = ({ campaign, firstEvent, lastEvent, numOfUpcomingEvents }: CampaignCardProps) : JSX.Element => {
+const CampaignCard = ({ campaign, events }: CampaignCardProps) : JSX.Element => {
     const { orgId } = useRouter().query;
     const { id, title } = campaign;
+
+    const campaignEvents = events.filter(event => event.campaign.id === campaign.id);
+    const numOfUpcomingEvents = events
+        .filter(event => event.campaign.id === campaign.id)
+        .filter(event => dayjs(removeOffset(event.end_time)).isAfter(dayjs()))
+        .length;
+
+    const [firstEvent, lastEvent] = getFirstAndLastEvent(campaignEvents);
 
     return (
         <Card data-testid="campaign-card">
@@ -24,7 +31,7 @@ const CamapignCard = ({ campaign, firstEvent, lastEvent, numOfUpcomingEvents }: 
                     { title }
                 </Typography>
                 <Typography gutterBottom variant="body2">
-                    { firstEvent?.start_time && lastEvent?.end_time ? (
+                    { firstEvent && lastEvent ? (
                         <>
                             <FormattedDate
                                 day="numeric"
@@ -55,4 +62,4 @@ const CamapignCard = ({ campaign, firstEvent, lastEvent, numOfUpcomingEvents }: 
     );
 };
 
-export default CamapignCard;
+export default CampaignCard;

@@ -6,8 +6,8 @@ import { FormattedDate, FormattedMessage as Msg } from 'react-intl';
 import CampaignActionButtons from 'components/organize/campaigns/CampaignActionButtons';
 import getCampaign from '../../../fetching/getCampaign';
 import getCampaignEvents from '../../../fetching/getCampaignEvents';
-import { removeOffset } from 'utils/dateUtils';
 import TabbedLayout from './TabbedLayout';
+import { getFirstAndLastEvent, removeOffset } from 'utils/dateUtils';
 
 interface SingleCampaignLayoutProps {
     fixedHeight?: boolean;
@@ -21,8 +21,7 @@ const SingleCampaignLayout: FunctionComponent<SingleCampaignLayoutProps> = ({ ch
     const campaign = campaignQuery.data;
     const campaignEvents = campaignEventsQuery.data || [];
 
-    const firstEvent = campaignEvents[0];
-    const lastEvent = campaignEvents[campaignEvents.length - 1];
+    const [firstEvent, lastEvent] = getFirstAndLastEvent(campaignEvents);
 
     if (!campaign) return null;
 
@@ -39,13 +38,13 @@ const SingleCampaignLayout: FunctionComponent<SingleCampaignLayoutProps> = ({ ch
                     <FormattedDate
                         day="2-digit"
                         month="long"
-                        value={ firstEvent.start_time? removeOffset(firstEvent.start_time) : undefined }
+                        value={ removeOffset(firstEvent.start_time) }
                     />
                     { ` - ` }
                     <FormattedDate
                         day="2-digit"
                         month="long"
-                        value={ lastEvent.start_time? removeOffset(lastEvent.end_time) : undefined }
+                        value={ removeOffset(lastEvent.end_time) }
                         year="numeric"
                     />
                 </>

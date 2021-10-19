@@ -1,5 +1,17 @@
 import { Dayjs } from 'dayjs';
 
+import { ZetkinEvent } from 'types/zetkin';
+
+export const getFirstAndLastEvent = (campaignEvents: ZetkinEvent[]): (ZetkinEvent | undefined)[] => {
+    const firstEvent = campaignEvents.length ? campaignEvents[0] : undefined;
+    const lastEvent = firstEvent? campaignEvents[campaignEvents.length - 1] : undefined;
+    return [firstEvent, lastEvent];
+};
+
+export const getLastEvent = (campaignEvents: ZetkinEvent[]): ZetkinEvent => {
+    return campaignEvents[campaignEvents.length - 1];
+};
+
 export const getNewDateWithOffset = (date: Date, offset: number ):Date => {
     return new Date(new Date(date).setDate(date.getDate() + offset));
 };

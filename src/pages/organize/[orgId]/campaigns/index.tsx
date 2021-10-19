@@ -6,7 +6,7 @@ import { useIntl } from 'react-intl';
 import { useQuery } from 'react-query';
 
 import AllCampaignsLayout from '../../../../components/layout/organize/AllCampaignsLayout';
-import CampaignCard from 'components/organize/campaigns/CamapignCard';
+import CampaignCard from 'components/organize/campaigns/CampaignCard';
 import getCampaigns from '../../../../fetching/getCampaigns';
 import getEvents from '../../../../fetching/getEvents';
 import getOrg from '../../../../fetching/getOrg';
@@ -65,11 +65,9 @@ type AllCampaignsSummaryPageProps = {
 const AllCampaignsSummaryPage: PageWithLayout<AllCampaignsSummaryPageProps> = ({ orgId }) => {
     const intl = useIntl();
     const campaignsQuery = useQuery(['campaigns', orgId], getCampaigns(orgId));
-    const upcomingEventsQuery = useQuery(['upcomingEvents', orgId], getUpcomingEvents(orgId));
     const eventsQuery = useQuery(['events', orgId], getEvents(orgId));
 
     const campaigns = campaignsQuery.data || [];
-    const upcomingEvents = upcomingEventsQuery.data || [];
     const events = eventsQuery.data || [];
 
     return (
@@ -79,18 +77,11 @@ const AllCampaignsSummaryPage: PageWithLayout<AllCampaignsSummaryPageProps> = ({
             </Head>
             <ZetkinSection title={ intl.formatMessage({ id: 'pages.organizeAllCampaigns.heading' }) }>
                 <Box display="grid" gridGap={ 20 } gridTemplateColumns="repeat( auto-fit, minmax(450px, 1fr) )">
-                    { campaigns.map(campaign => {
-                        const campaignEvents = events.filter(event => event.campaign.id === campaign.id);
-                        const campaignUpcomingEvents = upcomingEvents.filter(event => event.campaign.id === campaign.id);
-
-                        const firstEvent = campaignEvents.length ? campaignEvents[0] : undefined;
-                        const lastEvent = firstEvent ? campaignEvents[campaignEvents.length - 1] : undefined;
+                    { campaigns.map(campaign => { //här
                         return (<CampaignCard
                             key={ campaign.id }
                             campaign={ campaign }
-                            firstEvent={ firstEvent }
-                            lastEvent={ lastEvent }
-                            numOfUpcomingEvents={ campaignUpcomingEvents.length }
+                            events={ events }
                         />);
                     }) }
                 </Box>
