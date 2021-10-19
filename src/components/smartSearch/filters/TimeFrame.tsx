@@ -58,13 +58,13 @@ const TimeFrame = ({ onChange, filterConfig, options = Object.values(TIME_FRAME)
                 <Msg id={ `misc.smartSearch.timeFrame.edit.${selected}` } values={{
                     afterDateSelect: (
                         <StyledDatePicker
-                            onChange={ (date) => setAfter(date as Date) }
+                            onChange={ (date) => setAfter(date as unknown as Date) }
                             value={ after }
                         />
                     ),
                     beforeDateSelect: (
                         <StyledDatePicker
-                            onChange={ (date) => setBefore(date as Date) }
+                            onChange={ (date) => setBefore(date as unknown as Date) }
                             value={ before }
                         />
                     ),
