@@ -36,12 +36,8 @@ function ZetkinQuery<G>({
         );
     }
 
-    // Success
-    return (
-        <>
-            { typeof children === 'function' ? children({ query }) : children }
-        </>
-    );
+    // Render children on success
+    return typeof children === 'function' ? children({ query }) : children;
 }
 
 export default ZetkinQuery;
