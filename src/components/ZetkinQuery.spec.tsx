@@ -1,12 +1,13 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
+
 import { render } from 'test-utils';
 import { LinearProgress, Typography } from '@material-ui/core';
 import { QueryObserverResult, UseQueryResult } from 'react-query';
 
-import ZetkinQuery from './index';
+import ZetkinQuery from './ZetkinQuery';
 
 // @ts-ignore
-const mockQuery: UseQueryResult<unknown> = {
+const mockQuery: UseQueryResult = {
     data: {},
     dataUpdatedAt: 1000000,
     error: null,
@@ -123,7 +124,7 @@ describe('<ZetkinQuery />', () => {
                             const { data } = query;
                             return (
                                 <Typography>
-                                    { data?.text }
+                                    { data.text }
                                 </Typography>
                             );
                         } }
