@@ -2,18 +2,21 @@ import { Dayjs } from 'dayjs';
 
 import { ZetkinEvent } from 'types/zetkin';
 
+
+export const getNewDateWithOffset = (date: Date, offset: number ):Date => {
+    return new Date(new Date(date).setDate(date.getDate() + offset));
+};
+
+/**
+ * Returns the first and last object in an array of ZetkinEvents.
+ *
+ * This function works like this becuase the events will arrive from the
+ * server already sorted chronologically by start_time.
+ */
 export const getFirstAndLastEvent = (campaignEvents: ZetkinEvent[]): (ZetkinEvent | undefined)[] => {
     const firstEvent = campaignEvents.length ? campaignEvents[0] : undefined;
     const lastEvent = firstEvent? campaignEvents[campaignEvents.length - 1] : undefined;
     return [firstEvent, lastEvent];
-};
-
-export const getLastEvent = (campaignEvents: ZetkinEvent[]): ZetkinEvent => {
-    return campaignEvents[campaignEvents.length - 1];
-};
-
-export const getNewDateWithOffset = (date: Date, offset: number ):Date => {
-    return new Date(new Date(date).setDate(date.getDate() + offset));
 };
 
 /**
