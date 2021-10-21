@@ -1,19 +1,20 @@
-import { createMockEvent } from './testing';
-import { ZetkinEvent } from '../types/zetkin';
+import mockEvent from 'test-utils/mocks/mockEvent';
+import { ZetkinEvent } from 'types/zetkin';
+
 import { getFirstAndLastEvent, removeOffset } from './dateUtils';
 
 describe('getFirstAndLastEvent()', () => {
-    const firstEvent = createMockEvent({
+    const firstEvent = mockEvent({
         end_time: '2022-06-16T09:00:00+00:00',
         start_time: '2022-06-16T09:00:00+00:00',
     });
 
-    const secondEvent = createMockEvent({
+    const secondEvent = mockEvent({
         end_time: '2022-06-17T09:00:00+00:00',
         start_time: '2022-06-17T09:00:00+00:00',
     });
 
-    const thirdEvent = createMockEvent({
+    const thirdEvent = mockEvent({
         end_time: '2022-06-18T09:00:00+00:00',
         start_time: '2022-06-18T09:00:00+00:00',
     });
