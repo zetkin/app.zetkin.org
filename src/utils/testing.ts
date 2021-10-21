@@ -1,6 +1,7 @@
+import mockObject from 'test-utils/mockObject';
 import { ZetkinEvent } from 'types/zetkin';
 
-const dummyEvent : ZetkinEvent = {
+const dummyEvent: ZetkinEvent = {
     activity: {
         title: 'Active activity',
     },
@@ -29,15 +30,7 @@ const dummyEvent : ZetkinEvent = {
     url: undefined,
 };
 
-interface MockEventProps {
-    end_time: string;
-    start_time: string;
-}
 
-export const createMockEvent = ( { end_time, start_time } : MockEventProps ) : ZetkinEvent => {
-    return {
-        ...dummyEvent,
-        end_time: end_time,
-        start_time: start_time,
-    };
+export const createMockEvent = (overrides: Partial<ZetkinEvent>): ZetkinEvent => {
+    return mockObject(dummyEvent, overrides);
 };
