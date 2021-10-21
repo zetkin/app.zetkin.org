@@ -31,6 +31,10 @@ describe('getFirstAndLastEvent()', () => {
         const multiEventArray = [firstEvent, secondEvent, thirdEvent];
         expect(getFirstAndLastEvent(multiEventArray)).toMatchObject([firstEvent, thirdEvent]);
     });
+    it('Returns first and last event when passed an array of multiple events out of order', () => {
+        const multiEventArray = [firstEvent, thirdEvent, secondEvent];
+        expect(getFirstAndLastEvent(multiEventArray)).toMatchObject([firstEvent, thirdEvent]);
+    });
 });
 
 describe('removeOffset()', () => {
