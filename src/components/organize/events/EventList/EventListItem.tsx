@@ -1,8 +1,8 @@
 import Link from 'next/link';
-import { FormattedDate, FormattedTime } from 'react-intl';
 import { ListItem, ListItemText, Typography } from '@material-ui/core';
 
-import { getNaiveDate } from 'utils/dateUtils';
+import { removeOffset } from 'utils/dateUtils';
+import ZetkinDateTime from 'components/ZetkinDateTime';
 import { ZetkinEvent } from 'types/zetkin';
 
 interface EventListItemProps {
@@ -13,9 +13,6 @@ interface EventListItemProps {
 const EventListItem = ({ event, hrefBase }: EventListItemProps): JSX.Element => {
     const { id, title, activity, location, start_time, end_time } = event;
 
-    const startTime = getNaiveDate(start_time);
-    const endTime = getNaiveDate(end_time);
-
     return (
         <Link href={ hrefBase + `/calendar/events/${id}` } passHref>
             <ListItem button component="a">
@@ -24,24 +21,12 @@ const EventListItem = ({ event, hrefBase }: EventListItemProps): JSX.Element => 
                         { title || activity.title }
                     </Typography>
                     <Typography color="textPrimary" variant="body2">
-                        <FormattedDate
-                            day="numeric"
-                            month="long"
-                            value={ startTime }
-                        />
-                        { `  ` }
-                        <FormattedTime
-                            value={ startTime }
+                        <ZetkinDateTime
+                            datetime={ removeOffset(start_time) }
                         />
                         { ` - ` }
-                        <FormattedDate
-                            day="numeric"
-                            month="long"
-                            value={ endTime }
-                        />
-                        { `  ` }
-                        <FormattedTime
-                            value={ endTime }
+                        <ZetkinDateTime
+                            datetime={ removeOffset(end_time) }
                         />
                     </Typography>
                     <Typography color="textPrimary" variant="body2">

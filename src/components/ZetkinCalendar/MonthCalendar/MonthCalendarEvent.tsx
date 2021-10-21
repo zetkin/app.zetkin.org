@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import { FormattedTime } from 'react-intl';
 import { getContrastColor } from '../../../utils/colorUtils';
 import { grey } from '@material-ui/core/colors';
@@ -6,7 +7,7 @@ import { ArrowBackIos, ArrowForwardIos } from '@material-ui/icons';
 import { Box,  Link, Typography } from '@material-ui/core';
 import { useEffect, useRef, useState } from 'react';
 
-import { getNaiveDate } from '../../../utils/dateUtils';
+import { removeOffset } from 'utils/dateUtils';
 import { ZetkinCampaign, ZetkinEvent } from '../../../types/zetkin';
 
 const DEFAULT_COLOR = grey[900];
@@ -31,14 +32,14 @@ const MonthCalendarEvent = ({ baseHref, startOfDay, campaign, event, onLoad, isV
         }
     }, [onLoad]);
 
-    const startTime = getNaiveDate(event.start_time);
-    const endTime = getNaiveDate(event.end_time);
+    const dayStart = dayjs(startOfDay);
+    const dayEnd = dayStart.endOf('day');
 
-    const endOfDay = new Date(new Date(startOfDay)
-        .setDate(startOfDay.getDate() + 1));
+    const eventStartTime = dayjs(removeOffset(event.start_time));
+    const eventEndTime = dayjs(removeOffset(event.end_time));
 
-    const startsBeforeToday = startTime <= startOfDay;
-    const endsAfterToday = endTime >= endOfDay;
+    const startsBeforeToday = eventStartTime.isBefore(dayStart);
+    const endsAfterToday = eventEndTime.isAfter(dayEnd);
 
     return (
         <li>
@@ -62,7 +63,7 @@ const MonthCalendarEvent = ({ baseHref, startOfDay, campaign, event, onLoad, isV
                             <ArrowBackIos data-testid={ `back-icon-${event.id}` } fontSize="inherit"/>
                         ) }
                         <Typography data-testid={ `start-time-${event.id}` } noWrap={ true } variant="body2">
-                            <FormattedTime value={ new Date(startsBeforeToday? startOfDay: startTime) }/>{ ` - ` }
+                            <FormattedTime value={ startsBeforeToday ? dayStart.toDate() : eventStartTime.toDate() }/>{ ` - ` }
                             <span data-testid={ `title-${event.id}` }>{ event.title || event.activity.title }</span>
                         </Typography>
                         { endsAfterToday && (
