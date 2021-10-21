@@ -1,4 +1,4 @@
-import mockObject from './mockObject';
+import { mockObject } from './index';
 
 describe('mockObject', () => {
     it('if only object given, returns object', () => {
