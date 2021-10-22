@@ -28,7 +28,7 @@ export const getServerSideProps : GetServerSideProps = async (context) => {
     return {
         redirect: {
             destination: z.getLoginUrl(`${protocol}://${host}/`, scopes),
-            permanent: true,
+            permanent: false,
         },
     };
 };
