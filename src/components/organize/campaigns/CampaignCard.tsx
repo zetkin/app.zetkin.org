@@ -1,32 +1,27 @@
+import dayjs from 'dayjs';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import { Card, CardActions, CardContent, Link, Typography } from '@material-ui/core';
 import { FormattedDate, FormattedMessage as Msg } from 'react-intl';
 
-import { getNaiveDate } from 'utils/dateUtils';
+import { getFirstAndLastEvent, removeOffset } from 'utils/dateUtils';
 import { ZetkinCampaign, ZetkinEvent } from 'types/zetkin';
 
 interface CampaignCardProps {
     campaign: ZetkinCampaign;
     events: ZetkinEvent[];
-    upcomingEvents: ZetkinEvent[];
 }
 
-const CamapignCard = ({ campaign, events, upcomingEvents }: CampaignCardProps) : JSX.Element => {
+const CampaignCard = ({ campaign, events }: CampaignCardProps) : JSX.Element => {
     const { orgId } = useRouter().query;
     const { id, title } = campaign;
 
-    const campaignEvents = events.filter(e => e.campaign.id === id);
-    const campaignUpcomingEvents = upcomingEvents.filter(e => e.campaign?.id === id);
+    const campaignEvents = events.filter(event => event.campaign.id === campaign.id);
+    const numOfUpcomingEvents = campaignEvents
+        .filter(event => dayjs(removeOffset(event.end_time)).isAfter(dayjs()))
+        .length;
 
-    let endDate, startDate;
-
-    const firstEvent = campaignEvents[0];
-    const lastEvent = campaignEvents[campaignEvents.length - 1];
-    if (firstEvent && lastEvent) {
-        startDate = getNaiveDate(firstEvent.start_time) ;
-        endDate = getNaiveDate(lastEvent.end_time);
-    }
+    const [firstEvent, lastEvent] = getFirstAndLastEvent(campaignEvents);
 
     return (
         <Card data-testid="campaign-card">
@@ -35,26 +30,23 @@ const CamapignCard = ({ campaign, events, upcomingEvents }: CampaignCardProps) :
                     { title }
                 </Typography>
                 <Typography gutterBottom variant="body2">
-                    { startDate && endDate ? (
+                    { firstEvent && lastEvent ? (
                         <>
                             <FormattedDate
                                 day="numeric"
                                 month="long"
-                                value={ new Date(startDate)
-                                }
+                                value={ removeOffset(firstEvent.start_time) }
                             /> { ' - ' }
                             <FormattedDate
                                 day="numeric"
                                 month="long"
-                                value={ new Date(endDate) }
+                                value={ removeOffset(lastEvent.end_time) }
                             />
                         </>
                     ) : <Msg id="pages.organizeAllCampaigns.indefinite" /> }
                 </Typography>
                 <Typography color="secondary" gutterBottom variant="body2">
-                    <Msg id="pages.organizeAllCampaigns.upcoming" values={{ numEvents:campaignUpcomingEvents.length,
-                    }}
-                    />
+                    <Msg id="pages.organizeAllCampaigns.upcoming" values={{ numEvents: numOfUpcomingEvents }}/>
                 </Typography>
                 { /*TODO: labels for calls and surveys*/ }
             </CardContent>
@@ -69,4 +61,4 @@ const CamapignCard = ({ campaign, events, upcomingEvents }: CampaignCardProps) :
     );
 };
 
-export default CamapignCard;
+export default CampaignCard;
