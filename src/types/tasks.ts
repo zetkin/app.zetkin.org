@@ -78,11 +78,12 @@ export interface ZetkinTaskPostBody extends ZetkinTaskRequestBody {
     type: TASK_TYPE;
 }
 
-enum ASSIGNED_STATUS {
+export enum ASSIGNED_STATUS {
     ASSIGNED='assigned',
     COMPLETED='completed',
     EXPIRED='expired',
-    OVERDUE='overdue',
+    OVERDUE = 'overdue',
+    IGNORED = 'ignored',
 }
 
 export interface TaskAssignee {
