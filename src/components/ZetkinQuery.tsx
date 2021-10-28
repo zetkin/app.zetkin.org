@@ -21,7 +21,6 @@ function ZetkinQuery<G>({
             <>
                 { loadingIndicator || (
                     <Box
-                        data-testid="error-indicator"
                         display="flex"
                         justifyContent="center"
                         padding={ 3 }
