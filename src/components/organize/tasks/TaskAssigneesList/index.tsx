@@ -3,16 +3,18 @@ import { useIntl } from 'react-intl';
 import { Box, Card, Grid } from '@material-ui/core';
 
 import TaskStatusSubtitle from './TaskStatusSubtitle';
-import { ZetkinAssignedTask } from 'types/tasks';
 import ZetkinPerson from 'components/ZetkinPerson';
 import ZetkinSection from 'components/ZetkinSection';
+import { ASSIGNED_STATUS, ZetkinAssignedTask } from 'types/tasks';
 
 const TaskAssigneesList: React.FunctionComponent<{ assignedTasks: ZetkinAssignedTask[] }> = ({ assignedTasks }) => {
     const intl = useIntl();
 
     const sortedAssignedTasks = assignedTasks.sort((first, second) => {
-        if (!first.completed && second.completed) return 1;
-        if (first.completed && !second.completed) return -1;
+        if (first.status === ASSIGNED_STATUS.COMPLETED && second.status !== ASSIGNED_STATUS.COMPLETED) return -1;
+        if (first.status !== ASSIGNED_STATUS.COMPLETED && second.status === ASSIGNED_STATUS.COMPLETED) return 1;
+        if (first.status === ASSIGNED_STATUS.ASSIGNED && second.status === ASSIGNED_STATUS.IGNORED) return 1;
+        if (first.status === ASSIGNED_STATUS.IGNORED && second.status === ASSIGNED_STATUS.ASSIGNED) return -1;
 
         const firstDate = dayjs(first.completed);
         const secondDate = dayjs(second.completed);

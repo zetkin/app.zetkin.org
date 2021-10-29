@@ -15,7 +15,7 @@ const ZetkinPerson: React.FunctionComponent<{
             <Box alignItems="start" display="flex" flexDirection="column" justifyContent="center" ml={ 1 }>
                 <Typography variant="body1">{ name }</Typography>
                 { subtitle && (
-                    <Typography variant="body2">{ subtitle }</Typography>
+                    <span className="MuiTypography-root MuiTypography-body2">{ subtitle }</span>
                 ) }
             </Box>
         </Box>
