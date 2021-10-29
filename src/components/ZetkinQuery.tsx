@@ -1,4 +1,5 @@
 import { ErrorOutlined } from '@material-ui/icons';
+import { FormattedMessage } from 'react-intl';
 import { Box, CircularProgress, Typography } from '@material-ui/core';
 import { QueryObserverSuccessResult, UseQueryResult } from 'react-query';
 
@@ -45,7 +46,9 @@ function ZetkinQuery<G>({
                         padding={ 3 }
                         width="100%">
                         <ErrorOutlined color="error" fontSize="large" />
-                        <Typography variant="body1">There was an error loading the data.</Typography>
+                        <Typography variant="body1">
+                            <FormattedMessage id="misc.errorLoading" />
+                        </Typography>
                     </Box>
                 ) }
             </>
