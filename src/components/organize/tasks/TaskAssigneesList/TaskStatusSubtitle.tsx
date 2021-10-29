@@ -1,8 +1,8 @@
 import { Box } from '@material-ui/core';
-import { Done } from '@material-ui/icons';
 import { FormattedMessage } from 'react-intl';
 import ZetkinRelativeTime from 'components/ZetkinRelativeTime';
 import { ASSIGNED_STATUS, ZetkinAssignedTask } from 'types/tasks';
+import { Done, NotInterested } from '@material-ui/icons';
 
 
 const TaskStatusSubtitle = ({
@@ -26,7 +26,12 @@ const TaskStatusSubtitle = ({
         );
     }
     else if (!task.completed && task.status === ASSIGNED_STATUS.IGNORED) {
-        return <FormattedMessage id="misc.tasks.taskAssigneesList.completedStates.ignored" />;
+        return (
+            <Box alignItems="center" display="flex">
+                <NotInterested fontSize="small" />
+                <FormattedMessage id="misc.tasks.taskAssigneesList.completedStates.ignored"/>
+            </Box>
+        );
     }
     else {
         return <FormattedMessage id="misc.tasks.taskAssigneesList.completedStates.notCompleted" />;
