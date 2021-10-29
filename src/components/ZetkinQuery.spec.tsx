@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-
-import { QueryObserverSuccessResult } from 'react-query';
 import { render } from 'test-utils';
 import { LinearProgress, Typography } from '@material-ui/core';
 
@@ -69,7 +66,7 @@ describe('<ZetkinQuery />', () => {
                     text: 'These pretzels are making me thirsty',
                 });
                 const { getByText } = render(
-                    <ZetkinQuery query={ mockSuccessQuery as QueryObserverSuccessResult<{text: string}> }>
+                    <ZetkinQuery query={ mockSuccessQuery }>
                         { ({ query }) => {
                             const { data } = query;
                             return (

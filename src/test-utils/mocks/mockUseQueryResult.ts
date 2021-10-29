@@ -6,7 +6,6 @@ import {
     QueryObserverLoadingResult,
     QueryObserverResult,
     QueryObserverSuccessResult,
-    QueryStatus,
     UseQueryResult,
 } from 'react-query';
 
@@ -35,17 +34,19 @@ export const useQueryResult: UseQueryResult<undefined> = {
     status: 'idle',
 };
 
-const mockUseQueryResult = <TData>(
-    status: QueryStatus,
-    data?: TData,
-): QueryObserverLoadingResult<undefined> |
-   QueryObserverLoadingErrorResult<undefined> |
-   QueryObserverSuccessResult<TData> |
-   QueryObserverResult => {
 
+function mockUseQueryResult(status: 'loading', data?: never): QueryObserverLoadingResult<undefined>;
+function mockUseQueryResult(status: 'error', data?: never): QueryObserverLoadingErrorResult<undefined>;
+function mockUseQueryResult<TData>(status: 'success', data?: TData): QueryObserverSuccessResult<TData>;
+function mockUseQueryResult<TData>(
+    status: 'loading' | 'error' | 'success',
+    data?: TData,
+):  QueryObserverLoadingResult<undefined> |
+    QueryObserverLoadingErrorResult<undefined> |
+    QueryObserverSuccessResult<TData> {
     if (status === 'loading') {
         return mockObject(
-            useQueryResult,
+            useQueryResult as QueryObserverLoadingResult<undefined>,
             {
                 isLoading: true,
                 status: 'loading',
@@ -61,18 +62,13 @@ const mockUseQueryResult = <TData>(
         });
     }
 
-    if (status === 'success') {
-        return mockObject(
+    return mockObject(
         useQueryResult as unknown as QueryObserverSuccessResult<TData>,
         {
             data: data,
             isSuccess: true,
             status: 'success',
         });
-    }
-
-    // If no arguments passed, return base query result
-    return useQueryResult;
-};
+}
 
 export default mockUseQueryResult;
