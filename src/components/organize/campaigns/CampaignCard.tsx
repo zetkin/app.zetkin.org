@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
-import { Card, CardActions, CardContent, Link, Typography } from '@material-ui/core';
+import { Card, CardActions, CardContent, Link, Typography } from '@mui/material';
 import { FormattedDate, FormattedMessage as Msg } from 'react-intl';
 
 import { getFirstAndLastEvent, removeOffset } from 'utils/dateUtils';

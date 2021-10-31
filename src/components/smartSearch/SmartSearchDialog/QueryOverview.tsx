@@ -1,8 +1,7 @@
-import { Alert } from '@material-ui/lab';
 import { FormattedMessage as Msg } from 'react-intl';
 import { useState } from 'react';
-import { Box, Button, DialogActions, IconButton, List, ListItem, Typography } from '@material-ui/core';
-import { DeleteOutline, Settings } from '@material-ui/icons';
+import { Alert, Box, Button, DialogActions, IconButton, List, ListItem, Typography } from '@mui/material';
+import { DeleteOutline, Settings } from '@mui/icons-material';
 
 import DisplayCallHistory from '../filters/CallHistory/DisplayCallHistory';
 import DisplayCampaignParticipation from '../filters/CampaignParticipation/DisplayCampaignParticipation';

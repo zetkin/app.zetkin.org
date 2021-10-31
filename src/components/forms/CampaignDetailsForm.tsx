@@ -2,7 +2,7 @@ import { Form } from 'react-final-form';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 import { Autocomplete, TextField } from 'mui-rff';
-import { Avatar, Box, Link, MenuItem, Typography } from '@material-ui/core';
+import { Avatar, Box, Link, MenuItem, Typography } from '@mui/material';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
 import { useEffect, useState } from 'react';
 

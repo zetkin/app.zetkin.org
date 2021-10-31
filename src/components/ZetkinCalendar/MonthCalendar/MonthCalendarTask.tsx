@@ -1,7 +1,7 @@
 import { getContrastColor } from '../../../utils/colorUtils';
-import { grey } from '@material-ui/core/colors';
+import { grey } from '@mui/material/colors';
 import NextLink from 'next/link';
-import { Box,  Link, Typography } from '@material-ui/core';
+import { Box,  Link, Typography } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 
 import { ZetkinCampaign, ZetkinTask } from '../../../types/zetkin';

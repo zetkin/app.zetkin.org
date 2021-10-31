@@ -4,7 +4,7 @@ import { FormattedMessage as Msg } from 'react-intl';
 import { useQuery } from 'react-query';
 import { FunctionComponent, useEffect, useState } from 'react';
 
-import Search from '@material-ui/icons/Search';
+import Search from '@mui/icons-material/Search';
 import {
     Avatar,
     Button,
@@ -13,7 +13,7 @@ import {
     ListItemAvatar,
     ListItemText,
     ListSubheader,
-} from '@material-ui/core';
+} from '@mui/material';
 
 import getOrg from '../../fetching/getOrg';
 import { MINIMUM_CHARACTERS } from './index';

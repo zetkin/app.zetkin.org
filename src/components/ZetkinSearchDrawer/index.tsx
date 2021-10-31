@@ -5,7 +5,7 @@ import {
     Box,
     Container,
     Typography,
-} from '@material-ui/core';
+} from '@mui/material';
 import { FunctionComponent, useEffect, useRef, useState } from 'react';
 
 import getPeopleSearchResults from '../../fetching/getPeopleSearchResults';

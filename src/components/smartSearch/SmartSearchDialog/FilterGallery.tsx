@@ -1,6 +1,6 @@
-import { ChevronLeft } from '@material-ui/icons';
+import { ChevronLeft } from '@mui/icons-material';
 import { FormattedMessage as Msg } from 'react-intl';
-import { Box, Button, ButtonBase, Card, Typography, useMediaQuery, useTheme } from '@material-ui/core';
+import { Box, Button, ButtonBase, Card, Typography, useMediaQuery, useTheme } from '@mui/material';
 
 import { FILTER_TYPE } from 'types/smartSearch';
 
@@ -44,7 +44,7 @@ const GROUPED_FILTERS: {[key in FILTER_CATEGORY]: FILTER_TYPE[]} = {
 
 const FilterGallery = ({ onCancelAddNewFilter, onAddNewFilter }:FilterGalleryProps): JSX.Element => {
     const theme = useTheme();
-    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+    const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
     return (
         <Box display="flex" flexDirection="column" pb={ 2 }>

@@ -1,6 +1,6 @@
 import { FormEvent } from 'react';
 import { FormattedMessage as Msg } from 'react-intl';
-import { Box, Button, Typography } from '@material-ui/core';
+import { Box, Button, Typography } from '@mui/material';
 
 interface FilterFormProps {
     renderSentence: () => JSX.Element;

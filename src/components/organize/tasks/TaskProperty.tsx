@@ -1,5 +1,5 @@
 import { useIntl } from 'react-intl';
-import { Box, Typography } from '@material-ui/core';
+import { Box, Typography } from '@mui/material';
 
 interface TaskPropertyProps {
     title: string;

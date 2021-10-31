@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { FormatListNumbered, Link as LinkIcon, NaturePeople, Share, VideoLibrary } from '@material-ui/icons';
-import { ListItem, ListItemIcon, ListItemText, Typography } from '@material-ui/core';
+import { FormatListNumbered, Link as LinkIcon, NaturePeople, Share, VideoLibrary } from '@mui/icons-material';
+import { ListItem, ListItemIcon, ListItemText, Typography } from '@mui/material';
 
 import { TASK_TYPE } from 'types/tasks';
 import { ZetkinTask } from 'types/zetkin';

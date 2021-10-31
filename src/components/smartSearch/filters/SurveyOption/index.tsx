@@ -1,8 +1,8 @@
-import { DoneAll } from '@material-ui/icons';
+import { DoneAll } from '@mui/icons-material';
 import { FormattedMessage as Msg } from 'react-intl';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
-import { Box, Chip, MenuItem, Tooltip } from '@material-ui/core';
+import { Box, Chip, MenuItem, Tooltip } from '@mui/material';
 import { FormEvent, useEffect } from 'react';
 
 import FilterForm from '../../FilterForm';

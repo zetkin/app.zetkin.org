@@ -1,7 +1,8 @@
+import makeStyles from '@mui/styles/makeStyles';
 import { FormattedMessage as Msg } from 'react-intl';
-import { Autocomplete, AutocompleteProps } from '@material-ui/lab';
-import { Chip, makeStyles, TextField } from '@material-ui/core';
-import { Theme, Tooltip } from '@material-ui/core';
+import { Autocomplete, AutocompleteProps } from '@mui/material';
+import { Chip, TextField } from '@mui/material';
+import { Theme, Tooltip } from '@mui/material';
 
 import { getEllipsedString } from 'utils/stringUtils';
 
@@ -43,25 +44,27 @@ const StyledItemSelect = (props: StyledItemSelectProps): JSX.Element => {
                     inputProps={{ ...params.inputProps , className: classes.MuiInput }}
                 />
             ) }
-            renderOption={ (item) => {
+            renderOption={ (props, item ) => {
                 const shortenedLabel = getEllipsedString(item.title, 15);
                 return (
-                    shortenedLabel.length === item.title.length ?
-                        <Chip
-                            key={ item.id }
-                            color="primary"
-                            label={ item.title }
-                            variant="outlined"
-                        /> :
-                        <Tooltip
-                            key={ item.id }
-                            title={ item.title }>
+                    <li { ...props }>
+                        { shortenedLabel.length === item.title.length ?
                             <Chip
+                                key={ item.id }
                                 color="primary"
-                                label={ shortenedLabel }
+                                label={ item.title }
                                 variant="outlined"
-                            />
-                        </Tooltip>);
+                            /> :
+                            <Tooltip
+                                key={ item.id }
+                                title={ item.title }>
+                                <Chip
+                                    color="primary"
+                                    label={ shortenedLabel }
+                                    variant="outlined"
+                                />
+                            </Tooltip> }
+                    </li>);
             } }
             renderTags={ () => null }
             { ...props }

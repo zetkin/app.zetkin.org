@@ -1,10 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Action } from './actions/types';
-import { makeStyles } from '@material-ui/core';
+import makeStyles from '@mui/styles/makeStyles';
 import { useIntl } from 'react-intl';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
-import { SpeedDial, SpeedDialAction, SpeedDialIcon } from '@material-ui/lab';
+import { SpeedDial, SpeedDialAction, SpeedDialIcon } from '@mui/material';
 
 import ZetkinDialog from '../ZetkinDialog';
 

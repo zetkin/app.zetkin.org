@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import { Dialog,  DialogContent } from '@material-ui/core';
+import { Dialog,  DialogContent } from '@mui/material';
 import { useMutation, useQueryClient } from 'react-query';
 
 import FilterEditor from './FilterEditor';

@@ -1,5 +1,5 @@
 import { FunctionComponent } from 'react';
-import { Box, Dialog, DialogContent, DialogTitle, useMediaQuery, useTheme } from '@material-ui/core';
+import { Box, Dialog, DialogContent, DialogTitle, useMediaQuery, useTheme } from '@mui/material';
 
 
 interface ZetkinDialogProps {
@@ -10,7 +10,7 @@ interface ZetkinDialogProps {
 
 const ZetkinDialog: FunctionComponent<ZetkinDialogProps> = ({ children, open, onClose, title }): JSX.Element => {
     const theme = useTheme();
-    const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
+    const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
     return (
         <Dialog fullScreen={ fullScreen } fullWidth onClose={ onClose } open={ open }>

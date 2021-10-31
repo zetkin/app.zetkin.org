@@ -1,9 +1,9 @@
-import { Button } from '@material-ui/core';
+import { Button } from '@mui/material';
 import { FormattedMessage as Msg } from 'react-intl';
 import { QUERY_STATUS } from 'types/smartSearch';
-import { Alert, Color } from '@material-ui/lab';
+import { Alert,AlertColor  } from '@mui/material';
 
-const SEVERITY: {[key in QUERY_STATUS]: Color} =  {
+const SEVERITY: {[key in QUERY_STATUS]: AlertColor} =  {
     [QUERY_STATUS.ASSIGNED]: 'success',
     [QUERY_STATUS.EDITABLE]: 'info',
     [QUERY_STATUS.NEW]: 'warning',

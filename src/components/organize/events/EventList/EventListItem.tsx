@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { ListItem, ListItemText, Typography } from '@material-ui/core';
+import { ListItem, ListItemText, Typography } from '@mui/material';
 
 import { removeOffset } from 'utils/dateUtils';
 import ZetkinDateTime from 'components/ZetkinDateTime';

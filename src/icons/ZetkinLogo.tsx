@@ -1,4 +1,4 @@
-import SvgIcon from '@material-ui/core/SvgIcon';
+import SvgIcon from '@mui/material/SvgIcon';
 
 interface ZetkinLogoProps {
     size?: number;

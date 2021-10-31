@@ -1,8 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Alert } from '@material-ui/lab';
+import { Alert } from '@mui/material';
 import { useRouter } from 'next/router';
-import { Box, Button, Menu, MenuItem } from '@material-ui/core';
-import { Delete, Settings } from '@material-ui/icons';
+import { Box, Button, Menu, MenuItem } from '@mui/material';
+import { Delete, Settings } from '@mui/icons-material';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
 import React, { useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';

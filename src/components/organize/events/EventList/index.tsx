@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Divider, ListItem, ListItemText } from '@material-ui/core';
+import { Card, Divider, ListItem, ListItemText } from '@mui/material';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
 
 import { ZetkinEvent } from 'types/zetkin';

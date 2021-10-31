@@ -1,8 +1,8 @@
-import { DoneAll } from '@material-ui/icons';
+import { DoneAll } from '@mui/icons-material';
 import { FormattedMessage as Msg } from 'react-intl';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
-import { Box, Chip, Tooltip } from '@material-ui/core';
+import { Box, Chip, Tooltip } from '@mui/material';
 
 import { getEllipsedString } from 'utils/stringUtils';
 import getSurveysWithElements from 'fetching/getSurveysWithElements';

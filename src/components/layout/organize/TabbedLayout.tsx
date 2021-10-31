@@ -1,6 +1,7 @@
+import makeStyles from '@mui/styles/makeStyles';
 import { useIntl } from 'react-intl';
 import { useRouter } from 'next/router';
-import { Box, makeStyles, Tab, Tabs, Typography } from '@material-ui/core';
+import { Box, Tab, Tabs, Typography } from '@mui/material';
 import { FunctionComponent, ReactElement } from 'react';
 
 import BreadcrumbTrail from '../../BreadcrumbTrail';
@@ -8,7 +9,7 @@ import OrganizeSidebar from 'components/organize/OrganizeSidebar';
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        [theme.breakpoints.down('xs')]: {
+        [theme.breakpoints.down('sm')]: {
             paddingTop: '3.5rem',
         },
     },
@@ -22,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
         gridTemplateColumns:'1fr auto',
         gridTemplateRows:'auto',
         width: '100%',
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
             gridTemplateColumns: '1fr',
         },
     },

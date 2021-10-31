@@ -1,10 +1,12 @@
+import createStyles from '@mui/styles/createStyles';
+import makeStyles from '@mui/styles/makeStyles';
 import { FormattedMessage as Msg } from 'react-intl';
-import NavigateNextIcon from '@material-ui/icons/NavigateNext';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import NextLink from 'next/link';
 import { ParsedUrlQuery } from 'node:querystring';
+import { Theme } from '@mui/material/styles';
 import { useRouter } from 'next/router';
-import { Breadcrumbs, Link, Typography, useMediaQuery } from '@material-ui/core';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import { Breadcrumbs, Link, Typography, useMediaQuery } from '@mui/material';
 import { useEffect, useState } from 'react';
 
 type Breadcrumb = {
@@ -26,7 +28,7 @@ const useStyles = makeStyles((theme: Theme) =>
             '& > * + *': {
                 marginTop: theme.spacing(2),
             },
-            [theme.breakpoints.down('xs')]: {
+            [theme.breakpoints.down('sm')]: {
                 width: '100%',
             },
         },

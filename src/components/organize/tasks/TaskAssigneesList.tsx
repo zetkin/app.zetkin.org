@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
-import { Done } from '@material-ui/icons';
-import { Box, Card, Grid } from '@material-ui/core';
+import { Done } from '@mui/icons-material';
+import { Box, Card, Grid } from '@mui/material';
 import { FormattedMessage, useIntl } from 'react-intl';
 
 import { ZetkinAssignedTask } from 'types/tasks';

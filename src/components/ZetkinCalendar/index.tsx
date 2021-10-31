@@ -1,7 +1,8 @@
 import dayjs from 'dayjs';
+import makeStyles from '@mui/styles/makeStyles';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import { Box, Button, makeStyles, MenuItem, TextField, Tooltip, Typography } from '@material-ui/core';
+import { Box, Button, MenuItem, TextField, Tooltip, Typography } from '@mui/material';
 import { FormattedDate, FormattedMessage as Msg } from 'react-intl';
 
 import MonthCalendar from './MonthCalendar';

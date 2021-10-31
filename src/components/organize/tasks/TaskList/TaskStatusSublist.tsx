@@ -1,6 +1,6 @@
 import { FormattedMessage as Msg } from 'react-intl';
 import React from 'react';
-import { List, ListSubheader } from '@material-ui/core';
+import { List, ListSubheader } from '@mui/material';
 
 import { TASK_STATUS } from 'utils/getTaskStatus';
 import TaskListItem from './TaskListItem';

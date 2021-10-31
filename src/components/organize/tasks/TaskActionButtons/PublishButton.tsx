@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import { useState } from 'react';
-import { Button, Tooltip } from '@material-ui/core';
+import { Button, Tooltip } from '@mui/material';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
 import { useMutation, useQueryClient } from 'react-query';
 

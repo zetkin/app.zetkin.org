@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import { FormattedRelativeTime } from 'react-intl';
-import { Tooltip } from '@material-ui/core';
+import { Tooltip } from '@mui/material';
 
 import ZetkinDateTime from './ZetkinDateTime';
 

@@ -1,13 +1,10 @@
 /* eslint-disable react/display-name */
 import { ChangeEventHandler, FocusEventHandler, FormEventHandler, forwardRef  } from 'react';
 
-import Search from '@material-ui/icons/Search';
+import makeStyles from '@mui/styles/makeStyles';
+import Search from '@mui/icons-material/Search';
 import { useIntl } from 'react-intl';
-import {
-    InputAdornment,
-    makeStyles,
-    TextField,
-} from '@material-ui/core';
+import { InputAdornment, TextField } from '@mui/material';
 
 interface SearchFieldProps {
     onChange: ChangeEventHandler<HTMLInputElement>;

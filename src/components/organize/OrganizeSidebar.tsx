@@ -1,9 +1,11 @@
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import { AppBar, Box, Drawer, Hidden, IconButton, List, ListItem, Toolbar } from '@material-ui/core';
-import { Event,  Home, Map, Menu, People } from '@material-ui/icons/';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
+import { useTheme } from '@mui/material/styles';
+import { AppBar, Box, Drawer, Hidden, IconButton, List, ListItem, Toolbar } from '@mui/material';
+import { Event,  Home, Map, Menu, People } from '@mui/icons-material/';
+
+import makeStyles from '@mui/styles/makeStyles';
 
 import ZetkinLogo from '../../icons/ZetkinLogo';
 
@@ -68,35 +70,61 @@ const OrganizeSidebar = () : JSX.Element =>{
                 <Box display="flex" flexDirection="column">
                     <ListItem disableGutters>
                         <NextLink href="/organize" passHref>
-                            <IconButton aria-label="Home" className={ classes.roundButton } color={ key === 'organize' ?  'primary' : 'secondary' } data-test="logo-button" style={{ marginBottom:'2rem' }}>
+                            <IconButton
+                                aria-label="Home"
+                                className={ classes.roundButton }
+                                color={ key === 'organize' ?  'primary' : 'secondary' }
+                                data-test="logo-button"
+                                size="large"
+                                style={{ marginBottom:'2rem' }}>
                                 <ZetkinLogo color="primary" size={ 40 } />
                             </IconButton>
                         </NextLink>
                     </ListItem>
                     <ListItem disableGutters>
                         <NextLink href={ `/organize/${orgId}` } passHref>
-                            <IconButton aria-label="Home" className={ classes.roundButton } color={ key === '' ?  'primary' : 'secondary' } data-test="home-button">
+                            <IconButton
+                                aria-label="Home"
+                                className={ classes.roundButton }
+                                color={ key === '' ?  'primary' : 'secondary' }
+                                data-test="home-button"
+                                size="large">
                                 <Home />
                             </IconButton>
                         </NextLink>
                     </ListItem>
                     <ListItem disableGutters>
                         <NextLink href={ `/organize/${orgId}/people` } passHref>
-                            <IconButton aria-label="People" className={ classes.roundButton } color={ key.startsWith('/people') ?  'primary' : 'secondary' } data-test="people-button">
+                            <IconButton
+                                aria-label="People"
+                                className={ classes.roundButton }
+                                color={ key.startsWith('/people') ?  'primary' : 'secondary' }
+                                data-test="people-button"
+                                size="large">
                                 <People />
                             </IconButton>
                         </NextLink>
                     </ListItem>
                     <ListItem disableGutters>
                         <NextLink href={ `/organize/${orgId}/areas` } passHref>
-                            <IconButton aria-label="Areas" className={ classes.roundButton } color={ key.startsWith('/areas') ?  'primary' : 'secondary' } data-test="area-button">
+                            <IconButton
+                                aria-label="Areas"
+                                className={ classes.roundButton }
+                                color={ key.startsWith('/areas') ?  'primary' : 'secondary' }
+                                data-test="area-button"
+                                size="large">
                                 <Map />
                             </IconButton>
                         </NextLink>
                     </ListItem>
                     <ListItem disableGutters>
                         <NextLink href={ `/organize/${orgId}/campaigns` } passHref>
-                            <IconButton aria-label="Campaigns" className={ classes.roundButton } color={ key.startsWith('/campaigns') ?  'primary' : 'secondary' } data-test="calendar-button">
+                            <IconButton
+                                aria-label="Campaigns"
+                                className={ classes.roundButton }
+                                color={ key.startsWith('/campaigns') ?  'primary' : 'secondary' }
+                                data-test="calendar-button"
+                                size="large">
                                 <Event />
                             </IconButton>
                         </NextLink>
@@ -115,7 +143,8 @@ const OrganizeSidebar = () : JSX.Element =>{
                         className={ classes.menuButton }
                         color="inherit"
                         edge="start"
-                        onClick={ handleDrawerToggle }>
+                        onClick={ handleDrawerToggle }
+                        size="large">
                         <Menu data-test="menu-button"/>
                     </IconButton>
                 </Toolbar>
@@ -136,7 +165,7 @@ const OrganizeSidebar = () : JSX.Element =>{
                         { drawer }
                     </Drawer>
                 </Hidden>
-                <Hidden implementation="css" xsDown>
+                <Hidden implementation="css" smDown>
                     <Drawer
                         classes={{
                             paper: classes.drawerPaper,

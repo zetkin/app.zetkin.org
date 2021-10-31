@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { Avatar, Box, Typography } from '@material-ui/core';
+import { Avatar, Box, Typography } from '@mui/material';
 
 const ZetkinPerson: React.FunctionComponent<{
     id: number;

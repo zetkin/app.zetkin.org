@@ -1,7 +1,7 @@
 import DateFnsUtils from '@date-io/date-fns';
 import { FormattedMessage as Msg } from 'react-intl';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
-import { MenuItem, Typography } from '@material-ui/core';
+import { MenuItem, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 
 import { getNewDateWithOffset } from 'utils/dateUtils';

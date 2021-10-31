@@ -1,6 +1,7 @@
-import { grey } from '@material-ui/core/colors';
+import { grey } from '@mui/material/colors';
+import makeStyles from '@mui/styles/makeStyles';
 import NextLink from 'next/link';
-import { Box, Button, Link, makeStyles, Tooltip, Typography } from '@material-ui/core';
+import { Box, Button, Link, Tooltip, Typography } from '@mui/material';
 import { FormattedDate, FormattedMessage as Msg } from 'react-intl';
 import  React, { useEffect, useRef, useState } from 'react';
 
@@ -182,7 +183,7 @@ const MonthCalendar = ({ orgId, campaigns, baseHref, events, focusDate, tasks }:
                                 }) }
                             </ul>
                             { totalTasksAndEvents - maxNoOfEvents > 0 && (
-                                <Tooltip arrow interactive title={ (
+                                <Tooltip arrow disableInteractive={ false } title={ (
                                     <Box>
                                         <ul className={ classes.list } data-testid={ `day-${index}-events` }>
                                             { tasksAndEvents.map((item, i) => {

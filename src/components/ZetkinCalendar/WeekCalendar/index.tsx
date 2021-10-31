@@ -1,7 +1,8 @@
 import { FormattedDate } from 'react-intl';
-import { grey } from '@material-ui/core/colors';
+import { grey } from '@mui/material/colors';
+import makeStyles from '@mui/styles/makeStyles';
 import NextLink from 'next/link';
-import { Box, Link, List, makeStyles, Tooltip, Typography } from '@material-ui/core';
+import { Box, Link, List, Tooltip, Typography } from '@mui/material';
 import { CALENDAR_RANGES, getViewRange } from '../utils';
 import { useEffect, useRef } from 'react';
 
