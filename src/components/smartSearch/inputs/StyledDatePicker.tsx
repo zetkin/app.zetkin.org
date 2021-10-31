@@ -1,28 +1,34 @@
 import makeStyles from '@mui/styles/makeStyles';
-import { DatePicker, DatePickerProps } from '@material-ui/pickers';
+import { TextField } from '@mui/material';
+import DatePicker, { DatePickerProps } from '@mui/lab/DatePicker';
+
 
 const useStyles = makeStyles((theme) => ({
-    MuiDatePicker: {
-        display: 'inline',
+    MuiInput: {
+        fontSize: theme.typography.h4.fontSize,
+        width: '14rem',
+    },
+    MuiTextField: {
+        fontSize: theme.typography.h4.fontSize,
         verticalAlign: 'inherit',
     },
     input: {
-        fontSize: theme.typography.h4.fontSize,
         padding: 0,
-        width: '12rem',
     },
 }));
 
-const StyledDatePicker: React.FC<DatePickerProps> = (props): React.ReactElement => {
+const StyledDatePicker: React.FC<Omit<DatePickerProps, 'renderInput'>> = (props): React.ReactElement => {
     const classes = useStyles();
     return (
         <DatePicker
-            className={ classes.MuiDatePicker }
-            disableToolbar
-            format="yyyy-MM-dd"
-            id="date-picker-inline"
-            inputProps={{ className: classes.input }}
-            variant="inline"
+            inputFormat="yyyy-MM-dd"
+            renderInput={ (props) => (
+                <TextField className={ classes.MuiTextField } id="date-picker-inline"
+                    { ...props }
+                    InputProps={{ className: classes.MuiInput, ...props.InputProps }}
+                    inputProps={{ className: classes.input , ...props.inputProps }}
+                />
+            ) }
             { ...props }
         />
     );

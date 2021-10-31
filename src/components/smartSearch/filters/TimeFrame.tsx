@@ -1,11 +1,11 @@
-import DateFnsUtils from '@date-io/date-fns';
 import { FormattedMessage as Msg } from 'react-intl';
-import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import { MenuItem, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import { getNewDateWithOffset } from 'utils/dateUtils';
 import { getTimeFrameWithConfig } from '../utils';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import StyledDatePicker from '../inputs/StyledDatePicker';
 import StyledNumberInput from '../inputs/StyledNumberInput';
 import StyledSelect from '../inputs/StyledSelect';
@@ -53,7 +53,7 @@ const TimeFrame = ({ onChange, filterConfig, options = Object.values(TIME_FRAME)
     }, [before, after, selected, numDays]); // eslint-disable-line react-hooks/exhaustive-deps
 
     return (
-        <MuiPickersUtilsProvider utils={ DateFnsUtils }>
+        <LocalizationProvider dateAdapter={ AdapterDateFns }>
             <Typography display="inline" variant="h4">
                 <Msg id={ `misc.smartSearch.timeFrame.edit.${selected}` } values={{
                     afterDateSelect: (
@@ -99,7 +99,7 @@ const TimeFrame = ({ onChange, filterConfig, options = Object.values(TIME_FRAME)
                 }}
                 />
             </Typography>
-        </MuiPickersUtilsProvider>
+        </LocalizationProvider>
     );
 };
 
