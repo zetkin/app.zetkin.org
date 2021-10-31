@@ -1,56 +1,90 @@
 import { createElement } from 'react';
-import { createTheme } from '@material-ui/core/styles';
+import { createTheme } from '@mui/material/styles';
 
 // Create a theme instance.
 const theme = createTheme({
-    overrides: {
+    components: {
         MuiButton: {
-            root: {
-                minWidth: '1rem',
-                textTransform: 'none',
+            styleOverrides: {
+                root: {
+                    minWidth: '1rem',
+                    textTransform: 'none',
+                } },
+        },
+        MuiCard: {
+            defaultProps: {
+                elevation: 2,
             },
         },
         MuiFormControl: {
-            root: {
-                minWidth: 120,
+            styleOverrides: {
+                root: {
+                    minWidth: 120,
+                },
             },
         },
         MuiIconButton: {
-            colorPrimary: {
-                '&:hover': {
-                    backgroundColor: 'transparent',
+            styleOverrides:{
+                colorPrimary: {
+                    '&:hover': {
+                        backgroundColor: 'transparent',
+                    },
+                },
+                colorSecondary: {
+                    '&:hover': {
+                        backgroundColor: 'transparent',
+                    },
+                },
+                root: {
+                    '&:hover': {
+                        backgroundColor: 'transparent',
+                        color: '#ED1C55',
+                    },
                 },
             },
-            colorSecondary: {
-                '&:hover': {
-                    backgroundColor: 'transparent',
-                },
-            },
-            root: {
-                '&:hover': {
-                    backgroundColor: 'transparent',
-                    color: '#ED1C55',
-                },
+        },
+        MuiLink: {
+            defaultProps: {
+                underline: 'hover',
             },
         },
         MuiTabs: {
-            indicator: {
-                '& > span': {
-                    backgroundColor: '#ED1C55',
-                    maxWidth: 100,
-                    width: '100%',
+            defaultProps: {
+                TabIndicatorProps: {
+                    children: createElement('span'),
                 },
-                backgroundColor: 'transparent',
-                display: 'flex',
-                justifyContent: 'center',
+                indicatorColor: 'primary',
+                textColor: 'primary',
             },
-            root: {
-                borderBottom: '1px solid rgba(0, 0, 0, 0.12)',
+            styleOverrides: {
+                indicator: {
+                    '& > span': {
+                        backgroundColor: '#ED1C55',
+                        maxWidth: 100,
+                        width: '100%',
+                    },
+                    backgroundColor: 'transparent',
+                    display: 'flex',
+                    justifyContent: 'center',
+                },
+                root: {
+                    borderBottom: '1px solid rgba(0, 0, 0, 0.12)',
+                },
+            },
+        },
+        MuiTextField: {
+            defaultProps: {
+                variant: 'standard',
             },
         },
         MuiTooltip: {
-            tooltip: {
-                fontSize: '14px',
+            defaultProps: {
+                disableInteractive: true,
+            },
+            styleOverrides: {
+                tooltip: {
+                    fontSize: '14px',
+                },
             },
         },
     },
@@ -78,18 +112,6 @@ const theme = createTheme({
         },
         warning: {
             main: '#ee8432',
-        },
-    },
-    props: {
-        MuiCard: {
-            elevation: 2,
-        },
-        MuiTabs: {
-            TabIndicatorProps: {
-                children: createElement('span'),
-            },
-            indicatorColor: 'primary',
-            textColor: 'primary',
         },
     },
     typography: {
