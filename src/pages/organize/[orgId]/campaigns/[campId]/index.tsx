@@ -2,7 +2,7 @@ import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { useIntl } from 'react-intl';
 import { useQuery } from 'react-query';
-import { Box, Grid, Typography } from '@material-ui/core';
+import { Box, Grid, Typography } from '@mui/material';
 
 import EventList from 'components/organize/events/EventList';
 import getCampaign from 'fetching/getCampaign';

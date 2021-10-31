@@ -2,7 +2,7 @@ import { GetStaticProps } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 import { FormattedMessage as Msg } from 'react-intl';
-import {  AppBar, Box, Container, Toolbar, Typography } from '@material-ui/core';
+import {  AppBar, Box, Container, Toolbar, Typography } from '@mui/material';
 
 import { getMessages } from '../utils/locale';
 import ZetkinLogo from 'icons/ZetkinLogo';

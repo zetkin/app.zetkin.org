@@ -1,5 +1,5 @@
 import { Children } from 'react';
-import { ServerStyleSheets } from '@material-ui/core/styles';
+import ServerStyleSheets from '@mui/styles/ServerStyleSheets';
 import theme from '../theme';
 import Document, { Head, Html, Main, NextScript } from 'next/document';
 

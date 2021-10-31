@@ -1,7 +1,7 @@
 import '../styles.css';
 
 import { AppProps } from 'next/app';
-import CssBaseline from '@material-ui/core/CssBaseline';
+import CssBaseline from '@mui/material/CssBaseline';
 import DateUtils from '@date-io/dayjs';
 import dayjs from 'dayjs';
 import { Hydrate } from 'react-query/hydration';
@@ -22,7 +22,7 @@ import theme from '../theme';
 import { UserContext } from '../hooks';
 
 
-declare module '@material-ui/styles/defaultTheme' {
+declare module '@mui/styles/defaultTheme' {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
   interface DefaultTheme extends Theme {}
 }

@@ -1,6 +1,6 @@
 import { GetServerSideProps } from 'next';
 
-import { Box } from '@material-ui/core';
+import { Box } from '@mui/material';
 import Head from 'next/head';
 import { useIntl } from 'react-intl';
 import { useQuery } from 'react-query';
@@ -76,7 +76,7 @@ const AllCampaignsSummaryPage: PageWithLayout<AllCampaignsSummaryPageProps> = ({
                 <title>{ intl.formatMessage({ id:'layout.organize.campaigns.allCampaigns' }) }</title>
             </Head>
             <ZetkinSection title={ intl.formatMessage({ id: 'pages.organizeAllCampaigns.heading' }) }>
-                <Box display="grid" gridGap={ 20 } gridTemplateColumns="repeat( auto-fit, minmax(450px, 1fr) )">
+                <Box display="grid" gap={ 20 } gridTemplateColumns="repeat( auto-fit, minmax(450px, 1fr) )">
                     { campaigns.map(campaign => { //här
                         return (<CampaignCard
                             key={ campaign.id }
