@@ -4,15 +4,22 @@ import dayjs from 'dayjs';
 import { IntlProvider } from 'react-intl';
 import isoWeek from 'dayjs/plugin/isoWeek';
 import { StyledEngineProvider } from '@mui/material/styles';
-import { ThemeProvider } from '@material-ui/styles';
 import { FC, ReactElement } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { render, RenderOptions, RenderResult } from '@testing-library/react';
+import { Theme, ThemeProvider } from '@mui/material/styles';
 
 import { LocalTimeToJsonPlugin } from 'utils/dateUtils';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import theme from 'theme';
 import { UserContext } from 'hooks';
+
+
+declare module '@material-ui/styles/defaultTheme' {
+  // eslint-disable-next-line @typescript-eslint/no-empty-interface
+  interface DefaultTheme extends Theme {}
+}
+
 
 dayjs.extend(LocalTimeToJsonPlugin);
 dayjs.extend(isoWeek);

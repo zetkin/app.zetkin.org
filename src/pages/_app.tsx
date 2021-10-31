@@ -12,14 +12,21 @@ import NProgress from 'nprogress';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import Router from 'next/router';
 import { StyledEngineProvider } from '@mui/material/styles';
-import { ThemeProvider } from '@material-ui/core/styles';
 import { useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
+import { Theme, ThemeProvider } from '@mui/material/styles';
 
 import { LocalTimeToJsonPlugin } from 'utils/dateUtils';
 import { PageWithLayout } from '../types';
 import theme from '../theme';
 import { UserContext } from '../hooks';
+
+
+declare module '@material-ui/styles/defaultTheme' {
+  // eslint-disable-next-line @typescript-eslint/no-empty-interface
+  interface DefaultTheme extends Theme {}
+}
+
 
 dayjs.extend(LocalTimeToJsonPlugin);
 dayjs.extend(isoWeek);
