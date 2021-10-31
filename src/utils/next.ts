@@ -138,7 +138,7 @@ export const scaffold = (wrapped : ScaffoldedGetServerSideProps, options? : Scaf
             reqWithSession.session.tokenData = ctx.z.getTokenData();
         }
 
-        const result = await wrapped(ctx) || {};
+        const result = (await wrapped(ctx)) || {};
 
         // Figure out browser's preferred language
         const negotiator = new Negotiator(contextFromNext.req);

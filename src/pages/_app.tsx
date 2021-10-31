@@ -11,6 +11,7 @@ import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import NProgress from 'nprogress';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import Router from 'next/router';
+import { StyledEngineProvider } from '@mui/material/styles';
 import { ThemeProvider } from '@material-ui/core/styles';
 import { useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
@@ -62,22 +63,24 @@ function MyApp({ Component, pageProps } : AppProps) : JSX.Element {
 
     return (
         <UserContext.Provider value={ pageProps.user }>
-            <ThemeProvider theme={ theme }>
-                <MuiPickersUtilsProvider libInstance={ dayjs } utils={ DateUtils }>
-                    <IntlProvider
-                        defaultLocale="en"
-                        locale={ lang }
-                        messages={ messages }>
-                        <QueryClientProvider client={ queryClient }>
-                            <Hydrate state={ dehydratedState }>
-                                <CssBaseline />
-                                { getLayout(<Component { ...restProps } />, restProps) }
-                            </Hydrate>
-                            <ReactQueryDevtools initialIsOpen={ false } />
-                        </QueryClientProvider>
-                    </IntlProvider>
-                </MuiPickersUtilsProvider>
-            </ThemeProvider>
+            <StyledEngineProvider injectFirst>
+                <ThemeProvider theme={ theme }>
+                    <MuiPickersUtilsProvider libInstance={ dayjs } utils={ DateUtils }>
+                        <IntlProvider
+                            defaultLocale="en"
+                            locale={ lang }
+                            messages={ messages }>
+                            <QueryClientProvider client={ queryClient }>
+                                <Hydrate state={ dehydratedState }>
+                                    <CssBaseline />
+                                    { getLayout(<Component { ...restProps } />, restProps) }
+                                </Hydrate>
+                                <ReactQueryDevtools initialIsOpen={ false } />
+                            </QueryClientProvider>
+                        </IntlProvider>
+                    </MuiPickersUtilsProvider>
+                </ThemeProvider>
+            </StyledEngineProvider>
         </UserContext.Provider>
     );
 }

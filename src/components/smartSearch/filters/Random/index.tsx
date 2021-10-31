@@ -89,7 +89,7 @@ const Random = ({ onSubmit, onCancel, filter: initialFilter }: RandomProps): JSX
                                 numInput: (
                                     <StyledNumberInput
                                         inputProps={{
-                                            min: '1', ...selected === QUANTITY.PERCENT && { max: '99' },
+                                            min: '1', ...(selected === QUANTITY.PERCENT && { max: '99' }),
                                         }}
                                         onChange={ (e) => {
                                             if (selected === QUANTITY.PERCENT && +e.target.value > 99) {
