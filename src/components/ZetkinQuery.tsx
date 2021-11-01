@@ -6,8 +6,8 @@ import { QueryObserverSuccessResult, UseQueryResult } from 'react-query';
 interface ZetkinQueryProps<G> {
     children?: React.ReactNode | (({ query }: {query: QueryObserverSuccessResult<G>}) => React.ReactNode);
     query: UseQueryResult<G>;
-    errorIndicator?: React.ReactNode;
-    loadingIndicator?: React.ReactNode;
+    errorIndicator?: React.ReactElement;
+    loadingIndicator?: React.ReactElement;
 }
 
 
@@ -18,40 +18,32 @@ function ZetkinQuery<G>({
     errorIndicator,
 }: ZetkinQueryProps<G>): JSX.Element {
     if (query.isLoading) {
-        return (
-            <>
-                { loadingIndicator || (
-                    <Box
-                        display="flex"
-                        justifyContent="center"
-                        padding={ 3 }
-                        width="100%">
-                        <CircularProgress data-testid="loading-indicator" disableShrink />
-                    </Box>
-                ) }
-            </>
+        return loadingIndicator || (
+            <Box
+                display="flex"
+                justifyContent="center"
+                padding={ 3 }
+                width="100%">
+                <CircularProgress data-testid="loading-indicator" disableShrink />
+            </Box>
         );
     }
 
     if (query.isError) {
-        return (
-            <>
-                { errorIndicator || (
-                    <Box
-                        alignItems="center"
-                        data-testid="error-indicator"
-                        display="flex"
-                        flexDirection="column"
-                        justifyItems="center"
-                        padding={ 3 }
-                        width="100%">
-                        <ErrorOutlined color="error" fontSize="large" />
-                        <Typography variant="body1">
-                            <FormattedMessage id="misc.errorLoading" />
-                        </Typography>
-                    </Box>
-                ) }
-            </>
+        return errorIndicator || (
+            <Box
+                alignItems="center"
+                data-testid="error-indicator"
+                display="flex"
+                flexDirection="column"
+                justifyItems="center"
+                padding={ 3 }
+                width="100%">
+                <ErrorOutlined color="error" fontSize="large" />
+                <Typography variant="body1">
+                    <FormattedMessage id="misc.errorLoading" />
+                </Typography>
+            </Box>
         );
     }
 
@@ -60,7 +52,6 @@ function ZetkinQuery<G>({
     return typeof children === 'function' ?
         children({ query: successQuery }) : // Expose the successfully resolved query if children is a function
         children; // Otherwise render children
-
 }
 
 export default ZetkinQuery;
