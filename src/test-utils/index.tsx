@@ -1,5 +1,4 @@
 import { CssBaseline } from '@mui/material';
-import DateUtils from '@date-io/dayjs';
 import dayjs from 'dayjs';
 import { IntlProvider } from 'react-intl';
 import isoWeek from 'dayjs/plugin/isoWeek';
@@ -10,7 +9,6 @@ import { render, RenderOptions, RenderResult } from '@testing-library/react';
 import { Theme, ThemeProvider } from '@mui/material/styles';
 
 import { LocalTimeToJsonPlugin } from 'utils/dateUtils';
-import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import theme from 'theme';
 import { UserContext } from 'hooks';
 
@@ -37,23 +35,21 @@ const ZetkinAppProviders: FC = ({ children }) => {
         <UserContext.Provider value={ null }>
             <StyledEngineProvider injectFirst>
                 <ThemeProvider theme={ theme }>
-                    <MuiPickersUtilsProvider libInstance={ dayjs } utils={ DateUtils }>
-                        <IntlProvider
-                            defaultLocale="en"
-                            locale="en"
-                            messages={{}}
-                            onError={ (err) => {
-                                if (err.code === 'MISSING_TRANSLATION') {
-                                    return;
-                                }
-                                throw err;
-                            } }>
-                            <QueryClientProvider client={ queryClient }>
-                                <CssBaseline />
-                                { children }
-                            </QueryClientProvider>
-                        </IntlProvider>
-                    </MuiPickersUtilsProvider>
+                    <IntlProvider
+                        defaultLocale="en"
+                        locale="en"
+                        messages={{}}
+                        onError={ (err) => {
+                            if (err.code === 'MISSING_TRANSLATION') {
+                                return;
+                            }
+                            throw err;
+                        } }>
+                        <QueryClientProvider client={ queryClient }>
+                            <CssBaseline />
+                            { children }
+                        </QueryClientProvider>
+                    </IntlProvider>
                 </ThemeProvider>
             </StyledEngineProvider>
         </UserContext.Provider>

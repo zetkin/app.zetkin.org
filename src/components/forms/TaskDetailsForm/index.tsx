@@ -191,10 +191,7 @@ const TaskDetailsForm = ({ onSubmit, onCancel, task }: TaskDetailsFormProps): JS
                         clearable={ true }
                         disabled={ taskStatus === TASK_STATUS.ACTIVE || taskStatus === TASK_STATUS.CLOSED }
                         disablePast
-                        fullWidth={ true }
-                        id={ TASK_DETAILS_FIELDS.PUBLISHED }
                         label={ intl.formatMessage({ id: 'misc.tasks.forms.createTask.fields.published' }) }
-                        margin="normal"
                         name={ TASK_DETAILS_FIELDS.PUBLISHED }
                     />
 
@@ -202,10 +199,7 @@ const TaskDetailsForm = ({ onSubmit, onCancel, task }: TaskDetailsFormProps): JS
                         ampm={ false }
                         clearable={ true }
                         disablePast
-                        fullWidth={ true }
-                        id={ TASK_DETAILS_FIELDS.DEADLINE }
                         label={ intl.formatMessage({ id: 'misc.tasks.forms.createTask.fields.deadline' }) }
-                        margin="normal"
                         name={ TASK_DETAILS_FIELDS.DEADLINE }
                     />
 
@@ -213,10 +207,7 @@ const TaskDetailsForm = ({ onSubmit, onCancel, task }: TaskDetailsFormProps): JS
                         ampm={ false }
                         clearable={ true }
                         disablePast
-                        fullWidth={ true }
-                        id={ TASK_DETAILS_FIELDS.EXPIRES }
                         label={ intl.formatMessage({ id: 'misc.tasks.forms.createTask.fields.expires' }) }
-                        margin="normal"
                         name={ TASK_DETAILS_FIELDS.EXPIRES }
                     />
 

@@ -2,12 +2,10 @@ import '../styles.css';
 
 import { AppProps } from 'next/app';
 import CssBaseline from '@mui/material/CssBaseline';
-import DateUtils from '@date-io/dayjs';
 import dayjs from 'dayjs';
 import { Hydrate } from 'react-query/hydration';
 import { IntlProvider } from 'react-intl';
 import isoWeek from 'dayjs/plugin/isoWeek';
-import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import NProgress from 'nprogress';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import Router from 'next/router';
@@ -72,20 +70,18 @@ function MyApp({ Component, pageProps } : AppProps) : JSX.Element {
         <UserContext.Provider value={ pageProps.user }>
             <StyledEngineProvider injectFirst>
                 <ThemeProvider theme={ theme }>
-                    <MuiPickersUtilsProvider libInstance={ dayjs } utils={ DateUtils }>
-                        <IntlProvider
-                            defaultLocale="en"
-                            locale={ lang }
-                            messages={ messages }>
-                            <QueryClientProvider client={ queryClient }>
-                                <Hydrate state={ dehydratedState }>
-                                    <CssBaseline />
-                                    { getLayout(<Component { ...restProps } />, restProps) }
-                                </Hydrate>
-                                <ReactQueryDevtools initialIsOpen={ false } />
-                            </QueryClientProvider>
-                        </IntlProvider>
-                    </MuiPickersUtilsProvider>
+                    <IntlProvider
+                        defaultLocale="en"
+                        locale={ lang }
+                        messages={ messages }>
+                        <QueryClientProvider client={ queryClient }>
+                            <Hydrate state={ dehydratedState }>
+                                <CssBaseline />
+                                { getLayout(<Component { ...restProps } />, restProps) }
+                            </Hydrate>
+                            <ReactQueryDevtools initialIsOpen={ false } />
+                        </QueryClientProvider>
+                    </IntlProvider>
                 </ThemeProvider>
             </StyledEngineProvider>
         </UserContext.Provider>
