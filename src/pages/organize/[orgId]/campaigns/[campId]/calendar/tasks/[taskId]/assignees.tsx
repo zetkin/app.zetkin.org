@@ -16,14 +16,13 @@ import { scaffold } from 'utils/next';
 import SingleTaskLayout from 'components/layout/organize/SingleTaskLayout';
 import SmartSearchDialog from 'components/smartSearch/SmartSearchDialog';
 import TaskAssigneesList from 'components/organize/tasks/TaskAssigneesList';
+import ZetkinQuery from 'components/ZetkinQuery';
 import getTaskStatus, { TASK_STATUS } from 'utils/getTaskStatus';
 import { ZetkinAssignedTask, ZetkinTask } from 'types/zetkin';
 
 const scaffoldOptions = {
     authLevelRequired: 2,
-    localeScope: [
-        'layout.organize', 'misc.breadcrumbs', 'misc.smartSearch', 'pages.assignees', 'misc.tasks', 'misc.formDialog',
-    ],
+    localeScope: ['layout.organize', 'pages.assignees', 'misc'],
 };
 
 export const getServerSideProps : GetServerSideProps = scaffold(async (ctx) => {
@@ -103,11 +102,16 @@ const TaskAssigneesPage: PageWithLayout = () => {
                     openDialog={ () => setDialogOpen(true) }
                     status={ queryStatus }
                 />
-                { assignedTasks && (
-                    <Box mt={ 3 }>
-                        <TaskAssigneesList assignedTasks={ assignedTasks } />
-                    </Box>
-                ) }
+                <ZetkinQuery query={ assignedTasksQuery }>
+                    { ({ query }) => {
+                        return (
+                            <Box mt={ 3 }>
+                                <TaskAssigneesList assignedTasks={ query.data } />
+                            </Box>
+                        );
+                    } }
+                </ZetkinQuery>
+
             </>
             { dialogOpen &&
             <SmartSearchDialog
