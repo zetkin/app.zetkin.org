@@ -47,4 +47,4 @@ taskAssigneesList:
     completedStates:
         notCompleted: Not yet completed
         completed: Completed {time}
-        ignored: Ignored
+        ignored: Ignored {time}

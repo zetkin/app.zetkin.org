@@ -52,6 +52,7 @@ describe('TaskAssigneesList', () => {
                 last_name: 'Smith',
             },
             id: 3,
+            ignored: '2021-11-21T12:50:01.469207',
             status: ASSIGNED_STATUS.IGNORED,
         });
         const task4 = mockAssignedTask({
@@ -62,6 +63,7 @@ describe('TaskAssigneesList', () => {
                 last_name: 'Paytas',
             },
             id: 4,
+            ignored: '2021-11-19T12:50:01.469207',
             status: ASSIGNED_STATUS.IGNORED,
         });
         const task5 = mockAssignedTask({

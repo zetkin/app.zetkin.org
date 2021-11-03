@@ -99,4 +99,5 @@ export interface ZetkinAssignedTask {
     completed: string | null;
     assignee:TaskAssignee;
     assigned: string;
+    ignored: string | null;
 }

@@ -11,6 +11,7 @@ const task: ZetkinAssignedTask =
         },
         completed: null,
         id: 1,
+        ignored: null,
         status: ASSIGNED_STATUS.ASSIGNED,
         task: {
             deadline: '2021-12-20T12:55:01.469207',

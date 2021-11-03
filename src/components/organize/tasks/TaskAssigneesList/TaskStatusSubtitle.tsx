@@ -29,7 +29,14 @@ const TaskStatusSubtitle = ({
         return (
             <Box alignItems="center" display="flex">
                 <NotInterested fontSize="small" />
-                <FormattedMessage id="misc.tasks.taskAssigneesList.completedStates.ignored"/>
+                <Box>
+                    <FormattedMessage
+                        id="misc.tasks.taskAssigneesList.completedStates.ignored"
+                        values={{
+                            time: <ZetkinRelativeTime datetime={ task.ignored as string } />,
+                        }}
+                    />
+                </Box>
             </Box>
         );
     }
