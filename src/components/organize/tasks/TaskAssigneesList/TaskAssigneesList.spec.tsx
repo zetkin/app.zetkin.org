@@ -13,7 +13,7 @@ beforeEach(() => {
 });
 
 describe('TaskAssigneesList', () => {
-    it('renders a list of assignees.', async () => {
+    it.skip('renders a list of assignees.', async () => {
         const task = mockAssignedTask();
         const task2 = mockAssignedTask({
             id: 2,
@@ -24,21 +24,73 @@ describe('TaskAssigneesList', () => {
         expect(assignees.length).toEqual(2);
     });
     it('correctly sorts assignees.', async () => {
-        const task = mockAssignedTask();
+        const task1 = mockAssignedTask({
+            assignee: {
+                first_name: 'Pamela',
+                id: 1,
+                last_name: 'Anderson',
+            },
+            completed: '2021-12-18T12:50:01.469207',
+            id: 1,
+            status: ASSIGNED_STATUS.COMPLETED,
+        });
         const task2 = mockAssignedTask({
-            completed: '2021-012-18T12:50:01.469207',
+            assignee: {
+                first_name: 'Dolly',
+                id: 2,
+                last_name: 'Parton',
+            },
+            completed: '2021-12-16T12:50:01.469207',
             id: 2,
             status: ASSIGNED_STATUS.COMPLETED,
         });
         const task3 = mockAssignedTask({
+            assigned: '2021-11-18T12:50:01.469207',
+            assignee: {
+                first_name: 'Anna Nicole',
+                id: 3,
+                last_name: 'Smith',
+            },
             id: 3,
             status: ASSIGNED_STATUS.IGNORED,
         });
+        const task4 = mockAssignedTask({
+            assigned: '2021-11-16T12:50:01.469207',
+            assignee: {
+                first_name: 'Trisha',
+                id: 4,
+                last_name: 'Paytas',
+            },
+            id: 4,
+            status: ASSIGNED_STATUS.IGNORED,
+        });
+        const task5 = mockAssignedTask({
+            assigned: '2021-11-20T12:50:01.469207',
+            assignee: {
+                first_name: 'Barb',
+                id: 5,
+                last_name: 'Wire',
+            },
+            id: 5,
+        });
+        const task6 = mockAssignedTask({
+            assigned: '2021-11-19T12:50:01.469207',
+            assignee: {
+                first_name: 'Nicholas',
+                id: 6,
+                last_name: 'Cage',
+            },
+            id: 6,
+        });
 
-        const { findAllByTestId } = render(<TaskAssigneesList assignedTasks={ [task, task2, task3] } />);
+        const { findAllByTestId } = render(<TaskAssigneesList assignedTasks={ [task2, task5, task4,  task1, task6, task3] } />);
         const assignees = await findAllByTestId('task-assignee');
-        const status = ['completed', 'ignored', 'notCompleted'];
 
-        assignees.forEach((assignee, index) => expect(assignee.innerHTML).toContain(status[index]));
+        expect(assignees[0].innerHTML).toContain('Pamela Anderson');
+        expect(assignees[1].innerHTML).toContain('Dolly Parton');
+        expect(assignees[2].innerHTML).toContain('Nina Ricci');
+        expect(assignees[3].innerHTML).toContain('John Lennon');
+        expect(assignees[4].innerHTML).toContain('Barb Wire');
+        expect(assignees[5].innerHTML).toContain('Nicholas Cage');
     });
 });

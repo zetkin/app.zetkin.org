@@ -16,8 +16,8 @@ const TaskAssigneesList: React.FunctionComponent<{ assignedTasks: ZetkinAssigned
         if (first.status === ASSIGNED_STATUS.ASSIGNED && second.status === ASSIGNED_STATUS.IGNORED) return 1;
         if (first.status === ASSIGNED_STATUS.IGNORED && second.status === ASSIGNED_STATUS.ASSIGNED) return -1;
 
-        const firstDate = dayjs(first.completed);
-        const secondDate = dayjs(second.completed);
+        const firstDate = first.completed ? dayjs(first.completed) : dayjs(first.assigned);
+        const secondDate = second.completed ? dayjs(second.completed) : dayjs(second.assigned);
 
         if (firstDate.isBefore(secondDate)) return 1;
         if (firstDate.isAfter(secondDate)) return -1;

@@ -13,8 +13,8 @@ const task: ZetkinAssignedTask =
         id: 1,
         status: ASSIGNED_STATUS.ASSIGNED,
         task: {
-            deadline: '2021-012-20T12:55:01.469207',
-            expires: '2021-012-20T12:55:01.469207',
+            deadline: '2021-12-20T12:55:01.469207',
+            expires: '2021-12-20T12:55:01.469207',
             id: 1,
             title: 'Fake title',
         },
