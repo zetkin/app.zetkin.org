@@ -13,7 +13,7 @@ beforeEach(() => {
 });
 
 describe('TaskAssigneesList', () => {
-    it.skip('renders a list of assignees.', async () => {
+    it('renders a list of assignees.', async () => {
         const task = mockAssignedTask();
         const task2 = mockAssignedTask({
             id: 2,
@@ -88,8 +88,8 @@ describe('TaskAssigneesList', () => {
 
         expect(assignees[0].innerHTML).toContain('Pamela Anderson');
         expect(assignees[1].innerHTML).toContain('Dolly Parton');
-        expect(assignees[2].innerHTML).toContain('Nina Ricci');
-        expect(assignees[3].innerHTML).toContain('John Lennon');
+        expect(assignees[2].innerHTML).toContain('Anna Nicole Smith');
+        expect(assignees[3].innerHTML).toContain('Trisha Paytas');
         expect(assignees[4].innerHTML).toContain('Barb Wire');
         expect(assignees[5].innerHTML).toContain('Nicholas Cage');
     });
