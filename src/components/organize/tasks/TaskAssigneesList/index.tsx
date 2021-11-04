@@ -16,8 +16,27 @@ const TaskAssigneesList: React.FunctionComponent<{ assignedTasks: ZetkinAssigned
         if (first.status === ASSIGNED_STATUS.ASSIGNED && second.status === ASSIGNED_STATUS.IGNORED) return 1;
         if (first.status === ASSIGNED_STATUS.IGNORED && second.status === ASSIGNED_STATUS.ASSIGNED) return -1;
 
-        const firstDate = first.completed ? dayjs(first.completed) : first.ignored ? dayjs(first.ignored) : dayjs(first.assigned);
-        const secondDate = second.completed ? dayjs(second.completed) : second.ignored ? dayjs(second.ignored) : dayjs(second.assigned);
+        let firstDate;
+        if (first.completed) {
+            firstDate = dayjs(first.completed);
+        }
+        else if (first.ignored) {
+            firstDate = dayjs(first.ignored);
+        }
+        else {
+            firstDate = dayjs(first.assigned);
+        }
+
+        let secondDate;
+        if (first.completed) {
+            secondDate = dayjs(second.completed);
+        }
+        else if (first.ignored) {
+            secondDate = dayjs(second.ignored);
+        }
+        else {
+            secondDate = dayjs(second.assigned);
+        }
 
         return secondDate.diff(firstDate);
     });

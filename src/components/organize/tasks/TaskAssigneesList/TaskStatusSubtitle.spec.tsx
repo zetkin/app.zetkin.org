@@ -27,8 +27,8 @@ describe('TaskStatusSubtitle', () => {
         });
 
         const { getByText } = render(<TaskStatusSubtitle task={ task } />);
-        const notCompletedSubtitle = getByText('misc.tasks.taskAssigneesList.completedStates.ignored');
-        expect(notCompletedSubtitle).not.toBeNull();
+        const ignoredSubtitle = getByText('misc.tasks.taskAssigneesList.completedStates.ignored');
+        expect(ignoredSubtitle).not.toBeNull();
     });
     it('shows completed status.', () => {
         const task = mockAssignedTask({
@@ -37,7 +37,7 @@ describe('TaskStatusSubtitle', () => {
         });
 
         const { getByText } = render(<TaskStatusSubtitle task={ task } />);
-        const notCompletedSubtitle = getByText('misc.tasks.taskAssigneesList.completedStates.completed');
-        expect(notCompletedSubtitle).not.toBeNull();
+        const completedSubtitle = getByText('misc.tasks.taskAssigneesList.completedStates.completed');
+        expect(completedSubtitle).not.toBeNull();
     });
 });
