@@ -12,7 +12,7 @@ const TaskStatusSubtitle = ({
 }): JSX.Element => {
     if (task.completed) {
         return (
-            <Box alignItems="center" display="flex">
+            <>
                 <Done fontSize="small" />
                 <Box>
                     <FormattedMessage
@@ -22,12 +22,12 @@ const TaskStatusSubtitle = ({
                         }}
                     />
                 </Box>
-            </Box>
+            </>
         );
     }
     else if (!task.completed && task.status === ASSIGNED_STATUS.IGNORED) {
         return (
-            <Box alignItems="center" display="flex">
+            <>
                 <NotInterested fontSize="small" />
                 <Box>
                     <FormattedMessage
@@ -37,7 +37,7 @@ const TaskStatusSubtitle = ({
                         }}
                     />
                 </Box>
-            </Box>
+            </>
         );
     }
     else {

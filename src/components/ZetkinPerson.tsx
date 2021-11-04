@@ -14,9 +14,7 @@ const ZetkinPerson: React.FunctionComponent<{
             <Avatar src={ orgId ? `/api/orgs/${orgId}/people/${id}/avatar` : '' } />
             <Box alignItems="start" display="flex" flexDirection="column" justifyContent="center" ml={ 1 }>
                 <Typography variant="body1">{ name }</Typography>
-                { subtitle && (
-                    <span className="MuiTypography-root MuiTypography-body2">{ subtitle }</span>
-                ) }
+                { typeof subtitle === 'string' ? <Typography>{ subtitle }</Typography> : <Box alignItems="center" display="flex">{ subtitle }</Box> }
             </Box>
         </Box>
     );
