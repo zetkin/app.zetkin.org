@@ -15,9 +15,8 @@ const ZetkinPerson: React.FunctionComponent<{
             <Box alignItems="start" display="flex" flexDirection="column" justifyContent="center" ml={ 1 }>
                 <Typography variant="body1">{ name }</Typography>
                 { typeof subtitle === 'string' ?
-                    <Typography>{ subtitle }</Typography>
-                    :
-                    <>{ subtitle }</>
+                    <Typography variant="body2">{ subtitle }</Typography> :
+                    subtitle
                 }
             </Box>
         </Box>

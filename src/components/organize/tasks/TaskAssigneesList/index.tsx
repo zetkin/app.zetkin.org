@@ -1,45 +1,19 @@
-import dayjs from 'dayjs';
 import { useIntl } from 'react-intl';
 import { Box, Card, Grid } from '@material-ui/core';
 
 import TaskStatusSubtitle from './TaskStatusSubtitle';
+import { ZetkinAssignedTask } from 'types/tasks';
 import ZetkinPerson from 'components/ZetkinPerson';
 import ZetkinSection from 'components/ZetkinSection';
-import { ASSIGNED_STATUS, ZetkinAssignedTask } from 'types/tasks';
+
+import { sortAssignedTasks } from './utils';
+
+
 
 const TaskAssigneesList: React.FunctionComponent<{ assignedTasks: ZetkinAssignedTask[] }> = ({ assignedTasks }) => {
     const intl = useIntl();
 
-    const sortedAssignedTasks = assignedTasks.sort((first, second) => {
-        if (first.status === ASSIGNED_STATUS.COMPLETED && second.status !== ASSIGNED_STATUS.COMPLETED) return -1;
-        if (first.status !== ASSIGNED_STATUS.COMPLETED && second.status === ASSIGNED_STATUS.COMPLETED) return 1;
-        if (first.status === ASSIGNED_STATUS.ASSIGNED && second.status === ASSIGNED_STATUS.IGNORED) return 1;
-        if (first.status === ASSIGNED_STATUS.IGNORED && second.status === ASSIGNED_STATUS.ASSIGNED) return -1;
-
-        let firstDate;
-        if (first.completed) {
-            firstDate = dayjs(first.completed);
-        }
-        else if (first.ignored) {
-            firstDate = dayjs(first.ignored);
-        }
-        else {
-            firstDate = dayjs(first.assigned);
-        }
-
-        let secondDate;
-        if (first.completed) {
-            secondDate = dayjs(second.completed);
-        }
-        else if (first.ignored) {
-            secondDate = dayjs(second.ignored);
-        }
-        else {
-            secondDate = dayjs(second.assigned);
-        }
-
-        return secondDate.diff(firstDate);
-    });
+    const sortedAssignedTasks = assignedTasks.sort(sortAssignedTasks);
 
     return (
         <ZetkinSection title={ intl.formatMessage({ id: 'misc.tasks.taskAssigneesList.title' }, { numPeople: assignedTasks.length }) }>
