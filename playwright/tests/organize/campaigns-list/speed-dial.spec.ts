@@ -66,7 +66,7 @@ test.describe('All campaigns page speed dial', () => {
             await page.fill('#info_text', ReferendumSignatures.info_text);
             await page.fill('input:near(#status)', 'published');
             await page.fill('input:near(#visibility)', ReferendumSignatures.visibility);
-            await page.click('button > :text("Submit")');
+            await page.click('button:has-text("Submit")');
 
             // Check for redirect
             await page.waitForNavigation();
@@ -92,7 +92,7 @@ test.describe('All campaigns page speed dial', () => {
             await page.fill('#info_text', ReferendumSignatures.info_text);
             await page.fill('input:near(#status)', 'published');
             await page.fill('input:near(#visibility)', ReferendumSignatures.visibility);
-            await page.click('button > :text("Submit")');
+            await page.click('button:has-text("Submit")');
 
             // Shows alert
             await expect(page.locator('data-testid=error-alert')).toBeVisible();

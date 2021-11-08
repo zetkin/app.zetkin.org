@@ -81,7 +81,7 @@ test.describe('Single campaign page', () => {
             await page.fill('#instructions', SpeakToFriend.instructions);
             await page.fill('input:near(#type)', SpeakToFriend.type);
 
-            await page.click('button > :text("Submit")');
+            await page.click('button:has-text("Submit")');
 
             await page.waitForNavigation(); // Closing the modal
             await page.waitForNavigation(); // Redirecting to new page
@@ -107,7 +107,7 @@ test.describe('Single campaign page', () => {
             await page.fill('#title', SpeakToFriend.title);
             await page.fill('#instructions', SpeakToFriend.instructions);
             await page.fill('input:near(#type)', SpeakToFriend.type);
-            await page.click('button > :text("Submit")');
+            await page.click('button:has-text("Submit")');
 
             // Shows alert
             await expect(page.locator('data-testid=error-alert')).toBeVisible();

@@ -71,7 +71,7 @@ test.describe('Campaign action buttons', async () => {
 
             // Edit task
             await page.fill('#title', newTitle);
-            await page.click('button > :text("Submit")');
+            await page.click('button:has-text("Submit")');
 
             // Check that title changes on page
             const taskTitle = page.locator('data-testid=page-title');
@@ -104,7 +104,7 @@ test.describe('Campaign action buttons', async () => {
 
             // Edit task
             await page.fill('#title', newTitle);
-            await page.click('button > :text("Submit")');
+            await page.click('button:has-text("Submit")');
 
             // Check that alert shows
             await expect(page.locator('data-testid=error-alert')).toBeVisible();
