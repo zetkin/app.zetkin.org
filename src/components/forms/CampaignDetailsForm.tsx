@@ -125,8 +125,8 @@ const CampaignDetailsForm = ({ onSubmit, onCancel, campaign }: CampaignDetailsFo
                     <Autocomplete
                         filterOptions={ (options) => options } // override filtering
                         getOptionLabel={ person => person.first_name ? `${person.first_name} ${person.last_name}` : '' }
-                        getOptionSelected={ (option, value) => option?.id == value?.id }
                         getOptionValue={ person => person.id || null }
+                        isOptionEqualToValue={ (option, value) => option?.id == value?.id }
                         label={ intl.formatMessage({ id: 'misc.formDialog.campaign.manager.label' }) }
                         name="manager_id"
                         noOptionsText={ searchLabel }
@@ -137,18 +137,23 @@ const CampaignDetailsForm = ({ onSubmit, onCancel, campaign }: CampaignDetailsFo
                             setSearchFieldValue(v);
                         } }
                         options={ managerOptions }
-                        renderOption={ (person) => (
-                            <Box alignItems="center" display="flex">
-                                <Box m={ 1 }>
-                                    <Avatar
-                                        src={ `/api/orgs/${orgId}/people/${person.id}/avatar` }>
-                                    </Avatar>
-                                </Box>
-                                <Typography>
-                                    { `${ person.first_name } ${ person.last_name }` }
-                                </Typography>
-                            </Box>
-                        ) }
+                        renderOption={ (props, person) => {
+                            return (
+                                <li { ...props }>
+                                    <Box key={ person.id } alignItems="center" display="flex">
+                                        <Box m={ 1 }>
+                                            <Avatar
+                                                src={ `/api/orgs/${orgId}/people/${person.id}/avatar` }>
+                                            </Avatar>
+                                        </Box>
+                                        <Typography>
+                                            { `${ person.first_name } ${ person.last_name }` }
+                                        </Typography>
+                                    </Box>
+                                </li>
+
+                            );
+                        } }
                         value={ selectedManager }
                     />
                     { (userProfile && userProfile.id != selectedManager?.id) && (
