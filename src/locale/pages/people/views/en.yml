@@ -1,4 +1,5 @@
 viewsList:
+    empty: You haven't created any views yet.
     columns:
         title: Title
         created: Date created

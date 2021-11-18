@@ -12,7 +12,7 @@ import { ZetkinView } from 'types/zetkin';
 const scaffoldOptions = {
     authLevelRequired: 2,
     localeScope: [
-        'layout.organize', 'misc',
+        'layout.organize', 'pages.people', 'misc',
     ],
 };
 

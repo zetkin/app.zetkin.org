@@ -1,3 +1,4 @@
+import { useIntl } from 'react-intl';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 import { Table, TableBody, TableCell, TableHead, TableRow } from '@material-ui/core';
@@ -7,6 +8,7 @@ import ZetkinDateTime from 'components/ZetkinDateTime';
 import ZetkinQuery from 'components/ZetkinQuery';
 
 const ViewsListTable: React.FunctionComponent = () => {
+    const intl = useIntl();
     const { orgId } = useRouter().query;
     const viewsQuery = useQuery(['views', orgId], getViews(orgId as string));
 
@@ -15,13 +17,13 @@ const ViewsListTable: React.FunctionComponent = () => {
             <TableHead>
                 <TableRow>
                     <TableCell>
-                        <b>Title</b>
+                        <b>{ intl.formatMessage({ id: 'pages.people.views.viewsList.columns.title' }) }</b>
                     </TableCell>
                     <TableCell>
-                        <b>Date Created</b>
+                        <b>{ intl.formatMessage({ id: 'pages.people.views.viewsList.columns.created' }) }</b>
                     </TableCell>
                     <TableCell>
-                        <b>Owner</b>
+                        <b>{ intl.formatMessage({ id: 'pages.people.views.viewsList.columns.owner' }) }</b>
                     </TableCell>
                 </TableRow>
             </TableHead>
@@ -29,6 +31,15 @@ const ViewsListTable: React.FunctionComponent = () => {
                 <ZetkinQuery
                     query={ viewsQuery }>
                     { ({ query: { data: views } }) => {
+                        if (views.length === 0) {
+                            return (
+                                <TableRow>
+                                    <TableCell colSpan={ 3 }>
+                                        { intl.formatMessage({ id: 'pages.people.views.viewsList.empty' }) }
+                                    </TableCell>
+                                </TableRow>
+                            );
+                        }
                         return views.map(view => {
                             return (
                                 <TableRow key={ view.id } hover>
