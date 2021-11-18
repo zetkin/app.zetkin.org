@@ -28,3 +28,7 @@ tasks:
     tabs:
         summary: Summary
         assignees: Assignees
+people:
+    title: People
+    tabs:
+        views: Views
