@@ -1,0 +1,5 @@
+viewsList:
+    columns:
+        title: Title
+        created: Date created
+        owner: Owner

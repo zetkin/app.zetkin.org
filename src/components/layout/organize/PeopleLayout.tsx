@@ -1,9 +1,11 @@
+import { useIntl } from 'react-intl';
 import { useRouter } from 'next/router';
 
 import TabbedLayout from './TabbedLayout';
 
 
 const PeopleLayout: React.FunctionComponent = ({ children }) => {
+    const intl = useIntl();
     const { orgId } = useRouter().query;
 
     return (
@@ -13,7 +15,7 @@ const PeopleLayout: React.FunctionComponent = ({ children }) => {
             tabs={ [
                 { href: `/views`, messageId: 'layout.organize.people.tabs.views' },
             ] }
-            title="People">
+            title={ intl.formatMessage({ id: 'layout.organize.people.title' }) }>
             { children }
         </TabbedLayout>
     );
