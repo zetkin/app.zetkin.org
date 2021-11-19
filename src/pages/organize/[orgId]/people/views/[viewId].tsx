@@ -1,10 +1,15 @@
-import getOrg from 'fetching/getOrg';
 import { GetServerSideProps } from 'next';
-import getView from 'fetching/views/getView';
+import Head from 'next/head';
+import { useQuery } from 'react-query';
 
+import getOrg from 'fetching/getOrg';
+import getView from 'fetching/views/getView';
+import getViewColumns from 'fetching/views/getViewColumns';
+import getViewRows from 'fetching/views/getViewRows';
 import { PageWithLayout } from 'types';
 import { scaffold } from 'utils/next';
 import SingleViewLayout from 'components/layout/organize/SingleViewLayout';
+import ZetkinViewTable from 'components/ZetkinViewTable';
 
 
 const scaffoldOptions = {
@@ -47,13 +52,34 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
 
 type SingleViewPageProps = {
     orgId: string;
+    viewId: string;
 };
 
-const SingleViewPage: PageWithLayout<SingleViewPageProps> = () => {
-    return (
-        <>
-        </>
-    );
+const SingleViewPage: PageWithLayout<SingleViewPageProps> = ({ orgId, viewId }) => {
+    const viewQuery = useQuery(['views', viewId], getView(orgId, viewId));
+    const colsQuery = useQuery(['views', viewId, 'columns'], getViewColumns(orgId, viewId));
+    const rowsQuery = useQuery(['views', viewId, 'rows'], getViewRows(orgId, viewId));
+
+    if (viewQuery.data && colsQuery.data && rowsQuery.data) {
+        const view = viewQuery.data;
+        const cols = colsQuery.data;
+        const rows = rowsQuery.data;
+
+        return (
+            <>
+                <Head>
+                    <title>{ view.title || '' }</title>
+                </Head>
+                <ZetkinViewTable
+                    columns={ cols }
+                    rows={ rows }
+                />
+            </>
+        );
+    }
+    else {
+        return <></>;
+    }
 };
 
 SingleViewPage.getLayout = function getLayout(page) {
