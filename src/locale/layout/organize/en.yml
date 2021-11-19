@@ -32,3 +32,6 @@ people:
     title: People
     tabs:
         views: Views
+view:
+    tabs:
+        view: View
