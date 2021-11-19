@@ -82,6 +82,12 @@ async function fetchLabel(
         ).then((res) => res.json());
         return campaign.data.title;
     }
+    if (fieldName == 'viewId') {
+        const view = await apiFetch(
+            `/orgs/${orgId}/people/views/${fieldValue}`,
+        ).then((res) => res.json());
+        return view.data.title;
+    }
     return fieldValue;
 }
 
