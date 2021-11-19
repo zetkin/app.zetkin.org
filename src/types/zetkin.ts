@@ -229,3 +229,14 @@ export interface ZetkinView {
     };
     organization: ZetkinOrganization;
 }
+
+export interface ZetkinViewColumn {
+    id: number;
+    title: string;
+    // TODO: Add all fields when implementing proper support for column types
+}
+
+export interface ZetkinViewRow {
+    id: number;
+    content: unknown[];
+}
