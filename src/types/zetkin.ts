@@ -217,3 +217,15 @@ export interface ZetkinDataField {
 }
 
 export type { ZetkinTask, ZetkinAssignedTask, ZetkinQuery, ZetkinSmartSearchFilter };
+
+export interface ZetkinView {
+    id: number;
+    title: string;
+    description: string;
+    created: string; // ISO Datetime
+    owner: {
+        id: number;
+        name: string;
+    };
+    organization: ZetkinOrganization;
+}
