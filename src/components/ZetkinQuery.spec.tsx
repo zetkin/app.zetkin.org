@@ -81,4 +81,65 @@ describe('<ZetkinQuery />', () => {
             });
         });
     });
+
+    describe('when multiple queries are passed', () => {
+        it('renders the error indicator if any query resolves to error', () => {
+            const mockSuccessQuery = mockUseQueryResult('success');
+            const mockErrorQuery = mockUseQueryResult('error');
+            const mockLoadingQuery = mockUseQueryResult('loading');
+
+            const { getByTestId } = render(
+                <ZetkinQuery queries={{
+                    mockErrorQuery,
+                    mockLoadingQuery,
+                    mockSuccessQuery,
+                }}
+                />,
+            );
+            expect(getByTestId('error-indicator')).toBeTruthy();
+        });
+
+        it('renders the loading indicator if any query is loading and none have errors', () => {
+            const mockSuccessQuery = mockUseQueryResult('success');
+            const mockLoadingQuery = mockUseQueryResult('loading');
+
+            const { getByTestId } = render(
+                <ZetkinQuery queries={{
+                    mockLoadingQuery,
+                    mockSuccessQuery,
+                }}
+                />,
+            );
+            expect(getByTestId('loading-indicator')).toBeTruthy();
+        });
+
+        it('exposes the query result to the children', () => {
+            const pretzelQuery = mockUseQueryResult('success', {
+                text: 'These pretzels are making me thirsty',
+            });
+            const movieQuery = mockUseQueryResult('success', {
+                title: 'Rochelle, Rochelle',
+            });
+
+            const { getByText } = render(
+                <ZetkinQuery queries={{ movieQuery, pretzelQuery }}>
+                    { ({ queries: { movieQuery, pretzelQuery } }) => {
+                        const { data: pretzelData } = pretzelQuery;
+                        const { data: movieData } = movieQuery;
+                        return (
+                            <>
+                                <Typography>
+                                    { pretzelData.text }
+                                </Typography>
+                                <Typography>
+                                    { movieData.title }
+                                </Typography>
+                            </>
+                        );
+                    } }
+                </ZetkinQuery>,
+            );
+            expect(getByText('These pretzels are making me thirsty')).toBeTruthy();
+        });
+    });
 });
