@@ -9,6 +9,7 @@ import getViewRows from 'fetching/views/getViewRows';
 import { PageWithLayout } from 'types';
 import { scaffold } from 'utils/next';
 import SingleViewLayout from 'components/layout/organize/SingleViewLayout';
+import ZetkinQuery from 'components/ZetkinQuery';
 import ZetkinViewTable from 'components/ZetkinViewTable';
 
 
@@ -56,30 +57,26 @@ type SingleViewPageProps = {
 };
 
 const SingleViewPage: PageWithLayout<SingleViewPageProps> = ({ orgId, viewId }) => {
-    const viewQuery = useQuery(['views', viewId], getView(orgId, viewId));
-    const colsQuery = useQuery(['views', viewId, 'columns'], getViewColumns(orgId, viewId));
-    const rowsQuery = useQuery(['views', viewId, 'rows'], getViewRows(orgId, viewId));
 
-    if (viewQuery.data && colsQuery.data && rowsQuery.data) {
-        const view = viewQuery.data;
-        const cols = colsQuery.data;
-        const rows = rowsQuery.data;
-
-        return (
-            <>
-                <Head>
-                    <title>{ view.title || '' }</title>
-                </Head>
-                <ZetkinViewTable
-                    columns={ cols }
-                    rows={ rows }
-                />
-            </>
-        );
-    }
-    else {
-        return <></>;
-    }
+    return (
+        <ZetkinQuery queries={{
+            colsQuery: useQuery(['views', viewId, 'columns'], getViewColumns(orgId, viewId)),
+            rowsQuery: useQuery(['views', viewId, 'rows'], getViewRows(orgId, viewId)),
+            viewQuery: useQuery(['views', viewId], getView(orgId, viewId)),
+        }}>
+            { ({ queries: { colsQuery, rowsQuery, viewQuery } }) => (
+                <>
+                    <Head>
+                        <title>{ viewQuery.data.title }</title>
+                    </Head>
+                    <ZetkinViewTable
+                        columns={ colsQuery.data }
+                        rows={ rowsQuery.data }
+                    />
+                </>
+            ) }
+        </ZetkinQuery>
+    );
 };
 
 SingleViewPage.getLayout = function getLayout(page) {
