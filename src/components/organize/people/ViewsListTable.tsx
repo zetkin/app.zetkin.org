@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { useIntl } from 'react-intl';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
@@ -42,17 +43,19 @@ const ViewsListTable: React.FunctionComponent = () => {
                         }
                         return views.map(view => {
                             return (
-                                <TableRow key={ view.id } hover>
-                                    <TableCell>
-                                        { view.title }
-                                    </TableCell>
-                                    <TableCell>
-                                        <ZetkinDateTime datetime={ view.created } />
-                                    </TableCell>
-                                    <TableCell>
-                                        { view.owner.name }
-                                    </TableCell>
-                                </TableRow>
+                                <Link key={ view.id } href={ `/organize/1/people/views/${view.id}` } passHref>
+                                    <TableRow key={ view.id } component="a" hover style={{ textDecoration: 'none' }}>
+                                        <TableCell>
+                                            { view.title }
+                                        </TableCell>
+                                        <TableCell>
+                                            <ZetkinDateTime datetime={ view.created } />
+                                        </TableCell>
+                                        <TableCell>
+                                            { view.owner.name }
+                                        </TableCell>
+                                    </TableRow>
+                                </Link>
                             );
                         });
                     } }

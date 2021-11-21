@@ -63,5 +63,25 @@ test.describe('Views list page', () => {
             await removeViewsMock();
         });
 
+        test('navigates to view page when user clicks view', async ({ page, appUri, moxy }) => {
+            const removeViewsMock = await moxy.setMock('/orgs/1/people/views', 'get', {
+                data: {
+                    data: [
+                        AllMembers,
+                    ],
+                },
+                status: 200,
+            });
+
+            await page.goto(appUri + '/organize/1/people/views');
+
+            await page.click(`text=${AllMembers.title}`);
+
+            await page.waitForNavigation();
+
+            await expect(page.url()).toEqual(appUri + `/organize/1/people/views/${AllMembers.id}`);
+
+            await removeViewsMock();
+        });
     });
 });
