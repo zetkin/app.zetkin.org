@@ -1,6 +1,6 @@
-import KPD from '../..';
-import RosaLuxemburg from '../../../../users/RosaLuxemburg';
-import { ZetkinView } from '../../../../../../src/types/zetkin';
+import KPD from '../../..';
+import RosaLuxemburg from '../../../../../users/RosaLuxemburg';
+import { ZetkinView } from '../../../../../../../src/types/zetkin';
 
 const AllMembers: ZetkinView = {
     created: '2021-11-21T12:53:15',
