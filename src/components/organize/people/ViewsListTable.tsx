@@ -44,7 +44,12 @@ const ViewsListTable: React.FunctionComponent = () => {
                         return views.map(view => {
                             return (
                                 <Link key={ view.id } href={ `/organize/1/people/views/${view.id}` } passHref>
-                                    <TableRow key={ view.id } component="a" hover style={{ textDecoration: 'none' }}>
+                                    <TableRow
+                                        key={ view.id }
+                                        component="a"
+                                        data-testid="view-list-table-row"
+                                        hover
+                                        style={{ textDecoration: 'none' }}>
                                         <TableCell>
                                             { view.title }
                                         </TableCell>

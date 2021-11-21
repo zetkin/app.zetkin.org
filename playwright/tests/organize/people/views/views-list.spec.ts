@@ -37,7 +37,7 @@ test.describe('Views list page', () => {
             await removeViewsMock();
         });
 
-        test('displays available views to the user', async ({ page, appUri, moxy }) => {
+        test.only('displays available views to the user', async ({ page, appUri, moxy }) => {
             const removeViewsMock = await moxy.setMock('/orgs/1/people/views', 'get', {
                 data: {
                     data: [
@@ -57,8 +57,7 @@ test.describe('Views list page', () => {
             });
 
             await page.goto(appUri + '/organize/1/people/views');
-            // Includes three rows including the header row
-            expect(await page.locator('tr').count()).toEqual(3);
+            expect(await page.locator('data-testid=view-list-table-row').count()).toEqual(2);
 
             await removeViewsMock();
         });
