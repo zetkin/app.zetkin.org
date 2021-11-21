@@ -33,7 +33,7 @@ const ViewsListTable: React.FunctionComponent = () => {
                     { ({ query: { data: views } }) => {
                         if (views.length === 0) {
                             return (
-                                <TableRow>
+                                <TableRow data-testid="empty-views-list-row">
                                     <TableCell colSpan={ 3 }>
                                         { intl.formatMessage({ id: 'pages.people.views.viewsList.empty' }) }
                                     </TableCell>
