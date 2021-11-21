@@ -102,11 +102,11 @@ const TaskAssigneesPage: PageWithLayout = () => {
                     openDialog={ () => setDialogOpen(true) }
                     status={ queryStatus }
                 />
-                <ZetkinQuery query={ assignedTasksQuery }>
-                    { ({ query }) => {
+                <ZetkinQuery queries={{ assignedTasksQuery }}>
+                    { ({ queries }) => {
                         return (
                             <Box mt={ 3 }>
-                                <TaskAssigneesList assignedTasks={ query.data } />
+                                <TaskAssigneesList assignedTasks={ queries.assignedTasksQuery.data } />
                             </Box>
                         );
                     } }

@@ -3,33 +3,21 @@ import { FormattedMessage } from 'react-intl';
 import { Box, CircularProgress, Typography } from '@material-ui/core';
 import { QueryObserverSuccessResult, UseQueryResult } from 'react-query';
 
-interface ZetkinQueryProps<G> {
-    children?: React.ReactNode | (({ query }: {query: QueryObserverSuccessResult<G>}) => React.ReactNode);
-    query: UseQueryResult<G>;
+
+interface ZetkinQueryProps<G extends Record<string,unknown>> {
+    children?: React.ReactNode | (({ queries }: {queries: {[I in keyof G]: QueryObserverSuccessResult<G[I]>}}) => React.ReactNode);
+    queries: {[I in keyof G]: UseQueryResult<G[I]>};
     errorIndicator?: React.ReactElement;
     loadingIndicator?: React.ReactElement;
 }
 
-
-function ZetkinQuery<G>({
+function ZetkinQuery<G extends Record<string,unknown>>({
     children,
-    query,
+    queries,
     loadingIndicator,
     errorIndicator,
 }: ZetkinQueryProps<G>): JSX.Element {
-    if (query.isLoading) {
-        return loadingIndicator || (
-            <Box
-                display="flex"
-                justifyContent="center"
-                padding={ 3 }
-                width="100%">
-                <CircularProgress data-testid="loading-indicator" disableShrink />
-            </Box>
-        );
-    }
-
-    if (query.isError) {
+    if (Object.values(queries).some(query => query.isError)) {
         return errorIndicator || (
             <Box
                 alignItems="center"
@@ -47,10 +35,22 @@ function ZetkinQuery<G>({
         );
     }
 
-    const successQuery = query as QueryObserverSuccessResult<G>;
+    if (Object.values(queries).some(query => query.isLoading)) {
+        return loadingIndicator || (
+            <Box
+                display="flex"
+                justifyContent="center"
+                padding={ 3 }
+                width="100%">
+                <CircularProgress data-testid="loading-indicator" disableShrink />
+            </Box>
+        );
+    }
+
+    const successQueries = queries as {[I in keyof G]: QueryObserverSuccessResult<G[I]>};
     // Render children if query resolves successfully
     return typeof children === 'function' ?
-        children({ query: successQuery }) : // Expose the successfully resolved query if children is a function
+        children({ queries: successQueries }) : // Expose the successfully resolved query if children is a function
         children; // Otherwise render children
 }
 
