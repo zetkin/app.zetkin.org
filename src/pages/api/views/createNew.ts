@@ -2,8 +2,22 @@ import { NextApiRequest, NextApiResponse } from 'next';
 
 import { createApiFetch } from 'utils/apiFetch';
 import { DATA_FIELD } from 'types/smartSearch';
+import postView from 'fetching/views/postView';
 import postViewColumn from 'fetching/views/postViewColumn';
-import postView, { ZetkinViewPostBody } from 'fetching/views/postView';
+
+export interface CreateNewViewApiReqBody {
+    columns: {
+        first_name: {
+            title: string;
+        };
+        last_name: {
+            title: string;
+        };
+    };
+    view: {
+        title: string;
+    };
+}
 
 export default async (
     req: NextApiRequest,
@@ -15,6 +29,8 @@ export default async (
         body,
     } = req;
 
+    const { view, columns } = body as CreateNewViewApiReqBody;
+
     // Return error if method other than POST
     if (method !== 'POST') {
         res.setHeader('Allow', ['POST']);
@@ -24,7 +40,7 @@ export default async (
     const apiFetch = createApiFetch(req.headers);
 
     const viewPostMethod = postView(orgId as string, apiFetch);
-    const newView = await viewPostMethod(body as ZetkinViewPostBody);
+    const newView = await viewPostMethod({ title: view.title });
     const { id: newViewId } = newView;
 
     const columnsPostMethod = postViewColumn(orgId as string, newViewId, apiFetch);
@@ -32,14 +48,14 @@ export default async (
         config: {
             field:  DATA_FIELD.FIRST_NAME,
         },
-        title: 'First name',
+        title: columns.first_name.title,
         type: 'person_field',
     });
     await columnsPostMethod({
         config: {
             field:  DATA_FIELD.LAST_NAME,
         },
-        title: 'Last name',
+        title: columns.last_name.title,
         type: 'person_field',
     });
 
