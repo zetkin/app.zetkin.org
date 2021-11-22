@@ -1,23 +1,10 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 
 import { createApiFetch } from 'utils/apiFetch';
+import { CreateNewViewPostBody } from 'fetching/views/createNewView';
 import { DATA_FIELD } from 'types/smartSearch';
 import postView from 'fetching/views/postView';
 import postViewColumn from 'fetching/views/postViewColumn';
-
-export interface CreateNewViewApiReqBody {
-    columns: {
-        first_name: {
-            title: string;
-        };
-        last_name: {
-            title: string;
-        };
-    };
-    view: {
-        title: string;
-    };
-}
 
 export default async (
     req: NextApiRequest,
@@ -29,7 +16,11 @@ export default async (
         body,
     } = req;
 
-    const { view, columns } = body as CreateNewViewApiReqBody;
+    const {
+        first_name_column_title,
+        last_name_column_title,
+        new_view_title,
+    } = body as CreateNewViewPostBody;
 
     // Return error if method other than POST
     if (method !== 'POST') {
@@ -40,7 +31,7 @@ export default async (
     const apiFetch = createApiFetch(req.headers);
 
     const viewPostMethod = postView(orgId as string, apiFetch);
-    const newView = await viewPostMethod({ title: view.title });
+    const newView = await viewPostMethod({ title: new_view_title });
     const { id: newViewId } = newView;
 
     const columnsPostMethod = postViewColumn(orgId as string, newViewId, apiFetch);
@@ -48,14 +39,14 @@ export default async (
         config: {
             field:  DATA_FIELD.FIRST_NAME,
         },
-        title: columns.first_name.title,
+        title: first_name_column_title,
         type: 'person_field',
     });
     await columnsPostMethod({
         config: {
             field:  DATA_FIELD.LAST_NAME,
         },
-        title: columns.last_name.title,
+        title: last_name_column_title,
         type: 'person_field',
     });
 
