@@ -5,6 +5,9 @@ createViewButton:
         columns:
             first_name: First name
             last_name: Last name
+    errorDialog:
+        content: Sorry, we're having trouble creating that view.
+        tryAgain: Try again
 viewsList:
     empty: You haven't created any views yet.
     columns:

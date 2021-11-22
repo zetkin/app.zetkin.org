@@ -15,9 +15,11 @@ const ZetkinDialog: FunctionComponent<ZetkinDialogProps> = ({ children, open, on
     return (
         <Dialog fullScreen={ fullScreen } fullWidth onClose={ onClose } open={ open }>
             <Box p={ 2 }>
-                <DialogTitle>
-                    { title || null }
-                </DialogTitle>
+                { title &&
+                    <DialogTitle>
+                        { title }
+                    </DialogTitle>
+                }
                 <DialogContent>
                     { children }
                 </DialogContent>
