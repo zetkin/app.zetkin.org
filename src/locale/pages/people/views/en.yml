@@ -1,3 +1,4 @@
+createViewButton: Create a new view.
 viewsList:
     empty: You haven't created any views yet.
     columns:
