@@ -1,8 +1,8 @@
 import { Add } from '@material-ui/icons';
 import { useIntl } from 'react-intl';
-import { useMutation } from 'react-query';
 import { useRouter } from 'next/router';
 import { Fab, makeStyles, Tooltip } from '@material-ui/core';
+import { useMutation, useQueryClient } from 'react-query';
 
 import createNewView from 'fetching/views/createNew';
 
@@ -17,7 +17,10 @@ const useStyles = makeStyles((theme) => ({
 const CreateViewActionButton: React.FunctionComponent = () => {
     const intl = useIntl();
     const classes = useStyles();
-    const { orgId } = useRouter().query;
+    const router = useRouter();
+    const queryClient = useQueryClient();
+
+    const { orgId } = router.query;
 
     const createNewViewMutation = useMutation(createNewView(orgId as string));
 
@@ -28,7 +31,10 @@ const CreateViewActionButton: React.FunctionComponent = () => {
                 color="primary"
                 data-testid="create-view-action-button"
                 onClick={ () => {
-                    createNewViewMutation.mutate();
+                    createNewViewMutation.mutate(undefined, {
+                        onSettled: () => queryClient.invalidateQueries(['views', orgId]),
+                        onSuccess: (newView) => router.push(`/organize/${orgId}/people/views/${newView.id}`),
+                    });
                 } }>
                 <Add />
             </Fab>

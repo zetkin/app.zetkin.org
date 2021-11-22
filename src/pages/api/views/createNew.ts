@@ -43,5 +43,5 @@ export default async (
         type: 'person_field',
     });
 
-    res.status(200).json(newView);
+    res.status(200).json({ data: newView });
 };
