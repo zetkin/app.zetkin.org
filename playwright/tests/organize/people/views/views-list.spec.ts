@@ -37,7 +37,7 @@ test.describe('Views list page', () => {
             await removeViewsMock();
         });
 
-        test.only('displays available views to the user', async ({ page, appUri, moxy }) => {
+        test('displays available views to the user', async ({ page, appUri, moxy }) => {
             const removeViewsMock = await moxy.setMock('/orgs/1/people/views', 'get', {
                 data: {
                     data: [

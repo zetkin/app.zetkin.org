@@ -30,8 +30,8 @@ const ViewsListTable: React.FunctionComponent = () => {
             </TableHead>
             <TableBody>
                 <ZetkinQuery
-                    query={ viewsQuery }>
-                    { ({ query: { data: views } }) => {
+                    queries={{ viewsQuery }}>
+                    { ({ queries: { viewsQuery: { data: views } } }) => {
                         if (views.length === 0) {
                             return (
                                 <TableRow data-testid="empty-views-list-row">

@@ -77,10 +77,16 @@ async function fetchLabel(
         return campaign.data.title;
     }
     if (fieldName === 'taskId') {
-        const campaign = await apiFetch(
+        const task = await apiFetch(
             `/orgs/${orgId}/tasks/${fieldValue}`,
         ).then((res) => res.json());
-        return campaign.data.title;
+        return task.data.title;
+    }
+    if (fieldName == 'viewId') {
+        const view = await apiFetch(
+            `/orgs/${orgId}/people/views/${fieldValue}`,
+        ).then((res) => res.json());
+        return view.data.title;
     }
     return fieldValue;
 }
