@@ -23,7 +23,7 @@ test.describe('Views list page', () => {
         await moxy.removeMock();
     });
 
-    test('shows an error modal if there is an error posting the new view', async ({ page, appUri, moxy }) => {
+    test('shows an error dialog if there is an error creating the new view', async ({ page, appUri, moxy }) => {
         const removeViewsMock = await moxy.setMock('/orgs/1/people/views', 'get', {
             data: {
                 data: [],
@@ -38,7 +38,10 @@ test.describe('Views list page', () => {
         await page.goto(appUri + '/organize/1/people/views');
         await page.click('data-testid=create-view-action-button');
 
-        await page.check('data-testid=create-view-error-diolog');
+        await page.waitForResponse(`${appUri}/api/views/createNew?orgId=1`);
+
+        // Expect error dialog to exist on page
+        expect(await page.locator('data-testid=create-view-error-dialog').count()).toEqual(1);
 
         await removeViewsMock();
         await removeViewPostErrorMock();
@@ -112,6 +115,7 @@ test.describe('Views list page', () => {
             await removeColumnPostMock();
             await removeColumnGetMock();
             await removeNewViewGetMock();
-        });
+        },
+    );
 });
 
