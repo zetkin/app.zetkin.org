@@ -10,6 +10,10 @@ assignees: ''
 ### Description
 A user should be able to...
 
+### Relevant Job Stories
+
+### Prerequisites
+
 ### Requirements
 - [ ] Requirement 1
 

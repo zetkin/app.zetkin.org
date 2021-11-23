@@ -2,8 +2,7 @@
 name: Epic
 about: High-level feature to be broken into separate tasks
 title: ''
-labels:
-- EPIC
+labels: EPIC
 assignees: ''
 
 ---
