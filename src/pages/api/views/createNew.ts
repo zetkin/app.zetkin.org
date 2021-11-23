@@ -1,10 +1,10 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 
 import { createApiFetch } from 'utils/apiFetch';
-import { CreateNewViewPostBody } from 'fetching/views/createNewView';
 import { DATA_FIELD } from 'types/smartSearch';
 import postView from 'fetching/views/postView';
 import postViewColumn from 'fetching/views/postViewColumn';
+import { getBrowserLanguage, getMessages } from 'utils/locale';
 
 export default async (
     req: NextApiRequest,
@@ -13,14 +13,11 @@ export default async (
     const {
         query: { orgId },
         method,
-        body,
     } = req;
 
-    const {
-        first_name_column_title,
-        last_name_column_title,
-        new_view_title,
-    } = body as CreateNewViewPostBody;
+    const lang = getBrowserLanguage(req);
+
+    const messages = await getMessages(lang, ['misc.views']);
 
     // Return error if method other than POST
     if (method !== 'POST') {
@@ -31,7 +28,7 @@ export default async (
     const apiFetch = createApiFetch(req.headers);
 
     const viewPostMethod = postView(orgId as string, apiFetch);
-    const newView = await viewPostMethod({ title: new_view_title });
+    const newView = await viewPostMethod({ title: messages['misc.views.newViewFields.title'] });
     const { id: newViewId } = newView;
 
     const columnsPostMethod = postViewColumn(orgId as string, newViewId, apiFetch);
@@ -39,14 +36,14 @@ export default async (
         config: {
             field:  DATA_FIELD.FIRST_NAME,
         },
-        title: first_name_column_title,
+        title: messages['misc.views.newViewFields.columns.first_name'],
         type: 'person_field',
     });
     await columnsPostMethod({
         config: {
             field:  DATA_FIELD.LAST_NAME,
         },
-        title: last_name_column_title,
+        title: messages['misc.views.newViewFields.columns.last_name'],
         type: 'person_field',
     });
 

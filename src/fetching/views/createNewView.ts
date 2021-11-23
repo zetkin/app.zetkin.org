@@ -4,18 +4,11 @@ import { ZetkinView } from 'types/zetkin';
 
 import { defaultFetch } from '..';
 
-export interface CreateNewViewPostBody {
-    first_name_column_title: string;
-    last_name_column_title: string;
-    new_view_title: string;
-}
-
 export default function createNewView(orgId: string, fetch = defaultFetch) {
-    return async (localizedTitles: CreateNewViewPostBody) : Promise<ZetkinView> => {
+    return async () : Promise<ZetkinView> => {
         const url = `/views/createNew?orgId=${orgId}`;
 
         const res = await fetch(url, {
-            body: JSON.stringify(localizedTitles),
             headers: {
                 'Content-Type': 'application/json',
             },

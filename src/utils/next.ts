@@ -1,11 +1,11 @@
 import { applySession } from 'next-session';
-import Negotiator from 'negotiator';
 import { ParsedUrlQuery } from 'querystring';
 import { QueryClient } from 'react-query';
 import { dehydrate, DehydratedState } from 'react-query/hydration';
 import { GetServerSideProps, GetServerSidePropsContext, GetServerSidePropsResult } from 'next';
 
 import { AppSession } from '../types';
+import { getBrowserLanguage } from './locale';
 import { getMessages } from './locale';
 import { stringToBool } from './stringUtils';
 import { ZetkinZ } from '../types/sdk';
@@ -141,9 +141,7 @@ export const scaffold = (wrapped : ScaffoldedGetServerSideProps, options? : Scaf
         const result = await wrapped(ctx) || {};
 
         // Figure out browser's preferred language
-        const negotiator = new Negotiator(contextFromNext.req);
-        const languages = negotiator.languages(['en', 'sv']);
-        const lang = languages.length? languages[0] : 'en';
+        const lang = getBrowserLanguage(contextFromNext.req);
 
         const messages = await getMessages(lang, options?.localeScope ?? []);
 

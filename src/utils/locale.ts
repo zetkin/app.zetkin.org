@@ -1,4 +1,7 @@
 import { promises as fs } from 'fs';
+import { IncomingMessage } from 'http';
+import Negotiator from 'negotiator';
+import { NextApiRequest } from 'next';
 import path from 'path';
 import yaml from 'yaml';
 
@@ -6,6 +9,8 @@ type MessageList = Record<string,string>;
 type MessageDB = Record<string,MessageList>;
 
 let MESSAGES : MessageDB | null = null;
+
+type SupportedLanguage = 'en' | 'sv'
 
 function flattenObject(obj : Record<string,unknown>, baseKey : string | null = null, flat : Record<string,string> = {}) {
     Object.entries(obj).forEach(([key, val]) => {
@@ -94,3 +99,9 @@ export async function getMessages(lang : string, scope : string[] = []) : Promis
         return localizedMessages;
     }
 }
+
+export const getBrowserLanguage = (req: NextApiRequest | IncomingMessage): SupportedLanguage => {
+    const negotiator = new Negotiator(req);
+    const languages = negotiator.languages(['en', 'sv']);
+    return languages.length ? languages[0] as SupportedLanguage : 'en';
+};

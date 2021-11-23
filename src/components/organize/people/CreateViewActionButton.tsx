@@ -36,18 +36,6 @@ const CreateViewActionButton: React.FunctionComponent = () => {
         onSuccess: (newView) => router.push(`/organize/${orgId}/people/views/${newView.id}`),
     });
 
-    const localizedViewFields = {
-        first_name_column_title: intl.formatMessage({
-            id: 'pages.people.views.createViewButton.newViewFields.columns.first_name',
-        }),
-        last_name_column_title: intl.formatMessage({
-            id: 'pages.people.views.createViewButton.newViewFields.columns.last_name',
-        }),
-        new_view_title: intl.formatMessage({
-            id: 'pages.people.views.createViewButton.newViewFields.title',
-        }),
-    };
-
     return (
         <>
             <Tooltip placement="left" title={ intl.formatMessage({ id: 'pages.people.views.createViewButton.tooltip' }) }>
@@ -57,7 +45,7 @@ const CreateViewActionButton: React.FunctionComponent = () => {
                     data-testid="create-view-action-button"
                     onClick={ () => {
                         NProgress.start();
-                        createNewViewMutation.mutate(localizedViewFields);
+                        createNewViewMutation.mutate();
                     } }>
                     <Add />
                 </Fab>
@@ -65,20 +53,22 @@ const CreateViewActionButton: React.FunctionComponent = () => {
             <ZetkinDialog
                 onClose={ () => setErrorDialogOpen(false) }
                 open={ errorDialogOpen }>
-                <Typography variant="body1">
-                    <FormattedMessage id="pages.people.views.createViewButton.errorDialog.content" />
-                </Typography>
-                <form onSubmit={ (e) => {
-                    e.preventDefault();
-                    NProgress.start();
-                    setErrorDialogOpen(false);
-                    createNewViewMutation.mutate(localizedViewFields);
-                } }>
-                    <SubmitCancelButtons
-                        onCancel={ () => setErrorDialogOpen(false) }
-                        submitText={ intl.formatMessage({ id: 'pages.people.views.createViewButton.errorDialog.tryAgain' }) }
-                    />
-                </form>
+                <div data-testid="create-view-error-dialog">
+                    <Typography variant="body1">
+                        <FormattedMessage id="pages.people.views.createViewButton.errorDialog.content" />
+                    </Typography>
+                    <form onSubmit={ (e) => {
+                        e.preventDefault();
+                        NProgress.start();
+                        setErrorDialogOpen(false);
+                        createNewViewMutation.mutate();
+                    } }>
+                        <SubmitCancelButtons
+                            onCancel={ () => setErrorDialogOpen(false) }
+                            submitText={ intl.formatMessage({ id: 'pages.people.views.createViewButton.errorDialog.tryAgain' }) }
+                        />
+                    </form>
+                </div>
             </ZetkinDialog>
         </>
     );
