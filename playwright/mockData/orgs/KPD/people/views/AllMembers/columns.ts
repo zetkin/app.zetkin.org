@@ -17,7 +17,7 @@ const AllMembersColumns: ZetkinViewColumn[] = [
         config: { field: 'active' },
         id: 3,
         title: 'Active',
-        type: 'custom_field',
+        type: 'local_bool',
     },
 ];
 

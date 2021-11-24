@@ -141,7 +141,7 @@ const test = base.extend<NextTestFixtures, NextWorkerFixtures>({
         };
 
         const clearLog = async() => {
-            const url = `http://localhost:${MOXY_PORT}/_log`; // Log all mocks
+            const url = `http://localhost:${MOXY_PORT}/_log`;
             await fetch(url, {
                 method: 'DELETE',
             });

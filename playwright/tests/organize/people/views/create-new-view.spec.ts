@@ -47,7 +47,7 @@ test.describe('Views list page', () => {
         await removeViewPostErrorMock();
     });
 
-    test(
+    test.only(
         'creates a new view with two columns for first and last name and redirects to new view',
         async ({ page, appUri, moxy }) => {
             const removeViewsMock = await moxy.setMock('/orgs/1/people/views', 'get', {
@@ -92,12 +92,8 @@ test.describe('Views list page', () => {
 
             // Get POST requests for creating new view and columns
             const { log } = await moxy.logRequests<{title: string}>();
-            const columnPostLogs = log.filter((log) => {
-                log.path === `/v1/orgs/1/people/views/${NewView.id}/columns` && log.method === 'POST';
-            });
-            const viewPostLogs = log.filter(log => {
-                log.path === '/v1/orgs/1/people/views' && log.method === 'POST';
-            });
+            const columnPostLogs = log.filter(log => log.path === `/v1/orgs/1/people/views/${NewView.id}/columns` && log.method === 'POST');
+            const viewPostLogs = log.filter(log => log.path === '/v1/orgs/1/people/views' && log.method === 'POST');
 
             // Expect requests to be made
             expect(viewPostLogs).toHaveLength(1);
