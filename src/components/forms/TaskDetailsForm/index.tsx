@@ -15,6 +15,7 @@ import CollectDemographicsFields from './fields/CollectDemographicsFields';
 import ShareLinkFields from './fields/ShareLinkFields';
 import TimeEstimateField from './fields/TimeEstimateField';
 import VisitLinkFields from './fields/VisitLinkFields';
+import WatchVideoFields from './fields/WatchVideoFields';
 
 import SubmitCancelButtons from '../common/SubmitCancelButtons';
 import { configForTaskType, isDeadlineSecond, isExpiresThird, isPublishedFirst } from './utils';
@@ -48,7 +49,11 @@ const TaskDetailsForm = ({ onSubmit, onCancel, task }: TaskDetailsFormProps): JS
         if (!values.campaign_id) {
             errors.campaign_id = intl.formatMessage({ id: 'misc.formDialog.required' });
         }
-        if (values.type === TASK_TYPE.VISIT_LINK || values.type === TASK_TYPE.SHARE_LINK) {
+        if (
+            values.type === TASK_TYPE.VISIT_LINK ||
+            values.type === TASK_TYPE.SHARE_LINK ||
+            values.type === TASK_TYPE.WATCH_VIDEO
+        ) {
             const config = values.config as VisitLinkConfig;
             errors.config = {};
             if (!config?.url) {
@@ -169,6 +174,9 @@ const TaskDetailsForm = ({ onSubmit, onCancel, task }: TaskDetailsFormProps): JS
                         <MenuItem value={ TASK_TYPE.VISIT_LINK }>
                             <FormattedMessage id="misc.tasks.forms.createTask.fields.types.visit_link" />
                         </MenuItem>
+                        <MenuItem value={ TASK_TYPE.WATCH_VIDEO }>
+                            <FormattedMessage id="misc.tasks.forms.createTask.fields.types.watch_video" />
+                        </MenuItem>
                         <MenuItem value={ TASK_TYPE.COLLECT_DEMOGRAPHICS }>
                             <FormattedMessage id="misc.tasks.forms.createTask.fields.types.demographic" />
                         </MenuItem>
@@ -183,6 +191,9 @@ const TaskDetailsForm = ({ onSubmit, onCancel, task }: TaskDetailsFormProps): JS
                     ) }
                     { values.type === TASK_TYPE.VISIT_LINK && (
                         <VisitLinkFields />
+                    ) }
+                    { values.type === TASK_TYPE.WATCH_VIDEO && (
+                        <WatchVideoFields />
                     ) }
 
                     { /* Date Selectors */ }

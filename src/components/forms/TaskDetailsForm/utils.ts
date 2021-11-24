@@ -5,6 +5,7 @@ import {
     ShareLinkConfig,
     TASK_TYPE,
     VisitLinkConfig,
+    WatchVideoConfig,
     ZetkinTaskRequestBody }
     from 'types/tasks';
 
@@ -76,6 +77,13 @@ export const configForTaskType = (type: TASK_TYPE | undefined, config: AnyTaskTy
         const visitLinkConfig = config as VisitLinkConfig;
         return {
             ...(visitLinkConfig.url && { url: visitLinkConfig.url }),
+        };
+    }
+
+    if (type === TASK_TYPE.WATCH_VIDEO) {
+        const watchVideoConfig = config as WatchVideoConfig;
+        return {
+            ...(watchVideoConfig.url && { url: watchVideoConfig.url }),
         };
     }
 
