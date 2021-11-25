@@ -15,15 +15,16 @@ export default async (
         method,
     } = req;
 
-    const lang = getBrowserLanguage(req);
-
-    const messages = await getMessages(lang, ['misc.views']);
-
     // Return error if method other than POST
     if (method !== 'POST') {
         res.setHeader('Allow', ['POST']);
         res.status(405).end(`Method ${method} Not Allowed`);
+        return;
     }
+
+    const lang = getBrowserLanguage(req);
+
+    const messages = await getMessages(lang, ['misc.views']);
 
     const apiFetch = createApiFetch(req.headers);
 
