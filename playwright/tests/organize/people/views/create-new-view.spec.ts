@@ -8,12 +8,7 @@ import NewViewColumns from '../../../../mockData/orgs/KPD/people/views/NewView/c
 
 test.describe('Views list page', () => {
 
-    test.beforeEach(async ({ moxy }) => {
-        await moxy.clearLog();
-    });
-
     test.afterEach(async ({ moxy }) => {
-        await moxy.removeMock();
         await moxy.clearLog();
     });
 
@@ -26,6 +21,10 @@ test.describe('Views list page', () => {
                 data: KPD,
             },
         });
+    });
+
+    test.afterAll(async ({ moxy }) => {
+        await moxy.removeMock();
     });
 
     test('shows an error dialog if there is an error creating the new view', async ({ page, appUri, moxy }) => {
