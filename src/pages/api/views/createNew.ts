@@ -28,25 +28,31 @@ export default async (
 
     const apiFetch = createApiFetch(req.headers);
 
-    const viewPostMethod = postView(orgId as string, apiFetch);
-    const newView = await viewPostMethod({ title: messages['misc.views.newViewFields.title'] });
-    const { id: newViewId } = newView;
+    try {
+        const viewPostMethod = postView(orgId as string, apiFetch);
+        const newView = await viewPostMethod({ title: messages['misc.views.newViewFields.title'] });
+        const { id: newViewId } = newView;
 
-    const columnsPostMethod = postViewColumn(orgId as string, newViewId, apiFetch);
-    await columnsPostMethod({
-        config: {
-            field:  DATA_FIELD.FIRST_NAME,
-        },
-        title: messages['misc.views.newViewFields.columns.first_name'],
-        type: 'person_field',
-    });
-    await columnsPostMethod({
-        config: {
-            field:  DATA_FIELD.LAST_NAME,
-        },
-        title: messages['misc.views.newViewFields.columns.last_name'],
-        type: 'person_field',
-    });
+        const columnsPostMethod = postViewColumn(orgId as string, newViewId, apiFetch);
+        await columnsPostMethod({
+            config: {
+                field:  DATA_FIELD.FIRST_NAME,
+            },
+            title: messages['misc.views.newViewFields.columns.first_name'],
+            type: 'person_field',
+        });
+        await columnsPostMethod({
+            config: {
+                field:  DATA_FIELD.LAST_NAME,
+            },
+            title: messages['misc.views.newViewFields.columns.last_name'],
+            type: 'person_field',
+        });
 
-    res.status(200).json({ data: newView });
+        res.status(200).json({ data: newView });
+    }
+    catch (e) {
+        res.status(500).json({ error: e });
+    }
+
 };

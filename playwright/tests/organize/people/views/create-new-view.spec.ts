@@ -8,6 +8,15 @@ import NewViewColumns from '../../../../mockData/orgs/KPD/people/views/NewView/c
 
 test.describe('Views list page', () => {
 
+    test.beforeEach(async ({ moxy }) => {
+        await moxy.clearLog();
+    });
+
+    test.afterEach(async ({ moxy }) => {
+        await moxy.removeMock();
+        await moxy.clearLog();
+    });
+
     test.beforeAll(async ({ moxy, login }) => {
         await moxy.removeMock();
         await login();
@@ -17,10 +26,6 @@ test.describe('Views list page', () => {
                 data: KPD,
             },
         });
-    });
-
-    test.afterAll(async ({ moxy }) => {
-        await moxy.removeMock();
     });
 
     test('shows an error dialog if there is an error creating the new view', async ({ page, appUri, moxy }) => {
@@ -37,8 +42,6 @@ test.describe('Views list page', () => {
 
         await page.goto(appUri + '/organize/1/people/views');
         await page.click('data-testid=create-view-action-button');
-
-        await page.waitForResponse(`${appUri}/api/views/createNew?orgId=1`);
 
         // Expect error dialog to exist on page
         expect(await page.locator('data-testid=create-view-error-dialog').count()).toEqual(1);
