@@ -235,7 +235,7 @@ export interface ZetkinViewColumn {
     title: string;
     description?: string;
     type: string;
-    config: {
+    config?: {
         field: string;
     };
 }
