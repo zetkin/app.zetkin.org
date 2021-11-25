@@ -2,7 +2,6 @@ import { useIntl } from 'react-intl';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
-// import { Table, TableBody, TableCell, TableHead, TableRow } from '@material-ui/core';
 
 import getViews from 'fetching/views/getViews';
 import ZetkinDateTime from 'components/ZetkinDateTime';
@@ -10,6 +9,7 @@ import ZetkinQuery from 'components/ZetkinQuery';
 
 const ViewsListTable: React.FunctionComponent = () => {
     const intl = useIntl();
+    const router = useRouter();
     const { orgId } = useRouter().query;
     const viewsQuery = useQuery(['views', orgId], getViews(orgId as string));
 
@@ -44,7 +44,13 @@ const ViewsListTable: React.FunctionComponent = () => {
                 });
                 return (
                     <DataGridPro
+                        autoHeight
                         columns={ gridColumns }
+                        disableSelectionOnClick
+                        hideFooter
+                        onRowClick={ (row) => {
+                            router.push(`/organize/${orgId}/people/views/${row.id}`);
+                        } }
                         rows={ viewRows }
                     />
                 );
