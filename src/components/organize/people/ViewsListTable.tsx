@@ -10,7 +10,7 @@ import ZetkinQuery from 'components/ZetkinQuery';
 const ViewsListTable: React.FunctionComponent = () => {
     const intl = useIntl();
     const router = useRouter();
-    const { orgId } = useRouter().query;
+    const { orgId } = router.query;
     const viewsQuery = useQuery(['views', orgId], getViews(orgId as string));
 
     // Columns
@@ -52,6 +52,9 @@ const ViewsListTable: React.FunctionComponent = () => {
                             router.push(`/organize/${orgId}/people/views/${row.id}`);
                         } }
                         rows={ viewRows }
+                        style={{
+                            cursor: 'pointer',
+                        }}
                     />
                 );
             } }
