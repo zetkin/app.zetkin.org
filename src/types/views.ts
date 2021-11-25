@@ -15,9 +15,9 @@ export interface ZetkinView {
 
 export interface ZetkinViewColumn {
     id: number;
+    type: COLUMN_TYPE;
     title: string;
     description?: string;
-    type: string;
     config?: {
         field: string;
     };
@@ -26,4 +26,15 @@ export interface ZetkinViewColumn {
 export interface ZetkinViewRow {
     id: number;
     content: unknown[];
+}
+
+export enum COLUMN_TYPE {
+    LOCAL_BOOL = 'local_bool',
+    LOCAL_PERSON = 'local_person',
+    PERSON_FIELD = 'person_field',
+    PERSON_NOTES = 'person_notes',
+    PERSON_QUERY = 'person_query',
+    PERSON_TAG = 'person_tag',
+    SURVEY_RESPONSE = 'survey_response',
+    SURVEY_SUBMITTED = 'survey_submitted',
 }

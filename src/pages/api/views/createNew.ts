@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 
+import { COLUMN_TYPE } from 'types/views';
 import { createApiFetch } from 'utils/apiFetch';
 import { DATA_FIELD } from 'types/smartSearch';
 import postView from 'fetching/views/postView';
@@ -39,14 +40,14 @@ export default async (
                 field:  DATA_FIELD.FIRST_NAME,
             },
             title: messages['misc.views.newViewFields.columns.first_name'],
-            type: 'person_field',
+            type: COLUMN_TYPE.PERSON_FIELD,
         });
         await columnsPostMethod({
             config: {
                 field:  DATA_FIELD.LAST_NAME,
             },
             title: messages['misc.views.newViewFields.columns.last_name'],
-            type: 'person_field',
+            type: COLUMN_TYPE.PERSON_FIELD,
         });
 
         res.status(200).json({ data: newView });
