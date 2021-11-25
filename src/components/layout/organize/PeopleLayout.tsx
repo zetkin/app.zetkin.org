@@ -12,6 +12,7 @@ const PeopleLayout: React.FunctionComponent = ({ children }) => {
         <TabbedLayout
             baseHref={ `/organize/${orgId}/people` }
             defaultTab="/views"
+            fixedHeight
             tabs={ [
                 { href: `/views`, messageId: 'layout.organize.people.tabs.views' },
             ] }
