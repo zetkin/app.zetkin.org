@@ -47,7 +47,7 @@ test.describe('Views list page', () => {
         await removeViewPostErrorMock();
     });
 
-    test.only(
+    test(
         'creates a new view with two columns for first and last name and redirects to new view',
         async ({ page, appUri, moxy }) => {
             const removeViewsMock = await moxy.setMock('/orgs/1/people/views', 'get', {
