@@ -1,6 +1,6 @@
 import { ZetkinViewColumn } from '../../../../../../../src/types/zetkin';
 
-const AllMembersColumns: ZetkinViewColumn[] = [
+const NewViewColumns: ZetkinViewColumn[] = [
     {
         config: { field: 'first_name' },
         id: 1,
@@ -13,11 +13,6 @@ const AllMembersColumns: ZetkinViewColumn[] = [
         title: 'Last name',
         type: 'person_field',
     },
-    {
-        id: 3,
-        title: 'Active',
-        type: 'local_bool',
-    },
 ];
 
-export default AllMembersColumns;
+export default NewViewColumns;

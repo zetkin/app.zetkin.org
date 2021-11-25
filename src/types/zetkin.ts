@@ -233,7 +233,11 @@ export interface ZetkinView {
 export interface ZetkinViewColumn {
     id: number;
     title: string;
-    // TODO: Add all fields when implementing proper support for column types
+    description?: string;
+    type: string;
+    config?: {
+        field: string;
+    };
 }
 
 export interface ZetkinViewRow {

@@ -13,7 +13,12 @@ import path from 'path';
 import { createServer, Server } from 'http';
 
 import RosaLuxemburg from '../mockData/users/RosaLuxemburg';
-import { Mock, MoxyHTTPMethod, ZetkinAPIResponse } from '../types';
+import {
+    LoggedRequestsRes,
+    Mock,
+    MoxyHTTPMethod,
+    ZetkinAPIResponse,
+} from '../types';
 import { ZetkinSession, ZetkinUser } from '../../src/types/zetkin';
 
 interface NextTestFixtures {
@@ -24,6 +29,8 @@ interface NextTestFixtures {
 interface NextWorkerFixtures {
     appUri: string;
     moxy: {
+        clearLog: () => Promise<void>;
+        logRequests: <ReqData = unknown, ResData = unknown>(path?: string) => Promise<LoggedRequestsRes<ReqData, ResData>>;
         port: number;
         removeMock: (path?: string, method?: MoxyHTTPMethod, ) => Promise<void>;
         setMock: <G>(path: string, method: MoxyHTTPMethod, response?: Mock<G>) => Promise<() => Promise<void>>;
@@ -120,7 +127,29 @@ const test = base.extend<NextTestFixtures, NextWorkerFixtures>({
             });
         };
 
+        const logRequests = async <ReqData, ResData>(path?: string) => {
+            let url = `http://localhost:${MOXY_PORT}/_log`; // Log all mocks
+            // Log all mocks on path
+            if (path) {
+                url = `${URL_BASE}${path}/_log`;
+            }
+            const res = await fetch(url, {
+                method: 'GET',
+            });
+            const logs = await res.json() as Promise<LoggedRequestsRes<ReqData, ResData>>;
+            return logs;
+        };
+
+        const clearLog = async() => {
+            const url = `http://localhost:${MOXY_PORT}/_log`;
+            await fetch(url, {
+                method: 'DELETE',
+            });
+        };
+
         await use({
+            clearLog,
+            logRequests,
             port: MOXY_PORT,
             setMock,
             removeMock,

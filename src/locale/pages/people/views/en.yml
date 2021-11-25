@@ -1,3 +1,8 @@
+createViewButton:
+    tooltip: Create a new view
+    errorDialog:
+        content: Sorry, we're having trouble creating that view.
+        tryAgain: Try again
 viewsList:
     empty: You haven't created any views yet.
     columns:

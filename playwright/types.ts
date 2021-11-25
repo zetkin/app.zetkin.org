@@ -10,3 +10,22 @@ export interface Mock<G> {
     headers?: Record<string, string>;
     status?: number;
 }
+
+export interface LoggedRequest<ReqData = unknown, ResData = unknown> {
+    timestamp: Date;
+    method: string;
+    path: string;
+    headers?: Record<string, string>;
+    data?: ReqData;
+    mocked: boolean;
+    response: {
+        data?: ResData;
+        headers?:  Record<string, string>;
+        status: number;
+    };
+}
+
+export interface LoggedRequestsRes<ReqData, ResData> {
+    log: LoggedRequest<ReqData, ResData>[];
+    path?: string;
+}

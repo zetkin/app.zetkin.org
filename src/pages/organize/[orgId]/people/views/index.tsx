@@ -2,6 +2,7 @@ import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { useIntl } from 'react-intl';
 
+import CreateViewActionButton from 'components/organize/people/CreateViewActionButton';
 import getViews from 'fetching/views/getViews';
 import { PageWithLayout } from 'types';
 import PeopleLayout from 'components/layout/organize/PeopleLayout';
@@ -56,6 +57,7 @@ const PeopleViewsPage: PageWithLayout<PeopleViewsPageProps> = () => {
                 </title>
             </Head>
             <ViewsListTable />
+            <CreateViewActionButton />
         </>
     );
 };
