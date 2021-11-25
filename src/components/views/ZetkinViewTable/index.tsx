@@ -1,4 +1,6 @@
-import { Person } from '@material-ui/icons';
+import { FunctionComponent } from 'react';
+import { Add, Person } from '@material-ui/icons';
+import { Box, Fab } from '@material-ui/core';
 import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
 
 import { ZetkinViewColumn, ZetkinViewRow } from 'types/zetkin';
@@ -6,10 +8,11 @@ import { ZetkinViewColumn, ZetkinViewRow } from 'types/zetkin';
 
 interface ZetkinViewTableProps {
     columns: ZetkinViewColumn[];
+    onAddColumn: () => void;
     rows: ZetkinViewRow[];
 }
 
-const ZetkinViewTable = ({ columns, rows }: ZetkinViewTableProps): JSX.Element => {
+const ZetkinViewTable: FunctionComponent<ZetkinViewTableProps> = ({ columns, onAddColumn, rows }) => {
     const avatarColumn : GridColDef = {
         disableColumnMenu: true,
         disableExport: true,
@@ -38,6 +41,26 @@ const ZetkinViewTable = ({ columns, rows }: ZetkinViewTableProps): JSX.Element =
         width: 50,
     };
 
+    const newColumn = {
+        disableColumnMenu: true,
+        disableExport: true,
+        disableReorder: true,
+        field: 'add',
+        filterable: false,
+        renderHeader: () => {
+            return (
+                <Box>
+                    <Fab onClick={ () => onAddColumn() } size="small">
+                        <Add/>
+                    </Fab>
+                </Box>
+            );
+        },
+        resizable: false,
+        sortable: false,
+        width: 80,
+    };
+
     const gridColumns = [
         avatarColumn,
         ...columns.map((col, index) => ({
@@ -45,6 +68,7 @@ const ZetkinViewTable = ({ columns, rows }: ZetkinViewTableProps): JSX.Element =
             headerName: col.title,
             minWidth: 200,
         })),
+        newColumn,
     ];
 
     const gridRows = rows.map(row => ({

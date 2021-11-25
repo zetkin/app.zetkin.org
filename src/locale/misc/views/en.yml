@@ -1,3 +1,20 @@
+columnDialog:
+    editor:
+        buttonLabels:
+            save: Save
+            cancel: Cancel
+        defaultTitle: New Column
+    gallery:
+        header: Column Gallery
+    types:
+        local_bool: On/off toggle in this view
+        local_person: Reference to another person
+        person_field: Basic person data (name, e-mail etc)
+        person_notes: Organizer notes on person
+        person_query: Smart Search cross-reference
+        person_tag: On/off toggle for tag
+        survey_response: Response to survey question
+        survey_submitted: Date of survey submission
 newViewFields:
     title: New View
     columns:
