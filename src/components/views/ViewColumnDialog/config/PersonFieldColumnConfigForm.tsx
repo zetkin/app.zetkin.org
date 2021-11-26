@@ -2,11 +2,11 @@ import { FunctionComponent } from 'react';
 import { useIntl } from 'react-intl';
 import { MenuItem, Select } from '@material-ui/core';
 
-import { PersonFieldViewColumnConfig, ViewColumnConfig } from 'types/views';
+import { PersonFieldViewColumnConfig } from 'types/views';
 
 
 interface PersonFieldColumnConfigFormProps {
-    config?: ViewColumnConfig;
+    config?: PersonFieldViewColumnConfig;
     onChange: (config: PersonFieldViewColumnConfig) => void;
 }
 

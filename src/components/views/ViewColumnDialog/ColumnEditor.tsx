@@ -2,10 +2,11 @@ import { Box, Button, Input, Typography, useMediaQuery, useTheme } from '@materi
 import { FormEvent, FunctionComponent, useState } from 'react';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
 
-import { COLUMN_TYPE } from 'types/views';
 import { ColumnEditorColumnSpec } from '.';
 import { getDefaultViewColumnConfig } from './utils';
 import PersonFieldColumnConfigForm from './config/PersonFieldColumnConfigForm';
+import PersonQueryColumnConfigForm from './config/PersonQueryColumnConfigForm';
+import { COLUMN_TYPE, PersonFieldViewColumnConfig, PersonQueryViewColumnConfig } from 'types/views';
 
 
 interface ColumnEditorProps {
@@ -49,7 +50,13 @@ const ColumnEditor : FunctionComponent<ColumnEditorProps> = ({ onCancel, onSave,
                         <Input onChange={ (ev) => setTitle(ev.target.value) } value={ title } />
                         { type == COLUMN_TYPE.PERSON_FIELD && (
                             <PersonFieldColumnConfigForm
-                                config={ config }
+                                config={ config as PersonFieldViewColumnConfig }
+                                onChange={ config => setConfig(config) }
+                            />
+                        ) }
+                        { type == COLUMN_TYPE.PERSON_QUERY && (
+                            <PersonQueryColumnConfigForm
+                                config={ config as PersonQueryViewColumnConfig }
                                 onChange={ config => setConfig(config) }
                             />
                         ) }

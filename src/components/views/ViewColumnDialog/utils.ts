@@ -1,4 +1,4 @@
-import { COLUMN_TYPE, ViewColumnConfig } from 'types/views';
+import { COLUMN_TYPE, PersonQueryViewColumnConfig, ViewColumnConfig } from 'types/views';
 
 
 export function getDefaultViewColumnConfig(type : COLUMN_TYPE) : ViewColumnConfig {

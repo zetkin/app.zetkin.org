@@ -41,6 +41,10 @@ export interface PersonFieldViewColumnConfig {
     field: string;
 }
 
+export interface PersonQueryViewColumnConfig {
+    query_id: number;
+}
+
 export type EmptyViewColumnConfig = Record<string,never>;
 
-export type ViewColumnConfig = EmptyViewColumnConfig | PersonFieldViewColumnConfig;
+export type ViewColumnConfig = EmptyViewColumnConfig | PersonFieldViewColumnConfig | PersonQueryViewColumnConfig;
