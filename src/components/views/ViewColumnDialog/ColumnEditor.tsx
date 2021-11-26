@@ -3,10 +3,10 @@ import { FormEvent, FunctionComponent, useState } from 'react';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
 
 import { ColumnEditorColumnSpec } from '.';
-import { getDefaultViewColumnConfig } from './utils';
 import PersonFieldColumnConfigForm from './config/PersonFieldColumnConfigForm';
 import PersonQueryColumnConfigForm from './config/PersonQueryColumnConfigForm';
 import { COLUMN_TYPE, PersonFieldViewColumnConfig, PersonQueryViewColumnConfig } from 'types/views';
+import { getDefaultViewColumnConfig, isColumnConfigValid } from './utils';
 
 
 interface ColumnEditorProps {
@@ -73,6 +73,7 @@ const ColumnEditor : FunctionComponent<ColumnEditorProps> = ({ onCancel, onSave,
                             </Button>
                             <Button
                                 color="primary"
+                                disabled={ !isColumnConfigValid(type, config) }
                                 type="submit"
                                 variant="contained">
                                 <Msg id="misc.views.columnDialog.editor.buttonLabels.save"/>
