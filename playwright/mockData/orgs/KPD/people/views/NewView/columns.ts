@@ -1,4 +1,4 @@
-import { COLUMN_TYPE } from 'types/views';
+import { COLUMN_TYPE } from '../../../../../../../src/types/views';
 import { ZetkinViewColumn } from '../../../../../../../src/types/zetkin';
 
 const NewViewColumns: ZetkinViewColumn[] = [

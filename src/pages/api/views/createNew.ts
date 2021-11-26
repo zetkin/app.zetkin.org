@@ -25,7 +25,7 @@ export default async (
 
     const lang = getBrowserLanguage(req);
 
-    const messages = await getMessages(lang, ['misc.views']);
+    const messages = await getMessages(lang, ['misc']);
 
     const apiFetch = createApiFetch(req.headers);
 
