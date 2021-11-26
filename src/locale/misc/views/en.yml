@@ -17,6 +17,3 @@ columnDialog:
         survey_submitted: Date of survey submission
 newViewFields:
     title: New View
-    columns:
-        first_name: First name
-        last_name: Last name

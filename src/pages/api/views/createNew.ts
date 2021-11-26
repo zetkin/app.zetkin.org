@@ -39,14 +39,14 @@ export default async (
             config: {
                 field:  DATA_FIELD.FIRST_NAME,
             },
-            title: messages['misc.views.newViewFields.columns.first_name'],
+            title: messages['misc.nativePersonFields.first_name'],
             type: COLUMN_TYPE.PERSON_FIELD,
         });
         await columnsPostMethod({
             config: {
                 field:  DATA_FIELD.LAST_NAME,
             },
-            title: messages['misc.views.newViewFields.columns.last_name'],
+            title: messages['misc.nativePersonFields.last_name'],
             type: COLUMN_TYPE.PERSON_FIELD,
         });
 
