@@ -18,9 +18,7 @@ export interface ZetkinViewColumn {
     type: COLUMN_TYPE;
     title: string;
     description?: string;
-    config?: {
-        field: string;
-    };
+    config?: ViewColumnConfig;
 }
 
 export interface ZetkinViewRow {
@@ -38,3 +36,11 @@ export enum COLUMN_TYPE {
     SURVEY_RESPONSE = 'survey_response',
     SURVEY_SUBMITTED = 'survey_submitted',
 }
+
+export interface PersonFieldViewColumnConfig {
+    field: string;
+}
+
+export type EmptyViewColumnConfig = Record<string,never>;
+
+export type ViewColumnConfig = EmptyViewColumnConfig | PersonFieldViewColumnConfig;

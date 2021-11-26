@@ -6,7 +6,7 @@ import ColumnGallery from './ColumnGallery';
 import { COLUMN_TYPE, ZetkinViewColumn } from 'types/views';
 
 
-export type ColumnEditorColumnSpec = Pick<ZetkinViewColumn, 'title' | 'type'>;
+export type ColumnEditorColumnSpec = Pick<ZetkinViewColumn, 'title' | 'type' | 'config'>;
 
 
 interface ViewColumnDialogProps {

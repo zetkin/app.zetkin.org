@@ -4,6 +4,8 @@ import { FormattedMessage as Msg, useIntl } from 'react-intl';
 
 import { COLUMN_TYPE } from 'types/views';
 import { ColumnEditorColumnSpec } from '.';
+import { getDefaultViewColumnConfig } from './utils';
+import PersonFieldColumnConfigForm from './config/PersonFieldColumnConfigForm';
 
 
 interface ColumnEditorProps {
@@ -17,10 +19,15 @@ const ColumnEditor : FunctionComponent<ColumnEditorProps> = ({ onCancel, onSave,
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     const [title, setTitle] = useState<string>(intl.formatMessage({ id: 'misc.views.columnDialog.editor.defaultTitle' }));
+    const [config, setConfig] = useState(getDefaultViewColumnConfig(type));
 
     const onSubmit = (ev : FormEvent) => {
         ev.preventDefault();
-        onSave({ title, type });
+        onSave({
+            config: config,
+            title,
+            type,
+        });
     };
 
     return (
@@ -40,6 +47,12 @@ const ColumnEditor : FunctionComponent<ColumnEditorProps> = ({ onCancel, onSave,
                 <Box display="flex" flexDirection="column" height="100%">
                     <Box flex={ 20 }>
                         <Input onChange={ (ev) => setTitle(ev.target.value) } value={ title } />
+                        { type == COLUMN_TYPE.PERSON_FIELD && (
+                            <PersonFieldColumnConfigForm
+                                config={ config }
+                                onChange={ config => setConfig(config) }
+                            />
+                        ) }
                     </Box>
                     <Box>
                         <Box
