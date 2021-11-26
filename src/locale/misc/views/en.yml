@@ -15,5 +15,7 @@ columnDialog:
         person_tag: On/off toggle for tag
         survey_response: Response to survey question
         survey_submitted: Date of survey submission
+columnMenu:
+    delete: Delete column
 newViewFields:
     title: New View
