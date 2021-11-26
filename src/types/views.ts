@@ -45,6 +45,13 @@ export interface PersonQueryViewColumnConfig {
     query_id: number;
 }
 
+export interface PersonTagViewColumnConfig {
+    tag_id: number;
+}
+
 export type EmptyViewColumnConfig = Record<string,never>;
 
-export type ViewColumnConfig = EmptyViewColumnConfig | PersonFieldViewColumnConfig | PersonQueryViewColumnConfig;
+export type ViewColumnConfig = EmptyViewColumnConfig
+    | PersonFieldViewColumnConfig
+    | PersonQueryViewColumnConfig
+    | PersonTagViewColumnConfig;

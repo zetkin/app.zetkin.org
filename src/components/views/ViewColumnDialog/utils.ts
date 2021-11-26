@@ -1,4 +1,4 @@
-import { COLUMN_TYPE, PersonQueryViewColumnConfig, ViewColumnConfig } from 'types/views';
+import { COLUMN_TYPE, PersonQueryViewColumnConfig, PersonTagViewColumnConfig, ViewColumnConfig } from 'types/views';
 
 
 export function getDefaultViewColumnConfig(type : COLUMN_TYPE) : ViewColumnConfig {
@@ -16,6 +16,10 @@ export function isColumnConfigValid(type : COLUMN_TYPE, config : ViewColumnConfi
     if (type === COLUMN_TYPE.PERSON_QUERY) {
         const typedConfig = config as PersonQueryViewColumnConfig;
         return !!typedConfig.query_id;
+    }
+    else if (type === COLUMN_TYPE.PERSON_TAG) {
+        const typedConfig = config as PersonTagViewColumnConfig;
+        return !!typedConfig.tag_id;
     }
     else {
         return true;

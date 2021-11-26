@@ -5,7 +5,13 @@ import { FormattedMessage as Msg, useIntl } from 'react-intl';
 import { ColumnEditorColumnSpec } from '.';
 import PersonFieldColumnConfigForm from './config/PersonFieldColumnConfigForm';
 import PersonQueryColumnConfigForm from './config/PersonQueryColumnConfigForm';
-import { COLUMN_TYPE, PersonFieldViewColumnConfig, PersonQueryViewColumnConfig } from 'types/views';
+import PersonTagColumnConfigForm from './config/PersonTagColumnConfigForm';
+import {
+    COLUMN_TYPE,
+    PersonFieldViewColumnConfig,
+    PersonQueryViewColumnConfig,
+    PersonTagViewColumnConfig,
+} from 'types/views';
 import { getDefaultViewColumnConfig, isColumnConfigValid } from './utils';
 
 
@@ -57,6 +63,12 @@ const ColumnEditor : FunctionComponent<ColumnEditorProps> = ({ onCancel, onSave,
                         { type == COLUMN_TYPE.PERSON_QUERY && (
                             <PersonQueryColumnConfigForm
                                 config={ config as PersonQueryViewColumnConfig }
+                                onChange={ config => setConfig(config) }
+                            />
+                        ) }
+                        { type == COLUMN_TYPE.PERSON_TAG && (
+                            <PersonTagColumnConfigForm
+                                config={ config as PersonTagViewColumnConfig }
                                 onChange={ config => setConfig(config) }
                             />
                         ) }
