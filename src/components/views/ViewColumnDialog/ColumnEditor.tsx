@@ -16,17 +16,19 @@ import { getDefaultViewColumnConfig, isColumnConfigValid } from './utils';
 
 
 interface ColumnEditorProps {
+    column: ColumnEditorColumnSpec | null;
     onCancel: () => void;
     onSave: (colSpec: ColumnEditorColumnSpec) => void;
     type: COLUMN_TYPE;
 }
 
-const ColumnEditor : FunctionComponent<ColumnEditorProps> = ({ onCancel, onSave, type }) => {
+const ColumnEditor : FunctionComponent<ColumnEditorProps> = ({ column, onCancel, onSave, type }) => {
     const intl = useIntl();
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-    const [title, setTitle] = useState<string>(intl.formatMessage({ id: 'misc.views.columnDialog.editor.defaultTitle' }));
-    const [config, setConfig] = useState(getDefaultViewColumnConfig(type));
+    const [title, setTitle] = useState<string>(
+        column?.title || intl.formatMessage({ id: 'misc.views.columnDialog.editor.defaultTitle' }));
+    const [config, setConfig] = useState(column?.config || getDefaultViewColumnConfig(type));
 
     const onSubmit = (ev : FormEvent) => {
         ev.preventDefault();

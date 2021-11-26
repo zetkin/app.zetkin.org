@@ -8,8 +8,10 @@ import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
 import { useMutation, useQueryClient } from 'react-query';
 
 import deleteViewColumn from 'fetching/views/deleteViewColumn';
+import patchViewColumn from 'fetching/views/patchViewColumn';
 import postViewColumn from 'fetching/views/postViewColumn';
 import ViewDataTableColumnMenu from './ViewDataTableColumnMenu';
+import { COLUMN_TYPE, ViewColumnConfig } from 'types/views';
 import ViewColumnDialog, { ColumnEditorColumnSpec } from 'components/views/ViewColumnDialog';
 import { ZetkinViewColumn, ZetkinViewRow } from 'types/zetkin';
 
@@ -20,8 +22,10 @@ interface ViewDataTableProps {
     viewId: string;
 }
 
+type PendingViewColumn = Partial<ZetkinViewColumn>;
+
 const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, viewId }) => {
-    const [columnDialogOpen, setColumnDialogOpen] = useState(false);
+    const [selectedColumn, setSelectedColumn] = useState<PendingViewColumn | null>(null);
     const { orgId } = useRouter().query;
     const queryClient = useQueryClient();
 
@@ -32,9 +36,19 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
         },
         onSettled: () => {
             NProgress.done();
-            queryClient.invalidateQueries(['views', orgId]);
+            queryClient.invalidateQueries(['views', viewId]);
         },
-        onSuccess: () => queryClient.invalidateQueries(['views', viewId]),
+    });
+
+    const updateColumnMutation = useMutation(patchViewColumn(orgId as string, viewId), {
+        onError: () => {
+            // TODO: Show error dialog
+            NProgress.done();
+        },
+        onSettled: () => {
+            NProgress.done();
+            queryClient.invalidateQueries(['views', viewId]);
+        },
     });
 
     const removeColumnMutation = useMutation(deleteViewColumn(orgId as string, viewId), {
@@ -44,22 +58,42 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
         },
         onSettled: () => {
             NProgress.done();
-            queryClient.invalidateQueries(['views', orgId]);
+            queryClient.invalidateQueries(['views', viewId]);
         },
         onSuccess: () => {
             queryClient.removeQueries(['views', viewId, 'rows']);
-            queryClient.invalidateQueries(['views', viewId]);
         },
     });
 
     const onColumnCancel = () => {
-        setColumnDialogOpen(false);
+        setSelectedColumn(null);
     };
 
     const onColumnSave = (colSpec : ColumnEditorColumnSpec) => {
-        setColumnDialogOpen(false);
+        setSelectedColumn(null);
         NProgress.start();
-        addColumnMutation.mutate(colSpec);
+        if (colSpec.id) {
+            updateColumnMutation.mutate(colSpec as ZetkinViewColumn);
+        }
+        else {
+            addColumnMutation.mutate({
+                // TODO: Move this type coercion somewhere else?
+                config: colSpec.config as ViewColumnConfig,
+                title: colSpec.title as string,
+                type: colSpec.type as COLUMN_TYPE,
+            });
+        }
+    };
+
+    const onColumnConfigure = (colFieldName : string) => {
+        const nameFields = colFieldName.split('_');
+        const colId = parseInt(nameFields[1]);
+        const colSpec = columns.find(col => col.id === colId) || null;
+        setSelectedColumn(colSpec);
+    };
+
+    const onColumnCreate = () => {
+        setSelectedColumn({});
     };
 
     const onColumnDelete = (colFieldName : string) => {
@@ -107,7 +141,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
         renderHeader: () => {
             return (
                 <Box>
-                    <Fab onClick={ () => setColumnDialogOpen(true) } size="small">
+                    <Fab onClick={ () => onColumnCreate() } size="small">
                         <Add/>
                     </Fab>
                 </Box>
@@ -150,13 +184,18 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
                 }}
                 componentsProps={{
                     columnMenu: {
+                        onConfigure: onColumnConfigure,
                         onDelete: onColumnDelete,
                     },
                 }}
                 rows={ gridRows }
             />
-            { columnDialogOpen && (
-                <ViewColumnDialog onCancel={ onColumnCancel } onSave={ onColumnSave }/>
+            { selectedColumn && (
+                <ViewColumnDialog
+                    column={ selectedColumn }
+                    onCancel={ onColumnCancel }
+                    onSave={ onColumnSave }
+                />
             ) }
         </>
     );

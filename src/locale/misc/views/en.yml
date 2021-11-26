@@ -16,6 +16,7 @@ columnDialog:
         survey_response: Response to survey question
         survey_submitted: Date of survey submission
 columnMenu:
+    configure: Configure column
     delete: Delete column
 newViewFields:
     title: New View

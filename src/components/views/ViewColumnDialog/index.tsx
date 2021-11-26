@@ -6,16 +6,17 @@ import ColumnGallery from './ColumnGallery';
 import { COLUMN_TYPE, ZetkinViewColumn } from 'types/views';
 
 
-export type ColumnEditorColumnSpec = Pick<ZetkinViewColumn, 'title' | 'type' | 'config'>;
+export type ColumnEditorColumnSpec = Partial<ZetkinViewColumn>;
 
 
 interface ViewColumnDialogProps {
+    column: ColumnEditorColumnSpec | null;
     onCancel: () => void;
     onSave: (colSpec: ColumnEditorColumnSpec) => void;
 }
 
-const ViewColumnDialog : FunctionComponent<ViewColumnDialogProps> = ({ onCancel, onSave }) => {
-    const [selectedType, setSelectedType] = useState<COLUMN_TYPE | null>(null);
+const ViewColumnDialog : FunctionComponent<ViewColumnDialogProps> = ({ column, onCancel, onSave }) => {
+    const [selectedType, setSelectedType] = useState<COLUMN_TYPE | null>(column?.type || null);
 
     return (
         <Dialog
@@ -26,7 +27,12 @@ const ViewColumnDialog : FunctionComponent<ViewColumnDialogProps> = ({ onCancel,
             <DialogContent
                 style={{ height: '85vh' }}>
                 { selectedType && (
-                    <ColumnEditor onCancel={ onCancel } onSave={ onSave } type={ selectedType }/>
+                    <ColumnEditor
+                        column={ column }
+                        onCancel={ onCancel }
+                        onSave={ onSave }
+                        type={ selectedType }
+                    />
                 ) }
                 { !selectedType && (
                     <ColumnGallery onSelectType={ (type) => setSelectedType(type) } />
