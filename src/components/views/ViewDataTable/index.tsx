@@ -6,13 +6,13 @@ import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
 import { ZetkinViewColumn, ZetkinViewRow } from 'types/zetkin';
 
 
-interface ZetkinViewTableProps {
+interface ViewDataTableProps {
     columns: ZetkinViewColumn[];
     onAddColumn: () => void;
     rows: ZetkinViewRow[];
 }
 
-const ZetkinViewTable: FunctionComponent<ZetkinViewTableProps> = ({ columns, onAddColumn, rows }) => {
+const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, onAddColumn, rows }) => {
     const avatarColumn : GridColDef = {
         disableColumnMenu: true,
         disableExport: true,
@@ -84,4 +84,4 @@ const ZetkinViewTable: FunctionComponent<ZetkinViewTableProps> = ({ columns, onA
     );
 };
 
-export default ZetkinViewTable;
+export default ViewDataTable;

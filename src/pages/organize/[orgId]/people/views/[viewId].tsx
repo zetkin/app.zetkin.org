@@ -12,8 +12,8 @@ import { PageWithLayout } from 'types';
 import postViewColumn from 'fetching/views/postViewColumn';
 import { scaffold } from 'utils/next';
 import SingleViewLayout from 'components/layout/organize/SingleViewLayout';
+import ViewDataTable from 'components/views/ViewDataTable';
 import ZetkinQuery from 'components/ZetkinQuery';
-import ZetkinViewTable from 'components/views/ZetkinViewTable';
 import ViewColumnDialog, { ColumnEditorColumnSpec } from 'components/views/ViewColumnDialog';
 
 
@@ -97,7 +97,7 @@ const SingleViewPage: PageWithLayout<SingleViewPageProps> = ({ orgId, viewId }) 
                     <Head>
                         <title>{ viewQuery.data.title }</title>
                     </Head>
-                    <ZetkinViewTable
+                    <ViewDataTable
                         columns={ colsQuery.data }
                         onAddColumn={ () => setColumnDialogOpen(true) }
                         rows={ rowsQuery.data }
