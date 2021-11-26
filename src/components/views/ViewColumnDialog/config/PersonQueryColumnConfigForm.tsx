@@ -5,6 +5,7 @@ import { MenuItem, Select } from '@material-ui/core';
 
 import getStandaloneQueries from 'fetching/getStandaloneQueries';
 import { PersonQueryViewColumnConfig } from 'types/views';
+import ZetkinQuery from 'components/ZetkinQuery';
 
 
 interface PersonQueryColumnConfigFormProps {
@@ -25,15 +26,18 @@ const PersonQueryColumnConfigForm: FunctionComponent<PersonQueryColumnConfigForm
     };
 
     return (
-        <Select
-            onChange={ ev => onQueryChange(ev.target.value as number) }
-            value={ config?.query_id }>
-            { standaloneQueries.map(query => (
-                <MenuItem key={ query.id } value={ query.id }>
-                    { query.title }
-                </MenuItem>
-            )) }
-        </Select>
+        <ZetkinQuery
+            queries={{ standaloneQuery }}>
+            <Select
+                onChange={ ev => onQueryChange(ev.target.value as number) }
+                value={ config?.query_id || '' }>
+                { standaloneQueries.map(query => (
+                    <MenuItem key={ query.id } value={ query.id }>
+                        { query.title }
+                    </MenuItem>
+                )) }
+            </Select>
+        </ZetkinQuery>
     );
 };
 
