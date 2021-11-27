@@ -7,6 +7,7 @@ import { Box, Fab } from '@material-ui/core';
 import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
 import { useMutation, useQueryClient } from 'react-query';
 
+import { colIdFromFieldName } from './utils';
 import deleteViewColumn from 'fetching/views/deleteViewColumn';
 import patchViewColumn from 'fetching/views/patchViewColumn';
 import postViewColumn from 'fetching/views/postViewColumn';
@@ -86,8 +87,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
     };
 
     const onColumnConfigure = (colFieldName : string) => {
-        const nameFields = colFieldName.split('_');
-        const colId = parseInt(nameFields[1]);
+        const colId = colIdFromFieldName(colFieldName);
         const colSpec = columns.find(col => col.id === colId) || null;
         setSelectedColumn(colSpec);
     };
@@ -97,10 +97,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
     };
 
     const onColumnDelete = (colFieldName : string) => {
-        // colFieldName is a string like col_10, where 10 is the
-        // ID of the view column that this refers to.
-        const nameFields = colFieldName.split('_');
-        const colId = nameFields[1];
+        const colId = colIdFromFieldName(colFieldName);
         removeColumnMutation.mutate(colId);
     };
 
