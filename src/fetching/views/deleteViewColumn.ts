@@ -7,7 +7,7 @@ export default function deleteViewColumn(orgId: string, viewId: string | number,
         const url = `/orgs/${orgId}/people/views/${viewId}/columns/${colId}`;
         const res = await fetch(url, { method: 'DELETE' });
         if (!res.ok) {
-            throw new APIError('POST', url);
+            throw new APIError('DELETE', url);
         }
     };
 }
