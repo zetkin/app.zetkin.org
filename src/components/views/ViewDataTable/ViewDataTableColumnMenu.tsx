@@ -4,10 +4,7 @@ import { forwardRef, MouseEventHandler } from 'react';
 import {
     GridColumnMenuContainer,
     GridColumnMenuProps,
-    GridColumnsMenuItem,
     GridFilterMenuItem,
-    HideGridColMenuItem,
-    SortGridMenuItems,
 } from '@mui/x-data-grid-pro';
 
 type CustomProps = {
@@ -43,10 +40,7 @@ const ViewDataTableColumnMenu = forwardRef<
             currentColumn={ currentColumn }
             hideMenu={ hideMenu }
             { ...rest }>
-            <SortGridMenuItems column={ currentColumn } onClick={ hideMenu }/>
             <GridFilterMenuItem column={ currentColumn } onClick={ hideMenu } />
-            <HideGridColMenuItem column={ currentColumn } onClick={ hideMenu } />
-            <GridColumnsMenuItem column={ currentColumn } onClick={ hideMenu } />
             <MenuItem onClick={ onClickRename }>
                 <Msg id="misc.views.columnMenu.rename"/>
             </MenuItem>
