@@ -53,10 +53,15 @@ export interface SurveyResponseViewColumnConfig {
     question_id: number;
 }
 
+export interface SurveySubmittedViewColumnConfig {
+    survey_id: number;
+}
+
 export type EmptyViewColumnConfig = Record<string,never>;
 
 export type ViewColumnConfig = EmptyViewColumnConfig
     | PersonFieldViewColumnConfig
     | PersonQueryViewColumnConfig
     | PersonTagViewColumnConfig
-    | SurveyResponseViewColumnConfig;
+    | SurveyResponseViewColumnConfig
+    | SurveySubmittedViewColumnConfig;
