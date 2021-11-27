@@ -49,9 +49,14 @@ export interface PersonTagViewColumnConfig {
     tag_id: number;
 }
 
+export interface SurveyResponseViewColumnConfig {
+    question_id: number;
+}
+
 export type EmptyViewColumnConfig = Record<string,never>;
 
 export type ViewColumnConfig = EmptyViewColumnConfig
     | PersonFieldViewColumnConfig
     | PersonQueryViewColumnConfig
-    | PersonTagViewColumnConfig;
+    | PersonTagViewColumnConfig
+    | SurveyResponseViewColumnConfig;

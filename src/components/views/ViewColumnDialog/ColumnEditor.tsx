@@ -6,11 +6,13 @@ import { ColumnEditorColumnSpec } from '.';
 import PersonFieldColumnConfigForm from './config/PersonFieldColumnConfigForm';
 import PersonQueryColumnConfigForm from './config/PersonQueryColumnConfigForm';
 import PersonTagColumnConfigForm from './config/PersonTagColumnConfigForm';
+import SurveyResponseColumnConfigForm from './config/SurveyResponseColumnConfigForm';
 import {
     COLUMN_TYPE,
     PersonFieldViewColumnConfig,
     PersonQueryViewColumnConfig,
     PersonTagViewColumnConfig,
+    SurveyResponseViewColumnConfig,
 } from 'types/views';
 import { getDefaultViewColumnConfig, isColumnConfigValid } from './utils';
 
@@ -71,6 +73,12 @@ const ColumnEditor : FunctionComponent<ColumnEditorProps> = ({ column, onCancel,
                         { type == COLUMN_TYPE.PERSON_TAG && (
                             <PersonTagColumnConfigForm
                                 config={ config as PersonTagViewColumnConfig }
+                                onChange={ config => setConfig(config) }
+                            />
+                        ) }
+                        { type == COLUMN_TYPE.SURVEY_RESPONSE && (
+                            <SurveyResponseColumnConfigForm
+                                config={ config as SurveyResponseViewColumnConfig }
                                 onChange={ config => setConfig(config) }
                             />
                         ) }
