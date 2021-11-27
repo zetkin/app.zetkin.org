@@ -13,13 +13,19 @@ import {
 type CustomProps = {
     onConfigure: (colId : string) => void;
     onDelete: (colId : string) => void;
+    onRename: (colId : string) => void;
 };
 
 const ViewDataTableColumnMenu = forwardRef<
     HTMLUListElement,
     GridColumnMenuProps & CustomProps
 >(function ViewDataTableColumnMenuComponent(props, ref) {
-    const { hideMenu, currentColumn, onConfigure, onDelete, ...rest } = props;
+    const { hideMenu, currentColumn, onConfigure, onDelete, onRename, ...rest } = props;
+
+    const onClickRename : MouseEventHandler = (ev) => {
+        ev.stopPropagation();
+        onRename(currentColumn.field);
+    };
 
     const onClickConfigure : MouseEventHandler = (ev) => {
         ev.stopPropagation();
@@ -41,6 +47,9 @@ const ViewDataTableColumnMenu = forwardRef<
             <GridFilterMenuItem column={ currentColumn } onClick={ hideMenu } />
             <HideGridColMenuItem column={ currentColumn } onClick={ hideMenu } />
             <GridColumnsMenuItem column={ currentColumn } onClick={ hideMenu } />
+            <MenuItem onClick={ onClickRename }>
+                <Msg id="misc.views.columnMenu.rename"/>
+            </MenuItem>
             <MenuItem onClick={ onClickConfigure }>
                 <Msg id="misc.views.columnMenu.configure"/>
             </MenuItem>

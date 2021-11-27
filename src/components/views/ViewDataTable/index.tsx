@@ -12,6 +12,7 @@ import deleteViewColumn from 'fetching/views/deleteViewColumn';
 import patchViewColumn from 'fetching/views/patchViewColumn';
 import postViewColumn from 'fetching/views/postViewColumn';
 import ViewDataTableColumnMenu from './ViewDataTableColumnMenu';
+import ViewRenameColumnDialog from '../ViewRenameColumnDialog';
 import { COLUMN_TYPE, ViewColumnConfig } from 'types/views';
 import ViewColumnDialog, { ColumnEditorColumnSpec } from 'components/views/ViewColumnDialog';
 import { ZetkinViewColumn, ZetkinViewRow } from 'types/zetkin';
@@ -27,6 +28,7 @@ type PendingViewColumn = Partial<ZetkinViewColumn>;
 
 const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, viewId }) => {
     const [selectedColumn, setSelectedColumn] = useState<PendingViewColumn | null>(null);
+    const [columnToRename, setColumnToRename] = useState<PendingViewColumn | null>(null);
     const { orgId } = useRouter().query;
     const queryClient = useQueryClient();
 
@@ -99,6 +101,24 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
     const onColumnDelete = (colFieldName : string) => {
         const colId = colIdFromFieldName(colFieldName);
         removeColumnMutation.mutate(colId);
+    };
+
+    const onColumnRename = (colFieldName : string) => {
+        const colId = colIdFromFieldName(colFieldName);
+        const colSpec = columns.find(col => col.id === colId) || null;
+        setColumnToRename(colSpec);
+    };
+
+    const onColumnRenameSave = (column : Pick<ZetkinViewColumn, 'id' | 'title'>) => {
+        setColumnToRename(null);
+        updateColumnMutation.mutate({
+            id: column.id,
+            title: column.title,
+        });
+    };
+
+    const onColumnRenameCancel = () => {
+        setColumnToRename(null);
     };
 
     const avatarColumn : GridColDef = {
@@ -183,10 +203,18 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
                     columnMenu: {
                         onConfigure: onColumnConfigure,
                         onDelete: onColumnDelete,
+                        onRename: onColumnRename,
                     },
                 }}
                 rows={ gridRows }
             />
+            { columnToRename && (
+                <ViewRenameColumnDialog
+                    column={ columnToRename as Pick<ZetkinViewColumn, 'id' | 'title'> }
+                    onCancel={ onColumnRenameCancel }
+                    onSave={ onColumnRenameSave }
+                />
+            ) }
             { selectedColumn && (
                 <ViewColumnDialog
                     column={ selectedColumn }

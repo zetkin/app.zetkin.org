@@ -18,5 +18,8 @@ columnDialog:
 columnMenu:
     configure: Configure column
     delete: Delete column
+    rename: Rename column
+columnRenameDialog:
+    save: Save
 newViewFields:
     title: New View
