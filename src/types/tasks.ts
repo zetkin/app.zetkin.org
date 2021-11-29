@@ -18,6 +18,10 @@ export interface VisitLinkConfig {
     url?: string;
 }
 
+export interface WatchVideoConfig {
+    url?: string;
+}
+
 export enum DEMOGRAPHICS_FIELD {
     EMAIL= 'email',
     STREET_ADDRESS= 'street_address',

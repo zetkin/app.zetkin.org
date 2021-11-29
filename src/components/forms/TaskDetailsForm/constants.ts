@@ -24,3 +24,7 @@ export enum VISIT_LINK_FIELDS {
 export enum COLLECT_DEMOGRAPHICS_FIELDS {
     FIELDS= 'config.fields'
 }
+
+export enum WATCH_VIDEO_FIELDS {
+    URL= 'config.url'
+}

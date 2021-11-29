@@ -7,6 +7,7 @@ createTask:
             offline: Offline
             share_link: Share Link
             visit_link: Visit Link
+            watch_video: Watch Video
             demographic: Collect Demographics
         instructions: Instructions
         campaign: Campaign
@@ -43,6 +44,9 @@ shareLinkConfig:
     fields:
         url: URL to share
         default_message: Default message user will send
+watchVideoConfig:
+    fields:
+        url: Video URL
 collectDemographicsConfig:
     title: Collect Demographics Config
     fields:
