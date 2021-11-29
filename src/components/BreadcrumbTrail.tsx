@@ -1,17 +1,18 @@
+import getBreadcrumbs from '../fetching/getBreadcrumbs';
 import { FormattedMessage as Msg } from 'react-intl';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import NextLink from 'next/link';
 import { ParsedUrlQuery } from 'node:querystring';
+import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 import { Breadcrumbs, Link, Typography, useMediaQuery } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import { useEffect, useState } from 'react';
 
-type Breadcrumb = {
-    href: string;
-    label?: string;
-    labelMsg?: string;
-}
+const getQueryString = function (query: ParsedUrlQuery): string {
+    return Object.entries(query)
+        .map(([key, val]) => `${key}=${val}`)
+        .join('&');
+};
 
 const useStyles = makeStyles<Theme, { small?: boolean }>((theme) =>
     createStyles({
@@ -40,29 +41,16 @@ const useStyles = makeStyles<Theme, { small?: boolean }>((theme) =>
     }),
 );
 
-const BreadcrumbTrail = ({ small } : { small?: boolean }) : JSX.Element | null => {
-    const router = useRouter();
+const BreadcrumbTrail =  ({ small } : { small?: boolean }) : JSX.Element | null => {
     const classes = useStyles({ small });
-    const [breadcrumbs, setBreadcrumbs] = useState<Breadcrumb[] | null>(null);
+    const router = useRouter();
+    const path = router.pathname;
+    const query = getQueryString(router.query);
+    const breadcrumbsQuery = useQuery(['breadcrumbs', path, query], getBreadcrumbs(path, query));
+    const breadcrumbs = breadcrumbsQuery.data;
     const smallScreen= useMediaQuery('(max-width:700px)');
     const mediumScreen = useMediaQuery('(max-width:960px)');
     const largeScreen = useMediaQuery('(max-width:1200px)');
-
-    const fetchBreadcrumbs = async (
-        pathname: string,
-        query: ParsedUrlQuery,
-    ) => {
-        const queryString = Object.entries(query)
-            .map(([key, val]) => `${key}=${val}`)
-            .join('&');
-        const completeUrl = `/api/breadcrumbs?pathname=${pathname}&${queryString}`;
-        const data = await fetch(completeUrl).then((res) => res.json());
-        setBreadcrumbs(data.breadcrumbs);
-    };
-
-    useEffect(() => {
-        fetchBreadcrumbs(router.pathname, router.query);
-    }, [router.pathname, router.query]);
 
     if (!breadcrumbs) return null;
 
