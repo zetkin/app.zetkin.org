@@ -1,11 +1,12 @@
-import { useIntl } from 'react-intl';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 import getViews from 'fetching/views/getViews';
 import ZetkinDateTime from 'components/ZetkinDateTime';
 import ZetkinQuery from 'components/ZetkinQuery';
+import { Box, Typography } from '@material-ui/core';
 
 const ViewsListTable: React.FunctionComponent = () => {
     const intl = useIntl();
@@ -14,7 +15,7 @@ const ViewsListTable: React.FunctionComponent = () => {
     const viewsQuery = useQuery(['views', orgId], getViews(orgId as string));
 
     // Columns
-    const gridColumns: GridColDef[] = [
+    const columns: GridColDef[] = [
         {
             field: 'title',
             flex: 1,
@@ -36,16 +37,26 @@ const ViewsListTable: React.FunctionComponent = () => {
     return (
         <ZetkinQuery queries={{ viewsQuery }}>
             { ({ queries: { viewsQuery } }) => {
-                const viewRows = viewsQuery.data.map(view => {
+                // If there are no views, display indicator to user
+                if (viewsQuery.data.length === 0) {
+                    return (
+                        <Box data-testid="empty-views-list-indicator" textAlign="center">
+                            <Typography><FormattedMessage id="pages.people.views.viewsList.empty" /></Typography>
+                        </Box>
+                    );
+                }
+
+                const rows = viewsQuery.data.map(view => {
                     return {
                         ...view,
                         owner: view.owner.name,
                     };
                 });
+
                 return (
                     <DataGridPro
                         autoHeight
-                        columns={ gridColumns }
+                        columns={ columns }
                         disableColumnMenu
                         disableColumnResize
                         disableSelectionOnClick
@@ -53,7 +64,7 @@ const ViewsListTable: React.FunctionComponent = () => {
                         onRowClick={ (row) => {
                             router.push(`/organize/${orgId}/people/views/${row.id}`);
                         } }
-                        rows={ viewRows }
+                        rows={ rows }
                         style={{
                             border: 'none',
                             cursor: 'pointer',

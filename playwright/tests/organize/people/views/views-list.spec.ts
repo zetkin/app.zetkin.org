@@ -32,7 +32,7 @@ test.describe('Views list page', () => {
             });
 
             await page.goto(appUri + '/organize/1/people/views');
-            expect(await page.locator('data-testid=empty-views-list-row').count()).toEqual(1);
+            expect(await page.locator('data-testid=empty-views-list-indicator').count()).toEqual(1);
 
             await removeViewsMock();
         });
