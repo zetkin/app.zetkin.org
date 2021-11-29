@@ -32,9 +32,6 @@ const useStyles = makeStyles<Theme, { highlight?: boolean }>((theme) =>
             [theme.breakpoints.down('xs')]: {
                 width: '100%',
             },
-            '& p, svg': {
-                transition: 'font-size 0.2s ease',
-            },
         },
         viewTitle: {
             fontWeight:({ highlight }) => highlight ? 'bolder' : 'inherit',
@@ -48,12 +45,12 @@ const BreadcrumbTrail =  ({ highlight } : { highlight?: boolean }) : JSX.Element
     const path = router.pathname;
     const query = getQueryString(router.query);
     const breadcrumbsQuery = useQuery(['breadcrumbs', path, query], getBreadcrumbs(path, query));
-    const breadcrumbs = breadcrumbsQuery.data;
+    const breadcrumbs = breadcrumbsQuery?.data;
     const smallScreen= useMediaQuery('(max-width:700px)');
     const mediumScreen = useMediaQuery('(max-width:960px)');
     const largeScreen = useMediaQuery('(max-width:1200px)');
 
-    if (!breadcrumbs) return null;
+    if (!breadcrumbs) return <div />;
 
     return (
         <div className={ classes.root }>

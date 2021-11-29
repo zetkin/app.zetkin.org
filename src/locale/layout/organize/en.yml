@@ -35,3 +35,9 @@ people:
 view:
     tabs:
         view: View
+header:
+    name:
+        header
+    collapseButton:
+        collapse: collapse
+        expand: expand
