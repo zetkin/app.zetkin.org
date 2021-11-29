@@ -97,8 +97,8 @@ const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
                                 </Box>
                             </Box>
                             { /* Title, subtitle, and action buttons */ }
-                            <Box className={ classes.titleGrid } mt={ 2 }>
-                                <Collapse in={ !collapsed }>
+                            <Collapse in={ !collapsed }>
+                                <Box className={ classes.titleGrid } mt={ 2 }>
                                     <Box overflow="hidden">
                                         <Typography className={ classes.title } component="h1" data-testid="page-title" noWrap variant="h3">
                                             { title }
@@ -107,11 +107,11 @@ const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
                                             { subtitle }
                                         </Typography>
                                     </Box>
-                                </Collapse>
-                                <Box>
-                                    { actionButtons }
+                                    <Box>
+                                        { actionButtons }
+                                    </Box>
                                 </Box>
-                            </Box>
+                            </Collapse>
                         </Box>
                         <Collapse in={ !collapsed }>
                             <Tabs
