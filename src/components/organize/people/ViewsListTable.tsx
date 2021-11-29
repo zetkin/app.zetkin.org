@@ -46,6 +46,8 @@ const ViewsListTable: React.FunctionComponent = () => {
                     <DataGridPro
                         autoHeight
                         columns={ gridColumns }
+                        disableColumnMenu
+                        disableColumnResize
                         disableSelectionOnClick
                         hideFooter
                         onRowClick={ (row) => {
@@ -53,6 +55,7 @@ const ViewsListTable: React.FunctionComponent = () => {
                         } }
                         rows={ viewRows }
                         style={{
+                            border: 'none',
                             cursor: 'pointer',
                         }}
                     />

@@ -57,7 +57,7 @@ test.describe('Views list page', () => {
             });
 
             await page.goto(appUri + '/organize/1/people/views');
-            expect(await page.locator('data-testid=view-list-table-row').count()).toEqual(2);
+            expect(await page.locator('.MuiDataGrid-row').count()).toEqual(2);
 
             await removeViewsMock();
         });
