@@ -14,11 +14,10 @@ const getQueryString = function (query: ParsedUrlQuery): string {
         .join('&');
 };
 
-const useStyles = makeStyles<Theme, { small?: boolean }>((theme) =>
+const useStyles = makeStyles<Theme, { highlight?: boolean }>((theme) =>
     createStyles({
         breadcrumb: {
             display: 'block',
-            fontSize: ({ small }) =>  small ? 12 : 16,
             maxWidth: '200px',
             overflow: 'hidden',
             textOverflow: 'ellipsis',
@@ -34,15 +33,17 @@ const useStyles = makeStyles<Theme, { small?: boolean }>((theme) =>
                 width: '100%',
             },
             '& p, svg': {
-                fontSize: ({ small }) =>  small ? 12 : 16,
                 transition: 'font-size 0.2s ease',
             },
+        },
+        viewTitle: {
+            fontWeight:({ highlight }) => highlight ? 'bolder' : 'inherit',
         },
     }),
 );
 
-const BreadcrumbTrail =  ({ small } : { small?: boolean }) : JSX.Element | null => {
-    const classes = useStyles({ small });
+const BreadcrumbTrail =  ({ highlight } : { highlight?: boolean }) : JSX.Element | null => {
+    const classes = useStyles({ highlight });
     const router = useRouter();
     const path = router.pathname;
     const query = getQueryString(router.query);
@@ -74,7 +75,7 @@ const BreadcrumbTrail =  ({ small } : { small?: boolean }) : JSX.Element | null 
                     }
                     else {
                         return (
-                            <Typography key={ crumb.href }>
+                            <Typography key={ crumb.href } classes={{ root: classes.viewTitle }}>
                                 { crumb.labelMsg ? <Msg id={ crumb.labelMsg } /> : crumb.label }
                             </Typography>
                         );

@@ -86,26 +86,30 @@ const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
             <Box display="flex" flexDirection="column" height="100vh" overflow="auto" position="relative" width={ 1 }>
                 <Box display={ fixedHeight ? 'flex' :'block' } flexDirection="column" height={ fixedHeight ? 1 : 'auto' }>
                     <Box component="header" flexGrow={ 0 } flexShrink={ 0 }>
-                        <Box mb={ 2 } pt={ 3 } px={ 3 }>
-                            <BreadcrumbTrail small={ collapsed } />
-                            { /* Title, subtitle, and action buttons */ }
-                            <Box className={ classes.titleGrid } mt={ 2 }>
-                                <Box overflow="hidden">
-                                    <Typography className={ classes.title } component="h1" data-testid="page-title" noWrap variant={ collapsed ? 'h5':'h3' }>
-                                        { title }
-                                    </Typography>
-                                    <Typography component="h2" variant="h5">
-                                        { subtitle }
-                                    </Typography>
-                                </Box>
-                                <Box>
-                                    { actionButtons }
-                                </Box>
+                        <Box mb={ collapsed ? 0 : 2 } pt={ 3 } px={ 3 }>
+                            <Box display="flex" flexDirection="row" justifyContent="space-between">
+                                <BreadcrumbTrail highlight={ collapsed } />
                                 <Box className="hide-button">
                                     <Button onClick={ toggleCollapse } size="small"
                                         startIcon={ collapsed ? <ArrowDownward /> : <ArrowUpward /> }>
                                         { collapsed ? 'expand' : 'collapse' } header
                                     </Button>
+                                </Box>
+                            </Box>
+                            { /* Title, subtitle, and action buttons */ }
+                            <Box className={ classes.titleGrid } mt={ 2 }>
+                                <Collapse in={ !collapsed }>
+                                    <Box overflow="hidden">
+                                        <Typography className={ classes.title } component="h1" data-testid="page-title" noWrap variant="h3">
+                                            { title }
+                                        </Typography>
+                                        <Typography component="h2" variant="h5">
+                                            { subtitle }
+                                        </Typography>
+                                    </Box>
+                                </Collapse>
+                                <Box>
+                                    { actionButtons }
                                 </Box>
                             </Box>
                         </Box>
