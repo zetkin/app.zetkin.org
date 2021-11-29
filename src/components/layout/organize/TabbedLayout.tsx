@@ -1,12 +1,17 @@
 import { useIntl } from 'react-intl';
 import { useRouter } from 'next/router';
-import { Box, makeStyles, Tab, Tabs, Typography } from '@material-ui/core';
-import { FunctionComponent, ReactElement } from 'react';
+import { ArrowDownward, ArrowUpward } from '@material-ui/icons';
+import { Box, Button, Collapse, makeStyles, Tab, Tabs, Theme, Typography } from '@material-ui/core';
+import { FunctionComponent, ReactElement, useState } from 'react';
 
 import BreadcrumbTrail from '../../BreadcrumbTrail';
 import OrganizeSidebar from 'components/organize/OrganizeSidebar';
 
-const useStyles = makeStyles((theme) => ({
+interface StyleProps {
+    collapsed: boolean;
+}
+
+const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
     root: {
         [theme.breakpoints.down('xs')]: {
             paddingTop: '3.5rem',
@@ -14,18 +19,25 @@ const useStyles = makeStyles((theme) => ({
     },
     title: {
         marginBottom: '8px',
+        transition: 'all 0.3s ease',
     },
     titleGrid: {
+        '& .hide-button': {
+            gridColumnEnd: 'none',
+        },
         alignItems: 'center',
         display: 'grid',
         gap: '1rem',
-        gridTemplateColumns:'1fr auto',
+        gridTemplateColumns: () => '1fr auto',
         gridTemplateRows:'auto',
+        transition: 'font-size 0.2s ease',
         width: '100%',
         [theme.breakpoints.down('sm')]: {
             gridTemplateColumns: '1fr',
         },
+
     },
+
 }));
 
 interface TabbedLayoutProps {
@@ -49,7 +61,8 @@ const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
     defaultTab,
 }) => {
     const intl = useIntl();
-    const classes = useStyles();
+    const [collapsed, setCollapsed] = useState(false);
+    const classes = useStyles({ collapsed });
     const router = useRouter();
 
     const currentTab = router.asPath === baseHref ? defaultTab :
@@ -65,6 +78,8 @@ const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
         }
     };
 
+    const toggleCollapse = () => setCollapsed(!collapsed);
+
     return (
         <Box className={ classes.root } display="flex" height="100vh">
             <OrganizeSidebar />
@@ -72,11 +87,11 @@ const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
                 <Box display={ fixedHeight ? 'flex' :'block' } flexDirection="column" height={ fixedHeight ? 1 : 'auto' }>
                     <Box component="header" flexGrow={ 0 } flexShrink={ 0 }>
                         <Box mb={ 2 } pt={ 3 } px={ 3 }>
-                            <BreadcrumbTrail/>
+                            <BreadcrumbTrail small={ collapsed } />
                             { /* Title, subtitle, and action buttons */ }
                             <Box className={ classes.titleGrid } mt={ 2 }>
                                 <Box overflow="hidden">
-                                    <Typography className={ classes.title } component="h1" data-testid="page-title" noWrap variant="h3">
+                                    <Typography className={ classes.title } component="h1" data-testid="page-title" noWrap variant={ collapsed ? 'h5':'h3' }>
                                         { title }
                                     </Typography>
                                     <Typography component="h2" variant="h5">
@@ -86,21 +101,29 @@ const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
                                 <Box>
                                     { actionButtons }
                                 </Box>
+                                <Box className="hide-button">
+                                    <Button onClick={ toggleCollapse } size="small"
+                                        startIcon={ collapsed ? <ArrowDownward /> : <ArrowUpward /> }>
+                                        { collapsed ? 'expand' : 'collapse' } header
+                                    </Button>
+                                </Box>
                             </Box>
                         </Box>
-                        <Tabs
-                            aria-label="campaign tabs"
-                            onChange={ (_, selected) => selectTab(selected) }
-                            value={ currentTab }>
-                            { tabs.map(tab => {
-                                return (
-                                    <Tab key={ tab.href } label={ intl.formatMessage({
-                                        id: tab.messageId,
-                                    }) } value={ tab.href }
-                                    />
-                                );
-                            }) }
-                        </Tabs>
+                        <Collapse in={ !collapsed }>
+                            <Tabs
+                                aria-label="campaign tabs"
+                                onChange={ (_, selected) => selectTab(selected) }
+                                value={ currentTab }>
+                                { tabs.map(tab => {
+                                    return (
+                                        <Tab key={ tab.href } label={ intl.formatMessage({
+                                            id: tab.messageId,
+                                        }) } value={ tab.href }
+                                        />
+                                    );
+                                }) }
+                            </Tabs>
+                        </Collapse>
                     </Box>
                     { /* Page Content */ }
                     <Box component="main" flexGrow={ 1 } minHeight={ 0 } p={ fixedHeight ? 0 : 3 } position="relative" role="tabpanel">

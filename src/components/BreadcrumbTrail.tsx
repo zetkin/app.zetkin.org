@@ -13,14 +13,17 @@ type Breadcrumb = {
     labelMsg?: string;
 }
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles<Theme, { small?: boolean }>((theme) =>
     createStyles({
         breadcrumb: {
             display: 'block',
+            fontSize: ({ small }) =>  small ? 12 : 16,
             maxWidth: '200px',
             overflow: 'hidden',
             textOverflow: 'ellipsis',
+            transition: 'font-size 0.2s ease',
             whiteSpace: 'nowrap',
+
         },
         root: {
             '& > * + *': {
@@ -29,13 +32,17 @@ const useStyles = makeStyles((theme: Theme) =>
             [theme.breakpoints.down('xs')]: {
                 width: '100%',
             },
+            '& p, svg': {
+                fontSize: ({ small }) =>  small ? 12 : 16,
+                transition: 'font-size 0.2s ease',
+            },
         },
     }),
 );
 
-const BreadcrumbTrail = () : JSX.Element | null => {
+const BreadcrumbTrail = ({ small } : { small?: boolean }) : JSX.Element | null => {
     const router = useRouter();
-    const classes = useStyles();
+    const classes = useStyles({ small });
     const [breadcrumbs, setBreadcrumbs] = useState<Breadcrumb[] | null>(null);
     const smallScreen= useMediaQuery('(max-width:700px)');
     const mediumScreen = useMediaQuery('(max-width:960px)');
