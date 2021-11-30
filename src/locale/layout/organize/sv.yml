@@ -14,3 +14,7 @@ campaigns:
     summary: Översikt
     calendar: Kalendar
     insights: Insikter
+header:
+    collapseButton:
+        collapse: dölj sidhuvud
+        expand: visa sidhuvud

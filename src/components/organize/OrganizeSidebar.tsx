@@ -63,7 +63,7 @@ const OrganizeSidebar = () : JSX.Element =>{
     const key = orgId ? router.pathname.split('[orgId]')[1] : 'organize';
 
     const drawer = (
-        <Box alignItems="center" display="flex" flexDirection="column" height="100%" justifyContent="space-between">
+        <Box alignItems="center" data-testid="organize-sidebar" display="flex" flexDirection="column" height="100%" justifyContent="space-between">
             <List disablePadding>
                 <Box display="flex" flexDirection="column">
                     <ListItem disableGutters>

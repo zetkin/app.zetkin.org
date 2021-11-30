@@ -16,3 +16,9 @@ interface GetLayout {
 export type PageWithLayout<P = Record<string, unknown>> = NextPage<P> & {
     getLayout: GetLayout;
 };
+
+export interface Breadcrumb {
+    href: string;
+    label?: string;
+    labelMsg?: string;
+}
