@@ -45,12 +45,13 @@ const BreadcrumbTrail =  ({ highlight } : { highlight?: boolean }) : JSX.Element
     const path = router.pathname;
     const query = getQueryString(router.query);
     const breadcrumbsQuery = useQuery(['breadcrumbs', path, query], getBreadcrumbs(path, query));
-    const breadcrumbs = breadcrumbsQuery?.data;
     const smallScreen= useMediaQuery('(max-width:700px)');
     const mediumScreen = useMediaQuery('(max-width:960px)');
     const largeScreen = useMediaQuery('(max-width:1200px)');
 
-    if (!breadcrumbs) return <div />;
+    if (!breadcrumbsQuery.isSuccess) {
+        return <div />;
+    }
 
     return (
         <div className={ classes.root }>
@@ -60,8 +61,8 @@ const BreadcrumbTrail =  ({ highlight } : { highlight?: boolean }) : JSX.Element
                 itemsBeforeCollapse={ smallScreen ? 1 : mediumScreen ? 2 : 3 }
                 maxItems={ smallScreen ? 2 : mediumScreen ? 4 : largeScreen ? 6 : 10 }
                 separator={ <NavigateNextIcon fontSize="small" /> }>
-                { breadcrumbs.map((crumb, index) => {
-                    if (index < breadcrumbs.length - 1) {
+                { breadcrumbsQuery.data.map((crumb, index) => {
+                    if (index < breadcrumbsQuery.data.length - 1) {
                         return (
                             <NextLink key={ crumb.href } href={ crumb.href } passHref>
                                 <Link className={ classes.breadcrumb } color="inherit">
