@@ -1,5 +1,5 @@
 import { ArrowUpward } from '@material-ui/icons';
-import { useIntl } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 import { useRouter } from 'next/router';
 import { Box, Button, Collapse, makeStyles, Tab, Tabs, Theme, Typography } from '@material-ui/core';
 import { FunctionComponent, ReactElement, useState } from 'react';
@@ -63,7 +63,6 @@ const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
     baseHref,
     defaultTab,
 }) => {
-    const intl = useIntl();
     const [collapsed, setCollapsed] = useState(false);
     const classes = useStyles({ collapsed });
     const router = useRouter();
@@ -95,9 +94,9 @@ const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
                                 <Box className="collapse-button">
                                     <Button fullWidth onClick={ toggleCollapse } size="small"
                                         startIcon={  <ArrowUpward /> }>
-                                        { intl.formatMessage({
-                                            id: `layout.organize.header.collapseButton.${collapsed ? 'expand' : 'collapse'}`,
-                                        }) }
+                                        <FormattedMessage
+                                            id={ `layout.organize.header.collapseButton.${collapsed ? 'expand' : 'collapse'}` }
+                                        />
                                     </Button>
                                 </Box>
                             </Box>
@@ -125,9 +124,9 @@ const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
                                 value={ currentTab }>
                                 { tabs.map(tab => {
                                     return (
-                                        <Tab key={ tab.href } label={ intl.formatMessage({
-                                            id: tab.messageId,
-                                        }) } value={ tab.href }
+                                        <Tab key={ tab.href } label={ <FormattedMessage
+                                            id={ tab.messageId }
+                                        /> } value={ tab.href }
                                         />
                                     );
                                 }) }
