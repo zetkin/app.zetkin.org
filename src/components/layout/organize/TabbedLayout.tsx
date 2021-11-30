@@ -33,7 +33,7 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
         alignItems: 'center',
         display: 'grid',
         gap: '1rem',
-        gridTemplateColumns: () => '1fr auto',
+        gridTemplateColumns: '1fr auto',
         gridTemplateRows:'auto',
         transition: 'font-size 0.2s ease',
         width: '100%',
@@ -96,9 +96,7 @@ const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
                                     <Button fullWidth onClick={ toggleCollapse } size="small"
                                         startIcon={  <ArrowUpward /> }>
                                         { intl.formatMessage({
-                                            id: 'layout.organize.header.collapseButton.' + (collapsed ? 'expand' : 'collapse'),
-                                        }) + ' ' + intl.formatMessage({
-                                            id: 'layout.organize.header.name',
+                                            id: `layout.organize.header.collapseButton.${collapsed ? 'expand' : 'collapse'}`,
                                         }) }
                                     </Button>
                                 </Box>

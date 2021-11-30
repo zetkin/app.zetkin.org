@@ -15,8 +15,6 @@ campaigns:
     calendar: Kalendar
     insights: Insikter
 header:
-    name:
-        sidhuvud
     collapseButton:
-        collapse: dölj
-        expand: visa
+        collapse: dölj sidhuvud
+        expand: visa sidhuvud
