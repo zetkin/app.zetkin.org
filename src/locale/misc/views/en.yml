@@ -20,6 +20,7 @@ columnMenu:
     delete: Delete column
     rename: Rename column
 columnRenameDialog:
+    title: Title
     save: Save
 newViewFields:
     title: New View

@@ -1,7 +1,9 @@
-import { FormattedMessage as Msg } from 'react-intl';
-import { Button, Dialog, DialogActions, Input } from '@material-ui/core';
+import { useIntl } from 'react-intl';
 import { FunctionComponent, useState } from 'react';
 
+import SubmitCancelButtons from 'components/forms/common/SubmitCancelButtons';
+import { TextField } from '@material-ui/core';
+import ZetkinDialog from 'components/ZetkinDialog';
 import { ZetkinViewColumn } from 'types/views';
 
 
@@ -12,20 +14,30 @@ interface ViewRenameColumnDialogProps {
 }
 
 const ViewRenameColumnDialog : FunctionComponent<ViewRenameColumnDialogProps> = ({ column, onCancel, onSave }) => {
+    const intl = useIntl();
     const [title, setTitle] = useState(column.title);
 
     return (
-        <Dialog onClose={ onCancel } open={ true }>
-            <Input
-                onChange={ ev => setTitle(ev.target.value) }
-                value={ title }
-            />
-            <DialogActions>
-                <Button color="primary" onClick={ () => onSave({ ...column, title }) }>
-                    <Msg id="misc.views.columnRenameDialog.save"/>
-                </Button>
-            </DialogActions>
-        </Dialog>
+        <ZetkinDialog onClose={ onCancel } open={ true }>
+            <form onSubmit={ ev => {
+                ev.preventDefault();
+                onSave({
+                    ...column,
+                    title,
+                });
+            } }>
+                <TextField
+                    fullWidth
+                    label={ intl.formatMessage({ id: 'misc.views.columnRenameDialog.title' }) }
+                    onChange={ ev => setTitle(ev.target.value) }
+                    value={ title }
+                />
+                <SubmitCancelButtons
+                    onCancel={ onCancel }
+                    submitText={ intl.formatMessage({ id: 'misc.views.columnRenameDialog.save' }) }
+                />
+            </form>
+        </ZetkinDialog>
     );
 };
 
