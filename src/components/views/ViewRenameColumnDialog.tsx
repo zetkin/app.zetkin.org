@@ -8,9 +8,9 @@ import { ZetkinViewColumn } from 'types/views';
 
 
 interface ViewRenameColumnDialogProps {
-    column: Pick<ZetkinViewColumn, 'id' | 'title'>;
+    column: ZetkinViewColumn;
     onCancel: () => void;
-    onSave: (column: Pick<ZetkinViewColumn, 'id' | 'title'>) => void;
+    onSave: (column: ZetkinViewColumn) => void;
 }
 
 const ViewRenameColumnDialog : FunctionComponent<ViewRenameColumnDialogProps> = ({ column, onCancel, onSave }) => {

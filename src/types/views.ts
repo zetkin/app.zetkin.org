@@ -13,17 +13,17 @@ export interface ZetkinView {
     organization: ZetkinOrganization;
 }
 
-export interface ZetkinViewColumn {
+export interface ZetkinViewRow {
+    id: number;
+    content: unknown[];
+}
+
+export interface ZetkinViewColumnBase {
     id: number;
     type: COLUMN_TYPE;
     title: string;
     description?: string;
-    config?: ViewColumnConfig;
-}
-
-export interface ZetkinViewRow {
-    id: number;
-    content: unknown[];
+    config?: Record<string, unknown>;
 }
 
 export enum COLUMN_TYPE {
@@ -37,31 +37,71 @@ export enum COLUMN_TYPE {
     SURVEY_SUBMITTED = 'survey_submitted',
 }
 
-export interface PersonFieldViewColumnConfig {
-    field: string;
+export interface LocalBoolViewColumn extends ZetkinViewColumnBase {
+    type: COLUMN_TYPE.LOCAL_BOOL;
+    config?: Record<string, never>;
 }
 
-export interface PersonQueryViewColumnConfig {
-    query_id: number;
+export interface LocalPersonViewColumn extends ZetkinViewColumnBase {
+    type: COLUMN_TYPE.LOCAL_PERSON;
+    config?: Record<string, never>;
 }
 
-export interface PersonTagViewColumnConfig {
-    tag_id: number;
+export interface PersonNotesViewColumn extends ZetkinViewColumnBase {
+    type: COLUMN_TYPE.PERSON_NOTES;
+    config?: Record<string, never>;
 }
 
-export interface SurveyResponseViewColumnConfig {
-    question_id: number;
+export interface PersonFieldViewColumn extends ZetkinViewColumnBase {
+    type: COLUMN_TYPE.PERSON_FIELD;
+    config: {
+        field: string;
+    };
 }
 
-export interface SurveySubmittedViewColumnConfig {
-    survey_id: number;
+export interface PersonQueryViewColumn extends ZetkinViewColumnBase {
+    type: COLUMN_TYPE.PERSON_QUERY;
+    config: {
+        query_id: number;
+    };
 }
 
-export type EmptyViewColumnConfig = Record<string,never>;
+export interface PersonTagViewColumn extends ZetkinViewColumnBase {
+    type: COLUMN_TYPE.PERSON_TAG;
+    config: {
+        tag_id: number;
+    };
+}
 
-export type ViewColumnConfig = EmptyViewColumnConfig
-    | PersonFieldViewColumnConfig
-    | PersonQueryViewColumnConfig
-    | PersonTagViewColumnConfig
-    | SurveyResponseViewColumnConfig
-    | SurveySubmittedViewColumnConfig;
+export interface SurveyResponseViewColumn extends ZetkinViewColumnBase {
+    type: COLUMN_TYPE.SURVEY_RESPONSE;
+    config: {
+        question_id: number;
+    };
+}
+
+export interface SurveySubmittedViewColumn extends ZetkinViewColumnBase {
+    type: COLUMN_TYPE.SURVEY_SUBMITTED;
+    config: {
+        survey_id: number;
+    };
+}
+
+export type ZetkinViewColumn =
+    LocalBoolViewColumn |
+    LocalPersonViewColumn |
+    PersonNotesViewColumn |
+    PersonFieldViewColumn |
+    PersonQueryViewColumn |
+    PersonTagViewColumn |
+    SurveyResponseViewColumn |
+    SurveySubmittedViewColumn;
+
+export type NewZetkinViewColumn = Record<string, never>
+
+export type PendingZetkinViewColumn = Omit<ZetkinViewColumn, 'id'>
+
+export type SelectedViewColumn =
+    NewZetkinViewColumn | // When creating a new column
+    PendingZetkinViewColumn | // When adding values to a new column
+    ZetkinViewColumn // When selecting an existing column

@@ -3,16 +3,13 @@ import { FunctionComponent, useState } from 'react';
 
 import ColumnEditor from './ColumnEditor';
 import ColumnGallery from './ColumnGallery';
-import { COLUMN_TYPE, ZetkinViewColumn } from 'types/views';
-
-
-export type ColumnEditorColumnSpec = Partial<ZetkinViewColumn>;
+import { COLUMN_TYPE, SelectedViewColumn } from 'types/views';
 
 
 interface ViewColumnDialogProps {
-    column: ColumnEditorColumnSpec | null;
+    column: SelectedViewColumn;
     onCancel: () => void;
-    onSave: (colSpec: ColumnEditorColumnSpec) => void;
+    onSave: (colSpec: SelectedViewColumn) => void;
 }
 
 const ViewColumnDialog : FunctionComponent<ViewColumnDialogProps> = ({ column, onCancel, onSave }) => {

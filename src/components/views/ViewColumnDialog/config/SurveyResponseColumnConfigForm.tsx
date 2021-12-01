@@ -4,14 +4,14 @@ import { ChangeEventHandler, FunctionComponent, useEffect, useState } from 'reac
 import { MenuItem, Select } from '@material-ui/core';
 
 import getSurveysWithElements from 'fetching/getSurveysWithElements';
-import { SurveyResponseViewColumnConfig } from 'types/views';
+import { SurveyResponseViewColumn } from 'types/views';
 import ZetkinQuery from 'components/ZetkinQuery';
 import { ELEMENT_TYPE, RESPONSE_TYPE, ZetkinSurveyExtended } from 'types/zetkin';
 
 
 interface SurveyResponseColumnConfigFormProps {
-    config?: SurveyResponseViewColumnConfig;
-    onChange: (config: SurveyResponseViewColumnConfig) => void;
+    config?: SurveyResponseViewColumn['config'];
+    onChange: (config: SurveyResponseViewColumn['config']) => void;
 }
 
 function getSurveyFromQuestionId(surveys? : ZetkinSurveyExtended[], questionId? : number) {

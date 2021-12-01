@@ -1,13 +1,13 @@
 import {
     COLUMN_TYPE,
-    PersonQueryViewColumnConfig,
-    PersonTagViewColumnConfig,
-    SurveyResponseViewColumnConfig,
-    ViewColumnConfig,
+    PersonQueryViewColumn,
+    PersonTagViewColumn,
+    SurveyResponseViewColumn,
+    ZetkinViewColumn,
 } from 'types/views';
 
 
-export function getDefaultViewColumnConfig(type : COLUMN_TYPE) : ViewColumnConfig {
+export function getDefaultViewColumnConfig(type : COLUMN_TYPE) : ZetkinViewColumn['config'] {
     if (type === COLUMN_TYPE.PERSON_FIELD) {
         return {
             field: 'email',
@@ -18,17 +18,17 @@ export function getDefaultViewColumnConfig(type : COLUMN_TYPE) : ViewColumnConfi
     }
 }
 
-export function isColumnConfigValid(type : COLUMN_TYPE, config : ViewColumnConfig) : boolean {
+export function isColumnConfigValid(type : COLUMN_TYPE, config : ZetkinViewColumn['config']) : boolean {
     if (type === COLUMN_TYPE.PERSON_QUERY) {
-        const typedConfig = config as PersonQueryViewColumnConfig;
+        const typedConfig = config as PersonQueryViewColumn['config'];
         return !!typedConfig.query_id;
     }
     else if (type === COLUMN_TYPE.PERSON_TAG) {
-        const typedConfig = config as PersonTagViewColumnConfig;
+        const typedConfig = config as PersonTagViewColumn['config'];
         return !!typedConfig.tag_id;
     }
     else if (type === COLUMN_TYPE.SURVEY_RESPONSE) {
-        const typedConfig = config as SurveyResponseViewColumnConfig;
+        const typedConfig = config as SurveyResponseViewColumn['config'];
         return !!typedConfig.question_id;
     }
     else {

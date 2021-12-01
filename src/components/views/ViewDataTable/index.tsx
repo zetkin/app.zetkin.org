@@ -11,10 +11,10 @@ import { colIdFromFieldName } from './utils';
 import deleteViewColumn from 'fetching/views/deleteViewColumn';
 import patchViewColumn from 'fetching/views/patchViewColumn';
 import postViewColumn from 'fetching/views/postViewColumn';
+import { SelectedViewColumn } from 'types/views';
+import ViewColumnDialog from 'components/views/ViewColumnDialog';
 import ViewDataTableColumnMenu from './ViewDataTableColumnMenu';
 import ViewRenameColumnDialog from '../ViewRenameColumnDialog';
-import { COLUMN_TYPE, ViewColumnConfig } from 'types/views';
-import ViewColumnDialog, { ColumnEditorColumnSpec } from 'components/views/ViewColumnDialog';
 import { ZetkinViewColumn, ZetkinViewRow } from 'types/zetkin';
 
 
@@ -24,11 +24,9 @@ interface ViewDataTableProps {
     viewId: string;
 }
 
-type PendingViewColumn = Partial<ZetkinViewColumn>;
-
 const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, viewId }) => {
-    const [selectedColumn, setSelectedColumn] = useState<PendingViewColumn | null>(null);
-    const [columnToRename, setColumnToRename] = useState<PendingViewColumn | null>(null);
+    const [selectedColumn, setSelectedColumn] = useState<SelectedViewColumn | null>(null);
+    const [columnToRename, setColumnToRename] = useState<ZetkinViewColumn | null>(null);
     const { orgId } = useRouter().query;
     const queryClient = useQueryClient();
 
@@ -72,18 +70,17 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
         setSelectedColumn(null);
     };
 
-    const onColumnSave = (colSpec : ColumnEditorColumnSpec) => {
+    const onColumnSave = (colSpec : SelectedViewColumn) => {
         setSelectedColumn(null);
         NProgress.start();
-        if (colSpec.id) {
-            updateColumnMutation.mutate(colSpec as ZetkinViewColumn);
+        if ('id' in colSpec) { // If is an existing column, PATCH it
+            updateColumnMutation.mutate(colSpec);
         }
-        else {
+        else { // If it's a new view, POST a new column
             addColumnMutation.mutate({
-                // TODO: Move this type coercion somewhere else?
-                config: colSpec.config as ViewColumnConfig,
-                title: colSpec.title as string,
-                type: colSpec.type as COLUMN_TYPE,
+                config: colSpec.config,
+                title: colSpec.title,
+                type: colSpec.type,
             });
         }
     };
@@ -210,7 +207,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
             />
             { columnToRename && (
                 <ViewRenameColumnDialog
-                    column={ columnToRename as Pick<ZetkinViewColumn, 'id' | 'title'> }
+                    column={ columnToRename }
                     onCancel={ onColumnRenameCancel }
                     onSave={ onColumnRenameSave }
                 />

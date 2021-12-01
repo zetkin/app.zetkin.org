@@ -4,13 +4,13 @@ import { useRouter } from 'next/router';
 import { MenuItem, Select } from '@material-ui/core';
 
 import getStandaloneQueries from 'fetching/getStandaloneQueries';
-import { PersonQueryViewColumnConfig } from 'types/views';
+import { PersonQueryViewColumn } from 'types/views';
 import ZetkinQuery from 'components/ZetkinQuery';
 
 
 interface PersonQueryColumnConfigFormProps {
-    config?: PersonQueryViewColumnConfig;
-    onChange: (config: PersonQueryViewColumnConfig) => void;
+    config?: PersonQueryViewColumn['config'];
+    onChange: (config: PersonQueryViewColumn['config']) => void;
 }
 
 const PersonQueryColumnConfigForm: FunctionComponent<PersonQueryColumnConfigFormProps> = ({ config, onChange }) => {

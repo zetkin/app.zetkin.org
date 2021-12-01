@@ -1,28 +1,20 @@
-import { Box, Button, Input, Typography, useMediaQuery, useTheme } from '@material-ui/core';
+import { Box, Button, Typography, useMediaQuery, useTheme } from '@material-ui/core';
 import { FormEvent, FunctionComponent, useState } from 'react';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
 
-import { ColumnEditorColumnSpec } from '.';
 import PersonFieldColumnConfigForm from './config/PersonFieldColumnConfigForm';
 import PersonQueryColumnConfigForm from './config/PersonQueryColumnConfigForm';
 import PersonTagColumnConfigForm from './config/PersonTagColumnConfigForm';
 import SurveyResponseColumnConfigForm from './config/SurveyResponseColumnConfigForm';
 import SurveySubmittedColumnConfigForm from './config/SurveySubmittedColumnConfigForm';
-import {
-    COLUMN_TYPE,
-    PersonFieldViewColumnConfig,
-    PersonQueryViewColumnConfig,
-    PersonTagViewColumnConfig,
-    SurveyResponseViewColumnConfig,
-    SurveySubmittedViewColumnConfig,
-} from 'types/views';
+import { COLUMN_TYPE, PersonFieldViewColumn, PersonQueryViewColumn, PersonTagViewColumn, SelectedViewColumn, SurveyResponseViewColumn, SurveySubmittedViewColumn } from 'types/views';
 import { getDefaultViewColumnConfig, isColumnConfigValid } from './utils';
 
 
 interface ColumnEditorProps {
-    column: ColumnEditorColumnSpec | null;
+    column: SelectedViewColumn | null;
     onCancel: () => void;
-    onSave: (colSpec: ColumnEditorColumnSpec) => void;
+    onSave: (colSpec: SelectedViewColumn) => void;
     type: COLUMN_TYPE;
 }
 
@@ -30,15 +22,14 @@ const ColumnEditor : FunctionComponent<ColumnEditorProps> = ({ column, onCancel,
     const intl = useIntl();
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-    const [title, setTitle] = useState<string>(
-        column?.title || intl.formatMessage({ id: 'misc.views.columnDialog.editor.defaultTitle' }));
+
     const [config, setConfig] = useState(column?.config || getDefaultViewColumnConfig(type));
 
     const onSubmit = (ev : FormEvent) => {
         ev.preventDefault();
         onSave({
             config: config,
-            title,
+            title: column?.title || intl.formatMessage({ id: 'misc.views.columnDialog.editor.defaultTitle' }),
             type,
         });
     };
@@ -59,34 +50,33 @@ const ColumnEditor : FunctionComponent<ColumnEditorProps> = ({ column, onCancel,
                 style={{ height: '100%' }}>
                 <Box display="flex" flexDirection="column" height="100%">
                     <Box flex={ 20 }>
-                        <Input onChange={ (ev) => setTitle(ev.target.value) } value={ title } />
                         { type == COLUMN_TYPE.PERSON_FIELD && (
                             <PersonFieldColumnConfigForm
-                                config={ config as PersonFieldViewColumnConfig }
+                                config={ config as PersonFieldViewColumn['config'] }
                                 onChange={ config => setConfig(config) }
                             />
                         ) }
                         { type == COLUMN_TYPE.PERSON_QUERY && (
                             <PersonQueryColumnConfigForm
-                                config={ config as PersonQueryViewColumnConfig }
+                                config={ config as PersonQueryViewColumn['config'] }
                                 onChange={ config => setConfig(config) }
                             />
                         ) }
                         { type == COLUMN_TYPE.PERSON_TAG && (
                             <PersonTagColumnConfigForm
-                                config={ config as PersonTagViewColumnConfig }
+                                config={ config as PersonTagViewColumn['config'] }
                                 onChange={ config => setConfig(config) }
                             />
                         ) }
                         { type == COLUMN_TYPE.SURVEY_RESPONSE && (
                             <SurveyResponseColumnConfigForm
-                                config={ config as SurveyResponseViewColumnConfig }
+                                config={ config as SurveyResponseViewColumn['config'] }
                                 onChange={ config => setConfig(config) }
                             />
                         ) }
                         { type == COLUMN_TYPE.SURVEY_SUBMITTED && (
                             <SurveySubmittedColumnConfigForm
-                                config={ config as SurveySubmittedViewColumnConfig }
+                                config={ config as SurveySubmittedViewColumn['config'] }
                                 onChange={ config => setConfig(config) }
                             />
                         ) }

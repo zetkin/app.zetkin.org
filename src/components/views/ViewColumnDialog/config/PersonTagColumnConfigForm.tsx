@@ -4,13 +4,13 @@ import { useRouter } from 'next/router';
 import { MenuItem, Select } from '@material-ui/core';
 
 import getTags from 'fetching/getTags';
-import { PersonTagViewColumnConfig } from 'types/views';
+import { PersonTagViewColumn } from 'types/views';
 import ZetkinQuery from 'components/ZetkinQuery';
 
 
 interface PersonTagColumnConfigFormProps {
-    config?: PersonTagViewColumnConfig;
-    onChange: (config: PersonTagViewColumnConfig) => void;
+    config?: PersonTagViewColumn['config'];
+    onChange: (config: PersonTagViewColumn['config']) => void;
 }
 
 const PersonTagColumnConfigForm: FunctionComponent<PersonTagColumnConfigFormProps> = ({ config, onChange }) => {

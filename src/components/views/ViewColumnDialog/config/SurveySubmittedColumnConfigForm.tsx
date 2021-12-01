@@ -4,13 +4,13 @@ import { ChangeEventHandler, FunctionComponent } from 'react';
 import { MenuItem, Select } from '@material-ui/core';
 
 import getSurveys from 'fetching/getSurveys';
-import { SurveySubmittedViewColumnConfig } from 'types/views';
+import { SurveySubmittedViewColumn } from 'types/views';
 import ZetkinQuery from 'components/ZetkinQuery';
 
 
 interface SurveySubmittedColumnConfigFormProps {
-    config?: SurveySubmittedViewColumnConfig;
-    onChange: (config: SurveySubmittedViewColumnConfig) => void;
+    config?: SurveySubmittedViewColumn['config'];
+    onChange: (config: SurveySubmittedViewColumn['config']) => void;
 }
 
 const SurveySubmittedColumnConfigForm: FunctionComponent<SurveySubmittedColumnConfigFormProps> = ({ config, onChange }) => {
