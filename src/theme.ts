@@ -82,7 +82,7 @@ const theme = createTheme({
     },
     props: {
         MuiCard: {
-            elevation: 2,
+            variant: 'outlined',
         },
         MuiTabs: {
             TabIndicatorProps: {
