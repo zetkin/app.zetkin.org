@@ -15,6 +15,7 @@ columnDialog:
         person_tag: On/off toggle for tag
         survey_response: Response to survey question
         survey_submitted: Date of survey submission
+createColumn: New column
 columnMenu:
     configure: Configure column
     delete: Delete column

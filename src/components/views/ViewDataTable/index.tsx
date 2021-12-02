@@ -1,9 +1,8 @@
 import { FunctionComponent } from 'react';
 import NProgress from 'nprogress';
+import { Person } from '@material-ui/icons';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import { Add, Person } from '@material-ui/icons';
-import { Box, Fab } from '@material-ui/core';
 import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
 import { useMutation, useQueryClient } from 'react-query';
 
@@ -14,6 +13,7 @@ import postViewColumn from 'fetching/views/postViewColumn';
 import { SelectedViewColumn } from 'types/views';
 import ViewColumnDialog from 'components/views/ViewColumnDialog';
 import ViewDataTableColumnMenu from './ViewDataTableColumnMenu';
+import ViewDataTableToolbar from './ViewDataTableToolbar';
 import ViewRenameColumnDialog from '../ViewRenameColumnDialog';
 import { ZetkinViewColumn, ZetkinViewRow } from 'types/zetkin';
 
@@ -146,26 +146,6 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
         width: 50,
     };
 
-    const newColumn = {
-        disableColumnMenu: true,
-        disableExport: true,
-        disableReorder: true,
-        field: 'add',
-        filterable: false,
-        renderHeader: () => {
-            return (
-                <Box>
-                    <Fab onClick={ () => onColumnCreate() } size="small">
-                        <Add/>
-                    </Fab>
-                </Box>
-            );
-        },
-        resizable: false,
-        sortable: false,
-        width: 80,
-    };
-
     const gridColumns = [
         avatarColumn,
         ...columns.map((col) => ({
@@ -173,7 +153,6 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
             headerName: col.title,
             minWidth: 200,
         })),
-        newColumn,
     ];
 
     const gridRows = rows.map(input => {
@@ -195,12 +174,16 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
                 columns={ gridColumns }
                 components={{
                     ColumnMenu: ViewDataTableColumnMenu,
+                    Toolbar: ViewDataTableToolbar,
                 }}
                 componentsProps={{
                     columnMenu: {
                         onConfigure: onColumnConfigure,
                         onDelete: onColumnDelete,
                         onRename: onColumnRename,
+                    },
+                    toolbar: {
+                        onColumnCreate,
                     },
                 }}
                 rows={ gridRows }
