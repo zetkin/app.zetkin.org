@@ -7,6 +7,7 @@ import getViews from 'fetching/views/getViews';
 import { PageWithLayout } from 'types';
 import PeopleLayout from 'components/layout/organize/PeopleLayout';
 import { scaffold } from 'utils/next';
+import Suggested from './Suggested';
 import ViewsListTable from 'components/organize/people/ViewsListTable';
 import { ZetkinView } from 'types/zetkin';
 
@@ -56,6 +57,7 @@ const PeopleViewsPage: PageWithLayout<PeopleViewsPageProps> = () => {
                     intl.formatMessage({ id:'layout.organize.people.tabs.views' }) }
                 </title>
             </Head>
+            <Suggested />
             <ViewsListTable />
             <CreateViewActionButton />
         </>
