@@ -1,32 +1,14 @@
+import getViews from '../../../../../../fetching/views/getViews';
+import Mockdata from '../../../../../../../playwright/mockData/orgs/KPD/people/views/Suggested';
+import { useQuery } from 'react-query';
+import { useRouter } from 'next/router';
 import ViewCard from '../ViewCard';
+import ZetkinQuery from '../../../../../../components/ZetkinQuery';
 import ZetkinSection from '../../../../../../components/ZetkinSection';
 import { ZetkinView } from '../../../../../../types/zetkin';
-import {  Grid, makeStyles, Theme } from '@material-ui/core';
+import { Grid, makeStyles, Theme } from '@material-ui/core';
 
-const VIEWS: ZetkinView[] = [{
-    created: 'Yesterday',
-    description: 'A view filtered by A',
-    id: 213123,
-    organization: { id: 1234123453123, title: 'Org 1' },
-    owner: { id: 346346346, name: 'nobody' },
-    title: 'View ABC',
-},
-{
-    created: 'Today',
-    description: 'A view filtered by B',
-    id: 245234523,
-    organization: { id: 1234167423123, title: 'Org 1' },
-    owner: { id: 346346346, name: 'nobody' },
-    title: 'View XYZ',
-},
-{
-    created: 'Today',
-    description: 'A view filtered by B',
-    id: 243623,
-    organization: { id: 123412365123, title: 'Org 1' },
-    owner: { id: 346346346, name: 'nobody' },
-    title: 'View XYZ',
-}];
+const VIEWS = Mockdata;
 
 const useStyles = makeStyles((theme: Theme) => ({
     container: {
@@ -45,17 +27,30 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const Suggested: React.FunctionComponent = () => {
     const classes = useStyles();
+    const router = useRouter();
+    const { orgId } = router.query;
+    const viewsQuery = useQuery(['views', orgId], getViews(orgId as string));
+
     return (
-        <ZetkinSection title="Suggested">
-            <Grid className={ classes.container } container spacing={ 3 }>
-                { VIEWS.map((view: ZetkinView) => (
-                    <Grid key={ view.id } className={ classes.item } item>
-                        <ViewCard view={ view } />
-                    </Grid>
-                )) }
-            </Grid>
-        </ZetkinSection>
-    );
+        <ZetkinQuery queries={{ viewsQuery }}>
+            { ({ queries: { viewsQuery } }) => {
+                if (viewsQuery.data.length === 0) {
+                    return null;
+                }
+
+                return (
+                    <ZetkinSection title="Suggested">
+                        <Grid className={ classes.container } container spacing={ 3 }>
+                            { VIEWS.map((view: ZetkinView) => (
+                                <Grid key={ view.id } className={ classes.item } item>
+                                    <ViewCard view={ view } />
+                                </Grid>
+                            )) }
+                        </Grid>
+                    </ZetkinSection>
+                );
+            } }
+        </ZetkinQuery>);
 };
 
 export default Suggested;
