@@ -3,6 +3,7 @@ import test from '../../../../fixtures/next';
 
 import AllMembers from '../../../../mockData/orgs/KPD/people/views/AllMembers';
 import KPD from '../../../../mockData/orgs/KPD';
+import Suggested from '../../../../mockData/orgs/KPD/people/views/Suggested';
 
 test.describe('Views list page', () => {
 
@@ -19,6 +20,23 @@ test.describe('Views list page', () => {
 
     test.afterAll(async ({ moxy }) => {
         await moxy.removeMock();
+    });
+
+    test.describe('views list suggested', () => {
+        test.skip(); //TODO: Remove this line once passing
+        test('displays suggested views to the user', async ({ page, appUri, moxy }) => {
+            const removeViewsMock = await moxy.setMock('/orgs/1/people/views', 'get', {
+                data: { data: Suggested },
+                status: 200,
+            });
+
+            await page.goto(appUri + '/organize/1/people/views');
+            expect(await page.locator('text=All members').count()).toEqual(1);
+            expect(await page.locator('text=Most active members').count()).toEqual(1);
+            expect(await page.locator('text=Newest members').count()).toEqual(1);
+
+            await removeViewsMock();
+        });
     });
 
     test.describe('views list table', () => {
