@@ -1,3 +1,4 @@
+import { IntlShape } from 'react-intl';
 import {
     COLUMN_TYPE,
     PersonQueryViewColumn,
@@ -35,3 +36,11 @@ export function isColumnConfigValid(type : COLUMN_TYPE, config : ZetkinViewColum
         return true;
     }
 }
+
+export const getDefaultTitle = (column: ZetkinViewColumn, intl: IntlShape): string => {
+    // If is a person field, use the selected person field
+    if (column.type === COLUMN_TYPE.PERSON_FIELD) {
+        return intl.formatMessage({ id: `misc.nativePersonFields.${column.config.field}` });
+    }
+    return intl.formatMessage({ id: `misc.views.columnDialog.types.${column.type}` });
+};

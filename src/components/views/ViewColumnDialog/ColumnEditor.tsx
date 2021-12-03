@@ -7,8 +7,8 @@ import PersonQueryColumnConfigForm from './config/PersonQueryColumnConfigForm';
 import PersonTagColumnConfigForm from './config/PersonTagColumnConfigForm';
 import SurveyResponseColumnConfigForm from './config/SurveyResponseColumnConfigForm';
 import SurveySubmittedColumnConfigForm from './config/SurveySubmittedColumnConfigForm';
-import { COLUMN_TYPE, PersonFieldViewColumn, PersonQueryViewColumn, PersonTagViewColumn, SelectedViewColumn, SurveyResponseViewColumn, SurveySubmittedViewColumn } from 'types/views';
-import { getDefaultViewColumnConfig, isColumnConfigValid } from './utils';
+import { COLUMN_TYPE, PersonFieldViewColumn, PersonQueryViewColumn, PersonTagViewColumn, SelectedViewColumn, SurveyResponseViewColumn, SurveySubmittedViewColumn, ZetkinViewColumn } from 'types/views';
+import { getDefaultTitle, getDefaultViewColumnConfig, isColumnConfigValid } from './utils';
 
 
 interface ColumnEditorProps {
@@ -28,8 +28,8 @@ const ColumnEditor : FunctionComponent<ColumnEditorProps> = ({ column, onCancel,
     const onSubmit = (ev : FormEvent) => {
         ev.preventDefault();
         onSave({
-            config: config,
-            title: column?.title || intl.formatMessage({ id: 'misc.views.columnDialog.editor.defaultTitle' }),
+            config,
+            title: column?.title || getDefaultTitle({ config, type } as ZetkinViewColumn, intl),
             type,
         });
     };
