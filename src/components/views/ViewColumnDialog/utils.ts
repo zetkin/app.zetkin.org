@@ -1,6 +1,7 @@
 import { IntlShape } from 'react-intl';
 import {
     COLUMN_TYPE,
+    PendingZetkinViewColumn,
     PersonQueryViewColumn,
     PersonTagViewColumn,
     SurveyResponseViewColumn,
@@ -19,17 +20,17 @@ export function getDefaultViewColumnConfig(type : COLUMN_TYPE) : ZetkinViewColum
     }
 }
 
-export function isColumnConfigValid(type : COLUMN_TYPE, config : ZetkinViewColumn['config']) : boolean {
-    if (type === COLUMN_TYPE.PERSON_QUERY) {
-        const typedConfig = config as PersonQueryViewColumn['config'];
+export function isColumnConfigValid(column: PendingZetkinViewColumn | ZetkinViewColumn) : boolean {
+    if (column.type === COLUMN_TYPE.PERSON_QUERY) {
+        const typedConfig = column.config as PersonQueryViewColumn['config'];
         return !!typedConfig.query_id;
     }
-    else if (type === COLUMN_TYPE.PERSON_TAG) {
-        const typedConfig = config as PersonTagViewColumn['config'];
+    else if (column.type === COLUMN_TYPE.PERSON_TAG) {
+        const typedConfig = column.config as PersonTagViewColumn['config'];
         return !!typedConfig.tag_id;
     }
-    else if (type === COLUMN_TYPE.SURVEY_RESPONSE) {
-        const typedConfig = config as SurveyResponseViewColumn['config'];
+    else if (column.type === COLUMN_TYPE.SURVEY_RESPONSE) {
+        const typedConfig = column.config as SurveyResponseViewColumn['config'];
         return !!typedConfig.question_id;
     }
     else {
@@ -42,5 +43,6 @@ export const getDefaultTitle = (column: ZetkinViewColumn, intl: IntlShape): stri
     if (column.type === COLUMN_TYPE.PERSON_FIELD) {
         return intl.formatMessage({ id: `misc.nativePersonFields.${column.config.field}` });
     }
+    // Use "default title" in locale file
     return intl.formatMessage({ id: `misc.views.columnDialog.types.${column.type}` });
 };

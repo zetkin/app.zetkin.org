@@ -23,5 +23,9 @@ columnMenu:
 columnRenameDialog:
     title: Title
     save: Save
+defaultColumnTitles:
+    local_bool: Toggle
+    local_person: Person reference
+    person_notes: Notes
 newViewFields:
     title: New View

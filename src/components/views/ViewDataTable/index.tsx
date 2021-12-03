@@ -197,9 +197,9 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
             ) }
             { selectedColumn && (
                 <ViewColumnDialog
-                    column={ selectedColumn }
                     onCancel={ onColumnCancel }
                     onSave={ onColumnSave }
+                    selectedColumn={ selectedColumn }
                 />
             ) }
         </>

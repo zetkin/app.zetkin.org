@@ -4,14 +4,14 @@ import { ChangeEventHandler, FunctionComponent, useEffect, useState } from 'reac
 import { MenuItem, Select } from '@material-ui/core';
 
 import getSurveysWithElements from 'fetching/getSurveysWithElements';
-import { SurveyResponseViewColumn } from 'types/views';
 import ZetkinQuery from 'components/ZetkinQuery';
 import { ELEMENT_TYPE, RESPONSE_TYPE, ZetkinSurveyExtended } from 'types/zetkin';
+import { PendingZetkinViewColumn, SurveyResponseViewColumn } from 'types/views';
 
 
 interface SurveyResponseColumnConfigFormProps {
-    config?: SurveyResponseViewColumn['config'];
-    onChange: (config: SurveyResponseViewColumn['config']) => void;
+    column: SurveyResponseViewColumn | PendingZetkinViewColumn;
+    onChange: (column: SurveyResponseViewColumn | PendingZetkinViewColumn) => void;
 }
 
 function getSurveyFromQuestionId(surveys? : ZetkinSurveyExtended[], questionId? : number) {
@@ -22,7 +22,7 @@ function getSurveyFromQuestionId(surveys? : ZetkinSurveyExtended[], questionId? 
     return surveys.find(survey => survey.elements.some(elem => elem.id == questionId)) || null;
 }
 
-const SurveyResponseColumnConfigForm: FunctionComponent<SurveyResponseColumnConfigFormProps> = ({ config, onChange }) => {
+const SurveyResponseColumnConfigForm: FunctionComponent<SurveyResponseColumnConfigFormProps> = ({ column, onChange }) => {
     const { orgId } = useRouter().query;
     const surveysQuery = useQuery(['surveysWithElements', orgId], getSurveysWithElements(orgId as string));
 
@@ -30,22 +30,13 @@ const SurveyResponseColumnConfigForm: FunctionComponent<SurveyResponseColumnConf
 
     useEffect(() => {
         if (!surveyId) {
-            const selectedSurvey = getSurveyFromQuestionId(surveysQuery.data, config?.question_id);
+            const selectedSurvey = getSurveyFromQuestionId(surveysQuery.data, (column.config as SurveyResponseViewColumn['config'])?.question_id);
             setSurveyId(selectedSurvey?.id || null);
         }
-    }, [surveyId, config, surveysQuery.data]);
+    }, [surveyId, column.config, surveysQuery.data]);
 
     const onSurveyChange : ChangeEventHandler<{ value: unknown }> = ev => {
         setSurveyId(ev.target.value as number);
-        onChange({
-            question_id: 0,
-        });
-    };
-
-    const onQuestionChange : ChangeEventHandler<{ value: unknown }> = ev => {
-        onChange({
-            question_id: ev.target.value as number,
-        });
     };
 
     return (
@@ -56,6 +47,17 @@ const SurveyResponseColumnConfigForm: FunctionComponent<SurveyResponseColumnConf
                 const questionElements = selectedSurvey?.elements
                     .filter(elem => elem.type == ELEMENT_TYPE.QUESTION)
                     .filter(elem => elem.question.response_type == RESPONSE_TYPE.TEXT) || null;
+
+                const onQuestionChange : ChangeEventHandler<{ value: unknown }> = ev => {
+                    const selectedQuestion = selectedSurvey?.elements.find(element => element.id === ev.target.value as number )?.question;
+                    onChange({
+                        ...column,
+                        config: {
+                            question_id: ev.target.value as number,
+                        },
+                        title: selectedQuestion?.question || '',
+                    });
+                };
 
                 return (
                     <>
@@ -71,7 +73,7 @@ const SurveyResponseColumnConfigForm: FunctionComponent<SurveyResponseColumnConf
                         { questionElements && (
                             <Select
                                 onChange={ onQuestionChange }
-                                value={ config?.question_id || '' }>
+                                value={ (column.config as SurveyResponseViewColumn['config'])?.question_id || '' }>
                                 { questionElements.map(elem => (
                                     <MenuItem key={ elem.id } value={ elem.id }>
                                         { elem.question.question }
