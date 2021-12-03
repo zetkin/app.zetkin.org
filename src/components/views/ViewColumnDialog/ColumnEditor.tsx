@@ -1,10 +1,11 @@
-import { Box, Button, Typography, useMediaQuery, useTheme } from '@material-ui/core';
+import { Box, Typography, useMediaQuery, useTheme } from '@material-ui/core';
 import { FormEvent, FunctionComponent, useState } from 'react';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
 
 import PersonFieldColumnConfigForm from './config/PersonFieldColumnConfigForm';
 import PersonQueryColumnConfigForm from './config/PersonQueryColumnConfigForm';
 import PersonTagColumnConfigForm from './config/PersonTagColumnConfigForm';
+import SubmitCancelButtons from 'components/forms/common/SubmitCancelButtons';
 import SurveyResponseColumnConfigForm from './config/SurveyResponseColumnConfigForm';
 import SurveySubmittedColumnConfigForm from './config/SurveySubmittedColumnConfigForm';
 import { COLUMN_TYPE, PersonFieldViewColumn, PersonQueryViewColumn, PersonTagViewColumn, SelectedViewColumn, SurveyResponseViewColumn, SurveySubmittedViewColumn, ZetkinViewColumn } from 'types/views';
@@ -82,23 +83,11 @@ const ColumnEditor : FunctionComponent<ColumnEditorProps> = ({ column, onCancel,
                         ) }
                     </Box>
                     <Box>
-                        <Box
-                            alignItems="flex-end"
-                            display="flex"
-                            justifyContent="flex-end"
-                            m={ 1 }
-                            style={{ gap: '1rem' }}>
-                            <Button color="primary" onClick={ () => onCancel() } variant="outlined">
-                                <Msg id="misc.views.columnDialog.editor.buttonLabels.cancel"/>
-                            </Button>
-                            <Button
-                                color="primary"
-                                disabled={ !isColumnConfigValid(type, config) }
-                                type="submit"
-                                variant="contained">
-                                <Msg id="misc.views.columnDialog.editor.buttonLabels.save"/>
-                            </Button>
-                        </Box>
+                        <SubmitCancelButtons
+                            onCancel={ onCancel }
+                            submitDisabled={ !isColumnConfigValid(type, config) }
+                            submitText={ intl.formatMessage({ id: 'misc.views.columnDialog.editor.buttonLabels.save' }) }
+                        />
                     </Box>
                 </Box>
             </form>
