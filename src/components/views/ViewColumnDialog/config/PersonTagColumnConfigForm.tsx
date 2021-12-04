@@ -24,6 +24,7 @@ const PersonTagColumnConfigForm: FunctionComponent<PersonTagColumnConfigFormProp
             config: {
                 tag_id: value,
             },
+            title: tags.find(tag => tag.id === value)?.title || '',
         });
     };
 

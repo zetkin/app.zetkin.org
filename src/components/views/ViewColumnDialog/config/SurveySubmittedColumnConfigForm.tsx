@@ -16,31 +16,37 @@ interface SurveySubmittedColumnConfigFormProps {
 const SurveySubmittedColumnConfigForm: FunctionComponent<SurveySubmittedColumnConfigFormProps> = ({ column, onChange }) => {
     const { orgId } = useRouter().query;
 
-    const onSurveyChange : ChangeEventHandler<{ value: unknown }> = ev => {
-        onChange({
-            ...column,
-            config: {
-                survey_id: ev.target.value as number,
-            },
-        });
-    };
 
     return (
         <ZetkinQuery
             queries={{
                 surveysQuery: useQuery(['surveys', orgId], getSurveys(orgId as string)),
             }}>
-            { ({ queries: { surveysQuery } }) => (
-                <Select
-                    onChange={ onSurveyChange }
-                    value={ column.config?.survey_id || '' }>
-                    { surveysQuery.data.map(survey => (
-                        <MenuItem key={ survey.id } value={ survey.id }>
-                            { survey.title }
-                        </MenuItem>
-                    )) }
-                </Select>
-            ) }
+            { ({ queries: { surveysQuery } }) => {
+
+
+                const onSurveyChange : ChangeEventHandler<{ value: unknown }> = ev => {
+                    onChange({
+                        ...column,
+                        config: {
+                            survey_id: ev.target.value as number,
+                        },
+                        title: surveysQuery.data.find(survey => survey.id === ev.target.value)?.title || '',
+                    });
+                };
+
+                return (
+                    <Select
+                        onChange={ onSurveyChange }
+                        value={ column.config?.survey_id || '' }>
+                        { surveysQuery.data.map(survey => (
+                            <MenuItem key={ survey.id } value={ survey.id }>
+                                { survey.title }
+                            </MenuItem>
+                        )) }
+                    </Select>
+                );
+            } }
         </ZetkinQuery>
     );
 };

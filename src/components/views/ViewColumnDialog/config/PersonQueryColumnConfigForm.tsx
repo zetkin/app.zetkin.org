@@ -24,6 +24,7 @@ const PersonQueryColumnConfigForm: FunctionComponent<PersonQueryColumnConfigForm
             config: {
                 query_id: queryId,
             },
+            title: standaloneQueries.find(query => query.id === queryId)?.title || '',
         });
     };
 

@@ -13,12 +13,15 @@ interface PersonFieldColumnConfigFormProps {
 const PersonFieldColumnConfigForm: FunctionComponent<PersonFieldColumnConfigFormProps> = ({ column, onChange }) => {
     const intl = useIntl();
 
-    const onFieldChange = (val: string) => {
+    const onFieldChange = (val: typeof fields[number]) => {
         onChange({
             ...column,
             config: {
                 field: val,
             },
+            title: column.config.field !== val ? // Change title if field changes
+                intl.formatMessage({ id: `misc.nativePersonFields.${val}` }) :
+                column.title,
         });
     };
 
