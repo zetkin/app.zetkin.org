@@ -9,19 +9,21 @@ import ZetkinQuery from 'components/ZetkinQuery';
 
 
 interface PersonQueryColumnConfigFormProps {
-    config?: PersonQueryViewColumn['config'];
-    onChange: (config: PersonQueryViewColumn['config']) => void;
+    column: PersonQueryViewColumn;
+    onChange: (config: PersonQueryViewColumn) => void;
 }
 
-const PersonQueryColumnConfigForm: FunctionComponent<PersonQueryColumnConfigFormProps> = ({ config, onChange }) => {
+const PersonQueryColumnConfigForm: FunctionComponent<PersonQueryColumnConfigFormProps> = ({ column, onChange }) => {
     const { orgId } = useRouter().query;
     const standaloneQuery = useQuery(['standaloneQueries', orgId], getStandaloneQueries(orgId as string));
     const standaloneQueries = standaloneQuery?.data || [];
 
     const onQueryChange = (queryId: number) => {
         onChange({
-            ...config,
-            query_id: queryId,
+            ...column,
+            config: {
+                query_id: queryId,
+            },
         });
     };
 
@@ -30,7 +32,7 @@ const PersonQueryColumnConfigForm: FunctionComponent<PersonQueryColumnConfigForm
             queries={{ standaloneQuery }}>
             <Select
                 onChange={ ev => onQueryChange(ev.target.value as number) }
-                value={ config?.query_id || '' }>
+                value={ column.config?.query_id || '' }>
                 { standaloneQueries.map(query => (
                     <MenuItem key={ query.id } value={ query.id }>
                         { query.title }

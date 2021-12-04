@@ -9,18 +9,21 @@ import ZetkinQuery from 'components/ZetkinQuery';
 
 
 interface PersonTagColumnConfigFormProps {
-    config?: PersonTagViewColumn['config'];
-    onChange: (config: PersonTagViewColumn['config']) => void;
+    column: PersonTagViewColumn;
+    onChange: (config: PersonTagViewColumn) => void;
 }
 
-const PersonTagColumnConfigForm: FunctionComponent<PersonTagColumnConfigFormProps> = ({ config, onChange }) => {
+const PersonTagColumnConfigForm: FunctionComponent<PersonTagColumnConfigFormProps> = ({ column, onChange }) => {
     const { orgId } = useRouter().query;
     const tagsQuery = useQuery(['tags', orgId], getTags(orgId as string));
     const tags = tagsQuery?.data || [];
 
     const onTagChange = (value: number) => {
         onChange({
-            tag_id: value,
+            ...column,
+            config: {
+                tag_id: value,
+            },
         });
     };
 
@@ -29,7 +32,7 @@ const PersonTagColumnConfigForm: FunctionComponent<PersonTagColumnConfigFormProp
             queries={{ tagsQuery }}>
             <Select
                 onChange={ ev => onTagChange(ev.target.value as number) }
-                value={ config?.tag_id || '' }>
+                value={ column.config?.tag_id || '' }>
                 { tags.map(tag => (
                     <MenuItem key={ tag.id } value={ tag.id }>
                         { tag.title }

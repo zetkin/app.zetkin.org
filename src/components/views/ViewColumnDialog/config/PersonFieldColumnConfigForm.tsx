@@ -6,17 +6,19 @@ import { PersonFieldViewColumn } from 'types/views';
 
 
 interface PersonFieldColumnConfigFormProps {
-    config?: PersonFieldViewColumn['config'];
-    onChange: (config: PersonFieldViewColumn['config']) => void;
+    column: PersonFieldViewColumn;
+    onChange: (column: PersonFieldViewColumn) => void;
 }
 
-const PersonFieldColumnConfigForm: FunctionComponent<PersonFieldColumnConfigFormProps> = ({ config, onChange }) => {
+const PersonFieldColumnConfigForm: FunctionComponent<PersonFieldColumnConfigFormProps> = ({ column, onChange }) => {
     const intl = useIntl();
 
     const onFieldChange = (val: string) => {
         onChange({
-            ...config,
-            field: val,
+            ...column,
+            config: {
+                field: val,
+            },
         });
     };
 
@@ -39,7 +41,7 @@ const PersonFieldColumnConfigForm: FunctionComponent<PersonFieldColumnConfigForm
     return (
         <Select
             onChange={ ev => onFieldChange(ev.target.value as string) }
-            value={ config?.field || fields[0] }>
+            value={ column.config?.field || fields[0] }>
             { fields.map(fieldSlug => (
                 <MenuItem key={ fieldSlug } value={ fieldSlug }>
                     { intl.formatMessage({ id: `misc.nativePersonFields.${fieldSlug}` }) }

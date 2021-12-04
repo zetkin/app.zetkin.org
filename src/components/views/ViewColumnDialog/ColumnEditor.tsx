@@ -47,48 +47,32 @@ const ColumnEditor : FunctionComponent<ColumnEditorProps> = ({ column, onCancel,
                     <Box flex={ 20 }>
                         { column.type == COLUMN_TYPE.PERSON_FIELD && (
                             <PersonFieldColumnConfigForm
-                                config={ column.config as PersonFieldViewColumn['config'] | undefined }
-                                onChange={ config => {
-                                    onChange({
-                                        ...column,
-                                        config },
-                                    );
-                                } }
+                                column={ column as PersonFieldViewColumn }
+                                onChange={ onChange }
                             />
                         ) }
                         { column.type == COLUMN_TYPE.PERSON_QUERY && (
                             <PersonQueryColumnConfigForm
-                                config={ column.config as PersonQueryViewColumn['config'] | undefined }
-                                onChange={ config => onChange({
-                                    ...column,
-                                    config },
-                                ) }
+                                column={ column as PersonQueryViewColumn }
+                                onChange={ onChange }
                             />
                         ) }
                         { column.type == COLUMN_TYPE.PERSON_TAG && (
                             <PersonTagColumnConfigForm
-                                config={ column.config as PersonTagViewColumn['config'] | undefined  }
-                                onChange={ config => onChange({
-                                    ...column,
-                                    config },
-                                ) }
+                                column={ column as PersonTagViewColumn }
+                                onChange={ onChange }
                             />
                         ) }
                         { column.type == COLUMN_TYPE.SURVEY_RESPONSE && (
                             <SurveyResponseColumnConfigForm
                                 column={ column as SurveyResponseViewColumn  }
-                                onChange={ (column) => {
-                                    onChange(column);
-                                } }
+                                onChange={ onChange }
                             />
                         ) }
                         { column.type == COLUMN_TYPE.SURVEY_SUBMITTED && (
                             <SurveySubmittedColumnConfigForm
-                                config={ column.config  as SurveySubmittedViewColumn['config'] | undefined  }
-                                onChange={ config => onChange({
-                                    ...column,
-                                    config },
-                                ) }
+                                column={ column as SurveySubmittedViewColumn  }
+                                onChange={ onChange }
                             />
                         ) }
                     </Box>

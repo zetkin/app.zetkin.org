@@ -9,16 +9,19 @@ import ZetkinQuery from 'components/ZetkinQuery';
 
 
 interface SurveySubmittedColumnConfigFormProps {
-    config?: SurveySubmittedViewColumn['config'];
-    onChange: (config: SurveySubmittedViewColumn['config']) => void;
+    column: SurveySubmittedViewColumn;
+    onChange: (config: SurveySubmittedViewColumn) => void;
 }
 
-const SurveySubmittedColumnConfigForm: FunctionComponent<SurveySubmittedColumnConfigFormProps> = ({ config, onChange }) => {
+const SurveySubmittedColumnConfigForm: FunctionComponent<SurveySubmittedColumnConfigFormProps> = ({ column, onChange }) => {
     const { orgId } = useRouter().query;
 
     const onSurveyChange : ChangeEventHandler<{ value: unknown }> = ev => {
         onChange({
-            survey_id: ev.target.value as number,
+            ...column,
+            config: {
+                survey_id: ev.target.value as number,
+            },
         });
     };
 
@@ -30,7 +33,7 @@ const SurveySubmittedColumnConfigForm: FunctionComponent<SurveySubmittedColumnCo
             { ({ queries: { surveysQuery } }) => (
                 <Select
                     onChange={ onSurveyChange }
-                    value={ config?.survey_id || '' }>
+                    value={ column.config?.survey_id || '' }>
                     { surveysQuery.data.map(survey => (
                         <MenuItem key={ survey.id } value={ survey.id }>
                             { survey.title }
