@@ -12,9 +12,9 @@ import patchViewColumn from 'fetching/views/patchViewColumn';
 import postViewColumn from 'fetching/views/postViewColumn';
 import { SelectedViewColumn } from 'types/views';
 import ViewColumnDialog from 'components/views/ViewColumnDialog';
-import ViewDataTableColumnMenu from './ViewDataTableColumnMenu';
-import ViewDataTableToolbar from './ViewDataTableToolbar';
 import ViewRenameColumnDialog from '../ViewRenameColumnDialog';
+import ViewDataTableColumnMenu, { ViewDataTableColumnMenuProps } from './ViewDataTableColumnMenu';
+import ViewDataTableToolbar, { ViewDataTableToolbarProps } from './ViewDataTableToolbar';
 import { ZetkinViewColumn, ZetkinViewRow } from 'types/zetkin';
 
 
@@ -168,6 +168,20 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
         return output;
     });
 
+    const componentsProps: {
+        columnMenu: ViewDataTableColumnMenuProps;
+        toolbar: ViewDataTableToolbarProps;
+    } = {
+        columnMenu: {
+            onConfigure: onColumnConfigure,
+            onDelete: onColumnDelete,
+            onRename: onColumnRename,
+        },
+        toolbar: {
+            onColumnCreate,
+        },
+    };
+
     return (
         <>
             <DataGridPro
@@ -176,16 +190,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
                     ColumnMenu: ViewDataTableColumnMenu,
                     Toolbar: ViewDataTableToolbar,
                 }}
-                componentsProps={{
-                    columnMenu: {
-                        onConfigure: onColumnConfigure,
-                        onDelete: onColumnDelete,
-                        onRename: onColumnRename,
-                    },
-                    toolbar: {
-                        onColumnCreate,
-                    },
-                }}
+                componentsProps={ componentsProps }
                 rows={ gridRows }
             />
             { columnToRename && (

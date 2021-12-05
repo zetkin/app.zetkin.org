@@ -7,7 +7,7 @@ import {
     GridFilterMenuItem,
 } from '@mui/x-data-grid-pro';
 
-type CustomProps = {
+export type ViewDataTableColumnMenuProps = {
     onConfigure: (colId : string) => void;
     onDelete: (colId : string) => void;
     onRename: (colId : string) => void;
@@ -15,7 +15,7 @@ type CustomProps = {
 
 const ViewDataTableColumnMenu = forwardRef<
     HTMLUListElement,
-    GridColumnMenuProps & CustomProps
+    GridColumnMenuProps & ViewDataTableColumnMenuProps
 >(function ViewDataTableColumnMenuComponent(props, ref) {
     const { hideMenu, currentColumn, onConfigure, onDelete, onRename, ...rest } = props;
 

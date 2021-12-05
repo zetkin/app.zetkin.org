@@ -2,7 +2,7 @@ import { Add } from '@material-ui/icons';
 import { FormattedMessage } from 'react-intl';
 import { Box, Button } from '@material-ui/core';
 
-interface ViewDataTableToolbarProps {
+export interface ViewDataTableToolbarProps {
     onColumnCreate: () => void;
 }
 
