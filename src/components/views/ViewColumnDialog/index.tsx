@@ -7,17 +7,18 @@ import ColumnGallery from './ColumnGallery';
 import { getDefaultViewColumnConfig } from './utils';
 import { COLUMN_TYPE, SelectedViewColumn } from 'types/views';
 
-interface ViewColumnDialogProps {
-    selectedColumn: SelectedViewColumn;
-    onCancel: () => void;
-    onSave: (colSpec: SelectedViewColumn) => void;
-}
-
+// These column types will auto save and not open the ColumnEditor
 const AUTO_SAVE_TYPES = [
     COLUMN_TYPE.LOCAL_BOOL,
     COLUMN_TYPE.LOCAL_PERSON,
     COLUMN_TYPE.PERSON_NOTES,
 ];
+
+interface ViewColumnDialogProps {
+    selectedColumn: SelectedViewColumn;
+    onCancel: () => void;
+    onSave: (colSpec: SelectedViewColumn) => void;
+}
 
 const ViewColumnDialog : FunctionComponent<ViewColumnDialogProps> = ({ selectedColumn, onCancel, onSave }) => {
     const intl = useIntl();

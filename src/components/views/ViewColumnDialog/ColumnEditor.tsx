@@ -29,6 +29,17 @@ const ColumnEditor : FunctionComponent<ColumnEditorProps> = ({ column, onCancel,
         onSave();
     };
 
+    const onCancelButtonPress = () => {
+        // If is existing column, close config
+        if ('id' in column) {
+            onCancel();
+        }
+        // If is new column, go back to gallery
+        if (!('id' in column)) {
+            onChange({});
+        }
+    };
+
     return (
         <Box display="flex" flexDirection="column" height="100%" pb={ 2 }>
             <Box display="flex"
@@ -78,7 +89,7 @@ const ColumnEditor : FunctionComponent<ColumnEditorProps> = ({ column, onCancel,
                     </Box>
                     <Box>
                         <SubmitCancelButtons
-                            onCancel={ onCancel }
+                            onCancel={ onCancelButtonPress }
                             submitDisabled={ !isColumnConfigValid(column) }
                             submitText={ intl.formatMessage({ id: 'misc.views.columnDialog.editor.buttonLabels.save' }) }
                         />
