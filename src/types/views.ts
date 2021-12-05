@@ -105,3 +105,18 @@ export type SelectedViewColumn =
     NewZetkinViewColumn | // When creating a new column
     PendingZetkinViewColumn | // When adding values to a new column
     ZetkinViewColumn // When selecting an existing column
+
+export enum NATIVE_PERSON_FIELDS {
+    ALT_PHONE = 'alt_phone',
+    CO_ADDRESS = 'co_address',
+    COUNTRY = 'country',
+    CITY ='city',
+    EMAIL ='email',
+    EXT_ID = 'ext_id',
+    FIRST_NAME = 'first_name',
+    GENDER = 'gender',
+    LAST_NAME = 'last_name',
+    PHONE = 'phone',
+    STREET_ADDRESS = 'street_address',
+    ZIP_CODE = 'zip_code',
+}

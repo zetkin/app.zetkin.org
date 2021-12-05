@@ -2,7 +2,7 @@ import { FunctionComponent } from 'react';
 import { useIntl } from 'react-intl';
 import { MenuItem, Select } from '@material-ui/core';
 
-import { PersonFieldViewColumn } from 'types/views';
+import { NATIVE_PERSON_FIELDS, PersonFieldViewColumn } from 'types/views';
 
 
 interface PersonFieldColumnConfigFormProps {
@@ -13,7 +13,7 @@ interface PersonFieldColumnConfigFormProps {
 const PersonFieldColumnConfigForm: FunctionComponent<PersonFieldColumnConfigFormProps> = ({ column, onChange }) => {
     const intl = useIntl();
 
-    const onFieldChange = (val: typeof fields[number]) => {
+    const onFieldChange = (val: NATIVE_PERSON_FIELDS ) => {
         onChange({
             ...column,
             config: {
@@ -25,27 +25,11 @@ const PersonFieldColumnConfigForm: FunctionComponent<PersonFieldColumnConfigForm
         });
     };
 
-    // TODO: Load custom fields and add to menu
-    const fields = [
-        'first_name',
-        'last_name',
-        'email',
-        'phone',
-        'alt_phone',
-        'co_address',
-        'street_address',
-        'zip_code',
-        'city',
-        'country',
-        'gender',
-        'ext_id',
-    ];
-
     return (
         <Select
-            onChange={ ev => onFieldChange(ev.target.value as string) }
-            value={ column.config?.field || fields[0] }>
-            { fields.map(fieldSlug => (
+            onChange={ ev => onFieldChange(ev.target.value as NATIVE_PERSON_FIELDS) }
+            value={ column.config?.field || Object.values(NATIVE_PERSON_FIELDS)[0] }>
+            { Object.values(NATIVE_PERSON_FIELDS).map(fieldSlug => (
                 <MenuItem key={ fieldSlug } value={ fieldSlug }>
                     { intl.formatMessage({ id: `misc.nativePersonFields.${fieldSlug}` }) }
                 </MenuItem>
