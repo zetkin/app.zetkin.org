@@ -15,31 +15,33 @@ interface PersonQueryColumnConfigFormProps {
 
 const PersonQueryColumnConfigForm: FunctionComponent<PersonQueryColumnConfigFormProps> = ({ column, onChange }) => {
     const { orgId } = useRouter().query;
-    const standaloneQuery = useQuery(['standaloneQueries', orgId], getStandaloneQueries(orgId as string));
-    const standaloneQueries = standaloneQuery?.data || [];
-
-    const onQueryChange = (queryId: number) => {
-        onChange({
-            ...column,
-            config: {
-                query_id: queryId,
-            },
-            title: standaloneQueries.find(query => query.id === queryId)?.title || '',
-        });
-    };
 
     return (
         <ZetkinQuery
-            queries={{ standaloneQuery }}>
-            <Select
-                onChange={ ev => onQueryChange(ev.target.value as number) }
-                value={ column.config?.query_id || '' }>
-                { standaloneQueries.map(query => (
-                    <MenuItem key={ query.id } value={ query.id }>
-                        { query.title }
-                    </MenuItem>
-                )) }
-            </Select>
+            queries={{ standaloneQueriesQuery:  useQuery(['standaloneQueries', orgId], getStandaloneQueries(orgId as string)) }}>
+            { ({ queries: { standaloneQueriesQuery } }) => {
+                const onQueryChange = (queryId: number) => {
+                    onChange({
+                        ...column,
+                        config: {
+                            query_id: queryId,
+                        },
+                        title: standaloneQueriesQuery.data.find(query => query.id === queryId)?.title || '',
+                    });
+                };
+                return (
+                    <Select
+                        onChange={ ev => onQueryChange(ev.target.value as number) }
+                        value={ column.config?.query_id || '' }>
+                        { standaloneQueriesQuery.data.map(query => (
+                            <MenuItem key={ query.id } value={ query.id }>
+                                { query.title }
+                            </MenuItem>
+                        )) }
+                    </Select>
+                );
+            } }
+
         </ZetkinQuery>
     );
 };

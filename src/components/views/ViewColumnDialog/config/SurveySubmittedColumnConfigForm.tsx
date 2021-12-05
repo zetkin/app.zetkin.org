@@ -16,14 +16,12 @@ interface SurveySubmittedColumnConfigFormProps {
 const SurveySubmittedColumnConfigForm: FunctionComponent<SurveySubmittedColumnConfigFormProps> = ({ column, onChange }) => {
     const { orgId } = useRouter().query;
 
-
     return (
         <ZetkinQuery
             queries={{
                 surveysQuery: useQuery(['surveys', orgId], getSurveys(orgId as string)),
             }}>
             { ({ queries: { surveysQuery } }) => {
-
 
                 const onSurveyChange : ChangeEventHandler<{ value: unknown }> = ev => {
                     onChange({

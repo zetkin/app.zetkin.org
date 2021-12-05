@@ -42,8 +42,8 @@ const SurveyResponseColumnConfigForm: FunctionComponent<SurveyResponseColumnConf
     return (
         <ZetkinQuery
             queries={{ surveysQuery }}>
-            { ({ queries: { surveysQuery } }) => {
-                const selectedSurvey = surveysQuery.data.find(survey => survey.id == surveyId);
+            { ({ queries: { surveysQuery: successSurveysQuery } }) => {
+                const selectedSurvey = successSurveysQuery.data.find(survey => survey.id == surveyId);
                 const questionElements = selectedSurvey?.elements
                     .filter(elem => elem.type == ELEMENT_TYPE.QUESTION)
                     .filter(elem => elem.question.response_type == RESPONSE_TYPE.TEXT) || null;
@@ -64,7 +64,7 @@ const SurveyResponseColumnConfigForm: FunctionComponent<SurveyResponseColumnConf
                         <Select
                             onChange={ onSurveyChange }
                             value={ surveyId || '' }>
-                            { surveysQuery.data.map(survey => (
+                            { successSurveysQuery.data.map(survey => (
                                 <MenuItem key={ survey.id } value={ survey.id }>
                                     { survey.title }
                                 </MenuItem>

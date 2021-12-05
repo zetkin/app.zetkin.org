@@ -16,30 +16,32 @@ interface PersonTagColumnConfigFormProps {
 const PersonTagColumnConfigForm: FunctionComponent<PersonTagColumnConfigFormProps> = ({ column, onChange }) => {
     const { orgId } = useRouter().query;
     const tagsQuery = useQuery(['tags', orgId], getTags(orgId as string));
-    const tags = tagsQuery?.data || [];
-
-    const onTagChange = (value: number) => {
-        onChange({
-            ...column,
-            config: {
-                tag_id: value,
-            },
-            title: tags.find(tag => tag.id === value)?.title || '',
-        });
-    };
 
     return (
         <ZetkinQuery
             queries={{ tagsQuery }}>
-            <Select
-                onChange={ ev => onTagChange(ev.target.value as number) }
-                value={ column.config?.tag_id || '' }>
-                { tags.map(tag => (
-                    <MenuItem key={ tag.id } value={ tag.id }>
-                        { tag.title }
-                    </MenuItem>
-                )) }
-            </Select>
+            { ({ queries: { tagsQuery } }) => {
+                const onTagChange = (selectedTagId: number) => {
+                    onChange({
+                        ...column,
+                        config: {
+                            tag_id: selectedTagId,
+                        },
+                        title: tagsQuery.data.find(tag => tag.id === selectedTagId)?.title || '',
+                    });
+                };
+                return (
+                    <Select
+                        onChange={ ev => onTagChange(ev.target.value as number) }
+                        value={ column.config?.tag_id || '' }>
+                        { tagsQuery.data.map(tag => (
+                            <MenuItem key={ tag.id } value={ tag.id }>
+                                { tag.title }
+                            </MenuItem>
+                        )) }
+                    </Select>
+                );
+            } }
         </ZetkinQuery>
     );
 };
