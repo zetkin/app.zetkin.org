@@ -8,6 +8,7 @@ types:
     offline: Offline
     share_link: Share Link
     visit_link: Visit Link
+    watch_video: Watch Video
     demographic: Collect Demographics
 taskListItem:
     relativeTimes:
