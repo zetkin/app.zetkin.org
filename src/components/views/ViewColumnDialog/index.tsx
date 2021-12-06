@@ -8,7 +8,7 @@ import { getDefaultViewColumnConfig } from './utils';
 import { COLUMN_TYPE, SelectedViewColumn } from 'types/views';
 
 // These column types will auto save and not open the ColumnEditor
-const AUTO_SAVE_TYPES = [
+export const AUTO_SAVE_TYPES = [
     COLUMN_TYPE.LOCAL_BOOL,
     COLUMN_TYPE.LOCAL_PERSON,
     COLUMN_TYPE.PERSON_NOTES,
