@@ -1,7 +1,8 @@
+import { useIntl } from 'react-intl';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 import { ChangeEventHandler, FunctionComponent, useEffect, useState } from 'react';
-import { MenuItem, Select } from '@material-ui/core';
+import { MenuItem, TextField } from '@material-ui/core';
 
 import getSurveysWithElements from 'fetching/getSurveysWithElements';
 import ZetkinQuery from 'components/ZetkinQuery';
@@ -23,6 +24,7 @@ function getSurveyFromQuestionId(surveys? : ZetkinSurveyExtended[], questionId? 
 }
 
 const SurveyResponseColumnConfigForm: FunctionComponent<SurveyResponseColumnConfigFormProps> = ({ column, onChange }) => {
+    const intl = useIntl();
     const { orgId } = useRouter().query;
     const surveysQuery = useQuery(['surveysWithElements', orgId], getSurveysWithElements(orgId as string));
 
@@ -61,26 +63,33 @@ const SurveyResponseColumnConfigForm: FunctionComponent<SurveyResponseColumnConf
 
                 return (
                     <>
-                        <Select
+                        <TextField
+                            fullWidth
+                            label={ intl.formatMessage({ id: 'misc.views.columnDialog.editor.fieldLabels.survey' }) }
+                            margin="normal"
                             onChange={ onSurveyChange }
+                            select
                             value={ surveyId || '' }>
                             { successSurveysQuery.data.map(survey => (
                                 <MenuItem key={ survey.id } value={ survey.id }>
                                     { survey.title }
                                 </MenuItem>
                             )) }
-                        </Select>
-                        { questionElements && (
-                            <Select
-                                onChange={ onQuestionChange }
-                                value={ (column.config as SurveyResponseViewColumn['config'])?.question_id || '' }>
-                                { questionElements.map(elem => (
-                                    <MenuItem key={ elem.id } value={ elem.id }>
-                                        { elem.question.question }
-                                    </MenuItem>
-                                )) }
-                            </Select>
-                        ) }
+                        </TextField>
+                        <TextField
+                            disabled={ !surveyId }
+                            fullWidth
+                            label={ intl.formatMessage({ id: 'misc.views.columnDialog.editor.fieldLabels.question' }) }
+                            margin="normal"
+                            onChange={ onQuestionChange }
+                            select
+                            value={ (column.config as SurveyResponseViewColumn['config'])?.question_id || '' }>
+                            { (questionElements || []).map(elem => (
+                                <MenuItem key={ elem.id } value={ elem.id }>
+                                    { elem.question.question }
+                                </MenuItem>
+                            )) }
+                        </TextField>
                     </>
                 );
             } }

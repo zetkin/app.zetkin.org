@@ -6,14 +6,15 @@ interface ZetkinDialogProps {
     open: boolean;
     onClose: () => void;
     title?: string;
+    maxWidth?: false | 'sm' | 'md' | 'lg' | 'xl' | undefined;
 }
 
-const ZetkinDialog: FunctionComponent<ZetkinDialogProps> = ({ children, open, onClose, title }): JSX.Element => {
+const ZetkinDialog: FunctionComponent<ZetkinDialogProps> = ({ children, maxWidth, open, onClose, title }): JSX.Element => {
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
     return (
-        <Dialog fullScreen={ fullScreen } fullWidth onClose={ onClose } open={ open }>
+        <Dialog fullScreen={ fullScreen } fullWidth maxWidth={ maxWidth || 'sm' } onClose={ onClose } open={ open }>
             <Box p={ 2 }>
                 { title &&
                     <DialogTitle>

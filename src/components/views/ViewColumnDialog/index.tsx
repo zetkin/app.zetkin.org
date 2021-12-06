@@ -1,10 +1,10 @@
 import { useIntl } from 'react-intl';
-import { Dialog, DialogContent } from '@material-ui/core';
 import { FunctionComponent, useState } from 'react';
 
 import ColumnEditor from './ColumnEditor';
 import ColumnGallery from './ColumnGallery';
 import { getDefaultViewColumnConfig } from './utils';
+import ZetkinDialog from 'components/ZetkinDialog';
 import { COLUMN_TYPE, SelectedViewColumn } from 'types/views';
 
 // These column types will auto save and not open the ColumnEditor
@@ -15,12 +15,13 @@ export const AUTO_SAVE_TYPES = [
 ];
 
 interface ViewColumnDialogProps {
-    selectedColumn: SelectedViewColumn;
+    selectedColumn?: SelectedViewColumn | null;
     onCancel: () => void;
     onSave: (colSpec: SelectedViewColumn) => void;
+    open: boolean;
 }
 
-const ViewColumnDialog : FunctionComponent<ViewColumnDialogProps> = ({ selectedColumn, onCancel, onSave }) => {
+const ViewColumnDialog : FunctionComponent<ViewColumnDialogProps> = ({ selectedColumn, onCancel, onSave, open }) => {
     const intl = useIntl();
     const [column, setColumn] = useState<SelectedViewColumn>(selectedColumn || {});
 
@@ -42,13 +43,15 @@ const ViewColumnDialog : FunctionComponent<ViewColumnDialogProps> = ({ selectedC
     };
 
     return (
-        <Dialog
-            fullWidth
-            maxWidth="xl"
+        <ZetkinDialog
+            maxWidth="lg"
             onClose={ () => onCancel() }
-            open>
-            <DialogContent
-                style={{ height: '85vh' }}>
+            open={ open }
+            title={ column.type ?
+                intl.formatMessage({ id: `misc.views.columnDialog.types.${column.type}` }) :
+                intl.formatMessage({ id: 'misc.views.columnDialog.gallery.header' })
+            }>
+            <div style={{ height: '50vh' }}>
                 { column.type && (
                     <ColumnEditor
                         column={ column }
@@ -64,8 +67,8 @@ const ViewColumnDialog : FunctionComponent<ViewColumnDialogProps> = ({ selectedC
                 { !column.type && (
                     <ColumnGallery onSelectType={ onSelectType } />
                 ) }
-            </DialogContent>
-        </Dialog>
+            </div>
+        </ZetkinDialog>
     );
 };
 

@@ -4,6 +4,12 @@ columnDialog:
             save: Save
             cancel: Cancel
         defaultTitle: New Column
+        fieldLabels:
+                survey: Survey
+                question: Question
+                tag: Tag
+                smartSearch: Smart Search
+                field: Field
     gallery:
         header: Add column to view
         addToView: Add to view

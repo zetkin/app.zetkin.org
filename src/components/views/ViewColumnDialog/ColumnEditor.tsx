@@ -1,6 +1,6 @@
-import { Box, Typography, useMediaQuery, useTheme } from '@material-ui/core';
+import { useIntl } from 'react-intl';
+import { Box, Container } from '@material-ui/core';
 import { FormEvent, FunctionComponent } from 'react';
-import { FormattedMessage as Msg, useIntl } from 'react-intl';
 
 import { isColumnConfigValid } from './utils';
 import PersonFieldColumnConfigForm from './config/PersonFieldColumnConfigForm';
@@ -9,7 +9,17 @@ import PersonTagColumnConfigForm from './config/PersonTagColumnConfigForm';
 import SubmitCancelButtons from 'components/forms/common/SubmitCancelButtons';
 import SurveyResponseColumnConfigForm from './config/SurveyResponseColumnConfigForm';
 import SurveySubmittedColumnConfigForm from './config/SurveySubmittedColumnConfigForm';
-import { COLUMN_TYPE, PendingZetkinViewColumn, PersonFieldViewColumn, PersonQueryViewColumn, PersonTagViewColumn, SelectedViewColumn, SurveyResponseViewColumn, SurveySubmittedViewColumn, ZetkinViewColumn } from 'types/views';
+import {
+    COLUMN_TYPE,
+    PendingZetkinViewColumn,
+    PersonFieldViewColumn,
+    PersonQueryViewColumn,
+    PersonTagViewColumn,
+    SelectedViewColumn,
+    SurveyResponseViewColumn,
+    SurveySubmittedViewColumn,
+    ZetkinViewColumn,
+} from 'types/views';
 
 
 interface ColumnEditorProps {
@@ -21,8 +31,6 @@ interface ColumnEditorProps {
 
 const ColumnEditor : FunctionComponent<ColumnEditorProps> = ({ column, onCancel, onChange, onSave }) => {
     const intl = useIntl();
-    const theme = useTheme();
-    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
     const onSubmit = (e : FormEvent) => {
         e.preventDefault();
@@ -41,21 +49,10 @@ const ColumnEditor : FunctionComponent<ColumnEditorProps> = ({ column, onCancel,
     };
 
     return (
-        <Box display="flex" flexDirection="column" height="100%" pb={ 2 }>
-            <Box display="flex"
-                flexDirection={ isMobile ? 'column' : 'row' }
-                justifyContent="space-between"
-                mb={ 1 }>
-                <Box flex={ 1 }>
-                    <Typography align="center" variant="h5">
-                        <Msg id={ `misc.views.columnDialog.types.${column.type}` }/>
-                    </Typography>
-                </Box>
-            </Box>
-            <form onSubmit={ onSubmit }
-                style={{ height: '100%' }}>
-                <Box display="flex" flexDirection="column" height="100%">
-                    <Box flex={ 20 }>
+        <form onSubmit={ onSubmit } style={{ height: '100%' }}>
+            <Box display="flex" flexDirection="column" height="100%" pb={ 2 }>
+                <Box flexGrow="1">
+                    <Container maxWidth="md">
                         { column.type == COLUMN_TYPE.PERSON_FIELD && (
                             <PersonFieldColumnConfigForm
                                 column={ column as PersonFieldViewColumn }
@@ -86,17 +83,17 @@ const ColumnEditor : FunctionComponent<ColumnEditorProps> = ({ column, onCancel,
                                 onChange={ onChange }
                             />
                         ) }
-                    </Box>
-                    <Box>
-                        <SubmitCancelButtons
-                            onCancel={ onCancelButtonPress }
-                            submitDisabled={ !isColumnConfigValid(column) }
-                            submitText={ intl.formatMessage({ id: 'misc.views.columnDialog.editor.buttonLabels.save' }) }
-                        />
-                    </Box>
+                    </Container>
                 </Box>
-            </form>
-        </Box>
+                <Box flexGrow={ 0 }>
+                    <SubmitCancelButtons
+                        onCancel={ onCancelButtonPress }
+                        submitDisabled={ !isColumnConfigValid(column) }
+                        submitText={ intl.formatMessage({ id: 'misc.views.columnDialog.editor.buttonLabels.save' }) }
+                    />
+                </Box>
+            </Box>
+        </form>
     );
 };
 
