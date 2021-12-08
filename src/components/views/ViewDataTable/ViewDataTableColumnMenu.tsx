@@ -2,6 +2,7 @@ import { MenuItem } from '@material-ui/core';
 import { FormattedMessage as Msg } from 'react-intl';
 import { forwardRef, MouseEventHandler } from 'react';
 import {
+    GridColDef,
     GridColumnMenuContainer,
     GridColumnMenuProps,
     GridFilterMenuItem,
@@ -11,6 +12,7 @@ export type ViewDataTableColumnMenuProps = {
     onConfigure: (colId : string) => void;
     onDelete: (colId : string) => void;
     onRename: (colId : string) => void;
+    showConfigureButton: (field: GridColDef['field']) => boolean;
 };
 
 const ViewDataTableColumnMenu = forwardRef<
@@ -44,9 +46,14 @@ const ViewDataTableColumnMenu = forwardRef<
             <MenuItem onClick={ onClickRename }>
                 <Msg id="misc.views.columnMenu.rename"/>
             </MenuItem>
-            <MenuItem onClick={ onClickConfigure }>
-                <Msg id="misc.views.columnMenu.configure"/>
-            </MenuItem>
+            {
+                // Conditionally show configure button only if the column type is configurable
+                props.showConfigureButton(currentColumn.field) && (
+                    <MenuItem onClick={ onClickConfigure }>
+                        <Msg id="misc.views.columnMenu.configure"/>
+                    </MenuItem>
+                )
+            }
             <MenuItem onClick={ onClickDelete }>
                 <Msg id="misc.views.columnMenu.delete"/>
             </MenuItem>

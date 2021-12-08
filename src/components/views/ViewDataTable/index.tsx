@@ -11,8 +11,8 @@ import deleteViewColumn from 'fetching/views/deleteViewColumn';
 import patchViewColumn from 'fetching/views/patchViewColumn';
 import postViewColumn from 'fetching/views/postViewColumn';
 import { SelectedViewColumn } from 'types/views';
-import ViewColumnDialog from 'components/views/ViewColumnDialog';
 import ViewRenameColumnDialog from '../ViewRenameColumnDialog';
+import ViewColumnDialog, { AUTO_SAVE_TYPES } from 'components/views/ViewColumnDialog';
 import ViewDataTableColumnMenu, { ViewDataTableColumnMenuProps } from './ViewDataTableColumnMenu';
 import ViewDataTableToolbar, { ViewDataTableToolbarProps } from './ViewDataTableToolbar';
 import { ZetkinViewColumn, ZetkinViewRow } from 'types/zetkin';
@@ -176,6 +176,14 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
             onConfigure: onColumnConfigure,
             onDelete: onColumnDelete,
             onRename: onColumnRename,
+            showConfigureButton: (field: GridColDef['field']): boolean => {
+                const colId = colIdFromFieldName(field);
+                const column = columns.find(column => column.id === colId);
+                if (column) {
+                    return !AUTO_SAVE_TYPES.includes(column.type);
+                }
+                return false;
+            },
         },
         toolbar: {
             onColumnCreate,
