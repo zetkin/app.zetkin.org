@@ -14,13 +14,12 @@ export const AUTO_SAVE_TYPES = [
 ];
 
 interface ViewColumnDialogProps {
-    selectedColumn?: SelectedViewColumn | null;
+    selectedColumn: SelectedViewColumn;
     onCancel: () => void;
     onSave: (colSpec: SelectedViewColumn) => Promise<void>;
-    open: boolean;
 }
 
-const ViewColumnDialog : FunctionComponent<ViewColumnDialogProps> = ({ selectedColumn, onCancel, onSave, open }) => {
+const ViewColumnDialog : FunctionComponent<ViewColumnDialogProps> = ({ selectedColumn, onCancel, onSave }) => {
     const intl = useIntl();
     const [column, setColumn] = useState<SelectedViewColumn>(selectedColumn || {});
 
@@ -45,7 +44,7 @@ const ViewColumnDialog : FunctionComponent<ViewColumnDialogProps> = ({ selectedC
         <ZetkinDialog
             maxWidth="lg"
             onClose={ () => onCancel() }
-            open={ open }
+            open
             title={ column.type ?
                 intl.formatMessage({ id: `misc.views.columnDialog.types.${column.type}` }) :
                 intl.formatMessage({ id: 'misc.views.columnDialog.gallery.header' })

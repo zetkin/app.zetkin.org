@@ -208,12 +208,13 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
                     onSave={ onColumnRenameSave }
                 />
             ) }
-            <ViewColumnDialog
-                onCancel={ onColumnCancel }
-                onSave={ onColumnSave }
-                open={ Boolean(selectedColumn) }
-                selectedColumn={ selectedColumn }
-            />
+            { selectedColumn && (
+                <ViewColumnDialog
+                    onCancel={ onColumnCancel }
+                    onSave={ onColumnSave }
+                    selectedColumn={ selectedColumn }
+                />
+            ) }
         </>
     );
 };
