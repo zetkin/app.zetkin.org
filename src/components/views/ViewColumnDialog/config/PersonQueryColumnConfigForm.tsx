@@ -1,7 +1,8 @@
 import { FunctionComponent } from 'react';
+import { useIntl } from 'react-intl';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
-import { MenuItem, Select } from '@material-ui/core';
+import { MenuItem, TextField } from '@material-ui/core';
 
 import getStandaloneQueries from 'fetching/getStandaloneQueries';
 import { PersonQueryViewColumn } from 'types/views';
@@ -14,6 +15,7 @@ interface PersonQueryColumnConfigFormProps {
 }
 
 const PersonQueryColumnConfigForm: FunctionComponent<PersonQueryColumnConfigFormProps> = ({ column, onChange }) => {
+    const intl = useIntl();
     const { orgId } = useRouter().query;
 
     return (
@@ -30,15 +32,19 @@ const PersonQueryColumnConfigForm: FunctionComponent<PersonQueryColumnConfigForm
                     });
                 };
                 return (
-                    <Select
-                        onChange={ ev => onQueryChange(ev.target.value as number) }
+                    <TextField
+                        fullWidth
+                        label={ intl.formatMessage({ id: 'misc.views.columnDialog.editor.fieldLabels.smartSearch' }) }
+                        margin="normal"
+                        onChange={ ev => onQueryChange(ev.target.value as unknown as number) }
+                        select
                         value={ column.config?.query_id || '' }>
                         { standaloneQueriesQuery.data.map(query => (
                             <MenuItem key={ query.id } value={ query.id }>
                                 { query.title }
                             </MenuItem>
                         )) }
-                    </Select>
+                    </TextField>
                 );
             } }
 

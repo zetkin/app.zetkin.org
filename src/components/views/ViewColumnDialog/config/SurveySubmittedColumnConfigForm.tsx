@@ -1,7 +1,8 @@
+import { useIntl } from 'react-intl';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 import { ChangeEventHandler, FunctionComponent } from 'react';
-import { MenuItem, Select } from '@material-ui/core';
+import { MenuItem, TextField } from '@material-ui/core';
 
 import getSurveys from 'fetching/getSurveys';
 import { SurveySubmittedViewColumn } from 'types/views';
@@ -14,6 +15,7 @@ interface SurveySubmittedColumnConfigFormProps {
 }
 
 const SurveySubmittedColumnConfigForm: FunctionComponent<SurveySubmittedColumnConfigFormProps> = ({ column, onChange }) => {
+    const intl = useIntl();
     const { orgId } = useRouter().query;
 
     return (
@@ -34,15 +36,19 @@ const SurveySubmittedColumnConfigForm: FunctionComponent<SurveySubmittedColumnCo
                 };
 
                 return (
-                    <Select
+                    <TextField
+                        fullWidth
+                        label={ intl.formatMessage({ id: 'misc.views.columnDialog.editor.fieldLabels.survey' }) }
+                        margin="normal"
                         onChange={ onSurveyChange }
+                        select
                         value={ column.config?.survey_id || '' }>
                         { surveysQuery.data.map(survey => (
                             <MenuItem key={ survey.id } value={ survey.id }>
                                 { survey.title }
                             </MenuItem>
                         )) }
-                    </Select>
+                    </TextField>
                 );
             } }
         </ZetkinQuery>

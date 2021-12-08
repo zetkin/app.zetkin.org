@@ -1,7 +1,8 @@
 import { FunctionComponent } from 'react';
+import { useIntl } from 'react-intl';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
-import { MenuItem, Select } from '@material-ui/core';
+import { MenuItem, TextField } from '@material-ui/core';
 
 import getTags from 'fetching/getTags';
 import { PersonTagViewColumn } from 'types/views';
@@ -14,6 +15,7 @@ interface PersonTagColumnConfigFormProps {
 }
 
 const PersonTagColumnConfigForm: FunctionComponent<PersonTagColumnConfigFormProps> = ({ column, onChange }) => {
+    const intl = useIntl();
     const { orgId } = useRouter().query;
     const tagsQuery = useQuery(['tags', orgId], getTags(orgId as string));
 
@@ -31,15 +33,19 @@ const PersonTagColumnConfigForm: FunctionComponent<PersonTagColumnConfigFormProp
                     });
                 };
                 return (
-                    <Select
-                        onChange={ ev => onTagChange(ev.target.value as number) }
+                    <TextField
+                        fullWidth
+                        label={ intl.formatMessage({ id: 'misc.views.columnDialog.editor.fieldLabels.tag' }) }
+                        margin="normal"
+                        onChange={ ev => onTagChange(ev.target.value as unknown as number) }
+                        select
                         value={ column.config?.tag_id || '' }>
                         { tagsQuery.data.map(tag => (
                             <MenuItem key={ tag.id } value={ tag.id }>
                                 { tag.title }
                             </MenuItem>
                         )) }
-                    </Select>
+                    </TextField>
                 );
             } }
         </ZetkinQuery>
