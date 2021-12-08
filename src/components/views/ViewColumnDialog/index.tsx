@@ -3,7 +3,6 @@ import { FunctionComponent, useState } from 'react';
 
 import ColumnEditor from './ColumnEditor';
 import ColumnGallery from './ColumnGallery';
-import { getDefaultViewColumnConfig } from './utils';
 import ZetkinDialog from 'components/ZetkinDialog';
 import { COLUMN_TYPE, SelectedViewColumn } from 'types/views';
 
@@ -36,7 +35,7 @@ const ViewColumnDialog : FunctionComponent<ViewColumnDialogProps> = ({ selectedC
         }
         // Create Pending state for column
         setColumn({
-            config: getDefaultViewColumnConfig(type),
+            config: {},
             title: '',
             type,
         });

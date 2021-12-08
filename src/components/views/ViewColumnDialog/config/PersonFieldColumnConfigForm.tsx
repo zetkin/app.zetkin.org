@@ -14,14 +14,11 @@ const PersonFieldColumnConfigForm: FunctionComponent<PersonFieldColumnConfigForm
     const intl = useIntl();
 
     const getTitle = (field: NATIVE_PERSON_FIELDS) => {
-        if (column.title) {
-            return column.title;
-        }
-        else if (field === column.config.field) {
-            return column.title;
+        if (field !== column.config.field) { // If field type changes, reset
+            return intl.formatMessage({ id: `misc.nativePersonFields.${field}` });
         }
         else {
-            return intl.formatMessage({ id: `misc.nativePersonFields.${field}` });
+            return  column.title;
         }
     };
 
@@ -41,8 +38,9 @@ const PersonFieldColumnConfigForm: FunctionComponent<PersonFieldColumnConfigForm
             label={ intl.formatMessage({ id: 'misc.views.columnDialog.editor.fieldLabels.field' }) }
             margin="normal"
             onChange={ ev => onFieldChange(ev.target.value as NATIVE_PERSON_FIELDS) }
+            required
             select
-            value={ column.config?.field || Object.values(NATIVE_PERSON_FIELDS)[0] }>
+            value={ column.config?.field }>
             { Object.values(NATIVE_PERSON_FIELDS).map(fieldSlug => (
                 <MenuItem key={ fieldSlug } value={ fieldSlug }>
                     { intl.formatMessage({ id: `misc.nativePersonFields.${fieldSlug}` }) }

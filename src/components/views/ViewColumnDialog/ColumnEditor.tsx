@@ -51,7 +51,7 @@ const ColumnEditor : FunctionComponent<ColumnEditorProps> = ({ column, onCancel,
     return (
         <form onSubmit={ onSubmit } style={{ height: '100%' }}>
             <Box display="flex" flexDirection="column" height="100%" pb={ 2 }>
-                <Box display="flex" flexDirection="column" flexGrow="1" height="100%" justifyContent="center">
+                <Box display="flex" flexDirection="column" flexGrow="1" justifyContent="center">
                     <Container maxWidth="md">
                         { column.type == COLUMN_TYPE.PERSON_FIELD && (
                             <PersonFieldColumnConfigForm

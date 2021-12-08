@@ -1,6 +1,7 @@
 import {
     COLUMN_TYPE,
     PendingZetkinViewColumn,
+    PersonFieldViewColumn,
     PersonQueryViewColumn,
     PersonTagViewColumn,
     SurveyResponseViewColumn,
@@ -8,18 +9,11 @@ import {
 } from 'types/views';
 
 
-export function getDefaultViewColumnConfig(type : COLUMN_TYPE) : ZetkinViewColumn['config'] {
-    if (type === COLUMN_TYPE.PERSON_FIELD) {
-        return {
-            field: 'email',
-        };
-    }
-    else {
-        return {};
-    }
-}
-
 export function isColumnConfigValid(column: PendingZetkinViewColumn | ZetkinViewColumn) : boolean {
+    if (column.type === COLUMN_TYPE.PERSON_FIELD) {
+        const typedConfig = column.config as PersonFieldViewColumn['config'];
+        return !!typedConfig.field;
+    }
     if (column.type === COLUMN_TYPE.PERSON_QUERY) {
         const typedConfig = column.config as PersonQueryViewColumn['config'];
         return !!typedConfig.query_id;
