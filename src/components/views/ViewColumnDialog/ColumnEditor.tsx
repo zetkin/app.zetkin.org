@@ -26,7 +26,7 @@ interface ColumnEditorProps {
     column: ZetkinViewColumn | PendingZetkinViewColumn;
     onCancel: () => void;
     onChange: (colSpec: SelectedViewColumn) => void;
-    onSave: () => void;
+    onSave: () => Promise<void>;
 }
 
 const ColumnEditor : FunctionComponent<ColumnEditorProps> = ({ column, onCancel, onChange, onSave }) => {
@@ -51,7 +51,7 @@ const ColumnEditor : FunctionComponent<ColumnEditorProps> = ({ column, onCancel,
     return (
         <form onSubmit={ onSubmit } style={{ height: '100%' }}>
             <Box display="flex" flexDirection="column" height="100%" pb={ 2 }>
-                <Box flexGrow="1">
+                <Box display="flex" flexGrow="1" height="100%" justifyContent="center">
                     <Container maxWidth="md">
                         { column.type == COLUMN_TYPE.PERSON_FIELD && (
                             <PersonFieldColumnConfigForm

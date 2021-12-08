@@ -70,14 +70,14 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
         setSelectedColumn(null);
     };
 
-    const onColumnSave = (colSpec : SelectedViewColumn) => {
+    const onColumnSave = async (colSpec : SelectedViewColumn) => {
         setSelectedColumn(null);
         NProgress.start();
         if ('id' in colSpec) { // If is an existing column, PATCH it
-            updateColumnMutation.mutate(colSpec);
+            await updateColumnMutation.mutateAsync(colSpec);
         }
         else { // If it's a new view, POST a new column
-            addColumnMutation.mutate({
+            await addColumnMutation.mutateAsync({
                 config: colSpec.config,
                 title: colSpec.title,
                 type: colSpec.type,
@@ -95,9 +95,9 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
         setSelectedColumn({});
     };
 
-    const onColumnDelete = (colFieldName : string) => {
+    const onColumnDelete = async (colFieldName : string) => {
         const colId = colIdFromFieldName(colFieldName);
-        removeColumnMutation.mutate(colId);
+        await removeColumnMutation.mutateAsync(colId);
     };
 
     const onColumnRename = (colFieldName : string) => {
@@ -106,9 +106,9 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
         setColumnToRename(colSpec);
     };
 
-    const onColumnRenameSave = (column : Pick<ZetkinViewColumn, 'id' | 'title'>) => {
+    const onColumnRenameSave = async (column : Pick<ZetkinViewColumn, 'id' | 'title'>) => {
         setColumnToRename(null);
-        updateColumnMutation.mutate({
+        await updateColumnMutation.mutateAsync({
             id: column.id,
             title: column.title,
         });

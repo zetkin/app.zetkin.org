@@ -17,7 +17,7 @@ export const AUTO_SAVE_TYPES = [
 interface ViewColumnDialogProps {
     selectedColumn?: SelectedViewColumn | null;
     onCancel: () => void;
-    onSave: (colSpec: SelectedViewColumn) => void;
+    onSave: (colSpec: SelectedViewColumn) => Promise<void>;
     open: boolean;
 }
 
@@ -59,8 +59,9 @@ const ViewColumnDialog : FunctionComponent<ViewColumnDialogProps> = ({ selectedC
                         onChange={ column => {
                             setColumn(column);
                         } }
-                        onSave={ () => {
-                            onSave(column);
+                        onSave={ async () => {
+                            await onSave(column);
+                            setColumn({});
                         } }
                     />
                 ) }
