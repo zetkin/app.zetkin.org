@@ -11,7 +11,7 @@ const ViewDataTableToolbar: React.FunctionComponent<ViewDataTableToolbarProps> =
         <Box display="flex" justifyContent="space-between">
             <Box />
 
-            <Button onClick={ onColumnCreate }>
+            <Button data-testid="create-column-button" onClick={ onColumnCreate }>
                 <Add /><FormattedMessage id="misc.views.createColumn" />
             </Button>
         </Box>

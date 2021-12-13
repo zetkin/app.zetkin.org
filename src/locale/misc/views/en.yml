@@ -37,3 +37,4 @@ defaultColumnTitles:
     person_notes: Notes
 newViewFields:
     title: New View
+columnConfigError: Sorry, something went wrong. 

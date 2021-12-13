@@ -15,6 +15,7 @@ const ColumnGallery : FunctionComponent<ColumnGalleryProps> = ({ onSelectType })
             { Object.values(COLUMN_TYPE).map(colType => (
                 <ButtonBase
                     key={ colType }
+                    data-testid={ `column-type-selector-${colType}` }
                     disableRipple
                     onClick={ () => onSelectType(colType) }
                     style={{ width: 'min-content' }}>

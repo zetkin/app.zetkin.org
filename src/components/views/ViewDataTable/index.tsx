@@ -11,6 +11,7 @@ import deleteViewColumn from 'fetching/views/deleteViewColumn';
 import patchViewColumn from 'fetching/views/patchViewColumn';
 import postViewColumn from 'fetching/views/postViewColumn';
 import { SelectedViewColumn } from 'types/views';
+import ViewErrorDialog from './ViewErrorDialog';
 import ViewRenameColumnDialog from '../ViewRenameColumnDialog';
 import ViewColumnDialog, { AUTO_SAVE_TYPES } from 'components/views/ViewColumnDialog';
 import ViewDataTableColumnMenu, { ViewDataTableColumnMenuProps } from './ViewDataTableColumnMenu';
@@ -25,14 +26,15 @@ interface ViewDataTableProps {
 }
 
 const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, viewId }) => {
-    const [selectedColumn, setSelectedColumn] = useState<SelectedViewColumn | null>(null);
+    const [columnToConfigure, setColumnToConfigure] = useState<SelectedViewColumn | null>(null);
     const [columnToRename, setColumnToRename] = useState<ZetkinViewColumn | null>(null);
+    const [errorDialogOpen, setErrorDialogOpen] = useState(false);
     const { orgId } = useRouter().query;
     const queryClient = useQueryClient();
 
     const addColumnMutation = useMutation(postViewColumn(orgId as string, viewId), {
         onError: () => {
-            // TODO: Show error dialog
+            setErrorDialogOpen(true);
             NProgress.done();
         },
         onSettled: () => {
@@ -43,7 +45,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
 
     const updateColumnMutation = useMutation(patchViewColumn(orgId as string, viewId), {
         onError: () => {
-            // TODO: Show error dialog
+            setErrorDialogOpen(true);
             NProgress.done();
         },
         onSettled: () => {
@@ -54,7 +56,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
 
     const removeColumnMutation = useMutation(deleteViewColumn(orgId as string, viewId), {
         onError: () => {
-            // TODO: Show error dialog
+            setErrorDialogOpen(true);
             NProgress.done();
         },
         onSettled: () => {
@@ -67,11 +69,11 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
     });
 
     const onColumnCancel = () => {
-        setSelectedColumn(null);
+        setColumnToConfigure(null);
     };
 
     const onColumnSave = async (colSpec : SelectedViewColumn) => {
-        setSelectedColumn(null);
+        setColumnToConfigure(null);
         NProgress.start();
         if ('id' in colSpec) { // If is an existing column, PATCH it
             await updateColumnMutation.mutateAsync(colSpec);
@@ -88,11 +90,11 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
     const onColumnConfigure = (colFieldName : string) => {
         const colId = colIdFromFieldName(colFieldName);
         const colSpec = columns.find(col => col.id === colId) || null;
-        setSelectedColumn(colSpec);
+        setColumnToConfigure(colSpec);
     };
 
     const onColumnCreate = () => {
-        setSelectedColumn({});
+        setColumnToConfigure({});
     };
 
     const onColumnDelete = async (colFieldName : string) => {
@@ -112,10 +114,6 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
             id: column.id,
             title: column.title,
         });
-    };
-
-    const onColumnRenameCancel = () => {
-        setColumnToRename(null);
     };
 
     const avatarColumn : GridColDef = {
@@ -204,17 +202,21 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
             { columnToRename && (
                 <ViewRenameColumnDialog
                     column={ columnToRename }
-                    onCancel={ onColumnRenameCancel }
+                    onCancel={ () => setColumnToRename(null) }
                     onSave={ onColumnRenameSave }
                 />
             ) }
-            { selectedColumn && (
+            { columnToConfigure && (
                 <ViewColumnDialog
                     onCancel={ onColumnCancel }
                     onSave={ onColumnSave }
-                    selectedColumn={ selectedColumn }
+                    selectedColumn={ columnToConfigure }
                 />
             ) }
+            <ViewErrorDialog
+                onClose={ () => setErrorDialogOpen(false) }
+                open={ errorDialogOpen }
+            />
         </>
     );
 };
