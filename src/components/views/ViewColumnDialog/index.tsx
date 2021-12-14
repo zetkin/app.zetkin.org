@@ -1,8 +1,10 @@
 import { useIntl } from 'react-intl';
+import { useMediaQuery } from '@material-ui/core';
 import { FunctionComponent, useState } from 'react';
 
 import ColumnEditor from './ColumnEditor';
 import ColumnGallery from './ColumnGallery';
+import theme from 'theme';
 import ZetkinDialog from 'components/ZetkinDialog';
 import { COLUMN_TYPE, SelectedViewColumn } from 'types/views';
 
@@ -20,6 +22,7 @@ interface ViewColumnDialogProps {
 }
 
 const ViewColumnDialog : FunctionComponent<ViewColumnDialogProps> = ({ selectedColumn, onCancel, onSave }) => {
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     const intl = useIntl();
     const [column, setColumn] = useState<SelectedViewColumn>(selectedColumn || {});
 
@@ -49,7 +52,7 @@ const ViewColumnDialog : FunctionComponent<ViewColumnDialogProps> = ({ selectedC
                 intl.formatMessage({ id: `misc.views.columnDialog.types.${column.type}` }) :
                 intl.formatMessage({ id: 'misc.views.columnDialog.gallery.header' })
             }>
-            <div style={{ height: '50vh' }}>
+            <div style={{ height: isMobile ? '80vh' : '50vh' }}>
                 { column.type && (
                     <ColumnEditor
                         column={ column }
