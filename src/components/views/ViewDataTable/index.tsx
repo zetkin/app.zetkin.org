@@ -1,6 +1,9 @@
+import { Alert } from '@material-ui/lab';
+import { FormattedMessage } from 'react-intl';
 import { FunctionComponent } from 'react';
 import NProgress from 'nprogress';
 import { Person } from '@material-ui/icons';
+import { Snackbar } from '@material-ui/core';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
@@ -11,7 +14,7 @@ import deleteViewColumn from 'fetching/views/deleteViewColumn';
 import patchViewColumn from 'fetching/views/patchViewColumn';
 import postViewColumn from 'fetching/views/postViewColumn';
 import { SelectedViewColumn } from 'types/views';
-import ViewErrorDialog from './ViewErrorDialog';
+import { VIEW_DATA_TABLE_ERROR } from './constants';
 import ViewRenameColumnDialog from '../ViewRenameColumnDialog';
 import ViewColumnDialog, { AUTO_SAVE_TYPES } from 'components/views/ViewColumnDialog';
 import ViewDataTableColumnMenu, { ViewDataTableColumnMenuProps } from './ViewDataTableColumnMenu';
@@ -28,13 +31,13 @@ interface ViewDataTableProps {
 const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, viewId }) => {
     const [columnToConfigure, setColumnToConfigure] = useState<SelectedViewColumn | null>(null);
     const [columnToRename, setColumnToRename] = useState<ZetkinViewColumn | null>(null);
-    const [errorDialogOpen, setErrorDialogOpen] = useState(false);
+    const [error, setError] = useState<VIEW_DATA_TABLE_ERROR>();
     const { orgId } = useRouter().query;
     const queryClient = useQueryClient();
 
     const addColumnMutation = useMutation(postViewColumn(orgId as string, viewId), {
         onError: () => {
-            setErrorDialogOpen(true);
+            setError(VIEW_DATA_TABLE_ERROR.CREATE_COLUMN);
             NProgress.done();
         },
         onSettled: () => {
@@ -45,7 +48,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
 
     const updateColumnMutation = useMutation(patchViewColumn(orgId as string, viewId), {
         onError: () => {
-            setErrorDialogOpen(true);
+            setError(VIEW_DATA_TABLE_ERROR.MODIFY_COLUMN);
             NProgress.done();
         },
         onSettled: () => {
@@ -56,7 +59,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
 
     const removeColumnMutation = useMutation(deleteViewColumn(orgId as string, viewId), {
         onError: () => {
-            setErrorDialogOpen(true);
+            setError(VIEW_DATA_TABLE_ERROR.DELETE_COLUMN);
             NProgress.done();
         },
         onSettled: () => {
@@ -213,10 +216,16 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
                     selectedColumn={ columnToConfigure }
                 />
             ) }
-            <ViewErrorDialog
-                onClose={ () => setErrorDialogOpen(false) }
-                open={ errorDialogOpen }
-            />
+            { /* Error alert */ }
+            <Snackbar
+                anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+                data-testid="data-table-error-indicator"
+                onClose={ () => setError(undefined) }
+                open={ Boolean(error) }>
+                <Alert severity="error">
+                    <FormattedMessage id={ `misc.views.dataTableErrors.${error}` } />
+                </Alert>
+            </Snackbar>
         </>
     );
 };

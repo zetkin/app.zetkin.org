@@ -37,4 +37,7 @@ defaultColumnTitles:
     person_notes: Notes
 newViewFields:
     title: New View
-columnConfigError: Sorry, something went wrong. 
+dataTableErrors:
+    create_column: There was an error creating the column
+    delete_column: There was an error deleting the column
+    modify_column: There was an error editing the column

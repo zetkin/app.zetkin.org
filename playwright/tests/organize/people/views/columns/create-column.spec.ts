@@ -98,7 +98,7 @@ test.describe('Creating a view column', () => {
         await page.click('data-testid=create-column-button');
         await page.click('data-testid=column-type-selector-local_bool');
 
-        expect(await page.locator('data-testid=view-column-config-error-dialog').count()).toEqual(1);
+        expect(await page.locator('data-testid=data-table-error-indicator').count()).toEqual(1);
     });
 
 });
