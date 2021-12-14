@@ -63,7 +63,7 @@ test.describe('Renaming a view column', () => {
         await page.click('button[aria-label="Menu"]:right-of(:text("First Name"))', { force: true });
         await page.click('data-testid=rename-column-button-col_1');
 
-        await page.fill('#title', newTitle);
+        await page.fill('#rename-column-title-field', newTitle);
         await page.click('button > :text("Save")');
 
         // Check body of request
@@ -89,7 +89,7 @@ test.describe('Renaming a view column', () => {
         await page.click('button[aria-label="Menu"]:right-of(:text("First Name"))', { force: true });
         await page.click('data-testid=rename-column-button-col_1');
 
-        await page.fill('#title', 'New title');
+        await page.fill('#rename-column-title-field', 'New title');
         await page.click('button > :text("Save")');
 
         expect(await page.locator('data-testid=view-column-config-error-dialog').count()).toEqual(1);

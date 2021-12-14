@@ -28,7 +28,7 @@ const ViewRenameColumnDialog : FunctionComponent<ViewRenameColumnDialogProps> = 
             } }>
                 <TextField
                     fullWidth
-                    id="title"
+                    id="rename-column-title-field"
                     label={ intl.formatMessage({ id: 'misc.views.columnRenameDialog.title' }) }
                     onChange={ ev => setTitle(ev.target.value) }
                     value={ title }
