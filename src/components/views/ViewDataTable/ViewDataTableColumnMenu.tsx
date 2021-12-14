@@ -40,10 +40,11 @@ const ViewDataTableColumnMenu = forwardRef<
         <GridColumnMenuContainer
             ref={ ref }
             currentColumn={ currentColumn }
+            data-testid={ `grid-filter-column-menu-${currentColumn.field}` }
             hideMenu={ hideMenu }
             { ...rest }>
             <GridFilterMenuItem column={ currentColumn } onClick={ hideMenu } />
-            <MenuItem onClick={ onClickRename }>
+            <MenuItem data-testid={ `rename-column-button-${currentColumn.field}` } onClick={ onClickRename }>
                 <Msg id="misc.views.columnMenu.rename"/>
             </MenuItem>
             {

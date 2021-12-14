@@ -6,77 +6,94 @@ import AllMembersColumns from '../../../../../mockData/orgs/KPD/people/views/All
 import AllMembersRows from '../../../../../mockData/orgs/KPD/people/views/AllMembers/rows';
 import KPD from '../../../../../mockData/orgs/KPD';
 
+test.describe.only('Renaming a view column', () => {
 
-test('the user can rename an existing column', async ({ page, appUri, moxy, login }) => {
-    await moxy.removeMock();
-    await login();
+    test.beforeEach(async ({ moxy, login }) => {
+        await moxy.removeMock();
+        await login();
+
+        await moxy.setMock( '/orgs/1', 'get', {
+            data: {
+                data: KPD,
+            },
+        });
 
 
-    await moxy.setMock( '/orgs/1', 'get', {
-        data: {
-            data: KPD,
-        },
+        await moxy.setMock('/orgs/1/people/views/1', 'get', {
+            data: {
+                data: AllMembers,
+            },
+            status: 200,
+        });
+
+        await moxy.setMock('/orgs/1/people/views/1/rows', 'get', {
+            data: {
+                data: AllMembersRows,
+            },
+            status: 200,
+        });
+
+        await moxy.setMock('/orgs/1/people/views/1/columns', 'get', {
+            data: {
+                data: AllMembersColumns,
+            },
+            status: 200,
+        });
     });
 
-    await moxy.setMock('/orgs/1/people/views/1', 'get', {
-        data: {
-            data: AllMembers,
-        },
-        status: 200,
-    });
-    // Rows with only data of first two columns
-    const removeRowsMock = await moxy.setMock('/orgs/1/people/views/1/rows', 'get', {
-        data: {
-            data: AllMembersRows.map(row => {
-                return { ...row, content: [row.content[0], row.content[1]] };
-            }),
-        },
-        status: 200,
-    });
-        // Only first two columns
-    const removeColsMock = await moxy.setMock('/orgs/1/people/views/1/columns', 'get', {
-        data: {
-            data: [AllMembersColumns[0], AllMembersColumns[1]],
-        },
-        status: 200,
+    test.afterEach(async ({ moxy }) => {
+        await moxy.removeMock();
     });
 
-    // Mock for post req to create new column
-    await moxy.setMock('/orgs/1/people/views/1/columns', 'post', {
-        data: { data: AllMembersColumns[2] },
-        status: 201,
+
+    test('the user can rename an existing column', async ({ page, appUri, moxy }) => {
+        const newTitle = 'Chosen Name';
+        await moxy.setMock(`/orgs/1/people/views/1/columns/${AllMembersColumns[0].id}`, 'patch', {
+            data: {
+                data: {
+                    ...AllMembersColumns[0],
+                    title: newTitle,
+                },
+            },
+            status: 201,
+        });
+
+        await page.goto(appUri + '/organize/1/people/views/1');
+
+        // Rename first column
+        await page.click('button[aria-label="Menu"]:right-of(:text("First Name"))', { force: true });
+        await page.click('data-testid=rename-column-button-col_1');
+
+        await page.fill('#title', newTitle);
+        await page.click('button > :text("Save")');
+
+        // Check body of request
+        const mocks = await moxy.logRequests();
+        const columnPostReq = mocks.log.find(mock =>
+            mock.method === 'PATCH' &&
+            mock.path === `/v1/orgs/1/people/views/1/columns/${AllMembersColumns[0].id}`,
+        );
+        expect(columnPostReq?.data).toEqual({ title: newTitle });
     });
 
-    await page.goto(appUri + '/organize/1/people/views/1');
+    test('shows an error modal if there is an error renaming the column', async ({ page, appUri, moxy }) => {
+        await moxy.setMock(`/orgs/1/people/views/1/columns/${AllMembersColumns[0].id}`, 'patch', {
+            data: {
+                error: '',
+            },
+            status: 400,
+        });
 
+        await page.goto(appUri + '/organize/1/people/views/1');
 
-    // Remove existing mocks
-    await removeRowsMock();
-    await removeColsMock();
+        // Rename first column
+        await page.click('button[aria-label="Menu"]:right-of(:text("First Name"))', { force: true });
+        await page.click('data-testid=rename-column-button-col_1');
 
-    // Replace mocks
-    await moxy.setMock('/orgs/1/people/views/1/columns', 'get', {
-        data: {
-            data: AllMembersColumns,
-        },
-        status: 200,
+        await page.fill('#title', 'New title');
+        await page.click('button > :text("Save")');
+
+        expect(await page.locator('data-testid=view-column-config-error-dialog').count()).toEqual(1);
     });
 
-    await moxy.setMock('/orgs/1/people/views/1/rows', 'get', {
-        data: {
-            data: AllMembersRows,
-        },
-        status: 200,
-    });
-
-    // Create new toggle column
-    await page.click('data-testid=create-column-button');
-    await page.click('data-testid=column-type-selector-local_bool');
-
-    // Check body of request
-    const mocks = await moxy.logRequests();
-    const columnPostReq = mocks.log.find(mock => mock.method === 'POST' && mock.path === '/v1/orgs/1/people/views/1/columns');
-    expect(columnPostReq?.data).toEqual({ title: 'Toggle', type: 'local_bool' });
-
-    await moxy.removeMock();
 });
