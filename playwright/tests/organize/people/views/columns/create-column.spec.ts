@@ -18,7 +18,6 @@ test.describe('Creating a view column', () => {
             },
         });
 
-
         await moxy.setMock('/orgs/1/people/views/1', 'get', {
             data: {
                 data: AllMembers,
@@ -100,7 +99,6 @@ test.describe('Creating a view column', () => {
         await page.click('data-testid=column-type-selector-local_bool');
 
         expect(await page.locator('data-testid=view-column-config-error-dialog').count()).toEqual(1);
-
     });
 
 });

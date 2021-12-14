@@ -55,7 +55,7 @@ const ViewDataTableColumnMenu = forwardRef<
                     </MenuItem>
                 )
             }
-            <MenuItem onClick={ onClickDelete }>
+            <MenuItem data-testid={ `delete-column-button-${currentColumn.field}` } onClick={ onClickDelete }>
                 <Msg id="misc.views.columnMenu.delete"/>
             </MenuItem>
         </GridColumnMenuContainer>
