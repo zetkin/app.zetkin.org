@@ -8,7 +8,7 @@ import TabbedLayout from './TabbedLayout';
 
 const SingleViewLayout: FunctionComponent = ({ children }) => {
     const { orgId, viewId } = useRouter().query;
-    const viewQuery = useQuery(['views', orgId, viewId ], getView(orgId as string, viewId as string));
+    const viewQuery = useQuery(['view', viewId ], getView(orgId as string, viewId as string));
 
     const view = viewQuery.data;
 
