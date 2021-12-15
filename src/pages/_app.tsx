@@ -7,6 +7,7 @@ import dayjs from 'dayjs';
 import { Hydrate } from 'react-query/hydration';
 import { IntlProvider } from 'react-intl';
 import isoWeek from 'dayjs/plugin/isoWeek';
+import { LicenseInfo } from '@mui/x-data-grid-pro';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import NProgress from 'nprogress';
 import { ReactQueryDevtools } from 'react-query/devtools';
@@ -22,6 +23,11 @@ import { UserContext } from '../hooks';
 
 dayjs.extend(LocalTimeToJsonPlugin);
 dayjs.extend(isoWeek);
+
+// MUI-X license
+if (process.env.NEXT_PUBLIC_MUIX_LICENSE_KEY) {
+    LicenseInfo.setLicenseKey(process.env.NEXT_PUBLIC_MUIX_LICENSE_KEY);
+}
 
 // Progress bar
 NProgress.configure({ showSpinner: false });
