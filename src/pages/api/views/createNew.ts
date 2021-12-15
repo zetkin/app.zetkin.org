@@ -1,7 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 
+import { COLUMN_TYPE } from 'types/views';
 import { createApiFetch } from 'utils/apiFetch';
-import { DATA_FIELD } from 'types/smartSearch';
+import { NATIVE_PERSON_FIELDS } from 'types/views';
 import postView from 'fetching/views/postView';
 import postViewColumn from 'fetching/views/postViewColumn';
 import { getBrowserLanguage, getMessages } from 'utils/locale';
@@ -24,7 +25,7 @@ export default async (
 
     const lang = getBrowserLanguage(req);
 
-    const messages = await getMessages(lang, ['misc.views']);
+    const messages = await getMessages(lang, ['misc']);
 
     const apiFetch = createApiFetch(req.headers);
 
@@ -36,17 +37,17 @@ export default async (
         const columnsPostMethod = postViewColumn(orgId as string, newViewId, apiFetch);
         await columnsPostMethod({
             config: {
-                field:  DATA_FIELD.FIRST_NAME,
+                field:  NATIVE_PERSON_FIELDS.FIRST_NAME,
             },
-            title: messages['misc.views.newViewFields.columns.first_name'],
-            type: 'person_field',
+            title: messages['misc.nativePersonFields.first_name'],
+            type: COLUMN_TYPE.PERSON_FIELD,
         });
         await columnsPostMethod({
             config: {
-                field:  DATA_FIELD.LAST_NAME,
+                field:  NATIVE_PERSON_FIELDS.LAST_NAME,
             },
-            title: messages['misc.views.newViewFields.columns.last_name'],
-            type: 'person_field',
+            title: messages['misc.nativePersonFields.last_name'],
+            type: COLUMN_TYPE.PERSON_FIELD,
         });
 
         res.status(200).json({ data: newView });

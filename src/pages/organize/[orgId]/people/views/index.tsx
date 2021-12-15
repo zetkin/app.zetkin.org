@@ -2,12 +2,12 @@ import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { useIntl } from 'react-intl';
 
-import CreateViewActionButton from 'components/organize/people/CreateViewActionButton';
+import CreateViewActionButton from 'components/views/CreateViewActionButton';
 import getViews from 'fetching/views/getViews';
 import { PageWithLayout } from 'types';
 import PeopleLayout from 'components/layout/organize/PeopleLayout';
 import { scaffold } from 'utils/next';
-import ViewsListTable from 'components/organize/people/ViewsListTable';
+import ViewsListTable from 'components/views/ViewsListTable';
 import { ZetkinView } from 'types/zetkin';
 
 const scaffoldOptions = {

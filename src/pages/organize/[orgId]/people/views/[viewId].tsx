@@ -9,8 +9,8 @@ import getViewRows from 'fetching/views/getViewRows';
 import { PageWithLayout } from 'types';
 import { scaffold } from 'utils/next';
 import SingleViewLayout from 'components/layout/organize/SingleViewLayout';
+import ViewDataTable from 'components/views/ViewDataTable';
 import ZetkinQuery from 'components/ZetkinQuery';
-import ZetkinViewTable from 'components/ZetkinViewTable';
 
 
 const scaffoldOptions = {
@@ -57,7 +57,6 @@ type SingleViewPageProps = {
 };
 
 const SingleViewPage: PageWithLayout<SingleViewPageProps> = ({ orgId, viewId }) => {
-
     return (
         <ZetkinQuery queries={{
             colsQuery: useQuery(['views', viewId, 'columns'], getViewColumns(orgId, viewId)),
@@ -69,9 +68,10 @@ const SingleViewPage: PageWithLayout<SingleViewPageProps> = ({ orgId, viewId }) 
                     <Head>
                         <title>{ viewQuery.data.title }</title>
                     </Head>
-                    <ZetkinViewTable
+                    <ViewDataTable
                         columns={ colsQuery.data }
                         rows={ rowsQuery.data }
+                        viewId={ viewId }
                     />
                 </>
             ) }

@@ -1,5 +1,7 @@
 import { ZetkinAssignedTask, ZetkinTask } from './tasks';
 import { ZetkinQuery, ZetkinSmartSearchFilter } from './smartSearch';
+import { ZetkinView, ZetkinViewColumn, ZetkinViewRow } from './views';
+
 
 export interface ZetkinCampaign {
     color: string;
@@ -218,29 +220,4 @@ export interface ZetkinDataField {
 
 export type { ZetkinTask, ZetkinAssignedTask, ZetkinQuery, ZetkinSmartSearchFilter };
 
-export interface ZetkinView {
-    id: number;
-    title: string;
-    description: string;
-    created: string; // ISO Datetime
-    owner: {
-        id: number;
-        name: string;
-    };
-    organization: ZetkinOrganization;
-}
-
-export interface ZetkinViewColumn {
-    id: number;
-    title: string;
-    description?: string;
-    type: string;
-    config?: {
-        field: string;
-    };
-}
-
-export interface ZetkinViewRow {
-    id: number;
-    content: unknown[];
-}
+export type { ZetkinView, ZetkinViewColumn, ZetkinViewRow };
