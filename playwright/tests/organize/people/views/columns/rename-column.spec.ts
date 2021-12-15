@@ -68,11 +68,11 @@ test.describe('Renaming a view column', () => {
 
         // Check body of request
         const mocks = await moxy.logRequests();
-        const columnPostReq = mocks.log.find(mock =>
+        const columnPatchRequest = mocks.log.find(mock =>
             mock.method === 'PATCH' &&
             mock.path === `/v1/orgs/1/people/views/1/columns/${AllMembersColumns[0].id}`,
         );
-        expect(columnPostReq?.data).toEqual({ title: newTitle });
+        expect(columnPatchRequest?.data).toEqual({ title: newTitle });
     });
 
     test('shows an error modal if there is an error renaming the column', async ({ page, appUri, moxy }) => {

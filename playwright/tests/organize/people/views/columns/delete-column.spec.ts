@@ -58,11 +58,11 @@ test.describe('Deleting a view column', () => {
 
         // Check body of request
         const mocks = await moxy.logRequests();
-        const columnPostReq = mocks.log.find(mock =>
+        const columnDeleteRequest = mocks.log.find(mock =>
             mock.method === 'DELETE' &&
             mock.path === `/v1/orgs/1/people/views/1/columns/${AllMembersColumns[0].id}`,
         );
-        expect(columnPostReq).not.toEqual(undefined);
+        expect(columnDeleteRequest).not.toEqual(undefined);
     });
 
     test('shows an error modal if there is an error renaming the column', async ({ page, appUri, moxy }) => {
