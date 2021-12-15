@@ -81,10 +81,14 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
         if ('id' in colSpec) { // If is an existing column, PATCH it with changed values
             // Get existing column
             const columnPreEdit = columns.find(col => col.id === colSpec.id);
+            if (!columnPreEdit) {
+                setError(VIEW_DATA_TABLE_ERROR.MODIFY_COLUMN);
+                return;
+            }
             // Extract out only fields which changed
             const changedFields = Object.entries(colSpec).reduce(
                 (acc: Partial<ZetkinViewColumn>, [key, value]) => {
-                    if (columnPreEdit && columnPreEdit[key as keyof ZetkinViewColumn] !== value) {
+                    if (columnPreEdit[key as keyof ZetkinViewColumn] !== value) {
                         return {
                             ...acc,
                             [key]: value,
