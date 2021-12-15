@@ -86,16 +86,13 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
                 return;
             }
             // Extract out only fields which changed
-            const changedFields = Object.entries(colSpec).reduce(
-                (acc: Partial<ZetkinViewColumn>, [key, value]) => {
-                    if (columnPreEdit[key as keyof ZetkinViewColumn] !== value) {
-                        return {
-                            ...acc,
-                            [key]: value,
-                        };
-                    }
-                    return acc;
-                }, {});
+            const changedFields: Partial<ZetkinViewColumn> = {};
+            Object.entries(colSpec).forEach(([key, value]) => {
+                const typedKey = key as keyof ZetkinViewColumn;
+                if (columnPreEdit[typedKey] !== value) {
+                    changedFields[typedKey] = value;
+                }
+            });
             await updateColumnMutation.mutateAsync({
                 ...changedFields,
                 id: colSpec.id,
