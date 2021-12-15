@@ -54,7 +54,7 @@ test.describe('Deleting a view column', () => {
 
         // Delete first column
         await page.click('button[aria-label="Menu"]:right-of(:text("First Name"))', { force: true });
-        await page.click('data-testid=delete-column-button-col_1');
+        await page.click(`data-testid=delete-column-button-col_${AllMembersColumns[0].id}`);
 
         // Check body of request
         const mocks = await moxy.logRequests();
@@ -74,7 +74,7 @@ test.describe('Deleting a view column', () => {
 
         // Delete first column
         await page.click('button[aria-label="Menu"]:right-of(:text("First Name"))', { force: true });
-        await page.click('data-testid=delete-column-button-col_1');
+        await page.click(`data-testid=delete-column-button-col_${AllMembersColumns[0].id}`);
 
         expect(await page.locator('data-testid=data-table-error-indicator').count()).toEqual(1);
     });

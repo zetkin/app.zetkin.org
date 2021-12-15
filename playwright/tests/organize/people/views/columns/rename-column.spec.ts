@@ -61,7 +61,7 @@ test.describe('Renaming a view column', () => {
 
         // Rename first column
         await page.click('button[aria-label="Menu"]:right-of(:text("First Name"))', { force: true });
-        await page.click('data-testid=rename-column-button-col_1');
+        await page.click(`data-testid=rename-column-button-col_${AllMembersColumns[0].id}`);
 
         await page.fill('#rename-column-title-field', newTitle);
         await page.click('button > :text("Save")');
@@ -87,7 +87,7 @@ test.describe('Renaming a view column', () => {
 
         // Rename first column
         await page.click('button[aria-label="Menu"]:right-of(:text("First Name"))', { force: true });
-        await page.click('data-testid=rename-column-button-col_1');
+        await page.click(`data-testid=rename-column-button-col_${AllMembersColumns[0].id}`);
 
         await page.fill('#rename-column-title-field', 'New title');
         await page.click('button > :text("Save")');
