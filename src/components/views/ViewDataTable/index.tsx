@@ -78,8 +78,25 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
     const onColumnSave = async (colSpec : SelectedViewColumn) => {
         setColumnToConfigure(null);
         NProgress.start();
-        if ('id' in colSpec) { // If is an existing column, PATCH it
-            await updateColumnMutation.mutateAsync(colSpec);
+        if ('id' in colSpec) { // If is an existing column, PATCH it with changed values
+            // Get existing column
+            const columnPreEdit = columns.find(col => col.id === colSpec.id);
+            // Extract out only fields which changed
+            const changedFields = Object.entries(colSpec).reduce(
+                (acc: Partial<ZetkinViewColumn>, [key, value]) => {
+                    if (columnPreEdit && columnPreEdit[key as keyof ZetkinViewColumn] !== value) {
+                        return {
+                            ...acc,
+                            [key]: value,
+                        };
+                    }
+                    return acc;
+                }, {});
+            await updateColumnMutation.mutateAsync({
+                ...changedFields,
+                id: colSpec.id,
+            },
+            );
         }
         else { // If it's a new view, POST a new column
             await addColumnMutation.mutateAsync({
