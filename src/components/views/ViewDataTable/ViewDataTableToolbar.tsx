@@ -8,9 +8,7 @@ export interface ViewDataTableToolbarProps {
 
 const ViewDataTableToolbar: React.FunctionComponent<ViewDataTableToolbarProps> = ({ onColumnCreate }) => {
     return (
-        <Box display="flex" justifyContent="space-between">
-            <Box />
-
+        <Box display="flex" justifyContent="flex-end">
             <Button data-testid="create-column-button" onClick={ onColumnCreate }>
                 <Add /><FormattedMessage id="misc.views.createColumn" />
             </Button>
