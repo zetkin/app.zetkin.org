@@ -17,7 +17,9 @@ const scaffoldOptions = {
 };
 
 export const getServerSideProps : GetServerSideProps = scaffold(async (ctx) => {
-    const orgId = ctx.params && ctx.params.orgId;
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const { orgId } = ctx.params!;
+
     await ctx.queryClient.prefetchQuery(['views', orgId], getViews(orgId as string, ctx.apiFetch));
     const viewsQueryState = ctx.queryClient.getQueryState<ZetkinView[]>(['views', orgId]);
 

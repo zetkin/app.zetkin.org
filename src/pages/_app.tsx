@@ -6,7 +6,6 @@ import DateUtils from '@date-io/dayjs';
 import dayjs from 'dayjs';
 import { Hydrate } from 'react-query/hydration';
 import { IntlProvider } from 'react-intl';
-import isoWeek from 'dayjs/plugin/isoWeek';
 import { LicenseInfo } from '@mui/x-data-grid-pro';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import NProgress from 'nprogress';
@@ -16,13 +15,10 @@ import { ThemeProvider } from '@material-ui/core/styles';
 import { useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
-import { LocalTimeToJsonPlugin } from 'utils/dateUtils';
+import { dayjsConfig } from '../utils/dateUtils';
 import { PageWithLayout } from '../types';
 import theme from '../theme';
 import { UserContext } from '../hooks';
-
-dayjs.extend(LocalTimeToJsonPlugin);
-dayjs.extend(isoWeek);
 
 // MUI-X license
 if (process.env.NEXT_PUBLIC_MUIX_LICENSE_KEY) {
@@ -57,6 +53,9 @@ function MyApp({ Component, pageProps } : AppProps) : JSX.Element {
     if (typeof window !== 'undefined') {
         window.__reactRendered = true;
     }
+
+    // Dayjs global setup
+    dayjsConfig(lang);
 
     useEffect(() => {
         // Remove the server-side injected CSS.

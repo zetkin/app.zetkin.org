@@ -27,6 +27,9 @@ const SuggestedViews: React.FunctionComponent = () => {
     const router = useRouter();
     const { orgId } = router.query;
     const viewsQuery = useQuery(['views', orgId], getViews(orgId as string));
+    const onClickCard = (evt: React.ChangeEvent<HTMLButtonElement>) => {
+        router.push(`/organize/${orgId}/people/views/${evt.currentTarget.value}`);
+    };
 
     const views: ZetkinView[] | undefined = viewsQuery?.data?.slice(0,3);
 
@@ -42,7 +45,7 @@ const SuggestedViews: React.FunctionComponent = () => {
                         <Grid className={ classes.container } container spacing={ 3 }>
                             { views?.map((view: ZetkinView) => (
                                 <Grid key={ view.id } className={ classes.item } item>
-                                    <ViewCard view={ view } />
+                                    <ViewCard onClick={ onClickCard } view={ view } />
                                 </Grid>
                             )) }
                         </Grid>
