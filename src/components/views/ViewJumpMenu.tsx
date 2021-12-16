@@ -28,6 +28,7 @@ const ViewJumpMenu : FunctionComponent = () => {
         groupedOptions,
         inputValue,
     } = useAutocomplete({
+        clearOnBlur: true,
         getOptionLabel: option => option.title,
         options: viewsQuery.data || [],
     });
@@ -124,7 +125,7 @@ const ViewJumpMenu : FunctionComponent = () => {
                                         pathname: `/organize/${orgId}/people/views/${view.id}`,
                                     }}
                                     passHref>
-                                    <ListItem button component="a" selected={ idx == activeIndex }>
+                                    <ListItem button component="a" selected={ idx == activeIndex } tabIndex={ -1 }>
                                         <ListItemText>
                                             { view.title }
                                         </ListItemText>
