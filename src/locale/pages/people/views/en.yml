@@ -9,3 +9,6 @@ viewsList:
         title: Title
         created: Date created
         owner: Owner
+layout:
+    jumpMenu:
+        placeholder: Start typing to find view

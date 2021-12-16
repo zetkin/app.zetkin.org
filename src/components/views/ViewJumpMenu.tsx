@@ -1,19 +1,20 @@
+/* eslint-disable jsx-a11y/no-autofocus */
+
 import { ExpandMore } from '@material-ui/icons';
+import Link from 'next/link';
 import { useAutocomplete } from '@material-ui/lab';
+import { useIntl } from 'react-intl';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
-import { Box, IconButton, MenuItem, Popover, TextField } from '@material-ui/core';
-import { FunctionComponent, useState } from 'react';
+import { Box, IconButton, List, ListItem, ListItemText, Popover, TextField } from '@material-ui/core';
+import { FunctionComponent, useEffect, useState } from 'react';
 
 import getViews from 'fetching/views/getViews';
 import ZetkinQuery from 'components/ZetkinQuery';
-import { ZetkinView } from 'types/views';
 
-interface ViewJumpMenuProps {
-    onViewSelect: (view: ZetkinView) => void;
-}
 
-const ViewJumpMenu : FunctionComponent<ViewJumpMenuProps> = ({ onViewSelect }) => {
+const ViewJumpMenu : FunctionComponent = () => {
+    const intl = useIntl();
     const router = useRouter();
     const { orgId, viewId } = router.query;
     const viewsQuery = useQuery(['views', orgId], getViews(orgId as string));
@@ -28,6 +29,22 @@ const ViewJumpMenu : FunctionComponent<ViewJumpMenuProps> = ({ onViewSelect }) =
         getOptionLabel: option => option.title,
         options: viewsQuery.data || [],
     });
+
+    useEffect(() => {
+        const closeMenu = () => {
+            setJumpMenuAnchor(null);
+        };
+
+        router.events.on('routeChangeStart', closeMenu);
+
+        return () => {
+            router.events.off('routeChangeStart', closeMenu);
+        };
+    }, [router]);
+
+    // Exclude the current view from the list of views to jump to
+    const options = (inputValue.length? groupedOptions : viewsQuery.data || [])
+        .filter(view => view.id.toString() != viewId as string);
 
     return (
         <>
@@ -48,32 +65,34 @@ const ViewJumpMenu : FunctionComponent<ViewJumpMenuProps> = ({ onViewSelect }) =
                 }}>
                 <ZetkinQuery
                     queries={{ viewsQuery }}>
-                    { ({ queries: { viewsQuery } }) => {
-                        const options = inputValue.length? groupedOptions : viewsQuery.data;
-
-                        return (
-                            <>
-                                <Box { ...getRootProps() }>
-                                    <TextField { ...getInputProps() } />
-                                </Box>
-                                <Box { ...getListboxProps() } style={{ overflowY: 'scroll' }}>
-                                    { options.map(view => {
-                                        if (view.id.toString() != viewId as string) {
-                                            return (
-                                                <MenuItem key={ view.id }
-                                                    onClick={ () => {
-                                                        setJumpMenuAnchor(null);
-                                                        onViewSelect(view);
-                                                    } }>
-                                                    { view.title }
-                                                </MenuItem>
-                                            );
-                                        }
-                                    }) }
-                                </Box>
-                            </>
-                        );
-                    } }
+                    <Box { ...getRootProps() } p={ 1 }>
+                        <TextField
+                            { ...getInputProps() }
+                            autoFocus={ true }
+                            fullWidth
+                            placeholder={ intl.formatMessage({ id: 'pages.people.views.layout.jumpMenu.placeholder' }) }
+                            size="small"
+                            variant="outlined"
+                        />
+                    </Box>
+                    <List { ...getListboxProps() } dense style={{ overflowY: 'scroll' }}>
+                        { options.map((view) => {
+                            return (
+                                <Link
+                                    key={ view.id }
+                                    href={{
+                                        pathname: `/organize/${orgId}/people/views/${view.id}`,
+                                    }}
+                                    passHref>
+                                    <ListItem button component="a">
+                                        <ListItemText>
+                                            { view.title }
+                                        </ListItemText>
+                                    </ListItem>
+                                </Link>
+                            );
+                        }) }
+                    </List>
                 </ZetkinQuery>
             </Popover>
         </>

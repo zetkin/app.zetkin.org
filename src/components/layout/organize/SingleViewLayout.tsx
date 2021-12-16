@@ -18,9 +18,7 @@ const SingleViewLayout: FunctionComponent = ({ children }) => {
     const title = (
         <Box>
             { view?.title }
-            <ViewJumpMenu
-                onViewSelect={ view => router.push(`/organize/${orgId}/people/views/${view.id}`) }
-            />
+            <ViewJumpMenu/>
         </Box>
     );
 
