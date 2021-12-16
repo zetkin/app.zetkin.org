@@ -66,11 +66,14 @@ const ViewJumpMenu : FunctionComponent = () => {
 
     return (
         <>
-            <IconButton onClick={ (ev) => setJumpMenuAnchor(ev.target as Element) }>
+            <IconButton
+                data-testid="view-jump-menu-button"
+                onClick={ (ev) => setJumpMenuAnchor(ev.target as Element) }>
                 <ExpandMore/>
             </IconButton>
             <Popover
                 anchorEl={ jumpMenuAnchor }
+                data-testid="view-jump-menu-popover"
                 onClose={ () => setJumpMenuAnchor(null) }
                 onKeyDown={ ev => {
                     if (ev.code == 'ArrowUp') {
