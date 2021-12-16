@@ -46,7 +46,7 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
 interface TabbedLayoutProps {
     actionButtons?: React.ReactElement | React.ReactElement[];
     fixedHeight?: boolean;
-    title?: string;
+    title?: string | ReactElement;
     subtitle?: string | ReactElement;
     baseHref: string;
     defaultTab: string;

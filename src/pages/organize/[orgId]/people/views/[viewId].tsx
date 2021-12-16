@@ -30,11 +30,11 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
     const orgState = ctx.queryClient.getQueryState(['org', orgId]);
 
     await ctx.queryClient.prefetchQuery(
-        ['views', viewId],
+        ['view', viewId],
         getView(orgId as string, viewId as string, ctx.apiFetch),
     );
 
-    const viewState = ctx.queryClient.getQueryState(['views', viewId]);
+    const viewState = ctx.queryClient.getQueryState(['view', viewId]);
 
     if (orgState?.data && viewState?.data) {
         return {
@@ -59,9 +59,9 @@ type SingleViewPageProps = {
 const SingleViewPage: PageWithLayout<SingleViewPageProps> = ({ orgId, viewId }) => {
     return (
         <ZetkinQuery queries={{
-            colsQuery: useQuery(['views', viewId, 'columns'], getViewColumns(orgId, viewId)),
-            rowsQuery: useQuery(['views', viewId, 'rows'], getViewRows(orgId, viewId)),
-            viewQuery: useQuery(['views', viewId], getView(orgId, viewId)),
+            colsQuery: useQuery(['view', viewId, 'columns'], getViewColumns(orgId, viewId)),
+            rowsQuery: useQuery(['view', viewId, 'rows'], getViewRows(orgId, viewId)),
+            viewQuery: useQuery(['view', viewId], getView(orgId, viewId)),
         }}>
             { ({ queries: { colsQuery, rowsQuery, viewQuery } }) => (
                 <>
