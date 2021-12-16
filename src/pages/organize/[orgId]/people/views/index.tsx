@@ -2,14 +2,12 @@ import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { useIntl } from 'react-intl';
 
-import CreateViewActionButton from 'components/organize/people/CreateViewActionButton';
 import getViews from 'fetching/views/getViews';
 import { PageWithLayout } from 'types';
 import PeopleLayout from 'components/layout/organize/PeopleLayout';
 import { scaffold } from 'utils/next';
-import Suggested from './Suggested';
-import ViewsListTable from 'components/organize/people/ViewsListTable';
 import { ZetkinView } from 'types/zetkin';
+import { CreateViewActionButton, SuggestedViews, ViewsListTable  } from 'components/organize/people';
 
 const scaffoldOptions = {
     authLevelRequired: 2,
@@ -19,9 +17,7 @@ const scaffoldOptions = {
 };
 
 export const getServerSideProps : GetServerSideProps = scaffold(async (ctx) => {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const { orgId } = ctx.params!;
-
+    const orgId = ctx.params && ctx.params.orgId;
     await ctx.queryClient.prefetchQuery(['views', orgId], getViews(orgId as string, ctx.apiFetch));
     const viewsQueryState = ctx.queryClient.getQueryState<ZetkinView[]>(['views', orgId]);
 
@@ -57,7 +53,7 @@ const PeopleViewsPage: PageWithLayout<PeopleViewsPageProps> = () => {
                     intl.formatMessage({ id:'layout.organize.people.tabs.views' }) }
                 </title>
             </Head>
-            <Suggested />
+            <SuggestedViews />
             <ViewsListTable />
             <CreateViewActionButton />
         </>

@@ -1,14 +1,11 @@
-import getViews from '../../../../../../fetching/views/getViews';
-import Mockdata from '../../../../../../../playwright/mockData/orgs/KPD/people/views/Suggested';
+import getViews from 'fetching/views/getViews';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
-import ViewCard from '../ViewCard';
-import ZetkinQuery from '../../../../../../components/ZetkinQuery';
-import ZetkinSection from '../../../../../../components/ZetkinSection';
-import { ZetkinView } from '../../../../../../types/zetkin';
+import ViewCard from './ViewCard';
+import ZetkinQuery from 'components/ZetkinQuery';
+import ZetkinSection from 'components/ZetkinSection';
+import { ZetkinView } from 'types/zetkin';
 import { Grid, makeStyles, Theme } from '@material-ui/core';
-
-const VIEWS = Mockdata;
 
 const useStyles = makeStyles((theme: Theme) => ({
     container: {
@@ -25,23 +22,25 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
 }));
 
-const Suggested: React.FunctionComponent = () => {
+const SuggestedViews: React.FunctionComponent = () => {
     const classes = useStyles();
     const router = useRouter();
     const { orgId } = router.query;
     const viewsQuery = useQuery(['views', orgId], getViews(orgId as string));
 
+    const views: ZetkinView[] | undefined = viewsQuery?.data?.slice(0,3);
+
     return (
         <ZetkinQuery queries={{ viewsQuery }}>
             { ({ queries: { viewsQuery } }) => {
-                if (viewsQuery.data.length === 0) {
+                if (viewsQuery.data.length < 3) {
                     return null;
                 }
 
                 return (
                     <ZetkinSection title="Suggested">
                         <Grid className={ classes.container } container spacing={ 3 }>
-                            { VIEWS.map((view: ZetkinView) => (
+                            { views?.map((view: ZetkinView) => (
                                 <Grid key={ view.id } className={ classes.item } item>
                                     <ViewCard view={ view } />
                                 </Grid>
@@ -53,4 +52,4 @@ const Suggested: React.FunctionComponent = () => {
         </ZetkinQuery>);
 };
 
-export default Suggested;
+export default SuggestedViews;

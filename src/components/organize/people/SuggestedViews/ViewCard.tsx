@@ -1,4 +1,4 @@
-import { ZetkinView } from '../../../../../../types/zetkin';
+import { ZetkinView } from '../../../../types/zetkin';
 import {
     Card,
     CardActionArea,
@@ -22,6 +22,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 const ViewCard: React.FunctionComponent<{view: ZetkinView}> = ({ view }) => {
     const classes = useStyles();
 
+    if (!view) return <div />;
     return (
         <Fade in>
             <Card>
