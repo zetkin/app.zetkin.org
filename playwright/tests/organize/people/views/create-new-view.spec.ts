@@ -6,7 +6,7 @@ import NewView from '../../../../mockData/orgs/KPD/people/views/NewView';
 import NewViewColumns from '../../../../mockData/orgs/KPD/people/views/NewView/columns';
 
 
-test.describe('Views list page', () => {
+test.describe.only('Views list page', () => {
 
     test.afterEach(async ({ moxy }) => {
         await moxy.clearLog();
