@@ -7,7 +7,7 @@ import { PageWithLayout } from 'types';
 import PeopleLayout from 'components/layout/organize/PeopleLayout';
 import { scaffold } from 'utils/next';
 import { ZetkinView } from 'types/zetkin';
-import { CreateViewActionButton, SuggestedViews, ViewsListTable  } from 'components/organize/people';
+import { CreateViewActionButton, SuggestedViews, ViewsListTable  } from 'components/views';
 
 const scaffoldOptions = {
     authLevelRequired: 2,

@@ -1,4 +1,4 @@
-import { ZetkinView } from '../../../../types/zetkin';
+import { ZetkinView } from 'types/zetkin';
 import {
     Card,
     CardActionArea,

@@ -1,5 +1,43 @@
+columnDialog:
+    editor:
+        buttonLabels:
+            save: Save
+            cancel: Cancel
+        defaultTitle: New Column
+        fieldLabels:
+                survey: Survey
+                question: Question
+                tag: Tag
+                smartSearch: Smart Search
+                field: Field
+    gallery:
+        header: Add column to view
+        addToView: Add to view
+        configureColumn: Configure column
+    types:
+        local_bool: On/off toggle in this view
+        local_person: Reference to another person
+        person_field: Basic person data (name, e-mail etc)
+        person_notes: Organizer notes on person
+        person_query: Smart Search cross-reference
+        person_tag: On/off toggle for tag
+        survey_response: Response to survey question
+        survey_submitted: Date of survey submission
+createColumn: New column
+columnMenu:
+    configure: Configure column
+    delete: Delete column
+    rename: Rename column
+columnRenameDialog:
+    title: Title
+    save: Save
+defaultColumnTitles:
+    local_bool: Toggle
+    local_person: Person reference
+    person_notes: Notes
 newViewFields:
     title: New View
-    columns:
-        first_name: First name
-        last_name: Last name
+dataTableErrors:
+    create_column: There was an error creating the column
+    delete_column: There was an error deleting the column
+    modify_column: There was an error editing the column

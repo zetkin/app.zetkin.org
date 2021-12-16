@@ -1,3 +1,4 @@
+import { COLUMN_TYPE } from '../../../../../../../src/types/views';
 import { ZetkinViewColumn } from '../../../../../../../src/types/zetkin';
 
 const AllMembersColumns: ZetkinViewColumn[] = [
@@ -5,18 +6,18 @@ const AllMembersColumns: ZetkinViewColumn[] = [
         config: { field: 'first_name' },
         id: 1,
         title: 'First name',
-        type: 'person_field',
+        type: COLUMN_TYPE.PERSON_FIELD,
     },
     {
         config: { field: 'last_name' },
         id: 2,
         title: 'Last name',
-        type: 'person_field',
+        type: COLUMN_TYPE.PERSON_FIELD,
     },
     {
         id: 3,
         title: 'Active',
-        type: 'local_bool',
+        type: COLUMN_TYPE.LOCAL_BOOL,
     },
 ];
 
