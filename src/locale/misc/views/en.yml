@@ -41,3 +41,5 @@ dataTableErrors:
     create_column: There was an error creating the column
     delete_column: There was an error deleting the column
     modify_column: There was an error editing the column
+suggested:
+    created: Created by
