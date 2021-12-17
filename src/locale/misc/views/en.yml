@@ -42,4 +42,4 @@ dataTableErrors:
     delete_column: There was an error deleting the column
     modify_column: There was an error editing the column
 suggested:
-    created: Created by
+    created: Created by {name}

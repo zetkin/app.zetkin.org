@@ -36,7 +36,7 @@ const ViewCard: React.FunctionComponent<ViewCardProps> = ({ onClick,  view }) =>
                         </Grid>
                         <Grid item>
                             <Typography component="p" variant="caption">
-                                <FormattedMessage id="misc.views.suggested.created" />{ ' ' }{ view.owner.name }
+                                <FormattedMessage id="misc.views.suggested.created" values={{ name: view.owner.name }} />
                             </Typography>
                             <Typography component="p" variant="caption">
                                 <ZetkinRelativeTime datetime={ view.created }/>
