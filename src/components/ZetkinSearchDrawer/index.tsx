@@ -1,5 +1,4 @@
 import { FormattedMessage as Msg } from 'react-intl';
-import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 import {
     Box,
@@ -8,8 +7,8 @@ import {
 } from '@material-ui/core';
 import { FunctionComponent, useEffect, useRef, useState } from 'react';
 
-import getPeopleSearchResults from '../../fetching/getPeopleSearchResults';
 import useDebounce from '../../hooks/useDebounce';
+import { useGetPeopleSearchResults } from '../../fetching/getPeopleSearchResults';
 
 import ResultsList from './ResultsList';
 import SearchField from './SearchField';
@@ -26,11 +25,7 @@ const ZetkinSearchDrawer: FunctionComponent = (): JSX.Element | null => {
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [searchFieldValue, setSearchFieldValue] = useState<string>('');
 
-    const { refetch, data: results, isIdle, isFetching } = useQuery(
-        ['searchDrawerResults', searchFieldValue],
-        getPeopleSearchResults(searchFieldValue, orgId),
-        { enabled: false },
-    );
+    const { refetch, data: results, isIdle, isFetching } = useGetPeopleSearchResults(searchFieldValue, orgId as string);
 
     const debouncedQuery = useDebounce(async () => {
         refetch();

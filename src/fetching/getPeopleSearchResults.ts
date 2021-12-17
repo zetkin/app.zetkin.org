@@ -1,3 +1,5 @@
+import { useQuery, UseQueryResult } from 'react-query';
+
 import { defaultFetch } from '.';
 import { ZetkinPerson } from '../types/zetkin';
 
@@ -25,3 +27,15 @@ export default function getPeopleSearchResults(
         return results;
     };
 }
+
+
+export const getPeopleSearchResultsQueryKey = (searchQuery: string): ['peopleSearchResults', string] =>
+    ['peopleSearchResults', searchQuery];
+
+export const useGetPeopleSearchResults = (searchQuery: string, orgId: string): UseQueryResult<ZetkinPerson[]> => {
+    return useQuery(
+        getPeopleSearchResultsQueryKey(searchQuery),
+        getPeopleSearchResults(searchQuery, orgId),
+        { enabled: false },
+    );
+};

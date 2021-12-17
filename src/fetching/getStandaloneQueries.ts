@@ -11,7 +11,8 @@ export default function getStandaloneQueries (orgId : string, fetch = defaultFet
     };
 }
 
-export const getStandaloneQueriesQueryKey = (orgId: string): ['standaloneQueries', string] => ['standaloneQueries', orgId];
+export const getStandaloneQueriesQueryKey = (orgId: string): ['standaloneQueries', string] =>
+    ['standaloneQueries', orgId];
 
 export const useGetStandaloneQueries = (orgId: string): UseQueryResult<ZetkinQuery[]> => {
     return useQuery(getStandaloneQueriesQueryKey(orgId), getStandaloneQueries(orgId));

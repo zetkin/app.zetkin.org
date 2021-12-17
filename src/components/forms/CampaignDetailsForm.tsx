@@ -6,10 +6,10 @@ import { Avatar, Box, Link, MenuItem, Typography } from '@material-ui/core';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
 import { useEffect, useState } from 'react';
 
-import getPeopleSearchResults from 'fetching/getPeopleSearchResults';
 import getUserMemberships from 'fetching/getUserMemberships';
 import SubmitCancelButtons from './common/SubmitCancelButtons';
 import useDebounce from 'hooks/useDebounce';
+import { useGetPeopleSearchResults } from 'fetching/getPeopleSearchResults';
 import { ZetkinCampaign, ZetkinPerson } from 'types/zetkin';
 
 interface CampaignDetailsFormProps {
@@ -34,11 +34,7 @@ const CampaignDetailsForm = ({ onSubmit, onCancel, campaign }: CampaignDetailsFo
         last_name: campaign?.manager.name.split(' ')[1],
     } as Partial<ZetkinPerson> : null);
 
-    const { isLoading, refetch, data: results } = useQuery(
-        ['peopleSearchResults', searchFieldValue],
-        getPeopleSearchResults(searchFieldValue, orgId as string),
-        { enabled: false },
-    );
+    const { isLoading, refetch, data: results } = useGetPeopleSearchResults(searchFieldValue, orgId as string);
 
     let searchLabel = searchFieldValue.length ?
         intl.formatMessage({ id: 'misc.formDialog.campaign.keepSearch' }) :
