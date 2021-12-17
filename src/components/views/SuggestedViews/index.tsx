@@ -3,13 +3,12 @@ import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 import { Grid, makeStyles, Theme } from '@material-ui/core';
 
+import getUserMemberships from 'fetching/getUserMemberships';
 import getViews from 'fetching/views/getViews';
-import { useUser } from 'hooks';
 import ViewCard from './ViewCard';
 import ZetkinQuery from 'components/ZetkinQuery';
 import ZetkinSection from 'components/ZetkinSection';
 import { ZetkinView } from 'types/zetkin';
-
 
 export const getSuggestedViews = (allViews: ZetkinView[], ownerId?: number): ZetkinView[] => {
     const sorted = allViews.sort(
@@ -37,8 +36,12 @@ const useStyles = makeStyles((theme: Theme) => ({
 const SuggestedViews: React.FunctionComponent = () => {
     const classes = useStyles();
     const router = useRouter();
-    const user = useUser();
     const { orgId } = router.query;
+
+    const membershipsQuery = useQuery('userMemberships', getUserMemberships());
+    const activeMembership = membershipsQuery?.data?.find(m => m.organization.id.toString() == orgId);
+    const member = activeMembership?.profile;
+
     const viewsQuery = useQuery(['views', orgId], getViews(orgId as string));
     const onClickCard = (evt: React.ChangeEvent<HTMLButtonElement>) => {
         router.push(`/organize/${orgId}/people/views/${evt.currentTarget.value}`);
@@ -47,12 +50,10 @@ const SuggestedViews: React.FunctionComponent = () => {
     return (
         <ZetkinQuery queries={{ viewsQuery }}>
             { ({ queries: { viewsQuery } }) => {
-                const suggestedViews = getSuggestedViews(viewsQuery.data, user?.id);
+                const suggestedViews = getSuggestedViews(viewsQuery.data, member?.id);
 
                 // if fewer than 3 views supplied, render nothing
-                if (viewsQuery.data.length < 3) {
-                    return null;
-                }
+                if (viewsQuery.data.length < 3) return null;
 
                 return (
                     <ZetkinSection title="Suggested">

@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
 }));
 
-type ViewCardProps = {
+interface ViewCardProps {
     onClick: ReactEventHandler;
     view: ZetkinView;
 }
@@ -22,19 +22,24 @@ type ViewCardProps = {
 const ViewCard: React.FunctionComponent<ViewCardProps> = ({ onClick,  view }) => {
     const classes = useStyles();
 
-    if (!view) return <div />;
     return (
         <Fade in>
             <Card>
                 <CardActionArea className={ classes.action } onClick={ onClick } value={ view.id }>
-                    <Grid className={ classes.content } container direction="column" justifyContent="space-between">
+                    <Grid className={ classes.content }
+                        container direction="column"
+                        justifyContent="space-between">
                         <Grid item>
                             <Typography variant="h5">{ view.title }</Typography>
                             <Typography variant="body2">{ view.description }</Typography>
                         </Grid>
                         <Grid item>
-                            <Typography component="p" variant="caption">Created by { view.owner.name }</Typography>
-                            <Typography component="p" variant="caption"><ZetkinRelativeTime datetime={ view.created }/></Typography>
+                            <Typography component="p" variant="caption">
+                                Created by { view.owner.name }
+                            </Typography>
+                            <Typography component="p" variant="caption">
+                                <ZetkinRelativeTime datetime={ view.created }/>
+                            </Typography>
                         </Grid>
                     </Grid>
                 </CardActionArea>
