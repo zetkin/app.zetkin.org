@@ -1,8 +1,9 @@
-import dayjs from 'dayjs';
 import { ReactEventHandler } from 'react';
 import { ZetkinView } from 'types/zetkin';
 import { Card, CardActionArea, Fade, Grid, Typography } from '@material-ui/core';
 import { makeStyles, Theme } from '@material-ui/core/styles';
+
+import ZetkinRelativeTime from 'components/ZetkinRelativeTime';
 
 const useStyles = makeStyles((theme: Theme) => ({
     action: {
@@ -33,7 +34,7 @@ const ViewCard: React.FunctionComponent<ViewCardProps> = ({ onClick,  view }) =>
                         </Grid>
                         <Grid item>
                             <Typography component="p" variant="caption">Created by { view.owner.name }</Typography>
-                            <Typography component="p" variant="caption">{ dayjs(view.created).fromNow() }</Typography>
+                            <Typography component="p" variant="caption"><ZetkinRelativeTime datetime={ view.created }/></Typography>
                         </Grid>
                     </Grid>
                 </CardActionArea>

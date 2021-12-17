@@ -1,13 +1,6 @@
-// TODO: would prefer dynamic locale imports
-import 'dayjs/locale/en';
-import 'dayjs/locale/sv';
-import isoWeek from 'dayjs/plugin/isoWeek';
-import relativeTime from 'dayjs/plugin/relativeTime';
 import dayjs, { Dayjs } from 'dayjs';
 
-import { SupportedLanguage } from './locale';
 import { ZetkinEvent } from 'types/zetkin';
-
 
 export const getNewDateWithOffset = (date: Date, offset: number ):Date => {
     return new Date(new Date(date).setDate(date.getDate() + offset));
@@ -45,14 +38,4 @@ export const LocalTimeToJsonPlugin = (options: never, dayjsClass: typeof Dayjs):
     dayjsClass.prototype.toJSON = function() {
         return this.format('YYYY-MM-DDTHH:mm:ss');
     };
-};
-
-/**
- * Dayjs global configuration
- */
-export const dayjsConfig = (lang: SupportedLanguage = 'en'): void => {
-    dayjs.extend(LocalTimeToJsonPlugin);
-    dayjs.extend(relativeTime);
-    dayjs.extend(isoWeek);
-    dayjs.locale(lang);
 };
