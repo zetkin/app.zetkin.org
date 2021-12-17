@@ -11,7 +11,7 @@ export const getTags = (orgId : string, fetch = defaultFetch) => {
     };
 };
 
-export const getTagsQueryKey = (orgId: string): ['tasks', string] => ['tasks', orgId];
+export const getTagsQueryKey = (orgId: string): ['tags', string] => ['tags', orgId];
 
 export const useGetTags = (orgId: string): UseQueryResult<ZetkinTag[]> => {
     return useQuery(getTagsQueryKey(orgId), getTags(orgId));
