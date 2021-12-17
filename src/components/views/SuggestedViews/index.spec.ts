@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 
-import { getSuggestedViews } from './datasetUtils';
-import mockView from '../test-utils/mocks/mockView';
+import { getSuggestedViews } from './index';
+import mockView from 'test-utils/mocks/mockView';
 
 describe('getSuggestedViews()', () => {
     const now = dayjs();
@@ -16,12 +16,12 @@ describe('getSuggestedViews()', () => {
     })));
 
     it('Picks the 3 most recent views belonging to the user', () => {
-        expect(getSuggestedViews(views, mockView().owner).map(view => view.title))
+        expect(getSuggestedViews(views, mockView().owner.id).map(view => view.title))
             .toMatchObject(['View number 1', 'View number 2', 'View number 3']);
     });
 
     it('Picks the 3 most recent views if the user has none', () => {
-        expect(getSuggestedViews(views, { id : 88888, name: 'a new user' }).map(view => view.title))
+        expect(getSuggestedViews(views, 88888).map(view => view.title))
             .toMatchObject(['another view', 'View number 1', 'View number 2']);
     });
 });

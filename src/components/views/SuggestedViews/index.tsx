@@ -1,14 +1,23 @@
+import dayjs from 'dayjs';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 import { Grid, makeStyles, Theme } from '@material-ui/core';
 
-import { getSuggestedViews } from 'utils/datasetUtils';
 import getViews from 'fetching/views/getViews';
 import { useUser } from 'hooks';
 import ViewCard from './ViewCard';
 import ZetkinQuery from 'components/ZetkinQuery';
 import ZetkinSection from 'components/ZetkinSection';
 import { ZetkinView } from 'types/zetkin';
+
+
+export const getSuggestedViews = (allViews: ZetkinView[], ownerId?: number): ZetkinView[] => {
+    const sorted = allViews.sort(
+        (a,b) => dayjs(a.created).isBefore(b.created) ? 1 : -1,
+    );
+    const filtered = !ownerId ? sorted : sorted.filter(view => view.owner.id === ownerId);
+    return filtered.length >= 3 ? filtered.slice(0,3) : sorted.slice(0,3);
+};
 
 const useStyles = makeStyles((theme: Theme) => ({
     container: {
@@ -35,14 +44,12 @@ const SuggestedViews: React.FunctionComponent = () => {
         router.push(`/organize/${orgId}/people/views/${evt.currentTarget.value}`);
     };
 
-    // if fewer than 3 views supplied, render nothing
-    if (!viewsQuery.data || viewsQuery.data.length < 3) return <div />;
-    const owner = user && { id: user.id, name: `${user.first_name} ${user.last_name}` };
-    const views = getSuggestedViews(viewsQuery?.data, owner);
-
     return (
         <ZetkinQuery queries={{ viewsQuery }}>
             { ({ queries: { viewsQuery } }) => {
+                const suggestedViews = getSuggestedViews(viewsQuery.data, user?.id);
+
+                // if fewer than 3 views supplied, render nothing
                 if (viewsQuery.data.length < 3) {
                     return null;
                 }
@@ -50,7 +57,7 @@ const SuggestedViews: React.FunctionComponent = () => {
                 return (
                     <ZetkinSection title="Suggested">
                         <Grid className={ classes.container } container spacing={ 3 }>
-                            { views?.map((view: ZetkinView) => (
+                            { suggestedViews.map((view: ZetkinView) => (
                                 <Grid key={ view.id } className={ classes.item } item>
                                     <ViewCard onClick={ onClickCard } view={ view } />
                                 </Grid>
