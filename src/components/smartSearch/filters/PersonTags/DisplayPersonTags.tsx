@@ -1,9 +1,8 @@
 import { FormattedMessage as Msg } from 'react-intl';
-import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 import { Box, Chip } from '@material-ui/core';
 
-import getTags from 'fetching/getTags';
+import { useGetTags } from 'fetching/getTags';
 import { ZetkinTag } from 'types/zetkin';
 import { OPERATION, PersonTagsFilterConfig, SmartSearchFilterWithId } from 'types/smartSearch';
 
@@ -16,7 +15,7 @@ const DisplayPersonTags = ({ filter }: DisplayPersonTagProps) : JSX.Element => {
     const { config } = filter;
     const op = filter.op || OPERATION.ADD;
     const { condition, tags: tagIds, min_matching } = config;
-    const tagsQuery = useQuery(['tags', orgId], getTags(orgId as string));
+    const tagsQuery = useGetTags(orgId as string);
     const tags = tagsQuery?.data || [];
 
     // preserve the order of the tag array

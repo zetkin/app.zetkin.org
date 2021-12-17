@@ -1,11 +1,10 @@
 import { FunctionComponent } from 'react';
 import { useIntl } from 'react-intl';
-import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 import { MenuItem, TextField } from '@material-ui/core';
 
-import getTags from 'fetching/getTags';
 import { PersonTagViewColumn } from 'types/views';
+import { useGetTags } from 'fetching/getTags';
 import ZetkinQuery from 'components/ZetkinQuery';
 
 
@@ -17,7 +16,7 @@ interface PersonTagColumnConfigFormProps {
 const PersonTagColumnConfigForm: FunctionComponent<PersonTagColumnConfigFormProps> = ({ column, onChange }) => {
     const intl = useIntl();
     const { orgId } = useRouter().query;
-    const tagsQuery = useQuery(['tags', orgId], getTags(orgId as string));
+    const tagsQuery = useGetTags(orgId as string);
 
     return (
         <ZetkinQuery

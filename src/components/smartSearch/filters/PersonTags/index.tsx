@@ -1,15 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { FormattedMessage as Msg } from 'react-intl';
-import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 import { Box, Chip, MenuItem } from '@material-ui/core';
 import { FormEvent, useEffect, useState } from 'react';
 
 import FilterForm from '../../FilterForm';
-import getTags from 'fetching/getTags';
 import StyledItemSelect from 'components/smartSearch/inputs/StyledItemSelect';
 import StyledNumberInput from '../../inputs/StyledNumberInput';
 import StyledSelect from '../../inputs/StyledSelect';
+import { useGetTags } from 'fetching/getTags';
 import useSmartSearchFilter from 'hooks/useSmartSearchFilter';
 import { ZetkinTag } from 'types/zetkin';
 import { CONDITION_OPERATOR, NewSmartSearchFilter, OPERATION, PersonTagsFilterConfig,
@@ -30,7 +29,7 @@ const PersonTags = (
     { onSubmit, onCancel, filter: initialFilter }: PersonTagsProps,
 ): JSX.Element => {
     const { orgId } = useRouter().query;
-    const tagsQuery = useQuery(['tags', orgId], getTags(orgId as string));
+    const tagsQuery = useGetTags(orgId as string);
     const tags = tagsQuery?.data || [];
 
     const { filter, setConfig, setOp } = useSmartSearchFilter<PersonTagsFilterConfig>(
