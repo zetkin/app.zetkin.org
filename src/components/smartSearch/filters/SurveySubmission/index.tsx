@@ -1,13 +1,12 @@
 import { MenuItem } from '@material-ui/core';
 import { FormattedMessage as Msg } from 'react-intl';
-import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 import { FormEvent, useEffect, useState } from 'react';
 
 import FilterForm from '../../FilterForm';
-import getSurveys from 'fetching/getSurveys';
 import StyledSelect from '../../inputs/StyledSelect';
 import TimeFrame from '../TimeFrame';
+import { useGetSurveys } from 'fetching/getSurveys';
 import useSmartSearchFilter from 'hooks/useSmartSearchFilter';
 import { NewSmartSearchFilter, OPERATION, SmartSearchFilterWithId, SurveySubmissionFilterConfig, TIME_FRAME, ZetkinSmartSearchFilter } from 'types/smartSearch';
 
@@ -21,7 +20,7 @@ interface SurveySubmissionProps {
 
 const SurveySubmission = ({ onSubmit, onCancel, filter: initialFilter }: SurveySubmissionProps): JSX.Element => {
     const { orgId } = useRouter().query;
-    const surveysQuery = useQuery(['surveys', orgId], getSurveys(orgId as string));
+    const surveysQuery = useGetSurveys(orgId as string);
     const surveys = surveysQuery.data || [];
 
     const [submittable, setSubmittable] = useState(false);

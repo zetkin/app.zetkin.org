@@ -1,11 +1,10 @@
 import { useIntl } from 'react-intl';
-import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 import { ChangeEventHandler, FunctionComponent } from 'react';
 import { MenuItem, TextField } from '@material-ui/core';
 
-import getSurveys from 'fetching/getSurveys';
 import { SurveySubmittedViewColumn } from 'types/views';
+import { useGetSurveys } from 'fetching/getSurveys';
 import ZetkinQuery from 'components/ZetkinQuery';
 
 
@@ -21,7 +20,7 @@ const SurveySubmittedColumnConfigForm: FunctionComponent<SurveySubmittedColumnCo
     return (
         <ZetkinQuery
             queries={{
-                surveysQuery: useQuery(['surveys', orgId], getSurveys(orgId as string)),
+                surveysQuery: useGetSurveys(orgId as string),
             }}>
             { ({ queries: { surveysQuery } }) => {
 
