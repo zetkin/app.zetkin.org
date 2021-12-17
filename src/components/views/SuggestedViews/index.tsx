@@ -1,11 +1,14 @@
-import getViews from 'fetching/views/getViews';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
+import { Grid, makeStyles, Theme } from '@material-ui/core';
+
+import { getSuggestedViews } from 'utils/datasetUtils';
+import getViews from 'fetching/views/getViews';
+import { useUser } from 'hooks';
 import ViewCard from './ViewCard';
 import ZetkinQuery from 'components/ZetkinQuery';
 import ZetkinSection from 'components/ZetkinSection';
 import { ZetkinView } from 'types/zetkin';
-import { Grid, makeStyles, Theme } from '@material-ui/core';
 
 const useStyles = makeStyles((theme: Theme) => ({
     container: {
@@ -25,13 +28,17 @@ const useStyles = makeStyles((theme: Theme) => ({
 const SuggestedViews: React.FunctionComponent = () => {
     const classes = useStyles();
     const router = useRouter();
+    const user = useUser();
     const { orgId } = router.query;
     const viewsQuery = useQuery(['views', orgId], getViews(orgId as string));
     const onClickCard = (evt: React.ChangeEvent<HTMLButtonElement>) => {
         router.push(`/organize/${orgId}/people/views/${evt.currentTarget.value}`);
     };
 
-    const views: ZetkinView[] | undefined = viewsQuery?.data?.slice(0,3);
+    // if fewer than 3 views supplied, render nothing
+    if (!viewsQuery.data || viewsQuery.data.length < 3) return <div />;
+    const owner = user && { id: user.id, name: `${user.first_name} ${user.last_name}` };
+    const views = getSuggestedViews(viewsQuery?.data, owner);
 
     return (
         <ZetkinQuery queries={{ viewsQuery }}>
