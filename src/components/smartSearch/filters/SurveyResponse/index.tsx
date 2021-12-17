@@ -1,14 +1,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { MenuItem } from '@material-ui/core';
 import { FormattedMessage as Msg } from 'react-intl';
-import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 import { FormEvent, useEffect, useState } from 'react';
 
 import FilterForm from '../../FilterForm';
-import getSurveysWithElements from 'fetching/getSurveysWithElements';
 import StyledSelect from '../../inputs/StyledSelect';
 import StyledTextInput from 'components/smartSearch/inputs/StyledTextInput';
+import { useGetSurveysWithElements } from 'fetching/getSurveysWithElements';
 import useSmartSearchFilter from 'hooks/useSmartSearchFilter';
 import {  ELEMENT_TYPE, RESPONSE_TYPE } from 'types/zetkin';
 import { MATCH_OPERATORS, NewSmartSearchFilter, OPERATION, SmartSearchFilterWithId,
@@ -30,7 +29,7 @@ interface InternalConfig extends SurveyResponseBase {
 
 const SurveyResponse = ({ onSubmit, onCancel, filter: initialFilter }: SurveyResponseProps): JSX.Element => {
     const { orgId } = useRouter().query;
-    const surveysQuery = useQuery(['surveysWithElements', orgId], getSurveysWithElements(orgId as string));
+    const surveysQuery = useGetSurveysWithElements(orgId as string);
     const surveys = surveysQuery.data || [];
 
     const getSurveyIdfromQuestionId = (questionId?: number) => {

@@ -1,8 +1,7 @@
 import { FormattedMessage as Msg } from 'react-intl';
-import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 
-import getSurveysWithElements from 'fetching/getSurveysWithElements';
+import { useGetSurveysWithElements } from 'fetching/getSurveysWithElements';
 import { OPERATION, SmartSearchFilterWithId, SurveyResponseFilterConfig } from 'types/smartSearch';
 
 interface DisplaySurveyResponseProps {
@@ -17,7 +16,7 @@ const DisplaySurveyResponse = ({ filter }: DisplaySurveyResponseProps) : JSX.Ele
     const surveyId = 'survey' in config ? config.survey : undefined;
     const op = filter.op || OPERATION.ADD;
 
-    const surveysQuery = useQuery(['surveysWithElements', orgId], getSurveysWithElements(orgId as string));
+    const surveysQuery = useGetSurveysWithElements(orgId as string);
 
     const surveys = surveysQuery.data || [];
 

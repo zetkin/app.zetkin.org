@@ -1,14 +1,13 @@
 import { DoneAll } from '@material-ui/icons';
 import { FormattedMessage as Msg } from 'react-intl';
-import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 import { Box, Chip, MenuItem, Tooltip } from '@material-ui/core';
 import { FormEvent, useEffect } from 'react';
 
 import FilterForm from '../../FilterForm';
-import getSurveysWithElements from 'fetching/getSurveysWithElements';
 import StyledItemSelect from '../../inputs/StyledItemSelect';
 import StyledSelect from '../../inputs/StyledSelect';
+import { useGetSurveysWithElements } from 'fetching/getSurveysWithElements';
 import useSmartSearchFilter from 'hooks/useSmartSearchFilter';
 import { CONDITION_OPERATOR, NewSmartSearchFilter, OPERATION, SmartSearchFilterWithId,
     SurveyOptionFilterConfig, ZetkinSmartSearchFilter } from 'types/smartSearch';
@@ -34,7 +33,7 @@ const SurveyOption = (
     { onSubmit, onCancel, filter: initialFilter }: SurveyOptionProps,
 ): JSX.Element => {
     const { orgId } = useRouter().query;
-    const surveysQuery = useQuery(['surveysWithElements', orgId], getSurveysWithElements(orgId as string));
+    const surveysQuery = useGetSurveysWithElements(orgId as string);
     const surveys = surveysQuery.data || [];
 
     const { filter, setConfig, setOp } = useSmartSearchFilter<InternalConfig>(initialFilter, {

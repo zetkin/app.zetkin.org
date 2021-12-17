@@ -1,3 +1,5 @@
+import { useQuery, UseQueryResult } from 'react-query';
+
 import { defaultFetch } from '.';
 import { ZetkinSurvey, ZetkinSurveyExtended } from '../types/zetkin';
 
@@ -16,3 +18,10 @@ export default function getSurveysWithElements(orgId : string, fetch = defaultFe
         return surveysWithElements.map(s => s.data);
     };
 }
+
+export const getSurveysWithElementsQueryKey = (orgId: string): [string, string] =>
+    ['surveysWithElements', orgId];
+
+export const useGetSurveysWithElements = (orgId: string): UseQueryResult<ZetkinSurveyExtended[]> => {
+    return useQuery(getSurveysWithElementsQueryKey(orgId), getSurveysWithElements(orgId));
+};

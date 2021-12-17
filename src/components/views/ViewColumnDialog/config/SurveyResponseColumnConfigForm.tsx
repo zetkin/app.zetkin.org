@@ -1,10 +1,9 @@
 import { useIntl } from 'react-intl';
-import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 import { ChangeEventHandler, FunctionComponent, useEffect, useState } from 'react';
 import { MenuItem, TextField } from '@material-ui/core';
 
-import getSurveysWithElements from 'fetching/getSurveysWithElements';
+import { useGetSurveysWithElements } from 'fetching/getSurveysWithElements';
 import ZetkinQuery from 'components/ZetkinQuery';
 import { ELEMENT_TYPE, RESPONSE_TYPE, ZetkinSurveyExtended } from 'types/zetkin';
 import { PendingZetkinViewColumn, SurveyResponseViewColumn } from 'types/views';
@@ -26,7 +25,7 @@ function getSurveyFromQuestionId(surveys? : ZetkinSurveyExtended[], questionId? 
 const SurveyResponseColumnConfigForm: FunctionComponent<SurveyResponseColumnConfigFormProps> = ({ column, onChange }) => {
     const intl = useIntl();
     const { orgId } = useRouter().query;
-    const surveysQuery = useQuery(['surveysWithElements', orgId], getSurveysWithElements(orgId as string));
+    const surveysQuery = useGetSurveysWithElements(orgId as string);
 
     const [surveyId, setSurveyId] = useState<number | null>();
 

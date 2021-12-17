@@ -1,11 +1,10 @@
 import { DoneAll } from '@material-ui/icons';
 import { FormattedMessage as Msg } from 'react-intl';
-import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 import { Box, Chip, Tooltip } from '@material-ui/core';
 
 import { getEllipsedString } from 'utils/stringUtils';
-import getSurveysWithElements from 'fetching/getSurveysWithElements';
+import { useGetSurveysWithElements } from 'fetching/getSurveysWithElements';
 import { ZetkinSurveyOption } from 'types/zetkin';
 import { OPERATION, SmartSearchFilterWithId, SurveyOptionFilterConfig } from 'types/smartSearch';
 
@@ -19,7 +18,7 @@ const DisplaySurveyOption = ({ filter }: DisplaySurveyOptionProps) : JSX.Element
     const { operator, question: questionId, survey: surveyId, options: optionIds  } = config;
     const op = filter.op || OPERATION.ADD;
 
-    const surveysQuery = useQuery(['surveysWithElements', orgId], getSurveysWithElements(orgId as string));
+    const surveysQuery = useGetSurveysWithElements(orgId as string);
 
     const surveys = surveysQuery.data || [];
 
