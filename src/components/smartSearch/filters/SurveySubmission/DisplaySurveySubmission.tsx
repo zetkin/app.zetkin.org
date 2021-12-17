@@ -1,9 +1,8 @@
 import { FormattedMessage as Msg } from 'react-intl';
-import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 
-import getSurvey from 'fetching/getSurvey';
 import { getTimeFrameWithConfig } from '../../utils';
+import { useGetSurvey } from 'fetching/getSurvey';
 import { OPERATION, SmartSearchFilterWithId, SurveySubmissionFilterConfig } from 'types/smartSearch';
 
 interface DisplaySurveySubmissionProps {
@@ -17,7 +16,7 @@ const DisplaySurveySubmission = ({ filter }: DisplaySurveySubmissionProps) : JSX
     const op = filter.op || OPERATION.ADD;
     const { timeFrame, after, before, numDays } = getTimeFrameWithConfig({ after: config.after, before: config.before });
 
-    const surveyQuery = useQuery(['survey', orgId, surveyId], getSurvey(orgId as string, surveyId.toString()));
+    const surveyQuery = useGetSurvey(orgId as string, surveyId.toString());
     const surveyTitle = surveyQuery?.data?.title;
 
     return (
