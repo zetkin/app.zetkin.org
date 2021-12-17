@@ -7,7 +7,6 @@ import { useRouter } from 'next/router';
 import { useState } from 'react';
 
 import getAssignedTasks from 'fetching/tasks/getAssignedTasks';
-import getOrg from 'fetching/getOrg';
 import getTask from 'fetching/tasks/getTask';
 import { PageWithLayout } from 'types';
 import { QUERY_STATUS } from 'types/smartSearch';
@@ -17,6 +16,7 @@ import SingleTaskLayout from 'components/layout/organize/SingleTaskLayout';
 import SmartSearchDialog from 'components/smartSearch/SmartSearchDialog';
 import TaskAssigneesList from 'components/organize/tasks/TaskAssigneesList';
 import ZetkinQuery from 'components/ZetkinQuery';
+import getOrg, { getOrgQueryKey } from 'fetching/getOrg';
 import getTaskStatus, { TASK_STATUS } from 'utils/getTaskStatus';
 import { ZetkinAssignedTask, ZetkinTask } from 'types/zetkin';
 
@@ -29,8 +29,8 @@ export const getServerSideProps : GetServerSideProps = scaffold(async (ctx) => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const { campId, orgId, taskId } = ctx.params!;
 
-    await ctx.queryClient.prefetchQuery(['org', orgId], getOrg(orgId as string, ctx.apiFetch));
-    const orgState = ctx.queryClient.getQueryState(['org', orgId]);
+    await ctx.queryClient.prefetchQuery(getOrgQueryKey(orgId as string), getOrg(orgId as string, ctx.apiFetch));
+    const orgState = ctx.queryClient.getQueryState(getOrgQueryKey(orgId as string));
 
     await ctx.queryClient.prefetchQuery(['task', taskId], getTask(orgId as string, taskId as string, ctx.apiFetch));
     const taskState = ctx.queryClient.getQueryState(['task', taskId]);

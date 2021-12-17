@@ -6,11 +6,11 @@ import { useQuery } from 'react-query';
 import AllCampaignsLayout from '../../../../../components/layout/organize/AllCampaignsLayout';
 import getCampaigns from '../../../../../fetching/getCampaigns';
 import getEvents from '../../../../../fetching/getEvents';
-import getOrg from '../../../../../fetching/getOrg';
 import getOrganizationTasks from '../../../../../fetching/tasks/getOrganizationTasks';
 import { PageWithLayout } from '../../../../../types';
 import { scaffold } from '../../../../../utils/next';
 import ZetkinCalendar from '../../../../../components/ZetkinCalendar';
+import getOrg, { getOrgQueryKey } from '../../../../../fetching/getOrg';
 import ZetkinSpeedDial, { ACTIONS } from '../../../../../components/ZetkinSpeedDial';
 
 const scaffoldOptions = {
@@ -24,8 +24,8 @@ export const getServerSideProps : GetServerSideProps = scaffold(async (ctx) => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const { orgId } = ctx.params!;
 
-    await ctx.queryClient.prefetchQuery(['org', orgId], getOrg(orgId as string, ctx.apiFetch));
-    const orgState = ctx.queryClient.getQueryState(['org', orgId]);
+    await ctx.queryClient.prefetchQuery(getOrgQueryKey(orgId as string), getOrg(orgId as string, ctx.apiFetch));
+    const orgState = ctx.queryClient.getQueryState(getOrgQueryKey(orgId as string));
 
     await ctx.queryClient.prefetchQuery(['events', orgId], getEvents(orgId as string, ctx.apiFetch));
     const eventsState = ctx.queryClient.getQueryState(['events', orgId]);

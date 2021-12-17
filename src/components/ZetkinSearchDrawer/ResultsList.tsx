@@ -1,7 +1,6 @@
 /* eslint-disable react/display-name */
 import Link from 'next/link';
 import { FormattedMessage as Msg } from 'react-intl';
-import { useQuery } from 'react-query';
 import { FunctionComponent, useEffect, useState } from 'react';
 
 import Search from '@material-ui/icons/Search';
@@ -15,8 +14,8 @@ import {
     ListSubheader,
 } from '@material-ui/core';
 
-import getOrg from '../../fetching/getOrg';
 import { MINIMUM_CHARACTERS } from './index';
+import { useGetOrg } from '../../fetching/getOrg';
 import { ZetkinPerson } from '../../types/zetkin';
 
 
@@ -29,7 +28,7 @@ interface ResultsListProps {
 
 const ResultsList: FunctionComponent<ResultsListProps> = ({ searchFieldValue, results, loading, orgId }): JSX.Element => {
     const [numResultsToDisplay, setNumResultsToDisplay] = useState<number>(5);
-    const { data: org } = useQuery(['org', orgId], getOrg(orgId), { enabled: false });
+    const { data: org } = useGetOrg(orgId);
 
     // If results change, reset the max number back to 5
     useEffect(() => {

@@ -8,13 +8,13 @@ import EventList from 'components/organize/events/EventList';
 import getCampaign from 'fetching/getCampaign';
 import getCampaignEvents from 'fetching/getCampaignEvents';
 import getCampaignTasks from 'fetching/tasks/getCampaignTasks';
-import getOrg from 'fetching/getOrg';
 import { PageWithLayout } from 'types';
 import { scaffold } from 'utils/next';
 import SingleCampaignLayout from 'components/layout/organize/SingleCampaignLayout';
 import TaskList from 'components/organize/tasks/TaskList';
 import ZetkinPerson from 'components/ZetkinPerson';
 import ZetkinSection from 'components/ZetkinSection';
+import getOrg, { getOrgQueryKey } from 'fetching/getOrg';
 import ZetkinSpeedDial, { ACTIONS } from 'components/ZetkinSpeedDial';
 
 const scaffoldOptions = {
@@ -34,8 +34,8 @@ export const getServerSideProps : GetServerSideProps = scaffold(async (ctx) => {
     const { orgId, campId } = ctx.params!;
 
 
-    await ctx.queryClient.prefetchQuery(['org', orgId], getOrg(orgId as string, ctx.apiFetch));
-    const orgState = ctx.queryClient.getQueryState(['org', orgId]);
+    await ctx.queryClient.prefetchQuery(getOrgQueryKey(orgId as string), getOrg(orgId as string, ctx.apiFetch));
+    const orgState = ctx.queryClient.getQueryState(getOrgQueryKey(orgId as string));
 
     await ctx.queryClient.prefetchQuery(['campaignEvents', orgId, campId], getCampaignEvents(orgId as string, campId as string, ctx.apiFetch));
     const campaignEventsState = ctx.queryClient.getQueryState(['campaignEvents', orgId, campId]);
