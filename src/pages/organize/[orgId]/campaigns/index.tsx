@@ -10,7 +10,6 @@ import CampaignCard from 'components/organize/campaigns/CampaignCard';
 import getCampaigns from '../../../../fetching/getCampaigns';
 import getEvents from '../../../../fetching/getEvents';
 import getOrg from '../../../../fetching/getOrg';
-import getUpcomingEvents from '../../../../fetching/getUpcomingEvents';
 import { PageWithLayout } from '../../../../types';
 import { scaffold } from '../../../../utils/next';
 import ZetkinSection from '../../../../components/ZetkinSection';
@@ -33,17 +32,13 @@ export const getServerSideProps : GetServerSideProps = scaffold(async (ctx) => {
     await ctx.queryClient.prefetchQuery(['campaigns', orgId], getCampaigns(orgId as string, ctx.apiFetch));
     const campaignsState = ctx.queryClient.getQueryState(['campaigns', orgId]);
 
-    await ctx.queryClient.prefetchQuery(['upcomingEvents', orgId], getUpcomingEvents(orgId as string, ctx.apiFetch));
-    const upcomingEventsState = ctx.queryClient.getQueryState(['upcomingEvents', orgId]);
-
     await ctx.queryClient.prefetchQuery(['events', orgId], getEvents(orgId as string, ctx.apiFetch));
     const eventsState = ctx.queryClient.getQueryState(['events', orgId]);
 
     if (
         orgState?.status === 'success' &&
         campaignsState?.status === 'success' &&
-        eventsState?.status === 'success' &&
-        upcomingEventsState?.status === 'success'
+        eventsState?.status === 'success'
     ) {
         return {
             props: {
