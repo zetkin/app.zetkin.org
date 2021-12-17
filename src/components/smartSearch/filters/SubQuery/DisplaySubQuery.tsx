@@ -3,7 +3,7 @@ import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 
 import getAllCallAssignments from 'fetching/getAllCallAssignments';
-import getStandaloneQueries from 'fetching/getStandaloneQueries';
+import { useGetStandaloneQueries } from 'fetching/getStandaloneQueries';
 import { ZetkinQuery } from 'types/zetkin';
 import { OPERATION, SmartSearchFilterWithId, SubQueryFilterConfig } from 'types/smartSearch';
 
@@ -14,7 +14,7 @@ interface DisplaySubQueryProps {
 const DisplaySubQuery = ({ filter }: DisplaySubQueryProps) : JSX.Element => {
     const { orgId } = useRouter().query;
     const { config } = filter;
-    const standaloneQuery = useQuery(['standaloneQueries', orgId], getStandaloneQueries(orgId as string));
+    const standaloneQuery = useGetStandaloneQueries(orgId as string);
     const standaloneQueries = standaloneQuery?.data || [];
     const assignmentsQuery = useQuery(
         ['assignments', orgId], getAllCallAssignments(orgId as string));

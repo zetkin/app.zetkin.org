@@ -7,8 +7,8 @@ import { FormEvent, useEffect, useState } from 'react';
 
 import FilterForm from '../../FilterForm';
 import getAllCallAssignments from 'fetching/getAllCallAssignments';
-import getStandaloneQueries from 'fetching/getStandaloneQueries';
 import StyledSelect from '../../inputs/StyledSelect';
+import { useGetStandaloneQueries } from 'fetching/getStandaloneQueries';
 import useSmartSearchFilter from 'hooks/useSmartSearchFilter';
 import {
     NewSmartSearchFilter,
@@ -35,7 +35,7 @@ const SubQuery = (
     { onSubmit, onCancel, filter: initialFilter }: SubQueryProps,
 ): JSX.Element => {
     const { orgId } = useRouter().query;
-    const standaloneQuery = useQuery(['standaloneQueries', orgId], getStandaloneQueries(orgId as string));
+    const standaloneQuery = useGetStandaloneQueries(orgId as string);
     const standaloneQueries = standaloneQuery?.data || [];
     const assignmentsQuery = useQuery(
         ['assignments', orgId], getAllCallAssignments(orgId as string));

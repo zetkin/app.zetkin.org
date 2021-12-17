@@ -1,11 +1,10 @@
 import { FunctionComponent } from 'react';
 import { useIntl } from 'react-intl';
-import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 import { MenuItem, TextField } from '@material-ui/core';
 
-import getStandaloneQueries from 'fetching/getStandaloneQueries';
 import { PersonQueryViewColumn } from 'types/views';
+import { useGetStandaloneQueries } from 'fetching/getStandaloneQueries';
 import ZetkinQuery from 'components/ZetkinQuery';
 
 
@@ -20,7 +19,7 @@ const PersonQueryColumnConfigForm: FunctionComponent<PersonQueryColumnConfigForm
 
     return (
         <ZetkinQuery
-            queries={{ standaloneQueriesQuery:  useQuery(['standaloneQueries', orgId], getStandaloneQueries(orgId as string)) }}>
+            queries={{ standaloneQueriesQuery: useGetStandaloneQueries(orgId as string) }}>
             { ({ queries: { standaloneQueriesQuery } }) => {
                 const onQueryChange = (queryId: number) => {
                     onChange({
