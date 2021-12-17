@@ -19,7 +19,7 @@ export default function getSurveysWithElements(orgId : string, fetch = defaultFe
     };
 }
 
-export const getSurveysWithElementsQueryKey = (orgId: string): [string, string] =>
+export const getSurveysWithElementsQueryKey = (orgId: string): ['surveysWithElements', string] =>
     ['surveysWithElements', orgId];
 
 export const useGetSurveysWithElements = (orgId: string): UseQueryResult<ZetkinSurveyExtended[]> => {
