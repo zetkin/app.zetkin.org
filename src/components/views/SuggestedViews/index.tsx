@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import { useIntl } from 'react-intl';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 import { Grid, makeStyles, Theme } from '@material-ui/core';
@@ -35,6 +36,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const SuggestedViews: React.FunctionComponent = () => {
     const classes = useStyles();
+    const intl = useIntl();
     const router = useRouter();
     const { orgId } = router.query;
 
@@ -56,7 +58,8 @@ const SuggestedViews: React.FunctionComponent = () => {
                 if (viewsQuery.data.length < 3) return null;
 
                 return (
-                    <ZetkinSection title="Suggested">
+                    <ZetkinSection title={ intl.formatMessage(
+                        { id: 'misc.views.suggested.section_title' }) }>
                         <Grid className={ classes.container } container spacing={ 3 }>
                             { suggestedViews.map((view: ZetkinView) => (
                                 <Grid key={ view.id } className={ classes.item } item>
