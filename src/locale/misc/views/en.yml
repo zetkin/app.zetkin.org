@@ -43,4 +43,4 @@ dataTableErrors:
     modify_column: There was an error editing the column
 suggested:
     created: Created by {name}
-    section_title: Suggested
+    sectionTitle: Suggested

@@ -59,7 +59,7 @@ const SuggestedViews: React.FunctionComponent = () => {
 
                 return (
                     <ZetkinSection title={ intl.formatMessage(
-                        { id: 'misc.views.suggested.section_title' }) }>
+                        { id: 'misc.views.suggested.sectionTitle' }) }>
                         <Grid className={ classes.container } container spacing={ 3 }>
                             { suggestedViews.map((view: ZetkinView) => (
                                 <Grid key={ view.id } className={ classes.item } item>
