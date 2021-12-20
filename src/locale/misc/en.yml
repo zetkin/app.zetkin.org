@@ -12,3 +12,16 @@ nativePersonFields:
     phone: Phone number
     street_address: Street address
     zip_code: Zip code
+components:
+    editTextInPlace:
+        tooltip:
+            edit:
+                Click to edit the {label}
+            save:
+                Press 'enter' to save
+        alert:
+            success:
+                Updated {label}!
+            error:
+                Error. {label} not updated
+
