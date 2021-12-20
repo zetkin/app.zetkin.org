@@ -7,12 +7,12 @@ import { Box, Grid, Typography } from '@material-ui/core';
 import EventList from 'components/organize/events/EventList';
 import getCampaign from 'fetching/getCampaign';
 import getCampaignEvents from 'fetching/getCampaignEvents';
-import getCampaignTasks from 'fetching/tasks/getCampaignTasks';
 import getOrg from 'fetching/getOrg';
 import { PageWithLayout } from 'types';
 import { scaffold } from 'utils/next';
 import SingleCampaignLayout from 'components/layout/organize/SingleCampaignLayout';
 import TaskList from 'components/organize/tasks/TaskList';
+import { useCampaignTasksResource } from 'api/tasks';
 import ZetkinPerson from 'components/ZetkinPerson';
 import ZetkinSection from 'components/ZetkinSection';
 import ZetkinSpeedDial, { ACTIONS } from 'components/ZetkinSpeedDial';
@@ -33,15 +33,14 @@ export const getServerSideProps : GetServerSideProps = scaffold(async (ctx) => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const { orgId, campId } = ctx.params!;
 
+    const tasksResource = useCampaignTasksResource(orgId as string, campId as string);
+    const campaignTasksState = await tasksResource.prefetch(ctx);
 
     await ctx.queryClient.prefetchQuery(['org', orgId], getOrg(orgId as string, ctx.apiFetch));
     const orgState = ctx.queryClient.getQueryState(['org', orgId]);
 
     await ctx.queryClient.prefetchQuery(['campaignEvents', orgId, campId], getCampaignEvents(orgId as string, campId as string, ctx.apiFetch));
     const campaignEventsState = ctx.queryClient.getQueryState(['campaignEvents', orgId, campId]);
-
-    await ctx.queryClient.prefetchQuery(['campaignTasks', orgId, campId], getCampaignTasks(orgId as string, campId as string, ctx.apiFetch));
-    const campaignTasksState = ctx.queryClient.getQueryState(['campaignTasks', orgId, campId]);
 
     await ctx.queryClient.prefetchQuery(['campaign', orgId, campId], getCampaign(orgId as string, campId as string, ctx.apiFetch));
     const campaignState = ctx.queryClient.getQueryState(['campaign', orgId, campId]);
@@ -74,8 +73,10 @@ type CampaignCalendarPageProps = {
 const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({ orgId, campId }) => {
     const intl = useIntl();
 
+    const tasksResource = useCampaignTasksResource(orgId, campId);
+    const tasksQuery = tasksResource.useQuery();
+
     const eventsQuery = useQuery(['campaignEvents', orgId, campId], getCampaignEvents(orgId, campId));
-    const tasksQuery = useQuery(['campaignTasks', orgId, campId], getCampaignTasks(orgId, campId));
     const campaignQuery = useQuery(['campaign', orgId, campId], getCampaign(orgId, campId));
     const events = eventsQuery.data || [];
     const tasks = tasksQuery.data || [];
