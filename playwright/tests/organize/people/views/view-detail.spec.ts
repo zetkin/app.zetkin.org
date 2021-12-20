@@ -45,7 +45,7 @@ test.describe('View detail page', () => {
         });
 
         await page.goto(appUri + '/organize/1/people/views/1');
-        expect(await page.locator('data-testid=page-title >> text=All KPD members').count()).toEqual(1);
+        expect(await page.locator('text=All KPD members').count()).toEqual(1);
         expect(await page.locator('text=Clara').count()).toEqual(1);
         expect(await page.locator('text=Rosa').count()).toEqual(1);
 
