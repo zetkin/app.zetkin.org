@@ -1,3 +1,4 @@
+import APIError from 'utils/apiError';
 import { defaultFetch } from '..';
 import { ZetkinView } from 'types/zetkin';
 
@@ -12,7 +13,7 @@ export default function patchView(orgId: string | number, viewId: string | numbe
             method: 'PATCH',
         });
         if (!res.ok) {
-            throw new Error(`Error making PATCH request to ${url}`);
+            throw new APIError('PATCH', url);
         }
         return await res.json();
     };
