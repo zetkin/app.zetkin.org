@@ -4,7 +4,7 @@ import { ClickAwayListener, FormControl, InputBase, InputLabel, Snackbar, Toolti
 import { FormattedMessage, useIntl } from 'react-intl';
 import { lighten, makeStyles } from '@material-ui/core/styles';
 
-interface ComponentProps {
+export interface ComponentProps {
     defaultText: string;
     label: string;
     onSubmit: (arg: string) => Promise<boolean>;
