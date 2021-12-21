@@ -17,7 +17,6 @@ const handleResponse = async <Result>(res: Response, method: string): Promise<Re
     }
 
     return body.data;
-
 };
 
 export default handleResponse;

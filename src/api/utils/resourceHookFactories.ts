@@ -1,10 +1,25 @@
 import nProgress from 'nprogress';
 import { QueryState } from 'react-query/types/core/query';
-import { QueryClient, useMutation, UseMutationOptions, UseMutationResult, useQuery, UseQueryResult } from 'react-query';
+import { QueryClient, useMutation, UseMutationOptions, UseMutationResult, useQuery, useQueryClient, UseQueryResult } from 'react-query';
 
 import { defaultFetch } from 'fetching';
 import handleResponse from './handleResponse';
 import { ScaffoldedContext } from 'utils/next';
+import APIError from 'utils/apiError';
+
+
+const makeUseMutationOptions = <Input, Result>(
+    queryClient: QueryClient,
+    key: string[],
+    mutationOptions?: UseMutationOptions<Result, unknown, Input, unknown>,
+) => {
+    return {
+        onMutate: () => nProgress.start(),
+        onSettled: async () => nProgress.done(),
+        onSuccess: async () => queryClient.invalidateQueries(key),
+        ...mutationOptions,
+    };
+};
 
 export const createUseQuery = <Result>(
     key: string[],
@@ -26,12 +41,12 @@ export const createUseQuery = <Result>(
 
 };
 
-export const createMutation = <Input, Result>(
+export const createUseMutation = <Input, Result>(
     key: string[],
     url: string,
     fetchOptions?: RequestInit,
     mutationOptions?: Omit<UseMutationOptions<Result, unknown, Input, unknown>, 'mutationFn'>,
-): (queryClient: QueryClient) => UseMutationResult<Result, unknown, Input, unknown> => {
+): () => UseMutationResult<Result, unknown, Input, unknown> => {
 
     const method = fetchOptions?.method || 'POST';
 
@@ -47,13 +62,37 @@ export const createMutation = <Input, Result>(
         return handleResponse(res, method);
     };
 
-    return (queryClient: QueryClient) => useMutation(handler, {
-        onMutate: () => nProgress.start(),
-        onSettled: async () => nProgress.done(),
-        onSuccess: async () => queryClient.invalidateQueries(key),
-        ...mutationOptions,
-    });
+    return () => {
+        const queryClient = useQueryClient();
+        return useMutation(handler, makeUseMutationOptions(queryClient, key, mutationOptions));
+    };
 };
+
+
+export const createUseMutationDelete = (
+    key: string[],
+    url: string,
+    fetchOptions?: RequestInit,
+    mutationOptions?: Omit<UseMutationOptions<null, unknown, void, unknown>, 'mutationFn'>,
+): () => UseMutationResult<null, unknown, void, unknown> => {
+    const handler = async (): Promise<null> => {
+        const res = await defaultFetch(url, {
+            method: 'DELETE',
+            ...fetchOptions,
+
+        });
+        if (!res.ok) {
+            throw new APIError('DELETE', res.url);
+        }
+        return null;
+    };
+
+    return () => {
+        const queryClient = useQueryClient();
+        return useMutation(handler, makeUseMutationOptions(queryClient, key, mutationOptions));
+    };
+};
+
 
 /**
  * Returns an async function which takes the context as an argument, runs the prefetch, and returns the query state
