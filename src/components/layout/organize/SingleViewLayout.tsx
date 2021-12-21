@@ -40,7 +40,8 @@ const SingleViewLayout: FunctionComponent = ({ children }) => {
                 const view = viewQuery.data;
                 return (
                     <Box>
-                        <EditTextinPlace clearIfMatchText={ intl.formatMessage({ id: 'misc.views.newViewFields.title' }) }
+                        <EditTextinPlace
+                            defaultText={ intl.formatMessage({ id: 'misc.views.newViewFields.title' }) }
                             label="title"
                             onSubmit={ (newTitle: string) => updateTitle(view, newTitle) }
                             text={ view?.title }

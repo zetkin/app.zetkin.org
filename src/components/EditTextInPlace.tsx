@@ -1,11 +1,11 @@
 import Alert from '@material-ui/lab/Alert';
 import { useIntl } from 'react-intl';
-import { ChangeEvent, useRef, useState } from 'react';
-import { InputBase, Snackbar, Tooltip } from '@material-ui/core';
+import { ChangeEvent, useEffect, useRef, useState } from 'react';
+import { ClickAwayListener, InputBase, Snackbar, Tooltip } from '@material-ui/core';
 import { lighten, makeStyles } from '@material-ui/core/styles';
 
 interface ComponentProps {
-    clearIfMatchText: string;
+    defaultText: string;
     label: string;
     onSubmit: (arg: string) => Promise<boolean>;
     text: string;
@@ -32,8 +32,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-const EditTextinPlace: React.FunctionComponent<ComponentProps> = ({ label, text, onSubmit, clearIfMatchText }) => {
+const EditTextinPlace: React.FunctionComponent<ComponentProps> = ({ label, text, onSubmit, defaultText }) => {
     const [editing, setEditing] = useState<boolean>(false);
+    const [disabled, setDisabled] = useState<boolean>(false);
     const [snackbar, setSnackbar] = useState<'success' | 'error'>();
     const [newText, setNewText] = useState<string>(text);
     const classes = useStyles();
@@ -45,26 +46,37 @@ const EditTextinPlace: React.FunctionComponent<ComponentProps> = ({ label, text,
         tooltip: `misc.components.editTextInPlace.tooltip.${editing ? 'save' : 'edit'}`,
     };
 
+    useEffect(() => {
+        if (text !== newText) setNewText(text);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [text]);
+
     const onRequestEdit = () => {
         setEditing(true);
-        if (text === clearIfMatchText) setNewText('');
+        if (text === defaultText) setNewText('');
     };
     const onCancelEdit = () => {
-        if (editing) {
-            setEditing(false);
-            setNewText(text);
-        }
+        setEditing(false);
+        setNewText(text);
     };
     const onChange = (evt: ChangeEvent<HTMLInputElement> ) => {
         setNewText(evt.target.value);
     };
-    const onKeyDown = async (evt: React.KeyboardEvent) => {
+    const onKeyDown = (evt: React.KeyboardEvent) => {
         if (evt.key === 'Enter') {
-            const success = await onSubmit(newText);
-            setSnackbar(success ? 'success' : 'error');
-            setEditing(false);
-            inputRef?.current?.blur();
+            if (!newText) submitChange(defaultText);
+            else if ( newText && newText !== text) submitChange();
         }
+    };
+    const submitChange = (override?: string) => {
+        inputRef?.current?.blur();
+        setEditing(false);
+        setDisabled(true);
+        onSubmit(override || newText).then((success) => {
+            setSnackbar(success ? 'success' : 'error');
+            setDisabled(false);
+        });
+
     };
 
     return (
@@ -79,17 +91,19 @@ const EditTextinPlace: React.FunctionComponent<ComponentProps> = ({ label, text,
                 </Alert>
             </Snackbar>
             <Tooltip title={ intl.formatMessage({ id: intlIds.tooltip },{ label }) }>
-                <InputBase
-                    classes={{ input: classes.input, root: classes.inputRoot  }}
-                    inputProps={{ size: Math.max(5, newText?.length) }}
-                    inputRef={ inputRef }
-                    onBlur={ onCancelEdit }
-                    onChange={ onChange }
-                    onFocus={ onRequestEdit }
-                    onKeyDown={ onKeyDown }
-                    readOnly={ !editing }
-                    value={ newText }
-                />
+                <ClickAwayListener onClickAway={ onCancelEdit }>
+                    <InputBase
+                        classes={{ input: classes.input, root: classes.inputRoot  }}
+                        disabled={ disabled }
+                        inputProps={{ size: Math.max(5, newText?.length) }}
+                        inputRef={ inputRef }
+                        onChange={ onChange }
+                        onFocus={ onRequestEdit }
+                        onKeyDown={ onKeyDown }
+                        readOnly={ !editing }
+                        value={ newText }
+                    />
+                </ClickAwayListener>
             </Tooltip>
         </>);
 };
