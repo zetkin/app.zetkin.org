@@ -20,7 +20,13 @@ const DialogContent: React.FunctionComponent<DialogContentBaseProps> = ({ closeD
     const { mutateAsync: sendTaskRequest, isError } = tasksResource.useCreate(queryClient);
 
     const handleFormSubmit = async (task: ZetkinTaskRequestBody) => {
-        await sendTaskRequest(task, {
+        // Set defaults for config and target_filters
+        const body: ZetkinTaskRequestBody = {
+            ...task,
+            config: {},
+            target_filters: [],
+        };
+        await sendTaskRequest(body, {
             onSuccess: async (newTask) => {
                 closeDialog();
                 // Redirect to task page
