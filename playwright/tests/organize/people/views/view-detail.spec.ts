@@ -54,6 +54,36 @@ test.describe('View detail page', () => {
         await removeColsMock();
     });
 
+    test('allows title to be changed', async ({ page, appUri, moxy }) => {
+        const removeViewsMock = await moxy.setMock('/orgs/1/people/views/1', 'get', {
+            data: {
+                data: AllMembers,
+            },
+            status: 200,
+        });
+        await moxy.setMock('/v1/orgs/1/people/views/1', 'patch', {
+            status: 200,
+        });
+
+        const inputSelector = 'data-testid=page-title >> input';
+
+        // Click to edit, fill and submit change
+        await page.goto(appUri + '/organize/1/people/views/1');
+        await page.click(inputSelector);
+        await page.fill(inputSelector, 'Friends of Zetkin');
+        await page.keyboard.press('Enter');
+
+        // Check body of request
+        const mocks = await moxy.logRequests();
+        const titleUpdateRequest = await mocks.log.find(mock =>
+            mock.method === 'PATCH' &&
+            mock.path === '/v1/orgs/1/people/views/1',
+        );
+        expect(titleUpdateRequest?.data).toEqual({ title: 'Friends of Zetkin' });
+
+        await removeViewsMock();
+    });
+
     test('jumps between views using jump menu', async ({ page, appUri, moxy }) => {
         const removeViewsMock = await moxy.setMock('/orgs/1/people/views', 'get', {
             data: {
