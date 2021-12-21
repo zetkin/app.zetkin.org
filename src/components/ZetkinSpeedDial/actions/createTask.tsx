@@ -1,23 +1,21 @@
 import { Alert } from '@material-ui/lab';
 import { CheckBox } from '@material-ui/icons';
 import { FormattedMessage } from 'react-intl';
-import { useQueryClient } from 'react-query';
 import { useRouter } from 'next/router';
 
 import TaskDetailsForm from 'components/forms/TaskDetailsForm';
 import { ZetkinTaskRequestBody } from '../../../types/tasks';
 
 import { ACTIONS } from '../constants';
-import { useTasksResource } from 'api/tasks';
+import { tasksResource } from 'api/tasks';
 import { ActionConfig, DialogContentBaseProps } from './types';
 
 const DialogContent: React.FunctionComponent<DialogContentBaseProps> = ({ closeDialog }) => {
     const router = useRouter();
     const { campId, orgId } = router.query as {campId: string; orgId: string};
 
-    const queryClient = useQueryClient();
-    const tasksResource = useTasksResource(orgId);
-    const { mutateAsync: sendTaskRequest, isError } = tasksResource.useCreate(queryClient);
+    const { useCreate: useCreateTask } = tasksResource(orgId);
+    const { mutateAsync: sendTaskRequest, isError } = useCreateTask();
 
     const handleFormSubmit = async (task: ZetkinTaskRequestBody) => {
         // Set defaults for config and target_filters

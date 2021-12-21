@@ -4,6 +4,7 @@ import { useIntl } from 'react-intl';
 import { useQuery } from 'react-query';
 import { Box, Grid, Typography } from '@material-ui/core';
 
+import { campaignTasksResource } from 'api/tasks';
 import EventList from 'components/organize/events/EventList';
 import getCampaign from 'fetching/getCampaign';
 import getCampaignEvents from 'fetching/getCampaignEvents';
@@ -12,7 +13,6 @@ import { PageWithLayout } from 'types';
 import { scaffold } from 'utils/next';
 import SingleCampaignLayout from 'components/layout/organize/SingleCampaignLayout';
 import TaskList from 'components/organize/tasks/TaskList';
-import { useCampaignTasksResource } from 'api/tasks';
 import ZetkinPerson from 'components/ZetkinPerson';
 import ZetkinSection from 'components/ZetkinSection';
 import ZetkinSpeedDial, { ACTIONS } from 'components/ZetkinSpeedDial';
@@ -33,8 +33,8 @@ export const getServerSideProps : GetServerSideProps = scaffold(async (ctx) => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const { orgId, campId } = ctx.params!;
 
-    const tasksResource = useCampaignTasksResource(orgId as string, campId as string);
-    const campaignTasksState = await tasksResource.prefetch(ctx);
+    const { prefetch: prefetchCampaignTasks } = campaignTasksResource(orgId as string, campId as string);
+    const campaignTasksState = await prefetchCampaignTasks(ctx);
 
     await ctx.queryClient.prefetchQuery(['org', orgId], getOrg(orgId as string, ctx.apiFetch));
     const orgState = ctx.queryClient.getQueryState(['org', orgId]);
@@ -73,8 +73,7 @@ type CampaignCalendarPageProps = {
 const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({ orgId, campId }) => {
     const intl = useIntl();
 
-    const tasksResource = useCampaignTasksResource(orgId, campId);
-    const tasksQuery = tasksResource.useQuery();
+    const tasksQuery = campaignTasksResource(orgId, campId).useQuery();
 
     const eventsQuery = useQuery(['campaignEvents', orgId, campId], getCampaignEvents(orgId, campId));
     const campaignQuery = useQuery(['campaign', orgId, campId], getCampaign(orgId, campId));

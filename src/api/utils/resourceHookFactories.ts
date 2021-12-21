@@ -2,10 +2,10 @@ import nProgress from 'nprogress';
 import { QueryState } from 'react-query/types/core/query';
 import { QueryClient, useMutation, UseMutationOptions, UseMutationResult, useQuery, useQueryClient, UseQueryResult } from 'react-query';
 
+import APIError from 'utils/apiError';
 import { defaultFetch } from 'fetching';
 import handleResponse from './handleResponse';
 import { ScaffoldedContext } from 'utils/next';
-import APIError from 'utils/apiError';
 
 
 const makeUseMutationOptions = <Input, Result>(
