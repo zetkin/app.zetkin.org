@@ -1,4 +1,3 @@
-import '@testing-library/jest-dom';
 import { CssBaseline } from '@material-ui/core';
 import DateUtils from '@date-io/dayjs';
 import dayjs from 'dayjs';

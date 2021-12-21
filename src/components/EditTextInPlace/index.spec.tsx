@@ -33,22 +33,20 @@ describe('EditTextInPlace', () => {
         expect(tooltip).not.toBeNull();
     });
 
-    it('does not submit unless text is non-null or changed', async () => {
+    it('does not submit if text is null or unchanged', async () => {
         const onSubmit = jest.fn(props.onSubmit);
         const { getByDisplayValue } = render(<EditTextinPlace { ...{ ...props, onSubmit } } />);
         const inputEl = getByDisplayValue(props.text);
         userEvent.click(inputEl);
         userEvent.clear(inputEl);
-        expect(inputEl).toHaveValue('');
         userEvent.keyboard('{enter}');
         expect(onSubmit).toHaveBeenCalledTimes(0);
         userEvent.paste(inputEl, props.text);
-        expect(inputEl).toHaveValue(props.text);
         userEvent.keyboard('{enter}');
         expect(onSubmit).toHaveBeenCalledTimes(0);
     });
 
-    it('calls the submit function when new text valid', async () => {
+    it('calls the submit function when text is changed', async () => {
         const onSubmit = jest.fn(props.onSubmit);
         const { getByDisplayValue } = render(<EditTextinPlace { ...{ ...props, onSubmit } } />);
         const inputEl = getByDisplayValue(props.text);
