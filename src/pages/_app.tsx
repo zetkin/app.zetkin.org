@@ -16,7 +16,7 @@ import { ThemeProvider } from '@material-ui/core/styles';
 import { useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
-import { LocalTimeToJsonPlugin } from 'utils/dateUtils';
+import { LocalTimeToJsonPlugin } from '../utils/dateUtils';
 import { PageWithLayout } from '../types';
 import theme from '../theme';
 import { UserContext } from '../hooks';
