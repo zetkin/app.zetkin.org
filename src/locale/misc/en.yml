@@ -24,4 +24,6 @@ components:
                 Updated {label}!
             error:
                 Error. {label} not updated
+            noEmpty: This cannot be empty
+
 

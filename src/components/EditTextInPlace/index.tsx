@@ -1,7 +1,7 @@
 import Alert from '@material-ui/lab/Alert';
-import { useIntl } from 'react-intl';
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
-import { ClickAwayListener, InputBase, Snackbar, Tooltip } from '@material-ui/core';
+import { ClickAwayListener, FormControl, InputBase, InputLabel, Snackbar, Tooltip } from '@material-ui/core';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { lighten, makeStyles } from '@material-ui/core/styles';
 
 interface ComponentProps {
@@ -14,11 +14,11 @@ interface ComponentProps {
 const useStyles = makeStyles((theme) => ({
     input: {
         '&:focus, &:hover': {
-            borderColor: lighten(theme.palette.primary.main, 0.75 ),
+            borderColor: lighten(theme.palette.primary.main, 0.65 ),
             paddingLeft: 10,
             paddingRight: 0,
         },
-        border: '2px dashed transparent',
+        border: '2px dotted transparent',
         borderRadius: 10,
         paddingRight: 10,
         transition: 'all 0.2s ease',
@@ -43,6 +43,7 @@ const EditTextinPlace: React.FunctionComponent<ComponentProps> = ({ label, text,
 
     const intlIds = {
         alert: `misc.components.editTextInPlace.alert.${snackbar || 'error'}`,
+        noEmpty: 'misc.components.editTextInPlace.noEmpty',
         tooltip: `misc.components.editTextInPlace.tooltip.${editing ? 'save' : 'edit'}`,
     };
 
@@ -51,21 +52,23 @@ const EditTextinPlace: React.FunctionComponent<ComponentProps> = ({ label, text,
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [text]);
 
-    const onRequestEdit = () => {
-        setEditing(true);
+    const onRequestEdit = async () => {
+        await setEditing(true);
+        inputRef?.current?.focus();
         if (text === defaultText) setNewText('');
     };
     const onCancelEdit = () => {
         setEditing(false);
+        inputRef?.current?.blur();
         setNewText(text);
     };
     const onChange = (evt: ChangeEvent<HTMLInputElement> ) => {
         setNewText(evt.target.value);
     };
     const onKeyDown = (evt: React.KeyboardEvent) => {
-        if (evt.key === 'Enter') {
-            if (!newText) submitChange(defaultText);
-            else if ( newText && newText !== text) submitChange();
+        if (evt.key === 'Enter' && !!newText) {
+            if ( newText === text) onCancelEdit();
+            else if ( newText !== text) submitChange();
         }
     };
     const submitChange = (override?: string) => {
@@ -82,7 +85,7 @@ const EditTextinPlace: React.FunctionComponent<ComponentProps> = ({ label, text,
     return (
         <>
             <Snackbar
-                anchorOrigin={{ horizontal: 'center', vertical: 'top' }}
+                anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
                 autoHideDuration={ 3000 }
                 onClose={ () => setSnackbar(undefined) }
                 open={ !!snackbar }>
@@ -90,21 +93,28 @@ const EditTextinPlace: React.FunctionComponent<ComponentProps> = ({ label, text,
                     { snackbar && intl.formatMessage({ id: intlIds.alert },{ label }) }
                 </Alert>
             </Snackbar>
-            <Tooltip title={ intl.formatMessage({ id: intlIds.tooltip },{ label }) }>
-                <ClickAwayListener onClickAway={ onCancelEdit }>
-                    <InputBase
-                        classes={{ input: classes.input, root: classes.inputRoot  }}
-                        disabled={ disabled }
-                        inputProps={{ size: Math.max(5, newText?.length) }}
-                        inputRef={ inputRef }
-                        onChange={ onChange }
-                        onFocus={ onRequestEdit }
-                        onKeyDown={ onKeyDown }
-                        readOnly={ !editing }
-                        value={ newText }
-                    />
-                </ClickAwayListener>
-            </Tooltip>
+            <ClickAwayListener onClickAway={ onCancelEdit }>
+                <Tooltip
+                    arrow
+                    disableHoverListener={ editing }
+                    title={ intl.formatMessage({ id: intlIds.tooltip },{ label }) }>
+                    <FormControl error={ !newText }>
+                        <InputLabel variant="standard">
+                            { !newText && <FormattedMessage id={ intlIds.noEmpty } /> }
+                        </InputLabel>
+                        <InputBase
+                            classes={{ input: classes.input, root: classes.inputRoot  }}
+                            disabled={ disabled }
+                            inputProps={{ size: Math.max(defaultText.length, newText?.length) }}
+                            inputRef={ inputRef }
+                            onChange={ onChange }
+                            onFocus={ onRequestEdit }
+                            onKeyDown={ onKeyDown }
+                            readOnly={ !editing } value={ newText }
+                        />
+                    </FormControl>
+                </Tooltip>
+            </ClickAwayListener>
         </>);
 };
 

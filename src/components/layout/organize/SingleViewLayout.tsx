@@ -19,7 +19,6 @@ const SingleViewLayout: FunctionComponent = ({ children }) => {
     const queryClient = useQueryClient();
     const { orgId, viewId } = router.query;
     const viewQuery = useQuery(['view', viewId ], getView(orgId as string, viewId as string));
-
     const patchViewMutation = useMutation(patchView(orgId as string, viewId as string));
 
     const updateTitle = async (view: ZetkinView, newTitle: string) => {
