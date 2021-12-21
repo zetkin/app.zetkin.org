@@ -1,44 +1,9 @@
-/* eslint-disable react-hooks/rules-of-hooks */
 import { QueryState } from 'react-query/types/core/query';
-import { useMutation, UseMutationResult, useQuery, UseQueryResult } from 'react-query';
+import { useMutation, UseMutationOptions, UseMutationResult, useQuery, UseQueryResult } from 'react-query';
 
-
-import APIError from './apiError';
 import { defaultFetch } from 'fetching';
-import { ScaffoldedContext } from './next';
-
-interface ZetkinApiResponse<G> {
-    data?: G;
-    error?: unknown;
-}
-
-const handleResponse = async <Result>(res: Response, method: string) => {
-    if (!res.ok) {
-        try {
-            // Try to get the body and throw error with it
-            const body = await res.json() as ZetkinApiResponse<Result>;
-            throw new APIError(method, res.url, body);
-        }
-        catch (e) {
-            if (e instanceof APIError) {
-                throw e;
-            }
-            else {
-                throw new APIError(method, res.url);
-            }
-        }
-    }
-
-    const body = await res.json() as ZetkinApiResponse<Result>;
-
-    if (!body.data) {
-        throw new APIError(method, res.url);
-    }
-
-    return body.data;
-
-};
-
+import handleResponse from './handleResponse';
+import { ScaffoldedContext } from 'utils/next';
 
 export const createUseQuery = <Result>(
     key: string[],
@@ -50,7 +15,6 @@ export const createUseQuery = <Result>(
         const res = await defaultFetch(url, fetchOptions);
         return handleResponse(res, fetchOptions?.method || 'GET');
     };
-
 
     return () => {
         return useQuery(
@@ -65,11 +29,12 @@ export const createMutation = <Input, Result>(
     key: string[],
     url: string,
     fetchOptions: RequestInit,
+    mutationOptions?: Omit<UseMutationOptions<Result, unknown, Input, unknown>, 'mutationFn'>,
 ): () => UseMutationResult<Result, unknown, Input, unknown> => {
 
-    const method = fetchOptions?.method || 'post';
+    const method = fetchOptions?.method || 'POST';
 
-    async function handler (reqBody: Input): Promise<Result> {
+    const handler = async (reqBody: Input): Promise<Result> => {
         const res = await defaultFetch(url, {
             body: JSON.stringify(reqBody),
             headers: {
@@ -79,13 +44,13 @@ export const createMutation = <Input, Result>(
             method,
         });
         return handleResponse(res, method);
-    }
+    };
 
-    return () => useMutation(handler);
+    return () => useMutation(handler, mutationOptions);
 };
 
 /**
- * Returns an async function which takes the context, runs the prefetch, and returns the query state
+ * Returns an async function which takes the context as an argument, runs the prefetch, and returns the query state
  */
 export const createPrefetch = <Result>(
     key: string[],

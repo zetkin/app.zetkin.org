@@ -1,6 +1,6 @@
 class APIError extends Error {
-    constructor(method: string, url: string, backendError?: unknown) {
-        const message = `Error making ${method} request to ${url}. Response: ${backendError}`;
+    constructor(method: string, url: string, more?: unknown) {
+        const message = `Error making ${method} request to ${url}. ${more ? `More info: ${more}` : ''}`;
         super(message);
         this.name = 'APIError';
     }

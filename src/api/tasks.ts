@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { ZetkinTaskRequestBody } from 'types/tasks';
-import { createMutation, createPrefetch, createUseQuery } from 'utils/resourceHookFactories';
+import { createMutation, createPrefetch, createUseQuery } from './utils/resourceHookFactories';
 
 import { ZetkinTask } from '../types/zetkin';
 
