@@ -29,7 +29,7 @@ export const createUseQuery = <Result>(
 export const createMutation = <Input, Result>(
     key: string[],
     url: string,
-    fetchOptions: RequestInit,
+    fetchOptions?: RequestInit,
     mutationOptions?: Omit<UseMutationOptions<Result, unknown, Input, unknown>, 'mutationFn'>,
 ): (queryClient: QueryClient) => UseMutationResult<Result, unknown, Input, unknown> => {
 

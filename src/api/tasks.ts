@@ -7,26 +7,22 @@ import { ZetkinTask } from '../types/zetkin';
 export const useTasksResource = (orgId: string) => {
 
     const key = ['tasks', orgId];
+    const url = `/orgs/${orgId}/tasks`;
 
     return {
-        key,
-
         prefetch: createPrefetch(
             key,
-            `/orgs/${orgId}/tasks`,
+            url,
         ),
 
         useCreate: createMutation<ZetkinTaskRequestBody, ZetkinTask>(
             key,
-            `/orgs/${orgId}/tasks`,
-            {
-                method: 'POST',
-            },
+            url,
         ),
 
         useQuery: createUseQuery<ZetkinTask[]>(
             key,
-            `/orgs/${orgId}/tasks`,
+            url,
         ),
     };
 };
@@ -35,18 +31,50 @@ export const useTasksResource = (orgId: string) => {
 export const useCampaignTasksResource = (orgId: string, campaignId: string) => {
 
     const key = ['tasks', orgId, campaignId];
+    const url = `/orgs/${orgId}/campaigns/${campaignId}/tasks`;
 
     return {
-        key,
-
         prefetch: createPrefetch(
             key,
-            `/orgs/${orgId}/campaigns/${campaignId}/tasks`,
+            url,
         ),
 
         useQuery: createUseQuery<ZetkinTask[]>(
             key,
-            `/orgs/${orgId}/campaigns/${campaignId}/tasks`,
+            url,
+        ),
+    };
+};
+
+export const useTaskResource = (orgId: string, taskId: string) => {
+    const key = ['task', taskId];
+    const url = `/orgs/${orgId}/tasks/${taskId}`;
+
+    return {
+        prefetch: createPrefetch<ZetkinTask>(
+            key,
+            url,
+        ),
+
+        useDelete: createMutation<never, never>(
+            key,
+            url,
+            {
+                method: 'DELETE',
+            },
+        ),
+
+        useQuery: createUseQuery<ZetkinTask>(
+            key,
+            url,
+        ),
+
+        useUpdate: createMutation<ZetkinTaskRequestBody, ZetkinTask>(
+            key,
+            url,
+            {
+                method: 'PATCH',
+            },
         ),
     };
 };

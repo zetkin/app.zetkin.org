@@ -7,6 +7,7 @@ import { PageWithLayout } from 'types';
 import { scaffold } from 'utils/next';
 import SingleTaskLayout from 'components/layout/organize/SingleTaskLayout';
 import TaskDetailsSection from 'components/organize/tasks/TaskDetailsSection';
+import { useTaskResource } from 'api/tasks';
 
 const scaffoldOptions = {
     authLevelRequired: 2,
@@ -24,15 +25,8 @@ export const getServerSideProps : GetServerSideProps = scaffold(async (ctx) => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const { orgId, campId, taskId } = ctx.params!;
 
-    await ctx.queryClient.prefetchQuery(
-        ['task', taskId],
-        getTask(
-            orgId as string,
-            taskId as string,
-            ctx.apiFetch,
-        ),
-    );
-    const taskQueryState = ctx.queryClient.getQueryState(['task', taskId]);
+    const taskResource = useTaskResource(orgId as string, taskId as string);
+    const taskQueryState = await taskResource.prefetch(ctx);
 
     if (
         taskQueryState?.status === 'success'
@@ -59,7 +53,7 @@ type TaskDetailPageProps = {
 }
 
 const TaskDetailPage: PageWithLayout<TaskDetailPageProps> = ({ taskId, orgId }) => {
-    const { data: task } = useQuery(['task', taskId], getTask(orgId, taskId));
+    const { data: task } = useTaskResource(orgId, taskId).useQuery();
 
     if (!task) return null;
 
