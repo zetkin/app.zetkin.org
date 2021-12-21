@@ -1,5 +1,6 @@
+import nProgress from 'nprogress';
 import { QueryState } from 'react-query/types/core/query';
-import { useMutation, UseMutationOptions, UseMutationResult, useQuery, UseQueryResult } from 'react-query';
+import { QueryClient, useMutation, UseMutationOptions, UseMutationResult, useQuery, UseQueryResult } from 'react-query';
 
 import { defaultFetch } from 'fetching';
 import handleResponse from './handleResponse';
@@ -30,7 +31,7 @@ export const createMutation = <Input, Result>(
     url: string,
     fetchOptions: RequestInit,
     mutationOptions?: Omit<UseMutationOptions<Result, unknown, Input, unknown>, 'mutationFn'>,
-): () => UseMutationResult<Result, unknown, Input, unknown> => {
+): (queryClient: QueryClient) => UseMutationResult<Result, unknown, Input, unknown> => {
 
     const method = fetchOptions?.method || 'POST';
 
@@ -46,7 +47,12 @@ export const createMutation = <Input, Result>(
         return handleResponse(res, method);
     };
 
-    return () => useMutation(handler, mutationOptions);
+    return (queryClient: QueryClient) => useMutation(handler, {
+        onMutate: () => nProgress.start(),
+        onSettled: async () => nProgress.done(),
+        onSuccess: async () => queryClient.invalidateQueries(key),
+        ...mutationOptions,
+    });
 };
 
 /**

@@ -9,6 +9,8 @@ export const useTasksResource = (orgId: string) => {
     const key = ['tasks', orgId];
 
     return {
+        key,
+
         prefetch: createPrefetch(
             key,
             `/orgs/${orgId}/tasks`,
@@ -35,6 +37,8 @@ export const useCampaignTasksResource = (orgId: string, campaignId: string) => {
     const key = ['tasks', orgId, campaignId];
 
     return {
+        key,
+
         prefetch: createPrefetch(
             key,
             `/orgs/${orgId}/campaigns/${campaignId}/tasks`,
