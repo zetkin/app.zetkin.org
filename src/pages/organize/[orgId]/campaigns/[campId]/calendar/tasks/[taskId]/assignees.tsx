@@ -2,14 +2,15 @@ import { Box } from '@material-ui/core';
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { useIntl } from 'react-intl';
-import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 
 import getAssignedTasks from 'fetching/tasks/getAssignedTasks';
 import getOrg from 'fetching/getOrg';
 import getTask from 'fetching/tasks/getTask';
 import { PageWithLayout } from 'types';
+import patchQuery from 'fetching/patchQuery';
 import { QUERY_STATUS } from 'types/smartSearch';
 import QueryStatusAlert from 'components/smartSearch/QueryStatusAlert';
 import { scaffold } from 'utils/next';
@@ -73,13 +74,20 @@ const getQueryStatus = (
 
 const TaskAssigneesPage: PageWithLayout = () => {
     const intl = useIntl();
+    const queryClient = useQueryClient();
 
     const { taskId, orgId } = useRouter().query;
     const taskQuery = useQuery(['task', taskId], getTask(orgId as string, taskId as string));
     const assignedTasksQuery = useQuery(['assignedTasks', orgId, taskId], getAssignedTasks(
         orgId as string, taskId as string,
     ));
+
     const task = taskQuery?.data;
+
+    const queryMutation = useMutation(patchQuery(orgId as string, task?.id as number), {
+        onSettled: () => queryClient.invalidateQueries(['task', taskId]),
+    });
+
     const assignedTasks = assignedTasksQuery?.data;
     const query = task?.target;
 
@@ -116,6 +124,10 @@ const TaskAssigneesPage: PageWithLayout = () => {
             { dialogOpen &&
             <SmartSearchDialog
                 onDialogClose={ handleDialogClose }
+                onSave={ (query) => {
+                    queryMutation.mutate(query);
+                    setDialogOpen(false);
+                } }
                 query={ query }
                 readOnly={ readOnly }
             /> }
