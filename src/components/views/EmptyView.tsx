@@ -84,7 +84,9 @@ const EmptyView: FunctionComponent<EmptyViewProps> = ({ orgId, view }) => {
                             </Typography>
                         </CardContent>
                         <CardActions>
-                            <Button onClick={ () => setQueryDialogOpen(true) }>
+                            <Button
+                                data-testid="EmptyView-configureButton"
+                                onClick={ () => setQueryDialogOpen(true) }>
                                 <Msg id="misc.views.empty.dynamic.configureButton"/>
                             </Button>
                         </CardActions>
