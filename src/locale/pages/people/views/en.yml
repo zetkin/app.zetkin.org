@@ -12,5 +12,6 @@ viewsList:
 layout:
     ellipsisMenu:
         editQuery: Edit Smart Search query
+        makeStatic: Convert to static view
     jumpMenu:
         placeholder: Start typing to find view
