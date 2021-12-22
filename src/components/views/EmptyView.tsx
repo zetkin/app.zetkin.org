@@ -6,9 +6,8 @@ import { useMutation, useQueryClient } from 'react-query';
 
 import { defaultFetch } from 'fetching';
 import PersonSelect from 'components/forms/common/PersonSelect';
-import SmartSearchDialog from 'components/smartSearch/SmartSearchDialog';
+import ViewSmartSearchDialog from './ViewSmartSearchDialog';
 import { ZetkinPerson } from 'types/zetkin';
-import { ZetkinQuery } from 'types/smartSearch';
 import { ZetkinView, ZetkinViewRow } from 'types/views';
 
 
@@ -40,19 +39,6 @@ const EmptyView: FunctionComponent<EmptyViewProps> = ({ orgId, view }) => {
             // Invalidate to retrieve entire row collection (in case more were added elsewhere)
             queryClient.invalidateQueries(rowsKey);
         },
-    });
-
-    // TODO: Create mutation using new factory pattern
-    const updateQueryMutation = useMutation(async (query: Partial<ZetkinQuery>) => {
-        await defaultFetch(`/orgs/${orgId}/people/views/${view.id}/content_query`, {
-            body: JSON.stringify(query),
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            method: 'PATCH',
-        });
-    }, {
-        onSettled: () => queryClient.invalidateQueries(rowsKey),
     });
 
     return (
@@ -100,10 +86,10 @@ const EmptyView: FunctionComponent<EmptyViewProps> = ({ orgId, view }) => {
                 </Grid>
             </Grid>
             { queryDialogOpen && (
-                <SmartSearchDialog
+                <ViewSmartSearchDialog
                     onDialogClose={ () => setQueryDialogOpen(false) }
-                    onSave={ (query) => updateQueryMutation.mutate(query) }
-                    query={ view.content_query }
+                    orgId={ orgId }
+                    view={ view }
                 />
             ) }
         </Box>

@@ -10,7 +10,7 @@ import { ZetkinQuery } from 'types/zetkin';
 import { FILTER_TYPE, SelectedSmartSearchFilter, SmartSearchFilterWithId,
     ZetkinSmartSearchFilter } from 'types/smartSearch';
 
-interface SmartSearchDialog {
+export interface SmartSearchDialogProps {
     query?: ZetkinQuery | null;
     onDialogClose: () => void;
     onSave: (query : Partial<ZetkinQuery>) => void;
@@ -25,7 +25,7 @@ enum QUERY_DIALOG_STATE {
 }
 
 const SmartSearchDialog = (
-    { onDialogClose, onSave, query, readOnly }: SmartSearchDialog,
+    { onDialogClose, onSave, query, readOnly }: SmartSearchDialogProps,
 ) : JSX.Element => {
     const {
         filtersWithIds: filterArray,
