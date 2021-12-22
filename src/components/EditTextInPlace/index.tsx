@@ -1,8 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useIntl } from 'react-intl';
-import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { ClickAwayListener, FormControl, InputBase, Tooltip } from '@material-ui/core';
 import { lighten, makeStyles } from '@material-ui/core/styles';
+import { useEffect, useRef, useState } from 'react';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -27,12 +27,11 @@ const useStyles = makeStyles((theme) => ({
 
 export interface EditTextinPlaceProps {
     disabled?: boolean;
-    label: string;
     onChange: (newValue: string) => Promise<void>;
     value: string;
 }
 
-const EditTextinPlace: React.FunctionComponent<EditTextinPlaceProps> = ({ label, disabled, onChange, value }) => {
+const EditTextinPlace: React.FunctionComponent<EditTextinPlaceProps> = ({ disabled, onChange, value }) => {
     const [editing, setEditing] = useState<boolean>(false);
     const [text, setText] = useState<string>(value);
 
