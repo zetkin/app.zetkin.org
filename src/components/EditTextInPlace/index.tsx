@@ -1,15 +1,9 @@
-import Alert from '@material-ui/lab/Alert';
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useIntl } from 'react-intl';
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
-import { ClickAwayListener, FormControl, InputBase, InputLabel, Snackbar, Tooltip } from '@material-ui/core';
-import { FormattedMessage, useIntl } from 'react-intl';
+import { ClickAwayListener, FormControl, InputBase, Tooltip } from '@material-ui/core';
 import { lighten, makeStyles } from '@material-ui/core/styles';
 
-export interface ComponentProps {
-    defaultText: string;
-    label: string;
-    onSubmit: (arg: string) => Promise<boolean>;
-    text: string;
-}
 
 const useStyles = makeStyles((theme) => ({
     input: {
@@ -31,86 +25,87 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
+export interface EditTextinPlaceProps {
+    disabled?: boolean;
+    label: string;
+    onChange: (newValue: string) => Promise<void>;
+    value: string;
+}
 
-const EditTextinPlace: React.FunctionComponent<ComponentProps> = ({ label, text, onSubmit, defaultText }) => {
+const EditTextinPlace: React.FunctionComponent<EditTextinPlaceProps> = ({ label, disabled, onChange, value }) => {
     const [editing, setEditing] = useState<boolean>(false);
-    const [disabled, setDisabled] = useState<boolean>(false);
-    const [snackbar, setSnackbar] = useState<'success' | 'error'>();
-    const [newText, setNewText] = useState<string>(text);
+    const [text, setText] = useState<string>(value);
+
     const classes = useStyles();
     const inputRef = useRef<HTMLInputElement>(null);
     const intl = useIntl();
 
     const intlIds = {
-        alert: `misc.components.editTextInPlace.alert.${snackbar || 'error'}`,
-        noEmpty: 'misc.components.editTextInPlace.noEmpty',
         tooltip: `misc.components.editTextInPlace.tooltip.${editing ? 'save' : 'edit'}`,
     };
 
     useEffect(() => {
-        if (text !== newText) setNewText(text);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [text]);
-
-    const onRequestEdit = async () => {
-        await setEditing(true);
-        inputRef?.current?.focus();
-        if (text === defaultText) setNewText('');
-    };
-    const onCancelEdit = () => {
-        setEditing(false);
-        inputRef?.current?.blur();
-        setNewText(text);
-    };
-    const onChange = (evt: ChangeEvent<HTMLInputElement> ) => {
-        setNewText(evt.target.value);
-    };
-    const onKeyDown = (evt: React.KeyboardEvent) => {
-        if (evt.key === 'Enter' && !!newText) {
-            if ( newText === text) onCancelEdit();
-            else if ( newText !== text) submitChange();
+        // If the value prop changes, set the text
+        if (value !== text) {
+            setText(text);
         }
+    }, [value]);
+
+    const startEditing = () => {
+        setEditing(true);
+        inputRef?.current?.focus();
     };
-    const submitChange = (override?: string) => {
+
+    const cancelEditing = () => {
+        setEditing(false);
+        inputRef?.current?.blur();
+        // Set text back to value passed in props
+        setText(value);
+    };
+
+    const onInputChange = (evt: ChangeEvent<HTMLInputElement> ) => {
+        setText(evt.target.value);
+    };
+
+    const submitChange = () => {
         inputRef?.current?.blur();
         setEditing(false);
-        setDisabled(true);
-        onSubmit(override || newText).then((success) => {
-            setSnackbar(success ? 'success' : 'error');
-            setDisabled(false);
-        });
+        onChange(text);
+    };
 
+    const onKeyDown = (evt: React.KeyboardEvent) => {
+        if (evt.key === 'Enter' && !!text) {
+            // If user has not changed the text, do nothing
+            if ( text === value) {
+                cancelEditing();
+            }
+            else {
+                submitChange();
+            }
+        }
     };
 
     return (
         <>
-            <Snackbar
-                anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-                autoHideDuration={ 3000 }
-                onClose={ () => setSnackbar(undefined) }
-                open={ !!snackbar }>
-                <Alert onClose={ () => setSnackbar(undefined) } severity={ snackbar }>
-                    { snackbar && intl.formatMessage({ id: intlIds.alert },{ label }) }
-                </Alert>
-            </Snackbar>
-            <ClickAwayListener onClickAway={ onCancelEdit }>
+            <ClickAwayListener onClickAway={ cancelEditing }>
                 <Tooltip
                     arrow
                     disableHoverListener={ editing }
-                    title={ intl.formatMessage({ id: intlIds.tooltip },{ label }) }>
-                    <FormControl error={ !newText }>
-                        <InputLabel variant="standard">
-                            { !newText && <FormattedMessage id={ intlIds.noEmpty } /> }
-                        </InputLabel>
+                    title={ text ?
+                        intl.formatMessage({ id: intlIds.tooltip },{ label }) :
+                        intl.formatMessage({ id: 'misc.components.editTextInPlace.noEmpty' })
+                    }>
+                    <FormControl>
                         <InputBase
                             classes={{ input: classes.input, root: classes.inputRoot  }}
                             disabled={ disabled }
-                            inputProps={{ size: Math.max(defaultText.length, newText?.length) }}
+                            inputProps={{ size: text.length || 1 }}
                             inputRef={ inputRef }
-                            onChange={ onChange }
-                            onFocus={ onRequestEdit }
+                            onChange={ onInputChange }
+                            onFocus={ startEditing }
                             onKeyDown={ onKeyDown }
-                            readOnly={ !editing } value={ newText }
+                            readOnly={ !editing }
+                            value={ text }
                         />
                     </FormControl>
                 </Tooltip>
