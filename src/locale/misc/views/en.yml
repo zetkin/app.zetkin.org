@@ -35,6 +35,10 @@ defaultColumnTitles:
     local_bool: Toggle
     local_person: Person reference
     person_notes: Notes
+empty:
+    notice:
+        dynamic: This is a Smart Search View but no people match the query
+        static: You haven't added any rows yet
 newViewFields:
     title: New View
 dataTableErrors:

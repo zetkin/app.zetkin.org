@@ -1,5 +1,4 @@
 import { Alert } from '@material-ui/lab';
-import { FormattedMessage } from 'react-intl';
 import { FunctionComponent } from 'react';
 import NProgress from 'nprogress';
 import { Person } from '@material-ui/icons';
@@ -7,15 +6,16 @@ import { Snackbar } from '@material-ui/core';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { useMutation, useQueryClient } from 'react-query';
 
 import { colIdFromFieldName } from './utils';
 import deleteViewColumn from 'fetching/views/deleteViewColumn';
 import patchViewColumn from 'fetching/views/patchViewColumn';
 import postViewColumn from 'fetching/views/postViewColumn';
-import { SelectedViewColumn } from 'types/views';
-import { VIEW_DATA_TABLE_ERROR } from './constants';
 import ViewRenameColumnDialog from '../ViewRenameColumnDialog';
+import { SelectedViewColumn, ZetkinView } from 'types/views';
+import { VIEW_CONTENT_SOURCE, VIEW_DATA_TABLE_ERROR } from './constants';
 import ViewColumnDialog, { AUTO_SAVE_TYPES } from 'components/views/ViewColumnDialog';
 import ViewDataTableColumnMenu, { ViewDataTableColumnMenuProps } from './ViewDataTableColumnMenu';
 import ViewDataTableToolbar, { ViewDataTableToolbarProps } from './ViewDataTableToolbar';
@@ -25,15 +25,17 @@ import { ZetkinViewColumn, ZetkinViewRow } from 'types/zetkin';
 interface ViewDataTableProps {
     columns: ZetkinViewColumn[];
     rows: ZetkinViewRow[];
-    viewId: string;
+    view: ZetkinView;
 }
 
-const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, viewId }) => {
+const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, view }) => {
+    const intl = useIntl();
     const [columnToConfigure, setColumnToConfigure] = useState<SelectedViewColumn | null>(null);
     const [columnToRename, setColumnToRename] = useState<ZetkinViewColumn | null>(null);
     const [error, setError] = useState<VIEW_DATA_TABLE_ERROR>();
     const { orgId } = useRouter().query;
     const queryClient = useQueryClient();
+    const viewId = view.id.toString();
 
     const addColumnMutation = useMutation(postViewColumn(orgId as string, viewId), {
         onError: () => {
@@ -209,6 +211,8 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
         },
     };
 
+    const contentSource = view.content_query? VIEW_CONTENT_SOURCE.DYNAMIC : VIEW_CONTENT_SOURCE.STATIC;
+
     return (
         <>
             <DataGridPro
@@ -218,6 +222,9 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
                     Toolbar: ViewDataTableToolbar,
                 }}
                 componentsProps={ componentsProps }
+                localeText={{
+                    noRowsLabel: intl.formatMessage({ id: `misc.views.empty.notice.${contentSource}` }),
+                }}
                 rows={ gridRows }
             />
             { columnToRename && (
