@@ -10,6 +10,7 @@ import { ZetkinPerson } from 'types/zetkin';
 
 
 interface PersonSelectProps {
+    label?: string;
     name: string;
     onChange: (person: Partial<ZetkinPerson>) => void;
     orgId: string | number;
@@ -17,6 +18,7 @@ interface PersonSelectProps {
 }
 
 const PersonSelect: FunctionComponent<PersonSelectProps> = ({
+    label,
     name,
     onChange,
     orgId,
@@ -32,14 +34,14 @@ const PersonSelect: FunctionComponent<PersonSelectProps> = ({
     );
 
     let searchLabel = searchFieldValue.length ?
-        intl.formatMessage({ id: 'misc.formDialog.campaign.keepSearch' }) :
-        intl.formatMessage({ id: 'misc.formDialog.campaign.search' });
+        intl.formatMessage({ id: 'misc.personSelect.keepTyping' }) :
+        intl.formatMessage({ id: 'misc.personSelect.search' });
 
     if (isLoading) {
-        searchLabel = intl.formatMessage({ id: 'misc.formDialog.campaign.searching' });
+        searchLabel = intl.formatMessage({ id: 'misc.personSelect.searching' });
     }
     else if (results?.length == 0) {
-        searchLabel = intl.formatMessage({ id: 'misc.formDialog.campaign.noResult' });
+        searchLabel = intl.formatMessage({ id: 'misc.personSelect.noResult' });
     }
 
     const debouncedQuery = useDebounce(async () => {
@@ -64,7 +66,7 @@ const PersonSelect: FunctionComponent<PersonSelectProps> = ({
             getOptionLabel={ person => person.first_name ? `${person.first_name} ${person.last_name}` : '' }
             getOptionSelected={ (option, value) => option?.id == value?.id }
             getOptionValue={ person => person.id || null }
-            label={ intl.formatMessage({ id: 'misc.formDialog.campaign.manager.label' }) }
+            label={ label }
             name={ name }
             noOptionsText={ searchLabel }
             onChange={ (_, v) => {

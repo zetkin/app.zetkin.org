@@ -87,6 +87,7 @@ const CampaignDetailsForm = ({ onSubmit, onCancel, campaign }: CampaignDetailsFo
                     />
 
                     <PersonSelect
+                        label={ intl.formatMessage({ id: 'misc.formDialog.campaign.manager.label' }) }
                         name="manager_id"
                         onChange={ (person) => {
                             setSelectedManager(person);

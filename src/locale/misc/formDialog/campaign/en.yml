@@ -1,9 +1,5 @@
 create: Create new campaign
 edit: Edit campaign
-searching: Searching...
-noResult: No matching person found
-search: Type to start searching
-keepSearch: Keep typing to start searching
 name: Name
 description: Description
 manager:
