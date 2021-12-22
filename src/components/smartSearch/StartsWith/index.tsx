@@ -29,12 +29,12 @@ const StartsWith = ({ startsWithAll, onSubmit, onCancel }: StartsWithProps): JSX
                     values={{
                         startWithSelect: (
                             // convert numbers to boolean since MenuItem cannot take boolean as props
-                            <StyledSelect onChange={ e => setShouldStartWithAll(!!e.target.value) }
+                            <StyledSelect data-testid="StartsWith-select" onChange={ e => setShouldStartWithAll(!!e.target.value) }
                                 value={ +shouldStartWithAll }>
-                                <MenuItem key={ 1 } value={ 1 }>
+                                <MenuItem key={ 1 } data-testid="StartsWith-select-all" value={ 1 }>
                                     <Msg id="misc.smartSearch.all.startWithSelect.true"/>
                                 </MenuItem>
-                                <MenuItem key={ 0 } value={ 0 }>
+                                <MenuItem key={ 0 } data-testid="StartsWith-select-empty" value={ 0 }>
                                     <Msg id="misc.smartSearch.all.startWithSelect.false" />
                                 </MenuItem>
                             </StyledSelect>
