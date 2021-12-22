@@ -77,31 +77,30 @@ const EditTextinPlace: React.FunctionComponent<EditTextinPlaceProps> = ({ disabl
     };
 
     return (
-        <>
-            <ClickAwayListener onClickAway={ cancelEditing }>
-                <Tooltip
-                    arrow
-                    disableHoverListener={ editing }
-                    title={ text ?
-                        intl.formatMessage({ id: `misc.components.editTextInPlace.tooltip.${editing ? 'save' : 'edit'}` }) :
-                        intl.formatMessage({ id: 'misc.components.editTextInPlace.tooltip.noEmpty' })
-                    }>
-                    <FormControl>
-                        <InputBase
-                            classes={{ input: classes.input, root: classes.inputRoot  }}
-                            disabled={ disabled }
-                            inputProps={{ size: text.length || 1 }}
-                            inputRef={ inputRef }
-                            onChange={ (e) => setText(e.target.value) }
-                            onFocus={ startEditing }
-                            onKeyDown={ onKeyDown }
-                            readOnly={ !editing }
-                            value={ text }
-                        />
-                    </FormControl>
-                </Tooltip>
-            </ClickAwayListener>
-        </>);
+        <ClickAwayListener onClickAway={ cancelEditing }>
+            <Tooltip
+                arrow
+                disableHoverListener={ editing }
+                title={ text ?
+                    intl.formatMessage({ id: `misc.components.editTextInPlace.tooltip.${editing ? 'save' : 'edit'}` }) :
+                    intl.formatMessage({ id: 'misc.components.editTextInPlace.tooltip.noEmpty' })
+                }>
+                <FormControl>
+                    <InputBase
+                        classes={{ input: classes.input, root: classes.inputRoot  }}
+                        disabled={ disabled }
+                        inputProps={{ size: text.length || 1 }}
+                        inputRef={ inputRef }
+                        onChange={ (e) => setText(e.target.value) }
+                        onFocus={ startEditing }
+                        onKeyDown={ onKeyDown }
+                        readOnly={ !editing }
+                        value={ text }
+                    />
+                </FormControl>
+            </Tooltip>
+        </ClickAwayListener>
+    );
 };
 
 export default EditTextinPlace;
