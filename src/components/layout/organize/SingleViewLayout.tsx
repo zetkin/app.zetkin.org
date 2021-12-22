@@ -54,6 +54,12 @@ const SingleViewLayout: FunctionComponent = ({ children }) => {
             onSelect: () => deleteQueryMutation.mutate(),
         });
     }
+    else {
+        ellipsisMenu.push({
+            label: intl.formatMessage({ id: 'pages.people.views.layout.ellipsisMenu.makeDynamic' }),
+            onSelect: () => setQueryDialogOpen(true),
+        });
+    }
 
     return (
         <>
