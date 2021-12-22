@@ -10,5 +10,7 @@ viewsList:
         created: Date created
         owner: Owner
 layout:
+    ellipsisMenu:
+        editQuery: Edit Smart Search query
     jumpMenu:
         placeholder: Start typing to find view
