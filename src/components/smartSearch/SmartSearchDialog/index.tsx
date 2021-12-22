@@ -11,7 +11,7 @@ import { FILTER_TYPE, SelectedSmartSearchFilter, SmartSearchFilterWithId,
     ZetkinSmartSearchFilter } from 'types/smartSearch';
 
 interface SmartSearchDialog {
-    query?: ZetkinQuery;
+    query?: ZetkinQuery | null;
     onDialogClose: () => void;
     onSave: (query : Partial<ZetkinQuery>) => void;
     readOnly?: boolean;
