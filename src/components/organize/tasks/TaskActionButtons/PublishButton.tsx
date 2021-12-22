@@ -2,16 +2,13 @@ import dayjs from 'dayjs';
 import { useState } from 'react';
 import { Button, Tooltip } from '@material-ui/core';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
-import { useMutation, useQueryClient } from 'react-query';
 
-import patchTask from 'fetching/tasks/patchTask';
-import { useRouter } from 'next/router';
+import TaskPublishForm from 'components/forms/TaskPublishForm';
+import { taskResource } from 'api/tasks';
+import validateTaskConfig from 'utils/validateTaskConfig';
 import ZetkinDialog from 'components/ZetkinDialog';
 import { ZetkinTask } from 'types/zetkin';
 import getTaskStatus, { TASK_STATUS } from 'utils/getTaskStatus';
-
-import TaskPublishForm from 'components/forms/TaskPublishForm';
-import validateTaskConfig from 'utils/validateTaskConfig';
 
 const getTooltipContents = (taskStatus: TASK_STATUS, isTaskConfigValid: boolean, hasAssignees: boolean): string | null => {
     if (taskStatus === TASK_STATUS.ACTIVE ||
@@ -41,13 +38,9 @@ interface PublishButtonProps {
 
 const PublishButton: React.FunctionComponent<PublishButtonProps> = ({ task }) => {
     const intl = useIntl();
-    const queryClient = useQueryClient();
     const [dialogOpen, setDialogOpen] = useState(false);
-    const { taskId } = useRouter().query;
 
-    const patchTaskMutation = useMutation(patchTask(task.organization.id, task.id), {
-        onSettled: () => queryClient.invalidateQueries(['task', taskId]),
-    });
+    const patchTaskMutation = taskResource(task.organization.id.toString(), task.id.toString()).useUpdate();
 
     const publishTask = () => {
         patchTaskMutation.mutate({
