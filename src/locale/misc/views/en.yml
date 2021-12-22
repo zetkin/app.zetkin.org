@@ -36,9 +36,16 @@ defaultColumnTitles:
     local_person: Person reference
     person_notes: Notes
 empty:
+    dynamic:
+        configureButton: Configure
+        description: Create a dynamic view where people are added and removed automatically using Smart Search.
+        headline: Configure Smart Search View
     notice:
         dynamic: This is a Smart Search View but no people match the query
         static: You haven't added any rows yet
+    static:
+        description: Add the first person to create a static view where people are added and removed manually.
+        headline: Add people manually
 newViewFields:
     title: New View
 dataTableErrors:

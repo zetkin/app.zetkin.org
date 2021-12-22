@@ -11,6 +11,7 @@ import { useMutation, useQueryClient } from 'react-query';
 
 import { colIdFromFieldName } from './utils';
 import deleteViewColumn from 'fetching/views/deleteViewColumn';
+import EmptyView from 'components/views/EmptyView';
 import patchViewColumn from 'fetching/views/patchViewColumn';
 import postViewColumn from 'fetching/views/postViewColumn';
 import ViewRenameColumnDialog from '../ViewRenameColumnDialog';
@@ -211,22 +212,33 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
         },
     };
 
+    const empty = gridRows.length == 0;
     const contentSource = view.content_query? VIEW_CONTENT_SOURCE.DYNAMIC : VIEW_CONTENT_SOURCE.STATIC;
 
     return (
         <>
             <DataGridPro
+                autoHeight={ empty }
                 columns={ gridColumns }
                 components={{
                     ColumnMenu: ViewDataTableColumnMenu,
                     Toolbar: ViewDataTableToolbar,
                 }}
                 componentsProps={ componentsProps }
+                hideFooter={ true }
                 localeText={{
                     noRowsLabel: intl.formatMessage({ id: `misc.views.empty.notice.${contentSource}` }),
                 }}
                 rows={ gridRows }
+                style={{
+                    border: 'none',
+                }}
             />
+            { empty && (
+                <EmptyView
+                    view={ view }
+                />
+            ) }
             { columnToRename && (
                 <ViewRenameColumnDialog
                     column={ columnToRename }
