@@ -40,10 +40,6 @@ const EditTextinPlace: React.FunctionComponent<EditTextinPlaceProps> = ({ label,
     const inputRef = useRef<HTMLInputElement>(null);
     const intl = useIntl();
 
-    const intlIds = {
-        tooltip: `misc.components.editTextInPlace.tooltip.${editing ? 'save' : 'edit'}`,
-    };
-
     useEffect(() => {
         // If the value prop changes, set the text
         if (value !== text) {
@@ -61,10 +57,6 @@ const EditTextinPlace: React.FunctionComponent<EditTextinPlaceProps> = ({ label,
         inputRef?.current?.blur();
         // Set text back to value passed in props
         setText(value);
-    };
-
-    const onInputChange = (evt: ChangeEvent<HTMLInputElement> ) => {
-        setText(evt.target.value);
     };
 
     const submitChange = () => {
@@ -92,7 +84,7 @@ const EditTextinPlace: React.FunctionComponent<EditTextinPlaceProps> = ({ label,
                     arrow
                     disableHoverListener={ editing }
                     title={ text ?
-                        intl.formatMessage({ id: intlIds.tooltip },{ label }) :
+                        intl.formatMessage({ id: `misc.components.editTextInPlace.tooltip.${editing ? 'save' : 'edit'}` }) :
                         intl.formatMessage({ id: 'misc.components.editTextInPlace.noEmpty' })
                     }>
                     <FormControl>
@@ -101,7 +93,7 @@ const EditTextinPlace: React.FunctionComponent<EditTextinPlaceProps> = ({ label,
                             disabled={ disabled }
                             inputProps={{ size: text.length || 1 }}
                             inputRef={ inputRef }
-                            onChange={ onInputChange }
+                            onChange={ (e) => setText(e.target.value) }
                             onFocus={ startEditing }
                             onKeyDown={ onKeyDown }
                             readOnly={ !editing }
