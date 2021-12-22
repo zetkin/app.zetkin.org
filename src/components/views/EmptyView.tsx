@@ -23,7 +23,13 @@ const EmptyView: FunctionComponent<EmptyViewProps> = ({ orgId, view }) => {
     const rowsKey = ['view', view.id.toString(), 'rows'];
 
     // TODO: Create mutation using new factory pattern
-    const addRowMutation = useMutation(async (person: Partial<ZetkinPerson>) => {
+    const addFirstRowMutation = useMutation(async (person: Partial<ZetkinPerson>) => {
+        // Get rid of view Smart Search query if there is one
+        await defaultFetch(`/orgs/${orgId}/people/views/${view?.id}/content_query`, {
+            method: 'DELETE',
+        });
+
+        // Add person
         const res = await defaultFetch(`/orgs/${orgId}/people/views/${view.id}/rows/${person.id}`, {
             method: 'PUT',
         });
@@ -57,7 +63,7 @@ const EmptyView: FunctionComponent<EmptyViewProps> = ({ orgId, view }) => {
                                 <PersonSelect
                                     name="person"
                                     onChange={ person => {
-                                        addRowMutation.mutate(person);
+                                        addFirstRowMutation.mutate(person);
                                     } }
                                     orgId={ 1 }
                                     selectedPerson={ null }
