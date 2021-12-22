@@ -236,6 +236,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
             />
             { empty && (
                 <EmptyView
+                    orgId={ orgId as string }
                     view={ view }
                 />
             ) }

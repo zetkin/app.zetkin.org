@@ -2,16 +2,42 @@ import { Form } from 'react-final-form';
 import { FunctionComponent } from 'react';
 import { FormattedMessage as Msg } from 'react-intl';
 import { Box, Button, Card, CardActions, CardContent, Grid, Typography } from '@material-ui/core';
+import { useMutation, useQueryClient } from 'react-query';
 
+import { defaultFetch } from 'fetching';
 import PersonSelect from 'components/forms/common/PersonSelect';
-import { ZetkinView } from 'types/views';
+import { ZetkinPerson } from 'types/zetkin';
+import { ZetkinView, ZetkinViewRow } from 'types/views';
 
 
 export interface EmptyViewProps {
+    orgId: string | number;
     view: ZetkinView;
 }
 
-const EmptyView: FunctionComponent<EmptyViewProps> = () => {
+const EmptyView: FunctionComponent<EmptyViewProps> = ({ orgId, view }) => {
+    const queryClient = useQueryClient();
+
+    // TODO: Create mutation using new factory pattern
+    const addRowMutation = useMutation(async (person: Partial<ZetkinPerson>) => {
+        const res = await defaultFetch(`/orgs/${orgId}/people/views/${view.id}/rows/${person.id}`, {
+            method: 'PUT',
+        });
+        const data = await res.json();
+        return data.data;
+    }, {
+        onSuccess: (newRow) => {
+            // Add created row directly to view, to avoid waiting for entire collection to reload
+            const rowsKey = ['view', view.id.toString(), 'rows'];
+            const prevRows: ZetkinViewRow[] = queryClient.getQueryData<ZetkinViewRow[]>(rowsKey) || [];
+            const allRows = prevRows.concat([newRow as ZetkinViewRow]);
+            queryClient.setQueryData(rowsKey, allRows);
+
+            // Invalidate to retrieve entire row collection (in case more were added elsewhere)
+            queryClient.invalidateQueries(rowsKey);
+        },
+    });
+
     return (
         <Box m={ 2 }>
             <Grid container spacing={ 2 }>
@@ -27,7 +53,9 @@ const EmptyView: FunctionComponent<EmptyViewProps> = () => {
                             <Form onSubmit={ () => undefined } render={ () => (
                                 <PersonSelect
                                     name="person"
-                                    onChange={ () => undefined }
+                                    onChange={ person => {
+                                        addRowMutation.mutate(person);
+                                    } }
                                     orgId={ 1 }
                                     selectedPerson={ null }
                                 />
