@@ -3,7 +3,7 @@ import { defaultFetch } from '..';
 import { ZetkinView } from 'types/zetkin';
 
 export default function patchView(orgId: string | number, viewId: string | number, fetch = defaultFetch) {
-    return async (view: Record<string, unknown>):Promise<ZetkinView> => {
+    return async (view: Partial<ZetkinView>):Promise<ZetkinView> => {
         const url = `/orgs/${orgId}/people/views/${viewId}`;
         const res = await fetch(url, {
             body: JSON.stringify(view),
@@ -15,6 +15,7 @@ export default function patchView(orgId: string | number, viewId: string | numbe
         if (!res.ok) {
             throw new APIError('PATCH', url);
         }
-        return await res.json();
+        const resBody = await res.json();
+        return resBody.data;
     };
 }
