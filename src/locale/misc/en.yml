@@ -14,7 +14,7 @@ nativePersonFields:
     zip_code: Zip code
 components:
     editTextInPlace:
-        noEmpty: This cannot be empty
         tooltip:
+            noEmpty: This cannot be empty
             edit: Click to edit
             save: Press 'enter' to save

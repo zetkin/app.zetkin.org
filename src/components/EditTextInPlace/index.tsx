@@ -84,7 +84,7 @@ const EditTextinPlace: React.FunctionComponent<EditTextinPlaceProps> = ({ disabl
                     disableHoverListener={ editing }
                     title={ text ?
                         intl.formatMessage({ id: `misc.components.editTextInPlace.tooltip.${editing ? 'save' : 'edit'}` }) :
-                        intl.formatMessage({ id: 'misc.components.editTextInPlace.noEmpty' })
+                        intl.formatMessage({ id: 'misc.components.editTextInPlace.tooltip.noEmpty' })
                     }>
                     <FormControl>
                         <InputBase
