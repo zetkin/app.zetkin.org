@@ -70,4 +70,12 @@ describe('makeGridColDef', () => {
         expect(colDef.width).toEqual(300);
         expect(colDef.renderCell).toBeTruthy();
     });
+
+    it('returns wide, custom cell for survey_response', () => {
+        const colDef = makeGridColDef(mockViewCol({
+            type: COLUMN_TYPE.SURVEY_RESPONSE,
+        }), 1);
+        expect(colDef.width).toEqual(300);
+        expect(colDef.renderCell).toBeTruthy();
+    });
 });
