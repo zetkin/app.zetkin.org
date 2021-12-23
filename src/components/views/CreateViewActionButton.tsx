@@ -45,7 +45,7 @@ const CreateViewActionButton: React.FunctionComponent = () => {
                     data-testid="create-view-action-button"
                     onClick={ () => {
                         NProgress.start();
-                        createNewViewMutation.mutate();
+                        createNewViewMutation.mutate(undefined);
                     } }>
                     <Add />
                 </Fab>
@@ -61,7 +61,7 @@ const CreateViewActionButton: React.FunctionComponent = () => {
                         e.preventDefault();
                         NProgress.start();
                         setErrorDialogOpen(false);
-                        createNewViewMutation.mutate();
+                        createNewViewMutation.mutate(undefined);
                     } }>
                         <SubmitCancelButtons
                             onCancel={ () => setErrorDialogOpen(false) }

@@ -5,10 +5,13 @@ import { ZetkinView } from 'types/zetkin';
 import { defaultFetch } from '..';
 
 export default function createNewView(orgId: string, fetch = defaultFetch) {
-    return async () : Promise<ZetkinView> => {
+    return async (rows?: number[]) : Promise<ZetkinView> => {
         const url = `/views/createNew?orgId=${orgId}`;
 
         const res = await fetch(url, {
+            body: JSON.stringify({
+                rows: rows || [],
+            }),
             headers: {
                 'Content-Type': 'application/json',
             },
