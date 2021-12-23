@@ -167,7 +167,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
 
     const gridColumns = [
         avatarColumn,
-        ...columns.map(makeGridColDef),
+        ...columns.map(col => makeGridColDef(col, orgId as string)),
     ];
 
     const gridRows = rows.map(input => {

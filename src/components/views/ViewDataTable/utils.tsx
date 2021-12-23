@@ -1,6 +1,7 @@
 import { GridColDef } from '@mui/x-data-grid-pro';
 
 import { COLUMN_TYPE, ZetkinViewColumn } from 'types/views';
+import LocalPersonViewCell, { LocalPersonViewCellParams } from './cells/LocalPersonViewCell';
 import PersonNotesViewCell, { PersonNotesViewCellParams } from './cells/PersonNotesViewCell';
 
 
@@ -11,7 +12,7 @@ export function colIdFromFieldName(colFieldName : string) : number {
     return parseInt(nameFields[1]);
 }
 
-export function makeGridColDef(viewCol: ZetkinViewColumn) : GridColDef {
+export function makeGridColDef(viewCol: ZetkinViewColumn, orgId: number | string) : GridColDef {
     const colDef : GridColDef = {
         field: `col_${viewCol.id}`,
         headerName: viewCol.title,
@@ -36,6 +37,12 @@ export function makeGridColDef(viewCol: ZetkinViewColumn) : GridColDef {
         colDef.width = 300;
         colDef.renderCell = (params) => (
             <PersonNotesViewCell params={ params as PersonNotesViewCellParams }/>
+        );
+    }
+    else if (viewCol.type == COLUMN_TYPE.LOCAL_PERSON) {
+        colDef.minWidth = 50;
+        colDef.renderCell = (params) => (
+            <LocalPersonViewCell orgId={ orgId } params={ params as LocalPersonViewCellParams }/>
         );
     }
 

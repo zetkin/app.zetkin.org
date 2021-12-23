@@ -16,7 +16,7 @@ describe('makeGridColDef', () => {
 
     it('returns common fields correctly', () => {
         const colMock = mockViewCol();
-        const colDef = makeGridColDef(colMock);
+        const colDef = makeGridColDef(colMock, 1);
         expect(colDef.field).toBe(`col_${colMock.id}`);
         expect(colDef.headerName).toBe(colMock.title);
         expect(colDef.resizable).toBeTruthy();
@@ -27,7 +27,7 @@ describe('makeGridColDef', () => {
         const colDef = makeGridColDef(mockViewCol({
             config: { field: 'first_name' },
             type: COLUMN_TYPE.PERSON_FIELD,
-        }));
+        }), 1);
 
         expect(colDef.minWidth).toBeGreaterThan(50);
         expect(colDef.width).toEqual(150);
@@ -36,7 +36,7 @@ describe('makeGridColDef', () => {
     it('returns narrow bool for local_bool columns', () => {
         const colDef = makeGridColDef(mockViewCol({
             type: COLUMN_TYPE.LOCAL_BOOL,
-        }));
+        }), 1);
         expect(colDef.type).toEqual('boolean');
         expect(colDef.minWidth).toEqual(50);
     });
@@ -47,7 +47,7 @@ describe('makeGridColDef', () => {
                 tag_id: 1,
             },
             type: COLUMN_TYPE.PERSON_TAG,
-        }));
+        }), 1);
         expect(colDef.type).toEqual('boolean');
         expect(colDef.minWidth).toEqual(50);
     });
@@ -58,7 +58,7 @@ describe('makeGridColDef', () => {
                 query_id: 1,
             },
             type: COLUMN_TYPE.PERSON_QUERY,
-        }));
+        }), 1);
         expect(colDef.type).toEqual('boolean');
         expect(colDef.minWidth).toEqual(50);
     });
@@ -66,7 +66,7 @@ describe('makeGridColDef', () => {
     it('returns wide, custom cell for person_notes', () => {
         const colDef = makeGridColDef(mockViewCol({
             type: COLUMN_TYPE.PERSON_NOTES,
-        }));
+        }), 1);
         expect(colDef.width).toEqual(300);
         expect(colDef.renderCell).toBeTruthy();
     });
