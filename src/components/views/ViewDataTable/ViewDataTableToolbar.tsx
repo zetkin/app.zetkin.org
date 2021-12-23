@@ -17,7 +17,10 @@ const ViewDataTableToolbar: React.FunctionComponent<ViewDataTableToolbarProps> =
     return (
         <Box display="flex" justifyContent="flex-end">
             { !!selection.length && (
-                <Button onClick={ onViewCreate } startIcon={ <Launch/> }>
+                <Button
+                    data-testid="ViewDataTableToolbar-createFromSelection"
+                    onClick={ onViewCreate }
+                    startIcon={ <Launch/> }>
                     <FormattedMessage id="misc.views.createFromSelection" />
                 </Button>
             ) }
