@@ -62,4 +62,12 @@ describe('makeGridColDef', () => {
         expect(colDef.type).toEqual('boolean');
         expect(colDef.minWidth).toEqual(50);
     });
+
+    it('returns wide, custom cell for person_notes', () => {
+        const colDef = makeGridColDef(mockViewCol({
+            type: COLUMN_TYPE.PERSON_NOTES,
+        }));
+        expect(colDef.width).toEqual(300);
+        expect(colDef.renderCell).toBeTruthy();
+    });
 });

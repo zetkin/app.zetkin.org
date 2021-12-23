@@ -1,6 +1,7 @@
 import { GridColDef } from '@mui/x-data-grid-pro';
 
 import { COLUMN_TYPE, ZetkinViewColumn } from 'types/views';
+import PersonNotesViewCell, { PersonNotesViewCellParams } from './cells/PersonNotesViewCell';
 
 
 export function colIdFromFieldName(colFieldName : string) : number {
@@ -30,6 +31,12 @@ export function makeGridColDef(viewCol: ZetkinViewColumn) : GridColDef {
         colDef.type = 'boolean';
         colDef.minWidth = 50;
         colDef.width = 100;
+    }
+    else if (viewCol.type == COLUMN_TYPE.PERSON_NOTES) {
+        colDef.width = 300;
+        colDef.renderCell = (params) => (
+            <PersonNotesViewCell params={ params as PersonNotesViewCellParams }/>
+        );
     }
 
     return colDef;
