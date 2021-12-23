@@ -101,7 +101,12 @@ export const createPrefetch = <Result>(
     key: string[],
     url: string,
     fetchOptions?: RequestInit,
-): (scaffoldContext: ScaffoldedContext) => Promise<QueryState<Result> | undefined> => {
+): (scaffoldContext: ScaffoldedContext) => Promise<
+    {
+        data: Result | undefined;
+        state: QueryState<Result> | undefined;
+    }
+> => {
 
     return async (
         scaffoldContext,
@@ -117,7 +122,10 @@ export const createPrefetch = <Result>(
             handler,
         );
 
-        return scaffoldContext.queryClient.getQueryState(key);
+        return {
+            data: scaffoldContext.queryClient.getQueryData<Result>(key),
+            state: scaffoldContext.queryClient.getQueryState(key),
+        };
     };
 
 };

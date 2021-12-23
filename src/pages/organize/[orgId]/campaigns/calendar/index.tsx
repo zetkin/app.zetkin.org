@@ -34,7 +34,7 @@ export const getServerSideProps : GetServerSideProps = scaffold(async (ctx) => {
     const campaignsState = ctx.queryClient.getQueryState(['campaigns', orgId]);
 
     const { prefetch: prefetchTasks } = tasksResource(orgId as string);
-    const tasksState = await prefetchTasks(ctx);
+    const { state: tasksState } = await prefetchTasks(ctx);
 
     if (
         orgState?.status === 'success' &&
