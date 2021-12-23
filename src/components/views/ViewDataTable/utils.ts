@@ -1,6 +1,6 @@
 import { GridColDef } from '@mui/x-data-grid-pro';
 
-import { ZetkinViewColumn } from 'types/views';
+import { COLUMN_TYPE, ZetkinViewColumn } from 'types/views';
 
 
 export function colIdFromFieldName(colFieldName : string) : number {
@@ -19,6 +19,18 @@ export function makeGridColDef(viewCol: ZetkinViewColumn) : GridColDef {
         sortable: true,
         width: 150,
     };
+
+    const boolTypes = [
+        COLUMN_TYPE.LOCAL_BOOL,
+        COLUMN_TYPE.PERSON_QUERY,
+        COLUMN_TYPE.PERSON_TAG,
+    ];
+
+    if (boolTypes.includes(viewCol.type)) {
+        colDef.type = 'boolean';
+        colDef.minWidth = 50;
+        colDef.width = 100;
+    }
 
     return colDef;
 }

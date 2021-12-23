@@ -32,4 +32,34 @@ describe('makeGridColDef', () => {
         expect(colDef.minWidth).toBeGreaterThan(50);
         expect(colDef.width).toEqual(150);
     });
+
+    it('returns narrow bool for local_bool columns', () => {
+        const colDef = makeGridColDef(mockViewCol({
+            type: COLUMN_TYPE.LOCAL_BOOL,
+        }));
+        expect(colDef.type).toEqual('boolean');
+        expect(colDef.minWidth).toEqual(50);
+    });
+
+    it('returns narrow bool for person_tag columns', () => {
+        const colDef = makeGridColDef(mockViewCol({
+            config: {
+                tag_id: 1,
+            },
+            type: COLUMN_TYPE.PERSON_TAG,
+        }));
+        expect(colDef.type).toEqual('boolean');
+        expect(colDef.minWidth).toEqual(50);
+    });
+
+    it('returns narrow bool for person_query columns', () => {
+        const colDef = makeGridColDef(mockViewCol({
+            config: {
+                query_id: 1,
+            },
+            type: COLUMN_TYPE.PERSON_QUERY,
+        }));
+        expect(colDef.type).toEqual('boolean');
+        expect(colDef.minWidth).toEqual(50);
+    });
 });
