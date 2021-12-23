@@ -4,7 +4,6 @@ import { useIntl } from 'react-intl';
 
 import getCampaign from '../../../../../../fetching/getCampaign';
 import getCampaignEvents from '../../../../../../fetching/getCampaignEvents';
-import getCampaignTasks from '../../../../../../fetching/tasks/getCampaignTasks';
 import getOrg from '../../../../../../fetching/getOrg';
 import { PageWithLayout } from '../../../../../../types';
 import { scaffold } from '../../../../../../utils/next';
@@ -12,6 +11,8 @@ import SingleCampaignLayout from '../../../../../../components/layout/organize/S
 import { useQuery } from 'react-query';
 import ZetkinCalendar from '../../../../../../components/ZetkinCalendar';
 import ZetkinSpeedDial, { ACTIONS } from '../../../../../../components/ZetkinSpeedDial';
+
+import { campaignTasksResource } from 'api/tasks';
 
 const scaffoldOptions = {
     authLevelRequired: 2,
@@ -24,6 +25,8 @@ export const getServerSideProps : GetServerSideProps = scaffold(async (ctx) => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const { orgId, campId } = ctx.params!;
 
+    const { prefetch: prefetchCampaignTasks } = campaignTasksResource(orgId as string, campId as string);
+    const campaignTasksState = await prefetchCampaignTasks(ctx);
 
     await ctx.queryClient.prefetchQuery(['org', orgId], getOrg(orgId as string, ctx.apiFetch));
     const orgState = ctx.queryClient.getQueryState(['org', orgId]);
@@ -33,9 +36,6 @@ export const getServerSideProps : GetServerSideProps = scaffold(async (ctx) => {
 
     await ctx.queryClient.prefetchQuery(['campaign', orgId, campId], getCampaign(orgId as string, campId as string, ctx.apiFetch));
     const campaignState = ctx.queryClient.getQueryState(['campaign', orgId, campId]);
-
-    await ctx.queryClient.prefetchQuery(['tasks', orgId, campId], getCampaignTasks(orgId as string, campId as string, ctx.apiFetch));
-    const campaignTasksState = ctx.queryClient.getQueryState(['tasks', orgId, campId]);
 
     if (orgState?.status === 'success' && campaignEventsState?.status === 'success' && campaignState?.status === 'success' && campaignTasksState?.status === 'success' ) {
         return {
@@ -61,7 +61,8 @@ const CampaignCalendarPage : PageWithLayout<OrganizeCalendarPageProps> = ({ orgI
     const intl = useIntl();
     const eventsQuery = useQuery(['campaignEvents', orgId, campId], getCampaignEvents(orgId, campId));
     const campaignQuery = useQuery(['campaign', orgId, campId], getCampaign(orgId, campId));
-    const tasksQuery = useQuery(['tasks', orgId, campId], getCampaignTasks(orgId, campId));
+    const tasksQuery = campaignTasksResource(orgId, campId).useQuery();
+
     const events = eventsQuery.data || [];
     const tasks = tasksQuery.data || [];
     const campaigns = campaignQuery.data ? [campaignQuery.data] : [];
