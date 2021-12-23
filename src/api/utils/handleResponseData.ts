@@ -5,7 +5,7 @@ interface ZetkinApiResponse<G> {
     error?: unknown;
 }
 
-const handleResponse = async <Result>(res: Response, method: string): Promise<Result> => {
+const handleResponseData = async <Result>(res: Response, method: string): Promise<Result> => {
     if (!res.ok) {
         throw new APIError(method, res.url);
     }
@@ -19,4 +19,4 @@ const handleResponse = async <Result>(res: Response, method: string): Promise<Re
     return body.data;
 };
 
-export default handleResponse;
+export default handleResponseData;

@@ -4,7 +4,7 @@ import { QueryClient, useMutation, UseMutationOptions, UseMutationResult, useQue
 
 import APIError from 'utils/apiError';
 import { defaultFetch } from 'fetching';
-import handleResponse from './handleResponse';
+import handleResponseData from './handleResponseData';
 import { ScaffoldedContext } from 'utils/next';
 
 
@@ -29,7 +29,7 @@ export const createUseQuery = <Result>(
 
     const handler = async () => {
         const res = await defaultFetch(url, fetchOptions);
-        return handleResponse(res, fetchOptions?.method || 'GET');
+        return handleResponseData(res, fetchOptions?.method || 'GET');
     };
 
     return () => {
@@ -59,7 +59,7 @@ export const createUseMutation = <Input, Result>(
             ...fetchOptions,
             method,
         });
-        return handleResponse(res, method);
+        return handleResponseData(res, method);
     };
 
     return () => {
@@ -114,7 +114,7 @@ export const createPrefetch = <Result>(
         // Build get handler
         const handler = async (): Promise<Result> => {
             const res = await scaffoldContext.apiFetch(url, fetchOptions);
-            return handleResponse(res, fetchOptions?.method || 'get');
+            return handleResponseData(res, fetchOptions?.method || 'get');
         };
 
         await scaffoldContext.queryClient.prefetchQuery(
