@@ -2,11 +2,9 @@ import { Box } from '@material-ui/core';
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { useIntl } from 'react-intl';
-import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 
-import getAssignedTasks from 'fetching/tasks/getAssignedTasks';
 import getOrg from 'fetching/getOrg';
 import { PageWithLayout } from 'types';
 import { QUERY_STATUS } from 'types/smartSearch';
@@ -74,10 +72,9 @@ const TaskAssigneesPage: PageWithLayout = () => {
     const intl = useIntl();
 
     const { taskId, orgId } = useRouter().query;
-    const { data: task } = taskResource(orgId as string, taskId as string).useQuery();
-    const assignedTasksQuery = useQuery(['assignedTasks', orgId, taskId], getAssignedTasks(
-        orgId as string, taskId as string,
-    ));
+    const { useQuery: useTaskQuery, useAssignedTasksQuery } = taskResource(orgId as string, taskId as string);
+    const { data: task } = useTaskQuery();
+    const assignedTasksQuery = useAssignedTasksQuery();
     const assignedTasks = assignedTasksQuery?.data;
     const query = task?.target;
 

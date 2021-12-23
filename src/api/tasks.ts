@@ -7,7 +7,7 @@ import {
     createUseQuery,
 } from './utils/resourceHookFactories';
 
-import { ZetkinTask } from '../types/zetkin';
+import { ZetkinAssignedTask,ZetkinTask } from '../types/zetkin';
 
 export const tasksResource = (orgId: string) => {
 
@@ -41,6 +41,10 @@ export const taskResource = (orgId: string, taskId: string) => {
 
     return {
         prefetch: createPrefetch<ZetkinTask>(key, url),
+        useAssignedTasksQuery: createUseQuery<ZetkinAssignedTask[]>(
+            ['assignedTasks', orgId, taskId],
+            `/orgs/${orgId}/tasks/${taskId}/assigned`,
+        ),
         useDelete: createUseMutationDelete(key, url),
         useQuery: createUseQuery<ZetkinTask>(key, url),
         useUpdate: createUseMutation<ZetkinTaskRequestBody, ZetkinTask>(
