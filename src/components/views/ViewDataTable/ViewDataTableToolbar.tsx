@@ -24,7 +24,10 @@ const ViewDataTableToolbar: React.FunctionComponent<ViewDataTableToolbarProps> =
                     <FormattedMessage id="misc.views.createFromSelection" />
                 </Button>
             ) }
-            <Button data-testid="create-column-button" onClick={ onColumnCreate } startIcon={ <Add /> }>
+            <Button
+                data-testid="ViewDataTableToolbar-createColumn"
+                onClick={ onColumnCreate }
+                startIcon={ <Add /> }>
                 <FormattedMessage id="misc.views.createColumn" />
             </Button>
         </Box>
