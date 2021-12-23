@@ -2,7 +2,6 @@ import { Alert } from '@material-ui/lab';
 import { FormattedMessage } from 'react-intl';
 import { FunctionComponent } from 'react';
 import NProgress from 'nprogress';
-import { Person } from '@material-ui/icons';
 import { Snackbar } from '@material-ui/core';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
@@ -156,9 +155,6 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
                     }}
                 />
             );
-        },
-        renderHeader: () => {
-            return <Person/>;
         },
         resizable: false,
         sortable: false,
