@@ -78,4 +78,11 @@ describe('makeGridColDef', () => {
         expect(colDef.width).toEqual(300);
         expect(colDef.renderCell).toBeTruthy();
     });
+
+    it('returns custom cell for survey_submitted', () => {
+        const colDef = makeGridColDef(mockViewCol({
+            type: COLUMN_TYPE.SURVEY_SUBMITTED,
+        }), 1);
+        expect(colDef.renderCell).toBeTruthy();
+    });
 });
