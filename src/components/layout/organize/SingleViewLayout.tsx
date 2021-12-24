@@ -43,6 +43,7 @@ const SingleViewLayout: FunctionComponent = ({ children }) => {
                     return (
                         <Box>
                             <EditTextinPlace
+                                key={ view.id }
                                 disabled={ patchViewMutation.isLoading }
                                 onChange={ (newTitle) => updateTitle(newTitle) }
                                 value={ view?.title }
@@ -52,7 +53,7 @@ const SingleViewLayout: FunctionComponent = ({ children }) => {
                     );
                 } }
             </ZetkinQuery>
-            { /* Snackbar that shows */ }
+            { /* Snackbar that shows if updating the title failed or succeeded */ }
             <Snackbar
                 onClose={ () => setUpdateViewSnackbar(undefined) }
                 open={ Boolean(updateViewSnackbar) }>
