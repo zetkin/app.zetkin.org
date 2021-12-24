@@ -4,10 +4,10 @@ import { useIntl } from 'react-intl';
 import { useQuery } from 'react-query';
 import { Box, Grid, Typography } from '@material-ui/core';
 
+import { campaignTasksResource } from 'api/tasks';
 import EventList from 'components/organize/events/EventList';
 import getCampaign from 'fetching/getCampaign';
 import getCampaignEvents from 'fetching/getCampaignEvents';
-import getCampaignTasks from 'fetching/tasks/getCampaignTasks';
 import getOrg from 'fetching/getOrg';
 import { PageWithLayout } from 'types';
 import { scaffold } from 'utils/next';
@@ -33,15 +33,14 @@ export const getServerSideProps : GetServerSideProps = scaffold(async (ctx) => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const { orgId, campId } = ctx.params!;
 
+    const { prefetch: prefetchCampaignTasks } = campaignTasksResource(orgId as string, campId as string);
+    const { state: campaignTasksState } = await prefetchCampaignTasks(ctx);
 
     await ctx.queryClient.prefetchQuery(['org', orgId], getOrg(orgId as string, ctx.apiFetch));
     const orgState = ctx.queryClient.getQueryState(['org', orgId]);
 
     await ctx.queryClient.prefetchQuery(['campaignEvents', orgId, campId], getCampaignEvents(orgId as string, campId as string, ctx.apiFetch));
     const campaignEventsState = ctx.queryClient.getQueryState(['campaignEvents', orgId, campId]);
-
-    await ctx.queryClient.prefetchQuery(['campaignTasks', orgId, campId], getCampaignTasks(orgId as string, campId as string, ctx.apiFetch));
-    const campaignTasksState = ctx.queryClient.getQueryState(['campaignTasks', orgId, campId]);
 
     await ctx.queryClient.prefetchQuery(['campaign', orgId, campId], getCampaign(orgId as string, campId as string, ctx.apiFetch));
     const campaignState = ctx.queryClient.getQueryState(['campaign', orgId, campId]);
@@ -74,8 +73,9 @@ type CampaignCalendarPageProps = {
 const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({ orgId, campId }) => {
     const intl = useIntl();
 
+    const tasksQuery = campaignTasksResource(orgId, campId).useQuery();
+
     const eventsQuery = useQuery(['campaignEvents', orgId, campId], getCampaignEvents(orgId, campId));
-    const tasksQuery = useQuery(['campaignTasks', orgId, campId], getCampaignTasks(orgId, campId));
     const campaignQuery = useQuery(['campaign', orgId, campId], getCampaign(orgId, campId));
     const events = eventsQuery.data || [];
     const tasks = tasksQuery.data || [];

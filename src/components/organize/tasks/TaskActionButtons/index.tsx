@@ -5,16 +5,14 @@ import { Box, Button, Menu, MenuItem } from '@material-ui/core';
 import { Delete, Settings } from '@material-ui/icons';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
 import React, { useState } from 'react';
-import { useMutation, useQueryClient } from 'react-query';
 
-import deleteTask from 'fetching/tasks/deleteTask';
-import patchTask from 'fetching/tasks/patchTask';
 import ZetkinDialog from 'components/ZetkinDialog';
 import { ZetkinTask } from 'types/zetkin';
 
 import DeleteTaskForm from 'components/forms/TaskDeleteForm';
 import PublishButton from './PublishButton';
 import TaskDetailsForm from 'components/forms/TaskDetailsForm';
+import { taskResource } from 'api/tasks';
 
 enum TASK_MENU_ITEMS {
     EDIT_TASK = 'editTask',
@@ -27,9 +25,7 @@ interface TaskActionButtonsProps {
 
 const TaskActionButtons: React.FunctionComponent<TaskActionButtonsProps> = ({ task }) => {
     const intl = useIntl();
-    const queryClient = useQueryClient();
     const router = useRouter();
-    const { taskId } = router.query;
     // Menu
     const [menuActivator, setMenuActivator] = React.useState<null | HTMLElement>(null);
     // Dialogs
@@ -37,13 +33,13 @@ const TaskActionButtons: React.FunctionComponent<TaskActionButtonsProps> = ({ ta
     const closeDialog = () => setCurrentOpenDialog(undefined);
 
     // Mutations
-    const patchTaskMutation = useMutation(patchTask(task.organization.id, task.id) );
-    const deleteTaskMutation = useMutation(deleteTask(task.organization.id, task.id));
+    const taskHooks = taskResource(task.organization.id.toString(), task.id.toString());
+    const patchTaskMutation = taskHooks.useUpdate();
+    const deleteTaskMutation = taskHooks.useDelete();
 
     // Event Handlers
     const handleEditTask = (task: Partial<ZetkinTask>) => {
-        patchTaskMutation.mutate(task, {
-            onSettled: () => queryClient.invalidateQueries(['task', taskId]),
+        patchTaskMutation.mutateAsync(task, {
             onSuccess: () => closeDialog(),
         });
     };
