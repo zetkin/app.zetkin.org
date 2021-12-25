@@ -3,7 +3,7 @@ import { FunctionComponent } from 'react';
 import NProgress from 'nprogress';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
+import { DataGridPro, GridColDef, useGridApiRef } from '@mui/x-data-grid-pro';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { makeStyles, Snackbar } from '@material-ui/core';
 import { useMutation, useQueryClient } from 'react-query';
@@ -48,6 +48,7 @@ interface ViewDataTableProps {
 const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, view }) => {
     const intl = useIntl();
     const classes = useStyles();
+    const gridApiRef = useGridApiRef();
     const [addedId, setAddedId] = useState(0);
     const [columnToConfigure, setColumnToConfigure] = useState<SelectedViewColumn | null>(null);
     const [columnToRename, setColumnToRename] = useState<ZetkinViewColumn | null>(null);
@@ -114,6 +115,18 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
 
             // Store ID for highlighting the new row
             setAddedId(person.id);
+
+            // Remove ID again after 2 seconds, unless the state has changed
+            setTimeout(() => {
+                setAddedId(curState => (curState == person.id)? 0 : curState);
+            }, 2000);
+
+            // Scroll (jump) to row after short delay
+            setTimeout(() => {
+                const gridApi = gridApiRef.current;
+                const rowIndex = gridApi.getRowIndex(person.id);
+                gridApi.scrollToIndexes({ rowIndex });
+            }, 200);
         },
     });
 
@@ -277,6 +290,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
     return (
         <>
             <DataGridPro
+                apiRef={ gridApiRef }
                 autoHeight={ empty }
                 checkboxSelection={ true }
                 columns={ gridColumns }
