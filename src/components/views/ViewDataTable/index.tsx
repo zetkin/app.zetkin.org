@@ -276,6 +276,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
             onRowAdd: person => {
                 addRowMutation.mutate(person);
             },
+            viewId,
         },
         toolbar: {
             onColumnCreate,

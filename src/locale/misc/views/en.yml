@@ -49,6 +49,7 @@ empty:
         headline: Add people manually
 footer:
     addPlaceholder: Start typing to add person to view
+    alreadyInView: Already in view
 newViewFields:
     title: New View
 dataTableErrors:
