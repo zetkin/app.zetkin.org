@@ -46,7 +46,7 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
 
 interface TabbedLayoutProps {
     actionButtons?: React.ReactElement | React.ReactElement[];
-    ellipsisMenu?: EllipsisMenuProps['items'];
+    ellipsisMenuItems?: EllipsisMenuProps['items'];
     fixedHeight?: boolean;
     title?: string | ReactElement;
     subtitle?: string | ReactElement;
@@ -58,7 +58,7 @@ interface TabbedLayoutProps {
 const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
     children,
     actionButtons,
-    ellipsisMenu,
+    ellipsisMenuItems,
     fixedHeight,
     title,
     subtitle,
@@ -118,8 +118,8 @@ const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
                                         <Box>
                                             { actionButtons }
                                         </Box>
-                                        { !!ellipsisMenu?.length && (
-                                            <EllipsisMenu items={ ellipsisMenu }/>
+                                        { !!ellipsisMenuItems?.length && (
+                                            <EllipsisMenu items={ ellipsisMenuItems }/>
                                         ) }
                                     </Box>
                                 </Box>

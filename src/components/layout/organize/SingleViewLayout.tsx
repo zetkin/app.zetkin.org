@@ -66,7 +66,7 @@ const SingleViewLayout: FunctionComponent = ({ children }) => {
             <TabbedLayout
                 baseHref={ `/organize/${orgId}/people/views/${viewId}` }
                 defaultTab="/"
-                ellipsisMenu={ ellipsisMenu }
+                ellipsisMenuItems={ ellipsisMenu }
                 fixedHeight={ true }
                 tabs={ [
                     { href: `/`, messageId: 'layout.organize.view.tabs.view' },
