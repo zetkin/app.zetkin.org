@@ -42,7 +42,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
         },
         onSettled: () => {
             NProgress.done();
-            queryClient.invalidateQueries(['views', viewId]);
+            queryClient.invalidateQueries(['view', viewId]);
         },
     });
 
@@ -53,7 +53,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
         },
         onSettled: () => {
             NProgress.done();
-            queryClient.invalidateQueries(['views', viewId]);
+            queryClient.invalidateQueries(['view', viewId]);
         },
     });
 
@@ -64,10 +64,10 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
         },
         onSettled: () => {
             NProgress.done();
-            queryClient.invalidateQueries(['views', viewId]);
+            queryClient.invalidateQueries(['view', viewId]);
         },
         onSuccess: () => {
-            queryClient.removeQueries(['views', viewId, 'rows']);
+            queryClient.removeQueries(['view', viewId, 'rows']);
         },
     });
 
