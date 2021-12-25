@@ -1,6 +1,7 @@
 import { Autocomplete } from 'mui-rff';
 import { useIntl } from 'react-intl';
 import { useQuery } from 'react-query';
+import { useRouter } from 'next/router';
 import { Avatar, Box, Typography } from '@material-ui/core';
 import { FunctionComponent, useEffect, useState } from 'react';
 
@@ -13,7 +14,6 @@ interface PersonSelectProps {
     label?: string;
     name: string;
     onChange: (person: Partial<ZetkinPerson>) => void;
-    orgId: string | number;
     selectedPerson: Partial<ZetkinPerson> | null;
 }
 
@@ -21,15 +21,15 @@ const PersonSelect: FunctionComponent<PersonSelectProps> = ({
     label,
     name,
     onChange,
-    orgId,
     selectedPerson,
 }) => {
     const intl = useIntl();
+    const { orgId } = useRouter().query;
     const [searchFieldValue, setSearchFieldValue] = useState<string>('');
 
     const { isLoading, refetch, data: results } = useQuery(
         ['peopleSearchResults', searchFieldValue],
-        getPeopleSearchResults(searchFieldValue, orgId.toString()),
+        getPeopleSearchResults(searchFieldValue, orgId as string),
         { enabled: false },
     );
 

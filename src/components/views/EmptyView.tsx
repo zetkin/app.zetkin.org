@@ -65,7 +65,6 @@ const EmptyView: FunctionComponent<EmptyViewProps> = ({ orgId, view }) => {
                                     onChange={ person => {
                                         addFirstRowMutation.mutate(person);
                                     } }
-                                    orgId={ 1 }
                                     selectedPerson={ null }
                                 />
                             ) }

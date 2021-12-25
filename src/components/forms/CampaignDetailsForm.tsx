@@ -92,7 +92,6 @@ const CampaignDetailsForm = ({ onSubmit, onCancel, campaign }: CampaignDetailsFo
                         onChange={ (person) => {
                             setSelectedManager(person);
                         } }
-                        orgId={ orgId as string }
                         selectedPerson={ selectedManager }
                     />
 
