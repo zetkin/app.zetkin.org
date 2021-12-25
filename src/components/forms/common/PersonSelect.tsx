@@ -13,6 +13,7 @@ import { ZetkinPerson } from 'types/zetkin';
 
 interface UsePersonSelectProps {
     getOptionDisabled?: (option: ZetkinPerson) => boolean;
+    getOptionExtraLabel?: (option: ZetkinPerson) => string;
     inputRef?: MutableRefObject<HTMLInputElement | undefined> | undefined;
     label?: string;
     name?: string;
@@ -47,6 +48,7 @@ type PersonSelectProps = UsePersonSelectProps;
 
 const usePersonSelect: UsePersonSelect = ({
     getOptionDisabled,
+    getOptionExtraLabel,
     inputRef,
     label,
     name,
@@ -110,18 +112,29 @@ const usePersonSelect: UsePersonSelect = ({
             },
             options: personOptions,
             placeholder,
-            renderOption: (person: ZetkinPerson) => (
-                <Box alignItems="center" display="flex">
-                    <Box m={ 1 }>
-                        <Avatar
-                            src={ `/api/orgs/${orgId}/people/${person.id}/avatar` }>
-                        </Avatar>
+            renderOption: (person: ZetkinPerson) => {
+                const extraLabel = getOptionExtraLabel? getOptionExtraLabel(person) : null;
+
+                return (
+                    <Box alignItems="center" display="flex">
+                        <Box m={ 1 }>
+                            <Avatar
+                                src={ `/api/orgs/${orgId}/people/${person.id}/avatar` }>
+                            </Avatar>
+                        </Box>
+                        <Box display="flex" flexDirection="column" justifyContent="center">
+                            <Typography>
+                                { `${ person.first_name } ${ person.last_name }` }
+                            </Typography>
+                            { extraLabel && (
+                                <Typography variant="caption">
+                                    { extraLabel }
+                                </Typography>
+                            ) }
+                        </Box>
                     </Box>
-                    <Typography>
-                        { `${ person.first_name } ${ person.last_name }` }
-                    </Typography>
-                </Box>
-            ),
+                );
+            },
             value: selectedPerson,
         },
     };
