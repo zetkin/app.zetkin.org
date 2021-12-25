@@ -69,11 +69,11 @@ const PersonSelect: FunctionComponent<PersonSelectProps> = ({
             label={ label }
             name={ name }
             noOptionsText={ searchLabel }
-            onChange={ (_, v) => {
-                onChange(v as Partial<ZetkinPerson>);
+            onChange={ (ev, value) => {
+                onChange(value as Partial<ZetkinPerson>);
             } }
-            onInputChange={ (_, v) => {
-                setSearchFieldValue(v);
+            onInputChange={ (ev, value) => {
+                setSearchFieldValue(value);
             } }
             options={ personOptions }
             renderOption={ (person) => (
