@@ -25,11 +25,11 @@ const CampaignDetailsForm = ({ onSubmit, onCancel, campaign }: CampaignDetailsFo
     const activeMembership = membershipsQuery?.data?.find(m => m.organization.id.toString() == orgId);
     const userProfile = activeMembership?.profile;
 
-    const [selectedManager, setSelectedManager] = useState<Partial<ZetkinPerson> | null>(campaign?.manager? {
+    const [selectedManager, setSelectedManager] = useState<ZetkinPerson | null>(campaign?.manager? {
         first_name: campaign.manager.name.split(' ')[0],
         id: campaign.manager.id,
         last_name: campaign?.manager.name.split(' ')[1],
-    } as Partial<ZetkinPerson> : null);
+    } as ZetkinPerson : null);
 
     const initialValues = {
         info_text: campaign?.info_text,
@@ -107,7 +107,7 @@ const CampaignDetailsForm = ({ onSubmit, onCancel, campaign }: CampaignDetailsFo
                                     first_name: userProfile.name,
                                     id: userProfile.id,
                                     last_name: '',
-                                });
+                                } as ZetkinPerson);
                             } }>
                             <Msg id="misc.formDialog.campaign.manager.selectSelf"/>
                         </Link>

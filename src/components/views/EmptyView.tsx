@@ -1,11 +1,10 @@
-import { Form } from 'react-final-form';
 import { FormattedMessage as Msg } from 'react-intl';
 import { Box, Button, Card, CardActions, CardContent, Grid, Typography } from '@material-ui/core';
 import { FunctionComponent, useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 
 import { defaultFetch } from 'fetching';
-import PersonSelect from 'components/forms/common/PersonSelect';
+import { MUIOnlyPersonSelect as PersonSelect } from 'components/forms/common/PersonSelect';
 import ViewSmartSearchDialog from './ViewSmartSearchDialog';
 import { ZetkinPerson } from 'types/zetkin';
 import { ZetkinView, ZetkinViewRow } from 'types/views';
@@ -59,7 +58,7 @@ const EmptyView: FunctionComponent<EmptyViewProps> = ({ orgId, view }) => {
                             <Typography variant="body1">
                                 <Msg id="misc.views.empty.static.description"/>
                             </Typography>
-                            <Form onSubmit={ () => undefined } render={ () => (
+                            <Box marginTop={ 2 }>
                                 <PersonSelect
                                     name="person"
                                     onChange={ person => {
@@ -67,8 +66,7 @@ const EmptyView: FunctionComponent<EmptyViewProps> = ({ orgId, view }) => {
                                     } }
                                     selectedPerson={ null }
                                 />
-                            ) }
-                            />
+                            </Box>
                         </CardContent>
                     </Card>
                 </Grid>

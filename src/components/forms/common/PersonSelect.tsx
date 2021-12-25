@@ -1,26 +1,51 @@
-import { Autocomplete } from 'mui-rff';
+import { Autocomplete as MUIAutocomplete } from '@material-ui/lab';
+import { Autocomplete as RFFAutocomplete } from 'mui-rff';
 import { useIntl } from 'react-intl';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
-import { Avatar, Box, Typography } from '@material-ui/core';
-import { FunctionComponent, useEffect, useState } from 'react';
+import { Avatar, Box, TextField, Typography } from '@material-ui/core';
+import React, { FunctionComponent, ReactElement, useEffect, useState } from 'react';
 
 import getPeopleSearchResults from 'fetching/getPeopleSearchResults';
 import useDebounce from 'hooks/useDebounce';
 import { ZetkinPerson } from 'types/zetkin';
 
 
-interface PersonSelectProps {
+interface UsePersonSelectProps {
     label?: string;
-    name: string;
-    onChange: (person: Partial<ZetkinPerson>) => void;
-    selectedPerson: Partial<ZetkinPerson> | null;
+    name?: string;
+    onChange: (person: ZetkinPerson) => void;
+    placeholder?: string;
+    selectedPerson: ZetkinPerson | null;
 }
 
-const PersonSelect: FunctionComponent<PersonSelectProps> = ({
+interface UsePersonSelectReturn {
+    autoCompleteProps: {
+        filterOptions: (options: ZetkinPerson[]) => ZetkinPerson[];
+        getOptionLabel: (person: ZetkinPerson) => string;
+        getOptionSelected: (option: ZetkinPerson, value: ZetkinPerson) => boolean;
+        getOptionValue: (person: ZetkinPerson) => unknown;
+        label: string | undefined;
+        name: string;
+        noOptionsText: string;
+        onChange: (ev: unknown, value: string | ZetkinPerson | (string | ZetkinPerson)[] | null) => void;
+        onInputChange: (ev: unknown, value: string) => void;
+        options: ZetkinPerson[];
+        placeholder?: string;
+        renderOption: (person: ZetkinPerson) => ReactElement;
+        value: ZetkinPerson | null;
+    };
+}
+
+type UsePersonSelect = (props: UsePersonSelectProps) => UsePersonSelectReturn;
+
+type PersonSelectProps = UsePersonSelectProps;
+
+const usePersonSelect: UsePersonSelect = ({
     label,
     name,
     onChange,
+    placeholder,
     selectedPerson,
 }) => {
     const intl = useIntl();
@@ -55,28 +80,29 @@ const PersonSelect: FunctionComponent<PersonSelectProps> = ({
         }
     }, [searchFieldValue.length, debouncedQuery]);
 
-    let personOptions = (results || []) as Partial<ZetkinPerson>[];
+    let personOptions = (results || []) as ZetkinPerson[];
     if (selectedPerson && !personOptions.some(o => o.id === selectedPerson.id)) {
-        personOptions = [selectedPerson].concat(personOptions);
+        personOptions = [selectedPerson as ZetkinPerson].concat(personOptions);
     }
 
-    return (
-        <Autocomplete
-            filterOptions={ (options) => options } // override filtering
-            getOptionLabel={ person => person.first_name ? `${person.first_name} ${person.last_name}` : '' }
-            getOptionSelected={ (option, value) => option?.id == value?.id }
-            getOptionValue={ person => person.id || null }
-            label={ label }
-            name={ name }
-            noOptionsText={ searchLabel }
-            onChange={ (ev, value) => {
-                onChange(value as Partial<ZetkinPerson>);
-            } }
-            onInputChange={ (ev, value) => {
+    return {
+        autoCompleteProps: {
+            filterOptions: options => options,
+            getOptionLabel: (person: ZetkinPerson) => person.first_name? `${person.first_name} ${person.last_name}` : '',
+            getOptionSelected: (option: ZetkinPerson, value: ZetkinPerson) => option?.id == value?.id,
+            getOptionValue: (person: ZetkinPerson) => person.id || null,
+            label,
+            name: name || '',
+            noOptionsText: searchLabel,
+            onChange: (ev, value) => {
+                onChange(value as ZetkinPerson);
+            },
+            onInputChange: (ev: unknown, value: string) => {
                 setSearchFieldValue(value);
-            } }
-            options={ personOptions }
-            renderOption={ (person) => (
+            },
+            options: personOptions,
+            placeholder,
+            renderOption: (person: ZetkinPerson) => (
                 <Box alignItems="center" display="flex">
                     <Box m={ 1 }>
                         <Avatar
@@ -87,10 +113,54 @@ const PersonSelect: FunctionComponent<PersonSelectProps> = ({
                         { `${ person.first_name } ${ person.last_name }` }
                     </Typography>
                 </Box>
-            ) }
-            value={ selectedPerson }
+            ),
+            value: selectedPerson,
+        },
+    };
+};
+
+// TODO: Remove once mui-rff has been retired
+const PersonSelect: FunctionComponent<PersonSelectProps & { name: string }> = (props) => {
+    const {
+        autoCompleteProps,
+    } = usePersonSelect(props);
+
+    return (
+        <RFFAutocomplete
+            { ...autoCompleteProps }
         />
     );
 };
 
 export default PersonSelect;
+
+const MUIOnlyPersonSelect: FunctionComponent<PersonSelectProps> = (props) => {
+    const {
+        autoCompleteProps,
+    } = usePersonSelect(props);
+
+    const {
+        name,
+        placeholder,
+        ...restProps
+    } = autoCompleteProps;
+
+    return (
+        <MUIAutocomplete
+            { ...restProps }
+            renderInput={ params => (
+                <TextField
+                    { ...params }
+                    inputProps={{
+                        ...params.inputProps,
+                    }}
+                    name={ name }
+                    placeholder={ placeholder }
+                    variant="outlined"
+                />
+            ) }
+        />
+    );
+};
+
+export { MUIOnlyPersonSelect };
