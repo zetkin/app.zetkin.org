@@ -1,11 +1,11 @@
 import { Alert } from '@material-ui/lab';
 import { FunctionComponent } from 'react';
 import NProgress from 'nprogress';
-import { Snackbar } from '@material-ui/core';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
 import { FormattedMessage, useIntl } from 'react-intl';
+import { makeStyles, Snackbar } from '@material-ui/core';
 import { useMutation, useQueryClient } from 'react-query';
 
 import createNewView from 'fetching/views/createNewView';
@@ -25,6 +25,20 @@ import ViewDataTableToolbar, { ViewDataTableToolbarProps } from './ViewDataTable
 import { ZetkinPerson, ZetkinViewColumn, ZetkinViewRow } from 'types/zetkin';
 
 
+const useStyles = makeStyles((theme) => ({
+    '@keyframes addedRowAnimation': {
+        '0%': {
+            backgroundColor: theme.palette.success.main,
+        },
+        '100%': {
+            backgroundColor: 'transparent',
+        },
+    },
+    addedRow: {
+        animation: '$addedRowAnimation 2s',
+    },
+}));
+
 interface ViewDataTableProps {
     columns: ZetkinViewColumn[];
     rows: ZetkinViewRow[];
@@ -33,6 +47,8 @@ interface ViewDataTableProps {
 
 const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, view }) => {
     const intl = useIntl();
+    const classes = useStyles();
+    const [addedId, setAddedId] = useState(0);
     const [columnToConfigure, setColumnToConfigure] = useState<SelectedViewColumn | null>(null);
     const [columnToRename, setColumnToRename] = useState<ZetkinViewColumn | null>(null);
     const [selection, setSelection] = useState<number[]>([]);
@@ -87,12 +103,17 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
         const data = await res.json();
         return data.data;
     }, {
-        onSuccess: (newRow) => {
-            // Add created row directly to view, to avoid waiting for entire collection to reload
-            const rowsKey = ['view', viewId, 'rows'];
-            const prevRows: ZetkinViewRow[] = queryClient.getQueryData<ZetkinViewRow[]>(rowsKey) || [];
-            const allRows = prevRows.concat([newRow as ZetkinViewRow]);
-            queryClient.setQueryData(rowsKey, allRows);
+        onSettled: (newRow, err, person : ZetkinPerson) => {
+            if (newRow) {
+                // Add created row directly to view, to avoid waiting for entire collection to reload
+                const rowsKey = ['view', viewId, 'rows'];
+                const prevRows: ZetkinViewRow[] = queryClient.getQueryData<ZetkinViewRow[]>(rowsKey) || [];
+                const allRows = prevRows.concat([newRow as ZetkinViewRow]);
+                queryClient.setQueryData(rowsKey, allRows);
+            }
+
+            // Store ID for highlighting the new row
+            setAddedId(person.id);
         },
     });
 
@@ -265,6 +286,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
                     Toolbar: ViewDataTableToolbar,
                 }}
                 componentsProps={ componentsProps }
+                getRowClassName={ params => (params.id == addedId)? classes.addedRow : '' }
                 hideFooter={ empty || contentSource == VIEW_CONTENT_SOURCE.DYNAMIC }
                 localeText={{
                     noRowsLabel: intl.formatMessage({ id: `misc.views.empty.notice.${contentSource}` }),
