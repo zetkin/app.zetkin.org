@@ -12,6 +12,7 @@ import { ZetkinPerson } from 'types/zetkin';
 
 
 interface UsePersonSelectProps {
+    getOptionDisabled?: (option: ZetkinPerson) => boolean;
     inputRef?: MutableRefObject<HTMLInputElement | undefined> | undefined;
     label?: string;
     name?: string;
@@ -23,6 +24,7 @@ interface UsePersonSelectProps {
 interface UsePersonSelectReturn {
     autoCompleteProps: {
         filterOptions: (options: ZetkinPerson[]) => ZetkinPerson[];
+        getOptionDisabled?: (option: ZetkinPerson) => boolean;
         getOptionLabel: (person: ZetkinPerson) => string;
         getOptionSelected: (option: ZetkinPerson, value: ZetkinPerson) => boolean;
         getOptionValue: (person: ZetkinPerson) => unknown;
@@ -44,6 +46,7 @@ type UsePersonSelect = (props: UsePersonSelectProps) => UsePersonSelectReturn;
 type PersonSelectProps = UsePersonSelectProps;
 
 const usePersonSelect: UsePersonSelect = ({
+    getOptionDisabled,
     inputRef,
     label,
     name,
@@ -91,6 +94,7 @@ const usePersonSelect: UsePersonSelect = ({
     return {
         autoCompleteProps: {
             filterOptions: options => options,
+            getOptionDisabled,
             getOptionLabel: (person: ZetkinPerson) => person.first_name? `${person.first_name} ${person.last_name}` : '',
             getOptionSelected: (option: ZetkinPerson, value: ZetkinPerson) => option?.id == value?.id,
             getOptionValue: (person: ZetkinPerson) => person.id || null,
