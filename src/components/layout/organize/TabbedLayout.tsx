@@ -107,7 +107,12 @@ const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
                             <Collapse in={ !collapsed }>
                                 <Box className={ classes.titleGrid } mt={ 2 }>
                                     <Box overflow="hidden">
-                                        <Typography className={ classes.title } component="h1" data-testid="page-title" noWrap variant="h3">
+                                        <Typography
+                                            className={ classes.title }
+                                            component="div"
+                                            data-testid="page-title"
+                                            noWrap
+                                            variant="h3">
                                             { title }
                                         </Typography>
                                         <Typography component="h2" variant="h5">

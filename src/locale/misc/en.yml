@@ -12,3 +12,9 @@ nativePersonFields:
     phone: Phone number
     street_address: Street address
     zip_code: Zip code
+components:
+    editTextInPlace:
+        tooltip:
+            noEmpty: This cannot be empty
+            edit: Click to edit
+            save: Press 'enter' to save

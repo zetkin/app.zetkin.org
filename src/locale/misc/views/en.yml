@@ -52,6 +52,9 @@ dataTableErrors:
     create_column: There was an error creating the column
     delete_column: There was an error deleting the column
     modify_column: There was an error editing the column
+editViewTitleAlert:
+    success: Updated title!
+    error: Error. Title not updated
 suggested:
     created: Created by {name}
     sectionTitle: Suggested

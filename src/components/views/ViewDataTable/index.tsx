@@ -256,7 +256,6 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
             ) }
             { /* Error alert */ }
             <Snackbar
-                anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
                 data-testid="data-table-error-indicator"
                 onClose={ () => setError(undefined) }
                 open={ Boolean(error) }>
