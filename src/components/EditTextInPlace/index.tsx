@@ -23,6 +23,21 @@ const useStyles = makeStyles((theme) => ({
         fontSize: 'inherit !important',
         fontWeight: 'inherit',
     },
+    span: {
+        // Same styles as input
+        '&:focus, &:hover': {
+            borderColor: lighten(theme.palette.primary.main, 0.65 ),
+            paddingLeft: 10,
+            paddingRight: 0,
+        },
+        border: '2px dotted transparent',
+        borderRadius: 10,
+        paddingRight: 10,
+
+        // But invisible and positioned absolutely to not affect flow
+        position: 'absolute',
+        visibility: 'hidden',
+    },
 }));
 
 export interface EditTextinPlaceProps {
@@ -37,6 +52,7 @@ const EditTextinPlace: React.FunctionComponent<EditTextinPlaceProps> = ({ disabl
 
     const classes = useStyles();
     const inputRef = useRef<HTMLInputElement>(null);
+    const spanRef = useRef<HTMLSpanElement>(null);
     const intl = useIntl();
 
     useEffect(() => {
@@ -45,6 +61,17 @@ const EditTextinPlace: React.FunctionComponent<EditTextinPlaceProps> = ({ disabl
             setText(text);
         }
     }, [value]);
+
+    useEffect(() => {
+        // When the text changes, and when moving in and out of edit mode,
+        // transfer the width of an invisible span (which the browser is
+        // capable of auto-resizing) to the input.
+        if (spanRef.current && inputRef.current) {
+            // Add some margin to the right while in edit mode
+            const width = spanRef.current.offsetWidth + (editing? 30 : -5);
+            inputRef.current.style.width = width + 'px';
+        }
+    }, [spanRef.current, inputRef.current, editing, text]);
 
     const startEditing = () => {
         setEditing(true);
@@ -85,11 +112,13 @@ const EditTextinPlace: React.FunctionComponent<EditTextinPlaceProps> = ({ disabl
                     intl.formatMessage({ id: `misc.components.editTextInPlace.tooltip.${editing ? 'save' : 'edit'}` }) :
                     intl.formatMessage({ id: 'misc.components.editTextInPlace.tooltip.noEmpty' })
                 }>
-                <FormControl>
+                <FormControl style={{ overflow: 'hidden' }}>
+                    <span ref={ spanRef } className={ classes.span }>
+                        { text }
+                    </span>
                     <InputBase
                         classes={{ input: classes.input, root: classes.inputRoot  }}
                         disabled={ disabled }
-                        inputProps={{ size: text.length || 1 }}
                         inputRef={ inputRef }
                         onChange={ (e) => setText(e.target.value) }
                         onFocus={ startEditing }
