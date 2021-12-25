@@ -83,8 +83,8 @@ test.describe('Campaign action buttons', async () => {
             await expect(campaignTitle).toContainText(newTitle);
 
             // Check that patch was made correctly
-            const log = await moxy.logRequests();
-            const patchRequest = await log.log.find(req =>
+            const { log } = await moxy.logRequests();
+            const patchRequest = log.find(req =>
                 req.method === 'PATCH' &&
                 req.path === '/v1/orgs/1/campaigns/1',
             );
