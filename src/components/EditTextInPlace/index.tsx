@@ -101,6 +101,9 @@ const EditTextinPlace: React.FunctionComponent<EditTextinPlaceProps> = ({ disabl
                 submitChange();
             }
         }
+        else if (evt.key === 'Escape') {
+            cancelEditing();
+        }
     };
 
     return (

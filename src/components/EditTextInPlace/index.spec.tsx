@@ -56,6 +56,17 @@ describe('EditTextInPlace', () => {
         expect(onChange).toHaveBeenCalledTimes(0);
     });
 
+    it('resets when text is discarded with "escape"', async () => {
+        const onChange = jest.fn(props.onChange);
+        const { getByDisplayValue } = render(<EditTextinPlace { ...{ ...props, onChange } } />);
+        const inputEl = getByDisplayValue(props.value) as HTMLInputElement;
+        userEvent.click(inputEl);
+        userEvent.paste(inputEl, 'New Text');
+        userEvent.keyboard('{escape}');
+        expect(onChange).toHaveBeenCalledTimes(0);
+        expect(inputEl.value).toBe(props.value);
+    });
+
     it('triggers onChange when text is submitted with "enter"', async () => {
         const onChange = jest.fn(props.onChange);
         const { getByDisplayValue } = render(<EditTextinPlace { ...{ ...props, onChange } } />);
