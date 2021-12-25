@@ -1,5 +1,5 @@
 import { Box } from '@material-ui/core';
-import { FunctionComponent, useState } from 'react';
+import { FunctionComponent, useRef } from 'react';
 
 import { MUIOnlyPersonSelect as PersonSelect } from 'components/forms/common/PersonSelect';
 import { useIntl } from 'react-intl';
@@ -12,18 +12,20 @@ export interface ViewDataTableFooterProps {
 
 const ViewDataTableFooter: FunctionComponent<ViewDataTableFooterProps> = ({ onRowAdd }) => {
     const intl = useIntl();
-    const [key, setKey] = useState(1);
+    const selectInputRef = useRef<HTMLInputElement>();
 
     return (
         <Box p={ 1 }>
             <PersonSelect
-                key={ key }
+                inputRef={ selectInputRef }
                 name="person"
                 onChange={ person => {
                     onRowAdd(person);
 
-                    // Change the key to force the PersonSelect to reset
-                    setKey(key + 1);
+                    // Blur and re-focus input to reset, so that user can type again to
+                    // add another person, without taking their hands off the keyboard.
+                    selectInputRef?.current?.blur();
+                    selectInputRef?.current?.focus();
                 } }
                 placeholder={ intl.formatMessage({ id: 'misc.views.footer.addPlaceholder' }) }
                 selectedPerson={ null }
