@@ -5,7 +5,7 @@ import { ZetkinView } from 'types/zetkin';
 import { defaultFetch } from '..';
 
 export default function createNewView(orgId: string, fetch = defaultFetch) {
-    return async (rows?: number[]) : Promise<ZetkinView> => {
+    return async (rows?: number[] | void) : Promise<ZetkinView> => {
         const url = `/views/createNew?orgId=${orgId}`;
 
         const res = await fetch(url, {

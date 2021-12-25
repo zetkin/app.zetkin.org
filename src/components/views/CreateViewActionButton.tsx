@@ -45,7 +45,7 @@ const CreateViewActionButton: React.FunctionComponent = () => {
                     data-testid="create-view-action-button"
                     onClick={ () => {
                         NProgress.start();
-                        createNewViewMutation.mutate(undefined);
+                        createNewViewMutation.mutate();
                     } }>
                     <Add />
                 </Fab>
