@@ -7,9 +7,9 @@ import AllCampaignsLayout from '../../../../../components/layout/organize/AllCam
 import getCampaigns from '../../../../../fetching/getCampaigns';
 import getEvents from '../../../../../fetching/getEvents';
 import getOrg from '../../../../../fetching/getOrg';
-import getOrganizationTasks from '../../../../../fetching/tasks/getOrganizationTasks';
 import { PageWithLayout } from '../../../../../types';
 import { scaffold } from '../../../../../utils/next';
+import { tasksResource } from 'api/tasks';
 import ZetkinCalendar from '../../../../../components/ZetkinCalendar';
 import ZetkinSpeedDial, { ACTIONS } from '../../../../../components/ZetkinSpeedDial';
 
@@ -33,10 +33,15 @@ export const getServerSideProps : GetServerSideProps = scaffold(async (ctx) => {
     await ctx.queryClient.prefetchQuery(['campaigns', orgId], getCampaigns(orgId as string, ctx.apiFetch));
     const campaignsState = ctx.queryClient.getQueryState(['campaigns', orgId]);
 
-    await ctx.queryClient.prefetchQuery(['tasks', orgId], getOrganizationTasks(orgId as string, ctx.apiFetch));
-    const allTasksState = ctx.queryClient.getQueryState(['tasks', orgId]);
+    const { prefetch: prefetchTasks } = tasksResource(orgId as string);
+    const { state: tasksState } = await prefetchTasks(ctx);
 
-    if (orgState?.status === 'success' && eventsState?.status === 'success' &&campaignsState?.status === 'success' && allTasksState?.status === 'success') {
+    if (
+        orgState?.status === 'success' &&
+        eventsState?.status === 'success' &&
+        campaignsState?.status === 'success' &&
+        tasksState?.status === 'success'
+    ) {
         return {
             props: {
                 orgId,
@@ -58,7 +63,7 @@ const AllCampaignsCalendarPage : PageWithLayout<AllCampaignsCalendarPageProps> =
     const intl = useIntl();
     const eventsQuery = useQuery(['events', orgId], getEvents(orgId));
     const campaignsQuery = useQuery(['campaigns', orgId], getCampaigns(orgId));
-    const tasksQuery = useQuery(['tasks', orgId], getOrganizationTasks(orgId));
+    const tasksQuery = tasksResource(orgId).useQuery();
     const events = eventsQuery.data || [];
     const tasks = tasksQuery.data || [];
     const campaigns = campaignsQuery.data || [];

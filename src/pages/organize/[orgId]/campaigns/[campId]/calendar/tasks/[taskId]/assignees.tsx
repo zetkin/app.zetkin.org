@@ -4,11 +4,9 @@ import Head from 'next/head';
 import { useIntl } from 'react-intl';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
 
-import getAssignedTasks from 'fetching/tasks/getAssignedTasks';
 import getOrg from 'fetching/getOrg';
-import getTask from 'fetching/tasks/getTask';
 import { PageWithLayout } from 'types';
 import patchQuery from 'fetching/patchQuery';
 import { QUERY_STATUS } from 'types/smartSearch';
@@ -17,6 +15,7 @@ import { scaffold } from 'utils/next';
 import SingleTaskLayout from 'components/layout/organize/SingleTaskLayout';
 import SmartSearchDialog from 'components/smartSearch/SmartSearchDialog';
 import TaskAssigneesList from 'components/organize/tasks/TaskAssigneesList';
+import { taskResource } from 'api/tasks';
 import ZetkinQuery from 'components/ZetkinQuery';
 import getTaskStatus, { TASK_STATUS } from 'utils/getTaskStatus';
 import { ZetkinAssignedTask, ZetkinTask } from 'types/zetkin';
@@ -33,9 +32,8 @@ export const getServerSideProps : GetServerSideProps = scaffold(async (ctx) => {
     await ctx.queryClient.prefetchQuery(['org', orgId], getOrg(orgId as string, ctx.apiFetch));
     const orgState = ctx.queryClient.getQueryState(['org', orgId]);
 
-    await ctx.queryClient.prefetchQuery(['task', taskId], getTask(orgId as string, taskId as string, ctx.apiFetch));
-    const taskState = ctx.queryClient.getQueryState(['task', taskId]);
-    const taskData: ZetkinTask | undefined = ctx.queryClient.getQueryData(['task', taskId]);
+    const { prefetch: prefetchTask } = taskResource(orgId as string, taskId as string);
+    const { state: taskState, data: taskData } = await prefetchTask(ctx);
 
     if (orgState?.status === 'success' && taskState?.status === 'success') {
         if (campId && +campId === taskData?.campaign.id) {
@@ -77,19 +75,15 @@ const TaskAssigneesPage: PageWithLayout = () => {
     const queryClient = useQueryClient();
 
     const { taskId, orgId } = useRouter().query;
-    const taskQuery = useQuery(['task', taskId], getTask(orgId as string, taskId as string));
-    const assignedTasksQuery = useQuery(['assignedTasks', orgId, taskId], getAssignedTasks(
-        orgId as string, taskId as string,
-    ));
-
-    const task = taskQuery?.data;
-
-    const queryMutation = useMutation(patchQuery(orgId as string, task?.id as number), {
-        onSettled: () => queryClient.invalidateQueries(['task', taskId]),
-    });
-
+    const { useQuery: useTaskQuery, useAssignedTasksQuery } = taskResource(orgId as string, taskId as string);
+    const { data: task } = useTaskQuery();
+    const assignedTasksQuery = useAssignedTasksQuery();
     const assignedTasks = assignedTasksQuery?.data;
     const query = task?.target;
+
+    const queryMutation = useMutation(patchQuery(orgId as string, query?.id as number), {
+        onSettled: () => queryClient.invalidateQueries(['task', taskId]),
+    });
 
     const [dialogOpen, setDialogOpen] = useState(false);
     const handleDialogClose = () => setDialogOpen(false);
