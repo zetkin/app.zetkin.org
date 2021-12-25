@@ -47,6 +47,8 @@ empty:
     static:
         description: Add the first person to create a static view where people are added and removed manually.
         headline: Add people manually
+footer:
+    addPlaceholder: Start typing to add person to view
 newViewFields:
     title: New View
 dataTableErrors:

@@ -9,6 +9,7 @@ import { FormattedMessage, useIntl } from 'react-intl';
 import { useMutation, useQueryClient } from 'react-query';
 
 import createNewView from 'fetching/views/createNewView';
+import { defaultFetch } from 'fetching';
 import deleteViewColumn from 'fetching/views/deleteViewColumn';
 import EmptyView from 'components/views/EmptyView';
 import patchViewColumn from 'fetching/views/patchViewColumn';
@@ -19,8 +20,9 @@ import { SelectedViewColumn, ZetkinView } from 'types/views';
 import { VIEW_CONTENT_SOURCE, VIEW_DATA_TABLE_ERROR } from './constants';
 import ViewColumnDialog, { AUTO_SAVE_TYPES } from 'components/views/ViewColumnDialog';
 import ViewDataTableColumnMenu, { ViewDataTableColumnMenuProps } from './ViewDataTableColumnMenu';
+import ViewDataTableFooter, { ViewDataTableFooterProps } from './ViewDataTableFooter';
 import ViewDataTableToolbar, { ViewDataTableToolbarProps } from './ViewDataTableToolbar';
-import { ZetkinViewColumn, ZetkinViewRow } from 'types/zetkin';
+import { ZetkinPerson, ZetkinViewColumn, ZetkinViewRow } from 'types/zetkin';
 
 
 interface ViewDataTableProps {
@@ -74,6 +76,23 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
             const colsKey = ['view', viewId, 'columns'];
             const cols = queryClient.getQueryData<ZetkinViewColumn[]>(colsKey);
             queryClient.setQueryData(colsKey, cols?.filter(col => col.id != colId));
+        },
+    });
+
+    // TODO: Create mutation using new factory pattern
+    const addRowMutation = useMutation(async (person: ZetkinPerson) => {
+        const res = await defaultFetch(`/orgs/${orgId}/people/views/${view.id}/rows/${person.id}`, {
+            method: 'PUT',
+        });
+        const data = await res.json();
+        return data.data;
+    }, {
+        onSuccess: (newRow) => {
+            // Add created row directly to view, to avoid waiting for entire collection to reload
+            const rowsKey = ['view', viewId, 'rows'];
+            const prevRows: ZetkinViewRow[] = queryClient.getQueryData<ZetkinViewRow[]>(rowsKey) || [];
+            const allRows = prevRows.concat([newRow as ZetkinViewRow]);
+            queryClient.setQueryData(rowsKey, allRows);
         },
     });
 
@@ -203,6 +222,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
 
     const componentsProps: {
         columnMenu: ViewDataTableColumnMenuProps;
+        footer: ViewDataTableFooterProps;
         toolbar: ViewDataTableToolbarProps;
     } = {
         columnMenu: {
@@ -216,6 +236,11 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
                     return !AUTO_SAVE_TYPES.includes(column.type);
                 }
                 return false;
+            },
+        },
+        footer: {
+            onRowAdd: person => {
+                addRowMutation.mutate(person);
             },
         },
         toolbar: {
@@ -236,10 +261,11 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
                 columns={ gridColumns }
                 components={{
                     ColumnMenu: ViewDataTableColumnMenu,
+                    Footer: ViewDataTableFooter,
                     Toolbar: ViewDataTableToolbar,
                 }}
                 componentsProps={ componentsProps }
-                hideFooter={ true }
+                hideFooter={ empty || contentSource == VIEW_CONTENT_SOURCE.DYNAMIC }
                 localeText={{
                     noRowsLabel: intl.formatMessage({ id: `misc.views.empty.notice.${contentSource}` }),
                 }}
