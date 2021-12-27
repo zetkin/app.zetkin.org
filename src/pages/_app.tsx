@@ -16,10 +16,11 @@ import { ThemeProvider } from '@material-ui/core/styles';
 import { useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
-import { lightTheme } from '../theme';
 import { LocalTimeToJsonPlugin } from '../utils/dateUtils';
 import { PageWithLayout } from '../types';
+import { useMediaQuery } from '@material-ui/core';
 import { UserContext } from '../hooks';
+import { darkTheme, lightTheme } from '../theme';
 
 dayjs.extend(LocalTimeToJsonPlugin);
 dayjs.extend(isoWeek);
@@ -58,6 +59,8 @@ function MyApp({ Component, pageProps } : AppProps) : JSX.Element {
         window.__reactRendered = true;
     }
 
+    const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+
     useEffect(() => {
         // Remove the server-side injected CSS.
         const jssStyles = document.querySelector('#jss-server-side');
@@ -68,7 +71,7 @@ function MyApp({ Component, pageProps } : AppProps) : JSX.Element {
 
     return (
         <UserContext.Provider value={ pageProps.user }>
-            <ThemeProvider theme={ lightTheme }>
+            <ThemeProvider theme={ prefersDarkMode? darkTheme : lightTheme }>
                 <MuiPickersUtilsProvider libInstance={ dayjs } utils={ DateUtils }>
                     <IntlProvider
                         defaultLocale="en"
