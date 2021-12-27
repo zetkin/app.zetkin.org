@@ -16,9 +16,9 @@ import { ThemeProvider } from '@material-ui/core/styles';
 import { useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
+import { lightTheme } from '../theme';
 import { LocalTimeToJsonPlugin } from '../utils/dateUtils';
 import { PageWithLayout } from '../types';
-import theme from '../theme';
 import { UserContext } from '../hooks';
 
 dayjs.extend(LocalTimeToJsonPlugin);
@@ -68,7 +68,7 @@ function MyApp({ Component, pageProps } : AppProps) : JSX.Element {
 
     return (
         <UserContext.Provider value={ pageProps.user }>
-            <ThemeProvider theme={ theme }>
+            <ThemeProvider theme={ lightTheme }>
                 <MuiPickersUtilsProvider libInstance={ dayjs } utils={ DateUtils }>
                     <IntlProvider
                         defaultLocale="en"

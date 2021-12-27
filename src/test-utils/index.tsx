@@ -8,9 +8,9 @@ import { FC, ReactElement } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { render, RenderOptions, RenderResult } from '@testing-library/react';
 
+import { lightTheme } from 'theme';
 import { LocalTimeToJsonPlugin } from 'utils/dateUtils';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
-import theme from 'theme';
 import { UserContext } from 'hooks';
 
 dayjs.extend(LocalTimeToJsonPlugin);
@@ -27,7 +27,7 @@ const ZetkinAppProviders: FC = ({ children }) => {
 
     return (
         <UserContext.Provider value={ null }>
-            <ThemeProvider theme={ theme }>
+            <ThemeProvider theme={ lightTheme }>
                 <MuiPickersUtilsProvider libInstance={ dayjs } utils={ DateUtils }>
                     <IntlProvider
                         defaultLocale="en"

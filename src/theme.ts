@@ -1,8 +1,7 @@
 import { createElement } from 'react';
-import { createTheme } from '@material-ui/core/styles';
+import { createTheme, ThemeOptions } from '@material-ui/core/styles';
 
-// Create a theme instance.
-const theme = createTheme({
+const baseTheme: ThemeOptions = {
     overrides: {
         MuiButton: {
             root: {
@@ -105,6 +104,19 @@ const theme = createTheme({
             fontWeight: 'lighter',
         },
     },
+};
+
+const lightTheme = createTheme(baseTheme);
+const darkTheme = createTheme(baseTheme, {
+    palette: {
+        background: {
+            default: '#222222',
+        },
+        text: {
+            secondary: '#eeeeee',
+        },
+        type: 'dark',
+    },
 });
 
-export default theme;
+export { darkTheme, lightTheme };

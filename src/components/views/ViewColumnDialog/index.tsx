@@ -4,7 +4,7 @@ import { FunctionComponent, useState } from 'react';
 
 import ColumnEditor from './ColumnEditor';
 import ColumnGallery from './ColumnGallery';
-import theme from 'theme';
+import { lightTheme } from 'theme';
 import ZetkinDialog from 'components/ZetkinDialog';
 import { COLUMN_TYPE, SelectedViewColumn } from 'types/views';
 
@@ -22,7 +22,7 @@ interface ViewColumnDialogProps {
 }
 
 const ViewColumnDialog : FunctionComponent<ViewColumnDialogProps> = ({ selectedColumn, onCancel, onSave }) => {
-    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+    const isMobile = useMediaQuery(lightTheme.breakpoints.down('sm'));
     const intl = useIntl();
     const [column, setColumn] = useState<SelectedViewColumn>(selectedColumn || {});
 
