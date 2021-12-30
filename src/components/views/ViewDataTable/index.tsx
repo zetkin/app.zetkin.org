@@ -45,7 +45,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
         },
         onSettled: () => {
             NProgress.done();
-            queryClient.invalidateQueries(['views', viewId]);
+            queryClient.invalidateQueries(['view', viewId]);
         },
     });
 
@@ -56,7 +56,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
         },
         onSettled: () => {
             NProgress.done();
-            queryClient.invalidateQueries(['views', viewId]);
+            queryClient.invalidateQueries(['view', viewId]);
         },
     });
 
@@ -67,10 +67,11 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
         },
         onSettled: () => {
             NProgress.done();
-            queryClient.invalidateQueries(['views', viewId]);
         },
-        onSuccess: () => {
-            queryClient.removeQueries(['views', viewId, 'rows']);
+        onSuccess: (data, colId) => {
+            const colsKey = ['view', viewId, 'columns'];
+            const cols = queryClient.getQueryData<ZetkinViewColumn[]>(colsKey);
+            queryClient.setQueryData(colsKey, cols?.filter(col => col.id != colId));
         },
     });
 
@@ -196,8 +197,10 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
         };
         input.content.forEach((cellValue, colIndex) => {
             const col = columns[colIndex];
-            const fieldName = `col_${col.id}`;
-            output[fieldName] = cellValue;
+            if (col) {
+                const fieldName = `col_${col.id}`;
+                output[fieldName] = cellValue;
+            }
         });
 
         return output;
