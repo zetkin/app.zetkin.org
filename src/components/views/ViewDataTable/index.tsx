@@ -10,6 +10,7 @@ import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
 import { useMutation, useQueryClient } from 'react-query';
 
 import { colIdFromFieldName } from './utils';
+import createNewView from 'fetching/views/createNewView';
 import deleteViewColumn from 'fetching/views/deleteViewColumn';
 import patchViewColumn from 'fetching/views/patchViewColumn';
 import postViewColumn from 'fetching/views/postViewColumn';
@@ -31,8 +32,10 @@ interface ViewDataTableProps {
 const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, viewId }) => {
     const [columnToConfigure, setColumnToConfigure] = useState<SelectedViewColumn | null>(null);
     const [columnToRename, setColumnToRename] = useState<ZetkinViewColumn | null>(null);
+    const [selection, setSelection] = useState<number[]>([]);
     const [error, setError] = useState<VIEW_DATA_TABLE_ERROR>();
-    const { orgId } = useRouter().query;
+    const router = useRouter();
+    const { orgId } = router.query;
     const queryClient = useQueryClient();
 
     const addColumnMutation = useMutation(postViewColumn(orgId as string, viewId), {
@@ -137,6 +140,19 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
         });
     };
 
+    const createNewViewMutation = useMutation(createNewView(orgId as string), {
+        onError: () => {
+            NProgress.done();
+        },
+        onMutate: () => NProgress.start(),
+        onSettled: () => queryClient.invalidateQueries(['views', orgId]),
+        onSuccess: (newView) => router.push(`/organize/${orgId}/people/views/${newView.id}`),
+    });
+
+    const onViewCreate = () => {
+        createNewViewMutation.mutate(selection);
+    };
+
     const avatarColumn : GridColDef = {
         disableColumnMenu: true,
         disableExport: true,
@@ -206,18 +222,22 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
         },
         toolbar: {
             onColumnCreate,
+            onViewCreate,
+            selection,
         },
     };
 
     return (
         <>
             <DataGridPro
+                checkboxSelection={ true }
                 columns={ gridColumns }
                 components={{
                     ColumnMenu: ViewDataTableColumnMenu,
                     Toolbar: ViewDataTableToolbar,
                 }}
                 componentsProps={ componentsProps }
+                onSelectionModelChange={ model => setSelection(model as number[]) }
                 rows={ gridRows }
             />
             { columnToRename && (

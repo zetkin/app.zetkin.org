@@ -77,7 +77,7 @@ test.describe('Creating a view column', () => {
         });
 
         // Create new toggle column
-        await page.click('data-testid=create-column-button');
+        await page.click('data-testid=ViewDataTableToolbar-createColumn');
         await page.click('data-testid=column-type-selector-local_bool');
 
         // Check body of request
@@ -95,7 +95,7 @@ test.describe('Creating a view column', () => {
         await page.goto(appUri + '/organize/1/people/views/1');
 
         // Create new toggle column
-        await page.click('data-testid=create-column-button');
+        await page.click('data-testid=ViewDataTableToolbar-createColumn');
         await page.click('data-testid=column-type-selector-local_bool');
 
         expect(await page.locator('data-testid=data-table-error-indicator').count()).toEqual(1);

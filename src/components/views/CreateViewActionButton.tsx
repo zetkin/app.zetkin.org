@@ -61,7 +61,7 @@ const CreateViewActionButton: React.FunctionComponent = () => {
                         e.preventDefault();
                         NProgress.start();
                         setErrorDialogOpen(false);
-                        createNewViewMutation.mutate();
+                        createNewViewMutation.mutate(undefined);
                     } }>
                         <SubmitCancelButtons
                             onCancel={ () => setErrorDialogOpen(false) }
