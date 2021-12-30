@@ -26,6 +26,7 @@ const SingleTaskLayout: FunctionComponent = ({ children }) => {
             tabs={ [
                 { href: `/`, messageId: 'layout.organize.tasks.tabs.summary' },
                 { href: `/assignees`, messageId: 'layout.organize.tasks.tabs.assignees' },
+                { href: `/insights`, messageId: 'layout.organize.tasks.tabs.insights' },
             ] }
             title={ task?.title }>
             { children }

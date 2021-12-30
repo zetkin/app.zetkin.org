@@ -27,6 +27,7 @@ lists:
 tasks:
     tabs:
         summary: Summary
+        insights: Insights
         assignees: Assignees
 people:
     title: People
