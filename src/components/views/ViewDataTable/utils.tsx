@@ -14,6 +14,10 @@ export function colIdFromFieldName(colFieldName : string) : number {
     return parseInt(nameFields[1]);
 }
 
+/**
+ * Maps a ZetkinViewColumn from the view definition in the Zetkin Platform to
+ * a GridColDef for rendering the column in the MUI DataGrid.
+*/
 export function makeGridColDef(viewCol: ZetkinViewColumn, orgId: number | string) : GridColDef {
     const colDef : GridColDef = {
         field: `col_${viewCol.id}`,
