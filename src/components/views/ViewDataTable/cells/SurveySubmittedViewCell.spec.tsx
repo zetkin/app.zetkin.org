@@ -30,7 +30,7 @@ describe('SurveySubmittedViewCell', () => {
         const params = mockParams({
             value: [
                 { submission_id: 2, submitted: '1989-07-05' },
-                { submission_id: 3, submitted: threeDaysAgo.toUTCString() },
+                { submission_id: 3, submitted: threeDaysAgo.toISOString() },
                 { submission_id: 1, submitted: '1857-07-05' },
             ],
         });

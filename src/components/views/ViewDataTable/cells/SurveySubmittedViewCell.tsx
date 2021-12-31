@@ -15,11 +15,14 @@ interface SurveySubmittedViewCellProps {
 
 const SurveySubmittedViewCell: FunctionComponent<SurveySubmittedViewCellProps> = ({ params }) => {
     if (params.value?.length) {
-        const subDates = params.value.map(sub => new Date(sub.submitted));
-        const sorted = subDates.sort();
+        const subsWithDates = params.value.map(sub => ({
+            ...sub,
+            submitted: new Date(sub.submitted),
+        }));
+        const sorted = subsWithDates.sort((s0, s1) => s1.submitted.getTime() - s0.submitted.getTime());
 
         return (
-            <ZetkinRelativeTime datetime={ sorted[0].toUTCString() }/>
+            <ZetkinRelativeTime datetime={ sorted[0].submitted.toISOString() }/>
         );
     }
 
