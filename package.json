@@ -46,6 +46,7 @@
     "devDependencies": {
         "@playwright/test": "^1.14.1",
         "@testing-library/react": "^12.1.2",
+        "@testing-library/user-event": "^13.5.0",
         "@types/jest": "^27.0.2",
         "@types/leaflet": "^1.7.0",
         "@types/lodash.debounce": "^4.0.6",

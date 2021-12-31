@@ -1,24 +1,30 @@
 import { Alert } from '@material-ui/lab';
 import { CheckBox } from '@material-ui/icons';
 import { FormattedMessage } from 'react-intl';
-import { useMutation } from 'react-query';
 import { useRouter } from 'next/router';
 
-import postTask from '../../../fetching/tasks/postTask';
 import TaskDetailsForm from 'components/forms/TaskDetailsForm';
 import { ZetkinTaskRequestBody } from '../../../types/tasks';
 
 import { ACTIONS } from '../constants';
+import { tasksResource } from 'api/tasks';
 import { ActionConfig, DialogContentBaseProps } from './types';
 
 const DialogContent: React.FunctionComponent<DialogContentBaseProps> = ({ closeDialog }) => {
     const router = useRouter();
     const { campId, orgId } = router.query as {campId: string; orgId: string};
 
-    const { mutateAsync: sendTaskRequest, isError } = useMutation(postTask(orgId));
+    const { useCreate: useCreateTask } = tasksResource(orgId);
+    const { mutateAsync: sendTaskRequest, isError } = useCreateTask();
 
     const handleFormSubmit = async (task: ZetkinTaskRequestBody) => {
-        await sendTaskRequest(task, {
+        // Set defaults for config and target_filters
+        const body: ZetkinTaskRequestBody = {
+            ...task,
+            config: {},
+            target_filters: [],
+        };
+        await sendTaskRequest(body, {
             onSuccess: async (newTask) => {
                 closeDialog();
                 // Redirect to task page

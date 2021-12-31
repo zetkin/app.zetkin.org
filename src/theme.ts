@@ -84,6 +84,10 @@ const theme = createTheme({
         MuiCard: {
             variant: 'outlined',
         },
+        MuiSnackbar: {
+            anchorOrigin: { horizontal: 'right', vertical: 'bottom' },
+            autoHideDuration: 3000,
+        },
         MuiTabs: {
             TabIndicatorProps: {
                 children: createElement('span'),

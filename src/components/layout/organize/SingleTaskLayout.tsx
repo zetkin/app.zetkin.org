@@ -1,16 +1,15 @@
 import { FunctionComponent } from 'react';
-import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 
-import getTask from 'fetching/tasks/getTask';
 import TabbedLayout from './TabbedLayout';
 
 import TaskActionButtons from 'components/organize/tasks/TaskActionButtons';
+import { taskResource } from 'api/tasks';
 import TaskStatusText from 'components/organize/tasks/TaskStatusText';
 
 const SingleTaskLayout: FunctionComponent = ({ children }) => {
     const { taskId, orgId, campId } = useRouter().query;
-    const { data: task } = useQuery(['task', taskId ], getTask(orgId  as string, taskId as string));
+    const { data: task } = taskResource(orgId as string, taskId as string).useQuery();
 
     if (!task) return null;
 

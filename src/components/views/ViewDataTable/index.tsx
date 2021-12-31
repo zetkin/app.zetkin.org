@@ -8,6 +8,7 @@ import { useState } from 'react';
 import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
 import { useMutation, useQueryClient } from 'react-query';
 
+import createNewView from 'fetching/views/createNewView';
 import deleteViewColumn from 'fetching/views/deleteViewColumn';
 import patchViewColumn from 'fetching/views/patchViewColumn';
 import postViewColumn from 'fetching/views/postViewColumn';
@@ -30,8 +31,10 @@ interface ViewDataTableProps {
 const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, viewId }) => {
     const [columnToConfigure, setColumnToConfigure] = useState<SelectedViewColumn | null>(null);
     const [columnToRename, setColumnToRename] = useState<ZetkinViewColumn | null>(null);
+    const [selection, setSelection] = useState<number[]>([]);
     const [error, setError] = useState<VIEW_DATA_TABLE_ERROR>();
-    const { orgId } = useRouter().query;
+    const router = useRouter();
+    const { orgId } = router.query;
     const queryClient = useQueryClient();
 
     const addColumnMutation = useMutation(postViewColumn(orgId as string, viewId), {
@@ -41,7 +44,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
         },
         onSettled: () => {
             NProgress.done();
-            queryClient.invalidateQueries(['views', viewId]);
+            queryClient.invalidateQueries(['view', viewId]);
         },
     });
 
@@ -52,7 +55,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
         },
         onSettled: () => {
             NProgress.done();
-            queryClient.invalidateQueries(['views', viewId]);
+            queryClient.invalidateQueries(['view', viewId]);
         },
     });
 
@@ -63,10 +66,11 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
         },
         onSettled: () => {
             NProgress.done();
-            queryClient.invalidateQueries(['views', viewId]);
         },
-        onSuccess: () => {
-            queryClient.removeQueries(['views', viewId, 'rows']);
+        onSuccess: (data, colId) => {
+            const colsKey = ['view', viewId, 'columns'];
+            const cols = queryClient.getQueryData<ZetkinViewColumn[]>(colsKey);
+            queryClient.setQueryData(colsKey, cols?.filter(col => col.id != colId));
         },
     });
 
@@ -136,6 +140,19 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
         });
     };
 
+    const createNewViewMutation = useMutation(createNewView(orgId as string), {
+        onError: () => {
+            NProgress.done();
+        },
+        onMutate: () => NProgress.start(),
+        onSettled: () => queryClient.invalidateQueries(['views', orgId]),
+        onSuccess: (newView) => router.push(`/organize/${orgId}/people/views/${newView.id}`),
+    });
+
+    const onViewCreate = () => {
+        createNewViewMutation.mutate(selection);
+    };
+
     const avatarColumn : GridColDef = {
         disableColumnMenu: true,
         disableExport: true,
@@ -172,8 +189,10 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
         };
         input.content.forEach((cellValue, colIndex) => {
             const col = columns[colIndex];
-            const fieldName = `col_${col.id}`;
-            output[fieldName] = cellValue;
+            if (col) {
+                const fieldName = `col_${col.id}`;
+                output[fieldName] = cellValue;
+            }
         });
 
         return output;
@@ -198,18 +217,22 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
         },
         toolbar: {
             onColumnCreate,
+            onViewCreate,
+            selection,
         },
     };
 
     return (
         <>
             <DataGridPro
+                checkboxSelection={ true }
                 columns={ gridColumns }
                 components={{
                     ColumnMenu: ViewDataTableColumnMenu,
                     Toolbar: ViewDataTableToolbar,
                 }}
                 componentsProps={ componentsProps }
+                onSelectionModelChange={ model => setSelection(model as number[]) }
                 rows={ gridRows }
             />
             { columnToRename && (
@@ -228,7 +251,6 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
             ) }
             { /* Error alert */ }
             <Snackbar
-                anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
                 data-testid="data-table-error-indicator"
                 onClose={ () => setError(undefined) }
                 open={ Boolean(error) }>

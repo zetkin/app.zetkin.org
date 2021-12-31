@@ -1,12 +1,11 @@
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
-import { useQuery } from 'react-query';
 
-import getTask from 'fetching/tasks/getTask';
 import { PageWithLayout } from 'types';
 import { scaffold } from 'utils/next';
 import SingleTaskLayout from 'components/layout/organize/SingleTaskLayout';
 import TaskDetailsSection from 'components/organize/tasks/TaskDetailsSection';
+import { taskResource } from 'api/tasks';
 
 const scaffoldOptions = {
     authLevelRequired: 2,
@@ -24,15 +23,8 @@ export const getServerSideProps : GetServerSideProps = scaffold(async (ctx) => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const { orgId, campId, taskId } = ctx.params!;
 
-    await ctx.queryClient.prefetchQuery(
-        ['task', taskId],
-        getTask(
-            orgId as string,
-            taskId as string,
-            ctx.apiFetch,
-        ),
-    );
-    const taskQueryState = ctx.queryClient.getQueryState(['task', taskId]);
+    const { prefetch } = taskResource(orgId as string, taskId as string);
+    const { state: taskQueryState } = await prefetch(ctx);
 
     if (
         taskQueryState?.status === 'success'
@@ -59,7 +51,7 @@ type TaskDetailPageProps = {
 }
 
 const TaskDetailPage: PageWithLayout<TaskDetailPageProps> = ({ taskId, orgId }) => {
-    const { data: task } = useQuery(['task', taskId], getTask(orgId, taskId));
+    const { data: task } = taskResource(orgId, taskId).useQuery();
 
     if (!task) return null;
 
