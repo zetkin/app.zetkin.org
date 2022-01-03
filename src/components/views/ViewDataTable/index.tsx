@@ -8,13 +8,13 @@ import { useState } from 'react';
 import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
 import { useMutation, useQueryClient } from 'react-query';
 
-import createNewView from 'fetching/views/createNewView';
 import deleteViewColumn from 'fetching/views/deleteViewColumn';
 import patchViewColumn from 'fetching/views/patchViewColumn';
 import postViewColumn from 'fetching/views/postViewColumn';
 import { SelectedViewColumn } from 'types/views';
 import { VIEW_DATA_TABLE_ERROR } from './constants';
 import ViewRenameColumnDialog from '../ViewRenameColumnDialog';
+import { viewsResource } from 'api/views';
 import { colIdFromFieldName, makeGridColDef } from './utils';
 import ViewColumnDialog, { AUTO_SAVE_TYPES } from 'components/views/ViewColumnDialog';
 import ViewDataTableColumnMenu, { ViewDataTableColumnMenuProps } from './ViewDataTableColumnMenu';
@@ -140,17 +140,12 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
         });
     };
 
-    const createNewViewMutation = useMutation(createNewView(orgId as string), {
-        onError: () => {
-            NProgress.done();
-        },
-        onMutate: () => NProgress.start(),
-        onSettled: () => queryClient.invalidateQueries(['views', orgId]),
-        onSuccess: (newView) => router.push(`/organize/${orgId}/people/views/${newView.id}`),
-    });
+    const createNewViewMutation = viewsResource(orgId as string).useCreate();
 
     const onViewCreate = () => {
-        createNewViewMutation.mutate(selection);
+        createNewViewMutation.mutate({ rows: selection }, {
+            onSuccess: (newView) => router.push(`/organize/${orgId}/people/views/${newView.id}`),
+        });
     };
 
     const avatarColumn : GridColDef = {

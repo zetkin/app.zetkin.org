@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+import { CreateNewViewReqBody } from 'pages/api/views/createNew';
 import { ZetkinView } from 'types/views';
-import { createPrefetch, createUseQuery } from './utils/resourceHookFactories';
+import { createPrefetch, createUseMutation, createUseQuery } from './utils/resourceHookFactories';
 
 export const viewsResource = (orgId: string) => {
     const key = ['views', orgId];
@@ -8,6 +9,7 @@ export const viewsResource = (orgId: string) => {
 
     return {
         prefetch: createPrefetch<ZetkinView[]>(key, url),
+        useCreate: createUseMutation<CreateNewViewReqBody, ZetkinView>(key, `/views/createNew?orgId=${orgId}`),
         useQuery: createUseQuery<ZetkinView[]>(key, url),
     };
 };
