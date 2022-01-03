@@ -1,9 +1,8 @@
-import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
 import { FormattedMessage, useIntl } from 'react-intl';
 
-import getViews from 'fetching/views/getViews';
+import { viewsResource } from 'api/views';
 import ZetkinDateTime from 'components/ZetkinDateTime';
 import ZetkinQuery from 'components/ZetkinQuery';
 import { Box, Typography } from '@material-ui/core';
@@ -12,7 +11,7 @@ const ViewsListTable: React.FunctionComponent = () => {
     const intl = useIntl();
     const router = useRouter();
     const { orgId } = router.query;
-    const viewsQuery = useQuery(['views', orgId], getViews(orgId as string));
+    const viewsQuery = viewsResource(orgId as string).useQuery();
 
     // Columns
     const columns: GridColDef[] = [
