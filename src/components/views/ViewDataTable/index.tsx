@@ -2,14 +2,12 @@ import { Alert } from '@material-ui/lab';
 import { FormattedMessage } from 'react-intl';
 import { FunctionComponent } from 'react';
 import NProgress from 'nprogress';
-import { Person } from '@material-ui/icons';
 import { Snackbar } from '@material-ui/core';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
 import { useMutation, useQueryClient } from 'react-query';
 
-import { colIdFromFieldName } from './utils';
 import createNewView from 'fetching/views/createNewView';
 import deleteViewColumn from 'fetching/views/deleteViewColumn';
 import patchViewColumn from 'fetching/views/patchViewColumn';
@@ -17,6 +15,7 @@ import postViewColumn from 'fetching/views/postViewColumn';
 import { SelectedViewColumn } from 'types/views';
 import { VIEW_DATA_TABLE_ERROR } from './constants';
 import ViewRenameColumnDialog from '../ViewRenameColumnDialog';
+import { colIdFromFieldName, makeGridColDef } from './utils';
 import ViewColumnDialog, { AUTO_SAVE_TYPES } from 'components/views/ViewColumnDialog';
 import ViewDataTableColumnMenu, { ViewDataTableColumnMenuProps } from './ViewDataTableColumnMenu';
 import ViewDataTableToolbar, { ViewDataTableToolbarProps } from './ViewDataTableToolbar';
@@ -174,9 +173,6 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
                 />
             );
         },
-        renderHeader: () => {
-            return <Person/>;
-        },
         resizable: false,
         sortable: false,
         width: 50,
@@ -184,11 +180,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
 
     const gridColumns = [
         avatarColumn,
-        ...columns.map((col) => ({
-            field: `col_${col.id}`,
-            headerName: col.title,
-            minWidth: 200,
-        })),
+        ...columns.map(col => makeGridColDef(col, orgId as string)),
     ];
 
     const gridRows = rows.map(input => {
