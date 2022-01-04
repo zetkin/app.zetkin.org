@@ -9,12 +9,12 @@ import { makeStyles, Snackbar } from '@material-ui/core';
 import { useMutation, useQueryClient } from 'react-query';
 
 import createNewView from 'fetching/views/createNewView';
-import { defaultFetch } from 'fetching';
 import deleteViewColumn from 'fetching/views/deleteViewColumn';
 import EmptyView from 'components/views/EmptyView';
 import patchViewColumn from 'fetching/views/patchViewColumn';
 import postViewColumn from 'fetching/views/postViewColumn';
 import ViewRenameColumnDialog from '../ViewRenameColumnDialog';
+import { viewRowsResource } from 'api/viewRows';
 import { colIdFromFieldName, makeGridColDef } from './utils';
 import { SelectedViewColumn, ZetkinView } from 'types/views';
 import { VIEW_CONTENT_SOURCE, VIEW_DATA_TABLE_ERROR } from './constants';
@@ -22,7 +22,7 @@ import ViewColumnDialog, { AUTO_SAVE_TYPES } from 'components/views/ViewColumnDi
 import ViewDataTableColumnMenu, { ViewDataTableColumnMenuProps } from './ViewDataTableColumnMenu';
 import ViewDataTableFooter, { ViewDataTableFooterProps } from './ViewDataTableFooter';
 import ViewDataTableToolbar, { ViewDataTableToolbarProps } from './ViewDataTableToolbar';
-import { ZetkinPerson, ZetkinViewColumn, ZetkinViewRow } from 'types/zetkin';
+import { ZetkinViewColumn, ZetkinViewRow } from 'types/zetkin';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -96,39 +96,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
         },
     });
 
-    // TODO: Create mutation using new factory pattern
-    const addRowMutation = useMutation(async (person: ZetkinPerson) => {
-        const res = await defaultFetch(`/orgs/${orgId}/people/views/${view.id}/rows/${person.id}`, {
-            method: 'PUT',
-        });
-        const data = await res.json();
-        return data.data;
-    }, {
-        onSettled: (newRow, err, person : ZetkinPerson) => {
-            if (newRow) {
-                // Add created row directly to view, to avoid waiting for entire collection to reload
-                const rowsKey = ['view', viewId, 'rows'];
-                const prevRows: ZetkinViewRow[] = queryClient.getQueryData<ZetkinViewRow[]>(rowsKey) || [];
-                const allRows = prevRows.concat([newRow as ZetkinViewRow]);
-                queryClient.setQueryData(rowsKey, allRows);
-            }
-
-            // Store ID for highlighting the new row
-            setAddedId(person.id);
-
-            // Remove ID again after 2 seconds, unless the state has changed
-            setTimeout(() => {
-                setAddedId(curState => (curState == person.id)? 0 : curState);
-            }, 2000);
-
-            // Scroll (jump) to row after short delay
-            setTimeout(() => {
-                const gridApi = gridApiRef.current;
-                const rowIndex = gridApi.getRowIndex(person.id);
-                gridApi.scrollToIndexes({ rowIndex });
-            }, 200);
-        },
-    });
+    const addRowMutation = viewRowsResource(view.organization.id, viewId).useAdd();
 
     const onColumnCancel = () => {
         setColumnToConfigure(null);
@@ -274,7 +242,24 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
         },
         footer: {
             onRowAdd: person => {
-                addRowMutation.mutate(person);
+                addRowMutation.mutate(person.id, {
+                    onSettled: (newRow, err, personId: number) => {
+                        // Store ID for highlighting the new row
+                        setAddedId(personId);
+
+                        // Remove ID again after 2 seconds, unless the state has changed
+                        setTimeout(() => {
+                            setAddedId(curState => (curState == personId)? 0 : curState);
+                        }, 2000);
+
+                        // Scroll (jump) to row after short delay
+                        setTimeout(() => {
+                            const gridApi = gridApiRef.current;
+                            const rowIndex = gridApi.getRowIndex(personId);
+                            gridApi.scrollToIndexes({ rowIndex });
+                        }, 200);
+                    },
+                });
             },
             viewId,
         },
