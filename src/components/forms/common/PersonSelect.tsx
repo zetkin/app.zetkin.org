@@ -29,7 +29,7 @@ interface UsePersonSelectReturn {
         getOptionDisabled?: (option: ZetkinPerson) => boolean;
         getOptionLabel: (person: ZetkinPerson) => string;
         getOptionSelected: (option: ZetkinPerson, value: ZetkinPerson) => boolean;
-        getOptionValue: (person: ZetkinPerson) => unknown;
+        getOptionValue?: (person: ZetkinPerson) => unknown;
         inputRef: MutableRefObject<HTMLInputElement | undefined> | undefined;
         label: string | undefined;
         name: string;
@@ -155,6 +155,8 @@ const MUIOnlyPersonSelect: FunctionComponent<PersonSelectProps> = (props) => {
         inputRef,
         ...restProps
     } = autoCompleteProps;
+
+    delete restProps.getOptionValue;
 
     return (
         <MUIAutocomplete
