@@ -1,14 +1,15 @@
 import { Autocomplete as MUIAutocomplete } from '@material-ui/lab';
 import { Autocomplete as RFFAutocomplete } from 'mui-rff';
+import { TextField } from '@material-ui/core';
 import { useIntl } from 'react-intl';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
-import { Avatar, Box, TextField, Typography } from '@material-ui/core';
 import React, { FunctionComponent, MutableRefObject, ReactElement, useEffect, useState } from 'react';
 
 import getPeopleSearchResults from 'fetching/getPeopleSearchResults';
 import useDebounce from 'hooks/useDebounce';
 import { ZetkinPerson } from 'types/zetkin';
+import ZetkinPersonComponent from 'components/ZetkinPerson';
 
 
 interface UsePersonSelectProps {
@@ -116,23 +117,11 @@ const usePersonSelect: UsePersonSelect = ({
                 const extraLabel = getOptionExtraLabel? getOptionExtraLabel(person) : null;
 
                 return (
-                    <Box alignItems="center" display="flex">
-                        <Box m={ 1 }>
-                            <Avatar
-                                src={ `/api/orgs/${orgId}/people/${person.id}/avatar` }>
-                            </Avatar>
-                        </Box>
-                        <Box display="flex" flexDirection="column" justifyContent="center">
-                            <Typography>
-                                { `${ person.first_name } ${ person.last_name }` }
-                            </Typography>
-                            { extraLabel && (
-                                <Typography variant="caption">
-                                    { extraLabel }
-                                </Typography>
-                            ) }
-                        </Box>
-                    </Box>
+                    <ZetkinPersonComponent
+                        id={ person.id }
+                        name={ `${ person.first_name } ${ person.last_name }` }
+                        subtitle={ extraLabel }
+                    />
                 );
             },
             value: selectedPerson,
