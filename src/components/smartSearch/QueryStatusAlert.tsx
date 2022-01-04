@@ -24,7 +24,10 @@ const QueryStatusAlert: React.FunctionComponent<{
     return (
         <Alert
             action={
-                <Button color="inherit" onClick={ openDialog }>
+                <Button
+                    color="inherit"
+                    data-testid="QueryStatusAlert-actionButton"
+                    onClick={ openDialog }>
                     <Msg id={ ACTION_LABEL[status] } />
                 </Button>
             }

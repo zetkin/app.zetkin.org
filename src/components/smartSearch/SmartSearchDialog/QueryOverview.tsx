@@ -194,7 +194,7 @@ const QueryOverview = (
                             <Button color="primary" onClick={ onCloseDialog } variant="outlined">
                                 <Msg id="misc.smartSearch.buttonLabels.cancel"/>
                             </Button>
-                            <Button color="primary" onClick={ onSaveQuery } variant="contained">
+                            <Button color="primary" data-testid="QueryOverview-saveButton" onClick={ onSaveQuery } variant="contained">
                                 <Msg id="misc.smartSearch.buttonLabels.save"/>
                             </Button>
                         </>

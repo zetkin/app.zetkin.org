@@ -1,11 +1,8 @@
-import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { Dialog,  DialogContent } from '@material-ui/core';
-import { useMutation, useQueryClient } from 'react-query';
 
 import FilterEditor from './FilterEditor';
 import FilterGallery from './FilterGallery';
-import patchQuery from 'fetching/patchQuery';
 import QueryOverview from './QueryOverview';
 import StartsWith from '../StartsWith';
 import useSmartSearch from 'hooks/useSmartSearch';
@@ -13,9 +10,10 @@ import { ZetkinQuery } from 'types/zetkin';
 import { FILTER_TYPE, SelectedSmartSearchFilter, SmartSearchFilterWithId,
     ZetkinSmartSearchFilter } from 'types/smartSearch';
 
-interface SmartSearchDialog {
-    query?: ZetkinQuery;
+export interface SmartSearchDialogProps {
+    query?: ZetkinQuery | null;
     onDialogClose: () => void;
+    onSave: (query : Partial<ZetkinQuery>) => void;
     readOnly?: boolean;
 }
 
@@ -27,11 +25,8 @@ enum QUERY_DIALOG_STATE {
 }
 
 const SmartSearchDialog = (
-    { onDialogClose, query, readOnly }: SmartSearchDialog,
+    { onDialogClose, onSave, query, readOnly }: SmartSearchDialogProps,
 ) : JSX.Element => {
-    const queryClient = useQueryClient();
-    const { orgId, taskId } = useRouter().query;
-
     const {
         filtersWithIds: filterArray,
         filters,
@@ -48,10 +43,6 @@ const SmartSearchDialog = (
         isEmptyQuery ? QUERY_DIALOG_STATE.START_WITH : QUERY_DIALOG_STATE.PREVIEW,
     );
 
-    const taskMutation = useMutation(patchQuery(orgId as string, query?.id as number),{
-        onSettled: () => queryClient.invalidateQueries(['task', taskId]),
-    } );
-
     // event handlers for query overview
     const handleOpenFilterGallery = () => {
         setDialogState(QUERY_DIALOG_STATE.GALLERY);
@@ -66,8 +57,9 @@ const SmartSearchDialog = (
     };
 
     const handleSaveQuery = () => {
-        taskMutation.mutate({ filter_spec: filters });
-        onDialogClose();
+        onSave({
+            filter_spec: filters,
+        });
     };
 
     const handleDeleteFilter = (filter: SmartSearchFilterWithId) => {

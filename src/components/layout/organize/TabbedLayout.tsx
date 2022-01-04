@@ -6,6 +6,7 @@ import { FunctionComponent, ReactElement, useState } from 'react';
 
 import BreadcrumbTrail from '../../BreadcrumbTrail';
 import OrganizeSidebar from 'components/organize/OrganizeSidebar';
+import EllipsisMenu, { EllipsisMenuProps } from './EllipsisMenu';
 
 interface StyleProps {
     collapsed: boolean;
@@ -45,6 +46,7 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
 
 interface TabbedLayoutProps {
     actionButtons?: React.ReactElement | React.ReactElement[];
+    ellipsisMenuItems?: EllipsisMenuProps['items'];
     fixedHeight?: boolean;
     title?: string | ReactElement;
     subtitle?: string | ReactElement;
@@ -56,6 +58,7 @@ interface TabbedLayoutProps {
 const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
     children,
     actionButtons,
+    ellipsisMenuItems,
     fixedHeight,
     title,
     subtitle,
@@ -116,8 +119,13 @@ const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
                                             { subtitle }
                                         </Typography>
                                     </Box>
-                                    <Box>
-                                        { actionButtons }
+                                    <Box display="flex" flexDirection="row">
+                                        <Box>
+                                            { actionButtons }
+                                        </Box>
+                                        { !!ellipsisMenuItems?.length && (
+                                            <EllipsisMenu items={ ellipsisMenuItems }/>
+                                        ) }
                                     </Box>
                                 </Box>
                             </Collapse>

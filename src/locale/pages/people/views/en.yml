@@ -10,5 +10,9 @@ viewsList:
         created: Date created
         owner: Owner
 layout:
+    ellipsisMenu:
+        editQuery: Edit Smart Search query
+        makeDynamic: Convert to Smart Search view
+        makeStatic: Convert to static view
     jumpMenu:
         placeholder: Start typing to find view

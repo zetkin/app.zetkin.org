@@ -3,6 +3,7 @@ import test from '../../../fixtures/next';
 
 import KPD from '../../../mockData/orgs/KPD';
 import ReferendumSignatures from '../../../mockData/orgs/KPD/campaigns/ReferendumSignatures';
+import RosaLuxemburg from '../../../mockData/users/RosaLuxemburg';
 
 test.describe('Campaign action buttons', async () => {
 
@@ -44,12 +45,9 @@ test.describe('Campaign action buttons', async () => {
         const newTitle = 'Edited Title';
 
         test('allows users to edit campaign details', async ({ page, moxy, appUri }) => {
-            const removePatchTaskMock = await moxy.setMock('/orgs/1/campaigns/1', 'patch', {
+            const removePeopleSearchMock = await moxy.setMock('/orgs/1/search/person', 'post', {
                 data: {
-                    data: {
-                        ...ReferendumSignatures,
-                        title: newTitle,
-                    },
+                    data: [RosaLuxemburg],
                 },
             });
 
@@ -60,7 +58,7 @@ test.describe('Campaign action buttons', async () => {
             await page.click('data-testid=campaign-action-buttons-edit-campaign');
 
             await moxy.removeMock('/orgs/1/campaigns/1', 'get'); // Remove existing mock
-            const removeEditedTaskMock = await moxy.setMock('/orgs/1/campaigns/1', 'get', { // After editing task
+            const removeEditedCampaignMock = await moxy.setMock('/orgs/1/campaigns/1', 'get', { // After editing task
                 data: {
                     data: {
                         ...ReferendumSignatures,
@@ -69,17 +67,37 @@ test.describe('Campaign action buttons', async () => {
                 },
             });
 
-            // Edit task
+            // Edit title
             await page.fill('#title', newTitle);
+
+            // Set manager
+            await page.click('[name=manager_id]');
+            await page.fill('[name=manager_id]', 'Rosa');
+            await page.click('text="Rosa Luxemburg"');
+
+            // Submit the form
             await page.click('button > :text("Submit")');
 
             // Check that title changes on page
-            const taskTitle = page.locator('data-testid=page-title');
-            await expect(taskTitle).toContainText(newTitle);
+            const campaignTitle = page.locator('data-testid=page-title');
+            await expect(campaignTitle).toContainText(newTitle);
+
+            // Check that patch was made correctly
+            const { log } = await moxy.logRequests();
+            const patchRequest = log.find(req =>
+                req.method === 'PATCH' &&
+                req.path === '/v1/orgs/1/campaigns/1',
+            );
+
+            expect(patchRequest?.data).toMatchObject({
+                manager_id: RosaLuxemburg.id,
+                title: newTitle,
+            });
 
             // Clean up mocks
-            await removePatchTaskMock();
-            await removeEditedTaskMock();
+            await removeEditedCampaignMock();
+            await removePeopleSearchMock();
+
             // Reset campaign mock back to "pre edit" state
             await moxy.setMock('/orgs/1/campaigns/1', 'get', {
                 data: {
