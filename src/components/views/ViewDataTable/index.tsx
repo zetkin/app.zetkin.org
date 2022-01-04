@@ -161,7 +161,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
         filterable: false,
         headerName: ' ',
         renderCell: (params) => {
-            const url = `/api/orgs/1/people/${params.value}/avatar`;
+            const url = `/api/orgs/${orgId}/people/${params.value}/avatar`;
             return (
                 <img
                     alt="Avatar"
