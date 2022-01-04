@@ -10,6 +10,7 @@ import EditTextinPlace from 'components/EditTextInPlace';
 import getView from 'fetching/views/getView';
 import patchView from 'fetching/views/patchView';
 import TabbedLayout from './TabbedLayout';
+import ViewDeleteConfirmDialog from 'components/views/ViewDeleteConfirmDialog';
 import ViewJumpMenu from 'components/views/ViewJumpMenu';
 import ViewSmartSearchDialog from 'components/views/ViewSmartSearchDialog';
 import { ZetkinEllipsisMenuProps } from 'components/ZetkinEllipsisMenu';
@@ -21,6 +22,7 @@ const SingleViewLayout: FunctionComponent = ({ children }) => {
     const router = useRouter();
     const queryClient = useQueryClient();
     const { orgId, viewId } = router.query;
+    const [deleteViewDialogOpen, setDeleteViewDialogOpen] = useState(false);
     const [queryDialogOpen, setQueryDialogOpen] = useState(false);
     const viewQuery = useQuery(['view', viewId ], getView(orgId as string, viewId as string));
     const patchViewMutation = useMutation(patchView(orgId as string, viewId as string));
@@ -104,6 +106,12 @@ const SingleViewLayout: FunctionComponent = ({ children }) => {
         });
     }
 
+    ellipsisMenu.push({
+        id: 'delete',
+        label: intl.formatMessage({ id: 'pages.people.views.layout.ellipsisMenu.delete' }),
+        onSelect: () => setDeleteViewDialogOpen(true),
+    });
+
     return (
         <>
             <TabbedLayout
@@ -123,6 +131,9 @@ const SingleViewLayout: FunctionComponent = ({ children }) => {
                     orgId={ orgId as string }
                     view={ view }
                 />
+            ) }
+            { deleteViewDialogOpen && view && (
+                <ViewDeleteConfirmDialog onClose={ () => setDeleteViewDialogOpen(false) } view={ view } />
             ) }
         </>
     );
