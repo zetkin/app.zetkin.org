@@ -5,6 +5,7 @@ import { createApiFetch } from 'utils/apiFetch';
 import { NATIVE_PERSON_FIELDS } from 'types/views';
 import postView from 'fetching/views/postView';
 import postViewColumn from 'fetching/views/postViewColumn';
+import putViewRow from 'fetching/views/putViewRow';
 import { getBrowserLanguage, getMessages } from 'utils/locale';
 
 export default async (
@@ -14,6 +15,7 @@ export default async (
     const {
         query: { orgId },
         method,
+        body,
     } = req;
 
     // Return error if method other than POST
@@ -49,6 +51,14 @@ export default async (
             title: messages['misc.nativePersonFields.last_name'],
             type: COLUMN_TYPE.PERSON_FIELD,
         });
+
+        const { rows } = body;
+        if (rows.length) {
+            const rowsPutMethod = putViewRow(orgId as string, newViewId, apiFetch);
+            for await (const personId of rows) {
+                await rowsPutMethod(personId);
+            }
+        }
 
         res.status(200).json({ data: newView });
     }

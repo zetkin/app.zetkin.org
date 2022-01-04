@@ -24,6 +24,7 @@ columnDialog:
         survey_response: Response to survey question
         survey_submitted: Date of survey submission
 createColumn: New column
+createFromSelection: Create view from selection
 columnMenu:
     configure: Configure column
     delete: Delete column
