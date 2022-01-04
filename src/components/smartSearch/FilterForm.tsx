@@ -52,6 +52,7 @@ const FilterForm = (
                             </Button>
                             <Button
                                 color="primary"
+                                data-testid="FilterForm-saveButton"
                                 disabled={ disableSubmit }
                                 type="submit"
                                 variant="contained">

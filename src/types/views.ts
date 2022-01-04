@@ -1,4 +1,5 @@
 import { ZetkinOrganization } from './zetkin';
+import { ZetkinQuery } from './smartSearch';
 
 
 export interface ZetkinView {
@@ -6,6 +7,7 @@ export interface ZetkinView {
     title: string;
     description: string;
     created: string; // ISO Datetime
+    content_query: null | Pick<ZetkinQuery, 'id' | 'filter_spec'>;
     owner: {
         id: number;
         name: string;

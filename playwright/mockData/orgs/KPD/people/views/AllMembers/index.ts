@@ -3,6 +3,7 @@ import RosaLuxemburg from '../../../../../users/RosaLuxemburg';
 import { ZetkinView } from '../../../../../../../src/types/zetkin';
 
 const AllMembers: ZetkinView = {
+    content_query: null,
     created: '2021-11-21T12:53:15',
     description: 'All members in the KPD',
     id: 1,

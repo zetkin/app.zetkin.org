@@ -4,9 +4,11 @@ import Head from 'next/head';
 import { useIntl } from 'react-intl';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
+import { useMutation, useQueryClient } from 'react-query';
 
 import getOrg from 'fetching/getOrg';
 import { PageWithLayout } from 'types';
+import patchQuery from 'fetching/patchQuery';
 import { QUERY_STATUS } from 'types/smartSearch';
 import QueryStatusAlert from 'components/smartSearch/QueryStatusAlert';
 import { scaffold } from 'utils/next';
@@ -70,6 +72,7 @@ const getQueryStatus = (
 
 const TaskAssigneesPage: PageWithLayout = () => {
     const intl = useIntl();
+    const queryClient = useQueryClient();
 
     const { taskId, orgId } = useRouter().query;
     const { useQuery: useTaskQuery, useAssignedTasksQuery } = taskResource(orgId as string, taskId as string);
@@ -77,6 +80,10 @@ const TaskAssigneesPage: PageWithLayout = () => {
     const assignedTasksQuery = useAssignedTasksQuery();
     const assignedTasks = assignedTasksQuery?.data;
     const query = task?.target;
+
+    const queryMutation = useMutation(patchQuery(orgId as string, query?.id as number), {
+        onSettled: () => queryClient.invalidateQueries(['task', taskId]),
+    });
 
     const [dialogOpen, setDialogOpen] = useState(false);
     const handleDialogClose = () => setDialogOpen(false);
@@ -111,6 +118,10 @@ const TaskAssigneesPage: PageWithLayout = () => {
             { dialogOpen &&
             <SmartSearchDialog
                 onDialogClose={ handleDialogClose }
+                onSave={ (query) => {
+                    queryMutation.mutate(query);
+                    setDialogOpen(false);
+                } }
                 query={ query }
                 readOnly={ readOnly }
             /> }

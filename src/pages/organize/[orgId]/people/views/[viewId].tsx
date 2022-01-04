@@ -71,7 +71,7 @@ const SingleViewPage: PageWithLayout<SingleViewPageProps> = ({ orgId, viewId }) 
                     <ViewDataTable
                         columns={ colsQuery.data }
                         rows={ rowsQuery.data }
-                        viewId={ viewId }
+                        view={ viewQuery.data }
                     />
                 </>
             ) }
