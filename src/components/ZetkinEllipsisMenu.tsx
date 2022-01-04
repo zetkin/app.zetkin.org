@@ -3,7 +3,7 @@ import { Button, Menu, MenuItem } from '@material-ui/core';
 import { FunctionComponent, useState } from 'react';
 
 
-export interface EllipsisMenuProps {
+export interface ZetkinEllipsisMenuProps {
     items: {
         id?: string;
         label: string;
@@ -11,7 +11,7 @@ export interface EllipsisMenuProps {
     }[];
 }
 
-const EllipsisMenu: FunctionComponent<EllipsisMenuProps> = ({ items }) => {
+const ZetkinEllipsisMenu: FunctionComponent<ZetkinEllipsisMenuProps> = ({ items }) => {
     const [menuActivator, setMenuActivator] = useState<null | HTMLElement>(null);
 
     return (
@@ -43,4 +43,4 @@ const EllipsisMenu: FunctionComponent<EllipsisMenuProps> = ({ items }) => {
     );
 };
 
-export default EllipsisMenu;
+export default ZetkinEllipsisMenu;

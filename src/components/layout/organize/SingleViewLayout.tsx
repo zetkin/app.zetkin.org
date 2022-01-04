@@ -7,12 +7,12 @@ import { useMutation, useQuery, useQueryClient } from 'react-query';
 
 import { defaultFetch } from 'fetching';
 import EditTextinPlace from 'components/EditTextInPlace';
-import { EllipsisMenuProps } from './EllipsisMenu';
 import getView from 'fetching/views/getView';
 import patchView from 'fetching/views/patchView';
 import TabbedLayout from './TabbedLayout';
 import ViewJumpMenu from 'components/views/ViewJumpMenu';
 import ViewSmartSearchDialog from 'components/views/ViewSmartSearchDialog';
+import { ZetkinEllipsisMenuProps } from 'components/ZetkinEllipsisMenu';
 import ZetkinQuery from 'components/ZetkinQuery';
 
 
@@ -85,7 +85,7 @@ const SingleViewLayout: FunctionComponent = ({ children }) => {
         </>
     );
 
-    const ellipsisMenu: EllipsisMenuProps['items'] = [];
+    const ellipsisMenu: ZetkinEllipsisMenuProps['items'] = [];
 
     if (view?.content_query) {
         ellipsisMenu.push({
