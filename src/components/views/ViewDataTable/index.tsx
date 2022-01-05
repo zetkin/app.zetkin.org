@@ -1,10 +1,9 @@
 import { Alert } from '@material-ui/lab';
-import { FunctionComponent } from 'react';
 import NProgress from 'nprogress';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
 import { DataGridPro, GridColDef, useGridApiRef } from '@mui/x-data-grid-pro';
 import { FormattedMessage, useIntl } from 'react-intl';
+import { FunctionComponent, useState } from 'react';
 import { makeStyles, Snackbar } from '@material-ui/core';
 import { useMutation, useQueryClient } from 'react-query';
 
@@ -177,11 +176,12 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
 
     const onRowsRemove = () => {
         // TODO: are you sure?
-        // TODO: snackbar
-        // TODO: some failed snackbar
         setWaiting(true);
         removeRowsMutation.mutate(selection, {
-            onSettled: () => setWaiting(false),
+            onSettled: (res) => {
+                setWaiting(false);
+                if (res?.failed?.length) setError(VIEW_DATA_TABLE_ERROR.REMOVE_ROWS);
+            },
         });
     };
 

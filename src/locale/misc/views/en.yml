@@ -56,6 +56,7 @@ dataTableErrors:
     create_column: There was an error creating the column
     delete_column: There was an error deleting the column
     modify_column: There was an error editing the column
+    remove_rows: There was an error removing one or more rows
 editViewTitleAlert:
     success: Updated title!
     error: Error. Title not updated
