@@ -1,26 +1,19 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import nProgress from 'nprogress';
 import { QueryState } from 'react-query/types/core/query';
-import { QueryClient, useMutation, UseMutationOptions, UseMutationResult, useQuery, useQueryClient, UseQueryResult } from 'react-query';
+import {
+    useMutation,
+    UseMutationOptions,
+    UseMutationResult,
+    useQuery,
+    useQueryClient,
+    UseQueryResult,
+} from 'react-query';
 
-import APIError from 'utils/apiError';
+import { createDeleteHandler } from './createDeleteHandler';
 import { defaultFetch } from 'fetching';
 import handleResponseData from './handleResponseData';
+import { makeUseMutationOptions } from './makeUseMutationOptions';
 import { ScaffoldedContext } from 'utils/next';
-
-
-export const makeUseMutationOptions = <Input, Result>(
-    queryClient: QueryClient,
-    key: string[],
-    mutationOptions?: UseMutationOptions<Result, unknown, Input, unknown>,
-) => {
-    return {
-        onMutate: () => nProgress.start(),
-        onSettled: async () => nProgress.done(),
-        onSuccess: async () => queryClient.invalidateQueries(key),
-        ...mutationOptions,
-    };
-};
 
 export const createUseQuery = <Result>(
     key: string[],
@@ -76,17 +69,7 @@ export const createUseMutationDelete = (
     fetchOptions?: RequestInit,
     mutationOptions?: Omit<UseMutationOptions<null, unknown, void, unknown>, 'mutationFn'>,
 ): () => UseMutationResult<null, unknown, void, unknown> => {
-    const handler = async (): Promise<null> => {
-        const res = await defaultFetch(url, {
-            method: 'DELETE',
-            ...fetchOptions,
-
-        });
-        if (!res.ok) {
-            throw new APIError('DELETE', res.url);
-        }
-        return null;
-    };
+    const handler = createDeleteHandler(url, fetchOptions);
 
     return () => {
         const queryClient = useQueryClient();
