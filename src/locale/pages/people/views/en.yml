@@ -20,4 +20,5 @@ layout:
     deleteDialog:
         title: Delete view
         warningText: Deleting this view is a permanent action which can't be undone. Are you sure you want to continue?
+        error: There was an error deleting the view
             
