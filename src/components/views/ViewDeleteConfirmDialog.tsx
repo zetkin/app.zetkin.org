@@ -37,7 +37,10 @@ const ViewDeleteConfirmDialog: React.FunctionComponent<ViewDeleteConfirmDialogPr
                     },
                 });
             } }>
-                <SubmitCancelButtons onCancel={ () => onClose() }/>
+                <SubmitCancelButtons
+                    onCancel={ () => onClose() }
+                    submitDisabled={ deleteMutation.isLoading || deleteMutation.isSuccess }
+                />
             </form>
         </ZetkinDialog>
     );
