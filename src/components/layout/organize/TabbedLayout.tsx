@@ -13,6 +13,9 @@ interface StyleProps {
 }
 
 const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
+    main: {
+        overflowX: 'hidden',
+    },
     root: {
         [theme.breakpoints.down('xs')]: {
             paddingTop: '3.5rem',
@@ -147,7 +150,7 @@ const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
                         </Collapse>
                     </Box>
                     { /* Page Content */ }
-                    <Box component="main" flexGrow={ 1 } minHeight={ 0 } p={ fixedHeight ? 0 : 3 } position="relative" role="tabpanel">
+                    <Box className={ classes.main } component="main" flexGrow={ 1 } minHeight={ 0 } p={ fixedHeight ? 0 : 3 } position="relative" role="tabpanel">
                         { children }
                     </Box>
                 </Box>
