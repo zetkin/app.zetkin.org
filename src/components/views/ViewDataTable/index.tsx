@@ -97,6 +97,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
     });
 
     const addRowMutation = viewRowsResource(view.organization.id, viewId).useAdd();
+    const removeRowsMutation = viewRowsResource(view.organization.id, viewId).useRemoveMany();
 
     const onColumnCancel = () => {
         setColumnToConfigure(null);
@@ -172,6 +173,19 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
         onSettled: () => queryClient.invalidateQueries(['views', orgId]),
         onSuccess: (newView) => router.push(`/organize/${orgId}/people/views/${newView.id}`),
     });
+
+    const onRowsRemove = () => {
+        // TODO: are you sure?
+        // TODO: disable toolbar while executing
+
+        removeRowsMutation.mutate(selection, {
+            onSettled: () => {
+                // TODO: snackbar
+                // TODO: some failed snackbar
+                // console.log(res?.failed);
+            },
+        });
+    };
 
     const onViewCreate = () => {
         createNewViewMutation.mutate(selection);
@@ -265,6 +279,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
         },
         toolbar: {
             onColumnCreate,
+            onRowsRemove,
             onViewCreate,
             selection,
         },

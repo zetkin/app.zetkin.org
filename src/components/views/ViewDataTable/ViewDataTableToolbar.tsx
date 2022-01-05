@@ -5,12 +5,16 @@ import { Box, Button, Slide } from '@material-ui/core';
 
 export interface ViewDataTableToolbarProps {
     onColumnCreate: () => void;
+    onRowsRemove: () => void;
     onViewCreate: () => void;
     selection: number[];
 }
 
+// TODO: disable on in progress
+// TODO: disable delete on smart search views
 const ViewDataTableToolbar: React.FunctionComponent<ViewDataTableToolbarProps> = ({
     onColumnCreate,
+    onRowsRemove,
     onViewCreate,
     selection,
 }) => {
@@ -27,7 +31,7 @@ const ViewDataTableToolbar: React.FunctionComponent<ViewDataTableToolbarProps> =
             <Slide direction="left" in={ !!selection.length } timeout={ 100 }>
                 <Button
                     data-testid="ViewDataTableToolbar-removeFromSelection"
-                    onClick={ onViewCreate }
+                    onClick={ onRowsRemove }
                     startIcon={ <RemoveCircleOutline /> }>
                     <FormattedMessage id="misc.views.removeFromSelection" values={{ numSelected: selection.length }} />
                 </Button>
