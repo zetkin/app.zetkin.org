@@ -1,17 +1,21 @@
 import { Autocomplete as MUIAutocomplete } from '@material-ui/lab';
 import { Autocomplete as RFFAutocomplete } from 'mui-rff';
+import { TextField } from '@material-ui/core';
 import { useIntl } from 'react-intl';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
-import { Avatar, Box, TextField, Typography } from '@material-ui/core';
-import React, { FunctionComponent, ReactElement, useEffect, useState } from 'react';
+import React, { FunctionComponent, MutableRefObject, ReactElement, useEffect, useState } from 'react';
 
 import getPeopleSearchResults from 'fetching/getPeopleSearchResults';
 import useDebounce from 'hooks/useDebounce';
 import { ZetkinPerson } from 'types/zetkin';
+import ZetkinPersonComponent from 'components/ZetkinPerson';
 
 
 interface UsePersonSelectProps {
+    getOptionDisabled?: (option: ZetkinPerson) => boolean;
+    getOptionExtraLabel?: (option: ZetkinPerson) => string;
+    inputRef?: MutableRefObject<HTMLInputElement | undefined> | undefined;
     label?: string;
     name?: string;
     onChange: (person: ZetkinPerson) => void;
@@ -22,9 +26,11 @@ interface UsePersonSelectProps {
 interface UsePersonSelectReturn {
     autoCompleteProps: {
         filterOptions: (options: ZetkinPerson[]) => ZetkinPerson[];
+        getOptionDisabled?: (option: ZetkinPerson) => boolean;
         getOptionLabel: (person: ZetkinPerson) => string;
         getOptionSelected: (option: ZetkinPerson, value: ZetkinPerson) => boolean;
-        getOptionValue: (person: ZetkinPerson) => unknown;
+        getOptionValue?: (person: ZetkinPerson) => unknown;
+        inputRef: MutableRefObject<HTMLInputElement | undefined> | undefined;
         label: string | undefined;
         name: string;
         noOptionsText: string;
@@ -42,6 +48,9 @@ type UsePersonSelect = (props: UsePersonSelectProps) => UsePersonSelectReturn;
 type PersonSelectProps = UsePersonSelectProps;
 
 const usePersonSelect: UsePersonSelect = ({
+    getOptionDisabled,
+    getOptionExtraLabel,
+    inputRef,
     label,
     name,
     onChange,
@@ -88,9 +97,11 @@ const usePersonSelect: UsePersonSelect = ({
     return {
         autoCompleteProps: {
             filterOptions: options => options,
+            getOptionDisabled,
             getOptionLabel: (person: ZetkinPerson) => person.first_name? `${person.first_name} ${person.last_name}` : '',
             getOptionSelected: (option: ZetkinPerson, value: ZetkinPerson) => option?.id == value?.id,
             getOptionValue: (person: ZetkinPerson) => person.id || null,
+            inputRef,
             label,
             name: name || '',
             noOptionsText: searchLabel,
@@ -102,18 +113,17 @@ const usePersonSelect: UsePersonSelect = ({
             },
             options: personOptions,
             placeholder,
-            renderOption: (person: ZetkinPerson) => (
-                <Box alignItems="center" display="flex">
-                    <Box m={ 1 }>
-                        <Avatar
-                            src={ `/api/orgs/${orgId}/people/${person.id}/avatar` }>
-                        </Avatar>
-                    </Box>
-                    <Typography>
-                        { `${ person.first_name } ${ person.last_name }` }
-                    </Typography>
-                </Box>
-            ),
+            renderOption: (person: ZetkinPerson) => {
+                const extraLabel = getOptionExtraLabel? getOptionExtraLabel(person) : null;
+
+                return (
+                    <ZetkinPersonComponent
+                        id={ person.id }
+                        name={ `${ person.first_name } ${ person.last_name }` }
+                        subtitle={ extraLabel }
+                    />
+                );
+            },
             value: selectedPerson,
         },
     };
@@ -142,8 +152,11 @@ const MUIOnlyPersonSelect: FunctionComponent<PersonSelectProps> = (props) => {
     const {
         name,
         placeholder,
+        inputRef,
         ...restProps
     } = autoCompleteProps;
+
+    delete restProps.getOptionValue;
 
     return (
         <MUIAutocomplete
@@ -154,6 +167,7 @@ const MUIOnlyPersonSelect: FunctionComponent<PersonSelectProps> = (props) => {
                     inputProps={{
                         ...params.inputProps,
                     }}
+                    inputRef={ inputRef }
                     name={ name }
                     placeholder={ placeholder }
                     variant="outlined"

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import nProgress from 'nprogress';
 import { QueryState } from 'react-query/types/core/query';
 import { QueryClient, useMutation, UseMutationOptions, UseMutationResult, useQuery, useQueryClient, UseQueryResult } from 'react-query';
@@ -8,7 +9,7 @@ import handleResponseData from './handleResponseData';
 import { ScaffoldedContext } from 'utils/next';
 
 
-const makeUseMutationOptions = <Input, Result>(
+export const makeUseMutationOptions = <Input, Result>(
     queryClient: QueryClient,
     key: string[],
     mutationOptions?: UseMutationOptions<Result, unknown, Input, unknown>,
