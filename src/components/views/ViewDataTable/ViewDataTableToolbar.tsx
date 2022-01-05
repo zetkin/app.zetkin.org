@@ -1,9 +1,9 @@
 import { FormattedMessage } from 'react-intl';
 import { Add, Launch, RemoveCircleOutline } from '@material-ui/icons';
-import { Box, Button, Slide } from '@material-ui/core';
-
+import { Box, Button, Slide, Tooltip } from '@material-ui/core';
 
 export interface ViewDataTableToolbarProps {
+    isSmartSearch: boolean;
     onColumnCreate: () => void;
     onRowsRemove: () => void;
     onViewCreate: () => void;
@@ -11,8 +11,8 @@ export interface ViewDataTableToolbarProps {
 }
 
 // TODO: disable on in progress
-// TODO: disable delete on smart search views
 const ViewDataTableToolbar: React.FunctionComponent<ViewDataTableToolbarProps> = ({
+    isSmartSearch,
     onColumnCreate,
     onRowsRemove,
     onViewCreate,
@@ -29,12 +29,17 @@ const ViewDataTableToolbar: React.FunctionComponent<ViewDataTableToolbarProps> =
                 </Button>
             </Slide>
             <Slide direction="left" in={ !!selection.length } timeout={ 100 }>
-                <Button
-                    data-testid="ViewDataTableToolbar-removeFromSelection"
-                    onClick={ onRowsRemove }
-                    startIcon={ <RemoveCircleOutline /> }>
-                    <FormattedMessage id="misc.views.removeFromSelection" values={{ numSelected: selection.length }} />
-                </Button>
+                <Tooltip title="Smart search views do not currently support removing rows">
+                    <span>
+                        <Button
+                            data-testid="ViewDataTableToolbar-removeFromSelection"
+                            disabled={ isSmartSearch }
+                            onClick={ onRowsRemove }
+                            startIcon={ <RemoveCircleOutline /> }>
+                            <FormattedMessage id="misc.views.removeFromSelection" values={{ numSelected: selection.length }} />
+                        </Button>
+                    </span>
+                </Tooltip>
             </Slide>
             <Button
                 data-testid="ViewDataTableToolbar-createColumn"

@@ -179,11 +179,11 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
         // TODO: disable toolbar while executing
 
         removeRowsMutation.mutate(selection, {
-            onSettled: () => {
-                // TODO: snackbar
-                // TODO: some failed snackbar
-                // console.log(res?.failed);
-            },
+            //onSettled: (res) => {
+            // TODO: snackbar
+            // TODO: some failed snackbar
+            // console.log(res?.failed);
+            //},
         });
     };
 
@@ -278,6 +278,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
             viewId,
         },
         toolbar: {
+            isSmartSearch: !!view.content_query,
             onColumnCreate,
             onRowsRemove,
             onViewCreate,
