@@ -1,11 +1,11 @@
 import { Alert } from '@material-ui/lab';
 import { FunctionComponent } from 'react';
 import NProgress from 'nprogress';
-import { Snackbar } from '@material-ui/core';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
+import { DataGridPro, GridColDef, useGridApiRef } from '@mui/x-data-grid-pro';
 import { FormattedMessage, useIntl } from 'react-intl';
+import { makeStyles, Snackbar } from '@material-ui/core';
 import { useMutation, useQueryClient } from 'react-query';
 
 import createNewView from 'fetching/views/createNewView';
@@ -14,14 +14,30 @@ import EmptyView from 'components/views/EmptyView';
 import patchViewColumn from 'fetching/views/patchViewColumn';
 import postViewColumn from 'fetching/views/postViewColumn';
 import ViewRenameColumnDialog from '../ViewRenameColumnDialog';
+import { viewRowsResource } from 'api/viewRows';
 import { colIdFromFieldName, makeGridColDef } from './utils';
 import { SelectedViewColumn, ZetkinView } from 'types/views';
 import { VIEW_CONTENT_SOURCE, VIEW_DATA_TABLE_ERROR } from './constants';
 import ViewColumnDialog, { AUTO_SAVE_TYPES } from 'components/views/ViewColumnDialog';
 import ViewDataTableColumnMenu, { ViewDataTableColumnMenuProps } from './ViewDataTableColumnMenu';
+import ViewDataTableFooter, { ViewDataTableFooterProps } from './ViewDataTableFooter';
 import ViewDataTableToolbar, { ViewDataTableToolbarProps } from './ViewDataTableToolbar';
 import { ZetkinViewColumn, ZetkinViewRow } from 'types/zetkin';
 
+
+const useStyles = makeStyles((theme) => ({
+    '@keyframes addedRowAnimation': {
+        '0%': {
+            backgroundColor: theme.palette.success.main,
+        },
+        '100%': {
+            backgroundColor: 'transparent',
+        },
+    },
+    addedRow: {
+        animation: '$addedRowAnimation 2s',
+    },
+}));
 
 interface ViewDataTableProps {
     columns: ZetkinViewColumn[];
@@ -31,6 +47,9 @@ interface ViewDataTableProps {
 
 const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, view }) => {
     const intl = useIntl();
+    const classes = useStyles();
+    const gridApiRef = useGridApiRef();
+    const [addedId, setAddedId] = useState(0);
     const [columnToConfigure, setColumnToConfigure] = useState<SelectedViewColumn | null>(null);
     const [columnToRename, setColumnToRename] = useState<ZetkinViewColumn | null>(null);
     const [selection, setSelection] = useState<number[]>([]);
@@ -76,6 +95,8 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
             queryClient.setQueryData(colsKey, cols?.filter(col => col.id != colId));
         },
     });
+
+    const addRowMutation = viewRowsResource(view.organization.id, viewId).useAdd();
 
     const onColumnCancel = () => {
         setColumnToConfigure(null);
@@ -203,6 +224,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
 
     const componentsProps: {
         columnMenu: ViewDataTableColumnMenuProps;
+        footer: ViewDataTableFooterProps;
         toolbar: ViewDataTableToolbarProps;
     } = {
         columnMenu: {
@@ -218,6 +240,29 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
                 return false;
             },
         },
+        footer: {
+            onRowAdd: person => {
+                addRowMutation.mutate(person.id, {
+                    onSettled: (newRow, err, personId: number) => {
+                        // Store ID for highlighting the new row
+                        setAddedId(personId);
+
+                        // Remove ID again after 2 seconds, unless the state has changed
+                        setTimeout(() => {
+                            setAddedId(curState => (curState == personId)? 0 : curState);
+                        }, 2000);
+
+                        // Scroll (jump) to row after short delay
+                        setTimeout(() => {
+                            const gridApi = gridApiRef.current;
+                            const rowIndex = gridApi.getRowIndex(personId);
+                            gridApi.scrollToIndexes({ rowIndex });
+                        }, 200);
+                    },
+                });
+            },
+            viewId,
+        },
         toolbar: {
             onColumnCreate,
             onViewCreate,
@@ -231,15 +276,18 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
     return (
         <>
             <DataGridPro
+                apiRef={ gridApiRef }
                 autoHeight={ empty }
                 checkboxSelection={ true }
                 columns={ gridColumns }
                 components={{
                     ColumnMenu: ViewDataTableColumnMenu,
+                    Footer: ViewDataTableFooter,
                     Toolbar: ViewDataTableToolbar,
                 }}
                 componentsProps={ componentsProps }
-                hideFooter={ true }
+                getRowClassName={ params => (params.id == addedId)? classes.addedRow : '' }
+                hideFooter={ empty || contentSource == VIEW_CONTENT_SOURCE.DYNAMIC }
                 localeText={{
                     noRowsLabel: intl.formatMessage({ id: `misc.views.empty.notice.${contentSource}` }),
                 }}
