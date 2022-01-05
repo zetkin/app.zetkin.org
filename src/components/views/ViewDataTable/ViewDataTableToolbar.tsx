@@ -3,6 +3,7 @@ import { Add, Launch, RemoveCircleOutline } from '@material-ui/icons';
 import { Box, Button, Slide, Tooltip } from '@material-ui/core';
 
 export interface ViewDataTableToolbarProps {
+    disabled: boolean;
     isSmartSearch: boolean;
     onColumnCreate: () => void;
     onRowsRemove: () => void;
@@ -10,8 +11,8 @@ export interface ViewDataTableToolbarProps {
     selection: number[];
 }
 
-// TODO: disable on in progress
 const ViewDataTableToolbar: React.FunctionComponent<ViewDataTableToolbarProps> = ({
+    disabled,
     isSmartSearch,
     onColumnCreate,
     onRowsRemove,
@@ -23,17 +24,18 @@ const ViewDataTableToolbar: React.FunctionComponent<ViewDataTableToolbarProps> =
             <Slide direction="left" in={ !!selection.length } timeout={ 150 }>
                 <Button
                     data-testid="ViewDataTableToolbar-createFromSelection"
+                    disabled={ disabled }
                     onClick={ onViewCreate }
                     startIcon={ <Launch/> }>
                     <FormattedMessage id="misc.views.createFromSelection" />
                 </Button>
             </Slide>
             <Slide direction="left" in={ !!selection.length } timeout={ 100 }>
-                <Tooltip title="Smart search views do not currently support removing rows">
+                <Tooltip title={ isSmartSearch ? 'Smart search views do not currently support removing rows' : '' }>
                     <span>
                         <Button
                             data-testid="ViewDataTableToolbar-removeFromSelection"
-                            disabled={ isSmartSearch }
+                            disabled={ isSmartSearch || disabled }
                             onClick={ onRowsRemove }
                             startIcon={ <RemoveCircleOutline /> }>
                             <FormattedMessage id="misc.views.removeFromSelection" values={{ numSelected: selection.length }} />
@@ -43,6 +45,7 @@ const ViewDataTableToolbar: React.FunctionComponent<ViewDataTableToolbarProps> =
             </Slide>
             <Button
                 data-testid="ViewDataTableToolbar-createColumn"
+                disabled={ disabled }
                 onClick={ onColumnCreate }
                 startIcon={ <Add /> }>
                 <FormattedMessage id="misc.views.createColumn" />

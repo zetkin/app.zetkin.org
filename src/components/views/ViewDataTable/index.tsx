@@ -54,6 +54,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
     const [columnToRename, setColumnToRename] = useState<ZetkinViewColumn | null>(null);
     const [selection, setSelection] = useState<number[]>([]);
     const [error, setError] = useState<VIEW_DATA_TABLE_ERROR>();
+    const [waiting, setWaiting] = useState(false);
     const router = useRouter();
     const { orgId } = router.query;
     const queryClient = useQueryClient();
@@ -176,14 +177,11 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
 
     const onRowsRemove = () => {
         // TODO: are you sure?
-        // TODO: disable toolbar while executing
-
+        // TODO: snackbar
+        // TODO: some failed snackbar
+        setWaiting(true);
         removeRowsMutation.mutate(selection, {
-            //onSettled: (res) => {
-            // TODO: snackbar
-            // TODO: some failed snackbar
-            // console.log(res?.failed);
-            //},
+            onSettled: () => setWaiting(false),
         });
     };
 
@@ -278,6 +276,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
             viewId,
         },
         toolbar: {
+            disabled: waiting,
             isSmartSearch: !!view.content_query,
             onColumnCreate,
             onRowsRemove,
