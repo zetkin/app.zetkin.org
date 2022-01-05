@@ -132,8 +132,8 @@ const SingleViewLayout: FunctionComponent = ({ children }) => {
                     view={ view }
                 />
             ) }
-            { deleteViewDialogOpen && view && (
-                <ViewDeleteConfirmDialog onClose={ () => setDeleteViewDialogOpen(false) } view={ view } />
+            { view && (
+                <ViewDeleteConfirmDialog onClose={ () => setDeleteViewDialogOpen(false) } open={ deleteViewDialogOpen } view={ view } />
             ) }
         </>
     );
