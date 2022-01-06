@@ -1,5 +1,4 @@
-import { ConfirmContext } from 'components/ConfirmProvider';
-import { useContext } from 'react';
+import useOverlay from 'hooks/useOverlay';
 import { Add, Launch, RemoveCircleOutline } from '@material-ui/icons';
 import { Box, Button, Slide, Tooltip } from '@material-ui/core';
 import { FormattedMessage, useIntl } from 'react-intl';
@@ -22,15 +21,14 @@ const ViewDataTableToolbar: React.FunctionComponent<ViewDataTableToolbarProps> =
     selection,
 }) => {
     const intl = useIntl();
-    const confirm = useContext(ConfirmContext);
+    const { showConfirm } = useOverlay();
 
     const onClickRemoveRows = () =>{
-        confirm.setConfirmProps({
+        showConfirm({
             actionText: intl.formatMessage({ id: 'misc.views.removeDialog.action' }),
             onConfirm: onRowsRemove,
             title: intl.formatMessage({ id: 'misc.views.removeDialog.title' }),
         });
-        confirm.setOpen(true);
     };
     return (
         <Box display="flex" justifyContent="flex-end">
