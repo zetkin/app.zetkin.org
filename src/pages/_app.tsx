@@ -16,6 +16,7 @@ import { ThemeProvider } from '@material-ui/core/styles';
 import { useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
+import { ConfirmProvider } from '../components/ConfirmProvider';
 import { LocalTimeToJsonPlugin } from '../utils/dateUtils';
 import { PageWithLayout } from '../types';
 import theme from '../theme';
@@ -77,7 +78,9 @@ function MyApp({ Component, pageProps } : AppProps) : JSX.Element {
                         <QueryClientProvider client={ queryClient }>
                             <Hydrate state={ dehydratedState }>
                                 <CssBaseline />
-                                { getLayout(<Component { ...restProps } />, restProps) }
+                                <ConfirmProvider>
+                                    { getLayout(<Component { ...restProps } />, restProps) }
+                                </ConfirmProvider>
                             </Hydrate>
                             <ReactQueryDevtools initialIsOpen={ false } />
                         </QueryClientProvider>

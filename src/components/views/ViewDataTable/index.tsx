@@ -3,10 +3,11 @@ import NProgress from 'nprogress';
 import { useRouter } from 'next/router';
 import { DataGridPro, GridColDef, useGridApiRef } from '@mui/x-data-grid-pro';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { FunctionComponent, useState } from 'react';
+import { FunctionComponent, useContext, useState } from 'react';
 import { makeStyles, Snackbar } from '@material-ui/core';
 import { useMutation, useQueryClient } from 'react-query';
 
+import { ConfirmContext } from 'components/ConfirmProvider';
 import createNewView from 'fetching/views/createNewView';
 import deleteViewColumn from 'fetching/views/deleteViewColumn';
 import EmptyView from 'components/views/EmptyView';
@@ -22,7 +23,6 @@ import ViewDataTableColumnMenu, { ViewDataTableColumnMenuProps } from './ViewDat
 import ViewDataTableFooter, { ViewDataTableFooterProps } from './ViewDataTableFooter';
 import ViewDataTableToolbar, { ViewDataTableToolbarProps } from './ViewDataTableToolbar';
 import { ZetkinViewColumn, ZetkinViewRow } from 'types/zetkin';
-
 
 const useStyles = makeStyles((theme) => ({
     '@keyframes addedRowAnimation': {
@@ -58,6 +58,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
     const { orgId } = router.query;
     const queryClient = useQueryClient();
     const viewId = view.id.toString();
+    const confirm = useContext(ConfirmContext);
 
     const addColumnMutation = useMutation(postViewColumn(orgId as string, viewId), {
         onError: () => {
@@ -175,14 +176,20 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
     });
 
     const onRowsRemove = () => {
-        // TODO: are you sure?
-        setWaiting(true);
-        removeRowsMutation.mutate(selection, {
-            onSettled: (res) => {
-                setWaiting(false);
-                if (res?.failed?.length) setError(VIEW_DATA_TABLE_ERROR.REMOVE_ROWS);
+        confirm.setConfirmProps({
+            actionText: intl.formatMessage({ id: 'misc.views.removeDialog.action' }),
+            onConfirm: () => {
+                setWaiting(true);
+                removeRowsMutation.mutate(selection, {
+                    onSettled: (res) => {
+                        setWaiting(false);
+                        if (res?.failed?.length) setError(VIEW_DATA_TABLE_ERROR.REMOVE_ROWS);
+                    },
+                });
             },
+            title: intl.formatMessage({ id: 'misc.views.removeDialog.title' }),
         });
+        confirm.setOpen(true);
     };
 
     const onViewCreate = () => {

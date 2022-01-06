@@ -64,6 +64,9 @@ removeFromSelection: Remove {numSelected, plural,
     one {1 person}
     other {{numSelected} people}
     } from view
+removeDialog:
+    action: Are you sure you want to remove these rows from this view?
+    title: Remove people from view
 suggested:
     created: Created by {name}
     sectionTitle: Suggested
