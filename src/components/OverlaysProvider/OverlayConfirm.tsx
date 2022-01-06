@@ -16,12 +16,12 @@ export interface ConfirmProps {
 
 export const defaultConfirmProps = { actionText: '', onConfirm: (): void => {}, open: false, title: '' };
 
-export default function OverlayConfirm(): JSX.Element {
+export default function OverlayConfirm(props: ConfirmProps): JSX.Element {
     const intl = useIntl();
     const overlay = useContext(OverlayContext);
 
     const onClickConfirm = () => {
-        overlay.confirmProps.onConfirm();
+        props.onConfirm();
         clear();
     };
 
@@ -32,10 +32,10 @@ export default function OverlayConfirm(): JSX.Element {
     return (
         <ZetkinDialog
             onClose={ clear }
-            open={ overlay.confirmProps.open }
-            title={ overlay.confirmProps.title }>
+            open={ props.open }
+            title={ props.title }>
             <Box>
-                <p>{ overlay.confirmProps.actionText }</p>
+                <p>{ props.actionText }</p>
                 <form onSubmit={ (e) => {
                     e.preventDefault();
                     onClickConfirm();

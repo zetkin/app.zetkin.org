@@ -3,12 +3,10 @@ import OverlayConfirm, { ConfirmProps, defaultConfirmProps } from './OverlayConf
 import React, { useState } from 'react';
 
 interface OverlayContextProps {
-    confirmProps: ConfirmProps;
     setConfirmProps: (newProps: ConfirmProps) => void;
 }
 
 const defaultValue = {
-    confirmProps: defaultConfirmProps,
     setConfirmProps: () => null,
 };
 
@@ -19,8 +17,8 @@ export const OverlaysProvider: React.FunctionComponent = (props) => {
 
     return (
         <OverlayContext.Provider
-            value={{ confirmProps, setConfirmProps }}>
-            <OverlayConfirm />
+            value={{ setConfirmProps }}>
+            <OverlayConfirm { ...confirmProps } />
             { props.children }
         </OverlayContext.Provider>
     );
