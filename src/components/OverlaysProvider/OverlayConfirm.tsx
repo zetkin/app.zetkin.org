@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import { FormattedMessage } from 'react-intl';
-import { Box, Button } from '@material-ui/core';
+import { Box } from '@material-ui/core';
+import { useIntl } from 'react-intl';
 import React, { useContext } from 'react';
 
 import { OverlayContext } from './index';
+import SubmitCancelButtons from 'components/forms/common/SubmitCancelButtons';
 import ZetkinDialog from '../ZetkinDialog';
 
 export interface ConfirmProps {
@@ -16,6 +17,7 @@ export interface ConfirmProps {
 export const defaultConfirmProps = { actionText: '', onConfirm: (): void => {}, open: false, title: '' };
 
 export default function OverlayConfirm(): JSX.Element {
+    const intl = useIntl();
     const overlay = useContext(OverlayContext);
 
     const onClickConfirm = () => {
@@ -34,18 +36,18 @@ export default function OverlayConfirm(): JSX.Element {
             title={ overlay.confirmProps.title }>
             <Box>
                 <p>{ overlay.confirmProps.actionText }</p>
-                <Box display="flex" justifyContent="flex-end" py={ 2 }>
-                    <Box mx={ 2 }>
-                        <Button color="primary" onClick={ onClickConfirm } variant="contained">
-                            <FormattedMessage id="misc.components.confirm.buttons.submit"/>
-                        </Button>
-                    </Box>
-                    <Button color="default" onClick={ clear } variant="contained">
-                        <FormattedMessage id="misc.components.confirm.buttons.cancel"/>
-                    </Button>
-                </Box>
-
+                <form onSubmit={ (e) => {
+                    e.preventDefault();
+                    onClickConfirm();
+                } }>
+                    <SubmitCancelButtons
+                        onCancel={ clear }
+                        submitText={ intl.formatMessage({ id: 'misc.components.confirm.buttons.submit' }) }
+                    />
+                </form>
             </Box>
         </ZetkinDialog>
     );
 }
+
+
