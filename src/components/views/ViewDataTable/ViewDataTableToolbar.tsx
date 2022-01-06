@@ -1,6 +1,8 @@
-import { FormattedMessage } from 'react-intl';
+import { ConfirmContext } from 'components/ConfirmProvider';
+import { useContext } from 'react';
 import { Add, Launch, RemoveCircleOutline } from '@material-ui/icons';
 import { Box, Button, Slide, Tooltip } from '@material-ui/core';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 export interface ViewDataTableToolbarProps {
     disabled: boolean;
@@ -19,6 +21,17 @@ const ViewDataTableToolbar: React.FunctionComponent<ViewDataTableToolbarProps> =
     onViewCreate,
     selection,
 }) => {
+    const intl = useIntl();
+    const confirm = useContext(ConfirmContext);
+
+    const onClickRemoveRows = () =>{
+        confirm.setConfirmProps({
+            actionText: intl.formatMessage({ id: 'misc.views.removeDialog.action' }),
+            onConfirm: onRowsRemove,
+            title: intl.formatMessage({ id: 'misc.views.removeDialog.title' }),
+        });
+        confirm.setOpen(true);
+    };
     return (
         <Box display="flex" justifyContent="flex-end">
             <Slide direction="left" in={ !!selection.length } timeout={ 150 }>
@@ -31,12 +44,12 @@ const ViewDataTableToolbar: React.FunctionComponent<ViewDataTableToolbarProps> =
                 </Button>
             </Slide>
             <Slide direction="left" in={ !!selection.length } timeout={ 100 }>
-                <Tooltip title={ isSmartSearch ? 'Smart search views do not currently support removing rows' : '' }>
+                <Tooltip title={ isSmartSearch ? intl.formatMessage({ id: 'misc.views.removeTooltip' }) : '' }>
                     <span>
                         <Button
                             data-testid="ViewDataTableToolbar-removeFromSelection"
                             disabled={ isSmartSearch || disabled }
-                            onClick={ onRowsRemove }
+                            onClick={ onClickRemoveRows }
                             startIcon={ <RemoveCircleOutline /> }>
                             <FormattedMessage id="misc.views.removeFromSelection" values={{ numSelected: selection.length }} />
                         </Button>

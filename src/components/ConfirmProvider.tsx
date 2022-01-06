@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
+import { FormattedMessage } from 'react-intl';
 import { Box, Button } from '@material-ui/core';
 import React, { useContext, useState } from 'react';
 
@@ -31,7 +32,7 @@ export const ConfirmContext = React.createContext<ContextProps>(defaultValue);
 const ConfirmModal = () => {
     const confirm = useContext(ConfirmContext);
 
-    const onClick = () => {
+    const onClickConfirm = () => {
         confirm.confirmProps.onConfirm();
         clear();
     };
@@ -49,8 +50,14 @@ const ConfirmModal = () => {
             <Box>
                 <p>{ confirm.confirmProps.actionText }</p>
                 <Box display="flex" justifyContent="flex-end" py={ 2 }>
-                    <Box mx={ 1 }><Button color="primary" onClick={ onClick } variant="contained">Confirm</Button></Box>
-                    <Button color="default" onClick={ () => confirm.setOpen(false) } variant="contained">Cancel</Button>
+                    <Box mx={ 2 }>
+                        <Button color="primary" onClick={ onClickConfirm } variant="contained">
+                            <FormattedMessage id="misc.components.confirm.buttons.submit" />
+                        </Button>
+                    </Box>
+                    <Button color="default" onClick={ () => confirm.setOpen(false) } variant="contained">
+                        <FormattedMessage id="misc.components.confirm.buttons.cancel" />
+                    </Button>
                 </Box>
 
             </Box>

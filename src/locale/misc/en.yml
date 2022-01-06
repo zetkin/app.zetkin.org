@@ -18,3 +18,7 @@ components:
             noEmpty: This cannot be empty
             edit: Click to edit
             save: Press 'enter' to save
+    confirm:
+        buttons:
+            submit: Confirm
+            cancel: Cancel
