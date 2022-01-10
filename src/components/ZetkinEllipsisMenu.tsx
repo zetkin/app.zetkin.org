@@ -19,7 +19,10 @@ const ZetkinEllipsisMenu: FunctionComponent<ZetkinEllipsisMenuProps> = ({ items 
             <Button
                 data-testid="EllipsisMenu-menuActivator"
                 disableElevation
-                onClick={ (e) => setMenuActivator(e.currentTarget) }>
+                onClick={ (e) => {
+                    setMenuActivator(e.currentTarget);
+                    e.stopPropagation();
+                } }>
                 <MoreVert/>
             </Button>
             <Menu

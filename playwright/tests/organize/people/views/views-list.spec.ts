@@ -82,5 +82,67 @@ test.describe('Views list page', () => {
 
             await removeViewsMock();
         });
+
+        test.describe('delete view', () => {
+
+            test('user can delete a view from a menu in the list', async ({ page, appUri, moxy }) => {
+                const removeViewsMock = await moxy.setMock('/orgs/1/people/views', 'get', {
+                    data: {
+                        data: [
+                            AllMembers,
+                        ],
+                    },
+                    status: 200,
+                });
+
+                const removeDeleteViewMock = await moxy.setMock(`/orgs/1/people/1/views/${AllMembers.id}`, 'delete', {
+                    status: 204,
+                });
+
+                await page.goto(appUri + '/organize/1/people/views');
+
+                await page.click('data-testid=EllipsisMenu-menuActivator');
+                await page.click(`data-testid=EllipsisMenu-item-delete-view`);
+                await page.click('button > :text("Submit")');
+
+                // Check body of request
+                const mocks = await moxy.logRequests();
+                const deleteViewRequest = await mocks.log.find(mock =>
+                    mock.method === 'DELETE' &&
+                    mock.path === `/v1/orgs/1/people/views/${AllMembers.id}`,
+                );
+                expect(deleteViewRequest).toBeTruthy();
+                expect(await page.locator('data-testid=Snackbar-success').count()).toEqual(1);
+
+                await removeViewsMock();
+                await removeDeleteViewMock();
+            });
+
+            test('shows an error if view deletion fails', async ({ page, appUri, moxy }) => {
+                const removeViewsMock = await moxy.setMock('/orgs/1/people/views', 'get', {
+                    data: {
+                        data: [
+                            AllMembers,
+                        ],
+                    },
+                    status: 200,
+                });
+
+                const removeDeleteViewMock = await moxy.setMock(`/orgs/1/people/1/views/${AllMembers.id}`, 'delete', {
+                    status: 405,
+                });
+
+                await page.goto(appUri + '/organize/1/people/views');
+
+                await page.click('data-testid=EllipsisMenu-menuActivator');
+                await page.click(`data-testid=EllipsisMenu-item-delete-view`);
+                await page.click('button > :text("Submit")');
+
+                expect(await page.locator('data-testid=Snackbar-error').count()).toEqual(1);
+
+                await removeViewsMock();
+                await removeDeleteViewMock();
+            });
+        });
     });
 });
