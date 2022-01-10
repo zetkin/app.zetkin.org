@@ -23,7 +23,7 @@ test.describe('Delete view', () => {
         await moxy.removeMock();
     });
 
-    test.only('successfully deletes a view', async ({ page, appUri, moxy }) => {
+    test('successfully deletes a view', async ({ page, appUri, moxy }) => {
         const removeViewsMock = await moxy.setMock('/orgs/1/people/views/1', 'get', {
             data: {
                 data: AllMembers,
@@ -55,6 +55,44 @@ test.describe('Delete view', () => {
 
         await page.waitForNavigation();
         await expect(page.url()).toEqual(appUri + `/organize/${KPD.id}/people/views`);
+
+        await removeDeleteMock();
+        await removeViewsMock();
+        await removeRowsMock();
+        await removeColsMock();
+    });
+
+    test('shows snackbar if error deleting view', async ({ page, appUri, moxy }) => {
+        const removeViewsMock = await moxy.setMock('/orgs/1/people/views/1', 'get', {
+            data: {
+                data: AllMembers,
+            },
+            status: 200,
+        });
+        const removeRowsMock = await moxy.setMock('/orgs/1/people/views/1/rows', 'get', {
+            data: {
+                data: AllMembersRows,
+            },
+            status: 200,
+        });
+        const removeColsMock = await moxy.setMock('/orgs/1/people/views/1/columns', 'get', {
+            data: {
+                data: AllMembersColumns,
+            },
+            status: 200,
+        });
+
+        const removeDeleteMock = await moxy.setMock('/orgs/1/people/views/1', 'delete', {
+            status: 405,
+        });
+
+        await page.goto(appUri + '/organize/1/people/views/1');
+
+        await page.click('data-testid=EllipsisMenu-menuActivator');
+        await page.click('data-testid=EllipsisMenu-item-delete');
+        await page.click('button > :text("Submit")');
+
+        expect(await page.locator('data-testid=Snackbar-error').count()).toEqual(1);
 
         await removeDeleteMock();
         await removeViewsMock();
