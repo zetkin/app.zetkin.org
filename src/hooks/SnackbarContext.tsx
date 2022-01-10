@@ -46,6 +46,7 @@ const SnackbarProvider: React.FunctionComponent = ({ children }) => {
             </SnackbarContext.Provider>
             <Snackbar
                 autoHideDuration={ 5000 }
+                data-testid={ `Snackbar-${snackbarState?.severity}` }
                 onClose={ () => {
                     setSnackbarOpen(false);
                 } }
