@@ -13,6 +13,9 @@ layout:
     editQuery: Edit Smart Search query
     makeDynamic: Convert to Smart Search view
     makeStatic: Convert to static view
+    export: Export
+  exportMenu:
+      title: Export View
   jumpMenu:
     placeholder: Start typing to find view
 viewsList:

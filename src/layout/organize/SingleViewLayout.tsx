@@ -17,6 +17,7 @@ import ViewSmartSearchDialog from 'components/views/ViewSmartSearchDialog';
 import { viewsResource } from 'api/views';
 import { ZetkinEllipsisMenuProps } from 'components/ZetkinEllipsisMenu';
 import ZetkinQuery from 'components/ZetkinQuery';
+import ZetkinDialog from 'components/ZetkinDialog';
 
 const useStyles = makeStyles<Theme, { deactivated: boolean }>(() => ({
   deactivateWrapper: {
@@ -113,7 +114,12 @@ const SingleViewLayout: FunctionComponent = ({ children }) => {
     </>
   );
 
-  const ellipsisMenu: ZetkinEllipsisMenuProps['items'] = [];
+  const ellipsisMenu: ZetkinEllipsisMenuProps['items'] = [
+    {
+        label: intl.formatMessage({ id: 'pages.people.views.layout.ellipsisMenu.export' }),
+        onSelect: () => setExportDialogOpen(true),
+    }
+  ];
 
   if (view?.content_query) {
     ellipsisMenu.push({
@@ -194,6 +200,16 @@ const SingleViewLayout: FunctionComponent = ({ children }) => {
           orgId={orgId as string}
           view={view}
         />
+      )}
+      {exportDialogOpen && view && (
+        <ZetkinDialog
+            onClose={ () => setExportDialogOpen(false) }
+            open={ exportDialogOpen }
+            title= { intl.formatMessage({ id: 'pages.people.views.layout.exportMenu.title' })}>
+            <div>
+                <p>Bla bla bla</p>
+            </div>
+        </ZetkinDialog>
       )}
     </Box>
   );
