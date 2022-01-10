@@ -16,10 +16,9 @@ export const viewsResource = (orgId: string) => {
 
 
 export const viewResource = (orgId: string, viewId: string) => {
-    const key = ['view', orgId, viewId];
     const url = `/orgs/${orgId}/people/views/${viewId}`;
 
     return {
-        useDelete: createUseMutationDelete(key, url),
+        useDelete: createUseMutationDelete(['views', orgId], url),
     };
 };
