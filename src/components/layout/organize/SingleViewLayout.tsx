@@ -95,7 +95,7 @@ const SingleViewLayout: FunctionComponent = ({ children }) => {
     }
 
     ellipsisMenu.push({
-        id: 'delete',
+        id: 'delete-view',
         label: intl.formatMessage({ id: 'pages.people.views.layout.ellipsisMenu.delete' }),
         onSelect: () => setDeleteViewDialogOpen(true),
     });
