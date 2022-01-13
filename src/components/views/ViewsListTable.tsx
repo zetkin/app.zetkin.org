@@ -1,20 +1,23 @@
 import { useRouter } from 'next/router';
-import { useState } from 'react';
 import { Box, Typography } from '@material-ui/core';
 import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
 import { FormattedMessage, useIntl } from 'react-intl';
+import { useContext, useState } from 'react';
 
-import ViewDeleteConfirmDialog from './ViewDeleteConfirmDialog';
-import { viewsResource } from 'api/views';
+import SnackbarContext from 'hooks/SnackbarContext';
+import ZetkinConfirmDialog from 'components/ZetkinConfirmDialog';
 import ZetkinDateTime from 'components/ZetkinDateTime';
 import ZetkinEllipsisMenu from 'components/ZetkinEllipsisMenu';
 import ZetkinQuery from 'components/ZetkinQuery';
+import { viewResource, viewsResource } from 'api/views';
 
 const ViewsListTable: React.FunctionComponent = () => {
     const intl = useIntl();
     const router = useRouter();
     const [selectedViewToDelete, setSelectedViewToDelete] = useState<number | undefined>(undefined);
     const { orgId } = router.query;
+    const { showSnackbar } = useContext(SnackbarContext);
+    const deleteMutation = viewResource(orgId as string).useDelete();
     const viewsQuery = viewsResource(orgId as string).useQuery();
 
     // Columns
@@ -44,7 +47,7 @@ const ViewsListTable: React.FunctionComponent = () => {
                         items={ [{
                             id: 'delete-view',
                             label: intl.formatMessage({
-                                id: 'pages.people.views.viewsList.columns.menu.delete.label',
+                                id: 'pages.people.views.layout.ellipsisMenu.delete',
                             }),
                             onSelect: () => setSelectedViewToDelete(props.id as number),
                         }] }
@@ -95,13 +98,25 @@ const ViewsListTable: React.FunctionComponent = () => {
                                 cursor: 'pointer',
                             }}
                         />
-                        {
-                            deleteView && <ViewDeleteConfirmDialog
-                                onClose={ () => setSelectedViewToDelete(undefined) }
-                                open={ Boolean(selectedViewToDelete) }
-                                view={ deleteView }
-                            />
-                        }
+                        <ZetkinConfirmDialog
+                            onCancel={ () => setSelectedViewToDelete(undefined) }
+                            onSubmit={ () => {
+                                deleteMutation.mutate(deleteView?.id as number, {
+                                    onError: () => {
+                                        showSnackbar('error', intl.formatMessage({ id: 'pages.people.views.layout.deleteDialog.error' }));
+                                    },
+                                    onSuccess: () => {
+                                        setSelectedViewToDelete(undefined);
+                                    },
+                                });
+                            } }
+                            open={ Boolean(selectedViewToDelete) }
+                            submitDisabled={ deleteMutation.isLoading || deleteMutation.isSuccess }
+                            title={ intl.formatMessage({ id: 'pages.people.views.layout.deleteDialog.title' }) }
+                            warningText={ intl.formatMessage({ id: 'pages.people.views.layout.deleteDialog.warningText' }) }
+                        />
+
+
                     </>
                 );
             } }

@@ -10,23 +10,26 @@ import getView from 'fetching/views/getView';
 import patchView from 'fetching/views/patchView';
 import SnackbarContext from 'hooks/SnackbarContext';
 import TabbedLayout from './TabbedLayout';
-import ViewDeleteConfirmDialog from 'components/views/ViewDeleteConfirmDialog';
 import ViewJumpMenu from 'components/views/ViewJumpMenu';
+import { viewResource } from 'api/views';
 import ViewSmartSearchDialog from 'components/views/ViewSmartSearchDialog';
+import ZetkinConfirmDialog from 'components/ZetkinConfirmDialog';
 import { ZetkinEllipsisMenuProps } from 'components/ZetkinEllipsisMenu';
 import ZetkinQuery from 'components/ZetkinQuery';
 
 
 const SingleViewLayout: FunctionComponent = ({ children }) => {
-    const intl = useIntl();
     const router = useRouter();
-    const queryClient = useQueryClient();
     const { orgId, viewId } = router.query;
+
+    const intl = useIntl();
+    const queryClient = useQueryClient();
     const [deleteViewDialogOpen, setDeleteViewDialogOpen] = useState(false);
     const [queryDialogOpen, setQueryDialogOpen] = useState(false);
     const viewQuery = useQuery(['view', viewId ], getView(orgId as string, viewId as string));
     const patchViewMutation = useMutation(patchView(orgId as string, viewId as string));
     const { showSnackbar } = useContext(SnackbarContext);
+    const deleteMutation = viewResource(orgId as string).useDelete();
 
     const updateTitle = async (newTitle: string) => {
         patchViewMutation.mutateAsync({ title: newTitle }, {
@@ -120,9 +123,25 @@ const SingleViewLayout: FunctionComponent = ({ children }) => {
                     view={ view }
                 />
             ) }
-            { view && (
-                <ViewDeleteConfirmDialog onClose={ () => setDeleteViewDialogOpen(false) } open={ deleteViewDialogOpen } view={ view } />
-            ) }
+            { view &&
+            <ZetkinConfirmDialog
+                onCancel={ () => setDeleteViewDialogOpen(false) }
+                onSubmit={ () => {
+                    deleteMutation.mutate(view.id, {
+                        onError: () => {
+                            showSnackbar('error', intl.formatMessage({ id: 'pages.people.views.layout.deleteDialog.error' }));
+                        },
+                        onSuccess: () => {
+                            router.push(`/organize/${orgId}/people/views`);
+                        },
+                    });
+                } }
+                open={ deleteViewDialogOpen }
+                submitDisabled={ deleteMutation.isLoading || deleteMutation.isSuccess }
+                title={ intl.formatMessage({ id: 'pages.people.views.layout.deleteDialog.title' }) }
+                warningText={ intl.formatMessage({ id: 'pages.people.views.layout.deleteDialog.warningText' }) }
+            />
+            }
         </>
     );
 };

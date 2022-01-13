@@ -74,10 +74,10 @@ export const createUseMutationDelete = (
     key: string[],
     url: string,
     fetchOptions?: RequestInit,
-    mutationOptions?: Omit<UseMutationOptions<null, unknown, void, unknown>, 'mutationFn'>,
-): () => UseMutationResult<null, unknown, void, unknown> => {
-    const handler = async (): Promise<null> => {
-        const res = await defaultFetch(url, {
+    mutationOptions?: Omit<UseMutationOptions<null, unknown, number, unknown>, 'mutationFn'>,
+): () => UseMutationResult<null, unknown, number, unknown> => {
+    const handler = async (id: number): Promise<null> => {
+        const res = await defaultFetch(`${url}/${id}`, {
             method: 'DELETE',
             ...fetchOptions,
 
