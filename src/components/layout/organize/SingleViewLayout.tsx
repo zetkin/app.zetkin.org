@@ -11,8 +11,8 @@ import patchView from 'fetching/views/patchView';
 import SnackbarContext from 'hooks/SnackbarContext';
 import TabbedLayout from './TabbedLayout';
 import ViewJumpMenu from 'components/views/ViewJumpMenu';
-import { viewResource } from 'api/views';
 import ViewSmartSearchDialog from 'components/views/ViewSmartSearchDialog';
+import { viewsResource } from 'api/views';
 import ZetkinConfirmDialog from 'components/ZetkinConfirmDialog';
 import { ZetkinEllipsisMenuProps } from 'components/ZetkinEllipsisMenu';
 import ZetkinQuery from 'components/ZetkinQuery';
@@ -29,7 +29,7 @@ const SingleViewLayout: FunctionComponent = ({ children }) => {
     const viewQuery = useQuery(['view', viewId ], getView(orgId as string, viewId as string));
     const patchViewMutation = useMutation(patchView(orgId as string, viewId as string));
     const { showSnackbar } = useContext(SnackbarContext);
-    const deleteMutation = viewResource(orgId as string).useDelete();
+    const deleteMutation = viewsResource(orgId as string).useDelete();
 
     const updateTitle = async (newTitle: string) => {
         patchViewMutation.mutateAsync({ title: newTitle }, {

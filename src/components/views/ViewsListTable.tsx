@@ -5,11 +5,11 @@ import { FormattedMessage, useIntl } from 'react-intl';
 import { useContext, useState } from 'react';
 
 import SnackbarContext from 'hooks/SnackbarContext';
+import { viewsResource } from 'api/views';
 import ZetkinConfirmDialog from 'components/ZetkinConfirmDialog';
 import ZetkinDateTime from 'components/ZetkinDateTime';
 import ZetkinEllipsisMenu from 'components/ZetkinEllipsisMenu';
 import ZetkinQuery from 'components/ZetkinQuery';
-import { viewResource, viewsResource } from 'api/views';
 
 const ViewsListTable: React.FunctionComponent = () => {
     const intl = useIntl();
@@ -17,7 +17,7 @@ const ViewsListTable: React.FunctionComponent = () => {
     const [selectedViewToDelete, setSelectedViewToDelete] = useState<number | undefined>(undefined);
     const { orgId } = router.query;
     const { showSnackbar } = useContext(SnackbarContext);
-    const deleteMutation = viewResource(orgId as string).useDelete();
+    const deleteMutation = viewsResource(orgId as string).useDelete();
     const viewsQuery = viewsResource(orgId as string).useQuery();
 
     // Columns

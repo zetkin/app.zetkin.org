@@ -10,14 +10,7 @@ export const viewsResource = (orgId: string) => {
     return {
         prefetch: createPrefetch<ZetkinView[]>(key, url),
         useCreate: createUseMutation<CreateNewViewReqBody, ZetkinView>(key, `/views/createNew?orgId=${orgId}`),
+        useDelete: createUseMutationDelete(key, url),
         useQuery: createUseQuery<ZetkinView[]>(key, url),
-    };
-};
-
-
-export const viewResource = (orgId: string) => {
-
-    return {
-        useDelete: createUseMutationDelete(['views', orgId], `/orgs/${orgId}/people/views`),
     };
 };
