@@ -3,22 +3,22 @@ import { Box } from '@material-ui/core';
 import { useIntl } from 'react-intl';
 import React, { useContext } from 'react';
 
-import { OverlayContext } from './index';
+import { ConfirmDialogContext } from './index';
 import SubmitCancelButtons from 'components/forms/common/SubmitCancelButtons';
-import ZetkinDialog from '../ZetkinDialog';
+import ZetkinDialog from '../../components/ZetkinDialog';
 
-export interface ConfirmProps {
+export interface ConfirmDialogProps {
     actionText: string;
     onConfirm: <T>(t?: T) => void;
     open: boolean;
     title: string;
 }
 
-export const defaultConfirmProps = { actionText: '', onConfirm: (): void => {}, open: false, title: '' };
+export const defaultConfirmDialogProps = { actionText: '', onConfirm: (): void => {}, open: false, title: '' };
 
-export default function OverlayConfirm(props: ConfirmProps): JSX.Element {
+export default function ConfirmDialog(props: ConfirmDialogProps): JSX.Element {
     const intl = useIntl();
-    const overlay = useContext(OverlayContext);
+    const overlay = useContext(ConfirmDialogContext);
 
     const onClickConfirm = () => {
         props.onConfirm();
@@ -26,7 +26,7 @@ export default function OverlayConfirm(props: ConfirmProps): JSX.Element {
     };
 
     const clear = () => {
-        overlay.setConfirmProps(defaultConfirmProps);
+        overlay.setConfirmDialogProps(defaultConfirmDialogProps);
     };
 
     return (
