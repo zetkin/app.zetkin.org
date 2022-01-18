@@ -3,9 +3,9 @@ import React, { useContext, useState } from 'react';
 import ZetkinConfirmDialog, { ZetkinConfirmDialogProps } from 'components/ZetkinConfirmDialog';
 
 export const ConfirmDialogContext = React.createContext<{
-    setConfirmDialogProps: ( newProps: ZetkinConfirmDialogProps ) => void;
+    showConfirmDialog: (newProps: ZetkinConfirmDialogProps ) => void;
         }>({
-            setConfirmDialogProps: () => null,
+            showConfirmDialog: () => null,
         });
 
 const defaultConfirmDialogProps = {
@@ -14,9 +14,10 @@ const defaultConfirmDialogProps = {
 
 function ConfirmDialog(props: ZetkinConfirmDialogProps): JSX.Element {
     const overlay = useContext(ConfirmDialogContext);
+    const { title, warningText } = props;
 
     const clear = () => {
-        overlay.setConfirmDialogProps(defaultConfirmDialogProps);
+        overlay.showConfirmDialog({ ...defaultConfirmDialogProps, title, warningText });
     };
 
     return (
@@ -39,7 +40,7 @@ export const ConfirmDialogProvider: React.FunctionComponent = (props) => {
 
     return (
         <ConfirmDialogContext.Provider
-            value={{ setConfirmDialogProps }}>
+            value={{ showConfirmDialog: setConfirmDialogProps }}>
             <ConfirmDialog { ...confirmDialogProps } />
             { props.children }
         </ConfirmDialogContext.Provider>

@@ -23,10 +23,10 @@ const ViewDataTableToolbar: React.FunctionComponent<ViewDataTableToolbarProps> =
     selection,
 }) => {
     const intl = useIntl();
-    const confirmDialog = useContext(ConfirmDialogContext);
+    const { showConfirmDialog } = useContext(ConfirmDialogContext);
 
     const onClickRemoveRows = () =>{
-        confirmDialog.setConfirmDialogProps({
+        showConfirmDialog({
             onCancel: () => null,
             onSubmit: onRowsRemove,
             open:true,
