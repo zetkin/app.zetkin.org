@@ -1,40 +1,44 @@
-import { Alert } from '@material-ui/lab';
+import { Box } from '@material-ui/core';
 import { useIntl } from 'react-intl';
 import { useRouter } from 'next/router';
-import { Box, Snackbar } from '@material-ui/core';
-import { FunctionComponent, useState } from 'react';
+import { FunctionComponent, useContext, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 
 import { defaultFetch } from 'fetching';
 import EditTextinPlace from 'components/EditTextInPlace';
-import { EllipsisMenuProps } from './EllipsisMenu';
 import getView from 'fetching/views/getView';
 import patchView from 'fetching/views/patchView';
+import SnackbarContext from 'hooks/SnackbarContext';
 import TabbedLayout from './TabbedLayout';
 import ViewJumpMenu from 'components/views/ViewJumpMenu';
 import ViewSmartSearchDialog from 'components/views/ViewSmartSearchDialog';
+import { viewsResource } from 'api/views';
+import ZetkinConfirmDialog from 'components/ZetkinConfirmDialog';
+import { ZetkinEllipsisMenuProps } from 'components/ZetkinEllipsisMenu';
 import ZetkinQuery from 'components/ZetkinQuery';
 
 
 const SingleViewLayout: FunctionComponent = ({ children }) => {
-    const intl = useIntl();
     const router = useRouter();
-    const queryClient = useQueryClient();
     const { orgId, viewId } = router.query;
+
+    const intl = useIntl();
+    const queryClient = useQueryClient();
+    const [deleteViewDialogOpen, setDeleteViewDialogOpen] = useState(false);
     const [queryDialogOpen, setQueryDialogOpen] = useState(false);
     const viewQuery = useQuery(['view', viewId ], getView(orgId as string, viewId as string));
     const patchViewMutation = useMutation(patchView(orgId as string, viewId as string));
-
-    const [updateViewSnackbar, setUpdateViewSnackbar] = useState<'error' | 'success'>();
+    const { showSnackbar } = useContext(SnackbarContext);
+    const deleteMutation = viewsResource(orgId as string).useDelete();
 
     const updateTitle = async (newTitle: string) => {
         patchViewMutation.mutateAsync({ title: newTitle }, {
             onError: () => {
-                setUpdateViewSnackbar('error');
+                showSnackbar('error', intl.formatMessage({ id: `misc.views.editViewTitleAlert.error` }));
             },
             onSuccess: async () => {
                 await queryClient.invalidateQueries(['view', viewId]);
-                setUpdateViewSnackbar('success');
+                showSnackbar('success', intl.formatMessage({ id: `misc.views.editViewTitleAlert.success` }));
             },
         });
     };
@@ -71,21 +75,10 @@ const SingleViewLayout: FunctionComponent = ({ children }) => {
                     );
                 } }
             </ZetkinQuery>
-            { /* Snackbar that shows if updating the title failed or succeeded */ }
-            <Snackbar
-                onClose={ () => setUpdateViewSnackbar(undefined) }
-                open={ Boolean(updateViewSnackbar) }>
-                { updateViewSnackbar && (
-                    <Alert onClose={ () => setUpdateViewSnackbar(undefined) } severity={ updateViewSnackbar }>
-                        { intl.formatMessage({ id: `misc.views.editViewTitleAlert.${updateViewSnackbar}` } ) }
-                    </Alert>
-                ) }
-
-            </Snackbar>
         </>
     );
 
-    const ellipsisMenu: EllipsisMenuProps['items'] = [];
+    const ellipsisMenu: ZetkinEllipsisMenuProps['items'] = [];
 
     if (view?.content_query) {
         ellipsisMenu.push({
@@ -103,6 +96,12 @@ const SingleViewLayout: FunctionComponent = ({ children }) => {
             onSelect: () => setQueryDialogOpen(true),
         });
     }
+
+    ellipsisMenu.push({
+        id: 'delete-view',
+        label: intl.formatMessage({ id: 'pages.people.views.layout.ellipsisMenu.delete' }),
+        onSelect: () => setDeleteViewDialogOpen(true),
+    });
 
     return (
         <>
@@ -124,6 +123,25 @@ const SingleViewLayout: FunctionComponent = ({ children }) => {
                     view={ view }
                 />
             ) }
+            { view &&
+            <ZetkinConfirmDialog
+                onCancel={ () => setDeleteViewDialogOpen(false) }
+                onSubmit={ () => {
+                    deleteMutation.mutate(view.id, {
+                        onError: () => {
+                            showSnackbar('error', intl.formatMessage({ id: 'pages.people.views.layout.deleteDialog.error' }));
+                        },
+                        onSuccess: () => {
+                            router.push(`/organize/${orgId}/people/views`);
+                        },
+                    });
+                } }
+                open={ deleteViewDialogOpen }
+                submitDisabled={ deleteMutation.isLoading || deleteMutation.isSuccess }
+                title={ intl.formatMessage({ id: 'pages.people.views.layout.deleteDialog.title' }) }
+                warningText={ intl.formatMessage({ id: 'pages.people.views.layout.deleteDialog.warningText' }) }
+            />
+            }
         </>
     );
 };

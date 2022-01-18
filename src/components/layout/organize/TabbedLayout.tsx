@@ -6,7 +6,7 @@ import { FunctionComponent, ReactElement, useState } from 'react';
 
 import BreadcrumbTrail from '../../BreadcrumbTrail';
 import OrganizeSidebar from 'components/organize/OrganizeSidebar';
-import EllipsisMenu, { EllipsisMenuProps } from './EllipsisMenu';
+import ZetkinEllipsisMenu, { ZetkinEllipsisMenuProps } from 'components/ZetkinEllipsisMenu';
 
 interface StyleProps {
     collapsed: boolean;
@@ -49,7 +49,7 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
 
 interface TabbedLayoutProps {
     actionButtons?: React.ReactElement | React.ReactElement[];
-    ellipsisMenuItems?: EllipsisMenuProps['items'];
+    ellipsisMenuItems?: ZetkinEllipsisMenuProps['items'];
     fixedHeight?: boolean;
     title?: string | ReactElement;
     subtitle?: string | ReactElement;
@@ -127,7 +127,7 @@ const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
                                             { actionButtons }
                                         </Box>
                                         { !!ellipsisMenuItems?.length && (
-                                            <EllipsisMenu items={ ellipsisMenuItems }/>
+                                            <ZetkinEllipsisMenu items={ ellipsisMenuItems }/>
                                         ) }
                                     </Box>
                                 </Box>

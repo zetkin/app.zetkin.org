@@ -4,10 +4,9 @@ import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { Fab, makeStyles, Tooltip, Typography } from '@material-ui/core';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { useMutation, useQueryClient } from 'react-query';
 
-import createNewView from 'fetching/views/createNewView';
 import SubmitCancelButtons from 'components/forms/common/SubmitCancelButtons';
+import { viewsResource } from 'api/views';
 import ZetkinDialog from 'components/ZetkinDialog';
 
 const useStyles = makeStyles((theme) => ({
@@ -23,18 +22,16 @@ const CreateViewActionButton: React.FunctionComponent = () => {
     const intl = useIntl();
     const classes = useStyles();
     const router = useRouter();
-    const queryClient = useQueryClient();
 
     const { orgId } = router.query;
 
-    const createNewViewMutation = useMutation(createNewView(orgId as string), {
-        onError: () => {
-            NProgress.done();
-            setErrorDialogOpen(true);
-        },
-        onSettled: () => queryClient.invalidateQueries(['views', orgId]),
+    const createNewViewMutation = viewsResource(orgId as string).useCreate();
+
+    const createNewView = () => createNewViewMutation.mutate({ rows: [] }, {
+        onError: () => setErrorDialogOpen(true),
         onSuccess: (newView) => router.push(`/organize/${orgId}/people/views/${newView.id}`),
     });
+
 
     return (
         <>
@@ -45,7 +42,7 @@ const CreateViewActionButton: React.FunctionComponent = () => {
                     data-testid="create-view-action-button"
                     onClick={ () => {
                         NProgress.start();
-                        createNewViewMutation.mutate();
+                        createNewView();
                     } }>
                     <Add />
                 </Fab>
@@ -61,7 +58,7 @@ const CreateViewActionButton: React.FunctionComponent = () => {
                         e.preventDefault();
                         NProgress.start();
                         setErrorDialogOpen(false);
-                        createNewViewMutation.mutate(undefined);
+                        createNewView();
                     } }>
                         <SubmitCancelButtons
                             onCancel={ () => setErrorDialogOpen(false) }

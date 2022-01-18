@@ -2,11 +2,10 @@ import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { useIntl } from 'react-intl';
 
-import getViews from 'fetching/views/getViews';
 import { PageWithLayout } from 'types';
 import PeopleLayout from 'components/layout/organize/PeopleLayout';
 import { scaffold } from 'utils/next';
-import { ZetkinView } from 'types/zetkin';
+import { viewsResource } from 'api/views';
 import { CreateViewActionButton, SuggestedViews, ViewsListTable  } from 'components/views';
 
 const scaffoldOptions = {
@@ -20,12 +19,9 @@ export const getServerSideProps : GetServerSideProps = scaffold(async (ctx) => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const { orgId } = ctx.params!;
 
-    await ctx.queryClient.prefetchQuery(['views', orgId], getViews(orgId as string, ctx.apiFetch));
-    const viewsQueryState = ctx.queryClient.getQueryState<ZetkinView[]>(['views', orgId]);
+    const { state: viewsQueryState } = await viewsResource(orgId as string).prefetch(ctx);
 
-    if (
-        viewsQueryState?.status === 'success'
-    ) {
+    if (viewsQueryState?.status === 'success') {
         return {
             props: {
                 orgId,

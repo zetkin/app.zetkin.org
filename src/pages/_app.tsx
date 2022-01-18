@@ -17,8 +17,9 @@ import { useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
 import { ConfirmDialogProvider } from 'hooks/ConfirmDialogProvider';
-import { LocalTimeToJsonPlugin } from 'utils/dateUtils';
+import { LocalTimeToJsonPlugin } from '../utils/dateUtils';
 import { PageWithLayout } from '../types';
+import { SnackbarProvider } from 'hooks/SnackbarContext';
 import theme from '../theme';
 import { UserContext } from '../hooks';
 
@@ -76,12 +77,14 @@ function MyApp({ Component, pageProps } : AppProps) : JSX.Element {
                         locale={ lang }
                         messages={ messages }>
                         <QueryClientProvider client={ queryClient }>
-                            <Hydrate state={ dehydratedState }>
-                                <CssBaseline />
+                            <SnackbarProvider>
                                 <ConfirmDialogProvider>
-                                    { getLayout(<Component { ...restProps } />, restProps) }
+                                    <Hydrate state={ dehydratedState }>
+                                        <CssBaseline />
+                                        { getLayout(<Component { ...restProps } />, restProps) }
+                                    </Hydrate>
                                 </ConfirmDialogProvider>
-                            </Hydrate>
+                            </SnackbarProvider>
                             <ReactQueryDevtools initialIsOpen={ false } />
                         </QueryClientProvider>
                     </IntlProvider>
