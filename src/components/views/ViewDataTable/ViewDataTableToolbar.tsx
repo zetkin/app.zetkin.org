@@ -27,11 +27,12 @@ const ViewDataTableToolbar: React.FunctionComponent<ViewDataTableToolbarProps> =
 
     const onClickRemoveRows = () =>{
         confirmDialog.setConfirmDialogProps({
-            actionText: intl.formatMessage({ id: 'misc.views.removeDialog.action' }),
-            onConfirm: onRowsRemove,
+            onCancel: () => null,
+            onSubmit: onRowsRemove,
             open:true,
-            title: intl.formatMessage({ id: 'misc.views.removeDialog.title' }) },
-        );
+            title: intl.formatMessage({ id: 'misc.views.removeDialog.title' }),
+            warningText: intl.formatMessage({ id: 'misc.views.removeDialog.action' }),
+        });
     };
 
     return (
