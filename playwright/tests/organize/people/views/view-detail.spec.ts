@@ -386,6 +386,54 @@ test.describe('View detail page', () => {
         await removePutRowMock();
     });
 
+    test('Remove people from view', async ({ page, appUri, moxy }) => {
+        const removeViewsMock = await moxy.setMock('/orgs/1/people/views/1', 'get', {
+            data: {
+                data: AllMembers,
+            },
+            status: 200,
+        });
+        const removeRowsMock = await moxy.setMock('/orgs/1/people/views/1/rows', 'get', {
+            data: {
+                data: AllMembersRows,
+            },
+            status: 200,
+        });
+        const removeColsMock = await moxy.setMock('/orgs/1/people/views/1/columns', 'get', {
+            data: {
+                data: AllMembersColumns,
+            },
+            status: 200,
+        });
+        const removeDeleteQueryMock = await moxy.setMock('/v1/orgs/1/people/views/1/rows/1', 'delete', { status: 204 });
+
+        const removeButton = 'data-testid=ViewDataTableToolbar-removeFromSelection';
+        const confirmButton = 'button:has-text("confirm")';
+        await page.goto(appUri + '/organize/1/people/views/1');
+
+        // Show toolbar button on row selection
+        await expect(page.locator(removeButton)).toBeHidden();
+        await page.locator('[role=cell]:has-text("Clara")').click();
+
+        // Show modal on click remove button -> click confirm
+        await expect(page.locator(removeButton)).toBeVisible();
+        await page.locator(removeButton).click();
+        await expect(page.locator(confirmButton)).toBeVisible();
+        await page.locator(confirmButton).click();
+        await expect(page.locator(confirmButton)).toBeHidden();
+
+        // Check for delete request
+        expect((await moxy.logRequests()).log.find(req =>
+            req.method === 'DELETE' &&
+            req.path === '/v1/orgs/1/people/views/1/rows/1',
+        )).toBeTruthy();
+
+        await removeViewsMock();
+        await removeRowsMock();
+        await removeColsMock();
+        await removeDeleteQueryMock();
+    });
+
     test('configure Smart Search query in empty view', async ({ page, appUri, moxy }) => {
         const removeViewsMock = await moxy.setMock('/orgs/1/people/views', 'get', {
             data: {
