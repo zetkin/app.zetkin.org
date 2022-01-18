@@ -4,8 +4,8 @@ import { defaultFetch } from 'fetching';
 export const createDeleteHandler = (
     url: string,
     fetchOptions?: RequestInit,
-) => async (): Promise<null> => {
-    const res = await defaultFetch(url, {
+) => async (id: number): Promise<null> => {
+    const res = await defaultFetch(`${url}/${id}`, {
         method: 'DELETE',
         ...fetchOptions,
 

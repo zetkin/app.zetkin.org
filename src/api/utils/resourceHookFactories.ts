@@ -67,8 +67,8 @@ export const createUseMutationDelete = (
     key: string[],
     url: string,
     fetchOptions?: RequestInit,
-    mutationOptions?: Omit<UseMutationOptions<null, unknown, void, unknown>, 'mutationFn'>,
-): () => UseMutationResult<null, unknown, void, unknown> => {
+    mutationOptions?: Omit<UseMutationOptions<null, unknown, number, unknown>, 'mutationFn'>,
+): () => UseMutationResult<null, unknown, number, unknown> => {
     const handler = createDeleteHandler(url, fetchOptions);
 
     return () => {
