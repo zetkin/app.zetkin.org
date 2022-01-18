@@ -44,7 +44,7 @@ const TaskActionButtons: React.FunctionComponent<TaskActionButtonsProps> = ({ ta
         });
     };
     const handleDeleteTask = () => {
-        deleteTaskMutation.mutate();
+        deleteTaskMutation.mutate(task.id);
         closeDialog();
         // Navigate back to campaign page
         router.push(`/organize/${task.organization.id}/campaigns/${task.campaign.id}`);

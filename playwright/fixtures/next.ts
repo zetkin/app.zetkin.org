@@ -21,6 +21,14 @@ import {
 } from '../types';
 import { ZetkinSession, ZetkinUser } from '../../src/types/zetkin';
 
+export interface Moxy {
+    clearLog: () => Promise<void>;
+    logRequests: <ReqData = unknown, ResData = unknown>(path?: string) => Promise<LoggedRequestsRes<ReqData, ResData>>;
+    port: number;
+    removeMock: (path?: string, method?: MoxyHTTPMethod, ) => Promise<void>;
+    setMock: <G>(path: string, method: MoxyHTTPMethod, response?: Mock<G>) => Promise<() => Promise<void>>;
+}
+
 interface NextTestFixtures {
     login: () => Promise<void>;
     logout: () => Promise<void>;
@@ -28,13 +36,7 @@ interface NextTestFixtures {
 
 interface NextWorkerFixtures {
     appUri: string;
-    moxy: {
-        clearLog: () => Promise<void>;
-        logRequests: <ReqData = unknown, ResData = unknown>(path?: string) => Promise<LoggedRequestsRes<ReqData, ResData>>;
-        port: number;
-        removeMock: (path?: string, method?: MoxyHTTPMethod, ) => Promise<void>;
-        setMock: <G>(path: string, method: MoxyHTTPMethod, response?: Mock<G>) => Promise<() => Promise<void>>;
-    };
+    moxy: Moxy;
 }
 
 const test = base.extend<NextTestFixtures, NextWorkerFixtures>({

@@ -8,13 +8,13 @@ import { FormattedMessage, useIntl } from 'react-intl';
 import { makeStyles, Snackbar } from '@material-ui/core';
 import { useMutation, useQueryClient } from 'react-query';
 
-import createNewView from 'fetching/views/createNewView';
 import deleteViewColumn from 'fetching/views/deleteViewColumn';
 import EmptyView from 'components/views/EmptyView';
 import patchViewColumn from 'fetching/views/patchViewColumn';
 import postViewColumn from 'fetching/views/postViewColumn';
 import ViewRenameColumnDialog from '../ViewRenameColumnDialog';
 import { viewRowsResource } from 'api/viewRows';
+import { viewsResource } from 'api/views';
 import { colIdFromFieldName, makeGridColDef } from './utils';
 import { SelectedViewColumn, ZetkinView } from 'types/views';
 import { VIEW_CONTENT_SOURCE, VIEW_DATA_TABLE_ERROR } from './constants';
@@ -164,17 +164,12 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
         });
     };
 
-    const createNewViewMutation = useMutation(createNewView(orgId as string), {
-        onError: () => {
-            NProgress.done();
-        },
-        onMutate: () => NProgress.start(),
-        onSettled: () => queryClient.invalidateQueries(['views', orgId]),
-        onSuccess: (newView) => router.push(`/organize/${orgId}/people/views/${newView.id}`),
-    });
+    const createNewViewMutation = viewsResource(orgId as string).useCreate();
 
     const onViewCreate = () => {
-        createNewViewMutation.mutate(selection);
+        createNewViewMutation.mutate({ rows: selection }, {
+            onSuccess: (newView) => router.push(`/organize/${orgId}/people/views/${newView.id}`),
+        });
     };
 
     const avatarColumn : GridColDef = {
