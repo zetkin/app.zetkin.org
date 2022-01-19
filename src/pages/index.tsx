@@ -3,7 +3,7 @@ import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { FormattedMessage as Msg } from 'react-intl';
 import { stringToBool } from '../utils/stringUtils';
-import { Container, Typography } from '@material-ui/core';
+import { Button, ButtonGroup, Container, Typography } from '@material-ui/core';
 
 import { AppSession } from '../types';
 import { scaffold } from '../utils/next';
@@ -73,6 +73,19 @@ export default function Home() : JSX.Element {
                 <Typography variant="h4">
                     <Msg id="pages.home.welcome"/>
                 </Typography>
+                { /* TODO: remove stuff below */ }
+                <Typography variant="body1">
+                    This page is for devs only!
+                </Typography>
+                <ButtonGroup
+                    aria-label="vertical contained primary button group"
+                    color="primary"
+                    orientation="vertical"
+                    size="large"
+                    variant="text">
+                    <Button href="organize/1/people/views">People / views</Button>
+                    <Button href="organize/1/campaigns">Campaigns</Button>
+                </ButtonGroup>
             </Container>
         </>
     );
