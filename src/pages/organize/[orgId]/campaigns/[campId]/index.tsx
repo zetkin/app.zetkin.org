@@ -11,7 +11,7 @@ import getCampaignEvents from 'fetching/getCampaignEvents';
 import getOrg from 'fetching/getOrg';
 import { PageWithLayout } from 'types';
 import { scaffold } from 'utils/next';
-import SingleCampaignLayout from 'components/layout/organize/SingleCampaignLayout';
+import SingleCampaignLayout from 'layout/organize/SingleCampaignLayout';
 import TaskList from 'components/organize/tasks/TaskList';
 import ZetkinPerson from 'components/ZetkinPerson';
 import ZetkinSection from 'components/ZetkinSection';

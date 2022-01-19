@@ -3,7 +3,7 @@ import Head from 'next/head';
 import { useIntl } from 'react-intl';
 import { useQuery } from 'react-query';
 
-import AllCampaignsLayout from 'components/layout/organize/AllCampaignsLayout';
+import AllCampaignsLayout from 'layout/organize/AllCampaignsLayout';
 import getCampaigns from 'fetching/getCampaigns';
 import getEvents from 'fetching/getEvents';
 import getOrg from 'fetching/getOrg';
