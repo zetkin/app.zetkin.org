@@ -128,9 +128,7 @@ const SingleViewLayout: FunctionComponent = ({ children }) => {
         label: intl.formatMessage({ id: 'pages.people.views.layout.ellipsisMenu.delete' }),
         onSelect: () => {
             showConfirmDialog({
-                onCancel: () => null,
                 onSubmit: deleteView,
-                open: true,
                 title: intl.formatMessage({ id: 'pages.people.views.layout.deleteDialog.title' }),
                 warningText: intl.formatMessage({ id: 'pages.people.views.layout.deleteDialog.warningText' }),
             });

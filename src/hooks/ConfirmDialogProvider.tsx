@@ -3,7 +3,7 @@ import React, { useContext, useState } from 'react';
 import ZetkinConfirmDialog, { ZetkinConfirmDialogProps } from 'components/ZetkinConfirmDialog';
 
 export const ConfirmDialogContext = React.createContext<{
-    showConfirmDialog: (newProps: ZetkinConfirmDialogProps ) => void;
+    showConfirmDialog: (newProps: Partial<ZetkinConfirmDialogProps> ) => void;
         }>({
             showConfirmDialog: () => null,
         });
@@ -13,18 +13,21 @@ const defaultConfirmDialogProps = {
 };
 
 function ConfirmDialog(props: ZetkinConfirmDialogProps): JSX.Element {
-    const overlay = useContext(ConfirmDialogContext);
-    const { title, warningText } = props;
+    const { showConfirmDialog } = useContext(ConfirmDialogContext);
 
     const clear = () => {
-        overlay.showConfirmDialog({ ...defaultConfirmDialogProps, title, warningText });
+        const { title, warningText } = props;
+        showConfirmDialog({ ...defaultConfirmDialogProps, title, warningText });
     };
 
     return (
         <ZetkinConfirmDialog { ...{
             ...props,
             ...{
-                onCancel: clear,
+                onCancel: () => {
+                    props.onCancel();
+                    clear();
+                },
                 onSubmit: () => {
                     props.onSubmit();
                     clear();
@@ -36,12 +39,15 @@ function ConfirmDialog(props: ZetkinConfirmDialogProps): JSX.Element {
 }
 
 export const ConfirmDialogProvider: React.FunctionComponent = (props) => {
-    const [confirmDialogProps, setConfirmDialogProps] = useState<ZetkinConfirmDialogProps>(defaultConfirmDialogProps);
+    const [confirmDialogProps, setConfirmDialogProps] = useState<Partial<ZetkinConfirmDialogProps>>(defaultConfirmDialogProps);
+    const showConfirmDialog = (newProps: Partial<ZetkinConfirmDialogProps>) => {
+        setConfirmDialogProps({ open: true, ...newProps });
+    };
 
     return (
         <ConfirmDialogContext.Provider
-            value={{ showConfirmDialog: setConfirmDialogProps }}>
-            <ConfirmDialog { ...confirmDialogProps } />
+            value={{ showConfirmDialog }}>
+            <ConfirmDialog { ...{ ...defaultConfirmDialogProps, ...confirmDialogProps } } />
             { props.children }
         </ConfirmDialogContext.Provider>
     );
