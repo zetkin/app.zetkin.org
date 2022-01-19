@@ -7,7 +7,7 @@ import  React, { useEffect, useRef, useState } from 'react';
 import MonthCalendarEvent from './MonthCalendarEvent';
 import MonthCalendarTask from './MonthCalendarTask';
 import { CALENDAR_RANGES, getViewRange } from '../utils';
-import { ZetkinCampaign, ZetkinEvent , ZetkinTask } from '../../../types/zetkin';
+import { ZetkinCampaign, ZetkinEvent , ZetkinTask } from 'types/zetkin';
 
 interface MonthCalendarProps {
     baseHref: string;

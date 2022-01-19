@@ -1,4 +1,4 @@
-import { ApiFetch, createApiFetch } from '../../utils/apiFetch';
+import { ApiFetch, createApiFetch } from 'utils/apiFetch';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 export default async (

@@ -15,9 +15,9 @@ import {
     ListSubheader,
 } from '@material-ui/core';
 
-import getOrg from '../../fetching/getOrg';
+import getOrg from 'fetching/getOrg';
 import { MINIMUM_CHARACTERS } from './index';
-import { ZetkinPerson } from '../../types/zetkin';
+import { ZetkinPerson } from 'types/zetkin';
 
 
 interface ResultsListProps {
