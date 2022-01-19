@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 
 import { getSuggestedViews } from './index';
-import mockView from 'test-utils/mocks/mockView';
+import mockView from 'utils/testing/mocks/mockView';
 
 describe('getSuggestedViews()', () => {
     const now = dayjs();

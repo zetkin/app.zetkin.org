@@ -1,4 +1,4 @@
-import { mockObject } from '.';
+import { mockObject } from './index';
 
 const response: Response = {
     arrayBuffer: async () => new ArrayBuffer(256),

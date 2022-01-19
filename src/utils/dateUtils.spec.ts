@@ -1,4 +1,4 @@
-import mockEvent from 'test-utils/mocks/mockEvent';
+import mockEvent from 'utils/testing/mocks/mockEvent';
 import { ZetkinEvent } from 'types/zetkin';
 
 import { getFirstAndLastEvent, removeOffset } from './dateUtils';

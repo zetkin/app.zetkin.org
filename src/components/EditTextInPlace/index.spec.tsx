@@ -1,5 +1,5 @@
 import userEvent from '@testing-library/user-event';
-import { act, render } from 'test-utils';
+import { act, render } from 'utils/testing';
 import EditTextinPlace, { EditTextinPlaceProps } from './index';
 
 const props: EditTextinPlaceProps = {

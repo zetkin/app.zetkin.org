@@ -1,6 +1,6 @@
 import APIError from 'utils/apiError';
 import handleResponseData from './handleResponseData';
-import mockFetchResponse from 'test-utils/mocks/mockFetchResponse';
+import mockFetchResponse from 'utils/testing/mocks/mockFetchResponse';
 
 describe('handleResponseData()', () => {
 

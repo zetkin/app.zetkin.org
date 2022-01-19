@@ -1,5 +1,5 @@
 import TabbedLayout from './TabbedLayout';
-import { fireEvent, render } from 'test-utils';
+import { fireEvent, render } from 'utils/testing';
 
 const mockTabbedLayoutProps = {
     baseHref: '/alpha/beta/gamma',
