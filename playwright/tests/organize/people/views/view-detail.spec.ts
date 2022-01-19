@@ -408,19 +408,19 @@ test.describe('View detail page', () => {
         const removeDeleteQueryMock = await moxy.setMock('/v1/orgs/1/people/views/1/rows/1', 'delete', { status: 204 });
 
         const removeButton = 'data-testid=ViewDataTableToolbar-removeFromSelection';
-        const confirmButton = 'button:has-text("confirm")';
+        const confirmButtonInModal = 'button:has-text("confirm")';
         await page.goto(appUri + '/organize/1/people/views/1');
 
         // Show toolbar button on row selection
         await expect(page.locator(removeButton)).toBeHidden();
         await page.locator('[role=cell]:has-text("Clara")').click();
-
-        // Show modal on click remove button -> click confirm
         await expect(page.locator(removeButton)).toBeVisible();
+
+        // Show modal on click remove button -> click confirm to close modal
         await page.locator(removeButton).click();
-        await expect(page.locator(confirmButton)).toBeVisible();
-        await page.locator(confirmButton).click();
-        await expect(page.locator(confirmButton)).toBeHidden();
+        await expect(page.locator(confirmButtonInModal)).toBeVisible();
+        await page.locator(confirmButtonInModal).click();
+        await expect(page.locator(confirmButtonInModal)).toBeHidden();
 
         // Check for delete request
         expect((await moxy.logRequests()).log.find(req =>
