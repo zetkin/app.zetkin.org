@@ -1,4 +1,4 @@
-import { mockObject } from './index';
+import { mockObject } from '.';
 import { ASSIGNED_STATUS, ZetkinAssignedTask } from 'types/tasks';
 
 const task: ZetkinAssignedTask =

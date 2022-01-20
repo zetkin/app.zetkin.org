@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 
-import { getSuggestedViews } from './index';
+import { getSuggestedViews } from '.';
 import mockView from 'utils/testing/mocks/mockView';
 
 describe('getSuggestedViews()', () => {

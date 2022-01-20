@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 
-import { mockObject } from './index';
+import { mockObject } from '.';
 import {
     QueryObserverLoadingErrorResult,
     QueryObserverLoadingResult,
