@@ -34,11 +34,10 @@ export const viewRowsResource = (orgId: number, viewId: string) => {
         },
         useRemoveMany: () => {
             const handler = async (personIds: number[]): Promise<{deleted: (number | null)[]; failed: number[]}> => {
-                const deleted = (await Promise.all(personIds.map(async (personId) => {
-                    return await createDeleteHandler(`${rowsUrl}`)(personId)
-                        .then(() => personId)
-                        .catch(() => null);
-                }))).filter(id => !!id);
+                const deleted = (await Promise.all(personIds.map(personId => createDeleteHandler(`${rowsUrl}`)(personId)
+                    .then(() => personId)
+                    .catch(() => null),
+                ))).filter(id => !!id);
 
                 return { deleted, failed: personIds.filter(id => !deleted.includes(id)) };
             };
