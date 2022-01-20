@@ -26,7 +26,7 @@ const expectDeleteViewSuccess = (moxy: NextWorkerFixtures['moxy']) => {
     expect(deleteViewRequest).toBeTruthy();
 };
 
-test.describe.only('Delete view from view list page', () => {
+test.describe('Delete view from view list page', () => {
 
     test.beforeEach(({ moxy, login }) => {
         login();
@@ -58,7 +58,7 @@ test.describe.only('Delete view from view list page', () => {
     });
 });
 
-test.describe.only('Delete view from view detail page', () => {
+test.describe('Delete view from view detail page', () => {
     test.beforeEach(({ moxy, login }) => {
         login();
         moxy.setZetkinApiMock( '/orgs/1', 'get', KPD);
