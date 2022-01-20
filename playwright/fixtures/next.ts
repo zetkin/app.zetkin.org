@@ -22,7 +22,13 @@ interface NextWorkerFixtures {
     appUri: string;
     moxy: {
         port: number;
-        setZetkinApiMock: Moxy['setMock'];
+        setZetkinApiMock: <G>(
+            path: string,
+            method?: HTTPMethod,
+            data?: G,
+            status?: MockResponseSetter['status'],
+            headers?: MockResponseSetter['headers'],
+        ) => () => void;
     } & Omit<Moxy, 'start' | 'stop'>;
 }
 
@@ -81,15 +87,21 @@ const test = base.extend<NextTestFixtures, NextWorkerFixtures>({
              * Wrapper around `moxy.setMock()` which sets the response body of the mock to be accessed in the `data`
              * property. This is to make it easier to emulate successful Zetkin API responses.
              */
-            const setZetkinApiMock = <G>(path: string, method?: HTTPMethod, response?: MockResponseSetter<G>) => {
+            const setZetkinApiMock = <G>(
+                path: string,
+                method?: HTTPMethod,
+                data?: G,
+                status?: MockResponseSetter['status'],
+                headers?: MockResponseSetter['headers'],
+            ) => {
                 return setMock<{ data: G }>(
-                    path,
+                    `/v1${path}`,
                     method,
                     {
-                        status: response?.status,
-                        headers: response?.headers,
-                        data: response?.data ? {
-                            data: response.data,
+                        status,
+                        headers,
+                        data: data ? {
+                            data,
                         } : undefined,
                     });
             };
@@ -121,20 +133,16 @@ const test = base.extend<NextTestFixtures, NextWorkerFixtures>({
             moxy.setZetkinApiMock<ZetkinUser>(
                 '/users/me',
                 'get',
-                {
-                    data: user,
-                },
+                user,
             );
 
             moxy.setZetkinApiMock<ZetkinSession>(
                 '/session',
                 'get',
                 {
-                    data: {
-                        created: '2020-01-01T00:00:00',
-                        level: 2,
-                        user: user,
-                    },
+                    created: '2020-01-01T00:00:00',
+                    level: 2,
+                    user: user,
                 },
             );
         };
