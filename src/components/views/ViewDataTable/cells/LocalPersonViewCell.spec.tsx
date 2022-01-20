@@ -8,6 +8,7 @@ import LocalPersonViewCell, { LocalPersonViewCellParams } from './LocalPersonVie
 describe('LocalPersonViewCell', () => {
     const mockParams = (overrides?: Partial<LocalPersonViewCellParams>) => {
         return {
+            field: 'fieldName',
             value: null,
             ...overrides,
         } as LocalPersonViewCellParams;
@@ -26,11 +27,13 @@ describe('LocalPersonViewCell', () => {
             colDef: {
                 width: 50,
             } as unknown as GridStateColDef,
-            value: {
-                first_name: 'Jerry',
-                id: 123,
-                last_name: 'Seinfeld',
-            } as ZetkinPerson,
+            row: {
+                fieldName: {
+                    first_name: 'Jerry',
+                    id: 123,
+                    last_name: 'Seinfeld',
+                } as ZetkinPerson,
+            },
         });
 
         const { queryByText, baseElement } = render(
@@ -49,11 +52,13 @@ describe('LocalPersonViewCell', () => {
             colDef: {
                 width: 150,
             } as unknown as GridStateColDef,
-            value: {
-                first_name: 'Jerry',
-                id: 123,
-                last_name: 'Seinfeld',
-            } as ZetkinPerson,
+            row: {
+                fieldName: {
+                    first_name: 'Jerry',
+                    id: 123,
+                    last_name: 'Seinfeld',
+                } as ZetkinPerson,
+            },
         });
 
         const { queryByText, baseElement } = render(

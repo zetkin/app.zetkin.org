@@ -2,10 +2,15 @@ import { render } from 'utils/testing';
 
 import SurveyResponseViewCell, { SurveyResponseViewCellParams } from './SurveyResponseViewCell';
 
+const surveyResponses = [
+    { submission_id: 1, text: 'This is the response' },
+    { submission_id: 2, text: 'This is another response' },
+];
 
 describe('SurveyResponseViewCell', () => {
     const mockParams = (overrides?: Partial<SurveyResponseViewCellParams>) => {
         return {
+            field: 'fieldName',
             value: null,
             ...overrides,
         } as SurveyResponseViewCellParams;
@@ -21,10 +26,9 @@ describe('SurveyResponseViewCell', () => {
 
     it('renders response when at least one exists', () => {
         const params = mockParams({
-            value: [{
-                submission_id: 1,
-                text: 'This is the response',
-            }],
+            row: {
+                fieldName: surveyResponses.slice(0,1),
+            },
         });
         const { getByText } = render(
             <SurveyResponseViewCell params={ params }/>,
@@ -34,10 +38,9 @@ describe('SurveyResponseViewCell', () => {
 
     it('renders pop-over with responses', () => {
         const params = mockParams({
-            value: [
-                { submission_id: 1, text: 'This is the response' },
-                { submission_id: 2, text: 'This is another response' },
-            ],
+            row: {
+                fieldName: surveyResponses,
+            },
         });
         const { getByText } = render(
             <SurveyResponseViewCell params={ params }/>,

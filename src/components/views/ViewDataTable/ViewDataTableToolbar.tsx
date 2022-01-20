@@ -20,6 +20,7 @@ const useStyles = makeStyles({
         '& > *': {
             margin: '0 4px',
         },
+        marginTop: 5,
     },
 });
 

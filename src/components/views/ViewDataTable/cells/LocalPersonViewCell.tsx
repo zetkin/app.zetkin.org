@@ -4,8 +4,9 @@ import { Box, Typography } from '@material-ui/core';
 import { ViewGridCellParams } from '.';
 import { ZetkinPerson } from 'types/zetkin';
 
+export type LocalPersonParams = ViewGridCellParams<ZetkinPerson | null>;
 
-export type LocalPersonViewCellParams = ViewGridCellParams<ZetkinPerson | null>;
+export type LocalPersonViewCellParams = ViewGridCellParams<string | null>;
 
 interface LocalPersonViewCellProps {
     orgId: number | string;
@@ -13,8 +14,8 @@ interface LocalPersonViewCellProps {
 }
 
 const LocalPersonViewCell: FunctionComponent<LocalPersonViewCellProps> = ({ orgId, params }) => {
-    if (params.value) {
-        const person = params.value;
+    const person = params?.row && params.row[params.field];
+    if (person) {
         const name = `${person.first_name} ${person.last_name}`;
 
         return (

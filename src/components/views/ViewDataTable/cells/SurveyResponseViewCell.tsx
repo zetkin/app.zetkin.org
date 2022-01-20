@@ -20,9 +20,9 @@ interface SurveyResponseViewCellProps {
 
 const SurveyResponseViewCell: FunctionComponent<SurveyResponseViewCellProps> = ({ params }) => {
     const [anchorEl, setAnchorEl] = useState<Element | null>(null);
-    const rawValue: SurveyResponse[] = params.row[params.field];
+    const rawValue: SurveyResponse[] = params?.row && params.row[params?.field];
 
-    if (params.value?.length) {
+    if (rawValue?.length) {
         return (
             <>
                 <Box
