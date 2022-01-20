@@ -1,16 +1,16 @@
-import { Alert } from '@material-ui/lab';
+import { makeStyles } from '@material-ui/core';
 import NProgress from 'nprogress';
+import { useIntl } from 'react-intl';
 import { useRouter } from 'next/router';
 import { DataGridPro, GridColDef, useGridApiRef } from '@mui/x-data-grid-pro';
-import { FormattedMessage, useIntl } from 'react-intl';
-import { FunctionComponent, useState } from 'react';
-import { makeStyles, Snackbar } from '@material-ui/core';
+import { FunctionComponent, useContext, useEffect, useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 
 import deleteViewColumn from 'fetching/views/deleteViewColumn';
 import EmptyView from 'components/views/EmptyView';
 import patchViewColumn from 'fetching/views/patchViewColumn';
 import postViewColumn from 'fetching/views/postViewColumn';
+import SnackbarContext from 'hooks/SnackbarContext';
 import ViewRenameColumnDialog from '../ViewRenameColumnDialog';
 import { viewRowsResource } from 'api/viewRows';
 import { viewsResource } from 'api/views';
@@ -57,6 +57,10 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
     const { orgId } = router.query;
     const queryClient = useQueryClient();
     const viewId = view.id.toString();
+    const { showSnackbar } = useContext(SnackbarContext);
+
+    /* eslint-disable react-hooks/exhaustive-deps */
+    useEffect(() => showSnackbar('error', intl.formatMessage({ id: `misc.views.dataTableErrors.${error}` }) ), [error]);
 
     const addColumnMutation = useMutation(postViewColumn(orgId as string, viewId), {
         onError: () => {
@@ -325,15 +329,6 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
                     selectedColumn={ columnToConfigure }
                 />
             ) }
-            { /* Error alert */ }
-            <Snackbar
-                data-testid="data-table-error-indicator"
-                onClose={ () => setError(undefined) }
-                open={ Boolean(error) }>
-                <Alert severity="error">
-                    <FormattedMessage id={ `misc.views.dataTableErrors.${error}` } />
-                </Alert>
-            </Snackbar>
         </>
     );
 };
