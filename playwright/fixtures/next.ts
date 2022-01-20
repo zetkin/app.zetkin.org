@@ -18,7 +18,7 @@ interface NextTestFixtures {
     logout: () => void;
 }
 
-interface NextWorkerFixtures {
+export interface NextWorkerFixtures {
     appUri: string;
     moxy: {
         port: number;
