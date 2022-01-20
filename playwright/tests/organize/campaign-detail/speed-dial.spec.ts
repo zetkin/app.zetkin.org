@@ -6,7 +6,7 @@ import ReferendumSignatures  from '../../../mockData/orgs/KPD/campaigns/Referend
 import SpeakToFriend from '../../../mockData/orgs/KPD/campaigns/ReferendumSignatures/tasks/SpeakToFriend';
 
 test.describe('Single campaign page speed dial', () => {
-    test.beforeEach(async ({ moxy, login }) => {
+    test.beforeEach(({ moxy, login }) => {
         moxy.setZetkinApiMock('/orgs/1', 'get', KPD);
         moxy.setZetkinApiMock('/orgs/1/campaigns/1', 'get', ReferendumSignatures);
         moxy.setZetkinApiMock('/orgs/1/campaigns/1/actions', 'get', []);
@@ -15,7 +15,7 @@ test.describe('Single campaign page speed dial', () => {
         login();
     });
 
-    test.afterEach( ({ moxy }) => {
+    test.afterEach(({ moxy }) => {
         moxy.teardown();
     });
 
