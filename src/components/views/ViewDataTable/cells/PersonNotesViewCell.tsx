@@ -3,20 +3,24 @@ import { Typography } from '@material-ui/core';
 
 import { ViewGridCellParams } from '.';
 
-
-export type PersonNotesViewCellParams = ViewGridCellParams<{
+interface PersonNote {
     created: string;
     id: number;
     text: string;
-}[] | null>;
+}
+
+export type PersonNotesParams = ViewGridCellParams<PersonNote[] | null>;
+
+export type PersonNotesViewCellParams = ViewGridCellParams<string | null>;
 
 interface PersonNotesViewCellProps {
     params: PersonNotesViewCellParams;
 }
 
 const PersonNotesViewCell: FunctionComponent<PersonNotesViewCellProps> = ({ params }) => {
-    if (params.value?.length) {
-        const sorted = params.value.concat().sort((n0, n1) => {
+    const notes: PersonNote[] | null = params?.row && params.row[params.field];
+    if (notes?.length) {
+        const sorted = notes.concat().sort((n0, n1) => {
             return n0.created < n1.created? 1 : -1;
         });
 

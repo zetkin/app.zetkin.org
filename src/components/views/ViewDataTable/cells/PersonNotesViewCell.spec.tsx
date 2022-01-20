@@ -2,10 +2,16 @@ import { render } from 'utils/testing';
 
 import PersonNotesViewCell, { PersonNotesViewCellParams } from './PersonNotesViewCell';
 
+const personNotes = [
+    { created: '1989-07-05', id: 1, text: 'First note'  },
+    { created: '2021-07-05', id: 3, text: 'Third note' },
+    { created: '1857-07-05', id: 2, text: 'Second note' },
+];
 
 describe('PersonNotesViewCell', () => {
     const mockParams = (overrides?: Partial<PersonNotesViewCellParams>) => {
         return {
+            field: 'fieldName',
             value: null,
             ...overrides,
         } as PersonNotesViewCellParams;
@@ -21,7 +27,9 @@ describe('PersonNotesViewCell', () => {
 
     it('renders empty when content is empty', () => {
         const params = mockParams({
-            value: [],
+            row: {
+                fieldName: [],
+            },
         });
         const { baseElement } = render(
             <PersonNotesViewCell params={ params }/>,
@@ -31,11 +39,9 @@ describe('PersonNotesViewCell', () => {
 
     it('renders most recent note when there are more than one', () => {
         const params = mockParams({
-            value: [
-                { created: '1989-07-05', id: 1, text: 'First note'  },
-                { created: '2021-07-05', id: 3, text: 'Third note' },
-                { created: '1857-07-05', id: 2, text: 'Second note' },
-            ],
+            row: {
+                fieldName: personNotes,
+            },
         });
         const { getByText } = render(
             <PersonNotesViewCell params={ params }/>,

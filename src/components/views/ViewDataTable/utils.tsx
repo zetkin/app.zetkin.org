@@ -2,7 +2,7 @@ import { GridColDef } from '@mui/x-data-grid-pro';
 
 import { COLUMN_TYPE, ZetkinViewColumn } from 'types/views';
 import LocalPersonViewCell, { LocalPersonParams, LocalPersonViewCellParams } from './cells/LocalPersonViewCell';
-import PersonNotesViewCell, { PersonNotesViewCellParams } from './cells/PersonNotesViewCell';
+import PersonNotesViewCell, { PersonNotesParams, PersonNotesViewCellParams } from './cells/PersonNotesViewCell';
 import SurveyResponseViewCell, {
     SurveyResponseParams,
     SurveyResponseViewCellParams,
@@ -51,6 +51,10 @@ export function makeGridColDef(viewCol: ZetkinViewColumn, orgId: number | string
         colDef.renderCell = (params) => (
             <PersonNotesViewCell params={ params as PersonNotesViewCellParams }/>
         );
+        colDef.valueGetter = (params) => {
+            const notes = (params as PersonNotesParams).value;
+            return notes?.length ? notes.map(note => note.text).join(',') : null;
+        };
     }
     else if (viewCol.type == COLUMN_TYPE.LOCAL_PERSON) {
         colDef.minWidth = 50;
