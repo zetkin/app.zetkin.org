@@ -2,6 +2,7 @@ import { ExpandMore } from '@material-ui/icons';
 import { Box, Button, Popover, Typography } from '@material-ui/core';
 import { FunctionComponent, useState } from 'react';
 
+import { noPropagate } from 'utils';
 import { ViewGridCellParams } from '.';
 
 
@@ -23,7 +24,7 @@ const SurveyResponseViewCell: FunctionComponent<SurveyResponseViewCellProps> = (
                 <Box
                     alignItems="center"
                     display="flex"
-                    onClick={ ev => setAnchorEl(ev.target as Element) }>
+                    onClick={ noPropagate(ev => setAnchorEl(ev?.target as Element)) }>
                     <Button>
                         <ExpandMore/>
                     </Button>
