@@ -39,7 +39,7 @@ test.describe('Deleting a view column', () => {
     });
 
     test('shows an error modal if there is an error renaming the column', async ({ page, appUri, moxy }) => {
-        await moxy.setZetkinApiMock(`/orgs/1/people/views/1/columns/${AllMembersColumns[0].id}`, 'delete', undefined, 400);
+        moxy.setZetkinApiMock(`/orgs/1/people/views/1/columns/${AllMembersColumns[0].id}`, 'delete', undefined, 400);
 
         await page.goto(appUri + '/organize/1/people/views/1');
 
