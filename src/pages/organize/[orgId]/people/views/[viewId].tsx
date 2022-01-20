@@ -8,7 +8,7 @@ import getViewColumns from 'fetching/views/getViewColumns';
 import getViewRows from 'fetching/views/getViewRows';
 import { PageWithLayout } from 'types';
 import { scaffold } from 'utils/next';
-import SingleViewLayout from 'components/layout/organize/SingleViewLayout';
+import SingleViewLayout from 'layout/organize/SingleViewLayout';
 import ViewDataTable from 'components/views/ViewDataTable';
 import ZetkinQuery from 'components/ZetkinQuery';
 

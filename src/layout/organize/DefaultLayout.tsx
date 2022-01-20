@@ -2,7 +2,7 @@ import { FunctionComponent } from 'react';
 import { grey } from '@material-ui/core/colors';
 import { Box, makeStyles } from '@material-ui/core';
 
-import BreadcrumbTrail from '../../BreadcrumbTrail';
+import BreadcrumbTrail from 'components/BreadcrumbTrail';
 import OrganizeSidebar from 'components/organize/OrganizeSidebar';
 
 const useStyles = makeStyles((theme) => ({

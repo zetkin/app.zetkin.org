@@ -2,15 +2,15 @@ import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { useIntl } from 'react-intl';
 
-import getCampaign from '../../../../../../fetching/getCampaign';
-import getCampaignEvents from '../../../../../../fetching/getCampaignEvents';
-import getOrg from '../../../../../../fetching/getOrg';
-import { PageWithLayout } from '../../../../../../types';
-import { scaffold } from '../../../../../../utils/next';
-import SingleCampaignLayout from '../../../../../../components/layout/organize/SingleCampaignLayout';
+import getCampaign from 'fetching/getCampaign';
+import getCampaignEvents from 'fetching/getCampaignEvents';
+import getOrg from 'fetching/getOrg';
+import { PageWithLayout } from 'types';
+import { scaffold } from 'utils/next';
+import SingleCampaignLayout from 'layout/organize/SingleCampaignLayout';
 import { useQuery } from 'react-query';
-import ZetkinCalendar from '../../../../../../components/ZetkinCalendar';
-import ZetkinSpeedDial, { ACTIONS } from '../../../../../../components/ZetkinSpeedDial';
+import ZetkinCalendar from 'components/ZetkinCalendar';
+import ZetkinSpeedDial, { ACTIONS } from 'components/ZetkinSpeedDial';
 
 import { campaignTasksResource } from 'api/tasks';
 

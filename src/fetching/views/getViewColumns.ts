@@ -1,6 +1,6 @@
 import APIError from 'utils/apiError';
 import { defaultFetch } from '..';
-import { ZetkinViewColumn } from '../../types/zetkin';
+import { ZetkinViewColumn } from 'types/zetkin';
 
 export default function getViewColumns(orgId : string, viewId : string, fetch = defaultFetch) {
     return async () : Promise<ZetkinViewColumn[]> => {

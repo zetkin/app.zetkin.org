@@ -1,5 +1,5 @@
 import { GridStateColDef } from '@mui/x-data-grid-pro';
-import { render } from 'test-utils';
+import { render } from 'utils/testing';
 
 import { ZetkinPerson } from 'types/zetkin';
 import LocalPersonViewCell, { LocalPersonViewCellParams } from './LocalPersonViewCell';
