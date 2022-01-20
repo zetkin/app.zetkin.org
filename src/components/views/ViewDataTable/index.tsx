@@ -2,7 +2,7 @@ import { makeStyles } from '@material-ui/core';
 import NProgress from 'nprogress';
 import { useIntl } from 'react-intl';
 import { useRouter } from 'next/router';
-import { DataGridPro, GridColDef, useGridApiRef } from '@mui/x-data-grid-pro';
+import { DataGridPro, GridColDef, GridSortModel, useGridApiRef } from '@mui/x-data-grid-pro';
 import { FunctionComponent, useContext, useEffect, useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 
@@ -53,6 +53,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
     const [selection, setSelection] = useState<number[]>([]);
     const [error, setError] = useState<VIEW_DATA_TABLE_ERROR>();
     const [waiting, setWaiting] = useState(false);
+    const [sortModel, setSortModel] = useState<GridSortModel>([]);
     const router = useRouter();
     const { orgId } = router.query;
     const queryClient = useQueryClient();
@@ -60,7 +61,9 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
     const { showSnackbar } = useContext(SnackbarContext);
 
     /* eslint-disable react-hooks/exhaustive-deps */
-    useEffect(() => showSnackbar('error', intl.formatMessage({ id: `misc.views.dataTableErrors.${error}` }) ), [error]);
+    useEffect(() => {
+        if (error) showSnackbar('error', intl.formatMessage({ id: `misc.views.dataTableErrors.${error}` }) );
+    }, [error]);
 
     const addColumnMutation = useMutation(postViewColumn(orgId as string, viewId), {
         onError: () => {
@@ -275,10 +278,12 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
         toolbar: {
             disabled: waiting,
             isSmartSearch: !!view.content_query,
+            onChangeSortModel: (model) => setSortModel(model),
             onColumnCreate,
             onRowsRemove,
             onViewCreate,
             selection,
+            sortModel,
         },
     };
 
@@ -304,7 +309,9 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
                     noRowsLabel: intl.formatMessage({ id: `misc.views.empty.notice.${contentSource}` }),
                 }}
                 onSelectionModelChange={ model => setSelection(model as number[]) }
+                onSortModelChange={ (model) => setSortModel(model) }
                 rows={ gridRows }
+                sortModel={ sortModel }
                 style={{
                     border: 'none',
                 }}

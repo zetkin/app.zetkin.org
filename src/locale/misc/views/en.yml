@@ -68,6 +68,7 @@ removeTooltip: Smart search views do not currently support removing rows
 removeDialog:
     action: Are you sure you want to remove these rows from this view?
     title: Remove people from view
+showSorting: Sort
 suggested:
     created: Created by {name}
     sectionTitle: Suggested
