@@ -3,7 +3,10 @@ import { GridColDef } from '@mui/x-data-grid-pro';
 import { COLUMN_TYPE, ZetkinViewColumn } from 'types/views';
 import LocalPersonViewCell, { LocalPersonViewCellParams } from './cells/LocalPersonViewCell';
 import PersonNotesViewCell, { PersonNotesViewCellParams } from './cells/PersonNotesViewCell';
-import SurveyResponseViewCell, { SurveyResponseViewCellParams } from './cells/SurveyResponseViewCell';
+import SurveyResponseViewCell, {
+    SurveyResponseParams,
+    SurveyResponseViewCellParams,
+} from './cells/SurveyResponseViewCell';
 import SurveySubmittedViewCell, {
     getNewestSubmission,
     SurveySubmittedParams,
@@ -57,9 +60,14 @@ export function makeGridColDef(viewCol: ZetkinViewColumn, orgId: number | string
     }
     else if (viewCol.type == COLUMN_TYPE.SURVEY_RESPONSE) {
         colDef.width = 300;
+        colDef.type = 'string';
         colDef.renderCell = (params) => (
             <SurveyResponseViewCell params={ params as SurveyResponseViewCellParams }/>
         );
+        colDef.valueGetter = (params) => {
+            const responses = (params as SurveyResponseParams).value;
+            return responses?.length ? responses.map(response => response.text).join(',') : null;
+        };
     }
     else if (viewCol.type == COLUMN_TYPE.SURVEY_SUBMITTED) {
         colDef.type = 'date';

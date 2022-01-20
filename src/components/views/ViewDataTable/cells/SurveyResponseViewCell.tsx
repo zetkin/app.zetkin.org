@@ -5,11 +5,14 @@ import { FunctionComponent, useState } from 'react';
 import { noPropagate } from 'utils';
 import { ViewGridCellParams } from '.';
 
-
-export type SurveyResponseViewCellParams = ViewGridCellParams<{
+interface SurveyResponse {
     submission_id: number;
     text: string;
-}[] | null>;
+}
+
+export type SurveyResponseParams = ViewGridCellParams<SurveyResponse[] | null>;
+
+export type SurveyResponseViewCellParams = ViewGridCellParams<string | null>;
 
 interface SurveyResponseViewCellProps {
     params: SurveyResponseViewCellParams;
@@ -17,6 +20,7 @@ interface SurveyResponseViewCellProps {
 
 const SurveyResponseViewCell: FunctionComponent<SurveyResponseViewCellProps> = ({ params }) => {
     const [anchorEl, setAnchorEl] = useState<Element | null>(null);
+    const rawValue: SurveyResponse[] = params.row[params.field];
 
     if (params.value?.length) {
         return (
@@ -33,14 +37,14 @@ const SurveyResponseViewCell: FunctionComponent<SurveyResponseViewCellProps> = (
                         overflow: 'hidden',
                         textOverflow: 'ellipsis',
                     }}>
-                        { params.value[0].text }
+                        { rawValue[0].text }
                     </Typography>
                 </Box>
                 <Popover
                     anchorEl={ anchorEl }
                     onClose={ () => setAnchorEl(null) }
                     open={ Boolean(anchorEl) }>
-                    { params.value.map(response => (
+                    { rawValue.map((response) => (
                         <Box key={ response.submission_id } m={ 2 }>
                             <Typography>
                                 { response.text }
