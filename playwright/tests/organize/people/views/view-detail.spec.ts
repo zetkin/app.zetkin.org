@@ -14,7 +14,7 @@ const NewPerson = {
     last_name: 'Person',
 };
 
-test.describe.only('View detail page', () => {
+test.describe('View detail page', () => {
 
     test.beforeEach(({ moxy, login }) => {
         login();
