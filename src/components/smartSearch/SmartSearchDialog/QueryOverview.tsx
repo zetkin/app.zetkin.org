@@ -16,6 +16,7 @@ import DisplaySubQuery from '../filters/SubQuery/DisplaySubQuery';
 import DisplaySurveyOption from '../filters/SurveyOption/DisplaySurveyOption';
 import DisplaySurveyResponse from '../filters/SurveyResponse/DisplaySurveyResponse';
 import DisplaySurveySubmission from '../filters/SurveySubmission/DisplaySurveySubmission';
+import DisplayTask from '../filters/Task/DisplayTask';
 import DisplayUser from '../filters/User/DisplayUser';
 import {
     AnyFilterConfig,
@@ -32,6 +33,7 @@ import {
     SurveyOptionFilterConfig,
     SurveyResponseFilterConfig,
     SurveySubmissionFilterConfig,
+    TaskFilterConfig,
     UserFilterConfig,
 } from 'types/smartSearch';
 
@@ -148,6 +150,10 @@ const QueryOverview = (
                                         /> }
                                         { filter.type === FILTER_TYPE.SURVEY_SUBMISSION &&
                                         <DisplaySurveySubmission
+                                            filter={ filter as SmartSearchFilterWithId<SurveySubmissionFilterConfig>  }
+                                        /> }
+                                        { filter.type === FILTER_TYPE.TASK &&
+                                        <DisplayTask
                                             filter={ filter as SmartSearchFilterWithId<SurveySubmissionFilterConfig>  }
                                         /> }
                                         { filter.type === FILTER_TYPE.USER &&

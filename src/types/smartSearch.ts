@@ -12,6 +12,7 @@ export enum FILTER_TYPE {
     SURVEY_OPTION='survey_option',
     SURVEY_RESPONSE = 'survey_response',
     SURVEY_SUBMISSION = 'survey_submission',
+    TASK = 'task',
     USER = 'user'
 }
 
@@ -54,6 +55,13 @@ export enum TIME_FRAME {
     LAST_FEW_DAYS='lastFew',
 }
 
+export enum MATCHING {
+    MIN='min',
+    MAX='max',
+    BETWEEN='between',
+    ONCE='once',
+}
+
 export enum DATA_FIELD {
     FIRST_NAME = 'first_name',
     LAST_NAME = 'last_name',
@@ -65,6 +73,12 @@ export enum DATA_FIELD {
     ZIP_CODE = 'zip_code',
     PHONE = 'phone',
     ALT_PHONE = 'alt_phone'
+}
+
+export enum TASK_STATUS {
+    COMPLETED = 'completed',
+    IGNORED = 'ignored',
+    ASSIGNED = 'assigned',
 }
 
 /**
@@ -161,6 +175,37 @@ export interface SubQueryFilterConfig {
     query_id: number;
 }
 
+export interface TaskFilterConfig {
+    campaign?: number;
+    task?: number;
+    type?: 'demographic'
+        | 'offline'
+        | 'share_link'
+        | 'share_image'
+        | 'visit_link';
+    assigned?: {
+        after?: string;
+        before?: string;
+    };
+    completed?: {
+        after?: string;
+        before?: string;
+    };
+    ignored?: {
+        after?: string;
+        before?: string;
+    };
+    time_estimate?: {
+        max?: number;
+        min?: number;
+    };
+    matching?: {
+        max?: number;
+        min?: number;
+    };
+    operator: 'in' | 'notin';
+}
+
 export type AnyFilterConfig = (
     CallHistoryFilterConfig |
     CampaignParticipationConfig |
@@ -174,6 +219,7 @@ export type AnyFilterConfig = (
     SurveyOptionFilterConfig |
     SurveyResponseFilterConfig |
     SurveySubmissionFilterConfig |
+    TaskFilterConfig |
     UserFilterConfig
     ) // Add all filter objects here
 

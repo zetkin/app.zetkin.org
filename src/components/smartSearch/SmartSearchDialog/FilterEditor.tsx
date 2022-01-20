@@ -9,6 +9,7 @@ import SubQuery from '../filters/SubQuery';
 import SurveyOption from '../filters/SurveyOption';
 import SurveyResponse from '../filters/SurveyResponse';
 import SurveySubmission from '../filters/SurveySubmission';
+import Task from '../filters/Task';
 import User from '../filters/User';
 import { AnyFilterConfig, FILTER_TYPE, NewSmartSearchFilter, SmartSearchFilterWithId,
     ZetkinSmartSearchFilter } from 'types/smartSearch';
@@ -86,6 +87,12 @@ const FilterEditor = (
             /> }
             { filter.type === FILTER_TYPE.SURVEY_SUBMISSION &&
             <SurveySubmission
+                filter={ filter }
+                onCancel={ onCancelSubmitFilter }
+                onSubmit={ onSubmitFilter }
+            /> }
+            { filter.type === FILTER_TYPE.TASK &&
+            <Task
                 filter={ filter }
                 onCancel={ onCancelSubmitFilter }
                 onSubmit={ onSubmitFilter }

@@ -1,0 +1,20 @@
+preview:
+    min: at least {min} times
+    max: at most {max} times
+    between: between {min} and {max} times
+    once: at least once
+edit:
+    min: "{matchingSelect} {minInput} times"
+    max: "{matchingSelect} {maxInput} times"
+    between: "{matchingSelect} {minInput} and {maxInput} times"
+    once: "{matchingSelect}"
+labels:
+    min: at least
+    max: less than
+    between: between
+    once: at least once
+options:
+    min: at least
+    max: less than
+    between: between
+    once: at least once
