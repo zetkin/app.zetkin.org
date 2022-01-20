@@ -13,7 +13,7 @@ test.describe('Campaign action buttons', async () => {
         moxy.setZetkinApiMock('/orgs/1/campaigns/1/actions', 'get', []);
         moxy.setZetkinApiMock('/orgs/1/campaigns/1/tasks', 'get', []);
         moxy.setZetkinApiMock('/orgs/1/tasks', 'get', []);
-        await login();
+        login();
     });
 
     test.afterEach(({ moxy }) => {

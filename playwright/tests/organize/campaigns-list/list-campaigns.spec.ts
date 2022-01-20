@@ -17,7 +17,7 @@ test.describe('All campaigns page', () => {
     });
 
     test('shows list of campaigns ', async ({ page, appUri, moxy }) => {
-        await moxy.setZetkinApiMock( '/orgs/1/campaigns', 'get', [ReferendumSignatures, WelcomeNewMembers]);
+        moxy.setZetkinApiMock( '/orgs/1/campaigns', 'get', [ReferendumSignatures, WelcomeNewMembers]);
 
         await page.goto(appUri + '/organize/1/campaigns');
 
