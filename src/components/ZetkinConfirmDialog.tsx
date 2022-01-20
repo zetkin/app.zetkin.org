@@ -4,7 +4,7 @@ import { useIntl } from 'react-intl';
 import SubmitCancelButtons from 'components/forms/common/SubmitCancelButtons';
 import ZetkinDialog from 'components/ZetkinDialog';
 
-interface ZetkinConfirmDialogProps {
+export interface ZetkinConfirmDialogProps {
     open: boolean;
     onCancel: () => void;
     onSubmit: () => void;
@@ -37,6 +37,7 @@ const ZetkinConfirmDialog: React.FunctionComponent<ZetkinConfirmDialogProps> = (
                 <SubmitCancelButtons
                     onCancel={ () => onCancel() }
                     submitDisabled={ submitDisabled }
+                    submitText={ intl.formatMessage({ id: 'misc.ConfirmDialog.button' }) }
                 />
             </form>
         </ZetkinDialog>
