@@ -1,22 +1,20 @@
+import { GridRenderCellParams } from '@mui/x-data-grid-pro';
 import { render } from 'utils/testing';
-import SurveySubmittedViewCell, {
-    getNewestSubmission,
-    SurveySubmittedViewCellParams,
-} from './SurveySubmittedViewCell';
-
+import SurveySubmittedViewCell from './SurveySubmittedViewCell';
 
 describe('SurveySubmittedViewCell', () => {
-    const mockParams = (overrides?: Partial<SurveySubmittedViewCellParams>) => {
+    const mockParams = (overrides?: Partial<GridRenderCellParams>) => {
         return {
+            field: 'fieldName',
             value: null,
             ...overrides,
-        } as SurveySubmittedViewCellParams;
+        } as GridRenderCellParams;
     };
 
     it('renders empty when content is null', () => {
         const params = mockParams();
         const { baseElement } = render(
-            <SurveySubmittedViewCell params={ params as SurveySubmittedViewCellParams }/>,
+            <SurveySubmittedViewCell params={ params as GridRenderCellParams }/>,
         );
         expect(baseElement.innerHTML).toEqual('<div></div>');
     });
@@ -37,11 +35,13 @@ describe('SurveySubmittedViewCell', () => {
         ];
 
         const params = mockParams({
-            value: getNewestSubmission(submissions),
+            row: {
+                fieldName: submissions,
+            },
         });
 
         const { getByText } = render(
-            <SurveySubmittedViewCell params={ params as SurveySubmittedViewCellParams }/>,
+            <SurveySubmittedViewCell params={ params as GridRenderCellParams }/>,
         );
 
         getByText('3 days ago');

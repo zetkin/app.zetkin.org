@@ -1,4 +1,5 @@
 import { FunctionComponent } from 'react';
+import { GridRenderCellParams } from '@mui/x-data-grid-pro';
 import { Box, Typography } from '@material-ui/core';
 
 import { ViewGridCellParams } from '.';
@@ -6,11 +7,9 @@ import { ZetkinPerson } from 'types/zetkin';
 
 export type LocalPersonParams = ViewGridCellParams<ZetkinPerson | null>;
 
-export type LocalPersonViewCellParams = ViewGridCellParams<string | null>;
-
 interface LocalPersonViewCellProps {
     orgId: number | string;
-    params: LocalPersonViewCellParams;
+    params: GridRenderCellParams;
 }
 
 const LocalPersonViewCell: FunctionComponent<LocalPersonViewCellProps> = ({ orgId, params }) => {

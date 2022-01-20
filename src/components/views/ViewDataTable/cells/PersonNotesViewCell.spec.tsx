@@ -1,6 +1,6 @@
+import { GridRenderCellParams } from '@mui/x-data-grid-pro';
+import PersonNotesViewCell from './PersonNotesViewCell';
 import { render } from 'utils/testing';
-
-import PersonNotesViewCell, { PersonNotesViewCellParams } from './PersonNotesViewCell';
 
 const personNotes = [
     { created: '1989-07-05', id: 1, text: 'First note'  },
@@ -9,12 +9,12 @@ const personNotes = [
 ];
 
 describe('PersonNotesViewCell', () => {
-    const mockParams = (overrides?: Partial<PersonNotesViewCellParams>) => {
+    const mockParams = (overrides?: Partial<GridRenderCellParams>) => {
         return {
             field: 'fieldName',
             value: null,
             ...overrides,
-        } as PersonNotesViewCellParams;
+        } as GridRenderCellParams;
     };
 
     it('renders empty when content is null', () => {

@@ -1,4 +1,5 @@
 import { FunctionComponent } from 'react';
+import { GridRenderCellParams } from '@mui/x-data-grid-pro';
 import { Typography } from '@material-ui/core';
 
 import { ViewGridCellParams } from '.';
@@ -11,10 +12,8 @@ interface PersonNote {
 
 export type PersonNotesParams = ViewGridCellParams<PersonNote[] | null>;
 
-export type PersonNotesViewCellParams = ViewGridCellParams<string | null>;
-
 interface PersonNotesViewCellProps {
-    params: PersonNotesViewCellParams;
+    params: GridRenderCellParams;
 }
 
 const PersonNotesViewCell: FunctionComponent<PersonNotesViewCellProps> = ({ params }) => {

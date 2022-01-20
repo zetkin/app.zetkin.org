@@ -1,18 +1,10 @@
-import { GridColDef } from '@mui/x-data-grid-pro';
+import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid-pro';
 
 import { COLUMN_TYPE, ZetkinViewColumn } from 'types/views';
-import LocalPersonViewCell, { LocalPersonParams, LocalPersonViewCellParams } from './cells/LocalPersonViewCell';
-import PersonNotesViewCell, { PersonNotesParams, PersonNotesViewCellParams } from './cells/PersonNotesViewCell';
-import SurveyResponseViewCell, {
-    SurveyResponseParams,
-    SurveyResponseViewCellParams,
-} from './cells/SurveyResponseViewCell';
-import SurveySubmittedViewCell, {
-    getNewestSubmission,
-    SurveySubmittedParams,
-    SurveySubmittedViewCellParams,
-} from './cells/SurveySubmittedViewCell';
-
+import LocalPersonViewCell, { LocalPersonParams } from './cells/LocalPersonViewCell';
+import PersonNotesViewCell, { PersonNotesParams } from './cells/PersonNotesViewCell';
+import SurveyResponseViewCell, { SurveyResponseParams } from './cells/SurveyResponseViewCell';
+import SurveySubmittedViewCell, { getNewestSubmission, SurveySubmittedParams } from './cells/SurveySubmittedViewCell';
 
 export function colIdFromFieldName(colFieldName : string) : number {
     // colFieldName is a string like col_10, where 10 is the
@@ -49,7 +41,7 @@ export function makeGridColDef(viewCol: ZetkinViewColumn, orgId: number | string
     else if (viewCol.type == COLUMN_TYPE.PERSON_NOTES) {
         colDef.width = 300;
         colDef.renderCell = (params) => (
-            <PersonNotesViewCell params={ params as PersonNotesViewCellParams }/>
+            <PersonNotesViewCell params={ params as GridRenderCellParams }/>
         );
         colDef.valueGetter = (params) => {
             const notes = (params as PersonNotesParams).value;
@@ -59,7 +51,7 @@ export function makeGridColDef(viewCol: ZetkinViewColumn, orgId: number | string
     else if (viewCol.type == COLUMN_TYPE.LOCAL_PERSON) {
         colDef.minWidth = 50;
         colDef.renderCell = (params) => (
-            <LocalPersonViewCell orgId={ orgId } params={ params as LocalPersonViewCellParams }/>
+            <LocalPersonViewCell orgId={ orgId } params={ params as GridRenderCellParams }/>
         );
         colDef.valueGetter = (params) => {
             const person = (params as LocalPersonParams).value;
@@ -70,7 +62,7 @@ export function makeGridColDef(viewCol: ZetkinViewColumn, orgId: number | string
         colDef.width = 300;
         colDef.type = 'string';
         colDef.renderCell = (params) => (
-            <SurveyResponseViewCell params={ params as SurveyResponseViewCellParams }/>
+            <SurveyResponseViewCell params={ params as GridRenderCellParams }/>
         );
         colDef.valueGetter = (params) => {
             const responses = (params as SurveyResponseParams).value;
@@ -80,7 +72,7 @@ export function makeGridColDef(viewCol: ZetkinViewColumn, orgId: number | string
     else if (viewCol.type == COLUMN_TYPE.SURVEY_SUBMITTED) {
         colDef.type = 'date';
         colDef.renderCell = (params) => (
-            <SurveySubmittedViewCell params={ params as SurveySubmittedViewCellParams }/>
+            <SurveySubmittedViewCell params={ params as GridRenderCellParams }/>
         );
         colDef.valueGetter = (params) => {
             const submissions = (params as SurveySubmittedParams).value;

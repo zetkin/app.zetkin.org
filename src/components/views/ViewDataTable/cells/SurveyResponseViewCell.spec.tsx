@@ -1,6 +1,6 @@
+import { GridRenderCellParams } from '@mui/x-data-grid-pro';
 import { render } from 'utils/testing';
-
-import SurveyResponseViewCell, { SurveyResponseViewCellParams } from './SurveyResponseViewCell';
+import SurveyResponseViewCell from './SurveyResponseViewCell';
 
 const surveyResponses = [
     { submission_id: 1, text: 'This is the response' },
@@ -8,12 +8,12 @@ const surveyResponses = [
 ];
 
 describe('SurveyResponseViewCell', () => {
-    const mockParams = (overrides?: Partial<SurveyResponseViewCellParams>) => {
+    const mockParams = (overrides?: Partial<GridRenderCellParams>) => {
         return {
             field: 'fieldName',
             value: null,
             ...overrides,
-        } as SurveyResponseViewCellParams;
+        } as GridRenderCellParams;
     };
 
     it('renders empty when content is null', () => {

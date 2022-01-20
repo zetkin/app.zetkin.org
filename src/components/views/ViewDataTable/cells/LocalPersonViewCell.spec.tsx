@@ -1,17 +1,17 @@
-import { GridStateColDef } from '@mui/x-data-grid-pro';
-import { render } from 'utils/testing';
+import { GridRenderCellParams, GridStateColDef } from '@mui/x-data-grid-pro';
 
+import LocalPersonViewCell  from './LocalPersonViewCell';
+import { render } from 'utils/testing';
 import { ZetkinPerson } from 'types/zetkin';
-import LocalPersonViewCell, { LocalPersonViewCellParams } from './LocalPersonViewCell';
 
 
 describe('LocalPersonViewCell', () => {
-    const mockParams = (overrides?: Partial<LocalPersonViewCellParams>) => {
+    const mockParams = (overrides?: Partial<GridRenderCellParams>) => {
         return {
             field: 'fieldName',
             value: null,
             ...overrides,
-        } as LocalPersonViewCellParams;
+        } as GridRenderCellParams;
     };
 
     it('renders empty when content is null', () => {

@@ -1,4 +1,5 @@
 import { FunctionComponent } from 'react';
+import { GridRenderCellParams } from '@mui/x-data-grid-pro';
 import { ViewGridCellParams } from '.';
 import ZetkinRelativeTime from 'components/ZetkinRelativeTime';
 
@@ -6,9 +7,8 @@ interface Submission {submission_id: number; submitted: string}
 
 export type SurveySubmittedParams = ViewGridCellParams<Submission[] | null>;
 
-export type SurveySubmittedViewCellParams = ViewGridCellParams<string | null>;
-
-export const getNewestSubmission = (submissions: Submission[]): string => {
+export const getNewestSubmission = (submissions: Submission[]): string | null => {
+    if (!submissions.length) return null;
     const subsWithDates = submissions.map(sub => ({
         ...sub,
         submitted: new Date(sub.submitted),
@@ -18,8 +18,9 @@ export const getNewestSubmission = (submissions: Submission[]): string => {
     return sorted[0].submitted.toISOString();
 };
 
-const SurveySubmittedViewCell: FunctionComponent<{params: SurveySubmittedViewCellParams}> = ({ params }) => {
-    return params.value ? <ZetkinRelativeTime datetime={ params.value }/> : null;
+const SurveySubmittedViewCell: FunctionComponent<{params: GridRenderCellParams}> = ({ params }) => {
+    const latestSubmission = params?.row && getNewestSubmission(params.row[params.field]);
+    return latestSubmission ? <ZetkinRelativeTime datetime={  latestSubmission }/> : null;
 };
 
 export default SurveySubmittedViewCell;

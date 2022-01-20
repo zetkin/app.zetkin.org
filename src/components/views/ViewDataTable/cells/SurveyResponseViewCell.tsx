@@ -1,4 +1,5 @@
 import { ExpandMore } from '@material-ui/icons';
+import { GridRenderCellParams } from '@mui/x-data-grid-pro';
 import { Box, Button, Popover, Typography } from '@material-ui/core';
 import { FunctionComponent, useState } from 'react';
 
@@ -12,10 +13,8 @@ interface SurveyResponse {
 
 export type SurveyResponseParams = ViewGridCellParams<SurveyResponse[] | null>;
 
-export type SurveyResponseViewCellParams = ViewGridCellParams<string | null>;
-
 interface SurveyResponseViewCellProps {
-    params: SurveyResponseViewCellParams;
+    params: GridRenderCellParams;
 }
 
 const SurveyResponseViewCell: FunctionComponent<SurveyResponseViewCellProps> = ({ params }) => {
