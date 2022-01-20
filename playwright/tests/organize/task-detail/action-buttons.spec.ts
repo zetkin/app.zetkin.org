@@ -4,7 +4,7 @@ import test from '../../../fixtures/next';
 import ReferendumSignatureCollection from '../../../mockData/orgs/KPD/campaigns/ReferendumSignatures';
 import SpeakToFriend from '../../../mockData/orgs/KPD/campaigns/ReferendumSignatures/tasks/SpeakToFriend';
 
-test.describe.only('Task action buttons', async () => {
+test.describe('Task action buttons', async () => {
 
     test.beforeEach(async ({ login, moxy }) => {
         moxy.setZetkinApiMock('/orgs/1/tasks/1', 'get',  SpeakToFriend);
