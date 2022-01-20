@@ -1,5 +1,5 @@
 import singletonRouter from 'next/router';
-import { fireEvent, render } from 'test-utils';
+import { fireEvent, render } from 'utils/testing';
 
 import CampaignActionButtons from './CampaignActionButtons';
 

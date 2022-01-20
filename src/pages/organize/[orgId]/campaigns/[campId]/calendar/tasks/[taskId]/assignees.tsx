@@ -12,7 +12,7 @@ import patchQuery from 'fetching/patchQuery';
 import { QUERY_STATUS } from 'types/smartSearch';
 import QueryStatusAlert from 'components/smartSearch/QueryStatusAlert';
 import { scaffold } from 'utils/next';
-import SingleTaskLayout from 'components/layout/organize/SingleTaskLayout';
+import SingleTaskLayout from 'layout/organize/SingleTaskLayout';
 import SmartSearchDialog from 'components/smartSearch/SmartSearchDialog';
 import TaskAssigneesList from 'components/organize/tasks/TaskAssigneesList';
 import { taskResource } from 'api/tasks';

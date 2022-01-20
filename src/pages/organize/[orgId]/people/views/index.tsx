@@ -3,7 +3,7 @@ import Head from 'next/head';
 import { useIntl } from 'react-intl';
 
 import { PageWithLayout } from 'types';
-import PeopleLayout from 'components/layout/organize/PeopleLayout';
+import PeopleLayout from 'layout/organize/PeopleLayout';
 import { scaffold } from 'utils/next';
 import { viewsResource } from 'api/views';
 import { CreateViewActionButton, SuggestedViews, ViewsListTable  } from 'components/views';

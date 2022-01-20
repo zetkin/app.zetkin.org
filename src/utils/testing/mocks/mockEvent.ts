@@ -1,4 +1,4 @@
-import { mockObject } from 'test-utils/mocks';
+import { mockObject } from 'utils/testing/mocks';
 import { ZetkinEvent } from 'types/zetkin';
 
 const event: ZetkinEvent = {

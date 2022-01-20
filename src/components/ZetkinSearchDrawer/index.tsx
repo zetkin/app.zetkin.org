@@ -8,8 +8,8 @@ import {
 } from '@material-ui/core';
 import { FunctionComponent, useEffect, useRef, useState } from 'react';
 
-import getPeopleSearchResults from '../../fetching/getPeopleSearchResults';
-import useDebounce from '../../hooks/useDebounce';
+import getPeopleSearchResults from 'fetching/getPeopleSearchResults';
+import useDebounce from 'hooks/useDebounce';
 
 import ResultsList from './ResultsList';
 import SearchField from './SearchField';

@@ -1,10 +1,10 @@
 import { FormattedTime } from 'react-intl';
-import { getContrastColor } from '../../../utils/colorUtils';
+import { getContrastColor } from 'utils/colorUtils';
 import { grey } from '@material-ui/core/colors';
 import NextLink from 'next/link';
 import { Box,  Link, Tooltip, Typography } from '@material-ui/core';
 import { useEffect, useRef, useState } from 'react';
-import { ZetkinCampaign, ZetkinEvent } from '../../../types/zetkin';
+import { ZetkinCampaign, ZetkinEvent } from 'types/zetkin';
 
 const DEFAULT_COLOR = grey[900];
 

@@ -1,4 +1,4 @@
-import { render } from 'test-utils';
+import { render } from 'utils/testing';
 
 import PersonNotesViewCell, { PersonNotesViewCellParams } from './PersonNotesViewCell';
 
