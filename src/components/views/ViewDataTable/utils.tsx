@@ -4,7 +4,11 @@ import { COLUMN_TYPE, ZetkinViewColumn } from 'types/views';
 import LocalPersonViewCell, { LocalPersonViewCellParams } from './cells/LocalPersonViewCell';
 import PersonNotesViewCell, { PersonNotesViewCellParams } from './cells/PersonNotesViewCell';
 import SurveyResponseViewCell, { SurveyResponseViewCellParams } from './cells/SurveyResponseViewCell';
-import SurveySubmittedViewCell, { SurveySubmittedViewCellParams } from './cells/SurveySubmittedViewCell';
+import SurveySubmittedViewCell, {
+    getNewestSubmission,
+    SurveySubmittedParams,
+    SurveySubmittedViewCellParams,
+} from './cells/SurveySubmittedViewCell';
 
 
 export function colIdFromFieldName(colFieldName : string) : number {
@@ -58,9 +62,14 @@ export function makeGridColDef(viewCol: ZetkinViewColumn, orgId: number | string
         );
     }
     else if (viewCol.type == COLUMN_TYPE.SURVEY_SUBMITTED) {
+        colDef.type = 'date';
         colDef.renderCell = (params) => (
             <SurveySubmittedViewCell params={ params as SurveySubmittedViewCellParams }/>
         );
+        colDef.valueGetter = (params) => {
+            const submissions = (params as SurveySubmittedParams).value;
+            return submissions?.length ? getNewestSubmission(submissions) : null;
+        };
     }
 
     return colDef;

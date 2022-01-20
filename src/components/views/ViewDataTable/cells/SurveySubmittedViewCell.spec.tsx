@@ -1,5 +1,8 @@
 import { render } from 'utils/testing';
-import SurveySubmittedViewCell, { SurveySubmittedViewCellParams } from './SurveySubmittedViewCell';
+import SurveySubmittedViewCell, {
+    getNewestSubmission,
+    SurveySubmittedViewCellParams,
+} from './SurveySubmittedViewCell';
 
 
 describe('SurveySubmittedViewCell', () => {
@@ -13,7 +16,7 @@ describe('SurveySubmittedViewCell', () => {
     it('renders empty when content is null', () => {
         const params = mockParams();
         const { baseElement } = render(
-            <SurveySubmittedViewCell params={ params }/>,
+            <SurveySubmittedViewCell params={ params as SurveySubmittedViewCellParams }/>,
         );
         expect(baseElement.innerHTML).toEqual('<div></div>');
     });
@@ -27,15 +30,18 @@ describe('SurveySubmittedViewCell', () => {
             today.getHours() + 1,
         );
 
+        const submissions = [
+            { submission_id: 2, submitted: '1989-07-05' },
+            { submission_id: 3, submitted: threeDaysAgo.toISOString() },
+            { submission_id: 1, submitted: '1857-07-05' },
+        ];
+
         const params = mockParams({
-            value: [
-                { submission_id: 2, submitted: '1989-07-05' },
-                { submission_id: 3, submitted: threeDaysAgo.toISOString() },
-                { submission_id: 1, submitted: '1857-07-05' },
-            ],
+            value: getNewestSubmission(submissions),
         });
+
         const { getByText } = render(
-            <SurveySubmittedViewCell params={ params }/>,
+            <SurveySubmittedViewCell params={ params as SurveySubmittedViewCellParams }/>,
         );
 
         getByText('3 days ago');
