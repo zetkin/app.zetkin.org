@@ -7,7 +7,7 @@ import { useEffect, useRef } from 'react';
 
 import WeekCalendarEvent from './WeekCalendarEvent';
 import WeekCalendarTask from './WeekCalendarTask';
-import { ZetkinCampaign, ZetkinEvent, ZetkinTask } from '../../../types/zetkin';
+import { ZetkinCampaign, ZetkinEvent, ZetkinTask } from 'types/zetkin';
 
 interface WeekCalendarProps {
     baseHref: string;

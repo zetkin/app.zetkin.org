@@ -1,4 +1,4 @@
-import { mockObject } from 'test-utils/mocks';
+import { mockObject } from 'utils/testing/mocks';
 import { ZetkinView } from 'types/zetkin';
 
 const view: ZetkinView = {

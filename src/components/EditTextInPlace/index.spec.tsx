@@ -1,6 +1,6 @@
 import userEvent from '@testing-library/user-event';
-import { act, render } from 'test-utils';
-import EditTextinPlace, { EditTextinPlaceProps } from './index';
+import { act, render } from 'utils/testing';
+import EditTextinPlace, { EditTextinPlaceProps } from '.';
 
 const props: EditTextinPlaceProps = {
     onChange: async () => undefined,

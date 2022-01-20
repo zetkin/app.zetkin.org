@@ -1,6 +1,6 @@
 import { ASSIGNED_STATUS } from 'types/tasks';
-import mockAssignedTask from 'test-utils/mocks/mockAssignedTask';
-import { render } from 'test-utils';
+import mockAssignedTask from 'utils/testing/mocks/mockAssignedTask';
+import { render } from 'utils/testing';
 import singletonRouter from 'next/router';
 import TaskAssigneesList from '.';
 

@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { Box, Button, Collapse, makeStyles, Tab, Tabs, Theme, Typography } from '@material-ui/core';
 import { FunctionComponent, ReactElement, useState } from 'react';
 
-import BreadcrumbTrail from '../../BreadcrumbTrail';
+import BreadcrumbTrail from 'components/BreadcrumbTrail';
 import OrganizeSidebar from 'components/organize/OrganizeSidebar';
 import ZetkinEllipsisMenu, { ZetkinEllipsisMenuProps } from 'components/ZetkinEllipsisMenu';
 

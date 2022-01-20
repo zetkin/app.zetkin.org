@@ -5,16 +5,16 @@ import Head from 'next/head';
 import { useIntl } from 'react-intl';
 import { useQuery } from 'react-query';
 
-import AllCampaignsLayout from '../../../../components/layout/organize/AllCampaignsLayout';
+import AllCampaignsLayout from 'layout/organize/AllCampaignsLayout';
 import CampaignCard from 'components/organize/campaigns/CampaignCard';
-import getCampaigns from '../../../../fetching/getCampaigns';
-import getEvents from '../../../../fetching/getEvents';
-import getOrg from '../../../../fetching/getOrg';
-import getUpcomingEvents from '../../../../fetching/getUpcomingEvents';
-import { PageWithLayout } from '../../../../types';
-import { scaffold } from '../../../../utils/next';
-import ZetkinSection from '../../../../components/ZetkinSection';
-import ZetkinSpeedDial, { ACTIONS } from '../../../../components/ZetkinSpeedDial';
+import getCampaigns from 'fetching/getCampaigns';
+import getEvents from 'fetching/getEvents';
+import getOrg from 'fetching/getOrg';
+import getUpcomingEvents from 'fetching/getUpcomingEvents';
+import { PageWithLayout } from 'types';
+import { scaffold } from 'utils/next';
+import ZetkinSection from 'components/ZetkinSection';
+import ZetkinSpeedDial, { ACTIONS } from 'components/ZetkinSpeedDial';
 
 const scaffoldOptions = {
     authLevelRequired: 2,

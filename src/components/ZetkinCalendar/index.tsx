@@ -5,11 +5,11 @@ import { Box, Button, makeStyles, MenuItem, TextField, Tooltip, Typography } fro
 import { FormattedDate, FormattedMessage as Msg } from 'react-intl';
 
 import MonthCalendar from './MonthCalendar';
-import { useFocusDate } from '../../hooks';
+import { useFocusDate } from 'hooks';
 import { useIntl } from 'react-intl';
 import WeekCalendar from './WeekCalendar';
 import { CALENDAR_RANGES, getViewRange } from './utils';
-import { ZetkinCampaign, ZetkinEvent, ZetkinTask } from '../../types/zetkin';
+import { ZetkinCampaign, ZetkinEvent, ZetkinTask } from 'types/zetkin';
 
 interface ZetkinCalendarProps {
     baseHref: string;

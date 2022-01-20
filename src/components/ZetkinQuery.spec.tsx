@@ -1,7 +1,7 @@
-import { render } from 'test-utils';
+import { render } from 'utils/testing';
 import { LinearProgress, Typography } from '@material-ui/core';
 
-import mockUseQueryResult from 'test-utils/mocks/mockUseQueryResult';
+import mockUseQueryResult from 'utils/testing/mocks/mockUseQueryResult';
 import ZetkinQuery from './ZetkinQuery';
 
 describe('<ZetkinQuery />', () => {
