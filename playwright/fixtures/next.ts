@@ -29,6 +29,7 @@ interface NextWorkerFixtures {
             status?: MockResponseSetter['status'],
             headers?: MockResponseSetter['headers'],
         ) => () => void;
+        teardown: () => void;
     } & Omit<Moxy, 'start' | 'stop'>;
 }
 
@@ -106,12 +107,18 @@ const test = base.extend<NextTestFixtures, NextWorkerFixtures>({
                     });
             };
 
+            const teardown = () => {
+                rest.clearLog(),
+                rest.removeMock();
+            };
+
             start();
 
             await use({
                 port: MOXY_PORT,
                 setZetkinApiMock,
                 setMock,
+                teardown,
                 ...rest,
             });
 
