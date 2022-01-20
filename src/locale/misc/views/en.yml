@@ -56,9 +56,18 @@ dataTableErrors:
     create_column: There was an error creating the column
     delete_column: There was an error deleting the column
     modify_column: There was an error editing the column
+    remove_rows: There was an error removing one or more rows
 editViewTitleAlert:
     success: Updated title!
     error: Error. Title not updated
+removeFromSelection: Remove {numSelected, plural,
+    one {1 person}
+    other {{numSelected} people}
+    } from view
+removeTooltip: Smart search views do not currently support removing rows
+removeDialog:
+    action: Are you sure you want to remove these rows from this view?
+    title: Remove people from view
 suggested:
     created: Created by {name}
     sectionTitle: Suggested

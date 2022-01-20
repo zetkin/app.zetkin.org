@@ -1,10 +1,9 @@
 import { Alert } from '@material-ui/lab';
-import { FunctionComponent } from 'react';
 import NProgress from 'nprogress';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
 import { DataGridPro, GridColDef, useGridApiRef } from '@mui/x-data-grid-pro';
 import { FormattedMessage, useIntl } from 'react-intl';
+import { FunctionComponent, useState } from 'react';
 import { makeStyles, Snackbar } from '@material-ui/core';
 import { useMutation, useQueryClient } from 'react-query';
 
@@ -23,7 +22,6 @@ import ViewDataTableColumnMenu, { ViewDataTableColumnMenuProps } from './ViewDat
 import ViewDataTableFooter, { ViewDataTableFooterProps } from './ViewDataTableFooter';
 import ViewDataTableToolbar, { ViewDataTableToolbarProps } from './ViewDataTableToolbar';
 import { ZetkinViewColumn, ZetkinViewRow } from 'types/zetkin';
-
 
 const useStyles = makeStyles((theme) => ({
     '@keyframes addedRowAnimation': {
@@ -54,6 +52,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
     const [columnToRename, setColumnToRename] = useState<ZetkinViewColumn | null>(null);
     const [selection, setSelection] = useState<number[]>([]);
     const [error, setError] = useState<VIEW_DATA_TABLE_ERROR>();
+    const [waiting, setWaiting] = useState(false);
     const router = useRouter();
     const { orgId } = router.query;
     const queryClient = useQueryClient();
@@ -97,6 +96,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
     });
 
     const addRowMutation = viewRowsResource(view.organization.id, viewId).useAdd();
+    const removeRowsMutation = viewRowsResource(view.organization.id, viewId).useRemoveMany();
 
     const onColumnCancel = () => {
         setColumnToConfigure(null);
@@ -165,6 +165,16 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
     };
 
     const createNewViewMutation = viewsResource(orgId as string).useCreate();
+
+    const onRowsRemove = () => {
+        setWaiting(true);
+        removeRowsMutation.mutate(selection, {
+            onSettled: (res) => {
+                setWaiting(false);
+                if (res?.failed?.length) setError(VIEW_DATA_TABLE_ERROR.REMOVE_ROWS);
+            },
+        });
+    };
 
     const onViewCreate = () => {
         createNewViewMutation.mutate({ rows: selection }, {
@@ -259,7 +269,10 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
             viewId,
         },
         toolbar: {
+            disabled: waiting,
+            isSmartSearch: !!view.content_query,
             onColumnCreate,
+            onRowsRemove,
             onViewCreate,
             selection,
         },

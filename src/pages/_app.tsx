@@ -16,6 +16,7 @@ import { ThemeProvider } from '@material-ui/core/styles';
 import { useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
+import { ConfirmDialogProvider } from 'hooks/ConfirmDialogProvider';
 import { LocalTimeToJsonPlugin } from '../utils/dateUtils';
 import { PageWithLayout } from '../types';
 import { SnackbarProvider } from 'hooks/SnackbarContext';
@@ -77,10 +78,12 @@ function MyApp({ Component, pageProps } : AppProps) : JSX.Element {
                         messages={ messages }>
                         <QueryClientProvider client={ queryClient }>
                             <SnackbarProvider>
-                                <Hydrate state={ dehydratedState }>
-                                    <CssBaseline />
-                                    { getLayout(<Component { ...restProps } />, restProps) }
-                                </Hydrate>
+                                <ConfirmDialogProvider>
+                                    <Hydrate state={ dehydratedState }>
+                                        <CssBaseline />
+                                        { getLayout(<Component { ...restProps } />, restProps) }
+                                    </Hydrate>
+                                </ConfirmDialogProvider>
                             </SnackbarProvider>
                             <ReactQueryDevtools initialIsOpen={ false } />
                         </QueryClientProvider>
