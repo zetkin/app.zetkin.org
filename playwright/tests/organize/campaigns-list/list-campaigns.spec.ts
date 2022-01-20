@@ -5,7 +5,7 @@ import KPD from '../../../mockData/orgs/KPD';
 import ReferendumSignatures  from '../../../mockData/orgs/KPD/campaigns/ReferendumSignatures';
 import WelcomeNewMembers from '../../../mockData/orgs/KPD/campaigns/WelcomeNewMembers';
 
-test.describe.only('All campaigns page', () => {
+test.describe('All campaigns page', () => {
 
     test.beforeEach(async ({ moxy, login }) => {
         login();

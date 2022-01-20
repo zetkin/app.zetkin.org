@@ -7,57 +7,24 @@ import WelcomeNewMembers from '../../../mockData/orgs/KPD/campaigns/WelcomeNewMe
 
 test.describe('All campaigns page speed dial', () => {
 
-    test.beforeAll(async ({ moxy, login }) => {
-        await moxy.removeMock();
-        await login();
-
-        await moxy.setMock( '/orgs/1', 'get', {
-            data: {
-                data: KPD,
-            },
-        });
+    test.beforeEach(async ({ moxy, login }) => {
+        login();
+        moxy.setZetkinApiMock( '/orgs/1', 'get',  KPD);
     });
 
-    test.afterAll(async ({ moxy }) => {
-        await moxy.removeMock();
+    test.afterEach(async ({ moxy }) => {
+        await moxy.teardown();
     });
 
     test.describe('allows user to create a campiagn', async () => {
-        test.beforeAll(async ({ moxy }) => {
-            await moxy.setMock( '/orgs/1/campaigns', 'get', {
-                data: {
-                    data: [WelcomeNewMembers],
-                },
-            });
-        });
-
-        test.afterAll(async ({ moxy })=> {
-            await moxy.removeMock( '/orgs/1/campaigns', 'get');
-        });
-
-        test.afterEach(async ({ moxy }) => {
-            moxy.removeMock('/orgs/1/campaigns', 'post');
+        test.beforeEach(async ({ moxy }) => {
+            moxy.setZetkinApiMock( '/orgs/1/campaigns', 'get', [WelcomeNewMembers]);
         });
 
         test('user can create a new campaign', async ({ appUri, page, moxy }) => {
-            await moxy.setMock('/orgs/1/campaigns', 'post', {
-                data: {
-                    data: ReferendumSignatures,
-                },
-                status: 201,
-            });
-
-            await moxy.setMock('/orgs/1/campaigns/1', 'get', {
-                data: {
-                    data: ReferendumSignatures,
-                },
-            });
-
-            await moxy.setMock('/orgs/1/campaigns/1/actions', 'get', {
-                data: {
-                    data: [],
-                },
-            });
+            await moxy.setZetkinApiMock('/orgs/1/campaigns', 'post', ReferendumSignatures, 201);
+            await moxy.setZetkinApiMock('/orgs/1/campaigns/1', 'get', ReferendumSignatures);
+            await moxy.setZetkinApiMock('/orgs/1/campaigns/1/actions', 'get', []);
 
             await page.goto(appUri + '/organize/1/campaigns#create-campaign');
 
@@ -75,12 +42,7 @@ test.describe('All campaigns page speed dial', () => {
         });
 
         test('shows error alert when response error', async ({ page, moxy, appUri }) => {
-            await moxy.setMock('/orgs/1/tasks', 'post', {
-                data: {
-                    data: {},
-                },
-                status: 400,
-            });
+            await moxy.setZetkinApiMock('/orgs/1/tasks', 'post', {}, 400);
 
             await page.goto(appUri + '/organize/1/campaigns#create-campaign');
 
