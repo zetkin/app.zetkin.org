@@ -23,7 +23,9 @@ const ViewsListTable: React.FunctionComponent = () => {
     const viewsQuery = viewsResource(orgId as string).useQuery();
 
     useEffect(() => {
-        if (selectedViewToDelete) deleteView();
+        if (selectedViewToDelete) {
+            deleteView();
+        }
     }, [selectedViewToDelete]);
 
     const deleteView = () => {
@@ -114,8 +116,9 @@ const ViewsListTable: React.FunctionComponent = () => {
                             disableSelectionOnClick
                             hideFooter
                             onRowClick={ (row) => {
-                                if (row.id !== selectedViewToDelete)
+                                if (row.id !== selectedViewToDelete) {
                                     router.push(`/organize/${orgId}/people/views/${row.id}`);
+                                }
                             } }
                             rows={ rows }
                             style={{
