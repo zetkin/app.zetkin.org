@@ -1,12 +1,11 @@
 import { FormattedMessage } from 'react-intl';
 import { makeStyles } from '@material-ui/styles';
+import { useState } from 'react';
 import { Add, Delete, ImportExport } from '@material-ui/icons';
 import { Box, Button, Divider, FormControl, IconButton, MenuItem, Popover, Select, Typography } from '@material-ui/core';
-import { useContext, useState } from 'react';
+import { GridColDef, GridSortModel } from '@mui/x-data-grid-pro';
 
-import { GridSortModel } from '@mui/x-data-grid-pro';
 import ShiftKeyIcon from './ShiftKeyIcon';
-import { ViewDataTableContext } from './ViewDataTableContext';
 
 const useStyles = makeStyles({
     deleteButton: {
@@ -25,10 +24,17 @@ const useStyles = makeStyles({
     },
 });
 
-const ViewDataTableSorting: React.FunctionComponent = () => {
+interface ViewDataTableSortingProps {
+    gridColumns: GridColDef[];
+    setSortModel: (model: GridSortModel | []) => void;
+    sortModel: GridSortModel | [];
+}
+
+const ViewDataTableSorting: React.FunctionComponent<ViewDataTableSortingProps> = ({
+    gridColumns, setSortModel, sortModel,
+}) => {
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
     const classes = useStyles();
-    const { gridColumns, setSortModel, sortModel } = useContext(ViewDataTableContext);
     const open = Boolean(anchorEl);
     const id = open ? 'sort-options' : undefined;
 

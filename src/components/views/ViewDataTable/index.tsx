@@ -12,7 +12,6 @@ import EmptyView from 'components/views/EmptyView';
 import patchViewColumn from 'fetching/views/patchViewColumn';
 import postViewColumn from 'fetching/views/postViewColumn';
 import SnackbarContext from 'hooks/SnackbarContext';
-import { ViewDataTableContext } from './ViewDataTableContext';
 import ViewRenameColumnDialog from '../ViewRenameColumnDialog';
 import { viewRowsResource } from 'api/viewRows';
 import { viewsResource } from 'api/views';
@@ -282,11 +281,14 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
         },
         toolbar: {
             disabled: waiting,
+            gridColumns,
             isSmartSearch: !!view.content_query,
             onColumnCreate,
             onRowsRemove,
             onViewCreate,
             selection,
+            setSortModel,
+            sortModel,
         },
     };
 
@@ -294,7 +296,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
     const contentSource = view.content_query? VIEW_CONTENT_SOURCE.DYNAMIC : VIEW_CONTENT_SOURCE.STATIC;
 
     return (
-        <ViewDataTableContext.Provider value={{ gridColumns, setSortModel, sortModel }}>
+        <>
             <DataGridPro
                 apiRef={ gridApiRef }
                 autoHeight={ empty }
@@ -342,7 +344,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
                     selectedColumn={ columnToConfigure }
                 />
             ) }
-        </ViewDataTableContext.Provider>
+        </>
     );
 };
 
