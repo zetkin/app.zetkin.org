@@ -29,7 +29,7 @@ test.describe('View detail page', () => {
         expect(await page.locator('text=Rosa').count()).toEqual(1);
     });
 
-    test.skip('allows title to be changed', async ({ page, appUri, moxy }) => {
+    test('allows title to be changed', async ({ page, appUri, moxy }) => {
         moxy.setZetkinApiMock('/v1/orgs/1/people/views/1', 'patch');
 
         const inputSelector = 'data-testid=page-title >> input';
@@ -39,6 +39,7 @@ test.describe('View detail page', () => {
         await page.click(inputSelector);
         await page.fill(inputSelector, 'Friends of Zetkin');
         await page.keyboard.press('Enter');
+        await page.waitForRequest('**/orgs/1/people/views/1');
 
         // Check body of request
         const titleUpdateRequest = moxy.log().find(mock =>
@@ -68,7 +69,7 @@ test.describe('View detail page', () => {
         await expect(page.url()).toEqual(appUri + `/organize/1/people/views/${NewView.id}`);
     });
 
-    test.skip('configure Smart Search query in empty view', async ({ page, appUri, moxy }) => {
+    test('configure Smart Search query in empty view', async ({ page, appUri, moxy }) => {
         moxy.setZetkinApiMock('/orgs/1/people/views/1/rows', 'get',  []);
         moxy.setZetkinApiMock('/orgs/1/people/queries/1', 'patch', {
             filter_spec: [{
@@ -87,7 +88,7 @@ test.describe('View detail page', () => {
         await page.click('data-testid=StartsWith-select-all');
         await page.click('data-testid=FilterForm-saveButton');
         await page.click('data-testid=QueryOverview-saveButton');
-        await page.waitForTimeout(200);
+        await page.waitForRequest('**/orgs/1/people/views/1/rows');
 
         // Make sure previous content query was deleted
         expect(moxy.log().find(req =>

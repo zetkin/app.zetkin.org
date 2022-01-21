@@ -20,7 +20,7 @@ test.describe('View detail page', () => {
         moxy.teardown();
     });
 
-    test.skip('Remove people from view', async ({ page, appUri, moxy }) => {
+    test('Remove people from view', async ({ page, appUri, moxy }) => {
         moxy.setZetkinApiMock('/v1/orgs/1/people/views/1/rows/1', 'delete', undefined, 204);
 
         const removeButton = 'data-testid=ViewDataTableToolbar-removeFromSelection';
@@ -30,6 +30,7 @@ test.describe('View detail page', () => {
         // Show toolbar button on row selection
         await expect(page.locator(removeButton)).toBeHidden();
         await page.locator('[role=cell]:has-text("Clara")').click();
+        await page.locator(removeButton).waitFor();
         await expect(page.locator(removeButton)).toBeVisible();
 
         // Show modal on click remove button -> click confirm to close modal
