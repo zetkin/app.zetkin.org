@@ -7,7 +7,7 @@ import AllMembersRows from '../../../../mockData/orgs/KPD/people/views/AllMember
 import KPD from '../../../../mockData/orgs/KPD';
 import NewView from '../../../../mockData/orgs/KPD/people/views/NewView';
 
-test.describe.only('View detail page', () => {
+test.describe('View detail page', () => {
 
     test.beforeEach(({ moxy, login }) => {
         login();
@@ -29,7 +29,7 @@ test.describe.only('View detail page', () => {
         expect(await page.locator('text=Rosa').count()).toEqual(1);
     });
 
-    test('allows title to be changed', async ({ page, appUri, moxy }) => {
+    test.skip('allows title to be changed', async ({ page, appUri, moxy }) => {
         moxy.setZetkinApiMock('/v1/orgs/1/people/views/1', 'patch');
 
         const inputSelector = 'data-testid=page-title >> input';
@@ -68,7 +68,7 @@ test.describe.only('View detail page', () => {
         await expect(page.url()).toEqual(appUri + `/organize/1/people/views/${NewView.id}`);
     });
 
-    test('configure Smart Search query in empty view', async ({ page, appUri, moxy }) => {
+    test.skip('configure Smart Search query in empty view', async ({ page, appUri, moxy }) => {
         moxy.setZetkinApiMock('/orgs/1/people/views/1/rows', 'get',  []);
         moxy.setZetkinApiMock('/orgs/1/people/queries/1', 'patch', {
             filter_spec: [{
