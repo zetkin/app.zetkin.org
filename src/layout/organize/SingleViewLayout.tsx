@@ -1,34 +1,44 @@
-import { Box } from '@material-ui/core';
 import { useIntl } from 'react-intl';
 import { useRouter } from 'next/router';
+import { Box, makeStyles, Theme } from '@material-ui/core';
 import { FunctionComponent, useContext, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 
+import { ConfirmDialogContext } from 'hooks/ConfirmDialogProvider';
 import { defaultFetch } from 'fetching';
 import EditTextinPlace from 'components/EditTextInPlace';
 import getView from 'fetching/views/getView';
+import NProgress from 'nprogress';
 import patchView from 'fetching/views/patchView';
 import SnackbarContext from 'hooks/SnackbarContext';
 import TabbedLayout from './TabbedLayout';
 import ViewJumpMenu from 'components/views/ViewJumpMenu';
 import ViewSmartSearchDialog from 'components/views/ViewSmartSearchDialog';
 import { viewsResource } from 'api/views';
-import ZetkinConfirmDialog from 'components/ZetkinConfirmDialog';
 import { ZetkinEllipsisMenuProps } from 'components/ZetkinEllipsisMenu';
 import ZetkinQuery from 'components/ZetkinQuery';
 
+const useStyles = makeStyles<Theme, { deactivated: boolean }>(() => ({
+    deactivateWrapper: {
+        filter: props => props.deactivated ? 'grayscale(1) opacity(0.5)' : 'none',
+        pointerEvents: props => props.deactivated ? 'none' : 'all',
+        transition: 'filter 0.3s ease',
+    },
+}));
 
 const SingleViewLayout: FunctionComponent = ({ children }) => {
     const router = useRouter();
     const { orgId, viewId } = router.query;
 
+    const [deactivated, setDeactivated] = useState(false);
+    const classes = useStyles({ deactivated });
     const intl = useIntl();
     const queryClient = useQueryClient();
-    const [deleteViewDialogOpen, setDeleteViewDialogOpen] = useState(false);
     const [queryDialogOpen, setQueryDialogOpen] = useState(false);
     const viewQuery = useQuery(['view', viewId ], getView(orgId as string, viewId as string));
     const patchViewMutation = useMutation(patchView(orgId as string, viewId as string));
     const { showSnackbar } = useContext(SnackbarContext);
+    const { showConfirmDialog } = useContext(ConfirmDialogContext);
     const deleteMutation = viewsResource(orgId as string).useDelete();
 
     const updateTitle = async (newTitle: string) => {
@@ -97,14 +107,36 @@ const SingleViewLayout: FunctionComponent = ({ children }) => {
         });
     }
 
+    const deleteView = () => {
+        if (view) {
+            setDeactivated(true);
+            NProgress.start();
+            deleteMutation.mutate(view.id, {
+                onError: () => {
+                    setDeactivated(false);
+                    showSnackbar('error', intl.formatMessage({ id: 'pages.people.views.layout.deleteDialog.error' }));
+                },
+                onSuccess: () => {
+                    router.push(`/organize/${orgId}/people/views`);
+                },
+            });
+        }
+    };
+
     ellipsisMenu.push({
         id: 'delete-view',
         label: intl.formatMessage({ id: 'pages.people.views.layout.ellipsisMenu.delete' }),
-        onSelect: () => setDeleteViewDialogOpen(true),
+        onSelect: () => {
+            showConfirmDialog({
+                onSubmit: deleteView,
+                title: intl.formatMessage({ id: 'pages.people.views.layout.deleteDialog.title' }),
+                warningText: intl.formatMessage({ id: 'pages.people.views.layout.deleteDialog.warningText' }),
+            });
+        },
     });
 
     return (
-        <>
+        <Box className={ classes.deactivateWrapper }>
             <TabbedLayout
                 baseHref={ `/organize/${orgId}/people/views/${viewId}` }
                 defaultTab="/"
@@ -123,26 +155,7 @@ const SingleViewLayout: FunctionComponent = ({ children }) => {
                     view={ view }
                 />
             ) }
-            { view &&
-            <ZetkinConfirmDialog
-                onCancel={ () => setDeleteViewDialogOpen(false) }
-                onSubmit={ () => {
-                    deleteMutation.mutate(view.id, {
-                        onError: () => {
-                            showSnackbar('error', intl.formatMessage({ id: 'pages.people.views.layout.deleteDialog.error' }));
-                        },
-                        onSuccess: () => {
-                            router.push(`/organize/${orgId}/people/views`);
-                        },
-                    });
-                } }
-                open={ deleteViewDialogOpen }
-                submitDisabled={ deleteMutation.isLoading || deleteMutation.isSuccess }
-                title={ intl.formatMessage({ id: 'pages.people.views.layout.deleteDialog.title' }) }
-                warningText={ intl.formatMessage({ id: 'pages.people.views.layout.deleteDialog.warningText' }) }
-            />
-            }
-        </>
+        </Box>
     );
 };
 
