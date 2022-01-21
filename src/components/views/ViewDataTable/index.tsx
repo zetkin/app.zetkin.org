@@ -313,6 +313,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
                 }}
                 onSelectionModelChange={ model => setSelection(model as number[]) }
                 onSortModelChange={ (model) => {
+                    // Something strange going on here with infinite state updates, so I added the line below
                     if (!isEqual(model, sortModel)) setSortModel(model);
                 } }
                 rows={ gridRows }
