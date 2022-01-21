@@ -2,7 +2,18 @@ import { FormattedMessage } from 'react-intl';
 import { makeStyles } from '@material-ui/styles';
 import { useState } from 'react';
 import { Add, Delete, ImportExport } from '@material-ui/icons';
-import { Box, Button, Divider, FormControl, IconButton, MenuItem, Popover, Select, Typography } from '@material-ui/core';
+import {
+    Badge,
+    Box,
+    Button,
+    Divider,
+    FormControl,
+    IconButton,
+    MenuItem,
+    Popover,
+    Select,
+    Typography,
+} from '@material-ui/core';
 import { GridColDef, GridSortModel } from '@mui/x-data-grid-pro';
 
 import ShiftKeyIcon from './ShiftKeyIcon';
@@ -61,12 +72,15 @@ const ViewDataTableSorting: React.FunctionComponent<ViewDataTableSortingProps> =
 
     return (
         <>
-            <Button
-                data-testid="ViewDataTableToolbar-showSorting"
-                onClick={ handleSortButtonClick }
-                startIcon={ <ImportExport /> }>
-                <FormattedMessage id="misc.views.showSorting" />
-            </Button>
+            <Badge anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
+                badgeContent={ sortModel.length } color="primary" overlap="circular">
+                <Button
+                    data-testid="ViewDataTableToolbar-showSorting"
+                    onClick={ handleSortButtonClick }
+                    startIcon={ <ImportExport /> }>
+                    <FormattedMessage id="misc.views.showSorting" />
+                </Button>
+            </Badge>
             <Popover
                 anchorEl={ anchorEl }
                 anchorOrigin={{
