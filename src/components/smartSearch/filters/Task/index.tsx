@@ -11,7 +11,7 @@ import Matching from '../Matching';
 import StyledSelect from '../../inputs/StyledSelect';
 import TimeFrame from '../TimeFrame';
 import useSmartSearchFilter from 'hooks/useSmartSearchFilter';
-import { getTaskTimeFrame, getTaskStatus } from '../../utils'
+import { getTaskStatus, getTaskTimeFrame } from '../../utils';
 
 import { NewSmartSearchFilter, OPERATION,
     SmartSearchFilterWithId, TASK_STATUS, TaskFilterConfig, TIME_FRAME, ZetkinSmartSearchFilter } from 'types/smartSearch';

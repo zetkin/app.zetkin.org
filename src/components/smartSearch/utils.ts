@@ -65,7 +65,7 @@ export const getQuantityWithConfig = (size: number): QuantityConfig => {
     };
 };
 
-export const getMatchingWithConfig = (config: { max?: number; min?: number  }) : { config: MatchingConfig; option: MATCHING } => {
+export const getMatchingWithConfig = (config?: { max?: number; min?: number  }) : { config?: MatchingConfig; option: MATCHING } => {
     const max = config?.max;
     const min = config?.min;
 

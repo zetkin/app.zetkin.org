@@ -14,10 +14,9 @@ interface DisplayTaskProps {
 const DisplayTask = ({ filter }: DisplayTaskProps) : JSX.Element => {
     const { orgId } = useRouter().query;
     const { config } = filter;
-    const { task: taskId } = config;
     const op = filter.op || OPERATION.ADD;
 
-    const tf = getTaskTimeFrame(filter.config);
+    const tf = getTaskTimeFrame(config);
     const {
         after,
         before,
@@ -25,21 +24,24 @@ const DisplayTask = ({ filter }: DisplayTaskProps) : JSX.Element => {
         timeFrame,
     } = getTimeFrameWithConfig(tf);
 
-    const taskQuery = taskResource(orgId as string, taskId as string).useQuery();
-    const taskTitle = taskQuery?.data?.title || null;
+    let taskTitle = null;
+    if (config.task != undefined) {
+        const taskQuery = taskResource(orgId as string, (config.task as unknown) as string).useQuery();
+        taskTitle = taskQuery?.data?.title || null;
+    }
 
     let campaignTitle;
-    if (filter.config.campaign && filter.config.task == undefined) {
-        const campaignQuery = campaignResource(orgId as string, filter.config.campaign as string).useQuery();
+    if (config.campaign && config.task == undefined) {
+        const campaignQuery = campaignResource(orgId as string, (config.campaign as unknown) as string).useQuery();
         campaignTitle = campaignQuery?.data?.title || null;
     }
 
-    const matching = getMatchingWithConfig(filter.config?.matching);
+    const matching = getMatchingWithConfig(config?.matching);
 
     // We don't want to show the campaign if a task has been specfied
     let campaignSelect = null;
     if (!taskTitle) {
-        const label = campaignTitle ? "campaign" : "any";
+        const label = campaignTitle ? 'campaign' : 'any';
         campaignSelect = (
             <>
                 <Msg id="misc.smartSearch.task.campaignSelect.in" />
@@ -60,13 +62,10 @@ const DisplayTask = ({ filter }: DisplayTaskProps) : JSX.Element => {
                     <Msg id={ `misc.smartSearch.task.addRemoveSelect.${op}` }/>
                 ),
                 campaignSelect: campaignSelect,
-                haveSelect: (
-                    <Msg id={ `misc.smartSearch.task.haveSelect.${filter.config.operator}` } />
-                ),
                 matchingSelect: (
                     <Msg id={ `misc.smartSearch.matching.preview.${matching.option}` } values={{
-                        max: matching.config.max,
-                        min: matching.config.min,
+                        max: matching.config?.max,
+                        min: matching.config?.min,
                     }}
                     />
                 ),
@@ -78,7 +77,7 @@ const DisplayTask = ({ filter }: DisplayTaskProps) : JSX.Element => {
                     /> :
                     <Msg id="misc.smartSearch.task.taskSelect.any"/>,
                 taskStatusSelect: (
-                    <Msg id={ `misc.smartSearch.task.taskStatusSelect.${getTaskStatus(filter.config)}` } />
+                    <Msg id={ `misc.smartSearch.task.taskStatusSelect.${getTaskStatus(config)}` } />
                 ),
                 timeFrame: (
                     <Msg
@@ -93,7 +92,7 @@ const DisplayTask = ({ filter }: DisplayTaskProps) : JSX.Element => {
                             days: numDays,
                         }}
                     />
-                ), 
+                ),
             }}
         />
     );

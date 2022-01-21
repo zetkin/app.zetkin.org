@@ -1,6 +1,6 @@
 import { FormattedMessage as Msg } from 'react-intl';
-import { useEffect, useState } from 'react';
 import { MenuItem, Typography } from '@material-ui/core';
+import { useEffect, useState } from 'react';
 
 import { getMatchingWithConfig } from '../utils';
 
@@ -65,7 +65,7 @@ const Matching = ({ onChange, filterConfig, options = Object.values(MATCHING) }:
                 minInput: (
                     <StyledNumberInput
                         onChange={ (e) => setMin(+e.target.value) }
-                        value={ min || DEFAULT_MIN}
+                        value={ min || DEFAULT_MIN }
                     />
                 ),
             }}
