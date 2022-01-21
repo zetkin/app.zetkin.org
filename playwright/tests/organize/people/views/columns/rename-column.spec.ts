@@ -92,7 +92,7 @@ test.describe('Renaming a view column', () => {
         await page.fill('#rename-column-title-field', 'New title');
         await page.click('button > :text("Save")');
 
-        expect(await page.locator('data-testid=data-table-error-indicator').count()).toEqual(1);
+        expect(await page.locator('data-testid=Snackbar-error').count()).toEqual(1);
     });
 
 });
