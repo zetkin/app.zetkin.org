@@ -37,7 +37,7 @@ test.describe('View detail page', () => {
     });
 
     test('allows title to be changed', async ({ page, appUri, moxy }) => {
-        await moxy.setZetkinApiMock('/v1/orgs/1/people/views/1', 'patch');
+        moxy.setZetkinApiMock('/v1/orgs/1/people/views/1', 'patch');
 
         const inputSelector = 'data-testid=page-title >> input';
 
@@ -48,7 +48,7 @@ test.describe('View detail page', () => {
         await page.keyboard.press('Enter');
 
         // Check body of request
-        const titleUpdateRequest = await moxy.log().find(mock =>
+        const titleUpdateRequest = moxy.log().find(mock =>
             mock.method === 'PATCH' &&
             mock.path === '/v1/orgs/1/people/views/1',
         );
