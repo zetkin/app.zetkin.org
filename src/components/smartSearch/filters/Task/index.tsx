@@ -69,7 +69,8 @@ const Task = (
             setConfig({ ...filter.config, task: undefined });
         }
         else {
-            setConfig({ ...filter.config, task: +taskValue });
+            // When specifying a task we don't want to specify a campaign
+            setConfig({ ...filter.config, campaign: undefined, task: +taskValue });
         }
     };
 
@@ -78,7 +79,7 @@ const Task = (
             setConfig({ ...filter.config, campaign: undefined });
         }
         else {
-            setConfig({ ...filter.config, campaign: +campaignValue });
+            setConfig({ ...filter.config, campaign: +campaignValue, task: undefined });
         }
     };
 

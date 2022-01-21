@@ -21,9 +21,9 @@ const DEFAULT_MAX = 5;
 const Matching = ({ onChange, filterConfig, options = Object.values(MATCHING) }: MatchingProps): JSX.Element => {
     const matching = getMatchingWithConfig(filterConfig);
 
-    const option = matching.option;
-    const [max, setMax] = useState(matching.config?.max || null);
-    const [min, setMin] = useState(matching.config?.min || null);
+    const [option, setOption] = useState(matching.option);
+    const [max, setMax] = useState(matching.config?.max);
+    const [min, setMin] = useState(matching.config?.min);
 
     useEffect(() => {
         if (option == MATCHING.MAX) {
@@ -32,22 +32,13 @@ const Matching = ({ onChange, filterConfig, options = Object.values(MATCHING) }:
         else if (option == MATCHING.MIN) {
             onChange({ max: undefined, min: min });
         }
-    }, [min, max, onChange, option]);
-
-    const setOption = (newOption : MATCHING) => {
-        if (newOption == MATCHING.ONCE) {
+        else if (option == MATCHING.BETWEEN) {
+            onChange({ max: max || DEFAULT_MAX, min: min || DEFAULT_MIN });
+        }
+        else if (option == MATCHING.ONCE) {
             onChange({ max: undefined, min: undefined });
         }
-        else if (newOption == MATCHING.MAX) {
-            onChange({ max: DEFAULT_MAX, min: undefined });
-        }
-        else if (newOption == MATCHING.MIN) {
-            onChange({ max: undefined, min: 1 });
-        }
-        else if (newOption == MATCHING.BETWEEN) {
-            onChange({ max: DEFAULT_MAX, min: DEFAULT_MIN });
-        }
-    };
+    }, [min, max, option]);
 
     return (
         <Typography display="inline" variant="h4">
@@ -58,7 +49,7 @@ const Matching = ({ onChange, filterConfig, options = Object.values(MATCHING) }:
                         value={ option }>
                         { options.map(value => (
                             <MenuItem key={ value } value={ value }>
-                                <Msg id={ `misc.smartSearch.matching.matchingSelect.${value}` } />
+                                <Msg id={ `misc.smartSearch.matching.labels.${value}` } />
                             </MenuItem>
                         )) }
                     </StyledSelect>

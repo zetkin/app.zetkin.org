@@ -66,21 +66,22 @@ export const getQuantityWithConfig = (size: number): QuantityConfig => {
 };
 
 export const getMatchingWithConfig = (config: { max?: number; min?: number  }) : { config: MatchingConfig; option: MATCHING } => {
-    const { min, max } = config;
+    const max = config?.max;
+    const min = config?.min;
 
-    if (min && max) {
+    if (min != undefined && max != undefined) {
         return {
             config: config,
             option: MATCHING.BETWEEN,
         };
     }
-    if (min) {
+    if (min != undefined) {
         return {
             config,
             option: MATCHING.MIN,
         };
     }
-    if (max) {
+    if (max != undefined) {
         return {
             config,
             option: MATCHING.MAX,
@@ -88,7 +89,7 @@ export const getMatchingWithConfig = (config: { max?: number; min?: number  }) :
     }
 
     return {
-        config,
+        config: {},
         option: MATCHING.ONCE,
     };
 };

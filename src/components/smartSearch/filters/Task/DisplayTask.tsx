@@ -14,7 +14,7 @@ interface DisplayTaskProps {
 const DisplayTask = ({ filter }: DisplayTaskProps) : JSX.Element => {
     const { orgId } = useRouter().query;
     const { config } = filter;
-    const { operator, task: taskId } = config;
+    const { task: taskId } = config;
     const op = filter.op || OPERATION.ADD;
 
     const tf = getTaskTimeFrame(filter.config);
@@ -29,12 +29,28 @@ const DisplayTask = ({ filter }: DisplayTaskProps) : JSX.Element => {
     const taskTitle = taskQuery?.data?.title || null;
 
     let campaignTitle;
-    if(filter.config.campaign) {
+    if (filter.config.campaign && filter.config.task == undefined) {
         const campaignQuery = campaignResource(orgId as string, filter.config.campaign as string).useQuery();
         campaignTitle = campaignQuery?.data?.title || null;
     }
 
     const matching = getMatchingWithConfig(filter.config?.matching);
+
+    // We don't want to show the campaign if a task has been specfied
+    let campaignSelect = null;
+    if (!taskTitle) {
+        const label = campaignTitle ? "campaign" : "any"
+            campaignSelect = (
+                <>
+                    <Msg id="misc.smartSearch.task.campaignSelect.in" />
+                    <Msg id={ `misc.smartSearch.task.campaignSelect.${label}` }
+                        values={{
+                            campaign: campaignTitle,
+                        }}
+                    />
+                </>
+            );
+    }
 
     return (
         <Msg
@@ -43,20 +59,27 @@ const DisplayTask = ({ filter }: DisplayTaskProps) : JSX.Element => {
                 addRemoveSelect: (
                     <Msg id={ `misc.smartSearch.task.addRemoveSelect.${op}` }/>
                 ),
+                campaignSelect: campaignSelect,
+                haveSelect: (
+                    <Msg id={ `misc.smartSearch.task.haveSelect.${filter.config.operator}` } />
+                ),
+                matchingSelect: (
+                    <Msg id={ `misc.smartSearch.matching.preview.${matching.option}` } values={{
+                        max: matching.config.max,
+                        min: matching.config.min,
+                    }}
+                    />
+                ),
                 taskSelect: taskTitle ?
                     <Msg id="misc.smartSearch.task.taskSelect.task"
                         values={{
-                            taskTitle,
+                            task: taskTitle,
                         }}
                     /> :
-                    <Msg id="misc.smartSearch.task.task.any"/>,
-                campaignSelect: campaignTitle ?
-                    <Msg id="misc.smartSearch.task.campaignSelect.campaign"
-                        values={{
-                            campaignTitle,
-                        }}
-                    /> :
-                    <Msg id="misc.smartSearch.task.campaign.any"/>,
+                    <Msg id="misc.smartSearch.task.taskSelect.any"/>,
+                taskStatusSelect: (
+                    <Msg id={ `misc.smartSearch.task.taskStatusSelect.${getTaskStatus(filter.config)}` } />
+                ),
                 timeFrame: (
                     <Msg
                         id={ `misc.smartSearch.timeFrame.preview.${timeFrame}` }
@@ -70,20 +93,7 @@ const DisplayTask = ({ filter }: DisplayTaskProps) : JSX.Element => {
                             days: numDays,
                         }}
                     />
-                ),
-                taskStatusSelect: (
-                    <Msg id={ `misc.smartSearch.task.taskStatusSelect.${getTaskStatus(filter.config)}` } />
-                ),
-                haveSelect: (
-                    <Msg id={ `misc.smartSearch.task.haveSelect.${filter.config.operator}` } />
-                ),
-                matchingSelect: (
-                    <Msg id={ `misc.smartSearch.matching.preview.${matching.option}` } values={{
-                        max: matching.config.max,
-                        min: matching.config.min,
-                    }}
-                    />
-                ),
+                ), 
             }}
         />
     );

@@ -29,6 +29,7 @@ filterTitles:
     survey_option: Based on the options they have selected in survey questions
     survey_response: Based on their responses to survey questions
     survey_submission: People who have submitted a survey
+    task: People who have engaged in tasks
     user: People who used Zetkin
 all:
     inputString: Start with {startWithSelect}.

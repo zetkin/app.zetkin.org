@@ -154,7 +154,7 @@ const QueryOverview = (
                                         /> }
                                         { filter.type === FILTER_TYPE.TASK &&
                                         <DisplayTask
-                                            filter={ filter as SmartSearchFilterWithId<SurveySubmissionFilterConfig>  }
+                                            filter={ filter as SmartSearchFilterWithId<TaskFilterConfig>  }
                                         /> }
                                         { filter.type === FILTER_TYPE.USER &&
                                         <DisplayUser
