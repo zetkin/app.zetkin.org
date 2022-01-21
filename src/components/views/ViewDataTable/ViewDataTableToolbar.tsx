@@ -1,4 +1,3 @@
-import { GridSortModel } from '@mui/x-data-grid-pro';
 import { useContext } from 'react';
 import { Add, Launch, RemoveCircleOutline } from '@material-ui/icons';
 import { Box, Button, Slide, Tooltip } from '@material-ui/core';
@@ -10,23 +9,19 @@ import ViewDataTableSorting from './ViewDataTableSorting';
 export interface ViewDataTableToolbarProps {
     disabled: boolean;
     isSmartSearch: boolean;
-    onChangeSortModel: (model: GridSortModel) => void;
     onColumnCreate: () => void;
     onRowsRemove: () => void;
     onViewCreate: () => void;
     selection: number[];
-    sortModel: GridSortModel;
 }
 
 const ViewDataTableToolbar: React.FunctionComponent<ViewDataTableToolbarProps> = ({
     disabled,
     isSmartSearch,
-    onChangeSortModel,
     onColumnCreate,
     onRowsRemove,
     onViewCreate,
     selection,
-    sortModel,
 }) => {
     const intl = useIntl();
     const { showConfirmDialog } = useContext(ConfirmDialogContext);
@@ -63,7 +58,7 @@ const ViewDataTableToolbar: React.FunctionComponent<ViewDataTableToolbarProps> =
                     </span>
                 </Tooltip>
             </Slide>
-            <ViewDataTableSorting { ...{ onChangeSortModel, sortModel } } />
+            <ViewDataTableSorting />
             <Button
                 data-testid="ViewDataTableToolbar-createColumn"
                 disabled={ disabled }

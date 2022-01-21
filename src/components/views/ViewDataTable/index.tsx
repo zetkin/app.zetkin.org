@@ -1,3 +1,4 @@
+import isEqual from 'lodash.isequal';
 import { makeStyles } from '@material-ui/core';
 import NProgress from 'nprogress';
 import { useIntl } from 'react-intl';
@@ -11,6 +12,7 @@ import EmptyView from 'components/views/EmptyView';
 import patchViewColumn from 'fetching/views/patchViewColumn';
 import postViewColumn from 'fetching/views/postViewColumn';
 import SnackbarContext from 'hooks/SnackbarContext';
+import { ViewDataTableContext } from './ViewDataTableContext';
 import ViewRenameColumnDialog from '../ViewRenameColumnDialog';
 import { viewRowsResource } from 'api/viewRows';
 import { viewsResource } from 'api/views';
@@ -62,7 +64,10 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
 
     /* eslint-disable react-hooks/exhaustive-deps */
     useEffect(() => {
-        if (error) showSnackbar('error', intl.formatMessage({ id: `misc.views.dataTableErrors.${error}` }) );
+        if (error) {
+            showSnackbar('error', intl.formatMessage({ id: `misc.views.dataTableErrors.${error}` }) );
+            setError(undefined);
+        }
     }, [error]);
 
     const addColumnMutation = useMutation(postViewColumn(orgId as string, viewId), {
@@ -278,12 +283,10 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
         toolbar: {
             disabled: waiting,
             isSmartSearch: !!view.content_query,
-            onChangeSortModel: (model) => setSortModel(model),
             onColumnCreate,
             onRowsRemove,
             onViewCreate,
             selection,
-            sortModel,
         },
     };
 
@@ -291,7 +294,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
     const contentSource = view.content_query? VIEW_CONTENT_SOURCE.DYNAMIC : VIEW_CONTENT_SOURCE.STATIC;
 
     return (
-        <>
+        <ViewDataTableContext.Provider value={{ gridColumns, setSortModel, sortModel }}>
             <DataGridPro
                 apiRef={ gridApiRef }
                 autoHeight={ empty }
@@ -309,7 +312,9 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
                     noRowsLabel: intl.formatMessage({ id: `misc.views.empty.notice.${contentSource}` }),
                 }}
                 onSelectionModelChange={ model => setSelection(model as number[]) }
-                onSortModelChange={ (model) => setSortModel(model) }
+                onSortModelChange={ (model) => {
+                    if (!isEqual(model, sortModel)) setSortModel(model);
+                } }
                 rows={ gridRows }
                 sortModel={ sortModel }
                 style={{
@@ -336,7 +341,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
                     selectedColumn={ columnToConfigure }
                 />
             ) }
-        </>
+        </ViewDataTableContext.Provider>
     );
 };
 
