@@ -90,9 +90,9 @@ const Task = (
             onSubmit={ e => handleSubmit(e) }
             renderExamples={ () => (
                 <>
-                    <Msg id="misc.smartSearch.call_history.examples.one"/>
+                    <Msg id="misc.smartSearch.task.examples.one"/>
                     <br />
-                    <Msg id="misc.smartSearch.call_history.examples.two"/>
+                    <Msg id="misc.smartSearch.task.examples.two"/>
                 </>
             ) }
             renderSentence={ () => (
