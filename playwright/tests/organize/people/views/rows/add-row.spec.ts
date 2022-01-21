@@ -54,7 +54,7 @@ test.describe('View detail page', () => {
         await page.click('[name=person]');
         await page.fill('[name=person]', `${NewPerson.last_name}`);
         await page.click(`text="${NewPerson.first_name} ${NewPerson.last_name}"`);
-        await page.waitForRequest('**/orgs/1/people/views/1/rows');
+        await page.waitForResponse('**/orgs/1/people/views/1/rows');
 
         // Make sure the row was added
         expect(moxy.log().find(req =>

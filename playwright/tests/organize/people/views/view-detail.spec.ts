@@ -39,7 +39,7 @@ test.describe('View detail page', () => {
         await page.click(inputSelector);
         await page.fill(inputSelector, 'Friends of Zetkin');
         await page.keyboard.press('Enter');
-        await page.waitForRequest('**/orgs/1/people/views/1');
+        await page.waitForResponse('**/orgs/1/people/views/1');
 
         // Check body of request
         const titleUpdateRequest = moxy.log().find(mock =>
@@ -88,7 +88,7 @@ test.describe('View detail page', () => {
         await page.click('data-testid=StartsWith-select-all');
         await page.click('data-testid=FilterForm-saveButton');
         await page.click('data-testid=QueryOverview-saveButton');
-        await page.waitForRequest('**/orgs/1/people/views/1/rows');
+        await page.waitForResponse('**/orgs/1/people/views/1/rows');
 
         // Make sure previous content query was deleted
         expect(moxy.log().find(req =>
