@@ -78,7 +78,7 @@ const ViewDataTableSorting: React.FunctionComponent<ViewDataTableSortingProps> =
                     data-testid="ViewDataTableToolbar-showSorting"
                     onClick={ handleSortButtonClick }
                     startIcon={ <ImportExport /> }>
-                    <FormattedMessage id="misc.views.showSorting" />
+                    <FormattedMessage id="misc.views.viewTableSort.button" />
                 </Button>
             </Badge>
             <Popover
@@ -97,7 +97,7 @@ const ViewDataTableSorting: React.FunctionComponent<ViewDataTableSortingProps> =
                     vertical: 'top',
                 }}>
                 <Box display="flex" flexDirection="column">
-                    <Typography variant="body1"><FormattedMessage id="misc.views.showSorting" /></Typography>
+                    <Typography variant="body1"><FormattedMessage id="misc.views.viewTableSort.title" /></Typography>
                     <Divider />
                     <Box display="flex" flexDirection="column" mt={ 1 }>
                         { sortModel.map((item) => (
@@ -131,6 +131,7 @@ const ViewDataTableSorting: React.FunctionComponent<ViewDataTableSortingProps> =
                                 </Box>
                                 <IconButton
                                     className={ classes.deleteButton }
+                                    data-testid="deleteSortModelItem"
                                     onClick={ () => handleChange({ field: item.field, name: 'delete', value: true }) }>
                                     <Delete />
                                 </IconButton>
@@ -143,13 +144,13 @@ const ViewDataTableSorting: React.FunctionComponent<ViewDataTableSortingProps> =
                             size="small"
                             startIcon={ <Add /> }
                             variant="text">
-                            Add sorting column
+                            <FormattedMessage id="misc.views.viewTableSort.addButton" />
                         </Button>
                     </Box>
                     <Typography variant="caption">
-                        <span>Hint: hold down</span>
+                        <FormattedMessage id="misc.views.viewTableSort.hintStart" />
                         <ShiftKeyIcon size={ 40 } svgProps={{ className: classes.shiftIcon }} />
-                        <span>while clicking multiple columns</span>
+                        <FormattedMessage id="misc.views.viewTableSort.hintEnd" />
                     </Typography>
                 </Box>
             </Popover>

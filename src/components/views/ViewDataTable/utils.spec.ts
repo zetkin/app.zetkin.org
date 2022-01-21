@@ -1,18 +1,18 @@
 import { makeGridColDef } from './utils';
 import { COLUMN_TYPE, ZetkinViewColumn } from 'types/views';
 
+export const mockViewCol = (overrides?: Partial<ZetkinViewColumn>): ZetkinViewColumn => {
+    return {
+        config: {},
+        description: 'This is not a real column',
+        id: 1,
+        title: 'Mock column',
+        type: COLUMN_TYPE.LOCAL_BOOL,
+        ...overrides,
+    } as ZetkinViewColumn;
+};
 
 describe('makeGridColDef', () => {
-    const mockViewCol = (overrides?: Partial<ZetkinViewColumn>) => {
-        return {
-            config: {},
-            description: 'This is not a real column',
-            id: 1,
-            title: 'Mock column',
-            type: COLUMN_TYPE.LOCAL_BOOL,
-            ...overrides,
-        } as ZetkinViewColumn;
-    };
 
     it('returns common fields correctly', () => {
         const colMock = mockViewCol();
