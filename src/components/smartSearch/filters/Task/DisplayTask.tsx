@@ -39,17 +39,17 @@ const DisplayTask = ({ filter }: DisplayTaskProps) : JSX.Element => {
     // We don't want to show the campaign if a task has been specfied
     let campaignSelect = null;
     if (!taskTitle) {
-        const label = campaignTitle ? "campaign" : "any"
-            campaignSelect = (
-                <>
-                    <Msg id="misc.smartSearch.task.campaignSelect.in" />
-                    <Msg id={ `misc.smartSearch.task.campaignSelect.${label}` }
-                        values={{
-                            campaign: campaignTitle,
-                        }}
-                    />
-                </>
-            );
+        const label = campaignTitle ? "campaign" : "any";
+        campaignSelect = (
+            <>
+                <Msg id="misc.smartSearch.task.campaignSelect.in" />
+                <Msg id={ `misc.smartSearch.task.campaignSelect.${label}` }
+                    values={{
+                        campaign: campaignTitle,
+                    }}
+                />
+            </>
+        );
     }
 
     return (

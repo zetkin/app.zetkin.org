@@ -133,13 +133,10 @@ person_tags:
         one: "Add people with at least one of the following tags: 'Member', 'Activist'"
         two: "Remove people with all of the following tags: 'Board member'"
 task:
-    inputString: "{addRemoveSelect} people who {haveSelect} {taskStatusSelect} {taskSelect}{campaignSelect} {matchingSelect} {timeFrame}"
+    inputString: "{addRemoveSelect} people who have {taskStatusSelect} {taskSelect}{campaignSelect} {matchingSelect} {timeFrame}"
     addRemoveSelect:
         add: Add
         sub: Remove
-    haveSelect:
-        in: have
-        notin: have not
     examples:
         one: Add people who have completed task "Tell your friends" at least once at any point in time
         two: Add people who have ignored any task in any campaign between 2 and 5 times before today 

@@ -203,7 +203,6 @@ export interface TaskFilterConfig {
         max?: number;
         min?: number;
     };
-    operator: 'in' | 'notin';
 }
 
 export type AnyFilterConfig = (

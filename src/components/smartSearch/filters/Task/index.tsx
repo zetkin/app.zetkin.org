@@ -40,7 +40,7 @@ const Task = (
     const campaigns = campaignsQuery?.data || [];
 
     const { filter, setConfig, setOp } = useSmartSearchFilter<TaskFilterConfig>(
-        initialFilter, { completed: {}, operator: 'in' });
+        initialFilter, { completed: {} });
 
     // only submit if tasks exist
     const submittable = !!tasks.length;
@@ -124,22 +124,6 @@ const Task = (
                             </StyledSelect>
                         </>) : null
                     ,
-                    haveSelect: (
-                        <StyledSelect
-                            onChange={
-                                e => setConfig({
-                                    ...filter.config,
-                                    operator: e.target.value as 'in' | 'notin',
-                                }) }
-                            value={ filter.config.operator }>
-                            <MenuItem key="in" value="in">
-                                <Msg id="misc.smartSearch.task.haveSelect.in" />
-                            </MenuItem>
-                            <MenuItem key="notin" value="notin">
-                                <Msg id="misc.smartSearch.task.haveSelect.notin" />
-                            </MenuItem>
-                        </StyledSelect>
-                    ),
                     matchingSelect: (
                         <Matching
                             filterConfig={ filter.config.matching || {} }
