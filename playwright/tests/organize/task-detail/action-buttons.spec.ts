@@ -6,35 +6,21 @@ import SpeakToFriend from '../../../mockData/orgs/KPD/campaigns/ReferendumSignat
 
 test.describe('Task action buttons', async () => {
 
-    test.beforeAll(async ({ login, moxy }) => {
-        await moxy.removeMock();
-        await login();
+    test.beforeEach(async ({ login, moxy }) => {
+        moxy.setZetkinApiMock('/orgs/1/tasks/1', 'get',  SpeakToFriend);
+        moxy.setZetkinApiMock('/orgs/1/campaigns/1', 'get',  ReferendumSignatureCollection);
+        login();
+    });
 
-        await moxy.setMock('/orgs/1/tasks/1', 'get', {
-            data: {
-                data: SpeakToFriend,
-            },
-        });
-
-        await moxy.setMock('/orgs/1/campaigns/1', 'get', {
-            data: {
-                data: ReferendumSignatureCollection,
-            },
-        });
+    test.afterEach(({ moxy }) => {
+        moxy.teardown();
     });
 
     test.describe('edit task dialog', () => {
         const newTitle = 'Speak to a family member';
 
         test('allows users to edit task details', async ({ page, moxy, appUri }) => {
-            const removePatchTaskMock = await moxy.setMock('/orgs/1/tasks/1', 'patch', {
-                data: {
-                    data: {
-                        ...SpeakToFriend,
-                        title: newTitle,
-                    },
-                },
-            });
+            moxy.setZetkinApiMock('/orgs/1/tasks/1', 'patch',  { ...SpeakToFriend, title: newTitle });
 
             await page.goto(appUri + '/organize/1/campaigns/1/calendar/tasks/1');
 
@@ -42,14 +28,10 @@ test.describe('Task action buttons', async () => {
             await page.click('data-testid=task-action-buttons-menu-activator');
             await page.click('data-testid=task-action-buttons-edit-task');
 
-            await moxy.removeMock('/orgs/1/tasks/1', 'get'); // Remove existing mock
-            const removeEditedTaskMock = await moxy.setMock('/orgs/1/tasks/1', 'get', { // After editing task
-                data: {
-                    data: {
-                        ...SpeakToFriend,
-                        title: newTitle,
-                    },
-                },
+            moxy.removeMock('/orgs/1/tasks/1', 'get'); // Remove existing mock
+            moxy.setZetkinApiMock('/orgs/1/tasks/1', 'get', { // After editing
+                ...SpeakToFriend,
+                title: newTitle,
             });
 
             // Edit task
@@ -59,24 +41,10 @@ test.describe('Task action buttons', async () => {
             // Check that title changes on page
             const taskTitle = page.locator('data-testid=page-title');
             await expect(taskTitle).toContainText(newTitle);
-
-            // Clean up mocks
-            await removePatchTaskMock();
-            await removeEditedTaskMock();
-            await moxy.setMock('/orgs/1/tasks/1', 'get', {
-                data: {
-                    data: SpeakToFriend,
-                },
-            });
         });
 
         test('shows error alert if server error on request', async ({ appUri, page, moxy }) => {
-            const removePatchTaskMock = await moxy.setMock('/orgs/1/tasks/1', 'patch', {
-                data: {
-                    data: {},
-                },
-                status: 401,
-            });
+            moxy.setZetkinApiMock('/orgs/1/tasks/1', 'patch', {}, 401);
 
             await page.goto(appUri + '/organize/1/campaigns/1/calendar/tasks/1');
 
@@ -90,8 +58,6 @@ test.describe('Task action buttons', async () => {
 
             // Check that alert shows
             await expect(page.locator('data-testid=error-alert')).toBeVisible();
-
-            await removePatchTaskMock();
         });
     });
 });
