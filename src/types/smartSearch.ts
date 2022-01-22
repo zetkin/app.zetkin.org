@@ -175,6 +175,24 @@ export interface SubQueryFilterConfig {
     query_id: number;
 }
 
+interface TaskTimeFrameBefore {
+    before: string;
+}
+
+interface TaskTimeFrameAfter {
+    after: string;
+}
+
+interface TaskTimeFrameBetween {
+    after: string;
+    before: string;
+}
+
+type TaskTimeFrame = boolean
+        | TaskTimeFrameAfter
+        | TaskTimeFrameBefore
+        | TaskTimeFrameBetween;
+
 export interface TaskFilterConfig {
     campaign?: number;
     task?: number;
@@ -183,18 +201,9 @@ export interface TaskFilterConfig {
         | 'share_link'
         | 'share_image'
         | 'visit_link';
-    assigned?: {
-        after?: string;
-        before?: string;
-    };
-    completed?: {
-        after?: string;
-        before?: string;
-    };
-    ignored?: {
-        after?: string;
-        before?: string;
-    };
+    assigned?: TaskTimeFrame;
+    completed?: TaskTimeFrame;
+    ignored?: TaskTimeFrame;
     time_estimate?: {
         max?: number;
         min?: number;

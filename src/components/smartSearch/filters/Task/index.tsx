@@ -40,7 +40,7 @@ const Task = (
     const campaigns = campaignsQuery?.data || [];
 
     const { filter, setConfig, setOp } = useSmartSearchFilter<TaskFilterConfig>(
-        initialFilter, { completed: {} });
+        initialFilter, { completed: true });
 
     // only submit if tasks exist
     const submittable = !!tasks.length;
@@ -51,9 +51,14 @@ const Task = (
     };
 
     const handleTimeFrameChange = (range: {after?: string; before?: string}) => {
+        // The TimeFrame component produces an empty object for "ever", but the API expects true
+        let newValue : {after?: string; before?: string} | boolean = range;
+        if (!range.after && !range.before) {
+            newValue = true;
+        }
         setConfig({
             ...filter.config,
-            [getTaskStatus(filter.config)]: range,
+            [getTaskStatus(filter.config)]: newValue,
         });
     };
 
