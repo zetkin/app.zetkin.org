@@ -15,8 +15,8 @@ export interface ViewDataTableToolbarProps {
     onRowsRemove: () => void;
     onViewCreate: () => void;
     selection: number[];
-    setSortModel: (model: GridSortModel | []) => void;
-    sortModel: GridSortModel | [];
+    setSortModel: (model: GridSortModel) => void;
+    sortModel: GridSortModel;
 }
 
 const ViewDataTableToolbar: React.FunctionComponent<ViewDataTableToolbarProps> = ({
