@@ -14,7 +14,7 @@ import {
     Select,
     Typography,
 } from '@material-ui/core';
-import { GridColDef, GridSortModel } from '@mui/x-data-grid-pro';
+import { GridColDef, GridSortDirection, GridSortModel } from '@mui/x-data-grid-pro';
 
 import ShiftKeyIcon from './ShiftKeyIcon';
 
@@ -52,14 +52,19 @@ const ViewDataTableSorting: React.FunctionComponent<ViewDataTableSortingProps> =
     const handleSortButtonClick = (event: React.SyntheticEvent<HTMLButtonElement>) => setAnchorEl(event.currentTarget);
     const handlePopoverClose = () => setAnchorEl(null);
 
-    const handleChange = ({ name, value, field }: Record<string, string | undefined | unknown>) => {
-        const newSortModel = sortModel.map(item => {
-            if (name === 'delete' && item.field === field) return null;
-            else return item.field === field ?
-                { field: name === 'column' ? value : item.field, sort: name === 'direction' ? value : item.sort } : item;
-        }).filter(item => !!item);
+    const handleChange = (index: number, field?: string, direction?: GridSortDirection) => {
+        const newSortModel = sortModel.map((item, idx) => {
+            return (idx == index)? {
+                field: field || item.field,
+                sort: direction || item.sort,
+            } : item;
+        });
 
-        setSortModel(newSortModel as GridSortModel);
+        setSortModel(newSortModel);
+    };
+
+    const handleDelete = (field: string) => {
+        setSortModel(sortModel.filter(item => item.field !== field));
     };
 
     const handleAdd = () => {
@@ -100,13 +105,13 @@ const ViewDataTableSorting: React.FunctionComponent<ViewDataTableSortingProps> =
                     <Typography variant="body1"><FormattedMessage id="misc.views.viewTableSort.title" /></Typography>
                     <Divider />
                     <Box display="flex" flexDirection="column" mt={ 1 }>
-                        { sortModel.map((item) => (
+                        { sortModel.map((item, index) => (
                             <Box key={ item.field } display="flex" flexDirection="row" pb={ 1 }>
                                 <Box flex={ 1 } mr={ 2 }>
                                     <FormControl fullWidth>
                                         <Select
                                             name="column"
-                                            onChange={ (evt) => handleChange({ ...evt.target, field: item.field }) }
+                                            onChange={ (evt) => handleChange(index, evt.target.value as string) }
                                             value={ item.field }>
                                             { gridColumns.map(gridColumn => (
                                                 <MenuItem key={ gridColumn.field }
@@ -122,7 +127,11 @@ const ViewDataTableSorting: React.FunctionComponent<ViewDataTableSortingProps> =
                                     <FormControl fullWidth>
                                         <Select
                                             name="direction"
-                                            onChange={ (evt) => handleChange({ ...evt.target, field: item.field }) }
+                                            onChange={ (evt) => handleChange(
+                                                index,
+                                                undefined,
+                                                evt.target.value as GridSortDirection,
+                                            ) }
                                             value={ item.sort }>
                                             <MenuItem value="asc">Ascending</MenuItem>
                                             <MenuItem value="desc">Descending</MenuItem>
@@ -132,7 +141,7 @@ const ViewDataTableSorting: React.FunctionComponent<ViewDataTableSortingProps> =
                                 <IconButton
                                     className={ classes.deleteButton }
                                     data-testid="deleteSortModelItem"
-                                    onClick={ () => handleChange({ field: item.field, name: 'delete', value: true }) }>
+                                    onClick={ () => handleDelete(item.field) }>
                                     <Delete />
                                 </IconButton>
                             </Box>)) }
