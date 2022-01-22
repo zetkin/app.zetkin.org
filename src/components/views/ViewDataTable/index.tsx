@@ -182,7 +182,9 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
         removeRowsMutation.mutate(selection, {
             onSettled: (res) => {
                 setWaiting(false);
-                if (res?.failed?.length) setError(VIEW_DATA_TABLE_ERROR.REMOVE_ROWS);
+                if (res?.failed?.length) {
+                    setError(VIEW_DATA_TABLE_ERROR.REMOVE_ROWS);
+                }
             },
         });
     };
@@ -316,7 +318,9 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
                 onSelectionModelChange={ model => setSelection(model as number[]) }
                 onSortModelChange={ (model) => {
                     // Something strange going on here with infinite state updates, so I added the line below
-                    if (!isEqual(model, sortModel)) setSortModel(model);
+                    if (!isEqual(model, sortModel)) {
+                        setSortModel(model);
+                    }
                 } }
                 rows={ gridRows }
                 sortModel={ sortModel }
