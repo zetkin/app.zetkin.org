@@ -4,7 +4,7 @@ import NProgress from 'nprogress';
 import { useIntl } from 'react-intl';
 import { useRouter } from 'next/router';
 import { DataGridPro, GridColDef, GridSortModel, useGridApiRef } from '@mui/x-data-grid-pro';
-import { FunctionComponent, useContext, useEffect, useState } from 'react';
+import { FunctionComponent, useContext, useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 
 import deleteViewColumn from 'fetching/views/deleteViewColumn';
@@ -52,7 +52,6 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
     const [columnToConfigure, setColumnToConfigure] = useState<SelectedViewColumn | null>(null);
     const [columnToRename, setColumnToRename] = useState<ZetkinViewColumn | null>(null);
     const [selection, setSelection] = useState<number[]>([]);
-    const [error, setError] = useState<VIEW_DATA_TABLE_ERROR>();
     const [waiting, setWaiting] = useState(false);
     const [sortModel, setSortModel] = useState<GridSortModel>([]);
     const router = useRouter();
@@ -61,17 +60,13 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
     const viewId = view.id.toString();
     const { showSnackbar } = useContext(SnackbarContext);
 
-    /* eslint-disable react-hooks/exhaustive-deps */
-    useEffect(() => {
-        if (error) {
-            showSnackbar('error', intl.formatMessage({ id: `misc.views.dataTableErrors.${error}` }) );
-            setError(undefined);
-        }
-    }, [error]);
+    const showError = (error: VIEW_DATA_TABLE_ERROR) => {
+        showSnackbar('error', intl.formatMessage({ id: `misc.views.dataTableErrors.${error}` }) );
+    };
 
     const addColumnMutation = useMutation(postViewColumn(orgId as string, viewId), {
         onError: () => {
-            setError(VIEW_DATA_TABLE_ERROR.CREATE_COLUMN);
+            showError(VIEW_DATA_TABLE_ERROR.CREATE_COLUMN);
             NProgress.done();
         },
         onSettled: () => {
@@ -82,7 +77,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
 
     const updateColumnMutation = useMutation(patchViewColumn(orgId as string, viewId), {
         onError: () => {
-            setError(VIEW_DATA_TABLE_ERROR.MODIFY_COLUMN);
+            showError(VIEW_DATA_TABLE_ERROR.MODIFY_COLUMN);
             NProgress.done();
         },
         onSettled: () => {
@@ -93,7 +88,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
 
     const removeColumnMutation = useMutation(deleteViewColumn(orgId as string, viewId), {
         onError: () => {
-            setError(VIEW_DATA_TABLE_ERROR.DELETE_COLUMN);
+            showError(VIEW_DATA_TABLE_ERROR.DELETE_COLUMN);
             NProgress.done();
         },
         onSettled: () => {
@@ -120,7 +115,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
             // Get existing column
             const columnPreEdit = columns.find(col => col.id === colSpec.id);
             if (!columnPreEdit) {
-                setError(VIEW_DATA_TABLE_ERROR.MODIFY_COLUMN);
+                showError(VIEW_DATA_TABLE_ERROR.MODIFY_COLUMN);
                 return;
             }
             // Extract out only fields which changed
@@ -183,7 +178,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
             onSettled: (res) => {
                 setWaiting(false);
                 if (res?.failed?.length) {
-                    setError(VIEW_DATA_TABLE_ERROR.REMOVE_ROWS);
+                    showError(VIEW_DATA_TABLE_ERROR.REMOVE_ROWS);
                 }
             },
         });
