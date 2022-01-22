@@ -148,9 +148,15 @@ const ViewDataTableSorting: React.FunctionComponent<ViewDataTableSortingProps> =
                         </Button>
                     </Box>
                     <Typography variant="caption">
-                        <FormattedMessage id="misc.views.viewTableSort.hintStart" />
-                        <ShiftKeyIcon size={ 40 } svgProps={{ className: classes.shiftIcon }} />
-                        <FormattedMessage id="misc.views.viewTableSort.hintEnd" />
+                        <FormattedMessage
+                            id="misc.views.viewTableSort.hint"
+                            values={{
+                                shiftKeyIcon: <ShiftKeyIcon
+                                    size={ 40 }
+                                    svgProps={{ className: classes.shiftIcon }}
+                                />,
+                            }}
+                        />
                     </Typography>
                 </Box>
             </Popover>
