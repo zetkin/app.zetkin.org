@@ -7,33 +7,21 @@ import WelcomeNewMembers from '../../../mockData/orgs/KPD/campaigns/WelcomeNewMe
 
 test.describe('All campaigns page', () => {
 
-    test.beforeAll(async ({ moxy, login }) => {
-        await moxy.removeMock();
-        await login();
-
-        await moxy.setMock( '/orgs/1', 'get', {
-            data: {
-                data: KPD,
-            },
-        });
+    test.beforeEach(async ({ moxy, login }) => {
+        login();
+        moxy.setZetkinApiMock( '/orgs/1', 'get', KPD);
     });
 
-    test.afterAll(async ({ moxy }) => {
-        await moxy.removeMock();
+    test.afterEach(async ({ moxy }) => {
+        moxy.teardown();
     });
 
     test('shows list of campaigns ', async ({ page, appUri, moxy }) => {
-        const removeCampaignsMock = await moxy.setMock( '/orgs/1/campaigns', 'get', {
-            data: {
-                data: [ReferendumSignatures, WelcomeNewMembers],
-            },
-        });
+        moxy.setZetkinApiMock( '/orgs/1/campaigns', 'get', [ReferendumSignatures, WelcomeNewMembers]);
 
         await page.goto(appUri + '/organize/1/campaigns');
 
         const numCampaignCards = await page.$$eval('data-testid=campaign-card', (items) => items.length);
         expect(numCampaignCards).toEqual(2);
-
-        await removeCampaignsMock();
     });
 });

@@ -8,6 +8,10 @@ import postViewColumn from 'fetching/views/postViewColumn';
 import putViewRow from 'fetching/views/putViewRow';
 import { getBrowserLanguage, getMessages } from 'utils/locale';
 
+export interface CreateNewViewReqBody {
+    rows: number[];
+}
+
 export default async (
     req: NextApiRequest,
     res: NextApiResponse,
@@ -52,7 +56,7 @@ export default async (
             type: COLUMN_TYPE.PERSON_FIELD,
         });
 
-        const { rows } = body;
+        const { rows } = body as CreateNewViewReqBody;
         if (rows.length) {
             const rowsPutMethod = putViewRow(orgId as string, newViewId, apiFetch);
             for await (const personId of rows) {
@@ -63,7 +67,7 @@ export default async (
         res.status(200).json({ data: newView });
     }
     catch (e) {
-        res.status(500).json({ error: e });
+        res.status(500).json({ error: (e as Error).message });
     }
 
 };

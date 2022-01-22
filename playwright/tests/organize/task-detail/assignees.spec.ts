@@ -4,44 +4,30 @@ import test from '../../../fixtures/next';
 import ReferendumSignatureCollection from '../../../mockData/orgs/KPD/campaigns/ReferendumSignatures';
 import SpeakToFriend from '../../../mockData/orgs/KPD/campaigns/ReferendumSignatures/tasks/SpeakToFriend';
 
+const filter = {
+    filter_spec: [{
+        config: {},
+        op: 'add',
+        type: 'all',
+    }],
+    id: 1,
+};
+
 test.describe('Task assignees', async () => {
 
-    test.beforeAll(async ({ login, moxy }) => {
-        await moxy.removeMock();
-        await login();
+    test.beforeEach(({ login, moxy }) => {
+        login();
+        moxy.setZetkinApiMock('/orgs/1/tasks/1', 'get', SpeakToFriend);
+        moxy.setZetkinApiMock('/orgs/1/campaigns/1', 'get', ReferendumSignatureCollection);
+        moxy.setZetkinApiMock('/orgs/1/tasks/1/assigned', 'get', []);
+    });
 
-        await moxy.setMock('/orgs/1/tasks/1', 'get', {
-            data: {
-                data: SpeakToFriend,
-            },
-        });
-
-        await moxy.setMock('/orgs/1/campaigns/1', 'get', {
-            data: {
-                data: ReferendumSignatureCollection,
-            },
-        });
-
-        await moxy.setMock('/orgs/1/tasks/1/assigned', 'get', {
-            data: {
-                data: [],
-            },
-        });
+    test.afterEach(({ moxy }) => {
+        moxy.teardown();
     });
 
     test('update target using Smart Search Dialog', async ({ page, moxy, appUri }) => {
-        const removePatchQueryMock = await moxy.setMock('/orgs/1/people/queries/1', 'patch', {
-            data: {
-                data: {
-                    filter_spec: [{
-                        config: {},
-                        op: 'add',
-                        type: 'all',
-                    }],
-                    id: 1,
-                },
-            },
-        });
+        moxy.setZetkinApiMock('/orgs/1/people/queries/1', 'patch', filter);
 
         await page.goto(appUri + '/organize/1/campaigns/1/calendar/tasks/1/assignees');
 
@@ -53,8 +39,7 @@ test.describe('Task assignees', async () => {
         await page.click('data-testid=QueryOverview-saveButton');
 
         // Check body of request
-        const log = await moxy.logRequests();
-        const patchRequest = await log.log.find(req =>
+        const patchRequest = moxy.log().find(req =>
             req.method === 'PATCH' &&
             req.path === `/v1/orgs/1/people/queries/${SpeakToFriend.target.id}`,
         );
@@ -66,7 +51,5 @@ test.describe('Task assignees', async () => {
                 type: 'all',
             }],
         });
-
-        await removePatchQueryMock();
     });
 });

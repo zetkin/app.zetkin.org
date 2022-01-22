@@ -3,15 +3,15 @@ import Head from 'next/head';
 import { useIntl } from 'react-intl';
 import { useQuery } from 'react-query';
 
-import AllCampaignsLayout from '../../../../../components/layout/organize/AllCampaignsLayout';
-import getCampaigns from '../../../../../fetching/getCampaigns';
-import getEvents from '../../../../../fetching/getEvents';
-import getOrg from '../../../../../fetching/getOrg';
-import { PageWithLayout } from '../../../../../types';
-import { scaffold } from '../../../../../utils/next';
+import AllCampaignsLayout from 'layout/organize/AllCampaignsLayout';
+import getCampaigns from 'fetching/getCampaigns';
+import getEvents from 'fetching/getEvents';
+import getOrg from 'fetching/getOrg';
+import { PageWithLayout } from 'types';
+import { scaffold } from 'utils/next';
 import { tasksResource } from 'api/tasks';
-import ZetkinCalendar from '../../../../../components/ZetkinCalendar';
-import ZetkinSpeedDial, { ACTIONS } from '../../../../../components/ZetkinSpeedDial';
+import ZetkinCalendar from 'components/ZetkinCalendar';
+import ZetkinSpeedDial, { ACTIONS } from 'components/ZetkinSpeedDial';
 
 const scaffoldOptions = {
     authLevelRequired: 2,

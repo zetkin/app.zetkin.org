@@ -5,73 +5,32 @@ import KPD from '../../../mockData/orgs/KPD';
 import ReferendumSignatures  from '../../../mockData/orgs/KPD/campaigns/ReferendumSignatures';
 import SpeakToFriend from '../../../mockData/orgs/KPD/campaigns/ReferendumSignatures/tasks/SpeakToFriend';
 
-test.describe('Single campaign page', () => {
-    test.beforeAll(async ({ moxy }) => {
-        await moxy.removeMock();
+test.describe('Single campaign page speed dial', () => {
+    test.beforeEach(({ moxy, login }) => {
+        moxy.setZetkinApiMock('/orgs/1', 'get', KPD);
+        moxy.setZetkinApiMock('/orgs/1/campaigns/1', 'get', ReferendumSignatures);
+        moxy.setZetkinApiMock('/orgs/1/campaigns/1/actions', 'get', []);
+        moxy.setZetkinApiMock('/orgs/1/campaigns/1/tasks', 'get', []);
+        moxy.setZetkinApiMock('/orgs/1/tasks', 'get', []);
+        login();
+    });
 
-        await moxy.setMock('/orgs/1', 'get', {
-            data: {
-                data: KPD,
-            },
-        });
-
-        await moxy.setMock('/orgs/1/campaigns/1', 'get', {
-            data: {
-                data: ReferendumSignatures,
-            },
-        });
-
-        await moxy.setMock('/orgs/1/campaigns/1/actions', 'get', {
-            data: {
-                data: [],
-            },
-        });
-
-        await moxy.setMock('/orgs/1/campaigns/1/tasks', 'get', {
-            data: {
-                data: [],
-            },
-        });
-
-        await moxy.setMock('/orgs/1/tasks', 'get', {
-            data: {
-                data: [],
-            },
-        });
+    test.afterEach(({ moxy }) => {
+        moxy.teardown();
     });
 
     test.describe('creating a task from speed dial', () => {
-        test.beforeAll(async ({ moxy }) => {
+        test.beforeEach(async ({ moxy }) => {
             // All campaigns request for create task campaign select options
-            await moxy.setMock( '/orgs/1/campaigns', 'get', {
-                data: {
-                    data: [ReferendumSignatures],
-                },
-            });
+            moxy.setZetkinApiMock( '/orgs/1/campaigns', 'get', [ReferendumSignatures]);
         });
 
-        test.afterEach(async ({ moxy, logout }) => {
-            await logout();
-            await moxy.removeMock('/orgs/1/tasks', 'post');
-        });
-
-        test('user can create an offline task', async ({ page, appUri, login, moxy }) => {
+        test('user can create an offline task', async ({ page, appUri, moxy }) => {
             // Submit create task form response
-            await moxy.setMock('/orgs/1/tasks', 'post', {
-                data: {
-                    data: SpeakToFriend,
-                },
-                status: 201,
-            });
+            moxy.setZetkinApiMock('/orgs/1/tasks', 'post', SpeakToFriend, 201);
 
             // Response for task detail page
-            await moxy.setMock('/orgs/1/tasks/1', 'get', {
-                data: {
-                    data: SpeakToFriend,
-                },
-            });
-
-            await login();
+            moxy.setZetkinApiMock('/orgs/1/tasks/1', 'get', SpeakToFriend);
 
             // Open create task modal with URL
             await page.goto(appUri + '/organize/1/campaigns/1#create-task');
@@ -88,15 +47,8 @@ test.describe('Single campaign page', () => {
             await expect(page.url()).toEqual(appUri + '/organize/1/campaigns/1/calendar/tasks/' + SpeakToFriend.id);
         });
 
-        test('shows error alert when response error', async ({ page, moxy, login, appUri }) => {
-            await moxy.setMock('/orgs/1/tasks', 'post', {
-                data: {
-                    data: {},
-                },
-                status: 400,
-            });
-
-            await login();
+        test('shows error alert when response error', async ({ page, moxy, appUri }) => {
+            moxy.setZetkinApiMock('/orgs/1/tasks', 'post', {}, 400);
 
             await page.goto(appUri + '/organize/1/campaigns/1#create-task');
 

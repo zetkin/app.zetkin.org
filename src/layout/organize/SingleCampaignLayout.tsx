@@ -4,8 +4,8 @@ import { useRouter } from 'next/router';
 import { FormattedDate, FormattedMessage as Msg } from 'react-intl';
 
 import CampaignActionButtons from 'components/organize/campaigns/CampaignActionButtons';
-import getCampaign from '../../../fetching/getCampaign';
-import getCampaignEvents from '../../../fetching/getCampaignEvents';
+import getCampaign from 'fetching/getCampaign';
+import getCampaignEvents from 'fetching/getCampaignEvents';
 import TabbedLayout from './TabbedLayout';
 import { getFirstAndLastEvent, removeOffset } from 'utils/dateUtils';
 

@@ -4,12 +4,11 @@ import { ExpandMore } from '@material-ui/icons';
 import Link from 'next/link';
 import { useAutocomplete } from '@material-ui/lab';
 import { useIntl } from 'react-intl';
-import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 import { Box, IconButton, List, ListItem, ListItemText, Popover, TextField } from '@material-ui/core';
 import { FunctionComponent, useEffect, useRef, useState } from 'react';
 
-import getViews from 'fetching/views/getViews';
+import { viewsResource } from 'api/views';
 import ZetkinQuery from 'components/ZetkinQuery';
 
 
@@ -18,7 +17,7 @@ const ViewJumpMenu : FunctionComponent = () => {
     const listRef = useRef<HTMLUListElement>(null);
     const router = useRouter();
     const { orgId, viewId } = router.query;
-    const viewsQuery = useQuery(['views', orgId], getViews(orgId as string));
+    const viewsQuery = viewsResource(orgId as string).useQuery();
     const [jumpMenuAnchor, setJumpMenuAnchor] = useState<Element | null>(null);
     const [activeIndex, setActiveIndex] = useState<number>(Infinity);
     const {

@@ -5,8 +5,8 @@ import { useRouter } from 'next/router';
 import { Grid, makeStyles, Theme } from '@material-ui/core';
 
 import getUserMemberships from 'fetching/getUserMemberships';
-import getViews from 'fetching/views/getViews';
 import ViewCard from './ViewCard';
+import { viewsResource } from 'api/views';
 import ZetkinQuery from 'components/ZetkinQuery';
 import ZetkinSection from 'components/ZetkinSection';
 import { ZetkinView } from 'types/zetkin';
@@ -44,7 +44,8 @@ const SuggestedViews: React.FunctionComponent = () => {
     const activeMembership = membershipsQuery?.data?.find(m => m.organization.id.toString() == orgId);
     const member = activeMembership?.profile;
 
-    const viewsQuery = useQuery(['views', orgId], getViews(orgId as string));
+    const viewsQuery = viewsResource(orgId as string).useQuery();
+
     const onClickCard = (evt: React.ChangeEvent<HTMLButtonElement>) => {
         router.push(`/organize/${orgId}/people/views/${evt.currentTarget.value}`);
     };

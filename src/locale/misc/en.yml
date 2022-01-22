@@ -18,3 +18,7 @@ components:
             noEmpty: This cannot be empty
             edit: Click to edit
             save: Press 'enter' to save
+ConfirmDialog:
+    button: Confirm
+    defaultTitle: Confirm
+    defaultWarningText: Are you sure you want to do this action? It can not be undone.

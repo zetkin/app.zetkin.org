@@ -2,7 +2,7 @@
 import { ACTIONS } from '../constants';
 import { Event } from '@material-ui/icons';
 import EventDetailsForm from 'components/forms/EventDetailsForm';
-import postEvent from '../../../fetching/postEvent';
+import postEvent from 'fetching/postEvent';
 import { useMutation } from 'react-query';
 import { useRouter } from 'next/router';
 import { ActionConfig, DialogContentBaseProps } from './types';

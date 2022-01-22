@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import { useRouter } from 'next/router';
 
 import TaskDetailsForm from 'components/forms/TaskDetailsForm';
-import { ZetkinTaskRequestBody } from '../../../types/tasks';
+import { ZetkinTaskRequestBody } from 'types/tasks';
 
 import { ACTIONS } from '../constants';
 import { tasksResource } from 'api/tasks';

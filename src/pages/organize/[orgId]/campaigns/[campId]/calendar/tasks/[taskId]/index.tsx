@@ -3,7 +3,7 @@ import Head from 'next/head';
 
 import { PageWithLayout } from 'types';
 import { scaffold } from 'utils/next';
-import SingleTaskLayout from 'components/layout/organize/SingleTaskLayout';
+import SingleTaskLayout from 'layout/organize/SingleTaskLayout';
 import TaskDetailsSection from 'components/organize/tasks/TaskDetailsSection';
 import { taskResource } from 'api/tasks';
 

@@ -1,20 +1,19 @@
 import { Alert } from '@material-ui/lab';
-import { FunctionComponent } from 'react';
 import NProgress from 'nprogress';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
 import { DataGridPro, GridColDef, useGridApiRef } from '@mui/x-data-grid-pro';
 import { FormattedMessage, useIntl } from 'react-intl';
+import { FunctionComponent, useState } from 'react';
 import { makeStyles, Snackbar } from '@material-ui/core';
 import { useMutation, useQueryClient } from 'react-query';
 
-import createNewView from 'fetching/views/createNewView';
 import deleteViewColumn from 'fetching/views/deleteViewColumn';
 import EmptyView from 'components/views/EmptyView';
 import patchViewColumn from 'fetching/views/patchViewColumn';
 import postViewColumn from 'fetching/views/postViewColumn';
 import ViewRenameColumnDialog from '../ViewRenameColumnDialog';
 import { viewRowsResource } from 'api/viewRows';
+import { viewsResource } from 'api/views';
 import { colIdFromFieldName, makeGridColDef } from './utils';
 import { SelectedViewColumn, ZetkinView } from 'types/views';
 import { VIEW_CONTENT_SOURCE, VIEW_DATA_TABLE_ERROR } from './constants';
@@ -23,7 +22,6 @@ import ViewDataTableColumnMenu, { ViewDataTableColumnMenuProps } from './ViewDat
 import ViewDataTableFooter, { ViewDataTableFooterProps } from './ViewDataTableFooter';
 import ViewDataTableToolbar, { ViewDataTableToolbarProps } from './ViewDataTableToolbar';
 import { ZetkinViewColumn, ZetkinViewRow } from 'types/zetkin';
-
 
 const useStyles = makeStyles((theme) => ({
     '@keyframes addedRowAnimation': {
@@ -54,6 +52,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
     const [columnToRename, setColumnToRename] = useState<ZetkinViewColumn | null>(null);
     const [selection, setSelection] = useState<number[]>([]);
     const [error, setError] = useState<VIEW_DATA_TABLE_ERROR>();
+    const [waiting, setWaiting] = useState(false);
     const router = useRouter();
     const { orgId } = router.query;
     const queryClient = useQueryClient();
@@ -97,6 +96,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
     });
 
     const addRowMutation = viewRowsResource(view.organization.id, viewId).useAdd();
+    const removeRowsMutation = viewRowsResource(view.organization.id, viewId).useRemoveMany();
 
     const onColumnCancel = () => {
         setColumnToConfigure(null);
@@ -164,17 +164,22 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
         });
     };
 
-    const createNewViewMutation = useMutation(createNewView(orgId as string), {
-        onError: () => {
-            NProgress.done();
-        },
-        onMutate: () => NProgress.start(),
-        onSettled: () => queryClient.invalidateQueries(['views', orgId]),
-        onSuccess: (newView) => router.push(`/organize/${orgId}/people/views/${newView.id}`),
-    });
+    const createNewViewMutation = viewsResource(orgId as string).useCreate();
+
+    const onRowsRemove = () => {
+        setWaiting(true);
+        removeRowsMutation.mutate(selection, {
+            onSettled: (res) => {
+                setWaiting(false);
+                if (res?.failed?.length) setError(VIEW_DATA_TABLE_ERROR.REMOVE_ROWS);
+            },
+        });
+    };
 
     const onViewCreate = () => {
-        createNewViewMutation.mutate(selection);
+        createNewViewMutation.mutate({ rows: selection }, {
+            onSuccess: (newView) => router.push(`/organize/${orgId}/people/views/${newView.id}`),
+        });
     };
 
     const avatarColumn : GridColDef = {
@@ -264,7 +269,10 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
             viewId,
         },
         toolbar: {
+            disabled: waiting,
+            isSmartSearch: !!view.content_query,
             onColumnCreate,
+            onRowsRemove,
             onViewCreate,
             selection,
         },

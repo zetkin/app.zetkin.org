@@ -5,7 +5,7 @@ import { FormattedMessage as Msg } from 'react-intl';
 import {  AppBar, Box, Container, Toolbar, Typography } from '@material-ui/core';
 
 import { getMessages } from '../utils/locale';
-import ZetkinLogo from 'icons/ZetkinLogo';
+import ZetkinLogo from 'components/ZetkinLogo';
 
 export const getStaticProps: GetStaticProps = async () => {
     const lang = 'en';

@@ -4,15 +4,18 @@ import { useRouter } from 'next/router';
 import { Box, Button, Collapse, makeStyles, Tab, Tabs, Theme, Typography } from '@material-ui/core';
 import { FunctionComponent, ReactElement, useState } from 'react';
 
-import BreadcrumbTrail from '../../BreadcrumbTrail';
+import BreadcrumbTrail from 'components/BreadcrumbTrail';
 import OrganizeSidebar from 'components/organize/OrganizeSidebar';
-import EllipsisMenu, { EllipsisMenuProps } from './EllipsisMenu';
+import ZetkinEllipsisMenu, { ZetkinEllipsisMenuProps } from 'components/ZetkinEllipsisMenu';
 
 interface StyleProps {
     collapsed: boolean;
 }
 
 const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
+    main: {
+        overflowX: 'hidden',
+    },
     root: {
         [theme.breakpoints.down('xs')]: {
             paddingTop: '3.5rem',
@@ -46,7 +49,7 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
 
 interface TabbedLayoutProps {
     actionButtons?: React.ReactElement | React.ReactElement[];
-    ellipsisMenuItems?: EllipsisMenuProps['items'];
+    ellipsisMenuItems?: ZetkinEllipsisMenuProps['items'];
     fixedHeight?: boolean;
     title?: string | ReactElement;
     subtitle?: string | ReactElement;
@@ -124,7 +127,7 @@ const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
                                             { actionButtons }
                                         </Box>
                                         { !!ellipsisMenuItems?.length && (
-                                            <EllipsisMenu items={ ellipsisMenuItems }/>
+                                            <ZetkinEllipsisMenu items={ ellipsisMenuItems }/>
                                         ) }
                                     </Box>
                                 </Box>
@@ -147,7 +150,7 @@ const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
                         </Collapse>
                     </Box>
                     { /* Page Content */ }
-                    <Box component="main" flexGrow={ 1 } minHeight={ 0 } p={ fixedHeight ? 0 : 3 } position="relative" role="tabpanel">
+                    <Box className={ classes.main } component="main" flexGrow={ 1 } minHeight={ 0 } p={ fixedHeight ? 0 : 3 } position="relative" role="tabpanel">
                         { children }
                     </Box>
                 </Box>

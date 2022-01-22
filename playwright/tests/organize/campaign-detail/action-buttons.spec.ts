@@ -7,49 +7,24 @@ import RosaLuxemburg from '../../../mockData/users/RosaLuxemburg';
 
 test.describe('Campaign action buttons', async () => {
 
-    test.beforeAll(async ({ login, moxy }) => {
-        await moxy.removeMock();
-        await login();
-        await moxy.setMock('/orgs/1', 'get', {
-            data: {
-                data: KPD,
-            },
-        });
+    test.beforeEach(async ({ login, moxy }) => {
+        moxy.setZetkinApiMock('/orgs/1', 'get', KPD);
+        moxy.setZetkinApiMock('/orgs/1/campaigns/1', 'get', ReferendumSignatures);
+        moxy.setZetkinApiMock('/orgs/1/campaigns/1/actions', 'get', []);
+        moxy.setZetkinApiMock('/orgs/1/campaigns/1/tasks', 'get', []);
+        moxy.setZetkinApiMock('/orgs/1/tasks', 'get', []);
+        login();
+    });
 
-        await moxy.setMock('/orgs/1/campaigns/1', 'get', {
-            data: {
-                data: ReferendumSignatures,
-            },
-        });
-
-        await moxy.setMock('/orgs/1/campaigns/1/actions', 'get', {
-            data: {
-                data: [],
-            },
-        });
-
-        await moxy.setMock('/orgs/1/campaigns/1/tasks', 'get', {
-            data: {
-                data: [],
-            },
-        });
-
-        await moxy.setMock('/orgs/1/tasks', 'get', {
-            data: {
-                data: [],
-            },
-        });
+    test.afterEach(({ moxy }) => {
+        moxy.teardown();
     });
 
     test.describe('edit campaign dialog', () => {
         const newTitle = 'Edited Title';
 
         test('allows users to edit campaign details', async ({ page, moxy, appUri }) => {
-            const removePeopleSearchMock = await moxy.setMock('/orgs/1/search/person', 'post', {
-                data: {
-                    data: [RosaLuxemburg],
-                },
-            });
+            moxy.setZetkinApiMock('/orgs/1/search/person', 'post', [RosaLuxemburg]);
 
             await page.goto(appUri + '/organize/1/campaigns/1');
 
@@ -57,14 +32,11 @@ test.describe('Campaign action buttons', async () => {
             await page.click('data-testid=campaign-action-buttons-menu-activator');
             await page.click('data-testid=campaign-action-buttons-edit-campaign');
 
-            await moxy.removeMock('/orgs/1/campaigns/1', 'get'); // Remove existing mock
-            const removeEditedCampaignMock = await moxy.setMock('/orgs/1/campaigns/1', 'get', { // After editing task
-                data: {
-                    data: {
-                        ...ReferendumSignatures,
-                        title: newTitle,
-                    },
-                },
+            moxy.removeMock('/orgs/1/campaigns/1', 'get'); // Remove existing mock
+            // After editing task
+            moxy.setZetkinApiMock('/orgs/1/campaigns/1', 'get', {
+                ...ReferendumSignatures,
+                title: newTitle,
             });
 
             // Edit title
@@ -83,7 +55,7 @@ test.describe('Campaign action buttons', async () => {
             await expect(campaignTitle).toContainText(newTitle);
 
             // Check that patch was made correctly
-            const { log } = await moxy.logRequests();
+            const log = moxy.log();
             const patchRequest = log.find(req =>
                 req.method === 'PATCH' &&
                 req.path === '/v1/orgs/1/campaigns/1',
@@ -93,26 +65,10 @@ test.describe('Campaign action buttons', async () => {
                 manager_id: RosaLuxemburg.id,
                 title: newTitle,
             });
-
-            // Clean up mocks
-            await removeEditedCampaignMock();
-            await removePeopleSearchMock();
-
-            // Reset campaign mock back to "pre edit" state
-            await moxy.setMock('/orgs/1/campaigns/1', 'get', {
-                data: {
-                    data: ReferendumSignatures,
-                },
-            });
         });
 
         test('shows error alert if server error on request', async ({ appUri, page, moxy }) => {
-            const removePatchTaskMock = await moxy.setMock('/orgs/1/campaigns/1', 'patch', {
-                data: {
-                    data: {},
-                },
-                status: 401,
-            });
+            const removePatchTaskMock =  moxy.setZetkinApiMock('/orgs/1/campaigns/1', 'patch', {}, 401);
 
             await page.goto(appUri + '/organize/1/campaigns/1');
 

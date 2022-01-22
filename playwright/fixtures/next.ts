@@ -4,43 +4,39 @@
 
 import { AddressInfo } from 'net';
 import { test as base } from '@playwright/test';
-// @ts-ignore
-import fetch from 'node-fetch';
-import moxy from 'moxy';
 import next from 'next';
 import { parse } from 'url';
 import path from 'path';
 import { createServer, Server } from 'http';
+import moxy, { HTTPMethod, MockResponseSetter, Moxy } from 'moxy';
 
 import RosaLuxemburg from '../mockData/users/RosaLuxemburg';
-import {
-    LoggedRequestsRes,
-    Mock,
-    MoxyHTTPMethod,
-    ZetkinAPIResponse,
-} from '../types';
 import { ZetkinSession, ZetkinUser } from '../../src/types/zetkin';
 
 interface NextTestFixtures {
-    login: () => Promise<void>;
-    logout: () => Promise<void>;
+    login: () => void;
+    logout: () => void;
 }
 
-interface NextWorkerFixtures {
+export interface NextWorkerFixtures {
     appUri: string;
     moxy: {
-        clearLog: () => Promise<void>;
-        logRequests: <ReqData = unknown, ResData = unknown>(path?: string) => Promise<LoggedRequestsRes<ReqData, ResData>>;
         port: number;
-        removeMock: (path?: string, method?: MoxyHTTPMethod, ) => Promise<void>;
-        setMock: <G>(path: string, method: MoxyHTTPMethod, response?: Mock<G>) => Promise<() => Promise<void>>;
-    };
+        setZetkinApiMock: <G>(
+            path: string,
+            method?: HTTPMethod,
+            data?: G,
+            status?: MockResponseSetter['status'],
+            headers?: MockResponseSetter['headers'],
+        ) => () => void;
+        teardown: () => void;
+    } & Omit<Moxy, 'start' | 'stop'>;
 }
 
 const test = base.extend<NextTestFixtures, NextWorkerFixtures>({
     appUri: [
         async ({ moxy }, use) => {
-            process.env.ZETKIN_API_PORT= moxy.port.toString();
+            process.env.ZETKIN_API_PORT = moxy.port.toString();
 
             const app = next({
                 dev: false,
@@ -69,133 +65,104 @@ const test = base.extend<NextTestFixtures, NextWorkerFixtures>({
             await use(`http://localhost:${NEXT_PORT}`);
 
             // Close server when worker stops
-            await new Promise(cb => {
+            await new Promise((cb) => {
                 server.close(cb);
             });
-
         },
         {
             auto: true,
             scope: 'worker',
         },
     ],
-    moxy: [async ({}, use, workerInfo) => {
-        const PROXY_FORWARD_URI = 'http://api.dev.zetkin.org';
-        const MOXY_PORT = 3000 + workerInfo.workerIndex;
-        const URL_BASE = `http://localhost:${MOXY_PORT}/v1`;
+    moxy: [
+        async ({}, use, workerInfo) => {
+            const PROXY_FORWARD_URI = 'http://api.dev.zetkin.org';
+            const MOXY_PORT = 3000 + workerInfo.workerIndex;
 
-        const { start: startMoxy, stop: stopMoxy } = moxy({ forward: PROXY_FORWARD_URI, port: MOXY_PORT });
-
-        startMoxy();
-
-        const setMock = async <G>(path: string, method: MoxyHTTPMethod, response?: Mock<G>) => {
-            const url = `${URL_BASE}${path}/_mocks/${method}`;
-
-            const res = await fetch(url, {
-                body: JSON.stringify({ response }),
-                headers: [
-                    ['Content-Type', 'application/json'],
-                ],
-                method: 'PUT',
+            const { start, stop, setMock, ...rest } = moxy({
+                forward: PROXY_FORWARD_URI,
+                port: MOXY_PORT,
             });
 
-            if (res.status === 409) {
-                throw Error(`
-                     Mock already exists with method ${method} at path ${path}.
-                     You must delete it with removeMock before you can assign a new mock with these parameters
-                 `);
-            }
-
-            // Return function which removes the mock
-            return async () => {
-                removeMock(path, method);
+            /**
+             * Wrapper around `moxy.setMock()` which sets the response body of the mock to be accessed in the `data`
+             * property. This is to make it easier to emulate successful Zetkin API responses.
+             */
+            const setZetkinApiMock = <G>(
+                path: string,
+                method?: HTTPMethod,
+                data?: G,
+                status?: MockResponseSetter['status'],
+                headers?: MockResponseSetter['headers'],
+            ) => {
+                return setMock<{ data: G }>(
+                    `/v1${path}`,
+                    method,
+                    {
+                        status,
+                        headers,
+                        data: data ? {
+                            data,
+                        } : undefined,
+                    });
             };
-        };
 
-        const removeMock = async(path?: string, method?: MoxyHTTPMethod) => {
-            let url = `http://localhost:${MOXY_PORT}/_mocks`; // Remove all mocks
-            // Remove all mocks on path
-            if (path && !method) {
-                url = `${URL_BASE}${path}/_mocks`;
-            }
-            // Remove mock from path and method
-            if (path && method) {
-                url = `${URL_BASE}${path}/_mocks/${method}`;
-            }
-            await fetch(url, {
-                method: 'DELETE',
+            const teardown = () => {
+                rest.clearLog(),
+                rest.removeMock();
+            };
+
+            start();
+
+            await use({
+                port: MOXY_PORT,
+                setZetkinApiMock,
+                setMock,
+                teardown,
+                ...rest,
             });
-        };
 
-        const logRequests = async <ReqData, ResData>(path?: string) => {
-            let url = `http://localhost:${MOXY_PORT}/_log`; // Log all mocks
-            // Log all mocks on path
-            if (path) {
-                url = `${URL_BASE}${path}/_log`;
-            }
-            const res = await fetch(url, {
-                method: 'GET',
-            });
-            const logs = await res.json() as Promise<LoggedRequestsRes<ReqData, ResData>>;
-            return logs;
-        };
-
-        const clearLog = async() => {
-            const url = `http://localhost:${MOXY_PORT}/_log`;
-            await fetch(url, {
-                method: 'DELETE',
-            });
-        };
-
-        await use({
-            clearLog,
-            logRequests,
-            port: MOXY_PORT,
-            setMock,
-            removeMock,
-        });
-
-        // Stop moxy when tests finish
-        stopMoxy();
-
-    }, {
-        auto: true,
-        scope: 'worker',
-    }],
+            // Stop moxy when tests finish
+            await stop();
+        },
+        {
+            auto: true,
+            scope: 'worker',
+        },
+    ],
     login: async ({ moxy }, use) => {
         /**
          * Mocks the responses for getting the current user and the user session.
          *
          * The default user is Rosa Luxumburg. Pass in a ZetkinUser object to override.
          */
-        const login = async (user: ZetkinUser = RosaLuxemburg) => {
-            await moxy.setMock<ZetkinAPIResponse<ZetkinUser>>( '/users/me', 'get', {
-                data: {
-                    data: user,
-                },
-            });
+        const login = (user: ZetkinUser = RosaLuxemburg) => {
+            moxy.setZetkinApiMock<ZetkinUser>(
+                '/users/me',
+                'get',
+                user,
+            );
 
-            await moxy.setMock<ZetkinAPIResponse<ZetkinSession>>('/session', 'get', {
-                data: {
-                    data: {
-                        created: '2020-01-01T00:00:00',
-                        level: 2,
-                        user: user,
-                    },
+            moxy.setZetkinApiMock<ZetkinSession>(
+                '/session',
+                'get',
+                {
+                    created: '2020-01-01T00:00:00',
+                    level: 2,
+                    user: user,
                 },
-            });
-
+            );
         };
         await use(login);
     },
-    logout: async({ moxy }, use) => {
+    logout: async ({ moxy }, use) => {
         /**
          * Removes mock responses for getting the current user and session. Does not navigate user to log out,
          * this is only used for handling the mocks, which unauthenticates the user.
          */
-        const logout = async () => {
-            await moxy.removeMock('/users/me', 'get');
-            await moxy.removeMock('/session', 'get');
+        const logout = () => {
+            moxy.removeMock('/users/me', 'get');
+            moxy.removeMock('/session', 'get');
         };
         await use(logout);
     },
