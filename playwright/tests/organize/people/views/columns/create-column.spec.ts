@@ -59,7 +59,7 @@ test.describe('Creating a view column', () => {
         await page.click('data-testid=ViewDataTableToolbar-createColumn');
         await page.click('data-testid=column-type-selector-local_bool');
 
-        expect(await page.locator('data-testid=data-table-error-indicator').count()).toEqual(1);
+        expect(await page.locator('data-testid=Snackbar-error').count()).toEqual(1);
     });
 
 });

@@ -47,7 +47,7 @@ test.describe('Deleting a view column', () => {
         await page.click('button[aria-label="Menu"]:right-of(:text("First Name"))', { force: true });
         await page.click(`data-testid=delete-column-button-col_${AllMembersColumns[0].id}`);
 
-        expect(await page.locator('data-testid=data-table-error-indicator').count()).toEqual(1);
+        expect(await page.locator('data-testid=Snackbar-error').count()).toEqual(1);
     });
 
 });

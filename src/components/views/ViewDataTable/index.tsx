@@ -1,16 +1,17 @@
-import { Alert } from '@material-ui/lab';
+import isEqual from 'lodash.isequal';
+import { makeStyles } from '@material-ui/core';
 import NProgress from 'nprogress';
+import { useIntl } from 'react-intl';
 import { useRouter } from 'next/router';
-import { DataGridPro, GridColDef, useGridApiRef } from '@mui/x-data-grid-pro';
-import { FormattedMessage, useIntl } from 'react-intl';
-import { FunctionComponent, useState } from 'react';
-import { makeStyles, Snackbar } from '@material-ui/core';
+import { DataGridPro, GridColDef, GridSortModel, useGridApiRef } from '@mui/x-data-grid-pro';
+import { FunctionComponent, useContext, useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 
 import deleteViewColumn from 'fetching/views/deleteViewColumn';
 import EmptyView from 'components/views/EmptyView';
 import patchViewColumn from 'fetching/views/patchViewColumn';
 import postViewColumn from 'fetching/views/postViewColumn';
+import SnackbarContext from 'hooks/SnackbarContext';
 import ViewRenameColumnDialog from '../ViewRenameColumnDialog';
 import { viewRowsResource } from 'api/viewRows';
 import { viewsResource } from 'api/views';
@@ -51,16 +52,21 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
     const [columnToConfigure, setColumnToConfigure] = useState<SelectedViewColumn | null>(null);
     const [columnToRename, setColumnToRename] = useState<ZetkinViewColumn | null>(null);
     const [selection, setSelection] = useState<number[]>([]);
-    const [error, setError] = useState<VIEW_DATA_TABLE_ERROR>();
     const [waiting, setWaiting] = useState(false);
+    const [sortModel, setSortModel] = useState<GridSortModel>([]);
     const router = useRouter();
     const { orgId } = router.query;
     const queryClient = useQueryClient();
     const viewId = view.id.toString();
+    const { showSnackbar } = useContext(SnackbarContext);
+
+    const showError = (error: VIEW_DATA_TABLE_ERROR) => {
+        showSnackbar('error', intl.formatMessage({ id: `misc.views.dataTableErrors.${error}` }) );
+    };
 
     const addColumnMutation = useMutation(postViewColumn(orgId as string, viewId), {
         onError: () => {
-            setError(VIEW_DATA_TABLE_ERROR.CREATE_COLUMN);
+            showError(VIEW_DATA_TABLE_ERROR.CREATE_COLUMN);
             NProgress.done();
         },
         onSettled: () => {
@@ -71,7 +77,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
 
     const updateColumnMutation = useMutation(patchViewColumn(orgId as string, viewId), {
         onError: () => {
-            setError(VIEW_DATA_TABLE_ERROR.MODIFY_COLUMN);
+            showError(VIEW_DATA_TABLE_ERROR.MODIFY_COLUMN);
             NProgress.done();
         },
         onSettled: () => {
@@ -82,7 +88,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
 
     const removeColumnMutation = useMutation(deleteViewColumn(orgId as string, viewId), {
         onError: () => {
-            setError(VIEW_DATA_TABLE_ERROR.DELETE_COLUMN);
+            showError(VIEW_DATA_TABLE_ERROR.DELETE_COLUMN);
             NProgress.done();
         },
         onSettled: () => {
@@ -109,7 +115,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
             // Get existing column
             const columnPreEdit = columns.find(col => col.id === colSpec.id);
             if (!columnPreEdit) {
-                setError(VIEW_DATA_TABLE_ERROR.MODIFY_COLUMN);
+                showError(VIEW_DATA_TABLE_ERROR.MODIFY_COLUMN);
                 return;
             }
             // Extract out only fields which changed
@@ -171,7 +177,9 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
         removeRowsMutation.mutate(selection, {
             onSettled: (res) => {
                 setWaiting(false);
-                if (res?.failed?.length) setError(VIEW_DATA_TABLE_ERROR.REMOVE_ROWS);
+                if (res?.failed?.length) {
+                    showError(VIEW_DATA_TABLE_ERROR.REMOVE_ROWS);
+                }
             },
         });
     };
@@ -270,11 +278,14 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
         },
         toolbar: {
             disabled: waiting,
+            gridColumns,
             isSmartSearch: !!view.content_query,
             onColumnCreate,
             onRowsRemove,
             onViewCreate,
             selection,
+            setSortModel,
+            sortModel,
         },
     };
 
@@ -300,7 +311,14 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
                     noRowsLabel: intl.formatMessage({ id: `misc.views.empty.notice.${contentSource}` }),
                 }}
                 onSelectionModelChange={ model => setSelection(model as number[]) }
+                onSortModelChange={ (model) => {
+                    // Something strange going on here with infinite state updates, so I added the line below
+                    if (!isEqual(model, sortModel)) {
+                        setSortModel(model);
+                    }
+                } }
                 rows={ gridRows }
+                sortModel={ sortModel }
                 style={{
                     border: 'none',
                 }}
@@ -325,15 +343,6 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
                     selectedColumn={ columnToConfigure }
                 />
             ) }
-            { /* Error alert */ }
-            <Snackbar
-                data-testid="data-table-error-indicator"
-                onClose={ () => setError(undefined) }
-                open={ Boolean(error) }>
-                <Alert severity="error">
-                    <FormattedMessage id={ `misc.views.dataTableErrors.${error}` } />
-                </Alert>
-            </Snackbar>
         </>
     );
 };

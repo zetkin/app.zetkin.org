@@ -4,23 +4,31 @@ import { Box, Button, Slide, Tooltip } from '@material-ui/core';
 import { FormattedMessage, useIntl } from 'react-intl';
 
 import { ConfirmDialogContext } from 'hooks/ConfirmDialogProvider';
+import ViewDataTableSorting from './ViewDataTableSorting';
+import { GridColDef, GridSortModel } from '@mui/x-data-grid-pro';
 
 export interface ViewDataTableToolbarProps {
     disabled: boolean;
+    gridColumns: GridColDef[];
     isSmartSearch: boolean;
     onColumnCreate: () => void;
     onRowsRemove: () => void;
     onViewCreate: () => void;
     selection: number[];
+    setSortModel: (model: GridSortModel) => void;
+    sortModel: GridSortModel;
 }
 
 const ViewDataTableToolbar: React.FunctionComponent<ViewDataTableToolbarProps> = ({
     disabled,
+    gridColumns,
     isSmartSearch,
     onColumnCreate,
     onRowsRemove,
     onViewCreate,
     selection,
+    setSortModel,
+    sortModel,
 }) => {
     const intl = useIntl();
     const { showConfirmDialog } = useContext(ConfirmDialogContext);
@@ -57,6 +65,7 @@ const ViewDataTableToolbar: React.FunctionComponent<ViewDataTableToolbarProps> =
                     </span>
                 </Tooltip>
             </Slide>
+            <ViewDataTableSorting { ...{ gridColumns, setSortModel, sortModel } } />
             <Button
                 data-testid="ViewDataTableToolbar-createColumn"
                 disabled={ disabled }
