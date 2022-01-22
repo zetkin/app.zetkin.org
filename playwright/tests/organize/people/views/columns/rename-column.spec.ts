@@ -8,54 +8,25 @@ import KPD from '../../../../../mockData/orgs/KPD';
 
 test.describe('Renaming a view column', () => {
 
-    test.beforeEach(async ({ moxy, login }) => {
-        await moxy.removeMock();
-        await login();
-
-        await moxy.setMock( '/orgs/1', 'get', {
-            data: {
-                data: KPD,
-            },
-        });
-
-        await moxy.setMock('/orgs/1/people/views/1', 'get', {
-            data: {
-                data: AllMembers,
-            },
-            status: 200,
-        });
-
-        await moxy.setMock('/orgs/1/people/views/1/rows', 'get', {
-            data: {
-                data: AllMembersRows,
-            },
-            status: 200,
-        });
-
-        await moxy.setMock('/orgs/1/people/views/1/columns', 'get', {
-            data: {
-                data: AllMembersColumns,
-            },
-            status: 200,
-        });
+    test.beforeEach(({ moxy, login }) => {
+        login();
+        moxy.setZetkinApiMock( '/orgs/1', 'get',  KPD);
+        moxy.setZetkinApiMock('/orgs/1/people/views/1', 'get', AllMembers);
+        moxy.setZetkinApiMock('/orgs/1/people/views/1/rows', 'get', AllMembersRows);
+        moxy.setZetkinApiMock('/orgs/1/people/views/1/columns', 'get', AllMembersColumns);
     });
 
-    test.afterEach(async ({ moxy }) => {
-        await moxy.removeMock();
+    test.afterEach(({ moxy }) => {
+        moxy.teardown();
     });
 
 
     test('the user can rename an existing column', async ({ page, appUri, moxy }) => {
         const newTitle = 'Chosen Name';
-        await moxy.setMock(`/orgs/1/people/views/1/columns/${AllMembersColumns[0].id}`, 'patch', {
-            data: {
-                data: {
-                    ...AllMembersColumns[0],
-                    title: newTitle,
-                },
-            },
-            status: 201,
-        });
+        moxy.setZetkinApiMock(`/orgs/1/people/views/1/columns/${AllMembersColumns[0].id}`, 'patch', {
+            ...AllMembersColumns[0],
+            title: newTitle,
+        }, 201);
 
         await page.goto(appUri + '/organize/1/people/views/1');
 
@@ -67,8 +38,7 @@ test.describe('Renaming a view column', () => {
         await page.click('button > :text("Save")');
 
         // Check body of request
-        const mocks = await moxy.logRequests();
-        const columnPatchRequest = mocks.log.find(mock =>
+        const columnPatchRequest = moxy.log().find(mock =>
             mock.method === 'PATCH' &&
             mock.path === `/v1/orgs/1/people/views/1/columns/${AllMembersColumns[0].id}`,
         );
@@ -76,12 +46,7 @@ test.describe('Renaming a view column', () => {
     });
 
     test('shows an error modal if there is an error renaming the column', async ({ page, appUri, moxy }) => {
-        await moxy.setMock(`/orgs/1/people/views/1/columns/${AllMembersColumns[0].id}`, 'patch', {
-            data: {
-                error: '',
-            },
-            status: 400,
-        });
+        moxy.setZetkinApiMock(`/orgs/1/people/views/1/columns/${AllMembersColumns[0].id}`, 'patch', undefined, 400);
 
         await page.goto(appUri + '/organize/1/people/views/1');
 
@@ -92,7 +57,7 @@ test.describe('Renaming a view column', () => {
         await page.fill('#rename-column-title-field', 'New title');
         await page.click('button > :text("Save")');
 
-        expect(await page.locator('data-testid=data-table-error-indicator').count()).toEqual(1);
+        expect(await page.locator('data-testid=Snackbar-error').count()).toEqual(1);
     });
 
 });

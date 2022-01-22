@@ -9,61 +9,28 @@ import NewView from '../../../../mockData/orgs/KPD/people/views/NewView';
 
 test.describe('View detail page', () => {
 
-    test.beforeAll(async ({ moxy, login }) => {
-        await moxy.removeMock();
-        await login();
-
-        await moxy.setMock( '/orgs/1', 'get', {
-            data: {
-                data: KPD,
-            },
-        });
+    test.beforeEach(({ moxy, login }) => {
+        login();
+        moxy.setZetkinApiMock( '/orgs/1', 'get', KPD);
+        moxy.setZetkinApiMock('/orgs/1/people/views', 'get', [ AllMembers, NewView ]);
+        moxy.setZetkinApiMock('/orgs/1/people/views/1', 'get', AllMembers);
+        moxy.setZetkinApiMock('/orgs/1/people/views/1/rows', 'get', AllMembersRows);
+        moxy.setZetkinApiMock('/orgs/1/people/views/1/columns', 'get', AllMembersColumns);
     });
 
-    test.afterAll(async ({ moxy }) => {
-        await moxy.removeMock();
+    test.afterEach(({ moxy }) => {
+        moxy.teardown();
     });
 
-    test('displays view title and content to the user', async ({ page, appUri, moxy }) => {
-        const removeViewsMock = await moxy.setMock('/orgs/1/people/views/1', 'get', {
-            data: {
-                data: AllMembers,
-            },
-            status: 200,
-        });
-        const removeRowsMock = await moxy.setMock('/orgs/1/people/views/1/rows', 'get', {
-            data: {
-                data: AllMembersRows,
-            },
-            status: 200,
-        });
-        const removeColsMock = await moxy.setMock('/orgs/1/people/views/1/columns', 'get', {
-            data: {
-                data: AllMembersColumns,
-            },
-            status: 200,
-        });
-
+    test('displays view title and content to the user', async ({ page, appUri }) => {
         await page.goto(appUri + '/organize/1/people/views/1');
         expect(await page.locator('text=All KPD members >> visible=true').count()).toEqual(1);
         expect(await page.locator('text=Clara').count()).toEqual(1);
         expect(await page.locator('text=Rosa').count()).toEqual(1);
-
-        await removeViewsMock();
-        await removeRowsMock();
-        await removeColsMock();
     });
 
     test('allows title to be changed', async ({ page, appUri, moxy }) => {
-        const removeViewsMock = await moxy.setMock('/orgs/1/people/views/1', 'get', {
-            data: {
-                data: AllMembers,
-            },
-            status: 200,
-        });
-        await moxy.setMock('/v1/orgs/1/people/views/1', 'patch', {
-            status: 200,
-        });
+        moxy.setZetkinApiMock('/v1/orgs/1/people/views/1', 'patch');
 
         const inputSelector = 'data-testid=page-title >> input';
 
@@ -72,43 +39,17 @@ test.describe('View detail page', () => {
         await page.click(inputSelector);
         await page.fill(inputSelector, 'Friends of Zetkin');
         await page.keyboard.press('Enter');
+        await page.waitForResponse('**/orgs/1/people/views/1');
 
         // Check body of request
-        const mocks = await moxy.logRequests();
-        const titleUpdateRequest = await mocks.log.find(mock =>
+        const titleUpdateRequest = moxy.log().find(mock =>
             mock.method === 'PATCH' &&
             mock.path === '/v1/orgs/1/people/views/1',
         );
         expect(titleUpdateRequest?.data).toEqual({ title: 'Friends of Zetkin' });
-
-        await removeViewsMock();
     });
 
-    test('jumps between views using jump menu', async ({ page, appUri, moxy }) => {
-        const removeViewsMock = await moxy.setMock('/orgs/1/people/views', 'get', {
-            data: {
-                data: [ AllMembers, NewView ],
-            },
-            status: 200,
-        });
-        const removeViewMock = await moxy.setMock('/orgs/1/people/views/1', 'get', {
-            data: {
-                data: AllMembers,
-            },
-            status: 200,
-        });
-        const removeRowsMock = await moxy.setMock('/orgs/1/people/views/1/rows', 'get', {
-            data: {
-                data: AllMembersRows,
-            },
-            status: 200,
-        });
-        const removeColsMock = await moxy.setMock('/orgs/1/people/views/1/columns', 'get', {
-            data: {
-                data: AllMembersColumns,
-            },
-            status: 200,
-        });
+    test('jumps between views using jump menu', async ({ page, appUri }) => {
 
         await page.goto(appUri + '/organize/1/people/views/1');
 
@@ -126,49 +67,17 @@ test.describe('View detail page', () => {
         // Assert that we navigate away to the new view
         await page.waitForNavigation();
         await expect(page.url()).toEqual(appUri + `/organize/1/people/views/${NewView.id}`);
-
-        await removeViewsMock();
-        await removeViewMock();
-        await removeRowsMock();
-        await removeColsMock();
     });
 
     test('configure Smart Search query in empty view', async ({ page, appUri, moxy }) => {
-        const removeViewsMock = await moxy.setMock('/orgs/1/people/views', 'get', {
-            data: {
-                data: [ AllMembers, NewView ],
-            },
-            status: 200,
-        });
-        const removeViewMock = await moxy.setMock('/orgs/1/people/views/1', 'get', {
-            data: {
-                data: AllMembers,
-            },
-            status: 200,
-        });
-        const removeRowsMock = await moxy.setMock('/orgs/1/people/views/1/rows', 'get', {
-            data: {
-                data: [],
-            },
-            status: 200,
-        });
-        const removeColsMock = await moxy.setMock('/orgs/1/people/views/1/columns', 'get', {
-            data: {
-                data: AllMembersColumns,
-            },
-            status: 200,
-        });
-        const removePatchQueryMock = await moxy.setMock('/orgs/1/people/queries/1', 'patch', {
-            data: {
-                data: {
-                    filter_spec: [{
-                        config: {},
-                        op: 'add',
-                        type: 'all',
-                    }],
-                    id: 1,
-                },
-            },
+        moxy.setZetkinApiMock('/orgs/1/people/views/1/rows', 'get',  []);
+        moxy.setZetkinApiMock('/orgs/1/people/queries/1', 'patch', {
+            filter_spec: [{
+                config: {},
+                op: 'add',
+                type: 'all',
+            }],
+            id: 1,
         });
 
         await page.goto(appUri + '/organize/1/people/views/1');
@@ -179,10 +88,10 @@ test.describe('View detail page', () => {
         await page.click('data-testid=StartsWith-select-all');
         await page.click('data-testid=FilterForm-saveButton');
         await page.click('data-testid=QueryOverview-saveButton');
-        await page.waitForTimeout(200);
+        await page.waitForResponse('**/orgs/1/people/views/1/rows');
 
         // Make sure previous content query was deleted
-        expect((await moxy.logRequests()).log.find(req =>
+        expect(moxy.log().find(req =>
             req.method === 'PATCH' &&
             req.path === '/v1/orgs/1/people/views/1/content_query',
         )?.data).toMatchObject({
@@ -194,15 +103,9 @@ test.describe('View detail page', () => {
         });
 
         // Make sure rows are fetched anew
-        expect((await moxy.logRequests()).log.filter(req =>
+        expect(moxy.log().filter(req =>
             req.method === 'GET' &&
             req.path === '/v1/orgs/1/people/views/1/rows',
         ).length).toBeGreaterThan(1);
-
-        await removeViewsMock();
-        await removeViewMock();
-        await removeRowsMock();
-        await removeColsMock();
-        await removePatchQueryMock();
     });
 });

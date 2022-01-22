@@ -5,14 +5,19 @@ import { Box, Button, makeStyles, Slide, Tooltip } from '@material-ui/core';
 import { FormattedMessage, useIntl } from 'react-intl';
 
 import { ConfirmDialogContext } from 'hooks/ConfirmDialogProvider';
+import ViewDataTableSorting from './ViewDataTableSorting';
+import { GridColDef, GridSortModel } from '@mui/x-data-grid-pro';
 
 export interface ViewDataTableToolbarProps {
     disabled: boolean;
+    gridColumns: GridColDef[];
     isSmartSearch: boolean;
     onColumnCreate: () => void;
     onRowsRemove: () => void;
     onViewCreate: () => void;
     selection: number[];
+    setSortModel: (model: GridSortModel) => void;
+    sortModel: GridSortModel;
 }
 
 const useStyles = makeStyles({
@@ -26,11 +31,14 @@ const useStyles = makeStyles({
 
 const ViewDataTableToolbar: React.FunctionComponent<ViewDataTableToolbarProps> = ({
     disabled,
+    gridColumns,
     isSmartSearch,
     onColumnCreate,
     onRowsRemove,
     onViewCreate,
     selection,
+    setSortModel,
+    sortModel,
 }) => {
     const classes = useStyles();
     const intl = useIntl();
@@ -68,6 +76,7 @@ const ViewDataTableToolbar: React.FunctionComponent<ViewDataTableToolbarProps> =
                 </Tooltip>
             </Slide>
             <GridToolbarFilterButton componentsProps={{ button: { color: 'default', size: 'medium'  } }} />
+            <ViewDataTableSorting { ...{ gridColumns, setSortModel, sortModel } } />
             <Button
                 data-testid="ViewDataTableToolbar-createColumn"
                 disabled={ disabled }
