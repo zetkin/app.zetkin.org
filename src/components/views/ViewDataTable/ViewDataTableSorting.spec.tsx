@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 
 import { COLUMN_TYPE } from 'types/views';
 import { makeGridColDef } from './utils';
-import { mockViewCol } from './utils.spec';
+import mockViewCol from 'utils/testing/mocks/mockViewCol';
 import { render } from 'utils/testing';
 import ViewDataTableSorting from './ViewDataTableSorting';
 

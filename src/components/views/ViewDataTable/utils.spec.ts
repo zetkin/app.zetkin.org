@@ -1,16 +1,7 @@
+import { COLUMN_TYPE } from 'types/views';
 import { makeGridColDef } from './utils';
-import { COLUMN_TYPE, ZetkinViewColumn } from 'types/views';
+import mockViewCol from 'utils/testing/mocks/mockViewCol';
 
-export const mockViewCol = (overrides?: Partial<ZetkinViewColumn>): ZetkinViewColumn => {
-    return {
-        config: {},
-        description: 'This is not a real column',
-        id: 1,
-        title: 'Mock column',
-        type: COLUMN_TYPE.LOCAL_BOOL,
-        ...overrides,
-    } as ZetkinViewColumn;
-};
 
 describe('makeGridColDef', () => {
 
