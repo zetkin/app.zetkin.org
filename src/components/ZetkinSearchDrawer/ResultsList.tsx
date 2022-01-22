@@ -17,6 +17,7 @@ import {
 
 import getOrg from 'fetching/getOrg';
 import { MINIMUM_CHARACTERS } from '.';
+import { noPropagate } from 'utils';
 import { ZetkinPerson } from 'types/zetkin';
 
 
@@ -133,10 +134,7 @@ const ResultsList: FunctionComponent<ResultsListProps> = ({ searchFieldValue, re
                         { results.length > numResultsToDisplay && (
                             <ListItem>
                                 <ListItemText>
-                                    <Button onClick={ (e) => {
-                                        e.stopPropagation();
-                                        setNumResultsToDisplay(numResultsToDisplay + 5);
-                                    } }>
+                                    <Button onClick={ noPropagate(() => setNumResultsToDisplay(numResultsToDisplay + 5)) }>
                                         <Msg id="layout.organize.search.showMore" />
                                     </Button>
                                 </ListItemText>

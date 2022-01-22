@@ -1,22 +1,25 @@
 import { FunctionComponent } from 'react';
+import { GridRenderCellParams } from '@mui/x-data-grid-pro';
 import { Typography } from '@material-ui/core';
 
 import { ViewGridCellParams } from '.';
 
-
-export type PersonNotesViewCellParams = ViewGridCellParams<{
+interface PersonNote {
     created: string;
     id: number;
     text: string;
-}[] | null>;
+}
+
+export type PersonNotesParams = ViewGridCellParams<PersonNote[] | null>;
 
 interface PersonNotesViewCellProps {
-    params: PersonNotesViewCellParams;
+    params: GridRenderCellParams;
 }
 
 const PersonNotesViewCell: FunctionComponent<PersonNotesViewCellProps> = ({ params }) => {
-    if (params.value?.length) {
-        const sorted = params.value.concat().sort((n0, n1) => {
+    const notes: PersonNote[] | null = params?.row && params.row[params.field];
+    if (notes?.length) {
+        const sorted = notes.concat().sort((n0, n1) => {
             return n0.created < n1.created? 1 : -1;
         });
 

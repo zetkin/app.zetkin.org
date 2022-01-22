@@ -1,20 +1,20 @@
 import { FunctionComponent } from 'react';
+import { GridRenderCellParams } from '@mui/x-data-grid-pro';
 import { Box, Typography } from '@material-ui/core';
 
 import { ViewGridCellParams } from '.';
 import { ZetkinPerson } from 'types/zetkin';
 
-
-export type LocalPersonViewCellParams = ViewGridCellParams<ZetkinPerson | null>;
+export type LocalPersonParams = ViewGridCellParams<ZetkinPerson | null>;
 
 interface LocalPersonViewCellProps {
     orgId: number | string;
-    params: LocalPersonViewCellParams;
+    params: GridRenderCellParams;
 }
 
 const LocalPersonViewCell: FunctionComponent<LocalPersonViewCellProps> = ({ orgId, params }) => {
-    if (params.value) {
-        const person = params.value;
+    const person = params?.row && params.row[params.field];
+    if (person) {
         const name = `${person.first_name} ${person.last_name}`;
 
         return (

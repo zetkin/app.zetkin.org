@@ -1,6 +1,7 @@
+import { GridToolbarFilterButton } from '@mui/x-data-grid-pro';
 import { useContext } from 'react';
 import { Add, Launch, RemoveCircleOutline } from '@material-ui/icons';
-import { Box, Button, Slide, Tooltip } from '@material-ui/core';
+import { Box, Button, makeStyles, Slide, Tooltip } from '@material-ui/core';
 import { FormattedMessage, useIntl } from 'react-intl';
 
 import { ConfirmDialogContext } from 'hooks/ConfirmDialogProvider';
@@ -19,6 +20,15 @@ export interface ViewDataTableToolbarProps {
     sortModel: GridSortModel;
 }
 
+const useStyles = makeStyles({
+    main: {
+        '& > *': {
+            margin: '0 4px',
+        },
+        marginTop: 5,
+    },
+});
+
 const ViewDataTableToolbar: React.FunctionComponent<ViewDataTableToolbarProps> = ({
     disabled,
     gridColumns,
@@ -30,6 +40,7 @@ const ViewDataTableToolbar: React.FunctionComponent<ViewDataTableToolbarProps> =
     setSortModel,
     sortModel,
 }) => {
+    const classes = useStyles();
     const intl = useIntl();
     const { showConfirmDialog } = useContext(ConfirmDialogContext);
 
@@ -40,9 +51,8 @@ const ViewDataTableToolbar: React.FunctionComponent<ViewDataTableToolbarProps> =
             warningText: intl.formatMessage({ id: 'misc.views.removeDialog.action' }),
         });
     };
-
     return (
-        <Box display="flex" justifyContent="flex-end">
+        <Box className={ classes.main } display="flex" justifyContent="flex-end">
             <Slide direction="left" in={ !!selection.length } timeout={ 150 }>
                 <Button
                     data-testid="ViewDataTableToolbar-createFromSelection"
@@ -65,6 +75,7 @@ const ViewDataTableToolbar: React.FunctionComponent<ViewDataTableToolbarProps> =
                     </span>
                 </Tooltip>
             </Slide>
+            <GridToolbarFilterButton componentsProps={{ button: { color: 'default', size: 'medium'  } }} />
             <ViewDataTableSorting { ...{ gridColumns, setSortModel, sortModel } } />
             <Button
                 data-testid="ViewDataTableToolbar-createColumn"

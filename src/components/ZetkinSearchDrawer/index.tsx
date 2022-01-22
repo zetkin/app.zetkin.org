@@ -1,4 +1,5 @@
 import { FormattedMessage as Msg } from 'react-intl';
+import { noPropagate } from 'utils';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 import {
@@ -96,10 +97,9 @@ const ZetkinSearchDrawer: FunctionComponent = (): JSX.Element | null => {
                             if (!drawerOpen) setDrawerOpen(true);
                             setSearchFieldValue(e.target.value);
                         } }
-                        onFocus={ (e) => {
-                            e.stopPropagation();
+                        onFocus={ noPropagate(() => {
                             if (!drawerOpen) setDrawerOpen(true);
-                        } }
+                        } )  }
                         onSubmit={ (e) => {
                             e.preventDefault();
                             // If user presses enter while focussed, navigate to full results

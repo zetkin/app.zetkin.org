@@ -1,16 +1,17 @@
-import { GridStateColDef } from '@mui/x-data-grid-pro';
-import { render } from 'utils/testing';
+import { GridRenderCellParams, GridStateColDef } from '@mui/x-data-grid-pro';
 
+import LocalPersonViewCell  from './LocalPersonViewCell';
+import { render } from 'utils/testing';
 import { ZetkinPerson } from 'types/zetkin';
-import LocalPersonViewCell, { LocalPersonViewCellParams } from './LocalPersonViewCell';
 
 
 describe('LocalPersonViewCell', () => {
-    const mockParams = (overrides?: Partial<LocalPersonViewCellParams>) => {
+    const mockParams = (overrides?: Partial<GridRenderCellParams>) => {
         return {
+            field: 'fieldName',
             value: null,
             ...overrides,
-        } as LocalPersonViewCellParams;
+        } as GridRenderCellParams;
     };
 
     it('renders empty when content is null', () => {
@@ -26,11 +27,13 @@ describe('LocalPersonViewCell', () => {
             colDef: {
                 width: 50,
             } as unknown as GridStateColDef,
-            value: {
-                first_name: 'Jerry',
-                id: 123,
-                last_name: 'Seinfeld',
-            } as ZetkinPerson,
+            row: {
+                fieldName: {
+                    first_name: 'Jerry',
+                    id: 123,
+                    last_name: 'Seinfeld',
+                } as ZetkinPerson,
+            },
         });
 
         const { queryByText, baseElement } = render(
@@ -49,11 +52,13 @@ describe('LocalPersonViewCell', () => {
             colDef: {
                 width: 150,
             } as unknown as GridStateColDef,
-            value: {
-                first_name: 'Jerry',
-                id: 123,
-                last_name: 'Seinfeld',
-            } as ZetkinPerson,
+            row: {
+                fieldName: {
+                    first_name: 'Jerry',
+                    id: 123,
+                    last_name: 'Seinfeld',
+                } as ZetkinPerson,
+            },
         });
 
         const { queryByText, baseElement } = render(

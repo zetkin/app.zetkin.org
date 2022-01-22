@@ -1,4 +1,5 @@
 import { MoreVert } from '@material-ui/icons';
+import { noPropagate } from 'utils';
 import { Button, Menu, MenuItem } from '@material-ui/core';
 import { FunctionComponent, useState } from 'react';
 
@@ -19,10 +20,7 @@ const ZetkinEllipsisMenu: FunctionComponent<ZetkinEllipsisMenuProps> = ({ items 
             <Button
                 data-testid="EllipsisMenu-menuActivator"
                 disableElevation
-                onClick={ (e) => {
-                    setMenuActivator(e.currentTarget);
-                    e.stopPropagation();
-                } }>
+                onClick={ noPropagate((e) => setMenuActivator(e?.currentTarget as HTMLElement)) }>
                 <MoreVert/>
             </Button>
             <Menu

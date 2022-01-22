@@ -1,19 +1,20 @@
+import { GridRenderCellParams } from '@mui/x-data-grid-pro';
 import { render } from 'utils/testing';
-import SurveySubmittedViewCell, { SurveySubmittedViewCellParams } from './SurveySubmittedViewCell';
-
+import SurveySubmittedViewCell from './SurveySubmittedViewCell';
 
 describe('SurveySubmittedViewCell', () => {
-    const mockParams = (overrides?: Partial<SurveySubmittedViewCellParams>) => {
+    const mockParams = (overrides?: Partial<GridRenderCellParams>) => {
         return {
+            field: 'fieldName',
             value: null,
             ...overrides,
-        } as SurveySubmittedViewCellParams;
+        } as GridRenderCellParams;
     };
 
     it('renders empty when content is null', () => {
         const params = mockParams();
         const { baseElement } = render(
-            <SurveySubmittedViewCell params={ params }/>,
+            <SurveySubmittedViewCell params={ params as GridRenderCellParams }/>,
         );
         expect(baseElement.innerHTML).toEqual('<div></div>');
     });
@@ -27,15 +28,20 @@ describe('SurveySubmittedViewCell', () => {
             today.getHours() + 1,
         );
 
+        const submissions = [
+            { submission_id: 2, submitted: '1989-07-05' },
+            { submission_id: 3, submitted: threeDaysAgo.toISOString() },
+            { submission_id: 1, submitted: '1857-07-05' },
+        ];
+
         const params = mockParams({
-            value: [
-                { submission_id: 2, submitted: '1989-07-05' },
-                { submission_id: 3, submitted: threeDaysAgo.toISOString() },
-                { submission_id: 1, submitted: '1857-07-05' },
-            ],
+            row: {
+                fieldName: submissions,
+            },
         });
+
         const { getByText } = render(
-            <SurveySubmittedViewCell params={ params }/>,
+            <SurveySubmittedViewCell params={ params as GridRenderCellParams }/>,
         );
 
         getByText('3 days ago');
