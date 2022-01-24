@@ -4,7 +4,7 @@ import test from '../../../fixtures/next';
 import KPD from '../../../mockData/orgs/KPD';
 import ReferendumSignatures  from '../../../mockData/orgs/KPD/campaigns/ReferendumSignatures';
 import SpeakToFriend from '../../../mockData/orgs/KPD/campaigns/ReferendumSignatures/tasks/SpeakToFriend';
-import { VisitLinkConfig } from 'types/tasks';
+import { VisitLinkConfig } from '../../../../src/types/tasks';
 import VisitReferendumWebsite from '../../../mockData/orgs/KPD/campaigns/ReferendumSignatures/tasks/VisitReferendumWebsite';
 
 test.describe('Single campaign page speed dial', () => {
@@ -76,7 +76,7 @@ test.describe('Single campaign page speed dial', () => {
         });
 
         test('shows error alert when response error', async ({ page, moxy, appUri }) => {
-            moxy.setZetkinApiMock('/orgs/1/tasks', 'post', {}, 400);
+            moxy.setZetkinApiMock('/orgs/1/tasks', 'post', undefined, 400);
 
             await page.goto(appUri + '/organize/1/campaigns/1#create-task');
 
