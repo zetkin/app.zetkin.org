@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { campaignResource } from 'api/campaigns';
 import { taskResource } from 'api/tasks';
 
-import { getMatchingWithConfig, getTaskStatus, getTaskTimeFrame, getTimeFrameWithConfig } from '../../utils';
+import { getMatchingWithConfig, getTaskStatus, getTaskTimeFrameWithConfig, getTimeFrameWithConfig } from '../../utils';
 import { OPERATION, SmartSearchFilterWithId, TaskFilterConfig } from 'types/smartSearch';
 
 interface DisplayTaskProps {
@@ -16,7 +16,7 @@ const DisplayTask = ({ filter }: DisplayTaskProps) : JSX.Element => {
     const { config } = filter;
     const op = filter.op || OPERATION.ADD;
 
-    const tf = getTaskTimeFrame(config);
+    const tf = getTaskTimeFrameWithConfig(config);
     const {
         after,
         before,

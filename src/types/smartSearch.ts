@@ -1,3 +1,4 @@
+import { TASK_TYPE } from './tasks';
 
 export enum FILTER_TYPE {
     ALL ='all',
@@ -188,7 +189,7 @@ interface TaskTimeFrameBetween {
     before: string;
 }
 
-type TaskTimeFrame = boolean
+export type TaskTimeFrame = boolean
         | TaskTimeFrameAfter
         | TaskTimeFrameBefore
         | TaskTimeFrameBetween;
@@ -196,11 +197,7 @@ type TaskTimeFrame = boolean
 export interface TaskFilterConfig {
     campaign?: number;
     task?: number;
-    type?: 'demographic'
-        | 'offline'
-        | 'share_link'
-        | 'share_image'
-        | 'visit_link';
+    type?: TASK_TYPE;
     assigned?: TaskTimeFrame;
     completed?: TaskTimeFrame;
     ignored?: TaskTimeFrame;

@@ -11,10 +11,10 @@ import Matching from '../Matching';
 import StyledSelect from '../../inputs/StyledSelect';
 import TimeFrame from '../TimeFrame';
 import useSmartSearchFilter from 'hooks/useSmartSearchFilter';
-import { getTaskStatus, getTaskTimeFrame } from '../../utils';
+import { getTaskStatus, getTaskTimeFrameWithConfig } from '../../utils';
 
 import { NewSmartSearchFilter, OPERATION,
-    SmartSearchFilterWithId, TASK_STATUS, TaskFilterConfig, TIME_FRAME, ZetkinSmartSearchFilter } from 'types/smartSearch';
+    SmartSearchFilterWithId, TASK_STATUS, TaskFilterConfig, TaskTimeFrame, TIME_FRAME, ZetkinSmartSearchFilter } from 'types/smartSearch';
 
 const ANY_CAMPAIGN = 'any';
 const ANY_TASK = 'any';
@@ -52,9 +52,12 @@ const Task = (
 
     const handleTimeFrameChange = (range: {after?: string; before?: string}) => {
         // The TimeFrame component produces an empty object for "ever", but the API expects true
-        let newValue : {after?: string; before?: string} | boolean = range;
+        let newValue;
         if (!range.after && !range.before) {
             newValue = true;
+        }
+        else {
+            newValue = range;
         }
         setConfig({
             ...filter.config,
@@ -85,6 +88,21 @@ const Task = (
         }
         else {
             setConfig({ ...filter.config, campaign: +campaignValue, task: undefined });
+        }
+    };
+
+    const getTimeFrame = (config : TaskFilterConfig) : TaskTimeFrame => {
+        if (config.assigned) {
+            return config.assigned;
+        }
+        else if (config.completed) {
+            return config.completed;
+        }
+        else if (config.ignored) {
+            return config.ignored;
+        }
+        else {
+            throw 'Unkown time frame';
         }
     };
 
@@ -158,7 +176,7 @@ const Task = (
                                 assigned: undefined,
                                 completed: undefined,
                                 ignored: undefined,
-                                [e.target.value]: getTaskTimeFrame(filter.config),
+                                [e.target.value]: getTimeFrame(filter.config),
                             }) }
                             value={ getTaskStatus(filter.config) }>
                             { Object.values(TASK_STATUS).map( s => (
@@ -170,7 +188,7 @@ const Task = (
                     ),
                     timeFrame: (
                         <TimeFrame
-                            filterConfig={ getTaskTimeFrame(filter.config) }
+                            filterConfig={ getTaskTimeFrameWithConfig(filter.config) }
                             onChange={ handleTimeFrameChange }
                             options={ [
                                 TIME_FRAME.EVER,

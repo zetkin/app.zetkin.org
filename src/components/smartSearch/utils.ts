@@ -109,21 +109,26 @@ export const getTaskStatus = (config : TaskFilterConfig) : TASK_STATUS => {
     }
 };
 
-export const getTaskTimeFrame = (config : TaskFilterConfig) : { after?: string; before?: string } => {
-    let timeFrame;
+export const getTaskTimeFrameWithConfig = (config : TaskFilterConfig) : { after?: string; before?: string } => {
     if (config.assigned) {
-        timeFrame = config.assigned;
+        if (config.assigned === true) {
+            return {};
+        }
+        return config.assigned;
     }
     else if (config.ignored) {
-        timeFrame = config.ignored;
+        if (config.ignored === true) {
+            return {};
+        }
+        return config.ignored;
     }
     else if (config.completed) {
-        timeFrame = config.completed;
+        if (config.completed === true) {
+            return {};
+        }
+        return config.completed;
     }
     else {
         throw 'Unknown task status';
     }
-
-    // The API specifies true to represent "ever", but the TimeFrame component expects an empty object
-    return timeFrame === true ? {} : timeFrame;
 };
