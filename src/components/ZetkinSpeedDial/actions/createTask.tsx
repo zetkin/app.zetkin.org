@@ -21,7 +21,6 @@ const DialogContent: React.FunctionComponent<DialogContentBaseProps> = ({ closeD
         // Set defaults for config and target_filters
         const body: ZetkinTaskRequestBody = {
             ...task,
-            config: {},
             target_filters: [],
         };
         await sendTaskRequest(body, {
