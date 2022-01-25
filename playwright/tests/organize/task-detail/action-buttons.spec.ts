@@ -63,7 +63,7 @@ test.describe('Task action buttons', async () => {
 
     test.describe('delete task', () => {
         test('user can delete task', async ({ page, moxy, appUri }) => {
-            moxy.setZetkinApiMock('/orgs/1/tasks/1', 'delete', {}, 204);
+            const { log } = moxy.setZetkinApiMock('/orgs/1/tasks/1', 'delete', {}, 204);
 
             await page.goto(appUri + '/organize/1/campaigns/1/calendar/tasks/1');
 
@@ -73,6 +73,7 @@ test.describe('Task action buttons', async () => {
 
             await page.waitForNavigation();
             expect(page.url()).toEqual(appUri + '/organize/1/campaigns/1');
+            expect(log().length).toEqual(1);
         });
 
         test('shows error if delete task fails', async ({ page, moxy, appUri }) => {
