@@ -72,7 +72,7 @@ const PublishButton: React.FunctionComponent<PublishButtonProps> = ({ task }) =>
                     disabled={ !isEnabled }
                     onClick={ () => showConfirmDialog({
                         onSubmit: publishTask,
-                        title: 'Publish task',
+                        title: intl.formatMessage({ id: 'misc.tasks.forms.publishTask.title' }),
                         warningText: intl.formatMessage({ id: 'misc.tasks.forms.publishTask.warning' }),
                     }) }
                     variant="contained">
