@@ -1,18 +1,19 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Alert } from '@material-ui/lab';
+import { Box } from '@material-ui/core';
 import { useRouter } from 'next/router';
-import { Box, Button, Menu, MenuItem } from '@material-ui/core';
 import { Delete, Settings } from '@material-ui/icons';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 
 import ZetkinDialog from 'components/ZetkinDialog';
 import { ZetkinTask } from 'types/zetkin';
 
-import DeleteTaskForm from 'components/forms/TaskDeleteForm';
+import { ConfirmDialogContext } from 'hooks/ConfirmDialogProvider';
 import PublishButton from './PublishButton';
 import TaskDetailsForm from 'components/forms/TaskDetailsForm';
 import { taskResource } from 'api/tasks';
+import ZetkinEllipsisMenu from 'components/ZetkinEllipsisMenu';
 
 enum TASK_MENU_ITEMS {
     EDIT_TASK = 'editTask',
@@ -26,28 +27,33 @@ interface TaskActionButtonsProps {
 const TaskActionButtons: React.FunctionComponent<TaskActionButtonsProps> = ({ task }) => {
     const intl = useIntl();
     const router = useRouter();
-    // Menu
-    const [menuActivator, setMenuActivator] = React.useState<null | HTMLElement>(null);
     // Dialogs
-    const [currentOpenDialog, setCurrentOpenDialog] = useState<TASK_MENU_ITEMS>();
-    const closeDialog = () => setCurrentOpenDialog(undefined);
+    const [editTaskDialogOpen, setEditTaskDialogOpen] = useState(false);
+    const { showConfirmDialog } = useContext(ConfirmDialogContext);
 
     // Mutations
-    const taskHooks = taskResource(task.organization.id.toString(), task.id.toString());
+    const taskHooks = taskResource(
+        task.organization.id.toString(),
+        task.campaign.id.toString(),
+        task.id.toString(),
+    );
     const patchTaskMutation = taskHooks.useUpdate();
     const deleteTaskMutation = taskHooks.useDelete();
 
     // Event Handlers
     const handleEditTask = (task: Partial<ZetkinTask>) => {
         patchTaskMutation.mutateAsync(task, {
-            onSuccess: () => closeDialog(),
+            onSuccess: () => setEditTaskDialogOpen(false),
         });
     };
     const handleDeleteTask = () => {
-        deleteTaskMutation.mutate(task.id);
-        closeDialog();
-        // Navigate back to campaign page
-        router.push(`/organize/${task.organization.id}/campaigns/${task.campaign.id}`);
+        deleteTaskMutation.mutate(task.id, {
+            onSuccess: () => {
+                // Navigate back to campaign page
+                router.push(`/organize/${task.organization.id}/campaigns/${task.campaign.id}`);
+            },
+        });
+
     };
 
     return (
@@ -56,46 +62,40 @@ const TaskActionButtons: React.FunctionComponent<TaskActionButtonsProps> = ({ ta
                 <PublishButton task={ task }/>
             </Box>
             <Box>
-                <Button
-                    color="secondary"
-                    data-testid="task-action-buttons-menu-activator"
-                    disableElevation
-                    onClick={ (e) => setMenuActivator(e.currentTarget) }
-                    variant="contained">
-                    <Settings />
-                </Button>
+                <ZetkinEllipsisMenu items={ [
+                    {
+                        id: TASK_MENU_ITEMS.EDIT_TASK,
+                        label: (
+                            <>
+                                <Box mr={ 1 }><Settings /></Box>
+                                <Msg id="misc.tasks.forms.editTask.title" />
+                            </>
+                        ),
+                        onSelect: () => setEditTaskDialogOpen(true),
+                    },
+                    {
+                        id: TASK_MENU_ITEMS.DELETE_TASK,
+                        label: (
+                            <>
+                                <Box mr={ 1 }><Delete /></Box>
+                                <Msg id="misc.tasks.forms.deleteTask.title" />
+                            </>
+                        ),
+                        onSelect: () => {
+                            showConfirmDialog({
+                                onSubmit: handleDeleteTask,
+                                title: intl.formatMessage({ id: 'misc.tasks.forms.deleteTask.title' }),
+                                warningText: intl.formatMessage({ id: 'misc.tasks.forms.deleteTask.warning' }),
+                            });
+                        },
+                    },
+                ] }
+                />
             </Box>
-            <Menu
-                anchorEl={ menuActivator }
-                keepMounted
-                onClose={ () => setMenuActivator(null) }
-                open={ Boolean(menuActivator) }>
-                { /* Edit Task */ }
-                <MenuItem
-                    key={ TASK_MENU_ITEMS.EDIT_TASK }
-                    data-testid="task-action-buttons-edit-task"
-                    onClick={ () => {
-                        setMenuActivator(null);
-                        setCurrentOpenDialog(TASK_MENU_ITEMS.EDIT_TASK);
-                    } }>
-                    <Box mr={ 1 }><Settings /></Box>
-                    <Msg id="misc.tasks.forms.editTask.title" />
-                </MenuItem>
-                { /* Delete Task */ }
-                <MenuItem
-                    key={ TASK_MENU_ITEMS.DELETE_TASK }
-                    onClick={ () => {
-                        setMenuActivator(null);
-                        setCurrentOpenDialog(TASK_MENU_ITEMS.DELETE_TASK);
-                    } }>
-                    <Box mr={ 1 }><Delete /></Box>
-                    <Msg id="misc.tasks.forms.deleteTask.title" />
-                </MenuItem>
-            </Menu>
             { /* Dialogs */ }
             <ZetkinDialog
-                onClose={ closeDialog }
-                open={ currentOpenDialog === TASK_MENU_ITEMS.EDIT_TASK }
+                onClose={ () => setEditTaskDialogOpen(false) }
+                open={ editTaskDialogOpen }
                 title={ intl.formatMessage({ id: 'misc.tasks.forms.editTask.title' }) }>
                 {
                     patchTaskMutation.isError &&
@@ -104,20 +104,11 @@ const TaskActionButtons: React.FunctionComponent<TaskActionButtonsProps> = ({ ta
                     </Alert>
                 }
                 <TaskDetailsForm
-                    onCancel={ closeDialog }
+                    onCancel={ () => setEditTaskDialogOpen(false) }
                     onSubmit={ (task)=>{
                         handleEditTask(task);
                     } }
                     task={ task }
-                />
-            </ZetkinDialog>
-            <ZetkinDialog
-                onClose={ closeDialog }
-                open={ currentOpenDialog === TASK_MENU_ITEMS.DELETE_TASK }
-                title={ intl.formatMessage({ id: 'misc.tasks.forms.deleteTask.title' }) }>
-                <DeleteTaskForm
-                    onCancel={ closeDialog }
-                    onSubmit={ handleDeleteTask }
                 />
             </ZetkinDialog>
         </Box>

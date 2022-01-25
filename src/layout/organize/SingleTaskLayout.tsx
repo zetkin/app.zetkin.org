@@ -9,7 +9,11 @@ import TaskStatusText from 'components/organize/tasks/TaskStatusText';
 
 const SingleTaskLayout: FunctionComponent = ({ children }) => {
     const { taskId, orgId, campId } = useRouter().query;
-    const { data: task } = taskResource(orgId as string, taskId as string).useQuery();
+    const { data: task } = taskResource(
+        orgId as string,
+        campId as string,
+        taskId as string,
+    ).useQuery();
 
     if (!task) return null;
 

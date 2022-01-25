@@ -40,7 +40,11 @@ const PublishButton: React.FunctionComponent<PublishButtonProps> = ({ task }) =>
     const intl = useIntl();
     const [dialogOpen, setDialogOpen] = useState(false);
 
-    const patchTaskMutation = taskResource(task.organization.id.toString(), task.id.toString()).useUpdate();
+    const patchTaskMutation = taskResource(
+        task.organization.id.toString(),
+        task.campaign.id.toString(),
+        task.id.toString(),
+    ).useUpdate();
 
     const publishTask = () => {
         patchTaskMutation.mutate({

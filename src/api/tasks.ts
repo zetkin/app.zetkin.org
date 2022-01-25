@@ -35,7 +35,7 @@ export const campaignTasksResource = (orgId: string, campaignId: string) => {
     };
 };
 
-export const taskResource = (orgId: string, taskId: string) => {
+export const taskResource = (orgId: string, campaignId: string, taskId: string) => {
     const key = ['task', taskId];
     const url = `/orgs/${orgId}/tasks/${taskId}`;
 
@@ -45,7 +45,7 @@ export const taskResource = (orgId: string, taskId: string) => {
             ['assignedTasks', orgId, taskId],
             `/orgs/${orgId}/tasks/${taskId}/assigned`,
         ),
-        useDelete: createUseMutationDelete(key, url),
+        useDelete: createUseMutationDelete(['tasks', orgId, campaignId], `/orgs/${orgId}/tasks`),
         useQuery: createUseQuery<ZetkinTask>(key, url),
         useUpdate: createUseMutation<ZetkinTaskRequestBody, ZetkinTask>(
             key,
