@@ -34,7 +34,6 @@ export const getServerSideProps : GetServerSideProps = scaffold(async (ctx) => {
 
     const { prefetch: prefetchTask } = taskResource(
         orgId as string,
-        campId as string,
         taskId as string,
     );
     const { state: taskState, data: taskData } = await prefetchTask(ctx);
@@ -78,10 +77,9 @@ const TaskAssigneesPage: PageWithLayout = () => {
     const intl = useIntl();
     const queryClient = useQueryClient();
 
-    const { taskId, orgId, campId } = useRouter().query;
+    const { taskId, orgId } = useRouter().query;
     const { useQuery: useTaskQuery, useAssignedTasksQuery } = taskResource(
         orgId as string,
-        campId as string,
         taskId as string);
     const { data: task } = useTaskQuery();
     const assignedTasksQuery = useAssignedTasksQuery();

@@ -20,7 +20,7 @@ export const getServerSideProps : GetServerSideProps = scaffold(async (ctx) => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const { orgId, campId, taskId } = ctx.params!;
 
-    const { prefetch } = taskResource(orgId as string, campId as string, taskId as string);
+    const { prefetch } = taskResource(orgId as string, taskId as string);
     const { state: taskQueryState } = await prefetch(ctx);
 
     if (
@@ -47,8 +47,8 @@ type TaskDetailPageProps = {
     taskId: string;
 }
 
-const TaskDetailPage: PageWithLayout<TaskDetailPageProps> = ({ taskId, campId, orgId }) => {
-    const { data: task } = taskResource(orgId, campId, taskId).useQuery();
+const TaskDetailPage: PageWithLayout<TaskDetailPageProps> = ({ taskId, orgId }) => {
+    const { data: task } = taskResource(orgId, taskId).useQuery();
 
     if (!task) return null;
 

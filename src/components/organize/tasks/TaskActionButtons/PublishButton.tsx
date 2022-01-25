@@ -42,7 +42,6 @@ const PublishButton: React.FunctionComponent<PublishButtonProps> = ({ task }) =>
 
     const patchTaskMutation = taskResource(
         task.organization.id.toString(),
-        task.campaign.id.toString(),
         task.id.toString(),
     ).useUpdate();
 

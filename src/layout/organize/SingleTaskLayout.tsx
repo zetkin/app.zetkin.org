@@ -11,7 +11,6 @@ const SingleTaskLayout: FunctionComponent = ({ children }) => {
     const { taskId, orgId, campId } = useRouter().query;
     const { data: task } = taskResource(
         orgId as string,
-        campId as string,
         taskId as string,
     ).useQuery();
 

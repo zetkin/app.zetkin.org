@@ -12,8 +12,8 @@ import { ZetkinTask } from 'types/zetkin';
 import { ConfirmDialogContext } from 'hooks/ConfirmDialogProvider';
 import PublishButton from './PublishButton';
 import TaskDetailsForm from 'components/forms/TaskDetailsForm';
-import { taskResource } from 'api/tasks';
 import ZetkinEllipsisMenu from 'components/ZetkinEllipsisMenu';
+import { taskResource, tasksResource } from 'api/tasks';
 
 enum TASK_MENU_ITEMS {
     EDIT_TASK = 'editTask',
@@ -34,11 +34,10 @@ const TaskActionButtons: React.FunctionComponent<TaskActionButtonsProps> = ({ ta
     // Mutations
     const taskHooks = taskResource(
         task.organization.id.toString(),
-        task.campaign.id.toString(),
         task.id.toString(),
     );
     const patchTaskMutation = taskHooks.useUpdate();
-    const deleteTaskMutation = taskHooks.useDelete();
+    const deleteTaskMutation = tasksResource(task.organization.id.toString()).useDelete();
 
     // Event Handlers
     const handleEditTask = (task: Partial<ZetkinTask>) => {
