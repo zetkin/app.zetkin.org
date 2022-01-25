@@ -11,6 +11,7 @@ import { ZetkinTask } from 'types/zetkin';
 
 import { ConfirmDialogContext } from 'hooks/ConfirmDialogProvider';
 import PublishButton from './PublishButton';
+import SnackbarContext from 'hooks/SnackbarContext';
 import TaskDetailsForm from 'components/forms/TaskDetailsForm';
 import ZetkinEllipsisMenu from 'components/ZetkinEllipsisMenu';
 import { taskResource, tasksResource } from 'api/tasks';
@@ -30,6 +31,7 @@ const TaskActionButtons: React.FunctionComponent<TaskActionButtonsProps> = ({ ta
     // Dialogs
     const [editTaskDialogOpen, setEditTaskDialogOpen] = useState(false);
     const { showConfirmDialog } = useContext(ConfirmDialogContext);
+    const { showSnackbar } = useContext(SnackbarContext);
 
     // Mutations
     const taskHooks = taskResource(
@@ -47,6 +49,7 @@ const TaskActionButtons: React.FunctionComponent<TaskActionButtonsProps> = ({ ta
     };
     const handleDeleteTask = () => {
         deleteTaskMutation.mutate(task.id, {
+            onError: () => showSnackbar('error', intl.formatMessage({ id: 'misc.tasks.forms.deleteTask.error' })),
             onSuccess: () => {
                 // Navigate back to campaign page
                 router.push(`/organize/${task.organization.id}/campaigns/${task.campaign.id}`);
@@ -91,7 +94,6 @@ const TaskActionButtons: React.FunctionComponent<TaskActionButtonsProps> = ({ ta
                 ] }
                 />
             </Box>
-            { /* Dialogs */ }
             <ZetkinDialog
                 onClose={ () => setEditTaskDialogOpen(false) }
                 open={ editTaskDialogOpen }

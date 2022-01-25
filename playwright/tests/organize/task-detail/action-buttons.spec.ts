@@ -74,5 +74,19 @@ test.describe('Task action buttons', async () => {
             await page.waitForNavigation();
             expect(page.url()).toEqual(appUri + '/organize/1/campaigns/1');
         });
+
+        test('shows error if delete task fails', async ({ page, moxy, appUri }) => {
+            moxy.setZetkinApiMock('/orgs/1/tasks/1', 'delete', {}, 404);
+
+            await page.goto(appUri + '/organize/1/campaigns/1/calendar/tasks/1');
+
+            await page.click('data-testid=EllipsisMenu-menuActivator');
+            await page.click('data-testid=EllipsisMenu-item-deleteTask');
+            await page.click('button > :text("Confirm")');
+
+            await page.locator('data-testid=Snackbar-error').waitFor();
+            const canSeeErrorSnackbar = await page.locator('data-testid=Snackbar-error').isVisible();
+            expect(canSeeErrorSnackbar).toBeTruthy();
+        });
     });
 });
