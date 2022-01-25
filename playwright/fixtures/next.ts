@@ -8,7 +8,7 @@ import next from 'next';
 import { parse } from 'url';
 import path from 'path';
 import { createServer, Server } from 'http';
-import moxy, { HTTPMethod, MockResponseSetter, Moxy } from 'moxy';
+import moxy, { HTTPMethod, LoggedRequest, MockResponseSetter, Moxy } from 'moxy';
 
 import RosaLuxemburg from '../mockData/users/RosaLuxemburg';
 import { ZetkinSession, ZetkinUser } from '../../src/types/zetkin';
@@ -28,7 +28,10 @@ export interface NextWorkerFixtures {
             data?: G,
             status?: MockResponseSetter['status'],
             headers?: MockResponseSetter['headers'],
-        ) => () => void;
+        ) => {
+            log: <T>() => LoggedRequest<T, { data: G }>[];
+            removeMock: () => void;
+        };
         teardown: () => void;
     } & Omit<Moxy, 'start' | 'stop'>;
 }

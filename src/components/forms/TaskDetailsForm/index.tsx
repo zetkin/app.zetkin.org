@@ -174,9 +174,9 @@ const TaskDetailsForm = ({ onSubmit, onCancel, task }: TaskDetailsFormProps): JS
                         <MenuItem value={ TASK_TYPE.VISIT_LINK }>
                             <FormattedMessage id="misc.tasks.forms.createTask.fields.types.visit_link" />
                         </MenuItem>
-                        <MenuItem value={ TASK_TYPE.WATCH_VIDEO }>
+                        { /* <MenuItem value={ TASK_TYPE.WATCH_VIDEO }>
                             <FormattedMessage id="misc.tasks.forms.createTask.fields.types.watch_video" />
-                        </MenuItem>
+                        </MenuItem> */ }
                         <MenuItem value={ TASK_TYPE.COLLECT_DEMOGRAPHICS }>
                             <FormattedMessage id="misc.tasks.forms.createTask.fields.types.demographic" />
                         </MenuItem>

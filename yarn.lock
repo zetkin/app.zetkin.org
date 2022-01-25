@@ -4903,10 +4903,10 @@ minimist@^1.2.0, minimist@^1.2.5:
   resolved "https://registry.yarnpkg.com/minimist/-/minimist-1.2.5.tgz#67d66014b66a6a8aaa0c083c5fd58df4e4e97602"
   integrity sha512-FM9nNUYrRBAELZQT3xeZQ7fmMOBg6nWNmJKTcgsJeaLstP/UODVpGsr5OhXhhXg6f+qtJ8uiZ+PUxkDWcgIXLw==
 
-moxy@^0.1.1:
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/moxy/-/moxy-0.1.1.tgz#b486ad4a318a1f4b0a36fe1350f406c0d29b4cf8"
-  integrity sha512-a7fMfbtfS7peyqut3w0KCo2SFY4lgupe4Jy8NNLUWqCP5b3S9XlSEDM7O0oA6n/NU0h6LohbKaRyYsoQbA08hQ==
+moxy@^0.1.2:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/moxy/-/moxy-0.1.2.tgz#d8a25ec03c4531a83d0f1f3b01a85319244257b4"
+  integrity sha512-383YEqihqO1ZpW+6HYf3ErIeO58PtVX+H+PKopu4clGC3LQEGdkut0u3GtrZe2aNYqV/w7eTxB5iDhEeScArDg==
   dependencies:
     body-parser "^1.19.0"
     command-line-args "^5.1.1"
