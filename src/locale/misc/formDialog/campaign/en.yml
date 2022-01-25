@@ -18,3 +18,4 @@ deleteCampaign:
     warning: Are you sure you want to delete this campiagn? This action is permanent.
     cancel: Cancel
     submitButton: Confirm deletion
+    error: There was an error deleting the campaign

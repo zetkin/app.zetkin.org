@@ -3,9 +3,12 @@ import { defaultFetch } from '..';
 const deleteCampaign = (orgId : string | number, campaignId: string | number, fetch = defaultFetch) => {
     return async (): Promise<void> => {
         const url = `/orgs/${orgId}/campaigns/${campaignId}`;
-        await fetch(url, {
+        const res = await fetch(url, {
             method: 'DELETE',
         });
+        if (!res.ok) {
+            throw new Error(`Error making PATCH request to ${url}`);
+        }
     };
 };
 

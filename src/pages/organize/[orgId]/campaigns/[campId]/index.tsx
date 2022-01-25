@@ -21,11 +21,8 @@ const scaffoldOptions = {
     authLevelRequired: 2,
     localeScope: [
         'layout.organize',
-        'misc.breadcrumbs',
         'pages.organizeCampaigns',
-        'misc.formDialog',
-        'misc.tasks',
-        'misc.speedDial',
+        'misc',
     ],
 };
 

@@ -2,19 +2,20 @@
 import { Alert } from '@material-ui/lab';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { Box, Button, Menu, MenuItem } from '@material-ui/core';
+import { Box, Button } from '@material-ui/core';
 import { Delete, Settings } from '@material-ui/icons';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 
-
-import CampaignDeleteForm from 'components/forms/CampaignDeleteForm';
 import CampaignDetailsForm from 'components/forms/CampaignDetailsForm';
+import { ConfirmDialogContext } from 'hooks/ConfirmDialogProvider';
 import deleteCampaign from 'fetching/campaigns/deleteCampaign';
 import patchCampaign from 'fetching/campaigns/patchCampaign';
+import SnackbarContext from 'hooks/SnackbarContext';
 import { ZetkinCampaign } from 'types/zetkin';
 import ZetkinDialog from 'components/ZetkinDialog';
+import ZetkinEllipsisMenu from 'components/ZetkinEllipsisMenu';
 
 enum CAMPAIGN_MENU_ITEMS {
     EDIT_CAMPAIGN = 'editCampaign',
@@ -30,11 +31,11 @@ const CampaignActionButtons: React.FunctionComponent<CampaignActionButtonsProps>
     const queryClient = useQueryClient();
     const router = useRouter();
     const { orgId } = router.query;
-    // Menu
-    const [menuActivator, setMenuActivator] = React.useState<null | HTMLElement>(null);
     // Dialogs
-    const [currentOpenDialog, setCurrentOpenDialog] = useState<CAMPAIGN_MENU_ITEMS>();
-    const closeDialog = () => setCurrentOpenDialog(undefined);
+    const { showSnackbar } = useContext(SnackbarContext);
+    const { showConfirmDialog } = useContext(ConfirmDialogContext);
+    const [editCampaignDialogOpen, setEditCampaignDialogOpen] = useState(false);
+    const closeDialog = () => setEditCampaignDialogOpen(false);
 
     // Mutations
     const patchCampaignMutation = useMutation(patchCampaign(orgId as string, campaign.id));
@@ -48,10 +49,15 @@ const CampaignActionButtons: React.FunctionComponent<CampaignActionButtonsProps>
         });
     };
     const handleDeleteCampaign = () => {
-        deleteCampaignMutation.mutate();
-        closeDialog();
-        // Navigate back to campaign page
-        router.push(`/organize/${orgId as string}/campaigns`);
+        deleteCampaignMutation.mutate(undefined, {
+            onError: () => showSnackbar(
+                'error',
+                intl.formatMessage({ id: 'misc.formDialog.campaign.deleteCampaign.error' }),
+            ),
+            onSuccess: () => {
+                router.push(`/organize/${orgId as string}/campaigns`);
+            },
+        });
     };
 
     return (
@@ -64,46 +70,39 @@ const CampaignActionButtons: React.FunctionComponent<CampaignActionButtonsProps>
                 </Link>
             </Box>
             <Box>
-                <Button
-                    color="secondary"
-                    data-testid="campaign-action-buttons-menu-activator"
-                    disableElevation
-                    onClick={ (e) => setMenuActivator(e.currentTarget) }
-                    variant="contained">
-                    <Settings />
-                </Button>
+                <ZetkinEllipsisMenu items={ [
+                    {
+                        id: CAMPAIGN_MENU_ITEMS.EDIT_CAMPAIGN,
+                        label: (
+                            <>
+                                <Box mr={ 1 }><Settings /></Box>
+                                <Msg id="misc.formDialog.campaign.edit" />
+                            </>
+                        ),
+                        onSelect: () => setEditCampaignDialogOpen(true),
+                    },
+                    {
+                        id: CAMPAIGN_MENU_ITEMS.DELETE_CAMPAIGN,
+                        label: (
+                            <>
+                                <Box mr={ 1 }><Delete /></Box>
+                                <Msg id="misc.formDialog.campaign.deleteCampaign.title" />
+                            </>
+                        ),
+                        onSelect: () => {
+                            showConfirmDialog({
+                                onSubmit: handleDeleteCampaign,
+                                title: intl.formatMessage({ id: 'misc.formDialog.campaign.deleteCampaign.title' }),
+                                warningText: intl.formatMessage({ id: 'misc.formDialog.campaign.deleteCampaign.warning' }),
+                            });
+                        },
+                    },
+                ] }
+                />
             </Box>
-            <Menu
-                anchorEl={ menuActivator }
-                keepMounted
-                onClose={ () => setMenuActivator(null) }
-                open={ Boolean(menuActivator) }>
-                { /* Edit Campaign */ }
-                <MenuItem
-                    key={ CAMPAIGN_MENU_ITEMS.EDIT_CAMPAIGN }
-                    data-testid="campaign-action-buttons-edit-campaign"
-                    onClick={ () => {
-                        setMenuActivator(null);
-                        setCurrentOpenDialog(CAMPAIGN_MENU_ITEMS.EDIT_CAMPAIGN);
-                    } }>
-                    <Box mr={ 1 }><Settings /></Box>
-                    <Msg id="misc.formDialog.campaign.edit" />
-                </MenuItem>
-                { /* Delete Task */ }
-                <MenuItem
-                    key={ CAMPAIGN_MENU_ITEMS.DELETE_CAMPAIGN }
-                    onClick={ () => {
-                        setMenuActivator(null);
-                        setCurrentOpenDialog(CAMPAIGN_MENU_ITEMS.DELETE_CAMPAIGN);
-                    } }>
-                    <Box mr={ 1 }><Delete /></Box>
-                    <Msg id="misc.formDialog.campaign.deleteCampaign.title" />
-                </MenuItem>
-            </Menu>
-            { /* Dialogs */ }
             <ZetkinDialog
                 onClose={ closeDialog }
-                open={ currentOpenDialog === CAMPAIGN_MENU_ITEMS.EDIT_CAMPAIGN }
+                open={ editCampaignDialogOpen }
                 title={ intl.formatMessage({ id: 'misc.formDialog.campaign.edit' }) }>
                 {
                     patchCampaignMutation.isError &&
@@ -112,12 +111,6 @@ const CampaignActionButtons: React.FunctionComponent<CampaignActionButtonsProps>
                     </Alert>
                 }
                 <CampaignDetailsForm campaign={ campaign } onCancel={ closeDialog } onSubmit={ handleEditCampaign }/>
-            </ZetkinDialog>
-            <ZetkinDialog
-                onClose={ closeDialog }
-                open={ currentOpenDialog === CAMPAIGN_MENU_ITEMS.DELETE_CAMPAIGN }
-                title={ intl.formatMessage({ id: 'misc.formDialog.campaign.deleteCampaign.title' }) }>
-                <CampaignDeleteForm onCancel={ closeDialog } onSubmit={ handleDeleteCampaign } />
             </ZetkinDialog>
         </Box>
     );
