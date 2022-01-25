@@ -1,12 +1,11 @@
 import dayjs from 'dayjs';
-import { useState } from 'react';
+import { useContext } from 'react';
 import { Button, Tooltip } from '@material-ui/core';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
 
-import TaskPublishForm from 'components/forms/TaskPublishForm';
+import { ConfirmDialogContext } from 'hooks/ConfirmDialogProvider';
 import { taskResource } from 'api/tasks';
 import validateTaskConfig from 'utils/validateTaskConfig';
-import ZetkinDialog from 'components/ZetkinDialog';
 import { ZetkinTask } from 'types/zetkin';
 import getTaskStatus, { TASK_STATUS } from 'utils/getTaskStatus';
 
@@ -38,7 +37,7 @@ interface PublishButtonProps {
 
 const PublishButton: React.FunctionComponent<PublishButtonProps> = ({ task }) => {
     const intl = useIntl();
-    const [dialogOpen, setDialogOpen] = useState(false);
+    const { showConfirmDialog } = useContext(ConfirmDialogContext);
 
     const patchTaskMutation = taskResource(
         task.organization.id.toString(),
@@ -49,7 +48,6 @@ const PublishButton: React.FunctionComponent<PublishButtonProps> = ({ task }) =>
         patchTaskMutation.mutate({
             published: dayjs().format('YYYY-MM-DDTHH:mm:ss'),
         });
-        setDialogOpen(false);
     };
 
     const taskStatus = getTaskStatus(task);
@@ -65,34 +63,23 @@ const PublishButton: React.FunctionComponent<PublishButtonProps> = ({ task }) =>
     const tooltipContents = getTooltipContents(taskStatus, isTaskConfigValid, hasAssignees);
 
     return (
-        <>
-            <Tooltip
-                arrow
-                title={ tooltipContents ? intl.formatMessage({ id: tooltipContents }) : '' }>
-                <span>
-                    <Button
-                        color="primary"
-                        disabled={ !isEnabled }
-                        onClick={ () => setDialogOpen(true) }
-                        variant="contained">
-                        <Msg id="misc.tasks.publishButton.publish" />
-                    </Button>
-                </span>
-            </Tooltip>
-            <ZetkinDialog
-                onClose={ () => {
-                    setDialogOpen(false);
-                } }
-                open={ dialogOpen }
-                title="Publish task">
-                <TaskPublishForm
-                    onCancel={ () => {
-                        setDialogOpen(false);
-                    } }
-                    onSubmit={ publishTask }
-                />
-            </ZetkinDialog>
-        </>
+        <Tooltip
+            arrow
+            title={ tooltipContents ? intl.formatMessage({ id: tooltipContents }) : '' }>
+            <span>
+                <Button
+                    color="primary"
+                    disabled={ !isEnabled }
+                    onClick={ () => showConfirmDialog({
+                        onSubmit: publishTask,
+                        title: 'Publish task',
+                        warningText: intl.formatMessage({ id: 'misc.tasks.forms.publishTask.warning' }),
+                    }) }
+                    variant="contained">
+                    <Msg id="misc.tasks.publishButton.publish" />
+                </Button>
+            </span>
+        </Tooltip>
     );
 };
 
