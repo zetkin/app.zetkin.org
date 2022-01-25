@@ -68,7 +68,7 @@ test.describe('Campaign action buttons', async () => {
         });
 
         test('shows error alert if server error on request', async ({ appUri, page, moxy }) => {
-            const removePatchTaskMock =  moxy.setZetkinApiMock('/orgs/1/campaigns/1', 'patch', {}, 401);
+            moxy.setZetkinApiMock('/orgs/1/campaigns/1', 'patch', {}, 401);
 
             await page.goto(appUri + '/organize/1/campaigns/1');
 
@@ -82,8 +82,6 @@ test.describe('Campaign action buttons', async () => {
 
             // Check that alert shows
             await expect(page.locator('data-testid=error-alert')).toBeVisible();
-
-            await removePatchTaskMock();
         });
     });
 });
