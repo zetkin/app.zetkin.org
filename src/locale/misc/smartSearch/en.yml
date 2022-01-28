@@ -143,7 +143,7 @@ task:
     taskStatusSelect:
         completed: completed
         ignored: ignored
-        assigned: been assigned to
+        assigned: been assigned
     taskSelect:
         any: any task
         task: task "{task}"
