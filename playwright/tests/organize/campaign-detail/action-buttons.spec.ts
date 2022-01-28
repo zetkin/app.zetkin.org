@@ -29,8 +29,8 @@ test.describe('Campaign action buttons', async () => {
             await page.goto(appUri + '/organize/1/campaigns/1');
 
             // Open modal
-            await page.click('data-testid=campaign-action-buttons-menu-activator');
-            await page.click('data-testid=campaign-action-buttons-edit-campaign');
+            await page.click('data-testid=EllipsisMenu-menuActivator');
+            await page.click('data-testid=EllipsisMenu-item-editCampaign');
 
             moxy.removeMock('/orgs/1/campaigns/1', 'get'); // Remove existing mock
             // After editing task
@@ -73,8 +73,8 @@ test.describe('Campaign action buttons', async () => {
             await page.goto(appUri + '/organize/1/campaigns/1');
 
             // Open modal
-            await page.click('data-testid=campaign-action-buttons-menu-activator');
-            await page.click('data-testid=campaign-action-buttons-edit-campaign');
+            await page.click('data-testid=EllipsisMenu-menuActivator');
+            await page.click('data-testid=EllipsisMenu-item-editCampaign');
 
             // Edit task
             await page.fill('#title', newTitle);
@@ -82,6 +82,38 @@ test.describe('Campaign action buttons', async () => {
 
             // Check that alert shows
             await expect(page.locator('data-testid=error-alert')).toBeVisible();
+        });
+    });
+
+    test.describe('delete campaign', () => {
+        test('allows users to delete a campaign', async ({ page, moxy, appUri }) => {
+            const { log } = moxy.setZetkinApiMock('/orgs/1/campaigns/1', 'delete', undefined, 204);
+
+            await page.goto(appUri + '/organize/1/campaigns/1');
+
+            await page.click('data-testid=EllipsisMenu-menuActivator');
+            await page.click('data-testid=EllipsisMenu-item-deleteCampaign');
+            await page.click('button > :text("Confirm")');
+
+            await page.waitForNavigation();
+            expect(page.url()).toEqual(appUri + '/organize/1/campaigns');
+            expect(log().length).toEqual(1);
+        });
+
+        test('shows error if delete campaign fails', async ({ page, moxy, appUri }) => {
+            moxy.setZetkinApiMock('/orgs/1/campaigns/1', 'delete', undefined, 400);
+
+            await page.goto(appUri + '/organize/1/campaigns/1');
+
+            await page.click('data-testid=EllipsisMenu-menuActivator');
+            await page.click('data-testid=EllipsisMenu-item-deleteCampaign');
+            await page.click('button > :text("Confirm")');
+
+            await page.locator('data-testid=Snackbar-error').waitFor();
+            const canSeeErrorSnackbar = await page.locator('data-testid=Snackbar-error').isVisible();
+            expect(canSeeErrorSnackbar).toBeTruthy();
+
+            expect(page.url()).toEqual(appUri + '/organize/1/campaigns/1');
         });
     });
 });

@@ -7,7 +7,7 @@ import { FunctionComponent, useState } from 'react';
 export interface ZetkinEllipsisMenuProps {
     items: {
         id?: string;
-        label: string;
+        label: string | React.ReactNode;
         onSelect: () => void;
     }[];
 }

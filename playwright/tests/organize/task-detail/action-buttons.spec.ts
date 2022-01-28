@@ -25,8 +25,8 @@ test.describe('Task action buttons', async () => {
             await page.goto(appUri + '/organize/1/campaigns/1/calendar/tasks/1');
 
             // Open modal
-            await page.click('data-testid=task-action-buttons-menu-activator');
-            await page.click('data-testid=task-action-buttons-edit-task');
+            await page.click('data-testid=EllipsisMenu-menuActivator');
+            await page.click('data-testid=EllipsisMenu-item-editTask');
 
             moxy.removeMock('/orgs/1/tasks/1', 'get'); // Remove existing mock
             moxy.setZetkinApiMock('/orgs/1/tasks/1', 'get', { // After editing
@@ -49,8 +49,8 @@ test.describe('Task action buttons', async () => {
             await page.goto(appUri + '/organize/1/campaigns/1/calendar/tasks/1');
 
             // Open modal
-            await page.click('data-testid=task-action-buttons-menu-activator');
-            await page.click('data-testid=task-action-buttons-edit-task');
+            await page.click('data-testid=EllipsisMenu-menuActivator');
+            await page.click('data-testid=EllipsisMenu-item-editTask');
 
             // Edit task
             await page.fill('#title', newTitle);
@@ -58,6 +58,36 @@ test.describe('Task action buttons', async () => {
 
             // Check that alert shows
             await expect(page.locator('data-testid=error-alert')).toBeVisible();
+        });
+    });
+
+    test.describe('delete task', () => {
+        test('user can delete task', async ({ page, moxy, appUri }) => {
+            const { log } = moxy.setZetkinApiMock('/orgs/1/tasks/1', 'delete', {}, 204);
+
+            await page.goto(appUri + '/organize/1/campaigns/1/calendar/tasks/1');
+
+            await page.click('data-testid=EllipsisMenu-menuActivator');
+            await page.click('data-testid=EllipsisMenu-item-deleteTask');
+            await page.click('button > :text("Confirm")');
+
+            await page.waitForNavigation();
+            expect(page.url()).toEqual(appUri + '/organize/1/campaigns/1');
+            expect(log().length).toEqual(1);
+        });
+
+        test('shows error if delete task fails', async ({ page, moxy, appUri }) => {
+            moxy.setZetkinApiMock('/orgs/1/tasks/1', 'delete', {}, 404);
+
+            await page.goto(appUri + '/organize/1/campaigns/1/calendar/tasks/1');
+
+            await page.click('data-testid=EllipsisMenu-menuActivator');
+            await page.click('data-testid=EllipsisMenu-item-deleteTask');
+            await page.click('button > :text("Confirm")');
+
+            await page.locator('data-testid=Snackbar-error').waitFor();
+            const canSeeErrorSnackbar = await page.locator('data-testid=Snackbar-error').isVisible();
+            expect(canSeeErrorSnackbar).toBeTruthy();
         });
     });
 });

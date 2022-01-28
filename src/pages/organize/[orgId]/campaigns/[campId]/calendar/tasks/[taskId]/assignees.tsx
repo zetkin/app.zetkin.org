@@ -32,7 +32,10 @@ export const getServerSideProps : GetServerSideProps = scaffold(async (ctx) => {
     await ctx.queryClient.prefetchQuery(['org', orgId], getOrg(orgId as string, ctx.apiFetch));
     const orgState = ctx.queryClient.getQueryState(['org', orgId]);
 
-    const { prefetch: prefetchTask } = taskResource(orgId as string, taskId as string);
+    const { prefetch: prefetchTask } = taskResource(
+        orgId as string,
+        taskId as string,
+    );
     const { state: taskState, data: taskData } = await prefetchTask(ctx);
 
     if (orgState?.status === 'success' && taskState?.status === 'success') {
@@ -75,7 +78,9 @@ const TaskAssigneesPage: PageWithLayout = () => {
     const queryClient = useQueryClient();
 
     const { taskId, orgId } = useRouter().query;
-    const { useQuery: useTaskQuery, useAssignedTasksQuery } = taskResource(orgId as string, taskId as string);
+    const { useQuery: useTaskQuery, useAssignedTasksQuery } = taskResource(
+        orgId as string,
+        taskId as string);
     const { data: task } = useTaskQuery();
     const assignedTasksQuery = useAssignedTasksQuery();
     const assignedTasks = assignedTasksQuery?.data;
