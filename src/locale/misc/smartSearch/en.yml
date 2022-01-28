@@ -29,6 +29,7 @@ filterTitles:
     survey_option: Based on the options they have selected in survey questions
     survey_response: Based on their responses to survey questions
     survey_submission: People who have submitted a survey
+    task: People who have engaged in tasks
     user: People who used Zetkin
 all:
     inputString: Start with {startWithSelect}.
@@ -131,6 +132,26 @@ person_tags:
     examples:
         one: "Add people with at least one of the following tags: 'Member', 'Activist'"
         two: "Remove people with all of the following tags: 'Board member'"
+task:
+    inputString: "{addRemoveSelect} people who have {taskStatusSelect} {taskSelect}{campaignSelect} {matchingSelect} {timeFrame}"
+    addRemoveSelect:
+        add: Add
+        sub: Remove
+    examples:
+        one: Add people who have completed task "Tell your friends" at least once at any point in time
+        two: Add people who have ignored any task in any campaign between 2 and 5 times before today 
+    taskStatusSelect:
+        completed: completed
+        ignored: ignored
+        assigned: been assigned
+    taskSelect:
+        any: any task
+        task: task "{task}"
+    campaignSelect:
+        any: any campaign
+        campaign: campaign "{campaign}"
+        in: " in "
+
 condition:
     preview:
         all: all

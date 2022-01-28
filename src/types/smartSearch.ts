@@ -1,3 +1,4 @@
+import { TASK_TYPE } from './tasks';
 
 export enum FILTER_TYPE {
     ALL ='all',
@@ -12,6 +13,7 @@ export enum FILTER_TYPE {
     SURVEY_OPTION='survey_option',
     SURVEY_RESPONSE = 'survey_response',
     SURVEY_SUBMISSION = 'survey_submission',
+    TASK = 'task',
     USER = 'user'
 }
 
@@ -54,6 +56,13 @@ export enum TIME_FRAME {
     LAST_FEW_DAYS='lastFew',
 }
 
+export enum MATCHING {
+    MIN='min',
+    MAX='max',
+    BETWEEN='between',
+    ONCE='once',
+}
+
 export enum DATA_FIELD {
     FIRST_NAME = 'first_name',
     LAST_NAME = 'last_name',
@@ -65,6 +74,12 @@ export enum DATA_FIELD {
     ZIP_CODE = 'zip_code',
     PHONE = 'phone',
     ALT_PHONE = 'alt_phone'
+}
+
+export enum TASK_STATUS {
+    COMPLETED = 'completed',
+    IGNORED = 'ignored',
+    ASSIGNED = 'assigned',
 }
 
 /**
@@ -161,6 +176,41 @@ export interface SubQueryFilterConfig {
     query_id: number;
 }
 
+interface TaskTimeFrameBefore {
+    before: string;
+}
+
+interface TaskTimeFrameAfter {
+    after: string;
+}
+
+interface TaskTimeFrameBetween {
+    after: string;
+    before: string;
+}
+
+export type TaskTimeFrame = boolean
+        | TaskTimeFrameAfter
+        | TaskTimeFrameBefore
+        | TaskTimeFrameBetween;
+
+export interface TaskFilterConfig {
+    campaign?: number;
+    task?: number;
+    type?: TASK_TYPE;
+    assigned?: TaskTimeFrame;
+    completed?: TaskTimeFrame;
+    ignored?: TaskTimeFrame;
+    time_estimate?: {
+        max?: number;
+        min?: number;
+    };
+    matching?: {
+        max?: number;
+        min?: number;
+    };
+}
+
 export type AnyFilterConfig = (
     CallHistoryFilterConfig |
     CampaignParticipationConfig |
@@ -174,6 +224,7 @@ export type AnyFilterConfig = (
     SurveyOptionFilterConfig |
     SurveyResponseFilterConfig |
     SurveySubmissionFilterConfig |
+    TaskFilterConfig |
     UserFilterConfig
     ) // Add all filter objects here
 

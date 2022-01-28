@@ -1,4 +1,4 @@
-import { QUANTITY, TIME_FRAME } from 'types/smartSearch';
+import { MATCHING, QUANTITY, TASK_STATUS, TaskFilterConfig, TIME_FRAME } from 'types/smartSearch';
 
 interface TimeFrameConfig {
     after?: Date;
@@ -10,6 +10,11 @@ interface TimeFrameConfig {
 interface QuantityConfig {
     quantity: QUANTITY;
     size: number;
+}
+
+interface MatchingConfig {
+    min?: number;
+    max?: number;
 }
 
 export const getTimeFrameWithConfig = (config: {after?: string; before?: string }): TimeFrameConfig => {
@@ -58,4 +63,72 @@ export const getQuantityWithConfig = (size: number): QuantityConfig => {
         quantity: QUANTITY.PERCENT,
         size: size * 100,
     };
+};
+
+export const getMatchingWithConfig = (config?: { max?: number; min?: number  }) : { config?: MatchingConfig; option: MATCHING } => {
+    const max = config?.max;
+    const min = config?.min;
+
+    if (min != undefined && max != undefined) {
+        return {
+            config: config,
+            option: MATCHING.BETWEEN,
+        };
+    }
+    if (min != undefined) {
+        return {
+            config,
+            option: MATCHING.MIN,
+        };
+    }
+    if (max != undefined) {
+        return {
+            config,
+            option: MATCHING.MAX,
+        };
+    }
+
+    return {
+        config: {},
+        option: MATCHING.ONCE,
+    };
+};
+
+export const getTaskStatus = (config : TaskFilterConfig) : TASK_STATUS => {
+    if (config.assigned) {
+        return TASK_STATUS.ASSIGNED;
+    }
+    else if (config.ignored) {
+        return TASK_STATUS.IGNORED;
+    }
+    else if (config.completed) {
+        return TASK_STATUS.COMPLETED;
+    }
+    else {
+        throw 'Unknown task status';
+    }
+};
+
+export const getTaskTimeFrameWithConfig = (config : TaskFilterConfig) : { after?: string; before?: string } => {
+    if (config.assigned) {
+        if (config.assigned === true) {
+            return {};
+        }
+        return config.assigned;
+    }
+    else if (config.ignored) {
+        if (config.ignored === true) {
+            return {};
+        }
+        return config.ignored;
+    }
+    else if (config.completed) {
+        if (config.completed === true) {
+            return {};
+        }
+        return config.completed;
+    }
+    else {
+        throw 'Unknown task status';
+    }
 };
