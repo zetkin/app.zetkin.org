@@ -28,6 +28,9 @@ createFromSelection: Create view from selection
 columnMenu:
     configure: Configure column
     delete: Delete column
+    confirmDelete: >-
+        Are you sure you want to remove this column? It contains data 
+        that will be permanently deleted. This action can not be undone.
     rename: Rename column
 columnRenameDialog:
     title: Title

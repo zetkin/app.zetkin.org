@@ -7,6 +7,7 @@ import { DataGridPro, GridColDef, GridSortModel, useGridApiRef } from '@mui/x-da
 import { FunctionComponent, useContext, useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 
+import { ConfirmDialogContext } from 'hooks/ConfirmDialogProvider';
 import deleteViewColumn from 'fetching/views/deleteViewColumn';
 import EmptyView from 'components/views/EmptyView';
 import patchViewColumn from 'fetching/views/patchViewColumn';
@@ -59,6 +60,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
     const queryClient = useQueryClient();
     const viewId = view.id.toString();
     const { showSnackbar } = useContext(SnackbarContext);
+    const { showConfirmDialog } = useContext(ConfirmDialogContext);
 
     const showError = (error: VIEW_DATA_TABLE_ERROR) => {
         showSnackbar('error', intl.formatMessage({ id: `misc.views.dataTableErrors.${error}` }) );
@@ -153,7 +155,20 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({ columns, rows, v
 
     const onColumnDelete = async (colFieldName : string) => {
         const colId = colIdFromFieldName(colFieldName);
-        await removeColumnMutation.mutateAsync(colId);
+        const colSpec = columns.find(col => col.id === colId) || null;
+        // If it's a local column, require confirmation
+        if (colSpec?.type.includes('local_')) {
+            showConfirmDialog({
+                onSubmit: () => {
+                    removeColumnMutation.mutateAsync(colId);
+                },
+                title: intl.formatMessage({ id: `misc.views.columnMenu.delete` }) ,
+                warningText: intl.formatMessage({ id: `misc.views.columnMenu.confirmDelete` }),
+            });
+        }
+        else {
+            removeColumnMutation.mutateAsync(colId);
+        }
     };
 
     const onColumnRename = (colFieldName : string) => {
