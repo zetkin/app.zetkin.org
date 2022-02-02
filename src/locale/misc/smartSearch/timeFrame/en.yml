@@ -1,4 +1,3 @@
-
 edit:
   afterDate: '{timeFrameSelect} {afterDateSelect}'
   beforeDate: '{timeFrameSelect} {beforeDateSelect}'
