@@ -7,7 +7,13 @@ module.exports = {
   parserOptions: { ecmaVersion: 8 }, // to enable features such as async/await
   // We don't want to lint generated files nor node_modules, but we want to lint .prettierrc.js (ignored by default by eslint)
   ignorePatterns: ['node_modules/*', '.next/*', '.out/*', '!.prettierrc.js'],
-  extends: ['eslint:recommended', 'next', 'prettier'],
+  extends: [
+    'eslint:recommended',
+    'next',
+    'plugin:yml/standard',
+    'plugin:yml/prettier',
+    'prettier',
+  ],
   settings: { react: { version: 'detect' } },
   overrides: [
     // This configuration will apply only to TypeScript files
@@ -78,6 +84,14 @@ module.exports = {
         ],
         'sort-keys': 'error',
         'sort-vars': 'error',
+      },
+    },
+    {
+      files: ['**/*.yaml', '**/*.yml'],
+      parser: 'yaml-eslint-parser',
+      rules: {
+        'yml/sort-keys': 'error',
+        'yml/key-name-casing': ['error', { camelCase: true }],
       },
     },
   ],

@@ -1,41 +1,42 @@
-menu:
-  home: Home
-  people: People
-  areas: Areas
-  calendar: Calendar
-  inbox: Inbox
-  manage: Manage
-search:
-  label: Search
-  placeholder: Type to search
-  drawerLabel: Press Enter to show full results.
-  startTypingPrompt: Start typing to search.
-  keepTypingPrompt: Keep typing to search.
-  seeAllResultsInOrg: See all results in <b>{orgName}</b> for "{searchQuery}"
-  loading: Loading...
-  noResults: No results
-  showMore: Show more...
-  peopleListSubheader: People
+
 campaigns:
   allCampaigns: All Campaigns
-  summary: Summary
+  archive: Archive
   calendar: Calendar
   insights: Insights
-  archive: Archive
-lists:
-  showMore: Show more...
-tasks:
-  tabs:
-    summary: Summary
-    assignees: Assignees
-people:
-  title: People
-  tabs:
-    views: Views
-view:
-  tabs:
-    view: View
+  summary: Summary
 header:
   collapseButton:
     collapse: collapse header
     expand: expand header
+lists:
+  showMore: Show more...
+menu:
+  areas: Areas
+  calendar: Calendar
+  home: Home
+  inbox: Inbox
+  manage: Manage
+  people: People
+people:
+  tabs:
+    views: Views
+  title: People
+search:
+  drawerLabel: Press Enter to show full results.
+  keepTypingPrompt: Keep typing to search.
+  label: Search
+  loading: Loading...
+  noResults: No results
+  peopleListSubheader: People
+  placeholder: Type to search
+  seeAllResultsInOrg: See all results in <b>{orgName}</b> for "{searchQuery}"
+  showMore: Show more...
+  startTypingPrompt: Start typing to search.
+tasks:
+  tabs:
+    assignees: Assignees
+    summary: Summary
+view:
+  tabs:
+    view: View

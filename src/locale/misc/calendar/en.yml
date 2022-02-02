@@ -1,7 +1,8 @@
-month: Month
-week: Week
+
 label: Pick an option
-prev: PREV
-next: NEXT
+month: Month
 moreEvents: |
   {numEvents, plural, one {# more event} other {# more events}}
+next: NEXT
+prev: PREV
+week: Week

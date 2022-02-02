@@ -1,9 +1,20 @@
+# eslint-disable yml/key-name-casing
+ConfirmDialog:
+  button: Confirm
+  defaultTitle: Confirm
+  defaultWarningText: Are you sure you want to do this action? It can not be undone.
+components:
+  editTextInPlace:
+    tooltip:
+      edit: Click to edit
+      noEmpty: This cannot be empty
+      save: Press 'enter' to save
 errorLoading: There was an error loading the data.
 nativePersonFields:
   alt_phone: Alt Phone number
+  city: City
   co_address: C/O address
   country: Country
-  city: City
   email: E-mail address
   ext_id: External ID
   first_name: First name
@@ -12,13 +23,3 @@ nativePersonFields:
   phone: Phone number
   street_address: Street address
   zip_code: Zip code
-components:
-  editTextInPlace:
-    tooltip:
-      noEmpty: This cannot be empty
-      edit: Click to edit
-      save: Press 'enter' to save
-ConfirmDialog:
-  button: Confirm
-  defaultTitle: Confirm
-  defaultWarningText: Are you sure you want to do this action? It can not be undone.

@@ -3,6 +3,6 @@ actions:
   follow: Följ
   unfollow: Sluta följa
 tabs:
-  home: Hem
-  comingUp: Kommande
   campaigns: Kampanjer
+  comingUp: Kommande
+  home: Hem

@@ -1,13 +1,14 @@
-heading: Current campaigns
-create: Create new campaign
+
 cardCTA: Go to campaign
+create: Create new campaign
+filter:
+  calls: Call assignments
+  canvasses: Canvass assignments
+  filter: Filter results
+  standalones: Standalone events
+  surveys: Surveys
+heading: Current campaigns
 indefinite: Indefinite
 unsorted: Unsorted projects
 upcoming: |
   {numEvents, number} upcoming events.
-filter:
-  filter: Filter results
-  standalones: Standalone events
-  calls: Call assignments
-  surveys: Surveys
-  canvasses: Canvass assignments

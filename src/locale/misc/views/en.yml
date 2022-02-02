@@ -1,19 +1,20 @@
+# eslint-disable yml/key-name-casing
 columnDialog:
   editor:
     buttonLabels:
-      save: Save
       cancel: Cancel
+      save: Save
     defaultTitle: New Column
     fieldLabels:
-      survey: Survey
-      question: Question
-      tag: Tag
-      smartSearch: Smart Search
       field: Field
+      question: Question
+      smartSearch: Smart Search
+      survey: Survey
+      tag: Tag
   gallery:
-    header: Add column to view
     addToView: Add to view
     configureColumn: Configure column
+    header: Add column to view
   types:
     local_bool: On/off toggle in this view
     local_person: Reference to another person
@@ -23,22 +24,30 @@ columnDialog:
     person_tag: On/off toggle for tag
     survey_response: Response to survey question
     survey_submitted: Date of survey submission
-createColumn: New column
-createFromSelection: Create view from selection
 columnMenu:
   configure: Configure column
-  delete: Delete column
   confirmDelete: >-
     Are you sure you want to remove this column? It contains data 
     that will be permanently deleted. This action can not be undone.
+  delete: Delete column
   rename: Rename column
 columnRenameDialog:
-  title: Title
   save: Save
+  title: Title
+createColumn: New column
+createFromSelection: Create view from selection
+dataTableErrors:
+  create_column: There was an error creating the column
+  delete_column: There was an error deleting the column
+  modify_column: There was an error editing the column
+  remove_rows: There was an error removing one or more rows
 defaultColumnTitles:
   local_bool: Toggle
   local_person: Person reference
   person_notes: Notes
+editViewTitleAlert:
+  error: Error. Title not updated
+  success: Updated title!
 empty:
   dynamic:
     configureButton: Configure
@@ -55,22 +64,14 @@ footer:
   alreadyInView: Already in view
 newViewFields:
   title: New View
-dataTableErrors:
-  create_column: There was an error creating the column
-  delete_column: There was an error deleting the column
-  modify_column: There was an error editing the column
-  remove_rows: There was an error removing one or more rows
-editViewTitleAlert:
-  success: Updated title!
-  error: Error. Title not updated
+removeDialog:
+  action: Are you sure you want to remove these rows from this view?
+  title: Remove people from view
 removeFromSelection: Remove {numSelected, plural,
   one {1 person}
   other {{numSelected} people}
   } from view
 removeTooltip: Smart search views do not currently support removing rows
-removeDialog:
-  action: Are you sure you want to remove these rows from this view?
-  title: Remove people from view
 suggested:
   created: Created by {name}
   sectionTitle: Suggested

@@ -3,6 +3,6 @@ actions:
   follow: Follow
   unfollow: Unfollow
 tabs:
-  home: Home
-  comingUp: Coming up
   campaigns: Campaigns
+  comingUp: Coming up
+  home: Home

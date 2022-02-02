@@ -1,4 +1,12 @@
 {
-    "singleQuote": true,
-    "tabWidth": 2
+  "singleQuote": true,
+  "tabWidth": 2,
+  "overrides": [
+    {
+      "files": "**/*.yml",
+      "options": {
+        "parser": "yaml"
+      }
+    }
+  ]
 }

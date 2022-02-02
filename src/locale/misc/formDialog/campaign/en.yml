@@ -1,21 +1,21 @@
 create: Create new campaign
-edit: Edit campaign
-name: Name
+deleteCampaign:
+  cancel: Cancel
+  error: There was an error deleting the campaign
+  submitButton: Confirm deletion
+  title: Delete campaign
+  warning: Are you sure you want to delete this campiagn? This action is permanent.
 description: Description
+edit: Edit campaign
 manager:
   label: Campaign manager
   selectSelf: Set yourself as manager
+name: Name
+status:
+  draft: Draft
+  heading: Status
+  published: Published
 visibility:
   heading: Visibility
   private: Private
   public: Public
-status:
-  heading: Status
-  published: Published
-  draft: Draft
-deleteCampaign:
-  title: Delete campaign
-  warning: Are you sure you want to delete this campiagn? This action is permanent.
-  cancel: Cancel
-  submitButton: Confirm deletion
-  error: There was an error deleting the campaign
