@@ -6,7 +6,7 @@
         "build": "next build",
         "start": "next start -p 80",
         "devserver": "next dev -p 3000",
-        "lint": "next lint --dir src",
+        "lint": "next lint --dir src && prettier --check src playwright",
         "check-types": "yarn tsc --noEmit",
         "test": "jest",
         "suite": "yarn lint && yarn check-types && yarn test && yarn playwright:ci",

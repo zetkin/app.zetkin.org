@@ -12,84 +12,84 @@ import { scaffold } from '../utils/next';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 
 const scaffoldOptions = {
-    localeScope: [
-        'pages.home',
-        'misc.publicHeader',
-    ],
+  localeScope: ['pages.home', 'misc.publicHeader'],
 };
 
-export const getServerSideProps : GetServerSideProps = scaffold(async (context) => {
+export const getServerSideProps: GetServerSideProps = scaffold(
+  async (context) => {
     const { query, req, res } = context;
 
     const code = query?.code;
 
     if (code) {
-        const protocol = stringToBool(process.env.ZETKIN_USE_TLS)? 'https' : 'http';
-        const host = process.env.ZETKIN_APP_HOST;
+      const protocol = stringToBool(process.env.ZETKIN_USE_TLS)
+        ? 'https'
+        : 'http';
+      const host = process.env.ZETKIN_APP_HOST;
 
-        let destination = '/';
+      let destination = '/';
 
-        try {
-            await context.z.authenticate(`${protocol}://${host}/?code=${code}`);
-            await applySession(req, res);
+      try {
+        await context.z.authenticate(`${protocol}://${host}/?code=${code}`);
+        await applySession(req, res);
 
-            const reqWithSession = req as { session? : AppSession };
-            if (reqWithSession.session) {
-                reqWithSession.session.tokenData = context.z.getTokenData();
+        const reqWithSession = req as { session?: AppSession };
+        if (reqWithSession.session) {
+          reqWithSession.session.tokenData = context.z.getTokenData();
 
-                if (reqWithSession.session.redirAfterLogin) {
-                    // User logged in after trying to access some URL, and
-                    // should be redirected to that URL once authenticated.
-                    destination = reqWithSession.session.redirAfterLogin;
-                    reqWithSession.session.redirAfterLogin = null;
-                }
-            }
+          if (reqWithSession.session.redirAfterLogin) {
+            // User logged in after trying to access some URL, and
+            // should be redirected to that URL once authenticated.
+            destination = reqWithSession.session.redirAfterLogin;
+            reqWithSession.session.redirAfterLogin = null;
+          }
         }
-        catch (err) {
-            // If this failed, we'll just continue anonymously
-        }
+      } catch (err) {
+        // If this failed, we'll just continue anonymously
+      }
 
-        return {
-            redirect: {
-                destination,
-                permanent: false,
-            },
-        };
+      return {
+        redirect: {
+          destination,
+          permanent: false,
+        },
+      };
+    } else {
+      return {
+        props: {},
+      };
     }
-    else {
-        return {
-            props: {},
-        };
-    }
-}, scaffoldOptions);
+  },
+  scaffoldOptions
+);
 
-export default function Home() : JSX.Element {
-    return (
-        <>
-            <Head>
-                <title>Zetkin</title>
-            </Head>
-            <Container>
-                <Typography variant="h4">
-                    <Msg id="pages.home.welcome"/>
-                </Typography>
-                { /* TODO: remove stuff below */ }
-                { process.env.NODE_ENV === 'development' &&
-                <div>
-                    <Typography variant="body1">
-                        This page is for devs only!
-                    </Typography>
-                    <ButtonGroup
-                        aria-label="vertical contained primary button group"
-                        color="primary"
-                        orientation="vertical"
-                        size="large"
-                        variant="text">
-                        <Button href="organize/1/people/views">People / views</Button>
-                        <Button href="organize/1/campaigns">Campaigns</Button>
-                    </ButtonGroup>
-                </div> }
-            </Container>
-        </>
-    );
+export default function Home(): JSX.Element {
+  return (
+    <>
+      <Head>
+        <title>Zetkin</title>
+      </Head>
+      <Container>
+        <Typography variant="h4">
+          <Msg id="pages.home.welcome" />
+        </Typography>
+        {/* TODO: remove stuff below */}
+        {process.env.NODE_ENV === 'development' && (
+          <div>
+            <Typography variant="body1">This page is for devs only!</Typography>
+            <ButtonGroup
+              aria-label="vertical contained primary button group"
+              color="primary"
+              orientation="vertical"
+              size="large"
+              variant="text"
+            >
+              <Button href="organize/1/people/views">People / views</Button>
+              <Button href="organize/1/campaigns">Campaigns</Button>
+            </ButtonGroup>
+          </div>
+        )}
+      </Container>
+    </>
+  );
 }

@@ -8,48 +8,53 @@ import getTags from 'fetching/getTags';
 import { PersonTagViewColumn } from 'types/views';
 import ZetkinQuery from 'components/ZetkinQuery';
 
-
 interface PersonTagColumnConfigFormProps {
-    column: PersonTagViewColumn;
-    onChange: (config: PersonTagViewColumn) => void;
+  column: PersonTagViewColumn;
+  onChange: (config: PersonTagViewColumn) => void;
 }
 
-const PersonTagColumnConfigForm: FunctionComponent<PersonTagColumnConfigFormProps> = ({ column, onChange }) => {
-    const intl = useIntl();
-    const { orgId } = useRouter().query;
-    const tagsQuery = useQuery(['tags', orgId], getTags(orgId as string));
+const PersonTagColumnConfigForm: FunctionComponent<
+  PersonTagColumnConfigFormProps
+> = ({ column, onChange }) => {
+  const intl = useIntl();
+  const { orgId } = useRouter().query;
+  const tagsQuery = useQuery(['tags', orgId], getTags(orgId as string));
 
-    return (
-        <ZetkinQuery
-            queries={{ tagsQuery }}>
-            { ({ queries: { tagsQuery } }) => {
-                const onTagChange = (selectedTagId: number) => {
-                    onChange({
-                        ...column,
-                        config: {
-                            tag_id: selectedTagId,
-                        },
-                        title: tagsQuery.data.find(tag => tag.id === selectedTagId)?.title || '',
-                    });
-                };
-                return (
-                    <TextField
-                        fullWidth
-                        label={ intl.formatMessage({ id: 'misc.views.columnDialog.editor.fieldLabels.tag' }) }
-                        margin="normal"
-                        onChange={ ev => onTagChange(ev.target.value as unknown as number) }
-                        select
-                        value={ column.config?.tag_id || '' }>
-                        { tagsQuery.data.map(tag => (
-                            <MenuItem key={ tag.id } value={ tag.id }>
-                                { tag.title }
-                            </MenuItem>
-                        )) }
-                    </TextField>
-                );
-            } }
-        </ZetkinQuery>
-    );
+  return (
+    <ZetkinQuery queries={{ tagsQuery }}>
+      {({ queries: { tagsQuery } }) => {
+        const onTagChange = (selectedTagId: number) => {
+          onChange({
+            ...column,
+            config: {
+              tag_id: selectedTagId,
+            },
+            title:
+              tagsQuery.data.find((tag) => tag.id === selectedTagId)?.title ||
+              '',
+          });
+        };
+        return (
+          <TextField
+            fullWidth
+            label={intl.formatMessage({
+              id: 'misc.views.columnDialog.editor.fieldLabels.tag',
+            })}
+            margin="normal"
+            onChange={(ev) => onTagChange(ev.target.value as unknown as number)}
+            select
+            value={column.config?.tag_id || ''}
+          >
+            {tagsQuery.data.map((tag) => (
+              <MenuItem key={tag.id} value={tag.id}>
+                {tag.title}
+              </MenuItem>
+            ))}
+          </TextField>
+        );
+      }}
+    </ZetkinQuery>
+  );
 };
 
 export default PersonTagColumnConfigForm;

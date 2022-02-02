@@ -6,8 +6,8 @@ unsorted: Unsorted projects
 upcoming: |
   {numEvents, number} upcoming events.
 filter:
-    filter: Filter results
-    standalones: Standalone events
-    calls: Call assignments
-    surveys: Surveys
-    canvasses: Canvass assignments
+  filter: Filter results
+  standalones: Standalone events
+  calls: Call assignments
+  surveys: Surveys
+  canvasses: Canvass assignments

@@ -3,19 +3,19 @@ edit: Edit campaign
 name: Name
 description: Description
 manager:
-    label: Campaign manager
-    selectSelf: Set yourself as manager
+  label: Campaign manager
+  selectSelf: Set yourself as manager
 visibility:
-    heading: Visibility
-    private: Private
-    public: Public
+  heading: Visibility
+  private: Private
+  public: Public
 status:
-    heading: Status
-    published: Published
-    draft: Draft
+  heading: Status
+  published: Published
+  draft: Draft
 deleteCampaign:
-    title: Delete campaign
-    warning: Are you sure you want to delete this campiagn? This action is permanent.
-    cancel: Cancel
-    submitButton: Confirm deletion
-    error: There was an error deleting the campaign
+  title: Delete campaign
+  warning: Are you sure you want to delete this campiagn? This action is permanent.
+  cancel: Cancel
+  submitButton: Confirm deletion
+  error: There was an error deleting the campaign

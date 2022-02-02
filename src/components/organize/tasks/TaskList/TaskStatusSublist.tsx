@@ -7,34 +7,32 @@ import TaskListItem from './TaskListItem';
 import { ZetkinTask } from 'types/zetkin';
 
 interface TaskStatusSublistProps {
-    status: TASK_STATUS;
-    tasks: ZetkinTask[];
+  status: TASK_STATUS;
+  tasks: ZetkinTask[];
 }
 
 const TaskStatusSublist: React.FunctionComponent<TaskStatusSublistProps> = ({
-    tasks,
-    status,
+  tasks,
+  status,
 }) => {
-    return (
-        <List
-            disablePadding
-            subheader={
-                <ListSubheader>
-                    <Msg id={ `misc.tasks.statuses.${status}` } />
-                </ListSubheader>
-            }>
-            { tasks.map((task) => {
-                return (
-                    <React.Fragment
-                        key={ task.id }>
-                        <TaskListItem
-                            task={ task }
-                        />
-                    </React.Fragment>
-                );
-            }) }
-        </List>
-    );
+  return (
+    <List
+      disablePadding
+      subheader={
+        <ListSubheader>
+          <Msg id={`misc.tasks.statuses.${status}`} />
+        </ListSubheader>
+      }
+    >
+      {tasks.map((task) => {
+        return (
+          <React.Fragment key={task.id}>
+            <TaskListItem task={task} />
+          </React.Fragment>
+        );
+      })}
+    </List>
+  );
 };
 
 export default TaskStatusSublist;

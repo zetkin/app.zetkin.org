@@ -6,64 +6,66 @@ import { PageWithLayout } from 'types';
 import PeopleLayout from 'layout/organize/PeopleLayout';
 import { scaffold } from 'utils/next';
 import { viewsResource } from 'api/views';
-import { CreateViewActionButton, SuggestedViews, ViewsListTable  } from 'components/views';
+import {
+  CreateViewActionButton,
+  SuggestedViews,
+  ViewsListTable,
+} from 'components/views';
 
 const scaffoldOptions = {
-    authLevelRequired: 2,
-    localeScope: [
-        'layout.organize', 'pages.people', 'misc',
-    ],
+  authLevelRequired: 2,
+  localeScope: ['layout.organize', 'pages.people', 'misc'],
 };
 
-export const getServerSideProps : GetServerSideProps = scaffold(async (ctx) => {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const { orgId } = ctx.params!;
+export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
+  const { orgId } = ctx.params!;
 
-    const { state: viewsQueryState } = await viewsResource(orgId as string).prefetch(ctx);
+  const { state: viewsQueryState } = await viewsResource(
+    orgId as string
+  ).prefetch(ctx);
 
-    if (viewsQueryState?.status === 'success') {
-        return {
-            props: {
-                orgId,
-            },
-        };
-    }
-    else {
-        return {
-            notFound: true,
-        };
-    }
+  if (viewsQueryState?.status === 'success') {
+    return {
+      props: {
+        orgId,
+      },
+    };
+  } else {
+    return {
+      notFound: true,
+    };
+  }
 }, scaffoldOptions);
 
 type PeopleViewsPageProps = {
-    orgId: string;
+  orgId: string;
 };
 
 const PeopleViewsPage: PageWithLayout<PeopleViewsPageProps> = () => {
-    const intl = useIntl();
+  const intl = useIntl();
 
-    return (
-        <>
-            <Head>
-                <title>
-                    { intl.formatMessage({ id:'layout.organize.people.title' })
-                    + ' - ' +
-                    intl.formatMessage({ id:'layout.organize.people.tabs.views' }) }
-                </title>
-            </Head>
-            <SuggestedViews />
-            <ViewsListTable />
-            <CreateViewActionButton />
-        </>
-    );
+  return (
+    <>
+      <Head>
+        <title>
+          {intl.formatMessage({
+            id: 'layout.organize.people.title',
+          }) +
+            ' - ' +
+            intl.formatMessage({
+              id: 'layout.organize.people.tabs.views',
+            })}
+        </title>
+      </Head>
+      <SuggestedViews />
+      <ViewsListTable />
+      <CreateViewActionButton />
+    </>
+  );
 };
 
 PeopleViewsPage.getLayout = function getLayout(page) {
-    return (
-        <PeopleLayout>
-            { page }
-        </PeopleLayout>
-    );
+  return <PeopleLayout>{page}</PeopleLayout>;
 };
 
 export default PeopleViewsPage;

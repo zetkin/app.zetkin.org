@@ -28,7 +28,7 @@ dayjs.extend(isoWeek);
 
 // MUI-X license
 if (process.env.NEXT_PUBLIC_MUIX_LICENSE_KEY) {
-    LicenseInfo.setLicenseKey(process.env.NEXT_PUBLIC_MUIX_LICENSE_KEY);
+  LicenseInfo.setLicenseKey(process.env.NEXT_PUBLIC_MUIX_LICENSE_KEY);
 }
 
 // Progress bar
@@ -38,60 +38,57 @@ Router.events.on('routeChangeComplete', () => NProgress.done());
 Router.events.on('routeChangeError', () => NProgress.done());
 
 const queryClient = new QueryClient({
-    defaultOptions: {
-        queries: {
-            refetchOnWindowFocus: false,
-        },
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
     },
+  },
 });
 
 declare global {
-    interface Window {
-        __reactRendered: boolean;
-    }
+  interface Window {
+    __reactRendered: boolean;
+  }
 }
 
-function MyApp({ Component, pageProps } : AppProps) : JSX.Element {
-    const { dehydratedState, lang, messages, ...restProps } = pageProps;
-    const c = Component as PageWithLayout;
-    const getLayout = c.getLayout || (page => <>{ page }</>);
+function MyApp({ Component, pageProps }: AppProps): JSX.Element {
+  const { dehydratedState, lang, messages, ...restProps } = pageProps;
+  const c = Component as PageWithLayout;
+  const getLayout = c.getLayout || ((page) => <>{page}</>);
 
-    if (typeof window !== 'undefined') {
-        window.__reactRendered = true;
+  if (typeof window !== 'undefined') {
+    window.__reactRendered = true;
+  }
+
+  useEffect(() => {
+    // Remove the server-side injected CSS.
+    const jssStyles = document.querySelector('#jss-server-side');
+    if (jssStyles) {
+      jssStyles.parentElement?.removeChild(jssStyles);
     }
+  }, []);
 
-    useEffect(() => {
-        // Remove the server-side injected CSS.
-        const jssStyles = document.querySelector('#jss-server-side');
-        if (jssStyles) {
-            jssStyles.parentElement?.removeChild(jssStyles);
-        }
-    }, []);
-
-    return (
-        <UserContext.Provider value={ pageProps.user }>
-            <ThemeProvider theme={ theme }>
-                <MuiPickersUtilsProvider libInstance={ dayjs } utils={ DateUtils }>
-                    <IntlProvider
-                        defaultLocale="en"
-                        locale={ lang }
-                        messages={ messages }>
-                        <QueryClientProvider client={ queryClient }>
-                            <SnackbarProvider>
-                                <ConfirmDialogProvider>
-                                    <Hydrate state={ dehydratedState }>
-                                        <CssBaseline />
-                                        { getLayout(<Component { ...restProps } />, restProps) }
-                                    </Hydrate>
-                                </ConfirmDialogProvider>
-                            </SnackbarProvider>
-                            <ReactQueryDevtools initialIsOpen={ false } />
-                        </QueryClientProvider>
-                    </IntlProvider>
-                </MuiPickersUtilsProvider>
-            </ThemeProvider>
-        </UserContext.Provider>
-    );
+  return (
+    <UserContext.Provider value={pageProps.user}>
+      <ThemeProvider theme={theme}>
+        <MuiPickersUtilsProvider libInstance={dayjs} utils={DateUtils}>
+          <IntlProvider defaultLocale="en" locale={lang} messages={messages}>
+            <QueryClientProvider client={queryClient}>
+              <SnackbarProvider>
+                <ConfirmDialogProvider>
+                  <Hydrate state={dehydratedState}>
+                    <CssBaseline />
+                    {getLayout(<Component {...restProps} />, restProps)}
+                  </Hydrate>
+                </ConfirmDialogProvider>
+              </SnackbarProvider>
+              <ReactQueryDevtools initialIsOpen={false} />
+            </QueryClientProvider>
+          </IntlProvider>
+        </MuiPickersUtilsProvider>
+      </ThemeProvider>
+    </UserContext.Provider>
+  );
 }
 
 export default MyApp;

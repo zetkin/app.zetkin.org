@@ -1,20 +1,20 @@
 preview:
-    min: at least {min} {max, plural, one {time} other {times}}
-    max: at most {max} {max, plural, one {time} other {times}}
-    between: between {min} and {max} times
-    once: at least once
+  min: at least {min} {max, plural, one {time} other {times}}
+  max: at most {max} {max, plural, one {time} other {times}}
+  between: between {min} and {max} times
+  once: at least once
 edit:
-    min: "{matchingSelect} {minInput} {min, plural, one {time} other {times}}"
-    max: "{matchingSelect} {maxInput} {max, plural, one {time} other {times}}"
-    between: "{matchingSelect} {minInput} and {maxInput} times"
-    once: "{matchingSelect}"
+  min: '{matchingSelect} {minInput} {min, plural, one {time} other {times}}'
+  max: '{matchingSelect} {maxInput} {max, plural, one {time} other {times}}'
+  between: '{matchingSelect} {minInput} and {maxInput} times'
+  once: '{matchingSelect}'
 labels:
-    min: at least
-    max: at most
-    between: between
-    once: at least once
+  min: at least
+  max: at most
+  between: between
+  once: at least once
 options:
-    min: at least
-    max: at most
-    between: between
-    once: at least once
+  min: at least
+  max: at most
+  between: between
+  once: at least once

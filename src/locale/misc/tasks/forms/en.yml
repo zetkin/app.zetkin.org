@@ -1,63 +1,63 @@
 createTask:
-    title: Create new task
-    fields:
-        title: Title
-        type: Task Type
-        types:
-            offline: Offline
-            share_link: Share Link
-            visit_link: Visit Link
-            watch_video: Watch Video
-            demographic: Collect Demographics
-        instructions: Instructions
-        campaign: Campaign
-        published: Publish Time
-        deadline: Completion Deadline
-        expires: Expiration Date
-        time_estimate: Estimated time to complete
-        time_estimate_options:
-            noEstimate: No estimate
-            lessThanOneMinute: Less than one minute
-            hoursAndMinutes: "{hours, plural, =0{} one{# hour} other{# hours}} {minutes, plural, =0{} one {# minute} other {# minutes}}"
-        timeValidationErrors:
-            publishedNotFirst: This must be scheduled first
-            deadlineNotSecond: This must be scheduled after the Published Date, and before the Expiry Date
-            expiresNotThird: This must be scheduled last
+  title: Create new task
+  fields:
+    title: Title
+    type: Task Type
+    types:
+      offline: Offline
+      share_link: Share Link
+      visit_link: Visit Link
+      watch_video: Watch Video
+      demographic: Collect Demographics
+    instructions: Instructions
+    campaign: Campaign
+    published: Publish Time
+    deadline: Completion Deadline
+    expires: Expiration Date
+    time_estimate: Estimated time to complete
+    time_estimate_options:
+      noEstimate: No estimate
+      lessThanOneMinute: Less than one minute
+      hoursAndMinutes: '{hours, plural, =0{} one{# hour} other{# hours}} {minutes, plural, =0{} one {# minute} other {# minutes}}'
+    timeValidationErrors:
+      publishedNotFirst: This must be scheduled first
+      deadlineNotSecond: This must be scheduled after the Published Date, and before the Expiry Date
+      expiresNotThird: This must be scheduled last
 editTask:
-    title: Edit task
+  title: Edit task
 deleteTask:
-    title: Delete task
-    warning: Are you sure you want to delete this task? This action is permanent and cannot be undone.
-    cancel: Cancel
-    submitButton: Confirm deletion
-    error: There was an error deleting the task
+  title: Delete task
+  warning: Are you sure you want to delete this task? This action is permanent and cannot be undone.
+  cancel: Cancel
+  submitButton: Confirm deletion
+  error: There was an error deleting the task
 publishTask:
-    title: Publish task
-    warning: Please confirm you are ready to publish this task. It will be sent to all assignees.
-    cancel: Cancel
-    submitButton: Publish task now
+  title: Publish task
+  warning: Please confirm you are ready to publish this task. It will be sent to all assignees.
+  cancel: Cancel
+  submitButton: Publish task now
 visitLinkConfig:
-    title: Visit Link Config
-    fields:
-        url: URL to visit
+  title: Visit Link Config
+  fields:
+    url: URL to visit
 shareLinkConfig:
-    title: Share Link Config
-    fields:
-        url: URL to share
-        default_message: Default message user will send
+  title: Share Link Config
+  fields:
+    url: URL to share
+    default_message: Default message user will send
 watchVideoConfig:
-    fields:
-        url: Video URL
+  fields:
+    url: Video URL
 collectDemographicsConfig:
-    title: Collect Demographics Config
-    fields:
-        demographicField: Data to request
-        demographicFieldOptions:
-            email: Email Address
-            zip_code: Postcode
-            city: City
-            country: Country
-            gender: Gender Identity
-            street_address: Street Address
+  title: Collect Demographics Config
+  fields:
+    demographicField: Data to request
+    demographicFieldOptions:
+      email: Email Address
+      zip_code: Postcode
+      city: City
+      country: Country
+      gender: Gender Identity
+      street_address: Street Address
 common:
-    notSet: Not set
+  notSet: Not set

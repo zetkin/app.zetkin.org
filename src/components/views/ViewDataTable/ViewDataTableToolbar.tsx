@@ -9,83 +9,105 @@ import ViewDataTableSorting from './ViewDataTableSorting';
 import { GridColDef, GridSortModel } from '@mui/x-data-grid-pro';
 
 export interface ViewDataTableToolbarProps {
-    disabled: boolean;
-    gridColumns: GridColDef[];
-    isSmartSearch: boolean;
-    onColumnCreate: () => void;
-    onRowsRemove: () => void;
-    onViewCreate: () => void;
-    selection: number[];
-    setSortModel: (model: GridSortModel) => void;
-    sortModel: GridSortModel;
+  disabled: boolean;
+  gridColumns: GridColDef[];
+  isSmartSearch: boolean;
+  onColumnCreate: () => void;
+  onRowsRemove: () => void;
+  onViewCreate: () => void;
+  selection: number[];
+  setSortModel: (model: GridSortModel) => void;
+  sortModel: GridSortModel;
 }
 
 const useStyles = makeStyles({
-    main: {
-        '& > *': {
-            margin: '0 4px',
-        },
-        marginTop: 5,
+  main: {
+    '& > *': {
+      margin: '0 4px',
     },
+    marginTop: 5,
+  },
 });
 
-const ViewDataTableToolbar: React.FunctionComponent<ViewDataTableToolbarProps> = ({
-    disabled,
-    gridColumns,
-    isSmartSearch,
-    onColumnCreate,
-    onRowsRemove,
-    onViewCreate,
-    selection,
-    setSortModel,
-    sortModel,
+const ViewDataTableToolbar: React.FunctionComponent<
+  ViewDataTableToolbarProps
+> = ({
+  disabled,
+  gridColumns,
+  isSmartSearch,
+  onColumnCreate,
+  onRowsRemove,
+  onViewCreate,
+  selection,
+  setSortModel,
+  sortModel,
 }) => {
-    const classes = useStyles();
-    const intl = useIntl();
-    const { showConfirmDialog } = useContext(ConfirmDialogContext);
+  const classes = useStyles();
+  const intl = useIntl();
+  const { showConfirmDialog } = useContext(ConfirmDialogContext);
 
-    const onClickRemoveRows = () =>{
-        showConfirmDialog({
-            onSubmit: onRowsRemove,
-            title: intl.formatMessage({ id: 'misc.views.removeDialog.title' }),
-            warningText: intl.formatMessage({ id: 'misc.views.removeDialog.action' }),
-        });
-    };
-    return (
-        <Box className={ classes.main } display="flex" justifyContent="flex-end">
-            <Slide direction="left" in={ !!selection.length } timeout={ 150 }>
-                <Button
-                    data-testid="ViewDataTableToolbar-createFromSelection"
-                    disabled={ disabled }
-                    onClick={ onViewCreate }
-                    startIcon={ <Launch/> }>
-                    <FormattedMessage id="misc.views.createFromSelection" />
-                </Button>
-            </Slide>
-            <Slide direction="left" in={ !!selection.length } timeout={ 100 }>
-                <Tooltip title={ isSmartSearch ? intl.formatMessage({ id: 'misc.views.removeTooltip' }) : '' }>
-                    <span>
-                        <Button
-                            data-testid="ViewDataTableToolbar-removeFromSelection"
-                            disabled={ isSmartSearch || disabled }
-                            onClick={ onClickRemoveRows }
-                            startIcon={ <RemoveCircleOutline /> }>
-                            <FormattedMessage id="misc.views.removeFromSelection" values={{ numSelected: selection.length }} />
-                        </Button>
-                    </span>
-                </Tooltip>
-            </Slide>
-            <GridToolbarFilterButton componentsProps={{ button: { color: 'default', size: 'medium'  } }} />
-            <ViewDataTableSorting { ...{ gridColumns, setSortModel, sortModel } } />
+  const onClickRemoveRows = () => {
+    showConfirmDialog({
+      onSubmit: onRowsRemove,
+      title: intl.formatMessage({ id: 'misc.views.removeDialog.title' }),
+      warningText: intl.formatMessage({
+        id: 'misc.views.removeDialog.action',
+      }),
+    });
+  };
+  return (
+    <Box className={classes.main} display="flex" justifyContent="flex-end">
+      <Slide direction="left" in={!!selection.length} timeout={150}>
+        <Button
+          data-testid="ViewDataTableToolbar-createFromSelection"
+          disabled={disabled}
+          onClick={onViewCreate}
+          startIcon={<Launch />}
+        >
+          <FormattedMessage id="misc.views.createFromSelection" />
+        </Button>
+      </Slide>
+      <Slide direction="left" in={!!selection.length} timeout={100}>
+        <Tooltip
+          title={
+            isSmartSearch
+              ? intl.formatMessage({
+                  id: 'misc.views.removeTooltip',
+                })
+              : ''
+          }
+        >
+          <span>
             <Button
-                data-testid="ViewDataTableToolbar-createColumn"
-                disabled={ disabled }
-                onClick={ onColumnCreate }
-                startIcon={ <Add /> }>
-                <FormattedMessage id="misc.views.createColumn" />
+              data-testid="ViewDataTableToolbar-removeFromSelection"
+              disabled={isSmartSearch || disabled}
+              onClick={onClickRemoveRows}
+              startIcon={<RemoveCircleOutline />}
+            >
+              <FormattedMessage
+                id="misc.views.removeFromSelection"
+                values={{ numSelected: selection.length }}
+              />
             </Button>
-        </Box>
-    );
+          </span>
+        </Tooltip>
+      </Slide>
+      <GridToolbarFilterButton
+        componentsProps={{
+          button: { color: 'default', size: 'medium' },
+        }}
+      />
+      <ViewDataTableSorting {...{ gridColumns, setSortModel, sortModel }} />
+      <Button
+        data-testid="ViewDataTableToolbar-createColumn"
+        disabled={disabled}
+        onClick={onColumnCreate}
+        startIcon={<Add />}
+      >
+        <FormattedMessage id="misc.views.createColumn" />
+      </Button>
+    </Box>
+  );
 };
 
 export default ViewDataTableToolbar;

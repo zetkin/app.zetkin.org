@@ -1,81 +1,81 @@
 columnDialog:
-    editor:
-        buttonLabels:
-            save: Save
-            cancel: Cancel
-        defaultTitle: New Column
-        fieldLabels:
-                survey: Survey
-                question: Question
-                tag: Tag
-                smartSearch: Smart Search
-                field: Field
-    gallery:
-        header: Add column to view
-        addToView: Add to view
-        configureColumn: Configure column
-    types:
-        local_bool: On/off toggle in this view
-        local_person: Reference to another person
-        person_field: Basic person data (name, e-mail etc)
-        person_notes: Organizer notes on person
-        person_query: Smart Search cross-reference
-        person_tag: On/off toggle for tag
-        survey_response: Response to survey question
-        survey_submitted: Date of survey submission
+  editor:
+    buttonLabels:
+      save: Save
+      cancel: Cancel
+    defaultTitle: New Column
+    fieldLabels:
+      survey: Survey
+      question: Question
+      tag: Tag
+      smartSearch: Smart Search
+      field: Field
+  gallery:
+    header: Add column to view
+    addToView: Add to view
+    configureColumn: Configure column
+  types:
+    local_bool: On/off toggle in this view
+    local_person: Reference to another person
+    person_field: Basic person data (name, e-mail etc)
+    person_notes: Organizer notes on person
+    person_query: Smart Search cross-reference
+    person_tag: On/off toggle for tag
+    survey_response: Response to survey question
+    survey_submitted: Date of survey submission
 createColumn: New column
 createFromSelection: Create view from selection
 columnMenu:
-    configure: Configure column
-    delete: Delete column
-    confirmDelete: >-
-        Are you sure you want to remove this column? It contains data 
-        that will be permanently deleted. This action can not be undone.
-    rename: Rename column
+  configure: Configure column
+  delete: Delete column
+  confirmDelete: >-
+    Are you sure you want to remove this column? It contains data 
+    that will be permanently deleted. This action can not be undone.
+  rename: Rename column
 columnRenameDialog:
-    title: Title
-    save: Save
+  title: Title
+  save: Save
 defaultColumnTitles:
-    local_bool: Toggle
-    local_person: Person reference
-    person_notes: Notes
+  local_bool: Toggle
+  local_person: Person reference
+  person_notes: Notes
 empty:
-    dynamic:
-        configureButton: Configure
-        description: Create a dynamic view where people are added and removed automatically using Smart Search.
-        headline: Configure Smart Search View
-    notice:
-        dynamic: This is a Smart Search View but no people match the query
-        static: You haven't added any rows yet
-    static:
-        description: Add the first person to create a static view where people are added and removed manually.
-        headline: Add people manually
+  dynamic:
+    configureButton: Configure
+    description: Create a dynamic view where people are added and removed automatically using Smart Search.
+    headline: Configure Smart Search View
+  notice:
+    dynamic: This is a Smart Search View but no people match the query
+    static: You haven't added any rows yet
+  static:
+    description: Add the first person to create a static view where people are added and removed manually.
+    headline: Add people manually
 footer:
-    addPlaceholder: Start typing to add person to view
-    alreadyInView: Already in view
+  addPlaceholder: Start typing to add person to view
+  alreadyInView: Already in view
 newViewFields:
-    title: New View
+  title: New View
 dataTableErrors:
-    create_column: There was an error creating the column
-    delete_column: There was an error deleting the column
-    modify_column: There was an error editing the column
-    remove_rows: There was an error removing one or more rows
+  create_column: There was an error creating the column
+  delete_column: There was an error deleting the column
+  modify_column: There was an error editing the column
+  remove_rows: There was an error removing one or more rows
 editViewTitleAlert:
-    success: Updated title!
-    error: Error. Title not updated
+  success: Updated title!
+  error: Error. Title not updated
 removeFromSelection: Remove {numSelected, plural,
-    one {1 person}
-    other {{numSelected} people}
-    } from view
+  one {1 person}
+  other {{numSelected} people}
+  } from view
 removeTooltip: Smart search views do not currently support removing rows
 removeDialog:
-    action: Are you sure you want to remove these rows from this view?
-    title: Remove people from view
+  action: Are you sure you want to remove these rows from this view?
+  title: Remove people from view
 suggested:
-    created: Created by {name}
-    sectionTitle: Suggested
+  created: Created by {name}
+  sectionTitle: Suggested
 viewTableSort:
-    addButton: Add sorting column
-    button: Sort
-    hint: 'Hint: hold down {shiftKeyIcon} while clicking multiple columns'
-    title: Sort
+  addButton: Add sorting column
+  button: Sort
+  hint: 'Hint: hold down {shiftKeyIcon} while clicking multiple columns'
+  title: Sort

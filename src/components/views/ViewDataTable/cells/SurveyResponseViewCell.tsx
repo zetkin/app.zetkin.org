@@ -7,55 +7,59 @@ import { noPropagate } from 'utils';
 import { ViewGridCellParams } from '.';
 
 interface SurveyResponse {
-    submission_id: number;
-    text: string;
+  submission_id: number;
+  text: string;
 }
 
 export type SurveyResponseParams = ViewGridCellParams<SurveyResponse[] | null>;
 
 interface SurveyResponseViewCellProps {
-    params: GridRenderCellParams;
+  params: GridRenderCellParams;
 }
 
-const SurveyResponseViewCell: FunctionComponent<SurveyResponseViewCellProps> = ({ params }) => {
-    const [anchorEl, setAnchorEl] = useState<Element | null>(null);
-    const rawValue: SurveyResponse[] = params?.row && params.row[params?.field];
+const SurveyResponseViewCell: FunctionComponent<
+  SurveyResponseViewCellProps
+> = ({ params }) => {
+  const [anchorEl, setAnchorEl] = useState<Element | null>(null);
+  const rawValue: SurveyResponse[] = params?.row && params.row[params?.field];
 
-    if (rawValue?.length) {
-        return (
-            <>
-                <Box
-                    alignItems="center"
-                    display="flex"
-                    onClick={ noPropagate(ev => setAnchorEl(ev?.target as Element)) }>
-                    <Button>
-                        <ExpandMore/>
-                    </Button>
-                    <Typography style={{
-                        maxWidth: '100%',
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                    }}>
-                        { rawValue[0].text }
-                    </Typography>
-                </Box>
-                <Popover
-                    anchorEl={ anchorEl }
-                    onClose={ () => setAnchorEl(null) }
-                    open={ Boolean(anchorEl) }>
-                    { rawValue.map((response) => (
-                        <Box key={ response.submission_id } m={ 2 }>
-                            <Typography>
-                                { response.text }
-                            </Typography>
-                        </Box>
-                    )) }
-                </Popover>
-            </>
-        );
-    }
+  if (rawValue?.length) {
+    return (
+      <>
+        <Box
+          alignItems="center"
+          display="flex"
+          onClick={noPropagate((ev) => setAnchorEl(ev?.target as Element))}
+        >
+          <Button>
+            <ExpandMore />
+          </Button>
+          <Typography
+            style={{
+              maxWidth: '100%',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+            }}
+          >
+            {rawValue[0].text}
+          </Typography>
+        </Box>
+        <Popover
+          anchorEl={anchorEl}
+          onClose={() => setAnchorEl(null)}
+          open={Boolean(anchorEl)}
+        >
+          {rawValue.map((response) => (
+            <Box key={response.submission_id} m={2}>
+              <Typography>{response.text}</Typography>
+            </Box>
+          ))}
+        </Popover>
+      </>
+    );
+  }
 
-    return null;
+  return null;
 };
 
 export default SurveyResponseViewCell;

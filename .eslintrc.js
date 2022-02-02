@@ -30,6 +30,7 @@ module.exports = {
           'no-switch-statements',
       ],
       rules: {
+        '@typescript-eslint/no-non-null-assertion': 'off',
         '@typescript-eslint/no-unused-vars': ['error'],
         '@typescript-eslint/member-ordering': ['error', {
           'default': { 'memberTypes': 'never', 'order': 'alphabetically' },
