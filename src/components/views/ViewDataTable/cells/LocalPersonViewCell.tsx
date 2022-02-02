@@ -35,6 +35,7 @@ const LocalPersonViewCell: FunctionComponent<LocalPersonViewCellProps> = ({
             width: '2em',
           }}
         >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             alt={name}
             src={`/api/orgs/${orgId}/people/${person.id}/avatar`}

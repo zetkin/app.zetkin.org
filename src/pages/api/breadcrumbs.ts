@@ -1,7 +1,7 @@
 import { ApiFetch, createApiFetch } from 'utils/apiFetch';
 import { NextApiRequest, NextApiResponse } from 'next';
 
-export default async (
+const breadcrumbs = async (
   req: NextApiRequest,
   res: NextApiResponse
 ): Promise<void> => {
@@ -113,3 +113,5 @@ const validateQuery = (
   }
   return { query: query as Record<string, string> };
 };
+
+export default breadcrumbs;

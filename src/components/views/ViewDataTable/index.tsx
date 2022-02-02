@@ -265,6 +265,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
     renderCell: (params) => {
       const url = `/api/orgs/${orgId}/people/${params.value}/avatar`;
       return (
+        // eslint-disable-next-line @next/next/no-img-element
         <img
           alt="Avatar"
           src={url}

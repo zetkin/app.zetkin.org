@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-sync-scripts */
 import { Children } from 'react';
 import { ServerStyleSheets } from '@material-ui/core/styles';
 import theme from '../theme';
@@ -12,7 +13,7 @@ export default class MyDocument extends Document {
         <Head>
           {/* PWA primary color */}
           <meta content={theme.palette.primary.main} name="theme-color" />
-          <script src="https://use.typekit.net/tqq3ylv.js"></script>
+          <script src="https://use.typekit.net/tqq3ylv.js" />
           <script>{'try{Typekit.load({ async: true })}catch(e){}'}</script>
           <link href="/logo-zetkin.png" rel="shortcut icon" />
         </Head>
