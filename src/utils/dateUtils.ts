@@ -2,8 +2,8 @@ import dayjs, { Dayjs } from 'dayjs';
 
 import { ZetkinEvent } from 'types/zetkin';
 
-export const getNewDateWithOffset = (date: Date, offset: number ):Date => {
-    return new Date(new Date(date).setDate(date.getDate() + offset));
+export const getNewDateWithOffset = (date: Date, offset: number): Date => {
+  return new Date(new Date(date).setDate(date.getDate() + offset));
 };
 
 /**
@@ -11,11 +11,19 @@ export const getNewDateWithOffset = (date: Date, offset: number ):Date => {
  *
  * This function sorts the events by start_time and returns the first and last one.
  */
-export const getFirstAndLastEvent = (campaignEvents: ZetkinEvent[]): (ZetkinEvent | undefined)[] => {
-    const sortedCampaignEvents = campaignEvents.sort((a, b) => dayjs(a.start_time).diff(dayjs(b.start_time)));
-    const firstEvent = sortedCampaignEvents.length ? campaignEvents[0] : undefined;
-    const lastEvent = firstEvent? campaignEvents[campaignEvents.length - 1] : undefined;
-    return [firstEvent, lastEvent];
+export const getFirstAndLastEvent = (
+  campaignEvents: ZetkinEvent[]
+): (ZetkinEvent | undefined)[] => {
+  const sortedCampaignEvents = campaignEvents.sort((a, b) =>
+    dayjs(a.start_time).diff(dayjs(b.start_time))
+  );
+  const firstEvent = sortedCampaignEvents.length
+    ? campaignEvents[0]
+    : undefined;
+  const lastEvent = firstEvent
+    ? campaignEvents[campaignEvents.length - 1]
+    : undefined;
+  return [firstEvent, lastEvent];
 };
 
 /**
@@ -25,7 +33,7 @@ export const getFirstAndLastEvent = (campaignEvents: ZetkinEvent[]): (ZetkinEven
  * It is not needed if the datetime string coming from the server doesn't contain an offset.
  */
 export const removeOffset = (datetime: string): string => {
-    return datetime.split('+')[0];
+  return datetime.split('+')[0];
 };
 
 /**
@@ -34,8 +42,11 @@ export const removeOffset = (datetime: string): string => {
  *
  * Default behaviour returns an ISO datetime string in UTC time.
  */
-export const LocalTimeToJsonPlugin = (options: never, dayjsClass: typeof Dayjs): void => {
-    dayjsClass.prototype.toJSON = function() {
-        return this.format('YYYY-MM-DDTHH:mm:ss');
-    };
+export const LocalTimeToJsonPlugin = (
+  options: never,
+  dayjsClass: typeof Dayjs
+): void => {
+  dayjsClass.prototype.toJSON = function () {
+    return this.format('YYYY-MM-DDTHH:mm:ss');
+  };
 };

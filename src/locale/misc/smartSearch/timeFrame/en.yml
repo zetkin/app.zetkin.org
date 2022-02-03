@@ -1,32 +1,32 @@
-preview:
-    ever: at any point in time
-    future: in the future
-    between: between {afterDate} and {beforeDate}
-    beforeToday: before today
-    beforeDate: before {beforeDate}
-    afterDate: after {afterDate}
-    lastFew: during the last {days} {days, plural, one {day} other {days}}
 edit:
-    ever: '{timeFrameSelect}'
-    future: '{timeFrameSelect}'
-    beforeToday: '{timeFrameSelect}'
-    afterDate: "{timeFrameSelect} {afterDateSelect}"
-    beforeDate: "{timeFrameSelect} {beforeDateSelect}"
-    between: "{timeFrameSelect} {afterDateSelect} and {beforeDateSelect}"
-    lastFew: "{timeFrameSelect} {daysInput} {days, plural, one {day} other {days}}"
+  afterDate: '{timeFrameSelect} {afterDateSelect}'
+  beforeDate: '{timeFrameSelect} {beforeDateSelect}'
+  beforeToday: '{timeFrameSelect}'
+  between: '{timeFrameSelect} {afterDateSelect} and {beforeDateSelect}'
+  ever: '{timeFrameSelect}'
+  future: '{timeFrameSelect}'
+  lastFew: '{timeFrameSelect} {daysInput} {days, plural, one {day} other {days}}'
+preview:
+  afterDate: after {afterDate}
+  beforeDate: before {beforeDate}
+  beforeToday: before today
+  between: between {afterDate} and {beforeDate}
+  ever: at any point in time
+  future: in the future
+  lastFew: during the last {days} {days, plural, one {day} other {days}}
 timeFrameSelectLabel:
-    ever: at any point in time
-    future: in the future
-    between: between
-    beforeToday: before today
-    beforeDate: before
-    afterDate: after
-    lastFew: during the last
+  afterDate: after
+  beforeDate: before
+  beforeToday: before today
+  between: between
+  ever: at any point in time
+  future: in the future
+  lastFew: during the last
 timeFrameSelectOptions:
-    ever: at any point in time
-    future: in the future
-    between: between two dates
-    beforeToday: before today
-    beforeDate: before a certain date
-    afterDate: after a certain date
-    lastFew: recently
+  afterDate: after a certain date
+  beforeDate: before a certain date
+  beforeToday: before today
+  between: between two dates
+  ever: at any point in time
+  future: in the future
+  lastFew: recently

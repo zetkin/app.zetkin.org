@@ -1,20 +1,20 @@
-menu:
-    home: Hem
-    people: Personer
-    areas: Karta
-    calendar: Kalender
-    inbox: Inkorg
-    manage: Hantera
-search:
-    label: Sök
-    placeholder: Skriv för att söka
-    drawerLabel: Tryck Enter för att visa fullständiga resultat.
 campaigns:
-    allCampaigns: Alla projekt och kampanjer
-    summary: Översikt
-    calendar: Kalendar
-    insights: Insikter
+  allCampaigns: Alla projekt och kampanjer
+  calendar: Kalendar
+  insights: Insikter
+  summary: Översikt
 header:
-    collapseButton:
-        collapse: dölj sidhuvud
-        expand: visa sidhuvud
+  collapseButton:
+    collapse: dölj sidhuvud
+    expand: visa sidhuvud
+menu:
+  areas: Karta
+  calendar: Kalender
+  home: Hem
+  inbox: Inkorg
+  manage: Hantera
+  people: Personer
+search:
+  drawerLabel: Tryck Enter för att visa fullständiga resultat.
+  label: Sök
+  placeholder: Skriv för att söka

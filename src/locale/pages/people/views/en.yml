@@ -1,24 +1,23 @@
 createViewButton:
-    tooltip: Create a new view
-    errorDialog:
-        content: Sorry, we're having trouble creating that view.
-        tryAgain: Try again
-viewsList:
-    empty: You haven't created any views yet.
-    columns:
-        title: Title
-        created: Date created
-        owner: Owner
+  errorDialog:
+    content: Sorry, we're having trouble creating that view.
+    tryAgain: Try again
+  tooltip: Create a new view
 layout:
-    ellipsisMenu:
-        editQuery: Edit Smart Search query
-        makeDynamic: Convert to Smart Search view
-        makeStatic: Convert to static view
-        delete: Delete view
-    jumpMenu:
-        placeholder: Start typing to find view
-    deleteDialog:
-        title: Delete view
-        warningText: Deleting this view is a permanent action which can't be undone. Are you sure you want to continue?
-        error: There was an error deleting the view
-            
+  deleteDialog:
+    error: There was an error deleting the view
+    title: Delete view
+    warningText: Deleting this view is a permanent action which can't be undone. Are you sure you want to continue?
+  ellipsisMenu:
+    delete: Delete view
+    editQuery: Edit Smart Search query
+    makeDynamic: Convert to Smart Search view
+    makeStatic: Convert to static view
+  jumpMenu:
+    placeholder: Start typing to find view
+viewsList:
+  columns:
+    created: Date created
+    owner: Owner
+    title: Title
+  empty: You haven't created any views yet.

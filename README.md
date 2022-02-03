@@ -57,7 +57,7 @@ yarn test --watchAll // To run tests in interactive watch mode.
 We override the default `render()` function from `@testing-library/react` in the file `src/test-utils/index.ts` in order to automatically apply context providers. All `@testing-library/react` functions are exposed from the custom `test-utils` module, so import from there instead of `@testing-library/react`.
 
 ```js
-import { render, fireEvent } from "test-utils";
+import { render, fireEvent } from 'test-utils';
 
 /// Then use render as is documented in the docs for @testing-library/react.
 ```
@@ -97,6 +97,19 @@ way to set it up is to just configure git to use hooks from there:
 ```
 $ git config core.hooksPath .githooks
 ```
+
+### Code formatting
+
+The linting script also runs [Prettier](https://prettier.io) so make sure you run Prettier before you commit, or your work won't pass CI. Some IDEs support Prettier as standard and for some you need to download a plugin.
+
+For VSCode, install the [plugin](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode), then
+
+- Go to `extension settings / workspace` and set **Prettier: Config Path** to ".prettierrc.json"
+- Set **Prettier: Ignore Path** to ".prettierignore"
+- Check the box next to **Prettier: Require Config**
+- Uncheck the box next to **Prettier: Use Editor Config**
+- Go to `Settings / Text Editor` and change the **Editor: Default Formatter** to "Prettier"
+- Go to `Settings / Text Editor / Formatting` and check **Editor: Format On Save**
 
 ## Submit your contribution
 

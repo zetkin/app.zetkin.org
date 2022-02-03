@@ -1,51 +1,52 @@
-statuses:
-    active: "Active"
-    closed: "Closed"
-    draft: "Draft"
-    scheduled: "Scheduled"
-    expired: "Expired"
-types:
-    offline: Offline
-    share_link: Share Link
-    visit_link: Visit Link
-    watch_video: Watch Video
-    demographic: Collect Demographics
-taskListItem:
-    relativeTimes:
-        active: "Closes {time}"
-        expires: "Expires {time}"
-        closed: "Closed {time}"
-        scheduled: "Will be published {time}"
-        indefinite: "Published {time}"
-        expired: "Expired {time}"
-taskDetails:
-    title: Task Details
-    editButton: Edit
-    statusLabel: Status
-    titleLabel: Title
-    instructionsLabel: Instructions
-    timeEstimateLabel: Estimated time to complete
-    typeLabel: Type
-    publishedTime: Publish Time
-    deadlineTime: Deadline Time
-    expiresTime: Expires Time
-taskTypeDetails:
-    share_link:
-        title: Share Link Settings
-    visit_link:
-        title: Visit Link Settings
-    demographic:
-        title: Collect Demographics Settings
+# eslint-disable yml/key-name-casing
 publishButton:
-    publish: Publish
-    tooltip:
-        missingFields: Missing required fields
-        missingAssignees: Missing assignees
-        missingFieldsAndAssignees: Missing required fields and assignees
-        alreadyPublished: Already Published
+  publish: Publish
+  tooltip:
+    alreadyPublished: Already Published
+    missingAssignees: Missing assignees
+    missingFields: Missing required fields
+    missingFieldsAndAssignees: Missing required fields and assignees
+statuses:
+  active: Active
+  closed: Closed
+  draft: Draft
+  expired: Expired
+  scheduled: Scheduled
 taskAssigneesList:
-    title: Assigned to {numPeople, plural, one {# person} other {# people}}
-    completedStates:
-        notCompleted: Not yet completed
-        completed: Completed {time}
-        ignored: Ignored {time}
+  completedStates:
+    completed: Completed {time}
+    ignored: Ignored {time}
+    notCompleted: Not yet completed
+  title: Assigned to {numPeople, plural, one {# person} other {# people}}
+taskDetails:
+  deadlineTime: Deadline Time
+  editButton: Edit
+  expiresTime: Expires Time
+  instructionsLabel: Instructions
+  publishedTime: Publish Time
+  statusLabel: Status
+  timeEstimateLabel: Estimated time to complete
+  title: Task Details
+  titleLabel: Title
+  typeLabel: Type
+taskListItem:
+  relativeTimes:
+    active: 'Closes {time}'
+    closed: 'Closed {time}'
+    expired: 'Expired {time}'
+    expires: 'Expires {time}'
+    indefinite: 'Published {time}'
+    scheduled: 'Will be published {time}'
+taskTypeDetails:
+  demographic:
+    title: Collect Demographics Settings
+  share_link:
+    title: Share Link Settings
+  visit_link:
+    title: Visit Link Settings
+types:
+  demographic: Collect Demographics
+  offline: Offline
+  share_link: Share Link
+  visit_link: Visit Link
+  watch_video: Watch Video

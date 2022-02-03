@@ -17,37 +17,38 @@ dayjs.extend(LocalTimeToJsonPlugin);
 dayjs.extend(isoWeek);
 
 const ZetkinAppProviders: FC = ({ children }) => {
-    const queryClient = new QueryClient({
-        defaultOptions: {
-            queries: {
-                refetchOnWindowFocus: false,
-            },
-        },
-    });
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        refetchOnWindowFocus: false,
+      },
+    },
+  });
 
-    return (
-        <UserContext.Provider value={ null }>
-            <ThemeProvider theme={ theme }>
-                <MuiPickersUtilsProvider libInstance={ dayjs } utils={ DateUtils }>
-                    <IntlProvider
-                        defaultLocale="en"
-                        locale="en"
-                        messages={{}}
-                        onError={ (err) => {
-                            if (err.code === 'MISSING_TRANSLATION') {
-                                return;
-                            }
-                            throw err;
-                        } }>
-                        <QueryClientProvider client={ queryClient }>
-                            <CssBaseline />
-                            { children }
-                        </QueryClientProvider>
-                    </IntlProvider>
-                </MuiPickersUtilsProvider>
-            </ThemeProvider>
-        </UserContext.Provider>
-    );
+  return (
+    <UserContext.Provider value={null}>
+      <ThemeProvider theme={theme}>
+        <MuiPickersUtilsProvider libInstance={dayjs} utils={DateUtils}>
+          <IntlProvider
+            defaultLocale="en"
+            locale="en"
+            messages={{}}
+            onError={(err) => {
+              if (err.code === 'MISSING_TRANSLATION') {
+                return;
+              }
+              throw err;
+            }}
+          >
+            <QueryClientProvider client={queryClient}>
+              <CssBaseline />
+              {children}
+            </QueryClientProvider>
+          </IntlProvider>
+        </MuiPickersUtilsProvider>
+      </ThemeProvider>
+    </UserContext.Provider>
+  );
 };
 
 /**
@@ -58,12 +59,11 @@ const ZetkinAppProviders: FC = ({ children }) => {
  * specific to our application.
  */
 const customRender = (
-    ui: ReactElement| FC<unknown>,
-    options?: Omit<RenderOptions, 'wrapper'>,
-): RenderResult => render(ui as ReactElement, { wrapper: ZetkinAppProviders, ...options });
+  ui: ReactElement | FC<unknown>,
+  options?: Omit<RenderOptions, 'wrapper'>
+): RenderResult =>
+  render(ui as ReactElement, { wrapper: ZetkinAppProviders, ...options });
 
 export * from '@testing-library/react';
 
 export { customRender as render };
-
-

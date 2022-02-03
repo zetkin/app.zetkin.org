@@ -3,8 +3,8 @@ import { List, ListItem, ListItemText } from '@material-ui/core';
 import React, { useState } from 'react';
 
 interface ZetkinListProps {
-    initialLength?: number;
-    showMoreStep?: number;
+  initialLength?: number;
+  showMoreStep?: number;
 }
 
 /**
@@ -19,29 +19,37 @@ interface ZetkinListProps {
  * `showMoreStep?` - If `initialLength` is set, this sets how many more items are shown when
  * clicking the "show more" button. Default is 5.
  */
-const ZetkinList: React.FunctionComponent<ZetkinListProps> = ({ children, initialLength, showMoreStep }) => {
-    const childrenArray = Array.isArray(children) ? children : [children];
-    const [numResultsToDisplay, setNumResultsToDisplay] = useState(initialLength || childrenArray.length);
+const ZetkinList: React.FunctionComponent<ZetkinListProps> = ({
+  children,
+  initialLength,
+  showMoreStep,
+}) => {
+  const childrenArray = Array.isArray(children) ? children : [children];
+  const [numResultsToDisplay, setNumResultsToDisplay] = useState(
+    initialLength || childrenArray.length
+  );
 
-    return (
-        <List
-            disablePadding>
-            { childrenArray.map((child, index) => {
-                // Show more results if the user clicks the show more button
-                if (index < numResultsToDisplay)
-                    return child;
-            }) }
-            { childrenArray.length > numResultsToDisplay && (
-                <ListItem button component="a" onClick={ () => {
-                    setNumResultsToDisplay(numResultsToDisplay + (showMoreStep || 5));
-                } }>
-                    <ListItemText>
-                        <Msg id="layout.organize.lists.showMore" />
-                    </ListItemText>
-                </ListItem>
-            ) }
-        </List>
-    );
+  return (
+    <List disablePadding>
+      {childrenArray.map((child, index) => {
+        // Show more results if the user clicks the show more button
+        if (index < numResultsToDisplay) return child;
+      })}
+      {childrenArray.length > numResultsToDisplay && (
+        <ListItem
+          button
+          component="a"
+          onClick={() => {
+            setNumResultsToDisplay(numResultsToDisplay + (showMoreStep || 5));
+          }}
+        >
+          <ListItemText>
+            <Msg id="layout.organize.lists.showMore" />
+          </ListItemText>
+        </ListItem>
+      )}
+    </List>
+  );
 };
 
 export default ZetkinList;

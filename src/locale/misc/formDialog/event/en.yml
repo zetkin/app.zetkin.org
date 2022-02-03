@@ -1,11 +1,11 @@
+activity: Activity
+campaign: Campaign
 create: Create new event
 edit: Edit event
-campaign: Campaign
-title: Title
-link: Link
-start: Start Time
 end: End Time
-activity: Activity
-place: Place
 info: Information on signup
+link: Link
 minNo: Mininum participants
+place: Place
+start: Start Time
+title: Title
