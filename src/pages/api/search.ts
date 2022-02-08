@@ -2,7 +2,7 @@ import { createApiFetch } from 'utils/apiFetch';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 import handleResponseData from 'api/utils/handleResponseData';
-import { ZetkinCampaign, ZetkinPerson } from 'types/zetkin';
+import { ZetkinCampaign, ZetkinPerson, ZetkinTask } from 'types/zetkin';
 
 /**
  * To use
@@ -16,6 +16,7 @@ import { ZetkinCampaign, ZetkinPerson } from 'types/zetkin';
 export enum SEARCH_DATA_TYPE {
   PERSON = 'person',
   CAMPAIGN = 'campaign',
+  TASK = 'task',
 }
 
 interface PersonSearchResult {
@@ -26,8 +27,15 @@ interface CampaignSearchResult {
   type: SEARCH_DATA_TYPE.CAMPAIGN;
   match: ZetkinCampaign;
 }
+interface TaskSearchResult {
+  type: SEARCH_DATA_TYPE.TASK;
+  match: ZetkinTask;
+}
 
-export type SearchResult = PersonSearchResult | CampaignSearchResult;
+export type SearchResult =
+  | PersonSearchResult
+  | CampaignSearchResult
+  | TaskSearchResult;
 
 const search = async (
   req: NextApiRequest,
@@ -96,7 +104,29 @@ const search = async (
       }));
     };
 
-    const results = await Promise.all([peopleRequest(), campaignRequest()]);
+    const taskRequest = async () => {
+      const req = await apiFetch(
+        `/orgs/${orgId}/search/${SEARCH_DATA_TYPE.TASK}`,
+        {
+          body: JSON.stringify({ q }),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          method: 'POST',
+        }
+      );
+      const data = await handleResponseData<ZetkinTask[]>(req, 'post');
+      return data.map<SearchResult>((result) => ({
+        match: result,
+        type: SEARCH_DATA_TYPE.TASK,
+      }));
+    };
+
+    const results = await Promise.all([
+      peopleRequest(),
+      campaignRequest(),
+      taskRequest(),
+    ]);
     const searchResults = results.flat();
 
     res.status(200).json({ data: searchResults });
