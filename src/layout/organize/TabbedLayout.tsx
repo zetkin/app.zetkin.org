@@ -170,7 +170,7 @@ const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
                       >
                         {title}
                       </Typography>
-                      <Typography component="h2" variant="h5">
+                      <Typography color="secondary" component="h2" variant="h5">
                         {subtitle}
                       </Typography>
                     </Box>

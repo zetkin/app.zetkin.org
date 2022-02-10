@@ -106,7 +106,6 @@ const theme = createTheme({
       fontWeight: 400,
     },
     h5: {
-      color: 'gray',
       fontSize: '1.2rem',
       fontWeight: 500,
     },
