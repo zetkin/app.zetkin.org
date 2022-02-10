@@ -2,6 +2,7 @@ import { ArrowUpward } from '@material-ui/icons';
 import { FormattedMessage } from 'react-intl';
 import { useRouter } from 'next/router';
 import {
+  Avatar,
   Box,
   Button,
   Collapse,
@@ -24,6 +25,11 @@ interface StyleProps {
 }
 
 const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
+  avatar: {
+    height: 65,
+    marginRight: 20,
+    width: 'auto',
+  },
   main: {
     overflowX: 'hidden',
   },
@@ -60,6 +66,7 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
 
 interface TabbedLayoutProps {
   actionButtons?: React.ReactElement | React.ReactElement[];
+  avatar?: string;
   ellipsisMenuItems?: ZetkinEllipsisMenuProps['items'];
   fixedHeight?: boolean;
   title?: string | ReactElement;
@@ -70,6 +77,7 @@ interface TabbedLayoutProps {
 }
 
 const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
+  avatar,
   children,
   actionButtons,
   ellipsisMenuItems,
@@ -142,19 +150,29 @@ const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
               {/* Title, subtitle, and action buttons */}
               <Collapse in={!collapsed}>
                 <Box className={classes.titleGrid} mt={2}>
-                  <Box overflow="hidden">
-                    <Typography
-                      className={classes.title}
-                      component="div"
-                      data-testid="page-title"
-                      noWrap
-                      variant="h3"
-                    >
-                      {title}
-                    </Typography>
-                    <Typography component="h2" variant="h5">
-                      {subtitle}
-                    </Typography>
+                  <Box
+                    alignItems="center"
+                    display="flex"
+                    flexDirection="row"
+                    overflow="hidden"
+                  >
+                    {avatar && (
+                      <Avatar className={classes.avatar} src={avatar} />
+                    )}
+                    <Box>
+                      <Typography
+                        className={classes.title}
+                        component="div"
+                        data-testid="page-title"
+                        noWrap
+                        variant="h3"
+                      >
+                        {title}
+                      </Typography>
+                      <Typography component="h2" variant="h5">
+                        {subtitle}
+                      </Typography>
+                    </Box>
                   </Box>
                   <Box display="flex" flexDirection="row">
                     <Box>{actionButtons}</Box>
