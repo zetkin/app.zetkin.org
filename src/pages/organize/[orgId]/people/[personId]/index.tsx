@@ -1,7 +1,9 @@
 import { GetServerSideProps } from 'next';
+import { Grid } from '@material-ui/core';
 import Head from 'next/head';
 
 import { PageWithLayout } from 'types';
+import PersonDetailsCard from 'components/organize/people/PersonDetailsCard';
 import { personResource } from 'api/people';
 import { scaffold } from 'utils/next';
 import SinglePersonLayout from 'layout/organize/SinglePersonLayout';
@@ -51,7 +53,11 @@ const PersonProfilePage: PageWithLayout<PersonProfilePageProps> = ({
           {person?.first_name} {person?.last_name}
         </title>
       </Head>
-      Person page here
+      <Grid container direction="row" spacing={6}>
+        <Grid item md={4}>
+          <PersonDetailsCard {...person} />
+        </Grid>
+      </Grid>
     </>
   );
 };
