@@ -1,3 +1,4 @@
+import { FormattedMessage } from 'react-intl';
 import { Box, Grid, makeStyles, Typography } from '@material-ui/core';
 import { Home, Mail, Phone } from '@material-ui/icons';
 
@@ -33,7 +34,7 @@ const PersonDetailsCard: React.FunctionComponent<ZetkinPerson> = (person) => {
   return (
     <Box display="flex" flexDirection="column">
       <Typography className={classes.title} color="secondary" variant="h6">
-        Contact details
+        <FormattedMessage id="pages.people.person.details.title" />
       </Typography>
       <ZetkinCard>
         <Grid container direction="column" spacing={2}>

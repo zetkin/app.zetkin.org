@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 
 import { personResource } from 'api/people';
 import TabbedLayout from './TabbedLayout';
+import { useIntl } from 'react-intl';
 
 interface SinglePersonLayoutProps {
   fixedHeight?: boolean;
@@ -17,6 +18,7 @@ const SinglePersonLayout: FunctionComponent<SinglePersonLayoutProps> = ({
     orgId as string,
     personId as string
   ).useQuery();
+  const intl = useIntl();
 
   if (!person) return null;
 
@@ -26,12 +28,15 @@ const SinglePersonLayout: FunctionComponent<SinglePersonLayoutProps> = ({
       baseHref={`/organize/${orgId}/people/${personId}`}
       defaultTab="/"
       fixedHeight={fixedHeight}
-      subtitle={'Joined 2018'}
+      subtitle={intl.formatMessage(
+        { id: 'layout.organize.person.subtitle' },
+        { year: '20xx' }
+      )}
       tabs={[
-        { href: `/`, messageId: 'Profile' },
+        { href: `/`, messageId: 'layout.organize.person.tabs.profile' },
         {
           href: `/timeline`,
-          messageId: 'Timeline',
+          messageId: 'layout.organize.person.tabs.timeline',
           tabProps: { disabled: true },
         },
       ]}
