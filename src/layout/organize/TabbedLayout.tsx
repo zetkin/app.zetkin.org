@@ -101,7 +101,7 @@ const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
   const selectTab = (selected: string): void => {
     const href = tabs.find((tab) => tab.href === selected)?.href;
     if (href) {
-      if (href !== selected) router.push(baseHref + href);
+      if (href !== currentTab) router.push(baseHref + href);
     } else if (process.env.NODE_ENV === 'development') {
       throw new Error(`Tab with label ${selected} wasn't found`);
     }
