@@ -8,6 +8,7 @@ import {
   Collapse,
   makeStyles,
   Tab,
+  TabProps,
   Tabs,
   Theme,
   Typography,
@@ -73,7 +74,7 @@ interface TabbedLayoutProps {
   subtitle?: string | ReactElement;
   baseHref: string;
   defaultTab: string;
-  tabs: { href: string; messageId: string }[];
+  tabs: { href: string; messageId: string; tabProps?: TabProps }[];
 }
 
 const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
@@ -100,7 +101,7 @@ const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
   const selectTab = (selected: string): void => {
     const href = tabs.find((tab) => tab.href === selected)?.href;
     if (href) {
-      router.push(baseHref + href);
+      if (href !== selected) router.push(baseHref + href);
     } else if (process.env.NODE_ENV === 'development') {
       throw new Error(`Tab with label ${selected} wasn't found`);
     }
@@ -192,6 +193,7 @@ const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
                 {tabs.map((tab) => {
                   return (
                     <Tab
+                      {...tab.tabProps}
                       key={tab.href}
                       label={<FormattedMessage id={tab.messageId} />}
                       value={tab.href}
