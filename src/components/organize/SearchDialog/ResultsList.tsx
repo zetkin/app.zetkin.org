@@ -13,7 +13,7 @@ import {
 } from '@material-ui/core';
 
 import { MINIMUM_CHARACTERS } from '.';
-import { SEARCH_DATA_TYPE, SearchResult } from 'pages/api/search';
+import { SEARCH_DATA_TYPE, SearchResult } from 'types/search';
 
 interface ResultsListProps {
   searchQuery: string;

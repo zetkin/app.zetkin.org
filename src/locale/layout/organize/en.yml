@@ -23,10 +23,10 @@ people:
   title: People
 search:
   drawerLabel: Press Enter to show full results.
+  error: There was an error searching.
   keepTypingPrompt: Keep typing to search.
   label: Search
   loading: Loading...
-  error: There was an error searching.
   noResults: No results for this search
   peopleListSubheader: People
   placeholder: Type to search

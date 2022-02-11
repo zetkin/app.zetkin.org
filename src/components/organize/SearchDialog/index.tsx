@@ -6,7 +6,7 @@ import { defaultFetch } from 'fetching';
 import handleResponseData from 'api/utils/handleResponseData';
 import ResultsList from './ResultsList';
 import SearchField from './SearchField';
-import { SearchResult } from 'pages/api/search';
+import { SearchResult } from 'types/search';
 import useDebounce from 'hooks/useDebounce';
 import { useQuery } from 'react-query';
 
