@@ -1,3 +1,5 @@
+import { FormattedMessage } from 'react-intl';
+import { Search } from '@material-ui/icons';
 import { useRouter } from 'next/router';
 import { Box, Button, Dialog } from '@material-ui/core';
 import { useEffect, useState } from 'react';
@@ -68,7 +70,9 @@ const SearchDialog: React.FunctionComponent = () => {
   return (
     <>
       {/* Activator */}
-      <Button onClick={() => setOpen(true)}>Search</Button>
+      <Button onClick={() => setOpen(true)} startIcon={<Search />}>
+        <FormattedMessage id={`layout.organize.search.label`} />
+      </Button>
       <Dialog
         fullWidth
         onClose={() => {

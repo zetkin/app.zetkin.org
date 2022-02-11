@@ -6,8 +6,8 @@ campaigns:
   summary: Summary
 header:
   collapseButton:
-    collapse: collapse header
-    expand: expand header
+    collapse: Collapse
+    expand: Expand
 lists:
   showMore: Show more...
 menu:
@@ -22,7 +22,6 @@ people:
     views: Views
   title: People
 search:
-  drawerLabel: Press Enter to show full results.
   error: There was an error searching.
   keepTypingPrompt: Keep typing to search.
   label: Search

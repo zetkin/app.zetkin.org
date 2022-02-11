@@ -38,7 +38,6 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
         transition: 'transform 0.2s ease',
       },
       gridColumnEnd: 'none',
-      minWidth: 130,
     },
   },
   title: {
@@ -131,9 +130,14 @@ const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
                     <Box className="collapse-button">
                       <Button
                         onClick={toggleCollapse}
-                        size="small"
                         startIcon={<ArrowUpward />}
-                      ></Button>
+                      >
+                        <FormattedMessage
+                          id={`layout.organize.header.collapseButton.${
+                            collapsed ? 'expand' : 'collapse'
+                          }`}
+                        />
+                      </Button>
                     </Box>
                   )}
                   <SearchDialog />
