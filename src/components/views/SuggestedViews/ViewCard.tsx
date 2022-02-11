@@ -3,7 +3,7 @@ import { ReactEventHandler } from 'react';
 import { Fade, Grid, Typography } from '@material-ui/core';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 
-import ZetkinCard from 'components/ZetkinCard';
+import ClickableCard from './ClickableCard';
 import ZetkinRelativeTime from 'components/ZetkinRelativeTime';
 import { ZetkinView } from 'types/zetkin';
 
@@ -29,7 +29,7 @@ const ViewCard: React.FunctionComponent<ViewCardProps> = ({
 
   return (
     <Fade in>
-      <ZetkinCard onClick={onClick} value={view.id}>
+      <ClickableCard onClick={onClick} value={view.id}>
         <Grid
           className={classes.content}
           container
@@ -52,7 +52,7 @@ const ViewCard: React.FunctionComponent<ViewCardProps> = ({
             </Typography>
           </Grid>
         </Grid>
-      </ZetkinCard>
+      </ClickableCard>
     </Fade>
   );
 };

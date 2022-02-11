@@ -8,8 +8,6 @@ interface ZetkinCardProps {
 
 const useStyles = makeStyles((theme) => ({
   card: ({ hasClickHandler }: { hasClickHandler: boolean }) => ({
-    border: '2px solid lightgrey',
-    borderRadius: 0,
     padding: theme.spacing(hasClickHandler ? 0 : 2),
   }),
   cardActionArea: {
@@ -17,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ZetkinCard: React.FunctionComponent<ZetkinCardProps> = ({
+const ClickableCard: React.FunctionComponent<ZetkinCardProps> = ({
   children,
   onClick,
   value,
@@ -40,4 +38,4 @@ const ZetkinCard: React.FunctionComponent<ZetkinCardProps> = ({
   );
 };
 
-export default ZetkinCard;
+export default ClickableCard;

@@ -1,17 +1,29 @@
 import { FormattedMessage } from 'react-intl';
-import { Box, Grid, makeStyles, Typography } from '@material-ui/core';
-import { Home, Mail, Phone } from '@material-ui/icons';
+import {
+  Box,
+  Card,
+  Divider,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  makeStyles,
+  Typography,
+} from '@material-ui/core';
+import { Edit, LocationCity, Mail, Phone } from '@material-ui/icons';
 
-import ZetkinCard from 'components/ZetkinCard';
 import { ZetkinPerson } from 'types/zetkin';
 
 const useStyles = makeStyles((theme) => ({
-  detailIcon: {
-    color: '#4b5c6b',
-    width: 40,
+  divider: {
+    marginLeft: 72,
   },
-  detailValue: {
-    color: '#4b5c6b',
+  editButton: {
+    '& span': {
+      fontWeight: 'bold',
+    },
+    color: theme.palette.primary.main,
+    textTransform: 'uppercase',
   },
   title: {
     marginBottom: theme.spacing(1),
@@ -24,34 +36,40 @@ const PersonDetailsCard: React.FunctionComponent<ZetkinPerson> = (person) => {
     { icon: <Phone />, value: person.phone },
     { icon: <Mail />, value: person.email },
     {
-      icon: <Home />,
+      icon: <LocationCity />,
       value: [person.street_address, person.city]
         .filter((item) => !!item)
         .join(', '),
     },
-  ];
+  ].filter((detail) => !!detail.value);
 
   return (
     <Box display="flex" flexDirection="column">
       <Typography className={classes.title} color="secondary" variant="h6">
         <FormattedMessage id="pages.people.person.details.title" />
       </Typography>
-      <ZetkinCard>
-        <Grid container direction="column" spacing={2}>
-          {details
-            .filter((detail) => !!detail.value)
-            .map((detail, idx) => (
-              <Grid key={idx} container direction="row" item>
-                <Box className={classes.detailIcon}>{detail.icon}</Box>
-                <Box>
-                  <Typography className={classes.detailValue} variant="body1">
-                    {detail.value}
-                  </Typography>
-                </Box>
-              </Grid>
-            ))}
-        </Grid>
-      </ZetkinCard>
+      <Card>
+        <List disablePadding>
+          {details.map((detail, idx) => (
+            <>
+              <ListItem key={idx} button>
+                <ListItemIcon>{detail.icon}</ListItemIcon>
+                <ListItemText primary={detail.value} />
+              </ListItem>
+              <Divider className={classes.divider} />
+            </>
+          ))}
+          <ListItem button disabled>
+            <ListItemIcon>
+              <Edit color="primary" />
+            </ListItemIcon>
+            <ListItemText
+              className={classes.editButton}
+              primary="Edit details"
+            />
+          </ListItem>
+        </List>
+      </Card>
     </Box>
   );
 };
