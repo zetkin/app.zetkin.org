@@ -1,5 +1,5 @@
 import isEqual from 'lodash.isequal';
-import { makeStyles } from '@material-ui/core';
+import NextLink from 'next/link';
 import NProgress from 'nprogress';
 import { useIntl } from 'react-intl';
 import { useRouter } from 'next/router';
@@ -10,6 +10,7 @@ import {
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
 import { FunctionComponent, useContext, useState } from 'react';
+import { Link, makeStyles } from '@material-ui/core';
 import { useMutation, useQueryClient } from 'react-query';
 
 import { ConfirmDialogContext } from 'hooks/ConfirmDialogProvider';
@@ -266,14 +267,19 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
       const url = `/api/orgs/${orgId}/people/${params.value}/avatar`;
       return (
         // eslint-disable-next-line @next/next/no-img-element
-        <img
-          alt="Avatar"
-          src={url}
-          style={{
-            maxHeight: '100%',
-            maxWidth: '100%',
-          }}
-        />
+        <NextLink href={`/organize/${orgId}/people/${params.value}`} passHref>
+          <Link
+            alt="Avatar"
+            component="img"
+            onClick={(evt) => evt.stopPropagation()}
+            src={url}
+            style={{
+              cursor: 'pointer',
+              maxHeight: '100%',
+              maxWidth: '100%',
+            }}
+          />
+        </NextLink>
       );
     },
     resizable: false,

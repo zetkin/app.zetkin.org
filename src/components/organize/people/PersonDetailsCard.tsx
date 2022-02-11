@@ -51,13 +51,13 @@ const PersonDetailsCard: React.FunctionComponent<ZetkinPerson> = (person) => {
       <Card>
         <List disablePadding>
           {details.map((detail, idx) => (
-            <>
-              <ListItem key={idx} button>
+            <div key={idx}>
+              <ListItem button>
                 <ListItemIcon>{detail.icon}</ListItemIcon>
                 <ListItemText primary={detail.value} />
               </ListItem>
               <Divider className={classes.divider} />
-            </>
+            </div>
           ))}
           <ListItem button disabled>
             <ListItemIcon>
