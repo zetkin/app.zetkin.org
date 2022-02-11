@@ -1,18 +1,13 @@
 /* eslint-disable react/display-name */
 import { FunctionComponent } from 'react';
-import Link from 'next/link';
 import { FormattedMessage as Msg } from 'react-intl';
-import { useRouter } from 'next/router';
 
-import {
-  Avatar,
-  List,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
-} from '@material-ui/core';
+import { List, ListItem, ListItemText } from '@material-ui/core';
 
-import { MINIMUM_CHARACTERS } from '.';
+import CampaignListItem from './CampaignListItem';
+import { MINIMUM_CHARACTERS } from '..';
+import PersonListItem from './PersonListItem';
+import TaskListItem from './TaskListItem';
 import { SEARCH_DATA_TYPE, SearchResult } from 'types/search';
 
 interface ResultsListProps {
@@ -28,9 +23,6 @@ const ResultsList: FunctionComponent<ResultsListProps> = ({
   loading,
   error,
 }): JSX.Element => {
-  const router = useRouter();
-  const { orgId } = router.query as { orgId: string };
-
   return (
     <List>
       {/* Typing prompts */}
@@ -78,53 +70,15 @@ const ResultsList: FunctionComponent<ResultsListProps> = ({
           {/* People */}
           {results.length > 0 && (
             <>
-              {results.map((result) => {
-                // Show more results if the user clicks the show more button
+              {results.slice(0, 6).map((result) => {
                 if (result.type === SEARCH_DATA_TYPE.PERSON) {
-                  return (
-                    <Link
-                      key={result.match.id}
-                      href={`/organize/${orgId}/people/${result.match.id}`}
-                      passHref
-                    >
-                      <ListItem button component="a">
-                        <ListItemAvatar>
-                          <Avatar
-                            src={`/api/orgs/${orgId}/people/${result.match.id}/avatar`}
-                          />
-                        </ListItemAvatar>
-                        <ListItemText>
-                          {result.match.first_name} {result.match.last_name}
-                        </ListItemText>
-                      </ListItem>
-                    </Link>
-                  );
+                  return <PersonListItem person={result.match} />;
                 }
                 if (result.type === SEARCH_DATA_TYPE.CAMPAIGN) {
-                  return (
-                    <Link
-                      key={result.match.id}
-                      href={`/organize/${orgId}/campaigns/${result.match.id}`}
-                      passHref
-                    >
-                      <ListItem button component="a">
-                        <ListItemText>{result.match.title}</ListItemText>
-                      </ListItem>
-                    </Link>
-                  );
+                  return <CampaignListItem campaign={result.match} />;
                 }
                 if (result.type === SEARCH_DATA_TYPE.TASK) {
-                  return (
-                    <Link
-                      key={result.match.id}
-                      href={`/organize/${orgId}/campaigns/${result.match.campaign.id}/calendar/tasks/${result.match.id}`}
-                      passHref
-                    >
-                      <ListItem button component="a">
-                        <ListItemText>{result.match.title}</ListItemText>
-                      </ListItem>
-                    </Link>
-                  );
+                  return <TaskListItem task={result.match} />;
                 }
               })}
             </>

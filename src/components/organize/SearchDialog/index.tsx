@@ -32,6 +32,16 @@ const SearchDialog: React.FunctionComponent = () => {
   const router = useRouter();
   const { orgId } = router.query as { orgId: string };
 
+  useEffect(() => {
+    const handleRouteChange = () => {
+      setOpen(false);
+    };
+    router.events.on('routeChangeStart', handleRouteChange);
+    return () => {
+      router.events.off('routeChangeStart', handleRouteChange);
+    };
+  }, [router]);
+
   const {
     refetch,
     data: searchResults,
