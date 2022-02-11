@@ -1,8 +1,28 @@
-import { createApiFetch } from 'utils/apiFetch';
+import { ApiFetch, createApiFetch } from 'utils/apiFetch';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 import handleResponseData from 'api/utils/handleResponseData';
-import { ZetkinCampaign, ZetkinPerson } from 'types/zetkin';
+import { ZetkinCampaign, ZetkinPerson, ZetkinTask } from 'types/zetkin';
+
+const searchRequest = async <G>(
+  dataType: SEARCH_DATA_TYPE,
+  query: {
+    orgId: number | string;
+    q: string;
+  },
+  apiFetch: ApiFetch
+): Promise<G[]> => {
+  const { orgId, q } = query;
+  const req = await apiFetch(`/orgs/${orgId}/search/${dataType}`, {
+    body: JSON.stringify({ q }),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    method: 'POST',
+  });
+  const data = await handleResponseData<G[]>(req, 'post');
+  return data;
+};
 
 /**
  * To use
@@ -16,6 +36,7 @@ import { ZetkinCampaign, ZetkinPerson } from 'types/zetkin';
 export enum SEARCH_DATA_TYPE {
   PERSON = 'person',
   CAMPAIGN = 'campaign',
+  TASK = 'task',
 }
 
 interface PersonSearchResult {
@@ -26,8 +47,15 @@ interface CampaignSearchResult {
   type: SEARCH_DATA_TYPE.CAMPAIGN;
   match: ZetkinCampaign;
 }
+interface TaskSearchResult {
+  type: SEARCH_DATA_TYPE.TASK;
+  match: ZetkinTask;
+}
 
-export type SearchResult = PersonSearchResult | CampaignSearchResult;
+export type SearchResult =
+  | PersonSearchResult
+  | CampaignSearchResult
+  | TaskSearchResult;
 
 const search = async (
   req: NextApiRequest,
@@ -61,42 +89,46 @@ const search = async (
 
   try {
     const peopleRequest = async () => {
-      const req = await apiFetch(
-        `/orgs/${orgId}/search/${SEARCH_DATA_TYPE.PERSON}`,
-        {
-          body: JSON.stringify({ q }),
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          method: 'POST',
-        }
+      const data = await searchRequest<ZetkinPerson>(
+        SEARCH_DATA_TYPE.PERSON,
+        { orgId, q },
+        apiFetch
       );
-      const data = await handleResponseData<ZetkinPerson[]>(req, 'post');
-      return data.map((result) => ({
+      return data.map<PersonSearchResult>((result) => ({
         match: result,
         type: SEARCH_DATA_TYPE.PERSON,
       }));
     };
 
     const campaignRequest = async () => {
-      const req = await apiFetch(
-        `/orgs/${orgId}/search/${SEARCH_DATA_TYPE.CAMPAIGN}`,
-        {
-          body: JSON.stringify({ q }),
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          method: 'POST',
-        }
+      const data = await searchRequest<ZetkinCampaign>(
+        SEARCH_DATA_TYPE.CAMPAIGN,
+        { orgId, q },
+        apiFetch
       );
-      const data = await handleResponseData<ZetkinCampaign[]>(req, 'post');
-      return data.map<SearchResult>((result) => ({
+      return data.map<CampaignSearchResult>((result) => ({
         match: result,
         type: SEARCH_DATA_TYPE.CAMPAIGN,
       }));
     };
 
-    const results = await Promise.all([peopleRequest(), campaignRequest()]);
+    const taskRequest = async () => {
+      const data = await searchRequest<ZetkinTask>(
+        SEARCH_DATA_TYPE.TASK,
+        { orgId, q },
+        apiFetch
+      );
+      return data.map<TaskSearchResult>((result) => ({
+        match: result,
+        type: SEARCH_DATA_TYPE.TASK,
+      }));
+    };
+
+    const results = await Promise.all([
+      peopleRequest(),
+      campaignRequest(),
+      taskRequest(),
+    ]);
     const searchResults = results.flat();
 
     res.status(200).json({ data: searchResults });

@@ -113,6 +113,19 @@ const ResultsList: FunctionComponent<ResultsListProps> = ({
                     </Link>
                   );
                 }
+                if (result.type === SEARCH_DATA_TYPE.TASK) {
+                  return (
+                    <Link
+                      key={result.match.id}
+                      href={`/organize/${orgId}/campaigns/${result.match.campaign.id}/calendar/tasks/${result.match.id}`}
+                      passHref
+                    >
+                      <ListItem button component="a">
+                        <ListItemText>{result.match.title}</ListItemText>
+                      </ListItem>
+                    </Link>
+                  );
+                }
               })}
             </>
           )}
