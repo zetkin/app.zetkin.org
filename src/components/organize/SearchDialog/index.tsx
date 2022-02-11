@@ -37,6 +37,7 @@ const SearchDialog: React.FunctionComponent = () => {
     data: searchResults,
     isIdle,
     isFetching,
+    isError,
   } = useQuery(
     ['searchResults', searchQuery],
     getSearchResults(orgId, searchQuery),
@@ -69,6 +70,7 @@ const SearchDialog: React.FunctionComponent = () => {
         <Box p={4}>
           <SearchField onChange={(e) => setSearchQuery(e.target.value)} />
           <ResultsList
+            error={isError}
             loading={isIdle || isFetching}
             results={searchResults || []}
             searchQuery={searchQuery}

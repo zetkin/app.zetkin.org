@@ -19,12 +19,14 @@ interface ResultsListProps {
   searchQuery: string;
   results: SearchResult[];
   loading: boolean;
+  error: boolean;
 }
 
 const ResultsList: FunctionComponent<ResultsListProps> = ({
   searchQuery,
   results,
   loading,
+  error,
 }): JSX.Element => {
   const router = useRouter();
   const { orgId } = router.query as { orgId: string };
@@ -54,6 +56,14 @@ const ResultsList: FunctionComponent<ResultsListProps> = ({
             <ListItem>
               <ListItemText>
                 <Msg id="layout.organize.search.loading" />
+              </ListItemText>
+            </ListItem>
+          )}
+          {/* Loading indicator */}
+          {error && results.length == 0 && (
+            <ListItem>
+              <ListItemText>
+                <Msg id="layout.organize.search.error" />
               </ListItemText>
             </ListItem>
           )}

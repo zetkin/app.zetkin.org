@@ -26,7 +26,8 @@ search:
   keepTypingPrompt: Keep typing to search.
   label: Search
   loading: Loading...
-  noResults: No results
+  error: There was an error searching.
+  noResults: No results for this search
   peopleListSubheader: People
   placeholder: Type to search
   seeAllResultsInOrg: See all results in <b>{orgName}</b> for "{searchQuery}"
