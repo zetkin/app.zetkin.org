@@ -17,17 +17,21 @@ const search = async (
   req: NextApiRequest,
   res: NextApiResponse
 ): Promise<void> => {
-  const { orgId } = req.query;
-  const { method } = req;
+  const {
+    method,
+    query: { orgId },
+    body: { q },
+  } = req;
 
   // Return error if method other than POST
   if (method !== 'POST') {
-    res.setHeader('Allow', ['POST']);
-    res.status(405).end(`Method ${method} Not Allowed`);
-    return;
+    return res
+      .setHeader('Allow', ['POST'])
+      .status(405)
+      .json({ error: `Method ${method} Not Allowed` });
   }
 
-  // Validate orgId
+  // Validate orgId, return error if not valid
   if (!orgId) {
     return res
       .status(400)
@@ -39,23 +43,18 @@ const search = async (
       .json({ error: 'Query Parameter "orgId" must by a single value' });
   }
 
+  const query = { orgId, q };
   const apiFetch = createApiFetch(req.headers);
-
-  const { q } = req.body;
 
   try {
     const peopleRequest = async () => {
-      return makeSearchRequest(SEARCH_DATA_TYPE.PERSON, { orgId, q }, apiFetch);
+      return makeSearchRequest(SEARCH_DATA_TYPE.PERSON, query, apiFetch);
     };
     const campaignRequest = async () => {
-      return makeSearchRequest(
-        SEARCH_DATA_TYPE.CAMPAIGN,
-        { orgId, q },
-        apiFetch
-      );
+      return makeSearchRequest(SEARCH_DATA_TYPE.CAMPAIGN, query, apiFetch);
     };
     const taskRequest = async () => {
-      return makeSearchRequest(SEARCH_DATA_TYPE.TASK, { orgId, q }, apiFetch);
+      return makeSearchRequest(SEARCH_DATA_TYPE.TASK, query, apiFetch);
     };
 
     const results = await Promise.all([
@@ -63,6 +62,7 @@ const search = async (
       campaignRequest(),
       taskRequest(),
     ]);
+
     const searchResults = results.flat();
 
     res.status(200).json({ data: searchResults });
