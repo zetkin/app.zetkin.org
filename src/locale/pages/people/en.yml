@@ -1,3 +1,6 @@
 person:
   details:
     title: Contact Details
+  organisations:
+    title: Organisations
+  editButton: Edit {title}

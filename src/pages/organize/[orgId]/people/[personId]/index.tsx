@@ -4,6 +4,7 @@ import Head from 'next/head';
 
 import { PageWithLayout } from 'types';
 import PersonDetailsCard from 'components/organize/people/PersonDetailsCard';
+import PersonOrganisationsCard from 'components/organize/people/PersonOrganisationsCard';
 import { personResource } from 'api/people';
 import { scaffold } from 'utils/next';
 import SinglePersonLayout from 'layout/organize/SinglePersonLayout';
@@ -43,6 +44,7 @@ const PersonProfilePage: PageWithLayout<PersonProfilePageProps> = ({
   orgId,
 }) => {
   const { data: person } = personResource(orgId, personId).useQuery();
+  const { data: organisations } = { data: [] };
 
   if (!person) return null;
 
@@ -55,7 +57,10 @@ const PersonProfilePage: PageWithLayout<PersonProfilePageProps> = ({
       </Head>
       <Grid container direction="row" spacing={6}>
         <Grid item md={4}>
-          <PersonDetailsCard {...person} />
+          <PersonDetailsCard {...{ person }} />
+        </Grid>
+        <Grid item md={4}>
+          <PersonOrganisationsCard {...{ organisations }} />
         </Grid>
       </Grid>
     </>
