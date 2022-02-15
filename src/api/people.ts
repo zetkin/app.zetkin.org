@@ -1,5 +1,9 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { createPrefetch, createUseQuery } from './utils/resourceHookFactories';
+import {
+  createPrefetch,
+  createUseMutation,
+  createUseQuery,
+} from './utils/resourceHookFactories';
 
 import { ZetkinMembership, ZetkinPerson } from '../types/zetkin';
 
@@ -10,6 +14,13 @@ export const personResource = (orgId: string, personId: string) => {
   return {
     prefetch: createPrefetch<ZetkinPerson>(key, url),
     useQuery: createUseQuery<ZetkinPerson>(key, url),
+    useUpdate: createUseMutation<Partial<ZetkinPerson>, ZetkinPerson>(
+      key,
+      url,
+      {
+        method: 'PATCH',
+      }
+    ),
   };
 };
 
