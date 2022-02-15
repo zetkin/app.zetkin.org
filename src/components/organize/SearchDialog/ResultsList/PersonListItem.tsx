@@ -1,12 +1,8 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import {
-  Avatar,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
-} from '@material-ui/core';
+import { Avatar, ListItem, ListItemAvatar } from '@material-ui/core';
 
+import ResultsListItemText from './ResultsListItemText';
 import { ZetkinPerson } from 'types/zetkin';
 
 const PersonListItem: React.FunctionComponent<{ person: ZetkinPerson }> = ({
@@ -24,9 +20,10 @@ const PersonListItem: React.FunctionComponent<{ person: ZetkinPerson }> = ({
         <ListItemAvatar>
           <Avatar src={`/api/orgs/${orgId}/people/${person.id}/avatar`} />
         </ListItemAvatar>
-        <ListItemText>
-          {person.first_name} {person.last_name}
-        </ListItemText>
+        <ResultsListItemText
+          primary={person.first_name + ' ' + person.last_name}
+          secondary={'Person'}
+        />
       </ListItem>
     </Link>
   );

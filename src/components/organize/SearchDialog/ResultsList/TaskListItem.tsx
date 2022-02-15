@@ -1,7 +1,9 @@
 import Link from 'next/link';
+import { MobileFriendly } from '@material-ui/icons';
 import { useRouter } from 'next/router';
-import { ListItem, ListItemText } from '@material-ui/core';
+import { Avatar, ListItem, ListItemAvatar } from '@material-ui/core';
 
+import ResultsListItemText from './ResultsListItemText';
 import { ZetkinTask } from 'types/zetkin';
 
 const TaskListItem: React.FunctionComponent<{ task: ZetkinTask }> = ({
@@ -16,7 +18,15 @@ const TaskListItem: React.FunctionComponent<{ task: ZetkinTask }> = ({
       passHref
     >
       <ListItem button component="a">
-        <ListItemText>{task.title}</ListItemText>
+        <ListItemAvatar>
+          <Avatar>
+            <MobileFriendly />
+          </Avatar>
+        </ListItemAvatar>
+        <ResultsListItemText
+          primary={task.title}
+          secondary={'Campaign / ' + task.campaign.title + ' / Task'}
+        />
       </ListItem>
     </Link>
   );

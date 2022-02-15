@@ -1,7 +1,9 @@
+import { Event } from '@material-ui/icons';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { ListItem, ListItemText } from '@material-ui/core';
+import { Avatar, ListItem, ListItemAvatar } from '@material-ui/core';
 
+import ResultsListItemText from './ResultsListItemText';
 import { ZetkinCampaign } from 'types/zetkin';
 
 const CampaignListItem: React.FunctionComponent<{
@@ -16,7 +18,12 @@ const CampaignListItem: React.FunctionComponent<{
       passHref
     >
       <ListItem button component="a">
-        <ListItemText>{campaign.title}</ListItemText>
+        <ListItemAvatar>
+          <Avatar>
+            <Event />
+          </Avatar>
+        </ListItemAvatar>
+        <ResultsListItemText primary={campaign.title} secondary="Campaign" />
       </ListItem>
     </Link>
   );

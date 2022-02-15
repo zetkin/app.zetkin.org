@@ -67,7 +67,6 @@ const ResultsList: FunctionComponent<ResultsListProps> = ({
               </ListItemText>
             </ListItem>
           )}
-          {/* People */}
           {results.length > 0 && (
             <>
               {results.slice(0, 6).map((result) => {
