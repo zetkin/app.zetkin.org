@@ -8,21 +8,22 @@ import {
 } from '@material-ui/core';
 
 import PersonCard from './PersonCard';
-import { ZetkinOrganization } from 'types/zetkin';
+import { ZetkinMembership } from 'types/zetkin';
 
 const PersonOrganisationsCard: React.FunctionComponent<{
-  organisations: ZetkinOrganization[];
-}> = ({ organisations }) => {
+  connections?: ZetkinMembership[];
+}> = ({ connections }) => {
+  if (!connections) return null;
   return (
     <PersonCard titleId="pages.people.person.organisations.title">
       <List disablePadding>
-        {organisations.map((organisation, idx) => (
+        {connections.map((connection, idx) => (
           <div key={idx}>
             <ListItem button>
               <ListItemIcon>
                 <Clear />
               </ListItemIcon>
-              <ListItemText primary={organisation.title} />
+              <ListItemText primary={connection.organization.title} />
             </ListItem>
             <Divider style={{ marginLeft: 72 }} />
           </div>
