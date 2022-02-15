@@ -3,4 +3,6 @@ person:
     title: Contact Details
   organisations:
     title: Organisations
+    add: Add a new sub-organisation
   editButton: Edit {title}
+  editButtonClose: Stop editing {title}

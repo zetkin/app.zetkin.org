@@ -1,4 +1,3 @@
-import { Edit } from '@material-ui/icons';
 import { useIntl } from 'react-intl';
 import {
   Box,
@@ -10,6 +9,8 @@ import {
   makeStyles,
   Typography,
 } from '@material-ui/core';
+import { Close, Edit } from '@material-ui/icons';
+import { ReactEventHandler, SyntheticEvent, useState } from 'react';
 
 const useStyles = makeStyles((theme) => ({
   divider: {
@@ -27,13 +28,19 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const PersonCard: React.FunctionComponent<{ titleId: string }> = ({
-  titleId,
-  children,
-}) => {
+const PersonCard: React.FunctionComponent<{
+  onClickEdit?: ReactEventHandler;
+  titleId: string;
+}> = ({ onClickEdit, titleId, children }) => {
+  const [editable, setEditable] = useState<boolean>();
   const classes = useStyles();
   const intl = useIntl();
   const title = intl.formatMessage({ id: titleId });
+
+  const onToggleEdit = (evt: SyntheticEvent) => {
+    setEditable(!editable);
+    if (onClickEdit) onClickEdit(evt);
+  };
 
   return (
     <Box display="flex" flexDirection="column">
@@ -43,15 +50,17 @@ const PersonCard: React.FunctionComponent<{ titleId: string }> = ({
       <Card>
         {children}
         <List disablePadding>
-          <ListItem button disabled>
+          <ListItem button disabled={!onClickEdit} onClick={onToggleEdit}>
             <ListItemIcon>
-              <Edit color="primary" />
+              {editable ? <Close color="primary" /> : <Edit color="primary" />}
             </ListItemIcon>
             <ListItemText
               className={classes.editButton}
               primary={intl.formatMessage(
                 {
-                  id: 'pages.people.person.editButton',
+                  id: `pages.people.person.${
+                    editable ? 'editButtonClose' : 'editButton'
+                  }`,
                 },
                 { title }
               )}
