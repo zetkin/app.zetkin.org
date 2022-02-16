@@ -32,7 +32,7 @@ const PersonOrganisationsCard: React.FunctionComponent<
       <List disablePadding>
         <Organisation
           editable={editable}
-          organisationTree={data.organisationTree}
+          organisationTree={data.personOrganisationTree}
         />
         <Collapse in={editable}>
           <ListItem button color="primary">

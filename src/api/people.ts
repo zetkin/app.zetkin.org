@@ -5,11 +5,7 @@ import {
   createUseQuery,
 } from './utils/resourceHookFactories';
 
-import {
-  ZetkinMembership,
-  ZetkinOrganization,
-  ZetkinPerson,
-} from '../types/zetkin';
+import { ZetkinOrganization, ZetkinPerson } from '../types/zetkin';
 
 export const personResource = (orgId: string, personId: string) => {
   const key = ['person', personId];
@@ -43,7 +39,7 @@ export const personOrganisationsResource = (
   return {
     useQuery: createUseQuery<{
       organisationTree: OrganisationTree;
-      personConnections: ZetkinMembership[];
+      personOrganisationTree: OrganisationTree;
     }>(key, url),
   };
 };

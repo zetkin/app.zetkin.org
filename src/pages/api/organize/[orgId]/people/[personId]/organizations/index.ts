@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 
 import { createApiFetch } from 'utils/apiFetch';
 import { nestByParentId } from 'utils';
-import { ZetkinOrganization } from 'types/zetkin';
+import { ZetkinMembership, ZetkinOrganization } from 'types/zetkin';
 
 const getPersonOrganisations = async (
   req: NextApiRequest & { query: Record<string, string> },
@@ -42,10 +42,16 @@ const getPersonOrganisations = async (
       }))
     );
 
+    const personFlatOrgs = flatOrgs.filter((org) =>
+      personConnections
+        .map((conn: ZetkinMembership) => conn.organization.id)
+        .includes(org.id)
+    );
+
     res.status(200).json({
       data: {
         organisationTree: nestByParentId(flatOrgs, null)[0],
-        personConnections,
+        personOrganisationTree: nestByParentId(personFlatOrgs, null)[0],
       },
     });
   } catch (e) {
