@@ -1,6 +1,5 @@
-import { FormattedMessage } from 'react-intl';
+import { useIntl } from 'react-intl';
 import {
-  Box,
   Card,
   Divider,
   List,
@@ -8,11 +7,11 @@ import {
   ListItemIcon,
   ListItemText,
   makeStyles,
-  Typography,
 } from '@material-ui/core';
 import { Edit, LocationCity, Mail, Phone } from '@material-ui/icons';
 
 import { ZetkinPerson } from 'types/zetkin';
+import ZetkinSection from 'components/ZetkinSection';
 
 const useStyles = makeStyles((theme) => ({
   divider: {
@@ -32,6 +31,7 @@ const useStyles = makeStyles((theme) => ({
 
 const PersonDetailsCard: React.FunctionComponent<ZetkinPerson> = (person) => {
   const classes = useStyles();
+  const intl = useIntl();
   const details = [
     { icon: <Phone />, value: person.phone },
     { icon: <Mail />, value: person.email },
@@ -44,15 +44,14 @@ const PersonDetailsCard: React.FunctionComponent<ZetkinPerson> = (person) => {
   ].filter((detail) => !!detail.value);
 
   return (
-    <Box display="flex" flexDirection="column">
-      <Typography className={classes.title} color="secondary" variant="h6">
-        <FormattedMessage id="pages.people.person.details.title" />
-      </Typography>
+    <ZetkinSection
+      title={intl.formatMessage({ id: 'pages.people.person.details.title' })}
+    >
       <Card>
         <List disablePadding>
           {details.map((detail, idx) => (
             <div key={idx}>
-              <ListItem button>
+              <ListItem>
                 <ListItemIcon>{detail.icon}</ListItemIcon>
                 <ListItemText primary={detail.value} />
               </ListItem>
@@ -70,7 +69,7 @@ const PersonDetailsCard: React.FunctionComponent<ZetkinPerson> = (person) => {
           </ListItem>
         </List>
       </Card>
-    </Box>
+    </ZetkinSection>
   );
 };
 
