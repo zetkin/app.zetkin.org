@@ -40,15 +40,14 @@ const getOrganisationTrees = async (
       await connectionsRes.json();
 
     // Map root organisation and all sub-organisations into flat array
+    const subOrgsPartial = subOrgs.map((org: ZetkinOrganization) => ({
+      id: org.id,
+      parentId: org?.parent?.id,
+      title: org.title,
+    }));
     const allOrgs: PersonOrganisation[] = [
       { id: rootOrg.id, parentId: null, title: rootOrg.title },
-    ].concat(
-      subOrgs.map((org: ZetkinOrganization) => ({
-        id: org.id,
-        parentId: org?.parent?.id,
-        title: org.title,
-      }))
-    );
+    ].concat(subOrgsPartial);
 
     // First pass - include all orgs that the member is directly connected to
     const connectedOrgs = getConnectedOrganisations(allOrgs, personConnections);
@@ -59,8 +58,10 @@ const getOrganisationTrees = async (
     // Return organisations trees
     res.status(200).json({
       data: {
+        memberships: connectedOrgs,
         organisationTree: nestByParentId(allOrgs, null)[0],
         personOrganisationTree: nestByParentId(personOrgs, null)[0],
+        subOrganisations: subOrgsPartial,
       },
     });
   } catch (e) {
