@@ -21,6 +21,10 @@ people:
   tabs:
     views: Views
   title: People
+person:
+  tabs:
+    profile: Profile
+    timeline: Timeline
 search:
   drawerLabel: Press Enter to show full results.
   keepTypingPrompt: Keep typing to search.

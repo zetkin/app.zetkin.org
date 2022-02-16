@@ -2,11 +2,13 @@ import { ArrowUpward } from '@material-ui/icons';
 import { FormattedMessage } from 'react-intl';
 import { useRouter } from 'next/router';
 import {
+  Avatar,
   Box,
   Button,
   Collapse,
   makeStyles,
   Tab,
+  TabProps,
   Tabs,
   Theme,
   Typography,
@@ -24,6 +26,11 @@ interface StyleProps {
 }
 
 const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
+  avatar: {
+    height: 65,
+    marginRight: 20,
+    width: 'auto',
+  },
   main: {
     overflowX: 'hidden',
   },
@@ -60,16 +67,18 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
 
 interface TabbedLayoutProps {
   actionButtons?: React.ReactElement | React.ReactElement[];
+  avatar?: string;
   ellipsisMenuItems?: ZetkinEllipsisMenuProps['items'];
   fixedHeight?: boolean;
   title?: string | ReactElement;
   subtitle?: string | ReactElement;
   baseHref: string;
   defaultTab: string;
-  tabs: { href: string; messageId: string }[];
+  tabs: { href: string; messageId: string; tabProps?: TabProps }[];
 }
 
 const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
+  avatar,
   children,
   actionButtons,
   ellipsisMenuItems,
@@ -92,7 +101,7 @@ const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
   const selectTab = (selected: string): void => {
     const href = tabs.find((tab) => tab.href === selected)?.href;
     if (href) {
-      router.push(baseHref + href);
+      if (href !== currentTab) router.push(baseHref + href);
     } else if (process.env.NODE_ENV === 'development') {
       throw new Error(`Tab with label ${selected} wasn't found`);
     }
@@ -142,19 +151,29 @@ const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
               {/* Title, subtitle, and action buttons */}
               <Collapse in={!collapsed}>
                 <Box className={classes.titleGrid} mt={2}>
-                  <Box overflow="hidden">
-                    <Typography
-                      className={classes.title}
-                      component="div"
-                      data-testid="page-title"
-                      noWrap
-                      variant="h3"
-                    >
-                      {title}
-                    </Typography>
-                    <Typography component="h2" variant="h5">
-                      {subtitle}
-                    </Typography>
+                  <Box
+                    alignItems="center"
+                    display="flex"
+                    flexDirection="row"
+                    overflow="hidden"
+                  >
+                    {avatar && (
+                      <Avatar className={classes.avatar} src={avatar} />
+                    )}
+                    <Box>
+                      <Typography
+                        className={classes.title}
+                        component="div"
+                        data-testid="page-title"
+                        noWrap
+                        variant="h3"
+                      >
+                        {title}
+                      </Typography>
+                      <Typography color="secondary" component="h2" variant="h5">
+                        {subtitle}
+                      </Typography>
+                    </Box>
                   </Box>
                   <Box display="flex" flexDirection="row">
                     <Box>{actionButtons}</Box>
@@ -174,6 +193,7 @@ const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
                 {tabs.map((tab) => {
                   return (
                     <Tab
+                      {...tab.tabProps}
                       key={tab.href}
                       label={<FormattedMessage id={tab.messageId} />}
                       value={tab.href}
