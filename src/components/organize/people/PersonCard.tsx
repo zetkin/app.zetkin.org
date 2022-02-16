@@ -1,13 +1,12 @@
 import { useIntl } from 'react-intl';
+import ZetkinSection from 'components/ZetkinSection';
 import {
-  Box,
   Card,
   List,
   ListItem,
   ListItemIcon,
   ListItemText,
   makeStyles,
-  Typography,
 } from '@material-ui/core';
 import { Close, Edit } from '@material-ui/icons';
 import { ReactEventHandler, SyntheticEvent, useState } from 'react';
@@ -43,10 +42,7 @@ const PersonCard: React.FunctionComponent<{
   };
 
   return (
-    <Box display="flex" flexDirection="column">
-      <Typography className={classes.title} color="secondary" variant="h6">
-        {title}
-      </Typography>
+    <ZetkinSection title={title}>
       <Card>
         {children}
         <List disablePadding>
@@ -68,7 +64,7 @@ const PersonCard: React.FunctionComponent<{
           </ListItem>
         </List>
       </Card>
-    </Box>
+    </ZetkinSection>
   );
 };
 
