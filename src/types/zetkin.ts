@@ -75,6 +75,7 @@ export interface ZetkinUser {
 
 export interface ZetkinOrganization {
   id: number;
+  parent?: ZetkinOrganization;
   title: string;
 }
 

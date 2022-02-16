@@ -5,7 +5,11 @@ import {
   createUseQuery,
 } from './utils/resourceHookFactories';
 
-import { ZetkinMembership, ZetkinPerson } from '../types/zetkin';
+import {
+  ZetkinMembership,
+  ZetkinOrganization,
+  ZetkinPerson,
+} from '../types/zetkin';
 
 export const personResource = (orgId: string, personId: string) => {
   const key = ['person', personId];
@@ -24,11 +28,22 @@ export const personResource = (orgId: string, personId: string) => {
   };
 };
 
-export const personConnectionsResource = (orgId: string, personId: string) => {
-  const key = ['personConnections', personId];
-  const url = `/orgs/${orgId}/people/${personId}/connections`;
+export type OrganisationTree = ZetkinOrganization & {
+  descendants: OrganisationTree[];
+  parentId: number;
+};
+
+export const personOrganisationsResource = (
+  orgId: string,
+  personId: string
+) => {
+  const key = ['personOrganisations', personId];
+  const url = `/organize/${orgId}/people/${personId}/organizations`;
 
   return {
-    useQuery: createUseQuery<ZetkinMembership[]>(key, url),
+    useQuery: createUseQuery<{
+      organisationTree: OrganisationTree;
+      personConnections: ZetkinMembership[];
+    }>(key, url),
   };
 };
