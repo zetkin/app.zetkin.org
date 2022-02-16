@@ -22,7 +22,6 @@ people:
     views: Views
   title: People
 person:
-  subtitle: Joined {year}
   tabs:
     profile: Profile
     timeline: Timeline

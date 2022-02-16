@@ -10,8 +10,9 @@ import { LocationCity, Mail, Phone } from '@material-ui/icons';
 import PersonCard from './PersonCard';
 import { ZetkinPerson } from 'types/zetkin';
 
+
 const PersonDetailsCard: React.FunctionComponent<{ person: ZetkinPerson }> = ({
-  person,
+person,
 }) => {
   const details = [
     { icon: <Phone />, value: person.phone },
@@ -25,19 +26,19 @@ const PersonDetailsCard: React.FunctionComponent<{ person: ZetkinPerson }> = ({
   ].filter((detail) => !!detail.value);
 
   return (
-    <PersonCard titleId="pages.people.person.details.title">
-      <List disablePadding>
-        {details.map((detail, idx) => (
-          <div key={idx}>
-            <ListItem button>
-              <ListItemIcon>{detail.icon}</ListItemIcon>
-              <ListItemText primary={detail.value} />
-            </ListItem>
-            <Divider style={{ marginLeft: 72 }} />
-          </div>
-        ))}
-      </List>
-    </PersonCard>
+      <PersonCard titleId="pages.people.person.details.title">
+        <List disablePadding>
+          {details.map((detail, idx) => (
+              <div key={idx}>
+                <ListItem>
+                  <ListItemIcon>{detail.icon}</ListItemIcon>
+                  <ListItemText primary={detail.value} />
+                </ListItem>
+                <Divider style={{ marginLeft: 72 }} />
+              </div>
+          ))}
+        </List>
+      </PersonCard>
   );
 };
 

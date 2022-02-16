@@ -6,6 +6,7 @@ import LocalPersonViewCell, {
 } from './cells/LocalPersonViewCell';
 import PersonNotesViewCell, {
   PersonNotesParams,
+  sortPersonNotes,
 } from './cells/PersonNotesViewCell';
 import SurveyResponseViewCell, {
   SurveyResponseParams,
@@ -56,7 +57,11 @@ export function makeGridColDef(
     );
     colDef.valueGetter = (params) => {
       const notes = (params as PersonNotesParams).value;
-      return notes?.length ? notes.map((note) => note.text).join(',') : null;
+      return notes?.length
+        ? sortPersonNotes(notes)
+            .map((note) => note.text)
+            .join(',')
+        : null;
     };
   } else if (viewCol.type == COLUMN_TYPE.LOCAL_PERSON) {
     colDef.minWidth = 50;
