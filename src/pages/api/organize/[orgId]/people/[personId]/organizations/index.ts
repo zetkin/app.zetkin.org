@@ -4,6 +4,12 @@ import { createApiFetch } from 'utils/apiFetch';
 import { nestByParentId } from 'utils';
 import { ZetkinMembership, ZetkinOrganization } from 'types/zetkin';
 
+type PersonOrganisation = ZetkinOrganization & {
+  connected?: boolean;
+  [key: string]: unknown;
+  parentId: number | null;
+};
+
 const getPersonOrganisations = async (
   req: NextApiRequest & { query: Record<string, string> },
   res: NextApiResponse
@@ -25,14 +31,15 @@ const getPersonOrganisations = async (
   try {
     const parentOrgRes = await apiFetch(`/orgs/${orgId}`);
     const subOrgRes = await apiFetch(`/orgs/${orgId}/sub_organizations`);
-    const cRes = await apiFetch(
+    const connectionsRes = await apiFetch(
       `/orgs/${orgId}/people/${personId}/connections`
     );
     const { data: subOrgs } = await subOrgRes.json();
     const { data: parentOrg } = await parentOrgRes.json();
-    const { data: personConnections } = await cRes.json();
+    const { data: personConnections }: { data: Partial<ZetkinMembership>[] } =
+      await connectionsRes.json();
 
-    const flatOrgs = [
+    const allOrgs: PersonOrganisation[] = [
       { id: parentOrg.id, parentId: null, title: parentOrg.title },
     ].concat(
       subOrgs.map((org: ZetkinOrganization) => ({
@@ -42,16 +49,43 @@ const getPersonOrganisations = async (
       }))
     );
 
-    const personFlatOrgs = flatOrgs.filter((org) =>
-      personConnections
-        .map((conn: ZetkinMembership) => conn.organization.id)
-        .includes(org.id)
-    );
+    // First pass - include all orgs that the member is directly connected to
+    const connectedOrgs = allOrgs
+      .filter((org) =>
+        personConnections.map((conn) => conn?.organization?.id).includes(org.id)
+      )
+      .map((org) => ({ ...org, connected: true }));
 
+    // Second pass - include any parent orgs, recursively, of any org the member is connected to
+    const personOrgs = connectedOrgs;
+
+    const getParentOrgs = (org: PersonOrganisation): PersonOrganisation[] => {
+      const [directParent] = allOrgs.filter((item) => item.id === org.parentId);
+      return directParent
+        ? [directParent].concat(getParentOrgs(directParent))
+        : [];
+    };
+
+    connectedOrgs.forEach((org) => {
+      if (org.parentId) {
+        const parentOrgs = getParentOrgs(org);
+        const unconnectedOrgs = parentOrgs.filter(
+          (parentOrg) => !personOrgs.map((o) => o.id).includes(parentOrg.id)
+        );
+        unconnectedOrgs.forEach((unconnectedOrg) => {
+          personOrgs.push({
+            ...unconnectedOrg,
+            connected: false,
+          });
+        });
+      }
+    });
+
+    // Return organisations trees
     res.status(200).json({
       data: {
-        organisationTree: nestByParentId(flatOrgs, null)[0],
-        personOrganisationTree: nestByParentId(personFlatOrgs, null)[0],
+        organisationTree: nestByParentId(allOrgs, null)[0],
+        personOrganisationTree: nestByParentId(personOrgs, null)[0],
       },
     });
   } catch (e) {

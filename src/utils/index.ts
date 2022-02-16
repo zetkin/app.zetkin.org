@@ -1,7 +1,8 @@
-type FlatRecord = { id: number; parentId: number | null } & Record<
-  string,
-  unknown
->;
+export type FlatRecord = {
+  id: number;
+  [key: string]: unknown | unknown[];
+  parentId: number | null;
+};
 type TreeRecord = FlatRecord & { descendants: TreeRecord[] };
 
 export const nestByParentId = (

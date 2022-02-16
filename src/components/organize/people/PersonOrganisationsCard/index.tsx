@@ -10,7 +10,7 @@ import {
   ListItemText,
 } from '@material-ui/core';
 
-import { Organisation } from './Organisation';
+import { OrganisationsTree } from './OrganisationsTree';
 import PersonCard from '../PersonCard';
 import { personOrganisationsResource } from 'api/people';
 import { PersonProfilePageProps } from 'pages/organize/[orgId]/people/[personId]';
@@ -30,7 +30,7 @@ const PersonOrganisationsCard: React.FunctionComponent<
       titleId="pages.people.person.organisations.title"
     >
       <List disablePadding>
-        <Organisation
+        <OrganisationsTree
           editable={editable}
           organisationTree={data.personOrganisationTree}
         />

@@ -25,6 +25,7 @@ export const personResource = (orgId: string, personId: string) => {
 };
 
 export type OrganisationTree = ZetkinOrganization & {
+  connected: boolean;
   descendants: OrganisationTree[];
   parentId: number;
 };

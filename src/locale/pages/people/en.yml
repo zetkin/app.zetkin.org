@@ -1,8 +1,8 @@
 person:
   details:
     title: Contact Details
-  organisations:
-    title: Organisations
-    add: Add a new sub-organisation
   editButton: Edit {title}
   editButtonClose: Stop editing {title}
+  organisations:
+    add: Add a new sub-organisation
+    title: Organisations
