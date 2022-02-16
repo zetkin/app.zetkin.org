@@ -28,7 +28,9 @@ describe('nestByParentId()', () => {
     const orgsTree = nestByParentId(flatOrgs, null);
     expect(orgsTree.length).toEqual(1);
     expect(orgsTree[0].title).toEqual(flatOrgs[0].title);
-    expect(orgsTree[0]?.children?.length).toEqual(2);
-    expect(orgsTree[0]?.children[1].children[0].id).toEqual(flatOrgs[3].id);
+    expect(orgsTree[0]?.descendants?.length).toEqual(2);
+    expect(orgsTree[0]?.descendants[1].descendants[0].id).toEqual(
+      flatOrgs[3].id
+    );
   });
 });

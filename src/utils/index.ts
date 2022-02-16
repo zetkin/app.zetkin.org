@@ -2,7 +2,7 @@ type FlatRecord = { id: number; parentId: number | null } & Record<
   string,
   unknown
 >;
-type TreeRecord = FlatRecord & { children: TreeRecord[] };
+type TreeRecord = FlatRecord & { descendants: TreeRecord[] };
 
 export const nestByParentId = (
   items: FlatRecord[],
@@ -13,7 +13,7 @@ export const nestByParentId = (
     .map(
       (item): TreeRecord => ({
         ...item,
-        children: nestByParentId(items, item.id),
+        descendants: nestByParentId(items, item.id),
       })
     );
 
