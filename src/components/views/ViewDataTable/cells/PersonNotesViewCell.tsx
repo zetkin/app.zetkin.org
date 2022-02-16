@@ -16,15 +16,16 @@ interface PersonNotesViewCellProps {
   params: GridRenderCellParams;
 }
 
+export const sortPersonNotes = (notes: PersonNote[]): PersonNote[] =>
+  notes.concat().sort((n0, n1) => {
+    return n0.created < n1.created ? 1 : -1;
+  });
+
 const PersonNotesViewCell: FunctionComponent<PersonNotesViewCellProps> = ({
   params,
 }) => {
   const notes: PersonNote[] | null = params?.row && params.row[params.field];
   if (notes?.length) {
-    const sorted = notes.concat().sort((n0, n1) => {
-      return n0.created < n1.created ? 1 : -1;
-    });
-
     return (
       <Typography
         style={{
@@ -33,7 +34,7 @@ const PersonNotesViewCell: FunctionComponent<PersonNotesViewCellProps> = ({
           textOverflow: 'ellipsis',
         }}
       >
-        {sorted[0].text}
+        {sortPersonNotes(notes)[0].text}
       </Typography>
     );
   }

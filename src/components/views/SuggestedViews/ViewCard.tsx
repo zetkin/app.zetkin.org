@@ -1,14 +1,9 @@
 import { FormattedMessage } from 'react-intl';
 import { ReactEventHandler } from 'react';
-import {
-  Card,
-  CardActionArea,
-  Fade,
-  Grid,
-  Typography,
-} from '@material-ui/core';
+import { Fade, Grid, Typography } from '@material-ui/core';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 
+import ClickableCard from './ClickableCard';
 import ZetkinRelativeTime from 'components/ZetkinRelativeTime';
 import { ZetkinView } from 'types/zetkin';
 
@@ -34,36 +29,30 @@ const ViewCard: React.FunctionComponent<ViewCardProps> = ({
 
   return (
     <Fade in>
-      <Card>
-        <CardActionArea
-          className={classes.action}
-          onClick={onClick}
-          value={view.id}
+      <ClickableCard onClick={onClick} value={view.id}>
+        <Grid
+          className={classes.content}
+          container
+          direction="column"
+          justifyContent="space-between"
         >
-          <Grid
-            className={classes.content}
-            container
-            direction="column"
-            justifyContent="space-between"
-          >
-            <Grid item>
-              <Typography variant="h5">{view.title}</Typography>
-              <Typography variant="body2">{view.description}</Typography>
-            </Grid>
-            <Grid item>
-              <Typography component="p" variant="caption">
-                <FormattedMessage
-                  id="misc.views.suggested.created"
-                  values={{ name: view.owner.name }}
-                />
-              </Typography>
-              <Typography component="p" variant="caption">
-                <ZetkinRelativeTime datetime={view.created} />
-              </Typography>
-            </Grid>
+          <Grid item>
+            <Typography variant="h5">{view.title}</Typography>
+            <Typography variant="body2">{view.description}</Typography>
           </Grid>
-        </CardActionArea>
-      </Card>
+          <Grid item>
+            <Typography component="p" variant="caption">
+              <FormattedMessage
+                id="misc.views.suggested.created"
+                values={{ name: view.owner.name }}
+              />
+            </Typography>
+            <Typography component="p" variant="caption">
+              <ZetkinRelativeTime datetime={view.created} />
+            </Typography>
+          </Grid>
+        </Grid>
+      </ClickableCard>
     </Fade>
   );
 };

@@ -21,6 +21,10 @@ people:
   tabs:
     views: Views
   title: People
+person:
+  tabs:
+    profile: Profile
+    timeline: Timeline
 search:
   error: There was an error searching.
   keepTypingPrompt: Keep typing to search.
