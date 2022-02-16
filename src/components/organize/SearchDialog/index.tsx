@@ -1,5 +1,7 @@
 import { FormattedMessage } from 'react-intl';
+import { makeStyles } from '@material-ui/styles';
 import { Search } from '@material-ui/icons';
+import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 import { Box, Button, Dialog } from '@material-ui/core';
 import { useEffect, useState } from 'react';
@@ -10,9 +12,17 @@ import ResultsList from './ResultsList';
 import SearchField from './SearchField';
 import { SearchResult } from 'types/search';
 import useDebounce from 'hooks/useDebounce';
-import { useQuery } from 'react-query';
 
-export const MINIMUM_CHARACTERS = 3;
+export const MINIMUM_CHARACTERS = 2;
+
+const useStyles = makeStyles(() => ({
+  topPaperScrollBody: {
+    verticalAlign: 'top',
+  },
+  topScrollPaper: {
+    alignItems: 'flex-start',
+  },
+}));
 
 const getSearchResults = (orgId: string, searchQuery: string) => {
   return async () => {
@@ -31,6 +41,7 @@ const SearchDialog: React.FunctionComponent = () => {
   const [open, setOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
+  const classes = useStyles();
   const router = useRouter();
   const { orgId } = router.query as { orgId: string };
 
@@ -47,7 +58,6 @@ const SearchDialog: React.FunctionComponent = () => {
   const {
     refetch,
     data: searchResults,
-    isIdle,
     isFetching,
     isError,
   } = useQuery(
@@ -74,6 +84,10 @@ const SearchDialog: React.FunctionComponent = () => {
         <FormattedMessage id={`layout.organize.search.label`} />
       </Button>
       <Dialog
+        classes={{
+          paperScrollBody: classes.topPaperScrollBody,
+          scrollPaper: classes.topScrollPaper,
+        }}
         fullWidth
         onClose={() => {
           setOpen(false);
@@ -82,13 +96,12 @@ const SearchDialog: React.FunctionComponent = () => {
         open={open}
       >
         <Box p={4}>
-          <SearchField onChange={(e) => setSearchQuery(e.target.value)} />
-          <ResultsList
+          <SearchField
             error={isError}
-            loading={isIdle || isFetching}
-            results={searchResults || []}
-            searchQuery={searchQuery}
+            loading={isFetching}
+            onChange={(e) => setSearchQuery(e.target.value)}
           />
+          {searchResults && <ResultsList results={searchResults} />}
         </Box>
       </Dialog>
     </>
