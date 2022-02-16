@@ -5,7 +5,8 @@ import {
   createUseQuery,
 } from './utils/resourceHookFactories';
 
-import { ZetkinOrganization, ZetkinPerson } from '../types/zetkin';
+import { OrganisationTree } from 'components/organize/people/PersonOrganisationsCard/OrganisationsTree';
+import { ZetkinPerson } from 'types/zetkin';
 
 export const personResource = (orgId: string, personId: string) => {
   const key = ['person', personId];
@@ -22,12 +23,6 @@ export const personResource = (orgId: string, personId: string) => {
       }
     ),
   };
-};
-
-export type OrganisationTree = ZetkinOrganization & {
-  connected: boolean;
-  descendants: OrganisationTree[];
-  parentId: number;
 };
 
 export const personOrganisationsResource = (

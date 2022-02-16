@@ -14,7 +14,13 @@ import {
   ListItemText,
 } from '@material-ui/core';
 
-import { OrganisationTree } from 'api/people';
+import { ZetkinOrganization } from 'types/zetkin';
+
+export type OrganisationTree = ZetkinOrganization & {
+  connected: boolean;
+  descendants: OrganisationTree[];
+  parentId: number;
+};
 
 type OrganisationProps = {
   editable: boolean;
