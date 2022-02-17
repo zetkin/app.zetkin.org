@@ -24,6 +24,12 @@ taskDetails:
   expiresTime: Expires Time
   instructionsLabel: Instructions
   publishedTime: Publish Time
+  reassignInterval:
+    label: Reassign interval
+    value: Reassigns {value, plural, =1{one hour} other{# hours}} after completion
+  reassignLimit:
+    label: Reassign limit
+    value: Repeats at most {value, plural, =1{one time} other{# times}} per person
   statusLabel: Status
   timeEstimateLabel: Estimated time to complete
   title: Task Details
