@@ -14,18 +14,12 @@ import {
   ListItemText,
 } from '@material-ui/core';
 
-import { ZetkinOrganization } from 'types/zetkin';
-
-export type OrganisationTree = ZetkinOrganization & {
-  connected: boolean;
-  descendants: OrganisationTree[];
-  parentId: number;
-};
+import { PersonOrganisation } from 'utils/organize/people';
 
 type OrganisationProps = {
   editable: boolean;
   level?: number;
-  organisationTree: OrganisationTree;
+  organisationTree: PersonOrganisation;
 };
 
 export const OrganisationsTree: React.FunctionComponent<OrganisationProps> = ({
@@ -33,8 +27,8 @@ export const OrganisationsTree: React.FunctionComponent<OrganisationProps> = ({
   level = 0,
   organisationTree,
 }) => {
-  const { connected, descendants, parentId, title } = organisationTree;
-  const hasChildren = !!descendants?.length;
+  const { connected, sub_orgs, parent, title } = organisationTree;
+  const hasChildren = !!sub_orgs?.length;
 
   const getIcon = () => {
     if (level === 0) return <AccountTree />;
@@ -47,7 +41,7 @@ export const OrganisationsTree: React.FunctionComponent<OrganisationProps> = ({
       <ListItem>
         <ListItemIcon>{getIcon()}</ListItemIcon>
         <ListItemText primary={title} style={{ marginLeft: level * 10 }} />
-        <Fade in={editable && !!parentId && connected}>
+        <Fade in={editable && !!parent && connected}>
           <ListItemSecondaryAction>
             <IconButton edge="end">
               <Delete />
@@ -57,7 +51,7 @@ export const OrganisationsTree: React.FunctionComponent<OrganisationProps> = ({
       </ListItem>
       <Divider style={{ marginLeft: 72 }} />
       {hasChildren &&
-        descendants.map((org) => (
+        sub_orgs.map((org) => (
           <OrganisationsTree
             key={org.id}
             editable={editable}

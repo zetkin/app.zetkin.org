@@ -1,13 +1,12 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 
 import { createApiFetch } from 'utils/apiFetch';
+import { ZetkinMembership } from 'types/zetkin';
+import { flattenTree, nestByParentId } from 'utils/organize/organizations';
 import {
   getConnectedOrganisations,
   getPersonOrganisations,
-  nestByParentId,
-  PersonOrganisation,
 } from 'utils/organize/people';
-import { ZetkinMembership, ZetkinOrganization } from 'types/zetkin';
 
 const getOrganisationTrees = async (
   req: NextApiRequest & { query: Record<string, string> },
@@ -29,7 +28,9 @@ const getOrganisationTrees = async (
 
   try {
     const rootOrgRes = await apiFetch(`/orgs/${orgId}`);
-    const subOrgRes = await apiFetch(`/orgs/${orgId}/sub_organizations`);
+    const subOrgRes = await apiFetch(
+      `/orgs/${orgId}/sub_organizations?recursive`
+    );
     const connectionsRes = await apiFetch(
       `/orgs/${orgId}/people/${personId}/connections`
     );
@@ -39,35 +40,27 @@ const getOrganisationTrees = async (
     const { data: personConnections }: { data: Partial<ZetkinMembership>[] } =
       await connectionsRes.json();
 
-    // Map root organisation and all sub-organisations into flat array
-    const subOrgsPartial = subOrgs.map((org: ZetkinOrganization) => ({
-      id: org.id,
-      is_active: org.is_active,
-      parentId: org?.parent?.id,
-      title: org.title,
-    }));
-    const allOrgs: PersonOrganisation[] = [
-      {
-        id: rootOrg.id,
-        is_active: rootOrg.is_active,
-        parentId: null,
-        title: rootOrg.title,
-      },
-    ].concat(subOrgsPartial);
+    const orgTree = { ...rootOrg, sub_orgs: subOrgs };
 
     // First pass - include all orgs that the member is directly connected to
-    const connectedOrgs = getConnectedOrganisations(allOrgs, personConnections);
+    const connectedOrgs = getConnectedOrganisations(
+      flattenTree(orgTree),
+      personConnections
+    );
 
     // Second pass - include all parent orgs, recursively, of any org the member is connected to
-    const personOrgs = getPersonOrganisations(allOrgs, connectedOrgs);
+    const personOrgs = getPersonOrganisations(
+      flattenTree(orgTree),
+      connectedOrgs
+    );
 
     // Return organisations trees
     res.status(200).json({
       data: {
         memberships: connectedOrgs,
-        organisationTree: nestByParentId(allOrgs, null)[0],
+        organisationTree: orgTree,
         personOrganisationTree: nestByParentId(personOrgs, null)[0],
-        subOrganisations: subOrgsPartial,
+        subOrganisations: flattenTree(orgTree),
       },
     });
   } catch (e) {

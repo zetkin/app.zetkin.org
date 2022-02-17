@@ -6,7 +6,6 @@ import {
   createUseQuery,
 } from './utils/resourceHookFactories';
 
-import { OrganisationTree } from 'components/organize/people/PersonOrganisationsCard/OrganisationsTree';
 import { PersonOrganisation } from 'utils/organize/people';
 import { ZetkinOrganization, ZetkinPerson } from 'types/zetkin';
 
@@ -39,8 +38,8 @@ export const personOrganisationsResource = (
     useAdd: createUseMutationPut({ key, url: connectionsUrl }),
     useQuery: createUseQuery<{
       memberships: PersonOrganisation[];
-      organisationTree: OrganisationTree;
-      personOrganisationTree: OrganisationTree;
+      organisationTree: ZetkinOrganization;
+      personOrganisationTree: PersonOrganisation;
       subOrganisations: ZetkinOrganization[];
     }>(key, orgsUrl),
   };
