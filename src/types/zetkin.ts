@@ -76,7 +76,8 @@ export interface ZetkinUser {
 export interface ZetkinOrganization {
   id: number;
   is_active: boolean;
-  parent?: ZetkinOrganization;
+  parent?: Partial<ZetkinOrganization>;
+  sub_orgs: ZetkinOrganization[];
   title: string;
 }
 
