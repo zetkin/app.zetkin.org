@@ -18,7 +18,7 @@ export const viewsResource = (orgId: string) => {
       key,
       `/views/createNew?orgId=${orgId}`
     ),
-    useDelete: createUseMutationDelete(key, url),
+    useDelete: createUseMutationDelete({ key, url }),
     useQuery: createUseQuery<ZetkinView[]>(key, url),
   };
 };
