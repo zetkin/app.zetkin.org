@@ -7,7 +7,7 @@ import { ZetkinOrganization } from 'types/zetkin';
 
 interface OrganisationSelectProps {
   memberships: PersonOrganisation[];
-  onSelect: (selected: ZetkinOrganization) => void;
+  onSelect: (selected?: ZetkinOrganization) => void;
   onSubmit: (selected: ZetkinOrganization) => void;
   options: ZetkinOrganization[];
   selected?: ZetkinOrganization;
@@ -24,7 +24,7 @@ const OrganisationSelect: React.FunctionComponent<OrganisationSelectProps> = ({
     evt: ChangeEvent<Record<string, string>>,
     selectedOrg: ZetkinOrganization | null
   ) => {
-    if (selectedOrg) onSelect(selectedOrg || undefined);
+    onSelect(selectedOrg || undefined);
   };
 
   return (
@@ -37,9 +37,9 @@ const OrganisationSelect: React.FunctionComponent<OrganisationSelectProps> = ({
             memberships.map((m) => m.id).includes(option.id) ||
             !option.is_active
           }
-          getOptionLabel={(option) =>
-            `${option.title}${option.is_active ? '' : ' (inactive)'}`
-          }
+          getOptionLabel={(option) => {
+            return `${option?.title}${option?.is_active ? '' : ' (inactive)'}`;
+          }}
           inputValue={selected?.title || ''}
           onChange={onChange}
           options={options}
@@ -50,6 +50,7 @@ const OrganisationSelect: React.FunctionComponent<OrganisationSelectProps> = ({
               variant="outlined"
             />
           )}
+          value={selected}
         />
       </Box>
       <Box

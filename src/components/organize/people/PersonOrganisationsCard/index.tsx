@@ -40,7 +40,7 @@ const PersonOrganisationsCard: React.FunctionComponent<
     }
   }, [editable]);
 
-  const onSelectSubOrg = (selectedOrg: ZetkinOrganization) => {
+  const onSelectSubOrg = (selectedOrg?: ZetkinOrganization) => {
     setSelected(selectedOrg);
   };
 
@@ -89,7 +89,7 @@ const PersonOrganisationsCard: React.FunctionComponent<
               memberships={data.memberships}
               onSelect={onSelectSubOrg}
               onSubmit={onSubmitSubOrg}
-              options={data.subOrganisations}
+              options={data.subOrganisations.filter((org) => !!org.parent)}
               selected={selected}
             />
           </ListItem>
