@@ -23,6 +23,8 @@ const SpeakToFriendAboutReferendum: ZetkinTask = {
     reducing homelessness.
     `,
   organization: KPD,
+  reassign_interval: null,
+  reassign_limit: null,
   target: {
     filter_spec: [],
     id: 1,

@@ -26,6 +26,8 @@ const VisitReferendumWebsite: ZetkinTask<VisitLinkConfig> = {
     Visit this website to learn more about the referendum
     `,
   organization: KPD,
+  reassign_interval: null,
+  reassign_limit: null,
   target: {
     filter_spec: [],
     id: 2,
