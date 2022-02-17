@@ -2,6 +2,7 @@
 import {
   createPrefetch,
   createUseMutation,
+  createUseMutationPut,
   createUseQuery,
 } from './utils/resourceHookFactories';
 
@@ -31,14 +32,16 @@ export const personOrganisationsResource = (
   personId: string
 ) => {
   const key = ['personOrganisations', personId];
-  const url = `/organize/${orgId}/people/${personId}/organizations`;
+  const orgsUrl = `/organize/${orgId}/people/${personId}/organizations`;
+  const connectionsUrl = `/orgs/${orgId}/people/${personId}/connections`;
 
   return {
+    useAdd: createUseMutationPut({ key, url: connectionsUrl }),
     useQuery: createUseQuery<{
       memberships: PersonOrganisation[];
       organisationTree: OrganisationTree;
       personOrganisationTree: OrganisationTree;
       subOrganisations: ZetkinOrganization[];
-    }>(key, url),
+    }>(key, orgsUrl),
   };
 };

@@ -55,10 +55,10 @@ const PersonProfilePage: PageWithLayout<PersonProfilePageProps> = ({
         </title>
       </Head>
       <Grid container direction="row" spacing={6}>
-        <Grid item md={4}>
+        <Grid item lg={4}>
           <PersonDetailsCard {...{ person }} />
         </Grid>
-        <Grid item md={4}>
+        <Grid item lg={4}>
           <PersonOrganisationsCard {...{ orgId, personId }} />
         </Grid>
       </Grid>

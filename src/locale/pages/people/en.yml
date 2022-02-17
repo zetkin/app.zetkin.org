@@ -5,4 +5,5 @@ person:
   editButtonClose: Stop editing {title}
   organisations:
     add: Add a new sub-organisation
+    addError: This organisation could not be added
     title: Organisations

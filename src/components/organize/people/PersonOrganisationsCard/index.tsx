@@ -8,13 +8,14 @@ import {
   ListItemIcon,
   ListItemText,
 } from '@material-ui/core';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 import OrganisationSelect from './OrganisationSelect';
 import { OrganisationsTree } from './OrganisationsTree';
 import PersonCard from '../PersonCard';
 import { personOrganisationsResource } from 'api/people';
 import { PersonProfilePageProps } from 'pages/organize/[orgId]/people/[personId]';
+import SnackbarContext from 'hooks/SnackbarContext';
 import { ZetkinOrganization } from 'types/zetkin';
 
 const PersonOrganisationsCard: React.FunctionComponent<
@@ -24,7 +25,13 @@ const PersonOrganisationsCard: React.FunctionComponent<
   const [addable, setAddable] = useState<boolean>(false);
   const [selected, setSelected] = useState<ZetkinOrganization>();
   const intl = useIntl();
+  const { showSnackbar } = useContext(SnackbarContext);
   const { data } = personOrganisationsResource(orgId, personId).useQuery();
+
+  const createConnectionMutation = personOrganisationsResource(
+    orgId,
+    personId
+  ).useAdd();
 
   useEffect(() => {
     if (!editable) {
@@ -33,8 +40,22 @@ const PersonOrganisationsCard: React.FunctionComponent<
     }
   }, [editable]);
 
-  const onSelectSubOrg = (selectedOrg: ZetkinOrganization | undefined) => {
+  const onSelectSubOrg = (selectedOrg: ZetkinOrganization) => {
     setSelected(selectedOrg);
+  };
+
+  const onSubmitSubOrg = () => {
+    if (selected)
+      createConnectionMutation.mutate(selected.id, {
+        onError: () =>
+          showSnackbar(
+            'error',
+            intl.formatMessage({
+              id: 'pages.people.person.organisations.addError',
+            })
+          ),
+        onSuccess: () => setSelected(undefined),
+      });
   };
 
   if (!data?.organisationTree) return null;
@@ -67,6 +88,7 @@ const PersonOrganisationsCard: React.FunctionComponent<
             <OrganisationSelect
               memberships={data.memberships}
               onSelect={onSelectSubOrg}
+              onSubmit={onSubmitSubOrg}
               options={data.subOrganisations}
               selected={selected}
             />
