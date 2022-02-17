@@ -12,6 +12,7 @@ import {
   ListItemIcon,
   ListItemSecondaryAction,
   ListItemText,
+  makeStyles,
 } from '@material-ui/core';
 
 import { PersonOrganisation } from 'utils/organize/people';
@@ -24,14 +25,28 @@ type OrganisationProps = {
   organisationTree: PersonOrganisation;
 };
 
+const useStyles = makeStyles({
+  divider: {
+    marginLeft: 72,
+  },
+  inactive: {
+    opacity: 0.3,
+  },
+  listItemText: {
+    marginLeft: ({ level }: { level: number }) => level * 10,
+  },
+});
+
 export const OrganisationsTree: React.FunctionComponent<OrganisationProps> = ({
   editable,
   level = 0,
   onClickRemove,
   organisationTree,
 }) => {
-  const { connected, id, sub_orgs, parent, title } = organisationTree;
+  const { connected, id, is_active, sub_orgs, parent, title } =
+    organisationTree;
   const hasChildren = !!sub_orgs?.length;
+  const classes = useStyles({ level });
 
   const getIcon = () => {
     if (level === 0) return <AccountTree />;
@@ -41,10 +56,13 @@ export const OrganisationsTree: React.FunctionComponent<OrganisationProps> = ({
 
   return (
     <>
-      <ListItem>
+      <ListItem className={is_active ? undefined : classes.inactive}>
         <ListItemIcon>{getIcon()}</ListItemIcon>
-        <ListItemText primary={title} style={{ marginLeft: level * 10 }} />
-        <Fade in={editable && !!parent && connected}>
+        <ListItemText className={classes.listItemText} primary={title} />
+        <Fade
+          in={editable && !!parent && connected}
+          timeout={300 + Math.random() * 500}
+        >
           <ListItemSecondaryAction>
             <IconButton edge="end" onClick={() => onClickRemove(id)}>
               <Delete />
@@ -52,7 +70,7 @@ export const OrganisationsTree: React.FunctionComponent<OrganisationProps> = ({
           </ListItemSecondaryAction>
         </Fade>
       </ListItem>
-      <Divider style={{ marginLeft: 72 }} />
+      <Divider className={classes.divider} />
       {hasChildren &&
         sub_orgs.map((org) => (
           <OrganisationsTree

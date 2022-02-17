@@ -10,7 +10,8 @@ export const nestByParentId = (
     .map((item) => ({
       ...item,
       sub_orgs: nestByParentId(items, item.id),
-    }));
+    }))
+    .sort((a, b) => (a.title > b.title ? 1 : -1));
 };
 
 export const flattenTree = (

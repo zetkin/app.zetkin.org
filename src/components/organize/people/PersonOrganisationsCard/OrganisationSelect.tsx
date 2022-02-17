@@ -1,6 +1,6 @@
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { Box, Button, TextField } from '@material-ui/core';
-import React, { ChangeEvent } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { PersonOrganisation } from 'utils/organize/people';
 import { ZetkinOrganization } from 'types/zetkin';
@@ -20,12 +20,10 @@ const OrganisationSelect: React.FunctionComponent<OrganisationSelectProps> = ({
   options,
   selected,
 }) => {
-  const onChange = (
-    evt: ChangeEvent<Record<string, string>>,
-    selectedOrg: ZetkinOrganization | null
-  ) => {
-    onSelect(selectedOrg || undefined);
-  };
+  const [highlighted, setHighlighted] = useState<ZetkinOrganization>();
+  const [inputValue, setInputValue] = useState<string>('');
+
+  useEffect(() => setInputValue(selected?.title || ''), [selected]);
 
   return (
     <Box display="flex" flexDirection="row" width="100%">
@@ -40,8 +38,12 @@ const OrganisationSelect: React.FunctionComponent<OrganisationSelectProps> = ({
           getOptionLabel={(option) => {
             return `${option?.title}${option?.is_active ? '' : ' (inactive)'}`;
           }}
-          inputValue={selected?.title || ''}
-          onChange={onChange}
+          inputValue={inputValue}
+          onClose={() => onSelect(highlighted)}
+          onHighlightChange={(evt, option) =>
+            setHighlighted(option || undefined)
+          }
+          onInputChange={(evt, value) => setInputValue(value)}
           options={options}
           renderInput={(params) => (
             <TextField
@@ -50,7 +52,6 @@ const OrganisationSelect: React.FunctionComponent<OrganisationSelectProps> = ({
               variant="outlined"
             />
           )}
-          value={selected}
         />
       </Box>
       <Box

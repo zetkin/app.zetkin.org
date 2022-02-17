@@ -72,6 +72,7 @@ const PersonOrganisationsCard: React.FunctionComponent<
                 id: 'pages.people.person.organisations.removeError',
               })
             ),
+          onSuccess: () => setSelected(undefined),
         });
       },
     });

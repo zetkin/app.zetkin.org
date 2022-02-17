@@ -60,7 +60,9 @@ const getOrganisationTrees = async (
         memberships: connectedOrgs,
         organisationTree: orgTree,
         personOrganisationTree: nestByParentId(personOrgs, null)[0],
-        subOrganisations: flattenTree(orgTree),
+        subOrganisations: flattenTree(orgTree).sort((a, b) =>
+          a.title > b.title ? 1 : -1
+        ),
       },
     });
   } catch (e) {
