@@ -10,6 +10,7 @@ import {
 } from '@material-ui/core';
 import { useContext, useEffect, useState } from 'react';
 
+import { ConfirmDialogContext } from 'hooks/ConfirmDialogProvider';
 import OrganisationSelect from './OrganisationSelect';
 import { OrganisationsTree } from './OrganisationsTree';
 import PersonCard from '../PersonCard';
@@ -25,13 +26,15 @@ const PersonOrganisationsCard: React.FunctionComponent<
   const [addable, setAddable] = useState<boolean>(false);
   const [selected, setSelected] = useState<ZetkinOrganization>();
   const intl = useIntl();
+  const { showConfirmDialog } = useContext(ConfirmDialogContext);
   const { showSnackbar } = useContext(SnackbarContext);
   const { data } = personOrganisationsResource(orgId, personId).useQuery();
 
-  const createConnectionMutation = personOrganisationsResource(
+  const addOrgMutation = personOrganisationsResource(orgId, personId).useAdd();
+  const removeOrgMutation = personOrganisationsResource(
     orgId,
     personId
-  ).useAdd();
+  ).useRemove();
 
   useEffect(() => {
     if (!editable) {
@@ -40,13 +43,13 @@ const PersonOrganisationsCard: React.FunctionComponent<
     }
   }, [editable]);
 
-  const onSelectSubOrg = (selectedOrg?: ZetkinOrganization) => {
+  const selectSubOrg = (selectedOrg?: ZetkinOrganization) => {
     setSelected(selectedOrg);
   };
 
-  const onSubmitSubOrg = () => {
+  const submitSubOrg = () => {
     if (selected)
-      createConnectionMutation.mutate(selected.id, {
+      addOrgMutation.mutate(selected.id, {
         onError: () =>
           showSnackbar(
             'error',
@@ -56,6 +59,22 @@ const PersonOrganisationsCard: React.FunctionComponent<
           ),
         onSuccess: () => setSelected(undefined),
       });
+  };
+
+  const removeSubOrg = (subOrgId: ZetkinOrganization['id']) => {
+    showConfirmDialog({
+      onSubmit: () => {
+        removeOrgMutation.mutate(subOrgId, {
+          onError: () =>
+            showSnackbar(
+              'error',
+              intl.formatMessage({
+                id: 'pages.people.person.organisations.removeError',
+              })
+            ),
+        });
+      },
+    });
   };
 
   if (!data?.organisationTree) return null;
@@ -68,6 +87,7 @@ const PersonOrganisationsCard: React.FunctionComponent<
       <List disablePadding>
         <OrganisationsTree
           editable={editable}
+          onClickRemove={removeSubOrg}
           organisationTree={data.personOrganisationTree}
         />
         <Collapse in={editable && !addable}>
@@ -87,8 +107,8 @@ const PersonOrganisationsCard: React.FunctionComponent<
           <ListItem color="primary">
             <OrganisationSelect
               memberships={data.memberships}
-              onSelect={onSelectSubOrg}
-              onSubmit={onSubmitSubOrg}
+              onSelect={selectSubOrg}
+              onSubmit={submitSubOrg}
               options={data.subOrganisations.filter((org) => !!org.parent)}
               selected={selected}
             />

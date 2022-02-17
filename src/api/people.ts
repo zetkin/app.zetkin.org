@@ -2,6 +2,7 @@
 import {
   createPrefetch,
   createUseMutation,
+  createUseMutationDelete,
   createUseMutationPut,
   createUseQuery,
 } from './utils/resourceHookFactories';
@@ -42,5 +43,6 @@ export const personOrganisationsResource = (
       personOrganisationTree: PersonOrganisation;
       subOrganisations: ZetkinOrganization[];
     }>(key, orgsUrl),
+    useRemove: createUseMutationDelete({ key, url: connectionsUrl }),
   };
 };
