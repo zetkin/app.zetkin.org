@@ -17,6 +17,7 @@ import {
 import getTaskStatus, { TASK_STATUS } from 'utils/getTaskStatus';
 
 import CollectDemographicsFields from './fields/CollectDemographicsFields';
+import ReassignFields from './fields/ReassignFields';
 import ShareLinkFields from './fields/ShareLinkFields';
 import TimeEstimateField from './fields/TimeEstimateField';
 import VisitLinkFields from './fields/VisitLinkFields';
@@ -29,7 +30,11 @@ import {
   isExpiresThird,
   isPublishedFirst,
 } from './utils';
-import { DEFAULT_TIME_ESTIMATE, TASK_DETAILS_FIELDS } from './constants';
+import {
+  DEFAULT_REASSIGN_INTERVAL,
+  DEFAULT_TIME_ESTIMATE,
+  TASK_DETAILS_FIELDS,
+} from './constants';
 
 interface TaskDetailsFormProps {
   onSubmit: (task: ZetkinTaskRequestBody) => void;
@@ -132,9 +137,24 @@ const TaskDetailsForm = ({
         ? null
         : newTaskValues.time_estimate;
 
+    const reassign_interval =
+      (newTaskValues.reassign_interval as number | string) ===
+      DEFAULT_REASSIGN_INTERVAL
+        ? null
+        : newTaskValues.reassign_interval;
+
+    // Value from widget is string, but typed as number. So convert to int
+    // or null, depending on whether interval was set or not.
+    const reassign_limit =
+      reassign_interval && newTaskValues.reassign_limit
+        ? parseInt(newTaskValues.reassign_limit.toString())
+        : null;
+
     onSubmit({
       ...newTaskValues,
       config,
+      reassign_interval,
+      reassign_limit,
       time_estimate,
     });
   };
@@ -156,6 +176,8 @@ const TaskDetailsForm = ({
         expires: task?.expires,
         instructions: task?.instructions,
         published: task?.published,
+        reassign_interval: task?.reassign_interval,
+        reassign_limit: task?.reassign_limit,
         time_estimate: task?.time_estimate || DEFAULT_TIME_ESTIMATE,
         title: task?.title,
         type: task?.type,
@@ -291,6 +313,8 @@ const TaskDetailsForm = ({
             margin="normal"
             name={TASK_DETAILS_FIELDS.EXPIRES}
           />
+
+          <ReassignFields />
 
           <SubmitCancelButtons
             onCancel={onCancel}
