@@ -34,9 +34,12 @@ const OrganisationSelect: React.FunctionComponent<OrganisationSelectProps> = ({
           clearOnEscape
           fullWidth
           getOptionDisabled={(option) =>
-            memberships.map((m) => m.id).includes(option.id)
+            memberships.map((m) => m.id).includes(option.id) ||
+            !option.is_active
           }
-          getOptionLabel={(option) => option.title}
+          getOptionLabel={(option) =>
+            `${option.title}${option.is_active ? '' : ' (inactive)'}`
+          }
           inputValue={selected?.title || ''}
           onChange={onChange}
           options={options}

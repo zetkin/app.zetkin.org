@@ -42,11 +42,17 @@ const getOrganisationTrees = async (
     // Map root organisation and all sub-organisations into flat array
     const subOrgsPartial = subOrgs.map((org: ZetkinOrganization) => ({
       id: org.id,
+      is_active: org.is_active,
       parentId: org?.parent?.id,
       title: org.title,
     }));
     const allOrgs: PersonOrganisation[] = [
-      { id: rootOrg.id, parentId: null, title: rootOrg.title },
+      {
+        id: rootOrg.id,
+        is_active: rootOrg.is_active,
+        parentId: null,
+        title: rootOrg.title,
+      },
     ].concat(subOrgsPartial);
 
     // First pass - include all orgs that the member is directly connected to
