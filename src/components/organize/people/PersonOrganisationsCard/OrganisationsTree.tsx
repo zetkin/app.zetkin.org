@@ -5,6 +5,7 @@ import {
   SubdirectoryArrowRight,
 } from '@material-ui/icons';
 import {
+  Collapse,
   Divider,
   Fade,
   IconButton,
@@ -55,13 +56,13 @@ export const OrganisationsTree: React.FunctionComponent<OrganisationProps> = ({
   };
 
   return (
-    <>
+    <Collapse appear in>
       <ListItem className={is_active ? undefined : classes.inactive}>
         <ListItemIcon>{getIcon()}</ListItemIcon>
         <ListItemText className={classes.listItemText} primary={title} />
         <Fade
           in={editable && !!parent && connected}
-          timeout={300 + Math.random() * 500}
+          timeout={400 + Math.random() * 400}
         >
           <ListItemSecondaryAction>
             <IconButton edge="end" onClick={() => onClickRemove(id)}>
@@ -81,6 +82,6 @@ export const OrganisationsTree: React.FunctionComponent<OrganisationProps> = ({
             organisationTree={org}
           />
         ))}
-    </>
+    </Collapse>
   );
 };
