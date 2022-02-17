@@ -22,7 +22,7 @@ const SearchFieldIcon: React.FunctionComponent<{
         <CircularProgress size={24} />
       ) : error ? (
         <Tooltip title="Error making the search request">
-          <Error color="error" />
+          <Error color="error" data-testid="SearchDialog-errorIndicator" />
         </Tooltip>
       ) : (
         // Default
@@ -59,6 +59,7 @@ const SearchField: React.FunctionComponent<SearchFieldProps> = ({
         id: 'layout.organize.search.label',
       })}
       fullWidth
+      id="SearchDialog-inputField"
       InputProps={{
         startAdornment: <SearchFieldIcon error={error} loading={loading} />,
       }}

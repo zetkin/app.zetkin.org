@@ -80,7 +80,11 @@ const SearchDialog: React.FunctionComponent = () => {
   return (
     <>
       {/* Activator */}
-      <Button onClick={() => setOpen(true)} startIcon={<Search />}>
+      <Button
+        data-testId="SearchDialog-activator"
+        onClick={() => setOpen(true)}
+        startIcon={<Search />}
+      >
         <FormattedMessage id={`layout.organize.search.label`} />
       </Button>
       <Dialog

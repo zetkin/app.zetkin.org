@@ -16,7 +16,7 @@ const PersonListItem: React.FunctionComponent<{ person: ZetkinPerson }> = ({
       href={`/organize/${orgId}/people/${person.id}`}
       passHref
     >
-      <ListItem button component="a">
+      <ListItem button component="a" data-testid="SearchDialog-resultsListItem">
         <ListItemAvatar>
           <Avatar src={`/api/orgs/${orgId}/people/${person.id}/avatar`} />
         </ListItemAvatar>

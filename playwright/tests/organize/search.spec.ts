@@ -1,0 +1,89 @@
+import { expect } from '@playwright/test';
+import test from '../../fixtures/next';
+
+import KPD from '../../mockData/orgs/KPD';
+import ReferendumSignatures from '../../mockData/orgs/KPD/campaigns/ReferendumSignatures';
+import RosaLuxemburg from '../../mockData/users/RosaLuxemburg';
+import SpeakToFriendAboutReferendum from '../../mockData/orgs/KPD/campaigns/ReferendumSignatures/tasks/SpeakToFriend';
+
+test.describe('Search', async () => {
+  test.beforeEach(async ({ login, moxy }) => {
+    moxy.setZetkinApiMock('/orgs/1', 'get', KPD);
+    moxy.setZetkinApiMock('/orgs/1/campaigns/1', 'get', ReferendumSignatures);
+    moxy.setZetkinApiMock('/orgs/1/campaigns/1/actions', 'get', []);
+    moxy.setZetkinApiMock('/orgs/1/campaigns/1/tasks', 'get', []);
+    moxy.setZetkinApiMock('/orgs/1/tasks', 'get', []);
+    login();
+  });
+
+  test('shows error if error fetching results', async ({
+    page,
+    moxy,
+    appUri,
+  }) => {
+    moxy.setZetkinApiMock('/orgs/1/search/person', 'post', [], 400);
+    moxy.setZetkinApiMock('/orgs/1/search/campaign', 'post', [
+      ReferendumSignatures,
+    ]);
+    moxy.setZetkinApiMock('/orgs/1/search/task', 'post', [
+      SpeakToFriendAboutReferendum,
+    ]);
+
+    await page.goto(appUri + '/organize/1/campaigns/1');
+
+    // Open modal
+    await page.click('data-testid=SearchDialog-activator');
+
+    // Type some characters
+    await page.fill('#SearchDialog-inputField', 'some input');
+
+    // Wait for debounce
+    await page.waitForTimeout(10000); // Time of debounce
+
+    // Check that error
+    expect(
+      await page.locator(`data-testid=SearchDialog-errorIndicator`).isVisible()
+    ).toBeTruthy();
+  });
+
+  test('shows results when user enters text', async ({
+    page,
+    moxy,
+    appUri,
+  }) => {
+    const personSearchReq = moxy.setZetkinApiMock(
+      '/orgs/1/search/person',
+      'post',
+      [RosaLuxemburg]
+    );
+    const campaignSearchReq = moxy.setZetkinApiMock(
+      '/orgs/1/search/campaign',
+      'post',
+      [ReferendumSignatures]
+    );
+    const taskSearchReq = moxy.setZetkinApiMock('/orgs/1/search/task', 'post', [
+      SpeakToFriendAboutReferendum,
+    ]);
+
+    await page.goto(appUri + '/organize/1/campaigns/1');
+
+    // Open modal
+    await page.click('data-testid=SearchDialog-activator');
+
+    // Type some characters
+    await page.fill('#SearchDialog-inputField', 'some input');
+
+    // Wait for debounce
+    await page.waitForTimeout(1000); // Time of debounce
+
+    // Check that requests were made
+    expect(personSearchReq.log()[0].mocked).toEqual(true);
+    expect(campaignSearchReq.log()[0].mocked).toEqual(true);
+    expect(taskSearchReq.log()[0].mocked).toEqual(true);
+
+    // Check that results list contains all results
+    expect(
+      await page.locator('data-testid=SearchDialog-resultsListItem').count()
+    ).toEqual(3);
+  });
+});
