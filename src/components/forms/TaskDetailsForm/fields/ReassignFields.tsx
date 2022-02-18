@@ -16,7 +16,6 @@ const ReassignFields: React.FunctionComponent = () => {
         })}
         margin="normal"
         name={TASK_DETAILS_FIELDS.REASSIGN_INTERVAL}
-        required
         select
       >
         <MenuItem value={DEFAULT_REASSIGN_INTERVAL}>
@@ -74,7 +73,6 @@ const ReassignFields: React.FunctionComponent = () => {
         })}
         margin="normal"
         name={TASK_DETAILS_FIELDS.REASSIGN_LIMIT}
-        required
         type="number"
       />
     </>
