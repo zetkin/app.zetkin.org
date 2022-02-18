@@ -82,6 +82,34 @@ const TaskDetailsCard: React.FunctionComponent<TaskDetailsCardProps> = ({
         })}
         value={task.expires && <ZetkinDateTime datetime={task.expires} />}
       />
+      <TaskProperty
+        title={intl.formatMessage({
+          id: 'misc.tasks.taskDetails.reassignInterval.label',
+        })}
+        value={
+          task.reassign_interval &&
+          intl.formatMessage(
+            { id: 'misc.tasks.taskDetails.reassignInterval.value' },
+            { value: task.reassign_interval }
+          )
+        }
+      />
+      <TaskProperty
+        title={intl.formatMessage({
+          id: 'misc.tasks.taskDetails.reassignLimit.label',
+        })}
+        value={
+          task.reassign_limit &&
+          intl.formatMessage(
+            {
+              id: 'misc.tasks.taskDetails.reassignLimit.value',
+            },
+            {
+              value: task.reassign_limit,
+            }
+          )
+        }
+      />
     </>
   );
 };

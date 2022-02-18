@@ -7,10 +7,13 @@ export enum TASK_DETAILS_FIELDS {
   PUBLISHED = 'published',
   DEADLINE = 'deadline',
   EXPIRES = 'expires',
+  REASSIGN_INTERVAL = 'reassign_interval',
+  REASSIGN_LIMIT = 'reassign_limit',
   TIME_ESTIMATE = 'time_estimate',
 }
 
 export const DEFAULT_TIME_ESTIMATE = 'noEstimate'; // Gets mapped to null when saving if this is selected value
+export const DEFAULT_REASSIGN_INTERVAL = 'noInterval'; // Gets mapped to null when saving if this is selected value
 
 export enum SHARE_LINK_FIELDS {
   DEFAULT_MESSAGE = 'config.default_message',

@@ -19,6 +19,12 @@ createTask:
     expires: Expiration Date
     instructions: Instructions
     published: Publish Time
+    reassign_interval: Reassign after completion
+    reassign_interval_options:
+      days: '{days, plural, =1 {The next day} other {after # days}}'
+      hours: After {hours, plural, =1 {one hour} other {# hours}}
+      noReassign: Never reassign
+    reassign_limit: 'Maximum number of (re)assigns:'
     timeValidationErrors:
       deadlineNotSecond: This must be scheduled after the Published Date, and before the Expiry Date
       expiresNotThird: This must be scheduled last

@@ -51,6 +51,8 @@ export interface ZetkinTask<TaskTypeConfig = AnyTaskTypeConfig> {
   time_estimate?: number | null; // Time in minutes to complete
   type: TASK_TYPE;
   config: TaskTypeConfig;
+  reassign_interval: number | null;
+  reassign_limit: number | null;
   target: ZetkinQuery;
   campaign: {
     id: number;
