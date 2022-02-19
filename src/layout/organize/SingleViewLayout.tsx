@@ -1,8 +1,9 @@
 import { useIntl } from 'react-intl';
 import { useRouter } from 'next/router';
-import { Box, makeStyles, Theme } from '@material-ui/core';
+import { Button, Box, makeStyles, Theme } from '@material-ui/core';
 import { FunctionComponent, useContext, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { useGridApiRef } from '@mui/x-data-grid-pro';
 
 import { ConfirmDialogContext } from 'hooks/ConfirmDialogProvider';
 import { defaultFetch } from 'fetching';
@@ -31,6 +32,8 @@ const useStyles = makeStyles<Theme, { deactivated: boolean }>(() => ({
 const SingleViewLayout: FunctionComponent = ({ children }) => {
   const router = useRouter();
   const { orgId, viewId } = router.query;
+  const [exportDialogOpen, setExportDialogOpen] = useState(false);
+  const gridApiRef = useGridApiRef();
 
   const [deactivated, setDeactivated] = useState(false);
   const classes = useStyles({ deactivated });
@@ -207,7 +210,10 @@ const SingleViewLayout: FunctionComponent = ({ children }) => {
             open={ exportDialogOpen }
             title= { intl.formatMessage({ id: 'pages.people.views.layout.exportMenu.title' })}>
             <div>
-                <p>Bla bla bla</p>
+                <p>Lorem Impsum</p>
+                <Button onClick={() => {
+                    console.log(gridApiRef.current.getDataAsCsv());
+                }}>Export</Button>
             </div>
         </ZetkinDialog>
       )}
