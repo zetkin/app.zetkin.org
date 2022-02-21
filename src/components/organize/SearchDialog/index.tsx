@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 
 import { defaultFetch } from 'fetching';
 import handleResponseData from 'api/utils/handleResponseData';
+import isUserTyping from 'utils/isUserTyping';
 import ResultsList from './ResultsList';
 import SearchField from './SearchField';
 import { SearchResult } from 'types/search';
@@ -45,10 +46,27 @@ const SearchDialog: React.FunctionComponent = () => {
   const router = useRouter();
   const { orgId } = router.query as { orgId: string };
 
+  const handleRouteChange = () => {
+    setOpen(false);
+  };
+
+  const handleKeydown = (e: KeyboardEvent) => {
+    if (!isUserTyping(e)) {
+      if (e.key === '/') {
+        e.preventDefault();
+        setOpen(true);
+      }
+    }
+  };
+
   useEffect(() => {
-    const handleRouteChange = () => {
-      setOpen(false);
+    document.addEventListener('keydown', handleKeydown);
+    return () => {
+      document.removeEventListener('keydown', handleKeydown);
     };
+  });
+
+  useEffect(() => {
     router.events.on('routeChangeStart', handleRouteChange);
     return () => {
       router.events.off('routeChangeStart', handleRouteChange);
