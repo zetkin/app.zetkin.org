@@ -16,6 +16,28 @@ test.describe('Search', async () => {
     login();
   });
 
+  test('opens the search dialog when entering "/" hotkey', async ({
+    page,
+    moxy,
+    appUri,
+  }) => {
+    moxy.setZetkinApiMock('/orgs/1/search/person', 'post', [RosaLuxemburg]);
+    moxy.setZetkinApiMock('/orgs/1/search/campaign', 'post', [
+      ReferendumSignatures,
+    ]);
+    moxy.setZetkinApiMock('/orgs/1/search/task', 'post', [
+      SpeakToFriendAboutReferendum,
+    ]);
+
+    await page.goto(appUri + '/organize/1/campaigns/1');
+    await page.keyboard.press('/');
+
+    // Check dialog open
+    expect(
+      await page.locator('#SearchDialog-inputField').isVisible()
+    ).toBeTruthy();
+  });
+
   test('shows error if error fetching results', async ({
     page,
     moxy,
@@ -31,14 +53,14 @@ test.describe('Search', async () => {
 
     await page.goto(appUri + '/organize/1/campaigns/1');
 
-    // Open modal
+    // Open dialog
     await page.click('data-testid=SearchDialog-activator');
 
     // Type some characters
     await page.fill('#SearchDialog-inputField', 'some input');
 
     // Wait for debounce
-    await page.waitForTimeout(10000); // Time of debounce
+    await page.waitForTimeout(1000);
 
     // Check that error
     expect(
@@ -74,7 +96,7 @@ test.describe('Search', async () => {
     await page.fill('#SearchDialog-inputField', 'some input');
 
     // Wait for debounce
-    await page.waitForTimeout(1000); // Time of debounce
+    await page.waitForTimeout(1000);
 
     // Check that requests were made
     expect(personSearchReq.log()[0].mocked).toEqual(true);

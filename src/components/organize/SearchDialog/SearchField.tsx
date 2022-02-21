@@ -1,5 +1,10 @@
 /* eslint-disable react/display-name */
-import { ChangeEventHandler, useEffect, useRef } from 'react';
+import {
+  ChangeEventHandler,
+  KeyboardEventHandler,
+  useEffect,
+  useRef,
+} from 'react';
 
 import Error from '@material-ui/icons/Error';
 import Search from '@material-ui/icons/Search';
@@ -34,12 +39,14 @@ const SearchFieldIcon: React.FunctionComponent<{
 
 interface SearchFieldProps {
   onChange: ChangeEventHandler<HTMLInputElement>;
+  onKeyDown?: KeyboardEventHandler<HTMLInputElement>;
   loading: boolean;
   error: boolean;
 }
 
 const SearchField: React.FunctionComponent<SearchFieldProps> = ({
   onChange,
+  onKeyDown,
   loading,
   error,
 }) => {
@@ -65,6 +72,7 @@ const SearchField: React.FunctionComponent<SearchFieldProps> = ({
       }}
       inputRef={input}
       onChange={onChange}
+      onKeyDown={onKeyDown}
       placeholder={intl.formatMessage({
         id: 'layout.organize.search.placeholder',
       })}

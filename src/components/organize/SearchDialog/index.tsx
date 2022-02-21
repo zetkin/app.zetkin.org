@@ -41,12 +41,18 @@ const getSearchResults = (orgId: string, searchQuery: string) => {
 const SearchDialog: React.FunctionComponent = () => {
   const [open, setOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [isTyping, setIsTyping] = useState(false);
 
   const classes = useStyles();
   const router = useRouter();
   const { orgId } = router.query as { orgId: string };
 
+  const debouncedFinishedTyping = useDebounce(async () => {
+    setIsTyping(false);
+  }, 600);
+
   const handleRouteChange = () => {
+    // Close dialog when clicking an item
     setOpen(false);
   };
 
@@ -74,26 +80,18 @@ const SearchDialog: React.FunctionComponent = () => {
   }, [router]);
 
   const {
-    refetch,
+    // refetch,
     data: searchResults,
     isFetching,
     isError,
   } = useQuery(
     ['searchResults', searchQuery],
     getSearchResults(orgId, searchQuery),
-    { enabled: false }
-  );
-
-  const debouncedSearch = useDebounce(async () => {
-    refetch();
-  }, 600);
-
-  // Watch for changes on the search field value and debounce search if changed
-  useEffect(() => {
-    if (searchQuery.length >= MINIMUM_CHARACTERS) {
-      debouncedSearch();
+    {
+      enabled: !isTyping && searchQuery.length >= MINIMUM_CHARACTERS,
+      retry: false,
     }
-  }, [searchQuery, debouncedSearch]);
+  );
 
   return (
     <>
@@ -122,6 +120,12 @@ const SearchDialog: React.FunctionComponent = () => {
             error={isError}
             loading={isFetching}
             onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyDown={() => {
+              if (!isTyping) {
+                setIsTyping(true);
+              }
+              debouncedFinishedTyping();
+            }}
           />
           {searchResults && <ResultsList results={searchResults} />}
         </Box>
