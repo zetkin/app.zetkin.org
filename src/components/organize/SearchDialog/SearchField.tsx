@@ -21,12 +21,17 @@ const SearchFieldIcon: React.FunctionComponent<{
   error: boolean;
   loading: boolean;
 }> = ({ loading, error }) => {
+  const intl = useIntl();
   return (
     <InputAdornment position="start">
       {loading ? (
         <CircularProgress size={24} />
       ) : error ? (
-        <Tooltip title="Error making the search request">
+        <Tooltip
+          title={intl.formatMessage({
+            id: 'layout.organize.search.error',
+          })}
+        >
           <Error color="error" data-testid="SearchDialog-errorIndicator" />
         </Tooltip>
       ) : (
