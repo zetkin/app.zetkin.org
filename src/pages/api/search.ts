@@ -47,20 +47,10 @@ const search = async (
   const apiFetch = createApiFetch(req.headers);
 
   try {
-    const peopleRequest = async () => {
-      return makeSearchRequest(SEARCH_DATA_TYPE.PERSON, query, apiFetch);
-    };
-    const campaignRequest = async () => {
-      return makeSearchRequest(SEARCH_DATA_TYPE.CAMPAIGN, query, apiFetch);
-    };
-    const taskRequest = async () => {
-      return makeSearchRequest(SEARCH_DATA_TYPE.TASK, query, apiFetch);
-    };
-
     const results = await Promise.all([
-      peopleRequest(),
-      campaignRequest(),
-      taskRequest(),
+      makeSearchRequest(SEARCH_DATA_TYPE.PERSON, query, apiFetch),
+      makeSearchRequest(SEARCH_DATA_TYPE.CAMPAIGN, query, apiFetch),
+      makeSearchRequest(SEARCH_DATA_TYPE.TASK, query, apiFetch),
     ]);
 
     const searchResults = results.flat();

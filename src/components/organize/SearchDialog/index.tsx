@@ -80,7 +80,6 @@ const SearchDialog: React.FunctionComponent = () => {
   }, [router]);
 
   const {
-    // refetch,
     data: searchResults,
     isFetching,
     isError,
