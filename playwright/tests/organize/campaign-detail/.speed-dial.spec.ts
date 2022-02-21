@@ -27,6 +27,38 @@ test.describe('Single campaign page speed dial', () => {
       moxy.setZetkinApiMock('/orgs/1/campaigns', 'get', [ReferendumSignatures]);
     });
 
+    test('user can create an offline task', async ({ page, appUri, moxy }) => {
+      // Submit create task form response
+      const { log } = moxy.setZetkinApiMock(
+        '/orgs/1/tasks',
+        'post',
+        SpeakToFriend,
+        201
+      );
+
+      // Response for task detail page
+      moxy.setZetkinApiMock('/orgs/1/tasks/1', 'get', SpeakToFriend);
+
+      // Open create task modal with URL
+      await page.goto(appUri + '/organize/1/campaigns/1#create-task');
+
+      // Fill form
+      await page.fill('#title', SpeakToFriend.title);
+      await page.fill('#instructions', SpeakToFriend.instructions);
+      await page.fill('input:near(#type)', SpeakToFriend.type);
+
+      await page.click('button > :text("Submit")');
+      await page.waitForResponse('**/orgs/1/tasks');
+      expect(log<{ config: unknown }>()[0].data?.config).toEqual({});
+
+      await page.waitForNavigation(); // Closing the modal
+      await page.waitForNavigation(); // Redirecting to new page
+
+      expect(page.url()).toEqual(
+        appUri + '/organize/1/campaigns/1/calendar/tasks/' + SpeakToFriend.id
+      );
+    });
+
     test('user can create a visit link task', async ({
       page,
       appUri,
