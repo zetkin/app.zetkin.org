@@ -4,11 +4,11 @@ import { createApiFetch } from 'utils/apiFetch';
 import { ZetkinMembership } from 'types/zetkin';
 import { flattenTree, nestByParentId } from 'utils/organize/organizations';
 import {
-  getConnectedOrganisations,
-  getPersonOrganisations,
+  getConnectedOrganizations,
+  getPersonOrganizations,
 } from 'utils/organize/people';
 
-const getOrganisationTrees = async (
+const getOrganizationTrees = async (
   req: NextApiRequest & { query: Record<string, string> },
   res: NextApiResponse
 ): Promise<void> => {
@@ -43,24 +43,24 @@ const getOrganisationTrees = async (
     const orgTree = { ...rootOrg, sub_orgs: subOrgs };
 
     // First pass - include all orgs that the member is directly connected to
-    const connectedOrgs = getConnectedOrganisations(
+    const connectedOrgs = getConnectedOrganizations(
       flattenTree(orgTree),
       personConnections
     );
 
     // Second pass - include all parent orgs, recursively, of any org the member is connected to
-    const personOrgs = getPersonOrganisations(
+    const personOrgs = getPersonOrganizations(
       flattenTree(orgTree),
       connectedOrgs
     );
 
-    // Return organisations trees
+    // Return organizations trees
     res.status(200).json({
       data: {
         memberships: connectedOrgs,
-        organisationTree: orgTree,
-        personOrganisationTree: nestByParentId(personOrgs, null)[0],
-        subOrganisations: flattenTree(orgTree).sort((a, b) =>
+        organizationTree: orgTree,
+        personOrganizationTree: nestByParentId(personOrgs, null)[0],
+        subOrganizations: flattenTree(orgTree).sort((a, b) =>
           a.title > b.title ? 1 : -1
         ),
       },
@@ -70,4 +70,4 @@ const getOrganisationTrees = async (
   }
 };
 
-export default getOrganisationTrees;
+export default getOrganizationTrees;

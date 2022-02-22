@@ -11,15 +11,15 @@ import {
 import { useContext, useEffect, useState } from 'react';
 
 import { ConfirmDialogContext } from 'hooks/ConfirmDialogProvider';
-import OrganisationSelect from './OrganisationSelect';
-import { OrganisationsTree } from './OrganisationsTree';
+import OrganizationSelect from './OrganizationSelect';
+import { OrganizationsTree } from './OrganizationsTree';
 import PersonCard from '../PersonCard';
-import { personOrganisationsResource } from 'api/people';
+import { personOrganizationsResource } from 'api/people';
 import { PersonProfilePageProps } from 'pages/organize/[orgId]/people/[personId]';
 import SnackbarContext from 'hooks/SnackbarContext';
 import { ZetkinOrganization } from 'types/zetkin';
 
-const PersonOrganisationsCard: React.FunctionComponent<
+const PersonOrganizationsCard: React.FunctionComponent<
   PersonProfilePageProps
 > = ({ orgId, personId }) => {
   const [editable, setEditable] = useState<boolean>(false);
@@ -28,10 +28,10 @@ const PersonOrganisationsCard: React.FunctionComponent<
   const intl = useIntl();
   const { showConfirmDialog } = useContext(ConfirmDialogContext);
   const { showSnackbar } = useContext(SnackbarContext);
-  const { data } = personOrganisationsResource(orgId, personId).useQuery();
+  const { data } = personOrganizationsResource(orgId, personId).useQuery();
 
-  const addOrgMutation = personOrganisationsResource(orgId, personId).useAdd();
-  const removeOrgMutation = personOrganisationsResource(
+  const addOrgMutation = personOrganizationsResource(orgId, personId).useAdd();
+  const removeOrgMutation = personOrganizationsResource(
     orgId,
     personId
   ).useRemove();
@@ -54,7 +54,7 @@ const PersonOrganisationsCard: React.FunctionComponent<
           showSnackbar(
             'error',
             intl.formatMessage({
-              id: 'pages.people.person.organisations.addError',
+              id: 'pages.people.person.organizations.addError',
             })
           ),
         onSuccess: () => setSelected(undefined),
@@ -69,7 +69,7 @@ const PersonOrganisationsCard: React.FunctionComponent<
             showSnackbar(
               'error',
               intl.formatMessage({
-                id: 'pages.people.person.organisations.removeError',
+                id: 'pages.people.person.organizations.removeError',
               })
             ),
           onSuccess: () => setSelected(undefined),
@@ -78,18 +78,18 @@ const PersonOrganisationsCard: React.FunctionComponent<
     });
   };
 
-  if (!data?.organisationTree) return null;
+  if (!data?.organizationTree) return null;
 
   return (
     <PersonCard
       onClickEdit={() => setEditable(!editable)}
-      titleId="pages.people.person.organisations.title"
+      titleId="pages.people.person.organizations.title"
     >
       <List disablePadding>
-        <OrganisationsTree
+        <OrganizationsTree
           editable={editable}
           onClickRemove={removeSubOrg}
-          organisationTree={data.personOrganisationTree}
+          organizationTree={data.personOrganizationTree}
         />
         <Collapse in={editable && !addable}>
           <ListItem button color="primary" onClick={() => setAddable(!addable)}>
@@ -99,18 +99,18 @@ const PersonOrganisationsCard: React.FunctionComponent<
             <ListItemText
               color="primary"
               primary={intl.formatMessage({
-                id: 'pages.people.person.organisations.add',
+                id: 'pages.people.person.organizations.add',
               })}
             />
           </ListItem>
         </Collapse>
         <Collapse in={editable && addable}>
           <ListItem color="primary">
-            <OrganisationSelect
+            <OrganizationSelect
               memberships={data.memberships}
               onSelect={selectSubOrg}
               onSubmit={submitSubOrg}
-              options={data.subOrganisations.filter((org) => !!org.parent)}
+              options={data.subOrganizations.filter((org) => !!org.parent)}
               selected={selected}
             />
           </ListItem>
@@ -121,4 +121,4 @@ const PersonOrganisationsCard: React.FunctionComponent<
   );
 };
 
-export default PersonOrganisationsCard;
+export default PersonOrganizationsCard;

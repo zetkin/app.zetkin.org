@@ -2,18 +2,18 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import { Box, Button, TextField } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
 
-import { PersonOrganisation } from 'utils/organize/people';
+import { PersonOrganization } from 'utils/organize/people';
 import { ZetkinOrganization } from 'types/zetkin';
 
-interface OrganisationSelectProps {
-  memberships: PersonOrganisation[];
+interface OrganizationSelectProps {
+  memberships: PersonOrganization[];
   onSelect: (selected?: ZetkinOrganization) => void;
   onSubmit: (selected: ZetkinOrganization) => void;
   options: ZetkinOrganization[];
   selected?: ZetkinOrganization;
 }
 
-const OrganisationSelect: React.FunctionComponent<OrganisationSelectProps> = ({
+const OrganizationSelect: React.FunctionComponent<OrganizationSelectProps> = ({
   memberships,
   onSelect,
   onSubmit,
@@ -48,7 +48,7 @@ const OrganisationSelect: React.FunctionComponent<OrganisationSelectProps> = ({
           renderInput={(params) => (
             <TextField
               {...params}
-              label="Sub-organisation"
+              label="Sub-organization"
               variant="outlined"
             />
           )}
@@ -77,4 +77,4 @@ const OrganisationSelect: React.FunctionComponent<OrganisationSelectProps> = ({
   );
 };
 
-export default OrganisationSelect;
+export default OrganizationSelect;

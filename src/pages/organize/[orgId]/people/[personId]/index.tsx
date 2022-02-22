@@ -4,7 +4,7 @@ import Head from 'next/head';
 
 import { PageWithLayout } from 'types';
 import PersonDetailsCard from 'components/organize/people/PersonDetailsCard';
-import PersonOrganisationsCard from 'components/organize/people/PersonOrganisationsCard';
+import PersonOrganizationsCard from 'components/organize/people/PersonOrganizationsCard';
 import { personResource } from 'api/people';
 import { scaffold } from 'utils/next';
 import SinglePersonLayout from 'layout/organize/SinglePersonLayout';
@@ -59,7 +59,7 @@ const PersonProfilePage: PageWithLayout<PersonProfilePageProps> = ({
           <PersonDetailsCard {...{ person }} />
         </Grid>
         <Grid item lg={4}>
-          <PersonOrganisationsCard {...{ orgId, personId }} />
+          <PersonOrganizationsCard {...{ orgId, personId }} />
         </Grid>
       </Grid>
     </>

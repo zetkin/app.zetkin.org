@@ -16,14 +16,14 @@ import {
   makeStyles,
 } from '@material-ui/core';
 
-import { PersonOrganisation } from 'utils/organize/people';
+import { PersonOrganization } from 'utils/organize/people';
 import { ZetkinOrganization } from 'types/zetkin';
 
-type OrganisationProps = {
+type OrganizationProps = {
   editable: boolean;
   level?: number;
   onClickRemove: (orgId: ZetkinOrganization['id']) => void;
-  organisationTree: PersonOrganisation;
+  organizationTree: PersonOrganization;
 };
 
 const useStyles = makeStyles({
@@ -38,14 +38,14 @@ const useStyles = makeStyles({
   },
 });
 
-export const OrganisationsTree: React.FunctionComponent<OrganisationProps> = ({
+export const OrganizationsTree: React.FunctionComponent<OrganizationProps> = ({
   editable,
   level = 0,
   onClickRemove,
-  organisationTree,
+  organizationTree,
 }) => {
   const { connected, id, is_active, sub_orgs, parent, title } =
-    organisationTree;
+    organizationTree;
   const hasChildren = !!sub_orgs?.length;
   const classes = useStyles({ level });
 
@@ -74,12 +74,12 @@ export const OrganisationsTree: React.FunctionComponent<OrganisationProps> = ({
       <Divider className={classes.divider} />
       {hasChildren &&
         sub_orgs.map((org) => (
-          <OrganisationsTree
+          <OrganizationsTree
             key={org.id}
             editable={editable}
             level={level + 1}
             onClickRemove={onClickRemove}
-            organisationTree={org}
+            organizationTree={org}
           />
         ))}
     </Collapse>

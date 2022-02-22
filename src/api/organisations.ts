@@ -3,8 +3,8 @@ import { createUseQuery } from './utils/resourceHookFactories';
 
 import { ZetkinOrganization } from '../types/zetkin';
 
-export const organisationResource = (orgId: string) => {
-  const key = ['organisation', orgId];
+export const organizationResource = (orgId: string) => {
+  const key = ['organization', orgId];
   const url = `/orgs/${orgId}`;
 
   return {
@@ -12,8 +12,8 @@ export const organisationResource = (orgId: string) => {
   };
 };
 
-export const organisationSubOrgsResource = (orgId: string) => {
-  const key = ['organisationsSubOrgs', orgId];
+export const organizationSubOrgsResource = (orgId: string) => {
+  const key = ['organizationsSubOrgs', orgId];
   const url = `/orgs/${orgId}/sub_organizations`;
 
   return {

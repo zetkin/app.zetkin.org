@@ -7,7 +7,7 @@ import {
   createUseQuery,
 } from './utils/resourceHookFactories';
 
-import { PersonOrganisation } from 'utils/organize/people';
+import { PersonOrganization } from 'utils/organize/people';
 import { ZetkinOrganization, ZetkinPerson } from 'types/zetkin';
 
 export const personResource = (orgId: string, personId: string) => {
@@ -27,21 +27,21 @@ export const personResource = (orgId: string, personId: string) => {
   };
 };
 
-export const personOrganisationsResource = (
+export const personOrganizationsResource = (
   orgId: string,
   personId: string
 ) => {
-  const key = ['personOrganisations', personId];
+  const key = ['personOrganizations', personId];
   const orgsUrl = `/organize/${orgId}/people/${personId}/organizations`;
   const connectionsUrl = `/orgs/${orgId}/people/${personId}/connections`;
 
   return {
     useAdd: createUseMutationPut({ key, url: connectionsUrl }),
     useQuery: createUseQuery<{
-      memberships: PersonOrganisation[];
-      organisationTree: ZetkinOrganization;
-      personOrganisationTree: PersonOrganisation;
-      subOrganisations: ZetkinOrganization[];
+      memberships: PersonOrganization[];
+      organizationTree: ZetkinOrganization;
+      personOrganizationTree: PersonOrganization;
+      subOrganizations: ZetkinOrganization[];
     }>(key, orgsUrl),
     useRemove: createUseMutationDelete({ key, url: connectionsUrl }),
   };

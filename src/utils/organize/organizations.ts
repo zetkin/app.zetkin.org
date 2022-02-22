@@ -1,10 +1,10 @@
-import { PersonOrganisation } from './people';
+import { PersonOrganization } from './people';
 import { ZetkinOrganization } from 'types/zetkin';
 
 export const nestByParentId = (
-  items: Omit<PersonOrganisation, 'sub_orgs'>[],
+  items: Omit<PersonOrganization, 'sub_orgs'>[],
   rootId: number | null
-): Omit<PersonOrganisation, 'sub_orgs'>[] => {
+): Omit<PersonOrganization, 'sub_orgs'>[] => {
   return items
     .filter((item) => (item.parent ? item.parent.id === rootId : !rootId))
     .map((item) => ({

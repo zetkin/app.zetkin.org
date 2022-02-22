@@ -1,14 +1,14 @@
 import { ZetkinMembership, ZetkinOrganization } from 'types/zetkin';
 
-export type PersonOrganisation = Omit<ZetkinOrganization, 'sub_orgs'> & {
+export type PersonOrganization = Omit<ZetkinOrganization, 'sub_orgs'> & {
   connected?: boolean;
-  sub_orgs: PersonOrganisation[];
+  sub_orgs: PersonOrganization[];
 };
 
-export const getConnectedOrganisations = (
+export const getConnectedOrganizations = (
   allOrgs: ZetkinOrganization[],
   personConnections: Partial<ZetkinMembership>[]
-): PersonOrganisation[] => {
+): PersonOrganization[] => {
   return allOrgs
     .filter((org) =>
       personConnections.map((conn) => conn?.organization?.id).includes(org?.id)
@@ -16,14 +16,14 @@ export const getConnectedOrganisations = (
     .map((org) => ({ ...org, connected: true }));
 };
 
-export const getPersonOrganisations = (
-  allOrganisations: ZetkinOrganization[],
-  connectedOrganisations: PersonOrganisation[]
-): PersonOrganisation[] => {
-  const personOrgs = [...connectedOrganisations];
+export const getPersonOrganizations = (
+  allOrganizations: ZetkinOrganization[],
+  connectedOrganizations: PersonOrganization[]
+): PersonOrganization[] => {
+  const personOrgs = [...connectedOrganizations];
 
-  const getParentOrgs = (org: PersonOrganisation): PersonOrganisation[] => {
-    const [directParent] = allOrganisations.filter(
+  const getParentOrgs = (org: PersonOrganization): PersonOrganization[] => {
+    const [directParent] = allOrganizations.filter(
       (item) => item.id === org?.parent?.id
     );
     return directParent
@@ -31,7 +31,7 @@ export const getPersonOrganisations = (
       : [];
   };
 
-  connectedOrganisations.forEach((org) => {
+  connectedOrganizations.forEach((org) => {
     if (org?.parent?.id) {
       const parentOrgs = getParentOrgs(org);
       const unconnectedOrgs = parentOrgs.filter(
