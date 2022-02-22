@@ -10,7 +10,9 @@ import { LocationCity, Mail, Phone } from '@material-ui/icons';
 import PersonCard from './PersonCard';
 import { ZetkinPerson } from 'types/zetkin';
 
-const PersonDetailsCard: React.FunctionComponent<ZetkinPerson> = (person) => {
+const PersonDetailsCard: React.FunctionComponent<{ person: ZetkinPerson }> = ({
+  person,
+}) => {
   const details = [
     { icon: <Phone />, value: person.phone },
     { icon: <Mail />, value: person.email },
