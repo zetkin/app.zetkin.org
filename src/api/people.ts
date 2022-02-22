@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import {
   createPrefetch,
-  createUseMutation,
   createUseMutationDelete,
   createUseMutationPut,
   createUseQuery,
@@ -17,13 +16,6 @@ export const personResource = (orgId: string, personId: string) => {
   return {
     prefetch: createPrefetch<ZetkinPerson>(key, url),
     useQuery: createUseQuery<ZetkinPerson>(key, url),
-    useUpdate: createUseMutation<Partial<ZetkinPerson>, ZetkinPerson>(
-      key,
-      url,
-      {
-        method: 'PATCH',
-      }
-    ),
   };
 };
 

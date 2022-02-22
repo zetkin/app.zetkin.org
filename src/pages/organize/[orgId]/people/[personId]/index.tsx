@@ -39,11 +39,11 @@ export type PersonProfilePageProps = {
   personId: string;
 };
 
-const PersonProfilePage: PageWithLayout<PersonProfilePageProps> = ({
-  personId,
-  orgId,
-}) => {
-  const { data: person } = personResource(orgId, personId).useQuery();
+const PersonProfilePage: PageWithLayout<PersonProfilePageProps> = (props) => {
+  const { data: person } = personResource(
+    props.orgId,
+    props.personId
+  ).useQuery();
 
   if (!person) return null;
 
@@ -56,10 +56,10 @@ const PersonProfilePage: PageWithLayout<PersonProfilePageProps> = ({
       </Head>
       <Grid container direction="row" spacing={6}>
         <Grid item lg={4}>
-          <PersonDetailsCard {...{ person }} />
+          <PersonDetailsCard {...person} />
         </Grid>
         <Grid item lg={4}>
-          <PersonOrganizationsCard {...{ orgId, personId }} />
+          <PersonOrganizationsCard {...props} />
         </Grid>
       </Grid>
     </>
