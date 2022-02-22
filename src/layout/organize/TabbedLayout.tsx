@@ -17,6 +17,7 @@ import { FunctionComponent, ReactElement, useState } from 'react';
 
 import BreadcrumbTrail from 'components/BreadcrumbTrail';
 import OrganizeSidebar from 'components/organize/OrganizeSidebar';
+import SearchDialog from 'components/organize/SearchDialog';
 import ZetkinEllipsisMenu, {
   ZetkinEllipsisMenuProps,
 } from 'components/ZetkinEllipsisMenu';
@@ -44,7 +45,6 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
         transition: 'transform 0.2s ease',
       },
       gridColumnEnd: 'none',
-      minWidth: 130,
     },
   },
   title: {
@@ -133,19 +133,23 @@ const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
                 justifyContent="space-between"
               >
                 <BreadcrumbTrail highlight={collapsed} />
-                <Box className="collapse-button">
-                  <Button
-                    fullWidth
-                    onClick={toggleCollapse}
-                    size="small"
-                    startIcon={<ArrowUpward />}
-                  >
-                    <FormattedMessage
-                      id={`layout.organize.header.collapseButton.${
-                        collapsed ? 'expand' : 'collapse'
-                      }`}
-                    />
-                  </Button>
+                {/* Search and collapse buttons */}
+                <Box display="flex" flexDirection="row">
+                  {fixedHeight && (
+                    <Box className="collapse-button">
+                      <Button
+                        onClick={toggleCollapse}
+                        startIcon={<ArrowUpward />}
+                      >
+                        <FormattedMessage
+                          id={`layout.organize.header.collapseButton.${
+                            collapsed ? 'expand' : 'collapse'
+                          }`}
+                        />
+                      </Button>
+                    </Box>
+                  )}
+                  <SearchDialog />
                 </Box>
               </Box>
               {/* Title, subtitle, and action buttons */}

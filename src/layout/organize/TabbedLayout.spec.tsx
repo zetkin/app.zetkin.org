@@ -28,20 +28,22 @@ describe('TabbedLayout.tsx', () => {
       const sidebar = getAllByTestId('organize-sidebar');
       expect(sidebar).toBeTruthy();
     });
-    describe('header', () => {
+    describe('collapse functionality', () => {
       let toggleButton: HTMLElement;
-      beforeEach(() => {
-        const { getByText } = render(
-          <TabbedLayout {...mockTabbedLayoutProps} />
-        );
-        toggleButton = getByText(/header/i, { selector: 'button *' });
-      });
-      it('is open by default', () => {
-        expect(toggleButton.textContent).toContain('collapse');
-      });
-      it('correctly collapses', () => {
-        fireEvent.click(toggleButton);
-        expect(toggleButton.textContent).toContain('expand');
+      describe('on fixed height pages', () => {
+        beforeEach(() => {
+          const { getByText } = render(
+            <TabbedLayout {...mockTabbedLayoutProps} fixedHeight />
+          );
+          toggleButton = getByText(/header/i, { selector: 'button *' });
+        });
+        it('is open by default', () => {
+          expect(toggleButton.textContent).toContain('collapse');
+        });
+        it('correctly collapses', () => {
+          fireEvent.click(toggleButton);
+          expect(toggleButton.textContent).toContain('expand');
+        });
       });
     });
   });

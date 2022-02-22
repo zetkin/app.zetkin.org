@@ -6,8 +6,8 @@ campaigns:
   summary: Summary
 header:
   collapseButton:
-    collapse: collapse header
-    expand: expand header
+    collapse: Collapse
+    expand: Expand
 lists:
   showMore: Show more...
 menu:
@@ -26,16 +26,10 @@ person:
     profile: Profile
     timeline: Timeline
 search:
-  drawerLabel: Press Enter to show full results.
-  keepTypingPrompt: Keep typing to search.
+  error: There was an error
   label: Search
-  loading: Loading...
-  noResults: No results
-  peopleListSubheader: People
+  noResults: No results for this search
   placeholder: Type to search
-  seeAllResultsInOrg: See all results in <b>{orgName}</b> for "{searchQuery}"
-  showMore: Show more...
-  startTypingPrompt: Start typing to search.
 tasks:
   tabs:
     assignees: Assignees
