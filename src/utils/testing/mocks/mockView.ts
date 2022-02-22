@@ -8,8 +8,6 @@ const view: ZetkinView = {
   id: 1,
   organization: {
     id: 1,
-    is_active: true,
-    sub_orgs: [],
     title: 'A ',
   },
   owner: {

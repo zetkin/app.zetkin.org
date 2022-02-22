@@ -1,10 +1,9 @@
 import { PersonOrganization } from './people';
-import { ZetkinOrganization } from 'types/zetkin';
 
 export const nestByParentId = (
   items: Omit<PersonOrganization, 'sub_orgs'>[],
   rootId: number | null
-): Omit<PersonOrganization, 'sub_orgs'>[] => {
+): PersonOrganization[] => {
   return items
     .filter((item) => (item.parent ? item.parent.id === rootId : !rootId))
     .map((item) => ({
@@ -15,19 +14,19 @@ export const nestByParentId = (
 };
 
 export const flattenTree = (
-  orgTree: ZetkinOrganization,
-  flattened: ZetkinOrganization[] = []
-): ZetkinOrganization[] => {
+  orgTree: PersonOrganization,
+  flattened: Omit<PersonOrganization, 'sub_orgs'>[] = []
+): Omit<PersonOrganization, 'sub_orgs'>[] => {
   const hasSubOrgs = !!orgTree?.sub_orgs?.length;
-  const orgCopy: Partial<ZetkinOrganization> = { ...orgTree };
+  const orgCopy = { ...orgTree } as Partial<PersonOrganization>;
   delete orgCopy.sub_orgs;
-  flattened.push(orgCopy as ZetkinOrganization);
+  flattened.push(orgCopy as Omit<PersonOrganization, 'sub_orgs'>);
   if (hasSubOrgs) {
     orgTree?.sub_orgs?.forEach((subOrg) => {
-      if (!subOrg.sub_orgs.length) {
-        const subOrgCopy: Partial<ZetkinOrganization> = { ...subOrg };
+      if (!subOrg?.sub_orgs?.length) {
+        const subOrgCopy = { ...subOrg } as Partial<PersonOrganization>;
         delete subOrgCopy.sub_orgs;
-        flattened.push(subOrgCopy as ZetkinOrganization);
+        flattened.push(subOrgCopy as Omit<PersonOrganization, 'sub_orgs'>);
       } else {
         flattened = flattenTree(subOrg, flattened);
       }

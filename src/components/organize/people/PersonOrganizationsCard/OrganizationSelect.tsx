@@ -3,14 +3,13 @@ import { Box, Button, TextField } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
 
 import { PersonOrganization } from 'utils/organize/people';
-import { ZetkinOrganization } from 'types/zetkin';
 
 interface OrganizationSelectProps {
   memberships: PersonOrganization[];
-  onSelect: (selected?: ZetkinOrganization) => void;
-  onSubmit: (selected: ZetkinOrganization) => void;
-  options: ZetkinOrganization[];
-  selected?: ZetkinOrganization;
+  onSelect: (selected?: PersonOrganization) => void;
+  onSubmit: (selected: PersonOrganization) => void;
+  options: PersonOrganization[];
+  selected?: PersonOrganization;
 }
 
 const OrganizationSelect: React.FunctionComponent<OrganizationSelectProps> = ({
@@ -20,7 +19,7 @@ const OrganizationSelect: React.FunctionComponent<OrganizationSelectProps> = ({
   options,
   selected,
 }) => {
-  const [highlighted, setHighlighted] = useState<ZetkinOrganization>();
+  const [highlighted, setHighlighted] = useState<PersonOrganization>();
   const [inputValue, setInputValue] = useState<string>('');
 
   useEffect(() => setInputValue(selected?.title || ''), [selected]);

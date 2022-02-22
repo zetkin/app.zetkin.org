@@ -1,12 +1,14 @@
 import { ZetkinMembership, ZetkinOrganization } from 'types/zetkin';
 
-export type PersonOrganization = Omit<ZetkinOrganization, 'sub_orgs'> & {
+export type PersonOrganization = ZetkinOrganization & {
   connected?: boolean;
+  is_active?: boolean;
+  parent?: ZetkinOrganization;
   sub_orgs: PersonOrganization[];
 };
 
 export const getConnectedOrganizations = (
-  allOrgs: ZetkinOrganization[],
+  allOrgs: PersonOrganization[],
   personConnections: Partial<ZetkinMembership>[]
 ): PersonOrganization[] => {
   return allOrgs
@@ -17,7 +19,7 @@ export const getConnectedOrganizations = (
 };
 
 export const getPersonOrganizations = (
-  allOrganizations: ZetkinOrganization[],
+  allOrganizations: PersonOrganization[],
   connectedOrganizations: PersonOrganization[]
 ): PersonOrganization[] => {
   const personOrgs = [...connectedOrganizations];

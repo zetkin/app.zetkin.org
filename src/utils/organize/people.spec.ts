@@ -1,38 +1,42 @@
 import isEqual from 'lodash.isequal';
 import { nestByParentId } from './organizations';
-import { ZetkinOrganization } from 'types/zetkin';
 import {
   getConnectedOrganizations,
   getPersonOrganizations,
   PersonOrganization,
 } from './people';
 
-const flatOrgs: ZetkinOrganization[] = [
+const flatOrgs: PersonOrganization[] = [
   {
     id: 1,
+    sub_orgs: [],
     title: 'Root Org',
   },
   {
     id: 2,
-    parent: { id: 1 },
+    parent: { id: 1, title: 'Root org' },
+    sub_orgs: [],
     title: 'First sub-org',
   },
   {
     id: 3,
-    parent: { id: 1 },
+    parent: { id: 1, title: 'Root org' },
+    sub_orgs: [],
     title: 'Second sub-org',
   },
   {
     id: 4,
-    parent: { id: 1 },
+    parent: { id: 1, title: 'Root org' },
+    sub_orgs: [],
     title: 'Third sub-org',
   },
   {
     id: 33,
-    parent: { id: 3 },
+    parent: { id: 3, title: 'Second sub-org' },
+    sub_orgs: [],
     title: 'Child of second sub-org',
   },
-].map((org) => ({ ...org, is_active: true, sub_orgs: [] }));
+].map((org) => ({ ...org, is_active: true }));
 
 const personConnections = [
   {
@@ -76,7 +80,7 @@ describe('People utils', () => {
 
   describe('nestByParentId()', () => {
     it('Returns the correct organization tree from a flat array of organizations', async () => {
-      const orgsTree = nestByParentId(flatOrgs, null) as [PersonOrganization];
+      const orgsTree = nestByParentId(flatOrgs, null);
       expect(orgsTree.length).toEqual(1);
       expect(orgsTree[0].title).toEqual(flatOrgs[0].title);
       expect(orgsTree[0]?.sub_orgs?.length).toEqual(3);

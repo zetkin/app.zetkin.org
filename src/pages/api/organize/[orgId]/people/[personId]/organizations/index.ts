@@ -6,6 +6,7 @@ import { flattenTree, nestByParentId } from 'utils/organize/organizations';
 import {
   getConnectedOrganizations,
   getPersonOrganizations,
+  PersonOrganization,
 } from 'utils/organize/people';
 
 const getOrganizationTrees = async (
@@ -44,14 +45,14 @@ const getOrganizationTrees = async (
 
     // First pass - include all orgs that the member is directly connected to
     const connectedOrgs = getConnectedOrganizations(
-      flattenTree(orgTree),
+      flattenTree(orgTree) as PersonOrganization[],
       personConnections
     );
 
     // Second pass - include all parent orgs, recursively, of any org the member is connected to
     const personOrgs = getPersonOrganizations(
-      flattenTree(orgTree),
-      connectedOrgs
+      flattenTree(orgTree) as PersonOrganization[],
+      connectedOrgs as PersonOrganization[]
     );
 
     // Return organizations trees

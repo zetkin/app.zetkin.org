@@ -17,12 +17,11 @@ import {
 } from '@material-ui/core';
 
 import { PersonOrganization } from 'utils/organize/people';
-import { ZetkinOrganization } from 'types/zetkin';
 
 type OrganizationProps = {
   editable: boolean;
   level?: number;
-  onClickRemove: (orgId: ZetkinOrganization['id']) => void;
+  onClickRemove: (orgId: PersonOrganization['id']) => void;
   organizationTree: PersonOrganization;
 };
 

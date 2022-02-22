@@ -14,17 +14,17 @@ import { ConfirmDialogContext } from 'hooks/ConfirmDialogProvider';
 import OrganizationSelect from './OrganizationSelect';
 import { OrganizationsTree } from './OrganizationsTree';
 import PersonCard from '../PersonCard';
+import { PersonOrganization } from 'utils/organize/people';
 import { personOrganizationsResource } from 'api/people';
 import { PersonProfilePageProps } from 'pages/organize/[orgId]/people/[personId]';
 import SnackbarContext from 'hooks/SnackbarContext';
-import { ZetkinOrganization } from 'types/zetkin';
 
 const PersonOrganizationsCard: React.FunctionComponent<
   PersonProfilePageProps
 > = ({ orgId, personId }) => {
   const [editable, setEditable] = useState<boolean>(false);
   const [addable, setAddable] = useState<boolean>(false);
-  const [selected, setSelected] = useState<ZetkinOrganization>();
+  const [selected, setSelected] = useState<PersonOrganization>();
   const intl = useIntl();
   const { showConfirmDialog } = useContext(ConfirmDialogContext);
   const { showSnackbar } = useContext(SnackbarContext);
@@ -43,7 +43,7 @@ const PersonOrganizationsCard: React.FunctionComponent<
     }
   }, [editable]);
 
-  const selectSubOrg = (selectedOrg?: ZetkinOrganization) => {
+  const selectSubOrg = (selectedOrg?: PersonOrganization) => {
     setSelected(selectedOrg);
   };
 
@@ -61,7 +61,7 @@ const PersonOrganizationsCard: React.FunctionComponent<
       });
   };
 
-  const removeSubOrg = (subOrgId: ZetkinOrganization['id']) => {
+  const removeSubOrg = (subOrgId: PersonOrganization['id']) => {
     showConfirmDialog({
       onSubmit: () => {
         removeOrgMutation.mutate(subOrgId, {
