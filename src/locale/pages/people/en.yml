@@ -1,3 +1,9 @@
 person:
   details:
     title: Contact Details
+  editButton: Edit {title}
+  editButtonClose: Stop editing {title}
+  organizations:
+    add: Add a new sub-organization
+    addError: This organization could not be added
+    title: Organizations

@@ -9,11 +9,11 @@ import {
   UseQueryResult,
 } from 'react-query';
 
-import { createDeleteHandler } from './createDeleteHandler';
 import { defaultFetch } from 'fetching';
 import handleResponseData from './handleResponseData';
 import { makeUseMutationOptions } from './makeUseMutationOptions';
 import { ScaffoldedContext } from 'utils/next';
+import { createDeleteHandler, createPutHandler } from './createDeleteHandler';
 
 export const createUseQuery = <Result>(
   key: string[],
@@ -62,22 +62,40 @@ export const createUseMutation = <Input, Result>(
   };
 };
 
-export const createUseMutationDelete = (
-  key: string[],
-  url: string,
-  fetchOptions?: RequestInit,
+interface MutationDeleteOrPutProps {
+  key: string[];
+  url: string;
+  fetchOptions?: RequestInit;
   mutationOptions?: Omit<
     UseMutationOptions<null, unknown, number, unknown>,
     'mutationFn'
-  >
+  >;
+}
+
+export const createUseMutationDelete = (
+  props: MutationDeleteOrPutProps
 ): (() => UseMutationResult<null, unknown, number, unknown>) => {
-  const handler = createDeleteHandler(url, fetchOptions);
+  const handler = createDeleteHandler(props.url, props.fetchOptions);
 
   return () => {
     const queryClient = useQueryClient();
     return useMutation(
       handler,
-      makeUseMutationOptions(queryClient, key, mutationOptions)
+      makeUseMutationOptions(queryClient, props.key, props.mutationOptions)
+    );
+  };
+};
+
+export const createUseMutationPut = (
+  props: MutationDeleteOrPutProps
+): (() => UseMutationResult<null, unknown, number, unknown>) => {
+  const handler = createPutHandler(props.url, props.fetchOptions);
+
+  return () => {
+    const queryClient = useQueryClient();
+    return useMutation(
+      handler,
+      makeUseMutationOptions(queryClient, props.key, props.mutationOptions)
     );
   };
 };

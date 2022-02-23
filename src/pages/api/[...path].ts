@@ -41,6 +41,7 @@ export default async function handle(
   res: NextApiResponse
 ): Promise<void> {
   const path = req.query.path as string[];
+  const queryParams = req.url?.split('?')[1];
   const pathStr = path.join('/');
 
   if (path[path.length - 1] === 'avatar') {
@@ -76,7 +77,7 @@ export default async function handle(
     ssl: stringToBool(process.env.ZETKIN_USE_TLS),
   });
 
-  const resource = z.resource(pathStr);
+  const resource = z.resource(pathStr + (queryParams ? '?' + queryParams : ''));
 
   try {
     await applySession(req, res);

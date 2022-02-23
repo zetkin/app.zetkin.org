@@ -4,6 +4,7 @@ import Head from 'next/head';
 
 import { PageWithLayout } from 'types';
 import PersonDetailsCard from 'components/organize/people/PersonDetailsCard';
+import PersonOrganizationsCard from 'components/organize/people/PersonOrganizationsCard';
 import { personResource } from 'api/people';
 import { scaffold } from 'utils/next';
 import SinglePersonLayout from 'layout/organize/SinglePersonLayout';
@@ -33,16 +34,16 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
   }
 }, scaffoldOptions);
 
-type PersonProfilePageProps = {
+export type PersonProfilePageProps = {
   orgId: string;
   personId: string;
 };
 
-const PersonProfilePage: PageWithLayout<PersonProfilePageProps> = ({
-  personId,
-  orgId,
-}) => {
-  const { data: person } = personResource(orgId, personId).useQuery();
+const PersonProfilePage: PageWithLayout<PersonProfilePageProps> = (props) => {
+  const { data: person } = personResource(
+    props.orgId,
+    props.personId
+  ).useQuery();
 
   if (!person) return null;
 
@@ -54,8 +55,11 @@ const PersonProfilePage: PageWithLayout<PersonProfilePageProps> = ({
         </title>
       </Head>
       <Grid container direction="row" spacing={6}>
-        <Grid item md={4}>
-          <PersonDetailsCard {...person} />
+        <Grid item lg={4}>
+          <PersonDetailsCard person={person} />
+        </Grid>
+        <Grid item lg={4}>
+          <PersonOrganizationsCard {...props} />
         </Grid>
       </Grid>
     </>
