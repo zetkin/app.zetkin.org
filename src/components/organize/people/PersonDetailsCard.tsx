@@ -25,7 +25,10 @@ const PersonDetailsCard: React.FunctionComponent<{ person: ZetkinPerson }> = ({
   ].filter((detail) => !!detail.value);
 
   return (
-    <PersonCard titleId="pages.people.person.details.title">
+    <PersonCard
+      onClickEdit={() => null}
+      titleId="pages.people.person.details.title"
+    >
       <List disablePadding>
         {details.map((detail, idx) => (
           <div key={idx}>

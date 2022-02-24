@@ -33,6 +33,10 @@ const SinglePersonLayout: FunctionComponent<SinglePersonLayoutProps> = ({
           messageId: 'layout.organize.person.tabs.timeline',
           tabProps: { disabled: true },
         },
+        {
+          href: `/manage`,
+          messageId: 'layout.organize.person.tabs.manage',
+        },
       ]}
       title={`${person?.first_name} ${person?.last_name}`}
     >

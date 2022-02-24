@@ -6,15 +6,17 @@ import { PageWithLayout } from 'types';
 import PersonDetailsCard from 'components/organize/people/PersonDetailsCard';
 import PersonOrganizationsCard from 'components/organize/people/PersonOrganizationsCard';
 import { personResource } from 'api/people';
-import { scaffold } from 'utils/next';
 import SinglePersonLayout from 'layout/organize/SinglePersonLayout';
+import { scaffold, ScaffoldedGetServerSideProps } from 'utils/next';
 
-const scaffoldOptions = {
+export const scaffoldOptions = {
   authLevelRequired: 2,
   localeScope: ['layout.organize', 'pages.people', 'misc'],
 };
 
-export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
+export const getPersonScaffoldProps: ScaffoldedGetServerSideProps = async (
+  ctx
+) => {
   const { orgId, personId } = ctx.params!;
 
   const { prefetch } = personResource(orgId as string, personId as string);
@@ -32,14 +34,19 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
       notFound: true,
     };
   }
-}, scaffoldOptions);
+};
 
-export type PersonProfilePageProps = {
+export const getServerSideProps: GetServerSideProps = scaffold(
+  getPersonScaffoldProps,
+  scaffoldOptions
+);
+
+export type PersonPageProps = {
   orgId: string;
   personId: string;
 };
 
-const PersonProfilePage: PageWithLayout<PersonProfilePageProps> = (props) => {
+const PersonProfilePage: PageWithLayout<PersonPageProps> = (props) => {
   const { data: person } = personResource(
     props.orgId,
     props.personId

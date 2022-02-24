@@ -16,12 +16,13 @@ import { OrganizationsTree } from './OrganizationsTree';
 import PersonCard from '../PersonCard';
 import { PersonOrganization } from 'utils/organize/people';
 import { personOrganizationsResource } from 'api/people';
-import { PersonProfilePageProps } from 'pages/organize/[orgId]/people/[personId]';
+import { PersonPageProps } from 'pages/organize/[orgId]/people/[personId]';
 import SnackbarContext from 'hooks/SnackbarContext';
 
-const PersonOrganizationsCard: React.FunctionComponent<
-  PersonProfilePageProps
-> = ({ orgId, personId }) => {
+const PersonOrganizationsCard: React.FunctionComponent<PersonPageProps> = ({
+  orgId,
+  personId,
+}) => {
   const [editable, setEditable] = useState<boolean>(false);
   const [addable, setAddable] = useState<boolean>(false);
   const [selected, setSelected] = useState<PersonOrganization>();
