@@ -23,3 +23,5 @@ nativePersonFields:
   phone: Phone number
   street_address: Street address
   zip_code: Zip code
+snackbar:
+  error: Oh dear, something went wrong
