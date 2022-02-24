@@ -1,11 +1,13 @@
 person:
+  delete:
+    button: Remove person
+    confirm: Are you sure you want to delete {name}? This is a permanent action.
+    title: Delete account
+    warning: This cannot be undone!
   details:
     title: Contact Details
   editButton: Edit {title}
   editButtonClose: Stop editing {title}
-  delete:
-    title: Delete account
-    confirm: Are you sure you want to delete {name}? This is a permanent action.
   organizations:
     add: Add a new sub-organization
     addError: This organization could not be added
