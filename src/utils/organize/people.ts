@@ -3,7 +3,7 @@ import { ZetkinMembership, ZetkinOrganization } from 'types/zetkin';
 export type PersonOrganization = ZetkinOrganization & {
   connected?: boolean;
   is_active?: boolean;
-  parent?: ZetkinOrganization;
+  parent?: ZetkinOrganization | null;
   sub_orgs: PersonOrganization[];
 };
 

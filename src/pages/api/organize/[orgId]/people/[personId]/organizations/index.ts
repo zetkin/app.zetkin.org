@@ -28,7 +28,7 @@ const getOrganizationTrees = async (
   const apiFetch = createApiFetch(req.headers);
 
   try {
-    const rootOrgRes = await apiFetch(`/orgs/${orgId}`);
+    const requestOrgRes = await apiFetch(`/orgs/${orgId}`);
     const subOrgRes = await apiFetch(
       `/orgs/${orgId}/sub_organizations?recursive`
     );
@@ -36,20 +36,24 @@ const getOrganizationTrees = async (
       `/orgs/${orgId}/people/${personId}/connections`
     );
 
+    const { data: requestOrg } = await requestOrgRes.json();
     const { data: subOrgs } = await subOrgRes.json();
-    const { data: rootOrg } = await rootOrgRes.json();
     const { data: personConnections }: { data: Partial<ZetkinMembership>[] } =
       await connectionsRes.json();
 
-    const orgTree = { ...rootOrg, sub_orgs: subOrgs };
+    // If orgId refers to an org that is itself a sub-org, then nullify the parent prop
+    if (requestOrg.parent) requestOrg.parent = null;
 
-    // First pass - include all orgs that the member is directly connected to
+    // Assemble tree
+    const orgTree = { ...requestOrg, sub_orgs: subOrgs };
+
+    // Get all orgs that the member is directly connected to
     const connectedOrgs = getConnectedOrganizations(
       flattenTree(orgTree) as PersonOrganization[],
       personConnections
     );
 
-    // Second pass - include all parent orgs, recursively, of any org the member is connected to
+    // Add all parent orgs, recursively, of any org the member is connected to
     const personOrgs = getPersonOrganizations(
       flattenTree(orgTree) as PersonOrganization[],
       connectedOrgs as PersonOrganization[]
