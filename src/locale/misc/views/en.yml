@@ -34,8 +34,6 @@ columnMenu:
 columnRenameDialog:
   save: Save
   title: Title
-createColumn: New column
-createFromSelection: Create view from selection
 dataTableErrors:
   create_column: There was an error creating the column
   delete_column: There was an error deleting the column
@@ -67,16 +65,22 @@ newViewFields:
 removeDialog:
   action: Are you sure you want to remove these rows from this view?
   title: Remove people from view
-removeFromSelection: Remove {numSelected, plural,
-  one {1 person}
-  other {{numSelected} people}
-  } from view
-removeTooltip: Smart search views do not currently support removing rows
 suggested:
   created: Created by {name}
   sectionTitle: Suggested
+toolbar:
+  createColumn: New column
+  createFromSelection: Create view from selection
+  removeFromSelection: Remove {numSelected, plural,
+    one {1 person}
+    other {{numSelected} people}
+    } from view
+  removeTooltip: Smart search views do not currently support removing rows
 viewTableSort:
   addButton: Add sorting column
   button: Sort
   hint: 'Hint: hold down {shiftKeyIcon} while clicking multiple columns'
   title: Sort
+viewTableSearch:
+  button: Search
+  title: Search
