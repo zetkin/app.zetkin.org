@@ -76,11 +76,12 @@ toolbar:
     other {{numSelected} people}
     } from view
   removeTooltip: Smart search views do not currently support removing rows
+viewTableSearch:
+  button: Search
+  helpText: Type at least {minSearchLength} characters
+  title: Search
 viewTableSort:
   addButton: Add sorting column
   button: Sort
   hint: 'Hint: hold down {shiftKeyIcon} while clicking multiple columns'
   title: Sort
-viewTableSearch:
-  button: Search
-  title: Search

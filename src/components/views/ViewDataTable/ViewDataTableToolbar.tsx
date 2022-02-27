@@ -17,6 +17,7 @@ export interface ViewDataTableToolbarProps {
   onRowsRemove: () => void;
   onViewCreate: () => void;
   selection: number[];
+  setQuickSearch: (quickSearch: string) => void;
   setSortModel: (model: GridSortModel) => void;
   sortModel: GridSortModel;
 }
@@ -41,6 +42,7 @@ const ViewDataTableToolbar: React.FunctionComponent<
   onRowsRemove,
   onViewCreate,
   selection,
+  setQuickSearch,
   setSortModel,
   sortModel,
 }) => {
@@ -108,7 +110,9 @@ const ViewDataTableToolbar: React.FunctionComponent<
       >
         <FormattedMessage id="misc.views.toolbar.createColumn" />
       </Button>
-      <ViewDataTableSearch />
+      <ViewDataTableSearch
+        onChange={(searchString) => setQuickSearch(searchString)}
+      />
     </Box>
   );
 };
