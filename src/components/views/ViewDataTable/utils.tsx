@@ -1,6 +1,6 @@
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid-pro';
 
-import { COLUMN_TYPE, ZetkinViewColumn } from 'types/views';
+import { COLUMN_TYPE, ZetkinViewColumn, ZetkinViewRow } from 'types/views';
 import LocalPersonViewCell, {
   LocalPersonParams,
 } from './cells/LocalPersonViewCell';
@@ -100,3 +100,47 @@ export function makeGridColDef(
 
   return colDef;
 }
+
+export const viewQuickSearch = (
+  rows: ZetkinViewRow[],
+  columns: ZetkinViewColumn[],
+  quickSearch: string
+): ZetkinViewRow[] => {
+  const getColIdxByFieldType = (fields: string[]) =>
+    columns.reduce((output: number[], input, idx) => {
+      if (fields.includes(input.type)) output.push(idx);
+      return output;
+    }, []);
+  const stringIndexes = getColIdxByFieldType(['person_field']);
+  const objectArrayIndexes = getColIdxByFieldType([
+    'survey_response',
+    'person_notes',
+  ]);
+
+  const getSearchableString = (row: { content: unknown[] }) => {
+    const rowContent = row.content;
+    let searchable = '';
+
+    // Add string fields
+    stringIndexes.forEach((idx) => {
+      searchable = [searchable, rowContent[idx]].join(',');
+    });
+
+    // Add object array fields
+    objectArrayIndexes.forEach((idx) => {
+      const content = rowContent[idx];
+      if (content instanceof Array) {
+        searchable = [
+          searchable,
+          content.map((item) => item.text).join(','),
+        ].join(',');
+      }
+    });
+
+    return searchable.toLowerCase();
+  };
+
+  return rows.filter((row) => {
+    return getSearchableString(row).includes(quickSearch.toLowerCase());
+  });
+};
