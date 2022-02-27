@@ -106,6 +106,8 @@ export const viewQuickSearch = (
   columns: ZetkinViewColumn[],
   quickSearch: string
 ): ZetkinViewRow[] => {
+  if (!quickSearch) return rows;
+
   const getColIdxByFieldType = (fields: string[]) =>
     columns.reduce((output: number[], input, idx) => {
       if (fields.includes(input.type)) output.push(idx);
