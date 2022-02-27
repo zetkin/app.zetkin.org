@@ -96,7 +96,7 @@ const SearchDialog: React.FunctionComponent = () => {
     <>
       {/* Activator */}
       <Button
-        data-testId="SearchDialog-activator"
+        data-testid="SearchDialog-activator"
         onClick={() => setOpen(true)}
         startIcon={<Search />}
       >
