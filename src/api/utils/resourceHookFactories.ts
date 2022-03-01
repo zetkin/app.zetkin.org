@@ -67,14 +67,14 @@ interface MutationDeleteOrPutProps {
   url: string;
   fetchOptions?: RequestInit;
   mutationOptions?: Omit<
-    UseMutationOptions<null, unknown, number, unknown>,
+    UseMutationOptions<null, unknown, number | undefined, unknown>,
     'mutationFn'
   >;
 }
 
 export const createUseMutationDelete = (
   props: MutationDeleteOrPutProps
-): (() => UseMutationResult<null, unknown, number, unknown>) => {
+): (() => UseMutationResult<null, unknown, number | undefined, unknown>) => {
   const handler = createDeleteHandler(props.url, props.fetchOptions);
 
   return () => {
@@ -88,7 +88,7 @@ export const createUseMutationDelete = (
 
 export const createUseMutationPut = (
   props: MutationDeleteOrPutProps
-): (() => UseMutationResult<null, unknown, number, unknown>) => {
+): (() => UseMutationResult<null, unknown, number | undefined, unknown>) => {
   const handler = createPutHandler(props.url, props.fetchOptions);
 
   return () => {

@@ -45,24 +45,30 @@ const PersonCard: React.FunctionComponent<{
     <ZetkinSection title={title}>
       <Card>
         {children}
-        <List disablePadding>
-          <ListItem button disabled={!onClickEdit} onClick={onToggleEdit}>
-            <ListItemIcon>
-              {editable ? <Close color="primary" /> : <Edit color="primary" />}
-            </ListItemIcon>
-            <ListItemText
-              className={classes.editButton}
-              primary={intl.formatMessage(
-                {
-                  id: `pages.people.person.${
-                    editable ? 'editButtonClose' : 'editButton'
-                  }`,
-                },
-                { title }
-              )}
-            />
-          </ListItem>
-        </List>
+        {onClickEdit && (
+          <List disablePadding>
+            <ListItem button disabled={!onClickEdit} onClick={onToggleEdit}>
+              <ListItemIcon>
+                {editable ? (
+                  <Close color="primary" />
+                ) : (
+                  <Edit color="primary" />
+                )}
+              </ListItemIcon>
+              <ListItemText
+                className={classes.editButton}
+                primary={intl.formatMessage(
+                  {
+                    id: `pages.people.person.${
+                      editable ? 'editButtonClose' : 'editButton'
+                    }`,
+                  },
+                  { title }
+                )}
+              />
+            </ListItem>
+          </List>
+        )}
       </Card>
     </ZetkinSection>
   );

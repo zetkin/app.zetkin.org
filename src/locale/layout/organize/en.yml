@@ -23,6 +23,7 @@ people:
   title: People
 person:
   tabs:
+    manage: Manage
     profile: Profile
     timeline: Timeline
 search:

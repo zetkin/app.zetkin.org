@@ -4,8 +4,8 @@ import { defaultFetch } from 'fetching';
 export const createPutOrDeleteHandler =
   (method: RequestInit['method']) =>
   (url: string, fetchOptions?: RequestInit) =>
-  async (id: number): Promise<null> => {
-    const res = await defaultFetch(`${url}/${id}`, {
+  async (id?: number): Promise<null> => {
+    const res = await defaultFetch(`${url}/${id ? id : ''}`, {
       method,
       ...fetchOptions,
     });

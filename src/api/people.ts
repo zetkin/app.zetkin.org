@@ -16,6 +16,7 @@ export const personResource = (orgId: string, personId: string) => {
   return {
     prefetch: createPrefetch<ZetkinPerson>(key, url),
     useQuery: createUseQuery<ZetkinPerson>(key, url),
+    useRemove: createUseMutationDelete({ key, url }),
   };
 };
 
