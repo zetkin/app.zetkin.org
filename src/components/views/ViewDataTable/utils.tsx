@@ -113,7 +113,9 @@ export const viewQuickSearch = (
 
   const getColIdxByFieldType = (fields: string[]) =>
     columns.reduce((output: number[], input, idx) => {
-      if (fields.includes(input.type)) output.push(idx);
+      if (fields.includes(input.type)) {
+        output.push(idx);
+      }
       return output;
     }, []);
 
