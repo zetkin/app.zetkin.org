@@ -22,7 +22,7 @@ import SnackbarContext from 'hooks/SnackbarContext';
 import ViewRenameColumnDialog from '../ViewRenameColumnDialog';
 import { viewRowsResource } from 'api/viewRows';
 import { viewsResource } from 'api/views';
-import { colIdFromFieldName, makeGridColDef } from './utils';
+import { colIdFromFieldName, makeGridColDef, viewQuickSearch } from './utils';
 import { SelectedViewColumn, ZetkinView } from 'types/views';
 import { VIEW_CONTENT_SOURCE, VIEW_DATA_TABLE_ERROR } from './constants';
 import ViewColumnDialog, {
@@ -76,6 +76,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
   const [selection, setSelection] = useState<number[]>([]);
   const [waiting, setWaiting] = useState(false);
   const [sortModel, setSortModel] = useState<GridSortModel>([]);
+  const [quickSearch, setQuickSearch] = useState('');
   const router = useRouter();
   const { orgId } = router.query;
   const queryClient = useQueryClient();
@@ -292,7 +293,9 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
     ...columns.map((col) => makeGridColDef(col, orgId as string)),
   ];
 
-  const gridRows = rows.map((input) => {
+  const rowsWithSearch = viewQuickSearch(rows, columns, quickSearch);
+
+  const gridRows = rowsWithSearch.map((input) => {
     const output: Record<string, unknown> = {
       id: input.id,
     };
@@ -356,6 +359,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
       onRowsRemove,
       onViewCreate,
       selection,
+      setQuickSearch,
       setSortModel,
       sortModel,
     },

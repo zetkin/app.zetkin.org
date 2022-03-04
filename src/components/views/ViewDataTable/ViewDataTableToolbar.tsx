@@ -5,6 +5,7 @@ import { Box, Button, makeStyles, Slide, Tooltip } from '@material-ui/core';
 import { FormattedMessage, useIntl } from 'react-intl';
 
 import { ConfirmDialogContext } from 'hooks/ConfirmDialogProvider';
+import ViewDataTableSearch from './ViewDataTableSearch';
 import ViewDataTableSorting from './ViewDataTableSorting';
 import { GridColDef, GridSortModel } from '@mui/x-data-grid-pro';
 
@@ -16,6 +17,7 @@ export interface ViewDataTableToolbarProps {
   onRowsRemove: () => void;
   onViewCreate: () => void;
   selection: number[];
+  setQuickSearch: (quickSearch: string) => void;
   setSortModel: (model: GridSortModel) => void;
   sortModel: GridSortModel;
 }
@@ -25,6 +27,7 @@ const useStyles = makeStyles({
     '& > *': {
       margin: '0 4px',
     },
+    marginRight: 15,
     marginTop: 5,
   },
 });
@@ -39,6 +42,7 @@ const ViewDataTableToolbar: React.FunctionComponent<
   onRowsRemove,
   onViewCreate,
   selection,
+  setQuickSearch,
   setSortModel,
   sortModel,
 }) => {
@@ -64,7 +68,7 @@ const ViewDataTableToolbar: React.FunctionComponent<
           onClick={onViewCreate}
           startIcon={<Launch />}
         >
-          <FormattedMessage id="misc.views.createFromSelection" />
+          <FormattedMessage id="misc.views.toolbar.createFromSelection" />
         </Button>
       </Slide>
       <Slide direction="left" in={!!selection.length} timeout={100}>
@@ -72,7 +76,7 @@ const ViewDataTableToolbar: React.FunctionComponent<
           title={
             isSmartSearch
               ? intl.formatMessage({
-                  id: 'misc.views.removeTooltip',
+                  id: 'misc.views.toolbar.removeTooltip',
                 })
               : ''
           }
@@ -85,7 +89,7 @@ const ViewDataTableToolbar: React.FunctionComponent<
               startIcon={<RemoveCircleOutline />}
             >
               <FormattedMessage
-                id="misc.views.removeFromSelection"
+                id="misc.views.toolbar.removeFromSelection"
                 values={{ numSelected: selection.length }}
               />
             </Button>
@@ -104,8 +108,11 @@ const ViewDataTableToolbar: React.FunctionComponent<
         onClick={onColumnCreate}
         startIcon={<Add />}
       >
-        <FormattedMessage id="misc.views.createColumn" />
+        <FormattedMessage id="misc.views.toolbar.createColumn" />
       </Button>
+      <ViewDataTableSearch
+        onChange={(searchString) => setQuickSearch(searchString)}
+      />
     </Box>
   );
 };

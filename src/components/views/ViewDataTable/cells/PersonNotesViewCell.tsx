@@ -4,7 +4,7 @@ import { Typography } from '@material-ui/core';
 
 import { ViewGridCellParams } from '.';
 
-interface PersonNote {
+export interface PersonNote {
   created: string;
   id: number;
   text: string;
