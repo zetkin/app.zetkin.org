@@ -106,7 +106,9 @@ export const viewQuickSearch = (
   columns: ZetkinViewColumn[],
   quickSearch: string
 ): ZetkinViewRow[] => {
-  if (!quickSearch) return rows;
+  if (!quickSearch) {
+    return rows;
+  }
 
   const searchableStringFields = ['person_field'];
   const searchableObjectFields = ['survey_response', 'person_notes'];

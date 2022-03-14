@@ -19,7 +19,9 @@ interface TaskTypeDetailsProps {
 const TaskTypeDetailsSection: React.FunctionComponent<TaskTypeDetailsProps> = ({
   task,
 }) => {
-  if (task.type === TASK_TYPE.OFFLINE) return null;
+  if (task.type === TASK_TYPE.OFFLINE) {
+    return null;
+  }
 
   return (
     <>

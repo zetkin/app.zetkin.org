@@ -70,9 +70,8 @@ const getQueryStatus = (
     if (!task?.target.filter_spec.length) {
       queryStatus = QUERY_STATUS.NEW;
     }
-  }
-  // we don't want 'publishing' state to appear on page load while the data is being fetched
-  else if (assignedTasks && !assignedTasks.length) {
+  } else if (assignedTasks && !assignedTasks.length) {
+    // we don't want 'publishing' state to appear on page load while the data is being fetched
     queryStatus = QUERY_STATUS.PUBLISHED;
   }
   return queryStatus;

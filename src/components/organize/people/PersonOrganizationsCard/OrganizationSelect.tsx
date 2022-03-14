@@ -64,7 +64,9 @@ const OrganizationSelect: React.FunctionComponent<OrganizationSelectProps> = ({
           color="primary"
           disabled={!selected}
           onClick={() => {
-            if (selected) onSubmit(selected);
+            if (selected) {
+              onSubmit(selected);
+            }
           }}
           style={{ height: '100%', marginLeft: 10 }}
           variant="contained"

@@ -42,7 +42,9 @@ const getOrganizationTrees = async (
       await connectionsRes.json();
 
     // If orgId refers to an org that is itself a sub-org, then nullify the parent prop
-    if (requestOrg.parent) requestOrg.parent = null;
+    if (requestOrg.parent) {
+      requestOrg.parent = null;
+    }
 
     // Assemble tree
     const orgTree = { ...requestOrg, sub_orgs: subOrgs };

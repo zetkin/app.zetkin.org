@@ -49,7 +49,7 @@ const PersonOrganizationsCard: React.FunctionComponent<PersonPageProps> = ({
   };
 
   const submitSubOrg = () => {
-    if (selected)
+    if (selected) {
       addOrgMutation.mutate(selected.id, {
         onError: () =>
           showSnackbar(
@@ -60,6 +60,7 @@ const PersonOrganizationsCard: React.FunctionComponent<PersonPageProps> = ({
           ),
         onSuccess: () => setSelected(undefined),
       });
+    }
   };
 
   const removeSubOrg = (subOrgId: PersonOrganization['id']) => {
@@ -79,7 +80,9 @@ const PersonOrganizationsCard: React.FunctionComponent<PersonPageProps> = ({
     });
   };
 
-  if (!data?.organizationTree) return null;
+  if (!data?.organizationTree) {
+    return null;
+  }
 
   return (
     <PersonCard

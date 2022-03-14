@@ -108,9 +108,8 @@ const SmartSearchDialog = ({
     // If editing existing filter
     if ('id' in filter) {
       editFilter(filter.id, filter);
-    }
-    // If creating a new filter
-    else {
+    } else {
+      // If creating a new filter
       addFilter(filter);
     }
   };

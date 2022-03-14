@@ -18,7 +18,9 @@ const SinglePersonLayout: FunctionComponent<SinglePersonLayoutProps> = ({
     personId as string
   ).useQuery();
 
-  if (!person) return null;
+  if (!person) {
+    return null;
+  }
 
   return (
     <TabbedLayout

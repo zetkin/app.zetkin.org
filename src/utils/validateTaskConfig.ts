@@ -1,7 +1,9 @@
 import { TASK_TYPE, ZetkinTask } from 'types/tasks';
 
 const validateTaskConfig = (task: ZetkinTask): boolean => {
-  if (typeof task.config !== 'object') return false;
+  if (typeof task.config !== 'object') {
+    return false;
+  }
 
   const configLength = Object.values(task.config).length;
 

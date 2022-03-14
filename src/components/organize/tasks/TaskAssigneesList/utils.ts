@@ -12,23 +12,27 @@ export const sortAssignedTasks = (
   if (
     first.status === ASSIGNED_STATUS.COMPLETED &&
     second.status !== ASSIGNED_STATUS.COMPLETED
-  )
+  ) {
     return -1;
+  }
   if (
     first.status !== ASSIGNED_STATUS.COMPLETED &&
     second.status === ASSIGNED_STATUS.COMPLETED
-  )
+  ) {
     return 1;
+  }
   if (
     first.status === ASSIGNED_STATUS.ASSIGNED &&
     second.status === ASSIGNED_STATUS.IGNORED
-  )
+  ) {
     return 1;
+  }
   if (
     first.status === ASSIGNED_STATUS.IGNORED &&
     second.status === ASSIGNED_STATUS.ASSIGNED
-  )
+  ) {
     return -1;
+  }
 
   let firstDate;
   if (first.completed) {

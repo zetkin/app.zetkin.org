@@ -32,7 +32,9 @@ const SingleCampaignLayout: FunctionComponent<SingleCampaignLayoutProps> = ({
 
   const [firstEvent, lastEvent] = getFirstAndLastEvent(campaignEvents);
 
-  if (!campaign) return null;
+  if (!campaign) {
+    return null;
+  }
 
   return (
     <TabbedLayout

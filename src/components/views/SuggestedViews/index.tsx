@@ -63,7 +63,9 @@ const SuggestedViews: React.FunctionComponent = () => {
         const suggestedViews = getSuggestedViews(viewsQuery.data, member?.id);
 
         // if fewer than 3 views supplied, render nothing
-        if (viewsQuery.data.length < 3) return null;
+        if (viewsQuery.data.length < 3) {
+          return null;
+        }
 
         return (
           <ZetkinSection

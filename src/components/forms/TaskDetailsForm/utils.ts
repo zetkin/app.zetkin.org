@@ -76,7 +76,9 @@ export const configForTaskType = (
   type: TASK_TYPE | undefined,
   config: AnyTaskTypeConfig | undefined
 ): AnyTaskTypeConfig => {
-  if (type === undefined || config === undefined) return {};
+  if (type === undefined || config === undefined) {
+    return {};
+  }
 
   if (type === TASK_TYPE.COLLECT_DEMOGRAPHICS) {
     const collectDemographicsConfig = config as CollectDemographicsConfig;

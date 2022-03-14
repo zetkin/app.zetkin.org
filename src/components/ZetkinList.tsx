@@ -33,7 +33,9 @@ const ZetkinList: React.FunctionComponent<ZetkinListProps> = ({
     <List disablePadding>
       {childrenArray.map((child, index) => {
         // Show more results if the user clicks the show more button
-        if (index < numResultsToDisplay) return child;
+        if (index < numResultsToDisplay) {
+          return child;
+        }
       })}
       {childrenArray.length > numResultsToDisplay && (
         <ListItem

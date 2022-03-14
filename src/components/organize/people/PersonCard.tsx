@@ -38,7 +38,9 @@ const PersonCard: React.FunctionComponent<{
 
   const onToggleEdit = (evt: SyntheticEvent) => {
     setEditable(!editable);
-    if (onClickEdit) onClickEdit(evt);
+    if (onClickEdit) {
+      onClickEdit(evt);
+    }
   };
 
   return (
