@@ -61,7 +61,9 @@ const test = base.extend<NextTestFixtures, NextWorkerFixtures>({
           handle(req, res, parsedUrl);
         });
         server.listen((error: unknown) => {
-          if (error) throw error;
+          if (error) {
+            throw error;
+          }
           resolve(server);
         });
       });
