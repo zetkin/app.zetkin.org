@@ -52,7 +52,9 @@ const PersonProfilePage: PageWithLayout<PersonPageProps> = (props) => {
     props.personId
   ).useQuery();
 
-  if (!person) return null;
+  if (!person) {
+    return null;
+  }
 
   return (
     <>

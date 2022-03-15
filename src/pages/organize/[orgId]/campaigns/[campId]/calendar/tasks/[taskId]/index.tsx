@@ -45,7 +45,9 @@ const TaskDetailPage: PageWithLayout<TaskDetailPageProps> = ({
 }) => {
   const { data: task } = taskResource(orgId, taskId).useQuery();
 
-  if (!task) return null;
+  if (!task) {
+    return null;
+  }
 
   return (
     <>

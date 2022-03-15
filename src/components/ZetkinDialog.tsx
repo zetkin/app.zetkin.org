@@ -12,7 +12,7 @@ interface ZetkinDialogProps {
   open: boolean;
   onClose: () => void;
   title?: string;
-  maxWidth?: false | 'sm' | 'md' | 'lg' | 'xl' | undefined;
+  maxWidth?: false | 'sm' | 'md' | 'lg' | 'xl';
 }
 
 const ZetkinDialog: FunctionComponent<ZetkinDialogProps> = ({

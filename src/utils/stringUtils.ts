@@ -13,7 +13,9 @@ function stringToBool(str: string | undefined): boolean {
 }
 
 const getEllipsedString = (string: string, maxLength: number): string => {
-  if (maxLength >= string.length) return string;
+  if (maxLength >= string.length) {
+    return string;
+  }
   const matches = Array.from(string.matchAll(/(\s)/g));
   const ellipseIndex = matches.find(
     (m) => (m.index as number) >= maxLength

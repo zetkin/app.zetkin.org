@@ -45,7 +45,9 @@ const ViewDataTableSearch: React.FunctionComponent<
     setSearchString(evt.currentTarget.value);
   };
   const handleClear = (override?: boolean) => {
-    if (!isActive || override) setSearchString('');
+    if (!isActive || override) {
+      setSearchString('');
+    }
     setAnchorEl(null);
   };
   useEffect(() => {

@@ -13,7 +13,9 @@ export type SurveySubmittedParams = ViewGridCellParams<Submission[] | null>;
 export const getNewestSubmission = (
   submissions: Submission[]
 ): string | null => {
-  if (!submissions.length) return null;
+  if (!submissions.length) {
+    return null;
+  }
   const subsWithDates = submissions.map((sub) => ({
     ...sub,
     submitted: new Date(sub.submitted),

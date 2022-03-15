@@ -49,9 +49,15 @@ export const OrganizationsTree: React.FunctionComponent<OrganizationProps> = ({
   const classes = useStyles({ level });
 
   const getIcon = () => {
-    if (level === 0) return <AccountTree />;
-    if (level === 1) return <SubdirectoryArrowRight />;
-    if (level === 2) return <ArrowRight />;
+    if (level === 0) {
+      return <AccountTree />;
+    }
+    if (level === 1) {
+      return <SubdirectoryArrowRight />;
+    }
+    if (level === 2) {
+      return <ArrowRight />;
+    }
   };
 
   return (

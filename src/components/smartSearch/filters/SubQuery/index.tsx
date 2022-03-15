@@ -98,7 +98,9 @@ const SubQuery = ({
     let newQuery = queries.find(
       (q) => q.type === type && selectedQuery?.title === q.title
     );
-    if (!newQuery) newQuery = queries.find((q) => q.type === type);
+    if (!newQuery) {
+      newQuery = queries.find((q) => q.type === type);
+    }
     setSelectedQuery(newQuery);
   };
 

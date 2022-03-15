@@ -47,8 +47,11 @@ const useSmartSearch = (
 
   const editFilter = (id: number, newFilterValue: SmartSearchFilterWithId) => {
     const filtersWithEditedFilter = filtersWithIds.map((filter) => {
-      if (id === filter.id) return newFilterValue;
-      else return filter;
+      if (id === filter.id) {
+        return newFilterValue;
+      } else {
+        return filter;
+      }
     });
     setFiltersWithIds(filtersWithEditedFilter);
   };

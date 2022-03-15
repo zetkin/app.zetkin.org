@@ -55,8 +55,9 @@ const PersonTags = ({
   );
 
   useEffect(() => {
-    if (filter.config.condition === CONDITION_OPERATOR.ANY)
+    if (filter.config.condition === CONDITION_OPERATOR.ANY) {
       setConfig({ ...filter.config, min_matching: minMatching });
+    }
   }, [minMatching]);
 
   // preserve the order of the tag array

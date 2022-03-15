@@ -108,8 +108,8 @@ export const createPrefetch = <Result>(
   url: string,
   fetchOptions?: RequestInit
 ): ((scaffoldContext: ScaffoldedContext) => Promise<{
-  data: Result | undefined;
-  state: QueryState<Result> | undefined;
+  data?: Result;
+  state?: QueryState<Result>;
 }>) => {
   return async (scaffoldContext) => {
     // Build get handler

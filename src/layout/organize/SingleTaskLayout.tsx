@@ -14,7 +14,9 @@ const SingleTaskLayout: FunctionComponent = ({ children }) => {
     taskId as string
   ).useQuery();
 
-  if (!task) return null;
+  if (!task) {
+    return null;
+  }
 
   return (
     <TabbedLayout
