@@ -73,8 +73,8 @@ export const isExpiresThird = (values: ZetkinTaskRequestBody): boolean => {
  * Returns a task config object with only the fields which exist on that type's config, and only fields with values
  */
 export const configForTaskType = (
-  type: TASK_TYPE | undefined,
-  config: AnyTaskTypeConfig | undefined
+  type?: TASK_TYPE,
+  config?: AnyTaskTypeConfig
 ): AnyTaskTypeConfig => {
   if (type === undefined || config === undefined) {
     return {};
