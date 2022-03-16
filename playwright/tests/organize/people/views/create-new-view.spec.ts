@@ -23,7 +23,7 @@ test.describe('Views list page', () => {
     moxy.setZetkinApiMock('/orgs/1/people/views', 'get', []);
     moxy.setZetkinApiMock('/orgs/1/people/views', 'post', undefined, 500);
 
-    await page.goto(appUri + '/organize/1/people/views');
+    await page.goto(appUri + '/organize/1/people');
     await page.click('data-testid=create-view-action-button');
 
     // Expect error dialog to exist on page
@@ -51,7 +51,7 @@ test.describe('Views list page', () => {
       NewViewColumns
     );
 
-    await page.goto(appUri + '/organize/1/people/views');
+    await page.goto(appUri + '/organize/1/people');
     await page.click('data-testid=create-view-action-button');
 
     await page.waitForNavigation();

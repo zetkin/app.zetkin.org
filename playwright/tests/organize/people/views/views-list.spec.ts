@@ -22,7 +22,7 @@ test.describe('Views list page', () => {
     }) => {
       moxy.setZetkinApiMock('/orgs/1/people/views', 'get', []);
 
-      await page.goto(appUri + '/organize/1/people/views');
+      await page.goto(appUri + '/organize/1/people');
       expect(
         await page.locator('data-testid=empty-views-list-indicator').count()
       ).toEqual(1);
@@ -46,7 +46,7 @@ test.describe('Views list page', () => {
         },
       ]);
 
-      await page.goto(appUri + '/organize/1/people/views');
+      await page.goto(appUri + '/organize/1/people');
       expect(await page.locator('.MuiDataGrid-row').count()).toEqual(2);
     });
 
@@ -57,7 +57,7 @@ test.describe('Views list page', () => {
     }) => {
       moxy.setZetkinApiMock('/orgs/1/people/views', 'get', [AllMembers]);
 
-      await page.goto(appUri + '/organize/1/people/views');
+      await page.goto(appUri + '/organize/1/people');
       await page.click(`text=${AllMembers.title}`);
       await page.waitForNavigation();
 

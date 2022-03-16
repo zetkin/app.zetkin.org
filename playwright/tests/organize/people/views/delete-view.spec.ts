@@ -54,7 +54,7 @@ test.describe('Delete view from view list page', () => {
       204
     );
 
-    await page.goto(appUri + '/organize/1/people/views');
+    await page.goto(appUri + '/organize/1/people');
 
     await deleteView(page);
     expectDeleteViewSuccess(moxy);
@@ -73,7 +73,7 @@ test.describe('Delete view from view list page', () => {
       405
     );
 
-    await page.goto(appUri + '/organize/1/people/views');
+    await page.goto(appUri + '/organize/1/people');
 
     await deleteView(page);
     await expectDeleteViewError(page);
