@@ -84,7 +84,7 @@ export default function Home(): JSX.Element {
               size="large"
               variant="text"
             >
-              <Button href="organize/1/people/views">People / views</Button>
+              <Button href="organize/1/people">People</Button>
               <Button href="organize/1/campaigns">Campaigns</Button>
             </ButtonGroup>
           </div>
