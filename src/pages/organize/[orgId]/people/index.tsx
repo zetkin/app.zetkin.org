@@ -50,11 +50,7 @@ const PeopleViewsPage: PageWithLayout<PeopleViewsPageProps> = () => {
         <title>
           {intl.formatMessage({
             id: 'layout.organize.people.title',
-          }) +
-            ' - ' +
-            intl.formatMessage({
-              id: 'layout.organize.people.tabs.views',
-            })}
+          })}
         </title>
       </Head>
       <SuggestedViews />
