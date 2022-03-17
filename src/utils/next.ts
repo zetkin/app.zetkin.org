@@ -193,10 +193,7 @@ export const scaffold =
 
             if (!requestedOrg2ElectricBoogaloo) {
               return {
-                redirect: {
-                  destination: '/403',
-                  permanent: false,
-                },
+                notFound: true,
               };
             }
           }
