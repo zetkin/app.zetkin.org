@@ -14,7 +14,7 @@ import { getMessages } from './locale';
 import { stringToBool } from './stringUtils';
 import { ZetkinZ } from '../types/sdk';
 import { ApiFetch, createApiFetch } from './apiFetch';
-import { ZetkinSession, ZetkinUser } from '../types/zetkin';
+import { ZetkinMembership, ZetkinSession, ZetkinUser } from '../types/zetkin';
 
 //TODO: Create module definition and revert to import.
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -108,6 +108,28 @@ export const scaffold =
       ctx.user = userRes.data.data as ZetkinUser;
     } catch (error) {
       ctx.user = null;
+    }
+
+    if (ctx.user) {
+      const orgId = ctx.query.orgId as string;
+      const userId = ctx.user.id.toString();
+
+      try {
+        const connectionRes = await ctx.z
+          .resource('orgs', orgId, 'people', userId, 'connections')
+          .get();
+        const connectionData = connectionRes.data.data as ZetkinMembership[];
+
+        if (reqWithSession.session) {
+          reqWithSession.session.organizations = connectionData.map(
+            (conn) => conn.organization
+          );
+        }
+      } catch (error) {
+        if (reqWithSession.session) {
+          reqWithSession.session.organizations = null;
+        }
+      }
     }
 
     if (options?.authLevelRequired) {
