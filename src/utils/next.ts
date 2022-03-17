@@ -75,6 +75,24 @@ const stripParams = (relativePath: string, params?: ParsedUrlQuery) => {
   return url.pathname + url.search;
 };
 
+const getAvailableOrganizations = async (
+  ctx: ScaffoldedContext,
+  orgId: string,
+  userId: string,
+  session: AppSession
+) => {
+  try {
+    const connectionRes = await ctx.z
+      .resource('orgs', orgId, 'people', userId, 'connections')
+      .get();
+    const connectionData = connectionRes.data.data as ZetkinMembership[];
+
+    session.organizations = connectionData.map((conn) => conn.organization);
+  } catch (error) {
+    session.organizations = null;
+  }
+};
+
 export const scaffold =
   (
     wrapped: ScaffoldedGetServerSideProps,
@@ -114,21 +132,8 @@ export const scaffold =
       const orgId = ctx.query.orgId as string;
       const userId = ctx.user.id.toString();
 
-      try {
-        const connectionRes = await ctx.z
-          .resource('orgs', orgId, 'people', userId, 'connections')
-          .get();
-        const connectionData = connectionRes.data.data as ZetkinMembership[];
-
-        if (reqWithSession.session) {
-          reqWithSession.session.organizations = connectionData.map(
-            (conn) => conn.organization
-          );
-        }
-      } catch (error) {
-        if (reqWithSession.session) {
-          reqWithSession.session.organizations = null;
-        }
+      if (reqWithSession.session) {
+        getAvailableOrganizations(ctx, orgId, userId, reqWithSession.session);
       }
     }
 
@@ -160,6 +165,42 @@ export const scaffold =
             permanent: false,
           },
         };
+      }
+    }
+
+    if (reqWithSession.session?.organizations) {
+      const orgId = ctx.query.orgId as string;
+      if (orgId) {
+        const requestedOrg = reqWithSession.session.organizations.find(
+          (org) => org.id === parseInt(orgId)
+        );
+
+        if (!requestedOrg) {
+          if (ctx.user) {
+            if (reqWithSession.session) {
+              getAvailableOrganizations(
+                ctx,
+                orgId,
+                ctx.user.id.toString(),
+                reqWithSession.session
+              );
+            }
+
+            const requestedOrg2ElectricBoogaloo =
+              reqWithSession.session?.organizations?.find(
+                (org) => org.id === parseInt(orgId)
+              );
+
+            if (!requestedOrg2ElectricBoogaloo) {
+              return {
+                redirect: {
+                  destination: '/403',
+                  permanent: false,
+                },
+              };
+            }
+          }
+        }
       }
     }
 
