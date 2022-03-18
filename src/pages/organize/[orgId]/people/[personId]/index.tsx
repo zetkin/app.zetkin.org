@@ -2,14 +2,15 @@ import { GetServerSideProps } from 'next';
 import { Grid } from '@material-ui/core';
 import Head from 'next/head';
 import { useIntl } from 'react-intl';
+import { useRouter } from 'next/router';
 
 import { PageWithLayout } from 'types';
 import PersonDetailsCard from 'components/organize/people/PersonDetailsCard';
 import PersonOrganizationsCard from 'components/organize/people/PersonOrganizationsCard';
-import { personResource } from 'api/people';
 import SinglePersonLayout from 'layout/organize/SinglePersonLayout';
 import TagsManager from 'components/organize/TagsManager';
 import ZetkinSection from 'components/ZetkinSection';
+import { personResource, personTagsResource } from 'api/people';
 import { scaffold, ScaffoldedGetServerSideProps } from 'utils/next';
 
 export const scaffoldOptions = {
@@ -50,7 +51,12 @@ export type PersonPageProps = {
 };
 
 const PersonProfilePage: PageWithLayout<PersonPageProps> = (props) => {
+  const { orgId, personId } = useRouter().query;
   const intl = useIntl();
+  const { data: personTags } = personTagsResource(
+    orgId as string,
+    personId as string
+  ).useQuery();
   const { data: person } = personResource(
     props.orgId,
     props.personId
@@ -78,7 +84,7 @@ const PersonProfilePage: PageWithLayout<PersonPageProps> = (props) => {
           <ZetkinSection
             title={intl.formatMessage({ id: 'pages.people.person.tags.title' })}
           >
-            <TagsManager />
+            <TagsManager appliedTags={personTags || []} />
           </ZetkinSection>
         </Grid>
       </Grid>

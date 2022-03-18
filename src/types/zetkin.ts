@@ -200,6 +200,8 @@ export interface ZetkinTag {
   title: string;
   hidden: boolean;
   description: string;
+  organization: ZetkinOrganization;
+  color: string;
 }
 
 export enum CUSTOM_FIELD_TYPE {
