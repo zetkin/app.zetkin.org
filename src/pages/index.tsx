@@ -7,6 +7,7 @@ import { Button, ButtonGroup, Container, Typography } from '@material-ui/core';
 
 import { AppSession } from '../types';
 import { scaffold } from '../utils/next';
+import { ZetkinMembership, ZetkinUser } from '../types/zetkin';
 
 //TODO: Create module definition and revert to import.
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -34,8 +35,33 @@ export const getServerSideProps: GetServerSideProps = scaffold(
         await applySession(req, res);
 
         const reqWithSession = req as { session?: AppSession };
+
+        try {
+          const userRes = await context.z.resource('users', 'me').get();
+          context.user = userRes.data.data as ZetkinUser;
+        } catch (error) {
+          context.user = null;
+        }
+
         if (reqWithSession.session) {
           reqWithSession.session.tokenData = context.z.getTokenData();
+
+          if (context.user) {
+            const userId = context.user.id.toString();
+            try {
+              const membershipsRes = await context.z
+                .resource('users', userId, 'memberships')
+                .get();
+              const membershipsData = membershipsRes.data
+                .data as ZetkinMembership[];
+
+              reqWithSession.session.organizations = membershipsData.map(
+                (membership) => membership.organization.id
+              );
+            } catch (error) {
+              reqWithSession.session.organizations = null;
+            }
+          }
 
           if (reqWithSession.session.redirAfterLogin) {
             // User logged in after trying to access some URL, and

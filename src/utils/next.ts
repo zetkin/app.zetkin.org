@@ -75,22 +75,10 @@ const stripParams = (relativePath: string, params?: ParsedUrlQuery) => {
   return url.pathname + url.search;
 };
 
-const getAvailableOrganizations = async (
-  ctx: ScaffoldedContext,
-  orgId: string,
-  userId: string,
-  session: AppSession
-) => {
-  try {
-    const connectionRes = await ctx.z
-      .resource('orgs', orgId, 'people', userId, 'connections')
-      .get();
-    const connectionData = connectionRes.data.data as ZetkinMembership[];
-
-    session.organizations = connectionData.map((conn) => conn.organization);
-  } catch (error) {
-    session.organizations = null;
-  }
+const hasOrg = (reqWithSession: { session?: AppSession }, orgId: string) => {
+  return reqWithSession.session?.organizations?.find(
+    (org) => org === parseInt(orgId)
+  );
 };
 
 export const scaffold =
@@ -128,15 +116,6 @@ export const scaffold =
       ctx.user = null;
     }
 
-    if (ctx.user) {
-      const orgId = ctx.query.orgId as string;
-      const userId = ctx.user.id.toString();
-
-      if (reqWithSession.session) {
-        getAvailableOrganizations(ctx, orgId, userId, reqWithSession.session);
-      }
-    }
-
     if (options?.authLevelRequired) {
       let authLevel;
 
@@ -171,27 +150,23 @@ export const scaffold =
     if (reqWithSession.session?.organizations) {
       const orgId = ctx.query.orgId as string;
       if (orgId) {
-        const requestedOrg = reqWithSession.session.organizations.find(
-          (org) => org.id === parseInt(orgId)
-        );
-
-        if (!requestedOrg) {
+        if (!hasOrg(reqWithSession, orgId)) {
           if (ctx.user) {
-            if (reqWithSession.session) {
-              getAvailableOrganizations(
-                ctx,
-                orgId,
-                ctx.user.id.toString(),
-                reqWithSession.session
+            try {
+              const membershipsRes = await ctx.z
+                .resource('users', ctx.user.id.toString(), 'memberships')
+                .get();
+              const membershipsData = membershipsRes.data
+                .data as ZetkinMembership[];
+
+              reqWithSession.session.organizations = membershipsData.map(
+                (membership) => membership.organization.id
               );
+            } catch (error) {
+              reqWithSession.session.organizations = null;
             }
 
-            const requestedOrg2ElectricBoogaloo =
-              reqWithSession.session?.organizations?.find(
-                (org) => org.id === parseInt(orgId)
-              );
-
-            if (!requestedOrg2ElectricBoogaloo) {
+            if (!hasOrg(reqWithSession, orgId)) {
               return {
                 notFound: true,
               };
