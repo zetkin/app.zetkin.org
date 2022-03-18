@@ -150,26 +150,28 @@ export const scaffold =
     if (reqWithSession.session?.organizations) {
       const orgId = ctx.query.orgId as string;
       if (orgId) {
-        if (!hasOrg(reqWithSession, orgId)) {
-          if (ctx.user) {
-            try {
-              const membershipsRes = await ctx.z
-                .resource('users', ctx.user.id.toString(), 'memberships')
-                .get();
-              const membershipsData = membershipsRes.data
-                .data as ZetkinMembership[];
+        if (!ctx.user?.is_superuser) {
+          if (!hasOrg(reqWithSession, orgId)) {
+            if (ctx.user) {
+              try {
+                const membershipsRes = await ctx.z
+                  .resource('users', ctx.user.id.toString(), 'memberships')
+                  .get();
+                const membershipsData = membershipsRes.data
+                  .data as ZetkinMembership[];
 
-              reqWithSession.session.organizations = membershipsData.map(
-                (membership) => membership.organization.id
-              );
-            } catch (error) {
-              reqWithSession.session.organizations = null;
-            }
+                reqWithSession.session.organizations = membershipsData.map(
+                  (membership) => membership.organization.id
+                );
+              } catch (error) {
+                reqWithSession.session.organizations = null;
+              }
 
-            if (!hasOrg(reqWithSession, orgId)) {
-              return {
-                notFound: true,
-              };
+              if (!hasOrg(reqWithSession, orgId)) {
+                return {
+                  notFound: true,
+                };
+              }
             }
           }
         }
