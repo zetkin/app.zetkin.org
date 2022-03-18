@@ -4,8 +4,8 @@ const TagsManager: React.FunctionComponent = () => {
   return (
     <Box>
       {/* Tags List */}
-      <Box display="flex" flexWrap="wrap">
-        {[{ title: '1' }, { title: '2' }].map((tag, i) => {
+      <Box display="flex" flexWrap="wrap" style={{ gap: 8 }}>
+        {[{ title: 'Activist' }, { title: 'Contributor' }].map((tag, i) => {
           // Tag Chip
           return (
             <Box
@@ -13,9 +13,8 @@ const TagsManager: React.FunctionComponent = () => {
               bgcolor="pink"
               borderRadius="18px"
               fontSize={12}
-              margin={1}
               px={2}
-              py={1}
+              py={0.7}
             >
               {tag.title}
             </Box>
