@@ -55,9 +55,9 @@ export const getServerSideProps: GetServerSideProps = scaffold(
               const membershipsData = membershipsRes.data
                 .data as ZetkinMembership[];
 
-              reqWithSession.session.organizations = membershipsData.map(
-                (membership) => membership.organization.id
-              );
+              reqWithSession.session.organizations = membershipsData
+                .filter((membership) => membership.role)
+                .map((membership) => membership.organization.id);
             } catch (error) {
               reqWithSession.session.organizations = null;
             }
