@@ -225,3 +225,13 @@ export type {
 };
 
 export type { ZetkinView, ZetkinViewColumn, ZetkinViewRow };
+
+export interface ZetkinJourney {
+  id: number;
+  organization: ZetkinOrganization;
+  singular_name: string;
+  stats: {
+    closed: number;
+    open: number;
+  };
+}
