@@ -18,7 +18,7 @@ const TagsManager: React.FunctionComponent<{
                 <Box
                   bgcolor={tag.color || '#e1e1e1'}
                   borderRadius="18px"
-                  fontSize={12}
+                  fontSize={13}
                   px={2}
                   py={0.7}
                 >
