@@ -13,5 +13,5 @@ person:
     addError: This organization could not be added
     title: Organizations
   tags:
-    title: Tags
     noTags: No tags applied
+    title: Tags

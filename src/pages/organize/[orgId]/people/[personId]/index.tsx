@@ -12,6 +12,7 @@ import TagsManager from 'components/organize/TagsManager';
 import ZetkinSection from 'components/ZetkinSection';
 import { personResource, personTagsResource } from 'api/people';
 import { scaffold, ScaffoldedGetServerSideProps } from 'utils/next';
+import ZetkinQuery from 'components/ZetkinQuery';
 
 export const scaffoldOptions = {
   authLevelRequired: 2,
@@ -53,7 +54,7 @@ export type PersonPageProps = {
 const PersonProfilePage: PageWithLayout<PersonPageProps> = (props) => {
   const { orgId, personId } = useRouter().query;
   const intl = useIntl();
-  const { data: personTags } = personTagsResource(
+  const personTagsQuery = personTagsResource(
     orgId as string,
     personId as string
   ).useQuery();
@@ -74,17 +75,19 @@ const PersonProfilePage: PageWithLayout<PersonPageProps> = (props) => {
         </title>
       </Head>
       <Grid container direction="row" spacing={6}>
-        <Grid item lg={4} md={12}>
+        <Grid item lg={4} xs={12}>
           <PersonDetailsCard person={person} />
         </Grid>
-        <Grid item lg={4} md={12}>
+        <Grid item lg={4} xs={12}>
           <PersonOrganizationsCard {...props} />
         </Grid>
-        <Grid item lg={4} md={12}>
+        <Grid item lg={4} xs={12}>
           <ZetkinSection
             title={intl.formatMessage({ id: 'pages.people.person.tags.title' })}
           >
-            <TagsManager appliedTags={personTags || []} />
+            <ZetkinQuery queries={{ personTagsQuery }}>
+              <TagsManager appliedTags={personTagsQuery.data || []} />
+            </ZetkinQuery>
           </ZetkinSection>
         </Grid>
       </Grid>
