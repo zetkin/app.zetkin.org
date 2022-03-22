@@ -9,10 +9,10 @@ import PersonDetailsCard from 'components/organize/people/PersonDetailsCard';
 import PersonOrganizationsCard from 'components/organize/people/PersonOrganizationsCard';
 import SinglePersonLayout from 'layout/organize/SinglePersonLayout';
 import TagsManager from 'components/organize/TagsManager';
+import ZetkinQuery from 'components/ZetkinQuery';
 import ZetkinSection from 'components/ZetkinSection';
 import { personResource, personTagsResource } from 'api/people';
 import { scaffold, ScaffoldedGetServerSideProps } from 'utils/next';
-import ZetkinQuery from 'components/ZetkinQuery';
 
 export const scaffoldOptions = {
   authLevelRequired: 2,
