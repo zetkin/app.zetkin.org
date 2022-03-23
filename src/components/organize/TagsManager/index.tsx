@@ -31,6 +31,7 @@ const TagsManager: React.FunctionComponent<{
             <Switch
               checked={isGrouped}
               color="primary"
+              data-testid="TagsManager-groupToggle"
               disabled={!hasGroups}
               name="Tags"
               onChange={() => setIsGrouped(!isGrouped)}
