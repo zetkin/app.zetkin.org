@@ -4,6 +4,7 @@ import { ZetkinTag } from 'types/zetkin';
 const tag: ZetkinTag = {
   color: null,
   description: 'People who organise',
+  group: null,
   hidden: false,
   id: 1,
   organization: {

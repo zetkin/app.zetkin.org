@@ -13,5 +13,7 @@ person:
     addError: This organization could not be added
     title: Organizations
   tags:
+    groupTags: Group tags
+    noGroups: None of these tags have a group
     noTags: No tags applied
     title: Tags

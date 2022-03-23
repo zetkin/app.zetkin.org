@@ -1,7 +1,6 @@
 import { GetServerSideProps } from 'next';
 import { Grid } from '@material-ui/core';
 import Head from 'next/head';
-import { useIntl } from 'react-intl';
 import { useRouter } from 'next/router';
 
 import { PageWithLayout } from 'types';
@@ -10,7 +9,6 @@ import PersonOrganizationsCard from 'components/organize/people/PersonOrganizati
 import SinglePersonLayout from 'layout/organize/SinglePersonLayout';
 import TagsManager from 'components/organize/TagsManager';
 import ZetkinQuery from 'components/ZetkinQuery';
-import ZetkinSection from 'components/ZetkinSection';
 import { personResource, personTagsResource } from 'api/people';
 import { scaffold, ScaffoldedGetServerSideProps } from 'utils/next';
 
@@ -53,7 +51,6 @@ export type PersonPageProps = {
 
 const PersonProfilePage: PageWithLayout<PersonPageProps> = (props) => {
   const { orgId, personId } = useRouter().query;
-  const intl = useIntl();
   const personTagsQuery = personTagsResource(
     orgId as string,
     personId as string
@@ -82,13 +79,9 @@ const PersonProfilePage: PageWithLayout<PersonPageProps> = (props) => {
           <PersonOrganizationsCard {...props} />
         </Grid>
         <Grid item lg={4} xs={12}>
-          <ZetkinSection
-            title={intl.formatMessage({ id: 'pages.people.person.tags.title' })}
-          >
-            <ZetkinQuery queries={{ personTagsQuery }}>
-              <TagsManager appliedTags={personTagsQuery.data || []} />
-            </ZetkinQuery>
-          </ZetkinSection>
+          <ZetkinQuery queries={{ personTagsQuery }}>
+            <TagsManager appliedTags={personTagsQuery.data || []} />
+          </ZetkinQuery>
         </Grid>
       </Grid>
     </>
