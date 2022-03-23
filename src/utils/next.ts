@@ -1,4 +1,6 @@
 import { applySession } from 'next-session';
+import { IncomingMessage } from 'http';
+import { NextApiRequestCookies } from 'next/dist/server/api-utils';
 import { ParsedUrlQuery } from 'querystring';
 import { QueryClient } from 'react-query';
 import { dehydrate, DehydratedState } from 'react-query/hydration';
@@ -11,10 +13,11 @@ import {
 import { AppSession } from '../types';
 import { getBrowserLanguage } from './locale';
 import { getMessages } from './locale';
+import getOrganizations from './getOrganizations';
 import { stringToBool } from './stringUtils';
 import { ZetkinZ } from '../types/sdk';
 import { ApiFetch, createApiFetch } from './apiFetch';
-import { ZetkinMembership, ZetkinSession, ZetkinUser } from '../types/zetkin';
+import { ZetkinSession, ZetkinUser } from '../types/zetkin';
 
 //TODO: Create module definition and revert to import.
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -78,7 +81,9 @@ const stripParams = (relativePath: string, params?: ParsedUrlQuery) => {
 const hasOrg = (reqWithSession: { session?: AppSession }, orgId: string) => {
   return reqWithSession.session?.organizations?.find(
     (org) => org === parseInt(orgId)
-  );
+  )
+    ? true
+    : false;
 };
 
 export const scaffold =
@@ -103,9 +108,16 @@ export const scaffold =
 
     const { req, res } = contextFromNext;
     await applySession(req, res);
+    const reqWithSession = req as IncomingMessage & {
+      cookies: NextApiRequestCookies;
+      session: AppSession;
+    };
 
-    const reqWithSession = req as { session?: AppSession };
-    if (reqWithSession.session?.tokenData) {
+    if (!('session' in reqWithSession)) {
+      throw new Error('Session was not applied correctly.');
+    }
+
+    if (reqWithSession.session.tokenData) {
       ctx.z.setTokenData(reqWithSession.session.tokenData);
     }
 
@@ -129,14 +141,12 @@ export const scaffold =
       }
 
       if (authLevel < options.authLevelRequired) {
-        if (reqWithSession.session) {
-          // Store the URL that the user tried to access, so that they
-          // can be redirected back here after logging in
-          reqWithSession.session.redirAfterLogin = stripParams(
-            ctx.resolvedUrl,
-            ctx.params
-          );
-        }
+        // Store the URL that the user tried to access, so that they
+        // can be redirected back here after logging in
+        reqWithSession.session.redirAfterLogin = stripParams(
+          ctx.resolvedUrl,
+          ctx.params
+        );
 
         return {
           redirect: {
@@ -147,41 +157,27 @@ export const scaffold =
       }
     }
 
-    if (reqWithSession.session?.organizations) {
-      const orgId = ctx.query.orgId as string;
-      if (orgId) {
-        if (!ctx.user?.is_superuser) {
+    const orgId = ctx.query.orgId as string;
+
+    if (orgId) {
+      if (!ctx.user?.is_superuser) {
+        if (!hasOrg(reqWithSession, orgId)) {
+          try {
+            reqWithSession.session.organizations = await getOrganizations(ctx);
+          } catch (error) {
+            reqWithSession.session.organizations = null;
+          }
           if (!hasOrg(reqWithSession, orgId)) {
-            if (ctx.user) {
-              try {
-                const membershipsRes = await ctx.z
-                  .resource('users', ctx.user.id.toString(), 'memberships')
-                  .get();
-                const membershipsData = membershipsRes.data
-                  .data as ZetkinMembership[];
-
-                reqWithSession.session.organizations = membershipsData
-                  .filter((membership) => membership.role)
-                  .map((membership) => membership.organization.id);
-              } catch (error) {
-                reqWithSession.session.organizations = null;
-              }
-
-              if (!hasOrg(reqWithSession, orgId)) {
-                return {
-                  notFound: true,
-                };
-              }
-            }
+            return {
+              notFound: true,
+            };
           }
         }
       }
     }
 
     // Update token data in session, in case it was refreshed
-    if (reqWithSession.session) {
-      reqWithSession.session.tokenData = ctx.z.getTokenData();
-    }
+    reqWithSession.session.tokenData = ctx.z.getTokenData();
 
     const result = (await wrapped(ctx)) || {};
 

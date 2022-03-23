@@ -6,8 +6,9 @@ import { stringToBool } from '../utils/stringUtils';
 import { Button, ButtonGroup, Container, Typography } from '@material-ui/core';
 
 import { AppSession } from '../types';
+import getOrganizations from 'utils/getOrganizations';
 import { scaffold } from '../utils/next';
-import { ZetkinMembership, ZetkinUser } from '../types/zetkin';
+import { ZetkinUser } from '../types/zetkin';
 
 //TODO: Create module definition and revert to import.
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -45,19 +46,11 @@ export const getServerSideProps: GetServerSideProps = scaffold(
 
         if (reqWithSession.session) {
           reqWithSession.session.tokenData = context.z.getTokenData();
-
           if (context.user) {
-            const userId = context.user.id.toString();
             try {
-              const membershipsRes = await context.z
-                .resource('users', userId, 'memberships')
-                .get();
-              const membershipsData = membershipsRes.data
-                .data as ZetkinMembership[];
-
-              reqWithSession.session.organizations = membershipsData
-                .filter((membership) => membership.role)
-                .map((membership) => membership.organization.id);
+              reqWithSession.session.organizations = await getOrganizations(
+                context
+              );
             } catch (error) {
               reqWithSession.session.organizations = null;
             }
