@@ -202,7 +202,7 @@ export interface ZetkinTag {
   hidden: boolean;
   organization: ZetkinOrganization;
   color: string | null;
-  group: string | null;
+  group: { id: number; title: string } | null;
 }
 
 export enum CUSTOM_FIELD_TYPE {
