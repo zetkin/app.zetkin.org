@@ -11,10 +11,10 @@ describe('<TagsManager />', () => {
       expect(getByText('misc.tags.tagsManager.noTags')).toBeTruthy();
     });
     it('shows tags that have been applied in the tags list', () => {
-      const tag1 = mockTag({ title: 'Organiser' });
+      const tag1 = mockTag({ title: 'Organizer' });
       const tag2 = mockTag({ id: 2, title: 'Activist' });
       const { getByText } = render(<TagsManager appliedTags={[tag1, tag2]} />);
-      expect(getByText('Organiser')).toBeTruthy();
+      expect(getByText('Organizer')).toBeTruthy();
       expect(getByText('Activist')).toBeTruthy();
     });
   });

@@ -3,7 +3,7 @@ import { ZetkinTag } from 'types/zetkin';
 
 const tag: ZetkinTag = {
   color: null,
-  description: 'People who organise',
+  description: 'People who organize',
   group: null,
   hidden: false,
   id: 1,
@@ -11,7 +11,7 @@ const tag: ZetkinTag = {
     id: 1,
     title: 'KPD',
   },
-  title: 'Organiser',
+  title: 'Organizer',
 };
 
 const mockTag = (overrides?: Partial<ZetkinTag>): ZetkinTag => {
