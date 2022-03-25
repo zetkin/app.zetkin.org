@@ -18,11 +18,12 @@ const ZetkinSection: FunctionComponent<ZetkinSectionProps> = ({
         display="flex"
         justifyContent="space-between"
         mb={2}
+        minHeight={38}
       >
         <Typography color="secondary" component="h2" variant="h6">
           {title}
         </Typography>
-        {action}
+        {action && <Box>{action}</Box>}
       </Box>
       {children}
     </Box>
