@@ -1,17 +1,15 @@
+import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { useIntl } from 'react-intl';
 import { Box, Grid } from '@material-ui/core';
 
-import getJourneys from 'fetching/getJourneys';
-import { GetServerSideProps } from 'next';
 import JourneyCard from 'components/organize/journeys/JourneyCard';
-import JourneysLayout from 'layout/organize/JourneysLayout';
-import { PageWithLayout } from 'types';
-import { scaffold } from 'utils/next';
-import { useQuery } from 'react-query';
-import { ZetkinJourney } from 'types/zetkin';
-import ZetkinSection from 'components/ZetkinSection';
-
+import JourneysLayout from '../../../../layout/organize/JourneysLayout';
+import { journeysResource } from '../../../../api/journeys';
+import { PageWithLayout } from '../../../../types';
+import { scaffold } from '../../../../utils/next';
+import { ZetkinJourney } from '../../../../types/zetkin';
+import ZetkinSection from '../../../../components/ZetkinSection';
 const scaffoldOptions = {
   authLevelRequired: 2,
   localeScope: ['layout.organize', 'misc', 'pages.organizeAllJourneys'],
@@ -36,7 +34,7 @@ const AllJourneysOverviewPage: PageWithLayout<AllJourneysOverviewPageProps> = ({
 }) => {
   const intl = useIntl();
 
-  const journeysQuery = useQuery(['journeys', orgId], getJourneys(orgId));
+  const journeysQuery = journeysResource(orgId).useQuery();
   const journeys = journeysQuery.data || [];
 
   return (
