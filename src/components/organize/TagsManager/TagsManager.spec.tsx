@@ -36,6 +36,11 @@ describe('<TagsManager />', () => {
         id: 4,
         title: 'Cooking',
       }),
+      mockTag({
+        group: { id: 2, title: 'Skills' },
+        id: 4,
+        title: 'Phone banking',
+      }),
       // Ungrouped tags
       mockTag({
         group: null,
@@ -55,9 +60,16 @@ describe('<TagsManager />', () => {
       ?.firstChild as Element & { disabled: boolean };
     expect(toggle.disabled).toBeFalsy();
     click(toggle);
-    // Shows group titles
+
     expect(getByText('Political')).toBeTruthy();
+    expect(getByTestId('TagsManager-groupedTags-1').children.length).toEqual(2);
+
     expect(getByText('Skills')).toBeTruthy();
+    expect(getByTestId('TagsManager-groupedTags-2').children.length).toEqual(3);
+
     expect(getByText('misc.tags.tagsManager.ungroupedHeader')).toBeTruthy();
+    expect(
+      getByTestId('TagsManager-groupedTags-ungrouped').children.length
+    ).toEqual(2);
   });
 });

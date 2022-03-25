@@ -95,10 +95,15 @@ const TagsManager: React.FunctionComponent<{
             {isGrouped ? (
               // Grouped list
               <>
-                {Object.entries(groups).map(([, group], i) => (
+                {Object.entries(groups).map(([id, group], i) => (
                   <Box key={i} mb={1}>
                     <Typography variant="overline">{group.title}</Typography>
-                    <Box display="flex" flexWrap="wrap" style={{ gap: 8 }}>
+                    <Box
+                      data-testid={`TagsManager-groupedTags-${id}`}
+                      display="flex"
+                      flexWrap="wrap"
+                      style={{ gap: 8 }}
+                    >
                       {group.tags.map((tag, i) => {
                         // Tag Chip
                         return <TagChip key={i} tag={tag} />;
