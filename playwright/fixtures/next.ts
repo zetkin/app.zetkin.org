@@ -24,7 +24,7 @@ import {
 } from '../../src/types/zetkin';
 
 interface NextTestFixtures {
-  login: () => void;
+  login: (user?: ZetkinUser, memberships?: ZetkinMembership[]) => void;
   logout: () => void;
 }
 
