@@ -15,7 +15,7 @@ import moxy, {
   Moxy,
 } from 'moxy';
 
-import Memberships from '../mockData/Memberships';
+import Memberships from '../mockData/orgs/KPD/Memberships';
 import RosaLuxemburg from '../mockData/users/RosaLuxemburg';
 import {
   ZetkinMembership,

@@ -1,6 +1,6 @@
-import KPD from './orgs/KPD';
-import RosaLuxemburg from './users/RosaLuxemburg';
-import { ZetkinMembership } from '../../src/types/zetkin';
+import KPD from '.';
+import RosaLuxemburg from '../../users/RosaLuxemburg';
+import { ZetkinMembership } from '../../../../src/types/zetkin';
 
 const Memberships: ZetkinMembership[] = [
   {

@@ -79,11 +79,11 @@ const stripParams = (relativePath: string, params?: ParsedUrlQuery) => {
 };
 
 const hasOrg = (reqWithSession: { session?: AppSession }, orgId: string) => {
-  return reqWithSession.session?.organizations?.find(
-    (org) => org === parseInt(orgId)
-  )
-    ? true
-    : false;
+  return Boolean(
+    reqWithSession.session?.organizations?.find(
+      (org) => org === parseInt(orgId)
+    )
+  );
 };
 
 export const scaffold =
@@ -112,10 +112,6 @@ export const scaffold =
       cookies: NextApiRequestCookies;
       session: AppSession;
     };
-
-    if (!('session' in reqWithSession)) {
-      throw new Error('Session was not applied correctly.');
-    }
 
     if (reqWithSession.session.tokenData) {
       ctx.z.setTokenData(reqWithSession.session.tokenData);
@@ -159,14 +155,20 @@ export const scaffold =
 
     const orgId = ctx.query.orgId as string;
 
+    //if it's an org page we check if you have access
     if (orgId) {
+      //superusers get in everywhere
       if (!ctx.user?.is_superuser) {
+        //if the org is in your memberships, come in
+        //if not, more checks
         if (!hasOrg(reqWithSession, orgId)) {
+          //fetch your orgs again to see if they've been updated
           try {
             reqWithSession.session.organizations = await getOrganizations(ctx);
           } catch (error) {
             reqWithSession.session.organizations = null;
           }
+          //if you still don't have the org we redirect to 404
           if (!hasOrg(reqWithSession, orgId)) {
             return {
               notFound: true,
