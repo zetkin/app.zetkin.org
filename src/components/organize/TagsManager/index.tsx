@@ -83,7 +83,7 @@ const TagsManager: React.FunctionComponent<{
       action={
         <GroupToggle
           checked={isGrouped}
-          onChange={() => setIsGrouped(!setIsGrouped)}
+          onChange={() => setIsGrouped(!isGrouped)}
         />
       }
       title={intl.formatMessage({ id: 'misc.tags.tagsManager.title' })}
@@ -95,16 +95,16 @@ const TagsManager: React.FunctionComponent<{
             {isGrouped ? (
               // Grouped list
               <>
-                {Object.entries(groups).map(([, group]) => (
-                  <>
-                    <Typography variant="h3">{group.title}</Typography>
+                {Object.entries(groups).map(([, group], i) => (
+                  <Box key={i} mb={1}>
+                    <Typography variant="overline">{group.title}</Typography>
                     <Box display="flex" flexWrap="wrap" style={{ gap: 8 }}>
                       {group.tags.map((tag, i) => {
                         // Tag Chip
                         return <TagChip key={i} tag={tag} />;
                       })}
                     </Box>
-                  </>
+                  </Box>
                 ))}
               </>
             ) : (
@@ -119,7 +119,7 @@ const TagsManager: React.FunctionComponent<{
           </>
         )}
         {/* If no tags */}
-        {appliedTags?.length === 0 && (
+        {appliedTags.length === 0 && (
           <Typography>
             <FormattedMessage id="misc.tags.tagsManager.noTags" />
           </Typography>
