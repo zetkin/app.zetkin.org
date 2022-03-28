@@ -198,8 +198,11 @@ export interface ZetkinActivity {
 export interface ZetkinTag {
   id: number;
   title: string;
-  hidden: boolean;
   description: string;
+  hidden: boolean;
+  organization: ZetkinOrganization;
+  color: string | null;
+  group: { id: number; title: string } | null;
 }
 
 export enum CUSTOM_FIELD_TYPE {
