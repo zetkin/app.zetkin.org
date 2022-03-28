@@ -1,4 +1,5 @@
 import { mockObject } from 'utils/testing/mocks';
+import mockOrganization from './mockOrganization';
 import { ZetkinTag } from 'types/zetkin';
 
 const tag: ZetkinTag = {
@@ -7,10 +8,7 @@ const tag: ZetkinTag = {
   group: null,
   hidden: false,
   id: 1,
-  organization: {
-    id: 1,
-    title: 'KPD',
-  },
+  organization: mockOrganization(),
   title: 'Organizer',
 };
 
