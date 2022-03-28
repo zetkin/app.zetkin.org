@@ -1,4 +1,6 @@
 import { applySession } from 'next-session';
+import { IncomingMessage } from 'http';
+import { NextApiRequestCookies } from 'next/dist/server/api-utils';
 import { ParsedUrlQuery } from 'querystring';
 import { QueryClient } from 'react-query';
 import { dehydrate, DehydratedState } from 'react-query/hydration';
@@ -11,6 +13,7 @@ import {
 import { AppSession } from '../types';
 import { getBrowserLanguage } from './locale';
 import { getMessages } from './locale';
+import getUserMemberships from './getUserMemberships';
 import { stringToBool } from './stringUtils';
 import { ZetkinZ } from '../types/sdk';
 import { ApiFetch, createApiFetch } from './apiFetch';
@@ -75,6 +78,12 @@ const stripParams = (relativePath: string, params?: ParsedUrlQuery) => {
   return url.pathname + url.search;
 };
 
+const hasOrg = (reqWithSession: { session?: AppSession }, orgId: string) => {
+  return Boolean(
+    reqWithSession.session?.memberships?.find((org) => org === parseInt(orgId))
+  );
+};
+
 export const scaffold =
   (
     wrapped: ScaffoldedGetServerSideProps,
@@ -97,9 +106,12 @@ export const scaffold =
 
     const { req, res } = contextFromNext;
     await applySession(req, res);
+    const reqWithSession = req as IncomingMessage & {
+      cookies: NextApiRequestCookies;
+      session: AppSession;
+    };
 
-    const reqWithSession = req as { session?: AppSession };
-    if (reqWithSession.session?.tokenData) {
+    if (reqWithSession.session.tokenData) {
       ctx.z.setTokenData(reqWithSession.session.tokenData);
     }
 
@@ -123,14 +135,12 @@ export const scaffold =
       }
 
       if (authLevel < options.authLevelRequired) {
-        if (reqWithSession.session) {
-          // Store the URL that the user tried to access, so that they
-          // can be redirected back here after logging in
-          reqWithSession.session.redirAfterLogin = stripParams(
-            ctx.resolvedUrl,
-            ctx.params
-          );
-        }
+        // Store the URL that the user tried to access, so that they
+        // can be redirected back here after logging in
+        reqWithSession.session.redirAfterLogin = stripParams(
+          ctx.resolvedUrl,
+          ctx.params
+        );
 
         return {
           redirect: {
@@ -141,10 +151,33 @@ export const scaffold =
       }
     }
 
-    // Update token data in session, in case it was refreshed
-    if (reqWithSession.session) {
-      reqWithSession.session.tokenData = ctx.z.getTokenData();
+    const orgId = ctx.query.orgId as string;
+
+    //if it's an org page we check if you have access
+    if (orgId) {
+      //superusers get in everywhere
+      if (!ctx.user?.is_superuser) {
+        //if the org is in your memberships, come in
+        //if not, more checks
+        if (!hasOrg(reqWithSession, orgId)) {
+          //fetch your orgs again to see if they've been updated
+          try {
+            reqWithSession.session.memberships = await getUserMemberships(ctx);
+          } catch (error) {
+            reqWithSession.session.memberships = null;
+          }
+          //if you still don't have the org we redirect to 404
+          if (!hasOrg(reqWithSession, orgId)) {
+            return {
+              notFound: true,
+            };
+          }
+        }
+      }
     }
+
+    // Update token data in session, in case it was refreshed
+    reqWithSession.session.tokenData = ctx.z.getTokenData();
 
     const result = (await wrapped(ctx)) || {};
 

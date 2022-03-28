@@ -69,6 +69,7 @@ export interface ZetkinEvent {
 export interface ZetkinUser {
   first_name: string;
   id: number;
+  is_superuser?: boolean;
   last_name: string;
   username: string;
 }
