@@ -4,12 +4,13 @@ import { useIntl } from 'react-intl';
 import { Box, Grid } from '@material-ui/core';
 
 import JourneyCard from 'components/organize/journeys/JourneyCard';
-import JourneysLayout from '../../../../layout/organize/JourneysLayout';
-import { journeysResource } from '../../../../api/journeys';
-import { PageWithLayout } from '../../../../types';
-import { scaffold } from '../../../../utils/next';
-import { ZetkinJourney } from '../../../../types/zetkin';
-import ZetkinSection from '../../../../components/ZetkinSection';
+import JourneysLayout from 'layout/organize/JourneysLayout';
+import { journeysResource } from 'api/journeys';
+import { organizationResource } from 'api/organizations';
+import { PageWithLayout } from 'types';
+import { scaffold } from 'utils/next';
+import { ZetkinJourney } from 'types/zetkin';
+import ZetkinSection from 'components/ZetkinSection';
 const scaffoldOptions = {
   authLevelRequired: 2,
   localeScope: ['layout.organize', 'misc', 'pages.organizeAllJourneys'],
@@ -18,11 +19,28 @@ const scaffoldOptions = {
 export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
   const { orgId } = ctx.params!;
 
-  return {
-    props: {
-      orgId,
-    },
-  };
+  const { state: orgQueryState } = await organizationResource(
+    orgId as string
+  ).prefetch(ctx);
+
+  const { state: journeysQueryState } = await journeysResource(
+    orgId as string
+  ).prefetch(ctx);
+
+  if (
+    orgQueryState?.status === 'success' &&
+    journeysQueryState?.status === 'success'
+  ) {
+    return {
+      props: {
+        orgId,
+      },
+    };
+  } else {
+    return {
+      notFound: true,
+    };
+  }
 }, scaffoldOptions);
 
 type AllJourneysOverviewPageProps = {
