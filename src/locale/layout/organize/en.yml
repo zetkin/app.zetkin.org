@@ -8,6 +8,11 @@ header:
   collapseButton:
     collapse: Collapse
     expand: Expand
+journeys:
+  tabs:
+    manage: Manage
+    overview: Overview
+  title: Journeys
 lists:
   showMore: Show more...
 menu:
