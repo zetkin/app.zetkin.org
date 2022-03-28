@@ -6,7 +6,7 @@ import { stringToBool } from '../utils/stringUtils';
 import { Button, ButtonGroup, Container, Typography } from '@material-ui/core';
 
 import { AppSession } from '../types';
-import getOrganizations from 'utils/getOrganizations';
+import getUserMemberships from 'utils/getUserMemberships';
 import { scaffold } from '../utils/next';
 import { ZetkinUser } from '../types/zetkin';
 
@@ -48,11 +48,11 @@ export const getServerSideProps: GetServerSideProps = scaffold(
           reqWithSession.session.tokenData = context.z.getTokenData();
           if (context.user) {
             try {
-              reqWithSession.session.organizations = await getOrganizations(
+              reqWithSession.session.memberships = await getUserMemberships(
                 context
               );
             } catch (error) {
-              reqWithSession.session.organizations = null;
+              reqWithSession.session.memberships = null;
             }
           }
 

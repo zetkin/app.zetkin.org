@@ -1,7 +1,9 @@
 import { ScaffoldedContext } from './next';
 import { ZetkinMembership } from 'types/zetkin';
 
-const getOrganizations = async (ctx: ScaffoldedContext): Promise<number[]> => {
+const getUserMemberships = async (
+  ctx: ScaffoldedContext
+): Promise<number[]> => {
   const membershipsRes = await ctx.z
     .resource('users', 'me', 'memberships')
     .get();
@@ -12,4 +14,4 @@ const getOrganizations = async (ctx: ScaffoldedContext): Promise<number[]> => {
     .map((membership) => membership.organization.id);
 };
 
-export default getOrganizations;
+export default getUserMemberships;

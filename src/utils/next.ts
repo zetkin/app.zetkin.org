@@ -13,7 +13,7 @@ import {
 import { AppSession } from '../types';
 import { getBrowserLanguage } from './locale';
 import { getMessages } from './locale';
-import getOrganizations from './getOrganizations';
+import getUserMemberships from './getUserMemberships';
 import { stringToBool } from './stringUtils';
 import { ZetkinZ } from '../types/sdk';
 import { ApiFetch, createApiFetch } from './apiFetch';
@@ -80,9 +80,7 @@ const stripParams = (relativePath: string, params?: ParsedUrlQuery) => {
 
 const hasOrg = (reqWithSession: { session?: AppSession }, orgId: string) => {
   return Boolean(
-    reqWithSession.session?.organizations?.find(
-      (org) => org === parseInt(orgId)
-    )
+    reqWithSession.session?.memberships?.find((org) => org === parseInt(orgId))
   );
 };
 
@@ -164,9 +162,9 @@ export const scaffold =
         if (!hasOrg(reqWithSession, orgId)) {
           //fetch your orgs again to see if they've been updated
           try {
-            reqWithSession.session.organizations = await getOrganizations(ctx);
+            reqWithSession.session.memberships = await getUserMemberships(ctx);
           } catch (error) {
-            reqWithSession.session.organizations = null;
+            reqWithSession.session.memberships = null;
           }
           //if you still don't have the org we redirect to 404
           if (!hasOrg(reqWithSession, orgId)) {
