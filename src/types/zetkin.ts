@@ -69,6 +69,7 @@ export interface ZetkinEvent {
 export interface ZetkinUser {
   first_name: string;
   id: number;
+  is_superuser?: boolean;
   last_name: string;
   username: string;
 }
@@ -198,8 +199,11 @@ export interface ZetkinActivity {
 export interface ZetkinTag {
   id: number;
   title: string;
-  hidden: boolean;
   description: string;
+  hidden: boolean;
+  organization: ZetkinOrganization;
+  color: string | null;
+  group: { id: number; title: string } | null;
 }
 
 export enum CUSTOM_FIELD_TYPE {
@@ -225,3 +229,13 @@ export type {
 };
 
 export type { ZetkinView, ZetkinViewColumn, ZetkinViewRow };
+
+export interface ZetkinJourney {
+  id: number;
+  organization: ZetkinOrganization;
+  singular_name: string;
+  stats: {
+    closed: number;
+    open: number;
+  };
+}

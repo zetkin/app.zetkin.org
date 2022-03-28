@@ -7,7 +7,7 @@ import {
 } from './utils/resourceHookFactories';
 
 import { PersonOrganization } from 'utils/organize/people';
-import { ZetkinPerson } from 'types/zetkin';
+import { ZetkinPerson, ZetkinTag } from 'types/zetkin';
 
 export const personResource = (orgId: string, personId: string) => {
   const key = ['person', personId];
@@ -37,5 +37,18 @@ export const personOrganizationsResource = (
       subOrganizations: PersonOrganization[];
     }>(key, orgsUrl),
     useRemove: createUseMutationDelete({ key, url: connectionsUrl }),
+  };
+};
+
+export const personTagsResource = (orgId: string, personId: string) => {
+  const key = ['personTags', personId];
+  const url = `/orgs/${orgId}/people/${personId}/tags`;
+
+  return {
+    useAllTagsQuery: createUseQuery<ZetkinTag[]>(
+      ['tags', orgId],
+      `/orgs/${orgId}/people/tags`
+    ),
+    useQuery: createUseQuery<ZetkinTag[]>(key, url),
   };
 };

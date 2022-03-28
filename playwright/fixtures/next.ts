@@ -15,11 +15,16 @@ import moxy, {
   Moxy,
 } from 'moxy';
 
+import Memberships from '../mockData/orgs/KPD/Memberships';
 import RosaLuxemburg from '../mockData/users/RosaLuxemburg';
-import { ZetkinSession, ZetkinUser } from '../../src/types/zetkin';
+import {
+  ZetkinMembership,
+  ZetkinSession,
+  ZetkinUser,
+} from '../../src/types/zetkin';
 
 interface NextTestFixtures {
-  login: () => void;
+  login: (user?: ZetkinUser, memberships?: ZetkinMembership[]) => void;
   logout: () => void;
 }
 
@@ -145,8 +150,16 @@ const test = base.extend<NextTestFixtures, NextWorkerFixtures>({
      *
      * The default user is Rosa Luxumburg. Pass in a ZetkinUser object to override.
      */
-    const login = (user: ZetkinUser = RosaLuxemburg) => {
+    const login = (
+      user: ZetkinUser = RosaLuxemburg,
+      memberships: ZetkinMembership[] = Memberships
+    ) => {
       moxy.setZetkinApiMock<ZetkinUser>('/users/me', 'get', user);
+      moxy.setZetkinApiMock<ZetkinMembership[]>(
+        '/users/me/memberships',
+        'get',
+        memberships
+      );
 
       moxy.setZetkinApiMock<ZetkinSession>('/session', 'get', {
         created: '2020-01-01T00:00:00',
@@ -164,6 +177,7 @@ const test = base.extend<NextTestFixtures, NextWorkerFixtures>({
     const logout = () => {
       moxy.removeMock('/users/me', 'get');
       moxy.removeMock('/session', 'get');
+      moxy.removeMock('/users/me/memberships', 'get');
     };
     await use(logout);
   },

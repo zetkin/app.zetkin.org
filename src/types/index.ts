@@ -4,6 +4,7 @@ import { Session } from 'next-session/dist/types';
 import { ZetkinTokenData } from './sdk';
 
 export type AppSession = Session & {
+  memberships?: number[] | null;
   redirAfterLogin: string | null;
   tokenData?: ZetkinTokenData | null;
 };

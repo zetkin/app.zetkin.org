@@ -1,4 +1,5 @@
 import { mockObject } from 'utils/testing/mocks';
+import mockOrganization from './mockOrganization';
 import { ZetkinEvent } from 'types/zetkin';
 
 const event: ZetkinEvent = {
@@ -21,10 +22,7 @@ const event: ZetkinEvent = {
   },
   num_participants_available: 3,
   num_participants_required: 2,
-  organization: {
-    id: 1,
-    title: 'My Organization',
-  },
+  organization: mockOrganization(),
   start_time: '2022-06-16T07:00:00+00:00',
   title: undefined,
   url: undefined,

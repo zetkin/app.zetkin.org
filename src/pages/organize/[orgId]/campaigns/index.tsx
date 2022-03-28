@@ -109,7 +109,6 @@ const AllCampaignsSummaryPage: PageWithLayout<AllCampaignsSummaryPageProps> = ({
           gridTemplateColumns="repeat( auto-fit, minmax(450px, 1fr) )"
         >
           {campaigns.map((campaign) => {
-            //här
             return (
               <CampaignCard
                 key={campaign.id}
