@@ -4,7 +4,8 @@ import { ZetkinJourney } from '../../../../../src/types/zetkin';
 const MarxistTraining: ZetkinJourney = {
   id: 2,
   organization: KPD,
-  singular_name: 'Marxist traning',
+  plural_name: 'Marxist trainings',
+  singular_name: 'Marxist training',
   stats: {
     closed: 359,
     open: 75,

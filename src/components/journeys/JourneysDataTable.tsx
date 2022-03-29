@@ -1,11 +1,8 @@
 import { FunctionComponent } from 'react';
-
-type ZetkinJourney = {
-  id: number;
-};
+import { ZetkinJourneyInstance } from 'types/zetkin';
 
 interface JourneysDataTableProps {
-  journeys: ZetkinJourney[];
+  journeyInstances: ZetkinJourneyInstance[];
 }
 
 const JourneysDataTable: FunctionComponent<JourneysDataTableProps> = () => (

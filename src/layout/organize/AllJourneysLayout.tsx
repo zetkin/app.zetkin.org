@@ -3,6 +3,8 @@ import { useRouter } from 'next/router';
 
 import TabbedLayout from './TabbedLayout';
 
+import MarxistTraining from '../../../playwright/mockData/orgs/KPD/journeys/MarxistTraining';
+
 interface AllJourneysLayoutProps {
   fixedHeight?: boolean;
 }
@@ -11,13 +13,15 @@ const AllJourneysLayout: FunctionComponent<AllJourneysLayoutProps> = ({
   children,
   fixedHeight,
 }) => {
-  const { orgId, journeyTypeId } = useRouter().query;
+  const { orgId, journeyId } = useRouter().query;
+
+  const journey = MarxistTraining;
 
   // TODO: make journey title dynamic & localised, based on journey type
 
   return (
     <TabbedLayout
-      baseHref={`/organize/${orgId}/journeys/${journeyTypeId}`}
+      baseHref={`/organize/${orgId}/journeys/${journeyId}`}
       defaultTab="/"
       fixedHeight={fixedHeight}
       tabs={[
@@ -28,7 +32,7 @@ const AllJourneysLayout: FunctionComponent<AllJourneysLayoutProps> = ({
           tabProps: { disabled: true },
         },
       ]}
-      title={journeyTypeId?.toString()}
+      title={journey.plural_name}
     >
       {children}
     </TabbedLayout>

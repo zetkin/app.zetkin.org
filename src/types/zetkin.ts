@@ -233,9 +233,27 @@ export type { ZetkinView, ZetkinViewColumn, ZetkinViewRow };
 export interface ZetkinJourney {
   id: number;
   organization: ZetkinOrganization;
+  plural_name: string;
   singular_name: string;
   stats: {
     closed: number;
     open: number;
   };
+}
+
+export interface ZetkinJourneyInstance {
+  assigned_to: ZetkinPerson[];
+  created_at: string;
+  id: number;
+  next_milestone: ZetkinJourneyMilestone;
+  next_milestone_deadline: string;
+  people: ZetkinPerson[];
+  summary: string;
+  title: string;
+  updated_at: string;
+}
+
+export interface ZetkinJourneyMilestone {
+  id: number;
+  title: string;
 }
