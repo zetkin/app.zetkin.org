@@ -3,7 +3,7 @@ import Head from 'next/head';
 
 import AllJourneysLayout from 'layout/organize/AllJourneysLayout';
 import getOrg from 'fetching/getOrg';
-import JourneysDataTable from 'components/journeys/JourneysDataTable';
+import JourneysInstancesDataTable from 'components/journeys/JourneysInstancesDataTable';
 import { PageWithLayout } from 'types';
 import { scaffold } from 'utils/next';
 import { journeyInstancesResource, journeyResource } from 'api/journeys';
@@ -67,7 +67,7 @@ const JourneyInstancesOverviewPage: PageWithLayout<
       <Head>
         <title>{journey.plural_name}</title>
       </Head>
-      <JourneysDataTable {...{ journeyInstances }} />
+      <JourneysInstancesDataTable {...{ journeyInstances }} />
     </>
   );
 };

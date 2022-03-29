@@ -2,6 +2,7 @@ import { ScaffoldedContext } from 'utils/next';
 import { ZetkinJourney } from 'types/zetkin';
 import { createPrefetch, createUseQuery } from './utils/resourceHookFactories';
 
+import { dummyTableData } from 'components/journeys/JourneysInstancesDataTable.spec';
 import MarxistTraining from '../../playwright/mockData/orgs/KPD/journeys/MarxistTraining';
 
 export const journeysResource = (orgId: string) => {
@@ -14,6 +15,7 @@ export const journeysResource = (orgId: string) => {
   };
 };
 
+// TODO: delete dummy data
 export const journeyResource = (orgId: string, journeyId: string) => {
   const key = ['journey', orgId, journeyId];
   const url = `/orgs/${orgId}/journeys/${journeyId}`;
@@ -29,12 +31,13 @@ export const journeyResource = (orgId: string, journeyId: string) => {
   };
 };
 
+// TODO: delete dummy data
 export const journeyInstancesResource = (orgId: string, journeyId: string) => {
   const key = ['journeyInstances', orgId, journeyId];
   const url = `/orgs/${orgId}/journeys/${journeyId}/instances`;
 
   return {
     // useQuery: createUseQuery<ZetkinJourneyInstance[]>(key, url),
-    useQuery: () => ({ data: [], key, url }),
+    useQuery: () => ({ data: dummyTableData, key, url }),
   };
 };
