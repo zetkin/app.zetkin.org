@@ -20,7 +20,7 @@ import { createContext, FunctionComponent, useContext, useState } from 'react';
 import { GridApiRef, useGridApiRef } from '@mui/x-data-grid-pro';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 
-export const gridApiRefContext = createContext<GridApiRef>(useGridApiRef());
+export const gridApiRefContext = createContext<GridApiRef>({} as GridApiRef);
 
 const useStyles = makeStyles<Theme, { deactivated: boolean }>(() => ({
   deactivateWrapper: {
