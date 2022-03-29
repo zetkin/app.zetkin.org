@@ -24,6 +24,7 @@ const AllJourneysLayout: FunctionComponent<AllJourneysLayoutProps> = ({
       baseHref={`/organize/${orgId}/journeys/${journeyId}`}
       defaultTab="/"
       fixedHeight={fixedHeight}
+      noPad
       tabs={[
         { href: `/`, messageId: 'layout.organize.journeys.tabs.overview' },
         {

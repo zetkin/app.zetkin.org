@@ -15,10 +15,10 @@ const people = ids
     mockPerson({ first_name: chance.first(), id, last_name: chance.last() })
   );
 const milestones = [
-  { id: 1, title: 'make coffee' },
-  { id: 2, title: 'prepare for battle' },
-  { id: 3, title: 'perform lip sync' },
-  { id: 4, title: 'sashay away' },
+  'make coffee',
+  'prepare for battle',
+  'perform lip sync',
+  'sashay away',
 ];
 
 const dummyTableData = ids.map((id) => {
@@ -30,10 +30,12 @@ const dummyTableData = ids.map((id) => {
     assigned_to: chance.pickset(people, chance.pickone([1, 1, 1, 1, 1, 2, 3])),
     created_at,
     id: id + 1,
-    next_milestone: chance.pickone(milestones),
-    next_milestone_deadline: dayjs()
-      .add(Math.ceil(Math.random() * 500), 'hour')
-      .format(),
+    next_milestone: {
+      deadline: dayjs()
+        .add(Math.ceil(Math.random() * 500), 'hour')
+        .format(),
+      title: chance.pickone(milestones),
+    },
     people: chance.pickset(people, chance.pickone([1, 1, 2, 2, 3, 6])),
     summary: chance.sentence({ words: 10 }),
     updated_at: dayjs()

@@ -24,6 +24,7 @@ import ZetkinEllipsisMenu, {
 
 interface StyleProps {
   collapsed: boolean;
+  noPad?: boolean;
 }
 
 const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
@@ -34,6 +35,7 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
   },
   main: {
     overflowX: 'hidden',
+    padding: ({ noPad }) => (noPad ? 0 : 'inherit'),
   },
   root: {
     [theme.breakpoints.down('xs')]: {
@@ -74,23 +76,25 @@ interface TabbedLayoutProps {
   subtitle?: string | ReactElement;
   baseHref: string;
   defaultTab: string;
+  noPad?: boolean;
   tabs: { href: string; messageId: string; tabProps?: TabProps }[];
 }
 
 const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
-  avatar,
-  children,
   actionButtons,
+  avatar,
+  baseHref,
+  children,
+  defaultTab,
   ellipsisMenuItems,
   fixedHeight,
-  title,
+  noPad,
   subtitle,
   tabs,
-  baseHref,
-  defaultTab,
+  title,
 }) => {
   const [collapsed, setCollapsed] = useState(false);
-  const classes = useStyles({ collapsed });
+  const classes = useStyles({ collapsed, noPad });
   const router = useRouter();
 
   const currentTab =

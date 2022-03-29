@@ -204,6 +204,7 @@ export interface ZetkinTag {
   organization: ZetkinOrganization;
   color: string | null;
   group: { id: number; title: string } | null;
+  value?: string | number;
 }
 
 export enum CUSTOM_FIELD_TYPE {
@@ -245,15 +246,13 @@ export interface ZetkinJourneyInstance {
   assigned_to: ZetkinPerson[];
   created_at: string;
   id: number;
-  next_milestone: ZetkinJourneyMilestone;
-  next_milestone_deadline: string;
+  next_milestone: {
+    deadline: string;
+    title: string;
+  };
   people: ZetkinPerson[];
   summary: string;
+  tags: Pick<ZetkinTag, 'id' | 'title' | 'group' | 'color' | 'value'>[];
   title: string;
   updated_at: string;
-}
-
-export interface ZetkinJourneyMilestone {
-  id: number;
-  title: string;
 }
