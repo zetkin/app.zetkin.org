@@ -35,7 +35,7 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
   },
   main: {
     overflowX: 'hidden',
-    padding: ({ noPad }) => (noPad ? 0 : 'inherit'),
+    padding: ({ noPad }) => (noPad ? 0 : undefined),
   },
   root: {
     [theme.breakpoints.down('xs')]: {

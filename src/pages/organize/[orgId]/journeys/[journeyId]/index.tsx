@@ -11,7 +11,7 @@ import { ZetkinJourney, ZetkinJourneyInstance } from 'types/zetkin';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
-  localeScope: ['layout.organize.journeys', 'misc.breadcrumbs'],
+  localeScope: ['layout.organize', 'misc.breadcrumbs', 'pages.organizeJourney'],
 };
 
 export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
@@ -67,7 +67,7 @@ const JourneyInstancesOverviewPage: PageWithLayout<
       <Head>
         <title>{journey.plural_name}</title>
       </Head>
-      <JourneysInstancesDataTable {...{ journeyInstances }} />
+      <JourneysInstancesDataTable {...{ journey, journeyInstances }} />
     </>
   );
 };
