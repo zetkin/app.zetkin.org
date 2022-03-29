@@ -1,6 +1,53 @@
 import { createElement } from 'react';
 import { createTheme } from '@material-ui/core/styles';
 
+interface PaletteIntensityOptions {
+  disabled: string;
+  high: string;
+  medium: string;
+}
+
+declare module '@material-ui/core/styles/createPalette' {
+  interface Palette {
+    onSurface: Palette['primary'];
+  }
+  interface PaletteOptions {
+    onSurface: PaletteIntensityOptions;
+  }
+}
+
+const themePalette = {
+  background: {
+    default: '#F9F9F9',
+  },
+  error: {
+    main: '#EE323E',
+  },
+  info: {
+    main: '#3598c5',
+  },
+  onSurface: {
+    disabled: '#231F2061',
+    high: '#231F20DE',
+    medium: '#231F2099',
+  },
+  primary: {
+    main: '#ED1C55',
+  },
+  secondary: {
+    main: 'rgba(0, 0, 0, 0.6)',
+  },
+  success: {
+    main: '#0eae4e',
+  },
+  text: {
+    secondary: 'rgba(0, 0, 0, 0.6)',
+  },
+  warning: {
+    main: '#ee8432',
+  },
+};
+
 // Create a theme instance.
 const theme = createTheme({
   overrides: {
@@ -8,6 +55,19 @@ const theme = createTheme({
       root: {
         minWidth: '1rem',
         textTransform: 'none',
+      },
+    },
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    MuiDataGrid: {
+      root: {
+        '& .MuiDataGrid-cell': {
+          fontSize: 16,
+        },
+        '& .MuiDataGrid-columnHeaderTitle': {
+          color: themePalette.onSurface.medium,
+          fontWeight: 'bold',
+        },
       },
     },
     MuiFormControl: {
@@ -54,32 +114,7 @@ const theme = createTheme({
       },
     },
   },
-  palette: {
-    background: {
-      default: '#F9F9F9',
-    },
-    error: {
-      main: '#EE323E',
-    },
-    info: {
-      main: '#3598c5',
-    },
-    primary: {
-      main: '#ED1C55',
-    },
-    secondary: {
-      main: 'rgba(0, 0, 0, 0.6)',
-    },
-    success: {
-      main: '#0eae4e',
-    },
-    text: {
-      secondary: 'rgba(0, 0, 0, 0.6)',
-    },
-    warning: {
-      main: '#ee8432',
-    },
-  },
+  palette: themePalette,
   props: {
     MuiCard: {
       variant: 'outlined',
