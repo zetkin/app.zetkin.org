@@ -1,16 +1,25 @@
+import { useIntl } from 'react-intl';
 import { Box, Typography } from '@material-ui/core';
 
 import { ZetkinTag } from 'types/zetkin';
 
+import { groupTags } from './utils';
 import TagChip from './TagChip';
-import { TagsGroups } from './types';
 
 const TagsList: React.FunctionComponent<{
-  groupedTags: TagsGroups;
   isGrouped: boolean;
   tags: ZetkinTag[];
-}> = ({ tags, isGrouped, groupedTags }) => {
+}> = ({ tags, isGrouped }) => {
+  const intl = useIntl();
+
   if (isGrouped) {
+    const groupedTags = groupTags(
+      tags,
+      intl.formatMessage({
+        id: 'misc.tags.tagsManager.ungroupedHeader',
+      })
+    );
+
     return (
       <>
         {Object.entries(groupedTags).map(([id, group], i) => (
@@ -23,7 +32,6 @@ const TagsList: React.FunctionComponent<{
               style={{ gap: 8 }}
             >
               {group.tags.map((tag, i) => {
-                // Tag Chip
                 return <TagChip key={i} tag={tag} />;
               })}
             </Box>
@@ -37,7 +45,6 @@ const TagsList: React.FunctionComponent<{
   return (
     <Box display="flex" flexWrap="wrap" style={{ gap: 8 }}>
       {tags.map((tag, i) => {
-        // Tag Chip
         return <TagChip key={i} tag={tag} />;
       })}
     </Box>

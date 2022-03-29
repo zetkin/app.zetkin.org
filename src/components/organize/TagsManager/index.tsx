@@ -1,29 +1,25 @@
-import { Autocomplete } from '@material-ui/lab';
+/* eslint-disable jsx-a11y/no-autofocus */
+import { Add } from '@material-ui/icons';
 import { useState } from 'react';
-import { Box, TextField, Typography } from '@material-ui/core';
+import { Box, Button, Popover, Typography } from '@material-ui/core';
 import { FormattedMessage, useIntl } from 'react-intl';
 
 import ZetkinSection from 'components/ZetkinSection';
 import { ZetkinTag } from 'types/zetkin';
 
-import { groupTags } from './utils';
 import GroupToggle from './GroupToggle';
-import TagChip from './TagChip';
+import TagSelect from './TagSelect';
 import TagsList from './TagsList';
 
 const TagsManager: React.FunctionComponent<{
   appliedTags: ZetkinTag[];
-}> = ({ appliedTags }) => {
+  availableTags: ZetkinTag[];
+  onSelectTag: (tag: ZetkinTag) => void;
+}> = ({ availableTags, appliedTags, onSelectTag }) => {
   const intl = useIntl();
 
+  const [addTagButton, setAddTagButton] = useState<HTMLElement | null>(null);
   const [isGrouped, setIsGrouped] = useState(false);
-
-  const groupedTags = groupTags(
-    appliedTags,
-    intl.formatMessage({
-      id: 'misc.tags.tagsManager.ungroupedHeader',
-    })
-  );
 
   return (
     <ZetkinSection
@@ -37,11 +33,7 @@ const TagsManager: React.FunctionComponent<{
     >
       <Box>
         {appliedTags.length > 0 ? (
-          <TagsList
-            groupedTags={groupedTags}
-            isGrouped={isGrouped}
-            tags={appliedTags}
-          />
+          <TagsList isGrouped={isGrouped} tags={appliedTags} />
         ) : (
           // If no tags
           <Typography>
@@ -50,34 +42,24 @@ const TagsManager: React.FunctionComponent<{
         )}
       </Box>
       <Box mt={2}>
-        {/* <Button
+        <Button
           color="primary"
           onClick={(event) => setAddTagButton(event.currentTarget)}
+          startIcon={<Add />}
         >
           <FormattedMessage id="misc.tags.tagsManager.addTag" />
-        </Button> */}
-        <Autocomplete
-          getOptionLabel={(option) => option.title}
-          groupBy={(option) =>
-            option.group?.title ||
-            intl.formatMessage({
-              id: 'misc.tags.tagsManager.ungroupedHeader',
-            })
-          }
-          id="grouped-demo"
-          options={appliedTags}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              label={<FormattedMessage id="misc.tags.tagsManager.addTag" />}
-              variant="outlined"
-            />
-          )}
-          renderOption={(option) => {
-            return <TagChip tag={option} />;
-          }}
-          style={{ width: 300 }}
-        />
+        </Button>
+        <Popover
+          anchorEl={addTagButton}
+          onClose={() => setAddTagButton(null)}
+          open={Boolean(addTagButton)}
+        >
+          <TagSelect
+            disabledTags={appliedTags}
+            onSelect={onSelectTag}
+            tags={availableTags}
+          />
+        </Popover>
       </Box>
     </ZetkinSection>
   );

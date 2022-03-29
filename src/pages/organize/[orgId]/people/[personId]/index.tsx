@@ -51,10 +51,14 @@ export type PersonPageProps = {
 
 const PersonProfilePage: PageWithLayout<PersonPageProps> = (props) => {
   const { orgId, personId } = useRouter().query;
-  const personTagsQuery = personTagsResource(
-    orgId as string,
-    personId as string
-  ).useQuery();
+  const {
+    useAdd,
+    useQuery: usePersonTagsQuery,
+    useAvailableTagsQuery,
+  } = personTagsResource(orgId as string, personId as string);
+  const addTagMutation = useAdd();
+  const personTagsQuery = usePersonTagsQuery();
+  const organizationTagsQuery = useAvailableTagsQuery();
   const { data: person } = personResource(
     props.orgId,
     props.personId
@@ -79,8 +83,12 @@ const PersonProfilePage: PageWithLayout<PersonPageProps> = (props) => {
           <PersonOrganizationsCard {...props} />
         </Grid>
         <Grid item lg={4} xs={12}>
-          <ZetkinQuery queries={{ personTagsQuery }}>
-            <TagsManager appliedTags={personTagsQuery.data || []} />
+          <ZetkinQuery queries={{ organizationTagsQuery, personTagsQuery }}>
+            <TagsManager
+              appliedTags={personTagsQuery.data || []}
+              availableTags={organizationTagsQuery.data || []}
+              onSelectTag={(tag) => addTagMutation.mutate(tag.id)}
+            />
           </ZetkinQuery>
         </Grid>
       </Grid>
