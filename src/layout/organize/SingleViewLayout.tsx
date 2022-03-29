@@ -1,10 +1,3 @@
-import { useIntl } from 'react-intl';
-import { useRouter } from 'next/router';
-import { Button, Box, makeStyles, Theme } from '@material-ui/core';
-import { FunctionComponent, useContext, useState } from 'react';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { useGridApiRef } from '@mui/x-data-grid-pro';
-
 import { ConfirmDialogContext } from 'hooks/ConfirmDialogProvider';
 import { defaultFetch } from 'fetching';
 import EditTextinPlace from 'components/EditTextInPlace';
@@ -13,12 +6,21 @@ import NProgress from 'nprogress';
 import patchView from 'fetching/views/patchView';
 import SnackbarContext from 'hooks/SnackbarContext';
 import TabbedLayout from './TabbedLayout';
+import { useIntl } from 'react-intl';
+import { useRouter } from 'next/router';
 import ViewJumpMenu from 'components/views/ViewJumpMenu';
 import ViewSmartSearchDialog from 'components/views/ViewSmartSearchDialog';
 import { viewsResource } from 'api/views';
+import ZetkinDialog from 'components/ZetkinDialog';
 import { ZetkinEllipsisMenuProps } from 'components/ZetkinEllipsisMenu';
 import ZetkinQuery from 'components/ZetkinQuery';
-import ZetkinDialog from 'components/ZetkinDialog';
+
+import { Box, Button, makeStyles, Theme } from '@material-ui/core';
+import { createContext, FunctionComponent, useContext, useState } from 'react';
+import { GridApiRef, useGridApiRef } from '@mui/x-data-grid-pro';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
+
+export const gridApiRefContext = createContext<GridApiRef>(useGridApiRef());
 
 const useStyles = makeStyles<Theme, { deactivated: boolean }>(() => ({
   deactivateWrapper: {
@@ -34,7 +36,6 @@ const SingleViewLayout: FunctionComponent = ({ children }) => {
   const { orgId, viewId } = router.query;
   const [exportDialogOpen, setExportDialogOpen] = useState(false);
   const gridApiRef = useGridApiRef();
-
   const [deactivated, setDeactivated] = useState(false);
   const classes = useStyles({ deactivated });
   const intl = useIntl();
@@ -119,9 +120,11 @@ const SingleViewLayout: FunctionComponent = ({ children }) => {
 
   const ellipsisMenu: ZetkinEllipsisMenuProps['items'] = [
     {
-        label: intl.formatMessage({ id: 'pages.people.views.layout.ellipsisMenu.export' }),
-        onSelect: () => setExportDialogOpen(true),
-    }
+      label: intl.formatMessage({
+        id: 'pages.people.views.layout.ellipsisMenu.export',
+      }),
+      onSelect: () => setExportDialogOpen(true),
+    },
   ];
 
   if (view?.content_query) {
@@ -186,38 +189,58 @@ const SingleViewLayout: FunctionComponent = ({ children }) => {
   });
 
   return (
-    <Box className={classes.deactivateWrapper}>
-      <TabbedLayout
-        baseHref={`/organize/${orgId}/people/views/${viewId}`}
-        defaultTab="/"
-        ellipsisMenuItems={ellipsisMenu}
-        fixedHeight={true}
-        tabs={[{ href: `/`, messageId: 'layout.organize.view.tabs.view' }]}
-        title={title}
-      >
-        {children}
-      </TabbedLayout>
-      {queryDialogOpen && view && (
-        <ViewSmartSearchDialog
-          onDialogClose={() => setQueryDialogOpen(false)}
-          orgId={orgId as string}
-          view={view}
-        />
-      )}
-      {exportDialogOpen && view && (
-        <ZetkinDialog
-            onClose={ () => setExportDialogOpen(false) }
-            open={ exportDialogOpen }
-            title= { intl.formatMessage({ id: 'pages.people.views.layout.exportMenu.title' })}>
+    <gridApiRefContext.Provider value={gridApiRef}>
+      <Box className={classes.deactivateWrapper}>
+        <TabbedLayout
+          baseHref={`/organize/${orgId}/people/views/${viewId}`}
+          defaultTab="/"
+          ellipsisMenuItems={ellipsisMenu}
+          fixedHeight={true}
+          tabs={[{ href: `/`, messageId: 'layout.organize.view.tabs.view' }]}
+          title={title}
+        >
+          {children}
+        </TabbedLayout>
+        {queryDialogOpen && view && (
+          <ViewSmartSearchDialog
+            onDialogClose={() => setQueryDialogOpen(false)}
+            orgId={orgId as string}
+            view={view}
+          />
+        )}
+        {exportDialogOpen && view && (
+          <ZetkinDialog
+            onClose={() => setExportDialogOpen(false)}
+            open={exportDialogOpen}
+            title={intl.formatMessage({
+              id: 'pages.people.views.layout.exportMenu.title',
+            })}
+          >
             <div>
-                <p>Lorem Impsum</p>
-                <Button onClick={() => {
-                    console.log(gridApiRef.current.getDataAsCsv());
-                }}>Export</Button>
+              <p>Lorem Impsum</p>
+              <Button
+                onClick={() => {
+                  const now = new Date();
+                  const fileName =
+                    document.title.replace(' ', '_') +
+                    '_' +
+                    String(now.getFullYear()) +
+                    ('0' + (now.getMonth() + 1)).slice(-2) +
+                    ('0' + now.getDate()).slice(-2) +
+                    '_' +
+                    ('0' + now.getHours()).slice(-2) +
+                    ('0' + now.getMinutes()).slice(-2) +
+                    ('0' + now.getSeconds()).slice(-2);
+                  gridApiRef.current.exportDataAsCsv({ fileName: fileName });
+                }}
+              >
+                Export
+              </Button>
             </div>
-        </ZetkinDialog>
-      )}
-    </Box>
+          </ZetkinDialog>
+        )}
+      </Box>
+    </gridApiRefContext.Provider>
   );
 };
 

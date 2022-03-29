@@ -1,29 +1,25 @@
-import isEqual from 'lodash.isequal';
-import NextLink from 'next/link';
-import NProgress from 'nprogress';
-import { useIntl } from 'react-intl';
-import { useRouter } from 'next/router';
-import {
-  DataGridPro,
-  GridColDef,
-  GridSortModel,
-  useGridApiRef,
-} from '@mui/x-data-grid-pro';
-import { FunctionComponent, useContext, useState } from 'react';
-import { Link, makeStyles } from '@material-ui/core';
-import { useMutation, useQueryClient } from 'react-query';
-
 import { ConfirmDialogContext } from 'hooks/ConfirmDialogProvider';
 import deleteViewColumn from 'fetching/views/deleteViewColumn';
 import EmptyView from 'components/views/EmptyView';
+import { gridApiRefContext } from 'layout/organize/SingleViewLayout';
+import isEqual from 'lodash.isequal';
+import NextLink from 'next/link';
+import NProgress from 'nprogress';
 import patchViewColumn from 'fetching/views/patchViewColumn';
 import postViewColumn from 'fetching/views/postViewColumn';
 import SnackbarContext from 'hooks/SnackbarContext';
+import { useIntl } from 'react-intl';
+import { useRouter } from 'next/router';
 import ViewRenameColumnDialog from '../ViewRenameColumnDialog';
 import { viewRowsResource } from 'api/viewRows';
 import { viewsResource } from 'api/views';
+
 import { colIdFromFieldName, makeGridColDef } from './utils';
+import { DataGridPro, GridColDef, GridSortModel } from '@mui/x-data-grid-pro';
+import { FunctionComponent, useContext, useState } from 'react';
+import { Link, makeStyles } from '@material-ui/core';
 import { SelectedViewColumn, ZetkinView } from 'types/views';
+import { useMutation, useQueryClient } from 'react-query';
 import { VIEW_CONTENT_SOURCE, VIEW_DATA_TABLE_ERROR } from './constants';
 import ViewColumnDialog, {
   AUTO_SAVE_TYPES,
@@ -66,7 +62,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
 }) => {
   const intl = useIntl();
   const classes = useStyles();
-  const gridApiRef = useGridApiRef();
+  const gridApiRef = useContext(gridApiRefContext);
   const [addedId, setAddedId] = useState(0);
   const [columnToConfigure, setColumnToConfigure] =
     useState<SelectedViewColumn | null>(null);
