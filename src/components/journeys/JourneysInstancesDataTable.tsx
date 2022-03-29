@@ -16,7 +16,6 @@ const JourneysInstancesDataTable: FunctionComponent<JourneysDataTableProps> = ({
 }) => {
   const intl = useIntl();
   const columns = getColumns(intl, journeyInstances, journey);
-  //
 
   return (
     <>
@@ -24,7 +23,7 @@ const JourneysInstancesDataTable: FunctionComponent<JourneysDataTableProps> = ({
         autoHeight
         checkboxSelection
         columns={columns}
-        pageSize={25}
+        pageSize={10}
         pagination
         rows={journeyInstances}
       />
