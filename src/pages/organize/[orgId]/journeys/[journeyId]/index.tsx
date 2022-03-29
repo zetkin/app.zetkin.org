@@ -1,7 +1,7 @@
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 
-import AllJourneysLayout from 'layout/organize/AllJourneysLayout';
+import AllJourneyInstancesLayout from 'layout/organize/AllJourneyInstancesLayout';
 import getOrg from 'fetching/getOrg';
 import JourneysInstancesDataTable from 'components/journeys/JourneysInstancesDataTable';
 import { PageWithLayout } from 'types';
@@ -73,7 +73,7 @@ const JourneyInstancesOverviewPage: PageWithLayout<
 };
 
 JourneyInstancesOverviewPage.getLayout = function getLayout(page) {
-  return <AllJourneysLayout>{page}</AllJourneysLayout>;
+  return <AllJourneyInstancesLayout>{page}</AllJourneyInstancesLayout>;
 };
 
 export default JourneyInstancesOverviewPage;

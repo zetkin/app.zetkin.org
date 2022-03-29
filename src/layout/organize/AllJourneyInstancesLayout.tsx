@@ -1,23 +1,24 @@
 import { FunctionComponent } from 'react';
 import { useRouter } from 'next/router';
 
+import { journeyResource } from 'api/journeys';
 import TabbedLayout from './TabbedLayout';
+import { ZetkinJourney } from 'types/zetkin';
 
-import MarxistTraining from '../../../playwright/mockData/orgs/KPD/journeys/MarxistTraining';
-
-interface AllJourneysLayoutProps {
+interface LayoutProps {
   fixedHeight?: boolean;
 }
 
-const AllJourneysLayout: FunctionComponent<AllJourneysLayoutProps> = ({
+const AllJourneyInstancesLayout: FunctionComponent<LayoutProps> = ({
   children,
   fixedHeight,
 }) => {
   const { orgId, journeyId } = useRouter().query;
-
-  const journey = MarxistTraining;
-
-  // TODO: make journey title dynamic & localised, based on journey type
+  const journeyQuery = journeyResource(
+    orgId as string,
+    journeyId as string
+  ).useQuery();
+  const journey = journeyQuery.data as ZetkinJourney;
 
   return (
     <TabbedLayout
@@ -40,4 +41,4 @@ const AllJourneysLayout: FunctionComponent<AllJourneysLayoutProps> = ({
   );
 };
 
-export default AllJourneysLayout;
+export default AllJourneyInstancesLayout;
