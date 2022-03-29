@@ -5,6 +5,7 @@ dayjs.extend(relativeTime);
 
 import mockJourneyInstance from 'utils/testing/mocks/mockJourneyInstance';
 import mockPerson from 'utils/testing/mocks/mockPerson';
+import { ZetkinJourneyInstance } from 'types/zetkin';
 
 const chance = Chance();
 
@@ -20,6 +21,50 @@ const milestones = [
   'perform lip sync',
   'sashay away',
 ];
+
+const valueTags = [
+  {
+    tags: [
+      { color: 'salmon', value: '1 - immediate' },
+      { color: 'peach', value: '2 - near future' },
+      { color: 'grey', value: '3 - chase up' },
+    ],
+    title: 'priority',
+  },
+  {
+    tags: [
+      { color: 'beige', value: 'contract' },
+      { color: 'cornflowerblue', value: 'pay' },
+      { color: 'grey', value: 'disciplinary/dismissal' },
+      { color: 'aliceblue', value: 'discrimination' },
+      { color: 'aquamarine', value: 'whistleblowing' },
+    ],
+    title: 'category',
+  },
+];
+
+const animals = ids.map((id) => ({
+  color: chance.color(),
+  id,
+  title: chance.animal(),
+}));
+
+const getOneOfEachValueTagTypes = (): ZetkinJourneyInstance['tags'] =>
+  valueTags.map((column, idx) => ({
+    group: null,
+    id: idx + 10000,
+    title: column.title,
+    ...chance.pickone(column.tags),
+  }));
+
+const getGroupTags = (): ZetkinJourneyInstance['tags'] => {
+  return chance
+    .pickset(animals, chance.integer({ max: 5, min: 2 }))
+    .map((animal) => ({
+      ...animal,
+      group: { id: 1, title: 'Animals' },
+    }));
+};
 
 const dummyTableData = ids.map((id) => {
   const created_at = dayjs()
@@ -38,6 +83,7 @@ const dummyTableData = ids.map((id) => {
     },
     people: chance.pickset(people, chance.pickone([1, 1, 1, 1, 2])),
     summary: chance.sentence({ words: 10 }),
+    tags: getOneOfEachValueTagTypes().concat(getGroupTags()),
     updated_at: dayjs()
       .subtract(dayjs().diff(dayjs(created_at), 'minute') / 2, 'minute')
       .format(),
