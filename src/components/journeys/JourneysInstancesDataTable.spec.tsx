@@ -27,7 +27,7 @@ const dummyTableData = ids.map((id) => {
     .format();
 
   return mockJourneyInstance({
-    assigned_to: chance.pickset(people, chance.pickone([1, 1, 1, 1, 1, 2, 3])),
+    assigned_to: chance.pickset(people, chance.pickone([1, 1, 1, 1, 2])),
     created_at,
     id: id + 1,
     next_milestone: {
@@ -36,7 +36,7 @@ const dummyTableData = ids.map((id) => {
         .format(),
       title: chance.pickone(milestones),
     },
-    people: chance.pickset(people, chance.pickone([1, 1, 2, 2, 3, 6])),
+    people: chance.pickset(people, chance.pickone([1, 1, 1, 1, 2])),
     summary: chance.sentence({ words: 10 }),
     updated_at: dayjs()
       .subtract(dayjs().diff(dayjs(created_at), 'minute') / 2, 'minute')

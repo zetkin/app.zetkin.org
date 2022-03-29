@@ -249,7 +249,7 @@ export interface ZetkinJourneyInstance {
   next_milestone: {
     deadline: string;
     title: string;
-  };
+  } | null;
   people: ZetkinPerson[];
   summary: string;
   tags: Pick<ZetkinTag, 'id' | 'title' | 'group' | 'color' | 'value'>[];
