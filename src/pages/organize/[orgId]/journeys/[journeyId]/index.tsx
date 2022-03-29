@@ -6,17 +6,14 @@ import getOrg from 'fetching/getOrg';
 import JourneysDataTable from 'components/journeys/JourneysDataTable';
 import { PageWithLayout } from 'types';
 import { scaffold } from 'utils/next';
-import { ZetkinJourneyInstance } from 'types/zetkin';
-
-// TODO: delete once done with UI design
-import MarxistTraining from '../../../../../../playwright/mockData/orgs/KPD/journeys/MarxistTraining';
+import { journeyInstancesResource, journeyResource } from 'api/journeys';
+import { ZetkinJourney, ZetkinJourneyInstance } from 'types/zetkin';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
   localeScope: ['layout.organize.journeys', 'misc.breadcrumbs'],
 };
 
-// TODO: will need to fetch real journeys data here, once the journeys API is baked and out of the dev oven
 export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
   const { orgId, journeyId } = ctx.params!;
 
@@ -26,7 +23,15 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
   );
   const orgState = ctx.queryClient.getQueryState(['org', orgId]);
 
-  if (orgState?.status === 'success') {
+  const { state: journeyQueryState } = await journeyResource(
+    orgId as string,
+    journeyId as string
+  ).prefetch(ctx);
+
+  if (
+    orgState?.status === 'success' &&
+    journeyQueryState?.status === 'success'
+  ) {
     return {
       props: {
         journeyId,
@@ -40,14 +45,22 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
   }
 }, scaffoldOptions);
 
-type JourneyOverviewPageProps = {
+type JourneyInstancesOverviewPageProps = {
   journeyId: string;
-  orgId?: string;
+  orgId: string;
 };
 
-const JourneysOverviewPage: PageWithLayout<JourneyOverviewPageProps> = () => {
-  const journey = MarxistTraining;
-  const journeyInstances: ZetkinJourneyInstance[] = [];
+const JourneyInstancesOverviewPage: PageWithLayout<
+  JourneyInstancesOverviewPageProps
+> = ({ orgId, journeyId }) => {
+  const journeyQuery = journeyResource(orgId, journeyId).useQuery();
+  const journeyInstancesQuery = journeyInstancesResource(
+    orgId,
+    journeyId
+  ).useQuery();
+  const journey = journeyQuery.data as ZetkinJourney;
+  const journeyInstances =
+    journeyInstancesQuery.data as ZetkinJourneyInstance[];
 
   return (
     <>
@@ -59,8 +72,8 @@ const JourneysOverviewPage: PageWithLayout<JourneyOverviewPageProps> = () => {
   );
 };
 
-JourneysOverviewPage.getLayout = function getLayout(page) {
+JourneyInstancesOverviewPage.getLayout = function getLayout(page) {
   return <AllJourneysLayout>{page}</AllJourneysLayout>;
 };
 
-export default JourneysOverviewPage;
+export default JourneyInstancesOverviewPage;
