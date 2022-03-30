@@ -2,7 +2,7 @@ import { DataGridPro } from '@mui/x-data-grid-pro';
 import { FunctionComponent } from 'react';
 import { useIntl } from 'react-intl';
 
-import { getColumns } from './getColumns';
+import getColumns from './getColumns';
 import { ZetkinJourney, ZetkinJourneyInstance } from 'types/zetkin';
 
 interface JourneysDataTableProps {

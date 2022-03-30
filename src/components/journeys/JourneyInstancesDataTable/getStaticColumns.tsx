@@ -6,14 +6,9 @@ import {
   GridValueFormatterParams,
 } from '@mui/x-data-grid-pro';
 
+import { getHeaderName } from './getColumns';
 import ZetkinPerson from 'components/ZetkinPerson';
 import { ZetkinJourney, ZetkinPerson as ZetkinPersonType } from 'types/zetkin';
-
-// Localised header names
-const getHeaderName = (field: string, intl: IntlShape) =>
-  intl.formatMessage({
-    id: `pages.organizeJourney.columns.${field}`,
-  });
 
 // Name concatenation
 const getPeopleString = (people: ZetkinPersonType[]) =>
@@ -83,9 +78,7 @@ export const getStaticColumns = (
 
   // Add common props
   return staticColumns.map((col) => ({
-    flex: 1,
     headerName: getHeaderName(col.field, intl),
-    minWidth: 200,
     ...col,
   }));
 };
