@@ -1,14 +1,14 @@
 import { Form } from 'react-final-form';
+import getUserMemberships from 'fetching/getUserMemberships';
+import PersonSelect from './common/PersonSelect';
+import SubmitCancelButtons from './common/SubmitCancelButtons';
 import { TextField } from 'mui-rff';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
+
 import { Link, MenuItem } from '@material-ui/core';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
-
-import getUserMemberships from 'fetching/getUserMemberships';
-import PersonSelect from './common/PersonSelect';
-import SubmitCancelButtons from './common/SubmitCancelButtons';
 import { ZetkinCampaign, ZetkinPerson } from 'types/zetkin';
 
 interface CampaignDetailsFormProps {
