@@ -16,6 +16,7 @@ layout:
     makeStatic: Convert to static view
   exportMenu:
     title: Export View
+    warningText: Views contain sensitive personal information that needs to be protected. Are you sure you want to export?
   jumpMenu:
     placeholder: Start typing to find view
 viewsList:
