@@ -11,11 +11,11 @@ import { useRouter } from 'next/router';
 import ViewJumpMenu from 'components/views/ViewJumpMenu';
 import ViewSmartSearchDialog from 'components/views/ViewSmartSearchDialog';
 import { viewsResource } from 'api/views';
-import ZetkinDialog from 'components/ZetkinDialog';
 import { ZetkinEllipsisMenuProps } from 'components/ZetkinEllipsisMenu';
 import ZetkinQuery from 'components/ZetkinQuery';
+import ZetkinTextConfirmDialog from 'components/ZetkinTextConfirmDialog';
 
-import { Box, Button, makeStyles, Theme } from '@material-ui/core';
+import { Box, makeStyles, Theme } from '@material-ui/core';
 import { createContext, FunctionComponent, useContext, useState } from 'react';
 import { GridApiRef, useGridApiRef } from '@mui/x-data-grid-pro';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
@@ -30,6 +30,19 @@ const useStyles = makeStyles<Theme, { deactivated: boolean }>(() => ({
     transition: 'filter 0.3s ease',
   },
 }));
+
+function getTimeStamp(): string {
+  const now = new Date();
+  const timestamp =
+    String(now.getFullYear()) +
+    ('0' + (now.getMonth() + 1)).slice(-2) +
+    ('0' + now.getDate()).slice(-2) +
+    '_' +
+    ('0' + now.getHours()).slice(-2) +
+    ('0' + now.getMinutes()).slice(-2) +
+    ('0' + now.getSeconds()).slice(-2);
+  return timestamp;
+}
 
 const SingleViewLayout: FunctionComponent = ({ children }) => {
   const router = useRouter();
@@ -209,35 +222,26 @@ const SingleViewLayout: FunctionComponent = ({ children }) => {
           />
         )}
         {exportDialogOpen && view && (
-          <ZetkinDialog
-            onClose={() => setExportDialogOpen(false)}
+          <ZetkinTextConfirmDialog
+            defaultValue={
+              document.title.replace(' ', '_') + '_' + getTimeStamp()
+            }
+            onCancel={() => setExportDialogOpen(false)}
+            onSubmit={() => {
+              const fileName = 'Foo';
+              gridApiRef.current.exportDataAsCsv({ fileName: fileName });
+            }}
             open={exportDialogOpen}
+            submitText={intl.formatMessage({
+              id: 'pages.people.views.layout.ellipsisMenu.export',
+            })}
             title={intl.formatMessage({
               id: 'pages.people.views.layout.exportMenu.title',
             })}
-          >
-            <div>
-              <p>Lorem Impsum</p>
-              <Button
-                onClick={() => {
-                  const now = new Date();
-                  const fileName =
-                    document.title.replace(' ', '_') +
-                    '_' +
-                    String(now.getFullYear()) +
-                    ('0' + (now.getMonth() + 1)).slice(-2) +
-                    ('0' + now.getDate()).slice(-2) +
-                    '_' +
-                    ('0' + now.getHours()).slice(-2) +
-                    ('0' + now.getMinutes()).slice(-2) +
-                    ('0' + now.getSeconds()).slice(-2);
-                  gridApiRef.current.exportDataAsCsv({ fileName: fileName });
-                }}
-              >
-                Export
-              </Button>
-            </div>
-          </ZetkinDialog>
+            warningText={intl.formatMessage({
+              id: 'pages.people.views.layout.exportMenu.warningText',
+            })}
+          ></ZetkinTextConfirmDialog>
         )}
       </Box>
     </gridApiRefContext.Provider>
