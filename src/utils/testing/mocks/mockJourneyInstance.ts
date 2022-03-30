@@ -13,6 +13,7 @@ const journeyInstance: ZetkinJourneyInstance = {
   people: [person],
   summary:
     'At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga.',
+  tags: [],
   title: 'Training ID 1',
   updated_at: '2022-03-28T12:20:46.019Z',
 };
