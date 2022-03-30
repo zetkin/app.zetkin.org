@@ -1,21 +1,23 @@
-import { DataGridPro } from '@mui/x-data-grid-pro';
 import { FunctionComponent } from 'react';
-import { useIntl } from 'react-intl';
+import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
 
-import getColumns from './getColumns';
+import getColumns, { ColumnNames } from './getColumns';
 import { ZetkinJourney, ZetkinJourneyInstance } from 'types/zetkin';
 
 interface JourneysDataTableProps {
+  columnNames: ColumnNames;
+  dynamicColumns: GridColDef[];
   journey: ZetkinJourney;
   journeyInstances: ZetkinJourneyInstance[];
 }
 
 const JourneyInstancesDataTable: FunctionComponent<JourneysDataTableProps> = ({
+  columnNames,
+  dynamicColumns,
   journey,
   journeyInstances,
 }) => {
-  const intl = useIntl();
-  const columns = getColumns(intl, journeyInstances, journey);
+  const columns = getColumns(columnNames, dynamicColumns, journey);
 
   return (
     <>

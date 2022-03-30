@@ -1,12 +1,11 @@
 import dayjs from 'dayjs';
-import { IntlShape } from 'react-intl';
 import {
   GridColDef,
   GridRenderCellParams,
   GridValueFormatterParams,
 } from '@mui/x-data-grid-pro';
 
-import { getHeaderName } from './getColumns';
+import { ColumnNames } from './getColumns';
 import ZetkinPerson from 'components/ZetkinPerson';
 import { ZetkinJourney, ZetkinPerson as ZetkinPersonType } from 'types/zetkin';
 
@@ -15,8 +14,8 @@ const getPeopleString = (people: ZetkinPersonType[]) =>
   people.map((person) => `${person.first_name} ${person.last_name}`).join(', ');
 
 export const getStaticColumns = (
-  intl: IntlShape,
-  journey: ZetkinJourney
+  journey: ZetkinJourney,
+  columnNames: ColumnNames
 ): GridColDef[] => {
   const staticColumns: GridColDef[] = [
     {
@@ -76,9 +75,9 @@ export const getStaticColumns = (
     },
   ];
 
-  // Add common props
+  // Add header names
   return staticColumns.map((col) => ({
-    headerName: getHeaderName(col.field, intl),
+    headerName: columnNames[col.field],
     ...col,
   }));
 };

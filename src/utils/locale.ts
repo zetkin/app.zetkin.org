@@ -5,7 +5,7 @@ import { NextApiRequest } from 'next';
 import path from 'path';
 import yaml from 'yaml';
 
-type MessageList = Record<string, string>;
+export type MessageList = Record<string, string>;
 type MessageDB = Record<string, MessageList>;
 
 let MESSAGES: MessageDB | null = null;

@@ -1,7 +1,5 @@
 import Chance from 'chance';
 import dayjs from 'dayjs';
-import relativeTime from 'dayjs/plugin/relativeTime';
-dayjs.extend(relativeTime);
 
 import mockJourneyInstance from 'utils/testing/mocks/mockJourneyInstance';
 import mockPerson from 'utils/testing/mocks/mockPerson';
@@ -10,7 +8,7 @@ import { ZetkinJourneyInstance } from 'types/zetkin';
 const chance = Chance();
 
 // Ensure uniqueness
-const ids: number[] = Array.from(Array(2000).keys());
+const ids: number[] = Array.from(Array(20000).keys());
 
 const people = ids
   .splice(0, 20)
@@ -77,7 +75,7 @@ const getFreeTags = (numTags: number): ZetkinJourneyInstance['tags'] =>
     title: chance.word(),
   }));
 
-const dummyTableData = ids.map((id) => {
+const dummyTableData = ids.splice(0, 500).map((id) => {
   const created_at = dayjs()
     .subtract(Math.ceil(Math.random() * 200), 'hour')
     .format();

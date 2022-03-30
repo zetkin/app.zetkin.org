@@ -1,8 +1,10 @@
-import { ScaffoldedContext } from 'utils/next';
-import { ZetkinJourney } from 'types/zetkin';
-import { createPrefetch, createUseQuery } from './utils/resourceHookFactories';
+import { GridColDef } from '@mui/x-data-grid-pro';
 
-import { dummyTableData } from 'components/journeys/JourneyInstancesDataTable/index.spec';
+import { ColumnNames } from 'components/journeys/JourneyInstancesDataTable/getColumns';
+import { ScaffoldedContext } from 'utils/next';
+import { createPrefetch, createUseQuery } from './utils/resourceHookFactories';
+import { ZetkinJourney, ZetkinJourneyInstance } from 'types/zetkin';
+
 import MarxistTraining from '../../playwright/mockData/orgs/KPD/journeys/MarxistTraining';
 
 export const journeysResource = (orgId: string) => {
@@ -31,13 +33,15 @@ export const journeyResource = (orgId: string, journeyId: string) => {
   };
 };
 
-// TODO: delete dummy data
 export const journeyInstancesResource = (orgId: string, journeyId: string) => {
   const key = ['journeyInstances', orgId, journeyId];
-  const url = `/orgs/${orgId}/journeys/${journeyId}/instances`;
+  const url = `/organize/${orgId}/journeys/${journeyId}`;
 
   return {
-    // useQuery: createUseQuery<ZetkinJourneyInstance[]>(key, url),
-    useQuery: () => ({ data: dummyTableData, key, url }),
+    useQuery: createUseQuery<{
+      columnNames: ColumnNames;
+      dynamicColumns: GridColDef[];
+      journeyInstances: ZetkinJourneyInstance[];
+    }>(key, url),
   };
 };

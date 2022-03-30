@@ -1,15 +1,16 @@
 import { GridColDef } from '@mui/x-data-grid-pro';
-import { IntlShape } from 'react-intl';
 import { uniqBy } from 'lodash';
 
-import { getHeaderName } from './getColumns';
+import { ColumnNames } from 'components/journeys/JourneyInstancesDataTable/getColumns';
 import { ZetkinJourneyInstance, ZetkinTag } from 'types/zetkin';
 
 export const getTagColumns = (
-  intl: IntlShape,
-  rows: ZetkinJourneyInstance[]
+  journeyInstances: ZetkinJourneyInstance[],
+  columnNames: ColumnNames
 ): GridColDef[] => {
-  const allTags = rows.map((row) => row.tags).flat(1);
+  const allTags = journeyInstances
+    .map((journeyInstance) => journeyInstance.tags)
+    .flat(1);
 
   // Get array of unique groups by id
   const allTagGroups: ZetkinTag['group'][] = allTags
@@ -35,7 +36,7 @@ export const getTagColumns = (
 
   const freeTagColumn: GridColDef = {
     field: 'tagsFree',
-    headerName: getHeaderName('tagsFree', intl),
+    headerName: columnNames['tagsFree'],
   };
 
   return groupColumns.concat(valueColumns).concat(freeTagColumn);

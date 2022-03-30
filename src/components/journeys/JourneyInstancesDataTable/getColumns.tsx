@@ -1,20 +1,20 @@
 import { GridColDef } from '@mui/x-data-grid-pro';
-import { IntlShape } from 'react-intl';
 
 import { getStaticColumns } from './getStaticColumns';
-import { getTagColumns } from './getTagColumns';
-import { ZetkinJourney, ZetkinJourneyInstance } from 'types/zetkin';
+import { ZetkinJourney } from 'types/zetkin';
+
+export type ColumnNames = Record<string, string>;
 
 const getColumns = (
-  intl: IntlShape,
-  rows: ZetkinJourneyInstance[],
+  columnNames: ColumnNames,
+  dynamicColumns: GridColDef[],
   journey: ZetkinJourney
 ): GridColDef[] => {
-  const staticColumns = getStaticColumns(intl, journey);
+  const staticColumns = getStaticColumns(journey, columnNames);
   return (
     staticColumns
       .splice(0, 2)
-      .concat(getTagColumns(intl, rows))
+      .concat(dynamicColumns)
       // Add/override common props
       .concat(staticColumns)
       .map((col) => ({
@@ -24,11 +24,5 @@ const getColumns = (
       }))
   );
 };
-
-// Localised header names
-export const getHeaderName = (field: string, intl: IntlShape): string =>
-  intl.formatMessage({
-    id: `pages.organizeJourney.columns.${field}`,
-  });
 
 export default getColumns;

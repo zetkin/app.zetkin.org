@@ -1,11 +1,14 @@
 import { GetServerSideProps } from 'next';
+import { GridColDef } from '@mui/x-data-grid-pro';
 import Head from 'next/head';
 
 import AllJourneyInstancesLayout from 'layout/organize/AllJourneyInstancesLayout';
+import { ColumnNames } from 'components/journeys/JourneyInstancesDataTable/getColumns';
 import getOrg from 'fetching/getOrg';
 import JourneyInstancesDataTable from 'components/journeys/JourneyInstancesDataTable';
 import { PageWithLayout } from 'types';
 import { scaffold } from 'utils/next';
+import ZetkinQuery from 'components/ZetkinQuery';
 import { journeyInstancesResource, journeyResource } from 'api/journeys';
 import { ZetkinJourney, ZetkinJourneyInstance } from 'types/zetkin';
 
@@ -59,15 +62,24 @@ const JourneyInstancesOverviewPage: PageWithLayout<
     journeyId
   ).useQuery();
   const journey = journeyQuery.data as ZetkinJourney;
-  const journeyInstances =
-    journeyInstancesQuery.data as ZetkinJourneyInstance[];
 
   return (
     <>
       <Head>
         <title>{journey.plural_name}</title>
       </Head>
-      <JourneyInstancesDataTable {...{ journey, journeyInstances }} />
+      <ZetkinQuery queries={{ journeyInstancesQuery }}>
+        <JourneyInstancesDataTable
+          {...{
+            journey,
+            ...(journeyInstancesQuery.data as {
+              columnNames: ColumnNames;
+              dynamicColumns: GridColDef[];
+              journeyInstances: ZetkinJourneyInstance[];
+            }),
+          }}
+        />
+      </ZetkinQuery>
     </>
   );
 };
