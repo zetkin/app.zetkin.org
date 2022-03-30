@@ -2,7 +2,7 @@ import { ScaffoldedContext } from 'utils/next';
 import { ZetkinJourney } from 'types/zetkin';
 import { createPrefetch, createUseQuery } from './utils/resourceHookFactories';
 
-import { dummyTableData } from 'components/journeys/JourneysInstancesDataTable.spec';
+import { dummyTableData } from 'components/journeys/JourneyInstancesDataTable/index.spec';
 import MarxistTraining from '../../playwright/mockData/orgs/KPD/journeys/MarxistTraining';
 
 export const journeysResource = (orgId: string) => {

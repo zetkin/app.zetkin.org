@@ -2,7 +2,7 @@ import { DataGridPro } from '@mui/x-data-grid-pro';
 import { FunctionComponent } from 'react';
 import { useIntl } from 'react-intl';
 
-import { getColumns } from './columns';
+import { getColumns } from './getColumns';
 import { ZetkinJourney, ZetkinJourneyInstance } from 'types/zetkin';
 
 interface JourneysDataTableProps {
@@ -10,7 +10,7 @@ interface JourneysDataTableProps {
   journeyInstances: ZetkinJourneyInstance[];
 }
 
-const JourneysInstancesDataTable: FunctionComponent<JourneysDataTableProps> = ({
+const JourneyInstancesDataTable: FunctionComponent<JourneysDataTableProps> = ({
   journey,
   journeyInstances,
 }) => {
@@ -31,4 +31,4 @@ const JourneysInstancesDataTable: FunctionComponent<JourneysDataTableProps> = ({
   );
 };
 
-export default JourneysInstancesDataTable;
+export default JourneyInstancesDataTable;

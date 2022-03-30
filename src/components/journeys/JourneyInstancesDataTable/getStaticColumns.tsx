@@ -7,18 +7,22 @@ import {
 } from '@mui/x-data-grid-pro';
 
 import ZetkinPerson from 'components/ZetkinPerson';
-import {
-  ZetkinJourney,
-  ZetkinJourneyInstance,
-  ZetkinPerson as ZetkinPersonType,
-} from 'types/zetkin';
+import { ZetkinJourney, ZetkinPerson as ZetkinPersonType } from 'types/zetkin';
 
+// Localised header names
 const getHeaderName = (field: string, intl: IntlShape) =>
   intl.formatMessage({
     id: `pages.organizeJourney.columns.${field}`,
   });
 
-const getStaticColumns = (intl: IntlShape, journey: ZetkinJourney) => {
+// Name concatenation
+const getPeopleString = (people: ZetkinPersonType[]) =>
+  people.map((person) => `${person.first_name} ${person.last_name}`).join(', ');
+
+export const getStaticColumns = (
+  intl: IntlShape,
+  journey: ZetkinJourney
+): GridColDef[] => {
   const staticColumns: GridColDef[] = [
     {
       field: 'id',
@@ -28,19 +32,18 @@ const getStaticColumns = (intl: IntlShape, journey: ZetkinJourney) => {
     },
     {
       field: 'people',
-      valueFormatter: (params: GridValueFormatterParams) => {
-        return (params.value as ZetkinPersonType[])
-          .map((person) => `${person.first_name} ${person.last_name}`)
-          .join(', ');
-      },
+      valueGetter: (params: GridValueFormatterParams) =>
+        getPeopleString(params.value as ZetkinPersonType[]),
     },
     {
       field: 'created_at',
+      type: 'date',
       valueFormatter: (params: GridValueFormatterParams) =>
         dayjs(params.value as string).format('MMMM D, YYYY'),
     },
     {
       field: 'updated_at',
+      type: 'date',
       valueFormatter: (params: GridValueFormatterParams) =>
         dayjs(params.value as string).fromNow(),
     },
@@ -51,6 +54,7 @@ const getStaticColumns = (intl: IntlShape, journey: ZetkinJourney) => {
     },
     {
       field: 'next_milestone_deadline',
+      type: 'date',
       valueFormatter: (params: GridValueFormatterParams) =>
         dayjs(params.value as string).fromNow(true),
       valueGetter: (params: GridValueFormatterParams) =>
@@ -61,8 +65,9 @@ const getStaticColumns = (intl: IntlShape, journey: ZetkinJourney) => {
     },
     {
       field: 'assigned_to',
+      filterable: false,
       renderCell: (params: GridRenderCellParams) =>
-        (params.value as ZetkinPersonType[]).map((person) => (
+        (params.row.assigned_to as ZetkinPersonType[]).map((person) => (
           <ZetkinPerson
             key={person.id}
             containerProps={{ style: { marginRight: 10 } }}
@@ -72,27 +77,15 @@ const getStaticColumns = (intl: IntlShape, journey: ZetkinJourney) => {
             showText={false}
           />
         )),
+      sortable: false,
     },
   ];
 
-  //
-
+  // Add common props
   return staticColumns.map((col) => ({
     flex: 1,
     headerName: getHeaderName(col.field, intl),
     minWidth: 200,
     ...col,
   }));
-};
-
-const getTagColumns = (intl: IntlShape, rows: ZetkinJourneyInstance[]) => {
-  return [];
-};
-
-export const getColumns = (
-  intl: IntlShape,
-  rows: ZetkinJourneyInstance[],
-  journey: ZetkinJourney
-): GridColDef[] => {
-  return getStaticColumns(intl, journey).concat(getTagColumns(intl, rows));
 };
