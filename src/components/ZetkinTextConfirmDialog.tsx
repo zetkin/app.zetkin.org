@@ -17,7 +17,16 @@ export interface ZetkinTextConfirmDialogProps {
 
 const ZetkinTextConfirmDialog: React.FunctionComponent<
   ZetkinTextConfirmDialogProps
-> = ({ open, onCancel, onSubmit, title, warningText, submitDisabled, defaultValue, submitText}) => {
+> = ({
+  open,
+  onCancel,
+  onSubmit,
+  title,
+  warningText,
+  submitDisabled,
+  defaultValue,
+  submitText,
+}) => {
   const intl = useIntl();
   return (
     <ZetkinDialog
@@ -38,23 +47,26 @@ const ZetkinTextConfirmDialog: React.FunctionComponent<
           ev.preventDefault();
           onSubmit();
         }}
-      > 
+      >
         <TextField
+          defaultValue={defaultValue}
           fullWidth
           id="user_input"
-          defaultValue={defaultValue}
           label="Filename"
           margin="normal"
           name="user_input"
-          variant="filled"
           size="small"
+          variant="filled"
         />
         <SubmitCancelButtons
           onCancel={() => onCancel()}
           submitDisabled={submitDisabled}
-          submitText={submitText || intl.formatMessage({
-            id: 'misc.ConfirmDialog.button',
-          })}
+          submitText={
+            submitText ||
+            intl.formatMessage({
+              id: 'misc.ConfirmDialog.button',
+            })
+          }
         />
       </form>
     </ZetkinDialog>
