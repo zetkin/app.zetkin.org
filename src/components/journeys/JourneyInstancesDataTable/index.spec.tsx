@@ -9,7 +9,7 @@ import { ZetkinJourneyInstance } from 'types/zetkin';
 
 const chance = Chance();
 
-const ids = Array.from(Array(100).keys());
+const ids = Array.from(Array(200).keys());
 const people = ids
   .slice(1, 20)
   .map((id) =>
@@ -22,49 +22,48 @@ const milestones = [
   'sashay away',
 ];
 
-const valueTags = [
-  {
-    tags: [
-      { color: 'salmon', value: '1 - immediate' },
-      { color: 'peach', value: '2 - near future' },
-      { color: 'grey', value: '3 - chase up' },
-    ],
-    title: 'priority',
-  },
-  {
-    tags: [
-      { color: 'beige', value: 'contract' },
-      { color: 'cornflowerblue', value: 'pay' },
-      { color: 'grey', value: 'disciplinary/dismissal' },
-      { color: 'aliceblue', value: 'discrimination' },
-      { color: 'aquamarine', value: 'whistleblowing' },
-    ],
-    title: 'category',
-  },
+const groupTags: ZetkinJourneyInstance['tags'][] = [
+  [
+    { color: 'salmon', title: '1 - immediate' },
+    { color: 'peach', title: '2 - near future' },
+    { color: 'grey', title: '3 - chase up' },
+  ].map((tag, idx) => ({
+    group: { id: 2, title: 'priority' },
+    id: 300 + idx,
+    ...tag,
+  })),
+  [
+    { color: 'beige', title: 'contract' },
+    { color: 'cornflowerblue', title: 'pay' },
+    { color: 'grey', title: 'disciplinary/dismissal' },
+    { color: 'aliceblue', title: 'discrimination' },
+    { color: 'aquamarine', title: 'whistleblowing' },
+  ].map((tag, idx) => ({
+    group: { id: 3, title: 'category' },
+    id: 400 + idx,
+    ...tag,
+  })),
 ];
 
-const animals = ids.map((id) => ({
+const animalTags = ids.slice(1, 100).map((id) => ({
   color: chance.color(),
+  group: { id: 1, title: 'Animals' },
   id,
   title: chance.animal(),
 }));
 
-const getOneOfEachValueTagTypes = (): ZetkinJourneyInstance['tags'] =>
-  valueTags.map((column, idx) => ({
+const getValueTag = (): ZetkinJourneyInstance['tags'] => [
+  {
+    color: 'green',
     group: null,
-    id: idx + 10000,
-    title: column.title,
-    ...chance.pickone(column.tags),
-  }));
+    id: 2000,
+    title: 'Number of pets',
+    value: chance.integer({ max: 11, min: 0 }),
+  },
+];
 
-const getGroupTags = (): ZetkinJourneyInstance['tags'] => {
-  return chance
-    .pickset(animals, chance.integer({ max: 5, min: 2 }))
-    .map((animal) => ({
-      ...animal,
-      group: { id: 1, title: 'Animals' },
-    }));
-};
+const getMultipleTagsGroup = (): ZetkinJourneyInstance['tags'] =>
+  chance.pickset(animalTags, chance.integer({ max: 5, min: 2 }));
 
 const dummyTableData = ids.map((id) => {
   const created_at = dayjs()
@@ -83,7 +82,10 @@ const dummyTableData = ids.map((id) => {
     },
     people: chance.pickset(people, chance.pickone([1, 1, 1, 1, 2])),
     summary: chance.sentence({ words: 10 }),
-    tags: getOneOfEachValueTagTypes().concat(getGroupTags()),
+    tags: groupTags
+      .map((tags) => chance.pickone(tags))
+      .concat(getValueTag())
+      .concat(getMultipleTagsGroup()),
     updated_at: dayjs()
       .subtract(dayjs().diff(dayjs(created_at), 'minute') / 2, 'minute')
       .format(),
