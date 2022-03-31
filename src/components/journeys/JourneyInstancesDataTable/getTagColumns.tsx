@@ -2,7 +2,7 @@ import { ColumnNames } from './getColumns';
 import { GridColDef } from '@mui/x-data-grid-pro';
 import { TagMetadata } from 'pages/api/organize/[orgId]/journeys/[journeyId]/getTagMetadata';
 import { ZetkinJourneyInstance } from 'types/zetkin';
-import ZetkinTag from '../../ZetkinTag';
+import ZetkinTag from 'components/ZetkinTag';
 
 const getTagColumns = (
   tagMetadata: TagMetadata,

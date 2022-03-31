@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { Avatar, Box, BoxProps, Typography } from '@material-ui/core';
+import { Avatar, Box, BoxProps, Tooltip, Typography } from '@material-ui/core';
 
 const ZetkinPerson: React.FunctionComponent<{
   containerProps?: BoxProps;
@@ -18,10 +18,12 @@ const ZetkinPerson: React.FunctionComponent<{
 
   return (
     <Box display="flex" {...containerProps}>
-      <Avatar
-        {...(link ? linkProps : {})}
-        src={orgId ? `/api/orgs/${orgId}/people/${id}/avatar` : ''}
-      />
+      <Tooltip title={name}>
+        <Avatar
+          {...(link ? linkProps : {})}
+          src={orgId ? `/api/orgs/${orgId}/people/${id}/avatar` : ''}
+        />
+      </Tooltip>
 
       {showText && (
         <Box

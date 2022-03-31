@@ -1,9 +1,5 @@
 import dayjs from 'dayjs';
-import {
-  GridColDef,
-  GridRenderCellParams,
-  GridValueFormatterParams,
-} from '@mui/x-data-grid-pro';
+import { GridColDef } from '@mui/x-data-grid-pro';
 
 import { ColumnNames } from './getColumns';
 import ZetkinPerson from 'components/ZetkinPerson';
@@ -20,47 +16,42 @@ export const getStaticColumns = (
   const staticColumns: GridColDef[] = [
     {
       field: 'id',
-      valueFormatter: (params: GridValueFormatterParams) => {
+      valueFormatter: (params) => {
         return `${journey.singular_name} #${params.value}`;
       },
     },
     {
       field: 'people',
-      valueGetter: (params: GridValueFormatterParams) =>
+      valueGetter: (params) =>
         getPeopleString(params.value as ZetkinPersonType[]),
     },
     {
       field: 'created_at',
       type: 'date',
-      valueFormatter: (params: GridValueFormatterParams) =>
+      valueFormatter: (params) =>
         dayjs(params.value as string).format('MMMM D, YYYY'),
     },
     {
       field: 'updated_at',
       type: 'date',
-      valueFormatter: (params: GridValueFormatterParams) =>
-        dayjs(params.value as string).fromNow(),
+      valueFormatter: (params) => dayjs(params.value as string).fromNow(),
     },
     {
       field: 'next_milestone_title',
-      valueGetter: (params: GridValueFormatterParams) =>
-        params.row.next_milestone.title,
+      valueGetter: (params) => params.row.next_milestone.title,
     },
     {
       field: 'next_milestone_deadline',
       type: 'date',
-      valueFormatter: (params: GridValueFormatterParams) =>
-        dayjs(params.value as string).fromNow(true),
-      valueGetter: (params: GridValueFormatterParams) =>
-        params.row.next_milestone.deadline,
+      valueFormatter: (params) => dayjs(params.value as string).fromNow(true),
+      valueGetter: (params) => params.row.next_milestone.deadline,
     },
     {
       field: 'summary',
     },
     {
       field: 'assigned_to',
-      filterable: false,
-      renderCell: (params: GridRenderCellParams) =>
+      renderCell: (params) =>
         (params.row.assigned_to as ZetkinPersonType[]).map((person) => (
           <ZetkinPerson
             key={person.id}
@@ -71,7 +62,10 @@ export const getStaticColumns = (
             showText={false}
           />
         )),
-      sortable: false,
+      valueGetter: (params) =>
+        (params.row.assigned_to as ZetkinPersonType[])
+          .map((person) => `${person.first_name} ${person.last_name}`)
+          .join(', '),
     },
   ];
 
