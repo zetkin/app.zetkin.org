@@ -17,6 +17,7 @@ import { ConfirmDialogContext } from 'hooks/ConfirmDialogProvider';
 import deleteViewColumn from 'fetching/views/deleteViewColumn';
 import EmptyView from 'components/views/EmptyView';
 import patchViewColumn from 'fetching/views/patchViewColumn';
+import PersonHoverCard from 'components/PersonHoverCard';
 import postViewColumn from 'fetching/views/postViewColumn';
 import SnackbarContext from 'hooks/SnackbarContext';
 import ViewRenameColumnDialog from '../ViewRenameColumnDialog';
@@ -268,19 +269,21 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
       const url = `/api/orgs/${orgId}/people/${params.value}/avatar`;
       return (
         // eslint-disable-next-line @next/next/no-img-element
-        <NextLink href={`/organize/${orgId}/people/${params.value}`} passHref>
-          <Link
-            alt="Avatar"
-            component="img"
-            onClick={(evt) => evt.stopPropagation()}
-            src={url}
-            style={{
-              cursor: 'pointer',
-              maxHeight: '100%',
-              maxWidth: '100%',
-            }}
-          />
-        </NextLink>
+        <PersonHoverCard personId={params.value as string}>
+          <NextLink href={`/organize/${orgId}/people/${params.value}`} passHref>
+            <Link
+              alt="Avatar"
+              component="img"
+              onClick={(evt) => evt.stopPropagation()}
+              src={url}
+              style={{
+                cursor: 'pointer',
+                maxHeight: '100%',
+                maxWidth: '100%',
+              }}
+            />
+          </NextLink>
+        </PersonHoverCard>
       );
     },
     resizable: false,
