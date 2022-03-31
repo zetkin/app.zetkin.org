@@ -1,25 +1,10 @@
 import { useState } from 'react';
-import { Box, Switch, Tooltip, Typography } from '@material-ui/core';
+import { Box, Switch, Typography } from '@material-ui/core';
 import { FormattedMessage, useIntl } from 'react-intl';
 
 import ZetkinSection from 'components/ZetkinSection';
-import { ZetkinTag } from 'types/zetkin';
-
-const TagChip: React.FunctionComponent<{ tag: ZetkinTag }> = ({ tag }) => {
-  return (
-    <Tooltip arrow title={tag.description}>
-      <Box
-        bgcolor={tag.color || '#e1e1e1'}
-        borderRadius="18px"
-        fontSize={13}
-        px={2}
-        py={0.7}
-      >
-        {tag.title}
-      </Box>
-    </Tooltip>
-  );
-};
+import ZetkinTag from 'components/ZetkinTag';
+import { ZetkinTag as ZetkinTagType } from 'types/zetkin';
 
 const GroupToggle: React.FunctionComponent<{
   checked?: boolean;
@@ -44,13 +29,13 @@ const GroupToggle: React.FunctionComponent<{
 
 interface TagsGroups {
   [key: string]: {
-    tags: ZetkinTag[];
+    tags: ZetkinTagType[];
     title: string;
   };
 }
 
 const TagsManager: React.FunctionComponent<{
-  appliedTags: ZetkinTag[];
+  appliedTags: ZetkinTagType[];
 }> = ({ appliedTags }) => {
   const intl = useIntl();
 
@@ -106,7 +91,7 @@ const TagsManager: React.FunctionComponent<{
                     >
                       {group.tags.map((tag, i) => {
                         // Tag Chip
-                        return <TagChip key={i} tag={tag} />;
+                        return <ZetkinTag key={i} tag={tag} />;
                       })}
                     </Box>
                   </Box>
@@ -117,7 +102,7 @@ const TagsManager: React.FunctionComponent<{
               <Box display="flex" flexWrap="wrap" style={{ gap: 8 }}>
                 {appliedTags.map((tag, i) => {
                   // Tag Chip
-                  return <TagChip key={i} tag={tag} />;
+                  return <ZetkinTag key={i} tag={tag} />;
                 })}
               </Box>
             )}

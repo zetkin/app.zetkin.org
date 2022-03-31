@@ -26,8 +26,8 @@ const groupIds = ids.splice(0, 3);
 const groupTags: ZetkinJourneyInstance['tags'][] = [
   [
     { color: 'salmon', title: '1 - immediate' },
-    { color: 'peach', title: '2 - near future' },
-    { color: 'grey', title: '3 - chase up' },
+    { color: 'peachpuff', title: '2 - near future' },
+    { color: 'lightgray', title: '3 - chase up' },
   ].map((tag) => ({
     group: { id: groupIds[0], title: 'Priority' },
     id: ids.shift() as number,
@@ -36,7 +36,7 @@ const groupTags: ZetkinJourneyInstance['tags'][] = [
   [
     { color: 'beige', title: 'contract' },
     { color: 'cornflowerblue', title: 'pay' },
-    { color: 'grey', title: 'disciplinary/dismissal' },
+    { color: 'gray', title: 'disciplinary/dismissal' },
     { color: 'aliceblue', title: 'discrimination' },
     { color: 'aquamarine', title: 'whistleblowing' },
   ].map((tag) => ({
