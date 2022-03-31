@@ -1,11 +1,10 @@
-import { GridColDef } from '@mui/x-data-grid-pro';
-
 import { ColumnNames } from 'components/journeys/JourneyInstancesDataTable/getColumns';
 import { ScaffoldedContext } from 'utils/next';
 import { createPrefetch, createUseQuery } from './utils/resourceHookFactories';
 import { ZetkinJourney, ZetkinJourneyInstance } from 'types/zetkin';
 
 import MarxistTraining from '../../playwright/mockData/orgs/KPD/journeys/MarxistTraining';
+import { TagMetadata } from '../pages/api/organize/[orgId]/journeys/[journeyId]/getTagMetadata';
 
 export const journeysResource = (orgId: string) => {
   const key = ['journeys', orgId];
@@ -40,8 +39,8 @@ export const journeyInstancesResource = (orgId: string, journeyId: string) => {
   return {
     useQuery: createUseQuery<{
       columnNames: ColumnNames;
-      dynamicColumns: GridColDef[];
       journeyInstances: ZetkinJourneyInstance[];
+      tagMetadata: TagMetadata;
     }>(key, url),
   };
 };

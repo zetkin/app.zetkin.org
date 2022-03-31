@@ -4,7 +4,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 
 import { createApiFetch } from 'utils/apiFetch';
 import { getMessages } from 'utils/locale';
-import { getTagColumns } from './getTagColumns';
+import { getTagMetadata } from './getTagMetadata';
 
 import { dummyTableData } from 'components/journeys/JourneyInstancesDataTable/index.spec';
 
@@ -30,6 +30,7 @@ const getJourneyTableData = async (
     //   `/orgs/${orgId}/journeys/${journeyId}/instances`
     // );
     // const { data: journeyInstances } = await journeyInstancesRes.json();
+
     // Retrieve column names
     const columnNames = Object.fromEntries(
       Object.entries(
@@ -37,11 +38,11 @@ const getJourneyTableData = async (
       ).map(([key, value]) => [key.split('.').pop(), value])
     );
     const journeyInstances = dummyTableData;
-    const dynamicColumns = getTagColumns(journeyInstances, columnNames);
+    const tagMetadata = getTagMetadata(journeyInstances);
 
     res
       .status(200)
-      .json({ data: { columnNames, dynamicColumns, journeyInstances } });
+      .json({ data: { columnNames, journeyInstances, tagMetadata } });
   } catch (e) {
     res.status(500).json({ error: (e as Error).message });
   }

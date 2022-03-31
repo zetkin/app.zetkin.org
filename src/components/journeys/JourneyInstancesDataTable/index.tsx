@@ -1,23 +1,24 @@
+import { DataGridPro } from '@mui/x-data-grid-pro';
 import { FunctionComponent } from 'react';
-import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
 
+import { TagMetadata } from 'pages/api/organize/[orgId]/journeys/[journeyId]/getTagMetadata';
 import getColumns, { ColumnNames } from './getColumns';
 import { ZetkinJourney, ZetkinJourneyInstance } from 'types/zetkin';
 
 interface JourneysDataTableProps {
   columnNames: ColumnNames;
-  dynamicColumns: GridColDef[];
+  tagMetadata: TagMetadata;
   journey: ZetkinJourney;
   journeyInstances: ZetkinJourneyInstance[];
 }
 
 const JourneyInstancesDataTable: FunctionComponent<JourneysDataTableProps> = ({
   columnNames,
-  dynamicColumns,
+  tagMetadata,
   journey,
   journeyInstances,
 }) => {
-  const columns = getColumns(columnNames, dynamicColumns, journey);
+  const columns = getColumns(columnNames, tagMetadata, journey);
 
   return (
     <>
