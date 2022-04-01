@@ -1,12 +1,14 @@
 import { GetServerSideProps } from 'next';
 import { Grid } from '@material-ui/core';
 import Head from 'next/head';
+import { useContext } from 'react';
 import { useRouter } from 'next/router';
 
 import { PageWithLayout } from 'types';
 import PersonDetailsCard from 'components/organize/people/PersonDetailsCard';
 import PersonOrganizationsCard from 'components/organize/people/PersonOrganizationsCard';
 import SinglePersonLayout from 'layout/organize/SinglePersonLayout';
+import SnackbarContext from 'hooks/SnackbarContext';
 import TagsManager from 'components/organize/TagsManager';
 import ZetkinQuery from 'components/ZetkinQuery';
 import { personResource, personTagsResource } from 'api/people';
@@ -51,6 +53,7 @@ export type PersonPageProps = {
 
 const PersonProfilePage: PageWithLayout<PersonPageProps> = (props) => {
   const { orgId, personId } = useRouter().query;
+  const { showSnackbar } = useContext(SnackbarContext);
   const {
     useAdd,
     useQuery: usePersonTagsQuery,
@@ -87,7 +90,11 @@ const PersonProfilePage: PageWithLayout<PersonPageProps> = (props) => {
             <TagsManager
               appliedTags={personTagsQuery.data || []}
               availableTags={organizationTagsQuery.data || []}
-              onSelect={(tag) => addTagMutation.mutate(tag.id)}
+              onSelect={(tag) =>
+                addTagMutation.mutate(tag.id, {
+                  onError: () => showSnackbar('error'),
+                })
+              }
             />
           </ZetkinQuery>
         </Grid>
