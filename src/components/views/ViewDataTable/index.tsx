@@ -269,7 +269,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
       const url = `/api/orgs/${orgId}/people/${params.value}/avatar`;
       return (
         // eslint-disable-next-line @next/next/no-img-element
-        <PersonHoverCard personId={params.value as string}>
+        <PersonHoverCard personId={params.value as number}>
           <NextLink href={`/organize/${orgId}/people/${params.value}`} passHref>
             <Link
               alt="Avatar"

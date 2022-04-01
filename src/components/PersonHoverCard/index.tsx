@@ -24,7 +24,7 @@ const TagChip: React.FunctionComponent<{ tag: ZetkinTag }> = ({ tag }) => {
   );
 };
 
-const PersonHoverCard: React.FunctionComponent<{ personId: string }> = ({
+const PersonHoverCard: React.FunctionComponent<{ personId: number }> = ({
   children,
   personId,
 }) => {
@@ -38,10 +38,13 @@ const PersonHoverCard: React.FunctionComponent<{ personId: string }> = ({
   };
 
   const { orgId } = useRouter().query;
-  const { data: person } = personResource(orgId as string, personId).useQuery();
+  const { data: person } = personResource(
+    orgId as string,
+    personId.toString()
+  ).useQuery();
   const { data: tags } = personTagsResource(
     orgId as string,
-    personId
+    personId.toString()
   ).useAllTagsQuery();
 
   if (person) {

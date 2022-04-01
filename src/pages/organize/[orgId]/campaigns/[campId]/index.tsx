@@ -117,7 +117,7 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({
             )}
             {campaign?.manager && (
               <Grid item xs={12}>
-                <PersonHoverCard personId={campaign.manager.id.toString()}>
+                <PersonHoverCard personId={campaign.manager.id}>
                   <ZetkinPerson
                     id={campaign.manager.id}
                     name={campaign.manager.name}
