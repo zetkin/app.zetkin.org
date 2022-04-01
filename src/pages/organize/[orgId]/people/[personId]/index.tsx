@@ -87,7 +87,7 @@ const PersonProfilePage: PageWithLayout<PersonPageProps> = (props) => {
             <TagsManager
               appliedTags={personTagsQuery.data || []}
               availableTags={organizationTagsQuery.data || []}
-              onSelectTag={(tag) => addTagMutation.mutate(tag.id)}
+              onSelect={(tag) => addTagMutation.mutate(tag.id)}
             />
           </ZetkinQuery>
         </Grid>

@@ -14,8 +14,8 @@ import TagsList from './TagsList';
 const TagsManager: React.FunctionComponent<{
   appliedTags: ZetkinTag[];
   availableTags: ZetkinTag[];
-  onSelectTag: (tag: ZetkinTag) => void;
-}> = ({ availableTags, appliedTags, onSelectTag }) => {
+  onSelect: (tag: ZetkinTag) => void;
+}> = ({ availableTags, appliedTags, onSelect }) => {
   const intl = useIntl();
 
   const [addTagButton, setAddTagButton] = useState<HTMLElement | null>(null);
@@ -56,7 +56,7 @@ const TagsManager: React.FunctionComponent<{
         >
           <TagSelect
             disabledTags={appliedTags}
-            onSelect={onSelectTag}
+            onSelect={onSelect}
             tags={availableTags}
           />
         </Popover>

@@ -29,6 +29,7 @@ const TagSelect: React.FunctionComponent<{
       renderInput={(params) => (
         <TextField
           {...params}
+          data-testid="TagsManager-tagSelectTextField"
           placeholder={intl.formatMessage({
             id: 'misc.tags.tagsManager.addTag',
           })}
