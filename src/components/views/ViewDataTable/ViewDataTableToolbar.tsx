@@ -49,7 +49,7 @@ const ViewDataTableToolbar: React.FunctionComponent<
     });
   };
   return (
-    <Box display="flex" justifyContent="flex-end" role="toolbar">
+    <Box role="toolbar">
       <Slide direction="left" in={!!selection.length} timeout={150}>
         <Button
           data-testid="ViewDataTableToolbar-createFromSelection"

@@ -75,6 +75,8 @@ const theme = createTheme({
             marginRight: 15,
             marginTop: 5,
           },
+          display: 'flex',
+          justifyContent: 'flex-end',
         },
       },
     },

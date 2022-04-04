@@ -2,6 +2,7 @@ import { DataGridPro } from '@mui/x-data-grid-pro';
 import { FunctionComponent } from 'react';
 
 import { TagMetadata } from 'pages/api/organize/[orgId]/journeys/[journeyId]/getTagMetadata';
+import Toolbar from './Toolbar';
 import getColumns, { ColumnNames } from './getColumns';
 import { ZetkinJourney, ZetkinJourneyInstance } from 'types/zetkin';
 
@@ -26,6 +27,7 @@ const JourneyInstancesDataTable: FunctionComponent<JourneysDataTableProps> = ({
         autoHeight
         checkboxSelection
         columns={columns}
+        components={{ Toolbar: Toolbar }}
         pageSize={10}
         pagination
         rows={journeyInstances}
