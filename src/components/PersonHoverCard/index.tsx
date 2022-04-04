@@ -45,7 +45,7 @@ const PersonHoverCard: React.FunctionComponent<{ personId: number }> = ({
   const { data: tags } = personTagsResource(
     orgId as string,
     personId.toString()
-  ).useAllTagsQuery();
+  ).useQuery();
 
   if (person) {
     return (
