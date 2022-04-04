@@ -51,12 +51,12 @@ test.describe('Person Profile Page', () => {
     });
     test.describe('adding tags', () => {
       test('can add tag to person', async ({ page, appUri, moxy }) => {
-        moxy.setZetkinApiMock('/orgs/1/people/tags', 'get', [
+        moxy.setZetkinApiMock(`/orgs/${KPD.id}/people/tags`, 'get', [
           ActivistTag,
           CodingSkillsTag,
         ]);
         moxy.setZetkinApiMock(
-          `/orgs/1/people/${ClaraZetkin.id}/tags`,
+          `/orgs/${KPD.id}/people/${ClaraZetkin.id}/tags`,
           'get',
           []
         );
@@ -88,12 +88,12 @@ test.describe('Person Profile Page', () => {
         page,
         appUri,
       }) => {
-        moxy.setZetkinApiMock('/orgs/1/people/tags', 'get', [
+        moxy.setZetkinApiMock(`/orgs/${KPD.id}/people/tags`, 'get', [
           ActivistTag,
           CodingSkillsTag,
         ]);
         moxy.setZetkinApiMock(
-          `/orgs/1/people/${ClaraZetkin.id}/tags`,
+          `/orgs/${KPD.id}/people/${ClaraZetkin.id}/tags`,
           'get',
           []
         );

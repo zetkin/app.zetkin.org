@@ -23,15 +23,17 @@ const TagSelect: React.FunctionComponent<{
           id: 'misc.tags.tagsManager.ungroupedHeader',
         })
       }
-      onChange={(e, value) => value && onSelect(value)}
+      onChange={(e, value) => {
+        if (value) {
+          onSelect(value);
+        }
+      }}
       openOnFocus
       options={tags}
       renderInput={(params) => (
         <TextField
           {...params}
-          inputProps={{
-            'data-testid': 'TagsManager-tagSelectTextField',
-          }}
+          data-testid="TagsManager-tagSelectTextField"
           placeholder={intl.formatMessage({
             id: 'misc.tags.tagsManager.addTag',
           })}
