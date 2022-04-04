@@ -5,8 +5,8 @@ import { Box, Button, Slide, Tooltip } from '@material-ui/core';
 import { FormattedMessage, useIntl } from 'react-intl';
 
 import { ConfirmDialogContext } from 'hooks/ConfirmDialogProvider';
+import DataTableSorting from 'components/dataTables/DataTableSorting';
 import ViewDataTableSearch from './ViewDataTableSearch';
-import ViewDataTableSorting from './ViewDataTableSorting';
 import { GridColDef, GridSortModel } from '@mui/x-data-grid-pro';
 
 export interface ViewDataTableToolbarProps {
@@ -90,7 +90,7 @@ const ViewDataTableToolbar: React.FunctionComponent<
           button: { color: 'default', size: 'medium' },
         }}
       />
-      <ViewDataTableSorting {...{ gridColumns, setSortModel, sortModel }} />
+      <DataTableSorting {...{ gridColumns, setSortModel, sortModel }} />
       <Button
         data-testid="ViewDataTableToolbar-createColumn"
         disabled={disabled}
