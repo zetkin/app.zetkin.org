@@ -1,7 +1,7 @@
 import { GridToolbarFilterButton } from '@mui/x-data-grid-pro';
 import { useContext } from 'react';
 import { Add, Launch, RemoveCircleOutline } from '@material-ui/icons';
-import { Box, Button, makeStyles, Slide, Tooltip } from '@material-ui/core';
+import { Box, Button, Slide, Tooltip } from '@material-ui/core';
 import { FormattedMessage, useIntl } from 'react-intl';
 
 import { ConfirmDialogContext } from 'hooks/ConfirmDialogProvider';
@@ -22,16 +22,6 @@ export interface ViewDataTableToolbarProps {
   sortModel: GridSortModel;
 }
 
-const useStyles = makeStyles({
-  main: {
-    '& > *': {
-      margin: '0 4px',
-    },
-    marginRight: 15,
-    marginTop: 5,
-  },
-});
-
 const ViewDataTableToolbar: React.FunctionComponent<
   ViewDataTableToolbarProps
 > = ({
@@ -46,7 +36,6 @@ const ViewDataTableToolbar: React.FunctionComponent<
   setSortModel,
   sortModel,
 }) => {
-  const classes = useStyles();
   const intl = useIntl();
   const { showConfirmDialog } = useContext(ConfirmDialogContext);
 
@@ -60,7 +49,7 @@ const ViewDataTableToolbar: React.FunctionComponent<
     });
   };
   return (
-    <Box className={classes.main} display="flex" justifyContent="flex-end">
+    <Box display="flex" justifyContent="flex-end" role="toolbar">
       <Slide direction="left" in={!!selection.length} timeout={150}>
         <Button
           data-testid="ViewDataTableToolbar-createFromSelection"
