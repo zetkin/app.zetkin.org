@@ -1,5 +1,6 @@
-import { DataGridPro } from '@mui/x-data-grid-pro';
-import { FunctionComponent } from 'react';
+import { isEqual } from 'lodash';
+import { DataGridPro, GridSortModel } from '@mui/x-data-grid-pro';
+import { FunctionComponent, useState } from 'react';
 
 import { TagMetadata } from 'pages/api/organize/[orgId]/journeys/[journeyId]/getTagMetadata';
 import Toolbar from './Toolbar';
@@ -20,6 +21,7 @@ const JourneyInstancesDataTable: FunctionComponent<JourneysDataTableProps> = ({
   journeyInstances,
 }) => {
   const columns = getColumns(columnNames, tagMetadata, journey);
+  const [sortModel, setSortModel] = useState<GridSortModel>([]);
 
   return (
     <>
@@ -28,9 +30,23 @@ const JourneyInstancesDataTable: FunctionComponent<JourneysDataTableProps> = ({
         checkboxSelection
         columns={columns}
         components={{ Toolbar: Toolbar }}
+        componentsProps={{
+          toolbar: {
+            gridColumns: columns,
+            setSortModel,
+            sortModel,
+          },
+        }}
+        onSortModelChange={(model) => {
+          // Something strange going on here with infinite state updates, so I added the line below
+          if (!isEqual(model, sortModel)) {
+            setSortModel(model);
+          }
+        }}
         pageSize={10}
         pagination
         rows={journeyInstances}
+        sortModel={sortModel}
       />
     </>
   );
