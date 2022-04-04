@@ -77,7 +77,7 @@ const PersonHoverCard: React.FunctionComponent<{ personId: number }> = ({
           }}
           open={open}
         >
-          <Card>
+          <Card elevation={5} variant="elevation">
             <Box m={2} width="25rem">
               <ZetkinPerson
                 id={person?.id}
