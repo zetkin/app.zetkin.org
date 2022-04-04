@@ -1,8 +1,8 @@
 import MailIcon from '@material-ui/icons/Mail';
 import PhoneIcon from '@material-ui/icons/Phone';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
 import { Box, Card, Popper, Tooltip, Typography } from '@material-ui/core';
+import { useEffect, useState } from 'react';
 
 import ZetkinPerson from 'components/ZetkinPerson';
 import { ZetkinTag } from 'types/zetkin';
@@ -29,12 +29,23 @@ const PersonHoverCard: React.FunctionComponent<{ personId: number }> = ({
   personId,
 }) => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  const [open, setOpen] = useState(false);
   const openPopover = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
     setAnchorEl(event.currentTarget);
   };
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (anchorEl) {
+        setOpen(true);
+      }
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [anchorEl]);
+
   const closePopover = () => {
     setAnchorEl(null);
+    setOpen(false);
   };
 
   const { orgId } = useRouter().query;
@@ -49,7 +60,11 @@ const PersonHoverCard: React.FunctionComponent<{ personId: number }> = ({
 
   if (person) {
     return (
-      <Box onMouseEnter={openPopover} style={{ display: 'flex' }}>
+      <Box
+        onMouseEnter={openPopover}
+        onMouseLeave={closePopover}
+        style={{ display: 'flex' }}
+      >
         {children}
         <Popper
           anchorEl={anchorEl}
@@ -60,6 +75,7 @@ const PersonHoverCard: React.FunctionComponent<{ personId: number }> = ({
               enabled: true,
             },
           }}
+          open={open}
         >
           <Card>
             <Box m={2} width="25rem">
