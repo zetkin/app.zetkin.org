@@ -1,7 +1,6 @@
 import { Autocomplete } from '@material-ui/lab';
 import { TextField } from '@material-ui/core';
 import { useIntl } from 'react-intl';
-import { useState } from 'react';
 
 import TagChip from './TagChip';
 import { ZetkinTag } from 'types/zetkin';
@@ -12,9 +11,9 @@ const TagSelect: React.FunctionComponent<{
   tags: ZetkinTag[];
 }> = ({ disabledTags, tags, onSelect }) => {
   const intl = useIntl();
-  const [value, setValue] = useState<ZetkinTag | null>();
   return (
     <Autocomplete
+      clearOnEscape
       getOptionDisabled={(option) =>
         disabledTags.map((tag) => tag.id).includes(option.id)
       }
@@ -28,7 +27,6 @@ const TagSelect: React.FunctionComponent<{
       onChange={(e, value) => {
         if (value) {
           onSelect(value);
-          setValue(null);
         }
       }}
       openOnFocus
@@ -47,7 +45,6 @@ const TagSelect: React.FunctionComponent<{
         return <TagChip tag={option} />;
       }}
       style={{ width: 300 }}
-      value={value}
     />
   );
 };
