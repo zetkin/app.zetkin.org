@@ -2,7 +2,7 @@ import MailIcon from '@material-ui/icons/Mail';
 import PhoneIcon from '@material-ui/icons/Phone';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import { Box, Card, Popover, Tooltip, Typography } from '@material-ui/core';
+import { Box, Card, Popper, Tooltip, Typography } from '@material-ui/core';
 
 import ZetkinPerson from 'components/ZetkinPerson';
 import { ZetkinTag } from 'types/zetkin';
@@ -51,19 +51,14 @@ const PersonHoverCard: React.FunctionComponent<{ personId: number }> = ({
     return (
       <Box onMouseEnter={openPopover} style={{ display: 'flex' }}>
         {children}
-        <Popover
+        <Popper
           anchorEl={anchorEl}
-          anchorOrigin={{
-            horizontal: 'left',
-            vertical: 'top',
-          }}
-          disableRestoreFocus
           id="person-hover-card"
-          onClose={closePopover}
-          open={Boolean(anchorEl)}
-          transformOrigin={{
-            horizontal: 'left',
-            vertical: 'bottom',
+          modifiers={{
+            preventOverflow: {
+              boundariesElement: 'scrollParent',
+              enabled: true,
+            },
           }}
         >
           <Card>
@@ -109,7 +104,7 @@ const PersonHoverCard: React.FunctionComponent<{ personId: number }> = ({
               )}
             </Box>
           </Card>
-        </Popover>
+        </Popper>
       </Box>
     );
   } else {
