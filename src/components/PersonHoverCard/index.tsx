@@ -1,28 +1,12 @@
 import MailIcon from '@material-ui/icons/Mail';
 import PhoneIcon from '@material-ui/icons/Phone';
 import { useRouter } from 'next/router';
-import { Box, Card, Popper, Tooltip, Typography } from '@material-ui/core';
+import { Box, Card, Popper, Typography } from '@material-ui/core';
 import { useEffect, useState } from 'react';
 
+import TagsList from 'components/organize/TagsManager/TagsList';
 import ZetkinPerson from 'components/ZetkinPerson';
-import { ZetkinTag } from 'types/zetkin';
 import { personResource, personTagsResource } from 'api/people';
-
-const TagChip: React.FunctionComponent<{ tag: ZetkinTag }> = ({ tag }) => {
-  return (
-    <Tooltip arrow title={tag.description}>
-      <Box
-        bgcolor={tag.color || '#e1e1e1'}
-        borderRadius="18px"
-        fontSize={13}
-        px={2}
-        py={0.7}
-      >
-        {tag.title}
-      </Box>
-    </Tooltip>
-  );
-};
 
 const PersonHoverCard: React.FunctionComponent<{ personId: number }> = ({
   children,
@@ -83,14 +67,7 @@ const PersonHoverCard: React.FunctionComponent<{ personId: number }> = ({
                 id={person?.id}
                 name={`${person?.first_name} ${person?.last_name}`}
               />
-              {tags && (
-                //filter for only non-hidden tags?
-                <Box display="flex" flexDirection="row" pt={1}>
-                  {tags.map((tag, index) => (
-                    <TagChip key={index} tag={tag} />
-                  ))}
-                </Box>
-              )}
+              {tags && <TagsList isGrouped={false} tags={tags} />}
               {person.phone && (
                 <Box display="flex" flexDirection="row" pl="1rem" pt="1.5rem">
                   <PhoneIcon
