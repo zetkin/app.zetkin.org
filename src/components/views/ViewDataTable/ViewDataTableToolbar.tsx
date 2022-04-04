@@ -5,8 +5,8 @@ import { Box, Button, Slide, Tooltip } from '@material-ui/core';
 import { FormattedMessage, useIntl } from 'react-intl';
 
 import { ConfirmDialogContext } from 'hooks/ConfirmDialogProvider';
+import DataTableSearch from 'components/dataTables/DataTableSearch';
 import DataTableSorting from 'components/dataTables/DataTableSorting';
-import ViewDataTableSearch from './ViewDataTableSearch';
 import { GridColDef, GridSortModel } from '@mui/x-data-grid-pro';
 
 export interface ViewDataTableToolbarProps {
@@ -99,7 +99,7 @@ const ViewDataTableToolbar: React.FunctionComponent<
       >
         <FormattedMessage id="misc.views.toolbar.createColumn" />
       </Button>
-      <ViewDataTableSearch
+      <DataTableSearch
         onChange={(searchString) => setQuickSearch(searchString)}
       />
     </Box>

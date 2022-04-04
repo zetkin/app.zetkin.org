@@ -20,14 +20,15 @@ const useStyles = makeStyles({
   },
 });
 
-interface ViewDataTableSearchProps {
+interface DataTableSearchProps {
   minSearchLength?: number;
   onChange: (searchString: string) => void;
 }
 
-const ViewDataTableSearch: React.FunctionComponent<
-  ViewDataTableSearchProps
-> = ({ minSearchLength = 3, onChange }) => {
+const DataTableSearch: React.FunctionComponent<DataTableSearchProps> = ({
+  minSearchLength = 3,
+  onChange,
+}) => {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const classes = useStyles();
   const open = Boolean(anchorEl);
@@ -68,7 +69,7 @@ const ViewDataTableSearch: React.FunctionComponent<
           onClick={handleSearchButtonClick}
           startIcon={<Search />}
         >
-          <FormattedMessage id="misc.views.viewTableSearch.button" />
+          <FormattedMessage id="misc.dataTable.search.button" />
         </Button>
       </Badge>
       <Popover
@@ -95,7 +96,7 @@ const ViewDataTableSearch: React.FunctionComponent<
               minSearchLength > 1 &&
               searchString.length < 3 && (
                 <FormattedMessage
-                  id="misc.views.viewTableSearch.helpText"
+                  id="misc.dataTable.search.helpText"
                   values={{ minSearchLength }}
                 />
               )
@@ -120,4 +121,4 @@ const ViewDataTableSearch: React.FunctionComponent<
   );
 };
 
-export default ViewDataTableSearch;
+export default DataTableSearch;
