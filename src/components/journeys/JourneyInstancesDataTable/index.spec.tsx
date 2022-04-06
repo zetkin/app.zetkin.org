@@ -1,5 +1,6 @@
 import Chance from 'chance';
 import dayjs from 'dayjs';
+import { uniqBy } from 'lodash';
 
 import mockJourneyInstance from 'utils/testing/mocks/mockJourneyInstance';
 import mockPerson from 'utils/testing/mocks/mockPerson';
@@ -46,12 +47,15 @@ const groupTags: ZetkinJourneyInstance['tags'][] = [
   })),
 ];
 
-const animalTags = ids.splice(0, 100).map((id) => ({
-  color: chance.color(),
-  group: { id: groupIds[2], title: 'Animals' },
-  id,
-  title: chance.animal(),
-}));
+const animalTags = uniqBy(
+  ids.splice(0, 100).map((id) => ({
+    color: chance.color(),
+    group: { id: groupIds[2], title: 'Animals' },
+    id,
+    title: chance.animal(),
+  })),
+  'title'
+);
 
 const valueTagId = ids.shift();
 const getValueTag = (): ZetkinJourneyInstance['tags'] => [
