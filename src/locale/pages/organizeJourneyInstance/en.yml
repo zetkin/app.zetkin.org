@@ -1,10 +1,10 @@
 assignedTo: Assigned to
-collapse: Collapse
-complete: complete
-edit: Edit
-expand: Expand
+collapseButton: Collapse
+complete: Complete
+editButton: Edit
+expandButton: Expand
 members: Members
 milestones: Milestones
-save: Save
-summary: Summary
+saveButton: Save
+summaryHeader: Summary
 tags: Tags

@@ -1,46 +1,117 @@
 import { FormattedMessage as Msg } from 'react-intl';
 import { useState } from 'react';
-import { Button, Collapse, Typography } from '@material-ui/core';
+import {
+  Box,
+  Button,
+  lighten,
+  makeStyles,
+  TextareaAutosize,
+  Typography,
+} from '@material-ui/core';
+import { Edit, Save } from '@material-ui/icons';
 import { ExpandLess, ExpandMore } from '@material-ui/icons';
 
-import { ZetkinJourneyInstance } from 'types/zetkin';
+const useStyles = makeStyles((theme) => ({
+  collapsed: {
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+  },
+  editSummary: {
+    border: '2px dotted transparent',
+    borderColor: lighten(theme.palette.primary.main, 0.65),
+    borderRadius: 10,
+    fontFamily: theme.typography.fontFamily,
+    lineHeight: '1.5',
+    overflow: 'hidden',
+    padding: 10,
+    resize: 'none',
+    width: '100%',
+  },
+  expanded: {},
+}));
 
 const JourneyInstanceSummary = ({
-  journeyInstance,
+  originalSummary,
 }: {
-  journeyInstance: ZetkinJourneyInstance;
+  originalSummary: string;
 }): JSX.Element => {
-  const [summaryExpanded, setSummaryExpanded] = useState(false);
+  const classes = useStyles();
+
+  const [summaryCollapsed, setSummaryCollapsed] = useState<boolean>(true);
+
+  const [editingSummary, setEditingSummary] = useState<boolean>(false);
+  const [summary, setSummary] = useState<string>(originalSummary);
+
+  const saveEditedSummary = (text: string) => {
+    text;
+    //do thing to save the edited summary
+  };
 
   return (
     <>
-      {journeyInstance.summary.length < 100 ? (
-        <Typography variant="body1">{journeyInstance.summary}</Typography>
+      <Box
+        style={{
+          alignItems: 'center',
+          display: 'flex',
+          justifyContent: 'space-between',
+        }}
+      >
+        <Typography variant="h6">
+          <Msg id="pages.organizeJourneyInstance.summaryHeader" />
+        </Typography>
+        <Button
+          color="primary"
+          onClick={
+            editingSummary
+              ? () => {
+                  setEditingSummary(false);
+                  saveEditedSummary(summary);
+                }
+              : () => setEditingSummary(true)
+          }
+          startIcon={editingSummary ? <Save /> : <Edit />}
+          style={{ textTransform: 'uppercase' }}
+        >
+          <Msg
+            id={
+              editingSummary
+                ? 'pages.organizeJourneyInstance.saveButton'
+                : 'pages.organizeJourneyInstance.editButton'
+            }
+          />
+        </Button>
+      </Box>
+      {editingSummary ? (
+        <TextareaAutosize
+          className={classes.editSummary}
+          onChange={(e) => setSummary(e.target.value)}
+          value={summary}
+        />
       ) : (
         <>
-          <Typography variant="body1">
-            {journeyInstance.summary.substring(0, 200)}
-            {!summaryExpanded && '...'}
-          </Typography>
-          <Collapse in={summaryExpanded}>
-            <Typography variant="body1">
-              {journeyInstance.summary.substring(200)}
-            </Typography>
-          </Collapse>
-          <Button
-            color="primary"
-            onClick={() => setSummaryExpanded((prev) => !prev)}
-            startIcon={summaryExpanded ? <ExpandLess /> : <ExpandMore />}
-            style={{ textTransform: 'uppercase' }}
+          <Typography
+            className={summaryCollapsed ? classes.collapsed : classes.expanded}
+            variant="body1"
           >
-            <Msg
-              id={
-                summaryExpanded
-                  ? 'pages.organizeJourneyInstance.collapse'
-                  : 'pages.organizeJourneyInstance.expand'
-              }
-            />
-          </Button>
+            {originalSummary}
+          </Typography>
+          {originalSummary.length > 100 && (
+            <Button
+              color="primary"
+              onClick={() => setSummaryCollapsed((prev) => !prev)}
+              startIcon={summaryCollapsed ? <ExpandMore /> : <ExpandLess />}
+              style={{ textTransform: 'uppercase' }}
+            >
+              <Msg
+                id={
+                  summaryCollapsed
+                    ? 'pages.organizeJourneyInstance.expandButton'
+                    : 'pages.organizeJourneyInstance.collapseButton'
+                }
+              />
+            </Button>
+          )}
         </>
       )}
     </>

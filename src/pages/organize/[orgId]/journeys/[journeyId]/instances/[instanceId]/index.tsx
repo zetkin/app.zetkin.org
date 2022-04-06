@@ -1,23 +1,12 @@
-import dayjs from 'dayjs';
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { FormattedMessage as Msg } from 'react-intl';
-import { useState } from 'react';
-import {
-  Box,
-  Button,
-  Divider,
-  lighten,
-  makeStyles,
-  TextareaAutosize,
-  Typography,
-} from '@material-ui/core';
-import { Edit, Save, Schedule } from '@material-ui/icons';
+import { Box, Divider, Typography } from '@material-ui/core';
 
-import JourneyDetailsLayout from 'layout/organize/JourneyDetailsLayout';
+import JourneyInstanceLayout from 'layout/organize/JourneyInstanceLayout';
 import { journeyInstanceResource } from 'api/journeys';
 import JourneyInstanceSummary from 'components/organize/journeys/JourneyInstanceSummary';
-import JourneyMilestoneProgressBar from 'components/organize/journeys/JourneyMilestoneProgressBar';
+import JourneyMilestoneProgress from 'components/organize/journeys/JourneyMilestoneProgress';
 import { organizationResource } from 'api/organizations';
 import { PageWithLayout } from 'types';
 import { scaffold } from 'utils/next';
@@ -27,19 +16,6 @@ const scaffoldOptions = {
   authLevelRequired: 2,
   localeScope: ['layout.organize', 'misc', 'pages.organizeJourneyInstance'],
 };
-
-const useStyles = makeStyles((theme) => ({
-  textarea: {
-    border: '2px dotted transparent',
-    borderColor: lighten(theme.palette.primary.main, 0.65),
-    borderRadius: 10,
-    fontFamily: theme.typography.fontFamily,
-    lineHeight: '1.5',
-    padding: 10,
-    resize: 'none',
-    width: '100%',
-  },
-}));
 
 export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
   const { orgId, journeyId, instanceId } = ctx.params!;
@@ -89,68 +65,19 @@ const JourneyDetailsPage: PageWithLayout<JourneyDetailsPageProps> = ({
     instanceId
   ).useQuery();
   const journeyInstance = journeyInstanceQuery.data as ZetkinJourneyInstance;
-  const classes = useStyles();
-
-  const [editSummaryMode, setEditSummaryMode] = useState<boolean>(false);
-  const [text, setText] = useState<string>(journeyInstance.summary);
-
-  const saveEditedSummary = (text: string) => {
-    text;
-    //do thing to save the edited summary
-  };
 
   return (
     <>
       <Head>
         <title>
-          {journeyInstance.title
-            ? journeyInstance.title
-            : `${journeyInstance.journey.title} ${journeyInstance.id}`}
+          {`${journeyInstance.title || journeyInstance.journey.title} #${
+            journeyInstance.id
+          }`}
         </title>
       </Head>
       <Box display="flex" flexDirection="row" justifyContent="space-between">
         <Box width="50%">
-          <Box
-            style={{
-              alignItems: 'center',
-              display: 'flex',
-              justifyContent: 'space-between',
-            }}
-          >
-            <Typography variant="h6">
-              <Msg id="pages.organizeJourneyInstance.summary" />
-            </Typography>
-            <Button
-              color="primary"
-              onClick={
-                editSummaryMode
-                  ? () => {
-                      setEditSummaryMode(false);
-                      saveEditedSummary(text);
-                    }
-                  : () => setEditSummaryMode(true)
-              }
-              startIcon={editSummaryMode ? <Save /> : <Edit />}
-              style={{ textTransform: 'uppercase' }}
-            >
-              <Msg
-                id={
-                  editSummaryMode
-                    ? 'pages.organizeJourneyInstance.save'
-                    : 'pages.organizeJourneyInstance.edit'
-                }
-              />
-            </Button>
-          </Box>
-          {editSummaryMode ? (
-            <TextareaAutosize
-              className={classes.textarea}
-              onChange={(e) => setText(e.target.value)}
-              value={text}
-            />
-          ) : (
-            <JourneyInstanceSummary journeyInstance={journeyInstance} />
-          )}
+          <JourneyInstanceSummary originalSummary={journeyInstance.summary} />
         </Box>
         <Box pr={3} width="30%">
           <Typography>
@@ -170,20 +97,10 @@ const JourneyDetailsPage: PageWithLayout<JourneyDetailsPageProps> = ({
               <Typography>
                 <Msg id="pages.organizeJourneyInstance.milestones" />
               </Typography>
-              <JourneyMilestoneProgressBar
+              <JourneyMilestoneProgress
                 milestones={journeyInstance.milestones}
+                next_milestone={journeyInstance.next_milestone}
               />
-              <Box display="flex" flexDirection="row">
-                <Schedule
-                  color="secondary"
-                  style={{ marginRight: '0.25rem' }}
-                />
-                <Typography color="secondary">
-                  {`${journeyInstance.next_milestone?.title}: ${dayjs(
-                    journeyInstance.next_milestone?.deadline
-                  ).format('DD MMMM YYYY')}`}
-                </Typography>
-              </Box>
               <Divider />
             </>
           )}
@@ -194,7 +111,7 @@ const JourneyDetailsPage: PageWithLayout<JourneyDetailsPageProps> = ({
 };
 
 JourneyDetailsPage.getLayout = function getLayout(page) {
-  return <JourneyDetailsLayout>{page}</JourneyDetailsLayout>;
+  return <JourneyInstanceLayout>{page}</JourneyInstanceLayout>;
 };
 
 export default JourneyDetailsPage;
