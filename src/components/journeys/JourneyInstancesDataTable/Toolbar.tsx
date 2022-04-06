@@ -6,16 +6,19 @@ import {
   GridToolbarFilterButton,
 } from '@mui/x-data-grid-pro';
 
+import DataTableSearch from 'components/dataTables/DataTableSearch';
 import DataTableSorting from 'components/dataTables/DataTableSorting';
 
 interface ToolbarProps {
   gridColumns: GridColDef[];
+  setQuickSearch: (quickSearch: string) => void;
   setSortModel: (model: GridSortModel) => void;
   sortModel: GridSortModel;
 }
 
 const Toolbar: React.FunctionComponent<ToolbarProps> = ({
   gridColumns,
+  setQuickSearch,
   setSortModel,
   sortModel,
 }) => {
@@ -30,6 +33,9 @@ const Toolbar: React.FunctionComponent<ToolbarProps> = ({
         gridColumns={gridColumns}
         setSortModel={setSortModel}
         sortModel={sortModel}
+      />
+      <DataTableSearch
+        onChange={(searchString) => setQuickSearch(searchString)}
       />
     </Box>
   );

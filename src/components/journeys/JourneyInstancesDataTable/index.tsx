@@ -2,6 +2,7 @@ import { isEqual } from 'lodash';
 import { DataGridPro, GridSortModel } from '@mui/x-data-grid-pro';
 import { FunctionComponent, useState } from 'react';
 
+import { getRows } from './getRows';
 import { TagMetadata } from 'pages/api/organize/[orgId]/journeys/[journeyId]/getTagMetadata';
 import Toolbar from './Toolbar';
 import getColumns, { ColumnNames } from './getColumns';
@@ -22,6 +23,9 @@ const JourneyInstancesDataTable: FunctionComponent<JourneysDataTableProps> = ({
 }) => {
   const columns = getColumns(columnNames, tagMetadata, journey);
   const [sortModel, setSortModel] = useState<GridSortModel>([]);
+  const [quickSearch, setQuickSearch] = useState('');
+
+  const rows = getRows({ journeyInstances, quickSearch });
 
   return (
     <>
@@ -33,6 +37,7 @@ const JourneyInstancesDataTable: FunctionComponent<JourneysDataTableProps> = ({
         componentsProps={{
           toolbar: {
             gridColumns: columns,
+            setQuickSearch,
             setSortModel,
             sortModel,
           },
@@ -43,9 +48,9 @@ const JourneyInstancesDataTable: FunctionComponent<JourneysDataTableProps> = ({
             setSortModel(model);
           }
         }}
-        pageSize={10}
+        pageSize={50}
         pagination
-        rows={journeyInstances}
+        rows={rows}
         sortModel={sortModel}
       />
     </>
