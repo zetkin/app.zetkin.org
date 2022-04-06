@@ -1,4 +1,5 @@
 tagsManager:
+  addTag: Add tag
   groupTags: Group tags
   noTags: No tags applied
   title: Tags
