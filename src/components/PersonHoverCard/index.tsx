@@ -1,7 +1,7 @@
 import MailIcon from '@material-ui/icons/Mail';
 import PhoneIcon from '@material-ui/icons/Phone';
 import { useRouter } from 'next/router';
-import { Box, Card, Popper, Typography } from '@material-ui/core';
+import { Box, Card, Fade, Grid, Popper, Typography } from '@material-ui/core';
 import { useEffect, useState } from 'react';
 
 import TagsList from 'components/organize/TagsManager/TagsList';
@@ -23,7 +23,7 @@ const PersonHoverCard: React.FunctionComponent<{ personId: number }> = ({
       if (anchorEl) {
         setOpen(true);
       }
-    }, 500);
+    }, 400);
     return () => clearTimeout(timer);
   }, [anchorEl]);
 
@@ -61,42 +61,61 @@ const PersonHoverCard: React.FunctionComponent<{ personId: number }> = ({
           }}
           open={open}
         >
-          <Card elevation={5} variant="elevation">
-            <Box m={2} width="25rem">
-              <ZetkinPerson
-                id={person?.id}
-                name={`${person?.first_name} ${person?.last_name}`}
-              />
-              {tags && <TagsList isGrouped={false} tags={tags} />}
-              {person.phone && (
-                <Box display="flex" flexDirection="row" pl="1rem" pt="1.5rem">
-                  <PhoneIcon
-                    color="secondary"
-                    style={{ marginRight: '1.5rem' }}
+          <Fade in={open} timeout={200}>
+            <Card elevation={5} style={{ padding: 24 }} variant="elevation">
+              <Grid
+                container
+                direction="column"
+                spacing={3}
+                style={{ width: '25rem' }}
+              >
+                <Grid item>
+                  <ZetkinPerson
+                    id={person?.id}
+                    name={`${person?.first_name} ${person?.last_name}`}
                   />
-                  <Typography>{person.phone}</Typography>
-                </Box>
-              )}
-              {person.alt_phone && (
-                <Box display="flex" flexDirection="row" pl="1rem" pt="1.5rem">
-                  <PhoneIcon
-                    color="secondary"
-                    style={{ marginRight: '1.5rem' }}
-                  />
-                  <Typography>{person.alt_phone}</Typography>
-                </Box>
-              )}
-              {person.email && (
-                <Box display="flex" flexDirection="row" pl="1rem" pt="1.5rem">
-                  <MailIcon
-                    color="secondary"
-                    style={{ marginRight: '1.5rem' }}
-                  />
-                  <Typography>{person.email}</Typography>
-                </Box>
-              )}
-            </Box>
-          </Card>
+                </Grid>
+                {tags && (
+                  <Grid item>
+                    <TagsList isGrouped={false} tags={tags} />
+                  </Grid>
+                )}
+                {person.phone && (
+                  <Grid item>
+                    <Box display="flex" flexDirection="row">
+                      <PhoneIcon
+                        color="secondary"
+                        style={{ marginRight: '1.5rem' }}
+                      />
+                      <Typography>{person.phone}</Typography>
+                    </Box>
+                  </Grid>
+                )}
+                {person.alt_phone && (
+                  <Grid item>
+                    <Box display="flex" flexDirection="row">
+                      <PhoneIcon
+                        color="secondary"
+                        style={{ marginRight: '1.5rem' }}
+                      />
+                      <Typography>{person.alt_phone}</Typography>
+                    </Box>
+                  </Grid>
+                )}
+                {person.email && (
+                  <Grid item>
+                    <Box display="flex" flexDirection="row">
+                      <MailIcon
+                        color="secondary"
+                        style={{ marginRight: '1.5rem' }}
+                      />
+                      <Typography>{person.email}</Typography>
+                    </Box>
+                  </Grid>
+                )}
+              </Grid>
+            </Card>
+          </Fade>
         </Popper>
       </Box>
     );
