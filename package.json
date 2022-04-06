@@ -21,7 +21,6 @@
         "@material-ui/icons": "^4.11.2",
         "@material-ui/lab": "^4.0.0-alpha.58",
         "@material-ui/pickers": "^3.3.10",
-        "@mui/icons-material": "^5.6.0",
         "@mui/x-data-grid-pro": "^4.0.2",
         "copy-to-clipboard": "^3.3.1",
         "date-fns": "^2.22.1",
