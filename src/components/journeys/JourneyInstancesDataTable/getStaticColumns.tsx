@@ -75,8 +75,12 @@ export const getStaticColumns = (
   ];
 
   // Add header names
-  return staticColumns.map((col) => ({
-    headerName: columnNames[col.field],
-    ...col,
-  }));
+  return staticColumns
+    .filter((staticColumn) =>
+      Object.keys(columnNames).includes(staticColumn.field)
+    )
+    .map((col) => ({
+      headerName: columnNames[col.field],
+      ...col,
+    }));
 };

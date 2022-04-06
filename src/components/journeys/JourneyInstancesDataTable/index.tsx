@@ -1,5 +1,9 @@
 import { isEqual } from 'lodash';
-import { DataGridPro, GridSortModel } from '@mui/x-data-grid-pro';
+import {
+  DataGridPro,
+  DataGridProProps,
+  GridSortModel,
+} from '@mui/x-data-grid-pro';
 import { FunctionComponent, useState } from 'react';
 
 import { getRows } from './getRows';
@@ -10,6 +14,7 @@ import { ZetkinJourney, ZetkinJourneyInstance } from 'types/zetkin';
 
 interface JourneysDataTableProps {
   columnNames: ColumnNames;
+  dataGridProps?: Partial<DataGridProProps>;
   tagMetadata: TagMetadata;
   journey: ZetkinJourney;
   journeyInstances: ZetkinJourneyInstance[];
@@ -17,6 +22,7 @@ interface JourneysDataTableProps {
 
 const JourneyInstancesDataTable: FunctionComponent<JourneysDataTableProps> = ({
   columnNames,
+  dataGridProps,
   tagMetadata,
   journey,
   journeyInstances,
@@ -52,6 +58,7 @@ const JourneyInstancesDataTable: FunctionComponent<JourneysDataTableProps> = ({
         pagination
         rows={rows}
         sortModel={sortModel}
+        {...dataGridProps}
       />
     </>
   );

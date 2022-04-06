@@ -1,110 +1,91 @@
-import Chance from 'chance';
-import dayjs from 'dayjs';
-import { uniqBy } from 'lodash';
-
-import mockJourneyInstance from 'utils/testing/mocks/mockJourneyInstance';
+import JourneyInstancesDataTable from './index';
 import mockPerson from 'utils/testing/mocks/mockPerson';
+import { render } from 'utils/testing';
 import { ZetkinJourneyInstance } from 'types/zetkin';
 
-const chance = Chance();
+const columnNames = {
+  created_at: 'Created',
+  id: 'Title',
+  next_milestone_deadline: 'Next milestone deadline',
+  next_milestone_title: 'Next milestone',
+  summary: 'Summary',
+  tagsFree: 'Tags',
+  updated_at: 'Last updated',
+};
 
-// Ensure uniqueness
-const ids: number[] = Array.from(Array(20000).keys());
+const tagMetadata = { groups: [], valueTags: [] };
 
-const people = ids
-  .splice(0, 20)
-  .map((id) =>
-    mockPerson({ first_name: chance.first(), id, last_name: chance.last() })
-  );
-const milestones = [
-  'make coffee',
-  'prepare for battle',
-  'perform lip sync',
-  'sashay away',
-];
+const journey = {
+  id: 2,
+  organization: {
+    id: 1,
+    title: 'Kommunistiche Partei Deutschlands',
+  },
+  plural_name: 'Marxist trainings',
+  singular_name: 'Marxist training',
+  stats: {
+    closed: 359,
+    open: 75,
+  },
+};
 
-const groupIds = ids.splice(0, 3);
-const groupTags: ZetkinJourneyInstance['tags'][] = [
-  [
-    { color: 'salmon', title: '1 - immediate' },
-    { color: 'peachpuff', title: '2 - near future' },
-    { color: 'lightgray', title: '3 - chase up' },
-  ].map((tag) => ({
-    group: { id: groupIds[0], title: 'Priority' },
-    id: ids.shift() as number,
-    ...tag,
-  })),
-  [
-    { color: 'beige', title: 'contract' },
-    { color: 'cornflowerblue', title: 'pay' },
-    { color: 'gray', title: 'disciplinary/dismissal' },
-    { color: 'aliceblue', title: 'discrimination' },
-    { color: 'aquamarine', title: 'whistleblowing' },
-  ].map((tag) => ({
-    group: { id: groupIds[1], title: 'Category' },
-    id: ids.shift() as number,
-    ...tag,
-  })),
-];
-
-const animalTags = uniqBy(
-  ids.splice(0, 100).map((id) => ({
-    color: chance.color(),
-    group: { id: groupIds[2], title: 'Animals' },
-    id,
-    title: chance.animal(),
-  })),
-  'title'
-);
-
-const valueTagId = ids.shift();
-const getValueTag = (): ZetkinJourneyInstance['tags'] => [
+const journeyInstances = [
   {
-    color: 'green',
-    group: null,
-    id: valueTagId as number,
-    title: 'Number of pets',
-    value: chance.integer({ max: 11, min: 0 }),
+    assigned_to: [mockPerson()],
+    created_at: '2022-04-01T03:29:12+02:00',
+    id: 333,
+    next_milestone: {
+      deadline: '2022-04-18T00:29:12+02:00',
+      title: 'perform lip sync',
+    },
+    people: [mockPerson()],
+    summary: 'Haohrez uhca evo fup fonruh do vafeesa lida penco rillesven.',
+    tags: [],
+    title: 'Training ID 1',
+    updated_at: '2022-04-03T23:59:12+02:00',
   },
 ];
 
-const getMultipleTagsGroup = (): ZetkinJourneyInstance['tags'] =>
-  chance.pickset(animalTags, chance.integer({ max: 5, min: 2 }));
+describe('JourneyInstancesDataTable.tsx', () => {
+  it('Renders with no data', async () => {
+    const { getByText } = render(
+      <JourneyInstancesDataTable
+        columnNames={columnNames}
+        journey={journey}
+        journeyInstances={[] as ZetkinJourneyInstance[]}
+        tagMetadata={tagMetadata}
+      />
+    );
 
-const getFreeTags = (numTags: number): ZetkinJourneyInstance['tags'] =>
-  ids.splice(0, numTags).map((id) => ({
-    color: chance.color(),
-    group: null,
-    id,
-    title: chance.word(),
-  }));
+    // Columns visible
+    const noRows = await getByText('No rows');
+    expect(noRows).toBeTruthy();
+  });
 
-const dummyTableData = ids.splice(0, 500).map((id) => {
-  const created_at = dayjs()
-    .subtract(Math.ceil(Math.random() * 200), 'hour')
-    .format();
+  it('Renders column headers & data correctly', async () => {
+    const { getByText, getAllByRole } = render(
+      <div
+        style={{
+          height: 2000,
+          width: 2000,
+        }}
+      >
+        <JourneyInstancesDataTable
+          columnNames={columnNames}
+          dataGridProps={{
+            checkboxSelection: false,
+            disableVirtualization: true,
+          }}
+          journey={journey}
+          journeyInstances={journeyInstances}
+          tagMetadata={tagMetadata}
+        />
+      </div>
+    );
 
-  return mockJourneyInstance({
-    assigned_to: chance.pickset(people, chance.pickone([1, 1, 1, 1, 2])),
-    created_at,
-    id: id + 1,
-    next_milestone: {
-      deadline: dayjs()
-        .add(Math.ceil(Math.random() * 500), 'hour')
-        .format(),
-      title: chance.pickone(milestones),
-    },
-    people: chance.pickset(people, chance.pickone([1, 1, 1, 1, 2])),
-    summary: chance.sentence({ words: 10 }),
-    tags: groupTags
-      .map((tags) => chance.pickone(tags))
-      .concat(getValueTag())
-      .concat(getMultipleTagsGroup())
-      .concat(getFreeTags(chance.integer({ max: 5, min: 0 }))),
-    updated_at: dayjs()
-      .subtract(dayjs().diff(dayjs(created_at), 'minute') / 2, 'minute')
-      .format(),
+    const colHeaders = await getAllByRole('columnheader');
+    expect(colHeaders.length).toEqual(Object.keys(columnNames).length);
+    const milestone = await getByText('perform lip sync');
+    expect(milestone).toBeTruthy();
   });
 });
-
-export { dummyTableData };
