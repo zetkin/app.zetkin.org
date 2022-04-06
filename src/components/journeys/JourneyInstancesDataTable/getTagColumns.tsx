@@ -1,6 +1,6 @@
 import { ColumnNames } from './getColumns';
 import { GridColDef } from '@mui/x-data-grid-pro';
-import { TagMetadata } from 'pages/api/organize/[orgId]/journeys/[journeyId]/getTagMetadata';
+import { TagMetadata } from 'utils/getTagMetadata';
 import { ZetkinJourneyInstance } from 'types/zetkin';
 import ZetkinTag from 'components/ZetkinTag';
 

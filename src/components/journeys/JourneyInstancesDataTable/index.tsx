@@ -7,7 +7,7 @@ import {
 import { FunctionComponent, useState } from 'react';
 
 import { getRows } from './getRows';
-import { TagMetadata } from 'pages/api/organize/[orgId]/journeys/[journeyId]/getTagMetadata';
+import { TagMetadata } from 'utils/getTagMetadata';
 import Toolbar from './Toolbar';
 import getColumns, { ColumnNames } from './getColumns';
 import { ZetkinJourney, ZetkinJourneyInstance } from 'types/zetkin';

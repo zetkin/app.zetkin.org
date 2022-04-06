@@ -7,7 +7,7 @@ import { createPrefetch, createUseQuery } from './utils/resourceHookFactories';
 import { ZetkinJourney, ZetkinJourneyInstance } from 'types/zetkin';
 
 import MarxistTraining from '../../playwright/mockData/orgs/KPD/journeys/MarxistTraining';
-import { TagMetadata } from '../pages/api/organize/[orgId]/journeys/[journeyId]/getTagMetadata';
+import { TagMetadata } from '../utils/getTagMetadata';
 
 export const journeysResource = (orgId: string) => {
   const key = ['journeys', orgId];

@@ -7,7 +7,7 @@ import getOrg from 'fetching/getOrg';
 import JourneyInstancesDataTable from 'components/journeys/JourneyInstancesDataTable';
 import { PageWithLayout } from 'types';
 import { scaffold } from 'utils/next';
-import { TagMetadata } from 'pages/api/organize/[orgId]/journeys/[journeyId]/getTagMetadata';
+import { TagMetadata } from 'utils/getTagMetadata';
 import ZetkinQuery from 'components/ZetkinQuery';
 import { journeyInstancesResource, journeyResource } from 'api/journeys';
 import { ZetkinJourney, ZetkinJourneyInstance } from 'types/zetkin';

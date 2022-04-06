@@ -2,7 +2,7 @@ import { GridColDef } from '@mui/x-data-grid-pro';
 
 import { getStaticColumns } from './getStaticColumns';
 import getTagColumns from './getTagColumns';
-import { TagMetadata } from 'pages/api/organize/[orgId]/journeys/[journeyId]/getTagMetadata';
+import { TagMetadata } from 'utils/getTagMetadata';
 import { ZetkinJourney } from 'types/zetkin';
 
 export type ColumnNames = Record<string, string>;
