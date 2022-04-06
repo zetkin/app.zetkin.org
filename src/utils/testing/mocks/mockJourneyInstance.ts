@@ -6,11 +6,18 @@ const journeyInstance: ZetkinJourneyInstance = {
   assigned_to: [person],
   created_at: '2022-03-22T12:20:46.019Z',
   id: 1,
+  journey: {
+    id: 1,
+    title: 'Training',
+  },
+  milestones: [],
   next_milestone: {
     deadline: '2023-03-28T12:20:46.019Z',
+    status: '',
     title: 'Expropriate land back to the commons',
   },
   people: [person],
+  status: '',
   summary:
     'At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga.',
   tags: [],
