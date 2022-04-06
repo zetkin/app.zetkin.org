@@ -1,4 +1,6 @@
 # eslint-disable yml/key-name-casing
+# Reason for the above: the Zetkin API uses snake_case for fields, and
+# we would like to keep the native names in some of our yaml files
 ConfirmDialog:
   button: Confirm
   defaultTitle: Confirm
@@ -9,6 +11,16 @@ components:
       edit: Click to edit
       noEmpty: This cannot be empty
       save: Press 'enter' to save
+dataTable:
+  search:
+    button: Search
+    helpText: Type at least {minSearchLength} characters
+    title: Search
+  sorting:
+    addButton: Add sorting column
+    button: Sort
+    hint: 'Hint: hold down {shiftKeyIcon} while clicking multiple columns'
+    title: Sort
 errorLoading: There was an error loading the data.
 nativePersonFields:
   alt_phone: Alt Phone number
@@ -25,13 +37,3 @@ nativePersonFields:
   zip_code: Zip code
 snackbar:
   error: Oh dear, something went wrong
-dataTable:
-  sorting:
-    addButton: Add sorting column
-    button: Sort
-    hint: 'Hint: hold down {shiftKeyIcon} while clicking multiple columns'
-    title: Sort
-  search:
-    button: Search
-    helpText: Type at least {minSearchLength} characters
-    title: Search

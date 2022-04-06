@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+/* Reason for above: the output types of these resources are cast
+in the places where they are ultimately consumed */
 import { ColumnNames } from 'components/journeys/JourneyInstancesDataTable/getColumns';
 import { ScaffoldedContext } from 'utils/next';
 import { createPrefetch, createUseQuery } from './utils/resourceHookFactories';
