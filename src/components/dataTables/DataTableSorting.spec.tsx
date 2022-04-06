@@ -37,14 +37,14 @@ describe('ViewDataTableSorting.tsx', () => {
       />
     );
 
-    const sortButton = getByText('misc.views.viewTableSort.button');
+    const sortButton = getByText('misc.dataTable.sorting.button');
     expect(sortButton).toBeTruthy();
 
     // Show popover
     await userEvent.click(sortButton);
 
-    expect(getByText('misc.views.viewTableSort.title')).toBeTruthy();
-    expect(getByText('misc.views.viewTableSort.addButton')).toBeTruthy();
+    expect(getByText('misc.dataTable.sorting.title')).toBeTruthy();
+    expect(getByText('misc.dataTable.sorting.addButton')).toBeTruthy();
   });
 
   it('renders correctly when sort model is populated', async () => {
@@ -57,7 +57,7 @@ describe('ViewDataTableSorting.tsx', () => {
     );
 
     // Show popover
-    const sortButton = getByText('misc.views.viewTableSort.button');
+    const sortButton = getByText('misc.dataTable.sorting.button');
     await userEvent.click(sortButton);
 
     expect(getByText(fields[0])).toBeTruthy();
@@ -75,7 +75,7 @@ describe('ViewDataTableSorting.tsx', () => {
     );
 
     // Show popover
-    const sortButton = getByText('misc.views.viewTableSort.button');
+    const sortButton = getByText('misc.dataTable.sorting.button');
     await userEvent.click(sortButton);
 
     // Modify sort direction
