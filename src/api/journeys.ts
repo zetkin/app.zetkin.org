@@ -1,6 +1,11 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { ColumnNames } from 'components/journeys/JourneyInstancesDataTable/getColumns';
 import { ScaffoldedContext } from 'utils/next';
-import { createPrefetch, createUseQuery } from './utils/resourceHookFactories';
+import {
+  createPrefetch,
+  createUseMutation,
+  createUseQuery,
+} from './utils/resourceHookFactories';
 import { ZetkinJourney, ZetkinJourneyInstance } from 'types/zetkin';
 
 import ClarasOnboarding from '../../playwright/mockData/orgs/KPD/journeys/instances/ClarasOnboarding';
@@ -46,21 +51,12 @@ export const journeyInstancesResource = (orgId: string, journeyId: string) => {
   };
 };
 
-//TODO: update type when dummy data is removed
-interface JourneyInstanceResource {
-  prefetch: (ctx?: ScaffoldedContext | undefined) => Promise<{
-    ctx: ScaffoldedContext | undefined;
-    state: { status: string };
-  }>;
-  useQuery: () => { data: ZetkinJourneyInstance; key: unknown; url: string };
-}
-
 //TODO: remove dummy data
 export const journeyInstanceResource = (
   orgId: string,
   journeyId: string,
   instanceId: string
-): JourneyInstanceResource => {
+) => {
   const key = ['journeyInstance', orgId, journeyId, instanceId];
   const url = `/organize/${orgId}/journeys/${journeyId}/instances/${instanceId}`;
 
@@ -72,5 +68,11 @@ export const journeyInstanceResource = (
     }),
     //useQuery: createUseQuery<ZetkinJourneyInstance>(key, url),
     useQuery: () => ({ data: ClarasOnboarding, key, url }),
+    useUpdate: createUseMutation<
+      Partial<ZetkinJourneyInstance>,
+      ZetkinJourneyInstance
+    >(key, url, {
+      method: 'PATCH',
+    }),
   };
 };

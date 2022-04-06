@@ -1,4 +1,5 @@
 import { FormattedMessage as Msg } from 'react-intl';
+import { useRouter } from 'next/router';
 import { useState } from 'react';
 import {
   Box,
@@ -10,6 +11,9 @@ import {
 } from '@material-ui/core';
 import { Edit, Save } from '@material-ui/icons';
 import { ExpandLess, ExpandMore } from '@material-ui/icons';
+
+import { journeyInstanceResource } from 'api/journeys';
+import { ZetkinJourneyInstance } from 'types/zetkin';
 
 const useStyles = makeStyles((theme) => ({
   collapsed: {
@@ -32,20 +36,32 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const JourneyInstanceSummary = ({
-  originalSummary,
+  journeyInstance,
 }: {
-  originalSummary: string;
+  journeyInstance: ZetkinJourneyInstance;
 }): JSX.Element => {
   const classes = useStyles();
+  const { orgId } = useRouter().query;
 
   const [summaryCollapsed, setSummaryCollapsed] = useState<boolean>(true);
 
   const [editingSummary, setEditingSummary] = useState<boolean>(false);
-  const [summary, setSummary] = useState<string>(originalSummary);
+  const [summary, setSummary] = useState<string>(journeyInstance.summary);
 
-  const saveEditedSummary = (text: string) => {
-    text;
-    //do thing to save the edited summary
+  const journeyInstanceHooks = journeyInstanceResource(
+    orgId as string,
+    journeyInstance.journey.id.toString(),
+    journeyInstance.id.toString()
+  );
+  const patchJourneyInstanceMutation = journeyInstanceHooks.useUpdate();
+
+  const saveEditedSummary = (summary: string) => {
+    patchJourneyInstanceMutation.mutateAsync(
+      { summary },
+      {
+        onSuccess: () => setEditingSummary(false),
+      }
+    );
   };
 
   return (
@@ -94,9 +110,9 @@ const JourneyInstanceSummary = ({
             className={summaryCollapsed ? classes.collapsed : classes.expanded}
             variant="body1"
           >
-            {originalSummary}
+            {journeyInstance.summary}
           </Typography>
-          {originalSummary.length > 100 && (
+          {journeyInstance.summary.length > 100 && (
             <Button
               color="primary"
               onClick={() => setSummaryCollapsed((prev) => !prev)}

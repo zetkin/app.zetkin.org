@@ -77,7 +77,7 @@ const JourneyDetailsPage: PageWithLayout<JourneyDetailsPageProps> = ({
       </Head>
       <Box display="flex" flexDirection="row" justifyContent="space-between">
         <Box width="50%">
-          <JourneyInstanceSummary originalSummary={journeyInstance.summary} />
+          <JourneyInstanceSummary journeyInstance={journeyInstance} />
         </Box>
         <Box pr={3} width="30%">
           <Typography>
