@@ -15,10 +15,8 @@ const getColumns = (
   const staticColumns = getStaticColumns(journey, columnNames);
   return (
     staticColumns
-      .splice(0, 2)
       .concat(getTagColumns(tagMetadata, columnNames))
       // Add/override common props
-      .concat(staticColumns)
       .map((col) => ({
         flex: 1,
         minWidth: 200,
