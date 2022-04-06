@@ -176,6 +176,7 @@ const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
                         component="div"
                         data-testid="page-title"
                         noWrap
+                        style={{ display: 'flex' }}
                         variant="h3"
                       >
                         {title}
