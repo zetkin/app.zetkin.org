@@ -4,8 +4,10 @@ import { useRouter } from 'next/router';
 import { Box, Card, Fade, Grid, Popper, Typography } from '@material-ui/core';
 import { useEffect, useState } from 'react';
 
+import CopyToClipboard from 'components/CopyToClipboard';
 import TagsList from 'components/organize/TagsManager/TagsList';
 import ZetkinPerson from 'components/ZetkinPerson';
+import { ZetkinPerson as ZetkinPersonType } from 'types/zetkin';
 import { personResource, personTagsResource } from 'api/people';
 
 const PersonHoverCard: React.FunctionComponent<{ personId: number }> = ({
@@ -66,7 +68,7 @@ const PersonHoverCard: React.FunctionComponent<{ personId: number }> = ({
               <Grid
                 container
                 direction="column"
-                spacing={3}
+                spacing={2}
                 style={{ width: '25rem' }}
               >
                 <Grid item>
@@ -80,39 +82,26 @@ const PersonHoverCard: React.FunctionComponent<{ personId: number }> = ({
                     <TagsList isGrouped={false} tags={tags} />
                   </Grid>
                 )}
-                {person.phone && (
-                  <Grid item>
-                    <Box display="flex" flexDirection="row">
-                      <PhoneIcon
-                        color="secondary"
-                        style={{ marginRight: '1.5rem' }}
-                      />
-                      <Typography>{person.phone}</Typography>
-                    </Box>
-                  </Grid>
-                )}
-                {person.alt_phone && (
-                  <Grid item>
-                    <Box display="flex" flexDirection="row">
-                      <PhoneIcon
-                        color="secondary"
-                        style={{ marginRight: '1.5rem' }}
-                      />
-                      <Typography>{person.alt_phone}</Typography>
-                    </Box>
-                  </Grid>
-                )}
-                {person.email && (
-                  <Grid item>
-                    <Box display="flex" flexDirection="row">
-                      <MailIcon
-                        color="secondary"
-                        style={{ marginRight: '1.5rem' }}
-                      />
-                      <Typography>{person.email}</Typography>
-                    </Box>
-                  </Grid>
-                )}
+                {['phone', 'alt_phone', 'email']
+                  .filter((field) => !!person[field as keyof ZetkinPersonType])
+                  .map((field) => (
+                    <Grid key={field} container item>
+                      <CopyToClipboard
+                        copyText={person[field as keyof ZetkinPersonType]}
+                      >
+                        <Box display="flex" flexDirection="row">
+                          {field.includes('mail') ? (
+                            <MailIcon color="secondary" />
+                          ) : (
+                            <PhoneIcon color="secondary" />
+                          )}
+                          <Typography style={{ marginLeft: '1.5rem' }}>
+                            {person[field as keyof ZetkinPersonType]}
+                          </Typography>
+                        </Box>
+                      </CopyToClipboard>
+                    </Grid>
+                  ))}
               </Grid>
             </Card>
           </Fade>
