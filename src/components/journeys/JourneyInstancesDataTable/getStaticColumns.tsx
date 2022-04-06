@@ -3,6 +3,7 @@ import { GridColDef } from '@mui/x-data-grid-pro';
 
 import { ColumnNames } from './getColumns';
 import ZetkinPerson from 'components/ZetkinPerson';
+import ZetkinRelativeTime from 'components/ZetkinRelativeTime';
 import { ZetkinJourney, ZetkinPerson as ZetkinPersonType } from 'types/zetkin';
 
 // Name concatenation
@@ -33,8 +34,10 @@ export const getStaticColumns = (
     },
     {
       field: 'updated_at',
+      renderCell: (params) => (
+        <ZetkinRelativeTime datetime={params.value as string} />
+      ),
       type: 'date',
-      valueFormatter: (params) => dayjs(params.value as string).fromNow(),
     },
     {
       field: 'next_milestone_title',
@@ -42,8 +45,10 @@ export const getStaticColumns = (
     },
     {
       field: 'next_milestone_deadline',
+      renderCell: (params) => (
+        <ZetkinRelativeTime datetime={params.value as string} />
+      ),
       type: 'date',
-      valueFormatter: (params) => dayjs(params.value as string).fromNow(true),
       valueGetter: (params) => params.row.next_milestone.deadline,
     },
     {

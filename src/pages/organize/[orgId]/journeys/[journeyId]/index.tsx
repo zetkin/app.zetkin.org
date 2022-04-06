@@ -53,6 +53,12 @@ type JourneyInstancesOverviewPageProps = {
   orgId: string;
 };
 
+interface JourneyInstancesData {
+  columnNames: ColumnNames;
+  journeyInstances: ZetkinJourneyInstance[];
+  tagMetadata: TagMetadata;
+}
+
 const JourneyInstancesOverviewPage: PageWithLayout<
   JourneyInstancesOverviewPageProps
 > = ({ orgId, journeyId }) => {
@@ -70,14 +76,8 @@ const JourneyInstancesOverviewPage: PageWithLayout<
       </Head>
       <ZetkinQuery queries={{ journeyInstancesQuery }}>
         <JourneyInstancesDataTable
-          {...{
-            journey,
-            ...(journeyInstancesQuery.data as {
-              columnNames: ColumnNames;
-              journeyInstances: ZetkinJourneyInstance[];
-              tagMetadata: TagMetadata;
-            }),
-          }}
+          journey={journey}
+          {...(journeyInstancesQuery.data as JourneyInstancesData)}
         />
       </ZetkinQuery>
     </>
