@@ -85,7 +85,9 @@ const JourneyInstancesOverviewPage: PageWithLayout<
 };
 
 JourneyInstancesOverviewPage.getLayout = function getLayout(page) {
-  return <AllJourneyInstancesLayout>{page}</AllJourneyInstancesLayout>;
+  return (
+    <AllJourneyInstancesLayout fixedHeight>{page}</AllJourneyInstancesLayout>
+  );
 };
 
 export default JourneyInstancesOverviewPage;

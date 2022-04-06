@@ -30,7 +30,7 @@ const JourneyInstancesDataTable: FunctionComponent<JourneysDataTableProps> = ({
   return (
     <>
       <DataGridPro
-        autoHeight
+        autoHeight={rows.length === 0}
         checkboxSelection
         columns={columns}
         components={{ Toolbar: Toolbar }}
