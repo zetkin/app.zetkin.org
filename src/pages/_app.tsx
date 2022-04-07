@@ -11,7 +11,6 @@ import { LicenseInfo } from '@mui/x-data-grid-pro';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import NProgress from 'nprogress';
 import { ReactQueryDevtools } from 'react-query/devtools';
-import relativeTime from 'dayjs/plugin/relativeTime';
 import Router from 'next/router';
 import { ThemeProvider } from '@material-ui/core/styles';
 import { useEffect } from 'react';
@@ -24,7 +23,6 @@ import { SnackbarProvider } from 'hooks/SnackbarContext';
 import theme from '../theme';
 import { UserContext } from '../hooks';
 
-dayjs.extend(relativeTime);
 dayjs.extend(LocalTimeToJsonPlugin);
 dayjs.extend(isoWeek);
 

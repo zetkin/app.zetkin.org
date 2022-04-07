@@ -2,10 +2,10 @@ import { GridSortModel } from '@mui/x-data-grid-pro';
 import userEvent from '@testing-library/user-event';
 
 import { COLUMN_TYPE } from 'types/views';
-import { makeGridColDef } from './utils';
+import DataTableSorting from './DataTableSorting';
+import { makeGridColDef } from '../views/ViewDataTable/utils';
 import mockViewCol from 'utils/testing/mocks/mockViewCol';
 import { render } from 'utils/testing';
-import ViewDataTableSorting from './ViewDataTableSorting';
 
 describe('ViewDataTableSorting.tsx', () => {
   const fields = ['first_name', 'last_name', 'middle_name'];
@@ -30,26 +30,26 @@ describe('ViewDataTableSorting.tsx', () => {
 
   it('renders correctly when sort model is empty', async () => {
     const { getByText } = render(
-      <ViewDataTableSorting
+      <DataTableSorting
         gridColumns={gridColumns}
         setSortModel={() => null}
         sortModel={[]}
       />
     );
 
-    const sortButton = getByText('misc.views.viewTableSort.button');
+    const sortButton = getByText('misc.dataTable.sorting.button');
     expect(sortButton).toBeTruthy();
 
     // Show popover
     await userEvent.click(sortButton);
 
-    expect(getByText('misc.views.viewTableSort.title')).toBeTruthy();
-    expect(getByText('misc.views.viewTableSort.addButton')).toBeTruthy();
+    expect(getByText('misc.dataTable.sorting.title')).toBeTruthy();
+    expect(getByText('misc.dataTable.sorting.addButton')).toBeTruthy();
   });
 
   it('renders correctly when sort model is populated', async () => {
     const { getAllByText, getByText } = render(
-      <ViewDataTableSorting
+      <DataTableSorting
         gridColumns={gridColumns}
         setSortModel={handleSetSortModel}
         sortModel={sortModel}
@@ -57,7 +57,7 @@ describe('ViewDataTableSorting.tsx', () => {
     );
 
     // Show popover
-    const sortButton = getByText('misc.views.viewTableSort.button');
+    const sortButton = getByText('misc.dataTable.sorting.button');
     await userEvent.click(sortButton);
 
     expect(getByText(fields[0])).toBeTruthy();
@@ -67,7 +67,7 @@ describe('ViewDataTableSorting.tsx', () => {
 
   it('Calls setSortModel correctly on user input', async () => {
     const { getAllByText, getByText, getAllByTestId } = render(
-      <ViewDataTableSorting
+      <DataTableSorting
         gridColumns={gridColumns}
         setSortModel={handleSetSortModel}
         sortModel={sortModel}
@@ -75,7 +75,7 @@ describe('ViewDataTableSorting.tsx', () => {
     );
 
     // Show popover
-    const sortButton = getByText('misc.views.viewTableSort.button');
+    const sortButton = getByText('misc.dataTable.sorting.button');
     await userEvent.click(sortButton);
 
     // Modify sort direction

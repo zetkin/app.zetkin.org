@@ -1,108 +1,49 @@
-import Chance from 'chance';
-import dayjs from 'dayjs';
-
+import JourneyInstancesDataTable from './index';
+import mockJourney from 'utils/testing/mocks/mockJourney';
 import mockJourneyInstance from 'utils/testing/mocks/mockJourneyInstance';
-import mockPerson from 'utils/testing/mocks/mockPerson';
+import { render } from 'utils/testing';
 import { ZetkinJourneyInstance } from 'types/zetkin';
 
-const chance = Chance();
+const tagMetadata = { groups: [], valueTags: [] };
+const journey = mockJourney();
+const journeyInstances = [mockJourneyInstance({ assigned_to: [], people: [] })];
 
-// Ensure uniqueness
-const ids: number[] = Array.from(Array(20000).keys());
+describe('JourneyInstancesDataTable.tsx', () => {
+  it('Renders with no data', async () => {
+    const { getByText } = render(
+      <JourneyInstancesDataTable
+        journey={journey}
+        journeyInstances={[] as ZetkinJourneyInstance[]}
+        tagMetadata={tagMetadata}
+      />
+    );
 
-const people = ids
-  .splice(0, 20)
-  .map((id) =>
-    mockPerson({ first_name: chance.first(), id, last_name: chance.last() })
-  );
-const milestones = [
-  'make coffee',
-  'prepare for battle',
-  'perform lip sync',
-  'sashay away',
-];
+    // Columns visible
+    const noRows = await getByText('No rows');
+    expect(noRows).toBeTruthy();
+  });
 
-const groupIds = ids.splice(0, 3);
-const groupTags: ZetkinJourneyInstance['tags'][] = [
-  [
-    { color: 'salmon', title: '1 - immediate' },
-    { color: 'peachpuff', title: '2 - near future' },
-    { color: 'lightgray', title: '3 - chase up' },
-  ].map((tag) => ({
-    group: { id: groupIds[0], title: 'Priority' },
-    id: ids.shift() as number,
-    ...tag,
-  })),
-  [
-    { color: 'beige', title: 'contract' },
-    { color: 'cornflowerblue', title: 'pay' },
-    { color: 'gray', title: 'disciplinary/dismissal' },
-    { color: 'aliceblue', title: 'discrimination' },
-    { color: 'aquamarine', title: 'whistleblowing' },
-  ].map((tag) => ({
-    group: { id: groupIds[1], title: 'Category' },
-    id: ids.shift() as number,
-    ...tag,
-  })),
-];
+  it('Renders column headers & data correctly', async () => {
+    const { getByText } = render(
+      <div
+        style={{
+          height: 2000,
+          width: 2000,
+        }}
+      >
+        <JourneyInstancesDataTable
+          dataGridProps={{
+            checkboxSelection: false,
+            disableVirtualization: true,
+          }}
+          journey={journey}
+          journeyInstances={journeyInstances}
+          tagMetadata={tagMetadata}
+        />
+      </div>
+    );
 
-const animalTags = ids.splice(0, 100).map((id) => ({
-  color: chance.color(),
-  group: { id: groupIds[2], title: 'Animals' },
-  id,
-  title: chance.animal(),
-}));
-
-const valueTagId = ids.shift();
-const getValueTag = (): ZetkinJourneyInstance['tags'] => [
-  {
-    color: 'green',
-    group: null,
-    id: valueTagId as number,
-    title: 'Number of pets',
-    value: chance.integer({ max: 11, min: 0 }),
-  },
-];
-
-const getMultipleTagsGroup = (): ZetkinJourneyInstance['tags'] =>
-  chance.pickset(animalTags, chance.integer({ max: 5, min: 2 }));
-
-const getFreeTags = (numTags: number): ZetkinJourneyInstance['tags'] =>
-  ids.splice(0, numTags).map((id) => ({
-    color: chance.color(),
-    group: null,
-    id,
-    title: chance.word(),
-  }));
-
-const dummyTableData = ids.splice(0, 500).map((id) => {
-  const created_at = dayjs()
-    .subtract(Math.ceil(Math.random() * 200), 'hour')
-    .format();
-
-  return mockJourneyInstance({
-    assigned_to: chance.pickset(people, chance.pickone([1, 1, 1, 1, 2])),
-    created_at,
-    id: id + 1,
-    milestones: [],
-    next_milestone: {
-      deadline: dayjs()
-        .add(Math.ceil(Math.random() * 500), 'hour')
-        .format(),
-      status: '',
-      title: chance.pickone(milestones),
-    },
-    people: chance.pickset(people, chance.pickone([1, 1, 1, 1, 2])),
-    summary: chance.sentence({ words: 10 }),
-    tags: groupTags
-      .map((tags) => chance.pickone(tags))
-      .concat(getValueTag())
-      .concat(getMultipleTagsGroup())
-      .concat(getFreeTags(chance.integer({ max: 5, min: 0 }))),
-    updated_at: dayjs()
-      .subtract(dayjs().diff(dayjs(created_at), 'minute') / 2, 'minute')
-      .format(),
+    const milestone = await getByText('perform lip sync');
+    expect(milestone).toBeTruthy();
   });
 });
-
-export { dummyTableData };

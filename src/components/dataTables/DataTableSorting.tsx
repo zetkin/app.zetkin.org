@@ -20,7 +20,7 @@ import {
   GridSortModel,
 } from '@mui/x-data-grid-pro';
 
-import ShiftKeyIcon from './ShiftKeyIcon';
+import ShiftKeyIcon from '../views/ViewDataTable/ShiftKeyIcon';
 
 const useStyles = makeStyles({
   deleteButton: {
@@ -45,9 +45,11 @@ interface ViewDataTableSortingProps {
   sortModel: GridSortModel | [];
 }
 
-const ViewDataTableSorting: React.FunctionComponent<
-  ViewDataTableSortingProps
-> = ({ gridColumns, setSortModel, sortModel }) => {
+const DataTableSorting: React.FunctionComponent<ViewDataTableSortingProps> = ({
+  gridColumns,
+  setSortModel,
+  sortModel,
+}) => {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const classes = useStyles();
   const open = Boolean(anchorEl);
@@ -103,7 +105,7 @@ const ViewDataTableSorting: React.FunctionComponent<
           onClick={handleSortButtonClick}
           startIcon={<ImportExport />}
         >
-          <FormattedMessage id="misc.views.viewTableSort.button" />
+          <FormattedMessage id="misc.dataTable.sorting.button" />
         </Button>
       </Badge>
       <Popover
@@ -124,7 +126,7 @@ const ViewDataTableSorting: React.FunctionComponent<
       >
         <Box display="flex" flexDirection="column">
           <Typography variant="body1">
-            <FormattedMessage id="misc.views.viewTableSort.title" />
+            <FormattedMessage id="misc.dataTable.sorting.title" />
           </Typography>
           <Divider />
           <Box display="flex" flexDirection="column" mt={1}>
@@ -190,12 +192,12 @@ const ViewDataTableSorting: React.FunctionComponent<
               startIcon={<Add />}
               variant="text"
             >
-              <FormattedMessage id="misc.views.viewTableSort.addButton" />
+              <FormattedMessage id="misc.dataTable.sorting.addButton" />
             </Button>
           </Box>
           <Typography variant="caption">
             <FormattedMessage
-              id="misc.views.viewTableSort.hint"
+              id="misc.dataTable.sorting.hint"
               values={{
                 shiftKeyIcon: (
                   <ShiftKeyIcon
@@ -214,4 +216,4 @@ const ViewDataTableSorting: React.FunctionComponent<
   );
 };
 
-export default ViewDataTableSorting;
+export default DataTableSorting;

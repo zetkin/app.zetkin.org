@@ -2,19 +2,18 @@ import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 
 import AllJourneyInstancesLayout from 'layout/organize/AllJourneyInstancesLayout';
-import { ColumnNames } from 'components/journeys/JourneyInstancesDataTable/getColumns';
 import getOrg from 'fetching/getOrg';
 import JourneyInstancesDataTable from 'components/journeys/JourneyInstancesDataTable';
 import { PageWithLayout } from 'types';
 import { scaffold } from 'utils/next';
-import { TagMetadata } from 'pages/api/organize/[orgId]/journeys/[journeyId]/getTagMetadata';
+import { TagMetadata } from 'utils/getTagMetadata';
 import ZetkinQuery from 'components/ZetkinQuery';
 import { journeyInstancesResource, journeyResource } from 'api/journeys';
 import { ZetkinJourney, ZetkinJourneyInstance } from 'types/zetkin';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
-  localeScope: ['layout.organize', 'misc.breadcrumbs', 'pages.organizeJourney'],
+  localeScope: ['layout.organize', 'misc', 'pages.organizeJourney'],
 };
 
 export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
@@ -53,6 +52,11 @@ type JourneyInstancesOverviewPageProps = {
   orgId: string;
 };
 
+interface JourneyInstancesData {
+  journeyInstances: ZetkinJourneyInstance[];
+  tagMetadata: TagMetadata;
+}
+
 const JourneyInstancesOverviewPage: PageWithLayout<
   JourneyInstancesOverviewPageProps
 > = ({ orgId, journeyId }) => {
@@ -70,14 +74,8 @@ const JourneyInstancesOverviewPage: PageWithLayout<
       </Head>
       <ZetkinQuery queries={{ journeyInstancesQuery }}>
         <JourneyInstancesDataTable
-          {...{
-            journey,
-            ...(journeyInstancesQuery.data as {
-              columnNames: ColumnNames;
-              journeyInstances: ZetkinJourneyInstance[];
-              tagMetadata: TagMetadata;
-            }),
-          }}
+          journey={journey}
+          {...(journeyInstancesQuery.data as JourneyInstancesData)}
         />
       </ZetkinQuery>
     </>
@@ -85,7 +83,9 @@ const JourneyInstancesOverviewPage: PageWithLayout<
 };
 
 JourneyInstancesOverviewPage.getLayout = function getLayout(page) {
-  return <AllJourneyInstancesLayout>{page}</AllJourneyInstancesLayout>;
+  return (
+    <AllJourneyInstancesLayout fixedHeight>{page}</AllJourneyInstancesLayout>
+  );
 };
 
 export default JourneyInstancesOverviewPage;

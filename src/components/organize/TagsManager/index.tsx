@@ -1,67 +1,25 @@
+/* eslint-disable jsx-a11y/no-autofocus */
+import { Add } from '@material-ui/icons';
 import { useState } from 'react';
-import { Box, Switch, Typography } from '@material-ui/core';
+import { Box, Button, Popover, Typography } from '@material-ui/core';
 import { FormattedMessage, useIntl } from 'react-intl';
 
 import ZetkinSection from 'components/ZetkinSection';
-import ZetkinTag from 'components/ZetkinTag';
-import { ZetkinTag as ZetkinTagType } from 'types/zetkin';
+import { ZetkinTag } from 'types/zetkin';
 
-const GroupToggle: React.FunctionComponent<{
-  checked?: boolean;
-  onChange: () => void;
-}> = ({ checked, onChange }) => {
-  const intl = useIntl();
-  return (
-    <Box alignItems="center" display="flex">
-      <Typography variant="body2">
-        {intl.formatMessage({ id: 'misc.tags.tagsManager.groupTags' })}
-      </Typography>
-      <Switch
-        checked={checked}
-        color="primary"
-        data-testid="TagsManager-groupToggle"
-        name="Tags"
-        onChange={onChange}
-      />
-    </Box>
-  );
-};
-
-interface TagsGroups {
-  [key: string]: {
-    tags: ZetkinTagType[];
-    title: string;
-  };
-}
+import GroupToggle from './GroupToggle';
+import TagSelect from './TagSelect';
+import TagsList from './TagsList';
 
 const TagsManager: React.FunctionComponent<{
-  appliedTags: ZetkinTagType[];
-}> = ({ appliedTags }) => {
+  appliedTags: ZetkinTag[];
+  availableTags: ZetkinTag[];
+  onSelect: (tag: ZetkinTag) => void;
+}> = ({ availableTags, appliedTags, onSelect }) => {
   const intl = useIntl();
 
+  const [addTagButton, setAddTagButton] = useState<HTMLElement | null>(null);
   const [isGrouped, setIsGrouped] = useState(false);
-  const groups: TagsGroups = appliedTags.reduce((acc: TagsGroups, tag) => {
-    // Add to ungrouped tags list
-    if (!tag.group) {
-      return {
-        ...acc,
-        ungrouped: {
-          tags: acc['ungrouped'] ? [...acc['ungrouped'].tags, tag] : [tag],
-          title: intl.formatMessage({
-            id: 'misc.tags.tagsManager.ungroupedHeader',
-          }),
-        },
-      };
-    }
-    // Add to tags list for group
-    return {
-      ...acc,
-      [tag.group.id]: {
-        tags: acc[tag.group.id] ? [...acc[tag.group.id].tags, tag] : [tag],
-        title: tag.group.title,
-      },
-    };
-  }, {});
 
   return (
     <ZetkinSection
@@ -74,46 +32,34 @@ const TagsManager: React.FunctionComponent<{
       title={intl.formatMessage({ id: 'misc.tags.tagsManager.title' })}
     >
       <Box>
-        {/* Tags List */}
-        {appliedTags.length > 0 && (
-          <>
-            {isGrouped ? (
-              // Grouped list
-              <>
-                {Object.entries(groups).map(([id, group], i) => (
-                  <Box key={i} mb={1}>
-                    <Typography variant="overline">{group.title}</Typography>
-                    <Box
-                      data-testid={`TagsManager-groupedTags-${id}`}
-                      display="flex"
-                      flexWrap="wrap"
-                      style={{ gap: 8 }}
-                    >
-                      {group.tags.map((tag, i) => {
-                        // Tag Chip
-                        return <ZetkinTag key={i} tag={tag} />;
-                      })}
-                    </Box>
-                  </Box>
-                ))}
-              </>
-            ) : (
-              // Flat list
-              <Box display="flex" flexWrap="wrap" style={{ gap: 8 }}>
-                {appliedTags.map((tag, i) => {
-                  // Tag Chip
-                  return <ZetkinTag key={i} tag={tag} />;
-                })}
-              </Box>
-            )}
-          </>
-        )}
-        {/* If no tags */}
-        {appliedTags.length === 0 && (
+        {appliedTags.length > 0 ? (
+          <TagsList isGrouped={isGrouped} tags={appliedTags} />
+        ) : (
+          // If no tags
           <Typography>
             <FormattedMessage id="misc.tags.tagsManager.noTags" />
           </Typography>
         )}
+      </Box>
+      <Box mt={2}>
+        <Button
+          color="primary"
+          onClick={(event) => setAddTagButton(event.currentTarget)}
+          startIcon={<Add />}
+        >
+          <FormattedMessage id="misc.tags.tagsManager.addTag" />
+        </Button>
+        <Popover
+          anchorEl={addTagButton}
+          onClose={() => setAddTagButton(null)}
+          open={Boolean(addTagButton)}
+        >
+          <TagSelect
+            disabledTags={appliedTags}
+            onSelect={onSelect}
+            tags={availableTags}
+          />
+        </Popover>
       </Box>
     </ZetkinSection>
   );

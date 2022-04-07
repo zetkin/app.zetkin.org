@@ -1,12 +1,8 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-// TODO: re-enable eslint
 import { NextApiRequest, NextApiResponse } from 'next';
 
 import { createApiFetch } from 'utils/apiFetch';
 import { getMessages } from 'utils/locale';
-import { getTagMetadata } from './getTagMetadata';
-
-import { dummyTableData } from 'components/journeys/JourneyInstancesDataTable/index.spec';
+import { getTagMetadata } from 'utils/getTagMetadata';
 
 const getJourneyTableData = async (
   req: NextApiRequest & { query: Record<string, string> },
@@ -26,10 +22,10 @@ const getJourneyTableData = async (
   }
 
   try {
-    // const journeyInstancesRes = await apiFetch(
-    //   `/orgs/${orgId}/journeys/${journeyId}/instances`
-    // );
-    // const { data: journeyInstances } = await journeyInstancesRes.json();
+    const journeyInstancesRes = await apiFetch(
+      `/orgs/${orgId}/journeys/${journeyId}/instances`
+    );
+    const { data: journeyInstances } = await journeyInstancesRes.json();
 
     // Retrieve column names
     const columnNames = Object.fromEntries(
@@ -37,7 +33,6 @@ const getJourneyTableData = async (
         await getMessages('en', ['pages.organizeJourneyInstances'])
       ).map(([key, value]) => [key.split('.').pop(), value])
     );
-    const journeyInstances = dummyTableData;
     const tagMetadata = getTagMetadata(journeyInstances);
 
     res

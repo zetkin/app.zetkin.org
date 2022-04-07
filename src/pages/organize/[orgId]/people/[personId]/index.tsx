@@ -1,12 +1,14 @@
 import { GetServerSideProps } from 'next';
 import { Grid } from '@material-ui/core';
 import Head from 'next/head';
+import { useContext } from 'react';
 import { useRouter } from 'next/router';
 
 import { PageWithLayout } from 'types';
 import PersonDetailsCard from 'components/organize/people/PersonDetailsCard';
 import PersonOrganizationsCard from 'components/organize/people/PersonOrganizationsCard';
 import SinglePersonLayout from 'layout/organize/SinglePersonLayout';
+import SnackbarContext from 'hooks/SnackbarContext';
 import TagsManager from 'components/organize/TagsManager';
 import ZetkinQuery from 'components/ZetkinQuery';
 import { personResource, personTagsResource } from 'api/people';
@@ -51,10 +53,15 @@ export type PersonPageProps = {
 
 const PersonProfilePage: PageWithLayout<PersonPageProps> = (props) => {
   const { orgId, personId } = useRouter().query;
-  const personTagsQuery = personTagsResource(
-    orgId as string,
-    personId as string
-  ).useQuery();
+  const { showSnackbar } = useContext(SnackbarContext);
+  const {
+    useAdd,
+    useQuery: usePersonTagsQuery,
+    useAvailableTagsQuery,
+  } = personTagsResource(orgId as string, personId as string);
+  const addTagMutation = useAdd();
+  const personTagsQuery = usePersonTagsQuery();
+  const organizationTagsQuery = useAvailableTagsQuery();
   const { data: person } = personResource(
     props.orgId,
     props.personId
@@ -79,8 +86,16 @@ const PersonProfilePage: PageWithLayout<PersonPageProps> = (props) => {
           <PersonOrganizationsCard {...props} />
         </Grid>
         <Grid item lg={4} xs={12}>
-          <ZetkinQuery queries={{ personTagsQuery }}>
-            <TagsManager appliedTags={personTagsQuery.data || []} />
+          <ZetkinQuery queries={{ organizationTagsQuery, personTagsQuery }}>
+            <TagsManager
+              appliedTags={personTagsQuery.data || []}
+              availableTags={organizationTagsQuery.data || []}
+              onSelect={(tag) =>
+                addTagMutation.mutate(tag.id, {
+                  onError: () => showSnackbar('error'),
+                })
+              }
+            />
           </ZetkinQuery>
         </Grid>
       </Grid>

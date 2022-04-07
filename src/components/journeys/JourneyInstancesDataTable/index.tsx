@@ -1,34 +1,72 @@
-import { DataGridPro } from '@mui/x-data-grid-pro';
-import { FunctionComponent } from 'react';
+import { isEqual } from 'lodash';
+import { useIntl } from 'react-intl';
+import {
+  DataGridPro,
+  DataGridProProps,
+  GridSortModel,
+} from '@mui/x-data-grid-pro';
 
-import { TagMetadata } from 'pages/api/organize/[orgId]/journeys/[journeyId]/getTagMetadata';
-import getColumns, { ColumnNames } from './getColumns';
+import getColumns from './getColumns';
+import { getRows } from './getRows';
+import { TagMetadata } from 'utils/getTagMetadata';
+import Toolbar from './Toolbar';
+import { FunctionComponent, useState } from 'react';
 import { ZetkinJourney, ZetkinJourneyInstance } from 'types/zetkin';
 
 interface JourneysDataTableProps {
-  columnNames: ColumnNames;
+  dataGridProps?: Partial<DataGridProProps>;
   tagMetadata: TagMetadata;
   journey: ZetkinJourney;
   journeyInstances: ZetkinJourneyInstance[];
 }
 
 const JourneyInstancesDataTable: FunctionComponent<JourneysDataTableProps> = ({
-  columnNames,
+  dataGridProps,
   tagMetadata,
   journey,
   journeyInstances,
 }) => {
-  const columns = getColumns(columnNames, tagMetadata, journey);
+  const columns = getColumns(tagMetadata, journey);
+  const [sortModel, setSortModel] = useState<GridSortModel>([]);
+  const [quickSearch, setQuickSearch] = useState('');
+
+  const rows = getRows({ journeyInstances, quickSearch });
+
+  // Add localised header titles
+  const intl = useIntl();
+  const columnsWithHeaderTitles = columns.map((column) => ({
+    headerName: intl.formatMessage({
+      id: `pages.organizeJourneyInstances.columns.${column.field}`,
+    }),
+    ...column,
+  }));
 
   return (
     <>
       <DataGridPro
-        autoHeight
+        autoHeight={rows.length === 0}
         checkboxSelection
-        columns={columns}
-        pageSize={10}
+        columns={columnsWithHeaderTitles}
+        components={{ Toolbar: Toolbar }}
+        componentsProps={{
+          toolbar: {
+            gridColumns: columnsWithHeaderTitles,
+            setQuickSearch,
+            setSortModel,
+            sortModel,
+          },
+        }}
+        onSortModelChange={(model) => {
+          // Something strange going on here with infinite state updates, so I added the line below
+          if (!isEqual(model, sortModel)) {
+            setSortModel(model);
+          }
+        }}
+        pageSize={50}
         pagination
-        rows={journeyInstances}
+        rows={rows}
+        sortModel={sortModel}
+        {...dataGridProps}
       />
     </>
   );

@@ -10,6 +10,7 @@ import getCampaign from 'fetching/getCampaign';
 import getCampaignEvents from 'fetching/getCampaignEvents';
 import getOrg from 'fetching/getOrg';
 import { PageWithLayout } from 'types';
+import PersonHoverCard from 'components/PersonHoverCard';
 import { scaffold } from 'utils/next';
 import SingleCampaignLayout from 'layout/organize/SingleCampaignLayout';
 import TaskList from 'components/organize/tasks/TaskList';
@@ -116,13 +117,15 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({
             )}
             {campaign?.manager && (
               <Grid item xs={12}>
-                <ZetkinPerson
-                  id={campaign.manager.id}
-                  name={campaign.manager.name}
-                  subtitle={intl.formatMessage({
-                    id: 'pages.organizeCampaigns.campaignManager',
-                  })}
-                />
+                <PersonHoverCard personId={campaign.manager.id}>
+                  <ZetkinPerson
+                    id={campaign.manager.id}
+                    name={campaign.manager.name}
+                    subtitle={intl.formatMessage({
+                      id: 'pages.organizeCampaigns.campaignManager',
+                    })}
+                  />
+                </PersonHoverCard>
               </Grid>
             )}
           </Grid>

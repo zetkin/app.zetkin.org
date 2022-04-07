@@ -57,6 +57,7 @@ const theme = createTheme({
         textTransform: 'none',
       },
     },
+    // Note: MUI issue - MuiDataGrid is missing from MUI overrides
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     MuiDataGrid: {
@@ -67,6 +68,15 @@ const theme = createTheme({
         '& .MuiDataGrid-columnHeaderTitle': {
           color: themePalette.onSurface.medium,
           fontWeight: 'bold',
+        },
+        '& [role="toolbar"]': {
+          '& > *': {
+            margin: '0 4px',
+            marginRight: 15,
+            marginTop: 5,
+          },
+          display: 'flex',
+          justifyContent: 'flex-end',
         },
       },
     },

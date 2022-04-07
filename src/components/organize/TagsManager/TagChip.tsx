@@ -1,9 +1,10 @@
-import { ZetkinTag as ZetkinTagType } from 'types/zetkin';
 import { Chip, ChipProps, Tooltip } from '@material-ui/core';
 
-const ZetkinTag: React.FunctionComponent<{
+import { ZetkinTag } from 'types/zetkin';
+
+const TagChip: React.FunctionComponent<{
   chipProps?: ChipProps;
-  tag: Partial<ZetkinTagType>;
+  tag: ZetkinTag;
 }> = ({ chipProps, tag }) => {
   return (
     <Tooltip arrow title={tag.description || ''}>
@@ -16,4 +17,4 @@ const ZetkinTag: React.FunctionComponent<{
   );
 };
 
-export default ZetkinTag;
+export default TagChip;

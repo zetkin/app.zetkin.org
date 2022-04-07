@@ -1,16 +1,14 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { ColumnNames } from 'components/journeys/JourneyInstancesDataTable/getColumns';
 import { ScaffoldedContext } from 'utils/next';
+
+import ClarasOnboarding from '../../playwright/mockData/orgs/KPD/journeys/instances/ClarasOnboarding';
+import { TagMetadata } from '../utils/getTagMetadata';
 import {
   createPrefetch,
   createUseMutation,
   createUseQuery,
 } from './utils/resourceHookFactories';
 import { ZetkinJourney, ZetkinJourneyInstance } from 'types/zetkin';
-
-import ClarasOnboarding from '../../playwright/mockData/orgs/KPD/journeys/instances/ClarasOnboarding';
-import MarxistTraining from '../../playwright/mockData/orgs/KPD/journeys/MarxistTraining';
-import { TagMetadata } from '../pages/api/organize/[orgId]/journeys/[journeyId]/getTagMetadata';
 
 export const journeysResource = (orgId: string) => {
   const key = ['journeys', orgId];
@@ -22,19 +20,13 @@ export const journeysResource = (orgId: string) => {
   };
 };
 
-// TODO: delete dummy data
 export const journeyResource = (orgId: string, journeyId: string) => {
   const key = ['journey', orgId, journeyId];
   const url = `/orgs/${orgId}/journeys/${journeyId}`;
 
   return {
-    // prefetch: createPrefetch<ZetkinJourney>(key, url),
-    prefetch: async (ctx?: ScaffoldedContext) => ({
-      ctx,
-      state: { status: 'success' },
-    }),
-    // useQuery: createUseQuery<ZetkinJourney>(key, url),
-    useQuery: () => ({ data: MarxistTraining, key, url }),
+    prefetch: createPrefetch<ZetkinJourney>(key, url),
+    useQuery: createUseQuery<ZetkinJourney>(key, url),
   };
 };
 
@@ -44,7 +36,6 @@ export const journeyInstancesResource = (orgId: string, journeyId: string) => {
 
   return {
     useQuery: createUseQuery<{
-      columnNames: ColumnNames;
       journeyInstances: ZetkinJourneyInstance[];
       tagMetadata: TagMetadata;
     }>(key, url),
