@@ -1,15 +1,16 @@
 import { isEqual } from 'lodash';
+import { useIntl } from 'react-intl';
 import {
   DataGridPro,
   DataGridProProps,
   GridSortModel,
 } from '@mui/x-data-grid-pro';
-import { FunctionComponent, useState } from 'react';
 
 import getColumns from './getColumns';
 import { getRows } from './getRows';
 import { TagMetadata } from 'utils/getTagMetadata';
 import Toolbar from './Toolbar';
+import { FunctionComponent, useState } from 'react';
 import { ZetkinJourney, ZetkinJourneyInstance } from 'types/zetkin';
 
 interface JourneysDataTableProps {
@@ -31,16 +32,25 @@ const JourneyInstancesDataTable: FunctionComponent<JourneysDataTableProps> = ({
 
   const rows = getRows({ journeyInstances, quickSearch });
 
+  // Add localised header titles
+  const intl = useIntl();
+  const columnsWithHeaderTitles = columns.map((column) => ({
+    headerName: intl.formatMessage({
+      id: `pages.organizeJourneyInstances.columns.${column.field}`,
+    }),
+    ...column,
+  }));
+
   return (
     <>
       <DataGridPro
         autoHeight={rows.length === 0}
         checkboxSelection
-        columns={columns}
+        columns={columnsWithHeaderTitles}
         components={{ Toolbar: Toolbar }}
         componentsProps={{
           toolbar: {
-            gridColumns: columns,
+            gridColumns: columnsWithHeaderTitles,
             setQuickSearch,
             setSortModel,
             sortModel,
