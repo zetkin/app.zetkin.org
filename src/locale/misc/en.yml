@@ -11,6 +11,8 @@ components:
       edit: Click to edit
       noEmpty: This cannot be empty
       save: Press 'enter' to save
+copyToClipboard:
+  copied: Copied
 dataTable:
   search:
     button: Search

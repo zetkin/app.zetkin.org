@@ -1,4 +1,5 @@
 import copy from 'copy-to-clipboard';
+import { FormattedMessage } from 'react-intl';
 import {
   ButtonBase,
   Collapse,
@@ -80,7 +81,7 @@ const CopyToClipboard: React.FunctionComponent<{
                 style={{ fontSize: 11, fontWeight: 'bold' }}
                 variant="button"
               >
-                Copied to clipboard
+                <FormattedMessage id="misc.copyToClipboard.copied" />
               </Typography>
             </Collapse>
           </Grid>
