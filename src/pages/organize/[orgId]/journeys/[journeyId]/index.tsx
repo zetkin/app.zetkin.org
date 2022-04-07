@@ -2,7 +2,6 @@ import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 
 import AllJourneyInstancesLayout from 'layout/organize/AllJourneyInstancesLayout';
-import { ColumnNames } from 'components/journeys/JourneyInstancesDataTable/getColumns';
 import getOrg from 'fetching/getOrg';
 import JourneyInstancesDataTable from 'components/journeys/JourneyInstancesDataTable';
 import { PageWithLayout } from 'types';
@@ -54,7 +53,6 @@ type JourneyInstancesOverviewPageProps = {
 };
 
 interface JourneyInstancesData {
-  columnNames: ColumnNames;
   journeyInstances: ZetkinJourneyInstance[];
   tagMetadata: TagMetadata;
 }

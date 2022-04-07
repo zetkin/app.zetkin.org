@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
+import { FormattedMessage } from 'react-intl';
 import { GridColDef } from '@mui/x-data-grid-pro';
 
-import { ColumnNames } from './getColumns';
 import ZetkinPerson from 'components/ZetkinPerson';
 import ZetkinRelativeTime from 'components/ZetkinRelativeTime';
 import { ZetkinJourney, ZetkinPerson as ZetkinPersonType } from 'types/zetkin';
@@ -10,10 +10,7 @@ import { ZetkinJourney, ZetkinPerson as ZetkinPersonType } from 'types/zetkin';
 const getPeopleString = (people: ZetkinPersonType[]) =>
   people.map((person) => `${person.first_name} ${person.last_name}`).join(', ');
 
-export const getStaticColumns = (
-  journey: ZetkinJourney,
-  columnNames: ColumnNames
-): GridColDef[] => {
+export const getStaticColumns = (journey: ZetkinJourney): GridColDef[] => {
   const staticColumns: GridColDef[] = [
     {
       field: 'id',
@@ -75,12 +72,14 @@ export const getStaticColumns = (
   ];
 
   // Add header names
-  return staticColumns
-    .filter((staticColumn) =>
-      Object.keys(columnNames).includes(staticColumn.field)
-    )
-    .map((col) => ({
-      headerName: columnNames[col.field],
-      ...col,
-    }));
+  return staticColumns.map((col) => ({
+    renderHeader: () => (
+      <div className="MuiDataGrid-columnHeaderTitle">
+        <FormattedMessage
+          id={`pages.organizeJourneyInstances.columns.${col.field}`}
+        />
+      </div>
+    ),
+    ...col,
+  }));
 };

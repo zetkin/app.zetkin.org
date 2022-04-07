@@ -6,14 +6,13 @@ import {
 } from '@mui/x-data-grid-pro';
 import { FunctionComponent, useState } from 'react';
 
+import getColumns from './getColumns';
 import { getRows } from './getRows';
 import { TagMetadata } from 'utils/getTagMetadata';
 import Toolbar from './Toolbar';
-import getColumns, { ColumnNames } from './getColumns';
 import { ZetkinJourney, ZetkinJourneyInstance } from 'types/zetkin';
 
 interface JourneysDataTableProps {
-  columnNames: ColumnNames;
   dataGridProps?: Partial<DataGridProProps>;
   tagMetadata: TagMetadata;
   journey: ZetkinJourney;
@@ -21,13 +20,12 @@ interface JourneysDataTableProps {
 }
 
 const JourneyInstancesDataTable: FunctionComponent<JourneysDataTableProps> = ({
-  columnNames,
   dataGridProps,
   tagMetadata,
   journey,
   journeyInstances,
 }) => {
-  const columns = getColumns(columnNames, tagMetadata, journey);
+  const columns = getColumns(tagMetadata, journey);
   const [sortModel, setSortModel] = useState<GridSortModel>([]);
   const [quickSearch, setQuickSearch] = useState('');
 

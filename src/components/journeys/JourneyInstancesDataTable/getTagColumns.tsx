@@ -1,13 +1,10 @@
-import { ColumnNames } from './getColumns';
+import { FormattedMessage } from 'react-intl';
 import { GridColDef } from '@mui/x-data-grid-pro';
 import { TagMetadata } from 'utils/getTagMetadata';
 import { ZetkinJourneyInstance } from 'types/zetkin';
 import ZetkinTag from 'components/ZetkinTag';
 
-const getTagColumns = (
-  tagMetadata: TagMetadata,
-  columnNames: ColumnNames
-): GridColDef[] => {
+const getTagColumns = (tagMetadata: TagMetadata): GridColDef[] => {
   const { groups, valueTags } = tagMetadata;
 
   const getGroupTags = (
@@ -53,7 +50,6 @@ const getTagColumns = (
 
   const freeTagColumn: GridColDef = {
     field: 'tagsFree',
-    headerName: columnNames['tagsFree'],
     renderCell: (params) => {
       const rowTags = params.row.tags as ZetkinJourneyInstance['tags'];
       const freeTags = rowTags.filter((tag) => !tag.group && !('value' in tag));
@@ -65,6 +61,13 @@ const getTagColumns = (
         />
       ));
     },
+    renderHeader: () => (
+      <div className="MuiDataGrid-columnHeaderTitle">
+        <FormattedMessage
+          id={`pages.organizeJourneyInstances.columns.tagsFree`}
+        />
+      </div>
+    ),
     valueGetter: (params) => {
       const rowTags = params.row.tags as ZetkinJourneyInstance['tags'];
       const freeTags = rowTags.filter((tag) => !tag.group && !('value' in tag));
