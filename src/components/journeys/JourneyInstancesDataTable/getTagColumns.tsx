@@ -1,8 +1,8 @@
 import { FormattedMessage } from 'react-intl';
 import { GridColDef } from '@mui/x-data-grid-pro';
+import TagChip from 'components/organize/TagsManager/TagChip';
 import { TagMetadata } from 'utils/getTagMetadata';
-import { ZetkinJourneyInstance } from 'types/zetkin';
-import ZetkinTag from 'components/ZetkinTag';
+import { ZetkinJourneyInstance, ZetkinTag } from 'types/zetkin';
 
 const getTagColumns = (tagMetadata: TagMetadata): GridColDef[] => {
   const { groups, valueTags } = tagMetadata;
@@ -21,10 +21,10 @@ const getTagColumns = (tagMetadata: TagMetadata): GridColDef[] => {
     renderCell: (params) => {
       if (group) {
         return getGroupTags(params.row, group.id).map((tag) => (
-          <ZetkinTag
+          <TagChip
             key={tag.id}
             chipProps={{ style: { marginRight: 5 } }}
-            tag={tag}
+            tag={tag as ZetkinTag}
           />
         ));
       }
@@ -54,10 +54,10 @@ const getTagColumns = (tagMetadata: TagMetadata): GridColDef[] => {
       const rowTags = params.row.tags as ZetkinJourneyInstance['tags'];
       const freeTags = rowTags.filter((tag) => !tag.group && !('value' in tag));
       return freeTags.map((tag) => (
-        <ZetkinTag
+        <TagChip
           key={tag.id}
           chipProps={{ style: { marginRight: 5 } }}
-          tag={tag}
+          tag={tag as ZetkinTag}
         />
       ));
     },
