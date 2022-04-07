@@ -1,6 +1,5 @@
 import { FormattedMessage as Msg } from 'react-intl';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
 import {
   Box,
   Button,
@@ -11,6 +10,7 @@ import {
 } from '@material-ui/core';
 import { Edit, Save } from '@material-ui/icons';
 import { ExpandLess, ExpandMore } from '@material-ui/icons';
+import { useEffect, useRef, useState } from 'react';
 
 import { journeyInstanceResource } from 'api/journeys';
 import { ZetkinJourneyInstance } from 'types/zetkin';
@@ -42,6 +42,8 @@ const JourneyInstanceSummary = ({
   const classes = useStyles();
   const { orgId } = useRouter().query;
 
+  const editingRef = useRef<HTMLTextAreaElement>(null);
+
   const [summaryCollapsed, setSummaryCollapsed] = useState<boolean>(true);
 
   const [editingSummary, setEditingSummary] = useState<boolean>(false);
@@ -54,6 +56,12 @@ const JourneyInstanceSummary = ({
   );
   const patchJourneyInstanceMutation = journeyInstanceHooks.useUpdate();
 
+  useEffect(() => {
+    if (editingRef.current) {
+      editingRef.current.focus();
+    }
+  }, [editingSummary]);
+
   const saveEditedSummary = (summary: string) => {
     patchJourneyInstanceMutation.mutateAsync(
       { summary },
@@ -61,6 +69,11 @@ const JourneyInstanceSummary = ({
         onSuccess: () => setEditingSummary(false),
       }
     );
+  };
+
+  const submitChange = () => {
+    setEditingSummary(false);
+    saveEditedSummary(summary);
   };
 
   return (
@@ -78,12 +91,7 @@ const JourneyInstanceSummary = ({
         <Button
           color="primary"
           onClick={
-            editingSummary
-              ? () => {
-                  setEditingSummary(false);
-                  saveEditedSummary(summary);
-                }
-              : () => setEditingSummary(true)
+            editingSummary ? submitChange : () => setEditingSummary(true)
           }
           startIcon={editingSummary ? <Save /> : <Edit />}
           style={{ textTransform: 'uppercase' }}
@@ -99,6 +107,7 @@ const JourneyInstanceSummary = ({
       </Box>
       {editingSummary ? (
         <TextareaAutosize
+          ref={editingRef}
           className={classes.editSummary}
           onChange={(e) => setSummary(e.target.value)}
           value={summary}
