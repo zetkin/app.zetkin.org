@@ -1,4 +1,4 @@
-import debounce from 'lodash.debounce';
+import { debounce } from 'lodash';
 import { useCallback, useEffect, useRef } from 'react';
 
 type DefaultCallbackArgs = Array<unknown>;

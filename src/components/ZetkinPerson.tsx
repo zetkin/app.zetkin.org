@@ -1,31 +1,46 @@
 import { useRouter } from 'next/router';
-import { Avatar, Box, Typography } from '@material-ui/core';
+import { Avatar, Box, BoxProps, Tooltip, Typography } from '@material-ui/core';
 
 const ZetkinPerson: React.FunctionComponent<{
+  containerProps?: BoxProps;
   id: number;
+  link?: boolean;
   name: string;
+  showText?: boolean;
   subtitle?: string | React.ReactNode;
-}> = ({ id, name, subtitle }) => {
+}> = ({ containerProps, id, link, name, showText = true, subtitle }) => {
   const router = useRouter();
   const { orgId } = router.query;
+  const linkProps = {
+    component: 'a',
+    href: `/organize/${orgId}/people/${id}`,
+  };
 
   return (
-    <Box display="flex">
-      <Avatar src={orgId ? `/api/orgs/${orgId}/people/${id}/avatar` : ''} />
-      <Box
-        alignItems="start"
-        display="flex"
-        flexDirection="column"
-        justifyContent="center"
-        ml={1}
-      >
-        <Typography variant="body1">{name}</Typography>
-        {typeof subtitle === 'string' ? (
-          <Typography variant="body2">{subtitle}</Typography>
-        ) : (
-          subtitle
-        )}
-      </Box>
+    <Box display="flex" {...containerProps}>
+      <Tooltip title={name}>
+        <Avatar
+          {...(link ? linkProps : {})}
+          src={orgId ? `/api/orgs/${orgId}/people/${id}/avatar` : ''}
+        />
+      </Tooltip>
+
+      {showText && (
+        <Box
+          alignItems="start"
+          display="flex"
+          flexDirection="column"
+          justifyContent="center"
+          ml={1}
+        >
+          <Typography variant="body1">{name}</Typography>
+          {typeof subtitle === 'string' ? (
+            <Typography variant="body2">{subtitle}</Typography>
+          ) : (
+            subtitle
+          )}
+        </Box>
+      )}
     </Box>
   );
 };

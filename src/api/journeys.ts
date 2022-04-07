@@ -1,24 +1,37 @@
-import { QueryState } from 'react-query/types/core/query';
-import { UseQueryResult } from 'react-query';
-
-import { ScaffoldedContext } from 'utils/next';
-import { ZetkinJourney } from 'types/zetkin';
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { createPrefetch, createUseQuery } from './utils/resourceHookFactories';
+import { ZetkinJourney, ZetkinJourneyInstance } from 'types/zetkin';
 
-interface JourneysResources {
-  useQuery: () => UseQueryResult<ZetkinJourney[], unknown>;
-  prefetch: (scaffoldContext: ScaffoldedContext) => Promise<{
-    data?: ZetkinJourney[] | undefined;
-    state?: QueryState<ZetkinJourney[], unknown> | undefined;
-  }>;
-}
+import { TagMetadata } from '../utils/getTagMetadata';
 
-export const journeysResource = (orgId: string): JourneysResources => {
-  const key = ['campaigns', orgId];
+export const journeysResource = (orgId: string) => {
+  const key = ['journeys', orgId];
   const url = `/orgs/${orgId}/journeys`;
 
   return {
     prefetch: createPrefetch<ZetkinJourney[]>(key, url),
     useQuery: createUseQuery<ZetkinJourney[]>(key, url),
+  };
+};
+
+export const journeyResource = (orgId: string, journeyId: string) => {
+  const key = ['journey', orgId, journeyId];
+  const url = `/orgs/${orgId}/journeys/${journeyId}`;
+
+  return {
+    prefetch: createPrefetch<ZetkinJourney>(key, url),
+    useQuery: createUseQuery<ZetkinJourney>(key, url),
+  };
+};
+
+export const journeyInstancesResource = (orgId: string, journeyId: string) => {
+  const key = ['journeyInstances', orgId, journeyId];
+  const url = `/organize/${orgId}/journeys/${journeyId}`;
+
+  return {
+    useQuery: createUseQuery<{
+      journeyInstances: ZetkinJourneyInstance[];
+      tagMetadata: TagMetadata;
+    }>(key, url),
   };
 };
