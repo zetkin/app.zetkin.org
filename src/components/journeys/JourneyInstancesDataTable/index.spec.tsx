@@ -1,39 +1,12 @@
 import JourneyInstancesDataTable from './index';
+import mockJourney from 'utils/testing/mocks/mockJourney';
+import mockJourneyInstance from 'utils/testing/mocks/mockJourneyInstance';
 import { render } from 'utils/testing';
 import { ZetkinJourneyInstance } from 'types/zetkin';
 
 const tagMetadata = { groups: [], valueTags: [] };
-
-const journey = {
-  id: 2,
-  organization: {
-    id: 1,
-    title: 'Kommunistiche Partei Deutschlands',
-  },
-  plural_name: 'Marxist trainings',
-  singular_name: 'Marxist training',
-  stats: {
-    closed: 359,
-    open: 75,
-  },
-};
-
-const journeyInstances = [
-  {
-    assigned_to: [],
-    created_at: '2022-04-01T03:29:12+02:00',
-    id: 333,
-    next_milestone: {
-      deadline: '2022-04-18T00:29:12+02:00',
-      title: 'perform lip sync',
-    },
-    people: [],
-    summary: 'Haohrez uhca evo fup fonruh do vafeesa lida penco rillesven.',
-    tags: [],
-    title: 'Training ID 1',
-    updated_at: '2022-04-03T23:59:12+02:00',
-  },
-];
+const journey = mockJourney();
+const journeyInstances = [mockJourneyInstance({ assigned_to: [], people: [] })];
 
 describe('JourneyInstancesDataTable.tsx', () => {
   it('Renders with no data', async () => {
