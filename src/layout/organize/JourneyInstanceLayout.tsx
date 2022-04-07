@@ -6,7 +6,7 @@ import { journeyInstanceResource } from 'api/journeys';
 import TabbedLayout from './TabbedLayout';
 import { ZetkinJourneyInstance } from 'types/zetkin';
 import ZetkinRelativeTime from 'components/ZetkinRelativeTime';
-import { Box, Button, Chip, makeStyles, Typography } from '@material-ui/core';
+import { Box, Chip, makeStyles, Typography } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   closedChip: {
@@ -45,7 +45,6 @@ const JourneyStatusChip = ({ status }: { status: string }) => {
 
 const JourneyInstanceLayout: React.FunctionComponent = ({ children }) => {
   const { orgId, journeyId, instanceId } = useRouter().query;
-  const intl = useIntl();
 
   const journeyInstanceQuery = journeyInstanceResource(
     orgId as string,
@@ -56,22 +55,6 @@ const JourneyInstanceLayout: React.FunctionComponent = ({ children }) => {
 
   return (
     <TabbedLayout
-      actionButtons={
-        <Box>
-          <Button
-            color="primary"
-            style={{ textTransform: 'uppercase' }}
-            variant="contained"
-          >
-            {intl.formatMessage({
-              id:
-                journeyInstance.status === 'open'
-                  ? 'layout.organize.journeys.buttonClose'
-                  : 'layout.organize.journeys.buttonOpen',
-            })}
-          </Button>
-        </Box>
-      }
       baseHref={`/organize/${orgId}/journeys/${journeyId}/instances/${instanceId}`}
       defaultTab="/"
       subtitle={
