@@ -92,6 +92,7 @@ const dummyTableData = ids.splice(0, 500).map((id) => {
       deadline: dayjs()
         .add(Math.ceil(Math.random() * 500), 'hour')
         .format(),
+      status: '',
       title: chance.pickone(milestones),
     },
     people: chance.pickset(people, chance.pickone([1, 1, 1, 1, 2])),
