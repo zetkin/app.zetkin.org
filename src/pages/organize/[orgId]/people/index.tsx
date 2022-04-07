@@ -13,8 +13,7 @@ import {
 } from 'components/views';
 
 const scaffoldOptions = {
-  authLevelRequired: 2,
-  localeScope: ['layout.organize', 'pages.people', 'misc'],
+  localeScope: ['layout.organize', 'pages.people'],
 };
 
 export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {

@@ -16,7 +16,7 @@ import { scaffold, ScaffoldedGetServerSideProps } from 'utils/next';
 
 export const scaffoldOptions = {
   authLevelRequired: 2,
-  localeScope: ['layout.organize', 'pages.people', 'misc'],
+  localeScope: ['layout.organize', 'pages.people'],
 };
 
 export const getPersonScaffoldProps: ScaffoldedGetServerSideProps = async (

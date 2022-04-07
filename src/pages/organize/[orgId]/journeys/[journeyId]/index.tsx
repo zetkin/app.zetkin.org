@@ -13,7 +13,7 @@ import { ZetkinJourney, ZetkinJourneyInstance } from 'types/zetkin';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
-  localeScope: ['layout.organize', 'misc', 'pages.organizeJourney'],
+  localeScope: ['layout.organize', 'pages.organizeJourney'],
 };
 
 export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {

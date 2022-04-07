@@ -184,7 +184,8 @@ export const scaffold =
     // Figure out browser's preferred language
     const lang = getBrowserLanguage(contextFromNext.req);
 
-    const messages = await getMessages(lang, options?.localeScope ?? []);
+    const localeScope = (options?.localeScope ?? []).concat(['misc']);
+    const messages = await getMessages(lang, localeScope);
 
     if (hasProps(result)) {
       result.props = {
