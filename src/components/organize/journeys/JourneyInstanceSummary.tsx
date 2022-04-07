@@ -32,7 +32,6 @@ const useStyles = makeStyles((theme) => ({
     resize: 'none',
     width: '100%',
   },
-  expanded: {},
 }));
 
 const JourneyInstanceSummary = ({
@@ -73,7 +72,7 @@ const JourneyInstanceSummary = ({
           justifyContent: 'space-between',
         }}
       >
-        <Typography variant="h6">
+        <Typography component="h2" variant="h6">
           <Msg id="pages.organizeJourneyInstance.summaryHeader" />
         </Typography>
         <Button
@@ -107,7 +106,10 @@ const JourneyInstanceSummary = ({
       ) : (
         <>
           <Typography
-            className={summaryCollapsed ? classes.collapsed : classes.expanded}
+            className={summaryCollapsed ? classes.collapsed : ''}
+            style={{
+              padding: '1rem 0 1rem 0',
+            }}
             variant="body1"
           >
             {journeyInstance.summary}

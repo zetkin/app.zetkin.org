@@ -24,15 +24,26 @@ const JourneyMilestoneProgress = ({
       <Box mr={1} width="100%">
         <LinearProgress value={percentCompleted} variant="determinate" />
       </Box>
-      <Typography style={{ fontWeight: 'bold', textTransform: 'lowercase' }}>
+      <Typography
+        style={{
+          fontWeight: 'bold',
+          padding: '0.5rem 0 0.5rem 0',
+          textTransform: 'lowercase',
+        }}
+      >
         {`${percentCompleted}% `}
         <Msg id="pages.organizeJourneyInstance.complete" />
       </Typography>
       {next_milestone && (
-        <Box display="flex" flexDirection="row">
+        <Box
+          display="flex"
+          flexDirection="row"
+          style={{ paddingBottom: '1rem' }}
+        >
           <Schedule color="secondary" style={{ marginRight: '0.25rem' }} />
           <Typography color="secondary">
             {next_milestone.title}
+            {': '}
             <FormattedDate
               day="numeric"
               month="long"

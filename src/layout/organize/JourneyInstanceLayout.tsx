@@ -93,7 +93,8 @@ const JourneyInstanceLayout: React.FunctionComponent = ({ children }) => {
                 style={{ marginRight: '0.25rem' }}
               />
               <Typography>
-                {journeyInstance.next_milestone?.title}{' '}
+                {journeyInstance.next_milestone?.title}
+                {': '}
                 <FormattedDate
                   day="numeric"
                   month="long"

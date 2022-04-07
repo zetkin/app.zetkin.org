@@ -78,23 +78,44 @@ const JourneyDetailsPage: PageWithLayout<JourneyDetailsPageProps> = ({
       <Box display="flex" flexDirection="row" justifyContent="space-between">
         <Box width="50%">
           <JourneyInstanceSummary journeyInstance={journeyInstance} />
+          <Divider style={{ margin: '2rem 0 2rem 0' }} />
         </Box>
         <Box pr={3} width="30%">
-          <Typography>
+          <Typography
+            style={{
+              paddingBottom: '1rem',
+            }}
+            variant="h6"
+          >
             <Msg id="pages.organizeJourneyInstance.assignedTo" />
           </Typography>
           <Divider />
-          <Typography>
+          <Typography
+            style={{
+              padding: '1rem 0 1rem 0',
+            }}
+            variant="h6"
+          >
             <Msg id="pages.organizeJourneyInstance.members" />
           </Typography>
           <Divider />
-          <Typography>
+          <Typography
+            style={{
+              padding: '1rem 0 1rem 0',
+            }}
+            variant="h6"
+          >
             <Msg id="pages.organizeJourneyInstance.tags" />
           </Typography>
           <Divider />
           {journeyInstance.milestones && (
             <>
-              <Typography>
+              <Typography
+                style={{
+                  padding: '1rem 0 1rem 0',
+                }}
+                variant="h6"
+              >
                 <Msg id="pages.organizeJourneyInstance.milestones" />
               </Typography>
               <JourneyMilestoneProgress
