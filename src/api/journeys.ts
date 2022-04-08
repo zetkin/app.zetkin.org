@@ -1,7 +1,4 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { ScaffoldedContext } from 'utils/next';
-
-import ClarasOnboarding from '../../playwright/mockData/orgs/KPD/journeys/instances/ClarasOnboarding';
 import { TagMetadata } from '../utils/getTagMetadata';
 import {
   createPrefetch,
@@ -42,7 +39,6 @@ export const journeyInstancesResource = (orgId: string, journeyId: string) => {
   };
 };
 
-//TODO: remove dummy data
 export const journeyInstanceResource = (
   orgId: string,
   journeyId: string,
@@ -52,13 +48,8 @@ export const journeyInstanceResource = (
   const url = `/organize/${orgId}/journeys/${journeyId}/instances/${instanceId}`;
 
   return {
-    //prefetch: createPrefetch<ZetkinJourneyInstance>(key,url),
-    prefetch: async (ctx?: ScaffoldedContext) => ({
-      ctx,
-      state: { status: 'success' },
-    }),
-    //useQuery: createUseQuery<ZetkinJourneyInstance>(key, url),
-    useQuery: () => ({ data: ClarasOnboarding, key, url }),
+    prefetch: createPrefetch<ZetkinJourneyInstance>(key, url),
+    useQuery: createUseQuery<ZetkinJourneyInstance>(key, url),
     useUpdate: createUseMutation<
       Partial<ZetkinJourneyInstance>,
       ZetkinJourneyInstance
