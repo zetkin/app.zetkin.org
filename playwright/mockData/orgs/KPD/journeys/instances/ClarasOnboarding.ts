@@ -3,6 +3,7 @@ import ClaraZetkin from '../../people/ClaraZetkin';
 import MemberOnboarding from '../MemberOnboarding';
 import PlaysGuitarTag from '../../tags/PlaysGuitar';
 import { ZetkinJourneyInstance } from 'types/zetkin';
+import { dance, karaoke, lipsync } from '../JourneyMilestones';
 
 const ClarasOnboarding: ZetkinJourneyInstance = {
   assigned_to: [ClaraZetkin],
@@ -12,28 +13,8 @@ const ClarasOnboarding: ZetkinJourneyInstance = {
     id: MemberOnboarding.id,
     title: MemberOnboarding.singular_name,
   },
-  milestones: [
-    {
-      deadline: '2022-03-06T14:53:15',
-      status: 'completed',
-      title: 'Sign up for newsletter',
-    },
-    {
-      deadline: '2022-05-23T12:53:15',
-      status: 'unfinished',
-      title: 'Go to open meeting',
-    },
-    {
-      deadline: '2022-07-11T12:00:00',
-      status: 'unfinished',
-      title: 'Fill out member survey',
-    },
-  ],
-  next_milestone: {
-    deadline: '2022-05-23T12:53:15',
-    status: 'unfinished',
-    title: 'Go to open meeting',
-  },
+  milestones: [karaoke, lipsync, dance],
+  next_milestone: karaoke,
   people: [ClaraZetkin],
   status: 'open',
   summary:
