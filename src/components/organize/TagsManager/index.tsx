@@ -14,8 +14,9 @@ import TagsList from './TagsList';
 const TagsManager: React.FunctionComponent<{
   appliedTags: ZetkinTag[];
   availableTags: ZetkinTag[];
+  onRemove: (tag: ZetkinTag) => void;
   onSelect: (tag: ZetkinTag) => void;
-}> = ({ availableTags, appliedTags, onSelect }) => {
+}> = ({ availableTags, appliedTags, onRemove, onSelect }) => {
   const intl = useIntl();
 
   const [addTagButton, setAddTagButton] = useState<HTMLElement | null>(null);
@@ -33,7 +34,11 @@ const TagsManager: React.FunctionComponent<{
     >
       <Box>
         {appliedTags.length > 0 ? (
-          <TagsList isGrouped={isGrouped} tags={appliedTags} />
+          <TagsList
+            isGrouped={isGrouped}
+            onRemove={onRemove}
+            tags={appliedTags}
+          />
         ) : (
           // If no tags
           <Typography>
