@@ -61,7 +61,7 @@ test.describe('Person Profile Page', () => {
           []
         );
         const { log: putTagLog } = moxy.setZetkinApiMock(
-          '/orgs/1/people/1/tags/1',
+          `/orgs/1/people/${ClaraZetkin.id}/tags/${ActivistTag.id}`,
           'put'
         );
 
@@ -97,7 +97,12 @@ test.describe('Person Profile Page', () => {
           'get',
           []
         );
-        moxy.setZetkinApiMock('/orgs/1/people/1/tags/1', 'put', undefined, 401);
+        moxy.setZetkinApiMock(
+          `/orgs/1/people/${ClaraZetkin.id}/tags/${ActivistTag.id}`,
+          'put',
+          undefined,
+          401
+        );
 
         await page.goto(appUri + `/organize/1/people/${ClaraZetkin.id}`);
 
@@ -127,7 +132,7 @@ test.describe('Person Profile Page', () => {
           [ActivistTag, CodingSkillsTag]
         );
         const { log: deleteTagLog } = moxy.setZetkinApiMock(
-          `/orgs/1/people/1/tags/1`,
+          `/orgs/1/people/${ClaraZetkin.id}/tags/${ActivistTag.id}`,
           'delete'
         );
 
@@ -140,44 +145,41 @@ test.describe('Person Profile Page', () => {
           CodingSkillsTag,
         ]);
 
-        // Select tag
-        await page.click('text=Activist');
-
-        // Expect to have made request to put tag
+        // Expect to have made request to delete tag
         expect(deleteTagLog().length).toEqual(1);
       });
 
-      // test('shows error when adding tag fails', async ({
-      //   moxy,
-      //   page,
-      //   appUri,
-      // }) => {
-      //   moxy.setZetkinApiMock(`/orgs/${KPD.id}/people/tags`, 'get', [
-      //     ActivistTag,
-      //     CodingSkillsTag,
-      //   ]);
-      //   moxy.setZetkinApiMock(
-      //     `/orgs/${KPD.id}/people/${ClaraZetkin.id}/tags`,
-      //     'get',
-      //     []
-      //   );
-      //   moxy.setZetkinApiMock('/orgs/1/people/1/tags/1', 'put', undefined, 401);
+      test('shows error when adding tag fails', async ({
+        moxy,
+        page,
+        appUri,
+      }) => {
+        moxy.setZetkinApiMock(`/orgs/${KPD.id}/people/tags`, 'get', [
+          ActivistTag,
+          CodingSkillsTag,
+        ]);
+        moxy.setZetkinApiMock(
+          `/orgs/${KPD.id}/people/${ClaraZetkin.id}/tags`,
+          'get',
+          [ActivistTag, CodingSkillsTag]
+        );
+        moxy.setZetkinApiMock(
+          `/orgs/1/people/${ClaraZetkin.id}/tags/${ActivistTag.id}`,
+          'delete',
+          undefined,
+          401
+        );
 
-      //   await page.goto(appUri + `/organize/1/people/${ClaraZetkin.id}`);
+        await page.goto(appUri + `/organize/1/people/${ClaraZetkin.id}`);
 
-      //   await page.locator('text=Add tag').click();
-      //   await page
-      //     .locator('data-testid=TagsManager-tagSelectTextField')
-      //     .click();
+        await page.locator(`text="${ActivistTag.title}"`).hover();
+        await page.locator('.MuiChip-deleteIcon').click();
 
-      //   // Select tag
-      //   await page.click('text=Activist');
-
-      //   // Show error
-      //   expect(
-      //     await page.locator('data-testid=Snackbar-error').count()
-      //   ).toEqual(1);
-      // });
+        // Show error
+        expect(
+          await page.locator('data-testid=Snackbar-error').count()
+        ).toEqual(1);
+      });
     });
   });
 });
