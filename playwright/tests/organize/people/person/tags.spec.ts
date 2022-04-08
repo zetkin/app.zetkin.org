@@ -115,5 +115,69 @@ test.describe('Person Profile Page', () => {
         ).toEqual(1);
       });
     });
+    test.describe('unassigning tags', () => {
+      test('can remove a tag from person', async ({ page, appUri, moxy }) => {
+        moxy.setZetkinApiMock(`/orgs/${KPD.id}/people/tags`, 'get', [
+          ActivistTag,
+          CodingSkillsTag,
+        ]);
+        moxy.setZetkinApiMock(
+          `/orgs/${KPD.id}/people/${ClaraZetkin.id}/tags`,
+          'get',
+          [ActivistTag, CodingSkillsTag]
+        );
+        const { log: deleteTagLog } = moxy.setZetkinApiMock(
+          `/orgs/1/people/1/tags/1`,
+          'delete'
+        );
+
+        await page.goto(appUri + `/organize/1/people/${ClaraZetkin.id}`);
+
+        await page.locator(`text="${ActivistTag.title}"`).hover();
+        await page.locator('.MuiChip-deleteIcon').click();
+
+        moxy.setZetkinApiMock(`/orgs/1/people/${ClaraZetkin.id}/tags`, 'get', [
+          CodingSkillsTag,
+        ]);
+
+        // Select tag
+        await page.click('text=Activist');
+
+        // Expect to have made request to put tag
+        expect(deleteTagLog().length).toEqual(1);
+      });
+
+      // test('shows error when adding tag fails', async ({
+      //   moxy,
+      //   page,
+      //   appUri,
+      // }) => {
+      //   moxy.setZetkinApiMock(`/orgs/${KPD.id}/people/tags`, 'get', [
+      //     ActivistTag,
+      //     CodingSkillsTag,
+      //   ]);
+      //   moxy.setZetkinApiMock(
+      //     `/orgs/${KPD.id}/people/${ClaraZetkin.id}/tags`,
+      //     'get',
+      //     []
+      //   );
+      //   moxy.setZetkinApiMock('/orgs/1/people/1/tags/1', 'put', undefined, 401);
+
+      //   await page.goto(appUri + `/organize/1/people/${ClaraZetkin.id}`);
+
+      //   await page.locator('text=Add tag').click();
+      //   await page
+      //     .locator('data-testid=TagsManager-tagSelectTextField')
+      //     .click();
+
+      //   // Select tag
+      //   await page.click('text=Activist');
+
+      //   // Show error
+      //   expect(
+      //     await page.locator('data-testid=Snackbar-error').count()
+      //   ).toEqual(1);
+      // });
+    });
   });
 });

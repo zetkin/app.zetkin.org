@@ -6,7 +6,7 @@ const CodingSkillsTag: ZetkinTag = {
   description: 'Has coding experience',
   group: { id: 2, title: 'Skills' },
   hidden: false,
-  id: 1,
+  id: 2,
   organization: { id: KPD.id, title: KPD.title },
   title: 'Coding',
 };
