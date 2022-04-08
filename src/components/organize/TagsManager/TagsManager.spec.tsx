@@ -131,7 +131,7 @@ describe('<TagsManager />', () => {
     // Check that callback has been called
     expect(onSelect).toHaveBeenCalledWith(tag1);
   });
-  it.only('can remove a tag', () => {
+  it('can remove a tag', () => {
     const onRemove = jest.fn((tag: ZetkinTag) => tag);
 
     const tag1 = mockTag({
@@ -140,7 +140,7 @@ describe('<TagsManager />', () => {
       title: 'Phone banking',
     });
 
-    const { getByText, getByTestId } = render(
+    const { getByText, container } = render(
       <TagsManager
         appliedTags={[tag1]}
         availableTags={[tag1]}
@@ -154,8 +154,11 @@ describe('<TagsManager />', () => {
     hover(tagOption);
 
     // Click delete button
-    const removeTagButton = getByTestId(`TagChip-removeButton-${tag1.id}`);
-    click(removeTagButton);
+    const removeTagButton = container.querySelector(`.MuiChip-deleteIcon`);
+    expect(removeTagButton).not.toBeNull();
+    if (removeTagButton) {
+      click(removeTagButton);
+    }
 
     // Check that callback has been called
     expect(onRemove).toHaveBeenCalledWith(tag1);

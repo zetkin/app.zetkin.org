@@ -16,7 +16,7 @@ const TagChip: React.FunctionComponent<{
         onMouseLeave={() => setHover(false)}
       >
         <Chip
-          onDelete={hover ? onDelete : undefined}
+          onDelete={hover && onDelete ? () => onDelete(tag) : undefined}
           {...chipProps}
           label={tag.title}
           style={{ background: tag.color || '#e1e1e1', ...chipProps?.style }}
