@@ -1,12 +1,12 @@
 import { GridToolbarFilterButton } from '@mui/x-data-grid-pro';
 import { useContext } from 'react';
 import { Add, Launch, RemoveCircleOutline } from '@material-ui/icons';
-import { Box, Button, makeStyles, Slide, Tooltip } from '@material-ui/core';
+import { Box, Button, Slide, Tooltip } from '@material-ui/core';
 import { FormattedMessage, useIntl } from 'react-intl';
 
 import { ConfirmDialogContext } from 'hooks/ConfirmDialogProvider';
-import ViewDataTableSearch from './ViewDataTableSearch';
-import ViewDataTableSorting from './ViewDataTableSorting';
+import DataTableSearch from 'components/dataTables/DataTableSearch';
+import DataTableSorting from 'components/dataTables/DataTableSorting';
 import { GridColDef, GridSortModel } from '@mui/x-data-grid-pro';
 
 export interface ViewDataTableToolbarProps {
@@ -22,16 +22,6 @@ export interface ViewDataTableToolbarProps {
   sortModel: GridSortModel;
 }
 
-const useStyles = makeStyles({
-  main: {
-    '& > *': {
-      margin: '0 4px',
-    },
-    marginRight: 15,
-    marginTop: 5,
-  },
-});
-
 const ViewDataTableToolbar: React.FunctionComponent<
   ViewDataTableToolbarProps
 > = ({
@@ -46,7 +36,6 @@ const ViewDataTableToolbar: React.FunctionComponent<
   setSortModel,
   sortModel,
 }) => {
-  const classes = useStyles();
   const intl = useIntl();
   const { showConfirmDialog } = useContext(ConfirmDialogContext);
 
@@ -60,7 +49,7 @@ const ViewDataTableToolbar: React.FunctionComponent<
     });
   };
   return (
-    <Box className={classes.main} display="flex" justifyContent="flex-end">
+    <Box role="toolbar">
       <Slide direction="left" in={!!selection.length} timeout={150}>
         <Button
           data-testid="ViewDataTableToolbar-createFromSelection"
@@ -101,7 +90,7 @@ const ViewDataTableToolbar: React.FunctionComponent<
           button: { color: 'default', size: 'medium' },
         }}
       />
-      <ViewDataTableSorting {...{ gridColumns, setSortModel, sortModel }} />
+      <DataTableSorting {...{ gridColumns, setSortModel, sortModel }} />
       <Button
         data-testid="ViewDataTableToolbar-createColumn"
         disabled={disabled}
@@ -110,7 +99,7 @@ const ViewDataTableToolbar: React.FunctionComponent<
       >
         <FormattedMessage id="misc.views.toolbar.createColumn" />
       </Button>
-      <ViewDataTableSearch
+      <DataTableSearch
         onChange={(searchString) => setQuickSearch(searchString)}
       />
     </Box>

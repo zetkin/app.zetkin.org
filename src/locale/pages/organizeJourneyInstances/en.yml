@@ -1,0 +1,13 @@
+# eslint-disable yml/key-name-casing
+# Reason for the above: the Zetkin API uses snake_case for fields, and
+# we would like to keep the native names in some of our yaml files
+columns:
+  assigned_to: Assigned
+  created_at: Created
+  id: Title
+  next_milestone_deadline: Next milestone deadline
+  next_milestone_title: Next milestone
+  people: People
+  summary: Summary
+  tagsFree: Tags
+  updated_at: Last updated

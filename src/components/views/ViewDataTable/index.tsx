@@ -1,4 +1,4 @@
-import isEqual from 'lodash.isequal';
+import { isEqual } from 'lodash';
 import NextLink from 'next/link';
 import NProgress from 'nprogress';
 import { useIntl } from 'react-intl';
