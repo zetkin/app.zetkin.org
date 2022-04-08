@@ -9,7 +9,7 @@ import { taskResource } from 'api/tasks';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
-  localeScope: ['layout.organize', 'pages.organizeCampaigns', 'misc'],
+  localeScope: ['layout.organize', 'pages.organizeCampaigns'],
 };
 
 export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {

@@ -22,7 +22,7 @@ import { ZetkinAssignedTask, ZetkinTask } from 'types/zetkin';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
-  localeScope: ['layout.organize', 'pages.assignees', 'misc'],
+  localeScope: ['layout.organize', 'pages.assignees'],
 };
 
 export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {

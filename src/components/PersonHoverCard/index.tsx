@@ -1,40 +1,37 @@
 import MailIcon from '@material-ui/icons/Mail';
 import PhoneIcon from '@material-ui/icons/Phone';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
-import { Box, Card, Popover, Tooltip, Typography } from '@material-ui/core';
+import { Box, Card, Fade, Grid, Popper, Typography } from '@material-ui/core';
+import { useEffect, useState } from 'react';
 
+import CopyToClipboard from 'components/CopyToClipboard';
+import TagsList from 'components/organize/TagsManager/TagsList';
 import ZetkinPerson from 'components/ZetkinPerson';
-import { ZetkinTag } from 'types/zetkin';
+import { ZetkinPerson as ZetkinPersonType } from 'types/zetkin';
 import { personResource, personTagsResource } from 'api/people';
-
-const TagChip: React.FunctionComponent<{ tag: ZetkinTag }> = ({ tag }) => {
-  return (
-    <Tooltip arrow title={tag.description}>
-      <Box
-        bgcolor={tag.color || '#e1e1e1'}
-        borderRadius="18px"
-        fontSize={13}
-        px={2}
-        py={0.7}
-      >
-        {tag.title}
-      </Box>
-    </Tooltip>
-  );
-};
 
 const PersonHoverCard: React.FunctionComponent<{ personId: number }> = ({
   children,
   personId,
 }) => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  const [open, setOpen] = useState(false);
   const openPopover = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
     setAnchorEl(event.currentTarget);
   };
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (anchorEl) {
+        setOpen(true);
+      }
+    }, 400);
+    return () => clearTimeout(timer);
+  }, [anchorEl]);
+
   const closePopover = () => {
     setAnchorEl(null);
+    setOpen(false);
   };
 
   const { orgId } = useRouter().query;
@@ -49,67 +46,66 @@ const PersonHoverCard: React.FunctionComponent<{ personId: number }> = ({
 
   if (person) {
     return (
-      <Box onMouseEnter={openPopover} style={{ display: 'flex' }}>
+      <Box
+        onMouseEnter={openPopover}
+        onMouseLeave={closePopover}
+        style={{ display: 'flex' }}
+      >
         {children}
-        <Popover
+        <Popper
           anchorEl={anchorEl}
-          anchorOrigin={{
-            horizontal: 'left',
-            vertical: 'top',
-          }}
-          disableRestoreFocus
           id="person-hover-card"
-          onClose={closePopover}
-          open={Boolean(anchorEl)}
-          transformOrigin={{
-            horizontal: 'left',
-            vertical: 'bottom',
+          modifiers={{
+            preventOverflow: {
+              boundariesElement: 'scrollParent',
+              enabled: true,
+            },
           }}
+          open={open}
         >
-          <Card>
-            <Box m={2} width="25rem">
-              <ZetkinPerson
-                id={person?.id}
-                name={`${person?.first_name} ${person?.last_name}`}
-              />
-              {tags && (
-                //filter for only non-hidden tags?
-                <Box display="flex" flexDirection="row" pt={1}>
-                  {tags.map((tag, index) => (
-                    <TagChip key={index} tag={tag} />
+          <Fade in={open} timeout={200}>
+            <Card elevation={5} style={{ padding: 24 }} variant="elevation">
+              <Grid
+                container
+                direction="column"
+                spacing={2}
+                style={{ width: '25rem' }}
+              >
+                <Grid item>
+                  <ZetkinPerson
+                    id={person?.id}
+                    name={`${person?.first_name} ${person?.last_name}`}
+                  />
+                </Grid>
+                {tags && (
+                  <Grid item>
+                    <TagsList isGrouped={false} tags={tags} />
+                  </Grid>
+                )}
+                {['phone', 'alt_phone', 'email']
+                  .filter((field) => !!person[field as keyof ZetkinPersonType])
+                  .map((field) => (
+                    <Grid key={field} container item>
+                      <CopyToClipboard
+                        copyText={person[field as keyof ZetkinPersonType]}
+                      >
+                        <Box display="flex" flexDirection="row">
+                          {field.includes('mail') ? (
+                            <MailIcon color="secondary" />
+                          ) : (
+                            <PhoneIcon color="secondary" />
+                          )}
+                          <Typography style={{ marginLeft: '1.5rem' }}>
+                            {person[field as keyof ZetkinPersonType]}
+                          </Typography>
+                        </Box>
+                      </CopyToClipboard>
+                    </Grid>
                   ))}
-                </Box>
-              )}
-              {person.phone && (
-                <Box display="flex" flexDirection="row" pl="1rem" pt="1.5rem">
-                  <PhoneIcon
-                    color="secondary"
-                    style={{ marginRight: '1.5rem' }}
-                  />
-                  <Typography>{person.phone}</Typography>
-                </Box>
-              )}
-              {person.alt_phone && (
-                <Box display="flex" flexDirection="row" pl="1rem" pt="1.5rem">
-                  <PhoneIcon
-                    color="secondary"
-                    style={{ marginRight: '1.5rem' }}
-                  />
-                  <Typography>{person.alt_phone}</Typography>
-                </Box>
-              )}
-              {person.email && (
-                <Box display="flex" flexDirection="row" pl="1rem" pt="1.5rem">
-                  <MailIcon
-                    color="secondary"
-                    style={{ marginRight: '1.5rem' }}
-                  />
-                  <Typography>{person.email}</Typography>
-                </Box>
-              )}
-            </Box>
-          </Card>
-        </Popover>
+              </Grid>
+            </Card>
+          </Fade>
+        </Popper>
       </Box>
     );
   } else {
