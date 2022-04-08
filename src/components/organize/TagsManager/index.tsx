@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/no-autofocus */
 import { Add } from '@material-ui/icons';
 import { useState } from 'react';
 import { Box, Button, Popover, Typography } from '@material-ui/core';

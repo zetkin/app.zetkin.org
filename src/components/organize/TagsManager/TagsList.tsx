@@ -33,7 +33,7 @@ const TagsList: React.FunctionComponent<{
               style={{ gap: 8 }}
             >
               {group.tags.map((tag, i) => {
-                return <TagChip key={i} onClickRemove={onRemove} tag={tag} />;
+                return <TagChip key={i} onDelete={onRemove} tag={tag} />;
               })}
             </Box>
           </Box>
@@ -46,7 +46,7 @@ const TagsList: React.FunctionComponent<{
   return (
     <Box display="flex" flexWrap="wrap" style={{ gap: 8 }}>
       {tags.map((tag, i) => {
-        return <TagChip key={i} tag={tag} />;
+        return <TagChip key={i} onDelete={onRemove} tag={tag} />;
       })}
     </Box>
   );

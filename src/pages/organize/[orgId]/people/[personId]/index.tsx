@@ -90,6 +90,7 @@ const PersonProfilePage: PageWithLayout<PersonPageProps> = (props) => {
             <TagsManager
               appliedTags={personTagsQuery.data || []}
               availableTags={organizationTagsQuery.data || []}
+              onRemove={(tag) => tag}
               onSelect={(tag) =>
                 addTagMutation.mutate(tag.id, {
                   onError: () => showSnackbar('error'),
