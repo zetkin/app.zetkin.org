@@ -1,7 +1,7 @@
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
-import { FormattedMessage as Msg } from 'react-intl';
-import { Divider, Grid, Typography } from '@material-ui/core';
+import { useIntl } from 'react-intl';
+import { Divider, Grid } from '@material-ui/core';
 
 import JourneyInstanceLayout from 'layout/organize/JourneyInstanceLayout';
 import { journeyInstanceResource } from 'api/journeys';
@@ -11,6 +11,7 @@ import { organizationResource } from 'api/organizations';
 import { PageWithLayout } from 'types';
 import { scaffold } from 'utils/next';
 import { ZetkinJourneyInstance } from 'types/zetkin';
+import ZetkinSection from 'components/ZetkinSection';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -66,6 +67,8 @@ const JourneyDetailsPage: PageWithLayout<JourneyDetailsPageProps> = ({
   ).useQuery();
   const journeyInstance = journeyInstanceQuery.data as ZetkinJourneyInstance;
 
+  const intl = useIntl();
+
   return (
     <>
       <Head>
@@ -75,56 +78,53 @@ const JourneyDetailsPage: PageWithLayout<JourneyDetailsPageProps> = ({
           }`}
         </title>
       </Head>
-      <Grid container justifyContent="space-between">
-        <Grid item lg={6}>
+      <Grid container justifyContent="space-between" spacing={2}>
+        <Grid item md={6}>
           <JourneyInstanceSummary journeyInstance={journeyInstance} />
-          <Divider style={{ margin: '2rem 0 2rem 0' }} />
+          <Divider style={{ marginTop: '2rem' }} />
         </Grid>
-        <Grid item>
-          <Typography
-            style={{
-              paddingBottom: '1rem',
-            }}
-            variant="h6"
-          >
-            <Msg id="pages.organizeJourneyInstance.assignedTo" />
-          </Typography>
-          <Divider />
-          <Typography
-            style={{
-              padding: '1rem 0 1rem 0',
-            }}
-            variant="h6"
-          >
-            <Msg id="pages.organizeJourneyInstance.members" />
-          </Typography>
-          <Divider />
-          <Typography
-            style={{
-              padding: '1rem 0 1rem 0',
-            }}
-            variant="h6"
-          >
-            <Msg id="pages.organizeJourneyInstance.tags" />
-          </Typography>
-          <Divider />
-          {journeyInstance.milestones && (
-            <>
-              <Typography
-                style={{
-                  padding: '1rem 0 1rem 0',
-                }}
-                variant="h6"
-              >
-                <Msg id="pages.organizeJourneyInstance.milestones" />
-              </Typography>
-              <JourneyMilestoneProgress
-                milestones={journeyInstance.milestones}
-                next_milestone={journeyInstance.next_milestone}
-              />
+        <Grid item md={4}>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <ZetkinSection
+                title={intl.formatMessage({
+                  id: 'pages.organizeJourneyInstance.assignedTo',
+                })}
+              ></ZetkinSection>
               <Divider />
-            </>
-          )}
+            </Grid>
+            <Grid item xs={12}>
+              <ZetkinSection
+                title={intl.formatMessage({
+                  id: 'pages.organizeJourneyInstance.members',
+                })}
+              ></ZetkinSection>
+              <Divider />
+            </Grid>
+            <Grid item xs={12}>
+              <ZetkinSection
+                title={intl.formatMessage({
+                  id: 'pages.organizeJourneyInstance.tags',
+                })}
+              ></ZetkinSection>
+              <Divider />
+            </Grid>
+            {journeyInstance.milestones && (
+              <Grid item xs={12}>
+                <ZetkinSection
+                  title={intl.formatMessage({
+                    id: 'pages.organizeJourneyInstance.milestones',
+                  })}
+                >
+                  <JourneyMilestoneProgress
+                    milestones={journeyInstance.milestones}
+                    next_milestone={journeyInstance.next_milestone}
+                  />
+                </ZetkinSection>
+                <Divider />
+              </Grid>
+            )}
+          </Grid>
         </Grid>
       </Grid>
     </>

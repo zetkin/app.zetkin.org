@@ -1,7 +1,5 @@
-import { FormattedMessage as Msg } from 'react-intl';
 import { useRouter } from 'next/router';
 import {
-  Box,
   Button,
   lighten,
   makeStyles,
@@ -10,10 +8,12 @@ import {
 } from '@material-ui/core';
 import { Edit, Save } from '@material-ui/icons';
 import { ExpandLess, ExpandMore } from '@material-ui/icons';
+import { FormattedMessage as Msg, useIntl } from 'react-intl';
 import { useEffect, useRef, useState } from 'react';
 
 import { journeyInstanceResource } from 'api/journeys';
 import { ZetkinJourneyInstance } from 'types/zetkin';
+import ZetkinSection from 'components/ZetkinSection';
 
 const useStyles = makeStyles((theme) => ({
   collapsed: {
@@ -41,6 +41,7 @@ const JourneyInstanceSummary = ({
 }): JSX.Element => {
   const classes = useStyles();
   const { orgId } = useRouter().query;
+  const intl = useIntl();
 
   const editingRef = useRef<HTMLTextAreaElement>(null);
 
@@ -77,17 +78,8 @@ const JourneyInstanceSummary = ({
   };
 
   return (
-    <>
-      <Box
-        style={{
-          alignItems: 'center',
-          display: 'flex',
-          justifyContent: 'space-between',
-        }}
-      >
-        <Typography component="h2" variant="h6">
-          <Msg id="pages.organizeJourneyInstance.summaryHeader" />
-        </Typography>
+    <ZetkinSection
+      action={
         <Button
           color="primary"
           onClick={
@@ -104,7 +96,11 @@ const JourneyInstanceSummary = ({
             }
           />
         </Button>
-      </Box>
+      }
+      title={intl.formatMessage({
+        id: 'pages.organizeJourneyInstance.summaryHeader',
+      })}
+    >
       {editingSummary ? (
         <TextareaAutosize
           ref={editingRef}
@@ -141,7 +137,7 @@ const JourneyInstanceSummary = ({
           )}
         </>
       )}
-    </>
+    </ZetkinSection>
   );
 };
 

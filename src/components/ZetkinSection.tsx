@@ -12,7 +12,7 @@ const ZetkinSection: FunctionComponent<ZetkinSectionProps> = ({
   action,
 }) => {
   return (
-    <Box height={1} width={1}>
+    <Box>
       <Box
         alignItems="center"
         display="flex"
