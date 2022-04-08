@@ -1,7 +1,7 @@
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { FormattedMessage as Msg } from 'react-intl';
-import { Box, Divider, Typography } from '@material-ui/core';
+import { Divider, Grid, Typography } from '@material-ui/core';
 
 import JourneyInstanceLayout from 'layout/organize/JourneyInstanceLayout';
 import { journeyInstanceResource } from 'api/journeys';
@@ -75,12 +75,12 @@ const JourneyDetailsPage: PageWithLayout<JourneyDetailsPageProps> = ({
           }`}
         </title>
       </Head>
-      <Box display="flex" flexDirection="row" justifyContent="space-between">
-        <Box width="50%">
+      <Grid container justifyContent="space-between">
+        <Grid item lg={6}>
           <JourneyInstanceSummary journeyInstance={journeyInstance} />
           <Divider style={{ margin: '2rem 0 2rem 0' }} />
-        </Box>
-        <Box pr={3} width="30%">
+        </Grid>
+        <Grid item>
           <Typography
             style={{
               paddingBottom: '1rem',
@@ -125,8 +125,8 @@ const JourneyDetailsPage: PageWithLayout<JourneyDetailsPageProps> = ({
               <Divider />
             </>
           )}
-        </Box>
-      </Box>
+        </Grid>
+      </Grid>
     </>
   );
 };
