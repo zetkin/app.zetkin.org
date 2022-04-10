@@ -1,4 +1,5 @@
 import { click } from '@testing-library/user-event/dist/click';
+import { hover } from '@testing-library/user-event/dist/hover';
 import { keyboard } from '@testing-library/user-event/dist/keyboard';
 import { render } from 'utils/testing';
 
@@ -7,6 +8,7 @@ import TagsManager from '.';
 import { ZetkinTag } from 'types/zetkin';
 
 const selectTagCallback = jest.fn((tag: ZetkinTag) => tag);
+const removeTagCallback = jest.fn((tag: ZetkinTag) => tag);
 
 describe('<TagsManager />', () => {
   describe('Renders list of tags passed in', () => {
@@ -15,6 +17,7 @@ describe('<TagsManager />', () => {
         <TagsManager
           appliedTags={[]}
           availableTags={[]}
+          onRemove={removeTagCallback}
           onSelect={selectTagCallback}
         />
       );
@@ -27,6 +30,7 @@ describe('<TagsManager />', () => {
         <TagsManager
           appliedTags={[tag1, tag2]}
           availableTags={[tag1, tag2]}
+          onRemove={removeTagCallback}
           onSelect={selectTagCallback}
         />
       );
@@ -73,6 +77,7 @@ describe('<TagsManager />', () => {
       <TagsManager
         appliedTags={tags}
         availableTags={tags}
+        onRemove={removeTagCallback}
         onSelect={selectTagCallback}
       />
     );
@@ -92,7 +97,7 @@ describe('<TagsManager />', () => {
       getByTestId('TagsManager-groupedTags-ungrouped').children.length
     ).toEqual(2);
   });
-  it('can add tag', () => {
+  it('can add a tag', () => {
     const onSelect = jest.fn((tag: ZetkinTag) => tag);
 
     const tag1 = mockTag({
@@ -105,6 +110,7 @@ describe('<TagsManager />', () => {
       <TagsManager
         appliedTags={[]}
         availableTags={[tag1]}
+        onRemove={removeTagCallback}
         onSelect={onSelect}
       />
     );
@@ -124,5 +130,37 @@ describe('<TagsManager />', () => {
 
     // Check that callback has been called
     expect(onSelect).toHaveBeenCalledWith(tag1);
+  });
+  it('can remove a tag', () => {
+    const onRemove = jest.fn((tag: ZetkinTag) => tag);
+
+    const tag1 = mockTag({
+      group: { id: 2, title: 'Skills' },
+      id: 4,
+      title: 'Phone banking',
+    });
+
+    const { getByText, container } = render(
+      <TagsManager
+        appliedTags={[tag1]}
+        availableTags={[tag1]}
+        onRemove={onRemove}
+        onSelect={selectTagCallback}
+      />
+    );
+
+    // Hover tag to remove
+    const tagOption = getByText('Phone banking');
+    hover(tagOption);
+
+    // Click delete button
+    const removeTagButton = container.querySelector(`.MuiChip-deleteIcon`);
+    expect(removeTagButton).not.toBeNull();
+    if (removeTagButton) {
+      click(removeTagButton);
+    }
+
+    // Check that callback has been called
+    expect(onRemove).toHaveBeenCalledWith(tag1);
   });
 });

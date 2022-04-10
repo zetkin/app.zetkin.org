@@ -51,5 +51,6 @@ export const personTagsResource = (orgId: string, personId: string) => {
       `/orgs/${orgId}/people/tags`
     ),
     useQuery: createUseQuery<ZetkinTag[]>(key, url),
+    useRemove: createUseMutationDelete({ key, url }),
   };
 };

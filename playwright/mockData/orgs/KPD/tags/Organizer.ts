@@ -6,7 +6,7 @@ const OrganizerTag: ZetkinTag = {
   description: 'People who organise',
   group: { id: 1, title: 'Political' },
   hidden: false,
-  id: 1,
+  id: 3,
   organization: { id: KPD.id, title: KPD.title },
   title: 'Organiser',
 };

@@ -58,8 +58,10 @@ const PersonProfilePage: PageWithLayout<PersonPageProps> = (props) => {
     useAdd,
     useQuery: usePersonTagsQuery,
     useAvailableTagsQuery,
+    useRemove,
   } = personTagsResource(orgId as string, personId as string);
   const addTagMutation = useAdd();
+  const removeTagMutation = useRemove();
   const personTagsQuery = usePersonTagsQuery();
   const organizationTagsQuery = useAvailableTagsQuery();
   const { data: person } = personResource(
@@ -90,6 +92,11 @@ const PersonProfilePage: PageWithLayout<PersonPageProps> = (props) => {
             <TagsManager
               appliedTags={personTagsQuery.data || []}
               availableTags={organizationTagsQuery.data || []}
+              onRemove={(tag) =>
+                removeTagMutation.mutate(tag.id, {
+                  onError: () => showSnackbar('error'),
+                })
+              }
               onSelect={(tag) =>
                 addTagMutation.mutate(tag.id, {
                   onError: () => showSnackbar('error'),
