@@ -6,7 +6,7 @@ const PlaysGuitarTag: ZetkinTag = {
   description: 'Can strum a cheery tune',
   group: null,
   hidden: false,
-  id: 3,
+  id: 4,
   organization: { id: KPD.id, title: KPD.title },
   title: 'Plays guitar',
 };
