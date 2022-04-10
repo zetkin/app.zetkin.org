@@ -67,7 +67,6 @@ test.describe('Person Profile Page Tags', () => {
       await page.goto(appUri + `/organize/1/people/${ClaraZetkin.id}`);
 
       await page.locator('text=Add tag').click();
-      await page.locator('data-testid=TagsManager-tagSelectTextField').click();
 
       moxy.setZetkinApiMock(`/orgs/1/people/${ClaraZetkin.id}/tags`, 'get', [
         ActivistTag,
@@ -104,7 +103,6 @@ test.describe('Person Profile Page Tags', () => {
       await page.goto(appUri + `/organize/1/people/${ClaraZetkin.id}`);
 
       await page.locator('text=Add tag').click();
-      await page.locator('data-testid=TagsManager-tagSelectTextField').click();
 
       // Select tag
       await page.click('text=Activist');

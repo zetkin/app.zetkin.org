@@ -106,7 +106,7 @@ describe('<TagsManager />', () => {
       title: 'Phone banking',
     });
 
-    const { getByText, getByTestId } = render(
+    const { getByText } = render(
       <TagsManager
         appliedTags={[]}
         availableTags={[tag1]}
@@ -116,10 +116,6 @@ describe('<TagsManager />', () => {
     );
     const addTagButton = getByText('misc.tags.tagsManager.addTag');
     click(addTagButton);
-
-    // Click on input
-    const tagSearch = getByTestId('TagsManager-tagSelectTextField');
-    click(tagSearch);
 
     // Typing searches for tag
     keyboard(tag1.title);
