@@ -1,7 +1,8 @@
 /* eslint-disable jsx-a11y/no-autofocus */
-// import { Add } from '@material-ui/icons';
+import { Add } from '@material-ui/icons';
 import { useAutocomplete } from '@material-ui/lab';
 import { useIntl } from 'react-intl';
+import { useState } from 'react';
 import {
   Box,
   List,
@@ -11,6 +12,7 @@ import {
 } from '@material-ui/core';
 
 import TagChip from './TagChip';
+import TagDialog from './TagDialog';
 import { ZetkinTag } from 'types/zetkin';
 
 interface Group<Option> {
@@ -26,6 +28,7 @@ const TagSelect: React.FunctionComponent<{
   tags: ZetkinTag[];
 }> = ({ disabledTags, tags, onSelect }) => {
   const intl = useIntl();
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   const { getInputProps, getListboxProps, getRootProps, groupedOptions } =
     useAutocomplete({
@@ -81,7 +84,16 @@ const TagSelect: React.FunctionComponent<{
             </List>
           );
         })}
+        <ListItem button onClick={() => setDialogOpen(true)}>
+          <Add />
+          Create Tag
+        </ListItem>
       </List>
+      <TagDialog
+        onClose={() => setDialogOpen(false)}
+        onSubmit={(tag) => tag}
+        open={dialogOpen}
+      />
     </Box>
   );
 };
