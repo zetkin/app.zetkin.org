@@ -9,9 +9,10 @@ import {
 import { Edit, Save } from '@material-ui/icons';
 import { ExpandLess, ExpandMore } from '@material-ui/icons';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
-import { useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 
 import { journeyInstanceResource } from 'api/journeys';
+import SnackbarContext from 'hooks/SnackbarContext';
 import { ZetkinJourneyInstance } from 'types/zetkin';
 import ZetkinSection from 'components/ZetkinSection';
 
@@ -42,6 +43,7 @@ const JourneyInstanceSummary = ({
   const classes = useStyles();
   const { orgId } = useRouter().query;
   const intl = useIntl();
+  const { showSnackbar } = useContext(SnackbarContext);
 
   const editingRef = useRef<HTMLTextAreaElement>(null);
 
@@ -67,6 +69,7 @@ const JourneyInstanceSummary = ({
     patchJourneyInstanceMutation.mutateAsync(
       { summary },
       {
+        onError: () => showSnackbar('error'),
         onSuccess: () => setEditingSummary(false),
       }
     );
@@ -82,6 +85,7 @@ const JourneyInstanceSummary = ({
       action={
         <Button
           color="primary"
+          data-testid="JourneyInstanceSummary-saveEditButton"
           onClick={
             editingSummary ? submitChange : () => setEditingSummary(true)
           }
@@ -105,6 +109,7 @@ const JourneyInstanceSummary = ({
         <TextareaAutosize
           ref={editingRef}
           className={classes.editSummary}
+          data-testid="JourneyInstanceSummary-textArea"
           onChange={(e) => setSummary(e.target.value)}
           value={summary}
         />
