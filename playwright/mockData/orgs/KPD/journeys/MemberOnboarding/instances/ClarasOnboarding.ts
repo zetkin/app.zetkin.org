@@ -1,10 +1,30 @@
-import ActivistTag from '../../../../tags/Activist';
-import ClaraZetkin from '../../../../people/ClaraZetkin';
-import MemberOnboarding from '../../../MemberOnboarding';
-import PlaysGuitarTag from '../../../../tags/PlaysGuitar';
-import { ZetkinJourneyInstance } from '../../../../../../../../src/types/zetkin';
-import milestones, { AttendMeeting } from './milestones';
+import ActivistTag from '../../../tags/Activist';
+import ClaraZetkin from '../../../people/ClaraZetkin';
+import MemberOnboarding from '../../MemberOnboarding';
+import PlaysGuitarTag from '../../../tags/PlaysGuitar';
+import { ZetkinJourneyInstance } from '../../../../../../../src/types/zetkin';
+import { ZetkinJourneyMilestone } from '../../../../../../../src/types/zetkin';
 
+// Milestones
+const AttendMeeting: ZetkinJourneyMilestone = {
+  deadline: '2022-06-18T00:29:12+02:00',
+  status: 'unfinished',
+  title: 'Attend a branch meeting',
+};
+
+const AttendTraining: ZetkinJourneyMilestone = {
+  deadline: '2022-05-16T00:29:12+02:00',
+  status: 'unfinished',
+  title: 'Attend a training',
+};
+
+const MeetBranchSec: ZetkinJourneyMilestone = {
+  deadline: '2022-04-20T00:29:12+02:00',
+  status: 'unfinished',
+  title: 'Meet the branch secretary',
+};
+
+// Journey Instance
 const ClarasOnboarding: ZetkinJourneyInstance = {
   assigned_to: [ClaraZetkin],
   created_at: '2022-02-01T14:53:15',
@@ -13,7 +33,7 @@ const ClarasOnboarding: ZetkinJourneyInstance = {
     id: MemberOnboarding.id,
     title: MemberOnboarding.singular_name,
   },
-  milestones: milestones,
+  milestones: [AttendMeeting, AttendTraining, MeetBranchSec],
   next_milestone: AttendMeeting,
   people: [ClaraZetkin],
   status: 'open',

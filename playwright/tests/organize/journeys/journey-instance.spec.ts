@@ -5,7 +5,7 @@ import ClarasOnboarding from '../../../mockData/orgs/KPD/journeys/MemberOnboardi
 import KPD from '../../../mockData/orgs/KPD';
 import MemberOnboarding from '../../../mockData/orgs/KPD/journeys/MemberOnboarding';
 
-test.describe.only('Journey instance page', () => {
+test.describe('Journey instance page', () => {
   test.beforeEach(async ({ moxy, login }) => {
     login();
     moxy.setZetkinApiMock('/orgs/1', 'get', KPD);
