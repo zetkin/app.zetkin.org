@@ -7,18 +7,18 @@ import mockTag from 'utils/testing/mocks/mockTag';
 import TagsManager from '.';
 import { ZetkinTag } from 'types/zetkin';
 
-const selectTagCallback = jest.fn((tag: ZetkinTag) => tag);
-const removeTagCallback = jest.fn((tag: ZetkinTag) => tag);
+const assignTagCallback = jest.fn((tag: ZetkinTag) => tag);
+const unassignTagCallback = jest.fn((tag: ZetkinTag) => tag);
 
 describe('<TagsManager />', () => {
   describe('Renders list of tags passed in', () => {
     it('informs user if no tags applied', () => {
       const { getByText } = render(
         <TagsManager
-          appliedTags={[]}
+          assignedTags={[]}
           availableTags={[]}
-          onRemove={removeTagCallback}
-          onSelect={selectTagCallback}
+          onAssignTag={assignTagCallback}
+          onUnassignTag={unassignTagCallback}
         />
       );
       expect(getByText('misc.tags.tagsManager.noTags')).toBeTruthy();
@@ -28,10 +28,10 @@ describe('<TagsManager />', () => {
       const tag2 = mockTag({ id: 2, title: 'Activist' });
       const { getByText } = render(
         <TagsManager
-          appliedTags={[tag1, tag2]}
+          assignedTags={[tag1, tag2]}
           availableTags={[tag1, tag2]}
-          onRemove={removeTagCallback}
-          onSelect={selectTagCallback}
+          onAssignTag={assignTagCallback}
+          onUnassignTag={unassignTagCallback}
         />
       );
       expect(getByText('Organizer')).toBeTruthy();
@@ -75,10 +75,10 @@ describe('<TagsManager />', () => {
     ];
     const { getByTestId, getByText } = render(
       <TagsManager
-        appliedTags={tags}
+        assignedTags={tags}
         availableTags={tags}
-        onRemove={removeTagCallback}
-        onSelect={selectTagCallback}
+        onAssignTag={assignTagCallback}
+        onUnassignTag={unassignTagCallback}
       />
     );
     const toggle = getByTestId('TagsManager-groupToggle').firstChild
@@ -98,7 +98,7 @@ describe('<TagsManager />', () => {
     ).toEqual(2);
   });
   it('can add a tag', () => {
-    const onSelect = jest.fn((tag: ZetkinTag) => tag);
+    const onAssignTag = jest.fn((tag: ZetkinTag) => tag);
 
     const tag1 = mockTag({
       group: { id: 2, title: 'Skills' },
@@ -108,10 +108,10 @@ describe('<TagsManager />', () => {
 
     const { getByText } = render(
       <TagsManager
-        appliedTags={[]}
+        assignedTags={[]}
         availableTags={[tag1]}
-        onRemove={removeTagCallback}
-        onSelect={onSelect}
+        onAssignTag={onAssignTag}
+        onUnassignTag={unassignTagCallback}
       />
     );
     const addTagButton = getByText('misc.tags.tagsManager.addTag');
@@ -125,10 +125,10 @@ describe('<TagsManager />', () => {
     click(tagOption);
 
     // Check that callback has been called
-    expect(onSelect).toHaveBeenCalledWith(tag1);
+    expect(onAssignTag).toHaveBeenCalledWith(tag1);
   });
   it('can remove a tag', () => {
-    const onRemove = jest.fn((tag: ZetkinTag) => tag);
+    const onUnassignTag = jest.fn((tag: ZetkinTag) => tag);
 
     const tag1 = mockTag({
       group: { id: 2, title: 'Skills' },
@@ -138,10 +138,10 @@ describe('<TagsManager />', () => {
 
     const { getByText, container } = render(
       <TagsManager
-        appliedTags={[tag1]}
+        assignedTags={[tag1]}
         availableTags={[tag1]}
-        onRemove={onRemove}
-        onSelect={selectTagCallback}
+        onAssignTag={assignTagCallback}
+        onUnassignTag={onUnassignTag}
       />
     );
 
@@ -157,6 +157,6 @@ describe('<TagsManager />', () => {
     }
 
     // Check that callback has been called
-    expect(onRemove).toHaveBeenCalledWith(tag1);
+    expect(onUnassignTag).toHaveBeenCalledWith(tag1);
   });
 });

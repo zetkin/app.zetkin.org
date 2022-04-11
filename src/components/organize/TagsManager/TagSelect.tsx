@@ -2,6 +2,7 @@
 import { Add } from '@material-ui/icons';
 import { useAutocomplete } from '@material-ui/lab';
 import { useIntl } from 'react-intl';
+import { useState } from 'react';
 import {
   Box,
   List,
@@ -9,11 +10,9 @@ import {
   ListSubheader,
   TextField,
 } from '@material-ui/core';
-import { useContext, useState } from 'react';
 
 import TagChip from './TagChip';
 import TagDialog from './TagDialog';
-import TagsManagerContext from './TagsManagerContext';
 import { ZetkinTag } from 'types/zetkin';
 
 interface Group<Option> {
@@ -23,12 +22,13 @@ interface Group<Option> {
   options: Option[];
 }
 
-const TagSelect: React.FunctionComponent = () => {
+const TagSelect: React.FunctionComponent<{
+  disabledTags: ZetkinTag[];
+  onSelect: (tag: ZetkinTag) => void;
+  tags: ZetkinTag[];
+}> = ({ disabledTags, onSelect, tags }) => {
   const intl = useIntl();
   const [dialogOpen, setDialogOpen] = useState(false);
-
-  const { assignedTags, availableTags, onAssignTag } =
-    useContext(TagsManagerContext);
 
   const { getInputProps, getListboxProps, getRootProps, groupedOptions } =
     useAutocomplete({
@@ -39,7 +39,7 @@ const TagSelect: React.FunctionComponent = () => {
           id: 'misc.tags.tagsManager.ungroupedHeader',
         }),
       openOnFocus: true,
-      options: availableTags,
+      options: tags,
     });
 
   return (
@@ -71,10 +71,10 @@ const TagSelect: React.FunctionComponent = () => {
                   <ListItem
                     key={tag.id}
                     button
-                    disabled={assignedTags
-                      .map((assignedTag) => assignedTag.id)
+                    disabled={disabledTags
+                      .map((disabledTags) => disabledTags.id)
                       .includes(tag.id)}
-                    onClick={() => onAssignTag(tag)}
+                    onClick={() => onSelect(tag)}
                     tabIndex={-1}
                   >
                     <TagChip tag={tag} />

@@ -6,10 +6,6 @@ import { ZetkinTag } from 'types/zetkin';
 import { groupTags } from './utils';
 import TagChip from './TagChip';
 
-/**
- *
- * This component can be used on it's own without the TagsManagerContext
- */
 const TagsList: React.FunctionComponent<{
   isGrouped: boolean;
   onUnassignTag?: (tag: ZetkinTag) => void;
