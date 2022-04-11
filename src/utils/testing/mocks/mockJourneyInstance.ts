@@ -1,3 +1,4 @@
+import { milestone } from './mockMilestone';
 import { mockObject } from 'utils/testing/mocks';
 import { person } from './mockPerson';
 import { ZetkinJourneyInstance } from 'types/zetkin';
@@ -6,11 +7,14 @@ const journeyInstance: ZetkinJourneyInstance = {
   assigned_to: [person],
   created_at: '2022-04-01T03:29:12+02:00',
   id: 333,
-  next_milestone: {
-    deadline: '2022-04-18T00:29:12+02:00',
-    title: 'perform lip sync',
+  journey: {
+    id: 1,
+    title: 'Training',
   },
+  milestones: [milestone],
+  next_milestone: milestone,
   people: [person],
+  status: '',
   summary: 'Haohrez uhca evo fup fonruh do vafeesa lida penco rillesven.',
   tags: [],
   title: 'Training ID 1',

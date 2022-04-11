@@ -4,6 +4,7 @@ calendar: Calendar
 campaigns: Campaigns
 events: Events
 insights: Insights
+instances: Instances
 journeys: Journeys
 manage: Manage
 organize: Organize

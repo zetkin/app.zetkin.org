@@ -246,13 +246,22 @@ export interface ZetkinJourneyInstance {
   assigned_to: ZetkinPerson[];
   created_at: string;
   id: number;
-  next_milestone: {
-    deadline: string;
+  journey: {
+    id: number;
     title: string;
-  } | null;
+  };
+  milestones: ZetkinJourneyMilestone[] | null;
+  next_milestone: ZetkinJourneyMilestone | null;
   people: ZetkinPerson[];
+  status: string;
   summary: string;
   tags: Pick<ZetkinTag, 'id' | 'title' | 'group' | 'color' | 'value'>[];
-  title: string;
+  title?: string;
   updated_at: string;
+}
+
+export interface ZetkinJourneyMilestone {
+  deadline: string;
+  title: string;
+  status: string;
 }

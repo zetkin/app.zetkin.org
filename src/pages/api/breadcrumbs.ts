@@ -78,7 +78,14 @@ async function fetchLabel(
     ).then((res) => res.json());
     return view.data.title;
   }
-  // TODO: journeys
+  if (fieldName == 'journeyInstanceId') {
+    const journeyInstance = await apiFetch(
+      `/journey_instances/${fieldValue}`
+    ).then((res) => res.json());
+    return `${
+      journeyInstance.data.title || journeyInstance.data.journey.title
+    } #${journeyInstance.data.id}`;
+  }
   return fieldValue;
 }
 

@@ -1,4 +1,4 @@
-import { dummyTableData } from '../../playwright/mockData/orgs/KPD/journeys/JourneyInstances';
+import { dummyTableData } from '../../playwright/mockData/orgs/KPD/journeys/MarxistTraining/instances';
 import { getTagMetadata } from './getTagMetadata';
 
 describe('getTagMetadata.ts', () => {

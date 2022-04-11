@@ -1,5 +1,5 @@
-import KPD from '..';
-import { ZetkinJourney } from '../../../../../src/types/zetkin';
+import KPD from '../..';
+import { ZetkinJourney } from '../../../../../../src/types/zetkin';
 
 const MemberOnboarding: ZetkinJourney = {
   id: 1,

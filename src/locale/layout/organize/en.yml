@@ -9,9 +9,16 @@ header:
     collapse: Collapse
     expand: Expand
 journeys:
+  buttonClose: Close
+  buttonOpen: Open
+  lastActivity: Last activity
+  nextMilestone: Next milestone
+  statusClosed: Closed
+  statusOpen: Open
   tabs:
     manage: Manage
     overview: Overview
+    timeline: Timeline
   title: Journeys
 lists:
   showMore: Show more...
