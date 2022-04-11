@@ -6,11 +6,15 @@ import { ZetkinTag } from 'types/zetkin';
 import { groupTags } from './utils';
 import TagChip from './TagChip';
 
+/**
+ *
+ * This component can be used on it's own without the TagsManagerContext
+ */
 const TagsList: React.FunctionComponent<{
   isGrouped: boolean;
-  onRemove?: (tag: ZetkinTag) => void;
+  onUnassignTag?: (tag: ZetkinTag) => void;
   tags: ZetkinTag[];
-}> = ({ tags, isGrouped, onRemove }) => {
+}> = ({ tags, isGrouped, onUnassignTag }) => {
   const intl = useIntl();
 
   if (isGrouped) {
@@ -33,7 +37,7 @@ const TagsList: React.FunctionComponent<{
               style={{ gap: 8 }}
             >
               {group.tags.map((tag, i) => {
-                return <TagChip key={i} onDelete={onRemove} tag={tag} />;
+                return <TagChip key={i} onDelete={onUnassignTag} tag={tag} />;
               })}
             </Box>
           </Box>
@@ -46,7 +50,7 @@ const TagsList: React.FunctionComponent<{
   return (
     <Box display="flex" flexWrap="wrap" style={{ gap: 8 }}>
       {tags.map((tag, i) => {
-        return <TagChip key={i} onDelete={onRemove} tag={tag} />;
+        return <TagChip key={i} onDelete={onUnassignTag} tag={tag} />;
       })}
     </Box>
   );

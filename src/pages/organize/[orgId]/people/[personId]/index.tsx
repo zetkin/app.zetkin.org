@@ -10,6 +10,7 @@ import PersonOrganizationsCard from 'components/organize/people/PersonOrganizati
 import SinglePersonLayout from 'layout/organize/SinglePersonLayout';
 import SnackbarContext from 'hooks/SnackbarContext';
 import TagsManager from 'components/organize/TagsManager';
+import { TagsManagerContextProvider } from 'components/organize/TagsManager/TagsManagerContext';
 import ZetkinQuery from 'components/ZetkinQuery';
 import { personResource, personTagsResource } from 'api/people';
 import { scaffold, ScaffoldedGetServerSideProps } from 'utils/next';
@@ -89,20 +90,23 @@ const PersonProfilePage: PageWithLayout<PersonPageProps> = (props) => {
         </Grid>
         <Grid item lg={4} xs={12}>
           <ZetkinQuery queries={{ organizationTagsQuery, personTagsQuery }}>
-            <TagsManager
-              appliedTags={personTagsQuery.data || []}
+            <TagsManagerContextProvider
+              assignedTags={personTagsQuery.data || []}
               availableTags={organizationTagsQuery.data || []}
-              onRemove={(tag) =>
-                removeTagMutation.mutate(tag.id, {
-                  onError: () => showSnackbar('error'),
-                })
-              }
-              onSelect={(tag) =>
+              onAssignTag={(tag) =>
                 addTagMutation.mutate(tag.id, {
                   onError: () => showSnackbar('error'),
                 })
               }
-            />
+              onCreateGroup={(tag) => tag}
+              onUnassignTag={(tag) =>
+                removeTagMutation.mutate(tag.id, {
+                  onError: () => showSnackbar('error'),
+                })
+              }
+            >
+              <TagsManager />
+            </TagsManagerContextProvider>
           </ZetkinQuery>
         </Grid>
       </Grid>

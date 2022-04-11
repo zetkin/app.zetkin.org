@@ -2,7 +2,6 @@
 import { Add } from '@material-ui/icons';
 import { useAutocomplete } from '@material-ui/lab';
 import { useIntl } from 'react-intl';
-import { useState } from 'react';
 import {
   Box,
   List,
@@ -10,9 +9,11 @@ import {
   ListSubheader,
   TextField,
 } from '@material-ui/core';
+import { useContext, useState } from 'react';
 
 import TagChip from './TagChip';
 import TagDialog from './TagDialog';
+import TagsManagerContext from './TagsManagerContext';
 import { ZetkinTag } from 'types/zetkin';
 
 interface Group<Option> {
@@ -22,13 +23,12 @@ interface Group<Option> {
   options: Option[];
 }
 
-const TagSelect: React.FunctionComponent<{
-  disabledTags: ZetkinTag[];
-  onSelect: (tag: ZetkinTag) => void;
-  tags: ZetkinTag[];
-}> = ({ disabledTags, tags, onSelect }) => {
+const TagSelect: React.FunctionComponent = () => {
   const intl = useIntl();
   const [dialogOpen, setDialogOpen] = useState(false);
+
+  const { assignedTags, availableTags, onAssignTag } =
+    useContext(TagsManagerContext);
 
   const { getInputProps, getListboxProps, getRootProps, groupedOptions } =
     useAutocomplete({
@@ -39,7 +39,7 @@ const TagSelect: React.FunctionComponent<{
           id: 'misc.tags.tagsManager.ungroupedHeader',
         }),
       openOnFocus: true,
-      options: tags,
+      options: availableTags,
     });
 
   return (
@@ -71,10 +71,10 @@ const TagSelect: React.FunctionComponent<{
                   <ListItem
                     key={tag.id}
                     button
-                    disabled={disabledTags
-                      .map((disabledTag) => disabledTag.id)
+                    disabled={assignedTags
+                      .map((assignedTag) => assignedTag.id)
                       .includes(tag.id)}
-                    onClick={() => onSelect(tag)}
+                    onClick={() => onAssignTag(tag)}
                     tabIndex={-1}
                   >
                     <TagChip tag={tag} />
@@ -89,11 +89,7 @@ const TagSelect: React.FunctionComponent<{
           Create Tag
         </ListItem>
       </List>
-      <TagDialog
-        onClose={() => setDialogOpen(false)}
-        onSubmit={(tag) => tag}
-        open={dialogOpen}
-      />
+      <TagDialog onClose={() => setDialogOpen(false)} open={dialogOpen} />
     </Box>
   );
 };

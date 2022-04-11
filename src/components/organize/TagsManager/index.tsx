@@ -1,25 +1,22 @@
 import { Add } from '@material-ui/icons';
-import { useState } from 'react';
 import { Box, Button, Popover, Typography } from '@material-ui/core';
 import { FormattedMessage, useIntl } from 'react-intl';
+import { useContext, useState } from 'react';
 
 import ZetkinSection from 'components/ZetkinSection';
-import { ZetkinTag } from 'types/zetkin';
 
 import GroupToggle from './GroupToggle';
 import TagSelect from './TagSelect';
 import TagsList from './TagsList';
+import TagsManagerContext from './TagsManagerContext';
 
-const TagsManager: React.FunctionComponent<{
-  appliedTags: ZetkinTag[];
-  availableTags: ZetkinTag[];
-  onRemove: (tag: ZetkinTag) => void;
-  onSelect: (tag: ZetkinTag) => void;
-}> = ({ availableTags, appliedTags, onRemove, onSelect }) => {
+const TagsManager: React.FunctionComponent = () => {
   const intl = useIntl();
 
   const [addTagButton, setAddTagButton] = useState<HTMLElement | null>(null);
   const [isGrouped, setIsGrouped] = useState(false);
+
+  const { assignedTags, onUnassignTag } = useContext(TagsManagerContext);
 
   return (
     <ZetkinSection
@@ -32,11 +29,11 @@ const TagsManager: React.FunctionComponent<{
       title={intl.formatMessage({ id: 'misc.tags.tagsManager.title' })}
     >
       <Box>
-        {appliedTags.length > 0 ? (
+        {assignedTags.length > 0 ? (
           <TagsList
             isGrouped={isGrouped}
-            onRemove={onRemove}
-            tags={appliedTags}
+            onUnassignTag={onUnassignTag}
+            tags={assignedTags}
           />
         ) : (
           // If no tags
@@ -58,11 +55,7 @@ const TagsManager: React.FunctionComponent<{
           onClose={() => setAddTagButton(null)}
           open={Boolean(addTagButton)}
         >
-          <TagSelect
-            disabledTags={appliedTags}
-            onSelect={onSelect}
-            tags={availableTags}
-          />
+          <TagSelect />
         </Popover>
       </Box>
     </ZetkinSection>

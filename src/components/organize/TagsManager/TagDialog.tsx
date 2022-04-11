@@ -1,6 +1,6 @@
 import SubmitCancelButtons from 'components/forms/common/SubmitCancelButtons';
 import { TextField } from '@material-ui/core';
-import { useState } from 'react';
+import { FormEvent, useState } from 'react';
 
 import ZetkinDialog from 'components/ZetkinDialog';
 import { ZetkinTag } from 'types/zetkin';
@@ -8,23 +8,23 @@ import { ZetkinTag } from 'types/zetkin';
 interface TagDialogProps {
   open: boolean;
   onClose: () => void;
-  onSubmit: (tag: Partial<ZetkinTag>) => void;
+  tag?: ZetkinTag;
 }
 
 const TagDialog: React.FunctionComponent<TagDialogProps> = ({
   open,
   onClose,
-  onSubmit,
+  tag,
 }) => {
   const [title, setTitle] = useState('');
 
-  const submitForm = () => {
-    onSubmit({ title });
+  const submitForm = (e: FormEvent<HTMLFormElement>) => {
+    return { e, tag };
   };
 
   return (
     <ZetkinDialog onClose={onClose} open={open} title="Create Tag">
-      <form onSubmit={() => submitForm()}>
+      <form onSubmit={(e) => submitForm(e)}>
         <TextField
           label="Name"
           onChange={(e) => setTitle(e.target.value)}
