@@ -54,6 +54,7 @@ const JourneyInstancesDataTable: FunctionComponent<JourneysDataTableProps> = ({
             sortModel,
           },
         }}
+        disableSelectionOnClick={true}
         onSortModelChange={(model) => {
           // Something strange going on here with infinite state updates, so I added the line below
           if (!isEqual(model, sortModel)) {
