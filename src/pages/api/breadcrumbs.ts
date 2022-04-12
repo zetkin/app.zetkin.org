@@ -78,9 +78,9 @@ async function fetchLabel(
     ).then((res) => res.json());
     return view.data.title;
   }
-  if (fieldName == 'journeyInstanceId') {
+  if (fieldName == 'instanceId') {
     const journeyInstance = await apiFetch(
-      `/journey_instances/${fieldValue}`
+      `/orgs/${orgId}/journey_instances/${fieldValue}`
     ).then((res) => res.json());
     return `${
       journeyInstance.data.title || journeyInstance.data.journey.title

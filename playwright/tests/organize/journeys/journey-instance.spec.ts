@@ -32,7 +32,7 @@ test.describe('Journey instance page', () => {
 
     expect(
       await page.locator(`text=${ClarasOnboarding.title}`).count()
-    ).toEqual(1);
+    ).toEqual(2);
   });
 
   test.describe('Editing the journey summary', () => {
