@@ -28,7 +28,7 @@ test.describe('Journey instance page', () => {
       ClarasOnboarding
     );
 
-    await page.goto(appUri + '/organize/1/journeys/1/instances/1');
+    await page.goto(appUri + '/organize/1/journeys/1/1');
 
     expect(
       await page.locator(`text=${ClarasOnboarding.title}`).count()
@@ -57,7 +57,7 @@ test.describe('Journey instance page', () => {
         { ...ClarasOnboarding, summary: newSummaryText }
       );
 
-      await page.goto(appUri + '/organize/1/journeys/1/instances/1');
+      await page.goto(appUri + '/organize/1/journeys/1/1');
 
       await page.click('data-testid=JourneyInstanceSummary-saveEditButton');
 
@@ -100,7 +100,7 @@ test.describe('Journey instance page', () => {
         401
       );
 
-      await page.goto(appUri + '/organize/1/journeys/1/instances/1');
+      await page.goto(appUri + '/organize/1/journeys/1/1');
 
       await page.click('data-testid=JourneyInstanceSummary-saveEditButton');
 

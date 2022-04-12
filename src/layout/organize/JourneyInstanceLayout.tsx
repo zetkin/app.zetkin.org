@@ -58,7 +58,7 @@ const JourneyInstanceLayout: React.FunctionComponent = ({ children }) => {
 
   return (
     <TabbedLayout
-      baseHref={`/organize/${orgId}/journeys/${journeyId}/instances/${instanceId}`}
+      baseHref={`/organize/${orgId}/journeys/${journeyId}/${instanceId}`}
       defaultTab="/"
       subtitle={
         <Box
