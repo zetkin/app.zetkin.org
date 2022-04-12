@@ -37,7 +37,7 @@ const JourneyCard = ({ journey }: JourneyCardProps): JSX.Element => {
         </Box>
       </CardContent>
       <CardActions>
-        <NextLink href={`/organize/${orgId}/journey/${id}`} passHref>
+        <NextLink href={`/organize/${orgId}/journeys/${id}`} passHref>
           <Link variant="button">
             <Msg id="pages.organizeJourneys.cardCTA" />
           </Link>
