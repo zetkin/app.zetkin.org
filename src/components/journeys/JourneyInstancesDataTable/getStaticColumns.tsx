@@ -41,11 +41,11 @@ export const getStaticColumns = (): GridColDef[] => [
     type: 'date',
   },
   {
-    field: 'next_milestone_title',
+    field: 'nextMilestoneTitle',
     valueGetter: (params) => params.row.next_milestone.title,
   },
   {
-    field: 'next_milestone_deadline',
+    field: 'nextMilestoneDeadline',
     renderCell: (params) => (
       <ZetkinRelativeTime datetime={params.value as string} />
     ),
