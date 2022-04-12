@@ -4,10 +4,10 @@
 columns:
   assignees: Assigned
   created: Created
-  id: Title
   next_milestone_deadline: Next milestone deadline
   next_milestone_title: Next milestone
   subjects: People
   summary: Summary
   tagsFree: Tags
+  title: Title
   updated: Last updated

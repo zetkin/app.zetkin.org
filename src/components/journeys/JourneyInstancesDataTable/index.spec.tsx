@@ -1,18 +1,15 @@
 import JourneyInstancesDataTable from './index';
-import mockJourney from 'utils/testing/mocks/mockJourney';
 import mockJourneyInstance from 'utils/testing/mocks/mockJourneyInstance';
 import { render } from 'utils/testing';
 import { ZetkinJourneyInstance } from 'types/zetkin';
 
 const tagMetadata = { groups: [], valueTags: [] };
-const journey = mockJourney();
 const journeyInstances = [mockJourneyInstance({ assignees: [], subjects: [] })];
 
 describe('JourneyInstancesDataTable.tsx', () => {
   it('Renders with no data', async () => {
     const { getByText } = render(
       <JourneyInstancesDataTable
-        journey={journey}
         journeyInstances={[] as ZetkinJourneyInstance[]}
         tagMetadata={tagMetadata}
       />
@@ -36,7 +33,6 @@ describe('JourneyInstancesDataTable.tsx', () => {
             checkboxSelection: false,
             disableVirtualization: true,
           }}
-          journey={journey}
           journeyInstances={journeyInstances}
           tagMetadata={tagMetadata}
         />

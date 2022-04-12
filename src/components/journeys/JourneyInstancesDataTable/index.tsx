@@ -10,23 +10,21 @@ import getColumns from './getColumns';
 import { getRows } from './getRows';
 import { TagMetadata } from 'utils/getTagMetadata';
 import Toolbar from './Toolbar';
+import { ZetkinJourneyInstance } from 'types/zetkin';
 import { FunctionComponent, useState } from 'react';
-import { ZetkinJourney, ZetkinJourneyInstance } from 'types/zetkin';
 
 interface JourneysDataTableProps {
   dataGridProps?: Partial<DataGridProProps>;
   tagMetadata: TagMetadata;
-  journey: ZetkinJourney;
   journeyInstances: ZetkinJourneyInstance[];
 }
 
 const JourneyInstancesDataTable: FunctionComponent<JourneysDataTableProps> = ({
   dataGridProps,
   tagMetadata,
-  journey,
   journeyInstances,
 }) => {
-  const columns = getColumns(tagMetadata, journey);
+  const columns = getColumns(tagMetadata);
   const [sortModel, setSortModel] = useState<GridSortModel>([]);
   const [quickSearch, setQuickSearch] = useState('');
 

@@ -1,20 +1,25 @@
 import dayjs from 'dayjs';
 import { GridColDef } from '@mui/x-data-grid-pro';
 
+import JourneyInstanceTitle from 'components/journeys/JourneyInstanceTitle';
 import PersonHoverCard from 'components/PersonHoverCard';
 import ZetkinPerson from 'components/ZetkinPerson';
 import ZetkinRelativeTime from 'components/ZetkinRelativeTime';
-import { ZetkinJourney, ZetkinPerson as ZetkinPersonType } from 'types/zetkin';
+import {
+  ZetkinJourneyInstance,
+  ZetkinPerson as ZetkinPersonType,
+} from 'types/zetkin';
 
 // Name concatenation
 const getPeopleString = (people: ZetkinPersonType[]) =>
   people.map((person) => `${person.first_name} ${person.last_name}`).join(', ');
 
-export const getStaticColumns = (journey: ZetkinJourney): GridColDef[] => [
+export const getStaticColumns = (): GridColDef[] => [
   {
-    field: 'id',
-    valueFormatter: (params) => {
-      return `${journey.singular_label} #${params.value}`;
+    field: 'title',
+    renderCell: (params) => {
+      const row = params.row as ZetkinJourneyInstance;
+      return <JourneyInstanceTitle instance={row} />;
     },
   },
   {

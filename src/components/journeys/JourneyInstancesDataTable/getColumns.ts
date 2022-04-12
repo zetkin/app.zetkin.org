@@ -3,13 +3,9 @@ import { GridColDef } from '@mui/x-data-grid-pro';
 import { getStaticColumns } from './getStaticColumns';
 import getTagColumns from './getTagColumns';
 import { TagMetadata } from 'utils/getTagMetadata';
-import { ZetkinJourney } from 'types/zetkin';
 
-const getColumns = (
-  tagMetadata: TagMetadata,
-  journey: ZetkinJourney
-): GridColDef[] => {
-  const staticColumns = getStaticColumns(journey);
+const getColumns = (tagMetadata: TagMetadata): GridColDef[] => {
+  const staticColumns = getStaticColumns();
   return (
     staticColumns
       .splice(0, 2)

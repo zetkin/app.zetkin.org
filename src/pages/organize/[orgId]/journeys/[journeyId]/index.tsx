@@ -74,7 +74,6 @@ const JourneyInstancesOverviewPage: PageWithLayout<
       </Head>
       <ZetkinQuery queries={{ journeyInstancesQuery }}>
         <JourneyInstancesDataTable
-          journey={journey}
           {...(journeyInstancesQuery.data as JourneyInstancesData)}
         />
       </ZetkinQuery>
