@@ -23,7 +23,7 @@ test.describe('Journey instance page', () => {
       MemberOnboarding
     );
     moxy.setZetkinApiMock(
-      `/orgs/${KPD.id}/journeys/${MemberOnboarding.id}/instances/${ClarasOnboarding.id}`,
+      `/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}`,
       'get',
       ClarasOnboarding
     );
@@ -44,7 +44,7 @@ test.describe('Journey instance page', () => {
       );
 
       moxy.setZetkinApiMock(
-        `/orgs/${KPD.id}/journeys/${MemberOnboarding.id}/instances/${ClarasOnboarding.id}`,
+        `/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}`,
         'get',
         ClarasOnboarding
       );
@@ -52,7 +52,7 @@ test.describe('Journey instance page', () => {
       const newSummaryText = 'This is the new summary text. Wow!';
 
       const { log: patchJourneyReqLog } = moxy.setZetkinApiMock(
-        `/orgs/${KPD.id}/journeys/${MemberOnboarding.id}/instances/${ClarasOnboarding.id}`,
+        `/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}`,
         'patch',
         { ...ClarasOnboarding, summary: newSummaryText }
       );
@@ -86,7 +86,7 @@ test.describe('Journey instance page', () => {
       );
 
       moxy.setZetkinApiMock(
-        `/orgs/${KPD.id}/journeys/${MemberOnboarding.id}/instances/${ClarasOnboarding.id}`,
+        `/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}`,
         'get',
         ClarasOnboarding
       );
@@ -94,7 +94,7 @@ test.describe('Journey instance page', () => {
       const newSummaryText = 'This is the new summary text. Wow!';
 
       moxy.setZetkinApiMock(
-        `/orgs/${KPD.id}/journeys/${MemberOnboarding.id}/instances/${ClarasOnboarding.id}`,
+        `/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}`,
         'patch',
         undefined,
         401

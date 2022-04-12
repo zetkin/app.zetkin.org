@@ -19,7 +19,7 @@ const scaffoldOptions = {
 };
 
 export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
-  const { orgId, journeyId, instanceId } = ctx.params!;
+  const { orgId, instanceId } = ctx.params!;
 
   const { state: orgQueryState } = await organizationResource(
     orgId as string
@@ -27,7 +27,6 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
 
   const { state: journeyInstanceQueryState } = await journeyInstanceResource(
     orgId as string,
-    journeyId as string,
     instanceId as string
   ).prefetch(ctx);
 
@@ -38,7 +37,6 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
     return {
       props: {
         instanceId,
-        journeyId,
         orgId,
       },
     };
@@ -51,18 +49,15 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
 
 interface JourneyDetailsPageProps {
   instanceId: string;
-  journeyId: string;
   orgId: string;
 }
 
 const JourneyDetailsPage: PageWithLayout<JourneyDetailsPageProps> = ({
   instanceId,
-  journeyId,
   orgId,
 }) => {
   const journeyInstanceQuery = journeyInstanceResource(
     orgId,
-    journeyId,
     instanceId
   ).useQuery();
   const journeyInstance = journeyInstanceQuery.data as ZetkinJourneyInstance;

@@ -52,7 +52,6 @@ const JourneyInstanceLayout: React.FunctionComponent = ({ children }) => {
 
   const journeyInstanceQuery = journeyInstanceResource(
     orgId as string,
-    journeyId as string,
     instanceId as string
   ).useQuery();
   const journeyInstance = journeyInstanceQuery.data as ZetkinJourneyInstance;
