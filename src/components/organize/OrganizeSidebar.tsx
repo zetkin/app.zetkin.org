@@ -11,7 +11,7 @@ import {
   ListItem,
   Toolbar,
 } from '@material-ui/core';
-import { Event, Home, Map, Menu, People } from '@material-ui/icons/';
+import { Event, Explore, Home, Map, Menu, People } from '@material-ui/icons/';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 
 import ZetkinLogo from '../ZetkinLogo';
@@ -115,6 +115,18 @@ const OrganizeSidebar = (): JSX.Element => {
                 data-test="people-button"
               >
                 <People />
+              </IconButton>
+            </NextLink>
+          </ListItem>
+          <ListItem disableGutters>
+            <NextLink href={`/organize/${orgId}/journeys`} passHref>
+              <IconButton
+                aria-label="Journeys"
+                className={classes.roundButton}
+                color={key.startsWith('/journeys') ? 'primary' : 'secondary'}
+                data-test="people-button"
+              >
+                <Explore />
               </IconButton>
             </NextLink>
           </ListItem>
