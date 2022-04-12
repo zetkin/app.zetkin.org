@@ -7,8 +7,8 @@ const journey: ZetkinJourney = {
     id: 1,
     title: 'Kommunistiche Partei Deutschlands',
   },
-  plural_name: 'Marxist trainings',
-  singular_name: 'Marxist training',
+  plural_label: 'Marxist trainings',
+  singular_label: 'Marxist training',
   stats: {
     closed: 359,
     open: 75,

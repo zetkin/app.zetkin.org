@@ -23,10 +23,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const JourneyStatusChip = ({ status }: { status: string }) => {
+const JourneyStatusChip = ({
+  instance,
+}: {
+  instance: ZetkinJourneyInstance;
+}) => {
   const intl = useIntl();
   const classes = useStyles();
-  return status === 'open' ? (
+  return !instance.closed ? (
     <Chip
       className={classes.openChip}
       label={intl.formatMessage({
@@ -64,10 +68,10 @@ const JourneyInstanceLayout: React.FunctionComponent = ({ children }) => {
             display: 'flex',
           }}
         >
-          <JourneyStatusChip status={journeyInstance.status} />
+          <JourneyStatusChip instance={journeyInstance} />
           <Typography style={{ marginRight: '1rem' }}>
             <Msg id="layout.organize.journeys.lastActivity" />{' '}
-            <ZetkinRelativeTime datetime={journeyInstance.updated_at} />
+            <ZetkinRelativeTime datetime={journeyInstance.updated} />
           </Typography>
           {journeyInstance.next_milestone && (
             <>
@@ -76,14 +80,16 @@ const JourneyInstanceLayout: React.FunctionComponent = ({ children }) => {
                 style={{ marginRight: '0.25rem' }}
               />
               <Typography>
-                {journeyInstance.next_milestone?.title}
+                {journeyInstance.next_milestone.title}
                 {': '}
-                <FormattedDate
-                  day="numeric"
-                  month="long"
-                  value={journeyInstance.next_milestone?.deadline}
-                  year="numeric"
-                />
+                {journeyInstance.next_milestone.deadline && (
+                  <FormattedDate
+                    day="numeric"
+                    month="long"
+                    value={journeyInstance.next_milestone.deadline}
+                    year="numeric"
+                  />
+                )}
               </Typography>
             </>
           )}

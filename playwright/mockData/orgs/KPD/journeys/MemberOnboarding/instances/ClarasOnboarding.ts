@@ -1,42 +1,49 @@
 import ActivistTag from '../../../tags/Activist';
 import ClaraZetkin from '../../../people/ClaraZetkin';
+import KPD from '../../..';
 import MemberOnboarding from '../../MemberOnboarding';
 import PlaysGuitarTag from '../../../tags/PlaysGuitar';
-import { ZetkinJourneyInstance } from '../../../../../../../src/types/zetkin';
-import { ZetkinJourneyMilestone } from '../../../../../../../src/types/zetkin';
+import {
+  ZetkinJourneyInstance,
+  ZetkinJourneyMilestoneStatus,
+} from '../../../../../../../src/types/zetkin';
 
 // Milestones
-const AttendMeeting: ZetkinJourneyMilestone = {
+const AttendMeeting: ZetkinJourneyMilestoneStatus = {
+  completed: null,
   deadline: '2022-06-18T00:29:12+02:00',
-  status: 'unfinished',
+  description: '',
   title: 'Attend a branch meeting',
 };
 
-const AttendTraining: ZetkinJourneyMilestone = {
+const AttendTraining: ZetkinJourneyMilestoneStatus = {
+  completed: null,
   deadline: '2022-05-16T00:29:12+02:00',
-  status: 'unfinished',
+  description: '',
   title: 'Attend a training',
 };
 
-const MeetBranchSec: ZetkinJourneyMilestone = {
+const MeetBranchSec: ZetkinJourneyMilestoneStatus = {
+  completed: null,
   deadline: '2022-04-20T00:29:12+02:00',
-  status: 'unfinished',
+  description: '',
   title: 'Meet the branch secretary',
 };
 
 // Journey Instance
 const ClarasOnboarding: ZetkinJourneyInstance = {
-  assigned_to: [ClaraZetkin],
-  created_at: '2022-02-01T14:53:15',
+  assignees: [ClaraZetkin],
+  closed: null,
+  created: '2022-02-01T14:53:15',
   id: 1,
   journey: {
     id: MemberOnboarding.id,
-    title: MemberOnboarding.singular_name,
+    title: MemberOnboarding.singular_label,
   },
   milestones: [AttendMeeting, AttendTraining, MeetBranchSec],
   next_milestone: AttendMeeting,
-  people: [ClaraZetkin],
-  status: 'open',
+  organization: KPD,
+  subjects: [ClaraZetkin],
   summary: `Nullam sagittis neque augue, vitae lacinia purus auctor eget. Mauris bibendum, 
     dui id fringilla dictum, velit ligula efficitur ligula, vitae aliquet mauris augue 
     vel ante. Mauris vitae ante molestie, pharetra risus vel, suscipit metus. Sed cursus 
@@ -51,7 +58,7 @@ const ClarasOnboarding: ZetkinJourneyInstance = {
      lobortis lacus. Fusce vel tincidunt lectus, sit amet facilisis nisl. `,
   tags: [ActivistTag, PlaysGuitarTag],
   title: "Clara's onboarding",
-  updated_at: '2022-03-21T12:53:15',
+  updated: '2022-03-21T12:53:15',
 };
 
 export default ClarasOnboarding;

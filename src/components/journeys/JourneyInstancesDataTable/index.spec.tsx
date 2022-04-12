@@ -6,7 +6,7 @@ import { ZetkinJourneyInstance } from 'types/zetkin';
 
 const tagMetadata = { groups: [], valueTags: [] };
 const journey = mockJourney();
-const journeyInstances = [mockJourneyInstance({ assigned_to: [], people: [] })];
+const journeyInstances = [mockJourneyInstance({ assignees: [], subjects: [] })];
 
 describe('JourneyInstancesDataTable.tsx', () => {
   it('Renders with no data', async () => {

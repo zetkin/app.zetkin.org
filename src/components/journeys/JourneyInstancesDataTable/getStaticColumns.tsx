@@ -14,22 +14,22 @@ export const getStaticColumns = (journey: ZetkinJourney): GridColDef[] => [
   {
     field: 'id',
     valueFormatter: (params) => {
-      return `${journey.singular_name} #${params.value}`;
+      return `${journey.singular_label} #${params.value}`;
     },
   },
   {
-    field: 'people',
+    field: 'subjects',
     valueGetter: (params) =>
       getPeopleString(params.value as ZetkinPersonType[]),
   },
   {
-    field: 'created_at',
+    field: 'created',
     type: 'date',
     valueFormatter: (params) =>
       dayjs(params.value as string).format('MMMM D, YYYY'),
   },
   {
-    field: 'updated_at',
+    field: 'updated',
     renderCell: (params) => (
       <ZetkinRelativeTime datetime={params.value as string} />
     ),
@@ -51,9 +51,9 @@ export const getStaticColumns = (journey: ZetkinJourney): GridColDef[] => [
     field: 'summary',
   },
   {
-    field: 'assigned_to',
+    field: 'assignees',
     renderCell: (params) =>
-      (params.row.assigned_to as ZetkinPersonType[]).map((person) => (
+      (params.row.assignees as ZetkinPersonType[]).map((person) => (
         <PersonHoverCard key={person.id} personId={person.id}>
           <ZetkinPerson
             containerProps={{ style: { marginRight: 10 } }}
@@ -65,7 +65,7 @@ export const getStaticColumns = (journey: ZetkinJourney): GridColDef[] => [
         </PersonHoverCard>
       )),
     valueGetter: (params) =>
-      (params.row.assigned_to as ZetkinPersonType[])
+      (params.row.assignees as ZetkinPersonType[])
         .map((person) => `${person.first_name} ${person.last_name}`)
         .join(', '),
   },

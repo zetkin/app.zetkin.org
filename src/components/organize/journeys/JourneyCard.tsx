@@ -18,13 +18,13 @@ interface JourneyCardProps {
 
 const JourneyCard = ({ journey }: JourneyCardProps): JSX.Element => {
   const { orgId } = useRouter().query;
-  const { id, singular_name, stats } = journey;
+  const { id, singular_label, stats } = journey;
 
   return (
     <Card data-testid="journey-card">
       <CardContent>
         <Typography gutterBottom noWrap variant="h5">
-          {singular_name}
+          {singular_label}
         </Typography>
         <Box
           sx={{
