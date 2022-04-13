@@ -1,15 +1,16 @@
 import { mockObject } from 'utils/testing/mocks';
-import { ZetkinJourneyMilestone } from 'types/zetkin';
+import { ZetkinJourneyMilestoneStatus } from 'types/zetkin';
 
-const milestone: ZetkinJourneyMilestone = {
+const milestone: ZetkinJourneyMilestoneStatus = {
+  completed: null,
   deadline: '2022-06-18T00:29:12+02:00',
-  status: 'unfinished',
+  description: '',
   title: 'perform lip sync',
 };
 
 const mockMilestone = (
-  overrides?: Partial<ZetkinJourneyMilestone>
-): ZetkinJourneyMilestone => {
+  overrides?: Partial<ZetkinJourneyMilestoneStatus>
+): ZetkinJourneyMilestoneStatus => {
   return mockObject(milestone, overrides);
 };
 

@@ -54,7 +54,6 @@ const JourneyInstanceSummary = ({
 
   const journeyInstanceHooks = journeyInstanceResource(
     orgId as string,
-    journeyInstance.journey.id.toString(),
     journeyInstance.id.toString()
   );
   const patchJourneyInstanceMutation = journeyInstanceHooks.useUpdate();

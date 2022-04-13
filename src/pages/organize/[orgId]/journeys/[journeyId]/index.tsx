@@ -70,11 +70,10 @@ const JourneyInstancesOverviewPage: PageWithLayout<
   return (
     <>
       <Head>
-        <title>{journey.plural_name}</title>
+        <title>{journey.plural_label}</title>
       </Head>
       <ZetkinQuery queries={{ journeyInstancesQuery }}>
         <JourneyInstancesDataTable
-          journey={journey}
           {...(journeyInstancesQuery.data as JourneyInstancesData)}
         />
       </ZetkinQuery>

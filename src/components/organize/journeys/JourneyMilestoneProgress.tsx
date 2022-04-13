@@ -2,18 +2,16 @@ import { Schedule } from '@material-ui/icons';
 import { Box, LinearProgress, Typography } from '@material-ui/core';
 import { FormattedDate, FormattedMessage as Msg } from 'react-intl';
 
-import { ZetkinJourneyMilestone } from 'types/zetkin';
+import { ZetkinJourneyMilestoneStatus } from 'types/zetkin';
 
 const JourneyMilestoneProgress = ({
   milestones,
   next_milestone,
 }: {
-  milestones: ZetkinJourneyMilestone[];
-  next_milestone: ZetkinJourneyMilestone | null;
+  milestones: ZetkinJourneyMilestoneStatus[];
+  next_milestone: ZetkinJourneyMilestoneStatus | null;
 }): JSX.Element => {
-  const completed = milestones.filter(
-    (milestone) => milestone.status === 'completed'
-  );
+  const completed = milestones.filter((milestone) => milestone.completed);
 
   const percentCompleted = Math.floor(
     (completed.length / milestones.length) * 100
@@ -44,12 +42,14 @@ const JourneyMilestoneProgress = ({
           <Typography color="secondary">
             {next_milestone.title}
             {': '}
-            <FormattedDate
-              day="numeric"
-              month="long"
-              value={next_milestone.deadline}
-              year="numeric"
-            />
+            {next_milestone.deadline && (
+              <FormattedDate
+                day="numeric"
+                month="long"
+                value={next_milestone.deadline}
+                year="numeric"
+              />
+            )}
           </Typography>
         </Box>
       )}

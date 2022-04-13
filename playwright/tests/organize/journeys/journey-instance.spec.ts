@@ -23,16 +23,16 @@ test.describe('Journey instance page', () => {
       MemberOnboarding
     );
     moxy.setZetkinApiMock(
-      `/orgs/${KPD.id}/journeys/${MemberOnboarding.id}/instances/${ClarasOnboarding.id}`,
+      `/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}`,
       'get',
       ClarasOnboarding
     );
 
-    await page.goto(appUri + '/organize/1/journeys/1/instances/1');
+    await page.goto(appUri + '/organize/1/journeys/1/1');
 
     expect(
       await page.locator(`text=${ClarasOnboarding.title}`).count()
-    ).toEqual(1);
+    ).toEqual(2);
   });
 
   test.describe('Editing the journey summary', () => {
@@ -44,7 +44,7 @@ test.describe('Journey instance page', () => {
       );
 
       moxy.setZetkinApiMock(
-        `/orgs/${KPD.id}/journeys/${MemberOnboarding.id}/instances/${ClarasOnboarding.id}`,
+        `/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}`,
         'get',
         ClarasOnboarding
       );
@@ -52,12 +52,12 @@ test.describe('Journey instance page', () => {
       const newSummaryText = 'This is the new summary text. Wow!';
 
       const { log: patchJourneyReqLog } = moxy.setZetkinApiMock(
-        `/orgs/${KPD.id}/journeys/${MemberOnboarding.id}/instances/${ClarasOnboarding.id}`,
+        `/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}`,
         'patch',
         { ...ClarasOnboarding, summary: newSummaryText }
       );
 
-      await page.goto(appUri + '/organize/1/journeys/1/instances/1');
+      await page.goto(appUri + '/organize/1/journeys/1/1');
 
       await page.click('data-testid=JourneyInstanceSummary-saveEditButton');
 
@@ -86,7 +86,7 @@ test.describe('Journey instance page', () => {
       );
 
       moxy.setZetkinApiMock(
-        `/orgs/${KPD.id}/journeys/${MemberOnboarding.id}/instances/${ClarasOnboarding.id}`,
+        `/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}`,
         'get',
         ClarasOnboarding
       );
@@ -94,13 +94,13 @@ test.describe('Journey instance page', () => {
       const newSummaryText = 'This is the new summary text. Wow!';
 
       moxy.setZetkinApiMock(
-        `/orgs/${KPD.id}/journeys/${MemberOnboarding.id}/instances/${ClarasOnboarding.id}`,
+        `/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}`,
         'patch',
         undefined,
         401
       );
 
-      await page.goto(appUri + '/organize/1/journeys/1/instances/1');
+      await page.goto(appUri + '/organize/1/journeys/1/1');
 
       await page.click('data-testid=JourneyInstanceSummary-saveEditButton');
 

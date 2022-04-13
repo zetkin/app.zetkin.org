@@ -39,13 +39,9 @@ export const journeyInstancesResource = (orgId: string, journeyId: string) => {
   };
 };
 
-export const journeyInstanceResource = (
-  orgId: string,
-  journeyId: string,
-  instanceId: string
-) => {
-  const key = ['journeyInstance', orgId, journeyId, instanceId];
-  const url = `/orgs/${orgId}/journeys/${journeyId}/instances/${instanceId}`;
+export const journeyInstanceResource = (orgId: string, instanceId: string) => {
+  const key = ['journeyInstance', orgId, instanceId];
+  const url = `/orgs/${orgId}/journey_instances/${instanceId}`;
 
   return {
     prefetch: createPrefetch<ZetkinJourneyInstance>(key, url),

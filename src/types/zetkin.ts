@@ -234,8 +234,8 @@ export type { ZetkinView, ZetkinViewColumn, ZetkinViewRow };
 export interface ZetkinJourney {
   id: number;
   organization: ZetkinOrganization;
-  plural_name: string;
-  singular_name: string;
+  plural_label: string;
+  singular_label: string;
   stats: {
     closed: number;
     open: number;
@@ -243,25 +243,37 @@ export interface ZetkinJourney {
 }
 
 export interface ZetkinJourneyInstance {
-  assigned_to: ZetkinPerson[];
-  created_at: string;
+  assignees: ZetkinPerson[];
+  closed: string | null;
+  created: string;
   id: number;
   journey: {
     id: number;
     title: string;
   };
-  milestones: ZetkinJourneyMilestone[] | null;
-  next_milestone: ZetkinJourneyMilestone | null;
-  people: ZetkinPerson[];
-  status: string;
+  // `milestones` only available when instance is retrieved
+  // as item, not when retrieved as collection
+  milestones?: ZetkinJourneyMilestoneStatus[] | null;
+  next_milestone: ZetkinJourneyMilestoneStatus | null;
+  organization: {
+    id: number;
+    title: string;
+  };
+  subjects: ZetkinPerson[];
   summary: string;
   tags: Pick<ZetkinTag, 'id' | 'title' | 'group' | 'color' | 'value'>[];
   title?: string;
-  updated_at: string;
+  updated: string;
 }
 
 export interface ZetkinJourneyMilestone {
-  deadline: string;
+  description: string;
   title: string;
-  status: string;
+}
+
+export interface ZetkinJourneyMilestoneStatus {
+  completed: string | null;
+  deadline: string | null;
+  description: string;
+  title: string;
 }
