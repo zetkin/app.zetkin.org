@@ -196,6 +196,13 @@ export interface ZetkinActivity {
   info_text: string | null;
 }
 
+export interface ZetkinTagGroup {
+  id: number;
+  title: string;
+  description: string;
+  organization: ZetkinOrganization;
+}
+
 export interface ZetkinTag {
   id: number;
   title: string;
@@ -203,7 +210,7 @@ export interface ZetkinTag {
   hidden: boolean;
   organization: ZetkinOrganization;
   color: string | null;
-  group: { id: number; title: string } | null;
+  group: ZetkinTagGroup | null;
   value?: string | number;
 }
 
@@ -221,15 +228,6 @@ export interface ZetkinDataField {
   type: CUSTOM_FIELD_TYPE;
   slug: string;
 }
-
-export type {
-  ZetkinTask,
-  ZetkinAssignedTask,
-  ZetkinQuery,
-  ZetkinSmartSearchFilter,
-};
-
-export type { ZetkinView, ZetkinViewColumn, ZetkinViewRow };
 
 export interface ZetkinJourney {
   id: number;
@@ -256,3 +254,13 @@ export interface ZetkinJourneyInstance {
   title: string;
   updated_at: string;
 }
+
+export type {
+  ZetkinTask,
+  ZetkinAssignedTask,
+  ZetkinQuery,
+  ZetkinSmartSearchFilter,
+  ZetkinView,
+  ZetkinViewColumn,
+  ZetkinViewRow,
+};
