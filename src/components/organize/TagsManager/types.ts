@@ -1,4 +1,4 @@
-import { ZetkinTag } from 'types/zetkin';
+import { ZetkinTag, ZetkinTagReqBody } from 'types/zetkin';
 
 export interface TagsGroups {
   [key: string]: {
@@ -6,3 +6,5 @@ export interface TagsGroups {
     title: string;
   };
 }
+
+export type OnCreateTagHandler = (tag: ZetkinTagReqBody) => void;

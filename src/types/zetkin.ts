@@ -214,6 +214,12 @@ export interface ZetkinTag {
   value?: string | number;
 }
 
+export interface ZetkinTagReqBody
+  extends Partial<Omit<ZetkinTag, 'group' | 'organization'>> {
+  organization_id: number | string;
+  group_id?: number;
+}
+
 export enum CUSTOM_FIELD_TYPE {
   URL = 'url',
   DATE = 'date',

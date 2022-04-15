@@ -1,3 +1,4 @@
+import { useRef } from 'react';
 import { Box, Button, InputAdornment, TextField } from '@material-ui/core';
 
 const ColorPicker: React.FunctionComponent<{
@@ -9,12 +10,11 @@ const ColorPicker: React.FunctionComponent<{
       fullWidth
       inputProps={{
         startAdornment: (
-          <InputAdornment position="start">
-            <Button>Pick Color</Button>
-          </InputAdornment>
+          <InputAdornment position="start">Pick Color</InputAdornment>
         ),
       }}
       margin="normal"
+      onClick={(e) => (e.target as HTMLInputElement).focus()}
       placeholder="Color"
       variant="outlined"
     />

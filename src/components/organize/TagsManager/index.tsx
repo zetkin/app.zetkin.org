@@ -6,6 +6,7 @@ import { FormattedMessage, useIntl } from 'react-intl';
 import ZetkinSection from 'components/ZetkinSection';
 
 import GroupToggle from './GroupToggle';
+import { OnCreateTagHandler } from './types';
 import TagSelect from './TagSelect';
 import TagsList from './TagsList';
 import { ZetkinTag } from 'types/zetkin';
@@ -14,7 +15,7 @@ const TagsManager: React.FunctionComponent<{
   assignedTags: ZetkinTag[];
   availableTags: ZetkinTag[];
   onAssignTag: (tag: ZetkinTag) => void;
-  onCreateTag: (tag: ZetkinTag) => void;
+  onCreateTag: OnCreateTagHandler;
   // onCreateGroup?: (group: { title: string }) => void;
   onUnassignTag: (tag: ZetkinTag) => void;
 }> = ({

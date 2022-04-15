@@ -11,6 +11,7 @@ import {
 } from '@material-ui/core';
 import { FormattedMessage, useIntl } from 'react-intl';
 
+import { OnCreateTagHandler } from './types';
 import TagChip from './TagChip';
 import TagDialog from './TagDialog';
 import { ZetkinTag } from 'types/zetkin';
@@ -24,7 +25,7 @@ interface Group<Option> {
 
 const TagSelect: React.FunctionComponent<{
   disabledTags: ZetkinTag[];
-  onCreateTag: (tag: ZetkinTag) => void;
+  onCreateTag: OnCreateTagHandler;
   onSelect: (tag: ZetkinTag) => void;
   tags: ZetkinTag[];
 }> = ({ disabledTags, onCreateTag, onSelect, tags }) => {
