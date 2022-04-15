@@ -1,7 +1,6 @@
 /* eslint-disable jsx-a11y/no-autofocus */
 import { Add } from '@material-ui/icons';
 import { useAutocomplete } from '@material-ui/lab';
-import { useIntl } from 'react-intl';
 import { useState } from 'react';
 import {
   Box,
@@ -10,6 +9,7 @@ import {
   ListSubheader,
   TextField,
 } from '@material-ui/core';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 import TagChip from './TagChip';
 import TagDialog from './TagDialog';
@@ -92,8 +92,21 @@ const TagSelect: React.FunctionComponent<{
         })}
         <ListItem button onClick={() => setDialogOpen(true)}>
           <Add />
-          Create Tag
-          {Boolean(inputValue) && <b>&nbsp;{inputValue}</b>}
+          {inputValue ? (
+            <FormattedMessage
+              id="misc.tags.tagsManager.createNamedTag"
+              values={{
+                b: (...chunks: string[]) => (
+                  <>
+                    &nbsp;<b>{chunks}</b>
+                  </>
+                ),
+                name: inputValue,
+              }}
+            />
+          ) : (
+            <FormattedMessage id="misc.tags.tagsManager.createTag" />
+          )}
         </ListItem>
       </List>
       <TagDialog

@@ -4,3 +4,5 @@ tagsManager:
   noTags: No tags applied
   title: Tags
   ungroupedHeader: No group
+  createTag: New Tag
+  createNamedTag: 'Create tag: <b>{name}</b>'
