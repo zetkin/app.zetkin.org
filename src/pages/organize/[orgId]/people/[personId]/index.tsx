@@ -54,16 +54,20 @@ export type PersonPageProps = {
 const PersonProfilePage: PageWithLayout<PersonPageProps> = (props) => {
   const { orgId, personId } = useRouter().query;
   const { showSnackbar } = useContext(SnackbarContext);
+
   const {
     useAdd,
+    useCreate,
     useQuery: usePersonTagsQuery,
     useAvailableTagsQuery,
     useRemove,
   } = personTagsResource(orgId as string, personId as string);
   const addTagMutation = useAdd();
+  const createTagMutation = useCreate();
   const removeTagMutation = useRemove();
   const personTagsQuery = usePersonTagsQuery();
   const organizationTagsQuery = useAvailableTagsQuery();
+
   const { data: person } = personResource(
     props.orgId,
     props.personId
@@ -97,6 +101,11 @@ const PersonProfilePage: PageWithLayout<PersonPageProps> = (props) => {
                   onError: () => showSnackbar('error'),
                 })
               }
+              onCreateTag={(tag) => {
+                createTagMutation.mutate(tag, {
+                  onError: () => showSnackbar('error'),
+                });
+              }}
               onUnassignTag={(tag) =>
                 removeTagMutation.mutate(tag.id, {
                   onError: () => showSnackbar('error'),

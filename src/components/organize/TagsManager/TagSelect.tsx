@@ -24,29 +24,35 @@ interface Group<Option> {
 
 const TagSelect: React.FunctionComponent<{
   disabledTags: ZetkinTag[];
+  onCreateTag: (tag: ZetkinTag) => void;
   onSelect: (tag: ZetkinTag) => void;
   tags: ZetkinTag[];
-}> = ({ disabledTags, onSelect, tags }) => {
+}> = ({ disabledTags, onCreateTag, onSelect, tags }) => {
   const intl = useIntl();
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  const { getInputProps, getListboxProps, getRootProps, groupedOptions } =
-    useAutocomplete({
-      getOptionLabel: (option) => option.title,
-      groupBy: (option) =>
-        option.group?.title ||
-        intl.formatMessage({
-          id: 'misc.tags.tagsManager.ungroupedHeader',
-        }),
-      openOnFocus: true,
-      options: tags,
-    });
+  const {
+    inputValue,
+    getInputProps,
+    getListboxProps,
+    getRootProps,
+    groupedOptions,
+  } = useAutocomplete({
+    getOptionLabel: (option) => option.title,
+    groupBy: (option) =>
+      option.group?.title ||
+      intl.formatMessage({
+        id: 'misc.tags.tagsManager.ungroupedHeader',
+      }),
+    open: true,
+    options: tags,
+  });
 
   return (
     <Box {...getRootProps()}>
       <TextField
         {...getInputProps()}
-        autoFocus={true}
+        autoFocus
         fullWidth
         placeholder={intl.formatMessage({
           id: 'misc.tags.tagsManager.addTag',
@@ -87,9 +93,15 @@ const TagSelect: React.FunctionComponent<{
         <ListItem button onClick={() => setDialogOpen(true)}>
           <Add />
           Create Tag
+          {Boolean(inputValue) && <b>&nbsp;{inputValue}</b>}
         </ListItem>
       </List>
-      <TagDialog onClose={() => setDialogOpen(false)} open={dialogOpen} />
+      <TagDialog
+        onClose={() => setDialogOpen(false)}
+        onSubmit={onCreateTag}
+        open={dialogOpen}
+        tag={inputValue ? { title: inputValue } : undefined}
+      />
     </Box>
   );
 };

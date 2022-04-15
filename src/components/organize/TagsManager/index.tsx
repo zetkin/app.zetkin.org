@@ -14,6 +14,7 @@ const TagsManager: React.FunctionComponent<{
   assignedTags: ZetkinTag[];
   availableTags: ZetkinTag[];
   onAssignTag: (tag: ZetkinTag) => void;
+  onCreateTag: (tag: ZetkinTag) => void;
   // onCreateGroup?: (group: { title: string }) => void;
   onUnassignTag: (tag: ZetkinTag) => void;
 }> = ({
@@ -21,6 +22,7 @@ const TagsManager: React.FunctionComponent<{
   availableTags,
   onAssignTag,
   // onCreateGroup,
+  onCreateTag,
   onUnassignTag,
 }) => {
   const intl = useIntl();
@@ -67,6 +69,7 @@ const TagsManager: React.FunctionComponent<{
         >
           <TagSelect
             disabledTags={assignedTags}
+            onCreateTag={onCreateTag}
             onSelect={onAssignTag}
             tags={availableTags}
           />
