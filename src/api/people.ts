@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import {
   createPrefetch,
+  createUseMutation,
   createUseMutationDelete,
   createUseMutationPut,
   createUseQuery,
@@ -50,6 +51,7 @@ export const personTagsResource = (orgId: string, personId: string) => {
       ['tags', orgId],
       `/orgs/${orgId}/people/tags`
     ),
+    useCreate: createUseMutation<ZetkinTag, ZetkinTag>(key, url),
     useQuery: createUseQuery<ZetkinTag[]>(key, url),
     useRemove: createUseMutationDelete({ key, url }),
   };
