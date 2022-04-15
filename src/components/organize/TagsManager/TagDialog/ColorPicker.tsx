@@ -1,12 +1,12 @@
-import { useRef } from 'react';
-import { Box, Button, InputAdornment, TextField } from '@material-ui/core';
+import { InputAdornment, TextField } from '@material-ui/core';
 
 const ColorPicker: React.FunctionComponent<{
+  defaultValue?: string;
   onChange: (value: string) => void;
-  value: string;
-}> = ({ value, onChange }) => {
+}> = ({ defaultValue, onChange }) => {
   return (
     <TextField
+      defaultValue={defaultValue}
       fullWidth
       inputProps={{
         startAdornment: (
@@ -14,6 +14,7 @@ const ColorPicker: React.FunctionComponent<{
         ),
       }}
       margin="normal"
+      onChange={(e) => onChange(e.target.value)}
       onClick={(e) => (e.target as HTMLInputElement).focus()}
       placeholder="Color"
       variant="outlined"

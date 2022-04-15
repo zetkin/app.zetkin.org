@@ -6,3 +6,8 @@ tagsManager:
   ungroupedHeader: No group
   createTag: New Tag
   createNamedTag: 'Create tag: <b>{name}</b>'
+  tagDialog:
+    titleLabel: Tag name
+    groupLabel: Group
+    createGroup: New Group
+    colorLabel: Color

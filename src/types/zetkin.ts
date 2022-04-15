@@ -216,7 +216,6 @@ export interface ZetkinTag {
 
 export interface ZetkinTagReqBody
   extends Partial<Omit<ZetkinTag, 'group' | 'organization'>> {
-  organization_id: number | string;
   group_id?: number;
 }
 

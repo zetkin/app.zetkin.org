@@ -52,7 +52,7 @@ export const personTagsResource = (orgId: string, personId: string) => {
       `/orgs/${orgId}/people/tags`
     ),
     useCreate: createUseMutation<ZetkinTagReqBody, ZetkinTag>(
-      key,
+      ['tags', orgId],
       `/orgs/${orgId}/people/tags`
     ),
     useQuery: createUseQuery<ZetkinTag[]>(key, url),
