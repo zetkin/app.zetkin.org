@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/no-autofocus */
 import { TextField } from '@material-ui/core';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import ColorPicker from './ColorPicker';
 // import SubmitCancelButtons from 'components/forms/common/SubmitCancelButtons';
@@ -22,11 +22,18 @@ const TagDialog: React.FunctionComponent<TagDialogProps> = ({
   // onSubmit,
   tag,
 }) => {
-  const [title, setTitle] = useState('');
-  const [group, setGroup] = useState<ZetkinTagGroup | undefined>(
-    tag?.group || undefined
+  const [title, setTitle] = useState(tag?.title || '');
+  const [group, setGroup] = useState<ZetkinTagGroup | null | undefined>(
+    tag?.group
   );
   const [color, setColor] = useState<string>('');
+
+  useEffect(() => {
+    if (tag) {
+      setTitle(tag.title || '');
+      setGroup(tag.group);
+    }
+  }, [tag]);
 
   // const submitForm = () => {
   //   const tag = {
@@ -47,10 +54,7 @@ const TagDialog: React.FunctionComponent<TagDialogProps> = ({
         value={title}
         variant="outlined"
       />
-      <TagGroupSelect
-        onChange={(e, value) => setGroup(value || undefined)}
-        value={group}
-      />
+      <TagGroupSelect onChange={(e, value) => setGroup(value)} value={group} />
       <ColorPicker onChange={(value) => setColor(value)} value={color} />
       {/* <SubmitCancelButtons onCancel={onClose} /> */}
     </ZetkinDialog>

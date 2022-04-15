@@ -13,11 +13,11 @@ import { ZetkinTagGroup } from 'types/zetkin';
 const TagGroupSelect: React.FunctionComponent<{
   onChange: (
     e: ChangeEvent<{ [key: string]: never }>,
-    value: ZetkinTagGroup | null,
+    value: ZetkinTagGroup | null | undefined,
     reason: AutocompleteChangeReason,
     details: AutocompleteChangeDetails<ZetkinTagGroup> | undefined
   ) => void;
-  value?: ZetkinTagGroup;
+  value?: ZetkinTagGroup | null | undefined;
 }> = ({ value, onChange }) => {
   const { orgId } = useRouter().query;
   const { data: tagGroups } = tagGroupsResource(orgId as string).useQuery();
