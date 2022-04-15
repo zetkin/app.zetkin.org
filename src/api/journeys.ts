@@ -1,8 +1,11 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { createPrefetch, createUseQuery } from './utils/resourceHookFactories';
-import { ZetkinJourney, ZetkinJourneyInstance } from 'types/zetkin';
-
 import { TagMetadata } from '../utils/getTagMetadata';
+import {
+  createPrefetch,
+  createUseMutation,
+  createUseQuery,
+} from './utils/resourceHookFactories';
+import { ZetkinJourney, ZetkinJourneyInstance } from 'types/zetkin';
 
 export const journeysResource = (orgId: string) => {
   const key = ['journeys', orgId];
@@ -33,5 +36,21 @@ export const journeyInstancesResource = (orgId: string, journeyId: string) => {
       journeyInstances: ZetkinJourneyInstance[];
       tagMetadata: TagMetadata;
     }>(key, url),
+  };
+};
+
+export const journeyInstanceResource = (orgId: string, instanceId: string) => {
+  const key = ['journeyInstance', orgId, instanceId];
+  const url = `/orgs/${orgId}/journey_instances/${instanceId}`;
+
+  return {
+    prefetch: createPrefetch<ZetkinJourneyInstance>(key, url),
+    useQuery: createUseQuery<ZetkinJourneyInstance>(key, url),
+    useUpdate: createUseMutation<
+      Partial<ZetkinJourneyInstance>,
+      ZetkinJourneyInstance
+    >(key, url, {
+      method: 'PATCH',
+    }),
   };
 };

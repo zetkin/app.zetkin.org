@@ -80,29 +80,31 @@ const getFreeTags = (numTags: number): ZetkinJourneyInstance['tags'] =>
   }));
 
 const dummyTableData = ids.splice(0, 500).map((id) => {
-  const created_at = dayjs()
+  const created = dayjs()
     .subtract(Math.ceil(Math.random() * 200), 'hour')
     .format();
 
   return mockJourneyInstance({
-    assigned_to: chance.pickset(people, chance.pickone([1, 1, 1, 1, 2])),
-    created_at,
+    assignees: chance.pickset(people, chance.pickone([1, 1, 1, 1, 2])),
+    created,
     id: id + 1,
     next_milestone: {
+      completed: null,
       deadline: dayjs()
         .add(Math.ceil(Math.random() * 500), 'hour')
         .format(),
+      description: '',
       title: chance.pickone(milestones),
     },
-    people: chance.pickset(people, chance.pickone([1, 1, 1, 1, 2])),
+    subjects: chance.pickset(people, chance.pickone([1, 1, 1, 1, 2])),
     summary: chance.sentence({ words: 10 }),
     tags: groupTags
       .map((tags) => chance.pickone(tags))
       .concat(getValueTag())
       .concat(getMultipleTagsGroup())
       .concat(getFreeTags(chance.integer({ max: 5, min: 0 }))),
-    updated_at: dayjs()
-      .subtract(dayjs().diff(dayjs(created_at), 'minute') / 2, 'minute')
+    updated: dayjs()
+      .subtract(dayjs().diff(dayjs(created), 'minute') / 2, 'minute')
       .format(),
   });
 });

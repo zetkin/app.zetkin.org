@@ -34,7 +34,7 @@ const AllJourneyInstancesLayout: FunctionComponent<LayoutProps> = ({
           tabProps: { disabled: true },
         },
       ]}
-      title={journey.plural_name}
+      title={journey.plural_label}
     >
       {children}
     </TabbedLayout>

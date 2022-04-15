@@ -18,13 +18,13 @@ interface JourneyCardProps {
 
 const JourneyCard = ({ journey }: JourneyCardProps): JSX.Element => {
   const { orgId } = useRouter().query;
-  const { id, singular_name, stats } = journey;
+  const { id, singular_label, stats } = journey;
 
   return (
     <Card data-testid="journey-card">
       <CardContent>
         <Typography gutterBottom noWrap variant="h5">
-          {singular_name}
+          {singular_label}
         </Typography>
         <Box
           sx={{
@@ -37,7 +37,7 @@ const JourneyCard = ({ journey }: JourneyCardProps): JSX.Element => {
         </Box>
       </CardContent>
       <CardActions>
-        <NextLink href={`/organize/${orgId}/journey/${id}`} passHref>
+        <NextLink href={`/organize/${orgId}/journeys/${id}`} passHref>
           <Link variant="button">
             <Msg id="pages.organizeJourneys.cardCTA" />
           </Link>

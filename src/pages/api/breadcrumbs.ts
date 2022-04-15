@@ -78,7 +78,20 @@ async function fetchLabel(
     ).then((res) => res.json());
     return view.data.title;
   }
-  // TODO: journeys
+  if (fieldName == 'instanceId') {
+    const journeyInstance = await apiFetch(
+      `/orgs/${orgId}/journey_instances/${fieldValue}`
+    ).then((res) => res.json());
+    return `${
+      journeyInstance.data.title || journeyInstance.data.journey.title
+    } #${journeyInstance.data.id}`;
+  }
+  if (fieldName == 'journeyId') {
+    const journey = await apiFetch(
+      `/orgs/${orgId}/journeys/${fieldValue}`
+    ).then((res) => res.json());
+    return journey.data.plural_label;
+  }
   return fieldValue;
 }
 

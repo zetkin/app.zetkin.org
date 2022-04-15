@@ -1,20 +1,26 @@
+import KPD from '../../../../playwright/mockData/orgs/KPD';
+import { milestone } from './mockMilestone';
 import { mockObject } from 'utils/testing/mocks';
 import { person } from './mockPerson';
 import { ZetkinJourneyInstance } from 'types/zetkin';
 
 const journeyInstance: ZetkinJourneyInstance = {
-  assigned_to: [person],
-  created_at: '2022-04-01T03:29:12+02:00',
+  assignees: [person],
+  closed: null,
+  created: '2022-04-01T03:29:12+02:00',
   id: 333,
-  next_milestone: {
-    deadline: '2022-04-18T00:29:12+02:00',
-    title: 'perform lip sync',
+  journey: {
+    id: 1,
+    title: 'Training',
   },
-  people: [person],
+  milestones: [milestone],
+  next_milestone: milestone,
+  organization: KPD,
+  subjects: [person],
   summary: 'Haohrez uhca evo fup fonruh do vafeesa lida penco rillesven.',
   tags: [],
   title: 'Training ID 1',
-  updated_at: '2022-04-03T23:59:12+02:00',
+  updated: '2022-04-03T23:59:12+02:00',
 };
 
 const mockJourneyInstance = (
