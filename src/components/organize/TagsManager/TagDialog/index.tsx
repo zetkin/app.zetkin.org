@@ -22,16 +22,17 @@ const TagDialog: React.FunctionComponent<TagDialogProps> = ({
   onSubmit,
   tag,
 }) => {
-  const [title, setTitle] = useState(tag?.title || '');
-  const [group, setGroup] = useState<ZetkinTagGroup | null | undefined>(
-    tag?.group
-  );
-  const [color, setColor] = useState<string>('');
+  const [title, setTitle] = useState('');
+  const [group, setGroup] = useState<
+    ZetkinTagGroup | { title: string } | null | undefined
+  >();
+  const [color, setColor] = useState('');
 
   useEffect(() => {
     if (tag) {
       setTitle(tag.title || '');
-      setGroup(tag.group);
+      setGroup(tag.group || undefined);
+      setColor(tag.color || '');
     }
   }, [tag]);
 
@@ -40,11 +41,27 @@ const TagDialog: React.FunctionComponent<TagDialogProps> = ({
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          onSubmit({
-            color: color || undefined,
-            group_id: group?.id,
-            title,
-          });
+          if (group && 'id' in group) {
+            // If existing group, submit with POST body
+            onSubmit({
+              color: color || undefined,
+              group_id: group.id,
+              title,
+            });
+          } else if (group && !('id' in group)) {
+            // If new group, submit with group object
+            onSubmit({
+              color: color || undefined,
+              group,
+              title,
+            });
+          } else {
+            // If no group
+            onSubmit({
+              color: color || undefined,
+              title,
+            });
+          }
           onClose();
         }}
       >
@@ -57,10 +74,7 @@ const TagDialog: React.FunctionComponent<TagDialogProps> = ({
           onClick={(e) => (e.target as HTMLInputElement).focus()}
           variant="outlined"
         />
-        <TagGroupSelect
-          onChange={(e, value) => setGroup(value)}
-          value={group}
-        />
+        <TagGroupSelect onChange={(e, value) => setGroup(value)} />
         <ColorPicker
           defaultValue={color}
           onChange={(value) => setColor(value)}

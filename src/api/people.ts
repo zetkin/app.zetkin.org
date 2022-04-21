@@ -8,7 +8,7 @@ import {
 } from './utils/resourceHookFactories';
 
 import { PersonOrganization } from 'utils/organize/people';
-import { ZetkinPerson, ZetkinTag, ZetkinTagReqBody } from 'types/zetkin';
+import { ZetkinPerson, ZetkinTag, ZetkinTagPostBody } from 'types/zetkin';
 
 export const personResource = (orgId: string, personId: string) => {
   const key = ['person', personId];
@@ -51,7 +51,7 @@ export const personTagsResource = (orgId: string, personId: string) => {
       ['tags', orgId],
       `/orgs/${orgId}/people/tags`
     ),
-    useCreate: createUseMutation<ZetkinTagReqBody, ZetkinTag>(
+    useCreate: createUseMutation<ZetkinTagPostBody, ZetkinTag>(
       ['tags', orgId],
       `/orgs/${orgId}/people/tags`
     ),

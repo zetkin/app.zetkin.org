@@ -9,8 +9,10 @@ import PersonDetailsCard from 'components/organize/people/PersonDetailsCard';
 import PersonOrganizationsCard from 'components/organize/people/PersonOrganizationsCard';
 import SinglePersonLayout from 'layout/organize/SinglePersonLayout';
 import SnackbarContext from 'hooks/SnackbarContext';
+import { tagGroupsResource } from 'api/tags';
 import TagsManager from 'components/organize/TagsManager';
 import ZetkinQuery from 'components/ZetkinQuery';
+import { ZetkinTagPostBody } from 'types/zetkin';
 import { personResource, personTagsResource } from 'api/people';
 import { scaffold, ScaffoldedGetServerSideProps } from 'utils/next';
 
@@ -73,6 +75,8 @@ const PersonProfilePage: PageWithLayout<PersonPageProps> = (props) => {
     props.personId
   ).useQuery();
 
+  const tagsGroupMutation = tagGroupsResource(orgId as string).useAdd();
+
   if (!person) {
     return null;
   }
@@ -101,10 +105,29 @@ const PersonProfilePage: PageWithLayout<PersonPageProps> = (props) => {
                   onError: () => showSnackbar('error'),
                 })
               }
-              onCreateTag={(tag) => {
-                createTagMutation.mutate(tag, {
-                  onError: () => showSnackbar('error'),
-                });
+              onCreateTag={async (tag) => {
+                if ('group' in tag) {
+                  // If creating a new group, has group object
+                  const newGroup = await tagsGroupMutation.mutateAsync(
+                    tag.group
+                  );
+                  const tagWithNewGroup = {
+                    ...tag,
+                    group: undefined,
+                    group_id: newGroup.id,
+                  };
+                  await createTagMutation.mutateAsync(
+                    tagWithNewGroup as ZetkinTagPostBody,
+                    {
+                      onError: () => showSnackbar('error'),
+                    }
+                  );
+                } else {
+                  // Add tag with existing or no group
+                  createTagMutation.mutate(tag, {
+                    onError: () => showSnackbar('error'),
+                  });
+                }
               }}
               onUnassignTag={(tag) =>
                 removeTagMutation.mutate(tag.id, {

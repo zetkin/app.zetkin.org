@@ -16,13 +16,11 @@ const TagsManager: React.FunctionComponent<{
   availableTags: ZetkinTag[];
   onAssignTag: (tag: ZetkinTag) => void;
   onCreateTag: OnCreateTagHandler;
-  // onCreateGroup?: (group: { title: string }) => void;
   onUnassignTag: (tag: ZetkinTag) => void;
 }> = ({
   assignedTags,
   availableTags,
   onAssignTag,
-  // onCreateGroup,
   onCreateTag,
   onUnassignTag,
 }) => {

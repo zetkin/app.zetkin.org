@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import {
-  createUseMutationPut,
+  createUseMutation,
   createUseQuery,
 } from './utils/resourceHookFactories';
 
+import { NewTagGroup } from 'components/organize/TagsManager/types';
 import { ZetkinTagGroup } from 'types/zetkin';
 
 export const tagGroupsResource = (orgId: string) => {
@@ -11,7 +12,7 @@ export const tagGroupsResource = (orgId: string) => {
   const url = `/orgs/${orgId}/tag_groups`;
 
   return {
-    useAdd: createUseMutationPut({ key, url }),
+    useAdd: createUseMutation<NewTagGroup, ZetkinTagGroup>(key, url),
     useQuery: createUseQuery<ZetkinTagGroup[]>(key, url),
   };
 };
