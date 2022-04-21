@@ -1,9 +1,11 @@
 import dayjs from 'dayjs';
+import { IntlProvider } from 'react-intl';
 import React from 'react';
 import { ComponentMeta, ComponentStory } from '@storybook/react';
 
 import mockUpdate from '../utils/testing/mocks/mockUpdate';
 import Timeline from '../components/Timeline';
+import ZetkinPerson from '../components/ZetkinPerson';
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 export default {
@@ -11,13 +13,26 @@ export default {
     backgroundColor: { control: 'color' },
   },
   component: Timeline,
+  parameters: {
+    nextRouter: {
+      asPath: '/organize/1/people/1',
+      path: '/organize/[orgId]/people/[id]',
+      query: {
+        id: 1,
+        orgId: 1,
+      },
+    },
+  },
+  subcomponents: { ZetkinPerson },
   // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
   title: 'Example/Timeline',
 } as ComponentMeta<typeof Timeline>;
 
 // More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
 const Template: ComponentStory<typeof Timeline> = (args) => (
-  <Timeline {...args} />
+  <IntlProvider defaultLocale="en" locale="en" messages={{}}>
+    <Timeline {...args} />
+  </IntlProvider>
 );
 
 export const Primary = Template.bind({});

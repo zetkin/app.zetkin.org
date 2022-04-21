@@ -6,6 +6,8 @@ module.exports = {
     '@storybook/addon-links',
     '@storybook/addon-essentials',
     '@storybook/addon-interactions',
+    'storybook-addon-next-router',
+    'storybook-addon-material-ui',
   ],
   framework: '@storybook/react',
   core: {
