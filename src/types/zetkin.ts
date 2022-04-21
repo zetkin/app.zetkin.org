@@ -277,3 +277,14 @@ export interface ZetkinJourneyMilestoneStatus {
   description: string;
   title: string;
 }
+
+type ZetkinUpdateAssignee = {
+  assignee: Pick<ZetkinPerson, 'id' | 'first_name' | 'last_name'>;
+};
+
+export interface ZetkinUpdate {
+  actor?: Pick<ZetkinPerson, 'id' | 'first_name' | 'last_name'>;
+  created_at: string;
+  data: ZetkinUpdateAssignee;
+  type: 'journey.assignee.add';
+}
