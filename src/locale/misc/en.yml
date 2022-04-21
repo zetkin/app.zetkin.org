@@ -39,3 +39,5 @@ nativePersonFields:
   zip_code: Zip code
 snackbar:
   error: Oh dear, something went wrong
+timeline:
+  expand: show full timeline

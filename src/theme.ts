@@ -158,6 +158,9 @@ const theme = createTheme({
       fontSize: '1rem',
       fontWeight: 600,
     },
+    subtitle2: {
+      fontWeight: 600,
+    },
   },
 });
 

@@ -1,3 +1,8 @@
+import { FormattedMessage } from 'react-intl';
+import React from 'react';
+import { Button, Divider, Grid } from '@material-ui/core';
+
+import TimelineUpdate from './TimelineUpdate';
 import { ZetkinUpdate } from 'types/zetkin';
 
 export interface TimelineProps {
@@ -11,14 +16,28 @@ const Timeline: React.FunctionComponent<TimelineProps> = ({
   showAll,
   updates,
 }) => {
+  const [expanded, setExpanded] = React.useState<boolean>(!!showAll);
+
   return (
-    <div>
-      {(showAll ? updates : updates.slice(0, SHOW_INITIALLY)).map((update) => (
-        <div key={update.created_at + update.type} aria-label="timeline update">
-          <p>{update.actor?.first_name}</p>
-        </div>
-      ))}
-    </div>
+    <Grid container direction="column" spacing={3}>
+      {(expanded ? updates : updates.slice(0, SHOW_INITIALLY)).map(
+        (update, idx) => (
+          <React.Fragment key={update.created_at + update.type}>
+            <Grid aria-label="timeline update" item>
+              <TimelineUpdate update={update} />
+            </Grid>
+            {idx < (expanded ? updates.length : SHOW_INITIALLY) - 1 && (
+              <Divider style={{ width: '100%' }} />
+            )}
+          </React.Fragment>
+        )
+      )}
+      <Grid item>
+        <Button onClick={() => setExpanded(!expanded)} variant="outlined">
+          <FormattedMessage id="misc.timeline.expand" />
+        </Button>
+      </Grid>
+    </Grid>
   );
 };
 
