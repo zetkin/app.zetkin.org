@@ -199,7 +199,7 @@ export interface ZetkinActivity {
 export interface ZetkinTagGroup {
   id: number;
   title: string;
-  description: string;
+  description?: string;
   organization: ZetkinOrganization;
 }
 

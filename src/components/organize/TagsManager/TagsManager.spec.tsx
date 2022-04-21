@@ -2,12 +2,17 @@ import { click } from '@testing-library/user-event/dist/click';
 import { hover } from '@testing-library/user-event/dist/hover';
 import { keyboard } from '@testing-library/user-event/dist/keyboard';
 import { render } from 'utils/testing';
+import singletonRouter from 'next/router';
 
 import mockTag from 'utils/testing/mocks/mockTag';
+import { NewTag } from './types';
 import TagsManager from '.';
 import { ZetkinTag } from 'types/zetkin';
 
+jest.mock('next/dist/client/router', () => require('next-router-mock'));
+
 const assignTagCallback = jest.fn((tag: ZetkinTag) => tag);
+const createTagCallback = jest.fn((tag: NewTag) => tag);
 const unassignTagCallback = jest.fn((tag: ZetkinTag) => tag);
 
 describe('<TagsManager />', () => {
@@ -18,6 +23,7 @@ describe('<TagsManager />', () => {
           assignedTags={[]}
           availableTags={[]}
           onAssignTag={assignTagCallback}
+          onCreateTag={createTagCallback}
           onUnassignTag={unassignTagCallback}
         />
       );
@@ -31,6 +37,7 @@ describe('<TagsManager />', () => {
           assignedTags={[tag1, tag2]}
           availableTags={[tag1, tag2]}
           onAssignTag={assignTagCallback}
+          onCreateTag={createTagCallback}
           onUnassignTag={unassignTagCallback}
         />
       );
@@ -78,6 +85,7 @@ describe('<TagsManager />', () => {
         assignedTags={tags}
         availableTags={tags}
         onAssignTag={assignTagCallback}
+        onCreateTag={createTagCallback}
         onUnassignTag={unassignTagCallback}
       />
     );
@@ -111,6 +119,7 @@ describe('<TagsManager />', () => {
         assignedTags={[]}
         availableTags={[tag1]}
         onAssignTag={onAssignTag}
+        onCreateTag={createTagCallback}
         onUnassignTag={unassignTagCallback}
       />
     );
@@ -141,6 +150,7 @@ describe('<TagsManager />', () => {
         assignedTags={[tag1]}
         availableTags={[tag1]}
         onAssignTag={assignTagCallback}
+        onCreateTag={createTagCallback}
         onUnassignTag={onUnassignTag}
       />
     );
@@ -158,5 +168,43 @@ describe('<TagsManager />', () => {
 
     // Check that callback has been called
     expect(onUnassignTag).toHaveBeenCalledWith(tag1);
+  });
+
+  describe('creating a tag', () => {
+    let onCreateTag: jest.Mock<NewTag, [tag: NewTag]>;
+
+    beforeEach(() => {
+      onCreateTag = jest.fn((tag: NewTag) => tag);
+      singletonRouter.query = {
+        orgId: '1',
+      };
+    });
+
+    // it('can create a new tag', () => {});
+    it('sends a group to be created when no existing group', () => {
+      const tag1 = mockTag({
+        group: { id: 2, title: 'Skills' },
+        id: 4,
+        title: 'Phone banking',
+      });
+
+      const { getByText, getByTestId } = render(
+        <TagsManager
+          assignedTags={[]}
+          availableTags={[tag1]}
+          onAssignTag={assignTagCallback}
+          onCreateTag={onCreateTag}
+          onUnassignTag={unassignTagCallback}
+        />
+      );
+      const addTagButton = getByText('misc.tags.tagsManager.addTag');
+      click(addTagButton);
+
+      // Select an option
+      const createTagOption = getByTestId(
+        'TagManager-TagSelect-createTagOpiton'
+      );
+      click(createTagOption);
+    });
   });
 });

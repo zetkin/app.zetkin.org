@@ -91,7 +91,11 @@ const TagSelect: React.FunctionComponent<{
             </List>
           );
         })}
-        <ListItem button onClick={() => setDialogOpen(true)}>
+        <ListItem
+          button
+          data-testid="TagManager-TagSelect-createTagOpiton"
+          onClick={() => setDialogOpen(true)}
+        >
           <Add />
           {inputValue ? (
             <FormattedMessage
