@@ -8,6 +8,7 @@ module.exports = {
     '@storybook/addon-interactions',
     'storybook-addon-next-router',
     'storybook-addon-material-ui',
+    'storybook-addon-mock/register',
   ],
   framework: '@storybook/react',
   core: {
