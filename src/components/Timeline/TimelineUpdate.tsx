@@ -82,11 +82,7 @@ const TimelineUpdate: React.FunctionComponent<Props> = ({ update }) => {
       };
     }
     return (
-      <FormattedMessage
-        defaultMessage="{actor} assigned {assignee}"
-        id={`misc.updates.${update.type}`}
-        values={values}
-      />
+      <FormattedMessage id={`misc.updates.${update.type}`} values={values} />
     );
   }
 

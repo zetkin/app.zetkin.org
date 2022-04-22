@@ -28,10 +28,14 @@ describe('Timeline', () => {
     mockRouter.setCurrentUrl('/initial');
   });
 
-  it('displays the correct number of updates initially', () => {
+  it('displays the correct number of updates', () => {
     const { getAllByLabelText } = render(<Timeline {...props} />);
     const updates = getAllByLabelText('timeline update');
-    expect(updates.length).toEqual(SHOW_INITIALLY);
+    expect(
+      updates.filter(
+        (update) => getComputedStyle(update).visibility === 'visible'
+      ).length
+    ).toEqual(SHOW_INITIALLY);
   });
 
   it('expands to show all updates', () => {

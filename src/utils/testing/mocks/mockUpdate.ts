@@ -8,7 +8,8 @@ const update: ZetkinUpdate = {
   actor: mockPerson(),
   created_at: dayjs().subtract(5, 'hours').format(),
   details: { assignee: mockPerson() },
-  type: 'journey.assignee.add',
+  target: { id: 1, title: 'Journey instance' },
+  type: 'journeyInstance.assignee.add',
 };
 
 const mockUpdate = (overrides?: Partial<ZetkinUpdate>): ZetkinUpdate => {
