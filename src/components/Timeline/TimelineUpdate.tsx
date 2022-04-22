@@ -23,27 +23,14 @@ interface Props {
 const TimelineUpdate: React.FunctionComponent<Props> = ({ update }) => {
   return (
     <Box display="flex" flexDirection="column">
-      {getDescription()}
+      {renderDescription()}
       {getContent()}
     </Box>
   );
 
-  function getDescription() {
-    const Action = () => (
-      <>
-        <Typography component={Grid} item variant="body2">
-          <FormattedMessage id={`misc.updates.${update.type}`} />
-        </Typography>
-        {update.data?.assignee && (
-          <PersonHoverCard personId={update.data.assignee.id}>
-            <PersonName person={update.data.assignee} />
-          </PersonHoverCard>
-        )}
-        <Typography color="textSecondary" component={Grid} item variant="body2">
-          <ZetkinRelativeTime datetime={update.created_at} />
-        </Typography>
-      </>
-    );
+  // Forms the update description, which consists of an "action" (i.e. what the update changed),
+  // and an optional "actor" (the person who made the change)
+  function renderDescription() {
     return (
       <Grid alignItems="center" container direction="row" spacing={1}>
         {update.actor && (
@@ -65,11 +52,30 @@ const TimelineUpdate: React.FunctionComponent<Props> = ({ update }) => {
             </Grid>
           </>
         )}
-        <Action />
+        {renderAction()}
       </Grid>
     );
   }
 
+  function renderAction() {
+    return (
+      <>
+        <Typography component={Grid} item variant="body2">
+          <FormattedMessage id={`misc.updates.${update.type}`} />
+        </Typography>
+        {update.data?.assignee && (
+          <PersonHoverCard personId={update.data.assignee.id}>
+            <PersonName person={update.data.assignee} />
+          </PersonHoverCard>
+        )}
+        <Typography color="textSecondary" component={Grid} item variant="body2">
+          <ZetkinRelativeTime datetime={update.created_at} />
+        </Typography>
+      </>
+    );
+  }
+
+  // Displays the content of the update, if the type of update includes content
   function getContent() {
     const noContent = ['journey.assignee.add'].includes(update.type);
     return noContent ? null : <Box />;

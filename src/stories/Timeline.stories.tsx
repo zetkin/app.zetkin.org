@@ -21,7 +21,7 @@ const Template: ComponentStory<typeof Timeline> = (args) => (
 export const Primary = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
 Primary.args = {
-  updates: Array.from(Array(30).keys()).map(() =>
+  updates: Array.from(Array(10).keys()).map(() =>
     mockUpdate({
       created_at: dayjs()
         .subtract(Math.random() * 100, 'hours')

@@ -18,18 +18,22 @@ const Timeline: React.FunctionComponent<TimelineProps> = ({
 }) => {
   const [expanded, setExpanded] = React.useState<boolean>(!!showAll);
 
-  const renderUpdate = (update: ZetkinUpdate, divider: boolean) => (
-    <React.Fragment key={update.created_at + update.type}>
-      <Grid aria-label="timeline update" item>
-        <TimelineUpdate update={update} />
-      </Grid>
-      {divider && <Divider style={{ width: '100%' }} />}
-    </React.Fragment>
-  );
-
   return (
     <Fade appear in timeout={1000}>
       <Grid container direction="column" spacing={3}>
+        {renderUpdateList()}
+        <Grid item>
+          <Button onClick={() => setExpanded(!expanded)} variant="outlined">
+            <FormattedMessage id="misc.timeline.expand" />
+          </Button>
+        </Grid>
+      </Grid>
+    </Fade>
+  );
+
+  function renderUpdateList() {
+    return (
+      <>
         {updates
           .slice(0, SHOW_INITIALLY)
           .map((update, idx) =>
@@ -41,7 +45,7 @@ const Timeline: React.FunctionComponent<TimelineProps> = ({
         <Collapse
           component={Grid}
           in={expanded}
-          style={{ padding: expanded ? 12 : 0 }}
+          style={{ padding: expanded ? 12 : '0 12px' }}
         >
           <Grid container direction="column" spacing={3}>
             {updates
@@ -51,14 +55,20 @@ const Timeline: React.FunctionComponent<TimelineProps> = ({
               )}
           </Grid>
         </Collapse>
-        <Grid item>
-          <Button onClick={() => setExpanded(!expanded)} variant="outlined">
-            <FormattedMessage id="misc.timeline.expand" />
-          </Button>
+      </>
+    );
+  }
+
+  function renderUpdate(update: ZetkinUpdate, divider: boolean) {
+    return (
+      <React.Fragment key={update.created_at + update.type}>
+        <Grid aria-label="timeline update" item>
+          <TimelineUpdate update={update} />
         </Grid>
-      </Grid>
-    </Fade>
-  );
+        {divider && <Divider style={{ width: '100%' }} />}
+      </React.Fragment>
+    );
+  }
 };
 
 export default Timeline;
