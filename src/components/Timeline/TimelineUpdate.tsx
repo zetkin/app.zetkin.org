@@ -1,8 +1,9 @@
 import { FormattedMessage } from 'react-intl';
 import { Box, Grid, Typography } from '@material-ui/core';
 
-import ZetkinPerson from '../ZetkinPerson';
-import ZetkinRelativeTime from '../ZetkinRelativeTime';
+import PersonHoverCard from 'components/PersonHoverCard';
+import ZetkinPerson from 'components/ZetkinPerson';
+import ZetkinRelativeTime from 'components/ZetkinRelativeTime';
 import { ZetkinPerson as ZetkinPersonType, ZetkinUpdate } from 'types/zetkin';
 
 const PersonName: React.FunctionComponent<{
@@ -33,7 +34,11 @@ const TimelineUpdate: React.FunctionComponent<Props> = ({ update }) => {
         <Typography component={Grid} item variant="body2">
           <FormattedMessage id={`misc.updates.${update.type}`} />
         </Typography>
-        {update.data?.assignee && <PersonName person={update.data.assignee} />}
+        {update.data?.assignee && (
+          <PersonHoverCard personId={update.data.assignee.id}>
+            <PersonName person={update.data.assignee} />
+          </PersonHoverCard>
+        )}
         <Typography color="textSecondary" component={Grid} item variant="body2">
           <ZetkinRelativeTime datetime={update.created_at} />
         </Typography>
@@ -44,15 +49,19 @@ const TimelineUpdate: React.FunctionComponent<Props> = ({ update }) => {
         {update.actor && (
           <>
             <Grid item>
-              <ZetkinPerson
-                id={update.actor.id}
-                name={''}
-                showText={false}
-                small
-              />
+              <PersonHoverCard personId={update.actor.id}>
+                <ZetkinPerson
+                  id={update.actor.id}
+                  name={''}
+                  showText={false}
+                  small
+                />
+              </PersonHoverCard>
             </Grid>
             <Grid item>
-              <PersonName person={update.actor} />
+              <PersonHoverCard personId={update.actor.id}>
+                <PersonName person={update.actor} />
+              </PersonHoverCard>
             </Grid>
           </>
         )}
