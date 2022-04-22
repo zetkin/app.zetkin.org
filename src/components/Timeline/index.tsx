@@ -1,6 +1,6 @@
 import { FormattedMessage } from 'react-intl';
 import React from 'react';
-import { Button, Divider, Grid } from '@material-ui/core';
+import { Button, Collapse, Divider, Fade, Grid } from '@material-ui/core';
 
 import TimelineUpdate from './TimelineUpdate';
 import { ZetkinUpdate } from 'types/zetkin';
@@ -18,26 +18,46 @@ const Timeline: React.FunctionComponent<TimelineProps> = ({
 }) => {
   const [expanded, setExpanded] = React.useState<boolean>(!!showAll);
 
-  return (
-    <Grid container direction="column" spacing={3}>
-      {(expanded ? updates : updates.slice(0, SHOW_INITIALLY)).map(
-        (update, idx) => (
-          <React.Fragment key={update.created_at + update.type}>
-            <Grid aria-label="timeline update" item>
-              <TimelineUpdate update={update} />
-            </Grid>
-            {idx < (expanded ? updates.length : SHOW_INITIALLY) - 1 && (
-              <Divider style={{ width: '100%' }} />
-            )}
-          </React.Fragment>
-        )
-      )}
-      <Grid item>
-        <Button onClick={() => setExpanded(!expanded)} variant="outlined">
-          <FormattedMessage id="misc.timeline.expand" />
-        </Button>
+  const renderUpdate = (update: ZetkinUpdate, divider: boolean) => (
+    <React.Fragment key={update.created_at + update.type}>
+      <Grid aria-label="timeline update" item>
+        <TimelineUpdate update={update} />
       </Grid>
-    </Grid>
+      {divider && <Divider style={{ width: '100%' }} />}
+    </React.Fragment>
+  );
+
+  return (
+    <Fade appear in timeout={1000}>
+      <Grid container direction="column" spacing={3}>
+        {updates
+          .slice(0, SHOW_INITIALLY)
+          .map((update, idx) =>
+            renderUpdate(
+              update,
+              idx < (expanded ? updates.length : SHOW_INITIALLY) - 1
+            )
+          )}
+        <Collapse
+          component={Grid}
+          in={expanded}
+          style={{ padding: expanded ? 12 : 0 }}
+        >
+          <Grid container direction="column" spacing={3}>
+            {updates
+              .slice(SHOW_INITIALLY)
+              .map((update, idx) =>
+                renderUpdate(update, idx < updates.length - SHOW_INITIALLY - 1)
+              )}
+          </Grid>
+        </Collapse>
+        <Grid item>
+          <Button onClick={() => setExpanded(!expanded)} variant="outlined">
+            <FormattedMessage id="misc.timeline.expand" />
+          </Button>
+        </Grid>
+      </Grid>
+    </Fade>
   );
 };
 
