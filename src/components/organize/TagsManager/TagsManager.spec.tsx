@@ -21,6 +21,7 @@ describe('<TagsManager />', () => {
       const { getByText } = render(
         <TagsManager
           assignedTags={[]}
+          availableGroups={[]}
           availableTags={[]}
           onAssignTag={assignTagCallback}
           onCreateTag={createTagCallback}
@@ -35,6 +36,7 @@ describe('<TagsManager />', () => {
       const { getByText } = render(
         <TagsManager
           assignedTags={[tag1, tag2]}
+          availableGroups={[]}
           availableTags={[tag1, tag2]}
           onAssignTag={assignTagCallback}
           onCreateTag={createTagCallback}
@@ -83,6 +85,7 @@ describe('<TagsManager />', () => {
     const { getByTestId, getByText } = render(
       <TagsManager
         assignedTags={tags}
+        availableGroups={[]}
         availableTags={tags}
         onAssignTag={assignTagCallback}
         onCreateTag={createTagCallback}
@@ -117,6 +120,7 @@ describe('<TagsManager />', () => {
     const { getByText } = render(
       <TagsManager
         assignedTags={[]}
+        availableGroups={[]}
         availableTags={[tag1]}
         onAssignTag={onAssignTag}
         onCreateTag={createTagCallback}
@@ -148,6 +152,7 @@ describe('<TagsManager />', () => {
     const { getByText, container } = render(
       <TagsManager
         assignedTags={[tag1]}
+        availableGroups={[]}
         availableTags={[tag1]}
         onAssignTag={assignTagCallback}
         onCreateTag={createTagCallback}
@@ -191,6 +196,7 @@ describe('<TagsManager />', () => {
       const { getByText, getByTestId } = render(
         <TagsManager
           assignedTags={[]}
+          availableGroups={[]}
           availableTags={[tag1]}
           onAssignTag={assignTagCallback}
           onCreateTag={onCreateTag}

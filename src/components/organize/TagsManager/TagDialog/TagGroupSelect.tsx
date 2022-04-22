@@ -1,5 +1,4 @@
 import { ChangeEvent } from 'react';
-import { useRouter } from 'next/router';
 import {
   Autocomplete,
   AutocompleteChangeDetails,
@@ -9,13 +8,13 @@ import {
 import { Box, TextField } from '@material-ui/core';
 
 import { NewTagGroup } from '../types';
-import { tagGroupsResource } from 'api/tags';
 import { ZetkinTagGroup } from 'types/zetkin';
 
 type GroupOptions = ZetkinTagGroup | { inputValue: string; title: string };
 const filter = createFilterOptions<GroupOptions>();
 
 const TagGroupSelect: React.FunctionComponent<{
+  groups: ZetkinTagGroup[];
   onChange: (
     e: ChangeEvent<{ [key: string]: never }>,
     value: ZetkinTagGroup | NewTagGroup | null | undefined,
@@ -23,11 +22,7 @@ const TagGroupSelect: React.FunctionComponent<{
     details: AutocompleteChangeDetails<ZetkinTagGroup> | undefined
   ) => void;
   value?: ZetkinTagGroup | null | undefined;
-}> = ({ value, onChange }) => {
-  const { orgId } = useRouter().query;
-  const { useQuery } = tagGroupsResource(orgId as string);
-  const { data: tagGroups } = useQuery();
-
+}> = ({ groups, value, onChange }) => {
   return (
     <Box mb={0.8} mt={1.5}>
       <Autocomplete
@@ -64,10 +59,11 @@ const TagGroupSelect: React.FunctionComponent<{
             );
           }
         }}
-        options={(tagGroups as GroupOptions[]) || []}
+        options={(groups as GroupOptions[]) || []}
         renderInput={(params) => (
           <TextField
             {...params}
+            id="TagManager-TagDialog-tagGroupSelect"
             inputProps={{
               ...params.inputProps,
             }}

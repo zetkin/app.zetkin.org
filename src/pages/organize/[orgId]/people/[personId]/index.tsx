@@ -4,6 +4,7 @@ import Head from 'next/head';
 import { useContext } from 'react';
 import { useRouter } from 'next/router';
 
+import { NewTag } from 'components/organize/TagsManager/types';
 import { PageWithLayout } from 'types';
 import PersonDetailsCard from 'components/organize/people/PersonDetailsCard';
 import PersonOrganizationsCard from 'components/organize/people/PersonOrganizationsCard';
@@ -75,7 +76,33 @@ const PersonProfilePage: PageWithLayout<PersonPageProps> = (props) => {
     props.personId
   ).useQuery();
 
-  const tagsGroupMutation = tagGroupsResource(orgId as string).useAdd();
+  const { useQuery: useTagGroupsQuery, useAdd: useTagGroupsMutation } =
+    tagGroupsResource(orgId as string);
+  const tagsGroupsQuery = useTagGroupsQuery();
+  const tagsGroupMutation = useTagGroupsMutation();
+
+  const createTag = async (tag: NewTag) => {
+    if ('group' in tag) {
+      // If creating a new group, has group object
+      const newGroup = await tagsGroupMutation.mutateAsync(tag.group);
+      const tagWithNewGroup = {
+        ...tag,
+        group: undefined,
+        group_id: newGroup.id,
+      };
+      await createTagMutation.mutateAsync(
+        tagWithNewGroup as ZetkinTagPostBody,
+        {
+          onError: () => showSnackbar('error'),
+        }
+      );
+    } else {
+      // Add tag with existing or no group
+      createTagMutation.mutate(tag, {
+        onError: () => showSnackbar('error'),
+      });
+    }
+  };
 
   if (!person) {
     return null;
@@ -99,36 +126,14 @@ const PersonProfilePage: PageWithLayout<PersonPageProps> = (props) => {
           <ZetkinQuery queries={{ organizationTagsQuery, personTagsQuery }}>
             <TagsManager
               assignedTags={personTagsQuery.data || []}
+              availableGroups={tagsGroupsQuery.data || []}
               availableTags={organizationTagsQuery.data || []}
               onAssignTag={(tag) =>
                 addTagMutation.mutate(tag.id, {
                   onError: () => showSnackbar('error'),
                 })
               }
-              onCreateTag={async (tag) => {
-                if ('group' in tag) {
-                  // If creating a new group, has group object
-                  const newGroup = await tagsGroupMutation.mutateAsync(
-                    tag.group
-                  );
-                  const tagWithNewGroup = {
-                    ...tag,
-                    group: undefined,
-                    group_id: newGroup.id,
-                  };
-                  await createTagMutation.mutateAsync(
-                    tagWithNewGroup as ZetkinTagPostBody,
-                    {
-                      onError: () => showSnackbar('error'),
-                    }
-                  );
-                } else {
-                  // Add tag with existing or no group
-                  createTagMutation.mutate(tag, {
-                    onError: () => showSnackbar('error'),
-                  });
-                }
-              }}
+              onCreateTag={createTag}
               onUnassignTag={(tag) =>
                 removeTagMutation.mutate(tag.id, {
                   onError: () => showSnackbar('error'),

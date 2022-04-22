@@ -14,7 +14,7 @@ import { FormattedMessage, useIntl } from 'react-intl';
 import { OnCreateTagHandler } from './types';
 import TagChip from './TagChip';
 import TagDialog from './TagDialog';
-import { ZetkinTag } from 'types/zetkin';
+import { ZetkinTag, ZetkinTagGroup } from 'types/zetkin';
 
 interface Group<Option> {
   key: number;
@@ -25,10 +25,11 @@ interface Group<Option> {
 
 const TagSelect: React.FunctionComponent<{
   disabledTags: ZetkinTag[];
+  groups: ZetkinTagGroup[];
   onCreateTag: OnCreateTagHandler;
   onSelect: (tag: ZetkinTag) => void;
   tags: ZetkinTag[];
-}> = ({ disabledTags, onCreateTag, onSelect, tags }) => {
+}> = ({ disabledTags, groups, onCreateTag, onSelect, tags }) => {
   const intl = useIntl();
   const [dialogOpen, setDialogOpen] = useState(false);
 
@@ -115,6 +116,7 @@ const TagSelect: React.FunctionComponent<{
         </ListItem>
       </List>
       <TagDialog
+        groups={groups}
         onClose={() => setDialogOpen(false)}
         onSubmit={onCreateTag}
         open={dialogOpen}

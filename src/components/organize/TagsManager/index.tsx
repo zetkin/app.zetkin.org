@@ -9,16 +9,18 @@ import GroupToggle from './GroupToggle';
 import { OnCreateTagHandler } from './types';
 import TagSelect from './TagSelect';
 import TagsList from './TagsList';
-import { ZetkinTag } from 'types/zetkin';
+import { ZetkinTag, ZetkinTagGroup } from 'types/zetkin';
 
 const TagsManager: React.FunctionComponent<{
   assignedTags: ZetkinTag[];
+  availableGroups: ZetkinTagGroup[];
   availableTags: ZetkinTag[];
   onAssignTag: (tag: ZetkinTag) => void;
   onCreateTag: OnCreateTagHandler;
   onUnassignTag: (tag: ZetkinTag) => void;
 }> = ({
   assignedTags,
+  availableGroups,
   availableTags,
   onAssignTag,
   onCreateTag,
@@ -68,6 +70,7 @@ const TagsManager: React.FunctionComponent<{
         >
           <TagSelect
             disabledTags={assignedTags}
+            groups={availableGroups}
             onCreateTag={onCreateTag}
             onSelect={onAssignTag}
             tags={availableTags}

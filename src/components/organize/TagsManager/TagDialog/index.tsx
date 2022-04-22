@@ -10,6 +10,7 @@ import ZetkinDialog from 'components/ZetkinDialog';
 import { ZetkinTag, ZetkinTagGroup } from 'types/zetkin';
 
 interface TagDialogProps {
+  groups: ZetkinTagGroup[];
   open: boolean;
   onClose: () => void;
   onSubmit: OnCreateTagHandler;
@@ -17,6 +18,7 @@ interface TagDialogProps {
 }
 
 const TagDialog: React.FunctionComponent<TagDialogProps> = ({
+  groups,
   open,
   onClose,
   onSubmit,
@@ -68,13 +70,17 @@ const TagDialog: React.FunctionComponent<TagDialogProps> = ({
         <TextField
           defaultValue={title}
           fullWidth
+          id="TagManager-TagDialog-titleField"
           label="Tag name"
           margin="normal"
           onChange={(e) => setTitle(e.target.value)}
           onClick={(e) => (e.target as HTMLInputElement).focus()}
           variant="outlined"
         />
-        <TagGroupSelect onChange={(e, value) => setGroup(value)} />
+        <TagGroupSelect
+          groups={groups}
+          onChange={(e, value) => setGroup(value)}
+        />
         <ColorPicker
           defaultValue={color}
           onChange={(value) => setColor(value)}

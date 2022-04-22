@@ -8,6 +8,7 @@ const ColorPicker: React.FunctionComponent<{
     <TextField
       defaultValue={defaultValue}
       fullWidth
+      id="TagManager-TagDialog-colorField"
       label="Color"
       margin="normal"
       onChange={(e) => onChange(e.target.value)}
