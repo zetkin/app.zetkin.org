@@ -14,13 +14,7 @@ const AsyncIntlProvider = (props) => {
 
   // Load localized messages on first render
   useEffect(() => {
-    async function loadMessages() {
-      const res = await fetch('/l10n_messages');
-      const data = await res.json();
-      setMessages(data.messages);
-    }
-
-    loadMessages();
+    loadMessages().then((data) => setMessages(data.messages));
   }, []);
 
   return (
@@ -28,6 +22,11 @@ const AsyncIntlProvider = (props) => {
       {props.children}
     </IntlProvider>
   );
+
+  async function loadMessages() {
+    const res = await fetch('/l10n_messages');
+    return await res.json();
+  }
 };
 
 export const decorators = [
@@ -62,14 +61,6 @@ export const parameters = {
       status: 200,
       response: {
         data: [],
-      },
-    },
-    {
-      url: 'api/orgs/1/people/1/avatar',
-      method: 'GET',
-      status: 200,
-      response: {
-        data: 'Hello storybook-addon-mock!',
       },
     },
   ],
