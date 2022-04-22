@@ -6,15 +6,8 @@ import ZetkinPerson from 'components/ZetkinPerson';
 import ZetkinRelativeTime from 'components/ZetkinRelativeTime';
 import { ZetkinPerson as ZetkinPersonType, ZetkinUpdate } from 'types/zetkin';
 
-const PersonName: React.FunctionComponent<{
-  person: Partial<ZetkinPersonType>;
-}> = ({ person }) => {
-  return (
-    <Typography component={Grid} item variant="subtitle2">
-      {person.first_name + ' ' + person.last_name}
-    </Typography>
-  );
-};
+const getPersonName = (person: Partial<ZetkinPersonType>) =>
+  person.first_name + ' ' + person.last_name;
 
 interface Props {
   update: ZetkinUpdate;
@@ -23,55 +16,77 @@ interface Props {
 const TimelineUpdate: React.FunctionComponent<Props> = ({ update }) => {
   return (
     <Box display="flex" flexDirection="column">
-      {renderDescription()}
+      <Grid alignItems="center" container direction="row" spacing={1}>
+        {update.actor && renderActorAvatar(update.actor as ZetkinPersonType)}
+        {renderDescriptionText()}
+      </Grid>
       {getContent()}
     </Box>
   );
 
-  // Forms the update description, which consists of an "action" (i.e. what the update changed),
-  // and an optional "actor" (the person who made the change)
-  function renderDescription() {
+  // optional "actor" (the person who made the change)
+  function renderActorAvatar(actor: ZetkinPersonType) {
     return (
-      <Grid alignItems="center" container direction="row" spacing={1}>
-        {update.actor && (
-          <>
-            <Grid item>
-              <PersonHoverCard personId={update.actor.id}>
-                <ZetkinPerson
-                  id={update.actor.id}
-                  name={''}
-                  showText={false}
-                  small
-                />
-              </PersonHoverCard>
-            </Grid>
-            <Grid item>
-              <PersonHoverCard personId={update.actor.id}>
-                <PersonName person={update.actor} />
-              </PersonHoverCard>
-            </Grid>
-          </>
-        )}
-        {renderAction()}
-      </Grid>
+      <>
+        <Grid item>
+          <PersonHoverCard personId={actor.id}>
+            <ZetkinPerson id={actor.id} name={''} showText={false} small />
+          </PersonHoverCard>
+        </Grid>
+      </>
     );
   }
 
-  function renderAction() {
+  // Forms the update description, which consists of an "action" (i.e. what the update changed),
+  function renderDescriptionText() {
     return (
       <>
         <Typography component={Grid} item variant="body2">
-          <FormattedMessage id={`misc.updates.${update.type}`} />
+          {renderActionText()}
         </Typography>
-        {update.data?.assignee && (
-          <PersonHoverCard personId={update.data.assignee.id}>
-            <PersonName person={update.data.assignee} />
-          </PersonHoverCard>
-        )}
         <Typography color="textSecondary" component={Grid} item variant="body2">
           <ZetkinRelativeTime datetime={update.created_at} />
         </Typography>
       </>
+    );
+  }
+
+  function renderActionText() {
+    const assignee = update.details?.assignee;
+    const actor = update?.actor;
+    let values = {};
+    if (assignee) {
+      values = {
+        ...values,
+        assignee: (
+          <PersonHoverCard
+            BoxProps={{ style: { display: 'inline-flex' } }}
+            personId={assignee.id}
+          >
+            <b>{getPersonName(assignee)}</b>
+          </PersonHoverCard>
+        ),
+      };
+    }
+    if (actor) {
+      values = {
+        ...values,
+        actor: (
+          <PersonHoverCard
+            BoxProps={{ style: { display: 'inline-flex' } }}
+            personId={actor.id}
+          >
+            <b>{getPersonName(actor)}</b>
+          </PersonHoverCard>
+        ),
+      };
+    }
+    return (
+      <FormattedMessage
+        defaultMessage="{actor} assigned {assignee}"
+        id={`misc.updates.${update.type}`}
+        values={values}
+      />
     );
   }
 

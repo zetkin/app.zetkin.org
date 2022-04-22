@@ -7,7 +7,7 @@ import { ZetkinUpdate } from 'types/zetkin';
 const update: ZetkinUpdate = {
   actor: mockPerson(),
   created_at: dayjs().subtract(5, 'hours').format(),
-  data: { assignee: mockPerson() },
+  details: { assignee: mockPerson() },
   type: 'journey.assignee.add',
 };
 
