@@ -68,9 +68,9 @@ const TagDialog: React.FunctionComponent<TagDialogProps> = ({
         }}
       >
         <TextField
+          data-testid="TagManager-TagDialog-titleField"
           defaultValue={title}
           fullWidth
-          id="TagManager-TagDialog-titleField"
           label="Tag name"
           margin="normal"
           onChange={(e) => setTitle(e.target.value)}

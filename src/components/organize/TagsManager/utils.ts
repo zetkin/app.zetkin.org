@@ -1,5 +1,11 @@
-import { TagsGroups } from './types';
-import { ZetkinTag } from 'types/zetkin';
+import { useContext } from 'react';
+import { UseMutationResult } from 'react-query';
+import { useRouter } from 'next/router';
+
+import SnackbarContext from 'hooks/SnackbarContext';
+import { tagGroupsResource } from 'api/tags';
+import { NewTag, NewTagGroup, TagsGroups } from './types';
+import { ZetkinTag, ZetkinTagGroup, ZetkinTagPostBody } from 'types/zetkin';
 
 export const groupTags = (
   tags: ZetkinTag[],
@@ -25,4 +31,44 @@ export const groupTags = (
       },
     };
   }, {});
+};
+
+/**
+ * Returns a function for creating a tag using react-query mutations while
+ * supporting the ability to create a tag group.
+ *
+ * Provide a `createTagMutation` because this can be different for universal tags or person tags.
+ * The mutation to create a group is always the same, so this is hard coded.
+ */
+export const useCreateTag = (
+  createTagMutation: UseMutationResult<ZetkinTagGroup, unknown, NewTagGroup>
+): ((tag: NewTag) => void) => {
+  const { orgId } = useRouter().query;
+  const tagsGroupMutation = tagGroupsResource(orgId as string).useAdd();
+  const { showSnackbar } = useContext(SnackbarContext);
+
+  const createTag = async (tag: NewTag) => {
+    if ('group' in tag) {
+      // If creating a new group, has group object
+      const newGroup = await tagsGroupMutation.mutateAsync(tag.group);
+      const tagWithNewGroup = {
+        ...tag,
+        group: undefined,
+        group_id: newGroup.id,
+      };
+      await createTagMutation.mutateAsync(
+        tagWithNewGroup as ZetkinTagPostBody,
+        {
+          onError: () => showSnackbar('error'),
+        }
+      );
+    } else {
+      // Add tag with existing or no group
+      createTagMutation.mutate(tag, {
+        onError: () => showSnackbar('error'),
+      });
+    }
+  };
+
+  return createTag;
 };

@@ -4,7 +4,6 @@ import Head from 'next/head';
 import { useContext } from 'react';
 import { useRouter } from 'next/router';
 
-import { NewTag } from 'components/organize/TagsManager/types';
 import { PageWithLayout } from 'types';
 import PersonDetailsCard from 'components/organize/people/PersonDetailsCard';
 import PersonOrganizationsCard from 'components/organize/people/PersonOrganizationsCard';
@@ -12,8 +11,8 @@ import SinglePersonLayout from 'layout/organize/SinglePersonLayout';
 import SnackbarContext from 'hooks/SnackbarContext';
 import { tagGroupsResource } from 'api/tags';
 import TagsManager from 'components/organize/TagsManager';
+import { useCreateTag } from 'components/organize/TagsManager/utils';
 import ZetkinQuery from 'components/ZetkinQuery';
-import { ZetkinTagPostBody } from 'types/zetkin';
 import { personResource, personTagsResource } from 'api/people';
 import { scaffold, ScaffoldedGetServerSideProps } from 'utils/next';
 
@@ -76,33 +75,10 @@ const PersonProfilePage: PageWithLayout<PersonPageProps> = (props) => {
     props.personId
   ).useQuery();
 
-  const { useQuery: useTagGroupsQuery, useAdd: useTagGroupsMutation } =
-    tagGroupsResource(orgId as string);
+  const { useQuery: useTagGroupsQuery } = tagGroupsResource(orgId as string);
   const tagsGroupsQuery = useTagGroupsQuery();
-  const tagsGroupMutation = useTagGroupsMutation();
 
-  const createTag = async (tag: NewTag) => {
-    if ('group' in tag) {
-      // If creating a new group, has group object
-      const newGroup = await tagsGroupMutation.mutateAsync(tag.group);
-      const tagWithNewGroup = {
-        ...tag,
-        group: undefined,
-        group_id: newGroup.id,
-      };
-      await createTagMutation.mutateAsync(
-        tagWithNewGroup as ZetkinTagPostBody,
-        {
-          onError: () => showSnackbar('error'),
-        }
-      );
-    } else {
-      // Add tag with existing or no group
-      createTagMutation.mutate(tag, {
-        onError: () => showSnackbar('error'),
-      });
-    }
-  };
+  const createTag = useCreateTag(createTagMutation);
 
   if (!person) {
     return null;

@@ -63,7 +63,7 @@ const TagGroupSelect: React.FunctionComponent<{
         renderInput={(params) => (
           <TextField
             {...params}
-            id="TagManager-TagDialog-tagGroupSelect"
+            data-testid="TagManager-TagDialog-tagGroupSelect"
             inputProps={{
               ...params.inputProps,
             }}
