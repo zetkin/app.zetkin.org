@@ -11,8 +11,8 @@ export enum UPDATE_TYPES {
 }
 
 export interface ZetkinUpdate {
-  actor?: Pick<ZetkinPerson, 'id' | 'first_name' | 'last_name'>;
-  created_at: string;
+  actor: Pick<ZetkinPerson, 'id' | 'first_name' | 'last_name'>;
+  timestamp: string;
   type: `${UPDATE_TYPES}`;
 }
 

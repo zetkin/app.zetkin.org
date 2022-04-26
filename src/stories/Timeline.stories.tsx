@@ -21,7 +21,7 @@ const Template: ComponentStory<typeof Timeline> = (args) => (
 
 const addAssigneeUpdates = Array.from(Array(10).keys()).map(() =>
   mockUpdate(UPDATE_TYPES.JOURNEYINSTANCE_ADDASSIGNEE, {
-    created_at: dayjs()
+    timestamp: dayjs()
       .subtract(Math.random() * 100, 'hours')
       .format(),
   })
@@ -29,7 +29,7 @@ const addAssigneeUpdates = Array.from(Array(10).keys()).map(() =>
 
 const journeyMilestoneUpdates = Array.from(Array(10).keys()).map(() =>
   mockUpdate(UPDATE_TYPES.JOURNEYINSTANCE_UPDATEMILESTONE, {
-    created_at: dayjs()
+    timestamp: dayjs()
       .subtract(Math.random() * 100, 'hours')
       .format(),
   })
@@ -37,7 +37,7 @@ const journeyMilestoneUpdates = Array.from(Array(10).keys()).map(() =>
 
 const updates = addAssigneeUpdates
   .concat(journeyMilestoneUpdates)
-  .sort((a, b) => (dayjs(a.created_at).isAfter(dayjs(b.created_at)) ? 1 : -1));
+  .sort((a, b) => (dayjs(a.timestamp).isAfter(dayjs(b.timestamp)) ? -1 : 1));
 
 export const Primary = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args

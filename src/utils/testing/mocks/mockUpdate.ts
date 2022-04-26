@@ -8,7 +8,7 @@ import { UPDATE_TYPES, ZetkinUpdate } from 'types/updates';
 
 const update: Partial<ZetkinUpdate> = {
   actor: mockPerson(),
-  created_at: dayjs().subtract(5, 'hours').format(),
+  timestamp: dayjs().subtract(5, 'hours').format(),
 };
 
 const mockUpdate = (
@@ -24,7 +24,7 @@ const mockUpdate = (
     [UPDATE_TYPES.JOURNEYINSTANCE_UPDATEMILESTONE]: {
       details: {
         changes: {
-          completed: { from: null, to: update.created_at },
+          completed: { from: null, to: update.timestamp },
         },
         milestone: {
           id: 1,

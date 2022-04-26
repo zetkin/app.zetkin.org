@@ -1,2 +1,3 @@
 journeyinstance:
   addassignee: '{actor} assigned {assignee}'
+  updatemilestone: '{actor} completed a milestone'

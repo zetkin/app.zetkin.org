@@ -61,7 +61,7 @@ const Timeline: React.FunctionComponent<TimelineProps> = ({
 
   function renderUpdate(update: ZetkinUpdate, divider: boolean) {
     return (
-      <React.Fragment key={update.created_at + update.type}>
+      <React.Fragment key={update.timestamp + update.type}>
         <Grid aria-label="timeline update" item>
           <TimelineUpdate update={update} />
         </Grid>
