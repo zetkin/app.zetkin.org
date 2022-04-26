@@ -6,6 +6,7 @@ import TimelineUpdate from './TimelineUpdate';
 import { ZetkinUpdate } from 'types/updates';
 
 export interface TimelineProps {
+  expandable?: boolean;
   showAll?: boolean;
   updates: ZetkinUpdate[];
 }
@@ -13,6 +14,7 @@ export interface TimelineProps {
 export const SHOW_INITIALLY = 5;
 
 const Timeline: React.FunctionComponent<TimelineProps> = ({
+  expandable,
   showAll,
   updates,
 }) => {
@@ -22,11 +24,7 @@ const Timeline: React.FunctionComponent<TimelineProps> = ({
     <Fade appear in timeout={1000}>
       <Grid container direction="column" spacing={3}>
         {renderUpdateList()}
-        <Grid item>
-          <Button onClick={() => setExpanded(!expanded)} variant="outlined">
-            <FormattedMessage id="misc.timeline.expand" />
-          </Button>
-        </Grid>
+        {expandable && renderExpandButton()}
       </Grid>
     </Fade>
   );
@@ -34,27 +32,15 @@ const Timeline: React.FunctionComponent<TimelineProps> = ({
   function renderUpdateList() {
     return (
       <>
-        {updates
-          .slice(0, SHOW_INITIALLY)
-          .map((update, idx) =>
+        {(expandable ? updates.slice(0, SHOW_INITIALLY) : updates).map(
+          (update, idx) =>
             renderUpdate(
               update,
-              idx < (expanded ? updates.length : SHOW_INITIALLY) - 1
+              idx <
+                (!expandable || expanded ? updates.length : SHOW_INITIALLY) - 1
             )
-          )}
-        <Collapse
-          component={Grid}
-          in={expanded}
-          style={{ padding: expanded ? 12 : '0 12px' }}
-        >
-          <Grid container direction="column" spacing={3}>
-            {updates
-              .slice(SHOW_INITIALLY)
-              .map((update, idx) =>
-                renderUpdate(update, idx < updates.length - SHOW_INITIALLY - 1)
-              )}
-          </Grid>
-        </Collapse>
+        )}
+        {expandable && renderExpandedUpdates()}
       </>
     );
   }
@@ -67,6 +53,34 @@ const Timeline: React.FunctionComponent<TimelineProps> = ({
         </Grid>
         {divider && <Divider style={{ width: '100%' }} />}
       </React.Fragment>
+    );
+  }
+
+  function renderExpandButton() {
+    return (
+      <Grid item>
+        <Button onClick={() => setExpanded(!expanded)} variant="outlined">
+          <FormattedMessage id="misc.timeline.expand" />
+        </Button>
+      </Grid>
+    );
+  }
+
+  function renderExpandedUpdates() {
+    return (
+      <Collapse
+        component={Grid}
+        in={expanded}
+        style={{ padding: expanded ? 12 : '0 12px' }}
+      >
+        <Grid container direction="column" spacing={3}>
+          {updates
+            .slice(SHOW_INITIALLY)
+            .map((update, idx) =>
+              renderUpdate(update, idx < updates.length - SHOW_INITIALLY - 1)
+            )}
+        </Grid>
+      </Collapse>
     );
   }
 };
