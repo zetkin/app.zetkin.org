@@ -13,6 +13,7 @@ import {
 } from 'components/views';
 
 const scaffoldOptions = {
+  authLevelRequired: 2,
   localeScope: ['layout.organize', 'pages.people'],
 };
 
