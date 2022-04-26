@@ -4,6 +4,7 @@ import { ComponentMeta, ComponentStory } from '@storybook/react';
 
 import mockUpdate from 'utils/testing/mocks/mockUpdate';
 import Timeline from 'components/Timeline';
+import { UPDATE_TYPES } from '../types/updates';
 
 export default {
   argTypes: {
@@ -22,7 +23,7 @@ export const Primary = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
 Primary.args = {
   updates: Array.from(Array(10).keys()).map(() =>
-    mockUpdate({
+    mockUpdate(UPDATE_TYPES.JOURNEYINSTANCE_ADDASSIGNEE, {
       created_at: dayjs()
         .subtract(Math.random() * 100, 'hours')
         .format(),

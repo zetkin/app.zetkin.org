@@ -3,7 +3,7 @@ import React from 'react';
 import { Button, Collapse, Divider, Fade, Grid } from '@material-ui/core';
 
 import TimelineUpdate from './TimelineUpdate';
-import { ZetkinUpdate } from 'types/zetkin';
+import { ZetkinUpdate } from 'types/updates';
 
 export interface TimelineProps {
   showAll?: boolean;
