@@ -16,10 +16,16 @@ interface Props {
 
 const TimelineAssigned: React.FunctionComponent<Props> = ({ update }) => {
   return (
-    <Box display="flex" flexDirection="column">
-      <Grid alignItems="center" container direction="row" spacing={1}>
-        <TimelineActor actor={update.actor} />
-        {renderDescriptionText()}
+    <Box>
+      <Grid alignItems="center" container direction="row" spacing={2}>
+        <Grid item>
+          <TimelineActor actor={update.actor} size={32} />
+        </Grid>
+        <Grid item>
+          <Grid container direction="row" spacing={1}>
+            {renderDescriptionText()}
+          </Grid>
+        </Grid>
       </Grid>
     </Box>
   );

@@ -7,9 +7,9 @@ const ZetkinPerson: React.FunctionComponent<{
   link?: boolean;
   name: string;
   showText?: boolean;
-  small?: boolean;
+  size?: number;
   subtitle?: string | React.ReactNode;
-}> = ({ containerProps, id, link, name, showText = true, small, subtitle }) => {
+}> = ({ containerProps, id, link, name, showText = true, size, subtitle }) => {
   const router = useRouter();
   const { orgId } = router.query;
   const linkProps = {
@@ -23,7 +23,7 @@ const ZetkinPerson: React.FunctionComponent<{
         <Avatar
           {...(link ? linkProps : {})}
           src={orgId ? `/api/orgs/${orgId}/people/${id}/avatar` : ''}
-          style={small ? { height: 32, width: 32 } : {}}
+          style={size ? { height: size, width: size } : {}}
         />
       </Tooltip>
 

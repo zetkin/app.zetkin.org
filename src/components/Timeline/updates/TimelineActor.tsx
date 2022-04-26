@@ -7,12 +7,13 @@ import { ZetkinUpdate } from 'types/updates';
 
 const TimelineActor: React.FunctionComponent<{
   actor: ZetkinUpdate['actor'];
-}> = ({ actor }) => {
+  size: number;
+}> = ({ actor, size }) => {
   return (
     <>
       <Grid item>
         <PersonHoverCard personId={actor.id}>
-          <ZetkinPerson id={actor.id} name={''} showText={false} small />
+          <ZetkinPerson id={actor.id} name={''} showText={false} size={size} />
         </PersonHoverCard>
       </Grid>
     </>

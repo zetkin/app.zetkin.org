@@ -22,7 +22,7 @@ const Timeline: React.FunctionComponent<TimelineProps> = ({
 
   return (
     <Fade appear in timeout={1000}>
-      <Grid container direction="column" spacing={3}>
+      <Grid container direction="column" spacing={5}>
         {renderUpdateList()}
         {expandable && renderExpandButton()}
       </Grid>
@@ -68,11 +68,10 @@ const Timeline: React.FunctionComponent<TimelineProps> = ({
 
   function renderExpandedUpdates() {
     return (
-      <Collapse
-        component={Grid}
-        in={expanded}
-        style={{ padding: expanded ? 12 : '0 12px' }}
-      >
+      // Because MUI Collapse typing is wrong
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      <Collapse component={Grid} in={expanded} item>
         <Grid container direction="column" spacing={3}>
           {updates
             .slice(SHOW_INITIALLY)
