@@ -1,10 +1,12 @@
+import CancelIcon from '@material-ui/icons/Cancel';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import { FormattedMessage } from 'react-intl';
 import React from 'react';
 import { Box, Grid, Typography } from '@material-ui/core';
 
 import PersonHoverCard from 'components/PersonHoverCard';
-import TimelineActor from './TimelineActor';
+import theme from 'theme';
+import TimelineActor from '../TimelineActor';
 import { ZetkinPerson as ZetkinPersonType } from 'types/zetkin';
 import ZetkinRelativeTime from 'components/ZetkinRelativeTime';
 import { ZetkinUpdateJourneyMilestone } from 'types/updates';
@@ -19,21 +21,30 @@ interface Props {
 const TimelineJourneyMilestone: React.FunctionComponent<Props> = ({
   update,
 }) => {
+  let changeType: 'complete' | 'incomplete';
+  const changeName = Object.keys(update.details.changes)[0];
+  if (changeName === 'completed') {
+    changeType = !update.details.changes[changeName].to
+      ? 'incomplete'
+      : 'complete';
+  }
+
   return (
     <Box>
       <Grid container direction="row" spacing={2}>
         <Grid item>
           <TimelineActor actor={update.actor} size={32} />
         </Grid>
-        <Grid
-          alignItems="flex-start"
-          direction="column"
-          item
-          spacing={3}
-          style={{ paddingTop: 12 }}
-        >
-          {renderDescriptionText()}
-          {renderContent()}
+        <Grid item style={{ paddingTop: 12 }}>
+          <Grid
+            alignItems="flex-start"
+            container
+            direction="column"
+            spacing={2}
+          >
+            {renderDescriptionText()}
+            {renderContent()}
+          </Grid>
         </Grid>
       </Grid>
     </Box>
@@ -41,10 +52,10 @@ const TimelineJourneyMilestone: React.FunctionComponent<Props> = ({
 
   function renderDescriptionText() {
     return (
-      <Grid container direction="row" item spacing={1} style={{ height: 32 }}>
+      <Grid container direction="row" item spacing={1}>
         <Typography component={Grid} item variant="body2">
           <FormattedMessage
-            id={`misc.updates.${update.type}`}
+            id={`misc.updates.${update.type}.${changeType}`}
             values={{
               actor: (
                 <PersonHoverCard
@@ -66,9 +77,17 @@ const TimelineJourneyMilestone: React.FunctionComponent<Props> = ({
 
   function renderContent() {
     return (
-      <Box>
-        <CheckCircleIcon color="primary" />
-      </Box>
+      <Grid alignItems="center" container direction="row" item spacing={2}>
+        {changeType === 'complete' && (
+          <CheckCircleIcon style={{ color: theme.palette.success.main }} />
+        )}
+        {changeType === 'incomplete' && (
+          <CancelIcon style={{ color: theme.palette.warning.main }} />
+        )}
+        <Typography component={Grid} item variant="h6">
+          {update.details.milestone.title}
+        </Typography>
+      </Grid>
     );
   }
 };

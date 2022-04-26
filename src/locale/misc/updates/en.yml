@@ -1,3 +1,5 @@
 journeyinstance:
   addassignee: '{actor} assigned {assignee}'
-  updatemilestone: '{actor} completed a milestone'
+  updatemilestone:
+    complete: '{actor} completed a milestone'
+    incomplete: '{actor} marked a milestone as incomplete'
