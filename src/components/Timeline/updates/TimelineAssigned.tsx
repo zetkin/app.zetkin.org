@@ -2,7 +2,7 @@ import { FormattedMessage } from 'react-intl';
 import { Box, Grid, Typography } from '@material-ui/core';
 
 import PersonHoverCard from 'components/PersonHoverCard';
-import TimelineActor from './TimelineActor';
+import TimelineActor from '../TimelineActor';
 import { ZetkinPerson as ZetkinPersonType } from 'types/zetkin';
 import ZetkinRelativeTime from 'components/ZetkinRelativeTime';
 import { ZetkinUpdateAssignee } from 'types/updates';

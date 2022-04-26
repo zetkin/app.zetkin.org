@@ -22,7 +22,7 @@ const Timeline: React.FunctionComponent<TimelineProps> = ({
 
   return (
     <Fade appear in timeout={1000}>
-      <Grid container direction="column" spacing={5}>
+      <Grid container direction="column" spacing={6}>
         {renderUpdateList()}
         {expandable && renderExpandButton()}
       </Grid>
@@ -72,7 +72,7 @@ const Timeline: React.FunctionComponent<TimelineProps> = ({
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       <Collapse component={Grid} in={expanded} item>
-        <Grid container direction="column" spacing={3}>
+        <Grid container direction="column" spacing={6}>
           {updates
             .slice(SHOW_INITIALLY)
             .map((update, idx) =>
