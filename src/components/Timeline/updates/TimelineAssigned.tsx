@@ -1,10 +1,10 @@
 import { FormattedMessage } from 'react-intl';
 import { Box, Grid, Typography } from '@material-ui/core';
 
-import PersonHoverCard from '../../PersonHoverCard';
-import ZetkinPerson from '../../ZetkinPerson';
-import { ZetkinPerson as ZetkinPersonType } from '../../../types/zetkin';
-import ZetkinRelativeTime from '../../ZetkinRelativeTime';
+import PersonHoverCard from 'components/PersonHoverCard';
+import ZetkinPerson from 'components/ZetkinPerson';
+import { ZetkinPerson as ZetkinPersonType } from 'types/zetkin';
+import ZetkinRelativeTime from 'components/ZetkinRelativeTime';
 import { ZetkinUpdateAssignee } from 'types/updates';
 
 const getPersonName = (person: Partial<ZetkinPersonType>) =>
