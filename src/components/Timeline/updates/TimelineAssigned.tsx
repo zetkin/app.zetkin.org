@@ -2,7 +2,7 @@ import { FormattedMessage } from 'react-intl';
 import { Box, Grid, Typography } from '@material-ui/core';
 
 import PersonHoverCard from 'components/PersonHoverCard';
-import ZetkinPerson from 'components/ZetkinPerson';
+import TimelineActor from './TimelineActor';
 import { ZetkinPerson as ZetkinPersonType } from 'types/zetkin';
 import ZetkinRelativeTime from 'components/ZetkinRelativeTime';
 import { ZetkinUpdateAssignee } from 'types/updates';
@@ -18,24 +18,11 @@ const TimelineAssigned: React.FunctionComponent<Props> = ({ update }) => {
   return (
     <Box display="flex" flexDirection="column">
       <Grid alignItems="center" container direction="row" spacing={1}>
-        {update.actor && renderActorAvatar(update.actor as ZetkinPersonType)}
+        <TimelineActor actor={update.actor} />
         {renderDescriptionText()}
       </Grid>
     </Box>
   );
-
-  // optional "actor" (the person who made the change)
-  function renderActorAvatar(actor: ZetkinPersonType) {
-    return (
-      <>
-        <Grid item>
-          <PersonHoverCard personId={actor.id}>
-            <ZetkinPerson id={actor.id} name={''} showText={false} small />
-          </PersonHoverCard>
-        </Grid>
-      </>
-    );
-  }
 
   // Forms the update description, which consists of an "action" (i.e. what the update changed),
   function renderDescriptionText() {
@@ -45,7 +32,7 @@ const TimelineAssigned: React.FunctionComponent<Props> = ({ update }) => {
           {renderActionText()}
         </Typography>
         <Typography color="textSecondary" component={Grid} item variant="body2">
-          <ZetkinRelativeTime datetime={update.created_at} />
+          <ZetkinRelativeTime datetime={update.timestamp} />
         </Typography>
       </>
     );
@@ -53,7 +40,7 @@ const TimelineAssigned: React.FunctionComponent<Props> = ({ update }) => {
 
   function renderActionText() {
     const assignee = update.details?.assignee;
-    const actor = update?.actor;
+    const actor = update.actor;
     let values = {};
     if (assignee) {
       values = {
@@ -68,19 +55,17 @@ const TimelineAssigned: React.FunctionComponent<Props> = ({ update }) => {
         ),
       };
     }
-    if (actor) {
-      values = {
-        ...values,
-        actor: (
-          <PersonHoverCard
-            BoxProps={{ style: { display: 'inline-flex' } }}
-            personId={actor.id}
-          >
-            <b>{getPersonName(actor)}</b>
-          </PersonHoverCard>
-        ),
-      };
-    }
+    values = {
+      ...values,
+      actor: (
+        <PersonHoverCard
+          BoxProps={{ style: { display: 'inline-flex' } }}
+          personId={actor.id}
+        >
+          <b>{getPersonName(actor)}</b>
+        </PersonHoverCard>
+      ),
+    };
     return (
       <FormattedMessage id={`misc.updates.${update.type}`} values={values} />
     );
