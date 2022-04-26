@@ -28,21 +28,33 @@ describe('Timeline', () => {
     mockRouter.setCurrentUrl('/initial');
   });
 
-  it('displays the correct number of updates', () => {
+  it('displays all updates', () => {
     const { getAllByLabelText } = render(<Timeline {...props} />);
     const updates = getAllByLabelText('timeline update');
     expect(
       updates.filter(
         (update) => getComputedStyle(update).visibility === 'visible'
       ).length
-    ).toEqual(SHOW_INITIALLY);
+    ).toEqual(NUM_UPDATES);
   });
 
-  it('expands to show all updates', () => {
-    const { getAllByLabelText, getByText } = render(<Timeline {...props} />);
+  it('if expandable, expands to show all updates', () => {
+    const { getAllByLabelText, getByText } = render(
+      <Timeline {...props} expandable={true} />
+    );
+    const updatesBefore = getAllByLabelText('timeline update');
+    expect(
+      updatesBefore.filter(
+        (update) => getComputedStyle(update).visibility === 'visible'
+      ).length
+    ).toEqual(SHOW_INITIALLY);
     const showMore = getByText('misc.timeline.expand');
     fireEvent.click(showMore);
     const updates = getAllByLabelText('timeline update');
-    expect(updates.length).toEqual(NUM_UPDATES);
+    expect(
+      updates.filter(
+        (update) => getComputedStyle(update).visibility === 'visible'
+      ).length
+    ).toEqual(NUM_UPDATES);
   });
 });
