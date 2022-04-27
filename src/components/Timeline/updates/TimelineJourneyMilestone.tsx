@@ -1,5 +1,6 @@
 import CancelIcon from '@material-ui/icons/Cancel';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import FlagIcon from '@material-ui/icons/Flag';
 import { FormattedMessage } from 'react-intl';
 import React from 'react';
 import { Box, Grid, Typography } from '@material-ui/core';
@@ -32,7 +33,7 @@ const TimelineJourneyMilestone: React.FunctionComponent<Props> = ({
   )[0] as CHANGE_PROPS[UPDATE_TYPES.JOURNEYINSTANCE_UPDATEMILESTONE];
 
   if (changeProp === 'completed') {
-    changeToRender = !update.details.changes[changeProp].to
+    changeToRender = !update.details.changes[changeProp]?.to
       ? 'incomplete'
       : 'complete';
   } else if (changeProp === 'deadline') {
@@ -97,6 +98,27 @@ const TimelineJourneyMilestone: React.FunctionComponent<Props> = ({
         <Typography component={Grid} item variant="h6">
           {update.details.milestone.title}
         </Typography>
+        {changeToRender === 'deadline' && (
+          <FlagIcon
+            style={{
+              color: theme.palette.text.secondary,
+              marginLeft: theme.spacing(2),
+            }}
+          />
+        )}
+        {changeToRender === 'deadline' && (
+          <Typography
+            color="textSecondary"
+            component={Grid}
+            item
+            variant="body2"
+          >
+            now due{' '}
+            <ZetkinRelativeTime
+              datetime={update.details.changes.deadline?.to as string}
+            />
+          </Typography>
+        )}
       </Grid>
     );
   }

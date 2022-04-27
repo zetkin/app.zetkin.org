@@ -36,10 +36,24 @@ const journeyMilestoneUpdates = Array.from(Array(10).keys()).map(() => {
       .subtract(Math.random() * 100, 'hours')
       .format(),
   }) as ZetkinUpdateJourneyMilestone;
-  update.details.milestone.title = chance.sentence({ words: 4 });
-  if (Math.random() > 0.5) {
-    const change = update.details.changes.completed;
+  update.details.milestone.title = chance.sentence({ words: 4 }).slice(0, -1);
+  const dice = Math.random();
+  if (dice > 0.33 && dice < 0.66) {
+    const change = update.details.changes.completed as {
+      from: string;
+      to: string;
+    };
     update.details.changes.completed = { from: change.to, to: change.from };
+  }
+  if (dice >= 0.66) {
+    update.details.changes = {
+      deadline: {
+        from: '',
+        to: dayjs()
+          .add(Math.random() * 100, 'hours')
+          .format(),
+      },
+    };
   }
   return update;
 });

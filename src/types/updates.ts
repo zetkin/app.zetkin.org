@@ -21,7 +21,7 @@ export interface ZetkinUpdate {
 }
 
 type ZetkinUpdateChange<UpdateType> = {
-  [Property in keyof UpdateType]: {
+  [Property in keyof UpdateType]?: {
     from: UpdateType[Property];
     to: UpdateType[Property];
   };
