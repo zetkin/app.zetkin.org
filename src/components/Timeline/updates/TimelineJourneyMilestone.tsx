@@ -1,3 +1,4 @@
+import AlarmOffIcon from '@material-ui/icons/AlarmOff';
 import CancelIcon from '@material-ui/icons/Cancel';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import FlagIcon from '@material-ui/icons/Flag';
@@ -98,28 +99,40 @@ const TimelineJourneyMilestone: React.FunctionComponent<Props> = ({
         <Typography component={Grid} item variant="h6">
           {update.details.milestone.title}
         </Typography>
-        {changeToRender === 'deadline' && (
-          <FlagIcon
-            style={{
-              color: theme.palette.text.secondary,
-              marginLeft: theme.spacing(2),
-            }}
-          />
-        )}
-        {changeToRender === 'deadline' && (
-          <Typography
-            color="textSecondary"
-            component={Grid}
-            item
-            variant="body2"
-          >
-            now due{' '}
-            <ZetkinRelativeTime
-              datetime={update.details.changes.deadline?.to as string}
-            />
-          </Typography>
-        )}
+        {changeToRender === 'deadline' && renderDeadlineUpdate()}
       </Grid>
+    );
+  }
+
+  function renderDeadlineUpdate() {
+    const deadlineTo = update.details.changes?.deadline?.to;
+    const iconStyle = {
+      color: theme.palette.text.secondary,
+      marginLeft: theme.spacing(2),
+    };
+
+    return (
+      <>
+        {deadlineTo ? (
+          <FlagIcon style={iconStyle} />
+        ) : (
+          <AlarmOffIcon style={iconStyle} />
+        )}
+        <Typography color="textSecondary" component={Grid} item variant="body2">
+          <FormattedMessage
+            id={`misc.updates.${update.type}.${
+              deadlineTo ? 'deadlineUpdate' : 'deadlineRemove'
+            }`}
+            values={
+              deadlineTo
+                ? {
+                    datetime: <ZetkinRelativeTime datetime={deadlineTo} />,
+                  }
+                : {}
+            }
+          />
+        </Typography>
+      </>
     );
   }
 };

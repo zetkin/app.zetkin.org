@@ -30,7 +30,7 @@ const addAssigneeUpdates = Array.from(Array(10).keys()).map(() =>
   })
 );
 
-const journeyMilestoneUpdates = Array.from(Array(10).keys()).map(() => {
+const journeyMilestoneUpdates = Array.from(Array(30).keys()).map(() => {
   const update = mockUpdate(UPDATE_TYPES.JOURNEYINSTANCE_UPDATEMILESTONE, {
     timestamp: dayjs()
       .subtract(Math.random() * 100, 'hours')
@@ -49,9 +49,12 @@ const journeyMilestoneUpdates = Array.from(Array(10).keys()).map(() => {
     update.details.changes = {
       deadline: {
         from: '',
-        to: dayjs()
-          .add(Math.random() * 100, 'hours')
-          .format(),
+        to:
+          dice > 0.85
+            ? null
+            : dayjs()
+                .add(Math.random() * 100, 'hours')
+                .format(),
       },
     };
   }
