@@ -1,3 +1,8 @@
-journeyInstance:
-  assignee:
-    add: '{actor} assigned {assignee}'
+journeyinstance:
+  addassignee: '{actor} assigned {assignee}'
+  updatemilestone:
+    complete: '{actor} completed a milestone'
+    deadline: '{actor} updated a milestone deadline'
+    deadlineRemove: deadline was removed
+    deadlineUpdate: 'now due {datetime}'
+    incomplete: '{actor} marked a milestone as incomplete'

@@ -94,6 +94,7 @@ const dummyTableData = ids.splice(0, 500).map((id) => {
         .add(Math.ceil(Math.random() * 500), 'hour')
         .format(),
       description: '',
+      id: ids.shift() as number,
       title: chance.pickone(milestones),
     },
     subjects: chance.pickset(people, chance.pickone([1, 1, 1, 1, 2])),

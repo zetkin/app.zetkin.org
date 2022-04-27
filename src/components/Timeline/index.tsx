@@ -3,7 +3,7 @@ import React from 'react';
 import { Button, Collapse, Divider, Fade, Grid } from '@material-ui/core';
 
 import TimelineUpdate from './TimelineUpdate';
-import { ZetkinUpdate } from 'types/zetkin';
+import { ZetkinUpdate } from 'types/updates';
 
 export interface TimelineProps {
   expandable?: boolean;
@@ -22,7 +22,7 @@ const Timeline: React.FunctionComponent<TimelineProps> = ({
 
   return (
     <Fade appear in timeout={1000}>
-      <Grid container direction="column" spacing={3}>
+      <Grid container direction="column" spacing={6}>
         {renderUpdateList()}
         {expandable && renderExpandButton()}
       </Grid>
@@ -47,7 +47,7 @@ const Timeline: React.FunctionComponent<TimelineProps> = ({
 
   function renderUpdate(update: ZetkinUpdate, divider: boolean) {
     return (
-      <React.Fragment key={update.created_at + update.type}>
+      <React.Fragment key={update.timestamp + update.type}>
         <Grid aria-label="timeline update" item>
           <TimelineUpdate update={update} />
         </Grid>
@@ -68,12 +68,11 @@ const Timeline: React.FunctionComponent<TimelineProps> = ({
 
   function renderExpandedUpdates() {
     return (
-      <Collapse
-        component={Grid}
-        in={expanded}
-        style={{ padding: expanded ? 12 : '0 12px' }}
-      >
-        <Grid container direction="column" spacing={3}>
+      // Because MUI Collapse typing is wrong
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      <Collapse component={Grid} in={expanded} item>
+        <Grid container direction="column" spacing={6}>
           {updates
             .slice(SHOW_INITIALLY)
             .map((update, idx) =>
