@@ -9,7 +9,11 @@ import theme from 'theme';
 import TimelineActor from '../TimelineActor';
 import { ZetkinPerson as ZetkinPersonType } from 'types/zetkin';
 import ZetkinRelativeTime from 'components/ZetkinRelativeTime';
-import { ZetkinUpdateJourneyMilestone } from 'types/updates';
+import {
+  CHANGE_PROPS,
+  UPDATE_TYPES,
+  ZetkinUpdateJourneyMilestone,
+} from 'types/updates';
 
 const getPersonName = (person: Partial<ZetkinPersonType>) =>
   person.first_name + ' ' + person.last_name;
@@ -21,12 +25,18 @@ interface Props {
 const TimelineJourneyMilestone: React.FunctionComponent<Props> = ({
   update,
 }) => {
-  let changeType: 'complete' | 'incomplete';
-  const changeName = Object.keys(update.details.changes)[0];
-  if (changeName === 'completed') {
-    changeType = !update.details.changes[changeName].to
+  let changeToRender: 'complete' | 'incomplete' | 'deadline';
+
+  const changeProp = Object.keys(
+    update.details.changes
+  )[0] as CHANGE_PROPS[UPDATE_TYPES.JOURNEYINSTANCE_UPDATEMILESTONE];
+
+  if (changeProp === 'completed') {
+    changeToRender = !update.details.changes[changeProp].to
       ? 'incomplete'
       : 'complete';
+  } else if (changeProp === 'deadline') {
+    changeToRender = 'deadline';
   }
 
   return (
@@ -55,7 +65,7 @@ const TimelineJourneyMilestone: React.FunctionComponent<Props> = ({
       <Grid container direction="row" item spacing={1}>
         <Typography component={Grid} item variant="body2">
           <FormattedMessage
-            id={`misc.updates.${update.type}.${changeType}`}
+            id={`misc.updates.${update.type}.${changeToRender}`}
             values={{
               actor: (
                 <PersonHoverCard
@@ -78,10 +88,10 @@ const TimelineJourneyMilestone: React.FunctionComponent<Props> = ({
   function renderContent() {
     return (
       <Grid alignItems="center" container direction="row" item spacing={2}>
-        {changeType === 'complete' && (
+        {changeToRender === 'complete' && (
           <CheckCircleIcon style={{ color: theme.palette.success.main }} />
         )}
-        {changeType === 'incomplete' && (
+        {changeToRender === 'incomplete' && (
           <CancelIcon style={{ color: theme.palette.warning.main }} />
         )}
         <Typography component={Grid} item variant="h6">

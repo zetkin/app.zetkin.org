@@ -10,6 +10,10 @@ export enum UPDATE_TYPES {
   JOURNEYINSTANCE_UPDATEMILESTONE = 'journeyinstance.updatemilestone',
 }
 
+export type CHANGE_PROPS = {
+  [UPDATE_TYPES.JOURNEYINSTANCE_UPDATEMILESTONE]: 'completed' | 'deadline';
+};
+
 export interface ZetkinUpdate {
   actor: Pick<ZetkinPerson, 'id' | 'first_name' | 'last_name'>;
   timestamp: string;
@@ -32,7 +36,12 @@ export interface ZetkinUpdateAssignee extends ZetkinUpdate {
 
 export interface ZetkinUpdateJourneyMilestone extends ZetkinUpdate {
   details: {
-    changes: ZetkinUpdateChange<ZetkinJourneyMilestoneStatus>;
+    changes: ZetkinUpdateChange<
+      Pick<
+        ZetkinJourneyMilestoneStatus,
+        CHANGE_PROPS[UPDATE_TYPES.JOURNEYINSTANCE_UPDATEMILESTONE]
+      >
+    >;
     milestone: ZetkinJourneyMilestone;
   };
   target: ZetkinJourneyInstance;
