@@ -1,7 +1,15 @@
 import MailIcon from '@material-ui/icons/Mail';
 import PhoneIcon from '@material-ui/icons/Phone';
 import { useRouter } from 'next/router';
-import { Box, Card, Fade, Grid, Popper, Typography } from '@material-ui/core';
+import {
+  Box,
+  BoxProps,
+  Card,
+  Fade,
+  Grid,
+  Popper,
+  Typography,
+} from '@material-ui/core';
 import { useEffect, useState } from 'react';
 
 import CopyToClipboard from 'components/CopyToClipboard';
@@ -10,10 +18,10 @@ import ZetkinPerson from 'components/ZetkinPerson';
 import { ZetkinPerson as ZetkinPersonType } from 'types/zetkin';
 import { personResource, personTagsResource } from 'api/people';
 
-const PersonHoverCard: React.FunctionComponent<{ personId: number }> = ({
-  children,
-  personId,
-}) => {
+const PersonHoverCard: React.FunctionComponent<{
+  BoxProps?: BoxProps;
+  personId: number;
+}> = ({ BoxProps, children, personId }) => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [open, setOpen] = useState(false);
   const openPopover = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
@@ -50,6 +58,7 @@ const PersonHoverCard: React.FunctionComponent<{ personId: number }> = ({
         onMouseEnter={openPopover}
         onMouseLeave={closePopover}
         style={{ display: 'flex' }}
+        {...BoxProps}
       >
         {children}
         <Popper
