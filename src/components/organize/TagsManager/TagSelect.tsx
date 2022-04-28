@@ -56,6 +56,9 @@ const TagSelect: React.FunctionComponent<{
         {...getInputProps()}
         autoFocus
         fullWidth
+        inputProps={{
+          'data-testid': 'TagManager-TagSelect-searchField',
+        }}
         placeholder={intl.formatMessage({
           id: 'misc.tags.tagsManager.addTag',
         })}

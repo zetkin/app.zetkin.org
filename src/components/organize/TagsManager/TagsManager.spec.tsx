@@ -185,8 +185,35 @@ describe('<TagsManager />', () => {
       };
     });
 
-    // it('can create a new tag', () => {});
-    it.only(`
+    it('passes the value in the tag search field in to the create tag', () => {
+      const { getByTestId, getByText } = render(
+        <TagsManager
+          assignedTags={[]}
+          availableGroups={[]}
+          availableTags={[]}
+          onAssignTag={assignTagCallback}
+          onCreateTag={onCreateTag}
+          onUnassignTag={unassignTagCallback}
+        />
+      );
+
+      const addTagButton = getByText('misc.tags.tagsManager.addTag');
+      click(addTagButton);
+
+      const tagSearchField = getByTestId('TagManager-TagSelect-searchField');
+      click(tagSearchField);
+      keyboard("Jerry's family");
+
+      const createTagOption = getByTestId(
+        'TagManager-TagSelect-createTagOpiton'
+      );
+      click(createTagOption);
+
+      const titleField = getByTestId('TagManager-TagDialog-titleField');
+      expect((titleField as HTMLInputElement).value).toEqual("Jerry's family");
+    });
+
+    it(`
       When creating a new group, sends the new group properties
       to the onCreateTag callback instead of groupId
     `, () => {
