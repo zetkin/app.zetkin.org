@@ -1,5 +1,6 @@
 /* eslint-disable jsx-a11y/no-autofocus */
 import { TextField } from '@material-ui/core';
+import { useIntl } from 'react-intl';
 import { useEffect, useState } from 'react';
 
 import ColorPicker from './ColorPicker';
@@ -24,6 +25,8 @@ const TagDialog: React.FunctionComponent<TagDialogProps> = ({
   onSubmit,
   tag,
 }) => {
+  const intl = useIntl();
+
   const [title, setTitle] = useState('');
   const [group, setGroup] = useState<
     ZetkinTagGroup | { title: string } | null | undefined
@@ -39,7 +42,11 @@ const TagDialog: React.FunctionComponent<TagDialogProps> = ({
   }, [tag]);
 
   return (
-    <ZetkinDialog onClose={onClose} open={open} title="Create Tag">
+    <ZetkinDialog
+      onClose={onClose}
+      open={open}
+      title={intl.formatMessage({ id: 'misc.tags.tagDialog.dialogTitle' })}
+    >
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -71,7 +78,9 @@ const TagDialog: React.FunctionComponent<TagDialogProps> = ({
           defaultValue={title}
           fullWidth
           inputProps={{ 'data-testid': 'TagManager-TagDialog-titleField' }}
-          label="Tag name"
+          label={intl.formatMessage({
+            id: 'misc.tags.tagsManager.tagDialog.titleLabel',
+          })}
           margin="normal"
           onChange={(e) => setTitle(e.target.value)}
           onClick={(e) => (e.target as HTMLInputElement).focus()}

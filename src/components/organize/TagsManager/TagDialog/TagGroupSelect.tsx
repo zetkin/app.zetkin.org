@@ -1,4 +1,5 @@
 import { ChangeEvent } from 'react';
+import { useIntl } from 'react-intl';
 import {
   Autocomplete,
   AutocompleteChangeDetails,
@@ -23,6 +24,7 @@ const TagGroupSelect: React.FunctionComponent<{
   ) => void;
   value?: ZetkinTagGroup | null | undefined;
 }> = ({ groups, value, onChange }) => {
+  const intl = useIntl();
   return (
     <Box mb={0.8} mt={1.5}>
       <Autocomplete
@@ -33,7 +35,14 @@ const TagGroupSelect: React.FunctionComponent<{
           if (params.inputValue !== '') {
             filtered.push({
               inputValue: params.inputValue,
-              title: `Add "${params.inputValue}"`,
+              title: intl.formatMessage(
+                {
+                  id: 'misc.tags.tagsManager.tagDialog.groupCreatePrompt',
+                },
+                {
+                  groupName: params.inputValue,
+                }
+              ),
             });
           }
 
@@ -67,8 +76,12 @@ const TagGroupSelect: React.FunctionComponent<{
             inputProps={{
               ...params.inputProps,
             }}
-            label={'Group'}
-            placeholder="Type to search or create a group"
+            label={intl.formatMessage({
+              id: 'misc.tags.tagsManager.tagDialog.groupLabel',
+            })}
+            placeholder={intl.formatMessage({
+              id: 'misc.tags.tagsManager.tagDialog.groupSelectPlaceholder',
+            })}
             variant="outlined"
           />
         )}

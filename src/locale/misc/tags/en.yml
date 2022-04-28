@@ -7,7 +7,10 @@ tagsManager:
   createTag: New Tag
   createNamedTag: 'Create tag: <b>{name}</b>'
   tagDialog:
+    dialogTitle: Create Tag
     titleLabel: Tag name
     groupLabel: Group
+    groupCreatePrompt: Add "{groupName}"
+    groupSelectPlaceholder: Type to search or create a group
     createGroup: New Group
     colorLabel: Color

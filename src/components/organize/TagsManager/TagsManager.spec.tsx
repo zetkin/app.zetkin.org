@@ -186,7 +186,7 @@ describe('<TagsManager />', () => {
     });
 
     // it('can create a new tag', () => {});
-    it(`
+    it.only(`
       When creating a new group, sends the new group properties
       to the onCreateTag callback instead of groupId
     `, () => {
@@ -223,7 +223,9 @@ describe('<TagsManager />', () => {
       const groupField = getByTestId('TagManager-TagDialog-tagGroupSelect');
       click(groupField);
       keyboard('New Group');
-      const newGroupOption = getByText('Add "New Group"');
+      const newGroupOption = getByText(
+        'misc.tags.tagsManager.tagDialog.groupCreatePrompt'
+      );
       click(newGroupOption);
 
       const submit = getByTestId('submit-button');
