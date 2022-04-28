@@ -186,7 +186,10 @@ describe('<TagsManager />', () => {
     });
 
     // it('can create a new tag', () => {});
-    it('sends a group to be created when no existing group', () => {
+    it(`
+      When creating a new group, sends the new group properties
+      to the onCreateTag callback instead of groupId
+    `, () => {
       const tag1 = mockTag({
         group: { id: 2, title: 'Skills' },
         id: 4,
@@ -211,6 +214,27 @@ describe('<TagsManager />', () => {
         'TagManager-TagSelect-createTagOpiton'
       );
       click(createTagOption);
+
+      // Fill in dialog
+      const titleField = getByTestId('TagManager-TagDialog-titleField');
+      click(titleField);
+      keyboard('Tag Title');
+
+      const groupField = getByTestId('TagManager-TagDialog-tagGroupSelect');
+      click(groupField);
+      keyboard('New Group');
+      const newGroupOption = getByText('Add "New Group"');
+      click(newGroupOption);
+
+      const submit = getByTestId('submit-button');
+      click(submit);
+
+      // Check new group object created
+      expect(onCreateTag).toBeCalledWith({
+        color: undefined,
+        group: { title: 'New Group' },
+        title: 'Tag Title',
+      });
     });
   });
 });
