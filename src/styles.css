@@ -11,6 +11,7 @@ body {
 
 * {
   box-sizing: border-box;
+  font-family: azo-sans-web, sans-serif;
 }
 
 /**
@@ -32,4 +33,9 @@ body {
 
 #nprogress #nprogress .bar {
   position: absolute;
+}
+
+.anchor-link {
+  text-underline: none;
+  color: var(--color-primary);
 }
