@@ -12,7 +12,10 @@ interface Props {
 }
 
 const TimelineUpdate: React.FunctionComponent<Props> = ({ update }) => {
-  if (update.type === UPDATE_TYPES.JOURNEYINSTANCE_ADDASSIGNEE) {
+  if (
+    update.type === UPDATE_TYPES.JOURNEYINSTANCE_ADDASSIGNEE ||
+    update.type === UPDATE_TYPES.JOURNEYINSTANCE_REMOVEASSIGNEE
+  ) {
     return <TimelineAssigned update={update as ZetkinUpdateAssignee} />;
   } else if (update.type === UPDATE_TYPES.JOURNEYINSTANCE_UPDATEMILESTONE) {
     return (
