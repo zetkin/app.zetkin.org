@@ -45,7 +45,9 @@ const TagDialog: React.FunctionComponent<TagDialogProps> = ({
     <ZetkinDialog
       onClose={onClose}
       open={open}
-      title={intl.formatMessage({ id: 'misc.tags.tagDialog.dialogTitle' })}
+      title={intl.formatMessage({
+        id: 'misc.tags.tagsManager.tagDialog.dialogTitle',
+      })}
     >
       <form
         onSubmit={(e) => {

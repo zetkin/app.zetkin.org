@@ -7,6 +7,8 @@ import { tagGroupsResource } from 'api/tags';
 import { NewTag, NewTagGroup, TagsGroups } from './types';
 import { ZetkinTag, ZetkinTagGroup, ZetkinTagPostBody } from 'types/zetkin';
 
+export const DEFAULT_TAG_COLOR = '#e1e1e1';
+
 export const groupTags = (
   tags: ZetkinTag[],
   localisedUngroupedText: string
