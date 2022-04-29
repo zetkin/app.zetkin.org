@@ -6,6 +6,7 @@ import { createEditor, Descendant } from 'slate';
 import { Editable, Slate, withReact } from 'slate-react';
 import React, { Attributes, useCallback, useMemo, useState } from 'react';
 
+import './types';
 import LinkComponent from './LinkComponent';
 import theme from 'theme';
 import Toolbar from './Toolbar';

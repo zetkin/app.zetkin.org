@@ -2,6 +2,7 @@ import { FormattedMessage } from 'react-intl';
 import React from 'react';
 import { Button, Collapse, Divider, Fade, Grid } from '@material-ui/core';
 
+import TimelineAddNote from './TimelineAddNote';
 import TimelineUpdate from './TimelineUpdate';
 import { ZetkinUpdate } from 'types/updates';
 
@@ -23,6 +24,9 @@ const Timeline: React.FunctionComponent<TimelineProps> = ({
   return (
     <Fade appear in timeout={1000}>
       <Grid container direction="column" spacing={6}>
+        <Grid item>
+          <TimelineAddNote />
+        </Grid>
         {renderUpdateList()}
         {expandable && renderExpandButton()}
       </Grid>
