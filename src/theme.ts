@@ -2,17 +2,20 @@ import { createElement } from 'react';
 import { createTheme } from '@material-ui/core/styles';
 
 interface PaletteIntensityOptions {
-  disabled: string;
-  high: string;
-  medium: string;
+  disabled?: string;
+  high?: string;
+  medium?: string;
+  main?: string;
 }
 
 declare module '@material-ui/core/styles/createPalette' {
   interface Palette {
-    onSurface: Palette['primary'];
+    onSurface: PaletteIntensityOptions;
+    outline: PaletteIntensityOptions;
   }
   interface PaletteOptions {
     onSurface: PaletteIntensityOptions;
+    outline: PaletteIntensityOptions;
   }
 }
 
@@ -30,6 +33,9 @@ const themePalette = {
     disabled: '#231F2061',
     high: '#231F20DE',
     medium: '#231F2099',
+  },
+  outline: {
+    main: 'rgba(0,0,0,0.12)',
   },
   primary: {
     main: '#ED1C55',
