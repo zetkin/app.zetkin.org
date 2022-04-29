@@ -10,20 +10,22 @@ const randomColor = () => {
 };
 
 const ColorPicker: React.FunctionComponent<{
-  defaultValue?: string;
   onChange: (value: string) => void;
-}> = ({ defaultValue, onChange }) => {
+  value: string;
+}> = ({ value, onChange }) => {
   const intl = useIntl();
 
-  // Strip # from original value
-  const [value, setValue] = useState<string | null>(
-    defaultValue ? defaultValue.slice(1) : null
+  // Strip # from original value when setting internal value
+  const [internalValue, setInternalValue] = useState<string | null>(
+    value ? value.split('#')[1] : null
   );
 
   useEffect(() => {
     // Add # back in to value
-    onChange(`#${value}`);
-  }, [value]);
+    if (internalValue) {
+      onChange(`#${internalValue}`);
+    }
+  }, [internalValue]);
 
   return (
     <TextField
@@ -34,8 +36,8 @@ const ColorPicker: React.FunctionComponent<{
           <InputAdornment position="start">
             <Box
               alignItems="center"
-              bgcolor={value ? `#${value}` : DEFAULT_TAG_COLOR}
-              borderRadius={3}
+              bgcolor={internalValue ? `#${internalValue}` : DEFAULT_TAG_COLOR}
+              borderRadius={7}
               display="flex"
               height={30}
               justifyContent="center"
@@ -43,9 +45,10 @@ const ColorPicker: React.FunctionComponent<{
             >
               <ReplayIcon
                 fontSize="small"
-                onClick={() => setValue(randomColor())}
+                onClick={() => setInternalValue(randomColor())}
                 style={{
                   cursor: 'pointer',
+                  opacity: 0.7,
                 }}
               />
             </Box>
@@ -57,7 +60,7 @@ const ColorPicker: React.FunctionComponent<{
       })}
       margin="normal"
       onChange={(e) => {
-        setValue(e.target.value);
+        setInternalValue(e.target.value);
       }}
       onClick={(e) => (e.target as HTMLInputElement).focus()}
       placeholder={intl.formatMessage({

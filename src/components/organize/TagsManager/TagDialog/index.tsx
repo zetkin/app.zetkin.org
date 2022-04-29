@@ -1,13 +1,13 @@
 /* eslint-disable jsx-a11y/no-autofocus */
 import { TextField } from '@material-ui/core';
 import { useIntl } from 'react-intl';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import ColorPicker from './ColorPicker';
-import { OnCreateTagHandler } from '../types';
 import SubmitCancelButtons from 'components/forms/common/SubmitCancelButtons';
 import TagGroupSelect from './TagGroupSelect';
 import ZetkinDialog from 'components/ZetkinDialog';
+import { NewTagGroup, OnCreateTagHandler } from '../types';
 import { ZetkinTag, ZetkinTagGroup } from 'types/zetkin';
 
 interface TagDialogProps {
@@ -23,23 +23,14 @@ const TagDialog: React.FunctionComponent<TagDialogProps> = ({
   open,
   onClose,
   onSubmit,
-  tag,
 }) => {
   const intl = useIntl();
 
   const [title, setTitle] = useState('');
-  const [group, setGroup] = useState<
-    ZetkinTagGroup | { title: string } | null | undefined
-  >();
   const [color, setColor] = useState('');
-
-  useEffect(() => {
-    if (tag) {
-      setTitle(tag.title || '');
-      setGroup(tag.group || undefined);
-      setColor(tag.color || '');
-    }
-  }, [tag]);
+  const [group, setGroup] = useState<
+    ZetkinTagGroup | NewTagGroup | null | undefined
+  >();
 
   return (
     <ZetkinDialog
@@ -77,7 +68,6 @@ const TagDialog: React.FunctionComponent<TagDialogProps> = ({
         }}
       >
         <TextField
-          defaultValue={title}
           fullWidth
           inputProps={{ 'data-testid': 'TagManager-TagDialog-titleField' }}
           label={intl.formatMessage({
@@ -86,16 +76,15 @@ const TagDialog: React.FunctionComponent<TagDialogProps> = ({
           margin="normal"
           onChange={(e) => setTitle(e.target.value)}
           onClick={(e) => (e.target as HTMLInputElement).focus()}
+          value={title}
           variant="outlined"
         />
         <TagGroupSelect
           groups={groups}
-          onChange={(e, value) => setGroup(value)}
+          onChange={(value) => setGroup(value)}
+          value={group}
         />
-        <ColorPicker
-          defaultValue={color}
-          onChange={(value) => setColor(value)}
-        />
+        <ColorPicker onChange={(value) => setColor(value)} value={color} />
         <SubmitCancelButtons onCancel={onClose} />
       </form>
     </ZetkinDialog>

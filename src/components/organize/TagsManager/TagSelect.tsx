@@ -41,11 +41,14 @@ const TagSelect: React.FunctionComponent<{
     groupedOptions,
   } = useAutocomplete({
     getOptionLabel: (option) => option.title,
-    groupBy: (option) =>
-      option.group?.title ||
-      intl.formatMessage({
-        id: 'misc.tags.tagsManager.ungroupedHeader',
-      }),
+    groupBy: (option) => {
+      return (
+        option.group?.title ||
+        intl.formatMessage({
+          id: 'misc.tags.tagsManager.ungroupedHeader',
+        })
+      );
+    },
     open: true,
     options: tags,
   });
