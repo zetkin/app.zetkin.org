@@ -1,16 +1,16 @@
 tagsManager:
   addTag: Add tag
+  createTag: New Tag
+  createNamedTag: 'Create tag: <b>{name}</b>'
   groupTags: Group tags
   noTags: No tags applied
   title: Tags
   ungroupedHeader: No group
-  createTag: New Tag
-  createNamedTag: 'Create tag: <b>{name}</b>'
   tagDialog:
-    dialogTitle: Create Tag
-    titleLabel: Tag name
-    groupLabel: Group
-    groupCreatePrompt: Add "{groupName}"
-    groupSelectPlaceholder: Type to search or create a group
-    createGroup: New Group
     colorLabel: Color
+    createGroup: New Group
+    dialogTitle: Create Tag
+    groupCreatePrompt: Add "{groupName}"
+    groupLabel: Group
+    groupSelectPlaceholder: Type to search or create a group
+    titleLabel: Tag name

@@ -32,9 +32,16 @@ const TagDialog: React.FunctionComponent<TagDialogProps> = ({
     ZetkinTagGroup | NewTagGroup | null | undefined
   >();
 
+  const closeAndClear = () => {
+    setTitle('');
+    setColor('');
+    setGroup(undefined);
+    onClose();
+  };
+
   return (
     <ZetkinDialog
-      onClose={onClose}
+      onClose={closeAndClear}
       open={open}
       title={intl.formatMessage({
         id: 'misc.tags.tagsManager.tagDialog.dialogTitle',
@@ -64,7 +71,7 @@ const TagDialog: React.FunctionComponent<TagDialogProps> = ({
               title,
             });
           }
-          onClose();
+          closeAndClear();
         }}
       >
         <TextField
@@ -85,7 +92,7 @@ const TagDialog: React.FunctionComponent<TagDialogProps> = ({
           value={group}
         />
         <ColorPicker onChange={(value) => setColor(value)} value={color} />
-        <SubmitCancelButtons onCancel={onClose} />
+        <SubmitCancelButtons onCancel={closeAndClear} />
       </form>
     </ZetkinDialog>
   );
