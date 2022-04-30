@@ -1,6 +1,6 @@
 journeyinstance:
   addassignee: '{actor} assigned {assignee}'
-  removeassignee: '{actor} removed {assignee}'
+  removeassignee: '{actor} unassigned {assignee}'
   updatemilestone:
     complete: '{actor} completed a milestone'
     deadline: '{actor} updated a milestone deadline'
