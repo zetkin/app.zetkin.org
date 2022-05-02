@@ -1,17 +1,15 @@
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
-import { useIntl } from 'react-intl';
 import { Divider, Grid } from '@material-ui/core';
 
 import JourneyInstanceLayout from 'layout/organize/JourneyInstanceLayout';
 import { journeyInstanceResource } from 'api/journeys';
+import JourneyInstanceSidebar from 'components/organize/journeys/JourneyInstanceSidebar';
 import JourneyInstanceSummary from 'components/organize/journeys/JourneyInstanceSummary';
-import JourneyMilestoneProgress from 'components/organize/journeys/JourneyMilestoneProgress';
 import { organizationResource } from 'api/organizations';
 import { PageWithLayout } from 'types';
 import { scaffold } from 'utils/next';
 import { ZetkinJourneyInstance } from 'types/zetkin';
-import ZetkinSection from 'components/ZetkinSection';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -62,8 +60,6 @@ const JourneyDetailsPage: PageWithLayout<JourneyDetailsPageProps> = ({
   ).useQuery();
   const journeyInstance = journeyInstanceQuery.data as ZetkinJourneyInstance;
 
-  const intl = useIntl();
-
   return (
     <>
       <Head>
@@ -79,47 +75,7 @@ const JourneyDetailsPage: PageWithLayout<JourneyDetailsPageProps> = ({
           <Divider style={{ marginTop: '2rem' }} />
         </Grid>
         <Grid item md={4}>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <ZetkinSection
-                title={intl.formatMessage({
-                  id: 'pages.organizeJourneyInstance.assignedTo',
-                })}
-              ></ZetkinSection>
-              <Divider />
-            </Grid>
-            <Grid item xs={12}>
-              <ZetkinSection
-                title={intl.formatMessage({
-                  id: 'pages.organizeJourneyInstance.members',
-                })}
-              ></ZetkinSection>
-              <Divider />
-            </Grid>
-            <Grid item xs={12}>
-              <ZetkinSection
-                title={intl.formatMessage({
-                  id: 'pages.organizeJourneyInstance.tags',
-                })}
-              ></ZetkinSection>
-              <Divider />
-            </Grid>
-            {journeyInstance.milestones && (
-              <Grid item xs={12}>
-                <ZetkinSection
-                  title={intl.formatMessage({
-                    id: 'pages.organizeJourneyInstance.milestones',
-                  })}
-                >
-                  <JourneyMilestoneProgress
-                    milestones={journeyInstance.milestones}
-                    next_milestone={journeyInstance.next_milestone}
-                  />
-                </ZetkinSection>
-                <Divider />
-              </Grid>
-            )}
-          </Grid>
+          <JourneyInstanceSidebar journeyInstance={journeyInstance} />
         </Grid>
       </Grid>
     </>
