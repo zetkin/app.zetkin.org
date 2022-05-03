@@ -82,6 +82,7 @@ const EmptyView: FunctionComponent<EmptyViewProps> = ({ orgId, view }) => {
                     addFirstRowMutation.mutate(person);
                   }}
                   selectedPerson={null}
+                  variant="outlined"
                 />
               </Box>
             </CardContent>
