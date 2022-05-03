@@ -122,11 +122,11 @@ const TagSelect: React.FunctionComponent<{
         </ListItem>
       </List>
       <TagDialog
+        defaultTitle={inputValue}
         groups={groups}
         onClose={() => setDialogOpen(false)}
         onSubmit={onCreateTag}
         open={dialogOpen}
-        tag={inputValue ? { title: inputValue } : undefined}
       />
     </Box>
   );

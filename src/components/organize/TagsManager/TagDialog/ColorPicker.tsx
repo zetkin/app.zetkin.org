@@ -1,7 +1,6 @@
 import ReplayIcon from '@material-ui/icons/Replay';
 import { useIntl } from 'react-intl';
 import { Box, InputAdornment, TextField } from '@material-ui/core';
-import { useEffect, useState } from 'react';
 
 import { DEFAULT_TAG_COLOR } from '../utils';
 
@@ -9,34 +8,33 @@ const randomColor = () => {
   return Math.floor(Math.random() * 16777215).toString(16);
 };
 
+const hexRegex = new RegExp(/(^[0-9a-f]{6}$)|(^[0-9a-f]{3}$)/i);
+
 const ColorPicker: React.FunctionComponent<{
-  onChange: (value: string) => void;
+  onChange: (color: { valid: boolean; value: string }) => void;
   value: string;
 }> = ({ value, onChange }) => {
   const intl = useIntl();
 
-  // Strip # from original value when setting internal value
-  const [internalValue, setInternalValue] = useState<string | null>(
-    value ? value.split('#')[1] : null
-  );
-
-  useEffect(() => {
-    // Add # back in to value
-    if (internalValue) {
-      onChange(`#${internalValue}`);
-    }
-  }, [internalValue]);
+  const error = !!value && !hexRegex.test(value);
 
   return (
     <TextField
       data-testid="TagManager-TagDialog-colorField"
+      error={error}
       fullWidth
+      helperText={
+        error &&
+        intl.formatMessage({
+          id: 'misc.tags.tagsManager.tagDialog.colorErrorText',
+        })
+      }
       InputProps={{
         startAdornment: (
           <InputAdornment position="start">
             <Box
               alignItems="center"
-              bgcolor={internalValue ? `#${internalValue}` : DEFAULT_TAG_COLOR}
+              bgcolor={value ? `#${value}` : DEFAULT_TAG_COLOR}
               borderRadius={7}
               display="flex"
               height={30}
@@ -45,7 +43,10 @@ const ColorPicker: React.FunctionComponent<{
             >
               <ReplayIcon
                 fontSize="small"
-                onClick={() => setInternalValue(randomColor())}
+                onClick={() => {
+                  const newColor = randomColor();
+                  onChange({ valid: hexRegex.test(newColor), value: newColor });
+                }}
                 style={{
                   cursor: 'pointer',
                   opacity: 0.7,
@@ -60,7 +61,10 @@ const ColorPicker: React.FunctionComponent<{
       })}
       margin="normal"
       onChange={(e) => {
-        setInternalValue(e.target.value);
+        onChange({
+          valid: !e.target.value || hexRegex.test(e.target.value),
+          value: e.target.value,
+        });
       }}
       onClick={(e) => (e.target as HTMLInputElement).focus()}
       placeholder={intl.formatMessage({
