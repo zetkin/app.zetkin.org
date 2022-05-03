@@ -1,5 +1,6 @@
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
+import { useContext } from 'react';
 import { Divider, Grid } from '@material-ui/core';
 
 import JourneyInstanceLayout from 'layout/organize/JourneyInstanceLayout';
@@ -9,6 +10,7 @@ import JourneyInstanceSummary from 'components/organize/journeys/JourneyInstance
 import { organizationResource } from 'api/organizations';
 import { PageWithLayout } from 'types';
 import { scaffold } from 'utils/next';
+import SnackbarContext from 'hooks/SnackbarContext';
 import { ZetkinJourneyInstance } from 'types/zetkin';
 
 const scaffoldOptions = {
@@ -60,6 +62,14 @@ const JourneyDetailsPage: PageWithLayout<JourneyDetailsPageProps> = ({
   ).useQuery();
   const journeyInstance = journeyInstanceQuery.data as ZetkinJourneyInstance;
 
+  const { showSnackbar } = useContext(SnackbarContext);
+
+  const journeyInstanceHooks = journeyInstanceResource(
+    orgId as string,
+    journeyInstance.id.toString()
+  );
+  const patchJourneyInstanceMutation = journeyInstanceHooks.useUpdate();
+
   return (
     <>
       <Head>
@@ -75,7 +85,18 @@ const JourneyDetailsPage: PageWithLayout<JourneyDetailsPageProps> = ({
           <Divider style={{ marginTop: '2rem' }} />
         </Grid>
         <Grid item md={4}>
-          <JourneyInstanceSidebar journeyInstance={journeyInstance} />
+          <JourneyInstanceSidebar
+            journeyInstance={journeyInstance}
+            onAddAssignee={(person) => {
+              patchJourneyInstanceMutation.mutateAsync(
+                { assignees: [...journeyInstance.assignees, person] },
+                {
+                  onError: () => showSnackbar('error'),
+                  onSuccess: () => console.log('success'),
+                }
+              );
+            }}
+          />
         </Grid>
       </Grid>
     </>
