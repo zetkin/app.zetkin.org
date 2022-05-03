@@ -1,10 +1,17 @@
 import { Add } from '@material-ui/icons';
 import { useState } from 'react';
-import { Button, ClickAwayListener, Divider, Grid } from '@material-ui/core';
+import {
+  Box,
+  Button,
+  ClickAwayListener,
+  Divider,
+  Grid,
+} from '@material-ui/core';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
 
 import JourneyMilestoneProgress from 'components/organize/journeys/JourneyMilestoneProgress';
 import { MUIOnlyPersonSelect as PersonSelect } from 'components/forms/common/PersonSelect';
+import ZetkinPerson from 'components/ZetkinPerson';
 import ZetkinSection from 'components/ZetkinSection';
 import {
   ZetkinJourneyInstance,
@@ -30,6 +37,19 @@ const JourneyInstanceSidebar = ({
             id: 'pages.organizeJourneyInstance.assignedTo',
           })}
         >
+          {journeyInstance.assignees.map((assignee, index) => (
+            <Box
+              key={index}
+              alignItems="center"
+              display="flex"
+              justifyContent="space-between"
+            >
+              <ZetkinPerson
+                id={assignee.id}
+                name={`${assignee.first_name} ${assignee.last_name}`}
+              />
+            </Box>
+          ))}
           {!addingAssignee && (
             <Button
               color="primary"
