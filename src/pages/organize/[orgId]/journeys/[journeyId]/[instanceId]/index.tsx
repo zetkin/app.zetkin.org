@@ -56,12 +56,11 @@ const JourneyDetailsPage: PageWithLayout<JourneyDetailsPageProps> = ({
   instanceId,
   orgId,
 }) => {
-  const { useAddAssignee, useQuery } = journeyInstanceResource(
-    orgId,
-    instanceId
-  );
+  const { useAddAssignee, useQuery, useRemoveAssignee } =
+    journeyInstanceResource(orgId, instanceId);
   const journeyInstanceQuery = useQuery();
   const addAssigneeMutation = useAddAssignee();
+  const removeAssigneeMutation = useRemoveAssignee();
 
   const journeyInstance = journeyInstanceQuery.data as ZetkinJourneyInstance;
 
@@ -69,6 +68,12 @@ const JourneyDetailsPage: PageWithLayout<JourneyDetailsPageProps> = ({
 
   const onAddAssignee = (person: ZetkinPerson) => {
     addAssigneeMutation.mutate(person.id, {
+      onError: () => showSnackbar('error'),
+    });
+  };
+
+  const onRemoveAssignee = (person: ZetkinPerson) => {
+    removeAssigneeMutation.mutate(person.id, {
       onError: () => showSnackbar('error'),
     });
   };
@@ -91,6 +96,7 @@ const JourneyDetailsPage: PageWithLayout<JourneyDetailsPageProps> = ({
           <JourneyInstanceSidebar
             journeyInstance={journeyInstance}
             onAddAssignee={onAddAssignee}
+            onRemoveAssignee={onRemoveAssignee}
           />
         </Grid>
       </Grid>
