@@ -142,7 +142,7 @@ test.describe('Person Profile Page Tags', () => {
       expect(deleteTagLog().length).toEqual(1);
     });
 
-    test('shows error when adding tag fails', async ({
+    test('shows error when removing a tag fails', async ({
       moxy,
       page,
       appUri,
@@ -173,5 +173,39 @@ test.describe('Person Profile Page Tags', () => {
         1
       );
     });
+  });
+
+  test.describe('unassigning tags', () => {
+    test.beforeEach(async ({ page, appUri, moxy }) => {
+      moxy.setZetkinApiMock(`/orgs/${KPD.id}/people/tags`, 'get', [
+        ActivistTag,
+        CodingSkillsTag,
+      ]);
+      moxy.setZetkinApiMock(
+        `/orgs/${KPD.id}/people/${ClaraZetkin.id}/tags`,
+        'get',
+        []
+      );
+
+      await page.goto(appUri + `/organize/1/people/${ClaraZetkin.id}`);
+
+      // moxy.setZetkinApiMock(
+      //   `/orgs/1/people/${ClaraZetkin.id}/tags/${ActivistTag.id}`,
+      //   'put',
+      //   undefined,
+      //   401
+      // );
+    });
+    test.only('can create a tag', async ({ page }) => {
+      await page.locator('text=Add tag').click();
+      await page.click('data-testid=TagManager-TagSelect-createTagOption');
+    });
+
+    describe('create a tag with a new group', () => {
+      test('can create a group and tag with that group', () => {});
+      test('shows error when creating group fails', () => {});
+    });
+
+    test('shows error when creating a tag fails', () => {});
   });
 });
