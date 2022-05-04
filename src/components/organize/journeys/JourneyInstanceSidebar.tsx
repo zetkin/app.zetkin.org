@@ -1,18 +1,11 @@
-import { grey } from '@material-ui/core/colors';
+import { Add } from '@material-ui/icons';
 import { useState } from 'react';
-import { Add, Close } from '@material-ui/icons';
-import {
-  Box,
-  Button,
-  ClickAwayListener,
-  Divider,
-  Grid,
-} from '@material-ui/core';
+import { Button, ClickAwayListener, Divider, Grid } from '@material-ui/core';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
 
 import JourneyMilestoneProgress from 'components/organize/journeys/JourneyMilestoneProgress';
+import JourneyPerson from './JourneyPerson';
 import { MUIOnlyPersonSelect as PersonSelect } from 'components/forms/common/PersonSelect';
-import ZetkinPerson from 'components/ZetkinPerson';
 import ZetkinSection from 'components/ZetkinSection';
 import {
   ZetkinJourneyInstance,
@@ -22,16 +15,20 @@ import {
 const JourneyInstanceSidebar = ({
   journeyInstance,
   onAddAssignee,
+  onAddMember,
   onRemoveAssignee,
+  onRemoveMember,
 }: {
   journeyInstance: ZetkinJourneyInstance;
   onAddAssignee: (person: ZetkinPersonType) => void;
+  onAddMember: (person: ZetkinPersonType) => void;
   onRemoveAssignee: (person: ZetkinPersonType) => void;
+  onRemoveMember: (person: ZetkinPersonType) => void;
 }): JSX.Element => {
   const intl = useIntl();
 
   const [addingAssignee, setAddingAssignee] = useState<boolean>(false);
-  const [hover, setHover] = useState<boolean>(false);
+  const [addingMember, setAddingMember] = useState<boolean>(false);
 
   return (
     <Grid container spacing={2}>
@@ -42,23 +39,11 @@ const JourneyInstanceSidebar = ({
           })}
         >
           {journeyInstance.assignees.map((assignee, index) => (
-            <Box
+            <JourneyPerson
               key={index}
-              alignItems="center"
-              bgcolor={hover ? grey[200] : ''}
-              display="flex"
-              justifyContent="space-between"
-              onClick={() => onRemoveAssignee(assignee)}
-              onMouseEnter={() => setHover(true)}
-              onMouseLeave={() => setHover(false)}
-              p={1}
-            >
-              <ZetkinPerson
-                id={assignee.id}
-                name={`${assignee.first_name} ${assignee.last_name}`}
-              />
-              {hover && <Close color="secondary" />}
-            </Box>
+              onRemove={onRemoveAssignee}
+              person={assignee}
+            />
           ))}
           {!addingAssignee && (
             <Button
@@ -75,11 +60,9 @@ const JourneyInstanceSidebar = ({
               <div>
                 <PersonSelect
                   getOptionDisabled={(option) => {
-                    if (journeyInstance.assignees.length > 0) {
-                      return !journeyInstance.assignees.includes(option);
-                    } else {
-                      return false;
-                    }
+                    return journeyInstance.assignees
+                      .map((a) => a.id)
+                      .includes(option.id);
                   }}
                   label={intl.formatMessage({
                     id: 'pages.organizeJourneyInstance.assignPersonLabel',
@@ -104,6 +87,46 @@ const JourneyInstanceSidebar = ({
             id: 'pages.organizeJourneyInstance.members',
           })}
         ></ZetkinSection>
+        {journeyInstance.subjects.map((member, index) => (
+          <JourneyPerson
+            key={index}
+            onRemove={onRemoveMember}
+            person={member}
+          />
+        ))}
+        {!addingMember && (
+          <Button
+            color="primary"
+            onClick={() => setAddingMember(true)}
+            startIcon={<Add />}
+            style={{ textTransform: 'uppercase' }}
+          >
+            <Msg id="pages.organizeJourneyInstance.addMemberButton" />
+          </Button>
+        )}
+        {addingMember && (
+          <ClickAwayListener onClickAway={() => setAddingMember(false)}>
+            <div>
+              <PersonSelect
+                getOptionDisabled={(option) => {
+                  return journeyInstance.subjects
+                    .map((s) => s.id)
+                    .includes(option.id);
+                }}
+                label={intl.formatMessage({
+                  id: 'pages.organizeJourneyInstance.addMemberLabel',
+                })}
+                name="person_id"
+                onChange={(person) => {
+                  setAddingMember(false);
+                  onAddMember(person);
+                }}
+                selectedPerson={null}
+                size="small"
+              />
+            </div>
+          </ClickAwayListener>
+        )}
         <Divider />
       </Grid>
       <Grid item xs={12}>
