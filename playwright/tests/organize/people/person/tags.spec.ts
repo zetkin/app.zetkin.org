@@ -20,6 +20,10 @@ test.describe('Person Profile Page Tags', () => {
     );
   });
 
+  test.afterEach(({ moxy }) => {
+    moxy.teardown();
+  });
+
   test('lists tags', async ({ page, appUri, moxy }) => {
     moxy.setZetkinApiMock('/orgs/1/people/tags', 'get', [
       ActivistTag,
