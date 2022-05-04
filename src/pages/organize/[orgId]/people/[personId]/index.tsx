@@ -109,7 +109,12 @@ const PersonProfilePage: PageWithLayout<PersonPageProps> = (props) => {
                   onError: () => showSnackbar('error'),
                 })
               }
-              onCreateTag={createTag}
+              onCreateTag={async (tag) => {
+                const newTag = await createTag(tag);
+                addTagMutation.mutate(newTag.id, {
+                  onError: () => showSnackbar('error'),
+                });
+              }}
               onUnassignTag={(tag) =>
                 removeTagMutation.mutate(tag.id, {
                   onError: () => showSnackbar('error'),

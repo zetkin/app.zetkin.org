@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 import SnackbarContext from 'hooks/SnackbarContext';
 import { tagGroupsResource } from 'api/tags';
 import { NewTag, NewTagGroup, TagsGroups } from './types';
-import { ZetkinTag, ZetkinTagGroup, ZetkinTagPostBody } from 'types/zetkin';
+import { ZetkinTag, ZetkinTagPostBody } from 'types/zetkin';
 
 export const DEFAULT_TAG_COLOR = '#e1e1e1';
 
@@ -43,8 +43,8 @@ export const groupTags = (
  * The mutation to create a group is always the same, so this is hard coded.
  */
 export const useCreateTag = (
-  createTagMutation: UseMutationResult<ZetkinTagGroup, unknown, NewTagGroup>
-): ((tag: NewTag) => void) => {
+  createTagMutation: UseMutationResult<ZetkinTag, unknown, NewTagGroup>
+): ((tag: NewTag) => Promise<ZetkinTag>) => {
   const { orgId } = useRouter().query;
   const tagsGroupMutation = tagGroupsResource(orgId as string).useAdd();
   const { showSnackbar } = useContext(SnackbarContext);
@@ -58,7 +58,7 @@ export const useCreateTag = (
         group: undefined,
         group_id: newGroup.id,
       };
-      await createTagMutation.mutateAsync(
+      return await createTagMutation.mutateAsync(
         tagWithNewGroup as ZetkinTagPostBody,
         {
           onError: () => showSnackbar('error'),
@@ -66,7 +66,7 @@ export const useCreateTag = (
       );
     } else {
       // Add tag with existing or no group
-      createTagMutation.mutate(tag, {
+      return await createTagMutation.mutateAsync(tag, {
         onError: () => showSnackbar('error'),
       });
     }
