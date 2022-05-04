@@ -123,6 +123,9 @@ const TagDialog: React.FunctionComponent<TagDialogProps> = ({
         <SubmitCancelButtons
           onCancel={closeAndClear}
           submitDisabled={!titleValid || !color.valid}
+          submitText={intl.formatMessage({
+            id: 'misc.tags.tagsManager.submitCreateTagButton',
+          })}
         />
       </form>
     </ZetkinDialog>

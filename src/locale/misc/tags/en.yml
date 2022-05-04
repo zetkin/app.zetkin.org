@@ -4,6 +4,7 @@ tagsManager:
   createTag: New Tag
   groupTags: Group tags
   noTags: No tags applied
+  submitCreateTagButton: Create and apply
   tagDialog:
     colorErrorText: Please enter a valid hex code
     colorLabel: Color
