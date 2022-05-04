@@ -18,7 +18,30 @@ describe('<TagDialog />', () => {
     };
   });
 
-  // it('creates a tag', () => {});
+  it('creates a basic tag', () => {
+    const { getByTestId } = render(
+      <TagDialog
+        groups={[]}
+        onClose={() => undefined}
+        onSubmit={onCreateTag}
+        open={true}
+      />
+    );
+
+    // Fill in dialog
+    const titleField = getByTestId('TagManager-TagDialog-titleField');
+    click(titleField);
+    keyboard('Spongeworthy');
+
+    const submit = getByTestId('submit-button');
+    click(submit);
+
+    // Check new group object created
+    expect(onCreateTag).toBeCalledWith({
+      color: undefined,
+      title: 'Spongeworthy',
+    });
+  });
 
   it(`
       When creating a new group, sends the new group properties
@@ -57,6 +80,37 @@ describe('<TagDialog />', () => {
     });
   });
 
-  // describe('validation', () => {});
-  // Validation
+  it('Requires valid inputs to submit', () => {
+    const { getByTestId } = render(
+      <TagDialog
+        groups={[]}
+        onClose={() => undefined}
+        onSubmit={onCreateTag}
+        open={true}
+      />
+    );
+
+    // Submit is disabled
+    const submit = getByTestId('submit-button') as HTMLButtonElement;
+    expect(submit.disabled).toBeTruthy();
+
+    const titleField = getByTestId('TagManager-TagDialog-titleField');
+    const colorField = getByTestId('TagManager-TagDialog-colorField');
+
+    // Enter title
+    click(titleField);
+    keyboard('Tag Title');
+
+    // Submit enabled when title provided
+    expect(submit.disabled).toBeFalsy();
+
+    // Enter invalid color, submit should be disabled
+    click(colorField);
+    keyboard('a1');
+    expect(submit.disabled).toBeTruthy();
+
+    // Enter valid color, submit should be enabled
+    keyboard('a1a1'); // Adds 4 more chars
+    expect(submit.disabled).toBeFalsy();
+  });
 });

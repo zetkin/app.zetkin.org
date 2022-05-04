@@ -20,7 +20,6 @@ const ColorPicker: React.FunctionComponent<{
 
   return (
     <TextField
-      data-testid="TagManager-TagDialog-colorField"
       error={error}
       fullWidth
       helperText={
@@ -29,6 +28,7 @@ const ColorPicker: React.FunctionComponent<{
           id: 'misc.tags.tagsManager.tagDialog.colorErrorText',
         })
       }
+      inputProps={{ 'data-testid': 'TagManager-TagDialog-colorField' }}
       InputProps={{
         startAdornment: (
           <InputAdornment position="start">
