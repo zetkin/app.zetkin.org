@@ -11,7 +11,7 @@ import { organizationResource } from 'api/organizations';
 import { PageWithLayout } from 'types';
 import { scaffold } from 'utils/next';
 import SnackbarContext from 'hooks/SnackbarContext';
-import { ZetkinJourneyInstance } from 'types/zetkin';
+import { ZetkinJourneyInstance, ZetkinPerson } from 'types/zetkin';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -56,19 +56,22 @@ const JourneyDetailsPage: PageWithLayout<JourneyDetailsPageProps> = ({
   instanceId,
   orgId,
 }) => {
-  const journeyInstanceQuery = journeyInstanceResource(
+  const { useAddAssignee, useQuery } = journeyInstanceResource(
     orgId,
     instanceId
-  ).useQuery();
+  );
+  const journeyInstanceQuery = useQuery();
+  const addAssigneeMutation = useAddAssignee();
+
   const journeyInstance = journeyInstanceQuery.data as ZetkinJourneyInstance;
 
   const { showSnackbar } = useContext(SnackbarContext);
 
-  const journeyInstanceHooks = journeyInstanceResource(
-    orgId as string,
-    journeyInstance.id.toString()
-  );
-  const patchJourneyInstanceMutation = journeyInstanceHooks.useUpdate();
+  const onAddAssignee = (person: ZetkinPerson) => {
+    addAssigneeMutation.mutate(person.id, {
+      onError: () => showSnackbar('error'),
+    });
+  };
 
   return (
     <>
@@ -87,15 +90,7 @@ const JourneyDetailsPage: PageWithLayout<JourneyDetailsPageProps> = ({
         <Grid item md={4}>
           <JourneyInstanceSidebar
             journeyInstance={journeyInstance}
-            onAddAssignee={(person) => {
-              patchJourneyInstanceMutation.mutateAsync(
-                { assignees: [...journeyInstance.assignees, person] },
-                {
-                  onError: () => showSnackbar('error'),
-                  onSuccess: () => console.log('success'),
-                }
-              );
-            }}
+            onAddAssignee={onAddAssignee}
           />
         </Grid>
       </Grid>

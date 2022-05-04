@@ -64,6 +64,9 @@ const JourneyInstanceSidebar = ({
             <ClickAwayListener onClickAway={() => setAddingAssignee(false)}>
               <div>
                 <PersonSelect
+                  getOptionDisabled={(option) =>
+                    !journeyInstance.assignees.includes(option)
+                  }
                   label={intl.formatMessage({
                     id: 'pages.organizeJourneyInstance.assignPersonLabel',
                   })}
