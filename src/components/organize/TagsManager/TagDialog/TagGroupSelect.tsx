@@ -56,9 +56,9 @@ const TagGroupSelect: React.FunctionComponent<{
         renderInput={(params) => (
           <TextField
             {...params}
-            data-testid="TagManager-TagDialog-tagGroupSelect"
             inputProps={{
               ...params.inputProps,
+              'data-testid': 'TagManager-TagDialog-tagGroupSelect',
             }}
             label={intl.formatMessage({
               id: 'misc.tags.tagsManager.tagDialog.groupLabel',

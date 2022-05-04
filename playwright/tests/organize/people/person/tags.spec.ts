@@ -7,6 +7,7 @@ import CodingSkillsTag from '../../../../mockData/orgs/KPD/tags/Coding';
 import KPD from '../../../../mockData/orgs/KPD';
 import OrganizerTag from '../../../../mockData/orgs/KPD/tags/Organizer';
 import PlaysGuitarTag from '../../../../mockData/orgs/KPD/tags/PlaysGuitar';
+import SkillsGroup from '../../../../mockData/orgs/KPD/tags/groups/Skills';
 
 test.describe('Person Profile Page Tags', () => {
   test.beforeEach(({ moxy, login }) => {
@@ -188,24 +189,136 @@ test.describe('Person Profile Page Tags', () => {
       );
 
       await page.goto(appUri + `/organize/1/people/${ClaraZetkin.id}`);
-
-      // moxy.setZetkinApiMock(
-      //   `/orgs/1/people/${ClaraZetkin.id}/tags/${ActivistTag.id}`,
-      //   'put',
-      //   undefined,
-      //   401
-      // );
     });
-    test.only('can create a tag', async ({ page }) => {
+    test('can create a tag', async ({ page, moxy }) => {
+      const createTagRequest = moxy.setZetkinApiMock(
+        '/orgs/1/people/tags',
+        'post',
+        ActivistTag
+      );
+      const assignNewTagRequest = moxy.setZetkinApiMock(
+        `/orgs/${KPD.id}/people/${ClaraZetkin.id}/tags/${ActivistTag.id}`,
+        'put',
+        {}
+      );
+
       await page.locator('text=Add tag').click();
       await page.click('data-testid=TagManager-TagSelect-createTagOption');
+      await page.fill(
+        'data-testid=TagManager-TagDialog-titleField',
+        ActivistTag.title
+      );
+
+      moxy.setZetkinApiMock(
+        `/orgs/${KPD.id}/people/${ClaraZetkin.id}/tags`,
+        'get',
+        [ActivistTag, CodingSkillsTag, ActivistTag]
+      );
+
+      await page.click('data-testid=submit-button');
+
+      // Check that request made to create tag
+      await page.waitForResponse('**/orgs/1/people/tags');
+      expect(createTagRequest.log().length).toEqual(1);
+
+      // Check that request made to apply tag
+      await page.waitForResponse(
+        `**/orgs/${KPD.id}/people/${ClaraZetkin.id}/tags/${ActivistTag.id}`
+      );
+      expect(assignNewTagRequest.log().length).toEqual(1);
     });
 
-    describe('create a tag with a new group', () => {
-      test('can create a group and tag with that group', () => {});
-      test('shows error when creating group fails', () => {});
+    test.describe('create a tag with a new group', () => {
+      test('can create a group and tag with that group', async ({
+        page,
+        moxy,
+      }) => {
+        const createTagRequest = moxy.setZetkinApiMock(
+          '/orgs/1/people/tags',
+          'post',
+          ActivistTag
+        );
+        const createTagGroupRequest = moxy.setZetkinApiMock(
+          '/orgs/1/tag_groups',
+          'post',
+          SkillsGroup
+        );
+        const assignNewTagRequest = moxy.setZetkinApiMock(
+          `/orgs/${KPD.id}/people/${ClaraZetkin.id}/tags/${ActivistTag.id}`,
+          'put',
+          {}
+        );
+
+        await page.locator('text=Add tag').click();
+        await page.click('data-testid=TagManager-TagSelect-createTagOption');
+        await page.fill(
+          'data-testid=TagManager-TagDialog-titleField',
+          ActivistTag.title
+        );
+        // Create group
+        await page.fill(
+          'data-testid=TagManager-TagDialog-tagGroupSelect',
+          SkillsGroup.title
+        );
+        await page.click(`text=Add "${SkillsGroup.title}"`);
+
+        await page.click('data-testid=submit-button');
+
+        // Check that request made to create group
+        await page.waitForResponse(`**/orgs/1/tag_groups`);
+        expect(createTagGroupRequest.log().length).toEqual(1);
+
+        // Check that request made to create tag
+        await page.waitForResponse('**/orgs/1/people/tags');
+        expect(createTagRequest.log().length).toEqual(1);
+
+        // Check that request made to apply tag
+        await page.waitForResponse(
+          `**/orgs/${KPD.id}/people/${ClaraZetkin.id}/tags/${ActivistTag.id}`
+        );
+        expect(assignNewTagRequest.log().length).toEqual(1);
+      });
+      test('shows error when creating group fails', async ({ page, moxy }) => {
+        moxy.setZetkinApiMock('/orgs/1/tag_groups', 'post', {}, 404);
+
+        await page.locator('text=Add tag').click();
+        await page.click('data-testid=TagManager-TagSelect-createTagOption');
+        await page.fill(
+          'data-testid=TagManager-TagDialog-titleField',
+          ActivistTag.title
+        );
+        // Create group
+        await page.fill(
+          'data-testid=TagManager-TagDialog-tagGroupSelect',
+          SkillsGroup.title
+        );
+        await page.click(`text=Add "${SkillsGroup.title}"`);
+
+        await page.click('data-testid=submit-button');
+
+        // Show error
+        expect(
+          await page.locator('data-testid=Snackbar-error').count()
+        ).toEqual(1);
+      });
     });
 
-    test('shows error when creating a tag fails', () => {});
+    test('shows error when creating a tag fails', async ({ moxy, page }) => {
+      moxy.setZetkinApiMock('/orgs/1/people/tags', 'post', {}, 409);
+
+      await page.locator('text=Add tag').click();
+      await page.click('data-testid=TagManager-TagSelect-createTagOption');
+      await page.fill(
+        'data-testid=TagManager-TagDialog-titleField',
+        ActivistTag.title
+      );
+
+      await page.click('data-testid=submit-button');
+
+      // Show error
+      expect(await page.locator('data-testid=Snackbar-error').count()).toEqual(
+        1
+      );
+    });
   });
 });

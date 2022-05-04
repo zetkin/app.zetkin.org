@@ -52,7 +52,9 @@ export const useCreateTag = (
   const createTag = async (tag: NewTag) => {
     if ('group' in tag) {
       // If creating a new group, has group object
-      const newGroup = await tagsGroupMutation.mutateAsync(tag.group);
+      const newGroup = await tagsGroupMutation.mutateAsync(tag.group, {
+        onError: () => showSnackbar('error'),
+      });
       const tagWithNewGroup = {
         ...tag,
         group: undefined,
