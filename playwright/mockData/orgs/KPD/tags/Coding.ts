@@ -4,7 +4,7 @@ import { ZetkinTag } from '../../../../../src/types/zetkin';
 const CodingSkillsTag: ZetkinTag = {
   color: null,
   description: 'Has coding experience',
-  group: { id: 2, title: 'Skills' },
+  group: { id: 2, organization: KPD, title: 'Skills' },
   hidden: false,
   id: 2,
   organization: { id: KPD.id, title: KPD.title },

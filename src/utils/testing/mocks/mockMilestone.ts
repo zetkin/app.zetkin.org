@@ -5,6 +5,7 @@ const milestone: ZetkinJourneyMilestoneStatus = {
   completed: null,
   deadline: '2022-06-18T00:29:12+02:00',
   description: '',
+  id: 1,
   title: 'perform lip sync',
 };
 

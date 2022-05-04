@@ -271,15 +271,17 @@ export interface ZetkinJourneyInstance {
 }
 
 export interface ZetkinJourneyMilestone {
-  description: string;
+  id: number;
   title: string;
+  description: string;
 }
 
 export interface ZetkinJourneyMilestoneStatus {
   completed: string | null;
   deadline: string | null;
-  description: string;
+  id: number;
   title: string;
+  description: string;
 }
 
 export type {
