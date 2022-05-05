@@ -9,12 +9,12 @@ import PersonDetailsCard from 'components/organize/people/PersonDetailsCard';
 import PersonOrganizationsCard from 'components/organize/people/PersonOrganizationsCard';
 import SinglePersonLayout from 'layout/organize/SinglePersonLayout';
 import SnackbarContext from 'hooks/SnackbarContext';
-import { tagGroupsResource } from 'api/tags';
 import TagsManager from 'components/organize/TagsManager';
 import { useCreateTag } from 'components/organize/TagsManager/utils';
 import ZetkinQuery from 'components/ZetkinQuery';
 import { personResource, personTagsResource } from 'api/people';
 import { scaffold, ScaffoldedGetServerSideProps } from 'utils/next';
+import { tagGroupsResource, tagsResource } from 'api/tags';
 
 export const scaffoldOptions = {
   authLevelRequired: 2,
@@ -58,15 +58,13 @@ const PersonProfilePage: PageWithLayout<PersonPageProps> = (props) => {
   const { showSnackbar } = useContext(SnackbarContext);
 
   const {
-    useAdd,
-    useCreate,
+    useAssign,
     useQuery: usePersonTagsQuery,
-    useAvailableTagsQuery,
-    useRemove,
+    useUnassign,
   } = personTagsResource(orgId as string, personId as string);
-  const addTagMutation = useAdd();
-  const createTagMutation = useCreate();
-  const removeTagMutation = useRemove();
+  const { useQuery: useAvailableTagsQuery } = tagsResource(orgId as string);
+  const assignTagMutation = useAssign();
+  const unassignTagMutation = useUnassign();
   const personTagsQuery = usePersonTagsQuery();
   const organizationTagsQuery = useAvailableTagsQuery();
 
@@ -78,7 +76,7 @@ const PersonProfilePage: PageWithLayout<PersonPageProps> = (props) => {
   const { useQuery: useTagGroupsQuery } = tagGroupsResource(orgId as string);
   const tagsGroupsQuery = useTagGroupsQuery();
 
-  const createTag = useCreateTag(createTagMutation);
+  const createTag = useCreateTag();
 
   if (!person) {
     return null;
@@ -105,18 +103,18 @@ const PersonProfilePage: PageWithLayout<PersonPageProps> = (props) => {
               availableGroups={tagsGroupsQuery.data || []}
               availableTags={organizationTagsQuery.data || []}
               onAssignTag={(tag) =>
-                addTagMutation.mutate(tag.id, {
+                assignTagMutation.mutate(tag.id, {
                   onError: () => showSnackbar('error'),
                 })
               }
               onCreateTag={async (tag) => {
                 const newTag = await createTag(tag);
-                addTagMutation.mutate(newTag.id, {
+                assignTagMutation.mutate(newTag.id, {
                   onError: () => showSnackbar('error'),
                 });
               }}
               onUnassignTag={(tag) =>
-                removeTagMutation.mutate(tag.id, {
+                unassignTagMutation.mutate(tag.id, {
                   onError: () => showSnackbar('error'),
                 })
               }

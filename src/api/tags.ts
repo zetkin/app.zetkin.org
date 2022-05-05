@@ -5,14 +5,23 @@ import {
 } from './utils/resourceHookFactories';
 
 import { NewTagGroup } from 'components/organize/TagsManager/types';
-import { ZetkinTagGroup } from 'types/zetkin';
+import { ZetkinTag, ZetkinTagGroup, ZetkinTagPostBody } from 'types/zetkin';
+
+export const tagsResource = (orgId: string) => {
+  const key = ['tags', orgId];
+  const url = `/orgs/${orgId}/people/tags`;
+  return {
+    useCreate: createUseMutation<ZetkinTagPostBody, ZetkinTag>(key, url),
+    useQuery: createUseQuery<ZetkinTag[]>(key, url),
+  };
+};
 
 export const tagGroupsResource = (orgId: string) => {
   const key = ['tagsGroups', orgId];
   const url = `/orgs/${orgId}/tag_groups`;
 
   return {
-    useAdd: createUseMutation<NewTagGroup, ZetkinTagGroup>(key, url),
+    useCreate: createUseMutation<NewTagGroup, ZetkinTagGroup>(key, url),
     useQuery: createUseQuery<ZetkinTagGroup[]>(key, url),
   };
 };

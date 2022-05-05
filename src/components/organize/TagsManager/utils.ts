@@ -1,10 +1,9 @@
 import { useContext } from 'react';
-import { UseMutationResult } from 'react-query';
 import { useRouter } from 'next/router';
 
 import SnackbarContext from 'hooks/SnackbarContext';
-import { tagGroupsResource } from 'api/tags';
-import { NewTag, NewTagGroup, TagsGroups } from './types';
+import { NewTag, TagsGroups } from './types';
+import { tagGroupsResource, tagsResource } from 'api/tags';
 import { ZetkinTag, ZetkinTagPostBody } from 'types/zetkin';
 
 export const DEFAULT_TAG_COLOR = '#e1e1e1';
@@ -35,24 +34,30 @@ export const groupTags = (
   }, {});
 };
 
+export const randomColor = (): string => {
+  return Math.floor(Math.random() * 0xffffff)
+    .toString(16)
+    .padStart(6, '0');
+};
+
+export const hexRegex = new RegExp(/^[0-9a-f]{6}$/i);
+
 /**
- * Returns a function for creating a tag using react-query mutations while
- * supporting the ability to create a tag group.
- *
- * Provide a `createTagMutation` because this can be different for universal tags or person tags.
- * The mutation to create a group is always the same, so this is hard coded.
+ * Returns a function which handles creating new tags and conditionally
+ * creating a new group for it.
  */
-export const useCreateTag = (
-  createTagMutation: UseMutationResult<ZetkinTag, unknown, NewTagGroup>
-): ((tag: NewTag) => Promise<ZetkinTag>) => {
+export const useCreateTag = (): ((tag: NewTag) => Promise<ZetkinTag>) => {
   const { orgId } = useRouter().query;
-  const tagsGroupMutation = tagGroupsResource(orgId as string).useAdd();
+
+  const createTagMutation = tagsResource(orgId as string).useCreate();
+  const createTagGroupMutation = tagGroupsResource(orgId as string).useCreate();
+
   const { showSnackbar } = useContext(SnackbarContext);
 
   const createTag = async (tag: NewTag) => {
     if ('group' in tag) {
       // If creating a new group, has group object
-      const newGroup = await tagsGroupMutation.mutateAsync(tag.group, {
+      const newGroup = await createTagGroupMutation.mutateAsync(tag.group, {
         onError: () => showSnackbar('error'),
       });
       const tagWithNewGroup = {

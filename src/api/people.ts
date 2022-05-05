@@ -1,14 +1,13 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import {
   createPrefetch,
-  createUseMutation,
   createUseMutationDelete,
   createUseMutationPut,
   createUseQuery,
 } from './utils/resourceHookFactories';
 
 import { PersonOrganization } from 'utils/organize/people';
-import { ZetkinPerson, ZetkinTag, ZetkinTagPostBody } from 'types/zetkin';
+import { ZetkinPerson, ZetkinTag } from 'types/zetkin';
 
 export const personResource = (orgId: string, personId: string) => {
   const key = ['person', personId];
@@ -46,16 +45,8 @@ export const personTagsResource = (orgId: string, personId: string) => {
   const url = `/orgs/${orgId}/people/${personId}/tags`;
 
   return {
-    useAdd: createUseMutationPut({ key, url }),
-    useAvailableTagsQuery: createUseQuery<ZetkinTag[]>(
-      ['tags', orgId],
-      `/orgs/${orgId}/people/tags`
-    ),
-    useCreate: createUseMutation<ZetkinTagPostBody, ZetkinTag>(
-      ['tags', orgId],
-      `/orgs/${orgId}/people/tags`
-    ),
+    useAssign: createUseMutationPut({ key, url }),
     useQuery: createUseQuery<ZetkinTag[]>(key, url),
-    useRemove: createUseMutationDelete({ key, url }),
+    useUnassign: createUseMutationDelete({ key, url }),
   };
 };
