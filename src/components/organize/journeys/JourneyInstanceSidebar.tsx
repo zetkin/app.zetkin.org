@@ -15,20 +15,20 @@ import {
 const JourneyInstanceSidebar = ({
   journeyInstance,
   onAddAssignee,
-  onAddMember,
+  onAddSubject,
   onRemoveAssignee,
-  onRemoveMember,
+  onRemoveSubject,
 }: {
   journeyInstance: ZetkinJourneyInstance;
   onAddAssignee: (person: ZetkinPersonType) => void;
-  onAddMember: (person: ZetkinPersonType) => void;
+  onAddSubject: (person: ZetkinPersonType) => void;
   onRemoveAssignee: (person: ZetkinPersonType) => void;
-  onRemoveMember: (person: ZetkinPersonType) => void;
+  onRemoveSubject: (person: ZetkinPersonType) => void;
 }): JSX.Element => {
   const intl = useIntl();
 
   const [addingAssignee, setAddingAssignee] = useState<boolean>(false);
-  const [addingMember, setAddingMember] = useState<boolean>(false);
+  const [addingSubject, setAddingSubject] = useState<boolean>(false);
 
   return (
     <Grid container spacing={2}>
@@ -90,22 +90,22 @@ const JourneyInstanceSidebar = ({
         {journeyInstance.subjects.map((member, index) => (
           <JourneyPerson
             key={index}
-            onRemove={onRemoveMember}
+            onRemove={onRemoveSubject}
             person={member}
           />
         ))}
-        {!addingMember && (
+        {!addingSubject && (
           <Button
             color="primary"
-            onClick={() => setAddingMember(true)}
+            onClick={() => setAddingSubject(true)}
             startIcon={<Add />}
             style={{ textTransform: 'uppercase' }}
           >
-            <Msg id="pages.organizeJourneyInstance.addMemberButton" />
+            <Msg id="pages.organizeJourneyInstance.addSubjectButton" />
           </Button>
         )}
-        {addingMember && (
-          <ClickAwayListener onClickAway={() => setAddingMember(false)}>
+        {addingSubject && (
+          <ClickAwayListener onClickAway={() => setAddingSubject(false)}>
             <div>
               <PersonSelect
                 getOptionDisabled={(option) => {
@@ -114,12 +114,12 @@ const JourneyInstanceSidebar = ({
                     .includes(option.id);
                 }}
                 label={intl.formatMessage({
-                  id: 'pages.organizeJourneyInstance.addMemberLabel',
+                  id: 'pages.organizeJourneyInstance.addSubjectLabel',
                 })}
                 name="person_id"
                 onChange={(person) => {
-                  setAddingMember(false);
-                  onAddMember(person);
+                  setAddingSubject(false);
+                  onAddSubject(person);
                 }}
                 selectedPerson={null}
                 size="small"

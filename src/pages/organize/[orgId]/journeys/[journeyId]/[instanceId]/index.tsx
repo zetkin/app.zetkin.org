@@ -58,16 +58,16 @@ const JourneyDetailsPage: PageWithLayout<JourneyDetailsPageProps> = ({
 }) => {
   const {
     useAddAssignee,
-    useAddMember,
+    useAddSubject,
     useQuery,
     useRemoveAssignee,
-    useRemoveMember,
+    useRemoveSubject,
   } = journeyInstanceResource(orgId, instanceId);
   const journeyInstanceQuery = useQuery();
   const addAssigneeMutation = useAddAssignee();
   const removeAssigneeMutation = useRemoveAssignee();
-  const addMemberMutation = useAddMember();
-  const removeMemberMutation = useRemoveMember();
+  const addMemberMutation = useAddSubject();
+  const removeMemberMutation = useRemoveSubject();
 
   const journeyInstance = journeyInstanceQuery.data as ZetkinJourneyInstance;
 
@@ -85,13 +85,13 @@ const JourneyDetailsPage: PageWithLayout<JourneyDetailsPageProps> = ({
     });
   };
 
-  const onAddMember = (person: ZetkinPerson) => {
+  const onAddSubject = (person: ZetkinPerson) => {
     addMemberMutation.mutate(person.id, {
       onError: () => showSnackbar('error'),
     });
   };
 
-  const onRemoveMember = (person: ZetkinPerson) => {
+  const onRemoveSubject = (person: ZetkinPerson) => {
     removeMemberMutation.mutate(person.id, {
       onError: () => showSnackbar('error'),
     });
@@ -115,9 +115,9 @@ const JourneyDetailsPage: PageWithLayout<JourneyDetailsPageProps> = ({
           <JourneyInstanceSidebar
             journeyInstance={journeyInstance}
             onAddAssignee={onAddAssignee}
-            onAddMember={onAddMember}
+            onAddSubject={onAddSubject}
             onRemoveAssignee={onRemoveAssignee}
-            onRemoveMember={onRemoveMember}
+            onRemoveSubject={onRemoveSubject}
           />
         </Grid>
       </Grid>
