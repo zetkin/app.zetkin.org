@@ -2,13 +2,7 @@ import ReplayIcon from '@material-ui/icons/Replay';
 import { useIntl } from 'react-intl';
 import { Box, InputAdornment, TextField } from '@material-ui/core';
 
-import { DEFAULT_TAG_COLOR } from '../utils';
-
-const randomColor = () => {
-  return Math.floor(Math.random() * 16777215).toString(16);
-};
-
-const hexRegex = new RegExp(/(^[0-9a-f]{6}$)|(^[0-9a-f]{3}$)/i);
+import { DEFAULT_TAG_COLOR, hexRegex, randomColor } from '../utils';
 
 const ColorPicker: React.FunctionComponent<{
   onChange: (color: { valid: boolean; value: string }) => void;
