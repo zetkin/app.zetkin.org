@@ -7,14 +7,14 @@ import ColorPicker from './ColorPicker';
 import SubmitCancelButtons from 'components/forms/common/SubmitCancelButtons';
 import TagGroupSelect from './TagGroupSelect';
 import ZetkinDialog from 'components/ZetkinDialog';
-import { NewTagGroup, OnCreateTagHandler } from '../types';
+import { EditTag, NewTag, NewTagGroup } from '../types';
 import { ZetkinTag, ZetkinTagGroup } from 'types/zetkin';
 
 interface TagDialogProps {
   groups: ZetkinTagGroup[];
   open: boolean;
   onClose: () => void;
-  onSubmit: OnCreateTagHandler;
+  onSubmit: (tag: NewTag | EditTag) => void;
   tag?: ZetkinTag | Pick<ZetkinTag, 'title'>;
 }
 
@@ -66,25 +66,26 @@ const TagDialog: React.FunctionComponent<TagDialogProps> = ({
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          const tag = {
+          const tagBody = {
             color: color.value ? `#${color.value}` : undefined,
+            id: tag && 'id' in tag ? tag.id : undefined, // Attach id when editing an existing tag
             title,
           };
           if (group && 'id' in group) {
             // If existing group, submit with POST body
             onSubmit({
               group_id: group.id,
-              ...tag,
+              ...tagBody,
             });
           } else if (group && !('id' in group)) {
             // If new group, submit with group object
             onSubmit({
               group,
-              ...tag,
+              ...tagBody,
             });
           } else {
             // If no group
-            onSubmit(tag);
+            onSubmit(tagBody);
           }
           closeAndClear();
         }}

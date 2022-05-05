@@ -14,18 +14,19 @@ import {
 import { FormattedMessage, useIntl } from 'react-intl';
 
 import { groupTags } from './utils';
-import { OnCreateTagHandler } from './types';
 import TagChip from './TagChip';
 import TagDialog from './TagDialog';
+import { EditTag, NewTag } from './types';
 import { ZetkinTag, ZetkinTagGroup } from 'types/zetkin';
 
 const TagSelect: React.FunctionComponent<{
   disabledTags: ZetkinTag[];
   groups: ZetkinTagGroup[];
-  onCreateTag: OnCreateTagHandler;
+  onCreateTag: (tag: NewTag) => void;
+  onEditTag: (tag: EditTag) => void;
   onSelect: (tag: ZetkinTag) => void;
   tags: ZetkinTag[];
-}> = ({ disabledTags, groups, onCreateTag, onSelect, tags }) => {
+}> = ({ disabledTags, groups, onCreateTag, onEditTag, onSelect, tags }) => {
   const intl = useIntl();
 
   const [tagToEdit, setTagToEdit] = useState<
@@ -151,7 +152,13 @@ const TagSelect: React.FunctionComponent<{
       <TagDialog
         groups={groups}
         onClose={() => setTagToEdit(undefined)}
-        onSubmit={onCreateTag}
+        onSubmit={(tag) => {
+          if ('id' in tag) {
+            onEditTag(tag);
+          } else {
+            onCreateTag(tag);
+          }
+        }}
         open={Boolean(tagToEdit)}
         tag={tagToEdit}
       />

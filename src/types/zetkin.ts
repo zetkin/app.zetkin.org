@@ -220,6 +220,12 @@ export interface ZetkinTagPostBody
   group_id?: number;
 }
 
+export interface ZetkinTagPatchBody
+  extends Partial<Omit<ZetkinTag, 'group' | 'organization'>> {
+  id: number;
+  group_id?: number;
+}
+
 export enum CUSTOM_FIELD_TYPE {
   URL = 'url',
   DATE = 'date',
