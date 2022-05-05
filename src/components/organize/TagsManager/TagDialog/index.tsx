@@ -7,27 +7,27 @@ import ColorPicker from './ColorPicker';
 import SubmitCancelButtons from 'components/forms/common/SubmitCancelButtons';
 import TagGroupSelect from './TagGroupSelect';
 import ZetkinDialog from 'components/ZetkinDialog';
-import { ZetkinTagGroup } from 'types/zetkin';
 import { NewTagGroup, OnCreateTagHandler } from '../types';
+import { ZetkinTag, ZetkinTagGroup } from 'types/zetkin';
 
 interface TagDialogProps {
   groups: ZetkinTagGroup[];
   open: boolean;
   onClose: () => void;
   onSubmit: OnCreateTagHandler;
-  defaultTitle?: string;
+  tag?: ZetkinTag | Pick<ZetkinTag, 'title'>;
 }
 
 const TagDialog: React.FunctionComponent<TagDialogProps> = ({
-  defaultTitle,
   groups,
   open,
   onClose,
   onSubmit,
+  tag,
 }) => {
   const intl = useIntl();
 
-  const [title, setTitle] = useState(defaultTitle || '');
+  const [title, setTitle] = useState('');
   const [titleEdited, setTitleEdited] = useState(false);
   const [color, setColor] = useState<{ valid: boolean; value: string }>({
     valid: true,
@@ -37,11 +37,15 @@ const TagDialog: React.FunctionComponent<TagDialogProps> = ({
     ZetkinTagGroup | NewTagGroup | null | undefined
   >();
 
-  const titleValid = !!title;
-
   useEffect(() => {
-    setTitle(defaultTitle || '');
-  }, [defaultTitle]);
+    setTitle(tag?.title || '');
+    setColor(
+      tag && 'color' in tag && tag.color
+        ? { valid: true, value: tag.color.slice(1) }
+        : { valid: true, value: '' }
+    );
+    setGroup(tag && 'group' in tag ? tag.group : undefined);
+  }, [tag]);
 
   const closeAndClear = () => {
     setTitle('');
@@ -86,11 +90,11 @@ const TagDialog: React.FunctionComponent<TagDialogProps> = ({
         }}
       >
         <TextField
-          error={titleEdited && !titleValid}
+          error={titleEdited && !title}
           fullWidth
           helperText={
             titleEdited &&
-            !titleValid &&
+            !title &&
             intl.formatMessage({
               id: 'misc.tags.tagsManager.tagDialog.titleErrorText',
             })
@@ -122,10 +126,14 @@ const TagDialog: React.FunctionComponent<TagDialogProps> = ({
         />
         <SubmitCancelButtons
           onCancel={closeAndClear}
-          submitDisabled={!titleValid || !color.valid}
-          submitText={intl.formatMessage({
-            id: 'misc.tags.tagsManager.submitCreateTagButton',
-          })}
+          submitDisabled={!title || !color.valid}
+          submitText={
+            !tag || !('id' in tag)
+              ? intl.formatMessage({
+                  id: 'misc.tags.tagsManager.submitCreateTagButton',
+                })
+              : undefined
+          }
         />
       </form>
     </ZetkinDialog>

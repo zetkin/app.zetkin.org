@@ -1,9 +1,11 @@
 /* eslint-disable jsx-a11y/no-autofocus */
 import { Add } from '@material-ui/icons';
+import EditIcon from '@material-ui/icons/Edit';
 import { useAutocomplete } from '@material-ui/lab';
 import { useState } from 'react';
 import {
   Box,
+  IconButton,
   List,
   ListItem,
   ListSubheader,
@@ -26,13 +28,9 @@ const TagSelect: React.FunctionComponent<{
 }> = ({ disabledTags, groups, onCreateTag, onSelect, tags }) => {
   const intl = useIntl();
 
-  const [dialogOpen, setDialogOpen] = useState<{
-    defaultTitle: string;
-    open: boolean;
-  }>({
-    defaultTitle: '',
-    open: false,
-  });
+  const [tagToEdit, setTagToEdit] = useState<
+    ZetkinTag | Pick<ZetkinTag, 'title'> | undefined
+  >(undefined);
 
   const {
     inputValue,
@@ -90,16 +88,32 @@ const TagSelect: React.FunctionComponent<{
                   <ListItem
                     key={tag.id}
                     button
+                    dense
                     disabled={disabledTags
                       .map((disabledTags) => disabledTags.id)
                       .includes(tag.id)}
                     onClick={() => onSelect(tag)}
                     tabIndex={-1}
                   >
-                    <TagChip
-                      chipProps={{ style: { cursor: 'pointer' } }}
-                      tag={tag}
-                    />
+                    <Box
+                      alignItems="center"
+                      display="flex"
+                      justifyContent="space-between"
+                      width="100%"
+                    >
+                      <TagChip
+                        chipProps={{ style: { cursor: 'pointer' } }}
+                        tag={tag}
+                      />
+                      <IconButton
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setTagToEdit(tag);
+                        }}
+                      >
+                        <EditIcon />
+                      </IconButton>
+                    </Box>
                   </ListItem>
                 );
               })}
@@ -109,10 +123,10 @@ const TagSelect: React.FunctionComponent<{
         <ListItem
           button
           data-testid="TagManager-TagSelect-createTagOption"
+          dense
           onClick={() =>
-            setDialogOpen({
-              defaultTitle: inputValue,
-              open: true,
+            setTagToEdit({
+              title: inputValue,
             })
           }
         >
@@ -135,11 +149,11 @@ const TagSelect: React.FunctionComponent<{
         </ListItem>
       </List>
       <TagDialog
-        defaultTitle={dialogOpen.defaultTitle}
         groups={groups}
-        onClose={() => setDialogOpen({ defaultTitle: '', open: false })}
+        onClose={() => setTagToEdit(undefined)}
         onSubmit={onCreateTag}
-        open={dialogOpen.open}
+        open={Boolean(tagToEdit)}
+        tag={tagToEdit}
       />
     </Box>
   );
