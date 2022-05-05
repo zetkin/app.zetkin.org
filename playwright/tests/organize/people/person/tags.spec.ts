@@ -53,7 +53,7 @@ test.describe('Person Profile Page Tags', () => {
       await page.locator(`text="${PlaysGuitarTag.title}"`).isVisible()
     ).toBeTruthy();
   });
-  test.describe('adding tags', () => {
+  test.describe('assigning tags', () => {
     test('can add tag to person', async ({ page, appUri, moxy }) => {
       moxy.setZetkinApiMock(`/orgs/${KPD.id}/people/tags`, 'get', [
         ActivistTag,
@@ -180,7 +180,7 @@ test.describe('Person Profile Page Tags', () => {
     });
   });
 
-  test.describe('unassigning tags', () => {
+  test.describe('creating tags', () => {
     test.beforeEach(async ({ page, appUri, moxy }) => {
       moxy.setZetkinApiMock(`/orgs/${KPD.id}/people/tags`, 'get', [
         ActivistTag,
