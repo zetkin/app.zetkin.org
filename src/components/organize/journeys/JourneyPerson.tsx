@@ -28,7 +28,13 @@ const JourneyPerson = ({
         id={person.id}
         name={`${person.first_name} ${person.last_name}`}
       />
-      {hover && <Close color="secondary" onClick={() => onRemove(person)} />}
+      {hover && (
+        <Close
+          color="secondary"
+          onClick={() => onRemove(person)}
+          style={{ cursor: 'pointer' }}
+        />
+      )}
     </Box>
   );
 };
