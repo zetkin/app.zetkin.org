@@ -59,7 +59,7 @@ test.describe('Journey instance sidebar', () => {
         ClarasOnboarding.assignees[0],
       ]);
       //Add Angela as assignee
-      moxy.setZetkinApiMock(
+      const { log: putTagLog } = moxy.setZetkinApiMock(
         `/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}/assignees/${ClarasOnboarding.assignees[0].id}`,
         'put'
       );
@@ -90,20 +90,12 @@ test.describe('Journey instance sidebar', () => {
         )
         .click();
 
-      //expect Angela to be in list of assignees
-      expect(
-        await page
-          .locator(
-            `[data-testid=ZetkinSection-assignees] [data-testid=JourneyPerson-${ClarasOnboarding.assignees[0].id}]`
-          )
-          .count()
-      ).toEqual(1);
+      //wait for response
+      await page.waitForResponse(
+        `**/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}/assignees/${ClarasOnboarding.assignees[0].id}`
+      );
 
       //Expect PUT-request to be done
-      const { log: putTagLog } = moxy.setZetkinApiMock(
-        `/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}/assignees/${ClarasOnboarding.assignees[0].id}`,
-        'put'
-      );
       expect(putTagLog().length).toEqual(1);
 
       //Expect Add assignee-button to be visible
@@ -212,7 +204,7 @@ test.describe('Journey instance sidebar', () => {
         ClarasOnboarding.subjects[0],
       ]);
       //Add Clara as subject
-      moxy.setZetkinApiMock(
+      const { log: putTagLog } = moxy.setZetkinApiMock(
         `/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}/subjects/${ClarasOnboarding.subjects[0].id}`,
         'put'
       );
@@ -243,20 +235,12 @@ test.describe('Journey instance sidebar', () => {
         )
         .click();
 
-      //expect Clara to be in list of assignees
-      expect(
-        await page
-          .locator(
-            `[data-testid=ZetkinSection-subjects] [data-testid=JourneyPerson-${ClarasOnboarding.subjects[0].id}]`
-          )
-          .count()
-      ).toEqual(1);
+      //wait for response
+      await page.waitForResponse(
+        `**/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}/subjects/${ClarasOnboarding.subjects[0].id}`
+      );
 
       //Expect PUT-request to be done
-      const { log: putTagLog } = moxy.setZetkinApiMock(
-        `/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}/subjects/${ClarasOnboarding.subjects[0].id}`,
-        'put'
-      );
       expect(putTagLog().length).toEqual(1);
 
       //Expect Add subject-button to be visible
