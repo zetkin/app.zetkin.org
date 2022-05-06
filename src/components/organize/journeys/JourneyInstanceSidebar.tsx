@@ -34,6 +34,7 @@ const JourneyInstanceSidebar = ({
     <Grid container spacing={2}>
       <Grid item xs={12}>
         <ZetkinSection
+          data-testid="ZetkinSection-assignees"
           title={intl.formatMessage({
             id: 'pages.organizeJourneyInstance.assignedTo',
           })}
@@ -48,6 +49,7 @@ const JourneyInstanceSidebar = ({
           {!addingAssignee && (
             <Button
               color="primary"
+              data-testid="Button-add-assignee"
               onClick={() => setAddingAssignee(true)}
               startIcon={<Add />}
               style={{ textTransform: 'uppercase' }}
@@ -59,6 +61,7 @@ const JourneyInstanceSidebar = ({
             <ClickAwayListener onClickAway={() => setAddingAssignee(false)}>
               <div>
                 <PersonSelect
+                  data-testid="PersonSelect-add-assignee"
                   getOptionDisabled={(option) => {
                     return journeyInstance.assignees
                       .map((a) => a.id)
@@ -83,50 +86,53 @@ const JourneyInstanceSidebar = ({
       </Grid>
       <Grid item xs={12}>
         <ZetkinSection
+          data-testid="ZetkinSection-subjects"
           title={intl.formatMessage({
             id: 'pages.organizeJourneyInstance.members',
           })}
-        ></ZetkinSection>
-        {journeyInstance.subjects.map((member, index) => (
-          <JourneyPerson
-            key={index}
-            onRemove={onRemoveSubject}
-            person={member}
-          />
-        ))}
-        {!addingSubject && (
-          <Button
-            color="primary"
-            onClick={() => setAddingSubject(true)}
-            startIcon={<Add />}
-            style={{ textTransform: 'uppercase' }}
-          >
-            <Msg id="pages.organizeJourneyInstance.addSubjectButton" />
-          </Button>
-        )}
-        {addingSubject && (
-          <ClickAwayListener onClickAway={() => setAddingSubject(false)}>
-            <div>
-              <PersonSelect
-                getOptionDisabled={(option) => {
-                  return journeyInstance.subjects
-                    .map((s) => s.id)
-                    .includes(option.id);
-                }}
-                label={intl.formatMessage({
-                  id: 'pages.organizeJourneyInstance.addSubjectLabel',
-                })}
-                name="person_id"
-                onChange={(person) => {
-                  setAddingSubject(false);
-                  onAddSubject(person);
-                }}
-                selectedPerson={null}
-                size="small"
-              />
-            </div>
-          </ClickAwayListener>
-        )}
+        >
+          {journeyInstance.subjects.map((member, index) => (
+            <JourneyPerson
+              key={index}
+              onRemove={onRemoveSubject}
+              person={member}
+            />
+          ))}
+          {!addingSubject && (
+            <Button
+              color="primary"
+              data-testid="Button-add-subject"
+              onClick={() => setAddingSubject(true)}
+              startIcon={<Add />}
+              style={{ textTransform: 'uppercase' }}
+            >
+              <Msg id="pages.organizeJourneyInstance.addSubjectButton" />
+            </Button>
+          )}
+          {addingSubject && (
+            <ClickAwayListener onClickAway={() => setAddingSubject(false)}>
+              <div>
+                <PersonSelect
+                  getOptionDisabled={(option) => {
+                    return journeyInstance.subjects
+                      .map((s) => s.id)
+                      .includes(option.id);
+                  }}
+                  label={intl.formatMessage({
+                    id: 'pages.organizeJourneyInstance.addSubjectLabel',
+                  })}
+                  name="person_id"
+                  onChange={(person) => {
+                    setAddingSubject(false);
+                    onAddSubject(person);
+                  }}
+                  selectedPerson={null}
+                  size="small"
+                />
+              </div>
+            </ClickAwayListener>
+          )}
+        </ZetkinSection>
         <Divider />
       </Grid>
       <Grid item xs={12}>

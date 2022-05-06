@@ -18,6 +18,7 @@ const JourneyPerson = ({
     <Box
       alignItems="center"
       bgcolor={hover ? grey[200] : ''}
+      data-testid={`JourneyPerson-${person.id}`}
       display="flex"
       justifyContent="space-between"
       onMouseEnter={() => setHover(true)}
@@ -31,6 +32,7 @@ const JourneyPerson = ({
       {hover && (
         <Close
           color="secondary"
+          data-testid={`JourneyPerson-remove-${person.id}`}
           onClick={() => onRemove(person)}
           style={{ cursor: 'pointer' }}
         />
