@@ -9,7 +9,17 @@ const ZetkinPerson: React.FunctionComponent<{
   showText?: boolean;
   size?: number;
   subtitle?: string | React.ReactNode;
-}> = ({ containerProps, id, link, name, showText = true, size, subtitle }) => {
+  tooltip?: boolean;
+}> = ({
+  containerProps,
+  id,
+  link,
+  name,
+  showText = true,
+  size,
+  subtitle,
+  tooltip = true,
+}) => {
   const router = useRouter();
   const { orgId } = router.query;
   const linkProps = {
@@ -19,14 +29,21 @@ const ZetkinPerson: React.FunctionComponent<{
 
   return (
     <Box display="flex" {...containerProps}>
-      <Tooltip title={name}>
+      {tooltip ? (
+        <Tooltip title={name}>
+          <Avatar
+            {...(link ? linkProps : {})}
+            src={orgId ? `/api/orgs/${orgId}/people/${id}/avatar` : ''}
+            style={size ? { height: size, width: size } : {}}
+          />
+        </Tooltip>
+      ) : (
         <Avatar
           {...(link ? linkProps : {})}
           src={orgId ? `/api/orgs/${orgId}/people/${id}/avatar` : ''}
           style={size ? { height: size, width: size } : {}}
         />
-      </Tooltip>
-
+      )}
       {showText && (
         <Box
           alignItems="start"

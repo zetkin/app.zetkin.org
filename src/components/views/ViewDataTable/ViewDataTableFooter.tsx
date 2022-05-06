@@ -52,6 +52,7 @@ const ViewDataTableFooter: FunctionComponent<ViewDataTableFooterProps> = ({
           id: 'misc.views.footer.addPlaceholder',
         })}
         selectedPerson={null}
+        variant="outlined"
       />
     </Box>
   );
