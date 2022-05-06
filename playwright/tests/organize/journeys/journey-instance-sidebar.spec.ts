@@ -1,9 +1,7 @@
 import { expect } from '@playwright/test';
 import test from '../../../fixtures/next';
 
-import AngelaDavis from '../../../mockData/orgs/KPD/people/AngelaDavis';
 import ClarasOnboarding from '../../../mockData/orgs/KPD/journeys/MemberOnboarding/instances/ClarasOnboarding';
-import ClaraZetkin from '../../../mockData/orgs/KPD/people/ClaraZetkin';
 import KPD from '../../../mockData/orgs/KPD';
 import MemberOnboarding from '../../../mockData/orgs/KPD/journeys/MemberOnboarding';
 
@@ -58,12 +56,18 @@ test.describe('Journey instance sidebar', () => {
       );
       //Angela appears in search results in PersonSelect
       moxy.setZetkinApiMock(`/orgs/${KPD.id}/search/person`, 'post', [
-        AngelaDavis,
+        ClarasOnboarding.assignees[0],
       ]);
       //Add Angela as assignee
       moxy.setZetkinApiMock(
-        `/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}/assignees/${AngelaDavis.id}`,
+        `/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}/assignees/${ClarasOnboarding.assignees[0].id}`,
         'put'
+      );
+      //GET data for Angela to render her info
+      moxy.setZetkinApiMock(
+        `/orgs/${KPD.id}/people/${ClarasOnboarding.assignees[0].id}`,
+        'get',
+        ClarasOnboarding.assignees[0]
       );
 
       await page.goto(appUri + '/organize/1/journeys/1/1');
@@ -72,19 +76,19 @@ test.describe('Journey instance sidebar', () => {
       await page.locator('data-testid=Button-add-assignee').click();
       await page.locator('text=Assign person').type('Angela');
 
+      //GET the journeyInstance with Angela as assignee
+      moxy.setZetkinApiMock(
+        `/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}`,
+        'get',
+        ClarasOnboarding
+      );
+
       //click Angela in search results
       await page
         .locator(
           `text=${ClarasOnboarding.assignees[0].first_name} ${ClarasOnboarding.assignees[0].last_name}`
         )
         .click();
-
-      //GET the journeyInstance with Angela as assignee
-      moxy.setZetkinApiMock(
-        `/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}`,
-        'get',
-        { ...ClarasOnboarding, assignees: [AngelaDavis] }
-      );
 
       //expect Angela to be in list of assignees
       expect(
@@ -97,7 +101,7 @@ test.describe('Journey instance sidebar', () => {
 
       //Expect PUT-request to be done
       const { log: putTagLog } = moxy.setZetkinApiMock(
-        `/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}/assignees/${AngelaDavis.id}`,
+        `/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}/assignees/${ClarasOnboarding.assignees[0].id}`,
         'put'
       );
       expect(putTagLog().length).toEqual(1);
@@ -138,19 +142,19 @@ test.describe('Journey instance sidebar', () => {
         )
         .hover();
 
-      //find x-icon and click it
-      await page
-        .locator(
-          `data-testid=JourneyPerson-remove-${ClarasOnboarding.assignees[0].id}`
-        )
-        .click();
-
       //GET journey instance again, with no assignees
       moxy.setZetkinApiMock(
         `/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}`,
         'get',
         { ...ClarasOnboarding, assignees: [] }
       );
+
+      //find x-icon and click it
+      await page
+        .locator(
+          `data-testid=JourneyPerson-remove-${ClarasOnboarding.assignees[0].id}`
+        )
+        .click();
 
       //there should be no Angela in list of assignees
       expect(
@@ -205,12 +209,18 @@ test.describe('Journey instance sidebar', () => {
       );
       //Clara appears in search results in PersonSelect
       moxy.setZetkinApiMock(`/orgs/${KPD.id}/search/person`, 'post', [
-        ClaraZetkin,
+        ClarasOnboarding.subjects[0],
       ]);
       //Add Clara as subject
       moxy.setZetkinApiMock(
-        `/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}/subjects/${ClaraZetkin.id}`,
+        `/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}/subjects/${ClarasOnboarding.subjects[0].id}`,
         'put'
+      );
+      //GET data for Clara to render her info
+      moxy.setZetkinApiMock(
+        `/orgs/${KPD.id}/people/${ClarasOnboarding.subjects[0].id}`,
+        'get',
+        ClarasOnboarding.subjects[0]
       );
 
       await page.goto(appUri + '/organize/1/journeys/1/1');
@@ -219,19 +229,19 @@ test.describe('Journey instance sidebar', () => {
       await page.locator('data-testid=Button-add-subject').click();
       await page.locator('text=Add person').type('Clara');
 
+      //GET the journeyInstance with Clara as assignee
+      moxy.setZetkinApiMock(
+        `/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}`,
+        'get',
+        ClarasOnboarding
+      );
+
       //click Clara in search results
       await page
         .locator(
           `text=${ClarasOnboarding.subjects[0].first_name} ${ClarasOnboarding.subjects[0].last_name}`
         )
         .click();
-
-      //GET the journeyInstance with Clara as assignee
-      moxy.setZetkinApiMock(
-        `/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}`,
-        'get',
-        { ...ClarasOnboarding, subjects: [ClaraZetkin] }
-      );
 
       //expect Clara to be in list of assignees
       expect(
@@ -244,7 +254,7 @@ test.describe('Journey instance sidebar', () => {
 
       //Expect PUT-request to be done
       const { log: putTagLog } = moxy.setZetkinApiMock(
-        `/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}/subjects/${ClaraZetkin.id}`,
+        `/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}/subjects/${ClarasOnboarding.subjects[0].id}`,
         'put'
       );
       expect(putTagLog().length).toEqual(1);
@@ -286,19 +296,19 @@ test.describe('Journey instance sidebar', () => {
         )
         .hover();
 
-      //find x-icon and click it
-      await page
-        .locator(
-          `data-testid=JourneyPerson-remove-${ClarasOnboarding.subjects[0].id}`
-        )
-        .click();
-
       //GET journey instance again, with no subjects
       moxy.setZetkinApiMock(
         `/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}`,
         'get',
         { ...ClarasOnboarding, subjects: [] }
       );
+
+      //find x-icon and click it
+      await page
+        .locator(
+          `data-testid=JourneyPerson-remove-${ClarasOnboarding.subjects[0].id}`
+        )
+        .click();
 
       //there should be no Clara in list of subejcts
       expect(
