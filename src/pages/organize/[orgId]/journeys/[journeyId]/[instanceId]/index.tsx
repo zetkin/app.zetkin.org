@@ -112,7 +112,7 @@ const JourneyDetailsPage: PageWithLayout<JourneyDetailsPageProps> = ({
           <JourneyInstanceSummary journeyInstance={journeyInstance} />
           <Divider style={{ marginTop: '2rem' }} />
           <TimelineWrapper
-            itemApiPath={`/api/orgs/${orgId}/journey_instances/${instanceId}`}
+            itemApiPath={`/orgs/${orgId}/journey_instances/${instanceId}`}
             queryKey={['journeyInstance', orgId, instanceId, 'timeline']}
           />
         </Grid>
