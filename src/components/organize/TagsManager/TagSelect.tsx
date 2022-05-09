@@ -11,17 +11,11 @@ import {
 } from '@material-ui/core';
 import { FormattedMessage, useIntl } from 'react-intl';
 
+import { groupTags } from './utils';
 import { OnCreateTagHandler } from './types';
 import TagChip from './TagChip';
 import TagDialog from './TagDialog';
 import { ZetkinTag } from 'types/zetkin';
-
-interface Group<Option> {
-  key: number;
-  index: number;
-  group: string;
-  options: Option[];
-}
 
 const TagSelect: React.FunctionComponent<{
   disabledTags: ZetkinTag[];
@@ -40,14 +34,16 @@ const TagSelect: React.FunctionComponent<{
     groupedOptions,
   } = useAutocomplete({
     getOptionLabel: (option) => option.title,
-    groupBy: (option) =>
-      option.group?.title ||
-      intl.formatMessage({
-        id: 'misc.tags.tagsManager.ungroupedHeader',
-      }),
     open: true,
     options: tags,
   });
+
+  const groupedFilteredTags = groupTags(
+    groupedOptions,
+    intl.formatMessage({
+      id: 'misc.tags.tagsManager.ungroupedHeader',
+    })
+  );
 
   return (
     <Box {...getRootProps()}>
@@ -62,18 +58,18 @@ const TagSelect: React.FunctionComponent<{
       />
       {/* Options */}
       <List {...getListboxProps()} style={{ overflowY: 'scroll' }}>
-        {(groupedOptions as unknown as Group<ZetkinTag>[]).map((group) => {
+        {Object.values(groupedFilteredTags).map((group) => {
           // Groups
           return (
             <List
-              key={group.group}
+              key={group.title}
               subheader={
-                <ListSubheader component="div">{group.group}</ListSubheader>
+                <ListSubheader component="div">{group.title}</ListSubheader>
               }
-              title={group.group}
+              title={group.title}
             >
               {/* Tags */}
-              {group.options.map((tag) => {
+              {group.tags.map((tag) => {
                 return (
                   <ListItem
                     key={tag.id}
