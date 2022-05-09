@@ -19,6 +19,7 @@ journeys:
     manage: Manage
     overview: Overview
     timeline: Timeline
+    milestones: Milestones
   title: Journeys
 lists:
   showMore: Show more...
