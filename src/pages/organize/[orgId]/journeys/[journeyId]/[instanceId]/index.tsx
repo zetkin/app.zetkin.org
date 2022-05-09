@@ -11,6 +11,7 @@ import { organizationResource } from 'api/organizations';
 import { PageWithLayout } from 'types';
 import { scaffold } from 'utils/next';
 import SnackbarContext from 'hooks/SnackbarContext';
+import TimelineWrapper from 'components/TimelineWrapper';
 import { ZetkinJourneyInstance, ZetkinPerson } from 'types/zetkin';
 
 const scaffoldOptions = {
@@ -110,6 +111,10 @@ const JourneyDetailsPage: PageWithLayout<JourneyDetailsPageProps> = ({
         <Grid item md={6}>
           <JourneyInstanceSummary journeyInstance={journeyInstance} />
           <Divider style={{ marginTop: '2rem' }} />
+          <TimelineWrapper
+            itemApiPath={`/orgs/${orgId}/journey_instances/${instanceId}`}
+            queryKey={['journeyInstance', orgId, instanceId, 'timeline']}
+          />
         </Grid>
         <Grid item md={4}>
           <JourneyInstanceSidebar
