@@ -77,9 +77,7 @@ const TagSelect: React.FunctionComponent<{
             <List
               key={group.title}
               subheader={
-                <ListSubheader component="div" disableSticky>
-                  {group.title}
-                </ListSubheader>
+                <ListSubheader component="div">{group.title}</ListSubheader>
               }
               title={group.title}
             >

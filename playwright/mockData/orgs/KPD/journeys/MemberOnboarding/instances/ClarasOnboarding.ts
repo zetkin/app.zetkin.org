@@ -1,4 +1,5 @@
 import ActivistTag from '../../../tags/Activist';
+import AngelaDavis from '../../../people/AngelaDavis';
 import ClaraZetkin from '../../../people/ClaraZetkin';
 import KPD from '../../..';
 import MemberOnboarding from '../../MemberOnboarding';
@@ -35,7 +36,7 @@ const MeetBranchSec: ZetkinJourneyMilestoneStatus = {
 
 // Journey Instance
 const ClarasOnboarding: ZetkinJourneyInstance = {
-  assignees: [ClaraZetkin],
+  assignees: [AngelaDavis],
   closed: null,
   created: '2022-02-01T14:53:15',
   id: 1,

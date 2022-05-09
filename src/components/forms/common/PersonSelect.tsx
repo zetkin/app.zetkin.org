@@ -53,7 +53,10 @@ interface UsePersonSelectReturn {
 
 type UsePersonSelect = (props: UsePersonSelectProps) => UsePersonSelectReturn;
 
-type PersonSelectProps = UsePersonSelectProps;
+type PersonSelectProps = UsePersonSelectProps & {
+  size?: 'small' | 'medium';
+  variant?: 'filled' | 'outlined' | 'standard';
+};
 
 const usePersonSelect: UsePersonSelect = ({
   getOptionDisabled,
@@ -159,7 +162,8 @@ const PersonSelect: FunctionComponent<PersonSelectProps & { name: string }> = (
 export default PersonSelect;
 
 const MUIOnlyPersonSelect: FunctionComponent<PersonSelectProps> = (props) => {
-  const { autoCompleteProps } = usePersonSelect(props);
+  const { label, size, variant, ...restComponentProps } = props;
+  const { autoCompleteProps } = usePersonSelect(restComponentProps);
 
   const { name, placeholder, inputRef, ...restProps } = autoCompleteProps;
 
@@ -175,9 +179,11 @@ const MUIOnlyPersonSelect: FunctionComponent<PersonSelectProps> = (props) => {
             ...params.inputProps,
           }}
           inputRef={inputRef}
+          label={label}
           name={name}
           placeholder={placeholder}
-          variant="outlined"
+          size={size}
+          variant={variant}
         />
       )}
     />
