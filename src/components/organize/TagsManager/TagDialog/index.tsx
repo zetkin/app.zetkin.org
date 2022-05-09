@@ -37,6 +37,8 @@ const TagDialog: React.FunctionComponent<TagDialogProps> = ({
     ZetkinTagGroup | NewTagGroup | null | undefined
   >();
 
+  const editingTag = tag && 'id' in tag;
+
   useEffect(() => {
     setTitle(tag?.title || '');
     setColor(
@@ -59,9 +61,13 @@ const TagDialog: React.FunctionComponent<TagDialogProps> = ({
     <ZetkinDialog
       onClose={closeAndClear}
       open={open}
-      title={intl.formatMessage({
-        id: 'misc.tags.tagsManager.tagDialog.dialogTitle',
-      })}
+      title={
+        editingTag
+          ? 'Edit tag'
+          : intl.formatMessage({
+              id: 'misc.tags.tagsManager.tagDialog.dialogTitle',
+            })
+      }
     >
       <form
         onSubmit={(e) => {
@@ -129,11 +135,11 @@ const TagDialog: React.FunctionComponent<TagDialogProps> = ({
           onCancel={closeAndClear}
           submitDisabled={!title || !color.valid}
           submitText={
-            !tag || !('id' in tag)
-              ? intl.formatMessage({
+            editingTag
+              ? undefined
+              : intl.formatMessage({
                   id: 'misc.tags.tagsManager.submitCreateTagButton',
                 })
-              : undefined
           }
         />
       </form>

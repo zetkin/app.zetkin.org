@@ -62,8 +62,11 @@ const PersonProfilePage: PageWithLayout<PersonPageProps> = (props) => {
     useQuery: usePersonTagsQuery,
     useUnassign,
   } = personTagsResource(orgId as string, personId as string);
-  const { useQuery: useAvailableTagsQuery } = tagsResource(orgId as string);
+  const { useQuery: useAvailableTagsQuery, useEdit } = tagsResource(
+    orgId as string
+  );
   const assignTagMutation = useAssign();
+  const editTagMutation = useEdit();
   const unassignTagMutation = useUnassign();
   const personTagsQuery = usePersonTagsQuery();
   const organizationTagsQuery = useAvailableTagsQuery();
@@ -112,6 +115,9 @@ const PersonProfilePage: PageWithLayout<PersonPageProps> = (props) => {
                 assignTagMutation.mutate(newTag.id, {
                   onError: () => showSnackbar('error'),
                 });
+              }}
+              onEditTag={async (tag) => {
+                await editTagMutation.mutateAsync(tag);
               }}
               onUnassignTag={(tag) =>
                 unassignTagMutation.mutate(tag.id, {
