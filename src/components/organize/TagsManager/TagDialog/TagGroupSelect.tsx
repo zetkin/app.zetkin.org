@@ -1,78 +1,71 @@
-import { ChangeEvent } from 'react';
-import { useRouter } from 'next/router';
-import {
-  Autocomplete,
-  AutocompleteChangeDetails,
-  AutocompleteChangeReason,
-  createFilterOptions,
-} from '@material-ui/lab';
+import { useIntl } from 'react-intl';
+import { Autocomplete, createFilterOptions } from '@material-ui/lab';
 import { Box, TextField } from '@material-ui/core';
 
 import { NewTagGroup } from '../types';
-import { tagGroupsResource } from 'api/tags';
 import { ZetkinTagGroup } from 'types/zetkin';
 
-type GroupOptions = ZetkinTagGroup | { inputValue: string; title: string };
+interface NewOption {
+  inputValue: string;
+  title: string;
+}
+type GroupOptions = ZetkinTagGroup | NewTagGroup | NewOption;
+
 const filter = createFilterOptions<GroupOptions>();
 
 const TagGroupSelect: React.FunctionComponent<{
-  onChange: (
-    e: ChangeEvent<{ [key: string]: never }>,
-    value: ZetkinTagGroup | NewTagGroup | null | undefined,
-    reason: AutocompleteChangeReason,
-    details: AutocompleteChangeDetails<ZetkinTagGroup> | undefined
-  ) => void;
-  value?: ZetkinTagGroup | null | undefined;
-}> = ({ value, onChange }) => {
-  const { orgId } = useRouter().query;
-  const { useQuery } = tagGroupsResource(orgId as string);
-  const { data: tagGroups } = useQuery();
+  groups: ZetkinTagGroup[];
+  onChange: (value: ZetkinTagGroup | NewTagGroup | null | undefined) => void;
+  value: ZetkinTagGroup | NewTagGroup | null | undefined;
+}> = ({ groups, value, onChange }) => {
+  const intl = useIntl();
 
   return (
     <Box mb={0.8} mt={1.5}>
       <Autocomplete
         filterOptions={(options, params) => {
           const filtered = filter(options, params);
-
           // Suggest the creation of a new value
           if (params.inputValue !== '') {
             filtered.push({
               inputValue: params.inputValue,
-              title: `Add "${params.inputValue}"`,
+              title: intl.formatMessage(
+                {
+                  id: 'misc.tags.tagsManager.tagDialog.groupCreatePrompt',
+                },
+                {
+                  groupName: params.inputValue,
+                }
+              ),
             });
           }
 
           return filtered;
         }}
         getOptionLabel={(group) => group.title}
-        onChange={(event, newValue, reason, details) => {
+        onChange={(e, newValue) => {
           if (newValue && 'inputValue' in newValue) {
             // Creating a new group with no id
-            onChange(
-              event,
-              { title: newValue.inputValue },
-              reason,
-              details as AutocompleteChangeDetails<ZetkinTagGroup>
-            );
+            onChange({ title: (newValue as NewOption).inputValue });
           } else {
             // Selecting an existing group
-            onChange(
-              event,
-              newValue,
-              reason,
-              details as AutocompleteChangeDetails<ZetkinTagGroup> | undefined
-            );
+            onChange(newValue);
           }
         }}
-        options={(tagGroups as GroupOptions[]) || []}
+        options={(groups as GroupOptions[]) || []}
         renderInput={(params) => (
           <TextField
             {...params}
             inputProps={{
               ...params.inputProps,
+              'data-testid': 'TagManager-TagDialog-tagGroupSelect',
             }}
-            label={'Group'}
-            placeholder="Type to search or create a group"
+            label={intl.formatMessage({
+              id: 'misc.tags.tagsManager.tagDialog.groupLabel',
+            })}
+            placeholder={intl.formatMessage({
+              id: 'misc.tags.tagsManager.tagDialog.groupSelectPlaceholder',
+            })}
             variant="outlined"
           />
         )}

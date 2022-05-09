@@ -13,6 +13,7 @@ const AttendMeeting: ZetkinJourneyMilestoneStatus = {
   completed: null,
   deadline: '2022-06-18T00:29:12+02:00',
   description: '',
+  id: 1,
   title: 'Attend a branch meeting',
 };
 
@@ -20,6 +21,7 @@ const AttendTraining: ZetkinJourneyMilestoneStatus = {
   completed: null,
   deadline: '2022-05-16T00:29:12+02:00',
   description: '',
+  id: 2,
   title: 'Attend a training',
 };
 
@@ -27,6 +29,7 @@ const MeetBranchSec: ZetkinJourneyMilestoneStatus = {
   completed: null,
   deadline: '2022-04-20T00:29:12+02:00',
   description: '',
+  id: 3,
   title: 'Meet the branch secretary',
 };
 

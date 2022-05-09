@@ -21,6 +21,7 @@ describe('<TagsManager />', () => {
       const { getByText } = render(
         <TagsManager
           assignedTags={[]}
+          availableGroups={[]}
           availableTags={[]}
           onAssignTag={assignTagCallback}
           onCreateTag={createTagCallback}
@@ -35,6 +36,7 @@ describe('<TagsManager />', () => {
       const { getByText } = render(
         <TagsManager
           assignedTags={[tag1, tag2]}
+          availableGroups={[]}
           availableTags={[tag1, tag2]}
           onAssignTag={assignTagCallback}
           onCreateTag={createTagCallback}
@@ -83,6 +85,7 @@ describe('<TagsManager />', () => {
     const { getByTestId, getByText } = render(
       <TagsManager
         assignedTags={tags}
+        availableGroups={[]}
         availableTags={tags}
         onAssignTag={assignTagCallback}
         onCreateTag={createTagCallback}
@@ -117,6 +120,7 @@ describe('<TagsManager />', () => {
     const { getByText } = render(
       <TagsManager
         assignedTags={[]}
+        availableGroups={[]}
         availableTags={[tag1]}
         onAssignTag={onAssignTag}
         onCreateTag={createTagCallback}
@@ -148,6 +152,7 @@ describe('<TagsManager />', () => {
     const { getByText, container } = render(
       <TagsManager
         assignedTags={[tag1]}
+        availableGroups={[]}
         availableTags={[tag1]}
         onAssignTag={assignTagCallback}
         onCreateTag={createTagCallback}
@@ -180,31 +185,32 @@ describe('<TagsManager />', () => {
       };
     });
 
-    // it('can create a new tag', () => {});
-    it('sends a group to be created when no existing group', () => {
-      const tag1 = mockTag({
-        group: { id: 2, title: 'Skills' },
-        id: 4,
-        title: 'Phone banking',
-      });
-
-      const { getByText, getByTestId } = render(
+    it('passes the value in the tag search field in to the create tag', () => {
+      const { getByTestId, getByText } = render(
         <TagsManager
           assignedTags={[]}
-          availableTags={[tag1]}
+          availableGroups={[]}
+          availableTags={[]}
           onAssignTag={assignTagCallback}
           onCreateTag={onCreateTag}
           onUnassignTag={unassignTagCallback}
         />
       );
+
       const addTagButton = getByText('misc.tags.tagsManager.addTag');
       click(addTagButton);
 
-      // Select an option
+      const tagSearchField = getByTestId('TagManager-TagSelect-searchField');
+      click(tagSearchField);
+      keyboard("Jerry's family");
+
       const createTagOption = getByTestId(
-        'TagManager-TagSelect-createTagOpiton'
+        'TagManager-TagSelect-createTagOption'
       );
       click(createTagOption);
+
+      const titleField = getByTestId('TagManager-TagDialog-titleField');
+      expect((titleField as HTMLInputElement).value).toEqual("Jerry's family");
     });
   });
 });

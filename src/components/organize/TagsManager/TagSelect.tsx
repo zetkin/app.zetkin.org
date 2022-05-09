@@ -15,16 +15,24 @@ import { groupTags } from './utils';
 import { OnCreateTagHandler } from './types';
 import TagChip from './TagChip';
 import TagDialog from './TagDialog';
-import { ZetkinTag } from 'types/zetkin';
+import { ZetkinTag, ZetkinTagGroup } from 'types/zetkin';
 
 const TagSelect: React.FunctionComponent<{
   disabledTags: ZetkinTag[];
+  groups: ZetkinTagGroup[];
   onCreateTag: OnCreateTagHandler;
   onSelect: (tag: ZetkinTag) => void;
   tags: ZetkinTag[];
-}> = ({ disabledTags, onCreateTag, onSelect, tags }) => {
+}> = ({ disabledTags, groups, onCreateTag, onSelect, tags }) => {
   const intl = useIntl();
-  const [dialogOpen, setDialogOpen] = useState(false);
+
+  const [dialogOpen, setDialogOpen] = useState<{
+    defaultTitle: string;
+    open: boolean;
+  }>({
+    defaultTitle: '',
+    open: false,
+  });
 
   const {
     inputValue,
@@ -51,13 +59,19 @@ const TagSelect: React.FunctionComponent<{
         {...getInputProps()}
         autoFocus
         fullWidth
+        inputProps={{
+          'data-testid': 'TagManager-TagSelect-searchField',
+        }}
         placeholder={intl.formatMessage({
           id: 'misc.tags.tagsManager.addTag',
         })}
         variant="outlined"
       />
       {/* Options */}
-      <List {...getListboxProps()} style={{ overflowY: 'scroll' }}>
+      <List
+        {...getListboxProps()}
+        style={{ maxHeight: '400px', overflowY: 'scroll' }}
+      >
         {Object.values(groupedFilteredTags).map((group) => {
           // Groups
           return (
@@ -80,7 +94,10 @@ const TagSelect: React.FunctionComponent<{
                     onClick={() => onSelect(tag)}
                     tabIndex={-1}
                   >
-                    <TagChip tag={tag} />
+                    <TagChip
+                      chipProps={{ style: { cursor: 'pointer' } }}
+                      tag={tag}
+                    />
                   </ListItem>
                 );
               })}
@@ -89,8 +106,13 @@ const TagSelect: React.FunctionComponent<{
         })}
         <ListItem
           button
-          data-testid="TagManager-TagSelect-createTagOpiton"
-          onClick={() => setDialogOpen(true)}
+          data-testid="TagManager-TagSelect-createTagOption"
+          onClick={() =>
+            setDialogOpen({
+              defaultTitle: inputValue,
+              open: true,
+            })
+          }
         >
           <Add />
           {inputValue ? (
@@ -111,10 +133,11 @@ const TagSelect: React.FunctionComponent<{
         </ListItem>
       </List>
       <TagDialog
-        onClose={() => setDialogOpen(false)}
+        defaultTitle={dialogOpen.defaultTitle}
+        groups={groups}
+        onClose={() => setDialogOpen({ defaultTitle: '', open: false })}
         onSubmit={onCreateTag}
-        open={dialogOpen}
-        tag={inputValue ? { title: inputValue } : undefined}
+        open={dialogOpen.open}
       />
     </Box>
   );
