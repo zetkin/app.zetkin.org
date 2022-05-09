@@ -10,9 +10,11 @@ import PersonOrganizationsCard from 'components/organize/people/PersonOrganizati
 import SinglePersonLayout from 'layout/organize/SinglePersonLayout';
 import SnackbarContext from 'hooks/SnackbarContext';
 import TagsManager from 'components/organize/TagsManager';
+import { useCreateTag } from 'components/organize/TagsManager/utils';
 import ZetkinQuery from 'components/ZetkinQuery';
 import { personResource, personTagsResource } from 'api/people';
 import { scaffold, ScaffoldedGetServerSideProps } from 'utils/next';
+import { tagGroupsResource, tagsResource } from 'api/tags';
 
 export const scaffoldOptions = {
   authLevelRequired: 2,
@@ -54,20 +56,27 @@ export type PersonPageProps = {
 const PersonProfilePage: PageWithLayout<PersonPageProps> = (props) => {
   const { orgId, personId } = useRouter().query;
   const { showSnackbar } = useContext(SnackbarContext);
+
   const {
-    useAdd,
+    useAssign,
     useQuery: usePersonTagsQuery,
-    useAvailableTagsQuery,
-    useRemove,
+    useUnassign,
   } = personTagsResource(orgId as string, personId as string);
-  const addTagMutation = useAdd();
-  const removeTagMutation = useRemove();
+  const { useQuery: useAvailableTagsQuery } = tagsResource(orgId as string);
+  const assignTagMutation = useAssign();
+  const unassignTagMutation = useUnassign();
   const personTagsQuery = usePersonTagsQuery();
   const organizationTagsQuery = useAvailableTagsQuery();
+
   const { data: person } = personResource(
     props.orgId,
     props.personId
   ).useQuery();
+
+  const { useQuery: useTagGroupsQuery } = tagGroupsResource(orgId as string);
+  const tagsGroupsQuery = useTagGroupsQuery();
+
+  const createTag = useCreateTag();
 
   if (!person) {
     return null;
@@ -90,15 +99,22 @@ const PersonProfilePage: PageWithLayout<PersonPageProps> = (props) => {
         <Grid item lg={4} xs={12}>
           <ZetkinQuery queries={{ organizationTagsQuery, personTagsQuery }}>
             <TagsManager
-              appliedTags={personTagsQuery.data || []}
+              assignedTags={personTagsQuery.data || []}
+              availableGroups={tagsGroupsQuery.data || []}
               availableTags={organizationTagsQuery.data || []}
-              onRemove={(tag) =>
-                removeTagMutation.mutate(tag.id, {
+              onAssignTag={(tag) =>
+                assignTagMutation.mutate(tag.id, {
                   onError: () => showSnackbar('error'),
                 })
               }
-              onSelect={(tag) =>
-                addTagMutation.mutate(tag.id, {
+              onCreateTag={async (tag) => {
+                const newTag = await createTag(tag);
+                assignTagMutation.mutate(newTag.id, {
+                  onError: () => showSnackbar('error'),
+                });
+              }}
+              onUnassignTag={(tag) =>
+                unassignTagMutation.mutate(tag.id, {
                   onError: () => showSnackbar('error'),
                 })
               }

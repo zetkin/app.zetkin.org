@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Box, Chip, ChipProps, Tooltip } from '@material-ui/core';
 
+import { DEFAULT_TAG_COLOR } from './utils';
 import { ZetkinTag } from 'types/zetkin';
 
 const TagChip: React.FunctionComponent<{
@@ -19,7 +20,10 @@ const TagChip: React.FunctionComponent<{
           onDelete={hover && onDelete ? () => onDelete(tag) : undefined}
           {...chipProps}
           label={tag.title}
-          style={{ background: tag.color || '#e1e1e1', ...chipProps?.style }}
+          style={{
+            background: tag.color || DEFAULT_TAG_COLOR,
+            ...chipProps?.style,
+          }}
         />
       </Box>
     </Tooltip>
