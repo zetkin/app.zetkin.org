@@ -4,18 +4,28 @@ import { Box, Button, Popover, Typography } from '@material-ui/core';
 import { FormattedMessage, useIntl } from 'react-intl';
 
 import ZetkinSection from 'components/ZetkinSection';
-import { ZetkinTag } from 'types/zetkin';
 
 import GroupToggle from './GroupToggle';
+import { OnCreateTagHandler } from './types';
 import TagSelect from './TagSelect';
 import TagsList from './TagsList';
+import { ZetkinTag, ZetkinTagGroup } from 'types/zetkin';
 
 const TagsManager: React.FunctionComponent<{
-  appliedTags: ZetkinTag[];
+  assignedTags: ZetkinTag[];
+  availableGroups: ZetkinTagGroup[];
   availableTags: ZetkinTag[];
-  onRemove: (tag: ZetkinTag) => void;
-  onSelect: (tag: ZetkinTag) => void;
-}> = ({ availableTags, appliedTags, onRemove, onSelect }) => {
+  onAssignTag: (tag: ZetkinTag) => void;
+  onCreateTag: OnCreateTagHandler;
+  onUnassignTag: (tag: ZetkinTag) => void;
+}> = ({
+  assignedTags,
+  availableGroups,
+  availableTags,
+  onAssignTag,
+  onCreateTag,
+  onUnassignTag,
+}) => {
   const intl = useIntl();
 
   const [addTagButton, setAddTagButton] = useState<HTMLElement | null>(null);
@@ -32,11 +42,11 @@ const TagsManager: React.FunctionComponent<{
       title={intl.formatMessage({ id: 'misc.tags.tagsManager.title' })}
     >
       <Box>
-        {appliedTags.length > 0 ? (
+        {assignedTags.length > 0 ? (
           <TagsList
             isGrouped={isGrouped}
-            onRemove={onRemove}
-            tags={appliedTags}
+            onUnassignTag={onUnassignTag}
+            tags={assignedTags}
           />
         ) : (
           // If no tags
@@ -59,8 +69,10 @@ const TagsManager: React.FunctionComponent<{
           open={Boolean(addTagButton)}
         >
           <TagSelect
-            disabledTags={appliedTags}
-            onSelect={onSelect}
+            disabledTags={assignedTags}
+            groups={availableGroups}
+            onCreateTag={onCreateTag}
+            onSelect={onAssignTag}
             tags={availableTags}
           />
         </Popover>
