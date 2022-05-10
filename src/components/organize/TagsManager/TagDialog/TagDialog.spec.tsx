@@ -11,10 +11,10 @@ import TagDialog from '.';
 jest.mock('next/dist/client/router', () => require('next-router-mock'));
 
 describe('<TagDialog />', () => {
-  let onCreateTag: jest.Mock<NewTag | EditTag, [tag: NewTag | EditTag]>;
+  let onSubmit: jest.Mock<NewTag | EditTag, [tag: NewTag | EditTag]>;
 
   beforeEach(() => {
-    onCreateTag = jest.fn((tag: NewTag | EditTag) => tag);
+    onSubmit = jest.fn((tag: NewTag | EditTag) => tag);
     singletonRouter.query = {
       orgId: '1',
     };
@@ -25,7 +25,7 @@ describe('<TagDialog />', () => {
       <TagDialog
         groups={[]}
         onClose={() => undefined}
-        onSubmit={onCreateTag}
+        onSubmit={onSubmit}
         open={true}
       />
     );
@@ -39,7 +39,7 @@ describe('<TagDialog />', () => {
     click(submit);
 
     // Check new group object created
-    expect(onCreateTag).toBeCalledWith({
+    expect(onSubmit).toBeCalledWith({
       color: undefined,
       group_id: null,
       title: 'Spongeworthy',
@@ -48,13 +48,13 @@ describe('<TagDialog />', () => {
 
   it(`
       When creating a new group, sends the new group properties
-      to the onCreateTag callback instead of groupId
+      to the onSubmit callback instead of groupId
     `, () => {
     const { getByTestId, getByText } = render(
       <TagDialog
         groups={[]}
         onClose={() => undefined}
-        onSubmit={onCreateTag}
+        onSubmit={onSubmit}
         open={true}
       />
     );
@@ -76,7 +76,7 @@ describe('<TagDialog />', () => {
     click(submit);
 
     // Check new group object created
-    expect(onCreateTag).toBeCalledWith({
+    expect(onSubmit).toBeCalledWith({
       color: undefined,
       group: { title: 'New Group' },
       title: 'Tag Title',
@@ -88,7 +88,7 @@ describe('<TagDialog />', () => {
       <TagDialog
         groups={[]}
         onClose={() => undefined}
-        onSubmit={onCreateTag}
+        onSubmit={onSubmit}
         open={true}
       />
     );
@@ -125,7 +125,7 @@ describe('<TagDialog />', () => {
       <TagDialog
         groups={[]}
         onClose={() => undefined}
-        onSubmit={onCreateTag}
+        onSubmit={onSubmit}
         open={true}
         tag={mockTag({ id: 1000, title })}
       />
@@ -140,7 +140,7 @@ describe('<TagDialog />', () => {
     click(submit);
 
     // Check correct fields returned with tag id.
-    expect(onCreateTag).toBeCalledWith({
+    expect(onSubmit).toBeCalledWith({
       color: `#${color}`,
       group_id: null,
       id: 1000,
