@@ -325,4 +325,74 @@ test.describe('Person Profile Page Tags', () => {
       );
     });
   });
+
+  test.describe('editing tags', () => {
+    test.beforeEach(async ({ page, appUri, moxy }) => {
+      moxy.setZetkinApiMock(`/orgs/${KPD.id}/people/tags`, 'get', [
+        ActivistTag,
+        CodingSkillsTag,
+      ]);
+      moxy.setZetkinApiMock(
+        `/orgs/${KPD.id}/people/${ClaraZetkin.id}/tags`,
+        'get',
+        []
+      );
+
+      await page.goto(appUri + `/organize/1/people/${ClaraZetkin.id}`);
+    });
+    test('can edit a tag', async ({ page, moxy }) => {
+      const editTagRequest = moxy.setZetkinApiMock(
+        `/orgs/1/people/tags/${ActivistTag.id}`,
+        'patch',
+        ActivistTag
+      );
+
+      await page.locator('text=Add tag').click();
+      await page.click(
+        `data-testid=TagManager-TagSelect-editTag-${ActivistTag.id}`
+      );
+
+      await page.fill(
+        'data-testid=TagManager-TagDialog-titleField',
+        'New tag title'
+      );
+
+      await page.click('data-testid=submit-button');
+
+      // Check that request made to edit tag with correct values
+      await page.waitForResponse(`**/orgs/1/people/tags/${ActivistTag.id}`);
+      const log = editTagRequest.log();
+      expect(log.length).toEqual(1);
+      expect(log[0].data).toEqual({
+        group_id: ActivistTag.group?.id,
+        title: 'New tag title',
+      });
+    });
+
+    test('shows error when editing tag fails', async ({ page, moxy }) => {
+      moxy.setZetkinApiMock(
+        `/orgs/1/people/tags/${ActivistTag.id}`,
+        'patch',
+        {},
+        409
+      );
+      await page.locator('text=Add tag').click();
+      await page.click(
+        `data-testid=TagManager-TagSelect-editTag-${ActivistTag.id}`
+      );
+
+      await page.fill(
+        'data-testid=TagManager-TagDialog-titleField',
+        'New tag title'
+      );
+
+      await page.click('data-testid=submit-button');
+
+      // Show error
+      await page.waitForResponse(`**/orgs/1/people/tags/${ActivistTag.id}`);
+      expect(await page.locator('data-testid=Snackbar-error').count()).toEqual(
+        1
+      );
+    });
+  });
 });
