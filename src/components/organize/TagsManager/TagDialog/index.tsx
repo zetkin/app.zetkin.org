@@ -73,25 +73,25 @@ const TagDialog: React.FunctionComponent<TagDialogProps> = ({
         onSubmit={(e) => {
           e.preventDefault();
           const tagBody = {
-            color: color.value ? `#${color.value}` : undefined,
-            id: tag && 'id' in tag ? tag.id : undefined, // Attach id when editing an existing tag
+            ...(color.value && { color: `#${color.value}` }),
+            ...(tag && 'id' in tag && { id: tag.id }),
             title,
           };
           if (group && 'id' in group) {
-            // If existing group, submit with POST body
+            // If selecting existing group, submit with group_id
             onSubmit({
               group_id: group.id,
               ...tagBody,
             });
           } else if (group && !('id' in group)) {
-            // If new group, submit with group object
+            // If selecting new group, submit with group object
             onSubmit({
               group,
               ...tagBody,
             });
           } else {
             // If no group
-            onSubmit(tagBody);
+            onSubmit({ ...tagBody, group_id: null });
           }
           closeAndClear();
         }}

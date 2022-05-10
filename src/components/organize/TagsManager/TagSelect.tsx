@@ -152,8 +152,10 @@ const TagSelect: React.FunctionComponent<{
         onClose={() => setTagToEdit(undefined)}
         onSubmit={(tag) => {
           if ('id' in tag) {
+            // If existing tag
             onEditTag(tag);
           } else {
+            // If new tag
             onCreateTag(tag);
           }
         }}

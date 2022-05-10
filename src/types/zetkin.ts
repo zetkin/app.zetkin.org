@@ -217,13 +217,13 @@ export interface ZetkinTag {
 export interface ZetkinTagPostBody
   extends Partial<Omit<ZetkinTag, 'id' | 'group' | 'organization'>> {
   title: string;
-  group_id?: number;
+  group_id?: number | null;
 }
 
 export interface ZetkinTagPatchBody
   extends Partial<Omit<ZetkinTag, 'group' | 'organization'>> {
   id: number;
-  group_id?: number;
+  group_id?: number | null;
 }
 
 export enum CUSTOM_FIELD_TYPE {
