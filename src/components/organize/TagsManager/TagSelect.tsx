@@ -84,16 +84,7 @@ const TagSelect: React.FunctionComponent<{
               {/* Tags */}
               {group.tags.map((tag) => {
                 return (
-                  <ListItem
-                    key={tag.id}
-                    button
-                    dense
-                    disabled={disabledTags
-                      .map((disabledTags) => disabledTags.id)
-                      .includes(tag.id)}
-                    onClick={() => onSelect(tag)}
-                    tabIndex={-1}
-                  >
+                  <ListItem key={tag.id} dense>
                     <Box
                       alignItems="center"
                       display="flex"
@@ -101,7 +92,12 @@ const TagSelect: React.FunctionComponent<{
                       width="100%"
                     >
                       <TagChip
-                        chipProps={{ style: { cursor: 'pointer' } }}
+                        chipProps={{
+                          disabled: disabledTags
+                            .map((disabledTags) => disabledTags.id)
+                            .includes(tag.id),
+                          onClick: () => onSelect(tag),
+                        }}
                         tag={tag}
                       />
                       <IconButton
