@@ -17,8 +17,15 @@ test.describe('Creating a journey instance', () => {
     moxy.teardown();
   });
 
-  test('shows correct labels', async ({ appUri, page }) => {
-    await page.goto(appUri + '/organize/1/journeys/1/new');
+  test('shows new page with correct labels', async ({ appUri, moxy, page }) => {
+    moxy.setZetkinApiMock('/orgs/1/journeys/1/instances', 'get', []);
+
+    await page.goto(appUri + '/organize/1/journeys/1');
+
+    await Promise.all([
+      page.waitForNavigation(),
+      page.locator('data-testid=JourneyInstanceOverviewPage-addFab').click(),
+    ]);
 
     expect(await page.locator('data-testid=page-title').textContent()).toEqual(
       'New Marxist training'
