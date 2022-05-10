@@ -1,0 +1,89 @@
+import { render } from 'utils/testing';
+
+import JourneyMilestoneCard from './JourneyMilestoneCard';
+import mockMilestone from 'utils/testing/mocks/mockMilestone';
+
+describe('<JourneyMilestoneCard />', () => {
+  it('has a title.', () => {
+    const milestone = mockMilestone();
+    const { getByText } = render(
+      <JourneyMilestoneCard milestone={milestone} />
+    );
+
+    const milestonEl = getByText(milestone.title);
+    expect(milestonEl.textContent).toBe(milestone.title);
+  });
+
+  it('has a description', () => {
+    const milestone = mockMilestone();
+    const { getByText } = render(
+      <JourneyMilestoneCard milestone={milestone} />
+    );
+
+    const milestonEl = getByText(milestone.description);
+
+    expect(milestonEl.textContent).toBe(milestone.description);
+  });
+
+  it('has an unchecked checkbox if milestone is not completed.', () => {
+    const milestone = mockMilestone();
+    const { getByTestId } = render(
+      <JourneyMilestoneCard milestone={milestone} />
+    );
+
+    const classList = getByTestId('JourneyMilestoneCard-completed').classList;
+
+    expect(classList).not.toContain('Mui-checked');
+  });
+
+  it('has a checked checkbox if milestone is completed.', () => {
+    const milestone = mockMilestone({ completed: '2022-03-18T15:29:12+02:00' });
+    const { getByTestId } = render(
+      <JourneyMilestoneCard milestone={milestone} />
+    );
+
+    const classList = getByTestId('JourneyMilestoneCard-completed').classList;
+
+    expect(classList).toContain('Mui-checked');
+  });
+
+  it('has an empty datepicker if deadline is not set.', () => {
+    const milestone = mockMilestone({ deadline: null });
+    const { getByTestId } = render(
+      <JourneyMilestoneCard milestone={milestone} />
+    );
+
+    const label = getByTestId('JourneyMilestoneCard-datePicker').querySelector(
+      'label'
+    );
+
+    const input = getByTestId('JourneyMilestoneCard-datePicker').querySelector(
+      'input'
+    );
+
+    expect(label?.textContent).toBe(
+      'pages.organizeJourneyInstance.addDateLabel'
+    );
+    expect(input?.value).toBe('');
+  });
+
+  it('has a datepicker that displays deadline, if set.', () => {
+    const milestone = mockMilestone();
+    const { getByTestId } = render(
+      <JourneyMilestoneCard milestone={milestone} />
+    );
+
+    const label = getByTestId('JourneyMilestoneCard-datePicker').querySelector(
+      'label'
+    );
+
+    const input = getByTestId('JourneyMilestoneCard-datePicker').querySelector(
+      'input'
+    );
+
+    expect(label?.textContent).toBe(
+      'pages.organizeJourneyInstance.deadlineLabel'
+    );
+    expect(input?.value).toBe('June 18th');
+  });
+});
