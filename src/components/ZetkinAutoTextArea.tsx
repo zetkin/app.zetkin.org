@@ -30,6 +30,7 @@ const ZetkinAutoTextArea = React.forwardRef<
     <TextareaAutosize
       ref={ref}
       className={classes.textarea}
+      data-testid="ZetkinAutoTextArea-textarea"
       onChange={(e) => onChange(e.target.value)}
       value={value}
       {...restProps}
