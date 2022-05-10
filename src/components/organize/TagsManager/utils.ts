@@ -3,36 +3,62 @@ import { useQueryClient } from 'react-query';
 import { useRouter } from 'next/router';
 
 import SnackbarContext from 'hooks/SnackbarContext';
-import { EditTag, NewTag, TagsGroups } from './types';
+import { EditTag, NewTag } from './types';
 import { tagGroupsResource, tagsResource } from 'api/tags';
 import { ZetkinTag, ZetkinTagPatchBody, ZetkinTagPostBody } from 'types/zetkin';
 
 export const DEFAULT_TAG_COLOR = '#e1e1e1';
 
+interface GroupedTagsHashmap {
+  [key: string]: {
+    id: number | 'ungrouped';
+    tags: ZetkinTag[];
+    title: string;
+  };
+}
+
 export const groupTags = (
   tags: ZetkinTag[],
   localisedUngroupedText: string
-): TagsGroups => {
-  return tags.reduce((acc: TagsGroups, tag) => {
-    // Add to ungrouped tags list
-    if (!tag.group) {
+): { id: number | 'ungrouped'; tags: ZetkinTag[]; title: string }[] => {
+  const groupedTags: GroupedTagsHashmap = tags.reduce(
+    (acc: GroupedTagsHashmap, tag) => {
+      // Add to ungrouped tags list
+      if (!tag.group) {
+        return {
+          ...acc,
+          ungrouped: {
+            id: 'ungrouped',
+            tags: acc['ungrouped'] ? [...acc['ungrouped'].tags, tag] : [tag],
+            title: localisedUngroupedText,
+          },
+        };
+      }
+      // Add to tags list for group
       return {
         ...acc,
-        ungrouped: {
-          tags: acc['ungrouped'] ? [...acc['ungrouped'].tags, tag] : [tag],
-          title: localisedUngroupedText,
+        [tag.group.id]: {
+          id: tag.group.id,
+          tags: acc[tag.group.id] ? [...acc[tag.group.id].tags, tag] : [tag],
+          title: tag.group.title,
         },
       };
-    }
-    // Add to tags list for group
-    return {
-      ...acc,
-      [tag.group.id]: {
-        tags: acc[tag.group.id] ? [...acc[tag.group.id].tags, tag] : [tag],
-        title: tag.group.title,
-      },
-    };
-  }, {});
+    },
+    {}
+  );
+
+  // Sort tags within groups
+  Object.values(groupedTags).forEach((group) =>
+    group.tags.sort((tag0, tag1) => tag0.title.localeCompare(tag1.title))
+  );
+
+  const { ungrouped, ...grouped } = groupedTags;
+
+  const sortedGroupedTags = Object.values(grouped).sort((group0, group1) =>
+    group0.title.localeCompare(group1.title)
+  );
+
+  return [...sortedGroupedTags, ungrouped];
 };
 
 export const randomColor = (): string => {

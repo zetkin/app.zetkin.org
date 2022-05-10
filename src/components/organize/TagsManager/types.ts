@@ -1,5 +1,4 @@
 import {
-  ZetkinTag,
   ZetkinTagGroup,
   ZetkinTagPatchBody,
   ZetkinTagPostBody,
@@ -17,10 +16,3 @@ export interface ZetkinTagGroupPostBody
 }
 
 export type OnCreateTagHandler = (tag: NewTag) => void;
-
-export interface TagsGroups {
-  [key: string]: {
-    tags: ZetkinTag[];
-    title: string;
-  };
-}

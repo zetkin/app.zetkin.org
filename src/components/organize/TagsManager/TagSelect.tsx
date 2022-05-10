@@ -71,7 +71,7 @@ const TagSelect: React.FunctionComponent<{
         {...getListboxProps()}
         style={{ maxHeight: '400px', overflowY: 'scroll' }}
       >
-        {Object.values(groupedFilteredTags).map((group) => {
+        {groupedFilteredTags.map((group) => {
           // Groups
           return (
             <List
@@ -106,7 +106,7 @@ const TagSelect: React.FunctionComponent<{
                           setTagToEdit(tag);
                         }}
                       >
-                        <EditIcon />
+                        <EditIcon fontSize="small" />
                       </IconButton>
                     </Box>
                   </ListItem>
