@@ -44,14 +44,18 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export interface EditTextinPlaceProps {
+  allowEmpty?: boolean;
   disabled?: boolean;
   onChange: (newValue: string) => Promise<void>;
+  placeholder?: string;
   value: string;
 }
 
 const EditTextinPlace: React.FunctionComponent<EditTextinPlaceProps> = ({
+  allowEmpty = false,
   disabled,
   onChange,
+  placeholder,
   value,
 }) => {
   const [editing, setEditing] = useState<boolean>(false);
@@ -99,7 +103,7 @@ const EditTextinPlace: React.FunctionComponent<EditTextinPlaceProps> = ({
   };
 
   const onKeyDown = (evt: React.KeyboardEvent) => {
-    if (evt.key === 'Enter' && !!text) {
+    if (evt.key === 'Enter' && (!!text || allowEmpty)) {
       // If user has not changed the text, do nothing
       if (text === value) {
         cancelEditing();
@@ -117,7 +121,7 @@ const EditTextinPlace: React.FunctionComponent<EditTextinPlaceProps> = ({
         arrow
         disableHoverListener={editing}
         title={
-          text
+          text || allowEmpty
             ? intl.formatMessage({
                 id: `misc.components.editTextInPlace.tooltip.${
                   editing ? 'save' : 'edit'
@@ -130,7 +134,7 @@ const EditTextinPlace: React.FunctionComponent<EditTextinPlaceProps> = ({
       >
         <FormControl style={{ overflow: 'hidden' }}>
           <span ref={spanRef} className={classes.span}>
-            {text}
+            {text || placeholder}
           </span>
           <InputBase
             classes={{
@@ -142,6 +146,7 @@ const EditTextinPlace: React.FunctionComponent<EditTextinPlaceProps> = ({
             onChange={(e) => setText(e.target.value)}
             onFocus={startEditing}
             onKeyDown={onKeyDown}
+            placeholder={placeholder}
             readOnly={!editing}
             value={text}
           />
