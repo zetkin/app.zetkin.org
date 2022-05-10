@@ -3,6 +3,7 @@ import { ZetkinJourney } from '../../../../../../src/types/zetkin';
 
 const MarxistTraining: ZetkinJourney = {
   id: 2,
+  opening_note_template: '',
   organization: KPD,
   plural_label: 'Marxist trainings',
   singular_label: 'Marxist training',

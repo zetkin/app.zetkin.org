@@ -3,6 +3,7 @@ import { ZetkinJourney } from 'types/zetkin';
 
 const journey: ZetkinJourney = {
   id: 2,
+  opening_note_template: '',
   organization: {
     id: 1,
     title: 'Kommunistiche Partei Deutschlands',

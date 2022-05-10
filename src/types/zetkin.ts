@@ -233,6 +233,7 @@ export type { ZetkinView, ZetkinViewColumn, ZetkinViewRow };
 
 export interface ZetkinJourney {
   id: number;
+  opening_note_template: string;
   organization: ZetkinOrganization;
   plural_label: string;
   singular_label: string;
