@@ -3,16 +3,18 @@ import { keyboard } from '@testing-library/user-event/dist/keyboard';
 import { render } from 'utils/testing';
 import singletonRouter from 'next/router';
 
-import { NewTag } from '../types';
+import mockTag from 'utils/testing/mocks/mockTag';
+import { EditTag, NewTag } from '../types';
+
 import TagDialog from '.';
 
 jest.mock('next/dist/client/router', () => require('next-router-mock'));
 
 describe('<TagDialog />', () => {
-  let onCreateTag: jest.Mock<NewTag, [tag: NewTag]>;
+  let onCreateTag: jest.Mock<NewTag | EditTag, [tag: NewTag | EditTag]>;
 
   beforeEach(() => {
-    onCreateTag = jest.fn((tag: NewTag) => tag);
+    onCreateTag = jest.fn((tag: NewTag | EditTag) => tag);
     singletonRouter.query = {
       orgId: '1',
     };
@@ -39,6 +41,7 @@ describe('<TagDialog />', () => {
     // Check new group object created
     expect(onCreateTag).toBeCalledWith({
       color: undefined,
+      group_id: null,
       title: 'Spongeworthy',
     });
   });
@@ -112,5 +115,40 @@ describe('<TagDialog />', () => {
     // Enter valid color, submit should be enabled
     keyboard('a1a1'); // Adds 4 more chars
     expect(submit.disabled).toBeFalsy();
+  });
+
+  test('can edit an existing tag', () => {
+    const title = 'New Tag';
+    const color = 'a1a1a1';
+
+    const { getByTestId } = render(
+      <TagDialog
+        groups={[]}
+        onClose={() => undefined}
+        onSubmit={onCreateTag}
+        open={true}
+        tag={mockTag({ id: 1000, title })}
+      />
+    );
+
+    // Title is passed in from existing tag
+    const titleField = getByTestId('TagManager-TagDialog-titleField');
+    expect((titleField as HTMLInputElement).value).toEqual(title);
+
+    // Modify color field
+    const colorField = getByTestId('TagManager-TagDialog-colorField');
+    click(colorField);
+    keyboard(color);
+
+    const submit = getByTestId('submit-button');
+    click(submit);
+
+    // Check correct fields returned with tag id.
+    expect(onCreateTag).toBeCalledWith({
+      color: `#${color}`,
+      group_id: null,
+      id: 1000,
+      title: title,
+    });
   });
 });
