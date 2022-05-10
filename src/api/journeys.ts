@@ -7,7 +7,11 @@ import {
   createUseMutationPut,
   createUseQuery,
 } from './utils/resourceHookFactories';
-import { ZetkinJourney, ZetkinJourneyInstance } from 'types/zetkin';
+import {
+  ZetkinJourney,
+  ZetkinJourneyInstance,
+  ZetkinPerson,
+} from 'types/zetkin';
 
 export const journeysResource = (orgId: string) => {
   const key = ['journeys', orgId];
@@ -34,6 +38,15 @@ export const journeyInstancesResource = (orgId: string, journeyId: string) => {
   const url = `/organize/${orgId}/journeys/${journeyId}`;
 
   return {
+    useCreate: createUseMutation<
+      {
+        assignees: ZetkinPerson[];
+        note: string;
+        subjects: ZetkinPerson[];
+        title: string;
+      },
+      ZetkinJourneyInstance
+    >(key, `/journeyInstances/createNew?orgId=${orgId}&journeyId=${journeyId}`),
     useQuery: createUseQuery<{
       journeyInstances: ZetkinJourneyInstance[];
       tagMetadata: TagMetadata;

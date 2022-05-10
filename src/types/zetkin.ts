@@ -256,6 +256,7 @@ export interface ZetkinJourneyInstance {
   // as item, not when retrieved as collection
   milestones?: ZetkinJourneyMilestoneStatus[] | null;
   next_milestone: ZetkinJourneyMilestoneStatus | null;
+  opening_note: string;
   organization: {
     id: number;
     title: string;
