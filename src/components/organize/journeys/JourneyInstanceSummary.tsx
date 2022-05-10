@@ -1,11 +1,5 @@
 import { useRouter } from 'next/router';
-import {
-  Button,
-  lighten,
-  makeStyles,
-  TextareaAutosize,
-  Typography,
-} from '@material-ui/core';
+import { Button, makeStyles, Typography } from '@material-ui/core';
 import { Edit, Save } from '@material-ui/icons';
 import { ExpandLess, ExpandMore } from '@material-ui/icons';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
@@ -13,25 +7,15 @@ import { useContext, useEffect, useRef, useState } from 'react';
 
 import { journeyInstanceResource } from 'api/journeys';
 import SnackbarContext from 'hooks/SnackbarContext';
+import ZetkinAutoTextArea from 'components/ZetkinAutoTextArea';
 import { ZetkinJourneyInstance } from 'types/zetkin';
 import ZetkinSection from 'components/ZetkinSection';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   collapsed: {
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
-  },
-  editSummary: {
-    border: '2px dotted transparent',
-    borderColor: lighten(theme.palette.primary.main, 0.65),
-    borderRadius: 10,
-    fontFamily: theme.typography.fontFamily,
-    lineHeight: '1.5',
-    overflow: 'hidden',
-    padding: 10,
-    resize: 'none',
-    width: '100%',
   },
 }));
 
@@ -105,11 +89,10 @@ const JourneyInstanceSummary = ({
       })}
     >
       {editingSummary ? (
-        <TextareaAutosize
+        <ZetkinAutoTextArea
           ref={editingRef}
-          className={classes.editSummary}
           data-testid="JourneyInstanceSummary-textArea"
-          onChange={(e) => setSummary(e.target.value)}
+          onChange={(value) => setSummary(value)}
           value={summary}
         />
       ) : (
