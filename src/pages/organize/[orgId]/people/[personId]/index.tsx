@@ -61,6 +61,7 @@ const PersonProfilePage: PageWithLayout<PersonPageProps> = (props) => {
   const { showSnackbar } = useContext(SnackbarContext);
 
   const {
+    key: personTagsKey,
     useAssign,
     useQuery: usePersonTagsQuery,
     useUnassign,
@@ -80,7 +81,7 @@ const PersonProfilePage: PageWithLayout<PersonPageProps> = (props) => {
   const tagsGroupsQuery = useTagGroupsQuery();
 
   const createTag = useCreateTag();
-  const editTag = useEditTag();
+  const editTag = useEditTag(personTagsKey);
 
   if (!person) {
     return null;

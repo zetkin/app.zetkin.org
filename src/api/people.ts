@@ -45,6 +45,7 @@ export const personTagsResource = (orgId: string, personId: string) => {
   const url = `/orgs/${orgId}/people/${personId}/tags`;
 
   return {
+    key,
     useAssign: createUseMutationPut({ key, url }),
     useQuery: createUseQuery<ZetkinTag[]>(key, url),
     useUnassign: createUseMutationDelete({ key, url }),
