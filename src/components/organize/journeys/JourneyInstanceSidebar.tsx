@@ -19,7 +19,10 @@ const JourneyInstanceSidebar = ({
   onRemoveAssignee,
   onRemoveSubject,
 }: {
-  journeyInstance: ZetkinJourneyInstance;
+  journeyInstance: Pick<
+    ZetkinJourneyInstance,
+    'assignees' | 'milestones' | 'next_milestone' | 'subjects'
+  >;
   onAddAssignee: (person: ZetkinPersonType) => void;
   onAddSubject: (person: ZetkinPersonType) => void;
   onRemoveAssignee: (person: ZetkinPersonType) => void;
