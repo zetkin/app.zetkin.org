@@ -357,16 +357,16 @@ test.describe('Person Profile Page Tags', () => {
         'New tag title'
       );
 
-      await page.click('data-testid=submit-button');
-
       // Check that request made to edit tag with correct values
       await Promise.all([
+        page.click('data-testid=submit-button'),
         page.waitForResponse(`**/orgs/1/people/tags/${ActivistTag.id}`),
-        expect(editTagRequest.log()[0].data).toEqual({
-          group_id: ActivistTag.group?.id,
-          title: 'New tag title',
-        }),
       ]);
+
+      expect(editTagRequest.log()[0].data).toEqual({
+        group_id: ActivistTag.group?.id,
+        title: 'New tag title',
+      });
     });
 
     test('shows error when editing tag fails', async ({ page, moxy }) => {
@@ -386,15 +386,14 @@ test.describe('Person Profile Page Tags', () => {
         'New tag title'
       );
 
-      await page.click('data-testid=submit-button');
-
       // Show error
       await Promise.all([
+        page.click('data-testid=submit-button'),
         page.waitForResponse(`**/orgs/1/people/tags/${ActivistTag.id}`),
-        expect(
-          await page.locator('data-testid=Snackbar-error').count()
-        ).toEqual(1),
       ]);
+      expect(await page.locator('data-testid=Snackbar-error').count()).toEqual(
+        1
+      );
     });
   });
 });
