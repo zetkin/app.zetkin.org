@@ -131,10 +131,6 @@ describe('<TagDialog />', () => {
       />
     );
 
-    // Title is passed in from existing tag
-    const titleField = getByTestId('TagManager-TagDialog-titleField');
-    expect((titleField as HTMLInputElement).value).toEqual(title);
-
     // Modify color field
     const colorField = getByTestId('TagManager-TagDialog-colorField');
     click(colorField);

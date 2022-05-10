@@ -101,6 +101,7 @@ const TagSelect: React.FunctionComponent<{
                         tag={tag}
                       />
                       <IconButton
+                        data-testid={`TagManager-TagSelect-editTag-${tag.id}`}
                         onClick={(e) => {
                           e.stopPropagation();
                           setTagToEdit(tag);

@@ -221,4 +221,42 @@ describe('<TagsManager />', () => {
       expect((titleField as HTMLInputElement).value).toEqual("Jerry's family");
     });
   });
+
+  describe('editing a tag', () => {
+    let onCreateTag: jest.Mock<NewTag, [tag: NewTag]>;
+
+    beforeEach(() => {
+      onCreateTag = jest.fn((tag: NewTag) => tag);
+      singletonRouter.query = {
+        orgId: '1',
+      };
+    });
+
+    it('can edit an existing tag in the tag dialog', () => {
+      const tagToEdit = mockTag();
+
+      const { getByTestId, getByText } = render(
+        <TagsManager
+          assignedTags={[]}
+          availableGroups={[]}
+          availableTags={[tagToEdit]}
+          onAssignTag={assignTagCallback}
+          onCreateTag={onCreateTag}
+          onEditTag={editTagCallback}
+          onUnassignTag={unassignTagCallback}
+        />
+      );
+
+      const addTagButton = getByText('misc.tags.tagsManager.addTag');
+      click(addTagButton);
+
+      const editTagButton = getByTestId(
+        `TagManager-TagSelect-editTag-${tagToEdit.id}`
+      );
+      click(editTagButton);
+
+      const titleField = getByTestId('TagManager-TagDialog-titleField');
+      expect((titleField as HTMLInputElement).value).toEqual(tagToEdit.title);
+    });
+  });
 });

@@ -58,7 +58,10 @@ export const groupTags = (
     group0.title.localeCompare(group1.title)
   );
 
-  return [...sortedGroupedTags, ungrouped];
+  if (ungrouped) {
+    return [...sortedGroupedTags, ungrouped];
+  }
+  return sortedGroupedTags;
 };
 
 export const randomColor = (): string => {
