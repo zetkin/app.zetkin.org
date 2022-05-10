@@ -1,6 +1,7 @@
 import { GetServerSideProps } from 'next';
-import { Grid } from '@material-ui/core';
 import Head from 'next/head';
+import { FormattedMessage as Msg } from 'react-intl';
+import { Grid, LinearProgress, Typography } from '@material-ui/core';
 
 import JourneyInstanceLayout from 'layout/organize/JourneyInstanceLayout';
 import { journeyInstanceResource } from 'api/journeys';
@@ -27,6 +28,15 @@ const JourneyMilestonesPage: PageWithLayout<JourneyDetailsPageProps> = ({
   const journeyInstanceQuery = useQuery();
   const journeyInstance = journeyInstanceQuery.data as ZetkinJourneyInstance;
 
+  const percentCompleted = journeyInstance.milestones
+    ? Math.floor(
+        (journeyInstance.milestones?.filter((milestone) => milestone.completed)
+          .length /
+          journeyInstance.milestones?.length) *
+          100
+      )
+    : 0;
+
   return (
     <>
       <Head>
@@ -38,6 +48,16 @@ const JourneyMilestonesPage: PageWithLayout<JourneyDetailsPageProps> = ({
       </Head>
       <Grid container justifyContent="space-between" spacing={2}>
         <Grid item md={6}>
+          <Typography
+            style={{
+              padding: '1rem 0 1rem 0',
+            }}
+            variant="h4"
+          >
+            {`${percentCompleted}% `}
+            <Msg id="pages.organizeJourneyInstance.complete" />
+          </Typography>
+          <LinearProgress value={percentCompleted} variant="determinate" />
           {journeyInstance.milestones &&
             journeyInstance.milestones.map((milestone, index) => (
               <JourneyMilestoneCard key={index} milestone={milestone} />
