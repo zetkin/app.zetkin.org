@@ -7,27 +7,27 @@ import ColorPicker from './ColorPicker';
 import SubmitCancelButtons from 'components/forms/common/SubmitCancelButtons';
 import TagGroupSelect from './TagGroupSelect';
 import ZetkinDialog from 'components/ZetkinDialog';
-import { ZetkinTagGroup } from 'types/zetkin';
-import { NewTagGroup, OnCreateTagHandler } from '../types';
+import { EditTag, NewTag, NewTagGroup } from '../types';
+import { ZetkinTag, ZetkinTagGroup } from 'types/zetkin';
 
 interface TagDialogProps {
   groups: ZetkinTagGroup[];
   open: boolean;
   onClose: () => void;
-  onSubmit: OnCreateTagHandler;
-  defaultTitle?: string;
+  onSubmit: (tag: NewTag | EditTag) => void;
+  tag?: ZetkinTag | Pick<ZetkinTag, 'title'>;
 }
 
 const TagDialog: React.FunctionComponent<TagDialogProps> = ({
-  defaultTitle,
   groups,
   open,
   onClose,
   onSubmit,
+  tag,
 }) => {
   const intl = useIntl();
 
-  const [title, setTitle] = useState(defaultTitle || '');
+  const [title, setTitle] = useState('');
   const [titleEdited, setTitleEdited] = useState(false);
   const [color, setColor] = useState<{ valid: boolean; value: string }>({
     valid: true,
@@ -37,11 +37,17 @@ const TagDialog: React.FunctionComponent<TagDialogProps> = ({
     ZetkinTagGroup | NewTagGroup | null | undefined
   >();
 
-  const titleValid = !!title;
+  const editingTag = tag && 'id' in tag;
 
   useEffect(() => {
-    setTitle(defaultTitle || '');
-  }, [defaultTitle]);
+    setTitle(tag?.title || '');
+    setColor(
+      tag && 'color' in tag && tag.color
+        ? { valid: true, value: tag.color.slice(1) }
+        : { valid: true, value: '' }
+    );
+    setGroup(tag && 'group' in tag ? tag.group : undefined);
+  }, [tag]);
 
   const closeAndClear = () => {
     setTitle('');
@@ -55,42 +61,47 @@ const TagDialog: React.FunctionComponent<TagDialogProps> = ({
     <ZetkinDialog
       onClose={closeAndClear}
       open={open}
-      title={intl.formatMessage({
-        id: 'misc.tags.tagsManager.tagDialog.dialogTitle',
-      })}
+      title={
+        editingTag
+          ? 'Edit tag'
+          : intl.formatMessage({
+              id: 'misc.tags.tagsManager.tagDialog.dialogTitle',
+            })
+      }
     >
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          const tag = {
-            color: color.value ? `#${color.value}` : undefined,
+          const tagBody = {
+            ...(color.value && { color: `#${color.value}` }),
+            ...(tag && 'id' in tag && { id: tag.id }),
             title,
           };
           if (group && 'id' in group) {
-            // If existing group, submit with POST body
+            // If selecting existing group, submit with group_id
             onSubmit({
               group_id: group.id,
-              ...tag,
+              ...tagBody,
             });
           } else if (group && !('id' in group)) {
-            // If new group, submit with group object
+            // If selecting new group, submit with group object
             onSubmit({
               group,
-              ...tag,
+              ...tagBody,
             });
           } else {
             // If no group
-            onSubmit(tag);
+            onSubmit({ ...tagBody, group_id: null });
           }
           closeAndClear();
         }}
       >
         <TextField
-          error={titleEdited && !titleValid}
+          error={titleEdited && !title}
           fullWidth
           helperText={
             titleEdited &&
-            !titleValid &&
+            !title &&
             intl.formatMessage({
               id: 'misc.tags.tagsManager.tagDialog.titleErrorText',
             })
@@ -122,10 +133,14 @@ const TagDialog: React.FunctionComponent<TagDialogProps> = ({
         />
         <SubmitCancelButtons
           onCancel={closeAndClear}
-          submitDisabled={!titleValid || !color.valid}
-          submitText={intl.formatMessage({
-            id: 'misc.tags.tagsManager.submitCreateTagButton',
-          })}
+          submitDisabled={!title || !color.valid}
+          submitText={
+            editingTag
+              ? undefined
+              : intl.formatMessage({
+                  id: 'misc.tags.tagsManager.submitCreateTagButton',
+                })
+          }
         />
       </form>
     </ZetkinDialog>

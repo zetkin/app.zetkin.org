@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { createDeleteHandler } from './utils/createDeleteHandler';
+import { createDeleteHandler } from './utils/createHandlers';
 import { defaultFetch } from 'fetching';
 import handleResponseData from './utils/handleResponseData';
 import { makeUseMutationOptions } from './utils/makeUseMutationOptions';

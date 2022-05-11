@@ -10,11 +10,14 @@ import PersonOrganizationsCard from 'components/organize/people/PersonOrganizati
 import SinglePersonLayout from 'layout/organize/SinglePersonLayout';
 import SnackbarContext from 'hooks/SnackbarContext';
 import TagsManager from 'components/organize/TagsManager';
-import { useCreateTag } from 'components/organize/TagsManager/utils';
 import ZetkinQuery from 'components/ZetkinQuery';
 import { personResource, personTagsResource } from 'api/people';
 import { scaffold, ScaffoldedGetServerSideProps } from 'utils/next';
 import { tagGroupsResource, tagsResource } from 'api/tags';
+import {
+  useCreateTag,
+  useEditTag,
+} from 'components/organize/TagsManager/utils';
 
 export const scaffoldOptions = {
   authLevelRequired: 2,
@@ -58,6 +61,7 @@ const PersonProfilePage: PageWithLayout<PersonPageProps> = (props) => {
   const { showSnackbar } = useContext(SnackbarContext);
 
   const {
+    key: personTagsKey,
     useAssign,
     useQuery: usePersonTagsQuery,
     useUnassign,
@@ -77,6 +81,7 @@ const PersonProfilePage: PageWithLayout<PersonPageProps> = (props) => {
   const tagsGroupsQuery = useTagGroupsQuery();
 
   const createTag = useCreateTag();
+  const editTag = useEditTag(personTagsKey);
 
   if (!person) {
     return null;
@@ -113,6 +118,7 @@ const PersonProfilePage: PageWithLayout<PersonPageProps> = (props) => {
                   onError: () => showSnackbar('error'),
                 });
               }}
+              onEditTag={editTag}
               onUnassignTag={(tag) =>
                 unassignTagMutation.mutate(tag.id, {
                   onError: () => showSnackbar('error'),

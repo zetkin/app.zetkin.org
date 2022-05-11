@@ -1,13 +1,14 @@
-import { ZetkinTag, ZetkinTagGroup, ZetkinTagPostBody } from 'types/zetkin';
+import {
+  ZetkinTagGroup,
+  ZetkinTagPatchBody,
+  ZetkinTagPostBody,
+} from 'types/zetkin';
 
 export type NewTagGroup = { title: string };
+export type TagWithNewGroup<Tag> = Tag & { group: NewTagGroup };
 
-interface TagWithNewGroup
-  extends Partial<Omit<ZetkinTag, 'group' | 'organization'>> {
-  group: NewTagGroup;
-}
-
-export type NewTag = ZetkinTagPostBody | TagWithNewGroup;
+export type NewTag = ZetkinTagPostBody | TagWithNewGroup<ZetkinTagPostBody>;
+export type EditTag = ZetkinTagPatchBody | TagWithNewGroup<ZetkinTagPatchBody>;
 
 export interface ZetkinTagGroupPostBody
   extends Partial<Omit<ZetkinTagGroup, 'id'>> {
@@ -15,10 +16,3 @@ export interface ZetkinTagGroupPostBody
 }
 
 export type OnCreateTagHandler = (tag: NewTag) => void;
-
-export interface TagsGroups {
-  [key: string]: {
-    tags: ZetkinTag[];
-    title: string;
-  };
-}
