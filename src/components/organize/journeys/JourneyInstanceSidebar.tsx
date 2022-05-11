@@ -1,4 +1,5 @@
 import { Add } from '@material-ui/icons';
+import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { Button, ClickAwayListener, Divider, Grid } from '@material-ui/core';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
@@ -6,29 +7,36 @@ import { FormattedMessage as Msg, useIntl } from 'react-intl';
 import JourneyMilestoneProgress from 'components/organize/journeys/JourneyMilestoneProgress';
 import JourneyPerson from './JourneyPerson';
 import { MUIOnlyPersonSelect as PersonSelect } from 'components/forms/common/PersonSelect';
+import TagsManager from '../TagsManager';
 import ZetkinSection from 'components/ZetkinSection';
 import {
   ZetkinJourneyInstance,
   ZetkinPerson as ZetkinPersonType,
+  ZetkinTag,
 } from 'types/zetkin';
 
 const JourneyInstanceSidebar = ({
   journeyInstance,
   onAddAssignee,
+  onAssignTag,
   onAddSubject,
   onRemoveAssignee,
   onRemoveSubject,
+  onUnassignTag,
 }: {
   journeyInstance: Pick<
     ZetkinJourneyInstance,
-    'assignees' | 'milestones' | 'next_milestone' | 'subjects'
-  >;
+    'assignees' | 'milestones' | 'next_milestone' | 'subjects' | 'tags'
+  > & { id?: number };
   onAddAssignee: (person: ZetkinPersonType) => void;
   onAddSubject: (person: ZetkinPersonType) => void;
+  onAssignTag: (tag: ZetkinTag) => void;
   onRemoveAssignee: (person: ZetkinPersonType) => void;
   onRemoveSubject: (person: ZetkinPersonType) => void;
+  onUnassignTag: (tag: ZetkinTag) => void;
 }): JSX.Element => {
   const intl = useIntl();
+  const { orgId } = useRouter().query;
 
   const [addingAssignee, setAddingAssignee] = useState<boolean>(false);
   const [addingSubject, setAddingSubject] = useState<boolean>(false);
@@ -139,11 +147,20 @@ const JourneyInstanceSidebar = ({
         <Divider />
       </Grid>
       <Grid item xs={12}>
-        <ZetkinSection
-          title={intl.formatMessage({
-            id: 'pages.organizeJourneyInstance.tags',
-          })}
-        ></ZetkinSection>
+        <TagsManager
+          assignedTags={journeyInstance.tags}
+          assignedTagsQueryKey={
+            journeyInstance?.id
+              ? [
+                  'journeyInstance',
+                  orgId as string,
+                  journeyInstance.id.toString(),
+                ]
+              : undefined
+          }
+          onAssignTag={onAssignTag}
+          onUnassignTag={onUnassignTag}
+        />
         <Divider />
       </Grid>
       {journeyInstance.milestones && (

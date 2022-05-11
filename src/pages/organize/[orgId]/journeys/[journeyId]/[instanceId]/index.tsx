@@ -60,15 +60,19 @@ const JourneyDetailsPage: PageWithLayout<JourneyDetailsPageProps> = ({
   const {
     useAddAssignee,
     useAddSubject,
+    useAssignTag,
     useQuery,
     useRemoveAssignee,
     useRemoveSubject,
+    useUnassignTag,
   } = journeyInstanceResource(orgId, instanceId);
   const journeyInstanceQuery = useQuery();
   const addAssigneeMutation = useAddAssignee();
   const removeAssigneeMutation = useRemoveAssignee();
   const addMemberMutation = useAddSubject();
   const removeMemberMutation = useRemoveSubject();
+  const assignTagMutation = useAssignTag();
+  const unassignTagMutation = useUnassignTag();
 
   const journeyInstance = journeyInstanceQuery.data as ZetkinJourneyInstance;
 
@@ -121,8 +125,14 @@ const JourneyDetailsPage: PageWithLayout<JourneyDetailsPageProps> = ({
             journeyInstance={journeyInstance}
             onAddAssignee={onAddAssignee}
             onAddSubject={onAddSubject}
+            onAssignTag={(tag) => {
+              assignTagMutation.mutate(tag.id);
+            }}
             onRemoveAssignee={onRemoveAssignee}
             onRemoveSubject={onRemoveSubject}
+            onUnassignTag={(tag) => {
+              unassignTagMutation.mutate(tag.id);
+            }}
           />
         </Grid>
       </Grid>
