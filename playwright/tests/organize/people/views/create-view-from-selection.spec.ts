@@ -47,9 +47,11 @@ test.describe('View detail page', () => {
 
     await page.locator('[role=cell] >> input[type=checkbox]').nth(0).click();
     await page.locator('[role=cell] >> input[type=checkbox]').nth(1).click();
-    await page.click('data-testid=ViewDataTableToolbar-createFromSelection');
 
-    await page.waitForNavigation();
+    await Promise.all([
+      page.waitForNavigation(),
+      page.click('data-testid=ViewDataTableToolbar-createFromSelection'),
+    ]);
 
     // Get POST requests for creating new view and columns
     const moxyLog = moxy.log<{ title: string }>();
