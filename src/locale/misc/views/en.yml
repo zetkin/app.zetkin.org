@@ -16,6 +16,7 @@ columnDialog:
     configureColumn: Configure column
     header: Add column to view
   types:
+    journey_assignee: Assigned journeys
     local_bool: On/off toggle in this view
     local_person: Reference to another person
     person_field: Basic person data (name, e-mail etc)
@@ -40,6 +41,7 @@ dataTableErrors:
   modify_column: There was an error editing the column
   remove_rows: There was an error removing one or more rows
 defaultColumnTitles:
+  journey_assignee: Assigned journeys
   local_bool: Toggle
   local_person: Person reference
   person_notes: Notes

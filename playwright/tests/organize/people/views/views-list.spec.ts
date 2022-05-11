@@ -58,8 +58,11 @@ test.describe('Views list page', () => {
       moxy.setZetkinApiMock('/orgs/1/people/views', 'get', [AllMembers]);
 
       await page.goto(appUri + '/organize/1/people');
-      await page.click(`text=${AllMembers.title}`);
-      await page.waitForNavigation();
+
+      await Promise.all([
+        page.waitForNavigation(),
+        page.click(`text=${AllMembers.title}`),
+      ]);
 
       await expect(page.url()).toEqual(
         appUri + `/organize/1/people/views/${AllMembers.id}`

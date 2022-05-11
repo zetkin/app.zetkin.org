@@ -83,17 +83,17 @@ test.describe('Journey instance sidebar', () => {
         ClarasOnboarding
       );
 
-      //click Angela in search results
-      await page
-        .locator(
-          `text=${ClarasOnboarding.assignees[0].first_name} ${ClarasOnboarding.assignees[0].last_name}`
-        )
-        .click();
-
-      //wait for response
-      await page.waitForResponse(
-        `**/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}/assignees/${ClarasOnboarding.assignees[0].id}`
-      );
+      //click Angela in search results and wait for response
+      await Promise.all([
+        page.waitForResponse(
+          `**/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}/assignees/${ClarasOnboarding.assignees[0].id}`
+        ),
+        page
+          .locator(
+            `text=${ClarasOnboarding.assignees[0].first_name} ${ClarasOnboarding.assignees[0].last_name}`
+          )
+          .click(),
+      ]);
 
       //Expect PUT-request to be done
       expect(putTagLog().length).toEqual(1);
@@ -228,17 +228,17 @@ test.describe('Journey instance sidebar', () => {
         ClarasOnboarding
       );
 
-      //click Clara in search results
-      await page
-        .locator(
-          `text=${ClarasOnboarding.subjects[0].first_name} ${ClarasOnboarding.subjects[0].last_name}`
-        )
-        .click();
-
-      //wait for response
-      await page.waitForResponse(
-        `**/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}/subjects/${ClarasOnboarding.subjects[0].id}`
-      );
+      //click Clara in search results and awit for response
+      await Promise.all([
+        page.waitForResponse(
+          `**/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}/subjects/${ClarasOnboarding.subjects[0].id}`
+        ),
+        page
+          .locator(
+            `text=${ClarasOnboarding.subjects[0].first_name} ${ClarasOnboarding.subjects[0].last_name}`
+          )
+          .click(),
+      ]);
 
       //Expect PUT-request to be done
       expect(putTagLog().length).toEqual(1);
