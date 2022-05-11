@@ -46,8 +46,10 @@ test.describe('View detail page', () => {
     await page.goto(appUri + '/organize/1/people/views/1');
     await page.click(inputSelector);
     await page.fill(inputSelector, 'Friends of Zetkin');
-    await page.keyboard.press('Enter');
-    await page.waitForResponse('**/orgs/1/people/views/1');
+    await Promise.all([
+      page.waitForResponse('**/orgs/1/people/views/1'),
+      page.keyboard.press('Enter'),
+    ]);
 
     // Check body of request
     const titleUpdateRequest = moxy
@@ -76,10 +78,10 @@ test.describe('View detail page', () => {
 
     // Press down to select view and enter to navigate
     await page.keyboard.press('ArrowDown');
-    await page.keyboard.press('Enter');
+
+    await Promise.all([page.waitForNavigation(), page.keyboard.press('Enter')]);
 
     // Assert that we navigate away to the new view
-    await page.waitForNavigation();
     await expect(page.url()).toEqual(
       appUri + `/organize/1/people/views/${NewView.id}`
     );
@@ -109,8 +111,11 @@ test.describe('View detail page', () => {
     await page.click('data-testid=StartsWith-select');
     await page.click('data-testid=StartsWith-select-all');
     await page.click('data-testid=FilterForm-saveButton');
-    await page.click('data-testid=QueryOverview-saveButton');
-    await page.waitForResponse('**/orgs/1/people/views/1/rows');
+
+    await Promise.all([
+      page.waitForResponse('**/orgs/1/people/views/1/rows'),
+      page.click('data-testid=QueryOverview-saveButton'),
+    ]);
 
     // Make sure previous content query was deleted
     expect(
