@@ -2,7 +2,7 @@ import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { useIntl } from 'react-intl';
 import { Box, Chip, Grid, useTheme } from '@material-ui/core';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 
 import DefaultLayout from 'layout/organize/DefaultLayout';
 import EditTextinPlace from 'components/EditTextInPlace';
@@ -15,8 +15,9 @@ import SnackbarContext from 'hooks/SnackbarContext';
 import SubmitCancelButtons from 'components/forms/common/SubmitCancelButtons';
 import { useRouter } from 'next/router';
 import ZetkinAutoTextArea from 'components/ZetkinAutoTextArea';
+import { ZetkinPerson } from 'types/zetkin';
+import ZetkinQuery from 'components/ZetkinQuery';
 import { journeyInstancesResource, journeyResource } from 'api/journeys';
-import { ZetkinJourney, ZetkinPerson } from 'types/zetkin';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -78,126 +79,136 @@ const NewJourneyPage: PageWithLayout<NewJourneyPageProps> = ({
   const theme = useTheme();
   const router = useRouter();
 
-  const journeyQuery = journeyResource(orgId, journeyId).useQuery();
-  const journey = journeyQuery.data as ZetkinJourney;
-
-  useEffect(() => {
-    if (journey && !editedNote) {
-      setNote(journey.opening_note_template);
-    }
-  }, [editedNote, journey, setNote]);
+  const journeyQuery = journeyResource(orgId, journeyId).useQuery({
+    onSuccess: (journey) => {
+      if (!editedNote) {
+        setNote(journey.opening_note_template);
+      }
+    },
+  });
 
   const mutation = journeyInstancesResource(orgId, journeyId).useCreate();
 
   return (
-    <>
-      <Head>
-        <title>
-          {intl.formatMessage(
-            { id: 'pages.organizeNewJourneyInstance.title' },
-            { journey: journey.singular_label }
-          )}
-        </title>
-      </Head>
-      <Header
-        subtitle={
-          <Box
-            style={{
-              alignItems: 'center',
-              display: 'flex',
-            }}
-          >
-            <Chip
-              label={intl.formatMessage({
-                id: 'pages.organizeNewJourneyInstance.draft',
-              })}
-              style={{
-                backgroundColor: theme.palette.grey['300'],
-                fontWeight: 'bold',
-              }}
-            />
-          </Box>
-        }
-        title={
-          <EditTextinPlace
-            allowEmpty={true}
-            onChange={async (value) => setTitle(value)}
-            placeholder={intl.formatMessage(
-              { id: 'pages.organizeNewJourneyInstance.title' },
-              { journey: journey.singular_label }
-            )}
-            value={title}
-          />
-        }
-      />
-      <Box p={3}>
-        <Grid container justifyContent="space-between" spacing={2}>
-          <Grid item md={6}>
-            <ZetkinAutoTextArea
-              onChange={(value) => {
-                setNote(value);
-                setEditedNote(true);
-              }}
-              value={note}
-            />
-            <form
-              onSubmit={async (ev) => {
-                ev.preventDefault();
-                mutation.mutate(
-                  { assignees, note, subjects, title },
-                  {
-                    onError: () => {
-                      showSnackbar('error');
-                    },
-                    onSuccess: (newInstance) => {
-                      router.push(
-                        `/organize/${orgId}/journeys/${journeyId}/${newInstance.id}`
-                      );
-                    },
-                  }
-                );
-              }}
-            >
-              <SubmitCancelButtons
-                onCancel={() => {
-                  router.push(`/organize/${orgId}/journeys/${journeyId}`);
-                }}
-                submitDisabled={
-                  !editedNote || mutation.isLoading || mutation.isSuccess
-                }
-                submitText={intl.formatMessage(
-                  {
-                    id: 'pages.organizeNewJourneyInstance.submitLabel',
-                  },
+    <ZetkinQuery queries={{ journeyQuery }}>
+      {({ queries }) => {
+        const journey = queries.journeyQuery.data;
+        return (
+          <>
+            <Head>
+              <title>
+                {intl.formatMessage(
+                  { id: 'pages.organizeNewJourneyInstance.title' },
                   { journey: journey.singular_label }
                 )}
-              />
-            </form>
-          </Grid>
-          <Grid item md={4}>
-            <JourneyInstanceSidebar
-              journeyInstance={{
-                assignees,
-                next_milestone: null,
-                subjects,
-              }}
-              onAddAssignee={(person) => setAssignees([...assignees, person])}
-              onAddSubject={(person) => setSubjects([...subjects, person])}
-              onRemoveAssignee={(person) =>
-                setAssignees(
-                  assignees.filter((assignee) => assignee.id != person.id)
-                )
+              </title>
+            </Head>
+            <Header
+              subtitle={
+                <Box
+                  style={{
+                    alignItems: 'center',
+                    display: 'flex',
+                  }}
+                >
+                  <Chip
+                    label={intl.formatMessage({
+                      id: 'pages.organizeNewJourneyInstance.draft',
+                    })}
+                    style={{
+                      backgroundColor: theme.palette.grey['300'],
+                      fontWeight: 'bold',
+                    }}
+                  />
+                </Box>
               }
-              onRemoveSubject={(person) =>
-                setSubjects(
-                  subjects.filter((subject) => subject.id != person.id)
-                )
+              title={
+                <EditTextinPlace
+                  allowEmpty={true}
+                  onChange={async (value) => setTitle(value)}
+                  placeholder={intl.formatMessage(
+                    { id: 'pages.organizeNewJourneyInstance.title' },
+                    { journey: journey.singular_label }
+                  )}
+                  value={title}
+                />
               }
             />
-          </Grid>
-        </Grid>
-      </Box>
-    </>
+            <Box p={3}>
+              <Grid container justifyContent="space-between" spacing={2}>
+                <Grid item md={6}>
+                  <ZetkinAutoTextArea
+                    onChange={(value) => {
+                      setNote(value);
+                      setEditedNote(true);
+                    }}
+                    value={note}
+                  />
+                  <form
+                    onSubmit={async (ev) => {
+                      ev.preventDefault();
+                      mutation.mutate(
+                        { assignees, note, subjects, title },
+                        {
+                          onError: () => {
+                            showSnackbar('error');
+                          },
+                          onSuccess: (newInstance) => {
+                            router.push(
+                              `/organize/${orgId}/journeys/${journeyId}/${newInstance.id}`
+                            );
+                          },
+                        }
+                      );
+                    }}
+                  >
+                    <SubmitCancelButtons
+                      onCancel={() => {
+                        router.push(`/organize/${orgId}/journeys/${journeyId}`);
+                      }}
+                      submitDisabled={
+                        !editedNote || mutation.isLoading || mutation.isSuccess
+                      }
+                      submitText={intl.formatMessage(
+                        {
+                          id: 'pages.organizeNewJourneyInstance.submitLabel',
+                        },
+                        { journey: journey.singular_label }
+                      )}
+                    />
+                  </form>
+                </Grid>
+                <Grid item md={4}>
+                  <JourneyInstanceSidebar
+                    journeyInstance={{
+                      assignees,
+                      next_milestone: null,
+                      subjects,
+                    }}
+                    onAddAssignee={(person) =>
+                      setAssignees([...assignees, person])
+                    }
+                    onAddSubject={(person) =>
+                      setSubjects([...subjects, person])
+                    }
+                    onRemoveAssignee={(person) =>
+                      setAssignees(
+                        assignees.filter((assignee) => assignee.id != person.id)
+                      )
+                    }
+                    onRemoveSubject={(person) =>
+                      setSubjects(
+                        subjects.filter((subject) => subject.id != person.id)
+                      )
+                    }
+                  />
+                </Grid>
+              </Grid>
+            </Box>
+          </>
+        );
+      }}
+    </ZetkinQuery>
   );
 };
 
