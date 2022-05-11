@@ -87,7 +87,10 @@ const NewJourneyPage: PageWithLayout<NewJourneyPageProps> = ({
     },
   });
 
-  const mutation = journeyInstancesResource(orgId, journeyId).useCreate();
+  const createInstanceMutation = journeyInstancesResource(
+    orgId,
+    journeyId
+  ).useCreate();
 
   return (
     <ZetkinQuery queries={{ journeyQuery }}>
@@ -147,7 +150,7 @@ const NewJourneyPage: PageWithLayout<NewJourneyPageProps> = ({
                   <form
                     onSubmit={async (ev) => {
                       ev.preventDefault();
-                      mutation.mutate(
+                      createInstanceMutation.mutate(
                         { assignees, note, subjects, title },
                         {
                           onError: () => {
@@ -167,7 +170,9 @@ const NewJourneyPage: PageWithLayout<NewJourneyPageProps> = ({
                         router.push(`/organize/${orgId}/journeys/${journeyId}`);
                       }}
                       submitDisabled={
-                        !editedNote || mutation.isLoading || mutation.isSuccess
+                        !editedNote ||
+                        createInstanceMutation.isLoading ||
+                        createInstanceMutation.isSuccess
                       }
                       submitText={intl.formatMessage(
                         {
