@@ -40,7 +40,10 @@ const createNewInstance = async (
     const instData = await instRes.json();
     const instId = instData.data.id;
 
-    const putPeople = async (field: string, people: ZetkinPerson[]) => {
+    const putPeople = async (
+      field: 'assignees' | 'subjects',
+      people: ZetkinPerson[]
+    ) => {
       await Promise.all(
         people.map((person: ZetkinPerson) =>
           apiFetch(
