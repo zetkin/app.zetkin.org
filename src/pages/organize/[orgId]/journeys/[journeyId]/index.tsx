@@ -1,5 +1,8 @@
+import { Add } from '@material-ui/icons';
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
+import NextLink from 'next/link';
+import { Fab, makeStyles } from '@material-ui/core';
 
 import AllJourneyInstancesLayout from 'layout/organize/AllJourneyInstancesLayout';
 import getOrg from 'fetching/getOrg';
@@ -57,6 +60,14 @@ interface JourneyInstancesData {
   tagMetadata: TagMetadata;
 }
 
+const useStyles = makeStyles((theme) => ({
+  fab: {
+    bottom: theme.spacing(10),
+    position: 'fixed',
+    right: theme.spacing(4),
+  },
+}));
+
 const JourneyInstancesOverviewPage: PageWithLayout<
   JourneyInstancesOverviewPageProps
 > = ({ orgId, journeyId }) => {
@@ -66,6 +77,8 @@ const JourneyInstancesOverviewPage: PageWithLayout<
     journeyId
   ).useQuery();
   const journey = journeyQuery.data as ZetkinJourney;
+
+  const classes = useStyles();
 
   return (
     <>
@@ -77,6 +90,15 @@ const JourneyInstancesOverviewPage: PageWithLayout<
           {...(journeyInstancesQuery.data as JourneyInstancesData)}
         />
       </ZetkinQuery>
+      <NextLink href={`/organize/${orgId}/journeys/${journeyId}/new`} passHref>
+        <Fab
+          className={classes.fab}
+          color="primary"
+          data-testid="JourneyInstanceOverviewPage-addFab"
+        >
+          <Add />
+        </Fab>
+      </NextLink>
     </>
   );
 };

@@ -224,7 +224,7 @@ test.describe('Person Profile Page Tags', () => {
         page.waitForResponse(
           `**/orgs/${KPD.id}/people/${ClaraZetkin.id}/tags/${ActivistTag.id}`
         ),
-        page.click('data-testid=submit-button'),
+        page.click('data-testid=SubmitCancelButtons-submitButton'),
       ]);
 
       // Check that request made to create tag
@@ -274,7 +274,7 @@ test.describe('Person Profile Page Tags', () => {
           page.waitForResponse(
             `**/orgs/${KPD.id}/people/${ClaraZetkin.id}/tags/${ActivistTag.id}`
           ),
-          page.click('data-testid=submit-button'),
+          page.click('data-testid=SubmitCancelButtons-submitButton'),
         ]);
 
         // Check that request made to create group
@@ -302,7 +302,7 @@ test.describe('Person Profile Page Tags', () => {
         );
         await page.click(`text=Add "${SkillsGroup.title}"`);
 
-        await page.click('data-testid=submit-button');
+        await page.click('data-testid=SubmitCancelButtons-submitButton');
 
         // Show error
         expect(
@@ -321,7 +321,7 @@ test.describe('Person Profile Page Tags', () => {
         ActivistTag.title
       );
 
-      await page.click('data-testid=submit-button');
+      await page.click('data-testid=SubmitCancelButtons-submitButton');
 
       // Show error
       expect(await page.locator('data-testid=Snackbar-error').count()).toEqual(
@@ -363,7 +363,7 @@ test.describe('Person Profile Page Tags', () => {
 
       // Check that request made to edit tag with correct values
       await Promise.all([
-        page.click('data-testid=submit-button'),
+        page.click('data-testid=SubmitCancelButtons-submitButton'),
         page.waitForResponse(`**/orgs/1/people/tags/${ActivistTag.id}`),
       ]);
 
@@ -392,7 +392,7 @@ test.describe('Person Profile Page Tags', () => {
 
       // Show error
       await Promise.all([
-        page.click('data-testid=submit-button'),
+        page.click('data-testid=SubmitCancelButtons-submitButton'),
         page.waitForResponse(`**/orgs/1/people/tags/${ActivistTag.id}`),
       ]);
       expect(await page.locator('data-testid=Snackbar-error').count()).toEqual(

@@ -6,6 +6,7 @@ import {
   UseMutationResult,
   useQuery,
   useQueryClient,
+  UseQueryOptions,
   UseQueryResult,
 } from 'react-query';
 
@@ -19,18 +20,23 @@ import {
   createPutHandler,
 } from './createHandlers';
 
+type FactoryUseQueryOptions<Result> = Omit<
+  UseQueryOptions<unknown, unknown, Result, string[]>,
+  'queryKey' | 'queryFn'
+>;
+
 export const createUseQuery = <Result>(
   key: string[],
   url: string,
   fetchOptions?: RequestInit
-): (() => UseQueryResult<Result>) => {
+): ((options?: FactoryUseQueryOptions<Result>) => UseQueryResult<Result>) => {
   const handler = async () => {
     const res = await defaultFetch(url, fetchOptions);
     return handleResponseData(res, fetchOptions?.method || 'GET');
   };
 
-  return () => {
-    return useQuery(key, handler);
+  return (options?: FactoryUseQueryOptions<Result>) => {
+    return useQuery(key, handler, options);
   };
 };
 
