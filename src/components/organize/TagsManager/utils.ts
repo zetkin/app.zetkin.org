@@ -117,7 +117,7 @@ export const useCreateTag = (): ((tag: NewTag) => Promise<ZetkinTag>) => {
  * creating a new group for it.
  */
 export const useEditTag = (
-  keyToInvalidate?: Array<string | number>
+  keyToInvalidate?: Array<string>
 ): ((tag: EditTag) => Promise<ZetkinTag>) => {
   const { orgId } = useRouter().query;
   const queryClient = useQueryClient();

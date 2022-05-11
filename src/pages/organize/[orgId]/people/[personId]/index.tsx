@@ -90,20 +90,22 @@ const PersonProfilePage: PageWithLayout<PersonPageProps> = (props) => {
         </Grid>
         <Grid item lg={4} xs={12}>
           <ZetkinQuery queries={{ personTagsQuery }}>
-            <TagsManager
-              assignedTags={personTagsQuery.data || []}
-              assignedTagsQueryKey={personTagsKey}
-              onAssignTag={(tag) =>
-                assignTagMutation.mutate(tag.id, {
-                  onError: () => showSnackbar('error'),
-                })
-              }
-              onUnassignTag={(tag) =>
-                unassignTagMutation.mutate(tag.id, {
-                  onError: () => showSnackbar('error'),
-                })
-              }
-            />
+            {({ queries: { personTagsQuery } }) => (
+              <TagsManager
+                assignedTags={personTagsQuery.data}
+                assignedTagsQueryKey={personTagsKey}
+                onAssignTag={(tag) =>
+                  assignTagMutation.mutate(tag.id, {
+                    onError: () => showSnackbar('error'),
+                  })
+                }
+                onUnassignTag={(tag) =>
+                  unassignTagMutation.mutate(tag.id, {
+                    onError: () => showSnackbar('error'),
+                  })
+                }
+              />
+            )}
           </ZetkinQuery>
         </Grid>
       </Grid>

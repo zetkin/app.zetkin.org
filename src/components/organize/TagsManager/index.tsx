@@ -95,7 +95,7 @@ const TagsManager: React.FunctionComponent<
   Omit<
     TagsManagerProps,
     'availableGroups' | 'availableTags' | 'onCreateTag' | 'onEditTag'
-  > & { assignedTagsQueryKey?: Array<string | number> }
+  > & { assignedTagsQueryKey?: Array<string> }
 > = (props) => {
   const { orgId } = useRouter().query;
 
