@@ -23,11 +23,16 @@ const Template: ComponentStory<typeof Timeline> = (args) => (
 );
 
 const addAssigneeUpdates = Array.from(Array(10).keys()).map(() =>
-  mockUpdate(UPDATE_TYPES.JOURNEYINSTANCE_ADDASSIGNEE, {
-    timestamp: dayjs()
-      .subtract(Math.random() * 100, 'hours')
-      .format(),
-  })
+  mockUpdate(
+    Math.random() > 0.5
+      ? UPDATE_TYPES.JOURNEYINSTANCE_ADDASSIGNEE
+      : UPDATE_TYPES.JOURNEYINSTANCE_REMOVEASSIGNEE,
+    {
+      timestamp: dayjs()
+        .subtract(Math.random() * 100, 'hours')
+        .format(),
+    }
+  )
 );
 
 const journeyMilestoneUpdates = Array.from(Array(30).keys()).map(() => {

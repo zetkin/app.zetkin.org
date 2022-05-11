@@ -3,6 +3,8 @@ import { TagMetadata } from '../utils/getTagMetadata';
 import {
   createPrefetch,
   createUseMutation,
+  createUseMutationDelete,
+  createUseMutationPut,
   createUseQuery,
 } from './utils/resourceHookFactories';
 import { ZetkinJourney, ZetkinJourneyInstance } from 'types/zetkin';
@@ -45,7 +47,14 @@ export const journeyInstanceResource = (orgId: string, instanceId: string) => {
 
   return {
     prefetch: createPrefetch<ZetkinJourneyInstance>(key, url),
+    useAddAssignee: createUseMutationPut({ key, url: `${url}/assignees` }),
+    useAddSubject: createUseMutationPut({ key, url: `${url}/subjects` }),
     useQuery: createUseQuery<ZetkinJourneyInstance>(key, url),
+    useRemoveAssignee: createUseMutationDelete({
+      key,
+      url: `${url}/assignees`,
+    }),
+    useRemoveSubject: createUseMutationDelete({ key, url: `${url}/subjects` }),
     useUpdate: createUseMutation<
       Partial<ZetkinJourneyInstance>,
       ZetkinJourneyInstance

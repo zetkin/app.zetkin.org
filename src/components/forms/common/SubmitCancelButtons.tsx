@@ -16,6 +16,7 @@ const SubmitCancelButtons: React.FunctionComponent<{
       <Box m={1}>
         <Button
           color="primary"
+          data-testid="submit-button"
           disabled={submitDisabled}
           type="submit"
           variant="contained"

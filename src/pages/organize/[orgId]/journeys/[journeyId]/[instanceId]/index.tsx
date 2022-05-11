@@ -1,17 +1,18 @@
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
-import { useIntl } from 'react-intl';
+import { useContext } from 'react';
 import { Divider, Grid } from '@material-ui/core';
 
 import JourneyInstanceLayout from 'layout/organize/JourneyInstanceLayout';
 import { journeyInstanceResource } from 'api/journeys';
+import JourneyInstanceSidebar from 'components/organize/journeys/JourneyInstanceSidebar';
 import JourneyInstanceSummary from 'components/organize/journeys/JourneyInstanceSummary';
-import JourneyMilestoneProgress from 'components/organize/journeys/JourneyMilestoneProgress';
 import { organizationResource } from 'api/organizations';
 import { PageWithLayout } from 'types';
 import { scaffold } from 'utils/next';
-import { ZetkinJourneyInstance } from 'types/zetkin';
-import ZetkinSection from 'components/ZetkinSection';
+import SnackbarContext from 'hooks/SnackbarContext';
+import TimelineWrapper from 'components/TimelineWrapper';
+import { ZetkinJourneyInstance, ZetkinPerson } from 'types/zetkin';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -56,13 +57,46 @@ const JourneyDetailsPage: PageWithLayout<JourneyDetailsPageProps> = ({
   instanceId,
   orgId,
 }) => {
-  const journeyInstanceQuery = journeyInstanceResource(
-    orgId,
-    instanceId
-  ).useQuery();
+  const {
+    useAddAssignee,
+    useAddSubject,
+    useQuery,
+    useRemoveAssignee,
+    useRemoveSubject,
+  } = journeyInstanceResource(orgId, instanceId);
+  const journeyInstanceQuery = useQuery();
+  const addAssigneeMutation = useAddAssignee();
+  const removeAssigneeMutation = useRemoveAssignee();
+  const addMemberMutation = useAddSubject();
+  const removeMemberMutation = useRemoveSubject();
+
   const journeyInstance = journeyInstanceQuery.data as ZetkinJourneyInstance;
 
-  const intl = useIntl();
+  const { showSnackbar } = useContext(SnackbarContext);
+
+  const onAddAssignee = (person: ZetkinPerson) => {
+    addAssigneeMutation.mutate(person.id, {
+      onError: () => showSnackbar('error'),
+    });
+  };
+
+  const onRemoveAssignee = (person: ZetkinPerson) => {
+    removeAssigneeMutation.mutate(person.id, {
+      onError: () => showSnackbar('error'),
+    });
+  };
+
+  const onAddSubject = (person: ZetkinPerson) => {
+    addMemberMutation.mutate(person.id, {
+      onError: () => showSnackbar('error'),
+    });
+  };
+
+  const onRemoveSubject = (person: ZetkinPerson) => {
+    removeMemberMutation.mutate(person.id, {
+      onError: () => showSnackbar('error'),
+    });
+  };
 
   return (
     <>
@@ -77,49 +111,19 @@ const JourneyDetailsPage: PageWithLayout<JourneyDetailsPageProps> = ({
         <Grid item md={6}>
           <JourneyInstanceSummary journeyInstance={journeyInstance} />
           <Divider style={{ marginTop: '2rem' }} />
+          <TimelineWrapper
+            itemApiPath={`/orgs/${orgId}/journey_instances/${instanceId}`}
+            queryKey={['journeyInstance', orgId, instanceId, 'timeline']}
+          />
         </Grid>
         <Grid item md={4}>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <ZetkinSection
-                title={intl.formatMessage({
-                  id: 'pages.organizeJourneyInstance.assignedTo',
-                })}
-              ></ZetkinSection>
-              <Divider />
-            </Grid>
-            <Grid item xs={12}>
-              <ZetkinSection
-                title={intl.formatMessage({
-                  id: 'pages.organizeJourneyInstance.members',
-                })}
-              ></ZetkinSection>
-              <Divider />
-            </Grid>
-            <Grid item xs={12}>
-              <ZetkinSection
-                title={intl.formatMessage({
-                  id: 'pages.organizeJourneyInstance.tags',
-                })}
-              ></ZetkinSection>
-              <Divider />
-            </Grid>
-            {journeyInstance.milestones && (
-              <Grid item xs={12}>
-                <ZetkinSection
-                  title={intl.formatMessage({
-                    id: 'pages.organizeJourneyInstance.milestones',
-                  })}
-                >
-                  <JourneyMilestoneProgress
-                    milestones={journeyInstance.milestones}
-                    next_milestone={journeyInstance.next_milestone}
-                  />
-                </ZetkinSection>
-                <Divider />
-              </Grid>
-            )}
-          </Grid>
+          <JourneyInstanceSidebar
+            journeyInstance={journeyInstance}
+            onAddAssignee={onAddAssignee}
+            onAddSubject={onAddSubject}
+            onRemoveAssignee={onRemoveAssignee}
+            onRemoveSubject={onRemoveSubject}
+          />
         </Grid>
       </Grid>
     </>

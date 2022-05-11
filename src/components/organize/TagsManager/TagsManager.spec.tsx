@@ -2,23 +2,33 @@ import { click } from '@testing-library/user-event/dist/click';
 import { hover } from '@testing-library/user-event/dist/hover';
 import { keyboard } from '@testing-library/user-event/dist/keyboard';
 import { render } from 'utils/testing';
+import singletonRouter from 'next/router';
+
+import TagsManager from '.';
 
 import mockTag from 'utils/testing/mocks/mockTag';
-import TagsManager from '.';
 import { ZetkinTag } from 'types/zetkin';
+import { EditTag, NewTag } from './types';
 
-const selectTagCallback = jest.fn((tag: ZetkinTag) => tag);
-const removeTagCallback = jest.fn((tag: ZetkinTag) => tag);
+jest.mock('next/dist/client/router', () => require('next-router-mock'));
+
+const assignTagCallback = jest.fn((tag: ZetkinTag) => tag);
+const createTagCallback = jest.fn((tag: NewTag) => tag);
+const unassignTagCallback = jest.fn((tag: ZetkinTag) => tag);
+const editTagCallback = jest.fn((tag: EditTag) => tag);
 
 describe('<TagsManager />', () => {
   describe('Renders list of tags passed in', () => {
     it('informs user if no tags applied', () => {
       const { getByText } = render(
         <TagsManager
-          appliedTags={[]}
+          assignedTags={[]}
+          availableGroups={[]}
           availableTags={[]}
-          onRemove={removeTagCallback}
-          onSelect={selectTagCallback}
+          onAssignTag={assignTagCallback}
+          onCreateTag={createTagCallback}
+          onEditTag={editTagCallback}
+          onUnassignTag={unassignTagCallback}
         />
       );
       expect(getByText('misc.tags.tagsManager.noTags')).toBeTruthy();
@@ -28,10 +38,13 @@ describe('<TagsManager />', () => {
       const tag2 = mockTag({ id: 2, title: 'Activist' });
       const { getByText } = render(
         <TagsManager
-          appliedTags={[tag1, tag2]}
+          assignedTags={[tag1, tag2]}
+          availableGroups={[]}
           availableTags={[tag1, tag2]}
-          onRemove={removeTagCallback}
-          onSelect={selectTagCallback}
+          onAssignTag={assignTagCallback}
+          onCreateTag={createTagCallback}
+          onEditTag={editTagCallback}
+          onUnassignTag={unassignTagCallback}
         />
       );
       expect(getByText('Organizer')).toBeTruthy();
@@ -75,10 +88,13 @@ describe('<TagsManager />', () => {
     ];
     const { getByTestId, getByText } = render(
       <TagsManager
-        appliedTags={tags}
+        assignedTags={tags}
+        availableGroups={[]}
         availableTags={tags}
-        onRemove={removeTagCallback}
-        onSelect={selectTagCallback}
+        onAssignTag={assignTagCallback}
+        onCreateTag={createTagCallback}
+        onEditTag={editTagCallback}
+        onUnassignTag={unassignTagCallback}
       />
     );
     const toggle = getByTestId('TagsManager-groupToggle').firstChild
@@ -98,7 +114,7 @@ describe('<TagsManager />', () => {
     ).toEqual(2);
   });
   it('can add a tag', () => {
-    const onSelect = jest.fn((tag: ZetkinTag) => tag);
+    const onAssignTag = jest.fn((tag: ZetkinTag) => tag);
 
     const tag1 = mockTag({
       group: { id: 2, title: 'Skills' },
@@ -106,20 +122,19 @@ describe('<TagsManager />', () => {
       title: 'Phone banking',
     });
 
-    const { getByText, getByTestId } = render(
+    const { getByText } = render(
       <TagsManager
-        appliedTags={[]}
+        assignedTags={[]}
+        availableGroups={[]}
         availableTags={[tag1]}
-        onRemove={removeTagCallback}
-        onSelect={onSelect}
+        onAssignTag={onAssignTag}
+        onCreateTag={createTagCallback}
+        onEditTag={editTagCallback}
+        onUnassignTag={unassignTagCallback}
       />
     );
     const addTagButton = getByText('misc.tags.tagsManager.addTag');
     click(addTagButton);
-
-    // Click on input
-    const tagSearch = getByTestId('TagsManager-tagSelectTextField');
-    click(tagSearch);
 
     // Typing searches for tag
     keyboard(tag1.title);
@@ -129,10 +144,10 @@ describe('<TagsManager />', () => {
     click(tagOption);
 
     // Check that callback has been called
-    expect(onSelect).toHaveBeenCalledWith(tag1);
+    expect(onAssignTag).toHaveBeenCalledWith(tag1);
   });
   it('can remove a tag', () => {
-    const onRemove = jest.fn((tag: ZetkinTag) => tag);
+    const onUnassignTag = jest.fn((tag: ZetkinTag) => tag);
 
     const tag1 = mockTag({
       group: { id: 2, title: 'Skills' },
@@ -142,10 +157,13 @@ describe('<TagsManager />', () => {
 
     const { getByText, container } = render(
       <TagsManager
-        appliedTags={[tag1]}
+        assignedTags={[tag1]}
+        availableGroups={[]}
         availableTags={[tag1]}
-        onRemove={onRemove}
-        onSelect={selectTagCallback}
+        onAssignTag={assignTagCallback}
+        onCreateTag={createTagCallback}
+        onEditTag={editTagCallback}
+        onUnassignTag={onUnassignTag}
       />
     );
 
@@ -161,6 +179,84 @@ describe('<TagsManager />', () => {
     }
 
     // Check that callback has been called
-    expect(onRemove).toHaveBeenCalledWith(tag1);
+    expect(onUnassignTag).toHaveBeenCalledWith(tag1);
+  });
+
+  describe('creating a tag', () => {
+    let onCreateTag: jest.Mock<NewTag, [tag: NewTag]>;
+
+    beforeEach(() => {
+      onCreateTag = jest.fn((tag: NewTag) => tag);
+      singletonRouter.query = {
+        orgId: '1',
+      };
+    });
+
+    it('passes the value in the tag search field in to the create tag', () => {
+      const { getByTestId, getByText } = render(
+        <TagsManager
+          assignedTags={[]}
+          availableGroups={[]}
+          availableTags={[]}
+          onAssignTag={assignTagCallback}
+          onCreateTag={onCreateTag}
+          onEditTag={editTagCallback}
+          onUnassignTag={unassignTagCallback}
+        />
+      );
+
+      const addTagButton = getByText('misc.tags.tagsManager.addTag');
+      click(addTagButton);
+
+      const tagSearchField = getByTestId('TagManager-TagSelect-searchField');
+      click(tagSearchField);
+      keyboard("Jerry's family");
+
+      const createTagOption = getByTestId(
+        'TagManager-TagSelect-createTagOption'
+      );
+      click(createTagOption);
+
+      const titleField = getByTestId('TagManager-TagDialog-titleField');
+      expect((titleField as HTMLInputElement).value).toEqual("Jerry's family");
+    });
+  });
+
+  describe('editing a tag', () => {
+    let onCreateTag: jest.Mock<NewTag, [tag: NewTag]>;
+
+    beforeEach(() => {
+      onCreateTag = jest.fn((tag: NewTag) => tag);
+      singletonRouter.query = {
+        orgId: '1',
+      };
+    });
+
+    it('can edit an existing tag in the tag dialog', () => {
+      const tagToEdit = mockTag();
+
+      const { getByTestId, getByText } = render(
+        <TagsManager
+          assignedTags={[]}
+          availableGroups={[]}
+          availableTags={[tagToEdit]}
+          onAssignTag={assignTagCallback}
+          onCreateTag={onCreateTag}
+          onEditTag={editTagCallback}
+          onUnassignTag={unassignTagCallback}
+        />
+      );
+
+      const addTagButton = getByText('misc.tags.tagsManager.addTag');
+      click(addTagButton);
+
+      const editTagButton = getByTestId(
+        `TagManager-TagSelect-editTag-${tagToEdit.id}`
+      );
+      click(editTagButton);
+
+      const titleField = getByTestId('TagManager-TagDialog-titleField');
+      expect((titleField as HTMLInputElement).value).toEqual(tagToEdit.title);
+    });
   });
 });

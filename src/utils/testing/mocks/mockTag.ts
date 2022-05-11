@@ -1,6 +1,10 @@
 import { mockObject } from 'utils/testing/mocks';
 import mockOrganization from './mockOrganization';
-import { ZetkinTag } from 'types/zetkin';
+import { ZetkinTag, ZetkinTagGroup } from 'types/zetkin';
+
+interface MockTag extends Partial<Omit<ZetkinTag, 'group'>> {
+  group?: Partial<ZetkinTagGroup> | null;
+}
 
 const tag: ZetkinTag = {
   color: null,
@@ -12,8 +16,18 @@ const tag: ZetkinTag = {
   title: 'Organizer',
 };
 
-const mockTag = (overrides?: Partial<ZetkinTag>): ZetkinTag => {
-  return mockObject(tag, overrides);
+const defaultGroup: ZetkinTagGroup = mockObject({
+  id: 1,
+  organization: mockOrganization(),
+  title: 'Political',
+});
+
+const mockTag = (overrides?: Partial<MockTag>): ZetkinTag => {
+  if (overrides && 'group' in overrides && overrides.group) {
+    const group = mockObject(defaultGroup, overrides.group);
+    return mockObject(tag, { ...overrides, group });
+  }
+  return mockObject(tag, overrides as ZetkinTag);
 };
 
 export default mockTag;

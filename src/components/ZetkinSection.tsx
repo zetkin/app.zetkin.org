@@ -10,9 +10,10 @@ const ZetkinSection: FunctionComponent<ZetkinSectionProps> = ({
   children,
   title,
   action,
+  ...restProps
 }) => {
   return (
-    <Box>
+    <Box {...restProps}>
       <Box
         alignItems="center"
         display="flex"

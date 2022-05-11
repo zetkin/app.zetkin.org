@@ -3,6 +3,7 @@ import dayjs from 'dayjs';
 import { uniqBy } from 'lodash';
 
 import mockJourneyInstance from 'utils/testing/mocks/mockJourneyInstance';
+import mockOrganization from 'utils/testing/mocks/mockOrganization';
 import mockPerson from 'utils/testing/mocks/mockPerson';
 import { ZetkinJourneyInstance } from 'types/zetkin';
 
@@ -26,22 +27,50 @@ const milestones = [
 const groupIds = ids.splice(0, 3);
 const groupTags: ZetkinJourneyInstance['tags'][] = [
   [
-    { color: 'salmon', title: '1 - immediate' },
-    { color: 'peachpuff', title: '2 - near future' },
+    {
+      color: 'salmon',
+      organization: mockOrganization(),
+      title: '1 - immediate',
+    },
+    {
+      color: 'peachpuff',
+      organization: mockOrganization(),
+      title: '2 - near future',
+    },
     { color: 'lightgray', title: '3 - chase up' },
   ].map((tag) => ({
-    group: { id: groupIds[0], title: 'Priority' },
+    group: {
+      id: groupIds[0],
+      organization: mockOrganization(),
+      title: 'Priority',
+    },
     id: ids.shift() as number,
     ...tag,
   })),
   [
-    { color: 'beige', title: 'contract' },
-    { color: 'cornflowerblue', title: 'pay' },
-    { color: 'gray', title: 'disciplinary/dismissal' },
-    { color: 'aliceblue', title: 'discrimination' },
-    { color: 'aquamarine', title: 'whistleblowing' },
+    { color: 'beige', organization: mockOrganization(), title: 'contract' },
+    { color: 'cornflowerblue', organization: mockOrganization(), title: 'pay' },
+    {
+      color: 'gray',
+      organization: mockOrganization(),
+      title: 'disciplinary/dismissal',
+    },
+    {
+      color: 'aliceblue',
+      organization: mockOrganization(),
+      title: 'discrimination',
+    },
+    {
+      color: 'aquamarine',
+      organization: mockOrganization(),
+      title: 'whistleblowing',
+    },
   ].map((tag) => ({
-    group: { id: groupIds[1], title: 'Category' },
+    group: {
+      id: groupIds[1],
+      organization: mockOrganization(),
+      title: 'Category',
+    },
     id: ids.shift() as number,
     ...tag,
   })),
@@ -50,7 +79,11 @@ const groupTags: ZetkinJourneyInstance['tags'][] = [
 const animalTags = uniqBy(
   ids.splice(0, 100).map((id) => ({
     color: chance.color(),
-    group: { id: groupIds[2], title: 'Animals' },
+    group: {
+      id: groupIds[2],
+      organization: mockOrganization(),
+      title: 'Animals',
+    },
     id,
     title: chance.animal(),
   })),

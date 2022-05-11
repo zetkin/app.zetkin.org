@@ -13,7 +13,11 @@ import { defaultFetch } from 'fetching';
 import handleResponseData from './handleResponseData';
 import { makeUseMutationOptions } from './makeUseMutationOptions';
 import { ScaffoldedContext } from 'utils/next';
-import { createDeleteHandler, createPutHandler } from './createDeleteHandler';
+import {
+  createDeleteHandler,
+  createPatchHandler,
+  createPutHandler,
+} from './createHandlers';
 
 export const createUseQuery = <Result>(
   key: string[],
@@ -62,7 +66,7 @@ export const createUseMutation = <Input, Result>(
   };
 };
 
-interface MutationDeleteOrPutProps {
+interface MutationProps {
   key: string[];
   url: string;
   fetchOptions?: RequestInit;
@@ -73,7 +77,7 @@ interface MutationDeleteOrPutProps {
 }
 
 export const createUseMutationDelete = (
-  props: MutationDeleteOrPutProps
+  props: MutationProps
 ): (() => UseMutationResult<null, unknown, number | undefined, unknown>) => {
   const handler = createDeleteHandler(props.url, props.fetchOptions);
 
@@ -87,7 +91,7 @@ export const createUseMutationDelete = (
 };
 
 export const createUseMutationPut = (
-  props: MutationDeleteOrPutProps
+  props: MutationProps
 ): (() => UseMutationResult<null, unknown, number | undefined, unknown>) => {
   const handler = createPutHandler(props.url, props.fetchOptions);
 
@@ -97,6 +101,21 @@ export const createUseMutationPut = (
       handler,
       makeUseMutationOptions(queryClient, props.key, props.mutationOptions)
     );
+  };
+};
+
+export const createUseMutationPatch = <
+  Input extends { id: number },
+  Result
+>(props: {
+  key: string[];
+  url: string;
+}): (() => UseMutationResult<Result, unknown, Input, unknown>) => {
+  const handler = createPatchHandler<Input, Result>(props.url);
+
+  return () => {
+    const queryClient = useQueryClient();
+    return useMutation(handler, makeUseMutationOptions(queryClient, props.key));
   };
 };
 
