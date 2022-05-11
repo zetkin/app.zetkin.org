@@ -13,11 +13,6 @@ import TagsManager from 'components/organize/TagsManager';
 import ZetkinQuery from 'components/ZetkinQuery';
 import { personResource, personTagsResource } from 'api/people';
 import { scaffold, ScaffoldedGetServerSideProps } from 'utils/next';
-import { tagGroupsResource, tagsResource } from 'api/tags';
-import {
-  useCreateTag,
-  useEditTag,
-} from 'components/organize/TagsManager/utils';
 
 export const scaffoldOptions = {
   authLevelRequired: 2,
@@ -66,22 +61,14 @@ const PersonProfilePage: PageWithLayout<PersonPageProps> = (props) => {
     useQuery: usePersonTagsQuery,
     useUnassign,
   } = personTagsResource(orgId as string, personId as string);
-  const { useQuery: useAvailableTagsQuery } = tagsResource(orgId as string);
   const assignTagMutation = useAssign();
   const unassignTagMutation = useUnassign();
   const personTagsQuery = usePersonTagsQuery();
-  const organizationTagsQuery = useAvailableTagsQuery();
 
   const { data: person } = personResource(
     props.orgId,
     props.personId
   ).useQuery();
-
-  const { useQuery: useTagGroupsQuery } = tagGroupsResource(orgId as string);
-  const tagsGroupsQuery = useTagGroupsQuery();
-
-  const createTag = useCreateTag();
-  const editTag = useEditTag(personTagsKey);
 
   if (!person) {
     return null;
@@ -102,23 +89,15 @@ const PersonProfilePage: PageWithLayout<PersonPageProps> = (props) => {
           <PersonOrganizationsCard {...props} />
         </Grid>
         <Grid item lg={4} xs={12}>
-          <ZetkinQuery queries={{ organizationTagsQuery, personTagsQuery }}>
+          <ZetkinQuery queries={{ personTagsQuery }}>
             <TagsManager
               assignedTags={personTagsQuery.data || []}
-              availableGroups={tagsGroupsQuery.data || []}
-              availableTags={organizationTagsQuery.data || []}
+              assignedTagsQueryKey={personTagsKey}
               onAssignTag={(tag) =>
                 assignTagMutation.mutate(tag.id, {
                   onError: () => showSnackbar('error'),
                 })
               }
-              onCreateTag={async (tag) => {
-                const newTag = await createTag(tag);
-                assignTagMutation.mutate(newTag.id, {
-                  onError: () => showSnackbar('error'),
-                });
-              }}
-              onEditTag={editTag}
               onUnassignTag={(tag) =>
                 unassignTagMutation.mutate(tag.id, {
                   onError: () => showSnackbar('error'),
