@@ -16,27 +16,22 @@ import { makeUseMutationOptions } from './makeUseMutationOptions';
 import { ScaffoldedContext } from 'utils/next';
 import { createDeleteHandler, createPutHandler } from './createDeleteHandler';
 
+type FactoryUseQueryOptions<Result> = Omit<
+  UseQueryOptions<unknown, unknown, Result, string[]>,
+  'queryKey' | 'queryFn'
+>;
+
 export const createUseQuery = <Result>(
   key: string[],
   url: string,
   fetchOptions?: RequestInit
-): ((
-  options?: Omit<
-    UseQueryOptions<unknown, unknown, Result, string[]>,
-    'queryKey' | 'queryFn'
-  >
-) => UseQueryResult<Result>) => {
+): ((options?: FactoryUseQueryOptions<Result>) => UseQueryResult<Result>) => {
   const handler = async () => {
     const res = await defaultFetch(url, fetchOptions);
     return handleResponseData(res, fetchOptions?.method || 'GET');
   };
 
-  return (
-    options?: Omit<
-      UseQueryOptions<unknown, unknown, Result, string[]>,
-      'queryKey' | 'queryFn'
-    >
-  ) => {
+  return (options?: FactoryUseQueryOptions<Result>) => {
     return useQuery(key, handler, options);
   };
 };
