@@ -127,7 +127,7 @@ test.describe('Person Profile Page Tags', () => {
       moxy.setZetkinApiMock(
         `/orgs/${KPD.id}/people/${ClaraZetkin.id}/tags`,
         'get',
-        [ActivistTag, CodingSkillsTag]
+        [ActivistTag]
       );
       const { log: deleteTagLog } = moxy.setZetkinApiMock(
         `/orgs/1/people/${ClaraZetkin.id}/tags/${ActivistTag.id}`,
@@ -137,11 +137,9 @@ test.describe('Person Profile Page Tags', () => {
       await page.goto(appUri + `/organize/1/people/${ClaraZetkin.id}`);
 
       await page.locator(`text="${ActivistTag.title}"`).hover();
-      await page.locator('.MuiChip-deleteIcon').click();
+      await page.locator('[data-testid=TagChip-deleteButton]').click();
 
-      moxy.setZetkinApiMock(`/orgs/1/people/${ClaraZetkin.id}/tags`, 'get', [
-        CodingSkillsTag,
-      ]);
+      moxy.setZetkinApiMock(`/orgs/1/people/${ClaraZetkin.id}/tags`, 'get', []);
 
       // Expect to have made request to delete tag
       expect(deleteTagLog().length).toEqual(1);
@@ -159,7 +157,7 @@ test.describe('Person Profile Page Tags', () => {
       moxy.setZetkinApiMock(
         `/orgs/${KPD.id}/people/${ClaraZetkin.id}/tags`,
         'get',
-        [ActivistTag, CodingSkillsTag]
+        [ActivistTag]
       );
       moxy.setZetkinApiMock(
         `/orgs/1/people/${ClaraZetkin.id}/tags/${ActivistTag.id}`,
@@ -171,7 +169,7 @@ test.describe('Person Profile Page Tags', () => {
       await page.goto(appUri + `/organize/1/people/${ClaraZetkin.id}`);
 
       await page.locator(`text="${ActivistTag.title}"`).hover();
-      await page.locator('.MuiChip-deleteIcon').click();
+      await page.locator('[data-testid=TagChip-deleteButton]').click();
 
       // Show error
       expect(await page.locator('data-testid=Snackbar-error').count()).toEqual(
@@ -392,8 +390,8 @@ test.describe('Person Profile Page Tags', () => {
 
       // Show error
       await Promise.all([
-        page.click('data-testid=SubmitCancelButtons-submitButton'),
         page.waitForResponse(`**/orgs/1/people/tags/${ActivistTag.id}`),
+        page.click('data-testid=SubmitCancelButtons-submitButton'),
       ]);
       expect(await page.locator('data-testid=Snackbar-error').count()).toEqual(
         1

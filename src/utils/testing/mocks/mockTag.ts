@@ -14,6 +14,7 @@ const tag: ZetkinTag = {
   id: 1,
   organization: mockOrganization(),
   title: 'Organizer',
+  value_type: null,
 };
 
 const defaultGroup: ZetkinTagGroup = mockObject({
