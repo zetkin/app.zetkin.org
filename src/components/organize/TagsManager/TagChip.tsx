@@ -13,11 +13,14 @@ import { DEFAULT_TAG_COLOR } from './utils';
 import { getContrastColor } from 'utils/colorUtils';
 import { ZetkinTag } from 'types/zetkin';
 
+type TagChipSize = 'small' | 'medium' | 'large';
+
 interface StyleProps {
   clickable: boolean;
   deletable: boolean;
   disabled: boolean;
   hover: boolean;
+  size: TagChipSize;
   tag: ZetkinTag;
 }
 
@@ -27,6 +30,12 @@ const useStyles = makeStyles<Theme, StyleProps>(() => ({
     cursor: ({ clickable, disabled }) =>
       clickable && !disabled ? 'pointer' : 'default',
     display: 'flex',
+    fontSize: ({ size }) =>
+      ({
+        large: '1.2em',
+        medium: '1.0em',
+        small: '0.8em',
+      }[size]),
     lineHeight: 'normal',
     marginRight: '0.1em',
     opacity: ({ disabled }) => (disabled ? 0.5 : 1.0),
@@ -74,14 +83,16 @@ const TagChip: React.FunctionComponent<{
   disabled?: boolean;
   onClick?: (tag: ZetkinTag) => void;
   onDelete?: (tag: ZetkinTag) => void;
+  size?: TagChipSize;
   tag: ZetkinTag;
-}> = ({ disabled = false, onClick, onDelete, tag }) => {
+}> = ({ disabled = false, onClick, onDelete, size = 'medium', tag }) => {
   const [hover, setHover] = useState(false);
   const classes = useStyles({
     clickable: !!onClick,
     deletable: !!onDelete,
     disabled,
     hover,
+    size,
     tag,
   });
 
