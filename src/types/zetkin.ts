@@ -274,7 +274,7 @@ export interface ZetkinJourneyInstance {
   };
   subjects: ZetkinPerson[];
   summary: string;
-  tags: Pick<ZetkinTag, 'id' | 'title' | 'group' | 'color' | 'value'>[];
+  tags: ZetkinTag[];
   title?: string;
   updated: string;
 }
