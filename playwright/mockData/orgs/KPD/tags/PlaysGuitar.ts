@@ -9,6 +9,7 @@ const PlaysGuitarTag: ZetkinTag = {
   id: 4,
   organization: { id: KPD.id, title: KPD.title },
   title: 'Plays guitar',
+  value_type: null,
 };
 
 export default PlaysGuitarTag;

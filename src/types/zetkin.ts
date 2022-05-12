@@ -212,6 +212,7 @@ export interface ZetkinTag {
   color: string | null;
   group: ZetkinTagGroup | null;
   value?: string | number;
+  value_type: string | null;
 }
 
 export interface ZetkinTagPostBody
