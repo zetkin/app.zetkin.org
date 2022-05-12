@@ -17,9 +17,9 @@ journeys:
   statusOpen: Open
   tabs:
     manage: Manage
+    milestones: Milestones
     overview: Overview
     timeline: Timeline
-    milestones: Milestones
   title: Journeys
 lists:
   showMore: Show more...

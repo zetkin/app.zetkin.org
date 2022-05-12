@@ -3,7 +3,7 @@ import { ZetkinJourneyMilestoneStatus } from 'types/zetkin';
 
 const milestone: ZetkinJourneyMilestoneStatus = {
   completed: null,
-  deadline: '2022-06-18T00:29:12+02:00',
+  deadline: '2022-06-18T00:29:12',
   description: 'A lipsync is the most important part of a fun night out.',
   id: 1,
   title: 'perform lip sync',
