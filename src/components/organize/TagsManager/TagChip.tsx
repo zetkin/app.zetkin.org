@@ -87,6 +87,24 @@ const useStyles = makeStyles<Theme, StyleProps>(() => ({
   },
 }));
 
+const TagToolTip: React.FunctionComponent<{
+  children: JSX.Element;
+  tag: ZetkinTag;
+}> = ({ children, tag }) => {
+  return (
+    <Tooltip
+      arrow
+      title={
+        <>
+          {tag.title} <br /> {tag.description || ''}
+        </>
+      }
+    >
+      {children}
+    </Tooltip>
+  );
+};
+
 const TagChip: React.FunctionComponent<{
   disabled?: boolean;
   onClick?: (tag: ZetkinTag) => void;
@@ -127,9 +145,9 @@ const TagChip: React.FunctionComponent<{
     >
       {tag.value_type && (
         <>
-          <Tooltip arrow title={tag.description || ''}>
+          <TagToolTip tag={tag}>
             <Box className={classes.label}>{tag.title}</Box>
-          </Tooltip>
+          </TagToolTip>
           <Tooltip arrow title={tag.value || ''}>
             <Box
               className={classes.value + ' ' + classes.deleteContainer}
@@ -142,12 +160,12 @@ const TagChip: React.FunctionComponent<{
         </>
       )}
       {!tag.value_type && (
-        <Tooltip arrow title={tag.description || ''}>
+        <TagToolTip tag={tag}>
           <Box className={classes.label + ' ' + classes.deleteContainer}>
             {tag.title}
             {deleteButton}
           </Box>
-        </Tooltip>
+        </TagToolTip>
       )}
     </Box>
   );
