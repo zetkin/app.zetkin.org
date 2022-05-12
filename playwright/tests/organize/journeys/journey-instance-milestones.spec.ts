@@ -60,7 +60,7 @@ test.describe('Journey instance Milestones tab', () => {
 
     expect(
       await page
-        .locator('data-testid=JourneyMilestoneCard-noMilestonesMessage')
+        .locator('data-testid=JourneyMilestoneCard-noMilestones')
         .textContent()
     ).toBe('There are no milestones.');
   });

@@ -28,7 +28,7 @@ const JourneyMilestonesPage: PageWithLayout<JourneyDetailsPageProps> = ({
   const journeyInstanceQuery = useQuery();
   const journeyInstance = journeyInstanceQuery.data as ZetkinJourneyInstance;
 
-  const percentCompleted = journeyInstance.milestones
+  const percentComplete = journeyInstance.milestones
     ? Math.floor(
         (journeyInstance.milestones?.filter((milestone) => milestone.completed)
           .length /
@@ -56,17 +56,22 @@ const JourneyMilestonesPage: PageWithLayout<JourneyDetailsPageProps> = ({
                 }}
                 variant="h4"
               >
-                {`${percentCompleted}% `}
-                <Msg id="pages.organizeJourneyInstance.complete" />
+                <Msg
+                  id="pages.organizeJourneyInstance.percentComplete"
+                  values={{ percentComplete }}
+                />
               </Typography>
-              <LinearProgress value={percentCompleted} variant="determinate" />
-              {journeyInstance.milestones.map((milestone, index) => (
-                <JourneyMilestoneCard key={index} milestone={milestone} />
+              <LinearProgress value={percentComplete} variant="determinate" />
+              {journeyInstance.milestones.map((milestone) => (
+                <JourneyMilestoneCard
+                  key={milestone.id}
+                  milestone={milestone}
+                />
               ))}
             </>
           ) : (
-            <Typography data-testid="JourneyMilestoneCard-noMilestonesMessage">
-              <Msg id="pages.organizeJourneyInstance.noMilestonesMessage" />
+            <Typography data-testid="JourneyMilestoneCard-noMilestones">
+              <Msg id="pages.organizeJourneyInstance.noMilestones" />
             </Typography>
           )}
         </Grid>

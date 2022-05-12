@@ -1,10 +1,10 @@
 import { DatePicker } from '@material-ui/pickers';
 import dayjs from 'dayjs';
+import { useContext } from 'react';
 import { useIntl } from 'react-intl';
 import { useQueryClient } from 'react-query';
 import { useRouter } from 'next/router';
 import { Box, Checkbox, Typography } from '@material-ui/core';
-import { useContext, useState } from 'react';
 
 import { journeyMilestoneStatusResource } from 'api/journeys';
 import SnackbarContext from 'hooks/SnackbarContext';
@@ -19,10 +19,6 @@ const JourneyMilestoneCard = ({
   const { orgId, instanceId } = useRouter().query;
   const { showSnackbar } = useContext(SnackbarContext);
   const queryClient = useQueryClient();
-  const [deadline, setDeadline] = useState<string | null>(milestone.deadline);
-  const [checked, setChecked] = useState<boolean>(
-    milestone.completed ? true : false
-  );
 
   const journeyMilestoneStatusHooks = journeyMilestoneStatusResource(
     orgId as string,
@@ -67,38 +63,44 @@ const JourneyMilestoneCard = ({
     >
       <Box alignItems="center" display="flex" flexDirection="row">
         <Checkbox
-          checked={checked}
+          checked={milestone.completed ? true : false}
           data-testid="JourneyMilestoneCard-completed"
-          onChange={(e) => {
-            setChecked(e.target.checked);
-            const completed = e.target.checked ? dayjs().toJSON() : null;
-            saveCompleted(completed);
+          onChange={() => {
+            saveCompleted(milestone.completed ? null : dayjs().toJSON());
           }}
         />
-        <Typography variant="h6">{milestone.title}</Typography>
+        <Typography
+          onClick={() => {
+            saveCompleted(milestone.completed ? null : dayjs().toJSON());
+          }}
+          style={{
+            cursor: 'pointer',
+          }}
+          variant="h6"
+        >
+          {milestone.title}
+        </Typography>
       </Box>
       <DatePicker
         clearable
         data-testid="JourneyMilestoneCard-datePicker"
         disableToolbar
-        format={intl.formatDate(deadline as string)}
+        format={intl.formatDate(milestone.deadline as string)}
         inputVariant="outlined"
         label={
-          !deadline &&
+          !milestone.deadline &&
           intl.formatMessage({
             id: 'pages.organizeJourneyInstance.addDateLabel',
           })
         }
         onChange={(newDeadline) => {
           if (newDeadline && newDeadline.isValid()) {
-            setDeadline(newDeadline.toJSON());
             saveDeadline(newDeadline.toJSON());
           } else if (!newDeadline) {
-            setDeadline(null);
             saveDeadline(null);
           }
         }}
-        value={deadline}
+        value={milestone.deadline}
       />
       {milestone.description && (
         <Typography>{milestone.description}</Typography>
