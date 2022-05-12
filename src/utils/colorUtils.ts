@@ -13,15 +13,17 @@ export function generateRandomColor(seed: string): string {
 
 export function getContrastColor(color: string): string {
   const bgColor = parseInt(color.slice(1), 16);
-  const bgR = bgColor >> 16;
-  const bgG = (bgColor >> 8) & 255;
-  const bgB = bgColor & 255;
+  const bgR = (bgColor >> 16) / 255;
+  const bgG = ((bgColor >> 8) & 255) / 255;
+  const bgB = (bgColor & 255) / 255;
+  const luma = 0.299 * bgR + 0.587 * bgG + 0.0722 * bgB;
   let fgB = 255,
     fgG = 255,
     fgR = 255;
-  const bgAvg = (bgR + bgG + bgB) / 3.0;
-  if (bgAvg > 150) {
+
+  if (luma > 0.5) {
     fgR = fgG = fgB = 0;
   }
+
   return '#' + ((fgR << 16) | (fgG << 8) | fgB).toString(16).padStart(6, '0');
 }
