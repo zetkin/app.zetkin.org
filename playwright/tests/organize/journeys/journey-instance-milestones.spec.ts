@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import { expect } from '@playwright/test';
 import test from '../../../fixtures/next';
 
@@ -97,14 +98,14 @@ test.describe('Journey instance Milestones tab', () => {
         )
         .first()
         .click();
-      //Click June 23 to trigger set of new deadline
+      //Click June 23
       await page.locator('p:has-text("23")').click();
 
       await Promise.all([
         page.waitForResponse(
           `**/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}/milestones/${AttendMeeting.id}`
         ),
-        //Click June 23 to trigger set of new deadline
+        //Click OK to trigger set of new deadline
         page.locator('text=OK').click(),
       ]);
 
@@ -153,6 +154,92 @@ test.describe('Journey instance Milestones tab', () => {
       //Expect deadline to be set to null
       expect(
         patchReqLog<ZetkinJourneyMilestoneStatus>()[0].data?.deadline
+      ).toBe(null);
+    });
+
+    test('lets you mark a milestone as completed.', async ({
+      appUri,
+      moxy,
+      page,
+    }) => {
+      moxy.setZetkinApiMock(
+        `/orgs/${KPD.id}/journeys/${MemberOnboarding.id}`,
+        'get',
+        MemberOnboarding
+      );
+      moxy.setZetkinApiMock(
+        `/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}`,
+        'get',
+        ClarasOnboarding
+      );
+
+      const { log: patchReqLog } = moxy.setZetkinApiMock(
+        `/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}/milestones/${AttendMeeting.id}`,
+        'patch',
+        AttendMeeting
+      );
+
+      await page.goto(appUri + '/organize/1/journeys/1/1/milestones');
+
+      await Promise.all([
+        page.waitForResponse(
+          `**/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}/milestones/${AttendMeeting.id}`
+        ),
+        //Click "completed"-checkbox in first JourneyMilestoneCard
+        await page
+          .locator(
+            '[data-testid=JourneyMilestoneCard] [data-testid=JourneyMilestoneCard-completed]'
+          )
+          .first()
+          .click(),
+      ]);
+
+      expect(
+        patchReqLog<ZetkinJourneyMilestoneStatus>()[0].data?.completed
+      ).toMatch(dayjs().toJSON());
+    });
+
+    test('lets you mark a completed milestone as not completed.', async ({
+      appUri,
+      moxy,
+      page,
+    }) => {
+      moxy.setZetkinApiMock(
+        `/orgs/${KPD.id}/journeys/${MemberOnboarding.id}`,
+        'get',
+        MemberOnboarding
+      );
+      moxy.setZetkinApiMock(
+        `/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}`,
+        'get',
+        {
+          ...ClarasOnboarding,
+          milestones: [{ ...AttendMeeting, completed: '2022-04-07' }],
+        }
+      );
+
+      const { log: patchReqLog } = moxy.setZetkinApiMock(
+        `/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}/milestones/${AttendMeeting.id}`,
+        'patch',
+        AttendMeeting
+      );
+
+      await page.goto(appUri + '/organize/1/journeys/1/1/milestones');
+
+      await Promise.all([
+        page.waitForResponse(
+          `**/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}/milestones/${AttendMeeting.id}`
+        ),
+        //Click "completed"-checkbox in JourneyMilestoneCard
+        await page
+          .locator(
+            '[data-testid=JourneyMilestoneCard] [data-testid=JourneyMilestoneCard-completed]'
+          )
+          .click(),
+      ]);
+
+      expect(
+        patchReqLog<ZetkinJourneyMilestoneStatus>()[0].data?.completed
       ).toBe(null);
     });
   });

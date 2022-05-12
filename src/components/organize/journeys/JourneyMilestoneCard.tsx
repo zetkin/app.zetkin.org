@@ -1,4 +1,5 @@
 import { DatePicker } from '@material-ui/pickers';
+import dayjs from 'dayjs';
 import { useIntl } from 'react-intl';
 import { useRouter } from 'next/router';
 import { Box, Checkbox, Typography } from '@material-ui/core';
@@ -18,6 +19,9 @@ const JourneyMilestoneCard = ({
   const { showSnackbar } = useContext(SnackbarContext);
 
   const [deadline, setDeadline] = useState<string | null>(milestone.deadline);
+  const [checked, setChecked] = useState<boolean>(
+    milestone.completed ? true : false
+  );
 
   const journeyMilestoneStatusHooks = journeyMilestoneStatusResource(
     orgId as string,
@@ -36,11 +40,25 @@ const JourneyMilestoneCard = ({
     );
   };
 
+  const saveCompleted = (completed: string | null) => {
+    patchJourneyMilestoneStatusMutation.mutateAsync(
+      { completed },
+      {
+        onError: () => showSnackbar('error'),
+      }
+    );
+  };
+
   return (
     <Box data-testid={`JourneyMilestoneCard`}>
       <Checkbox
-        checked={milestone.completed ? true : false}
+        checked={checked}
         data-testid="JourneyMilestoneCard-completed"
+        onChange={(e) => {
+          setChecked(e.target.checked);
+          const completed = e.target.checked ? dayjs().toJSON() : null;
+          saveCompleted(completed);
+        }}
       />
       <Typography>{milestone.title}</Typography>
       <DatePicker
