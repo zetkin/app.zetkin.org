@@ -1,6 +1,7 @@
 import { DatePicker } from '@material-ui/pickers';
 import dayjs from 'dayjs';
 import { useIntl } from 'react-intl';
+import { useQueryClient } from 'react-query';
 import { useRouter } from 'next/router';
 import { Box, Checkbox, Typography } from '@material-ui/core';
 import { useContext, useState } from 'react';
@@ -17,7 +18,7 @@ const JourneyMilestoneCard = ({
   const intl = useIntl();
   const { orgId, instanceId } = useRouter().query;
   const { showSnackbar } = useContext(SnackbarContext);
-
+  const queryClient = useQueryClient();
   const [deadline, setDeadline] = useState<string | null>(milestone.deadline);
   const [checked, setChecked] = useState<boolean>(
     milestone.completed ? true : false
@@ -36,6 +37,9 @@ const JourneyMilestoneCard = ({
       { deadline },
       {
         onError: () => showSnackbar('error'),
+        onSuccess: () => {
+          queryClient.invalidateQueries(['journeyInstance', orgId, instanceId]);
+        },
       }
     );
   };
@@ -45,6 +49,9 @@ const JourneyMilestoneCard = ({
       { completed },
       {
         onError: () => showSnackbar('error'),
+        onSuccess: () => {
+          queryClient.invalidateQueries(['journeyInstance', orgId, instanceId]);
+        },
       }
     );
   };
