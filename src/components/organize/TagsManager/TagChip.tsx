@@ -10,6 +10,7 @@ import {
 } from '@material-ui/core';
 
 import { DEFAULT_TAG_COLOR } from './utils';
+import { getContrastColor } from 'utils/colorUtils';
 import { ZetkinTag } from 'types/zetkin';
 
 interface StyleProps {
@@ -46,10 +47,15 @@ const useStyles = makeStyles<Theme, StyleProps>(() => ({
     transition: 'padding 0.1s',
   },
   deleteIcon: {
+    color: ({ tag }) =>
+      tag.value_type
+        ? 'black'
+        : getContrastColor(tag.color || DEFAULT_TAG_COLOR),
     fontSize: 'inherit',
   },
   label: {
     backgroundColor: ({ tag }) => tag.color || DEFAULT_TAG_COLOR,
+    color: ({ tag }) => getContrastColor(tag.color || DEFAULT_TAG_COLOR),
     padding: '0.2em 0.4em 0.2em 1em',
   },
   value: {
