@@ -73,7 +73,10 @@ const useStyles = makeStyles<Theme, StyleProps>(() => ({
   label: {
     backgroundColor: ({ tag }) => tag.color || DEFAULT_TAG_COLOR,
     color: ({ tag }) => getContrastColor(tag.color || DEFAULT_TAG_COLOR),
+    maxWidth: '100%',
+    overflow: 'hidden',
     padding: '0.2em 0.4em 0.2em 1em',
+    textOverflow: 'ellipsis',
   },
   value: {
     backgroundColor: ({ tag }) => lighten(tag.color || DEFAULT_TAG_COLOR, 0.7),
