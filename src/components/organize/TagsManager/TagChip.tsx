@@ -14,6 +14,7 @@ import { getContrastColor } from 'utils/colorUtils';
 import { ZetkinTag } from 'types/zetkin';
 
 interface StyleProps {
+  clickable: boolean;
   deletable: boolean;
   disabled: boolean;
   hover: boolean;
@@ -23,7 +24,8 @@ interface StyleProps {
 const useStyles = makeStyles<Theme, StyleProps>(() => ({
   chip: {
     borderRadius: '1em',
-    cursor: ({ disabled }) => (disabled ? 'default' : 'pointer'),
+    cursor: ({ clickable, disabled }) =>
+      clickable && !disabled ? 'pointer' : 'default',
     display: 'flex',
     lineHeight: 'normal',
     marginRight: '0.1em',
@@ -74,7 +76,13 @@ const TagChip: React.FunctionComponent<{
   tag: ZetkinTag;
 }> = ({ disabled = false, onClick, onDelete, tag }) => {
   const [hover, setHover] = useState(false);
-  const classes = useStyles({ deletable: !!onDelete, disabled, hover, tag });
+  const classes = useStyles({
+    clickable: !!onClick,
+    deletable: !!onDelete,
+    disabled,
+    hover,
+    tag,
+  });
 
   const deleteButton = onDelete ? (
     <IconButton
