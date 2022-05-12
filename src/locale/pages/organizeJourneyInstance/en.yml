@@ -11,6 +11,7 @@ editButton: Edit
 expandButton: Expand
 members: Members
 milestones: Milestones
+noMilestonesMessage: There are no milestones.
 saveButton: Save
 summaryHeader: Summary
 tags: Tags

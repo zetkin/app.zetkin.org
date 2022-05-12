@@ -48,20 +48,27 @@ const JourneyMilestonesPage: PageWithLayout<JourneyDetailsPageProps> = ({
       </Head>
       <Grid container justifyContent="space-between" spacing={2}>
         <Grid item md={6}>
-          <Typography
-            style={{
-              padding: '1rem 0 1rem 0',
-            }}
-            variant="h4"
-          >
-            {`${percentCompleted}% `}
-            <Msg id="pages.organizeJourneyInstance.complete" />
-          </Typography>
-          <LinearProgress value={percentCompleted} variant="determinate" />
-          {journeyInstance.milestones &&
-            journeyInstance.milestones.map((milestone, index) => (
-              <JourneyMilestoneCard key={index} milestone={milestone} />
-            ))}
+          {journeyInstance.milestones ? (
+            <>
+              <Typography
+                style={{
+                  padding: '1rem 0 1rem 0',
+                }}
+                variant="h4"
+              >
+                {`${percentCompleted}% `}
+                <Msg id="pages.organizeJourneyInstance.complete" />
+              </Typography>
+              <LinearProgress value={percentCompleted} variant="determinate" />
+              {journeyInstance.milestones.map((milestone, index) => (
+                <JourneyMilestoneCard key={index} milestone={milestone} />
+              ))}
+            </>
+          ) : (
+            <Typography data-testid="JourneyMilestoneCard-noMilestonesMessage">
+              <Msg id="pages.organizeJourneyInstance.noMilestonesMessage" />
+            </Typography>
+          )}
         </Grid>
       </Grid>
     </>

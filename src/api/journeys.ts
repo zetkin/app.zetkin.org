@@ -7,7 +7,11 @@ import {
   createUseMutationPut,
   createUseQuery,
 } from './utils/resourceHookFactories';
-import { ZetkinJourney, ZetkinJourneyInstance } from 'types/zetkin';
+import {
+  ZetkinJourney,
+  ZetkinJourneyInstance,
+  ZetkinJourneyMilestoneStatus,
+} from 'types/zetkin';
 
 export const journeysResource = (orgId: string) => {
   const key = ['journeys', orgId];
@@ -61,5 +65,21 @@ export const journeyInstanceResource = (orgId: string, instanceId: string) => {
     >(key, url, {
       method: 'PATCH',
     }),
+  };
+};
+
+export const journeyMilestoneStatusResource = (
+  orgId: string,
+  instanceId: string,
+  milestoneId: string
+) => {
+  const key = ['journeyMilestone', orgId, instanceId, milestoneId];
+  const url = `/orgs/${orgId}/journey_instances/${instanceId}/milestones/${milestoneId}`;
+
+  return {
+    useUpdate: createUseMutation<
+      Partial<ZetkinJourneyMilestoneStatus>,
+      ZetkinJourneyMilestoneStatus
+    >(key, url, { method: 'PATCH' }),
   };
 };
