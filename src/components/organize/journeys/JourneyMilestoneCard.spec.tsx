@@ -1,9 +1,19 @@
 import { render } from 'utils/testing';
+import singletonRouter from 'next/router';
 
 import JourneyMilestoneCard from './JourneyMilestoneCard';
 import mockMilestone from 'utils/testing/mocks/mockMilestone';
 
+jest.mock('next/dist/client/router', () => require('next-router-mock'));
+
 describe('<JourneyMilestoneCard />', () => {
+  beforeEach(() => {
+    singletonRouter.query = {
+      instanceId: '1',
+      orgId: '1',
+    };
+  });
+
   it('has a title.', () => {
     const milestone = mockMilestone();
     const { getByText } = render(
@@ -73,17 +83,10 @@ describe('<JourneyMilestoneCard />', () => {
       <JourneyMilestoneCard milestone={milestone} />
     );
 
-    const label = getByTestId('JourneyMilestoneCard-datePicker').querySelector(
-      'label'
-    );
-
     const input = getByTestId('JourneyMilestoneCard-datePicker').querySelector(
       'input'
     );
 
-    expect(label?.textContent).toBe(
-      'pages.organizeJourneyInstance.deadlineLabel'
-    );
-    expect(input?.value).toBe('June 18th');
+    expect(input?.value).toBe('6/18/2022');
   });
 });
