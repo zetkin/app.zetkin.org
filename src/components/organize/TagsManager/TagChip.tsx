@@ -53,8 +53,13 @@ const useStyles = makeStyles<Theme, StyleProps>(() => ({
       deletable && hover ? 'transform 0.1s 0.1s' : 'transform 0.1s',
   },
   deleteContainer: {
-    padding: ({ deletable, hover }) =>
-      deletable && hover ? '0.2em 1.6em 0.2em 0.4em' : '0.2em 1em',
+    padding: ({ deletable, hover }) => {
+      if (deletable) {
+        return hover ? '0.2em 1.6em 0.2em 0.4em' : '0.2em 1em';
+      } else {
+        return '0.2em 0.6em';
+      }
+    },
     position: 'relative',
     transition: 'padding 0.1s',
   },
