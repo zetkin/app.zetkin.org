@@ -37,6 +37,7 @@ const useStyles = makeStyles<Theme, StyleProps>(() => ({
     padding: '3px',
     position: 'absolute',
     right: '0.2em',
+    top: '0.3em',
     transform: ({ deletable, hover }) =>
       deletable && hover ? 'translate(0,0)' : 'translate(2rem, 0)',
     transition: ({ deletable, hover }) =>
