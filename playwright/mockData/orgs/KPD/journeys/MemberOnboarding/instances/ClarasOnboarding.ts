@@ -46,6 +46,7 @@ const ClarasOnboarding: ZetkinJourneyInstance = {
   },
   milestones: [AttendMeeting, AttendTraining, MeetBranchSec],
   next_milestone: AttendMeeting,
+  opening_note: '',
   organization: KPD,
   subjects: [ClaraZetkin],
   summary: `Nullam sagittis neque augue, vitae lacinia purus auctor eget. Mauris bibendum, 

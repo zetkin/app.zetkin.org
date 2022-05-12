@@ -28,6 +28,7 @@ export interface ZetkinViewColumnBase {
 }
 
 export enum COLUMN_TYPE {
+  JOURNEY_ASSIGNEE = 'journey_assignee',
   LOCAL_BOOL = 'local_bool',
   LOCAL_PERSON = 'local_person',
   PERSON_FIELD = 'person_field',
@@ -36,6 +37,13 @@ export enum COLUMN_TYPE {
   PERSON_TAG = 'person_tag',
   SURVEY_RESPONSE = 'survey_response',
   SURVEY_SUBMITTED = 'survey_submitted',
+}
+
+export interface JourneyAssigneeViewColumn extends ZetkinViewColumnBase {
+  type: COLUMN_TYPE.JOURNEY_ASSIGNEE;
+  config: {
+    journey_id?: number;
+  };
 }
 
 export interface LocalBoolViewColumn extends ZetkinViewColumnBase {
@@ -89,6 +97,7 @@ export interface SurveySubmittedViewColumn extends ZetkinViewColumnBase {
 }
 
 export type ZetkinViewColumn =
+  | JourneyAssigneeViewColumn
   | LocalBoolViewColumn
   | LocalPersonViewColumn
   | PersonNotesViewColumn

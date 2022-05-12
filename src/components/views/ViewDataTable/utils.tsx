@@ -96,6 +96,9 @@ export function makeGridColDef(
       const submissions = (params as SurveySubmittedParams).value;
       return submissions?.length ? getNewestSubmission(submissions) : null;
     };
+  } else if (viewCol.type == COLUMN_TYPE.JOURNEY_ASSIGNEE) {
+    colDef.type = 'number';
+    colDef.valueGetter = (params) => (params.value as unknown[]).length;
   }
 
   return colDef;

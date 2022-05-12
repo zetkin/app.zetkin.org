@@ -70,6 +70,20 @@ describe('EditTextInPlace', () => {
     expect(onChange).toHaveBeenCalledTimes(0);
   });
 
+  it('does trigger onChange with no text if explicitly allowed', async () => {
+    const onChange = jest.fn(props.onChange);
+    const { getByDisplayValue } = render(
+      <EditTextinPlace allowEmpty={true} {...{ ...props, onChange }} />
+    );
+    const inputEl = getByDisplayValue(props.value);
+    userEvent.click(inputEl);
+
+    // If user tries to save no text
+    userEvent.clear(inputEl);
+    userEvent.keyboard('{enter}');
+    expect(onChange).toHaveBeenCalledTimes(1);
+  });
+
   it('resets when text is discarded with "escape"', async () => {
     const onChange = jest.fn(props.onChange);
     const { getByDisplayValue } = render(

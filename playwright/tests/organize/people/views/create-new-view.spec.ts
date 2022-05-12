@@ -52,9 +52,11 @@ test.describe('Views list page', () => {
     );
 
     await page.goto(appUri + '/organize/1/people');
-    await page.click('data-testid=create-view-action-button');
 
-    await page.waitForNavigation();
+    await Promise.all([
+      page.waitForNavigation(),
+      page.click('data-testid=create-view-action-button'),
+    ]);
 
     // Get POST requests for creating new view and columns
     const columnPostLogs = moxy

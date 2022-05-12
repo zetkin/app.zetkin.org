@@ -196,6 +196,13 @@ export interface ZetkinActivity {
   info_text: string | null;
 }
 
+export interface ZetkinTagGroup {
+  id: number;
+  title: string;
+  description?: string;
+  organization: ZetkinOrganization;
+}
+
 export interface ZetkinTag {
   id: number;
   title: string;
@@ -203,8 +210,21 @@ export interface ZetkinTag {
   hidden: boolean;
   organization: ZetkinOrganization;
   color: string | null;
-  group: { id: number; title: string } | null;
+  group: ZetkinTagGroup | null;
   value?: string | number;
+  value_type: string | null;
+}
+
+export interface ZetkinTagPostBody
+  extends Partial<Omit<ZetkinTag, 'id' | 'group' | 'organization'>> {
+  title: string;
+  group_id?: number | null;
+}
+
+export interface ZetkinTagPatchBody
+  extends Partial<Omit<ZetkinTag, 'group' | 'organization'>> {
+  id: number;
+  group_id?: number | null;
 }
 
 export enum CUSTOM_FIELD_TYPE {
@@ -222,17 +242,9 @@ export interface ZetkinDataField {
   slug: string;
 }
 
-export type {
-  ZetkinTask,
-  ZetkinAssignedTask,
-  ZetkinQuery,
-  ZetkinSmartSearchFilter,
-};
-
-export type { ZetkinView, ZetkinViewColumn, ZetkinViewRow };
-
 export interface ZetkinJourney {
   id: number;
+  opening_note_template: string;
   organization: ZetkinOrganization;
   plural_label: string;
   singular_label: string;
@@ -255,13 +267,14 @@ export interface ZetkinJourneyInstance {
   // as item, not when retrieved as collection
   milestones?: ZetkinJourneyMilestoneStatus[] | null;
   next_milestone: ZetkinJourneyMilestoneStatus | null;
+  opening_note: string;
   organization: {
     id: number;
     title: string;
   };
   subjects: ZetkinPerson[];
   summary: string;
-  tags: Pick<ZetkinTag, 'id' | 'title' | 'group' | 'color' | 'value'>[];
+  tags: ZetkinTag[];
   title?: string;
   updated: string;
 }
@@ -278,4 +291,25 @@ export interface ZetkinJourneyMilestoneStatus {
   id: number;
   title: string;
   description: string;
+}
+
+export type {
+  ZetkinTask,
+  ZetkinAssignedTask,
+  ZetkinQuery,
+  ZetkinSmartSearchFilter,
+  ZetkinView,
+  ZetkinViewColumn,
+  ZetkinViewRow,
+};
+export type ZetkinUpdateAssignee = {
+  assignee: Pick<ZetkinPerson, 'id' | 'first_name' | 'last_name'>;
+};
+
+export interface ZetkinUpdate {
+  actor?: Pick<ZetkinPerson, 'id' | 'first_name' | 'last_name'>;
+  created_at: string;
+  details: ZetkinUpdateAssignee;
+  type: 'journeyInstance.assignee.add';
+  target: { id: number; title: string };
 }

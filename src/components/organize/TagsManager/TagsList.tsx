@@ -8,9 +8,9 @@ import TagChip from './TagChip';
 
 const TagsList: React.FunctionComponent<{
   isGrouped: boolean;
-  onRemove?: (tag: ZetkinTag) => void;
+  onUnassignTag?: (tag: ZetkinTag) => void;
   tags: ZetkinTag[];
-}> = ({ tags, isGrouped, onRemove }) => {
+}> = ({ tags, isGrouped, onUnassignTag }) => {
   const intl = useIntl();
 
   if (isGrouped) {
@@ -23,17 +23,19 @@ const TagsList: React.FunctionComponent<{
 
     return (
       <>
-        {Object.entries(groupedTags).map(([id, group], i) => (
+        {groupedTags.map((group, i) => (
           <Box key={i} mb={1}>
             <Typography variant="overline">{group.title}</Typography>
             <Box
-              data-testid={`TagsManager-groupedTags-${id}`}
+              data-testid={`TagsManager-groupedTags-${group.id}`}
               display="flex"
               flexWrap="wrap"
-              style={{ gap: 8 }}
+              style={{ gap: 4 }}
             >
-              {group.tags.map((tag, i) => {
-                return <TagChip key={i} onDelete={onRemove} tag={tag} />;
+              {group.tags.map((tag) => {
+                return (
+                  <TagChip key={tag.id} onDelete={onUnassignTag} tag={tag} />
+                );
               })}
             </Box>
           </Box>
@@ -44,10 +46,12 @@ const TagsList: React.FunctionComponent<{
 
   //   Flat list of tags
   return (
-    <Box display="flex" flexWrap="wrap" style={{ gap: 8 }}>
-      {tags.map((tag, i) => {
-        return <TagChip key={i} onDelete={onRemove} tag={tag} />;
-      })}
+    <Box display="flex" flexWrap="wrap" style={{ gap: 4 }}>
+      {tags
+        .sort((tag0, tag1) => tag0.title.localeCompare(tag1.title))
+        .map((tag) => {
+          return <TagChip key={tag.id} onDelete={onUnassignTag} tag={tag} />;
+        })}
     </Box>
   );
 };

@@ -1,6 +1,19 @@
 tagsManager:
   addTag: Add tag
+  createNamedTag: 'Create tag: <b>{name}</b>'
+  createTag: New Tag
   groupTags: Group tags
   noTags: No tags applied
+  submitCreateTagButton: Create and apply
+  tagDialog:
+    colorErrorText: Please enter a valid hex code
+    colorLabel: Color
+    createGroup: New Group
+    dialogTitle: Create Tag
+    groupCreatePrompt: Add "{groupName}"
+    groupLabel: Group
+    groupSelectPlaceholder: Type to search or create a group
+    titleErrorText: Tag name is required
+    titleLabel: Tag name
   title: Tags
   ungroupedHeader: No group

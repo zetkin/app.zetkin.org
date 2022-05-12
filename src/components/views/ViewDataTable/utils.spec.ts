@@ -1,3 +1,5 @@
+import { GridValueGetterParams } from '@mui/x-data-grid-pro';
+
 import { COLUMN_TYPE } from 'types/views';
 import mockPersonNote from 'utils/testing/mocks/mockPersonNote';
 import mockViewCol from 'utils/testing/mocks/mockViewCol';
@@ -97,6 +99,22 @@ describe('makeGridColDef', () => {
       1
     );
     expect(colDef.renderCell).toBeTruthy();
+  });
+
+  it('returns number cell for journey_assignee', () => {
+    const colDef = makeGridColDef(
+      mockViewCol({
+        type: COLUMN_TYPE.JOURNEY_ASSIGNEE,
+      }),
+      1
+    );
+    expect(colDef.type).toEqual('number');
+    expect(colDef.valueGetter).toBeTruthy();
+    expect(
+      colDef.valueGetter!({
+        value: [{}, {}],
+      } as GridValueGetterParams)
+    ).toEqual(2);
   });
 });
 
