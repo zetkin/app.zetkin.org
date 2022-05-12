@@ -50,17 +50,26 @@ const JourneyMilestoneCard = ({
   };
 
   return (
-    <Box data-testid={`JourneyMilestoneCard`}>
-      <Checkbox
-        checked={checked}
-        data-testid="JourneyMilestoneCard-completed"
-        onChange={(e) => {
-          setChecked(e.target.checked);
-          const completed = e.target.checked ? dayjs().toJSON() : null;
-          saveCompleted(completed);
-        }}
-      />
-      <Typography>{milestone.title}</Typography>
+    <Box
+      alignItems="center"
+      data-testid={`JourneyMilestoneCard`}
+      display="flex"
+      flexDirection="row"
+      justifyContent="space-between"
+      pt={3}
+    >
+      <Box alignItems="center" display="flex" flexDirection="row">
+        <Checkbox
+          checked={checked}
+          data-testid="JourneyMilestoneCard-completed"
+          onChange={(e) => {
+            setChecked(e.target.checked);
+            const completed = e.target.checked ? dayjs().toJSON() : null;
+            saveCompleted(completed);
+          }}
+        />
+        <Typography variant="h6">{milestone.title}</Typography>
+      </Box>
       <DatePicker
         clearable
         data-testid="JourneyMilestoneCard-datePicker"
@@ -68,13 +77,10 @@ const JourneyMilestoneCard = ({
         format={intl.formatDate(deadline as string)}
         inputVariant="outlined"
         label={
-          milestone.deadline
-            ? intl.formatMessage({
-                id: 'pages.organizeJourneyInstance.deadlineLabel',
-              })
-            : intl.formatMessage({
-                id: 'pages.organizeJourneyInstance.addDateLabel',
-              })
+          !deadline &&
+          intl.formatMessage({
+            id: 'pages.organizeJourneyInstance.addDateLabel',
+          })
         }
         onChange={(newDeadline) => {
           if (newDeadline && newDeadline.isValid()) {
