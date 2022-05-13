@@ -15,9 +15,9 @@ import SnackbarContext from 'hooks/SnackbarContext';
 import SubmitCancelButtons from 'components/forms/common/SubmitCancelButtons';
 import { useRouter } from 'next/router';
 import ZetkinAutoTextArea from 'components/ZetkinAutoTextArea';
-import { ZetkinPerson } from 'types/zetkin';
 import ZetkinQuery from 'components/ZetkinQuery';
 import { journeyInstancesResource, journeyResource } from 'api/journeys';
+import { ZetkinPerson, ZetkinTag } from 'types/zetkin';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -69,6 +69,7 @@ const NewJourneyPage: PageWithLayout<NewJourneyPageProps> = ({
 }) => {
   const [assignees, setAssignees] = useState<ZetkinPerson[]>([]);
   const [subjects, setSubjects] = useState<ZetkinPerson[]>([]);
+  const [tags, setTags] = useState<ZetkinTag[]>([]);
   const [note, setNote] = useState('');
   const [editedNote, setEditedNote] = useState(false);
   const [title, setTitle] = useState('');
@@ -127,7 +128,7 @@ const NewJourneyPage: PageWithLayout<NewJourneyPageProps> = ({
               }
               title={
                 <EditTextinPlace
-                  allowEmpty={true}
+                  allowEmpty
                   onChange={async (value) => setTitle(value)}
                   placeholder={intl.formatMessage(
                     { id: 'pages.organizeNewJourneyInstance.title' },
@@ -151,7 +152,7 @@ const NewJourneyPage: PageWithLayout<NewJourneyPageProps> = ({
                     onSubmit={async (ev) => {
                       ev.preventDefault();
                       createInstanceMutation.mutate(
-                        { assignees, note, subjects, title },
+                        { assignees, note, subjects, tags, title },
                         {
                           onError: () => {
                             showSnackbar('error');
@@ -189,6 +190,7 @@ const NewJourneyPage: PageWithLayout<NewJourneyPageProps> = ({
                       assignees,
                       next_milestone: null,
                       subjects,
+                      tags,
                     }}
                     onAddAssignee={(person) =>
                       setAssignees([...assignees, person])
@@ -196,6 +198,7 @@ const NewJourneyPage: PageWithLayout<NewJourneyPageProps> = ({
                     onAddSubject={(person) =>
                       setSubjects([...subjects, person])
                     }
+                    onAssignTag={(tag) => setTags([...tags, tag])}
                     onRemoveAssignee={(person) =>
                       setAssignees(
                         assignees.filter((assignee) => assignee.id != person.id)
@@ -205,6 +208,9 @@ const NewJourneyPage: PageWithLayout<NewJourneyPageProps> = ({
                       setSubjects(
                         subjects.filter((subject) => subject.id != person.id)
                       )
+                    }
+                    onUnassignTag={(tagToUnassign) =>
+                      setTags(tags.filter((tag) => tag.id != tagToUnassign.id))
                     }
                   />
                 </Grid>

@@ -11,6 +11,7 @@ import {
   ZetkinJourney,
   ZetkinJourneyInstance,
   ZetkinPerson,
+  ZetkinTag,
 } from 'types/zetkin';
 
 export const journeysResource = (orgId: string) => {
@@ -43,6 +44,7 @@ export const journeyInstancesResource = (orgId: string, journeyId: string) => {
         assignees: ZetkinPerson[];
         note: string;
         subjects: ZetkinPerson[];
+        tags: ZetkinTag[];
         title: string;
       },
       ZetkinJourneyInstance
