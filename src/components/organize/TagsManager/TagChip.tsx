@@ -13,11 +13,14 @@ import { DEFAULT_TAG_COLOR } from './utils';
 import { getContrastColor } from 'utils/colorUtils';
 import { ZetkinTag } from 'types/zetkin';
 
+type TagChipSize = 'small' | 'medium' | 'large';
+
 interface StyleProps {
   clickable: boolean;
   deletable: boolean;
   disabled: boolean;
   hover: boolean;
+  size: TagChipSize;
   tag: ZetkinTag;
 }
 
@@ -27,6 +30,12 @@ const useStyles = makeStyles<Theme, StyleProps>(() => ({
     cursor: ({ clickable, disabled }) =>
       clickable && !disabled ? 'pointer' : 'default',
     display: 'flex',
+    fontSize: ({ size }) =>
+      ({
+        large: '1.2em',
+        medium: '1.0em',
+        small: '0.8em',
+      }[size]),
     lineHeight: 'normal',
     marginRight: '0.1em',
     opacity: ({ disabled }) => (disabled ? 0.5 : 1.0),
@@ -44,8 +53,13 @@ const useStyles = makeStyles<Theme, StyleProps>(() => ({
       deletable && hover ? 'transform 0.1s 0.1s' : 'transform 0.1s',
   },
   deleteContainer: {
-    padding: ({ deletable, hover }) =>
-      deletable && hover ? '0.2em 1.6em 0.2em 0.4em' : '0.2em 1em',
+    padding: ({ deletable, hover }) => {
+      if (deletable) {
+        return hover ? '0.2em 1.6em 0.2em 0.4em' : '0.2em 1em';
+      } else {
+        return '0.2em 0.6em';
+      }
+    },
     position: 'relative',
     transition: 'padding 0.1s',
   },
@@ -59,7 +73,10 @@ const useStyles = makeStyles<Theme, StyleProps>(() => ({
   label: {
     backgroundColor: ({ tag }) => tag.color || DEFAULT_TAG_COLOR,
     color: ({ tag }) => getContrastColor(tag.color || DEFAULT_TAG_COLOR),
+    maxWidth: '100%',
+    overflow: 'hidden',
     padding: '0.2em 0.4em 0.2em 1em',
+    textOverflow: 'ellipsis',
   },
   value: {
     backgroundColor: ({ tag }) => lighten(tag.color || DEFAULT_TAG_COLOR, 0.7),
@@ -70,18 +87,38 @@ const useStyles = makeStyles<Theme, StyleProps>(() => ({
   },
 }));
 
+const TagToolTip: React.FunctionComponent<{
+  children: JSX.Element;
+  tag: ZetkinTag;
+}> = ({ children, tag }) => {
+  return (
+    <Tooltip
+      arrow
+      title={
+        <>
+          {tag.title} <br /> {tag.description || ''}
+        </>
+      }
+    >
+      {children}
+    </Tooltip>
+  );
+};
+
 const TagChip: React.FunctionComponent<{
   disabled?: boolean;
   onClick?: (tag: ZetkinTag) => void;
   onDelete?: (tag: ZetkinTag) => void;
+  size?: TagChipSize;
   tag: ZetkinTag;
-}> = ({ disabled = false, onClick, onDelete, tag }) => {
+}> = ({ disabled = false, onClick, onDelete, size = 'medium', tag }) => {
   const [hover, setHover] = useState(false);
   const classes = useStyles({
     clickable: !!onClick,
     deletable: !!onDelete,
     disabled,
     hover,
+    size,
     tag,
   });
 
@@ -108,9 +145,9 @@ const TagChip: React.FunctionComponent<{
     >
       {tag.value_type && (
         <>
-          <Tooltip arrow title={tag.description || ''}>
+          <TagToolTip tag={tag}>
             <Box className={classes.label}>{tag.title}</Box>
-          </Tooltip>
+          </TagToolTip>
           <Tooltip arrow title={tag.value || ''}>
             <Box
               className={classes.value + ' ' + classes.deleteContainer}
@@ -123,12 +160,12 @@ const TagChip: React.FunctionComponent<{
         </>
       )}
       {!tag.value_type && (
-        <Tooltip arrow title={tag.description || ''}>
+        <TagToolTip tag={tag}>
           <Box className={classes.label + ' ' + classes.deleteContainer}>
             {tag.title}
             {deleteButton}
           </Box>
-        </Tooltip>
+        </TagToolTip>
       )}
     </Box>
   );
