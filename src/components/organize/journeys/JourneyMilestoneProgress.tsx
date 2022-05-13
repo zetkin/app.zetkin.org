@@ -13,14 +13,14 @@ const JourneyMilestoneProgress = ({
 }): JSX.Element => {
   const completed = milestones.filter((milestone) => milestone.completed);
 
-  const percentCompleted = Math.floor(
+  const percentComplete = Math.floor(
     (completed.length / milestones.length) * 100
   );
 
   return (
     <>
       <Box mr={1} width="100%">
-        <LinearProgress value={percentCompleted} variant="determinate" />
+        <LinearProgress value={percentComplete} variant="determinate" />
       </Box>
       <Typography
         style={{
@@ -29,8 +29,10 @@ const JourneyMilestoneProgress = ({
           textTransform: 'lowercase',
         }}
       >
-        {`${percentCompleted}% `}
-        <Msg id="pages.organizeJourneyInstance.complete" />
+        <Msg
+          id="pages.organizeJourneyInstance.percentComplete"
+          values={{ percentComplete }}
+        />
       </Typography>
       {next_milestone && (
         <Box
