@@ -10,6 +10,7 @@ import {
 import {
   ZetkinJourney,
   ZetkinJourneyInstance,
+  ZetkinJourneyMilestoneStatus,
   ZetkinPerson,
 } from 'types/zetkin';
 
@@ -74,5 +75,21 @@ export const journeyInstanceResource = (orgId: string, instanceId: string) => {
     >(key, url, {
       method: 'PATCH',
     }),
+  };
+};
+
+export const journeyMilestoneStatusResource = (
+  orgId: string,
+  instanceId: string,
+  milestoneId: string
+) => {
+  const key = ['journeyMilestone', orgId, instanceId, milestoneId];
+  const url = `/orgs/${orgId}/journey_instances/${instanceId}/milestones/${milestoneId}`;
+
+  return {
+    useUpdate: createUseMutation<
+      Partial<ZetkinJourneyMilestoneStatus>,
+      ZetkinJourneyMilestoneStatus
+    >(key, url, { method: 'PATCH' }),
   };
 };

@@ -10,7 +10,7 @@ import {
 } from '../../../../../../../src/types/zetkin';
 
 // Milestones
-const AttendMeeting: ZetkinJourneyMilestoneStatus = {
+export const AttendMeeting: ZetkinJourneyMilestoneStatus = {
   completed: null,
   deadline: '2022-06-18T00:29:12+02:00',
   description: '',

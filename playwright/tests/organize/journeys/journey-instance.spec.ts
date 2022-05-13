@@ -35,6 +35,29 @@ test.describe('Journey instance page', () => {
     ).toEqual(2);
   });
 
+  test('navigates to Milestones page when clicking tab', async ({
+    appUri,
+    moxy,
+    page,
+  }) => {
+    moxy.setZetkinApiMock(
+      `/orgs/${KPD.id}/journeys/${MemberOnboarding.id}`,
+      'get',
+      MemberOnboarding
+    );
+    moxy.setZetkinApiMock(
+      `/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}`,
+      'get',
+      ClarasOnboarding
+    );
+
+    await page.goto(appUri + '/organize/1/journeys/1/1');
+    await page.locator('button[role="tab"]:has-text("Milestones")').click();
+    await page.waitForNavigation();
+
+    expect(page.url()).toEqual(appUri + '/organize/1/journeys/1/1/milestones');
+  });
+
   test.describe('Editing the journey summary', () => {
     test('User can edit summary', async ({ appUri, moxy, page }) => {
       moxy.setZetkinApiMock(
