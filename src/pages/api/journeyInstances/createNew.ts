@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { NextApiRequest, NextApiResponse } from 'next';
 
 import { createApiFetch } from 'utils/apiFetch';
@@ -65,17 +66,21 @@ const createNewInstance = async (
       );
     };
 
+    const putRequests = [];
+
     if (body.assignees) {
-      await putPeople('assignees', body.assignees);
+      putRequests.push(putPeople('assignees', body.assignees));
     }
 
     if (body.subjects) {
-      await putPeople('subjects', body.subjects);
+      putRequests.push(putPeople('subjects', body.subjects));
     }
 
     if (body.tags) {
-      await putTags(body.tags);
+      putRequests.push(putTags(body.tags));
     }
+
+    await Promise.all(putRequests);
 
     res.status(200).json(instData);
   } catch (e) {
