@@ -1,12 +1,12 @@
 import { expect } from '@playwright/test';
 
-import ActivistTag from '../../../mockData/orgs/KPD/tags/Activist';
-import ClaraZetkin from '../../../mockData/orgs/KPD/people/ClaraZetkin';
-import CodingSkillsTag from '../../../mockData/orgs/KPD/tags/Coding';
-import KPD from '../../../mockData/orgs/KPD';
-import MarxistTraining from '../../../mockData/orgs/KPD/journeys/MarxistTraining';
-import test from '../../../fixtures/next';
-import { ZetkinJourneyInstance } from '../../../../src/types/zetkin';
+import ActivistTag from '../../../../mockData/orgs/KPD/tags/Activist';
+import ClaraZetkin from '../../../../mockData/orgs/KPD/people/ClaraZetkin';
+import CodingSkillsTag from '../../../../mockData/orgs/KPD/tags/Coding';
+import KPD from '../../../../mockData/orgs/KPD';
+import MarxistTraining from '../../../../mockData/orgs/KPD/journeys/MarxistTraining';
+import test from '../../../../fixtures/next';
+import { ZetkinJourneyInstance } from '../../../../../src/types/zetkin';
 
 test.describe('Creating a journey instance', () => {
   test.beforeEach(async ({ moxy, login }) => {

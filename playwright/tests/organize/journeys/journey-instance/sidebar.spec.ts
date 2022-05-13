@@ -1,9 +1,12 @@
 import { expect } from '@playwright/test';
-import test from '../../../fixtures/next';
+import test from '../../../../fixtures/next';
 
-import ClarasOnboarding from '../../../mockData/orgs/KPD/journeys/MemberOnboarding/instances/ClarasOnboarding';
-import KPD from '../../../mockData/orgs/KPD';
-import MemberOnboarding from '../../../mockData/orgs/KPD/journeys/MemberOnboarding';
+import ActivistTag from '../../../../mockData/orgs/KPD/tags/Activist';
+import ClarasOnboarding from '../../../../mockData/orgs/KPD/journeys/MemberOnboarding/instances/ClarasOnboarding';
+import CodingSkillsTag from '../../../../mockData/orgs/KPD/tags/Coding';
+import KPD from '../../../../mockData/orgs/KPD';
+import MemberOnboarding from '../../../../mockData/orgs/KPD/journeys/MemberOnboarding';
+import PlaysGuitarTag from '../../../../mockData/orgs/KPD/tags/PlaysGuitar';
 
 test.describe('Journey instance sidebar', () => {
   test.beforeEach(async ({ moxy, login }) => {
@@ -307,6 +310,108 @@ test.describe('Journey instance sidebar', () => {
           )
           .isVisible()
       ).toBeFalsy();
+    });
+  });
+
+  test.describe('Has tags section', () => {
+    test.beforeEach(({ moxy }) => {
+      moxy.setZetkinApiMock(`/orgs/${KPD.id}/tag_groups`, 'get', []);
+      moxy.setZetkinApiMock(
+        `/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}`,
+        'get',
+        ClarasOnboarding
+      );
+      moxy.setZetkinApiMock(
+        `/orgs/${KPD.id}/journeys/${ClarasOnboarding.id}`,
+        'get',
+        MemberOnboarding
+      );
+    });
+    test('that shows assigned tags', async ({ appUri, page, moxy }) => {
+      moxy.setZetkinApiMock(`/orgs/${KPD.id}/people/tags`, 'get', [
+        ActivistTag,
+        PlaysGuitarTag,
+      ]);
+
+      await Promise.all([
+        page.waitForResponse(`**/orgs/${KPD.id}/people/tags`),
+        page.waitForResponse(`**/orgs/${KPD.id}/tag_groups`),
+        await page.goto(appUri + '/organize/1/journeys/1/1'),
+      ]);
+
+      expect(
+        await page.locator(`text="${ActivistTag.title}"`).isVisible()
+      ).toBeTruthy();
+      expect(
+        await page.locator(`text="${PlaysGuitarTag.title}"`).isVisible()
+      ).toBeTruthy();
+    });
+    test('that that can assign a tag to the journey instance', async ({
+      appUri,
+      page,
+      moxy,
+    }) => {
+      moxy.setZetkinApiMock(`/orgs/${KPD.id}/people/tags`, 'get', [
+        ActivistTag,
+        CodingSkillsTag,
+        PlaysGuitarTag,
+      ]);
+
+      const { log: putTagLog } = moxy.setZetkinApiMock(
+        `/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}/tags/${CodingSkillsTag.id}`,
+        'put'
+      );
+
+      await Promise.all([
+        page.waitForResponse(`**/orgs/${KPD.id}/people/tags`),
+        page.waitForResponse(`**/orgs/${KPD.id}/tag_groups`),
+        page.goto(appUri + '/organize/1/journeys/1/1'),
+      ]);
+
+      await page.locator('text=Add tag').click();
+
+      await Promise.all([
+        page.waitForResponse(
+          `**/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}/tags/${CodingSkillsTag.id}`
+        ),
+        page.click(`text=${CodingSkillsTag.title}`),
+      ]);
+
+      // Expect to have made request to put tag
+      expect(putTagLog().length).toEqual(1);
+    });
+    test('that that can unassign a tag from the journey instance', async ({
+      appUri,
+      page,
+      moxy,
+    }) => {
+      moxy.setZetkinApiMock(`/orgs/${KPD.id}/people/tags`, 'get', [
+        ActivistTag,
+        PlaysGuitarTag,
+      ]);
+
+      const { log: deleteTagLog } = moxy.setZetkinApiMock(
+        `/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}/tags/${ActivistTag.id}`,
+        'delete'
+      );
+
+      await Promise.all([
+        page.waitForResponse(`**/orgs/${KPD.id}/people/tags`),
+        page.waitForResponse(`**/orgs/${KPD.id}/tag_groups`),
+        page.goto(appUri + '/organize/1/journeys/1/1'),
+      ]);
+
+      await page.locator(`text="${ActivistTag.title}"`).hover();
+
+      await Promise.all([
+        page.waitForResponse(
+          `**/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}/tags/${ActivistTag.id}`
+        ),
+        page.locator(`[data-testid=TagChip-deleteButton]`).first().click(),
+      ]);
+
+      // Expect to have made request to delete tag
+      expect(deleteTagLog().length).toEqual(1);
     });
   });
 });

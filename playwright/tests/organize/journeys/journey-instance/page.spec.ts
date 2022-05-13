@@ -1,10 +1,10 @@
 import { expect } from '@playwright/test';
-import test from '../../../fixtures/next';
+import test from '../../../../fixtures/next';
 
-import ClarasOnboarding from '../../../mockData/orgs/KPD/journeys/MemberOnboarding/instances/ClarasOnboarding';
-import KPD from '../../../mockData/orgs/KPD';
-import MemberOnboarding from '../../../mockData/orgs/KPD/journeys/MemberOnboarding';
-import { ZetkinJourneyInstance } from '../../../../src/types/zetkin';
+import ClarasOnboarding from '../../../../mockData/orgs/KPD/journeys/MemberOnboarding/instances/ClarasOnboarding';
+import KPD from '../../../../mockData/orgs/KPD';
+import MemberOnboarding from '../../../../mockData/orgs/KPD/journeys/MemberOnboarding';
+import { ZetkinJourneyInstance } from '../../../../../src/types/zetkin';
 
 test.describe('Journey instance page', () => {
   test.beforeEach(async ({ moxy, login }) => {
