@@ -61,6 +61,7 @@ export const journeyInstanceResource = (orgId: string, instanceId: string) => {
   const url = `/orgs/${orgId}/journey_instances/${instanceId}`;
 
   return {
+    key,
     prefetch: createPrefetch<ZetkinJourneyInstance>(key, url),
     useAddAssignee: createUseMutationPut({ key, url: `${url}/assignees` }),
     useAddSubject: createUseMutationPut({ key, url: `${url}/subjects` }),
@@ -71,7 +72,7 @@ export const journeyInstanceResource = (orgId: string, instanceId: string) => {
       url: `${url}/assignees`,
     }),
     useRemoveSubject: createUseMutationDelete({ key, url: `${url}/subjects` }),
-    useUnassignTag: createUseMutationPut({ key, url: `${url}/tags` }),
+    useUnassignTag: createUseMutationDelete({ key, url: `${url}/tags` }),
     useUpdate: createUseMutation<
       Partial<ZetkinJourneyInstance>,
       ZetkinJourneyInstance
