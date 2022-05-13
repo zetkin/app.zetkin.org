@@ -95,7 +95,7 @@ const TagsManager: React.FunctionComponent<
   Omit<
     TagsManagerProps,
     'availableGroups' | 'availableTags' | 'onCreateTag' | 'onEditTag'
-  > & { assignedTagsQueryKey?: Array<string> }
+  > & { onTagEdited: (tag: ZetkinTag) => void }
 > = (props) => {
   const { orgId } = useRouter().query;
 
@@ -103,7 +103,7 @@ const TagsManager: React.FunctionComponent<
   const tagGroupsQuery = tagGroupsResource(orgId as string).useQuery();
 
   const createTag = useCreateTag();
-  const editTag = useEditTag(props.assignedTagsQueryKey);
+  const editTag = useEditTag(props.onTagEdited);
 
   return (
     <ZetkinQuery queries={{ tagGroupsQuery, tagsQuery }}>

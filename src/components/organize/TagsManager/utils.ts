@@ -1,5 +1,4 @@
 import { useContext } from 'react';
-import { useQueryClient } from 'react-query';
 import { useRouter } from 'next/router';
 
 import SnackbarContext from 'hooks/SnackbarContext';
@@ -117,10 +116,9 @@ export const useCreateTag = (): ((tag: NewTag) => Promise<ZetkinTag>) => {
  * creating a new group for it.
  */
 export const useEditTag = (
-  keyToInvalidate?: Array<string>
+  successCallback?: (tag: ZetkinTag) => void
 ): ((tag: EditTag) => Promise<ZetkinTag>) => {
   const { orgId } = useRouter().query;
-  const queryClient = useQueryClient();
 
   const editTagMutation = tagsResource(orgId as string).useEdit();
   const createTagGroupMutation = tagGroupsResource(orgId as string).useCreate();
@@ -142,18 +140,14 @@ export const useEditTag = (
         tagWithNewGroup as ZetkinTagPatchBody,
         {
           onError: () => showSnackbar('error'),
-          ...(keyToInvalidate && {
-            onSettled: () => queryClient.invalidateQueries(keyToInvalidate),
-          }),
+          onSuccess: successCallback,
         }
       );
     } else {
       // Add tag with existing or no group
       return await editTagMutation.mutateAsync(tag, {
         onError: () => showSnackbar('error'),
-        ...(keyToInvalidate && {
-          onSettled: () => queryClient.invalidateQueries(keyToInvalidate),
-        }),
+        onSuccess: successCallback,
       });
     }
   };

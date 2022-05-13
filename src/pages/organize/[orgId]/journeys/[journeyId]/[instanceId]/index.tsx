@@ -1,6 +1,7 @@
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { useContext } from 'react';
+import { useQueryClient } from 'react-query';
 import { Divider, Grid } from '@material-ui/core';
 
 import JourneyInstanceLayout from 'layout/organize/JourneyInstanceLayout';
@@ -58,6 +59,7 @@ const JourneyDetailsPage: PageWithLayout<JourneyDetailsPageProps> = ({
   orgId,
 }) => {
   const {
+    key,
     useAddAssignee,
     useAddSubject,
     useAssignTag,
@@ -77,6 +79,7 @@ const JourneyDetailsPage: PageWithLayout<JourneyDetailsPageProps> = ({
   const journeyInstance = journeyInstanceQuery.data as ZetkinJourneyInstance;
 
   const { showSnackbar } = useContext(SnackbarContext);
+  const queryClient = useQueryClient();
 
   const onAddAssignee = (person: ZetkinPerson) => {
     addAssigneeMutation.mutate(person.id, {
@@ -130,6 +133,9 @@ const JourneyDetailsPage: PageWithLayout<JourneyDetailsPageProps> = ({
             }}
             onRemoveAssignee={onRemoveAssignee}
             onRemoveSubject={onRemoveSubject}
+            onTagEdited={() => {
+              queryClient.invalidateQueries(key);
+            }}
             onUnassignTag={(tag) => {
               unassignTagMutation.mutate(tag.id);
             }}

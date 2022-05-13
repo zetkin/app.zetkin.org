@@ -209,6 +209,12 @@ const NewJourneyPage: PageWithLayout<NewJourneyPageProps> = ({
                         subjects.filter((subject) => subject.id != person.id)
                       )
                     }
+                    onTagEdited={(editedTag) => {
+                      setTags([
+                        ...tags.filter((tag) => tag.id != editedTag.id),
+                        editedTag,
+                      ]);
+                    }}
                     onUnassignTag={(tagToUnassign) =>
                       setTags(tags.filter((tag) => tag.id != tagToUnassign.id))
                     }

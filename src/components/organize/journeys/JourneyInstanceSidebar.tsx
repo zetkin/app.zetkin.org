@@ -1,5 +1,4 @@
 import { Add } from '@material-ui/icons';
-import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { Button, ClickAwayListener, Divider, Grid } from '@material-ui/core';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
@@ -22,6 +21,7 @@ const JourneyInstanceSidebar = ({
   onAddSubject,
   onRemoveAssignee,
   onRemoveSubject,
+  onTagEdited,
   onUnassignTag,
 }: {
   journeyInstance: Pick<
@@ -33,10 +33,10 @@ const JourneyInstanceSidebar = ({
   onAssignTag: (tag: ZetkinTag) => void;
   onRemoveAssignee: (person: ZetkinPersonType) => void;
   onRemoveSubject: (person: ZetkinPersonType) => void;
+  onTagEdited: (tag: ZetkinTag) => void;
   onUnassignTag: (tag: ZetkinTag) => void;
 }): JSX.Element => {
   const intl = useIntl();
-  const { orgId } = useRouter().query;
 
   const [addingAssignee, setAddingAssignee] = useState<boolean>(false);
   const [addingSubject, setAddingSubject] = useState<boolean>(false);
@@ -149,16 +149,8 @@ const JourneyInstanceSidebar = ({
       <Grid item xs={12}>
         <TagsManager
           assignedTags={journeyInstance.tags}
-          assignedTagsQueryKey={
-            journeyInstance?.id
-              ? [
-                  'journeyInstance',
-                  orgId as string,
-                  journeyInstance.id.toString(),
-                ]
-              : undefined
-          }
           onAssignTag={onAssignTag}
+          onTagEdited={onTagEdited}
           onUnassignTag={onUnassignTag}
         />
         <Divider />

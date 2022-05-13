@@ -2,6 +2,7 @@ import { GetServerSideProps } from 'next';
 import { Grid } from '@material-ui/core';
 import Head from 'next/head';
 import { useContext } from 'react';
+import { useQueryClient } from 'react-query';
 import { useRouter } from 'next/router';
 
 import { PageWithLayout } from 'types';
@@ -54,6 +55,7 @@ export type PersonPageProps = {
 const PersonProfilePage: PageWithLayout<PersonPageProps> = (props) => {
   const { orgId, personId } = useRouter().query;
   const { showSnackbar } = useContext(SnackbarContext);
+  const queryClient = useQueryClient();
 
   const {
     key: personTagsKey,
@@ -93,12 +95,14 @@ const PersonProfilePage: PageWithLayout<PersonPageProps> = (props) => {
             {({ queries: { personTagsQuery } }) => (
               <TagsManager
                 assignedTags={personTagsQuery.data}
-                assignedTagsQueryKey={personTagsKey}
                 onAssignTag={(tag) =>
                   assignTagMutation.mutate(tag.id, {
                     onError: () => showSnackbar('error'),
                   })
                 }
+                onTagEdited={() => {
+                  queryClient.invalidateQueries(personTagsKey);
+                }}
                 onUnassignTag={(tag) =>
                   unassignTagMutation.mutate(tag.id, {
                     onError: () => showSnackbar('error'),
