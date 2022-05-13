@@ -10,46 +10,52 @@ import JourneyInstanceSidebar from 'components/organize/journeys/JourneyInstance
 import JourneyInstanceSummary from 'components/organize/journeys/JourneyInstanceSummary';
 import { organizationResource } from 'api/organizations';
 import { PageWithLayout } from 'types';
-import { scaffold } from 'utils/next';
 import SnackbarContext from 'hooks/SnackbarContext';
 import TimelineWrapper from 'components/TimelineWrapper';
+import { scaffold, ScaffoldedGetServerSideProps } from 'utils/next';
 import { ZetkinJourneyInstance, ZetkinPerson } from 'types/zetkin';
 
-const scaffoldOptions = {
+export const scaffoldOptions = {
   authLevelRequired: 2,
   localeScope: ['layout.organize', 'misc', 'pages.organizeJourneyInstance'],
 };
 
-export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
-  const { orgId, instanceId } = ctx.params!;
+export const getJourneyInstanceScaffoldProps: ScaffoldedGetServerSideProps =
+  async (ctx) => {
+    const { orgId, instanceId } = ctx.params!;
 
-  const { state: orgQueryState } = await organizationResource(
-    orgId as string
-  ).prefetch(ctx);
+    const { state: orgQueryState } = await organizationResource(
+      orgId as string
+    ).prefetch(ctx);
 
-  const { state: journeyInstanceQueryState } = await journeyInstanceResource(
-    orgId as string,
-    instanceId as string
-  ).prefetch(ctx);
+    const { state: journeyInstanceQueryState } = await journeyInstanceResource(
+      orgId as string,
+      instanceId as string
+    ).prefetch(ctx);
 
-  if (
-    orgQueryState?.status === 'success' &&
-    journeyInstanceQueryState?.status === 'success'
-  ) {
-    return {
-      props: {
-        instanceId,
-        orgId,
-      },
-    };
-  } else {
-    return {
-      notFound: true,
-    };
-  }
-}, scaffoldOptions);
+    if (
+      orgQueryState?.status === 'success' &&
+      journeyInstanceQueryState?.status === 'success'
+    ) {
+      return {
+        props: {
+          instanceId,
+          orgId,
+        },
+      };
+    } else {
+      return {
+        notFound: true,
+      };
+    }
+  };
 
-interface JourneyDetailsPageProps {
+export const getServerSideProps: GetServerSideProps = scaffold(
+  getJourneyInstanceScaffoldProps,
+  scaffoldOptions
+);
+
+export interface JourneyDetailsPageProps {
   instanceId: string;
   orgId: string;
 }

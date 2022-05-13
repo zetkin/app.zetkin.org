@@ -287,12 +287,17 @@ test.describe('Journey instance sidebar', () => {
         { ...ClarasOnboarding, subjects: [] }
       );
 
-      //find x-icon and click it
-      await page
-        .locator(
-          `data-testid=JourneyPerson-remove-${ClarasOnboarding.subjects[0].id}`
-        )
-        .click();
+      //find x-icon and click it, then wait for re-fetch of invalidated instance data
+      await Promise.all([
+        page.waitForResponse(
+          `**/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}`
+        ),
+        page
+          .locator(
+            `data-testid=JourneyPerson-remove-${ClarasOnboarding.subjects[0].id}`
+          )
+          .click(),
+      ]);
 
       //there should be no Clara in list of subejcts
       expect(

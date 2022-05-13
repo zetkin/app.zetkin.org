@@ -99,6 +99,10 @@ const JourneyInstanceLayout: React.FunctionComponent = ({ children }) => {
           href: '/',
           messageId: 'layout.organize.journeys.tabs.timeline',
         },
+        {
+          href: '/milestones',
+          messageId: 'layout.organize.journeys.tabs.milestones',
+        },
       ]}
       title={
         <>
