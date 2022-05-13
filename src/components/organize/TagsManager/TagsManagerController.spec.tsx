@@ -172,7 +172,9 @@ describe('<TagsManagerController />', () => {
     hover(tagOption);
 
     // Click delete button
-    const removeTagButton = container.querySelector(`.MuiChip-deleteIcon`);
+    const removeTagButton = container.querySelector(
+      '[data-testid=TagChip-deleteButton]'
+    );
     expect(removeTagButton).not.toBeNull();
     if (removeTagButton) {
       click(removeTagButton);

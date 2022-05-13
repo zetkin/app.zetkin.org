@@ -10,6 +10,7 @@ const OrganizerTag: ZetkinTag = {
   id: 3,
   organization: { id: KPD.id, title: KPD.title },
   title: 'Organiser',
+  value_type: null,
 };
 
 export default OrganizerTag;

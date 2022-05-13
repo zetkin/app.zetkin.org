@@ -47,7 +47,13 @@ test.describe('Task assignees', async () => {
     await page.click('data-testid=StartsWith-select');
     await page.click('data-testid=StartsWith-select-all');
     await page.click('data-testid=FilterForm-saveButton');
-    await page.click('data-testid=QueryOverview-saveButton');
+
+    await Promise.all([
+      page.waitForResponse(
+        `**/orgs/1/people/queries/${SpeakToFriend.target.id}`
+      ),
+      page.click('data-testid=QueryOverview-saveButton'),
+    ]);
 
     // Check body of request
     const patchRequest = moxy

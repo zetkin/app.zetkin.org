@@ -10,6 +10,7 @@ const ActivistTag: ZetkinTag = {
   id: 1,
   organization: { id: KPD.id, title: KPD.title },
   title: 'Activist',
+  value_type: null,
 };
 
 export default ActivistTag;

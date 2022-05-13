@@ -30,7 +30,7 @@ const TagsList: React.FunctionComponent<{
               data-testid={`TagsManager-groupedTags-${group.id}`}
               display="flex"
               flexWrap="wrap"
-              style={{ gap: 8 }}
+              style={{ gap: 4 }}
             >
               {group.tags.map((tag) => {
                 return (
@@ -46,7 +46,7 @@ const TagsList: React.FunctionComponent<{
 
   //   Flat list of tags
   return (
-    <Box display="flex" flexWrap="wrap" style={{ gap: 8 }}>
+    <Box display="flex" flexWrap="wrap" style={{ gap: 4 }}>
       {tags
         .sort((tag0, tag1) => tag0.title.localeCompare(tag1.title))
         .map((tag) => {
