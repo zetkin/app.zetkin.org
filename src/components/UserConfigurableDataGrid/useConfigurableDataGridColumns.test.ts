@@ -304,4 +304,28 @@ describe('useConfigurableDataGridColumns', () => {
       expect(mockSetState).toHaveBeenCalledTimes(1);
     });
   });
+
+  describe('Complex interactions', () => {
+    test('handles reorder followed by resize', () => {
+      const inputColumns = mockColumns(3);
+      const { setColumnOrder, setColumnWidth } = useConfigurableDataGridColumns(
+        'key',
+        inputColumns,
+        mockStorage
+      );
+
+      setColumnOrder('field0', 1);
+      setColumnWidth('field1', 200);
+
+      const { columns } = useConfigurableDataGridColumns(
+        'key',
+        inputColumns,
+        mockStorage
+      );
+
+      expect(columns[0]).toEqual({ field: 'field1', width: 200 });
+      expect(columns[1]).toEqual({ field: 'field0', width: 100 });
+      expect(columns[2]).toEqual({ field: 'field2', width: 100 });
+    });
+  });
 });

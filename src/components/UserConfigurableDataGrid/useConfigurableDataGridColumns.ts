@@ -85,10 +85,11 @@ export default function useConfigurableDataGridColumns(
       storage.setItem(key, JSON.stringify(newConfig));
     },
     setColumnWidth: (field, width) => {
+      const storedConfig = loadConfig(storage, key);
       const newConfig = {
-        ...config,
+        ...storedConfig,
         fieldWidths: {
-          ...config.fieldWidths,
+          ...storedConfig.fieldWidths,
           [field]: width,
         },
       };
