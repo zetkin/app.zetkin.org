@@ -1,7 +1,8 @@
+/* eslint-disable no-console */
 import { NextApiRequest, NextApiResponse } from 'next';
 
 import { createApiFetch } from 'utils/apiFetch';
-import { ZetkinPerson } from 'types/zetkin';
+import { ZetkinPerson, ZetkinTag } from 'types/zetkin';
 
 const createNewInstance = async (
   req: NextApiRequest,
@@ -54,13 +55,32 @@ const createNewInstance = async (
       );
     };
 
+    const putTags = async (tags: ZetkinTag[]) => {
+      await Promise.all(
+        tags.map((tag: ZetkinTag) => {
+          apiFetch(
+            `/orgs/${orgId}/journey_instances/${instId}/tags/${tag.id}`,
+            { method: 'PUT' }
+          );
+        })
+      );
+    };
+
+    const putRequests = [];
+
     if (body.assignees) {
-      await putPeople('assignees', body.assignees);
+      putRequests.push(putPeople('assignees', body.assignees));
     }
 
     if (body.subjects) {
-      await putPeople('subjects', body.subjects);
+      putRequests.push(putPeople('subjects', body.subjects));
     }
+
+    if (body.tags) {
+      putRequests.push(putTags(body.tags));
+    }
+
+    await Promise.all(putRequests);
 
     res.status(200).json(instData);
   } catch (e) {

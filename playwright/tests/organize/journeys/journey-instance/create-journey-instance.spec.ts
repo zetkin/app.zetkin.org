@@ -1,10 +1,12 @@
 import { expect } from '@playwright/test';
 
-import ClaraZetkin from '../../../mockData/orgs/KPD/people/ClaraZetkin';
-import KPD from '../../../mockData/orgs/KPD';
-import MarxistTraining from '../../../mockData/orgs/KPD/journeys/MarxistTraining';
-import test from '../../../fixtures/next';
-import { ZetkinJourneyInstance } from '../../../../src/types/zetkin';
+import ActivistTag from '../../../../mockData/orgs/KPD/tags/Activist';
+import ClaraZetkin from '../../../../mockData/orgs/KPD/people/ClaraZetkin';
+import CodingSkillsTag from '../../../../mockData/orgs/KPD/tags/Coding';
+import KPD from '../../../../mockData/orgs/KPD';
+import MarxistTraining from '../../../../mockData/orgs/KPD/journeys/MarxistTraining';
+import test from '../../../../fixtures/next';
+import { ZetkinJourneyInstance } from '../../../../../src/types/zetkin';
 
 test.describe('Creating a journey instance', () => {
   test.beforeEach(async ({ moxy, login }) => {
@@ -38,7 +40,7 @@ test.describe('Creating a journey instance', () => {
     ).toEqual('Create new Marxist training');
   });
 
-  test('creates instance without subjects or assignees', async ({
+  test('creates instance without subjects, assignees, or tags', async ({
     appUri,
     moxy,
     page,
@@ -67,7 +69,7 @@ test.describe('Creating a journey instance', () => {
     expect(requests[0].data?.opening_note).toEqual('Some info');
   });
 
-  test('creates instance with subjects and assignees', async ({
+  test('creates instance with subjects, assignees, and tags', async ({
     appUri,
     moxy,
     page,
@@ -100,6 +102,17 @@ test.describe('Creating a journey instance', () => {
       'get',
       ClaraZetkin.id
     );
+    // Mock loading available tags and groups
+    moxy.setZetkinApiMock(`/orgs/${KPD.id}/people/tags`, 'get', [
+      ActivistTag,
+      CodingSkillsTag,
+    ]);
+    moxy.setZetkinApiMock(`/orgs/${KPD.id}/tag_groups`, 'get', []);
+    // Mock assigning tag to instance
+    const tagMock = moxy.setZetkinApiMock(
+      `/orgs/${KPD.id}/journey_instances/1857/tags/${ActivistTag.id}`,
+      'put'
+    );
 
     await page.goto(appUri + '/organize/1/journeys/1/new');
     await page
@@ -120,6 +133,14 @@ test.describe('Creating a journey instance', () => {
       .locator('.MuiAutocomplete-popper li:has-text("Clara Zetkin")')
       .click();
 
+    // Assign a tag
+    await page.locator('text=Add tag').click();
+    await page.click('text=Activist');
+    // Click outside of tags manager to close it
+    await page
+      .locator('data-testid=SubmitCancelButtons-submitButton')
+      .click({ force: true });
+
     await Promise.all([
       page.waitForResponse(async (res) => res.url().includes('createNew')),
       page.locator('data-testid=SubmitCancelButtons-submitButton').click(),
@@ -129,8 +150,10 @@ test.describe('Creating a journey instance', () => {
     // * POST to create journey instance
     // * PUT to add assignee
     // * PUT to add subject
+    // * PUT to assign tag
     expect(instMock.log().length).toBe(1);
     expect(assigneeMock.log().length).toBe(1);
     expect(subjectMock.log().length).toBe(1);
+    expect(tagMock.log().length).toBe(1);
   });
 });

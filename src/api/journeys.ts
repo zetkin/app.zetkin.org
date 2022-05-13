@@ -12,6 +12,7 @@ import {
   ZetkinJourneyInstance,
   ZetkinJourneyMilestoneStatus,
   ZetkinPerson,
+  ZetkinTag,
 } from 'types/zetkin';
 
 export const journeysResource = (orgId: string) => {
@@ -44,6 +45,7 @@ export const journeyInstancesResource = (orgId: string, journeyId: string) => {
         assignees: ZetkinPerson[];
         note: string;
         subjects: ZetkinPerson[];
+        tags: ZetkinTag[];
         title: string;
       },
       ZetkinJourneyInstance
@@ -60,15 +62,18 @@ export const journeyInstanceResource = (orgId: string, instanceId: string) => {
   const url = `/orgs/${orgId}/journey_instances/${instanceId}`;
 
   return {
+    key,
     prefetch: createPrefetch<ZetkinJourneyInstance>(key, url),
     useAddAssignee: createUseMutationPut({ key, url: `${url}/assignees` }),
     useAddSubject: createUseMutationPut({ key, url: `${url}/subjects` }),
+    useAssignTag: createUseMutationPut({ key, url: `${url}/tags` }),
     useQuery: createUseQuery<ZetkinJourneyInstance>(key, url),
     useRemoveAssignee: createUseMutationDelete({
       key,
       url: `${url}/assignees`,
     }),
     useRemoveSubject: createUseMutationDelete({ key, url: `${url}/subjects` }),
+    useUnassignTag: createUseMutationDelete({ key, url: `${url}/tags` }),
     useUpdate: createUseMutation<
       Partial<ZetkinJourneyInstance>,
       ZetkinJourneyInstance

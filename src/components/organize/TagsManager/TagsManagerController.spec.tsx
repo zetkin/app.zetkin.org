@@ -4,7 +4,7 @@ import { keyboard } from '@testing-library/user-event/dist/keyboard';
 import { render } from 'utils/testing';
 import singletonRouter from 'next/router';
 
-import TagsManager from '.';
+import { TagsManagerController } from '.';
 
 import mockTag from 'utils/testing/mocks/mockTag';
 import { ZetkinTag } from 'types/zetkin';
@@ -17,11 +17,11 @@ const createTagCallback = jest.fn((tag: NewTag) => tag);
 const unassignTagCallback = jest.fn((tag: ZetkinTag) => tag);
 const editTagCallback = jest.fn((tag: EditTag) => tag);
 
-describe('<TagsManager />', () => {
+describe('<TagsManagerController />', () => {
   describe('Renders list of tags passed in', () => {
     it('informs user if no tags applied', () => {
       const { getByText } = render(
-        <TagsManager
+        <TagsManagerController
           assignedTags={[]}
           availableGroups={[]}
           availableTags={[]}
@@ -37,7 +37,7 @@ describe('<TagsManager />', () => {
       const tag1 = mockTag({ title: 'Organizer' });
       const tag2 = mockTag({ id: 2, title: 'Activist' });
       const { getByText } = render(
-        <TagsManager
+        <TagsManagerController
           assignedTags={[tag1, tag2]}
           availableGroups={[]}
           availableTags={[tag1, tag2]}
@@ -87,7 +87,7 @@ describe('<TagsManager />', () => {
       }),
     ];
     const { getByTestId, getByText } = render(
-      <TagsManager
+      <TagsManagerController
         assignedTags={tags}
         availableGroups={[]}
         availableTags={tags}
@@ -123,7 +123,7 @@ describe('<TagsManager />', () => {
     });
 
     const { getByText } = render(
-      <TagsManager
+      <TagsManagerController
         assignedTags={[]}
         availableGroups={[]}
         availableTags={[tag1]}
@@ -156,7 +156,7 @@ describe('<TagsManager />', () => {
     });
 
     const { getByText, container } = render(
-      <TagsManager
+      <TagsManagerController
         assignedTags={[tag1]}
         availableGroups={[]}
         availableTags={[tag1]}
@@ -196,7 +196,7 @@ describe('<TagsManager />', () => {
 
     it('passes the value in the tag search field in to the create tag', () => {
       const { getByTestId, getByText } = render(
-        <TagsManager
+        <TagsManagerController
           assignedTags={[]}
           availableGroups={[]}
           availableTags={[]}
@@ -238,7 +238,7 @@ describe('<TagsManager />', () => {
       const tagToEdit = mockTag();
 
       const { getByTestId, getByText } = render(
-        <TagsManager
+        <TagsManagerController
           assignedTags={[]}
           availableGroups={[]}
           availableTags={[tagToEdit]}

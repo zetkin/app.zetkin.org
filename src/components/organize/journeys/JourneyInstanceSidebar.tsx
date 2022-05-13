@@ -6,27 +6,35 @@ import { FormattedMessage as Msg, useIntl } from 'react-intl';
 import JourneyMilestoneProgress from 'components/organize/journeys/JourneyMilestoneProgress';
 import JourneyPerson from './JourneyPerson';
 import { MUIOnlyPersonSelect as PersonSelect } from 'components/forms/common/PersonSelect';
+import TagsManager from '../TagsManager';
 import ZetkinSection from 'components/ZetkinSection';
 import {
   ZetkinJourneyInstance,
   ZetkinPerson as ZetkinPersonType,
+  ZetkinTag,
 } from 'types/zetkin';
 
 const JourneyInstanceSidebar = ({
   journeyInstance,
   onAddAssignee,
+  onAssignTag,
   onAddSubject,
   onRemoveAssignee,
   onRemoveSubject,
+  onTagEdited,
+  onUnassignTag,
 }: {
   journeyInstance: Pick<
     ZetkinJourneyInstance,
-    'assignees' | 'milestones' | 'next_milestone' | 'subjects'
-  >;
+    'assignees' | 'milestones' | 'next_milestone' | 'subjects' | 'tags'
+  > & { id?: number };
   onAddAssignee: (person: ZetkinPersonType) => void;
   onAddSubject: (person: ZetkinPersonType) => void;
+  onAssignTag: (tag: ZetkinTag) => void;
   onRemoveAssignee: (person: ZetkinPersonType) => void;
   onRemoveSubject: (person: ZetkinPersonType) => void;
+  onTagEdited: (tag: ZetkinTag) => void;
+  onUnassignTag: (tag: ZetkinTag) => void;
 }): JSX.Element => {
   const intl = useIntl();
 
@@ -139,11 +147,12 @@ const JourneyInstanceSidebar = ({
         <Divider />
       </Grid>
       <Grid item xs={12}>
-        <ZetkinSection
-          title={intl.formatMessage({
-            id: 'pages.organizeJourneyInstance.tags',
-          })}
-        ></ZetkinSection>
+        <TagsManager
+          assignedTags={journeyInstance.tags}
+          onAssignTag={onAssignTag}
+          onTagEdited={onTagEdited}
+          onUnassignTag={onUnassignTag}
+        />
         <Divider />
       </Grid>
       {journeyInstance.milestones && (
