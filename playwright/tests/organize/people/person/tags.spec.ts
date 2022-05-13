@@ -18,6 +18,8 @@ test.describe('Person Profile Page Tags', () => {
       'get',
       ClaraZetkin
     );
+
+    moxy.setZetkinApiMock(`/orgs/${KPD.id}/tag_groups`, 'get', []);
   });
 
   test.afterEach(({ moxy }) => {
