@@ -42,7 +42,8 @@ export const getStaticColumns = (): GridColDef[] => [
   },
   {
     field: 'nextMilestoneTitle',
-    valueGetter: (params) => params.row.next_milestone.title,
+    valueGetter: (params) =>
+      (params.row as ZetkinJourneyInstance).next_milestone?.title,
   },
   {
     field: 'nextMilestoneDeadline',
@@ -50,7 +51,8 @@ export const getStaticColumns = (): GridColDef[] => [
       <ZetkinRelativeTime datetime={params.value as string} />
     ),
     type: 'date',
-    valueGetter: (params) => params.row.next_milestone.deadline,
+    valueGetter: (params) =>
+      (params.row as ZetkinJourneyInstance).next_milestone?.deadline,
   },
   {
     field: 'summary',
