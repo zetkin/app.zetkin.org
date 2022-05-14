@@ -16,7 +16,7 @@ const UpdateContainer: React.FC<UpdateContainerProps> = ({
 }) => {
   return (
     <Box>
-      <Grid container direction="row" spacing={2}>
+      <Grid container direction="row" spacing={2} wrap="nowrap">
         <Grid item>
           <TimelineActor actor={update.actor} size={32} />
         </Grid>
