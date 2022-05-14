@@ -1,51 +1,13 @@
 import ScheduleIcon from '@material-ui/icons/Schedule';
 import { useRouter } from 'next/router';
-import { FormattedDate, FormattedMessage as Msg, useIntl } from 'react-intl';
+import { Box, Typography } from '@material-ui/core';
+import { FormattedDate, FormattedMessage as Msg } from 'react-intl';
 
 import { journeyInstanceResource } from 'api/journeys';
+import JourneyStatusChip from 'components/journeys/JourneyStatusChip';
 import TabbedLayout from './TabbedLayout';
 import { ZetkinJourneyInstance } from 'types/zetkin';
 import ZetkinRelativeTime from 'components/ZetkinRelativeTime';
-import { Box, Chip, makeStyles, Typography } from '@material-ui/core';
-
-const useStyles = makeStyles((theme) => ({
-  closedChip: {
-    backgroundColor: theme.palette.error.main,
-    color: 'white',
-    fontWeight: 'bold',
-    marginRight: '1rem',
-  },
-  openChip: {
-    backgroundColor: theme.palette.success.main,
-    color: 'white',
-    fontWeight: 'bold',
-    marginRight: '1rem',
-  },
-}));
-
-const JourneyStatusChip = ({
-  instance,
-}: {
-  instance: ZetkinJourneyInstance;
-}) => {
-  const intl = useIntl();
-  const classes = useStyles();
-  return !instance.closed ? (
-    <Chip
-      className={classes.openChip}
-      label={intl.formatMessage({
-        id: 'layout.organize.journeys.statusOpen',
-      })}
-    />
-  ) : (
-    <Chip
-      className={classes.closedChip}
-      label={intl.formatMessage({
-        id: 'layout.organize.journeys.statusClosed',
-      })}
-    />
-  );
-};
 
 const JourneyInstanceLayout: React.FunctionComponent = ({ children }) => {
   const { orgId, journeyId, instanceId } = useRouter().query;
