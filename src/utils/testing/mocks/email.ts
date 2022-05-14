@@ -5,6 +5,8 @@ Date: Sat, 14 May 2022 15:42:48 +0200
 To: Richard Olsson <info@zetkin.org>
 
 This is a plain text e-mail.
+
+It has two lines.
 `;
 
 export const PLAINTEXT_MULTI_CC = `From: Richard Olsson <richard@zetkin.org>

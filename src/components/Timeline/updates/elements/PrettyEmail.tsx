@@ -5,6 +5,7 @@ import {
   CircularProgress,
   Grid,
   makeStyles,
+  Theme,
   Typography,
 } from '@material-ui/core';
 import { LetterparserNode, parse } from 'letterparser';
@@ -41,7 +42,7 @@ const PrettyEmail: React.FC<PrettyEmailProps> = ({ emailStr }) => {
   }
 };
 
-const useBodyStyles = makeStyles((theme) => ({
+const useBodyStyles = makeStyles<Theme, { plain: boolean }>((theme) => ({
   body: {
     '& blockquote': {
       borderColor: theme.palette.text.disabled,
@@ -53,11 +54,16 @@ const useBodyStyles = makeStyles((theme) => ({
       paddingLeft: 10,
     },
     fontFamily: 'sans-serif',
+    whiteSpace: ({ plain }) => (plain ? 'pre' : 'normal'),
   },
 }));
 
-const EmailBody: React.FC<{ body: LetterparserNode['body'] }> = ({ body }) => {
-  const classes = useBodyStyles();
+const EmailBody: React.FC<{
+  body: LetterparserNode['body'];
+  forcePlain?: boolean;
+}> = ({ body, forcePlain = false }) => {
+  const plain = forcePlain || typeof body == 'string';
+  const classes = useBodyStyles({ plain });
 
   if (Array.isArray(body)) {
     let bodyToRender = body.find(
@@ -68,9 +74,10 @@ const EmailBody: React.FC<{ body: LetterparserNode['body'] }> = ({ body }) => {
       bodyToRender = body[0];
     }
 
-    return <EmailBody body={bodyToRender.body} />;
+    return <EmailBody body={bodyToRender.body} forcePlain />;
   } else {
     const content = typeof body == 'string' ? body : body.toString();
+
     // TODO: Sanitize content before rendering
     return (
       <div
