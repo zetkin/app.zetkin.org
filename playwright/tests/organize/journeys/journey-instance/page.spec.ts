@@ -103,7 +103,12 @@ test.describe('Journey instance page', () => {
         newSummaryText
       );
 
-      await page.click('data-testid=JourneyInstanceSummary-saveEditButton');
+      await Promise.all([
+        page.waitForResponse(
+          `**/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}`
+        ),
+        page.click('data-testid=JourneyInstanceSummary-saveEditButton'),
+      ]);
 
       // Makes request with correct data
       expect(
