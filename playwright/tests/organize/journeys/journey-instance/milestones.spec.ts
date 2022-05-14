@@ -1,4 +1,3 @@
-import dayjs from 'dayjs';
 import { expect } from '@playwright/test';
 import test from '../../../../fixtures/next';
 
@@ -194,9 +193,15 @@ test.describe('Journey instance Milestones tab', () => {
           .click(),
       ]);
 
+      const submittedDate = new Date(
+        patchReqLog<ZetkinJourneyMilestoneStatus>()[0].data!.completed!
+      );
+      const nowDate = new Date();
+
+      // Check that submitted time is within 10 seconds of now
       expect(
-        patchReqLog<ZetkinJourneyMilestoneStatus>()[0].data?.completed
-      ).toMatch(dayjs().toJSON());
+        Math.abs(submittedDate.getTime() - nowDate.getTime())
+      ).toBeLessThan(10000);
     });
 
     test('lets you mark a completed milestone as not completed.', async ({
