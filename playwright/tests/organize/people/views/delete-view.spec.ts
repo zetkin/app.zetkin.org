@@ -99,6 +99,7 @@ test.describe('Delete view from view detail page', () => {
       AllMembersColumns
     );
     moxy.setZetkinApiMock('/orgs/1/people/views/1', 'delete', undefined, 204);
+    moxy.setZetkinApiMock('/orgs/1/people/views', 'get', []);
 
     await page.goto(appUri + '/organize/1/people/views/1');
 
@@ -106,7 +107,14 @@ test.describe('Delete view from view detail page', () => {
     await Promise.all([
       (async () => {
         // Check that the request to delete was made successfully
-        await page.waitForResponse(`**/orgs/1/people/views/${AllMembers.id}`);
+        await page.waitForResponse(
+          (res) =>
+            res.request().method() === 'DELETE' &&
+            res
+              .request()
+              .url()
+              .includes(`/orgs/1/people/views/${AllMembers.id}`)
+        );
         expectDeleteViewSuccess(moxy);
       })(),
       page.waitForNavigation(),

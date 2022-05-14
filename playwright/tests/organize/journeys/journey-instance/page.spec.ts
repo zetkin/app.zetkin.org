@@ -30,9 +30,23 @@ test.describe('Journey instance page', () => {
 
     await page.goto(appUri + '/organize/1/journeys/1/1');
 
+    // Check that the title is visible in the right place
     expect(
-      await page.locator(`text=${ClarasOnboarding.title}`).count()
-    ).toEqual(2);
+      await page
+        .locator(
+          `[data-testid=page-title]:has-text("${ClarasOnboarding.title}")`
+        )
+        .count()
+    ).toEqual(1);
+
+    // Check that the title is also in the breadcrumbs
+    expect(
+      await page
+        .locator(
+          `[aria-label=breadcrumb]:has-text("${ClarasOnboarding.title}")`
+        )
+        .count()
+    ).toEqual(1);
   });
 
   test('navigates to Milestones page when clicking tab', async ({
@@ -89,7 +103,12 @@ test.describe('Journey instance page', () => {
         newSummaryText
       );
 
-      await page.click('data-testid=JourneyInstanceSummary-saveEditButton');
+      await Promise.all([
+        page.waitForResponse(
+          `**/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}`
+        ),
+        page.click('data-testid=JourneyInstanceSummary-saveEditButton'),
+      ]);
 
       // Makes request with correct data
       expect(
