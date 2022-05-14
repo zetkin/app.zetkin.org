@@ -1,22 +1,41 @@
 import { FormattedMessage } from 'react-intl';
 import {
   Box,
+  Button,
   Chip,
   CircularProgress,
+  Collapse,
   Grid,
   makeStyles,
   Theme,
   Typography,
 } from '@material-ui/core';
+import { ExpandLess, ExpandMore } from '@material-ui/icons';
 import { LetterparserNode, parse } from 'letterparser';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 interface PrettyEmailProps {
   emailStr: string;
 }
 
+const COLLAPSED_SIZE = 150;
+
 const PrettyEmail: React.FC<PrettyEmailProps> = ({ emailStr }) => {
   const [emailData, setEmailData] = useState<LetterparserNode | null>(null);
+  const [needsCollapse, setNeedsCollapse] = useState(false);
+  const [didMeasure, setDidMeasure] = useState(false);
+  const [collapsed, setCollapsed] = useState(true);
+
+  const divCallback = useCallback(
+    (node: HTMLDivElement) => {
+      const height = node.clientHeight;
+      if (height > COLLAPSED_SIZE && !needsCollapse) {
+        setNeedsCollapse(true);
+      }
+      setDidMeasure(true);
+    },
+    [setNeedsCollapse]
+  );
 
   useEffect(() => {
     async function parseEmailStr() {
@@ -34,7 +53,24 @@ const PrettyEmail: React.FC<PrettyEmailProps> = ({ emailStr }) => {
         <Typography style={{ fontWeight: 'bold', marginBottom: 8 }}>
           {emailData.headers.Subject}
         </Typography>
-        <EmailBody body={emailData.body} />
+        <Collapse
+          collapsedSize={COLLAPSED_SIZE}
+          in={(didMeasure && !needsCollapse) || !collapsed}
+        >
+          <div ref={divCallback}>
+            <EmailBody body={emailData.body} />
+          </div>
+        </Collapse>
+        {needsCollapse && (
+          <Button
+            onClick={() => setCollapsed(!collapsed)}
+            startIcon={collapsed ? <ExpandMore /> : <ExpandLess />}
+          >
+            <FormattedMessage
+              id={collapsed ? 'misc.email.expand' : 'misc.email.collapse'}
+            />
+          </Button>
+        )}
       </Box>
     );
   } else {
