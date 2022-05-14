@@ -64,8 +64,10 @@ const PrettyEmail: React.FC<PrettyEmailProps> = ({ emailStr }) => {
         </Collapse>
         {needsCollapse && (
           <Button
+            color="primary"
             onClick={() => setCollapsed(!collapsed)}
             startIcon={collapsed ? <ExpandMore /> : <ExpandLess />}
+            style={{ textTransform: 'uppercase' }}
           >
             <FormattedMessage
               id={collapsed ? 'misc.email.expand' : 'misc.email.collapse'}
