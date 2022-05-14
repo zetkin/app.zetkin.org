@@ -12,14 +12,12 @@ export enum UPDATE_TYPES {
   JOURNEYINSTANCE_UPDATEMILESTONE = 'journeyinstance.updatemilestone',
 }
 
-export type CHANGE_PROPS = {
-  [UPDATE_TYPES.JOURNEYINSTANCE_UPDATEMILESTONE]: 'completed' | 'deadline';
-};
-
-export interface ZetkinUpdate {
+interface ZetkinUpdateBase<UpdateType, Target, Details = null> {
   actor: Pick<ZetkinPerson, 'id' | 'first_name' | 'last_name'>;
+  details: Details;
+  target: Target;
   timestamp: string;
-  type: `${UPDATE_TYPES}`;
+  type: UpdateType;
 }
 
 type ZetkinUpdateChange<UpdateType> = {
@@ -29,32 +27,38 @@ type ZetkinUpdateChange<UpdateType> = {
   };
 };
 
-export interface ZetkinUpdateAssignee extends ZetkinUpdate {
-  details: {
+export type ZetkinUpdateAssignee = ZetkinUpdateBase<
+  | UPDATE_TYPES.JOURNEYINSTANCE_ADDASSIGNEE
+  | UPDATE_TYPES.JOURNEYINSTANCE_REMOVEASSIGNEE,
+  ZetkinJourneyInstance,
+  {
     assignee: Pick<ZetkinPerson, 'id' | 'first_name' | 'last_name'>;
-  };
-  target: ZetkinJourneyInstance;
-}
+  }
+>;
 
-export interface ZetkinUpdateJourneyMilestone extends ZetkinUpdate {
-  details: {
+export type ZetkinUpdateJourneyMilestone = ZetkinUpdateBase<
+  UPDATE_TYPES.JOURNEYINSTANCE_UPDATEMILESTONE,
+  ZetkinJourneyInstance,
+  {
     changes: ZetkinUpdateChange<
-      Pick<
-        ZetkinJourneyMilestoneStatus,
-        CHANGE_PROPS[UPDATE_TYPES.JOURNEYINSTANCE_UPDATEMILESTONE]
-      >
+      Pick<ZetkinJourneyMilestoneStatus, 'completed' | 'deadline'>
     >;
     milestone: ZetkinJourneyMilestone;
-  };
-  target: ZetkinJourneyInstance;
-}
+  }
+>;
 
-export interface ZetkinUpdateJourneyStart extends ZetkinUpdate {
-  details: {
+export type ZetkinUpdateJourneyStart = ZetkinUpdateBase<
+  UPDATE_TYPES.JOURNEYINSTANCE_CREATE,
+  ZetkinJourneyInstance,
+  {
     data: Pick<
       ZetkinJourneyInstance,
       'id' | 'title' | 'summary' | 'opening_note' | 'closed' | 'journey'
     >;
-  };
-  target: ZetkinJourneyInstance;
-}
+  }
+>;
+
+export type ZetkinUpdate =
+  | ZetkinUpdateAssignee
+  | ZetkinUpdateJourneyMilestone
+  | ZetkinUpdateJourneyStart;

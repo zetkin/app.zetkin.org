@@ -10,11 +10,7 @@ import theme from 'theme';
 import UpdateContainer from './elements/UpdateContainer';
 import ZetkinPersonLink from 'components/ZetkinPersonLink';
 import ZetkinRelativeTime from 'components/ZetkinRelativeTime';
-import {
-  CHANGE_PROPS,
-  UPDATE_TYPES,
-  ZetkinUpdateJourneyMilestone,
-} from 'types/updates';
+import { ZetkinUpdateJourneyMilestone } from 'types/updates';
 
 interface Props {
   update: ZetkinUpdateJourneyMilestone;
@@ -25,9 +21,7 @@ const TimelineJourneyMilestone: React.FunctionComponent<Props> = ({
 }) => {
   let changeToRender: 'complete' | 'incomplete' | 'deadline';
 
-  const changeProp = Object.keys(
-    update.details.changes
-  )[0] as CHANGE_PROPS[UPDATE_TYPES.JOURNEYINSTANCE_UPDATEMILESTONE];
+  const changeProp = Object.keys(update.details.changes)[0];
 
   if (changeProp === 'completed') {
     changeToRender = !update.details.changes[changeProp]?.to
