@@ -42,10 +42,11 @@ test.describe('All campaigns page speed dial', () => {
       );
 
       await Promise.all([
-        (async () => {
-          await page.waitForNavigation();
-          await page.waitForNavigation();
-        })(),
+        // Page may navigate away from modal (#createCampaign) before it
+        // navigates to the new campaign, so wait for specific URL
+        page.waitForNavigation({
+          url: `**/organize/1/campaigns/${ReferendumSignatures.id}`,
+        }),
         page.click('button > :text("Submit")'),
       ]);
 
