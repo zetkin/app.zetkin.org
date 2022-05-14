@@ -99,6 +99,7 @@ test.describe('Delete view from view detail page', () => {
       AllMembersColumns
     );
     moxy.setZetkinApiMock('/orgs/1/people/views/1', 'delete', undefined, 204);
+    moxy.setZetkinApiMock('/orgs/1/people/views', 'get', []);
 
     await page.goto(appUri + '/organize/1/people/views/1');
 
