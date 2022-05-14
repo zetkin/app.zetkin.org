@@ -7,6 +7,7 @@ import {
 
 export enum UPDATE_TYPES {
   JOURNEYINSTANCE_ADDASSIGNEE = 'journeyinstance.addassignee',
+  JOURNEYINSTANCE_CREATE = 'journeyinstance.create',
   JOURNEYINSTANCE_REMOVEASSIGNEE = 'journeyinstance.removeassignee',
   JOURNEYINSTANCE_UPDATEMILESTONE = 'journeyinstance.updatemilestone',
 }
@@ -44,6 +45,16 @@ export interface ZetkinUpdateJourneyMilestone extends ZetkinUpdate {
       >
     >;
     milestone: ZetkinJourneyMilestone;
+  };
+  target: ZetkinJourneyInstance;
+}
+
+export interface ZetkinUpdateJourneyStart extends ZetkinUpdate {
+  details: {
+    data: Pick<
+      ZetkinJourneyInstance,
+      'id' | 'title' | 'summary' | 'opening_note' | 'closed' | 'journey'
+    >;
   };
   target: ZetkinJourneyInstance;
 }
