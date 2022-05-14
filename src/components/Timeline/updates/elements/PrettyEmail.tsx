@@ -1,4 +1,5 @@
 import { FormattedMessage } from 'react-intl';
+import Link from 'next/link';
 import {
   Box,
   Button,
@@ -148,11 +149,13 @@ const EmailHeader: React.FC<{ headers: LetterparserNode['headers'] }> = ({
                 </Grid>
                 <Grid item>
                   {values.map((value) => (
-                    <Chip
-                      key={value}
-                      label={value}
-                      style={{ marginBottom: 4, marginRight: 4 }}
-                    />
+                    <Link key={value} href={`mailto:${value}`} passHref>
+                      <Chip
+                        component="a"
+                        label={value}
+                        style={{ marginBottom: 4, marginRight: 4 }}
+                      />
+                    </Link>
                   ))}
                 </Grid>
               </Grid>
