@@ -4,21 +4,13 @@ import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import FlagIcon from '@material-ui/icons/Flag';
 import { FormattedMessage } from 'react-intl';
 import React from 'react';
-import { Box, Grid, Typography } from '@material-ui/core';
+import { Grid, Typography } from '@material-ui/core';
 
-import PersonHoverCard from 'components/PersonHoverCard';
 import theme from 'theme';
-import TimelineActor from '../TimelineActor';
-import { ZetkinPerson as ZetkinPersonType } from 'types/zetkin';
+import UpdateContainer from './elements/UpdateContainer';
+import ZetkinPersonLink from 'components/ZetkinPersonLink';
 import ZetkinRelativeTime from 'components/ZetkinRelativeTime';
-import {
-  CHANGE_PROPS,
-  UPDATE_TYPES,
-  ZetkinUpdateJourneyMilestone,
-} from 'types/updates';
-
-const getPersonName = (person: Partial<ZetkinPersonType>) =>
-  person.first_name + ' ' + person.last_name;
+import { ZetkinUpdateJourneyMilestone } from 'types/updates';
 
 interface Props {
   update: ZetkinUpdateJourneyMilestone;
@@ -29,9 +21,7 @@ const TimelineJourneyMilestone: React.FunctionComponent<Props> = ({
 }) => {
   let changeToRender: 'complete' | 'incomplete' | 'deadline';
 
-  const changeProp = Object.keys(
-    update.details.changes
-  )[0] as CHANGE_PROPS[UPDATE_TYPES.JOURNEYINSTANCE_UPDATEMILESTONE];
+  const changeProp = Object.keys(update.details.changes)[0];
 
   if (changeProp === 'completed') {
     changeToRender = !update.details.changes[changeProp]?.to
@@ -42,48 +32,19 @@ const TimelineJourneyMilestone: React.FunctionComponent<Props> = ({
   }
 
   return (
-    <Box>
-      <Grid container direction="row" spacing={2}>
-        <Grid item>
-          <TimelineActor actor={update.actor} size={32} />
-        </Grid>
-        <Grid item style={{ paddingTop: 12 }}>
-          <Grid
-            alignItems="flex-start"
-            container
-            direction="column"
-            spacing={2}
-          >
-            {renderDescriptionText()}
-            {renderContent()}
-          </Grid>
-        </Grid>
-      </Grid>
-    </Box>
+    <UpdateContainer headerContent={renderDescriptionText()} update={update}>
+      {renderContent()}
+    </UpdateContainer>
   );
 
   function renderDescriptionText() {
     return (
-      <Grid container direction="row" item spacing={1}>
-        <Typography component={Grid} item variant="body2">
-          <FormattedMessage
-            id={`misc.updates.${update.type}.${changeToRender}`}
-            values={{
-              actor: (
-                <PersonHoverCard
-                  BoxProps={{ style: { display: 'inline-flex' } }}
-                  personId={update.actor.id}
-                >
-                  <b>{getPersonName(update.actor)}</b>
-                </PersonHoverCard>
-              ),
-            }}
-          />
-        </Typography>
-        <Typography color="textSecondary" component={Grid} item variant="body2">
-          <ZetkinRelativeTime datetime={update.timestamp} />
-        </Typography>
-      </Grid>
+      <FormattedMessage
+        id={`misc.updates.${update.type}.${changeToRender}`}
+        values={{
+          actor: <ZetkinPersonLink person={update.actor} />,
+        }}
+      />
     );
   }
 

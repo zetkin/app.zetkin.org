@@ -1,5 +1,7 @@
 journeyinstance:
   addassignee: '{actor} assigned {assignee}'
+  create:
+    header: '{actor} started a new journey'
   removeassignee: '{actor} unassigned {assignee}'
   updatemilestone:
     complete: '{actor} completed a milestone'

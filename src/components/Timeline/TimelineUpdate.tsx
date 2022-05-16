@@ -1,11 +1,7 @@
 import TimelineAssigned from './updates/TimelineAssigned';
 import TimelineJourneyMilestone from './updates/TimelineJourneyMilestone';
-import {
-  UPDATE_TYPES,
-  ZetkinUpdate,
-  ZetkinUpdateAssignee,
-  ZetkinUpdateJourneyMilestone,
-} from 'types/updates';
+import TimelineJourneyStart from './updates/TimelineJourneyStart';
+import { UPDATE_TYPES, ZetkinUpdate } from 'types/updates';
 
 interface Props {
   update: ZetkinUpdate;
@@ -16,13 +12,11 @@ const TimelineUpdate: React.FunctionComponent<Props> = ({ update }) => {
     update.type === UPDATE_TYPES.JOURNEYINSTANCE_ADDASSIGNEE ||
     update.type === UPDATE_TYPES.JOURNEYINSTANCE_REMOVEASSIGNEE
   ) {
-    return <TimelineAssigned update={update as ZetkinUpdateAssignee} />;
+    return <TimelineAssigned update={update} />;
   } else if (update.type === UPDATE_TYPES.JOURNEYINSTANCE_UPDATEMILESTONE) {
-    return (
-      <TimelineJourneyMilestone
-        update={update as ZetkinUpdateJourneyMilestone}
-      />
-    );
+    return <TimelineJourneyMilestone update={update} />;
+  } else if (update.type === UPDATE_TYPES.JOURNEYINSTANCE_CREATE) {
+    return <TimelineJourneyStart update={update} />;
   } else {
     return <div />;
   }

@@ -302,14 +302,3 @@ export type {
   ZetkinViewColumn,
   ZetkinViewRow,
 };
-export type ZetkinUpdateAssignee = {
-  assignee: Pick<ZetkinPerson, 'id' | 'first_name' | 'last_name'>;
-};
-
-export interface ZetkinUpdate {
-  actor?: Pick<ZetkinPerson, 'id' | 'first_name' | 'last_name'>;
-  created_at: string;
-  details: ZetkinUpdateAssignee;
-  type: 'journeyInstance.assignee.add';
-  target: { id: number; title: string };
-}
