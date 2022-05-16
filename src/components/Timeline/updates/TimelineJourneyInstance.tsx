@@ -1,7 +1,7 @@
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { FormattedMessage } from 'react-intl';
 import { Box, Button, Fade, Typography } from '@material-ui/core';
-import React, { useEffect, useState } from 'react';
+import { FormattedMessage, useIntl } from 'react-intl';
+import React, { useEffect, useRef, useState } from 'react';
 
 import UpdateContainer from './elements/UpdateContainer';
 import ZetkinPersonLink from 'components/ZetkinPersonLink';
@@ -14,22 +14,36 @@ interface Props {
 const TimelineJourneyInstance: React.FunctionComponent<Props> = ({
   update,
 }) => {
+  const intl = useIntl();
+  const textRef = useRef<HTMLParagraphElement>();
   const fieldToUpdate = Object.keys(update.details.changes)[0] as
     | 'summary'
     | 'title';
+  const [overflow, setOverflow] = useState<number>();
   const [expandSummary, setExpandSummary] = useState<boolean>(false);
   const [currentScroll, setCurrentScroll] = useState<number>(0);
 
   useEffect(() => {
-    if (expandSummary) {
-      setCurrentScroll(window.scrollY);
-      window.addEventListener('scroll', closeOnScroll);
+    if (expandSummary && !!textRef) {
+      const offset = textRef?.current?.offsetTop as number;
+      window.scrollTo({
+        behavior: 'smooth',
+        top: offset - 100,
+      });
+      setTimeout(() => {
+        setCurrentScroll(offset - 100);
+        window.addEventListener('scroll', closeOnScroll);
+      }, 1000);
     } else {
       window.removeEventListener('scroll', closeOnScroll);
     }
   }, [expandSummary]);
 
   useEffect(() => {
+    const text = textRef?.current;
+    if (text && text.scrollHeight > text.clientHeight) {
+      setOverflow(textRef.current?.scrollHeight);
+    }
     return () => window.removeEventListener('scroll', closeOnScroll);
   }, []);
 
@@ -54,24 +68,25 @@ const TimelineJourneyInstance: React.FunctionComponent<Props> = ({
     return (
       <Box>
         <Typography
+          innerRef={textRef}
           style={{
-            maxHeight: expandSummary ? 1000 : 100,
+            maxHeight: expandSummary ? overflow : 100,
             overflowY: 'hidden',
-            transition: 'max-height 500ms ease',
+            transition: 'max-height 300ms ease',
           }}
           variant="body1"
         >
           {update.details.changes[fieldToUpdate]?.to}
         </Typography>
-        {fieldToUpdate === 'summary' && (
-          <Fade in={!expandSummary}>
+        {fieldToUpdate.includes('summary') && (
+          <Fade in={!!overflow && !expandSummary}>
             <Button
               color="primary"
               onClick={() => setExpandSummary(!expandSummary)}
               startIcon={<ExpandMoreIcon />}
               variant="text"
             >
-              Read more
+              {intl.formatMessage({ id: 'misc.buttons.readMore' })}
             </Button>
           </Fade>
         )}
