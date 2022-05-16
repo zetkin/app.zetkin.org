@@ -16,6 +16,15 @@ const mockUpdate = (
   overrides?: Partial<ZetkinUpdate>
 ): ZetkinUpdate => {
   const updateData = {
+    [UPDATE_TYPES.JOURNEYINSTANCE_UPDATE]: {
+      details: {
+        changes: {
+          summary: { from: 'Old summary', to: 'New summary' },
+        },
+      },
+      target: pick(mockJourneyInstance(), ['id', 'title']),
+      type: 'journeyinstance.update',
+    },
     [UPDATE_TYPES.JOURNEYINSTANCE_ADDASSIGNEE]: {
       details: { assignee: mockPerson() },
       target: pick(mockJourneyInstance(), ['id', 'title']),

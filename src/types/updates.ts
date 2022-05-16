@@ -9,6 +9,7 @@ export enum UPDATE_TYPES {
   JOURNEYINSTANCE_ADDASSIGNEE = 'journeyinstance.addassignee',
   JOURNEYINSTANCE_CREATE = 'journeyinstance.create',
   JOURNEYINSTANCE_REMOVEASSIGNEE = 'journeyinstance.removeassignee',
+  JOURNEYINSTANCE_UPDATE = 'journeyinstance.update',
   JOURNEYINSTANCE_UPDATEMILESTONE = 'journeyinstance.updatemilestone',
 }
 
@@ -35,6 +36,15 @@ export type ZetkinUpdateJourneyInstanceAssignee = ZetkinUpdateBase<
     assignee: Pick<ZetkinPerson, 'id' | 'first_name' | 'last_name'>;
   }
 >;
+export type ZetkinUpdateJourneyInstance = ZetkinUpdateBase<
+  UPDATE_TYPES.JOURNEYINSTANCE_UPDATE,
+  ZetkinJourneyInstance,
+  {
+    changes: ZetkinUpdateChange<
+      Pick<ZetkinJourneyInstance, 'summary' | 'title'>
+    >;
+  }
+>;
 
 export type ZetkinUpdateJourneyInstanceMilestone = ZetkinUpdateBase<
   UPDATE_TYPES.JOURNEYINSTANCE_UPDATEMILESTONE,
@@ -59,10 +69,7 @@ export type ZetkinUpdateJourneyInstanceStart = ZetkinUpdateBase<
 >;
 
 export type ZetkinUpdate =
-  | ZetkinUpdateAssignee
-  | ZetkinUpdateJourneyMilestone
-  | ZetkinUpdateJourneyStart;
-
+  | ZetkinUpdateJourneyInstance
   | ZetkinUpdateJourneyInstanceAssignee
   | ZetkinUpdateJourneyInstanceMilestone
   | ZetkinUpdateJourneyInstanceStart;
