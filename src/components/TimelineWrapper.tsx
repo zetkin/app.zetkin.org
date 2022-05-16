@@ -1,7 +1,10 @@
 import { useQuery } from 'react-query';
+import { useContext, useState } from 'react';
 
+import { createUseMutation } from 'api/utils/resourceHookFactories';
 import { defaultFetch } from 'fetching';
 import handleResponseData from 'api/utils/handleResponseData';
+import SnackbarContext from '../hooks/SnackbarContext';
 import Timeline from './Timeline';
 import { ZetkinNote } from '../types/zetkin';
 import ZetkinQuery from './ZetkinQuery';
@@ -16,15 +19,30 @@ const TimelineWrapper: React.FC<TimelineWrapperProps> = ({
   queryKey,
   itemApiPath,
 }) => {
+  const { showSnackbar } = useContext(SnackbarContext);
+  const [submitting, setSubmitting] = useState<boolean>(false);
+
   const updatesQuery = useQuery(queryKey, async () => {
     const res = await defaultFetch(itemApiPath + '/timeline/updates');
     return handleResponseData<ZetkinUpdate[]>(res, 'GET');
   });
 
+  const notesMutation = createUseMutation(
+    queryKey.concat(['notes']),
+    itemApiPath + '/notes',
+    {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      method: 'POST',
+    }
+  )();
+
   return (
     <ZetkinQuery queries={{ updatesQuery }}>
       {({ queries }) => (
         <Timeline
+          disabled={submitting}
           onAddNote={handleAddNote}
           updates={queries.updatesQuery.data}
         />
@@ -33,7 +51,11 @@ const TimelineWrapper: React.FC<TimelineWrapperProps> = ({
   );
 
   function handleAddNote(note: ZetkinNote) {
-    return note;
+    setSubmitting(true);
+    notesMutation.mutate(note, {
+      onError: () => showSnackbar('error'),
+      onSettled: () => setSubmitting(false),
+    });
   }
 };
 
