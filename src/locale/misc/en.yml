@@ -1,12 +1,12 @@
 # eslint-disable yml/key-name-casing
 # Reason for the above: the Zetkin API uses snake_case for fields, and
 # we would like to keep the native names in some of our yaml files
-buttons:
-  readMore: Read more
 ConfirmDialog:
   button: Confirm
   defaultTitle: Confirm
   defaultWarningText: Are you sure you want to do this action? It can not be undone.
+buttons:
+  readMore: Read more
 components:
   editTextInPlace:
     tooltip:

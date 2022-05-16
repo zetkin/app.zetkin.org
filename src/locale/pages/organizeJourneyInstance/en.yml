@@ -10,8 +10,8 @@ noMilestones: There are no milestones.
 percentComplete: '{percentComplete}% complete'
 saveButton: Save
 sections:
-  summary: Summary
-  timeline: Notes
   assigned: Assigned to
   members: Members
   milestones: Milestones
+  summary: Summary
+  timeline: Notes
