@@ -52,7 +52,7 @@ export default {
     backgroundColor: { control: 'color' },
   },
   component: TextEditor,
-  title: 'Example/TextEditor',
+  title: 'Organisms/TextEditor',
 } as ComponentMeta<typeof TextEditor>;
 
 // More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args

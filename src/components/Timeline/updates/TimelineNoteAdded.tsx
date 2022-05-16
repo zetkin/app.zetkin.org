@@ -26,7 +26,10 @@ const TimelineNoteAdded: React.FC<Props> = ({ update }) => {
       update={update}
     >
       <Typography variant="body1">
-        <Slate editor={editor} value={JSON.parse(update.details.note.text)}>
+        <Slate
+          editor={editor}
+          value={JSON.parse(update.details.note.text) || []}
+        >
           <Editable readOnly />
         </Slate>
       </Typography>

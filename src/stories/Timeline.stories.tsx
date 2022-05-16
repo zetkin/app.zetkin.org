@@ -5,11 +5,13 @@ import { ComponentMeta, ComponentStory } from '@storybook/react';
 
 const chance = Chance();
 
+import mockNote from 'utils/testing/mocks/mockNote';
 import mockUpdate from 'utils/testing/mocks/mockUpdate';
 import Timeline from 'components/Timeline';
 import {
   UPDATE_TYPES,
   ZetkinUpdateJourneyInstance,
+  ZetkinUpdateJourneyInstanceAddNote,
   ZetkinUpdateJourneyInstanceMilestone,
 } from 'types/updates';
 
@@ -18,7 +20,7 @@ export default {
     backgroundColor: { control: 'color' },
   },
   component: Timeline,
-  title: 'Example/Timeline',
+  title: 'Organisms/Timeline',
 } as ComponentMeta<typeof Timeline>;
 
 // More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
@@ -41,7 +43,7 @@ const journeyInstanceUpdates = Array.from(Array(10).keys()).map(() => {
       to:
         fieldName === 'title'
           ? chance.sentence({ words: 4 })
-          : chance.paragraph({ sentences: 5 }),
+          : chance.paragraph({ sentences: chance.integer({ max: 8, min: 2 }) }),
     },
   };
   return update;
@@ -91,9 +93,34 @@ const journeyMilestoneUpdates = Array.from(Array(10).keys()).map(() => {
   return update;
 });
 
+const noteUpdates = Array.from(Array(10).keys()).map((id) => {
+  const update = mockUpdate(UPDATE_TYPES.JOURNEYINSTANCE_ADDNOTE, {
+    timestamp: dayjs()
+      .subtract(Math.random() * 100, 'hours')
+      .format(),
+  }) as ZetkinUpdateJourneyInstanceAddNote;
+  update.details.note = mockNote({
+    id,
+    text: JSON.stringify([
+      {
+        children: [
+          {
+            text: chance.paragraph({
+              sentences: chance.integer({ max: 3, min: 1 }),
+            }),
+          },
+        ],
+        type: 'paragraph',
+      },
+    ]),
+  });
+  return update;
+});
+
 const updates = addAssigneeUpdates
   .concat(journeyMilestoneUpdates)
   .concat(journeyInstanceUpdates)
+  .concat(noteUpdates)
   .concat([
     mockUpdate(UPDATE_TYPES.JOURNEYINSTANCE_CREATE, {
       timestamp: dayjs()
