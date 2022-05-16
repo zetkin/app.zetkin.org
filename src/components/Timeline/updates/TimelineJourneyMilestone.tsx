@@ -10,10 +10,10 @@ import theme from 'theme';
 import UpdateContainer from './elements/UpdateContainer';
 import ZetkinPersonLink from 'components/ZetkinPersonLink';
 import ZetkinRelativeTime from 'components/ZetkinRelativeTime';
-import { ZetkinUpdateJourneyMilestone } from 'types/updates';
+import { ZetkinUpdateJourneyInstanceMilestone } from 'types/updates';
 
 interface Props {
-  update: ZetkinUpdateJourneyMilestone;
+  update: ZetkinUpdateJourneyInstanceMilestone;
 }
 
 const TimelineJourneyMilestone: React.FunctionComponent<Props> = ({

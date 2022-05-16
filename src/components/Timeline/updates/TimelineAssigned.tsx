@@ -2,10 +2,10 @@ import { FormattedMessage } from 'react-intl';
 
 import UpdateContainer from './elements/UpdateContainer';
 import ZetkinPersonLink from 'components/ZetkinPersonLink';
-import { ZetkinUpdateAssignee } from 'types/updates';
+import { ZetkinUpdateJourneyInstanceAssignee } from 'types/updates';
 
 interface Props {
-  update: ZetkinUpdateAssignee;
+  update: ZetkinUpdateJourneyInstanceAssignee;
 }
 
 const TimelineAssigned: React.FunctionComponent<Props> = ({ update }) => {

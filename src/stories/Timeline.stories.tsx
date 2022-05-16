@@ -40,7 +40,7 @@ const journeyMilestoneUpdates = Array.from(Array(10).keys()).map(() => {
     timestamp: dayjs()
       .subtract(Math.random() * 100, 'hours')
       .format(),
-  }) as ZetkinUpdateJourneyMilestone;
+  }) as ZetkinUpdateJourneyInstanceMilestone;
   update.details.milestone.title = chance.sentence({ words: 4 }).slice(0, -1);
   const dice = Math.random();
   if (dice > 0.33 && dice < 0.66) {
