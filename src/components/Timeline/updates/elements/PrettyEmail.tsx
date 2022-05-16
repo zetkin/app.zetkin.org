@@ -51,7 +51,9 @@ const PrettyEmail: React.FC<PrettyEmailProps> = ({ emailStr }) => {
     return (
       <Box>
         <EmailHeader headers={emailData.headers} />
-        <Typography style={{ fontWeight: 'bold', marginBottom: 8 }}>
+        <Typography
+          style={{ fontWeight: 'bold', marginBottom: 8, marginTop: 8 }}
+        >
           {emailData.headers.Subject}
         </Typography>
         <Collapse
@@ -132,7 +134,7 @@ const EmailHeader: React.FC<{ headers: LetterparserNode['headers'] }> = ({
 }) => {
   const RELEVANT_HEADERS = ['from', 'to', 'cc'];
   return (
-    <Grid container direction="column">
+    <Grid container direction="column" spacing={1}>
       {RELEVANT_HEADERS.map((headerName) => {
         const matchedHeader = Object.entries(headers).find(
           ([key]) => key.toLowerCase() == headerName.toLowerCase()
@@ -142,24 +144,22 @@ const EmailHeader: React.FC<{ headers: LetterparserNode['headers'] }> = ({
           const values = matchedHeader[1].split(',');
 
           return (
-            <Grid key={headerName} item style={{ marginBottom: 8 }}>
-              <Grid container direction="row" wrap="nowrap">
-                <Grid item style={{ paddingRight: 12, paddingTop: '0.2em' }}>
-                  <Typography>
-                    <FormattedMessage id={`misc.email.headers.${headerName}`} />
-                  </Typography>
-                </Grid>
-                <Grid item>
-                  {values.map((value) => (
-                    <Link key={value} href={`mailto:${value}`} passHref>
-                      <Chip
-                        component="a"
-                        label={value}
-                        style={{ marginBottom: 4, marginRight: 4 }}
-                      />
-                    </Link>
-                  ))}
-                </Grid>
+            <Grid key={headerName} container direction="row" item wrap="nowrap">
+              <Grid item style={{ marginRight: 12, marginTop: '0.2em' }}>
+                <Typography>
+                  <FormattedMessage id={`misc.email.headers.${headerName}`} />
+                </Typography>
+              </Grid>
+              <Grid item>
+                {values.map((value) => (
+                  <Link key={value} href={`mailto:${value}`} passHref>
+                    <Chip
+                      component="a"
+                      label={value}
+                      style={{ marginBottom: 4, marginRight: 4 }}
+                    />
+                  </Link>
+                ))}
               </Grid>
             </Grid>
           );
