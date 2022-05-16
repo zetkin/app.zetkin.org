@@ -2,11 +2,13 @@ import {
   ZetkinJourneyInstance,
   ZetkinJourneyMilestone,
   ZetkinJourneyMilestoneStatus,
+  ZetkinNote,
   ZetkinPerson,
 } from './zetkin';
 
 export enum UPDATE_TYPES {
   JOURNEYINSTANCE_ADDASSIGNEE = 'journeyinstance.addassignee',
+  JOURNEYINSTANCE_ADDNOTE = 'journeyinstance.addnote',
   JOURNEYINSTANCE_CREATE = 'journeyinstance.create',
   JOURNEYINSTANCE_REMOVEASSIGNEE = 'journeyinstance.removeassignee',
   JOURNEYINSTANCE_UPDATE = 'journeyinstance.update',
@@ -68,8 +70,17 @@ export type ZetkinUpdateJourneyInstanceStart = ZetkinUpdateBase<
   }
 >;
 
+export type ZetkinUpdateJourneyInstanceAddNote = ZetkinUpdateBase<
+  UPDATE_TYPES.JOURNEYINSTANCE_ADDNOTE,
+  ZetkinJourneyInstance,
+  {
+    note: ZetkinNote;
+  }
+>;
+
 export type ZetkinUpdate =
   | ZetkinUpdateJourneyInstance
+  | ZetkinUpdateJourneyInstanceAddNote
   | ZetkinUpdateJourneyInstanceAssignee
   | ZetkinUpdateJourneyInstanceMilestone
   | ZetkinUpdateJourneyInstanceStart;
