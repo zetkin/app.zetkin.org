@@ -15,6 +15,7 @@ jest.mock('next/dist/client/router', () => require('next-router-mock'));
 const NUM_UPDATES = 10;
 
 const props: TimelineProps = {
+  onAddNote: () => null,
   updates: Array.from(Array(NUM_UPDATES).keys()).map(() =>
     mockUpdate(UPDATE_TYPES.JOURNEYINSTANCE_ADDASSIGNEE, {
       timestamp: dayjs()
