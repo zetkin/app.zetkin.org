@@ -4,10 +4,12 @@ import { Button, Collapse, Divider, Fade, Grid } from '@material-ui/core';
 
 import TimelineAddNote from './TimelineAddNote';
 import TimelineUpdate from './TimelineUpdate';
+import { ZetkinNote } from 'types/zetkin';
 import { ZetkinUpdate } from 'types/updates';
 
 export interface TimelineProps {
   expandable?: boolean;
+  onAddNote: (note: ZetkinNote) => void;
   showAll?: boolean;
   updates: ZetkinUpdate[];
 }
@@ -16,6 +18,7 @@ export const SHOW_INITIALLY = 5;
 
 const Timeline: React.FunctionComponent<TimelineProps> = ({
   expandable,
+  onAddNote,
   showAll,
   updates,
 }) => {
@@ -25,7 +28,7 @@ const Timeline: React.FunctionComponent<TimelineProps> = ({
     <Fade appear in timeout={1000}>
       <Grid container direction="column" spacing={6}>
         <Grid item>
-          <TimelineAddNote />
+          <TimelineAddNote onSubmit={onAddNote} />
         </Grid>
         {renderUpdateList()}
         {expandable && renderExpandButton()}

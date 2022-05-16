@@ -47,3 +47,7 @@ export interface ZetkinUpdateJourneyMilestone extends ZetkinUpdate {
   };
   target: ZetkinJourneyInstance;
 }
+
+export interface ZetkinUpdateNote extends ZetkinUpdate {
+  id: number;
+}

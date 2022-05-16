@@ -1,9 +1,16 @@
+import { isEqual } from 'lodash';
 import { makeStyles } from '@material-ui/styles';
 import { withHistory } from 'slate-history';
 import { Box, Collapse } from '@material-ui/core';
-import { createEditor, Descendant } from 'slate';
+import { createEditor, Descendant, Editor, Transforms } from 'slate';
 import { Editable, Slate, withReact } from 'slate-react';
-import React, { Attributes, useCallback, useMemo, useState } from 'react';
+import React, {
+  Attributes,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 
 import './types';
 import TextElement from './TextElement';
@@ -35,12 +42,14 @@ const useStyles = makeStyles({
 });
 
 interface TextEditorProps {
-  initialValue?: Descendant[];
+  clear: number;
+  initialValue: Descendant[];
   onChange: (value: Descendant[]) => void;
   placeholder: string;
 }
 
 const TextEditor: React.FunctionComponent<TextEditorProps> = ({
+  clear,
   initialValue,
   onChange,
   placeholder,
@@ -54,15 +63,18 @@ const TextEditor: React.FunctionComponent<TextEditorProps> = ({
     []
   );
 
-  const onKeyDown: React.KeyboardEventHandler<HTMLInputElement> = (event) => {
-    keyDownHandler(editor, event);
-  };
+  useEffect(() => {
+    if (clear > 0) {
+      clearEditor();
+      setActive(false);
+    }
+  }, [clear]);
 
   return (
     <Box className={classes.container}>
       <Slate editor={editor} onChange={onChange} value={initialValue || []}>
         <Editable
-          onBlur={() => setActive(false)}
+          onBlur={onBlur}
           onFocus={() => setActive(true)}
           onKeyDown={onKeyDown}
           placeholder={placeholder}
@@ -76,6 +88,26 @@ const TextEditor: React.FunctionComponent<TextEditorProps> = ({
       </Slate>
     </Box>
   );
+
+  function onKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
+    keyDownHandler(editor, event);
+  }
+
+  function onBlur() {
+    if (isEqual(editor.children, initialValue)) {
+      setActive(false);
+      clearEditor();
+    }
+  }
+
+  function clearEditor() {
+    Transforms.select(editor, {
+      anchor: Editor.start(editor, []),
+      focus: Editor.end(editor, []),
+    });
+    Transforms.removeNodes(editor);
+    Transforms.insertNodes(editor, initialValue);
+  }
 };
 
 const Leaf: React.FunctionComponent<{

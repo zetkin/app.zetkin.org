@@ -3,6 +3,7 @@ import { useQuery } from 'react-query';
 import { defaultFetch } from 'fetching';
 import handleResponseData from 'api/utils/handleResponseData';
 import Timeline from './Timeline';
+import { ZetkinNote } from '../types/zetkin';
 import ZetkinQuery from './ZetkinQuery';
 import { ZetkinUpdate } from 'types/updates';
 
@@ -22,9 +23,18 @@ const TimelineWrapper: React.FC<TimelineWrapperProps> = ({
 
   return (
     <ZetkinQuery queries={{ updatesQuery }}>
-      {({ queries }) => <Timeline updates={queries.updatesQuery.data} />}
+      {({ queries }) => (
+        <Timeline
+          onAddNote={handleAddNote}
+          updates={queries.updatesQuery.data}
+        />
+      )}
     </ZetkinQuery>
   );
+
+  function handleAddNote(note: ZetkinNote) {
+    return note;
+  }
 };
 
 export default TimelineWrapper;
