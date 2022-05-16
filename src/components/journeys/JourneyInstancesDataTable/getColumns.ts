@@ -13,8 +13,8 @@ const getColumns = (tagMetadata: TagMetadata): GridColDef[] => {
       // Add/override common props
       .concat(staticColumns)
       .map((col) => ({
-        flex: 1,
-        minWidth: 200,
+        minWidth: 50,
+        width: 200,
         ...col,
       }))
   );
