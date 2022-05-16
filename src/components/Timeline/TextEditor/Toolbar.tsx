@@ -15,7 +15,7 @@ import {
   BlockButton,
   MarkButton,
   RemoveLinkButton,
-} from './ToolbarButtons';
+} from './toolbarButtons';
 
 const useStyles = makeStyles({
   container: {

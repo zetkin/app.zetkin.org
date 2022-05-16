@@ -13,8 +13,10 @@ const TEXT_ALIGN_TYPES = ['left', 'center', 'right', 'justify'];
 const HOTKEYS: { [key: string]: string } = {
   'mod+b': 'bold',
   'mod+i': 'italic',
-  'mod+s': 'strikethrough',
+  'mod+shift+x': 'strikethrough',
 };
+
+/* TODO: Resolve typescript errors */
 
 type LinkElement = { children: Descendant[]; type: 'link'; url: string };
 
