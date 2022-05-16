@@ -18,6 +18,8 @@ test.describe('Person Profile Page Tags', () => {
       'get',
       ClaraZetkin
     );
+
+    moxy.setZetkinApiMock(`/orgs/${KPD.id}/tag_groups`, 'get', []);
   });
 
   test.afterEach(({ moxy }) => {
@@ -38,7 +40,12 @@ test.describe('Person Profile Page Tags', () => {
       PlaysGuitarTag,
     ]);
 
-    await page.goto(appUri + `/organize/1/people/${ClaraZetkin.id}`);
+    await Promise.all([
+      page.waitForResponse(`**/orgs/${KPD.id}/people/tags`),
+      page.waitForResponse(`**/orgs/${KPD.id}/people/${ClaraZetkin.id}/tags`),
+      page.waitForResponse(`**/orgs/${KPD.id}/tag_groups`),
+      page.goto(appUri + `/organize/1/people/${ClaraZetkin.id}`),
+    ]);
 
     expect(
       await page.locator(`text="${ActivistTag.title}"`).isVisible()
@@ -127,7 +134,7 @@ test.describe('Person Profile Page Tags', () => {
       moxy.setZetkinApiMock(
         `/orgs/${KPD.id}/people/${ClaraZetkin.id}/tags`,
         'get',
-        [ActivistTag, CodingSkillsTag]
+        [ActivistTag]
       );
       const { log: deleteTagLog } = moxy.setZetkinApiMock(
         `/orgs/1/people/${ClaraZetkin.id}/tags/${ActivistTag.id}`,
@@ -137,11 +144,9 @@ test.describe('Person Profile Page Tags', () => {
       await page.goto(appUri + `/organize/1/people/${ClaraZetkin.id}`);
 
       await page.locator(`text="${ActivistTag.title}"`).hover();
-      await page.locator('.MuiChip-deleteIcon').click();
+      await page.locator('[data-testid=TagChip-deleteButton]').click();
 
-      moxy.setZetkinApiMock(`/orgs/1/people/${ClaraZetkin.id}/tags`, 'get', [
-        CodingSkillsTag,
-      ]);
+      moxy.setZetkinApiMock(`/orgs/1/people/${ClaraZetkin.id}/tags`, 'get', []);
 
       // Expect to have made request to delete tag
       expect(deleteTagLog().length).toEqual(1);
@@ -159,7 +164,7 @@ test.describe('Person Profile Page Tags', () => {
       moxy.setZetkinApiMock(
         `/orgs/${KPD.id}/people/${ClaraZetkin.id}/tags`,
         'get',
-        [ActivistTag, CodingSkillsTag]
+        [ActivistTag]
       );
       moxy.setZetkinApiMock(
         `/orgs/1/people/${ClaraZetkin.id}/tags/${ActivistTag.id}`,
@@ -171,7 +176,7 @@ test.describe('Person Profile Page Tags', () => {
       await page.goto(appUri + `/organize/1/people/${ClaraZetkin.id}`);
 
       await page.locator(`text="${ActivistTag.title}"`).hover();
-      await page.locator('.MuiChip-deleteIcon').click();
+      await page.locator('[data-testid=TagChip-deleteButton]').click();
 
       // Show error
       expect(await page.locator('data-testid=Snackbar-error').count()).toEqual(
@@ -219,16 +224,18 @@ test.describe('Person Profile Page Tags', () => {
         [ActivistTag, CodingSkillsTag, ActivistTag]
       );
 
-      await page.click('data-testid=submit-button');
+      await Promise.all([
+        page.waitForResponse('**/orgs/1/people/tags'),
+        page.waitForResponse(
+          `**/orgs/${KPD.id}/people/${ClaraZetkin.id}/tags/${ActivistTag.id}`
+        ),
+        page.click('data-testid=SubmitCancelButtons-submitButton'),
+      ]);
 
       // Check that request made to create tag
-      await page.waitForResponse('**/orgs/1/people/tags');
       expect(createTagRequest.log().length).toEqual(1);
 
       // Check that request made to apply tag
-      await page.waitForResponse(
-        `**/orgs/${KPD.id}/people/${ClaraZetkin.id}/tags/${ActivistTag.id}`
-      );
       expect(assignNewTagRequest.log().length).toEqual(1);
     });
 
@@ -266,20 +273,22 @@ test.describe('Person Profile Page Tags', () => {
         );
         await page.click(`text=Add "${SkillsGroup.title}"`);
 
-        await page.click('data-testid=submit-button');
+        await Promise.all([
+          page.waitForResponse(`**/orgs/1/tag_groups`),
+          page.waitForResponse('**/orgs/1/people/tags'),
+          page.waitForResponse(
+            `**/orgs/${KPD.id}/people/${ClaraZetkin.id}/tags/${ActivistTag.id}`
+          ),
+          page.click('data-testid=SubmitCancelButtons-submitButton'),
+        ]);
 
         // Check that request made to create group
-        await page.waitForResponse(`**/orgs/1/tag_groups`);
         expect(createTagGroupRequest.log().length).toEqual(1);
 
         // Check that request made to create tag
-        await page.waitForResponse('**/orgs/1/people/tags');
         expect(createTagRequest.log().length).toEqual(1);
 
         // Check that request made to apply tag
-        await page.waitForResponse(
-          `**/orgs/${KPD.id}/people/${ClaraZetkin.id}/tags/${ActivistTag.id}`
-        );
         expect(assignNewTagRequest.log().length).toEqual(1);
       });
       test('shows error when creating group fails', async ({ page, moxy }) => {
@@ -298,7 +307,7 @@ test.describe('Person Profile Page Tags', () => {
         );
         await page.click(`text=Add "${SkillsGroup.title}"`);
 
-        await page.click('data-testid=submit-button');
+        await page.click('data-testid=SubmitCancelButtons-submitButton');
 
         // Show error
         expect(
@@ -317,7 +326,7 @@ test.describe('Person Profile Page Tags', () => {
         ActivistTag.title
       );
 
-      await page.click('data-testid=submit-button');
+      await page.click('data-testid=SubmitCancelButtons-submitButton');
 
       // Show error
       expect(await page.locator('data-testid=Snackbar-error').count()).toEqual(
@@ -359,7 +368,7 @@ test.describe('Person Profile Page Tags', () => {
 
       // Check that request made to edit tag with correct values
       await Promise.all([
-        page.click('data-testid=submit-button'),
+        page.click('data-testid=SubmitCancelButtons-submitButton'),
         page.waitForResponse(`**/orgs/1/people/tags/${ActivistTag.id}`),
       ]);
 
@@ -388,8 +397,8 @@ test.describe('Person Profile Page Tags', () => {
 
       // Show error
       await Promise.all([
-        page.click('data-testid=submit-button'),
         page.waitForResponse(`**/orgs/1/people/tags/${ActivistTag.id}`),
+        page.click('data-testid=SubmitCancelButtons-submitButton'),
       ]);
       expect(await page.locator('data-testid=Snackbar-error').count()).toEqual(
         1

@@ -3,6 +3,7 @@ import { ZetkinJourney } from '../../../../../../src/types/zetkin';
 
 const MemberOnboarding: ZetkinJourney = {
   id: 1,
+  opening_note_template: '',
   organization: KPD,
   plural_label: 'Onboardings',
   singular_label: 'Onboarding',

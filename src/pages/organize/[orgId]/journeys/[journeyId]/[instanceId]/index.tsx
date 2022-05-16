@@ -1,6 +1,7 @@
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { useContext } from 'react';
+import { useQueryClient } from 'react-query';
 import { Divider, Grid } from '@material-ui/core';
 
 import JourneyInstanceLayout from 'layout/organize/JourneyInstanceLayout';
@@ -9,46 +10,52 @@ import JourneyInstanceSidebar from 'components/organize/journeys/JourneyInstance
 import JourneyInstanceSummary from 'components/organize/journeys/JourneyInstanceSummary';
 import { organizationResource } from 'api/organizations';
 import { PageWithLayout } from 'types';
-import { scaffold } from 'utils/next';
 import SnackbarContext from 'hooks/SnackbarContext';
 import TimelineWrapper from 'components/TimelineWrapper';
+import { scaffold, ScaffoldedGetServerSideProps } from 'utils/next';
 import { ZetkinJourneyInstance, ZetkinPerson } from 'types/zetkin';
 
-const scaffoldOptions = {
+export const scaffoldOptions = {
   authLevelRequired: 2,
   localeScope: ['layout.organize', 'misc', 'pages.organizeJourneyInstance'],
 };
 
-export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
-  const { orgId, instanceId } = ctx.params!;
+export const getJourneyInstanceScaffoldProps: ScaffoldedGetServerSideProps =
+  async (ctx) => {
+    const { orgId, instanceId } = ctx.params!;
 
-  const { state: orgQueryState } = await organizationResource(
-    orgId as string
-  ).prefetch(ctx);
+    const { state: orgQueryState } = await organizationResource(
+      orgId as string
+    ).prefetch(ctx);
 
-  const { state: journeyInstanceQueryState } = await journeyInstanceResource(
-    orgId as string,
-    instanceId as string
-  ).prefetch(ctx);
+    const { state: journeyInstanceQueryState } = await journeyInstanceResource(
+      orgId as string,
+      instanceId as string
+    ).prefetch(ctx);
 
-  if (
-    orgQueryState?.status === 'success' &&
-    journeyInstanceQueryState?.status === 'success'
-  ) {
-    return {
-      props: {
-        instanceId,
-        orgId,
-      },
-    };
-  } else {
-    return {
-      notFound: true,
-    };
-  }
-}, scaffoldOptions);
+    if (
+      orgQueryState?.status === 'success' &&
+      journeyInstanceQueryState?.status === 'success'
+    ) {
+      return {
+        props: {
+          instanceId,
+          orgId,
+        },
+      };
+    } else {
+      return {
+        notFound: true,
+      };
+    }
+  };
 
-interface JourneyDetailsPageProps {
+export const getServerSideProps: GetServerSideProps = scaffold(
+  getJourneyInstanceScaffoldProps,
+  scaffoldOptions
+);
+
+export interface JourneyDetailsPageProps {
   instanceId: string;
   orgId: string;
 }
@@ -58,21 +65,27 @@ const JourneyDetailsPage: PageWithLayout<JourneyDetailsPageProps> = ({
   orgId,
 }) => {
   const {
+    key,
     useAddAssignee,
     useAddSubject,
+    useAssignTag,
     useQuery,
     useRemoveAssignee,
     useRemoveSubject,
+    useUnassignTag,
   } = journeyInstanceResource(orgId, instanceId);
   const journeyInstanceQuery = useQuery();
   const addAssigneeMutation = useAddAssignee();
   const removeAssigneeMutation = useRemoveAssignee();
   const addMemberMutation = useAddSubject();
   const removeMemberMutation = useRemoveSubject();
+  const assignTagMutation = useAssignTag();
+  const unassignTagMutation = useUnassignTag();
 
   const journeyInstance = journeyInstanceQuery.data as ZetkinJourneyInstance;
 
   const { showSnackbar } = useContext(SnackbarContext);
+  const queryClient = useQueryClient();
 
   const onAddAssignee = (person: ZetkinPerson) => {
     addAssigneeMutation.mutate(person.id, {
@@ -121,8 +134,17 @@ const JourneyDetailsPage: PageWithLayout<JourneyDetailsPageProps> = ({
             journeyInstance={journeyInstance}
             onAddAssignee={onAddAssignee}
             onAddSubject={onAddSubject}
+            onAssignTag={(tag) => {
+              assignTagMutation.mutate(tag.id);
+            }}
             onRemoveAssignee={onRemoveAssignee}
             onRemoveSubject={onRemoveSubject}
+            onTagEdited={() => {
+              queryClient.invalidateQueries(key);
+            }}
+            onUnassignTag={(tag) => {
+              unassignTagMutation.mutate(tag.id);
+            }}
           />
         </Grid>
       </Grid>

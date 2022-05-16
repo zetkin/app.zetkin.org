@@ -212,6 +212,7 @@ export interface ZetkinTag {
   color: string | null;
   group: ZetkinTagGroup | null;
   value?: string | number;
+  value_type: string | null;
 }
 
 export interface ZetkinTagPostBody
@@ -243,6 +244,7 @@ export interface ZetkinDataField {
 
 export interface ZetkinJourney {
   id: number;
+  opening_note_template: string;
   organization: ZetkinOrganization;
   plural_label: string;
   singular_label: string;
@@ -265,13 +267,14 @@ export interface ZetkinJourneyInstance {
   // as item, not when retrieved as collection
   milestones?: ZetkinJourneyMilestoneStatus[] | null;
   next_milestone: ZetkinJourneyMilestoneStatus | null;
+  opening_note: string;
   organization: {
     id: number;
     title: string;
   };
   subjects: ZetkinPerson[];
   summary: string;
-  tags: Pick<ZetkinTag, 'id' | 'title' | 'group' | 'color' | 'value'>[];
+  tags: ZetkinTag[];
   title?: string;
   updated: string;
 }

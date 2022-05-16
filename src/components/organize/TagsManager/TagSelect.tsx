@@ -92,12 +92,10 @@ const TagSelect: React.FunctionComponent<{
                       width="100%"
                     >
                       <TagChip
-                        chipProps={{
-                          disabled: disabledTags
-                            .map((disabledTags) => disabledTags.id)
-                            .includes(tag.id),
-                          onClick: () => onSelect(tag),
-                        }}
+                        disabled={disabledTags
+                          .map((disabledTags) => disabledTags.id)
+                          .includes(tag.id)}
+                        onClick={() => onSelect(tag)}
                         tag={tag}
                       />
                       <IconButton

@@ -40,12 +40,18 @@ test.describe('All campaigns page speed dial', () => {
         'input:near(#visibility)',
         ReferendumSignatures.visibility
       );
-      await page.click('button > :text("Submit")');
+
+      await Promise.all([
+        // Page may navigate away from modal (#createCampaign) before it
+        // navigates to the new campaign, so wait for specific URL
+        page.waitForNavigation({
+          url: `**/organize/1/campaigns/${ReferendumSignatures.id}`,
+        }),
+        page.click('button > :text("Submit")'),
+      ]);
 
       // Check for redirect
-      await page.waitForNavigation();
-      await page.waitForNavigation();
-      await expect(page.url()).toEqual(
+      expect(page.url()).toEqual(
         appUri + '/organize/1/campaigns/' + ReferendumSignatures.id
       );
     });

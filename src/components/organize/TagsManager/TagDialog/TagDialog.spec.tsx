@@ -35,7 +35,7 @@ describe('<TagDialog />', () => {
     click(titleField);
     keyboard('Spongeworthy');
 
-    const submit = getByTestId('submit-button');
+    const submit = getByTestId('SubmitCancelButtons-submitButton');
     click(submit);
 
     // Check new group object created
@@ -72,7 +72,7 @@ describe('<TagDialog />', () => {
     );
     click(newGroupOption);
 
-    const submit = getByTestId('submit-button');
+    const submit = getByTestId('SubmitCancelButtons-submitButton');
     click(submit);
 
     // Check new group object created
@@ -94,7 +94,9 @@ describe('<TagDialog />', () => {
     );
 
     // Submit is disabled
-    const submit = getByTestId('submit-button') as HTMLButtonElement;
+    const submit = getByTestId(
+      'SubmitCancelButtons-submitButton'
+    ) as HTMLButtonElement;
     expect(submit.disabled).toBeTruthy();
 
     const titleField = getByTestId('TagManager-TagDialog-titleField');
@@ -136,7 +138,7 @@ describe('<TagDialog />', () => {
     click(colorField);
     keyboard(color);
 
-    const submit = getByTestId('submit-button');
+    const submit = getByTestId('SubmitCancelButtons-submitButton');
     click(submit);
 
     // Check correct fields returned with tag id.

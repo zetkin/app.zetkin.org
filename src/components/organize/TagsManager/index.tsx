@@ -1,17 +1,20 @@
 import { Add } from '@material-ui/icons';
+import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { Box, Button, Popover, Typography } from '@material-ui/core';
 import { FormattedMessage, useIntl } from 'react-intl';
 
-import ZetkinSection from 'components/ZetkinSection';
-
 import GroupToggle from './GroupToggle';
 import TagSelect from './TagSelect';
 import TagsList from './TagsList';
+import ZetkinQuery from 'components/ZetkinQuery';
+import ZetkinSection from 'components/ZetkinSection';
 import { EditTag, NewTag } from './types';
+import { tagGroupsResource, tagsResource } from 'api/tags';
+import { useCreateTag, useEditTag } from './utils';
 import { ZetkinTag, ZetkinTagGroup } from 'types/zetkin';
 
-const TagsManager: React.FunctionComponent<{
+interface TagsManagerProps {
   assignedTags: ZetkinTag[];
   availableGroups: ZetkinTagGroup[];
   availableTags: ZetkinTag[];
@@ -19,7 +22,11 @@ const TagsManager: React.FunctionComponent<{
   onCreateTag: (tag: NewTag) => void;
   onEditTag: (tag: EditTag) => void;
   onUnassignTag: (tag: ZetkinTag) => void;
-}> = ({
+}
+
+export const TagsManagerController: React.FunctionComponent<
+  TagsManagerProps
+> = ({
   assignedTags,
   availableGroups,
   availableTags,
@@ -81,6 +88,38 @@ const TagsManager: React.FunctionComponent<{
         </Popover>
       </Box>
     </ZetkinSection>
+  );
+};
+
+const TagsManager: React.FunctionComponent<
+  Omit<
+    TagsManagerProps,
+    'availableGroups' | 'availableTags' | 'onCreateTag' | 'onEditTag'
+  > & { onTagEdited: (tag: ZetkinTag) => void }
+> = (props) => {
+  const { orgId } = useRouter().query;
+
+  const tagsQuery = tagsResource(orgId as string).useQuery();
+  const tagGroupsQuery = tagGroupsResource(orgId as string).useQuery();
+
+  const createTag = useCreateTag();
+  const editTag = useEditTag(props.onTagEdited);
+
+  return (
+    <ZetkinQuery queries={{ tagGroupsQuery, tagsQuery }}>
+      {({ queries: { tagGroupsQuery, tagsQuery } }) => (
+        <TagsManagerController
+          availableGroups={tagGroupsQuery.data}
+          availableTags={tagsQuery.data}
+          onCreateTag={async (tagToCreate) => {
+            const newTag = await createTag(tagToCreate);
+            props.onAssignTag(newTag);
+          }}
+          onEditTag={editTag}
+          {...props}
+        />
+      )}
+    </ZetkinQuery>
   );
 };
 

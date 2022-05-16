@@ -7,7 +7,13 @@ import {
   createUseMutationPut,
   createUseQuery,
 } from './utils/resourceHookFactories';
-import { ZetkinJourney, ZetkinJourneyInstance } from 'types/zetkin';
+import {
+  ZetkinJourney,
+  ZetkinJourneyInstance,
+  ZetkinJourneyMilestoneStatus,
+  ZetkinPerson,
+  ZetkinTag,
+} from 'types/zetkin';
 
 export const journeysResource = (orgId: string) => {
   const key = ['journeys', orgId];
@@ -34,6 +40,16 @@ export const journeyInstancesResource = (orgId: string, journeyId: string) => {
   const url = `/organize/${orgId}/journeys/${journeyId}`;
 
   return {
+    useCreate: createUseMutation<
+      {
+        assignees: ZetkinPerson[];
+        note: string;
+        subjects: ZetkinPerson[];
+        tags: ZetkinTag[];
+        title: string;
+      },
+      ZetkinJourneyInstance
+    >(key, `/journeyInstances/createNew?orgId=${orgId}&journeyId=${journeyId}`),
     useQuery: createUseQuery<{
       journeyInstances: ZetkinJourneyInstance[];
       tagMetadata: TagMetadata;
@@ -46,20 +62,39 @@ export const journeyInstanceResource = (orgId: string, instanceId: string) => {
   const url = `/orgs/${orgId}/journey_instances/${instanceId}`;
 
   return {
+    key,
     prefetch: createPrefetch<ZetkinJourneyInstance>(key, url),
     useAddAssignee: createUseMutationPut({ key, url: `${url}/assignees` }),
     useAddSubject: createUseMutationPut({ key, url: `${url}/subjects` }),
+    useAssignTag: createUseMutationPut({ key, url: `${url}/tags` }),
     useQuery: createUseQuery<ZetkinJourneyInstance>(key, url),
     useRemoveAssignee: createUseMutationDelete({
       key,
       url: `${url}/assignees`,
     }),
     useRemoveSubject: createUseMutationDelete({ key, url: `${url}/subjects` }),
+    useUnassignTag: createUseMutationDelete({ key, url: `${url}/tags` }),
     useUpdate: createUseMutation<
       Partial<ZetkinJourneyInstance>,
       ZetkinJourneyInstance
     >(key, url, {
       method: 'PATCH',
     }),
+  };
+};
+
+export const journeyMilestoneStatusResource = (
+  orgId: string,
+  instanceId: string,
+  milestoneId: string
+) => {
+  const key = ['journeyMilestone', orgId, instanceId, milestoneId];
+  const url = `/orgs/${orgId}/journey_instances/${instanceId}/milestones/${milestoneId}`;
+
+  return {
+    useUpdate: createUseMutation<
+      Partial<ZetkinJourneyMilestoneStatus>,
+      ZetkinJourneyMilestoneStatus
+    >(key, url, { method: 'PATCH' }),
   };
 };

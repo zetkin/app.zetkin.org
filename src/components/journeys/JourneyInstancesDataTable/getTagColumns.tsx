@@ -21,11 +21,7 @@ const getTagColumns = (tagMetadata: TagMetadata): GridColDef[] => {
     renderCell: (params) => {
       if (group) {
         return getGroupTags(params.row, group.id).map((tag) => (
-          <TagChip
-            key={tag.id}
-            chipProps={{ style: { marginRight: 5 } }}
-            tag={tag as ZetkinTag}
-          />
+          <TagChip key={tag.id} size="small" tag={tag as ZetkinTag} />
         ));
       }
     },
@@ -54,11 +50,7 @@ const getTagColumns = (tagMetadata: TagMetadata): GridColDef[] => {
       const rowTags = params.row.tags as ZetkinJourneyInstance['tags'];
       const freeTags = rowTags.filter((tag) => !tag.group && !('value' in tag));
       return freeTags.map((tag) => (
-        <TagChip
-          key={tag.id}
-          chipProps={{ style: { marginRight: 5 } }}
-          tag={tag as ZetkinTag}
-        />
+        <TagChip key={tag.id} size="small" tag={tag as ZetkinTag} />
       ));
     },
     renderHeader: () => (

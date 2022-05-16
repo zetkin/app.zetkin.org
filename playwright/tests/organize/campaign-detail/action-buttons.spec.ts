@@ -108,9 +108,12 @@ test.describe('Campaign action buttons', async () => {
 
       await page.click('data-testid=EllipsisMenu-menuActivator');
       await page.click('data-testid=EllipsisMenu-item-deleteCampaign');
-      await page.click('button > :text("Confirm")');
 
-      await page.waitForNavigation();
+      await Promise.all([
+        page.waitForNavigation(),
+        page.click('button > :text("Confirm")'),
+      ]);
+
       expect(page.url()).toEqual(appUri + '/organize/1/campaigns');
       expect(log().length).toEqual(1);
     });

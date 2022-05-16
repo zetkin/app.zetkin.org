@@ -10,6 +10,7 @@ const CodingSkillsTag: ZetkinTag = {
   id: 2,
   organization: { id: KPD.id, title: KPD.title },
   title: 'Coding',
+  value_type: null,
 };
 
 export default CodingSkillsTag;

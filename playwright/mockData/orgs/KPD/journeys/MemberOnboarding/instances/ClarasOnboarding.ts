@@ -10,7 +10,7 @@ import {
 } from '../../../../../../../src/types/zetkin';
 
 // Milestones
-const AttendMeeting: ZetkinJourneyMilestoneStatus = {
+export const AttendMeeting: ZetkinJourneyMilestoneStatus = {
   completed: null,
   deadline: '2022-06-18T00:29:12+02:00',
   description: '',
@@ -46,6 +46,7 @@ const ClarasOnboarding: ZetkinJourneyInstance = {
   },
   milestones: [AttendMeeting, AttendTraining, MeetBranchSec],
   next_milestone: AttendMeeting,
+  opening_note: '',
   organization: KPD,
   subjects: [ClaraZetkin],
   summary: `Nullam sagittis neque augue, vitae lacinia purus auctor eget. Mauris bibendum, 
