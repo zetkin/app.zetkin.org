@@ -9,3 +9,6 @@ journeyinstance:
     deadlineRemove: deadline was removed
     deadlineUpdate: 'now due {datetime}'
     incomplete: '{actor} marked a milestone as incomplete'
+  update:
+    summary: '{actor} edited the summary'
+    title: '{actor} edited the title'
