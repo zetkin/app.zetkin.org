@@ -27,16 +27,12 @@ const TimelineWrapper: React.FC<TimelineWrapperProps> = ({
     return handleResponseData<ZetkinUpdate[]>(res, 'GET');
   });
 
-  const notesMutation = createUseMutation(
-    queryKey.concat(['notes']),
-    itemApiPath + '/notes',
-    {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
-    }
-  )();
+  const notesMutation = createUseMutation(queryKey, itemApiPath + '/notes', {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    method: 'POST',
+  })();
 
   return (
     <ZetkinQuery queries={{ updatesQuery }}>
@@ -50,7 +46,7 @@ const TimelineWrapper: React.FC<TimelineWrapperProps> = ({
     </ZetkinQuery>
   );
 
-  function handleAddNote(note: ZetkinNote) {
+  function handleAddNote(note: Partial<ZetkinNote>) {
     setSubmitting(true);
     notesMutation.mutate(note, {
       onError: () => showSnackbar('error'),

@@ -9,7 +9,7 @@ import { ZetkinNote } from 'types/zetkin';
 
 interface AddNoteProps {
   disabled?: boolean;
-  onSubmit: (note: ZetkinNote) => void;
+  onSubmit: (note: Pick<ZetkinNote, 'text'>) => void;
 }
 
 const blank: Descendant[] = [
@@ -25,7 +25,7 @@ const TimelineAddNote: React.FunctionComponent<AddNoteProps> = ({
 }) => {
   const intl = useIntl();
   const [clear, setClear] = useState<number>(0);
-  const [note, setNote] = useState<ZetkinNote | null>(null);
+  const [note, setNote] = useState<Pick<ZetkinNote, 'text'> | null>(null);
 
   useEffect(() => {
     if (!disabled) {

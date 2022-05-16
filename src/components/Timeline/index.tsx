@@ -10,7 +10,7 @@ import { ZetkinUpdate } from 'types/updates';
 export interface TimelineProps {
   disabled?: boolean;
   expandable?: boolean;
-  onAddNote: (note: ZetkinNote) => void;
+  onAddNote: (note: Pick<ZetkinNote, 'text'>) => void;
   showAll?: boolean;
   updates: ZetkinUpdate[];
 }

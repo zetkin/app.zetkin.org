@@ -294,6 +294,7 @@ export interface ZetkinJourneyMilestoneStatus {
 }
 
 export interface ZetkinNote {
+  id: number;
   text: string;
 }
 
