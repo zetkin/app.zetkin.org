@@ -33,8 +33,16 @@ const useStyles = makeStyles({
   },
 });
 
-const TextEditor: React.FunctionComponent<{ initialValue?: Descendant[] }> = ({
+interface TextEditorProps {
+  initialValue?: Descendant[];
+  onChange: (value: Descendant[]) => void;
+  placeholder: string;
+}
+
+const TextEditor: React.FunctionComponent<TextEditorProps> = ({
   initialValue,
+  onChange,
+  placeholder,
 }) => {
   const [active, setActive] = useState<boolean>(false);
   const classes = useStyles({ active });
@@ -51,12 +59,12 @@ const TextEditor: React.FunctionComponent<{ initialValue?: Descendant[] }> = ({
 
   return (
     <Box className={classes.container}>
-      <Slate editor={editor} value={initialValue || []}>
+      <Slate editor={editor} onChange={onChange} value={initialValue || []}>
         <Editable
           onBlur={() => setActive(false)}
           onFocus={() => setActive(true)}
           onKeyDown={onKeyDown}
-          placeholder="Enter some rich text…"
+          placeholder={placeholder}
           renderElement={renderElement}
           renderLeaf={renderLeaf}
           spellCheck
