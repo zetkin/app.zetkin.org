@@ -40,5 +40,5 @@ nativePersonFields:
 snackbar:
   error: Oh dear, something went wrong
 timeline:
-  expand: show full timeline
   add_note_placeholder: Enter text to leave a note
+  expand: show full timeline

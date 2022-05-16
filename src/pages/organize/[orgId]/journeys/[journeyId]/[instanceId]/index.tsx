@@ -1,6 +1,7 @@
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { useContext } from 'react';
+import { useIntl } from 'react-intl';
 import { useQueryClient } from 'react-query';
 import { Divider, Grid } from '@material-ui/core';
 
@@ -12,6 +13,7 @@ import { organizationResource } from 'api/organizations';
 import { PageWithLayout } from 'types';
 import SnackbarContext from 'hooks/SnackbarContext';
 import TimelineWrapper from 'components/TimelineWrapper';
+import ZetkinSection from 'components/ZetkinSection';
 import { scaffold, ScaffoldedGetServerSideProps } from 'utils/next';
 import { ZetkinJourneyInstance, ZetkinPerson } from 'types/zetkin';
 
@@ -74,6 +76,7 @@ const JourneyDetailsPage: PageWithLayout<JourneyDetailsPageProps> = ({
     useRemoveSubject,
     useUnassignTag,
   } = journeyInstanceResource(orgId, instanceId);
+  const intl = useIntl();
   const journeyInstanceQuery = useQuery();
   const addAssigneeMutation = useAddAssignee();
   const removeAssigneeMutation = useRemoveAssignee();
@@ -123,11 +126,17 @@ const JourneyDetailsPage: PageWithLayout<JourneyDetailsPageProps> = ({
       <Grid container justifyContent="space-between" spacing={2}>
         <Grid item md={6}>
           <JourneyInstanceSummary journeyInstance={journeyInstance} />
-          <Divider style={{ marginTop: '2rem' }} />
-          <TimelineWrapper
-            itemApiPath={`/orgs/${orgId}/journey_instances/${instanceId}`}
-            queryKey={['journeyInstance', orgId, instanceId, 'timeline']}
-          />
+          <Divider style={{ marginBottom: 48, marginTop: 48 }} />
+          <ZetkinSection
+            title={intl.formatMessage({
+              id: 'pages.organizeJourneyInstance.sections.timeline',
+            })}
+          >
+            <TimelineWrapper
+              itemApiPath={`/orgs/${orgId}/journey_instances/${instanceId}`}
+              queryKey={['journeyInstance', orgId, instanceId, 'timeline']}
+            />
+          </ZetkinSection>
         </Grid>
         <Grid item md={4}>
           <JourneyInstanceSidebar

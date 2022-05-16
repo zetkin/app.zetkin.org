@@ -20,7 +20,8 @@ const useStyles = makeStyles({
     '&:hover': {
       borderColor: theme.palette.onSurface.medium,
     },
-    background: 'white',
+    background: (props: { active: boolean }) =>
+      props.active ? 'white' : 'transparent',
     border: '1.5px solid',
     borderColor: (props: { active: boolean }) =>
       props.active
@@ -29,7 +30,7 @@ const useStyles = makeStyles({
     borderRadius: 8,
     fontFamily: 'system-ui',
     padding: 16,
-    transition: 'border-color 0.3s ease',
+    transition: 'all 0.3s ease',
   },
 });
 
