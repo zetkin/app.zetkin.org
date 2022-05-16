@@ -2,6 +2,7 @@ import dayjs from 'dayjs';
 import { pick } from 'lodash';
 
 import mockJourneyInstance from './mockJourneyInstance';
+import mockNote from './mockNote';
 import { mockObject } from 'utils/testing/mocks';
 import mockPerson from './mockPerson';
 import { UPDATE_TYPES, ZetkinUpdate } from 'types/updates';
@@ -29,6 +30,11 @@ const mockUpdate = (
       details: { assignee: mockPerson() },
       target: pick(mockJourneyInstance(), ['id', 'title']),
       type: 'journeyinstance.addassignee',
+    },
+    [UPDATE_TYPES.JOURNEYINSTANCE_ADDNOTE]: {
+      details: { note: mockNote() },
+      target: pick(mockJourneyInstance(), ['id', 'title']),
+      type: 'journeyinstance.addnote',
     },
     [UPDATE_TYPES.JOURNEYINSTANCE_CREATE]: {
       details: { data: mockJourneyInstance() },
