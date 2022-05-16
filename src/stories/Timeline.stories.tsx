@@ -7,7 +7,11 @@ const chance = Chance();
 
 import mockUpdate from 'utils/testing/mocks/mockUpdate';
 import Timeline from 'components/Timeline';
-import { UPDATE_TYPES, ZetkinUpdateJourneyMilestone } from 'types/updates';
+import {
+  UPDATE_TYPES,
+  ZetkinUpdateJourneyInstance,
+  ZetkinUpdateJourneyInstanceMilestone,
+} from 'types/updates';
 
 export default {
   argTypes: {
@@ -19,8 +23,29 @@ export default {
 
 // More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
 const Template: ComponentStory<typeof Timeline> = (args) => (
-  <Timeline {...args} showAll />
+  <div style={{ maxWidth: 450 }}>
+    <Timeline {...args} showAll />
+  </div>
 );
+
+const journeyInstanceUpdates = Array.from(Array(10).keys()).map(() => {
+  const update = mockUpdate(UPDATE_TYPES.JOURNEYINSTANCE_UPDATE, {
+    timestamp: dayjs()
+      .subtract(Math.random() * 100, 'hours')
+      .format(),
+  }) as ZetkinUpdateJourneyInstance;
+  const fieldName = Math.random() > 0.5 ? 'summary' : 'title';
+  update.details.changes = {
+    [fieldName]: {
+      from: '',
+      to:
+        fieldName === 'title'
+          ? chance.sentence({ words: 4 })
+          : chance.paragraph({ sentences: 5 }),
+    },
+  };
+  return update;
+});
 
 const addAssigneeUpdates = Array.from(Array(10).keys()).map(() =>
   mockUpdate(
@@ -68,6 +93,7 @@ const journeyMilestoneUpdates = Array.from(Array(10).keys()).map(() => {
 
 const updates = addAssigneeUpdates
   .concat(journeyMilestoneUpdates)
+  .concat(journeyInstanceUpdates)
   .concat([
     mockUpdate(UPDATE_TYPES.JOURNEYINSTANCE_CREATE, {
       timestamp: dayjs()
