@@ -58,6 +58,10 @@ const themePalette = {
 const theme = createTheme({
   overrides: {
     MuiButton: {
+      label: {
+        fontWeight: 600,
+        textTransform: 'uppercase',
+      },
       root: {
         minWidth: '1rem',
         textTransform: 'none',
