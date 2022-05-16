@@ -1,10 +1,6 @@
 import { isEqual } from 'lodash';
 import { useIntl } from 'react-intl';
-import {
-  DataGridPro,
-  DataGridProProps,
-  GridSortModel,
-} from '@mui/x-data-grid-pro';
+import { DataGridProProps, GridSortModel } from '@mui/x-data-grid-pro';
 
 import getColumns from './getColumns';
 import { getRows } from './getRows';
@@ -12,6 +8,8 @@ import { TagMetadata } from 'utils/getTagMetadata';
 import Toolbar from './Toolbar';
 import { ZetkinJourneyInstance } from 'types/zetkin';
 import { FunctionComponent, useState } from 'react';
+
+import UserConfigurableDataGrid from 'components/UserConfigurableDataGrid';
 
 interface JourneysDataTableProps {
   dataGridProps?: Partial<DataGridProProps>;
@@ -41,8 +39,7 @@ const JourneyInstancesDataTable: FunctionComponent<JourneysDataTableProps> = ({
 
   return (
     <>
-      <DataGridPro
-        autoHeight={rows.length === 0}
+      <UserConfigurableDataGrid
         checkboxSelection
         columns={columnsWithHeaderTitles}
         components={{ Toolbar: Toolbar }}
@@ -65,6 +62,7 @@ const JourneyInstancesDataTable: FunctionComponent<JourneysDataTableProps> = ({
         pagination
         rows={rows}
         sortModel={sortModel}
+        storageKey="journeyInstances"
         {...dataGridProps}
       />
     </>

@@ -302,10 +302,3 @@ export type {
   ZetkinViewColumn,
   ZetkinViewRow,
 };
-export type ZetkinUpdateAssignee = {
-  assignee: Pick<ZetkinPerson, 'id' | 'first_name' | 'last_name'>;
-};
-
-export interface ZetkinNote {
-  content: string;
-}
