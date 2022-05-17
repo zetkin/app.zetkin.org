@@ -1,9 +1,9 @@
 import ArchiveIcon from '@material-ui/icons/Archive';
 import dayjs from 'dayjs';
-import { useIntl } from 'react-intl';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { Box, Button, TextField, Typography } from '@material-ui/core';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 import { journeyInstanceResource } from 'api/journeys';
 import SubmitCancelButtons from 'components/forms/common/SubmitCancelButtons';
@@ -11,7 +11,7 @@ import TagManager from 'components/organize/TagManager';
 import ZetkinDialog from 'components/ZetkinDialog';
 import { ZetkinJourneyInstance, ZetkinTag } from 'types/zetkin';
 
-const CloseJourneyButton: React.FunctionComponent<{
+const JourneyCloseButton: React.FunctionComponent<{
   journeyInstance: ZetkinJourneyInstance;
 }> = ({ journeyInstance }) => {
   const intl = useIntl();
@@ -47,12 +47,13 @@ const CloseJourneyButton: React.FunctionComponent<{
       <Button
         color="primary"
         onClick={() => setShowDialog(true)}
+        startIcon={<ArchiveIcon />}
         variant="contained"
       >
-        <Box align-items="center" display="flex" mr={1}>
-          <ArchiveIcon />
-        </Box>
-        Close {journeyInstance.journey.title}
+        <FormattedMessage
+          id="misc.journeys.closeJourneyInstanceButton.label"
+          values={{ singularLabel: journeyInstance.journey.title }}
+        />
       </Button>
       <ZetkinDialog onClose={closeAndClear} open={showDialog}>
         <form
@@ -61,21 +62,30 @@ const CloseJourneyButton: React.FunctionComponent<{
             onSubmit();
           }}
         >
-          <Typography variant="h6">Outcome</Typography>
+          <Typography variant="h6">
+            <FormattedMessage id="misc.journeys.closeJourneyInstanceButton.dialog.outcomeLabel" />
+          </Typography>
           <TextField
             fullWidth
             margin="normal"
             multiline
             onChange={(e) => setClosingNote(e.target.value)}
-            placeholder="Describe the outcome of the case"
+            placeholder={intl.formatMessage(
+              {
+                id: 'misc.journeys.closeJourneyInstanceButton.dialog.outcomeFieldPlaceholder',
+              },
+              { singularLabel: journeyInstance.journey.title }
+            )}
             rows={3}
             variant="outlined"
           />
           <Box mt={2}>
-            <Typography variant="h6">Outcome Tags</Typography>
+            <Typography variant="h6">
+              <FormattedMessage id="misc.journeys.closeJourneyInstanceButton.dialog.outcomeTagsLabel" />
+            </Typography>
             <Box mb={3} mt={1}>
               <Typography variant="body2">
-                Add any tags that describe the outcome
+                <FormattedMessage id="misc.journeys.closeJourneyInstanceButton.dialog.outcomeTagsDescription" />
               </Typography>
             </Box>
             <Box>
@@ -98,7 +108,12 @@ const CloseJourneyButton: React.FunctionComponent<{
           </Box>
           <SubmitCancelButtons
             onCancel={closeAndClear}
-            submitText={`Close ${journeyInstance.journey.title}`}
+            submitText={intl.formatMessage(
+              {
+                id: 'misc.journeys.closeJourneyInstanceButton.label',
+              },
+              { singularLabel: journeyInstance.journey.title }
+            )}
           />
         </form>
       </ZetkinDialog>
@@ -106,4 +121,4 @@ const CloseJourneyButton: React.FunctionComponent<{
   );
 };
 
-export default CloseJourneyButton;
+export default JourneyCloseButton;

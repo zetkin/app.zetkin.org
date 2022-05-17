@@ -7,3 +7,5 @@ closeJourneyInstanceButton:
     outcomeFieldPlaceholder: Describe the outcome of the case
     outcomeTagsLabel: Outcome tags
     outcomeTagsDescription: Add any tags that describe the outcome
+reopenJourneyInstanceButton:
+  label: Re-open {singularLabel}
