@@ -1,5 +1,4 @@
 import { Collapse } from '@material-ui/core';
-import { Descendant } from 'slate';
 import { useIntl } from 'react-intl';
 import React, { useEffect, useState } from 'react';
 
@@ -11,13 +10,6 @@ interface AddNoteProps {
   disabled?: boolean;
   onSubmit: (note: Pick<ZetkinNote, 'text'>) => void;
 }
-
-const blank: Descendant[] = [
-  {
-    children: [{ text: '' }],
-    type: 'paragraph',
-  },
-];
 
 const TimelineAddNote: React.FunctionComponent<AddNoteProps> = ({
   disabled,
@@ -44,7 +36,6 @@ const TimelineAddNote: React.FunctionComponent<AddNoteProps> = ({
     >
       <TextEditor
         clear={clear}
-        initialValue={blank}
         onChange={onChange}
         placeholder={intl.formatMessage({
           id: 'misc.timeline.add_note_placeholder',
@@ -56,11 +47,11 @@ const TimelineAddNote: React.FunctionComponent<AddNoteProps> = ({
     </form>
   );
 
-  function onChange(value: Descendant[]) {
-    if (JSON.stringify(value) === JSON.stringify(blank)) {
+  function onChange(value: string) {
+    if (value === '') {
       setNote(null);
     } else {
-      setNote({ ...note, text: JSON.stringify(value) });
+      setNote({ ...note, text: value });
     }
   }
 

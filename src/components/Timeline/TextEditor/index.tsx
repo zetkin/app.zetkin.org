@@ -16,7 +16,7 @@ import './types';
 import TextElement from './TextElement';
 import theme from 'theme';
 import Toolbar from './Toolbar';
-import { keyDownHandler, withInlines } from './helpers';
+import { keyDownHandler, slateToMarkdown, withInlines } from './helpers';
 
 const useStyles = makeStyles({
   container: {
@@ -43,14 +43,12 @@ const useStyles = makeStyles({
 
 interface TextEditorProps {
   clear: number;
-  initialValue: Descendant[];
-  onChange: (value: Descendant[]) => void;
+  onChange: (value: string) => void;
   placeholder: string;
 }
 
 const TextEditor: React.FunctionComponent<TextEditorProps> = ({
   clear,
-  initialValue,
   onChange,
   placeholder,
 }) => {
@@ -62,6 +60,12 @@ const TextEditor: React.FunctionComponent<TextEditorProps> = ({
     () => withInlines(withHistory(withReact(createEditor()))),
     []
   );
+  const initialValue = [
+    {
+      children: [{ text: '' }],
+      type: 'paragraph',
+    },
+  ] as Descendant[];
 
   useEffect(() => {
     if (clear > 0) {
@@ -72,7 +76,11 @@ const TextEditor: React.FunctionComponent<TextEditorProps> = ({
 
   return (
     <Box className={classes.container}>
-      <Slate editor={editor} onChange={onChange} value={initialValue || []}>
+      <Slate
+        editor={editor}
+        onChange={(slateArray) => onChange(slateToMarkdown(slateArray))}
+        value={initialValue}
+      >
         <Editable
           onBlur={onBlur}
           onFocus={() => setActive(true)}
@@ -110,7 +118,7 @@ const TextEditor: React.FunctionComponent<TextEditorProps> = ({
   }
 };
 
-const Leaf: React.FunctionComponent<{
+export const Leaf: React.FunctionComponent<{
   attributes: Attributes;
   leaf: { [key: string]: boolean };
 }> = ({ attributes, children, leaf }) => {
@@ -122,7 +130,7 @@ const Leaf: React.FunctionComponent<{
     children = <em>{children}</em>;
   }
 
-  if (leaf.strikethrough) {
+  if (leaf.strikeThrough || leaf.strikethrough) {
     children = <s>{children}</s>;
   }
 

@@ -1,4 +1,7 @@
 import isUrl from 'is-url';
+import markdown from 'remark-parse';
+import remarkGfm from 'remark-gfm';
+import { unified } from 'unified';
 import {
   Descendant,
   Editor,
@@ -7,6 +10,7 @@ import {
   Transforms,
 } from 'slate';
 import isHotkey, { isKeyHotkey } from 'is-hotkey';
+import slate, { BlockType, NodeTypes, serialize } from 'remark-slate';
 
 const LIST_TYPES = ['numbered-list', 'bulleted-list'];
 const TEXT_ALIGN_TYPES = ['left', 'center', 'right', 'justify'];
@@ -39,13 +43,11 @@ const toggleBlock = (editor: Editor, format: string): void => {
   let newProperties: Partial<SlateElement>;
   if (TEXT_ALIGN_TYPES.includes(format)) {
     newProperties = {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       align: isActive ? undefined : format,
     };
   } else {
     newProperties = {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       type: isActive ? 'paragraph' : isList ? 'list-item' : format,
     };
@@ -54,7 +56,7 @@ const toggleBlock = (editor: Editor, format: string): void => {
 
   if (!isActive && isList) {
     const block = { children: [], type: format };
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+
     // @ts-ignore
     Transforms.wrapNodes(editor, block);
   }
@@ -86,7 +88,6 @@ const isBlockActive = (
       match: (n) =>
         !Editor.isEditor(n) &&
         SlateElement.isElement(n) &&
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         n[blockType] === format,
     })
@@ -98,7 +99,6 @@ const isBlockActive = (
 const isLinkActive = (editor: Editor): boolean => {
   const [link] = Editor.nodes(editor, {
     match: (n) =>
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === 'link',
   });
@@ -113,7 +113,6 @@ const isMarkActive = (editor: Editor, format: string): boolean => {
 const unwrapLink = (editor: Editor): void => {
   Transforms.unwrapNodes(editor, {
     match: (n) =>
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === 'link',
   });
@@ -134,11 +133,9 @@ const wrapLink = (editor: Editor, url: string): void => {
   };
 
   if (isCollapsed) {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     Transforms.insertNodes(editor, link);
   } else {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     Transforms.wrapNodes(editor, link, { split: true });
     Transforms.collapse(editor, { edge: 'end' });
@@ -189,6 +186,12 @@ const keyDownHandler = (editor: Editor, event: React.KeyboardEvent): void => {
     }
   }
 
+  // Insert new line according to convention
+  if (isHotkey('shift+enter', event)) {
+    event.preventDefault();
+    Editor.insertText(editor, '\n');
+  }
+
   // Default left/right behavior is unit:'character'.
   // This fails to distinguish between two cursor positions, such as
   // <inline>foo<cursor/></inline> vs <inline>foo</inline><cursor/>.
@@ -208,6 +211,118 @@ const keyDownHandler = (editor: Editor, event: React.KeyboardEvent): void => {
       return;
     }
   }
+};
+
+interface SlateEl {
+  [key: string]: string | unknown;
+  children?: SlateEl[];
+}
+
+function slateReplace(
+  slateArray: SlateEl[],
+  field: string,
+  match: string | null,
+  replace: string
+) {
+  return slateArray.map((item) => {
+    if (!match && !!item[field]) {
+      item[replace] = item[field];
+    }
+    if (item[field] === match) {
+      item[field] = replace;
+    }
+    if (item.children) {
+      item.children = slateReplace(item.children, field, match, replace);
+    }
+    return item;
+  });
+}
+
+const markdownToSlate = (markdownString: string): Promise<SlateEl[]> =>
+  unified()
+    .use(markdown)
+    .use(slate)
+    .use(remarkGfm)
+    .process(markdownString)
+    .then(
+      (file) => {
+        let slateArray = file.result as SlateEl[];
+
+        slateArray = slateReplace(slateArray, 'type', 'list_item', 'list-item');
+        slateArray = slateReplace(
+          slateArray,
+          'type',
+          'ul_list',
+          'bulleted-list'
+        );
+        slateArray = slateReplace(
+          slateArray,
+          'type',
+          'ol_list',
+          'numbered-list'
+        );
+        slateArray = slateReplace(
+          slateArray,
+          'type',
+          'heading_one',
+          'heading-one'
+        );
+        slateArray = slateReplace(
+          slateArray,
+          'type',
+          'heading_two',
+          'heading-two'
+        );
+        slateArray = slateReplace(
+          slateArray,
+          'type',
+          'block_quote',
+          'block-quote'
+        );
+        slateArray = slateReplace(slateArray, 'link', null, 'url');
+        return slateArray.map((item) => {
+          return item;
+        });
+      },
+      (error) => {
+        throw error;
+      }
+    );
+
+const slateToMarkdown = (slateArray: Descendant[]): string => {
+  const nodeTypes = {
+    block_quote: 'block-quote',
+    heading: {
+      1: 'heading-one',
+      2: 'heading-two',
+    },
+    listItem: 'list-item',
+    ol_list: 'numbered-list',
+    ul_list: 'bulleted-list',
+  };
+
+  const processed = (slateArray as SlateEl[]).map((item) => {
+    const itemCopy = cloneDeep(item);
+    if (itemCopy.type === 'paragraph') {
+      itemCopy.children = itemCopy.children?.map((child) => {
+        if (child.url) {
+          child.link = child.url as string;
+        }
+        if (child.strikethrough) {
+          child.strikeThrough = true;
+        }
+        return child;
+      });
+    }
+    return itemCopy;
+  });
+  return processed
+    .map((v) => {
+      return serialize(v as unknown as BlockType, {
+        nodeTypes: nodeTypes as NodeTypes,
+      });
+    })
+    .join('');
 };
 
 export {
