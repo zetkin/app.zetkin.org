@@ -1,6 +1,6 @@
-import { IconButton } from '@material-ui/core';
 import { useSlate } from 'slate-react';
 import { Attachment, Link, LinkOff } from '@material-ui/icons';
+import { IconButton, IconButtonProps } from '@material-ui/core';
 import React, { FunctionComponent } from 'react';
 
 import {
@@ -43,7 +43,8 @@ export const BlockButton: React.FunctionComponent<{
 export const MarkButton: React.FunctionComponent<{
   MarkIcon: FunctionComponent;
   format: string;
-}> = ({ format, MarkIcon }) => {
+  iconButtonProps?: IconButtonProps;
+}> = ({ format, iconButtonProps, MarkIcon }) => {
   const editor = useSlate();
   return (
     <IconButton
@@ -52,6 +53,7 @@ export const MarkButton: React.FunctionComponent<{
         event.preventDefault();
         toggleMark(editor, format);
       }}
+      {...iconButtonProps}
     >
       <MarkIcon />
     </IconButton>
