@@ -6,7 +6,7 @@ import { FormattedMessage as Msg, useIntl } from 'react-intl';
 import JourneyMilestoneProgress from 'components/organize/journeys/JourneyMilestoneProgress';
 import JourneyPerson from './JourneyPerson';
 import { MUIOnlyPersonSelect as PersonSelect } from 'components/forms/common/PersonSelect';
-import TagsManager from '../TagsManager';
+import { TagManagerSection } from '../TagManager';
 import ZetkinSection from 'components/ZetkinSection';
 import {
   ZetkinJourneyInstance,
@@ -147,7 +147,7 @@ const JourneyInstanceSidebar = ({
         <Divider />
       </Grid>
       <Grid item xs={12}>
-        <TagsManager
+        <TagManagerSection
           assignedTags={journeyInstance.tags}
           onAssignTag={onAssignTag}
           onTagEdited={onTagEdited}

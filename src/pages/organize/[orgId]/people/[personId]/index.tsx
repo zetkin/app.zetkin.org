@@ -10,7 +10,7 @@ import PersonDetailsCard from 'components/organize/people/PersonDetailsCard';
 import PersonOrganizationsCard from 'components/organize/people/PersonOrganizationsCard';
 import SinglePersonLayout from 'layout/organize/SinglePersonLayout';
 import SnackbarContext from 'hooks/SnackbarContext';
-import TagsManager from 'components/organize/TagsManager';
+import { TagManagerSection } from 'components/organize/TagManager';
 import ZetkinQuery from 'components/ZetkinQuery';
 import { personResource, personTagsResource } from 'api/people';
 import { scaffold, ScaffoldedGetServerSideProps } from 'utils/next';
@@ -93,7 +93,7 @@ const PersonProfilePage: PageWithLayout<PersonPageProps> = (props) => {
         <Grid item lg={4} xs={12}>
           <ZetkinQuery queries={{ personTagsQuery }}>
             {({ queries: { personTagsQuery } }) => (
-              <TagsManager
+              <TagManagerSection
                 assignedTags={personTagsQuery.data}
                 onAssignTag={(tag) =>
                   assignTagMutation.mutate(tag.id, {

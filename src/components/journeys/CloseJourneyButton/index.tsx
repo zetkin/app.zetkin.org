@@ -1,24 +1,19 @@
-import { Add } from '@material-ui/icons';
 import ArchiveIcon from '@material-ui/icons/Archive';
 import dayjs from 'dayjs';
-import { FormattedMessage } from 'react-intl';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import { Box, Button, Popover, TextField, Typography } from '@material-ui/core';
+import { Box, Button, TextField, Typography } from '@material-ui/core';
 
 import { journeyInstanceResource } from 'api/journeys';
 import SubmitCancelButtons from 'components/forms/common/SubmitCancelButtons';
-import TagSelect from 'components/organize/TagsManager/TagSelect';
-import TagsList from 'components/organize/TagsManager/TagsList';
+import TagsManager from 'components/organize/TagManager';
 import ZetkinDialog from 'components/ZetkinDialog';
 import { ZetkinJourneyInstance } from 'types/zetkin';
-import { tagGroupsResource, tagsResource } from 'api/tags';
 
 const CloseJourneyButton: React.FunctionComponent<{
   journeyInstance: ZetkinJourneyInstance;
 }> = ({ journeyInstance }) => {
   const [showDialog, setShowDialog] = useState(false);
-  const [addTagButton, setAddTagButton] = useState<HTMLElement | null>(null);
 
   const { orgId } = useRouter().query;
 
@@ -30,9 +25,6 @@ const CloseJourneyButton: React.FunctionComponent<{
   const journeyInstanceMutation = useUpdate();
   const assignTagMutation = useAssignTag();
   const unassignTagMutation = useUnassignTag();
-
-  const { data: groups } = tagGroupsResource(orgId as string).useQuery();
-  const { data: tags } = tagsResource(orgId as string).useQuery();
 
   const [closingNote, setClosingNote] = useState('');
 
@@ -83,32 +75,12 @@ const CloseJourneyButton: React.FunctionComponent<{
             </Box>
             <Box>
               <Box mt={3}>
-                <TagsList
-                  isGrouped={false}
+                <TagsManager
+                  assignedTags={journeyInstance.tags}
+                  onAssignTag={(tag) => assignTagMutation.mutate(tag.id)}
+                  onTagEdited={(tag) => tag}
                   onUnassignTag={(tag) => unassignTagMutation.mutate(tag.id)}
-                  tags={journeyInstance.tags}
                 />
-                <Box mt={2}>
-                  <Button
-                    color="primary"
-                    onClick={(event) => setAddTagButton(event.currentTarget)}
-                    startIcon={<Add />}
-                  >
-                    <FormattedMessage id="misc.tags.tagsManager.addTag" />
-                  </Button>
-                </Box>
-                <Popover
-                  anchorEl={addTagButton}
-                  onClose={() => setAddTagButton(null)}
-                  open={Boolean(addTagButton)}
-                >
-                  <TagSelect
-                    disabledTags={journeyInstance.tags}
-                    groups={groups || []}
-                    onSelect={(tag) => assignTagMutation.mutate(tag.id)}
-                    tags={tags || []}
-                  />
-                </Popover>
               </Box>
             </Box>
           </Box>

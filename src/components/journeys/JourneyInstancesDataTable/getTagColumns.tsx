@@ -1,6 +1,6 @@
 import { FormattedMessage } from 'react-intl';
 import { GridColDef } from '@mui/x-data-grid-pro';
-import TagChip from 'components/organize/TagsManager/TagChip';
+import TagChip from 'components/organize/TagManager/components/TagChip';
 import { TagMetadata } from 'utils/getTagMetadata';
 import { ZetkinJourneyInstance, ZetkinTag } from 'types/zetkin';
 

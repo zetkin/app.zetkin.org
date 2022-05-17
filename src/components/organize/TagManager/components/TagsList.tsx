@@ -3,7 +3,7 @@ import { Box, Typography } from '@material-ui/core';
 
 import { ZetkinTag } from 'types/zetkin';
 
-import { groupTags } from './utils';
+import { groupTags } from '../utils';
 import TagChip from './TagChip';
 
 const TagsList: React.FunctionComponent<{

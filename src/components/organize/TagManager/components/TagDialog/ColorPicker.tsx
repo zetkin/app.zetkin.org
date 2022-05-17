@@ -2,7 +2,7 @@ import ReplayIcon from '@material-ui/icons/Replay';
 import { useIntl } from 'react-intl';
 import { Box, InputAdornment, TextField } from '@material-ui/core';
 
-import { DEFAULT_TAG_COLOR, hexRegex, randomColor } from '../utils';
+import { DEFAULT_TAG_COLOR, hexRegex, randomColor } from '../../utils';
 
 const ColorPicker: React.FunctionComponent<{
   onChange: (color: { valid: boolean; value: string }) => void;

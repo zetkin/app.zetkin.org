@@ -13,10 +13,10 @@ import {
 } from '@material-ui/core';
 import { FormattedMessage, useIntl } from 'react-intl';
 
-import { groupTags } from './utils';
+import { groupTags } from '../utils';
 import TagChip from './TagChip';
 import TagDialog from './TagDialog';
-import { EditTag, NewTag } from './types';
+import { EditTag, NewTag } from '../types';
 import { ZetkinTag, ZetkinTagGroup } from 'types/zetkin';
 
 const TagSelect: React.FunctionComponent<{

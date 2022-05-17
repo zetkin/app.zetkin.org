@@ -4,7 +4,7 @@ import { render } from 'utils/testing';
 import singletonRouter from 'next/router';
 
 import mockTag from 'utils/testing/mocks/mockTag';
-import { EditTag, NewTag } from '../types';
+import { EditTag, NewTag } from '../../types';
 
 import TagDialog from '.';
 

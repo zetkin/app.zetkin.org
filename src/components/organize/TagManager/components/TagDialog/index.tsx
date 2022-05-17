@@ -7,7 +7,7 @@ import ColorPicker from './ColorPicker';
 import SubmitCancelButtons from 'components/forms/common/SubmitCancelButtons';
 import TagGroupSelect from './TagGroupSelect';
 import ZetkinDialog from 'components/ZetkinDialog';
-import { EditTag, NewTag, NewTagGroup } from '../types';
+import { EditTag, NewTag, NewTagGroup } from '../../types';
 import { ZetkinTag, ZetkinTagGroup } from 'types/zetkin';
 
 interface TagDialogProps {

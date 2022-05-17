@@ -2,7 +2,7 @@ import { useIntl } from 'react-intl';
 import { Autocomplete, createFilterOptions } from '@material-ui/lab';
 import { Box, TextField } from '@material-ui/core';
 
-import { NewTagGroup } from '../types';
+import { NewTagGroup } from '../../types';
 import { ZetkinTagGroup } from 'types/zetkin';
 
 interface NewOption {
