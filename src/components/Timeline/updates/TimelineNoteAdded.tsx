@@ -22,8 +22,8 @@ const TimelineNoteAdded: React.FC<Props> = ({ update }) => {
   const renderElement = useCallback((props) => <TextElement {...props} />, []);
 
   useEffect(() => {
-    markdownToSlate(update.details.note.text).then((slateString) =>
-      setValue(slateString)
+    markdownToSlate(update.details.note.text).then((slateArray) =>
+      setValue(slateArray as Descendant[])
     );
   }, [update]);
 
