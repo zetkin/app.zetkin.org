@@ -244,6 +244,7 @@ export interface ZetkinDataField {
 
 export interface ZetkinJourney {
   id: number;
+  title: string;
   opening_note_template: string;
   organization: ZetkinOrganization;
   plural_label: string;

@@ -19,7 +19,7 @@ const ColorPicker: React.FunctionComponent<{
       helperText={
         error &&
         intl.formatMessage({
-          id: 'misc.tags.tagsManager.tagDialog.colorErrorText',
+          id: 'misc.tags.tagManager.tagDialog.colorErrorText',
         })
       }
       inputProps={{ 'data-testid': 'TagManager-TagDialog-colorField' }}
@@ -51,7 +51,7 @@ const ColorPicker: React.FunctionComponent<{
         ),
       }}
       label={intl.formatMessage({
-        id: 'misc.tags.tagsManager.tagDialog.colorLabel',
+        id: 'misc.tags.tagManager.tagDialog.colorLabel',
       })}
       margin="normal"
       onChange={(e) => {
@@ -62,7 +62,7 @@ const ColorPicker: React.FunctionComponent<{
       }}
       onClick={(e) => (e.target as HTMLInputElement).focus()}
       placeholder={intl.formatMessage({
-        id: 'misc.tags.tagsManager.tagDialog.colorLabel',
+        id: 'misc.tags.tagManager.tagDialog.colorLabel',
       })}
       value={value || ''}
       variant="outlined"

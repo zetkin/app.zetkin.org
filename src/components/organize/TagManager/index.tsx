@@ -59,7 +59,7 @@ export const TagManagerSection: React.FunctionComponent<
           onChange={() => setIsGrouped(!isGrouped)}
         />
       }
-      title={intl.formatMessage({ id: 'misc.tags.tagsManager.title' })}
+      title={intl.formatMessage({ id: 'misc.tags.tagManager.title' })}
     >
       <TagManager groupTags={isGrouped} {...props} />{' '}
     </ZetkinSection>

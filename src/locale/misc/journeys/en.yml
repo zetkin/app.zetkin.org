@@ -1,2 +1,9 @@
 overview:
   overviewTitle: All journeys
+closeJourneyInstanceButton:
+  label: Close {singularLabel}
+  dialog:
+    outcomeLabel: Outcome
+    outcomeFieldPlaceholder: Describe the outcome of the case
+    outcomeTagsLabel: Outcome tags
+    outcomeTagsDescription: Add any tags that describe the outcome

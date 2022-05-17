@@ -65,7 +65,7 @@ const TagDialog: React.FunctionComponent<TagDialogProps> = ({
         editingTag
           ? 'Edit tag'
           : intl.formatMessage({
-              id: 'misc.tags.tagsManager.tagDialog.dialogTitle',
+              id: 'misc.tags.tagManager.tagDialog.dialogTitle',
             })
       }
     >
@@ -103,12 +103,12 @@ const TagDialog: React.FunctionComponent<TagDialogProps> = ({
             titleEdited &&
             !title &&
             intl.formatMessage({
-              id: 'misc.tags.tagsManager.tagDialog.titleErrorText',
+              id: 'misc.tags.tagManager.tagDialog.titleErrorText',
             })
           }
           inputProps={{ 'data-testid': 'TagManager-TagDialog-titleField' }}
           label={intl.formatMessage({
-            id: 'misc.tags.tagsManager.tagDialog.titleLabel',
+            id: 'misc.tags.tagManager.tagDialog.titleLabel',
           })}
           margin="normal"
           onChange={(e) => {
@@ -138,7 +138,7 @@ const TagDialog: React.FunctionComponent<TagDialogProps> = ({
             editingTag
               ? undefined
               : intl.formatMessage({
-                  id: 'misc.tags.tagsManager.submitCreateTagButton',
+                  id: 'misc.tags.tagManager.submitCreateTagButton',
                 })
           }
         />

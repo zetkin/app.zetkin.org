@@ -19,20 +19,6 @@ const editTagCallback = jest.fn((tag: EditTag) => tag);
 
 describe('<TagManagerController />', () => {
   describe('Renders list of tags passed in', () => {
-    it('informs user if no tags applied', () => {
-      const { getByText } = render(
-        <TagManagerController
-          assignedTags={[]}
-          availableGroups={[]}
-          availableTags={[]}
-          onAssignTag={assignTagCallback}
-          onCreateTag={createTagCallback}
-          onEditTag={editTagCallback}
-          onUnassignTag={unassignTagCallback}
-        />
-      );
-      expect(getByText('misc.tags.tagsManager.noTags')).toBeTruthy();
-    });
     it('shows tags that have been applied in the tags list', () => {
       const tag1 = mockTag({ title: 'Organizer' });
       const tag2 = mockTag({ id: 2, title: 'Activist' });
@@ -51,7 +37,7 @@ describe('<TagManagerController />', () => {
       expect(getByText('Activist')).toBeTruthy();
     });
   });
-  it('groups tags when clicking toggle', () => {
+  it('groups tags passed tagsGrouped prop', () => {
     const tags = [
       mockTag({ group: { id: 1, title: 'Political' } }),
       mockTag({
@@ -91,26 +77,23 @@ describe('<TagManagerController />', () => {
         assignedTags={tags}
         availableGroups={[]}
         availableTags={tags}
+        groupTags
         onAssignTag={assignTagCallback}
         onCreateTag={createTagCallback}
         onEditTag={editTagCallback}
         onUnassignTag={unassignTagCallback}
       />
     );
-    const toggle = getByTestId('TagsManager-groupToggle').firstChild
-      ?.firstChild as Element & { disabled: boolean };
-    expect(toggle.disabled).toBeFalsy();
-    click(toggle);
 
     expect(getByText('Political')).toBeTruthy();
-    expect(getByTestId('TagsManager-groupedTags-1').children.length).toEqual(2);
+    expect(getByTestId('TagManager-groupedTags-1').children.length).toEqual(2);
 
     expect(getByText('Skills')).toBeTruthy();
-    expect(getByTestId('TagsManager-groupedTags-2').children.length).toEqual(3);
+    expect(getByTestId('TagManager-groupedTags-2').children.length).toEqual(3);
 
-    expect(getByText('misc.tags.tagsManager.ungroupedHeader')).toBeTruthy();
+    expect(getByText('misc.tags.tagManager.ungroupedHeader')).toBeTruthy();
     expect(
-      getByTestId('TagsManager-groupedTags-ungrouped').children.length
+      getByTestId('TagManager-groupedTags-ungrouped').children.length
     ).toEqual(2);
   });
   it('can add a tag', () => {
@@ -133,7 +116,7 @@ describe('<TagManagerController />', () => {
         onUnassignTag={unassignTagCallback}
       />
     );
-    const addTagButton = getByText('misc.tags.tagsManager.addTag');
+    const addTagButton = getByText('misc.tags.tagManager.addTag');
     click(addTagButton);
 
     // Typing searches for tag
@@ -207,7 +190,7 @@ describe('<TagManagerController />', () => {
         />
       );
 
-      const addTagButton = getByText('misc.tags.tagsManager.addTag');
+      const addTagButton = getByText('misc.tags.tagManager.addTag');
       click(addTagButton);
 
       const tagSearchField = getByTestId('TagManager-TagSelect-searchField');
@@ -249,7 +232,7 @@ describe('<TagManagerController />', () => {
         />
       );
 
-      const addTagButton = getByText('misc.tags.tagsManager.addTag');
+      const addTagButton = getByText('misc.tags.tagManager.addTag');
       click(addTagButton);
 
       const editTagButton = getByTestId(

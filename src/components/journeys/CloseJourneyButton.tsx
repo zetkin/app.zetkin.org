@@ -1,32 +1,37 @@
 import ArchiveIcon from '@material-ui/icons/Archive';
 import dayjs from 'dayjs';
+import { useIntl } from 'react-intl';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { Box, Button, TextField, Typography } from '@material-ui/core';
 
 import { journeyInstanceResource } from 'api/journeys';
 import SubmitCancelButtons from 'components/forms/common/SubmitCancelButtons';
-import TagsManager from 'components/organize/TagManager';
+import TagManager from 'components/organize/TagManager';
 import ZetkinDialog from 'components/ZetkinDialog';
-import { ZetkinJourneyInstance } from 'types/zetkin';
+import { ZetkinJourneyInstance, ZetkinTag } from 'types/zetkin';
 
 const CloseJourneyButton: React.FunctionComponent<{
   journeyInstance: ZetkinJourneyInstance;
 }> = ({ journeyInstance }) => {
-  const [showDialog, setShowDialog] = useState(false);
-
+  const intl = useIntl();
   const { orgId } = useRouter().query;
 
-  const { useAssignTag, useUpdate, useUnassignTag } = journeyInstanceResource(
+  const [showDialog, setShowDialog] = useState(false);
+  const { useUpdate } = journeyInstanceResource(
     orgId as string,
     journeyInstance.id.toString()
   );
-
   const journeyInstanceMutation = useUpdate();
-  const assignTagMutation = useAssignTag();
-  const unassignTagMutation = useUnassignTag();
 
   const [closingNote, setClosingNote] = useState('');
+  const [internalTags, setInternalTags] = useState<ZetkinTag[]>([]);
+
+  const closeAndClear = () => {
+    setShowDialog(false);
+    setInternalTags([]);
+    setClosingNote('');
+  };
 
   const onSubmit = () => {
     const body = {
@@ -49,7 +54,7 @@ const CloseJourneyButton: React.FunctionComponent<{
         </Box>
         Close {journeyInstance.journey.title}
       </Button>
-      <ZetkinDialog onClose={() => setShowDialog(false)} open={showDialog}>
+      <ZetkinDialog onClose={closeAndClear} open={showDialog}>
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -75,17 +80,24 @@ const CloseJourneyButton: React.FunctionComponent<{
             </Box>
             <Box>
               <Box mt={3}>
-                <TagsManager
-                  assignedTags={journeyInstance.tags}
-                  onAssignTag={(tag) => assignTagMutation.mutate(tag.id)}
+                <TagManager
+                  assignedTags={internalTags}
+                  disabledTags={journeyInstance.tags.concat(internalTags)}
+                  onAssignTag={(tag) => setInternalTags([...internalTags, tag])}
                   onTagEdited={(tag) => tag}
-                  onUnassignTag={(tag) => unassignTagMutation.mutate(tag.id)}
+                  onUnassignTag={(tag) =>
+                    setInternalTags(
+                      internalTags.filter(
+                        (existingTag) => tag.id !== existingTag.id
+                      )
+                    )
+                  }
                 />
               </Box>
             </Box>
           </Box>
           <SubmitCancelButtons
-            onCancel={() => setShowDialog(false)}
+            onCancel={closeAndClear}
             submitText={`Close ${journeyInstance.journey.title}`}
           />
         </form>

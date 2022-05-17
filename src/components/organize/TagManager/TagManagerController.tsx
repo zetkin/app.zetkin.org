@@ -1,7 +1,7 @@
 import { Add } from '@material-ui/icons';
 import { FormattedMessage } from 'react-intl';
 import { useState } from 'react';
-import { Box, Button, Popover, Typography } from '@material-ui/core';
+import { Box, Button, Popover } from '@material-ui/core';
 
 import TagSelect from './components/TagSelect';
 import TagsList from './components/TagsList';
@@ -12,6 +12,7 @@ export interface TagManagerControllerProps {
   assignedTags: ZetkinTag[];
   availableGroups: ZetkinTagGroup[];
   availableTags: ZetkinTag[];
+  disabledTags?: ZetkinTag[];
   groupTags?: boolean;
   onAssignTag: (tag: ZetkinTag) => void;
   onCreateTag: (tag: NewTag) => void;
@@ -25,6 +26,7 @@ export const TagManagerController: React.FunctionComponent<
   assignedTags,
   availableGroups,
   availableTags,
+  disabledTags,
   groupTags = false,
   onAssignTag,
   onCreateTag,
@@ -35,25 +37,18 @@ export const TagManagerController: React.FunctionComponent<
 
   return (
     <>
-      {assignedTags.length > 0 ? (
-        <TagsList
-          isGrouped={groupTags}
-          onUnassignTag={onUnassignTag}
-          tags={assignedTags}
-        />
-      ) : (
-        // If no tags
-        <Typography>
-          <FormattedMessage id="misc.tags.tagsManager.noTags" />
-        </Typography>
-      )}
-      <Box mt={2}>
+      <TagsList
+        isGrouped={groupTags}
+        onUnassignTag={onUnassignTag}
+        tags={assignedTags}
+      />
+      <Box mt={assignedTags.length > 0 ? 2 : 0}>
         <Button
           color="primary"
           onClick={(event) => setAddTagButton(event.currentTarget)}
           startIcon={<Add />}
         >
-          <FormattedMessage id="misc.tags.tagsManager.addTag" />
+          <FormattedMessage id="misc.tags.tagManager.addTag" />
         </Button>
         <Popover
           anchorEl={addTagButton}
@@ -61,7 +56,7 @@ export const TagManagerController: React.FunctionComponent<
           open={Boolean(addTagButton)}
         >
           <TagSelect
-            disabledTags={assignedTags}
+            disabledTags={disabledTags || assignedTags}
             groups={availableGroups}
             onCreateTag={onCreateTag}
             onEditTag={onEditTag}

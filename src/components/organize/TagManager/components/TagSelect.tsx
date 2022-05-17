@@ -48,7 +48,7 @@ const TagSelect: React.FunctionComponent<{
   const groupedFilteredTags = groupTags(
     groupedOptions,
     intl.formatMessage({
-      id: 'misc.tags.tagsManager.ungroupedHeader',
+      id: 'misc.tags.tagManager.ungroupedHeader',
     })
   );
 
@@ -62,7 +62,7 @@ const TagSelect: React.FunctionComponent<{
           'data-testid': 'TagManager-TagSelect-searchField',
         }}
         placeholder={intl.formatMessage({
-          id: 'misc.tags.tagsManager.addTag',
+          id: 'misc.tags.tagManager.addTag',
         })}
         variant="outlined"
       />
@@ -127,7 +127,7 @@ const TagSelect: React.FunctionComponent<{
           <Add />
           {inputValue ? (
             <FormattedMessage
-              id="misc.tags.tagsManager.createNamedTag"
+              id="misc.tags.tagManager.createNamedTag"
               values={{
                 b: (...chunks: string[]) => (
                   <>
@@ -138,7 +138,7 @@ const TagSelect: React.FunctionComponent<{
               }}
             />
           ) : (
-            <FormattedMessage id="misc.tags.tagsManager.createTag" />
+            <FormattedMessage id="misc.tags.tagManager.createTag" />
           )}
         </ListItem>
       </List>

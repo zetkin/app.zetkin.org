@@ -68,7 +68,7 @@ describe('<TagDialog />', () => {
     click(groupField);
     keyboard('New Group');
     const newGroupOption = getByText(
-      'misc.tags.tagsManager.tagDialog.groupCreatePrompt'
+      'misc.tags.tagManager.tagDialog.groupCreatePrompt'
     );
     click(newGroupOption);
 

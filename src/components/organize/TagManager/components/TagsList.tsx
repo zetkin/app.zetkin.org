@@ -17,7 +17,7 @@ const TagsList: React.FunctionComponent<{
     const groupedTags = groupTags(
       tags,
       intl.formatMessage({
-        id: 'misc.tags.tagsManager.ungroupedHeader',
+        id: 'misc.tags.tagManager.ungroupedHeader',
       })
     );
 
@@ -27,7 +27,7 @@ const TagsList: React.FunctionComponent<{
           <Box key={i} mb={1}>
             <Typography variant="overline">{group.title}</Typography>
             <Box
-              data-testid={`TagsManager-groupedTags-${group.id}`}
+              data-testid={`TagManager-groupedTags-${group.id}`}
               display="flex"
               flexWrap="wrap"
               style={{ gap: 4 }}
