@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+import { cloneDeep } from 'lodash';
 import isUrl from 'is-url';
 import markdown from 'remark-parse';
 import remarkGfm from 'remark-gfm';
@@ -334,6 +336,8 @@ export {
   isMarkActive,
   keyDownHandler,
   LIST_TYPES,
+  markdownToSlate,
+  slateToMarkdown,
   TEXT_ALIGN_TYPES,
   withInlines,
   unwrapLink,

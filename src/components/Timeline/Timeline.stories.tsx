@@ -101,18 +101,28 @@ const noteUpdates = Array.from(Array(10).keys()).map((id) => {
   }) as ZetkinUpdateJourneyInstanceAddNote;
   update.details.note = mockNote({
     id,
-    text: JSON.stringify([
-      {
-        children: [
-          {
-            text: chance.paragraph({
-              sentences: chance.integer({ max: 3, min: 1 }),
-            }),
-          },
-        ],
-        type: 'paragraph',
-      },
-    ]),
+    text: `# Heading one
+
+## Heading two
+
+Normal paragraph
+
+_italic text_
+
+
+~~strike through text~~
+
+[hyperlink](https://jackhanford.com)
+
+> A block quote.
+
+- bullet list item 1
+- bullet list item 2
+
+**bold text**
+
+1. ordered list item 1
+1. ordered list item 2`,
   });
   return update;
 });
