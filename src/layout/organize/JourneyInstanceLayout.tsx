@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import { Box, Typography } from '@material-ui/core';
 import { FormattedDate, FormattedMessage as Msg } from 'react-intl';
 
+import CloseJourneyButton from 'components/journeys/CloseJourneyButton';
 import { journeyInstanceResource } from 'api/journeys';
 import JourneyStatusChip from 'components/journeys/JourneyStatusChip';
 import TabbedLayout from './TabbedLayout';
@@ -20,6 +21,7 @@ const JourneyInstanceLayout: React.FunctionComponent = ({ children }) => {
 
   return (
     <TabbedLayout
+      actionButtons={<CloseJourneyButton journeyInstance={journeyInstance} />}
       baseHref={`/organize/${orgId}/journeys/${journeyId}/${instanceId}`}
       defaultTab="/"
       subtitle={
