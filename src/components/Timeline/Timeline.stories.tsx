@@ -7,7 +7,7 @@ const chance = Chance();
 
 import mockNote from 'utils/testing/mocks/mockNote';
 import mockUpdate from 'utils/testing/mocks/mockUpdate';
-import Timeline from 'components/Timeline';
+import Timeline from 'components/Timeline/index';
 import {
   UPDATE_TYPES,
   ZetkinUpdateJourneyInstance,

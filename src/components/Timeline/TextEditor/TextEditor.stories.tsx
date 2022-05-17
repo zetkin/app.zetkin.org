@@ -2,7 +2,7 @@ import { Descendant } from 'slate';
 import React from 'react';
 import { ComponentMeta, ComponentStory } from '@storybook/react';
 
-import TextEditor from 'components/Timeline/TextEditor';
+import TextEditor from 'components/Timeline/TextEditor/index';
 
 /* eslint-disable */
 const initialValue: Descendant[] = [
