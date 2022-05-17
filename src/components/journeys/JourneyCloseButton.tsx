@@ -1,11 +1,12 @@
 import ArchiveIcon from '@material-ui/icons/Archive';
 import dayjs from 'dayjs';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
 import { Box, Button, TextField, Typography } from '@material-ui/core';
 import { FormattedMessage, useIntl } from 'react-intl';
+import { useContext, useState } from 'react';
 
 import { journeyInstanceResource } from 'api/journeys';
+import SnackbarContext from 'hooks/SnackbarContext';
 import SubmitCancelButtons from 'components/forms/common/SubmitCancelButtons';
 import TagManager from 'components/organize/TagManager';
 import ZetkinDialog from 'components/ZetkinDialog';
@@ -122,3 +123,49 @@ const JourneyCloseButton: React.FunctionComponent<{
 };
 
 export default JourneyCloseButton;
+
+export const JourneyInstanceReopenButton: React.FunctionComponent<{
+  journeyInstance: ZetkinJourneyInstance;
+}> = ({ journeyInstance }) => {
+  const intl = useIntl();
+  const { orgId } = useRouter().query;
+  const { showSnackbar } = useContext(SnackbarContext);
+
+  const { useUpdate } = journeyInstanceResource(
+    orgId as string,
+    journeyInstance.id.toString()
+  );
+  const journeyInstanceMutation = useUpdate();
+
+  return (
+    <Button
+      color="secondary"
+      onClick={() =>
+        journeyInstanceMutation.mutate(
+          { closed: null },
+          {
+            onError: () =>
+              showSnackbar(
+                'error',
+                intl.formatMessage(
+                  {
+                    id: 'misc.journeys.journeyInstanceReopenButton.error',
+                  },
+                  {
+                    singularLabel: journeyInstance.journey.title,
+                  }
+                )
+              ),
+          }
+        )
+      }
+      startIcon={<ArchiveIcon />}
+      variant="contained"
+    >
+      <FormattedMessage
+        id="misc.journeys.journeyInstanceReopenButton.label"
+        values={{ singularLabel: journeyInstance.journey.title }}
+      />
+    </Button>
+  );
+};

@@ -3,12 +3,14 @@ import { useRouter } from 'next/router';
 import { Box, Typography } from '@material-ui/core';
 import { FormattedDate, FormattedMessage as Msg } from 'react-intl';
 
-import JourneyCloseButton from 'components/journeys/JourneyCloseButton';
 import { journeyInstanceResource } from 'api/journeys';
 import JourneyStatusChip from 'components/journeys/JourneyStatusChip';
 import TabbedLayout from './TabbedLayout';
 import { ZetkinJourneyInstance } from 'types/zetkin';
 import ZetkinRelativeTime from 'components/ZetkinRelativeTime';
+import JourneyCloseButton, {
+  JourneyInstanceReopenButton,
+} from 'components/journeys/JourneyCloseButton';
 
 const JourneyInstanceLayout: React.FunctionComponent = ({ children }) => {
   const { orgId, journeyId, instanceId } = useRouter().query;
@@ -21,7 +23,13 @@ const JourneyInstanceLayout: React.FunctionComponent = ({ children }) => {
 
   return (
     <TabbedLayout
-      actionButtons={<JourneyCloseButton journeyInstance={journeyInstance} />}
+      actionButtons={
+        journeyInstance.closed ? (
+          <JourneyInstanceReopenButton journeyInstance={journeyInstance} />
+        ) : (
+          <JourneyCloseButton journeyInstance={journeyInstance} />
+        )
+      }
       baseHref={`/organize/${orgId}/journeys/${journeyId}/${instanceId}`}
       defaultTab="/"
       subtitle={
