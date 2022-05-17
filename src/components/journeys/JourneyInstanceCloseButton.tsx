@@ -12,7 +12,7 @@ import TagManager from 'components/organize/TagManager';
 import ZetkinDialog from 'components/ZetkinDialog';
 import { ZetkinJourneyInstance, ZetkinTag } from 'types/zetkin';
 
-const JourneyCloseButton: React.FunctionComponent<{
+const JourneyInstanceCloseButton: React.FunctionComponent<{
   journeyInstance: ZetkinJourneyInstance;
 }> = ({ journeyInstance }) => {
   const intl = useIntl();
@@ -52,7 +52,7 @@ const JourneyCloseButton: React.FunctionComponent<{
         variant="contained"
       >
         <FormattedMessage
-          id="misc.journeys.closeJourneyInstanceButton.label"
+          id="misc.journeys.journeyInstanceCloseButton.label"
           values={{ singularLabel: journeyInstance.journey.title }}
         />
       </Button>
@@ -64,7 +64,7 @@ const JourneyCloseButton: React.FunctionComponent<{
           }}
         >
           <Typography variant="h6">
-            <FormattedMessage id="misc.journeys.closeJourneyInstanceButton.dialog.outcomeLabel" />
+            <FormattedMessage id="misc.journeys.journeyInstanceCloseButton.dialog.outcomeLabel" />
           </Typography>
           <TextField
             fullWidth
@@ -73,7 +73,7 @@ const JourneyCloseButton: React.FunctionComponent<{
             onChange={(e) => setClosingNote(e.target.value)}
             placeholder={intl.formatMessage(
               {
-                id: 'misc.journeys.closeJourneyInstanceButton.dialog.outcomeFieldPlaceholder',
+                id: 'misc.journeys.journeyInstanceCloseButton.dialog.outcomeFieldPlaceholder',
               },
               { singularLabel: journeyInstance.journey.title }
             )}
@@ -82,11 +82,11 @@ const JourneyCloseButton: React.FunctionComponent<{
           />
           <Box mt={2}>
             <Typography variant="h6">
-              <FormattedMessage id="misc.journeys.closeJourneyInstanceButton.dialog.outcomeTagsLabel" />
+              <FormattedMessage id="misc.journeys.journeyInstanceCloseButton.dialog.outcomeTagsLabel" />
             </Typography>
             <Box mb={3} mt={1}>
               <Typography variant="body2">
-                <FormattedMessage id="misc.journeys.closeJourneyInstanceButton.dialog.outcomeTagsDescription" />
+                <FormattedMessage id="misc.journeys.journeyInstanceCloseButton.dialog.outcomeTagsDescription" />
               </Typography>
             </Box>
             <Box>
@@ -109,9 +109,10 @@ const JourneyCloseButton: React.FunctionComponent<{
           </Box>
           <SubmitCancelButtons
             onCancel={closeAndClear}
+            submitDisabled={journeyInstanceMutation.isLoading}
             submitText={intl.formatMessage(
               {
-                id: 'misc.journeys.closeJourneyInstanceButton.label',
+                id: 'misc.journeys.journeyInstanceCloseButton.label',
               },
               { singularLabel: journeyInstance.journey.title }
             )}
@@ -122,7 +123,7 @@ const JourneyCloseButton: React.FunctionComponent<{
   );
 };
 
-export default JourneyCloseButton;
+export default JourneyInstanceCloseButton;
 
 export const JourneyInstanceReopenButton: React.FunctionComponent<{
   journeyInstance: ZetkinJourneyInstance;

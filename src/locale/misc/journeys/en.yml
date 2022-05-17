@@ -1,6 +1,6 @@
 overview:
   overviewTitle: All journeys
-closeJourneyInstanceButton:
+journeyInstanceCloseButton:
   label: Close {singularLabel}
   dialog:
     outcomeLabel: Outcome
