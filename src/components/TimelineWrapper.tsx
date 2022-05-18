@@ -1,5 +1,5 @@
+import { useContext } from 'react';
 import { useQuery } from 'react-query';
-import { useContext, useState } from 'react';
 
 import { createUseMutation } from 'api/utils/resourceHookFactories';
 import { defaultFetch } from 'fetching';
@@ -20,7 +20,6 @@ const TimelineWrapper: React.FC<TimelineWrapperProps> = ({
   itemApiPath,
 }) => {
   const { showSnackbar } = useContext(SnackbarContext);
-  const [submitting, setSubmitting] = useState<boolean>(false);
 
   const updatesQuery = useQuery(queryKey, async () => {
     const res = await defaultFetch(itemApiPath + '/timeline/updates');
@@ -38,7 +37,7 @@ const TimelineWrapper: React.FC<TimelineWrapperProps> = ({
     <ZetkinQuery queries={{ updatesQuery }}>
       {({ queries }) => (
         <Timeline
-          disabled={submitting}
+          disabled={notesMutation.isLoading}
           onAddNote={handleAddNote}
           updates={queries.updatesQuery.data}
         />
@@ -47,10 +46,8 @@ const TimelineWrapper: React.FC<TimelineWrapperProps> = ({
   );
 
   function handleAddNote(note: Partial<ZetkinNote>) {
-    setSubmitting(true);
     notesMutation.mutate(note, {
       onError: () => showSnackbar('error'),
-      onSettled: () => setSubmitting(false),
     });
   }
 };
