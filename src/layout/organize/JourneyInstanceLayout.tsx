@@ -1,6 +1,6 @@
+import { Forward } from '@material-ui/icons';
 import ScheduleIcon from '@material-ui/icons/Schedule';
 import { useRouter } from 'next/router';
-import { Add, Forward } from '@material-ui/icons';
 import { Box, Chip, makeStyles, Typography } from '@material-ui/core';
 import { FormattedDate, FormattedMessage as Msg, useIntl } from 'react-intl';
 
@@ -76,7 +76,6 @@ const JourneyInstanceLayout: React.FunctionComponent = ({ children }) => {
         onSelect: () => {
           //todo
         },
-        startIcon: <Add color="secondary" />,
       },
     ],
   });
