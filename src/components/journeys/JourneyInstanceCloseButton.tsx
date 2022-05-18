@@ -19,11 +19,12 @@ const JourneyInstanceCloseButton: React.FunctionComponent<{
   const { orgId } = useRouter().query;
 
   const [showDialog, setShowDialog] = useState(false);
-  const { useUpdate } = journeyInstanceResource(
+
+  const { useClose } = journeyInstanceResource(
     orgId as string,
     journeyInstance.id.toString()
   );
-  const journeyInstanceMutation = useUpdate();
+  const closeJourneyInstanceMutation = useClose();
 
   const [closingNote, setClosingNote] = useState('');
   const [internalTags, setInternalTags] = useState<ZetkinTag[]>([]);
@@ -38,9 +39,12 @@ const JourneyInstanceCloseButton: React.FunctionComponent<{
     const body = {
       closed: dayjs().toJSON(),
       outcome: closingNote,
+      tags: internalTags,
     };
 
-    journeyInstanceMutation.mutate(body, {});
+    closeJourneyInstanceMutation.mutate(body, {
+      onSuccess: () => closeAndClear(),
+    });
   };
 
   return (
@@ -109,7 +113,7 @@ const JourneyInstanceCloseButton: React.FunctionComponent<{
           </Box>
           <SubmitCancelButtons
             onCancel={closeAndClear}
-            submitDisabled={journeyInstanceMutation.isLoading}
+            submitDisabled={closeJourneyInstanceMutation.isLoading}
             submitText={intl.formatMessage(
               {
                 id: 'misc.journeys.journeyInstanceCloseButton.label',

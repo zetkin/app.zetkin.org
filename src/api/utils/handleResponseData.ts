@@ -1,8 +1,14 @@
 import APIError from 'utils/apiError';
 
-interface ZetkinApiResponse<G> {
-  data?: G;
-  error?: unknown;
+export interface ZetkinApiSuccessResponse<G> {
+  data: G;
+}
+
+export interface ZetkinApiErrorResponse {
+  error: {
+    description: string;
+    title: string;
+  };
 }
 
 const handleResponseData = async <Result>(
@@ -10,10 +16,18 @@ const handleResponseData = async <Result>(
   method: string
 ): Promise<Result> => {
   if (!res.ok) {
-    throw new APIError(method, res.url);
+    let errorBody: ZetkinApiErrorResponse;
+    try {
+      // Check if there is a body with the error
+      errorBody = await res.json();
+    } catch {
+      // If no body, throw simple error
+      throw new APIError(method, res.url);
+    }
+    throw new APIError(method, res.url, errorBody?.error?.description);
   }
 
-  const body = (await res.json()) as ZetkinApiResponse<Result>;
+  const body = (await res.json()) as ZetkinApiSuccessResponse<Result>;
 
   if (!body.data) {
     throw new APIError(
