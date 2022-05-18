@@ -2,7 +2,6 @@
 import { Add } from '@material-ui/icons';
 import EditIcon from '@material-ui/icons/Edit';
 import { useAutocomplete } from '@material-ui/lab';
-import { useState } from 'react';
 import {
   Box,
   IconButton,
@@ -10,10 +9,13 @@ import {
   ListItem,
   ListSubheader,
   TextField,
+  Typography,
 } from '@material-ui/core';
+import { ChangeEventHandler, useState } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 
 import { groupTags } from '../utils';
+import SubmitCancelButtons from 'components/forms/common/SubmitCancelButtons';
 import TagChip from './TagChip';
 import TagDialog from './TagDialog';
 import { EditTag, NewTag } from '../types';
@@ -42,6 +44,9 @@ const TagSelect: React.FunctionComponent<{
     ZetkinTag | Pick<ZetkinTag, 'title'> | undefined
   >(undefined);
 
+  const [pendingTag, setPendingTag] = useState<ZetkinTag | null>(null);
+  const [pendingValue, setPendingValue] = useState('');
+
   const {
     inputValue,
     getInputProps,
@@ -61,18 +66,35 @@ const TagSelect: React.FunctionComponent<{
     })
   );
 
+  const inputProps = getInputProps() as {
+    [key: string]: unknown;
+    onChange: ChangeEventHandler<HTMLInputElement>;
+    value: string;
+  };
+
+  if (pendingTag) {
+    inputProps.value = pendingValue;
+    inputProps.onChange = (ev) => {
+      setPendingValue(ev.target.value);
+    };
+  }
+
   return (
-    <Box {...getRootProps()}>
+    <Box {...getRootProps()} style={{ width: '100%' }}>
       <TextField
-        {...getInputProps()}
+        {...inputProps}
         autoFocus
         fullWidth
         inputProps={{
           'data-testid': 'TagManager-TagSelect-searchField',
         }}
-        placeholder={intl.formatMessage({
-          id: 'misc.tags.tagManager.addTag',
-        })}
+        placeholder={
+          pendingTag
+            ? 'set value'
+            : intl.formatMessage({
+                id: 'misc.tags.tagManager.addTag',
+              })
+        }
         variant="outlined"
       />
       {/* Options */}
@@ -80,79 +102,110 @@ const TagSelect: React.FunctionComponent<{
         {...getListboxProps()}
         style={{ maxHeight: '400px', overflowY: 'scroll' }}
       >
-        {groupedFilteredTags.map((group) => {
-          // Groups
-          return (
-            <List
-              key={group.title}
-              subheader={
-                <ListSubheader disableSticky>{group.title}</ListSubheader>
-              }
-              title={group.title}
-            >
-              {/* Tags */}
-              {group.tags.map((tag) => {
-                return (
-                  <ListItem key={tag.id} dense>
-                    <Box
-                      alignItems="center"
-                      display="flex"
-                      justifyContent="space-between"
-                      width="100%"
-                    >
-                      <TagChip
-                        disabled={disabledTags
-                          .map((disabledTags) => disabledTags.id)
-                          .includes(tag.id)}
-                        onClick={() => onSelect(tag)}
-                        tag={tag}
-                      />
-                      {/* Edit tag button, only show if enabled (it's enabled by default) */}
-                      {!disableEditTags && (
-                        <IconButton
-                          data-testid={`TagManager-TagSelect-editTag-${tag.id}`}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setTagToEdit(tag);
-                          }}
-                        >
-                          <EditIcon fontSize="small" />
-                        </IconButton>
-                      )}
-                    </Box>
-                  </ListItem>
-                );
-              })}
-            </List>
-          );
-        })}
-        <ListItem
-          button
-          data-testid="TagManager-TagSelect-createTagOption"
-          dense
-          onClick={() =>
-            setTagToEdit({
-              title: inputValue,
-            })
-          }
-        >
-          <Add />
-          {inputValue ? (
-            <FormattedMessage
-              id="misc.tags.tagManager.createNamedTag"
-              values={{
-                b: (...chunks: string[]) => (
-                  <>
-                    &nbsp;<b>{chunks}</b>
-                  </>
-                ),
-                name: inputValue,
+        {pendingTag && (
+          <ListItem
+            style={{
+              alignItems: 'flex-start',
+              flexDirection: 'column',
+              gap: 10,
+            }}
+          >
+            <Typography>Enter a value for tag or press ESC.</Typography>
+            <TagChip tag={{ ...pendingTag, value: pendingValue }} />
+            <form
+              onSubmit={(ev) => {
+                ev.preventDefault();
+                onSelect({ ...pendingTag, value: pendingValue });
+                setPendingTag(null);
+                setPendingValue('');
               }}
-            />
-          ) : (
-            <FormattedMessage id="misc.tags.tagManager.createTag" />
-          )}
-        </ListItem>
+            >
+              <SubmitCancelButtons onCancel={() => undefined} />
+            </form>
+          </ListItem>
+        )}
+        {!pendingTag &&
+          groupedFilteredTags.map((group) => {
+            // Groups
+            return (
+              <List
+                key={group.title}
+                subheader={
+                  <ListSubheader disableSticky>{group.title}</ListSubheader>
+                }
+                title={group.title}
+              >
+                {/* Tags */}
+                {group.tags.map((tag) => {
+                  return (
+                    <ListItem key={tag.id} dense>
+                      <Box
+                        alignItems="center"
+                        display="flex"
+                        justifyContent="space-between"
+                        width="100%"
+                      >
+                        <TagChip
+                          disabled={disabledTags
+                            .map((disabledTags) => disabledTags.id)
+                            .includes(tag.id)}
+                          onClick={() => {
+                            if (tag.value_type) {
+                              setPendingTag(tag);
+                            } else {
+                              onSelect(tag);
+                            }
+                          }}
+                          tag={tag}
+                        />
+                        {/* Edit tag button, only show if enabled (it's enabled by default) */}
+                        {!disableEditTags && (
+                          <IconButton
+                            data-testid={`TagManager-TagSelect-editTag-${tag.id}`}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setTagToEdit(tag);
+                            }}
+                          >
+                            <EditIcon fontSize="small" />
+                          </IconButton>
+                        )}
+                      </Box>
+                    </ListItem>
+                  );
+                })}
+              </List>
+            );
+          })}
+        {!pendingTag && (
+          <ListItem
+            button
+            data-testid="TagManager-TagSelect-createTagOption"
+            dense
+            onClick={() =>
+              setTagToEdit({
+                title: inputValue,
+              })
+            }
+          >
+            <Add />
+            {inputValue ? (
+              <FormattedMessage
+                id="misc.tags.tagManager.createNamedTag"
+                values={{
+                  b: (...chunks: string[]) => (
+                    <>
+                      &nbsp;<b>{chunks}</b>
+                    </>
+                  ),
+                  name: inputValue,
+                }}
+              />
+            ) : (
+              <FormattedMessage id="misc.tags.tagManager.createTag" />
+            )}
+          </ListItem>
+        )}
       </List>
       <TagDialog
         groups={groups}

@@ -56,6 +56,7 @@ export const TagManagerController: React.FunctionComponent<
           anchorEl={addTagButton}
           onClose={() => setAddTagButton(null)}
           open={Boolean(addTagButton)}
+          PaperProps={{ style: { minWidth: '300px' } }}
         >
           <TagSelect
             disabledTags={disabledTags || assignedTags}

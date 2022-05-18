@@ -96,7 +96,7 @@ const PersonProfilePage: PageWithLayout<PersonPageProps> = (props) => {
               <TagManagerSection
                 assignedTags={personTagsQuery.data}
                 onAssignTag={(tag) =>
-                  assignTagMutation.mutate(tag.id, {
+                  assignTagMutation.mutate(tag, {
                     onError: () => showSnackbar('error'),
                   })
                 }

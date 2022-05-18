@@ -6,7 +6,11 @@ import {
   createUseQuery,
 } from './utils/resourceHookFactories';
 
+import APIError from 'utils/apiError';
+import { defaultFetch } from 'fetching';
+import { makeUseMutationOptions } from './utils/makeUseMutationOptions';
 import { PersonOrganization } from 'utils/organize/people';
+import { useMutation, useQueryClient } from 'react-query';
 import { ZetkinPerson, ZetkinTag } from 'types/zetkin';
 
 export const personResource = (orgId: string, personId: string) => {
@@ -44,9 +48,30 @@ export const personTagsResource = (orgId: string, personId: string) => {
   const key = ['personTags', personId];
   const url = `/orgs/${orgId}/people/${personId}/tags`;
 
+  const handler = async (
+    resource: Pick<ZetkinTag, 'id' | 'value'>
+  ): Promise<null> => {
+    const { id, value } = resource;
+    const res = await defaultFetch(`${url}/${id}`, {
+      body: JSON.stringify({ value }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      method: 'PUT',
+    });
+
+    if (!res.ok) {
+      throw new APIError('PUT', res.url);
+    }
+    return null;
+  };
+
   return {
     key,
-    useAssign: createUseMutationPut({ key, url }),
+    useAssign: () => {
+      const queryClient = useQueryClient();
+      return useMutation(handler, makeUseMutationOptions(queryClient, key));
+    },
     useQuery: createUseQuery<ZetkinTag[]>(key, url),
     useUnassign: createUseMutationDelete({ key, url }),
   };
