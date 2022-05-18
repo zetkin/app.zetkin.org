@@ -4,11 +4,11 @@ import { useRouter } from 'next/router';
 import { Box, Chip, makeStyles, Typography } from '@material-ui/core';
 import { FormattedDate, FormattedMessage as Msg, useIntl } from 'react-intl';
 
-import { journeyInstanceResource } from 'api/journeys';
 import TabbedLayout from './TabbedLayout';
 import { ZetkinEllipsisMenuProps } from 'components/ZetkinEllipsisMenu';
-import { ZetkinJourneyInstance } from 'types/zetkin';
 import ZetkinRelativeTime from 'components/ZetkinRelativeTime';
+import { journeyInstanceResource, journeysResource } from 'api/journeys';
+import { ZetkinJourney, ZetkinJourneyInstance } from 'types/zetkin';
 
 const useStyles = makeStyles((theme) => ({
   closedChip: {
@@ -52,11 +52,15 @@ const JourneyStatusChip = ({
 const JourneyInstanceLayout: React.FunctionComponent = ({ children }) => {
   const { orgId, journeyId, instanceId } = useRouter().query;
   const intl = useIntl();
+
   const journeyInstanceQuery = journeyInstanceResource(
     orgId as string,
     instanceId as string
   ).useQuery();
   const journeyInstance = journeyInstanceQuery.data as ZetkinJourneyInstance;
+
+  const journeysQuery = journeysResource(orgId as string).useQuery();
+  const journeys = journeysQuery.data as ZetkinJourney[];
 
   const ellipsisMenu: ZetkinEllipsisMenuProps['items'] = [];
 
@@ -69,16 +73,18 @@ const JourneyInstanceLayout: React.FunctionComponent = ({ children }) => {
       //todo
     },
     startIcon: <Forward color="secondary" />,
-    subMenuItems: [
-      {
-        id: 'convert-test-thing',
-        label: 'Test thing',
+    subMenuItems: journeys
+      ?.filter((journey) => journey.id.toString() !== journeyId)
+      .map((journey) => ({
+        id: `convert-journey-submenu-${journey.id}`,
+        label: journey.singular_label,
         onSelect: () => {
           //todo
         },
-      },
-    ],
+      })),
   });
+
+  /* , */
 
   return (
     <>
