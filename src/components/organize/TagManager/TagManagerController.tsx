@@ -12,6 +12,7 @@ export interface TagManagerControllerProps {
   assignedTags: ZetkinTag[];
   availableGroups: ZetkinTagGroup[];
   availableTags: ZetkinTag[];
+  disableEditTags?: boolean;
   disabledTags?: ZetkinTag[];
   groupTags?: boolean;
   onAssignTag: (tag: ZetkinTag) => void;
@@ -26,6 +27,7 @@ export const TagManagerController: React.FunctionComponent<
   assignedTags,
   availableGroups,
   availableTags,
+  disableEditTags,
   disabledTags,
   groupTags = false,
   onAssignTag,
@@ -57,6 +59,7 @@ export const TagManagerController: React.FunctionComponent<
         >
           <TagSelect
             disabledTags={disabledTags || assignedTags}
+            disableEditTags={disableEditTags}
             groups={availableGroups}
             onCreateTag={onCreateTag}
             onEditTag={onEditTag}

@@ -20,13 +20,22 @@ import { EditTag, NewTag } from '../types';
 import { ZetkinTag, ZetkinTagGroup } from 'types/zetkin';
 
 const TagSelect: React.FunctionComponent<{
+  disableEditTags?: boolean;
   disabledTags: ZetkinTag[];
   groups: ZetkinTagGroup[];
   onCreateTag: (tag: NewTag) => void;
   onEditTag: (tag: EditTag) => void;
   onSelect: (tag: ZetkinTag) => void;
   tags: ZetkinTag[];
-}> = ({ disabledTags, groups, onCreateTag, onEditTag, onSelect, tags }) => {
+}> = ({
+  disableEditTags,
+  disabledTags,
+  groups,
+  onCreateTag,
+  onEditTag,
+  onSelect,
+  tags,
+}) => {
   const intl = useIntl();
 
   const [tagToEdit, setTagToEdit] = useState<
@@ -98,15 +107,18 @@ const TagSelect: React.FunctionComponent<{
                         onClick={() => onSelect(tag)}
                         tag={tag}
                       />
-                      <IconButton
-                        data-testid={`TagManager-TagSelect-editTag-${tag.id}`}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setTagToEdit(tag);
-                        }}
-                      >
-                        <EditIcon fontSize="small" />
-                      </IconButton>
+                      {/* Edit tag button, only show if enabled (it's enabled by default) */}
+                      {!disableEditTags && (
+                        <IconButton
+                          data-testid={`TagManager-TagSelect-editTag-${tag.id}`}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setTagToEdit(tag);
+                          }}
+                        >
+                          <EditIcon fontSize="small" />
+                        </IconButton>
+                      )}
                     </Box>
                   </ListItem>
                 );

@@ -12,12 +12,12 @@ import TagManagerController, {
 } from './TagManagerController';
 import { useCreateTag, useEditTag } from './utils';
 
-type TagManageProps = Omit<
+type TagManagerProps = Omit<
   TagManagerControllerProps,
   'availableGroups' | 'availableTags' | 'onCreateTag' | 'onEditTag'
-> & { onTagEdited: (tag: ZetkinTag) => void };
+> & { disableEditTags?: boolean; onTagEdited?: (tag: ZetkinTag) => void };
 
-const TagManager: React.FunctionComponent<TagManageProps> = (props) => {
+const TagManager: React.FunctionComponent<TagManagerProps> = (props) => {
   const { orgId } = useRouter().query;
 
   const tagsQuery = tagsResource(orgId as string).useQuery();
@@ -45,7 +45,7 @@ const TagManager: React.FunctionComponent<TagManageProps> = (props) => {
 };
 
 export const TagManagerSection: React.FunctionComponent<
-  Omit<TagManageProps, 'groupTags'>
+  Omit<TagManagerProps, 'groupTags'>
 > = (props) => {
   const intl = useIntl();
 
