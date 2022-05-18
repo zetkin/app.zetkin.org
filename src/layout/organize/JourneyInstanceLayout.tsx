@@ -69,9 +69,6 @@ const JourneyInstanceLayout: React.FunctionComponent = ({ children }) => {
     label: intl.formatMessage({
       id: 'pages.organizeJourneyInstance.ellipsisMenu.convert',
     }),
-    onSelect: () => {
-      //todo
-    },
     startIcon: <Forward color="secondary" />,
     subMenuItems: journeys
       ?.filter((journey) => journey.id.toString() !== journeyId)

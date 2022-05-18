@@ -6,7 +6,7 @@ import { FunctionComponent, ReactElement, useState } from 'react';
 interface MenuItem {
   id?: string;
   label: string | React.ReactNode;
-  onSelect: (e: React.MouseEvent<HTMLLIElement, MouseEvent>) => void;
+  onSelect?: (e: React.MouseEvent<HTMLLIElement, MouseEvent>) => void;
   startIcon?: ReactElement;
   subMenuItems?: Omit<MenuItem, 'subMenuItems'>[];
 }
@@ -47,7 +47,9 @@ const ZetkinEllipsisMenu: FunctionComponent<ZetkinEllipsisMenuProps> = ({
             key={item.id || idx}
             data-testid={`EllipsisMenu-item-${item.id || idx}`}
             onClick={(e) => {
-              item.onSelect(e);
+              if (item.onSelect) {
+                item.onSelect(e);
+              }
               if (item.subMenuItems) {
                 setSubMenuActivator(e.currentTarget as HTMLElement);
               }
@@ -78,7 +80,11 @@ const ZetkinEllipsisMenu: FunctionComponent<ZetkinEllipsisMenuProps> = ({
                     data-testid={`EllipsisSubMenu-item-${
                       subMenuItem.id || index
                     }`}
-                    onClick={(e) => subMenuItem.onSelect(e)}
+                    onClick={(e) => {
+                      if (subMenuItem.onSelect) {
+                        subMenuItem.onSelect(e);
+                      }
+                    }}
                   >
                     {subMenuItem.label}
                   </MenuItem>
