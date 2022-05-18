@@ -18,6 +18,7 @@ const JourneyInstanceCloseButton: React.FunctionComponent<{
   const intl = useIntl();
   const { orgId } = useRouter().query;
 
+  const { showSnackbar } = useContext(SnackbarContext);
   const [showDialog, setShowDialog] = useState(false);
 
   const { useClose } = journeyInstanceResource(
@@ -26,23 +27,31 @@ const JourneyInstanceCloseButton: React.FunctionComponent<{
   );
   const closeJourneyInstanceMutation = useClose();
 
-  const [closingNote, setClosingNote] = useState('');
+  const [outcomeNote, setOutcomeNote] = useState('');
   const [internalTags, setInternalTags] = useState<ZetkinTag[]>([]);
 
   const closeAndClear = () => {
     setShowDialog(false);
     setInternalTags([]);
-    setClosingNote('');
+    setOutcomeNote('');
   };
 
   const onSubmit = () => {
     const body = {
       closed: dayjs().toJSON(),
-      outcome: closingNote,
+      outcome: outcomeNote,
       tags: internalTags,
     };
 
     closeJourneyInstanceMutation.mutate(body, {
+      onError: () =>
+        showSnackbar(
+          'error',
+          intl.formatMessage(
+            { id: 'misc.journeys.journeyInstanceCloseButton.error' },
+            { singularLabel: journeyInstance.journey.title }
+          )
+        ),
       onSuccess: () => closeAndClear(),
     });
   };
@@ -74,7 +83,7 @@ const JourneyInstanceCloseButton: React.FunctionComponent<{
             fullWidth
             margin="normal"
             multiline
-            onChange={(e) => setClosingNote(e.target.value)}
+            onChange={(e) => setOutcomeNote(e.target.value)}
             placeholder={intl.formatMessage(
               {
                 id: 'misc.journeys.journeyInstanceCloseButton.dialog.outcomeFieldPlaceholder',
@@ -98,8 +107,8 @@ const JourneyInstanceCloseButton: React.FunctionComponent<{
                 <TagManager
                   assignedTags={internalTags}
                   disabledTags={journeyInstance.tags.concat(internalTags)}
+                  disableEditTags
                   onAssignTag={(tag) => setInternalTags([...internalTags, tag])}
-                  onTagEdited={(tag) => tag}
                   onUnassignTag={(tag) =>
                     setInternalTags(
                       internalTags.filter(
