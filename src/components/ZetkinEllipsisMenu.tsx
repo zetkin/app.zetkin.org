@@ -23,6 +23,8 @@ const ZetkinEllipsisMenu: FunctionComponent<ZetkinEllipsisMenuProps> = ({
     null
   );
 
+  const ITEM_HEIGHT = 48;
+
   return (
     <>
       <Button
@@ -56,11 +58,19 @@ const ZetkinEllipsisMenu: FunctionComponent<ZetkinEllipsisMenuProps> = ({
             {item.subMenuItems && (
               <Menu
                 anchorEl={subMenuActivator}
+                anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
+                getContentAnchorEl={null}
                 onClose={(e: Event) => {
                   e.stopPropagation();
                   setSubMenuActivator(null);
                 }}
                 open={Boolean(subMenuActivator)}
+                PaperProps={{
+                  style: {
+                    maxHeight: ITEM_HEIGHT * 4.5,
+                  },
+                }}
+                transformOrigin={{ horizontal: 'right', vertical: 'top' }}
               >
                 {item.subMenuItems.map((subMenuItem, index) => (
                   <MenuItem
@@ -70,9 +80,6 @@ const ZetkinEllipsisMenu: FunctionComponent<ZetkinEllipsisMenuProps> = ({
                     }`}
                     onClick={(e) => subMenuItem.onSelect(e)}
                   >
-                    {subMenuItem.startIcon && (
-                      <ListItemIcon>{item.startIcon}</ListItemIcon>
-                    )}
                     {subMenuItem.label}
                   </MenuItem>
                 ))}
