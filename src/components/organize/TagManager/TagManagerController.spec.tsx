@@ -217,6 +217,31 @@ describe('<TagManagerController />', () => {
       };
     });
 
+    it('does not show edit button for tag when `disableEditTags` set', () => {
+      const tagToEdit = mockTag();
+
+      const { getByTestId, getByText } = render(
+        <TagManagerController
+          assignedTags={[]}
+          availableGroups={[]}
+          availableTags={[tagToEdit]}
+          disableEditTags
+          onAssignTag={assignTagCallback}
+          onCreateTag={onCreateTag}
+          onEditTag={editTagCallback}
+          onUnassignTag={unassignTagCallback}
+        />
+      );
+
+      const addTagButton = getByText('misc.tags.tagManager.addTag');
+      click(addTagButton);
+
+      // Expect to not find edit button
+      expect(() =>
+        getByTestId(`TagManager-TagSelect-editTag-${tagToEdit.id}`)
+      ).toThrowError();
+    });
+
     it('can edit an existing tag in the tag dialog', () => {
       const tagToEdit = mockTag();
 
