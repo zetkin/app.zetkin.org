@@ -47,7 +47,7 @@ const JourneyInstanceSidebar = ({
         <ZetkinSection
           data-testid="ZetkinSection-assignees"
           title={intl.formatMessage({
-            id: 'pages.organizeJourneyInstance.assignedTo',
+            id: 'pages.organizeJourneyInstance.sections.assigned',
           })}
         >
           {journeyInstance.assignees.map((assignee, index) => (
@@ -99,7 +99,7 @@ const JourneyInstanceSidebar = ({
         <ZetkinSection
           data-testid="ZetkinSection-subjects"
           title={intl.formatMessage({
-            id: 'pages.organizeJourneyInstance.members',
+            id: 'pages.organizeJourneyInstance.sections.members',
           })}
         >
           {journeyInstance.subjects.map((member, index) => (
@@ -159,7 +159,7 @@ const JourneyInstanceSidebar = ({
         <Grid item xs={12}>
           <ZetkinSection
             title={intl.formatMessage({
-              id: 'pages.organizeJourneyInstance.milestones',
+              id: 'pages.organizeJourneyInstance.sections.milestones',
             })}
           >
             <JourneyMilestoneProgress

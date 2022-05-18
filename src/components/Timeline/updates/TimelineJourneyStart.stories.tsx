@@ -7,7 +7,7 @@ import { UPDATE_TYPES } from 'types/updates';
 
 export default {
   component: TimelineJourneyStart,
-  title: 'Example/Timeline/Updates/TimelineJourneyStart',
+  title: 'Organisms/Timeline/Updates/TimelineJourneyStart',
 } as ComponentMeta<typeof TimelineJourneyStart>;
 
 const Template: ComponentStory<typeof TimelineJourneyStart> = (args) => (

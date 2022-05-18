@@ -2,13 +2,16 @@ import {
   ZetkinJourneyInstance,
   ZetkinJourneyMilestone,
   ZetkinJourneyMilestoneStatus,
+  ZetkinNote,
   ZetkinPerson,
 } from './zetkin';
 
 export enum UPDATE_TYPES {
   JOURNEYINSTANCE_ADDASSIGNEE = 'journeyinstance.addassignee',
+  JOURNEYINSTANCE_ADDNOTE = 'journeyinstance.addnote',
   JOURNEYINSTANCE_CREATE = 'journeyinstance.create',
   JOURNEYINSTANCE_REMOVEASSIGNEE = 'journeyinstance.removeassignee',
+  JOURNEYINSTANCE_UPDATE = 'journeyinstance.update',
   JOURNEYINSTANCE_UPDATEMILESTONE = 'journeyinstance.updatemilestone',
 }
 
@@ -27,7 +30,7 @@ type ZetkinUpdateChange<UpdateType> = {
   };
 };
 
-export type ZetkinUpdateAssignee = ZetkinUpdateBase<
+export type ZetkinUpdateJourneyInstanceAssignee = ZetkinUpdateBase<
   | UPDATE_TYPES.JOURNEYINSTANCE_ADDASSIGNEE
   | UPDATE_TYPES.JOURNEYINSTANCE_REMOVEASSIGNEE,
   ZetkinJourneyInstance,
@@ -35,8 +38,17 @@ export type ZetkinUpdateAssignee = ZetkinUpdateBase<
     assignee: Pick<ZetkinPerson, 'id' | 'first_name' | 'last_name'>;
   }
 >;
+export type ZetkinUpdateJourneyInstance = ZetkinUpdateBase<
+  UPDATE_TYPES.JOURNEYINSTANCE_UPDATE,
+  ZetkinJourneyInstance,
+  {
+    changes: ZetkinUpdateChange<
+      Pick<ZetkinJourneyInstance, 'summary' | 'title'>
+    >;
+  }
+>;
 
-export type ZetkinUpdateJourneyMilestone = ZetkinUpdateBase<
+export type ZetkinUpdateJourneyInstanceMilestone = ZetkinUpdateBase<
   UPDATE_TYPES.JOURNEYINSTANCE_UPDATEMILESTONE,
   ZetkinJourneyInstance,
   {
@@ -47,7 +59,7 @@ export type ZetkinUpdateJourneyMilestone = ZetkinUpdateBase<
   }
 >;
 
-export type ZetkinUpdateJourneyStart = ZetkinUpdateBase<
+export type ZetkinUpdateJourneyInstanceStart = ZetkinUpdateBase<
   UPDATE_TYPES.JOURNEYINSTANCE_CREATE,
   ZetkinJourneyInstance,
   {
@@ -58,7 +70,17 @@ export type ZetkinUpdateJourneyStart = ZetkinUpdateBase<
   }
 >;
 
+export type ZetkinUpdateJourneyInstanceAddNote = ZetkinUpdateBase<
+  UPDATE_TYPES.JOURNEYINSTANCE_ADDNOTE,
+  ZetkinJourneyInstance,
+  {
+    note: ZetkinNote;
+  }
+>;
+
 export type ZetkinUpdate =
-  | ZetkinUpdateAssignee
-  | ZetkinUpdateJourneyMilestone
-  | ZetkinUpdateJourneyStart;
+  | ZetkinUpdateJourneyInstance
+  | ZetkinUpdateJourneyInstanceAddNote
+  | ZetkinUpdateJourneyInstanceAssignee
+  | ZetkinUpdateJourneyInstanceMilestone
+  | ZetkinUpdateJourneyInstanceStart;

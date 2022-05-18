@@ -3,14 +3,15 @@ addDateLabel: Add date
 addSubjectButton: Add person
 addSubjectLabel: Add person
 assignPersonLabel: Assign person
-assignedTo: Assigned to
 collapseButton: Collapse
 editButton: Edit
 expandButton: Expand
-members: Members
-milestones: Milestones
 noMilestones: There are no milestones.
 percentComplete: '{percentComplete}% complete'
 saveButton: Save
-summaryHeader: Summary
-tags: Tags
+sections:
+  assigned: Assigned to
+  members: Members
+  milestones: Milestones
+  summary: Summary
+  timeline: Notes

@@ -1,8 +1,13 @@
+# eslint-disable yml/key-name-casing
 journeyinstance:
   addassignee: '{actor} assigned {assignee}'
+  addnote: '{actor} added a note'
   create:
     header: '{actor} started a new journey'
   removeassignee: '{actor} unassigned {assignee}'
+  update:
+    summary_text: '{actor} edited the summary'
+    title: '{actor} edited the title'
   updatemilestone:
     complete: '{actor} completed a milestone'
     deadline: '{actor} updated a milestone deadline'

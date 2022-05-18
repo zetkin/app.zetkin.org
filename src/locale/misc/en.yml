@@ -5,6 +5,8 @@ ConfirmDialog:
   button: Confirm
   defaultTitle: Confirm
   defaultWarningText: Are you sure you want to do this action? It can not be undone.
+buttons:
+  readMore: Read more
 components:
   editTextInPlace:
     tooltip:
@@ -47,4 +49,5 @@ nativePersonFields:
 snackbar:
   error: Oh dear, something went wrong
 timeline:
+  add_note_placeholder: Enter text to leave a note
   expand: show full timeline
