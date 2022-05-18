@@ -15,7 +15,6 @@ import isHotkey, { isKeyHotkey } from 'is-hotkey';
 import slate, { BlockType, NodeTypes, serialize } from 'remark-slate';
 
 const LIST_TYPES = ['numbered-list', 'bulleted-list'];
-const TEXT_ALIGN_TYPES = ['left', 'center', 'right', 'justify'];
 const HOTKEYS: { [key: string]: string } = {
   'mod+b': 'bold',
   'mod+i': 'italic',
@@ -27,33 +26,21 @@ const HOTKEYS: { [key: string]: string } = {
 type LinkElement = { children: Descendant[]; type: 'link'; url: string };
 
 const toggleBlock = (editor: Editor, format: string): void => {
-  const isActive = isBlockActive(
-    editor,
-    format,
-    TEXT_ALIGN_TYPES.includes(format) ? 'align' : 'type'
-  );
+  const isActive = isBlockActive(editor, format);
   const isList = LIST_TYPES.includes(format);
 
   Transforms.unwrapNodes(editor, {
     match: (n) =>
       !Editor.isEditor(n) &&
       SlateElement.isElement(n) &&
-      LIST_TYPES.includes(n.type) &&
-      !TEXT_ALIGN_TYPES.includes(format),
+      LIST_TYPES.includes(n.type),
     split: true,
   });
-  let newProperties: Partial<SlateElement>;
-  if (TEXT_ALIGN_TYPES.includes(format)) {
-    newProperties = {
-      // @ts-ignore
-      align: isActive ? undefined : format,
-    };
-  } else {
-    newProperties = {
-      // @ts-ignore
-      type: isActive ? 'paragraph' : isList ? 'list-item' : format,
-    };
-  }
+
+  const newProperties: Partial<SlateElement> = {
+    // @ts-ignore
+    type: isActive ? 'paragraph' : isList ? 'list-item' : format,
+  };
   Transforms.setNodes<SlateElement>(editor, newProperties);
 
   if (!isActive && isList) {
@@ -338,7 +325,6 @@ export {
   LIST_TYPES,
   markdownToSlate,
   slateToMarkdown,
-  TEXT_ALIGN_TYPES,
   withInlines,
   unwrapLink,
 };

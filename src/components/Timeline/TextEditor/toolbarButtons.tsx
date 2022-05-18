@@ -8,7 +8,6 @@ import {
   isBlockActive,
   isLinkActive,
   isMarkActive,
-  TEXT_ALIGN_TYPES,
   toggleBlock,
   toggleMark,
   unwrapLink,
@@ -21,15 +20,7 @@ export const BlockButton: React.FunctionComponent<{
   const editor = useSlate();
   return (
     <IconButton
-      color={
-        isBlockActive(
-          editor,
-          format,
-          TEXT_ALIGN_TYPES.includes(format) ? 'align' : 'type'
-        )
-          ? 'primary'
-          : 'default'
-      }
+      color={isBlockActive(editor, format) ? 'primary' : 'default'}
       onMouseDown={(event) => {
         event.preventDefault();
         toggleBlock(editor, format);
