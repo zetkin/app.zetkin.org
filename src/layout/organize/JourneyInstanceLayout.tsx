@@ -1,9 +1,11 @@
 import { Forward } from '@material-ui/icons';
 import ScheduleIcon from '@material-ui/icons/Schedule';
+import { useContext } from 'react';
 import { useRouter } from 'next/router';
 import { Box, Chip, makeStyles, Typography } from '@material-ui/core';
 import { FormattedDate, FormattedMessage as Msg, useIntl } from 'react-intl';
 
+import SnackbarContext from 'hooks/SnackbarContext';
 import TabbedLayout from './TabbedLayout';
 import { ZetkinEllipsisMenuProps } from 'components/ZetkinEllipsisMenu';
 import ZetkinRelativeTime from 'components/ZetkinRelativeTime';
@@ -52,6 +54,7 @@ const JourneyStatusChip = ({
 const JourneyInstanceLayout: React.FunctionComponent = ({ children }) => {
   const { orgId, journeyId, instanceId } = useRouter().query;
   const intl = useIntl();
+  const { showSnackbar } = useContext(SnackbarContext);
 
   const journeyInstanceQuery = journeyInstanceResource(
     orgId as string,
@@ -61,6 +64,12 @@ const JourneyInstanceLayout: React.FunctionComponent = ({ children }) => {
 
   const journeysQuery = journeysResource(orgId as string).useQuery();
   const journeys = journeysQuery.data as ZetkinJourney[];
+
+  const journeyInstanceHooks = journeyInstanceResource(
+    orgId as string,
+    instanceId as string
+  );
+  const patchJourneyInstanceMutation = journeyInstanceHooks.useUpdate();
 
   const ellipsisMenu: ZetkinEllipsisMenuProps['items'] = [];
 
@@ -73,10 +82,23 @@ const JourneyInstanceLayout: React.FunctionComponent = ({ children }) => {
     subMenuItems: journeys
       ?.filter((journey) => journey.id.toString() !== journeyId)
       .map((journey) => ({
-        id: `convert-journey-submenu-${journey.id}`,
+        id: `convert-journey-submenu-${journey.singular_label}`,
         label: journey.singular_label,
         onSelect: () => {
-          //todo
+          patchJourneyInstanceMutation.mutateAsync(
+            {
+              journey: {
+                id: journey.id,
+                title: journey.singular_label,
+              },
+            },
+            {
+              onError: () => showSnackbar('error'),
+              onSuccess: () => {
+                //todo - go to new url
+              },
+            }
+          );
         },
       })),
   });
