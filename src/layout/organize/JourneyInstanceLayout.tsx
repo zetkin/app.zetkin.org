@@ -1,12 +1,14 @@
 import ScheduleIcon from '@material-ui/icons/Schedule';
 import { useRouter } from 'next/router';
+import { Add, Forward } from '@material-ui/icons';
+import { Box, Chip, makeStyles, Typography } from '@material-ui/core';
 import { FormattedDate, FormattedMessage as Msg, useIntl } from 'react-intl';
 
 import { journeyInstanceResource } from 'api/journeys';
 import TabbedLayout from './TabbedLayout';
+import { ZetkinEllipsisMenuProps } from 'components/ZetkinEllipsisMenu';
 import { ZetkinJourneyInstance } from 'types/zetkin';
 import ZetkinRelativeTime from 'components/ZetkinRelativeTime';
-import { Box, Chip, makeStyles, Typography } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   closedChip: {
@@ -49,73 +51,99 @@ const JourneyStatusChip = ({
 
 const JourneyInstanceLayout: React.FunctionComponent = ({ children }) => {
   const { orgId, journeyId, instanceId } = useRouter().query;
-
+  const intl = useIntl();
   const journeyInstanceQuery = journeyInstanceResource(
     orgId as string,
     instanceId as string
   ).useQuery();
   const journeyInstance = journeyInstanceQuery.data as ZetkinJourneyInstance;
 
+  const ellipsisMenu: ZetkinEllipsisMenuProps['items'] = [];
+
+  ellipsisMenu.push({
+    id: 'convert-journey',
+    label: intl.formatMessage({
+      id: 'pages.organizeJourneyInstance.ellipsisMenu.convert',
+    }),
+    onSelect: () => {
+      //todo
+    },
+    startIcon: <Forward color="secondary" />,
+    subMenuItems: [
+      {
+        id: 'convert-test-thing',
+        label: 'Test thing',
+        onSelect: () => {
+          //todo
+        },
+        startIcon: <Add color="secondary" />,
+      },
+    ],
+  });
+
   return (
-    <TabbedLayout
-      baseHref={`/organize/${orgId}/journeys/${journeyId}/${instanceId}`}
-      defaultTab="/"
-      subtitle={
-        <Box
-          style={{
-            alignItems: 'center',
-            display: 'flex',
-          }}
-        >
-          <JourneyStatusChip instance={journeyInstance} />
-          <Typography style={{ marginRight: '1rem' }}>
-            <Msg id="layout.organize.journeys.lastActivity" />{' '}
-            <ZetkinRelativeTime datetime={journeyInstance.updated} />
-          </Typography>
-          {journeyInstance.next_milestone && (
-            <>
-              <ScheduleIcon
-                color="secondary"
-                style={{ marginRight: '0.25rem' }}
-              />
-              <Typography>
-                {journeyInstance.next_milestone.title}
-                {': '}
-                {journeyInstance.next_milestone.deadline && (
-                  <FormattedDate
-                    day="numeric"
-                    month="long"
-                    value={journeyInstance.next_milestone.deadline}
-                    year="numeric"
-                  />
-                )}
-              </Typography>
-            </>
-          )}
-        </Box>
-      }
-      tabs={[
-        {
-          href: '/',
-          messageId: 'layout.organize.journeys.tabs.timeline',
-        },
-        {
-          href: '/milestones',
-          messageId: 'layout.organize.journeys.tabs.milestones',
-        },
-      ]}
-      title={
-        <>
-          {`${journeyInstance.title || journeyInstance.journey.title} `}
-          <Typography
-            color="secondary"
-            variant="h3"
-          >{`\u00A0#${journeyInstance.id}`}</Typography>
-        </>
-      }
-    >
-      {children}
-    </TabbedLayout>
+    <>
+      <TabbedLayout
+        baseHref={`/organize/${orgId}/journeys/${journeyId}/${instanceId}`}
+        defaultTab="/"
+        ellipsisMenuItems={ellipsisMenu}
+        subtitle={
+          <Box
+            style={{
+              alignItems: 'center',
+              display: 'flex',
+            }}
+          >
+            <JourneyStatusChip instance={journeyInstance} />
+            <Typography style={{ marginRight: '1rem' }}>
+              <Msg id="layout.organize.journeys.lastActivity" />{' '}
+              <ZetkinRelativeTime datetime={journeyInstance.updated} />
+            </Typography>
+            {journeyInstance.next_milestone && (
+              <>
+                <ScheduleIcon
+                  color="secondary"
+                  style={{ marginRight: '0.25rem' }}
+                />
+                <Typography>
+                  {journeyInstance.next_milestone.title}
+                  {': '}
+                  {journeyInstance.next_milestone.deadline && (
+                    <FormattedDate
+                      day="numeric"
+                      month="long"
+                      value={journeyInstance.next_milestone.deadline}
+                      year="numeric"
+                    />
+                  )}
+                </Typography>
+              </>
+            )}
+          </Box>
+        }
+        tabs={[
+          {
+            href: '/',
+            messageId: 'layout.organize.journeys.tabs.timeline',
+          },
+          {
+            href: '/milestones',
+            messageId: 'layout.organize.journeys.tabs.milestones',
+          },
+        ]}
+        title={
+          <>
+            {`${journeyInstance.title || journeyInstance.journey.title} `}
+            <Typography
+              color="secondary"
+              variant="h3"
+            >{`\u00A0#${journeyInstance.id}`}</Typography>
+          </>
+        }
+      >
+        {children}
+      </TabbedLayout>
+    </>
   );
 };
 

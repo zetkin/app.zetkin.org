@@ -6,6 +6,8 @@ assignPersonLabel: Assign person
 assignedTo: Assigned to
 collapseButton: Collapse
 editButton: Edit
+ellipsisMenu:
+  convert: Convert to...
 expandButton: Expand
 members: Members
 milestones: Milestones
