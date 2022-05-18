@@ -25,6 +25,11 @@ const TimelineAddNote: React.FunctionComponent<AddNoteProps> = ({
     }
   }, [disabled]);
 
+  // Markdown string is truthy even if the visible text box is empty
+  const visibleText = note?.text
+    .replace(/(<([^>]+)>)/gi, '')
+    .replace(/\r?\n|\r/g, '');
+
   return (
     <form
       onSubmit={(evt) => {
@@ -41,17 +46,17 @@ const TimelineAddNote: React.FunctionComponent<AddNoteProps> = ({
           id: 'misc.timeline.add_note_placeholder',
         })}
       />
-      <Collapse in={!!note}>
+      <Collapse in={!!visibleText}>
         <SubmitCancelButtons onCancel={onCancel} submitDisabled={disabled} />
       </Collapse>
     </form>
   );
 
-  function onChange(value: string) {
-    if (value === '') {
+  function onChange(markdown: string) {
+    if (markdown === '') {
       setNote(null);
     } else {
-      setNote({ ...note, text: value });
+      setNote({ ...note, text: markdown });
     }
   }
 
