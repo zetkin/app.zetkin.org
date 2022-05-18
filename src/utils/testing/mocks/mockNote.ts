@@ -3,12 +3,7 @@ import { ZetkinNote } from 'types/zetkin';
 
 const note: ZetkinNote = {
   id: 1,
-  text: JSON.stringify([
-    {
-      children: [{ text: 'Note to self' }],
-      type: 'paragraph',
-    },
-  ]),
+  text: '**Some bold markdown!**',
 };
 
 const mockNote = (overrides?: Partial<ZetkinNote>): ZetkinNote => {

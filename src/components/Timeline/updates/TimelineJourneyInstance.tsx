@@ -23,6 +23,9 @@ const TimelineJourneyInstance: React.FunctionComponent<Props> = ({
   const [expandSummary, setExpandSummary] = useState<boolean>(false);
   const [currentScroll, setCurrentScroll] = useState<number>(0);
 
+  // Everyone wants to click a "show more" button,
+  // No one wants to click a "show less" button. This way they don't have to:
+  // Also roughly centers the content they've just asked to read
   useEffect(() => {
     if (expandSummary && !!textRef) {
       const offset = textRef?.current?.offsetTop as number;
