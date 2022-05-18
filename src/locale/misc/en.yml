@@ -23,6 +23,13 @@ dataTable:
     button: Sort
     hint: 'Hint: hold down {shiftKeyIcon} while clicking multiple columns'
     title: Sort
+email:
+  collapse: Show less
+  expand: Show more
+  headers:
+    cc: CC
+    from: From
+    to: To
 errorLoading: There was an error loading the data.
 nativePersonFields:
   alt_phone: Alt Phone number
