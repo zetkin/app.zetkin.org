@@ -11,6 +11,7 @@ const MarxistTraining: ZetkinJourney = {
     closed: 359,
     open: 75,
   },
+  title: 'Marxist Training',
 };
 
 export default MarxistTraining;
