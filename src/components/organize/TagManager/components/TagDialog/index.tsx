@@ -72,6 +72,7 @@ const TagDialog: React.FunctionComponent<TagDialogProps> = ({
       <form
         onSubmit={(e) => {
           e.preventDefault();
+          e.stopPropagation();
           const tagBody = {
             ...(color.value && { color: `#${color.value}` }),
             ...(tag && 'id' in tag && { id: tag.id }),

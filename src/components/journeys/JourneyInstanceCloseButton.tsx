@@ -60,6 +60,7 @@ const JourneyInstanceCloseButton: React.FunctionComponent<{
     <>
       <Button
         color="primary"
+        data-testid="JourneyInstanceCloseButton"
         onClick={() => setShowDialog(true)}
         startIcon={<ArchiveIcon />}
         variant="contained"
@@ -73,6 +74,7 @@ const JourneyInstanceCloseButton: React.FunctionComponent<{
         <form
           onSubmit={(e) => {
             e.preventDefault();
+            e.stopPropagation();
             onSubmit();
           }}
         >
@@ -81,6 +83,9 @@ const JourneyInstanceCloseButton: React.FunctionComponent<{
           </Typography>
           <TextField
             fullWidth
+            inputProps={{
+              'data-testid': 'JourneyInstanceCloseButton-outcomeNoteField',
+            }}
             margin="normal"
             multiline
             onChange={(e) => setOutcomeNote(e.target.value)}
@@ -154,6 +159,7 @@ export const JourneyInstanceReopenButton: React.FunctionComponent<{
   return (
     <Button
       color="secondary"
+      data-testid="JourneyInstanceReopenButton"
       onClick={() =>
         journeyInstanceMutation.mutate(
           { closed: null },
