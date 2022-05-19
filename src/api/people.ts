@@ -3,6 +3,7 @@ import {
   createPrefetch,
   createUseMutationDelete,
   createUseMutationPut,
+  createUseMutationPutWithBody,
   createUseQuery,
 } from './utils/resourceHookFactories';
 
@@ -46,7 +47,10 @@ export const personTagsResource = (orgId: string, personId: string) => {
 
   return {
     key,
-    useAssign: createUseMutationPut({ key, url }),
+    useAssign: createUseMutationPutWithBody<Pick<ZetkinTag, 'id' | 'value'>>({
+      key,
+      url,
+    }),
     useQuery: createUseQuery<ZetkinTag[]>(key, url),
     useUnassign: createUseMutationDelete({ key, url }),
   };
