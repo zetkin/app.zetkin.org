@@ -145,11 +145,16 @@ test.describe('Journey instance sidebar', () => {
       );
 
       //find x-icon and click it
-      await page
-        .locator(
-          `data-testid=JourneyPerson-remove-${ClarasOnboarding.assignees[0].id}`
-        )
-        .click();
+      await Promise.all([
+        page.waitForResponse(
+          `**/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}`
+        ),
+        page
+          .locator(
+            `data-testid=JourneyPerson-remove-${ClarasOnboarding.assignees[0].id}`
+          )
+          .click(),
+      ]);
 
       //there should be no Angela in list of assignees
       expect(
