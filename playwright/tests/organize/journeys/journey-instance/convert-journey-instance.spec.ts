@@ -17,7 +17,7 @@ test.describe('Changing the type of a journey instance', () => {
     moxy.teardown();
   });
 
-  test.only('updates the id of the journey in the instance.', async ({
+  test('updates the id of the journey in the instance.', async ({
     appUri,
     moxy,
     page,
@@ -72,7 +72,7 @@ test.describe('Changing the type of a journey instance', () => {
     );
   });
 
-  test.only('shows error snackbar if request is wrong', async ({
+  test('shows error snackbar if request is wrong', async ({
     appUri,
     moxy,
     page,
@@ -117,5 +117,63 @@ test.describe('Changing the type of a journey instance', () => {
     ]);
 
     expect(await page.locator('data-testid=Snackbar-error').count()).toEqual(1);
+  });
+
+  test('successful conversion redirects to journey instance page.', async ({
+    appUri,
+    moxy,
+    page,
+  }) => {
+    moxy.setZetkinApiMock(
+      `/orgs/${KPD.id}/journeys/${MemberOnboarding.id}`,
+      'get',
+      MemberOnboarding
+    );
+
+    moxy.setZetkinApiMock(
+      `/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}`,
+      'get',
+      ClarasOnboarding
+    );
+
+    moxy.setZetkinApiMock(`/orgs/${KPD.id}/journeys`, 'get', [
+      MarxistTraining,
+      MemberOnboarding,
+    ]);
+
+    moxy.setZetkinApiMock(
+      `/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}`,
+      'patch',
+      {
+        journey: {
+          id: MarxistTraining.id,
+          title: MarxistTraining.singular_label,
+        },
+      }
+    );
+
+    await page.goto(appUri + '/organize/1/journeys/1/1');
+
+    //Click ellipsis menu
+    await page.locator('data-testid=EllipsisMenu-menuActivator').click();
+
+    //Click "Convert to..."
+    await page.locator('text=Convert to...').click();
+
+    //Click type of journey to convert to, "Marxist Training", and wait for navigation.
+    await Promise.all([
+      page.waitForResponse(
+        `**/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}`
+      ),
+      page.locator('text=Marxist Training').click(),
+      page.waitForNavigation({
+        url: `**/organize/${KPD.id}/journeys/${MarxistTraining.id}/${ClarasOnboarding.id}`,
+      }),
+    ]);
+
+    expect(page.url()).toEqual(
+      appUri +
+        `/organize/${KPD.id}/journeys/${MarxistTraining.id}/${ClarasOnboarding.id}`
+    );
   });
 });

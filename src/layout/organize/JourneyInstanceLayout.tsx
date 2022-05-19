@@ -53,6 +53,7 @@ const JourneyStatusChip = ({
 
 const JourneyInstanceLayout: React.FunctionComponent = ({ children }) => {
   const { orgId, journeyId, instanceId } = useRouter().query;
+  const router = useRouter();
   const intl = useIntl();
   const { showSnackbar } = useContext(SnackbarContext);
 
@@ -94,16 +95,15 @@ const JourneyInstanceLayout: React.FunctionComponent = ({ children }) => {
             },
             {
               onError: () => showSnackbar('error'),
-              onSuccess: () => {
-                //todo - go to new url
-              },
+              onSuccess: () =>
+                router.push(
+                  `/organize/${orgId}/journeys/${journey.id}/${instanceId}`
+                ),
             }
           );
         },
       })),
   });
-
-  /* , */
 
   return (
     <>
