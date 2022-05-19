@@ -146,9 +146,7 @@ test.describe('Journey instance sidebar', () => {
 
       //find x-icon and click it
       await Promise.all([
-        page.waitForResponse(
-          `**/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}`
-        ),
+        page.waitForResponse((res) => res.request().method() == 'DELETE'),
         page
           .locator(
             `data-testid=JourneyPerson-remove-${ClarasOnboarding.assignees[0].id}`
