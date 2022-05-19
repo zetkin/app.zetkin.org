@@ -2,11 +2,15 @@ import { FormattedMessage } from 'react-intl';
 import { Button, Collapse, Divider, Fade, Grid } from '@material-ui/core';
 import React, { useMemo } from 'react';
 
+import TimelineAddNote from './TimelineAddNote';
 import TimelineUpdate from './TimelineUpdate';
+import { ZetkinNote } from 'types/zetkin';
 import { ZetkinUpdate } from 'types/updates';
 
 export interface TimelineProps {
+  disabled?: boolean;
   expandable?: boolean;
+  onAddNote: (note: Pick<ZetkinNote, 'text'>) => void;
   showAll?: boolean;
   updates: ZetkinUpdate[];
 }
@@ -14,7 +18,9 @@ export interface TimelineProps {
 export const SHOW_INITIALLY = 5;
 
 const Timeline: React.FunctionComponent<TimelineProps> = ({
+  disabled,
   expandable,
+  onAddNote,
   showAll,
   updates,
 }) => {
@@ -32,6 +38,9 @@ const Timeline: React.FunctionComponent<TimelineProps> = ({
   return (
     <Fade appear in timeout={1000}>
       <Grid container direction="column" spacing={6}>
+        <Grid item>
+          <TimelineAddNote disabled={disabled} onSubmit={onAddNote} />
+        </Grid>
         {renderUpdateList()}
         {expandable && renderExpandButton()}
       </Grid>

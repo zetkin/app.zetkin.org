@@ -294,6 +294,11 @@ export interface ZetkinJourneyMilestoneStatus {
   description: string;
 }
 
+export interface ZetkinNote {
+  id: number;
+  text: string;
+}
+
 export type {
   ZetkinTask,
   ZetkinAssignedTask,

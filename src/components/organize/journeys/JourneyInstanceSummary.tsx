@@ -85,7 +85,7 @@ const JourneyInstanceSummary = ({
         </Button>
       }
       title={intl.formatMessage({
-        id: 'pages.organizeJourneyInstance.summaryHeader',
+        id: 'pages.organizeJourneyInstance.sections.summary',
       })}
     >
       {editingSummary ? (

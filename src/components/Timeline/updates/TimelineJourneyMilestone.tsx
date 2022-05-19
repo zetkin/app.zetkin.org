@@ -4,16 +4,16 @@ import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import FlagIcon from '@material-ui/icons/Flag';
 import { FormattedMessage } from 'react-intl';
 import React from 'react';
-import { Grid, Typography } from '@material-ui/core';
+import { Box, Grid, Typography } from '@material-ui/core';
 
 import theme from 'theme';
 import UpdateContainer from './elements/UpdateContainer';
 import ZetkinPersonLink from 'components/ZetkinPersonLink';
 import ZetkinRelativeTime from 'components/ZetkinRelativeTime';
-import { ZetkinUpdateJourneyMilestone } from 'types/updates';
+import { ZetkinUpdateJourneyInstanceMilestone } from 'types/updates';
 
 interface Props {
-  update: ZetkinUpdateJourneyMilestone;
+  update: ZetkinUpdateJourneyInstanceMilestone;
 }
 
 const TimelineJourneyMilestone: React.FunctionComponent<Props> = ({
@@ -73,13 +73,13 @@ const TimelineJourneyMilestone: React.FunctionComponent<Props> = ({
     };
 
     return (
-      <>
+      <Box display="flex" flexDirection="row" style={{ gap: 8 }}>
         {deadlineTo ? (
           <FlagIcon style={iconStyle} />
         ) : (
           <AlarmOffIcon style={iconStyle} />
         )}
-        <Typography color="textSecondary" component={Grid} item variant="body2">
+        <Typography color="textSecondary" variant="body2">
           <FormattedMessage
             id={`misc.updates.${update.type}.${
               deadlineTo ? 'deadlineUpdate' : 'deadlineRemove'
@@ -93,7 +93,7 @@ const TimelineJourneyMilestone: React.FunctionComponent<Props> = ({
             }
           />
         </Typography>
-      </>
+      </Box>
     );
   }
 };
