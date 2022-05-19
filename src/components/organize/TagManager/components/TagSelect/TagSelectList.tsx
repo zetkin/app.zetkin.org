@@ -1,108 +1,16 @@
-/* eslint-disable jsx-a11y/no-autofocus */
 import { Add } from '@material-ui/icons';
 import EditIcon from '@material-ui/icons/Edit';
-import { useAutocomplete } from '@material-ui/lab';
-import { useState } from 'react';
+import { FormattedMessage } from 'react-intl';
 import {
   Box,
   IconButton,
   List,
   ListItem,
   ListSubheader,
-  TextField,
 } from '@material-ui/core';
-import { FormattedMessage, useIntl } from 'react-intl';
 
-import { groupTags } from '../utils';
-import TagChip from './TagChip';
-import TagDialog from './TagDialog';
-import { EditTag, NewTag } from '../types';
-import { ZetkinTag, ZetkinTagGroup } from 'types/zetkin';
-
-const TagSelect: React.FunctionComponent<{
-  disableEditTags?: boolean;
-  disabledTags: ZetkinTag[];
-  groups: ZetkinTagGroup[];
-  onCreateTag: (tag: NewTag) => void;
-  onEditTag: (tag: EditTag) => void;
-  onSelect: (tag: ZetkinTag) => void;
-  tags: ZetkinTag[];
-}> = ({
-  disableEditTags,
-  disabledTags,
-  groups,
-  onCreateTag,
-  onEditTag,
-  onSelect,
-  tags,
-}) => {
-  const intl = useIntl();
-
-  const [tagToEdit, setTagToEdit] = useState<
-    ZetkinTag | Pick<ZetkinTag, 'title'> | undefined
-  >(undefined);
-
-  const {
-    inputValue,
-    getInputProps,
-    getListboxProps,
-    getRootProps,
-    groupedOptions,
-  } = useAutocomplete({
-    getOptionLabel: (option) => option.title,
-    open: true,
-    options: tags,
-  });
-
-  const groupedFilteredTags = groupTags(
-    groupedOptions,
-    intl.formatMessage({
-      id: 'misc.tags.tagManager.ungroupedHeader',
-    })
-  );
-
-  return (
-    <Box {...getRootProps()}>
-      <TextField
-        {...getInputProps()}
-        autoFocus
-        fullWidth
-        inputProps={{
-          'data-testid': 'TagManager-TagSelect-searchField',
-        }}
-        placeholder={intl.formatMessage({
-          id: 'misc.tags.tagManager.addTag',
-        })}
-        variant="outlined"
-      />
-      {/* Options */}
-      <TagSelectList
-        disabledTags={disabledTags}
-        disableEditTags={!!disableEditTags}
-        groupedTags={groupedFilteredTags}
-        inputValue={inputValue}
-        listProps={getListboxProps()}
-        onEdit={(tag) => setTagToEdit(tag)}
-        onSelect={onSelect}
-      />
-      <TagDialog
-        groups={groups}
-        onClose={() => setTagToEdit(undefined)}
-        onSubmit={(tag) => {
-          if ('id' in tag) {
-            // If existing tag
-            onEditTag(tag);
-          } else {
-            // If new tag
-            onCreateTag(tag);
-          }
-        }}
-        open={Boolean(tagToEdit)}
-        tag={tagToEdit}
-      />
-    </Box>
-  );
-};
+import TagChip from '../TagChip';
+import { ZetkinTag } from 'types/zetkin';
 
 const TagSelectList: React.FC<{
   disableEditTags: boolean;
@@ -200,4 +108,4 @@ const TagSelectList: React.FC<{
   );
 };
 
-export default TagSelect;
+export default TagSelectList;
