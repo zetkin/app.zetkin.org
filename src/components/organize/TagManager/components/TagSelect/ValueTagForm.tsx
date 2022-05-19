@@ -1,10 +1,16 @@
+import { FormattedMessage } from 'react-intl';
+import { Box, Typography } from '@material-ui/core';
+
 import SubmitCancelButtons from 'components/forms/common/SubmitCancelButtons';
+import TagChip from '../TagChip';
+import { ZetkinTag } from 'types/zetkin';
 
 const ValueTagForm: React.FC<{
   inputValue: string;
   onCancel: () => void;
   onSubmit: (value: string | number) => void;
-}> = ({ inputValue, onCancel, onSubmit }) => {
+  tag: ZetkinTag;
+}> = ({ inputValue, onCancel, onSubmit, tag }) => {
   return (
     <form
       onSubmit={(ev) => {
@@ -12,6 +18,22 @@ const ValueTagForm: React.FC<{
         onSubmit(inputValue);
       }}
     >
+      <Box display="flex" flexDirection="column" p={1}>
+        <Typography variant="body2">
+          <FormattedMessage
+            id="misc.tags.tagManager.valueTagForm.typeHint"
+            values={{ type: tag.value_type }}
+          />
+        </Typography>
+        <Box
+          alignItems="flex-start"
+          display="flex"
+          flexDirection="column"
+          marginTop={1}
+        >
+          <TagChip tag={{ ...tag, value: inputValue }} />
+        </Box>
+      </Box>
       <SubmitCancelButtons onCancel={onCancel} />
     </form>
   );
