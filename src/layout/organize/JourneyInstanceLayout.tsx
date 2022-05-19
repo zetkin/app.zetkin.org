@@ -45,7 +45,7 @@ const JourneyInstanceLayout: React.FunctionComponent = ({ children }) => {
     subMenuItems: journeys
       ?.filter((journey) => journey.id.toString() !== journeyId)
       .map((journey) => ({
-        id: `convert-journey-submenu-${journey.singular_label}`,
+        id: `convertTo-${journey.id}`,
         label: journey.singular_label,
         onSelect: () => {
           patchJourneyInstanceMutation.mutateAsync(

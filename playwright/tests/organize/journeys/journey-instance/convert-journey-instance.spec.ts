@@ -135,9 +135,15 @@ test.describe('Changing the type of a journey instance', () => {
       (async () => {
         await page.locator('data-testid=EllipsisMenu-menuActivator').click();
         await page.locator('text=Convert to...').click();
-        await page.locator('text=Marxist').click();
+        await page
+          .locator(
+            `data-testid=EllipsisSubMenu-item-convertTo-${MarxistTraining.id}`
+          )
+          .click();
       })(),
     ]);
+
+    await page.locator('data-testid=Snackbar-error').waitFor();
 
     expect(await page.locator('data-testid=Snackbar-error').count()).toEqual(1);
   });
