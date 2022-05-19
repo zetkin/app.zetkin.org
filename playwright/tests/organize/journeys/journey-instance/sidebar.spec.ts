@@ -296,7 +296,12 @@ test.describe('Journey instance sidebar', () => {
       //find x-icon and click it, then wait for re-fetch of invalidated instance data
       await Promise.all([
         page.waitForResponse(
-          `**/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}`
+          (res) =>
+            res.request().method() === 'GET' &&
+            res
+              .request()
+              .url()
+              .endsWith(`/journey_instances/${ClarasOnboarding.id}`)
         ),
         page
           .locator(
