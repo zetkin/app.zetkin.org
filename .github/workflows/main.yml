@@ -4,7 +4,6 @@ on:
     push:
         branches: [main]
     pull_request:
-        branches: [main]
 
 jobs:
     lint:
@@ -44,7 +43,7 @@ jobs:
             - name: Install dependencies
               run: yarn install --frozen-lockfile && npx playwright install chromium
             - name: Run playwright tests
-              run: yarn playwright:ci
+              run: DEBUG=pw:api yarn playwright:ci
     unit-test:
         runs-on: ubuntu-latest
         steps:
