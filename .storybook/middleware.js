@@ -53,8 +53,8 @@ async function loadMessages() {
 }
 
 module.exports = async (router) => {
-  const messages = await loadMessages();
   router.get('/l10n_messages', async (req, res) => {
+    const messages = await loadMessages();
     res.json({
       messages: messages,
     });

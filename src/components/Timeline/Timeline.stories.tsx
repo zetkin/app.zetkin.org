@@ -5,22 +5,49 @@ import { ComponentMeta, ComponentStory } from '@storybook/react';
 
 const chance = Chance();
 
+import mockNote from 'utils/testing/mocks/mockNote';
 import mockUpdate from 'utils/testing/mocks/mockUpdate';
-import Timeline from 'components/Timeline';
-import { UPDATE_TYPES, ZetkinUpdateJourneyMilestone } from 'types/updates';
+import Timeline from 'components/Timeline/index';
+import {
+  UPDATE_TYPES,
+  ZetkinUpdateJourneyInstance,
+  ZetkinUpdateJourneyInstanceAddNote,
+  ZetkinUpdateJourneyInstanceMilestone,
+} from 'types/updates';
 
 export default {
   argTypes: {
     backgroundColor: { control: 'color' },
   },
   component: Timeline,
-  title: 'Example/Timeline',
+  title: 'Organisms/Timeline',
 } as ComponentMeta<typeof Timeline>;
 
 // More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
 const Template: ComponentStory<typeof Timeline> = (args) => (
-  <Timeline {...args} showAll />
+  <div style={{ maxWidth: 450 }}>
+    <Timeline {...args} showAll />
+  </div>
 );
+
+const journeyInstanceUpdates = Array.from(Array(10).keys()).map(() => {
+  const update = mockUpdate(UPDATE_TYPES.JOURNEYINSTANCE_UPDATE, {
+    timestamp: dayjs()
+      .subtract(Math.random() * 100, 'hours')
+      .format(),
+  }) as ZetkinUpdateJourneyInstance;
+  const fieldName = Math.random() > 0.5 ? 'summary' : 'title';
+  update.details.changes = {
+    [fieldName]: {
+      from: '',
+      to:
+        fieldName === 'title'
+          ? chance.sentence({ words: 4 })
+          : chance.paragraph({ sentences: chance.integer({ max: 8, min: 2 }) }),
+    },
+  };
+  return update;
+});
 
 const addAssigneeUpdates = Array.from(Array(10).keys()).map(() =>
   mockUpdate(
@@ -35,12 +62,12 @@ const addAssigneeUpdates = Array.from(Array(10).keys()).map(() =>
   )
 );
 
-const journeyMilestoneUpdates = Array.from(Array(30).keys()).map(() => {
+const journeyMilestoneUpdates = Array.from(Array(10).keys()).map(() => {
   const update = mockUpdate(UPDATE_TYPES.JOURNEYINSTANCE_UPDATEMILESTONE, {
     timestamp: dayjs()
       .subtract(Math.random() * 100, 'hours')
       .format(),
-  }) as ZetkinUpdateJourneyMilestone;
+  }) as ZetkinUpdateJourneyInstanceMilestone;
   update.details.milestone.title = chance.sentence({ words: 4 }).slice(0, -1);
   const dice = Math.random();
   if (dice > 0.33 && dice < 0.66) {
@@ -66,8 +93,51 @@ const journeyMilestoneUpdates = Array.from(Array(30).keys()).map(() => {
   return update;
 });
 
+const noteUpdates = Array.from(Array(10).keys()).map((id) => {
+  const update = mockUpdate(UPDATE_TYPES.JOURNEYINSTANCE_ADDNOTE, {
+    timestamp: dayjs()
+      .subtract(Math.random() * 100, 'hours')
+      .format(),
+  }) as ZetkinUpdateJourneyInstanceAddNote;
+  update.details.note = mockNote({
+    id,
+    text: `# Heading one
+
+## Heading two
+
+Normal paragraph
+
+_italic text_
+
+
+~~strike through text~~
+
+[hyperlink](https://jackhanford.com)
+
+> A block quote.
+
+- bullet list item 1
+- bullet list item 2
+
+**bold text**
+
+1. ordered list item 1
+1. ordered list item 2`,
+  });
+  return update;
+});
+
 const updates = addAssigneeUpdates
   .concat(journeyMilestoneUpdates)
+  .concat(journeyInstanceUpdates)
+  .concat(noteUpdates)
+  .concat([
+    mockUpdate(UPDATE_TYPES.JOURNEYINSTANCE_CREATE, {
+      timestamp: dayjs()
+        .subtract(Math.random() * 100, 'hours')
+        .format(),
+    }),
+  ])
   .sort((a, b) => (dayjs(a.timestamp).isAfter(dayjs(b.timestamp)) ? -1 : 1));
 
 export const Primary = Template.bind({});

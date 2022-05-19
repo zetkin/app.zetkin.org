@@ -293,6 +293,11 @@ export interface ZetkinJourneyMilestoneStatus {
   description: string;
 }
 
+export interface ZetkinNote {
+  id: number;
+  text: string;
+}
+
 export type {
   ZetkinTask,
   ZetkinAssignedTask,
@@ -302,14 +307,3 @@ export type {
   ZetkinViewColumn,
   ZetkinViewRow,
 };
-export type ZetkinUpdateAssignee = {
-  assignee: Pick<ZetkinPerson, 'id' | 'first_name' | 'last_name'>;
-};
-
-export interface ZetkinUpdate {
-  actor?: Pick<ZetkinPerson, 'id' | 'first_name' | 'last_name'>;
-  created_at: string;
-  details: ZetkinUpdateAssignee;
-  type: 'journeyInstance.assignee.add';
-  target: { id: number; title: string };
-}

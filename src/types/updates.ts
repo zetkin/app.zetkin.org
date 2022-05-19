@@ -2,23 +2,25 @@ import {
   ZetkinJourneyInstance,
   ZetkinJourneyMilestone,
   ZetkinJourneyMilestoneStatus,
+  ZetkinNote,
   ZetkinPerson,
 } from './zetkin';
 
 export enum UPDATE_TYPES {
   JOURNEYINSTANCE_ADDASSIGNEE = 'journeyinstance.addassignee',
+  JOURNEYINSTANCE_ADDNOTE = 'journeyinstance.addnote',
+  JOURNEYINSTANCE_CREATE = 'journeyinstance.create',
   JOURNEYINSTANCE_REMOVEASSIGNEE = 'journeyinstance.removeassignee',
+  JOURNEYINSTANCE_UPDATE = 'journeyinstance.update',
   JOURNEYINSTANCE_UPDATEMILESTONE = 'journeyinstance.updatemilestone',
 }
 
-export type CHANGE_PROPS = {
-  [UPDATE_TYPES.JOURNEYINSTANCE_UPDATEMILESTONE]: 'completed' | 'deadline';
-};
-
-export interface ZetkinUpdate {
+interface ZetkinUpdateBase<UpdateType, Target, Details = null> {
   actor: Pick<ZetkinPerson, 'id' | 'first_name' | 'last_name'>;
+  details: Details;
+  target: Target;
   timestamp: string;
-  type: `${UPDATE_TYPES}`;
+  type: UpdateType;
 }
 
 type ZetkinUpdateChange<UpdateType> = {
@@ -28,22 +30,57 @@ type ZetkinUpdateChange<UpdateType> = {
   };
 };
 
-export interface ZetkinUpdateAssignee extends ZetkinUpdate {
-  details: {
+export type ZetkinUpdateJourneyInstanceAssignee = ZetkinUpdateBase<
+  | UPDATE_TYPES.JOURNEYINSTANCE_ADDASSIGNEE
+  | UPDATE_TYPES.JOURNEYINSTANCE_REMOVEASSIGNEE,
+  ZetkinJourneyInstance,
+  {
     assignee: Pick<ZetkinPerson, 'id' | 'first_name' | 'last_name'>;
-  };
-  target: ZetkinJourneyInstance;
-}
-
-export interface ZetkinUpdateJourneyMilestone extends ZetkinUpdate {
-  details: {
+  }
+>;
+export type ZetkinUpdateJourneyInstance = ZetkinUpdateBase<
+  UPDATE_TYPES.JOURNEYINSTANCE_UPDATE,
+  ZetkinJourneyInstance,
+  {
     changes: ZetkinUpdateChange<
-      Pick<
-        ZetkinJourneyMilestoneStatus,
-        CHANGE_PROPS[UPDATE_TYPES.JOURNEYINSTANCE_UPDATEMILESTONE]
-      >
+      Pick<ZetkinJourneyInstance, 'summary' | 'title'>
+    >;
+  }
+>;
+
+export type ZetkinUpdateJourneyInstanceMilestone = ZetkinUpdateBase<
+  UPDATE_TYPES.JOURNEYINSTANCE_UPDATEMILESTONE,
+  ZetkinJourneyInstance,
+  {
+    changes: ZetkinUpdateChange<
+      Pick<ZetkinJourneyMilestoneStatus, 'completed' | 'deadline'>
     >;
     milestone: ZetkinJourneyMilestone;
-  };
-  target: ZetkinJourneyInstance;
-}
+  }
+>;
+
+export type ZetkinUpdateJourneyInstanceStart = ZetkinUpdateBase<
+  UPDATE_TYPES.JOURNEYINSTANCE_CREATE,
+  ZetkinJourneyInstance,
+  {
+    data: Pick<
+      ZetkinJourneyInstance,
+      'id' | 'title' | 'summary' | 'opening_note' | 'closed' | 'journey'
+    >;
+  }
+>;
+
+export type ZetkinUpdateJourneyInstanceAddNote = ZetkinUpdateBase<
+  UPDATE_TYPES.JOURNEYINSTANCE_ADDNOTE,
+  ZetkinJourneyInstance,
+  {
+    note: ZetkinNote;
+  }
+>;
+
+export type ZetkinUpdate =
+  | ZetkinUpdateJourneyInstance
+  | ZetkinUpdateJourneyInstanceAddNote
+  | ZetkinUpdateJourneyInstanceAssignee
+  | ZetkinUpdateJourneyInstanceMilestone
+  | ZetkinUpdateJourneyInstanceStart;

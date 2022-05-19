@@ -1,11 +1,13 @@
 import { IntlProvider } from 'react-intl';
 import { muiTheme } from 'storybook-addon-material-ui';
-import withMock from 'storybook-addon-mock';
-import { QueryClientProvider, QueryClient } from 'react-query';
 import { RouterContext } from 'next/dist/shared/lib/router-context'; // next 11.1
-import theme from '../src/theme';
-import mockPerson from '../src/utils/testing/mocks/mockPerson';
+import withMock from 'storybook-addon-mock';
 import { useEffect, useState } from 'react';
+import { QueryClientProvider, QueryClient } from 'react-query';
+
+import theme from '../src/theme';
+import '../src/styles.css';
+import mockPerson from '../src/utils/testing/mocks/mockPerson';
 
 const queryClient = new QueryClient();
 

@@ -1,12 +1,16 @@
 import { FormattedMessage } from 'react-intl';
-import React from 'react';
 import { Button, Collapse, Divider, Fade, Grid } from '@material-ui/core';
+import React, { useMemo } from 'react';
 
+import TimelineAddNote from './TimelineAddNote';
 import TimelineUpdate from './TimelineUpdate';
+import { ZetkinNote } from 'types/zetkin';
 import { ZetkinUpdate } from 'types/updates';
 
 export interface TimelineProps {
+  disabled?: boolean;
   expandable?: boolean;
+  onAddNote: (note: Pick<ZetkinNote, 'text'>) => void;
   showAll?: boolean;
   updates: ZetkinUpdate[];
 }
@@ -14,15 +18,29 @@ export interface TimelineProps {
 export const SHOW_INITIALLY = 5;
 
 const Timeline: React.FunctionComponent<TimelineProps> = ({
+  disabled,
   expandable,
+  onAddNote,
   showAll,
   updates,
 }) => {
   const [expanded, setExpanded] = React.useState<boolean>(!!showAll);
 
+  const sorted = useMemo(
+    () =>
+      updates.sort(
+        (u0, u1) =>
+          new Date(u1.timestamp).getTime() - new Date(u0.timestamp).getTime()
+      ),
+    [updates]
+  );
+
   return (
     <Fade appear in timeout={1000}>
       <Grid container direction="column" spacing={6}>
+        <Grid item>
+          <TimelineAddNote disabled={disabled} onSubmit={onAddNote} />
+        </Grid>
         {renderUpdateList()}
         {expandable && renderExpandButton()}
       </Grid>
@@ -32,12 +50,12 @@ const Timeline: React.FunctionComponent<TimelineProps> = ({
   function renderUpdateList() {
     return (
       <>
-        {(expandable ? updates.slice(0, SHOW_INITIALLY) : updates).map(
+        {(expandable ? sorted.slice(0, SHOW_INITIALLY) : sorted).map(
           (update, idx) =>
             renderUpdate(
               update,
               idx <
-                (!expandable || expanded ? updates.length : SHOW_INITIALLY) - 1
+                (!expandable || expanded ? sorted.length : SHOW_INITIALLY) - 1
             )
         )}
         {expandable && renderExpandedUpdates()}
@@ -73,10 +91,10 @@ const Timeline: React.FunctionComponent<TimelineProps> = ({
       // @ts-ignore
       <Collapse component={Grid} in={expanded} item>
         <Grid container direction="column" spacing={6}>
-          {updates
+          {sorted
             .slice(SHOW_INITIALLY)
             .map((update, idx) =>
-              renderUpdate(update, idx < updates.length - SHOW_INITIALLY - 1)
+              renderUpdate(update, idx < sorted.length - SHOW_INITIALLY - 1)
             )}
         </Grid>
       </Collapse>
