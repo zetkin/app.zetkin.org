@@ -36,12 +36,13 @@ export const getJourneyInstanceScaffoldProps: ScaffoldedGetServerSideProps =
     ).prefetch(ctx);
 
     if (
-      journeyInstanceQueryState?.data?.journey.id.toString() !==
-      (journeyId as string)
+      journeyInstanceQueryState?.data &&
+      journeyInstanceQueryState.data.journey.id.toString() !==
+        (journeyId as string)
     ) {
       return {
         redirect: {
-          destination: `/organize/${orgId}/journeys/${journeyInstanceQueryState?.data?.journey.id}/${instanceId}`,
+          destination: `/organize/${orgId}/journeys/${journeyInstanceQueryState.data.journey.id}/${instanceId}`,
           permanent: false,
         },
       };

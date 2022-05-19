@@ -17,7 +17,7 @@ test.describe('Changing the type of a journey instance', () => {
     moxy.teardown();
   });
 
-  test('updates the id of the journey in the instance.', async ({
+  test.only('updates the id of the journey in the instance and redirects.', async ({
     appUri,
     moxy,
     page,
@@ -58,17 +58,39 @@ test.describe('Changing the type of a journey instance', () => {
     //Click "Convert to..."
     await page.locator('text=Convert to...').click();
 
+    //Mock fetch converted Claras onboarding
+    moxy.setZetkinApiMock(
+      `/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}`,
+      'get',
+      {
+        ...ClarasOnboarding,
+        journey: {
+          id: MarxistTraining.id,
+          title: MarxistTraining.title,
+        },
+      }
+    );
+
     //Click type of journey to convert to, "Marxist Training"
     await Promise.all([
       page.waitForResponse(
         `**/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}`
       ),
+      page.waitForNavigation({
+        url: `**/organize/${KPD.id}/journeys/${MarxistTraining.id}/${ClarasOnboarding.id}`,
+      }),
       page.locator('text=Marxist Training').click(),
     ]);
 
     //Expect the id to be the MarxistJourney id.
     expect(patchReqLog<ZetkinJourneyInstance>()[0].data?.journey.id).toBe(
       MarxistTraining.id
+    );
+
+    //Expect redirect to journey instance paage with new journey id.
+    expect(page.url()).toEqual(
+      appUri +
+        `/organize/${KPD.id}/journeys/${MarxistTraining.id}/${ClarasOnboarding.id}`
     );
   });
 
@@ -117,64 +139,6 @@ test.describe('Changing the type of a journey instance', () => {
     ]);
 
     expect(await page.locator('data-testid=Snackbar-error').count()).toEqual(1);
-  });
-
-  test('successful conversion redirects to journey instance page.', async ({
-    appUri,
-    moxy,
-    page,
-  }) => {
-    moxy.setZetkinApiMock(
-      `/orgs/${KPD.id}/journeys/${MemberOnboarding.id}`,
-      'get',
-      MemberOnboarding
-    );
-
-    moxy.setZetkinApiMock(
-      `/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}`,
-      'get',
-      ClarasOnboarding
-    );
-
-    moxy.setZetkinApiMock(`/orgs/${KPD.id}/journeys`, 'get', [
-      MarxistTraining,
-      MemberOnboarding,
-    ]);
-
-    moxy.setZetkinApiMock(
-      `/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}`,
-      'patch',
-      {
-        journey: {
-          id: MarxistTraining.id,
-          title: MarxistTraining.singular_label,
-        },
-      }
-    );
-
-    await page.goto(appUri + '/organize/1/journeys/1/1');
-
-    //Click ellipsis menu
-    await page.locator('data-testid=EllipsisMenu-menuActivator').click();
-
-    //Click "Convert to..."
-    await page.locator('text=Convert to...').click();
-
-    //Click type of journey to convert to, "Marxist Training", and wait for navigation.
-    await Promise.all([
-      page.waitForResponse(
-        `**/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}`
-      ),
-      page.locator('text=Marxist Training').click(),
-      page.waitForNavigation({
-        url: `**/organize/${KPD.id}/journeys/${MarxistTraining.id}/${ClarasOnboarding.id}`,
-      }),
-    ]);
-
-    expect(page.url()).toEqual(
-      appUri +
-        `/organize/${KPD.id}/journeys/${MarxistTraining.id}/${ClarasOnboarding.id}`
-    );
   });
 
   test('redirects to url with correct journey id if wrong one is supplied.', async ({

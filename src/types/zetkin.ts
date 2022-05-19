@@ -252,6 +252,7 @@ export interface ZetkinJourney {
     closed: number;
     open: number;
   };
+  title: string;
 }
 
 export interface ZetkinJourneyInstance {

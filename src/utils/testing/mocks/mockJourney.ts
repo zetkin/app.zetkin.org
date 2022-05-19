@@ -14,6 +14,7 @@ const journey: ZetkinJourney = {
     closed: 359,
     open: 75,
   },
+  title: 'Marxist training',
 };
 
 const mockJourney = (overrides?: Partial<ZetkinJourney>): ZetkinJourney => {
