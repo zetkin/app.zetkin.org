@@ -104,9 +104,7 @@ test.describe('Journey instance page', () => {
       );
 
       await Promise.all([
-        page.waitForResponse(
-          `**/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}`
-        ),
+        page.waitForResponse((res) => res.request().method() == 'PATCH'),
         page.click('data-testid=JourneyInstanceSummary-saveEditButton'),
       ]);
 
