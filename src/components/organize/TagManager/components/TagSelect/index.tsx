@@ -7,6 +7,7 @@ import { Box, TextField } from '@material-ui/core';
 import { groupTags } from '../../utils';
 import TagDialog from '../TagDialog';
 import TagSelectList from './TagSelectList';
+import ValueTagForm from './ValueTagForm';
 import { EditTag, NewTag } from '../../types';
 import { ZetkinTag, ZetkinTagGroup } from 'types/zetkin';
 
@@ -29,21 +30,20 @@ const TagSelect: React.FunctionComponent<{
 }) => {
   const intl = useIntl();
 
+  const [pendingTag, setPendingTag] = useState<ZetkinTag | null>(null);
+  const [inputValue, setInputValue] = useState('');
+
   const [tagToEdit, setTagToEdit] = useState<
     ZetkinTag | Pick<ZetkinTag, 'title'> | undefined
   >(undefined);
 
-  const {
-    inputValue,
-    getInputProps,
-    getListboxProps,
-    getRootProps,
-    groupedOptions,
-  } = useAutocomplete({
-    getOptionLabel: (option) => option.title,
-    open: true,
-    options: tags,
-  });
+  const { getInputProps, getListboxProps, getRootProps, groupedOptions } =
+    useAutocomplete({
+      getOptionLabel: (option) => option.title,
+      inputValue: inputValue,
+      open: true,
+      options: tags,
+    });
 
   const groupedFilteredTags = groupTags(
     groupedOptions,
@@ -61,21 +61,39 @@ const TagSelect: React.FunctionComponent<{
         inputProps={{
           'data-testid': 'TagManager-TagSelect-searchField',
         }}
+        onChange={(ev) => setInputValue(ev.target.value)}
         placeholder={intl.formatMessage({
           id: 'misc.tags.tagManager.addTag',
         })}
         variant="outlined"
       />
-      {/* Options */}
-      <TagSelectList
-        disabledTags={disabledTags}
-        disableEditTags={!!disableEditTags}
-        groupedTags={groupedFilteredTags}
-        inputValue={inputValue}
-        listProps={getListboxProps()}
-        onEdit={(tag) => setTagToEdit(tag)}
-        onSelect={onSelect}
-      />
+      {pendingTag ? (
+        <ValueTagForm
+          inputValue={inputValue}
+          onCancel={() => {
+            setPendingTag(null);
+            setInputValue('');
+          }}
+          onSubmit={(value) => onSelect({ ...pendingTag, value })}
+        />
+      ) : (
+        <TagSelectList
+          disabledTags={disabledTags}
+          disableEditTags={!!disableEditTags}
+          groupedTags={groupedFilteredTags}
+          inputValue={inputValue}
+          listProps={getListboxProps()}
+          onEdit={(tag) => setTagToEdit(tag)}
+          onSelect={(tag) => {
+            if (tag.value_type) {
+              setPendingTag(tag);
+              setInputValue('');
+            } else {
+              onSelect(tag);
+            }
+          }}
+        />
+      )}
       <TagDialog
         groups={groups}
         onClose={() => setTagToEdit(undefined)}
