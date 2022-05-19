@@ -22,7 +22,7 @@ export const scaffoldOptions = {
 
 export const getJourneyInstanceScaffoldProps: ScaffoldedGetServerSideProps =
   async (ctx) => {
-    const { orgId, instanceId } = ctx.params!;
+    const { orgId, instanceId, journeyId } = ctx.params!;
 
     const { state: orgQueryState } = await organizationResource(
       orgId as string
@@ -32,6 +32,18 @@ export const getJourneyInstanceScaffoldProps: ScaffoldedGetServerSideProps =
       orgId as string,
       instanceId as string
     ).prefetch(ctx);
+
+    if (
+      journeyInstanceQueryState?.data?.journey.id.toString() !==
+      (journeyId as string)
+    ) {
+      return {
+        redirect: {
+          destination: `/organize/${orgId}/journeys/${journeyInstanceQueryState?.data?.journey.id}/${instanceId}`,
+          permanent: false,
+        },
+      };
+    }
 
     if (
       orgQueryState?.status === 'success' &&

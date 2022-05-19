@@ -176,4 +176,32 @@ test.describe('Changing the type of a journey instance', () => {
         `/organize/${KPD.id}/journeys/${MarxistTraining.id}/${ClarasOnboarding.id}`
     );
   });
+
+  test('redirects to url with correct journey id if wrong one is supplied.', async ({
+    appUri,
+    moxy,
+    page,
+  }) => {
+    moxy.setZetkinApiMock(
+      `/orgs/${KPD.id}/journeys/${MemberOnboarding.id}`,
+      'get',
+      MemberOnboarding
+    );
+
+    moxy.setZetkinApiMock(
+      `/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}`,
+      'get',
+      ClarasOnboarding
+    );
+
+    await page.goto(
+      appUri +
+        `/organize/${KPD.id}/journeys/${MarxistTraining.id}/${ClarasOnboarding.id}`
+    );
+
+    expect(page.url()).toEqual(
+      appUri +
+        `/organize/${KPD.id}/journeys/${ClarasOnboarding.id}/${ClarasOnboarding.id}`
+    );
+  });
 });
