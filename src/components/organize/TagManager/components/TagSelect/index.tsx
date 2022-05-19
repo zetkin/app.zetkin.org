@@ -81,7 +81,12 @@ const TagSelect: React.FunctionComponent<{
             setPendingTag(null);
             setInputValue('');
           }}
-          onSubmit={(value) => onSelect({ ...pendingTag, value })}
+          onSubmit={(value) => {
+            onSelect({ ...pendingTag, value });
+            setPendingTag(null);
+            setInputValue('');
+          }}
+          tag={pendingTag}
         />
       ) : (
         <TagSelectList
