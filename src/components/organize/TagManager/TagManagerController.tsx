@@ -16,7 +16,7 @@ export interface TagManagerControllerProps {
   disabledTags?: ZetkinTag[];
   groupTags?: boolean;
   onAssignTag: (tag: ZetkinTag) => void;
-  onCreateTag: (tag: NewTag) => void;
+  onCreateTag: (tag: NewTag) => Promise<ZetkinTag>;
   onEditTag: (tag: EditTag) => void;
   onUnassignTag: (tag: ZetkinTag) => void;
 }
