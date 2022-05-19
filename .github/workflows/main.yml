@@ -43,7 +43,7 @@ jobs:
             - name: Install dependencies
               run: yarn install --frozen-lockfile && npx playwright install chromium
             - name: Run playwright tests
-              run: DEBUG=pw:api yarn playwright:ci
+              run: PLAYWRIGHT_WORKERS=2 DEBUG=pw:api yarn playwright:ci
     unit-test:
         runs-on: ubuntu-latest
         steps:
