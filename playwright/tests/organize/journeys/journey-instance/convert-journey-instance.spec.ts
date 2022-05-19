@@ -22,10 +22,16 @@ test.describe('Changing the type of a journey instance', () => {
     moxy,
     page,
   }) => {
+    // Set up mocks for journeys (both for before and for after conversion)
     moxy.setZetkinApiMock(
       `/orgs/${KPD.id}/journeys/${MemberOnboarding.id}`,
       'get',
       MemberOnboarding
+    );
+    moxy.setZetkinApiMock(
+      `/orgs/${KPD.id}/journeys/${MarxistTraining.id}`,
+      'get',
+      MarxistTraining
     );
 
     moxy.setZetkinApiMock(
