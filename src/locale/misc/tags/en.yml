@@ -1,5 +1,6 @@
 tagManager:
   addTag: Add tag
+  addValue: 'Add value for "{tag}"'
   createNamedTag: 'Create tag: <b>{name}</b>'
   createTag: New Tag
   groupTags: Group tags

@@ -62,9 +62,16 @@ const TagSelect: React.FunctionComponent<{
           'data-testid': 'TagManager-TagSelect-searchField',
         }}
         onChange={(ev) => setInputValue(ev.target.value)}
-        placeholder={intl.formatMessage({
-          id: 'misc.tags.tagManager.addTag',
-        })}
+        placeholder={
+          pendingTag
+            ? intl.formatMessage(
+                { id: 'misc.tags.tagManager.addValue' },
+                { tag: pendingTag.title }
+              )
+            : intl.formatMessage({
+                id: 'misc.tags.tagManager.addTag',
+              })
+        }
         variant="outlined"
       />
       {pendingTag ? (
