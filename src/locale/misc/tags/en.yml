@@ -16,6 +16,10 @@ tagManager:
     groupSelectPlaceholder: Type to search or create a group
     titleErrorText: Tag name is required
     titleLabel: Tag name
+    typeLabel: Type
+    types:
+      none: None (simple tag)
+      text: Text value
   title: Tags
   ungroupedHeader: No group
   valueTagForm:
