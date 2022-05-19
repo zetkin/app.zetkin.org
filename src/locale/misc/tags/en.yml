@@ -18,3 +18,5 @@ tagManager:
     titleLabel: Tag name
   title: Tags
   ungroupedHeader: No group
+  valueTagForm:
+    typeHint: '{type, select, text {Enter some text} other {Enter a value}} to go along with the tag.'
