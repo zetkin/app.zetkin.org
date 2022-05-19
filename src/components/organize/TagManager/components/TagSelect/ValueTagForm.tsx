@@ -1,4 +1,5 @@
 import { FormattedMessage } from 'react-intl';
+import { useEffect } from 'react';
 import { Box, Typography } from '@material-ui/core';
 
 import SubmitCancelButtons from 'components/forms/common/SubmitCancelButtons';
@@ -8,14 +9,23 @@ import { ZetkinTag } from 'types/zetkin';
 const ValueTagForm: React.FC<{
   inputValue: string;
   onCancel: () => void;
-  onSubmit: (value: string | number) => void;
+  onChange: (value: string | number | null) => void;
+  onSubmit: () => void;
   tag: ZetkinTag;
-}> = ({ inputValue, onCancel, onSubmit, tag }) => {
+}> = ({ inputValue, onCancel, onChange, onSubmit, tag }) => {
+  useEffect(() => {
+    if (inputValue == '') {
+      onChange(null);
+    } else {
+      onChange(inputValue);
+    }
+  }, [inputValue]);
+
   return (
     <form
       onSubmit={(ev) => {
         ev.preventDefault();
-        onSubmit(inputValue);
+        onSubmit();
       }}
     >
       <Box display="flex" flexDirection="column" p={1}>
