@@ -71,71 +71,75 @@ const JourneyInstanceCloseButton: React.FunctionComponent<{
         />
       </Button>
       <ZetkinDialog onClose={closeAndClear} open={showDialog}>
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            onSubmit();
-          }}
-        >
-          <Typography variant="h6">
-            <FormattedMessage id="misc.journeys.journeyInstanceCloseButton.dialog.outcomeLabel" />
-          </Typography>
-          <TextField
-            fullWidth
-            inputProps={{
-              'data-testid': 'JourneyInstanceCloseButton-outcomeNoteField',
+        <Box data-testid="JourneyInstanceCloseButton-outcomeDialog">
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              onSubmit();
             }}
-            margin="normal"
-            multiline
-            onChange={(e) => setOutcomeNote(e.target.value)}
-            placeholder={intl.formatMessage(
-              {
-                id: 'misc.journeys.journeyInstanceCloseButton.dialog.outcomeFieldPlaceholder',
-              },
-              { singularLabel: journeyInstance.journey.title }
-            )}
-            rows={3}
-            variant="outlined"
-          />
-          <Box mt={2}>
+          >
             <Typography variant="h6">
-              <FormattedMessage id="misc.journeys.journeyInstanceCloseButton.dialog.outcomeTagsLabel" />
+              <FormattedMessage id="misc.journeys.journeyInstanceCloseButton.dialog.outcomeLabel" />
             </Typography>
-            <Box mb={3} mt={1}>
-              <Typography variant="body2">
-                <FormattedMessage id="misc.journeys.journeyInstanceCloseButton.dialog.outcomeTagsDescription" />
+            <TextField
+              fullWidth
+              inputProps={{
+                'data-testid': 'JourneyInstanceCloseButton-outcomeNoteField',
+              }}
+              margin="normal"
+              multiline
+              onChange={(e) => setOutcomeNote(e.target.value)}
+              placeholder={intl.formatMessage(
+                {
+                  id: 'misc.journeys.journeyInstanceCloseButton.dialog.outcomeFieldPlaceholder',
+                },
+                { singularLabel: journeyInstance.journey.title }
+              )}
+              rows={3}
+              variant="outlined"
+            />
+            <Box mt={2}>
+              <Typography variant="h6">
+                <FormattedMessage id="misc.journeys.journeyInstanceCloseButton.dialog.outcomeTagsLabel" />
               </Typography>
-            </Box>
-            <Box>
-              <Box mt={3}>
-                <TagManager
-                  assignedTags={internalTags}
-                  disabledTags={journeyInstance.tags.concat(internalTags)}
-                  disableEditTags
-                  onAssignTag={(tag) => setInternalTags([...internalTags, tag])}
-                  onUnassignTag={(tag) =>
-                    setInternalTags(
-                      internalTags.filter(
-                        (existingTag) => tag.id !== existingTag.id
+              <Box mb={3} mt={1}>
+                <Typography variant="body2">
+                  <FormattedMessage id="misc.journeys.journeyInstanceCloseButton.dialog.outcomeTagsDescription" />
+                </Typography>
+              </Box>
+              <Box>
+                <Box mt={3}>
+                  <TagManager
+                    assignedTags={internalTags}
+                    disabledTags={journeyInstance.tags.concat(internalTags)}
+                    disableEditTags
+                    onAssignTag={(tag) =>
+                      setInternalTags([...internalTags, tag])
+                    }
+                    onUnassignTag={(tag) =>
+                      setInternalTags(
+                        internalTags.filter(
+                          (existingTag) => tag.id !== existingTag.id
+                        )
                       )
-                    )
-                  }
-                />
+                    }
+                  />
+                </Box>
               </Box>
             </Box>
-          </Box>
-          <SubmitCancelButtons
-            onCancel={closeAndClear}
-            submitDisabled={closeJourneyInstanceMutation.isLoading}
-            submitText={intl.formatMessage(
-              {
-                id: 'misc.journeys.journeyInstanceCloseButton.label',
-              },
-              { singularLabel: journeyInstance.journey.title }
-            )}
-          />
-        </form>
+            <SubmitCancelButtons
+              onCancel={closeAndClear}
+              submitDisabled={closeJourneyInstanceMutation.isLoading}
+              submitText={intl.formatMessage(
+                {
+                  id: 'misc.journeys.journeyInstanceCloseButton.label',
+                },
+                { singularLabel: journeyInstance.journey.title }
+              )}
+            />
+          </form>
+        </Box>
       </ZetkinDialog>
     </>
   );
