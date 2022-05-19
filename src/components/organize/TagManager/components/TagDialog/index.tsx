@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import ColorPicker from './ColorPicker';
 import SubmitCancelButtons from 'components/forms/common/SubmitCancelButtons';
 import TagGroupSelect from './TagGroupSelect';
+import TypeSelect from './TypeSelect';
 import ZetkinDialog from 'components/ZetkinDialog';
 import { EditTag, NewTag, NewTagGroup } from '../../types';
 import { ZetkinTag, ZetkinTagGroup } from 'types/zetkin';
@@ -36,6 +37,7 @@ const TagDialog: React.FunctionComponent<TagDialogProps> = ({
   const [group, setGroup] = useState<
     ZetkinTagGroup | NewTagGroup | null | undefined
   >();
+  const [type, setType] = useState<ZetkinTag['value_type']>(null);
 
   const editingTag = tag && 'id' in tag;
 
@@ -54,6 +56,7 @@ const TagDialog: React.FunctionComponent<TagDialogProps> = ({
     setColor({ valid: true, value: '' });
     setGroup(undefined);
     setTitleEdited(false);
+    setType(null);
     onClose();
   };
 
@@ -76,6 +79,7 @@ const TagDialog: React.FunctionComponent<TagDialogProps> = ({
           const tagBody = {
             ...(color.value && { color: `#${color.value}` }),
             ...(tag && 'id' in tag && { id: tag.id }),
+            ...(type && { value_type: type }),
             title,
           };
           if (group && 'id' in group) {
@@ -132,6 +136,7 @@ const TagDialog: React.FunctionComponent<TagDialogProps> = ({
           onChange={(value) => setColor(value)}
           value={color.value}
         />
+        <TypeSelect onChange={(value) => setType(value)} value={type} />
         <SubmitCancelButtons
           onCancel={closeAndClear}
           submitDisabled={!title || !color.valid}
