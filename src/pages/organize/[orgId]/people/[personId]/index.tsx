@@ -95,11 +95,12 @@ const PersonProfilePage: PageWithLayout<PersonPageProps> = (props) => {
             {({ queries: { personTagsQuery } }) => (
               <TagManagerSection
                 assignedTags={personTagsQuery.data}
-                onAssignTag={(tag) =>
-                  assignTagMutation.mutate(tag.id, {
+                onAssignTag={(tag) => {
+                  const tagBody = { id: tag.id, value: tag.value };
+                  assignTagMutation.mutate(tagBody, {
                     onError: () => showSnackbar('error'),
-                  })
-                }
+                  });
+                }}
                 onTagEdited={() => {
                   queryClient.invalidateQueries(personTagsKey);
                 }}
