@@ -81,7 +81,7 @@ test.describe('Changing the type of a journey instance', () => {
       (async () => {
         await page.locator('data-testid=EllipsisMenu-menuActivator').click();
         await page.locator('text=Convert to...').click();
-        await page.locator('text=Marxist training').click();
+        await page.locator('text=Marxist').click();
       })(),
     ]);
 
@@ -135,7 +135,7 @@ test.describe('Changing the type of a journey instance', () => {
       (async () => {
         await page.locator('data-testid=EllipsisMenu-menuActivator').click();
         await page.locator('text=Convert to...').click();
-        await page.locator('text=Marxist training').click();
+        await page.locator('text=Marxist').click();
       })(),
     ]);
 
