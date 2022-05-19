@@ -32,6 +32,9 @@ const TagSelect: React.FunctionComponent<{
 
   const [pendingTag, setPendingTag] = useState<ZetkinTag | null>(null);
   const [inputValue, setInputValue] = useState('');
+  const [pendingValue, setPendingValue] = useState<number | string | null>(
+    null
+  );
 
   const [tagToEdit, setTagToEdit] = useState<
     ZetkinTag | Pick<ZetkinTag, 'title'> | undefined
@@ -51,6 +54,14 @@ const TagSelect: React.FunctionComponent<{
       id: 'misc.tags.tagManager.ungroupedHeader',
     })
   );
+
+  const handleSubmit = () => {
+    if (pendingTag) {
+      onSelect({ ...pendingTag, value: pendingValue || undefined });
+      setPendingTag(null);
+      setInputValue('');
+    }
+  };
 
   return (
     <Box {...getRootProps()}>
@@ -81,11 +92,8 @@ const TagSelect: React.FunctionComponent<{
             setPendingTag(null);
             setInputValue('');
           }}
-          onSubmit={(value) => {
-            onSelect({ ...pendingTag, value });
-            setPendingTag(null);
-            setInputValue('');
-          }}
+          onChange={(value) => setPendingValue(value)}
+          onSubmit={handleSubmit}
           tag={pendingTag}
         />
       ) : (
