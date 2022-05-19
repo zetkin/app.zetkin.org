@@ -273,6 +273,7 @@ export interface ZetkinJourneyInstance {
     id: number;
     title: string;
   };
+  outcome: string;
   subjects: ZetkinPerson[];
   summary: string;
   tags: ZetkinTag[];

@@ -17,6 +17,7 @@ const journeyInstance: ZetkinJourneyInstance = {
   next_milestone: milestone,
   opening_note: '',
   organization: KPD,
+  outcome: '',
   subjects: [person],
   summary: 'Haohrez uhca evo fup fonruh do vafeesa lida penco rillesven.',
   tags: [],
