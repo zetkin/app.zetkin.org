@@ -16,7 +16,7 @@ const TagSelect: React.FunctionComponent<{
   disabledTags: ZetkinTag[];
   groups: ZetkinTagGroup[];
   onClose: () => void;
-  onCreateTag: (tag: NewTag) => void;
+  onCreateTag: (tag: NewTag) => Promise<ZetkinTag>;
   onEditTag: (tag: EditTag) => void;
   onSelect: (tag: ZetkinTag) => void;
   tags: ZetkinTag[];
@@ -134,13 +134,15 @@ const TagSelect: React.FunctionComponent<{
       <TagDialog
         groups={groups}
         onClose={() => setTagToEdit(undefined)}
-        onSubmit={(tag) => {
+        onSubmit={async (tag) => {
           if ('id' in tag) {
             // If existing tag
             onEditTag(tag);
           } else {
             // If new tag
-            onCreateTag(tag);
+            const createdTag = await onCreateTag(tag);
+            setPendingTag(createdTag);
+            setInputValue('');
           }
         }}
         open={Boolean(tagToEdit)}

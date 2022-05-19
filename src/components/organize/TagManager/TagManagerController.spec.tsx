@@ -13,7 +13,9 @@ import { EditTag, NewTag } from './types';
 jest.mock('next/dist/client/router', () => require('next-router-mock'));
 
 const assignTagCallback = jest.fn((tag: ZetkinTag) => tag);
-const createTagCallback = jest.fn((tag: NewTag) => tag);
+const createTagCallback = jest.fn<Promise<ZetkinTag>, [NewTag]>((tag) =>
+  Promise.resolve({ ...tag, id: 1 } as ZetkinTag)
+);
 const unassignTagCallback = jest.fn((tag: ZetkinTag) => tag);
 const editTagCallback = jest.fn((tag: EditTag) => tag);
 
@@ -168,10 +170,10 @@ describe('<TagManagerController />', () => {
   });
 
   describe('creating a tag', () => {
-    let onCreateTag: jest.Mock<NewTag, [tag: NewTag]>;
+    let onCreateTag: jest.Mock<Promise<ZetkinTag>, [tag: NewTag]>;
 
     beforeEach(() => {
-      onCreateTag = jest.fn((tag: NewTag) => tag);
+      onCreateTag = jest.fn((tag: NewTag) => Promise.resolve(tag as ZetkinTag));
       singletonRouter.query = {
         orgId: '1',
       };
@@ -208,10 +210,10 @@ describe('<TagManagerController />', () => {
   });
 
   describe('editing a tag', () => {
-    let onCreateTag: jest.Mock<NewTag, [tag: NewTag]>;
+    let onCreateTag: jest.Mock<Promise<ZetkinTag>, [tag: NewTag]>;
 
     beforeEach(() => {
-      onCreateTag = jest.fn((tag: NewTag) => tag);
+      onCreateTag = jest.fn((tag: NewTag) => Promise.resolve(tag as ZetkinTag));
       singletonRouter.query = {
         orgId: '1',
       };
