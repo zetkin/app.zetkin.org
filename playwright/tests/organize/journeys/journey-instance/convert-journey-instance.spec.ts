@@ -5,7 +5,6 @@ import ClarasOnboarding from '../../../../mockData/orgs/KPD/journeys/MemberOnboa
 import KPD from '../../../../mockData/orgs/KPD';
 import MarxistTraining from '../../../../mockData/orgs/KPD/journeys/MarxistTraining';
 import MemberOnboarding from '../../../../mockData/orgs/KPD/journeys/MemberOnboarding';
-import { ZetkinJourneyInstance } from '../../../../../src/types/zetkin';
 
 test.describe('Changing the type of a journey instance', () => {
   test.beforeEach(async ({ moxy, login }) => {
@@ -89,7 +88,7 @@ test.describe('Changing the type of a journey instance', () => {
     ]);
 
     //Expect the id to be the MarxistJourney id.
-    expect(patchReqLog<ZetkinJourneyInstance>()[0].data?.journey.id).toBe(
+    expect(patchReqLog<{ journey_id: number }>()[0].data?.journey_id).toBe(
       MarxistTraining.id
     );
 

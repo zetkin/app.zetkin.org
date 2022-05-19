@@ -50,10 +50,7 @@ const JourneyInstanceLayout: React.FunctionComponent = ({ children }) => {
         onSelect: () => {
           patchJourneyInstanceMutation.mutateAsync(
             {
-              journey: {
-                id: journey.id,
-                title: journey.singular_label,
-              },
+              journey_id: journey.id,
             },
             {
               onError: () => showSnackbar('error'),
