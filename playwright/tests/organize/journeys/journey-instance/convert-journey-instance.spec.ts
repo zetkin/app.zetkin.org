@@ -57,12 +57,6 @@ test.describe('Changing the type of a journey instance', () => {
 
     await page.goto(appUri + '/organize/1/journeys/1/1');
 
-    //Click ellipsis menu
-    await page.locator('data-testid=EllipsisMenu-menuActivator').click();
-
-    //Click "Convert to..."
-    await page.locator('text=Convert to...').click();
-
     //Mock fetch converted Claras onboarding
     moxy.setZetkinApiMock(
       `/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}`,
@@ -84,7 +78,11 @@ test.describe('Changing the type of a journey instance', () => {
       page.waitForNavigation({
         url: `**/organize/${KPD.id}/journeys/${MarxistTraining.id}/${ClarasOnboarding.id}`,
       }),
-      page.locator('text=Marxist Training').click(),
+      (async () => {
+        await page.locator('data-testid=EllipsisMenu-menuActivator').click();
+        await page.locator('text=Convert to...').click();
+        await page.locator('text=Marxist Training').click();
+      })(),
     ]);
 
     //Expect the id to be the MarxistJourney id.
@@ -129,18 +127,16 @@ test.describe('Changing the type of a journey instance', () => {
 
     await page.goto(appUri + '/organize/1/journeys/1/1');
 
-    //Click ellipsis menu
-    await page.locator('data-testid=EllipsisMenu-menuActivator').click();
-
-    //Click "Convert to..."
-    await page.locator('text=Convert to...').click();
-
     //Click type of journey to convert to, "Marxist Training"
     await Promise.all([
       page.waitForResponse(
         `**/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}`
       ),
-      page.locator('text=Marxist Training').click(),
+      (async () => {
+        await page.locator('data-testid=EllipsisMenu-menuActivator').click();
+        await page.locator('text=Convert to...').click();
+        await page.locator('text=Marxist Training').click();
+      })(),
     ]);
 
     expect(await page.locator('data-testid=Snackbar-error').count()).toEqual(1);
