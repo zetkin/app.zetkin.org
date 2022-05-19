@@ -62,6 +62,7 @@ export const TagManagerController: React.FunctionComponent<
             disabledTags={disabledTags || assignedTags}
             disableEditTags={disableEditTags}
             groups={availableGroups}
+            onClose={() => setAddTagButton(null)}
             onCreateTag={onCreateTag}
             onEditTag={onEditTag}
             onSelect={onAssignTag}

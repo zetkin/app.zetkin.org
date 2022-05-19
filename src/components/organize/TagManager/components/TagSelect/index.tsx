@@ -15,6 +15,7 @@ const TagSelect: React.FunctionComponent<{
   disableEditTags?: boolean;
   disabledTags: ZetkinTag[];
   groups: ZetkinTagGroup[];
+  onClose: () => void;
   onCreateTag: (tag: NewTag) => void;
   onEditTag: (tag: EditTag) => void;
   onSelect: (tag: ZetkinTag) => void;
@@ -23,6 +24,7 @@ const TagSelect: React.FunctionComponent<{
   disableEditTags,
   disabledTags,
   groups,
+  onClose,
   onCreateTag,
   onEditTag,
   onSelect,
@@ -73,6 +75,21 @@ const TagSelect: React.FunctionComponent<{
           'data-testid': 'TagManager-TagSelect-searchField',
         }}
         onChange={(ev) => setInputValue(ev.target.value)}
+        onKeyUp={(ev) => {
+          if (ev.key == 'Enter') {
+            if (pendingTag) {
+              handleSubmit();
+            }
+          } else if (ev.key == 'Escape') {
+            if (pendingTag) {
+              setPendingTag(null);
+            } else if (inputValue) {
+              setInputValue('');
+            } else {
+              onClose();
+            }
+          }
+        }}
         placeholder={
           pendingTag
             ? intl.formatMessage(
