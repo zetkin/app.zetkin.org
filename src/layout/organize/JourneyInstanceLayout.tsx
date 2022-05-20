@@ -43,6 +43,12 @@ const JourneyInstanceLayout: React.FunctionComponent = ({ children }) => {
         id: `convertTo-${journey.id}`,
         label: journey.singular_label,
         onSelect: () => {
+          //redirect to equivalent page but new journey id
+          const redirectUrl = router.pathname
+            .replace('[orgId]', orgId as string)
+            .replace('[journeyId]', journey.id.toString())
+            .replace('[instanceId]', instanceId as string);
+
           patchJourneyInstanceMutation.mutateAsync(
             {
               journey_id: journey.id,
@@ -62,9 +68,7 @@ const JourneyInstanceLayout: React.FunctionComponent = ({ children }) => {
                     id: 'misc.journeys.conversionSnackbar.success',
                   })
                 );
-                router.push(
-                  `/organize/${orgId}/journeys/${journey.id}/${instanceId}`
-                );
+                router.push(redirectUrl);
               },
             }
           );
