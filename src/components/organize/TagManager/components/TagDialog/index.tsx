@@ -49,6 +49,7 @@ const TagDialog: React.FunctionComponent<TagDialogProps> = ({
         : { valid: true, value: '' }
     );
     setGroup(tag && 'group' in tag ? tag.group : undefined);
+    setType(tag && 'value_type' in tag ? tag.value_type : null);
   }, [tag]);
 
   const closeAndClear = () => {
