@@ -13,7 +13,7 @@ import {
 import { useEffect, useState } from 'react';
 
 import CopyToClipboard from 'components/CopyToClipboard';
-import TagsList from 'components/organize/TagsManager/TagsList';
+import TagsList from 'components/organize/TagManager/components/TagsList';
 import ZetkinPerson from 'components/ZetkinPerson';
 import { ZetkinPerson as ZetkinPersonType } from 'types/zetkin';
 import { personResource, personTagsResource } from 'api/people';

@@ -9,7 +9,7 @@ import {
   Tooltip,
 } from '@material-ui/core';
 
-import { DEFAULT_TAG_COLOR } from './utils';
+import { DEFAULT_TAG_COLOR } from '../utils';
 import { getContrastColor } from 'utils/colorUtils';
 import { ZetkinTag } from 'types/zetkin';
 

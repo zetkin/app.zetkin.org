@@ -13,20 +13,29 @@ import {
 } from '@material-ui/core';
 import { FormattedMessage, useIntl } from 'react-intl';
 
-import { groupTags } from './utils';
+import { groupTags } from '../utils';
 import TagChip from './TagChip';
 import TagDialog from './TagDialog';
-import { EditTag, NewTag } from './types';
+import { EditTag, NewTag } from '../types';
 import { ZetkinTag, ZetkinTagGroup } from 'types/zetkin';
 
 const TagSelect: React.FunctionComponent<{
+  disableEditTags?: boolean;
   disabledTags: ZetkinTag[];
   groups: ZetkinTagGroup[];
   onCreateTag: (tag: NewTag) => void;
   onEditTag: (tag: EditTag) => void;
   onSelect: (tag: ZetkinTag) => void;
   tags: ZetkinTag[];
-}> = ({ disabledTags, groups, onCreateTag, onEditTag, onSelect, tags }) => {
+}> = ({
+  disableEditTags,
+  disabledTags,
+  groups,
+  onCreateTag,
+  onEditTag,
+  onSelect,
+  tags,
+}) => {
   const intl = useIntl();
 
   const [tagToEdit, setTagToEdit] = useState<
@@ -48,7 +57,7 @@ const TagSelect: React.FunctionComponent<{
   const groupedFilteredTags = groupTags(
     groupedOptions,
     intl.formatMessage({
-      id: 'misc.tags.tagsManager.ungroupedHeader',
+      id: 'misc.tags.tagManager.ungroupedHeader',
     })
   );
 
@@ -62,7 +71,7 @@ const TagSelect: React.FunctionComponent<{
           'data-testid': 'TagManager-TagSelect-searchField',
         }}
         placeholder={intl.formatMessage({
-          id: 'misc.tags.tagsManager.addTag',
+          id: 'misc.tags.tagManager.addTag',
         })}
         variant="outlined"
       />
@@ -84,7 +93,7 @@ const TagSelect: React.FunctionComponent<{
               {/* Tags */}
               {group.tags.map((tag) => {
                 return (
-                  <ListItem key={tag.id} dense>
+                  <ListItem key={tag.id} dense={!disableEditTags}>
                     <Box
                       alignItems="center"
                       display="flex"
@@ -98,15 +107,18 @@ const TagSelect: React.FunctionComponent<{
                         onClick={() => onSelect(tag)}
                         tag={tag}
                       />
-                      <IconButton
-                        data-testid={`TagManager-TagSelect-editTag-${tag.id}`}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setTagToEdit(tag);
-                        }}
-                      >
-                        <EditIcon fontSize="small" />
-                      </IconButton>
+                      {/* Edit tag button, only show if enabled (it's enabled by default) */}
+                      {!disableEditTags && (
+                        <IconButton
+                          data-testid={`TagManager-TagSelect-editTag-${tag.id}`}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setTagToEdit(tag);
+                          }}
+                        >
+                          <EditIcon fontSize="small" />
+                        </IconButton>
+                      )}
                     </Box>
                   </ListItem>
                 );
@@ -127,7 +139,7 @@ const TagSelect: React.FunctionComponent<{
           <Add />
           {inputValue ? (
             <FormattedMessage
-              id="misc.tags.tagsManager.createNamedTag"
+              id="misc.tags.tagManager.createNamedTag"
               values={{
                 b: (...chunks: string[]) => (
                   <>
@@ -138,7 +150,7 @@ const TagSelect: React.FunctionComponent<{
               }}
             />
           ) : (
-            <FormattedMessage id="misc.tags.tagsManager.createTag" />
+            <FormattedMessage id="misc.tags.tagManager.createTag" />
           )}
         </ListItem>
       </List>

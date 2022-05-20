@@ -11,7 +11,7 @@ const MemberOnboarding: ZetkinJourney = {
     closed: 1983,
     open: 232,
   },
-  title: 'Onboarding',
+  title: 'Member Onboarding',
 };
 
 export default MemberOnboarding;

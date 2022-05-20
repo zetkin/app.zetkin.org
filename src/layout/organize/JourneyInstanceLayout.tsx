@@ -11,6 +11,9 @@ import TabbedLayout from './TabbedLayout';
 import { ZetkinEllipsisMenuProps } from 'components/ZetkinEllipsisMenu';
 import { ZetkinJourneyInstance } from 'types/zetkin';
 import ZetkinRelativeTime from 'components/ZetkinRelativeTime';
+import JourneyInstanceCloseButton, {
+  JourneyInstanceReopenButton,
+} from 'components/journeys/JourneyInstanceCloseButton';
 import { journeyInstanceResource, journeysResource } from 'api/journeys';
 
 const JourneyInstanceLayout: React.FunctionComponent = ({ children }) => {
@@ -88,6 +91,13 @@ const JourneyInstanceLayout: React.FunctionComponent = ({ children }) => {
 
   return (
     <TabbedLayout
+      actionButtons={
+        journeyInstance.closed ? (
+          <JourneyInstanceReopenButton journeyInstance={journeyInstance} />
+        ) : (
+          <JourneyInstanceCloseButton journeyInstance={journeyInstance} />
+        )
+      }
       baseHref={`/organize/${orgId}/journeys/${journeyId}/${instanceId}`}
       defaultTab="/"
       ellipsisMenuItems={ellipsisMenu}

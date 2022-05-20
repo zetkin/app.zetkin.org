@@ -4,7 +4,7 @@ import { keyboard } from '@testing-library/user-event/dist/keyboard';
 import { render } from 'utils/testing';
 import singletonRouter from 'next/router';
 
-import { TagsManagerController } from '.';
+import { TagManagerController } from './TagManagerController';
 
 import mockTag from 'utils/testing/mocks/mockTag';
 import { ZetkinTag } from 'types/zetkin';
@@ -17,27 +17,13 @@ const createTagCallback = jest.fn((tag: NewTag) => tag);
 const unassignTagCallback = jest.fn((tag: ZetkinTag) => tag);
 const editTagCallback = jest.fn((tag: EditTag) => tag);
 
-describe('<TagsManagerController />', () => {
+describe('<TagManagerController />', () => {
   describe('Renders list of tags passed in', () => {
-    it('informs user if no tags applied', () => {
-      const { getByText } = render(
-        <TagsManagerController
-          assignedTags={[]}
-          availableGroups={[]}
-          availableTags={[]}
-          onAssignTag={assignTagCallback}
-          onCreateTag={createTagCallback}
-          onEditTag={editTagCallback}
-          onUnassignTag={unassignTagCallback}
-        />
-      );
-      expect(getByText('misc.tags.tagsManager.noTags')).toBeTruthy();
-    });
     it('shows tags that have been applied in the tags list', () => {
       const tag1 = mockTag({ title: 'Organizer' });
       const tag2 = mockTag({ id: 2, title: 'Activist' });
       const { getByText } = render(
-        <TagsManagerController
+        <TagManagerController
           assignedTags={[tag1, tag2]}
           availableGroups={[]}
           availableTags={[tag1, tag2]}
@@ -51,7 +37,7 @@ describe('<TagsManagerController />', () => {
       expect(getByText('Activist')).toBeTruthy();
     });
   });
-  it('groups tags when clicking toggle', () => {
+  it('groups tags passed tagsGrouped prop', () => {
     const tags = [
       mockTag({ group: { id: 1, title: 'Political' } }),
       mockTag({
@@ -87,30 +73,27 @@ describe('<TagsManagerController />', () => {
       }),
     ];
     const { getByTestId, getByText } = render(
-      <TagsManagerController
+      <TagManagerController
         assignedTags={tags}
         availableGroups={[]}
         availableTags={tags}
+        groupTags
         onAssignTag={assignTagCallback}
         onCreateTag={createTagCallback}
         onEditTag={editTagCallback}
         onUnassignTag={unassignTagCallback}
       />
     );
-    const toggle = getByTestId('TagsManager-groupToggle').firstChild
-      ?.firstChild as Element & { disabled: boolean };
-    expect(toggle.disabled).toBeFalsy();
-    click(toggle);
 
     expect(getByText('Political')).toBeTruthy();
-    expect(getByTestId('TagsManager-groupedTags-1').children.length).toEqual(2);
+    expect(getByTestId('TagManager-groupedTags-1').children.length).toEqual(2);
 
     expect(getByText('Skills')).toBeTruthy();
-    expect(getByTestId('TagsManager-groupedTags-2').children.length).toEqual(3);
+    expect(getByTestId('TagManager-groupedTags-2').children.length).toEqual(3);
 
-    expect(getByText('misc.tags.tagsManager.ungroupedHeader')).toBeTruthy();
+    expect(getByText('misc.tags.tagManager.ungroupedHeader')).toBeTruthy();
     expect(
-      getByTestId('TagsManager-groupedTags-ungrouped').children.length
+      getByTestId('TagManager-groupedTags-ungrouped').children.length
     ).toEqual(2);
   });
   it('can add a tag', () => {
@@ -123,7 +106,7 @@ describe('<TagsManagerController />', () => {
     });
 
     const { getByText } = render(
-      <TagsManagerController
+      <TagManagerController
         assignedTags={[]}
         availableGroups={[]}
         availableTags={[tag1]}
@@ -133,7 +116,7 @@ describe('<TagsManagerController />', () => {
         onUnassignTag={unassignTagCallback}
       />
     );
-    const addTagButton = getByText('misc.tags.tagsManager.addTag');
+    const addTagButton = getByText('misc.tags.tagManager.addTag');
     click(addTagButton);
 
     // Typing searches for tag
@@ -156,7 +139,7 @@ describe('<TagsManagerController />', () => {
     });
 
     const { getByText, container } = render(
-      <TagsManagerController
+      <TagManagerController
         assignedTags={[tag1]}
         availableGroups={[]}
         availableTags={[tag1]}
@@ -196,7 +179,7 @@ describe('<TagsManagerController />', () => {
 
     it('passes the value in the tag search field in to the create tag', () => {
       const { getByTestId, getByText } = render(
-        <TagsManagerController
+        <TagManagerController
           assignedTags={[]}
           availableGroups={[]}
           availableTags={[]}
@@ -207,7 +190,7 @@ describe('<TagsManagerController />', () => {
         />
       );
 
-      const addTagButton = getByText('misc.tags.tagsManager.addTag');
+      const addTagButton = getByText('misc.tags.tagManager.addTag');
       click(addTagButton);
 
       const tagSearchField = getByTestId('TagManager-TagSelect-searchField');
@@ -234,11 +217,36 @@ describe('<TagsManagerController />', () => {
       };
     });
 
+    it('does not show edit button for tag when `disableEditTags` set', () => {
+      const tagToEdit = mockTag();
+
+      const { getByTestId, getByText } = render(
+        <TagManagerController
+          assignedTags={[]}
+          availableGroups={[]}
+          availableTags={[tagToEdit]}
+          disableEditTags
+          onAssignTag={assignTagCallback}
+          onCreateTag={onCreateTag}
+          onEditTag={editTagCallback}
+          onUnassignTag={unassignTagCallback}
+        />
+      );
+
+      const addTagButton = getByText('misc.tags.tagManager.addTag');
+      click(addTagButton);
+
+      // Expect to not find edit button
+      expect(() =>
+        getByTestId(`TagManager-TagSelect-editTag-${tagToEdit.id}`)
+      ).toThrowError();
+    });
+
     it('can edit an existing tag in the tag dialog', () => {
       const tagToEdit = mockTag();
 
       const { getByTestId, getByText } = render(
-        <TagsManagerController
+        <TagManagerController
           assignedTags={[]}
           availableGroups={[]}
           availableTags={[tagToEdit]}
@@ -249,7 +257,7 @@ describe('<TagsManagerController />', () => {
         />
       );
 
-      const addTagButton = getByText('misc.tags.tagsManager.addTag');
+      const addTagButton = getByText('misc.tags.tagManager.addTag');
       click(addTagButton);
 
       const editTagButton = getByTestId(
