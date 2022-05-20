@@ -143,6 +143,8 @@ test.describe('Changing the type of a journey instance', () => {
       page.locator('text=Marxist Training').click(),
     ]);
 
+    await page.locator('data-testid=Snackbar-error').waitFor();
+
     expect(await page.locator('data-testid=Snackbar-error').count()).toEqual(1);
   });
 

@@ -145,11 +145,29 @@ test.describe('Journey instance sidebar', () => {
       );
 
       //find x-icon and click it
-      await page
+
+      await Promise.all([
+        page.waitForResponse(
+          (res) =>
+            res.request().method() === 'GET' &&
+            res
+              .request()
+              .url()
+              .endsWith(`/journey_instances/${ClarasOnboarding.id}`)
+        ),
+        //page.waitForResponse((res) => res.request().method() == 'DELETE'),
+        page
+          .locator(
+            `data-testid=JourneyPerson-remove-${ClarasOnboarding.assignees[0].id}`
+          )
+          .click(),
+      ]);
+
+      /* await page
         .locator(
           `data-testid=JourneyPerson-remove-${ClarasOnboarding.assignees[0].id}`
         )
-        .click();
+        .click(); */
 
       //there should be no Angela in list of assignees
       expect(
@@ -293,7 +311,12 @@ test.describe('Journey instance sidebar', () => {
       //find x-icon and click it, then wait for re-fetch of invalidated instance data
       await Promise.all([
         page.waitForResponse(
-          `**/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}`
+          (res) =>
+            res.request().method() === 'GET' &&
+            res
+              .request()
+              .url()
+              .endsWith(`/journey_instances/${ClarasOnboarding.id}`)
         ),
         page
           .locator(
@@ -301,6 +324,9 @@ test.describe('Journey instance sidebar', () => {
           )
           .click(),
       ]);
+
+      // Wait for React to re-render after response
+      await page.waitForTimeout(200);
 
       //there should be no Clara in list of subejcts
       expect(

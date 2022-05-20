@@ -9,9 +9,9 @@ import JourneyStatusChip from 'components/journeys/JourneyStatusChip';
 import SnackbarContext from 'hooks/SnackbarContext';
 import TabbedLayout from './TabbedLayout';
 import { ZetkinEllipsisMenuProps } from 'components/ZetkinEllipsisMenu';
+import { ZetkinJourneyInstance } from 'types/zetkin';
 import ZetkinRelativeTime from 'components/ZetkinRelativeTime';
 import { journeyInstanceResource, journeysResource } from 'api/journeys';
-import { ZetkinJourney, ZetkinJourneyInstance } from 'types/zetkin';
 
 const JourneyInstanceLayout: React.FunctionComponent = ({ children }) => {
   const { orgId, journeyId, instanceId } = useRouter().query;
@@ -26,7 +26,7 @@ const JourneyInstanceLayout: React.FunctionComponent = ({ children }) => {
   const journeyInstance = journeyInstanceQuery.data as ZetkinJourneyInstance;
 
   const journeysQuery = journeysResource(orgId as string).useQuery();
-  const journeys = journeysQuery.data as ZetkinJourney[];
+  const journeys = journeysQuery.data;
 
   const journeyInstanceHooks = journeyInstanceResource(
     orgId as string,
@@ -36,16 +36,11 @@ const JourneyInstanceLayout: React.FunctionComponent = ({ children }) => {
 
   const ellipsisMenu: ZetkinEllipsisMenuProps['items'] = [];
 
-  ellipsisMenu.push({
-    id: 'convert-journey',
-    label: intl.formatMessage({
-      id: 'pages.organizeJourneyInstance.ellipsisMenu.convert',
-    }),
-    startIcon: <Forward color="secondary" />,
-    subMenuItems: journeys
+  const submenuItems =
+    journeys
       ?.filter((journey) => journey.id.toString() !== journeyId)
       .map((journey) => ({
-        id: `convert-journey-submenu-${journey.singular_label}`,
+        id: `convertTo-${journey.id}`,
         label: journey.singular_label,
         onSelect: () => {
           patchJourneyInstanceMutation.mutateAsync(
@@ -61,8 +56,18 @@ const JourneyInstanceLayout: React.FunctionComponent = ({ children }) => {
             }
           );
         },
-      })),
-  });
+      })) ?? [];
+
+  if (submenuItems.length) {
+    ellipsisMenu.push({
+      id: 'convert-journey',
+      label: intl.formatMessage({
+        id: 'pages.organizeJourneyInstance.ellipsisMenu.convert',
+      }),
+      startIcon: <Forward color="secondary" />,
+      subMenuItems: submenuItems,
+    });
+  }
 
   return (
     <>

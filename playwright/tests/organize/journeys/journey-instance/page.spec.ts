@@ -104,9 +104,7 @@ test.describe('Journey instance page', () => {
       );
 
       await Promise.all([
-        page.waitForResponse(
-          `**/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}`
-        ),
+        page.waitForResponse((res) => res.request().method() == 'PATCH'),
         page.click('data-testid=JourneyInstanceSummary-saveEditButton'),
       ]);
 
@@ -152,6 +150,8 @@ test.describe('Journey instance page', () => {
       );
 
       await page.click('data-testid=JourneyInstanceSummary-saveEditButton');
+
+      await page.locator('data-testid=Snackbar-error').waitFor();
 
       expect(await page.locator('data-testid=Snackbar-error').count()).toEqual(
         1
