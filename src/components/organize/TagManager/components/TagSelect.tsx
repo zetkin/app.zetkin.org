@@ -93,7 +93,7 @@ const TagSelect: React.FunctionComponent<{
               {/* Tags */}
               {group.tags.map((tag) => {
                 return (
-                  <ListItem key={tag.id} dense>
+                  <ListItem key={tag.id} dense={!disableEditTags}>
                     <Box
                       alignItems="center"
                       display="flex"
