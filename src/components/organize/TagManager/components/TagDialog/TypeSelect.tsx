@@ -1,6 +1,14 @@
-import { useIntl } from 'react-intl';
+import {
+  Box,
+  FormControl,
+  FormControlLabel,
+  FormLabel,
+  Radio,
+  RadioGroup,
+} from '@material-ui/core';
+import { FormattedMessage, useIntl } from 'react-intl';
+
 import { ZetkinTag } from 'types/zetkin';
-import { Box, MenuItem, TextField } from '@material-ui/core';
 
 const TypeSelect: React.FC<{
   onChange: (value: ZetkinTag['value_type']) => void;
@@ -10,33 +18,36 @@ const TypeSelect: React.FC<{
 
   return (
     <Box mb={0.8} mt={1.5}>
-      <TextField
-        label={intl.formatMessage({
-          id: 'misc.tags.tagManager.tagDialog.typeLabel',
-        })}
-        onChange={(ev) =>
-          onChange(
-            ev.target.value == 'none'
-              ? null
-              : (ev.target.value as ZetkinTag['value_type'])
-          )
-        }
-        select
-        style={{ width: '100%' }}
-        value={value || 'none'}
-        variant="outlined"
-      >
-        <MenuItem value="none">
-          {intl.formatMessage({
-            id: 'misc.tags.tagManager.tagDialog.types.none',
-          })}
-        </MenuItem>
-        <MenuItem value="text">
-          {intl.formatMessage({
-            id: 'misc.tags.tagManager.tagDialog.types.text',
-          })}
-        </MenuItem>
-      </TextField>
+      <FormControl data-testid="TypeSelect-formControl">
+        <FormLabel>
+          <FormattedMessage id={'misc.tags.tagManager.tagDialog.typeLabel'} />
+        </FormLabel>
+        <RadioGroup
+          onChange={(ev) =>
+            onChange(
+              ev.target.value == 'none'
+                ? null
+                : (ev.target.value as ZetkinTag['value_type'])
+            )
+          }
+          value={value || 'none'}
+        >
+          <FormControlLabel
+            control={<Radio />}
+            label={intl.formatMessage({
+              id: 'misc.tags.tagManager.tagDialog.types.none',
+            })}
+            value="none"
+          />
+          <FormControlLabel
+            control={<Radio />}
+            label={intl.formatMessage({
+              id: 'misc.tags.tagManager.tagDialog.types.text',
+            })}
+            value="text"
+          />
+        </RadioGroup>
+      </FormControl>
     </Box>
   );
 };
