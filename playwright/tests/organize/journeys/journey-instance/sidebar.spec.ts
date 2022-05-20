@@ -154,6 +154,9 @@ test.describe('Journey instance sidebar', () => {
           .click(),
       ]);
 
+      // Wait for React to re-render after response
+      await page.waitForTimeout(200);
+
       //there should be no Angela in list of assignees
       expect(
         await page
