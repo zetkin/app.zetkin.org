@@ -48,11 +48,24 @@ const JourneyInstanceLayout: React.FunctionComponent = ({ children }) => {
               journey_id: journey.id,
             },
             {
-              onError: () => showSnackbar('error'),
-              onSuccess: () =>
+              onError: () =>
+                showSnackbar(
+                  'error',
+                  intl.formatMessage({
+                    id: 'misc.journeys.conversionSnackbar.error',
+                  })
+                ),
+              onSuccess: () => {
+                showSnackbar(
+                  'success',
+                  intl.formatMessage({
+                    id: 'misc.journeys.conversionSnackbar.success',
+                  })
+                );
                 router.push(
                   `/organize/${orgId}/journeys/${journey.id}/${instanceId}`
-                ),
+                );
+              },
             }
           );
         },

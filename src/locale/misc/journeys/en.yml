@@ -1,2 +1,5 @@
 overview:
   overviewTitle: All journeys
+conversionSnackbar:
+  error: Something went wrong in converting the journey.
+  success: Journey conversion successful!

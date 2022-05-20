@@ -16,7 +16,7 @@ test.describe('Changing the type of a journey instance', () => {
     moxy.teardown();
   });
 
-  test('updates the id of the journey in the instance and redirects.', async ({
+  test.only('updates the id of the journey in the instance, shows success snackbar and redirects.', async ({
     appUri,
     moxy,
     page,
@@ -87,6 +87,8 @@ test.describe('Changing the type of a journey instance', () => {
       page.locator('text=Marxist Training').click(),
     ]);
 
+    await page.locator('data-testid=Snackbar-success').waitFor();
+
     //Expect the id to be the MarxistJourney id.
     expect(patchReqLog<{ journey_id: number }>()[0].data?.journey_id).toBe(
       MarxistTraining.id
@@ -96,6 +98,11 @@ test.describe('Changing the type of a journey instance', () => {
     expect(page.url()).toEqual(
       appUri +
         `/organize/${KPD.id}/journeys/${MarxistTraining.id}/${ClarasOnboarding.id}`
+    );
+
+    //Expect success snackbar to show
+    expect(await page.locator('data-testid=Snackbar-success').count()).toEqual(
+      1
     );
   });
 
