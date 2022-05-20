@@ -97,6 +97,103 @@ test.describe('Closing and reopening a journey instance', () => {
       // Check patch request has correct data
       expect(instanceCloseMock.log().length).toEqual(1);
     });
+
+    test.describe('Shows an error', () => {
+      test('if adding tags fails', async ({ moxy, page, appUri }) => {
+        moxy.setZetkinApiMock(
+          `/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}/tags/${CodingSkillsTag.id}`,
+          'put',
+          undefined,
+          401
+        );
+
+        await page.goto(appUri + '/organize/1/journeys/1/1');
+
+        // Click close instance button
+        await page.locator('data-testid=JourneyInstanceCloseButton').click();
+
+        // Add outcome
+        await page.fill(
+          'data-testid=JourneyInstanceCloseButton-outcomeDialog >> data-testid=JourneyInstanceCloseButton-outcomeNoteField',
+          'Outcome note content'
+        );
+
+        // Add tags
+        await page
+          .locator(
+            'data-testid=JourneyInstanceCloseButton-outcomeDialog >> text=Add tag'
+          )
+          .click();
+        await page.click(`text=${CodingSkillsTag.title}`);
+
+        // Submit close
+        const submitButton = page.locator(
+          'data-testid=JourneyInstanceCloseButton-outcomeDialog >> data-testid=SubmitCancelButtons-submitButton'
+        );
+
+        await Promise.all([
+          page.waitForResponse((res) => res.request().method() === 'POST'),
+          (async () => {
+            await submitButton.click({ force: true }); // To close the tag select popover
+            await submitButton.click();
+          })(),
+        ]);
+
+        expect(
+          await page.locator('data-testid=Snackbar-error').count()
+        ).toEqual(1);
+      });
+
+      test('if patching the instance fails', async ({ page, moxy, appUri }) => {
+        moxy.setZetkinApiMock(
+          `/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}`,
+          'patch',
+          undefined,
+          504
+        );
+
+        moxy.setZetkinApiMock(
+          `/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}/tags/${CodingSkillsTag.id}`,
+          'put'
+        );
+
+        await page.goto(appUri + '/organize/1/journeys/1/1');
+
+        // Click close instance button
+        await page.locator('data-testid=JourneyInstanceCloseButton').click();
+
+        // Add outcome
+        await page.fill(
+          'data-testid=JourneyInstanceCloseButton-outcomeDialog >> data-testid=JourneyInstanceCloseButton-outcomeNoteField',
+          'Outcome note content'
+        );
+
+        // Add tags
+        await page
+          .locator(
+            'data-testid=JourneyInstanceCloseButton-outcomeDialog >> text=Add tag'
+          )
+          .click();
+        await page.click(`text=${CodingSkillsTag.title}`);
+
+        // Submit close
+        const submitButton = page.locator(
+          'data-testid=JourneyInstanceCloseButton-outcomeDialog >> data-testid=SubmitCancelButtons-submitButton'
+        );
+
+        await Promise.all([
+          page.waitForResponse((res) => res.request().method() === 'POST'),
+          (async () => {
+            await submitButton.click({ force: true }); // To close the tag select popover
+            await submitButton.click();
+          })(),
+        ]);
+
+        expect(
+          await page.locator('data-testid=Snackbar-error').count()
+        ).toEqual(1);
+      });
+    });
   });
 
   test.describe('can reopen an instance', () => {
