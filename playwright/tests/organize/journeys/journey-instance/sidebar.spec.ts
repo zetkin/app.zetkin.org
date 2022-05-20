@@ -155,19 +155,12 @@ test.describe('Journey instance sidebar', () => {
               .url()
               .endsWith(`/journey_instances/${ClarasOnboarding.id}`)
         ),
-        //page.waitForResponse((res) => res.request().method() == 'DELETE'),
         page
           .locator(
             `data-testid=JourneyPerson-remove-${ClarasOnboarding.assignees[0].id}`
           )
           .click(),
       ]);
-
-      /* await page
-        .locator(
-          `data-testid=JourneyPerson-remove-${ClarasOnboarding.assignees[0].id}`
-        )
-        .click(); */
 
       //there should be no Angela in list of assignees
       expect(
