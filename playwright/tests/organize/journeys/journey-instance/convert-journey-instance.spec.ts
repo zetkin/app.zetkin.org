@@ -127,8 +127,6 @@ test.describe('Changing the type of a journey instance', () => {
 
     await page.goto(appUri + '/organize/1/journeys/1/1');
 
-    console.log(page.viewportSize());
-
     //Click type of journey to convert to, "Marxist Training"
     await Promise.all([
       page.waitForResponse(
