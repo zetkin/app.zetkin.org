@@ -58,14 +58,16 @@ const JourneyInstanceLayout: React.FunctionComponent = ({ children }) => {
         },
       })) ?? [];
 
-  ellipsisMenu.push({
-    id: 'convert-journey',
-    label: intl.formatMessage({
-      id: 'pages.organizeJourneyInstance.ellipsisMenu.convert',
-    }),
-    startIcon: <Forward color="secondary" />,
-    subMenuItems,
-  });
+  if (subMenuItems.length) {
+    ellipsisMenu.push({
+      id: 'convert-journey',
+      label: intl.formatMessage({
+        id: 'pages.organizeJourneyInstance.ellipsisMenu.convert',
+      }),
+      startIcon: <Forward color="secondary" />,
+      subMenuItems,
+    });
+  }
 
   return (
     <>
