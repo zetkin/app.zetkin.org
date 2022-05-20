@@ -79,7 +79,10 @@ const ZetkinEllipsisMenu: FunctionComponent<ZetkinEllipsisMenuProps> = ({
                     key={subMenuItem.id || index}
                     onClick={(e) => {
                       if (subMenuItem.onSelect) {
+                        e.stopPropagation();
                         subMenuItem.onSelect(e);
+                        setMenuActivator(null);
+                        setSubMenuActivator(null);
                       }
                     }}
                   >
