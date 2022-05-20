@@ -1,25 +1,93 @@
+import { Forward } from '@material-ui/icons';
 import ScheduleIcon from '@material-ui/icons/Schedule';
+import { useContext } from 'react';
 import { useRouter } from 'next/router';
 import { Box, Typography } from '@material-ui/core';
-import { FormattedDate, FormattedMessage as Msg } from 'react-intl';
+import { FormattedDate, FormattedMessage as Msg, useIntl } from 'react-intl';
 
-import { journeyInstanceResource } from 'api/journeys';
 import JourneyStatusChip from 'components/journeys/JourneyStatusChip';
+import SnackbarContext from 'hooks/SnackbarContext';
 import TabbedLayout from './TabbedLayout';
+import { ZetkinEllipsisMenuProps } from 'components/ZetkinEllipsisMenu';
 import { ZetkinJourneyInstance } from 'types/zetkin';
 import ZetkinRelativeTime from 'components/ZetkinRelativeTime';
 import JourneyInstanceCloseButton, {
   JourneyInstanceReopenButton,
 } from 'components/journeys/JourneyInstanceCloseButton';
+import { journeyInstanceResource, journeysResource } from 'api/journeys';
 
 const JourneyInstanceLayout: React.FunctionComponent = ({ children }) => {
   const { orgId, journeyId, instanceId } = useRouter().query;
+  const router = useRouter();
+  const intl = useIntl();
+  const { showSnackbar } = useContext(SnackbarContext);
 
   const journeyInstanceQuery = journeyInstanceResource(
     orgId as string,
     instanceId as string
   ).useQuery();
   const journeyInstance = journeyInstanceQuery.data as ZetkinJourneyInstance;
+
+  const journeysQuery = journeysResource(orgId as string).useQuery();
+  const journeys = journeysQuery.data;
+
+  const journeyInstanceHooks = journeyInstanceResource(
+    orgId as string,
+    instanceId as string
+  );
+  const patchJourneyInstanceMutation = journeyInstanceHooks.useUpdate();
+
+  const ellipsisMenu: ZetkinEllipsisMenuProps['items'] = [];
+
+  const submenuItems =
+    journeys
+      ?.filter((journey) => journey.id.toString() !== journeyId)
+      .map((journey) => ({
+        id: `convertTo-${journey.id}`,
+        label: journey.singular_label,
+        onSelect: () => {
+          //redirect to equivalent page but new journey id
+          const redirectUrl = router.pathname
+            .replace('[orgId]', orgId as string)
+            .replace('[journeyId]', journey.id.toString())
+            .replace('[instanceId]', instanceId as string);
+
+          patchJourneyInstanceMutation.mutateAsync(
+            {
+              journey_id: journey.id,
+            },
+            {
+              onError: () =>
+                showSnackbar(
+                  'error',
+                  intl.formatMessage({
+                    id: 'misc.journeys.conversionSnackbar.error',
+                  })
+                ),
+              onSuccess: () => {
+                showSnackbar(
+                  'success',
+                  intl.formatMessage({
+                    id: 'misc.journeys.conversionSnackbar.success',
+                  })
+                );
+                router.push(redirectUrl);
+              },
+            }
+          );
+        },
+      })) ?? [];
+
+  if (submenuItems.length) {
+    ellipsisMenu.push({
+      id: 'convert-journey',
+      label: intl.formatMessage({
+        id: 'pages.organizeJourneyInstance.ellipsisMenu.convert',
+      }),
+      startIcon: <Forward color="secondary" />,
+      subMenuItems: submenuItems,
+    });
+  }
 
   return (
     <TabbedLayout
@@ -32,6 +100,7 @@ const JourneyInstanceLayout: React.FunctionComponent = ({ children }) => {
       }
       baseHref={`/organize/${orgId}/journeys/${journeyId}/${instanceId}`}
       defaultTab="/"
+      ellipsisMenuItems={ellipsisMenu}
       subtitle={
         <Box
           style={{

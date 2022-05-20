@@ -48,6 +48,7 @@ const ClarasOnboarding: ZetkinJourneyInstance = {
   next_milestone: AttendMeeting,
   opening_note: '',
   organization: KPD,
+  outcome: '',
   subjects: [ClaraZetkin],
   summary: `Nullam sagittis neque augue, vitae lacinia purus auctor eget. Mauris bibendum, 
     dui id fringilla dictum, velit ligula efficitur ligula, vitae aliquet mauris augue 

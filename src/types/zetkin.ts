@@ -244,7 +244,6 @@ export interface ZetkinDataField {
 
 export interface ZetkinJourney {
   id: number;
-  title: string;
   opening_note_template: string;
   organization: ZetkinOrganization;
   plural_label: string;
@@ -253,6 +252,7 @@ export interface ZetkinJourney {
     closed: number;
     open: number;
   };
+  title: string;
 }
 
 export interface ZetkinJourneyInstance {
@@ -273,6 +273,7 @@ export interface ZetkinJourneyInstance {
     id: number;
     title: string;
   };
+  outcome: string;
   subjects: ZetkinPerson[];
   summary: string;
   tags: ZetkinTag[];

@@ -5,6 +5,8 @@ addSubjectLabel: Add person
 assignPersonLabel: Assign person
 collapseButton: Collapse
 editButton: Edit
+ellipsisMenu:
+  convert: Convert to...
 expandButton: Expand
 noMilestones: There are no milestones.
 percentComplete: '{percentComplete}% complete'
