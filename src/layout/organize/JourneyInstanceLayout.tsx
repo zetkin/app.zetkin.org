@@ -8,6 +8,9 @@ import JourneyStatusChip from 'components/journeys/JourneyStatusChip';
 import TabbedLayout from './TabbedLayout';
 import { ZetkinJourneyInstance } from 'types/zetkin';
 import ZetkinRelativeTime from 'components/ZetkinRelativeTime';
+import JourneyInstanceCloseButton, {
+  JourneyInstanceReopenButton,
+} from 'components/journeys/JourneyInstanceCloseButton';
 
 const JourneyInstanceLayout: React.FunctionComponent = ({ children }) => {
   const { orgId, journeyId, instanceId } = useRouter().query;
@@ -20,6 +23,13 @@ const JourneyInstanceLayout: React.FunctionComponent = ({ children }) => {
 
   return (
     <TabbedLayout
+      actionButtons={
+        journeyInstance.closed ? (
+          <JourneyInstanceReopenButton journeyInstance={journeyInstance} />
+        ) : (
+          <JourneyInstanceCloseButton journeyInstance={journeyInstance} />
+        )
+      }
       baseHref={`/organize/${orgId}/journeys/${journeyId}/${instanceId}`}
       defaultTab="/"
       subtitle={

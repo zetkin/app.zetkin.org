@@ -1,4 +1,4 @@
-tagsManager:
+tagManager:
   addTag: Add tag
   createNamedTag: 'Create tag: <b>{name}</b>'
   createTag: New Tag

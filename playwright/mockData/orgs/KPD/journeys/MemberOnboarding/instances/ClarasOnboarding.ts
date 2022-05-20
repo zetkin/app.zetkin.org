@@ -42,7 +42,7 @@ const ClarasOnboarding: ZetkinJourneyInstance = {
   id: 1,
   journey: {
     id: MemberOnboarding.id,
-    title: MemberOnboarding.singular_label,
+    title: MemberOnboarding.title,
   },
   milestones: [AttendMeeting, AttendTraining, MeetBranchSec],
   next_milestone: AttendMeeting,

@@ -2,7 +2,7 @@ import { useIntl } from 'react-intl';
 import { Autocomplete, createFilterOptions } from '@material-ui/lab';
 import { Box, TextField } from '@material-ui/core';
 
-import { NewTagGroup } from '../types';
+import { NewTagGroup } from '../../types';
 import { ZetkinTagGroup } from 'types/zetkin';
 
 interface NewOption {
@@ -31,7 +31,7 @@ const TagGroupSelect: React.FunctionComponent<{
               inputValue: params.inputValue,
               title: intl.formatMessage(
                 {
-                  id: 'misc.tags.tagsManager.tagDialog.groupCreatePrompt',
+                  id: 'misc.tags.tagManager.tagDialog.groupCreatePrompt',
                 },
                 {
                   groupName: params.inputValue,
@@ -61,10 +61,10 @@ const TagGroupSelect: React.FunctionComponent<{
               'data-testid': 'TagManager-TagDialog-tagGroupSelect',
             }}
             label={intl.formatMessage({
-              id: 'misc.tags.tagsManager.tagDialog.groupLabel',
+              id: 'misc.tags.tagManager.tagDialog.groupLabel',
             })}
             placeholder={intl.formatMessage({
-              id: 'misc.tags.tagsManager.tagDialog.groupSelectPlaceholder',
+              id: 'misc.tags.tagManager.tagDialog.groupSelectPlaceholder',
             })}
             variant="outlined"
           />

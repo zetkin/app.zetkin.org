@@ -1,2 +1,13 @@
+journeyInstanceCloseButton:
+  dialog:
+    outcomeFieldPlaceholder: Describe the outcome of the case
+    outcomeLabel: Outcome
+    outcomeTagsDescription: Add any tags that describe the outcome.
+    outcomeTagsLabel: Outcome tags
+  error: There was an error closing the {singularLabel}
+  label: Close {singularLabel}
+journeyInstanceReopenButton:
+  error: There was an error reopening the {singularLabel}
+  label: Reopen {singularLabel}
 overview:
   overviewTitle: All journeys

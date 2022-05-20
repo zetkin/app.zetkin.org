@@ -7,7 +7,7 @@ import ColorPicker from './ColorPicker';
 import SubmitCancelButtons from 'components/forms/common/SubmitCancelButtons';
 import TagGroupSelect from './TagGroupSelect';
 import ZetkinDialog from 'components/ZetkinDialog';
-import { EditTag, NewTag, NewTagGroup } from '../types';
+import { EditTag, NewTag, NewTagGroup } from '../../types';
 import { ZetkinTag, ZetkinTagGroup } from 'types/zetkin';
 
 interface TagDialogProps {
@@ -65,13 +65,14 @@ const TagDialog: React.FunctionComponent<TagDialogProps> = ({
         editingTag
           ? 'Edit tag'
           : intl.formatMessage({
-              id: 'misc.tags.tagsManager.tagDialog.dialogTitle',
+              id: 'misc.tags.tagManager.tagDialog.dialogTitle',
             })
       }
     >
       <form
         onSubmit={(e) => {
           e.preventDefault();
+          e.stopPropagation();
           const tagBody = {
             ...(color.value && { color: `#${color.value}` }),
             ...(tag && 'id' in tag && { id: tag.id }),
@@ -103,12 +104,12 @@ const TagDialog: React.FunctionComponent<TagDialogProps> = ({
             titleEdited &&
             !title &&
             intl.formatMessage({
-              id: 'misc.tags.tagsManager.tagDialog.titleErrorText',
+              id: 'misc.tags.tagManager.tagDialog.titleErrorText',
             })
           }
           inputProps={{ 'data-testid': 'TagManager-TagDialog-titleField' }}
           label={intl.formatMessage({
-            id: 'misc.tags.tagsManager.tagDialog.titleLabel',
+            id: 'misc.tags.tagManager.tagDialog.titleLabel',
           })}
           margin="normal"
           onChange={(e) => {
@@ -138,7 +139,7 @@ const TagDialog: React.FunctionComponent<TagDialogProps> = ({
             editingTag
               ? undefined
               : intl.formatMessage({
-                  id: 'misc.tags.tagsManager.submitCreateTagButton',
+                  id: 'misc.tags.tagManager.submitCreateTagButton',
                 })
           }
         />

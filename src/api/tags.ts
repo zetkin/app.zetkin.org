@@ -5,7 +5,7 @@ import {
   createUseQuery,
 } from './utils/resourceHookFactories';
 
-import { NewTagGroup } from 'components/organize/TagsManager/types';
+import { NewTagGroup } from 'components/organize/TagManager/types';
 import {
   ZetkinTag,
   ZetkinTagGroup,
