@@ -11,14 +11,15 @@ import { FormattedMessage, useIntl } from 'react-intl';
 import { ZetkinTag } from 'types/zetkin';
 
 const TypeSelect: React.FC<{
+  disabled?: boolean;
   onChange: (value: ZetkinTag['value_type']) => void;
   value: ZetkinTag['value_type'];
-}> = ({ onChange, value }) => {
+}> = ({ disabled, onChange, value }) => {
   const intl = useIntl();
 
   return (
     <Box mb={0.8} mt={1.5}>
-      <FormControl data-testid="TypeSelect-formControl">
+      <FormControl data-testid="TypeSelect-formControl" disabled={disabled}>
         <FormLabel>
           <FormattedMessage id={'misc.tags.tagManager.tagDialog.typeLabel'} />
         </FormLabel>

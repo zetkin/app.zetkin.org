@@ -137,7 +137,11 @@ const TagDialog: React.FunctionComponent<TagDialogProps> = ({
           onChange={(value) => setColor(value)}
           value={color.value}
         />
-        <TypeSelect onChange={(value) => setType(value)} value={type} />
+        <TypeSelect
+          disabled={tag && 'id' in tag}
+          onChange={(value) => setType(value)}
+          value={type}
+        />
         <SubmitCancelButtons
           onCancel={closeAndClear}
           submitDisabled={!title || !color.valid}
