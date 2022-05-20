@@ -77,9 +77,6 @@ const ZetkinEllipsisMenu: FunctionComponent<ZetkinEllipsisMenuProps> = ({
                 {item.subMenuItems.map((subMenuItem, index) => (
                   <MenuItem
                     key={subMenuItem.id || index}
-                    data-testid={`EllipsisSubMenu-item-${
-                      subMenuItem.id || index
-                    }`}
                     onClick={(e) => {
                       if (subMenuItem.onSelect) {
                         subMenuItem.onSelect(e);
