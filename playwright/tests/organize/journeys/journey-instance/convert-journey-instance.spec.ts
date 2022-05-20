@@ -16,7 +16,7 @@ test.describe('Changing the type of a journey instance', () => {
     moxy.teardown();
   });
 
-  test.only('updates the id of the journey in the instance, shows success snackbar and redirects.', async ({
+  test('updates the id of the journey in the instance, shows success snackbar and redirects.', async ({
     appUri,
     moxy,
     page,
