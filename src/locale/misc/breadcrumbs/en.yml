@@ -2,6 +2,7 @@ areas: Areas
 assignees: Assignees
 calendar: Calendar
 campaigns: Campaigns
+closed: Closed
 events: Events
 insights: Insights
 instances: Instances
