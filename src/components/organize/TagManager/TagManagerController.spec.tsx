@@ -3,6 +3,7 @@ import { hover } from '@testing-library/user-event/dist/hover';
 import { keyboard } from '@testing-library/user-event/dist/keyboard';
 import { render } from 'utils/testing';
 import singletonRouter from 'next/router';
+import { waitFor } from '@testing-library/react';
 
 import { TagManagerController } from './TagManagerController';
 
@@ -206,6 +207,35 @@ describe('<TagManagerController />', () => {
 
       const titleField = getByTestId('TagManager-TagDialog-titleField');
       expect((titleField as HTMLInputElement).value).toEqual("Jerry's family");
+    });
+
+    it('invokes onCreateTag() and onAssignTag() when creating a tag', async () => {
+      const { getByTestId, getByText } = render(
+        <TagManagerController
+          assignedTags={[]}
+          availableGroups={[]}
+          availableTags={[]}
+          onAssignTag={assignTagCallback}
+          onCreateTag={onCreateTag}
+          onEditTag={editTagCallback}
+          onUnassignTag={unassignTagCallback}
+        />
+      );
+
+      // Open create dialog
+      click(getByText('misc.tags.tagManager.addTag'));
+      click(getByTestId('TagManager-TagSelect-createTagOption'));
+
+      // Fill in dialog
+      const titleField = getByTestId('TagManager-TagDialog-titleField');
+      click(titleField);
+      keyboard('Spongeworthy');
+
+      const submit = getByTestId('SubmitCancelButtons-submitButton');
+      click(submit);
+
+      await waitFor(() => expect(onCreateTag).toBeCalled());
+      expect(assignTagCallback).toBeCalled();
     });
   });
 

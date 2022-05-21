@@ -63,7 +63,14 @@ export const TagManagerController: React.FunctionComponent<
             disableEditTags={disableEditTags}
             groups={availableGroups}
             onClose={() => setAddTagButton(null)}
-            onCreateTag={onCreateTag}
+            onCreateTag={async (tag) => {
+              const newTag = await onCreateTag(tag);
+              if (!newTag.value_type) {
+                onAssignTag(newTag);
+              }
+
+              return newTag;
+            }}
             onEditTag={onEditTag}
             onSelect={onAssignTag}
             tags={availableTags}

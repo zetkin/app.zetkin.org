@@ -34,10 +34,6 @@ const TagManager: React.FunctionComponent<TagManagerProps> = (props) => {
           availableTags={tagsQuery.data}
           onCreateTag={async (tagToCreate) => {
             const newTag = await createTag(tagToCreate);
-            if (!newTag.value_type) {
-              props.onAssignTag(newTag);
-            }
-
             return newTag;
           }}
           onEditTag={editTag}
