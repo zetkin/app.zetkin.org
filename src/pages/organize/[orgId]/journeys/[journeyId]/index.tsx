@@ -77,6 +77,7 @@ const OpenJourneyInstancesPage: PageWithLayout<
           return (
             <JourneyInstancesDataTable
               journeyInstances={openJourneyInstances}
+              storageKey="journeyInstances-open"
               tagMetadata={journeyInstancesQuery.data.tagMetadata}
             />
           );

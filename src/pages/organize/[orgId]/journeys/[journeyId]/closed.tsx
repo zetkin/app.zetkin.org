@@ -77,6 +77,7 @@ const ClosedJourneyInstancesPage: PageWithLayout<
           return (
             <JourneyInstancesDataTable
               journeyInstances={openJourneyInstances}
+              storageKey="journeyInstances-closed"
               tagMetadata={journeyInstancesQuery.data.tagMetadata}
             />
           );
