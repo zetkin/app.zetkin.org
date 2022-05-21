@@ -236,6 +236,12 @@ describe('<TagManagerController />', () => {
 
       await waitFor(() => expect(onCreateTag).toBeCalled());
       expect(assignTagCallback).toBeCalled();
+
+      const input = getByTestId('TagManager-TagSelect-searchField');
+      expect(input.getAttribute('value')).toEqual('');
+      expect(input.getAttribute('placeholder')).toEqual(
+        'misc.tags.tagManager.addTag'
+      );
     });
   });
 

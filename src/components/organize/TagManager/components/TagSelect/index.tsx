@@ -141,7 +141,9 @@ const TagSelect: React.FunctionComponent<{
           } else {
             // If new tag
             const createdTag = await onCreateTag(tag);
-            setPendingTag(createdTag);
+            if (createdTag.value_type) {
+              setPendingTag(createdTag);
+            }
             setInputValue('');
           }
         }}
