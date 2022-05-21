@@ -107,7 +107,11 @@ test.describe('Journey instance sidebar', () => {
       ).toBeTruthy();
     });
 
-    test('where you can remove assigned person from the journey instance.', async ({ appUri, moxy, page }) => {
+    test('where you can remove assigned person from the journey instance.', async ({
+      appUri,
+      moxy,
+      page,
+    }) => {
       moxy.setZetkinApiMock(
         `/orgs/${KPD.id}/journeys/${MemberOnboarding.id}`,
         'get',
