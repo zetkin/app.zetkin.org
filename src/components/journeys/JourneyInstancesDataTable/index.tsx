@@ -15,12 +15,14 @@ interface JourneysDataTableProps {
   dataGridProps?: Partial<DataGridProProps>;
   tagMetadata: TagMetadata;
   journeyInstances: ZetkinJourneyInstance[];
+  storageKey?: string;
 }
 
 const JourneyInstancesDataTable: FunctionComponent<JourneysDataTableProps> = ({
   dataGridProps,
   tagMetadata,
   journeyInstances,
+  storageKey = 'journeyInstances',
 }) => {
   const columns = getColumns(tagMetadata);
   const [sortModel, setSortModel] = useState<GridSortModel>([]);
@@ -62,7 +64,7 @@ const JourneyInstancesDataTable: FunctionComponent<JourneysDataTableProps> = ({
         pagination
         rows={rows}
         sortModel={sortModel}
-        storageKey="journeyInstances"
+        storageKey={storageKey}
         {...dataGridProps}
       />
     </>

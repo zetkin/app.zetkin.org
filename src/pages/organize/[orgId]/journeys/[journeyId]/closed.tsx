@@ -47,13 +47,13 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
   }
 }, scaffoldOptions);
 
-type OpenJourneyInstancesPageProps = {
+type ClosedJourneyInstancesPageProps = {
   journeyId: string;
   orgId: string;
 };
 
-const OpenJourneyInstancesPage: PageWithLayout<
-  OpenJourneyInstancesPageProps
+const ClosedJourneyInstancesPage: PageWithLayout<
+  ClosedJourneyInstancesPageProps
 > = ({ orgId, journeyId }) => {
   const journeyQuery = journeyResource(orgId, journeyId).useQuery();
   const journeyInstancesQuery = journeyInstancesResource(
@@ -71,13 +71,13 @@ const OpenJourneyInstancesPage: PageWithLayout<
         {({ queries: { journeyInstancesQuery } }) => {
           const openJourneyInstances =
             journeyInstancesQuery.data.journeyInstances.filter(
-              (journeyInstance) => journeyInstance.closed == null
+              (journeyInstance) => Boolean(journeyInstance.closed)
             );
 
           return (
             <JourneyInstancesDataTable
               journeyInstances={openJourneyInstances}
-              storageKey="journeyInstances-open"
+              storageKey="journeyInstances-closed"
               tagMetadata={journeyInstancesQuery.data.tagMetadata}
             />
           );
@@ -88,10 +88,10 @@ const OpenJourneyInstancesPage: PageWithLayout<
   );
 };
 
-OpenJourneyInstancesPage.getLayout = function getLayout(page) {
+ClosedJourneyInstancesPage.getLayout = function getLayout(page) {
   return (
     <AllJourneyInstancesLayout fixedHeight>{page}</AllJourneyInstancesLayout>
   );
 };
 
-export default OpenJourneyInstancesPage;
+export default ClosedJourneyInstancesPage;
