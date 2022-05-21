@@ -174,7 +174,10 @@ describe('<TagManagerController />', () => {
     let onCreateTag: jest.Mock<Promise<ZetkinTag>, [tag: NewTag]>;
 
     beforeEach(() => {
-      onCreateTag = jest.fn((tag: NewTag) => Promise.resolve(tag as ZetkinTag));
+      onCreateTag = jest.fn((tag: NewTag) =>
+        Promise.resolve({ ...tag, id: 1857 } as ZetkinTag)
+      );
+      assignTagCallback.mockReset();
       singletonRouter.query = {
         orgId: '1',
       };
@@ -241,6 +244,59 @@ describe('<TagManagerController />', () => {
       expect(input.getAttribute('value')).toEqual('');
       expect(input.getAttribute('placeholder')).toEqual(
         'misc.tags.tagManager.addTag'
+      );
+    });
+
+    it('comes back to value tag state without onAssignTag() after creating value tag', async () => {
+      const { getByTestId, getByText } = render(
+        <TagManagerController
+          assignedTags={[]}
+          availableGroups={[]}
+          availableTags={[]}
+          onAssignTag={assignTagCallback}
+          onCreateTag={onCreateTag}
+          onEditTag={editTagCallback}
+          onUnassignTag={unassignTagCallback}
+        />
+      );
+
+      // Open create dialog
+      click(getByText('misc.tags.tagManager.addTag'));
+      click(getByTestId('TagManager-TagSelect-createTagOption'));
+
+      // Fill in dialog
+      const titleField = getByTestId('TagManager-TagDialog-titleField');
+      click(titleField);
+      keyboard('Age');
+
+      // Set value type
+      const radioGroup = getByTestId('TypeSelect-formControl');
+      const textRadio = radioGroup.querySelector('input[value=text]');
+      click(textRadio!);
+
+      const submit = getByTestId('SubmitCancelButtons-submitButton');
+      click(submit);
+
+      await waitFor(() => expect(onCreateTag).toBeCalled());
+
+      const input = getByTestId('TagManager-TagSelect-searchField');
+      expect(input.getAttribute('placeholder')).toEqual(
+        'misc.tags.tagManager.addValue'
+      );
+
+      expect(assignTagCallback).not.toBeCalled();
+
+      click(input);
+      keyboard('75{Enter}');
+
+      await waitFor(() =>
+        expect(assignTagCallback).toBeCalledWith({
+          group_id: null,
+          id: 1857,
+          title: 'Age',
+          value: '75',
+          value_type: 'text',
+        })
       );
     });
   });
