@@ -130,37 +130,50 @@ test.describe('Journey instance sidebar', () => {
 
       await page.goto(appUri + '/organize/1/journeys/1/1');
 
-      //hover over Angela
-      await page
-        .locator(
-          `data-testid=JourneyPerson-${ClarasOnboarding.assignees[0].id}`
-        )
-        .hover();
-
-      //GET journey instance again, with no assignees
-      moxy.setZetkinApiMock(
-        `/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}`,
-        'get',
-        { ...ClarasOnboarding, assignees: [] }
-      );
-
-      //find x-icon and click it
-
+      // Set up two parallel async tracks
       await Promise.all([
-        page.waitForResponse(
-          (res) =>
-            res.request().method() === 'GET' &&
-            res
-              .request()
-              .url()
-              .endsWith(`/journey_instances/${ClarasOnboarding.id}`)
-        ),
-        page
-          .locator(
-            `data-testid=JourneyPerson-remove-${ClarasOnboarding.assignees[0].id}`
-          )
-          .click(),
+        // Track A waits for HTTP requests and updates mocks to reflect that
+        // an assignee has been deleted
+        (async () => {
+          await page.waitForRequest((res) => res.method() == 'DELETE');
+
+          // Update journey instance mock with no assignees
+          moxy.setZetkinApiMock(
+            `/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}`,
+            'get',
+            { ...ClarasOnboarding, assignees: [] }
+          );
+
+          await page.waitForResponse(
+            (res) =>
+              res.request().method() === 'GET' &&
+              res
+                .request()
+                .url()
+                .endsWith(`/journey_instances/${ClarasOnboarding.id}`)
+          );
+        })(),
+
+        // Track B performs UI interactions in parallel with track A
+        (async () => {
+          // Hover over Angela
+          await page
+            .locator(
+              `data-testid=JourneyPerson-${ClarasOnboarding.assignees[0].id}`
+            )
+            .hover();
+
+          // Click X icon
+          await page
+            .locator(
+              `data-testid=JourneyPerson-remove-${ClarasOnboarding.assignees[0].id}`
+            )
+            .click();
+        })(),
       ]);
+
+      // Wait a short while for React to re-render after data has been retrieved
+      await page.waitForTimeout(200);
 
       //there should be no Angela in list of assignees
       expect(
@@ -287,35 +300,43 @@ test.describe('Journey instance sidebar', () => {
 
       await page.goto(appUri + '/organize/1/journeys/1/1');
 
-      //hover over Clara
-      await page
-        .locator(
-          `[data-testid=ZetkinSection-subjects] [data-testid=JourneyPerson-${ClarasOnboarding.subjects[0].id}]`
-        )
-        .hover();
-
-      //GET journey instance again, with no subjects
-      moxy.setZetkinApiMock(
-        `/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}`,
-        'get',
-        { ...ClarasOnboarding, subjects: [] }
-      );
-
-      //find x-icon and click it, then wait for re-fetch of invalidated instance data
+      // Set up two parallel async tracks
       await Promise.all([
-        page.waitForResponse(
-          (res) =>
-            res.request().method() === 'GET' &&
-            res
-              .request()
-              .url()
-              .endsWith(`/journey_instances/${ClarasOnboarding.id}`)
-        ),
-        page
-          .locator(
-            `data-testid=JourneyPerson-remove-${ClarasOnboarding.subjects[0].id}`
-          )
-          .click(),
+        (async () => {
+          await page.waitForRequest((req) => req.method() == 'DELETE');
+
+          // Update journey instance mocke, with no subjects
+          moxy.setZetkinApiMock(
+            `/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}`,
+            'get',
+            { ...ClarasOnboarding, subjects: [] }
+          );
+
+          await page.waitForResponse(
+            (res) =>
+              res.request().method() === 'GET' &&
+              res
+                .request()
+                .url()
+                .endsWith(`/journey_instances/${ClarasOnboarding.id}`)
+          );
+        })(),
+
+        (async () => {
+          // Hover over Clara
+          await page
+            .locator(
+              `[data-testid=ZetkinSection-subjects] [data-testid=JourneyPerson-${ClarasOnboarding.subjects[0].id}]`
+            )
+            .hover();
+
+          // Click X icon
+          await page
+            .locator(
+              `data-testid=JourneyPerson-remove-${ClarasOnboarding.subjects[0].id}`
+            )
+            .click();
+        })(),
       ]);
 
       // Wait for React to re-render after response
