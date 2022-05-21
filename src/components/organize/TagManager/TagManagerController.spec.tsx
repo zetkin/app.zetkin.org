@@ -132,6 +132,56 @@ describe('<TagManagerController />', () => {
     // Check that callback has been called
     expect(onAssignTag).toHaveBeenCalledWith(tag1);
   });
+  it('can add a value tag', () => {
+    const onAssignTag = jest.fn((tag: ZetkinTag) => tag);
+
+    const tag = mockTag({
+      group: null,
+      id: 1857,
+      title: 'Age',
+      value_type: 'text',
+    });
+
+    const { getByText, getByTestId } = render(
+      <TagManagerController
+        assignedTags={[]}
+        availableGroups={[]}
+        availableTags={[tag]}
+        onAssignTag={onAssignTag}
+        onCreateTag={createTagCallback}
+        onEditTag={editTagCallback}
+        onUnassignTag={unassignTagCallback}
+      />
+    );
+    const addTagButton = getByText('misc.tags.tagManager.addTag');
+    click(addTagButton);
+
+    // Typing searches for tag
+    keyboard(tag.title);
+
+    // Select an option
+    const tagOption = getByText(tag.title);
+    click(tagOption);
+
+    // Check that callback has not been called yet
+    expect(onAssignTag).not.toHaveBeenCalled();
+
+    // Check that we're in value mode
+    const input = getByTestId('TagManager-TagSelect-searchField');
+    expect(input.getAttribute('placeholder')).toEqual(
+      'misc.tags.tagManager.addValue'
+    );
+
+    // Add value
+    click(input);
+    keyboard('75{Enter}');
+
+    // Check that tag was assigned with value
+    expect(onAssignTag).toHaveBeenCalledWith({
+      ...tag,
+      value: '75',
+    });
+  });
   it('can remove a tag', () => {
     const onUnassignTag = jest.fn((tag: ZetkinTag) => tag);
 
