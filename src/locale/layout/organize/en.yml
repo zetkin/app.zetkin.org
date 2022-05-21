@@ -16,8 +16,10 @@ journeys:
   statusClosed: Closed
   statusOpen: Open
   tabs:
+    closed: Closed
     manage: Manage
     milestones: Milestones
+    open: Open
     overview: Overview
     timeline: Timeline
   title: Journeys

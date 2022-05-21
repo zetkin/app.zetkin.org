@@ -1,12 +1,20 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 
 import { createApiFetch } from 'utils/apiFetch';
-import { getMessages } from 'utils/locale';
-import { getTagMetadata } from 'utils/getTagMetadata';
+import { ZetkinApiSuccessResponse } from 'api/utils/handleResponseData';
+import { ZetkinJourneyInstance } from 'types/zetkin';
+import { getTagMetadata, TagMetadata } from 'utils/getTagMetadata';
+
+export interface JourneyInstancesData {
+  journeyInstances: ZetkinJourneyInstance[];
+  tagMetadata: TagMetadata;
+}
 
 const getJourneyTableData = async (
   req: NextApiRequest & { query: Record<string, string> },
-  res: NextApiResponse
+  res: NextApiResponse<
+    ZetkinApiSuccessResponse<JourneyInstancesData> | { error: string }
+  >
 ): Promise<void> => {
   const {
     query: { orgId, journeyId },
@@ -27,17 +35,9 @@ const getJourneyTableData = async (
     );
     const { data: journeyInstances } = await journeyInstancesRes.json();
 
-    // Retrieve column names
-    const columnNames = Object.fromEntries(
-      Object.entries(
-        await getMessages('en', ['pages.organizeJourneyInstances'])
-      ).map(([key, value]) => [key.split('.').pop(), value])
-    );
     const tagMetadata = getTagMetadata(journeyInstances);
 
-    res
-      .status(200)
-      .json({ data: { columnNames, journeyInstances, tagMetadata } });
+    res.status(200).json({ data: { journeyInstances, tagMetadata } });
   } catch (e) {
     res.status(500).json({ error: (e as Error).message });
   }

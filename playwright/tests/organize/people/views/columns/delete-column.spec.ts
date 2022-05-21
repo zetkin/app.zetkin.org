@@ -36,13 +36,18 @@ test.describe('Deleting a view column', () => {
     await page.goto(appUri + '/organize/1/people/views/1');
 
     // Delete first column
-    await page.click(
-      'button[aria-label="Menu"]:right-of(:text("First Name"))',
-      { force: true }
-    );
-    await page.click(
-      `data-testid=delete-column-button-col_${AllMembersColumns[0].id}`
-    );
+    await Promise.all([
+      page.waitForResponse((res) => res.request().method() == 'DELETE'),
+      (async () => {
+        await page.click(
+          'button[aria-label="Menu"]:right-of(:text("First Name"))',
+          { force: true }
+        );
+        await page.click(
+          `data-testid=delete-column-button-col_${AllMembersColumns[0].id}`
+        );
+      })(),
+    ]);
 
     // Check body of request
     const columnDeleteRequest = moxy
@@ -71,13 +76,20 @@ test.describe('Deleting a view column', () => {
     await page.goto(appUri + '/organize/1/people/views/1');
 
     // Delete first column
-    await page.click(
-      'button[aria-label="Menu"]:right-of(:text("First Name"))',
-      { force: true }
-    );
-    await page.click(
-      `data-testid=delete-column-button-col_${AllMembersColumns[0].id}`
-    );
+    await Promise.all([
+      page.waitForResponse((res) => res.request().method() == 'DELETE'),
+      (async () => {
+        await page.click(
+          'button[aria-label="Menu"]:right-of(:text("First Name"))',
+          { force: true }
+        );
+        await page.click(
+          `data-testid=delete-column-button-col_${AllMembersColumns[0].id}`
+        );
+      })(),
+    ]);
+
+    await page.locator('data-testid=Snackbar-error').waitFor();
 
     expect(await page.locator('data-testid=Snackbar-error').count()).toEqual(1);
   });
@@ -95,13 +107,21 @@ test.describe('Deleting a view column', () => {
     await page.goto(appUri + '/organize/1/people/views/1');
 
     // Delete first column
-    await page.click('button[aria-label="Menu"]:right-of(:text("Active"))', {
-      force: true,
-    });
-    await page.click(
-      `data-testid=delete-column-button-col_${AllMembersColumns[2].id}`
-    );
-    await page.click('button > :text("Confirm")');
+    await Promise.all([
+      page.waitForResponse((res) => res.request().method() == 'DELETE'),
+      (async () => {
+        await page.click(
+          'button[aria-label="Menu"]:right-of(:text("Active"))',
+          {
+            force: true,
+          }
+        );
+        await page.click(
+          `data-testid=delete-column-button-col_${AllMembersColumns[2].id}`
+        );
+        await page.click('button > :text("Confirm")');
+      })(),
+    ]);
 
     // Check body of request
     const columnDeleteRequest = moxy
