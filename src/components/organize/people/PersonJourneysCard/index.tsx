@@ -27,7 +27,7 @@ const PersonJourneysCard: React.FC<PersonJourneysCardProps> = ({
     <ZetkinQuery queries={{ instancesQuery }}>
       {({ queries }) => (
         <PersonCard titleId="pages.people.person.journeys.title">
-          <List>
+          <List data-testid="PersonJourneysCard-list">
             {queries.instancesQuery.data
               .sort((i0, i1) => Number(!!i0.closed) - Number(!!i1.closed))
               .map((instance) => (
@@ -44,6 +44,7 @@ const PersonJourneysCard: React.FC<PersonJourneysCardProps> = ({
                   <>
                     <Button
                       color="primary"
+                      data-testid="PersonJourneysCard-addButton"
                       onClick={(ev) => setMenuAnchorEl(ev.currentTarget)}
                       startIcon={<Add />}
                     >
