@@ -4,9 +4,12 @@ import {
   ZetkinJourneyMilestoneStatus,
   ZetkinNote,
   ZetkinPerson,
+  ZetkinTag,
 } from './zetkin';
 
 export enum UPDATE_TYPES {
+  ANY_ADDTAGS = '*.addtags',
+  ANY_REMOVETAGS = '*.removetags',
   JOURNEYINSTANCE_ADDASSIGNEE = 'journeyinstance.addassignee',
   JOURNEYINSTANCE_ADDNOTE = 'journeyinstance.addnote',
   JOURNEYINSTANCE_CREATE = 'journeyinstance.create',
@@ -70,6 +73,14 @@ export type ZetkinUpdateJourneyInstanceStart = ZetkinUpdateBase<
   }
 >;
 
+export type ZetkinUpdateTags = ZetkinUpdateBase<
+  UPDATE_TYPES.ANY_ADDTAGS | UPDATE_TYPES.ANY_REMOVETAGS,
+  unknown,
+  {
+    tags: ZetkinTag[];
+  }
+>;
+
 export type ZetkinUpdateJourneyInstanceAddNote = ZetkinUpdateBase<
   UPDATE_TYPES.JOURNEYINSTANCE_ADDNOTE,
   ZetkinJourneyInstance,
@@ -79,6 +90,7 @@ export type ZetkinUpdateJourneyInstanceAddNote = ZetkinUpdateBase<
 >;
 
 export type ZetkinUpdate =
+  | ZetkinUpdateTags
   | ZetkinUpdateJourneyInstance
   | ZetkinUpdateJourneyInstanceAddNote
   | ZetkinUpdateJourneyInstanceAssignee
