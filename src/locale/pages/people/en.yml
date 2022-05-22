@@ -9,6 +9,7 @@ person:
   editButton: Edit {title}
   editButtonClose: Stop editing {title}
   journeys:
+    addButton: Start new journey
     title: Journeys
   organizations:
     add: Add a new sub-organization
