@@ -57,7 +57,7 @@ const TagSelect: React.FunctionComponent<{
     })
   );
 
-  const handleSubmit = () => {
+  const handleSubmitValue = () => {
     if (pendingTag) {
       onSelect({ ...pendingTag, value: pendingValue || undefined });
       setPendingTag(null);
@@ -78,7 +78,7 @@ const TagSelect: React.FunctionComponent<{
         onKeyUp={(ev) => {
           if (ev.key == 'Enter') {
             if (pendingTag) {
-              handleSubmit();
+              handleSubmitValue();
             }
           } else if (ev.key == 'Escape') {
             if (pendingTag) {
@@ -110,7 +110,7 @@ const TagSelect: React.FunctionComponent<{
             setInputValue('');
           }}
           onChange={(value) => setPendingValue(value)}
-          onSubmit={handleSubmit}
+          onSubmit={handleSubmitValue}
           tag={pendingTag}
         />
       ) : (
