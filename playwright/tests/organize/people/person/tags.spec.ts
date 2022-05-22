@@ -5,6 +5,7 @@ import ActivistTag from '../../../../mockData/orgs/KPD/tags/Activist';
 import ClaraZetkin from '../../../../mockData/orgs/KPD/people/ClaraZetkin';
 import CodingSkillsTag from '../../../../mockData/orgs/KPD/tags/Coding';
 import KPD from '../../../../mockData/orgs/KPD';
+import OccupationTag from '../../../../mockData/orgs/KPD/tags/Occupation';
 import OrganizerTag from '../../../../mockData/orgs/KPD/tags/Organizer';
 import PlaysGuitarTag from '../../../../mockData/orgs/KPD/tags/PlaysGuitar';
 import SkillsGroup from '../../../../mockData/orgs/KPD/tags/groups/Skills';
@@ -89,6 +90,44 @@ test.describe('Person Profile Page Tags', () => {
 
       // Expect to have made request to put tag
       expect(putTagLog().length).toEqual(1);
+    });
+
+    test('can add value tag to person', async ({ page, appUri, moxy }) => {
+      moxy.setZetkinApiMock(`/orgs/${KPD.id}/people/tags`, 'get', [
+        ActivistTag,
+        CodingSkillsTag,
+        OccupationTag,
+      ]);
+      moxy.setZetkinApiMock(
+        `/orgs/${KPD.id}/people/${ClaraZetkin.id}/tags`,
+        'get',
+        []
+      );
+      const { log: putTagLog } = moxy.setZetkinApiMock(
+        `/orgs/1/people/${ClaraZetkin.id}/tags/${ActivistTag.id}`,
+        'put'
+      );
+
+      await page.goto(appUri + `/organize/1/people/${ClaraZetkin.id}`);
+
+      await page.locator('text=Add tag').click();
+
+      // Select tag
+      await page.click('text=Occupation');
+
+      await page
+        .locator('data-testid=TagManager-TagSelect-searchField')
+        .type('Revolutionary');
+
+      await Promise.all([
+        page.waitForResponse((res) => res.request().method() == 'PUT'),
+        page.locator('data-testid=SubmitCancelButtons-submitButton').click(),
+      ]);
+
+      // Expect to have made request to put tag
+      expect(putTagLog()[0].data).toEqual({
+        value: 'Revolutionary',
+      });
     });
 
     test('shows error when adding tag fails', async ({
