@@ -24,6 +24,10 @@ simple.args = {
           'This is the opening note with information about the journey',
       }),
     },
+    organization: {
+      id: 1,
+      title: 'KPD',
+    },
     target: mockJourneyInstance(),
     timestamp: new Date().toISOString(),
     type: UPDATE_TYPES.JOURNEYINSTANCE_CREATE,

@@ -21,8 +21,11 @@ const PersonJourneysCard: React.FC<PersonJourneysCardProps> = ({
         <PersonCard titleId="pages.people.person.journeys.title">
           <List>
             {queries.instancesQuery.data.map((instance) => (
-              <ListItem key={instance.id}>
-                <ZetkinJourneyInstanceItem instance={instance} />
+              <ListItem key={instance.id} divider>
+                <ZetkinJourneyInstanceItem
+                  instance={instance}
+                  orgId={instance.organization.id}
+                />
               </ListItem>
             ))}
           </List>

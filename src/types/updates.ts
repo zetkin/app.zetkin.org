@@ -18,6 +18,7 @@ export enum UPDATE_TYPES {
 interface ZetkinUpdateBase<UpdateType, Target, Details = null> {
   actor: Pick<ZetkinPerson, 'id' | 'first_name' | 'last_name'>;
   details: Details;
+  organization: { id: number; title: string };
   target: Target;
   timestamp: string;
   type: UpdateType;

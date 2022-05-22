@@ -5,14 +5,16 @@ import ZetkinJourneyInstanceItem, {
 
 interface ZetkinJourneyInstanceCardProps {
   instance: ZetkinJourneyInstanceItemProps['instance'];
+  orgId: number | string;
 }
 
 const ZetkinJourneyInstanceCard: React.FC<ZetkinJourneyInstanceCardProps> = ({
   instance,
+  orgId,
 }) => {
   return (
     <ClickableCard>
-      <ZetkinJourneyInstanceItem instance={instance} />
+      <ZetkinJourneyInstanceItem instance={instance} orgId={orgId} />
     </ClickableCard>
   );
 };
