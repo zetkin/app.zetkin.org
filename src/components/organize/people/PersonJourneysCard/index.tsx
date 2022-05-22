@@ -28,14 +28,16 @@ const PersonJourneysCard: React.FC<PersonJourneysCardProps> = ({
       {({ queries }) => (
         <PersonCard titleId="pages.people.person.journeys.title">
           <List>
-            {queries.instancesQuery.data.map((instance) => (
-              <ListItem key={instance.id} divider>
-                <ZetkinJourneyInstanceItem
-                  instance={instance}
-                  orgId={instance.organization.id}
-                />
-              </ListItem>
-            ))}
+            {queries.instancesQuery.data
+              .sort((i0, i1) => Number(!!i0.closed) - Number(!!i1.closed))
+              .map((instance) => (
+                <ListItem key={instance.id} divider>
+                  <ZetkinJourneyInstanceItem
+                    instance={instance}
+                    orgId={instance.organization.id}
+                  />
+                </ListItem>
+              ))}
             <ListItem>
               <ZetkinQuery queries={{ journeysQuery }}>
                 {({ queries }) => (
