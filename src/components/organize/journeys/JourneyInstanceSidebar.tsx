@@ -14,6 +14,12 @@ import {
   ZetkinTag,
 } from 'types/zetkin';
 
+const GridDivider = () => (
+  <Grid item xs={12}>
+    <Divider />
+  </Grid>
+);
+
 const JourneyInstanceSidebar = ({
   journeyInstance,
   onAddAssignee,
@@ -93,8 +99,8 @@ const JourneyInstanceSidebar = ({
             </ClickAwayListener>
           )}
         </ZetkinSection>
-        <Divider />
       </Grid>
+      <GridDivider />
       <Grid item xs={12}>
         <ZetkinSection
           data-testid="ZetkinSection-subjects"
@@ -144,8 +150,8 @@ const JourneyInstanceSidebar = ({
             </ClickAwayListener>
           )}
         </ZetkinSection>
-        <Divider />
       </Grid>
+      <GridDivider />
       <Grid item xs={12}>
         <TagManagerSection
           assignedTags={journeyInstance.tags}
@@ -153,22 +159,23 @@ const JourneyInstanceSidebar = ({
           onTagEdited={onTagEdited}
           onUnassignTag={onUnassignTag}
         />
-        <Divider />
       </Grid>
       {journeyInstance.milestones && (
-        <Grid item xs={12}>
-          <ZetkinSection
-            title={intl.formatMessage({
-              id: 'pages.organizeJourneyInstance.sections.milestones',
-            })}
-          >
-            <JourneyMilestoneProgress
-              milestones={journeyInstance.milestones}
-              next_milestone={journeyInstance.next_milestone}
-            />
-          </ZetkinSection>
-          <Divider />
-        </Grid>
+        <>
+          <GridDivider />
+          <Grid item xs={12}>
+            <ZetkinSection
+              title={intl.formatMessage({
+                id: 'pages.organizeJourneyInstance.sections.milestones',
+              })}
+            >
+              <JourneyMilestoneProgress
+                milestones={journeyInstance.milestones}
+                next_milestone={journeyInstance.next_milestone}
+              />
+            </ZetkinSection>
+          </Grid>
+        </>
       )}
     </Grid>
   );

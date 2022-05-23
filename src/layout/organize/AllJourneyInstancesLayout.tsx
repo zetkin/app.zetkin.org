@@ -27,7 +27,8 @@ const AllJourneyInstancesLayout: FunctionComponent<LayoutProps> = ({
       fixedHeight={fixedHeight}
       noPad
       tabs={[
-        { href: `/`, messageId: 'layout.organize.journeys.tabs.overview' },
+        { href: `/`, messageId: 'layout.organize.journeys.tabs.open' },
+        { href: `/closed`, messageId: 'layout.organize.journeys.tabs.closed' },
         {
           href: `/manage`,
           messageId: 'layout.organize.journeys.tabs.manage',

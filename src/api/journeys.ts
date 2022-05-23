@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { TagMetadata } from '../utils/getTagMetadata';
+import { JourneyInstancesData } from 'pages/api/organize/[orgId]/journeys/[journeyId]';
 import {
   createPrefetch,
   createUseMutation,
@@ -50,10 +50,7 @@ export const journeyInstancesResource = (orgId: string, journeyId: string) => {
       },
       ZetkinJourneyInstance
     >(key, `/journeyInstances/createNew?orgId=${orgId}&journeyId=${journeyId}`),
-    useQuery: createUseQuery<{
-      journeyInstances: ZetkinJourneyInstance[];
-      tagMetadata: TagMetadata;
-    }>(key, url),
+    useQuery: createUseQuery<JourneyInstancesData>(key, url),
   };
 };
 

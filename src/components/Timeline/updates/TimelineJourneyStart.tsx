@@ -23,7 +23,10 @@ const TimelineJourneyStart: React.FC<TimelineJourneyStartProps> = ({
       }
       update={update}
     >
-      <ZetkinJourneyInstanceCard instance={update.details.data} />
+      <ZetkinJourneyInstanceCard
+        instance={update.details.data}
+        orgId={update.organization.id}
+      />
       <Typography style={{ margin: '1em 0' }}>
         {update.details.data.opening_note}
       </Typography>

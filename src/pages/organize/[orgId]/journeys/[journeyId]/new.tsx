@@ -10,6 +10,7 @@ import Header from 'layout/organize/elements/Header';
 import JourneyInstanceSidebar from 'components/organize/journeys/JourneyInstanceSidebar';
 import { organizationResource } from 'api/organizations';
 import { PageWithLayout } from 'types';
+import { personResource } from 'api/people';
 import { scaffold } from 'utils/next';
 import SnackbarContext from 'hooks/SnackbarContext';
 import SubmitCancelButtons from 'components/forms/common/SubmitCancelButtons';
@@ -79,6 +80,25 @@ const NewJourneyPage: PageWithLayout<NewJourneyPageProps> = ({
   const intl = useIntl();
   const theme = useTheme();
   const router = useRouter();
+
+  const inputSubjectIds = router.query.subject
+    ? Array.isArray(router.query.subject)
+      ? router.query.subject
+      : [router.query.subject]
+    : [];
+
+  // Maybe in the future we can support multiple subjects added using
+  // the link, but for now a single subject (the first) is enough.
+  const subjectId = inputSubjectIds[0];
+  personResource(orgId, subjectId).useQuery({
+    // Only load if there is a subjectId and no subjects added already
+    enabled: !!subjectId && !subjects.length,
+    onSuccess: (person) => {
+      if (subjects.length == 0) {
+        setSubjects([...subjects, person]);
+      }
+    },
+  });
 
   const journeyQuery = journeyResource(orgId, journeyId).useQuery({
     onSuccess: (journey) => {
