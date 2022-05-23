@@ -2,6 +2,8 @@
 journeyinstance:
   addassignee: '{actor} assigned {assignee}'
   addnote: '{actor} added a note'
+  close:
+    header: '{actor} closed the journey'
   create:
     header: '{actor} started a new journey'
   removeassignee: '{actor} unassigned {assignee}'

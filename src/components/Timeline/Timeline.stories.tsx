@@ -130,6 +130,7 @@ _italic text_
 const updates = addAssigneeUpdates
   .concat(journeyMilestoneUpdates)
   .concat(journeyInstanceUpdates)
+  .concat([mockUpdate(UPDATE_TYPES.JOURNEYINSTANCE_CLOSE)])
   .concat(noteUpdates)
   .concat([
     mockUpdate(UPDATE_TYPES.JOURNEYINSTANCE_CREATE, {
