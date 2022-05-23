@@ -11,9 +11,11 @@ export enum UPDATE_TYPES {
   ANY_ADDTAGS = '*.addtags',
   ANY_REMOVETAGS = '*.removetags',
   JOURNEYINSTANCE_ADDASSIGNEE = 'journeyinstance.addassignee',
+  JOURNEYINSTANCE_ADDSUBJECT = 'journeyinstance.addsubject',
   JOURNEYINSTANCE_ADDNOTE = 'journeyinstance.addnote',
   JOURNEYINSTANCE_CREATE = 'journeyinstance.create',
   JOURNEYINSTANCE_REMOVEASSIGNEE = 'journeyinstance.removeassignee',
+  JOURNEYINSTANCE_REMOVESUBJECT = 'journeyinstance.removesubject',
   JOURNEYINSTANCE_UPDATE = 'journeyinstance.update',
   JOURNEYINSTANCE_UPDATEMILESTONE = 'journeyinstance.updatemilestone',
 }
@@ -42,6 +44,16 @@ export type ZetkinUpdateJourneyInstanceAssignee = ZetkinUpdateBase<
     assignee: Pick<ZetkinPerson, 'id' | 'first_name' | 'last_name'>;
   }
 >;
+
+export type ZetkinUpdateJourneyInstanceSubject = ZetkinUpdateBase<
+  | UPDATE_TYPES.JOURNEYINSTANCE_ADDSUBJECT
+  | UPDATE_TYPES.JOURNEYINSTANCE_REMOVESUBJECT,
+  ZetkinJourneyInstance,
+  {
+    subject: Pick<ZetkinPerson, 'id' | 'first_name' | 'last_name'>;
+  }
+>;
+
 export type ZetkinUpdateJourneyInstance = ZetkinUpdateBase<
   UPDATE_TYPES.JOURNEYINSTANCE_UPDATE,
   ZetkinJourneyInstance,
@@ -96,4 +108,5 @@ export type ZetkinUpdate =
   | ZetkinUpdateJourneyInstanceAddNote
   | ZetkinUpdateJourneyInstanceAssignee
   | ZetkinUpdateJourneyInstanceMilestone
-  | ZetkinUpdateJourneyInstanceStart;
+  | ZetkinUpdateJourneyInstanceStart
+  | ZetkinUpdateJourneyInstanceSubject;
