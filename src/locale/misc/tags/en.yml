@@ -1,5 +1,6 @@
 tagManager:
   addTag: Add tag
+  addValue: 'Add value for "{tag}"'
   createNamedTag: 'Create tag: <b>{name}</b>'
   createTag: New Tag
   groupTags: Group tags
@@ -15,5 +16,11 @@ tagManager:
     groupSelectPlaceholder: Type to search or create a group
     titleErrorText: Tag name is required
     titleLabel: Tag name
+    typeLabel: Tag type
+    types:
+      none: Basic (no values)
+      text: Text values
   title: Tags
   ungroupedHeader: No group
+  valueTagForm:
+    typeHint: '{type, select, text {Enter some text} other {Enter a value}} to go along with the tag.'

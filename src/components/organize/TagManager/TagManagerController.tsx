@@ -16,7 +16,7 @@ export interface TagManagerControllerProps {
   disabledTags?: ZetkinTag[];
   groupTags?: boolean;
   onAssignTag: (tag: ZetkinTag) => void;
-  onCreateTag: (tag: NewTag) => void;
+  onCreateTag: (tag: NewTag) => Promise<ZetkinTag>;
   onEditTag: (tag: EditTag) => void;
   onUnassignTag: (tag: ZetkinTag) => void;
 }
@@ -56,12 +56,22 @@ export const TagManagerController: React.FunctionComponent<
           anchorEl={addTagButton}
           onClose={() => setAddTagButton(null)}
           open={Boolean(addTagButton)}
+          PaperProps={{ style: { minWidth: '300px' } }}
         >
           <TagSelect
             disabledTags={disabledTags || assignedTags}
             disableEditTags={disableEditTags}
             groups={availableGroups}
-            onCreateTag={onCreateTag}
+            onClose={() => setAddTagButton(null)}
+            onCreateTag={async (tag) => {
+              const newTag = await onCreateTag(tag);
+              if (!newTag.value_type) {
+                // If not a value tag, assign to resource directly
+                onAssignTag(newTag);
+              }
+              // New tag is accessible in TagSelect
+              return newTag;
+            }}
             onEditTag={onEditTag}
             onSelect={onAssignTag}
             tags={availableTags}

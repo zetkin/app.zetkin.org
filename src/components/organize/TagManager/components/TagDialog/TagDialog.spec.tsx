@@ -149,4 +149,20 @@ describe('<TagDialog />', () => {
       title: title,
     });
   });
+
+  it('disables TypeSelect when editing a tag', () => {
+    const { getByTestId } = render(
+      <TagDialog
+        groups={[]}
+        onClose={() => undefined}
+        onSubmit={onSubmit}
+        open={true}
+        tag={mockTag({ id: 1000, title: 'Value tag', value_type: 'text' })}
+      />
+    );
+
+    const radioGroup = getByTestId('TypeSelect-formControl');
+    const input = radioGroup.querySelector('input');
+    expect(input?.getAttribute('disabled')).not.toBeNull();
+  });
 });
