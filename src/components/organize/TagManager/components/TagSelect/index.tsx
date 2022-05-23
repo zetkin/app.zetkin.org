@@ -32,11 +32,11 @@ const TagSelect: React.FunctionComponent<{
 }) => {
   const intl = useIntl();
 
-  const [pendingTag, setPendingTag] = useState<ZetkinTag | null>(null);
   const [inputValue, setInputValue] = useState('');
-  const [pendingValue, setPendingValue] = useState<number | string | null>(
+  const [selectedValueTag, setSelectedValueTag] = useState<ZetkinTag | null>(
     null
   );
+  const [tagValue, setTagValue] = useState<number | string | null>(null);
 
   const [tagToEdit, setTagToEdit] = useState<
     ZetkinTag | Pick<ZetkinTag, 'title'> | undefined
@@ -58,9 +58,9 @@ const TagSelect: React.FunctionComponent<{
   );
 
   const handleSubmitValue = () => {
-    if (pendingTag) {
-      onSelect({ ...pendingTag, value: pendingValue || undefined });
-      setPendingTag(null);
+    if (selectedValueTag) {
+      onSelect({ ...selectedValueTag, value: tagValue || undefined });
+      setSelectedValueTag(null);
       setInputValue('');
     }
   };
@@ -77,12 +77,12 @@ const TagSelect: React.FunctionComponent<{
         onChange={(ev) => setInputValue(ev.target.value)}
         onKeyUp={(ev) => {
           if (ev.key == 'Enter') {
-            if (pendingTag) {
+            if (selectedValueTag) {
               handleSubmitValue();
             }
           } else if (ev.key == 'Escape') {
-            if (pendingTag) {
-              setPendingTag(null);
+            if (selectedValueTag) {
+              setSelectedValueTag(null);
             } else if (inputValue) {
               setInputValue('');
             } else {
@@ -91,10 +91,10 @@ const TagSelect: React.FunctionComponent<{
           }
         }}
         placeholder={
-          pendingTag
+          selectedValueTag
             ? intl.formatMessage(
                 { id: 'misc.tags.tagManager.addValue' },
-                { tag: pendingTag.title }
+                { tag: selectedValueTag.title }
               )
             : intl.formatMessage({
                 id: 'misc.tags.tagManager.addTag',
@@ -102,16 +102,16 @@ const TagSelect: React.FunctionComponent<{
         }
         variant="outlined"
       />
-      {pendingTag ? (
+      {selectedValueTag ? (
         <ValueTagForm
           inputValue={inputValue}
           onCancel={() => {
-            setPendingTag(null);
+            setSelectedValueTag(null);
             setInputValue('');
           }}
-          onChange={(value) => setPendingValue(value)}
+          onChange={(value) => setTagValue(value)}
           onSubmit={handleSubmitValue}
-          tag={pendingTag}
+          tag={selectedValueTag}
         />
       ) : (
         <TagSelectList
@@ -123,7 +123,7 @@ const TagSelect: React.FunctionComponent<{
           onEdit={(tag) => setTagToEdit(tag)}
           onSelect={(tag) => {
             if (tag.value_type) {
-              setPendingTag(tag);
+              setSelectedValueTag(tag);
               setInputValue('');
             } else {
               onSelect(tag);
@@ -142,7 +142,7 @@ const TagSelect: React.FunctionComponent<{
             // If new tag
             const createdTag = await onCreateTag(tag);
             if (createdTag.value_type) {
-              setPendingTag(createdTag);
+              setSelectedValueTag(createdTag);
             }
             setInputValue('');
           }
