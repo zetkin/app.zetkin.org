@@ -9,7 +9,7 @@ export default {
 } as ComponentMeta<typeof ZetkinJourneyInstanceCard>;
 
 const Template: ComponentStory<typeof ZetkinJourneyInstanceCard> = (args) => (
-  <ZetkinJourneyInstanceCard instance={args.instance} />
+  <ZetkinJourneyInstanceCard instance={args.instance} orgId={1} />
 );
 
 export const open = Template.bind({});

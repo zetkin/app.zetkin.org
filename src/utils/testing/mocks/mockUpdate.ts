@@ -9,6 +9,7 @@ import { UPDATE_TYPES, ZetkinUpdate } from 'types/updates';
 
 const update: Partial<ZetkinUpdate> = {
   actor: mockPerson(),
+  organization: { id: 1, title: 'KPD' },
   timestamp: dayjs().subtract(5, 'hours').format(),
 };
 
