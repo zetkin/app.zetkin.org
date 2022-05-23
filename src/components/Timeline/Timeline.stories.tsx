@@ -128,6 +128,18 @@ _italic text_
 });
 
 const updates = addAssigneeUpdates
+  .concat([
+    mockUpdate(UPDATE_TYPES.ANY_ADDTAGS, {
+      timestamp: dayjs()
+        .subtract(Math.random() * 10, 'hours')
+        .format(),
+    }),
+    mockUpdate(UPDATE_TYPES.ANY_REMOVETAGS, {
+      timestamp: dayjs()
+        .subtract(Math.random() * 10, 'hours')
+        .format(),
+    }),
+  ])
   .concat(journeyMilestoneUpdates)
   .concat(journeyInstanceUpdates)
   .concat(noteUpdates)

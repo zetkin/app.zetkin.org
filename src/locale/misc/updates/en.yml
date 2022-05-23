@@ -1,4 +1,7 @@
 # eslint-disable yml/key-name-casing
+any:
+  addtags: '{actor} added {count, plural, =1 {a tag} other {# tags}}'
+  removetags: '{actor} removed {count, plural, =1 {a tag} other {# tags}}'
 journeyinstance:
   addassignee: '{actor} assigned {assignee}'
   addnote: '{actor} added a note'
