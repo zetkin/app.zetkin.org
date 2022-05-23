@@ -32,10 +32,7 @@ const TagManager: React.FunctionComponent<TagManagerProps> = (props) => {
         <TagManagerController
           availableGroups={tagGroupsQuery.data}
           availableTags={tagsQuery.data}
-          onCreateTag={async (tagToCreate) => {
-            const newTag = await createTag(tagToCreate);
-            return newTag;
-          }}
+          onCreateTag={createTag}
           onEditTag={editTag}
           {...props}
         />
@@ -61,7 +58,7 @@ export const TagManagerSection: React.FunctionComponent<
       }
       title={intl.formatMessage({ id: 'misc.tags.tagManager.title' })}
     >
-      <TagManager groupTags={isGrouped} {...props} />{' '}
+      <TagManager groupTags={isGrouped} {...props} />
     </ZetkinSection>
   );
 };

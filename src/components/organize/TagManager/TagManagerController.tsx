@@ -66,9 +66,10 @@ export const TagManagerController: React.FunctionComponent<
             onCreateTag={async (tag) => {
               const newTag = await onCreateTag(tag);
               if (!newTag.value_type) {
+                // If not a value tag, assign to resource directly
                 onAssignTag(newTag);
               }
-
+              // New tag is accessible in TagSelect
               return newTag;
             }}
             onEditTag={onEditTag}
