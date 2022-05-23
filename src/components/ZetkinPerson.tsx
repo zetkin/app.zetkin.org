@@ -47,11 +47,10 @@ const ZetkinPerson: React.FunctionComponent<{
   subtitle,
   tooltip = true,
 }) => {
-  const router = useRouter();
-  const { orgId } = router.query;
+  const { orgId } = useRouter().query as { orgId: string };
 
   return (
-    <PersonLink id={id} link={link} orgId={orgId as string}>
+    <PersonLink id={id} link={link} orgId={orgId}>
       <Box display="flex" {...containerProps}>
         <Tooltip title={tooltip ? name : ''}>
           <Avatar
