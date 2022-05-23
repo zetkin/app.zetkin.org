@@ -1,6 +1,7 @@
 import { ComponentMeta, ComponentStory } from '@storybook/react';
 
 import mockJourneyInstance from 'utils/testing/mocks/mockJourneyInstance';
+import mockOrganization from 'utils/testing/mocks/mockOrganization';
 import mockPerson from 'utils/testing/mocks/mockPerson';
 import mockTag from 'utils/testing/mocks/mockTag';
 import TimelineTags from './TimelineTags';
@@ -22,6 +23,7 @@ addSingle.args = {
     details: {
       tags: [mockTag()],
     },
+    organization: mockOrganization(),
     target: mockJourneyInstance(),
     timestamp: new Date().toISOString(),
     type: UPDATE_TYPES.ANY_ADDTAGS,
@@ -35,6 +37,7 @@ addMultiple.args = {
     details: {
       tags: [mockTag(), mockTag({ id: 1857, title: 'Another' })],
     },
+    organization: mockOrganization(),
     target: mockJourneyInstance(),
     timestamp: new Date().toISOString(),
     type: UPDATE_TYPES.ANY_ADDTAGS,
@@ -48,6 +51,7 @@ removeSingle.args = {
     details: {
       tags: [mockTag()],
     },
+    organization: mockOrganization(),
     target: mockJourneyInstance(),
     timestamp: new Date().toISOString(),
     type: UPDATE_TYPES.ANY_REMOVETAGS,
@@ -61,6 +65,7 @@ removeMultiple.args = {
     details: {
       tags: [mockTag(), mockTag({ id: 1857, title: 'Another' })],
     },
+    organization: mockOrganization(),
     target: mockJourneyInstance(),
     timestamp: new Date().toISOString(),
     type: UPDATE_TYPES.ANY_REMOVETAGS,
