@@ -292,6 +292,23 @@ export interface ZetkinJourneyMilestoneStatus {
   description: string;
 }
 
+export interface ZetkinFile {
+  original_name: string;
+  id: number;
+  uloaded: string;
+  uploaded_by_user: {
+    first_name: string,
+    id: number,
+    last_name: string,
+  }
+  organization: {
+    id: number;
+    title: string;
+  };
+  url: string;
+  mime_type: string;
+}
+
 export type {
   ZetkinTask,
   ZetkinAssignedTask,

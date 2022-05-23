@@ -32,6 +32,7 @@
     "fuse.js": "^6.5.3",
     "leaflet": "^1.7.1",
     "lodash": "^4.17.21",
+    "material-ui-dropzone": "^3.5.0",
     "mui-rff": "^3.0.9",
     "negotiator": "^0.6.2",
     "next": "^11.1.2",
