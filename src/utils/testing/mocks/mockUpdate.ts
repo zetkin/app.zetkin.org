@@ -46,6 +46,11 @@ const mockUpdate = (
       target: mockJourneyInstance(),
       type: 'journeyinstance.create',
     },
+    [UPDATE_TYPES.JOURNEYINSTANCE_OPEN]: {
+      details: {},
+      target: pick(mockJourneyInstance(), ['id', 'title']),
+      type: 'journeyinstance.open',
+    },
     [UPDATE_TYPES.JOURNEYINSTANCE_REMOVEASSIGNEE]: {
       details: { assignee: mockPerson() },
       target: pick(mockJourneyInstance(), ['id', 'title']),

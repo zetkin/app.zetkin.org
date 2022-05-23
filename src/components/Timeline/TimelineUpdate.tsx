@@ -1,4 +1,5 @@
 import TimelineAssigned from './updates/TimelineAssigned';
+import TimelineGeneric from './updates/TimelineGeneric';
 import TimelineJourneyClose from './updates/TimelineJourneyClose';
 import TimelineJourneyInstance from './updates/TimelineJourneyInstance';
 import TimelineJourneyMilestone from './updates/TimelineJourneyMilestone';
@@ -9,6 +10,8 @@ import { UPDATE_TYPES, ZetkinUpdate } from 'types/updates';
 interface Props {
   update: ZetkinUpdate;
 }
+
+const GENERIC_UPDATES = [UPDATE_TYPES.JOURNEYINSTANCE_OPEN];
 
 const TimelineUpdate: React.FunctionComponent<Props> = ({ update }) => {
   if (
@@ -26,6 +29,8 @@ const TimelineUpdate: React.FunctionComponent<Props> = ({ update }) => {
     return <TimelineJourneyMilestone update={update} />;
   } else if (update.type === UPDATE_TYPES.JOURNEYINSTANCE_CREATE) {
     return <TimelineJourneyStart update={update} />;
+  } else if (GENERIC_UPDATES.includes(update.type)) {
+    return <TimelineGeneric update={update} />;
   } else {
     return <div />;
   }

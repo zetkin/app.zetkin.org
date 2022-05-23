@@ -11,6 +11,7 @@ export enum UPDATE_TYPES {
   JOURNEYINSTANCE_ADDNOTE = 'journeyinstance.addnote',
   JOURNEYINSTANCE_CLOSE = 'journeyinstance.close',
   JOURNEYINSTANCE_CREATE = 'journeyinstance.create',
+  JOURNEYINSTANCE_OPEN = 'journeyinstance.open',
   JOURNEYINSTANCE_REMOVEASSIGNEE = 'journeyinstance.removeassignee',
   JOURNEYINSTANCE_UPDATE = 'journeyinstance.update',
   JOURNEYINSTANCE_UPDATEMILESTONE = 'journeyinstance.updatemilestone',
@@ -79,6 +80,12 @@ export type ZetkinUpdateJourneyInstanceClose = ZetkinUpdateBase<
   }
 >;
 
+export type ZetkinUpdateJourneyInstanceOpen = ZetkinUpdateBase<
+  UPDATE_TYPES.JOURNEYINSTANCE_OPEN,
+  ZetkinJourneyInstance,
+  null
+>;
+
 export type ZetkinUpdateJourneyInstanceAddNote = ZetkinUpdateBase<
   UPDATE_TYPES.JOURNEYINSTANCE_ADDNOTE,
   ZetkinJourneyInstance,
@@ -93,4 +100,5 @@ export type ZetkinUpdate =
   | ZetkinUpdateJourneyInstanceAssignee
   | ZetkinUpdateJourneyInstanceClose
   | ZetkinUpdateJourneyInstanceMilestone
+  | ZetkinUpdateJourneyInstanceOpen
   | ZetkinUpdateJourneyInstanceStart;
