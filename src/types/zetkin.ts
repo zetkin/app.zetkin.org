@@ -295,7 +295,7 @@ export interface ZetkinJourneyMilestoneStatus {
 export interface ZetkinFile {
   original_name: string;
   id: number;
-  uloaded: string;
+  uploaded: string;
   uploaded_by_user: {
     first_name: string,
     id: number,
