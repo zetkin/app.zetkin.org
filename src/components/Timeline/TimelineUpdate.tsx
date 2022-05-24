@@ -14,7 +14,6 @@ interface Props {
   update: ZetkinUpdate;
 }
 
-
 const GENERIC_UPDATES = [UPDATE_TYPES.JOURNEYINSTANCE_OPEN];
 
 // Type predicate function that checks if the action (second part) of update type

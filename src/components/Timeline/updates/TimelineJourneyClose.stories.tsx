@@ -21,6 +21,7 @@ withOutcome.args = {
     details: {
       outcome: 'This is the outcome',
     },
+    organization: { id: 1, title: 'KPD' },
     target: mockJourneyInstance(),
     timestamp: new Date().toISOString(),
     type: UPDATE_TYPES.JOURNEYINSTANCE_CLOSE,
@@ -34,6 +35,7 @@ withoutOutcome.args = {
     details: {
       outcome: '',
     },
+    organization: { id: 1, title: 'KPD' },
     target: mockJourneyInstance(),
     timestamp: new Date().toISOString(),
     type: UPDATE_TYPES.JOURNEYINSTANCE_CLOSE,

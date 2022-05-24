@@ -23,7 +23,10 @@ const TimelineJourneyClose: React.FC<TimelineJourneyCloseProps> = ({
       }
       update={update}
     >
-      <ZetkinJourneyInstanceCard instance={update.target} />
+      <ZetkinJourneyInstanceCard
+        instance={update.target}
+        orgId={update.organization.id}
+      />
       <Typography style={{ margin: '1em 0' }}>
         {update.details.outcome}
       </Typography>
