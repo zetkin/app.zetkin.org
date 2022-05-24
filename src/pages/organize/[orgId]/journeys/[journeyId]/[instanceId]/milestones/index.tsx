@@ -3,6 +3,7 @@ import Head from 'next/head';
 import { FormattedMessage as Msg } from 'react-intl';
 import { Grid, LinearProgress, Typography } from '@material-ui/core';
 
+import { getCompletionPercentage } from 'components/organize/journeys/JourneyMilestoneProgress';
 import JourneyInstanceLayout from 'layout/organize/JourneyInstanceLayout';
 import { journeyInstanceResource } from 'api/journeys';
 import JourneyMilestoneCard from 'components/organize/journeys/JourneyMilestoneCard';
@@ -28,14 +29,9 @@ const JourneyMilestonesPage: PageWithLayout<JourneyDetailsPageProps> = ({
   const journeyInstanceQuery = useQuery();
   const journeyInstance = journeyInstanceQuery.data as ZetkinJourneyInstance;
 
-  const percentComplete = journeyInstance.milestones
-    ? Math.floor(
-        (journeyInstance.milestones?.filter((milestone) => milestone.completed)
-          .length /
-          journeyInstance.milestones?.length) *
-          100
-      )
-    : 0;
+  const percentComplete = getCompletionPercentage(
+    journeyInstance.milestones || []
+  );
 
   return (
     <>

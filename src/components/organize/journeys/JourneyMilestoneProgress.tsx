@@ -4,6 +4,13 @@ import { FormattedDate, FormattedMessage as Msg } from 'react-intl';
 
 import { ZetkinJourneyMilestoneStatus } from 'types/zetkin';
 
+export const getCompletionPercentage = (
+  milestones: ZetkinJourneyMilestoneStatus[]
+): number => {
+  const completed = milestones.filter((milestone) => milestone.completed);
+  return Math.floor((completed.length / milestones.length) * 100);
+};
+
 const JourneyMilestoneProgress = ({
   milestones,
   next_milestone,
@@ -11,11 +18,7 @@ const JourneyMilestoneProgress = ({
   milestones: ZetkinJourneyMilestoneStatus[];
   next_milestone: ZetkinJourneyMilestoneStatus | null;
 }): JSX.Element => {
-  const completed = milestones.filter((milestone) => milestone.completed);
-
-  const percentComplete = Math.floor(
-    (completed.length / milestones.length) * 100
-  );
+  const percentComplete = getCompletionPercentage(milestones);
 
   return (
     <>
