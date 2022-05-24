@@ -93,6 +93,12 @@ const JourneyInstanceSummary = ({
           ref={editingRef}
           data-testid="JourneyInstanceSummary-textArea"
           onChange={(value) => setSummary(value)}
+          placeholder={intl.formatMessage(
+            {
+              id: 'pages.organizeJourneyInstance.summaryPlaceholder',
+            },
+            { journeyTitle: journeyInstance.journey.title.toLowerCase() }
+          )}
           value={summary}
         />
       ) : (
