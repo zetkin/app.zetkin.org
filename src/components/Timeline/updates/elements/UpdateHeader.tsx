@@ -14,7 +14,7 @@ const UpdateHeader: React.FC<UpdateHeaderProps> = ({ children, timestamp }) => {
         {children}
       </Typography>
       <Typography color="textSecondary" component={Grid} item variant="body2">
-        <ZetkinRelativeTime convertToLocal datetime={timestamp} />
+        <ZetkinRelativeTime convertToLocal datetime={timestamp} forcePast />
       </Typography>
     </Grid>
   );
