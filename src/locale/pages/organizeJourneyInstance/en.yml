@@ -1,13 +1,15 @@
 addAssigneeButton: Add assignee
-addDateLabel: Add date
 addSubjectButton: Add person
 addSubjectLabel: Add person
 assignPersonLabel: Assign person
 collapseButton: Collapse
+deadlineLabel: (Was due {date})
+dueDateInputLabel: Due date
 editButton: Edit
 ellipsisMenu:
   convert: Convert to...
 expandButton: Expand
+markedCompleteLabel: Marked complete {relativeTime}
 noMilestones: There are no milestones.
 percentComplete: '{percentComplete}% complete'
 saveButton: Save
