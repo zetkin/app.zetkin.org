@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import { useContext } from 'react';
 import { useQueryClient } from 'react-query';
 import { useRouter } from 'next/router';
-import { Box, Checkbox, Typography } from '@material-ui/core';
+import { Box, Checkbox, Container, Typography } from '@material-ui/core';
 import { FormattedMessage, useIntl } from 'react-intl';
 
 import { journeyMilestoneStatusResource } from 'api/journeys';
@@ -53,84 +53,89 @@ const JourneyMilestoneCard = ({
   };
 
   return (
-    <Box
-      alignItems="center"
-      data-testid={`JourneyMilestoneCard`}
-      display="flex"
-      flexDirection="row"
-      justifyContent="space-between"
-      pt={3}
-    >
-      <Box alignItems="center" display="flex" flexDirection="row">
-        <Checkbox
-          checked={milestone.completed ? true : false}
-          data-testid="JourneyMilestoneCard-completed"
-          onChange={() => {
-            patchMilestoneStatus({
-              completed: toggleCompleted(milestone),
-            });
-          }}
-        />
-        <Typography
-          onClick={() => {
-            patchMilestoneStatus({
-              completed: toggleCompleted(milestone),
-            });
-          }}
-          style={{
-            cursor: 'pointer',
-          }}
-          variant="h6"
-        >
-          {milestone.title}
-        </Typography>
-      </Box>
-      {milestone.completed ? (
-        <Box textAlign="right">
-          <Typography>
-            <FormattedMessage
-              id="pages.organizeJourneyInstance.markedCompleteLabel"
-              values={{
-                relativeTime: (
-                  <ZetkinRelativeTime datetime={milestone.completed} />
-                ),
-              }}
-            />
+    <Box mt={4}>
+      <Box
+        alignItems="center"
+        data-testid={`JourneyMilestoneCard`}
+        display="flex"
+        flexDirection="row"
+        justifyContent="space-between"
+      >
+        <Box alignItems="center" display="flex" flexDirection="row">
+          <Checkbox
+            checked={milestone.completed ? true : false}
+            data-testid="JourneyMilestoneCard-completed"
+            onChange={() => {
+              patchMilestoneStatus({
+                completed: toggleCompleted(milestone),
+              });
+            }}
+          />
+          <Typography
+            onClick={() => {
+              patchMilestoneStatus({
+                completed: toggleCompleted(milestone),
+              });
+            }}
+            style={{
+              cursor: 'pointer',
+            }}
+            variant="h6"
+          >
+            {milestone.title}
           </Typography>
-          {milestone.deadline && (
-            <Typography variant="body2">
+        </Box>
+        {milestone.completed ? (
+          <Box textAlign="right">
+            <Typography>
               <FormattedMessage
-                id="pages.organizeJourneyInstance.deadlineLabel"
+                id="pages.organizeJourneyInstance.markedCompleteLabel"
                 values={{
-                  date: <ZetkinDate datetime={milestone.deadline} />,
+                  relativeTime: (
+                    <ZetkinRelativeTime datetime={milestone.completed} />
+                  ),
                 }}
               />
             </Typography>
-          )}
-        </Box>
-      ) : (
-        <DatePicker
-          clearable
-          data-testid="JourneyMilestoneCard-datePicker"
-          disableToolbar
-          format={intl.formatDate(milestone.deadline as string)}
-          inputVariant="outlined"
-          label={intl.formatMessage({
-            id: 'pages.organizeJourneyInstance.dueDateInputLabel',
-          })}
-          onChange={(newDeadline) => {
-            if (newDeadline && newDeadline.isValid()) {
-              patchMilestoneStatus({ deadline: newDeadline.toJSON() });
-            } else if (!newDeadline) {
-              // Deadline is cleared
-              patchMilestoneStatus({ deadline: null });
-            }
-          }}
-          value={milestone.deadline}
-        />
-      )}
+            {milestone.deadline && (
+              <Typography variant="body2">
+                <FormattedMessage
+                  id="pages.organizeJourneyInstance.deadlineLabel"
+                  values={{
+                    date: <ZetkinDate datetime={milestone.deadline} />,
+                  }}
+                />
+              </Typography>
+            )}
+          </Box>
+        ) : (
+          <DatePicker
+            clearable
+            data-testid="JourneyMilestoneCard-datePicker"
+            disableToolbar
+            format={intl.formatDate(milestone.deadline as string)}
+            inputVariant="outlined"
+            label={intl.formatMessage({
+              id: 'pages.organizeJourneyInstance.dueDateInputLabel',
+            })}
+            onChange={(newDeadline) => {
+              if (newDeadline && newDeadline.isValid()) {
+                patchMilestoneStatus({ deadline: newDeadline.toJSON() });
+              } else if (!newDeadline) {
+                // Deadline is cleared
+                patchMilestoneStatus({ deadline: null });
+              }
+            }}
+            value={milestone.deadline}
+          />
+        )}
+      </Box>
       {milestone.description && (
-        <Typography>{milestone.description}</Typography>
+        <Box mb={4} mt={2}>
+          <Container>
+            <Typography>{milestone.description}</Typography>
+          </Container>
+        </Box>
       )}
     </Box>
   );
