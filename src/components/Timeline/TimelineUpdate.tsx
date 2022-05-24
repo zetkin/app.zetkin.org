@@ -1,4 +1,6 @@
 import TimelineAssigned from './updates/TimelineAssigned';
+import TimelineGeneric from './updates/TimelineGeneric';
+import TimelineJourneyClose from './updates/TimelineJourneyClose';
 import TimelineJourneyInstance from './updates/TimelineJourneyInstance';
 import TimelineJourneyMilestone from './updates/TimelineJourneyMilestone';
 import TimelineJourneyStart from './updates/TimelineJourneyStart';
@@ -11,6 +13,8 @@ import { UPDATE_TYPES, ZetkinUpdate } from 'types/updates';
 interface Props {
   update: ZetkinUpdate;
 }
+
+const GENERIC_UPDATES = [UPDATE_TYPES.JOURNEYINSTANCE_OPEN];
 
 // Type predicate function that checks if the action (second part) of update type
 // matches any of the supplied types, and if so returns true indicating that
@@ -43,12 +47,16 @@ const TimelineUpdate: React.FunctionComponent<Props> = ({ update }) => {
     return <TimelineJourneySubject update={update} />;
   } else if (update.type === UPDATE_TYPES.JOURNEYINSTANCE_ADDNOTE) {
     return <TimelineNoteAdded update={update} />;
+  } else if (update.type === UPDATE_TYPES.JOURNEYINSTANCE_CLOSE) {
+    return <TimelineJourneyClose update={update} />;
   } else if (update.type === UPDATE_TYPES.JOURNEYINSTANCE_UPDATE) {
     return <TimelineJourneyInstance update={update} />;
   } else if (update.type === UPDATE_TYPES.JOURNEYINSTANCE_UPDATEMILESTONE) {
     return <TimelineJourneyMilestone update={update} />;
   } else if (update.type === UPDATE_TYPES.JOURNEYINSTANCE_CREATE) {
     return <TimelineJourneyStart update={update} />;
+  } else if (GENERIC_UPDATES.includes(update.type)) {
+    return <TimelineGeneric update={update} />;
   } else if (
     isWildcardType<ZetkinUpdateTags>(update, [
       UPDATE_TYPES.ANY_ADDTAGS,

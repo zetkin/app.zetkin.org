@@ -57,10 +57,20 @@ const mockUpdate = (
       target: pick(mockJourneyInstance(), ['id', 'title']),
       type: 'journeyinstance.addnote',
     },
+    [UPDATE_TYPES.JOURNEYINSTANCE_CLOSE]: {
+      details: { outcome: '' },
+      target: pick(mockJourneyInstance(), ['id', 'title']),
+      type: 'journeyinstance.close',
+    },
     [UPDATE_TYPES.JOURNEYINSTANCE_CREATE]: {
       details: { data: mockJourneyInstance() },
       target: mockJourneyInstance(),
       type: 'journeyinstance.create',
+    },
+    [UPDATE_TYPES.JOURNEYINSTANCE_OPEN]: {
+      details: {},
+      target: pick(mockJourneyInstance(), ['id', 'title']),
+      type: 'journeyinstance.open',
     },
     [UPDATE_TYPES.JOURNEYINSTANCE_REMOVEASSIGNEE]: {
       details: { assignee: mockPerson() },

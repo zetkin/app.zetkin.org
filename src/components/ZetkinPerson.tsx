@@ -1,5 +1,32 @@
+import NextLink from 'next/link';
 import { useRouter } from 'next/router';
-import { Avatar, Box, BoxProps, Tooltip, Typography } from '@material-ui/core';
+import {
+  Avatar,
+  Box,
+  BoxProps,
+  Link,
+  Tooltip,
+  Typography,
+} from '@material-ui/core';
+
+/**
+ * If `link` is `true`, wraps the children in a NextLink.
+ * Otherwise, it just returns the children directly
+ */
+const PersonLink: React.FunctionComponent<{
+  id: number;
+  link?: boolean;
+  orgId: string | number;
+}> = ({ link, id, orgId, children }) => {
+  if (link) {
+    return (
+      <NextLink href={`/organize/${orgId}/people/${id}`} passHref>
+        <Link style={{ cursor: 'pointer' }}>{children}</Link>
+      </NextLink>
+    );
+  }
+  return children as React.ReactElement;
+};
 
 const ZetkinPerson: React.FunctionComponent<{
   containerProps?: BoxProps;
@@ -20,47 +47,35 @@ const ZetkinPerson: React.FunctionComponent<{
   subtitle,
   tooltip = true,
 }) => {
-  const router = useRouter();
-  const { orgId } = router.query;
-  const linkProps = {
-    component: 'a',
-    href: `/organize/${orgId}/people/${id}`,
-  };
+  const { orgId } = useRouter().query as { orgId: string };
 
   return (
-    <Box display="flex" {...containerProps}>
-      {tooltip ? (
-        <Tooltip title={name}>
+    <PersonLink id={id} link={link} orgId={orgId}>
+      <Box display="flex" {...containerProps}>
+        <Tooltip title={tooltip ? name : ''}>
           <Avatar
-            {...(link ? linkProps : {})}
             src={orgId ? `/api/orgs/${orgId}/people/${id}/avatar` : ''}
             style={size ? { height: size, width: size } : {}}
           />
         </Tooltip>
-      ) : (
-        <Avatar
-          {...(link ? linkProps : {})}
-          src={orgId ? `/api/orgs/${orgId}/people/${id}/avatar` : ''}
-          style={size ? { height: size, width: size } : {}}
-        />
-      )}
-      {showText && (
-        <Box
-          alignItems="start"
-          display="flex"
-          flexDirection="column"
-          justifyContent="center"
-          ml={1}
-        >
-          <Typography variant="body1">{name}</Typography>
-          {typeof subtitle === 'string' ? (
-            <Typography variant="body2">{subtitle}</Typography>
-          ) : (
-            subtitle
-          )}
-        </Box>
-      )}
-    </Box>
+        {showText && (
+          <Box
+            alignItems="start"
+            display="flex"
+            flexDirection="column"
+            justifyContent="center"
+            ml={1}
+          >
+            <Typography variant="body1">{name}</Typography>
+            {typeof subtitle === 'string' ? (
+              <Typography variant="body2">{subtitle}</Typography>
+            ) : (
+              subtitle
+            )}
+          </Box>
+        )}
+      </Box>
+    </PersonLink>
   );
 };
 
