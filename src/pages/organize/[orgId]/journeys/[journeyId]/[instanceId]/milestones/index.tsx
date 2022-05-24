@@ -43,7 +43,7 @@ const JourneyMilestonesPage: PageWithLayout<JourneyDetailsPageProps> = ({
         </title>
       </Head>
       <Grid container justifyContent="space-between" spacing={2}>
-        <Grid item md={6}>
+        <Grid item lg={8} md={10} xl={6} xs={12}>
           {journeyInstance.milestones ? (
             <>
               <Typography
