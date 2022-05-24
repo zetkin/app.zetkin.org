@@ -83,7 +83,9 @@ const PersonHoverCard: React.FunctionComponent<{
                 <Grid item>
                   <ZetkinPerson
                     id={person?.id}
+                    link
                     name={`${person?.first_name} ${person?.last_name}`}
+                    tooltip={false}
                   />
                 </Grid>
                 {tags && (
@@ -91,13 +93,15 @@ const PersonHoverCard: React.FunctionComponent<{
                     <TagsList isGrouped={false} tags={tags} />
                   </Grid>
                 )}
-                {['phone', 'alt_phone', 'email']
-                  .filter((field) => !!person[field as keyof ZetkinPersonType])
+                {(
+                  ['phone', 'alt_phone', 'email'] as Array<
+                    keyof ZetkinPersonType
+                  >
+                )
+                  .filter((field) => !!person[field])
                   .map((field) => (
                     <Grid key={field} container item>
-                      <CopyToClipboard
-                        copyText={person[field as keyof ZetkinPersonType]}
-                      >
+                      <CopyToClipboard copyText={person[field]}>
                         <Box display="flex" flexDirection="row">
                           {field.includes('mail') ? (
                             <MailIcon color="secondary" />
@@ -105,7 +109,7 @@ const PersonHoverCard: React.FunctionComponent<{
                             <PhoneIcon color="secondary" />
                           )}
                           <Typography style={{ marginLeft: '1.5rem' }}>
-                            {person[field as keyof ZetkinPersonType]}
+                            {person[field]}
                           </Typography>
                         </Box>
                       </CopyToClipboard>
