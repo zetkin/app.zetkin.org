@@ -1,6 +1,9 @@
 conversionSnackbar:
   error: Something went wrong in converting the journey.
   success: Journey conversion successful!
+editJourneyTitleAlert:
+  error: Error. Title not updated.
+  success: Updated title!
 journeyInstanceCloseButton:
   dialog:
     outcomeFieldPlaceholder: Describe the outcome of the case

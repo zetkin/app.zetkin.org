@@ -72,21 +72,8 @@ describe('<JourneyMilestoneCard />', () => {
     );
 
     expect(label?.textContent).toBe(
-      'pages.organizeJourneyInstance.addDateLabel'
+      'pages.organizeJourneyInstance.dueDateInputLabel'
     );
     expect(input?.value).toBe('');
-  });
-
-  it('has a datepicker that displays deadline, if set.', () => {
-    const milestone = mockMilestone();
-    const { getByTestId } = render(
-      <JourneyMilestoneCard milestone={milestone} />
-    );
-
-    const input = getByTestId('JourneyMilestoneCard-datePicker').querySelector(
-      'input'
-    );
-
-    expect(input?.value).toBe('6/18/2022');
   });
 });
