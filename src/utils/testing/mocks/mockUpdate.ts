@@ -47,6 +47,11 @@ const mockUpdate = (
       target: pick(mockJourneyInstance(), ['id', 'title']),
       type: 'journeyinstance.addassignee',
     },
+    [UPDATE_TYPES.JOURNEYINSTANCE_ADDSUBJECT]: {
+      details: { subject: mockPerson() },
+      target: pick(mockJourneyInstance(), ['id', 'title']),
+      type: 'journeyinstance.addsubject',
+    },
     [UPDATE_TYPES.JOURNEYINSTANCE_ADDNOTE]: {
       details: { note: mockNote() },
       target: pick(mockJourneyInstance(), ['id', 'title']),
@@ -71,6 +76,11 @@ const mockUpdate = (
       details: { assignee: mockPerson() },
       target: pick(mockJourneyInstance(), ['id', 'title']),
       type: 'journeyinstance.removeassignee',
+    },
+    [UPDATE_TYPES.JOURNEYINSTANCE_REMOVESUBJECT]: {
+      details: { subject: mockPerson() },
+      target: pick(mockJourneyInstance(), ['id', 'title']),
+      type: 'journeyinstance.removesubject',
     },
     [UPDATE_TYPES.JOURNEYINSTANCE_UPDATEMILESTONE]: {
       details: {

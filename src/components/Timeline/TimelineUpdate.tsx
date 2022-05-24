@@ -4,11 +4,11 @@ import TimelineJourneyClose from './updates/TimelineJourneyClose';
 import TimelineJourneyInstance from './updates/TimelineJourneyInstance';
 import TimelineJourneyMilestone from './updates/TimelineJourneyMilestone';
 import TimelineJourneyStart from './updates/TimelineJourneyStart';
+import TimelineJourneySubject from './updates/TimelineJourneySubject';
 import TimelineNoteAdded from './updates/TimelineNoteAdded';
 import TimelineTags from './updates/TimelineTags';
-import { UPDATE_TYPES, ZetkinUpdate } from 'types/updates';
-
 import { ZetkinUpdateTags } from '../../types/updates';
+import { UPDATE_TYPES, ZetkinUpdate } from 'types/updates';
 
 interface Props {
   update: ZetkinUpdate;
@@ -40,6 +40,11 @@ const TimelineUpdate: React.FunctionComponent<Props> = ({ update }) => {
     update.type === UPDATE_TYPES.JOURNEYINSTANCE_REMOVEASSIGNEE
   ) {
     return <TimelineAssigned update={update} />;
+  } else if (
+    update.type === UPDATE_TYPES.JOURNEYINSTANCE_ADDSUBJECT ||
+    update.type === UPDATE_TYPES.JOURNEYINSTANCE_REMOVESUBJECT
+  ) {
+    return <TimelineJourneySubject update={update} />;
   } else if (update.type === UPDATE_TYPES.JOURNEYINSTANCE_ADDNOTE) {
     return <TimelineNoteAdded update={update} />;
   } else if (update.type === UPDATE_TYPES.JOURNEYINSTANCE_CLOSE) {

@@ -140,6 +140,18 @@ const updates = addAssigneeUpdates
         .format(),
     }),
   ])
+  .concat([
+    mockUpdate(UPDATE_TYPES.JOURNEYINSTANCE_ADDSUBJECT, {
+      timestamp: dayjs()
+        .subtract(Math.random() * 10, 'hours')
+        .format(),
+    }),
+    mockUpdate(UPDATE_TYPES.JOURNEYINSTANCE_REMOVESUBJECT, {
+      timestamp: dayjs()
+        .subtract(Math.random() * 10, 'hours')
+        .format(),
+    }),
+  ])
   .concat(journeyMilestoneUpdates)
   .concat(journeyInstanceUpdates)
   .concat([
