@@ -1,10 +1,12 @@
 import { Forward } from '@material-ui/icons';
 import ScheduleIcon from '@material-ui/icons/Schedule';
 import { useContext } from 'react';
+import { useQueryClient } from 'react-query';
 import { useRouter } from 'next/router';
 import { Box, Typography } from '@material-ui/core';
 import { FormattedDate, FormattedMessage as Msg, useIntl } from 'react-intl';
 
+import EditTextinPlace from 'components/EditTextInPlace';
 import JourneyStatusChip from 'components/journeys/JourneyStatusChip';
 import SnackbarContext from 'hooks/SnackbarContext';
 import TabbedLayout from './TabbedLayout';
@@ -20,6 +22,8 @@ const JourneyInstanceLayout: React.FunctionComponent = ({ children }) => {
   const { orgId, journeyId, instanceId } = useRouter().query;
   const router = useRouter();
   const intl = useIntl();
+  const queryClient = useQueryClient();
+
   const { showSnackbar } = useContext(SnackbarContext);
 
   const journeyInstanceQuery = journeyInstanceResource(
@@ -36,6 +40,36 @@ const JourneyInstanceLayout: React.FunctionComponent = ({ children }) => {
     instanceId as string
   );
   const patchJourneyInstanceMutation = journeyInstanceHooks.useUpdate();
+
+  const updateTitle = async (newTitle: string) => {
+    patchJourneyInstanceMutation.mutateAsync(
+      { title: newTitle },
+      {
+        onError: () => {
+          showSnackbar(
+            'error',
+            intl.formatMessage({
+              id: `misc.journeys.editJourneyTitleAlert.error`,
+            })
+          );
+        },
+        onSuccess: async () => {
+          await queryClient.invalidateQueries('breadcrumbs');
+          await queryClient.invalidateQueries([
+            'journeyInstance',
+            orgId,
+            instanceId,
+          ]);
+          showSnackbar(
+            'success',
+            intl.formatMessage({
+              id: `misc.journeys.editJourneyTitleAlert.success`,
+            })
+          );
+        },
+      }
+    );
+  };
 
   const ellipsisMenu: ZetkinEllipsisMenuProps['items'] = [];
 
@@ -146,13 +180,22 @@ const JourneyInstanceLayout: React.FunctionComponent = ({ children }) => {
         },
       ]}
       title={
-        <>
-          {`${journeyInstance.title || journeyInstance.journey.title} `}
+        <Box
+          style={{
+            alignItems: 'center',
+            display: 'flex',
+          }}
+        >
+          <EditTextinPlace
+            disabled={patchJourneyInstanceMutation.isLoading}
+            onChange={(newTitle) => updateTitle(newTitle)}
+            value={journeyInstance.title || journeyInstance.journey.title}
+          />
           <Typography
             color="secondary"
             variant="h3"
           >{`\u00A0#${journeyInstance.id}`}</Typography>
-        </>
+        </Box>
       }
     >
       {children}
