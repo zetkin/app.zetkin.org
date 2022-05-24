@@ -28,28 +28,26 @@ const JourneyMilestoneCard = ({
   const patchJourneyMilestoneStatusMutation =
     journeyMilestoneStatusHooks.useUpdate();
 
-  const saveDeadline = (deadline: string | null) => {
-    patchJourneyMilestoneStatusMutation.mutateAsync(
-      { deadline },
-      {
-        onError: () => showSnackbar('error'),
-        onSuccess: () => {
-          queryClient.invalidateQueries(['journeyInstance', orgId, instanceId]);
-        },
-      }
-    );
+  const patchMilestoneStatus = (
+    data:
+      | Pick<ZetkinJourneyMilestoneStatus, 'completed'>
+      | Pick<ZetkinJourneyMilestoneStatus, 'deadline'>
+  ) => {
+    patchJourneyMilestoneStatusMutation.mutateAsync(data, {
+      onError: () => showSnackbar('error'),
+      onSuccess: () => {
+        queryClient.invalidateQueries(['journeyInstance', orgId, instanceId]);
+      },
+    });
   };
 
-  const saveCompleted = (completed: string | null) => {
-    patchJourneyMilestoneStatusMutation.mutateAsync(
-      { completed },
-      {
-        onError: () => showSnackbar('error'),
-        onSuccess: () => {
-          queryClient.invalidateQueries(['journeyInstance', orgId, instanceId]);
-        },
-      }
-    );
+  const toggleCompleted = (
+    milestone: ZetkinJourneyMilestoneStatus
+  ): string | null => {
+    if (milestone.completed) {
+      return null;
+    }
+    return dayjs().toJSON();
   };
 
   return (
@@ -66,12 +64,16 @@ const JourneyMilestoneCard = ({
           checked={milestone.completed ? true : false}
           data-testid="JourneyMilestoneCard-completed"
           onChange={() => {
-            saveCompleted(milestone.completed ? null : dayjs().toJSON());
+            patchMilestoneStatus({
+              completed: toggleCompleted(milestone),
+            });
           }}
         />
         <Typography
           onClick={() => {
-            saveCompleted(milestone.completed ? null : dayjs().toJSON());
+            patchMilestoneStatus({
+              completed: toggleCompleted(milestone),
+            });
           }}
           style={{
             cursor: 'pointer',
@@ -95,9 +97,10 @@ const JourneyMilestoneCard = ({
         }
         onChange={(newDeadline) => {
           if (newDeadline && newDeadline.isValid()) {
-            saveDeadline(newDeadline.toJSON());
+            patchMilestoneStatus({ deadline: newDeadline.toJSON() });
           } else if (!newDeadline) {
-            saveDeadline(null);
+            // Deadline is cleared
+            patchMilestoneStatus({ deadline: null });
           }
         }}
         value={milestone.deadline}
