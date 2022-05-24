@@ -9,17 +9,11 @@ const ZetkinDateTime: React.FunctionComponent<ZetkinDateTimeProps> = ({
   convertToLocal,
   datetime,
 }) => {
+  const value = convertToLocal ? new Date(datetime + 'Z') : datetime;
   return (
     <>
-      <FormattedDate
-        day="numeric"
-        month="long"
-        value={convertToLocal ? new Date(datetime + 'Z') : datetime}
-        year="numeric"
-      />{' '}
-      <FormattedTime
-        value={convertToLocal ? new Date(datetime + 'Z') : datetime}
-      />
+      <FormattedDate day="numeric" month="long" value={value} year="numeric" />{' '}
+      <FormattedTime value={value} />
     </>
   );
 };
