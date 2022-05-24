@@ -1,38 +1,20 @@
-import { Grid, Typography } from '@material-ui/core';
-
 import ClickableCard from './views/SuggestedViews/ClickableCard';
-import JourneyStatusChip from './journeys/JourneyStatusChip';
-import { ZetkinJourneyInstance } from 'types/zetkin';
+import ZetkinJourneyInstanceItem, {
+  ZetkinJourneyInstanceItemProps,
+} from './ZetkinJourneyInstanceItem';
 
 interface ZetkinJourneyInstanceCardProps {
-  instance: Pick<ZetkinJourneyInstance, 'closed' | 'title' | 'journey' | 'id'>;
+  instance: ZetkinJourneyInstanceItemProps['instance'];
+  orgId: number | string;
 }
 
 const ZetkinJourneyInstanceCard: React.FC<ZetkinJourneyInstanceCardProps> = ({
   instance,
+  orgId,
 }) => {
   return (
     <ClickableCard>
-      <Grid container justifyContent="space-between">
-        <Grid item>
-          <Typography
-            component="div"
-            data-testid="page-title"
-            noWrap
-            style={{ display: 'flex' }}
-            variant="h5"
-          >
-            {instance.title || instance.journey.title}
-            <Typography
-              color="textSecondary"
-              variant="h5"
-            >{`#${instance.id}`}</Typography>
-          </Typography>
-        </Grid>
-        <Grid item>
-          <JourneyStatusChip instance={instance} />
-        </Grid>
-      </Grid>
+      <ZetkinJourneyInstanceItem instance={instance} orgId={orgId} />
     </ClickableCard>
   );
 };

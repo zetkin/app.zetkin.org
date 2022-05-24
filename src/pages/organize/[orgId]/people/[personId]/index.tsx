@@ -7,6 +7,7 @@ import { useRouter } from 'next/router';
 
 import { PageWithLayout } from 'types';
 import PersonDetailsCard from 'components/organize/people/PersonDetailsCard';
+import PersonJourneysCard from 'components/organize/people/PersonJourneysCard';
 import PersonOrganizationsCard from 'components/organize/people/PersonOrganizationsCard';
 import SinglePersonLayout from 'layout/organize/SinglePersonLayout';
 import SnackbarContext from 'hooks/SnackbarContext';
@@ -88,18 +89,16 @@ const PersonProfilePage: PageWithLayout<PersonPageProps> = (props) => {
           <PersonDetailsCard person={person} />
         </Grid>
         <Grid item lg={4} xs={12}>
-          <PersonOrganizationsCard {...props} />
-        </Grid>
-        <Grid item lg={4} xs={12}>
           <ZetkinQuery queries={{ personTagsQuery }}>
             {({ queries: { personTagsQuery } }) => (
               <TagManagerSection
                 assignedTags={personTagsQuery.data}
-                onAssignTag={(tag) =>
-                  assignTagMutation.mutate(tag.id, {
+                onAssignTag={(tag) => {
+                  const tagBody = { id: tag.id, value: tag.value };
+                  assignTagMutation.mutate(tagBody, {
                     onError: () => showSnackbar('error'),
-                  })
-                }
+                  });
+                }}
                 onTagEdited={() => {
                   queryClient.invalidateQueries(personTagsKey);
                 }}
@@ -111,6 +110,15 @@ const PersonProfilePage: PageWithLayout<PersonPageProps> = (props) => {
               />
             )}
           </ZetkinQuery>
+        </Grid>
+        <Grid item lg={4} xs={12}>
+          <PersonJourneysCard
+            orgId={orgId as string}
+            personId={personId as string}
+          />
+        </Grid>
+        <Grid item lg={4} xs={12}>
+          <PersonOrganizationsCard {...props} />
         </Grid>
       </Grid>
     </>

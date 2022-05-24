@@ -5,10 +5,12 @@ import mockJourneyInstance from './mockJourneyInstance';
 import mockNote from './mockNote';
 import { mockObject } from 'utils/testing/mocks';
 import mockPerson from './mockPerson';
+import mockTag from './mockTag';
 import { UPDATE_TYPES, ZetkinUpdate } from 'types/updates';
 
 const update: Partial<ZetkinUpdate> = {
   actor: mockPerson(),
+  organization: { id: 1, title: 'KPD' },
   timestamp: dayjs().subtract(5, 'hours').format(),
 };
 
@@ -17,6 +19,20 @@ const mockUpdate = (
   overrides?: Partial<ZetkinUpdate>
 ): ZetkinUpdate => {
   const updateData = {
+    [UPDATE_TYPES.ANY_ADDTAGS]: {
+      details: {
+        tags: [mockTag()],
+      },
+      target: pick(mockJourneyInstance(), ['id', 'title']),
+      type: 'journeyinstance.addtags',
+    },
+    [UPDATE_TYPES.ANY_REMOVETAGS]: {
+      details: {
+        tags: [mockTag()],
+      },
+      target: pick(mockJourneyInstance(), ['id', 'title']),
+      type: 'journeyinstance.removetags',
+    },
     [UPDATE_TYPES.JOURNEYINSTANCE_UPDATE]: {
       details: {
         changes: {

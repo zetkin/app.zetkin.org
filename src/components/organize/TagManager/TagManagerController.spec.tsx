@@ -3,6 +3,7 @@ import { hover } from '@testing-library/user-event/dist/hover';
 import { keyboard } from '@testing-library/user-event/dist/keyboard';
 import { render } from 'utils/testing';
 import singletonRouter from 'next/router';
+import { waitFor } from '@testing-library/react';
 
 import { TagManagerController } from './TagManagerController';
 
@@ -13,7 +14,9 @@ import { EditTag, NewTag } from './types';
 jest.mock('next/dist/client/router', () => require('next-router-mock'));
 
 const assignTagCallback = jest.fn((tag: ZetkinTag) => tag);
-const createTagCallback = jest.fn((tag: NewTag) => tag);
+const createTagCallback = jest.fn<Promise<ZetkinTag>, [NewTag]>((tag) =>
+  Promise.resolve({ ...tag, id: 1 } as ZetkinTag)
+);
 const unassignTagCallback = jest.fn((tag: ZetkinTag) => tag);
 const editTagCallback = jest.fn((tag: EditTag) => tag);
 
@@ -129,6 +132,56 @@ describe('<TagManagerController />', () => {
     // Check that callback has been called
     expect(onAssignTag).toHaveBeenCalledWith(tag1);
   });
+  it('can add a value tag', () => {
+    const onAssignTag = jest.fn((tag: ZetkinTag) => tag);
+
+    const tag = mockTag({
+      group: null,
+      id: 1857,
+      title: 'Age',
+      value_type: 'text',
+    });
+
+    const { getByText, getByTestId } = render(
+      <TagManagerController
+        assignedTags={[]}
+        availableGroups={[]}
+        availableTags={[tag]}
+        onAssignTag={onAssignTag}
+        onCreateTag={createTagCallback}
+        onEditTag={editTagCallback}
+        onUnassignTag={unassignTagCallback}
+      />
+    );
+    const addTagButton = getByText('misc.tags.tagManager.addTag');
+    click(addTagButton);
+
+    // Typing searches for tag
+    keyboard(tag.title);
+
+    // Select an option
+    const tagOption = getByText(tag.title);
+    click(tagOption);
+
+    // Check that callback has not been called yet
+    expect(onAssignTag).not.toHaveBeenCalled();
+
+    // Check that we're in value mode
+    const input = getByTestId('TagManager-TagSelect-searchField');
+    expect(input.getAttribute('placeholder')).toEqual(
+      'misc.tags.tagManager.addValue'
+    );
+
+    // Add value
+    click(input);
+    keyboard('75{Enter}');
+
+    // Check that tag was assigned with value
+    expect(onAssignTag).toHaveBeenCalledWith({
+      ...tag,
+      value: '75',
+    });
+  });
   it('can remove a tag', () => {
     const onUnassignTag = jest.fn((tag: ZetkinTag) => tag);
 
@@ -168,10 +221,13 @@ describe('<TagManagerController />', () => {
   });
 
   describe('creating a tag', () => {
-    let onCreateTag: jest.Mock<NewTag, [tag: NewTag]>;
+    let onCreateTag: jest.Mock<Promise<ZetkinTag>, [tag: NewTag]>;
 
     beforeEach(() => {
-      onCreateTag = jest.fn((tag: NewTag) => tag);
+      onCreateTag = jest.fn((tag: NewTag) =>
+        Promise.resolve({ ...tag, id: 1857 } as ZetkinTag)
+      );
+      assignTagCallback.mockReset();
       singletonRouter.query = {
         orgId: '1',
       };
@@ -205,13 +261,101 @@ describe('<TagManagerController />', () => {
       const titleField = getByTestId('TagManager-TagDialog-titleField');
       expect((titleField as HTMLInputElement).value).toEqual("Jerry's family");
     });
+
+    it('invokes onCreateTag() and onAssignTag() when creating a tag', async () => {
+      const { getByTestId, getByText } = render(
+        <TagManagerController
+          assignedTags={[]}
+          availableGroups={[]}
+          availableTags={[]}
+          onAssignTag={assignTagCallback}
+          onCreateTag={onCreateTag}
+          onEditTag={editTagCallback}
+          onUnassignTag={unassignTagCallback}
+        />
+      );
+
+      // Open create dialog
+      click(getByText('misc.tags.tagManager.addTag'));
+      click(getByTestId('TagManager-TagSelect-createTagOption'));
+
+      // Fill in dialog
+      const titleField = getByTestId('TagManager-TagDialog-titleField');
+      click(titleField);
+      keyboard('Spongeworthy');
+
+      const submit = getByTestId('SubmitCancelButtons-submitButton');
+      click(submit);
+
+      await waitFor(() => expect(onCreateTag).toBeCalled());
+      expect(assignTagCallback).toBeCalled();
+
+      const input = getByTestId('TagManager-TagSelect-searchField');
+      expect(input.getAttribute('value')).toEqual('');
+      expect(input.getAttribute('placeholder')).toEqual(
+        'misc.tags.tagManager.addTag'
+      );
+    });
+
+    it('comes back to value tag state without onAssignTag() after creating value tag', async () => {
+      const { getByTestId, getByText } = render(
+        <TagManagerController
+          assignedTags={[]}
+          availableGroups={[]}
+          availableTags={[]}
+          onAssignTag={assignTagCallback}
+          onCreateTag={onCreateTag}
+          onEditTag={editTagCallback}
+          onUnassignTag={unassignTagCallback}
+        />
+      );
+
+      // Open create dialog
+      click(getByText('misc.tags.tagManager.addTag'));
+      click(getByTestId('TagManager-TagSelect-createTagOption'));
+
+      // Fill in dialog
+      const titleField = getByTestId('TagManager-TagDialog-titleField');
+      click(titleField);
+      keyboard('Age');
+
+      // Set value type
+      const radioGroup = getByTestId('TypeSelect-formControl');
+      const textRadio = radioGroup.querySelector('input[value=text]');
+      click(textRadio!);
+
+      const submit = getByTestId('SubmitCancelButtons-submitButton');
+      click(submit);
+
+      await waitFor(() => expect(onCreateTag).toBeCalled());
+
+      const input = getByTestId('TagManager-TagSelect-searchField');
+      expect(input.getAttribute('placeholder')).toEqual(
+        'misc.tags.tagManager.addValue'
+      );
+
+      expect(assignTagCallback).not.toBeCalled();
+
+      click(input);
+      keyboard('75{Enter}');
+
+      await waitFor(() =>
+        expect(assignTagCallback).toBeCalledWith({
+          group_id: null,
+          id: 1857,
+          title: 'Age',
+          value: '75',
+          value_type: 'text',
+        })
+      );
+    });
   });
 
   describe('editing a tag', () => {
-    let onCreateTag: jest.Mock<NewTag, [tag: NewTag]>;
+    let onCreateTag: jest.Mock<Promise<ZetkinTag>, [tag: NewTag]>;
 
     beforeEach(() => {
-      onCreateTag = jest.fn((tag: NewTag) => tag);
+      onCreateTag = jest.fn((tag: NewTag) => Promise.resolve(tag as ZetkinTag));
       singletonRouter.query = {
         orgId: '1',
       };
