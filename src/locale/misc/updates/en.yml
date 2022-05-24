@@ -5,8 +5,11 @@ any:
 journeyinstance:
   addassignee: '{actor} assigned {assignee}'
   addnote: '{actor} added a note'
+  close:
+    header: '{actor} closed the journey'
   create:
     header: '{actor} started a new journey'
+  open: '{actor} opened the journey again'
   removeassignee: '{actor} unassigned {assignee}'
   update:
     summary_text: '{actor} edited the summary'
