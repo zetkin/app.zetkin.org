@@ -1,5 +1,3 @@
-import { Box, Grid } from '@material-ui/core';
-
 import TimelineActor from 'components/Timeline/TimelineActor';
 import UpdateHeader from './UpdateHeader';
 import { ZetkinUpdate } from 'types/updates';
@@ -15,21 +13,23 @@ const UpdateContainer: React.FC<UpdateContainerProps> = ({
   update,
 }) => {
   return (
-    <Box>
-      <Grid container direction="row" spacing={2} wrap="nowrap">
-        <Grid item>
-          <TimelineActor actor={update.actor} size={32} />
-        </Grid>
-        <Grid item style={{ paddingTop: 22 }}>
-          <Grid alignItems="stretch" container direction="column" spacing={2}>
-            <UpdateHeader timestamp={update.timestamp}>
-              {headerContent}
-            </UpdateHeader>
-            {children}
-          </Grid>
-        </Grid>
-      </Grid>
-    </Box>
+    <div
+      style={{
+        alignItems: 'center',
+        display: 'grid',
+        gap: 10,
+        gridAutoRows: 'auto',
+        gridTemplateColumns: 'auto 1fr',
+      }}
+    >
+      <TimelineActor actor={update.actor} size={32} />
+      <UpdateHeader timestamp={update.timestamp}>{headerContent}</UpdateHeader>
+      {children && (
+        <>
+          <div style={{ gridColumn: '2 / end' }}>{children} </div>
+        </>
+      )}
+    </div>
   );
 };
 
