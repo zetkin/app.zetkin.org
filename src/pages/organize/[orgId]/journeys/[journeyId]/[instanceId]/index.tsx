@@ -136,8 +136,8 @@ const JourneyDetailsPage: PageWithLayout<JourneyDetailsPageProps> = ({
           }`}
         </title>
       </Head>
-      <Grid container spacing={3}>
-        <Grid item md={8} xs={12}>
+      <Grid container justifyContent="space-between" spacing={3}>
+        <Grid item lg={6} md={7} xl={5} xs={12}>
           <JourneyInstanceSummary journeyInstance={journeyInstance} />
           <Box mb={3} mt={4}>
             <Divider />
@@ -153,7 +153,7 @@ const JourneyDetailsPage: PageWithLayout<JourneyDetailsPageProps> = ({
             />
           </ZetkinSection>
         </Grid>
-        <Grid item md={4} xs={12}>
+        <Grid item lg={4} md={4} xs={12}>
           <JourneyInstanceSidebar
             journeyInstance={journeyInstance}
             onAddAssignee={onAddAssignee}
