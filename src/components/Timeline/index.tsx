@@ -37,7 +37,7 @@ const Timeline: React.FunctionComponent<TimelineProps> = ({
 
   return (
     <Fade appear in timeout={1000}>
-      <Grid container direction="column" spacing={6}>
+      <Grid container direction="column" spacing={4}>
         <Grid item>
           <TimelineAddNote disabled={disabled} onSubmit={onAddNote} />
         </Grid>
@@ -69,7 +69,11 @@ const Timeline: React.FunctionComponent<TimelineProps> = ({
         <Grid aria-label="timeline update" item>
           <TimelineUpdate update={update} />
         </Grid>
-        {divider && <Divider style={{ width: '100%' }} />}
+        {divider && (
+          <Grid item>
+            <Divider style={{ width: '100%' }} />
+          </Grid>
+        )}
       </React.Fragment>
     );
   }
