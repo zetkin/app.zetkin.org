@@ -12,8 +12,8 @@ module.exports = {
         permanent: false,
       },
       {
-        source: `/:prevPath*/people/views`,
-        destination: '/:prevPath*/people',
+        source: `/organize/:orgId/people/views`,
+        destination: '/organize/:orgId/people',
         permanent: true,
       },
       // redirects to Gen2 for MVP August 2021
