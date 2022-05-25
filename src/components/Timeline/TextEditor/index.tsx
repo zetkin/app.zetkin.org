@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/styles';
 import { withHistory } from 'slate-history';
 import { Box, Collapse } from '@material-ui/core';
 import { createEditor, Descendant, Editor, Transforms } from 'slate';
-import { Editable, Slate, withReact } from 'slate-react';
+import { Editable, ReactEditor, Slate, withReact } from 'slate-react';
 import React, {
   Attributes,
   useCallback,
@@ -75,7 +75,10 @@ const TextEditor: React.FunctionComponent<TextEditorProps> = ({
   }, [clear]);
 
   return (
-    <Box className={classes.container}>
+    <Box
+      className={classes.container}
+      onClick={() => ReactEditor.focus(editor)}
+    >
       <Slate
         editor={editor}
         onChange={(slateArray) => onChange(slateToMarkdown(slateArray))}
