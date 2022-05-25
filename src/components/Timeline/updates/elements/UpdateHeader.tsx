@@ -9,7 +9,7 @@ interface UpdateHeaderProps {
 
 const UpdateHeader: React.FC<UpdateHeaderProps> = ({ children, timestamp }) => {
   return (
-    <Grid container direction="row" spacing={1} style={{ marginBottom: 8 }}>
+    <Grid container direction="row" spacing={1}>
       <Typography component={Grid} item variant="body2">
         {children}
       </Typography>

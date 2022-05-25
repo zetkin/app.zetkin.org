@@ -3,7 +3,7 @@ import Head from 'next/head';
 import { useContext } from 'react';
 import { useIntl } from 'react-intl';
 import { useQueryClient } from 'react-query';
-import { Divider, Grid } from '@material-ui/core';
+import { Box, Divider, Grid } from '@material-ui/core';
 
 import JourneyInstanceLayout from 'layout/organize/JourneyInstanceLayout';
 import { journeyInstanceResource } from 'api/journeys';
@@ -136,10 +136,12 @@ const JourneyDetailsPage: PageWithLayout<JourneyDetailsPageProps> = ({
           }`}
         </title>
       </Head>
-      <Grid container justifyContent="space-between" spacing={2}>
-        <Grid item md={8} xs={12}>
+      <Grid container justifyContent="space-between" spacing={3}>
+        <Grid item lg={6} md={7} xl={5} xs={12}>
           <JourneyInstanceSummary journeyInstance={journeyInstance} />
-          <Divider style={{ marginBottom: 48, marginTop: 48 }} />
+          <Box mb={3} mt={4}>
+            <Divider />
+          </Box>
           <ZetkinSection
             title={intl.formatMessage({
               id: 'pages.organizeJourneyInstance.sections.timeline',
@@ -151,7 +153,7 @@ const JourneyDetailsPage: PageWithLayout<JourneyDetailsPageProps> = ({
             />
           </ZetkinSection>
         </Grid>
-        <Grid item md={4} xs={12}>
+        <Grid item lg={4} md={4} xs={12}>
           <JourneyInstanceSidebar
             journeyInstance={journeyInstance}
             onAddAssignee={onAddAssignee}

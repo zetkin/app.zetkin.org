@@ -1,5 +1,5 @@
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { Box, Button, Fade, Typography } from '@material-ui/core';
+import { Box, Button, Typography } from '@material-ui/core';
 import { FormattedMessage, useIntl } from 'react-intl';
 import React, { useEffect, useRef, useState } from 'react';
 
@@ -81,17 +81,15 @@ const TimelineJourneyInstance: React.FunctionComponent<Props> = ({
         >
           {update.details.changes[fieldToUpdate]?.to}
         </Typography>
-        {fieldToUpdate.includes('summary') && (
-          <Fade in={!!overflow && !expandSummary}>
-            <Button
-              color="primary"
-              onClick={() => setExpandSummary(!expandSummary)}
-              startIcon={<ExpandMoreIcon />}
-              variant="text"
-            >
-              {intl.formatMessage({ id: 'misc.buttons.readMore' })}
-            </Button>
-          </Fade>
+        {fieldToUpdate.includes('summary') && overflow && !expandSummary && (
+          <Button
+            color="primary"
+            onClick={() => setExpandSummary(!expandSummary)}
+            startIcon={<ExpandMoreIcon />}
+            variant="text"
+          >
+            {intl.formatMessage({ id: 'misc.buttons.readMore' })}
+          </Button>
         )}
       </Box>
     );

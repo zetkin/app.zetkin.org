@@ -24,6 +24,7 @@ const ValueTagForm: React.FC<{
   return (
     <form
       onSubmit={(ev) => {
+        ev.stopPropagation();
         ev.preventDefault();
         onSubmit();
       }}
