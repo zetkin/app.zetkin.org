@@ -120,6 +120,7 @@ const JourneyInstanceSummary = ({
               color="secondary"
               onClick={() => setEditingSummary(true)}
               style={{
+                cursor: 'pointer',
                 padding: '1rem 0 1rem 0',
               }}
               variant="body1"
