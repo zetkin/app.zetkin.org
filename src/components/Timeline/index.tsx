@@ -37,7 +37,7 @@ const Timeline: React.FunctionComponent<TimelineProps> = ({
 
   return (
     <Fade appear in timeout={1000}>
-      <Grid container direction="column" spacing={4}>
+      <Grid container direction="column" spacing={5}>
         <Grid item>
           <TimelineAddNote disabled={disabled} onSubmit={onAddNote} />
         </Grid>
