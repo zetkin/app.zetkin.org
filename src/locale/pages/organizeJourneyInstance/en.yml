@@ -19,3 +19,4 @@ sections:
   milestones: Milestones
   summary: Summary
   timeline: Notes
+summaryPlaceholder: Enter a brief description of the status of this {journeyTitle}.

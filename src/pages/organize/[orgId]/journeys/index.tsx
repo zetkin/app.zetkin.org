@@ -1,7 +1,7 @@
 import { GetServerSideProps } from 'next';
+import { Grid } from '@material-ui/core';
 import Head from 'next/head';
 import { useIntl } from 'react-intl';
-import { Box, Grid } from '@material-ui/core';
 
 import JourneyCard from 'components/organize/journeys/JourneyCard';
 import JourneysLayout from 'layout/organize/JourneysLayout';
@@ -70,17 +70,13 @@ const AllJourneysOverviewPage: PageWithLayout<AllJourneysOverviewPageProps> = ({
           id: 'misc.journeys.overview.overviewTitle',
         })}
       >
-        <Box
-          display="grid"
-          gridGap={20}
-          gridTemplateColumns="repeat( auto-fit, minmax(450px, 1fr) )"
-        >
+        <Grid container spacing={2}>
           {journeys.map((journey: ZetkinJourney) => (
-            <Grid key={journey.id} item>
+            <Grid key={journey.id} item lg={4} md={6} xl={3} xs={12}>
               <JourneyCard journey={journey} />
             </Grid>
           ))}
-        </Box>
+        </Grid>
       </ZetkinSection>
     </>
   );

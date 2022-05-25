@@ -1,1 +1,3 @@
 cardCTA: View all
+closedCount: '{numberClosed} closed'
+openCount: '{numberOpen} open'
