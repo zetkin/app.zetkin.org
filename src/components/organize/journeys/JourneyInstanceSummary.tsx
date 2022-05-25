@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { Box, Button, makeStyles, Typography } from '@material-ui/core';
+import { Button, makeStyles, Typography } from '@material-ui/core';
 import { Edit, Save } from '@material-ui/icons';
 import { ExpandLess, ExpandMore } from '@material-ui/icons';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';

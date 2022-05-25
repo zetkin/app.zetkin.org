@@ -1,5 +1,5 @@
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { Box, Button, Fade, Typography } from '@material-ui/core';
+import { Box, Button, Typography } from '@material-ui/core';
 import { FormattedMessage, useIntl } from 'react-intl';
 import React, { useEffect, useRef, useState } from 'react';
 
