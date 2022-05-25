@@ -81,17 +81,15 @@ const TimelineJourneyInstance: React.FunctionComponent<Props> = ({
         >
           {update.details.changes[fieldToUpdate]?.to}
         </Typography>
-        {fieldToUpdate.includes('summary') && (
-          <Fade in={!!overflow && !expandSummary}>
-            <Button
-              color="primary"
-              onClick={() => setExpandSummary(!expandSummary)}
-              startIcon={<ExpandMoreIcon />}
-              variant="text"
-            >
-              {intl.formatMessage({ id: 'misc.buttons.readMore' })}
-            </Button>
-          </Fade>
+        {fieldToUpdate.includes('summary') && overflow && !expandSummary && (
+          <Button
+            color="primary"
+            onClick={() => setExpandSummary(!expandSummary)}
+            startIcon={<ExpandMoreIcon />}
+            variant="text"
+          >
+            {intl.formatMessage({ id: 'misc.buttons.readMore' })}
+          </Button>
         )}
       </Box>
     );
