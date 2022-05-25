@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { Button, makeStyles, Typography } from '@material-ui/core';
+import { Box, Button, makeStyles, Typography } from '@material-ui/core';
 import { Edit, Save } from '@material-ui/icons';
 import { ExpandLess, ExpandMore } from '@material-ui/icons';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
@@ -97,15 +97,14 @@ const JourneyInstanceSummary = ({
         />
       ) : (
         <>
-          <Typography
-            className={summaryCollapsed ? classes.collapsed : ''}
-            style={{
-              padding: '1rem 0 1rem 0',
-            }}
-            variant="body1"
-          >
-            {journeyInstance.summary}
-          </Typography>
+          <Box py={1.5}>
+            <Typography
+              className={summaryCollapsed ? classes.collapsed : ''}
+              variant="body1"
+            >
+              {journeyInstance.summary}
+            </Typography>
+          </Box>
           {journeyInstance.summary.length > 100 && (
             <Button
               color="primary"
