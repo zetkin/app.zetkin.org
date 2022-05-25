@@ -8,6 +8,7 @@ export const getCompletionPercentage = (
   milestones: ZetkinJourneyMilestoneStatus[]
 ): number => {
   const completed = milestones.filter((milestone) => milestone.completed);
+  // Milestone length will always be > 0
   return Math.floor((completed.length / milestones.length) * 100);
 };
 
@@ -46,14 +47,16 @@ const JourneyMilestoneProgress = ({
           <Schedule color="secondary" style={{ marginRight: '0.25rem' }} />
           <Typography color="secondary">
             {next_milestone.title}
-            {': '}
             {next_milestone.deadline && (
-              <FormattedDate
-                day="numeric"
-                month="long"
-                value={next_milestone.deadline}
-                year="numeric"
-              />
+              <>
+                {': '}
+                <FormattedDate
+                  day="numeric"
+                  month="long"
+                  value={next_milestone.deadline}
+                  year="numeric"
+                />
+              </>
             )}
           </Typography>
         </Box>

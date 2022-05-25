@@ -160,7 +160,7 @@ const JourneyInstanceSidebar = ({
           onUnassignTag={onUnassignTag}
         />
       </Grid>
-      {journeyInstance.milestones && (
+      {journeyInstance.milestones?.length && (
         <>
           <GridDivider />
           <Grid item xs={12}>
