@@ -35,6 +35,12 @@ const JourneyInstanceSummary = ({
 
   const [editingSummary, setEditingSummary] = useState<boolean>(false);
   const [summary, setSummary] = useState<string>(journeyInstance.summary);
+  const summaryPlaceholder = intl.formatMessage(
+    {
+      id: 'pages.organizeJourneyInstance.summaryPlaceholder',
+    },
+    { journeyTitle: journeyInstance.journey.title.toLowerCase() }
+  );
 
   const journeyInstanceHooks = journeyInstanceResource(
     orgId as string,
@@ -93,19 +99,35 @@ const JourneyInstanceSummary = ({
           ref={editingRef}
           data-testid="JourneyInstanceSummary-textArea"
           onChange={(value) => setSummary(value)}
+          placeholder={summaryPlaceholder}
           value={summary}
         />
       ) : (
         <>
-          <Typography
-            className={summaryCollapsed ? classes.collapsed : ''}
-            style={{
-              padding: '1rem 0 1rem 0',
-            }}
-            variant="body1"
-          >
-            {journeyInstance.summary}
-          </Typography>
+          {journeyInstance.summary.length > 0 ? (
+            <Typography
+              className={summaryCollapsed ? classes.collapsed : ''}
+              style={{
+                padding: '1rem 0 1rem 0',
+              }}
+              variant="body1"
+            >
+              {journeyInstance.summary}
+            </Typography>
+          ) : (
+            <Typography
+              className={summaryCollapsed ? classes.collapsed : ''}
+              color="secondary"
+              onClick={() => setEditingSummary(true)}
+              style={{
+                cursor: 'pointer',
+                padding: '1rem 0 1rem 0',
+              }}
+              variant="body1"
+            >
+              {summaryPlaceholder}
+            </Typography>
+          )}
           {journeyInstance.summary.length > 100 && (
             <Button
               color="primary"

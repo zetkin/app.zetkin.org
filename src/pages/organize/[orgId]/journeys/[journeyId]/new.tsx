@@ -1,7 +1,7 @@
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
-import { useIntl } from 'react-intl';
-import { Box, Chip, Grid, useTheme } from '@material-ui/core';
+import { Box, Chip, Grid, Typography, useTheme } from '@material-ui/core';
+import { FormattedMessage as Msg, useIntl } from 'react-intl';
 import { useContext, useState } from 'react';
 
 import DefaultLayout from 'layout/organize/DefaultLayout';
@@ -161,6 +161,13 @@ const NewJourneyPage: PageWithLayout<NewJourneyPageProps> = ({
             <Box p={3}>
               <Grid container justifyContent="space-between" spacing={2}>
                 <Grid item md={6}>
+                  <Typography
+                    color="secondary"
+                    style={{ marginBottom: '1.5rem' }}
+                    variant="h6"
+                  >
+                    <Msg id="pages.organizeNewJourneyInstance.openingNote" />
+                  </Typography>
                   <ZetkinAutoTextArea
                     onChange={(value) => {
                       setNote(value);

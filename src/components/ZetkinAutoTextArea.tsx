@@ -18,12 +18,16 @@ const useStyles = makeStyles((theme) => ({
 interface ZetkinAutoTextAreaProps {
   value: string;
   onChange: (value: string) => void;
+  placeholder?: string;
 }
 
 const ZetkinAutoTextArea = React.forwardRef<
   HTMLTextAreaElement,
   ZetkinAutoTextAreaProps
->(function ZetkinAutoTextArea({ onChange, value, ...restProps }, ref) {
+>(function ZetkinAutoTextArea(
+  { onChange, value, placeholder, ...restProps },
+  ref
+) {
   const classes = useStyles();
 
   return (
@@ -32,6 +36,7 @@ const ZetkinAutoTextArea = React.forwardRef<
       className={classes.textarea}
       data-testid="ZetkinAutoTextArea-textarea"
       onChange={(e) => onChange(e.target.value)}
+      placeholder={placeholder}
       value={value}
       {...restProps}
     />
