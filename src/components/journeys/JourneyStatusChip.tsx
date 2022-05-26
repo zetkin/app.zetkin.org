@@ -1,30 +1,34 @@
 import { useIntl } from 'react-intl';
-import { Chip, makeStyles } from '@material-ui/core';
+import { Chip, makeStyles, Theme } from '@material-ui/core';
 
 import { ZetkinJourneyInstance } from 'types/zetkin';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles<Theme, { spacing?: boolean }>((theme) => ({
   closedChip: {
     backgroundColor: theme.palette.error.main,
     color: 'white',
     fontWeight: 'bold',
-    marginRight: '1rem',
+    marginRight: ({ spacing }) => (spacing ? '1rem' : 0),
   },
   openChip: {
     backgroundColor: theme.palette.success.main,
     color: 'white',
     fontWeight: 'bold',
-    marginRight: '1rem',
+    marginRight: ({ spacing }) => (spacing ? '1rem' : 0),
   },
 }));
 
 interface JourneyStatusChipProps {
   instance: Pick<ZetkinJourneyInstance, 'closed'>;
+  spacing?: boolean;
 }
 
-const JourneyStatusChip: React.FC<JourneyStatusChipProps> = ({ instance }) => {
+const JourneyStatusChip: React.FC<JourneyStatusChipProps> = ({
+  instance,
+  spacing = true,
+}) => {
   const intl = useIntl();
-  const classes = useStyles();
+  const classes = useStyles({ spacing });
   return !instance.closed ? (
     <Chip
       className={classes.openChip}

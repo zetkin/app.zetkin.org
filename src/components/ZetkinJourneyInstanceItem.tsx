@@ -1,6 +1,6 @@
 import { AccessTime } from '@material-ui/icons';
 import NextLink from 'next/link';
-import { Grid, Link, Typography } from '@material-ui/core';
+import { Box, Grid, Link, Typography } from '@material-ui/core';
 
 import JourneyStatusChip from './journeys/JourneyStatusChip';
 import ZetkinDate from './ZetkinDate';
@@ -21,56 +21,56 @@ const ZetkinJourneyInstanceItem: React.FC<ZetkinJourneyInstanceItemProps> = ({
   const hasMeta = 'next_milestone' in instance;
 
   return (
-    <Grid
-      alignItems="center"
-      container
-      justifyContent="space-between"
-      spacing={1}
-    >
+    <Grid container direction="column">
       <Grid item>
-        <Typography
-          color={isOpen ? 'textPrimary' : 'textSecondary'}
-          component="span"
-          data-testid="page-title"
-          variant="h5"
+        <Box
+          alignItems="center"
+          display="flex"
+          flexWrap="wrap-reverse"
+          justifyContent="space-between"
+          style={{ gap: 5 }}
         >
-          <NextLink
-            href={`/organize/${orgId}/journeys/${instance.journey.id}/${instance.id}`}
-            passHref
+          <Typography
+            color={isOpen ? 'textPrimary' : 'textSecondary'}
+            component="span"
+            data-testid="page-title"
+            variant="h5"
           >
-            <Link color="inherit">
-              {instance.title || instance.journey.title}
-            </Link>
-          </NextLink>
-          <Typography color="textSecondary" component="span" variant="h5">
-            {' '}
-            {`#${instance.id}`}
+            <NextLink
+              href={`/organize/${orgId}/journeys/${instance.journey.id}/${instance.id}`}
+              passHref
+            >
+              <Link color="inherit">
+                {instance.title || instance.journey.title}
+              </Link>
+            </NextLink>
+            <Typography color="textSecondary" component="span" variant="h5">
+              {' '}
+              {`#${instance.id}`}
+            </Typography>
           </Typography>
-        </Typography>
-      </Grid>
-      <Grid item>
-        <JourneyStatusChip instance={instance} />
+          <JourneyStatusChip instance={instance} spacing={false} />
+        </Box>
       </Grid>
       {isOpen && hasMeta && (
         <>
-          <Grid item sm={12}>
+          <Grid item>
             <Typography variant="body2">{instance.journey.title}</Typography>
           </Grid>
           {instance.next_milestone && (
-            <Grid container item sm={12} style={{ marginTop: 8 }}>
+            <Grid container item>
               <Typography
                 color="inherit"
-                style={{ display: 'flex' }}
+                style={{ alignItems: 'center', display: 'flex', marginTop: 8 }}
                 variant="body2"
               >
-                <AccessTime
-                  color="inherit"
-                  style={{ height: '1em', marginRight: 4 }}
-                />
+                <AccessTime color="inherit" style={{ marginRight: 4 }} />
                 {instance.next_milestone.title}
-                {instance.next_milestone.deadline && ': '}
                 {instance.next_milestone.deadline && (
-                  <ZetkinDate datetime={instance.next_milestone.deadline} />
+                  <>
+                    {': '}
+                    <ZetkinDate datetime={instance.next_milestone.deadline} />
+                  </>
                 )}
               </Typography>
             </Grid>
