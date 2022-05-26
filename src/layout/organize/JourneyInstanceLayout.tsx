@@ -155,14 +155,16 @@ const JourneyInstanceLayout: React.FunctionComponent = ({ children }) => {
               />
               <Typography>
                 {journeyInstance.next_milestone.title}
-                {': '}
                 {journeyInstance.next_milestone.deadline && (
-                  <FormattedDate
-                    day="numeric"
-                    month="long"
-                    value={journeyInstance.next_milestone.deadline}
-                    year="numeric"
-                  />
+                  <>
+                    {': '}
+                    <FormattedDate
+                      day="numeric"
+                      month="long"
+                      value={journeyInstance.next_milestone.deadline}
+                      year="numeric"
+                    />
+                  </>
                 )}
               </Typography>
             </>
