@@ -1,12 +1,13 @@
+import { Edit } from '@material-ui/icons';
 import { useRouter } from 'next/router';
 import { Button, makeStyles, Typography } from '@material-ui/core';
-import { Edit, Save } from '@material-ui/icons';
 import { ExpandLess, ExpandMore } from '@material-ui/icons';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
 import { useContext, useEffect, useRef, useState } from 'react';
 
 import { journeyInstanceResource } from 'api/journeys';
 import SnackbarContext from 'hooks/SnackbarContext';
+import SubmitCancelButtons from 'components/forms/common/SubmitCancelButtons';
 import ZetkinAutoTextArea from 'components/ZetkinAutoTextArea';
 import { ZetkinJourneyInstance } from 'types/zetkin';
 import ZetkinSection from 'components/ZetkinSection';
@@ -42,11 +43,10 @@ const JourneyInstanceSummary = ({
     { journeyTitle: journeyInstance.journey.title.toLowerCase() }
   );
 
-  const journeyInstanceHooks = journeyInstanceResource(
+  const patchJourneyInstanceMutation = journeyInstanceResource(
     orgId as string,
     journeyInstance.id.toString()
-  );
-  const patchJourneyInstanceMutation = journeyInstanceHooks.useUpdate();
+  ).useUpdate();
 
   useEffect(() => {
     if (editingRef.current) {
@@ -54,8 +54,8 @@ const JourneyInstanceSummary = ({
     }
   }, [editingSummary]);
 
-  const saveEditedSummary = (summary: string) => {
-    patchJourneyInstanceMutation.mutateAsync(
+  const saveEditedSummary = async () => {
+    return await patchJourneyInstanceMutation.mutateAsync(
       { summary },
       {
         onError: () => showSnackbar('error'),
@@ -64,51 +64,62 @@ const JourneyInstanceSummary = ({
     );
   };
 
-  const submitChange = () => {
+  const cancelEditingSummary = () => {
     setEditingSummary(false);
-    saveEditedSummary(summary);
+    setSummary(journeyInstance.summary);
   };
 
   return (
     <ZetkinSection
       action={
-        <Button
-          color="primary"
-          data-testid="JourneyInstanceSummary-saveEditButton"
-          onClick={
-            editingSummary ? submitChange : () => setEditingSummary(true)
-          }
-          startIcon={editingSummary ? <Save /> : <Edit />}
-          style={{ textTransform: 'uppercase' }}
-        >
-          <Msg
-            id={
-              editingSummary
-                ? 'pages.organizeJourneyInstance.saveButton'
-                : 'pages.organizeJourneyInstance.editButton'
-            }
-          />
-        </Button>
+        editingSummary ? null : (
+          <Button
+            color="primary"
+            data-testid="JourneyInstanceSummary-editButton"
+            onClick={() => setEditingSummary(true)}
+            startIcon={<Edit />}
+            style={{ textTransform: 'uppercase' }}
+          >
+            <Msg id={'pages.organizeJourneyInstance.editButton'} />
+          </Button>
+        )
       }
       title={intl.formatMessage({
         id: 'pages.organizeJourneyInstance.sections.summary',
       })}
     >
       {editingSummary ? (
-        <ZetkinAutoTextArea
-          ref={editingRef}
-          data-testid="JourneyInstanceSummary-textArea"
-          onChange={(value) => setSummary(value)}
-          placeholder={summaryPlaceholder}
-          value={summary}
-        />
+        // Editing
+        <form
+          onSubmit={async (e) => {
+            e.stopPropagation();
+            e.preventDefault();
+            const patchedInstance = await saveEditedSummary();
+            setEditingSummary(false);
+            setSummary(patchedInstance.summary);
+          }}
+        >
+          <ZetkinAutoTextArea
+            ref={editingRef}
+            data-testid="JourneyInstanceSummary-textArea"
+            onChange={(value) => setSummary(value)}
+            placeholder={summaryPlaceholder}
+            value={summary}
+          />
+          <SubmitCancelButtons
+            onCancel={cancelEditingSummary}
+            submitDisabled={patchJourneyInstanceMutation.isLoading}
+          />
+        </form>
       ) : (
+        // Not editing
         <>
           {journeyInstance.summary.length > 0 ? (
             <Typography
               className={summaryCollapsed ? classes.collapsed : ''}
+              onClick={() => setEditingSummary(true)}
               style={{
-                padding: '1rem 0 1rem 0',
+                padding: '0.75rem 0',
               }}
               variant="body1"
             >

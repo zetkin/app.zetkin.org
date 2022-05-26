@@ -12,7 +12,6 @@ expandButton: Expand
 markedCompleteLabel: Marked complete {relativeTime}
 noMilestones: There are no milestones.
 percentComplete: '{percentComplete}% complete'
-saveButton: Save
 sections:
   assigned: Assigned to
   members: Members
