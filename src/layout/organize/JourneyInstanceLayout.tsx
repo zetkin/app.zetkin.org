@@ -142,7 +142,9 @@ const JourneyInstanceLayout: React.FunctionComponent = ({ children }) => {
             display: 'flex',
           }}
         >
-          <JourneyStatusChip instance={journeyInstance} />
+          <Box mr={1}>
+            <JourneyStatusChip instance={journeyInstance} />
+          </Box>
           <Typography style={{ marginRight: '1rem' }}>
             <Msg id="layout.organize.journeys.lastActivity" />{' '}
             <ZetkinRelativeTime datetime={journeyInstance.updated} />
@@ -155,14 +157,16 @@ const JourneyInstanceLayout: React.FunctionComponent = ({ children }) => {
               />
               <Typography>
                 {journeyInstance.next_milestone.title}
-                {': '}
                 {journeyInstance.next_milestone.deadline && (
-                  <FormattedDate
-                    day="numeric"
-                    month="long"
-                    value={journeyInstance.next_milestone.deadline}
-                    year="numeric"
-                  />
+                  <>
+                    {': '}
+                    <FormattedDate
+                      day="numeric"
+                      month="long"
+                      value={journeyInstance.next_milestone.deadline}
+                      year="numeric"
+                    />
+                  </>
                 )}
               </Typography>
             </>

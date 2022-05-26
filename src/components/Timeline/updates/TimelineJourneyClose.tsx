@@ -24,12 +24,14 @@ const TimelineJourneyClose: React.FC<TimelineJourneyCloseProps> = ({
       update={update}
     >
       <ZetkinJourneyInstanceCard
-        instance={update.target}
+        instance={{ ...update.target, ...update.details }}
         orgId={update.organization.id}
       />
-      <Typography style={{ margin: '1em 0' }}>
-        {update.details.outcome}
-      </Typography>
+      {update.details.outcome && (
+        <Typography style={{ margin: '1em 0 0 0' }}>
+          {update.details.outcome}
+        </Typography>
+      )}
     </UpdateContainer>
   );
 };
