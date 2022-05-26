@@ -55,13 +55,18 @@ const JourneyInstanceSummary = ({
   }, [editingSummary]);
 
   const saveEditedSummary = async () => {
-    await patchJourneyInstanceMutation.mutateAsync(
+    return await patchJourneyInstanceMutation.mutateAsync(
       { summary },
       {
         onError: () => showSnackbar('error'),
         onSuccess: () => setEditingSummary(false),
       }
     );
+  };
+
+  const cancelEditingSummary = () => {
+    setEditingSummary(false);
+    setSummary(journeyInstance.summary);
   };
 
   return (
@@ -89,8 +94,9 @@ const JourneyInstanceSummary = ({
           onSubmit={async (e) => {
             e.stopPropagation();
             e.preventDefault();
-            await saveEditedSummary();
+            const patchedInstance = await saveEditedSummary();
             setEditingSummary(false);
+            setSummary(patchedInstance.summary);
           }}
         >
           <ZetkinAutoTextArea
@@ -100,7 +106,10 @@ const JourneyInstanceSummary = ({
             placeholder={summaryPlaceholder}
             value={summary}
           />
-          <SubmitCancelButtons onCancel={() => setEditingSummary(false)} />
+          <SubmitCancelButtons
+            onCancel={cancelEditingSummary}
+            submitDisabled={patchJourneyInstanceMutation.isLoading}
+          />
         </form>
       ) : (
         // Not editing
