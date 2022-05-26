@@ -96,7 +96,7 @@ test.describe('Journey instance page', () => {
 
       await page.goto(appUri + '/organize/1/journeys/1/1');
 
-      await page.click('data-testid=JourneyInstanceSummary-saveEditButton');
+      await page.click('data-testid=JourneyInstanceSummary-editButton');
 
       await page.fill(
         'data-testid=JourneyInstanceSummary-textArea',
@@ -105,7 +105,7 @@ test.describe('Journey instance page', () => {
 
       await Promise.all([
         page.waitForResponse((res) => res.request().method() == 'PATCH'),
-        page.click('data-testid=JourneyInstanceSummary-saveEditButton'),
+        page.click('data-testid=JourneyInstanceSummary-editButton'),
       ]);
 
       // Makes request with correct data
@@ -142,14 +142,14 @@ test.describe('Journey instance page', () => {
 
       await page.goto(appUri + '/organize/1/journeys/1/1');
 
-      await page.click('data-testid=JourneyInstanceSummary-saveEditButton');
+      await page.click('data-testid=JourneyInstanceSummary-editButton');
 
       await page.fill(
         'data-testid=JourneyInstanceSummary-textArea',
         newSummaryText
       );
 
-      await page.click('data-testid=JourneyInstanceSummary-saveEditButton');
+      await page.click('data-testid=JourneyInstanceSummary-editButton');
 
       await page.locator('data-testid=Snackbar-error').waitFor();
 
