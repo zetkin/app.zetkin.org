@@ -8,7 +8,7 @@ const props: EditTextinPlaceProps = {
   value: 'Current Text',
 };
 
-describe.only('EditTextInPlace', () => {
+describe('EditTextInPlace', () => {
   it('shows the current text', () => {
     const { getByDisplayValue } = render(<EditTextinPlace {...props} />);
     const inputEl = getByDisplayValue(props.value);
