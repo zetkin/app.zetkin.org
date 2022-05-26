@@ -49,7 +49,7 @@ const ZetkinJourneyInstanceItem: React.FC<ZetkinJourneyInstanceItemProps> = ({
               {`#${instance.id}`}
             </Typography>
           </Typography>
-          <JourneyStatusChip instance={instance} spacing={false} />
+          <JourneyStatusChip instance={instance} />
         </Box>
       </Grid>
       {isOpen && hasMeta && (
