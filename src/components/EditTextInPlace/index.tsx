@@ -1,10 +1,5 @@
 import { useIntl } from 'react-intl';
-import {
-  ClickAwayListener,
-  FormControl,
-  InputBase,
-  Tooltip,
-} from '@material-ui/core';
+import { FormControl, InputBase, Tooltip } from '@material-ui/core';
 import { lighten, makeStyles } from '@material-ui/core/styles';
 import { useEffect, useRef, useState } from 'react';
 
@@ -84,20 +79,25 @@ const EditTextinPlace: React.FunctionComponent<EditTextinPlaceProps> = ({
     }
   }, [spanRef.current, inputRef.current, editing, text]);
 
+  useEffect(() => {
+    if (editing) {
+      inputRef.current?.focus();
+    } else {
+      inputRef.current?.blur();
+    }
+  }, [editing]);
+
   const startEditing = () => {
     setEditing(true);
-    inputRef?.current?.focus();
   };
 
   const cancelEditing = () => {
     setEditing(false);
-    inputRef?.current?.blur();
     // Set text back to value passed in props
     setText(value);
   };
 
   const submitChange = () => {
-    inputRef?.current?.blur();
     setEditing(false);
     onChange(text);
   };
@@ -115,44 +115,57 @@ const EditTextinPlace: React.FunctionComponent<EditTextinPlaceProps> = ({
     }
   };
 
-  return (
-    <ClickAwayListener onClickAway={cancelEditing}>
-      <Tooltip
-        arrow
-        disableHoverListener={editing}
-        title={
-          text || allowEmpty
-            ? intl.formatMessage({
-                id: `misc.components.editTextInPlace.tooltip.${
-                  editing ? 'save' : 'edit'
-                }`,
-              })
-            : intl.formatMessage({
-                id: 'misc.components.editTextInPlace.tooltip.noEmpty',
-              })
+  const onBlur = () => {
+    if (editing) {
+      if (!!text || allowEmpty) {
+        if (text === value) {
+          cancelEditing();
+        } else {
+          submitChange();
         }
-      >
-        <FormControl style={{ overflow: 'hidden' }}>
-          <span ref={spanRef} className={classes.span}>
-            {text || placeholder}
-          </span>
-          <InputBase
-            classes={{
-              input: classes.input,
-              root: classes.inputRoot,
-            }}
-            disabled={disabled}
-            inputRef={inputRef}
-            onChange={(e) => setText(e.target.value)}
-            onFocus={startEditing}
-            onKeyDown={onKeyDown}
-            placeholder={placeholder}
-            readOnly={!editing}
-            value={text}
-          />
-        </FormControl>
-      </Tooltip>
-    </ClickAwayListener>
+      }
+    }
+  };
+
+  const tooltipText = () => {
+    if (text || allowEmpty) {
+      if (editing) {
+        return '';
+      } else {
+        return intl.formatMessage({
+          id: 'misc.components.editTextInPlace.tooltip.edit',
+        });
+      }
+    } else {
+      return intl.formatMessage({
+        id: 'misc.components.editTextInPlace.tooltip.noEmpty',
+      });
+    }
+  };
+
+  return (
+    <Tooltip arrow disableHoverListener={editing} title={tooltipText()}>
+      <FormControl style={{ overflow: 'hidden' }}>
+        <span ref={spanRef} className={classes.span}>
+          {text || placeholder}
+        </span>
+        <InputBase
+          classes={{
+            input: classes.input,
+            root: classes.inputRoot,
+          }}
+          disabled={disabled}
+          inputRef={inputRef}
+          onBlur={onBlur}
+          onChange={(e) => setText(e.target.value)}
+          onFocus={startEditing}
+          onKeyDown={onKeyDown}
+          placeholder={placeholder}
+          readOnly={!editing}
+          value={text}
+        />
+      </FormControl>
+    </Tooltip>
   );
 };
 
