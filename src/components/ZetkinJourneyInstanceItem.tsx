@@ -21,13 +21,17 @@ const ZetkinJourneyInstanceItem: React.FC<ZetkinJourneyInstanceItemProps> = ({
   const hasMeta = 'next_milestone' in instance;
 
   return (
-    <Grid alignItems="center" container justifyContent="space-between">
+    <Grid
+      alignItems="center"
+      container
+      justifyContent="space-between"
+      spacing={1}
+    >
       <Grid item>
         <Typography
           color={isOpen ? 'textPrimary' : 'textSecondary'}
+          component="span"
           data-testid="page-title"
-          noWrap
-          style={{ display: 'flex' }}
           variant="h5"
         >
           <NextLink
@@ -38,10 +42,10 @@ const ZetkinJourneyInstanceItem: React.FC<ZetkinJourneyInstanceItemProps> = ({
               {instance.title || instance.journey.title}
             </Link>
           </NextLink>
-          <Typography
-            color="textSecondary"
-            variant="h5"
-          >{`#${instance.id}`}</Typography>
+          <Typography color="textSecondary" component="span" variant="h5">
+            {' '}
+            {`#${instance.id}`}
+          </Typography>
         </Typography>
       </Grid>
       <Grid item>
