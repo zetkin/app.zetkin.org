@@ -1,3 +1,4 @@
+import { fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { act, render } from 'utils/testing';
 import EditTextinPlace, { EditTextinPlaceProps } from '.';
@@ -7,7 +8,7 @@ const props: EditTextinPlaceProps = {
   value: 'Current Text',
 };
 
-describe('EditTextInPlace', () => {
+describe.only('EditTextInPlace', () => {
   it('shows the current text', () => {
     const { getByDisplayValue } = render(<EditTextinPlace {...props} />);
     const inputEl = getByDisplayValue(props.value);
@@ -26,17 +27,15 @@ describe('EditTextInPlace', () => {
     expect(tooltip).not.toBeNull();
   });
 
-  it('shows a tooltip informing the user to press enter to save when focussed', async () => {
-    const { getByDisplayValue, findByText } = render(
+  it('shows no tooltip when editing.', async () => {
+    const { getByDisplayValue, queryByRole } = render(
       <EditTextinPlace {...props} />
     );
     const inputEl = getByDisplayValue(props.value);
-    userEvent.hover(inputEl);
     userEvent.click(inputEl);
-    const tooltip = await findByText(
-      'misc.components.editTextInPlace.tooltip.save'
-    );
-    expect(tooltip).not.toBeNull();
+    userEvent.hover(inputEl);
+    const tooltip = queryByRole('tooltip');
+    expect(tooltip).toBeNull();
   });
 
   it('shows a tooltip informing the user the field must not be empty when no text', async () => {
@@ -44,9 +43,9 @@ describe('EditTextInPlace', () => {
       <EditTextinPlace {...props} />
     );
     const inputEl = getByDisplayValue(props.value);
-    userEvent.hover(inputEl);
     userEvent.click(inputEl);
     userEvent.clear(inputEl);
+    userEvent.hover(inputEl);
     const tooltip = await findByText(
       'misc.components.editTextInPlace.tooltip.noEmpty'
     );
@@ -109,5 +108,21 @@ describe('EditTextInPlace', () => {
       userEvent.keyboard('{enter}');
     });
     expect(onChange).toHaveBeenCalledTimes(1);
+  });
+
+  it('triggers onChange when text is submitted with click away', async () => {
+    const onChange = jest.fn(props.onChange);
+    const { getByDisplayValue } = render(
+      <EditTextinPlace {...{ ...props, onChange }} />
+    );
+    const inputEl = getByDisplayValue(props.value);
+    userEvent.click(inputEl);
+    userEvent.clear(inputEl);
+    userEvent.paste(inputEl, 'New Text');
+
+    fireEvent.blur(inputEl);
+
+    expect(onChange).toHaveBeenCalledTimes(1);
+    expect(onChange).toHaveBeenCalledWith('New Text');
   });
 });
