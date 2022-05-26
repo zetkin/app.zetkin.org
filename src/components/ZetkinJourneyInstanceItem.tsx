@@ -21,7 +21,7 @@ const ZetkinJourneyInstanceItem: React.FC<ZetkinJourneyInstanceItemProps> = ({
   const hasMeta = 'next_milestone' in instance;
 
   return (
-    <Grid container justifyContent="space-between">
+    <Grid alignItems="center" container justifyContent="space-between">
       <Grid item>
         <Typography
           color={isOpen ? 'textPrimary' : 'textSecondary'}
