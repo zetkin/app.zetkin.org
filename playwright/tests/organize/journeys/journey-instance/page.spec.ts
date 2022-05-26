@@ -105,7 +105,7 @@ test.describe('Journey instance page', () => {
 
       await Promise.all([
         page.waitForResponse((res) => res.request().method() == 'PATCH'),
-        page.click('data-testid=JourneyInstanceSummary-editButton'),
+        page.click('data-testid=SubmitCancelButtons-submitButton'),
       ]);
 
       // Makes request with correct data
@@ -149,7 +149,7 @@ test.describe('Journey instance page', () => {
         newSummaryText
       );
 
-      await page.click('data-testid=JourneyInstanceSummary-editButton');
+      await page.click('data-testid=SubmitCancelButtons-submitButton');
 
       await page.locator('data-testid=Snackbar-error').waitFor();
 
