@@ -18,6 +18,12 @@ module.exports = {
       },
       // redirects to Gen2 for MVP August 2021
       {
+        source: '/organize/:orgId/people/:personId/edit',
+        destination:
+          'https://organize.zetk.in/people/person%3A:personId/?org=:orgId',
+        permanent: false,
+      },
+      {
         source: '/organize/:orgId(\\d{1,})',
         destination: 'https://organize.zetk.in/?org=:orgId',
         permanent: false,
