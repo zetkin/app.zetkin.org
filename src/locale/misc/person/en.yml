@@ -1,5 +1,6 @@
+editButtonLabel: Edit Details
 fields:
-  alt_phone: 'Alternate Phone #'
+  alt_phone: Alternate Phone Number
   city: City
   country: Country
   co_address: C/O Address
@@ -10,9 +11,9 @@ fields:
   id: ID
   is_user: Is user
   last_name: Last Name
-  phone: 'Phone #'
+  phone: Phone Number
   street_address: Address
-  zip_code: Post code
+  zip_code: Post Code
 genders:
   f: Female
   m: Male

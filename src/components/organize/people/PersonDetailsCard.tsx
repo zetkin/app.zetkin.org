@@ -1,10 +1,12 @@
 import NextLink from 'next/link';
-import { useIntl } from 'react-intl';
-import { Link, ListItem, ListItemText } from '@material-ui/core';
+import { OpenInNew } from '@material-ui/icons';
+import { useRouter } from 'next/router';
+import { Button, Card, Link, ListItem, ListItemText } from '@material-ui/core';
+import { FormattedMessage, useIntl } from 'react-intl';
 
-import PersonCard from './PersonCard';
 import ZetkinDate from 'components/ZetkinDate';
 import ZetkinList from 'components/ZetkinList';
+import ZetkinSection from 'components/ZetkinSection';
 import { ZetkinCustomField, ZetkinPerson } from 'types/zetkin';
 
 const nativeFieldsToDisplay = [
@@ -25,6 +27,7 @@ const PersonDetailsCard: React.FunctionComponent<{
   person: ZetkinPerson;
 }> = ({ customFields, person }) => {
   const intl = useIntl();
+  const router = useRouter();
 
   const nativeFields = nativeFieldsToDisplay.map((field) => ({
     title: intl.formatMessage({
@@ -58,36 +61,32 @@ const PersonDetailsCard: React.FunctionComponent<{
       };
     });
 
-  const allFields = [...nativeFields, ...customFieldsConfig].sort(
-    // Sort so that items with values are shown first
-    (first, second) => {
-      if (first.value && !second.value) {
-        return -1;
-      }
-      if (!first.value && second.value) {
-        return 1;
-      }
-      return 0;
-    }
-  );
+  const allFields = [...nativeFields, ...customFieldsConfig];
 
   return (
-    <PersonCard titleId="pages.people.person.details.title">
-      <ZetkinList
-        initialLength={allFields.filter((field) => !!field.value).length}
-        showMoreStep={allFields.filter((field) => !field.value).length}
-        showMoreText="Show empty..."
-      >
-        {allFields.map((detail, idx) => (
-          <ListItem key={idx} divider>
-            <ListItemText
-              primary={detail.value || '-'}
-              secondary={detail.title}
-            />
-          </ListItem>
-        ))}
-      </ZetkinList>
-    </PersonCard>
+    <ZetkinSection
+      action={
+        <NextLink href={`${router.asPath}/edit`} passHref>
+          <Button color="primary" startIcon={<OpenInNew />}>
+            <FormattedMessage id="misc.person.editButtonLabel" />
+          </Button>
+        </NextLink>
+      }
+      title={intl.formatMessage({ id: 'pages.people.person.details.title' })}
+    >
+      <Card>
+        <ZetkinList initialLength={4} showMoreStep={allFields.length - 4}>
+          {allFields.map((detail, idx) => (
+            <ListItem key={idx} divider>
+              <ListItemText
+                primary={detail.value || '-'}
+                secondary={detail.title}
+              />
+            </ListItem>
+          ))}
+        </ZetkinList>
+      </Card>
+    </ZetkinSection>
   );
 };
 
