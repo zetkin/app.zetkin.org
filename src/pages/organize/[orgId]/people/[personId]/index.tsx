@@ -13,12 +13,16 @@ import SinglePersonLayout from 'layout/organize/SinglePersonLayout';
 import SnackbarContext from 'hooks/SnackbarContext';
 import { TagManagerSection } from 'components/organize/TagManager';
 import ZetkinQuery from 'components/ZetkinQuery';
-import { personResource, personTagsResource } from 'api/people';
+import {
+  personFieldsResource,
+  personResource,
+  personTagsResource,
+} from 'api/people';
 import { scaffold, ScaffoldedGetServerSideProps } from 'utils/next';
 
 export const scaffoldOptions = {
   authLevelRequired: 2,
-  localeScope: ['layout.organize', 'pages.people'],
+  localeScope: ['layout.organize', 'pages.people', 'misc.person'],
 };
 
 export const getPersonScaffoldProps: ScaffoldedGetServerSideProps = async (
@@ -64,6 +68,7 @@ const PersonProfilePage: PageWithLayout<PersonPageProps> = (props) => {
     useQuery: usePersonTagsQuery,
     useUnassign,
   } = personTagsResource(orgId as string, personId as string);
+  const customFieldsQuery = personFieldsResource(orgId as string).useQuery();
   const assignTagMutation = useAssign();
   const unassignTagMutation = useUnassign();
   const personTagsQuery = usePersonTagsQuery();
@@ -86,7 +91,14 @@ const PersonProfilePage: PageWithLayout<PersonPageProps> = (props) => {
       </Head>
       <Grid container direction="row" spacing={6}>
         <Grid item lg={4} xs={12}>
-          <PersonDetailsCard person={person} />
+          <ZetkinQuery queries={{ customFieldsQuery }}>
+            {({ queries: { customFieldsQuery } }) => (
+              <PersonDetailsCard
+                customFields={customFieldsQuery.data}
+                person={person}
+              />
+            )}
+          </ZetkinQuery>
         </Grid>
         <Grid item lg={4} xs={12}>
           <ZetkinQuery queries={{ personTagsQuery }}>
