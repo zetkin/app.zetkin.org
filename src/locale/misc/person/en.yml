@@ -1,0 +1,20 @@
+fields:
+  alt_phone: 'Alternate Phone #'
+  city: City
+  country: Country
+  co_address: C/O Address
+  email: Email
+  ext_id: External ID
+  first_name: First Name
+  gender: Gender
+  id: ID
+  is_user: Is user
+  last_name: Last Name
+  phone: 'Phone #'
+  street_address: Address
+  zip_code: Post code
+genders:
+  f: Female
+  m: Male
+  o: Other
+  unknown: Unknown
