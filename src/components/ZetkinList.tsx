@@ -5,7 +5,6 @@ import React, { useState } from 'react';
 interface ZetkinListProps {
   initialLength?: number;
   showMoreStep?: number;
-  showMoreText?: string;
 }
 
 /**
@@ -24,7 +23,6 @@ const ZetkinList: React.FunctionComponent<ZetkinListProps> = ({
   children,
   initialLength,
   showMoreStep,
-  showMoreText,
 }) => {
   const childrenArray = Array.isArray(children) ? children : [children];
   const [numResultsToDisplay, setNumResultsToDisplay] = useState(
@@ -48,7 +46,7 @@ const ZetkinList: React.FunctionComponent<ZetkinListProps> = ({
           }}
         >
           <ListItemText>
-            {showMoreText || <Msg id="layout.organize.lists.showMore" />}
+            <Msg id="layout.organize.lists.showMore" />
           </ListItemText>
         </ListItem>
       )}
