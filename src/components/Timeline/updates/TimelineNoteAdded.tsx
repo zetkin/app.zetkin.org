@@ -1,9 +1,10 @@
 import { FormattedMessage } from 'react-intl';
-import { makeStyles } from '@material-ui/core';
 import { marked } from 'marked';
 import { Typography } from '@material-ui/core';
+import { Box, makeStyles } from '@material-ui/core';
 
 import UpdateContainer from './elements/UpdateContainer';
+import { ZetkinFileObjectChip } from 'components/ZetkinFileChip';
 import ZetkinPersonLink from 'components/ZetkinPersonLink';
 import { ZetkinUpdateJourneyInstanceAddNote } from 'types/updates';
 
@@ -44,9 +45,13 @@ const TimelineNoteAdded: React.FC<Props> = ({ update }) => {
         }}
         variant="body1"
       ></Typography>
-      {update.details.note.files.map((file) => (
-        <Typography key={file.id}>{file.original_name}</Typography>
-      ))}
+      {update.details.note.files.length && (
+        <Box pt={2}>
+          {update.details.note.files.map((file) => (
+            <ZetkinFileObjectChip key={file.id} file={file} />
+          ))}
+        </Box>
+      )}
     </UpdateContainer>
   );
 };
