@@ -2,6 +2,7 @@ import { mockObject } from 'utils/testing/mocks';
 import { ZetkinNote } from 'types/zetkin';
 
 const note: ZetkinNote = {
+  files: [],
   id: 1,
   text: '**Some bold markdown!**',
 };

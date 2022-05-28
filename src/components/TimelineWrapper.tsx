@@ -6,7 +6,7 @@ import { defaultFetch } from 'fetching';
 import handleResponseData from 'api/utils/handleResponseData';
 import SnackbarContext from '../hooks/SnackbarContext';
 import Timeline from './Timeline';
-import { ZetkinNote } from '../types/zetkin';
+import { ZetkinNoteBody } from '../types/zetkin';
 import ZetkinQuery from './ZetkinQuery';
 import { ZetkinUpdate } from 'types/updates';
 
@@ -45,7 +45,7 @@ const TimelineWrapper: React.FC<TimelineWrapperProps> = ({
     </ZetkinQuery>
   );
 
-  function handleAddNote(note: Partial<ZetkinNote>) {
+  function handleAddNote(note: ZetkinNoteBody) {
     notesMutation.mutate(note, {
       onError: () => showSnackbar('error'),
     });

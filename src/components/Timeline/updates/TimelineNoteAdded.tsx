@@ -44,6 +44,9 @@ const TimelineNoteAdded: React.FC<Props> = ({ update }) => {
         }}
         variant="body1"
       ></Typography>
+      {update.details.note.files.map((file) => (
+        <Typography key={file.id}>{file.original_name}</Typography>
+      ))}
     </UpdateContainer>
   );
 };
