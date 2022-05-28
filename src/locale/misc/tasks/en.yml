@@ -43,6 +43,9 @@ taskListItem:
     expires: 'Expires {time}'
     indefinite: 'Published {time}'
     scheduled: 'Will be published {time}'
+taskPreview:
+  sectionTitle: Preview
+  timeEstimate: '{minutes, plural, =0 {Less than one minute} =1 {One minute} other {# minutes}}'
 taskTypeDetails:
   demographic:
     title: Collect Demographics Settings
