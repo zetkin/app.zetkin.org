@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { DropzoneState, useDropzone } from 'react-dropzone';
+import { Accept, DropzoneState, useDropzone } from 'react-dropzone';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { ZetkinFile } from 'types/zetkin';
@@ -9,6 +9,15 @@ export enum FileUploadState {
   SUCCESS = 'success',
   FAILURE = 'failure',
 }
+
+export interface FileCategory {
+  [mime: string]: string[];
+}
+
+export const FILECAT_IMAGES: FileCategory = {
+  'image/jpeg': ['.jpeg', '.jpg'],
+  'image/png': ['.png'],
+};
 
 export interface FileUpload {
   apiData: ZetkinFile | null;
@@ -26,7 +35,10 @@ interface UseFileUploads {
   reset: () => void;
 }
 
-export default function useFileUploads(): UseFileUploads {
+export default function useFileUploads(props?: {
+  accept?: Accept;
+  multiple?: boolean;
+}): UseFileUploads {
   const { orgId } = useRouter().query;
   const [fileUploads, setFileUploads] = useState<FileUpload[]>([]);
 
@@ -86,7 +98,12 @@ export default function useFileUploads(): UseFileUploads {
     ]);
   }, []);
 
-  const { getRootProps, open } = useDropzone({ noClick: true, onDrop });
+  const { getRootProps, open } = useDropzone({
+    accept: props?.accept,
+    multiple: props?.multiple,
+    noClick: true,
+    onDrop,
+  });
 
   return {
     cancelFileUpload: (fileUpload) => {

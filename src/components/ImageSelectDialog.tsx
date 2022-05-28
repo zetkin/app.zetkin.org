@@ -4,10 +4,10 @@ import Image from 'next/image';
 import { useEffect } from 'react';
 
 import SubmitCancelButtons from './forms/common/SubmitCancelButtons';
-import useFileUploads from 'hooks/useFileUploads';
 import ZetkinDialog from './ZetkinDialog';
 import { ZetkinFile } from 'types/zetkin';
 import { ZetkinFileUploadChip } from './ZetkinFileChip';
+import useFileUploads, { FILECAT_IMAGES } from 'hooks/useFileUploads';
 
 interface ImageUploadDialogProps {
   onClose: () => void;
@@ -20,7 +20,7 @@ const ImageSelectDialog: React.FC<ImageUploadDialogProps> = ({
   open,
 }) => {
   const { fileUploads, getDropZoneProps, openFilePicker, reset } =
-    useFileUploads();
+    useFileUploads({ accept: FILECAT_IMAGES, multiple: false });
 
   const selectedFileData = fileUploads[0]?.apiData ?? null;
 
