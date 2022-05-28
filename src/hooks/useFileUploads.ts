@@ -22,6 +22,7 @@ interface UseFileUploads {
   cancelFileUpload: (file: FileUpload) => void;
   fileUploads: FileUpload[];
   getDropZoneProps: DropzoneState['getRootProps'];
+  reset: () => void;
 }
 
 export default function useFileUploads(): UseFileUploads {
@@ -94,5 +95,8 @@ export default function useFileUploads(): UseFileUploads {
     },
     fileUploads,
     getDropZoneProps: getRootProps,
+    reset: () => {
+      setFileUploads([]);
+    },
   };
 }

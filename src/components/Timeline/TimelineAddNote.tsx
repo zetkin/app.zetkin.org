@@ -19,7 +19,12 @@ const TimelineAddNote: React.FunctionComponent<AddNoteProps> = ({
   const intl = useIntl();
   const [clear, setClear] = useState<number>(0);
   const [note, setNote] = useState<ZetkinNoteBody | null>(null);
-  const { cancelFileUpload, getDropZoneProps, fileUploads } = useFileUploads();
+  const {
+    cancelFileUpload,
+    getDropZoneProps,
+    fileUploads,
+    reset: resetFileUploads,
+  } = useFileUploads();
 
   useEffect(() => {
     if (!disabled) {
@@ -59,7 +64,7 @@ const TimelineAddNote: React.FunctionComponent<AddNoteProps> = ({
           })}
         />
       </Box>
-      <Collapse in={!!visibleText}>
+      <Collapse in={!!visibleText || fileUploads.length > 0}>
         <SubmitCancelButtons
           onCancel={onCancel}
           submitDisabled={disabled || someLoading}
@@ -77,6 +82,7 @@ const TimelineAddNote: React.FunctionComponent<AddNoteProps> = ({
   }
 
   function onCancel() {
+    resetFileUploads();
     setClear(clear + 1);
     setNote(null);
   }
