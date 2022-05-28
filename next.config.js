@@ -1,4 +1,7 @@
 module.exports = {
+  images: {
+    domains: [`files.${process.env.ZETKIN_API_DOMAIN}`],
+  },
   async redirects() {
     return [
       {
