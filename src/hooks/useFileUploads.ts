@@ -19,6 +19,7 @@ export interface FileUpload {
 }
 
 interface UseFileUploads {
+  cancelFileUpload: (file: FileUpload) => void;
   fileUploads: FileUpload[];
   getDropZoneProps: DropzoneState['getRootProps'];
 }
@@ -86,6 +87,11 @@ export default function useFileUploads(): UseFileUploads {
   const { getRootProps } = useDropzone({ noClick: true, onDrop });
 
   return {
+    cancelFileUpload: (fileUpload) => {
+      setFileUploads(
+        fileUploads.filter((candidate) => candidate.key != fileUpload.key)
+      );
+    },
     fileUploads,
     getDropZoneProps: getRootProps,
   };

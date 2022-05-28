@@ -19,7 +19,7 @@ const TimelineAddNote: React.FunctionComponent<AddNoteProps> = ({
   const intl = useIntl();
   const [clear, setClear] = useState<number>(0);
   const [note, setNote] = useState<ZetkinNoteBody | null>(null);
-  const { getDropZoneProps, fileUploads } = useFileUploads();
+  const { cancelFileUpload, getDropZoneProps, fileUploads } = useFileUploads();
 
   useEffect(() => {
     if (!disabled) {
@@ -52,6 +52,7 @@ const TimelineAddNote: React.FunctionComponent<AddNoteProps> = ({
         <TextEditor
           clear={clear}
           fileUploads={fileUploads}
+          onCancelFile={cancelFileUpload}
           onChange={onChange}
           placeholder={intl.formatMessage({
             id: 'misc.timeline.add_note_placeholder',

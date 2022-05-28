@@ -1,7 +1,7 @@
 import { isEqual } from 'lodash';
 import { makeStyles } from '@material-ui/styles';
 import { withHistory } from 'slate-history';
-import { Box, Collapse, Typography } from '@material-ui/core';
+import { Box, Collapse } from '@material-ui/core';
 import { createEditor, Descendant, Editor, Transforms } from 'slate';
 import { Editable, ReactEditor, Slate, withReact } from 'slate-react';
 import React, {
@@ -13,10 +13,11 @@ import React, {
 } from 'react';
 
 import './types';
+import { FileUpload } from 'hooks/useFileUploads';
 import TextElement from './TextElement';
 import theme from 'theme';
 import Toolbar from './Toolbar';
-import { FileUpload, FileUploadState } from 'hooks/useFileUploads';
+import { ZetkinFileUploadChip } from 'components/ZetkinFileChip';
 import { keyDownHandler, slateToMarkdown, withInlines } from './helpers';
 
 const useStyles = makeStyles({
@@ -46,6 +47,7 @@ interface TextEditorProps {
   clear: number;
   fileUploads: FileUpload[];
   onChange: (value: string) => void;
+  onCancelFile?: (file: FileUpload) => void;
   placeholder: string;
 }
 
@@ -53,6 +55,7 @@ const TextEditor: React.FunctionComponent<TextEditorProps> = ({
   clear,
   fileUploads,
   onChange,
+  onCancelFile,
   placeholder,
 }) => {
   const [active, setActive] = useState<boolean>(false);
@@ -102,10 +105,15 @@ const TextEditor: React.FunctionComponent<TextEditorProps> = ({
       </Slate>
       {fileUploads.map((fileUpload) => {
         return (
-          <Typography key={fileUpload.key}>
-            {fileUpload.name}{' '}
-            {fileUpload.state == FileUploadState.UPLOADING && 'loading'}
-          </Typography>
+          <ZetkinFileUploadChip
+            key={fileUpload.key}
+            fileUpload={fileUpload}
+            onDelete={() => {
+              if (onCancelFile) {
+                onCancelFile(fileUpload);
+              }
+            }}
+          />
         );
       })}
     </Box>
