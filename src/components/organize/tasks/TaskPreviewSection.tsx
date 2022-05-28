@@ -1,9 +1,12 @@
-import { AccessTime } from '@material-ui/icons';
-import Image from 'next/image';
 import { marked } from 'marked';
-import { Box, Card, Typography } from '@material-ui/core';
+import { useState } from 'react';
+import { AccessTime, Image as ImageIcon } from '@material-ui/icons';
+import { Box, Button, Card, Typography } from '@material-ui/core';
 import { FormattedMessage, useIntl } from 'react-intl';
 
+import ImageSelectDialog from 'components/ImageSelectDialog';
+import { taskResource } from 'api/tasks';
+import ZetkinEditableImage from 'components/ZetkinEditableImage';
 import ZetkinSection from 'components/ZetkinSection';
 import { ZetkinTask } from 'types/tasks';
 
@@ -13,18 +16,37 @@ interface TaskPreviewSectionProps {
 
 const TaskPreviewSection: React.FC<TaskPreviewSectionProps> = ({ task }) => {
   const intl = useIntl();
+  const [selecting, setSelecting] = useState(false);
+
+  const taskMutation = taskResource(
+    task.organization.id.toString(),
+    task.id.toString()
+  ).useUpdate();
 
   return (
     <ZetkinSection
+      action={
+        task.cover_file ? null : (
+          <Button onClick={() => setSelecting(true)} startIcon={<ImageIcon />}>
+            <FormattedMessage id={'misc.tasks.taskPreview.addImage'} />
+          </Button>
+        )
+      }
       title={intl.formatMessage({ id: 'misc.tasks.taskPreview.sectionTitle' })}
     >
       <Card>
         {task.cover_file && (
-          <Image
+          <ZetkinEditableImage
             alt={task.title}
             height={1}
             layout="responsive"
             objectFit="cover"
+            onEdit={() => setSelecting(true)}
+            onReset={() => {
+              taskMutation.mutate({
+                cover_file_id: null,
+              });
+            }}
             src={task.cover_file.url}
             width={2}
           />
@@ -50,6 +72,16 @@ const TaskPreviewSection: React.FC<TaskPreviewSectionProps> = ({ task }) => {
           />
         </Box>
       </Card>
+      <ImageSelectDialog
+        onClose={() => setSelecting(false)}
+        onSelectFile={(file) => {
+          setSelecting(false);
+          taskMutation.mutate({
+            cover_file_id: file.id,
+          });
+        }}
+        open={selecting}
+      />
     </ZetkinSection>
   );
 };

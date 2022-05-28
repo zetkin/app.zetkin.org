@@ -73,10 +73,11 @@ export interface ZetkinTaskRequestBody<
     Omit<
       // Remove these fields
       ZetkinTask<Config>,
-      'campaign' | 'organization' | 'target'
+      'campaign' | 'cover_file' | 'organization' | 'target'
     >
   > {
   campaign_id?: number;
+  cover_file_id?: number | null;
   organization_id?: number;
   target_filters?: ZetkinSmartSearchFilter[];
 }
