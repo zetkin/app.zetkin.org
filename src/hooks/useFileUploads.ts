@@ -22,6 +22,7 @@ interface UseFileUploads {
   cancelFileUpload: (file: FileUpload) => void;
   fileUploads: FileUpload[];
   getDropZoneProps: DropzoneState['getRootProps'];
+  openFilePicker: () => void;
   reset: () => void;
 }
 
@@ -85,7 +86,7 @@ export default function useFileUploads(): UseFileUploads {
     ]);
   }, []);
 
-  const { getRootProps } = useDropzone({ noClick: true, onDrop });
+  const { getRootProps, open } = useDropzone({ noClick: true, onDrop });
 
   return {
     cancelFileUpload: (fileUpload) => {
@@ -95,6 +96,7 @@ export default function useFileUploads(): UseFileUploads {
     },
     fileUploads,
     getDropZoneProps: getRootProps,
+    openFilePicker: open,
     reset: () => {
       setFileUploads([]);
     },

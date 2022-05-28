@@ -48,6 +48,7 @@ interface TextEditorProps {
   fileUploads: FileUpload[];
   onChange: (value: string) => void;
   onCancelFile?: (file: FileUpload) => void;
+  onClickAttach?: () => void;
   placeholder: string;
 }
 
@@ -56,6 +57,7 @@ const TextEditor: React.FunctionComponent<TextEditorProps> = ({
   fileUploads,
   onChange,
   onCancelFile,
+  onClickAttach,
   placeholder,
 }) => {
   const [active, setActive] = useState<boolean>(false);
@@ -100,7 +102,7 @@ const TextEditor: React.FunctionComponent<TextEditorProps> = ({
           spellCheck
         />
         <Collapse in={active}>
-          <Toolbar />
+          <Toolbar onClickAttach={onClickAttach} />
         </Collapse>
       </Slate>
       {fileUploads.map((fileUpload) => {

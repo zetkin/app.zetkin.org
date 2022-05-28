@@ -23,6 +23,7 @@ const TimelineAddNote: React.FunctionComponent<AddNoteProps> = ({
     cancelFileUpload,
     getDropZoneProps,
     fileUploads,
+    openFilePicker,
     reset: resetFileUploads,
   } = useFileUploads();
 
@@ -59,6 +60,7 @@ const TimelineAddNote: React.FunctionComponent<AddNoteProps> = ({
           fileUploads={fileUploads}
           onCancelFile={cancelFileUpload}
           onChange={onChange}
+          onClickAttach={() => openFilePicker()}
           placeholder={intl.formatMessage({
             id: 'misc.timeline.add_note_placeholder',
           })}
