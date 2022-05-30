@@ -14,7 +14,7 @@ journeyinstance:
   removeassignee: '{actor} unassigned {assignee}'
   removesubject: '{actor} removed {subject}'
   update:
-    summary_text: '{actor} edited the summary'
+    summary: '{actor} edited the summary'
     title: '{actor} edited the title'
   updatemilestone:
     complete: '{actor} completed a milestone'

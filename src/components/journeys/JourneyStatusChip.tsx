@@ -8,13 +8,11 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.error.main,
     color: 'white',
     fontWeight: 'bold',
-    marginRight: '1rem',
   },
   openChip: {
     backgroundColor: theme.palette.success.main,
     color: 'white',
     fontWeight: 'bold',
-    marginRight: '1rem',
   },
 }));
 

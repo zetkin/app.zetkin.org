@@ -26,7 +26,7 @@ const UpdateContainer: React.FC<UpdateContainerProps> = ({
       <UpdateHeader timestamp={update.timestamp}>{headerContent}</UpdateHeader>
       {children && (
         <>
-          <div style={{ gridColumn: '2 / end' }}>{children} </div>
+          <div style={{ gridColumn: '2 / end' }}>{children}</div>
         </>
       )}
     </div>
