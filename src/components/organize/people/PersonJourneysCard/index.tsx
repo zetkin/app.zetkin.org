@@ -27,11 +27,11 @@ const PersonJourneysCard: React.FC<PersonJourneysCardProps> = ({
     <ZetkinQuery queries={{ instancesQuery }}>
       {({ queries }) => (
         <PersonCard titleId="pages.people.person.journeys.title">
-          <List data-testid="PersonJourneysCard-list">
+          <List data-testid="PersonJourneysCard-list" disablePadding>
             {queries.instancesQuery.data
               .sort((i0, i1) => Number(!!i0.closed) - Number(!!i1.closed))
               .map((instance) => (
-                <ListItem key={instance.id} divider>
+                <ListItem key={instance.id} button divider>
                   <ZetkinJourneyInstanceItem
                     instance={instance}
                     orgId={instance.organization.id}
