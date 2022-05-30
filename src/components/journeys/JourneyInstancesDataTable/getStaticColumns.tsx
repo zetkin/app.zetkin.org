@@ -1,8 +1,8 @@
-import dayjs from 'dayjs';
 import { GridColDef } from '@mui/x-data-grid-pro';
 
 import JourneyInstanceTitle from 'components/journeys/JourneyInstanceTitle';
 import PersonHoverCard from 'components/PersonHoverCard';
+import ZetkinDateTime from 'components/ZetkinDateTime';
 import ZetkinPerson from 'components/ZetkinPerson';
 import ZetkinRelativeTime from 'components/ZetkinRelativeTime';
 import {
@@ -29,9 +29,10 @@ export const getStaticColumns = (): GridColDef[] => [
   },
   {
     field: 'created',
+    renderCell: (params) => (
+      <ZetkinDateTime datetime={params.value as string} />
+    ),
     type: 'date',
-    valueFormatter: (params) =>
-      dayjs(params.value as string).format('MMMM D, YYYY'),
   },
   {
     field: 'updated',
