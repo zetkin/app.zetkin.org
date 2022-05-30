@@ -1,4 +1,4 @@
-# eslint-disable
+# eslint-disable yml/key-name-casing
 editButtonLabel: Edit Details
 fields:
   alt_phone: Alternate Phone Number
