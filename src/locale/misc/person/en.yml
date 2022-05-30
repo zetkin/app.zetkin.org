@@ -2,8 +2,8 @@ editButtonLabel: Edit Details
 fields:
   alt_phone: Alternate Phone Number
   city: City
-  country: Country
   co_address: C/O Address
+  country: Country
   email: Email
   ext_id: External ID
   first_name: First Name
