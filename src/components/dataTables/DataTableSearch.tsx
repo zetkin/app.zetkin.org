@@ -95,6 +95,7 @@ const DataTableSearch: React.FunctionComponent<DataTableSearchProps> = ({
         variant="dot"
       >
         <Button
+          color="secondary"
           data-testid="ViewDataTableToolbar-showSearch"
           onClick={handleSearchButtonClick}
           startIcon={<Search />}

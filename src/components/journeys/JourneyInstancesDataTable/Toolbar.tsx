@@ -26,7 +26,7 @@ const Toolbar: React.FunctionComponent<ToolbarProps> = ({
     <Box role="toolbar">
       <GridToolbarFilterButton
         componentsProps={{
-          button: { color: 'default', size: 'medium' },
+          button: { color: 'secondary', size: 'medium' },
         }}
       />
       <DataTableSorting

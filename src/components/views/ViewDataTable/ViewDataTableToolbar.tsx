@@ -87,11 +87,12 @@ const ViewDataTableToolbar: React.FunctionComponent<
       </Slide>
       <GridToolbarFilterButton
         componentsProps={{
-          button: { color: 'default', size: 'medium' },
+          button: { color: 'secondary', size: 'medium' },
         }}
       />
       <DataTableSorting {...{ gridColumns, setSortModel, sortModel }} />
       <Button
+        color="secondary"
         data-testid="ViewDataTableToolbar-createColumn"
         disabled={disabled}
         onClick={onColumnCreate}
