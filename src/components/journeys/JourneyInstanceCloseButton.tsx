@@ -49,7 +49,7 @@ const JourneyInstanceCloseButton: React.FunctionComponent<{
           'error',
           intl.formatMessage(
             { id: 'misc.journeys.journeyInstanceCloseButton.error' },
-            { singularLabel: journeyInstance.journey.title }
+            { singularLabel: journeyInstance.journey.singular_label }
           )
         ),
       onSuccess: () => closeAndClear(),
@@ -67,7 +67,7 @@ const JourneyInstanceCloseButton: React.FunctionComponent<{
       >
         <FormattedMessage
           id="misc.journeys.journeyInstanceCloseButton.label"
-          values={{ singularLabel: journeyInstance.journey.title }}
+          values={{ singularLabel: journeyInstance.journey.singular_label }}
         />
       </Button>
       <ZetkinDialog onClose={closeAndClear} open={showDialog}>
@@ -94,7 +94,7 @@ const JourneyInstanceCloseButton: React.FunctionComponent<{
                 {
                   id: 'misc.journeys.journeyInstanceCloseButton.dialog.outcomeFieldPlaceholder',
                 },
-                { singularLabel: journeyInstance.journey.title }
+                { singularLabel: journeyInstance.journey.singular_label }
               )}
               rows={3}
               variant="outlined"
@@ -135,7 +135,7 @@ const JourneyInstanceCloseButton: React.FunctionComponent<{
                 {
                   id: 'misc.journeys.journeyInstanceCloseButton.label',
                 },
-                { singularLabel: journeyInstance.journey.title }
+                { singularLabel: journeyInstance.journey.singular_label }
               )}
             />
           </form>
@@ -176,7 +176,7 @@ export const JourneyInstanceReopenButton: React.FunctionComponent<{
                     id: 'misc.journeys.journeyInstanceReopenButton.error',
                   },
                   {
-                    singularLabel: journeyInstance.journey.title,
+                    singularLabel: journeyInstance.journey.singular_label,
                   }
                 )
               ),
@@ -188,7 +188,7 @@ export const JourneyInstanceReopenButton: React.FunctionComponent<{
     >
       <FormattedMessage
         id="misc.journeys.journeyInstanceReopenButton.label"
-        values={{ singularLabel: journeyInstance.journey.title }}
+        values={{ singularLabel: journeyInstance.journey.singular_label }}
       />
     </Button>
   );

@@ -11,6 +11,7 @@ const journeyInstance: ZetkinJourneyInstance = {
   id: 333,
   journey: {
     id: 1,
+    singular_label: 'Training',
     title: 'Training',
   },
   milestones: [milestone],

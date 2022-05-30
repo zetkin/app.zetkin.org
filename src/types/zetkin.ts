@@ -286,6 +286,7 @@ export interface ZetkinJourneyInstance {
   id: number;
   journey: {
     id: number;
+    singular_label: string;
     title: string;
   };
   // `milestones` only available when instance is retrieved

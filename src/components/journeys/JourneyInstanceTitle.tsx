@@ -12,8 +12,7 @@ const JourneyInstanceTitle: React.FC<JourneyInstanceTitleProps> = ({
   instance,
   link,
 }) => {
-  // TODO: Use instance.journey.singular_label instead, but requires API change
-  const title = instance.title || instance.journey.title;
+  const title = instance.title || instance.journey.singular_label;
 
   const titleElem = (
     <Typography component="span" style={{ marginRight: '0.5em' }}>
