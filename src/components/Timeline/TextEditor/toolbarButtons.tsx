@@ -87,9 +87,11 @@ export const RemoveLinkButton: React.FunctionComponent = () => {
   );
 };
 
-export const AddAttachmentButton: React.FunctionComponent = () => {
+export const AddAttachmentButton: React.FunctionComponent<{
+  onClick?: () => void;
+}> = ({ onClick }) => {
   return (
-    <IconButton disabled onMouseDown={() => null}>
+    <IconButton onClick={onClick}>
       <Attachment />
     </IconButton>
   );

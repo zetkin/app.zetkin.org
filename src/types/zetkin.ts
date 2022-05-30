@@ -66,6 +66,18 @@ export interface ZetkinEvent {
   url?: string;
 }
 
+export interface ZetkinFile {
+  id: number;
+  original_name: string;
+  uploaded: string;
+  organization: {
+    id: number;
+    title: string;
+  };
+  url: string;
+  mime_type: string;
+}
+
 export interface ZetkinUser {
   first_name: string;
   id: number;
@@ -297,7 +309,13 @@ export interface ZetkinJourneyMilestoneStatus {
 
 export interface ZetkinNote {
   id: number;
+  files: ZetkinFile[];
   text: string;
+}
+
+export interface ZetkinNoteBody {
+  text: string;
+  file_ids?: number[];
 }
 
 export type {

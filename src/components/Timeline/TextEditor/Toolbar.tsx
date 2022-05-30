@@ -26,7 +26,9 @@ const useStyles = makeStyles({
   },
 });
 
-const Toolbar: React.FunctionComponent = () => {
+const Toolbar: React.FunctionComponent<{ onClickAttach?: () => void }> = ({
+  onClickAttach,
+}) => {
   const classes = useStyles();
   return (
     <div className={classes.container}>
@@ -38,7 +40,7 @@ const Toolbar: React.FunctionComponent = () => {
       <BlockButton BlockIcon={FormatQuote} format="block-quote" />
       <BlockButton BlockIcon={FormatListBulleted} format="bulleted-list" />
       <BlockButton BlockIcon={FormatListNumbered} format="numbered-list" />
-      <AddAttachmentButton />
+      {!!onClickAttach && <AddAttachmentButton onClick={onClickAttach} />}
     </div>
   );
 };

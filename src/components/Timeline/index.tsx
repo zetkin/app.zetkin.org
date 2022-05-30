@@ -4,13 +4,13 @@ import React, { useMemo } from 'react';
 
 import TimelineAddNote from './TimelineAddNote';
 import TimelineUpdate from './TimelineUpdate';
-import { ZetkinNote } from 'types/zetkin';
+import { ZetkinNoteBody } from 'types/zetkin';
 import { ZetkinUpdate } from 'types/updates';
 
 export interface TimelineProps {
   disabled?: boolean;
   expandable?: boolean;
-  onAddNote: (note: Pick<ZetkinNote, 'text'>) => void;
+  onAddNote: (note: ZetkinNoteBody) => void;
   showAll?: boolean;
   updates: ZetkinUpdate[];
 }

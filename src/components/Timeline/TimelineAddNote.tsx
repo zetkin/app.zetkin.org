@@ -1,14 +1,15 @@
-import { Collapse } from '@material-ui/core';
 import { useIntl } from 'react-intl';
+import { Box, Collapse } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
 
 import SubmitCancelButtons from '../forms/common/SubmitCancelButtons';
 import TextEditor from './TextEditor';
-import { ZetkinNote } from 'types/zetkin';
+import { ZetkinNoteBody } from 'types/zetkin';
+import useFileUploads, { FileUploadState } from 'hooks/useFileUploads';
 
 interface AddNoteProps {
   disabled?: boolean;
-  onSubmit: (note: Pick<ZetkinNote, 'text'>) => void;
+  onSubmit: (note: ZetkinNoteBody) => void;
 }
 
 const TimelineAddNote: React.FunctionComponent<AddNoteProps> = ({
@@ -17,7 +18,14 @@ const TimelineAddNote: React.FunctionComponent<AddNoteProps> = ({
 }) => {
   const intl = useIntl();
   const [clear, setClear] = useState<number>(0);
-  const [note, setNote] = useState<Pick<ZetkinNote, 'text'> | null>(null);
+  const [note, setNote] = useState<ZetkinNoteBody | null>(null);
+  const {
+    cancelFileUpload,
+    getDropZoneProps,
+    fileUploads,
+    openFilePicker,
+    reset: resetFileUploads,
+  } = useFileUploads();
 
   useEffect(() => {
     if (!disabled) {
@@ -30,24 +38,39 @@ const TimelineAddNote: React.FunctionComponent<AddNoteProps> = ({
     .replace(/(<([^>]+)>)/gi, '')
     .replace(/\r?\n|\r/g, '');
 
+  const someLoading = fileUploads.some(
+    (fileUpload) => fileUpload.state == FileUploadState.UPLOADING
+  );
+
   return (
     <form
       onSubmit={(evt) => {
         evt.preventDefault();
         if (note?.text) {
-          onSubmit(note);
+          onSubmit({
+            ...note,
+            file_ids: fileUploads.map((fileUpload) => fileUpload.apiData!.id),
+          });
         }
       }}
     >
-      <TextEditor
-        clear={clear}
-        onChange={onChange}
-        placeholder={intl.formatMessage({
-          id: 'misc.timeline.add_note_placeholder',
-        })}
-      />
-      <Collapse in={!!visibleText}>
-        <SubmitCancelButtons onCancel={onCancel} submitDisabled={disabled} />
+      <Box {...getDropZoneProps()}>
+        <TextEditor
+          clear={clear}
+          fileUploads={fileUploads}
+          onCancelFile={cancelFileUpload}
+          onChange={onChange}
+          onClickAttach={() => openFilePicker()}
+          placeholder={intl.formatMessage({
+            id: 'misc.timeline.add_note_placeholder',
+          })}
+        />
+      </Box>
+      <Collapse in={!!visibleText || fileUploads.length > 0}>
+        <SubmitCancelButtons
+          onCancel={onCancel}
+          submitDisabled={disabled || someLoading}
+        />
       </Collapse>
     </form>
   );
@@ -61,6 +84,7 @@ const TimelineAddNote: React.FunctionComponent<AddNoteProps> = ({
   }
 
   function onCancel() {
+    resetFileUploads();
     setClear(clear + 1);
     setNote(null);
   }

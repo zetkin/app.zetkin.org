@@ -19,7 +19,7 @@ interface PrettyEmailProps {
   emailStr: string;
 }
 
-const COLLAPSED_SIZE = 150;
+const COLLAPSED_SIZE = 100;
 
 const PrettyEmail: React.FC<PrettyEmailProps> = ({ emailStr }) => {
   const [emailData, setEmailData] = useState<LetterparserNode | null>(null);
@@ -28,12 +28,14 @@ const PrettyEmail: React.FC<PrettyEmailProps> = ({ emailStr }) => {
   const [collapsed, setCollapsed] = useState(true);
 
   const divCallback = useCallback(
-    (node: HTMLDivElement) => {
-      const height = node.clientHeight;
-      if (height > COLLAPSED_SIZE && !needsCollapse) {
-        setNeedsCollapse(true);
+    (node: HTMLDivElement | null) => {
+      if (node) {
+        const height = node.clientHeight;
+        if (height > COLLAPSED_SIZE && !needsCollapse) {
+          setNeedsCollapse(true);
+        }
+        setDidMeasure(true);
       }
-      setDidMeasure(true);
     },
     [setNeedsCollapse]
   );
