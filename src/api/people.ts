@@ -8,7 +8,12 @@ import {
 } from './utils/resourceHookFactories';
 
 import { PersonOrganization } from 'utils/organize/people';
-import { ZetkinJourneyInstance, ZetkinPerson, ZetkinTag } from 'types/zetkin';
+import {
+  ZetkinCustomField,
+  ZetkinJourneyInstance,
+  ZetkinPerson,
+  ZetkinTag,
+} from 'types/zetkin';
 
 export const personResource = (orgId: string, personId: string) => {
   const key = ['person', personId];
@@ -62,5 +67,14 @@ export const personTagsResource = (orgId: string, personId: string) => {
     }),
     useQuery: createUseQuery<ZetkinTag[]>(key, url),
     useUnassign: createUseMutationDelete({ key, url }),
+  };
+};
+
+export const personFieldsResource = (orgId: string) => {
+  const key = ['personFields', orgId];
+  const url = `/orgs/${orgId}/people/fields`;
+
+  return {
+    useQuery: createUseQuery<ZetkinCustomField[]>(key, url),
   };
 };

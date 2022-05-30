@@ -101,7 +101,7 @@ const PersonHoverCard: React.FunctionComponent<{
                   .filter((field) => !!person[field])
                   .map((field) => (
                     <Grid key={field} container item>
-                      <CopyToClipboard copyText={person[field]}>
+                      <CopyToClipboard copyText={person[field] as string}>
                         <Box display="flex" flexDirection="row">
                           {field.includes('mail') ? (
                             <MailIcon color="secondary" />

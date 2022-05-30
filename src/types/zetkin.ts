@@ -91,21 +91,33 @@ export interface ZetkinOrganization {
   title: string;
 }
 
-export interface ZetkinPerson {
-  alt_phone: string;
+export interface ZetkinPersonNativeFields {
+  alt_phone: string | null;
   is_user: boolean;
-  zip_code: string;
+  zip_code: string | null;
   last_name: string;
-  city: string;
+  city: string | null;
   first_name: string;
-  gender: string;
-  street_address: string;
-  co_address: string;
-  ext_id: string;
-  email: string;
-  country: string;
+  gender: 'f' | 'm' | 'o' | null;
+  street_address: string | null;
+  co_address: string | null;
+  ext_id: string | null;
+  email: string | null;
+  country: string | null;
   id: number;
-  phone: string;
+  phone: string | null;
+}
+
+export type ZetkinPerson = ZetkinPersonNativeFields &
+  Record<string, string | number | boolean | Record<string, unknown> | null>;
+
+export interface ZetkinCustomField {
+  id: number;
+  title: string;
+  slug: string;
+  description: string | null;
+  type: 'text' | 'json' | 'date' | 'url';
+  organization: Pick<ZetkinOrganization, 'id' | 'title'>;
 }
 
 export interface ZetkinSession {

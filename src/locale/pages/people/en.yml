@@ -5,7 +5,7 @@ person:
     title: Delete account
     warning: This cannot be undone!
   details:
-    title: Contact Details
+    title: Details
   editButton: Edit {title}
   editButtonClose: Stop editing {title}
   journeys:
