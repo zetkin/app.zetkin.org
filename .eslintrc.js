@@ -93,6 +93,7 @@ module.exports = {
       parser: 'yaml-eslint-parser',
       rules: {
         'yml/sort-keys': 'error',
+        'yml/key-name-casing': ['error', { camelCase: true }],
       },
     },
   ],
