@@ -1,4 +1,3 @@
-import { FormattedMessage } from 'react-intl';
 import { makeStyles } from '@material-ui/styles';
 import { Search } from '@material-ui/icons';
 import { useQuery } from 'react-query';
@@ -98,9 +97,8 @@ const SearchDialog: React.FunctionComponent = () => {
       <Button
         data-testid="SearchDialog-activator"
         onClick={() => setOpen(true)}
-        startIcon={<Search />}
       >
-        <FormattedMessage id={`layout.organize.search.label`} />
+        <Search />
       </Button>
       <Dialog
         classes={{
