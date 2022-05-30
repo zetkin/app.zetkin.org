@@ -101,6 +101,7 @@ const DataTableSorting: React.FunctionComponent<ViewDataTableSortingProps> = ({
         overlap="circular"
       >
         <Button
+          color="secondary"
           data-testid="ViewDataTableToolbar-showSorting"
           onClick={handleSortButtonClick}
           startIcon={<ImportExport />}
