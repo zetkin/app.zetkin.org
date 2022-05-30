@@ -9,6 +9,14 @@ import ZetkinList from 'components/ZetkinList';
 import ZetkinSection from 'components/ZetkinSection';
 import { ZetkinCustomField, ZetkinPerson } from 'types/zetkin';
 
+const PersonDetailLink: React.FunctionComponent<{
+  href: string;
+}> = ({ children, href }) => (
+  <NextLink href={href} passHref>
+    <Link>{children}</Link>
+  </NextLink>
+);
+
 const nativeFieldsToDisplay = [
   'first_name',
   'last_name',
@@ -29,17 +37,35 @@ const PersonDetailsCard: React.FunctionComponent<{
   const intl = useIntl();
   const router = useRouter();
 
-  const nativeFields = nativeFieldsToDisplay.map((field) => ({
-    title: intl.formatMessage({
-      id: 'misc.person.fields.' + field,
-    }),
-    value:
-      field === 'gender' && person.gender
-        ? intl.formatMessage({
-            id: 'misc.person.genders.' + (person.gender || 'unknown'),
-          })
-        : person[field],
-  }));
+  const nativeFields = nativeFieldsToDisplay.map((field) => {
+    let value: string | React.ReactNode = person[field];
+
+    if (field === 'gender' && person.gender) {
+      // Localise gender field
+      value = intl.formatMessage({
+        id: 'misc.person.genders.' + (person.gender || 'unknown'),
+      });
+    } else if (field === 'phone' && person.phone) {
+      value = (
+        <PersonDetailLink href={`tel:${person.phone}`}>
+          {person.phone}
+        </PersonDetailLink>
+      );
+    } else if (field === 'email' && person.email) {
+      value = (
+        <PersonDetailLink href={`mailto:${person.email}`}>
+          {person.email}
+        </PersonDetailLink>
+      );
+    }
+
+    return {
+      title: intl.formatMessage({
+        id: 'misc.person.fields.' + field,
+      }),
+      value,
+    };
+  });
 
   const customFieldsConfig = customFields
     .filter((field) => field.type !== 'json')
@@ -49,9 +75,7 @@ const PersonDetailsCard: React.FunctionComponent<{
         value = <ZetkinDate datetime={value as string} />;
       } else if (value && field.type === 'url') {
         value = (
-          <NextLink href={value as string} passHref>
-            <Link>{value}</Link>
-          </NextLink>
+          <PersonDetailLink href={value as string}>{value}</PersonDetailLink>
         );
       }
 
