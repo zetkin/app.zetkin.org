@@ -29,12 +29,7 @@ export default async function handler(
     tokenData = null;
   }
 
-  if (!tokenData) {
-    res.status(401).end();
-    return;
-  }
-
-  const accessToken = tokenData.access_token;
+  const accessToken = tokenData?.access_token;
 
   const { orgId } = frontendReq.query;
   const useHttps = stringToBool(process.env.ZETKIN_USE_TLS);
@@ -49,7 +44,7 @@ export default async function handler(
     const apiReq = client.request(
       {
         headers: {
-          Authorization: `Bearer ${accessToken}`,
+          ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
           'Content-Type':
             frontendReq.headers['content-type'] || 'multipart/form-data',
         },

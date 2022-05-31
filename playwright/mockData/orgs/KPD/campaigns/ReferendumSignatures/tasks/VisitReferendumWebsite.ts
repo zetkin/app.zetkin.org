@@ -21,6 +21,7 @@ const VisitReferendumWebsite: ZetkinTask<VisitLinkConfig> = {
   config: {
     url: 'https://meingrundeinkommen.de',
   },
+  cover_file: null,
   id: 2,
   instructions: `
     Visit this website to learn more about the referendum

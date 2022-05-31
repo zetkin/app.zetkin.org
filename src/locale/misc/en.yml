@@ -33,6 +33,8 @@ email:
     from: From
     to: To
 errorLoading: There was an error loading the data.
+imageSelectDialog:
+  instructions: Drag and drop an image file, or click to select
 nativePersonFields:
   alt_phone: Alt Phone number
   city: City

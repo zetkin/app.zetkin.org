@@ -16,6 +16,7 @@ const SpeakToFriendAboutReferendum: ZetkinTask = {
     title: ReferendumSignatureCollection.title,
   },
   config: {},
+  cover_file: null,
   id: 1,
   instructions: `
     Talk to a friend about the referendum. 
