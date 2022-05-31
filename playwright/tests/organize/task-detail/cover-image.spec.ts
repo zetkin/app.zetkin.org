@@ -23,12 +23,7 @@ test.describe('Task cover image', () => {
     moxy.teardown();
   });
 
-  test('can be uploaded', async ({
-    appUri,
-    fileServerUri,
-    moxy,
-    page,
-  }) => {
+  test('can be uploaded', async ({ appUri, fileServerUri, moxy, page }) => {
     const claraAndRosaFile: ZetkinFile = {
       id: 1,
       mime_type: 'image/jpg',
