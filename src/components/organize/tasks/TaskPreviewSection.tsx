@@ -27,11 +27,16 @@ const TaskPreviewSection: React.FC<TaskPreviewSectionProps> = ({ task }) => {
     <ZetkinSection
       action={
         task.cover_file ? null : (
-          <Button onClick={() => setSelecting(true)} startIcon={<ImageIcon />}>
+          <Button
+            data-testid="TaskPreviewSection-addImage"
+            onClick={() => setSelecting(true)}
+            startIcon={<ImageIcon />}
+          >
             <FormattedMessage id={'misc.tasks.taskPreview.addImage'} />
           </Button>
         )
       }
+      data-testid="TaskPreviewSection-section"
       title={intl.formatMessage({ id: 'misc.tasks.taskPreview.sectionTitle' })}
     >
       <Card>

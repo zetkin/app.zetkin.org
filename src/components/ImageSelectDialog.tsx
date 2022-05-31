@@ -35,6 +35,7 @@ const ImageSelectDialog: React.FC<ImageUploadDialogProps> = ({
       {!fileUploads.length && (
         <Box
           {...getDropZoneProps()}
+          data-testid="ImageSelectDialog-dropZone"
           onClick={() => openFilePicker()}
           style={{
             backgroundColor: 'rgba(0,0,0,0.1)',

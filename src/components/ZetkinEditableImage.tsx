@@ -20,6 +20,7 @@ const ZetkinEditableImage: React.FC<ZetkinEditableImageProps & ImageProps> = ({
     <Box style={{ position: 'relative' }}>
       <Box style={{ bottom: 10, position: 'absolute', right: 10, zIndex: 1 }}>
         <IconButton
+          data-testid="ZetkinEditableImage-resetButton"
           onClick={() => onReset()}
           style={{
             backgroundColor: 'rgba(255,255,255,0.7)',
@@ -29,6 +30,7 @@ const ZetkinEditableImage: React.FC<ZetkinEditableImageProps & ImageProps> = ({
           <Clear />
         </IconButton>
         <IconButton
+          data-testid="ZetkinEditableImage-editButton"
           onClick={() => onEdit()}
           style={{
             backgroundColor: 'rgba(255,255,255,0.7)',
