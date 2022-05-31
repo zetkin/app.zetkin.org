@@ -4,6 +4,8 @@
 
 import { AddressInfo } from 'net';
 import { test as base } from '@playwright/test';
+import fs from 'fs/promises';
+import http from 'http';
 import next from 'next';
 import { parse } from 'url';
 import path from 'path';
@@ -30,6 +32,7 @@ interface NextTestFixtures {
 
 export interface NextWorkerFixtures {
   appUri: string;
+  fileServerUri: string;
   moxy: {
     port: number;
     setZetkinApiMock: <G>(
@@ -86,6 +89,40 @@ const test = base.extend<NextTestFixtures, NextWorkerFixtures>({
     },
     {
       auto: true,
+      scope: 'worker',
+    },
+  ],
+  fileServerUri: [
+    async ({}, use) => {
+      const server = http.createServer(async (req, res) => {
+        try {
+          // This is not a secure file server, but it's a test fixture, so it's ok
+          const filePath = path.join(__dirname, '../mockFiles', req.url!);
+          const buf = await fs.readFile(filePath);
+          res.writeHead(200);
+          res.end(buf);
+        } catch (err) {
+          res.writeHead(404);
+          res.end();
+        }
+      });
+
+      const port = await new Promise((resolve, reject) => {
+        server.listen((err: unknown) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve((server.address() as AddressInfo).port);
+          }
+        });
+      });
+
+      await use(`http://localhost:${port}`);
+
+      server.close();
+    },
+    {
+      auto: false,
       scope: 'worker',
     },
   ],
