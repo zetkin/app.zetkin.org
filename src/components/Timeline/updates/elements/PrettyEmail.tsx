@@ -123,11 +123,11 @@ const EmailBody: React.FC<{
   } else {
     const content = typeof body == 'string' ? body : body.toString();
 
-    // TODO: Sanitize content before rendering
     return (
-      <div className={classes.body}>
-        <CleanHtml dirtyHtml={content} />
-      </div>
+      <CleanHtml
+        BoxProps={{ className: classes.body, component: 'div' }}
+        dirtyHtml={content}
+      />
     );
   }
 };

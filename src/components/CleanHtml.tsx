@@ -1,8 +1,14 @@
 import dompurify from 'dompurify';
+import { Box, BoxProps } from '@material-ui/core';
 
-const CleanHtml = ({ dirtyHtml }: { dirtyHtml: string }): JSX.Element => {
+interface CleanHtmlProps {
+  dirtyHtml: string;
+  BoxProps?: BoxProps;
+}
+
+const CleanHtml = ({ BoxProps, dirtyHtml }: CleanHtmlProps): JSX.Element => {
   const cleanHtml = dompurify.sanitize(dirtyHtml);
-  return <div dangerouslySetInnerHTML={{ __html: cleanHtml }} />;
+  return <Box dangerouslySetInnerHTML={{ __html: cleanHtml }} {...BoxProps} />;
 };
 
 export default CleanHtml;
