@@ -88,4 +88,44 @@ test.describe('Task cover image', () => {
         .isVisible()
     ).toBeTruthy();
   });
+
+  test('can be reset', async ({ appUri, fileServerUri, moxy, page }) => {
+    const claraAndRosaFile: ZetkinFile = {
+      id: 1,
+      mime_type: 'image/jpg',
+      organization: KPD,
+      original_name: 'clara_and_rosa.jpg',
+      uploaded: '1857-07-05T13:37:00.000',
+      url: fileServerUri + '/clara_and_rosa.jpg',
+    };
+
+    const taskWithFile: ZetkinTask = {
+      ...SpeakToFriend,
+      cover_file: claraAndRosaFile,
+    };
+
+    moxy.setZetkinApiMock('/orgs/1/tasks/1', 'get', taskWithFile);
+    const { log: patchLog } = moxy.setZetkinApiMock(
+      '/orgs/1/tasks/1',
+      'patch',
+      SpeakToFriend
+    );
+
+    await page.goto(appUri + '/organize/1/campaigns/1/calendar/tasks/1');
+
+    expect(
+      await page
+        .locator('data-testid=TaskPreviewSection-section >> img')
+        .isVisible()
+    ).toBeTruthy();
+
+    await Promise.all([
+      page.waitForResponse((res) => res.request().method() == 'PATCH'),
+      page.locator('data-testid=ZetkinEditableImage-resetButton').click(),
+    ]);
+
+    expect(patchLog()[0].data).toEqual({
+      cover_file_id: null,
+    });
+  });
 });
