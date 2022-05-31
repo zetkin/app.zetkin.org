@@ -1,3 +1,4 @@
+/* eslint-disable react/no-danger */
 import dompurify from 'dompurify';
 import { Box, BoxProps } from '@material-ui/core';
 

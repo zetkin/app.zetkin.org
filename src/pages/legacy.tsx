@@ -1,3 +1,4 @@
+/* eslint-disable react/no-danger */
 import Head from 'next/head';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
