@@ -1,3 +1,4 @@
+import { ZetkinFile } from './zetkin';
 import { ZetkinQuery, ZetkinSmartSearchFilter } from './smartSearch';
 
 export enum TASK_TYPE {
@@ -54,6 +55,7 @@ export interface ZetkinTask<TaskTypeConfig = AnyTaskTypeConfig> {
   reassign_interval: number | null;
   reassign_limit: number | null;
   target: ZetkinQuery;
+  cover_file: ZetkinFile | null;
   campaign: {
     id: number;
     title: string;
@@ -71,10 +73,11 @@ export interface ZetkinTaskRequestBody<
     Omit<
       // Remove these fields
       ZetkinTask<Config>,
-      'campaign' | 'organization' | 'target'
+      'campaign' | 'cover_file' | 'organization' | 'target'
     >
   > {
   campaign_id?: number;
+  cover_file_id?: number | null;
   organization_id?: number;
   target_filters?: ZetkinSmartSearchFilter[];
 }

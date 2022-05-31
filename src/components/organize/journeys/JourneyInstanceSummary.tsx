@@ -40,7 +40,7 @@ const JourneyInstanceSummary = ({
     {
       id: 'pages.organizeJourneyInstance.summaryPlaceholder',
     },
-    { journeyTitle: journeyInstance.journey.title.toLowerCase() }
+    { journeyTitle: journeyInstance.journey.singular_label.toLowerCase() }
   );
 
   const patchJourneyInstanceMutation = journeyInstanceResource(

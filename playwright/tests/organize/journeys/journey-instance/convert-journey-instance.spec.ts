@@ -48,9 +48,12 @@ test.describe('Changing the type of a journey instance', () => {
       `/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}`,
       'patch',
       {
+        ...ClarasOnboarding,
         journey: {
           id: MarxistTraining.id,
-          title: MarxistTraining.singular_label,
+          plural_label: MarxistTraining.plural_label,
+          singular_label: MarxistTraining.singular_label,
+          title: MarxistTraining.title,
         },
       }
     );
@@ -71,6 +74,8 @@ test.describe('Changing the type of a journey instance', () => {
         ...ClarasOnboarding,
         journey: {
           id: MarxistTraining.id,
+          plural_label: MarxistTraining.plural_label,
+          singular_label: MarxistTraining.singular_label,
           title: MarxistTraining.title,
         },
       }
@@ -84,7 +89,7 @@ test.describe('Changing the type of a journey instance', () => {
       page.waitForNavigation({
         url: `**/organize/${KPD.id}/journeys/${MarxistTraining.id}/${ClarasOnboarding.id}`,
       }),
-      page.locator('text=Marxist Training').click(),
+      page.locator('text=Marxist training').click(),
     ]);
 
     await page.locator('data-testid=Snackbar-success').waitFor();
