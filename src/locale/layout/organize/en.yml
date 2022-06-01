@@ -12,6 +12,8 @@ journeys:
   buttonClose: Close
   buttonOpen: Open
   lastActivity: Last activity
+  menu:
+    downloadCsv: Download all as CSV
   nextMilestone: Next milestone
   statusClosed: Closed
   statusOpen: Open
