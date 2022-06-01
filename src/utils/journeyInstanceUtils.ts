@@ -1,34 +1,73 @@
 import { ZetkinJourneyInstance, ZetkinTag, ZetkinTagGroup } from 'types/zetkin';
 
 export enum JourneyTagColumnType {
-  VALUE_TAG,
-  TAG_GROUP,
-  UNSORTED,
+  VALUE_TAG = 'VALUE_TAG',
+  TAG_GROUP = 'TAG_GROUP',
+  UNSORTED = 'UNSORTED',
 }
 
-interface JourneyValueTagColumn {
+interface JourneyValueTagColumnData {
   type: JourneyTagColumnType.VALUE_TAG;
   tag: ZetkinTag;
   header: string;
-  valueGetter: (instance: ZetkinJourneyInstance) => string | number | null;
 }
 
-interface JourneyTagGroupColumn {
+interface JourneyTagGroupColumnData {
   type: JourneyTagColumnType.TAG_GROUP;
   group: ZetkinTagGroup;
   header: string;
-  tagsGetter: (instance: ZetkinJourneyInstance) => ZetkinTag[];
 }
 
-interface JourneyUnsortedTagsColumn {
+interface JourneyUnsortedTagsColumnData {
   type: JourneyTagColumnType.UNSORTED;
-  tagsGetter: (instance: ZetkinJourneyInstance) => ZetkinTag[];
 }
 
-type JourneyTagColumn =
+type JourneyUnsortedTagsColumn = JourneyUnsortedTagsColumnData & {
+  tagsGetter: (instance: ZetkinJourneyInstance) => ZetkinTag[];
+};
+
+type JourneyTagGroupColumn = JourneyTagGroupColumnData & {
+  tagsGetter: (instance: ZetkinJourneyInstance) => ZetkinTag[];
+};
+
+type JourneyValueTagColumn = JourneyValueTagColumnData & {
+  valueGetter: (instance: ZetkinJourneyInstance) => string | number | null;
+};
+
+export type JourneyTagColumnData =
+  | JourneyValueTagColumnData
+  | JourneyTagGroupColumnData
+  | JourneyUnsortedTagsColumnData;
+
+export type JourneyTagColumn =
   | JourneyValueTagColumn
   | JourneyTagGroupColumn
   | JourneyUnsortedTagsColumn;
+
+export function makeJourneyTagColumn(
+  colData: JourneyTagColumnData
+): JourneyTagColumn {
+  if (colData.type == JourneyTagColumnType.TAG_GROUP) {
+    return {
+      ...colData,
+      tagsGetter: (instance: ZetkinJourneyInstance) =>
+        instance.tags.filter((tag) => tag.group?.id == colData.group.id),
+    };
+  } else if (colData.type == JourneyTagColumnType.UNSORTED) {
+    return {
+      ...colData,
+      tagsGetter: (instance: ZetkinJourneyInstance) =>
+        instance.tags.filter((tag) => !tag.group),
+    };
+  } else {
+    // Must be VALUE_TAG
+    return {
+      ...colData,
+      valueGetter: (instance: ZetkinJourneyInstance) =>
+        instance.tags.find((tag) => tag.id == colData.tag.id)?.value ?? null,
+    };
+  }
+}
 
 export function getTagColumns(
   instances: ZetkinJourneyInstance[]
@@ -57,30 +96,26 @@ export function getTagColumns(
     });
   });
 
-  const groupColumns: JourneyTagGroupColumn[] = groups.map((group) => ({
-    group: group,
-    header: group.title,
-    tagsGetter: (instance: ZetkinJourneyInstance) =>
-      instance.tags.filter((tag) => tag.group?.id == group.id),
-    type: JourneyTagColumnType.TAG_GROUP,
-  }));
+  const columns = [
+    ...groups.map((group) =>
+      makeJourneyTagColumn({
+        group: group,
+        header: group.title,
+        type: JourneyTagColumnType.TAG_GROUP,
+      })
+    ),
+    ...valueTags.map((tag) =>
+      makeJourneyTagColumn({
+        header: tag.title,
+        tag: tag,
+        type: JourneyTagColumnType.VALUE_TAG,
+      })
+    ),
+  ];
 
-  const valueColumns: JourneyValueTagColumn[] = valueTags.map((tag) => ({
-    header: tag.title,
-    tag: tag,
-    type: JourneyTagColumnType.VALUE_TAG,
-    valueGetter: (instance: ZetkinJourneyInstance) =>
-      instance.tags.find((tag) => tag.id == tag.id)?.value ?? null,
-  }));
+  if (hasUnsorted) {
+    columns.push(makeJourneyTagColumn({ type: JourneyTagColumnType.UNSORTED }));
+  }
 
-  const ungroupedColumn: JourneyUnsortedTagsColumn[] = hasUnsorted
-    ? [
-        {
-          tagsGetter: (instance) => instance.tags.filter((tag) => !tag.group),
-          type: JourneyTagColumnType.UNSORTED,
-        },
-      ]
-    : [];
-
-  return [...groupColumns, ...valueColumns, ...ungroupedColumn];
+  return columns;
 }

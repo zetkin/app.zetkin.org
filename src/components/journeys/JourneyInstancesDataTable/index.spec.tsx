@@ -3,7 +3,6 @@ import mockJourneyInstance from 'utils/testing/mocks/mockJourneyInstance';
 import { render } from 'utils/testing';
 import { ZetkinJourneyInstance } from 'types/zetkin';
 
-const tagMetadata = { groups: [], valueTags: [] };
 const journeyInstances = [mockJourneyInstance({ assignees: [], subjects: [] })];
 
 describe('JourneyInstancesDataTable.tsx', () => {
@@ -11,7 +10,7 @@ describe('JourneyInstancesDataTable.tsx', () => {
     const { getByText } = render(
       <JourneyInstancesDataTable
         journeyInstances={[] as ZetkinJourneyInstance[]}
-        tagMetadata={tagMetadata}
+        tagColumnsData={[]}
       />
     );
 
@@ -34,7 +33,7 @@ describe('JourneyInstancesDataTable.tsx', () => {
             disableVirtualization: true,
           }}
           journeyInstances={journeyInstances}
-          tagMetadata={tagMetadata}
+          tagColumnsData={[]}
         />
       </div>
     );
