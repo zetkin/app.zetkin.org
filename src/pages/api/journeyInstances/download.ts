@@ -12,14 +12,16 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ): Promise<void> {
-  const { orgId } = req.query;
+  const { orgId, journeyId } = req.query;
 
-  if (!orgId || Array.isArray(orgId)) {
+  if (!orgId || Array.isArray(orgId) || Array.isArray(journeyId)) {
     return res.status(400).end();
   }
 
   const apiFetch = createApiFetch(req.headers);
-  const url = `/orgs/${orgId}/journey_instances`;
+  const url = journeyId
+    ? `/orgs/${orgId}/journeys/${journeyId}/instances`
+    : `/orgs/${orgId}/journey_instances`;
 
   const instanceRes = await apiFetch(url);
   const data = await instanceRes.json();
