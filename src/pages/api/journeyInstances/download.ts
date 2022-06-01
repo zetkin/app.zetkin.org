@@ -2,6 +2,7 @@ import XLSX from 'xlsx';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 import { createApiFetch } from 'utils/apiFetch';
+import { getBrowserLanguage, getMessages } from 'utils/locale';
 import {
   getTagColumns,
   JourneyTagColumnType,
@@ -54,22 +55,25 @@ export default async function handler(
 
   const columns = getTagColumns(journeyInstances);
 
+  const lang = await getBrowserLanguage(req);
+  const messages = await getMessages(lang, ['server']);
+
   const headerRow: string[] = [
-    'JOURNEY',
-    'ID',
-    'TITLE',
-    'CREATED',
-    'UPDATED',
-    'SUBJECTS',
-    'SUMMARY',
-    'NEXT_MILESTONE',
-    'CLOSED',
-    'OUTCOME',
-    'ASSIGNEES',
+    messages['server.export.journeyInstances.headers.journey'],
+    messages['server.export.journeyInstances.headers.id'],
+    messages['server.export.journeyInstances.headers.title'],
+    messages['server.export.journeyInstances.headers.created'],
+    messages['server.export.journeyInstances.headers.updated'],
+    messages['server.export.journeyInstances.headers.subjects'],
+    messages['server.export.journeyInstances.headers.summary'],
+    messages['server.export.journeyInstances.headers.nextMilestone'],
+    messages['server.export.journeyInstances.headers.closed'],
+    messages['server.export.journeyInstances.headers.outcome'],
+    messages['server.export.journeyInstances.headers.assignees'],
   ].concat(
     columns.map((column) => {
       if (column.type == JourneyTagColumnType.UNSORTED) {
-        return 'UNSORTED TAGS';
+        return messages['server.export.journeyInstances.headers.unsortedTags'];
       } else {
         return column.header.toUpperCase();
       }
