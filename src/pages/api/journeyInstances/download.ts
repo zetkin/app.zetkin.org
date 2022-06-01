@@ -1,4 +1,5 @@
 import { stringify as csvStringify } from 'csv-stringify';
+import XLSX from 'xlsx';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 import { createApiFetch } from 'utils/apiFetch';
@@ -8,15 +9,30 @@ import {
 } from 'utils/journeyInstanceUtils';
 import { ZetkinJourney, ZetkinJourneyInstance } from 'types/zetkin';
 
+const FORMAT_TYPES = {
+  csv: 'text/csv',
+  xlsx: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+};
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ): Promise<void> {
-  const { orgId, journeyId } = req.query;
+  const { format = 'csv', orgId, journeyId } = req.query;
 
-  if (!orgId || Array.isArray(orgId) || Array.isArray(journeyId)) {
+  if (
+    !orgId ||
+    Array.isArray(orgId) ||
+    Array.isArray(journeyId) ||
+    Array.isArray(format)
+  ) {
     return res.status(400).end();
   }
+
+  if (format != 'csv' && format != 'xlsx') {
+    return res.status(400).end();
+  }
+  const formatType = FORMAT_TYPES[format];
 
   const apiFetch = createApiFetch(req.headers);
   const url = journeyId
@@ -31,6 +47,9 @@ export default async function handler(
   }
 
   const instanceRes = await apiFetch(url);
+  if (!instanceRes.ok) {
+    return res.status(instanceRes.status).end();
+  }
   const data = await instanceRes.json();
   const journeyInstances = data.data as ZetkinJourneyInstance[];
 
@@ -58,19 +77,22 @@ export default async function handler(
     })
   );
 
+  const dateOrNull = (str: string | null | undefined): Date | null =>
+    str ? new Date(str) : null;
+
   const dataRows = journeyInstances.map((instance) => {
     return [
       instance.journey.title,
       instance.id,
       instance.title,
-      instance.created,
-      instance.updated,
+      dateOrNull(instance.created),
+      dateOrNull(instance.updated),
       instance.subjects
         .map((person) => `${person.first_name} ${person.last_name}`)
         .join(', '),
       instance.summary,
       instance.next_milestone?.title,
-      instance.closed,
+      dateOrNull(instance.closed),
       instance.outcome,
       instance.assignees
         .map((person) => `${person.first_name} ${person.last_name}`)
@@ -89,19 +111,51 @@ export default async function handler(
     );
   });
 
-  const csv = await new Promise((resolve, reject) =>
-    csvStringify([headerRow, ...dataRows], (err, output) =>
-      err ? reject(err) : resolve(output)
-    )
-  );
-
   const filePrefix = journey ? journey.plural_label : 'journeys';
+  const fileName = `${filePrefix}-${new Date().toISOString()}.${format}`;
 
-  const fileName = `${filePrefix}-${new Date().toISOString()}.csv`;
+  let fileData: string | Buffer;
+
+  if (format == 'csv') {
+    fileData = await new Promise((resolve, reject) =>
+      csvStringify([headerRow, ...dataRows], (err, output) =>
+        err ? reject(err) : resolve(output)
+      )
+    );
+  } else if (format == 'xlsx') {
+    const wb = XLSX.utils.book_new();
+    const sheet = XLSX.utils.aoa_to_sheet([headerRow, ...dataRows], {
+      dateNF: 'YYYY-MM-DD HH:mm:ss',
+    });
+    sheet['!cols'] = headerRow.map((col, idx) => {
+      const allLengths = [
+        col.length,
+        ...dataRows.map((row) =>
+          row[idx] instanceof Date ? 16 : row[idx]?.toString().length ?? 0
+        ),
+      ];
+
+      return {
+        // Set the width to 3 + the max number of characters on any row
+        width: 3 + Math.max.apply(null, allLengths),
+      };
+    });
+
+    XLSX.utils.book_append_sheet(wb, sheet);
+
+    fileData = XLSX.write(wb, {
+      type: 'buffer',
+    });
+  } else {
+    // This should never happen, because format is already checked
+    // at the beginning of this function. We do this anyway to make
+    // Typescript aware that fileData will always have a value.
+    return res.status(400).end();
+  }
 
   res
     .status(200)
     .setHeader('Content-Disposition', `attachment; filename="${fileName}"`)
-    .setHeader('Content-Type', 'text/csv')
-    .send(csv);
+    .setHeader('Content-Type', formatType)
+    .send(fileData);
 }
