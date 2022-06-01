@@ -1,4 +1,3 @@
-import { stringify as csvStringify } from 'csv-stringify';
 import XLSX from 'xlsx';
 import { NextApiRequest, NextApiResponse } from 'next';
 
@@ -116,17 +115,15 @@ export default async function handler(
 
   let fileData: string | Buffer;
 
+  const wb = XLSX.utils.book_new();
+  const sheet = XLSX.utils.aoa_to_sheet([headerRow, ...dataRows], {
+    dateNF: 'YYYY-MM-DD HH:mm:ss',
+  });
+  XLSX.utils.book_append_sheet(wb, sheet);
+
   if (format == 'csv') {
-    fileData = await new Promise((resolve, reject) =>
-      csvStringify([headerRow, ...dataRows], (err, output) =>
-        err ? reject(err) : resolve(output)
-      )
-    );
+    fileData = XLSX.write(wb, { bookType: 'csv', type: 'buffer' });
   } else if (format == 'xlsx') {
-    const wb = XLSX.utils.book_new();
-    const sheet = XLSX.utils.aoa_to_sheet([headerRow, ...dataRows], {
-      dateNF: 'YYYY-MM-DD HH:mm:ss',
-    });
     sheet['!cols'] = headerRow.map((col, idx) => {
       const allLengths = [
         col.length,
@@ -140,8 +137,6 @@ export default async function handler(
         width: 3 + Math.max.apply(null, allLengths),
       };
     });
-
-    XLSX.utils.book_append_sheet(wb, sheet);
 
     fileData = XLSX.write(wb, {
       type: 'buffer',
