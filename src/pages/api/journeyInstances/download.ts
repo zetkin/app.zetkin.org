@@ -2,11 +2,11 @@ import { stringify as csvStringify } from 'csv-stringify';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 import { createApiFetch } from 'utils/apiFetch';
-import { ZetkinJourneyInstance } from 'types/zetkin';
 import {
   getTagColumns,
   JourneyTagColumnType,
 } from 'utils/journeyInstanceUtils';
+import { ZetkinJourney, ZetkinJourneyInstance } from 'types/zetkin';
 
 export default async function handler(
   req: NextApiRequest,
@@ -22,6 +22,13 @@ export default async function handler(
   const url = journeyId
     ? `/orgs/${orgId}/journeys/${journeyId}/instances`
     : `/orgs/${orgId}/journey_instances`;
+
+  let journey: ZetkinJourney | null = null;
+  if (journeyId) {
+    const journeyRes = await apiFetch(`/orgs/${orgId}/journeys/${journeyId}`);
+    const journeyData = await journeyRes.json();
+    journey = journeyData.data as ZetkinJourney;
+  }
 
   const instanceRes = await apiFetch(url);
   const data = await instanceRes.json();
@@ -88,7 +95,9 @@ export default async function handler(
     )
   );
 
-  const fileName = `journeys-${new Date().toISOString()}.csv`;
+  const filePrefix = journey ? journey.plural_label : 'journeys';
+
+  const fileName = `${filePrefix}-${new Date().toISOString()}.csv`;
 
   res
     .status(200)
