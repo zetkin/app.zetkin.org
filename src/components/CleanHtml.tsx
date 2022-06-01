@@ -1,5 +1,5 @@
 /* eslint-disable react/no-danger */
-import dompurify from 'dompurify';
+import DOMPurify from 'isomorphic-dompurify';
 import { Box, BoxProps } from '@material-ui/core';
 
 interface CleanHtmlProps {
@@ -8,7 +8,7 @@ interface CleanHtmlProps {
 }
 
 const CleanHtml = ({ BoxProps, dirtyHtml }: CleanHtmlProps): JSX.Element => {
-  const cleanHtml = dompurify.sanitize(dirtyHtml);
+  const cleanHtml = DOMPurify.sanitize(dirtyHtml);
   return <Box dangerouslySetInnerHTML={{ __html: cleanHtml }} {...BoxProps} />;
 };
 
