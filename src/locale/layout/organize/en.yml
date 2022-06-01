@@ -11,12 +11,14 @@ header:
 journeyInstances:
   menu:
     downloadCsv: Download {pluralLabel} as CSV
+    downloadXlsx: Download {pluralLabel} as Excel
 journeys:
   buttonClose: Close
   buttonOpen: Open
   lastActivity: Last activity
   menu:
     downloadCsv: Download all as CSV
+    downloadXlsx: Download all as Excel
   nextMilestone: Next milestone
   statusClosed: Closed
   statusOpen: Open

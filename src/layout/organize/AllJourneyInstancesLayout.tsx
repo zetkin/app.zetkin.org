@@ -37,6 +37,17 @@ const AllJourneyInstancesLayout: FunctionComponent<LayoutProps> = ({
             location.href = `/api/journeyInstances/download?orgId=${orgId}&journeyId=${journeyId}`;
           },
         },
+        {
+          label: intl.formatMessage(
+            {
+              id: 'layout.organize.journeyInstances.menu.downloadXlsx',
+            },
+            { pluralLabel: journey?.plural_label ?? '' }
+          ),
+          onSelect: () => {
+            location.href = `/api/journeyInstances/download?orgId=${orgId}&journeyId=${journeyId}&format=xlsx`;
+          },
+        },
       ]}
       fixedHeight={fixedHeight}
       noPad

@@ -20,6 +20,14 @@ const JourneysLayout: React.FunctionComponent = ({ children }) => {
             location.href = `/api/journeyInstances/download?orgId=${orgId}`;
           },
         },
+        {
+          label: intl.formatMessage({
+            id: 'layout.organize.journeys.menu.downloadXlsx',
+          }),
+          onSelect: () => {
+            location.href = `/api/journeyInstances/download?orgId=${orgId}&format=xlsx`;
+          },
+        },
       ]}
       tabs={[
         {
