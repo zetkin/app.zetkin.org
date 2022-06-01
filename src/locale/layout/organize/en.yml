@@ -8,6 +8,9 @@ header:
   collapseButton:
     collapse: Collapse
     expand: Expand
+journeyInstances:
+  menu:
+    downloadCsv: Download {pluralLabel} as CSV
 journeys:
   buttonClose: Close
   buttonOpen: Open
