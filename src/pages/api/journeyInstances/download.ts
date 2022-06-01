@@ -1,4 +1,4 @@
-import XLSX from 'xlsx';
+import XLSX from 'xlsx-js-style';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 import { createApiFetch } from 'utils/apiFetch';
@@ -75,7 +75,7 @@ export default async function handler(
       if (column.type == JourneyTagColumnType.UNSORTED) {
         return messages['server.export.journeyInstances.headers.unsortedTags'];
       } else {
-        return column.header.toUpperCase();
+        return column.header;
       }
     })
   );
@@ -126,6 +126,12 @@ export default async function handler(
   XLSX.utils.book_append_sheet(wb, sheet);
 
   if (format == 'csv') {
+    // Make header uppercase
+    headerRow.forEach((_, idx) => {
+      const addr = XLSX.utils.encode_cell({ c: idx, r: 0 });
+      sheet[addr].v = sheet[addr].v.toString().toUpperCase();
+    });
+
     fileData = XLSX.write(wb, { bookType: 'csv', type: 'buffer' });
   } else if (format == 'xlsx') {
     sheet['!cols'] = headerRow.map((col, idx) => {
@@ -139,6 +145,13 @@ export default async function handler(
       return {
         // Set the width to 3 + the max number of characters on any row
         width: 3 + Math.max.apply(null, allLengths),
+      };
+    });
+
+    // Style header as bold
+    headerRow.forEach((_, idx) => {
+      sheet[XLSX.utils.encode_cell({ c: idx, r: 0 })].s = {
+        font: { bold: true },
       };
     });
 
