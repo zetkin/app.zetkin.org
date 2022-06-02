@@ -8,7 +8,7 @@ interface MarkdownProps {
   markdown: string;
 }
 
-const Markdown = ({ BoxProps, markdown }: MarkdownProps): JSX.Element => {
+const Markdown: React.FC<MarkdownProps> = ({ BoxProps, markdown }) => {
   const dirtyHtml = marked(markdown);
   return <CleanHtml BoxProps={BoxProps} dirtyHtml={dirtyHtml} />;
 };
