@@ -4,6 +4,7 @@ import { AccessTime, Image as ImageIcon } from '@material-ui/icons';
 import { Box, Button, Card, Typography } from '@material-ui/core';
 import { FormattedMessage, useIntl } from 'react-intl';
 
+import CleanHtml from 'components/CleanHtml';
 import ImageSelectDialog from 'components/ImageSelectDialog';
 import { taskResource } from 'api/tasks';
 import ZetkinEditableImage from 'components/ZetkinEditableImage';
@@ -71,9 +72,9 @@ const TaskPreviewSection: React.FC<TaskPreviewSectionProps> = ({ task }) => {
               />
             </Typography>
           )}
-          <Typography
-            component="div"
-            dangerouslySetInnerHTML={{ __html: marked(task.instructions) }}
+          <CleanHtml
+            BoxProps={{ component: 'div' }}
+            dirtyHtml={marked(task.instructions)}
           />
         </Box>
       </Card>

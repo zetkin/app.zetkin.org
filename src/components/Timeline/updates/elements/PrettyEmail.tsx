@@ -15,6 +15,8 @@ import { ExpandLess, ExpandMore } from '@material-ui/icons';
 import { LetterparserNode, parse } from 'letterparser';
 import { useCallback, useEffect, useState } from 'react';
 
+import CleanHtml from 'components/CleanHtml';
+
 interface PrettyEmailProps {
   emailStr: string;
 }
@@ -121,11 +123,10 @@ const EmailBody: React.FC<{
   } else {
     const content = typeof body == 'string' ? body : body.toString();
 
-    // TODO: Sanitize content before rendering
     return (
-      <div
-        className={classes.body}
-        dangerouslySetInnerHTML={{ __html: content }}
+      <CleanHtml
+        BoxProps={{ className: classes.body, component: 'div' }}
+        dirtyHtml={content}
       />
     );
   }
