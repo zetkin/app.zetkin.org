@@ -11,9 +11,6 @@ import Timeline, { SHOW_INITIALLY, TimelineProps } from '.';
 // @ts-ignore
 mockRouter.registerPaths(['/organize/[orgId]/people/[id]']);
 jest.mock('next/dist/client/router', () => require('next-router-mock'));
-jest.mock('remark-parse', () => null);
-jest.mock('remark-gfm', () => null);
-jest.mock('unified', () => null);
 
 const NUM_UPDATES = 10;
 

@@ -1,18 +1,15 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { cloneDeep } from 'lodash';
 import isUrl from 'is-url';
-import markdown from 'remark-parse';
-import remarkGfm from 'remark-gfm';
-import { unified } from 'unified';
+import { BlockType, LeafType, NodeTypes, serialize } from 'remark-slate';
 import {
   Descendant,
   Editor,
   Range,
   Element as SlateElement,
+  Text,
   Transforms,
 } from 'slate';
 import isHotkey, { isKeyHotkey } from 'is-hotkey';
-import slate, { BlockType, NodeTypes, serialize } from 'remark-slate';
 
 const LIST_TYPES = ['numbered-list', 'bulleted-list'];
 const HOTKEYS: { [key: string]: string } = {
@@ -202,81 +199,31 @@ const keyDownHandler = (editor: Editor, event: React.KeyboardEvent): void => {
   }
 };
 
-interface SlateEl {
-  [key: string]: string | unknown;
-  children?: SlateEl[];
-}
-
-function slateReplace(
-  slateArray: SlateEl[],
-  field: string,
-  match: string | null,
-  replace: string
-) {
-  return slateArray.map((item) => {
-    if (!match && !!item[field]) {
-      item[replace] = item[field];
-    }
-    if (item[field] === match) {
-      item[field] = replace;
-    }
-    if (item.children) {
-      item.children = slateReplace(item.children, field, match, replace);
-    }
-    return item;
+type SlateElementInReality = {
+  strikethrough?: boolean;
+  url?: string;
+} & SlateElement;
+/**
+ * Recursively transforms slate elements to the shape expected by remarked-slate
+ * which for some reason has slightly different property names.
+ */
+const convertSlateToRemarked = (
+  slateElements: Array<SlateElementInReality | Text>
+): Array<BlockType | LeafType> => {
+  const convertedChildren = slateElements.map((element) => {
+    return {
+      ...element,
+      ...('children' in element &&
+        element.children && {
+          children: convertSlateToRemarked(element.children),
+        }),
+      ...('url' in element && element.url && { link: element.url }),
+      ...('strikethrough' in element &&
+        element.strikethrough && { strikeThrough: element.strikethrough }),
+    };
   });
-}
-
-const markdownToSlate = (markdownString: string): Promise<SlateEl[]> =>
-  unified()
-    .use(markdown)
-    .use(slate)
-    .use(remarkGfm)
-    .process(markdownString)
-    .then(
-      (file) => {
-        let slateArray = file.result as SlateEl[];
-
-        slateArray = slateReplace(slateArray, 'type', 'list_item', 'list-item');
-        slateArray = slateReplace(
-          slateArray,
-          'type',
-          'ul_list',
-          'bulleted-list'
-        );
-        slateArray = slateReplace(
-          slateArray,
-          'type',
-          'ol_list',
-          'numbered-list'
-        );
-        slateArray = slateReplace(
-          slateArray,
-          'type',
-          'heading_one',
-          'heading-one'
-        );
-        slateArray = slateReplace(
-          slateArray,
-          'type',
-          'heading_two',
-          'heading-two'
-        );
-        slateArray = slateReplace(
-          slateArray,
-          'type',
-          'block_quote',
-          'block-quote'
-        );
-        slateArray = slateReplace(slateArray, 'link', null, 'url');
-        return slateArray.map((item) => {
-          return item;
-        });
-      },
-      (error) => {
-        throw error;
-      }
-    );
+  return convertedChildren;
+};
 
 const slateToMarkdown = (slateArray: Descendant[]): string => {
   const nodeTypes = {
@@ -290,28 +237,27 @@ const slateToMarkdown = (slateArray: Descendant[]): string => {
     ul_list: 'bulleted-list',
   };
 
-  const processed = (slateArray as SlateEl[]).map((item) => {
-    const itemCopy = cloneDeep(item);
-    if (itemCopy.type === 'paragraph') {
-      itemCopy.children = itemCopy.children?.map((child) => {
-        if (child.url) {
-          child.link = child.url as string;
-        }
-        if (child.strikethrough) {
-          child.strikeThrough = true;
-        }
-        return child;
-      });
-    }
-    return itemCopy;
-  });
+  const processed = convertSlateToRemarked(slateArray);
+
   return processed
-    .map((v) => {
-      return serialize(v as unknown as BlockType, {
+    .filter(
+      // Exclude empty lines
+      (element) =>
+        !(
+          'type' in element &&
+          element.type === 'paragraph' &&
+          element.children?.length === 1 &&
+          'text' in element.children[0] &&
+          element.children[0].text.length === 0
+        )
+    )
+    .map((element) => {
+      return serialize(element as unknown as BlockType, {
+        ignoreParagraphNewline: true,
         nodeTypes: nodeTypes as NodeTypes,
       });
     })
-    .join('');
+    .join('\n');
 };
 
 export {
@@ -323,7 +269,6 @@ export {
   isMarkActive,
   keyDownHandler,
   LIST_TYPES,
-  markdownToSlate,
   slateToMarkdown,
   withInlines,
   unwrapLink,
