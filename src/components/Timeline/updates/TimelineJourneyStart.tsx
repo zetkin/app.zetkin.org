@@ -1,6 +1,6 @@
 import { FormattedMessage } from 'react-intl';
-import { Typography } from '@material-ui/core';
 
+import Markdown from 'components/Markdown';
 import UpdateContainer from './elements/UpdateContainer';
 import ZetkinJourneyInstanceCard from 'components/ZetkinJourneyInstanceCard';
 import ZetkinPersonLink from 'components/ZetkinPersonLink';
@@ -27,9 +27,10 @@ const TimelineJourneyStart: React.FC<TimelineJourneyStartProps> = ({
         instance={update.details.data}
         orgId={update.organization.id}
       />
-      <Typography style={{ margin: '1em 0' }}>
-        {update.details.data.opening_note}
-      </Typography>
+      <Markdown
+        BoxProps={{ margin: '1rem 0' }}
+        markdown={update.details.data.opening_note}
+      />
     </UpdateContainer>
   );
 };

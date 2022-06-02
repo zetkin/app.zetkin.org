@@ -1,11 +1,10 @@
-import { marked } from 'marked';
 import { useState } from 'react';
 import { AccessTime, Image as ImageIcon } from '@material-ui/icons';
 import { Box, Button, Card, Typography } from '@material-ui/core';
 import { FormattedMessage, useIntl } from 'react-intl';
 
-import CleanHtml from 'components/CleanHtml';
 import ImageSelectDialog from 'components/ImageSelectDialog';
+import Markdown from 'components/Markdown';
 import { taskResource } from 'api/tasks';
 import ZetkinEditableImage from 'components/ZetkinEditableImage';
 import ZetkinSection from 'components/ZetkinSection';
@@ -72,9 +71,9 @@ const TaskPreviewSection: React.FC<TaskPreviewSectionProps> = ({ task }) => {
               />
             </Typography>
           )}
-          <CleanHtml
+          <Markdown
             BoxProps={{ component: 'div' }}
-            dirtyHtml={marked(task.instructions)}
+            markdown={task.instructions}
           />
         </Box>
       </Card>
