@@ -62,6 +62,7 @@ module.exports = {
             reservedFirst: true,
           },
         ],
+        'react/no-danger': 'error',
         'react/no-deprecated': 'error',
         'react/no-typos': 'error',
         'react/no-unknown-property': 'error',
