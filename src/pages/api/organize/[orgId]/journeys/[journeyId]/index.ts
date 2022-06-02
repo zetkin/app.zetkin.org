@@ -3,11 +3,14 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { createApiFetch } from 'utils/apiFetch';
 import { ZetkinApiSuccessResponse } from 'api/utils/handleResponseData';
 import { ZetkinJourneyInstance } from 'types/zetkin';
-import { getTagMetadata, TagMetadata } from 'utils/getTagMetadata';
+import {
+  getTagColumns,
+  JourneyTagColumnData,
+} from 'utils/journeyInstanceUtils';
 
 export interface JourneyInstancesData {
   journeyInstances: ZetkinJourneyInstance[];
-  tagMetadata: TagMetadata;
+  tagColumnsData: JourneyTagColumnData[];
 }
 
 const getJourneyTableData = async (
@@ -35,9 +38,11 @@ const getJourneyTableData = async (
     );
     const { data: journeyInstances } = await journeyInstancesRes.json();
 
-    const tagMetadata = getTagMetadata(journeyInstances);
+    const tagColumnData = getTagColumns(journeyInstances);
 
-    res.status(200).json({ data: { journeyInstances, tagMetadata } });
+    res
+      .status(200)
+      .json({ data: { journeyInstances, tagColumnsData: tagColumnData } });
   } catch (e) {
     res.status(500).json({ error: (e as Error).message });
   }

@@ -1,0 +1,14 @@
+export:
+  journeyInstances:
+    headers:
+      assignees: Assignees
+      closed: Closed
+      created: Created
+      id: ID
+      journey: Journey
+      nextMilestone: Next milestone
+      outcome: Outcome
+      subjects: Subjects
+      summary: Summary
+      title: Title
+      updated: Updated

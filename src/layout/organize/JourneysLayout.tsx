@@ -11,6 +11,24 @@ const JourneysLayout: React.FunctionComponent = ({ children }) => {
     <TabbedLayout
       baseHref={`/organize/${orgId}/journeys`}
       defaultTab="/overview"
+      ellipsisMenuItems={[
+        {
+          label: intl.formatMessage({
+            id: 'layout.organize.journeys.menu.downloadCsv',
+          }),
+          onSelect: () => {
+            location.href = `/api/journeyInstances/download?orgId=${orgId}`;
+          },
+        },
+        {
+          label: intl.formatMessage({
+            id: 'layout.organize.journeys.menu.downloadXlsx',
+          }),
+          onSelect: () => {
+            location.href = `/api/journeyInstances/download?orgId=${orgId}&format=xlsx`;
+          },
+        },
+      ]}
       tabs={[
         {
           href: `/overview`,
