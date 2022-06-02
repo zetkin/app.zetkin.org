@@ -1,9 +1,8 @@
 import { FormattedMessage } from 'react-intl';
-import { marked } from 'marked';
 import { Box, makeStyles } from '@material-ui/core';
 
-import CleanHtml from 'components/CleanHtml';
 import EmailLoader from './elements/EmailLoader';
+import Markdown from 'components/Markdown';
 import UpdateContainer from './elements/UpdateContainer';
 import { ZetkinFile } from 'types/zetkin';
 import { ZetkinFileObjectChip } from 'components/ZetkinFileChip';
@@ -46,12 +45,12 @@ const TimelineNoteAdded: React.FC<Props> = ({ update }) => {
       }
       update={update}
     >
-      <CleanHtml
+      <Markdown
         BoxProps={{
           className: classes.note,
           component: 'div',
         }}
-        dirtyHtml={marked(update.details.note.text)}
+        markdown={update.details.note.text}
       />
       {!!miscFiles.length && (
         <Box pt={2}>
