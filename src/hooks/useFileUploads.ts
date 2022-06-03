@@ -44,6 +44,38 @@ export default function useFileUploads(props?: {
 
   const fileKeyRef = useRef<number>(1);
   const filesRef = useRef(fileUploads);
+  const fileInput = useRef<HTMLInputElement>();
+
+  const addFiles = (files: File[]) => {
+    setFileUploads([
+      ...filesRef.current,
+      ...files.map((file) => {
+        const fileUpload: FileUpload = {
+          apiData: null,
+          file: file,
+          key: fileKeyRef.current++,
+          name: file.name,
+          state: FileUploadState.UPLOADING,
+        };
+
+        postFile(fileUpload);
+
+        return fileUpload;
+      }),
+    ]);
+  };
+
+  // Creates input element for uploading files that works across browsers
+  if (!fileInput.current && typeof document === 'object') {
+    fileInput.current = document.createElement('input');
+    fileInput.current.setAttribute('type', 'file');
+    fileInput.current.onchange = (ev) => {
+      const files = (ev.target as HTMLInputElement)?.files;
+      if (files) {
+        addFiles(Array.from(files));
+      }
+    };
+  }
 
   async function postFile(upload: FileUpload): Promise<void> {
     const formData = new FormData();
@@ -80,25 +112,10 @@ export default function useFileUploads(props?: {
   }, [fileUploads]);
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
-    setFileUploads([
-      ...filesRef.current,
-      ...acceptedFiles.map((file) => {
-        const fileUpload: FileUpload = {
-          apiData: null,
-          file: file,
-          key: fileKeyRef.current++,
-          name: file.name,
-          state: FileUploadState.UPLOADING,
-        };
-
-        postFile(fileUpload);
-
-        return fileUpload;
-      }),
-    ]);
+    addFiles(acceptedFiles);
   }, []);
 
-  const { getRootProps, open } = useDropzone({
+  const { getRootProps } = useDropzone({
     accept: props?.accept,
     multiple: props?.multiple,
     noClick: true,
@@ -113,7 +130,9 @@ export default function useFileUploads(props?: {
     },
     fileUploads,
     getDropZoneProps: getRootProps,
-    openFilePicker: open,
+    openFilePicker: () => {
+      fileInput.current?.click();
+    },
     reset: () => {
       setFileUploads([]);
     },

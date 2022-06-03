@@ -1,7 +1,7 @@
 import { isEqual } from 'lodash';
 import { makeStyles } from '@material-ui/styles';
 import { withHistory } from 'slate-history';
-import { Box, Collapse } from '@material-ui/core';
+import { Box, ClickAwayListener, Collapse } from '@material-ui/core';
 import { createEditor, Descendant, Editor, Transforms } from 'slate';
 import { Editable, ReactEditor, Slate, withReact } from 'slate-react';
 import React, {
@@ -83,49 +83,50 @@ const TextEditor: React.FunctionComponent<TextEditorProps> = ({
   }, [clear]);
 
   return (
-    <Box
-      className={classes.container}
-      onClick={() => ReactEditor.focus(editor)}
-    >
-      <Slate
-        editor={editor}
-        onChange={(slateArray) => onChange(slateToMarkdown(slateArray))}
-        value={initialValue}
+    <ClickAwayListener onClickAway={onClickAway}>
+      <Box
+        className={classes.container}
+        onClick={() => ReactEditor.focus(editor)}
       >
-        <Editable
-          onBlur={onBlur}
-          onFocus={() => setActive(true)}
-          onKeyDown={onKeyDown}
-          placeholder={placeholder}
-          renderElement={renderElement}
-          renderLeaf={renderLeaf}
-          spellCheck
-        />
-        <Collapse in={active}>
-          <Toolbar onClickAttach={onClickAttach} />
-        </Collapse>
-      </Slate>
-      {fileUploads.map((fileUpload) => {
-        return (
-          <ZetkinFileUploadChip
-            key={fileUpload.key}
-            fileUpload={fileUpload}
-            onDelete={() => {
-              if (onCancelFile) {
-                onCancelFile(fileUpload);
-              }
-            }}
+        <Slate
+          editor={editor}
+          onChange={(slateArray) => onChange(slateToMarkdown(slateArray))}
+          value={initialValue}
+        >
+          <Editable
+            onFocus={() => setActive(true)}
+            onKeyDown={onKeyDown}
+            placeholder={placeholder}
+            renderElement={renderElement}
+            renderLeaf={renderLeaf}
+            spellCheck
           />
-        );
-      })}
-    </Box>
+          <Collapse in={active}>
+            <Toolbar onClickAttach={onClickAttach} />
+          </Collapse>
+        </Slate>
+        {fileUploads.map((fileUpload) => {
+          return (
+            <ZetkinFileUploadChip
+              key={fileUpload.key}
+              fileUpload={fileUpload}
+              onDelete={() => {
+                if (onCancelFile) {
+                  onCancelFile(fileUpload);
+                }
+              }}
+            />
+          );
+        })}
+      </Box>
+    </ClickAwayListener>
   );
 
   function onKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
     keyDownHandler(editor, event);
   }
 
-  function onBlur() {
+  function onClickAway() {
     if (isEqual(editor.children, initialValue)) {
       setActive(false);
       clearEditor();
