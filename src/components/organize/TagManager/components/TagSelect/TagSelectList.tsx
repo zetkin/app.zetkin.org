@@ -35,7 +35,7 @@ const TagSelectList: React.FC<{
         // Groups
         return (
           <List
-            key={group.title}
+            key={group.id}
             subheader={
               <ListSubheader disableSticky>{group.title}</ListSubheader>
             }
