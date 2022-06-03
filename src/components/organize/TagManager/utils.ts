@@ -154,3 +154,20 @@ export const useEditTag = (
 
   return editTag;
 };
+
+export const filterTags = (
+  options: ZetkinTag[],
+  inputValue: string
+): ZetkinTag[] => {
+  const tokenisedInputValue = inputValue.split(' ');
+  return options.filter((option) =>
+    // Returns true if every token is found in one of the following matches
+    tokenisedInputValue.every((valueWord) => {
+      return (
+        option.title.toLowerCase().includes(valueWord.toLowerCase()) ||
+        option.group?.title.toLowerCase().includes(valueWord.toLowerCase()) ||
+        option.description?.toLowerCase().includes(valueWord.toLowerCase())
+      );
+    })
+  );
+};

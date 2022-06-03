@@ -4,11 +4,11 @@ import { useIntl } from 'react-intl';
 import { useState } from 'react';
 import { Box, TextField } from '@material-ui/core';
 
-import { groupTags } from '../../utils';
 import TagDialog from '../TagDialog';
 import TagSelectList from './TagSelectList';
 import ValueTagForm from './ValueTagForm';
 import { EditTag, NewTag } from '../../types';
+import { filterTags, groupTags } from '../../utils';
 import { ZetkinTag, ZetkinTagGroup } from 'types/zetkin';
 
 const TagSelect: React.FunctionComponent<{
@@ -44,6 +44,8 @@ const TagSelect: React.FunctionComponent<{
 
   const { getInputProps, getListboxProps, getRootProps, groupedOptions } =
     useAutocomplete({
+      filterOptions: (options, { inputValue }) =>
+        filterTags(options, inputValue),
       getOptionLabel: (option) => option.title,
       inputValue: inputValue,
       open: true,
