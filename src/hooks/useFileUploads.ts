@@ -66,7 +66,7 @@ export default function useFileUploads(props?: {
   };
 
   // Creates input element for uploading files that works across browsers
-  if (!fileInput.current) {
+  if (!fileInput.current && typeof document === 'object') {
     fileInput.current = document.createElement('input');
     fileInput.current.setAttribute('type', 'file');
     fileInput.current.onchange = (ev) => {
