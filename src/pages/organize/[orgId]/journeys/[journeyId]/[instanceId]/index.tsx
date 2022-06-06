@@ -159,7 +159,10 @@ const JourneyDetailsPage: PageWithLayout<JourneyDetailsPageProps> = ({
             onAddAssignee={onAddAssignee}
             onAddSubject={onAddSubject}
             onAssignTag={(tag) => {
-              assignTagMutation.mutate(tag.id);
+              assignTagMutation.mutate({
+                id: tag.id,
+                value: tag.value,
+              });
             }}
             onRemoveAssignee={onRemoveAssignee}
             onRemoveSubject={onRemoveSubject}
