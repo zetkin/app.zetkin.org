@@ -8,6 +8,7 @@ journeyinstance:
   addsubject: '{actor} added {subject}'
   close:
     header: '{actor} closed the journey'
+  convert: '{actor} converted from {oldLabel} to {newLabel}'
   create:
     header: '{actor} started a new journey'
   open: '{actor} opened the journey again'
