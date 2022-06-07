@@ -1,6 +1,7 @@
 import TimelineAssigned from './updates/TimelineAssigned';
 import TimelineGeneric from './updates/TimelineGeneric';
 import TimelineJourneyClose from './updates/TimelineJourneyClose';
+import TimelineJourneyConvert from './updates/TimelineJourneyConvert';
 import TimelineJourneyInstance from './updates/TimelineJourneyInstance';
 import TimelineJourneyMilestone from './updates/TimelineJourneyMilestone';
 import TimelineJourneyStart from './updates/TimelineJourneyStart';
@@ -49,6 +50,8 @@ const TimelineUpdate: React.FunctionComponent<Props> = ({ update }) => {
     return <TimelineNoteAdded update={update} />;
   } else if (update.type === UPDATE_TYPES.JOURNEYINSTANCE_CLOSE) {
     return <TimelineJourneyClose update={update} />;
+  } else if (update.type == UPDATE_TYPES.JOURNEYINSTANCE_CONVERT) {
+    return <TimelineJourneyConvert update={update} />;
   } else if (update.type === UPDATE_TYPES.JOURNEYINSTANCE_UPDATE) {
     return <TimelineJourneyInstance update={update} />;
   } else if (update.type === UPDATE_TYPES.JOURNEYINSTANCE_UPDATEMILESTONE) {

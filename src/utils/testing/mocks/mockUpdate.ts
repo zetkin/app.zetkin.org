@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
 import { pick } from 'lodash';
 
+import mockJourney from './mockJourney';
 import mockJourneyInstance from './mockJourneyInstance';
 import mockNote from './mockNote';
 import { mockObject } from 'utils/testing/mocks';
@@ -61,6 +62,14 @@ const mockUpdate = (
       details: { outcome: '' },
       target: pick(mockJourneyInstance(), ['id', 'title']),
       type: 'journeyinstance.close',
+    },
+    [UPDATE_TYPES.JOURNEYINSTANCE_CONVERT]: {
+      details: {
+        newJourney: mockJourney(),
+        oldJourney: mockJourney(),
+      },
+      target: pick(mockJourneyInstance(), ['id', 'title']),
+      type: 'journeyinstance.convert',
     },
     [UPDATE_TYPES.JOURNEYINSTANCE_CREATE]: {
       details: { data: mockJourneyInstance() },
