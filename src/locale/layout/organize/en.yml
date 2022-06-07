@@ -8,6 +8,9 @@ header:
   collapseButton:
     collapse: Collapse
     expand: Expand
+journeyInstance:
+  created: Created {relative}
+  updated: Last activity {relative}
 journeyInstances:
   menu:
     downloadCsv: Download {pluralLabel} as CSV

@@ -92,7 +92,11 @@ const JourneyMilestoneCard = ({
                 id="pages.organizeJourneyInstance.markedCompleteLabel"
                 values={{
                   relativeTime: (
-                    <ZetkinRelativeTime datetime={milestone.completed} />
+                    <ZetkinRelativeTime
+                      convertToLocal
+                      datetime={milestone.completed}
+                      forcePast
+                    />
                   ),
                 }}
               />

@@ -146,8 +146,33 @@ const JourneyInstanceLayout: React.FunctionComponent = ({ children }) => {
             <JourneyStatusChip instance={journeyInstance} />
           </Box>
           <Typography style={{ marginRight: '1rem' }}>
-            <Msg id="layout.organize.journeys.lastActivity" />{' '}
-            <ZetkinRelativeTime datetime={journeyInstance.updated} />
+            {journeyInstance.updated ? (
+              <Msg
+                id="layout.organize.journeyInstance.updated"
+                values={{
+                  relative: (
+                    <ZetkinRelativeTime
+                      convertToLocal
+                      datetime={journeyInstance.updated}
+                      forcePast
+                    />
+                  ),
+                }}
+              />
+            ) : (
+              <Msg
+                id="layout.organize.journeyInstance.created"
+                values={{
+                  relative: (
+                    <ZetkinRelativeTime
+                      convertToLocal
+                      datetime={journeyInstance.created}
+                      forcePast
+                    />
+                  ),
+                }}
+              />
+            )}
           </Typography>
           {journeyInstance.next_milestone && (
             <>
