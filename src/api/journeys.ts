@@ -5,6 +5,7 @@ import {
   createUseMutation,
   createUseMutationDelete,
   createUseMutationPut,
+  createUseMutationPutWithBody,
   createUseQuery,
 } from './utils/resourceHookFactories';
 import {
@@ -63,7 +64,9 @@ export const journeyInstanceResource = (orgId: string, instanceId: string) => {
     prefetch: createPrefetch<ZetkinJourneyInstance>(key, url),
     useAddAssignee: createUseMutationPut({ key, url: `${url}/assignees` }),
     useAddSubject: createUseMutationPut({ key, url: `${url}/subjects` }),
-    useAssignTag: createUseMutationPut({ key, url: `${url}/tags` }),
+    useAssignTag: createUseMutationPutWithBody<Pick<ZetkinTag, 'id' | 'value'>>(
+      { key, url: `${url}/tags` }
+    ),
     useClose: createUseMutation<
       { closed: string; outcome?: string; tags?: ZetkinTag[] },
       ZetkinJourneyInstance
