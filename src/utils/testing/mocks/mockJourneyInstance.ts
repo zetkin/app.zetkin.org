@@ -7,7 +7,7 @@ import { ZetkinJourneyInstance } from 'types/zetkin';
 const journeyInstance: ZetkinJourneyInstance = {
   assignees: [person],
   closed: null,
-  created: '2022-04-01T03:29:12+02:00',
+  created: '2022-04-01T03:29:12.000',
   id: 333,
   journey: {
     id: 1,
@@ -24,7 +24,7 @@ const journeyInstance: ZetkinJourneyInstance = {
   summary: 'Haohrez uhca evo fup fonruh do vafeesa lida penco rillesven.',
   tags: [],
   title: 'Training ID 1',
-  updated: '2022-04-03T23:59:12+02:00',
+  updated: '2022-04-03T23:59:12.000',
 };
 
 const mockJourneyInstance = (
