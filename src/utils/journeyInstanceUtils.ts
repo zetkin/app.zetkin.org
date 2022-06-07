@@ -6,32 +6,34 @@ export enum JourneyTagColumnType {
   UNSORTED = 'UNSORTED',
 }
 
-interface JourneyValueTagColumnData {
+export interface JourneyValueTagColumnData {
   type: JourneyTagColumnType.VALUE_TAG;
   tag: ZetkinTag;
   header: string;
 }
 
-interface JourneyTagGroupColumnData {
+export interface JourneyTagGroupColumnData {
   type: JourneyTagColumnType.TAG_GROUP;
   group: ZetkinTagGroup;
   header: string;
 }
 
-interface JourneyUnsortedTagsColumnData {
+export interface JourneyUnsortedTagsColumnData {
   type: JourneyTagColumnType.UNSORTED;
 }
 
-type JourneyUnsortedTagsColumn = JourneyUnsortedTagsColumnData & {
-  tagsGetter: (instance: ZetkinJourneyInstance) => ZetkinTag[];
+export type JourneyUnsortedTagsColumn = JourneyUnsortedTagsColumnData & {
+  tagsGetter: (instance: Pick<ZetkinJourneyInstance, 'tags'>) => ZetkinTag[];
 };
 
-type JourneyTagGroupColumn = JourneyTagGroupColumnData & {
-  tagsGetter: (instance: ZetkinJourneyInstance) => ZetkinTag[];
+export type JourneyTagGroupColumn = JourneyTagGroupColumnData & {
+  tagsGetter: (instance: Pick<ZetkinJourneyInstance, 'tags'>) => ZetkinTag[];
 };
 
-type JourneyValueTagColumn = JourneyValueTagColumnData & {
-  valueGetter: (instance: ZetkinJourneyInstance) => string | number | null;
+export type JourneyValueTagColumn = JourneyValueTagColumnData & {
+  valueGetter: (
+    instance: Pick<ZetkinJourneyInstance, 'tags'>
+  ) => string | number | null;
 };
 
 export type JourneyTagColumnData =
@@ -50,27 +52,29 @@ export function makeJourneyTagColumn(
   if (colData.type == JourneyTagColumnType.TAG_GROUP) {
     return {
       ...colData,
-      tagsGetter: (instance: ZetkinJourneyInstance) =>
-        instance.tags.filter((tag) => tag.group?.id == colData.group.id),
+      tagsGetter: (instance: Pick<ZetkinJourneyInstance, 'tags'>) =>
+        instance.tags.filter(
+          (tag) => tag.group?.id == colData.group.id && !tag.value_type
+        ),
     };
   } else if (colData.type == JourneyTagColumnType.UNSORTED) {
     return {
       ...colData,
-      tagsGetter: (instance: ZetkinJourneyInstance) =>
-        instance.tags.filter((tag) => !tag.group),
+      tagsGetter: (instance: Pick<ZetkinJourneyInstance, 'tags'>) =>
+        instance.tags.filter((tag) => !tag.group && !tag.value_type),
     };
   } else {
     // Must be VALUE_TAG
     return {
       ...colData,
-      valueGetter: (instance: ZetkinJourneyInstance) =>
+      valueGetter: (instance: Pick<ZetkinJourneyInstance, 'tags'>) =>
         instance.tags.find((tag) => tag.id == colData.tag.id)?.value ?? null,
     };
   }
 }
 
 export function getTagColumns(
-  instances: ZetkinJourneyInstance[]
+  instances: Pick<ZetkinJourneyInstance, 'tags'>[]
 ): JourneyTagColumn[] {
   const tagIds = new Set<number>();
   const groupIds = new Set<number>();
