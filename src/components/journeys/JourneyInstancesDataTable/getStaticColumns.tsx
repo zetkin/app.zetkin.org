@@ -30,14 +30,18 @@ export const getStaticColumns = (): GridColDef[] => [
   {
     field: 'created',
     renderCell: (params) => (
-      <ZetkinDateTime datetime={params.value as string} />
+      <ZetkinDateTime convertToLocal datetime={params.value as string} />
     ),
     type: 'date',
   },
   {
     field: 'updated',
     renderCell: (params) => (
-      <ZetkinRelativeTime datetime={params.value as string} />
+      <ZetkinRelativeTime
+        convertToLocal
+        datetime={params.value as string}
+        forcePast
+      />
     ),
     type: 'date',
   },
