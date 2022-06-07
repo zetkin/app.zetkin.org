@@ -304,7 +304,7 @@ export interface ZetkinJourneyInstance {
   summary: string;
   tags: ZetkinTag[];
   title?: string;
-  updated: string;
+  updated: string | null;
 }
 
 export interface ZetkinJourneyMilestone {
