@@ -3,6 +3,7 @@ columns:
   created: Created
   nextMilestoneDeadline: Next milestone deadline
   nextMilestoneTitle: Next milestone
+  outcome: Outcome notes
   subjects: People
   summary: Summary
   tagsFree: Tags
