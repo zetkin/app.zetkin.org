@@ -7,19 +7,19 @@ assignees: ''
 
 ---
 
-### Description
+## Description
 A user should be able to...
 
-### Relevant Job Stories
+## Relevant Job Stories
 
-### Prerequisites
+## Prerequisites
 
-### Requirements
+## Requirements
 - [ ] Requirement 1
 
-### Possible implementations
+## Possible implementations
 
-### Design specifications
+## Design specifications
 (Put any links to wireframes, figma, or other designs here etc here.)
 
-### Open questions
+## Open questions
