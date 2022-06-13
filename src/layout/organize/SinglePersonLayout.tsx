@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 
 import { personResource } from 'api/people';
 import TabbedLayout from './TabbedLayout';
+import { Box, Typography } from '@material-ui/core';
 
 interface SinglePersonLayoutProps {
   fixedHeight?: boolean;
@@ -40,7 +41,22 @@ const SinglePersonLayout: FunctionComponent<SinglePersonLayoutProps> = ({
           messageId: 'layout.organize.person.tabs.manage',
         },
       ]}
-      title={`${person?.first_name} ${person?.last_name}`}
+      title={
+        <Box
+          style={{
+            alignItems: 'center',
+            display: 'flex',
+          }}
+        >
+          {`${person?.first_name} ${person?.last_name}`}
+          {person?.ext_id && (
+            <Typography
+              color="secondary"
+              variant="h3"
+            >{`\u00A0#${person?.ext_id}`}</Typography>
+          )}
+        </Box>
+      }
     >
       {children}
     </TabbedLayout>
