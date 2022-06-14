@@ -29,7 +29,7 @@ export const TagManagerController: React.FunctionComponent<
   availableTags,
   disableEditTags,
   disabledTags,
-  groupTags = false,
+  groupTags = true,
   onAssignTag,
   onCreateTag,
   onEditTag,
