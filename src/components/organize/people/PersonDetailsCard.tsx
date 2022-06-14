@@ -28,6 +28,7 @@ const nativeFieldsToDisplay = [
   'zip_code',
   'country',
   'gender',
+  'ext_id',
 ];
 
 const PersonDetailsCard: React.FunctionComponent<{
