@@ -46,7 +46,7 @@ export const TagManagerSection: React.FunctionComponent<
 > = (props) => {
   const intl = useIntl();
 
-  const [isGrouped, setIsGrouped] = useState(false);
+  const [isGrouped, setIsGrouped] = useState(true);
 
   return (
     <ZetkinSection
