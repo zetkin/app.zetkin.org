@@ -1,13 +1,16 @@
+import { Alert } from '@material-ui/lab';
 import { FormattedMessage } from 'react-intl';
 import React from 'react';
 import {
   Button,
+  CardActionArea,
   Collapse,
   Divider,
   Fade,
   Grid,
   MenuItem,
   Select,
+  Typography,
 } from '@material-ui/core';
 
 import TimelineAddNote from './TimelineAddNote';
@@ -42,15 +45,29 @@ const Timeline: React.FunctionComponent<TimelineProps> = ({
   return (
     <Fade appear in timeout={1000}>
       <Grid container direction="column" spacing={5}>
-        <Grid item xs={6}>
+        <Grid item sm={6} xl={4} xs={12}>
+          {/* Filter timeline select */}
           <Select
             fullWidth
-            label="Type"
             onChange={(event) =>
               setUpdateTypeFilter(
                 event.target.value as UPDATE_TYPE_FILTER_OPTIONS
               )
             }
+            renderValue={(value) => (
+              <Typography color="secondary">
+                <FormattedMessage
+                  id="misc.timeline.filter.filterSelectLabel"
+                  values={{
+                    filter: (
+                      <FormattedMessage
+                        id={`misc.timeline.filter.byType.${value}`}
+                      />
+                    ),
+                  }}
+                />
+              </Typography>
+            )}
             value={updateTypeFilter}
             variant="outlined"
           >
@@ -68,6 +85,21 @@ const Timeline: React.FunctionComponent<TimelineProps> = ({
         <Grid item>
           <TimelineAddNote disabled={disabled} onSubmit={onAddNote} />
         </Grid>
+        {updateTypeFilter !== 'all' && (
+          <Grid item>
+            <CardActionArea>
+              <Alert
+                onClick={() =>
+                  setUpdateTypeFilter(UPDATE_TYPE_FILTER_OPTIONS.All)
+                }
+                severity="warning"
+                style={{ cursor: 'pointer' }}
+              >
+                <FormattedMessage id="misc.timeline.filter.warning" />
+              </Alert>
+            </CardActionArea>
+          </Grid>
+        )}
         {renderUpdateList()}
         {expandable && renderExpandButton()}
       </Grid>
