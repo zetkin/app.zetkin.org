@@ -34,9 +34,14 @@ customLoading.args = {
   queries: { mockLoadingQuery },
 };
 
-export const error = Template.bind({});
-error.args = {
-  errorIndicator: <Typography>THERE WAS AN ERROR!!!</Typography>,
+export const customError = Template.bind({});
+customError.args = {
+  errorIndicator: <Typography>THIS IS A CUSTOM ERROR!!!</Typography>,
+  queries: { mockErrorQuery },
+};
+
+export const defaultError = Template.bind({});
+defaultError.args = {
   queries: { mockErrorQuery },
 };
 
