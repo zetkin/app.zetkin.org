@@ -14,7 +14,9 @@ import TimelineAddNote from './TimelineAddNote';
 import TimelineUpdate from './TimelineUpdate';
 import { ZetkinNoteBody } from 'types/zetkin';
 import { ZetkinUpdate } from 'types/updates';
-import useFilterUpdates, { UpdateFilterOptions } from './useFilterUpdates';
+import useFilterUpdates, {
+  UPDATE_TYPE_FILTER_OPTIONS,
+} from './useFilterUpdates';
 
 export interface TimelineProps {
   disabled?: boolean;
@@ -45,16 +47,22 @@ const Timeline: React.FunctionComponent<TimelineProps> = ({
             fullWidth
             label="Type"
             onChange={(event) =>
-              setUpdateTypeFilter(event.target.value as UpdateFilterOptions)
+              setUpdateTypeFilter(
+                event.target.value as UPDATE_TYPE_FILTER_OPTIONS
+              )
             }
             value={updateTypeFilter}
             variant="outlined"
           >
-            <MenuItem value="all">All</MenuItem>
-            <MenuItem value="notes">Notes</MenuItem>
-            <MenuItem value="files">Files</MenuItem>
-            <MenuItem value="milestones">Milestones</MenuItem>
-            <MenuItem value="tags">Tags</MenuItem>
+            {Object.values(UPDATE_TYPE_FILTER_OPTIONS).map((option) => {
+              return (
+                <MenuItem key={option} value={option}>
+                  <FormattedMessage
+                    id={`misc.timeline.filter.byType.${option}`}
+                  />
+                </MenuItem>
+              );
+            })}
           </Select>
         </Grid>
         <Grid item>

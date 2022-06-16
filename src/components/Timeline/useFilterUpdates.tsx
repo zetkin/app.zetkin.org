@@ -3,16 +3,19 @@ import { useMemo, useState } from 'react';
 
 import { UPDATE_TYPES, ZetkinUpdate } from 'types/updates';
 
-export type UpdateFilterOptions =
-  | 'all'
-  | 'notes'
-  | 'files'
-  | 'milestones'
-  | 'tags';
+export enum UPDATE_TYPE_FILTER_OPTIONS {
+  All = 'all',
+  NOTES = 'notes',
+  FILES = 'files',
+  PEOPLE = 'people',
+  MILESTONES = 'milestones',
+  TAGS = 'tags',
+}
 
 const useFilterUpdates = (updates: ZetkinUpdate[]) => {
-  const [updateTypeFilter, setUpdateTypeFilter] =
-    useState<UpdateFilterOptions>('all');
+  const [updateTypeFilter, setUpdateTypeFilter] = useState(
+    UPDATE_TYPE_FILTER_OPTIONS.All
+  );
 
   const sortedUpdates = useMemo(
     () =>
@@ -33,6 +36,13 @@ const useFilterUpdates = (updates: ZetkinUpdate[]) => {
         update.type === UPDATE_TYPES.JOURNEYINSTANCE_ADDNOTE &&
         update.details.note.files.length > 0
       );
+    } else if (updateTypeFilter === 'people') {
+      return [
+        UPDATE_TYPES.JOURNEYINSTANCE_ADDASSIGNEE,
+        UPDATE_TYPES.JOURNEYINSTANCE_REMOVEASSIGNEE,
+        UPDATE_TYPES.JOURNEYINSTANCE_ADDSUBJECT,
+        UPDATE_TYPES.JOURNEYINSTANCE_REMOVESUBJECT,
+      ].includes(update.type);
     } else if (updateTypeFilter === 'milestones') {
       return update.type === UPDATE_TYPES.JOURNEYINSTANCE_UPDATEMILESTONE;
     } else if (updateTypeFilter === 'tags') {
