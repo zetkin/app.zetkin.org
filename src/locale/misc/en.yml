@@ -53,3 +53,11 @@ snackbar:
 timeline:
   add_note_placeholder: Enter text to leave a note
   expand: show full timeline
+  filter:
+    byType:
+      all: All
+      files: Files
+      milestones: Milestones
+      notes: Notes
+      people: People
+      tags: Tags
