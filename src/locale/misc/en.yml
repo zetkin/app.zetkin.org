@@ -61,3 +61,5 @@ timeline:
       notes: Notes
       people: People
       tags: Tags
+    filterSelectLabel: 'Show: {filter}'
+    warning: The timeline is being filtered. Click here to remove the filter.
