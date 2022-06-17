@@ -125,7 +125,14 @@ const EmailBody: React.FC<{
 
     return (
       <CleanHtml
-        BoxProps={{ className: classes.body, component: 'div' }}
+        BoxProps={{
+          className: classes.body,
+          component: 'div',
+          style: {
+            whiteSpace: 'pre-wrap',
+            wordBreak: 'break-word',
+          },
+        }}
         dirtyHtml={content}
       />
     );
