@@ -40,10 +40,11 @@ const Timeline: React.FunctionComponent<TimelineProps> = ({
 }) => {
   const [expanded, setExpanded] = React.useState<boolean>(!!showAll);
   const {
+    groupedUpdates,
     filteredUpdates,
     updateTypeFilter,
     setUpdateTypeFilter,
-    groupedUpdates,
+    typeFilterOptions,
   } = useFilterUpdates(updates);
 
   return (
@@ -75,7 +76,7 @@ const Timeline: React.FunctionComponent<TimelineProps> = ({
             value={updateTypeFilter}
             variant="outlined"
           >
-            {Object.values(UPDATE_TYPE_FILTER_OPTIONS).map((type) => {
+            {typeFilterOptions.map((type) => {
               return (
                 <MenuItem
                   key={type}
@@ -98,7 +99,7 @@ const Timeline: React.FunctionComponent<TimelineProps> = ({
             <CardActionArea>
               <Alert
                 onClick={() =>
-                  setUpdateTypeFilter(UPDATE_TYPE_FILTER_OPTIONS.All)
+                  setUpdateTypeFilter(UPDATE_TYPE_FILTER_OPTIONS.ALL)
                 }
                 severity="warning"
                 style={{ cursor: 'pointer' }}

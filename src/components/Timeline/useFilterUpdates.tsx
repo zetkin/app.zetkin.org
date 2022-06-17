@@ -4,7 +4,7 @@ import { useMemo, useState } from 'react';
 import { UPDATE_TYPES, ZetkinUpdate } from 'types/updates';
 
 export enum UPDATE_TYPE_FILTER_OPTIONS {
-  All = 'all',
+  ALL = 'all',
   NOTES = 'notes',
   FILES = 'files',
   PEOPLE = 'people',
@@ -55,7 +55,7 @@ const filterUpdates = (
 
 const useFilterUpdates = (updates: ZetkinUpdate[]) => {
   const [updateTypeFilter, setUpdateTypeFilter] = useState(
-    UPDATE_TYPE_FILTER_OPTIONS.All
+    UPDATE_TYPE_FILTER_OPTIONS.ALL
   );
 
   // Sorts and groups only when the updates are changed
@@ -85,6 +85,7 @@ const useFilterUpdates = (updates: ZetkinUpdate[]) => {
     filteredUpdates,
     groupedUpdates,
     setUpdateTypeFilter,
+    typeFilterOptions: Object.values(UPDATE_TYPE_FILTER_OPTIONS),
     updateTypeFilter,
   };
 };
