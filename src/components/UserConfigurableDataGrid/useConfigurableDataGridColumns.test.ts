@@ -228,18 +228,6 @@ describe('useConfigurableDataGridColumns', () => {
       expect(columns[2]).toEqual(inputColumns[0]);
     });
 
-    test('does not trigger re-render using state', () => {
-      const inputColumns = mockColumns(3);
-      const { setColumnOrder } = useConfigurableDataGridColumns(
-        'key',
-        inputColumns,
-        mockStorage
-      );
-
-      setColumnOrder('field0', 0);
-      expect(mockSetState).toHaveBeenCalledTimes(0);
-    });
-
     test('correctly updates storage when several times in a row', () => {
       const inputColumns = mockColumns(4);
       const { setColumnOrder } = useConfigurableDataGridColumns(
