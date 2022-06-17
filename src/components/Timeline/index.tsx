@@ -2,6 +2,7 @@ import { Alert } from '@material-ui/lab';
 import { FormattedMessage } from 'react-intl';
 import React from 'react';
 import {
+  Box,
   Button,
   CardActionArea,
   Collapse,
@@ -50,6 +51,9 @@ const Timeline: React.FunctionComponent<TimelineProps> = ({
   return (
     <Fade appear in timeout={1000}>
       <Grid container direction="column" spacing={5}>
+        <Grid item>
+          <TimelineAddNote disabled={disabled} onSubmit={onAddNote} />
+        </Grid>
         <Grid item sm={6} xl={4} xs={12}>
           {/* Filter timeline select */}
           <Select
@@ -83,16 +87,22 @@ const Timeline: React.FunctionComponent<TimelineProps> = ({
                   disabled={groupedUpdates[type].length === 0}
                   value={type}
                 >
-                  <FormattedMessage
-                    id={`misc.timeline.filter.byType.${type}`}
-                  />
+                  <Box
+                    display="flex"
+                    justifyContent="space-between"
+                    width="100%"
+                  >
+                    <Box>
+                      <FormattedMessage
+                        id={`misc.timeline.filter.byType.${type}`}
+                      />
+                    </Box>
+                    <Box>{groupedUpdates[type].length}</Box>
+                  </Box>
                 </MenuItem>
               );
             })}
           </Select>
-        </Grid>
-        <Grid item>
-          <TimelineAddNote disabled={disabled} onSubmit={onAddNote} />
         </Grid>
         {updateTypeFilter !== 'all' && (
           <Grid item>
