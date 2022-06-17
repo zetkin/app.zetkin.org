@@ -39,8 +39,12 @@ const Timeline: React.FunctionComponent<TimelineProps> = ({
   updates,
 }) => {
   const [expanded, setExpanded] = React.useState<boolean>(!!showAll);
-  const { filteredUpdates, updateTypeFilter, setUpdateTypeFilter } =
-    useFilterUpdates(updates);
+  const {
+    filteredUpdates,
+    updateTypeFilter,
+    setUpdateTypeFilter,
+    groupedUpdates,
+  } = useFilterUpdates(updates);
 
   return (
     <Fade appear in timeout={1000}>
@@ -71,11 +75,15 @@ const Timeline: React.FunctionComponent<TimelineProps> = ({
             value={updateTypeFilter}
             variant="outlined"
           >
-            {Object.values(UPDATE_TYPE_FILTER_OPTIONS).map((option) => {
+            {Object.values(UPDATE_TYPE_FILTER_OPTIONS).map((type) => {
               return (
-                <MenuItem key={option} value={option}>
+                <MenuItem
+                  key={type}
+                  disabled={groupedUpdates[type].length === 0}
+                  value={type}
+                >
                   <FormattedMessage
-                    id={`misc.timeline.filter.byType.${option}`}
+                    id={`misc.timeline.filter.byType.${type}`}
                   />
                 </MenuItem>
               );
