@@ -60,11 +60,6 @@ export default function useConfigurableDataGridColumns(
       }
     }),
     setColumnOrder: (field, newIndex) => {
-      // Use the stored config and not the config from state when reordering.
-      // Changing the order does not require a re-render (because the grid
-      // already re-renders internally), so we don't update state when the
-      // order changes, instead just updating the storage, which is why that's
-      // where we have to go to find the most recent order config.
       const storedConfig = loadConfig(storage, key);
       const sortedFields = orderColumns(
         inputColumns,
@@ -83,6 +78,8 @@ export default function useConfigurableDataGridColumns(
       };
 
       storage.setItem(key, JSON.stringify(newConfig));
+
+      setConfig(newConfig);
     },
     setColumnWidth: (field, width) => {
       const storedConfig = loadConfig(storage, key);
