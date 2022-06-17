@@ -53,3 +53,14 @@ snackbar:
 timeline:
   add_note_placeholder: Enter text to leave a note
   expand: show full timeline
+  filter:
+    byType:
+      all: All
+      files: Files
+      journey: Journey
+      milestones: Milestones
+      notes: Notes
+      people: People
+      tags: Tags
+    filterSelectLabel: 'Show: {filter}'
+    warning: The timeline is being filtered. Click here to remove the filter.

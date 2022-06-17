@@ -1,11 +1,26 @@
+import { Alert } from '@material-ui/lab';
 import { FormattedMessage } from 'react-intl';
-import { Button, Collapse, Divider, Fade, Grid } from '@material-ui/core';
-import React, { useMemo } from 'react';
+import React from 'react';
+import {
+  Box,
+  Button,
+  CardActionArea,
+  Collapse,
+  Divider,
+  Fade,
+  Grid,
+  MenuItem,
+  Select,
+  Typography,
+} from '@material-ui/core';
 
 import TimelineAddNote from './TimelineAddNote';
 import TimelineUpdate from './TimelineUpdate';
 import { ZetkinNoteBody } from 'types/zetkin';
 import { ZetkinUpdate } from 'types/updates';
+import useFilterUpdates, {
+  UPDATE_TYPE_FILTER_OPTIONS,
+} from './useFilterUpdates';
 
 export interface TimelineProps {
   disabled?: boolean;
@@ -25,15 +40,13 @@ const Timeline: React.FunctionComponent<TimelineProps> = ({
   updates,
 }) => {
   const [expanded, setExpanded] = React.useState<boolean>(!!showAll);
-
-  const sorted = useMemo(
-    () =>
-      updates.sort(
-        (u0, u1) =>
-          new Date(u1.timestamp).getTime() - new Date(u0.timestamp).getTime()
-      ),
-    [updates]
-  );
+  const {
+    groupedUpdates,
+    filteredUpdates,
+    updateTypeFilter,
+    setUpdateTypeFilter,
+    typeFilterOptions,
+  } = useFilterUpdates(updates);
 
   return (
     <Fade appear in timeout={1000}>
@@ -41,6 +54,71 @@ const Timeline: React.FunctionComponent<TimelineProps> = ({
         <Grid item>
           <TimelineAddNote disabled={disabled} onSubmit={onAddNote} />
         </Grid>
+        <Grid item sm={6} xl={4} xs={12}>
+          {/* Filter timeline select */}
+          <Select
+            fullWidth
+            onChange={(event) =>
+              setUpdateTypeFilter(
+                event.target.value as UPDATE_TYPE_FILTER_OPTIONS
+              )
+            }
+            renderValue={(value) => (
+              <Typography color="secondary">
+                <FormattedMessage
+                  id="misc.timeline.filter.filterSelectLabel"
+                  values={{
+                    filter: (
+                      <FormattedMessage
+                        id={`misc.timeline.filter.byType.${value}`}
+                      />
+                    ),
+                  }}
+                />
+              </Typography>
+            )}
+            value={updateTypeFilter}
+            variant="outlined"
+          >
+            {typeFilterOptions.map((type) => {
+              return (
+                <MenuItem
+                  key={type}
+                  disabled={groupedUpdates[type].length === 0}
+                  value={type}
+                >
+                  <Box
+                    display="flex"
+                    justifyContent="space-between"
+                    width="100%"
+                  >
+                    <Box>
+                      <FormattedMessage
+                        id={`misc.timeline.filter.byType.${type}`}
+                      />
+                    </Box>
+                    <Box>{groupedUpdates[type].length}</Box>
+                  </Box>
+                </MenuItem>
+              );
+            })}
+          </Select>
+        </Grid>
+        {updateTypeFilter !== 'all' && (
+          <Grid item>
+            <CardActionArea>
+              <Alert
+                onClick={() =>
+                  setUpdateTypeFilter(UPDATE_TYPE_FILTER_OPTIONS.ALL)
+                }
+                severity="warning"
+                style={{ cursor: 'pointer' }}
+              >
+                <FormattedMessage id="misc.timeline.filter.warning" />
+              </Alert>
+            </CardActionArea>
+          </Grid>
+        )}
         {renderUpdateList()}
         {expandable && renderExpandButton()}
       </Grid>
@@ -50,13 +128,18 @@ const Timeline: React.FunctionComponent<TimelineProps> = ({
   function renderUpdateList() {
     return (
       <>
-        {(expandable ? sorted.slice(0, SHOW_INITIALLY) : sorted).map(
-          (update, idx) =>
-            renderUpdate(
-              update,
-              idx <
-                (!expandable || expanded ? sorted.length : SHOW_INITIALLY) - 1
-            )
+        {(expandable
+          ? filteredUpdates.slice(0, SHOW_INITIALLY)
+          : filteredUpdates
+        ).map((update, idx) =>
+          renderUpdate(
+            update,
+            idx <
+              (!expandable || expanded
+                ? filteredUpdates.length
+                : SHOW_INITIALLY) -
+                1
+          )
         )}
         {expandable && renderExpandedUpdates()}
       </>
@@ -95,10 +178,13 @@ const Timeline: React.FunctionComponent<TimelineProps> = ({
       // @ts-ignore
       <Collapse component={Grid} in={expanded} item>
         <Grid container direction="column" spacing={6}>
-          {sorted
+          {filteredUpdates
             .slice(SHOW_INITIALLY)
             .map((update, idx) =>
-              renderUpdate(update, idx < sorted.length - SHOW_INITIALLY - 1)
+              renderUpdate(
+                update,
+                idx < filteredUpdates.length - SHOW_INITIALLY - 1
+              )
             )}
         </Grid>
       </Collapse>
