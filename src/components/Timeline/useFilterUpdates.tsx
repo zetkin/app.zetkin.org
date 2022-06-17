@@ -10,6 +10,7 @@ export enum UPDATE_TYPE_FILTER_OPTIONS {
   PEOPLE = 'people',
   MILESTONES = 'milestones',
   TAGS = 'tags',
+  JOURNEY = 'journey',
 }
 
 const filterUpdates = (
@@ -40,6 +41,14 @@ const filterUpdates = (
       UPDATE_TYPES.ANY_REMOVETAGS,
     ].map((type) => type.slice(2));
     return tagSelectors.some((selector) => update.type.includes(selector));
+  } else if (updateTypeFilter === 'journey') {
+    return [
+      UPDATE_TYPES.JOURNEYINSTANCE_CREATE,
+      UPDATE_TYPES.JOURNEYINSTANCE_OPEN,
+      UPDATE_TYPES.JOURNEYINSTANCE_CLOSE,
+      UPDATE_TYPES.JOURNEYINSTANCE_UPDATE,
+      UPDATE_TYPES.JOURNEYINSTANCE_CONVERT,
+    ].includes(update.type);
   }
   return false;
 };

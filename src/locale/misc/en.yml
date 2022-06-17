@@ -57,6 +57,7 @@ timeline:
     byType:
       all: All
       files: Files
+      journey: Journey
       milestones: Milestones
       notes: Notes
       people: People
