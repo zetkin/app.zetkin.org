@@ -29,15 +29,17 @@ toLocal.args = {
 const mockDatetime = new Date();
 mockDatetime.setDate(new Date().getDate() + 1);
 
+// slicing away the "Z" at the end of the ISO-string, because
+// that's how dates are formatted coming from the backend.
 export const forcedPast = Template.bind({});
 forcedPast.args = {
-  datetime: mockDatetime.toISOString().slice(0, 19),
+  datetime: mockDatetime.toISOString().slice(0, -1),
   forcePast: true,
 };
 
 export const forcedPastAndToLocal = Template.bind({});
 forcedPastAndToLocal.args = {
   convertToLocal: true,
-  datetime: mockDatetime.toISOString().slice(0, 19),
+  datetime: mockDatetime.toISOString().slice(0, -1),
   forcePast: true,
 };
