@@ -1,11 +1,23 @@
+import { isEqual } from 'lodash';
 import { ParsedUrlQuery } from 'querystring';
 import { useRouter } from 'next/router';
-import { GridFilterModel, GridLinkOperator } from '@mui/x-data-grid-pro';
+import {
+  DataGridProProps,
+  GridFilterModel,
+  GridLinkOperator,
+  GridSortModel,
+} from '@mui/x-data-grid-pro';
 import { useEffect, useState } from 'react';
 
 interface UseModelsFromQueryString {
   filterModel: GridFilterModel;
+  gridProps: Pick<
+    DataGridProProps,
+    'filterModel' | 'onFilterModelChange' | 'onSortModelChange' | 'sortModel'
+  >;
   setFilterModel: (model: GridFilterModel) => void;
+  setSortModel: (model: GridSortModel) => void;
+  sortModel: GridSortModel;
 }
 
 export function useModelsFromQueryString(): UseModelsFromQueryString {
@@ -15,39 +27,67 @@ export function useModelsFromQueryString(): UseModelsFromQueryString {
     parseFilterModelFromQuery(router.query)
   );
 
+  const [sortModel, setSortModel] = useState<GridSortModel>(
+    parseSortModelFromQuery(router.query)
+  );
+
   // Update router URL when model changes
   useEffect(() => {
     const pathWithoutQuery = router.asPath.includes('?')
       ? router.asPath.slice(0, router.asPath.indexOf('?'))
       : router.asPath;
 
-    const qs = serializeFilterQueryString(filterModel);
+    const qs = [
+      serializeFilterQueryString(filterModel),
+      serializeSortQueryString(sortModel),
+    ]
+      .filter((item) => !!item.length)
+      .join('&');
 
-    const filterPath = [pathWithoutQuery, qs]
+    const modelPath = [pathWithoutQuery, qs]
       .filter((elem) => elem.length)
       .join('?');
-    if (filterPath != router.asPath) {
-      router.push(filterPath, filterPath, {
+
+    if (modelPath != router.asPath) {
+      router.push(modelPath, modelPath, {
         shallow: true,
       });
     }
-  }, [filterModel]);
+  }, [filterModel, sortModel]);
 
   // Update model when router URL changes
   useEffect(() => {
-    const modelQueryString = serializeFilterQueryString(filterModel);
-    const routerQueryString = router.asPath.slice(
-      router.asPath.indexOf('?') + 1
-    );
+    const routerFilterModel = parseFilterModelFromQuery(router.query);
+    const routerSortModel = parseSortModelFromQuery(router.query);
 
-    if (modelQueryString != routerQueryString) {
-      setFilterModel(parseFilterModelFromQuery(router.query));
+    if (!isEqual(routerFilterModel, filterModel)) {
+      setFilterModel(routerFilterModel);
     }
-  }, [router.asPath, router.query]);
+
+    if (!isEqual(routerSortModel, sortModel)) {
+      setSortModel(routerSortModel);
+    }
+  }, [router.query]);
 
   return {
     filterModel,
+    gridProps: {
+      filterModel: filterModel,
+      onFilterModelChange: (model) => {
+        if (!isEqual(model, filterModel)) {
+          setFilterModel(model);
+        }
+      },
+      onSortModelChange: (model) => {
+        if (!isEqual(model, sortModel)) {
+          setSortModel(model);
+        }
+      },
+      sortModel: sortModel,
+    },
     setFilterModel,
+    setSortModel,
+    sortModel,
   };
 }
 
@@ -83,6 +123,25 @@ function parseFilterModelFromQuery(query: ParsedUrlQuery): GridFilterModel {
   };
 }
 
+function parseSortModelFromQuery(query: ParsedUrlQuery): GridSortModel {
+  const sort = Array.isArray(query.sort) ? query.sort[0] : query.sort;
+  if (sort) {
+    return sort.split(',').map((sortStr) => {
+      const direction = sortStr.charAt(0) == '-' ? 'desc' : 'asc';
+      const field = '+-'.includes(sortStr.charAt(0))
+        ? sortStr.slice(1)
+        : sortStr;
+
+      return {
+        field,
+        sort: direction,
+      };
+    });
+  } else {
+    return [];
+  }
+}
+
 function serializeFilterQueryString(filterModel: GridFilterModel): string {
   const qs = filterModel.items
     .map(
@@ -97,5 +156,18 @@ function serializeFilterQueryString(filterModel: GridFilterModel): string {
     return qs + `&filterOperator=${filterModel.linkOperator || 'and'}`;
   } else {
     return qs;
+  }
+}
+
+function serializeSortQueryString(sortModel: GridSortModel): string {
+  if (sortModel.length) {
+    return (
+      'sort=' +
+      sortModel
+        .map((item) => (item.sort == 'desc' ? `-${item.field}` : item.field))
+        .join(',')
+    );
+  } else {
+    return '';
   }
 }
