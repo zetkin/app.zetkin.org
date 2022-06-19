@@ -1,6 +1,7 @@
 import { DataGridPro, DataGridProProps } from '@mui/x-data-grid-pro';
 
 import useConfigurableDataGridColumns from './useConfigurableDataGridColumns';
+import { useModelsFromQueryString } from './useModelsFromQueryString';
 
 type UserConfigurableDataGridProps = DataGridProProps & {
   storageKey: string;
@@ -13,10 +14,13 @@ const UserConfigurableDataGrid: React.FC<UserConfigurableDataGridProps> = ({
   const { columns, setColumnOrder, setColumnWidth } =
     useConfigurableDataGridColumns(storageKey, gridProps.columns);
 
+  const { filterModel, setFilterModel } = useModelsFromQueryString();
+
   return (
     <DataGridPro
       {...gridProps}
       columns={columns}
+      filterModel={filterModel}
       onColumnOrderChange={(params, event, details) => {
         // Subtract one for selection column, if it's visible
         const targetIndex = gridProps.checkboxSelection
@@ -35,6 +39,9 @@ const UserConfigurableDataGrid: React.FC<UserConfigurableDataGridProps> = ({
         if (gridProps.onColumnResize) {
           gridProps.onColumnResize(params, event, details);
         }
+      }}
+      onFilterModelChange={(model) => {
+        setFilterModel(model);
       }}
     />
   );
