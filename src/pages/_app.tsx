@@ -33,9 +33,18 @@ if (process.env.NEXT_PUBLIC_MUIX_LICENSE_KEY) {
 
 // Progress bar
 NProgress.configure({ showSpinner: false });
-Router.events.on('routeChangeStart', () => NProgress.start());
-Router.events.on('routeChangeComplete', () => NProgress.done());
-Router.events.on('routeChangeError', () => NProgress.done());
+Router.events.on(
+  'routeChangeStart',
+  (url, { shallow }) => !shallow && NProgress.start()
+);
+Router.events.on(
+  'routeChangeComplete',
+  (url, { shallow }) => !shallow && NProgress.done()
+);
+Router.events.on(
+  'routeChangeError',
+  (url, { shallow }) => !shallow && NProgress.done()
+);
 
 const queryClient = new QueryClient({
   defaultOptions: {
