@@ -5,6 +5,8 @@ import { ZetkinJourneyInstance } from 'types/zetkin';
 
 const journeyInstances = [mockJourneyInstance({ assignees: [], subjects: [] })];
 
+jest.mock('next/dist/client/router', () => require('next-router-mock'));
+
 describe('JourneyInstancesDataTable.tsx', () => {
   it('Renders with no data', async () => {
     const { getByText } = render(
