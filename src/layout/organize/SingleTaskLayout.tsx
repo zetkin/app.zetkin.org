@@ -1,10 +1,13 @@
+import { Box } from '@material-ui/core';
 import { FunctionComponent } from 'react';
 import { useRouter } from 'next/router';
 
 import TabbedLayout from './TabbedLayout';
 
+import getTaskStatus from 'utils/getTaskStatus';
 import TaskActionButtons from 'components/organize/tasks/TaskActionButtons';
 import { taskResource } from 'api/tasks';
+import TaskStatusChip from 'components/organize/tasks/TaskStatusChip';
 import TaskStatusText from 'components/organize/tasks/TaskStatusText';
 
 const SingleTaskLayout: FunctionComponent = ({ children }) => {
@@ -23,7 +26,16 @@ const SingleTaskLayout: FunctionComponent = ({ children }) => {
       actionButtons={<TaskActionButtons task={task} />}
       baseHref={`/organize/${orgId}/campaigns/${campId}/calendar/tasks/${taskId}`}
       defaultTab="/"
-      subtitle={<TaskStatusText task={task} />}
+      subtitle={
+        <Box alignItems="center" display="flex">
+          <Box mr={1}>
+            <TaskStatusChip status={getTaskStatus(task)} />
+          </Box>
+          <Box>
+            <TaskStatusText task={task} />
+          </Box>
+        </Box>
+      }
       tabs={[
         { href: `/`, messageId: 'layout.organize.tasks.tabs.summary' },
         {
