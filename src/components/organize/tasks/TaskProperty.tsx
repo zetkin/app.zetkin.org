@@ -1,5 +1,5 @@
 import { useIntl } from 'react-intl';
-import { Box, Typography } from '@material-ui/core';
+import { ListItem, ListItemText } from '@material-ui/core';
 
 interface TaskPropertyProps {
   title: string;
@@ -13,15 +13,17 @@ const TaskProperty: React.FunctionComponent<TaskPropertyProps> = ({
   const intl = useIntl();
 
   return (
-    <Box mt={2}>
-      <Typography variant="subtitle2">{title}</Typography>
-      <Typography color={value ? 'inherit' : 'error'} variant="body1">
-        {value ||
+    <ListItem divider>
+      <ListItemText
+        primary={
+          value ||
           intl.formatMessage({
             id: 'misc.tasks.forms.common.notSet',
-          })}
-      </Typography>
-    </Box>
+          })
+        }
+        secondary={title}
+      />
+    </ListItem>
   );
 };
 

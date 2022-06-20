@@ -56,8 +56,8 @@ const TaskDetailPage: PageWithLayout<TaskDetailPageProps> = ({
       <Head>
         <title>{task?.title}</title>
       </Head>
-      <Grid container>
-        <Grid item lg={8} md={6} sm={12}>
+      <Grid container justifyContent="space-between" spacing={4}>
+        <Grid item lg={6} md={6} sm={12}>
           <TaskDetailsSection task={task} />
         </Grid>
         <Grid item lg={4} md={6} sm={12}>
