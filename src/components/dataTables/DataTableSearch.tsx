@@ -1,4 +1,3 @@
-import { FormattedMessage } from 'react-intl';
 import { makeStyles } from '@material-ui/styles';
 import {
   Badge,
@@ -10,6 +9,7 @@ import {
   TextField,
 } from '@material-ui/core';
 import { Close, Search } from '@material-ui/icons';
+import { FormattedMessage, useIntl } from 'react-intl';
 import {
   ReactEventHandler,
   SyntheticEvent,
@@ -19,6 +19,8 @@ import {
 } from 'react';
 
 import useDebounce from 'hooks/useDebounce';
+
+export const ID_SEARCH_CHAR = '#';
 
 const useStyles = makeStyles({
   popover: {
@@ -42,9 +44,12 @@ const DataTableSearch: React.FunctionComponent<DataTableSearchProps> = ({
   const open = Boolean(anchorEl);
   const [searchString, setSearchString] = useState<string>('');
   const id = open ? 'sort-options' : undefined;
-  const isActive = searchString.length >= minSearchLength;
+  const isIdSearch =
+    searchString[0] === ID_SEARCH_CHAR && searchString.length > 1;
+  const isActive = searchString.length >= minSearchLength || isIdSearch;
   const textFieldInputRef = useRef<HTMLInputElement>();
   const [isTyping, setIsTyping] = useState(false);
+  const intl = useIntl();
 
   const debouncedFinishedTyping = useDebounce(async () => {
     setIsTyping(false);
@@ -127,7 +132,11 @@ const DataTableSearch: React.FunctionComponent<DataTableSearchProps> = ({
               minSearchLength > 1 &&
               searchString.length < 3 && (
                 <FormattedMessage
-                  id="misc.dataTable.search.helpText"
+                  id={`misc.dataTable.search.${
+                    searchString[0] === ID_SEARCH_CHAR
+                      ? 'idSearchHelpText'
+                      : 'helpText'
+                  }`}
                   values={{ minSearchLength }}
                 />
               )
@@ -143,7 +152,9 @@ const DataTableSearch: React.FunctionComponent<DataTableSearchProps> = ({
             }}
             inputRef={textFieldInputRef}
             onChange={handleChange as ReactEventHandler<unknown>}
-            placeholder="Search this view"
+            placeholder={intl.formatMessage({
+              id: 'misc.dataTable.search.placeholder',
+            })}
             value={searchString}
             variant="outlined"
           />

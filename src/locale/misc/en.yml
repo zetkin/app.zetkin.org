@@ -19,6 +19,8 @@ dataTable:
   search:
     button: Search
     helpText: Type at least {minSearchLength} characters
+    idSearchHelpText: Type an ID (numbers only)
+    placeholder: 'Search - use # for IDs, e.g. type #123'
     title: Search
   sorting:
     addButton: Add sorting column
