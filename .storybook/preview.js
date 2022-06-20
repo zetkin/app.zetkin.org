@@ -1,4 +1,6 @@
+import dayjs from 'dayjs';
 import { IntlProvider } from 'react-intl';
+import isoWeek from 'dayjs/plugin/isoWeek';
 import { muiTheme } from 'storybook-addon-material-ui';
 import { RouterContext } from 'next/dist/shared/lib/router-context'; // next 11.1
 import withMock from 'storybook-addon-mock';
@@ -10,6 +12,8 @@ import '../src/styles.css';
 import mockPerson from '../src/utils/testing/mocks/mockPerson';
 
 const queryClient = new QueryClient();
+
+dayjs.extend(isoWeek);
 
 const AsyncIntlProvider = (props) => {
   const [messages, setMessages] = useState({});

@@ -10,7 +10,7 @@ import PrettyEmail from './PrettyEmail';
 
 export default {
   component: PrettyEmail,
-  title: 'Example/Timeline/Elements/PrettyEmail',
+  title: 'Organisms/Timeline/Updates/PrettyEmail',
 } as ComponentMeta<typeof PrettyEmail>;
 
 const Template: ComponentStory<typeof PrettyEmail> = (args) => (
