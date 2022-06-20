@@ -1,6 +1,7 @@
 columns:
   assignees: Assigned
   created: Created
+  id: ID
   nextMilestoneDeadline: Next milestone deadline
   nextMilestoneTitle: Next milestone
   outcome: Outcome notes
