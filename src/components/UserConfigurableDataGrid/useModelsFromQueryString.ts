@@ -94,22 +94,26 @@ export function useModelsFromQueryString(): UseModelsFromQueryString {
 function parseFilterModelFromQuery(query: ParsedUrlQuery): GridFilterModel {
   const items = Object.entries(query)
     .filter(([param]) => param.startsWith('filter_'))
-    .map(([param, val], idx) => {
-      // Split the query param, ignoring the first field ('filter')
-      const paramFields = param.split('_').slice(1);
+    .flatMap(([param, val], idx) => {
+      const values = Array.isArray(val) ? val : [val];
 
-      // The last will be the operator
-      const op = paramFields.pop();
+      return values.map((val, valIdx) => {
+        // Split the query param, ignoring the first field ('filter')
+        const paramFields = param.split('_').slice(1);
 
-      // The remaining ones are the name of the field, possibly containing underscores
-      const field = paramFields.join('_');
+        // The last will be the operator
+        const op = paramFields.pop();
 
-      return {
-        columnField: field,
-        id: idx,
-        operatorValue: op,
-        value: val || undefined,
-      };
+        // The remaining ones are the name of the field, possibly containing underscores
+        const field = paramFields.join('_');
+
+        return {
+          columnField: field,
+          id: idx * 10000 + valIdx,
+          operatorValue: op,
+          value: val || undefined,
+        };
+      });
     });
 
   return {
