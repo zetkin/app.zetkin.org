@@ -33,11 +33,13 @@ const useStyles = makeStyles({
 interface DataTableSearchProps {
   minSearchLength?: number;
   onChange: (searchString: string) => void;
+  searchById?: boolean;
 }
 
 const DataTableSearch: React.FunctionComponent<DataTableSearchProps> = ({
   minSearchLength = 3,
   onChange,
+  searchById = false,
 }) => {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const classes = useStyles();
@@ -45,7 +47,7 @@ const DataTableSearch: React.FunctionComponent<DataTableSearchProps> = ({
   const [searchString, setSearchString] = useState<string>('');
   const id = open ? 'sort-options' : undefined;
   const isIdSearch =
-    searchString[0] === ID_SEARCH_CHAR && searchString.length > 1;
+    searchById && searchString[0] === ID_SEARCH_CHAR && searchString.length > 1;
   const isActive = searchString.length >= minSearchLength || isIdSearch;
   const textFieldInputRef = useRef<HTMLInputElement>();
   const [isTyping, setIsTyping] = useState(false);
@@ -133,7 +135,7 @@ const DataTableSearch: React.FunctionComponent<DataTableSearchProps> = ({
               searchString.length < 3 && (
                 <FormattedMessage
                   id={`misc.dataTable.search.${
-                    searchString[0] === ID_SEARCH_CHAR
+                    searchString[0] === ID_SEARCH_CHAR && searchById
                       ? 'idSearchHelpText'
                       : 'helpText'
                   }`}
@@ -153,7 +155,9 @@ const DataTableSearch: React.FunctionComponent<DataTableSearchProps> = ({
             inputRef={textFieldInputRef}
             onChange={handleChange as ReactEventHandler<unknown>}
             placeholder={intl.formatMessage({
-              id: 'misc.dataTable.search.placeholder',
+              id: `misc.dataTable.search.placeholder${
+                searchById ? 'WithIdSearch' : ''
+              }`,
             })}
             value={searchString}
             variant="outlined"
