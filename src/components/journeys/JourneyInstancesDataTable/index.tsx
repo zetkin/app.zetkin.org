@@ -61,7 +61,6 @@ const JourneyInstancesDataTable: FunctionComponent<JourneysDataTableProps> = ({
           }
         }}
         pageSize={50}
-        pagination
         rows={rows}
         sortModel={sortModel}
         storageKey={storageKey}
