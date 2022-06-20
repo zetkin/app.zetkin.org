@@ -63,6 +63,9 @@ export const getStaticColumns = (): GridColDef[] => [
     field: 'summary',
   },
   {
+    field: 'outcome',
+  },
+  {
     field: 'assignees',
     renderCell: (params) =>
       (params.row.assignees as ZetkinPersonType[]).map((person) => (
