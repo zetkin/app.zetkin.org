@@ -1,13 +1,13 @@
-import ActivistTag from '../../../tags/Activist';
-import AngelaDavis from '../../../people/AngelaDavis';
-import ClaraZetkin from '../../../people/ClaraZetkin';
-import KPD from '../../..';
-import MemberOnboarding from '../../MemberOnboarding';
-import PlaysGuitarTag from '../../../tags/PlaysGuitar';
+import ActivistTag from '../../../../tags/Activist';
+import AngelaDavis from '../../../../people/AngelaDavis';
+import ClaraZetkin from '../../../../people/ClaraZetkin';
+import KPD from '../../../..';
+import MemberOnboarding from '../../../MemberOnboarding';
+import PlaysGuitarTag from '../../../../tags/PlaysGuitar';
 import {
   ZetkinJourneyInstance,
   ZetkinJourneyMilestoneStatus,
-} from '../../../../../../../src/types/zetkin';
+} from '../../../../../../../../src/types/zetkin';
 
 // Milestones
 export const AttendMeeting: ZetkinJourneyMilestoneStatus = {
