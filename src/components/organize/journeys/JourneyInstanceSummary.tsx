@@ -6,6 +6,7 @@ import { FormattedMessage as Msg, useIntl } from 'react-intl';
 import { useContext, useEffect, useRef, useState } from 'react';
 
 import { journeyInstanceResource } from 'api/journeys';
+import Markdown from 'components/Markdown';
 import SnackbarContext from 'hooks/SnackbarContext';
 import SubmitCancelButtons from 'components/forms/common/SubmitCancelButtons';
 import ZetkinAutoTextArea from 'components/ZetkinAutoTextArea';
@@ -115,16 +116,16 @@ const JourneyInstanceSummary = ({
         // Not editing
         <>
           {journeyInstance.summary.length > 0 ? (
-            <Typography
-              className={summaryCollapsed ? classes.collapsed : ''}
-              onClick={() => setEditingSummary(true)}
-              style={{
-                padding: '0.75rem 0',
+            <Markdown
+              BoxProps={{
+                className: summaryCollapsed ? classes.collapsed : '',
+                onClick: () => setSummaryCollapsed(true),
+                style: {
+                  padding: '0.75rem 0',
+                },
               }}
-              variant="body1"
-            >
-              {journeyInstance.summary}
-            </Typography>
+              markdown={journeyInstance.summary}
+            />
           ) : (
             <Typography
               className={summaryCollapsed ? classes.collapsed : ''}
