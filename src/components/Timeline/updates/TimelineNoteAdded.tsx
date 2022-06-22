@@ -1,9 +1,14 @@
+import { Edit } from '@material-ui/icons';
 import { FormattedMessage } from 'react-intl';
+import { useState } from 'react';
 import { Box, makeStyles } from '@material-ui/core';
 
 import EmailLoader from './elements/EmailLoader';
 import Markdown from 'components/Markdown';
+import SubmitCancelButtons from 'components/forms/common/SubmitCancelButtons';
+import TextEditor from '../TextEditor';
 import UpdateContainer from './elements/UpdateContainer';
+import ZetkinEllipsisMenu from 'components/ZetkinEllipsisMenu';
 import { ZetkinFile } from 'types/zetkin';
 import { ZetkinFileObjectChip } from 'components/ZetkinFileChip';
 import ZetkinPersonLink from 'components/ZetkinPersonLink';
@@ -27,6 +32,9 @@ const useStyles = makeStyles(() => {
 });
 
 const TimelineNoteAdded: React.FC<Props> = ({ update }) => {
+  const [editing, setEditing] = useState(false);
+  const [, setNoteText] = useState(update.details.note.text);
+
   const classes = useStyles();
   const emailFiles: ZetkinFile[] = update.details.note.files.filter(
     (file) => file.mime_type == 'message/rfc822'
@@ -37,6 +45,19 @@ const TimelineNoteAdded: React.FC<Props> = ({ update }) => {
 
   return (
     <UpdateContainer
+      actionButton={
+        <ZetkinEllipsisMenu
+          items={[
+            {
+              disabled: editing,
+              id: 'edit',
+              label: 'Edit',
+              onSelect: () => setEditing(true),
+              startIcon: <Edit />,
+            },
+          ]}
+        />
+      }
       headerContent={
         <FormattedMessage
           id="misc.updates.journeyinstance.addnote"
@@ -45,28 +66,43 @@ const TimelineNoteAdded: React.FC<Props> = ({ update }) => {
       }
       update={update}
     >
-      <Markdown
-        BoxProps={{
-          className: classes.note,
-          component: 'div',
-        }}
-        markdown={update.details.note.text}
-      />
-      {!!miscFiles.length && (
-        <Box pt={2}>
-          {miscFiles.map((file) => (
-            <ZetkinFileObjectChip key={file.id} file={file} />
-          ))}
-        </Box>
-      )}
-      {!!emailFiles.length && (
-        <Box pt={2}>
-          {emailFiles.map((emailFile) => (
-            <Box key={emailFile.id} marginTop={4}>
-              <EmailLoader file={emailFile} />
+      {editing ? (
+        <>
+          <TextEditor
+            clear={0}
+            fileUploads={[]}
+            onChange={(text) => setNoteText(text)}
+            placeholder="Text"
+          />
+          <SubmitCancelButtons onCancel={() => setEditing(false)} />
+        </>
+      ) : (
+        // Not editing
+        <>
+          <Markdown
+            BoxProps={{
+              className: classes.note,
+              component: 'div',
+            }}
+            markdown={update.details.note.text}
+          />
+          {!!miscFiles.length && (
+            <Box pt={2}>
+              {miscFiles.map((file) => (
+                <ZetkinFileObjectChip key={file.id} file={file} />
+              ))}
             </Box>
-          ))}
-        </Box>
+          )}
+          {!!emailFiles.length && (
+            <Box pt={2}>
+              {emailFiles.map((emailFile) => (
+                <Box key={emailFile.id} marginTop={4}>
+                  <EmailLoader file={emailFile} />
+                </Box>
+              ))}
+            </Box>
+          )}
+        </>
       )}
     </UpdateContainer>
   );
