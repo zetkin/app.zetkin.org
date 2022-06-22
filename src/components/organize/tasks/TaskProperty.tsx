@@ -1,27 +1,31 @@
-import { useIntl } from 'react-intl';
-import { Box, Typography } from '@material-ui/core';
+import { FormattedMessage } from 'react-intl';
+import NextLink from 'next/link';
+import { Link, ListItem, ListItemText } from '@material-ui/core';
 
 interface TaskPropertyProps {
   title: string;
   value?: string | React.ReactNode;
+  url?: boolean;
 }
 
 const TaskProperty: React.FunctionComponent<TaskPropertyProps> = ({
   title,
   value,
+  url,
 }) => {
-  const intl = useIntl();
-
+  const displayValue = !value ? (
+    <FormattedMessage id="misc.tasks.forms.common.notSet" />
+  ) : url ? (
+    <NextLink href={value as string} passHref>
+      <Link>{value}</Link>
+    </NextLink>
+  ) : (
+    value
+  );
   return (
-    <Box mt={2}>
-      <Typography variant="subtitle2">{title}</Typography>
-      <Typography color={value ? 'inherit' : 'error'} variant="body1">
-        {value ||
-          intl.formatMessage({
-            id: 'misc.tasks.forms.common.notSet',
-          })}
-      </Typography>
-    </Box>
+    <ListItem divider>
+      <ListItemText primary={displayValue} secondary={title} />
+    </ListItem>
   );
 };
 
