@@ -30,7 +30,7 @@ const JourneyInstanceTitle: React.FC<JourneyInstanceTitleProps> = ({
       </NextLink>
     );
   } else {
-    return <>{titleElem}</>;
+    return titleElem;
   }
 };
 

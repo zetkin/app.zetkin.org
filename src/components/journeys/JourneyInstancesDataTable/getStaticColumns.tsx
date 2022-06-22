@@ -19,7 +19,7 @@ export const getStaticColumns = (): GridColDef[] => [
     field: 'id',
     renderCell: (params) => {
       const row = params.row as ZetkinJourneyInstance;
-      return row.id.toString();
+      return '#' + row.id.toString();
     },
     width: 100,
   },
