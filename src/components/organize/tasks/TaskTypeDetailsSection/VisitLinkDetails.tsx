@@ -16,6 +16,7 @@ const VisitLinkDetails: React.FunctionComponent<VisitLinkDetailsProps> = ({
       title={intl.formatMessage({
         id: 'misc.tasks.forms.visitLinkConfig.fields.url',
       })}
+      url
       value={taskConfig.url}
     />
   );

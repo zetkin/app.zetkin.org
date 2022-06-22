@@ -1,29 +1,30 @@
 import { FormattedMessage } from 'react-intl';
-import { ListItem, ListItemText } from '@material-ui/core';
-
-import theme from 'theme';
+import NextLink from 'next/link';
+import { Link, ListItem, ListItemText } from '@material-ui/core';
 
 interface TaskPropertyProps {
   title: string;
   value?: string | React.ReactNode;
+  url?: boolean;
 }
 
 const TaskProperty: React.FunctionComponent<TaskPropertyProps> = ({
   title,
   value,
+  url,
 }) => {
+  const displayValue = !value ? (
+    <FormattedMessage id="misc.tasks.forms.common.notSet" />
+  ) : url ? (
+    <NextLink href={value as string} passHref>
+      <Link>{value}</Link>
+    </NextLink>
+  ) : (
+    value
+  );
   return (
     <ListItem divider>
-      <ListItemText
-        primary={
-          value || (
-            <span style={{ color: theme.palette.error.main }}>
-              <FormattedMessage id="misc.tasks.forms.common.notSet" />
-            </span>
-          )
-        }
-        secondary={title}
-      />
+      <ListItemText primary={displayValue} secondary={title} />
     </ListItem>
   );
 };

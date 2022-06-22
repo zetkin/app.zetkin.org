@@ -16,6 +16,7 @@ const WatchVideoDetails: React.FunctionComponent<WatchVideoDetailsProps> = ({
       title={intl.formatMessage({
         id: 'misc.tasks.forms.watchVideoConfig.fields.url',
       })}
+      url
       value={taskConfig.url}
     />
   );
