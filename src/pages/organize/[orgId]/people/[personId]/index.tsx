@@ -126,7 +126,7 @@ const PersonProfilePage: PageWithLayout<PersonPageProps> = (props) => {
             )}
           </ZetkinQuery>
         </Grid>
-        {journeys && journeys?.length > 0 && (
+        {journeys?.length && (
           <Grid item lg={4} xs={12}>
             <PersonJourneysCard
               orgId={orgId as string}
