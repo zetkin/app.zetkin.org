@@ -20,31 +20,17 @@ const JourneyInstanceTitle: React.FC<JourneyInstanceTitleProps> = ({
     </Typography>
   );
 
-  const idElem = (
-    <Typography color="secondary" component="span">
-      #{instance.id}
-    </Typography>
-  );
-
   if (link) {
     return (
       <NextLink
         href={`/organize/${instance.organization.id}/journeys/${instance.journey.id}/${instance.id}`}
         passHref
       >
-        <Link color="inherit">
-          {titleElem}
-          {idElem}
-        </Link>
+        <Link color="inherit">{titleElem}</Link>
       </NextLink>
     );
   } else {
-    return (
-      <>
-        {titleElem}
-        {idElem}
-      </>
-    );
+    return titleElem;
   }
 };
 
