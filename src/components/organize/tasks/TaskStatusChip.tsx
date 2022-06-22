@@ -8,6 +8,7 @@ enum ChipColors {
   closed = '#FF4242',
   draft = 'grey',
   expired = 'black',
+  passed = '#57a83d',
   scheduled = '#317ad6',
 }
 
