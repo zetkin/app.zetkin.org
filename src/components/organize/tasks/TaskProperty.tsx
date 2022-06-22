@@ -1,5 +1,7 @@
-import { useIntl } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 import { ListItem, ListItemText } from '@material-ui/core';
+
+import theme from 'theme';
 
 interface TaskPropertyProps {
   title: string;
@@ -10,16 +12,15 @@ const TaskProperty: React.FunctionComponent<TaskPropertyProps> = ({
   title,
   value,
 }) => {
-  const intl = useIntl();
-
   return (
     <ListItem divider>
       <ListItemText
         primary={
-          value ||
-          intl.formatMessage({
-            id: 'misc.tasks.forms.common.notSet',
-          })
+          value || (
+            <span style={{ color: theme.palette.error.main }}>
+              <FormattedMessage id="misc.tasks.forms.common.notSet" />
+            </span>
+          )
         }
         secondary={title}
       />
