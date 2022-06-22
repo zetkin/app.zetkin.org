@@ -43,43 +43,17 @@ const TaskList: React.FunctionComponent<TaskListProps> = ({ tasks }) => {
           </ListItem>
         )}
 
-        {TASK_STATUS.DRAFT in tasksGroupedByStatus && (
-          <TaskStatusSublist
-            status={TASK_STATUS.DRAFT}
-            tasks={tasksGroupedByStatus[TASK_STATUS.DRAFT]}
-          />
-        )}
-
-        {TASK_STATUS.SCHEDULED in tasksGroupedByStatus && (
-          <TaskStatusSublist
-            status={TASK_STATUS.SCHEDULED}
-            tasks={tasksGroupedByStatus[TASK_STATUS.SCHEDULED]}
-          />
-        )}
-
-        {TASK_STATUS.ACTIVE in tasksGroupedByStatus && (
-          <TaskStatusSublist
-            status={TASK_STATUS.ACTIVE}
-            tasks={tasksGroupedByStatus[TASK_STATUS.ACTIVE]}
-          />
-        )}
+        {renderTaskList(TASK_STATUS.DRAFT)}
+        {renderTaskList(TASK_STATUS.SCHEDULED)}
+        {renderTaskList(TASK_STATUS.ACTIVE)}
+        {renderTaskList(TASK_STATUS.PASSED)}
 
         {showClosedTasks &&
           (TASK_STATUS.CLOSED in tasksGroupedByStatus ||
             TASK_STATUS.EXPIRED in tasksGroupedByStatus) && (
             <>
-              {TASK_STATUS.CLOSED in tasksGroupedByStatus && (
-                <TaskStatusSublist
-                  status={TASK_STATUS.CLOSED}
-                  tasks={tasksGroupedByStatus[TASK_STATUS.CLOSED]}
-                />
-              )}
-              {TASK_STATUS.EXPIRED in tasksGroupedByStatus && (
-                <TaskStatusSublist
-                  status={TASK_STATUS.EXPIRED}
-                  tasks={tasksGroupedByStatus[TASK_STATUS.EXPIRED]}
-                />
-              )}
+              {renderTaskList(TASK_STATUS.CLOSED)}
+              {renderTaskList(TASK_STATUS.EXPIRED)}
             </>
           )}
 
@@ -102,6 +76,17 @@ const TaskList: React.FunctionComponent<TaskListProps> = ({ tasks }) => {
       </List>
     </Card>
   );
+
+  function renderTaskList(status: TASK_STATUS) {
+    return (
+      status in tasksGroupedByStatus && (
+        <TaskStatusSublist
+          status={status}
+          tasks={tasksGroupedByStatus[status]}
+        />
+      )
+    );
+  }
 };
 
 export default TaskList;

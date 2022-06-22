@@ -64,6 +64,13 @@ const TaskStatusText: React.FunctionComponent<TaskStatusTextProps> = ({
           values={{ time: <ZetkinRelativeTime datetime={expires} /> }}
         />
       )}
+      {/* Deadline passed */}
+      {taskStatus === TASK_STATUS.PASSED && deadline && (
+        <FormattedMessage
+          id="misc.tasks.taskListItem.relativeTimes.passed"
+          values={{ time: <ZetkinRelativeTime datetime={deadline} /> }}
+        />
+      )}
     </>
   );
 };

@@ -11,6 +11,7 @@ statuses:
   closed: Closed
   draft: Draft
   expired: Expired
+  passed: Passed
   scheduled: Scheduled
 taskAssigneesList:
   completedStates:
@@ -42,6 +43,7 @@ taskListItem:
     expired: 'Expired {time}'
     expires: 'Expires {time}'
     indefinite: 'Published {time}'
+    passed: 'Deadline passed {time}'
     scheduled: 'Will be published {time}'
 taskPreview:
   addImage: Add cover image
