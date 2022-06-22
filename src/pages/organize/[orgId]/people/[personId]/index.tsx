@@ -5,6 +5,7 @@ import { useContext } from 'react';
 import { useQueryClient } from 'react-query';
 import { useRouter } from 'next/router';
 
+import { journeysResource } from 'api/journeys';
 import { PageWithLayout } from 'types';
 import PersonDetailsCard from 'components/organize/people/PersonDetailsCard';
 import PersonJourneysCard from 'components/organize/people/PersonJourneysCard';
@@ -78,6 +79,8 @@ const PersonProfilePage: PageWithLayout<PersonPageProps> = (props) => {
     props.personId
   ).useQuery();
 
+  const { data: journeys } = journeysResource(orgId as string).useQuery();
+
   if (!person) {
     return null;
   }
@@ -123,12 +126,14 @@ const PersonProfilePage: PageWithLayout<PersonPageProps> = (props) => {
             )}
           </ZetkinQuery>
         </Grid>
-        <Grid item lg={4} xs={12}>
-          <PersonJourneysCard
-            orgId={orgId as string}
-            personId={personId as string}
-          />
-        </Grid>
+        {journeys?.length && (
+          <Grid item lg={4} xs={12}>
+            <PersonJourneysCard
+              orgId={orgId as string}
+              personId={personId as string}
+            />
+          </Grid>
+        )}
         <Grid item lg={4} xs={12}>
           <PersonOrganizationsCard {...props} />
         </Grid>
