@@ -17,6 +17,7 @@ const ShareLinkDetails: React.FunctionComponent<ShareLinkDetailsProps> = ({
         title={intl.formatMessage({
           id: 'misc.tasks.forms.shareLinkConfig.fields.url',
         })}
+        url
         value={taskConfig.url}
       />
       <TaskProperty

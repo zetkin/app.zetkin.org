@@ -4,11 +4,11 @@ import { useIntl } from 'react-intl';
 import { TASK_STATUS } from 'utils/getTaskStatus';
 
 enum ChipColors {
-  active = '#6CC551',
+  active = '#57a83d',
   closed = '#FF4242',
-  draft = '',
-  expired = 'grey',
-  scheduled = '#4A8FE7',
+  draft = 'grey',
+  expired = 'black',
+  scheduled = '#317ad6',
 }
 
 interface TaskStatusChipProps {
@@ -23,8 +23,11 @@ const TaskStatusChip: React.FunctionComponent<TaskStatusChipProps> = ({
     <Chip
       label={intl.formatMessage({ id: `misc.tasks.statuses.${status}` })}
       size="small"
-      style={{ backgroundColor: ChipColors[status] }}
-      variant="outlined"
+      style={{
+        backgroundColor: ChipColors[status],
+        color: 'white',
+        fontWeight: 'bold',
+      }}
     />
   );
 };
