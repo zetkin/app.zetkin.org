@@ -33,7 +33,7 @@ const useStyles = makeStyles(() => {
 
 const TimelineNoteAdded: React.FC<Props> = ({ update }) => {
   const [editing, setEditing] = useState(false);
-  const [, setNoteText] = useState(update.details.note.text);
+  const [noteText, setNoteText] = useState(update.details.note.text);
 
   const classes = useStyles();
   const emailFiles: ZetkinFile[] = update.details.note.files.filter(
@@ -71,6 +71,7 @@ const TimelineNoteAdded: React.FC<Props> = ({ update }) => {
           <TextEditor
             clear={0}
             fileUploads={[]}
+            initialValue={noteText}
             onChange={(text) => setNoteText(text)}
             placeholder="Text"
           />
