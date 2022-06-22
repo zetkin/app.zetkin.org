@@ -53,4 +53,19 @@ test.describe('Person Profile Page Journeys', () => {
     expect(page.url()).toMatch(/journeys\/2\/new/);
     expect(page.url()).toMatch(/\?subject=1$/);
   });
+
+  test('is not visible if the organization does not have any journeys.', async ({
+    appUri,
+    moxy,
+    page,
+  }) => {
+    moxy.setZetkinApiMock(`/orgs/${KPD.id}/journeys`, 'get', []);
+
+    await page.goto(appUri + `/organize/${KPD.id}/people/${ClaraZetkin.id}`);
+
+    await expect(page.locator('text=Journeys')).not.toBeVisible();
+    await expect(
+      page.locator('data-testid=PersonJourneysCard-addButton')
+    ).not.toBeVisible();
+  });
 });

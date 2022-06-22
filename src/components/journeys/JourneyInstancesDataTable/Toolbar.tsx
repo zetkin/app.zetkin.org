@@ -36,6 +36,7 @@ const Toolbar: React.FunctionComponent<ToolbarProps> = ({
       />
       <DataTableSearch
         onChange={(searchString) => setQuickSearch(searchString)}
+        searchById
       />
     </Box>
   );

@@ -60,7 +60,7 @@ const mockUpdate = (
     },
     [UPDATE_TYPES.JOURNEYINSTANCE_CLOSE]: {
       details: { outcome: '' },
-      target: pick(mockJourneyInstance(), ['id', 'title']),
+      target: mockJourneyInstance(),
       type: 'journeyinstance.close',
     },
     [UPDATE_TYPES.JOURNEYINSTANCE_CONVERT]: {

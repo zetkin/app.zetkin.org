@@ -33,9 +33,11 @@ const JourneyInstancesDataTable: FunctionComponent<JourneysDataTableProps> = ({
   // Add localised header titles
   const intl = useIntl();
   const columnsWithHeaderTitles = columns.map((column) => ({
-    headerName: intl.formatMessage({
-      id: `pages.organizeJourneyInstances.columns.${column.field}`,
-    }),
+    headerName:
+      column.headerName ||
+      intl.formatMessage({
+        id: `pages.organizeJourneyInstances.columns.${column.field}`,
+      }),
     ...column,
   }));
 
@@ -61,7 +63,6 @@ const JourneyInstancesDataTable: FunctionComponent<JourneysDataTableProps> = ({
           }
         }}
         pageSize={50}
-        pagination
         rows={rows}
         sortModel={sortModel}
         storageKey={storageKey}

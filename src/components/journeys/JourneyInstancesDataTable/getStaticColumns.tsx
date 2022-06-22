@@ -16,6 +16,14 @@ const getPeopleString = (people: ZetkinPersonType[]) =>
 
 export const getStaticColumns = (): GridColDef[] => [
   {
+    field: 'id',
+    renderCell: (params) => {
+      const row = params.row as ZetkinJourneyInstance;
+      return '#' + row.id.toString();
+    },
+    width: 100,
+  },
+  {
     field: 'title',
     renderCell: (params) => {
       const row = params.row as ZetkinJourneyInstance;

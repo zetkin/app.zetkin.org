@@ -2,9 +2,7 @@ import getBreadcrumbs from '../fetching/getBreadcrumbs';
 import { FormattedMessage as Msg } from 'react-intl';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import NextLink from 'next/link';
-import { ParsedUrlQuery } from 'node:querystring';
 import { useQuery } from 'react-query';
-import { useRouter } from 'next/router';
 import {
   Breadcrumbs,
   Link,
@@ -12,9 +10,13 @@ import {
   useMediaQuery,
 } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import { NextRouter, useRouter } from 'next/router';
 
-const getQueryString = function (query: ParsedUrlQuery): string {
-  return Object.entries(query)
+const getQueryString = function (router: NextRouter): string {
+  // Only use parameters that are part of the path (e.g. [personId])
+  // and not ones that are part of the actual querystring (e.g. ?filter_*)
+  return Object.entries(router.query)
+    .filter(([key]) => router.pathname.includes(`[${key}]`))
     .map(([key, val]) => `${key}=${val}`)
     .join('&');
 };
@@ -51,7 +53,7 @@ const BreadcrumbTrail = ({
   const classes = useStyles({ highlight });
   const router = useRouter();
   const path = router.pathname;
-  const query = getQueryString(router.query);
+  const query = getQueryString(router);
   const breadcrumbsQuery = useQuery(
     ['breadcrumbs', path, query],
     getBreadcrumbs(path, query)
