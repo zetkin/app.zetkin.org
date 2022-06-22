@@ -1,6 +1,7 @@
 import { DataGridPro, DataGridProProps } from '@mui/x-data-grid-pro';
 
 import useConfigurableDataGridColumns from './useConfigurableDataGridColumns';
+import { useModelsFromQueryString } from './useModelsFromQueryString';
 
 type UserConfigurableDataGridProps = DataGridProProps & {
   storageKey: string;
@@ -13,9 +14,12 @@ const UserConfigurableDataGrid: React.FC<UserConfigurableDataGridProps> = ({
   const { columns, setColumnOrder, setColumnWidth } =
     useConfigurableDataGridColumns(storageKey, gridProps.columns);
 
+  const { gridProps: modelGridProps } = useModelsFromQueryString();
+
   return (
     <DataGridPro
       {...gridProps}
+      {...modelGridProps}
       columns={columns}
       onColumnOrderChange={(params, event, details) => {
         // Subtract one for selection column, if it's visible

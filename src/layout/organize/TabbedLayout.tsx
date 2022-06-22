@@ -57,7 +57,7 @@ const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
   const router = useRouter();
 
   const currentTab =
-    router.asPath === baseHref
+    router.asPath.split('?')[0] === baseHref
       ? defaultTab
       : `/${router.pathname.split('/').pop()}`;
 
