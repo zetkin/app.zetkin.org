@@ -8,6 +8,7 @@ interface MenuItem {
   label: string | React.ReactNode;
   onSelect?: (e: React.MouseEvent<HTMLLIElement, MouseEvent>) => void;
   startIcon?: ReactElement;
+  disabled?: boolean;
   subMenuItems?: Omit<MenuItem, 'subMenuItems'>[];
 }
 
@@ -46,9 +47,11 @@ const ZetkinEllipsisMenu: FunctionComponent<ZetkinEllipsisMenuProps> = ({
           <MenuItem
             key={item.id || idx}
             data-testid={`EllipsisMenu-item-${item.id || idx}`}
+            disabled={item.disabled}
             onClick={(e) => {
               if (item.onSelect) {
                 item.onSelect(e);
+                setMenuActivator(null);
               }
               if (item.subMenuItems) {
                 setSubMenuActivator(e.currentTarget as HTMLElement);
