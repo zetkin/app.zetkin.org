@@ -1,6 +1,7 @@
 import { JSXElementConstructor } from 'react';
-import { TextField } from '@material-ui/core';
+import { FormControl, InputLabel, Select } from '@material-ui/core';
 import { GridColDef, GridFilterInputValueProps } from '@mui/x-data-grid-pro';
+import { IntlShape, FormattedMessage as Msg } from 'react-intl';
 
 import JourneyInstanceTitle from 'components/journeys/JourneyInstanceTitle';
 import PersonHoverCard from 'components/PersonHoverCard';
@@ -12,130 +13,168 @@ import {
   ZetkinPerson as ZetkinPersonType,
 } from 'types/zetkin';
 
-const TestValueInput: JSXElementConstructor<GridFilterInputValueProps> = ({
-  applyValue,
-  item,
-}) => {
+const TestValueInput: JSXElementConstructor<
+  GridFilterInputValueProps & { subjects?: ZetkinPersonType[] }
+> = ({ applyValue, item, subjects }) => {
   return (
-    <TextField
-      fullWidth
-      onChange={(event) => applyValue({ ...item, value: event.target.value })}
-      placeholder="Filter value"
-      value={item.value}
-    />
+    <FormControl>
+      <InputLabel>
+        <Msg id="misc.journeys.journeyInstancesFilters.personLabel" />
+      </InputLabel>
+      <Select
+        native
+        onChange={(event) => applyValue({ ...item, value: event.target.value })}
+        value={item.value}
+      >
+        <option value=""></option>
+        {subjects?.map((subject) => (
+          <option key={subject.id} value={subject.id}>
+            {fullName(subject)}
+          </option>
+        ))}
+      </Select>
+    </FormControl>
   );
 };
 
+const fullName = (person: ZetkinPersonType) =>
+  `${person.first_name} ${person.last_name}`;
+
 // Name concatenation
 const getPeopleString = (people: ZetkinPersonType[]) =>
-  people.map((person) => `${person.first_name} ${person.last_name}`).join(', ');
+  people.map((person) => fullName(person)).join(', ');
 
-export const getStaticColumns = (): GridColDef[] => [
-  {
-    field: 'id',
-    renderCell: (params) => {
-      const row = params.row as ZetkinJourneyInstance;
-      return '#' + row.id.toString();
-    },
-    width: 100,
-  },
-  {
-    field: 'title',
-    renderCell: (params) => {
-      const row = params.row as ZetkinJourneyInstance;
-      return <JourneyInstanceTitle instance={row} link />;
-    },
-  },
-  {
-    field: 'subjects',
-    filterOperators: [
-      {
-        InputComponent: TestValueInput,
-        getApplyFilterFn: (item) => {
-          return (params) => {
-            const people = params.value as ZetkinPersonType[];
+export const getStaticColumns = (
+  intl: IntlShape,
+  journeyInstances: ZetkinJourneyInstance[]
+): GridColDef[] => {
+  const peopleById: Record<string, ZetkinPersonType> = {};
+  journeyInstances
+    .flatMap((instance) => instance.subjects)
+    .forEach((person) => (peopleById[person.id.toString()] = person));
+  const uniqueSubjects = Object.values(peopleById).sort((p0, p1) =>
+    fullName(p0).localeCompare(fullName(p1))
+  );
 
-            return !!people.find((person) => {
-              return person.id.toString() === item.value;
-            });
-          };
-        },
-        label: 'Has ID',
-        value: 'has',
+  return [
+    {
+      field: 'id',
+      renderCell: (params) => {
+        const row = params.row as ZetkinJourneyInstance;
+        return '#' + row.id.toString();
       },
-      {
-        InputComponent: TestValueInput,
-        getApplyFilterFn: (item) => {
-          return (params) => {
-            const people = params.value as ZetkinPersonType[];
-
-            return !!people.find((person) => {
-              return person.id.toString() !== item.value;
-            });
-          };
-        },
-        label: 'Does not have ID',
-        value: 'does not have',
+      width: 100,
+    },
+    {
+      field: 'title',
+      renderCell: (params) => {
+        const row = params.row as ZetkinJourneyInstance;
+        return <JourneyInstanceTitle instance={row} link />;
       },
-    ],
-    valueFormatter: (params) =>
-      getPeopleString(params.value as ZetkinPersonType[]),
-  },
-  {
-    field: 'created',
-    renderCell: (params) => (
-      <ZetkinDateTime convertToLocal datetime={params.value as string} />
-    ),
-    type: 'date',
-  },
-  {
-    field: 'updated',
-    renderCell: (params) => (
-      <ZetkinRelativeTime
-        convertToLocal
-        datetime={params.value as string}
-        forcePast
-      />
-    ),
-    type: 'date',
-  },
-  {
-    field: 'nextMilestoneTitle',
-    valueGetter: (params) =>
-      (params.row as ZetkinJourneyInstance).next_milestone?.title,
-  },
-  {
-    field: 'nextMilestoneDeadline',
-    renderCell: (params) => (
-      <ZetkinRelativeTime datetime={params.value as string} />
-    ),
-    type: 'date',
-    valueGetter: (params) =>
-      (params.row as ZetkinJourneyInstance).next_milestone?.deadline,
-  },
-  {
-    field: 'summary',
-  },
-  {
-    field: 'outcome',
-  },
-  {
-    field: 'assignees',
-    renderCell: (params) =>
-      (params.row.assignees as ZetkinPersonType[]).map((person) => (
-        <PersonHoverCard key={person.id} personId={person.id}>
-          <ZetkinPerson
-            containerProps={{ style: { marginRight: 10 } }}
-            id={person.id}
-            link
-            name={`${person.first_name} ${person.last_name}`}
-            showText={false}
-          />
-        </PersonHoverCard>
-      )),
-    valueGetter: (params) =>
-      (params.row.assignees as ZetkinPersonType[])
-        .map((person) => `${person.first_name} ${person.last_name}`)
-        .join(', '),
-  },
-];
+    },
+    {
+      field: 'subjects',
+      filterOperators: [
+        {
+          InputComponent: TestValueInput,
+          InputComponentProps: { subjects: uniqueSubjects },
+          getApplyFilterFn: (item) => {
+            return (params) => {
+              if (!item.value) {
+                return true;
+              }
+              const people = params.value as ZetkinPersonType[];
+
+              return !!people.find((person) => {
+                return person.id.toString() === item.value;
+              });
+            };
+          },
+          label: intl.formatMessage({
+            id: 'misc.journeys.journeyInstancesFilters.includesOperator',
+          }),
+          value: 'includes',
+        },
+        {
+          InputComponent: TestValueInput,
+          InputComponentProps: { subjects: uniqueSubjects },
+          getApplyFilterFn: (item) => {
+            return (params) => {
+              if (!item.value) {
+                return true;
+              }
+              const people = params.value as ZetkinPersonType[];
+
+              return !!people.find((person) => {
+                return person.id.toString() !== item.value;
+              });
+            };
+          },
+          label: intl.formatMessage({
+            id: 'misc.journeys.journeyInstancesFilters.excludesOperator',
+          }),
+          value: 'doesNotInclude',
+        },
+      ],
+      valueFormatter: (params) =>
+        getPeopleString(params.value as ZetkinPersonType[]),
+    },
+    {
+      field: 'created',
+      renderCell: (params) => (
+        <ZetkinDateTime convertToLocal datetime={params.value as string} />
+      ),
+      type: 'date',
+    },
+    {
+      field: 'updated',
+      renderCell: (params) => (
+        <ZetkinRelativeTime
+          convertToLocal
+          datetime={params.value as string}
+          forcePast
+        />
+      ),
+      type: 'date',
+    },
+    {
+      field: 'nextMilestoneTitle',
+      valueGetter: (params) =>
+        (params.row as ZetkinJourneyInstance).next_milestone?.title,
+    },
+    {
+      field: 'nextMilestoneDeadline',
+      renderCell: (params) => (
+        <ZetkinRelativeTime datetime={params.value as string} />
+      ),
+      type: 'date',
+      valueGetter: (params) =>
+        (params.row as ZetkinJourneyInstance).next_milestone?.deadline,
+    },
+    {
+      field: 'summary',
+    },
+    {
+      field: 'outcome',
+    },
+    {
+      field: 'assignees',
+      renderCell: (params) =>
+        (params.row.assignees as ZetkinPersonType[]).map((person) => (
+          <PersonHoverCard key={person.id} personId={person.id}>
+            <ZetkinPerson
+              containerProps={{ style: { marginRight: 10 } }}
+              id={person.id}
+              link
+              name={`${person.first_name} ${person.last_name}`}
+              showText={false}
+            />
+          </PersonHoverCard>
+        )),
+      valueGetter: (params) =>
+        (params.row.assignees as ZetkinPersonType[])
+          .map((person) => `${person.first_name} ${person.last_name}`)
+          .join(', '),
+    },
+  ];
+};
