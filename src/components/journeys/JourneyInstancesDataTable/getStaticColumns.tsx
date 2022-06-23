@@ -1,4 +1,6 @@
-import { GridColDef } from '@mui/x-data-grid-pro';
+import { JSXElementConstructor } from 'react';
+import { TextField } from '@material-ui/core';
+import { GridColDef, GridFilterInputValueProps } from '@mui/x-data-grid-pro';
 
 import JourneyInstanceTitle from 'components/journeys/JourneyInstanceTitle';
 import PersonHoverCard from 'components/PersonHoverCard';
@@ -9,6 +11,20 @@ import {
   ZetkinJourneyInstance,
   ZetkinPerson as ZetkinPersonType,
 } from 'types/zetkin';
+
+const TestValueInput: JSXElementConstructor<GridFilterInputValueProps> = ({
+  applyValue,
+  item,
+}) => {
+  return (
+    <TextField
+      fullWidth
+      onChange={(event) => applyValue({ ...item, value: event.target.value })}
+      placeholder="Filter value"
+      value={item.value}
+    />
+  );
+};
 
 // Name concatenation
 const getPeopleString = (people: ZetkinPersonType[]) =>
@@ -32,7 +48,37 @@ export const getStaticColumns = (): GridColDef[] => [
   },
   {
     field: 'subjects',
-    valueGetter: (params) =>
+    filterOperators: [
+      {
+        InputComponent: TestValueInput,
+        getApplyFilterFn: (item) => {
+          return (params) => {
+            const people = params.value as ZetkinPersonType[];
+
+            return !!people.find((person) => {
+              return person.id.toString() === item.value;
+            });
+          };
+        },
+        label: 'Has ID',
+        value: 'has',
+      },
+      {
+        InputComponent: TestValueInput,
+        getApplyFilterFn: (item) => {
+          return (params) => {
+            const people = params.value as ZetkinPersonType[];
+
+            return !!people.find((person) => {
+              return person.id.toString() !== item.value;
+            });
+          };
+        },
+        label: 'Does not have ID',
+        value: 'does not have',
+      },
+    ],
+    valueFormatter: (params) =>
       getPeopleString(params.value as ZetkinPersonType[]),
   },
   {
