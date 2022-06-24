@@ -58,7 +58,7 @@ test.describe('Journey instance notes', () => {
     moxy.teardown();
   });
 
-  test.only('can make a note', async ({ moxy, page }) => {
+  test('can make a note', async ({ moxy, page }) => {
     moxy.setZetkinApiMock(
       `/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}/timeline/updates`,
       'get',
