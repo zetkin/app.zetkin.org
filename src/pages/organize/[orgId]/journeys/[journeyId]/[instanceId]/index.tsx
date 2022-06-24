@@ -6,14 +6,19 @@ import { useQueryClient } from 'react-query';
 import { Box, Divider, Grid } from '@material-ui/core';
 
 import JourneyInstanceLayout from 'layout/organize/JourneyInstanceLayout';
-import { journeyInstanceResource } from 'api/journeys';
+
 import JourneyInstanceSidebar from 'components/organize/journeys/JourneyInstanceSidebar';
 import JourneyInstanceSummary from 'components/organize/journeys/JourneyInstanceSummary';
 import { organizationResource } from 'api/organizations';
 import { PageWithLayout } from 'types';
 import SnackbarContext from 'hooks/SnackbarContext';
-import TimelineWrapper from 'components/TimelineWrapper';
+import Timeline from 'components/Timeline';
+import ZetkinQuery from 'components/ZetkinQuery';
 import ZetkinSection from 'components/ZetkinSection';
+import {
+  journeyInstanceResource,
+  journeyInstanceTimelineResource,
+} from 'api/journeys';
 import { scaffold, ScaffoldedGetServerSideProps } from 'utils/next';
 import { ZetkinJourneyInstance, ZetkinPerson } from 'types/zetkin';
 
@@ -89,6 +94,10 @@ const JourneyDetailsPage: PageWithLayout<JourneyDetailsPageProps> = ({
     useRemoveSubject,
     useUnassignTag,
   } = journeyInstanceResource(orgId, instanceId);
+  const { useQueryUpdates, useAddNote } = journeyInstanceTimelineResource(
+    orgId,
+    instanceId
+  );
   const intl = useIntl();
   const journeyInstanceQuery = useQuery();
   const addAssigneeMutation = useAddAssignee();
@@ -97,6 +106,8 @@ const JourneyDetailsPage: PageWithLayout<JourneyDetailsPageProps> = ({
   const removeMemberMutation = useRemoveSubject();
   const assignTagMutation = useAssignTag();
   const unassignTagMutation = useUnassignTag();
+  const updatesQuery = useQueryUpdates();
+  const addNoteMutation = useAddNote();
 
   const journeyInstance = journeyInstanceQuery.data as ZetkinJourneyInstance;
 
@@ -147,10 +158,19 @@ const JourneyDetailsPage: PageWithLayout<JourneyDetailsPageProps> = ({
               id: 'pages.organizeJourneyInstance.sections.timeline',
             })}
           >
-            <TimelineWrapper
-              itemApiPath={`/orgs/${orgId}/journey_instances/${instanceId}`}
-              queryKey={['journeyInstance', orgId, instanceId, 'timeline']}
-            />
+            <ZetkinQuery queries={{ updatesQuery }}>
+              {({ queries: { updatesQuery } }) => (
+                <Timeline
+                  disabled={addNoteMutation.isLoading}
+                  onAddNote={(note) => {
+                    addNoteMutation.mutate(note, {
+                      onError: () => showSnackbar('error'),
+                    });
+                  }}
+                  updates={updatesQuery.data}
+                />
+              )}
+            </ZetkinQuery>
           </ZetkinSection>
         </Grid>
         <Grid item lg={4} md={4} xs={12}>
