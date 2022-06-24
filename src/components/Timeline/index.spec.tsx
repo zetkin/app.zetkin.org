@@ -14,11 +14,15 @@ jest.mock('next/dist/client/router', () => require('next-router-mock'));
 jest.mock('isomorphic-dompurify', () => ({
   sanitize: (dirtyHtml: string) => dirtyHtml,
 }));
+jest.mock('remark-parse', () => null);
+jest.mock('remark-gfm', () => null);
+jest.mock('unified', () => null);
 
 const NUM_UPDATES = 10;
 
 const props: TimelineProps = {
   onAddNote: () => null,
+  onEditNote: () => null,
   updates: Array.from(Array(NUM_UPDATES).keys()).map(() =>
     mockUpdate(UPDATE_TYPES.JOURNEYINSTANCE_ADDASSIGNEE, {
       timestamp: dayjs()
