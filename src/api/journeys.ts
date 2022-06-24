@@ -1,9 +1,11 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { JourneyInstancesData } from 'pages/api/organize/[orgId]/journeys/[journeyId]';
+import { ZetkinUpdate } from 'types/updates';
 import {
   createPrefetch,
   createUseMutation,
   createUseMutationDelete,
+  createUseMutationPatch,
   createUseMutationPut,
   createUseMutationPutWithBody,
   createUseQuery,
@@ -12,6 +14,7 @@ import {
   ZetkinJourney,
   ZetkinJourneyInstance,
   ZetkinJourneyMilestoneStatus,
+  ZetkinNoteBody,
   ZetkinPerson,
   ZetkinTag,
 } from 'types/zetkin';
@@ -89,6 +92,26 @@ export const journeyInstanceResource = (orgId: string, instanceId: string) => {
     >(key, url, {
       method: 'PATCH',
     }),
+  };
+};
+
+export const journeyInstanceTimelineResource = (
+  orgId: string,
+  instanceId: string
+) => {
+  const key = ['journeyInstance', orgId, instanceId, 'timeline'];
+  const url = `/orgs/${orgId}/journey_instances/${instanceId}`;
+
+  return {
+    useAddNote: createUseMutation<ZetkinNoteBody, ZetkinUpdate>(
+      key,
+      `${url}/notes`
+    ),
+    useEditNote: createUseMutationPatch({ key, url: `${url}/notes` }),
+    useQueryUpdates: createUseQuery<ZetkinUpdate[]>(
+      key,
+      `${url}/timeline/updates`
+    ),
   };
 };
 
