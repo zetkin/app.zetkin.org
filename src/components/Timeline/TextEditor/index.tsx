@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/no-autofocus */
 import { isEqual } from 'lodash';
 import { makeStyles } from '@material-ui/styles';
 import { withHistory } from 'slate-history';
@@ -114,6 +115,7 @@ const TextEditor: React.FunctionComponent<TextEditorProps> = ({
             value={initialValueSlate}
           >
             <Editable
+              autoFocus
               onFocus={() => setActive(true)}
               onKeyDown={onKeyDown}
               placeholder={placeholder}
