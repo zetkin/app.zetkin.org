@@ -26,6 +26,7 @@ export interface TimelineProps {
   disabled?: boolean;
   expandable?: boolean;
   onAddNote: (note: ZetkinNoteBody) => void;
+  onEditNote: (note: Pick<ZetkinNoteBody, 'text'> & { id: number }) => void;
   showAll?: boolean;
   updates: ZetkinUpdate[];
 }
@@ -36,6 +37,7 @@ const Timeline: React.FunctionComponent<TimelineProps> = ({
   disabled,
   expandable,
   onAddNote,
+  onEditNote,
   showAll,
   updates,
 }) => {
@@ -150,7 +152,7 @@ const Timeline: React.FunctionComponent<TimelineProps> = ({
     return (
       <React.Fragment key={update.timestamp + update.type}>
         <Grid aria-label="timeline update" item>
-          <TimelineUpdate update={update} />
+          <TimelineUpdate onEditNote={onEditNote} update={update} />
         </Grid>
         {divider && (
           <Grid item>

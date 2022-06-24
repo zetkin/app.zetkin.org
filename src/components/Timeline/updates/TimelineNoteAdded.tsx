@@ -9,12 +9,13 @@ import SubmitCancelButtons from 'components/forms/common/SubmitCancelButtons';
 import TextEditor from '../TextEditor';
 import UpdateContainer from './elements/UpdateContainer';
 import ZetkinEllipsisMenu from 'components/ZetkinEllipsisMenu';
-import { ZetkinFile } from 'types/zetkin';
 import { ZetkinFileObjectChip } from 'components/ZetkinFileChip';
 import ZetkinPersonLink from 'components/ZetkinPersonLink';
 import { ZetkinUpdateJourneyInstanceAddNote } from 'types/updates';
+import { ZetkinFile, ZetkinNoteBody } from 'types/zetkin';
 
 interface Props {
+  onEditNote: (note: Pick<ZetkinNoteBody, 'text'> & { id: number }) => void;
   update: ZetkinUpdateJourneyInstanceAddNote;
 }
 
@@ -31,7 +32,7 @@ const useStyles = makeStyles(() => {
   };
 });
 
-const TimelineNoteAdded: React.FC<Props> = ({ update }) => {
+const TimelineNoteAdded: React.FC<Props> = ({ onEditNote, update }) => {
   const [editing, setEditing] = useState(false);
   const [noteText, setNoteText] = useState(update.details.note.text);
 
@@ -67,7 +68,14 @@ const TimelineNoteAdded: React.FC<Props> = ({ update }) => {
       update={update}
     >
       {editing ? (
-        <>
+        <form
+          onSubmit={(e) => {
+            e.stopPropagation();
+            e.preventDefault();
+            onEditNote({ id: update.details.note.id, text: noteText });
+            setEditing(false);
+          }}
+        >
           <TextEditor
             clear={0}
             fileUploads={[]}
@@ -76,7 +84,7 @@ const TimelineNoteAdded: React.FC<Props> = ({ update }) => {
             placeholder="Text"
           />
           <SubmitCancelButtons onCancel={() => setEditing(false)} />
-        </>
+        </form>
       ) : (
         // Not editing
         <>

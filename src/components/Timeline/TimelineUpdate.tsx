@@ -8,11 +8,13 @@ import TimelineJourneyStart from './updates/TimelineJourneyStart';
 import TimelineJourneySubject from './updates/TimelineJourneySubject';
 import TimelineNoteAdded from './updates/TimelineNoteAdded';
 import TimelineTags from './updates/TimelineTags';
+import { ZetkinNoteBody } from 'types/zetkin';
 import { ZetkinUpdateTags } from '../../types/updates';
 import { UPDATE_TYPES, ZetkinUpdate } from 'types/updates';
 
 interface Props {
   update: ZetkinUpdate;
+  onEditNote: (note: Pick<ZetkinNoteBody, 'text'> & { id: number }) => void;
 }
 
 const GENERIC_UPDATES = [UPDATE_TYPES.JOURNEYINSTANCE_OPEN];
@@ -35,7 +37,10 @@ function isWildcardType<T extends ZetkinUpdate>(
   return false;
 }
 
-const TimelineUpdate: React.FunctionComponent<Props> = ({ update }) => {
+const TimelineUpdate: React.FunctionComponent<Props> = ({
+  onEditNote,
+  update,
+}) => {
   if (
     update.type === UPDATE_TYPES.JOURNEYINSTANCE_ADDASSIGNEE ||
     update.type === UPDATE_TYPES.JOURNEYINSTANCE_REMOVEASSIGNEE
@@ -47,7 +52,7 @@ const TimelineUpdate: React.FunctionComponent<Props> = ({ update }) => {
   ) {
     return <TimelineJourneySubject update={update} />;
   } else if (update.type === UPDATE_TYPES.JOURNEYINSTANCE_ADDNOTE) {
-    return <TimelineNoteAdded update={update} />;
+    return <TimelineNoteAdded onEditNote={onEditNote} update={update} />;
   } else if (update.type === UPDATE_TYPES.JOURNEYINSTANCE_CLOSE) {
     return <TimelineJourneyClose update={update} />;
   } else if (update.type == UPDATE_TYPES.JOURNEYINSTANCE_CONVERT) {
