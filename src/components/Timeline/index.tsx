@@ -16,17 +16,17 @@ import {
 
 import TimelineAddNote from './TimelineAddNote';
 import TimelineUpdate from './TimelineUpdate';
-import { ZetkinNoteBody } from 'types/zetkin';
 import { ZetkinUpdate } from 'types/updates';
 import useFilterUpdates, {
   UPDATE_TYPE_FILTER_OPTIONS,
 } from './useFilterUpdates';
+import { ZetkinNote, ZetkinNoteBody } from 'types/zetkin';
 
 export interface TimelineProps {
   disabled?: boolean;
   expandable?: boolean;
   onAddNote: (note: ZetkinNoteBody) => void;
-  onEditNote: (note: Pick<ZetkinNoteBody, 'text'> & { id: number }) => void;
+  onEditNote: (note: Pick<ZetkinNote, 'id' | 'text'>) => void;
   showAll?: boolean;
   updates: ZetkinUpdate[];
 }

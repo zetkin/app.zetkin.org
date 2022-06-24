@@ -106,7 +106,7 @@ export const journeyInstanceTimelineResource = (
   return {
     useAddNote: createUseMutation<ZetkinNoteBody, unknown>(key, `${url}/notes`),
     useEditNote: createUseMutationPatch<
-      Pick<ZetkinNote, 'text' | 'id'>,
+      Pick<ZetkinNote, 'id' | 'text'>,
       unknown
     >({
       key,

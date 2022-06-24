@@ -12,10 +12,10 @@ import ZetkinEllipsisMenu from 'components/ZetkinEllipsisMenu';
 import { ZetkinFileObjectChip } from 'components/ZetkinFileChip';
 import ZetkinPersonLink from 'components/ZetkinPersonLink';
 import { ZetkinUpdateJourneyInstanceAddNote } from 'types/updates';
-import { ZetkinFile, ZetkinNoteBody } from 'types/zetkin';
+import { ZetkinFile, ZetkinNote } from 'types/zetkin';
 
 interface Props {
-  onEditNote: (note: Pick<ZetkinNoteBody, 'text'> & { id: number }) => void;
+  onEditNote: (note: Pick<ZetkinNote, 'id' | 'text'>) => void;
   update: ZetkinUpdateJourneyInstanceAddNote;
 }
 

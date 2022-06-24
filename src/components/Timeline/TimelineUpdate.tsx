@@ -8,13 +8,13 @@ import TimelineJourneyStart from './updates/TimelineJourneyStart';
 import TimelineJourneySubject from './updates/TimelineJourneySubject';
 import TimelineNoteAdded from './updates/TimelineNoteAdded';
 import TimelineTags from './updates/TimelineTags';
-import { ZetkinNoteBody } from 'types/zetkin';
+import { ZetkinNote } from 'types/zetkin';
 import { ZetkinUpdateTags } from '../../types/updates';
 import { UPDATE_TYPES, ZetkinUpdate } from 'types/updates';
 
 interface Props {
   update: ZetkinUpdate;
-  onEditNote: (note: Pick<ZetkinNoteBody, 'text'> & { id: number }) => void;
+  onEditNote: (note: Pick<ZetkinNote, 'id' | 'text'>) => void;
 }
 
 const GENERIC_UPDATES = [UPDATE_TYPES.JOURNEYINSTANCE_OPEN];
