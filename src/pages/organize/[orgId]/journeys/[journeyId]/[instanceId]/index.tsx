@@ -94,10 +94,8 @@ const JourneyDetailsPage: PageWithLayout<JourneyDetailsPageProps> = ({
     useRemoveSubject,
     useUnassignTag,
   } = journeyInstanceResource(orgId, instanceId);
-  const { useQueryUpdates, useAddNote } = journeyInstanceTimelineResource(
-    orgId,
-    instanceId
-  );
+  const { useQueryUpdates, useAddNote, useEditNote } =
+    journeyInstanceTimelineResource(orgId, instanceId);
   const intl = useIntl();
   const journeyInstanceQuery = useQuery();
   const addAssigneeMutation = useAddAssignee();
@@ -108,6 +106,7 @@ const JourneyDetailsPage: PageWithLayout<JourneyDetailsPageProps> = ({
   const unassignTagMutation = useUnassignTag();
   const updatesQuery = useQueryUpdates();
   const addNoteMutation = useAddNote();
+  const editNoteMutation = useEditNote();
 
   const journeyInstance = journeyInstanceQuery.data as ZetkinJourneyInstance;
 
@@ -164,6 +163,11 @@ const JourneyDetailsPage: PageWithLayout<JourneyDetailsPageProps> = ({
                   disabled={addNoteMutation.isLoading}
                   onAddNote={(note) => {
                     addNoteMutation.mutate(note, {
+                      onError: () => showSnackbar('error'),
+                    });
+                  }}
+                  onEditNote={(note) => {
+                    editNoteMutation.mutate(note, {
                       onError: () => showSnackbar('error'),
                     });
                   }}

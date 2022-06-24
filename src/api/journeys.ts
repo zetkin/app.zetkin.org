@@ -14,6 +14,7 @@ import {
   ZetkinJourney,
   ZetkinJourneyInstance,
   ZetkinJourneyMilestoneStatus,
+  ZetkinNote,
   ZetkinNoteBody,
   ZetkinPerson,
   ZetkinTag,
@@ -103,11 +104,14 @@ export const journeyInstanceTimelineResource = (
   const url = `/orgs/${orgId}/journey_instances/${instanceId}`;
 
   return {
-    useAddNote: createUseMutation<ZetkinNoteBody, ZetkinUpdate>(
+    useAddNote: createUseMutation<ZetkinNoteBody, unknown>(key, `${url}/notes`),
+    useEditNote: createUseMutationPatch<
+      Pick<ZetkinNote, 'text' | 'id'>,
+      unknown
+    >({
       key,
-      `${url}/notes`
-    ),
-    useEditNote: createUseMutationPatch({ key, url: `${url}/notes` }),
+      url: `${url}/notes`,
+    }),
     useQueryUpdates: createUseQuery<ZetkinUpdate[]>(
       key,
       `${url}/timeline/updates`
