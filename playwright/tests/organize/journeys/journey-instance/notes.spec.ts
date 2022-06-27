@@ -2,12 +2,18 @@ import { expect } from '@playwright/test';
 import test from '../../../../fixtures/next';
 
 import ClarasOnboarding from '../../../../mockData/orgs/KPD/journeys/MemberOnboarding/instances/ClarasOnboarding';
-import ClarasOnboardingTimelineUpdates from '../../../../mockData/orgs/KPD/journeys/MemberOnboarding/instances/ClarasOnboarding/updates';
+
 import ClaraZetkin from '../../../../mockData/orgs/KPD/people/ClaraZetkin';
 import KPD from '../../../../mockData/orgs/KPD';
 import MemberOnboarding from '../../../../mockData/orgs/KPD/journeys/MemberOnboarding';
 import { ZetkinNote } from '../../../../../src/types/zetkin';
-import { UPDATE_TYPES, ZetkinUpdate } from '../../../../../src/types/updates';
+import ClarasOnboardingTimelineUpdates, {
+  NoteUpdate,
+} from '../../../../mockData/orgs/KPD/journeys/MemberOnboarding/instances/ClarasOnboarding/updates';
+import {
+  UPDATE_TYPES,
+  ZetkinUpdateJourneyInstanceAddNote,
+} from '../../../../../src/types/updates';
 
 const newNote: ZetkinNote = {
   files: [],
@@ -15,7 +21,7 @@ const newNote: ZetkinNote = {
   text: 'BOSCO',
 };
 
-const newUpdate: ZetkinUpdate = {
+const newUpdate: ZetkinUpdateJourneyInstanceAddNote = {
   actor: {
     first_name: ClaraZetkin.first_name,
     id: ClaraZetkin.id,
@@ -82,6 +88,43 @@ test.describe('Journey instance notes', () => {
 
     expect(notePostMock.log()[0].data).toEqual({
       file_ids: [],
+      text: `${newNote.text}\n`,
+    });
+  });
+
+  test.only('can edit a note', async ({ moxy, page }) => {
+    const notePatchMock = moxy.setZetkinApiMock(
+      `/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}/notes/${NoteUpdate.details.note.id}`,
+      'patch',
+      {}
+    );
+
+    // Click menu
+    await page.click('[data-testid=EllipsisMenu-menuActivator]');
+
+    // Click edit
+    await page.click(
+      `[data-testid=EllipsisMenu-item-edit-note-${NoteUpdate.details.note.id}]`
+    );
+
+    // Click input
+    await page.click('[data-slate-editor=true]:below(:text("added a note"))');
+    await page.type(
+      '[data-slate-editor=true]:below(:text("added a note"))',
+      newNote.text
+    );
+    await page.click(
+      '[data-testid=SubmitCancelButtons-submitButton]:near(:text("added a note")'
+    );
+
+    // await Promise.all([
+    //   page.waitForResponse(
+    //     `**/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}/notes/${NoteUpdate.details.note.id}`
+    //   ),
+    //   page.click('[data-testid=SubmitCancelButtons-submitButton]'),
+    // ]);
+
+    expect(notePatchMock.log()[0].data).toEqual({
       text: `${newNote.text}\n`,
     });
   });
