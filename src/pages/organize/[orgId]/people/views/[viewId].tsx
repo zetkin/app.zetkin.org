@@ -14,7 +14,7 @@ import ZetkinQuery from 'components/ZetkinQuery';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
-  localeScope: ['layout.organize'],
+  localeScope: ['layout.organize', 'pages.people.views'],
 };
 
 export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
