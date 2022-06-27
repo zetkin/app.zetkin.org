@@ -1,8 +1,11 @@
-import { JSXElementConstructor } from 'react';
-import { FormControl, InputLabel, Select } from '@material-ui/core';
-import { GridColDef, GridFilterInputValueProps } from '@mui/x-data-grid-pro';
-import { IntlShape, FormattedMessage as Msg } from 'react-intl';
+import { IntlShape } from 'react-intl';
+import {
+  GridCellParams,
+  GridColDef,
+  GridFilterItem,
+} from '@mui/x-data-grid-pro';
 
+import FilterValueSelect from './FilterValueSelect';
 import JourneyInstanceTitle from 'components/journeys/JourneyInstanceTitle';
 import PersonHoverCard from 'components/PersonHoverCard';
 import ZetkinDateTime from 'components/ZetkinDateTime';
@@ -13,28 +16,30 @@ import {
   ZetkinPerson as ZetkinPersonType,
 } from 'types/zetkin';
 
-const TestValueInput: JSXElementConstructor<
-  GridFilterInputValueProps & { subjects?: ZetkinPersonType[] }
-> = ({ applyValue, item, subjects }) => {
-  return (
-    <FormControl>
-      <InputLabel>
-        <Msg id="misc.journeys.journeyInstancesFilters.personLabel" />
-      </InputLabel>
-      <Select
-        native
-        onChange={(event) => applyValue({ ...item, value: event.target.value })}
-        value={item.value}
-      >
-        <option value=""></option>
-        {subjects?.map((subject) => (
-          <option key={subject.id} value={subject.id}>
-            {fullName(subject)}
-          </option>
-        ))}
-      </Select>
-    </FormControl>
-  );
+const includes = (item: GridFilterItem) => {
+  return (params: GridCellParams) => {
+    if (!item.value) {
+      return true;
+    }
+    const people = params.value as ZetkinPersonType[];
+
+    return !!people.find((person) => {
+      return person.id.toString() === item.value;
+    });
+  };
+};
+
+const doesNotInclude = (item: GridFilterItem) => {
+  return (params: GridCellParams) => {
+    if (!item.value) {
+      return true;
+    }
+    const assignees = params.value as ZetkinPersonType[];
+
+    return !!assignees.find((assignee) => {
+      return assignee.id.toString() !== item.value;
+    });
+  };
 };
 
 const fullName = (person: ZetkinPersonType) =>
@@ -84,40 +89,18 @@ export const getStaticColumns = (
       field: 'subjects',
       filterOperators: [
         {
-          InputComponent: TestValueInput,
+          InputComponent: FilterValueSelect,
           InputComponentProps: { subjects: uniqueSubjects },
-          getApplyFilterFn: (item) => {
-            return (params) => {
-              if (!item.value) {
-                return true;
-              }
-              const people = params.value as ZetkinPersonType[];
-
-              return !!people.find((person) => {
-                return person.id.toString() === item.value;
-              });
-            };
-          },
+          getApplyFilterFn: (item) => includes(item),
           label: intl.formatMessage({
             id: 'misc.journeys.journeyInstancesFilters.includesOperator',
           }),
           value: 'includes',
         },
         {
-          InputComponent: TestValueInput,
+          InputComponent: FilterValueSelect,
           InputComponentProps: { subjects: uniqueSubjects },
-          getApplyFilterFn: (item) => {
-            return (params) => {
-              if (!item.value) {
-                return true;
-              }
-              const people = params.value as ZetkinPersonType[];
-
-              return !!people.find((person) => {
-                return person.id.toString() !== item.value;
-              });
-            };
-          },
+          getApplyFilterFn: (item) => doesNotInclude(item),
           label: intl.formatMessage({
             id: 'misc.journeys.journeyInstancesFilters.excludesOperator',
           }),
@@ -169,40 +152,18 @@ export const getStaticColumns = (
       field: 'assignees',
       filterOperators: [
         {
-          InputComponent: TestValueInput,
+          InputComponent: FilterValueSelect,
           InputComponentProps: { subjects: uniqueAssignees },
-          getApplyFilterFn: (item) => {
-            return (params) => {
-              if (!item.value) {
-                return true;
-              }
-              const assignees = params.value as ZetkinPersonType[];
-
-              return !!assignees.find((assignee) => {
-                return assignee.id.toString() === item.value;
-              });
-            };
-          },
+          getApplyFilterFn: (item) => includes(item),
           label: intl.formatMessage({
             id: 'misc.journeys.journeyInstancesFilters.includesOperator',
           }),
           value: 'includes',
         },
         {
-          InputComponent: TestValueInput,
+          InputComponent: FilterValueSelect,
           InputComponentProps: { subjects: uniqueAssignees },
-          getApplyFilterFn: (item) => {
-            return (params) => {
-              if (!item.value) {
-                return true;
-              }
-              const assignees = params.value as ZetkinPersonType[];
-
-              return !!assignees.find((assignee) => {
-                return assignee.id.toString() !== item.value;
-              });
-            };
-          },
+          getApplyFilterFn: (item) => doesNotInclude(item),
           label: intl.formatMessage({
             id: 'misc.journeys.journeyInstancesFilters.excludesOperator',
           }),
