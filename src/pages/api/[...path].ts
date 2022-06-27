@@ -75,6 +75,7 @@ export default async function handle(
     host: process.env.ZETKIN_API_HOST,
     port: process.env.ZETKIN_API_PORT,
     ssl: stringToBool(process.env.ZETKIN_USE_TLS),
+    zetkinDomain: process.env.ZETKIN_API_DOMAIN,
   });
 
   const resource = z.resource(pathStr + (queryParams ? '?' + queryParams : ''));
