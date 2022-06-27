@@ -179,6 +179,8 @@ export const scaffold =
     // Update token data in session, in case it was refreshed
     reqWithSession.session.tokenData = ctx.z.getTokenData();
 
+    await reqWithSession.session.commit();
+
     const result = (await wrapped(ctx)) || {};
 
     // Figure out browser's preferred language
