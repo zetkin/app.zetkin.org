@@ -92,6 +92,11 @@ export default async function handle(
   try {
     const method = HTTP_VERBS_TO_ZETKIN_METHODS[req.method!];
     const result = await method(resource, req);
+
+    // Update session in case tokens were refreshed
+    req.session.tokenData = z.getTokenData();
+    await req.session.commit();
+
     res.status(result.httpStatus).json(result.data);
   } catch (err) {
     if (err && typeof err === 'object' && 'httpStatus' in err) {
