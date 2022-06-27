@@ -51,7 +51,7 @@ const TimelineNoteAdded: React.FC<Props> = ({ onEditNote, update }) => {
           items={[
             {
               disabled: editing,
-              id: 'edit',
+              id: `edit-note-${update.details.note.id}`,
               label: 'Edit',
               onSelect: () => setEditing(true),
               startIcon: <Edit />,
