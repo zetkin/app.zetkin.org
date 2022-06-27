@@ -56,6 +56,14 @@ export const getStaticColumns = (
     fullName(p0).localeCompare(fullName(p1))
   );
 
+  const assigneesById: Record<string, ZetkinPersonType> = {};
+  journeyInstances
+    .flatMap((instance) => instance.assignees)
+    .forEach((assignee) => (assigneesById[assignee.id.toString()] = assignee));
+  const uniqueAssignees = Object.values(assigneesById).sort((a0, a1) =>
+    fullName(a0).localeCompare(fullName(a1))
+  );
+
   return [
     {
       field: 'id',
@@ -159,6 +167,48 @@ export const getStaticColumns = (
     },
     {
       field: 'assignees',
+      filterOperators: [
+        {
+          InputComponent: TestValueInput,
+          InputComponentProps: { subjects: uniqueAssignees },
+          getApplyFilterFn: (item) => {
+            return (params) => {
+              if (!item.value) {
+                return true;
+              }
+              const assignees = params.value as ZetkinPersonType[];
+
+              return !!assignees.find((assignee) => {
+                return assignee.id.toString() === item.value;
+              });
+            };
+          },
+          label: intl.formatMessage({
+            id: 'misc.journeys.journeyInstancesFilters.includesOperator',
+          }),
+          value: 'includes',
+        },
+        {
+          InputComponent: TestValueInput,
+          InputComponentProps: { subjects: uniqueAssignees },
+          getApplyFilterFn: (item) => {
+            return (params) => {
+              if (!item.value) {
+                return true;
+              }
+              const assignees = params.value as ZetkinPersonType[];
+
+              return !!assignees.find((assignee) => {
+                return assignee.id.toString() !== item.value;
+              });
+            };
+          },
+          label: intl.formatMessage({
+            id: 'misc.journeys.journeyInstancesFilters.excludesOperator',
+          }),
+          value: 'doesNotInclude',
+        },
+      ],
       renderCell: (params) =>
         (params.row.assignees as ZetkinPersonType[]).map((person) => (
           <PersonHoverCard key={person.id} personId={person.id}>
@@ -171,10 +221,8 @@ export const getStaticColumns = (
             />
           </PersonHoverCard>
         )),
-      valueGetter: (params) =>
-        (params.row.assignees as ZetkinPersonType[])
-          .map((person) => `${person.first_name} ${person.last_name}`)
-          .join(', '),
+      valueFormatter: (params) =>
+        getPeopleString(params.value as ZetkinPersonType[]),
     },
   ];
 };
