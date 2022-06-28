@@ -57,17 +57,17 @@ export const getStaticColumns = (
   journeyInstances
     .flatMap((instance) => instance.subjects)
     .forEach((person) => (peopleById[person.id.toString()] = person));
-  const uniqueSubjects = Object.values(peopleById).sort((p0, p1) =>
-    fullName(p0).localeCompare(fullName(p1))
-  );
+  const uniqueSubjects = Object.values(peopleById)
+    .sort((p0, p1) => fullName(p0).localeCompare(fullName(p1)))
+    .map((subject) => ({ id: subject.id, title: fullName(subject) }));
 
   const assigneesById: Record<string, ZetkinPersonType> = {};
   journeyInstances
     .flatMap((instance) => instance.assignees)
     .forEach((assignee) => (assigneesById[assignee.id.toString()] = assignee));
-  const uniqueAssignees = Object.values(assigneesById).sort((a0, a1) =>
-    fullName(a0).localeCompare(fullName(a1))
-  );
+  const uniqueAssignees = Object.values(assigneesById)
+    .sort((a0, a1) => fullName(a0).localeCompare(fullName(a1)))
+    .map((assignee) => ({ id: assignee.id, title: fullName(assignee) }));
 
   return [
     {
@@ -90,7 +90,10 @@ export const getStaticColumns = (
       filterOperators: [
         {
           InputComponent: FilterValueSelect,
-          InputComponentProps: { subjects: uniqueSubjects },
+          InputComponentProps: {
+            labelMessageId: 'misc.journeys.journeyInstancesFilters.personLabel',
+            options: uniqueSubjects,
+          },
           getApplyFilterFn: (item) => includes(item),
           label: intl.formatMessage({
             id: 'misc.journeys.journeyInstancesFilters.includesOperator',
@@ -99,10 +102,13 @@ export const getStaticColumns = (
         },
         {
           InputComponent: FilterValueSelect,
-          InputComponentProps: { subjects: uniqueSubjects },
+          InputComponentProps: {
+            labelMessageId: 'misc.journeys.journeyInstancesFilters.personLabel',
+            options: uniqueSubjects,
+          },
           getApplyFilterFn: (item) => doesNotInclude(item),
           label: intl.formatMessage({
-            id: 'misc.journeys.journeyInstancesFilters.excludesOperator',
+            id: 'misc.journeys.journeyInstancesFilters.doesNotIncludeOperator',
           }),
           value: 'doesNotInclude',
         },
@@ -153,7 +159,10 @@ export const getStaticColumns = (
       filterOperators: [
         {
           InputComponent: FilterValueSelect,
-          InputComponentProps: { subjects: uniqueAssignees },
+          InputComponentProps: {
+            labelMessageId: 'misc.journeys.journeyInstancesFilters.personLabel',
+            options: uniqueAssignees,
+          },
           getApplyFilterFn: (item) => includes(item),
           label: intl.formatMessage({
             id: 'misc.journeys.journeyInstancesFilters.includesOperator',
@@ -162,10 +171,13 @@ export const getStaticColumns = (
         },
         {
           InputComponent: FilterValueSelect,
-          InputComponentProps: { subjects: uniqueAssignees },
+          InputComponentProps: {
+            labelMessageId: 'misc.journeys.journeyInstancesFilters.personLabel',
+            options: uniqueAssignees,
+          },
           getApplyFilterFn: (item) => doesNotInclude(item),
           label: intl.formatMessage({
-            id: 'misc.journeys.journeyInstancesFilters.excludesOperator',
+            id: 'misc.journeys.journeyInstancesFilters.doesNotIncludeOperator',
           }),
           value: 'doesNotInclude',
         },

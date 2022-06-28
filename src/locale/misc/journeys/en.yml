@@ -13,9 +13,12 @@ journeyInstanceCloseButton:
   error: There was an error closing the {singularLabel}
   label: Close {singularLabel}
 journeyInstancesFilters:
-  excludesOperator: Does not include
+  doesNotHaveOperator: Does not have
+  doesNotIncludeOperator: Does not include
+  hasOperator: Has
   includesOperator: Includes
   personLabel: Person
+  tagLabel: Tag
 journeyInstanceReopenButton:
   error: There was an error reopening the {singularLabel}
   label: Reopen {singularLabel}
