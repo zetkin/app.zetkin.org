@@ -1,14 +1,54 @@
-import { GridColDef } from '@mui/x-data-grid-pro';
 import { FormattedMessage, IntlShape } from 'react-intl';
+import {
+  GridCellParams,
+  GridColDef,
+  GridFilterItem,
+} from '@mui/x-data-grid-pro';
 
 import FilterValueSelect from './FilterValueSelect';
 import TagChip from 'components/organize/TagManager/components/TagChip';
 import {
   JourneyTagColumnData,
   JourneyTagColumnType,
+  JourneyTagGroupColumn,
+  JourneyUnsortedTagsColumn,
   makeJourneyTagColumn,
 } from 'utils/journeyInstanceUtils';
 import { ZetkinJourneyInstance, ZetkinTag } from 'types/zetkin';
+
+const has = (
+  col: JourneyTagGroupColumn | JourneyUnsortedTagsColumn,
+  item: GridFilterItem
+) => {
+  return (params: GridCellParams) => {
+    if (!item.value) {
+      return true;
+    }
+
+    const tags = col.tagsGetter(params.row as ZetkinJourneyInstance);
+
+    return !!tags.find((tag) => {
+      return tag.id.toString() === item.value;
+    });
+  };
+};
+
+const doesNotHave = (
+  col: JourneyTagGroupColumn | JourneyUnsortedTagsColumn,
+  item: GridFilterItem
+) => {
+  return (params: GridCellParams) => {
+    if (!item.value) {
+      return true;
+    }
+
+    const tags = col.tagsGetter(params.row as ZetkinJourneyInstance);
+
+    return !!tags.find((tag) => {
+      return tag.id.toString() !== item.value;
+    });
+  };
+};
 
 const getTagColumns = (
   intl: IntlShape,
@@ -39,21 +79,7 @@ const getTagColumns = (
               labelMessageId: 'misc.journeys.journeyInstancesFilters.tagLabel',
               options: uniqueTags,
             },
-            getApplyFilterFn: (item) => {
-              return (params) => {
-                if (!item.value) {
-                  return true;
-                }
-
-                const tags = col.tagsGetter(
-                  params.row as ZetkinJourneyInstance
-                );
-
-                return !!tags.find((tag) => {
-                  return tag.id.toString() === item.value;
-                });
-              };
-            },
+            getApplyFilterFn: (item) => has(col, item),
             label: intl.formatMessage({
               id: 'misc.journeys.journeyInstancesFilters.hasOperator',
             }),
@@ -65,21 +91,7 @@ const getTagColumns = (
               labelMessageId: 'misc.journeys.journeyInstancesFilters.tagLabel',
               options: uniqueTags,
             },
-            getApplyFilterFn: (item) => {
-              return (params) => {
-                if (!item.value) {
-                  return true;
-                }
-
-                const tags = col.tagsGetter(
-                  params.row as ZetkinJourneyInstance
-                );
-
-                return !!tags.find((tag) => {
-                  return tag.id.toString() !== item.value;
-                });
-              };
-            },
+            getApplyFilterFn: (item) => doesNotHave(col, item),
             label: intl.formatMessage({
               id: 'misc.journeys.journeyInstancesFilters.doesNotHaveOperator',
             }),
@@ -125,21 +137,7 @@ const getTagColumns = (
               labelMessageId: 'misc.journeys.journeyInstancesFilters.tagLabel',
               options: uniqueTags,
             },
-            getApplyFilterFn: (item) => {
-              return (params) => {
-                if (!item.value) {
-                  return true;
-                }
-
-                const tags = col.tagsGetter(
-                  params.row as ZetkinJourneyInstance
-                );
-
-                return !!tags.find((tag) => {
-                  return tag.id.toString() === item.value;
-                });
-              };
-            },
+            getApplyFilterFn: (item) => has(col, item),
             label: intl.formatMessage({
               id: 'misc.journeys.journeyInstancesFilters.hasOperator',
             }),
@@ -151,21 +149,7 @@ const getTagColumns = (
               labelMessageId: 'misc.journeys.journeyInstancesFilters.tagLabel',
               options: uniqueTags,
             },
-            getApplyFilterFn: (item) => {
-              return (params) => {
-                if (!item.value) {
-                  return true;
-                }
-
-                const tags = col.tagsGetter(
-                  params.row as ZetkinJourneyInstance
-                );
-
-                return !!tags.find((tag) => {
-                  return tag.id.toString() !== item.value;
-                });
-              };
-            },
+            getApplyFilterFn: (item) => doesNotHave(col, item),
             label: intl.formatMessage({
               id: 'misc.journeys.journeyInstancesFilters.doesNotHaveOperator',
             }),
