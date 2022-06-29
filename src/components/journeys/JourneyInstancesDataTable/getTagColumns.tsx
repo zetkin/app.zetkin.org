@@ -106,11 +106,36 @@ const getTagColumns = (
               <TagChip key={tag.id} size="small" tag={tag as ZetkinTag} />
             ));
         },
+        sortComparator: (value0, value1) => {
+          const tags0 = (value0 as ZetkinTag[]).sort((t0, t1) =>
+            t0.title.localeCompare(t1.title)
+          );
+          const tags1 = (value1 as ZetkinTag[]).sort((t0, t1) =>
+            t0.title.localeCompare(t1.title)
+          );
+
+          const tagName0 = tags0[0]?.title ?? '';
+          const tagName1 = tags1[0]?.title ?? '';
+
+          if (!tagName0 && !tagName1) {
+            return 0;
+          } else if (!tagName0) {
+            return 1;
+          } else if (!tagName1) {
+            return -1;
+          } else {
+            return tagName0.localeCompare(tagName1);
+          }
+        },
         valueFormatter: (params) =>
           col
             .tagsGetter(params.row as ZetkinJourneyInstance)
             .map((tag) => tag.title)
             .join(', '),
+        valueGetter: (params) => {
+          const instance = params.row as ZetkinJourneyInstance;
+          return col.tagsGetter(instance);
+        },
       });
     } else if (col.type == JourneyTagColumnType.VALUE_TAG) {
       colDefs.push({
@@ -169,11 +194,36 @@ const getTagColumns = (
             />
           </div>
         ),
-        valueGetter: (params) =>
+        sortComparator: (value0, value1) => {
+          const tags0 = (value0 as ZetkinTag[]).sort((t0, t1) =>
+            t0.title.localeCompare(t1.title)
+          );
+          const tags1 = (value1 as ZetkinTag[]).sort((t0, t1) =>
+            t0.title.localeCompare(t1.title)
+          );
+
+          const tagName0 = tags0[0]?.title ?? '';
+          const tagName1 = tags1[0]?.title ?? '';
+
+          if (!tagName0 && !tagName1) {
+            return 0;
+          } else if (!tagName0) {
+            return 1;
+          } else if (!tagName1) {
+            return -1;
+          } else {
+            return tagName0.localeCompare(tagName1);
+          }
+        },
+        valueFormatter: (params) =>
           col
             .tagsGetter(params.row as ZetkinJourneyInstance)
             .map((tag) => tag.title)
             .join(', '),
+        valueGetter: (params) => {
+          const instance = params.row as ZetkinJourneyInstance;
+          return col.tagsGetter(instance);
+        },
       });
     }
   });
