@@ -113,6 +113,27 @@ export const getStaticColumns = (
           value: 'doesNotInclude',
         },
       ],
+      sortComparator: (value0, value1) => {
+        const subjects0 = (value0 as ZetkinPersonType[]).sort((p0, p1) =>
+          fullName(p0).localeCompare(fullName(p1))
+        );
+        const subjects1 = (value1 as ZetkinPersonType[]).sort((p0, p1) =>
+          fullName(p0).localeCompare(fullName(p1))
+        );
+
+        const name0 = subjects0[0] ? fullName(subjects0[0]) : '';
+        const name1 = subjects1[0] ? fullName(subjects1[0]) : '';
+
+        if (!name0 && !name1) {
+          return 0;
+        } else if (!name0) {
+          return 1;
+        } else if (!name1) {
+          return -1;
+        } else {
+          return name0.localeCompare(name1);
+        }
+      },
       valueFormatter: (params) =>
         getPeopleString(params.value as ZetkinPersonType[]),
     },
@@ -194,6 +215,27 @@ export const getStaticColumns = (
             />
           </PersonHoverCard>
         )),
+      sortComparator: (value0, value1) => {
+        const assignees0 = (value0 as ZetkinPersonType[]).sort((p0, p1) =>
+          fullName(p0).localeCompare(fullName(p1))
+        );
+        const assignees1 = (value1 as ZetkinPersonType[]).sort((p0, p1) =>
+          fullName(p0).localeCompare(fullName(p1))
+        );
+
+        const name0 = assignees0[0] ? fullName(assignees0[0]) : '';
+        const name1 = assignees1[0] ? fullName(assignees1[0]) : '';
+
+        if (!name0 && !name1) {
+          return 0;
+        } else if (!name0) {
+          return 1;
+        } else if (!name1) {
+          return -1;
+        } else {
+          return name0.localeCompare(name1);
+        }
+      },
       valueFormatter: (params) =>
         getPeopleString(params.value as ZetkinPersonType[]),
     },
