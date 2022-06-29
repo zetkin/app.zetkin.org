@@ -1,6 +1,7 @@
 import { IntlShape } from 'react-intl';
 import {
   GridCellParams,
+  GridCellValue,
   GridColDef,
   GridFilterItem,
 } from '@mui/x-data-grid-pro';
@@ -40,6 +41,28 @@ const doesNotInclude = (item: GridFilterItem) => {
       return assignee.id.toString() !== item.value;
     });
   };
+};
+
+const sortByName = (value0: GridCellValue, value1: GridCellValue) => {
+  const names0 = (value0 as ZetkinPersonType[]).sort((p0, p1) =>
+    fullName(p0).localeCompare(fullName(p1))
+  );
+  const names1 = (value1 as ZetkinPersonType[]).sort((p0, p1) =>
+    fullName(p0).localeCompare(fullName(p1))
+  );
+
+  const name0 = names0[0] ? fullName(names0[0]) : '';
+  const name1 = names1[0] ? fullName(names1[0]) : '';
+
+  if (!name0 && !name1) {
+    return 0;
+  } else if (!name0) {
+    return 1;
+  } else if (!name1) {
+    return -1;
+  } else {
+    return name0.localeCompare(name1);
+  }
 };
 
 const fullName = (person: ZetkinPersonType) =>
@@ -113,27 +136,7 @@ export const getStaticColumns = (
           value: 'doesNotInclude',
         },
       ],
-      sortComparator: (value0, value1) => {
-        const subjects0 = (value0 as ZetkinPersonType[]).sort((p0, p1) =>
-          fullName(p0).localeCompare(fullName(p1))
-        );
-        const subjects1 = (value1 as ZetkinPersonType[]).sort((p0, p1) =>
-          fullName(p0).localeCompare(fullName(p1))
-        );
-
-        const name0 = subjects0[0] ? fullName(subjects0[0]) : '';
-        const name1 = subjects1[0] ? fullName(subjects1[0]) : '';
-
-        if (!name0 && !name1) {
-          return 0;
-        } else if (!name0) {
-          return 1;
-        } else if (!name1) {
-          return -1;
-        } else {
-          return name0.localeCompare(name1);
-        }
-      },
+      sortComparator: (value0, value1) => sortByName(value0, value1),
       valueFormatter: (params) =>
         getPeopleString(params.value as ZetkinPersonType[]),
     },
@@ -215,27 +218,7 @@ export const getStaticColumns = (
             />
           </PersonHoverCard>
         )),
-      sortComparator: (value0, value1) => {
-        const assignees0 = (value0 as ZetkinPersonType[]).sort((p0, p1) =>
-          fullName(p0).localeCompare(fullName(p1))
-        );
-        const assignees1 = (value1 as ZetkinPersonType[]).sort((p0, p1) =>
-          fullName(p0).localeCompare(fullName(p1))
-        );
-
-        const name0 = assignees0[0] ? fullName(assignees0[0]) : '';
-        const name1 = assignees1[0] ? fullName(assignees1[0]) : '';
-
-        if (!name0 && !name1) {
-          return 0;
-        } else if (!name0) {
-          return 1;
-        } else if (!name1) {
-          return -1;
-        } else {
-          return name0.localeCompare(name1);
-        }
-      },
+      sortComparator: (value0, value1) => sortByName(value0, value1),
       valueFormatter: (params) =>
         getPeopleString(params.value as ZetkinPersonType[]),
     },
