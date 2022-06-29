@@ -1,6 +1,7 @@
 import { FormattedMessage, IntlShape } from 'react-intl';
 import {
   GridCellParams,
+  GridCellValue,
   GridColDef,
   GridFilterItem,
 } from '@mui/x-data-grid-pro';
@@ -48,6 +49,28 @@ const doesNotHave = (
       return tag.id.toString() !== item.value;
     });
   };
+};
+
+const sortByTagName = (value0: GridCellValue, value1: GridCellValue) => {
+  const tags0 = (value0 as ZetkinTag[]).sort((t0, t1) =>
+    t0.title.localeCompare(t1.title)
+  );
+  const tags1 = (value1 as ZetkinTag[]).sort((t0, t1) =>
+    t0.title.localeCompare(t1.title)
+  );
+
+  const tagName0 = tags0[0]?.title ?? '';
+  const tagName1 = tags1[0]?.title ?? '';
+
+  if (!tagName0 && !tagName1) {
+    return 0;
+  } else if (!tagName0) {
+    return 1;
+  } else if (!tagName1) {
+    return -1;
+  } else {
+    return tagName0.localeCompare(tagName1);
+  }
 };
 
 const getTagColumns = (
@@ -106,27 +129,7 @@ const getTagColumns = (
               <TagChip key={tag.id} size="small" tag={tag as ZetkinTag} />
             ));
         },
-        sortComparator: (value0, value1) => {
-          const tags0 = (value0 as ZetkinTag[]).sort((t0, t1) =>
-            t0.title.localeCompare(t1.title)
-          );
-          const tags1 = (value1 as ZetkinTag[]).sort((t0, t1) =>
-            t0.title.localeCompare(t1.title)
-          );
-
-          const tagName0 = tags0[0]?.title ?? '';
-          const tagName1 = tags1[0]?.title ?? '';
-
-          if (!tagName0 && !tagName1) {
-            return 0;
-          } else if (!tagName0) {
-            return 1;
-          } else if (!tagName1) {
-            return -1;
-          } else {
-            return tagName0.localeCompare(tagName1);
-          }
-        },
+        sortComparator: (value0, value1) => sortByTagName(value0, value1),
         valueFormatter: (params) =>
           col
             .tagsGetter(params.row as ZetkinJourneyInstance)
@@ -194,27 +197,7 @@ const getTagColumns = (
             />
           </div>
         ),
-        sortComparator: (value0, value1) => {
-          const tags0 = (value0 as ZetkinTag[]).sort((t0, t1) =>
-            t0.title.localeCompare(t1.title)
-          );
-          const tags1 = (value1 as ZetkinTag[]).sort((t0, t1) =>
-            t0.title.localeCompare(t1.title)
-          );
-
-          const tagName0 = tags0[0]?.title ?? '';
-          const tagName1 = tags1[0]?.title ?? '';
-
-          if (!tagName0 && !tagName1) {
-            return 0;
-          } else if (!tagName0) {
-            return 1;
-          } else if (!tagName1) {
-            return -1;
-          } else {
-            return tagName0.localeCompare(tagName1);
-          }
-        },
+        sortComparator: (value0, value1) => sortByTagName(value0, value1),
         valueFormatter: (params) =>
           col
             .tagsGetter(params.row as ZetkinJourneyInstance)
