@@ -15,7 +15,7 @@ interface TaskListProps {
 
 const TaskList: React.FunctionComponent<TaskListProps> = ({ tasks }) => {
   const router = useRouter();
-  const [showClosedTasks, setShowClosedTasks] = useState(false);
+  const [showExpiredTasks, setShowExpiredTasks] = useState(false);
 
   const tasksGroupedByStatus = tasks.reduce((acc, task) => {
     const taskStatus = getTaskStatus(task);
@@ -64,41 +64,38 @@ const TaskList: React.FunctionComponent<TaskListProps> = ({ tasks }) => {
           />
         )}
 
-        {showClosedTasks &&
-          (TASK_STATUS.CLOSED in tasksGroupedByStatus ||
-            TASK_STATUS.EXPIRED in tasksGroupedByStatus) && (
-            <>
-              {TASK_STATUS.CLOSED in tasksGroupedByStatus && (
-                <TaskStatusSublist
-                  status={TASK_STATUS.CLOSED}
-                  tasks={tasksGroupedByStatus[TASK_STATUS.CLOSED]}
-                />
-              )}
-              {TASK_STATUS.EXPIRED in tasksGroupedByStatus && (
-                <TaskStatusSublist
-                  status={TASK_STATUS.EXPIRED}
-                  tasks={tasksGroupedByStatus[TASK_STATUS.EXPIRED]}
-                />
-              )}
-            </>
-          )}
+        {TASK_STATUS.CLOSED in tasksGroupedByStatus && (
+          <TaskStatusSublist
+            status={TASK_STATUS.CLOSED}
+            tasks={tasksGroupedByStatus[TASK_STATUS.CLOSED]}
+          />
+        )}
 
-        {!showClosedTasks &&
-          (TASK_STATUS.CLOSED in tasksGroupedByStatus ||
-            TASK_STATUS.EXPIRED in tasksGroupedByStatus) && (
-            <>
-              <Divider />
-              <ListItem
-                button
-                component="a"
-                onClick={() => setShowClosedTasks(true)}
-              >
-                <ListItemText>
-                  <Msg id="pages.organizeCampaigns.showClosedTasksPrompt" />
-                </ListItemText>
-              </ListItem>
-            </>
-          )}
+        {showExpiredTasks && TASK_STATUS.EXPIRED in tasksGroupedByStatus && (
+          <>
+            {TASK_STATUS.EXPIRED in tasksGroupedByStatus && (
+              <TaskStatusSublist
+                status={TASK_STATUS.EXPIRED}
+                tasks={tasksGroupedByStatus[TASK_STATUS.EXPIRED]}
+              />
+            )}
+          </>
+        )}
+
+        {!showExpiredTasks && TASK_STATUS.EXPIRED in tasksGroupedByStatus && (
+          <>
+            <Divider />
+            <ListItem
+              button
+              component="a"
+              onClick={() => setShowExpiredTasks(true)}
+            >
+              <ListItemText>
+                <Msg id="pages.organizeCampaigns.showExpiredTasksPrompt" />
+              </ListItemText>
+            </ListItem>
+          </>
+        )}
       </List>
     </Card>
   );
