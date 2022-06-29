@@ -15,7 +15,7 @@ interface TaskListProps {
 
 const TaskList: React.FunctionComponent<TaskListProps> = ({ tasks }) => {
   const router = useRouter();
-  const [showClosedTasks, setShowClosedTasks] = useState(false);
+  const [showExpiredTasks, setShowExpiredTasks] = useState(false);
 
   const tasksGroupedByStatus = tasks.reduce((acc, task) => {
     const taskStatus = getTaskStatus(task);
@@ -48,31 +48,23 @@ const TaskList: React.FunctionComponent<TaskListProps> = ({ tasks }) => {
         {renderTaskList(TASK_STATUS.ACTIVE)}
         {renderTaskList(TASK_STATUS.PASSED)}
 
-        {showClosedTasks &&
-          (TASK_STATUS.CLOSED in tasksGroupedByStatus ||
-            TASK_STATUS.EXPIRED in tasksGroupedByStatus) && (
-            <>
-              {renderTaskList(TASK_STATUS.CLOSED)}
-              {renderTaskList(TASK_STATUS.EXPIRED)}
-            </>
-          )}
-
-        {!showClosedTasks &&
-          (TASK_STATUS.CLOSED in tasksGroupedByStatus ||
-            TASK_STATUS.EXPIRED in tasksGroupedByStatus) && (
+        {TASK_STATUS.EXPIRED in tasksGroupedByStatus &&
+          (showExpiredTasks ? (
+            renderTaskList(TASK_STATUS.EXPIRED)
+          ) : (
             <>
               <Divider />
               <ListItem
                 button
                 component="a"
-                onClick={() => setShowClosedTasks(true)}
+                onClick={() => setShowExpiredTasks(true)}
               >
                 <ListItemText>
-                  <Msg id="pages.organizeCampaigns.showClosedTasksPrompt" />
+                  <Msg id="pages.organizeCampaigns.showExpiredTasksPrompt" />
                 </ListItemText>
               </ListItem>
             </>
-          )}
+          ))}
       </List>
     </Card>
   );

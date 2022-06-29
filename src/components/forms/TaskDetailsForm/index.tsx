@@ -274,10 +274,7 @@ const TaskDetailsForm = ({
           <DateTimePicker
             ampm={false}
             clearable={true}
-            disabled={
-              taskStatus === TASK_STATUS.ACTIVE ||
-              taskStatus === TASK_STATUS.CLOSED
-            }
+            disabled={taskStatus === TASK_STATUS.ACTIVE}
             disablePast
             fullWidth={true}
             id={TASK_DETAILS_FIELDS.PUBLISHED}

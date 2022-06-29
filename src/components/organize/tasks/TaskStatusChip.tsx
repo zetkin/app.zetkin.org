@@ -5,7 +5,6 @@ import { TASK_STATUS } from 'utils/getTaskStatus';
 
 enum ChipColors {
   active = '#57a83d',
-  closed = '#FF4242',
   draft = 'grey',
   expired = 'black',
   passed = '#dac82f',

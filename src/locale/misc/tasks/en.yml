@@ -8,7 +8,6 @@ publishButton:
     missingFieldsAndAssignees: Missing required fields and assignees
 statuses:
   active: Active
-  closed: Closed
   draft: Draft
   expired: Expired
   passed: Passed
@@ -39,7 +38,6 @@ taskDetails:
 taskListItem:
   relativeTimes:
     active: 'Closes {time}'
-    closed: 'Closed {time}'
     expired: 'Expired {time}'
     expires: 'Expires {time}'
     indefinite: 'Published {time}'

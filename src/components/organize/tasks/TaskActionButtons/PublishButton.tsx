@@ -14,11 +14,7 @@ const getTooltipContents = (
   isTaskConfigValid: boolean,
   hasAssignees: boolean
 ): string | null => {
-  if (
-    taskStatus === TASK_STATUS.ACTIVE ||
-    taskStatus === TASK_STATUS.CLOSED ||
-    taskStatus === TASK_STATUS.EXPIRED
-  ) {
+  if (taskStatus === TASK_STATUS.ACTIVE || taskStatus === TASK_STATUS.EXPIRED) {
     return 'misc.tasks.publishButton.tooltip.alreadyPublished';
   }
 

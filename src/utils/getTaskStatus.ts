@@ -3,7 +3,6 @@ import { ZetkinTask } from 'types/zetkin';
 
 export enum TASK_STATUS {
   ACTIVE = 'active',
-  CLOSED = 'closed',
   DRAFT = 'draft',
   EXPIRED = 'expired',
   PASSED = 'passed',

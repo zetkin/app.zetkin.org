@@ -41,22 +41,6 @@ const TaskStatusText: React.FunctionComponent<TaskStatusTextProps> = ({
           }}
         />
       )}
-      {/* Closed and has expiry date */}
-      {taskStatus === TASK_STATUS.CLOSED && expires && (
-        <FormattedMessage
-          id="misc.tasks.taskListItem.relativeTimes.expires"
-          values={{ time: <ZetkinRelativeTime datetime={expires} /> }}
-        />
-      )}
-      {/* Closed and no expiry date */}
-      {taskStatus === TASK_STATUS.CLOSED && !expires && deadline && (
-        <FormattedMessage
-          id="misc.tasks.taskListItem.relativeTimes.closed"
-          values={{
-            time: <ZetkinRelativeTime datetime={deadline} />,
-          }}
-        />
-      )}
       {/* Expired */}
       {taskStatus === TASK_STATUS.EXPIRED && expires && (
         <FormattedMessage
