@@ -120,6 +120,21 @@ const getTagColumns = (
             }),
             value: 'doesNotHave',
           },
+          {
+            getApplyFilterFn: () => {
+              return (params) => {
+                const tags = col.tagsGetter(
+                  params.row as ZetkinJourneyInstance
+                );
+
+                return tags.length === 0;
+              };
+            },
+            label: intl.formatMessage({
+              id: 'misc.journeys.journeyInstancesFilters.isEmptyOperator',
+            }),
+            value: 'isEmpty',
+          },
         ],
         headerName: col.group.title,
         renderCell: (params) => {
@@ -182,6 +197,21 @@ const getTagColumns = (
               id: 'misc.journeys.journeyInstancesFilters.doesNotHaveOperator',
             }),
             value: 'doesNotHave',
+          },
+          {
+            getApplyFilterFn: () => {
+              return (params) => {
+                const tags = col.tagsGetter(
+                  params.row as ZetkinJourneyInstance
+                );
+
+                return tags.length === 0;
+              };
+            },
+            label: intl.formatMessage({
+              id: 'misc.journeys.journeyInstancesFilters.isEmptyOperator',
+            }),
+            value: 'isEmpty',
           },
         ],
         renderCell: (params) =>

@@ -17,6 +17,7 @@ journeyInstancesFilters:
   doesNotIncludeOperator: Does not include
   hasOperator: Has
   includesOperator: Includes
+  isEmptyOperator: is empty
   personLabel: Person
   tagLabel: Tag
 journeyInstanceReopenButton:

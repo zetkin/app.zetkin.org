@@ -31,7 +31,7 @@ test.describe('Journey instance list', () => {
     moxy.teardown();
   });
 
-  test('persists sort and filter state', async ({ appUri, page }) => {
+  test.only('persists sort and filter state', async ({ appUri, page }) => {
     await page.goto(appUri + '/organize/1/journeys/1');
 
     // Open filters dialog
@@ -42,7 +42,7 @@ test.describe('Journey instance list', () => {
       .locator('label:text("Columns") + * select')
       .selectOption({ label: 'Tags' });
     await page
-      .locator('select:has-text("contains")')
+      .locator('select:has-text("Has")')
       .selectOption({ label: 'is empty' });
 
     // Click title header twice to sort descending
