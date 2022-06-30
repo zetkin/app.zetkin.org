@@ -43,6 +43,13 @@ const doesNotInclude = (item: GridFilterItem) => {
   };
 };
 
+const isEmpty = () => {
+  return (params: GridCellParams) => {
+    const people = params.value as ZetkinPersonType[];
+    return people.length === 0;
+  };
+};
+
 const sortByName = (value0: GridCellValue, value1: GridCellValue) => {
   const names0 = (value0 as ZetkinPersonType[]).sort((p0, p1) =>
     fullName(p0).localeCompare(fullName(p1))
@@ -135,6 +142,13 @@ export const getStaticColumns = (
           }),
           value: 'doesNotInclude',
         },
+        {
+          getApplyFilterFn: isEmpty,
+          label: intl.formatMessage({
+            id: 'misc.journeys.journeyInstancesFilters.isEmptyOperator',
+          }),
+          value: 'isEmpty',
+        },
       ],
       sortComparator: (value0, value1) => sortByName(value0, value1),
       valueFormatter: (params) =>
@@ -204,6 +218,13 @@ export const getStaticColumns = (
             id: 'misc.journeys.journeyInstancesFilters.doesNotIncludeOperator',
           }),
           value: 'doesNotInclude',
+        },
+        {
+          getApplyFilterFn: isEmpty,
+          label: intl.formatMessage({
+            id: 'misc.journeys.journeyInstancesFilters.isEmptyOperator',
+          }),
+          value: 'isEmpty',
         },
       ],
       renderCell: (params) =>
