@@ -18,6 +18,9 @@ journeyInstancesFilters:
   hasOperator: has
   includesOperator: includes
   isEmptyOperator: is empty
+  isNotOperator: is not
+  isOperator: is
+  milestoneLabel: Milestone
   personLabel: Person
   tagLabel: Tag
 journeyInstanceReopenButton:
