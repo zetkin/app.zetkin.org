@@ -143,8 +143,9 @@ export default async function handler(
       ];
 
       return {
-        // Set the width to 3 + the max number of characters on any row
-        width: 3 + Math.max.apply(null, allLengths),
+        // Set the width to 3 + the max number of characters on any row,
+        // but cap to 50 characters to not get super wide columns
+        width: 3 + Math.min(50, Math.max.apply(null, allLengths)),
       };
     });
 
