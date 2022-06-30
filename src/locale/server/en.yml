@@ -11,4 +11,5 @@ export:
       subjects: Subjects
       summary: Summary
       title: Title
+      unsortedTags: Ungrouped Tags
       updated: Updated
