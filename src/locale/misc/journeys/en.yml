@@ -13,10 +13,10 @@ journeyInstanceCloseButton:
   error: There was an error closing the {singularLabel}
   label: Close {singularLabel}
 journeyInstancesFilters:
-  doesNotHaveOperator: Does not have
-  doesNotIncludeOperator: Does not include
-  hasOperator: Has
-  includesOperator: Includes
+  doesNotHaveOperator: does not have
+  doesNotIncludeOperator: does not include
+  hasOperator: has
+  includesOperator: includes
   isEmptyOperator: is empty
   personLabel: Person
   tagLabel: Tag
