@@ -12,6 +12,9 @@ journeyInstanceCloseButton:
     outcomeTagsLabel: Outcome tags
   error: There was an error closing the {singularLabel}
   label: Close {singularLabel}
+journeyInstanceReopenButton:
+  error: There was an error reopening the {singularLabel}
+  label: Reopen {singularLabel}
 journeyInstancesFilters:
   doesNotHaveOperator: does not have
   doesNotIncludeOperator: does not include
@@ -23,8 +26,5 @@ journeyInstancesFilters:
   milestoneLabel: Milestone
   personLabel: Person
   tagLabel: Tag
-journeyInstanceReopenButton:
-  error: There was an error reopening the {singularLabel}
-  label: Reopen {singularLabel}
 overview:
   overviewTitle: All journeys
