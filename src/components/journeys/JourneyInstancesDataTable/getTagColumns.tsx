@@ -51,6 +51,14 @@ const doesNotHave = (
   };
 };
 
+const isEmpty = (col: JourneyTagGroupColumn | JourneyUnsortedTagsColumn) => {
+  return (params: GridCellParams) => {
+    const tags = col.tagsGetter(params.row as ZetkinJourneyInstance);
+
+    return tags.length === 0;
+  };
+};
+
 const sortByTagName = (value0: GridCellValue, value1: GridCellValue) => {
   const tags0 = (value0 as ZetkinTag[]).sort((t0, t1) =>
     t0.title.localeCompare(t1.title)
@@ -121,15 +129,7 @@ const getTagColumns = (
             value: 'doesNotHave',
           },
           {
-            getApplyFilterFn: () => {
-              return (params) => {
-                const tags = col.tagsGetter(
-                  params.row as ZetkinJourneyInstance
-                );
-
-                return tags.length === 0;
-              };
-            },
+            getApplyFilterFn: () => isEmpty(col),
             label: intl.formatMessage({
               id: 'misc.journeys.journeyInstancesFilters.isEmptyOperator',
             }),
@@ -199,15 +199,7 @@ const getTagColumns = (
             value: 'doesNotHave',
           },
           {
-            getApplyFilterFn: () => {
-              return (params) => {
-                const tags = col.tagsGetter(
-                  params.row as ZetkinJourneyInstance
-                );
-
-                return tags.length === 0;
-              };
-            },
+            getApplyFilterFn: () => isEmpty(col),
             label: intl.formatMessage({
               id: 'misc.journeys.journeyInstancesFilters.isEmptyOperator',
             }),
