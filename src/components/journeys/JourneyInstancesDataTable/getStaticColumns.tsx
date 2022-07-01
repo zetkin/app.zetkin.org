@@ -222,54 +222,28 @@ export const getStaticColumns = (
     {
       field: 'nextMilestoneTitle',
       filterOperators: [
-        {
-          InputComponent: FilterValueSelect,
-          InputComponentProps: {
-            labelMessageId:
-              'misc.journeys.journeyInstancesFilters.milestoneLabel',
-            options: uniqueMilestones,
-          },
-          getApplyFilterFn: (item) => {
-            return (params) => {
-              if (!item.value) {
-                return true;
-              }
-              return (
-                (
-                  params.row as ZetkinJourneyInstance
-                ).next_milestone?.id.toString() === item.value
-              );
-            };
-          },
-          label: intl.formatMessage({
-            id: 'misc.journeys.journeyInstancesFilters.isOperator',
-          }),
-          value: 'is',
-        },
-        {
-          InputComponent: FilterValueSelect,
-          InputComponentProps: {
-            labelMessageId:
-              'misc.journeys.journeyInstancesFilters.milestoneLabel',
-            options: uniqueMilestones,
-          },
-          getApplyFilterFn: (item) => {
-            return (params) => {
-              if (!item.value) {
-                return true;
-              }
-              return (
-                (
-                  params.row as ZetkinJourneyInstance
-                ).next_milestone?.id.toString() !== item.value
-              );
-            };
-          },
-          label: intl.formatMessage({
-            id: 'misc.journeys.journeyInstancesFilters.isNotOperator',
-          }),
-          value: 'isNot',
-        },
+        makeSelectFilterOperator(
+          intl,
+          'misc.journeys.journeyInstancesFilters.isOperator',
+          'is',
+          'misc.journeys.journeyInstancesFilters.milestoneLabel',
+          uniqueMilestones,
+          (item, params) =>
+            (
+              params.row as ZetkinJourneyInstance
+            ).next_milestone?.id.toString() === item.value
+        ),
+        makeSelectFilterOperator(
+          intl,
+          'misc.journeys.journeyInstancesFilters.isNotOperator',
+          'isNot',
+          'misc.journeys.journeyInstancesFilters.milestoneLabel',
+          uniqueMilestones,
+          (item, params) =>
+            (
+              params.row as ZetkinJourneyInstance
+            ).next_milestone?.id.toString() !== item.value
+        ),
       ],
       valueGetter: (params) =>
         (params.row as ZetkinJourneyInstance).next_milestone?.title,
