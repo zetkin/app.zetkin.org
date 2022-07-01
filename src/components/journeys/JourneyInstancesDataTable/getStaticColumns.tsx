@@ -3,7 +3,6 @@ import {
   GridCellParams,
   GridCellValue,
   GridColDef,
-  GridFilterItem,
   GridFilterOperator,
 } from '@mui/x-data-grid-pro';
 
@@ -19,18 +18,35 @@ import {
   ZetkinPerson as ZetkinPersonType,
 } from 'types/zetkin';
 
-const doesNotInclude = (item: GridFilterItem) => {
-  return (params: GridCellParams) => {
-    if (!item.value) {
-      return true;
-    }
-    const assignees = params.value as ZetkinPersonType[];
+function makeDoesNotIncludeFilterOperator(
+  intl: IntlShape,
+  labelMsgId: string,
+  options: { id: number; title: string }[]
+): GridFilterOperator {
+  return {
+    InputComponent: FilterValueSelect,
+    InputComponentProps: {
+      labelMessageId: labelMsgId,
+      options,
+    },
+    getApplyFilterFn: (item) => {
+      return (params: GridCellParams) => {
+        if (!item.value) {
+          return true;
+        }
+        const people = params.value as ZetkinPersonType[];
 
-    return !!assignees.find((assignee) => {
-      return assignee.id.toString() !== item.value;
-    });
+        return !people.find((person) => {
+          return person.id.toString() === item.value;
+        });
+      };
+    },
+    label: intl.formatMessage({
+      id: 'misc.journeys.journeyInstancesFilters.doesNotIncludeOperator',
+    }),
+    value: 'doesNotInclude',
   };
-};
+}
 
 function makeIncludesFilterOperator(
   intl: IntlShape,
@@ -157,18 +173,11 @@ export const getStaticColumns = (
           'misc.journeys.journeyInstancesFilters.personLabel',
           uniqueSubjects
         ),
-        {
-          InputComponent: FilterValueSelect,
-          InputComponentProps: {
-            labelMessageId: 'misc.journeys.journeyInstancesFilters.personLabel',
-            options: uniqueSubjects,
-          },
-          getApplyFilterFn: (item) => doesNotInclude(item),
-          label: intl.formatMessage({
-            id: 'misc.journeys.journeyInstancesFilters.doesNotIncludeOperator',
-          }),
-          value: 'doesNotInclude',
-        },
+        makeDoesNotIncludeFilterOperator(
+          intl,
+          'misc.journeys.journeyInstancesFilters.doesNotIncludeOperator',
+          uniqueSubjects
+        ),
         {
           getApplyFilterFn: isEmpty,
           label: intl.formatMessage({
@@ -277,18 +286,11 @@ export const getStaticColumns = (
           'misc.journeys.journeyInstancesFilters.personLabel',
           uniqueAssignees
         ),
-        {
-          InputComponent: FilterValueSelect,
-          InputComponentProps: {
-            labelMessageId: 'misc.journeys.journeyInstancesFilters.personLabel',
-            options: uniqueAssignees,
-          },
-          getApplyFilterFn: (item) => doesNotInclude(item),
-          label: intl.formatMessage({
-            id: 'misc.journeys.journeyInstancesFilters.doesNotIncludeOperator',
-          }),
-          value: 'doesNotInclude',
-        },
+        makeDoesNotIncludeFilterOperator(
+          intl,
+          'misc.journeys.journeyInstancesFilters.doesNotIncludeOperator',
+          uniqueAssignees
+        ),
         {
           getApplyFilterFn: isEmpty,
           label: intl.formatMessage({
