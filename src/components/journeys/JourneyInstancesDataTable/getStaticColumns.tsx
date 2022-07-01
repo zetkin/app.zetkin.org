@@ -247,9 +247,10 @@ export const getStaticColumns = (
     },
     {
       field: 'nextMilestoneDeadline',
-      renderCell: (params) => (
-        <ZetkinRelativeTime datetime={params.value as string} />
-      ),
+      renderCell: (params) =>
+        params.value ? (
+          <ZetkinRelativeTime datetime={params.value as string} />
+        ) : null,
       type: 'date',
       valueGetter: (params) =>
         (params.row as ZetkinJourneyInstance).next_milestone?.deadline,
