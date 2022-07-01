@@ -3,6 +3,7 @@ import {
   GridCellParams,
   GridCellValue,
   GridColDef,
+  GridFilterItem,
   GridFilterOperator,
 } from '@mui/x-data-grid-pro';
 
@@ -18,15 +19,18 @@ import {
   ZetkinPerson as ZetkinPersonType,
 } from 'types/zetkin';
 
-function makeDoesNotIncludeFilterOperator(
+function makeSelectFilterOperator(
   intl: IntlShape,
-  labelMsgId: string,
-  options: { id: number; title: string }[]
+  operatorLabelMsgId: string,
+  operatorValue: string,
+  selectMsgId: string,
+  options: { id: number; title: string }[],
+  optionMatches: (item: GridFilterItem, params: GridCellParams) => boolean
 ): GridFilterOperator {
   return {
     InputComponent: FilterValueSelect,
     InputComponentProps: {
-      labelMessageId: labelMsgId,
+      labelMessageId: selectMsgId,
       options,
     },
     getApplyFilterFn: (item) => {
@@ -34,18 +38,33 @@ function makeDoesNotIncludeFilterOperator(
         if (!item.value) {
           return true;
         }
-        const people = params.value as ZetkinPersonType[];
 
-        return !people.find((person) => {
-          return person.id.toString() === item.value;
-        });
+        return optionMatches(item, params);
       };
     },
-    label: intl.formatMessage({
-      id: 'misc.journeys.journeyInstancesFilters.doesNotIncludeOperator',
-    }),
-    value: 'doesNotInclude',
+    label: intl.formatMessage({ id: operatorLabelMsgId }),
+    value: operatorValue,
   };
+}
+
+function makeDoesNotIncludeFilterOperator(
+  intl: IntlShape,
+  labelMsgId: string,
+  options: { id: number; title: string }[]
+): GridFilterOperator {
+  return makeSelectFilterOperator(
+    intl,
+    'misc.journeys.journeyInstancesFilters.doesNotIncludeOperator',
+    'doesNotInclude',
+    labelMsgId,
+    options,
+    (item, params) => {
+      const people = params.value as ZetkinPersonType[];
+      return !people.find((person) => {
+        return person.id.toString() === item.value;
+      });
+    }
+  );
 }
 
 function makeIncludesFilterOperator(
@@ -53,29 +72,19 @@ function makeIncludesFilterOperator(
   labelMsgId: string,
   options: { id: number; title: string }[]
 ): GridFilterOperator {
-  return {
-    InputComponent: FilterValueSelect,
-    InputComponentProps: {
-      labelMessageId: labelMsgId,
-      options,
-    },
-    getApplyFilterFn: (item) => {
-      return (params: GridCellParams) => {
-        if (!item.value) {
-          return true;
-        }
-        const people = params.value as ZetkinPersonType[];
-
-        return !!people.find((person) => {
-          return person.id.toString() === item.value;
-        });
-      };
-    },
-    label: intl.formatMessage({
-      id: 'misc.journeys.journeyInstancesFilters.includesOperator',
-    }),
-    value: 'includes',
-  };
+  return makeSelectFilterOperator(
+    intl,
+    'misc.journeys.journeyInstancesFilters.includesOperator',
+    'includes',
+    labelMsgId,
+    options,
+    (item, params) => {
+      const people = params.value as ZetkinPersonType[];
+      return !!people.find((person) => {
+        return person.id.toString() === item.value;
+      });
+    }
+  );
 }
 
 const isEmpty = () => {
