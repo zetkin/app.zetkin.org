@@ -1,4 +1,6 @@
 import { IntlShape } from 'react-intl';
+import { Link } from '@material-ui/core';
+import NextLink from 'next/link';
 import {
   GridCellParams,
   GridCellValue,
@@ -168,7 +170,14 @@ export const getStaticColumns = (
       field: 'id',
       renderCell: (params) => {
         const row = params.row as ZetkinJourneyInstance;
-        return '#' + row.id.toString();
+        return (
+          <NextLink
+            href={`/organize/${row.organization.id}/journeys/${row.journey.id}/${row.id}`}
+            passHref
+          >
+            <Link color="inherit">{'#' + row.id.toString()}</Link>
+          </NextLink>
+        );
       },
       width: 100,
     },
