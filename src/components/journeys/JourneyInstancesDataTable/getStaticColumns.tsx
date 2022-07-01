@@ -15,7 +15,6 @@ import ZetkinPerson from 'components/ZetkinPerson';
 import ZetkinRelativeTime from 'components/ZetkinRelativeTime';
 import {
   ZetkinJourneyInstance,
-  ZetkinJourneyMilestoneStatus,
   ZetkinPerson as ZetkinPersonType,
 } from 'types/zetkin';
 
@@ -124,6 +123,12 @@ const sortByName = (value0: GridCellValue, value1: GridCellValue) => {
   }
 };
 
+function getUniqueById<T extends { id: number }>(objects: T[]): T[] {
+  const objectsById: Record<number, T> = {};
+  objects.forEach((object) => (objectsById[object.id] = object));
+  return Object.values(objectsById);
+}
+
 const fullName = (person: ZetkinPersonType) =>
   `${person.first_name} ${person.last_name}`;
 
@@ -135,31 +140,23 @@ export const getStaticColumns = (
   intl: IntlShape,
   journeyInstances: ZetkinJourneyInstance[]
 ): GridColDef[] => {
-  const peopleById: Record<string, ZetkinPersonType> = {};
-  journeyInstances
-    .flatMap((instance) => instance.subjects)
-    .forEach((person) => (peopleById[person.id.toString()] = person));
-  const uniqueSubjects = Object.values(peopleById)
+  const uniqueSubjects = getUniqueById(
+    journeyInstances.flatMap((instance) => instance.subjects)
+  )
     .sort((p0, p1) => fullName(p0).localeCompare(fullName(p1)))
     .map((subject) => ({ id: subject.id, title: fullName(subject) }));
 
-  const assigneesById: Record<string, ZetkinPersonType> = {};
-  journeyInstances
-    .flatMap((instance) => instance.assignees)
-    .forEach((assignee) => (assigneesById[assignee.id.toString()] = assignee));
-  const uniqueAssignees = Object.values(assigneesById)
+  const uniqueAssignees = getUniqueById(
+    journeyInstances.flatMap((instance) => instance.assignees)
+  )
     .sort((a0, a1) => fullName(a0).localeCompare(fullName(a1)))
     .map((assignee) => ({ id: assignee.id, title: fullName(assignee) }));
 
-  const milestonesById: Record<string, ZetkinJourneyMilestoneStatus> = {};
-  journeyInstances
-    .flatMap((instance) => instance.next_milestone)
-    .forEach((milestone) => {
-      if (milestone) {
-        milestonesById[milestone.id.toString()] = milestone;
-      }
-    });
-  const uniqueMilestones = Object.values(milestonesById)
+  const uniqueMilestones = getUniqueById(
+    journeyInstances
+      .filter((instance) => !!instance.next_milestone)
+      .map((instance) => instance.next_milestone!)
+  )
     .sort((m0, m1) => m0.title.localeCompare(m1.title))
     .map((milestone) => ({
       id: milestone.id,
