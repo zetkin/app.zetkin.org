@@ -42,7 +42,7 @@ test.describe('Journey instance list', () => {
       .locator('label:text("Columns") + * select')
       .selectOption({ label: 'Tags' });
     await page
-      .locator('select:has-text("contains")')
+      .locator('select:has-text("Has")')
       .selectOption({ label: 'is empty' });
 
     // Click title header twice to sort descending

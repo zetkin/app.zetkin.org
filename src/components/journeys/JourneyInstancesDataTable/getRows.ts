@@ -10,11 +10,11 @@ interface GetRowsProps {
 const options = {
   includeScore: true,
   keys: [
-    'assigned_to.first_name',
-    'assigned_to.last_name',
+    'assignees.first_name',
+    'assignees.last_name',
     'next_milestone.title',
-    'people.first_name',
-    'people.last_name',
+    'subjects.first_name',
+    'subjects.last_name',
     'summary',
     'tags.value',
     'tags.title',

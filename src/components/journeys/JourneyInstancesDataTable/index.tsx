@@ -24,14 +24,14 @@ const JourneyInstancesDataTable: FunctionComponent<JourneysDataTableProps> = ({
   journeyInstances,
   storageKey = 'journeyInstances',
 }) => {
-  const columns = getColumns(tagColumnsData);
+  const intl = useIntl();
+  const columns = getColumns(intl, journeyInstances, tagColumnsData);
   const [sortModel, setSortModel] = useState<GridSortModel>([]);
   const [quickSearch, setQuickSearch] = useState('');
 
   const rows = getRows({ journeyInstances, quickSearch });
 
   // Add localised header titles
-  const intl = useIntl();
   const columnsWithHeaderTitles = columns.map((column) => ({
     headerName:
       column.headerName ||

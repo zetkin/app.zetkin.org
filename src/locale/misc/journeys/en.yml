@@ -15,5 +15,16 @@ journeyInstanceCloseButton:
 journeyInstanceReopenButton:
   error: There was an error reopening the {singularLabel}
   label: Reopen {singularLabel}
+journeyInstancesFilters:
+  doesNotHaveOperator: does not have
+  doesNotIncludeOperator: does not include
+  hasOperator: has
+  includesOperator: includes
+  isEmptyOperator: is empty
+  isNotOperator: is not
+  isOperator: is
+  milestoneLabel: Milestone
+  personLabel: Person
+  tagLabel: Tag
 overview:
   overviewTitle: All journeys
