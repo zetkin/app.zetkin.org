@@ -17,7 +17,6 @@ const useStyles = makeStyles(() => ({
   collapsed: {
     overflow: 'hidden',
     textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap',
   },
 }));
 
@@ -121,6 +120,7 @@ const JourneyInstanceSummary = ({
                 className: summaryCollapsed ? classes.collapsed : '',
                 onClick: () => setSummaryCollapsed(true),
                 style: {
+                  overflowWrap: 'break-word',
                   padding: '0.75rem 0',
                 },
               }}
