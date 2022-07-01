@@ -87,12 +87,20 @@ function makeIncludesFilterOperator(
   );
 }
 
-const isEmpty = () => {
-  return (params: GridCellParams) => {
-    const people = params.value as ZetkinPersonType[];
-    return people.length === 0;
+function makeEmptyFilterOperator(intl: IntlShape): GridFilterOperator {
+  return {
+    getApplyFilterFn: () => {
+      return (params: GridCellParams) => {
+        const people = params.value as ZetkinPersonType[];
+        return people.length === 0;
+      };
+    },
+    label: intl.formatMessage({
+      id: 'misc.journeys.journeyInstancesFilters.isEmptyOperator',
+    }),
+    value: 'isEmpty',
   };
-};
+}
 
 const sortByName = (value0: GridCellValue, value1: GridCellValue) => {
   const names0 = (value0 as ZetkinPersonType[]).sort((p0, p1) =>
@@ -187,13 +195,7 @@ export const getStaticColumns = (
           'misc.journeys.journeyInstancesFilters.doesNotIncludeOperator',
           uniqueSubjects
         ),
-        {
-          getApplyFilterFn: isEmpty,
-          label: intl.formatMessage({
-            id: 'misc.journeys.journeyInstancesFilters.isEmptyOperator',
-          }),
-          value: 'isEmpty',
-        },
+        makeEmptyFilterOperator(intl),
       ],
       sortComparator: (value0, value1) => sortByName(value0, value1),
       valueFormatter: (params) =>
@@ -300,13 +302,7 @@ export const getStaticColumns = (
           'misc.journeys.journeyInstancesFilters.doesNotIncludeOperator',
           uniqueAssignees
         ),
-        {
-          getApplyFilterFn: isEmpty,
-          label: intl.formatMessage({
-            id: 'misc.journeys.journeyInstancesFilters.isEmptyOperator',
-          }),
-          value: 'isEmpty',
-        },
+        makeEmptyFilterOperator(intl),
       ],
       renderCell: (params) =>
         (params.row.assignees as ZetkinPersonType[]).map((person) => (
