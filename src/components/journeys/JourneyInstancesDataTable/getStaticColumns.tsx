@@ -4,6 +4,7 @@ import {
   GridCellValue,
   GridColDef,
   GridFilterItem,
+  GridFilterOperator,
 } from '@mui/x-data-grid-pro';
 
 import FilterValueSelect from './FilterValueSelect';
@@ -18,19 +19,6 @@ import {
   ZetkinPerson as ZetkinPersonType,
 } from 'types/zetkin';
 
-const includes = (item: GridFilterItem) => {
-  return (params: GridCellParams) => {
-    if (!item.value) {
-      return true;
-    }
-    const people = params.value as ZetkinPersonType[];
-
-    return !!people.find((person) => {
-      return person.id.toString() === item.value;
-    });
-  };
-};
-
 const doesNotInclude = (item: GridFilterItem) => {
   return (params: GridCellParams) => {
     if (!item.value) {
@@ -43,6 +31,36 @@ const doesNotInclude = (item: GridFilterItem) => {
     });
   };
 };
+
+function makeIncludesFilterOperator(
+  intl: IntlShape,
+  labelMsgId: string,
+  options: { id: number; title: string }[]
+): GridFilterOperator {
+  return {
+    InputComponent: FilterValueSelect,
+    InputComponentProps: {
+      labelMessageId: labelMsgId,
+      options,
+    },
+    getApplyFilterFn: (item) => {
+      return (params: GridCellParams) => {
+        if (!item.value) {
+          return true;
+        }
+        const people = params.value as ZetkinPersonType[];
+
+        return !!people.find((person) => {
+          return person.id.toString() === item.value;
+        });
+      };
+    },
+    label: intl.formatMessage({
+      id: 'misc.journeys.journeyInstancesFilters.includesOperator',
+    }),
+    value: 'includes',
+  };
+}
 
 const isEmpty = () => {
   return (params: GridCellParams) => {
@@ -134,18 +152,11 @@ export const getStaticColumns = (
     {
       field: 'subjects',
       filterOperators: [
-        {
-          InputComponent: FilterValueSelect,
-          InputComponentProps: {
-            labelMessageId: 'misc.journeys.journeyInstancesFilters.personLabel',
-            options: uniqueSubjects,
-          },
-          getApplyFilterFn: (item) => includes(item),
-          label: intl.formatMessage({
-            id: 'misc.journeys.journeyInstancesFilters.includesOperator',
-          }),
-          value: 'includes',
-        },
+        makeIncludesFilterOperator(
+          intl,
+          'misc.journeys.journeyInstancesFilters.personLabel',
+          uniqueSubjects
+        ),
         {
           InputComponent: FilterValueSelect,
           InputComponentProps: {
@@ -261,18 +272,11 @@ export const getStaticColumns = (
     {
       field: 'assignees',
       filterOperators: [
-        {
-          InputComponent: FilterValueSelect,
-          InputComponentProps: {
-            labelMessageId: 'misc.journeys.journeyInstancesFilters.personLabel',
-            options: uniqueAssignees,
-          },
-          getApplyFilterFn: (item) => includes(item),
-          label: intl.formatMessage({
-            id: 'misc.journeys.journeyInstancesFilters.includesOperator',
-          }),
-          value: 'includes',
-        },
+        makeIncludesFilterOperator(
+          intl,
+          'misc.journeys.journeyInstancesFilters.personLabel',
+          uniqueAssignees
+        ),
         {
           InputComponent: FilterValueSelect,
           InputComponentProps: {
