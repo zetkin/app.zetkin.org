@@ -83,7 +83,7 @@ test.describe('Journey instance notes', () => {
       page.waitForResponse(
         `**/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}/notes`
       ),
-      page.click('[data-testid=SubmitCancelButtons-submitButton]'),
+      page.click('[data-testid=TimelineAddNote-submitButton]'),
     ]);
 
     expect(notePostMock.log()[0].data).toEqual({
@@ -92,7 +92,7 @@ test.describe('Journey instance notes', () => {
     });
   });
 
-  test.only('can edit a note', async ({ moxy, page }) => {
+  test('can edit a note', async ({ moxy, page }) => {
     const notePatchMock = moxy.setZetkinApiMock(
       `/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}/notes/${NoteUpdate.details.note.id}`,
       'patch',
@@ -109,20 +109,23 @@ test.describe('Journey instance notes', () => {
 
     // Click input
     await page.click('[data-slate-editor=true]:below(:text("added a note"))');
+    // Delete existing text
+    for (let i = 0; i < NoteUpdate.details.note.text.length; i++) {
+      await page.keyboard.press('Backspace');
+    }
     await page.type(
       '[data-slate-editor=true]:below(:text("added a note"))',
       newNote.text
     );
-    await page.click(
-      '[data-testid=SubmitCancelButtons-submitButton]:near(:text("added a note")'
-    );
 
-    // await Promise.all([
-    //   page.waitForResponse(
-    //     `**/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}/notes/${NoteUpdate.details.note.id}`
-    //   ),
-    //   page.click('[data-testid=SubmitCancelButtons-submitButton]'),
-    // ]);
+    await Promise.all([
+      page.waitForResponse(
+        `**/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}/notes/${NoteUpdate.details.note.id}`
+      ),
+      page.click(
+        `[data-testid=TimelineNoteAdded-submitButton-note-${NoteUpdate.details.note.id}]`
+      ),
+    ]);
 
     expect(notePatchMock.log()[0].data).toEqual({
       text: `${newNote.text}\n`,
