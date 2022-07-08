@@ -83,7 +83,12 @@ const TimelineNoteAdded: React.FC<Props> = ({ onEditNote, update }) => {
             onChange={(text) => setNoteText(text)}
             placeholder="Text"
           />
-          <SubmitCancelButtons onCancel={() => setEditing(false)} />
+          <SubmitCancelButtons
+            onCancel={() => setEditing(false)}
+            submitButtonProps={{
+              'data-testid': `TimelineNoteAdded-submitButton-note-${update.details.note.id}`,
+            }}
+          />
         </form>
       ) : (
         // Not editing
