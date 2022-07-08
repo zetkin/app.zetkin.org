@@ -85,11 +85,11 @@ const TextEditor: React.FunctionComponent<TextEditorProps> = ({
 
   useEffect(() => {
     (async () => {
-      if (!initialValue) {
-        setInitialValueSlate(emptySlate);
-      } else {
+      if (initialValue) {
         const slate = await markdownToSlate(initialValue as string);
         setInitialValueSlate(slate as Descendant[]);
+      } else {
+        setInitialValueSlate(emptySlate);
       }
     })();
   }, [initialValue]);
