@@ -46,32 +46,32 @@ const PersonHoverCard: React.FunctionComponent<{
   const { data: person } = personResource(
     orgId as string,
     personId.toString()
-  ).useQuery();
+  ).useQuery({ enabled: Boolean(anchorEl) });
   const { data: tags } = personTagsResource(
     orgId as string,
     personId.toString()
-  ).useQuery();
+  ).useQuery({ enabled: Boolean(anchorEl) });
 
-  if (person) {
-    return (
-      <Box
-        onMouseEnter={openPopover}
-        onMouseLeave={closePopover}
-        style={{ display: 'flex' }}
-        {...BoxProps}
+  return (
+    <Box
+      onMouseEnter={openPopover}
+      onMouseLeave={closePopover}
+      style={{ display: 'flex' }}
+      {...BoxProps}
+    >
+      {children}
+      <Popper
+        anchorEl={anchorEl}
+        id="person-hover-card"
+        modifiers={{
+          preventOverflow: {
+            boundariesElement: 'scrollParent',
+            enabled: true,
+          },
+        }}
+        open={open}
       >
-        {children}
-        <Popper
-          anchorEl={anchorEl}
-          id="person-hover-card"
-          modifiers={{
-            preventOverflow: {
-              boundariesElement: 'scrollParent',
-              enabled: true,
-            },
-          }}
-          open={open}
-        >
+        {person && (
           <Fade in={open} timeout={200}>
             <Card elevation={5} style={{ padding: 24 }} variant="elevation">
               <Grid
@@ -118,12 +118,10 @@ const PersonHoverCard: React.FunctionComponent<{
               </Grid>
             </Card>
           </Fade>
-        </Popper>
-      </Box>
-    );
-  } else {
-    return null;
-  }
+        )}
+      </Popper>
+    </Box>
+  );
 };
 
 export default PersonHoverCard;
