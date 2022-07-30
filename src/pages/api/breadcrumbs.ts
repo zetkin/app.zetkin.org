@@ -61,10 +61,14 @@ async function fetchLabel(
     return `${person.data.first_name} ${person.data.last_name}`;
   }
   if (fieldName === 'campId') {
-    const campaign = await apiFetch(
-      `/orgs/${orgId}/campaigns/${fieldValue}`
-    ).then((res) => res.json());
-    return campaign.data.title;
+    if (fieldValue == 'standalone') {
+      return null;
+    } else {
+      const campaign = await apiFetch(
+        `/orgs/${orgId}/campaigns/${fieldValue}`
+      ).then((res) => res.json());
+      return campaign.data.title;
+    }
   }
   if (fieldName === 'taskId') {
     const task = await apiFetch(`/orgs/${orgId}/tasks/${fieldValue}`).then(
@@ -91,6 +95,12 @@ async function fetchLabel(
       `/orgs/${orgId}/journeys/${fieldValue}`
     ).then((res) => res.json());
     return journey.data.plural_label;
+  }
+  if (fieldName == 'callAssId') {
+    const assignment = await apiFetch(
+      `/orgs/${orgId}/call_assignments/${fieldValue}`
+    ).then((res) => res.json());
+    return assignment.data.title;
   }
   return fieldValue;
 }
