@@ -26,10 +26,12 @@ const breadcrumbs = async (
 
         const label = await fetchLabel(fieldName, fieldValue, orgId, apiFetch);
         curPath.push(fieldValue);
-        breadcrumbs.push({
-          href: '/' + curPath.join('/'),
-          label: label,
-        });
+        if (label) {
+          breadcrumbs.push({
+            href: '/' + curPath.join('/'),
+            label: label,
+          });
+        }
       } else {
         curPath.push(field);
         breadcrumbs.push({
