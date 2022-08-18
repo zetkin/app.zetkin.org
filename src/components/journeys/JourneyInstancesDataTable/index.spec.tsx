@@ -40,7 +40,7 @@ describe('JourneyInstancesDataTable.tsx', () => {
       </div>
     );
 
-    const milestone = await getByText('perform lip sync');
+    const milestone = await getByText('Attend a branch meeting.');
     expect(milestone).toBeTruthy();
   });
 });

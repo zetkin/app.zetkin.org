@@ -10,7 +10,7 @@ const view: ZetkinView = {
   organization: mockOrganization(),
   owner: {
     id: 1,
-    name: 'M. E. Retsrof',
+    name: 'Clara Zetkin',
   },
   title: 'A view with a room',
 };
