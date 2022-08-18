@@ -2,7 +2,7 @@ import { expect } from '@playwright/test';
 import test from '../../fixtures/next';
 
 import KPD from '../../mockData/orgs/KPD';
-import RosaLuxemburg from '../../mockData/users/RosaLuxemburg';
+import RosaLuxemburgUser from '../../mockData/users/RosaLuxemburgUser';
 
 test.describe('User gets 404 when trying to access org pages', () => {
   test.afterEach(({ moxy }) => {
@@ -17,14 +17,15 @@ test.describe('User gets 404 when trying to access org pages', () => {
           title: 'Satanist Monster Org',
         },
         profile: {
-          id: RosaLuxemburg.id,
-          name: RosaLuxemburg.first_name + ' ' + RosaLuxemburg.last_name,
+          id: RosaLuxemburgUser.id,
+          name:
+            RosaLuxemburgUser.first_name + ' ' + RosaLuxemburgUser.last_name,
         },
         role: 'witch',
       },
     ];
 
-    login(RosaLuxemburg, memberships);
+    login(RosaLuxemburgUser, memberships);
     const response = await page.goto(appUri + '/organize/1/campaigns');
     expect(response?.status()).toEqual(404);
 
@@ -40,14 +41,15 @@ test.describe('User gets 404 when trying to access org pages', () => {
       {
         organization: KPD,
         profile: {
-          id: RosaLuxemburg.id,
-          name: RosaLuxemburg.first_name + ' ' + RosaLuxemburg.last_name,
+          id: RosaLuxemburgUser.id,
+          name:
+            RosaLuxemburgUser.first_name + ' ' + RosaLuxemburgUser.last_name,
         },
         role: null,
       },
     ];
 
-    login(RosaLuxemburg, memberships);
+    login(RosaLuxemburgUser, memberships);
     const response = await page.goto(appUri + '/organize/1/campaigns');
     expect(response?.status()).toEqual(404);
   });

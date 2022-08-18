@@ -1,5 +1,5 @@
 import KPD from '../../..';
-import RosaLuxemburg from '../../../../../users/RosaLuxemburg';
+import RosaLuxemburg from '../../RosaLuxemburg';
 import { ZetkinView } from '../../../../../../../src/types/zetkin';
 
 const NewView: ZetkinView = {

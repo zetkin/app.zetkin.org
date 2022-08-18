@@ -18,7 +18,7 @@ import moxy, {
 } from 'moxy';
 
 import Memberships from '../mockData/orgs/KPD/Memberships';
-import RosaLuxemburg from '../mockData/users/RosaLuxemburg';
+import RosaLuxemburgUser from '../mockData/users/RosaLuxemburgUser';
 import {
   ZetkinMembership,
   ZetkinSession,
@@ -188,7 +188,7 @@ const test = base.extend<NextTestFixtures, NextWorkerFixtures>({
      * The default user is Rosa Luxumburg. Pass in a ZetkinUser object to override.
      */
     const login = (
-      user: ZetkinUser = RosaLuxemburg,
+      user: ZetkinUser = RosaLuxemburgUser,
       memberships: ZetkinMembership[] = Memberships
     ) => {
       moxy.setZetkinApiMock<ZetkinUser>('/users/me', 'get', user);
