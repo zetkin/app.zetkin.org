@@ -1,7 +1,8 @@
 import { GetServerSideProps } from 'next';
 import { ResponsiveBar } from '@nivo/bar';
 import { useQuery } from 'react-query';
-import { Box, Typography } from '@material-ui/core';
+import { useState } from 'react';
+import { Box, MenuItem, Select, Typography } from '@material-ui/core';
 
 import APIError from 'utils/apiError';
 import CallAssignmentLayout from 'layout/organize/CallAssignmentLayout';
@@ -42,10 +43,15 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
   orgId,
   assignmentId,
 }) => {
+  const [caller, setCaller] = useState<number | null>(null);
+
   const statsQuery = useQuery(
-    ['callAssignmentStats', assignmentId],
+    ['callAssignmentStats', assignmentId, caller ? caller.toString() : 'all'],
     async () => {
-      const url = `/api/stats/calls?org=${orgId}&assignment=${assignmentId}`;
+      const url = `/api/stats/calls?org=${orgId}&assignment=${assignmentId}&caller=${
+        caller ? caller : ''
+      }`;
+
       const res = await fetch(url);
       if (!res.ok) {
         throw new APIError('get', url);
@@ -56,48 +62,64 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
   );
 
   return (
-    <ZetkinQuery queries={{ statsQuery }}>
-      {({ queries }) => {
-        const data = queries.statsQuery.data.dates.map((d) => ({
-          conversations: d.conversations,
-          date: d.date,
-          non_conversations: d.calls - d.conversations,
-        }));
+    <>
+      <Typography variant="h3">Calls and conversations</Typography>
+      <ZetkinQuery queries={{ statsQuery }}>
+        {({ queries }) => {
+          const data = queries.statsQuery.data.dates.map((d) => ({
+            conversations: d.conversations,
+            date: d.date,
+            non_conversations: d.calls - d.conversations,
+          }));
+          const sortedCallers = queries.statsQuery.data.callers.sort((c0, c1) =>
+            c0.name.localeCompare(c1.name)
+          );
 
-        return (
-          <Box>
-            <Typography variant="h3">Calls and conversations</Typography>
-            <Box height={400}>
-              <ResponsiveBar
-                axisBottom={{
-                  legend: 'Date',
-                  legendOffset: 40,
-                  legendPosition: 'middle',
-                  tickPadding: 10,
-                }}
-                axisLeft={{
-                  legend: 'Calls',
-                  legendOffset: -50,
-                  legendPosition: 'middle',
-                  tickPadding: 10,
-                }}
-                colors={{ scheme: 'nivo' }}
-                data={data}
-                indexBy="date"
-                keys={['conversations', 'non_conversations']}
-                margin={{
-                  bottom: 50,
-                  left: 60,
-                  right: 130,
-                  top: 50,
-                }}
-                padding={0.3}
-              />
+          return (
+            <Box>
+              <Select
+                onChange={(ev) => setCaller(parseInt(ev.target.value) || null)}
+                value={caller || 0}
+              >
+                <MenuItem value={0}>Total</MenuItem>
+                {sortedCallers.map((caller) => (
+                  <MenuItem key={caller.id} value={caller.id}>
+                    {caller.name}
+                  </MenuItem>
+                ))}
+              </Select>
+              <Box height={400}>
+                <ResponsiveBar
+                  axisBottom={{
+                    legend: 'Date',
+                    legendOffset: 40,
+                    legendPosition: 'middle',
+                    tickPadding: 10,
+                  }}
+                  axisLeft={{
+                    legend: 'Calls',
+                    legendOffset: -50,
+                    legendPosition: 'middle',
+                    tickPadding: 10,
+                  }}
+                  colors={{ scheme: 'nivo' }}
+                  data={data}
+                  indexBy="date"
+                  keys={['conversations', 'non_conversations']}
+                  margin={{
+                    bottom: 50,
+                    left: 60,
+                    right: 130,
+                    top: 50,
+                  }}
+                  padding={0.3}
+                />
+              </Box>
             </Box>
-          </Box>
-        );
-      }}
-    </ZetkinQuery>
+          );
+        }}
+      </ZetkinQuery>
+    </>
   );
 };
 

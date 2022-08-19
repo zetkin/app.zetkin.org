@@ -22,7 +22,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ): Promise<void> {
-  const { assignment, org } = req.query;
+  const { assignment, caller, org } = req.query;
 
   const apiFetch = createApiFetch(req.headers);
 
@@ -86,7 +86,11 @@ export default async function handler(
         continue;
       }
 
-      // TODO: Skip calls belonging to wrong caller
+      // Skip calls belonging to wrong caller
+      if (caller && curCall.caller.id.toString() !== caller) {
+        callIdx++;
+        continue;
+      }
 
       // Add stats
       dateStats.calls++;
