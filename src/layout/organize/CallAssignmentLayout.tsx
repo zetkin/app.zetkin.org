@@ -1,3 +1,4 @@
+import { callAssignmentQuery } from 'api/callAssignments';
 import TabbedLayout from './TabbedLayout';
 
 interface CallAssignmentLayoutProps {
@@ -12,6 +13,8 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
   campaignId,
   assignmentId,
 }) => {
+  const assQuery = callAssignmentQuery(orgId, assignmentId).useQuery();
+
   return (
     <TabbedLayout
       baseHref={`/organize/${orgId}/campaigns/${campaignId}/callassignments/${assignmentId}`}
@@ -22,7 +25,7 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
           messageId: 'layout.organize.callAssignment.tabs.insights',
         },
       ]}
-      title="Placeholder"
+      title={assQuery.data?.title}
     >
       {children}
     </TabbedLayout>
