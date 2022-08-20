@@ -2,11 +2,19 @@ import { GetServerSideProps } from 'next';
 import { ResponsiveBar } from '@nivo/bar';
 import { useQuery } from 'react-query';
 import { useState } from 'react';
-import { Box, MenuItem, Select, Typography } from '@material-ui/core';
+import {
+  Box,
+  FormControlLabel,
+  MenuItem,
+  Select,
+  Switch,
+  Typography,
+} from '@material-ui/core';
 
 import APIError from 'utils/apiError';
 import CallAssignmentLayout from 'layout/organize/CallAssignmentLayout';
 import { callAssignmentQuery } from 'api/callAssignments';
+import { DateStats } from 'pages/api/stats/calls';
 import { PageWithLayout } from 'types';
 import { scaffold } from 'utils/next';
 import ZetkinQuery from 'components/ZetkinQuery';
@@ -44,6 +52,7 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
   assignmentId,
 }) => {
   const [caller, setCaller] = useState<number | null>(null);
+  const [normalized, setNormalized] = useState(false);
 
   const statsQuery = useQuery(
     ['callAssignmentStats', assignmentId, caller ? caller.toString() : 'all'],
@@ -66,11 +75,24 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
       <Typography variant="h3">Calls and conversations</Typography>
       <ZetkinQuery queries={{ statsQuery }}>
         {({ queries }) => {
-          const data = queries.statsQuery.data.dates.map((d) => ({
-            conversations: d.conversations,
-            date: d.date,
-            non_conversations: d.calls - d.conversations,
-          }));
+          const data = queries.statsQuery.data.dates.map((d: DateStats) => {
+            const nonConversations = d.calls - d.conversations;
+
+            if (normalized) {
+              return {
+                conversations: d.calls? Math.round(d.conversations / d.calls * 100) : 0,
+                date: d.date,
+                non_conversations: d.calls? Math.round(nonConversations / d.calls * 100) : 0,
+              }
+            } else {
+              return {
+                conversations: d.conversations,
+                date: d.date,
+                non_conversations: nonConversations,
+              };
+            }
+          });
+
           const sortedCallers = queries.statsQuery.data.callers.sort((c0, c1) =>
             c0.name.localeCompare(c1.name)
           );
@@ -88,6 +110,15 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
                   </MenuItem>
                 ))}
               </Select>
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={normalized}
+                    onChange={(ev) => setNormalized(ev.target.checked)}
+                  />
+                }
+                label="Show as %"
+              />
               <Box height={400}>
                 <ResponsiveBar
                   axisBottom={{
