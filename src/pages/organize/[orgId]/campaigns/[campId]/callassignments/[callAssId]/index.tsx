@@ -14,7 +14,7 @@ import {
 import APIError from 'utils/apiError';
 import CallAssignmentLayout from 'layout/organize/CallAssignmentLayout';
 import { callAssignmentQuery } from 'api/callAssignments';
-import { DateStats } from 'pages/api/stats/calls';
+import { DateStats } from 'pages/api/stats/calls/date';
 import { PageWithLayout } from 'types';
 import { scaffold } from 'utils/next';
 import ZetkinQuery from 'components/ZetkinQuery';
@@ -53,11 +53,17 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
 }) => {
   const [caller, setCaller] = useState<number | null>(null);
   const [normalized, setNormalized] = useState(false);
+  const [interval, setInterval] = useState<'date' | 'hour'>('date');
 
   const statsQuery = useQuery(
-    ['callAssignmentStats', assignmentId, caller ? caller.toString() : 'all'],
+    [
+      'callAssignmentStats',
+      assignmentId,
+      caller ? caller.toString() : 'all',
+      interval,
+    ],
     async () => {
-      const url = `/api/stats/calls?org=${orgId}&assignment=${assignmentId}&caller=${
+      const url = `/api/stats/calls/${interval}?org=${orgId}&assignment=${assignmentId}&caller=${
         caller ? caller : ''
       }`;
 
@@ -80,10 +86,14 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
 
             if (normalized) {
               return {
-                conversations: d.calls? Math.round(d.conversations / d.calls * 100) : 0,
+                conversations: d.calls
+                  ? Math.round((d.conversations / d.calls) * 100)
+                  : 0,
                 date: d.date,
-                non_conversations: d.calls? Math.round(nonConversations / d.calls * 100) : 0,
-              }
+                non_conversations: d.calls
+                  ? Math.round((nonConversations / d.calls) * 100)
+                  : 0,
+              };
             } else {
               return {
                 conversations: d.conversations,
@@ -119,13 +129,28 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
                 }
                 label="Show as %"
               />
+              <Select
+                onChange={(ev) =>
+                  setInterval(ev.target.value as 'date' | 'hour')
+                }
+                value={interval}
+              >
+                <MenuItem value="date">Day by day</MenuItem>
+                <MenuItem value="hour">Last 48 hours</MenuItem>
+              </Select>
               <Box height={400}>
                 <ResponsiveBar
+                  key={interval}
                   axisBottom={{
-                    legend: 'Date',
-                    legendOffset: 40,
-                    legendPosition: 'middle',
+                    format: (value) => {
+                      if (interval == 'hour') {
+                        return value.slice(-5);
+                      } else {
+                        return value;
+                      }
+                    },
                     tickPadding: 10,
+                    tickRotation: -30,
                   }}
                   axisLeft={{
                     legend: 'Calls',
