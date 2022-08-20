@@ -109,35 +109,39 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
 
           return (
             <Box>
-              <Select
-                onChange={(ev) => setCaller(parseInt(ev.target.value) || null)}
-                value={caller || 0}
-              >
-                <MenuItem value={0}>Total</MenuItem>
-                {sortedCallers.map((caller) => (
-                  <MenuItem key={caller.id} value={caller.id}>
-                    {caller.name}
-                  </MenuItem>
-                ))}
-              </Select>
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={normalized}
-                    onChange={(ev) => setNormalized(ev.target.checked)}
-                  />
-                }
-                label="Show as %"
-              />
-              <Select
-                onChange={(ev) =>
-                  setInterval(ev.target.value as 'date' | 'hour')
-                }
-                value={interval}
-              >
-                <MenuItem value="date">Day by day</MenuItem>
-                <MenuItem value="hour">Last 48 hours</MenuItem>
-              </Select>
+              <Box display="flex" flexDirection="row" gridGap={40}>
+                <Select
+                  onChange={(ev) =>
+                    setCaller(parseInt(ev.target.value) || null)
+                  }
+                  value={caller || 0}
+                >
+                  <MenuItem value={0}>Total</MenuItem>
+                  {sortedCallers.map((caller) => (
+                    <MenuItem key={caller.id} value={caller.id}>
+                      {caller.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={normalized}
+                      onChange={(ev) => setNormalized(ev.target.checked)}
+                    />
+                  }
+                  label="Show as %"
+                />
+                <Select
+                  onChange={(ev) =>
+                    setInterval(ev.target.value as 'date' | 'hour')
+                  }
+                  value={interval}
+                >
+                  <MenuItem value="date">Day by day</MenuItem>
+                  <MenuItem value="hour">Last 48 hours</MenuItem>
+                </Select>
+              </Box>
               <Box height={400}>
                 <ResponsiveBar
                   key={interval}
