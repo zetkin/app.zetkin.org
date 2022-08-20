@@ -7,7 +7,7 @@ export interface DateStats {
   conversations: number;
 }
 
-interface ZetkinCaller {
+export interface ZetkinCaller {
   id: number;
   name: string;
 }

@@ -14,10 +14,10 @@ import {
 import APIError from 'utils/apiError';
 import CallAssignmentLayout from 'layout/organize/CallAssignmentLayout';
 import { callAssignmentQuery } from 'api/callAssignments';
-import { DateStats } from 'pages/api/stats/calls/date';
 import { PageWithLayout } from 'types';
 import { scaffold } from 'utils/next';
 import ZetkinQuery from 'components/ZetkinQuery';
+import { DateStats, ZetkinCaller } from 'pages/api/stats/calls/date';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   async (ctx) => {
@@ -103,7 +103,7 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
             }
           });
 
-          const sortedCallers = queries.statsQuery.data.callers.sort((c0, c1) =>
+          const sortedCallers = queries.statsQuery.data.callers.sort((c0: ZetkinCaller, c1: ZetkinCaller) =>
             c0.name.localeCompare(c1.name)
           );
 
@@ -112,12 +112,12 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
               <Box display="flex" flexDirection="row" gridGap={40}>
                 <Select
                   onChange={(ev) =>
-                    setCaller(parseInt(ev.target.value) || null)
+                    setCaller(parseInt(ev.target.value as string) || null)
                   }
                   value={caller || 0}
                 >
                   <MenuItem value={0}>Total</MenuItem>
-                  {sortedCallers.map((caller) => (
+                  {sortedCallers.map((caller: ZetkinCaller) => (
                     <MenuItem key={caller.id} value={caller.id}>
                       {caller.name}
                     </MenuItem>
