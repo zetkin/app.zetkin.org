@@ -103,8 +103,9 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
             }
           });
 
-          const sortedCallers = queries.statsQuery.data.callers.sort((c0: ZetkinCaller, c1: ZetkinCaller) =>
-            c0.name.localeCompare(c1.name)
+          const sortedCallers = queries.statsQuery.data.callers.sort(
+            (c0: ZetkinCaller, c1: ZetkinCaller) =>
+              c0.name.localeCompare(c1.name)
           );
 
           return (
