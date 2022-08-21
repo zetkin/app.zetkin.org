@@ -56,6 +56,10 @@ export default async function handler(
 
   let callIdx = 0;
   const curDate = startDate;
+  curDate.setMinutes(0);
+  curDate.setSeconds(0);
+  curDate.setMilliseconds(0);
+
   while (curDate <= lastDate) {
     const dateStats: DateStats = {
       calls: 0,
@@ -69,6 +73,8 @@ export default async function handler(
       const curCall = sortedCalls[callIdx];
       const curCallDate = new Date(curCall.allocation_time);
       curCallDate.setMinutes(0);
+      curCallDate.setSeconds(0);
+      curCallDate.setMilliseconds(0);
       const curCallDateStr = curCallDate.toISOString().slice(0, 16);
 
       if (curCallDate < curDate) {
