@@ -10,7 +10,7 @@ header:
     expand: Expand
 journeyInstance:
   created: Created {relative}
-  updated: Last activity {relative}
+  updated: last activity {relative}
 journeyInstances:
   menu:
     downloadCsv: Download {pluralLabel} as CSV
