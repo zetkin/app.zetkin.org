@@ -16,6 +16,7 @@ sections:
   assigned: Assigned to
   members: Members
   milestones: Milestones
+  outcome: Outcome
   summary: Summary
   timeline: Notes
 summaryPlaceholder: Enter a brief description of the status of this {journeyTitle}.
