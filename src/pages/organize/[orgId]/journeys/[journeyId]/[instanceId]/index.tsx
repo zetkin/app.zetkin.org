@@ -1,9 +1,16 @@
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { useContext } from 'react';
-import { useIntl } from 'react-intl';
 import { useQueryClient } from 'react-query';
-import { Box, Divider, Grid, Typography } from '@material-ui/core';
+import {
+  Box,
+  Card,
+  CardContent,
+  Divider,
+  Grid,
+  Typography,
+} from '@material-ui/core';
+import { FormattedMessage as Msg, useIntl } from 'react-intl';
 
 import JourneyInstanceLayout from 'layout/organize/JourneyInstanceLayout';
 import { journeyInstanceResource } from 'api/journeys';
@@ -138,21 +145,31 @@ const JourneyDetailsPage: PageWithLayout<JourneyDetailsPageProps> = ({
       </Head>
       <Grid container justifyContent="space-between" spacing={3}>
         <Grid item lg={6} md={7} xl={5} xs={12}>
-          {journeyInstance.closed && (
-            <>
-              <ZetkinSection
-                title={intl.formatMessage({
-                  id: 'pages.organizeJourneyInstance.sections.outcome',
-                })}
-              >
-                <Typography>{journeyInstance.outcome}</Typography>
-              </ZetkinSection>
-              <Box mb={3} mt={4}>
-                <Divider />
-              </Box>
-            </>
-          )}
           <JourneyInstanceSummary journeyInstance={journeyInstance} />
+          {journeyInstance.closed && (
+            <Card>
+              <CardContent>
+                <Box p={1.5}>
+                  <Typography gutterBottom variant="h5">
+                    <Msg
+                      id="pages.organizeJourneyInstance.sections.outcome"
+                      values={{
+                        journeyTitle:
+                          journeyInstance.journey.singular_label.toLowerCase(),
+                      }}
+                    />
+                  </Typography>
+                  <Typography>
+                    {journeyInstance.outcome ? (
+                      journeyInstance.outcome
+                    ) : (
+                      <Msg id="pages.organizeJourneyInstance.noOutcomeDetails" />
+                    )}
+                  </Typography>
+                </Box>
+              </CardContent>
+            </Card>
+          )}
           <Box mb={3} mt={4}>
             <Divider />
           </Box>
