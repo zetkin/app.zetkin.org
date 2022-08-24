@@ -1,18 +1,12 @@
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { useContext } from 'react';
+import { useIntl } from 'react-intl';
 import { useQueryClient } from 'react-query';
-import {
-  Box,
-  Card,
-  CardContent,
-  Divider,
-  Grid,
-  Typography,
-} from '@material-ui/core';
-import { FormattedMessage as Msg, useIntl } from 'react-intl';
+import { Box, Divider, Grid } from '@material-ui/core';
 
 import JourneyInstanceLayout from 'layout/organize/JourneyInstanceLayout';
+import JourneyInstanceOutcome from 'components/organize/journeys/JourneyInstanceOutcome';
 import { journeyInstanceResource } from 'api/journeys';
 import JourneyInstanceSidebar from 'components/organize/journeys/JourneyInstanceSidebar';
 import JourneyInstanceSummary from 'components/organize/journeys/JourneyInstanceSummary';
@@ -147,28 +141,7 @@ const JourneyDetailsPage: PageWithLayout<JourneyDetailsPageProps> = ({
         <Grid item lg={6} md={7} xl={5} xs={12}>
           <JourneyInstanceSummary journeyInstance={journeyInstance} />
           {journeyInstance.closed && (
-            <Card>
-              <CardContent>
-                <Box p={1.5}>
-                  <Typography gutterBottom variant="h5">
-                    <Msg
-                      id="pages.organizeJourneyInstance.sections.outcome"
-                      values={{
-                        journeyTitle:
-                          journeyInstance.journey.singular_label.toLowerCase(),
-                      }}
-                    />
-                  </Typography>
-                  <Typography>
-                    {journeyInstance.outcome ? (
-                      journeyInstance.outcome
-                    ) : (
-                      <Msg id="pages.organizeJourneyInstance.noOutcomeDetails" />
-                    )}
-                  </Typography>
-                </Box>
-              </CardContent>
-            </Card>
+            <JourneyInstanceOutcome journeyInstance={journeyInstance} />
           )}
           <Box mb={3} mt={4}>
             <Divider />
