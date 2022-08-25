@@ -67,6 +67,7 @@ export default async function handler(
     messages['server.export.journeyInstances.headers.subjects'],
     messages['server.export.journeyInstances.headers.summary'],
     messages['server.export.journeyInstances.headers.nextMilestone'],
+    messages['server.export.journeyInstances.headers.nextMilestoneDeadline'],
     messages['server.export.journeyInstances.headers.closed'],
     messages['server.export.journeyInstances.headers.outcome'],
     messages['server.export.journeyInstances.headers.assignees'],
@@ -95,6 +96,7 @@ export default async function handler(
         .join(', '),
       instance.summary,
       instance.next_milestone?.title,
+      dateOrNull(instance.next_milestone?.deadline),
       dateOrNull(instance.closed),
       instance.outcome,
       instance.assignees
