@@ -1,5 +1,6 @@
 calendarView: See all in calendar
 campaignManager: Campaign Manager
+currentTaskStatus: Current status of the task.
 events: Events
 feedback:
   copy: Collecting feedback (during phonebanks or standalone) can help you work more efficiently

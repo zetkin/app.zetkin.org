@@ -62,6 +62,7 @@ search:
 tasks:
   tabs:
     assignees: Assignees
+    insights: Insights
     summary: Summary
 view:
   tabs:

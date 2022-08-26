@@ -42,6 +42,7 @@ const SingleTaskLayout: FunctionComponent = ({ children }) => {
           href: `/assignees`,
           messageId: 'layout.organize.tasks.tabs.assignees',
         },
+        { href: `/insights`, messageId: 'layout.organize.tasks.tabs.insights' },
       ]}
       title={task?.title}
     >
