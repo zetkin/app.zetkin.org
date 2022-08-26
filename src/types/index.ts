@@ -9,12 +9,12 @@ export type AppSession = Session & {
   tokenData?: ZetkinTokenData | null;
 };
 
-interface GetLayout {
-  (page: JSX.Element, props: Record<string, unknown>): JSX.Element;
+interface GetLayout<P> {
+  (page: JSX.Element, props: P): JSX.Element;
 }
 
 export type PageWithLayout<P = Record<string, unknown>> = NextPage<P> & {
-  getLayout: GetLayout;
+  getLayout: GetLayout<P>;
 };
 
 export interface Breadcrumb {
