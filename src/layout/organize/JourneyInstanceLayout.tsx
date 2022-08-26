@@ -145,21 +145,14 @@ const JourneyInstanceLayout: React.FunctionComponent = ({ children }) => {
           <Box mr={1}>
             <JourneyStatusChip instance={journeyInstance} />
           </Box>
-          <Typography style={{ marginRight: '1rem' }}>
-            {journeyInstance.updated ? (
-              <Msg
-                id="layout.organize.journeyInstance.updated"
-                values={{
-                  relative: (
-                    <ZetkinRelativeTime
-                      convertToLocal
-                      datetime={journeyInstance.updated}
-                      forcePast
-                    />
-                  ),
-                }}
-              />
-            ) : (
+          <Box
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              marginRight: '1rem',
+            }}
+          >
+            <Typography>
               <Msg
                 id="layout.organize.journeyInstance.created"
                 values={{
@@ -172,8 +165,26 @@ const JourneyInstanceLayout: React.FunctionComponent = ({ children }) => {
                   ),
                 }}
               />
+            </Typography>
+            {journeyInstance.updated && (
+              <Typography>
+                {'\u00A0('}
+                <Msg
+                  id="layout.organize.journeyInstance.updated"
+                  values={{
+                    relative: (
+                      <ZetkinRelativeTime
+                        convertToLocal
+                        datetime={journeyInstance.updated}
+                        forcePast
+                      />
+                    ),
+                  }}
+                />
+                {')'}
+              </Typography>
             )}
-          </Typography>
+          </Box>
           {journeyInstance.next_milestone && (
             <>
               <ScheduleIcon
