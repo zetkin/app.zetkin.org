@@ -163,9 +163,9 @@ const TaskInsightsPage: PageWithLayout = () => {
         <ZetkinQuery queries={{ assignedTasksQuery }}>
           {({ queries }) => {
             return (
-              <Box height={400} maxWidth={1200} mt={3} width="100%">
+              <Box height={400} maxWidth={500} mt={3} width="100%">
                 <Typography>
-                  <Msg id="pages.organizeCampaigns.currentTaskStatus" />
+                  <Msg id="pages.organizeCampaigns.assigneeActions" />
                 </Typography>
                 <PieChart tasks={queries.assignedTasksQuery.data} />
               </Box>
