@@ -2,45 +2,25 @@ import { FormattedMessage } from 'react-intl';
 import Link from 'next/link';
 import {
   Box,
-  Button,
   Chip,
   CircularProgress,
-  Collapse,
   Grid,
   makeStyles,
   Theme,
   Typography,
 } from '@material-ui/core';
-import { ExpandLess, ExpandMore } from '@material-ui/icons';
 import { LetterparserNode, parse } from 'letterparser';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import CleanHtml from 'components/CleanHtml';
+import ZetkinCollapsible from 'components/ZetkinCollapsible';
 
 interface PrettyEmailProps {
   emailStr: string;
 }
 
-const COLLAPSED_SIZE = 100;
-
 const PrettyEmail: React.FC<PrettyEmailProps> = ({ emailStr }) => {
   const [emailData, setEmailData] = useState<LetterparserNode | null>(null);
-  const [needsCollapse, setNeedsCollapse] = useState(false);
-  const [didMeasure, setDidMeasure] = useState(false);
-  const [collapsed, setCollapsed] = useState(true);
-
-  const divCallback = useCallback(
-    (node: HTMLDivElement | null) => {
-      if (node) {
-        const height = node.clientHeight;
-        if (height > COLLAPSED_SIZE && !needsCollapse) {
-          setNeedsCollapse(true);
-        }
-        setDidMeasure(true);
-      }
-    },
-    [setNeedsCollapse]
-  );
 
   useEffect(() => {
     async function parseEmailStr() {
@@ -60,26 +40,9 @@ const PrettyEmail: React.FC<PrettyEmailProps> = ({ emailStr }) => {
         >
           {emailData.headers.Subject}
         </Typography>
-        <Collapse
-          collapsedSize={COLLAPSED_SIZE}
-          in={(didMeasure && !needsCollapse) || !collapsed}
-        >
-          <div ref={divCallback}>
-            <EmailBody body={emailData.body} />
-          </div>
-        </Collapse>
-        {needsCollapse && (
-          <Button
-            color="primary"
-            onClick={() => setCollapsed(!collapsed)}
-            startIcon={collapsed ? <ExpandMore /> : <ExpandLess />}
-            style={{ textTransform: 'uppercase' }}
-          >
-            <FormattedMessage
-              id={collapsed ? 'misc.email.expand' : 'misc.email.collapse'}
-            />
-          </Button>
-        )}
+        <ZetkinCollapsible collapsedHeight={100}>
+          <EmailBody body={emailData.body} />
+        </ZetkinCollapsible>
       </Box>
     );
   } else {
