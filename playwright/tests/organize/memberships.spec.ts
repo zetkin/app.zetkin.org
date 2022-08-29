@@ -2,6 +2,7 @@ import { expect } from '@playwright/test';
 import test from '../../fixtures/next';
 
 import KPD from '../../mockData/orgs/KPD';
+import RosaLuxemburg from '../../mockData/orgs/KPD/people/RosaLuxemburg';
 import RosaLuxemburgUser from '../../mockData/users/RosaLuxemburgUser';
 
 test.describe('User gets 404 when trying to access org pages', () => {
@@ -17,9 +18,8 @@ test.describe('User gets 404 when trying to access org pages', () => {
           title: 'Satanist Monster Org',
         },
         profile: {
-          id: RosaLuxemburgUser.id,
-          name:
-            RosaLuxemburgUser.first_name + ' ' + RosaLuxemburgUser.last_name,
+          id: RosaLuxemburg.id,
+          name: RosaLuxemburg.first_name + ' ' + RosaLuxemburg.last_name,
         },
         role: 'witch',
       },
@@ -41,9 +41,8 @@ test.describe('User gets 404 when trying to access org pages', () => {
       {
         organization: KPD,
         profile: {
-          id: RosaLuxemburgUser.id,
-          name:
-            RosaLuxemburgUser.first_name + ' ' + RosaLuxemburgUser.last_name,
+          id: RosaLuxemburg.id,
+          name: RosaLuxemburg.first_name + ' ' + RosaLuxemburg.last_name,
         },
         role: null,
       },
