@@ -105,8 +105,13 @@ const JourneyInstanceSummary = ({
         // Not editing
         <>
           {journeyInstance.summary.length > 0 ? (
-            <ZetkinCollapse collapsedSize={100}>
-              <Markdown markdown={journeyInstance.summary} />
+            <ZetkinCollapse collapsedSize={90}>
+              <Markdown
+                BoxProps={{
+                  fontSize: '1rem',
+                }}
+                markdown={journeyInstance.summary}
+              />
             </ZetkinCollapse>
           ) : (
             <Typography
