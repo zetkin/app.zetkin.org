@@ -9,7 +9,7 @@ import Markdown from 'components/Markdown';
 import SnackbarContext from 'hooks/SnackbarContext';
 import SubmitCancelButtons from 'components/forms/common/SubmitCancelButtons';
 import ZetkinAutoTextArea from 'components/ZetkinAutoTextArea';
-import ZetkinCollapsible from 'components/ZetkinCollapsible';
+import ZetkinCollapse from 'components/ZetkinCollapse';
 import { ZetkinJourneyInstance } from 'types/zetkin';
 import ZetkinSection from 'components/ZetkinSection';
 
@@ -105,9 +105,9 @@ const JourneyInstanceSummary = ({
         // Not editing
         <>
           {journeyInstance.summary.length > 0 ? (
-            <ZetkinCollapsible collapsedHeight={100}>
+            <ZetkinCollapse collapsedSize={100}>
               <Markdown markdown={journeyInstance.summary} />
-            </ZetkinCollapsible>
+            </ZetkinCollapse>
           ) : (
             <Typography
               color="secondary"

@@ -13,7 +13,7 @@ import { LetterparserNode, parse } from 'letterparser';
 import { useEffect, useState } from 'react';
 
 import CleanHtml from 'components/CleanHtml';
-import ZetkinCollapsible from 'components/ZetkinCollapsible';
+import ZetkinCollapse from 'components/ZetkinCollapse';
 
 interface PrettyEmailProps {
   emailStr: string;
@@ -40,9 +40,9 @@ const PrettyEmail: React.FC<PrettyEmailProps> = ({ emailStr }) => {
         >
           {emailData.headers.Subject}
         </Typography>
-        <ZetkinCollapsible collapsedHeight={100}>
+        <ZetkinCollapse collapsedSize={100}>
           <EmailBody body={emailData.body} />
-        </ZetkinCollapsible>
+        </ZetkinCollapse>
       </Box>
     );
   } else {

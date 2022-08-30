@@ -3,13 +3,13 @@ import { Button, Collapse } from '@material-ui/core';
 import { ExpandLess, ExpandMore } from '@material-ui/icons';
 import { useCallback, useState } from 'react';
 
-interface ZetkinCollapsibleProps {
-  collapsedHeight: number;
+interface ZetkinCollapse {
+  collapsedSize: number;
 }
 
-const ZetkinCollapsible: React.FC<ZetkinCollapsibleProps> = ({
+const ZetkinCollapse: React.FC<ZetkinCollapse> = ({
   children,
-  collapsedHeight,
+  collapsedSize,
 }) => {
   const [needsCollapse, setNeedsCollapse] = useState(false);
   const [didMeasure, setDidMeasure] = useState(false);
@@ -19,7 +19,7 @@ const ZetkinCollapsible: React.FC<ZetkinCollapsibleProps> = ({
     (node: HTMLDivElement | null) => {
       if (node) {
         const height = node.clientHeight;
-        if (height > collapsedHeight && !needsCollapse) {
+        if (height > collapsedSize && !needsCollapse) {
           setNeedsCollapse(true);
         }
         setDidMeasure(true);
@@ -31,7 +31,7 @@ const ZetkinCollapsible: React.FC<ZetkinCollapsibleProps> = ({
   return (
     <>
       <Collapse
-        collapsedSize={collapsedHeight}
+        collapsedSize={collapsedSize}
         in={(didMeasure && !needsCollapse) || !collapsed}
       >
         <div ref={divCallback}>{children}</div>
@@ -52,4 +52,4 @@ const ZetkinCollapsible: React.FC<ZetkinCollapsibleProps> = ({
   );
 };
 
-export default ZetkinCollapsible;
+export default ZetkinCollapse;
