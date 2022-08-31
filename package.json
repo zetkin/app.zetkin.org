@@ -27,6 +27,7 @@
     "@mui/x-data-grid-pro": "^4.0.2",
     "@nivo/bar": "^0.79.1",
     "@nivo/core": "^0.79.0",
+    "@nivo/pie": "^0.79.1",
     "@types/dompurify": "^2.3.3",
     "copy-to-clipboard": "^3.3.1",
     "date-fns": "^2.22.1",
