@@ -6,6 +6,8 @@ ConfirmDialog:
   defaultTitle: Confirm
   defaultWarningText: Are you sure you want to do this action? It can not be undone.
 buttons:
+  collapse: Show less
+  expand: Show more
   readMore: Read more
 components:
   editTextInPlace:
@@ -29,8 +31,6 @@ dataTable:
     hint: 'Hint: hold down {shiftKeyIcon} while clicking multiple columns'
     title: Sort
 email:
-  collapse: Show less
-  expand: Show more
   headers:
     cc: CC
     from: From

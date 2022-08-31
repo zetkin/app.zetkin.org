@@ -1,7 +1,6 @@
 import { Edit } from '@material-ui/icons';
 import { useRouter } from 'next/router';
-import { Button, makeStyles, Typography } from '@material-ui/core';
-import { ExpandLess, ExpandMore } from '@material-ui/icons';
+import { Button, Typography } from '@material-ui/core';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
 import { useContext, useEffect, useRef, useState } from 'react';
 
@@ -10,29 +9,20 @@ import Markdown from 'components/Markdown';
 import SnackbarContext from 'hooks/SnackbarContext';
 import SubmitCancelButtons from 'components/forms/common/SubmitCancelButtons';
 import ZetkinAutoTextArea from 'components/ZetkinAutoTextArea';
+import ZetkinCollapse from 'components/ZetkinCollapse';
 import { ZetkinJourneyInstance } from 'types/zetkin';
 import ZetkinSection from 'components/ZetkinSection';
-
-const useStyles = makeStyles(() => ({
-  collapsed: {
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-  },
-}));
 
 const JourneyInstanceSummary = ({
   journeyInstance,
 }: {
   journeyInstance: ZetkinJourneyInstance;
 }): JSX.Element => {
-  const classes = useStyles();
   const { orgId } = useRouter().query;
   const intl = useIntl();
   const { showSnackbar } = useContext(SnackbarContext);
 
   const editingRef = useRef<HTMLTextAreaElement>(null);
-
-  const [summaryCollapsed, setSummaryCollapsed] = useState<boolean>(true);
 
   const [editingSummary, setEditingSummary] = useState<boolean>(false);
   const [summary, setSummary] = useState<string>(journeyInstance.summary);
@@ -115,20 +105,16 @@ const JourneyInstanceSummary = ({
         // Not editing
         <>
           {journeyInstance.summary.length > 0 ? (
-            <Markdown
-              BoxProps={{
-                className: summaryCollapsed ? classes.collapsed : '',
-                onClick: () => setSummaryCollapsed(true),
-                style: {
-                  overflowWrap: 'break-word',
-                  padding: '0.75rem 0',
-                },
-              }}
-              markdown={journeyInstance.summary}
-            />
+            <ZetkinCollapse collapsedSize={90}>
+              <Markdown
+                BoxProps={{
+                  fontSize: '1rem',
+                }}
+                markdown={journeyInstance.summary}
+              />
+            </ZetkinCollapse>
           ) : (
             <Typography
-              className={summaryCollapsed ? classes.collapsed : ''}
               color="secondary"
               onClick={() => setEditingSummary(true)}
               style={{
@@ -139,22 +125,6 @@ const JourneyInstanceSummary = ({
             >
               {summaryPlaceholder}
             </Typography>
-          )}
-          {journeyInstance.summary.length > 100 && (
-            <Button
-              color="primary"
-              onClick={() => setSummaryCollapsed((prev) => !prev)}
-              startIcon={summaryCollapsed ? <ExpandMore /> : <ExpandLess />}
-              style={{ textTransform: 'uppercase' }}
-            >
-              <Msg
-                id={
-                  summaryCollapsed
-                    ? 'pages.organizeJourneyInstance.expandButton'
-                    : 'pages.organizeJourneyInstance.collapseButton'
-                }
-              />
-            </Button>
           )}
         </>
       )}
