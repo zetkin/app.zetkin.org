@@ -3,6 +3,7 @@ import { pick } from 'lodash';
 
 import mockJourney from './mockJourney';
 import mockJourneyInstance from './mockJourneyInstance';
+import mockMilestone from './mockMilestone';
 import mockNote from './mockNote';
 import { mockObject } from 'utils/testing/mocks';
 import mockPerson from './mockPerson';
@@ -96,10 +97,7 @@ const mockUpdate = (
         changes: {
           completed: { from: null, to: update.timestamp },
         },
-        milestone: {
-          id: 1,
-          title: 'title of milestone',
-        },
+        milestone: mockMilestone(),
       },
       target: pick(mockJourneyInstance(), ['id', 'title']),
       type: 'journeyinstance.updatemilestone',

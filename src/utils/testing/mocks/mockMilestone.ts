@@ -4,9 +4,9 @@ import { ZetkinJourneyMilestoneStatus } from 'types/zetkin';
 const milestone: ZetkinJourneyMilestoneStatus = {
   completed: null,
   deadline: '2022-06-18T00:29:12',
-  description: 'A lipsync is the most important part of a fun night out.',
+  description: 'Going to a branch meeting means you get cookies!',
   id: 1,
-  title: 'perform lip sync',
+  title: 'Attend a branch meeting.',
 };
 
 const mockMilestone = (

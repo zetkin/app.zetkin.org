@@ -3,7 +3,7 @@ import test from '../../fixtures/next';
 
 import KPD from '../../mockData/orgs/KPD';
 import ReferendumSignatures from '../../mockData/orgs/KPD/campaigns/ReferendumSignatures';
-import RosaLuxemburg from '../../mockData/users/RosaLuxemburg';
+import RosaLuxemburg from '../../mockData/orgs/KPD/people/RosaLuxemburg';
 import SpeakToFriendAboutReferendum from '../../mockData/orgs/KPD/campaigns/ReferendumSignatures/tasks/SpeakToFriend';
 
 test.describe('Search', async () => {

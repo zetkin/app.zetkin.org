@@ -1,13 +1,10 @@
 import { mockObject } from '.';
+import mockPerson from './mockPerson';
 import { ASSIGNED_STATUS, ZetkinAssignedTask } from 'types/tasks';
 
 const task: ZetkinAssignedTask = {
   assigned: '2021-08-20T12:55:01.469207',
-  assignee: {
-    first_name: 'Dolly',
-    id: 2,
-    last_name: 'Parton',
-  },
+  assignee: mockPerson(),
   completed: null,
   id: 1,
   ignored: null,

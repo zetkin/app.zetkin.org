@@ -4,7 +4,7 @@ import { PersonNote } from 'components/views/ViewDataTable/cells/PersonNotesView
 const personNote: PersonNote = {
   created: new Date().toISOString(),
   id: 1,
-  text: 'person note text',
+  text: 'Person note text.',
 };
 
 const mockPersonNote = (overrides?: Partial<PersonNote>): PersonNote => {

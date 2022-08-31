@@ -2,7 +2,8 @@ import { expect } from '@playwright/test';
 import test from '../../fixtures/next';
 
 import KPD from '../../mockData/orgs/KPD';
-import RosaLuxemburg from '../../mockData/users/RosaLuxemburg';
+import RosaLuxemburg from '../../mockData/orgs/KPD/people/RosaLuxemburg';
+import RosaLuxemburgUser from '../../mockData/users/RosaLuxemburgUser';
 
 test.describe('User gets 404 when trying to access org pages', () => {
   test.afterEach(({ moxy }) => {
@@ -24,11 +25,9 @@ test.describe('User gets 404 when trying to access org pages', () => {
       },
     ];
 
-    login(RosaLuxemburg, memberships);
+    login(RosaLuxemburgUser, memberships);
     const response = await page.goto(appUri + '/organize/1/campaigns');
     expect(response?.status()).toEqual(404);
-
-    //expect(response?.status).toEqual(404);
   });
 
   test('if they are member of org but do not have a role', async ({
@@ -47,7 +46,7 @@ test.describe('User gets 404 when trying to access org pages', () => {
       },
     ];
 
-    login(RosaLuxemburg, memberships);
+    login(RosaLuxemburgUser, memberships);
     const response = await page.goto(appUri + '/organize/1/campaigns');
     expect(response?.status()).toEqual(404);
   });

@@ -1,5 +1,5 @@
 import KPD from '../..';
-import RosaLuxemburg from '../../../../users/RosaLuxemburg';
+import RosaLuxemburg from '../../people/RosaLuxemburg';
 import { ZetkinCampaign } from '../../../../../../src/types/zetkin';
 
 /**

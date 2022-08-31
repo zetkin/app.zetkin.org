@@ -1,13 +1,11 @@
 import { mockObject } from 'utils/testing/mocks';
+import mockOrganization from './mockOrganization';
 import { ZetkinJourney } from 'types/zetkin';
 
 const journey: ZetkinJourney = {
   id: 2,
   opening_note_template: '',
-  organization: {
-    id: 1,
-    title: 'Kommunistiche Partei Deutschlands',
-  },
+  organization: mockOrganization(),
   plural_label: 'Marxist trainings',
   singular_label: 'Marxist training',
   stats: {
