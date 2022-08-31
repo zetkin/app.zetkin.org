@@ -3,11 +3,11 @@ import { Button, Collapse } from '@material-ui/core';
 import { ExpandLess, ExpandMore } from '@material-ui/icons';
 import { useCallback, useState } from 'react';
 
-interface ZetkinCollapse {
+interface ZetkinCollapseProps {
   collapsedSize: number;
 }
 
-const ZetkinCollapse: React.FC<ZetkinCollapse> = ({
+const ZetkinCollapse: React.FC<ZetkinCollapseProps> = ({
   children,
   collapsedSize,
 }) => {
