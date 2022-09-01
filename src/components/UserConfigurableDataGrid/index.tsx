@@ -14,7 +14,7 @@ const UserConfigurableDataGrid: React.FC<UserConfigurableDataGridProps> = ({
   const { columns, setColumnOrder, setColumnWidth } =
     useConfigurableDataGridColumns(storageKey, gridProps.columns);
 
-  const { gridProps: modelGridProps } = useModelsFromQueryString();
+  const { gridProps: modelGridProps } = useModelsFromQueryString(gridProps);
 
   return (
     <DataGridPro
