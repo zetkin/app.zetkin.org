@@ -104,10 +104,8 @@ const PersonProfilePage: PageWithLayout<PersonPageProps> = (props) => {
           </ZetkinQuery>
         </Grid>
         <Grid item lg={4} xs={12}>
-          <ZetkinQuery queries={{ personTagsQuery }}>
-            {({ queries: { personTagsQuery } }) => (
               <TagManagerSection
-                assignedTags={personTagsQuery.data}
+                assignedTags={[]}
                 onAssignTag={(tag) => {
                   const tagBody = { id: tag.id, value: tag.value };
                   assignTagMutation.mutate(tagBody, {
@@ -123,8 +121,6 @@ const PersonProfilePage: PageWithLayout<PersonPageProps> = (props) => {
                   })
                 }
               />
-            )}
-          </ZetkinQuery>
         </Grid>
         {journeys?.length && (
           <Grid item lg={4} xs={12}>

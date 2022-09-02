@@ -11,7 +11,9 @@ import { LicenseInfo } from '@mui/x-data-grid-pro';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import NProgress from 'nprogress';
 import { ReactQueryDevtools } from 'react-query/devtools';
+import { Provider as ReduxProvider } from 'react-redux';
 import Router from 'next/router';
+import { store } from 'core/store';
 import { ThemeProvider } from '@material-ui/core/styles';
 import { useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
@@ -78,6 +80,7 @@ function MyApp({ Component, pageProps }: AppProps): JSX.Element {
   }, []);
 
   return (
+    <ReduxProvider store={store}>
     <UserContext.Provider value={pageProps.user}>
       <ThemeProvider theme={theme}>
         <MuiPickersUtilsProvider libInstance={dayjs} utils={DateUtils}>
@@ -97,6 +100,7 @@ function MyApp({ Component, pageProps }: AppProps): JSX.Element {
         </MuiPickersUtilsProvider>
       </ThemeProvider>
     </UserContext.Provider>
+    </ReduxProvider>
   );
 }
 

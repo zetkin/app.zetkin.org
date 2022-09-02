@@ -22,7 +22,7 @@ export const tagsResource = (orgId: string) => {
       key,
       url,
     }),
-    useQuery: createUseQuery<ZetkinTag[]>(key, url),
+    useQuery: () => null,
   };
 };
 

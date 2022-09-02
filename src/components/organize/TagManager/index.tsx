@@ -1,6 +1,6 @@
 import { useIntl } from 'react-intl';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 
 import GroupToggle from './components/GroupToggle';
 import ZetkinQuery from 'components/ZetkinQuery';
@@ -20,24 +20,22 @@ type TagManagerProps = Omit<
 const TagManager: React.FunctionComponent<TagManagerProps> = (props) => {
   const { orgId } = useRouter().query;
 
-  const tagsQuery = tagsResource(orgId as string).useQuery();
-  const tagGroupsQuery = tagGroupsResource(orgId as string).useQuery();
+  //const tagsQuery = tagsResource(orgId as string).useQuery();
+  //const tagGroupsQuery = tagGroupsResource(orgId as string).useQuery();
 
   const createTag = useCreateTag();
   const editTag = useEditTag(props.onTagEdited);
 
+  console.log('Rendering TagManager');
+
   return (
-    <ZetkinQuery queries={{ tagGroupsQuery, tagsQuery }}>
-      {({ queries: { tagGroupsQuery, tagsQuery } }) => (
-        <TagManagerController
-          availableGroups={tagGroupsQuery.data}
-          availableTags={tagsQuery.data}
-          onCreateTag={createTag}
-          onEditTag={editTag}
-          {...props}
-        />
-      )}
-    </ZetkinQuery>
+      <TagManagerController
+        availableGroups={[]}
+        availableTags={[]}
+        onCreateTag={createTag}
+        onEditTag={editTag}
+        {...props}
+      />
   );
 };
 

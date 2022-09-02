@@ -7,6 +7,11 @@ import TagSelect from './components/TagSelect';
 import TagsList from './components/TagsList';
 import { EditTag, NewTag } from './types';
 import { ZetkinTag, ZetkinTagGroup } from 'types/zetkin';
+import { useStore } from 'react-redux';
+import TagListModel from 'features/tags/models/TagListModel';
+import { Store } from 'core/store';
+import useModel from 'core/useModel';
+import TagAssignModel from 'features/tags/models/TagAssignModel';
 
 export interface TagManagerControllerProps {
   assignedTags: ZetkinTag[];
@@ -36,6 +41,11 @@ export const TagManagerController: React.FunctionComponent<
   onUnassignTag,
 }) => {
   const [addTagButton, setAddTagButton] = useState<HTMLElement | null>(null);
+  const listModel = useModel(store => new TagListModel(store, 1));
+  const assignModel = useModel(store => new TagAssignModel(store, 1, '/orgs/1/people/1'));
+
+  availableTags = listModel.getAll();
+  assignedTags = assignModel.getAssignedTags();
 
   return (
     <>
@@ -59,6 +69,7 @@ export const TagManagerController: React.FunctionComponent<
           PaperProps={{ style: { minWidth: '300px' } }}
         >
           <TagSelect
+            model={assignModel}
             disabledTags={disabledTags || assignedTags}
             disableEditTags={disableEditTags}
             groups={availableGroups}

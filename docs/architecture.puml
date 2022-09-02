@@ -1,0 +1,31 @@
+@startuml "high-level"
+
+package "UI layer" {
+    ["Connected" components] as gui
+    ["Dumb" components] as jsx
+    gui -> jsx: passes data models
+}
+
+package "Model layer" {
+    [Model (with caching)] as model
+    interface action
+    [Redux store] as store
+}
+
+package "Source layer" {
+    [API adapter] as adapter
+    [API client] as client
+}
+
+cloud "REST API" as API
+
+gui --> model: CRUD
+gui <-- model: returns data
+model -> action: dispatches
+action -> store: triggers update
+model <- store: provides data
+model --> adapter: CRUD methods
+adapter -> client: HTTP methods
+client -> API: HTTP requests
+
+@enduml

@@ -10,11 +10,13 @@ import ValueTagForm from './ValueTagForm';
 import { EditTag, NewTag } from '../../types';
 import { filterTags, groupTags } from '../../utils';
 import { ZetkinTag, ZetkinTagGroup } from 'types/zetkin';
+import TagAssignModel from 'features/tags/models/TagAssignModel';
 
 const TagSelect: React.FunctionComponent<{
   disableEditTags?: boolean;
   disabledTags: ZetkinTag[];
   groups: ZetkinTagGroup[];
+  model: TagAssignModel;
   onClose: () => void;
   onCreateTag: (tag: NewTag) => Promise<ZetkinTag>;
   onEditTag: (tag: EditTag) => void;
@@ -24,6 +26,7 @@ const TagSelect: React.FunctionComponent<{
   disableEditTags,
   disabledTags,
   groups,
+  model,
   onClose,
   onCreateTag,
   onEditTag,
