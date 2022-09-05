@@ -10,9 +10,7 @@ describe('useModelsFromQueryString()', () => {
     it('handles single filter', () => {
       mockRouter.setCurrentUrl('/irrelevant?filter_first_name_contains=Clara');
 
-      const { result } = renderHook(() =>
-        useModelsFromQueryString({ columns: [], rows: [] })
-      );
+      const { result } = renderHook(() => useModelsFromQueryString());
 
       expect(result.current.filterModel).toMatchObject({
         items: [
@@ -30,9 +28,7 @@ describe('useModelsFromQueryString()', () => {
         '/irrelevant?filter_name_contains=Clara&filter_name_contains=Zetkin'
       );
 
-      const { result } = renderHook(() =>
-        useModelsFromQueryString({ columns: [], rows: [] })
-      );
+      const { result } = renderHook(() => useModelsFromQueryString());
 
       expect(result.current.filterModel).toMatchObject({
         items: [

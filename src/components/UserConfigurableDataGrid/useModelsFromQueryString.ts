@@ -20,9 +20,7 @@ interface UseModelsFromQueryString {
   sortModel: GridSortModel;
 }
 
-export function useModelsFromQueryString(
-  gridProps: DataGridProProps
-): UseModelsFromQueryString {
+export function useModelsFromQueryString(): UseModelsFromQueryString {
   const router = useRouter();
 
   const [filterModel, setFilterModel] = useState<GridFilterModel>(
@@ -30,15 +28,8 @@ export function useModelsFromQueryString(
   );
 
   const [sortModel, setSortModel] = useState<GridSortModel>(
-    gridProps.sortModel || parseSortModelFromQuery(router.query)
+    parseSortModelFromQuery(router.query)
   );
-
-  // Update sortModel state to match parent sortModel state
-  useEffect(() => {
-    if (gridProps.sortModel) {
-      setSortModel(gridProps.sortModel);
-    }
-  }, [gridProps.sortModel]);
 
   // Update router URL when model changes
   useEffect(() => {
@@ -75,10 +66,6 @@ export function useModelsFromQueryString(
 
     if (!isEqual(routerSortModel, sortModel)) {
       setSortModel(routerSortModel);
-
-      if (gridProps.onSortModelChange) {
-        gridProps.onSortModelChange(routerSortModel);
-      }
     }
   }, [router.query]);
 
