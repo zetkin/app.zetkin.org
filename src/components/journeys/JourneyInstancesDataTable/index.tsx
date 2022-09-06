@@ -1,6 +1,6 @@
 import { isEqual } from 'lodash';
 import { useIntl } from 'react-intl';
-import { DataGridProProps, GridSortModel } from '@mui/x-data-grid-pro';
+import { DataGridPro, DataGridProProps } from '@mui/x-data-grid-pro';
 
 import getColumns from './getColumns';
 import { getRows } from './getRows';
@@ -9,7 +9,8 @@ import { ZetkinJourneyInstance } from 'types/zetkin';
 import { FunctionComponent, useState } from 'react';
 
 import { JourneyTagColumnData } from 'utils/journeyInstanceUtils';
-import UserConfigurableDataGrid from 'components/UserConfigurableDataGrid';
+import useConfigurableDataGridColumns from 'components/UserConfigurableDataGrid/useConfigurableDataGridColumns';
+import { useModelsFromQueryString } from 'components/UserConfigurableDataGrid/useModelsFromQueryString';
 
 interface JourneysDataTableProps {
   dataGridProps?: Partial<DataGridProProps>;
@@ -25,11 +26,13 @@ const JourneyInstancesDataTable: FunctionComponent<JourneysDataTableProps> = ({
   storageKey = 'journeyInstances',
 }) => {
   const intl = useIntl();
-  const columns = getColumns(intl, journeyInstances, tagColumnsData);
-  const [sortModel, setSortModel] = useState<GridSortModel>([]);
+  const { gridProps: modelGridProps } = useModelsFromQueryString();
   const [quickSearch, setQuickSearch] = useState('');
-
   const rows = getRows({ journeyInstances, quickSearch });
+
+  const rawColumns = getColumns(intl, journeyInstances, tagColumnsData);
+  const { columns, setColumnOrder, setColumnWidth } =
+    useConfigurableDataGridColumns(storageKey, rawColumns);
 
   // Add localised header titles
   const columnsWithHeaderTitles = columns.map((column) => ({
@@ -43,7 +46,7 @@ const JourneyInstancesDataTable: FunctionComponent<JourneysDataTableProps> = ({
 
   return (
     <>
-      <UserConfigurableDataGrid
+      <DataGridPro
         checkboxSelection
         columns={columnsWithHeaderTitles}
         components={{ Toolbar: Toolbar }}
@@ -51,21 +54,32 @@ const JourneyInstancesDataTable: FunctionComponent<JourneysDataTableProps> = ({
           toolbar: {
             gridColumns: columnsWithHeaderTitles,
             setQuickSearch,
-            setSortModel,
-            sortModel,
+            setSortModel: modelGridProps.onSortModelChange,
+            sortModel: modelGridProps.sortModel,
           },
         }}
         disableSelectionOnClick={true}
+        filterModel={modelGridProps.filterModel}
+        onColumnOrderChange={(params) => {
+          setColumnOrder(params.colDef.field, params.targetIndex - 1);
+        }}
+        onColumnResize={(params) => {
+          setColumnWidth(params.colDef.field, params.width);
+        }}
+        onFilterModelChange={(model) => {
+          if (!isEqual(model, modelGridProps.filterModel)) {
+            modelGridProps.onFilterModelChange(model);
+          }
+        }}
         onSortModelChange={(model) => {
           // Something strange going on here with infinite state updates, so I added the line below
-          if (!isEqual(model, sortModel)) {
-            setSortModel(model);
+          if (!isEqual(model, modelGridProps.sortModel)) {
+            modelGridProps.onSortModelChange(model);
           }
         }}
         pageSize={50}
         rows={rows}
-        sortModel={sortModel}
-        storageKey={storageKey}
+        sortModel={modelGridProps.sortModel}
         {...dataGridProps}
       />
     </>

@@ -11,9 +11,11 @@ import { useEffect, useState } from 'react';
 
 interface UseModelsFromQueryString {
   filterModel: GridFilterModel;
-  gridProps: Pick<
-    DataGridProProps,
-    'filterModel' | 'onFilterModelChange' | 'onSortModelChange' | 'sortModel'
+  gridProps: Required<
+    Pick<
+      DataGridProProps,
+      'filterModel' | 'onFilterModelChange' | 'onSortModelChange' | 'sortModel'
+    >
   >;
   setFilterModel: (model: GridFilterModel) => void;
   setSortModel: (model: GridSortModel) => void;
