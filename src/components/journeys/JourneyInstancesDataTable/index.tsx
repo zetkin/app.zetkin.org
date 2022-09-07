@@ -1,4 +1,3 @@
-import { isEqual } from 'lodash';
 import { useIntl } from 'react-intl';
 import { DataGridPro, DataGridProProps } from '@mui/x-data-grid-pro';
 
@@ -10,7 +9,7 @@ import { FunctionComponent, useState } from 'react';
 
 import { JourneyTagColumnData } from 'utils/journeyInstanceUtils';
 import useConfigurableDataGridColumns from 'components/UserConfigurableDataGrid/useConfigurableDataGridColumns';
-import { useModelsFromQueryString } from 'components/UserConfigurableDataGrid/useModelsFromQueryString';
+import useModelsFromQueryString from 'components/UserConfigurableDataGrid/useModelsFromQueryString';
 
 interface JourneysDataTableProps {
   dataGridProps?: Partial<DataGridProProps>;
@@ -53,8 +52,8 @@ const JourneyInstancesDataTable: FunctionComponent<JourneysDataTableProps> = ({
         componentsProps={{
           toolbar: {
             gridColumns: columnsWithHeaderTitles,
-            setQuickSearch,
-            setSortModel: modelGridProps.onSortModelChange,
+            onQuickSearchChange: setQuickSearch,
+            onSortModelChange: modelGridProps.onSortModelChange,
             sortModel: modelGridProps.sortModel,
           },
         }}
@@ -66,17 +65,8 @@ const JourneyInstancesDataTable: FunctionComponent<JourneysDataTableProps> = ({
         onColumnResize={(params) => {
           setColumnWidth(params.colDef.field, params.width);
         }}
-        onFilterModelChange={(model) => {
-          if (!isEqual(model, modelGridProps.filterModel)) {
-            modelGridProps.onFilterModelChange(model);
-          }
-        }}
-        onSortModelChange={(model) => {
-          // Something strange going on here with infinite state updates, so I added the line below
-          if (!isEqual(model, modelGridProps.sortModel)) {
-            modelGridProps.onSortModelChange(model);
-          }
-        }}
+        onFilterModelChange={modelGridProps.onFilterModelChange}
+        onSortModelChange={modelGridProps.onSortModelChange}
         pageSize={50}
         rows={rows}
         sortModel={modelGridProps.sortModel}

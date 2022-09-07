@@ -1,7 +1,7 @@
 import mockRouter from 'next-router-mock';
 import { renderHook } from '@testing-library/react-hooks';
 
-import { useModelsFromQueryString } from './useModelsFromQueryString';
+import useModelsFromQueryString from './useModelsFromQueryString';
 
 jest.mock('next/dist/client/router', () => require('next-router-mock'));
 

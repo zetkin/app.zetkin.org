@@ -1,4 +1,3 @@
-import { isEqual } from 'lodash';
 import NextLink from 'next/link';
 import NProgress from 'nprogress';
 import { useIntl } from 'react-intl';
@@ -15,7 +14,7 @@ import patchViewColumn from 'fetching/views/patchViewColumn';
 import PersonHoverCard from 'components/PersonHoverCard';
 import postViewColumn from 'fetching/views/postViewColumn';
 import SnackbarContext from 'hooks/SnackbarContext';
-import { useModelsFromQueryString } from 'components/UserConfigurableDataGrid/useModelsFromQueryString';
+import useModelsFromQueryString from 'components/UserConfigurableDataGrid/useModelsFromQueryString';
 import ViewRenameColumnDialog from '../ViewRenameColumnDialog';
 import { viewRowsResource } from 'api/viewRows';
 import { viewsResource } from 'api/views';
@@ -358,10 +357,10 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
       isSmartSearch: !!view.content_query,
       onColumnCreate,
       onRowsRemove,
+      onSortModelChange: modelGridProps.onSortModelChange,
       onViewCreate,
       selection,
       setQuickSearch,
-      setSortModel: modelGridProps.onSortModelChange,
       sortModel: modelGridProps.sortModel,
     },
   };
@@ -394,18 +393,9 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
             id: `misc.views.empty.notice.${contentSource}`,
           }),
         }}
-        onFilterModelChange={(model) => {
-          if (!isEqual(model, modelGridProps.filterModel)) {
-            modelGridProps.onFilterModelChange(model);
-          }
-        }}
+        onFilterModelChange={modelGridProps.onFilterModelChange}
         onSelectionModelChange={(model) => setSelection(model as number[])}
-        onSortModelChange={(model) => {
-          // Something strange going on here with infinite state updates, so I added the line below
-          if (!isEqual(model, modelGridProps.sortModel)) {
-            modelGridProps.onSortModelChange(model);
-          }
-        }}
+        onSortModelChange={modelGridProps.onSortModelChange}
         rows={gridRows}
         sortModel={modelGridProps.sortModel}
         style={{

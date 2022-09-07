@@ -1,7 +1,7 @@
 import { DataGridPro, DataGridProProps } from '@mui/x-data-grid-pro';
 
 import useConfigurableDataGridColumns from './useConfigurableDataGridColumns';
-import { useModelsFromQueryString } from './useModelsFromQueryString';
+import useModelsFromQueryString from './useModelsFromQueryString';
 
 type UserConfigurableDataGridProps = Omit<
   DataGridProProps,

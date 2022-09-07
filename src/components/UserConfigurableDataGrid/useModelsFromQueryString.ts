@@ -22,7 +22,7 @@ interface UseModelsFromQueryString {
   sortModel: GridSortModel;
 }
 
-export function useModelsFromQueryString(): UseModelsFromQueryString {
+export default function useModelsFromQueryString(): UseModelsFromQueryString {
   const router = useRouter();
 
   const [filterModel, setFilterModel] = useState<GridFilterModel>(
