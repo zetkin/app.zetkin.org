@@ -41,13 +41,13 @@ const useStyles = makeStyles({
 
 interface ViewDataTableSortingProps {
   gridColumns: GridColDef[];
-  setSortModel: (model: GridSortModel | []) => void;
+  onSortModelChange: (model: GridSortModel | []) => void;
   sortModel: GridSortModel | [];
 }
 
 const DataTableSorting: React.FunctionComponent<ViewDataTableSortingProps> = ({
   gridColumns,
-  setSortModel,
+  onSortModelChange,
   sortModel,
 }) => {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
@@ -74,11 +74,11 @@ const DataTableSorting: React.FunctionComponent<ViewDataTableSortingProps> = ({
         : item;
     });
 
-    setSortModel(newSortModel);
+    onSortModelChange(newSortModel);
   };
 
   const handleDelete = (field: string) => {
-    setSortModel(sortModel.filter((item) => item.field !== field));
+    onSortModelChange(sortModel.filter((item) => item.field !== field));
   };
 
   const handleAdd = () => {
@@ -89,7 +89,7 @@ const DataTableSorting: React.FunctionComponent<ViewDataTableSortingProps> = ({
     );
     const newSortModel = sortModel?.length ? sortModel.map((item) => item) : [];
     newSortModel.push({ field: availableColumns[0].field, sort: 'asc' });
-    setSortModel(newSortModel);
+    onSortModelChange(newSortModel);
   };
 
   return (

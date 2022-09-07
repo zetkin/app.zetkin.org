@@ -32,7 +32,7 @@ describe('ViewDataTableSorting.tsx', () => {
     const { getByText } = render(
       <DataTableSorting
         gridColumns={gridColumns}
-        setSortModel={() => null}
+        onSortModelChange={() => null}
         sortModel={[]}
       />
     );
@@ -51,7 +51,7 @@ describe('ViewDataTableSorting.tsx', () => {
     const { getAllByText, getByText } = render(
       <DataTableSorting
         gridColumns={gridColumns}
-        setSortModel={handleSetSortModel}
+        onSortModelChange={handleSetSortModel}
         sortModel={sortModel}
       />
     );
@@ -69,7 +69,7 @@ describe('ViewDataTableSorting.tsx', () => {
     const { getAllByText, getByText, getAllByTestId } = render(
       <DataTableSorting
         gridColumns={gridColumns}
-        setSortModel={handleSetSortModel}
+        onSortModelChange={handleSetSortModel}
         sortModel={sortModel}
       />
     );
