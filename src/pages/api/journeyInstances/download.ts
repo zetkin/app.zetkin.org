@@ -7,7 +7,7 @@ import {
   getTagColumns,
   JourneyTagColumnType,
 } from 'utils/journeyInstanceUtils';
-import { ZetkinJourney, ZetkinJourneyInstance } from 'types/zetkin';
+import { ZetkinJourney, ZetkinJourneyInstance } from 'utils/types/zetkin';
 
 const FORMAT_TYPES = {
   csv: 'text/csv',

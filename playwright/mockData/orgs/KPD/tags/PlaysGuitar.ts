@@ -1,5 +1,5 @@
 import KPD from '..';
-import { ZetkinTag } from '../../../../../src/types/zetkin';
+import { ZetkinTag } from '../../../../../src/utils/types/zetkin';
 
 const PlaysGuitarTag: ZetkinTag = {
   color: null,

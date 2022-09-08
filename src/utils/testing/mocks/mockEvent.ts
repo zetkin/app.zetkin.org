@@ -1,6 +1,6 @@
 import { mockObject } from 'utils/testing/mocks';
 import mockOrganization from './mockOrganization';
-import { ZetkinEvent } from 'types/zetkin';
+import { ZetkinEvent } from 'utils/types/zetkin';
 
 const event: ZetkinEvent = {
   activity: {

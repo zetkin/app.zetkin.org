@@ -11,10 +11,10 @@ import {
   Typography,
 } from '@material-ui/core';
 
-import APIError from 'utils/apiError';
-import CallAssignmentLayout from 'layout/organize/CallAssignmentLayout';
-import { callAssignmentQuery } from 'api/callAssignments';
-import { PageWithLayout } from 'types';
+import APIError from 'utils/api/apiError';
+import CallAssignmentLayout from 'features/callAssignments/layouts/CallAssignmentLayout';
+import { callAssignmentQuery } from 'features/callAssignments/api/callAssignments';
+import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import ZetkinQuery from 'components/ZetkinQuery';
 import { DateStats, ZetkinCaller } from 'pages/api/stats/calls/date';

@@ -5,10 +5,10 @@ import { FormattedMessage as Msg } from 'react-intl';
 import { stringToBool } from '../utils/stringUtils';
 import { Button, ButtonGroup, Container, Typography } from '@material-ui/core';
 
-import { AppSession } from '../types';
+import { AppSession } from '../utils/types';
 import getUserMemberships from 'utils/getUserMemberships';
 import { scaffold } from '../utils/next';
-import { ZetkinUser } from '../types/zetkin';
+import { ZetkinUser } from '../utils/types/zetkin';
 
 //TODO: Create module definition and revert to import.
 // eslint-disable-next-line @typescript-eslint/no-var-requires

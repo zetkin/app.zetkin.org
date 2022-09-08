@@ -3,13 +3,13 @@ import { Grid } from '@material-ui/core';
 import Head from 'next/head';
 import { useIntl } from 'react-intl';
 
-import JourneyCard from 'components/organize/journeys/JourneyCard';
+import JourneyCard from 'components/journeys/JourneyCard';
 import JourneysLayout from 'layout/organize/JourneysLayout';
-import { journeysResource } from 'api/journeys';
-import { organizationResource } from 'api/organizations';
-import { PageWithLayout } from 'types';
+import { journeysResource } from 'features/journeys/api/journeys';
+import { organizationResource } from 'features/journeys/api/organizations';
+import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
-import { ZetkinJourney } from 'types/zetkin';
+import { ZetkinJourney } from 'utils/types/zetkin';
 import ZetkinSection from 'components/ZetkinSection';
 
 const scaffoldOptions = {

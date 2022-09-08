@@ -5,20 +5,20 @@ import { useContext } from 'react';
 import { useQueryClient } from 'react-query';
 import { useRouter } from 'next/router';
 
-import { journeysResource } from 'api/journeys';
-import { PageWithLayout } from 'types';
+import { journeysResource } from 'features/journeys/api/journeys';
+import { PageWithLayout } from 'utils/types';
 import PersonDetailsCard from 'components/organize/people/PersonDetailsCard';
-import PersonJourneysCard from 'components/organize/people/PersonJourneysCard';
-import PersonOrganizationsCard from 'components/organize/people/PersonOrganizationsCard';
-import SinglePersonLayout from 'layout/organize/SinglePersonLayout';
-import SnackbarContext from 'hooks/SnackbarContext';
-import { TagManagerSection } from 'components/organize/TagManager';
+import PersonJourneysCard from 'features/profile/components/PersonJourneysCard';
+import PersonOrganizationsCard from 'features/profile/components/PersonOrganizationsCard';
+import SinglePersonLayout from 'features/profile/layouts/SinglePersonLayout';
+import SnackbarContext from 'zui/utils/SnackbarContext';
+import { TagManagerSection } from 'features/tags/components/TagManager';
 import ZetkinQuery from 'components/ZetkinQuery';
 import {
   personFieldsResource,
   personResource,
   personTagsResource,
-} from 'api/people';
+} from 'features/profile/api/people';
 import { scaffold, ScaffoldedGetServerSideProps } from 'utils/next';
 
 export const scaffoldOptions = {

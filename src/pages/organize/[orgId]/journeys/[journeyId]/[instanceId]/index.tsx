@@ -7,16 +7,16 @@ import { Box, Divider, Grid } from '@material-ui/core';
 
 import JourneyInstanceLayout from 'layout/organize/JourneyInstanceLayout';
 import JourneyInstanceOutcome from 'components/organize/journeys/JourneyInstanceOutcome';
-import { journeyInstanceResource } from 'api/journeys';
+import { journeyInstanceResource } from 'features/journeys/api/journeys';
 import JourneyInstanceSidebar from 'components/organize/journeys/JourneyInstanceSidebar';
 import JourneyInstanceSummary from 'components/organize/journeys/JourneyInstanceSummary';
-import { organizationResource } from 'api/organizations';
-import { PageWithLayout } from 'types';
-import SnackbarContext from 'hooks/SnackbarContext';
+import { organizationResource } from 'features/journeys/api/organizations';
+import { PageWithLayout } from 'utils/types';
+import SnackbarContext from 'zui/utils/SnackbarContext';
 import TimelineWrapper from 'components/TimelineWrapper';
 import ZetkinSection from 'components/ZetkinSection';
 import { scaffold, ScaffoldedGetServerSideProps } from 'utils/next';
-import { ZetkinJourneyInstance, ZetkinPerson } from 'types/zetkin';
+import { ZetkinJourneyInstance, ZetkinPerson } from 'utils/types/zetkin';
 
 export const scaffoldOptions = {
   authLevelRequired: 2,

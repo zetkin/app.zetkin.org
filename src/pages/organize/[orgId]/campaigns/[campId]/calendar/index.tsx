@@ -2,17 +2,17 @@ import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { useIntl } from 'react-intl';
 
-import getCampaign from 'fetching/getCampaign';
+import getCampaign from 'features/campaigns/fetching/getCampaign';
 import getCampaignEvents from 'fetching/getCampaignEvents';
-import getOrg from 'fetching/getOrg';
-import { PageWithLayout } from 'types';
+import getOrg from 'utils/fetching/getOrg';
+import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
-import SingleCampaignLayout from 'layout/organize/SingleCampaignLayout';
+import SingleCampaignLayout from 'features/campaigns/layouts/SingleCampaignLayout';
 import { useQuery } from 'react-query';
-import ZetkinCalendar from 'components/ZetkinCalendar';
+import ZetkinCalendar from 'zui/molecules/ZetkinCalendar';
 import ZetkinSpeedDial, { ACTIONS } from 'components/ZetkinSpeedDial';
 
-import { campaignTasksResource } from 'api/tasks';
+import { campaignTasksResource } from 'features/tasks/api/tasks';
 
 const scaffoldOptions = {
   authLevelRequired: 2,

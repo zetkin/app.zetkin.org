@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 
 import { createApiFetch } from 'utils/apiFetch';
 import { ZetkinApiSuccessResponse } from 'api/utils/handleResponseData';
-import { ZetkinJourneyInstance } from 'types/zetkin';
+import { ZetkinJourneyInstance } from 'utils/types/zetkin';
 import {
   getTagColumns,
   JourneyTagColumnData,

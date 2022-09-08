@@ -2,12 +2,12 @@ import { GetServerSideProps } from 'next';
 import { Grid } from '@material-ui/core';
 import Head from 'next/head';
 
-import { PageWithLayout } from 'types';
+import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
-import SingleTaskLayout from 'layout/organize/SingleTaskLayout';
-import TaskDetailsSection from 'components/organize/tasks/TaskDetailsSection';
+import SingleTaskLayout from 'features/tasks/layouts/SingleTaskLayout';
+import TaskDetailsSection from 'features/tasks/components/TaskDetailsSection';
 import TaskPreviewSection from 'components/organize/tasks/TaskPreviewSection';
-import { taskResource } from 'api/tasks';
+import { taskResource } from 'features/tasks/api/tasks';
 
 const scaffoldOptions = {
   authLevelRequired: 2,

@@ -2,7 +2,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 
 import { createApiFetch } from 'utils/apiFetch';
-import { ZetkinPerson, ZetkinTag } from 'types/zetkin';
+import { ZetkinPerson, ZetkinTag } from 'utils/types/zetkin';
 
 const createNewInstance = async (
   req: NextApiRequest,

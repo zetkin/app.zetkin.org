@@ -1,15 +1,18 @@
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 
-import AllJourneyInstancesLayout from 'layout/organize/AllJourneyInstancesLayout';
-import getOrg from 'fetching/getOrg';
+import AllJourneyInstancesLayout from 'features/journeys/layouts/AllJourneyInstancesLayout';
+import getOrg from 'utils/fetching/getOrg';
 import JourneyInstanceCreateFab from 'components/journeys/JourneyInstanceCreateFab';
-import JourneyInstancesDataTable from 'components/journeys/JourneyInstancesDataTable';
-import { PageWithLayout } from 'types';
+import JourneyInstancesDataTable from 'features/journeys/components/JourneyInstancesDataTable';
+import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
-import { ZetkinJourney } from 'types/zetkin';
+import { ZetkinJourney } from 'utils/types/zetkin';
 import ZetkinQuery from 'components/ZetkinQuery';
-import { journeyInstancesResource, journeyResource } from 'api/journeys';
+import {
+  journeyInstancesResource,
+  journeyResource,
+} from 'features/journeys/api/journeys';
 
 const scaffoldOptions = {
   authLevelRequired: 2,

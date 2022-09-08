@@ -1,5 +1,5 @@
 import { mockObject } from 'utils/testing/mocks';
-import { ZetkinOrganization } from 'types/zetkin';
+import { ZetkinOrganization } from 'utils/types/zetkin';
 
 const organization: ZetkinOrganization = {
   id: 1,

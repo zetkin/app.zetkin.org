@@ -5,20 +5,23 @@ import { FormattedMessage as Msg, useIntl } from 'react-intl';
 import { useContext, useState } from 'react';
 
 import DefaultLayout from 'layout/organize/DefaultLayout';
-import EditTextinPlace from 'components/EditTextInPlace';
-import Header from 'layout/organize/elements/Header';
+import EditTextinPlace from 'zui/atoms/EditTextInPlace';
+import Header from 'utils/layout/elements/Header';
 import JourneyInstanceSidebar from 'components/organize/journeys/JourneyInstanceSidebar';
-import { organizationResource } from 'api/organizations';
-import { PageWithLayout } from 'types';
-import { personResource } from 'api/people';
+import { organizationResource } from 'features/journeys/api/organizations';
+import { PageWithLayout } from 'utils/types';
+import { personResource } from 'features/profile/api/people';
 import { scaffold } from 'utils/next';
-import SnackbarContext from 'hooks/SnackbarContext';
+import SnackbarContext from 'zui/utils/SnackbarContext';
 import SubmitCancelButtons from 'components/forms/common/SubmitCancelButtons';
 import { useRouter } from 'next/router';
 import ZetkinAutoTextArea from 'components/ZetkinAutoTextArea';
 import ZetkinQuery from 'components/ZetkinQuery';
-import { journeyInstancesResource, journeyResource } from 'api/journeys';
-import { ZetkinPerson, ZetkinTag } from 'types/zetkin';
+import {
+  journeyInstancesResource,
+  journeyResource,
+} from 'features/journeys/api/journeys';
+import { ZetkinPerson, ZetkinTag } from 'utils/types/zetkin';
 
 const scaffoldOptions = {
   authLevelRequired: 2,

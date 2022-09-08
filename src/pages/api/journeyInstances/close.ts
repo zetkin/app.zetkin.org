@@ -5,7 +5,7 @@ import handleResponseData, {
   ZetkinApiErrorResponse,
   ZetkinApiSuccessResponse,
 } from 'api/utils/handleResponseData';
-import { ZetkinJourneyInstance, ZetkinTag } from 'types/zetkin';
+import { ZetkinJourneyInstance, ZetkinTag } from 'utils/types/zetkin';
 
 interface JourneyInstanceCloseBody {
   closed: string; // Datetime

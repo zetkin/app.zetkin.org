@@ -1,6 +1,6 @@
 import { mockObject } from 'utils/testing/mocks';
 import mockOrganization from './mockOrganization';
-import { ZetkinJourney } from 'types/zetkin';
+import { ZetkinJourney } from 'utils/types/zetkin';
 
 const journey: ZetkinJourney = {
   id: 2,

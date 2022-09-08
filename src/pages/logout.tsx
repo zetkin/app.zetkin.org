@@ -1,6 +1,6 @@
 import { GetServerSideProps } from 'next';
 
-import { AppSession } from '../types';
+import { AppSession } from '../utils/types';
 import { scaffold } from '../utils/next';
 
 export const getServerSideProps: GetServerSideProps = scaffold(

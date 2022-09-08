@@ -1,6 +1,6 @@
 import KPD from '.';
 import RosaLuxemburg from './people/RosaLuxemburg';
-import { ZetkinMembership } from '../../../../src/types/zetkin';
+import { ZetkinMembership } from '../../../../src/utils/types/zetkin';
 
 const Memberships: ZetkinMembership[] = [
   {

@@ -1,5 +1,5 @@
-import { TASK_TYPE } from '../../../../../../../src/types/tasks';
-import { ZetkinTask } from '../../../../../../../src/types/zetkin';
+import { TASK_TYPE } from '../../../../../../../src/features/tasks/components/types';
+import { ZetkinTask } from '../../../../../../../src/utils/types/zetkin';
 
 import KPD from '../../..';
 import ReferendumSignatureCollection from '..';

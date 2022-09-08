@@ -1,5 +1,5 @@
 import { mockObject } from 'utils/testing/mocks';
-import { ZetkinPerson } from 'types/zetkin';
+import { ZetkinPerson } from 'utils/types/zetkin';
 
 const person: ZetkinPerson = {
   alt_phone: '',

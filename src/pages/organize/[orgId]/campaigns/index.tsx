@@ -5,13 +5,13 @@ import Head from 'next/head';
 import { useIntl } from 'react-intl';
 import { useQuery } from 'react-query';
 
-import AllCampaignsLayout from 'layout/organize/AllCampaignsLayout';
+import AllCampaignsLayout from 'features/campaigns/layouts/AllCampaignsLayout';
 import CampaignCard from 'components/organize/campaigns/CampaignCard';
 import getCampaigns from 'fetching/getCampaigns';
-import getEvents from 'fetching/getEvents';
-import getOrg from 'fetching/getOrg';
-import getUpcomingEvents from 'fetching/getUpcomingEvents';
-import { PageWithLayout } from 'types';
+import getEvents from 'features/events/fetching/getEvents';
+import getOrg from 'utils/fetching/getOrg';
+import getUpcomingEvents from 'features/events/fetching/getUpcomingEvents';
+import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import ZetkinSection from 'components/ZetkinSection';
 import ZetkinSpeedDial, { ACTIONS } from 'components/ZetkinSpeedDial';

@@ -3,14 +3,14 @@ import Head from 'next/head';
 import { useIntl } from 'react-intl';
 import { useQuery } from 'react-query';
 
-import AllCampaignsLayout from 'layout/organize/AllCampaignsLayout';
+import AllCampaignsLayout from 'features/campaigns/layouts/AllCampaignsLayout';
 import getCampaigns from 'fetching/getCampaigns';
-import getEvents from 'fetching/getEvents';
-import getOrg from 'fetching/getOrg';
-import { PageWithLayout } from 'types';
+import getEvents from 'features/events/fetching/getEvents';
+import getOrg from 'utils/fetching/getOrg';
+import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
-import { tasksResource } from 'api/tasks';
-import ZetkinCalendar from 'components/ZetkinCalendar';
+import { tasksResource } from 'features/tasks/api/tasks';
+import ZetkinCalendar from 'zui/molecules/ZetkinCalendar';
 import ZetkinSpeedDial, { ACTIONS } from 'components/ZetkinSpeedDial';
 
 const scaffoldOptions = {

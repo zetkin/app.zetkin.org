@@ -2,11 +2,11 @@ import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { useQuery } from 'react-query';
 
-import getOrg from 'fetching/getOrg';
+import getOrg from 'utils/fetching/getOrg';
 import getView from 'fetching/views/getView';
 import getViewColumns from 'fetching/views/getViewColumns';
 import getViewRows from 'fetching/views/getViewRows';
-import { PageWithLayout } from 'types';
+import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import SingleViewLayout from 'layout/organize/SingleViewLayout';
 import ViewDataTable from 'components/views/ViewDataTable';

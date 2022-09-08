@@ -23,7 +23,7 @@ import {
   ZetkinMembership,
   ZetkinSession,
   ZetkinUser,
-} from '../../src/types/zetkin';
+} from '../../src/utils/types/zetkin';
 
 interface NextTestFixtures {
   login: (user?: ZetkinUser, memberships?: ZetkinMembership[]) => void;

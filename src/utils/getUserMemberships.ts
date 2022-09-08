@@ -1,5 +1,5 @@
 import { ScaffoldedContext } from './next';
-import { ZetkinMembership } from 'types/zetkin';
+import { ZetkinMembership } from 'utils/types/zetkin';
 
 const getUserMemberships = async (
   ctx: ScaffoldedContext

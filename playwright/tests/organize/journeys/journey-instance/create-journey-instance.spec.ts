@@ -6,7 +6,7 @@ import CodingSkillsTag from '../../../../mockData/orgs/KPD/tags/Coding';
 import KPD from '../../../../mockData/orgs/KPD';
 import MarxistTraining from '../../../../mockData/orgs/KPD/journeys/MarxistTraining';
 import test from '../../../../fixtures/next';
-import { ZetkinJourneyInstance } from '../../../../../src/types/zetkin';
+import { ZetkinJourneyInstance } from '../../../../../src/utils/types/zetkin';
 
 test.describe('Creating a journey instance', () => {
   test.beforeEach(async ({ moxy, login }) => {

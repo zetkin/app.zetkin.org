@@ -11,7 +11,7 @@ import { render, RenderOptions, RenderResult } from '@testing-library/react';
 import { LocalTimeToJsonPlugin } from 'utils/dateUtils';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import theme from 'theme';
-import { UserContext } from 'hooks';
+import { UserContext } from 'utils/hooks';
 
 dayjs.extend(LocalTimeToJsonPlugin);
 dayjs.extend(isoWeek);

@@ -1,6 +1,9 @@
 import { mockObject } from '.';
 import mockPerson from './mockPerson';
-import { ASSIGNED_STATUS, ZetkinAssignedTask } from 'types/tasks';
+import {
+  ASSIGNED_STATUS,
+  ZetkinAssignedTask,
+} from 'features/tasks/components/types';
 
 const task: ZetkinAssignedTask = {
   assigned: '2021-08-20T12:55:01.469207',

@@ -16,12 +16,12 @@ import { ThemeProvider } from '@material-ui/core/styles';
 import { useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
-import { ConfirmDialogProvider } from 'hooks/ConfirmDialogProvider';
+import { ConfirmDialogProvider } from 'zui/utils/ConfirmDialogProvider';
 import { LocalTimeToJsonPlugin } from '../utils/dateUtils';
-import { PageWithLayout } from '../types';
-import { SnackbarProvider } from 'hooks/SnackbarContext';
+import { PageWithLayout } from '../utils/types';
+import { SnackbarProvider } from 'zui/utils/SnackbarContext';
 import theme from '../theme';
-import { UserContext } from '../hooks';
+import { UserContext } from '../utils/hooks';
 
 dayjs.extend(LocalTimeToJsonPlugin);
 dayjs.extend(isoWeek);

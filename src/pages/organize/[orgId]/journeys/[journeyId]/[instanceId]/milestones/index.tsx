@@ -5,11 +5,11 @@ import { Grid, LinearProgress, Typography } from '@material-ui/core';
 
 import { getCompletionPercentage } from 'components/organize/journeys/JourneyMilestoneProgress';
 import JourneyInstanceLayout from 'layout/organize/JourneyInstanceLayout';
-import { journeyInstanceResource } from 'api/journeys';
+import { journeyInstanceResource } from 'features/journeys/api/journeys';
 import JourneyMilestoneCard from 'components/organize/journeys/JourneyMilestoneCard';
-import { PageWithLayout } from 'types';
+import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
-import { ZetkinJourneyInstance } from 'types/zetkin';
+import { ZetkinJourneyInstance } from 'utils/types/zetkin';
 import {
   getJourneyInstanceScaffoldProps,
   JourneyDetailsPageProps,

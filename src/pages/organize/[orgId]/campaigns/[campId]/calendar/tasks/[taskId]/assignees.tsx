@@ -6,19 +6,19 @@ import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 
-import getOrg from 'fetching/getOrg';
-import { PageWithLayout } from 'types';
-import patchQuery from 'fetching/patchQuery';
-import { QUERY_STATUS } from 'types/smartSearch';
+import getOrg from 'utils/fetching/getOrg';
+import { PageWithLayout } from 'utils/types';
+import patchQuery from 'utils/fetching/patchQuery';
+import { QUERY_STATUS } from 'features/smartSearch/types';
 import QueryStatusAlert from 'components/smartSearch/QueryStatusAlert';
 import { scaffold } from 'utils/next';
-import SingleTaskLayout from 'layout/organize/SingleTaskLayout';
-import SmartSearchDialog from 'components/smartSearch/SmartSearchDialog';
-import TaskAssigneesList from 'components/organize/tasks/TaskAssigneesList';
-import { taskResource } from 'api/tasks';
+import SingleTaskLayout from 'features/tasks/layouts/SingleTaskLayout';
+import SmartSearchDialog from 'features/smartSearch/smartSearch/SmartSearchDialog';
+import TaskAssigneesList from 'features/tasks/components/TaskAssigneesList';
+import { taskResource } from 'features/tasks/api/tasks';
 import ZetkinQuery from 'components/ZetkinQuery';
-import getTaskStatus, { TASK_STATUS } from 'utils/getTaskStatus';
-import { ZetkinAssignedTask, ZetkinTask } from 'types/zetkin';
+import getTaskStatus, { TASK_STATUS } from 'features/tasks/utils/getTaskStatus';
+import { ZetkinAssignedTask, ZetkinTask } from 'utils/types/zetkin';
 
 const scaffoldOptions = {
   authLevelRequired: 2,

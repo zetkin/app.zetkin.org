@@ -10,14 +10,14 @@ import {
   GetServerSidePropsResult,
 } from 'next';
 
-import { AppSession } from '../types';
+import { AppSession } from './types';
 import { getBrowserLanguage } from './locale';
 import { getMessages } from './locale';
 import getUserMemberships from './getUserMemberships';
 import { stringToBool } from './stringUtils';
-import { ZetkinZ } from '../types/sdk';
+import { ZetkinZ } from './types/sdk';
 import { ApiFetch, createApiFetch } from './apiFetch';
-import { ZetkinSession, ZetkinUser } from '../types/zetkin';
+import { ZetkinSession, ZetkinUser } from './types/zetkin';
 
 //TODO: Create module definition and revert to import.
 // eslint-disable-next-line @typescript-eslint/no-var-requires

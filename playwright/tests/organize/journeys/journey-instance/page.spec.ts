@@ -4,7 +4,7 @@ import test from '../../../../fixtures/next';
 import ClarasOnboarding from '../../../../mockData/orgs/KPD/journeys/MemberOnboarding/instances/ClarasOnboarding';
 import KPD from '../../../../mockData/orgs/KPD';
 import MemberOnboarding from '../../../../mockData/orgs/KPD/journeys/MemberOnboarding';
-import { ZetkinJourneyInstance } from '../../../../../src/types/zetkin';
+import { ZetkinJourneyInstance } from '../../../../../src/utils/types/zetkin';
 
 test.describe('Journey instance page', () => {
   test.beforeEach(async ({ moxy, login }) => {
