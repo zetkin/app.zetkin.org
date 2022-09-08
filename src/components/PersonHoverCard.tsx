@@ -20,6 +20,7 @@ import { personResource, personTagsResource } from 'api/people';
 
 const PersonHoverCard: React.FunctionComponent<{
   BoxProps?: BoxProps;
+  children: React.ReactNode;
   personId: number;
 }> = ({ BoxProps, children, personId }) => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
@@ -99,22 +100,28 @@ const PersonHoverCard: React.FunctionComponent<{
                   >
                 )
                   .filter((field) => !!person[field])
-                  .map((field) => (
-                    <Grid key={field} container item>
-                      <CopyToClipboard copyText={person[field] as string}>
-                        <Box display="flex" flexDirection="row">
-                          {field.includes('mail') ? (
-                            <MailIcon color="secondary" />
-                          ) : (
-                            <PhoneIcon color="secondary" />
-                          )}
-                          <Typography style={{ marginLeft: '1.5rem' }}>
-                            {person[field]}
-                          </Typography>
-                        </Box>
-                      </CopyToClipboard>
-                    </Grid>
-                  ))}
+                  .map((field) => {
+                    const value = person[field];
+                    if (typeof value === 'object') {
+                      return null;
+                    }
+                    return (
+                      <Grid key={field} container item>
+                        <CopyToClipboard copyText={value as string}>
+                          <Box display="flex" flexDirection="row">
+                            {field.includes('mail') ? (
+                              <MailIcon color="secondary" />
+                            ) : (
+                              <PhoneIcon color="secondary" />
+                            )}
+                            <Typography style={{ marginLeft: '1.5rem' }}>
+                              {value}
+                            </Typography>
+                          </Box>
+                        </CopyToClipboard>
+                      </Grid>
+                    );
+                  })}
               </Grid>
             </Card>
           </Fade>

@@ -3,7 +3,13 @@ import { useRouter } from 'next/router';
 
 import TabbedLayout from './TabbedLayout';
 
-const PeopleLayout: React.FunctionComponent = ({ children }) => {
+interface PeopleLayoutProps {
+  children: React.ReactNode;
+}
+
+const PeopleLayout: React.FunctionComponent<PeopleLayoutProps> = ({
+  children,
+}) => {
   const intl = useIntl();
   const { orgId } = useRouter().query;
 

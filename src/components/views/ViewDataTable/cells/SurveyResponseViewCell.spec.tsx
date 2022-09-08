@@ -1,6 +1,7 @@
 import { GridRenderCellParams } from '@mui/x-data-grid-pro';
 import { render } from 'utils/testing';
 import SurveyResponseViewCell from './SurveyResponseViewCell';
+import userEvent from '@testing-library/user-event';
 
 const surveyResponses = [
   { submission_id: 1, text: 'This is the response' },
@@ -32,14 +33,14 @@ describe('SurveyResponseViewCell', () => {
     getByText('This is the response');
   });
 
-  it('renders pop-over with responses', () => {
+  it('renders pop-over with responses', async () => {
     const params = mockParams({
       row: {
         fieldName: surveyResponses,
       },
     });
     const { getByText } = render(<SurveyResponseViewCell params={params} />);
-    getByText('This is the response').click();
+    await userEvent.click(getByText('This is the response'));
     getByText('This is another response');
   });
 });

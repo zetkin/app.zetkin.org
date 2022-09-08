@@ -3,14 +3,15 @@ import { makeStyles } from '@material-ui/styles';
 import { withHistory } from 'slate-history';
 import { Box, ClickAwayListener, Collapse } from '@material-ui/core';
 import { createEditor, Descendant, Editor, Transforms } from 'slate';
-import { Editable, ReactEditor, Slate, withReact } from 'slate-react';
-import React, {
-  Attributes,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
+import {
+  Editable,
+  ReactEditor,
+  RenderElementProps,
+  RenderLeafProps,
+  Slate,
+  withReact,
+} from 'slate-react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
 import './types';
 import { FileUpload } from 'hooks/useFileUploads';
@@ -62,8 +63,14 @@ const TextEditor: React.FunctionComponent<TextEditorProps> = ({
 }) => {
   const [active, setActive] = useState<boolean>(false);
   const classes = useStyles({ active });
-  const renderElement = useCallback((props) => <TextElement {...props} />, []);
-  const renderLeaf = useCallback((props) => <Leaf {...props} />, []);
+  const renderElement = useCallback(
+    (props: RenderElementProps) => <TextElement {...props} />,
+    []
+  );
+  const renderLeaf = useCallback(
+    (props: RenderLeafProps) => <Leaf {...props} />,
+    []
+  );
   const editor = useMemo(
     () => withInlines(withHistory(withReact(createEditor()))),
     []
@@ -143,10 +150,11 @@ const TextEditor: React.FunctionComponent<TextEditorProps> = ({
   }
 };
 
-export const Leaf: React.FunctionComponent<{
-  attributes: Attributes;
-  leaf: { [key: string]: boolean };
-}> = ({ attributes, children, leaf }) => {
+export const Leaf: React.FunctionComponent<RenderLeafProps> = ({
+  attributes,
+  children,
+  leaf,
+}) => {
   if (leaf.bold) {
     children = <strong>{children}</strong>;
   }
@@ -155,7 +163,7 @@ export const Leaf: React.FunctionComponent<{
     children = <em>{children}</em>;
   }
 
-  if (leaf.strikeThrough || leaf.strikethrough) {
+  if (leaf.strikeThrough) {
     children = <s>{children}</s>;
   }
 

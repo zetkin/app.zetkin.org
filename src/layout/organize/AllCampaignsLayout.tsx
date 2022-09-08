@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 import TabbedLayout from './TabbedLayout';
 
 interface AllCampaignsLayoutProps {
+  children: React.ReactNode;
   fixedHeight?: boolean;
 }
 

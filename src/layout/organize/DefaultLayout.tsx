@@ -16,7 +16,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const DefaultLayout: FunctionComponent = ({ children }) => {
+interface DefaultLayoutProps {
+  children: React.ReactNode;
+}
+
+const DefaultLayout: FunctionComponent<DefaultLayoutProps> = ({ children }) => {
   const classes = useStyles();
   return (
     <Box className={classes.root} display="flex" height="100vh">

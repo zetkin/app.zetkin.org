@@ -6,6 +6,7 @@ import TabbedLayout from './TabbedLayout';
 import { Box, Typography } from '@material-ui/core';
 
 interface SinglePersonLayoutProps {
+  children: React.ReactNode;
   fixedHeight?: boolean;
 }
 

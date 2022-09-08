@@ -4,6 +4,7 @@ import ZetkinRelativeTime from 'components/ZetkinRelativeTime';
 import { ZetkinUpdate } from 'types/updates';
 
 interface UpdateHeaderProps {
+  children: React.ReactNode;
   timestamp: ZetkinUpdate['timestamp'];
 }
 

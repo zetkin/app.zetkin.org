@@ -39,6 +39,7 @@ const CopyIcon = ({
 };
 
 const CopyToClipboard: React.FunctionComponent<{
+  children: React.ReactNode;
   copyText: string | number | boolean;
 }> = ({ children, copyText }) => {
   const [hover, setHover] = useState<boolean>(false);

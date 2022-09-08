@@ -2,8 +2,9 @@ import { FunctionComponent } from 'react';
 import { Box, Typography } from '@material-ui/core';
 
 interface ZetkinSectionProps {
+  children: React.ReactNode;
   title: string;
-  action?: React.ReactNode | Element;
+  action?: React.ReactNode;
 }
 
 const ZetkinSection: FunctionComponent<ZetkinSectionProps> = ({

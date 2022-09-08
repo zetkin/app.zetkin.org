@@ -27,7 +27,13 @@ const useStyles = makeStyles<Theme, { deactivated: boolean }>(() => ({
   },
 }));
 
-const SingleViewLayout: FunctionComponent = ({ children }) => {
+interface SingleViewLayoutProps {
+  children: React.ReactNode;
+}
+
+const SingleViewLayout: FunctionComponent<SingleViewLayoutProps> = ({
+  children,
+}) => {
   const router = useRouter();
   const { orgId, viewId } = router.query;
 

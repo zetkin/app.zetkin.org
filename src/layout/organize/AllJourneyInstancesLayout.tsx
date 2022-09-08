@@ -6,6 +6,7 @@ import { journeyResource } from 'api/journeys';
 import TabbedLayout from './TabbedLayout';
 
 interface LayoutProps {
+  children: React.ReactNode;
   fixedHeight?: boolean;
 }
 

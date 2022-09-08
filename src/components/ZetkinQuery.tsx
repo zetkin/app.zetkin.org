@@ -10,7 +10,7 @@ interface ZetkinQueryProps<G extends Record<string, unknown>> {
         queries,
       }: {
         queries: { [I in keyof G]: QueryObserverSuccessResult<G[I]> };
-      }) => React.ReactNode);
+      }) => React.ReactElement | null);
   queries: { [I in keyof G]: UseQueryResult<G[I]> };
   errorIndicator?: React.ReactElement;
   loadingIndicator?: React.ReactElement;
@@ -21,7 +21,7 @@ function ZetkinQuery<G extends Record<string, unknown>>({
   queries,
   loadingIndicator,
   errorIndicator,
-}: ZetkinQueryProps<G>): JSX.Element {
+}: ZetkinQueryProps<G>): React.ReactElement | null {
   if (Object.values(queries).some((query) => query.isError)) {
     return (
       errorIndicator || (
@@ -56,10 +56,13 @@ function ZetkinQuery<G extends Record<string, unknown>>({
   const successQueries = queries as {
     [I in keyof G]: QueryObserverSuccessResult<G[I]>;
   };
+
   // Render children if query resolves successfully
-  return typeof children === 'function'
-    ? children({ queries: successQueries }) // Expose the successfully resolved query if children is a function
-    : children; // Otherwise render children
+  return typeof children === 'function' ? (
+    children({ queries: successQueries }) // Expose the successfully resolved query if children is a function
+  ) : (
+    <>{children || null}</>
+  ); // Otherwise render children
 }
 
 export default ZetkinQuery;

@@ -10,6 +10,7 @@ import TabbedLayout from './TabbedLayout';
 import { getFirstAndLastEvent, removeOffset } from 'utils/dateUtils';
 
 interface SingleCampaignLayoutProps {
+  children: React.ReactNode;
   fixedHeight?: boolean;
 }
 

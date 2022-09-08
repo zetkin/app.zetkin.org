@@ -10,6 +10,7 @@ import ZetkinSection from 'components/ZetkinSection';
 import { ZetkinCustomField, ZetkinPerson } from 'types/zetkin';
 
 const PersonDetailLink: React.FunctionComponent<{
+  children: React.ReactNode;
   href: string;
 }> = ({ children, href }) => (
   <NextLink href={href} passHref>
@@ -39,7 +40,10 @@ const PersonDetailsCard: React.FunctionComponent<{
   const router = useRouter();
 
   const nativeFields = nativeFieldsToDisplay.map((field) => {
-    let value: string | React.ReactNode = person[field];
+    // NAtive fields are never objects
+    let value: string | React.ReactNode = person[field] as
+      | string
+      | React.ReactNode;
 
     if (field === 'gender' && person.gender) {
       // Localise gender field
@@ -71,7 +75,10 @@ const PersonDetailsCard: React.FunctionComponent<{
   const customFieldsConfig = customFields
     .filter((field) => field.type !== 'json')
     .map((field) => {
-      let value: string | React.ReactNode = person[field.slug];
+      // Object type is filtered above
+      let value: string | React.ReactNode = person[field.slug] as
+        | string
+        | React.ReactNode;
       if (value && field.type === 'date') {
         value = <ZetkinDate datetime={value as string} />;
       } else if (value && field.type === 'url') {

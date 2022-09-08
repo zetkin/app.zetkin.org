@@ -3,6 +3,7 @@ import { List, ListItem, ListItemText } from '@material-ui/core';
 import React, { useState } from 'react';
 
 interface ZetkinListProps {
+  children: React.ReactNode;
   initialLength?: number;
   showMoreStep?: number;
 }

@@ -7,9 +7,11 @@ import { UPDATE_TYPES } from 'types/updates';
 import { fireEvent, render } from 'utils/testing';
 import Timeline, { SHOW_INITIALLY, TimelineProps } from '.';
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-mockRouter.registerPaths(['/organize/[orgId]/people/[id]']);
+import { createDynamicRouteParser } from 'next-router-mock/dynamic-routes';
+
+mockRouter.useParser(
+  createDynamicRouteParser(['/organize/[orgId]/people/[id]'])
+);
 jest.mock('next/dist/client/router', () => require('next-router-mock'));
 jest.mock('isomorphic-dompurify', () => ({
   sanitize: (dirtyHtml: string) => dirtyHtml,
