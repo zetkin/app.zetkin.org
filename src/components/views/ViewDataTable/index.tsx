@@ -383,7 +383,6 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
           Toolbar: ViewDataTableToolbar,
         }}
         componentsProps={componentsProps}
-        filterModel={modelGridProps.filterModel}
         getRowClassName={(params) =>
           params.id == addedId ? classes.addedRow : ''
         }
@@ -393,14 +392,12 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
             id: `misc.views.empty.notice.${contentSource}`,
           }),
         }}
-        onFilterModelChange={modelGridProps.onFilterModelChange}
         onSelectionModelChange={(model) => setSelection(model as number[])}
-        onSortModelChange={modelGridProps.onSortModelChange}
         rows={gridRows}
-        sortModel={modelGridProps.sortModel}
         style={{
           border: 'none',
         }}
+        {...modelGridProps}
       />
       {empty && <EmptyView orgId={orgId as string} view={view} />}
       {columnToRename && (

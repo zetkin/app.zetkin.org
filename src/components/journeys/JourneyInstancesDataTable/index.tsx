@@ -58,18 +58,15 @@ const JourneyInstancesDataTable: FunctionComponent<JourneysDataTableProps> = ({
           },
         }}
         disableSelectionOnClick={true}
-        filterModel={modelGridProps.filterModel}
         onColumnOrderChange={(params) => {
           setColumnOrder(params.colDef.field, params.targetIndex - 1);
         }}
         onColumnResize={(params) => {
           setColumnWidth(params.colDef.field, params.width);
         }}
-        onFilterModelChange={modelGridProps.onFilterModelChange}
-        onSortModelChange={modelGridProps.onSortModelChange}
         pageSize={50}
         rows={rows}
-        sortModel={modelGridProps.sortModel}
+        {...modelGridProps}
         {...dataGridProps}
       />
     </>
