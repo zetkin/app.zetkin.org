@@ -34,7 +34,7 @@ const Toolbar: React.FunctionComponent<{ onClickAttach?: () => void }> = ({
     <div className={classes.container}>
       <MarkButton format="bold" MarkIcon={FormatBold} />
       <MarkButton format="italic" MarkIcon={FormatItalic} />
-      <MarkButton format="strikethrough" MarkIcon={FormatStrikethrough} />
+      <MarkButton format="strikeThrough" MarkIcon={FormatStrikethrough} />
       <RemoveLinkButton />
       <AddLinkButton />
       <BlockButton BlockIcon={FormatQuote} format="block-quote" />

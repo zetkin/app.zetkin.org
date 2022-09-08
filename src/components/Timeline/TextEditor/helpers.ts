@@ -15,7 +15,7 @@ const LIST_TYPES = ['numbered-list', 'bulleted-list'];
 const HOTKEYS: { [key: string]: string } = {
   'mod+b': 'bold',
   'mod+i': 'italic',
-  'mod+shift+x': 'strikethrough',
+  'mod+shift+x': 'strikeThrough',
 };
 
 /* TODO: Resolve typescript errors */
@@ -200,7 +200,7 @@ const keyDownHandler = (editor: Editor, event: React.KeyboardEvent): void => {
 };
 
 type SlateElementInReality = {
-  strikethrough?: boolean;
+  strikeThrough?: boolean;
   url?: string;
 } & SlateElement;
 /**
@@ -218,8 +218,8 @@ const convertSlateToRemarked = (
           children: convertSlateToRemarked(element.children),
         }),
       ...('url' in element && element.url && { link: element.url }),
-      ...('strikethrough' in element &&
-        element.strikethrough && { strikeThrough: element.strikethrough }),
+      ...('strikeThrough' in element &&
+        element.strikeThrough && { strikeThrough: element.strikeThrough }),
     };
   });
   return convertedChildren;
