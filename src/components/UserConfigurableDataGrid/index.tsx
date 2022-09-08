@@ -1,9 +1,12 @@
 import { DataGridPro, DataGridProProps } from '@mui/x-data-grid-pro';
 
 import useConfigurableDataGridColumns from './useConfigurableDataGridColumns';
-import { useModelsFromQueryString } from './useModelsFromQueryString';
+import useModelsFromQueryString from './useModelsFromQueryString';
 
-type UserConfigurableDataGridProps = DataGridProProps & {
+type UserConfigurableDataGridProps = Omit<
+  DataGridProProps,
+  'sortModel' | 'onSortModelChange' | 'filterModel' | 'onFilterModelChange'
+> & {
   storageKey: string;
 };
 

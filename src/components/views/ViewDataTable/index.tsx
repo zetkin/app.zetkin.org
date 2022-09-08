@@ -1,10 +1,9 @@
-import { isEqual } from 'lodash';
 import NextLink from 'next/link';
 import NProgress from 'nprogress';
 import { useIntl } from 'react-intl';
 import { useRouter } from 'next/router';
+import { DataGridPro, GridColDef, useGridApiRef } from '@mui/x-data-grid-pro';
 import { FunctionComponent, useContext, useState } from 'react';
-import { GridColDef, GridSortModel, useGridApiRef } from '@mui/x-data-grid-pro';
 import { Link, makeStyles } from '@material-ui/core';
 import { useMutation, useQueryClient } from 'react-query';
 
@@ -15,7 +14,7 @@ import patchViewColumn from 'fetching/views/patchViewColumn';
 import PersonHoverCard from 'components/PersonHoverCard';
 import postViewColumn from 'fetching/views/postViewColumn';
 import SnackbarContext from 'hooks/SnackbarContext';
-import UserConfigurableDataGrid from 'components/UserConfigurableDataGrid';
+import useModelsFromQueryString from 'components/UserConfigurableDataGrid/useModelsFromQueryString';
 import ViewRenameColumnDialog from '../ViewRenameColumnDialog';
 import { viewRowsResource } from 'api/viewRows';
 import { viewsResource } from 'api/views';
@@ -72,7 +71,9 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
   );
   const [selection, setSelection] = useState<number[]>([]);
   const [waiting, setWaiting] = useState(false);
-  const [sortModel, setSortModel] = useState<GridSortModel>([]);
+
+  const { gridProps: modelGridProps } = useModelsFromQueryString();
+
   const [quickSearch, setQuickSearch] = useState('');
   const router = useRouter();
   const { orgId } = router.query;
@@ -356,11 +357,11 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
       isSmartSearch: !!view.content_query,
       onColumnCreate,
       onRowsRemove,
+      onSortModelChange: modelGridProps.onSortModelChange,
       onViewCreate,
       selection,
       setQuickSearch,
-      setSortModel,
-      sortModel,
+      sortModel: modelGridProps.sortModel,
     },
   };
 
@@ -371,7 +372,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
 
   return (
     <>
-      <UserConfigurableDataGrid
+      <DataGridPro
         apiRef={gridApiRef}
         autoHeight={empty}
         checkboxSelection={true}
@@ -392,18 +393,11 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
           }),
         }}
         onSelectionModelChange={(model) => setSelection(model as number[])}
-        onSortModelChange={(model) => {
-          // Something strange going on here with infinite state updates, so I added the line below
-          if (!isEqual(model, sortModel)) {
-            setSortModel(model);
-          }
-        }}
         rows={gridRows}
-        sortModel={sortModel}
-        storageKey={`personView_${viewId}`}
         style={{
           border: 'none',
         }}
+        {...modelGridProps}
       />
       {empty && <EmptyView orgId={orgId as string} view={view} />}
       {columnToRename && (

@@ -11,16 +11,18 @@ import { useEffect, useState } from 'react';
 
 interface UseModelsFromQueryString {
   filterModel: GridFilterModel;
-  gridProps: Pick<
-    DataGridProProps,
-    'filterModel' | 'onFilterModelChange' | 'onSortModelChange' | 'sortModel'
+  gridProps: Required<
+    Pick<
+      DataGridProProps,
+      'filterModel' | 'onFilterModelChange' | 'onSortModelChange' | 'sortModel'
+    >
   >;
   setFilterModel: (model: GridFilterModel) => void;
   setSortModel: (model: GridSortModel) => void;
   sortModel: GridSortModel;
 }
 
-export function useModelsFromQueryString(): UseModelsFromQueryString {
+export default function useModelsFromQueryString(): UseModelsFromQueryString {
   const router = useRouter();
 
   const [filterModel, setFilterModel] = useState<GridFilterModel>(

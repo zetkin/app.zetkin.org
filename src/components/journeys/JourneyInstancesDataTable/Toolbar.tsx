@@ -11,15 +11,15 @@ import DataTableSorting from 'components/dataTables/DataTableSorting';
 
 interface ToolbarProps {
   gridColumns: GridColDef[];
-  setQuickSearch: (quickSearch: string) => void;
-  setSortModel: (model: GridSortModel) => void;
+  onQuickSearchChange: (quickSearch: string) => void;
+  onSortModelChange: (model: GridSortModel) => void;
   sortModel: GridSortModel;
 }
 
 const Toolbar: React.FunctionComponent<ToolbarProps> = ({
   gridColumns,
-  setQuickSearch,
-  setSortModel,
+  onQuickSearchChange,
+  onSortModelChange,
   sortModel,
 }) => {
   return (
@@ -31,11 +31,11 @@ const Toolbar: React.FunctionComponent<ToolbarProps> = ({
       />
       <DataTableSorting
         gridColumns={gridColumns}
-        setSortModel={setSortModel}
+        onSortModelChange={onSortModelChange}
         sortModel={sortModel}
       />
       <DataTableSearch
-        onChange={(searchString) => setQuickSearch(searchString)}
+        onChange={(searchString) => onQuickSearchChange(searchString)}
         searchById
       />
     </Box>

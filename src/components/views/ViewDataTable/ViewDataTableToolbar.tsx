@@ -18,7 +18,7 @@ export interface ViewDataTableToolbarProps {
   onViewCreate: () => void;
   selection: number[];
   setQuickSearch: (quickSearch: string) => void;
-  setSortModel: (model: GridSortModel) => void;
+  onSortModelChange: (model: GridSortModel) => void;
   sortModel: GridSortModel;
 }
 
@@ -33,7 +33,7 @@ const ViewDataTableToolbar: React.FunctionComponent<
   onViewCreate,
   selection,
   setQuickSearch,
-  setSortModel,
+  onSortModelChange,
   sortModel,
 }) => {
   const intl = useIntl();
@@ -90,7 +90,7 @@ const ViewDataTableToolbar: React.FunctionComponent<
           button: { color: 'secondary', size: 'medium' },
         }}
       />
-      <DataTableSorting {...{ gridColumns, setSortModel, sortModel }} />
+      <DataTableSorting {...{ gridColumns, onSortModelChange, sortModel }} />
       <Button
         color="secondary"
         data-testid="ViewDataTableToolbar-createColumn"
