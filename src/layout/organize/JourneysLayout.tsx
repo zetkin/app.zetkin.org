@@ -3,7 +3,13 @@ import { useRouter } from 'next/router';
 
 import TabbedLayout from './TabbedLayout';
 
-const JourneysLayout: React.FunctionComponent = ({ children }) => {
+interface JourneysLayoutProps {
+  children: React.ReactNode;
+}
+
+const JourneysLayout: React.FunctionComponent<JourneysLayoutProps> = ({
+  children,
+}) => {
   const intl = useIntl();
   const { orgId } = useRouter().query;
 

@@ -18,7 +18,13 @@ import JourneyInstanceCloseButton, {
 } from 'components/journeys/JourneyInstanceCloseButton';
 import { journeyInstanceResource, journeysResource } from 'api/journeys';
 
-const JourneyInstanceLayout: React.FunctionComponent = ({ children }) => {
+interface JourneyInstanceLayoutProps {
+  children: React.ReactNode;
+}
+
+const JourneyInstanceLayout: React.FunctionComponent<
+  JourneyInstanceLayoutProps
+> = ({ children }) => {
   const { orgId, journeyId, instanceId } = useRouter().query;
   const router = useRouter();
   const intl = useIntl();

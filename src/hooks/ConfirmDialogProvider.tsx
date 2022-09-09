@@ -45,7 +45,13 @@ function ConfirmDialog(props: ZetkinConfirmDialogProps): JSX.Element {
   );
 }
 
-export const ConfirmDialogProvider: React.FunctionComponent = (props) => {
+interface ConfirmDialogProviderProps {
+  children: React.ReactNode;
+}
+
+export const ConfirmDialogProvider: React.FunctionComponent<
+  ConfirmDialogProviderProps
+> = (props) => {
   const [confirmDialogProps, setConfirmDialogProps] = useState<
     Partial<ZetkinConfirmDialogProps>
   >(defaultConfirmDialogProps);

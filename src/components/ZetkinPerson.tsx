@@ -14,10 +14,11 @@ import {
  * Otherwise, it just returns the children directly
  */
 const PersonLink: React.FunctionComponent<{
+  children: React.ReactNode;
   id: number;
   link?: boolean;
   orgId: string | number;
-}> = ({ link, id, orgId, children }) => {
+}> = ({ children, link, id, orgId }) => {
   if (link) {
     return (
       <NextLink href={`/organize/${orgId}/people/${id}`} passHref>

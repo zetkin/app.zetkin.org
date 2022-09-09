@@ -9,6 +9,7 @@ import {
 } from '@material-ui/core';
 
 interface ZetkinDialogProps {
+  children: React.ReactNode;
   open: boolean;
   onClose: () => void;
   title?: string;

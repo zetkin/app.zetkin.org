@@ -4,6 +4,7 @@ import { ExpandLess, ExpandMore } from '@material-ui/icons';
 import { useCallback, useState } from 'react';
 
 interface ZetkinCollapseProps {
+  children: React.ReactNode;
   collapsedSize: number;
 }
 

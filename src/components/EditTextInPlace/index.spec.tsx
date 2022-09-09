@@ -20,7 +20,7 @@ describe('EditTextInPlace', () => {
       <EditTextinPlace {...props} />
     );
     const inputEl = getByDisplayValue(props.value);
-    userEvent.hover(inputEl);
+    await userEvent.hover(inputEl);
     const tooltip = await findByText(
       'misc.components.editTextInPlace.tooltip.edit'
     );
@@ -32,8 +32,8 @@ describe('EditTextInPlace', () => {
       <EditTextinPlace {...props} />
     );
     const inputEl = getByDisplayValue(props.value);
-    userEvent.click(inputEl);
-    userEvent.hover(inputEl);
+    await userEvent.click(inputEl);
+    await userEvent.hover(inputEl);
     const tooltip = queryByRole('tooltip');
     expect(tooltip).toBeNull();
   });
@@ -43,9 +43,9 @@ describe('EditTextInPlace', () => {
       <EditTextinPlace {...props} />
     );
     const inputEl = getByDisplayValue(props.value);
-    userEvent.click(inputEl);
-    userEvent.clear(inputEl);
-    userEvent.hover(inputEl);
+    await userEvent.click(inputEl);
+    await userEvent.clear(inputEl);
+    await userEvent.hover(inputEl);
     const tooltip = await findByText(
       'misc.components.editTextInPlace.tooltip.noEmpty'
     );
@@ -58,14 +58,14 @@ describe('EditTextInPlace', () => {
       <EditTextinPlace {...{ ...props, onChange }} />
     );
     const inputEl = getByDisplayValue(props.value);
-    userEvent.click(inputEl);
+    await userEvent.click(inputEl);
     // If user tries to save no text
-    userEvent.clear(inputEl);
-    userEvent.keyboard('{enter}');
+    await userEvent.clear(inputEl);
+    await userEvent.keyboard('{enter}');
     expect(onChange).toHaveBeenCalledTimes(0);
     // If user saves the previous value, it doesn't need to save
-    userEvent.paste(inputEl, props.value);
-    userEvent.keyboard('{enter}');
+    await userEvent.paste(props.value);
+    await userEvent.keyboard('{enter}');
     expect(onChange).toHaveBeenCalledTimes(0);
   });
 
@@ -75,11 +75,11 @@ describe('EditTextInPlace', () => {
       <EditTextinPlace allowEmpty={true} {...{ ...props, onChange }} />
     );
     const inputEl = getByDisplayValue(props.value);
-    userEvent.click(inputEl);
+    await userEvent.click(inputEl);
 
     // If user tries to save no text
-    userEvent.clear(inputEl);
-    userEvent.keyboard('{enter}');
+    await userEvent.clear(inputEl);
+    await userEvent.keyboard('{enter}');
     expect(onChange).toHaveBeenCalledTimes(1);
   });
 
@@ -89,9 +89,9 @@ describe('EditTextInPlace', () => {
       <EditTextinPlace {...{ ...props, onChange }} />
     );
     const inputEl = getByDisplayValue(props.value) as HTMLInputElement;
-    userEvent.click(inputEl);
-    userEvent.paste(inputEl, 'New Text');
-    userEvent.keyboard('{escape}');
+    await userEvent.click(inputEl);
+    await userEvent.paste('New Text');
+    await userEvent.keyboard('{escape}');
     expect(onChange).toHaveBeenCalledTimes(0);
     expect(inputEl.value).toBe(props.value);
   });
@@ -102,10 +102,10 @@ describe('EditTextInPlace', () => {
       <EditTextinPlace {...{ ...props, onChange }} />
     );
     const inputEl = getByDisplayValue(props.value);
-    userEvent.click(inputEl);
-    userEvent.paste(inputEl, 'New Text');
+    await userEvent.click(inputEl);
+    await userEvent.paste('New Text');
     await act(async () => {
-      userEvent.keyboard('{enter}');
+      await userEvent.keyboard('{enter}');
     });
     expect(onChange).toHaveBeenCalledTimes(1);
   });
@@ -116,9 +116,9 @@ describe('EditTextInPlace', () => {
       <EditTextinPlace {...{ ...props, onChange }} />
     );
     const inputEl = getByDisplayValue(props.value);
-    userEvent.click(inputEl);
-    userEvent.clear(inputEl);
-    userEvent.paste(inputEl, 'New Text');
+    await userEvent.click(inputEl);
+    await userEvent.clear(inputEl);
+    await userEvent.paste('New Text');
 
     fireEvent.blur(inputEl);
 

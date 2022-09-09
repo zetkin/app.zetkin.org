@@ -1,12 +1,13 @@
-import { Property } from 'csstype';
-import React, { Attributes } from 'react';
+import React from 'react';
+import { RenderElementProps } from 'slate-react';
 
 import LinkComponent from './LinkComponent';
 
-const TextElement: React.FunctionComponent<{
-  attributes: Attributes;
-  element: { align: Property.TextAlign; [key: string]: string };
-}> = ({ attributes, children, element }) => {
+const TextElement: React.FunctionComponent<RenderElementProps> = ({
+  attributes,
+  children,
+  element,
+}) => {
   const style = {
     margin: '0 0 12px 0',
     textAlign: element.align,

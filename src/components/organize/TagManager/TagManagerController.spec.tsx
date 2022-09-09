@@ -1,8 +1,6 @@
-import { click } from '@testing-library/user-event/dist/click';
-import { hover } from '@testing-library/user-event/dist/hover';
-import { keyboard } from '@testing-library/user-event/dist/keyboard';
 import { render } from 'utils/testing';
 import singletonRouter from 'next/router';
+import userEvent from '@testing-library/user-event';
 import { waitFor } from '@testing-library/react';
 
 import { TagManagerController } from './TagManagerController';
@@ -99,7 +97,7 @@ describe('<TagManagerController />', () => {
       getByTestId('TagManager-groupedTags-ungrouped').children.length
     ).toEqual(2);
   });
-  it('can add a tag', () => {
+  it('can add a tag', async () => {
     const onAssignTag = jest.fn((tag: ZetkinTag) => tag);
 
     const tag1 = mockTag({
@@ -120,19 +118,19 @@ describe('<TagManagerController />', () => {
       />
     );
     const addTagButton = getByText('misc.tags.tagManager.addTag');
-    click(addTagButton);
+    await userEvent.click(addTagButton);
 
     // Typing searches for tag
-    keyboard(tag1.title);
+    await userEvent.keyboard(tag1.title);
 
     // Select an option
     const tagOption = getByText('Phone banking');
-    click(tagOption);
+    await userEvent.click(tagOption);
 
     // Check that callback has been called
     expect(onAssignTag).toHaveBeenCalledWith(tag1);
   });
-  it('can add a value tag', () => {
+  it('can add a value tag', async () => {
     const onAssignTag = jest.fn((tag: ZetkinTag) => tag);
 
     const tag = mockTag({
@@ -154,14 +152,14 @@ describe('<TagManagerController />', () => {
       />
     );
     const addTagButton = getByText('misc.tags.tagManager.addTag');
-    click(addTagButton);
+    await userEvent.click(addTagButton);
 
     // Typing searches for tag
-    keyboard(tag.title);
+    await userEvent.keyboard(tag.title);
 
     // Select an option
     const tagOption = getByText(tag.title);
-    click(tagOption);
+    await userEvent.click(tagOption);
 
     // Check that callback has not been called yet
     expect(onAssignTag).not.toHaveBeenCalled();
@@ -173,8 +171,8 @@ describe('<TagManagerController />', () => {
     );
 
     // Add value
-    click(input);
-    keyboard('75{Enter}');
+    await userEvent.click(input);
+    await userEvent.keyboard('75{Enter}');
 
     // Check that tag was assigned with value
     expect(onAssignTag).toHaveBeenCalledWith({
@@ -182,7 +180,7 @@ describe('<TagManagerController />', () => {
       value: '75',
     });
   });
-  it('can remove a tag', () => {
+  it('can remove a tag', async () => {
     const onUnassignTag = jest.fn((tag: ZetkinTag) => tag);
 
     const tag1 = mockTag({
@@ -205,7 +203,7 @@ describe('<TagManagerController />', () => {
 
     // Hover tag to remove
     const tagOption = getByText('Phone banking');
-    hover(tagOption);
+    await userEvent.hover(tagOption);
 
     // Click delete button
     const removeTagButton = container.querySelector(
@@ -213,7 +211,7 @@ describe('<TagManagerController />', () => {
     );
     expect(removeTagButton).not.toBeNull();
     if (removeTagButton) {
-      click(removeTagButton);
+      await userEvent.click(removeTagButton);
     }
 
     // Check that callback has been called
@@ -233,7 +231,7 @@ describe('<TagManagerController />', () => {
       };
     });
 
-    it('passes the value in the tag search field in to the create tag', () => {
+    it('passes the value in the tag search field in to the create tag', async () => {
       const { getByTestId, getByText } = render(
         <TagManagerController
           assignedTags={[]}
@@ -247,16 +245,16 @@ describe('<TagManagerController />', () => {
       );
 
       const addTagButton = getByText('misc.tags.tagManager.addTag');
-      click(addTagButton);
+      await userEvent.click(addTagButton);
 
       const tagSearchField = getByTestId('TagManager-TagSelect-searchField');
-      click(tagSearchField);
-      keyboard("Jerry's family");
+      await userEvent.click(tagSearchField);
+      await userEvent.keyboard("Jerry's family");
 
       const createTagOption = getByTestId(
         'TagManager-TagSelect-createTagOption'
       );
-      click(createTagOption);
+      await userEvent.click(createTagOption);
 
       const titleField = getByTestId('TagManager-TagDialog-titleField');
       expect((titleField as HTMLInputElement).value).toEqual("Jerry's family");
@@ -276,16 +274,18 @@ describe('<TagManagerController />', () => {
       );
 
       // Open create dialog
-      click(getByText('misc.tags.tagManager.addTag'));
-      click(getByTestId('TagManager-TagSelect-createTagOption'));
+      await userEvent.click(getByText('misc.tags.tagManager.addTag'));
+      await userEvent.click(
+        getByTestId('TagManager-TagSelect-createTagOption')
+      );
 
       // Fill in dialog
       const titleField = getByTestId('TagManager-TagDialog-titleField');
-      click(titleField);
-      keyboard('Spongeworthy');
+      await userEvent.click(titleField);
+      await userEvent.keyboard('Spongeworthy');
 
       const submit = getByTestId('SubmitCancelButtons-submitButton');
-      click(submit);
+      await userEvent.click(submit);
 
       await waitFor(() => expect(onCreateTag).toBeCalled());
       expect(assignTagCallback).toBeCalled();
@@ -311,21 +311,23 @@ describe('<TagManagerController />', () => {
       );
 
       // Open create dialog
-      click(getByText('misc.tags.tagManager.addTag'));
-      click(getByTestId('TagManager-TagSelect-createTagOption'));
+      await userEvent.click(getByText('misc.tags.tagManager.addTag'));
+      await userEvent.click(
+        getByTestId('TagManager-TagSelect-createTagOption')
+      );
 
       // Fill in dialog
       const titleField = getByTestId('TagManager-TagDialog-titleField');
-      click(titleField);
-      keyboard('Age');
+      await userEvent.click(titleField);
+      await userEvent.keyboard('Age');
 
       // Set value type
       const radioGroup = getByTestId('TypeSelect-formControl');
       const textRadio = radioGroup.querySelector('input[value=text]');
-      click(textRadio!);
+      await userEvent.click(textRadio!);
 
       const submit = getByTestId('SubmitCancelButtons-submitButton');
-      click(submit);
+      await userEvent.click(submit);
 
       await waitFor(() => expect(onCreateTag).toBeCalled());
 
@@ -336,8 +338,8 @@ describe('<TagManagerController />', () => {
 
       expect(assignTagCallback).not.toBeCalled();
 
-      click(input);
-      keyboard('75{Enter}');
+      await userEvent.click(input);
+      await userEvent.keyboard('75{Enter}');
 
       await waitFor(() =>
         expect(assignTagCallback).toBeCalledWith({
@@ -361,7 +363,7 @@ describe('<TagManagerController />', () => {
       };
     });
 
-    it('does not show edit button for tag when `disableEditTags` set', () => {
+    it('does not show edit button for tag when `disableEditTags` set', async () => {
       const tagToEdit = mockTag();
 
       const { getByTestId, getByText } = render(
@@ -378,7 +380,7 @@ describe('<TagManagerController />', () => {
       );
 
       const addTagButton = getByText('misc.tags.tagManager.addTag');
-      click(addTagButton);
+      await userEvent.click(addTagButton);
 
       // Expect to not find edit button
       expect(() =>
@@ -386,7 +388,7 @@ describe('<TagManagerController />', () => {
       ).toThrowError();
     });
 
-    it('can edit an existing tag in the tag dialog', () => {
+    it('can edit an existing tag in the tag dialog', async () => {
       const tagToEdit = mockTag();
 
       const { getByTestId, getByText } = render(
@@ -402,12 +404,12 @@ describe('<TagManagerController />', () => {
       );
 
       const addTagButton = getByText('misc.tags.tagManager.addTag');
-      click(addTagButton);
+      await userEvent.click(addTagButton);
 
       const editTagButton = getByTestId(
         `TagManager-TagSelect-editTag-${tagToEdit.id}`
       );
-      click(editTagButton);
+      await userEvent.click(editTagButton);
 
       const titleField = getByTestId('TagManager-TagDialog-titleField');
       expect((titleField as HTMLInputElement).value).toEqual(tagToEdit.title);

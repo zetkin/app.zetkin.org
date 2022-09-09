@@ -2,6 +2,7 @@ import { callAssignmentQuery } from 'api/callAssignments';
 import TabbedLayout from './TabbedLayout';
 
 interface CallAssignmentLayoutProps {
+  children: React.ReactNode;
   orgId: string;
   campaignId: string;
   assignmentId: string;

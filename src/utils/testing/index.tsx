@@ -16,7 +16,11 @@ import { UserContext } from 'hooks';
 dayjs.extend(LocalTimeToJsonPlugin);
 dayjs.extend(isoWeek);
 
-const ZetkinAppProviders: FC = ({ children }) => {
+interface ZetkinAppProvidersProps {
+  children: React.ReactNode;
+}
+
+const ZetkinAppProviders: FC<ZetkinAppProvidersProps> = ({ children }) => {
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {

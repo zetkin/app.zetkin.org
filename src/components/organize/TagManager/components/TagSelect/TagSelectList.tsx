@@ -92,7 +92,7 @@ const TagSelectList: React.FC<{
           <FormattedMessage
             id="misc.tags.tagManager.createNamedTag"
             values={{
-              b: (...chunks: string[]) => (
+              b: (...chunks) => (
                 <>
                   &nbsp;<b>{chunks}</b>
                 </>

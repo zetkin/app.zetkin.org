@@ -16,7 +16,13 @@ const SnackbarContext = createContext<SnackbarContextProps>({
   showSnackbar: () => {},
 });
 
-const SnackbarProvider: React.FunctionComponent = ({ children }) => {
+interface SnackbarProviderProps {
+  children: React.ReactNode;
+}
+
+const SnackbarProvider: React.FunctionComponent<SnackbarProviderProps> = ({
+  children,
+}) => {
   const intl = useIntl();
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarState, setSnackbarState] = useState<{

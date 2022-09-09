@@ -28,6 +28,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const PersonCard: React.FunctionComponent<{
+  children: React.ReactNode;
   onClickEdit?: ReactEventHandler;
   titleId: string;
 }> = ({ onClickEdit, titleId, children }) => {

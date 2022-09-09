@@ -175,6 +175,10 @@ const OrganizeSidebar = (): JSX.Element => {
         </Toolbar>
       </AppBar>
       <nav aria-label="mailbox folders" className={classes.drawer}>
+        {/*
+          // Because MUI Hidden typing is wrong
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore */}
         <Hidden implementation="css" smUp>
           <Drawer
             anchor={theme.direction === 'rtl' ? 'right' : 'left'}
@@ -191,6 +195,10 @@ const OrganizeSidebar = (): JSX.Element => {
             {drawer}
           </Drawer>
         </Hidden>
+        {/*
+          // Because MUI Hidden typing is wrong
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore */}
         <Hidden implementation="css" xsDown>
           <Drawer
             classes={{

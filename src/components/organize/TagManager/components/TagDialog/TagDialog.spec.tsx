@@ -1,7 +1,6 @@
-import { click } from '@testing-library/user-event/dist/click';
-import { keyboard } from '@testing-library/user-event/dist/keyboard';
 import { render } from 'utils/testing';
 import singletonRouter from 'next/router';
+import userEvent from '@testing-library/user-event';
 
 import mockTag from 'utils/testing/mocks/mockTag';
 import { EditTag, NewTag } from '../../types';
@@ -20,7 +19,7 @@ describe('<TagDialog />', () => {
     };
   });
 
-  it('creates a basic tag', () => {
+  it('creates a basic tag', async () => {
     const { getByTestId } = render(
       <TagDialog
         groups={[]}
@@ -32,11 +31,11 @@ describe('<TagDialog />', () => {
 
     // Fill in dialog
     const titleField = getByTestId('TagManager-TagDialog-titleField');
-    click(titleField);
-    keyboard('Spongeworthy');
+    await userEvent.click(titleField);
+    await userEvent.keyboard('Spongeworthy');
 
     const submit = getByTestId('SubmitCancelButtons-submitButton');
-    click(submit);
+    await userEvent.click(submit);
 
     // Check new group object created
     expect(onSubmit).toBeCalledWith({
@@ -49,7 +48,7 @@ describe('<TagDialog />', () => {
   it(`
       When creating a new group, sends the new group properties
       to the onSubmit callback instead of groupId
-    `, () => {
+    `, async () => {
     const { getByTestId, getByText } = render(
       <TagDialog
         groups={[]}
@@ -61,19 +60,19 @@ describe('<TagDialog />', () => {
 
     // Fill in dialog
     const titleField = getByTestId('TagManager-TagDialog-titleField');
-    click(titleField);
-    keyboard('Tag Title');
+    await userEvent.click(titleField);
+    await userEvent.keyboard('Tag Title');
 
     const groupField = getByTestId('TagManager-TagDialog-tagGroupSelect');
-    click(groupField);
-    keyboard('New Group');
+    await userEvent.click(groupField);
+    await userEvent.keyboard('New Group');
     const newGroupOption = getByText(
       'misc.tags.tagManager.tagDialog.groupCreatePrompt'
     );
-    click(newGroupOption);
+    await userEvent.click(newGroupOption);
 
     const submit = getByTestId('SubmitCancelButtons-submitButton');
-    click(submit);
+    await userEvent.click(submit);
 
     // Check new group object created
     expect(onSubmit).toBeCalledWith({
@@ -83,7 +82,7 @@ describe('<TagDialog />', () => {
     });
   });
 
-  it('Requires valid inputs to submit', () => {
+  it('Requires valid inputs to submit', async () => {
     const { getByTestId } = render(
       <TagDialog
         groups={[]}
@@ -103,23 +102,23 @@ describe('<TagDialog />', () => {
     const colorField = getByTestId('TagManager-TagDialog-colorField');
 
     // Enter title
-    click(titleField);
-    keyboard('Tag Title');
+    await userEvent.click(titleField);
+    await userEvent.keyboard('Tag Title');
 
     // Submit enabled when title provided
     expect(submit.disabled).toBeFalsy();
 
     // Enter invalid color, submit should be disabled
-    click(colorField);
-    keyboard('a1');
+    await userEvent.click(colorField);
+    await userEvent.keyboard('a1');
     expect(submit.disabled).toBeTruthy();
 
     // Enter valid color, submit should be enabled
-    keyboard('a1a1'); // Adds 4 more chars
+    await userEvent.keyboard('a1a1'); // Adds 4 more chars
     expect(submit.disabled).toBeFalsy();
   });
 
-  test('can edit an existing tag', () => {
+  test('can edit an existing tag', async () => {
     const title = 'New Tag';
     const color = 'a1a1a1';
 
@@ -135,11 +134,11 @@ describe('<TagDialog />', () => {
 
     // Modify color field
     const colorField = getByTestId('TagManager-TagDialog-colorField');
-    click(colorField);
-    keyboard(color);
+    await userEvent.click(colorField);
+    await userEvent.keyboard(color);
 
     const submit = getByTestId('SubmitCancelButtons-submitButton');
-    click(submit);
+    await userEvent.click(submit);
 
     // Check correct fields returned with tag id.
     expect(onSubmit).toBeCalledWith({

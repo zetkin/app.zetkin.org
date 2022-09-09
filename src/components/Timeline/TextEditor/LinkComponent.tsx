@@ -13,6 +13,7 @@ const InlineChromiumBugfix = () => (
 
 const LinkComponent: React.FunctionComponent<{
   attributes: Attributes;
+  children: React.ReactNode;
   element: unknown;
 }> = ({ attributes, children, element }) => {
   return (

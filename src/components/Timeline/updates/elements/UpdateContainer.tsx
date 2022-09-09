@@ -3,6 +3,7 @@ import UpdateHeader from './UpdateHeader';
 import { ZetkinUpdate } from 'types/updates';
 
 interface UpdateContainerProps {
+  children?: React.ReactNode;
   headerContent: React.ReactNode;
   update: ZetkinUpdate;
 }

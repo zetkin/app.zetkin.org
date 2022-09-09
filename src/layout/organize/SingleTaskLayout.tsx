@@ -10,7 +10,13 @@ import { taskResource } from 'api/tasks';
 import TaskStatusChip from 'components/organize/tasks/TaskStatusChip';
 import TaskStatusText from 'components/organize/tasks/TaskStatusText';
 
-const SingleTaskLayout: FunctionComponent = ({ children }) => {
+interface SingleTaskLayoutProps {
+  children: React.ReactNode;
+}
+
+const SingleTaskLayout: FunctionComponent<SingleTaskLayoutProps> = ({
+  children,
+}) => {
   const { taskId, orgId, campId } = useRouter().query;
   const { data: task } = taskResource(
     orgId as string,

@@ -108,7 +108,7 @@ async function fetchLabel(
 }
 
 const validateQuery = (
-  query: Record<string, string | string[]>
+  query: NextApiRequest['query']
 ): {
   error?: string;
   query?: Record<string, string>;

@@ -29,11 +29,12 @@ const useStyles = makeStyles<Theme, StyleProps>(() => ({
 interface TabbedLayoutProps {
   actionButtons?: React.ReactElement | React.ReactElement[];
   avatar?: string;
+  baseHref: string;
+  children?: React.ReactNode;
   ellipsisMenuItems?: ZetkinEllipsisMenuProps['items'];
   fixedHeight?: boolean;
   title?: string | ReactElement;
   subtitle?: string | ReactElement;
-  baseHref: string;
   defaultTab: string;
   noPad?: boolean;
   tabs: { href: string; messageId: string; tabProps?: TabProps }[];

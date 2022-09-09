@@ -26,6 +26,7 @@ test.describe('Views list page', () => {
     await page.goto(appUri + '/organize/1/people');
     await page.click('data-testid=create-view-action-button');
 
+    await page.locator('data-testid=create-view-error-dialog').waitFor();
     // Expect error dialog to exist on page
     expect(
       await page.locator('data-testid=create-view-error-dialog').count()

@@ -2,6 +2,7 @@ import { ReactEventHandler } from 'react';
 import { Box, Card, CardActionArea } from '@material-ui/core';
 
 interface ZetkinCardProps {
+  children: React.ReactNode;
   onClick?: ReactEventHandler;
   value?: string | number;
 }
