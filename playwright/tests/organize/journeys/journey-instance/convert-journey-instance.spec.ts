@@ -61,7 +61,7 @@ test.describe('Changing the type of a journey instance', () => {
     await page.goto(appUri + '/organize/1/journeys/1/1');
 
     //Click ellipsis menu
-    await page.locator('data-testid=EllipsisMenu-menuActivator').click();
+    await page.locator('data-testid=ZUIEllipsisMenu-menuActivator').click();
 
     //Click "Convert to..."
     await page.locator('text=Convert to...').click();
@@ -142,7 +142,7 @@ test.describe('Changing the type of a journey instance', () => {
     await page.goto(appUri + '/organize/1/journeys/1/1');
 
     //Click ellipsis menu
-    await page.locator('data-testid=EllipsisMenu-menuActivator').click();
+    await page.locator('data-testid=ZUIEllipsisMenu-menuActivator').click();
 
     //Click "Convert to..."
     await page.locator('text=Convert to...').click();

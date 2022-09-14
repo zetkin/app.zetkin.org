@@ -7,7 +7,7 @@ import PlaysGuitarTag from '../../../tags/PlaysGuitar';
 import {
   ZetkinJourneyInstance,
   ZetkinJourneyMilestoneStatus,
-} from '../../../../../../../src/types/zetkin';
+} from '../../../../../../../src/utils/types/zetkin';
 
 // Milestones
 export const AttendMeeting: ZetkinJourneyMilestoneStatus = {

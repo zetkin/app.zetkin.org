@@ -1,5 +1,5 @@
 import KPD from '../..';
-import { ZetkinTagGroup } from '../../../../../../src/types/zetkin';
+import { ZetkinTagGroup } from '../../../../../../src/utils/types/zetkin';
 
 const Skills: ZetkinTagGroup = { id: 2, organization: KPD, title: 'Skills' };
 

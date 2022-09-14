@@ -35,8 +35,8 @@ test.describe('Task action buttons', async () => {
       await page.goto(appUri + '/organize/1/campaigns/1/calendar/tasks/1');
 
       // Open modal
-      await page.click('data-testid=EllipsisMenu-menuActivator');
-      await page.click('data-testid=EllipsisMenu-item-editTask');
+      await page.click('data-testid=ZUIEllipsisMenu-menuActivator');
+      await page.click('data-testid=ZUIEllipsisMenu-item-editTask');
 
       moxy.removeMock('/orgs/1/tasks/1', 'get'); // Remove existing mock
       moxy.setZetkinApiMock('/orgs/1/tasks/1', 'get', {
@@ -64,8 +64,8 @@ test.describe('Task action buttons', async () => {
       await page.goto(appUri + '/organize/1/campaigns/1/calendar/tasks/1');
 
       // Open modal
-      await page.click('data-testid=EllipsisMenu-menuActivator');
-      await page.click('data-testid=EllipsisMenu-item-editTask');
+      await page.click('data-testid=ZUIEllipsisMenu-menuActivator');
+      await page.click('data-testid=ZUIEllipsisMenu-item-editTask');
 
       // Edit task
       await page.fill('#title', newTitle);
@@ -87,8 +87,8 @@ test.describe('Task action buttons', async () => {
 
       await page.goto(appUri + '/organize/1/campaigns/1/calendar/tasks/1');
 
-      await page.click('data-testid=EllipsisMenu-menuActivator');
-      await page.click('data-testid=EllipsisMenu-item-deleteTask');
+      await page.click('data-testid=ZUIEllipsisMenu-menuActivator');
+      await page.click('data-testid=ZUIEllipsisMenu-item-deleteTask');
 
       await Promise.all([
         page.waitForNavigation(),
@@ -104,8 +104,8 @@ test.describe('Task action buttons', async () => {
 
       await page.goto(appUri + '/organize/1/campaigns/1/calendar/tasks/1');
 
-      await page.click('data-testid=EllipsisMenu-menuActivator');
-      await page.click('data-testid=EllipsisMenu-item-deleteTask');
+      await page.click('data-testid=ZUIEllipsisMenu-menuActivator');
+      await page.click('data-testid=ZUIEllipsisMenu-item-deleteTask');
       await page.click('button > :text("Confirm")');
 
       await page.locator('data-testid=Snackbar-error').waitFor();

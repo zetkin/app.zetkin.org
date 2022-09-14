@@ -1,6 +1,6 @@
 import KPD from '..';
 import Political from './groups/Political';
-import { ZetkinTag } from '../../../../../src/types/zetkin';
+import { ZetkinTag } from '../../../../../src/utils/types/zetkin';
 
 const OrganizerTag: ZetkinTag = {
   color: null,
