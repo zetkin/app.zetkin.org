@@ -1,4 +1,4 @@
-import { ZetkinViewRow } from '../../../../../../../src/utils/types/zetkin';
+import { ZetkinViewRow } from 'utils/types/zetkin';
 
 const AllMembersRows: ZetkinViewRow[] = [
   {

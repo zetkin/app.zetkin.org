@@ -1,5 +1,5 @@
 import KPD from '../..';
-import { ZetkinTagGroup } from '../../../../../../src/utils/types/zetkin';
+import { ZetkinTagGroup } from 'utils/types/zetkin';
 
 const Political: ZetkinTagGroup = {
   id: 1,

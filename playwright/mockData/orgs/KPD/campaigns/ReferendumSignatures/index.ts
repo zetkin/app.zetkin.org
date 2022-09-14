@@ -1,5 +1,5 @@
 import KPD from '../..';
-import { ZetkinCampaign } from '../../../../../../src/utils/types/zetkin';
+import { ZetkinCampaign } from 'utils/types/zetkin';
 
 /**
  * A base campaign

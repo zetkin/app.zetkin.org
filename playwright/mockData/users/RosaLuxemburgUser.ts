@@ -1,4 +1,4 @@
-import { ZetkinUser } from '../../../src/utils/types/zetkin';
+import { ZetkinUser } from 'utils/types/zetkin';
 
 const RosaLuxemburgUser: ZetkinUser = {
   first_name: 'Rosa',

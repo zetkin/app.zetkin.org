@@ -1,4 +1,4 @@
-import { ZetkinPerson } from '../../../../../src/utils/types/zetkin';
+import { ZetkinPerson } from 'utils/types/zetkin';
 
 const RosaLuxemburg: ZetkinPerson = {
   alt_phone: '',
