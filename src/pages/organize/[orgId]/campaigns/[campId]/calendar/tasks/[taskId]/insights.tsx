@@ -6,13 +6,16 @@ import { useRouter } from 'next/router';
 import { Box, Typography } from '@material-ui/core';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
 
-import getOrg from 'fetching/getOrg';
-import { PageWithLayout } from 'types';
+import getOrg from 'utils/fetching/getOrg';
+import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
-import SingleTaskLayout from 'layout/organize/SingleTaskLayout';
-import { taskResource } from 'api/tasks';
-import ZetkinQuery from 'components/ZetkinQuery';
-import { ASSIGNED_STATUS, ZetkinAssignedTask } from 'types/tasks';
+import SingleTaskLayout from 'features/tasks/layout/SingleTaskLayout';
+import { taskResource } from 'features/tasks/api/tasks';
+import ZUIQuery from 'zui/ZUIQuery';
+import {
+  ASSIGNED_STATUS,
+  ZetkinAssignedTask,
+} from 'features/tasks/components/types';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -160,7 +163,7 @@ const TaskInsightsPage: PageWithLayout = () => {
         })}`}</title>
       </Head>
       <>
-        <ZetkinQuery queries={{ assignedTasksQuery }}>
+        <ZUIQuery queries={{ assignedTasksQuery }}>
           {({ queries }) => {
             return (
               <Box height={400} maxWidth={500} mt={3} width="100%">
@@ -171,7 +174,7 @@ const TaskInsightsPage: PageWithLayout = () => {
               </Box>
             );
           }}
-        </ZetkinQuery>
+        </ZUIQuery>
       </>
     </>
   );

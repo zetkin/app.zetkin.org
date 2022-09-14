@@ -1,15 +1,18 @@
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 
-import AllJourneyInstancesLayout from 'layout/organize/AllJourneyInstancesLayout';
-import getOrg from 'fetching/getOrg';
-import JourneyInstanceCreateFab from 'components/journeys/JourneyInstanceCreateFab';
-import JourneyInstancesDataTable from 'components/journeys/JourneyInstancesDataTable';
-import { PageWithLayout } from 'types';
+import AllJourneyInstancesLayout from 'features/journeys/layout/AllJourneyInstancesLayout';
+import getOrg from 'utils/fetching/getOrg';
+import JourneyInstanceCreateFab from 'features/journeys/components/JourneyInstanceCreateFab';
+import JourneyInstancesDataTable from 'features/journeys/components/JourneyInstancesDataTable';
+import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
-import { ZetkinJourney } from 'types/zetkin';
-import ZetkinQuery from 'components/ZetkinQuery';
-import { journeyInstancesResource, journeyResource } from 'api/journeys';
+import { ZetkinJourney } from 'utils/types/zetkin';
+import ZUIQuery from 'zui/ZUIQuery';
+import {
+  journeyInstancesResource,
+  journeyResource,
+} from 'features/journeys/api/journeys';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -67,7 +70,7 @@ const OpenJourneyInstancesPage: PageWithLayout<
       <Head>
         <title>{journey.plural_label}</title>
       </Head>
-      <ZetkinQuery queries={{ journeyInstancesQuery }}>
+      <ZUIQuery queries={{ journeyInstancesQuery }}>
         {({ queries: { journeyInstancesQuery } }) => {
           const openJourneyInstances =
             journeyInstancesQuery.data.journeyInstances.filter(
@@ -82,7 +85,7 @@ const OpenJourneyInstancesPage: PageWithLayout<
             />
           );
         }}
-      </ZetkinQuery>
+      </ZUIQuery>
       <JourneyInstanceCreateFab />
     </>
   );

@@ -1,5 +1,5 @@
 import { mockObject } from '.';
-import { COLUMN_TYPE, ZetkinViewColumn } from 'types/views';
+import { COLUMN_TYPE, ZetkinViewColumn } from 'features/views/components/types';
 
 const viewCol: ZetkinViewColumn = {
   config: {},

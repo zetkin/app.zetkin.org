@@ -5,18 +5,18 @@ import { useIntl } from 'react-intl';
 import { useQueryClient } from 'react-query';
 import { Box, Divider, Grid } from '@material-ui/core';
 
-import JourneyInstanceLayout from 'layout/organize/JourneyInstanceLayout';
-import JourneyInstanceOutcome from 'components/organize/journeys/JourneyInstanceOutcome';
-import { journeyInstanceResource } from 'api/journeys';
-import JourneyInstanceSidebar from 'components/organize/journeys/JourneyInstanceSidebar';
-import JourneyInstanceSummary from 'components/organize/journeys/JourneyInstanceSummary';
-import { organizationResource } from 'api/organizations';
-import { PageWithLayout } from 'types';
-import SnackbarContext from 'hooks/SnackbarContext';
-import TimelineWrapper from 'components/TimelineWrapper';
-import ZetkinSection from 'components/ZetkinSection';
+import JourneyInstanceLayout from 'features/journeys/layout/JourneyInstanceLayout';
+import JourneyInstanceOutcome from 'features/journeys/components/JourneyInstanceOutcome';
+import { journeyInstanceResource } from 'features/journeys/api/journeys';
+import JourneyInstanceSidebar from 'features/journeys/components/JourneyInstanceSidebar';
+import JourneyInstanceSummary from 'features/journeys/components/JourneyInstanceSummary';
+import { organizationResource } from 'features/journeys/api/organizations';
+import { PageWithLayout } from 'utils/types';
+import ZUISection from 'zui/ZUISection';
+import ZUISnackbarContext from 'zui/ZUISnackbarContext';
+import ZUITimelineWrapper from 'zui/ZUITimelineWrapper';
 import { scaffold, ScaffoldedGetServerSideProps } from 'utils/next';
-import { ZetkinJourneyInstance, ZetkinPerson } from 'types/zetkin';
+import { ZetkinJourneyInstance, ZetkinPerson } from 'utils/types/zetkin';
 
 export const scaffoldOptions = {
   authLevelRequired: 2,
@@ -101,7 +101,7 @@ const JourneyDetailsPage: PageWithLayout<JourneyDetailsPageProps> = ({
 
   const journeyInstance = journeyInstanceQuery.data as ZetkinJourneyInstance;
 
-  const { showSnackbar } = useContext(SnackbarContext);
+  const { showSnackbar } = useContext(ZUISnackbarContext);
   const queryClient = useQueryClient();
 
   const onAddAssignee = (person: ZetkinPerson) => {
@@ -146,16 +146,16 @@ const JourneyDetailsPage: PageWithLayout<JourneyDetailsPageProps> = ({
           <Box mb={3} mt={4}>
             <Divider />
           </Box>
-          <ZetkinSection
+          <ZUISection
             title={intl.formatMessage({
               id: 'pages.organizeJourneyInstance.sections.timeline',
             })}
           >
-            <TimelineWrapper
+            <ZUITimelineWrapper
               itemApiPath={`/orgs/${orgId}/journey_instances/${instanceId}`}
               queryKey={['journeyInstance', orgId, instanceId, 'timeline']}
             />
-          </ZetkinSection>
+          </ZUISection>
         </Grid>
         <Grid item lg={4} md={4} xs={12}>
           <JourneyInstanceSidebar

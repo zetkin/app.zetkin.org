@@ -4,19 +4,19 @@ import { useIntl } from 'react-intl';
 import { useQuery } from 'react-query';
 import { Box, Grid, Typography } from '@material-ui/core';
 
-import { campaignTasksResource } from 'api/tasks';
-import EventList from 'components/organize/events/EventList';
-import getCampaign from 'fetching/getCampaign';
-import getCampaignEvents from 'fetching/getCampaignEvents';
-import getOrg from 'fetching/getOrg';
-import { PageWithLayout } from 'types';
-import PersonHoverCard from 'components/PersonHoverCard';
+import { campaignTasksResource } from 'features/tasks/api/tasks';
+import EventList from 'features/events/components/EventList';
+import getCampaign from 'features/campaigns/fetching/getCampaign';
+import getCampaignEvents from 'features/campaigns/fetching/getCampaignEvents';
+import getOrg from 'utils/fetching/getOrg';
+import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
-import SingleCampaignLayout from 'layout/organize/SingleCampaignLayout';
-import TaskList from 'components/organize/tasks/TaskList';
-import ZetkinPerson from 'components/ZetkinPerson';
-import ZetkinSection from 'components/ZetkinSection';
-import ZetkinSpeedDial, { ACTIONS } from 'components/ZetkinSpeedDial';
+import SingleCampaignLayout from 'features/campaigns/layout/SingleCampaignLayout';
+import TaskList from 'features/tasks/components/TaskList';
+import ZUIPerson from 'zui/ZUIPerson';
+import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
+import ZUISection from 'zui/ZUISection';
+import ZUISpeedDial, { ACTIONS } from 'zui/ZUISpeedDial';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -117,15 +117,15 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({
             )}
             {campaign?.manager && (
               <Grid item xs={12}>
-                <PersonHoverCard personId={campaign.manager.id}>
-                  <ZetkinPerson
+                <ZUIPersonHoverCard personId={campaign.manager.id}>
+                  <ZUIPerson
                     id={campaign.manager.id}
                     name={campaign.manager.name}
                     subtitle={intl.formatMessage({
                       id: 'pages.organizeCampaigns.campaignManager',
                     })}
                   />
-                </PersonHoverCard>
+                </ZUIPersonHoverCard>
               </Grid>
             )}
           </Grid>
@@ -134,7 +134,7 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({
         <Grid container spacing={2}>
           {/* Events */}
           <Grid item md={6} sm={12} xs={12}>
-            <ZetkinSection
+            <ZUISection
               title={intl.formatMessage({
                 id: 'pages.organizeCampaigns.events',
               })}
@@ -143,21 +143,21 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({
                 events={events ?? []}
                 hrefBase={`/organize/${orgId}/campaigns/${campId}`}
               />
-            </ZetkinSection>
+            </ZUISection>
           </Grid>
 
           {/* Tasks */}
           <Grid item md={6} sm={12} xs={12}>
-            <ZetkinSection
+            <ZUISection
               title={intl.formatMessage({
                 id: 'pages.organizeCampaigns.tasks',
               })}
             >
               <TaskList tasks={tasks ?? []} />
-            </ZetkinSection>
+            </ZUISection>
           </Grid>
         </Grid>
-        <ZetkinSpeedDial actions={[ACTIONS.CREATE_TASK]} />
+        <ZUISpeedDial actions={[ACTIONS.CREATE_TASK]} />
       </>
     </>
   );

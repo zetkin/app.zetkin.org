@@ -3,10 +3,10 @@
 import { applySession } from 'next-session';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { AppSession } from 'types';
+import { AppSession } from 'utils/types';
 import getFilters from 'utils/getFilters';
 import { stringToBool } from 'utils/stringUtils';
-import { ZetkinZResource, ZetkinZResult } from 'types/sdk';
+import { ZetkinZResource, ZetkinZResult } from 'utils/types/sdk';
 
 //TODO: Create module definition and revert to import.
 const Z = require('zetkin');

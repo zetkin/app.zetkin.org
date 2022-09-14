@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 
 import { createApiFetch } from 'utils/apiFetch';
-import { ZetkinMembership } from 'types/zetkin';
+import { ZetkinMembership } from 'utils/types/zetkin';
 import { flattenTree, nestByParentId } from 'utils/organize/organizations';
 import {
   getConnectedOrganizations,

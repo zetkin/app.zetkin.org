@@ -4,8 +4,8 @@ import { createApiFetch } from 'utils/apiFetch';
 import handleResponseData, {
   ZetkinApiErrorResponse,
   ZetkinApiSuccessResponse,
-} from 'api/utils/handleResponseData';
-import { ZetkinJourneyInstance, ZetkinTag } from 'types/zetkin';
+} from 'utils/api/handleResponseData';
+import { ZetkinJourneyInstance, ZetkinTag } from 'utils/types/zetkin';
 
 interface JourneyInstanceCloseBody {
   closed: string; // Datetime

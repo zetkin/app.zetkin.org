@@ -1,5 +1,5 @@
 import { mockObject } from '.';
-import { ZetkinViewRow } from 'types/views';
+import { ZetkinViewRow } from 'features/views/components/types';
 
 const viewRow: ZetkinViewRow = {
   content: [],

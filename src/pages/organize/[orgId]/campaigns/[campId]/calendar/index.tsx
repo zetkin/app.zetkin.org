@@ -2,17 +2,17 @@ import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { useIntl } from 'react-intl';
 
-import getCampaign from 'fetching/getCampaign';
-import getCampaignEvents from 'fetching/getCampaignEvents';
-import getOrg from 'fetching/getOrg';
-import { PageWithLayout } from 'types';
+import Calendar from 'features/calendar/components';
+import getCampaign from 'features/campaigns/fetching/getCampaign';
+import getCampaignEvents from 'features/campaigns/fetching/getCampaignEvents';
+import getOrg from 'utils/fetching/getOrg';
+import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
-import SingleCampaignLayout from 'layout/organize/SingleCampaignLayout';
+import SingleCampaignLayout from 'features/campaigns/layout/SingleCampaignLayout';
 import { useQuery } from 'react-query';
-import ZetkinCalendar from 'components/ZetkinCalendar';
-import ZetkinSpeedDial, { ACTIONS } from 'components/ZetkinSpeedDial';
+import ZUISpeedDial, { ACTIONS } from 'zui/ZUISpeedDial';
 
-import { campaignTasksResource } from 'api/tasks';
+import { campaignTasksResource } from 'features/tasks/api/tasks';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -112,13 +112,13 @@ const CampaignCalendarPage: PageWithLayout<OrganizeCalendarPageProps> = ({
           id: 'layout.organize.campaigns.calendar',
         })}`}</title>
       </Head>
-      <ZetkinCalendar
+      <Calendar
         baseHref={`/organize/${orgId}/campaigns/${campId}/calendar`}
         campaigns={campaigns}
         events={events}
         tasks={tasks}
       />
-      <ZetkinSpeedDial actions={[ACTIONS.CREATE_TASK]} />
+      <ZUISpeedDial actions={[ACTIONS.CREATE_TASK]} />
     </>
   );
 };

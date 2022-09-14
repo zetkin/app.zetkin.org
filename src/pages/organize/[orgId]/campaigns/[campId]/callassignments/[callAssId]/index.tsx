@@ -12,11 +12,11 @@ import {
 } from '@material-ui/core';
 
 import APIError from 'utils/apiError';
-import CallAssignmentLayout from 'layout/organize/CallAssignmentLayout';
-import { callAssignmentQuery } from 'api/callAssignments';
-import { PageWithLayout } from 'types';
+import CallAssignmentLayout from 'features/callAssignments/layout/CallAssignmentLayout';
+import { callAssignmentQuery } from 'features/callAssignments/api/callAssignments';
+import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
-import ZetkinQuery from 'components/ZetkinQuery';
+import ZUIQuery from 'zui/ZUIQuery';
 import { DateStats, ZetkinCaller } from 'pages/api/stats/calls/date';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
@@ -79,7 +79,7 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
   return (
     <>
       <Typography variant="h3">Calls and conversations</Typography>
-      <ZetkinQuery queries={{ statsQuery }}>
+      <ZUIQuery queries={{ statsQuery }}>
         {({ queries }) => {
           const data = queries.statsQuery.data.dates.map((d: DateStats) => {
             const nonConversations = d.calls - d.conversations;
@@ -179,7 +179,7 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
             </Box>
           );
         }}
-      </ZetkinQuery>
+      </ZUIQuery>
     </>
   );
 };

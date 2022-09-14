@@ -3,7 +3,7 @@ import mockMilestone from './mockMilestone';
 import { mockObject } from 'utils/testing/mocks';
 import mockOrganization from './mockOrganization';
 import mockPerson from './mockPerson';
-import { ZetkinJourneyInstance } from 'types/zetkin';
+import { ZetkinJourneyInstance } from 'utils/types/zetkin';
 
 const journeyInstance: ZetkinJourneyInstance = {
   assignees: [mockPerson()],

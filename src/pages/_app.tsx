@@ -16,12 +16,12 @@ import { ThemeProvider } from '@material-ui/core/styles';
 import { useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
-import { ConfirmDialogProvider } from 'hooks/ConfirmDialogProvider';
 import { LocalTimeToJsonPlugin } from '../utils/dateUtils';
-import { PageWithLayout } from '../types';
-import { SnackbarProvider } from 'hooks/SnackbarContext';
+import { PageWithLayout } from '../utils/types';
 import theme from '../theme';
-import { UserContext } from '../hooks';
+import { UserContext } from 'utils/hooks/useFocusDate';
+import { ZUIConfirmDialogProvider } from 'zui/ZUIConfirmDialogProvider';
+import { ZUISnackbarProvider } from 'zui/ZUISnackbarContext';
 
 dayjs.extend(LocalTimeToJsonPlugin);
 dayjs.extend(isoWeek);
@@ -83,14 +83,14 @@ function MyApp({ Component, pageProps }: AppProps): JSX.Element {
         <MuiPickersUtilsProvider libInstance={dayjs} utils={DateUtils}>
           <IntlProvider defaultLocale="en" locale={lang} messages={messages}>
             <QueryClientProvider client={queryClient}>
-              <SnackbarProvider>
-                <ConfirmDialogProvider>
+              <ZUISnackbarProvider>
+                <ZUIConfirmDialogProvider>
                   <Hydrate state={dehydratedState}>
                     <CssBaseline />
                     {getLayout(<Component {...restProps} />, restProps)}
                   </Hydrate>
-                </ConfirmDialogProvider>
-              </SnackbarProvider>
+                </ZUIConfirmDialogProvider>
+              </ZUISnackbarProvider>
               <ReactQueryDevtools initialIsOpen={false} />
             </QueryClientProvider>
           </IntlProvider>

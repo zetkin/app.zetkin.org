@@ -1,12 +1,12 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 
 import { createApiFetch } from 'utils/apiFetch';
-import { ZetkinApiSuccessResponse } from 'api/utils/handleResponseData';
-import { ZetkinJourneyInstance } from 'types/zetkin';
+import { ZetkinApiSuccessResponse } from 'utils/api/handleResponseData';
+import { ZetkinJourneyInstance } from 'utils/types/zetkin';
 import {
   getTagColumns,
   JourneyTagColumnData,
-} from 'utils/journeyInstanceUtils';
+} from 'features/journeys/utils/journeyInstanceUtils';
 
 export interface JourneyInstancesData {
   journeyInstances: ZetkinJourneyInstance[];

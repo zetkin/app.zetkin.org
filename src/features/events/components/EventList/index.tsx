@@ -1,0 +1,48 @@
+import React from 'react';
+import { Card, Divider, ListItem, ListItemText } from '@material-ui/core';
+import { FormattedMessage as Msg, useIntl } from 'react-intl';
+
+import { ZetkinEvent } from 'utils/types/zetkin';
+import ZUIList from 'zui/ZUIList';
+
+import EventListItem from './EventListItem';
+
+interface EventListProps {
+  hrefBase: string;
+  events: ZetkinEvent[];
+}
+
+const EventList = ({ hrefBase, events }: EventListProps): JSX.Element => {
+  const intl = useIntl();
+
+  return (
+    <Card>
+      <ZUIList
+        aria-label={intl.formatMessage({
+          id: 'pages.organizeCampaigns.events',
+        })}
+        initialLength={5}
+      >
+        {events.length === 0 ? (
+          <ListItem>
+            <ListItemText>
+              <Msg id="pages.organizeCampaigns.noEvents" />
+            </ListItemText>
+          </ListItem>
+        ) : (
+          events.map((event, index) => (
+            <React.Fragment key={index}>
+              <EventListItem key={event.id} event={event} hrefBase={hrefBase} />
+              {
+                // Show divider under all items except last
+                index !== events.length - 1 && <Divider />
+              }
+            </React.Fragment>
+          ))
+        )}
+      </ZUIList>
+    </Card>
+  );
+};
+
+export default EventList;
