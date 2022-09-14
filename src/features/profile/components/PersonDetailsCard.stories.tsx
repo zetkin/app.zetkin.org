@@ -8,7 +8,7 @@ import PersonDetailsCard from './PersonDetailsCard';
 
 export default {
   component: PersonDetailsCard,
-  title: 'Molecules/PersonDetailsCard',
+  title: 'PersonDetailsCard',
 } as ComponentMeta<typeof PersonDetailsCard>;
 
 // More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
