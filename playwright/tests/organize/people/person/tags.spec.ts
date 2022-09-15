@@ -352,7 +352,7 @@ test.describe('Person Profile Page Tags', () => {
         const snackbar = page.locator('data-testid=Snackbar-error');
         await snackbar.waitFor();
 
-        expect(snackbar.count()).toEqual(1);
+        expect(await snackbar.count()).toEqual(1);
       });
     });
 
