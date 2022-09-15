@@ -348,12 +348,11 @@ test.describe('Person Profile Page Tags', () => {
 
         await page.click('data-testid=SubmitCancelButtons-submitButton');
 
-        await page.waitForTimeout(3000);
-
         // Show error
-        expect(
-          await page.locator('data-testid=Snackbar-error').count()
-        ).toEqual(1);
+        const snackbar = page.locator('data-testid=Snackbar-error');
+        await snackbar.waitFor();
+
+        expect(snackbar.count()).toEqual(1);
       });
     });
 
