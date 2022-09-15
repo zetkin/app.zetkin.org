@@ -60,7 +60,9 @@ test.describe('Journey instance list', () => {
     await page.reload();
 
     // Check that grid state persisted
-    const rowsAfterRefresh = await page.locator('[role=row]');
+    const rowsAfterRefresh = page.locator('[role=row]');
+    rowsAfterRefresh.waitFor();
+
     expect(await rowsAfterRefresh.count()).toBe(3);
     expect(rowsAfterRefresh.nth(1)).toContainText('Better');
     expect(rowsAfterRefresh.nth(2)).toContainText('Another');
