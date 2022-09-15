@@ -31,7 +31,7 @@ test.describe('Journey instance list', () => {
     moxy.teardown();
   });
 
-  test.only('persists sort and filter state', async ({ appUri, page }) => {
+  test('persists sort and filter state', async ({ appUri, page }) => {
     await page.goto(appUri + '/organize/1/journeys/1');
 
     // Open filters dialog
