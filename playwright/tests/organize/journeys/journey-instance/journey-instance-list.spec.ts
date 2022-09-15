@@ -31,7 +31,7 @@ test.describe('Journey instance list', () => {
     moxy.teardown();
   });
 
-  test('persists sort and filter state', async ({ appUri, page }) => {
+  test.only('persists sort and filter state', async ({ appUri, page }) => {
     await page.goto(appUri + '/organize/1/journeys/1');
 
     // Open filters dialog
@@ -51,21 +51,29 @@ test.describe('Journey instance list', () => {
 
     // Check that there are three rows (including header) and
     // that they are sorted reverse alphabetically
-    const rows = await page.locator('[role=row]');
+    const rows = page.locator('[role=row]');
+    const firstRow = rows.nth(1);
+    await firstRow.waitFor();
+    const secondRow = rows.nth(2);
+    await secondRow.waitFor();
+
+    expect(firstRow).toContainText('Better');
+    expect(secondRow).toContainText('Another');
     expect(await rows.count()).toBe(3);
-    expect(rows.nth(1)).toContainText('Better');
-    expect(rows.nth(2)).toContainText('Another');
 
     // Reload the page
     await page.reload();
 
     // Check that grid state persisted
     const rowsAfterRefresh = page.locator('[role=row]');
-    rowsAfterRefresh.waitFor();
+    const firstRowAfterRefresh = rowsAfterRefresh.nth(1);
+    await firstRowAfterRefresh.waitFor();
+    const secondRowAfterRefresh = rowsAfterRefresh.nth(2);
+    await secondRowAfterRefresh.waitFor();
 
+    expect(firstRowAfterRefresh).toContainText('Better');
+    expect(secondRowAfterRefresh).toContainText('Another');
     expect(await rowsAfterRefresh.count()).toBe(3);
-    expect(rowsAfterRefresh.nth(1)).toContainText('Better');
-    expect(rowsAfterRefresh.nth(2)).toContainText('Another');
 
     await page.waitForTimeout(5000);
   });
