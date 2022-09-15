@@ -189,9 +189,11 @@ test.describe('Closing and reopening a journey instance', () => {
           })(),
         ]);
 
-        expect(
-          await page.locator('data-testid=Snackbar-error').count()
-        ).toEqual(1);
+        // Show error
+        const snackbar = page.locator('data-testid=Snackbar-error');
+        await snackbar.waitFor();
+
+        expect(await snackbar.count()).toEqual(1);
       });
     });
   });

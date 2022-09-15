@@ -286,9 +286,11 @@ test.describe('Journey instance Milestones tab', () => {
           .click(),
       ]);
 
-      expect(await page.locator('data-testid=Snackbar-error').count()).toEqual(
-        1
-      );
+      // Show error
+      const snackbar = page.locator('data-testid=Snackbar-error');
+      await snackbar.waitFor();
+
+      expect(await snackbar.count()).toEqual(1);
     });
   });
 });

@@ -369,9 +369,10 @@ test.describe('Person Profile Page Tags', () => {
       await page.click('data-testid=SubmitCancelButtons-submitButton');
 
       // Show error
-      expect(await page.locator('data-testid=Snackbar-error').count()).toEqual(
-        1
-      );
+      const snackbar = page.locator('data-testid=Snackbar-error');
+      await snackbar.waitFor();
+
+      expect(await snackbar.count()).toEqual(1);
     });
   });
 
@@ -440,9 +441,11 @@ test.describe('Person Profile Page Tags', () => {
         page.waitForResponse(`**/orgs/1/people/tags/${ActivistTag.id}`),
         page.click('data-testid=SubmitCancelButtons-submitButton'),
       ]);
-      expect(await page.locator('data-testid=Snackbar-error').count()).toEqual(
-        1
-      );
+
+      const snackbar = page.locator('data-testid=Snackbar-error');
+      await snackbar.waitFor();
+
+      expect(await snackbar.count()).toEqual(1);
     });
   });
 });
