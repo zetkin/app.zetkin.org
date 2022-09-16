@@ -1,6 +1,6 @@
 import dayjs, { Dayjs } from 'dayjs';
 
-import { ZetkinEvent } from 'types/zetkin';
+import { ZetkinEvent } from 'utils/types/zetkin';
 
 export const getNewDateWithOffset = (date: Date, offset: number): Date => {
   return new Date(new Date(date).setDate(date.getDate() + offset));

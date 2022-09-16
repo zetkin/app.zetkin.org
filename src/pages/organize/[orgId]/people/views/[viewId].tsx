@@ -2,15 +2,15 @@ import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { useQuery } from 'react-query';
 
-import getOrg from 'fetching/getOrg';
-import getView from 'fetching/views/getView';
-import getViewColumns from 'fetching/views/getViewColumns';
-import getViewRows from 'fetching/views/getViewRows';
-import { PageWithLayout } from 'types';
+import getOrg from 'utils/fetching/getOrg';
+import getView from 'features/views/fetching/getView';
+import getViewColumns from 'features/views/fetching/getViewColumns';
+import getViewRows from 'features/views/fetching/getViewRows';
+import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
-import SingleViewLayout from 'layout/organize/SingleViewLayout';
-import ViewDataTable from 'components/views/ViewDataTable';
-import ZetkinQuery from 'components/ZetkinQuery';
+import SingleViewLayout from 'features/views/layout/SingleViewLayout';
+import ViewDataTable from 'features/views/components/ViewDataTable';
+import ZUIQuery from 'zui/ZUIQuery';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -57,7 +57,7 @@ const SingleViewPage: PageWithLayout<SingleViewPageProps> = ({
   viewId,
 }) => {
   return (
-    <ZetkinQuery
+    <ZUIQuery
       queries={{
         colsQuery: useQuery(
           ['view', viewId, 'columns'],
@@ -82,7 +82,7 @@ const SingleViewPage: PageWithLayout<SingleViewPageProps> = ({
           />
         </>
       )}
-    </ZetkinQuery>
+    </ZUIQuery>
   );
 };
 

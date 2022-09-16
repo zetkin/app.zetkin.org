@@ -5,16 +5,16 @@ import Head from 'next/head';
 import { useIntl } from 'react-intl';
 import { useQuery } from 'react-query';
 
-import AllCampaignsLayout from 'layout/organize/AllCampaignsLayout';
-import CampaignCard from 'components/organize/campaigns/CampaignCard';
-import getCampaigns from 'fetching/getCampaigns';
-import getEvents from 'fetching/getEvents';
-import getOrg from 'fetching/getOrg';
-import getUpcomingEvents from 'fetching/getUpcomingEvents';
-import { PageWithLayout } from 'types';
+import AllCampaignsLayout from 'features/campaigns/layout/AllCampaignsLayout';
+import CampaignCard from 'features/campaigns/components/CampaignCard';
+import getCampaigns from 'features/campaigns/fetching/getCampaigns';
+import getEvents from 'features/events/fetching/getEvents';
+import getOrg from 'utils/fetching/getOrg';
+import getUpcomingEvents from 'features/events/fetching/getUpcomingEvents';
+import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
-import ZetkinSection from 'components/ZetkinSection';
-import ZetkinSpeedDial, { ACTIONS } from 'components/ZetkinSpeedDial';
+import ZUISection from 'zui/ZUISection';
+import ZUISpeedDial, { ACTIONS } from 'zui/ZUISpeedDial';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -98,7 +98,7 @@ const AllCampaignsSummaryPage: PageWithLayout<AllCampaignsSummaryPageProps> = ({
           })}
         </title>
       </Head>
-      <ZetkinSection
+      <ZUISection
         title={intl.formatMessage({
           id: 'pages.organizeAllCampaigns.heading',
         })}
@@ -118,8 +118,8 @@ const AllCampaignsSummaryPage: PageWithLayout<AllCampaignsSummaryPageProps> = ({
             );
           })}
         </Box>
-      </ZetkinSection>
-      <ZetkinSpeedDial actions={[ACTIONS.CREATE_CAMPAIGN]} />
+      </ZUISection>
+      <ZUISpeedDial actions={[ACTIONS.CREATE_CAMPAIGN]} />
     </>
   );
 };

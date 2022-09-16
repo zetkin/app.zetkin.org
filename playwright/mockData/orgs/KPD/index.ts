@@ -1,4 +1,4 @@
-import { ZetkinOrganization } from '../../../../src/types/zetkin';
+import { ZetkinOrganization } from 'utils/types/zetkin';
 
 const KPD: ZetkinOrganization = {
   id: 1,

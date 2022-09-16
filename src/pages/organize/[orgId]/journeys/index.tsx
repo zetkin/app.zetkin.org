@@ -3,14 +3,14 @@ import { Grid } from '@material-ui/core';
 import Head from 'next/head';
 import { useIntl } from 'react-intl';
 
-import JourneyCard from 'components/organize/journeys/JourneyCard';
-import JourneysLayout from 'layout/organize/JourneysLayout';
-import { journeysResource } from 'api/journeys';
-import { organizationResource } from 'api/organizations';
-import { PageWithLayout } from 'types';
+import JourneyCard from 'features/journeys/components/JourneyCard';
+import JourneysLayout from 'features/journeys/layout/JourneysLayout';
+import { journeysResource } from 'features/journeys/api/journeys';
+import { organizationResource } from 'features/journeys/api/organizations';
+import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
-import { ZetkinJourney } from 'types/zetkin';
-import ZetkinSection from 'components/ZetkinSection';
+import { ZetkinJourney } from 'utils/types/zetkin';
+import ZUISection from 'zui/ZUISection';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -65,7 +65,7 @@ const AllJourneysOverviewPage: PageWithLayout<AllJourneysOverviewPageProps> = ({
           })}
         </title>
       </Head>
-      <ZetkinSection
+      <ZUISection
         title={intl.formatMessage({
           id: 'misc.journeys.overview.overviewTitle',
         })}
@@ -77,7 +77,7 @@ const AllJourneysOverviewPage: PageWithLayout<AllJourneysOverviewPageProps> = ({
             </Grid>
           ))}
         </Grid>
-      </ZetkinSection>
+      </ZUISection>
     </>
   );
 };

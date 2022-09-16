@@ -2,11 +2,11 @@ import { GetServerSideProps } from 'next';
 import { Grid } from '@material-ui/core';
 import Head from 'next/head';
 
-import { PageWithLayout } from 'types';
-import PersonDeleteCard from 'components/organize/people/PersonDeleteCard';
-import { personResource } from 'api/people';
+import { PageWithLayout } from 'utils/types';
+import PersonDeleteCard from 'features/profile/components/PersonDeleteCard';
+import { personResource } from 'features/profile/api/people';
 import { scaffold } from 'utils/next';
-import SinglePersonLayout from 'layout/organize/SinglePersonLayout';
+import SinglePersonLayout from 'features/profile/layout/SinglePersonLayout';
 import {
   getPersonScaffoldProps,
   PersonPageProps,

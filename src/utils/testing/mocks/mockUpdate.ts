@@ -8,7 +8,7 @@ import mockNote from './mockNote';
 import { mockObject } from 'utils/testing/mocks';
 import mockPerson from './mockPerson';
 import mockTag from './mockTag';
-import { UPDATE_TYPES, ZetkinUpdate } from 'types/updates';
+import { UPDATE_TYPES, ZetkinUpdate } from 'zui/ZUITimeline/types';
 
 const update: Partial<ZetkinUpdate> = {
   actor: mockPerson(),

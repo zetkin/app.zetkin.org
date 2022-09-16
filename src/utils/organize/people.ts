@@ -1,4 +1,4 @@
-import { ZetkinMembership, ZetkinOrganization } from 'types/zetkin';
+import { ZetkinMembership, ZetkinOrganization } from 'utils/types/zetkin';
 
 export type PersonOrganization = ZetkinOrganization & {
   connected?: boolean;

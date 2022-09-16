@@ -5,7 +5,7 @@ import { AttendMeeting } from '../../../../mockData/orgs/KPD/journeys/MemberOnbo
 import ClarasOnboarding from '../../../../mockData/orgs/KPD/journeys/MemberOnboarding/instances/ClarasOnboarding';
 import KPD from '../../../../mockData/orgs/KPD';
 import MemberOnboarding from '../../../../mockData/orgs/KPD/journeys/MemberOnboarding';
-import { ZetkinJourneyMilestoneStatus } from '../../../../../src/types/zetkin';
+import { ZetkinJourneyMilestoneStatus } from '../../../../../src/utils/types/zetkin';
 
 test.describe('Journey instance Milestones tab', () => {
   test.beforeEach(async ({ moxy, login }) => {
@@ -286,9 +286,11 @@ test.describe('Journey instance Milestones tab', () => {
           .click(),
       ]);
 
-      expect(await page.locator('data-testid=Snackbar-error').count()).toEqual(
-        1
-      );
+      // Show error
+      const snackbar = page.locator('data-testid=Snackbar-error');
+      await snackbar.waitFor();
+
+      expect(await snackbar.count()).toEqual(1);
     });
   });
 });

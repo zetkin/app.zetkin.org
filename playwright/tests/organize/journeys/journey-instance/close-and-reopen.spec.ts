@@ -7,7 +7,7 @@ import CodingSkillsTag from '../../../../mockData/orgs/KPD/tags/Coding';
 import KPD from '../../../../mockData/orgs/KPD';
 import MemberOnboarding from '../../../../mockData/orgs/KPD/journeys/MemberOnboarding';
 import PlaysGuitarTag from '../../../../mockData/orgs/KPD/tags/PlaysGuitar';
-import { ZetkinJourneyInstance } from '../../../../../src/types/zetkin';
+import { ZetkinJourneyInstance } from '../../../../../src/utils/types/zetkin';
 
 test.describe('Closing and reopening a journey instance', () => {
   test.beforeEach(async ({ moxy, login }) => {
@@ -189,9 +189,11 @@ test.describe('Closing and reopening a journey instance', () => {
           })(),
         ]);
 
-        expect(
-          await page.locator('data-testid=Snackbar-error').count()
-        ).toEqual(1);
+        // Show error
+        const snackbar = page.locator('data-testid=Snackbar-error');
+        await snackbar.waitFor();
+
+        expect(await snackbar.count()).toEqual(1);
       });
     });
   });

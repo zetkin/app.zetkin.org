@@ -5,7 +5,7 @@ import { FormattedMessage as Msg } from 'react-intl';
 import { AppBar, Box, Container, Toolbar, Typography } from '@material-ui/core';
 
 import { getMessages } from '../utils/locale';
-import ZetkinLogo from 'components/ZetkinLogo';
+import ZUILogo from 'zui/ZUILogo';
 
 export const getStaticProps: GetStaticProps = async () => {
   const lang = 'en';
@@ -25,7 +25,7 @@ export default function Custom404(): JSX.Element {
         <Toolbar>
           <Link href="/">
             <a>
-              <ZetkinLogo htmlColor="#EE323E" />
+              <ZUILogo htmlColor="#EE323E" />
             </a>
           </Link>
         </Toolbar>

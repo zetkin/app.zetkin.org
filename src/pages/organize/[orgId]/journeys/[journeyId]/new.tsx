@@ -4,21 +4,24 @@ import { Box, Chip, Grid, Typography, useTheme } from '@material-ui/core';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
 import { useContext, useState } from 'react';
 
-import DefaultLayout from 'layout/organize/DefaultLayout';
-import EditTextinPlace from 'components/EditTextInPlace';
-import Header from 'layout/organize/elements/Header';
-import JourneyInstanceSidebar from 'components/organize/journeys/JourneyInstanceSidebar';
-import { organizationResource } from 'api/organizations';
-import { PageWithLayout } from 'types';
-import { personResource } from 'api/people';
+import DefaultLayout from 'utils/layout/DefaultLayout';
+import Header from 'utils/layout/Header';
+import JourneyInstanceSidebar from 'features/journeys/components/JourneyInstanceSidebar';
+import { organizationResource } from 'features/journeys/api/organizations';
+import { PageWithLayout } from 'utils/types';
+import { personResource } from 'features/profile/api/people';
 import { scaffold } from 'utils/next';
-import SnackbarContext from 'hooks/SnackbarContext';
-import SubmitCancelButtons from 'components/forms/common/SubmitCancelButtons';
 import { useRouter } from 'next/router';
-import ZetkinAutoTextArea from 'components/ZetkinAutoTextArea';
-import ZetkinQuery from 'components/ZetkinQuery';
-import { journeyInstancesResource, journeyResource } from 'api/journeys';
-import { ZetkinPerson, ZetkinTag } from 'types/zetkin';
+import ZUIAutoTextArea from 'zui/ZUIAutoTextArea';
+import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
+import ZUIQuery from 'zui/ZUIQuery';
+import ZUISnackbarContext from 'zui/ZUISnackbarContext';
+import ZUISubmitCancelButtons from 'zui/ZUISubmitCancelButtons';
+import {
+  journeyInstancesResource,
+  journeyResource,
+} from 'features/journeys/api/journeys';
+import { ZetkinPerson, ZetkinTag } from 'utils/types/zetkin';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -75,7 +78,7 @@ const NewJourneyPage: PageWithLayout<NewJourneyPageProps> = ({
   const [editedNote, setEditedNote] = useState(false);
   const [title, setTitle] = useState('');
 
-  const { showSnackbar } = useContext(SnackbarContext);
+  const { showSnackbar } = useContext(ZUISnackbarContext);
 
   const intl = useIntl();
   const theme = useTheme();
@@ -114,7 +117,7 @@ const NewJourneyPage: PageWithLayout<NewJourneyPageProps> = ({
   ).useCreate();
 
   return (
-    <ZetkinQuery queries={{ journeyQuery }}>
+    <ZUIQuery queries={{ journeyQuery }}>
       {({ queries }) => {
         const journey = queries.journeyQuery.data;
         return (
@@ -147,7 +150,7 @@ const NewJourneyPage: PageWithLayout<NewJourneyPageProps> = ({
                 </Box>
               }
               title={
-                <EditTextinPlace
+                <ZUIEditTextinPlace
                   allowEmpty
                   onChange={async (value) => setTitle(value)}
                   placeholder={intl.formatMessage(
@@ -168,7 +171,7 @@ const NewJourneyPage: PageWithLayout<NewJourneyPageProps> = ({
                   >
                     <Msg id="pages.organizeNewJourneyInstance.openingNote" />
                   </Typography>
-                  <ZetkinAutoTextArea
+                  <ZUIAutoTextArea
                     onChange={(value) => {
                       setNote(value);
                       setEditedNote(true);
@@ -193,7 +196,7 @@ const NewJourneyPage: PageWithLayout<NewJourneyPageProps> = ({
                       );
                     }}
                   >
-                    <SubmitCancelButtons
+                    <ZUISubmitCancelButtons
                       onCancel={() => {
                         router.push(`/organize/${orgId}/journeys/${journeyId}`);
                       }}
@@ -252,7 +255,7 @@ const NewJourneyPage: PageWithLayout<NewJourneyPageProps> = ({
           </>
         );
       }}
-    </ZetkinQuery>
+    </ZUIQuery>
   );
 };
 

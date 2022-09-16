@@ -65,7 +65,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.17.9",
-    "@playwright/test": "^1.14.1",
+    "@playwright/test": "~1.25.0",
     "@storybook/addon-actions": "^6.5.5",
     "@storybook/addon-essentials": "^6.5.5",
     "@storybook/addon-interactions": "^6.5.5",

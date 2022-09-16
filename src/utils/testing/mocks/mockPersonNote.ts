@@ -1,5 +1,5 @@
 import { mockObject } from '.';
-import { PersonNote } from 'components/views/ViewDataTable/cells/PersonNotesViewCell';
+import { PersonNote } from 'features/views/components/ViewDataTable/cells/PersonNotesViewCell';
 
 const personNote: PersonNote = {
   created: new Date().toISOString(),

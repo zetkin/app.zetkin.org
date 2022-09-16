@@ -1,6 +1,6 @@
 import { mockObject } from 'utils/testing/mocks';
 import mockOrganization from './mockOrganization';
-import { ZetkinView } from 'types/zetkin';
+import { ZetkinView } from 'utils/types/zetkin';
 
 const view: ZetkinView = {
   content_query: null,

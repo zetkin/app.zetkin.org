@@ -2,15 +2,15 @@ import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { useIntl } from 'react-intl';
 
-import { PageWithLayout } from 'types';
-import PeopleLayout from 'layout/organize/PeopleLayout';
+import { PageWithLayout } from 'utils/types';
+import PeopleLayout from 'features/views/layout/PeopleLayout';
 import { scaffold } from 'utils/next';
-import { viewsResource } from 'api/views';
+import { viewsResource } from 'features/views/api/views';
 import {
   CreateViewActionButton,
   SuggestedViews,
   ViewsListTable,
-} from 'components/views';
+} from 'features/views/components';
 
 const scaffoldOptions = {
   authLevelRequired: 2,

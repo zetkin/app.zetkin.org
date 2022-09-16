@@ -1,6 +1,6 @@
 import { mockObject } from 'utils/testing/mocks';
 import mockOrganization from './mockOrganization';
-import { ZetkinFile } from 'types/zetkin';
+import { ZetkinFile } from 'utils/types/zetkin';
 
 const file: ZetkinFile = {
   id: 1,

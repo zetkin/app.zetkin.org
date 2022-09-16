@@ -1,5 +1,5 @@
 import { mockObject } from 'utils/testing/mocks';
-import { ZetkinJourneyMilestoneStatus } from 'types/zetkin';
+import { ZetkinJourneyMilestoneStatus } from 'utils/types/zetkin';
 
 const milestone: ZetkinJourneyMilestoneStatus = {
   completed: null,

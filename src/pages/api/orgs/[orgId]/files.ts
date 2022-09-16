@@ -3,7 +3,7 @@ import http from 'http';
 import https from 'https';
 import { NextApiRequest, NextApiResponse } from 'next';
 
-import { AppSession } from 'types';
+import { AppSession } from 'utils/types';
 import { stringToBool } from 'utils/stringUtils';
 
 type NextApiRequestWithSession = NextApiRequest & {

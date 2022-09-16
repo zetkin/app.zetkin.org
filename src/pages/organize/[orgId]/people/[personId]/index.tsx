@@ -5,20 +5,20 @@ import { useContext } from 'react';
 import { useQueryClient } from 'react-query';
 import { useRouter } from 'next/router';
 
-import { journeysResource } from 'api/journeys';
-import { PageWithLayout } from 'types';
-import PersonDetailsCard from 'components/organize/people/PersonDetailsCard';
-import PersonJourneysCard from 'components/organize/people/PersonJourneysCard';
-import PersonOrganizationsCard from 'components/organize/people/PersonOrganizationsCard';
-import SinglePersonLayout from 'layout/organize/SinglePersonLayout';
-import SnackbarContext from 'hooks/SnackbarContext';
-import { TagManagerSection } from 'components/organize/TagManager';
-import ZetkinQuery from 'components/ZetkinQuery';
+import { journeysResource } from 'features/journeys/api/journeys';
+import { PageWithLayout } from 'utils/types';
+import PersonDetailsCard from 'features/profile/components/PersonDetailsCard';
+import PersonJourneysCard from 'features/profile/components/PersonJourneysCard';
+import PersonOrganizationsCard from 'features/profile/components/PersonOrganizationsCard';
+import SinglePersonLayout from 'features/profile/layout/SinglePersonLayout';
+import { TagManagerSection } from 'features/tags/components/TagManager';
+import ZUIQuery from 'zui/ZUIQuery';
+import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 import {
   personFieldsResource,
   personResource,
   personTagsResource,
-} from 'api/people';
+} from 'features/profile/api/people';
 import { scaffold, ScaffoldedGetServerSideProps } from 'utils/next';
 
 export const scaffoldOptions = {
@@ -60,7 +60,7 @@ export type PersonPageProps = {
 
 const PersonProfilePage: PageWithLayout<PersonPageProps> = (props) => {
   const { orgId, personId } = useRouter().query;
-  const { showSnackbar } = useContext(SnackbarContext);
+  const { showSnackbar } = useContext(ZUISnackbarContext);
   const queryClient = useQueryClient();
 
   const {
@@ -94,17 +94,17 @@ const PersonProfilePage: PageWithLayout<PersonPageProps> = (props) => {
       </Head>
       <Grid container direction="row" spacing={6}>
         <Grid item lg={4} xs={12}>
-          <ZetkinQuery queries={{ customFieldsQuery }}>
+          <ZUIQuery queries={{ customFieldsQuery }}>
             {({ queries: { customFieldsQuery } }) => (
               <PersonDetailsCard
                 customFields={customFieldsQuery.data}
                 person={person}
               />
             )}
-          </ZetkinQuery>
+          </ZUIQuery>
         </Grid>
         <Grid item lg={4} xs={12}>
-          <ZetkinQuery queries={{ personTagsQuery }}>
+          <ZUIQuery queries={{ personTagsQuery }}>
             {({ queries: { personTagsQuery } }) => (
               <TagManagerSection
                 assignedTags={personTagsQuery.data}
@@ -124,7 +124,7 @@ const PersonProfilePage: PageWithLayout<PersonPageProps> = (props) => {
                 }
               />
             )}
-          </ZetkinQuery>
+          </ZUIQuery>
         </Grid>
         {journeys?.length && (
           <Grid item lg={4} xs={12}>

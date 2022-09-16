@@ -1,11 +1,11 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 
-import { COLUMN_TYPE } from 'types/views';
+import { COLUMN_TYPE } from 'features/views/components/types';
 import { createApiFetch } from 'utils/apiFetch';
-import { NATIVE_PERSON_FIELDS } from 'types/views';
-import postView from 'fetching/views/postView';
-import postViewColumn from 'fetching/views/postViewColumn';
-import putViewRow from 'fetching/views/putViewRow';
+import { NATIVE_PERSON_FIELDS } from 'features/views/components/types';
+import postView from 'features/views/fetching/postView';
+import postViewColumn from 'features/views/fetching/postViewColumn';
+import putViewRow from 'features/views/fetching/putViewRow';
 import { getBrowserLanguage, getMessages } from 'utils/locale';
 
 export interface CreateNewViewReqBody {

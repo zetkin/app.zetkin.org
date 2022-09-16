@@ -1,5 +1,5 @@
 import { mockObject } from 'utils/testing/mocks';
-import { ZetkinNote } from 'types/zetkin';
+import { ZetkinNote } from 'utils/types/zetkin';
 
 const note: ZetkinNote = {
   files: [],

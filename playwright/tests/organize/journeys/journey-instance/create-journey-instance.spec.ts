@@ -6,7 +6,7 @@ import CodingSkillsTag from '../../../../mockData/orgs/KPD/tags/Coding';
 import KPD from '../../../../mockData/orgs/KPD';
 import MarxistTraining from '../../../../mockData/orgs/KPD/journeys/MarxistTraining';
 import test from '../../../../fixtures/next';
-import { ZetkinJourneyInstance } from '../../../../../src/types/zetkin';
+import { ZetkinJourneyInstance } from '../../../../../src/utils/types/zetkin';
 
 test.describe('Creating a journey instance', () => {
   test.beforeEach(async ({ moxy, login }) => {
@@ -54,9 +54,7 @@ test.describe('Creating a journey instance', () => {
     await page.goto(appUri + '/organize/1/journeys/1/new');
     await page.locator('[data-testid=page-title] input').type('My training');
     await page.locator('[data-testid=page-title] input').press('Enter');
-    await page
-      .locator('data-testid=ZetkinAutoTextArea-textarea')
-      .type('Some info');
+    await page.locator('data-testid=AutoTextArea-textarea').type('Some info');
 
     await Promise.all([
       page.waitForResponse((res) => res.url().includes('api')),
@@ -115,9 +113,7 @@ test.describe('Creating a journey instance', () => {
     );
 
     await page.goto(appUri + '/organize/1/journeys/1/new');
-    await page
-      .locator('data-testid=ZetkinAutoTextArea-textarea')
-      .type('Some info');
+    await page.locator('data-testid=AutoTextArea-textarea').type('Some info');
 
     // Add a subject
     await page.locator('data-testid=Button-add-subject').click();

@@ -1,5 +1,5 @@
-import { COLUMN_TYPE } from '../../../../../../../src/types/views';
-import { ZetkinViewColumn } from '../../../../../../../src/types/zetkin';
+import { COLUMN_TYPE } from 'features/views/components/types';
+import { ZetkinViewColumn } from 'utils/types/zetkin';
 
 const AllMembersColumns: ZetkinViewColumn[] = [
   {

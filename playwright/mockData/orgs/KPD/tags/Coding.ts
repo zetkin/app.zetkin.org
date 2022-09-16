@@ -1,6 +1,6 @@
 import KPD from '..';
 import Skills from './groups/Skills';
-import { ZetkinTag } from '../../../../../src/types/zetkin';
+import { ZetkinTag } from 'utils/types/zetkin';
 
 const CodingSkillsTag: ZetkinTag = {
   color: null,
