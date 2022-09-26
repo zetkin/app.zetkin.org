@@ -38,7 +38,7 @@ test.describe('Search', async () => {
     ).toBeTruthy();
   });
 
-  test('shows error if error fetching results', async ({
+  test('shows error indicator if error fetching results', async ({
     page,
     moxy,
     appUri,

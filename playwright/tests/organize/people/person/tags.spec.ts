@@ -130,7 +130,7 @@ test.describe('Person Profile Page Tags', () => {
       });
     });
 
-    test('shows error when adding tag fails', async ({
+    test('shows error snackbar when adding tag fails', async ({
       moxy,
       page,
       appUri,
@@ -191,7 +191,7 @@ test.describe('Person Profile Page Tags', () => {
       expect(deleteTagLog().length).toEqual(1);
     });
 
-    test('shows error when removing a tag fails', async ({
+    test('shows error snackbar when removing a tag fails', async ({
       moxy,
       page,
       appUri,
@@ -356,7 +356,10 @@ test.describe('Person Profile Page Tags', () => {
       });
     });
 
-    test('shows error when creating a tag fails', async ({ moxy, page }) => {
+    test('shows error snackbar when creating a tag fails', async ({
+      moxy,
+      page,
+    }) => {
       moxy.setZetkinApiMock('/orgs/1/people/tags', 'post', {}, 409);
 
       await page.locator('text=Add tag').click();
@@ -419,7 +422,10 @@ test.describe('Person Profile Page Tags', () => {
       });
     });
 
-    test('shows error when editing tag fails', async ({ page, moxy }) => {
+    test('shows error snackbar when editing tag fails', async ({
+      page,
+      moxy,
+    }) => {
       moxy.setZetkinApiMock(
         `/orgs/1/people/tags/${ActivistTag.id}`,
         'patch',

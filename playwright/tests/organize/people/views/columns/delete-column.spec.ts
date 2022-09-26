@@ -61,7 +61,7 @@ test.describe('Deleting a view column', () => {
     expect(columnDeleteRequest).not.toEqual(undefined);
   });
 
-  test('shows an error modal if there is an error deleting the column', async ({
+  test('shows error snackbar if there is an error deleting the column', async ({
     page,
     appUri,
     moxy,

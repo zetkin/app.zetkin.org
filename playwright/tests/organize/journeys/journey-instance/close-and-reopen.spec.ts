@@ -98,7 +98,7 @@ test.describe('Closing and reopening a journey instance', () => {
       expect(instanceCloseMock.log().length).toEqual(1);
     });
 
-    test.describe('Shows an error', () => {
+    test.describe('Shows error snackbar', () => {
       test('if adding tags fails', async ({ moxy, page, appUri }) => {
         moxy.setZetkinApiMock(
           `/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}/tags/${CodingSkillsTag.id}`,

@@ -65,7 +65,7 @@ test.describe('Renaming a view column', () => {
     expect(columnPatchRequest?.data).toEqual({ title: newTitle });
   });
 
-  test('shows an error modal if there is an error renaming the column', async ({
+  test('shows error snackbar if there is an error renaming the column', async ({
     page,
     appUri,
     moxy,

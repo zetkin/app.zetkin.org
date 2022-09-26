@@ -60,7 +60,7 @@ test.describe('Delete view from view list page', () => {
     expectDeleteViewSuccess(moxy);
   });
 
-  test('shows an error if view deletion fails', async ({
+  test('shows error snackbar if view deletion fails', async ({
     page,
     appUri,
     moxy,
@@ -127,7 +127,7 @@ test.describe('Delete view from view detail page', () => {
     );
   });
 
-  test('shows snackbar if error deleting view', async ({
+  test('shows error snackbar if error deleting view', async ({
     page,
     appUri,
     moxy,

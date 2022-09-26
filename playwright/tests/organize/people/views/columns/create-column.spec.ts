@@ -71,7 +71,7 @@ test.describe('Creating a view column', () => {
     });
   });
 
-  test('shows an error modal if there is an error creating the column', async ({
+  test('shows error snackbar if there is an error creating the column', async ({
     page,
     appUri,
     moxy,

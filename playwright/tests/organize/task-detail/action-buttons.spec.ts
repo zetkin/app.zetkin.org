@@ -99,7 +99,11 @@ test.describe('Task action buttons', async () => {
       expect(log().length).toEqual(1);
     });
 
-    test('shows error if delete task fails', async ({ page, moxy, appUri }) => {
+    test('shows error snackbar if delete task fails', async ({
+      page,
+      moxy,
+      appUri,
+    }) => {
       moxy.setZetkinApiMock('/orgs/1/tasks/1', 'delete', {}, 404);
 
       await page.goto(appUri + '/organize/1/campaigns/1/calendar/tasks/1');

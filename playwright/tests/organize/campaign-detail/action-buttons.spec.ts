@@ -118,7 +118,7 @@ test.describe('Campaign action buttons', async () => {
       expect(log().length).toEqual(1);
     });
 
-    test('shows error if delete campaign fails', async ({
+    test('shows error snackbar if delete campaign fails', async ({
       page,
       moxy,
       appUri,

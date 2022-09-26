@@ -114,7 +114,7 @@ test.describe('Journey instance page', () => {
       ).toEqual(newSummaryText);
     });
 
-    test('Shows error if error making request', async ({
+    test('Shows error snackbar if error making request', async ({
       appUri,
       moxy,
       page,

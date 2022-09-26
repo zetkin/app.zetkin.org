@@ -248,7 +248,7 @@ test.describe('Journey instance Milestones tab', () => {
       ).toBe(null);
     });
 
-    test('Shows error if error making request', async ({
+    test('Shows error snackbar if error making request', async ({
       appUri,
       moxy,
       page,
