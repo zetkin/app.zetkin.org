@@ -81,7 +81,7 @@ test.describe('Journey instance Milestones tab', () => {
         ClarasOnboarding
       );
 
-      const newDeadline = '2022-06-23';
+      const newDeadline = '2022-06-24';
       const { log: patchReqLog } = moxy.setZetkinApiMock(
         `/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}/milestones/${AttendMeeting.id}`,
         'patch',
@@ -97,8 +97,8 @@ test.describe('Journey instance Milestones tab', () => {
         )
         .first()
         .click();
-      //Click June 23
-      await page.locator('p:has-text("23")').click();
+      //Click June 24
+      await page.locator('p:has-text("24")').click();
 
       await Promise.all([
         page.waitForResponse(
