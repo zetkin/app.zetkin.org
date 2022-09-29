@@ -28,7 +28,7 @@ import {
 interface NextTestFixtures {
   login: (user?: ZetkinUser, memberships?: ZetkinMembership[]) => void;
   logout: () => void;
-  setBrowserDate: (date: Date) => void;
+  setBrowserDate: (date: Date) => Promise<void>;
 }
 
 export interface NextWorkerFixtures {
@@ -219,7 +219,7 @@ const test = base.extend<NextTestFixtures, NextWorkerFixtures>({
     };
     await use(logout);
   },
-  setBrowserDate: ({ page }, use) => {
+  setBrowserDate: async ({ page }, use) => {
     const setBrowserDate = async (date: Date) => {
       // Pick the new/fake "now" for you test pages.
       const fakeNow = new Date(date).valueOf();
@@ -242,7 +242,7 @@ const test = base.extend<NextTestFixtures, NextWorkerFixtures>({
       Date.now = () => __DateNow() + __DateNowOffset;
     }`);
     };
-    use(setBrowserDate);
+    await use(setBrowserDate);
   },
 });
 

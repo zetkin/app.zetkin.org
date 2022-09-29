@@ -81,7 +81,7 @@ test.describe('Journey instance page Milestones tab', () => {
       ClarasOnboarding
     );
 
-    setBrowserDate(new Date(2022, 2, 20));
+    await setBrowserDate(new Date(2022, 2, 20));
 
     const newDeadline = '2022-06-24';
     const { log: patchReqLog } = moxy.setZetkinApiMock(
