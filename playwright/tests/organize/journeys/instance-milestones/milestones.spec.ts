@@ -64,10 +64,11 @@ test.describe('Journey instance page Milestones tab', () => {
     ).toBe('There are no milestones.');
   });
 
-  test('lets user update milestone deadline.', async ({
+  test.only('lets user update milestone deadline.', async ({
     appUri,
     moxy,
     page,
+    setBrowserDate,
   }) => {
     moxy.setZetkinApiMock(
       `/orgs/${KPD.id}/journeys/${MemberOnboarding.id}`,
@@ -79,6 +80,8 @@ test.describe('Journey instance page Milestones tab', () => {
       'get',
       ClarasOnboarding
     );
+
+    setBrowserDate(new Date(2022, 2, 20));
 
     const newDeadline = '2022-06-24';
     const { log: patchReqLog } = moxy.setZetkinApiMock(
