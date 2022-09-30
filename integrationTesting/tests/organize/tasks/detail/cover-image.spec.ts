@@ -56,7 +56,9 @@ test.describe('Task detail page', () => {
 
     await page.locator('data-testid=TaskPreviewSection-addImage').click();
 
-    const buffer = await fs.readFile('playwright/mockFiles/clara_and_rosa.jpg');
+    const buffer = await fs.readFile(
+      'integrationTesting/mockFiles/clara_and_rosa.jpg'
+    );
     const dataTransfer = await page.evaluateHandle((data) => {
       const dt = new DataTransfer();
       const file = new File([data as BlobPart], 'clara_and_rosa.jpg', {

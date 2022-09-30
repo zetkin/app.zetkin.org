@@ -2,7 +2,7 @@
 module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'jsdom',
-  testPathIgnorePatterns: ["<rootDir>/playwright/", "<rootDir>/node_modules/"],
+  testPathIgnorePatterns: ["<rootDir>/integrationTesting/", "<rootDir>/node_modules/"],
   transform: {
     '^.+\\.tsx?$': 'babel-jest',
   },

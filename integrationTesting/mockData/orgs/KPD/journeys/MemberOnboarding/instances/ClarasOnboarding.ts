@@ -2,7 +2,7 @@ import ActivistTag from '../../../tags/Activist';
 import AngelaDavis from '../../../people/AngelaDavis';
 import ClaraZetkin from '../../../people/ClaraZetkin';
 import KPD from '../../..';
-import MemberOnboarding from '../../MemberOnboarding';
+import MemberOnboarding from '..';
 import PlaysGuitarTag from '../../../tags/PlaysGuitar';
 import {
   ZetkinJourneyInstance,
