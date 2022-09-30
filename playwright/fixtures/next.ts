@@ -28,6 +28,7 @@ import {
 interface NextTestFixtures {
   login: (user?: ZetkinUser, memberships?: ZetkinMembership[]) => void;
   logout: () => void;
+  setBrowserDate: (date: Date) => Promise<void>;
 }
 
 export interface NextWorkerFixtures {
@@ -217,6 +218,31 @@ const test = base.extend<NextTestFixtures, NextWorkerFixtures>({
       moxy.removeMock('/users/me/memberships', 'get');
     };
     await use(logout);
+  },
+  setBrowserDate: async ({ page }, use) => {
+    const setBrowserDate = async (date: Date) => {
+      // Pick the new/fake "now" for you test pages.
+      const fakeNow = new Date(date).valueOf();
+
+      // Update the Date accordingly in your test pages
+      await page.addInitScript(`{
+      // Extend Date constructor to default to fakeNow
+      Date = class extends Date {
+        constructor(...args) {
+          if (args.length === 0) {
+            super(${fakeNow});
+          } else {
+            super(...args);
+          }
+        }
+      }
+      // Override Date.now() to start from fakeNow
+      const __DateNowOffset = ${fakeNow} - Date.now();
+      const __DateNow = Date.now;
+      Date.now = () => __DateNow() + __DateNowOffset;
+    }`);
+    };
+    await use(setBrowserDate);
   },
 });
 
