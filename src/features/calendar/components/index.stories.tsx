@@ -2,8 +2,8 @@ import { ComponentMeta, ComponentStory } from '@storybook/react';
 
 import Calendar from '.';
 import mockEvent from 'utils/testing/mocks/mockEvent';
-import ReferendumSignatureCollection from '../../../../playwright/mockData/orgs/KPD/campaigns/ReferendumSignatures';
-import VisitReferendumWebsite from '../../../../playwright/mockData/orgs/KPD/campaigns/ReferendumSignatures/tasks/VisitReferendumWebsite';
+import ReferendumSignatureCollection from '../../../../integrationTesting/mockData/orgs/KPD/campaigns/ReferendumSignatures';
+import VisitReferendumWebsite from '../../../../integrationTesting/mockData/orgs/KPD/campaigns/ReferendumSignatures/tasks/VisitReferendumWebsite';
 
 export default {
   component: Calendar,
