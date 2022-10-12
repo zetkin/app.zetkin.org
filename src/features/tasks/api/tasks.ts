@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { ZetkinTaskRequestBody } from 'features/tasks/components/types';
 import {
   createPrefetch,

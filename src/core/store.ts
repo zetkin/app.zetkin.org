@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { configureStore } from '@reduxjs/toolkit';
 
 import callAssignmentsReducer from '../features/callAssignments/store';

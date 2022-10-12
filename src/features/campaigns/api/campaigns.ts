@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { createUseQuery } from '../../../utils/api/resourceHookFactories';
 
 import { ZetkinCampaign } from '../../../utils/types/zetkin';
