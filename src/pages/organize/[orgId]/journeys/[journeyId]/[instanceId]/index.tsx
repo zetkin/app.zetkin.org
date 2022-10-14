@@ -7,14 +7,19 @@ import { Box, Divider, Grid } from '@material-ui/core';
 
 import JourneyInstanceLayout from 'features/journeys/layout/JourneyInstanceLayout';
 import JourneyInstanceOutcome from 'features/journeys/components/JourneyInstanceOutcome';
-import { journeyInstanceResource } from 'features/journeys/api/journeys';
+
 import JourneyInstanceSidebar from 'features/journeys/components/JourneyInstanceSidebar';
 import JourneyInstanceSummary from 'features/journeys/components/JourneyInstanceSummary';
 import { organizationResource } from 'features/journeys/api/organizations';
 import { PageWithLayout } from 'utils/types';
+import ZUIQuery from 'zui/ZUIQuery';
 import ZUISection from 'zui/ZUISection';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';
-import ZUITimelineWrapper from 'zui/ZUITimelineWrapper';
+import ZUITimeline from 'zui/ZUITimeline';
+import {
+  journeyInstanceResource,
+  journeyInstanceTimelineResource,
+} from 'features/journeys/api/journeys';
 import { scaffold, ScaffoldedGetServerSideProps } from 'utils/next';
 import { ZetkinJourneyInstance, ZetkinPerson } from 'utils/types/zetkin';
 
@@ -98,11 +103,16 @@ const JourneyDetailsPage: PageWithLayout<JourneyDetailsPageProps> = ({
   const removeMemberMutation = useRemoveSubject();
   const assignTagMutation = useAssignTag();
   const unassignTagMutation = useUnassignTag();
+  const { useQueryUpdates, useAddNote, useEditNote } =
+    journeyInstanceTimelineResource(orgId, instanceId);
 
   const journeyInstance = journeyInstanceQuery.data as ZetkinJourneyInstance;
 
   const { showSnackbar } = useContext(ZUISnackbarContext);
   const queryClient = useQueryClient();
+  const updatesQuery = useQueryUpdates();
+  const addNoteMutation = useAddNote();
+  const editNoteMutation = useEditNote();
 
   const onAddAssignee = (person: ZetkinPerson) => {
     addAssigneeMutation.mutate(person.id, {
@@ -151,10 +161,24 @@ const JourneyDetailsPage: PageWithLayout<JourneyDetailsPageProps> = ({
               id: 'pages.organizeJourneyInstance.sections.timeline',
             })}
           >
-            <ZUITimelineWrapper
-              itemApiPath={`/orgs/${orgId}/journey_instances/${instanceId}`}
-              queryKey={['journeyInstance', orgId, instanceId, 'timeline']}
-            />
+            <ZUIQuery queries={{ updatesQuery }}>
+              {({ queries: { updatesQuery } }) => (
+                <ZUITimeline
+                  disabled={addNoteMutation.isLoading}
+                  onAddNote={(note) => {
+                    addNoteMutation.mutate(note, {
+                      onError: () => showSnackbar('error'),
+                    });
+                  }}
+                  onEditNote={(note) => {
+                    editNoteMutation.mutate(note, {
+                      onError: () => showSnackbar('error'),
+                    });
+                  }}
+                  updates={updatesQuery.data}
+                />
+              )}
+            </ZUIQuery>
           </ZUISection>
         </Grid>
         <Grid item lg={4} md={4} xs={12}>
