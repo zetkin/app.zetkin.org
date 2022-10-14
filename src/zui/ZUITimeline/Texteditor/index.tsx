@@ -1,5 +1,7 @@
+/* eslint-disable jsx-a11y/no-autofocus */
 import { isEqual } from 'lodash';
 import { makeStyles } from '@material-ui/styles';
+import { markdownToSlate } from './utils/markdownToSlate';
 import { withHistory } from 'slate-history';
 import { Box, ClickAwayListener, Collapse } from '@material-ui/core';
 import { createEditor, Descendant, Editor, Transforms } from 'slate';
@@ -20,6 +22,13 @@ import theme from 'theme';
 import Toolbar from './Toolbar';
 import { ZetkinFileUploadChip } from 'zui/ZUIFileChip';
 import { keyDownHandler, slateToMarkdown, withInlines } from './helpers';
+
+const emptySlate = [
+  {
+    children: [{ text: '' }],
+    type: 'paragraph',
+  },
+] as Descendant[];
 
 const useStyles = makeStyles({
   container: {
@@ -44,9 +53,10 @@ const useStyles = makeStyles({
   },
 });
 
-interface TextEditorProps {
+export interface TextEditorProps {
   clear: number;
   fileUploads: FileUpload[];
+  initialValue?: string;
   onChange: (value: string) => void;
   onCancelFile?: (file: FileUpload) => void;
   onClickAttach?: () => void;
@@ -56,6 +66,7 @@ interface TextEditorProps {
 const TextEditor: React.FunctionComponent<TextEditorProps> = ({
   clear,
   fileUploads,
+  initialValue,
   onChange,
   onCancelFile,
   onClickAttach,
@@ -75,13 +86,20 @@ const TextEditor: React.FunctionComponent<TextEditorProps> = ({
     () => withInlines(withHistory(withReact(createEditor()))),
     []
   );
-  const initialValue = [
-    {
-      children: [{ text: '' }],
-      type: 'paragraph',
-    },
-  ] as Descendant[];
+  const [initialValueSlate, setInitialValueSlate] = useState<
+    Descendant[] | null
+  >(null);
 
+  useEffect(() => {
+    (async () => {
+      if (initialValue) {
+        const slate = await markdownToSlate(initialValue as string);
+        setInitialValueSlate(slate as Descendant[]);
+      } else {
+        setInitialValueSlate(emptySlate);
+      }
+    })();
+  }, [initialValue]);
   useEffect(() => {
     if (clear > 0) {
       clearEditor();
@@ -95,23 +113,27 @@ const TextEditor: React.FunctionComponent<TextEditorProps> = ({
         className={classes.container}
         onClick={() => ReactEditor.focus(editor)}
       >
-        <Slate
-          editor={editor}
-          onChange={(slateArray) => onChange(slateToMarkdown(slateArray))}
-          value={initialValue}
-        >
-          <Editable
-            onFocus={() => setActive(true)}
-            onKeyDown={onKeyDown}
-            placeholder={placeholder}
-            renderElement={renderElement}
-            renderLeaf={renderLeaf}
-            spellCheck
-          />
-          <Collapse in={active}>
-            <Toolbar onClickAttach={onClickAttach} />
-          </Collapse>
-        </Slate>
+        {/* Only render when slate has been generated */}
+        {initialValueSlate && (
+          <Slate
+            editor={editor}
+            onChange={(slateArray) => onChange(slateToMarkdown(slateArray))}
+            value={initialValueSlate}
+          >
+            <Editable
+              autoFocus
+              onFocus={() => setActive(true)}
+              onKeyDown={onKeyDown}
+              placeholder={placeholder}
+              renderElement={renderElement}
+              renderLeaf={renderLeaf}
+              spellCheck
+            />
+            <Collapse in={active}>
+              <Toolbar onClickAttach={onClickAttach} />
+            </Collapse>
+          </Slate>
+        )}
         {fileUploads.map((fileUpload) => {
           return (
             <ZetkinFileUploadChip
@@ -134,7 +156,7 @@ const TextEditor: React.FunctionComponent<TextEditorProps> = ({
   }
 
   function onClickAway() {
-    if (isEqual(editor.children, initialValue)) {
+    if (isEqual(editor.children, emptySlate)) {
       setActive(false);
       clearEditor();
     }
@@ -146,7 +168,7 @@ const TextEditor: React.FunctionComponent<TextEditorProps> = ({
       focus: Editor.end(editor, []),
     });
     Transforms.removeNodes(editor);
-    Transforms.insertNodes(editor, initialValue);
+    Transforms.insertNodes(editor, emptySlate);
   }
 };
 
