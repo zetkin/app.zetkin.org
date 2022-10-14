@@ -100,11 +100,11 @@ test.describe('Journey instance notes', () => {
     );
 
     // Click menu
-    await page.click('[data-testid=EllipsisMenu-menuActivator]');
+    await page.click('[data-testid=ZUIEllipsisMenu-menuActivator]');
 
     // Click edit
     await page.click(
-      `[data-testid=EllipsisMenu-item-edit-note-${NoteUpdate.details.note.id}]`
+      `[data-testid=ZUIEllipsisMenu-item-edit-note-${NoteUpdate.details.note.id}]`
     );
 
     // Click input
