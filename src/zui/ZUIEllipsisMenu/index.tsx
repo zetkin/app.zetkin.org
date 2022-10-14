@@ -4,6 +4,7 @@ import { Button, ListItemIcon, Menu, MenuItem } from '@material-ui/core';
 import { FunctionComponent, ReactElement, useState } from 'react';
 
 interface MenuItem {
+  disabled?: boolean;
   id?: string;
   label: string | React.ReactNode;
   onSelect?: (e: React.MouseEvent<HTMLLIElement, MouseEvent>) => void;
@@ -46,9 +47,11 @@ const ZUIEllipsisMenu: FunctionComponent<ZUIEllipsisMenuProps> = ({
           <MenuItem
             key={item.id || idx}
             data-testid={`ZUIEllipsisMenu-item-${item.id || idx}`}
+            disabled={item.disabled}
             onClick={(e) => {
               if (item.onSelect) {
                 item.onSelect(e);
+                setMenuActivator(null);
               }
               if (item.subMenuItems) {
                 setSubMenuActivator(e.currentTarget as HTMLElement);
