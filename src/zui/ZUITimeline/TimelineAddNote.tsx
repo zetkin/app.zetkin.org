@@ -71,6 +71,7 @@ const TimelineAddNote: React.FunctionComponent<AddNoteProps> = ({
       <Collapse in={!!visibleText || fileUploads.length > 0}>
         <ZUISubmitCancelButtons
           onCancel={onCancel}
+          submitButtonProps={{ 'data-testid': 'TimelineAddNote-submitButton' }}
           submitDisabled={disabled || someLoading}
         />
       </Collapse>
