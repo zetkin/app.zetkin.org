@@ -2,9 +2,11 @@ import { GetServerSideProps } from 'next';
 
 import CallAssignmentLayout from 'features/callAssignments/layout/CallAssignmentLayout';
 import CallAssignmentModel from 'features/callAssignments/models/CallAssignmentModel';
+import CallAssignmentStatusBar from 'features/callAssignments/components/CallAssignmentStatusBar';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import useModel from 'core/useModel';
+import ZUISection from 'zui/ZUISection';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   async (ctx) => {
@@ -48,7 +50,11 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
     return <h1>LOADING</h1>;
   }
 
-  return <h1>{model.getData().title}</h1>;
+  return (
+    <ZUISection title="Status">
+      <CallAssignmentStatusBar stats={model.getStats()} />
+    </ZUISection>
+  );
 };
 
 AssignmentPage.getLayout = function getLayout(page, props) {
