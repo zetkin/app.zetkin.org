@@ -27,7 +27,7 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
         },
         {
           href: '/targeting',
-          messageId: 'layout.organize.callAssignments.tabs.targeting',
+          messageId: 'layout.organize.callAssignment.tabs.targeting',
         },
       ]}
       title={assQuery.data?.title}
