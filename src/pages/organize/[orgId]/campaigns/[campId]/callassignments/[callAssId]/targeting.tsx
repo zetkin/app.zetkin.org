@@ -2,11 +2,11 @@ import { GetServerSideProps } from 'next';
 
 import CallAssignmentLayout from 'features/callAssignments/layout/CallAssignmentLayout';
 import CallAssignmentModel from 'features/callAssignments/models/CallAssignmentModel';
-import CallAssignmentStatusBar from 'features/callAssignments/components/CallAssignmentStatusBar';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import useModel from 'core/useModel';
 import ZUISection from 'zui/ZUISection';
+import ZUIStackedStatusBar from 'zui/ZUIStackedStatusBar';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   async (ctx) => {
@@ -52,7 +52,18 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
 
   return (
     <ZUISection title="Status">
-      <CallAssignmentStatusBar stats={model.getStats()} />
+      <ZUIStackedStatusBar
+        colors={[
+          'rgba(245, 124, 0, 1)',
+          'rgba(102, 187, 106, 1)',
+          'rgba(25, 118, 210, 1)',
+        ]}
+        values={[
+          model.getStats().blocked,
+          model.getStats().ready,
+          model.getStats().done,
+        ]}
+      />
     </ZUISection>
   );
 };
