@@ -50,20 +50,30 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
     return <h1>LOADING</h1>;
   }
 
-  return (
-    <ZUISection title="Status">
-      <ZUIStackedStatusBar
-        colors={[
+  const statsSum =
+    model.getStats().blocked + model.getStats().done + model.getStats().ready;
+
+  const colors =
+    statsSum > 0
+      ? [
           'rgba(245, 124, 0, 1)',
           'rgba(102, 187, 106, 1)',
           'rgba(25, 118, 210, 1)',
-        ]}
-        values={[
+        ]
+      : ['rgba(0, 0, 0, 0.12)', 'rgba(0, 0, 0, 0.12)', 'rgba(0, 0, 0, 0.12)'];
+
+  const values =
+    statsSum > 0
+      ? [
           model.getStats().blocked,
           model.getStats().ready,
           model.getStats().done,
-        ]}
-      />
+        ]
+      : [1, 1, 1];
+
+  return (
+    <ZUISection title="Status">
+      <ZUIStackedStatusBar colors={colors} values={values} />
     </ZUISection>
   );
 };
