@@ -1,12 +1,17 @@
-import { Box } from '@material-ui/core';
+import { Box, makeStyles } from '@material-ui/core';
 
 import { CallAssignmentStats } from '../apiTypes';
 
-const CallAssignmentStatusBar = ({
-  stats,
-}: {
-  stats: CallAssignmentStats | undefined;
-}) => {
+const useStyles = makeStyles(() => ({
+  animated: {
+    transition: 'all 0.2s ease',
+  },
+}));
+
+const CallAssignmentStatusBar: React.FunctionComponent<{
+  stats: CallAssignmentStats;
+}> = ({ stats }) => {
+  const classes = useStyles();
   const total = stats ? stats.blocked + stats.done + stats.ready : 1;
   return (
     <Box
@@ -20,18 +25,21 @@ const CallAssignmentStatusBar = ({
         <>
           <Box
             bgcolor={'rgba(245, 124, 0, 1)'}
+            className={classes.animated}
             minWidth={10}
             mr={0.3}
             width={stats.blocked / total}
           />
           <Box
             bgcolor={'rgba(102, 187, 106, 1)'}
+            className={classes.animated}
             minWidth={10}
             mr={0.3}
             width={stats.ready / total}
           />
           <Box
             bgcolor={'rgba(25, 118, 210, 1)'}
+            className={classes.animated}
             minWidth={10}
             width={stats.done / total}
           />
