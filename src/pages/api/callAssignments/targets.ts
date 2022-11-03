@@ -3,6 +3,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 
 export interface ZetkinTarget {
   status: {
+    block_reasons: string[];
     blocked: boolean;
   };
 }
@@ -25,11 +26,14 @@ export default async function handler(
   );
   const targetsData = await targetsRes.json();
 
-  const blocked: number = targetsData.data.filter(
-    (target: ZetkinTarget) => target.status.blocked
+  const allocated: number = targetsData.data.filter((target: ZetkinTarget) =>
+    target.status.block_reasons.includes('allocated')
   ).length;
+  const blocked: number =
+    targetsData.data.filter((target: ZetkinTarget) => target.status.blocked)
+      .length - allocated;
   const done: number = statsData.data.num_goal_matches;
-  const ready: number = statsData.data.num_target_matches - done;
+  const ready: number = statsData.data.num_target_matches + allocated - done;
 
   res.status(200).json({
     blocked,
