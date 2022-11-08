@@ -54,10 +54,6 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
     return null;
   }
 
-  if (model.isLoading) {
-    return <h1>LOADING</h1>;
-  }
-
   const statsSum =
     model.getStats().blocked + model.getStats().done + model.getStats().ready;
 

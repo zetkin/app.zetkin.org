@@ -7,4 +7,5 @@ export interface CallAssignmentStats {
   blocked: number;
   done: number;
   ready: number;
+  isLoading: boolean;
 }
