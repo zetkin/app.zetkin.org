@@ -2,7 +2,7 @@ import { Box, makeStyles } from '@material-ui/core';
 
 const useStyles = makeStyles(() => ({
   animated: {
-    transition: 'all 0.2s ease',
+    transition: 'all 0.5s cubic-bezier(0.83, 0, 0.17, 1)',
   },
 }));
 
