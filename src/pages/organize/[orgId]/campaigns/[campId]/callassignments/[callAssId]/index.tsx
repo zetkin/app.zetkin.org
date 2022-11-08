@@ -1,4 +1,5 @@
 import { GetServerSideProps } from 'next';
+import { useEffect, useState } from 'react';
 
 import CallAssignmentLayout from 'features/callAssignments/layout/CallAssignmentLayout';
 import CallAssignmentModel from 'features/callAssignments/models/CallAssignmentModel';
@@ -41,12 +42,14 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
   orgId,
   assignmentId,
 }) => {
+  const [onServer, setOnServer] = useState(true);
   const model = useModel(
     (store) =>
       new CallAssignmentModel(store, parseInt(orgId), parseInt(assignmentId))
   );
 
-  const onServer = typeof window === 'undefined';
+  useEffect(() => setOnServer(false), []);
+
   if (onServer) {
     return null;
   }
