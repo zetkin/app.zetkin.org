@@ -8,6 +8,11 @@ import useModel from 'core/useModel';
 import ZUISection from 'zui/ZUISection';
 import ZUIStackedStatusBar from 'zui/ZUIStackedStatusBar';
 
+const GRAY = 'rgba(0, 0, 0, 0.12)';
+const ORANGE = 'rgba(245, 124, 0, 1)';
+const GREEN = 'rgba(102, 187, 106, 1)';
+const BLUE = 'rgba(25, 118, 210, 1)';
+
 export const getServerSideProps: GetServerSideProps = scaffold(
   async (ctx) => {
     const { orgId, campId, callAssId } = ctx.params!;
@@ -53,23 +58,11 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
   const statsSum =
     model.getStats().blocked + model.getStats().done + model.getStats().ready;
 
-  const colors =
-    statsSum > 0
-      ? [
-          'rgba(245, 124, 0, 1)',
-          'rgba(102, 187, 106, 1)',
-          'rgba(25, 118, 210, 1)',
-        ]
-      : ['rgba(0, 0, 0, 0.12)', 'rgba(0, 0, 0, 0.12)', 'rgba(0, 0, 0, 0.12)'];
+  const colors = statsSum > 0 ? [ORANGE, GREEN, BLUE] : [GRAY, GRAY, GRAY];
 
-  const values =
-    statsSum > 0
-      ? [
-          model.getStats().blocked,
-          model.getStats().ready,
-          model.getStats().done,
-        ]
-      : [1, 1, 1];
+  const { blocked, ready, done } = model.getStats();
+
+  const values = statsSum > 0 ? [blocked, ready, done] : [1, 1, 1];
 
   return (
     <ZUISection title="Status">
