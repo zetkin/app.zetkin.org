@@ -23,11 +23,11 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
       tabs={[
         {
           href: '/',
-          messageId: 'layout.organize.callAssignment.tabs.insights',
+          messageId: 'layout.organize.callAssignment.tabs.overview',
         },
         {
-          href: '/targeting',
-          messageId: 'layout.organize.callAssignment.tabs.targeting',
+          href: '/insights',
+          messageId: 'layout.organize.callAssignment.tabs.insights',
         },
       ]}
       title={assQuery.data?.title}
