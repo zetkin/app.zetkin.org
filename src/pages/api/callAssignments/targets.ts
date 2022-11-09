@@ -36,9 +36,39 @@ export default async function handler(
   );
   const targetsData = await targetsRes.json();
 
+  const blockedTargets = targetsData.data.filter(
+    (target: ZetkinTarget) => target.status.block_reasons.length > 0
+  );
+  const organizerActionNeeded: number = blockedTargets.filter(
+    (target: ZetkinTarget) =>
+      target.status.block_reasons.includes('organizer_action_needed')
+  ).length;
+
+  const noNumber: number = blockedTargets.filter(
+    (target: ZetkinTarget) =>
+      target.status.block_reasons.includes('no_number') &&
+      !target.status.block_reasons.includes('organizer_action_needed')
+  ).length;
+
+  const callBackLater: number = blockedTargets.filter(
+    (target: ZetkinTarget) =>
+      target.status.block_reasons.includes('call_back_after') &&
+      !target.status.block_reasons.includes('organizer_action_needed') &&
+      !target.status.block_reasons.includes('no_number')
+  ).length;
+
+  const cooldown: number = blockedTargets.filter(
+    (target: ZetkinTarget) =>
+      target.status.block_reasons.includes('cooldown') &&
+      !target.status.block_reasons.includes('call_back_after') &&
+      !target.status.block_reasons.includes('organizer_action_needed') &&
+      !target.status.block_reasons.includes('no_number')
+  ).length;
+
   const allocated: number = targetsData.data.filter((target: ZetkinTarget) =>
     target.status.block_reasons.includes('allocated')
   ).length;
+
   const blocked: number =
     targetsData.data.filter((target: ZetkinTarget) => target.status.blocked)
       .length - allocated;
@@ -46,9 +76,17 @@ export default async function handler(
     statsData.data.num_target_matches - statsData.data.num_remaining_targets;
   const ready: number = statsData.data.num_target_matches + allocated - done;
 
+  const queue: number = ready - allocated;
+
   res.status(200).json({
+    allocated,
     blocked,
+    callBackLater,
+    cooldown,
     done,
+    noNumber,
+    organizerActionNeeded,
+    queue,
     ready,
   });
 }
