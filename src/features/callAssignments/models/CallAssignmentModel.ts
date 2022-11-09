@@ -48,8 +48,8 @@ export default class CallAssignmentModel {
     if (stats) {
       return stats;
     } else {
-      this._store.dispatch(statsLoad());
-      const promise = fetch(
+      this._store.dispatch(statsLoad(this._id));
+      fetch(
         `/api/callAssignments/targets?org=${this._orgId}&assignment=${this._id}`
       )
         .then((res) => res.json())
@@ -57,11 +57,23 @@ export default class CallAssignmentModel {
           this._store.dispatch(statsLoaded({ ...data, id: this._id }));
         });
 
-      throw promise;
+      return {
+        blocked: 0,
+        done: 0,
+        isLoading: true,
+        ready: 0,
+      };
     }
   }
 
   get isLoading() {
     return this._store.getState().callAssignments.isLoading;
+  }
+
+  get statsIsLoading() {
+    return (
+      this._store.getState().callAssignments.statsById[this._id]?.isLoading ??
+      false
+    );
   }
 }

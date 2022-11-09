@@ -8,6 +8,14 @@ export interface ZetkinTarget {
   };
 }
 
+interface ZetkinCallAssignmentStats {
+  num_target_matches: number;
+  num_goal_matches: number;
+  num_remaining_targets: number;
+  num_calls_made: number;
+  num_calls_reached: number;
+}
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -19,7 +27,9 @@ export default async function handler(
   const statsRes = await apiFetch(
     `/orgs/${org}/call_assignments/${assignment}/stats`
   );
-  const statsData = await statsRes.json();
+  const statsData = (await statsRes.json()) as {
+    data: ZetkinCallAssignmentStats;
+  };
 
   const targetsRes = await apiFetch(
     `/orgs/${org}/call_assignments/${assignment}/targets`
@@ -32,7 +42,8 @@ export default async function handler(
   const blocked: number =
     targetsData.data.filter((target: ZetkinTarget) => target.status.blocked)
       .length - allocated;
-  const done: number = statsData.data.num_goal_matches;
+  const done: number =
+    statsData.data.num_target_matches - statsData.data.num_remaining_targets;
   const ready: number = statsData.data.num_target_matches + allocated - done;
 
   res.status(200).json({

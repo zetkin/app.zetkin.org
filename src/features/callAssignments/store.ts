@@ -30,8 +30,14 @@ const callAssignmentsSlice = createSlice({
         .filter((ca) => ca.id != action.payload.id)
         .concat([action.payload]);
     },
-    statsLoad: (state) => {
-      state.isLoading = true;
+    statsLoad: (state, action: PayloadAction<number>) => {
+      state.statsById[action.payload] = {
+        blocked: 0,
+        done: 0,
+        ready: 0,
+        ...state.statsById[action.payload],
+        isLoading: true,
+      };
     },
     statsLoaded: (
       state,
@@ -41,6 +47,7 @@ const callAssignmentsSlice = createSlice({
       state.statsById[action.payload.id] = {
         blocked: action.payload.blocked,
         done: action.payload.done,
+        isLoading: false,
         ready: action.payload.ready,
       };
     },
