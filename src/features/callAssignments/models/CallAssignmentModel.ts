@@ -58,9 +58,15 @@ export default class CallAssignmentModel {
         });
 
       return {
+        allocated: 0,
         blocked: 0,
+        callBackLater: 0,
+        calledTooRecently: 0,
         done: 0,
         isLoading: true,
+        missingPhoneNumber: 0,
+        organizerActionNeeded: 0,
+        queue: 0,
         ready: 0,
       };
     }

@@ -32,8 +32,14 @@ const callAssignmentsSlice = createSlice({
     },
     statsLoad: (state, action: PayloadAction<number>) => {
       state.statsById[action.payload] = {
+        allocated: 0,
         blocked: 0,
+        callBackLater: 0,
+        calledTooRecently: 0,
         done: 0,
+        missingPhoneNumber: 0,
+        organizerActionNeeded: 0,
+        queue: 0,
         ready: 0,
         ...state.statsById[action.payload],
         isLoading: true,
@@ -45,9 +51,15 @@ const callAssignmentsSlice = createSlice({
     ) => {
       state.isLoading = false;
       state.statsById[action.payload.id] = {
+        allocated: action.payload.allocated,
         blocked: action.payload.blocked,
+        callBackLater: action.payload.callBackLater,
+        calledTooRecently: action.payload.calledTooRecently,
         done: action.payload.done,
         isLoading: false,
+        missingPhoneNumber: action.payload.missingPhoneNumber,
+        organizerActionNeeded: action.payload.organizerActionNeeded,
+        queue: action.payload.queue,
         ready: action.payload.ready,
       };
     },

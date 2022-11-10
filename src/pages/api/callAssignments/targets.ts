@@ -44,7 +44,7 @@ export default async function handler(
       target.status.block_reasons.includes('organizer_action_needed')
   ).length;
 
-  const noNumber: number = blockedTargets.filter(
+  const missingPhoneNumber: number = blockedTargets.filter(
     (target: ZetkinTarget) =>
       target.status.block_reasons.includes('no_number') &&
       !target.status.block_reasons.includes('organizer_action_needed')
@@ -57,7 +57,7 @@ export default async function handler(
       !target.status.block_reasons.includes('no_number')
   ).length;
 
-  const cooldown: number = blockedTargets.filter(
+  const calledTooRecently: number = blockedTargets.filter(
     (target: ZetkinTarget) =>
       target.status.block_reasons.includes('cooldown') &&
       !target.status.block_reasons.includes('call_back_after') &&
@@ -82,9 +82,9 @@ export default async function handler(
     allocated,
     blocked,
     callBackLater,
-    cooldown,
+    calledTooRecently,
     done,
-    noNumber,
+    missingPhoneNumber,
     organizerActionNeeded,
     queue,
     ready,
