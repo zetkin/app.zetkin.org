@@ -36,6 +36,35 @@ export default async function handler(
   );
   const targetsData = await targetsRes.json();
 
+  const blockedTargets = targetsData.data.filter(
+    (target: ZetkinTarget) => target.status.block_reasons.length > 0
+  );
+  const organizerActionNeeded: number = blockedTargets.filter(
+    (target: ZetkinTarget) =>
+      target.status.block_reasons.includes('organizer_action_needed')
+  ).length;
+
+  const missingPhoneNumber: number = blockedTargets.filter(
+    (target: ZetkinTarget) =>
+      target.status.block_reasons.includes('no_number') &&
+      !target.status.block_reasons.includes('organizer_action_needed')
+  ).length;
+
+  const callBackLater: number = blockedTargets.filter(
+    (target: ZetkinTarget) =>
+      target.status.block_reasons.includes('call_back_after') &&
+      !target.status.block_reasons.includes('organizer_action_needed') &&
+      !target.status.block_reasons.includes('no_number')
+  ).length;
+
+  const calledTooRecently: number = blockedTargets.filter(
+    (target: ZetkinTarget) =>
+      target.status.block_reasons.includes('cooldown') &&
+      !target.status.block_reasons.includes('call_back_after') &&
+      !target.status.block_reasons.includes('organizer_action_needed') &&
+      !target.status.block_reasons.includes('no_number')
+  ).length;
+
   const allocated: number = targetsData.data.filter((target: ZetkinTarget) =>
     target.status.block_reasons.includes('allocated')
   ).length;
@@ -48,7 +77,12 @@ export default async function handler(
 
   res.status(200).json({
     blocked,
+    callBackLater,
+    calledTooRecently,
     done,
+    missingPhoneNumber,
+    organizerActionNeeded,
+    queue,
     ready,
   });
 }
