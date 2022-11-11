@@ -19,7 +19,7 @@ const useStyles = makeStyles<Theme, { chipColor: string }>(() => ({
     lineHeight: 'normal',
     marginRight: '0.1em',
     overflow: 'hidden',
-    padding: '0.2em 0.4em 0.2em 0.4em',
+    padding: '0.2em 0.7em',
   },
 }));
 
