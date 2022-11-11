@@ -1,6 +1,6 @@
 import { GetServerSideProps } from 'next';
 import { useIntl } from 'react-intl';
-import { Box, Card, List, makeStyles } from '@material-ui/core';
+import { Box, Card, Grid, List } from '@material-ui/core';
 import { useEffect, useState } from 'react';
 
 import CallAssignmentLayout from 'features/callAssignments/layout/CallAssignmentLayout';
@@ -45,18 +45,11 @@ interface AssignmentPageProps {
   orgId: string;
 }
 
-const useStyles = makeStyles({
-  card: {
-    flexGrow: 1,
-  },
-});
-
 const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
   orgId,
   assignmentId,
 }) => {
   const intl = useIntl();
-  const classes = useStyles();
   const [onServer, setOnServer] = useState(true);
   const model = useModel(
     (store) =>
@@ -87,92 +80,94 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
       })}
     >
       <ZUIStackedStatusBar colors={colors} values={values} />
-      <Box
-        alignItems="flex-start"
-        display="flex"
-        gridGap="1em"
-        justifyContent="space-between"
-        mt={2}
-      >
-        <Card className={classes.card}>
-          <StatusSectionHeader
-            chipColor={ORANGE}
-            subtitle={intl.formatMessage({
-              id: 'pages.organizeCallAssignment.blocked.subtitle',
-            })}
-            targetingDone={targetingDone}
-            title={intl.formatMessage({
-              id: 'pages.organizeCallAssignment.blocked.title',
-            })}
-            value={stats.blocked}
-          />
-          <List>
-            <StatusSectionItem
-              title={intl.formatMessage({
-                id: 'pages.organizeCallAssignment.blocked.calledTooRecently',
-              })}
-              value={stats.calledTooRecently}
-            />
-            <StatusSectionItem
-              title={intl.formatMessage({
-                id: 'pages.organizeCallAssignment.blocked.callBackLater',
-              })}
-              value={stats.callBackLater}
-            />
-            <StatusSectionItem
-              title={intl.formatMessage({
-                id: 'pages.organizeCallAssignment.blocked.missingPhoneNumber',
-              })}
-              value={stats.missingPhoneNumber}
-            />
-            <StatusSectionItem
-              title={intl.formatMessage({
-                id: 'pages.organizeCallAssignment.blocked.organizerActionNeeded',
-              })}
-              value={stats.organizerActionNeeded}
-            />
-          </List>
-        </Card>
-        <Card className={classes.card}>
-          <StatusSectionHeader
-            chipColor={GREEN}
-            subtitle={intl.formatMessage({
-              id: 'pages.organizeCallAssignment.ready.subtitle',
-            })}
-            targetingDone={targetingDone}
-            title={intl.formatMessage({
-              id: 'pages.organizeCallAssignment.ready.title',
-            })}
-            value={stats.ready}
-          />
-          <List>
-            <StatusSectionItem
-              title={intl.formatMessage({
-                id: 'pages.organizeCallAssignment.ready.queue',
-              })}
-              value={stats.queue}
-            />
-            <StatusSectionItem
-              title={intl.formatMessage({
-                id: 'pages.organizeCallAssignment.ready.allocated',
-              })}
-              value={stats.allocated}
-            />
-          </List>
-        </Card>
-        <Card className={classes.card}>
-          <StatusSectionHeader
-            chipColor={BLUE}
-            subtitle={intl.formatMessage({
-              id: 'pages.organizeCallAssignment.done.subtitle',
-            })}
-            targetingDone={targetingDone}
-            title={intl.formatMessage({
-              id: 'pages.organizeCallAssignment.done.title',
-            })}
-            value={stats.done}
-          />
-        </Card>
+      <Box mt={2}>
+        <Grid container spacing={2}>
+          <Grid item md={4} xs={12}>
+            <Card>
+              <StatusSectionHeader
+                chipColor={ORANGE}
+                subtitle={intl.formatMessage({
+                  id: 'pages.organizeCallAssignment.blocked.subtitle',
+                })}
+                targetingDone={targetingDone}
+                title={intl.formatMessage({
+                  id: 'pages.organizeCallAssignment.blocked.title',
+                })}
+                value={stats.blocked}
+              />
+              <List>
+                <StatusSectionItem
+                  title={intl.formatMessage({
+                    id: 'pages.organizeCallAssignment.blocked.calledTooRecently',
+                  })}
+                  value={stats.calledTooRecently}
+                />
+                <StatusSectionItem
+                  title={intl.formatMessage({
+                    id: 'pages.organizeCallAssignment.blocked.callBackLater',
+                  })}
+                  value={stats.callBackLater}
+                />
+                <StatusSectionItem
+                  title={intl.formatMessage({
+                    id: 'pages.organizeCallAssignment.blocked.missingPhoneNumber',
+                  })}
+                  value={stats.missingPhoneNumber}
+                />
+                <StatusSectionItem
+                  title={intl.formatMessage({
+                    id: 'pages.organizeCallAssignment.blocked.organizerActionNeeded',
+                  })}
+                  value={stats.organizerActionNeeded}
+                />
+              </List>
+            </Card>
+          </Grid>
+          <Grid item md={4} xs={12}>
+            <Card>
+              <StatusSectionHeader
+                chipColor={GREEN}
+                subtitle={intl.formatMessage({
+                  id: 'pages.organizeCallAssignment.ready.subtitle',
+                })}
+                targetingDone={targetingDone}
+                title={intl.formatMessage({
+                  id: 'pages.organizeCallAssignment.ready.title',
+                })}
+                value={stats.ready}
+              />
+              <List>
+                <StatusSectionItem
+                  title={intl.formatMessage({
+                    id: 'pages.organizeCallAssignment.ready.queue',
+                  })}
+                  value={stats.queue}
+                />
+                <StatusSectionItem
+                  title={intl.formatMessage({
+                    id: 'pages.organizeCallAssignment.ready.allocated',
+                  })}
+                  value={stats.allocated}
+                />
+              </List>
+            </Card>
+          </Grid>
+          <Grid item md={4} xs={12}>
+            <Card>
+              <StatusSectionHeader
+                chipColor={BLUE}
+                subtitle={intl.formatMessage({
+                  id: 'pages.organizeCallAssignment.done.subtitle',
+                })}
+                targetingDone={targetingDone}
+                title={intl.formatMessage({
+                  id: 'pages.organizeCallAssignment.done.title',
+                })}
+                value={stats.done}
+              />
+            </Card>
+          </Grid>
+        </Grid>
       </Box>
     </ZUISection>
   );
