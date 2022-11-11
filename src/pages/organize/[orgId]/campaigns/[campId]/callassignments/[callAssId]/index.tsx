@@ -1,18 +1,18 @@
+import { Box } from '@material-ui/core';
 import { GetServerSideProps } from 'next';
 import { useIntl } from 'react-intl';
-import { Box, Card, Grid, List } from '@material-ui/core';
 import { useEffect, useState } from 'react';
 
 import CallAssignmentLayout from 'features/callAssignments/layout/CallAssignmentLayout';
 import CallAssignmentModel from 'features/callAssignments/models/CallAssignmentModel';
+import CallAssignmentStatusCards from 'features/callAssignments/components/CallAssignmentStatusCards';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
-import StatusSectionHeader from 'features/callAssignments/components/StatusSectionHeader';
-import StatusSectionItem from 'features/callAssignments/components/StatusSectionItem';
 import useModel from 'core/useModel';
 import ZUISection from 'zui/ZUISection';
 import ZUIStackedStatusBar from 'zui/ZUIStackedStatusBar';
 
+//TO-DO: Replace with theme colors
 const GRAY = 'rgba(0, 0, 0, 0.12)';
 const ORANGE = 'rgba(245, 124, 0, 1)';
 const GREEN = 'rgba(102, 187, 106, 1)';
@@ -69,7 +69,7 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
   const targetingDone = !!data.target.filter_spec?.length;
 
   const colors = targetingDone ? [ORANGE, GREEN, BLUE] : [GRAY, GRAY, GRAY];
-  const values = targetingDone
+  const statusBarStatsList = targetingDone
     ? [stats.blocked, stats.ready, stats.done]
     : [1, 1, 1];
 
@@ -79,95 +79,12 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
         id: 'pages.organizeCallAssignment.statusSectionTitle',
       })}
     >
-      <ZUIStackedStatusBar colors={colors} values={values} />
+      <ZUIStackedStatusBar colors={colors} values={statusBarStatsList} />
       <Box mt={2}>
-        <Grid container spacing={2}>
-          <Grid item md={4} xs={12}>
-            <Card>
-              <StatusSectionHeader
-                chipColor={ORANGE}
-                subtitle={intl.formatMessage({
-                  id: 'pages.organizeCallAssignment.blocked.subtitle',
-                })}
-                targetingDone={targetingDone}
-                title={intl.formatMessage({
-                  id: 'pages.organizeCallAssignment.blocked.title',
-                })}
-                value={stats.blocked}
-              />
-              <List>
-                <StatusSectionItem
-                  title={intl.formatMessage({
-                    id: 'pages.organizeCallAssignment.blocked.calledTooRecently',
-                  })}
-                  value={stats.calledTooRecently}
-                />
-                <StatusSectionItem
-                  title={intl.formatMessage({
-                    id: 'pages.organizeCallAssignment.blocked.callBackLater',
-                  })}
-                  value={stats.callBackLater}
-                />
-                <StatusSectionItem
-                  title={intl.formatMessage({
-                    id: 'pages.organizeCallAssignment.blocked.missingPhoneNumber',
-                  })}
-                  value={stats.missingPhoneNumber}
-                />
-                <StatusSectionItem
-                  title={intl.formatMessage({
-                    id: 'pages.organizeCallAssignment.blocked.organizerActionNeeded',
-                  })}
-                  value={stats.organizerActionNeeded}
-                />
-              </List>
-            </Card>
-          </Grid>
-          <Grid item md={4} xs={12}>
-            <Card>
-              <StatusSectionHeader
-                chipColor={GREEN}
-                subtitle={intl.formatMessage({
-                  id: 'pages.organizeCallAssignment.ready.subtitle',
-                })}
-                targetingDone={targetingDone}
-                title={intl.formatMessage({
-                  id: 'pages.organizeCallAssignment.ready.title',
-                })}
-                value={stats.ready}
-              />
-              <List>
-                <StatusSectionItem
-                  title={intl.formatMessage({
-                    id: 'pages.organizeCallAssignment.ready.queue',
-                  })}
-                  value={stats.queue}
-                />
-                <StatusSectionItem
-                  title={intl.formatMessage({
-                    id: 'pages.organizeCallAssignment.ready.allocated',
-                  })}
-                  value={stats.allocated}
-                />
-              </List>
-            </Card>
-          </Grid>
-          <Grid item md={4} xs={12}>
-            <Card>
-              <StatusSectionHeader
-                chipColor={BLUE}
-                subtitle={intl.formatMessage({
-                  id: 'pages.organizeCallAssignment.done.subtitle',
-                })}
-                targetingDone={targetingDone}
-                title={intl.formatMessage({
-                  id: 'pages.organizeCallAssignment.done.title',
-                })}
-                value={stats.done}
-              />
-            </Card>
-          </Grid>
-        </Grid>
+        <CallAssignmentStatusCards
+          stats={stats}
+          targetingDone={targetingDone}
+        />
       </Box>
     </ZUISection>
   );
