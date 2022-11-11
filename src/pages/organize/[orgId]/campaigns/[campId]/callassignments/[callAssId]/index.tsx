@@ -1,10 +1,13 @@
 import { GetServerSideProps } from 'next';
+import { Box, Card, List, makeStyles } from '@material-ui/core';
 import { useEffect, useState } from 'react';
 
 import CallAssignmentLayout from 'features/callAssignments/layout/CallAssignmentLayout';
 import CallAssignmentModel from 'features/callAssignments/models/CallAssignmentModel';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
+import StatusSectionHeader from 'features/callAssignments/components/StatusSectionHeader';
+import StatusSectionItem from 'features/callAssignments/components/StatusSectionItem';
 import useModel from 'core/useModel';
 import ZUISection from 'zui/ZUISection';
 import ZUIStackedStatusBar from 'zui/ZUIStackedStatusBar';
@@ -38,10 +41,17 @@ interface AssignmentPageProps {
   orgId: string;
 }
 
+const useStyles = makeStyles({
+  card: {
+    flexGrow: 1,
+  },
+});
+
 const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
   orgId,
   assignmentId,
 }) => {
+  const classes = useStyles();
   const [onServer, setOnServer] = useState(true);
   const model = useModel(
     (store) =>
@@ -54,18 +64,80 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
     return null;
   }
 
-  const statsSum =
-    model.getStats().blocked + model.getStats().done + model.getStats().ready;
+  const stats = model.getStats();
 
-  const colors = statsSum > 0 ? [ORANGE, GREEN, BLUE] : [GRAY, GRAY, GRAY];
+  const data = model.getData();
 
-  const { blocked, ready, done } = model.getStats();
+  const targetingDone = !!data.target.filter_spec?.length;
 
-  const values = statsSum > 0 ? [blocked, ready, done] : [1, 1, 1];
+  const colors = targetingDone ? [ORANGE, GREEN, BLUE] : [GRAY, GRAY, GRAY];
+  const values = targetingDone
+    ? [stats.blocked, stats.ready, stats.done]
+    : [1, 1, 1];
 
   return (
     <ZUISection title="Status">
       <ZUIStackedStatusBar colors={colors} values={values} />
+      <Box
+        alignItems="flex-start"
+        display="flex"
+        gridGap="1em"
+        justifyContent="space-between"
+        mt={2}
+      >
+        <Card className={classes.card}>
+          <StatusSectionHeader
+            chipColor={ORANGE}
+            subtitle="Targets not ready to be called"
+            targetingDone={targetingDone}
+            title="Blocked"
+            value={stats.blocked}
+          />
+          <List>
+            <StatusSectionItem
+              title="Called too recently"
+              value={stats.calledTooRecently}
+            />
+            <StatusSectionItem
+              title="Asked us to call back later"
+              value={stats.callBackLater}
+            />
+            <StatusSectionItem
+              title="Missing phone number"
+              value={stats.missingPhoneNumber}
+            />
+            <StatusSectionItem
+              title="Organizer action needed"
+              value={stats.organizerActionNeeded}
+            />
+          </List>
+        </Card>
+        <Card className={classes.card}>
+          <StatusSectionHeader
+            chipColor={GREEN}
+            subtitle="Targets to be called"
+            targetingDone={targetingDone}
+            title="Ready"
+            value={stats.ready}
+          />
+          <List>
+            <StatusSectionItem title="Targets in queue" value={stats.queue} />
+            <StatusSectionItem
+              title="Targets allocated to caller"
+              value={stats.allocated}
+            />
+          </List>
+        </Card>
+        <Card className={classes.card}>
+          <StatusSectionHeader
+            chipColor={BLUE}
+            subtitle="Targets that meet the done criteria"
+            targetingDone={targetingDone}
+            title="Done"
+            value={stats.done}
+          />
+        </Card>
+      </Box>
     </ZUISection>
   );
 };
