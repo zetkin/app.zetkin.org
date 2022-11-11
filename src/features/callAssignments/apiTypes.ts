@@ -1,6 +1,16 @@
 export interface CallAssignmentData {
   id: number;
+  target: CallAssignmentTargetData;
   title: string;
+}
+
+interface CallAssignmentTargetData {
+  id: number;
+  filter_spec: CallAssignmentFilter[] | null;
+}
+
+interface CallAssignmentFilter {
+  id: number;
 }
 
 export interface CallAssignmentStats {
