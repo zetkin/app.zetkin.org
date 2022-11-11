@@ -1,4 +1,5 @@
 import { GetServerSideProps } from 'next';
+import { useIntl } from 'react-intl';
 import { Box, Card, List, makeStyles } from '@material-ui/core';
 import { useEffect, useState } from 'react';
 
@@ -31,7 +32,10 @@ export const getServerSideProps: GetServerSideProps = scaffold(
   },
   {
     authLevelRequired: 2,
-    localeScope: ['layout.organize.callAssignment'],
+    localeScope: [
+      'layout.organize.callAssignment',
+      'pages.organizeCallAssignment',
+    ],
   }
 );
 
@@ -51,6 +55,7 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
   orgId,
   assignmentId,
 }) => {
+  const intl = useIntl();
   const classes = useStyles();
   const [onServer, setOnServer] = useState(true);
   const model = useModel(
@@ -76,7 +81,11 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
     : [1, 1, 1];
 
   return (
-    <ZUISection title="Status">
+    <ZUISection
+      title={intl.formatMessage({
+        id: 'pages.organizeCallAssignment.statusSectionTitle',
+      })}
+    >
       <ZUIStackedStatusBar colors={colors} values={values} />
       <Box
         alignItems="flex-start"
@@ -88,26 +97,38 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
         <Card className={classes.card}>
           <StatusSectionHeader
             chipColor={ORANGE}
-            subtitle="Targets not ready to be called"
+            subtitle={intl.formatMessage({
+              id: 'pages.organizeCallAssignment.blocked.subtitle',
+            })}
             targetingDone={targetingDone}
-            title="Blocked"
+            title={intl.formatMessage({
+              id: 'pages.organizeCallAssignment.blocked.title',
+            })}
             value={stats.blocked}
           />
           <List>
             <StatusSectionItem
-              title="Called too recently"
+              title={intl.formatMessage({
+                id: 'pages.organizeCallAssignment.blocked.calledTooRecently',
+              })}
               value={stats.calledTooRecently}
             />
             <StatusSectionItem
-              title="Asked us to call back later"
+              title={intl.formatMessage({
+                id: 'pages.organizeCallAssignment.blocked.callBackLater',
+              })}
               value={stats.callBackLater}
             />
             <StatusSectionItem
-              title="Missing phone number"
+              title={intl.formatMessage({
+                id: 'pages.organizeCallAssignment.blocked.missingPhoneNumber',
+              })}
               value={stats.missingPhoneNumber}
             />
             <StatusSectionItem
-              title="Organizer action needed"
+              title={intl.formatMessage({
+                id: 'pages.organizeCallAssignment.blocked.organizerActionNeeded',
+              })}
               value={stats.organizerActionNeeded}
             />
           </List>
@@ -115,15 +136,26 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
         <Card className={classes.card}>
           <StatusSectionHeader
             chipColor={GREEN}
-            subtitle="Targets to be called"
+            subtitle={intl.formatMessage({
+              id: 'pages.organizeCallAssignment.ready.subtitle',
+            })}
             targetingDone={targetingDone}
-            title="Ready"
+            title={intl.formatMessage({
+              id: 'pages.organizeCallAssignment.ready.title',
+            })}
             value={stats.ready}
           />
           <List>
-            <StatusSectionItem title="Targets in queue" value={stats.queue} />
             <StatusSectionItem
-              title="Targets allocated to caller"
+              title={intl.formatMessage({
+                id: 'pages.organizeCallAssignment.ready.queue',
+              })}
+              value={stats.queue}
+            />
+            <StatusSectionItem
+              title={intl.formatMessage({
+                id: 'pages.organizeCallAssignment.ready.allocated',
+              })}
               value={stats.allocated}
             />
           </List>
@@ -131,9 +163,13 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
         <Card className={classes.card}>
           <StatusSectionHeader
             chipColor={BLUE}
-            subtitle="Targets that meet the done criteria"
+            subtitle={intl.formatMessage({
+              id: 'pages.organizeCallAssignment.done.subtitle',
+            })}
             targetingDone={targetingDone}
-            title="Done"
+            title={intl.formatMessage({
+              id: 'pages.organizeCallAssignment.done.title',
+            })}
             value={stats.done}
           />
         </Card>

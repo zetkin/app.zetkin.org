@@ -1,0 +1,16 @@
+blocked:
+  callBackLater: Asked us to call back later
+  calledTooRecently: Called too recently
+  missingPhoneNumber: Missing phone number
+  organizerActionNeeded: Organizer action needed
+  subtitle: Targets not ready to be called
+  title: Blocked
+done:
+  subtitle: Targets that meet the done criteria
+  title: Done
+ready:
+  allocated: Targets allocated to caller
+  queue: Targets in queue
+  subtitle: Targets to be called
+  title: Ready
+statusSectionTitle: Status
