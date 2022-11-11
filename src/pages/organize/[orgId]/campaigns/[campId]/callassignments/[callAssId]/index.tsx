@@ -1,6 +1,6 @@
-import { Box } from '@material-ui/core';
 import { GetServerSideProps } from 'next';
-import { useIntl } from 'react-intl';
+import { FormattedMessage as Msg } from 'react-intl';
+import { Box, Typography } from '@material-ui/core';
 import { useEffect, useState } from 'react';
 
 import CallAssignmentLayout from 'features/callAssignments/layout/CallAssignmentLayout';
@@ -9,7 +9,6 @@ import CallAssignmentStatusCards from 'features/callAssignments/components/CallA
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import useModel from 'core/useModel';
-import ZUISection from 'zui/ZUISection';
 import ZUIStackedStatusBar from 'zui/ZUIStackedStatusBar';
 
 //TO-DO: Replace with theme colors
@@ -49,7 +48,6 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
   orgId,
   assignmentId,
 }) => {
-  const intl = useIntl();
   const [onServer, setOnServer] = useState(true);
   const model = useModel(
     (store) =>
@@ -74,11 +72,12 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
     : [1, 1, 1];
 
   return (
-    <ZUISection
-      title={intl.formatMessage({
-        id: 'pages.organizeCallAssignment.statusSectionTitle',
-      })}
-    >
+    <Box>
+      <Box mb={2}>
+        <Typography variant="h3">
+          <Msg id="pages.organizeCallAssignment.statusSectionTitle" />
+        </Typography>
+      </Box>
       <ZUIStackedStatusBar colors={colors} values={statusBarStatsList} />
       <Box mt={2}>
         <CallAssignmentStatusCards
@@ -86,7 +85,7 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
           targetingDone={targetingDone}
         />
       </Box>
-    </ZUISection>
+    </Box>
   );
 };
 
