@@ -5,11 +5,6 @@ import { CallAssignmentStats } from '../apiTypes';
 import StatusSectionHeader from './StatusSectionHeader';
 import StatusSectionItem from './StatusSectionItem';
 
-//TO-DO: Replace with theme colors
-const ORANGE = 'rgba(245, 124, 0, 1)';
-const GREEN = 'rgba(102, 187, 106, 1)';
-const BLUE = 'rgba(25, 118, 210, 1)';
-
 interface CallAssignmentStatusCardProps {
   stats: CallAssignmentStats;
   targetingDone: boolean;
@@ -25,7 +20,7 @@ const CallAssignmentStatusCards = ({
       <Grid item md={4} xs={12}>
         <Card>
           <StatusSectionHeader
-            chipColor={ORANGE}
+            chipColor={'targetingStatusBar.orange'}
             subtitle={intl.formatMessage({
               id: 'pages.organizeCallAssignment.blocked.subtitle',
             })}
@@ -66,7 +61,7 @@ const CallAssignmentStatusCards = ({
       <Grid item md={4} xs={12}>
         <Card>
           <StatusSectionHeader
-            chipColor={GREEN}
+            chipColor={'targetingStatusBar.green'}
             subtitle={intl.formatMessage({
               id: 'pages.organizeCallAssignment.ready.subtitle',
             })}
@@ -95,7 +90,7 @@ const CallAssignmentStatusCards = ({
       <Grid item md={4} xs={12}>
         <Card>
           <StatusSectionHeader
-            chipColor={BLUE}
+            chipColor={'targetingStatusBar.blue'}
             subtitle={intl.formatMessage({
               id: 'pages.organizeCallAssignment.done.subtitle',
             })}

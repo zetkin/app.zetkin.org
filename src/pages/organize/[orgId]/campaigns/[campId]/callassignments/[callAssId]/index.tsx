@@ -11,12 +11,6 @@ import { scaffold } from 'utils/next';
 import useModel from 'core/useModel';
 import ZUIStackedStatusBar from 'zui/ZUIStackedStatusBar';
 
-//TO-DO: Replace with theme colors
-const GRAY = 'rgba(0, 0, 0, 0.12)';
-const ORANGE = 'rgba(245, 124, 0, 1)';
-const GREEN = 'rgba(102, 187, 106, 1)';
-const BLUE = 'rgba(25, 118, 210, 1)';
-
 export const getServerSideProps: GetServerSideProps = scaffold(
   async (ctx) => {
     const { orgId, campId, callAssId } = ctx.params!;
@@ -66,7 +60,17 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
 
   const targetingDone = !!data.target.filter_spec?.length;
 
-  const colors = targetingDone ? [ORANGE, GREEN, BLUE] : [GRAY, GRAY, GRAY];
+  const colors = targetingDone
+    ? [
+        'targetingStatusBar.orange',
+        'targetingStatusBar.green',
+        'targetingStatusBar.blue',
+      ]
+    : [
+        'targetingStatusBar.gray',
+        'targetingStatusBar.gray',
+        'targetingStatusBar.gray',
+      ];
   const statusBarStatsList = targetingDone
     ? [stats.blocked, stats.ready, stats.done]
     : [1, 1, 1];
