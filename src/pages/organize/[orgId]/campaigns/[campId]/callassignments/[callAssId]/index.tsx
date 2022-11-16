@@ -56,11 +56,7 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
 
   const stats = model.getStats();
 
-  const data = model.getData();
-
-  const targetingDone = !!data.target.filter_spec?.length;
-
-  const colors = targetingDone
+  const colors = model.hasTargets
     ? [
         'targetingStatusBar.orange',
         'targetingStatusBar.green',
@@ -71,9 +67,11 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
         'targetingStatusBar.gray',
         'targetingStatusBar.gray',
       ];
-  const statusBarStatsList = targetingDone
-    ? [stats.blocked, stats.ready, stats.done]
-    : [1, 1, 1];
+
+  const statusBarStatsList =
+    model.hasTargets && stats
+      ? [stats.blocked, stats.ready, stats.done]
+      : [1, 1, 1];
 
   return (
     <Box>
@@ -84,10 +82,7 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
       </Box>
       <ZUIStackedStatusBar colors={colors} values={statusBarStatsList} />
       <Box mt={2}>
-        <CallAssignmentStatusCards
-          stats={stats}
-          targetingDone={targetingDone}
-        />
+        <CallAssignmentStatusCards model={model} />
       </Box>
     </Box>
   );
