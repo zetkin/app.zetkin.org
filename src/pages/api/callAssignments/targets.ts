@@ -75,6 +75,7 @@ export default async function handler(
   const queue: number = ready - allocated;
 
   res.status(200).json({
+    allocated,
     blocked,
     callBackLater,
     calledTooRecently,
