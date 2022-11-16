@@ -2,8 +2,8 @@ import { useIntl } from 'react-intl';
 import { Card, Grid, List } from '@material-ui/core';
 
 import { CallAssignmentStats } from '../apiTypes';
-import StatusSectionHeader from './StatusSectionHeader';
-import StatusSectionItem from './StatusSectionItem';
+import StatusCardHeader from './StatusCardHeader';
+import StatusCardItem from './StatusCardItem';
 
 interface CallAssignmentStatusCardProps {
   stats: CallAssignmentStats;
@@ -19,7 +19,7 @@ const CallAssignmentStatusCards = ({
     <Grid container spacing={2}>
       <Grid item md={4} xs={12}>
         <Card>
-          <StatusSectionHeader
+          <StatusCardHeader
             chipColor={'targetingStatusBar.orange'}
             subtitle={intl.formatMessage({
               id: 'pages.organizeCallAssignment.blocked.subtitle',
@@ -31,25 +31,25 @@ const CallAssignmentStatusCards = ({
             value={stats.blocked}
           />
           <List>
-            <StatusSectionItem
+            <StatusCardItem
               title={intl.formatMessage({
                 id: 'pages.organizeCallAssignment.blocked.calledTooRecently',
               })}
               value={stats.calledTooRecently}
             />
-            <StatusSectionItem
+            <StatusCardItem
               title={intl.formatMessage({
                 id: 'pages.organizeCallAssignment.blocked.callBackLater',
               })}
               value={stats.callBackLater}
             />
-            <StatusSectionItem
+            <StatusCardItem
               title={intl.formatMessage({
                 id: 'pages.organizeCallAssignment.blocked.missingPhoneNumber',
               })}
               value={stats.missingPhoneNumber}
             />
-            <StatusSectionItem
+            <StatusCardItem
               title={intl.formatMessage({
                 id: 'pages.organizeCallAssignment.blocked.organizerActionNeeded',
               })}
@@ -60,7 +60,7 @@ const CallAssignmentStatusCards = ({
       </Grid>
       <Grid item md={4} xs={12}>
         <Card>
-          <StatusSectionHeader
+          <StatusCardHeader
             chipColor={'targetingStatusBar.green'}
             subtitle={intl.formatMessage({
               id: 'pages.organizeCallAssignment.ready.subtitle',
@@ -72,13 +72,13 @@ const CallAssignmentStatusCards = ({
             value={stats.ready}
           />
           <List>
-            <StatusSectionItem
+            <StatusCardItem
               title={intl.formatMessage({
                 id: 'pages.organizeCallAssignment.ready.queue',
               })}
               value={stats.queue}
             />
-            <StatusSectionItem
+            <StatusCardItem
               title={intl.formatMessage({
                 id: 'pages.organizeCallAssignment.ready.allocated',
               })}
@@ -89,7 +89,7 @@ const CallAssignmentStatusCards = ({
       </Grid>
       <Grid item md={4} xs={12}>
         <Card>
-          <StatusSectionHeader
+          <StatusCardHeader
             chipColor={'targetingStatusBar.blue'}
             subtitle={intl.formatMessage({
               id: 'pages.organizeCallAssignment.done.subtitle',

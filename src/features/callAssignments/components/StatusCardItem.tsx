@@ -1,11 +1,11 @@
 import { Box, ListItem, Typography } from '@material-ui/core';
 
-interface StatusSectionItemProps {
+interface StatusCardItemProps {
   title: string;
   value: number;
 }
 
-const StatusSectionItem = ({ title, value }: StatusSectionItemProps) => {
+const StatusCardItem = ({ title, value }: StatusCardItemProps) => {
   return (
     <ListItem>
       <Box display="flex">
@@ -20,4 +20,4 @@ const StatusSectionItem = ({ title, value }: StatusSectionItemProps) => {
   );
 };
 
-export default StatusSectionItem;
+export default StatusCardItem;

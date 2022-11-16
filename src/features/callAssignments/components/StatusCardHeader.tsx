@@ -1,7 +1,7 @@
 import { makeStyles } from '@material-ui/styles';
 import { Box, Divider, Theme, Typography } from '@material-ui/core';
 
-interface StatusSectionHeaderProps {
+interface StatusCardHeaderProps {
   chipColor: string;
   subtitle: string;
   targetingDone: boolean;
@@ -23,13 +23,13 @@ const useStyles = makeStyles<Theme, { chipColor: string }>(() => ({
   },
 }));
 
-const StatusSectionHeader = ({
+const StatusCardHeader = ({
   chipColor,
   subtitle,
   targetingDone,
   title,
   value,
-}: StatusSectionHeaderProps) => {
+}: StatusCardHeaderProps) => {
   const classes = useStyles({ chipColor });
   return (
     <Box>
@@ -50,4 +50,4 @@ const StatusSectionHeader = ({
   );
 };
 
-export default StatusSectionHeader;
+export default StatusCardHeader;
