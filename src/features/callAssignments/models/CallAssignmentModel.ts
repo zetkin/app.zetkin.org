@@ -41,9 +41,13 @@ export default class CallAssignmentModel {
     }
   }
 
-  getStats(): CallAssignmentStats {
+  getStats(): CallAssignmentStats | null {
     const state = this._store.getState();
     const stats = state.callAssignments.statsById[this._id];
+
+    if (this.isTargeted) {
+      return null;
+    }
 
     if (stats) {
       return stats;
@@ -72,8 +76,21 @@ export default class CallAssignmentModel {
     }
   }
 
+  get hasTargets() {
+    const data = this.getStats();
+    if (data === null) {
+      return false;
+    }
+    return data.blocked + data.ready + data.done > 0;
+  }
+
   get isLoading() {
     return this._store.getState().callAssignments.isLoading;
+  }
+
+  get isTargeted() {
+    const data = this.getData();
+    return data.target.filter_spec?.length === 0;
   }
 
   get statsIsLoading() {
