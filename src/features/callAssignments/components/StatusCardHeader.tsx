@@ -2,16 +2,19 @@ import { makeStyles } from '@material-ui/styles';
 import { Box, Divider, Theme, Typography } from '@material-ui/core';
 
 interface StatusCardHeaderProps {
-  chipColor: string;
+  chipColor: keyof Theme['palette']['targetingStatusBar'];
   subtitle: string;
-  targetingDone: boolean;
   title: string;
-  value: number;
+  value: number | undefined;
 }
 
-const useStyles = makeStyles<Theme, { chipColor: string }>(() => ({
+const useStyles = makeStyles<
+  Theme,
+  { chipColor: keyof Theme['palette']['targetingStatusBar'] }
+>((theme) => ({
   chip: {
-    backgroundColor: ({ chipColor }) => chipColor,
+    backgroundColor: ({ chipColor }) =>
+      theme.palette.targetingStatusBar[chipColor],
     borderRadius: '1em',
     color: 'white',
     display: 'flex',
@@ -26,7 +29,6 @@ const useStyles = makeStyles<Theme, { chipColor: string }>(() => ({
 const StatusCardHeader = ({
   chipColor,
   subtitle,
-  targetingDone,
   title,
   value,
 }: StatusCardHeaderProps) => {
@@ -43,7 +45,7 @@ const StatusCardHeader = ({
           <Typography variant="h4">{title}</Typography>
           <Typography color="secondary">{subtitle}</Typography>
         </Box>
-        {targetingDone && <Box className={classes.chip}>{value}</Box>}
+        {value != undefined && <Box className={classes.chip}>{value}</Box>}
       </Box>
       <Divider />
     </Box>
