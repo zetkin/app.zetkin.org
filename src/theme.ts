@@ -12,6 +12,12 @@ declare module '@material-ui/core/styles/createPalette' {
   interface Palette {
     onSurface: PaletteIntensityOptions;
     outline: PaletteIntensityOptions;
+    targetingStatusBar: {
+      blue: string;
+      gray: string;
+      green: string;
+      orange: string;
+    };
   }
   interface PaletteOptions {
     onSurface: PaletteIntensityOptions;
