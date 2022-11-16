@@ -41,9 +41,13 @@ export default class CallAssignmentModel {
     }
   }
 
-  getStats(): CallAssignmentStats {
+  getStats(): CallAssignmentStats | null {
     const state = this._store.getState();
     const stats = state.callAssignments.statsById[this._id];
+
+    if (this.isTargeted) {
+      return null;
+    }
 
     if (stats) {
       return stats;
@@ -58,16 +62,35 @@ export default class CallAssignmentModel {
         });
 
       return {
+        allocated: 0,
         blocked: 0,
+        callBackLater: 0,
+        calledTooRecently: 0,
         done: 0,
         isLoading: true,
+        missingPhoneNumber: 0,
+        organizerActionNeeded: 0,
+        queue: 0,
         ready: 0,
       };
     }
   }
 
+  get hasTargets() {
+    const data = this.getStats();
+    if (data === null) {
+      return false;
+    }
+    return data.blocked + data.ready + data.done > 0;
+  }
+
   get isLoading() {
     return this._store.getState().callAssignments.isLoading;
+  }
+
+  get isTargeted() {
+    const data = this.getData();
+    return data.target.filter_spec?.length === 0;
   }
 
   get statsIsLoading() {
