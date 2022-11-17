@@ -1,6 +1,9 @@
 blocked:
   callBackLater: Asked us to call back later
   calledTooRecently: Called too recently
+  hours:
+    many: hours
+    one: hour
   missingPhoneNumber: Missing phone number
   organizerActionNeeded: Organizer action needed
   subtitle: Targets not ready to be called
