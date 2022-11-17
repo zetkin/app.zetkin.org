@@ -1,5 +1,6 @@
+import SettingsIcon from '@material-ui/icons/Settings';
 import { useIntl } from 'react-intl';
-import { Card, Grid, List } from '@material-ui/core';
+import { Box, Card, Grid, List, Typography } from '@material-ui/core';
 
 import CallAssignmentModel from '../models/CallAssignmentModel';
 import StatusCardHeader from './StatusCardHeader';
@@ -14,6 +15,7 @@ const CallAssignmentStatusCards = ({
 }: CallAssignmentStatusCardProps) => {
   const intl = useIntl();
   const stats = model.getStats();
+  const { cooldown } = model.getData();
   const hasTargets = model.hasTargets;
 
   return (
@@ -32,6 +34,14 @@ const CallAssignmentStatusCards = ({
           />
           <List>
             <StatusCardItem
+              action={
+                <Box display="flex" justifyContent="space-between">
+                  <Typography color="secondary" variant="h5">
+                    {cooldown} hours
+                  </Typography>
+                  <SettingsIcon color="secondary" cursor="pointer" />
+                </Box>
+              }
               title={intl.formatMessage({
                 id: 'pages.organizeCallAssignment.blocked.calledTooRecently',
               })}

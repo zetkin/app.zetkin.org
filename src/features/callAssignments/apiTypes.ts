@@ -1,6 +1,7 @@
 import { ZetkinQuery } from 'utils/types/zetkin';
 
 export interface CallAssignmentData {
+  cooldown: number;
   id: number;
   target: ZetkinQuery;
   title: string;
