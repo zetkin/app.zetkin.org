@@ -1,10 +1,21 @@
 import SettingsIcon from '@material-ui/icons/Settings';
-import { Box, Card, Grid, List, Typography } from '@material-ui/core';
-import { FormattedPlural, useIntl } from 'react-intl';
+import {
+  Box,
+  Card,
+  ClickAwayListener,
+  Grid,
+  List,
+  Paper,
+  Popper,
+  TextField,
+  Typography,
+} from '@material-ui/core';
+import { FormattedMessage as Msg, useIntl } from 'react-intl';
 
 import CallAssignmentModel from '../models/CallAssignmentModel';
 import StatusCardHeader from './StatusCardHeader';
 import StatusCardItem from './StatusCardItem';
+import { useState } from 'react';
 
 interface CallAssignmentStatusCardProps {
   model: CallAssignmentModel;
@@ -17,6 +28,11 @@ const CallAssignmentStatusCards = ({
   const stats = model.getStats();
   const { cooldown } = model.getData();
   const hasTargets = model.hasTargets;
+
+  const [anchorEl, setAnchorEl] = useState<
+    null | (EventTarget & SVGSVGElement)
+  >(null);
+  const [newCooldown, setNewCooldown] = useState<number | null>(cooldown);
 
   return (
     <Grid container spacing={2}>
@@ -37,20 +53,51 @@ const CallAssignmentStatusCards = ({
               action={
                 <Box display="flex" justifyContent="space-between">
                   <Typography color="secondary" variant="h5">
-                    {cooldown}
-                    {'\u00A0'}
-                    <FormattedPlural
-                      one={intl.formatMessage({
-                        id: 'pages.organizeCallAssignment.blocked.hours.one',
-                      })}
-                      other={intl.formatMessage({
-                        id: 'pages.organizeCallAssignment.blocked.hours.many',
-                      })}
-                      value={cooldown}
+                    <Msg
+                      id="pages.organizeCallAssignment.blocked.hours"
+                      values={{ cooldown }}
                     />
-                    {'\u00A0'}
                   </Typography>
-                  <SettingsIcon color="secondary" cursor="pointer" />
+                  <Box ml={1}>
+                    <SettingsIcon
+                      color="secondary"
+                      cursor="pointer"
+                      onClick={(event) =>
+                        setAnchorEl(anchorEl ? null : event.currentTarget)
+                      }
+                    />
+                  </Box>
+                  <Popper anchorEl={anchorEl} open={!!anchorEl}>
+                    <ClickAwayListener onClickAway={() => setAnchorEl(null)}>
+                      <Paper elevation={3} variant="elevation">
+                        <Box mt={1} p={2}>
+                          <TextField
+                            helperText={intl.formatMessage({
+                              id: 'pages.organizeCallAssignment.blocked.cooldownHelperText',
+                            })}
+                            label={intl.formatMessage({
+                              id: 'pages.organizeCallAssignment.blocked.cooldownLabel',
+                            })}
+                            onChange={(ev) => {
+                              const val = ev.target.value;
+
+                              if (val == '') {
+                                setNewCooldown(null);
+                                return;
+                              }
+
+                              const intVal = parseInt(val);
+                              if (!isNaN(intVal) && intVal.toString() == val) {
+                                setNewCooldown(intVal);
+                              }
+                            }}
+                            value={newCooldown === null ? '' : newCooldown}
+                            variant="outlined"
+                          />
+                        </Box>
+                      </Paper>
+                    </ClickAwayListener>
+                  </Popper>
                 </Box>
               }
               title={intl.formatMessage({
