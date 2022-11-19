@@ -1,6 +1,8 @@
 import { makeStyles } from '@material-ui/styles';
 import { Box, Divider, Theme, Typography } from '@material-ui/core';
 
+import ZUIAnimatedNumber from 'zui/ZUIAnimatedNumber';
+
 interface StatusCardHeaderProps {
   chipColor: keyof Theme['palette']['targetingStatusBar'];
   subtitle: string;
@@ -45,7 +47,13 @@ const StatusCardHeader = ({
           <Typography variant="h4">{title}</Typography>
           <Typography color="secondary">{subtitle}</Typography>
         </Box>
-        {value != undefined && <Box className={classes.chip}>{value}</Box>}
+        {value != undefined && (
+          <ZUIAnimatedNumber value={value || 0}>
+            {(animatedValue) => (
+              <Box className={classes.chip}>{animatedValue}</Box>
+            )}
+          </ZUIAnimatedNumber>
+        )}
       </Box>
       <Divider />
     </Box>
