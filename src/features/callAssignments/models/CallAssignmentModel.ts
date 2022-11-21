@@ -93,6 +93,35 @@ export default class CallAssignmentModel {
     return data.target.filter_spec?.length === 0;
   }
 
+  setCooldown(cooldown: number) {
+    const state = this._store.getState();
+    const callAssignment = state.callAssignments.callAssignments.find(
+      (ca) => ca.id == this._id
+    );
+
+    if (callAssignment) {
+      this._store.dispatch(callAssignmentLoad());
+      const promise = fetch(
+        `/api/orgs/${this._orgId}/call_assignments/${this._id}`,
+        {
+          body: JSON.stringify({ cooldown }),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          method: 'PATCH',
+        }
+      )
+        .then((res) => {
+          return res.json();
+        })
+        .then((data: { data: CallAssignmentData }) => {
+          this._store.dispatch(callAssignmentLoaded(data.data));
+        });
+
+      throw promise;
+    }
+  }
+
   get statsIsLoading() {
     return (
       this._store.getState().callAssignments.statsById[this._id]?.isLoading ??

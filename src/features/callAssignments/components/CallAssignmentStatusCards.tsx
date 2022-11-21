@@ -68,7 +68,14 @@ const CallAssignmentStatusCards = ({
                     />
                   </Box>
                   <Popper anchorEl={anchorEl} open={!!anchorEl}>
-                    <ClickAwayListener onClickAway={() => setAnchorEl(null)}>
+                    <ClickAwayListener
+                      onClickAway={() => {
+                        setAnchorEl(null);
+                        if (newCooldown && newCooldown != cooldown) {
+                          model.setCooldown(newCooldown);
+                        }
+                      }}
+                    >
                       <Paper elevation={3} variant="elevation">
                         <Box mt={1} p={2}>
                           <TextField
