@@ -71,7 +71,7 @@ const CallAssignmentStatusCards = ({
                     <ClickAwayListener
                       onClickAway={() => {
                         setAnchorEl(null);
-                        if (newCooldown && newCooldown != cooldown) {
+                        if (newCooldown != null && newCooldown != cooldown) {
                           model.setCooldown(newCooldown);
                         }
                       }}
@@ -100,7 +100,10 @@ const CallAssignmentStatusCards = ({
                             }}
                             onKeyDown={(ev) => {
                               if (ev.key === 'Enter') {
-                                if (newCooldown && newCooldown != cooldown) {
+                                if (
+                                  newCooldown != null &&
+                                  newCooldown != cooldown
+                                ) {
                                   setAnchorEl(null);
                                   model.setCooldown(newCooldown);
                                   // If user has not changed the cooldown, do nothing
