@@ -98,6 +98,21 @@ const CallAssignmentStatusCards = ({
                                 setNewCooldown(intVal);
                               }
                             }}
+                            onKeyDown={(ev) => {
+                              if (ev.key === 'Enter') {
+                                if (newCooldown && newCooldown != cooldown) {
+                                  setAnchorEl(null);
+                                  model.setCooldown(newCooldown);
+                                  // If user has not changed the cooldown, do nothing
+                                } else {
+                                  setAnchorEl(null);
+                                }
+                                //if user exits, reset value
+                              } else if (ev.key === 'Escape') {
+                                setAnchorEl(null);
+                                setNewCooldown(cooldown);
+                              }
+                            }}
                             value={newCooldown === null ? '' : newCooldown}
                             variant="outlined"
                           />
