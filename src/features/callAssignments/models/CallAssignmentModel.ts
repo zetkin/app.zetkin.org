@@ -3,6 +3,7 @@ import { CallAssignmentData, CallAssignmentStats } from '../apiTypes';
 import {
   callAssignmentLoad,
   callAssignmentLoaded,
+  callAssignmentUpdate,
   statsLoad,
   statsLoaded,
 } from '../store';
@@ -115,7 +116,7 @@ export default class CallAssignmentModel {
           return res.json();
         })
         .then((data: { data: CallAssignmentData }) => {
-          this._store.dispatch(callAssignmentLoaded(data.data));
+          this._store.dispatch(callAssignmentUpdate(data.data));
         });
 
       throw promise;

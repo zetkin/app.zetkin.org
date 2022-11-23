@@ -30,6 +30,20 @@ const callAssignmentsSlice = createSlice({
         .filter((ca) => ca.id != action.payload.id)
         .concat([action.payload]);
     },
+    callAssignmentUpdate: (
+      state,
+      action: PayloadAction<CallAssignmentData>
+    ) => {
+      const callAssignment = state.callAssignments.find(
+        (ca) => ca.id === action.payload.id
+      );
+      if (callAssignment?.cooldown != action.payload.cooldown) {
+        state.statsById[action.payload.id] = undefined;
+        state.callAssignments = state.callAssignments
+          .filter((ca) => ca.id != action.payload.id)
+          .concat([action.payload]);
+      }
+    },
     statsLoad: (state, action: PayloadAction<number>) => {
       state.statsById[action.payload] = {
         allocated: 0,
@@ -70,6 +84,7 @@ export default callAssignmentsSlice.reducer;
 export const {
   callAssignmentLoad,
   callAssignmentLoaded,
+  callAssignmentUpdate,
   statsLoad,
   statsLoaded,
 } = callAssignmentsSlice.actions;
