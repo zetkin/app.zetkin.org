@@ -13,6 +13,7 @@ export interface CallAssignmentStats {
   callBackLater: number;
   calledTooRecently: number;
   done: number;
+  isStale: boolean;
   missingPhoneNumber: number;
   organizerActionNeeded: number;
   queue: number;

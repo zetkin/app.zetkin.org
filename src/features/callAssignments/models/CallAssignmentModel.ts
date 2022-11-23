@@ -3,7 +3,7 @@ import { CallAssignmentData, CallAssignmentStats } from '../apiTypes';
 import {
   callAssignmentLoad,
   callAssignmentLoaded,
-  callAssignmentUpdate,
+  callAssignmentUpdated,
   statsLoad,
   statsLoaded,
 } from '../store';
@@ -50,7 +50,7 @@ export default class CallAssignmentModel {
       return null;
     }
 
-    if (stats) {
+    if (stats && !stats.isStale) {
       return stats;
     } else {
       this._store.dispatch(statsLoad(this._id));
@@ -69,6 +69,7 @@ export default class CallAssignmentModel {
         calledTooRecently: 0,
         done: 0,
         isLoading: true,
+        isStale: false,
         missingPhoneNumber: 0,
         organizerActionNeeded: 0,
         queue: 0,
@@ -116,7 +117,7 @@ export default class CallAssignmentModel {
           return res.json();
         })
         .then((data: { data: CallAssignmentData }) => {
-          this._store.dispatch(callAssignmentUpdate(data.data));
+          this._store.dispatch(callAssignmentUpdated(data.data));
         });
 
       throw promise;
