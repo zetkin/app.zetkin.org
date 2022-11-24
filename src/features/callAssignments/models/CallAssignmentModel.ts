@@ -46,7 +46,7 @@ export default class CallAssignmentModel {
     const state = this._store.getState();
     const stats = state.callAssignments.statsById[this._id];
 
-    if (this.isTargeted) {
+    if (!this.isTargeted) {
       return null;
     }
 
@@ -92,7 +92,7 @@ export default class CallAssignmentModel {
 
   get isTargeted() {
     const data = this.getData();
-    return data.target.filter_spec?.length === 0;
+    return data.target.filter_spec?.length != 0;
   }
 
   setCooldown(cooldown: number) {
