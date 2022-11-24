@@ -17,6 +17,7 @@ import CallAssignmentStatusCards from 'features/callAssignments/components/CallA
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import useModel from 'core/useModel';
+import ZUIAnimatedNumber from 'zui/ZUIAnimatedNumber';
 import ZUIStackedStatusBar from 'zui/ZUIStackedStatusBar';
 
 const useStyles = makeStyles((theme) => ({
@@ -102,7 +103,13 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
         <Card>
           <Box display="flex" justifyContent="space-between" p={2}>
             <Typography variant="h4">Targets</Typography>
-            {model.isTargeted && <Box className={classes.chip}>100</Box>}
+            {model.isTargeted && (
+              <ZUIAnimatedNumber value={stats?.allTargets || 0}>
+                {(animatedValue) => (
+                  <Box className={classes.chip}>{animatedValue}</Box>
+                )}
+              </ZUIAnimatedNumber>
+            )}
           </Box>
           {model.isTargeted ? (
             <>

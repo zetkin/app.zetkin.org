@@ -63,6 +63,7 @@ export default class CallAssignmentModel {
         });
 
       return {
+        allTargets: 0,
         allocated: 0,
         blocked: 0,
         callBackLater: 0,

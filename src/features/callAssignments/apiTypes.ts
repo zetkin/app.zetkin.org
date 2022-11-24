@@ -8,6 +8,7 @@ export interface CallAssignmentData {
 }
 
 export interface CallAssignmentStats {
+  allTargets: number;
   allocated: number;
   blocked: number;
   callBackLater: number;

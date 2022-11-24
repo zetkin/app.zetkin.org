@@ -47,6 +47,7 @@ const callAssignmentsSlice = createSlice({
     },
     statsLoad: (state, action: PayloadAction<number>) => {
       state.statsById[action.payload] = {
+        allTargets: 0,
         allocated: 0,
         blocked: 0,
         callBackLater: 0,
@@ -67,6 +68,7 @@ const callAssignmentsSlice = createSlice({
     ) => {
       state.isLoading = false;
       state.statsById[action.payload.id] = {
+        allTargets: action.payload.allTargets,
         allocated: action.payload.allocated,
         blocked: action.payload.blocked,
         callBackLater: action.payload.callBackLater,
