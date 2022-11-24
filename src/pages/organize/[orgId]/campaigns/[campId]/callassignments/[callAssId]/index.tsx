@@ -1,6 +1,14 @@
 import { GetServerSideProps } from 'next';
 import { FormattedMessage as Msg } from 'react-intl';
-import { Box, Typography } from '@material-ui/core';
+import { Add, Edit } from '@material-ui/icons';
+import {
+  Box,
+  Button,
+  Card,
+  Divider,
+  makeStyles,
+  Typography,
+} from '@material-ui/core';
 import { useEffect, useState } from 'react';
 
 import CallAssignmentLayout from 'features/callAssignments/layout/CallAssignmentLayout';
@@ -10,6 +18,20 @@ import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import useModel from 'core/useModel';
 import ZUIStackedStatusBar from 'zui/ZUIStackedStatusBar';
+
+const useStyles = makeStyles((theme) => ({
+  chip: {
+    backgroundColor: theme.palette.targetingStatusBar.gray,
+    borderRadius: '1em',
+    color: 'secondary',
+    display: 'flex',
+    fontSize: '1.8em',
+    lineHeight: 'normal',
+    marginRight: '0.1em',
+    overflow: 'hidden',
+    padding: '0.2em 0.7em',
+  },
+}));
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   async (ctx) => {
@@ -42,6 +64,7 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
   orgId,
   assignmentId,
 }) => {
+  const classes = useStyles();
   const [onServer, setOnServer] = useState(true);
   const model = useModel(
     (store) =>
@@ -75,6 +98,38 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
 
   return (
     <Box>
+      <Box mb={2}>
+        <Card>
+          <Box display="flex" justifyContent="space-between" p={2}>
+            <Typography variant="h4">Targets</Typography>
+            {model.isTargeted && <Box className={classes.chip}>100</Box>}
+          </Box>
+          {model.isTargeted ? (
+            <>
+              <Divider />
+              <Box p={2}>
+                <Button startIcon={<Edit />} variant="outlined">
+                  Edit target group
+                </Button>
+              </Box>
+            </>
+          ) : (
+            <Box pb={2} px={2}>
+              <Box bgcolor="gray" p={2}>
+                <Typography>
+                  Use smart search to define target group for this assignment.
+                </Typography>
+                <Box pt={1}>
+                  <Button startIcon={<Add />} variant="outlined">
+                    Define target group
+                  </Button>
+                </Box>
+              </Box>
+            </Box>
+          )}
+        </Card>
+      </Box>
+
       <Box mb={2}>
         <Typography variant="h3">
           <Msg id="pages.organizeCallAssignment.statusSectionTitle" />
