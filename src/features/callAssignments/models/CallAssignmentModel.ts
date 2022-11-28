@@ -101,6 +101,11 @@ export default class CallAssignmentModel {
       (ca) => ca.id == this._id
     );
 
+    //kolla här ifall cooldown som kommer in är annorlunda än existerande cooldown
+    if (cooldown === callAssignment?.cooldown) {
+      return null;
+    }
+
     if (callAssignment) {
       this._store.dispatch(callAssignmentLoad());
       const promise = fetch(
