@@ -38,7 +38,13 @@ const callAssignmentsSlice = createSlice({
       const callAssignment = state.callAssignments.find(
         (ca) => ca.id === action.payload.id
       );
-      if (stats && callAssignment?.cooldown != action.payload.cooldown) {
+      if (
+        //TODO: clean up this hot mess w better caching logic
+        (stats && callAssignment?.cooldown != action.payload.cooldown) ||
+        (stats &&
+          JSON.stringify(action.payload.target.filter_spec) !=
+            JSON.stringify(callAssignment?.target.filter_spec))
+      ) {
         stats.isStale = true;
         state.callAssignments = state.callAssignments
           .filter((ca) => ca.id != action.payload.id)

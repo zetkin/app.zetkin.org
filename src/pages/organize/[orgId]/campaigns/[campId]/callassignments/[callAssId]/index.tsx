@@ -16,6 +16,7 @@ import CallAssignmentModel from 'features/callAssignments/models/CallAssignmentM
 import CallAssignmentStatusCards from 'features/callAssignments/components/CallAssignmentStatusCards';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
+import SmartSearchDialog from 'features/smartSearch/components/SmartSearchDialog';
 import useModel from 'core/useModel';
 import ZUIAnimatedNumber from 'zui/ZUIAnimatedNumber';
 import ZUIStackedStatusBar from 'zui/ZUIStackedStatusBar';
@@ -67,6 +68,7 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
 }) => {
   const classes = useStyles();
   const [onServer, setOnServer] = useState(true);
+  const [queryDialogOpen, setQueryDialogOpen] = useState(false);
   const model = useModel(
     (store) =>
       new CallAssignmentModel(store, parseInt(orgId), parseInt(assignmentId))
@@ -97,6 +99,8 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
       ? [stats.blocked, stats.ready, stats.done]
       : [1, 1, 1];
 
+  const { target } = model.getData();
+
   return (
     <Box>
       <Box mb={2}>
@@ -115,7 +119,11 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
             <>
               <Divider />
               <Box p={2}>
-                <Button startIcon={<Edit />} variant="outlined">
+                <Button
+                  onClick={() => setQueryDialogOpen(true)}
+                  startIcon={<Edit />}
+                  variant="outlined"
+                >
                   Edit target group
                 </Button>
               </Box>
@@ -127,7 +135,11 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
                   Use smart search to define target group for this assignment.
                 </Typography>
                 <Box pt={1}>
-                  <Button startIcon={<Add />} variant="outlined">
+                  <Button
+                    onClick={() => setQueryDialogOpen(true)}
+                    startIcon={<Add />}
+                    variant="outlined"
+                  >
                     Define target group
                   </Button>
                 </Box>
@@ -135,6 +147,16 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
             </Box>
           )}
         </Card>
+        {queryDialogOpen && (
+          <SmartSearchDialog
+            onDialogClose={() => setQueryDialogOpen(false)}
+            onSave={(query) => {
+              model.setTargets(query);
+              setQueryDialogOpen(false);
+            }}
+            query={target}
+          />
+        )}
       </Box>
 
       <Box mb={2}>
