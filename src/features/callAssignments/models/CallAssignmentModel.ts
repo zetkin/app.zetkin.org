@@ -101,31 +101,26 @@ export default class CallAssignmentModel {
       (ca) => ca.id == this._id
     );
 
-    //kolla här ifall cooldown som kommer in är annorlunda än existerande cooldown
+    //if cooldown has not changed, do nothing.
     if (cooldown === callAssignment?.cooldown) {
       return null;
     }
 
     if (callAssignment) {
       this._store.dispatch(callAssignmentLoad());
-      const promise = fetch(
-        `/api/orgs/${this._orgId}/call_assignments/${this._id}`,
-        {
-          body: JSON.stringify({ cooldown }),
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          method: 'PATCH',
-        }
-      )
+      fetch(`/api/orgs/${this._orgId}/call_assignments/${this._id}`, {
+        body: JSON.stringify({ cooldown }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        method: 'PATCH',
+      })
         .then((res) => {
           return res.json();
         })
         .then((data: { data: CallAssignmentData }) => {
           this._store.dispatch(callAssignmentUpdated(data.data));
         });
-
-      throw promise;
     }
   }
 
