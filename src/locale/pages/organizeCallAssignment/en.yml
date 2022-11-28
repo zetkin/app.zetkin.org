@@ -3,7 +3,7 @@ blocked:
   calledTooRecently: Called too recently
   cooldownHelperText: Set the minimum time between attempts to reach a target
   cooldownLabel: Cooldown time in hours
-  hours: '{cooldown, plural, =0 {None} =1 {One hour} other {# hours}}'
+  hours: '{cooldown, plural, =0 {None} =1 {# hour} other {# hours}}'
   missingPhoneNumber: Missing phone number
   organizerActionNeeded: Organizer action needed
   subtitle: Targets not ready to be called
