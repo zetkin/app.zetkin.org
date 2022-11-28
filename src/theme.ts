@@ -28,6 +28,7 @@ declare module '@material-ui/core/styles/createPalette' {
 const themePalette = {
   background: {
     default: '#F9F9F9',
+    secondary: 'rgba(0,0,0,0.04)',
   },
   error: {
     main: '#EE323E',

@@ -22,6 +22,10 @@ import ZUIAnimatedNumber from 'zui/ZUIAnimatedNumber';
 import ZUIStackedStatusBar from 'zui/ZUIStackedStatusBar';
 
 const useStyles = makeStyles((theme) => ({
+  button: {
+    borderColor: theme.palette.targetingStatusBar.blue,
+    color: theme.palette.targetingStatusBar.blue,
+  },
   chip: {
     backgroundColor: theme.palette.targetingStatusBar.gray,
     borderRadius: '1em',
@@ -122,6 +126,7 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
               <Divider />
               <Box p={2}>
                 <Button
+                  className={classes.button}
                   onClick={() => setQueryDialogOpen(true)}
                   startIcon={<Edit />}
                   variant="outlined"
@@ -132,12 +137,13 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
             </>
           ) : (
             <Box pb={2} px={2}>
-              <Box bgcolor="gray" p={2}>
+              <Box bgcolor="background.secondary" p={2}>
                 <Typography>
                   <Msg id="pages.organizeCallAssignment.targets.subtitle" />
                 </Typography>
                 <Box pt={1}>
                   <Button
+                    className={classes.button}
                     onClick={() => setQueryDialogOpen(true)}
                     startIcon={<Add />}
                     variant="outlined"
