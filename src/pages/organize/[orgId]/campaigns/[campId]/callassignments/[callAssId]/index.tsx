@@ -106,7 +106,9 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
       <Box mb={2}>
         <Card>
           <Box display="flex" justifyContent="space-between" p={2}>
-            <Typography variant="h4">Targets</Typography>
+            <Typography variant="h4">
+              <Msg id="pages.organizeCallAssignment.targets.title" />
+            </Typography>
             {model.isTargeted && (
               <ZUIAnimatedNumber value={stats?.allTargets || 0}>
                 {(animatedValue) => (
@@ -124,7 +126,7 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
                   startIcon={<Edit />}
                   variant="outlined"
                 >
-                  Edit target group
+                  <Msg id="pages.organizeCallAssignment.targets.editButton" />
                 </Button>
               </Box>
             </>
@@ -132,7 +134,7 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
             <Box pb={2} px={2}>
               <Box bgcolor="gray" p={2}>
                 <Typography>
-                  Use smart search to define target group for this assignment.
+                  <Msg id="pages.organizeCallAssignment.targets.subtitle" />
                 </Typography>
                 <Box pt={1}>
                   <Button
@@ -140,7 +142,7 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
                     startIcon={<Add />}
                     variant="outlined"
                   >
-                    Define target group
+                    <Msg id="pages.organizeCallAssignment.targets.defineButton" />
                   </Button>
                 </Box>
               </Box>
