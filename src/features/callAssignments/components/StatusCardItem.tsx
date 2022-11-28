@@ -3,14 +3,15 @@ import { Box, ListItem, Typography } from '@material-ui/core';
 import ZUIAnimatedNumber from 'zui/ZUIAnimatedNumber';
 
 interface StatusCardItemProps {
+  action?: JSX.Element;
   title: string;
   value: number | undefined;
 }
 
-const StatusCardItem = ({ title, value }: StatusCardItemProps) => {
+const StatusCardItem = ({ action, title, value }: StatusCardItemProps) => {
   return (
     <ListItem>
-      <Box display="flex">
+      <Box display="flex" justifyContent="space-between" width="100%">
         <Box display="flex" flexDirection="column">
           <Typography color="secondary" variant="h5">
             {title}
@@ -22,6 +23,7 @@ const StatusCardItem = ({ title, value }: StatusCardItemProps) => {
             }}
           </ZUIAnimatedNumber>
         </Box>
+        {action && action}
       </Box>
     </ListItem>
   );

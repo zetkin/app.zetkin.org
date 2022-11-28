@@ -3,6 +3,7 @@ import { CallAssignmentData, CallAssignmentStats } from '../apiTypes';
 import {
   callAssignmentLoad,
   callAssignmentLoaded,
+  callAssignmentUpdated,
   statsLoad,
   statsLoaded,
 } from '../store';
@@ -49,7 +50,7 @@ export default class CallAssignmentModel {
       return null;
     }
 
-    if (stats) {
+    if (stats && !stats.isStale) {
       return stats;
     } else {
       this._store.dispatch(statsLoad(this._id));
@@ -68,6 +69,7 @@ export default class CallAssignmentModel {
         calledTooRecently: 0,
         done: 0,
         isLoading: true,
+        isStale: false,
         missingPhoneNumber: 0,
         organizerActionNeeded: 0,
         queue: 0,
@@ -91,6 +93,35 @@ export default class CallAssignmentModel {
   get isTargeted() {
     const data = this.getData();
     return data.target.filter_spec?.length === 0;
+  }
+
+  setCooldown(cooldown: number) {
+    const state = this._store.getState();
+    const callAssignment = state.callAssignments.callAssignments.find(
+      (ca) => ca.id == this._id
+    );
+
+    //if cooldown has not changed, do nothing.
+    if (cooldown === callAssignment?.cooldown) {
+      return null;
+    }
+
+    if (callAssignment) {
+      this._store.dispatch(callAssignmentLoad());
+      fetch(`/api/orgs/${this._orgId}/call_assignments/${this._id}`, {
+        body: JSON.stringify({ cooldown }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        method: 'PATCH',
+      })
+        .then((res) => {
+          return res.json();
+        })
+        .then((data: { data: CallAssignmentData }) => {
+          this._store.dispatch(callAssignmentUpdated(data.data));
+        });
+    }
   }
 
   get statsIsLoading() {
