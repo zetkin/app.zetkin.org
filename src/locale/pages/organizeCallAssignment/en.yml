@@ -17,3 +17,8 @@ ready:
   subtitle: Targets to be called
   title: Ready
 statusSectionTitle: Status
+targets:
+  defineButton: Define target group
+  editButton: Edit target group
+  subtitle: Use smart search to define target group for this assignment.
+  title: Targets

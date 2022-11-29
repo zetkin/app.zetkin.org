@@ -38,8 +38,15 @@ const callAssignmentsSlice = createSlice({
       const callAssignment = state.callAssignments.find(
         (ca) => ca.id === action.payload.id
       );
-      if (stats && callAssignment?.cooldown != action.payload.cooldown) {
-        stats.isStale = true;
+      if (
+        //TODO: clean up this hot mess w better caching logic
+        callAssignment?.cooldown != action.payload.cooldown ||
+        JSON.stringify(action.payload.target.filter_spec) !=
+          JSON.stringify(callAssignment?.target.filter_spec)
+      ) {
+        if (stats) {
+          stats.isStale = true;
+        }
         state.callAssignments = state.callAssignments
           .filter((ca) => ca.id != action.payload.id)
           .concat([action.payload]);
@@ -47,6 +54,7 @@ const callAssignmentsSlice = createSlice({
     },
     statsLoad: (state, action: PayloadAction<number>) => {
       state.statsById[action.payload] = {
+        allTargets: 0,
         allocated: 0,
         blocked: 0,
         callBackLater: 0,
@@ -67,6 +75,7 @@ const callAssignmentsSlice = createSlice({
     ) => {
       state.isLoading = false;
       state.statsById[action.payload.id] = {
+        allTargets: action.payload.allTargets,
         allocated: action.payload.allocated,
         blocked: action.payload.blocked,
         callBackLater: action.payload.callBackLater,

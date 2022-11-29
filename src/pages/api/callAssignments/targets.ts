@@ -5,6 +5,7 @@ export interface ZetkinTarget {
   status: {
     block_reasons: string[];
     blocked: boolean;
+    goal_fulfilled: boolean;
   };
 }
 
@@ -43,10 +44,15 @@ export default async function handler(
   let allocated = 0,
     callBackLater = 0,
     calledTooRecently = 0,
+    doneButBlocked = 0,
     missingPhoneNumber = 0,
     organizerActionNeeded = 0;
 
   blockedTargets.forEach((target: ZetkinTarget) => {
+    if (target.status.goal_fulfilled) {
+      doneButBlocked++;
+    }
+
     const reasons = target.status.block_reasons;
     if (reasons.includes('organizer_action_needed')) {
       organizerActionNeeded++;
@@ -68,13 +74,18 @@ export default async function handler(
     organizerActionNeeded;
 
   const done: number =
-    statsData.data.num_target_matches - statsData.data.num_remaining_targets;
+    statsData.data.num_target_matches -
+    statsData.data.num_remaining_targets -
+    doneButBlocked;
 
   const ready: number = statsData.data.num_target_matches + allocated - done;
 
   const queue: number = ready - allocated;
 
+  const allTargets: number = blocked + ready + done;
+
   res.status(200).json({
+    allTargets,
     allocated,
     blocked,
     callBackLater,

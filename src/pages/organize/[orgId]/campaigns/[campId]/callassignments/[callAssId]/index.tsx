@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import CallAssignmentLayout from 'features/callAssignments/layout/CallAssignmentLayout';
 import CallAssignmentModel from 'features/callAssignments/models/CallAssignmentModel';
 import CallAssignmentStatusCards from 'features/callAssignments/components/CallAssignmentStatusCards';
+import CallAssignmentTargets from 'features/callAssignments/components/CallAssignmentTargets';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import useModel from 'core/useModel';
@@ -75,6 +76,9 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
 
   return (
     <Box>
+      <Box mb={2}>
+        <CallAssignmentTargets model={model} />
+      </Box>
       <Box mb={2}>
         <Typography variant="h3">
           <Msg id="pages.organizeCallAssignment.statusSectionTitle" />

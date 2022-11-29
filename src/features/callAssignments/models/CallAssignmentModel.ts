@@ -1,4 +1,5 @@
 import { Store } from 'core/store';
+import { ZetkinQuery } from 'utils/types/zetkin';
 import { CallAssignmentData, CallAssignmentStats } from '../apiTypes';
 import {
   callAssignmentLoad,
@@ -46,7 +47,7 @@ export default class CallAssignmentModel {
     const state = this._store.getState();
     const stats = state.callAssignments.statsById[this._id];
 
-    if (this.isTargeted) {
+    if (!this.isTargeted) {
       return null;
     }
 
@@ -63,6 +64,7 @@ export default class CallAssignmentModel {
         });
 
       return {
+        allTargets: 0,
         allocated: 0,
         blocked: 0,
         callBackLater: 0,
@@ -92,7 +94,7 @@ export default class CallAssignmentModel {
 
   get isTargeted() {
     const data = this.getData();
-    return data.target.filter_spec?.length === 0;
+    return data.target.filter_spec?.length != 0;
   }
 
   setCooldown(cooldown: number) {
@@ -121,6 +123,32 @@ export default class CallAssignmentModel {
         .then((data: { data: CallAssignmentData }) => {
           this._store.dispatch(callAssignmentUpdated(data.data));
         });
+    }
+  }
+
+  setTargets(query: Partial<ZetkinQuery>) {
+    const state = this._store.getState();
+    const callAssignment = state.callAssignments.callAssignments.find(
+      (ca) => ca.id == this._id
+    );
+    if (callAssignment) {
+      this._store.dispatch(callAssignmentLoad());
+      fetch(
+        `/api/orgs/${this._orgId}/people/queries/${callAssignment.target.id}`,
+        {
+          body: JSON.stringify(query),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          method: 'PATCH',
+        }
+      )
+        .then((res) => res.json())
+        .then((data: { data: ZetkinQuery }) =>
+          this._store.dispatch(
+            callAssignmentUpdated({ ...callAssignment, target: data.data })
+          )
+        );
     }
   }
 
