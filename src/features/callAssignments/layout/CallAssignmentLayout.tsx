@@ -26,6 +26,10 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
           messageId: 'layout.organize.callAssignment.tabs.overview',
         },
         {
+          href: '/callers',
+          messageId: 'layout.organize.callAssignment.tabs.callers',
+        },
+        {
           href: '/insights',
           messageId: 'layout.organize.callAssignment.tabs.insights',
         },
