@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
   chip: {
     backgroundColor: theme.palette.targetingStatusBar.gray,
     borderRadius: '1em',
-    color: 'secondary',
+    color: theme.palette.text.secondary,
     display: 'flex',
     fontSize: '1.8em',
     lineHeight: 'normal',
