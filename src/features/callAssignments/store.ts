@@ -49,6 +49,21 @@ const callAssignmentsSlice = createSlice({
         state.callAssignments = state.callAssignments
           .filter((ca) => ca.id != action.payload.id)
           .concat([action.payload]);
+      } else {
+        state.statsById[action.payload.id] = {
+          allTargets: 0,
+          allocated: 0,
+          blocked: 0,
+          callBackLater: 0,
+          calledTooRecently: 0,
+          done: 0,
+          isLoading: false,
+          isStale: true,
+          missingPhoneNumber: 0,
+          organizerActionNeeded: 0,
+          queue: 0,
+          ready: 0,
+        };
       }
     },
     statsLoad: (state, action: PayloadAction<number>) => {
