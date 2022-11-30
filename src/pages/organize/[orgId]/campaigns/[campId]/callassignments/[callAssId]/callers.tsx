@@ -1,5 +1,16 @@
 import { GetServerSideProps } from 'next';
-import { Box, Typography } from '@material-ui/core';
+import {
+  Avatar,
+  Box,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Typography,
+} from '@material-ui/core';
 import { useEffect, useState } from 'react';
 
 import CallAssignmentLayout from 'features/callAssignments/layout/CallAssignmentLayout';
@@ -56,9 +67,39 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
 
   return (
     <Box>
-      {callers.map((caller) => (
-        <Typography key={caller.id}>{caller.first_name}</Typography>
-      ))}
+      <Paper>
+        <Box p={2}>
+          <Typography variant="h4">Callers</Typography>
+          <TableContainer>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell padding="checkbox" />
+                  <TableCell>
+                    <Typography>Name</Typography>
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {callers.map((caller) => (
+                  <TableRow key={caller.id}>
+                    <TableCell>
+                      <Avatar
+                        src={`/api/orgs/${orgId}/people/${caller.id}/avatar`}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <Typography>
+                        {`${caller.first_name} ${caller.last_name}`}
+                      </Typography>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Box>
+      </Paper>
     </Box>
   );
 };
