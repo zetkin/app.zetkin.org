@@ -16,16 +16,17 @@ import {
 
 import TimelineAddNote from './TimelineAddNote';
 import TimelineUpdate from './TimelineUpdate';
-import { ZetkinNoteBody } from 'utils/types/zetkin';
 import { ZetkinUpdate } from 'zui/ZUITimeline/types';
 import useFilterUpdates, {
   UPDATE_TYPE_FILTER_OPTIONS,
 } from './useFilterUpdates';
+import { ZetkinNote, ZetkinNoteBody } from 'utils/types/zetkin';
 
 export interface ZUITimelineProps {
   disabled?: boolean;
   expandable?: boolean;
   onAddNote: (note: ZetkinNoteBody) => void;
+  onEditNote: (note: Pick<ZetkinNote, 'id' | 'text'>) => void;
   showAll?: boolean;
   updates: ZetkinUpdate[];
 }
@@ -36,6 +37,7 @@ const ZUITimeline: React.FunctionComponent<ZUITimelineProps> = ({
   disabled,
   expandable,
   onAddNote,
+  onEditNote,
   showAll,
   updates,
 }) => {
@@ -150,7 +152,7 @@ const ZUITimeline: React.FunctionComponent<ZUITimelineProps> = ({
     return (
       <React.Fragment key={update.timestamp + update.type}>
         <Grid aria-label="timeline update" item>
-          <TimelineUpdate update={update} />
+          <TimelineUpdate onEditNote={onEditNote} update={update} />
         </Grid>
         {divider && (
           <Grid item>

@@ -20,6 +20,7 @@ const options = {
     'tags.title',
     'title',
   ],
+  threshold: 0.4,
 };
 
 export const getRows = ({

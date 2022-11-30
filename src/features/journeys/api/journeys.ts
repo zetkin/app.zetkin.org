@@ -1,8 +1,10 @@
 import { JourneyInstancesData } from 'pages/api/organize/[orgId]/journeys/[journeyId]';
+import { ZetkinUpdate } from 'zui/ZUITimeline/types';
 import {
   createPrefetch,
   createUseMutation,
   createUseMutationDelete,
+  createUseMutationPatch,
   createUseMutationPut,
   createUseMutationPutWithBody,
   createUseQuery,
@@ -11,6 +13,8 @@ import {
   ZetkinJourney,
   ZetkinJourneyInstance,
   ZetkinJourneyMilestoneStatus,
+  ZetkinNote,
+  ZetkinNoteBody,
   ZetkinPerson,
   ZetkinTag,
 } from 'utils/types/zetkin';
@@ -104,5 +108,28 @@ export const journeyMilestoneStatusResource = (
       Partial<ZetkinJourneyMilestoneStatus>,
       ZetkinJourneyMilestoneStatus
     >(key, url, { method: 'PATCH' }),
+  };
+};
+
+export const journeyInstanceTimelineResource = (
+  orgId: string,
+  instanceId: string
+) => {
+  const key = ['journeyInstance', orgId, instanceId, 'timeline'];
+  const url = `/orgs/${orgId}/journey_instances/${instanceId}`;
+
+  return {
+    useAddNote: createUseMutation<ZetkinNoteBody, unknown>(key, `${url}/notes`),
+    useEditNote: createUseMutationPatch<
+      Pick<ZetkinNote, 'id' | 'text'>,
+      unknown
+    >({
+      key,
+      url: `${url}/notes`,
+    }),
+    useQueryUpdates: createUseQuery<ZetkinUpdate[]>(
+      key,
+      `${url}/timeline/updates`
+    ),
   };
 };

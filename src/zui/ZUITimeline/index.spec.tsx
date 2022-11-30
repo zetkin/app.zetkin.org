@@ -9,6 +9,10 @@ import ZUITimeline, { SHOW_INITIALLY, ZUITimelineProps } from 'zui/ZUITimeline';
 
 import { createDynamicRouteParser } from 'next-router-mock/dynamic-routes';
 
+jest.mock('remark-parse', () => null);
+jest.mock('remark-gfm', () => null);
+jest.mock('unified', () => null);
+
 mockRouter.useParser(
   createDynamicRouteParser(['/organize/[orgId]/people/[id]'])
 );
@@ -21,6 +25,7 @@ const NUM_UPDATES = 10;
 
 const props: ZUITimelineProps = {
   onAddNote: () => null,
+  onEditNote: () => null,
   updates: Array.from(Array(NUM_UPDATES).keys()).map(() =>
     mockUpdate(UPDATE_TYPES.JOURNEYINSTANCE_ADDASSIGNEE, {
       timestamp: dayjs()
