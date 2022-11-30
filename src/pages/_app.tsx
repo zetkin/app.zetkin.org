@@ -1,6 +1,7 @@
 import '../styles.css';
 
 import { AppProps } from 'next/app';
+import createStore from 'core/store';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import DateUtils from '@date-io/dayjs';
 import dayjs from 'dayjs';
@@ -11,6 +12,7 @@ import { LicenseInfo } from '@mui/x-data-grid-pro';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import NProgress from 'nprogress';
 import { ReactQueryDevtools } from 'react-query/devtools';
+import { Provider as ReduxProvider } from 'react-redux';
 import Router from 'next/router';
 import { ThemeProvider } from '@material-ui/core/styles';
 import { useEffect } from 'react';
@@ -60,6 +62,8 @@ declare global {
   }
 }
 
+const store = createStore();
+
 function MyApp({ Component, pageProps }: AppProps): JSX.Element {
   const { dehydratedState, lang, messages, ...restProps } = pageProps;
   const c = Component as PageWithLayout;
@@ -78,25 +82,27 @@ function MyApp({ Component, pageProps }: AppProps): JSX.Element {
   }, []);
 
   return (
-    <UserContext.Provider value={pageProps.user}>
-      <ThemeProvider theme={theme}>
-        <MuiPickersUtilsProvider libInstance={dayjs} utils={DateUtils}>
-          <IntlProvider defaultLocale="en" locale={lang} messages={messages}>
-            <QueryClientProvider client={queryClient}>
-              <ZUISnackbarProvider>
-                <ZUIConfirmDialogProvider>
-                  <Hydrate state={dehydratedState}>
-                    <CssBaseline />
-                    {getLayout(<Component {...restProps} />, restProps)}
-                  </Hydrate>
-                </ZUIConfirmDialogProvider>
-              </ZUISnackbarProvider>
-              <ReactQueryDevtools initialIsOpen={false} />
-            </QueryClientProvider>
-          </IntlProvider>
-        </MuiPickersUtilsProvider>
-      </ThemeProvider>
-    </UserContext.Provider>
+    <ReduxProvider store={store}>
+      <UserContext.Provider value={pageProps.user}>
+        <ThemeProvider theme={theme}>
+          <MuiPickersUtilsProvider libInstance={dayjs} utils={DateUtils}>
+            <IntlProvider defaultLocale="en" locale={lang} messages={messages}>
+              <QueryClientProvider client={queryClient}>
+                <ZUISnackbarProvider>
+                  <ZUIConfirmDialogProvider>
+                    <Hydrate state={dehydratedState}>
+                      <CssBaseline />
+                      {getLayout(<Component {...restProps} />, restProps)}
+                    </Hydrate>
+                  </ZUIConfirmDialogProvider>
+                </ZUISnackbarProvider>
+                <ReactQueryDevtools initialIsOpen={false} />
+              </QueryClientProvider>
+            </IntlProvider>
+          </MuiPickersUtilsProvider>
+        </ThemeProvider>
+      </UserContext.Provider>
+    </ReduxProvider>
   );
 }
 

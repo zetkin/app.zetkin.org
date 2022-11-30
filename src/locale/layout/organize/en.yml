@@ -1,6 +1,7 @@
 callAssignment:
   tabs:
     insights: Insights
+    overview: Overview
 campaigns:
   allCampaigns: All Campaigns
   archive: Archive

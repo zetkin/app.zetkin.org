@@ -1,0 +1,24 @@
+blocked:
+  callBackLater: Asked us to call back later
+  calledTooRecently: Called too recently
+  cooldownHelperText: Set the minimum time between attempts to reach a target
+  cooldownLabel: Cooldown time in hours
+  hours: '{cooldown, plural, =0 {None} =1 {# hour} other {# hours}}'
+  missingPhoneNumber: Missing phone number
+  organizerActionNeeded: Organizer action needed
+  subtitle: Targets not ready to be called
+  title: Blocked
+done:
+  subtitle: Targets that meet the done criteria
+  title: Done
+ready:
+  allocated: Targets allocated to caller
+  queue: Targets in queue
+  subtitle: Targets to be called
+  title: Ready
+statusSectionTitle: Status
+targets:
+  defineButton: Define target group
+  editButton: Edit target group
+  subtitle: Use smart search to define target group for this assignment.
+  title: Targets

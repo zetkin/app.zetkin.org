@@ -12,6 +12,12 @@ declare module '@material-ui/core/styles/createPalette' {
   interface Palette {
     onSurface: PaletteIntensityOptions;
     outline: PaletteIntensityOptions;
+    targetingStatusBar: {
+      blue: string;
+      gray: string;
+      green: string;
+      orange: string;
+    };
   }
   interface PaletteOptions {
     onSurface: PaletteIntensityOptions;
@@ -22,6 +28,7 @@ declare module '@material-ui/core/styles/createPalette' {
 const themePalette = {
   background: {
     default: '#F9F9F9',
+    secondary: 'rgba(0,0,0,0.04)',
   },
   error: {
     main: '#EE323E',
@@ -45,6 +52,12 @@ const themePalette = {
   },
   success: {
     main: '#0eae4e',
+  },
+  targetingStatusBar: {
+    blue: 'rgba(25, 118, 210, 1)',
+    gray: 'rgba(0, 0, 0, 0.12)',
+    green: 'rgba(102, 187, 106, 1)',
+    orange: 'rgba(245, 124, 0, 1)',
   },
   text: {
     secondary: 'rgba(0, 0, 0, 0.6)',

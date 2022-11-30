@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { JourneyInstancesData } from 'pages/api/organize/[orgId]/journeys/[journeyId]';
 import { ZetkinUpdate } from 'zui/ZUITimeline/types';
 import {

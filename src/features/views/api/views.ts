@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { CreateNewViewReqBody } from 'pages/api/views/createNew';
 import { ZetkinView } from 'features/views/components/types';
 import {
