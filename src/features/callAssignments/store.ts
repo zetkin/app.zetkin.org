@@ -1,15 +1,21 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { CallAssignmentData, CallAssignmentStats } from './apiTypes';
+import {
+  CallAssignmentCaller,
+  CallAssignmentData,
+  CallAssignmentStats,
+} from './apiTypes';
 
 interface CallAssignmentSlice {
   callAssignments: CallAssignmentData[];
+  callersById: Record<number, CallAssignmentCaller[] | undefined>;
   isLoading: boolean;
   statsById: Record<number, CallAssignmentStats | undefined>;
 }
 
 const initialState: CallAssignmentSlice = {
   callAssignments: [],
+  callersById: {},
   isLoading: false,
   statsById: {},
 };
@@ -51,6 +57,15 @@ const callAssignmentsSlice = createSlice({
           .filter((ca) => ca.id != action.payload.id)
           .concat([action.payload]);
       }
+    },
+    callersLoad: (state, action: PayloadAction<number>) => {
+      state.callersById[action.payload] = [];
+    },
+    callersLoaded: (
+      state,
+      action: PayloadAction<{ callers: CallAssignmentCaller[]; id: number }>
+    ) => {
+      state.callersById[action.payload.id] = action.payload.callers;
     },
     statsLoad: (state, action: PayloadAction<number>) => {
       state.statsById[action.payload] = {
@@ -97,6 +112,8 @@ export const {
   callAssignmentLoad,
   callAssignmentLoaded,
   callAssignmentUpdated,
+  callersLoad,
+  callersLoaded,
   statsLoad,
   statsLoaded,
 } = callAssignmentsSlice.actions;

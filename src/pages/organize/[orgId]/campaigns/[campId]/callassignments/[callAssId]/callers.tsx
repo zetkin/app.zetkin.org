@@ -1,5 +1,5 @@
-import { Box } from '@material-ui/core';
 import { GetServerSideProps } from 'next';
+import { Box, Typography } from '@material-ui/core';
 import { useEffect, useState } from 'react';
 
 import CallAssignmentLayout from 'features/callAssignments/layout/CallAssignmentLayout';
@@ -52,7 +52,15 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
     return null;
   }
 
-  return <Box>{model.getData().title}</Box>;
+  const callers = model.getCallers();
+
+  return (
+    <Box>
+      {callers.map((caller) => (
+        <Typography key={caller.id}>{caller.first_name}</Typography>
+      ))}
+    </Box>
+  );
 };
 
 AssignmentPage.getLayout = function getLayout(page, props) {

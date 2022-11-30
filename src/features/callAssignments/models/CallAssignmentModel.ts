@@ -1,10 +1,16 @@
 import { Store } from 'core/store';
 import { ZetkinQuery } from 'utils/types/zetkin';
-import { CallAssignmentData, CallAssignmentStats } from '../apiTypes';
+import {
+  CallAssignmentCaller,
+  CallAssignmentData,
+  CallAssignmentStats,
+} from '../apiTypes';
 import {
   callAssignmentLoad,
   callAssignmentLoaded,
   callAssignmentUpdated,
+  callersLoad,
+  callersLoaded,
   statsLoad,
   statsLoaded,
 } from '../store';
@@ -18,6 +24,25 @@ export default class CallAssignmentModel {
     this._store = store;
     this._orgId = orgId;
     this._id = id;
+  }
+
+  getCallers(): CallAssignmentCaller[] {
+    const state = this._store.getState();
+    const callers = state.callAssignments.callersById[this._id];
+
+    if (callers) {
+      return callers;
+    } else {
+      this._store.dispatch(callersLoad(this._id));
+      fetch(`/api/orgs/${this._orgId}/call_assignments/${this._id}/callers`)
+        .then((res) => res.json())
+        .then((data: { data: CallAssignmentCaller[] }) => {
+          this._store.dispatch(
+            callersLoaded({ callers: data.data, id: this._id })
+          );
+        });
+    }
+    return [];
   }
 
   getData(): CallAssignmentData {
