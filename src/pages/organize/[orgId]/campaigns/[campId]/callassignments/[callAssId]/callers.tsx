@@ -6,7 +6,9 @@ import CallAssignmentLayout from 'features/callAssignments/layout/CallAssignment
 import CallAssignmentModel from 'features/callAssignments/models/CallAssignmentModel';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
+import TagChip from 'features/tags/components/TagManager/components/TagChip';
 import useModel from 'core/useModel';
+import { ZetkinTag } from 'utils/types/zetkin';
 import { DataGridPro, GridColDef, GridRowData } from '@mui/x-data-grid-pro';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
@@ -65,19 +67,42 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
         <Avatar src={`/api/orgs/${orgId}/people/${params.id}/avatar`} />
       ),
       sortable: false,
-      width: 50,
     },
     {
       field: 'name',
       flex: 1,
       headerName: 'Name',
     },
+    {
+      field: 'prioritizedTags',
+      flex: 1,
+      headerName: 'Prioritized tags',
+      renderCell: (props) =>
+        props.row.prioritizedTags.map((tag: ZetkinTag) => (
+          <Box key={tag.id} pr={1}>
+            <TagChip tag={tag} />
+          </Box>
+        )),
+    },
+    {
+      field: 'excludedTags',
+      flex: 1,
+      headerName: 'Excluded tags',
+      renderCell: (props) =>
+        props.row.excludedTags.map((tag: ZetkinTag) => (
+          <Box key={tag.id} pr={1}>
+            <TagChip tag={tag} />
+          </Box>
+        )),
+    },
   ];
 
   const rows: GridRowData[] = Array.from(
     callers.map((caller) => ({
+      excludedTags: caller.excluded_tags,
       id: caller.id,
       name: `${caller.first_name} ${caller.last_name}`,
+      prioritizedTags: caller.prioritized_tags,
     }))
   );
 
