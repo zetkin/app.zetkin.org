@@ -1,5 +1,7 @@
 import { GetServerSideProps } from 'next';
 import { Avatar, Box, Paper, Typography } from '@material-ui/core';
+import { DataGridPro, GridColDef, GridRowData } from '@mui/x-data-grid-pro';
+import { FormattedMessage as Msg, useIntl } from 'react-intl';
 import { useEffect, useState } from 'react';
 
 import CallAssignmentLayout from 'features/callAssignments/layout/CallAssignmentLayout';
@@ -9,7 +11,6 @@ import { scaffold } from 'utils/next';
 import TagChip from 'features/tags/components/TagManager/components/TagChip';
 import useModel from 'core/useModel';
 import { ZetkinTag } from 'utils/types/zetkin';
-import { DataGridPro, GridColDef, GridRowData } from '@mui/x-data-grid-pro';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   async (ctx) => {
@@ -48,6 +49,7 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
     (store) =>
       new CallAssignmentModel(store, parseInt(orgId), parseInt(assignmentId))
   );
+  const intl = useIntl();
 
   useEffect(() => setOnServer(false), []);
 
@@ -71,28 +73,30 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
     {
       field: 'name',
       flex: 1,
-      headerName: 'Name',
+      headerName: intl.formatMessage({
+        id: 'pages.organizeCallAssignment.callers.nameColumn',
+      }),
     },
     {
       field: 'prioritizedTags',
       flex: 1,
-      headerName: 'Prioritized tags',
+      headerName: intl.formatMessage({
+        id: 'pages.organizeCallAssignment.callers.prioritizedTagsColumn',
+      }),
       renderCell: (props) =>
         props.row.prioritizedTags.map((tag: ZetkinTag) => (
-          <Box key={tag.id} pr={1}>
-            <TagChip tag={tag} />
-          </Box>
+          <TagChip key={tag.id} tag={tag} />
         )),
     },
     {
       field: 'excludedTags',
       flex: 1,
-      headerName: 'Excluded tags',
+      headerName: intl.formatMessage({
+        id: 'pages.organizeCallAssignment.callers.excludedTagsColumn',
+      }),
       renderCell: (props) =>
         props.row.excludedTags.map((tag: ZetkinTag) => (
-          <Box key={tag.id} pr={1}>
-            <TagChip tag={tag} />
-          </Box>
+          <TagChip key={tag.id} tag={tag} />
         )),
     },
   ];
@@ -110,7 +114,9 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
     <Box>
       <Paper>
         <Box p={2}>
-          <Typography variant="h4">Callers</Typography>
+          <Typography variant="h4">
+            <Msg id="pages.organizeCallAssignment.callers.title" />
+          </Typography>
           <DataGridPro
             autoHeight
             columns={columns}
