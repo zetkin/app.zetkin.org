@@ -1,16 +1,5 @@
 import { GetServerSideProps } from 'next';
-import {
-  Avatar,
-  Box,
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Typography,
-} from '@material-ui/core';
+import { Avatar, Box, Paper, Typography } from '@material-ui/core';
 import { useEffect, useState } from 'react';
 
 import CallAssignmentLayout from 'features/callAssignments/layout/CallAssignmentLayout';
@@ -18,6 +7,7 @@ import CallAssignmentModel from 'features/callAssignments/models/CallAssignmentM
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import useModel from 'core/useModel';
+import { DataGridPro, GridColDef, GridRowData } from '@mui/x-data-grid-pro';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   async (ctx) => {
@@ -65,39 +55,47 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
 
   const callers = model.getCallers();
 
+  // Columns
+  const columns: GridColDef[] = [
+    {
+      disableColumnMenu: true,
+      field: 'id',
+      headerName: ' ',
+      renderCell: (params) => (
+        <Avatar src={`/api/orgs/${orgId}/people/${params.id}/avatar`} />
+      ),
+      sortable: false,
+      width: 50,
+    },
+    {
+      field: 'name',
+      flex: 1,
+      headerName: 'Name',
+    },
+  ];
+
+  const rows: GridRowData[] = Array.from(
+    callers.map((caller) => ({
+      id: caller.id,
+      name: `${caller.first_name} ${caller.last_name}`,
+    }))
+  );
+
   return (
     <Box>
       <Paper>
         <Box p={2}>
           <Typography variant="h4">Callers</Typography>
-          <TableContainer>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell padding="checkbox" />
-                  <TableCell>
-                    <Typography>Name</Typography>
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {callers.map((caller) => (
-                  <TableRow key={caller.id}>
-                    <TableCell>
-                      <Avatar
-                        src={`/api/orgs/${orgId}/people/${caller.id}/avatar`}
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <Typography>
-                        {`${caller.first_name} ${caller.last_name}`}
-                      </Typography>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+          <DataGridPro
+            autoHeight
+            columns={columns}
+            disableColumnReorder
+            disableColumnResize
+            rows={rows}
+            style={{
+              border: 'none',
+            }}
+          />
         </Box>
       </Paper>
     </Box>
