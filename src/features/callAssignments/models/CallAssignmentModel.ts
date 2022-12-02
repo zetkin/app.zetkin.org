@@ -67,7 +67,7 @@ export default class CallAssignmentModel {
     return data && data.target?.filter_spec?.length != 0;
   }
 
-  setCooldown(cooldown: number) {
+  setCooldown(cooldown: number): void {
     const state = this._store.getState();
     const caItem = state.callAssignments.assignmentList.items.find(
       (item) => item.id == this._id
@@ -76,28 +76,14 @@ export default class CallAssignmentModel {
 
     //if cooldown has not changed, do nothing.
     if (cooldown === callAssignment?.cooldown) {
-      return null;
+      return;
     }
 
-    if (callAssignment) {
-      this._store.dispatch(callAssignmentLoad(this._id));
-      fetch(`/api/orgs/${this._orgId}/call_assignments/${this._id}`, {
-        body: JSON.stringify({ cooldown }),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        method: 'PATCH',
-      })
-        .then((res) => {
-          return res.json();
-        })
-        .then((data: { data: CallAssignmentData }) => {
-          this._store.dispatch(callAssignmentUpdated(data.data));
-        });
-    }
+    this._repo.updateCallAssignment(this._orgId, this._id, { cooldown });
   }
 
-  setTargets(query: Partial<ZetkinQuery>) {
+  setTargets(query: Partial<ZetkinQuery>): void {
+    // TODO: Refactor once SmartSearch is supported in redux framework
     const state = this._store.getState();
     const caItem = state.callAssignments.assignmentList.items.find(
       (item) => item.id == this._id

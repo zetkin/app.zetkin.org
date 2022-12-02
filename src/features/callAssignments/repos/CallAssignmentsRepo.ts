@@ -6,6 +6,7 @@ import { CallAssignmentData, CallAssignmentStats } from '../apiTypes';
 import {
   callAssignmentLoad,
   callAssignmentLoaded,
+  callAssignmentUpdated,
   statsLoad,
   statsLoaded,
 } from '../store';
@@ -63,5 +64,24 @@ export default class CallAssignmentsRepo {
     } else {
       return new RemoteItemFuture(statsItem);
     }
+  }
+
+  updateCallAssignment(
+    orgId: number,
+    id: number,
+    data: Partial<CallAssignmentData>
+  ): IFuture<CallAssignmentData> {
+    this._store.dispatch(callAssignmentLoad(id));
+    const promise = this._apiClient
+      .patch<CallAssignmentData>(
+        `/api/orgs/${orgId}/call_assignments/${id}`,
+        data
+      )
+      .then((data: CallAssignmentData) => {
+        this._store.dispatch(callAssignmentUpdated(data));
+        return data;
+      });
+
+    return new PromiseFuture(promise);
   }
 }
