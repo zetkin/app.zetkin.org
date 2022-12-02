@@ -37,8 +37,9 @@ const CallAssignmentTargets = ({ model }: { model: CallAssignmentModel }) => {
 
   const [queryDialogOpen, setQueryDialogOpen] = useState(false);
 
-  const stats = model.getStats();
-  const { target } = model.getData();
+  const { data: stats } = model.getStats();
+  const { data } = model.getData();
+  const target = data?.target;
 
   return (
     <>
