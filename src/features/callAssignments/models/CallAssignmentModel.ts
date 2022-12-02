@@ -35,7 +35,7 @@ export default class CallAssignmentModel {
     }
 
     const future = this._repo.getCallAssignmentStats(this._orgId, this._id);
-    if (future.isLoading) {
+    if (future.isLoading && !future.data) {
       return new PlaceholderFuture({
         allTargets: 0,
         allocated: 0,

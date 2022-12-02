@@ -1,6 +1,7 @@
 import { ApiResponse } from 'core/api/types';
 import Environment from 'core/env/Environment';
 import IApiClient from 'core/api/client/IApiClient';
+import shouldLoad from 'core/caching/shouldLoad';
 import { Store } from 'core/store';
 import { CallAssignmentData, CallAssignmentStats } from '../apiTypes';
 import {
@@ -9,12 +10,10 @@ import {
   statsLoad,
   statsLoaded,
 } from '../store';
-import { IFuture, PromiseFuture, ResolvedFuture } from 'core/caching/futures';
+import { IFuture, PromiseFuture, RemoteItemFuture } from 'core/caching/futures';
 
 export default class CallAssignmentsRepo {
   private _apiClient: IApiClient;
-  private _assignmentFuture: IFuture<CallAssignmentData> | null = null;
-  private _statsFuture: IFuture<CallAssignmentStats> | null = null;
   private _store: Store;
 
   constructor(env: Environment) {
@@ -27,13 +26,8 @@ export default class CallAssignmentsRepo {
     const caItem = state.callAssignments.assignmentList.items.find(
       (item) => item.id == id
     );
-    const callAssignment = caItem?.data;
 
-    if (callAssignment) {
-      return new ResolvedFuture(callAssignment);
-    } else if (this._assignmentFuture) {
-      return this._assignmentFuture;
-    } else {
+    if (!caItem || shouldLoad(caItem)) {
       this._store.dispatch(callAssignmentLoad(id));
       const promise = this._apiClient
         .get<ApiResponse<CallAssignmentData>>(
@@ -45,9 +39,9 @@ export default class CallAssignmentsRepo {
           return data;
         });
 
-      this._assignmentFuture = new PromiseFuture(promise);
-
-      return this._assignmentFuture;
+      return new PromiseFuture(promise);
+    } else {
+      return new RemoteItemFuture(caItem);
     }
   }
 
@@ -58,11 +52,7 @@ export default class CallAssignmentsRepo {
     const state = this._store.getState();
     const statsItem = state.callAssignments.statsById[id];
 
-    if (statsItem?.data && !statsItem.isStale) {
-      return new ResolvedFuture(statsItem.data);
-    } else if (this._statsFuture) {
-      return this._statsFuture;
-    } else {
+    if (shouldLoad(statsItem)) {
       this._store.dispatch(statsLoad(id));
       const promise = this._apiClient
         .get<CallAssignmentStats>(
@@ -73,8 +63,9 @@ export default class CallAssignmentsRepo {
           return data;
         });
 
-      this._statsFuture = new PromiseFuture(promise);
-      return this._statsFuture;
+      return new PromiseFuture(promise);
+    } else {
+      return new RemoteItemFuture(statsItem);
     }
   }
 }

@@ -1,3 +1,5 @@
+import { RemoteItem } from 'utils/storeUtils';
+
 export interface IFuture<DataType> {
   data: DataType | null;
   error: unknown | null;
@@ -64,5 +66,14 @@ export class PlaceholderFuture<DataType>
 {
   constructor(placeholder: DataType) {
     super(placeholder, null, true);
+  }
+}
+
+export class RemoteItemFuture<DataType>
+  extends FutureBase<DataType>
+  implements IFuture<DataType>
+{
+  constructor(item: RemoteItem<DataType>) {
+    super(item.data, item.error, item.isLoading);
   }
 }
