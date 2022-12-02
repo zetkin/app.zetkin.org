@@ -1,4 +1,3 @@
-import { ApiResponse } from 'core/api/types';
 import Environment from 'core/env/Environment';
 import IApiClient from 'core/api/client/IApiClient';
 import shouldLoad from 'core/caching/shouldLoad';
@@ -30,10 +29,7 @@ export default class CallAssignmentsRepo {
     if (!caItem || shouldLoad(caItem)) {
       this._store.dispatch(callAssignmentLoad(id));
       const promise = this._apiClient
-        .get<ApiResponse<CallAssignmentData>>(
-          `/api/orgs/${orgId}/call_assignments/${id}`
-        )
-        .then((data: ApiResponse<CallAssignmentData>) => data.data)
+        .get<CallAssignmentData>(`/api/orgs/${orgId}/call_assignments/${id}`)
         .then((data: CallAssignmentData) => {
           this._store.dispatch(callAssignmentLoaded(data));
           return data;

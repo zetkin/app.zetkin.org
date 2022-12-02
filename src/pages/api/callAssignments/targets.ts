@@ -85,15 +85,17 @@ export default async function handler(
   const allTargets: number = blocked + ready + done;
 
   res.status(200).json({
-    allTargets,
-    allocated,
-    blocked,
-    callBackLater,
-    calledTooRecently,
-    done,
-    missingPhoneNumber,
-    organizerActionNeeded,
-    queue,
-    ready,
+    data: {
+      allTargets,
+      allocated,
+      blocked,
+      callBackLater,
+      calledTooRecently,
+      done,
+      missingPhoneNumber,
+      organizerActionNeeded,
+      queue,
+      ready,
+    },
   });
 }
