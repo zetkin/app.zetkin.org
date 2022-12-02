@@ -26,7 +26,8 @@ export class FutureBase<DataType> {
 
 export class PromiseFuture<DataType>
   extends FutureBase<DataType>
-  implements IFuture<DataType> {
+  implements IFuture<DataType>
+{
   private _promise: Promise<DataType>;
 
   constructor(promise: Promise<DataType>) {
@@ -50,7 +51,8 @@ export class PromiseFuture<DataType>
 
 export class ResolvedFuture<DataType>
   extends FutureBase<DataType>
-  implements IFuture<DataType> {
+  implements IFuture<DataType>
+{
   constructor(data: DataType) {
     super(data);
   }
@@ -58,7 +60,8 @@ export class ResolvedFuture<DataType>
 
 export class PlaceholderFuture<DataType>
   extends FutureBase<DataType>
-  implements IFuture<DataType> {
+  implements IFuture<DataType>
+{
   constructor(placeholder: DataType) {
     super(placeholder, null, true);
   }

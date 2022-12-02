@@ -1,3 +1,3 @@
 export interface ApiResponse<DataType> {
-    data: DataType;
+  data: DataType;
 }

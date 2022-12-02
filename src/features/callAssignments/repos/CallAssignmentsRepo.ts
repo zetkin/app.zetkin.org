@@ -9,11 +9,7 @@ import {
   statsLoad,
   statsLoaded,
 } from '../store';
-import {
-  IFuture,
-  PromiseFuture,
-  ResolvedFuture,
-} from 'core/caching/futures';
+import { IFuture, PromiseFuture, ResolvedFuture } from 'core/caching/futures';
 
 export default class CallAssignmentsRepo {
   private _apiClient: IApiClient;

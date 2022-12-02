@@ -1,5 +1,5 @@
 interface RemoteData {
-    id: number;
+  id: number;
 }
 
 export interface RemoteItem<DataType> {
@@ -23,12 +23,12 @@ export function remoteItem<DataType extends RemoteData>(
   item?: Partial<Omit<RemoteItem<DataType>, 'id'>>
 ): RemoteItem<DataType> {
   return {
+    data: item?.data || null,
     error: item?.error || null,
     id: id,
     isLoading: item?.isLoading || false,
     isStale: item?.isStale || false,
     loaded: item?.loaded || null,
-    data: item?.data || null,
   };
 }
 
