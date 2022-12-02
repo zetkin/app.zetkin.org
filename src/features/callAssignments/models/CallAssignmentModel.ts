@@ -22,13 +22,15 @@ export default class CallAssignmentModel {
 
   getData(): CallAssignmentData {
     const state = this._store.getState();
-    const callAssignment = state.callAssignments.callAssignments.find(
-      (ca) => ca.id == this._id
+    const caItem = state.callAssignments.assignmentList.items.find(
+      (item) => item.id == this._id
     );
+    const callAssignment = caItem?.data;
+
     if (callAssignment) {
       return callAssignment;
     } else {
-      this._store.dispatch(callAssignmentLoad());
+      this._store.dispatch(callAssignmentLoad(this._id));
       const promise = fetch(
         `/api/orgs/${this._orgId}/call_assignments/${this._id}`
       )
@@ -51,8 +53,8 @@ export default class CallAssignmentModel {
       return null;
     }
 
-    if (stats && !stats.isStale) {
-      return stats;
+    if (stats?.data && !stats.isStale) {
+      return stats.data;
     } else {
       this._store.dispatch(statsLoad(this._id));
       fetch(
@@ -70,8 +72,7 @@ export default class CallAssignmentModel {
         callBackLater: 0,
         calledTooRecently: 0,
         done: 0,
-        isLoading: true,
-        isStale: false,
+        id: this._id,
         missingPhoneNumber: 0,
         organizerActionNeeded: 0,
         queue: 0,
@@ -89,7 +90,11 @@ export default class CallAssignmentModel {
   }
 
   get isLoading() {
-    return this._store.getState().callAssignments.isLoading;
+    const state = this._store.getState();
+    const caItem = state.callAssignments.assignmentList.items.find(
+      (item) => item.id == this._id
+    );
+    return !!caItem?.isLoading;
   }
 
   get isTargeted() {
@@ -99,9 +104,10 @@ export default class CallAssignmentModel {
 
   setCooldown(cooldown: number) {
     const state = this._store.getState();
-    const callAssignment = state.callAssignments.callAssignments.find(
-      (ca) => ca.id == this._id
+    const caItem = state.callAssignments.assignmentList.items.find(
+      (item) => item.id == this._id
     );
+    const callAssignment = caItem?.data;
 
     //if cooldown has not changed, do nothing.
     if (cooldown === callAssignment?.cooldown) {
@@ -109,7 +115,7 @@ export default class CallAssignmentModel {
     }
 
     if (callAssignment) {
-      this._store.dispatch(callAssignmentLoad());
+      this._store.dispatch(callAssignmentLoad(this._id));
       fetch(`/api/orgs/${this._orgId}/call_assignments/${this._id}`, {
         body: JSON.stringify({ cooldown }),
         headers: {
@@ -128,11 +134,13 @@ export default class CallAssignmentModel {
 
   setTargets(query: Partial<ZetkinQuery>) {
     const state = this._store.getState();
-    const callAssignment = state.callAssignments.callAssignments.find(
-      (ca) => ca.id == this._id
+    const caItem = state.callAssignments.assignmentList.items.find(
+      (item) => item.id == this._id
     );
+    const callAssignment = caItem?.data;
+
     if (callAssignment) {
-      this._store.dispatch(callAssignmentLoad());
+      this._store.dispatch(callAssignmentLoad(this._id));
       fetch(
         `/api/orgs/${this._orgId}/people/queries/${callAssignment.target.id}`,
         {

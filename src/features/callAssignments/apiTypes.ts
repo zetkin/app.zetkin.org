@@ -8,16 +8,15 @@ export interface CallAssignmentData {
 }
 
 export interface CallAssignmentStats {
+  id: number;
   allTargets: number;
   allocated: number;
   blocked: number;
   callBackLater: number;
   calledTooRecently: number;
   done: number;
-  isStale: boolean;
   missingPhoneNumber: number;
   organizerActionNeeded: number;
   queue: number;
   ready: number;
-  isLoading: boolean;
 }
