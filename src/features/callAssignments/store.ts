@@ -58,18 +58,17 @@ const callAssignmentsSlice = createSlice({
       const callAssignment = caItem?.data;
 
       if (
-        //TODO: clean up this hot mess w better caching logic
-        callAssignment?.cooldown != action.payload.cooldown ||
-        JSON.stringify(action.payload.target.filter_spec) !=
-          JSON.stringify(callAssignment?.target.filter_spec)
+        statsItem &&
+        (callAssignment?.cooldown != action.payload.cooldown ||
+          JSON.stringify(action.payload.target.filter_spec) !=
+            JSON.stringify(callAssignment?.target.filter_spec))
       ) {
-        if (statsItem) {
-          statsItem.isStale = true;
-        }
-        state.assignmentList.items = state.assignmentList.items
-          .filter((ca) => ca.id != action.payload.id)
-          .concat([remoteItem(action.payload.id, { data: action.payload })]);
+        statsItem.isStale = true;
       }
+
+      state.assignmentList.items = state.assignmentList.items
+        .filter((ca) => ca.id != action.payload.id)
+        .concat([remoteItem(action.payload.id, { data: action.payload })]);
     },
     statsLoad: (state, action: PayloadAction<number>) => {
       const statsItem = state.statsById[action.payload];
