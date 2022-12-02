@@ -43,7 +43,6 @@ module.exports = {
           },
         ],
         curly: 'error',
-        'brace-style': 'error',
         'jsx-a11y/anchor-is-valid': 'off',
         'no-console': 'error',
         'no-switch-statements/no-switch': 'error',
