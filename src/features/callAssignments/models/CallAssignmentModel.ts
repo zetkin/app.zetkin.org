@@ -110,4 +110,8 @@ export default class CallAssignmentModel {
         );
     }
   }
+
+  setTitle(title: string): void {
+    this._repo.updateCallAssignment(this._orgId, this._id, { title });
+  }
 }

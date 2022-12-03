@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
 export interface ZUIEditTextinPlaceProps {
   allowEmpty?: boolean;
   disabled?: boolean;
-  onChange: (newValue: string) => Promise<void>;
+  onChange: (newValue: string) => void;
   placeholder?: string;
   value: string;
 }
