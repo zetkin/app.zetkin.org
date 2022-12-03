@@ -1,12 +1,13 @@
 import { anything, instance, mock, reset, when } from 'ts-mockito';
 
-import CallAssignmentModel from './CallAssignmentModel';
 import createStore from 'core/store';
 import Environment from 'core/env/Environment';
 import { FILTER_TYPE } from 'features/smartSearch/components/types';
 import IApiClient from 'core/api/client/IApiClient';
-
 import { CallAssignmentData, CallAssignmentStats } from '../apiTypes';
+import CallAssignmentModel, {
+  CallAssignmentState,
+} from './CallAssignmentModel';
 import { remoteItem, remoteList } from 'utils/storeUtils';
 
 function mockList<DataType extends { id: number }>(items?: DataType[]) {
@@ -85,6 +86,147 @@ describe('CallAssignmentModel', () => {
       const model = new CallAssignmentModel(env, 1, 2);
 
       expect(model.isTargeted).toBeTruthy();
+    });
+  });
+
+  describe('state', () => {
+    const mockAssignment = {
+      cooldown: 3,
+      id: 2,
+      target: {
+        filter_spec: [],
+        id: 101,
+      },
+      title: 'My assignment',
+    };
+
+    afterEach(() => {
+      jest.useRealTimers();
+    });
+
+    it('is UNKNOWN when not loaded', () => {
+      const store = createStore({
+        callAssignments: {
+          assignmentList: mockList<CallAssignmentData>(),
+          statsById: {},
+        },
+      });
+
+      when(mockClient.get<CallAssignmentData>(anything())).thenResolve(
+        mockAssignment
+      );
+
+      const apiClient = instance(mockClient);
+      const env = new Environment(store, apiClient);
+      const model = new CallAssignmentModel(env, 1, 2);
+      expect(model.state).toBe(CallAssignmentState.UNKNOWN);
+    });
+
+    it('is DRAFT when there is no start date', () => {
+      const store = createStore({
+        callAssignments: {
+          assignmentList: mockList<CallAssignmentData>([
+            {
+              ...mockAssignment,
+            },
+          ]),
+          statsById: {},
+        },
+      });
+
+      jest.useFakeTimers().setSystemTime(new Date('1857-07-04'));
+
+      const apiClient = instance(mockClient);
+      const env = new Environment(store, apiClient);
+      const model = new CallAssignmentModel(env, 1, 2);
+      expect(model.state).toBe(CallAssignmentState.DRAFT);
+    });
+
+    it('is SCHEDULED when start date is in the future', () => {
+      const store = createStore({
+        callAssignments: {
+          assignmentList: mockList<CallAssignmentData>([
+            {
+              ...mockAssignment,
+              end_date: '1933-06-20',
+              start_date: '1857-07-05',
+            },
+          ]),
+          statsById: {},
+        },
+      });
+
+      jest.useFakeTimers().setSystemTime(new Date('1857-07-04'));
+
+      const apiClient = instance(mockClient);
+      const env = new Environment(store, apiClient);
+      const model = new CallAssignmentModel(env, 1, 2);
+      expect(model.state).toBe(CallAssignmentState.SCHEDULED);
+    });
+
+    it('is OPEN when start_date is in the past and end_date in the future', () => {
+      const store = createStore({
+        callAssignments: {
+          assignmentList: mockList<CallAssignmentData>([
+            {
+              ...mockAssignment,
+              end_date: '1933-06-20',
+              start_date: '1857-07-05',
+            },
+          ]),
+          statsById: {},
+        },
+      });
+
+      jest.useFakeTimers().setSystemTime(new Date('1857-07-08'));
+
+      const apiClient = instance(mockClient);
+      const env = new Environment(store, apiClient);
+      const model = new CallAssignmentModel(env, 1, 2);
+      expect(model.state).toBe(CallAssignmentState.OPEN);
+    });
+
+    it('is OPEN when start_date is in the past and there is no end_date', () => {
+      const store = createStore({
+        callAssignments: {
+          assignmentList: mockList<CallAssignmentData>([
+            {
+              ...mockAssignment,
+              start_date: '1857-07-05',
+            },
+          ]),
+          statsById: {},
+        },
+      });
+
+      jest.useFakeTimers().setSystemTime(new Date('1857-08-04'));
+
+      const apiClient = instance(mockClient);
+      const env = new Environment(store, apiClient);
+      const model = new CallAssignmentModel(env, 1, 2);
+      expect(model.state).toBe(CallAssignmentState.OPEN);
+    });
+
+    it('is CLOSED when end date is in the past', () => {
+      const store = createStore({
+        callAssignments: {
+          assignmentList: mockList<CallAssignmentData>([
+            {
+              ...mockAssignment,
+              end_date: '1933-06-20',
+              start_date: '1857-07-05',
+            },
+          ]),
+          statsById: {},
+        },
+      });
+
+      jest.useFakeTimers().setSystemTime(new Date('1933-06-21'));
+
+      const apiClient = instance(mockClient);
+      const env = new Environment(store, apiClient);
+      const model = new CallAssignmentModel(env, 1, 2);
+      expect(model.state).toBe(CallAssignmentState.CLOSED);
     });
   });
 
