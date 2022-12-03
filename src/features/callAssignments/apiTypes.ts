@@ -18,6 +18,7 @@ export interface CallAssignmentStats {
   calledTooRecently: number;
   done: number;
   missingPhoneNumber: number;
+  mostRecentCallTime: string | null;
   organizerActionNeeded: number;
   queue: number;
   ready: number;
