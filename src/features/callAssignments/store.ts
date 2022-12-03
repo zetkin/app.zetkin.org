@@ -8,7 +8,7 @@ import {
 
 import { CallAssignmentData, CallAssignmentStats } from './apiTypes';
 
-interface CallAssignmentSlice {
+export interface CallAssignmentSlice {
   assignmentList: RemoteList<CallAssignmentData>;
   statsById: Record<number, RemoteItem<CallAssignmentStats>>;
 }
@@ -105,7 +105,7 @@ const callAssignmentsSlice = createSlice({
   },
 });
 
-export default callAssignmentsSlice.reducer;
+export default callAssignmentsSlice;
 export const {
   callAssignmentLoad,
   callAssignmentLoaded,
