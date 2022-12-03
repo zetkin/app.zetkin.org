@@ -36,6 +36,7 @@ export class PromiseFuture<DataType>
     super();
 
     this._promise = promise;
+    this._isLoading = true;
 
     this._promise.then((res) => {
       this._data = res;
