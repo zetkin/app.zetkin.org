@@ -1,4 +1,5 @@
 import CallAssignmentModel from '../models/CallAssignmentModel';
+import CallAssignmentStatusChip from '../components/CallAssignmentStatusChip';
 import TabbedLayout from '../../../utils/layout/TabbedLayout';
 import useModel from 'core/useModel';
 import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
@@ -31,6 +32,7 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
     <TabbedLayout
       baseHref={`/organize/${orgId}/campaigns/${campaignId}/callassignments/${assignmentId}`}
       defaultTab="/"
+      subtitle={<CallAssignmentStatusChip state={model.state} />}
       tabs={[
         {
           href: '/',
