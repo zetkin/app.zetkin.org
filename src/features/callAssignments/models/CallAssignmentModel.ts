@@ -11,6 +11,7 @@ import {
 } from 'core/caching/futures';
 
 export enum CallAssignmentState {
+  ACTIVE = 'active',
   CLOSED = 'closed',
   DRAFT = 'draft',
   OPEN = 'open',
@@ -53,6 +54,7 @@ export default class CallAssignmentModel {
         done: 0,
         id: this._id,
         missingPhoneNumber: 0,
+        mostRecentCallTime: null,
         organizerActionNeeded: 0,
         queue: 0,
         ready: 0,
@@ -142,7 +144,17 @@ export default class CallAssignmentModel {
           }
         }
 
-        return CallAssignmentState.OPEN;
+        const { data: statsData } = this.getStats();
+        if (!statsData?.mostRecentCallTime) {
+          return CallAssignmentState.OPEN;
+        }
+
+        const mostRecentCallTime = new Date(statsData.mostRecentCallTime);
+        const diff = now.getTime() - mostRecentCallTime.getTime();
+
+        return diff < 10 * 60 * 1000
+          ? CallAssignmentState.ACTIVE
+          : CallAssignmentState.OPEN;
       }
     } else {
       return CallAssignmentState.DRAFT;

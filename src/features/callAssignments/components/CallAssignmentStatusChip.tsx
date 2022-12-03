@@ -1,6 +1,6 @@
 import { FC } from 'react';
-import { useIntl } from 'react-intl';
-import { Chip, makeStyles } from '@material-ui/core';
+import { FormattedMessage } from 'react-intl';
+import { Box, CircularProgress, makeStyles } from '@material-ui/core';
 
 import { CallAssignmentState } from '../models/CallAssignmentModel';
 
@@ -9,32 +9,35 @@ interface CallAssignmentStatusChipProps {
 }
 
 const useStyles = makeStyles((theme) => ({
+  chip: {
+    alignItems: 'center',
+    borderRadius: '2em',
+    color: 'white',
+    display: 'inline-flex',
+    fontSize: 14,
+    fontWeight: 'bold',
+    padding: '0.5em 0.7em',
+  },
   closed: {
     backgroundColor: theme.palette.error.main,
-    color: 'white',
-    fontWeight: 'bold',
   },
   draft: {
     backgroundColor: theme.palette.grey[500],
-    color: 'white',
-    fontWeight: 'bold',
   },
   open: {
     backgroundColor: theme.palette.success.main,
-    color: 'white',
-    fontWeight: 'bold',
   },
   scheduled: {
     backgroundColor: theme.palette.targetingStatusBar.blue,
-    color: 'white',
-    fontWeight: 'bold',
+  },
+  spinner: {
+    marginLeft: '0.5em',
   },
 }));
 
 const CallAssignmentStatusChip: FC<CallAssignmentStatusChipProps> = ({
   state,
 }) => {
-  const intl = useIntl();
   const classes = useStyles();
 
   if (state == CallAssignmentState.UNKNOWN) {
@@ -42,6 +45,7 @@ const CallAssignmentStatusChip: FC<CallAssignmentStatusChipProps> = ({
   }
 
   const classMap: Record<CallAssignmentState, string> = {
+    [CallAssignmentState.ACTIVE]: classes.open,
     [CallAssignmentState.CLOSED]: classes.closed,
     [CallAssignmentState.DRAFT]: classes.draft,
     [CallAssignmentState.OPEN]: classes.open,
@@ -49,15 +53,19 @@ const CallAssignmentStatusChip: FC<CallAssignmentStatusChipProps> = ({
     [CallAssignmentState.UNKNOWN]: classes.draft,
   };
 
-  const className = classMap[state];
+  const colorClassName = classMap[state];
 
   return (
-    <Chip
-      className={className}
-      label={intl.formatMessage({
-        id: `pages.organizeCallAssignment.state.${state}`,
-      })}
-    />
+    <Box className={`${colorClassName} ${classes.chip}`}>
+      <FormattedMessage id={`pages.organizeCallAssignment.state.${state}`} />
+      {state == CallAssignmentState.ACTIVE && (
+        <CircularProgress
+          className={classes.spinner}
+          size={14}
+          style={{ color: 'white' }}
+        />
+      )}
+    </Box>
   );
 };
 

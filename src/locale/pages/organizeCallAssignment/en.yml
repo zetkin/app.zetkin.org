@@ -17,6 +17,7 @@ ready:
   subtitle: Targets to be called
   title: Ready
 state:
+  active: Active
   closed: Closed
   draft: Draft
   open: Open

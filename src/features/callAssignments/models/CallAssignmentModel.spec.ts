@@ -90,15 +90,43 @@ describe('CallAssignmentModel', () => {
   });
 
   describe('state', () => {
-    const mockAssignment = {
-      cooldown: 3,
-      id: 2,
-      target: {
-        filter_spec: [],
-        id: 101,
+    const mockStoreData = (
+      startDate?: string,
+      endDate?: string,
+      mostRecentCallTime: string | null = null
+    ) => ({
+      callAssignments: {
+        assignmentList: mockList<CallAssignmentData>([
+          {
+            cooldown: 3,
+            end_date: endDate,
+            id: 2,
+            start_date: startDate,
+            target: {
+              filter_spec: [{ config: {}, type: FILTER_TYPE.ALL }],
+              id: 101,
+            },
+            title: 'My assignment',
+          },
+        ]),
+        statsById: {
+          2: mockItem({
+            allTargets: 100,
+            allocated: 0,
+            blocked: 0,
+            callBackLater: 0,
+            calledTooRecently: 0,
+            done: 50,
+            id: 2,
+            missingPhoneNumber: 0,
+            mostRecentCallTime: mostRecentCallTime,
+            organizerActionNeeded: 0,
+            queue: 0,
+            ready: 50,
+          }),
+        },
       },
-      title: 'My assignment',
-    };
+    });
 
     afterEach(() => {
       jest.useRealTimers();
@@ -107,13 +135,14 @@ describe('CallAssignmentModel', () => {
     it('is UNKNOWN when not loaded', () => {
       const store = createStore({
         callAssignments: {
-          assignmentList: mockList<CallAssignmentData>(),
+          assignmentList: mockList(),
           statsById: {},
         },
       });
 
+      const mockData = mockStoreData();
       when(mockClient.get<CallAssignmentData>(anything())).thenResolve(
-        mockAssignment
+        mockData.callAssignments.assignmentList.items[0].data!
       );
 
       const apiClient = instance(mockClient);
@@ -123,16 +152,7 @@ describe('CallAssignmentModel', () => {
     });
 
     it('is DRAFT when there is no start date', () => {
-      const store = createStore({
-        callAssignments: {
-          assignmentList: mockList<CallAssignmentData>([
-            {
-              ...mockAssignment,
-            },
-          ]),
-          statsById: {},
-        },
-      });
+      const store = createStore(mockStoreData());
 
       jest.useFakeTimers().setSystemTime(new Date('1857-07-04'));
 
@@ -143,19 +163,7 @@ describe('CallAssignmentModel', () => {
     });
 
     it('is SCHEDULED when start date is in the future', () => {
-      const store = createStore({
-        callAssignments: {
-          assignmentList: mockList<CallAssignmentData>([
-            {
-              ...mockAssignment,
-              end_date: '1933-06-20',
-              start_date: '1857-07-05',
-            },
-          ]),
-          statsById: {},
-        },
-      });
-
+      const store = createStore(mockStoreData('1857-07-05', '1933-06-20'));
       jest.useFakeTimers().setSystemTime(new Date('1857-07-04'));
 
       const apiClient = instance(mockClient);
@@ -165,19 +173,7 @@ describe('CallAssignmentModel', () => {
     });
 
     it('is OPEN when start_date is in the past and end_date in the future', () => {
-      const store = createStore({
-        callAssignments: {
-          assignmentList: mockList<CallAssignmentData>([
-            {
-              ...mockAssignment,
-              end_date: '1933-06-20',
-              start_date: '1857-07-05',
-            },
-          ]),
-          statsById: {},
-        },
-      });
-
+      const store = createStore(mockStoreData('1857-07-05', '1933-06-20'));
       jest.useFakeTimers().setSystemTime(new Date('1857-07-08'));
 
       const apiClient = instance(mockClient);
@@ -187,18 +183,7 @@ describe('CallAssignmentModel', () => {
     });
 
     it('is OPEN when start_date is in the past and there is no end_date', () => {
-      const store = createStore({
-        callAssignments: {
-          assignmentList: mockList<CallAssignmentData>([
-            {
-              ...mockAssignment,
-              start_date: '1857-07-05',
-            },
-          ]),
-          statsById: {},
-        },
-      });
-
+      const store = createStore(mockStoreData('1857-07-05'));
       jest.useFakeTimers().setSystemTime(new Date('1857-08-04'));
 
       const apiClient = instance(mockClient);
@@ -207,19 +192,34 @@ describe('CallAssignmentModel', () => {
       expect(model.state).toBe(CallAssignmentState.OPEN);
     });
 
+    it('is OPEN when dates are correct, and most recent call was too long ago', () => {
+      jest.useFakeTimers().setSystemTime(new Date('1857-08-04T14:37:00'));
+
+      const store = createStore(
+        mockStoreData('1857-07-05', '1933-06-20', '1857-08-04T13:37:00Z')
+      );
+
+      const apiClient = instance(mockClient);
+      const env = new Environment(store, apiClient);
+      const model = new CallAssignmentModel(env, 1, 2);
+      expect(model.state).toBe(CallAssignmentState.ACTIVE);
+    });
+
+    it('is ACTIVE when open with very recent call', () => {
+      jest.useFakeTimers().setSystemTime(new Date('1857-08-04T13:38:00'));
+
+      const store = createStore(
+        mockStoreData('1857-07-05', '1933-06-20', '1857-08-04T13:37:00Z')
+      );
+
+      const apiClient = instance(mockClient);
+      const env = new Environment(store, apiClient);
+      const model = new CallAssignmentModel(env, 1, 2);
+      expect(model.state).toBe(CallAssignmentState.ACTIVE);
+    });
+
     it('is CLOSED when end date is in the past', () => {
-      const store = createStore({
-        callAssignments: {
-          assignmentList: mockList<CallAssignmentData>([
-            {
-              ...mockAssignment,
-              end_date: '1933-06-20',
-              start_date: '1857-07-05',
-            },
-          ]),
-          statsById: {},
-        },
-      });
+      const store = createStore(mockStoreData('1857-07-05', '1933-06-20'));
 
       jest.useFakeTimers().setSystemTime(new Date('1933-06-21'));
 
@@ -293,6 +293,7 @@ describe('CallAssignmentModel', () => {
         done: 50,
         id: 2,
         missingPhoneNumber: 0,
+        mostRecentCallTime: null,
         organizerActionNeeded: 0,
         queue: 0,
         ready: 50,
@@ -314,6 +315,7 @@ describe('CallAssignmentModel', () => {
         done: 0,
         id: 2,
         missingPhoneNumber: 0,
+        mostRecentCallTime: null,
         organizerActionNeeded: 0,
         queue: 0,
         ready: 0,
@@ -351,6 +353,7 @@ describe('CallAssignmentModel', () => {
               done: 50,
               id: 2,
               missingPhoneNumber: 0,
+              mostRecentCallTime: null,
               organizerActionNeeded: 0,
               queue: 0,
               ready: 50,
@@ -375,6 +378,7 @@ describe('CallAssignmentModel', () => {
         done: 50,
         id: 2,
         missingPhoneNumber: 0,
+        mostRecentCallTime: null,
         organizerActionNeeded: 0,
         queue: 0,
         ready: 50,
