@@ -193,7 +193,7 @@ describe('CallAssignmentModel', () => {
     });
 
     it('is OPEN when dates are correct, and most recent call was too long ago', () => {
-      jest.useFakeTimers().setSystemTime(new Date('1857-08-04T14:37:00'));
+      jest.useFakeTimers().setSystemTime(new Date('1857-08-04T14:37:00Z'));
 
       const store = createStore(
         mockStoreData('1857-07-05', '1933-06-20', '1857-08-04T13:37:00Z')
@@ -202,7 +202,7 @@ describe('CallAssignmentModel', () => {
       const apiClient = instance(mockClient);
       const env = new Environment(store, apiClient);
       const model = new CallAssignmentModel(env, 1, 2);
-      expect(model.state).toBe(CallAssignmentState.ACTIVE);
+      expect(model.state).toBe(CallAssignmentState.OPEN);
     });
 
     it('is ACTIVE when open with very recent call', () => {
