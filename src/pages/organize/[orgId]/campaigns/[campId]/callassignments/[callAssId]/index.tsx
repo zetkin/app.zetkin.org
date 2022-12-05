@@ -45,8 +45,8 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
 }) => {
   const [onServer, setOnServer] = useState(true);
   const model = useModel(
-    (store) =>
-      new CallAssignmentModel(store, parseInt(orgId), parseInt(assignmentId))
+    (env) =>
+      new CallAssignmentModel(env, parseInt(orgId), parseInt(assignmentId))
   );
 
   useEffect(() => setOnServer(false), []);
@@ -55,7 +55,7 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
     return null;
   }
 
-  const stats = model.getStats();
+  const { data: stats } = model.getStats();
 
   const colors = model.hasTargets
     ? [

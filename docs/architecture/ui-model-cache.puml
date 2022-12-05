@@ -1,0 +1,51 @@
+@startuml ui-model-repo-store
+
+title "UI, models and cache"
+
+frame ui as "UI layer" {
+  component SmartComponent
+  component Child
+}
+
+frame models as "Model layer" {
+  node Model
+}
+
+frame cache as "Cache layer" {
+  node Repository
+  database Store as "Redux store"
+}
+
+cloud API
+
+SmartComponent -> Child: pass model
+
+SmartComponent --> Model: creates
+Child --> Model: uses
+
+Model --> Repository: requests or\nupdates data
+Repository -> Store: uses as cache\nand mutates
+Store ~~> SmartComponent: triggers updates\nwhen mutated
+
+Repository --> API: requests (via ApiClient)
+
+note right of SmartComponent
+Some components create models using
+useModel(), and can then pass it to
+child components to use.
+endnote
+
+note right of Model
+Models contain most logic that isn't
+purely UI. They get their data via
+the cache layer.
+endnote
+
+note bottom of cache
+When data is requested from a
+repository, it will either get
+a cached version from the store,
+or retrieve it from the API.
+endnote
+
+@enduml

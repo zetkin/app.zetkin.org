@@ -1,138 +1,97 @@
+import CallAssignmentsRepo from '../repos/CallAssignmentsRepo';
+import Environment from 'core/env/Environment';
 import { Store } from 'core/store';
 import { ZetkinQuery } from 'utils/types/zetkin';
 import { CallAssignmentData, CallAssignmentStats } from '../apiTypes';
+import { callAssignmentLoad, callAssignmentUpdated } from '../store';
 import {
-  callAssignmentLoad,
-  callAssignmentLoaded,
-  callAssignmentUpdated,
-  statsLoad,
-  statsLoaded,
-} from '../store';
+  IFuture,
+  PlaceholderFuture,
+  ResolvedFuture,
+} from 'core/caching/futures';
 
 export default class CallAssignmentModel {
+  private _env: Environment;
   private _id: number;
   private _orgId: number;
+  private _repo: CallAssignmentsRepo;
   private _store: Store;
 
-  constructor(store: Store, orgId: number, id: number) {
-    this._store = store;
+  constructor(env: Environment, orgId: number, id: number) {
+    this._env = env;
+    this._store = this._env.store;
     this._orgId = orgId;
     this._id = id;
+    this._repo = new CallAssignmentsRepo(env);
   }
 
-  getData(): CallAssignmentData {
-    const state = this._store.getState();
-    const callAssignment = state.callAssignments.callAssignments.find(
-      (ca) => ca.id == this._id
-    );
-    if (callAssignment) {
-      return callAssignment;
-    } else {
-      this._store.dispatch(callAssignmentLoad());
-      const promise = fetch(
-        `/api/orgs/${this._orgId}/call_assignments/${this._id}`
-      )
-        .then((res) => {
-          return res.json();
-        })
-        .then((data: { data: CallAssignmentData }) => {
-          this._store.dispatch(callAssignmentLoaded(data.data));
-        });
-
-      throw promise;
-    }
+  getData(): IFuture<CallAssignmentData> {
+    return this._repo.getCallAssignment(this._orgId, this._id);
   }
 
-  getStats(): CallAssignmentStats | null {
-    const state = this._store.getState();
-    const stats = state.callAssignments.statsById[this._id];
-
+  getStats(): IFuture<CallAssignmentStats | null> {
     if (!this.isTargeted) {
-      return null;
+      return new ResolvedFuture(null);
     }
 
-    if (stats && !stats.isStale) {
-      return stats;
-    } else {
-      this._store.dispatch(statsLoad(this._id));
-      fetch(
-        `/api/callAssignments/targets?org=${this._orgId}&assignment=${this._id}`
-      )
-        .then((res) => res.json())
-        .then((data: CallAssignmentStats) => {
-          this._store.dispatch(statsLoaded({ ...data, id: this._id }));
-        });
-
-      return {
+    const future = this._repo.getCallAssignmentStats(this._orgId, this._id);
+    if (future.isLoading && !future.data) {
+      return new PlaceholderFuture({
         allTargets: 0,
         allocated: 0,
         blocked: 0,
         callBackLater: 0,
         calledTooRecently: 0,
         done: 0,
-        isLoading: true,
-        isStale: false,
+        id: this._id,
         missingPhoneNumber: 0,
         organizerActionNeeded: 0,
         queue: 0,
         ready: 0,
-      };
+      });
+    } else {
+      return future;
     }
   }
 
   get hasTargets() {
-    const data = this.getStats();
+    const { data } = this.getStats();
     if (data === null) {
       return false;
     }
     return data.blocked + data.ready + data.done > 0;
   }
 
-  get isLoading() {
-    return this._store.getState().callAssignments.isLoading;
-  }
-
   get isTargeted() {
-    const data = this.getData();
-    return data.target.filter_spec?.length != 0;
+    const { data } = this.getData();
+    return data && data.target?.filter_spec?.length != 0;
   }
 
-  setCooldown(cooldown: number) {
+  setCooldown(cooldown: number): void {
     const state = this._store.getState();
-    const callAssignment = state.callAssignments.callAssignments.find(
-      (ca) => ca.id == this._id
+    const caItem = state.callAssignments.assignmentList.items.find(
+      (item) => item.id == this._id
     );
+    const callAssignment = caItem?.data;
 
     //if cooldown has not changed, do nothing.
     if (cooldown === callAssignment?.cooldown) {
-      return null;
+      return;
     }
 
-    if (callAssignment) {
-      this._store.dispatch(callAssignmentLoad());
-      fetch(`/api/orgs/${this._orgId}/call_assignments/${this._id}`, {
-        body: JSON.stringify({ cooldown }),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        method: 'PATCH',
-      })
-        .then((res) => {
-          return res.json();
-        })
-        .then((data: { data: CallAssignmentData }) => {
-          this._store.dispatch(callAssignmentUpdated(data.data));
-        });
-    }
+    this._repo.updateCallAssignment(this._orgId, this._id, { cooldown });
   }
 
-  setTargets(query: Partial<ZetkinQuery>) {
+  setTargets(query: Partial<ZetkinQuery>): void {
+    // TODO: Refactor once SmartSearch is supported in redux framework
     const state = this._store.getState();
-    const callAssignment = state.callAssignments.callAssignments.find(
-      (ca) => ca.id == this._id
+    const caItem = state.callAssignments.assignmentList.items.find(
+      (item) => item.id == this._id
     );
+    const callAssignment = caItem?.data;
+
     if (callAssignment) {
-      this._store.dispatch(callAssignmentLoad());
+      this._store.dispatch(callAssignmentLoad(this._id));
       fetch(
         `/api/orgs/${this._orgId}/people/queries/${callAssignment.target.id}`,
         {
@@ -150,12 +109,5 @@ export default class CallAssignmentModel {
           )
         );
     }
-  }
-
-  get statsIsLoading() {
-    return (
-      this._store.getState().callAssignments.statsById[this._id]?.isLoading ??
-      false
-    );
   }
 }
