@@ -1,9 +1,6 @@
-import { Theme } from '@material-ui/core';
-import {
-  makeStyles,
-  StandardTextFieldProps,
-  TextField,
-} from '@material-ui/core';
+import { Theme } from '@mui/material';
+import { StandardTextFieldProps, TextField } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import { useEffect, useRef, useState } from 'react';
 
 const useStyles = makeStyles<Theme, ExpandingTextInputProps>((theme) => ({
@@ -40,6 +37,7 @@ const ExpandingTextInput: React.FC<ExpandingTextInputProps> = (
   const classes = useStyles(props);
   return (
     <TextField
+      variant="standard"
       className={classes.MuiTextField}
       inputProps={{ className: classes.MuiInput }}
       {...props}

@@ -6,7 +6,7 @@ import {
   DialogTitle,
   useMediaQuery,
   useTheme,
-} from '@material-ui/core';
+} from '@mui/material';
 
 interface ZUIDialogProps {
   children: React.ReactNode;
@@ -24,7 +24,7 @@ const ZUIDialog: FunctionComponent<ZUIDialogProps> = ({
   title,
 }): JSX.Element => {
   const theme = useTheme();
-  const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
+  const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
   return (
     <Dialog

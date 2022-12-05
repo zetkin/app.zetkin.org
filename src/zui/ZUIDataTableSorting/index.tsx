@@ -1,7 +1,7 @@
 import { FormattedMessage } from 'react-intl';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 import { useState } from 'react';
-import { Add, Delete, ImportExport } from '@material-ui/icons';
+import { Add, Delete, ImportExport } from '@mui/icons-material';
 import {
   Badge,
   Box,
@@ -13,7 +13,7 @@ import {
   Popover,
   Select,
   Typography,
-} from '@material-ui/core';
+} from '@mui/material';
 import {
   GridColDef,
   GridSortDirection,
@@ -131,8 +131,9 @@ const ZUIDataTableSorting: React.FunctionComponent<
             {sortModel.map((item, index) => (
               <Box key={item.field} display="flex" flexDirection="row" pb={1}>
                 <Box flex={1} mr={2}>
-                  <FormControl fullWidth>
+                  <FormControl variant="standard" fullWidth>
                     <Select
+                      variant="standard"
                       name="column"
                       onChange={(evt) =>
                         handleChange(index, evt.target.value as string)
@@ -154,8 +155,9 @@ const ZUIDataTableSorting: React.FunctionComponent<
                   </FormControl>
                 </Box>
                 <Box flex={1}>
-                  <FormControl fullWidth>
+                  <FormControl variant="standard" fullWidth>
                     <Select
+                      variant="standard"
                       name="direction"
                       onChange={(evt) =>
                         handleChange(
@@ -175,6 +177,7 @@ const ZUIDataTableSorting: React.FunctionComponent<
                   className={classes.deleteButton}
                   data-testid="deleteSortModelItem"
                   onClick={() => handleDelete(item.field)}
+                  size="large"
                 >
                   <Delete />
                 </IconButton>

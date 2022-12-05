@@ -5,10 +5,10 @@ import {
   Chip,
   CircularProgress,
   Grid,
-  makeStyles,
   Theme,
   Typography,
-} from '@material-ui/core';
+} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import { LetterparserNode, parse } from 'letterparser';
 import { useEffect, useState } from 'react';
 

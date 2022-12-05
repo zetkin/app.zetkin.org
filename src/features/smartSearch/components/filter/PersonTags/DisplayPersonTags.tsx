@@ -1,7 +1,7 @@
 import { FormattedMessage as Msg } from 'react-intl';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
-import { Box, Chip } from '@material-ui/core';
+import { Box, Chip } from '@mui/material';
 
 import getTags from 'features/tags/api/getTags';
 import { ZetkinTag } from 'utils/types/zetkin';

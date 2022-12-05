@@ -1,16 +1,18 @@
 import { FunctionComponent } from 'react';
-import { Box, makeStyles } from '@material-ui/core';
+import { Box } from '@mui/material';
+
+import makeStyles from '@mui/styles/makeStyles';
 
 import ZUIOrganizeSidebar from 'zui/ZUIOrganizeSidebar';
 
 const useStyles = makeStyles((theme) => ({
   breadcrumbs: {
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       width: '100%',
     },
   },
   root: {
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       paddingTop: '3.5rem',
     },
   },

@@ -1,6 +1,7 @@
 import { useIntl } from 'react-intl';
 import { useRouter } from 'next/router';
-import { Box, makeStyles, Theme } from '@material-ui/core';
+import { Box, Theme } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import { FunctionComponent, useContext, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 

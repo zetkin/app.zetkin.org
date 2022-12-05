@@ -3,7 +3,7 @@ import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { FormattedMessage as Msg } from 'react-intl';
 import { stringToBool } from '../utils/stringUtils';
-import { Button, ButtonGroup, Container, Typography } from '@material-ui/core';
+import { Button, ButtonGroup, Container, Typography } from '@mui/material';
 
 import { AppSession } from '../utils/types';
 import getUserMemberships from 'utils/getUserMemberships';

@@ -1,5 +1,5 @@
 import { FormattedMessage } from 'react-intl';
-import { Typography } from '@material-ui/core';
+import { Typography } from '@mui/material';
 
 import UpdateContainer from './elements/UpdateContainer';
 import { ZetkinUpdateJourneyInstanceClose } from 'zui/ZUITimeline/types';

@@ -5,7 +5,7 @@ import {
   FormLabel,
   Radio,
   RadioGroup,
-} from '@material-ui/core';
+} from '@mui/material';
 import { FormattedMessage, useIntl } from 'react-intl';
 
 import { ZetkinTag } from 'utils/types/zetkin';
@@ -19,7 +19,11 @@ const TypeSelect: React.FC<{
 
   return (
     <Box mb={0.8} mt={1.5}>
-      <FormControl data-testid="TypeSelect-formControl" disabled={disabled}>
+      <FormControl
+        variant="standard"
+        data-testid="TypeSelect-formControl"
+        disabled={disabled}
+      >
         <FormLabel>
           <FormattedMessage id={'misc.tags.tagManager.tagDialog.typeLabel'} />
         </FormLabel>

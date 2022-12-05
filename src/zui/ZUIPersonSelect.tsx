@@ -1,6 +1,6 @@
-import { Autocomplete as MUIAutocomplete } from '@material-ui/lab';
+import { Autocomplete as MUIAutocomplete } from '@mui/material';
 import { Autocomplete as RFFAutocomplete } from 'mui-rff';
-import { TextField } from '@material-ui/core';
+import { Box, TextField } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
@@ -115,8 +115,7 @@ const usePersonSelect: UsePersonSelect = ({
     autoCompleteProps: {
       filterOptions: (options) => options,
       getOptionDisabled,
-      getOptionLabel: (person: ZetkinPerson) =>
-        person.first_name ? `${person.first_name} ${person.last_name}` : '',
+      getOptionLabel: (person: ZetkinPerson) => `${person.id}`,
       getOptionSelected: (option: ZetkinPerson, value: ZetkinPerson) =>
         option?.id == value?.id,
       getOptionValue: (person: ZetkinPerson) => person.id || null,
@@ -132,17 +131,16 @@ const usePersonSelect: UsePersonSelect = ({
       },
       options: personOptions,
       placeholder,
-      renderOption: (person: ZetkinPerson) => {
+      renderOption: (props: any, person: ZetkinPerson) => {
         const extraLabel = getOptionExtraLabel
           ? getOptionExtraLabel(person)
           : null;
-
+        const name = `${person.first_name} ${person.last_name}`;
+        const { getOptionSelected, ...rest } = props;
         return (
-          <ZUIPerson
-            id={person.id}
-            name={`${person.first_name} ${person.last_name}`}
-            subtitle={extraLabel}
-          />
+          <Box component="li" {...rest}>
+            <ZUIPerson id={person.id} name={name} subtitle={extraLabel} />
+          </Box>
         );
       },
       value: selectedPerson,

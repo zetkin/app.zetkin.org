@@ -1,7 +1,7 @@
 import { useIntl } from 'react-intl';
 import { FunctionComponent, useState } from 'react';
 
-import { TextField } from '@material-ui/core';
+import { TextField } from '@mui/material';
 import { ZetkinViewColumn } from 'features/views/components/types';
 import ZUIDialog from 'zui/ZUIDialog';
 import ZUISubmitCancelButtons from 'zui/ZUISubmitCancelButtons';
@@ -30,6 +30,7 @@ const ViewRenameColumnDialog: FunctionComponent<
         }}
       >
         <TextField
+          variant="standard"
           fullWidth
           id="rename-column-title-field"
           label={intl.formatMessage({

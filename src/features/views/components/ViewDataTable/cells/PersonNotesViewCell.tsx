@@ -1,6 +1,6 @@
 import { FunctionComponent } from 'react';
 import { GridRenderCellParams } from '@mui/x-data-grid-pro';
-import { Typography } from '@material-ui/core';
+import { Typography } from '@mui/material';
 
 import { ViewGridCellParams } from '.';
 

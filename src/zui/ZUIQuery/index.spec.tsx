@@ -1,5 +1,5 @@
 import { render } from 'utils/testing';
-import { LinearProgress, Typography } from '@material-ui/core';
+import { LinearProgress, Typography } from '@mui/material';
 
 import mockUseQueryResult from 'utils/testing/mocks/mockUseQueryResult';
 import ZUIQuery from '.';

@@ -1,4 +1,4 @@
-import { Typography } from '@material-ui/core';
+import { Typography } from '@mui/material';
 import { ComponentMeta, ComponentStory } from '@storybook/react';
 
 import mockPerson from 'utils/testing/mocks/mockPerson';

@@ -1,7 +1,7 @@
 import { GridToolbarFilterButton } from '@mui/x-data-grid-pro';
 import { useContext } from 'react';
-import { Add, Launch, RemoveCircleOutline } from '@material-ui/icons';
-import { Box, Button, Slide, Tooltip } from '@material-ui/core';
+import { Add, Launch, RemoveCircleOutline } from '@mui/icons-material';
+import { Box, Button, Slide, Tooltip } from '@mui/material';
 import { FormattedMessage, useIntl } from 'react-intl';
 
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';

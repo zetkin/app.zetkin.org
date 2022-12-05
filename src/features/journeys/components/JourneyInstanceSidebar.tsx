@@ -1,6 +1,6 @@
-import { Add } from '@material-ui/icons';
+import { Add } from '@mui/icons-material';
 import { useState } from 'react';
-import { Button, ClickAwayListener, Divider, Grid } from '@material-ui/core';
+import { Button, ClickAwayListener, Divider, Grid } from '@mui/material';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
 
 import JourneyMilestoneProgress from 'features/journeys/components/JourneyMilestoneProgress';

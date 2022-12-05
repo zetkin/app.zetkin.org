@@ -1,6 +1,6 @@
 import { FunctionComponent } from 'react';
 import { GridRenderCellParams } from '@mui/x-data-grid-pro';
-import { Box, Typography } from '@material-ui/core';
+import { Box, Typography } from '@mui/material';
 
 import { ViewGridCellParams } from '.';
 import { ZetkinPerson } from 'utils/types/zetkin';

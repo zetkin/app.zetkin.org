@@ -3,7 +3,7 @@ import Head from 'next/head';
 import { useContext } from 'react';
 import { useIntl } from 'react-intl';
 import { useQueryClient } from 'react-query';
-import { Box, Divider, Grid } from '@material-ui/core';
+import { Box, Divider, Grid } from '@mui/material';
 
 import JourneyInstanceLayout from 'features/journeys/layout/JourneyInstanceLayout';
 import JourneyInstanceOutcome from 'features/journeys/components/JourneyInstanceOutcome';

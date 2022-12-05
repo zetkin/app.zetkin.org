@@ -1,14 +1,8 @@
 import { FormattedDate } from 'react-intl';
-import { grey } from '@material-ui/core/colors';
+import { grey } from '@mui/material/colors';
 import NextLink from 'next/link';
-import {
-  Box,
-  Link,
-  List,
-  makeStyles,
-  Tooltip,
-  Typography,
-} from '@material-ui/core';
+import { Box, Link, List, Tooltip, Typography } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import { CALENDAR_RANGES, getViewRange } from '../utils';
 import { useEffect, useRef } from 'react';
 
@@ -365,7 +359,7 @@ const CalendarBar = ({
   return (
     <Box height="0.5rem" position="relative" width={1}>
       <NextLink href={`/organize/${orgId}/campaigns/${id}`} passHref>
-        <Link>
+        <Link underline="hover">
           <Tooltip
             arrow
             data-testid={`calendar-bar-popover-${id}`}

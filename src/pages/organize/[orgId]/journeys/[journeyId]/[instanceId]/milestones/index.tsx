@@ -1,7 +1,7 @@
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { FormattedMessage as Msg } from 'react-intl';
-import { Grid, LinearProgress, Typography } from '@material-ui/core';
+import { Grid, LinearProgress, Typography } from '@mui/material';
 
 import { getCompletionPercentage } from 'features/journeys/components/JourneyMilestoneProgress';
 import JourneyInstanceLayout from 'features/journeys/layout/JourneyInstanceLayout';

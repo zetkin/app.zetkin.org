@@ -3,7 +3,7 @@ import { Form } from 'react-final-form';
 import { TextField } from 'mui-rff';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
-import { Box, Button, Grid, GridSize, MenuItem } from '@material-ui/core';
+import { Box, Button, Grid, GridSize, MenuItem } from '@mui/material';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
 
 import getActivities from 'utils/fetching/getActivities';

@@ -1,5 +1,5 @@
 import { useIntl } from 'react-intl';
-import { Box, Switch, Typography } from '@material-ui/core';
+import { Box, Switch, Typography } from '@mui/material';
 
 const GroupToggle: React.FunctionComponent<{
   checked?: boolean;
@@ -13,7 +13,6 @@ const GroupToggle: React.FunctionComponent<{
       </Typography>
       <Switch
         checked={checked}
-        color="primary"
         data-testid="TagManager-groupToggle"
         name="Tags"
         onChange={onChange}

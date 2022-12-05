@@ -1,6 +1,6 @@
 import Link from 'next/link';
-import { AttachFile, Image as ImageIcon } from '@material-ui/icons';
-import { Chip, CircularProgress, useTheme } from '@material-ui/core';
+import { AttachFile, Image as ImageIcon } from '@mui/icons-material';
+import { Chip, CircularProgress, useTheme } from '@mui/material';
 
 import { ZetkinFile } from 'utils/types/zetkin';
 import {

@@ -1,20 +1,23 @@
-import { CssBaseline } from '@material-ui/core';
-import DateUtils from '@date-io/dayjs';
-import dayjs from 'dayjs';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { CssBaseline } from '@mui/material';
 import { IntlProvider } from 'react-intl';
-import isoWeek from 'dayjs/plugin/isoWeek';
-import { ThemeProvider } from '@material-ui/styles';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import {
+  ThemeProvider,
+  Theme,
+  StyledEngineProvider,
+} from '@mui/material/styles';
 import { FC, ReactElement } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { render, RenderOptions, RenderResult } from '@testing-library/react';
 
-import { LocalTimeToJsonPlugin } from 'utils/dateUtils';
-import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import theme from 'theme';
 import { UserContext } from 'utils/hooks/useFocusDate';
 
-dayjs.extend(LocalTimeToJsonPlugin);
-dayjs.extend(isoWeek);
+declare module '@mui/styles/defaultTheme' {
+  // eslint-disable-next-line @typescript-eslint/no-empty-interface
+  interface DefaultTheme extends Theme {}
+}
 
 interface ZetkinAppProvidersProps {
   children: React.ReactNode;
@@ -31,26 +34,28 @@ const ZetkinAppProviders: FC<ZetkinAppProvidersProps> = ({ children }) => {
 
   return (
     <UserContext.Provider value={null}>
-      <ThemeProvider theme={theme}>
-        <MuiPickersUtilsProvider libInstance={dayjs} utils={DateUtils}>
-          <IntlProvider
-            defaultLocale="en"
-            locale="en"
-            messages={{}}
-            onError={(err) => {
-              if (err.code === 'MISSING_TRANSLATION') {
-                return;
-              }
-              throw err;
-            }}
-          >
-            <QueryClientProvider client={queryClient}>
-              <CssBaseline />
-              {children}
-            </QueryClientProvider>
-          </IntlProvider>
-        </MuiPickersUtilsProvider>
-      </ThemeProvider>
+      <StyledEngineProvider injectFirst>
+        <ThemeProvider theme={theme}>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <IntlProvider
+              defaultLocale="en"
+              locale="en"
+              messages={{}}
+              onError={(err) => {
+                if (err.code === 'MISSING_TRANSLATION') {
+                  return;
+                }
+                throw err;
+              }}
+            >
+              <QueryClientProvider client={queryClient}>
+                <CssBaseline />
+                {children}
+              </QueryClientProvider>
+            </IntlProvider>
+          </LocalizationProvider>
+        </ThemeProvider>
+      </StyledEngineProvider>
     </UserContext.Provider>
   );
 };

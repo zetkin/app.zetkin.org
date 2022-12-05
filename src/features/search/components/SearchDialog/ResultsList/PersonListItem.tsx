@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { Avatar, ListItem, ListItemAvatar } from '@material-ui/core';
+import { Avatar, ListItem, ListItemAvatar } from '@mui/material';
 
 import ResultsListItemText from './ResultsListItemText';
 import { ZetkinPerson } from 'utils/types/zetkin';

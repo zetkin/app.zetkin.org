@@ -3,7 +3,7 @@ import { TextField } from 'mui-rff';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import { Link, MenuItem } from '@material-ui/core';
+import { Link, MenuItem } from '@mui/material';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
 
 import getUserMemberships from 'utils/fetching/getUserMemberships';
@@ -124,6 +124,7 @@ const CampaignDetailsForm = ({
                   last_name: '',
                 } as ZetkinPerson);
               }}
+              underline="hover"
             >
               <Msg id="misc.formDialog.campaign.manager.selectSelf" />
             </Link>

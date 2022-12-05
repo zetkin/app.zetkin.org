@@ -1,4 +1,4 @@
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 import React from 'react';
 import {
   FormatBold,
@@ -7,7 +7,7 @@ import {
   FormatListNumbered,
   FormatQuote,
   FormatStrikethrough,
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 
 import {
   AddAttachmentButton,

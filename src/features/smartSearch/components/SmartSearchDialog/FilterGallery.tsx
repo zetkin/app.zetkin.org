@@ -1,4 +1,4 @@
-import { ChevronLeft } from '@material-ui/icons';
+import { ChevronLeft } from '@mui/icons-material';
 import { FormattedMessage as Msg } from 'react-intl';
 import {
   Box,
@@ -8,7 +8,7 @@ import {
   Typography,
   useMediaQuery,
   useTheme,
-} from '@material-ui/core';
+} from '@mui/material';
 
 import { FILTER_TYPE } from 'features/smartSearch/components/types';
 
@@ -53,7 +53,7 @@ const FilterGallery = ({
   onAddNewFilter,
 }: FilterGalleryProps): JSX.Element => {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   return (
     <Box display="flex" flexDirection="column" pb={2}>

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Dialog, DialogContent } from '@material-ui/core';
+import { Dialog, DialogContent } from '@mui/material';
 
 import FilterEditor from './FilterEditor';
 import FilterGallery from './FilterGallery';

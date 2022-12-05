@@ -1,10 +1,10 @@
-import AlarmOffIcon from '@material-ui/icons/AlarmOff';
-import CancelIcon from '@material-ui/icons/Cancel';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import FlagIcon from '@material-ui/icons/Flag';
+import AlarmOffIcon from '@mui/icons-material/AlarmOff';
+import CancelIcon from '@mui/icons-material/Cancel';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import FlagIcon from '@mui/icons-material/Flag';
 import { FormattedMessage } from 'react-intl';
 import React from 'react';
-import { Box, Grid, Typography } from '@material-ui/core';
+import { Box, Grid, Typography } from '@mui/material';
 
 import theme from 'theme';
 import UpdateContainer from './elements/UpdateContainer';

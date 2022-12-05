@@ -1,5 +1,5 @@
 import { FormattedMessage as Msg } from 'react-intl';
-import { List, ListItem, ListItemText } from '@material-ui/core';
+import { List, ListItem, ListItemText } from '@mui/material';
 import React, { useState } from 'react';
 
 interface ZUIListProps {

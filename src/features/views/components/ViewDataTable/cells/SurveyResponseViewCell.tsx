@@ -1,6 +1,6 @@
-import { ExpandMore } from '@material-ui/icons';
+import { ExpandMore } from '@mui/icons-material';
 import { GridRenderCellParams } from '@mui/x-data-grid-pro';
-import { Box, Button, Popover, Typography } from '@material-ui/core';
+import { Box, Button, Popover, Typography } from '@mui/material';
 import { FunctionComponent, useState } from 'react';
 
 import noPropagate from 'utils/noPropagate';

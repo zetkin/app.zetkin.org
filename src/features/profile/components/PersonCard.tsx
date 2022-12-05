@@ -6,9 +6,9 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
-  makeStyles,
-} from '@material-ui/core';
-import { Close, Edit } from '@material-ui/icons';
+} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
+import { Close, Edit } from '@mui/icons-material';
 import { ReactEventHandler, SyntheticEvent, useState } from 'react';
 
 const useStyles = makeStyles((theme) => ({

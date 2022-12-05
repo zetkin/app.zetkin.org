@@ -1,7 +1,5 @@
-import DateFnsUtils from '@date-io/date-fns';
 import { FormattedMessage as Msg } from 'react-intl';
-import { MuiPickersUtilsProvider } from '@material-ui/pickers';
-import { MenuItem, Typography } from '@material-ui/core';
+import { MenuItem, TextField, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 
 import { getNewDateWithOffset } from 'utils/dateUtils';
@@ -59,61 +57,61 @@ const TimeFrame = ({
   }, [before, after, selected, numDays]);
 
   return (
-    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-      <Typography display="inline" variant="h4">
-        <Msg
-          id={`misc.smartSearch.timeFrame.edit.${selected}`}
-          values={{
-            afterDateSelect: (
-              <StyledDatePicker
-                onChange={(date) => setAfter(date as unknown as Date)}
-                value={after}
-              />
-            ),
-            beforeDateSelect: (
-              <StyledDatePicker
-                onChange={(date) => setBefore(date as unknown as Date)}
-                value={before}
-              />
-            ),
-            days: numDays,
-            daysInput: (
-              <StyledNumberInput
-                inputProps={{ min: '1' }}
-                onChange={(e) => setNumDays(+e.target.value)}
-                value={numDays}
-              />
-            ),
-            timeFrameSelect: (
-              <StyledSelect
-                onChange={(e) => setSelected(e.target.value as TIME_FRAME)}
-                SelectProps={{
-                  renderValue: function getLabel(value) {
-                    return (
-                      <Msg
-                        id={`misc.smartSearch.timeFrame.timeFrameSelectLabel.${value}`}
-                        values={{
-                          days: numDays,
-                        }}
-                      />
-                    );
-                  },
-                }}
-                value={selected}
-              >
-                {options.map((value) => (
-                  <MenuItem key={value} value={value}>
+    <Typography display="inline" variant="h4">
+      <Msg
+        id={`misc.smartSearch.timeFrame.edit.${selected}`}
+        values={{
+          afterDateSelect: (
+            <StyledDatePicker
+              onChange={(date) => setAfter(date as unknown as Date)}
+              value={after}
+              renderInput={(params) => <TextField {...params} />}
+            />
+          ),
+          beforeDateSelect: (
+            <StyledDatePicker
+              onChange={(date) => setBefore(date as unknown as Date)}
+              value={before}
+              renderInput={(params) => <TextField {...params} />}
+            />
+          ),
+          days: numDays,
+          daysInput: (
+            <StyledNumberInput
+              inputProps={{ min: '1' }}
+              onChange={(e) => setNumDays(+e.target.value)}
+              value={numDays}
+            />
+          ),
+          timeFrameSelect: (
+            <StyledSelect
+              onChange={(e) => setSelected(e.target.value as TIME_FRAME)}
+              SelectProps={{
+                renderValue: function getLabel(value) {
+                  return (
                     <Msg
-                      id={`misc.smartSearch.timeFrame.timeFrameSelectOptions.${value}`}
+                      id={`misc.smartSearch.timeFrame.timeFrameSelectLabel.${value}`}
+                      values={{
+                        days: numDays,
+                      }}
                     />
-                  </MenuItem>
-                ))}
-              </StyledSelect>
-            ),
-          }}
-        />
-      </Typography>
-    </MuiPickersUtilsProvider>
+                  );
+                },
+              }}
+              value={selected}
+            >
+              {options.map((value) => (
+                <MenuItem key={value} value={value}>
+                  <Msg
+                    id={`misc.smartSearch.timeFrame.timeFrameSelectOptions.${value}`}
+                  />
+                </MenuItem>
+              ))}
+            </StyledSelect>
+          ),
+        }}
+      />
+    </Typography>
   );
 };
 

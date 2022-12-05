@@ -1,5 +1,5 @@
 import { FormattedMessage as Msg } from 'react-intl';
-import { MenuItem, Typography } from '@material-ui/core';
+import { MenuItem, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 
 import { getMatchingWithConfig } from '../utils';

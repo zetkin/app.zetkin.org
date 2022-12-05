@@ -6,8 +6,8 @@ import {
   useRef,
 } from 'react';
 
-import Error from '@material-ui/icons/Error';
-import Search from '@material-ui/icons/Search';
+import Error from '@mui/icons-material/Error';
+import Search from '@mui/icons-material/Search';
 
 import { useIntl } from 'react-intl';
 import {
@@ -15,7 +15,7 @@ import {
   InputAdornment,
   TextField,
   Tooltip,
-} from '@material-ui/core';
+} from '@mui/material';
 
 const SearchFieldIcon: React.FunctionComponent<{
   error: boolean;

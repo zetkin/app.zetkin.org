@@ -1,5 +1,5 @@
-import MailIcon from '@material-ui/icons/Mail';
-import PhoneIcon from '@material-ui/icons/Phone';
+import MailIcon from '@mui/icons-material/Mail';
+import PhoneIcon from '@mui/icons-material/Phone';
 import { useRouter } from 'next/router';
 import {
   Box,
@@ -9,7 +9,7 @@ import {
   Grid,
   Popper,
   Typography,
-} from '@material-ui/core';
+} from '@mui/material';
 import { useEffect, useState } from 'react';
 
 import TagsList from 'features/tags/components/TagManager/components/TagsList';
@@ -67,12 +67,19 @@ const ZUIPersonHoverCard: React.FunctionComponent<{
       <Popper
         anchorEl={anchorEl}
         id="person-hover-card"
-        modifiers={{
-          preventOverflow: {
-            boundariesElement: 'scrollParent',
+        modifiers={[
+          {
+            name: 'preventOverflow',
             enabled: true,
+            options: {
+              altAxis: true,
+              altBoundary: true,
+              tether: true,
+              rootBoundary: 'document',
+              padding: 8,
+            },
           },
-        }}
+        ]}
         open={open}
       >
         {person && (

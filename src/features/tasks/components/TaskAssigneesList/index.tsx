@@ -1,5 +1,5 @@
 import { useIntl } from 'react-intl';
-import { Box, Card, Grid } from '@material-ui/core';
+import { Box, Card, Grid } from '@mui/material';
 
 import TaskStatusSubtitle from './TaskStatusSubtitle';
 import { ZetkinAssignedTask } from 'features/tasks/components/types';

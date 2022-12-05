@@ -1,7 +1,7 @@
 import { isEqual } from 'lodash';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 import { withHistory } from 'slate-history';
-import { Box, ClickAwayListener, Collapse } from '@material-ui/core';
+import { Box, ClickAwayListener, Collapse } from '@mui/material';
 import { createEditor, Descendant, Editor, Transforms } from 'slate';
 import {
   Editable,

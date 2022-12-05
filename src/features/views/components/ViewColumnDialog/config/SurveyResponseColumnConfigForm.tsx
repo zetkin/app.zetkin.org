@@ -7,7 +7,7 @@ import {
   useEffect,
   useState,
 } from 'react';
-import { MenuItem, TextField } from '@material-ui/core';
+import { MenuItem, TextField } from '@mui/material';
 
 import getSurveysWithElements from 'features/smartSearch/fetching/getSurveysWithElements';
 import ZUIQuery from 'zui/ZUIQuery';
@@ -100,6 +100,7 @@ const SurveyResponseColumnConfigForm: FunctionComponent<
         return (
           <>
             <TextField
+              variant="standard"
               fullWidth
               label={intl.formatMessage({
                 id: 'misc.views.columnDialog.editor.fieldLabels.survey',
@@ -116,6 +117,7 @@ const SurveyResponseColumnConfigForm: FunctionComponent<
               ))}
             </TextField>
             <TextField
+              variant="standard"
               disabled={!surveyId}
               fullWidth
               label={intl.formatMessage({

@@ -1,7 +1,7 @@
-import { Add } from '@material-ui/icons';
+import { Add } from '@mui/icons-material';
 import { FormattedMessage } from 'react-intl';
 import { useState } from 'react';
-import { Box, Button, Popover } from '@material-ui/core';
+import { Box, Button, Popover } from '@mui/material';
 
 import TagSelect from 'features/tags/components/TagManager/components/TagSelect';
 import TagsList from './components/TagsList';

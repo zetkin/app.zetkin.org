@@ -1,6 +1,6 @@
-import { AccessTime } from '@material-ui/icons';
+import { AccessTime } from '@mui/icons-material';
 import NextLink from 'next/link';
-import { Box, Grid, Link, Typography } from '@material-ui/core';
+import { Box, Grid, Link, Typography } from '@mui/material';
 
 import JourneyStatusChip from '../../features/journeys/components/JourneyStatusChip';
 import { ZetkinJourneyInstance } from 'utils/types/zetkin';
@@ -39,7 +39,7 @@ const ZUIJourneyInstanceItem: React.FC<ZUIJourneyInstanceItemProps> = ({
               data-testid="page-title"
               variant="h5"
             >
-              <Link color="inherit">
+              <Link color="inherit" underline="hover">
                 {instance.title || instance.journey.title}
               </Link>
               <Typography color="textSecondary" component="span" variant="h5">

@@ -1,4 +1,4 @@
-import { Box, ListItemText, Typography } from '@material-ui/core';
+import { Box, ListItemText, Typography } from '@mui/material';
 
 const ResultsListItemText: React.FunctionComponent<{
   primary: string | React.ReactNode;

@@ -1,5 +1,7 @@
 import { useIntl } from 'react-intl';
-import { Chip, makeStyles } from '@material-ui/core';
+import { Chip } from '@mui/material';
+
+import makeStyles from '@mui/styles/makeStyles';
 
 import { ZetkinJourneyInstance } from 'utils/types/zetkin';
 

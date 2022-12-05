@@ -6,13 +6,13 @@ import {
   NaturePeople,
   Share,
   VideoLibrary,
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 import {
   ListItem,
   ListItemIcon,
   ListItemText,
   Typography,
-} from '@material-ui/core';
+} from '@mui/material';
 
 import { TASK_TYPE } from 'features/tasks/components/types';
 import { ZetkinTask } from 'utils/types/zetkin';

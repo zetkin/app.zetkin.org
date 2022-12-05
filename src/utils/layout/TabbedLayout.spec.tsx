@@ -35,7 +35,7 @@ describe('TabbedLayout.tsx', () => {
           const { getByText } = render(
             <TabbedLayout {...mockTabbedLayoutProps} fixedHeight />
           );
-          toggleButton = getByText(/header/i, { selector: 'button *' });
+          toggleButton = getByText(/header/i, { selector: 'button' });
         });
         it('is open by default', () => {
           expect(toggleButton.textContent).toContain('collapse');

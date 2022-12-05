@@ -1,8 +1,8 @@
 /* eslint-disable jsx-a11y/no-autofocus */
 
-import { ExpandMore } from '@material-ui/icons';
+import { ExpandMore } from '@mui/icons-material';
 import Link from 'next/link';
-import { useAutocomplete } from '@material-ui/lab';
+import useAutocomplete from '@mui/material/useAutocomplete';
 import { useIntl } from 'react-intl';
 import { useRouter } from 'next/router';
 import {
@@ -13,7 +13,7 @@ import {
   ListItemText,
   Popover,
   TextField,
-} from '@material-ui/core';
+} from '@mui/material';
 import { FunctionComponent, useEffect, useRef, useState } from 'react';
 
 import { viewsResource } from 'features/views/api/views';
@@ -79,6 +79,7 @@ const ViewJumpMenu: FunctionComponent = () => {
       <IconButton
         data-testid="view-jump-menu-button"
         onClick={(ev) => setJumpMenuAnchor(ev.target as Element)}
+        size="large"
       >
         <ExpandMore />
       </IconButton>

@@ -3,18 +3,18 @@ import {
   ArrowRight,
   Delete,
   SubdirectoryArrowRight,
-} from '@material-ui/icons';
+} from '@mui/icons-material';
 import {
   Collapse,
   Divider,
-  Fade,
   IconButton,
   ListItem,
   ListItemIcon,
   ListItemSecondaryAction,
   ListItemText,
-  makeStyles,
-} from '@material-ui/core';
+} from '@mui/material';
+
+import makeStyles from '@mui/styles/makeStyles';
 
 import { PersonOrganization } from 'utils/organize/people';
 
@@ -65,16 +65,11 @@ export const OrganizationsTree: React.FunctionComponent<OrganizationProps> = ({
       <ListItem className={is_active ? undefined : classes.inactive}>
         <ListItemIcon>{getIcon()}</ListItemIcon>
         <ListItemText className={classes.listItemText} primary={title} />
-        <Fade
-          in={editable && !!parent && connected}
-          timeout={400 + Math.random() * 400}
-        >
-          <ListItemSecondaryAction>
-            <IconButton edge="end" onClick={() => onClickRemove(id)}>
-              <Delete />
-            </IconButton>
-          </ListItemSecondaryAction>
-        </Fade>
+        <ListItemSecondaryAction>
+          <IconButton edge="end" onClick={() => onClickRemove(id)} size="large">
+            <Delete />
+          </IconButton>
+        </ListItemSecondaryAction>
       </ListItem>
       <Divider className={classes.divider} />
       {hasChildren &&

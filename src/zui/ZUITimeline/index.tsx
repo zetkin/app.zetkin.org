@@ -1,4 +1,4 @@
-import { Alert } from '@material-ui/lab';
+import { Alert } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 import React from 'react';
 import {
@@ -12,7 +12,7 @@ import {
   MenuItem,
   Select,
   Typography,
-} from '@material-ui/core';
+} from '@mui/material';
 
 import TimelineAddNote from './TimelineAddNote';
 import TimelineUpdate from './TimelineUpdate';

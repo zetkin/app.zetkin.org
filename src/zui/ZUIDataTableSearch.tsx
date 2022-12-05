@@ -1,4 +1,4 @@
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 import {
   Badge,
   Box,
@@ -7,8 +7,8 @@ import {
   IconButton,
   Popover,
   TextField,
-} from '@material-ui/core';
-import { Close, Search } from '@material-ui/icons';
+} from '@mui/material';
+import { Close, Search } from '@mui/icons-material';
 import { FormattedMessage, useIntl } from 'react-intl';
 import {
   ReactEventHandler,
@@ -145,7 +145,7 @@ const DataTableSearch: React.FunctionComponent<ZUIDataTableSearchProps> = ({
             InputProps={{
               endAdornment: (
                 <Fade in={isActive}>
-                  <IconButton onClick={() => handleClear(true)}>
+                  <IconButton onClick={() => handleClear(true)} size="large">
                     <Close />
                   </IconButton>
                 </Fade>

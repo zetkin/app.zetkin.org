@@ -1,6 +1,6 @@
 import { FormattedMessage as Msg } from 'react-intl';
 import { useRouter } from 'next/router';
-import { Card, Divider, List, ListItem, ListItemText } from '@material-ui/core';
+import { Card, Divider, List, ListItem, ListItemText } from '@mui/material';
 import React, { useState } from 'react';
 
 import { config as createTaskAction } from 'zui/ZUISpeedDial/actions/createTask';

@@ -2,7 +2,7 @@ import { useIntl } from 'react-intl';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 import { ChangeEventHandler, FunctionComponent } from 'react';
-import { MenuItem, TextField } from '@material-ui/core';
+import { MenuItem, TextField } from '@mui/material';
 
 import getSurveys from 'features/smartSearch/fetching/getSurveys';
 import { SurveySubmittedViewColumn } from 'features/views/components/types';
@@ -40,6 +40,7 @@ const SurveySubmittedColumnConfigForm: FunctionComponent<
 
         return (
           <TextField
+            variant="standard"
             fullWidth
             label={intl.formatMessage({
               id: 'misc.views.columnDialog.editor.fieldLabels.survey',

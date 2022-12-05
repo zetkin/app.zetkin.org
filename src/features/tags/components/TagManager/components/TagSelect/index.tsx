@@ -1,8 +1,7 @@
-/* eslint-disable jsx-a11y/no-autofocus */
-import { useAutocomplete } from '@material-ui/lab';
+import useAutocomplete from '@mui/material/useAutocomplete';
 import { useIntl } from 'react-intl';
 import { useState } from 'react';
-import { Box, TextField } from '@material-ui/core';
+import { Box, TextField } from '@mui/material';
 
 import TagDialog from 'features/tags/components/TagManager/components/TagDialog';
 import TagSelectList from './TagSelectList';

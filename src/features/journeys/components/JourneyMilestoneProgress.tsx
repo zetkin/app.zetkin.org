@@ -1,5 +1,5 @@
-import { Schedule } from '@material-ui/icons';
-import { Box, LinearProgress, Typography } from '@material-ui/core';
+import { Schedule } from '@mui/icons-material';
+import { Box, LinearProgress, Typography } from '@mui/material';
 import { FormattedDate, FormattedMessage as Msg } from 'react-intl';
 
 import { ZetkinJourneyMilestoneStatus } from 'utils/types/zetkin';

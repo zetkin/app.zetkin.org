@@ -2,7 +2,7 @@ import { FunctionComponent } from 'react';
 import { useIntl } from 'react-intl';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
-import { MenuItem, TextField } from '@material-ui/core';
+import { MenuItem, TextField } from '@mui/material';
 
 import getStandaloneQueries from 'utils/fetching/getStandaloneQueries';
 import { PersonQueryViewColumn } from 'features/views/components/types';
@@ -42,6 +42,7 @@ const PersonQueryColumnConfigForm: FunctionComponent<
         };
         return (
           <TextField
+            variant="standard"
             fullWidth
             label={intl.formatMessage({
               id: 'misc.views.columnDialog.editor.fieldLabels.smartSearch',

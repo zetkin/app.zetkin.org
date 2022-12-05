@@ -1,9 +1,9 @@
-import { DatePicker } from '@material-ui/pickers';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
 import { useContext } from 'react';
 import { useQueryClient } from 'react-query';
 import { useRouter } from 'next/router';
-import { Box, Checkbox, Container, Typography } from '@material-ui/core';
+import { Box, Checkbox, Container, TextField, Typography } from '@mui/material';
 import { FormattedMessage, useIntl } from 'react-intl';
 
 import { journeyMilestoneStatusResource } from 'features/journeys/api/journeys';
@@ -114,11 +114,8 @@ const JourneyMilestoneCard = ({
           </Box>
         ) : (
           <DatePicker
-            clearable
             data-testid="JourneyMilestoneCard-datePicker"
-            disableToolbar
-            format={intl.formatDate(milestone.deadline as string)}
-            inputVariant="outlined"
+            value={dayjs(milestone.deadline)}
             label={intl.formatMessage({
               id: 'pages.organizeJourneyInstance.dueDateInputLabel',
             })}
@@ -130,7 +127,12 @@ const JourneyMilestoneCard = ({
                 patchMilestoneStatus({ deadline: null });
               }
             }}
-            value={milestone.deadline}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                data-testid="JourneyMilestoneCard-datePicker"
+              />
+            )}
           />
         )}
       </Box>

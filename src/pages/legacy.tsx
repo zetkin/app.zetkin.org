@@ -2,7 +2,7 @@
 import Head from 'next/head';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
-import { Box, Button, Card, Link, Typography } from '@material-ui/core';
+import { Box, Button, Card, Link, Typography } from '@mui/material';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { GetServerSideProps, NextPage } from 'next';
 
@@ -42,8 +42,8 @@ const LegacyPage: NextPage<LegacyPageProps> = ({ destination }) => {
         <style
           dangerouslySetInnerHTML={{
             __html: `
-            html, body, body > div { height: 100%; padding: 0; margin: 0; }
-            `,
+          html, body, body > div { height: 100%; padding: 0; margin: 0; }
+          `,
           }}
         />
       </Head>
@@ -89,6 +89,7 @@ const LegacyPage: NextPage<LegacyPageProps> = ({ destination }) => {
                   ev.preventDefault();
                   router.back();
                 }}
+                underline="hover"
               >
                 No, take me back!
               </Link>

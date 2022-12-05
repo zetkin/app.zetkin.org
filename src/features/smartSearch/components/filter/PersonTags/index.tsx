@@ -1,7 +1,7 @@
 import { FormattedMessage as Msg } from 'react-intl';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
-import { Box, Chip, MenuItem } from '@material-ui/core';
+import { Box, Chip, MenuItem } from '@mui/material';
 import { FormEvent, useEffect, useState } from 'react';
 
 import FilterForm from '../../FilterForm';

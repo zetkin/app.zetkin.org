@@ -1,5 +1,5 @@
 import { IntlShape } from 'react-intl';
-import { Link } from '@material-ui/core';
+import { Link } from '@mui/material';
 import NextLink from 'next/link';
 import {
   GridCellParams,
@@ -175,7 +175,9 @@ export const getStaticColumns = (
             href={`/organize/${row.organization.id}/journeys/${row.journey.id}/${row.id}`}
             passHref
           >
-            <Link color="inherit">{'#' + row.id.toString()}</Link>
+            <Link color="inherit" underline="hover">
+              {'#' + row.id.toString()}
+            </Link>
           </NextLink>
         );
       },

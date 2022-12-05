@@ -1,7 +1,9 @@
 import { FormattedMessage } from 'react-intl';
 import { ReactEventHandler } from 'react';
-import { Fade, Grid, Typography } from '@material-ui/core';
-import { makeStyles, Theme } from '@material-ui/core/styles';
+import { Grid, Typography } from '@mui/material';
+import { Theme } from '@mui/material/styles';
+
+import makeStyles from '@mui/styles/makeStyles';
 
 import ClickableCard from './ClickableCard';
 import { ZetkinView } from 'utils/types/zetkin';
@@ -28,32 +30,30 @@ const ViewCard: React.FunctionComponent<ViewCardProps> = ({
   const classes = useStyles();
 
   return (
-    <Fade in>
-      <ClickableCard onClick={onClick} value={view.id}>
-        <Grid
-          className={classes.content}
-          container
-          direction="column"
-          justifyContent="space-between"
-        >
-          <Grid item>
-            <Typography variant="h5">{view.title}</Typography>
-            <Typography variant="body2">{view.description}</Typography>
-          </Grid>
-          <Grid item>
-            <Typography component="p" variant="caption">
-              <FormattedMessage
-                id="misc.views.suggested.created"
-                values={{ name: view.owner.name }}
-              />
-            </Typography>
-            <Typography component="p" variant="caption">
-              <ZUIRelativeTime datetime={view.created} />
-            </Typography>
-          </Grid>
+    <ClickableCard onClick={onClick} value={view.id}>
+      <Grid
+        className={classes.content}
+        container
+        direction="column"
+        justifyContent="space-between"
+      >
+        <Grid item>
+          <Typography variant="h5">{view.title}</Typography>
+          <Typography variant="body2">{view.description}</Typography>
         </Grid>
-      </ClickableCard>
-    </Fade>
+        <Grid item>
+          <Typography component="p" variant="caption">
+            <FormattedMessage
+              id="misc.views.suggested.created"
+              values={{ name: view.owner.name }}
+            />
+          </Typography>
+          <Typography component="p" variant="caption">
+            <ZUIRelativeTime datetime={view.created} />
+          </Typography>
+        </Grid>
+      </Grid>
+    </ClickableCard>
   );
 };
 

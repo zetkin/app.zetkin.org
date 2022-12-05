@@ -1,5 +1,5 @@
 import { useIntl } from 'react-intl';
-import { Box, Container } from '@material-ui/core';
+import { Box, Container } from '@mui/material';
 import { FormEvent, FunctionComponent } from 'react';
 
 import { isColumnConfigValid } from './utils';

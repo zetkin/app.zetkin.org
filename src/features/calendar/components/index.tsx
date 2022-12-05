@@ -1,15 +1,16 @@
 import dayjs from 'dayjs';
+import isoWeek from 'dayjs/plugin/isoWeek';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import {
   Box,
   Button,
-  makeStyles,
   MenuItem,
   TextField,
   Tooltip,
   Typography,
-} from '@material-ui/core';
+} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import { FormattedDate, FormattedMessage as Msg } from 'react-intl';
 
 import MonthCalendar from './MonthCalendar';
@@ -25,6 +26,8 @@ interface ZetkinCalendarProps {
   campaigns: ZetkinCampaign[];
   tasks: ZetkinTask[];
 }
+
+dayjs.extend(isoWeek);
 
 const useStyles = makeStyles(() => ({
   hide: {
@@ -181,6 +184,7 @@ const Calendar = ({
           mr={1}
         >
           <TextField
+            variant="standard"
             aria-label={intl.formatMessage({
               id: 'misc.calendar.label',
             })}

@@ -1,14 +1,7 @@
 import { FormattedMessage } from 'react-intl';
 import { useRouter } from 'next/router';
-import {
-  Box,
-  Collapse,
-  makeStyles,
-  Tab,
-  TabProps,
-  Tabs,
-  Theme,
-} from '@material-ui/core';
+import { Box, Collapse, Tab, TabProps, Tabs, Theme } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import { FunctionComponent, ReactElement, useState } from 'react';
 
 import DefaultLayout from './DefaultLayout';

@@ -1,6 +1,6 @@
 import { GetServerSideProps } from 'next';
 
-import { Box } from '@material-ui/core';
+import { Box } from '@mui/material';
 import Head from 'next/head';
 import { useIntl } from 'react-intl';
 import { useQuery } from 'react-query';
@@ -105,7 +105,7 @@ const AllCampaignsSummaryPage: PageWithLayout<AllCampaignsSummaryPageProps> = ({
       >
         <Box
           display="grid"
-          gridGap={20}
+          gap={20}
           gridTemplateColumns="repeat( auto-fit, minmax(450px, 1fr) )"
         >
           {campaigns.map((campaign) => {

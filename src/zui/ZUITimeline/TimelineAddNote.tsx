@@ -1,5 +1,5 @@
 import { useIntl } from 'react-intl';
-import { Box, Collapse } from '@material-ui/core';
+import { Box, Collapse } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 
 import TextEditor from './Texteditor';

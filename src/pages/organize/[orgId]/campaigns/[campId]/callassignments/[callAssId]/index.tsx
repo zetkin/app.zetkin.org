@@ -9,7 +9,7 @@ import {
   Select,
   Switch,
   Typography,
-} from '@material-ui/core';
+} from '@mui/material';
 
 import APIError from 'utils/apiError';
 import CallAssignmentLayout from 'features/callAssignments/layout/CallAssignmentLayout';
@@ -110,8 +110,9 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
 
           return (
             <Box>
-              <Box display="flex" flexDirection="row" gridGap={40}>
+              <Box display="flex" flexDirection="row" gap={40}>
                 <Select
+                  variant="standard"
                   onChange={(ev) =>
                     setCaller(parseInt(ev.target.value as string) || null)
                   }
@@ -134,6 +135,7 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
                   label="Show as %"
                 />
                 <Select
+                  variant="standard"
                   onChange={(ev) =>
                     setInterval(ev.target.value as 'date' | 'hour')
                   }

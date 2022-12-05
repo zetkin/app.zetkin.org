@@ -1,4 +1,4 @@
-import { Box } from '@material-ui/core';
+import { Box } from '@mui/material';
 import { FunctionComponent, useRef } from 'react';
 
 import getViewRows from 'features/views/fetching/getViewRows';

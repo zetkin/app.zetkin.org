@@ -1,4 +1,4 @@
-import { MenuItem } from '@material-ui/core';
+import { MenuItem } from '@mui/material';
 import { TextField } from 'mui-rff';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
 

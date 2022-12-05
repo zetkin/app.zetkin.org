@@ -1,5 +1,5 @@
-import { Box, IconButton } from '@material-ui/core';
-import { Clear, Edit } from '@material-ui/icons';
+import { Box, IconButton } from '@mui/material';
+import { Clear, Edit } from '@mui/icons-material';
 import Image, { ImageProps } from 'next/image';
 
 interface ZUIEditableImageProps {
@@ -26,6 +26,7 @@ const ZUIEditableImage: React.FC<ZUIEditableImageProps & ImageProps> = ({
             backgroundColor: 'rgba(255,255,255,0.7)',
             marginRight: 10,
           }}
+          size="large"
         >
           <Clear />
         </IconButton>
@@ -35,6 +36,7 @@ const ZUIEditableImage: React.FC<ZUIEditableImageProps & ImageProps> = ({
           style={{
             backgroundColor: 'rgba(255,255,255,0.7)',
           }}
+          size="large"
         >
           <Edit />
         </IconButton>

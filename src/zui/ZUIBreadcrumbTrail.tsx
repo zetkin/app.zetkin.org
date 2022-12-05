@@ -1,15 +1,12 @@
 import getBreadcrumbs from '../utils/fetching/getBreadcrumbs';
 import { FormattedMessage as Msg } from 'react-intl';
-import NavigateNextIcon from '@material-ui/icons/NavigateNext';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import NextLink from 'next/link';
 import { useQuery } from 'react-query';
-import {
-  Breadcrumbs,
-  Link,
-  Typography,
-  useMediaQuery,
-} from '@material-ui/core';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import { Breadcrumbs, Link, Typography, useMediaQuery } from '@mui/material';
+import { Theme } from '@mui/material/styles';
+import createStyles from '@mui/styles/createStyles';
+import makeStyles from '@mui/styles/makeStyles';
 import { NextRouter, useRouter } from 'next/router';
 
 const getQueryString = function (router: NextRouter): string {
@@ -35,7 +32,7 @@ const useStyles = makeStyles<Theme, { highlight?: boolean }>((theme) =>
       '& > * + *': {
         marginTop: theme.spacing(2),
       },
-      [theme.breakpoints.down('xs')]: {
+      [theme.breakpoints.down('sm')]: {
         width: '100%',
       },
     },
@@ -79,7 +76,11 @@ const ZUIBreadcrumbTrail = ({
           if (index < breadcrumbsQuery.data.length - 1) {
             return (
               <NextLink key={crumb.href} href={crumb.href} passHref>
-                <Link className={classes.breadcrumb} color="inherit">
+                <Link
+                  className={classes.breadcrumb}
+                  color="inherit"
+                  underline="hover"
+                >
                   {crumb.labelMsg ? <Msg id={crumb.labelMsg} /> : crumb.label}
                 </Link>
               </NextLink>

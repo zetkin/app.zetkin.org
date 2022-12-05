@@ -1,13 +1,8 @@
-import { Clear } from '@material-ui/icons';
+import { Clear } from '@mui/icons-material';
 import { useState } from 'react';
-import {
-  Box,
-  IconButton,
-  lighten,
-  makeStyles,
-  Theme,
-  Tooltip,
-} from '@material-ui/core';
+import { Box, IconButton, lighten, Theme, Tooltip } from '@mui/material';
+
+import makeStyles from '@mui/styles/makeStyles';
 
 import { DEFAULT_TAG_COLOR } from '../utils';
 import { getContrastColor } from 'utils/colorUtils';
@@ -131,6 +126,7 @@ const TagChip: React.FunctionComponent<{
         ev.stopPropagation();
         onDelete(tag);
       }}
+      size="large"
     >
       <Clear className={classes.deleteIcon} />
     </IconButton>

@@ -10,9 +10,11 @@ import {
   List,
   ListItem,
   Toolbar,
-} from '@material-ui/core';
-import { Event, Explore, Home, Map, Menu, People } from '@material-ui/icons/';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
+} from '@mui/material';
+import { Event, Explore, Home, Map, Menu, People } from '@mui/icons-material/';
+import { useTheme } from '@mui/material/styles';
+
+import makeStyles from '@mui/styles/makeStyles';
 
 import ZUILogo from './ZUILogo';
 
@@ -36,6 +38,10 @@ const useStyles = makeStyles((theme) => ({
   },
   drawerPaper: {
     width: drawerWidth,
+    display: 'none',
+    [theme.breakpoints.up('sm')]: {
+      display: 'block',
+    },
   },
   menuButton: {
     marginRight: theme.spacing(2),
@@ -89,6 +95,7 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                 color={key === 'organize' ? 'primary' : 'secondary'}
                 data-test="logo-button"
                 style={{ marginBottom: '2rem' }}
+                size="large"
               >
                 <ZUILogo color="primary" size={40} />
               </IconButton>
@@ -101,6 +108,7 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                 className={classes.roundButton}
                 color={key === '' ? 'primary' : 'secondary'}
                 data-test="home-button"
+                size="large"
               >
                 <Home />
               </IconButton>
@@ -113,6 +121,7 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                 className={classes.roundButton}
                 color={key.startsWith('/people') ? 'primary' : 'secondary'}
                 data-test="people-button"
+                size="large"
               >
                 <People />
               </IconButton>
@@ -125,6 +134,7 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                 className={classes.roundButton}
                 color={key.startsWith('/journeys') ? 'primary' : 'secondary'}
                 data-test="people-button"
+                size="large"
               >
                 <Explore />
               </IconButton>
@@ -137,6 +147,7 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                 className={classes.roundButton}
                 color={key.startsWith('/areas') ? 'primary' : 'secondary'}
                 data-test="area-button"
+                size="large"
               >
                 <Map />
               </IconButton>
@@ -149,6 +160,7 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                 className={classes.roundButton}
                 color={key.startsWith('/campaigns') ? 'primary' : 'secondary'}
                 data-test="calendar-button"
+                size="large"
               >
                 <Event />
               </IconButton>
@@ -169,47 +181,37 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
             color="inherit"
             edge="start"
             onClick={handleDrawerToggle}
+            size="large"
           >
             <Menu data-test="menu-button" />
           </IconButton>
         </Toolbar>
       </AppBar>
       <nav aria-label="mailbox folders" className={classes.drawer}>
-        {/*
-          // Because MUI Hidden typing is wrong
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore */}
-        <Hidden implementation="css" smUp>
-          <Drawer
-            anchor={theme.direction === 'rtl' ? 'right' : 'left'}
-            classes={{
-              paper: classes.drawerPaper,
-            }}
-            ModalProps={{
-              keepMounted: true, // Better open performance on mobile.
-            }}
-            onClose={handleDrawerToggle}
-            open={mobileOpen}
-            variant="temporary"
-          >
-            {drawer}
-          </Drawer>
-        </Hidden>
-        {/*
-          // Because MUI Hidden typing is wrong
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore */}
-        <Hidden implementation="css" xsDown>
-          <Drawer
-            classes={{
-              paper: classes.drawerPaper,
-            }}
-            open
-            variant="permanent"
-          >
-            {drawer}
-          </Drawer>
-        </Hidden>
+        <Drawer
+          anchor={theme.direction === 'rtl' ? 'right' : 'left'}
+          classes={{
+            paper: classes.drawerPaper,
+          }}
+          ModalProps={{
+            keepMounted: true, // Better open performance on mobile.
+          }}
+          onClose={handleDrawerToggle}
+          open={mobileOpen}
+          variant="temporary"
+        >
+          {drawer}
+        </Drawer>
+
+        <Drawer
+          classes={{
+            paper: classes.drawerPaper,
+          }}
+          open
+          variant="permanent"
+        >
+          {drawer}
+        </Drawer>
       </nav>
     </div>
   );

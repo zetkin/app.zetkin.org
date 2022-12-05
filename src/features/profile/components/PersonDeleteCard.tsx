@@ -1,7 +1,7 @@
-import { NewReleases } from '@material-ui/icons';
+import { NewReleases } from '@mui/icons-material';
 import { useContext } from 'react';
 import { useRouter } from 'next/router';
-import { Box, Button, Typography } from '@material-ui/core';
+import { Box, Button, Typography } from '@mui/material';
 import { FormattedMessage, useIntl } from 'react-intl';
 
 import PersonCard from './PersonCard';

@@ -2,7 +2,9 @@ import dayjs from 'dayjs';
 import { useIntl } from 'react-intl';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
-import { Grid, makeStyles, Theme } from '@material-ui/core';
+import { Grid, Theme } from '@mui/material';
+
+import makeStyles from '@mui/styles/makeStyles';
 
 import getUserMemberships from 'utils/fetching/getUserMemberships';
 import ViewCard from './ViewCard';

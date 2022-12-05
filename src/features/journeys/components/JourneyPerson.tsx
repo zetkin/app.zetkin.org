@@ -1,6 +1,6 @@
-import { Box } from '@material-ui/core';
-import { Close } from '@material-ui/icons';
-import { grey } from '@material-ui/core/colors';
+import { Box } from '@mui/material';
+import { Close } from '@mui/icons-material';
+import { grey } from '@mui/material/colors';
 import { useState } from 'react';
 
 import { ZetkinPerson as ZetkinPersonType } from 'utils/types/zetkin';

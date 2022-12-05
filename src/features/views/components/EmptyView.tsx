@@ -7,7 +7,7 @@ import {
   CardContent,
   Grid,
   Typography,
-} from '@material-ui/core';
+} from '@mui/material';
 import { FunctionComponent, useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 

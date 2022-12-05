@@ -1,5 +1,5 @@
 import { useIntl } from 'react-intl';
-import { useMediaQuery } from '@material-ui/core';
+import { useMediaQuery } from '@mui/material';
 import { FunctionComponent, useState } from 'react';
 
 import ColumnEditor from './ColumnEditor';
@@ -30,7 +30,7 @@ const ViewColumnDialog: FunctionComponent<ViewColumnDialogProps> = ({
   onCancel,
   onSave,
 }) => {
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const intl = useIntl();
   const [column, setColumn] = useState<SelectedViewColumn>(
     selectedColumn || {}

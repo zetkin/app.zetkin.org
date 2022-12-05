@@ -1,4 +1,4 @@
-import MovieIcon from '@material-ui/icons/Movie';
+import MovieIcon from '@mui/icons-material/Movie';
 import { ComponentMeta, ComponentStory } from '@storybook/react';
 
 import ZUIEllipsisMenu from '.';

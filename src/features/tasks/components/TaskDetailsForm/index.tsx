@@ -1,5 +1,5 @@
 import { Form } from 'react-final-form';
-import { MenuItem } from '@material-ui/core';
+import { MenuItem } from '@mui/material';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 import validator from 'validator';

@@ -1,6 +1,6 @@
 import { FunctionComponent } from 'react';
 import { FormattedMessage as Msg } from 'react-intl';
-import { Box, Button, ButtonBase, Card, Typography } from '@material-ui/core';
+import { Box, Button, ButtonBase, Card, Typography } from '@mui/material';
 
 import { AUTO_SAVE_TYPES } from '.';
 import { COLUMN_TYPE } from 'features/views/components/types';
@@ -15,7 +15,7 @@ const ColumnGallery: FunctionComponent<ColumnGalleryProps> = ({
   return (
     <Box
       display="grid"
-      gridGap="1rem"
+      gap="1rem"
       gridTemplateColumns="repeat(auto-fit, minmax(300px, 1fr))"
       justifyItems="center"
     >

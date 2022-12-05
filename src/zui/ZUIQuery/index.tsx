@@ -1,6 +1,6 @@
-import { ErrorOutlined } from '@material-ui/icons';
+import { ErrorOutlined } from '@mui/icons-material';
 import { FormattedMessage } from 'react-intl';
-import { Box, CircularProgress, Typography } from '@material-ui/core';
+import { Box, CircularProgress, Typography } from '@mui/material';
 import { QueryObserverSuccessResult, UseQueryResult } from 'react-query';
 
 interface ZUIQueryProps<G extends Record<string, unknown>> {

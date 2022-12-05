@@ -1,5 +1,5 @@
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import { Box, Button, TextField } from '@material-ui/core';
+import Autocomplete from '@mui/material/Autocomplete';
+import { Box, Button, TextField } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 
 import { PersonOrganization } from 'utils/organize/people';
