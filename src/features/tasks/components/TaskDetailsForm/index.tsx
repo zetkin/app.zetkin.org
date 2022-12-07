@@ -277,11 +277,11 @@ const TaskDetailsForm = ({
               taskStatus === TASK_STATUS.ACTIVE ||
               taskStatus === TASK_STATUS.CLOSED
             }
+            disablePast
             fieldProps={{
               id: TASK_DETAILS_FIELDS.PUBLISHED,
               margin: "normal",
             }}
-            disablePast
             label={intl.formatMessage({
               id: 'misc.tasks.forms.createTask.fields.published',
             })}

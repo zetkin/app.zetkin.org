@@ -17,8 +17,8 @@ import {
 import { FunctionComponent, useEffect, useRef, useState } from 'react';
 
 import { viewsResource } from 'features/views/api/views';
-import ZUIQuery from 'zui/ZUIQuery';
 import { ZetkinView } from './types';
+import ZUIQuery from 'zui/ZUIQuery';
 
 const ViewJumpMenu: FunctionComponent = () => {
   const intl = useIntl();

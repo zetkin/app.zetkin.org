@@ -22,21 +22,21 @@ const ZUIEditableImage: React.FC<ZUIEditableImageProps & ImageProps> = ({
         <IconButton
           data-testid="ZetkinEditableImage-resetButton"
           onClick={() => onReset()}
+          size="large"
           style={{
             backgroundColor: 'rgba(255,255,255,0.7)',
             marginRight: 10,
           }}
-          size="large"
         >
           <Clear />
         </IconButton>
         <IconButton
           data-testid="ZetkinEditableImage-editButton"
           onClick={() => onEdit()}
+          size="large"
           style={{
             backgroundColor: 'rgba(255,255,255,0.7)',
           }}
-          size="large"
         >
           <Edit />
         </IconButton>

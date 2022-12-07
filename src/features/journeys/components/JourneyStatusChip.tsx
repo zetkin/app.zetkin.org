@@ -1,5 +1,5 @@
-import { useIntl } from 'react-intl';
 import { Chip } from '@mui/material';
+import { useIntl } from 'react-intl';
 
 import makeStyles from '@mui/styles/makeStyles';
 

@@ -1,7 +1,7 @@
 import { grey } from '@mui/material/colors';
+import makeStyles from '@mui/styles/makeStyles';
 import NextLink from 'next/link';
 import { Box, Button, Link, Tooltip, Typography } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
 import { FormattedDate, FormattedMessage as Msg } from 'react-intl';
 import React, { useEffect, useRef, useState } from 'react';
 

@@ -1,5 +1,6 @@
 import { FormattedMessage } from 'react-intl';
 import Link from 'next/link';
+import makeStyles from '@mui/styles/makeStyles';
 import {
   Box,
   Chip,
@@ -8,7 +9,6 @@ import {
   Theme,
   Typography,
 } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
 import { LetterparserNode, parse } from 'letterparser';
 import { useEffect, useState } from 'react';
 

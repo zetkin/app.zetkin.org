@@ -131,14 +131,14 @@ const ZUIDataTableSorting: React.FunctionComponent<
             {sortModel.map((item, index) => (
               <Box key={item.field} display="flex" flexDirection="row" pb={1}>
                 <Box flex={1} mr={2}>
-                  <FormControl variant="standard" fullWidth>
+                  <FormControl fullWidth variant="standard">
                     <Select
-                      variant="standard"
                       name="column"
                       onChange={(evt) =>
                         handleChange(index, evt.target.value as string)
                       }
                       value={item.field}
+                      variant="standard"
                     >
                       {gridColumns.map((gridColumn) => (
                         <MenuItem
@@ -155,9 +155,8 @@ const ZUIDataTableSorting: React.FunctionComponent<
                   </FormControl>
                 </Box>
                 <Box flex={1}>
-                  <FormControl variant="standard" fullWidth>
+                  <FormControl fullWidth variant="standard">
                     <Select
-                      variant="standard"
                       name="direction"
                       onChange={(evt) =>
                         handleChange(
@@ -167,6 +166,7 @@ const ZUIDataTableSorting: React.FunctionComponent<
                         )
                       }
                       value={item.sort}
+                      variant="standard"
                     >
                       <MenuItem value="asc">Ascending</MenuItem>
                       <MenuItem value="desc">Descending</MenuItem>

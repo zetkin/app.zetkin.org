@@ -42,7 +42,6 @@ const PersonQueryColumnConfigForm: FunctionComponent<
         };
         return (
           <TextField
-            variant="standard"
             fullWidth
             label={intl.formatMessage({
               id: 'misc.views.columnDialog.editor.fieldLabels.smartSearch',
@@ -53,6 +52,7 @@ const PersonQueryColumnConfigForm: FunctionComponent<
             }
             select
             value={column.config?.query_id || ''}
+            variant="standard"
           >
             {standaloneQueriesQuery.data.map((query) => (
               <MenuItem key={query.id} value={query.id}>

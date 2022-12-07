@@ -40,7 +40,6 @@ const SurveySubmittedColumnConfigForm: FunctionComponent<
 
         return (
           <TextField
-            variant="standard"
             fullWidth
             label={intl.formatMessage({
               id: 'misc.views.columnDialog.editor.fieldLabels.survey',
@@ -49,6 +48,7 @@ const SurveySubmittedColumnConfigForm: FunctionComponent<
             onChange={onSurveyChange}
             select
             value={column.config?.survey_id || ''}
+            variant="standard"
           >
             {surveysQuery.data.map((survey) => (
               <MenuItem key={survey.id} value={survey.id}>

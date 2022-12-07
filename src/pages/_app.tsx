@@ -2,8 +2,8 @@ import '../styles.css';
 
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { AppProps } from 'next/app';
-import CssBaseline from '@mui/material/CssBaseline';
 import createStore from 'core/store';
+import CssBaseline from '@mui/material/CssBaseline';
 import { Hydrate } from 'react-query/hydration';
 import { IntlProvider } from 'react-intl';
 import { LicenseInfo } from '@mui/x-data-grid-pro';
@@ -12,13 +12,13 @@ import NProgress from 'nprogress';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { Provider as ReduxProvider } from 'react-redux';
 import Router from 'next/router';
-import {
-  ThemeProvider,
-  Theme,
-  StyledEngineProvider,
-} from '@mui/material/styles';
 import { useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
+import {
+  StyledEngineProvider,
+  Theme,
+  ThemeProvider,
+} from '@mui/material/styles';
 
 import BrowserApiClient from 'core/api/client/BrowserApiClient';
 import Environment from 'core/env/Environment';

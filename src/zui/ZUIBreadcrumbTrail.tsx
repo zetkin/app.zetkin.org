@@ -1,13 +1,14 @@
-import getBreadcrumbs from '../utils/fetching/getBreadcrumbs';
+import createStyles from '@mui/styles/createStyles';
+import makeStyles from '@mui/styles/makeStyles';
 import { FormattedMessage as Msg } from 'react-intl';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import NextLink from 'next/link';
+import { Theme } from '@mui/material/styles';
 import { useQuery } from 'react-query';
 import { Breadcrumbs, Link, Typography, useMediaQuery } from '@mui/material';
-import { Theme } from '@mui/material/styles';
-import createStyles from '@mui/styles/createStyles';
-import makeStyles from '@mui/styles/makeStyles';
 import { NextRouter, useRouter } from 'next/router';
+
+import getBreadcrumbs from '../utils/fetching/getBreadcrumbs';
 
 const getQueryString = function (router: NextRouter): string {
   // Only use parameters that are part of the path (e.g. [personId])

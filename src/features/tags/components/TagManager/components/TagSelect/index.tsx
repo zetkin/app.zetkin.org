@@ -69,6 +69,7 @@ const TagSelect: React.FunctionComponent<{
   return (
     <>
       <Box {...getRootProps()}>
+        {/* eslint-disable jsx-a11y/no-autofocus */}
         <TextField
           autoFocus
           fullWidth

@@ -1,7 +1,7 @@
+import makeStyles from '@mui/styles/makeStyles';
 import { FormattedMessage as Msg } from 'react-intl';
 import { Autocomplete, AutocompleteProps } from '@mui/material';
 import { Chip, TextField } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
 import { Theme, Tooltip } from '@mui/material';
 
 import { getEllipsedString } from 'utils/stringUtils';
@@ -42,13 +42,13 @@ const StyledItemSelect = (props: StyledItemSelectProps): JSX.Element => {
       noOptionsText={<Msg id="misc.smartSearch.misc.noOptions" />}
       renderInput={(params) => (
         <TextField
-          variant="standard"
           className={classes.MuiTextField}
           {...params}
           inputProps={{
             ...params.inputProps,
             className: classes.MuiInput,
           }}
+          variant="standard"
         />
       )}
       renderOption={(item) => {

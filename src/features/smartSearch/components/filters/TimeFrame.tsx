@@ -64,15 +64,15 @@ const TimeFrame = ({
           afterDateSelect: (
             <StyledDatePicker
               onChange={(date) => setAfter(date as unknown as Date)}
-              value={after}
               renderInput={(params) => <TextField {...params} />}
+              value={after}
             />
           ),
           beforeDateSelect: (
             <StyledDatePicker
               onChange={(date) => setBefore(date as unknown as Date)}
-              value={before}
               renderInput={(params) => <TextField {...params} />}
+              value={before}
             />
           ),
           days: numDays,

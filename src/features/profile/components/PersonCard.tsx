@@ -1,5 +1,5 @@
+import makeStyles from '@mui/styles/makeStyles';
 import { useIntl } from 'react-intl';
-import ZUISection from 'zui/ZUISection';
 import {
   Card,
   List,
@@ -7,9 +7,10 @@ import {
   ListItemIcon,
   ListItemText,
 } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
 import { Close, Edit } from '@mui/icons-material';
 import { ReactEventHandler, SyntheticEvent, useState } from 'react';
+
+import ZUISection from 'zui/ZUISection';
 
 const useStyles = makeStyles((theme) => ({
   divider: {

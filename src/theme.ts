@@ -1,6 +1,7 @@
+import type {} from '@mui/x-data-grid-pro/themeAugmentation';
+
 import { createElement } from 'react';
 import { createTheme } from '@mui/material/styles';
-import type {} from '@mui/x-data-grid-pro/themeAugmentation';
 
 interface PaletteIntensityOptions {
   disabled?: string;
@@ -9,6 +10,7 @@ interface PaletteIntensityOptions {
   main?: string;
 }
 
+//declare module "@material-ui/core/styles/createPalette" {
 declare module '@mui/material/styles/createPalette' {
   interface Palette {
     onSurface: PaletteIntensityOptions;

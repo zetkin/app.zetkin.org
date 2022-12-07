@@ -15,10 +15,10 @@ const FilterValueSelect: JSXElementConstructor<
         <Msg id={labelMessageId} />
       </InputLabel>
       <Select
-        variant="standard"
         native
         onChange={(event) => applyValue({ ...item, value: event.target.value })}
         value={item.value}
+        variant="standard"
       >
         <option value=""></option>
         {options?.map((option) => (

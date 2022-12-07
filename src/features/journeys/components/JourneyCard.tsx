@@ -34,7 +34,7 @@ const JourneyCard = ({ journey }: JourneyCardProps): JSX.Element => {
               </Typography>
             </Typography>
             <Box mt={3}>
-              <Link variant="button" underline="hover">
+              <Link underline="hover" variant="button">
                 <Msg id="pages.organizeJourneys.cardCTA" />
               </Link>
             </Box>

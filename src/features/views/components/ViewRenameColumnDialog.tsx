@@ -30,7 +30,6 @@ const ViewRenameColumnDialog: FunctionComponent<
         }}
       >
         <TextField
-          variant="standard"
           fullWidth
           id="rename-column-title-field"
           label={intl.formatMessage({
@@ -38,6 +37,7 @@ const ViewRenameColumnDialog: FunctionComponent<
           })}
           onChange={(ev) => setTitle(ev.target.value)}
           value={title}
+          variant="standard"
         />
         <ZUISubmitCancelButtons
           onCancel={onCancel}

@@ -21,12 +21,12 @@ const StyledSelect: React.FC<TextFieldProps> = (props): JSX.Element => {
   const classes = useStyles();
   return (
     <TextField
-      variant="standard"
       className={classes.MuiTextField}
       inputProps={{ className: classes.MuiInput }}
       select
       {...props}
       SelectProps={{ ...props.SelectProps, className: classes.MuiSelect }}
+      variant="standard"
     />
   );
 };

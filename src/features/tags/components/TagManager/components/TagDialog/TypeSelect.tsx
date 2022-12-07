@@ -20,9 +20,9 @@ const TypeSelect: React.FC<{
   return (
     <Box mb={0.8} mt={1.5}>
       <FormControl
-        variant="standard"
         data-testid="TypeSelect-formControl"
         disabled={disabled}
+        variant="standard"
       >
         <FormLabel>
           <FormattedMessage id={'misc.tags.tagManager.tagDialog.typeLabel'} />

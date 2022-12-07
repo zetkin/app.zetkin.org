@@ -1,9 +1,8 @@
 import { Autocomplete as MUIAutocomplete } from '@mui/material';
-import { Autocomplete as RFFAutocomplete } from 'mui-rff';
-import { Box, TextField } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
+import { Box, TextField } from '@mui/material';
 import React, {
   FunctionComponent,
   HTMLAttributes,

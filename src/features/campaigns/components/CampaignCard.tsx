@@ -66,7 +66,7 @@ const CampaignCard = ({ campaign, events }: CampaignCardProps): JSX.Element => {
       </CardContent>
       <CardActions>
         <NextLink href={`/organize/${orgId}/campaigns/${id}`} passHref>
-          <Link variant="button" underline="hover">
+          <Link underline="hover" variant="button">
             <Msg id="pages.organizeAllCampaigns.cardCTA" />
           </Link>
         </NextLink>

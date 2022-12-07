@@ -40,7 +40,6 @@ const PersonFieldColumnConfigForm: FunctionComponent<
 
   return (
     <TextField
-      variant="standard"
       fullWidth
       label={intl.formatMessage({
         id: 'misc.views.columnDialog.editor.fieldLabels.field',
@@ -50,6 +49,7 @@ const PersonFieldColumnConfigForm: FunctionComponent<
       required
       select
       value={column.config?.field}
+      variant="standard"
     >
       {Object.values(NATIVE_PERSON_FIELDS).map((fieldSlug) => (
         <MenuItem key={fieldSlug} value={fieldSlug}>

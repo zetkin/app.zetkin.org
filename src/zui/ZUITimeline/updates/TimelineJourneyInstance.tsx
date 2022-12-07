@@ -72,12 +72,12 @@ const TimelineJourneyInstance: React.FunctionComponent<Props> = ({
       <Box>
         <Typography
           ref={textRef}
+          component="p"
           style={{
             maxHeight: expandSummary ? overflow : 100,
             overflowY: 'hidden',
             transition: 'max-height 300ms ease',
           }}
-          component="p"
           variant="body1"
         >
           {update.details.changes[fieldToUpdate]?.to}

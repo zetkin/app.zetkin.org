@@ -36,7 +36,6 @@ const PersonTagColumnConfigForm: FunctionComponent<
         };
         return (
           <TextField
-            variant="standard"
             fullWidth
             label={intl.formatMessage({
               id: 'misc.views.columnDialog.editor.fieldLabels.tag',
@@ -45,6 +44,7 @@ const PersonTagColumnConfigForm: FunctionComponent<
             onChange={(ev) => onTagChange(ev.target.value as unknown as number)}
             select
             value={column.config?.tag_id || ''}
+            variant="standard"
           >
             {tagsQuery.data.map((tag) => (
               <MenuItem key={tag.id} value={tag.id}>

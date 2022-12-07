@@ -115,7 +115,6 @@ const JourneyMilestoneCard = ({
         ) : (
           <DatePicker
             data-testid="JourneyMilestoneCard-datePicker"
-            value={dayjs(milestone.deadline)}
             label={intl.formatMessage({
               id: 'pages.organizeJourneyInstance.dueDateInputLabel',
             })}
@@ -135,6 +134,7 @@ const JourneyMilestoneCard = ({
                 data-testid="JourneyMilestoneCard-datePicker"
               />
             )}
+            value={dayjs(milestone.deadline)}
           />
         )}
       </Box>

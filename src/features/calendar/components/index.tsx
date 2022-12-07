@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
 import isoWeek from 'dayjs/plugin/isoWeek';
+import makeStyles from '@mui/styles/makeStyles';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import {
@@ -10,7 +11,6 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
 import { FormattedDate, FormattedMessage as Msg } from 'react-intl';
 
 import MonthCalendar from './MonthCalendar';
@@ -184,7 +184,6 @@ const Calendar = ({
           mr={1}
         >
           <TextField
-            variant="standard"
             aria-label={intl.formatMessage({
               id: 'misc.calendar.label',
             })}
@@ -192,6 +191,7 @@ const Calendar = ({
             onChange={(e) => setRange(e.target.value as CALENDAR_RANGES)}
             select
             value={range}
+            variant="standard"
           >
             {Object.values(CALENDAR_RANGES).map((range) => (
               <MenuItem key={range} value={range}>

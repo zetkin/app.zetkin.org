@@ -1,9 +1,8 @@
 import { FormattedMessage } from 'react-intl';
-import { ReactEventHandler } from 'react';
-import { Grid, Typography } from '@mui/material';
-import { Theme } from '@mui/material/styles';
-
 import makeStyles from '@mui/styles/makeStyles';
+import { ReactEventHandler } from 'react';
+import { Theme } from '@mui/material/styles';
+import { Grid, Typography } from '@mui/material';
 
 import ClickableCard from './ClickableCard';
 import { ZetkinView } from 'utils/types/zetkin';

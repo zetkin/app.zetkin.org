@@ -1,18 +1,17 @@
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
+import { useTheme } from '@mui/material/styles';
 import {
   AppBar,
   Box,
   Drawer,
-  Hidden,
   IconButton,
   List,
   ListItem,
   Toolbar,
 } from '@mui/material';
 import { Event, Explore, Home, Map, Menu, People } from '@mui/icons-material/';
-import { useTheme } from '@mui/material/styles';
 
 import makeStyles from '@mui/styles/makeStyles';
 
@@ -37,8 +36,8 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   drawerPaper: {
-    width: drawerWidth,
     display: 'none',
+    width: drawerWidth,
     [theme.breakpoints.up('sm')]: {
       display: 'block',
     },
@@ -94,8 +93,8 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                 className={classes.roundButton}
                 color={key === 'organize' ? 'primary' : 'secondary'}
                 data-test="logo-button"
-                style={{ marginBottom: '2rem' }}
                 size="large"
+                style={{ marginBottom: '2rem' }}
               >
                 <ZUILogo color="primary" size={40} />
               </IconButton>

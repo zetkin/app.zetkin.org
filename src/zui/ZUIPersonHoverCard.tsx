@@ -69,14 +69,14 @@ const ZUIPersonHoverCard: React.FunctionComponent<{
         id="person-hover-card"
         modifiers={[
           {
-            name: 'preventOverflow',
             enabled: true,
+            name: 'preventOverflow',
             options: {
               altAxis: true,
               altBoundary: true,
-              tether: true,
-              rootBoundary: 'document',
               padding: 8,
+              rootBoundary: 'document',
+              tether: true,
             },
           },
         ]}

@@ -1,6 +1,6 @@
-import { useIntl } from 'react-intl';
 import { Autocomplete } from '@mui/material';
 import { createFilterOptions } from '@mui/material/useAutocomplete';
+import { useIntl } from 'react-intl';
 import { Box, TextField } from '@mui/material';
 
 import { NewTagGroup } from '../../types';
