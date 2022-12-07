@@ -2,7 +2,9 @@ import { ZetkinQuery } from 'utils/types/zetkin';
 
 export interface CallAssignmentData {
   cooldown: number;
+  end_date?: string;
   id: number;
+  start_date?: string;
   target: ZetkinQuery;
   title: string;
 }
@@ -16,6 +18,7 @@ export interface CallAssignmentStats {
   calledTooRecently: number;
   done: number;
   missingPhoneNumber: number;
+  mostRecentCallTime: string | null;
   organizerActionNeeded: number;
   queue: number;
   ready: number;

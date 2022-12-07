@@ -10,6 +10,15 @@ import {
   ResolvedFuture,
 } from 'core/caching/futures';
 
+export enum CallAssignmentState {
+  ACTIVE = 'active',
+  CLOSED = 'closed',
+  DRAFT = 'draft',
+  OPEN = 'open',
+  SCHEDULED = 'scheduled',
+  UNKNOWN = 'unknown',
+}
+
 export default class CallAssignmentModel {
   private _env: Environment;
   private _id: number;
@@ -45,6 +54,7 @@ export default class CallAssignmentModel {
         done: 0,
         id: this._id,
         missingPhoneNumber: 0,
+        mostRecentCallTime: null,
         organizerActionNeeded: 0,
         queue: 0,
         ready: 0,
@@ -108,6 +118,46 @@ export default class CallAssignmentModel {
             callAssignmentUpdated({ ...callAssignment, target: data.data })
           )
         );
+    }
+  }
+
+  setTitle(title: string): void {
+    this._repo.updateCallAssignment(this._orgId, this._id, { title });
+  }
+
+  get state(): CallAssignmentState {
+    const { data } = this.getData();
+    if (!data) {
+      return CallAssignmentState.UNKNOWN;
+    }
+
+    if (data.start_date) {
+      const startDate = new Date(data.start_date);
+      const now = new Date();
+      if (startDate > now) {
+        return CallAssignmentState.SCHEDULED;
+      } else {
+        if (data.end_date) {
+          const endDate = new Date(data.end_date);
+          if (endDate < now) {
+            return CallAssignmentState.CLOSED;
+          }
+        }
+
+        const { data: statsData } = this.getStats();
+        if (!statsData?.mostRecentCallTime) {
+          return CallAssignmentState.OPEN;
+        }
+
+        const mostRecentCallTime = new Date(statsData.mostRecentCallTime);
+        const diff = now.getTime() - mostRecentCallTime.getTime();
+
+        return diff < 10 * 60 * 1000
+          ? CallAssignmentState.ACTIVE
+          : CallAssignmentState.OPEN;
+      }
+    } else {
+      return CallAssignmentState.DRAFT;
     }
   }
 }

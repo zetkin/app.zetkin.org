@@ -16,6 +16,12 @@ ready:
   queue: Targets in queue
   subtitle: Targets to be called
   title: Ready
+state:
+  active: Active
+  closed: Closed
+  draft: Draft
+  open: Open
+  scheduled: Scheduled
 statusSectionTitle: Status
 targets:
   defineButton: Define target group

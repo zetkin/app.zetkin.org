@@ -32,6 +32,15 @@ export default async function handler(
     data: ZetkinCallAssignmentStats;
   };
 
+  let mostRecentCallTime: string | null = null;
+  const callsRes = await apiFetch(
+    `/orgs/${org}/call_assignments/${assignment}/calls?pp=1&p=0`
+  );
+  const callsData = await callsRes.json();
+  if (callsData.data.length) {
+    mostRecentCallTime = callsData.data[0].allocation_time;
+  }
+
   const targetsRes = await apiFetch(
     `/orgs/${org}/call_assignments/${assignment}/targets`
   );
@@ -93,6 +102,7 @@ export default async function handler(
       calledTooRecently,
       done,
       missingPhoneNumber,
+      mostRecentCallTime,
       organizerActionNeeded,
       queue,
       ready,

@@ -81,6 +81,7 @@ const callAssignmentsSlice = createSlice({
           calledTooRecently: 0,
           done: 0,
           missingPhoneNumber: 0,
+          mostRecentCallTime: null,
           organizerActionNeeded: 0,
           queue: 0,
           ready: 0,
