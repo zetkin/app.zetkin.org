@@ -18,6 +18,7 @@ import { FunctionComponent, useEffect, useRef, useState } from 'react';
 
 import { viewsResource } from 'features/views/api/views';
 import ZUIQuery from 'zui/ZUIQuery';
+import { ZetkinView } from './types';
 
 const ViewJumpMenu: FunctionComponent = () => {
   const intl = useIntl();
@@ -70,9 +71,14 @@ const ViewJumpMenu: FunctionComponent = () => {
   }, [listRef, activeIndex]);
 
   // Exclude the current view from the list of views to jump to
-  const options = (
+  const allOptions = (
     inputValue.length ? groupedOptions : viewsQuery.data || []
-  ).filter((view) => view.id.toString() != (viewId as string));
+  ) as ZetkinView[];
+  const options = allOptions.filter(
+    (view) => view.id.toString() != (viewId as string)
+  );
+
+  const tfProps = getInputProps();
 
   return (
     <>
@@ -117,8 +123,9 @@ const ViewJumpMenu: FunctionComponent = () => {
         <ZUIQuery queries={{ viewsQuery }}>
           <Box {...getRootProps()} p={1}>
             <TextField
-              {...getInputProps()}
+              {...tfProps}
               autoFocus={true}
+              color="primary"
               fullWidth
               placeholder={intl.formatMessage({
                 id: 'pages.people.views.layout.jumpMenu.placeholder',

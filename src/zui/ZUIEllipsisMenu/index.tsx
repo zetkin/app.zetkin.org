@@ -64,7 +64,6 @@ const ZUIEllipsisMenu: FunctionComponent<ZUIEllipsisMenuProps> = ({
                 <Menu
                   anchorEl={subMenuActivator}
                   anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
-                  getContentAnchorEl={null}
                   onClose={(e: Event) => {
                     e.stopPropagation();
                     setSubMenuActivator(null);

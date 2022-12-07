@@ -52,7 +52,7 @@ const TagSelect: React.FunctionComponent<{
     });
 
   const groupedFilteredTags = groupTags(
-    groupedOptions,
+    groupedOptions as ZetkinTag[],
     intl.formatMessage({
       id: 'misc.tags.tagManager.ungroupedHeader',
     })

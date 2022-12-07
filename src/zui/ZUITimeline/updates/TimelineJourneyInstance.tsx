@@ -15,7 +15,7 @@ const TimelineJourneyInstance: React.FunctionComponent<Props> = ({
   update,
 }) => {
   const intl = useIntl();
-  const textRef = useRef<HTMLParagraphElement | undefined>();
+  const textRef = useRef<HTMLParagraphElement | null>(null);
   const fieldToUpdate = Object.keys(update.details.changes)[0] as
     | 'summary'
     | 'title';

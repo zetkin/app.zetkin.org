@@ -4,6 +4,7 @@ import {
   GridCellValue,
   GridColDef,
   GridFilterItem,
+  GridValueFormatterParams,
 } from '@mui/x-data-grid-pro';
 
 import FilterValueSelect from './FilterValueSelect';
@@ -145,9 +146,9 @@ const getTagColumns = (
             ));
         },
         sortComparator: (value0, value1) => sortByTagName(value0, value1),
-        valueFormatter: (params) =>
+        valueFormatter: (params: GridValueFormatterParams<ZetkinJourneyInstance>) =>
           col
-            .tagsGetter(params.row as ZetkinJourneyInstance)
+            .tagsGetter(params.value)
             .map((tag) => tag.title)
             .join(', '),
         valueGetter: (params) => {
@@ -220,9 +221,9 @@ const getTagColumns = (
           </div>
         ),
         sortComparator: (value0, value1) => sortByTagName(value0, value1),
-        valueFormatter: (params) =>
+        valueFormatter: (params: GridValueFormatterParams<ZetkinJourneyInstance>) =>
           col
-            .tagsGetter(params.row as ZetkinJourneyInstance)
+            .tagsGetter(params.value)
             .map((tag) => tag.title)
             .join(', '),
         valueGetter: (params) => {

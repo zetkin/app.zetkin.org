@@ -11,7 +11,7 @@ const TagSelectList: React.FC<{
   disabledTags: ZetkinTag[];
   groupedTags: { id: number | 'ungrouped'; tags: ZetkinTag[]; title: string }[];
   inputValue: string;
-  listProps: Record<string, unknown>;
+  listProps: React.HTMLAttributes<HTMLUListElement>;
   onEdit: (tag: ZetkinTag | Pick<ZetkinTag, 'title'>) => void;
   onSelect: (tag: ZetkinTag) => void;
 }> = ({

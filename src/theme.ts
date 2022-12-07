@@ -1,5 +1,6 @@
 import { createElement } from 'react';
 import { createTheme } from '@mui/material/styles';
+import type {} from '@mui/x-data-grid-pro/themeAugmentation';
 
 interface PaletteIntensityOptions {
   disabled?: string;

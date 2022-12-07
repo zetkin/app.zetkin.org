@@ -235,7 +235,6 @@ const MonthCalendar = ({
               {totalTasksAndEvents - maxNoOfEvents > 0 && (
                 <Tooltip
                   arrow
-                  interactive
                   title={
                     <Box>
                       <ul
