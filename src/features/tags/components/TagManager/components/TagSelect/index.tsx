@@ -67,71 +67,73 @@ const TagSelect: React.FunctionComponent<{
   };
 
   return (
-    <Box {...getRootProps()}>
-      <TextField
-        {...getInputProps()}
-        autoFocus
-        fullWidth
-        inputProps={{
-          'data-testid': 'TagManager-TagSelect-searchField',
-        }}
-        onChange={(ev) => setInputValue(ev.target.value)}
-        onKeyUp={(ev) => {
-          if (ev.key == 'Enter') {
-            if (selectedValueTag) {
-              handleSubmitValue();
+    <>
+      <Box {...getRootProps()}>
+        <TextField
+          autoFocus
+          fullWidth
+          inputProps={{
+            ...getInputProps(),
+            'data-testid': 'TagManager-TagSelect-searchField',
+          }}
+          onChange={(ev) => setInputValue(ev.target.value)}
+          onKeyUp={(ev) => {
+            if (ev.key == 'Enter') {
+              if (selectedValueTag) {
+                handleSubmitValue();
+              }
+            } else if (ev.key == 'Escape') {
+              if (selectedValueTag) {
+                setSelectedValueTag(null);
+              } else if (inputValue) {
+                setInputValue('');
+              } else {
+                onClose();
+              }
             }
-          } else if (ev.key == 'Escape') {
-            if (selectedValueTag) {
-              setSelectedValueTag(null);
-            } else if (inputValue) {
-              setInputValue('');
-            } else {
-              onClose();
-            }
+          }}
+          placeholder={
+            selectedValueTag
+              ? intl.formatMessage(
+                  { id: 'misc.tags.tagManager.addValue' },
+                  { tag: selectedValueTag.title }
+                )
+              : intl.formatMessage({
+                  id: 'misc.tags.tagManager.addTag',
+                })
           }
-        }}
-        placeholder={
-          selectedValueTag
-            ? intl.formatMessage(
-                { id: 'misc.tags.tagManager.addValue' },
-                { tag: selectedValueTag.title }
-              )
-            : intl.formatMessage({
-                id: 'misc.tags.tagManager.addTag',
-              })
-        }
-        variant="outlined"
-      />
-      {selectedValueTag ? (
-        <ValueTagForm
-          inputValue={inputValue}
-          onCancel={() => {
-            setSelectedValueTag(null);
-            setInputValue('');
-          }}
-          onChange={(value) => setTagValue(value)}
-          onSubmit={handleSubmitValue}
-          tag={selectedValueTag}
+          variant="outlined"
         />
-      ) : (
-        <TagSelectList
-          disabledTags={disabledTags}
-          disableEditTags={!!disableEditTags}
-          groupedTags={groupedFilteredTags}
-          inputValue={inputValue}
-          listProps={getListboxProps()}
-          onEdit={(tag) => setTagToEdit(tag)}
-          onSelect={(tag) => {
-            if (tag.value_type) {
-              setSelectedValueTag(tag);
+        {selectedValueTag ? (
+          <ValueTagForm
+            inputValue={inputValue}
+            onCancel={() => {
+              setSelectedValueTag(null);
               setInputValue('');
-            } else {
-              onSelect(tag);
-            }
-          }}
-        />
-      )}
+            }}
+            onChange={(value) => setTagValue(value)}
+            onSubmit={handleSubmitValue}
+            tag={selectedValueTag}
+          />
+        ) : (
+          <TagSelectList
+            disabledTags={disabledTags}
+            disableEditTags={!!disableEditTags}
+            groupedTags={groupedFilteredTags}
+            inputValue={inputValue}
+            listProps={getListboxProps()}
+            onEdit={(tag) => setTagToEdit(tag)}
+            onSelect={(tag) => {
+              if (tag.value_type) {
+                setSelectedValueTag(tag);
+                setInputValue('');
+              } else {
+                onSelect(tag);
+              }
+            }}
+          />
+        )}
+      </Box>
       <TagDialog
         groups={groups}
         onClose={() => setTagToEdit(undefined)}
@@ -151,7 +153,7 @@ const TagSelect: React.FunctionComponent<{
         open={Boolean(tagToEdit)}
         tag={tagToEdit}
       />
-    </Box>
+    </>
   );
 };
 
