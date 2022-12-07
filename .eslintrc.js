@@ -33,6 +33,7 @@ module.exports = {
       plugins: ['no-switch-statements'],
       rules: {
         '@typescript-eslint/no-non-null-assertion': 'off',
+        '@typescript-eslint/explicit-module-boundary-types': 'off',
         '@typescript-eslint/no-unused-vars': ['error'],
         '@typescript-eslint/member-ordering': [
           'error',
@@ -42,7 +43,6 @@ module.exports = {
           },
         ],
         curly: 'error',
-        'brace-style': 'error',
         'jsx-a11y/anchor-is-valid': 'off',
         'no-console': 'error',
         'no-switch-statements/no-switch': 'error',

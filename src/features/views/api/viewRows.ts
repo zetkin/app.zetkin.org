@@ -1,5 +1,4 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { createDeleteHandler } from '../../../utils/api/createHandlers';
 import defaultFetch from 'utils/fetching/defaultFetch';
 import handleResponseData from '../../../utils/api/handleResponseData';

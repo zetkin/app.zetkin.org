@@ -1,17 +1,22 @@
-import { FormattedMessage } from 'react-intl';
 import { Box } from '@mui/material';
-
+import { FormattedMessage } from 'react-intl';
 import makeStyles from '@mui/styles/makeStyles';
+import { useState } from 'react';
 
+import { Edit } from '@material-ui/icons';
 import EmailLoader from './elements/EmailLoader';
+import TextEditor from '../Texteditor';
 import UpdateContainer from './elements/UpdateContainer';
-import { ZetkinFile } from 'utils/types/zetkin';
 import { ZetkinFileObjectChip } from 'zui/ZUIFileChip';
 import { ZetkinUpdateJourneyInstanceAddNote } from 'zui/ZUITimeline/types';
+import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import ZUIMarkdown from 'zui/ZUIMarkdown';
 import ZUIPersonLink from 'zui/ZUIPersonLink';
+import ZUISubmitCancelButtons from 'zui/ZUISubmitCancelButtons';
+import { ZetkinFile, ZetkinNote } from 'utils/types/zetkin';
 
 interface Props {
+  onEditNote: (note: Pick<ZetkinNote, 'id' | 'text'>) => void;
   update: ZetkinUpdateJourneyInstanceAddNote;
 }
 
@@ -28,8 +33,12 @@ const useStyles = makeStyles(() => {
   };
 });
 
-const TimelineNoteAdded: React.FC<Props> = ({ update }) => {
+const TimelineNoteAdded: React.FC<Props> = ({ onEditNote, update }) => {
   const classes = useStyles();
+
+  const [editing, setEditing] = useState(false);
+  const [noteText, setNoteText] = useState(update.details.note.text);
+
   const emailFiles: ZetkinFile[] = update.details.note.files.filter(
     (file) => file.mime_type == 'message/rfc822'
   );
@@ -39,6 +48,19 @@ const TimelineNoteAdded: React.FC<Props> = ({ update }) => {
 
   return (
     <UpdateContainer
+      actionButton={
+        <ZUIEllipsisMenu
+          items={[
+            {
+              disabled: editing,
+              id: `edit-note-${update.details.note.id}`,
+              label: 'Edit',
+              onSelect: () => setEditing(true),
+              startIcon: <Edit />,
+            },
+          ]}
+        />
+      }
       headerContent={
         <FormattedMessage
           id="misc.updates.journeyinstance.addnote"
@@ -47,28 +69,56 @@ const TimelineNoteAdded: React.FC<Props> = ({ update }) => {
       }
       update={update}
     >
-      <ZUIMarkdown
-        BoxProps={{
-          className: classes.note,
-          component: 'div',
-        }}
-        markdown={update.details.note.text}
-      />
-      {!!miscFiles.length && (
-        <Box pt={2}>
-          {miscFiles.map((file) => (
-            <ZetkinFileObjectChip key={file.id} file={file} />
-          ))}
-        </Box>
-      )}
-      {!!emailFiles.length && (
-        <Box pt={2}>
-          {emailFiles.map((emailFile) => (
-            <Box key={emailFile.id} marginTop={4}>
-              <EmailLoader file={emailFile} />
+      {editing ? (
+        <form
+          onSubmit={(e) => {
+            e.stopPropagation();
+            e.preventDefault();
+            onEditNote({ id: update.details.note.id, text: noteText });
+            setEditing(false);
+          }}
+        >
+          <TextEditor
+            clear={0}
+            fileUploads={[]}
+            initialValue={noteText}
+            onChange={(text) => setNoteText(text)}
+            placeholder="Text"
+          />
+          <ZUISubmitCancelButtons
+            onCancel={() => setEditing(false)}
+            submitButtonProps={{
+              'data-testid': `TimelineNoteAdded-submitButton-note-${update.details.note.id}`,
+            }}
+          />
+        </form>
+      ) : (
+        // Not editing
+        <>
+          <ZUIMarkdown
+            BoxProps={{
+              className: classes.note,
+              component: 'div',
+            }}
+            markdown={update.details.note.text}
+          />
+          {!!miscFiles.length && (
+            <Box pt={2}>
+              {miscFiles.map((file) => (
+                <ZetkinFileObjectChip key={file.id} file={file} />
+              ))}
             </Box>
-          ))}
-        </Box>
+          )}
+          {!!emailFiles.length && (
+            <Box pt={2}>
+              {emailFiles.map((emailFile) => (
+                <Box key={emailFile.id} marginTop={4}>
+                  <EmailLoader file={emailFile} />
+                </Box>
+              ))}
+            </Box>
+          )}
+        </>
       )}
     </UpdateContainer>
   );

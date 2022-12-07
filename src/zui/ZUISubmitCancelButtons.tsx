@@ -1,11 +1,12 @@
 import { FormattedMessage as Msg } from 'react-intl';
-import { Box, Button } from '@mui/material';
+import { Box, Button, ButtonProps } from '@mui/material';
 
 const ZUISubmitCancelButtons: React.FunctionComponent<{
   onCancel: () => unknown;
+  submitButtonProps?: ButtonProps & { 'data-testid': string };
   submitDisabled?: boolean;
   submitText?: string;
-}> = ({ onCancel, submitDisabled, submitText }) => {
+}> = ({ onCancel, submitButtonProps, submitDisabled, submitText }) => {
   return (
     <Box display="flex" justifyContent="flex-end" mt={2} width={1}>
       <Box m={1}>
@@ -20,6 +21,7 @@ const ZUISubmitCancelButtons: React.FunctionComponent<{
           disabled={submitDisabled}
           type="submit"
           variant="contained"
+          {...submitButtonProps}
         >
           {submitText || <Msg id="misc.formDialog.submit" />}
         </Button>

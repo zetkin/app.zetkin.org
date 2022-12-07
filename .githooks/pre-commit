@@ -1,3 +1,2 @@
 #!/bin/sh
-yarn lint
-yarn check-types
+yarn lint && yarn check-types

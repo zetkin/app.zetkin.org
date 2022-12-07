@@ -4,6 +4,7 @@ import { Button, ListItemIcon, Menu, MenuItem } from '@mui/material';
 import { FunctionComponent, ReactElement, useState } from 'react';
 
 interface MenuItem {
+  disabled?: boolean;
   id?: string;
   label: string | React.ReactNode;
   onSelect?: (e: React.MouseEvent<HTMLLIElement, MouseEvent>) => void;
@@ -42,60 +43,58 @@ const ZUIEllipsisMenu: FunctionComponent<ZUIEllipsisMenuProps> = ({
         onClose={() => setMenuActivator(null)}
         open={Boolean(menuActivator)}
       >
-        {items.map((item, idx) => {
-          console.log(item);
-
-          return (
-            <MenuItem
-              key={item.id || idx}
-              data-testid={`ZUIEllipsisMenu-item-${item.id || idx}`}
-              onClick={(e) => {
-                if (item.onSelect) {
-                  item.onSelect(e);
-                }
-                if (item.subMenuItems) {
-                  setSubMenuActivator(e.currentTarget as HTMLElement);
-                }
-              }}
-            >
-              {item.startIcon && <ListItemIcon>{item.startIcon}</ListItemIcon>}
-              {item.label}
-              {item.subMenuItems && (
-                <Menu
-                  anchorEl={subMenuActivator}
-                  anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
-                  onClose={(e: Event) => {
-                    e.stopPropagation();
-                    setSubMenuActivator(null);
-                  }}
-                  open={Boolean(subMenuActivator)}
-                  PaperProps={{
-                    style: {
-                      maxHeight: ITEM_HEIGHT * 4.5,
-                    },
-                  }}
-                  transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-                >
-                  {item.subMenuItems.map((subMenuItem, index) => (
-                    <MenuItem
-                      key={subMenuItem.id || index}
-                      onClick={(e) => {
-                        if (subMenuItem.onSelect) {
-                          e.stopPropagation();
-                          subMenuItem.onSelect(e);
-                          setMenuActivator(null);
-                          setSubMenuActivator(null);
-                        }
-                      }}
-                    >
-                      {subMenuItem.label}
-                    </MenuItem>
-                  ))}
-                </Menu>
-              )}
-            </MenuItem>
-          );
-        })}
+        {items.map((item, idx) => (
+          <MenuItem
+            key={item.id || idx}
+            data-testid={`ZUIEllipsisMenu-item-${item.id || idx}`}
+            disabled={item.disabled}
+            onClick={(e) => {
+              if (item.onSelect) {
+                item.onSelect(e);
+                setMenuActivator(null);
+              }
+              if (item.subMenuItems) {
+                setSubMenuActivator(e.currentTarget as HTMLElement);
+              }
+            }}
+          >
+            {item.startIcon && <ListItemIcon>{item.startIcon}</ListItemIcon>}
+            {item.label}
+            {item.subMenuItems && (
+              <Menu
+                anchorEl={subMenuActivator}
+                anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
+                onClose={(e: Event) => {
+                  e.stopPropagation();
+                  setSubMenuActivator(null);
+                }}
+                open={Boolean(subMenuActivator)}
+                PaperProps={{
+                  style: {
+                    maxHeight: ITEM_HEIGHT * 4.5,
+                  },
+                }}
+                transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+              >
+                {item.subMenuItems.map((subMenuItem, index) => (
+                  <MenuItem
+                    key={subMenuItem.id || index}
+                    onClick={(e) => {
+                      if (subMenuItem.onSelect) {
+                        e.stopPropagation();
+                        subMenuItem.onSelect(e);
+                        setMenuActivator(null);
+                        setSubMenuActivator(null);
+                      }
+                    }}
+                  >
+                    {subMenuItem.label}
+                  </MenuItem>
+                ))}
+              </Menu>
+            )}
+          </MenuItem>
+        ))}
       </Menu>
     </>
   );

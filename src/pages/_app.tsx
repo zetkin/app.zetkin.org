@@ -3,12 +3,14 @@ import '../styles.css';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { AppProps } from 'next/app';
 import CssBaseline from '@mui/material/CssBaseline';
+import createStore from 'core/store';
 import { Hydrate } from 'react-query/hydration';
 import { IntlProvider } from 'react-intl';
 import { LicenseInfo } from '@mui/x-data-grid-pro';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import NProgress from 'nprogress';
 import { ReactQueryDevtools } from 'react-query/devtools';
+import { Provider as ReduxProvider } from 'react-redux';
 import Router from 'next/router';
 import {
   ThemeProvider,
@@ -18,6 +20,9 @@ import {
 import { useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
+import BrowserApiClient from 'core/api/client/BrowserApiClient';
+import Environment from 'core/env/Environment';
+import { EnvProvider } from 'core/env/EnvContext';
 import { PageWithLayout } from '../utils/types';
 import theme from '../theme';
 import { UserContext } from 'utils/hooks/useFocusDate';
@@ -63,6 +68,8 @@ declare global {
   }
 }
 
+const store = createStore();
+
 function MyApp({ Component, pageProps }: AppProps): JSX.Element {
   const { dehydratedState, lang, messages, ...restProps } = pageProps;
   const c = Component as PageWithLayout;
@@ -71,6 +78,8 @@ function MyApp({ Component, pageProps }: AppProps): JSX.Element {
   if (typeof window !== 'undefined') {
     window.__reactRendered = true;
   }
+
+  const env = new Environment(store, new BrowserApiClient());
 
   useEffect(() => {
     // Remove the server-side injected CSS.
@@ -81,27 +90,31 @@ function MyApp({ Component, pageProps }: AppProps): JSX.Element {
   }, []);
 
   return (
-    <UserContext.Provider value={pageProps.user}>
-      <StyledEngineProvider injectFirst>
-        <ThemeProvider theme={theme}>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <IntlProvider defaultLocale="en" locale={lang} messages={messages}>
-              <QueryClientProvider client={queryClient}>
-                <ZUISnackbarProvider>
-                  <ZUIConfirmDialogProvider>
-                    <Hydrate state={dehydratedState}>
-                      <CssBaseline />
-                      {getLayout(<Component {...restProps} />, restProps)}
-                    </Hydrate>
-                  </ZUIConfirmDialogProvider>
-                </ZUISnackbarProvider>
-                <ReactQueryDevtools initialIsOpen={false} />
-              </QueryClientProvider>
-            </IntlProvider>
-          </LocalizationProvider>
-        </ThemeProvider>
-      </StyledEngineProvider>
-    </UserContext.Provider>
+    <ReduxProvider store={store}>
+      <EnvProvider env={env}>
+        <UserContext.Provider value={pageProps.user}>
+          <StyledEngineProvider injectFirst>
+            <ThemeProvider theme={theme}>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <IntlProvider defaultLocale="en" locale={lang} messages={messages}>
+                  <QueryClientProvider client={queryClient}>
+                    <ZUISnackbarProvider>
+                      <ZUIConfirmDialogProvider>
+                        <Hydrate state={dehydratedState}>
+                          <CssBaseline />
+                          {getLayout(<Component {...restProps} />, restProps)}
+                        </Hydrate>
+                      </ZUIConfirmDialogProvider>
+                    </ZUISnackbarProvider>
+                    <ReactQueryDevtools initialIsOpen={false} />
+                  </QueryClientProvider>
+                </IntlProvider>
+              </LocalizationProvider>
+            </ThemeProvider>
+          </StyledEngineProvider>
+        </UserContext.Provider>
+      </EnvProvider>
+    </ReduxProvider>
   );
 }
 

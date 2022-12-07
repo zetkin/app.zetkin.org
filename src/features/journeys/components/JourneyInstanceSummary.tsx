@@ -109,6 +109,9 @@ const JourneyInstanceSummary = ({
               <ZUIMarkdown
                 BoxProps={{
                   fontSize: '1rem',
+                  style: {
+                    overflowWrap: 'anywhere',
+                  },
                 }}
                 markdown={journeyInstance.summary}
               />

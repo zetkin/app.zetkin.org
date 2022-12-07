@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { QueryState } from 'react-query/types/core/query';
 import {
   useMutation,

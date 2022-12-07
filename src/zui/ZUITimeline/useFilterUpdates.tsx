@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { useMemo, useState } from 'react';
 
 import { UPDATE_TYPES, ZetkinUpdate } from 'zui/ZUITimeline/types';
