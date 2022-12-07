@@ -1,5 +1,12 @@
 import { GetServerSideProps } from 'next';
-import { Avatar, Box, makeStyles, Paper, Typography } from '@material-ui/core';
+import {
+  Avatar,
+  Box,
+  makeStyles,
+  Paper,
+  Tooltip,
+  Typography,
+} from '@material-ui/core';
 import { DataGridPro, GridColDef, GridRowData } from '@mui/x-data-grid-pro';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
 import { useEffect, useState } from 'react';
@@ -19,6 +26,7 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: '1em',
     borderWidth: '1px',
     color: theme.palette.text.secondary,
+    cursor: 'default',
     display: 'flex',
     lineHeight: 'normal',
     marginRight: '0.1em',
@@ -66,15 +74,19 @@ const TagsCell = ({ tags }: { tags: ZetkinTag[] }) => {
         const displayedTags = tags.slice(0, maxTags);
         const hiddenTags = tags.slice(maxTags);
 
+        const tooltipTitle = hiddenTags.map((tag) => tag.title).join(', ');
+
         return (
           <Box alignItems="center" display="flex" width="100%">
             {displayedTags.map((tag) => (
               <TagChip key={tag.id} tag={tag} />
             ))}
             {hiddenTags.length > 0 && (
-              <Box border={2} className={classes.chip}>
-                {`${displayedTags.length > 0 ? '+' : ''}${hiddenTags.length}`}
-              </Box>
+              <Tooltip title={tooltipTitle}>
+                <Box border={2} className={classes.chip}>
+                  {`${displayedTags.length > 0 ? '+' : ''}${hiddenTags.length}`}
+                </Box>
+              </Tooltip>
             )}
           </Box>
         );
