@@ -1,5 +1,5 @@
 import { GetServerSideProps } from 'next';
-import { Avatar, Box, Paper, Typography } from '@material-ui/core';
+import { Avatar, Box, makeStyles, Paper, Typography } from '@material-ui/core';
 import { DataGridPro, GridColDef, GridRowData } from '@mui/x-data-grid-pro';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
 import { useEffect, useState } from 'react';
@@ -11,6 +11,22 @@ import { scaffold } from 'utils/next';
 import TagChip from 'features/tags/components/TagManager/components/TagChip';
 import useModel from 'core/useModel';
 import { ZetkinTag } from 'utils/types/zetkin';
+import ZUIResponsiveContainer from 'zui/ZUIResponsiveContainer';
+
+const useStyles = makeStyles((theme) => ({
+  chip: {
+    borderColor: theme.palette.grey[500],
+    borderRadius: '1em',
+    borderWidth: '1px',
+    color: theme.palette.text.secondary,
+    display: 'flex',
+    lineHeight: 'normal',
+    marginRight: '0.1em',
+    overflow: 'hidden',
+    padding: '0.2em 0.7em',
+    textOverflow: 'ellipsis',
+  },
+}));
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   async (ctx) => {
@@ -40,6 +56,33 @@ interface AssignmentPageProps {
   orgId: string;
 }
 
+const TagsCell = ({ tags }: { tags: ZetkinTag[] }) => {
+  const classes = useStyles();
+
+  return (
+    <ZUIResponsiveContainer ssrWidth={200}>
+      {(width) => {
+        const maxTags = Math.floor(width / 100);
+        const displayedTags = tags.slice(0, maxTags);
+        const hiddenTags = tags.slice(maxTags);
+
+        return (
+          <Box alignItems="center" display="flex" width="100%">
+            {displayedTags.map((tag) => (
+              <TagChip key={tag.id} tag={tag} />
+            ))}
+            {hiddenTags.length > 0 && (
+              <Box border={2} className={classes.chip}>
+                {`${displayedTags.length > 0 ? '+' : ''}${hiddenTags.length}`}
+              </Box>
+            )}
+          </Box>
+        );
+      }}
+    </ZUIResponsiveContainer>
+  );
+};
+
 const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
   orgId,
   assignmentId,
@@ -51,7 +94,9 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
   );
   const intl = useIntl();
 
-  useEffect(() => setOnServer(false), []);
+  useEffect(() => {
+    setOnServer(false);
+  }, []);
 
   if (onServer) {
     return null;
@@ -83,10 +128,9 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
       headerName: intl.formatMessage({
         id: 'pages.organizeCallAssignment.callers.prioritizedTagsColumn',
       }),
-      renderCell: (props) =>
-        props.row.prioritizedTags.map((tag: ZetkinTag) => (
-          <TagChip key={tag.id} tag={tag} />
-        )),
+      renderCell: (props) => {
+        return <TagsCell tags={props.row.prioritizedTags} />;
+      },
     },
     {
       field: 'excludedTags',
@@ -94,10 +138,9 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
       headerName: intl.formatMessage({
         id: 'pages.organizeCallAssignment.callers.excludedTagsColumn',
       }),
-      renderCell: (props) =>
-        props.row.excludedTags.map((tag: ZetkinTag) => (
-          <TagChip key={tag.id} tag={tag} />
-        )),
+      renderCell: (props) => {
+        return <TagsCell tags={props.row.excludedTags} />;
+      },
     },
   ];
 
