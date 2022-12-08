@@ -178,7 +178,7 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
     <Box>
       <Paper>
         <Box p={2}>
-          <Box display="flex" justifyContent="space-between">
+          <Box display="flex" justifyContent="space-between" mb={2}>
             <Typography variant="h4">
               <Msg id="pages.organizeCallAssignment.callers.title" />
             </Typography>
