@@ -1,15 +1,25 @@
-import { configureStore } from '@reduxjs/toolkit';
+import { configureStore, ConfigureStoreOptions } from '@reduxjs/toolkit';
 
-import callAssignmentsReducer from '../features/callAssignments/store';
+import callAssignmentsSlice, {
+  CallAssignmentSlice,
+} from '../features/callAssignments/store';
 
-export default function createStore() {
+export interface RootState {
+  callAssignments: CallAssignmentSlice;
+}
+
+const reducer = {
+  callAssignments: callAssignmentsSlice.reducer,
+};
+
+export default function createStore(
+  preloadedState?: ConfigureStoreOptions<RootState>['preloadedState']
+) {
   return configureStore({
-    reducer: {
-      callAssignments: callAssignmentsReducer,
-    },
+    preloadedState: preloadedState,
+    reducer: reducer,
   });
 }
 
 export type Store = ReturnType<typeof createStore>;
-export type RootState = ReturnType<Store['getState']>;
 export type AppDispatch = Store['dispatch'];

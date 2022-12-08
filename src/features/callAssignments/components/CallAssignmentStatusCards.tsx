@@ -25,8 +25,9 @@ const CallAssignmentStatusCards = ({
   model,
 }: CallAssignmentStatusCardProps) => {
   const intl = useIntl();
-  const stats = model.getStats();
-  const { cooldown } = model.getData();
+  const { data: stats } = model.getStats();
+  const { data } = model.getData();
+  const cooldown = data?.cooldown ?? null;
   const hasTargets = model.hasTargets;
 
   const [anchorEl, setAnchorEl] = useState<

@@ -18,6 +18,9 @@ import { ThemeProvider } from '@material-ui/core/styles';
 import { useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
+import BrowserApiClient from 'core/api/client/BrowserApiClient';
+import Environment from 'core/env/Environment';
+import { EnvProvider } from 'core/env/EnvContext';
 import { LocalTimeToJsonPlugin } from '../utils/dateUtils';
 import { PageWithLayout } from '../utils/types';
 import theme from '../theme';
@@ -73,6 +76,8 @@ function MyApp({ Component, pageProps }: AppProps): JSX.Element {
     window.__reactRendered = true;
   }
 
+  const env = new Environment(store, new BrowserApiClient());
+
   useEffect(() => {
     // Remove the server-side injected CSS.
     const jssStyles = document.querySelector('#jss-server-side');
@@ -83,25 +88,31 @@ function MyApp({ Component, pageProps }: AppProps): JSX.Element {
 
   return (
     <ReduxProvider store={store}>
-      <UserContext.Provider value={pageProps.user}>
-        <ThemeProvider theme={theme}>
-          <MuiPickersUtilsProvider libInstance={dayjs} utils={DateUtils}>
-            <IntlProvider defaultLocale="en" locale={lang} messages={messages}>
-              <QueryClientProvider client={queryClient}>
-                <ZUISnackbarProvider>
-                  <ZUIConfirmDialogProvider>
-                    <Hydrate state={dehydratedState}>
-                      <CssBaseline />
-                      {getLayout(<Component {...restProps} />, restProps)}
-                    </Hydrate>
-                  </ZUIConfirmDialogProvider>
-                </ZUISnackbarProvider>
-                <ReactQueryDevtools initialIsOpen={false} />
-              </QueryClientProvider>
-            </IntlProvider>
-          </MuiPickersUtilsProvider>
-        </ThemeProvider>
-      </UserContext.Provider>
+      <EnvProvider env={env}>
+        <UserContext.Provider value={pageProps.user}>
+          <ThemeProvider theme={theme}>
+            <MuiPickersUtilsProvider libInstance={dayjs} utils={DateUtils}>
+              <IntlProvider
+                defaultLocale="en"
+                locale={lang}
+                messages={messages}
+              >
+                <QueryClientProvider client={queryClient}>
+                  <ZUISnackbarProvider>
+                    <ZUIConfirmDialogProvider>
+                      <Hydrate state={dehydratedState}>
+                        <CssBaseline />
+                        {getLayout(<Component {...restProps} />, restProps)}
+                      </Hydrate>
+                    </ZUIConfirmDialogProvider>
+                  </ZUISnackbarProvider>
+                  <ReactQueryDevtools initialIsOpen={false} />
+                </QueryClientProvider>
+              </IntlProvider>
+            </MuiPickersUtilsProvider>
+          </ThemeProvider>
+        </UserContext.Provider>
+      </EnvProvider>
     </ReduxProvider>
   );
 }

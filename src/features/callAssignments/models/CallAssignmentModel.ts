@@ -1,202 +1,123 @@
-import Fuse from 'fuse.js';
-
+import CallAssignmentsRepo from '../repos/CallAssignmentsRepo';
+import Environment from 'core/env/Environment';
 import { Store } from 'core/store';
 import { ZetkinQuery } from 'utils/types/zetkin';
+import { CallAssignmentData, CallAssignmentStats } from '../apiTypes';
+import { callAssignmentLoad, callAssignmentUpdated } from '../store';
 import {
-  CallAssignmentCaller,
-  CallAssignmentData,
-  CallAssignmentStats,
-} from '../apiTypes';
-import {
-  callAssignmentLoad,
-  callAssignmentLoaded,
-  callAssignmentUpdated,
-  callersLoad,
-  callersLoaded,
-  statsLoad,
-  statsLoaded,
-} from '../store';
+  IFuture,
+  PlaceholderFuture,
+  ResolvedFuture,
+} from 'core/caching/futures';
+
+export enum CallAssignmentState {
+  ACTIVE = 'active',
+  CLOSED = 'closed',
+  DRAFT = 'draft',
+  OPEN = 'open',
+  SCHEDULED = 'scheduled',
+  UNKNOWN = 'unknown',
+}
 
 export default class CallAssignmentModel {
+  private _env: Environment;
   private _id: number;
   private _orgId: number;
+  private _repo: CallAssignmentsRepo;
   private _store: Store;
 
-  constructor(store: Store, orgId: number, id: number) {
-    this._store = store;
+  constructor(env: Environment, orgId: number, id: number) {
+    this._env = env;
+    this._store = this._env.store;
     this._orgId = orgId;
     this._id = id;
+    this._repo = new CallAssignmentsRepo(env);
   }
 
-  getCallers(): CallAssignmentCaller[] {
-    const state = this._store.getState();
-    const callers = state.callAssignments.callersById[this._id];
-
-    if (callers) {
-      return callers;
-    } else {
-      this._store.dispatch(callersLoad(this._id));
-      fetch(`/api/orgs/${this._orgId}/call_assignments/${this._id}/callers`)
-        .then((res) => res.json())
-        .then((data: { data: CallAssignmentCaller[] }) => {
-          this._store.dispatch(
-            callersLoaded({ callers: data.data, id: this._id })
-          );
-        });
-    }
+  getCallers() {
     return [];
   }
 
-  getData(): CallAssignmentData {
-    const state = this._store.getState();
-    const callAssignment = state.callAssignments.callAssignments.find(
-      (ca) => ca.id == this._id
-    );
-    if (callAssignment) {
-      return callAssignment;
-    } else {
-      this._store.dispatch(callAssignmentLoad());
-      const promise = fetch(
-        `/api/orgs/${this._orgId}/call_assignments/${this._id}`
-      )
-        .then((res) => {
-          return res.json();
-        })
-        .then((data: { data: CallAssignmentData }) => {
-          this._store.dispatch(callAssignmentLoaded(data.data));
-        });
-
-      throw promise;
-    }
+  getData(): IFuture<CallAssignmentData> {
+    return this._repo.getCallAssignment(this._orgId, this._id);
   }
 
-  getFilteredCallers(searchString: string): CallAssignmentCaller[] {
-    const state = this._store.getState();
-    const callers = state.callAssignments.callersById[this._id];
-
-    if (callers && searchString) {
-      //search the callers in state
-      const fuse = new Fuse(callers, {
-        includeScore: true,
-        keys: ['first_name', 'last_name'],
-        threshold: 0.4,
-      });
-      return fuse
-        .search(searchString)
-        .map((fuseResult) => fuseResult.item) as CallAssignmentCaller[];
-    } else if (!callers && searchString) {
-      //load callers, search and set state to the search results
-      this._store.dispatch(callersLoad(this._id));
-
-      fetch(`/api/orgs/${this._orgId}/call_assignments/${this._id}/callers`)
-        .then((res) => res.json())
-        .then((data: { data: CallAssignmentCaller[] }) => {
-          const fuse = new Fuse(data.data, {
-            includeScore: true,
-            keys: ['first_name', 'last_name'],
-            threshold: 0.4,
-          });
-          const filtered = fuse
-            .search(searchString)
-            .map((fuseResult) => fuseResult.item) as CallAssignmentCaller[];
-          this._store.dispatch(
-            callersLoaded({ callers: filtered, id: this._id })
-          );
-        });
-    }
-    return [];
+  getFilteredCallers(searchString: string) {
+    return [
+      {
+        excluded_tags: [{}],
+        first_name: searchString,
+        id: 2,
+        last_name: searchString,
+        prioritized_tags: [{}],
+      },
+    ];
   }
 
-  getStats(): CallAssignmentStats | null {
-    const state = this._store.getState();
-    const stats = state.callAssignments.statsById[this._id];
-
+  getStats(): IFuture<CallAssignmentStats | null> {
     if (!this.isTargeted) {
-      return null;
+      return new ResolvedFuture(null);
     }
 
-    if (stats && !stats.isStale) {
-      return stats;
-    } else {
-      this._store.dispatch(statsLoad(this._id));
-      fetch(
-        `/api/callAssignments/targets?org=${this._orgId}&assignment=${this._id}`
-      )
-        .then((res) => res.json())
-        .then((data: CallAssignmentStats) => {
-          this._store.dispatch(statsLoaded({ ...data, id: this._id }));
-        });
-
-      return {
+    const future = this._repo.getCallAssignmentStats(this._orgId, this._id);
+    if (future.isLoading && !future.data) {
+      return new PlaceholderFuture({
         allTargets: 0,
         allocated: 0,
         blocked: 0,
         callBackLater: 0,
         calledTooRecently: 0,
         done: 0,
-        isLoading: true,
-        isStale: false,
+        id: this._id,
         missingPhoneNumber: 0,
+        mostRecentCallTime: null,
         organizerActionNeeded: 0,
         queue: 0,
         ready: 0,
-      };
+      });
+    } else {
+      return future;
     }
   }
 
   get hasTargets() {
-    const data = this.getStats();
+    const { data } = this.getStats();
     if (data === null) {
       return false;
     }
     return data.blocked + data.ready + data.done > 0;
   }
 
-  get isLoading() {
-    return this._store.getState().callAssignments.isLoading;
-  }
-
   get isTargeted() {
-    const data = this.getData();
-    return data.target.filter_spec?.length != 0;
+    const { data } = this.getData();
+    return data && data.target?.filter_spec?.length != 0;
   }
 
-  setCooldown(cooldown: number) {
+  setCooldown(cooldown: number): void {
     const state = this._store.getState();
-    const callAssignment = state.callAssignments.callAssignments.find(
-      (ca) => ca.id == this._id
+    const caItem = state.callAssignments.assignmentList.items.find(
+      (item) => item.id == this._id
     );
+    const callAssignment = caItem?.data;
 
     //if cooldown has not changed, do nothing.
     if (cooldown === callAssignment?.cooldown) {
-      return null;
+      return;
     }
 
-    if (callAssignment) {
-      this._store.dispatch(callAssignmentLoad());
-      fetch(`/api/orgs/${this._orgId}/call_assignments/${this._id}`, {
-        body: JSON.stringify({ cooldown }),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        method: 'PATCH',
-      })
-        .then((res) => {
-          return res.json();
-        })
-        .then((data: { data: CallAssignmentData }) => {
-          this._store.dispatch(callAssignmentUpdated(data.data));
-        });
-    }
+    this._repo.updateCallAssignment(this._orgId, this._id, { cooldown });
   }
 
-  setTargets(query: Partial<ZetkinQuery>) {
+  setTargets(query: Partial<ZetkinQuery>): void {
+    // TODO: Refactor once SmartSearch is supported in redux framework
     const state = this._store.getState();
-    const callAssignment = state.callAssignments.callAssignments.find(
-      (ca) => ca.id == this._id
+    const caItem = state.callAssignments.assignmentList.items.find(
+      (item) => item.id == this._id
     );
+    const callAssignment = caItem?.data;
+
     if (callAssignment) {
-      this._store.dispatch(callAssignmentLoad());
+      this._store.dispatch(callAssignmentLoad(this._id));
       fetch(
         `/api/orgs/${this._orgId}/people/queries/${callAssignment.target.id}`,
         {
@@ -216,10 +137,43 @@ export default class CallAssignmentModel {
     }
   }
 
-  get statsIsLoading() {
-    return (
-      this._store.getState().callAssignments.statsById[this._id]?.isLoading ??
-      false
-    );
+  setTitle(title: string): void {
+    this._repo.updateCallAssignment(this._orgId, this._id, { title });
+  }
+
+  get state(): CallAssignmentState {
+    const { data } = this.getData();
+    if (!data) {
+      return CallAssignmentState.UNKNOWN;
+    }
+
+    if (data.start_date) {
+      const startDate = new Date(data.start_date);
+      const now = new Date();
+      if (startDate > now) {
+        return CallAssignmentState.SCHEDULED;
+      } else {
+        if (data.end_date) {
+          const endDate = new Date(data.end_date);
+          if (endDate < now) {
+            return CallAssignmentState.CLOSED;
+          }
+        }
+
+        const { data: statsData } = this.getStats();
+        if (!statsData?.mostRecentCallTime) {
+          return CallAssignmentState.OPEN;
+        }
+
+        const mostRecentCallTime = new Date(statsData.mostRecentCallTime);
+        const diff = now.getTime() - mostRecentCallTime.getTime();
+
+        return diff < 10 * 60 * 1000
+          ? CallAssignmentState.ACTIVE
+          : CallAssignmentState.OPEN;
+      }
+    } else {
+      return CallAssignmentState.DRAFT;
+    }
   }
 }

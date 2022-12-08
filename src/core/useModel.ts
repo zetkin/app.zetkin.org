@@ -1,21 +1,25 @@
-import { useStore } from 'react-redux';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
-import { RootState, Store } from './store';
+import { EnvContext } from './env/EnvContext';
+import Environment from './env/Environment';
 
 export interface UseModelFactory<ModelType> {
-  (store: Store): ModelType;
+  (env: Environment): ModelType;
 }
 
 export default function useModel<ModelType>(
   factory: UseModelFactory<ModelType>
 ) {
-  const store = useStore<RootState>();
-  const [model, setModel] = useState(() => factory(store));
+  const env = useContext(EnvContext);
+  if (!env) {
+    throw new Error('Environment must be supplied. Add EnvProvider to tree.');
+  }
+
+  const [model, setModel] = useState(() => factory(env));
   const setRandom = useState(0)[1];
 
   useEffect(() => {
-    const unsubscribe = store.subscribe(() => {
+    const unsubscribe = env.store.subscribe(() => {
       setModel(() => model);
 
       // TODO: Refactor to remove this, which is only used to force re-render

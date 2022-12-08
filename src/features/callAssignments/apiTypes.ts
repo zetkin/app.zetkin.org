@@ -10,22 +10,24 @@ export interface CallAssignmentCaller {
 
 export interface CallAssignmentData {
   cooldown: number;
+  end_date?: string;
   id: number;
+  start_date?: string;
   target: ZetkinQuery;
   title: string;
 }
 
 export interface CallAssignmentStats {
+  id: number;
   allTargets: number;
   allocated: number;
   blocked: number;
   callBackLater: number;
   calledTooRecently: number;
   done: number;
-  isStale: boolean;
   missingPhoneNumber: number;
+  mostRecentCallTime: string | null;
   organizerActionNeeded: number;
   queue: number;
   ready: number;
-  isLoading: boolean;
 }
