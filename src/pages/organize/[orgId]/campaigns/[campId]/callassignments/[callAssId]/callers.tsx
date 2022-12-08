@@ -1,9 +1,14 @@
+import { Close } from '@material-ui/icons';
+import Fuse from 'fuse.js';
 import { GetServerSideProps } from 'next';
 import {
   Avatar,
   Box,
+  Fade,
+  IconButton,
   makeStyles,
   Paper,
+  TextField,
   Tooltip,
   Typography,
 } from '@material-ui/core';
@@ -95,11 +100,28 @@ const TagsCell = ({ tags }: { tags: ZetkinTag[] }) => {
   );
 };
 
+const filterRows = (rows: GridRowData[], searchString: string) => {
+  if (!searchString) {
+    return rows;
+  }
+
+  const fuse = new Fuse(rows, {
+    includeScore: true,
+    keys: ['name'],
+    threshold: 0.4,
+  });
+  return fuse
+    .search(searchString)
+    .map((fuseResult) => fuseResult.item) as GridRowData[];
+};
+
 const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
   orgId,
   assignmentId,
 }) => {
   const [onServer, setOnServer] = useState(true);
+  const [searchString, setSearchString] = useState('');
+  const isSearching = searchString.length > 0;
   const model = useModel(
     (store) =>
       new CallAssignmentModel(store, parseInt(orgId), parseInt(assignmentId))
@@ -113,8 +135,6 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
   if (onServer) {
     return null;
   }
-
-  const callers = model.getCallers();
 
   // Columns
   const columns: GridColDef[] = [
@@ -156,7 +176,10 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
     },
   ];
 
-  const rows: GridRowData[] = Array.from(
+  //Rows
+  const callers = model.getCallers();
+
+  const callersAsRowData: GridRowData[] = Array.from(
     callers.map((caller) => ({
       excludedTags: caller.excluded_tags,
       id: caller.id,
@@ -165,13 +188,34 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
     }))
   );
 
+  const rows = filterRows(callersAsRowData, searchString);
+
   return (
     <Box>
       <Paper>
         <Box p={2}>
-          <Typography variant="h4">
-            <Msg id="pages.organizeCallAssignment.callers.title" />
-          </Typography>
+          <Box display="flex" justifyContent="space-between">
+            <Typography variant="h4">
+              <Msg id="pages.organizeCallAssignment.callers.title" />
+            </Typography>
+            <TextField
+              InputProps={{
+                endAdornment: (
+                  <Fade in={isSearching}>
+                    <IconButton onClick={() => setSearchString('')}>
+                      <Close />
+                    </IconButton>
+                  </Fade>
+                ),
+              }}
+              onChange={(evt) => {
+                setSearchString(evt.target.value);
+              }}
+              placeholder="Search"
+              value={searchString}
+              variant="outlined"
+            />
+          </Box>
           <DataGridPro
             autoHeight
             columns={columns}
