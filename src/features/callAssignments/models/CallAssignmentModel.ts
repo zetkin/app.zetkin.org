@@ -1,3 +1,5 @@
+import Fuse from 'fuse.js';
+
 import { Store } from 'core/store';
 import { ZetkinQuery } from 'utils/types/zetkin';
 import {
@@ -66,6 +68,43 @@ export default class CallAssignmentModel {
 
       throw promise;
     }
+  }
+
+  getFilteredCallers(searchString: string): CallAssignmentCaller[] {
+    const state = this._store.getState();
+    const callers = state.callAssignments.callersById[this._id];
+
+    if (callers && searchString) {
+      //search the callers in state
+      const fuse = new Fuse(callers, {
+        includeScore: true,
+        keys: ['first_name', 'last_name'],
+        threshold: 0.4,
+      });
+      return fuse
+        .search(searchString)
+        .map((fuseResult) => fuseResult.item) as CallAssignmentCaller[];
+    } else if (!callers && searchString) {
+      //load callers, search and set state to the search results
+      this._store.dispatch(callersLoad(this._id));
+
+      fetch(`/api/orgs/${this._orgId}/call_assignments/${this._id}/callers`)
+        .then((res) => res.json())
+        .then((data: { data: CallAssignmentCaller[] }) => {
+          const fuse = new Fuse(data.data, {
+            includeScore: true,
+            keys: ['first_name', 'last_name'],
+            threshold: 0.4,
+          });
+          const filtered = fuse
+            .search(searchString)
+            .map((fuseResult) => fuseResult.item) as CallAssignmentCaller[];
+          this._store.dispatch(
+            callersLoaded({ callers: filtered, id: this._id })
+          );
+        });
+    }
+    return [];
   }
 
   getStats(): CallAssignmentStats | null {

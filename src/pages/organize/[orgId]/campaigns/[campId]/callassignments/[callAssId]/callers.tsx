@@ -1,5 +1,4 @@
 import { Close } from '@material-ui/icons';
-import Fuse from 'fuse.js';
 import { GetServerSideProps } from 'next';
 import {
   Avatar,
@@ -100,21 +99,6 @@ const TagsCell = ({ tags }: { tags: ZetkinTag[] }) => {
   );
 };
 
-const filterRows = (rows: GridRowData[], searchString: string) => {
-  if (!searchString) {
-    return rows;
-  }
-
-  const fuse = new Fuse(rows, {
-    includeScore: true,
-    keys: ['name'],
-    threshold: 0.4,
-  });
-  return fuse
-    .search(searchString)
-    .map((fuseResult) => fuseResult.item) as GridRowData[];
-};
-
 const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
   orgId,
   assignmentId,
@@ -177,9 +161,11 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
   ];
 
   //Rows
-  const callers = model.getCallers();
+  const callers = searchString
+    ? model.getFilteredCallers(searchString)
+    : model.getCallers();
 
-  const callersAsRowData: GridRowData[] = Array.from(
+  const rows: GridRowData[] = Array.from(
     callers.map((caller) => ({
       excludedTags: caller.excluded_tags,
       id: caller.id,
@@ -187,8 +173,6 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
       prioritizedTags: caller.prioritized_tags,
     }))
   );
-
-  const rows = filterRows(callersAsRowData, searchString);
 
   return (
     <Box>
