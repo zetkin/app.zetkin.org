@@ -146,7 +146,9 @@ const getTagColumns = (
             ));
         },
         sortComparator: (value0, value1) => sortByTagName(value0, value1),
-        valueFormatter: (params: GridValueFormatterParams<ZetkinJourneyInstance>) =>
+        valueFormatter: (
+          params: GridValueFormatterParams<ZetkinJourneyInstance>
+        ) =>
           col
             .tagsGetter(params.value)
             .map((tag) => tag.title)
@@ -221,7 +223,9 @@ const getTagColumns = (
           </div>
         ),
         sortComparator: (value0, value1) => sortByTagName(value0, value1),
-        valueFormatter: (params: GridValueFormatterParams<ZetkinJourneyInstance>) =>
+        valueFormatter: (
+          params: GridValueFormatterParams<ZetkinJourneyInstance>
+        ) =>
           col
             .tagsGetter(params.value)
             .map((tag) => tag.title)

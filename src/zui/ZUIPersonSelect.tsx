@@ -46,7 +46,10 @@ interface UsePersonSelectReturn {
     onInputChange: (ev: unknown, value: string) => void;
     options: ZetkinPerson[];
     placeholder?: string;
-    renderOption: (props: HTMLAttributes<HTMLLIElement>, person: ZetkinPerson) => ReactElement;
+    renderOption: (
+      props: HTMLAttributes<HTMLLIElement>,
+      person: ZetkinPerson
+    ) => ReactElement;
     value: ZetkinPerson | null;
   };
 }
@@ -131,7 +134,10 @@ const usePersonSelect: UsePersonSelect = ({
       },
       options: personOptions,
       placeholder,
-      renderOption: (props: HTMLAttributes<HTMLLIElement>, person: ZetkinPerson) => {
+      renderOption: (
+        props: HTMLAttributes<HTMLLIElement>,
+        person: ZetkinPerson
+      ) => {
         const extraLabel = getOptionExtraLabel
           ? getOptionExtraLabel(person)
           : null;

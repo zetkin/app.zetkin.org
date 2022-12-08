@@ -1,4 +1,4 @@
-import { Box, ListItem, Typography } from '@material-ui/core';
+import { Box, ListItem, Typography } from '@mui/material';
 
 import ZUIAnimatedNumber from 'zui/ZUIAnimatedNumber';
 

@@ -96,7 +96,11 @@ function MyApp({ Component, pageProps }: AppProps): JSX.Element {
           <StyledEngineProvider injectFirst>
             <ThemeProvider theme={theme}>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <IntlProvider defaultLocale="en" locale={lang} messages={messages}>
+                <IntlProvider
+                  defaultLocale="en"
+                  locale={lang}
+                  messages={messages}
+                >
                   <QueryClientProvider client={queryClient}>
                     <ZUISnackbarProvider>
                       <ZUIConfirmDialogProvider>

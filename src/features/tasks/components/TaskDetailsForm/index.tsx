@@ -280,7 +280,7 @@ const TaskDetailsForm = ({
             disablePast
             fieldProps={{
               id: TASK_DETAILS_FIELDS.PUBLISHED,
-              margin: "normal",
+              margin: 'normal',
             }}
             label={intl.formatMessage({
               id: 'misc.tasks.forms.createTask.fields.published',
@@ -293,7 +293,7 @@ const TaskDetailsForm = ({
             disablePast
             fieldProps={{
               id: TASK_DETAILS_FIELDS.DEADLINE,
-              margin: "normal",
+              margin: 'normal',
             }}
             label={intl.formatMessage({
               id: 'misc.tasks.forms.createTask.fields.deadline',
@@ -306,13 +306,12 @@ const TaskDetailsForm = ({
             disablePast
             fieldProps={{
               id: TASK_DETAILS_FIELDS.EXPIRES,
-              margin: "normal",
+              margin: 'normal',
             }}
             label={intl.formatMessage({
               id: 'misc.tasks.forms.createTask.fields.expires',
             })}
             name={TASK_DETAILS_FIELDS.EXPIRES}
-
           />
 
           <ReassignFields />

@@ -1,14 +1,8 @@
+import { makeStyles } from '@mui/styles';
 import { FormattedMessage as Msg } from 'react-intl';
 import { useState } from 'react';
 import { Add, Edit } from '@material-ui/icons';
-import {
-  Box,
-  Button,
-  Card,
-  Divider,
-  makeStyles,
-  Typography,
-} from '@material-ui/core';
+import { Box, Button, Card, Divider, Typography } from '@mui/material';
 
 import CallAssignmentModel from '../models/CallAssignmentModel';
 import SmartSearchDialog from 'features/smartSearch/components/SmartSearchDialog';

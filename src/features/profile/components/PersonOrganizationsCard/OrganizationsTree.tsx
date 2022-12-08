@@ -43,8 +43,7 @@ export const OrganizationsTree: React.FunctionComponent<OrganizationProps> = ({
   onClickRemove,
   organizationTree,
 }) => {
-  const { id, is_active, sub_orgs, title } =
-    organizationTree;
+  const { id, is_active, sub_orgs, title } = organizationTree;
   const hasChildren = !!sub_orgs?.length;
   const classes = useStyles({ level });
 

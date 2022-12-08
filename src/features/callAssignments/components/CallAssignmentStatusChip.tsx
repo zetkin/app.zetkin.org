@@ -1,6 +1,7 @@
 import { FC } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Box, CircularProgress, makeStyles } from '@material-ui/core';
+import { makeStyles } from '@mui/styles';
+import { Box, CircularProgress } from '@mui/material';
 
 import { CallAssignmentState } from '../models/CallAssignmentModel';
 
