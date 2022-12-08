@@ -211,7 +211,9 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
               onChange={(evt) => {
                 setSearchString(evt.target.value);
               }}
-              placeholder="Search"
+              placeholder={intl.formatMessage({
+                id: 'pages.organizeCallAssignment.callers.searchBox',
+              })}
               value={searchString}
               variant="outlined"
             />

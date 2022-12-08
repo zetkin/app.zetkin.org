@@ -12,6 +12,7 @@ callers:
   excludedTagsColumn: Excluded tags
   nameColumn: Name
   prioritizedTagsColumn: Prioritized tags
+  searchBox: Search
   title: Callers
 done:
   subtitle: Targets that meet the done criteria
