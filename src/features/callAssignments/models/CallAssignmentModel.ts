@@ -216,7 +216,7 @@ export default class CallAssignmentModel {
       const endDate = dayjs(endStr);
 
       if (
-        startDate.isBefore(today) &&
+        (startDate.isBefore(today) || startDate.isSame(today)) &&
         (endDate.isBefore(today) || endDate.isSame(today))
       ) {
         // Start is past, end is past

@@ -588,6 +588,7 @@ describe('CallAssignmentModel', () => {
     it.each([
       [pastDate(3), pastDate(1), { end_date: null }],
       [pastDate(3), today, { end_date: null }],
+      [today, today, { end_date: null }],
       [futureDate(1), futureDate(3), { start_date: today }],
       [futureDate(1), null, { start_date: today }],
       [null, pastDate(1), { end_date: null, start_date: today }],
