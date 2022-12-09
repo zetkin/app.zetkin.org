@@ -44,11 +44,6 @@ test.describe('Campaign detail page', async () => {
     // Edit title
     await page.fill('#title', newTitle);
 
-    // Set manager
-    await page.click('[name=manager_id]');
-    await page.fill('[name=manager_id]', 'Rosa');
-    await page.click('text="Rosa Luxemburg"');
-
     // Submit the form
     await page.click('button > :text("Submit")');
 
@@ -63,7 +58,6 @@ test.describe('Campaign detail page', async () => {
     );
 
     expect(patchRequest?.data).toMatchObject({
-      manager_id: RosaLuxemburg.id,
       title: newTitle,
     });
   });
