@@ -56,7 +56,7 @@ export default class CallAssignmentModel {
 
       const filteredCallers = fuse
         .search(searchString)
-        .map((fuseResult) => fuseResult.item) as CallAssignmentCaller[];
+        .map((fuseResult) => fuseResult.item);
 
       return new ResolvedFuture(filteredCallers);
     }
