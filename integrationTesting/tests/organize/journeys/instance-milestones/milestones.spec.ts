@@ -95,19 +95,17 @@ test.describe('Journey instance page Milestones tab', () => {
     //Click datepicker in first JourneyMilestoneCard
     await page
       .locator(
-        '[data-testid=JourneyMilestoneCard] [data-testid=JourneyMilestoneCard-datePicker]'
+        '[data-testid=JourneyMilestoneCard] [data-testid=JourneyMilestoneCard-datePicker] button[aria-label*="Choose"]'
       )
       .first()
       .click();
-    //Click June 23
-    await page.locator('p:has-text("24")').click();
 
     await Promise.all([
       page.waitForResponse(
         `**/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}/milestones/${AttendMeeting.id}`
       ),
-      //Click OK to trigger set of new deadline
-      page.locator('text=OK').click(),
+      //Click June 24 to trigger setting new deadline
+      await page.locator('button:has-text("24")').click(),
     ]);
 
     //Expect the deadline to be the newly set deadline

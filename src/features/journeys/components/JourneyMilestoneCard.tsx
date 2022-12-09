@@ -128,10 +128,9 @@ const JourneyMilestoneCard = ({
               id: 'pages.organizeJourneyInstance.dueDateInputLabel',
             })}
             onChange={(newDeadline) => {
-              //TODO fix this cast which should be unnecessary
-              const castDeadline = dayjs(newDeadline);
-              if (newDeadline && castDeadline.isValid()) {
-                patchMilestoneStatus({ deadline: newDeadline.toJSON() });
+              if (newDeadline && newDeadline.isValid()) {
+                const dateStr = newDeadline.format('YYYY-MM-DD');
+                patchMilestoneStatus({ deadline: dateStr });
               } else if (!newDeadline) {
                 // Deadline is cleared
                 patchMilestoneStatus({ deadline: null });
