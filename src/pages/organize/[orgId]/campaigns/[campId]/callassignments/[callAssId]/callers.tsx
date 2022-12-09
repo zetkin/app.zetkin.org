@@ -161,18 +161,15 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
   ];
 
   //Rows
-  const callers = searchString
-    ? model.getFilteredCallers(searchString)
-    : model.getCallers();
+  const future = model.getFilteredCallers(searchString);
 
-  const rows: GridRowData[] = Array.from(
-    callers.map((caller) => ({
+  const rows: GridRowData[] =
+    future.data?.map((caller) => ({
       excludedTags: caller.excluded_tags,
       id: caller.id,
       name: `${caller.first_name} ${caller.last_name}`,
       prioritizedTags: caller.prioritized_tags,
-    }))
-  );
+    })) ?? [];
 
   return (
     <Box>

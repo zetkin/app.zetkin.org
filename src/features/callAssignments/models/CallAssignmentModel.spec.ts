@@ -47,6 +47,7 @@ describe('CallAssignmentModel', () => {
               title: 'My assignment',
             },
           ]),
+          callersById: {},
           statsById: {},
         },
       });
@@ -77,6 +78,7 @@ describe('CallAssignmentModel', () => {
               title: 'My assignment',
             },
           ]),
+          callersById: {},
           statsById: {},
         },
       });
@@ -109,6 +111,7 @@ describe('CallAssignmentModel', () => {
             title: 'My assignment',
           },
         ]),
+        callersById: {},
         statsById: {
           2: mockItem({
             allTargets: 100,
@@ -136,6 +139,7 @@ describe('CallAssignmentModel', () => {
       const store = createStore({
         callAssignments: {
           assignmentList: mockList(),
+          callersById: {},
           statsById: {},
         },
       });
@@ -245,6 +249,7 @@ describe('CallAssignmentModel', () => {
               title: 'My assignment',
             },
           ]),
+          callersById: {},
           statsById: {},
         },
       });
@@ -280,6 +285,7 @@ describe('CallAssignmentModel', () => {
               title: 'My assignment',
             },
           ]),
+          callersById: {},
           statsById: {},
         },
       });
@@ -343,6 +349,7 @@ describe('CallAssignmentModel', () => {
               title: 'My assignment',
             },
           ]),
+          callersById: {},
           statsById: {
             2: mockItem({
               allTargets: 100,
