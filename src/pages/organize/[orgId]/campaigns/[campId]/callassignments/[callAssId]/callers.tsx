@@ -40,13 +40,13 @@ export const getServerSideProps: GetServerSideProps = scaffold(
   }
 );
 
-interface AssignmentPageProps {
+interface CallersPageProps {
   assignmentId: string;
   campId: string;
   orgId: string;
 }
 
-const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
+const CallersPage: PageWithLayout<CallersPageProps> = ({
   orgId,
   assignmentId,
 }) => {
@@ -104,7 +104,7 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
   );
 };
 
-AssignmentPage.getLayout = function getLayout(page, props) {
+CallersPage.getLayout = function getLayout(page, props) {
   return (
     <CallAssignmentLayout
       assignmentId={props.assignmentId}
@@ -116,4 +116,4 @@ AssignmentPage.getLayout = function getLayout(page, props) {
   );
 };
 
-export default AssignmentPage;
+export default CallersPage;
