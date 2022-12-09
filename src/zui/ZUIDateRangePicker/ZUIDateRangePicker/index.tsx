@@ -1,4 +1,12 @@
-import { Box, Paper, Popper, TextField } from '@mui/material';
+import { Clear } from '@mui/icons-material';
+import {
+  Box,
+  IconButton,
+  InputAdornment,
+  Paper,
+  Popper,
+  TextField,
+} from '@mui/material';
 import { DateRange, StaticDateRangePicker } from '@mui/x-date-pickers-pro';
 import dayjs, { Dayjs } from 'dayjs';
 import React, { FC, useCallback, useEffect, useState } from 'react';
@@ -79,8 +87,29 @@ const DateTextField: FC<DateTextFieldProps> = ({ label, onChange, value }) => {
   return (
     <TextField
       fullWidth
+      InputProps={{
+        endAdornment: value ? (
+          <InputAdornment position="end">
+            <IconButton
+              onClick={() => {
+                onChange(null);
+              }}
+            >
+              <Clear />
+            </IconButton>
+          </InputAdornment>
+        ) : null,
+      }}
       label={label}
       onBlur={(ev) => {
+        // If user leaves the field empty, clear
+        if (ev.target.value == '') {
+          onChange(null);
+          return;
+        }
+
+        // If user entered a valid date, change
+        // to that date, or revert to previous
         const parsed = dayjs(ev.target.value);
         if (parsed.isValid()) {
           onChange(parsed);
