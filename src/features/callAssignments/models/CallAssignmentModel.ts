@@ -118,6 +118,13 @@ export default class CallAssignmentModel {
     this._repo.updateCallAssignment(this._orgId, this._id, { cooldown });
   }
 
+  setDates(startDate: string | null, endDate: string | null) {
+    return this._repo.updateCallAssignment(this._orgId, this._id, {
+      end_date: endDate,
+      start_date: startDate,
+    });
+  }
+
   setTargets(query: Partial<ZetkinQuery>): void {
     // TODO: Refactor once SmartSearch is supported in redux framework
     const state = this._store.getState();

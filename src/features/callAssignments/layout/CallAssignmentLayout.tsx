@@ -1,7 +1,10 @@
+import { Box } from '@mui/material';
+
 import CallAssignmentModel from '../models/CallAssignmentModel';
 import CallAssignmentStatusChip from '../components/CallAssignmentStatusChip';
 import TabbedLayout from '../../../utils/layout/TabbedLayout';
 import useModel from 'core/useModel';
+import ZUIDateRangePicker from 'zui/ZUIDateRangePicker/ZUIDateRangePicker';
 import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
 
 interface CallAssignmentLayoutProps {
@@ -32,7 +35,20 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
     <TabbedLayout
       baseHref={`/organize/${orgId}/campaigns/${campaignId}/callassignments/${assignmentId}`}
       defaultTab="/"
-      subtitle={<CallAssignmentStatusChip state={model.state} />}
+      subtitle={
+        <Box alignItems="center" display="flex">
+          <CallAssignmentStatusChip state={model.state} />
+          <Box marginX={2}>
+            <ZUIDateRangePicker
+              endDate={future.data.end_date || null}
+              onChange={(startDate, endDate) => {
+                model.setDates(startDate, endDate);
+              }}
+              startDate={future.data.start_date || null}
+            />
+          </Box>
+        </Box>
+      }
       tabs={[
         {
           href: '/',
