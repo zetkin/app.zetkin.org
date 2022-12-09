@@ -89,6 +89,7 @@ const CallAssignmentCallersList = ({
       renderCell: (props) => {
         return <TagsCell tags={props.row.prioritizedTags} />;
       },
+      sortable: false,
     },
     {
       field: 'excludedTags',
@@ -99,6 +100,7 @@ const CallAssignmentCallersList = ({
       renderCell: (props) => {
         return <TagsCell tags={props.row.excludedTags} />;
       },
+      sortable: false,
     },
   ];
 
@@ -114,6 +116,8 @@ const CallAssignmentCallersList = ({
     <DataGridPro
       autoHeight
       columns={columns}
+      disableColumnFilter
+      disableColumnMenu
       disableColumnReorder
       disableColumnResize
       rows={rows}
