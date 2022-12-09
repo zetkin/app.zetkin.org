@@ -42,16 +42,16 @@ test.describe('View detail page', () => {
     await page.goto(appUri + '/organize/1/people/views/1');
 
     // Rename first column
+    await page.hover('[role=columnheader]:has-text("First name")');
     await page.click(
-      'button[aria-label="Menu"]:right-of(:text("First Name"))',
-      { force: true }
+      '[role=columnheader]:has-text("First name") [aria-label=Menu]'
     );
     await page.click(
       `data-testid=rename-column-button-col_${AllMembersColumns[0].id}`
     );
 
     await page.fill('#rename-column-title-field', newTitle);
-    await page.click('button > :text("Save")');
+    await page.click('button:text("Save")');
 
     // Check body of request
     const columnPatchRequest = moxy
@@ -80,16 +80,16 @@ test.describe('View detail page', () => {
     await page.goto(appUri + '/organize/1/people/views/1');
 
     // Rename first column
+    await page.hover('[role=columnheader]:has-text("First name")');
     await page.click(
-      'button[aria-label="Menu"]:right-of(:text("First Name"))',
-      { force: true }
+      '[role=columnheader]:has-text("First name") [aria-label=Menu]'
     );
     await page.click(
       `data-testid=rename-column-button-col_${AllMembersColumns[0].id}`
     );
 
     await page.fill('#rename-column-title-field', 'New title');
-    await page.click('button > :text("Save")');
+    await page.click('button:text("Save")');
 
     expect(await page.locator('data-testid=Snackbar-error').count()).toEqual(1);
   });

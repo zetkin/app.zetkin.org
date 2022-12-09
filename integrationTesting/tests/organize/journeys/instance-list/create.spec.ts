@@ -117,14 +117,14 @@ test.describe('Creating a journey instance from journey instance page', () => {
 
     // Add a subject
     await page.locator('data-testid=Button-add-subject').click();
-    await page.locator('text=Add person').type('Clara');
+    await page.locator(':has-text("Add person") > input').type('Clara');
     await page
       .locator('.MuiAutocomplete-popper li:has-text("Clara Zetkin")')
       .click();
 
     // Add an assignee
     await page.locator('data-testid=Button-add-assignee').click();
-    await page.locator('text=Assign person').type('Clara');
+    await page.locator(':has-text("Assign person") > input').type('Clara');
     await page
       .locator('.MuiAutocomplete-popper li:has-text("Clara Zetkin")')
       .click();
