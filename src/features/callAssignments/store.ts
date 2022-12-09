@@ -6,15 +6,21 @@ import {
   RemoteList,
 } from 'utils/storeUtils';
 
-import { CallAssignmentData, CallAssignmentStats } from './apiTypes';
+import {
+  CallAssignmentCaller,
+  CallAssignmentData,
+  CallAssignmentStats,
+} from './apiTypes';
 
 export interface CallAssignmentSlice {
   assignmentList: RemoteList<CallAssignmentData>;
+  callersById: Record<number, RemoteList<CallAssignmentCaller>>;
   statsById: Record<number, RemoteItem<CallAssignmentStats>>;
 }
 
 const initialState: CallAssignmentSlice = {
   assignmentList: remoteList(),
+  callersById: {},
   statsById: {},
 };
 
@@ -70,6 +76,15 @@ const callAssignmentsSlice = createSlice({
         .filter((ca) => ca.id != action.payload.id)
         .concat([remoteItem(action.payload.id, { data: action.payload })]);
     },
+    callersLoad: (state, action: PayloadAction<number>) => {
+      state.callersById[action.payload] = remoteList<CallAssignmentCaller>();
+    },
+    callersLoaded: (
+      state,
+      action: PayloadAction<{ callers: CallAssignmentCaller[]; id: number }>
+    ) => {
+      state.callersById[action.payload.id] = remoteList(action.payload.callers);
+    },
     statsLoad: (state, action: PayloadAction<number>) => {
       const statsItem = state.statsById[action.payload];
       state.statsById[action.payload] = remoteItem(action.payload, {
@@ -111,6 +126,8 @@ export const {
   callAssignmentLoad,
   callAssignmentLoaded,
   callAssignmentUpdated,
+  callersLoad,
+  callersLoaded,
   statsLoad,
   statsLoaded,
 } = callAssignmentsSlice.actions;

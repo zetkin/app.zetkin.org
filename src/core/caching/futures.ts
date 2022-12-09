@@ -1,4 +1,4 @@
-import { RemoteItem } from 'utils/storeUtils';
+import { RemoteItem, RemoteList } from 'utils/storeUtils';
 
 export interface IFuture<DataType> {
   data: DataType | null;
@@ -76,5 +76,20 @@ export class RemoteItemFuture<DataType>
 {
   constructor(item: RemoteItem<DataType>) {
     super(item.data, item.error, item.isLoading);
+  }
+}
+
+export class RemoteListFuture<DataType>
+  extends FutureBase<DataType[]>
+  implements IFuture<DataType[]>
+{
+  constructor(list: RemoteList<DataType>) {
+    super(
+      list.items
+        .filter((item) => item.data != null)
+        .map((item) => item.data) as DataType[],
+      list.error,
+      list.isLoading
+    );
   }
 }

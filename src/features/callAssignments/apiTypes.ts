@@ -1,4 +1,12 @@
-import { ZetkinQuery } from 'utils/types/zetkin';
+import { ZetkinQuery, ZetkinTag } from 'utils/types/zetkin';
+
+export interface CallAssignmentCaller {
+  id: number;
+  first_name: string;
+  last_name: string;
+  prioritized_tags: ZetkinTag[];
+  excluded_tags: ZetkinTag[];
+}
 
 export interface CallAssignmentData {
   cooldown: number;
