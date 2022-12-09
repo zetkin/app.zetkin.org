@@ -8,10 +8,8 @@ export default {
 } as ComponentMeta<typeof ZUIDateRangePicker>;
 
 const Template: ComponentStory<typeof ZUIDateRangePicker> = () => (
-  <ZUIDateRangePicker />
+  <ZUIDateRangePicker endDate={null} startDate={null} />
 );
 
 export const basic = Template.bind({});
-basic.args = {
-  datetime: new Date().toISOString(),
-};
+basic.args = {};

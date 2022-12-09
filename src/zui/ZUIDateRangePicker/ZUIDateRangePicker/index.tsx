@@ -32,13 +32,30 @@ const rangeStr = (intl: IntlShape, values: DateRange<Dayjs>): string => {
   }
 };
 
-const ZUIDateRangePicker: FC = () => {
+interface ZUIDateRangePickerProps {
+  endDate: string | null;
+  onChange?: (startDate: string | null, endDate: string | null) => void;
+  startDate: string | null;
+}
+
+const ZUIDateRangePicker: FC<ZUIDateRangePickerProps> = ({
+  endDate,
+  onChange,
+  startDate,
+}) => {
   const intl = useIntl();
   const [anchorEl, setAnchorEl] = useState<HTMLSpanElement | null>(null);
   const [value, setValue] = useState<DateRange<Dayjs>>([
     dayjs('1857-07-05'),
     dayjs('1933-06-20'),
   ]);
+
+  useEffect(() => {
+    setValue([
+      startDate ? dayjs(startDate) : null,
+      endDate ? dayjs(endDate) : null,
+    ]);
+  }, [endDate, startDate]);
 
   // Calculate duration to use when shifting the entire range,
   // which happens when setting a start date that precedes the
@@ -60,6 +77,12 @@ const ZUIDateRangePicker: FC = () => {
       <ClickAwayListener
         onClickAway={() => {
           setAnchorEl(null);
+          if (onChange) {
+            onChange(
+              start?.format('YYYY-MM-DD') ?? null,
+              end?.format('YYYY-MM-DD') ?? null
+            );
+          }
         }}
       >
         <Popper anchorEl={anchorEl} open={!!anchorEl}>
@@ -74,11 +97,11 @@ const ZUIDateRangePicker: FC = () => {
                 <DateTextField
                   label="Start"
                   onChange={(date) => {
-                    let endDate = value[1];
-                    if (date && endDate?.isBefore(date)) {
-                      endDate = date.add(duration, 'day');
+                    let newEndDate = value[1];
+                    if (date && newEndDate?.isBefore(date)) {
+                      newEndDate = date.add(duration, 'day');
                     }
-                    setValue([date, endDate]);
+                    setValue([date, newEndDate]);
                   }}
                   value={value[0]}
                 />
@@ -87,11 +110,11 @@ const ZUIDateRangePicker: FC = () => {
                 <DateTextField
                   label="End"
                   onChange={(date) => {
-                    let startDate = value[0];
-                    if (date && startDate?.isAfter(date)) {
-                      startDate = date?.subtract(duration, 'day');
+                    let newStartDate = value[0];
+                    if (date && newStartDate?.isAfter(date)) {
+                      newStartDate = date?.subtract(duration, 'day');
                     }
-                    setValue([startDate, date]);
+                    setValue([newStartDate, date]);
                   }}
                   value={value[1]}
                 />
