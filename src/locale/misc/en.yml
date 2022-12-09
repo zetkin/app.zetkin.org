@@ -30,6 +30,10 @@ dataTable:
     button: Sort
     hint: 'Hint: hold down {shiftKeyIcon} while clicking multiple columns'
     title: Sort
+dateRange:
+  draft: No start date
+  finite: From {start, date, medium} to {end, date, medium}
+  indefinite: From {start, date, medium} onwards
 email:
   headers:
     cc: CC
