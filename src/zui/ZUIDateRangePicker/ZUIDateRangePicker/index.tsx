@@ -22,6 +22,12 @@ const ZUIDateRangePicker: FC = () => {
     setAnchorEl(elem);
   }, []);
 
+  // Calculate duration to use when shifting the entire range,
+  // which happens when setting a start date that precedes the
+  // end date, and vice versa.
+  const [start, end] = value;
+  const duration = start && end ? end.diff(start, 'day') : 1;
+
   return (
     <>
       <span ref={callback}>Label</span>
@@ -37,7 +43,11 @@ const ZUIDateRangePicker: FC = () => {
               <DateTextField
                 label="Start"
                 onChange={(date) => {
-                  setValue([date, value[1]]);
+                  let endDate = value[1];
+                  if (date && endDate?.isBefore(date)) {
+                    endDate = date.add(duration, 'day');
+                  }
+                  setValue([date, endDate]);
                 }}
                 value={value[0]}
               />
@@ -46,7 +56,11 @@ const ZUIDateRangePicker: FC = () => {
               <DateTextField
                 label="End"
                 onChange={(date) => {
-                  setValue([value[0], date]);
+                  let startDate = value[0];
+                  if (date && startDate?.isAfter(date)) {
+                    startDate = date?.subtract(duration, 'day');
+                  }
+                  setValue([startDate, date]);
                 }}
                 value={value[1]}
               />
