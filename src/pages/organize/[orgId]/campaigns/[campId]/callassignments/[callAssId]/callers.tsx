@@ -1,44 +1,22 @@
 import { Close } from '@material-ui/icons';
 import { GetServerSideProps } from 'next';
 import {
-  Avatar,
   Box,
   Fade,
   IconButton,
-  makeStyles,
   Paper,
   TextField,
-  Tooltip,
   Typography,
 } from '@material-ui/core';
-import { DataGridPro, GridColDef, GridRowData } from '@mui/x-data-grid-pro';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
 import { useEffect, useState } from 'react';
 
+import CallAssignmentCallersList from 'features/callAssignments/components/CallAssignmentCallersList';
 import CallAssignmentLayout from 'features/callAssignments/layout/CallAssignmentLayout';
 import CallAssignmentModel from 'features/callAssignments/models/CallAssignmentModel';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
-import TagChip from 'features/tags/components/TagManager/components/TagChip';
 import useModel from 'core/useModel';
-import { ZetkinTag } from 'utils/types/zetkin';
-import ZUIResponsiveContainer from 'zui/ZUIResponsiveContainer';
-
-const useStyles = makeStyles((theme) => ({
-  chip: {
-    borderColor: theme.palette.grey[500],
-    borderRadius: '1em',
-    borderWidth: '1px',
-    color: theme.palette.text.secondary,
-    cursor: 'default',
-    display: 'flex',
-    lineHeight: 'normal',
-    marginRight: '0.1em',
-    overflow: 'hidden',
-    padding: '0.2em 0.7em',
-    textOverflow: 'ellipsis',
-  },
-}));
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   async (ctx) => {
@@ -68,37 +46,6 @@ interface AssignmentPageProps {
   orgId: string;
 }
 
-const TagsCell = ({ tags }: { tags: ZetkinTag[] }) => {
-  const classes = useStyles();
-
-  return (
-    <ZUIResponsiveContainer ssrWidth={200}>
-      {(width) => {
-        const maxTags = Math.floor(width / 100);
-        const displayedTags = tags.slice(0, maxTags);
-        const hiddenTags = tags.slice(maxTags);
-
-        const tooltipTitle = hiddenTags.map((tag) => tag.title).join(', ');
-
-        return (
-          <Box alignItems="center" display="flex" width="100%">
-            {displayedTags.map((tag) => (
-              <TagChip key={tag.id} tag={tag} />
-            ))}
-            {hiddenTags.length > 0 && (
-              <Tooltip title={tooltipTitle}>
-                <Box border={2} className={classes.chip}>
-                  {`${displayedTags.length > 0 ? '+' : ''}${hiddenTags.length}`}
-                </Box>
-              </Tooltip>
-            )}
-          </Box>
-        );
-      }}
-    </ZUIResponsiveContainer>
-  );
-};
-
 const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
   orgId,
   assignmentId,
@@ -120,56 +67,7 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
     return null;
   }
 
-  // Columns
-  const columns: GridColDef[] = [
-    {
-      disableColumnMenu: true,
-      field: 'id',
-      headerName: ' ',
-      renderCell: (params) => (
-        <Avatar src={`/api/orgs/${orgId}/people/${params.id}/avatar`} />
-      ),
-      sortable: false,
-    },
-    {
-      field: 'name',
-      flex: 1,
-      headerName: intl.formatMessage({
-        id: 'pages.organizeCallAssignment.callers.nameColumn',
-      }),
-    },
-    {
-      field: 'prioritizedTags',
-      flex: 1,
-      headerName: intl.formatMessage({
-        id: 'pages.organizeCallAssignment.callers.prioritizedTagsColumn',
-      }),
-      renderCell: (props) => {
-        return <TagsCell tags={props.row.prioritizedTags} />;
-      },
-    },
-    {
-      field: 'excludedTags',
-      flex: 1,
-      headerName: intl.formatMessage({
-        id: 'pages.organizeCallAssignment.callers.excludedTagsColumn',
-      }),
-      renderCell: (props) => {
-        return <TagsCell tags={props.row.excludedTags} />;
-      },
-    },
-  ];
-
-  //Rows
   const future = model.getFilteredCallers(searchString);
-
-  const rows: GridRowData[] =
-    future.data?.map((caller) => ({
-      excludedTags: caller.excluded_tags,
-      id: caller.id,
-      name: `${caller.first_name} ${caller.last_name}`,
-      prioritizedTags: caller.prioritized_tags,
-    })) ?? [];
 
   return (
     <Box>
@@ -199,16 +97,7 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
               variant="outlined"
             />
           </Box>
-          <DataGridPro
-            autoHeight
-            columns={columns}
-            disableColumnReorder
-            disableColumnResize
-            rows={rows}
-            style={{
-              border: 'none',
-            }}
-          />
+          <CallAssignmentCallersList callers={future.data || []} />
         </Box>
       </Paper>
     </Box>
