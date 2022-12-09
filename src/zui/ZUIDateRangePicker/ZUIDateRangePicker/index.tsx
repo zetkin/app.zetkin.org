@@ -1,9 +1,11 @@
 import { Clear } from '@mui/icons-material';
+import { makeStyles } from '@mui/styles';
 import {
   Box,
   ClickAwayListener,
   IconButton,
   InputAdornment,
+  lighten,
   Paper,
   Popper,
   TextField,
@@ -38,6 +40,17 @@ interface ZUIDateRangePickerProps {
   startDate: string | null;
 }
 
+const useStyles = makeStyles((theme) => ({
+  label: {
+    '&:hover': {
+      borderBottomColor: lighten(theme.palette.primary.main, 0.65),
+      borderBottomStyle: 'dotted',
+      borderBottomWidth: 2,
+    },
+    cursor: 'pointer',
+  },
+}));
+
 const ZUIDateRangePicker: FC<ZUIDateRangePickerProps> = ({
   endDate,
   onChange,
@@ -49,6 +62,8 @@ const ZUIDateRangePicker: FC<ZUIDateRangePickerProps> = ({
     dayjs('1857-07-05'),
     dayjs('1933-06-20'),
   ]);
+
+  const classes = useStyles();
 
   useEffect(() => {
     setValue([
@@ -66,6 +81,7 @@ const ZUIDateRangePicker: FC<ZUIDateRangePickerProps> = ({
   return (
     <>
       <Typography
+        className={classes.label}
         component="span"
         onClick={(ev: MouseEvent<HTMLSpanElement>) => {
           ev.stopPropagation();
