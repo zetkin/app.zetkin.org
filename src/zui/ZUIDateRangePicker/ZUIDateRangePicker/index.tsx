@@ -1,4 +1,3 @@
-import { Clear } from '@mui/icons-material';
 import { makeStyles } from '@mui/styles';
 import {
   Box,
@@ -11,6 +10,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
+import { CalendarToday, Clear } from '@mui/icons-material';
 import { DateRange, StaticDateRangePicker } from '@mui/x-date-pickers-pro';
 import dayjs, { Dayjs } from 'dayjs';
 import { IntlShape, useIntl } from 'react-intl';
@@ -80,16 +80,20 @@ const ZUIDateRangePicker: FC<ZUIDateRangePickerProps> = ({
 
   return (
     <>
-      <Typography
-        className={classes.label}
-        component="span"
-        onClick={(ev: MouseEvent<HTMLSpanElement>) => {
-          ev.stopPropagation();
-          setAnchorEl(ev.currentTarget);
-        }}
-      >
-        {rangeStr(intl, value)}
-      </Typography>
+      <Box alignItems="center" className={classes.label} display="flex">
+        <CalendarToday />
+
+        <Typography
+          component="span"
+          marginLeft={1}
+          onClick={(ev: MouseEvent<HTMLSpanElement>) => {
+            ev.stopPropagation();
+            setAnchorEl(ev.currentTarget);
+          }}
+        >
+          {rangeStr(intl, value)}
+        </Typography>
+      </Box>
       <ClickAwayListener
         onClickAway={() => {
           setAnchorEl(null);
