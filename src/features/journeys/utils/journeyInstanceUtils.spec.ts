@@ -59,7 +59,7 @@ describe('journeyInstanceUtils', () => {
 
       // There should be only one tag in unsorted
       const unsortedTags = (columns[1] as JourneyUnsortedTagsColumn).tagsGetter(
-        instance
+        instance.tags
       );
       expect(unsortedTags.map((tag) => tag.id)).toEqual([2]);
     });

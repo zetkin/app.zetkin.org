@@ -108,7 +108,7 @@ export default async function handler(
           return column.valueGetter(instance);
         } else {
           return column
-            .tagsGetter(instance)
+            .tagsGetter(instance.tags)
             .map((tag) => tag.title)
             .join(', ');
         }

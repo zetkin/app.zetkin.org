@@ -4,6 +4,7 @@ import {
   GridCellValue,
   GridColDef,
   GridFilterItem,
+  GridRenderCellParams,
   GridValueFormatterParams,
 } from '@mui/x-data-grid-pro';
 
@@ -22,12 +23,14 @@ const has = (
   col: JourneyTagGroupColumn | JourneyUnsortedTagsColumn,
   item: GridFilterItem
 ) => {
-  return (params: GridCellParams) => {
+  return (
+    params: GridCellParams<ZetkinJourneyInstance['tags'], ZetkinJourneyInstance>
+  ) => {
     if (!item.value) {
       return true;
     }
 
-    const tags = col.tagsGetter(params.row as ZetkinJourneyInstance);
+    const tags = col.tagsGetter(params.row.tags);
 
     return !!tags.find((tag) => {
       return tag.id.toString() === item.value;
@@ -39,12 +42,14 @@ const doesNotHave = (
   col: JourneyTagGroupColumn | JourneyUnsortedTagsColumn,
   item: GridFilterItem
 ) => {
-  return (params: GridCellParams) => {
+  return (
+    params: GridCellParams<ZetkinJourneyInstance['tags'], ZetkinJourneyInstance>
+  ) => {
     if (!item.value) {
       return true;
     }
 
-    const tags = col.tagsGetter(params.row as ZetkinJourneyInstance);
+    const tags = col.tagsGetter(params.row.tags);
 
     return !!tags.find((tag) => {
       return tag.id.toString() !== item.value;
@@ -53,8 +58,10 @@ const doesNotHave = (
 };
 
 const isEmpty = (col: JourneyTagGroupColumn | JourneyUnsortedTagsColumn) => {
-  return (params: GridCellParams) => {
-    const tags = col.tagsGetter(params.row as ZetkinJourneyInstance);
+  return (
+    params: GridCellParams<ZetkinJourneyInstance['tags'], ZetkinJourneyInstance>
+  ) => {
+    const tags = col.tagsGetter(params.row.tags);
 
     return tags.length === 0;
   };
@@ -96,7 +103,7 @@ const getTagColumns = (
     if (col.type == JourneyTagColumnType.TAG_GROUP) {
       const tagsById: Record<string, ZetkinTag> = {};
       journeyInstances
-        .flatMap((instance) => col.tagsGetter(instance))
+        .flatMap((instance) => col.tagsGetter(instance.tags))
         .forEach((tag) => (tagsById[tag.id.toString()] = tag));
       const uniqueTags = Object.values(tagsById).sort((t0, t1) =>
         t0.title.localeCompare(t1.title)
@@ -138,16 +145,16 @@ const getTagColumns = (
           },
         ],
         headerName: col.group.title,
-        renderCell: (params) => {
+        renderCell: (params: GridRenderCellParams<ZetkinJourneyInstance>) => {
           return col
-            .tagsGetter(params.row as ZetkinJourneyInstance)
+            .tagsGetter(params.row.tags)
             .map((tag) => (
               <TagChip key={tag.id} size="small" tag={tag as ZetkinTag} />
             ));
         },
         sortComparator: (value0, value1) => sortByTagName(value0, value1),
         valueFormatter: (
-          params: GridValueFormatterParams<ZetkinJourneyInstance>
+          params: GridValueFormatterParams<ZetkinJourneyInstance['tags']>
         ) =>
           col
             .tagsGetter(params.value)
@@ -155,7 +162,7 @@ const getTagColumns = (
             .join(', '),
         valueGetter: (params) => {
           const instance = params.row as ZetkinJourneyInstance;
-          return col.tagsGetter(instance);
+          return col.tagsGetter(instance.tags);
         },
       });
     } else if (col.type == JourneyTagColumnType.VALUE_TAG) {
@@ -168,7 +175,7 @@ const getTagColumns = (
     } else if (col.type == JourneyTagColumnType.UNSORTED) {
       const tagsById: Record<string, ZetkinTag> = {};
       journeyInstances
-        .flatMap((instance) => col.tagsGetter(instance))
+        .flatMap((instance) => col.tagsGetter(instance.tags))
         .forEach((tag) => (tagsById[tag.id.toString()] = tag));
       const uniqueTags = Object.values(tagsById).sort((t0, t1) =>
         t0.title.localeCompare(t1.title)
@@ -209,9 +216,9 @@ const getTagColumns = (
             value: 'isEmpty',
           },
         ],
-        renderCell: (params) =>
+        renderCell: (params: GridRenderCellParams<ZetkinJourneyInstance>) =>
           col
-            .tagsGetter(params.row as ZetkinJourneyInstance)
+            .tagsGetter(params.row.tags)
             .map((tag) => (
               <TagChip key={tag.id} size="small" tag={tag as ZetkinTag} />
             )),
@@ -224,7 +231,7 @@ const getTagColumns = (
         ),
         sortComparator: (value0, value1) => sortByTagName(value0, value1),
         valueFormatter: (
-          params: GridValueFormatterParams<ZetkinJourneyInstance>
+          params: GridValueFormatterParams<ZetkinJourneyInstance['tags']>
         ) =>
           col
             .tagsGetter(params.value)
@@ -232,7 +239,7 @@ const getTagColumns = (
             .join(', '),
         valueGetter: (params) => {
           const instance = params.row as ZetkinJourneyInstance;
-          return col.tagsGetter(instance);
+          return col.tagsGetter(instance.tags);
         },
       });
     }

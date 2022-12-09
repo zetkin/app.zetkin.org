@@ -27,11 +27,11 @@ export interface JourneyUnsortedTagsColumnData {
 }
 
 export type JourneyUnsortedTagsColumn = JourneyUnsortedTagsColumnData & {
-  tagsGetter: (instance: Pick<ZetkinJourneyInstance, 'tags'>) => ZetkinTag[];
+  tagsGetter: (allTags: ZetkinJourneyInstance['tags']) => ZetkinTag[];
 };
 
 export type JourneyTagGroupColumn = JourneyTagGroupColumnData & {
-  tagsGetter: (instance: Pick<ZetkinJourneyInstance, 'tags'>) => ZetkinTag[];
+  tagsGetter: (allTags: ZetkinJourneyInstance['tags']) => ZetkinTag[];
 };
 
 export type JourneyValueTagColumn = JourneyValueTagColumnData & {
@@ -56,16 +56,16 @@ export function makeJourneyTagColumn(
   if (colData.type == JourneyTagColumnType.TAG_GROUP) {
     return {
       ...colData,
-      tagsGetter: (instance: Pick<ZetkinJourneyInstance, 'tags'>) =>
-        instance.tags.filter(
+      tagsGetter: (allTags: ZetkinJourneyInstance['tags']) =>
+        allTags.filter(
           (tag) => tag.group?.id == colData.group.id && !tag.value_type
         ),
     };
   } else if (colData.type == JourneyTagColumnType.UNSORTED) {
     return {
       ...colData,
-      tagsGetter: (instance: Pick<ZetkinJourneyInstance, 'tags'>) =>
-        instance.tags.filter((tag) => !tag.group && !tag.value_type),
+      tagsGetter: (allTags: ZetkinJourneyInstance['tags']) =>
+        allTags.filter((tag) => !tag.group && !tag.value_type),
     };
   } else {
     // Must be VALUE_TAG

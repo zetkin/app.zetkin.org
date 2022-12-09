@@ -128,12 +128,14 @@ const JourneyMilestoneCard = ({
                 patchMilestoneStatus({ deadline: null });
               }
             }}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                data-testid="JourneyMilestoneCard-datePicker"
-              />
-            )}
+            renderInput={(params) => {
+              return (
+                <TextField
+                  {...params}
+                  data-testid="JourneyMilestoneCard-datePicker"
+                />
+              );
+            }}
             value={dayjs(milestone.deadline)}
           />
         )}
