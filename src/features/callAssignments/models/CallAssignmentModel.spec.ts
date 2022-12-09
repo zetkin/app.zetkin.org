@@ -43,7 +43,9 @@ describe('CallAssignmentModel', () => {
           assignmentList: mockList<CallAssignmentData>([
             {
               cooldown: 3,
+              end_date: null,
               id: 2,
+              start_date: null,
               target: {
                 filter_spec: [],
                 id: 101,
@@ -69,7 +71,9 @@ describe('CallAssignmentModel', () => {
           assignmentList: mockList<CallAssignmentData>([
             {
               cooldown: 3,
+              end_date: null,
               id: 2,
+              start_date: null,
               target: {
                 filter_spec: [
                   {
@@ -97,8 +101,8 @@ describe('CallAssignmentModel', () => {
 
   describe('state', () => {
     const mockStoreData = (
-      startDate?: string,
-      endDate?: string,
+      startDate: string | null = null,
+      endDate: string | null = null,
       mostRecentCallTime: string | null = null
     ) => ({
       callAssignments: {
@@ -245,7 +249,9 @@ describe('CallAssignmentModel', () => {
           assignmentList: mockList<CallAssignmentData>([
             {
               cooldown: 3,
+              end_date: null,
               id: 2,
+              start_date: null,
               target: {
                 filter_spec: [],
                 id: 101,
@@ -276,7 +282,9 @@ describe('CallAssignmentModel', () => {
           assignmentList: mockList<CallAssignmentData>([
             {
               cooldown: 3,
+              end_date: null,
               id: 2,
+              start_date: null,
               target: {
                 filter_spec: [
                   {
@@ -340,7 +348,9 @@ describe('CallAssignmentModel', () => {
           assignmentList: mockList<CallAssignmentData>([
             {
               cooldown: 3,
+              end_date: null,
               id: 2,
+              start_date: null,
               target: {
                 filter_spec: [
                   {
