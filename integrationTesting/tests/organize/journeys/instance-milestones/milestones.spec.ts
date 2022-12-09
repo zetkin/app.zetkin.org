@@ -136,20 +136,12 @@ test.describe('Journey instance page Milestones tab', () => {
 
     await page.goto(appUri + '/organize/1/journeys/1/1/milestones');
 
-    //Click datepicker in first JourneyMilestoneCard
-    await page
-      .locator(
-        '[data-testid=JourneyMilestoneCard] [data-testid=JourneyMilestoneCard-datePicker]'
-      )
-      .first()
-      .click();
-
     await Promise.all([
       page.waitForResponse(
         `**/orgs/${KPD.id}/journey_instances/${ClarasOnboarding.id}/milestones/${AttendMeeting.id}`
       ),
       //Click "clear"-button
-      page.locator('text=clear').click(),
+      page.locator('[aria-label="Clear"]').first().click(),
     ]);
 
     //Expect deadline to be set to null
