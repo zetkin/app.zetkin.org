@@ -1,11 +1,14 @@
-import { Box } from '@mui/material';
+import { useIntl } from 'react-intl';
+import { Box, Button } from '@mui/material';
 
-import CallAssignmentModel from '../models/CallAssignmentModel';
 import CallAssignmentStatusChip from '../components/CallAssignmentStatusChip';
 import TabbedLayout from '../../../utils/layout/TabbedLayout';
 import useModel from 'core/useModel';
 import ZUIDateRangePicker from 'zui/ZUIDateRangePicker/ZUIDateRangePicker';
 import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
+import CallAssignmentModel, {
+  CallAssignmentState,
+} from '../models/CallAssignmentModel';
 
 interface CallAssignmentLayoutProps {
   children: React.ReactNode;
@@ -20,6 +23,7 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
   campaignId,
   assignmentId,
 }) => {
+  const intl = useIntl();
   const model = useModel(
     (env) =>
       new CallAssignmentModel(env, parseInt(orgId), parseInt(assignmentId))
@@ -33,6 +37,22 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
 
   return (
     <TabbedLayout
+      actionButtons={
+        model.state == CallAssignmentState.OPEN ||
+        model.state == CallAssignmentState.ACTIVE ? (
+          <Button onClick={() => model.end()} variant="contained">
+            {intl.formatMessage({
+              id: 'layout.organize.callAssignment.actions.end',
+            })}
+          </Button>
+        ) : (
+          <Button onClick={() => model.start()} variant="contained">
+            {intl.formatMessage({
+              id: 'layout.organize.callAssignment.actions.start',
+            })}
+          </Button>
+        )
+      }
       baseHref={`/organize/${orgId}/campaigns/${campaignId}/callassignments/${assignmentId}`}
       defaultTab="/"
       subtitle={

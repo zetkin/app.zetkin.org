@@ -1,4 +1,7 @@
 callAssignment:
+  actions:
+    end: End assignment
+    start: Start assignment
   tabs:
     callers: Callers
     insights: Insights
