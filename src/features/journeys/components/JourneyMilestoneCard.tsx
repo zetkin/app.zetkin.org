@@ -122,6 +122,7 @@ const JourneyMilestoneCard = ({
             )}
           </Box>
         ) : (
+          // TODO: Move this to new ZUIDatePicker
           <DatePicker
             data-testid="JourneyMilestoneCard-datePicker"
             label={intl.formatMessage({
