@@ -120,6 +120,6 @@ test.describe('Tag manager', () => {
     await page.click('text=Activist');
 
     // Show error
-    expect(await page.locator('data-testid=Snackbar-error').count()).toEqual(1);
+    await page.locator('data-testid=Snackbar-error').waitFor();
   });
 });
