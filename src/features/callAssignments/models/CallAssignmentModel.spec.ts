@@ -4,7 +4,11 @@ import createStore from 'core/store';
 import Environment from 'core/env/Environment';
 import { FILTER_TYPE } from 'features/smartSearch/components/types';
 import IApiClient from 'core/api/client/IApiClient';
-import { CallAssignmentData, CallAssignmentStats } from '../apiTypes';
+import {
+  CallAssignmentCaller,
+  CallAssignmentData,
+  CallAssignmentStats,
+} from '../apiTypes';
 import CallAssignmentModel, {
   CallAssignmentState,
 } from './CallAssignmentModel';
@@ -47,6 +51,7 @@ describe('CallAssignmentModel', () => {
               title: 'My assignment',
             },
           ]),
+          callersById: {},
           statsById: {},
         },
       });
@@ -77,6 +82,7 @@ describe('CallAssignmentModel', () => {
               title: 'My assignment',
             },
           ]),
+          callersById: {},
           statsById: {},
         },
       });
@@ -109,6 +115,7 @@ describe('CallAssignmentModel', () => {
             title: 'My assignment',
           },
         ]),
+        callersById: {},
         statsById: {
           2: mockItem({
             allTargets: 100,
@@ -136,6 +143,7 @@ describe('CallAssignmentModel', () => {
       const store = createStore({
         callAssignments: {
           assignmentList: mockList(),
+          callersById: {},
           statsById: {},
         },
       });
@@ -245,6 +253,7 @@ describe('CallAssignmentModel', () => {
               title: 'My assignment',
             },
           ]),
+          callersById: {},
           statsById: {},
         },
       });
@@ -280,6 +289,7 @@ describe('CallAssignmentModel', () => {
               title: 'My assignment',
             },
           ]),
+          callersById: {},
           statsById: {},
         },
       });
@@ -343,6 +353,7 @@ describe('CallAssignmentModel', () => {
               title: 'My assignment',
             },
           ]),
+          callersById: {},
           statsById: {
             2: mockItem({
               allTargets: 100,
@@ -385,6 +396,143 @@ describe('CallAssignmentModel', () => {
       });
       expect(future.isLoading).toBeFalsy();
       expect(future.error).toBeNull();
+    });
+  });
+
+  describe('getFilteredCallers', () => {
+    it('returns all callers if the search string is empty', () => {
+      const store = createStore({
+        callAssignments: {
+          assignmentList: mockList(),
+          callersById: {
+            2: mockList<CallAssignmentCaller>([
+              {
+                excluded_tags: [],
+                first_name: 'Rosa',
+                id: 3,
+                last_name: 'Luxemburg',
+                prioritized_tags: [],
+              },
+            ]),
+          },
+          statsById: {},
+        },
+      });
+
+      const apiClient = instance(mockClient);
+
+      const env = new Environment(store, apiClient);
+      const model = new CallAssignmentModel(env, 1, 2);
+
+      const future = model.getFilteredCallers('');
+
+      expect(future.data).toEqual([
+        {
+          excluded_tags: [],
+          first_name: 'Rosa',
+          id: 3,
+          last_name: 'Luxemburg',
+          prioritized_tags: [],
+        },
+      ]);
+    });
+    it('returns callers that matches the search string', () => {
+      const store = createStore({
+        callAssignments: {
+          assignmentList: mockList(),
+          callersById: {
+            2: mockList<CallAssignmentCaller>([
+              {
+                excluded_tags: [],
+                first_name: 'Rosa',
+                id: 3,
+                last_name: 'Luxemburg',
+                prioritized_tags: [],
+              },
+              {
+                excluded_tags: [],
+                first_name: 'Angela',
+                id: 4,
+                last_name: 'Davis',
+                prioritized_tags: [],
+              },
+            ]),
+          },
+          statsById: {},
+        },
+      });
+
+      const apiClient = instance(mockClient);
+
+      const env = new Environment(store, apiClient);
+      const model = new CallAssignmentModel(env, 1, 2);
+
+      const future = model.getFilteredCallers('rosa');
+
+      expect(future.data).toEqual([
+        {
+          excluded_tags: [],
+          first_name: 'Rosa',
+          id: 3,
+          last_name: 'Luxemburg',
+          prioritized_tags: [],
+        },
+      ]);
+    });
+    it('returns future with no data if no caller matches the search string', () => {
+      const store = createStore({
+        callAssignments: {
+          assignmentList: mockList(),
+          callersById: {
+            2: mockList<CallAssignmentCaller>([
+              {
+                excluded_tags: [],
+                first_name: 'Rosa',
+                id: 3,
+                last_name: 'Luxemburg',
+                prioritized_tags: [],
+              },
+              {
+                excluded_tags: [],
+                first_name: 'Angela',
+                id: 4,
+                last_name: 'Davis',
+                prioritized_tags: [],
+              },
+            ]),
+          },
+          statsById: {},
+        },
+      });
+
+      const apiClient = instance(mockClient);
+
+      const env = new Environment(store, apiClient);
+      const model = new CallAssignmentModel(env, 1, 2);
+
+      const future = model.getFilteredCallers('boris');
+
+      expect(future.data).toEqual([]);
+    });
+    it('returns future with no data if there are no callers but a search string', () => {
+      const store = createStore({
+        callAssignments: {
+          assignmentList: mockList(),
+          callersById: {
+            2: mockList<CallAssignmentCaller>([]),
+          },
+          statsById: {},
+        },
+      });
+
+      const apiClient = instance(mockClient);
+
+      const env = new Environment(store, apiClient);
+      const model = new CallAssignmentModel(env, 1, 2);
+
+      const future = model.getFilteredCallers('rosa');
+
+      expect(future.data).toEqual([]);
     });
   });
 });

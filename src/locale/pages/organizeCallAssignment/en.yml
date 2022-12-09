@@ -8,6 +8,12 @@ blocked:
   organizerActionNeeded: Organizer action needed
   subtitle: Targets not ready to be called
   title: Blocked
+callers:
+  excludedTagsColumn: Excluded tags
+  nameColumn: Name
+  prioritizedTagsColumn: Prioritized tags
+  searchBox: Search
+  title: Callers
 done:
   subtitle: Targets that meet the done criteria
   title: Done

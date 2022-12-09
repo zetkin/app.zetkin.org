@@ -2,15 +2,26 @@ import Environment from 'core/env/Environment';
 import IApiClient from 'core/api/client/IApiClient';
 import shouldLoad from 'core/caching/shouldLoad';
 import { Store } from 'core/store';
-import { CallAssignmentData, CallAssignmentStats } from '../apiTypes';
+import {
+  CallAssignmentCaller,
+  CallAssignmentData,
+  CallAssignmentStats,
+} from '../apiTypes';
 import {
   callAssignmentLoad,
   callAssignmentLoaded,
   callAssignmentUpdated,
+  callersLoad,
+  callersLoaded,
   statsLoad,
   statsLoaded,
 } from '../store';
-import { IFuture, PromiseFuture, RemoteItemFuture } from 'core/caching/futures';
+import {
+  IFuture,
+  PromiseFuture,
+  RemoteItemFuture,
+  RemoteListFuture,
+} from 'core/caching/futures';
 
 export default class CallAssignmentsRepo {
   private _apiClient: IApiClient;
@@ -40,6 +51,28 @@ export default class CallAssignmentsRepo {
     } else {
       return new RemoteItemFuture(caItem);
     }
+  }
+
+  getCallAssignmentCallers(
+    orgId: number,
+    id: number
+  ): IFuture<CallAssignmentCaller[]> {
+    const state = this._store.getState();
+    const callersList = state.callAssignments.callersById[id];
+
+    if (callersList) {
+      return new RemoteListFuture(callersList);
+    }
+
+    this._store.dispatch(callersLoad(id));
+    const promise = fetch(`/api/orgs/${orgId}/call_assignments/${id}/callers`)
+      .then((res) => res.json())
+      .then((data: { data: CallAssignmentCaller[] }) => {
+        this._store.dispatch(callersLoaded({ callers: data.data, id }));
+        return data.data;
+      });
+
+    return new PromiseFuture(promise);
   }
 
   getCallAssignmentStats(

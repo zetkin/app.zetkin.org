@@ -1,8 +1,14 @@
+import Fuse from 'fuse.js';
+
 import CallAssignmentsRepo from '../repos/CallAssignmentsRepo';
 import Environment from 'core/env/Environment';
 import { Store } from 'core/store';
 import { ZetkinQuery } from 'utils/types/zetkin';
-import { CallAssignmentData, CallAssignmentStats } from '../apiTypes';
+import {
+  CallAssignmentCaller,
+  CallAssignmentData,
+  CallAssignmentStats,
+} from '../apiTypes';
 import { callAssignmentLoad, callAssignmentUpdated } from '../store';
 import {
   IFuture,
@@ -36,6 +42,26 @@ export default class CallAssignmentModel {
 
   getData(): IFuture<CallAssignmentData> {
     return this._repo.getCallAssignment(this._orgId, this._id);
+  }
+
+  getFilteredCallers(searchString: string): IFuture<CallAssignmentCaller[]> {
+    const callers = this._repo.getCallAssignmentCallers(this._orgId, this._id);
+
+    if (callers.data && searchString) {
+      const fuse = new Fuse(callers.data, {
+        includeScore: true,
+        keys: ['first_name', 'last_name'],
+        threshold: 0.4,
+      });
+
+      const filteredCallers = fuse
+        .search(searchString)
+        .map((fuseResult) => fuseResult.item);
+
+      return new ResolvedFuture(filteredCallers);
+    }
+
+    return new ResolvedFuture(callers.data || []);
   }
 
   getStats(): IFuture<CallAssignmentStats | null> {
