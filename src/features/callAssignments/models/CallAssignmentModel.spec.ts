@@ -1,9 +1,11 @@
-import { anything, instance, mock, reset, when } from 'ts-mockito';
+import dayjs from 'dayjs';
+import { anything, capture, instance, mock, reset, when } from 'ts-mockito';
 
 import createStore from 'core/store';
 import Environment from 'core/env/Environment';
 import { FILTER_TYPE } from 'features/smartSearch/components/types';
 import IApiClient from 'core/api/client/IApiClient';
+import { ZetkinCallAssignment } from 'utils/types/zetkin';
 import {
   CallAssignmentCaller,
   CallAssignmentData,
@@ -409,7 +411,7 @@ describe('CallAssignmentModel', () => {
     });
   });
 
-  describe('getFilteredCallers', () => {
+  describe('getFilteredCallers()', () => {
     it('returns all callers if the search string is empty', () => {
       const store = createStore({
         callAssignments: {
@@ -446,6 +448,7 @@ describe('CallAssignmentModel', () => {
         },
       ]);
     });
+
     it('returns callers that matches the search string', () => {
       const store = createStore({
         callAssignments: {
@@ -489,6 +492,7 @@ describe('CallAssignmentModel', () => {
         },
       ]);
     });
+
     it('returns future with no data if no caller matches the search string', () => {
       const store = createStore({
         callAssignments: {
@@ -524,6 +528,7 @@ describe('CallAssignmentModel', () => {
 
       expect(future.data).toEqual([]);
     });
+
     it('returns future with no data if there are no callers but a search string', () => {
       const store = createStore({
         callAssignments: {
@@ -543,6 +548,133 @@ describe('CallAssignmentModel', () => {
       const future = model.getFilteredCallers('rosa');
 
       expect(future.data).toEqual([]);
+    });
+  });
+
+  describe('start()', () => {
+    const mockStoreData = (
+      startDate: string | null = null,
+      endDate: string | null = null
+    ) => ({
+      callAssignments: {
+        assignmentList: mockList<CallAssignmentData>([
+          {
+            cooldown: 3,
+            end_date: endDate,
+            id: 2,
+            start_date: startDate,
+            target: {
+              filter_spec: [{ config: {}, type: FILTER_TYPE.ALL }],
+              id: 101,
+            },
+            title: 'My assignment',
+          },
+        ]),
+        callersById: {},
+        statsById: {},
+      },
+    });
+
+    const pastDate = (days = 1) =>
+      dayjs().subtract(days, 'day').format('YYYY-MM-DD');
+    const futureDate = (days = 1) =>
+      dayjs().add(days, 'day').format('YYYY-MM-DD');
+    const today = dayjs().format('YYYY-MM-DD');
+
+    beforeEach(() => {
+      when(mockClient.patch(anything(), anything())).thenResolve({});
+    });
+
+    it.each([
+      [pastDate(3), pastDate(1), { end_date: null }],
+      [pastDate(3), today, { end_date: null }],
+      [futureDate(1), futureDate(3), { start_date: today }],
+      [futureDate(1), null, { start_date: today }],
+      [null, pastDate(1), { end_date: null, start_date: today }],
+      [null, futureDate(1), { start_date: today }],
+      [null, null, { start_date: today }],
+    ])(
+      'updates correctly when start is %p, end is %p',
+      (startDate, endDate, expectedData) => {
+        const store = createStore(mockStoreData(startDate, endDate));
+        const apiClient = instance(mockClient);
+        const env = new Environment(store, apiClient);
+        const model = new CallAssignmentModel(env, 1, 2);
+        model.start();
+
+        const [url, data] = capture<string, Partial<ZetkinCallAssignment>>(
+          mockClient.patch
+        ).last();
+        expect(url).toBe('/api/orgs/1/call_assignments/2');
+        expect(data).toEqual(expectedData);
+      }
+    );
+  });
+
+  describe('end()', () => {
+    const mockStoreData = (
+      startDate: string | null = null,
+      endDate: string | null = null
+    ) => ({
+      callAssignments: {
+        assignmentList: mockList<CallAssignmentData>([
+          {
+            cooldown: 3,
+            end_date: endDate,
+            id: 2,
+            start_date: startDate,
+            target: {
+              filter_spec: [{ config: {}, type: FILTER_TYPE.ALL }],
+              id: 101,
+            },
+            title: 'My assignment',
+          },
+        ]),
+        callersById: {},
+        statsById: {},
+      },
+    });
+
+    const pastDate = (days = 1) =>
+      dayjs().subtract(days, 'day').format('YYYY-MM-DD');
+    const futureDate = (days = 1) =>
+      dayjs().add(days, 'day').format('YYYY-MM-DD');
+    const today = dayjs().format('YYYY-MM-DD');
+
+    beforeEach(() => {
+      when(mockClient.patch(anything(), anything())).thenResolve({});
+    });
+
+    it('sets end date to today when start is past, end is future', () => {
+      const store = createStore(mockStoreData(pastDate(1), futureDate(1)));
+      const apiClient = instance(mockClient);
+      const env = new Environment(store, apiClient);
+      const model = new CallAssignmentModel(env, 1, 2);
+      model.end();
+
+      const [url, data] = capture<string, Partial<ZetkinCallAssignment>>(
+        mockClient.patch
+      ).last();
+      expect(url).toBe('/api/orgs/1/call_assignments/2');
+      expect(data).toEqual({
+        end_date: today,
+      });
+    });
+
+    it('sets end date to today when start is past, end is null', () => {
+      const store = createStore(mockStoreData(null, null));
+      const apiClient = instance(mockClient);
+      const env = new Environment(store, apiClient);
+      const model = new CallAssignmentModel(env, 1, 2);
+      model.end();
+
+      const [url, data] = capture<string, Partial<ZetkinCallAssignment>>(
+        mockClient.patch
+      ).last();
+      expect(url).toBe('/api/orgs/1/call_assignments/2');
+      expect(data).toEqual({
+        end_date: today,
+      });
     });
   });
 });
