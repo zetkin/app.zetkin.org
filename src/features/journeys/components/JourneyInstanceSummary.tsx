@@ -1,6 +1,6 @@
-import { Edit } from '@material-ui/icons';
+import { Edit } from '@mui/icons-material';
 import { useRouter } from 'next/router';
-import { Button, Typography } from '@material-ui/core';
+import { Button, Typography } from '@mui/material';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
 import { useContext, useEffect, useRef, useState } from 'react';
 

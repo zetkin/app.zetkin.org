@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import { Snackbar } from '@material-ui/core';
+import { Snackbar } from '@mui/material';
 import { useIntl } from 'react-intl';
-import { Alert, Color } from '@material-ui/lab';
+import { Alert, AlertColor } from '@mui/material';
 import { createContext, useState } from 'react';
 
 interface ZUISnackbarContextProps {
   isOpen: boolean;
   hideSnackbar: () => void;
-  showSnackbar: (severity: Color, message?: string) => void;
+  showSnackbar: (severity: AlertColor, message?: string) => void;
 }
 
 const ZUISnackbarContext = createContext<ZUISnackbarContextProps>({
@@ -27,7 +27,7 @@ const ZUISnackbarProvider: React.FunctionComponent<SnackbarProviderProps> = ({
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarState, setSnackbarState] = useState<{
     message: string;
-    severity: Color;
+    severity: AlertColor;
   }>();
 
   const showSnackbar: ZUISnackbarContextProps['showSnackbar'] = (

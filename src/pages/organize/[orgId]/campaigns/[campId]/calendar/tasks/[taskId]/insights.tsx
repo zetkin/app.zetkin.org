@@ -3,7 +3,7 @@ import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { ResponsivePie } from '@nivo/pie';
 import { useRouter } from 'next/router';
-import { Box, Typography } from '@material-ui/core';
+import { Box, Typography } from '@mui/material';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
 
 import getOrg from 'utils/fetching/getOrg';

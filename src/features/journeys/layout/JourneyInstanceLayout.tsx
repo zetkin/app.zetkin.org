@@ -1,9 +1,9 @@
-import { Forward } from '@material-ui/icons';
-import ScheduleIcon from '@material-ui/icons/Schedule';
+import { Forward } from '@mui/icons-material';
+import ScheduleIcon from '@mui/icons-material/Schedule';
 import { useContext } from 'react';
 import { useQueryClient } from 'react-query';
 import { useRouter } from 'next/router';
-import { Box, Typography } from '@material-ui/core';
+import { Box, Typography } from '@mui/material';
 import { FormattedDate, FormattedMessage as Msg, useIntl } from 'react-intl';
 
 import JourneyStatusChip from '../components/JourneyStatusChip';

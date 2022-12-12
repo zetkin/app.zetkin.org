@@ -1,7 +1,7 @@
 import { FormattedMessage as Msg } from 'react-intl';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
-import { Box, Card, CardActionArea, Link, Typography } from '@material-ui/core';
+import { Box, Card, CardActionArea, Link, Typography } from '@mui/material';
 
 import { ZetkinJourney } from 'utils/types/zetkin';
 
@@ -34,7 +34,7 @@ const JourneyCard = ({ journey }: JourneyCardProps): JSX.Element => {
               </Typography>
             </Typography>
             <Box mt={3}>
-              <Link variant="button">
+              <Link underline="hover" variant="button">
                 <Msg id="pages.organizeJourneys.cardCTA" />
               </Link>
             </Box>

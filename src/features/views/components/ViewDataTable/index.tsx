@@ -1,10 +1,11 @@
+import { Link } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import NextLink from 'next/link';
 import NProgress from 'nprogress';
 import { useIntl } from 'react-intl';
 import { useRouter } from 'next/router';
 import { DataGridPro, GridColDef, useGridApiRef } from '@mui/x-data-grid-pro';
 import { FunctionComponent, useContext, useState } from 'react';
-import { Link, makeStyles } from '@material-ui/core';
 import { useMutation, useQueryClient } from 'react-query';
 
 import deleteViewColumn from 'features/views/fetching/deleteViewColumn';
@@ -281,6 +282,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
                 maxHeight: '100%',
                 maxWidth: '100%',
               }}
+              underline="hover"
             />
           </NextLink>
         </ZUIPersonHoverCard>

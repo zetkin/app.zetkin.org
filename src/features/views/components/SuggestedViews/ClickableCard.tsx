@@ -1,5 +1,5 @@
 import { ReactEventHandler } from 'react';
-import { Box, Card, CardActionArea } from '@material-ui/core';
+import { Box, Card, CardActionArea } from '@mui/material';
 
 interface ZetkinCardProps {
   children: React.ReactNode;

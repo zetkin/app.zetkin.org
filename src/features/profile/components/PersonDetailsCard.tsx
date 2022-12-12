@@ -1,7 +1,7 @@
 import NextLink from 'next/link';
-import { OpenInNew } from '@material-ui/icons';
+import { OpenInNew } from '@mui/icons-material';
 import { useRouter } from 'next/router';
-import { Button, Card, Link, ListItem, ListItemText } from '@material-ui/core';
+import { Button, Card, Link, ListItem, ListItemText } from '@mui/material';
 import { FormattedMessage, useIntl } from 'react-intl';
 
 import ZUIDate from 'zui/ZUIDate';
@@ -14,7 +14,7 @@ const PersonDetailLink: React.FunctionComponent<{
   href: string;
 }> = ({ children, href }) => (
   <NextLink href={href} passHref>
-    <Link>{children}</Link>
+    <Link underline="hover">{children}</Link>
   </NextLink>
 );
 

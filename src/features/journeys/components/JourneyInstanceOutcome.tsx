@@ -1,5 +1,5 @@
 import { FormattedMessage as Msg } from 'react-intl';
-import { Box, Card, CardContent, Typography } from '@material-ui/core';
+import { Box, Card, CardContent, Typography } from '@mui/material';
 
 import { ZetkinJourneyInstance } from 'utils/types/zetkin';
 

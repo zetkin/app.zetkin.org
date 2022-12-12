@@ -1,4 +1,4 @@
-import { ArrowUpward } from '@material-ui/icons';
+import { ArrowUpward } from '@mui/icons-material';
 import { FormattedMessage } from 'react-intl';
 import { ReactElement } from 'react';
 import {
@@ -6,10 +6,11 @@ import {
   Box,
   Button,
   Collapse,
-  makeStyles,
   Theme,
   Typography,
-} from '@material-ui/core';
+} from '@mui/material';
+
+import makeStyles from '@mui/styles/makeStyles';
 
 import SearchDialog from 'features/search/components/SearchDialog';
 import ZUIBreadcrumbTrail from 'zui/ZUIBreadcrumbTrail';
@@ -44,7 +45,7 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
     gridTemplateRows: 'auto',
     transition: 'font-size 0.2s ease',
     width: '100%',
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       gridTemplateColumns: '1fr',
     },
   },

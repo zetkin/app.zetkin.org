@@ -1,6 +1,6 @@
 /* eslint-disable react/no-danger */
 import DOMPurify from 'isomorphic-dompurify';
-import { Box, BoxProps } from '@material-ui/core';
+import { Box, BoxProps } from '@mui/material';
 
 interface ZUICleanHtmlProps {
   dirtyHtml: string;

@@ -1,5 +1,5 @@
 import NextLink from 'next/link';
-import { Link, Typography } from '@material-ui/core';
+import { Link, Typography } from '@mui/material';
 
 import { ZetkinJourneyInstance } from 'utils/types/zetkin';
 
@@ -26,7 +26,9 @@ const JourneyInstanceTitle: React.FC<JourneyInstanceTitleProps> = ({
         href={`/organize/${instance.organization.id}/journeys/${instance.journey.id}/${instance.id}`}
         passHref
       >
-        <Link color="inherit">{titleElem}</Link>
+        <Link color="inherit" underline="hover">
+          {titleElem}
+        </Link>
       </NextLink>
     );
   } else {

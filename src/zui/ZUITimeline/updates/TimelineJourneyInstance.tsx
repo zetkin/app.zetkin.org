@@ -1,5 +1,5 @@
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { Box, Button, Typography } from '@material-ui/core';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { Box, Button, Typography } from '@mui/material';
 import { FormattedMessage, useIntl } from 'react-intl';
 import React, { useEffect, useRef, useState } from 'react';
 
@@ -15,7 +15,7 @@ const TimelineJourneyInstance: React.FunctionComponent<Props> = ({
   update,
 }) => {
   const intl = useIntl();
-  const textRef = useRef<HTMLParagraphElement>();
+  const textRef = useRef<HTMLParagraphElement | null>(null);
   const fieldToUpdate = Object.keys(update.details.changes)[0] as
     | 'summary'
     | 'title';
@@ -71,7 +71,8 @@ const TimelineJourneyInstance: React.FunctionComponent<Props> = ({
     return (
       <Box>
         <Typography
-          innerRef={textRef}
+          ref={textRef}
+          component="p"
           style={{
             maxHeight: expandSummary ? overflow : 100,
             overflowY: 'hidden',

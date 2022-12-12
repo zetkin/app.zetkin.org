@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 
 import { personResource } from 'features/profile/api/people';
 import TabbedLayout from '../../../utils/layout/TabbedLayout';
-import { Box, Typography } from '@material-ui/core';
+import { Box, Typography } from '@mui/material';
 
 interface SinglePersonLayoutProps {
   children: React.ReactNode;

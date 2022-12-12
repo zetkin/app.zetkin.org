@@ -7,7 +7,7 @@ import {
   CardContent,
   Link,
   Typography,
-} from '@material-ui/core';
+} from '@mui/material';
 import { FormattedDate, FormattedMessage as Msg } from 'react-intl';
 
 import { getFirstAndLastEvent, removeOffset } from 'utils/dateUtils';
@@ -66,7 +66,7 @@ const CampaignCard = ({ campaign, events }: CampaignCardProps): JSX.Element => {
       </CardContent>
       <CardActions>
         <NextLink href={`/organize/${orgId}/campaigns/${id}`} passHref>
-          <Link variant="button">
+          <Link underline="hover" variant="button">
             <Msg id="pages.organizeAllCampaigns.cardCTA" />
           </Link>
         </NextLink>

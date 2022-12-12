@@ -1,6 +1,7 @@
+import { makeStyles } from '@mui/styles';
 import { useIntl } from 'react-intl';
 import { useRouter } from 'next/router';
-import { Avatar, Box, makeStyles, Tooltip } from '@material-ui/core';
+import { Avatar, Box, Tooltip } from '@mui/material';
 import { DataGridPro, GridColDef, GridRowData } from '@mui/x-data-grid-pro';
 
 import { CallAssignmentCaller } from '../apiTypes';

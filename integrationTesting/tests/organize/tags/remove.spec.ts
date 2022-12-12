@@ -40,7 +40,10 @@ test.describe('Tags manager', () => {
     await page.goto(appUri + `/organize/1/people/${ClaraZetkin.id}`);
 
     await page.locator(`text="${ActivistTag.title}"`).hover();
-    await page.locator('[data-testid=TagChip-deleteButton]').click();
+    await Promise.all([
+      page.waitForRequest((req) => req.method() == 'DELETE'),
+      page.locator('[data-testid=TagChip-deleteButton]').click(),
+    ]);
 
     moxy.setZetkinApiMock(`/orgs/1/people/${ClaraZetkin.id}/tags`, 'get', []);
 
@@ -75,6 +78,6 @@ test.describe('Tags manager', () => {
     await page.locator('[data-testid=TagChip-deleteButton]').click();
 
     // Show error
-    expect(await page.locator('data-testid=Snackbar-error').count()).toEqual(1);
+    await page.locator('data-testid=Snackbar-error').waitFor();
   });
 });

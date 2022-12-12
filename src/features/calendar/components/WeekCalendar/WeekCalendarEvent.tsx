@@ -1,8 +1,8 @@
 import { FormattedTime } from 'react-intl';
 import { getContrastColor } from 'utils/colorUtils';
-import { grey } from '@material-ui/core/colors';
+import { grey } from '@mui/material/colors';
 import NextLink from 'next/link';
-import { Box, Link, Tooltip, Typography } from '@material-ui/core';
+import { Box, Link, Tooltip, Typography } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 import { ZetkinCampaign, ZetkinEvent } from 'utils/types/zetkin';
 
@@ -106,7 +106,7 @@ const WeekCalendarEvent = ({
   return (
     <li>
       <NextLink href={baseHref + `/calendar/events/${event.id}`} passHref>
-        <Link>
+        <Link underline="hover">
           <Tooltip
             arrow
             placement="left"

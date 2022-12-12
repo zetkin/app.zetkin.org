@@ -1,7 +1,8 @@
+import makeStyles from '@mui/styles/makeStyles';
 import { FormattedMessage as Msg } from 'react-intl';
-import { Autocomplete, AutocompleteProps } from '@material-ui/lab';
-import { Chip, makeStyles, TextField } from '@material-ui/core';
-import { Theme, Tooltip } from '@material-ui/core';
+import { Autocomplete, AutocompleteProps } from '@mui/material';
+import { Chip, TextField } from '@mui/material';
+import { Theme, Tooltip } from '@mui/material';
 
 import { getEllipsedString } from 'utils/stringUtils';
 
@@ -47,11 +48,13 @@ const StyledItemSelect = (props: StyledItemSelectProps): JSX.Element => {
             ...params.inputProps,
             className: classes.MuiInput,
           }}
+          variant="standard"
         />
       )}
       renderOption={(item) => {
-        const shortenedLabel = getEllipsedString(item.title, 15);
-        return shortenedLabel.length === item.title.length ? (
+        const title = item.title || '';
+        const shortenedLabel = getEllipsedString(title, 15);
+        return shortenedLabel.length === title.length ? (
           <Chip
             key={item.id}
             color="primary"

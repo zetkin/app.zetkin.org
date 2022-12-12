@@ -1,7 +1,9 @@
-import { Button } from '@material-ui/core';
+import { Alert } from '@mui/material';
+import { Button } from '@mui/material';
+import { Color } from '@material-ui/lab';
 import { FormattedMessage as Msg } from 'react-intl';
+
 import { QUERY_STATUS } from 'features/smartSearch/components/types';
-import { Alert, Color } from '@material-ui/lab';
 
 const SEVERITY: { [key in QUERY_STATUS]: Color } = {
   [QUERY_STATUS.ASSIGNED]: 'success',

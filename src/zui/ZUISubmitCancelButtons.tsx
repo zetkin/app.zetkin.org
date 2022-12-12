@@ -1,5 +1,5 @@
 import { FormattedMessage as Msg } from 'react-intl';
-import { Box, Button, ButtonProps } from '@material-ui/core';
+import { Box, Button, ButtonProps } from '@mui/material';
 
 const ZUISubmitCancelButtons: React.FunctionComponent<{
   onCancel: () => unknown;

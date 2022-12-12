@@ -1,7 +1,7 @@
 import Link from 'next/link';
-import { MobileFriendly } from '@material-ui/icons';
+import { MobileFriendly } from '@mui/icons-material';
 import { useRouter } from 'next/router';
-import { Avatar, ListItem, ListItemAvatar } from '@material-ui/core';
+import { Avatar, ListItem, ListItemAvatar } from '@mui/material';
 
 import ResultsListItemText from './ResultsListItemText';
 import { ZetkinTask } from 'utils/types/zetkin';

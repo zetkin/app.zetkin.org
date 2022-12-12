@@ -1,8 +1,9 @@
-import { Add } from '@material-ui/icons';
+import { Add } from '@mui/icons-material';
+import makeStyles from '@mui/styles/makeStyles';
 import NProgress from 'nprogress';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import { Fab, makeStyles, Tooltip, Typography } from '@material-ui/core';
+import { Fab, Tooltip, Typography } from '@mui/material';
 import { FormattedMessage, useIntl } from 'react-intl';
 
 import { viewsResource } from 'features/views/api/views';

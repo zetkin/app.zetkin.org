@@ -1,4 +1,4 @@
-import { Add } from '@material-ui/icons';
+import { Add } from '@mui/icons-material';
 import { useIntl } from 'react-intl';
 import {
   Collapse,
@@ -7,7 +7,7 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
-} from '@material-ui/core';
+} from '@mui/material';
 import { useContext, useEffect, useState } from 'react';
 
 import OrganizationSelect from './OrganizationSelect';

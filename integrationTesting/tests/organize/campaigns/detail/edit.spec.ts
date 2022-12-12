@@ -44,13 +44,8 @@ test.describe('Campaign detail page', async () => {
     // Edit title
     await page.fill('#title', newTitle);
 
-    // Set manager
-    await page.click('[name=manager_id]');
-    await page.fill('[name=manager_id]', 'Rosa');
-    await page.click('text="Rosa Luxemburg"');
-
     // Submit the form
-    await page.click('button > :text("Submit")');
+    await page.click('button:text("Submit")');
 
     // Check that title changes on page
     const campaignTitle = page.locator('data-testid=page-title');
@@ -63,7 +58,6 @@ test.describe('Campaign detail page', async () => {
     );
 
     expect(patchRequest?.data).toMatchObject({
-      manager_id: RosaLuxemburg.id,
       title: newTitle,
     });
   });
@@ -83,7 +77,7 @@ test.describe('Campaign detail page', async () => {
 
     // Edit task
     await page.fill('#title', newTitle);
-    await page.click('button > :text("Submit")');
+    await page.click('button:text("Submit")');
 
     // Check that alert shows
     await expect(page.locator('data-testid=error-alert')).toBeVisible();

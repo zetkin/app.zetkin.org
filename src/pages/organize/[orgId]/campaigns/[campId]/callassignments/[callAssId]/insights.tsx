@@ -9,7 +9,7 @@ import {
   Select,
   Switch,
   Typography,
-} from '@material-ui/core';
+} from '@mui/material';
 
 import APIError from 'utils/apiError';
 import CallAssignmentLayout from 'features/callAssignments/layout/CallAssignmentLayout';
@@ -110,7 +110,7 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
 
           return (
             <Box>
-              <Box display="flex" flexDirection="row" gridGap={40}>
+              <Box display="flex" flexDirection="row">
                 <Select
                   onChange={(ev) =>
                     setCaller(parseInt(ev.target.value as string) || null)

@@ -1,5 +1,7 @@
+import type {} from '@mui/x-data-grid-pro/themeAugmentation';
+
 import { createElement } from 'react';
-import { createTheme } from '@material-ui/core/styles';
+import { createTheme } from '@mui/material/styles';
 
 interface PaletteIntensityOptions {
   disabled?: string;
@@ -8,7 +10,7 @@ interface PaletteIntensityOptions {
   main?: string;
 }
 
-declare module '@material-ui/core/styles/createPalette' {
+declare module '@mui/material/styles/createPalette' {
   interface Palette {
     onSurface: PaletteIntensityOptions;
     outline: PaletteIntensityOptions;
@@ -69,100 +71,108 @@ const themePalette = {
 
 // Create a theme instance.
 const theme = createTheme({
-  overrides: {
+  components: {
     MuiButton: {
-      label: {
-        textTransform: 'uppercase',
-      },
-      root: {
-        minWidth: '1rem',
-        textTransform: 'none',
+      styleOverrides: {
+        root: {
+          minWidth: '1rem',
+          textTransform: 'uppercase',
+        },
       },
     },
-    // Note: MUI issue - MuiDataGrid is missing from MUI overrides
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
+    MuiCard: {
+      defaultProps: {
+        variant: 'outlined',
+      },
+    },
     MuiDataGrid: {
-      root: {
-        '& .MuiDataGrid-cell': {
-          fontSize: 16,
-        },
-        '& .MuiDataGrid-columnHeaderTitle': {
-          color: themePalette.onSurface.medium,
-          fontWeight: 'bold',
-        },
-        '& [role="toolbar"]': {
-          '& > *': {
-            margin: '0 4px',
-            marginRight: 15,
-            marginTop: 5,
+      styleOverrides: {
+        root: {
+          '& .MuiDataGrid-cell': {
+            fontSize: 16,
           },
-          display: 'flex',
-          justifyContent: 'flex-end',
+          '& .MuiDataGrid-columnHeaderTitle': {
+            color: themePalette.onSurface.medium,
+            fontWeight: 'bold',
+          },
+          '& [role="toolbar"]': {
+            '& > *': {
+              margin: '0 4px',
+              marginRight: 15,
+              marginTop: 5,
+            },
+            display: 'flex',
+            justifyContent: 'flex-end',
+          },
         },
       },
     },
     MuiFormControl: {
-      root: {
-        minWidth: 120,
+      styleOverrides: {
+        root: {
+          minWidth: 120,
+        },
       },
     },
     MuiIconButton: {
-      colorPrimary: {
-        '&:hover': {
-          backgroundColor: 'transparent',
+      styleOverrides: {
+        colorPrimary: {
+          '&:hover': {
+            backgroundColor: 'transparent',
+          },
+        },
+        colorSecondary: {
+          '&:hover': {
+            backgroundColor: 'transparent',
+          },
+        },
+        root: {
+          '&:hover': {
+            backgroundColor: 'transparent',
+            color: '#ED1C55',
+          },
         },
       },
-      colorSecondary: {
-        '&:hover': {
-          backgroundColor: 'transparent',
-        },
-      },
-      root: {
-        '&:hover': {
-          backgroundColor: 'transparent',
-          color: '#ED1C55',
-        },
+    },
+    MuiSnackbar: {
+      defaultProps: {
+        anchorOrigin: { horizontal: 'right', vertical: 'bottom' },
+        autoHideDuration: 3000,
       },
     },
     MuiTabs: {
-      indicator: {
-        '& > span': {
-          backgroundColor: '#ED1C55',
-          maxWidth: 100,
-          width: '100%',
+      defaultProps: {
+        TabIndicatorProps: {
+          children: createElement('span'),
         },
-        backgroundColor: 'transparent',
-        display: 'flex',
-        justifyContent: 'center',
+        indicatorColor: 'primary',
+        textColor: 'primary',
       },
-      root: {
-        borderBottom: '1px solid rgba(0, 0, 0, 0.12)',
+      styleOverrides: {
+        indicator: {
+          '& > span': {
+            backgroundColor: '#ED1C55',
+            maxWidth: 100,
+            width: '100%',
+          },
+          backgroundColor: 'transparent',
+          display: 'flex',
+          justifyContent: 'center',
+        },
+        root: {
+          borderBottom: '1px solid rgba(0, 0, 0, 0.12)',
+        },
       },
     },
     MuiTooltip: {
-      tooltip: {
-        fontSize: '14px',
+      styleOverrides: {
+        tooltip: {
+          fontSize: '14px',
+        },
       },
     },
   },
   palette: themePalette,
-  props: {
-    MuiCard: {
-      variant: 'outlined',
-    },
-    MuiSnackbar: {
-      anchorOrigin: { horizontal: 'right', vertical: 'bottom' },
-      autoHideDuration: 3000,
-    },
-    MuiTabs: {
-      TabIndicatorProps: {
-        children: createElement('span'),
-      },
-      indicatorColor: 'primary',
-      textColor: 'primary',
-    },
-  },
   typography: {
     fontFamily: 'azo-sans-web, sans-serif',
     h2: {

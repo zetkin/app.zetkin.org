@@ -9,7 +9,7 @@ import {
   Popper,
   TextField,
   Typography,
-} from '@material-ui/core';
+} from '@mui/material';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
 
 import CallAssignmentModel from '../models/CallAssignmentModel';

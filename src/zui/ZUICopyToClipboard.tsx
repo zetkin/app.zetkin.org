@@ -1,14 +1,8 @@
 import copy from 'copy-to-clipboard';
 import { FormattedMessage } from 'react-intl';
-import {
-  ButtonBase,
-  Collapse,
-  Fade,
-  Grid,
-  Typography,
-} from '@material-ui/core';
+import { ButtonBase, Collapse, Fade, Grid, Typography } from '@mui/material';
 import React, { useState } from 'react';
-import SvgIcon, { SvgIconProps } from '@material-ui/core/SvgIcon';
+import SvgIcon, { SvgIconProps } from '@mui/material/SvgIcon';
 
 interface IconProps {
   size?: number;

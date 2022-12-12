@@ -1,11 +1,11 @@
-import { Autocomplete as MUIAutocomplete } from '@material-ui/lab';
-import { Autocomplete as RFFAutocomplete } from 'mui-rff';
-import { TextField } from '@material-ui/core';
+import { Autocomplete as MUIAutocomplete } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
+import { Box, TextField } from '@mui/material';
 import React, {
   FunctionComponent,
+  HTMLAttributes,
   MutableRefObject,
   ReactElement,
   useEffect,
@@ -46,7 +46,10 @@ interface UsePersonSelectReturn {
     onInputChange: (ev: unknown, value: string) => void;
     options: ZetkinPerson[];
     placeholder?: string;
-    renderOption: (person: ZetkinPerson) => ReactElement;
+    renderOption: (
+      props: HTMLAttributes<HTMLLIElement>,
+      person: ZetkinPerson
+    ) => ReactElement;
     value: ZetkinPerson | null;
   };
 }
@@ -115,8 +118,7 @@ const usePersonSelect: UsePersonSelect = ({
     autoCompleteProps: {
       filterOptions: (options) => options,
       getOptionDisabled,
-      getOptionLabel: (person: ZetkinPerson) =>
-        person.first_name ? `${person.first_name} ${person.last_name}` : '',
+      getOptionLabel: (person: ZetkinPerson) => `${person.id}`,
       getOptionSelected: (option: ZetkinPerson, value: ZetkinPerson) =>
         option?.id == value?.id,
       getOptionValue: (person: ZetkinPerson) => person.id || null,
@@ -132,34 +134,24 @@ const usePersonSelect: UsePersonSelect = ({
       },
       options: personOptions,
       placeholder,
-      renderOption: (person: ZetkinPerson) => {
+      renderOption: (
+        props: HTMLAttributes<HTMLLIElement>,
+        person: ZetkinPerson
+      ) => {
         const extraLabel = getOptionExtraLabel
           ? getOptionExtraLabel(person)
           : null;
-
+        const name = `${person.first_name} ${person.last_name}`;
         return (
-          <ZUIPerson
-            id={person.id}
-            name={`${person.first_name} ${person.last_name}`}
-            subtitle={extraLabel}
-          />
+          <Box component="li" {...props}>
+            <ZUIPerson id={person.id} name={name} subtitle={extraLabel} />
+          </Box>
         );
       },
       value: selectedPerson,
     },
   };
 };
-
-// TODO: Remove once mui-rff has been retired
-const ZUIPersonSelect: FunctionComponent<
-  ZUIPersonSelectProps & { name: string }
-> = (props) => {
-  const { autoCompleteProps } = usePersonSelect(props);
-
-  return <RFFAutocomplete {...autoCompleteProps} />;
-};
-
-export default ZUIPersonSelect;
 
 const MUIOnlyPersonSelect: FunctionComponent<ZUIPersonSelectProps> = (
   props

@@ -1,4 +1,4 @@
-import { Box } from '@material-ui/core';
+import { Box } from '@mui/material';
 import { FunctionComponent } from 'react';
 import { useRouter } from 'next/router';
 

@@ -1,14 +1,14 @@
 import { FormattedMessage } from 'react-intl';
 import Link from 'next/link';
+import makeStyles from '@mui/styles/makeStyles';
 import {
   Box,
   Chip,
   CircularProgress,
   Grid,
-  makeStyles,
   Theme,
   Typography,
-} from '@material-ui/core';
+} from '@mui/material';
 import { LetterparserNode, parse } from 'letterparser';
 import { useEffect, useState } from 'react';
 

@@ -1,4 +1,4 @@
-import { Grid, Typography } from '@material-ui/core';
+import { Grid, Typography } from '@mui/material';
 
 import { ZetkinUpdate } from 'zui/ZUITimeline/types';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';

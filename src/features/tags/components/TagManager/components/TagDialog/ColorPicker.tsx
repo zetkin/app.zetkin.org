@@ -1,6 +1,6 @@
-import ReplayIcon from '@material-ui/icons/Replay';
+import ReplayIcon from '@mui/icons-material/Replay';
 import { useIntl } from 'react-intl';
-import { Box, InputAdornment, TextField } from '@material-ui/core';
+import { Box, InputAdornment, TextField } from '@mui/material';
 
 import { DEFAULT_TAG_COLOR, hexRegex, randomColor } from '../../utils';
 
@@ -29,7 +29,7 @@ const ColorPicker: React.FunctionComponent<{
             <Box
               alignItems="center"
               bgcolor={value ? `#${value}` : DEFAULT_TAG_COLOR}
-              borderRadius={7}
+              borderRadius="7px"
               display="flex"
               height={30}
               justifyContent="center"

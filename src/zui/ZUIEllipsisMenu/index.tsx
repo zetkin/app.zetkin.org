@@ -1,6 +1,6 @@
-import { MoreVert } from '@material-ui/icons';
+import { MoreVert } from '@mui/icons-material';
 import noPropagate from 'utils/noPropagate';
-import { Button, ListItemIcon, Menu, MenuItem } from '@material-ui/core';
+import { Button, ListItemIcon, Menu, MenuItem } from '@mui/material';
 import { FunctionComponent, ReactElement, useState } from 'react';
 
 interface MenuItem {
@@ -64,7 +64,6 @@ const ZUIEllipsisMenu: FunctionComponent<ZUIEllipsisMenuProps> = ({
               <Menu
                 anchorEl={subMenuActivator}
                 anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
-                getContentAnchorEl={null}
                 onClose={(e: Event) => {
                   e.stopPropagation();
                   setSubMenuActivator(null);

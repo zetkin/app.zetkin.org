@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import { useContext } from 'react';
-import { Button, Tooltip } from '@material-ui/core';
+import { Button, Tooltip } from '@mui/material';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
 
 import { taskResource } from 'features/tasks/api/tasks';

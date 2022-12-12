@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { Box, Typography } from '@material-ui/core';
+import { Box, Typography } from '@mui/material';
 import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { useContext, useEffect, useState } from 'react';

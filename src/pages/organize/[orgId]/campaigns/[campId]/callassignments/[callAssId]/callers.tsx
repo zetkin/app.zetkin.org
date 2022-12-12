@@ -7,7 +7,7 @@ import {
   Paper,
   TextField,
   Typography,
-} from '@material-ui/core';
+} from '@mui/material';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
 import { useEffect, useState } from 'react';
 

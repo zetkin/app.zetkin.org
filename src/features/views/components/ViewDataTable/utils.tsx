@@ -88,7 +88,7 @@ export function makeGridColDef(
     colDef.valueGetter = (params) => {
       const responses = (params as SurveyResponseParams).value;
       return responses?.length
-        ? responses.map((response) => response.text).join(',')
+        ? responses.map((response: { text: string }) => response.text).join(',')
         : null;
     };
   } else if (viewCol.type == COLUMN_TYPE.SURVEY_SUBMITTED) {

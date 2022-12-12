@@ -1,6 +1,7 @@
+import { Box } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
+import makeStyles from '@mui/styles/makeStyles';
 import { useState } from 'react';
-import { Box, makeStyles } from '@material-ui/core';
 
 import { Edit } from '@material-ui/icons';
 import EmailLoader from './elements/EmailLoader';

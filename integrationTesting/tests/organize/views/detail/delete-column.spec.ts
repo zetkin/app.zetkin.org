@@ -39,9 +39,9 @@ test.describe('View detail page', () => {
     await Promise.all([
       page.waitForResponse((res) => res.request().method() == 'DELETE'),
       (async () => {
+        await page.hover('[role=columnheader]:has-text("First name")');
         await page.click(
-          'button[aria-label="Menu"]:right-of(:text("First Name"))',
-          { force: true }
+          '[role=columnheader]:has-text("First name") [aria-label=Menu]'
         );
         await page.click(
           `data-testid=delete-column-button-col_${AllMembersColumns[0].id}`
@@ -79,9 +79,9 @@ test.describe('View detail page', () => {
     await Promise.all([
       page.waitForResponse((res) => res.request().method() == 'DELETE'),
       (async () => {
+        await page.hover('[role=columnheader]:has-text("First name")');
         await page.click(
-          'button[aria-label="Menu"]:right-of(:text("First Name"))',
-          { force: true }
+          '[role=columnheader]:has-text("First name") [aria-label=Menu]'
         );
         await page.click(
           `data-testid=delete-column-button-col_${AllMembersColumns[0].id}`
@@ -106,20 +106,18 @@ test.describe('View detail page', () => {
 
     await page.goto(appUri + '/organize/1/people/views/1');
 
-    // Delete first column
+    // Delete local column
     await Promise.all([
       page.waitForResponse((res) => res.request().method() == 'DELETE'),
       (async () => {
+        await page.hover('[role=columnheader]:has-text("Active")');
         await page.click(
-          'button[aria-label="Menu"]:right-of(:text("Active"))',
-          {
-            force: true,
-          }
+          '[role=columnheader]:has-text("Active") [aria-label=Menu]'
         );
         await page.click(
           `data-testid=delete-column-button-col_${AllMembersColumns[2].id}`
         );
-        await page.click('button > :text("Confirm")');
+        await page.click('button:text("Confirm")');
       })(),
     ]);
 

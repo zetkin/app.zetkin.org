@@ -1,4 +1,4 @@
-import { Chip } from '@material-ui/core';
+import { Chip } from '@mui/material';
 import { useIntl } from 'react-intl';
 
 import { TASK_STATUS } from 'features/tasks/utils/getTaskStatus';

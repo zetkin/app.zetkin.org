@@ -1,4 +1,4 @@
-import { Box, Typography } from '@material-ui/core';
+import { Box, Typography } from '@mui/material';
 import { ComponentMeta, ComponentStory } from '@storybook/react';
 
 import ZUIDialog from '.';

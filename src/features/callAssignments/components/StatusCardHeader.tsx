@@ -1,5 +1,5 @@
-import { makeStyles } from '@material-ui/styles';
-import { Box, Divider, Theme, Typography } from '@material-ui/core';
+import { makeStyles } from '@mui/styles';
+import { Box, Divider, Theme, Typography } from '@mui/material';
 
 import ZUIAnimatedNumber from 'zui/ZUIAnimatedNumber';
 

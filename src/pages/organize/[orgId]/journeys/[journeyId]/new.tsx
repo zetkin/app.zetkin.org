@@ -1,6 +1,6 @@
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
-import { Box, Chip, Grid, Typography, useTheme } from '@material-ui/core';
+import { Box, Chip, Grid, Typography, useTheme } from '@mui/material';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
 import { useContext, useState } from 'react';
 

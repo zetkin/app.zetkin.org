@@ -2,7 +2,7 @@ import { FunctionComponent } from 'react';
 import { useIntl } from 'react-intl';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
-import { MenuItem, TextField } from '@material-ui/core';
+import { MenuItem, TextField } from '@mui/material';
 
 import getStandaloneQueries from 'utils/fetching/getStandaloneQueries';
 import { PersonQueryViewColumn } from 'features/views/components/types';
@@ -52,6 +52,7 @@ const PersonQueryColumnConfigForm: FunctionComponent<
             }
             select
             value={column.config?.query_id || ''}
+            variant="standard"
           >
             {standaloneQueriesQuery.data.map((query) => (
               <MenuItem key={query.id} value={query.id}>

@@ -1,8 +1,8 @@
-import { makeStyles } from '@material-ui/styles';
-import { Search } from '@material-ui/icons';
+import { makeStyles } from '@mui/styles';
+import { Search } from '@mui/icons-material';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
-import { Box, Button, Dialog } from '@material-ui/core';
+import { Box, Button, Dialog } from '@mui/material';
 import { useEffect, useState } from 'react';
 
 import defaultFetch from 'utils/fetching/defaultFetch';

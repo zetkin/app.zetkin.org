@@ -1,4 +1,6 @@
-import { makeStyles, TextField, TextFieldProps } from '@material-ui/core';
+import { TextField, TextFieldProps } from '@mui/material';
+
+import makeStyles from '@mui/styles/makeStyles';
 
 const useStyles = makeStyles((theme) => ({
   MuiInput: {
@@ -24,6 +26,7 @@ const StyledSelect: React.FC<TextFieldProps> = (props): JSX.Element => {
       select
       {...props}
       SelectProps={{ ...props.SelectProps, className: classes.MuiSelect }}
+      variant="standard"
     />
   );
 };

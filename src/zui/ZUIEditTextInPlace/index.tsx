@@ -1,6 +1,7 @@
+import { lighten } from '@mui/material/styles';
+import makeStyles from '@mui/styles/makeStyles';
 import { useIntl } from 'react-intl';
-import { FormControl, InputBase, Tooltip } from '@material-ui/core';
-import { lighten, makeStyles } from '@material-ui/core/styles';
+import { FormControl, InputBase, Tooltip } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 
 const useStyles = makeStyles((theme) => ({
@@ -145,7 +146,7 @@ const ZUIEditTextinPlace: React.FunctionComponent<ZUIEditTextinPlaceProps> = ({
 
   return (
     <Tooltip arrow disableHoverListener={editing} title={tooltipText()}>
-      <FormControl style={{ overflow: 'hidden' }}>
+      <FormControl style={{ overflow: 'hidden' }} variant="standard">
         <span ref={spanRef} className={classes.span}>
           {text || placeholder}
         </span>

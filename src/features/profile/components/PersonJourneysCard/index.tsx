@@ -1,8 +1,8 @@
-import { Add } from '@material-ui/icons';
+import { Add } from '@mui/icons-material';
 import { FormattedMessage } from 'react-intl';
 import Link from 'next/link';
 import { useState } from 'react';
-import { Button, List, ListItem, Menu, MenuItem } from '@material-ui/core';
+import { Button, List, ListItem, Menu, MenuItem } from '@mui/material';
 
 import { journeysResource } from 'features/journeys/api/journeys';
 import PersonCard from '../PersonCard';

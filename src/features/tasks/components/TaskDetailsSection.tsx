@@ -6,7 +6,7 @@ import ZUIDateTime from 'zui/ZUIDateTime';
 import TaskProperty from './TaskProperty';
 import TaskTypeDetailsSection from 'features/tasks/components/TaskTypeDetailsSection';
 import ZUISection from 'zui/ZUISection';
-import { Card, List } from '@material-ui/core';
+import { Card, List } from '@mui/material';
 
 interface TaskDetailsCardProps {
   task: ZetkinTask;

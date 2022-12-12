@@ -1,5 +1,5 @@
-import { Alert } from '@material-ui/lab';
-import { CheckBox } from '@material-ui/icons';
+import { Alert } from '@mui/material';
+import { CheckBox } from '@mui/icons-material';
 import { FormattedMessage } from 'react-intl';
 import { useRouter } from 'next/router';
 

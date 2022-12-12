@@ -1,6 +1,5 @@
-/* eslint-disable react/display-name */
-import { Alert } from '@material-ui/lab';
-import { Flag } from '@material-ui/icons';
+import { Alert } from '@mui/material';
+import { Flag } from '@mui/icons-material';
 import { FormattedMessage } from 'react-intl';
 import { useRouter } from 'next/router';
 import { useMutation, useQueryClient } from 'react-query';

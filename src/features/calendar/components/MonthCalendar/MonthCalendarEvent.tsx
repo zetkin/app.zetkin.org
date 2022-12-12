@@ -1,10 +1,10 @@
 import dayjs from 'dayjs';
 import { FormattedTime } from 'react-intl';
 import { getContrastColor } from 'utils/colorUtils';
-import { grey } from '@material-ui/core/colors';
+import { grey } from '@mui/material/colors';
 import NextLink from 'next/link';
-import { ArrowBackIos, ArrowForwardIos } from '@material-ui/icons';
-import { Box, Link, Typography } from '@material-ui/core';
+import { ArrowBackIos, ArrowForwardIos } from '@mui/icons-material';
+import { Box, Link, Typography } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 
 import { removeOffset } from 'utils/dateUtils';

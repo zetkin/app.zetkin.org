@@ -1,31 +1,19 @@
-import { makeStyles } from '@material-ui/core';
-import { DatePicker, DatePickerProps } from '@material-ui/pickers';
+import { TextField } from '@mui/material';
+import { DatePicker, DatePickerProps } from '@mui/x-date-pickers/DatePicker';
 
-const useStyles = makeStyles((theme) => ({
-  MuiDatePicker: {
-    display: 'inline',
-    verticalAlign: 'inherit',
-  },
-  input: {
-    fontSize: theme.typography.h4.fontSize,
-    padding: 0,
-    width: '12rem',
-  },
-}));
+const styles = {
+  fontSize: 'typography.h4.fontSize',
+  padding: 0,
+  width: '12rem',
+};
 
-const StyledDatePicker: React.FC<DatePickerProps> = (
+const StyledDatePicker: React.FC<DatePickerProps<Date, Date>> = (
   props
 ): React.ReactElement => {
-  const classes = useStyles();
   return (
     <DatePicker
-      className={classes.MuiDatePicker}
-      disableToolbar
-      format="yyyy-MM-dd"
-      id="date-picker-inline"
-      inputProps={{ className: classes.input }}
-      variant="inline"
       {...props}
+      renderInput={(params) => <TextField {...params} sx={styles} />}
     />
   );
 };

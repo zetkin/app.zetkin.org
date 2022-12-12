@@ -1,7 +1,9 @@
-import { Add } from '@material-ui/icons';
+import { Add } from '@mui/icons-material';
+import { Fab } from '@mui/material';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { Fab, makeStyles } from '@material-ui/core';
+
+import makeStyles from '@mui/styles/makeStyles';
 
 const useStyles = makeStyles((theme) => ({
   fab: {

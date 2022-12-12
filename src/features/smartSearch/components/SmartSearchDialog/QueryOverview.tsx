@@ -1,4 +1,4 @@
-import { Alert } from '@material-ui/lab';
+import { Alert } from '@mui/material';
 import { FormattedMessage as Msg } from 'react-intl';
 import { useState } from 'react';
 import {
@@ -9,8 +9,8 @@ import {
   List,
   ListItem,
   Typography,
-} from '@material-ui/core';
-import { DeleteOutline, Settings } from '@material-ui/icons';
+} from '@mui/material';
+import { DeleteOutline, Settings } from '@mui/icons-material';
 
 import DisplayCallHistory from '../filters/CallHistory/DisplayCallHistory';
 import DisplayCampaignParticipation from '../filters/CampaignParticipation/DisplayCampaignParticipation';

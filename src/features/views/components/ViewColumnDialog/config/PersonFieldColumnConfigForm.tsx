@@ -1,6 +1,6 @@
 import { FunctionComponent } from 'react';
 import { useIntl } from 'react-intl';
-import { MenuItem, TextField } from '@material-ui/core';
+import { MenuItem, TextField } from '@mui/material';
 
 import {
   NATIVE_PERSON_FIELDS,
@@ -49,6 +49,7 @@ const PersonFieldColumnConfigForm: FunctionComponent<
       required
       select
       value={column.config?.field}
+      variant="standard"
     >
       {Object.values(NATIVE_PERSON_FIELDS).map((fieldSlug) => (
         <MenuItem key={fieldSlug} value={fieldSlug}>

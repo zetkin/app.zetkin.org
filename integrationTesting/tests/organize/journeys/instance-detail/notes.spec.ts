@@ -111,6 +111,9 @@ test.describe('Journey instance notes', () => {
     await page.click('[data-slate-editor=true]:below(:text("added a note"))');
     // Delete existing text
     for (let i = 0; i < NoteUpdate.details.note.text.length; i++) {
+      // Delete forwards and backwards in case caret
+      // was put somewhere in the middle
+      await page.keyboard.press('Delete');
       await page.keyboard.press('Backspace');
     }
     await page.type(

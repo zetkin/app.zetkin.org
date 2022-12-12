@@ -1,7 +1,7 @@
-import { Alert } from '@material-ui/lab';
-import { Box } from '@material-ui/core';
+import { Alert } from '@mui/material';
+import { Box } from '@mui/material';
 import { useRouter } from 'next/router';
-import { Delete, Settings } from '@material-ui/icons';
+import { Delete, Settings } from '@mui/icons-material';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
 import React, { useContext, useState } from 'react';
 

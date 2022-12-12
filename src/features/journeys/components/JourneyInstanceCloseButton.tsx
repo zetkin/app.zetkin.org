@@ -1,7 +1,7 @@
-import ArchiveIcon from '@material-ui/icons/Archive';
+import ArchiveIcon from '@mui/icons-material/Archive';
 import dayjs from 'dayjs';
 import { useRouter } from 'next/router';
-import { Box, Button, TextField, Typography } from '@material-ui/core';
+import { Box, Button, TextField, Typography } from '@mui/material';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { useContext, useState } from 'react';
 

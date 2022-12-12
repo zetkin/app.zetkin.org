@@ -7,7 +7,7 @@ import {
   Link,
   Tooltip,
   Typography,
-} from '@material-ui/core';
+} from '@mui/material';
 
 /**
  * If `link` is `true`, wraps the children in a NextLink.
@@ -22,7 +22,9 @@ const PersonLink: React.FunctionComponent<{
   if (link) {
     return (
       <NextLink href={`/organize/${orgId}/people/${id}`} passHref>
-        <Link style={{ cursor: 'pointer' }}>{children}</Link>
+        <Link style={{ cursor: 'pointer' }} underline="hover">
+          {children}
+        </Link>
       </NextLink>
     );
   }

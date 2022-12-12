@@ -1,7 +1,7 @@
 import { FormattedMessage } from 'react-intl';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 import { useState } from 'react';
-import { Add, Delete, ImportExport } from '@material-ui/icons';
+import { Add, Delete, ImportExport } from '@mui/icons-material';
 import {
   Badge,
   Box,
@@ -13,7 +13,7 @@ import {
   Popover,
   Select,
   Typography,
-} from '@material-ui/core';
+} from '@mui/material';
 import {
   GridColDef,
   GridSortDirection,
@@ -131,13 +131,14 @@ const ZUIDataTableSorting: React.FunctionComponent<
             {sortModel.map((item, index) => (
               <Box key={item.field} display="flex" flexDirection="row" pb={1}>
                 <Box flex={1} mr={2}>
-                  <FormControl fullWidth>
+                  <FormControl fullWidth variant="standard">
                     <Select
                       name="column"
                       onChange={(evt) =>
                         handleChange(index, evt.target.value as string)
                       }
                       value={item.field}
+                      variant="standard"
                     >
                       {gridColumns.map((gridColumn) => (
                         <MenuItem
@@ -154,7 +155,7 @@ const ZUIDataTableSorting: React.FunctionComponent<
                   </FormControl>
                 </Box>
                 <Box flex={1}>
-                  <FormControl fullWidth>
+                  <FormControl fullWidth variant="standard">
                     <Select
                       name="direction"
                       onChange={(evt) =>
@@ -165,6 +166,7 @@ const ZUIDataTableSorting: React.FunctionComponent<
                         )
                       }
                       value={item.sort}
+                      variant="standard"
                     >
                       <MenuItem value="asc">Ascending</MenuItem>
                       <MenuItem value="desc">Descending</MenuItem>
@@ -175,6 +177,7 @@ const ZUIDataTableSorting: React.FunctionComponent<
                   className={classes.deleteButton}
                   data-testid="deleteSortModelItem"
                   onClick={() => handleDelete(item.field)}
+                  size="large"
                 >
                   <Delete />
                 </IconButton>

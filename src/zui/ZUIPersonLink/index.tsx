@@ -1,4 +1,4 @@
-import { Link } from '@material-ui/core';
+import { Link } from '@mui/material';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 
@@ -17,7 +17,11 @@ const ZUIPersonLink: React.FC<ZUIPersonLinkProps> = ({ person }) => {
       personId={Number(person.id)}
     >
       <NextLink href={`/organize/${orgId}/people/${person.id}`} passHref>
-        <Link color="textPrimary" style={{ fontWeight: 'bold' }}>
+        <Link
+          color="textPrimary"
+          style={{ fontWeight: 'bold' }}
+          underline="hover"
+        >
           {person.first_name + ' ' + person.last_name}
         </Link>
       </NextLink>

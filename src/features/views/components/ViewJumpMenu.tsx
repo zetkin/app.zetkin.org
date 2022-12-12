@@ -1,8 +1,8 @@
 /* eslint-disable jsx-a11y/no-autofocus */
 
-import { ExpandMore } from '@material-ui/icons';
+import { ExpandMore } from '@mui/icons-material';
 import Link from 'next/link';
-import { useAutocomplete } from '@material-ui/lab';
+import useAutocomplete from '@mui/material/useAutocomplete';
 import { useIntl } from 'react-intl';
 import { useRouter } from 'next/router';
 import {
@@ -13,10 +13,11 @@ import {
   ListItemText,
   Popover,
   TextField,
-} from '@material-ui/core';
+} from '@mui/material';
 import { FunctionComponent, useEffect, useRef, useState } from 'react';
 
 import { viewsResource } from 'features/views/api/views';
+import { ZetkinView } from './types';
 import ZUIQuery from 'zui/ZUIQuery';
 
 const ViewJumpMenu: FunctionComponent = () => {
@@ -70,15 +71,21 @@ const ViewJumpMenu: FunctionComponent = () => {
   }, [listRef, activeIndex]);
 
   // Exclude the current view from the list of views to jump to
-  const options = (
+  const allOptions = (
     inputValue.length ? groupedOptions : viewsQuery.data || []
-  ).filter((view) => view.id.toString() != (viewId as string));
+  ) as ZetkinView[];
+  const options = allOptions.filter(
+    (view) => view.id.toString() != (viewId as string)
+  );
+
+  const tfProps = getInputProps();
 
   return (
     <>
       <IconButton
         data-testid="view-jump-menu-button"
         onClick={(ev) => setJumpMenuAnchor(ev.target as Element)}
+        size="large"
       >
         <ExpandMore />
       </IconButton>
@@ -116,8 +123,9 @@ const ViewJumpMenu: FunctionComponent = () => {
         <ZUIQuery queries={{ viewsQuery }}>
           <Box {...getRootProps()} p={1}>
             <TextField
-              {...getInputProps()}
+              {...tfProps}
               autoFocus={true}
+              color="primary"
               fullWidth
               placeholder={intl.formatMessage({
                 id: 'pages.people.views.layout.jumpMenu.placeholder',

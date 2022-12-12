@@ -1,5 +1,5 @@
-import { Box, IconButton } from '@material-ui/core';
-import { Clear, Edit } from '@material-ui/icons';
+import { Box, IconButton } from '@mui/material';
+import { Clear, Edit } from '@mui/icons-material';
 import Image, { ImageProps } from 'next/image';
 
 interface ZUIEditableImageProps {
@@ -22,6 +22,7 @@ const ZUIEditableImage: React.FC<ZUIEditableImageProps & ImageProps> = ({
         <IconButton
           data-testid="ZetkinEditableImage-resetButton"
           onClick={() => onReset()}
+          size="large"
           style={{
             backgroundColor: 'rgba(255,255,255,0.7)',
             marginRight: 10,
@@ -32,6 +33,7 @@ const ZUIEditableImage: React.FC<ZUIEditableImageProps & ImageProps> = ({
         <IconButton
           data-testid="ZetkinEditableImage-editButton"
           onClick={() => onEdit()}
+          size="large"
           style={{
             backgroundColor: 'rgba(255,255,255,0.7)',
           }}

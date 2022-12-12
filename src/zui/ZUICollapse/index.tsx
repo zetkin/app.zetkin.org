@@ -1,6 +1,6 @@
 import { FormattedMessage } from 'react-intl';
-import { Button, Collapse } from '@material-ui/core';
-import { ExpandLess, ExpandMore } from '@material-ui/icons';
+import { Button, Collapse } from '@mui/material';
+import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import { useCallback, useState } from 'react';
 
 interface ZUICollapseProps {

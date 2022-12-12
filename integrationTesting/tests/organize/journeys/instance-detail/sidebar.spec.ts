@@ -76,7 +76,7 @@ test.describe('Journey instance detail page sidebar', () => {
 
     //Open PersonSelect and search for Angela
     await page.locator('data-testid=Button-add-assignee').click();
-    await page.locator('text=Assign person').type('Angela');
+    await page.locator(':has-text("Assign person") > input').type('Angela');
 
     //GET the journeyInstance with Angela as assignee
     moxy.setZetkinApiMock(
@@ -243,7 +243,7 @@ test.describe('Journey instance detail page sidebar', () => {
 
     //Open PersonSelect and search for Clara
     await page.locator('data-testid=Button-add-subject').click();
-    await page.locator('text=Add person').type('Clara');
+    await page.locator(':has-text("Add person") > input').type('Clara');
 
     //GET the journeyInstance with Clara as assignee
     moxy.setZetkinApiMock(

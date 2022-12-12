@@ -2,7 +2,7 @@ import { FunctionComponent } from 'react';
 import { useIntl } from 'react-intl';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
-import { MenuItem, TextField } from '@material-ui/core';
+import { MenuItem, TextField } from '@mui/material';
 
 import getTags from 'features/tags/api/getTags';
 import { PersonTagViewColumn } from 'features/views/components/types';
@@ -44,6 +44,7 @@ const PersonTagColumnConfigForm: FunctionComponent<
             onChange={(ev) => onTagChange(ev.target.value as unknown as number)}
             select
             value={column.config?.tag_id || ''}
+            variant="standard"
           >
             {tagsQuery.data.map((tag) => (
               <MenuItem key={tag.id} value={tag.id}>

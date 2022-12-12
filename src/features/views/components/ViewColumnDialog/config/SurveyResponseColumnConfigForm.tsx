@@ -7,7 +7,7 @@ import {
   useEffect,
   useState,
 } from 'react';
-import { MenuItem, TextField } from '@material-ui/core';
+import { MenuItem, TextField } from '@mui/material';
 
 import getSurveysWithElements from 'features/smartSearch/fetching/getSurveysWithElements';
 import ZUIQuery from 'zui/ZUIQuery';
@@ -108,6 +108,7 @@ const SurveyResponseColumnConfigForm: FunctionComponent<
               onChange={onSurveyChange}
               select
               value={surveyId || ''}
+              variant="standard"
             >
               {successSurveysQuery.data.map((survey) => (
                 <MenuItem key={survey.id} value={survey.id}>
@@ -128,6 +129,7 @@ const SurveyResponseColumnConfigForm: FunctionComponent<
                 (column.config as SurveyResponseViewColumn['config'])
                   ?.question_id || ''
               }
+              variant="standard"
             >
               {(questionElements || []).map((elem) => (
                 <MenuItem key={elem.id} value={elem.id}>

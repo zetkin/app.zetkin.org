@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/no-autofocus */
-import { TextField } from '@material-ui/core';
+import { TextField } from '@mui/material';
 import { useIntl } from 'react-intl';
 import { useEffect, useState } from 'react';
 

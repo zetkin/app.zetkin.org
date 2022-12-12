@@ -1,4 +1,4 @@
-import { MenuItem } from '@material-ui/core';
+import { MenuItem } from '@mui/material';
 import { FormattedMessage as Msg } from 'react-intl';
 import { FormEvent, useEffect, useState } from 'react';
 

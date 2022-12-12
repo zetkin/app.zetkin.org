@@ -40,7 +40,7 @@ test.describe('Campaigns list page', async () => {
       page.waitForNavigation({
         url: `**/organize/1/campaigns/${ReferendumSignatures.id}`,
       }),
-      page.click('button > :text("Submit")'),
+      page.click('button:text("Submit")'),
     ]);
 
     // Check for redirect
@@ -66,7 +66,7 @@ test.describe('Campaigns list page', async () => {
     await page.fill('#info_text', ReferendumSignatures.info_text);
     await page.fill('input:near(#status)', 'published');
     await page.fill('input:near(#visibility)', ReferendumSignatures.visibility);
-    await page.click('button > :text("Submit")');
+    await page.click('button:text("Submit")');
 
     // Shows alert
     await expect(page.locator('data-testid=error-alert')).toBeVisible();

@@ -1,15 +1,16 @@
+import makeStyles from '@mui/styles/makeStyles';
 import { useIntl } from 'react-intl';
-import ZUISection from 'zui/ZUISection';
 import {
   Card,
   List,
   ListItem,
   ListItemIcon,
   ListItemText,
-  makeStyles,
-} from '@material-ui/core';
-import { Close, Edit } from '@material-ui/icons';
+} from '@mui/material';
+import { Close, Edit } from '@mui/icons-material';
 import { ReactEventHandler, SyntheticEvent, useState } from 'react';
+
+import ZUISection from 'zui/ZUISection';
 
 const useStyles = makeStyles((theme) => ({
   divider: {

@@ -1,15 +1,16 @@
 import dayjs from 'dayjs';
+import isoWeek from 'dayjs/plugin/isoWeek';
+import makeStyles from '@mui/styles/makeStyles';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import {
   Box,
   Button,
-  makeStyles,
   MenuItem,
   TextField,
   Tooltip,
   Typography,
-} from '@material-ui/core';
+} from '@mui/material';
 import { FormattedDate, FormattedMessage as Msg } from 'react-intl';
 
 import MonthCalendar from './MonthCalendar';
@@ -25,6 +26,8 @@ interface ZetkinCalendarProps {
   campaigns: ZetkinCampaign[];
   tasks: ZetkinTask[];
 }
+
+dayjs.extend(isoWeek);
 
 const useStyles = makeStyles(() => ({
   hide: {
@@ -188,6 +191,7 @@ const Calendar = ({
             onChange={(e) => setRange(e.target.value as CALENDAR_RANGES)}
             select
             value={range}
+            variant="standard"
           >
             {Object.values(CALENDAR_RANGES).map((range) => (
               <MenuItem key={range} value={range}>

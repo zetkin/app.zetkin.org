@@ -1,13 +1,17 @@
-import { GridToolbarFilterButton } from '@mui/x-data-grid-pro';
 import { useContext } from 'react';
-import { Add, Launch, RemoveCircleOutline } from '@material-ui/icons';
-import { Box, Button, Slide, Tooltip } from '@material-ui/core';
+import { Add, Launch, RemoveCircleOutline } from '@mui/icons-material';
+import { Box, Button, Slide, Tooltip } from '@mui/material';
+import {
+  DataGridProProps,
+  GridColDef,
+  GridSortModel,
+  GridToolbarFilterButton,
+} from '@mui/x-data-grid-pro';
 import { FormattedMessage, useIntl } from 'react-intl';
 
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUIDataTableSearch from 'zui/ZUIDataTableSearch';
 import ZUIDataTableSorting from 'zui/ZUIDataTableSorting';
-import { GridColDef, GridSortModel } from '@mui/x-data-grid-pro';
 
 export interface ViewDataTableToolbarProps {
   disabled: boolean;
@@ -18,7 +22,7 @@ export interface ViewDataTableToolbarProps {
   onViewCreate: () => void;
   selection: number[];
   setQuickSearch: (quickSearch: string) => void;
-  onSortModelChange: (model: GridSortModel) => void;
+  onSortModelChange: DataGridProProps['onSortModelChange'];
   sortModel: GridSortModel;
 }
 
@@ -90,7 +94,13 @@ const ViewDataTableToolbar: React.FunctionComponent<
           button: { color: 'secondary', size: 'medium' },
         }}
       />
-      <ZUIDataTableSorting {...{ gridColumns, onSortModelChange, sortModel }} />
+      <ZUIDataTableSorting
+        gridColumns={gridColumns}
+        onSortModelChange={(model) =>
+          onSortModelChange && onSortModelChange(model, {})
+        }
+        sortModel={sortModel}
+      />
       <Button
         color="secondary"
         data-testid="ViewDataTableToolbar-createColumn"

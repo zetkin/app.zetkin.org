@@ -1,5 +1,7 @@
 import React from 'react';
-import { lighten, makeStyles, TextareaAutosize } from '@material-ui/core';
+import { lighten, TextareaAutosize } from '@mui/material';
+
+import makeStyles from '@mui/styles/makeStyles';
 
 const useStyles = makeStyles((theme) => ({
   textarea: {

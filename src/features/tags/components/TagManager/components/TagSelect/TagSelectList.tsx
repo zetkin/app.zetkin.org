@@ -1,13 +1,7 @@
-import { Add } from '@material-ui/icons';
-import EditIcon from '@material-ui/icons/Edit';
+import { Add } from '@mui/icons-material';
+import EditIcon from '@mui/icons-material/Edit';
 import { FormattedMessage } from 'react-intl';
-import {
-  Box,
-  IconButton,
-  List,
-  ListItem,
-  ListSubheader,
-} from '@material-ui/core';
+import { Box, IconButton, List, ListItem, ListSubheader } from '@mui/material';
 
 import TagChip from '../TagChip';
 import { ZetkinTag } from 'utils/types/zetkin';
@@ -17,7 +11,7 @@ const TagSelectList: React.FC<{
   disabledTags: ZetkinTag[];
   groupedTags: { id: number | 'ungrouped'; tags: ZetkinTag[]; title: string }[];
   inputValue: string;
-  listProps: Record<string, unknown>;
+  listProps: React.HTMLAttributes<HTMLUListElement>;
   onEdit: (tag: ZetkinTag | Pick<ZetkinTag, 'title'>) => void;
   onSelect: (tag: ZetkinTag) => void;
 }> = ({
@@ -66,6 +60,7 @@ const TagSelectList: React.FC<{
                           e.stopPropagation();
                           onEdit(tag);
                         }}
+                        size="large"
                       >
                         <EditIcon fontSize="small" />
                       </IconButton>

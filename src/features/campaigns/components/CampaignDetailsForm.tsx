@@ -3,11 +3,10 @@ import { TextField } from 'mui-rff';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import { Link, MenuItem } from '@material-ui/core';
+import { Link, MenuItem } from '@mui/material';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
 
 import getUserMemberships from 'utils/fetching/getUserMemberships';
-import ZUIPersonSelect from '../../../zui/ZUIPersonSelect';
 import ZUISubmitCancelButtons from '../../../zui/ZUISubmitCancelButtons';
 import { ZetkinCampaign, ZetkinPerson } from 'utils/types/zetkin';
 
@@ -99,6 +98,7 @@ const CampaignDetailsForm = ({
             variant="outlined"
           />
 
+          {/* This is broken due to MUIv5 migration, but will be replaced by new UI
           <ZUIPersonSelect
             label={intl.formatMessage({
               id: 'misc.formDialog.campaign.manager.label',
@@ -109,6 +109,7 @@ const CampaignDetailsForm = ({
             }}
             selectedPerson={selectedManager}
           />
+          */}
 
           {userProfile && userProfile.id != selectedManager?.id && (
             <Link
@@ -124,6 +125,7 @@ const CampaignDetailsForm = ({
                   last_name: '',
                 } as ZetkinPerson);
               }}
+              underline="hover"
             >
               <Msg id="misc.formDialog.campaign.manager.selectSelf" />
             </Link>

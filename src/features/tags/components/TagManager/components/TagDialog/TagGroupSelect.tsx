@@ -1,6 +1,7 @@
+import { Autocomplete } from '@mui/material';
+import { createFilterOptions } from '@mui/material/useAutocomplete';
 import { useIntl } from 'react-intl';
-import { Autocomplete, createFilterOptions } from '@material-ui/lab';
-import { Box, TextField } from '@material-ui/core';
+import { Box, TextField } from '@mui/material';
 
 import { NewTagGroup } from '../../types';
 import { ZetkinTagGroup } from 'utils/types/zetkin';

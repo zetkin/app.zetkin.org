@@ -1,4 +1,6 @@
-import { makeStyles, TextField, TextFieldProps } from '@material-ui/core';
+import { TextField, TextFieldProps } from '@mui/material';
+
+import makeStyles from '@mui/styles/makeStyles';
 
 const useStyles = makeStyles((theme) => ({
   MuiInput: {
@@ -25,6 +27,7 @@ const StyledNumberInput: React.FC<TextFieldProps> = (props): JSX.Element => {
       type="number"
       {...props}
       inputProps={{ ...props.inputProps, className: classes.MuiInput }}
+      variant="standard"
     />
   );
 };

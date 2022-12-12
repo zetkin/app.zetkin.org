@@ -33,7 +33,7 @@ test.describe('Campaign detail page', async () => {
 
     await Promise.all([
       page.waitForNavigation(),
-      page.click('button > :text("Confirm")'),
+      page.click('button:text("Confirm")'),
     ]);
 
     expect(page.url()).toEqual(appUri + '/organize/1/campaigns');
@@ -51,7 +51,7 @@ test.describe('Campaign detail page', async () => {
 
     await page.click('data-testid=ZUIEllipsisMenu-menuActivator');
     await page.click('data-testid=ZUIEllipsisMenu-item-deleteCampaign');
-    await page.click('button > :text("Confirm")');
+    await page.click('button:text("Confirm")');
 
     await page.locator('data-testid=Snackbar-error').waitFor();
     const canSeeErrorSnackbar = await page

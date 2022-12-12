@@ -2,7 +2,7 @@
 import { FunctionComponent } from 'react';
 import { FormattedMessage as Msg } from 'react-intl';
 
-import { List, ListItem, ListItemText } from '@material-ui/core';
+import { List, ListItem, ListItemText } from '@mui/material';
 
 import CampaignListItem from './CampaignListItem';
 import PersonListItem from './PersonListItem';

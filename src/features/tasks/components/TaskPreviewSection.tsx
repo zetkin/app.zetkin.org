@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { AccessTime, Image as ImageIcon } from '@material-ui/icons';
-import { Box, Button, Card, Typography } from '@material-ui/core';
+import { AccessTime, Image as ImageIcon } from '@mui/icons-material';
+import { Box, Button, Card, Typography } from '@mui/material';
 import { FormattedMessage, useIntl } from 'react-intl';
 
 import { taskResource } from 'features/tasks/api/tasks';
