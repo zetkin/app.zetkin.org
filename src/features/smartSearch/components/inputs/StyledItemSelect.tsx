@@ -1,6 +1,6 @@
 import makeStyles from '@mui/styles/makeStyles';
 import { FormattedMessage as Msg } from 'react-intl';
-import { Autocomplete, AutocompleteProps } from '@mui/material';
+import { Autocomplete, AutocompleteProps, Box } from '@mui/material';
 import { Chip, TextField } from '@mui/material';
 import { Theme, Tooltip } from '@mui/material';
 
@@ -51,20 +51,28 @@ const StyledItemSelect = (props: StyledItemSelectProps): JSX.Element => {
           variant="standard"
         />
       )}
-      renderOption={(item) => {
+      renderOption={(optionProps, item) => {
         const title = item.title || '';
         const shortenedLabel = getEllipsedString(title, 15);
-        return shortenedLabel.length === title.length ? (
-          <Chip
-            key={item.id}
-            color="primary"
-            label={item.title}
-            variant="outlined"
-          />
-        ) : (
-          <Tooltip key={item.id} title={item.title}>
-            <Chip color="primary" label={shortenedLabel} variant="outlined" />
-          </Tooltip>
+        return (
+          <Box component="li" {...optionProps}>
+            {shortenedLabel.length === title.length ? (
+              <Chip
+                key={item.id}
+                color="primary"
+                label={item.title}
+                variant="outlined"
+              />
+            ) : (
+              <Tooltip key={item.id} title={item.title}>
+                <Chip
+                  color="primary"
+                  label={shortenedLabel}
+                  variant="outlined"
+                />
+              </Tooltip>
+            )}
+          </Box>
         );
       }}
       renderTags={() => null}
