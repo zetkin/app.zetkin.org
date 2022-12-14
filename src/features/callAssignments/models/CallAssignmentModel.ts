@@ -59,8 +59,12 @@ export default class CallAssignmentModel {
     return this._repo.getCallAssignment(this._orgId, this._id);
   }
 
-  getFilteredCallers(searchString: string): IFuture<CallAssignmentCaller[]> {
+  getFilteredCallers(searchString = ''): IFuture<CallAssignmentCaller[]> {
     const callers = this._repo.getCallAssignmentCallers(this._orgId, this._id);
+
+    if (callers.isLoading) {
+      return callers;
+    }
 
     if (callers.data && searchString) {
       const fuse = new Fuse(callers.data, {

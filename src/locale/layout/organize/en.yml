@@ -2,6 +2,9 @@ callAssignment:
   actions:
     end: End assignment
     start: Start assignment
+  stats:
+    callers: '{numCallers, plural, =0 {No callers} one {1 caller} other {# callers}}'
+    targets: '{numTargets, plural, =0 {No targets} one {1 targets} other {# targets}}'
   tabs:
     callers: Callers
     insights: Insights
