@@ -55,7 +55,11 @@ const TextElement: React.FunctionComponent<RenderElementProps> = ({
     );
   }
   if (element.type === 'link') {
-    return <LinkComponent {...{ attributes, children, element }} />;
+    return (
+      <LinkComponent attributes={attributes} element={element}>
+        {children}
+      </LinkComponent>
+    );
   } else {
     return (
       <p style={style} {...attributes}>

@@ -2,9 +2,9 @@ import { useIntl } from 'react-intl';
 import { Box, Collapse } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 
-import TextEditor from './Texteditor';
 import { ZetkinNoteBody } from 'utils/types/zetkin';
 import ZUISubmitCancelButtons from '../ZUISubmitCancelButtons';
+import ZUITextEditor from '../ZUITextEditor';
 import useFileUploads, {
   FileUploadState,
 } from 'features/files/hooks/useFileUploads';
@@ -57,7 +57,7 @@ const TimelineAddNote: React.FunctionComponent<AddNoteProps> = ({
       }}
     >
       <Box {...getDropZoneProps()}>
-        <TextEditor
+        <ZUITextEditor
           clear={clear}
           fileUploads={fileUploads}
           onCancelFile={cancelFileUpload}

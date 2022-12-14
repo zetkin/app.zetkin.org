@@ -53,7 +53,7 @@ const useStyles = makeStyles({
   },
 });
 
-export interface TextEditorProps {
+export interface ZUITextEditorProps {
   clear: number;
   fileUploads: FileUpload[];
   initialValue?: string;
@@ -63,7 +63,7 @@ export interface TextEditorProps {
   placeholder: string;
 }
 
-const TextEditor: React.FunctionComponent<TextEditorProps> = ({
+const ZUITextEditor: React.FunctionComponent<ZUITextEditorProps> = ({
   clear,
   fileUploads,
   initialValue,
@@ -192,4 +192,4 @@ export const Leaf: React.FunctionComponent<RenderLeafProps> = ({
   return <span {...attributes}>{children}</span>;
 };
 
-export default TextEditor;
+export default ZUITextEditor;

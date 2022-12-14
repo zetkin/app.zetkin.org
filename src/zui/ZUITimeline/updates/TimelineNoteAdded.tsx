@@ -5,7 +5,6 @@ import { useState } from 'react';
 
 import { Edit } from '@material-ui/icons';
 import EmailLoader from './elements/EmailLoader';
-import TextEditor from '../Texteditor';
 import UpdateContainer from './elements/UpdateContainer';
 import { ZetkinFileObjectChip } from 'zui/ZUIFileChip';
 import { ZetkinUpdateJourneyInstanceAddNote } from 'zui/ZUITimeline/types';
@@ -13,6 +12,7 @@ import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import ZUIMarkdown from 'zui/ZUIMarkdown';
 import ZUIPersonLink from 'zui/ZUIPersonLink';
 import ZUISubmitCancelButtons from 'zui/ZUISubmitCancelButtons';
+import ZUITextEditor from '../../ZUITextEditor';
 import { ZetkinFile, ZetkinNote } from 'utils/types/zetkin';
 
 interface Props {
@@ -78,7 +78,7 @@ const TimelineNoteAdded: React.FC<Props> = ({ onEditNote, update }) => {
             setEditing(false);
           }}
         >
-          <TextEditor
+          <ZUITextEditor
             clear={0}
             fileUploads={[]}
             initialValue={noteText}
