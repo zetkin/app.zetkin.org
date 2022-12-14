@@ -1,8 +1,14 @@
-import CallAssignmentModel from '../models/CallAssignmentModel';
+import { useIntl } from 'react-intl';
+import { Box, Button } from '@mui/material';
+
 import CallAssignmentStatusChip from '../components/CallAssignmentStatusChip';
 import TabbedLayout from '../../../utils/layout/TabbedLayout';
 import useModel from 'core/useModel';
+import ZUIDateRangePicker from 'zui/ZUIDateRangePicker/ZUIDateRangePicker';
 import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
+import CallAssignmentModel, {
+  CallAssignmentState,
+} from '../models/CallAssignmentModel';
 
 interface CallAssignmentLayoutProps {
   children: React.ReactNode;
@@ -17,6 +23,7 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
   campaignId,
   assignmentId,
 }) => {
+  const intl = useIntl();
   const model = useModel(
     (env) =>
       new CallAssignmentModel(env, parseInt(orgId), parseInt(assignmentId))
@@ -30,9 +37,38 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
 
   return (
     <TabbedLayout
+      actionButtons={
+        model.state == CallAssignmentState.OPEN ||
+        model.state == CallAssignmentState.ACTIVE ? (
+          <Button onClick={() => model.end()} variant="contained">
+            {intl.formatMessage({
+              id: 'layout.organize.callAssignment.actions.end',
+            })}
+          </Button>
+        ) : (
+          <Button onClick={() => model.start()} variant="contained">
+            {intl.formatMessage({
+              id: 'layout.organize.callAssignment.actions.start',
+            })}
+          </Button>
+        )
+      }
       baseHref={`/organize/${orgId}/campaigns/${campaignId}/callassignments/${assignmentId}`}
       defaultTab="/"
-      subtitle={<CallAssignmentStatusChip state={model.state} />}
+      subtitle={
+        <Box alignItems="center" display="flex">
+          <CallAssignmentStatusChip state={model.state} />
+          <Box marginX={2}>
+            <ZUIDateRangePicker
+              endDate={future.data.end_date || null}
+              onChange={(startDate, endDate) => {
+                model.setDates(startDate, endDate);
+              }}
+              startDate={future.data.start_date || null}
+            />
+          </Box>
+        </Box>
+      }
       tabs={[
         {
           href: '/',

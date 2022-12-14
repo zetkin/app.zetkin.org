@@ -10,9 +10,9 @@ export interface CallAssignmentCaller {
 
 export interface CallAssignmentData {
   cooldown: number;
-  end_date?: string;
+  end_date: string | null;
   id: number;
-  start_date?: string;
+  start_date: string | null;
   target: ZetkinQuery;
   title: string;
 }

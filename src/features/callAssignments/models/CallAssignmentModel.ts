@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import Fuse from 'fuse.js';
 
 import CallAssignmentsRepo from '../repos/CallAssignmentsRepo';
@@ -38,6 +39,20 @@ export default class CallAssignmentModel {
     this._orgId = orgId;
     this._id = id;
     this._repo = new CallAssignmentsRepo(env);
+  }
+
+  end(): void {
+    const { data } = this.getData();
+    if (!data) {
+      return;
+    }
+
+    const now = dayjs();
+    const today = now.format('YYYY-MM-DD');
+
+    this._repo.updateCallAssignment(this._orgId, this._id, {
+      end_date: today,
+    });
   }
 
   getData(): IFuture<CallAssignmentData> {
@@ -118,6 +133,13 @@ export default class CallAssignmentModel {
     this._repo.updateCallAssignment(this._orgId, this._id, { cooldown });
   }
 
+  setDates(startDate: string | null, endDate: string | null): void {
+    this._repo.updateCallAssignment(this._orgId, this._id, {
+      end_date: endDate,
+      start_date: startDate,
+    });
+  }
+
   setTargets(query: Partial<ZetkinQuery>): void {
     // TODO: Refactor once SmartSearch is supported in redux framework
     const state = this._store.getState();
@@ -149,6 +171,65 @@ export default class CallAssignmentModel {
 
   setTitle(title: string): void {
     this._repo.updateCallAssignment(this._orgId, this._id, { title });
+  }
+
+  start(): void {
+    const { data } = this.getData();
+    if (!data) {
+      return;
+    }
+
+    const now = dayjs();
+    const today = now.format('YYYY-MM-DD');
+
+    const { start_date: startStr, end_date: endStr } = data;
+
+    if (!startStr && !endStr) {
+      this._repo.updateCallAssignment(this._orgId, this._id, {
+        start_date: today,
+      });
+    } else if (!startStr) {
+      // End date is non-null
+      const endDate = dayjs(endStr);
+      if (endDate.isBefore(today)) {
+        this._repo.updateCallAssignment(this._orgId, this._id, {
+          end_date: null,
+          start_date: today,
+        });
+      } else if (endDate.isAfter(today)) {
+        this._repo.updateCallAssignment(this._orgId, this._id, {
+          start_date: today,
+        });
+      }
+    } else if (!endStr) {
+      // Start date is non-null
+      const startDate = dayjs(startStr);
+      if (startDate.isAfter(today)) {
+        // End date is null, start date is future
+        this._repo.updateCallAssignment(this._orgId, this._id, {
+          start_date: today,
+        });
+      }
+    } else {
+      // Start and end date are non-null
+      const startDate = dayjs(startStr);
+      const endDate = dayjs(endStr);
+
+      if (
+        (startDate.isBefore(today) || startDate.isSame(today)) &&
+        (endDate.isBefore(today) || endDate.isSame(today))
+      ) {
+        // Start is past, end is past
+        this._repo.updateCallAssignment(this._orgId, this._id, {
+          end_date: null,
+        });
+      } else if (startDate.isAfter(today) && endDate.isAfter(today)) {
+        // Start is future, end is future
+        this._repo.updateCallAssignment(this._orgId, this._id, {
+          start_date: today,
+        });
+      }
+    }
   }
 
   get state(): CallAssignmentState {

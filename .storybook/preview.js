@@ -1,6 +1,8 @@
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import { IntlProvider } from 'react-intl';
 import isoWeek from 'dayjs/plugin/isoWeek';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { muiTheme } from 'storybook-addon-material-ui';
 import { RouterContext } from 'next/dist/shared/lib/router-context'; // next 11.1
 import withMock from 'storybook-addon-mock';
@@ -25,7 +27,9 @@ const AsyncIntlProvider = (props) => {
 
   return (
     <IntlProvider defaultLocale="en" locale="en" messages={messages}>
-      {props.children}
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        {props.children}
+      </LocalizationProvider>
     </IntlProvider>
   );
 
