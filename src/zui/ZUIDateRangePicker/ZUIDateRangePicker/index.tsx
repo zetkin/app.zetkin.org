@@ -58,10 +58,7 @@ const ZUIDateRangePicker: FC<ZUIDateRangePickerProps> = ({
 }) => {
   const intl = useIntl();
   const [anchorEl, setAnchorEl] = useState<HTMLSpanElement | null>(null);
-  const [value, setValue] = useState<DateRange<Dayjs>>([
-    dayjs('1857-07-05'),
-    dayjs('1933-06-20'),
-  ]);
+  const [value, setValue] = useState<DateRange<Dayjs>>([null, null]);
 
   const classes = useStyles();
 
@@ -164,9 +161,18 @@ interface DateTextFieldProps {
 
 const DateTextField: FC<DateTextFieldProps> = ({ label, onChange, value }) => {
   const [rawValue, setRawValue] = useState('');
+  const intl = useIntl();
 
   const resetValue = () => {
-    setRawValue(value?.format('l') ?? '');
+    setRawValue(
+      value
+        ? intl.formatDate(value.toDate(), {
+            day: 'numeric',
+            month: 'numeric',
+            year: 'numeric',
+          })
+        : ''
+    );
   };
 
   useEffect(() => {
