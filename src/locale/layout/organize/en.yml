@@ -4,6 +4,7 @@ callAssignment:
     start: Start assignment
   tabs:
     callers: Callers
+    conversation: Conversation
     insights: Insights
     overview: Overview
 campaigns:
