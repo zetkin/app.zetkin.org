@@ -78,6 +78,7 @@ const callAssignmentsSlice = createSlice({
     },
     callersLoad: (state, action: PayloadAction<number>) => {
       state.callersById[action.payload] = remoteList<CallAssignmentCaller>();
+      state.callersById[action.payload].isLoading = true;
     },
     callersLoaded: (
       state,
