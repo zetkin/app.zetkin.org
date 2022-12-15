@@ -55,7 +55,7 @@ const useStyles = makeStyles({
 
 export interface ZUITextEditorProps {
   clear: number;
-  fileUploads: FileUpload[];
+  fileUploads?: FileUpload[];
   initialValue?: string;
   onChange: (value: string) => void;
   onCancelFile?: (file: FileUpload) => void;
@@ -100,6 +100,7 @@ const ZUITextEditor: React.FunctionComponent<ZUITextEditorProps> = ({
       }
     })();
   }, [initialValue]);
+
   useEffect(() => {
     if (clear > 0) {
       clearEditor();
@@ -134,19 +135,20 @@ const ZUITextEditor: React.FunctionComponent<ZUITextEditorProps> = ({
             </Collapse>
           </Slate>
         )}
-        {fileUploads.map((fileUpload) => {
-          return (
-            <ZetkinFileUploadChip
-              key={fileUpload.key}
-              fileUpload={fileUpload}
-              onDelete={() => {
-                if (onCancelFile) {
-                  onCancelFile(fileUpload);
-                }
-              }}
-            />
-          );
-        })}
+        {fileUploads &&
+          fileUploads.map((fileUpload) => {
+            return (
+              <ZetkinFileUploadChip
+                key={fileUpload.key}
+                fileUpload={fileUpload}
+                onDelete={() => {
+                  if (onCancelFile) {
+                    onCancelFile(fileUpload);
+                  }
+                }}
+              />
+            );
+          })}
       </Box>
     </ClickAwayListener>
   );
