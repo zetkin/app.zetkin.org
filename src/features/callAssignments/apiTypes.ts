@@ -12,6 +12,7 @@ export interface CallAssignmentData {
   cooldown: number;
   end_date: string | null;
   id: number;
+  instructions: string;
   start_date: string | null;
   target: ZetkinQuery;
   title: string;

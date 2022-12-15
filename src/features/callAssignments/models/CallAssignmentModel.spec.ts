@@ -47,6 +47,7 @@ describe('CallAssignmentModel', () => {
               cooldown: 3,
               end_date: null,
               id: 2,
+              instructions: 'Be nice when you call people.',
               start_date: null,
               target: {
                 filter_spec: [],
@@ -75,6 +76,7 @@ describe('CallAssignmentModel', () => {
               cooldown: 3,
               end_date: null,
               id: 2,
+              instructions: 'Be nice when you call people.',
               start_date: null,
               target: {
                 filter_spec: [
@@ -113,6 +115,7 @@ describe('CallAssignmentModel', () => {
             cooldown: 3,
             end_date: endDate,
             id: 2,
+            instructions: 'Be nice when you call people.',
             start_date: startDate,
             target: {
               filter_spec: [{ config: {}, type: FILTER_TYPE.ALL }],
@@ -253,6 +256,7 @@ describe('CallAssignmentModel', () => {
               cooldown: 3,
               end_date: null,
               id: 2,
+              instructions: 'Be nice when you call people.',
               start_date: null,
               target: {
                 filter_spec: [],
@@ -286,6 +290,7 @@ describe('CallAssignmentModel', () => {
               cooldown: 3,
               end_date: null,
               id: 2,
+              instructions: 'Be nice when you call people.',
               start_date: null,
               target: {
                 filter_spec: [
@@ -352,6 +357,7 @@ describe('CallAssignmentModel', () => {
               cooldown: 3,
               end_date: null,
               id: 2,
+              instructions: 'Be nice when you call people.',
               start_date: null,
               target: {
                 filter_spec: [
@@ -562,6 +568,7 @@ describe('CallAssignmentModel', () => {
             cooldown: 3,
             end_date: endDate,
             id: 2,
+            instructions: 'Be nice when you call people.',
             start_date: startDate,
             target: {
               filter_spec: [{ config: {}, type: FILTER_TYPE.ALL }],
@@ -623,6 +630,7 @@ describe('CallAssignmentModel', () => {
             cooldown: 3,
             end_date: endDate,
             id: 2,
+            instructions: 'Be nice when you call people.',
             start_date: startDate,
             target: {
               filter_spec: [{ config: {}, type: FILTER_TYPE.ALL }],
