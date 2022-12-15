@@ -54,7 +54,7 @@ const useStyles = makeStyles({
 });
 
 export interface ZUITextEditorProps {
-  clear: number;
+  clear?: number;
   fileUploads?: FileUpload[];
   initialValue?: string;
   onChange: (value: string) => void;
@@ -102,7 +102,7 @@ const ZUITextEditor: React.FunctionComponent<ZUITextEditorProps> = ({
   }, [initialValue]);
 
   useEffect(() => {
-    if (clear > 0) {
+    if (clear && clear > 0) {
       clearEditor();
       setActive(false);
     }
