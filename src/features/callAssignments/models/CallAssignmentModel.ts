@@ -118,22 +118,6 @@ export default class CallAssignmentModel {
     return data && data.target?.filter_spec?.length != 0;
   }
 
-  setCallerInstructions(instructions: string): void {
-    const state = this._store.getState();
-    const caItem = state.callAssignments.assignmentList.items.find(
-      (item) => item.id === this._id
-    );
-
-    const callAssignment = caItem?.data;
-
-    //if instructions have not changed, do nothing.
-    if (instructions === callAssignment?.instructions) {
-      return;
-    }
-
-    this._repo.updateCallAssignment(this._orgId, this._id, { instructions });
-  }
-
   setCooldown(cooldown: number): void {
     const state = this._store.getState();
     const caItem = state.callAssignments.assignmentList.items.find(

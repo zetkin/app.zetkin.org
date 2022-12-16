@@ -5,8 +5,8 @@ import { Box, Button, Paper, Typography } from '@mui/material';
 
 import CallAssignmentLayout from 'features/callAssignments/layout/CallAssignmentLayout';
 import CallAssignmentModel from 'features/callAssignments/models/CallAssignmentModel';
+import CallerInstructionsModel from 'features/callAssignments/models/CallerInstructionsModel';
 import { PageWithLayout } from 'utils/types';
-
 import { scaffold } from 'utils/next';
 import useModel from 'core/useModel';
 import ZUITextEditor from 'zui/ZUITextEditor';
@@ -43,18 +43,30 @@ const ConversationPage: PageWithLayout<ConversationPageProps> = ({
   assignmentId,
   orgId,
 }) => {
-  const model = useModel(
+  const callAssignmentModel = useModel(
     (store) =>
       new CallAssignmentModel(store, parseInt(orgId), parseInt(assignmentId))
   );
-  const future = model.getData();
+  const callerInstructionsModel = useModel(
+    (store) =>
+      new CallerInstructionsModel(
+        store,
+        parseInt(orgId),
+        parseInt(assignmentId)
+      )
+  );
+
+  const caFuture = callAssignmentModel.getData();
 
   const [instructions, setInstructions] = useState(
-    future.data?.instructions || ''
+    callerInstructionsModel.getInstructions() ||
+      caFuture.data?.instructions ||
+      ''
   );
 
   const onChange = (markdown: string) => {
     setInstructions(markdown);
+    callerInstructionsModel.setInstructions(instructions);
   };
 
   return (
@@ -64,14 +76,14 @@ const ConversationPage: PageWithLayout<ConversationPageProps> = ({
         <form
           onSubmit={(evt) => {
             evt.preventDefault();
-            model.setCallerInstructions(instructions);
+            callerInstructionsModel.save();
           }}
         >
           <Box marginBottom={2} marginTop={4}>
             <ZUITextEditor
-              initialValue={future.data?.instructions}
+              initialValue={caFuture.data?.instructions}
               onChange={onChange}
-              placeholder={'Add instructions for your callers'}
+              placeholder="Add instructions for your callers"
             />
           </Box>
           <Box display="flex" justifyContent="flex-end">
