@@ -144,6 +144,35 @@ export default class CallAssignmentModel {
     });
   }
 
+  setGoal(query: Partial<ZetkinQuery>) {
+    // TODO: Refactor once SmartSearch is supported in redux framework
+    const state = this._store.getState();
+    const caItem = state.callAssignments.assignmentList.items.find(
+      (item) => item.id == this._id
+    );
+    const callAssignment = caItem?.data;
+
+    if (callAssignment) {
+      this._store.dispatch(callAssignmentLoad(this._id));
+      fetch(
+        `/api/orgs/${this._orgId}/people/queries/${callAssignment.goal.id}`,
+        {
+          body: JSON.stringify(query),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          method: 'PATCH',
+        }
+      )
+        .then((res) => res.json())
+        .then((data: { data: ZetkinQuery }) =>
+          this._store.dispatch(
+            callAssignmentUpdated({ ...callAssignment, goal: data.data })
+          )
+        );
+    }
+  }
+
   setTargets(query: Partial<ZetkinQuery>): void {
     // TODO: Refactor once SmartSearch is supported in redux framework
     const state = this._store.getState();
