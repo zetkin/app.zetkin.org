@@ -4,7 +4,6 @@ import Fuse from 'fuse.js';
 import CallAssignmentsRepo from '../repos/CallAssignmentsRepo';
 import Environment from 'core/env/Environment';
 import { Store } from 'core/store';
-import { ZetkinQuery } from 'utils/types/zetkin';
 import {
   CallAssignmentCaller,
   CallAssignmentData,
@@ -16,6 +15,7 @@ import {
   PlaceholderFuture,
   ResolvedFuture,
 } from 'core/caching/futures';
+import { ZetkinPerson, ZetkinQuery } from 'utils/types/zetkin';
 
 export enum CallAssignmentState {
   ACTIVE = 'active',
@@ -32,6 +32,10 @@ export default class CallAssignmentModel {
   private _orgId: number;
   private _repo: CallAssignmentsRepo;
   private _store: Store;
+
+  addCaller(person: ZetkinPerson): void {
+    this._repo.addCaller(this._orgId, this._id, person.id);
+  }
 
   constructor(env: Environment, orgId: number, id: number) {
     this._env = env;

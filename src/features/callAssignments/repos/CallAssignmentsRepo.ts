@@ -11,6 +11,8 @@ import {
   callAssignmentLoad,
   callAssignmentLoaded,
   callAssignmentUpdated,
+  callerAdd,
+  callerAdded,
   callersLoad,
   callersLoaded,
   statsLoad,
@@ -26,6 +28,20 @@ import {
 export default class CallAssignmentsRepo {
   private _apiClient: IApiClient;
   private _store: Store;
+
+  addCaller(orgId: number, id: number, callerId: number) {
+    this._store.dispatch(callerAdd([id, callerId]));
+    const promise = this._apiClient
+      .put<CallAssignmentCaller>(
+        `/api/orgs/${orgId}/call_assignments/${id}/callers/${callerId}`
+      )
+      .then((data) => {
+        this._store.dispatch(callerAdded([id, data]));
+        return data;
+      });
+
+    return new PromiseFuture(promise);
+  }
 
   constructor(env: Environment) {
     this._apiClient = env.apiClient;

@@ -76,6 +76,21 @@ const callAssignmentsSlice = createSlice({
         .filter((ca) => ca.id != action.payload.id)
         .concat([remoteItem(action.payload.id, { data: action.payload })]);
     },
+    callerAdd: (state, action: PayloadAction<[number, number]>) => {
+      const [assignmentId, callerId] = action.payload;
+      state.callersById[assignmentId].items.push(
+        remoteItem(callerId, { isLoading: true })
+      );
+    },
+    callerAdded: (
+      state,
+      action: PayloadAction<[number, CallAssignmentCaller]>
+    ) => {
+      const [caId, caller] = action.payload;
+      state.callersById[caId].items = state.callersById[caId].items
+        .filter((c) => c.id != caller.id)
+        .concat([remoteItem(caller.id, { data: caller })]);
+    },
     callersLoad: (state, action: PayloadAction<number>) => {
       state.callersById[action.payload] = remoteList<CallAssignmentCaller>();
       state.callersById[action.payload].isLoading = true;
@@ -127,6 +142,8 @@ export const {
   callAssignmentLoad,
   callAssignmentLoaded,
   callAssignmentUpdated,
+  callerAdd,
+  callerAdded,
   callersLoad,
   callersLoaded,
   statsLoad,
