@@ -121,6 +121,7 @@ const CallAssignmentCallersList = ({
       disableColumnMenu
       disableColumnReorder
       disableColumnResize
+      hideFooter
       rows={rows}
       style={{
         border: 'none',

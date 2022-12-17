@@ -9,14 +9,16 @@ import {
   Typography,
 } from '@mui/material';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import CallAssignmentCallersList from 'features/callAssignments/components/CallAssignmentCallersList';
 import CallAssignmentLayout from 'features/callAssignments/layout/CallAssignmentLayout';
 import CallAssignmentModel from 'features/callAssignments/models/CallAssignmentModel';
+import { MUIOnlyPersonSelect } from 'zui/ZUIPersonSelect';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import useModel from 'core/useModel';
+import { ZetkinPerson } from 'utils/types/zetkin';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   async (ctx) => {
@@ -58,6 +60,7 @@ const CallersPage: PageWithLayout<CallersPageProps> = ({
       new CallAssignmentModel(store, parseInt(orgId), parseInt(assignmentId))
   );
   const intl = useIntl();
+  const selectInputRef = useRef<HTMLInputElement>();
 
   useEffect(() => {
     setOnServer(false);
@@ -68,6 +71,9 @@ const CallersPage: PageWithLayout<CallersPageProps> = ({
   }
 
   const future = model.getFilteredCallers(searchString);
+
+  const isCaller = (person: ZetkinPerson) =>
+    !!model.getFilteredCallers().data?.find((caller) => caller.id == person.id);
 
   return (
     <Box>
@@ -100,6 +106,31 @@ const CallersPage: PageWithLayout<CallersPageProps> = ({
           <CallAssignmentCallersList callers={future.data || []} />
         </Box>
       </Paper>
+      <Box marginTop={2}>
+        <MUIOnlyPersonSelect
+          getOptionDisabled={isCaller}
+          getOptionExtraLabel={(person) =>
+            isCaller(person)
+              ? intl.formatMessage({
+                  id: 'pages.organizeCallAssignment.callers.add.alreadyAdded',
+                })
+              : ''
+          }
+          inputRef={selectInputRef}
+          onChange={(person) => {
+            model.addCaller(person);
+
+            // Blur and re-focus input to reset, so that user can type again to
+            // add another person, without taking their hands off the keyboard.
+            selectInputRef?.current?.blur();
+            selectInputRef?.current?.focus();
+          }}
+          placeholder={intl.formatMessage({
+            id: 'pages.organizeCallAssignment.callers.add.placeholder',
+          })}
+          selectedPerson={null}
+        />
+      </Box>
     </Box>
   );
 };

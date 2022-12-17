@@ -9,6 +9,9 @@ blocked:
   subtitle: Targets not ready to be called
   title: Blocked
 callers:
+  add:
+    alreadyAdded: Already added
+    placeholder: Add caller
   excludedTagsColumn: Excluded tags
   nameColumn: Name
   prioritizedTagsColumn: Prioritized tags
