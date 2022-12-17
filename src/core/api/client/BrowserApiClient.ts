@@ -21,4 +21,25 @@ export default class BrowserApiClient implements IApiClient {
     const body = await res.json();
     return body.data;
   }
+
+  async put<DataType = void>(
+    path: string,
+    data?: Partial<DataType> | undefined
+  ): Promise<DataType> {
+    const options: RequestInit = {
+      method: 'PUT',
+    };
+
+    if (data) {
+      options.body = JSON.stringify(data);
+      options.headers = {
+        'Content-Type': 'application/json',
+      };
+    }
+
+    const res = await fetch(path, options);
+
+    const body = await res.json();
+    return body.data;
+  }
 }
