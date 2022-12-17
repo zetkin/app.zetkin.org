@@ -22,7 +22,7 @@ function ZUIFuture<DataType>({
   future,
   ignoreDataWhileLoading = false,
   skeleton,
-  skeletonHeight = 50,
+  skeletonHeight,
   skeletonWidth = 50,
 }: ZUIFutureProps<DataType>): ReturnType<FC> {
   if (!skeleton) {
