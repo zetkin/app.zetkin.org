@@ -2,7 +2,7 @@ import { makeStyles } from '@mui/styles';
 import { useIntl } from 'react-intl';
 import { useRouter } from 'next/router';
 import { Avatar, Box, Tooltip } from '@mui/material';
-import { DataGridPro, GridColDef, GridRowData } from '@mui/x-data-grid-pro';
+import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
 
 import { CallAssignmentCaller } from '../apiTypes';
 import TagChip from 'features/tags/components/TagManager/components/TagChip';
@@ -64,7 +64,7 @@ const CallAssignmentCallersList = ({
   const intl = useIntl();
   const { orgId } = useRouter().query;
 
-  const columns: GridColDef[] = [
+  const columns: GridColDef<CallAssignmentCaller>[] = [
     {
       disableColumnMenu: true,
       field: 'id',
@@ -80,38 +80,32 @@ const CallAssignmentCallersList = ({
       headerName: intl.formatMessage({
         id: 'pages.organizeCallAssignment.callers.nameColumn',
       }),
+      valueGetter: (params) =>
+        `${params.row.first_name} ${params.row.last_name}`,
     },
     {
-      field: 'prioritizedTags',
+      field: 'prioritized_tags',
       flex: 1,
       headerName: intl.formatMessage({
         id: 'pages.organizeCallAssignment.callers.prioritizedTagsColumn',
       }),
       renderCell: (props) => {
-        return <TagsCell tags={props.row.prioritizedTags} />;
+        return <TagsCell tags={props.row.prioritized_tags} />;
       },
       sortable: false,
     },
     {
-      field: 'excludedTags',
+      field: 'excluded_tags',
       flex: 1,
       headerName: intl.formatMessage({
         id: 'pages.organizeCallAssignment.callers.excludedTagsColumn',
       }),
       renderCell: (props) => {
-        return <TagsCell tags={props.row.excludedTags} />;
+        return <TagsCell tags={props.row.excluded_tags} />;
       },
       sortable: false,
     },
   ];
-
-  const rows: GridRowData[] =
-    callers.map((caller) => ({
-      excludedTags: caller.excluded_tags,
-      id: caller.id,
-      name: `${caller.first_name} ${caller.last_name}`,
-      prioritizedTags: caller.prioritized_tags,
-    })) ?? [];
 
   return (
     <DataGridPro
@@ -122,7 +116,7 @@ const CallAssignmentCallersList = ({
       disableColumnReorder
       disableColumnResize
       hideFooter
-      rows={rows}
+      rows={callers}
       style={{
         border: 'none',
       }}
