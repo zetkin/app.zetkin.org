@@ -110,6 +110,7 @@ const CallersPage: PageWithLayout<CallersPageProps> = ({
           <CallAssignmentCallersList
             callers={future.data || []}
             onCustomize={(caller) => setSelectedCaller(caller)}
+            onRemove={(caller) => model.removeCaller(caller.id)}
           />
         </Box>
       </Paper>

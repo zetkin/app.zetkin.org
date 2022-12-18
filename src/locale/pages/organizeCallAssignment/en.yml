@@ -11,6 +11,7 @@ blocked:
 callers:
   actions:
     customize: Customize queue
+    remove: Remove from assignment
   add:
     alreadyAdded: Already added
     placeholder: Add caller

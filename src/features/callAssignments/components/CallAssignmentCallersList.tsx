@@ -9,7 +9,7 @@ import TagChip from 'features/tags/components/TagManager/components/TagChip';
 import { ZetkinTag } from 'utils/types/zetkin';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import ZUIResponsiveContainer from 'zui/ZUIResponsiveContainer';
-import { Edit } from '@mui/icons-material';
+import { Delete, Edit } from '@mui/icons-material';
 
 const useStyles = makeStyles((theme) => ({
   chip: {
@@ -61,9 +61,11 @@ const TagsCell = ({ tags }: { tags: ZetkinTag[] }) => {
 const CallAssignmentCallersList = ({
   callers,
   onCustomize,
+  onRemove,
 }: {
   callers: CallAssignmentCaller[];
   onCustomize: (caller: CallAssignmentCaller) => void;
+  onRemove: (caller: CallAssignmentCaller) => void;
 }) => {
   const intl = useIntl();
   const { orgId } = useRouter().query;
@@ -128,6 +130,13 @@ const CallAssignmentCallersList = ({
                   }),
                   onSelect: () => onCustomize(props.row),
                   startIcon: <Edit />,
+                },
+                {
+                  label: intl.formatMessage({
+                    id: 'pages.organizeCallAssignment.callers.actions.remove',
+                  }),
+                  onSelect: () => onRemove(props.row),
+                  startIcon: <Delete />,
                 },
               ]}
             />
