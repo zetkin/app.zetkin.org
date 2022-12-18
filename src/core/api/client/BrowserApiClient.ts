@@ -1,6 +1,12 @@
 import IApiClient from './IApiClient';
 
 export default class BrowserApiClient implements IApiClient {
+  async delete(path: string): Promise<void> {
+    await fetch(path, {
+      method: 'DELETE',
+    });
+  }
+
   async get<DataType>(path: string): Promise<DataType> {
     const res = await fetch(path);
     const body = await res.json();

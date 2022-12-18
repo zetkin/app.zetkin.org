@@ -1,4 +1,5 @@
 export default interface IApiClient {
+  delete(path: string): Promise<void>;
   put<DataType = void>(
     path: string,
     data?: Partial<DataType>
