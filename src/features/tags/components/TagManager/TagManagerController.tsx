@@ -15,6 +15,7 @@ export interface TagManagerControllerProps {
   disableEditTags?: boolean;
   disabledTags?: ZetkinTag[];
   groupTags?: boolean;
+  ignoreValues?: boolean;
   onAssignTag: (tag: ZetkinTag) => void;
   onCreateTag: (tag: NewTag) => Promise<ZetkinTag>;
   onEditTag: (tag: EditTag) => void;
@@ -30,6 +31,7 @@ export const TagManagerController: React.FunctionComponent<
   disableEditTags,
   disabledTags,
   groupTags = true,
+  ignoreValues = false,
   onAssignTag,
   onCreateTag,
   onEditTag,
@@ -62,6 +64,7 @@ export const TagManagerController: React.FunctionComponent<
             disabledTags={disabledTags || assignedTags}
             disableEditTags={disableEditTags}
             groups={availableGroups}
+            ignoreValues={ignoreValues}
             onClose={() => setAddTagButton(null)}
             onCreateTag={async (tag) => {
               const newTag = await onCreateTag(tag);
