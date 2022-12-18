@@ -1,8 +1,8 @@
 import { makeStyles } from '@mui/styles';
-import { useIntl } from 'react-intl';
 import { useRouter } from 'next/router';
-import { Avatar, Box, Tooltip } from '@mui/material';
+import { Avatar, Box, Button, Tooltip } from '@mui/material';
 import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
+import { FormattedMessage as Msg, useIntl } from 'react-intl';
 
 import { CallAssignmentCaller } from '../apiTypes';
 import TagChip from 'features/tags/components/TagManager/components/TagChip';
@@ -58,8 +58,10 @@ const TagsCell = ({ tags }: { tags: ZetkinTag[] }) => {
 
 const CallAssignmentCallersList = ({
   callers,
+  onCustomize,
 }: {
   callers: CallAssignmentCaller[];
+  onCustomize: (caller: CallAssignmentCaller) => void;
 }) => {
   const intl = useIntl();
   const { orgId } = useRouter().query;
@@ -105,6 +107,22 @@ const CallAssignmentCallersList = ({
       },
       sortable: false,
     },
+    {
+      align: 'right',
+      field: 'actions',
+      flex: 1,
+      headerName: '',
+      renderCell: (props) => {
+        return (
+          <Box>
+            <Button onClick={() => onCustomize(props.row)} variant="outlined">
+              <Msg id="pages.organizeCallAssignment.callers.customizeButton" />
+            </Button>
+          </Box>
+        );
+      },
+      sortable: false,
+    },
   ];
 
   return (
@@ -115,6 +133,7 @@ const CallAssignmentCallersList = ({
       disableColumnMenu
       disableColumnReorder
       disableColumnResize
+      disableSelectionOnClick
       hideFooter
       rows={callers}
       style={{

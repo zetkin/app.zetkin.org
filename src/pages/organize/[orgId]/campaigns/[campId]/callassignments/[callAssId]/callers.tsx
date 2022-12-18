@@ -11,9 +11,11 @@ import {
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
 import { useEffect, useRef, useState } from 'react';
 
+import { CallAssignmentCaller } from 'features/callAssignments/apiTypes';
 import CallAssignmentCallersList from 'features/callAssignments/components/CallAssignmentCallersList';
 import CallAssignmentLayout from 'features/callAssignments/layout/CallAssignmentLayout';
 import CallAssignmentModel from 'features/callAssignments/models/CallAssignmentModel';
+import CallerConfigDialog from 'features/callAssignments/components/CallerConfigDialog';
 import { MUIOnlyPersonSelect } from 'zui/ZUIPersonSelect';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
@@ -61,6 +63,8 @@ const CallersPage: PageWithLayout<CallersPageProps> = ({
   );
   const intl = useIntl();
   const selectInputRef = useRef<HTMLInputElement>();
+  const [selectedCaller, setSelectedCaller] =
+    useState<CallAssignmentCaller | null>(null);
 
   useEffect(() => {
     setOnServer(false);
@@ -103,7 +107,10 @@ const CallersPage: PageWithLayout<CallersPageProps> = ({
               variant="outlined"
             />
           </Box>
-          <CallAssignmentCallersList callers={future.data || []} />
+          <CallAssignmentCallersList
+            callers={future.data || []}
+            onCustomize={(caller) => setSelectedCaller(caller)}
+          />
         </Box>
       </Paper>
       <Box marginTop={2}>
@@ -131,6 +138,17 @@ const CallersPage: PageWithLayout<CallersPageProps> = ({
           selectedPerson={null}
         />
       </Box>
+      <CallerConfigDialog
+        caller={selectedCaller}
+        onClose={() => setSelectedCaller(null)}
+        onSubmit={(prioTags, excludedTags) => {
+          if (selectedCaller) {
+            model.setCallerTags(selectedCaller.id, prioTags, excludedTags);
+          }
+          setSelectedCaller(null);
+        }}
+        open={!!selectedCaller}
+      />
     </Box>
   );
 };

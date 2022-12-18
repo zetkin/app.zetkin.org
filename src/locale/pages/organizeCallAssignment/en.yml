@@ -12,6 +12,15 @@ callers:
   add:
     alreadyAdded: Already added
     placeholder: Add caller
+  customize:
+    exclude:
+      h: Excluded tags
+      intro: Never call targets with these tags.
+    prioritize:
+      h: Prioritized tags
+      intro: First call targets with these tags.
+    title: Customize Queue for {name}
+  customizeButton: Customize
   excludedTagsColumn: Excluded tags
   nameColumn: Name
   prioritizedTagsColumn: Prioritized tags
