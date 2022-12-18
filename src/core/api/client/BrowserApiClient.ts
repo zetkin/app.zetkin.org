@@ -22,6 +22,21 @@ export default class BrowserApiClient implements IApiClient {
     return body.data;
   }
 
+  async post<DataType, InputType = DataType>(
+    path: string,
+    data: Partial<InputType>
+  ): Promise<DataType> {
+    const res = await fetch(path, {
+      body: JSON.stringify(data),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      method: 'POST',
+    });
+    const body = await res.json();
+    return body.data;
+  }
+
   async put<DataType = void>(
     path: string,
     data?: Partial<DataType> | undefined
