@@ -1,7 +1,9 @@
+import { BodySchema } from 'pages/api/callAssignments/setCallerTags';
 import Environment from 'core/env/Environment';
 import IApiClient from 'core/api/client/IApiClient';
 import shouldLoad from 'core/caching/shouldLoad';
 import { Store } from 'core/store';
+import { ZetkinTag } from '../../../utils/types/zetkin';
 import {
   CallAssignmentCaller,
   CallAssignmentData,
@@ -13,6 +15,8 @@ import {
   callAssignmentUpdated,
   callerAdd,
   callerAdded,
+  callerConfigure,
+  callerConfigured,
   callersLoad,
   callersLoaded,
   statsLoad,
@@ -113,6 +117,30 @@ export default class CallAssignmentsRepo {
     } else {
       return new RemoteItemFuture(statsItem);
     }
+  }
+
+  setCallerTags(
+    orgId: number,
+    assignmentId: number,
+    callerId: number,
+    prioTags: ZetkinTag[],
+    excludedTags: ZetkinTag[]
+  ) {
+    this._store.dispatch(callerConfigure([assignmentId, callerId]));
+    this._apiClient
+      .post<CallAssignmentCaller, BodySchema>(
+        `/api/callAssignments/setCallerTags`,
+        {
+          assignmentId,
+          callerId,
+          excludedTags: excludedTags.map((tag) => tag.id),
+          orgId,
+          prioTags: prioTags.map((tag) => tag.id),
+        }
+      )
+      .then((data: CallAssignmentCaller) => {
+        this._store.dispatch(callerConfigured([assignmentId, data]));
+      });
   }
 
   updateCallAssignment(

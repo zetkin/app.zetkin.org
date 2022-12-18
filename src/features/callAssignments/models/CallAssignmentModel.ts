@@ -15,7 +15,7 @@ import {
   PlaceholderFuture,
   ResolvedFuture,
 } from 'core/caching/futures';
-import { ZetkinPerson, ZetkinQuery } from 'utils/types/zetkin';
+import { ZetkinPerson, ZetkinQuery, ZetkinTag } from 'utils/types/zetkin';
 
 export enum CallAssignmentState {
   ACTIVE = 'active',
@@ -124,6 +124,20 @@ export default class CallAssignmentModel {
   get isTargeted() {
     const { data } = this.getData();
     return data && data.target?.filter_spec?.length != 0;
+  }
+
+  setCallerTags(
+    callerId: number,
+    prioTags: ZetkinTag[],
+    excludedTags: ZetkinTag[]
+  ): void {
+    this._repo.setCallerTags(
+      this._orgId,
+      this._id,
+      callerId,
+      prioTags,
+      excludedTags
+    );
   }
 
   setCooldown(cooldown: number): void {
