@@ -7,7 +7,9 @@ import { FormattedMessage as Msg, useIntl } from 'react-intl';
 import { CallAssignmentCaller } from '../apiTypes';
 import TagChip from 'features/tags/components/TagManager/components/TagChip';
 import { ZetkinTag } from 'utils/types/zetkin';
+import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import ZUIResponsiveContainer from 'zui/ZUIResponsiveContainer';
+import { Edit } from '@mui/icons-material';
 
 const useStyles = makeStyles((theme) => ({
   chip: {
@@ -118,6 +120,17 @@ const CallAssignmentCallersList = ({
             <Button onClick={() => onCustomize(props.row)} variant="outlined">
               <Msg id="pages.organizeCallAssignment.callers.customizeButton" />
             </Button>
+            <ZUIEllipsisMenu
+              items={[
+                {
+                  label: intl.formatMessage({
+                    id: 'pages.organizeCallAssignment.callers.actions.customize',
+                  }),
+                  onSelect: () => onCustomize(props.row),
+                  startIcon: <Edit />,
+                },
+              ]}
+            />
           </Box>
         );
       },

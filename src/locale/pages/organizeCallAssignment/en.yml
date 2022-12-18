@@ -9,6 +9,8 @@ blocked:
   subtitle: Targets not ready to be called
   title: Blocked
 callers:
+  actions:
+    customize: Customize queue
   add:
     alreadyAdded: Already added
     placeholder: Add caller
