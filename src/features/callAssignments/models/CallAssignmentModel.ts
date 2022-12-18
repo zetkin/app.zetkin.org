@@ -126,6 +126,10 @@ export default class CallAssignmentModel {
     return data && data.target?.filter_spec?.length != 0;
   }
 
+  removeCaller(callerId: number) {
+    this._repo.removeCaller(this._orgId, this._id, callerId);
+  }
+
   setCallerTags(
     callerId: number,
     prioTags: ZetkinTag[],

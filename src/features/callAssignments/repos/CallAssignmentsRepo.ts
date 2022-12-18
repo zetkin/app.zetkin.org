@@ -17,6 +17,8 @@ import {
   callerAdded,
   callerConfigure,
   callerConfigured,
+  callerRemove,
+  callerRemoved,
   callersLoad,
   callersLoaded,
   statsLoad,
@@ -117,6 +119,15 @@ export default class CallAssignmentsRepo {
     } else {
       return new RemoteItemFuture(statsItem);
     }
+  }
+
+  removeCaller(orgId: number, id: number, callerId: number) {
+    this._store.dispatch(callerRemove([id, callerId]));
+    this._apiClient
+      .delete(`/api/orgs/${orgId}/call_assignments/${id}/callers/${callerId}`)
+      .then(() => {
+        this._store.dispatch(callerRemoved([id, callerId]));
+      });
   }
 
   setCallerTags(

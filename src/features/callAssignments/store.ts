@@ -113,6 +113,21 @@ const callAssignmentsSlice = createSlice({
         item.data = caller;
       }
     },
+    callerRemove: (state, action: PayloadAction<[number, number]>) => {
+      const [caId, callerId] = action.payload;
+      const item = state.callersById[caId].items.find(
+        (item) => item.id == callerId
+      );
+      if (item) {
+        item.isLoading = true;
+      }
+    },
+    callerRemoved: (state, action: PayloadAction<[number, number]>) => {
+      const [caId, callerId] = action.payload;
+      state.callersById[caId].items = state.callersById[caId].items.filter(
+        (item) => item.id != callerId
+      );
+    },
     callersLoad: (state, action: PayloadAction<number>) => {
       state.callersById[action.payload] = remoteList<CallAssignmentCaller>();
       state.callersById[action.payload].isLoading = true;
@@ -168,6 +183,8 @@ export const {
   callerAdded,
   callerConfigure,
   callerConfigured,
+  callerRemove,
+  callerRemoved,
   callersLoad,
   callersLoaded,
   statsLoad,
