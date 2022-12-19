@@ -2,13 +2,14 @@ import { Close } from '@material-ui/icons';
 import { GetServerSideProps } from 'next';
 import {
   Box,
+  Button,
   Fade,
   IconButton,
   Paper,
   TextField,
   Typography,
 } from '@mui/material';
-import { FormattedMessage as Msg, useIntl } from 'react-intl';
+import { FormattedMessage, FormattedMessage as Msg, useIntl } from 'react-intl';
 import { useEffect, useRef, useState } from 'react';
 
 import { CallAssignmentCaller } from 'features/callAssignments/apiTypes';
@@ -20,6 +21,7 @@ import { MUIOnlyPersonSelect } from 'zui/ZUIPersonSelect';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import useModel from 'core/useModel';
+import usePressedKeys from 'utils/hooks/usePressedKeys';
 import { ZetkinPerson } from 'utils/types/zetkin';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
@@ -65,6 +67,7 @@ const CallersPage: PageWithLayout<CallersPageProps> = ({
   const selectInputRef = useRef<HTMLInputElement>();
   const [selectedCaller, setSelectedCaller] =
     useState<CallAssignmentCaller | null>(null);
+  const { isPressed } = usePressedKeys();
 
   useEffect(() => {
     setOnServer(false);
@@ -132,6 +135,24 @@ const CallersPage: PageWithLayout<CallersPageProps> = ({
             // add another person, without taking their hands off the keyboard.
             selectInputRef?.current?.blur();
             selectInputRef?.current?.focus();
+          }}
+          optionActionButtons={(person) => {
+            return (
+              <Box alignItems="center" display="flex" gap={1}>
+                <Typography color="secondary" variant="body2">
+                  <FormattedMessage id="pages.organizeCallAssignment.callers.add.controlTooltip" />
+                </Typography>
+                <Button variant={isPressed('Control') ? 'outlined' : 'text'}>
+                  <FormattedMessage id="pages.organizeCallAssignment.callers.add.addAndCustomizePrompt" />
+                </Button>
+                <Button
+                  onClick={() => model.addCaller(person)}
+                  variant={isPressed('Control') ? 'text' : 'outlined'}
+                >
+                  <FormattedMessage id="pages.organizeCallAssignment.callers.add.addPrompt" />
+                </Button>
+              </Box>
+            );
           }}
           placeholder={intl.formatMessage({
             id: 'pages.organizeCallAssignment.callers.add.placeholder',

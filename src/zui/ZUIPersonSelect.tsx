@@ -8,6 +8,7 @@ import React, {
   HTMLAttributes,
   MutableRefObject,
   ReactElement,
+  ReactNode,
   useEffect,
   useState,
 } from 'react';
@@ -57,6 +58,7 @@ interface UsePersonSelectReturn {
 type UsePersonSelect = (props: UsePersonSelectProps) => UsePersonSelectReturn;
 
 type ZUIPersonSelectProps = UsePersonSelectProps & {
+  optionActionButtons?: (option: ZetkinPerson) => ReactNode;
   size?: 'small' | 'medium';
   variant?: 'filled' | 'outlined' | 'standard';
 };
@@ -156,7 +158,8 @@ const usePersonSelect: UsePersonSelect = ({
 const MUIOnlyPersonSelect: FunctionComponent<ZUIPersonSelectProps> = (
   props
 ) => {
-  const { label, size, variant, ...restComponentProps } = props;
+  const { label, size, variant, optionActionButtons, ...restComponentProps } =
+    props;
   const { autoCompleteProps } = usePersonSelect(restComponentProps);
 
   const { name, placeholder, inputRef, ...restProps } = autoCompleteProps;
@@ -180,6 +183,25 @@ const MUIOnlyPersonSelect: FunctionComponent<ZUIPersonSelectProps> = (
           variant={variant}
         />
       )}
+      renderOption={(
+        optionProps: HTMLAttributes<HTMLLIElement>,
+        person: ZetkinPerson
+      ) => {
+        const extraLabel = restComponentProps.getOptionExtraLabel
+          ? restComponentProps.getOptionExtraLabel(person)
+          : null;
+        const name = `${person.first_name} ${person.last_name}`;
+        return (
+          <Box component="li" {...optionProps} display="flex">
+            <Box flexGrow="1">
+              <ZUIPerson id={person.id} name={name} subtitle={extraLabel} />
+            </Box>
+            {optionActionButtons && (
+              <Box flexGrow="0">{optionActionButtons(person)}</Box>
+            )}
+          </Box>
+        );
+      }}
     />
   );
 };

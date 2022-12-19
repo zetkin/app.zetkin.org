@@ -13,7 +13,10 @@ callers:
     customize: Customize queue
     remove: Remove from assignment
   add:
+    addAndCustomizePrompt: Add & Customize
+    addPrompt: Add
     alreadyAdded: Already added
+    controlTooltip: Hold Ctrl to toggle
     placeholder: Add caller
   customize:
     exclude:
