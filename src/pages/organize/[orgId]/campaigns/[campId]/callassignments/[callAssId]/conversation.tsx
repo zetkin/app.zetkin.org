@@ -1,5 +1,4 @@
 import { GetServerSideProps } from 'next';
-import { FormattedMessage as Msg } from 'react-intl';
 import { useState } from 'react';
 import { Box, Button, Paper, Typography } from '@mui/material';
 
@@ -57,17 +56,31 @@ const ConversationPage: PageWithLayout<ConversationPageProps> = ({
   );
 
   const caFuture = callAssignmentModel.getData();
+  const savedInstructions = caFuture.data?.instructions;
+  const localInstructions = callerInstructionsModel.getInstructions();
 
   const [instructions, setInstructions] = useState(
-    callerInstructionsModel.getInstructions() ||
-      caFuture.data?.instructions ||
-      ''
+    localInstructions || savedInstructions || ''
+  );
+
+  const [hasChanges, setHasChanges] = useState(
+    localInstructions != savedInstructions ? true : false
   );
 
   const onChange = (markdown: string) => {
     setInstructions(markdown);
-    callerInstructionsModel.setInstructions(instructions);
+    callerInstructionsModel.setInstructions(markdown);
+    setHasChanges(instructions != savedInstructions ? true : false);
   };
+
+  //Jag tror att detta, klippt från TimelineAddNote gör nåt som behövs även här
+  /**
+   * 
+   *  // Markdown string is truthy even if the visible text box is empty
+  const visibleText = note?.text
+    .replace(/(<([^>]+)>)/gi, '')
+    .replace(/\r?\n|\r/g, '');
+   */
 
   return (
     <Paper>
@@ -81,14 +94,22 @@ const ConversationPage: PageWithLayout<ConversationPageProps> = ({
         >
           <Box marginBottom={2} marginTop={4}>
             <ZUITextEditor
-              initialValue={caFuture.data?.instructions}
+              initialValue={instructions}
               onChange={onChange}
               placeholder="Add instructions for your callers"
             />
           </Box>
-          <Box display="flex" justifyContent="flex-end">
-            <Button color="primary" type="submit" variant="contained">
-              <Msg id="misc.formDialog.submit" />
+          <Box alignItems="center" display="flex" justifyContent="flex-end">
+            <Box marginRight={2}>
+              <Typography>Message</Typography>
+            </Box>
+            <Button
+              color="primary"
+              disabled={!hasChanges}
+              type="submit"
+              variant="contained"
+            >
+              save
             </Button>
           </Box>
         </form>

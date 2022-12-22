@@ -9,12 +9,14 @@ export default class CallerInstructionsModel {
   private _key: string;
   private _orgId: number;
   private _repo: CallAssignmentsRepo;
+  private _saveFuture: IFuture<CallAssignmentData>;
 
   constructor(env: Environment, id: number, orgId: number) {
     this._id = id;
     this._orgId = orgId;
-    this._key = `callerInstructions-${this._orgId}-${this._id}`;
+    this._key = `callerInstructions-${this._id}`;
     this._repo = new CallAssignmentsRepo(env);
+    this._saveFuture = { data: null, error: null, isLoading: false };
 
     const instructions = localStorage.getItem(this._key);
 
@@ -22,13 +24,20 @@ export default class CallerInstructionsModel {
   }
 
   getInstructions(): string {
+    this._instructions = localStorage.getItem(this._key) || '';
     return this._instructions;
   }
 
+  get isSaving(): boolean {
+    return this._saveFuture.isLoading;
+  }
+
   save(): IFuture<CallAssignmentData> {
-    return this._repo.updateCallAssignment(this._orgId, this._id, {
+    this._saveFuture = this._repo.updateCallAssignment(this._orgId, this._id, {
       instructions: this._instructions,
     });
+
+    return this._saveFuture;
   }
 
   setInstructions(instructions: string): void {
