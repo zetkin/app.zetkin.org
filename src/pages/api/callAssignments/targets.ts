@@ -10,6 +10,14 @@ export interface ZetkinTarget {
 }
 
 interface ZetkinCallAssignmentStats {
+  num_blocked: {
+    allocated: number;
+    any: number;
+    call_back_after: number;
+    cooldown: number;
+    no_number: number;
+    organizer_action_needed: number;
+  };
   num_target_matches: number;
   num_goal_matches: number;
   num_remaining_targets: number;
@@ -41,71 +49,25 @@ export default async function handler(
     mostRecentCallTime = callsData.data[0].allocation_time;
   }
 
-  const targetsRes = await apiFetch(
-    `/orgs/${org}/call_assignments/${assignment}/targets`
-  );
-  const targetsData = await targetsRes.json();
-
-  const blockedTargets = targetsData.data.filter(
-    (target: ZetkinTarget) => target.status.block_reasons.length > 0
-  );
-
-  let allocated = 0,
-    callBackLater = 0,
-    calledTooRecently = 0,
-    doneButBlocked = 0,
-    missingPhoneNumber = 0,
-    organizerActionNeeded = 0;
-
-  blockedTargets.forEach((target: ZetkinTarget) => {
-    if (target.status.goal_fulfilled) {
-      doneButBlocked++;
-    }
-
-    const reasons = target.status.block_reasons;
-    if (reasons.includes('organizer_action_needed')) {
-      organizerActionNeeded++;
-    } else if (reasons.includes('no_number')) {
-      missingPhoneNumber++;
-    } else if (reasons.includes('call_back_after')) {
-      callBackLater++;
-    } else if (reasons.includes('cooldown')) {
-      calledTooRecently++;
-    } else if (reasons.includes('allocated')) {
-      allocated++;
-    }
-  });
-
-  const blocked: number =
-    callBackLater +
-    calledTooRecently +
-    missingPhoneNumber +
-    organizerActionNeeded;
-
-  const done: number =
-    statsData.data.num_target_matches -
-    statsData.data.num_remaining_targets -
-    doneButBlocked;
-
-  const ready: number = statsData.data.num_target_matches + allocated - done;
-
-  const queue: number = ready - allocated;
-
-  const allTargets: number = blocked + ready + done;
-
   res.status(200).json({
     data: {
-      allTargets,
-      allocated,
-      blocked,
-      callBackLater,
-      calledTooRecently,
-      done,
-      missingPhoneNumber,
+      allTargets: statsData.data.num_target_matches,
+      allocated: statsData.data.num_blocked.allocated,
+      blocked: statsData.data.num_blocked.any,
+      callBackLater: statsData.data.num_blocked.call_back_after,
+      calledTooRecently: statsData.data.num_blocked.cooldown,
+      done:
+        statsData.data.num_target_matches -
+        statsData.data.num_remaining_targets,
+      missingPhoneNumber: statsData.data.num_blocked.no_number,
       mostRecentCallTime,
-      organizerActionNeeded,
-      queue,
-      ready,
+      organizerActionNeeded: statsData.data.num_blocked.organizer_action_needed,
+      queue:
+        statsData.data.num_remaining_targets - statsData.data.num_blocked.any,
+      ready:
+        statsData.data.num_remaining_targets -
+        statsData.data.num_blocked.any +
+        statsData.data.num_blocked.allocated,
     },
   });
 }
