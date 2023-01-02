@@ -46,6 +46,10 @@ describe('CallAssignmentModel', () => {
             {
               cooldown: 3,
               end_date: null,
+              goal: {
+                filter_spec: [],
+                id: 102,
+              },
               id: 2,
               start_date: null,
               target: {
@@ -74,6 +78,10 @@ describe('CallAssignmentModel', () => {
             {
               cooldown: 3,
               end_date: null,
+              goal: {
+                filter_spec: [],
+                id: 102,
+              },
               id: 2,
               start_date: null,
               target: {
@@ -112,6 +120,10 @@ describe('CallAssignmentModel', () => {
           {
             cooldown: 3,
             end_date: endDate,
+            goal: {
+              filter_spec: [],
+              id: 102,
+            },
             id: 2,
             start_date: startDate,
             target: {
@@ -252,6 +264,10 @@ describe('CallAssignmentModel', () => {
             {
               cooldown: 3,
               end_date: null,
+              goal: {
+                filter_spec: [],
+                id: 102,
+              },
               id: 2,
               start_date: null,
               target: {
@@ -285,6 +301,10 @@ describe('CallAssignmentModel', () => {
             {
               cooldown: 3,
               end_date: null,
+              goal: {
+                filter_spec: [],
+                id: 102,
+              },
               id: 2,
               start_date: null,
               target: {
@@ -351,6 +371,10 @@ describe('CallAssignmentModel', () => {
             {
               cooldown: 3,
               end_date: null,
+              goal: {
+                filter_spec: [],
+                id: 102,
+              },
               id: 2,
               start_date: null,
               target: {
@@ -561,6 +585,10 @@ describe('CallAssignmentModel', () => {
           {
             cooldown: 3,
             end_date: endDate,
+            goal: {
+              filter_spec: [],
+              id: 102,
+            },
             id: 2,
             start_date: startDate,
             target: {
@@ -622,6 +650,10 @@ describe('CallAssignmentModel', () => {
           {
             cooldown: 3,
             end_date: endDate,
+            goal: {
+              filter_spec: [],
+              id: 102,
+            },
             id: 2,
             start_date: startDate,
             target: {

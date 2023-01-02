@@ -9,10 +9,6 @@ import SmartSearchDialog from 'features/smartSearch/components/SmartSearchDialog
 import ZUIAnimatedNumber from 'zui/ZUIAnimatedNumber';
 
 const useStyles = makeStyles((theme) => ({
-  button: {
-    borderColor: theme.palette.targetingStatusBar.blue,
-    color: theme.palette.targetingStatusBar.blue,
-  },
   chip: {
     backgroundColor: theme.palette.targetingStatusBar.gray,
     borderRadius: '1em',
@@ -55,7 +51,6 @@ const CallAssignmentTargets = ({ model }: { model: CallAssignmentModel }) => {
             <Divider />
             <Box p={2}>
               <Button
-                className={classes.button}
                 onClick={() => setQueryDialogOpen(true)}
                 startIcon={<Edit />}
                 variant="outlined"
@@ -72,7 +67,6 @@ const CallAssignmentTargets = ({ model }: { model: CallAssignmentModel }) => {
               </Typography>
               <Box pt={1}>
                 <Button
-                  className={classes.button}
                   onClick={() => setQueryDialogOpen(true)}
                   startIcon={<Add />}
                   variant="outlined"

@@ -15,6 +15,7 @@ callers:
   searchBox: Search
   title: Callers
 done:
+  defineButton: Edit done criteria
   subtitle: Targets that meet the done criteria
   title: Done
 ready:

@@ -67,7 +67,9 @@ const callAssignmentsSlice = createSlice({
         statsItem &&
         (callAssignment?.cooldown != action.payload.cooldown ||
           JSON.stringify(action.payload.target.filter_spec) !=
-            JSON.stringify(callAssignment?.target.filter_spec))
+            JSON.stringify(callAssignment?.target.filter_spec) ||
+          JSON.stringify(action.payload.goal.filter_spec) !=
+            JSON.stringify(callAssignment?.goal.filter_spec))
       ) {
         statsItem.isStale = true;
       }
