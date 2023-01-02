@@ -3,6 +3,7 @@ import Fuse from 'fuse.js';
 
 import CallAssignmentsRepo from '../repos/CallAssignmentsRepo';
 import Environment from 'core/env/Environment';
+import { ModelBase } from 'core/models';
 import { Store } from 'core/store';
 import { ZetkinQuery } from 'utils/types/zetkin';
 import {
@@ -10,7 +11,7 @@ import {
   CallAssignmentData,
   CallAssignmentStats,
 } from '../apiTypes';
-import { callAssignmentLoad, callAssignmentUpdated } from '../store';
+import { callAssignmentUpdate, callAssignmentUpdated } from '../store';
 import {
   IFuture,
   PlaceholderFuture,
@@ -26,7 +27,7 @@ export enum CallAssignmentState {
   UNKNOWN = 'unknown',
 }
 
-export default class CallAssignmentModel {
+export default class CallAssignmentModel extends ModelBase {
   private _env: Environment;
   private _id: number;
   private _orgId: number;
@@ -34,6 +35,7 @@ export default class CallAssignmentModel {
   private _store: Store;
 
   constructor(env: Environment, orgId: number, id: number) {
+    super();
     this._env = env;
     this._store = this._env.store;
     this._orgId = orgId;
@@ -149,7 +151,7 @@ export default class CallAssignmentModel {
     const callAssignment = caItem?.data;
 
     if (callAssignment) {
-      this._store.dispatch(callAssignmentLoad(this._id));
+      this._store.dispatch(callAssignmentUpdate([this._id, ['target']]));
       fetch(
         `/api/orgs/${this._orgId}/people/queries/${callAssignment.target.id}`,
         {
@@ -161,11 +163,14 @@ export default class CallAssignmentModel {
         }
       )
         .then((res) => res.json())
-        .then((data: { data: ZetkinQuery }) =>
+        .then((data: { data: ZetkinQuery }) => {
           this._store.dispatch(
-            callAssignmentUpdated({ ...callAssignment, target: data.data })
-          )
-        );
+            callAssignmentUpdated([
+              { ...callAssignment, target: data.data },
+              ['target'],
+            ])
+          );
+        });
     }
   }
 

@@ -10,6 +10,7 @@ import {
 import {
   callAssignmentLoad,
   callAssignmentLoaded,
+  callAssignmentUpdate,
   callAssignmentUpdated,
   callersLoad,
   callersLoaded,
@@ -104,14 +105,16 @@ export default class CallAssignmentsRepo {
     id: number,
     data: Partial<CallAssignmentData>
   ): IFuture<CallAssignmentData> {
-    this._store.dispatch(callAssignmentLoad(id));
+    const mutatingAttributes = Object.keys(data);
+
+    this._store.dispatch(callAssignmentUpdate([id, mutatingAttributes]));
     const promise = this._apiClient
       .patch<CallAssignmentData>(
         `/api/orgs/${orgId}/call_assignments/${id}`,
         data
       )
       .then((data: CallAssignmentData) => {
-        this._store.dispatch(callAssignmentUpdated(data));
+        this._store.dispatch(callAssignmentUpdated([data, mutatingAttributes]));
         return data;
       });
 

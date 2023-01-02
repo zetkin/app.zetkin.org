@@ -2,48 +2,79 @@ import { CallAssignmentData } from '../apiTypes';
 import CallAssignmentsRepo from '../repos/CallAssignmentsRepo';
 import Environment from 'core/env/Environment';
 import { IFuture } from 'core/caching/futures';
+import { ModelBase } from 'core/models';
+import { Store } from 'core/store';
 
-export default class CallerInstructionsModel {
+export default class CallerInstructionsModel extends ModelBase {
   private _id: number;
-  private _instructions: string;
   private _key: string;
   private _orgId: number;
   private _repo: CallAssignmentsRepo;
   private _saveFuture: IFuture<CallAssignmentData>;
+  private _store: Store;
 
   constructor(env: Environment, id: number, orgId: number) {
+    super();
+
     this._id = id;
     this._orgId = orgId;
     this._key = `callerInstructions-${this._id}`;
     this._repo = new CallAssignmentsRepo(env);
     this._saveFuture = { data: null, error: null, isLoading: false };
-
-    const instructions = localStorage.getItem(this._key);
-
-    this._instructions = instructions || '';
+    this._store = env.store;
   }
 
   getInstructions(): string {
-    this._instructions = localStorage.getItem(this._key) || '';
-    return this._instructions;
+    const lsInstructions = localStorage.getItem(this._key) || '';
+
+    const { data } = this._repo.getCallAssignment(this._orgId, this._id);
+
+    if (lsInstructions === null) {
+      if (data) {
+        localStorage.setItem(this._key, data.instructions);
+        return data.instructions;
+      }
+    }
+
+    return lsInstructions;
+  }
+
+  get hasUnsavedChanges(): boolean {
+    const { data } = this._repo.getCallAssignment(this._orgId, this._id);
+    if (!data) {
+      return false;
+    }
+
+    const lsInstructions = localStorage.getItem(this._key) || '';
+
+    return data.instructions != lsInstructions;
   }
 
   get isSaving(): boolean {
-    return this._saveFuture.isLoading;
+    const state = this._store.getState();
+
+    const item = state.callAssignments.assignmentList.items.find(
+      (item) => item.id === this._id
+    );
+
+    if (!item) {
+      return false;
+    }
+
+    return item.mutating.includes('instructions');
   }
 
   save(): IFuture<CallAssignmentData> {
+    const lsInstructions = localStorage.getItem(this._key) || '';
     this._saveFuture = this._repo.updateCallAssignment(this._orgId, this._id, {
-      instructions: this._instructions,
+      instructions: lsInstructions,
     });
 
     return this._saveFuture;
   }
 
   setInstructions(instructions: string): void {
-    if (instructions != this._instructions) {
-      this._instructions = instructions;
-      localStorage.setItem(this._key, this._instructions);
-    }
+    localStorage.setItem(this._key, instructions);
+    this.emitChange();
   }
 }
