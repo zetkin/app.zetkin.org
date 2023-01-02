@@ -78,6 +78,58 @@ const callAssignmentsSlice = createSlice({
         .filter((ca) => ca.id != action.payload.id)
         .concat([remoteItem(action.payload.id, { data: action.payload })]);
     },
+    callerAdd: (state, action: PayloadAction<[number, number]>) => {
+      const [assignmentId, callerId] = action.payload;
+      state.callersById[assignmentId].items.push(
+        remoteItem(callerId, { isLoading: true })
+      );
+    },
+    callerAdded: (
+      state,
+      action: PayloadAction<[number, CallAssignmentCaller]>
+    ) => {
+      const [caId, caller] = action.payload;
+      state.callersById[caId].items = state.callersById[caId].items
+        .filter((c) => c.id != caller.id)
+        .concat([remoteItem(caller.id, { data: caller })]);
+    },
+    callerConfigure: (state, action: PayloadAction<[number, number]>) => {
+      const [caId, callerId] = action.payload;
+      const item = state.callersById[caId].items.find(
+        (item) => item.id == callerId
+      );
+      if (item) {
+        item.isLoading = true;
+      }
+    },
+    callerConfigured: (
+      state,
+      action: PayloadAction<[number, CallAssignmentCaller]>
+    ) => {
+      const [caId, caller] = action.payload;
+      const item = state.callersById[caId].items.find(
+        (item) => item.id == caller.id
+      );
+      if (item) {
+        item.isLoading = false;
+        item.data = caller;
+      }
+    },
+    callerRemove: (state, action: PayloadAction<[number, number]>) => {
+      const [caId, callerId] = action.payload;
+      const item = state.callersById[caId].items.find(
+        (item) => item.id == callerId
+      );
+      if (item) {
+        item.isLoading = true;
+      }
+    },
+    callerRemoved: (state, action: PayloadAction<[number, number]>) => {
+      const [caId, callerId] = action.payload;
+      state.callersById[caId].items = state.callersById[caId].items.filter(
+        (item) => item.id != callerId
+      );
+    },
     callersLoad: (state, action: PayloadAction<number>) => {
       state.callersById[action.payload] = remoteList<CallAssignmentCaller>();
       state.callersById[action.payload].isLoading = true;
@@ -129,6 +181,12 @@ export const {
   callAssignmentLoad,
   callAssignmentLoaded,
   callAssignmentUpdated,
+  callerAdd,
+  callerAdded,
+  callerConfigure,
+  callerConfigured,
+  callerRemove,
+  callerRemoved,
   callersLoad,
   callersLoaded,
   statsLoad,

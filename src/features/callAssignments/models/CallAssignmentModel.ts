@@ -4,7 +4,6 @@ import Fuse from 'fuse.js';
 import CallAssignmentsRepo from '../repos/CallAssignmentsRepo';
 import Environment from 'core/env/Environment';
 import { Store } from 'core/store';
-import { ZetkinQuery } from 'utils/types/zetkin';
 import {
   CallAssignmentCaller,
   CallAssignmentData,
@@ -16,6 +15,7 @@ import {
   PlaceholderFuture,
   ResolvedFuture,
 } from 'core/caching/futures';
+import { ZetkinPerson, ZetkinQuery, ZetkinTag } from 'utils/types/zetkin';
 
 export enum CallAssignmentState {
   ACTIVE = 'active',
@@ -32,6 +32,10 @@ export default class CallAssignmentModel {
   private _orgId: number;
   private _repo: CallAssignmentsRepo;
   private _store: Store;
+
+  addCaller(person: ZetkinPerson): void {
+    this._repo.addCaller(this._orgId, this._id, person.id);
+  }
 
   constructor(env: Environment, orgId: number, id: number) {
     this._env = env;
@@ -120,6 +124,24 @@ export default class CallAssignmentModel {
   get isTargeted() {
     const { data } = this.getData();
     return data && data.target?.filter_spec?.length != 0;
+  }
+
+  removeCaller(callerId: number) {
+    this._repo.removeCaller(this._orgId, this._id, callerId);
+  }
+
+  setCallerTags(
+    callerId: number,
+    prioTags: ZetkinTag[],
+    excludedTags: ZetkinTag[]
+  ): void {
+    this._repo.setCallerTags(
+      this._orgId,
+      this._id,
+      callerId,
+      prioTags,
+      excludedTags
+    );
   }
 
   setCooldown(cooldown: number): void {
