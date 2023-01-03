@@ -14,6 +14,7 @@ const TagSelect: React.FunctionComponent<{
   disableEditTags?: boolean;
   disabledTags: ZetkinTag[];
   groups: ZetkinTagGroup[];
+  ignoreValues?: boolean;
   onClose: () => void;
   onCreateTag: (tag: NewTag) => Promise<ZetkinTag>;
   onEditTag: (tag: EditTag) => void;
@@ -23,6 +24,7 @@ const TagSelect: React.FunctionComponent<{
   disableEditTags,
   disabledTags,
   groups,
+  ignoreValues = false,
   onClose,
   onCreateTag,
   onEditTag,
@@ -125,7 +127,7 @@ const TagSelect: React.FunctionComponent<{
             listProps={getListboxProps()}
             onEdit={(tag) => setTagToEdit(tag)}
             onSelect={(tag) => {
-              if (tag.value_type) {
+              if (tag.value_type && !ignoreValues) {
                 setSelectedValueTag(tag);
                 setInputValue('');
               } else {

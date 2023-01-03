@@ -1,13 +1,15 @@
 import { makeStyles } from '@mui/styles';
-import { useIntl } from 'react-intl';
 import { useRouter } from 'next/router';
-import { Avatar, Box, Tooltip } from '@mui/material';
-import { DataGridPro, GridColDef, GridRowData } from '@mui/x-data-grid-pro';
+import { Avatar, Box, Button, Tooltip } from '@mui/material';
+import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
+import { FormattedMessage as Msg, useIntl } from 'react-intl';
 
 import { CallAssignmentCaller } from '../apiTypes';
 import TagChip from 'features/tags/components/TagManager/components/TagChip';
 import { ZetkinTag } from 'utils/types/zetkin';
+import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import ZUIResponsiveContainer from 'zui/ZUIResponsiveContainer';
+import { Delete, Edit } from '@mui/icons-material';
 
 const useStyles = makeStyles((theme) => ({
   chip: {
@@ -58,13 +60,17 @@ const TagsCell = ({ tags }: { tags: ZetkinTag[] }) => {
 
 const CallAssignmentCallersList = ({
   callers,
+  onCustomize,
+  onRemove,
 }: {
   callers: CallAssignmentCaller[];
+  onCustomize: (caller: CallAssignmentCaller) => void;
+  onRemove: (caller: CallAssignmentCaller) => void;
 }) => {
   const intl = useIntl();
   const { orgId } = useRouter().query;
 
-  const columns: GridColDef[] = [
+  const columns: GridColDef<CallAssignmentCaller>[] = [
     {
       disableColumnMenu: true,
       field: 'id',
@@ -80,38 +86,66 @@ const CallAssignmentCallersList = ({
       headerName: intl.formatMessage({
         id: 'pages.organizeCallAssignment.callers.nameColumn',
       }),
+      valueGetter: (params) =>
+        `${params.row.first_name} ${params.row.last_name}`,
     },
     {
-      field: 'prioritizedTags',
+      field: 'prioritized_tags',
       flex: 1,
       headerName: intl.formatMessage({
         id: 'pages.organizeCallAssignment.callers.prioritizedTagsColumn',
       }),
       renderCell: (props) => {
-        return <TagsCell tags={props.row.prioritizedTags} />;
+        return <TagsCell tags={props.row.prioritized_tags} />;
       },
       sortable: false,
     },
     {
-      field: 'excludedTags',
+      field: 'excluded_tags',
       flex: 1,
       headerName: intl.formatMessage({
         id: 'pages.organizeCallAssignment.callers.excludedTagsColumn',
       }),
       renderCell: (props) => {
-        return <TagsCell tags={props.row.excludedTags} />;
+        return <TagsCell tags={props.row.excluded_tags} />;
+      },
+      sortable: false,
+    },
+    {
+      align: 'right',
+      field: 'actions',
+      flex: 1,
+      headerName: '',
+      renderCell: (props) => {
+        return (
+          <Box>
+            <Button onClick={() => onCustomize(props.row)} variant="outlined">
+              <Msg id="pages.organizeCallAssignment.callers.customizeButton" />
+            </Button>
+            <ZUIEllipsisMenu
+              items={[
+                {
+                  label: intl.formatMessage({
+                    id: 'pages.organizeCallAssignment.callers.actions.customize',
+                  }),
+                  onSelect: () => onCustomize(props.row),
+                  startIcon: <Edit />,
+                },
+                {
+                  label: intl.formatMessage({
+                    id: 'pages.organizeCallAssignment.callers.actions.remove',
+                  }),
+                  onSelect: () => onRemove(props.row),
+                  startIcon: <Delete />,
+                },
+              ]}
+            />
+          </Box>
+        );
       },
       sortable: false,
     },
   ];
-
-  const rows: GridRowData[] =
-    callers.map((caller) => ({
-      excludedTags: caller.excluded_tags,
-      id: caller.id,
-      name: `${caller.first_name} ${caller.last_name}`,
-      prioritizedTags: caller.prioritized_tags,
-    })) ?? [];
 
   return (
     <DataGridPro
@@ -121,7 +155,9 @@ const CallAssignmentCallersList = ({
       disableColumnMenu
       disableColumnReorder
       disableColumnResize
-      rows={rows}
+      disableSelectionOnClick
+      hideFooter
+      rows={callers}
       style={{
         border: 'none',
       }}

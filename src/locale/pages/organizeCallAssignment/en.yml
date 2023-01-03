@@ -9,6 +9,21 @@ blocked:
   subtitle: Targets not ready to be called
   title: Blocked
 callers:
+  actions:
+    customize: Customize queue
+    remove: Remove from assignment
+  add:
+    alreadyAdded: Already added
+    placeholder: Add caller
+  customize:
+    exclude:
+      h: Excluded tags
+      intro: Never call targets with these tags.
+    prioritize:
+      h: Prioritized tags
+      intro: First call targets with these tags.
+    title: Customize Queue for {name}
+  customizeButton: Customize
   excludedTagsColumn: Excluded tags
   nameColumn: Name
   prioritizedTagsColumn: Prioritized tags
@@ -24,6 +39,7 @@ conversation:
   title: Caller instructions
   unsavedMessage: You have unsaved changes.
 done:
+  defineButton: Edit done criteria
   subtitle: Targets that meet the done criteria
   title: Done
 ready:

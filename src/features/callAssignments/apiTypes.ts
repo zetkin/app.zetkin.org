@@ -11,6 +11,7 @@ export interface CallAssignmentCaller {
 export interface CallAssignmentData {
   cooldown: number;
   end_date: string | null;
+  goal: ZetkinQuery;
   id: number;
   instructions: string;
   start_date: string | null;

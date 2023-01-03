@@ -1,6 +1,9 @@
+import { Edit } from '@mui/icons-material';
 import SettingsIcon from '@material-ui/icons/Settings';
+import { useState } from 'react';
 import {
   Box,
+  Button,
   Card,
   ClickAwayListener,
   Grid,
@@ -13,9 +16,9 @@ import {
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
 
 import CallAssignmentModel from '../models/CallAssignmentModel';
+import SmartSearchDialog from 'features/smartSearch/components/SmartSearchDialog';
 import StatusCardHeader from './StatusCardHeader';
 import StatusCardItem from './StatusCardItem';
-import { useState } from 'react';
 
 interface CallAssignmentStatusCardProps {
   model: CallAssignmentModel;
@@ -29,11 +32,13 @@ const CallAssignmentStatusCards = ({
   const { data } = model.getData();
   const cooldown = data?.cooldown ?? null;
   const hasTargets = model.hasTargets;
+  const goalQuery = data?.goal;
 
   const [anchorEl, setAnchorEl] = useState<
     null | (EventTarget & SVGSVGElement)
   >(null);
   const [newCooldown, setNewCooldown] = useState<number | null>(cooldown);
+  const [queryDialogOpen, setQueryDialogOpen] = useState(false);
 
   return (
     <Grid container spacing={2}>
@@ -185,6 +190,25 @@ const CallAssignmentStatusCards = ({
             })}
             value={stats?.done}
           />
+          <Box p={2}>
+            <Button
+              onClick={() => setQueryDialogOpen(true)}
+              startIcon={<Edit />}
+              variant="outlined"
+            >
+              <Msg id="pages.organizeCallAssignment.done.defineButton" />
+            </Button>
+            {queryDialogOpen && (
+              <SmartSearchDialog
+                onDialogClose={() => setQueryDialogOpen(false)}
+                onSave={(query) => {
+                  model.setGoal(query);
+                  setQueryDialogOpen(false);
+                }}
+                query={goalQuery}
+              />
+            )}
+          </Box>
         </Card>
       </Grid>
     </Grid>

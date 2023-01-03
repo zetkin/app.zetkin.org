@@ -46,6 +46,10 @@ describe('CallAssignmentModel', () => {
             {
               cooldown: 3,
               end_date: null,
+              goal: {
+                filter_spec: [],
+                id: 102,
+              },
               id: 2,
               instructions: 'Be nice when you call people.',
               start_date: null,
@@ -75,6 +79,10 @@ describe('CallAssignmentModel', () => {
             {
               cooldown: 3,
               end_date: null,
+              goal: {
+                filter_spec: [],
+                id: 102,
+              },
               id: 2,
               instructions: 'Be nice when you call people.',
               start_date: null,
@@ -114,6 +122,10 @@ describe('CallAssignmentModel', () => {
           {
             cooldown: 3,
             end_date: endDate,
+            goal: {
+              filter_spec: [],
+              id: 102,
+            },
             id: 2,
             instructions: 'Be nice when you call people.',
             start_date: startDate,
@@ -255,6 +267,10 @@ describe('CallAssignmentModel', () => {
             {
               cooldown: 3,
               end_date: null,
+              goal: {
+                filter_spec: [],
+                id: 102,
+              },
               id: 2,
               instructions: 'Be nice when you call people.',
               start_date: null,
@@ -289,6 +305,10 @@ describe('CallAssignmentModel', () => {
             {
               cooldown: 3,
               end_date: null,
+              goal: {
+                filter_spec: [],
+                id: 102,
+              },
               id: 2,
               instructions: 'Be nice when you call people.',
               start_date: null,
@@ -356,6 +376,10 @@ describe('CallAssignmentModel', () => {
             {
               cooldown: 3,
               end_date: null,
+              goal: {
+                filter_spec: [],
+                id: 102,
+              },
               id: 2,
               instructions: 'Be nice when you call people.',
               start_date: null,
@@ -567,6 +591,10 @@ describe('CallAssignmentModel', () => {
           {
             cooldown: 3,
             end_date: endDate,
+            goal: {
+              filter_spec: [],
+              id: 102,
+            },
             id: 2,
             instructions: 'Be nice when you call people.',
             start_date: startDate,
@@ -629,6 +657,10 @@ describe('CallAssignmentModel', () => {
           {
             cooldown: 3,
             end_date: endDate,
+            goal: {
+              filter_spec: [],
+              id: 102,
+            },
             id: 2,
             instructions: 'Be nice when you call people.',
             start_date: startDate,

@@ -45,13 +45,15 @@ const TagsList: React.FunctionComponent<{
   }
 
   //   Flat list of tags
+  const sortedTags = tags
+    .concat()
+    .sort((tag0, tag1) => tag0.title.localeCompare(tag1.title));
+
   return (
     <Box display="flex" flexWrap="wrap" style={{ gap: 4 }}>
-      {tags
-        .sort((tag0, tag1) => tag0.title.localeCompare(tag1.title))
-        .map((tag) => {
-          return <TagChip key={tag.id} onDelete={onUnassignTag} tag={tag} />;
-        })}
+      {sortedTags.map((tag) => {
+        return <TagChip key={tag.id} onDelete={onUnassignTag} tag={tag} />;
+      })}
     </Box>
   );
 };

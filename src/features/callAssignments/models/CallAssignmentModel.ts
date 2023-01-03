@@ -5,7 +5,6 @@ import CallAssignmentsRepo from '../repos/CallAssignmentsRepo';
 import Environment from 'core/env/Environment';
 import { ModelBase } from 'core/models';
 import { Store } from 'core/store';
-import { ZetkinQuery } from 'utils/types/zetkin';
 import {
   CallAssignmentCaller,
   CallAssignmentData,
@@ -17,6 +16,7 @@ import {
   PlaceholderFuture,
   ResolvedFuture,
 } from 'core/caching/futures';
+import { ZetkinPerson, ZetkinQuery, ZetkinTag } from 'utils/types/zetkin';
 
 export enum CallAssignmentState {
   ACTIVE = 'active',
@@ -33,6 +33,10 @@ export default class CallAssignmentModel extends ModelBase {
   private _orgId: number;
   private _repo: CallAssignmentsRepo;
   private _store: Store;
+
+  addCaller(person: ZetkinPerson): void {
+    this._repo.addCaller(this._orgId, this._id, person.id);
+  }
 
   constructor(env: Environment, orgId: number, id: number) {
     super();
@@ -61,8 +65,12 @@ export default class CallAssignmentModel extends ModelBase {
     return this._repo.getCallAssignment(this._orgId, this._id);
   }
 
-  getFilteredCallers(searchString: string): IFuture<CallAssignmentCaller[]> {
+  getFilteredCallers(searchString = ''): IFuture<CallAssignmentCaller[]> {
     const callers = this._repo.getCallAssignmentCallers(this._orgId, this._id);
+
+    if (callers.isLoading) {
+      return callers;
+    }
 
     if (callers.data && searchString) {
       const fuse = new Fuse(callers.data, {
@@ -120,6 +128,24 @@ export default class CallAssignmentModel extends ModelBase {
     return data && data.target?.filter_spec?.length != 0;
   }
 
+  removeCaller(callerId: number) {
+    this._repo.removeCaller(this._orgId, this._id, callerId);
+  }
+
+  setCallerTags(
+    callerId: number,
+    prioTags: ZetkinTag[],
+    excludedTags: ZetkinTag[]
+  ): void {
+    this._repo.setCallerTags(
+      this._orgId,
+      this._id,
+      callerId,
+      prioTags,
+      excludedTags
+    );
+  }
+
   setCooldown(cooldown: number): void {
     const state = this._store.getState();
     const caItem = state.callAssignments.assignmentList.items.find(
@@ -140,6 +166,38 @@ export default class CallAssignmentModel extends ModelBase {
       end_date: endDate,
       start_date: startDate,
     });
+  }
+
+  setGoal(query: Partial<ZetkinQuery>) {
+    // TODO: Refactor once SmartSearch is supported in redux framework
+    const state = this._store.getState();
+    const caItem = state.callAssignments.assignmentList.items.find(
+      (item) => item.id == this._id
+    );
+    const callAssignment = caItem?.data;
+
+    if (callAssignment) {
+      this._store.dispatch(callAssignmentUpdate([this._id, ['goal']]));
+      fetch(
+        `/api/orgs/${this._orgId}/people/queries/${callAssignment.goal.id}`,
+        {
+          body: JSON.stringify(query),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          method: 'PATCH',
+        }
+      )
+        .then((res) => res.json())
+        .then((data: { data: ZetkinQuery }) =>
+          this._store.dispatch(
+            callAssignmentUpdated([
+              { ...callAssignment, goal: data.data },
+              ['goal'],
+            ])
+          )
+        );
+    }
   }
 
   setTargets(query: Partial<ZetkinQuery>): void {

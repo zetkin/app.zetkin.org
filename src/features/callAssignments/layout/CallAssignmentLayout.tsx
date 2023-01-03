@@ -1,14 +1,16 @@
-import { useIntl } from 'react-intl';
-import { Box, Button } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
+import { FormattedMessage as Msg, useIntl } from 'react-intl';
 
 import CallAssignmentStatusChip from '../components/CallAssignmentStatusChip';
 import TabbedLayout from '../../../utils/layout/TabbedLayout';
 import useModel from 'core/useModel';
 import ZUIDateRangePicker from 'zui/ZUIDateRangePicker/ZUIDateRangePicker';
 import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
+import ZUIFuture from 'zui/ZUIFuture';
 import CallAssignmentModel, {
   CallAssignmentState,
 } from '../models/CallAssignmentModel';
+import { Headset, People } from '@material-ui/icons';
 
 interface CallAssignmentLayoutProps {
   children: React.ReactNode;
@@ -29,9 +31,11 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
       new CallAssignmentModel(env, parseInt(orgId), parseInt(assignmentId))
   );
 
-  const future = model.getData();
+  const dataFuture = model.getData();
+  const statsFuture = model.getStats();
+  const callersFuture = model.getFilteredCallers();
 
-  if (!future.data) {
+  if (!dataFuture.data) {
     return null;
   }
 
@@ -60,12 +64,50 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
           <CallAssignmentStatusChip state={model.state} />
           <Box marginX={2}>
             <ZUIDateRangePicker
-              endDate={future.data.end_date || null}
+              endDate={dataFuture.data.end_date || null}
               onChange={(startDate, endDate) => {
                 model.setDates(startDate, endDate);
               }}
-              startDate={future.data.start_date || null}
+              startDate={dataFuture.data.start_date || null}
             />
+          </Box>
+          <Box display="flex" marginX={1}>
+            <ZUIFuture
+              future={statsFuture}
+              ignoreDataWhileLoading
+              skeletonWidth={100}
+            >
+              {(data) => (
+                <>
+                  <People />
+                  <Typography marginLeft={1}>
+                    <Msg
+                      id="layout.organize.callAssignment.stats.targets"
+                      values={{ numTargets: data?.allTargets }}
+                    />
+                  </Typography>
+                </>
+              )}
+            </ZUIFuture>
+          </Box>
+          <Box display="flex" marginX={1}>
+            <ZUIFuture
+              future={callersFuture}
+              ignoreDataWhileLoading
+              skeletonWidth={100}
+            >
+              {(data) => (
+                <>
+                  <Headset />
+                  <Typography marginLeft={1}>
+                    <Msg
+                      id="layout.organize.callAssignment.stats.callers"
+                      values={{ numCallers: data.length }}
+                    />
+                  </Typography>
+                </>
+              )}
+            </ZUIFuture>
           </Box>
         </Box>
       }
@@ -90,7 +132,7 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
       title={
         <ZUIEditTextinPlace
           onChange={(newTitle) => model.setTitle(newTitle)}
-          value={future.data.title}
+          value={dataFuture.data.title}
         />
       }
     >
