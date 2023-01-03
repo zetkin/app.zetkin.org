@@ -53,30 +53,50 @@ const callAssignmentsSlice = createSlice({
       item.isLoading = false;
       item.isStale = false;
     },
+    callAssignmentUpdate: (
+      state,
+      action: PayloadAction<[number, string[]]>
+    ) => {
+      const [id, attributes] = action.payload;
+      const caItem = state.assignmentList.items.find((item) => item.id == id);
+
+      if (caItem) {
+        caItem.mutating = caItem.mutating
+          .filter((attr) => !attributes.includes(attr))
+          .concat(attributes);
+      }
+    },
     callAssignmentUpdated: (
       state,
-      action: PayloadAction<CallAssignmentData>
+      action: PayloadAction<[CallAssignmentData, string[]]>
     ) => {
-      const statsItem = state.statsById[action.payload.id];
+      const [assignment, mutating] = action.payload;
+      const statsItem = state.statsById[assignment.id];
       const caItem = state.assignmentList.items.find(
-        (item) => item.id == action.payload.id
+        (item) => item.id == assignment.id
       );
       const callAssignment = caItem?.data;
 
       if (
         statsItem &&
-        (callAssignment?.cooldown != action.payload.cooldown ||
-          JSON.stringify(action.payload.target.filter_spec) !=
+        (callAssignment?.cooldown != assignment.cooldown ||
+          JSON.stringify(assignment.target.filter_spec) !=
             JSON.stringify(callAssignment?.target.filter_spec) ||
-          JSON.stringify(action.payload.goal.filter_spec) !=
+          JSON.stringify(assignment.goal.filter_spec) !=
             JSON.stringify(callAssignment?.goal.filter_spec))
       ) {
         statsItem.isStale = true;
       }
 
+      if (caItem) {
+        caItem.mutating = caItem.mutating.filter((attr) =>
+          mutating.includes(attr)
+        );
+      }
+
       state.assignmentList.items = state.assignmentList.items
-        .filter((ca) => ca.id != action.payload.id)
-        .concat([remoteItem(action.payload.id, { data: action.payload })]);
+        .filter((ca) => ca.id != assignment.id)
+        .concat([remoteItem(assignment.id, { data: assignment })]);
     },
     callerAdd: (state, action: PayloadAction<[number, number]>) => {
       const [assignmentId, callerId] = action.payload;
@@ -180,6 +200,7 @@ export default callAssignmentsSlice;
 export const {
   callAssignmentLoad,
   callAssignmentLoaded,
+  callAssignmentUpdate,
   callAssignmentUpdated,
   callerAdd,
   callerAdded,

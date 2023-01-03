@@ -8,6 +8,7 @@ export interface RemoteItem<DataType> {
   isLoading: boolean;
   isStale: boolean;
   loaded: string | null;
+  mutating: string[];
   data: DataType | null;
 }
 
@@ -29,6 +30,7 @@ export function remoteItem<DataType extends RemoteData>(
     isLoading: item?.isLoading || false,
     isStale: item?.isStale || false,
     loaded: item?.loaded || null,
+    mutating: item?.mutating || [],
   };
 }
 

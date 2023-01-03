@@ -13,6 +13,7 @@ export interface CallAssignmentData {
   end_date: string | null;
   goal: ZetkinQuery;
   id: number;
+  instructions: string;
   start_date: string | null;
   target: ZetkinQuery;
   title: string;

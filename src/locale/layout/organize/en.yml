@@ -7,6 +7,7 @@ callAssignment:
     targets: '{numTargets, plural, =0 {No targets} one {1 targets} other {# targets}}'
   tabs:
     callers: Callers
+    conversation: Conversation
     insights: Insights
     overview: Overview
 campaigns:

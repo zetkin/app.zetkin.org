@@ -51,6 +51,7 @@ describe('CallAssignmentModel', () => {
                 id: 102,
               },
               id: 2,
+              instructions: 'Be nice when you call people.',
               start_date: null,
               target: {
                 filter_spec: [],
@@ -83,6 +84,7 @@ describe('CallAssignmentModel', () => {
                 id: 102,
               },
               id: 2,
+              instructions: 'Be nice when you call people.',
               start_date: null,
               target: {
                 filter_spec: [
@@ -125,6 +127,7 @@ describe('CallAssignmentModel', () => {
               id: 102,
             },
             id: 2,
+            instructions: 'Be nice when you call people.',
             start_date: startDate,
             target: {
               filter_spec: [{ config: {}, type: FILTER_TYPE.ALL }],
@@ -269,6 +272,7 @@ describe('CallAssignmentModel', () => {
                 id: 102,
               },
               id: 2,
+              instructions: 'Be nice when you call people.',
               start_date: null,
               target: {
                 filter_spec: [],
@@ -306,6 +310,7 @@ describe('CallAssignmentModel', () => {
                 id: 102,
               },
               id: 2,
+              instructions: 'Be nice when you call people.',
               start_date: null,
               target: {
                 filter_spec: [
@@ -376,6 +381,7 @@ describe('CallAssignmentModel', () => {
                 id: 102,
               },
               id: 2,
+              instructions: 'Be nice when you call people.',
               start_date: null,
               target: {
                 filter_spec: [
@@ -590,6 +596,7 @@ describe('CallAssignmentModel', () => {
               id: 102,
             },
             id: 2,
+            instructions: 'Be nice when you call people.',
             start_date: startDate,
             target: {
               filter_spec: [{ config: {}, type: FILTER_TYPE.ALL }],
@@ -655,6 +662,7 @@ describe('CallAssignmentModel', () => {
               id: 102,
             },
             id: 2,
+            instructions: 'Be nice when you call people.',
             start_date: startDate,
             target: {
               filter_spec: [{ config: {}, type: FILTER_TYPE.ALL }],

@@ -53,9 +53,9 @@ const useStyles = makeStyles({
   },
 });
 
-export interface TextEditorProps {
-  clear: number;
-  fileUploads: FileUpload[];
+export interface ZUITextEditorProps {
+  clear?: number;
+  fileUploads?: FileUpload[];
   initialValue?: string;
   onChange: (value: string) => void;
   onCancelFile?: (file: FileUpload) => void;
@@ -63,7 +63,7 @@ export interface TextEditorProps {
   placeholder: string;
 }
 
-const TextEditor: React.FunctionComponent<TextEditorProps> = ({
+const ZUITextEditor: React.FunctionComponent<ZUITextEditorProps> = ({
   clear,
   fileUploads,
   initialValue,
@@ -100,8 +100,9 @@ const TextEditor: React.FunctionComponent<TextEditorProps> = ({
       }
     })();
   }, [initialValue]);
+
   useEffect(() => {
-    if (clear > 0) {
+    if (clear && clear > 0) {
       clearEditor();
       setActive(false);
     }
@@ -134,19 +135,20 @@ const TextEditor: React.FunctionComponent<TextEditorProps> = ({
             </Collapse>
           </Slate>
         )}
-        {fileUploads.map((fileUpload) => {
-          return (
-            <ZetkinFileUploadChip
-              key={fileUpload.key}
-              fileUpload={fileUpload}
-              onDelete={() => {
-                if (onCancelFile) {
-                  onCancelFile(fileUpload);
-                }
-              }}
-            />
-          );
-        })}
+        {fileUploads &&
+          fileUploads.map((fileUpload) => {
+            return (
+              <ZetkinFileUploadChip
+                key={fileUpload.key}
+                fileUpload={fileUpload}
+                onDelete={() => {
+                  if (onCancelFile) {
+                    onCancelFile(fileUpload);
+                  }
+                }}
+              />
+            );
+          })}
       </Box>
     </ClickAwayListener>
   );
@@ -192,4 +194,4 @@ export const Leaf: React.FunctionComponent<RenderLeafProps> = ({
   return <span {...attributes}>{children}</span>;
 };
 
-export default TextEditor;
+export default ZUITextEditor;
