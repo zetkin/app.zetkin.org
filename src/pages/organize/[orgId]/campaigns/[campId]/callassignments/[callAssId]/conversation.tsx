@@ -1,4 +1,6 @@
 import { GetServerSideProps } from 'next';
+import { Link } from '@material-ui/core';
+import { useState } from 'react';
 import { Box, Button, Paper, Typography } from '@mui/material';
 
 import CallAssignmentLayout from 'features/callAssignments/layout/CallAssignmentLayout';
@@ -62,6 +64,8 @@ const ConversationPage: PageWithLayout<ConversationPageProps> = ({
     .replace(/\r?\n|\r/g, '');
    */
 
+  const [key, setKey] = useState(1);
+
   return (
     <Paper>
       <Box padding={2}>
@@ -74,6 +78,7 @@ const ConversationPage: PageWithLayout<ConversationPageProps> = ({
         >
           <Box marginBottom={2} marginTop={4}>
             <ZUITextEditor
+              key={key}
               initialValue={model.getInstructions()}
               onChange={onChange}
               placeholder="Add instructions for your callers"
@@ -81,9 +86,28 @@ const ConversationPage: PageWithLayout<ConversationPageProps> = ({
           </Box>
           <Box alignItems="center" display="flex" justifyContent="flex-end">
             <Box marginRight={2}>
-              <Typography>
-                {model.hasUnsavedChanges ? 'You have unsaved changes.' : ''}
-              </Typography>
+              {!model.isSaving && !model.hasUnsavedChanges && (
+                <Typography>Everything is up to date!</Typography>
+              )}
+              {!model.isSaving && model.hasUnsavedChanges && (
+                <Box display="flex">
+                  <Typography>You have unsaved changes.</Typography>
+                  <Link
+                    component={Typography}
+                    onClick={() => {
+                      model.revert();
+                      //Force Slate to re-mount
+                      setKey((current) => current + 1);
+                    }}
+                    sx={{
+                      cursor: 'pointer',
+                      paddingLeft: 0.5,
+                    }}
+                  >
+                    Revert to saved version?
+                  </Link>
+                </Box>
+              )}
             </Box>
             <Button
               color="primary"

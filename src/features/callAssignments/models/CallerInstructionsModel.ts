@@ -64,6 +64,17 @@ export default class CallerInstructionsModel extends ModelBase {
     return item.mutating.includes('instructions');
   }
 
+  revert(): void {
+    const { data } = this._repo.getCallAssignment(this._orgId, this._id);
+
+    if (!data) {
+      return;
+    }
+
+    localStorage.setItem(this._key, data?.instructions);
+    this.emitChange();
+  }
+
   save(): IFuture<CallAssignmentData> {
     const lsInstructions = localStorage.getItem(this._key) || '';
     this._saveFuture = this._repo.updateCallAssignment(this._orgId, this._id, {
