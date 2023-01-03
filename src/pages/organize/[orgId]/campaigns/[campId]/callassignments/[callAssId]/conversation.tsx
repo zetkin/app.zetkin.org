@@ -60,15 +60,6 @@ const ConversationPage: PageWithLayout<ConversationPageProps> = ({
     model.setInstructions(markdown);
   };
 
-  //Jag tror att detta, klippt från TimelineAddNote gör nåt som behövs även här
-  /**
-   * 
-   *  // Markdown string is truthy even if the visible text box is empty
-  const visibleText = note?.text
-    .replace(/(<([^>]+)>)/gi, '')
-    .replace(/\r?\n|\r/g, '');
-   */
-
   const [key, setKey] = useState(1);
 
   return (
