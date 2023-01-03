@@ -30,14 +30,17 @@ callers:
   searchBox: Search
   title: Callers
 conversation:
-  confirm: Do you want to delete all unsaved changes and go back to saved instructions?
-  editorPlaceholder: Add instructions for your callers
-  revertLink: Revert to saved version?
-  saveButton: Save
-  savedMessage: Everything is up to date!
-  savingButton: Saving...
-  title: Caller instructions
-  unsavedMessage: You have unsaved changes.
+  instructions:
+    confirm: Do you want to delete all unsaved changes and go back to saved instructions?
+    editorPlaceholder: Add instructions for your callers
+    revertLink: Revert to saved version?
+    saveButton: Save
+    savedMessage: Everything is up to date!
+    savingButton: Saving...
+    title: Caller instructions
+    unsavedMessage: You have unsaved changes.
+  settings:
+    title: Conversation settings
 done:
   defineButton: Edit done criteria
   subtitle: Targets that meet the done criteria

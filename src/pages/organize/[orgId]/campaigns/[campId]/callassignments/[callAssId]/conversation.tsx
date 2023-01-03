@@ -1,6 +1,6 @@
 import { GetServerSideProps } from 'next';
 import { Link } from '@material-ui/core';
-import { Box, Button, Paper, Typography } from '@mui/material';
+import { Box, Button, Grid, Paper, Switch, Typography } from '@mui/material';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
 import { useContext, useState } from 'react';
 
@@ -63,80 +63,114 @@ const ConversationPage: PageWithLayout<ConversationPageProps> = ({
   const [key, setKey] = useState(1);
 
   return (
-    <Paper>
-      <Box padding={2}>
-        <Typography variant="h4">
-          <Msg id="pages.organizeCallAssignment.conversation.title" />
-        </Typography>
-        <form
-          onSubmit={(evt) => {
-            evt.preventDefault();
-            model.save();
-          }}
-        >
-          <Box marginBottom={2} marginTop={4}>
-            <ZUITextEditor
-              key={key}
-              initialValue={model.getInstructions()}
-              onChange={onChange}
-              placeholder={intl.formatMessage({
-                id: 'pages.organizeCallAssignment.conversation.editorPlaceholder',
-              })}
-            />
-          </Box>
-          <Box alignItems="center" display="flex" justifyContent="flex-end">
-            <Box marginRight={2}>
-              {!model.isSaving && !model.hasUnsavedChanges && (
-                <Typography>
-                  <Msg id="pages.organizeCallAssignment.conversation.savedMessage" />
-                </Typography>
-              )}
-              {!model.isSaving && model.hasUnsavedChanges && (
-                <Box display="flex">
-                  <Typography>
-                    <Msg id="pages.organizeCallAssignment.conversation.unsavedMessage" />
-                  </Typography>
-                  <Link
-                    color="textPrimary"
-                    component={Typography}
-                    onClick={() => {
-                      showConfirmDialog({
-                        onSubmit: () => {
-                          model.revert();
-                          //Force Slate to re-mount
-                          setKey((current) => current + 1);
-                        },
-                        warningText: intl.formatMessage({
-                          id: 'pages.organizeCallAssignment.conversation.confirm',
-                        }),
-                      });
-                    }}
-                    sx={{
-                      cursor: 'pointer',
-                      paddingLeft: 0.5,
-                    }}
-                  >
-                    <Msg id="pages.organizeCallAssignment.conversation.revertLink" />
-                  </Link>
-                </Box>
-              )}
-            </Box>
-            <Button
-              color="primary"
-              disabled={!model.hasUnsavedChanges}
-              type="submit"
-              variant="contained"
+    <Grid container spacing={2}>
+      <Grid item lg={8} md={6} sm={12}>
+        <Paper>
+          <Box padding={2}>
+            <Typography variant="h4">
+              <Msg id="pages.organizeCallAssignment.conversation.instructions.title" />
+            </Typography>
+            <form
+              onSubmit={(evt) => {
+                evt.preventDefault();
+                model.save();
+              }}
             >
-              {model.isSaving ? (
-                <Msg id="pages.organizeCallAssignment.conversation.savingButton" />
-              ) : (
-                <Msg id="pages.organizeCallAssignment.conversation.saveButton" />
-              )}
-            </Button>
+              <Box marginBottom={2} marginTop={4}>
+                <ZUITextEditor
+                  key={key}
+                  initialValue={model.getInstructions()}
+                  onChange={onChange}
+                  placeholder={intl.formatMessage({
+                    id: 'pages.organizeCallAssignment.conversation.instructions.editorPlaceholder',
+                  })}
+                />
+              </Box>
+              <Box alignItems="center" display="flex" justifyContent="flex-end">
+                <Box marginRight={2}>
+                  {!model.isSaving && !model.hasUnsavedChanges && (
+                    <Typography>
+                      <Msg id="pages.organizeCallAssignment.conversation.instructions.savedMessage" />
+                    </Typography>
+                  )}
+                  {!model.isSaving && model.hasUnsavedChanges && (
+                    <Typography component="span">
+                      <Msg id="pages.organizeCallAssignment.conversation.instructions.unsavedMessage" />{' '}
+                      <Link
+                        color="textPrimary"
+                        component="span"
+                        onClick={() => {
+                          showConfirmDialog({
+                            onSubmit: () => {
+                              model.revert();
+                              //Force Slate to re-mount
+                              setKey((current) => current + 1);
+                            },
+                            warningText: intl.formatMessage({
+                              id: 'pages.organizeCallAssignment.conversation.instructions.unsavedMessage',
+                            }),
+                          });
+                        }}
+                        style={{ cursor: 'pointer', fontFamily: 'inherit' }}
+                      >
+                        <Msg id="pages.organizeCallAssignment.conversation.instructions.revertLink" />
+                      </Link>
+                    </Typography>
+                  )}
+                </Box>
+                <Button
+                  color="primary"
+                  disabled={!model.hasUnsavedChanges}
+                  type="submit"
+                  variant="contained"
+                >
+                  {model.isSaving ? (
+                    <Msg id="pages.organizeCallAssignment.conversation.instructions.savingButton" />
+                  ) : (
+                    <Msg id="pages.organizeCallAssignment.conversation.instructions.saveButton" />
+                  )}
+                </Button>
+              </Box>
+            </form>
           </Box>
-        </form>
-      </Box>
-    </Paper>
+        </Paper>
+      </Grid>
+      <Grid item lg={4} md={6} sm={12}>
+        <Paper>
+          <Box padding={2}>
+            <Typography variant="h4">
+              <Msg id="pages.organizeCallAssignment.conversation.settings.title" />
+            </Typography>
+            <Box
+              alignItems="center"
+              display="flex"
+              justifyContent="space-between"
+              marginTop={2}
+            >
+              <Typography variant="h6">Allow caller to make notes</Typography>
+              <Switch />
+            </Box>
+            <Typography>
+              Disabling caller notes may increase the call rate but may lead to
+              important information being lost.
+            </Typography>
+            <Box
+              alignItems="center"
+              display="flex"
+              justifyContent="space-between"
+              marginTop={1}
+            >
+              <Typography variant="h6">Show additional target data</Typography>
+              <Switch />
+            </Box>
+            <Typography>
+              Target name and phone number are always visible to callers.
+              Enabling this will share all person fields with callers.
+            </Typography>
+          </Box>
+        </Paper>
+      </Grid>
+    </Grid>
   );
 };
 
