@@ -97,6 +97,7 @@ const ConversationPage: PageWithLayout<ConversationPageProps> = ({
                     <Msg id="pages.organizeCallAssignment.conversation.unsavedMessage" />
                   </Typography>
                   <Link
+                    color="textPrimary"
                     component={Typography}
                     onClick={() => {
                       showConfirmDialog({
