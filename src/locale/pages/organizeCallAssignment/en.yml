@@ -14,6 +14,14 @@ callers:
   prioritizedTagsColumn: Prioritized tags
   searchBox: Search
   title: Callers
+conversation:
+  editorPlaceholder: Add instructions for your callers
+  revertLink: Revert to saved version?
+  saveButton: Save
+  savedMessage: Everything is up to date!
+  savingButton: Saving...
+  title: Caller instructions
+  unsavedMessage: You have unsaved changes.
 done:
   subtitle: Targets that meet the done criteria
   title: Done

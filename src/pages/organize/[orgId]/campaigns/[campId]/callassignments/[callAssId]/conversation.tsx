@@ -2,6 +2,7 @@ import { GetServerSideProps } from 'next';
 import { Link } from '@material-ui/core';
 import { useState } from 'react';
 import { Box, Button, Paper, Typography } from '@mui/material';
+import { FormattedMessage as Msg, useIntl } from 'react-intl';
 
 import CallAssignmentLayout from 'features/callAssignments/layout/CallAssignmentLayout';
 import CallerInstructionsModel from 'features/callAssignments/models/CallerInstructionsModel';
@@ -42,6 +43,7 @@ const ConversationPage: PageWithLayout<ConversationPageProps> = ({
   assignmentId,
   orgId,
 }) => {
+  const intl = useIntl();
   const model = useModel(
     (store) =>
       new CallerInstructionsModel(
@@ -69,7 +71,9 @@ const ConversationPage: PageWithLayout<ConversationPageProps> = ({
   return (
     <Paper>
       <Box padding={2}>
-        <Typography variant="h4">Caller instructions</Typography>
+        <Typography variant="h4">
+          <Msg id="pages.organizeCallAssignment.conversation.title" />
+        </Typography>
         <form
           onSubmit={(evt) => {
             evt.preventDefault();
@@ -81,17 +85,23 @@ const ConversationPage: PageWithLayout<ConversationPageProps> = ({
               key={key}
               initialValue={model.getInstructions()}
               onChange={onChange}
-              placeholder="Add instructions for your callers"
+              placeholder={intl.formatMessage({
+                id: 'pages.organizeCallAssignment.conversation.editorPlaceholder',
+              })}
             />
           </Box>
           <Box alignItems="center" display="flex" justifyContent="flex-end">
             <Box marginRight={2}>
               {!model.isSaving && !model.hasUnsavedChanges && (
-                <Typography>Everything is up to date!</Typography>
+                <Typography>
+                  <Msg id="pages.organizeCallAssignment.conversation.savedMessage" />
+                </Typography>
               )}
               {!model.isSaving && model.hasUnsavedChanges && (
                 <Box display="flex">
-                  <Typography>You have unsaved changes.</Typography>
+                  <Typography>
+                    <Msg id="pages.organizeCallAssignment.conversation.unsavedMessage" />
+                  </Typography>
                   <Link
                     component={Typography}
                     onClick={() => {
@@ -104,7 +114,7 @@ const ConversationPage: PageWithLayout<ConversationPageProps> = ({
                       paddingLeft: 0.5,
                     }}
                   >
-                    Revert to saved version?
+                    <Msg id="pages.organizeCallAssignment.conversation.revertLink" />
                   </Link>
                 </Box>
               )}
@@ -115,7 +125,11 @@ const ConversationPage: PageWithLayout<ConversationPageProps> = ({
               type="submit"
               variant="contained"
             >
-              {model.isSaving ? 'Saving...' : 'Save'}
+              {model.isSaving ? (
+                <Msg id="pages.organizeCallAssignment.conversation.savingButton" />
+              ) : (
+                <Msg id="pages.organizeCallAssignment.conversation.saveButton" />
+              )}
             </Button>
           </Box>
         </form>
