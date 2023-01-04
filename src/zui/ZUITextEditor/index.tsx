@@ -113,6 +113,11 @@ const ZUITextEditor: React.FunctionComponent<ZUITextEditorProps> = ({
       <Box
         className={classes.container}
         onClick={() => ReactEditor.focus(editor)}
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          minHeight: 0,
+        }}
       >
         {/* Only render when slate has been generated */}
         {initialValueSlate && (
@@ -129,8 +134,9 @@ const ZUITextEditor: React.FunctionComponent<ZUITextEditorProps> = ({
               renderElement={renderElement}
               renderLeaf={renderLeaf}
               spellCheck
+              style={{ overflowY: 'scroll' }}
             />
-            <Collapse in={active}>
+            <Collapse in={active} sx={{ flexShrink: 0 }}>
               <Toolbar onClickAttach={onClickAttach} />
             </Collapse>
           </Slate>

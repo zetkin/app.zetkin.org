@@ -1,5 +1,12 @@
 import { Link } from '@material-ui/core';
-import { Box, Button, Paper, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  Paper,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from '@mui/material';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
 import { useContext, useState } from 'react';
 
@@ -20,6 +27,9 @@ const CallerInstructions = ({
   const intl = useIntl();
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
 
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+
   const model = useModel(
     (store) => new CallerInstructionsModel(store, orgId, assignmentId)
   );
@@ -30,8 +40,23 @@ const CallerInstructions = ({
 
   const [key, setKey] = useState(1);
   return (
-    <Paper>
-      <Box padding={2}>
+    <Paper
+      //These styles are added to enable the editor to grow with the window.
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        maxHeight: isMobile ? '90vh' : 'calc(100vh - 300px)',
+        minHeight: 0,
+      }}
+    >
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          minHeight: 0,
+          padding: 2,
+        }}
+      >
         <Typography variant="h4">
           <Msg id="pages.organizeCallAssignment.conversation.instructions.title" />
         </Typography>
@@ -40,8 +65,17 @@ const CallerInstructions = ({
             evt.preventDefault();
             model.save();
           }}
+          style={{ display: 'flex', flexDirection: 'column', minHeight: 0 }}
         >
-          <Box marginBottom={2} marginTop={4}>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              marginBottom: 2,
+              marginTop: 4,
+              minHeight: 0,
+            }}
+          >
             <ZUITextEditor
               key={key}
               initialValue={model.getInstructions()}
