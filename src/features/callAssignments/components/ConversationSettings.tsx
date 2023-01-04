@@ -33,6 +33,8 @@ const ConversationSettings = ({
             <Msg id="pages.organizeCallAssignment.conversation.settings.notes.title" />
           </Typography>
           <Switch
+            //this looks backwards bc in interface we use the positive "allow"
+            checked={!model.getData().data?.disable_caller_notes}
             onChange={(evt) => model.setCallerNotesEnabled(evt.target.checked)}
           />
         </Box>
@@ -49,6 +51,7 @@ const ConversationSettings = ({
             <Msg id="pages.organizeCallAssignment.conversation.settings.targetData.title" />
           </Typography>
           <Switch
+            checked={model.getData().data?.expose_target_details}
             onChange={(evt) =>
               model.setTargetDetailsExposed(evt.target.checked)
             }
