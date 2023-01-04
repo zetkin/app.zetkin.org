@@ -40,6 +40,12 @@ conversation:
     title: Caller instructions
     unsavedMessage: You have unsaved changes.
   settings:
+    notes:
+      message: Disabling caller notes may increase the call rate but could lead to important information being lost.
+      title: Allow caller to make notes
+    targetData:
+      message: Target name and phone number are always visible to callers. Enabling additional target data will share all person fields with callers.
+      title: Show additional target data
     title: Conversation settings
 done:
   defineButton: Edit done criteria

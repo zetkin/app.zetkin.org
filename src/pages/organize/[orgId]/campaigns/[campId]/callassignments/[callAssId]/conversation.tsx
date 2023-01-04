@@ -153,7 +153,9 @@ const ConversationPage: PageWithLayout<ConversationPageProps> = ({
               justifyContent="space-between"
               marginTop={2}
             >
-              <Typography variant="h6">Allow caller to make notes</Typography>
+              <Typography variant="h6">
+                <Msg id="pages.organizeCallAssignment.conversation.settings.notes.title" />
+              </Typography>
               <Switch
                 onChange={(evt) =>
                   callAssignmentModel.setCallerNotes(evt.target.checked)
@@ -161,8 +163,7 @@ const ConversationPage: PageWithLayout<ConversationPageProps> = ({
               />
             </Box>
             <Typography>
-              Disabling caller notes may increase the call rate but may lead to
-              important information being lost.
+              <Msg id="pages.organizeCallAssignment.conversation.settings.notes.message" />
             </Typography>
             <Box
               alignItems="center"
@@ -170,7 +171,10 @@ const ConversationPage: PageWithLayout<ConversationPageProps> = ({
               justifyContent="space-between"
               marginTop={1}
             >
-              <Typography variant="h6">Show additional target data</Typography>
+              <Typography variant="h6">
+                <Msg id="pages.organizeCallAssignment.conversation.settings.targetData.title" />
+                a
+              </Typography>
               <Switch
                 onChange={(evt) =>
                   callAssignmentModel.setCallerAccess(evt.target.checked)
@@ -178,8 +182,7 @@ const ConversationPage: PageWithLayout<ConversationPageProps> = ({
               />
             </Box>
             <Typography>
-              Target name and phone number are always visible to callers.
-              Enabling this will share all person fields with callers.
+              <Msg id="pages.organizeCallAssignment.conversation.settings.targetData.message" />
             </Typography>
           </Box>
         </Paper>
