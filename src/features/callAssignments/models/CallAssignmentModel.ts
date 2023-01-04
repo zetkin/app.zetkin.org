@@ -132,6 +132,12 @@ export default class CallAssignmentModel extends ModelBase {
     this._repo.removeCaller(this._orgId, this._id, callerId);
   }
 
+  setCallerNotesEnabled(enabled: boolean) {
+    this._repo.updateCallAssignment(this._orgId, this._id, {
+      disable_caller_notes: !enabled,
+    });
+  }
+
   setCallerTags(
     callerId: number,
     prioTags: ZetkinTag[],
@@ -198,6 +204,12 @@ export default class CallAssignmentModel extends ModelBase {
           )
         );
     }
+  }
+
+  setTargetDetailsExposed(exposeTargetDetails: boolean) {
+    this._repo.updateCallAssignment(this._orgId, this._id, {
+      expose_target_details: exposeTargetDetails,
+    });
   }
 
   setTargets(query: Partial<ZetkinQuery>): void {
