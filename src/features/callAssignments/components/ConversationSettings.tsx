@@ -33,7 +33,7 @@ const ConversationSettings = ({
             <Msg id="pages.organizeCallAssignment.conversation.settings.notes.title" />
           </Typography>
           <Switch
-            onChange={(evt) => model.setCallerNotes(evt.target.checked)}
+            onChange={(evt) => model.setCallerNotesEnabled(evt.target.checked)}
           />
         </Box>
         <Typography>
@@ -49,7 +49,9 @@ const ConversationSettings = ({
             <Msg id="pages.organizeCallAssignment.conversation.settings.targetData.title" />
           </Typography>
           <Switch
-            onChange={(evt) => model.setCallerAccess(evt.target.checked)}
+            onChange={(evt) =>
+              model.setTargetDetailsExposed(evt.target.checked)
+            }
           />
         </Box>
         <Typography>

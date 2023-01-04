@@ -132,15 +132,9 @@ export default class CallAssignmentModel extends ModelBase {
     this._repo.removeCaller(this._orgId, this._id, callerId);
   }
 
-  setCallerAccess(expose_target_details: boolean) {
+  setCallerNotesEnabled(enabled: boolean) {
     this._repo.updateCallAssignment(this._orgId, this._id, {
-      expose_target_details,
-    });
-  }
-
-  setCallerNotes(disable_caller_notes: boolean) {
-    this._repo.updateCallAssignment(this._orgId, this._id, {
-      disable_caller_notes,
+      disable_caller_notes: !enabled,
     });
   }
 
@@ -210,6 +204,12 @@ export default class CallAssignmentModel extends ModelBase {
           )
         );
     }
+  }
+
+  setTargetDetailsExposed(exposeTargetDetails: boolean) {
+    this._repo.updateCallAssignment(this._orgId, this._id, {
+      expose_target_details: exposeTargetDetails,
+    });
   }
 
   setTargets(query: Partial<ZetkinQuery>): void {
