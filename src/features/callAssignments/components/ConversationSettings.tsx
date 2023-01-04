@@ -47,7 +47,6 @@ const ConversationSettings = ({
         >
           <Typography variant="h6">
             <Msg id="pages.organizeCallAssignment.conversation.settings.targetData.title" />
-            a
           </Typography>
           <Switch
             onChange={(evt) => model.setCallerAccess(evt.target.checked)}
