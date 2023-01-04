@@ -72,7 +72,7 @@ const CallerInstructions = ({
                           setKey((current) => current + 1);
                         },
                         warningText: intl.formatMessage({
-                          id: 'pages.organizeCallAssignment.conversation.instructions.unsavedMessage',
+                          id: 'pages.organizeCallAssignment.conversation.instructions.confirm',
                         }),
                       });
                     }}
