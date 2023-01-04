@@ -132,6 +132,18 @@ export default class CallAssignmentModel extends ModelBase {
     this._repo.removeCaller(this._orgId, this._id, callerId);
   }
 
+  setCallerAccess(expose_target_details: boolean) {
+    this._repo.updateCallAssignment(this._orgId, this._id, {
+      expose_target_details,
+    });
+  }
+
+  setCallerNotes(disable_caller_notes: boolean) {
+    this._repo.updateCallAssignment(this._orgId, this._id, {
+      disable_caller_notes,
+    });
+  }
+
   setCallerTags(
     callerId: number,
     prioTags: ZetkinTag[],

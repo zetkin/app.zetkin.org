@@ -45,7 +45,9 @@ describe('CallAssignmentModel', () => {
           assignmentList: mockList<CallAssignmentData>([
             {
               cooldown: 3,
+              disable_caller_notes: false,
               end_date: null,
+              expose_target_details: false,
               goal: {
                 filter_spec: [],
                 id: 102,
@@ -78,7 +80,9 @@ describe('CallAssignmentModel', () => {
           assignmentList: mockList<CallAssignmentData>([
             {
               cooldown: 3,
+              disable_caller_notes: false,
               end_date: null,
+              expose_target_details: false,
               goal: {
                 filter_spec: [],
                 id: 102,
@@ -121,7 +125,9 @@ describe('CallAssignmentModel', () => {
         assignmentList: mockList<CallAssignmentData>([
           {
             cooldown: 3,
+            disable_caller_notes: false,
             end_date: endDate,
+            expose_target_details: false,
             goal: {
               filter_spec: [],
               id: 102,
@@ -266,7 +272,9 @@ describe('CallAssignmentModel', () => {
           assignmentList: mockList<CallAssignmentData>([
             {
               cooldown: 3,
+              disable_caller_notes: false,
               end_date: null,
+              expose_target_details: false,
               goal: {
                 filter_spec: [],
                 id: 102,
@@ -304,7 +312,9 @@ describe('CallAssignmentModel', () => {
           assignmentList: mockList<CallAssignmentData>([
             {
               cooldown: 3,
+              disable_caller_notes: false,
               end_date: null,
+              expose_target_details: false,
               goal: {
                 filter_spec: [],
                 id: 102,
@@ -375,7 +385,9 @@ describe('CallAssignmentModel', () => {
           assignmentList: mockList<CallAssignmentData>([
             {
               cooldown: 3,
+              disable_caller_notes: false,
               end_date: null,
+              expose_target_details: false,
               goal: {
                 filter_spec: [],
                 id: 102,
@@ -590,7 +602,9 @@ describe('CallAssignmentModel', () => {
         assignmentList: mockList<CallAssignmentData>([
           {
             cooldown: 3,
+            disable_caller_notes: false,
             end_date: endDate,
+            expose_target_details: false,
             goal: {
               filter_spec: [],
               id: 102,
@@ -656,7 +670,9 @@ describe('CallAssignmentModel', () => {
         assignmentList: mockList<CallAssignmentData>([
           {
             cooldown: 3,
+            disable_caller_notes: false,
             end_date: endDate,
+            expose_target_details: false,
             goal: {
               filter_spec: [],
               id: 102,

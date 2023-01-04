@@ -10,7 +10,9 @@ export interface CallAssignmentCaller {
 
 export interface CallAssignmentData {
   cooldown: number;
+  disable_caller_notes: boolean;
   end_date: string | null;
+  expose_target_details: boolean;
   goal: ZetkinQuery;
   id: number;
   instructions: string;

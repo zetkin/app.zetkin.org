@@ -5,6 +5,7 @@ import { FormattedMessage as Msg, useIntl } from 'react-intl';
 import { useContext, useState } from 'react';
 
 import CallAssignmentLayout from 'features/callAssignments/layout/CallAssignmentLayout';
+import CallAssignmentModel from 'features/callAssignments/models/CallAssignmentModel';
 import CallerInstructionsModel from 'features/callAssignments/models/CallerInstructionsModel';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
@@ -54,6 +55,11 @@ const ConversationPage: PageWithLayout<ConversationPageProps> = ({
         parseInt(orgId),
         parseInt(assignmentId)
       )
+  );
+
+  const callAssignmentModel = useModel(
+    (store) =>
+      new CallAssignmentModel(store, parseInt(orgId), parseInt(assignmentId))
   );
 
   const onChange = (markdown: string) => {
@@ -148,7 +154,11 @@ const ConversationPage: PageWithLayout<ConversationPageProps> = ({
               marginTop={2}
             >
               <Typography variant="h6">Allow caller to make notes</Typography>
-              <Switch />
+              <Switch
+                onChange={(evt) =>
+                  callAssignmentModel.setCallerNotes(evt.target.checked)
+                }
+              />
             </Box>
             <Typography>
               Disabling caller notes may increase the call rate but may lead to
@@ -161,7 +171,11 @@ const ConversationPage: PageWithLayout<ConversationPageProps> = ({
               marginTop={1}
             >
               <Typography variant="h6">Show additional target data</Typography>
-              <Switch />
+              <Switch
+                onChange={(evt) =>
+                  callAssignmentModel.setCallerAccess(evt.target.checked)
+                }
+              />
             </Box>
             <Typography>
               Target name and phone number are always visible to callers.
