@@ -45,7 +45,7 @@ test('Clicking the "Views" breadcrumb redirects to views page', async ({
 
   await page.goto(appUri + '/organize/1/people/views/1');
 
-  await page.click('Views');
+  await page.locator('text=Views').click();
 
   // Expect to have been redirected
   expect(page.url()).not.toEqual(appUri + '/organize/1/people/views');

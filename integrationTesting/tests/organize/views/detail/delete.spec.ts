@@ -73,9 +73,7 @@ test.describe('View detail page', () => {
     ]);
 
     // Check navigates back to views list
-    await expect(page.url()).toEqual(
-      appUri + `/organize/${KPD.id}/people/views`
-    );
+    expect(page.url()).toEqual(appUri + `/organize/${KPD.id}/people`);
   });
 
   test('shows error snackbar if error deleting view', async ({
