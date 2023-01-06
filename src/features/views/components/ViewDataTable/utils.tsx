@@ -1,5 +1,6 @@
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid-pro';
 
+import LocalBoolViewCell from './cells/LocalBoolViewCell';
 import {
   COLUMN_TYPE,
   ZetkinViewColumn,
@@ -44,16 +45,19 @@ export function makeGridColDef(
     width: 150,
   };
 
-  const boolTypes = [
-    COLUMN_TYPE.LOCAL_BOOL,
-    COLUMN_TYPE.PERSON_QUERY,
-    COLUMN_TYPE.PERSON_TAG,
-  ];
-
-  if (boolTypes.includes(viewCol.type)) {
-    colDef.type = 'boolean';
+  if (
+    // Non Editable Toggle
+    [COLUMN_TYPE.PERSON_QUERY, COLUMN_TYPE.PERSON_TAG].includes(viewCol.type)
+  ) {
     colDef.minWidth = 50;
     colDef.width = 100;
+    colDef.type = 'boolean';
+  } else if (viewCol.type === COLUMN_TYPE.LOCAL_BOOL) {
+    colDef.minWidth = 50;
+    colDef.width = 100;
+    colDef.renderCell = (params) => (
+      <LocalBoolViewCell params={params as GridRenderCellParams} />
+    );
   } else if (viewCol.type == COLUMN_TYPE.PERSON_NOTES) {
     colDef.width = 300;
     colDef.renderCell = (params) => (
