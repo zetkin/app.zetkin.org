@@ -31,6 +31,16 @@ export const getPersonScaffoldProps: ScaffoldedGetServerSideProps = async (
 ) => {
   const { orgId, personId } = ctx.params!;
 
+  // If navigating to /organize/1/people/views redirect to /organize/1/peo
+  if (personId === 'views') {
+    return {
+      redirect: {
+        destination: `organize/${orgId}/people`,
+        permanent: true,
+      },
+    };
+  }
+
   const { prefetch } = personResource(orgId as string, personId as string);
   const { state: personQueryState } = await prefetch(ctx);
 
