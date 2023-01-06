@@ -35,7 +35,7 @@ export const getPersonScaffoldProps: ScaffoldedGetServerSideProps = async (
   if (personId === 'views') {
     return {
       redirect: {
-        destination: `organize/${orgId}/people`,
+        destination: `/organize/${orgId}/people`,
         permanent: true,
       },
     };

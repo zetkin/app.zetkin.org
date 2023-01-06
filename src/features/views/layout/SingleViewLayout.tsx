@@ -159,7 +159,7 @@ const SingleViewLayout: FunctionComponent<SingleViewLayoutProps> = ({
           );
         },
         onSuccess: () => {
-          router.push(`/organize/${orgId}/people/views`);
+          router.push(`/organize/${orgId}/people`);
         },
       });
     }
