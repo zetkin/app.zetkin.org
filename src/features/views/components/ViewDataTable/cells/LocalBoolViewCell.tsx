@@ -6,7 +6,7 @@ import { useRouter } from 'next/router';
 import { FunctionComponent, useContext } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 
-import patchViewColumnCell from 'features/views/fetching/patchViewColumnCell';
+import putViewColumnCell from 'features/views/fetching/putViewColumnCell';
 import { VIEW_DATA_TABLE_ERROR } from '../constants';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 
@@ -39,7 +39,7 @@ const LocalBoolViewCell: FunctionComponent<LocalBoolViewCellProps> = ({
   const cellValue: boolean = params?.row && params.row[params.field];
 
   const updateCellMutation = useMutation(
-    patchViewColumnCell(orgId as string, viewId as string, params.id),
+    putViewColumnCell(orgId as string, viewId as string, params.id),
     {
       onError: () => {
         showError(VIEW_DATA_TABLE_ERROR.MODIFY_COLUMN);
@@ -54,9 +54,10 @@ const LocalBoolViewCell: FunctionComponent<LocalBoolViewCellProps> = ({
   return (
     <Checkbox
       checked={cellValue}
-      onChange={(ev, value) =>
-        updateCellMutation.mutate({ id: parseInt(columnId), value })
-      }
+      onChange={(ev, value) => {
+        nProgress.start();
+        updateCellMutation.mutate({ id: parseInt(columnId), value });
+      }}
     />
   );
 };
