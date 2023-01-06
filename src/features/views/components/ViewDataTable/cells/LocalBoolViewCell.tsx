@@ -10,12 +10,6 @@ import putViewColumnCell from 'features/views/fetching/putViewColumnCell';
 import { VIEW_DATA_TABLE_ERROR } from '../constants';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 
-export interface LocalBool {
-  person_id: number;
-  column_id: number;
-  value: boolean;
-}
-
 interface LocalBoolViewCellProps {
   params: GridRenderCellParams;
 }
@@ -54,9 +48,9 @@ const LocalBoolViewCell: FunctionComponent<LocalBoolViewCellProps> = ({
   return (
     <Checkbox
       checked={cellValue}
-      onChange={(ev, value) => {
+      onChange={(ev, checked) => {
         nProgress.start();
-        updateCellMutation.mutate({ id: parseInt(columnId), value });
+        updateCellMutation.mutate({ id: parseInt(columnId), value: checked });
       }}
     />
   );

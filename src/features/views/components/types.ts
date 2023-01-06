@@ -130,3 +130,9 @@ export enum NATIVE_PERSON_FIELDS {
   STREET_ADDRESS = 'street_address',
   ZIP_CODE = 'zip_code',
 }
+
+interface LocalBoolCell {
+  value: boolean;
+}
+
+export type ZetkinViewCell = LocalBoolCell;
