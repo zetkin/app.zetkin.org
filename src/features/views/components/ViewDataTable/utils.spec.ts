@@ -30,15 +30,15 @@ describe('makeGridColDef', () => {
     expect(colDef.width).toEqual(150);
   });
 
-  it('returns narrow bool for local_bool columns', () => {
+  it('returns a narrow LocalBoolViewCell for local_bool columns', () => {
     const colDef = makeGridColDef(
       mockViewCol({
         type: COLUMN_TYPE.LOCAL_BOOL,
       }),
       1
     );
-    expect(colDef.type).toEqual('boolean');
     expect(colDef.minWidth).toEqual(50);
+    expect(colDef.renderCell).toBeTruthy();
   });
 
   it('returns narrow bool for person_tag columns', () => {
