@@ -269,7 +269,6 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
     renderCell: (params) => {
       const url = `/api/orgs/${orgId}/people/${params.value}/avatar`;
       return (
-        // eslint-disable-next-line @next/next/no-img-element
         <ZUIPersonHoverCard personId={params.value as number}>
           <NextLink href={`/organize/${orgId}/people/${params.value}`} passHref>
             <Link
@@ -388,6 +387,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
           Toolbar: ViewDataTableToolbar,
         }}
         componentsProps={componentsProps}
+        disableSelectionOnClick
         getRowClassName={(params) =>
           params.id == addedId ? classes.addedRow : ''
         }
