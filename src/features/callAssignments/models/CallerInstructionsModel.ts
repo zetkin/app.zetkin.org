@@ -13,7 +13,7 @@ export default class CallerInstructionsModel extends ModelBase {
   private _saveFuture: IFuture<CallAssignmentData>;
   private _store: Store;
 
-  constructor(env: Environment, id: number, orgId: number) {
+  constructor(env: Environment, orgId: number, id: number) {
     super();
 
     this._id = id;
