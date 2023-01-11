@@ -12,13 +12,11 @@ import {
 export type ColumnChoice = {
   alreadyInView?: (columns: ZetkinViewColumn[]) => boolean;
   defaultColumns?: (intl: IntlShape) => PendingZetkinViewColumn[];
-  description: string;
   icons: OverridableComponent<SvgIconTypeMap<Record<string, unknown>, 'svg'>>[];
   key: string;
   renderConfigForm?: (props: {
     onOutputConfigured: (columns: SelectedViewColumn[]) => void;
   }) => JSX.Element;
-  title: string;
 };
 
 const choices: ColumnChoice[] = [
@@ -53,10 +51,8 @@ const choices: ColumnChoice[] = [
         type: COLUMN_TYPE.PERSON_FIELD,
       },
     ],
-    description: 'First and last name of person',
     icons: [Person, Person],
     key: 'firstAndLastName',
-    title: 'First and Last Name',
   },
 ];
 

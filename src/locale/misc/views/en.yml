@@ -1,5 +1,9 @@
 # eslint-disable yml/key-name-casing
 columnDialog:
+  choices:
+    firstAndLastName:
+      description: First and last name of person
+      title: First and Last Name
   editor:
     buttonLabels:
       cancel: Cancel
@@ -16,26 +20,6 @@ columnDialog:
     alreadyInView: Already in view
     configure: Configure
     header: Add column to view
-  types:
-    descriptions:
-      journey_assignee: This is a test description, it's pretty nice.
-      local_bool: This is a test description, it's pretty nice.
-      local_person: This is a test description, it's pretty nice.
-      person_field: This is a test description, it's pretty nice.
-      person_notes: This is a test description, it's pretty nice.
-      person_query: This is a test description, it's pretty nice.
-      person_tag: This is a test description, it's pretty nice.
-      survey_response: This is a test description, it's pretty nice.
-      survey_submitted: This is a test description, it's pretty nice.
-    journey_assignee: Assigned journeys
-    local_bool: On/off toggle in this view
-    local_person: Reference to another person
-    person_field: Basic person data (name, e-mail etc)
-    person_notes: Organizer notes on person
-    person_query: Smart Search cross-reference
-    person_tag: On/off toggle for tag
-    survey_response: Response to survey question
-    survey_submitted: Date of survey submission
 columnMenu:
   configure: Configure column
   confirmDelete: >-
