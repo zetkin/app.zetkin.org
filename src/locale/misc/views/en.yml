@@ -12,10 +12,21 @@ columnDialog:
       survey: Survey
       tag: Tag
   gallery:
-    addToView: Add to view
-    configureColumn: Configure column
+    add: Add
+    alreadyInView: Already in view
+    configure: Configure
     header: Add column to view
   types:
+    descriptions:
+      journey_assignee: This is a test description, it's pretty nice.
+      local_bool: This is a test description, it's pretty nice.
+      local_person: This is a test description, it's pretty nice.
+      person_field: This is a test description, it's pretty nice.
+      person_notes: This is a test description, it's pretty nice.
+      person_query: This is a test description, it's pretty nice.
+      person_tag: This is a test description, it's pretty nice.
+      survey_response: This is a test description, it's pretty nice.
+      survey_submitted: This is a test description, it's pretty nice.
     journey_assignee: Assigned journeys
     local_bool: On/off toggle in this view
     local_person: Reference to another person
