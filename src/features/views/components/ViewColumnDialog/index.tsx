@@ -5,69 +5,57 @@ import ColumnEditor from './ColumnEditor';
 import ColumnGallery from './ColumnGallery';
 import ZUIDialog from 'zui/ZUIDialog';
 import {
-  COLUMN_TYPE,
   SelectedViewColumn,
+  ZetkinViewColumn,
 } from 'features/views/components/types';
-
-// These column types will auto save and not open the ColumnEditor
-export const AUTO_SAVE_TYPES = [
-  COLUMN_TYPE.JOURNEY_ASSIGNEE,
-  COLUMN_TYPE.LOCAL_BOOL,
-  COLUMN_TYPE.LOCAL_PERSON,
-  COLUMN_TYPE.PERSON_NOTES,
-];
+import { ColumnChoice } from './choices';
 
 interface ViewColumnDialogProps {
+  columns: ZetkinViewColumn[];
   selectedColumn: SelectedViewColumn;
   onCancel: () => void;
-  onSave: (colSpec: SelectedViewColumn) => Promise<void>;
+  onSave: (columns: SelectedViewColumn[]) => Promise<void>;
 }
 
 const ViewColumnDialog: FunctionComponent<ViewColumnDialogProps> = ({
+  columns: existingColumns,
   selectedColumn,
   onCancel,
   onSave,
 }) => {
   const intl = useIntl();
-  const [column, setColumn] = useState<SelectedViewColumn>(
-    selectedColumn || {}
-  );
+  const [columnChoice, setColumnChoice] = useState<ColumnChoice | null>();
 
-  const onSelectType = (type: COLUMN_TYPE) => {
-    if (AUTO_SAVE_TYPES.includes(type)) {
-      // Save column if no configuration needed
-      onSave({
-        title: intl.formatMessage({
-          id: `misc.views.defaultColumnTitles.${type}`,
-        }),
-        type,
-      });
-      return;
-    }
-    // Create Pending state for column
-    setColumn({
-      config: {},
-      title: '',
-      type,
-    });
+  const onConfigure = (choice: ColumnChoice) => {
+    setColumnChoice(choice);
   };
 
   return (
     <ZUIDialog maxWidth="lg" onClose={() => onCancel()} open>
-      {column.type && (
+      {columnChoice && (
         <ColumnEditor
-          column={column}
+          choice={columnChoice}
           onCancel={onCancel}
-          onChange={(column) => {
-            setColumn(column);
-          }}
-          onSave={async () => {
-            await onSave(column);
-            setColumn({});
+          onSave={async (columns) => {
+            await onSave(columns);
+            setColumnChoice(null);
           }}
         />
       )}
-      {!column.type && <ColumnGallery onSelectType={onSelectType} />}
+      {!columnChoice && (
+        <ColumnGallery
+          existingColumns={existingColumns}
+          onAdd={async (choice) => {
+            if (!choice.defaultColumns) {
+              return null;
+            }
+
+            const columns = choice.defaultColumns(intl);
+            await onSave(columns);
+          }}
+          onConfigure={onConfigure}
+        />
+      )}
     </ZUIDialog>
   );
 };

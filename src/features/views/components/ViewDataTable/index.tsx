@@ -25,9 +25,6 @@ import {
   ZetkinView,
 } from 'features/views/components/types';
 import { VIEW_CONTENT_SOURCE, VIEW_DATA_TABLE_ERROR } from './constants';
-import ViewColumnDialog, {
-  AUTO_SAVE_TYPES,
-} from 'features/views/components/ViewColumnDialog';
 import ViewDataTableColumnMenu, {
   ViewDataTableColumnMenuProps,
 } from './ViewDataTableColumnMenu';
@@ -38,6 +35,7 @@ import ViewDataTableToolbar, {
   ViewDataTableToolbarProps,
 } from './ViewDataTableToolbar';
 import { ZetkinViewColumn, ZetkinViewRow } from 'utils/types/zetkin';
+import ViewColumnDialog from '../ViewColumnDialog';
 
 const useStyles = makeStyles((theme) => ({
   '@keyframes addedRowAnimation': {
@@ -327,9 +325,8 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
       showConfigureButton: (field: GridColDef['field']): boolean => {
         const colId = colIdFromFieldName(field);
         const column = columns.find((column) => column.id === colId);
-        if (column) {
-          return !AUTO_SAVE_TYPES.includes(column.type);
-        }
+
+        // TODO: Decide which ones should have a configure option
         return false;
       },
     },
@@ -414,8 +411,15 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
       )}
       {columnToConfigure && (
         <ViewColumnDialog
+          columns={columns}
           onCancel={onColumnCancel}
-          onSave={onColumnSave}
+          onSave={async (columns) => {
+            // TODO: Handle these async calls better
+            // (maybe custom API endpoint to bulk create/edit columns?)
+            for (const col of columns) {
+              await onColumnSave(col);
+            }
+          }}
           selectedColumn={columnToConfigure}
         />
       )}

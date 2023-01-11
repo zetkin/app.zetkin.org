@@ -11,20 +11,17 @@ import {
   Typography,
 } from '@mui/material';
 
-import { COLUMN_TYPE } from '../types';
-
 interface ColumnChoiceCardProps {
   title: string;
   description: string;
   disabled?: boolean;
   color: string;
-  columnType: COLUMN_TYPE;
   FirstIcon: OverridableComponent<
     SvgIconTypeMap<Record<string, unknown>, 'svg'>
   >;
   multiIcon?: boolean;
-  onAdd: (type: COLUMN_TYPE) => void;
-  onConfigure: (type: COLUMN_TYPE) => void;
+  onAdd: () => void;
+  onConfigure: () => void;
   addButtonLabel?: string;
   configureButtonLabel?: string;
   SecondIcon?: OverridableComponent<
@@ -38,7 +35,6 @@ interface ColumnChoiceCardProps {
 const ColumnChoiceCard = ({
   addButtonLabel = 'add',
   color,
-  columnType,
   configureButtonLabel = 'configure',
   description,
   disabled = false,
@@ -124,12 +120,12 @@ const ColumnChoiceCard = ({
       </CardContent>
       <CardActions>
         {!disabled && showAddButton && (
-          <Button onClick={() => onAdd(columnType)} variant="text">
+          <Button onClick={() => onAdd()} variant="text">
             <Msg id={`misc.views.columnDialog.gallery.${addButtonLabel}`} />
           </Button>
         )}
         {!disabled && showConfigureButton && (
-          <Button onClick={() => onConfigure(columnType)} variant="text">
+          <Button onClick={() => onConfigure()} variant="text">
             <Msg
               id={`misc.views.columnDialog.gallery.${configureButtonLabel}`}
             />
