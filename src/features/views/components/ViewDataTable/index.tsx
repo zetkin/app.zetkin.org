@@ -13,6 +13,7 @@ import EmptyView from 'features/views/components/EmptyView';
 import patchViewColumn from 'features/views/fetching/patchViewColumn';
 import postViewColumn from 'features/views/fetching/postViewColumn';
 import useModelsFromQueryString from 'zui/ZUIUserConfigurableDataGrid/useModelsFromQueryString';
+import ViewColumnDialog from '../ViewColumnDialog';
 import ViewRenameColumnDialog from '../ViewRenameColumnDialog';
 import { viewRowsResource } from 'features/views/api/viewRows';
 import { viewsResource } from 'features/views/api/views';
@@ -25,9 +26,6 @@ import {
   ZetkinView,
 } from 'features/views/components/types';
 import { VIEW_CONTENT_SOURCE, VIEW_DATA_TABLE_ERROR } from './constants';
-import ViewColumnDialog, {
-  AUTO_SAVE_TYPES,
-} from 'features/views/components/ViewColumnDialog';
 import ViewDataTableColumnMenu, {
   ViewDataTableColumnMenuProps,
 } from './ViewDataTableColumnMenu';
@@ -324,12 +322,8 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
       onConfigure: onColumnConfigure,
       onDelete: onColumnDelete,
       onRename: onColumnRename,
-      showConfigureButton: (field: GridColDef['field']): boolean => {
-        const colId = colIdFromFieldName(field);
-        const column = columns.find((column) => column.id === colId);
-        if (column) {
-          return !AUTO_SAVE_TYPES.includes(column.type);
-        }
+      showConfigureButton: (): boolean => {
+        // TODO: Decide which ones should have a configure option
         return false;
       },
     },
@@ -414,9 +408,15 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
       )}
       {columnToConfigure && (
         <ViewColumnDialog
+          columns={columns}
           onCancel={onColumnCancel}
-          onSave={onColumnSave}
-          selectedColumn={columnToConfigure}
+          onSave={async (columns) => {
+            // TODO: Handle these async calls better
+            // (maybe custom API endpoint to bulk create/edit columns?)
+            for (const col of columns) {
+              await onColumnSave(col);
+            }
+          }}
         />
       )}
     </>
