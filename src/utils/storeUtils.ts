@@ -15,7 +15,8 @@ export interface RemoteItem<DataType> {
 export interface RemoteList<DataType> {
   error: unknown;
   isLoading: boolean;
-  loaded: Date | null;
+  isStale: boolean;
+  loaded: string | null;
   items: RemoteItem<DataType>[];
 }
 
@@ -40,6 +41,7 @@ export function remoteList<DataType extends RemoteData>(
   return {
     error: null,
     isLoading: false,
+    isStale: false,
     items: items.map((item) => remoteItem(item.id, { data: item })),
     loaded: null,
   };
