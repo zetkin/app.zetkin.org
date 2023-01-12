@@ -1,13 +1,16 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
+import { ViewTreeItem } from 'pages/api/views/tree';
 import { ZetkinView } from './components/types';
 import { remoteList, RemoteList } from 'utils/storeUtils';
 
 export interface ViewsStoreSlice {
+  treeList: RemoteList<ViewTreeItem>;
   viewList: RemoteList<ZetkinView>;
 }
 
 const initialState: ViewsStoreSlice = {
+  treeList: remoteList(),
   viewList: remoteList(),
 };
 
@@ -15,15 +18,15 @@ const viewsSlice = createSlice({
   initialState,
   name: 'views',
   reducers: {
-    allViewsLoad: (state) => {
-      state.viewList.isLoading = true;
+    treeLoad: (state) => {
+      state.treeList.isLoading = true;
     },
-    allViewsLoaded: (state, action: PayloadAction<ZetkinView[]>) => {
-      state.viewList = remoteList(action.payload);
-      state.viewList.loaded = new Date().toISOString();
+    treeLoadded: (state, action: PayloadAction<ViewTreeItem[]>) => {
+      state.treeList = remoteList(action.payload);
+      state.treeList.loaded = new Date().toISOString();
     },
   },
 });
 
 export default viewsSlice;
-export const { allViewsLoad, allViewsLoaded } = viewsSlice.actions;
+export const { treeLoad, treeLoadded } = viewsSlice.actions;

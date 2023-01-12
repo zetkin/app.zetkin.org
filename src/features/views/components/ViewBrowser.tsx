@@ -1,12 +1,12 @@
 import { FC } from 'react';
-import { InsertDriveFileOutlined } from '@mui/icons-material';
 import { Link } from '@mui/material';
 import NextLink from 'next/link';
 import { useIntl } from 'react-intl';
 import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
+import { Folder, InsertDriveFileOutlined } from '@mui/icons-material';
 
 import ViewBrowserModel from '../models/ViewBrowserModel';
-import { ZetkinView } from './types';
+import { ViewTreeItem } from 'pages/api/views/tree';
 import ZUIFuture from 'zui/ZUIFuture';
 
 interface ViewBrowserProps {
@@ -17,12 +17,16 @@ interface ViewBrowserProps {
 const ViewBrowser: FC<ViewBrowserProps> = ({ basePath, model }) => {
   const intl = useIntl();
 
-  const colDefs: GridColDef<ZetkinView>[] = [
+  const colDefs: GridColDef<ViewTreeItem>[] = [
     {
       field: 'icon',
       headerName: '',
-      renderCell: () => {
-        return <InsertDriveFileOutlined />;
+      renderCell: (params) => {
+        return params.row.type == 'folder' ? (
+          <Folder />
+        ) : (
+          <InsertDriveFileOutlined />
+        );
       },
     },
     {
@@ -45,11 +49,12 @@ const ViewBrowser: FC<ViewBrowserProps> = ({ basePath, model }) => {
       headerName: intl.formatMessage({
         id: 'pages.people.views.viewsList.columns.owner',
       }),
-      valueGetter: (params) => params.row.owner.name,
+      valueGetter: (params) => params.row.owner,
     },
   ];
+
   return (
-    <ZUIFuture future={model.getViews()}>
+    <ZUIFuture future={model.getItems()}>
       {(data) => (
         <DataGridPro autoHeight columns={colDefs} hideFooter rows={data} />
       )}

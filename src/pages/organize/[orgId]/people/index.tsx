@@ -54,7 +54,7 @@ const PeopleViewsPage: PageWithLayout<PeopleViewsPageProps> = ({ orgId }) => {
           })}
         </title>
       </Head>
-      <ViewBrowser basePath={`/organize/${orgId}/people/views`} model={model} />
+      <ViewBrowser basePath={`/organize/${orgId}/people`} model={model} />
     </>
   );
 };

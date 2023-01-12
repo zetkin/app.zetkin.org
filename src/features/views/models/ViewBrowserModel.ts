@@ -1,20 +1,29 @@
 import Environment from 'core/env/Environment';
-import { IFuture } from 'core/caching/futures';
 import { ModelBase } from 'core/models';
 import ViewsRepo from '../repos/ViewsRepo';
-import { ZetkinView } from '../components/types';
+import { ViewTreeItem } from 'pages/api/views/tree';
+import { IFuture, ResolvedFuture } from 'core/caching/futures';
 
 export default class ViewBrowserModel extends ModelBase {
+  private _folderId: number | null;
   private _orgId: number;
   private _repo: ViewsRepo;
 
-  constructor(env: Environment, orgId: number) {
+  constructor(env: Environment, orgId: number, folderId: number | null = null) {
     super();
     this._orgId = orgId;
+    this._folderId = folderId;
     this._repo = new ViewsRepo(env);
   }
 
-  getViews(): IFuture<ZetkinView[]> {
-    return this._repo.getAllViews(this._orgId);
+  getItems(): IFuture<ViewTreeItem[]> {
+    const itemsFuture = this._repo.getViewTree(this._orgId);
+    if (!itemsFuture.data) {
+      return itemsFuture;
+    }
+
+    return new ResolvedFuture(
+      itemsFuture.data.filter((item) => item.folderId == this._folderId)
+    );
   }
 }
