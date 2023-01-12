@@ -1,7 +1,7 @@
 import { IntlShape } from 'react-intl';
-import { OverridableComponent } from '@mui/material/OverridableComponent';
 import { Person } from '@mui/icons-material';
-import { SvgIconTypeMap } from '@mui/material/SvgIcon';
+
+import DoubleIconCardVisual from './DoubleIconCardVisual';
 import {
   COLUMN_TYPE,
   PendingZetkinViewColumn,
@@ -12,8 +12,8 @@ import {
 export type ColumnChoice = {
   alreadyInView?: (columns: ZetkinViewColumn[]) => boolean;
   defaultColumns?: (intl: IntlShape) => PendingZetkinViewColumn[];
-  icons: OverridableComponent<SvgIconTypeMap<Record<string, unknown>, 'svg'>>[];
   key: string;
+  renderCardVisual: (color: string) => JSX.Element;
   renderConfigForm?: (props: {
     onOutputConfigured: (columns: SelectedViewColumn[]) => void;
   }) => JSX.Element;
@@ -51,8 +51,10 @@ const choices: ColumnChoice[] = [
         type: COLUMN_TYPE.PERSON_FIELD,
       },
     ],
-    icons: [Person, Person],
     key: 'firstAndLastName',
+    renderCardVisual: (color: string) => {
+      return <DoubleIconCardVisual color={color} icons={[Person, Person]} />;
+    },
   },
 ];
 

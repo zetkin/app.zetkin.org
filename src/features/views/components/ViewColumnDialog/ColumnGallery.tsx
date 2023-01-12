@@ -21,17 +21,19 @@ const ColumnGallery: FunctionComponent<ColumnGalleryProps> = ({
   return (
     <Grid container spacing={3}>
       {choices.map((choice) => {
+        const alreadyInView =
+          choice.alreadyInView && choice.alreadyInView(existingColumns);
         return (
           <Grid key={choice.key} item md={4} sm={6}>
             <ColumnChoiceCard
-              color="#234890"
+              alreadyInView={alreadyInView}
+              cardVisual={choice.renderCardVisual(
+                alreadyInView ? 'gray' : '#234890'
+              )}
+              color={alreadyInView ? 'gray' : '#234890'}
               description={intl.formatMessage({
                 id: `misc.views.columnDialog.choices.${choice.key}.description`,
               })}
-              disabled={
-                choice.alreadyInView && choice.alreadyInView(existingColumns)
-              }
-              FirstIcon={choice.icons[0]}
               onAdd={() => onAdd(choice)}
               onConfigure={() => onConfigure(choice)}
               showAddButton

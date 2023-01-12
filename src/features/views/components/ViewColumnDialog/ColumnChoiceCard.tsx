@@ -1,6 +1,4 @@
 import { FormattedMessage as Msg } from 'react-intl';
-import { OverridableComponent } from '@mui/material/OverridableComponent';
-import { SvgIconTypeMap } from '@mui/material/SvgIcon';
 import {
   Box,
   Button,
@@ -11,28 +9,26 @@ import {
 } from '@mui/material';
 
 interface ColumnChoiceCardProps {
-  title: string;
+  addButtonLabel?: string;
+  alreadyInView?: boolean;
+  cardVisual: JSX.Element;
   description: string;
-  disabled?: boolean;
   color: string;
-  FirstIcon: OverridableComponent<
-    SvgIconTypeMap<Record<string, unknown>, 'svg'>
-  >;
+  configureButtonLabel?: string;
   onAdd: () => void;
   onConfigure: () => void;
-  addButtonLabel?: string;
-  configureButtonLabel?: string;
   showAddButton?: boolean;
   showConfigureButton?: boolean;
+  title: string;
 }
 
 const ColumnChoiceCard = ({
   addButtonLabel = 'add',
+  alreadyInView = false,
+  cardVisual,
   color,
   configureButtonLabel = 'configure',
   description,
-  disabled = false,
-  FirstIcon,
   onAdd,
   onConfigure,
   showAddButton = false,
@@ -43,20 +39,12 @@ const ColumnChoiceCard = ({
     <Card sx={{ height: '300px' }}>
       <Box
         alignItems="center"
-        bgcolor={disabled ? 'gray' : color}
+        bgcolor={color}
         display="flex"
         height="50%"
         justifyContent="center"
       >
-        <Box
-          alignItems="center"
-          bgcolor="white"
-          borderRadius="50%"
-          display="flex"
-          justifyContent="center"
-        >
-          <FirstIcon sx={{ color: color, fontSize: '60px', margin: 2 }} />
-        </Box>
+        {cardVisual}
       </Box>
       <CardContent
         sx={{
@@ -69,19 +57,19 @@ const ColumnChoiceCard = ({
         <Typography>{description}</Typography>
       </CardContent>
       <CardActions>
-        {!disabled && showAddButton && (
+        {!alreadyInView && showAddButton && (
           <Button onClick={() => onAdd()} variant="text">
             <Msg id={`misc.views.columnDialog.gallery.${addButtonLabel}`} />
           </Button>
         )}
-        {!disabled && showConfigureButton && (
+        {!alreadyInView && showConfigureButton && (
           <Button onClick={() => onConfigure()} variant="text">
             <Msg
               id={`misc.views.columnDialog.gallery.${configureButtonLabel}`}
             />
           </Button>
         )}
-        {disabled && (
+        {alreadyInView && (
           <Button disabled variant="text">
             <Msg id="misc.views.columnDialog.gallery.alreadyInView" />
           </Button>
