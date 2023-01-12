@@ -1,7 +1,9 @@
+import { Button } from '@mui/material';
 import { IntlShape } from 'react-intl';
 import { Person } from '@mui/icons-material';
 
 import DoubleIconCardVisual from './DoubleIconCardVisual';
+import SingleIconCardVisual from './SingleIconCardVisual';
 import {
   COLUMN_TYPE,
   PendingZetkinViewColumn,
@@ -54,6 +56,19 @@ const choices: ColumnChoice[] = [
     key: 'firstAndLastName',
     renderCardVisual: (color: string) => {
       return <DoubleIconCardVisual color={color} icons={[Person, Person]} />;
+    },
+  },
+  {
+    key: 'personFields',
+    renderCardVisual: (color: string) => {
+      return <SingleIconCardVisual color={color} icon={Person} />;
+    },
+    renderConfigForm: (props: {
+      onOutputConfigured: (columns: SelectedViewColumn[]) => void;
+    }) => {
+      return (
+        <Button onClick={() => props.onOutputConfigured([])}>Klick!</Button>
+      );
     },
   },
 ];

@@ -4,13 +4,18 @@ columnDialog:
     firstAndLastName:
       description: First and last name of person
       title: First and Last Name
+    personFields:
+      description: Add your choice of fields like email, phone number, etc.
+      title: Person fields
   commonHeaders:
     firstName: First Name
     lastName: Last Name
   editor:
     buttonLabels:
-      cancel: Cancel
-      save: Save
+      addColumns: Add {columns, plural,
+        one {1 column}
+        other {{columns} columns}}
+      change: Change column type
     defaultTitle: New Column
     fieldLabels:
       field: Field

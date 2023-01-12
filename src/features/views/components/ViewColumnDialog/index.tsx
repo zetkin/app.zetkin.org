@@ -1,10 +1,10 @@
 import { useIntl } from 'react-intl';
+import { Dialog, useMediaQuery, useTheme } from '@mui/material';
 import { FunctionComponent, useState } from 'react';
 
 import { ColumnChoice } from './choices';
 import ColumnEditor from './ColumnEditor';
 import ColumnGallery from './ColumnGallery';
-import ZUIDialog from 'zui/ZUIDialog';
 import {
   SelectedViewColumn,
   ZetkinViewColumn,
@@ -22,6 +22,10 @@ const ViewColumnDialog: FunctionComponent<ViewColumnDialogProps> = ({
   onSave,
 }) => {
   const intl = useIntl();
+
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
+
   const [columnChoice, setColumnChoice] = useState<ColumnChoice | null>();
 
   const onConfigure = (choice: ColumnChoice) => {
@@ -29,10 +33,17 @@ const ViewColumnDialog: FunctionComponent<ViewColumnDialogProps> = ({
   };
 
   return (
-    <ZUIDialog maxWidth="lg" onClose={() => onCancel()} open>
+    <Dialog
+      fullScreen={fullScreen}
+      fullWidth
+      maxWidth="lg"
+      onClose={() => onCancel()}
+      open
+    >
       {columnChoice && (
         <ColumnEditor
           choice={columnChoice}
+          color="#234890"
           onSave={async (columns) => {
             await onSave(columns);
             setColumnChoice(null);
@@ -53,7 +64,7 @@ const ViewColumnDialog: FunctionComponent<ViewColumnDialogProps> = ({
           onConfigure={onConfigure}
         />
       )}
-    </ZUIDialog>
+    </Dialog>
   );
 };
 
