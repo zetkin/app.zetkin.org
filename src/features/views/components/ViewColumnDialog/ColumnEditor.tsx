@@ -1,5 +1,5 @@
 import { ChevronLeft } from '@mui/icons-material';
-import { Box, Button, Typography } from '@mui/material';
+import { Box, Button, Link, Typography } from '@mui/material';
 import { FunctionComponent, useState } from 'react';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
 
@@ -9,12 +9,14 @@ import { SelectedViewColumn } from '../types';
 interface ColumnEditorProps {
   choice: ColumnChoice;
   color: string;
+  onCancel: () => void;
   onSave: (columns: SelectedViewColumn[]) => Promise<void>;
 }
 
 const ColumnEditor: FunctionComponent<ColumnEditorProps> = ({
   choice,
   color,
+  onCancel,
   onSave,
 }) => {
   const intl = useIntl();
@@ -28,10 +30,22 @@ const ColumnEditor: FunctionComponent<ColumnEditorProps> = ({
     <Box display="flex" flexDirection="column">
       <Box bgcolor={color} display="flex" flexDirection="column" padding={2}>
         <Box alignSelf="flex-start" display="flex" sx={{ cursor: 'pointer' }}>
-          <ChevronLeft sx={{ color: 'white' }} />
-          <Typography color="white" variant="h5">
+          <Link
+            component="div"
+            onClick={() => onCancel()}
+            sx={{
+              color: 'white',
+              cursor: 'pointer',
+              display: 'flex',
+              fontFamily: 'inherit',
+              justifyContent: 'center',
+            }}
+            underline="none"
+            variant="h5"
+          >
+            <ChevronLeft sx={{ color: 'white' }} />
             <Msg id="misc.views.columnDialog.editor.buttonLabels.change" />
-          </Typography>
+          </Link>
         </Box>
 
         <Box alignSelf="center" display="flex" flexDirection="column">

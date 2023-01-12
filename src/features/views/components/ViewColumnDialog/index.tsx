@@ -44,6 +44,7 @@ const ViewColumnDialog: FunctionComponent<ViewColumnDialogProps> = ({
         <ColumnEditor
           choice={columnChoice}
           color="#234890"
+          onCancel={() => setColumnChoice(null)}
           onSave={async (columns) => {
             await onSave(columns);
             setColumnChoice(null);
