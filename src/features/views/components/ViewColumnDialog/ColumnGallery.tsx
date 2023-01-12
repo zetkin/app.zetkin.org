@@ -36,7 +36,7 @@ const ColumnGallery: FunctionComponent<ColumnGalleryProps> = ({
               })}
               onAdd={() => onAdd(choice)}
               onConfigure={() => onConfigure(choice)}
-              showAddButton
+              showAddButton={!!choice.defaultColumns}
               showConfigureButton={!!choice.renderConfigForm}
               title={intl.formatMessage({
                 id: `misc.views.columnDialog.choices.${choice.key}.title`,
