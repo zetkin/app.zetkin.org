@@ -1,7 +1,20 @@
 import { ZetkinOrganization } from 'utils/types/zetkin';
 import { ZetkinQuery } from 'features/smartSearch/components/types';
 
+export interface ZetkinViewFolder {
+  id: number;
+  title: string;
+  parent: null | {
+    id: number;
+    title: string;
+  };
+}
+
 export interface ZetkinView {
+  folder: null | {
+    id: number;
+    title: string;
+  };
   id: number;
   title: string;
   description: string;

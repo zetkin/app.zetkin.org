@@ -6,6 +6,7 @@ const NewView: ZetkinView = {
   content_query: null,
   created: '2021-11-21T12:53:15',
   description: '',
+  folder: null,
   id: 2,
   organization: KPD,
   owner: {
