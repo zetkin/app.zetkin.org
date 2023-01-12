@@ -1,12 +1,5 @@
 import { FormattedMessage as Msg } from 'react-intl';
-import {
-  Box,
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  Typography,
-} from '@mui/material';
+import { Box, Button, Card, Typography } from '@mui/material';
 
 interface ColumnChoiceCardProps {
   addButtonLabel?: string;
@@ -46,35 +39,37 @@ const ColumnChoiceCard = ({
       >
         {cardVisual}
       </Box>
-      <CardContent
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'space-between',
-        }}
+      <Box
+        display="flex"
+        flexDirection="column"
+        height="50%"
+        justifyContent="space-between"
+        p={2}
       >
-        <Typography variant="h5">{title}</Typography>
-        <Typography>{description}</Typography>
-      </CardContent>
-      <CardActions>
-        {!alreadyInView && showAddButton && (
-          <Button onClick={() => onAdd()} variant="text">
-            <Msg id={`misc.views.columnDialog.gallery.${addButtonLabel}`} />
-          </Button>
-        )}
-        {!alreadyInView && showConfigureButton && (
-          <Button onClick={() => onConfigure()} variant="text">
-            <Msg
-              id={`misc.views.columnDialog.gallery.${configureButtonLabel}`}
-            />
-          </Button>
-        )}
-        {alreadyInView && (
-          <Button disabled variant="text">
-            <Msg id="misc.views.columnDialog.gallery.alreadyInView" />
-          </Button>
-        )}
-      </CardActions>
+        <Box>
+          <Typography variant="h5">{title}</Typography>
+          <Typography>{description}</Typography>
+        </Box>
+        <Box>
+          {!alreadyInView && showAddButton && (
+            <Button onClick={() => onAdd()} variant="text">
+              <Msg id={`misc.views.columnDialog.gallery.${addButtonLabel}`} />
+            </Button>
+          )}
+          {!alreadyInView && showConfigureButton && (
+            <Button onClick={() => onConfigure()} variant="text">
+              <Msg
+                id={`misc.views.columnDialog.gallery.${configureButtonLabel}`}
+              />
+            </Button>
+          )}
+          {alreadyInView && (
+            <Button disabled variant="text">
+              <Msg id="misc.views.columnDialog.gallery.alreadyInView" />
+            </Button>
+          )}
+        </Box>
+      </Box>
     </Card>
   );
 };
