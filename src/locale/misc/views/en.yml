@@ -4,6 +4,9 @@ columnDialog:
     firstAndLastName:
       description: First and last name of person
       title: First and Last Name
+  commonHeaders:
+    firstName: First Name
+    lastName: Last Name
   editor:
     buttonLabels:
       cancel: Cancel
