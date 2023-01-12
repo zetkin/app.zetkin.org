@@ -5,12 +5,10 @@ import { useIntl } from 'react-intl';
 import { PageWithLayout } from 'utils/types';
 import PeopleLayout from 'features/views/layout/PeopleLayout';
 import { scaffold } from 'utils/next';
+import useModel from 'core/useModel';
+import ViewBrowser from 'features/views/components/ViewBrowser';
+import ViewBrowserModel from 'features/views/models/ViewBrowserModel';
 import { viewsResource } from 'features/views/api/views';
-import {
-  CreateViewActionButton,
-  SuggestedViews,
-  ViewsListTable,
-} from 'features/views/components';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -41,8 +39,11 @@ type PeopleViewsPageProps = {
   orgId: string;
 };
 
-const PeopleViewsPage: PageWithLayout<PeopleViewsPageProps> = () => {
+const PeopleViewsPage: PageWithLayout<PeopleViewsPageProps> = ({ orgId }) => {
   const intl = useIntl();
+  const model: ViewBrowserModel = useModel(
+    (env) => new ViewBrowserModel(env, parseInt(orgId))
+  );
 
   return (
     <>
@@ -53,9 +54,7 @@ const PeopleViewsPage: PageWithLayout<PeopleViewsPageProps> = () => {
           })}
         </title>
       </Head>
-      <SuggestedViews />
-      <ViewsListTable />
-      <CreateViewActionButton />
+      <ViewBrowser basePath={`/organize/${orgId}/people/views`} model={model} />
     </>
   );
 };
