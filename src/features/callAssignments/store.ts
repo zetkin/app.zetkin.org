@@ -160,9 +160,10 @@ const callAssignmentsSlice = createSlice({
     ) => {
       state.callersById[action.payload.id] = remoteList(action.payload.callers);
     },
-    statsLoad: (state, action: PayloadAction<number>) => {
-      const statsItem = state.statsById[action.payload];
-      state.statsById[action.payload] = remoteItem(action.payload, {
+    statsLoad: (state, action: PayloadAction<number | string>) => {
+      const id = action.payload as number;
+      const statsItem = state.statsById[id];
+      state.statsById[id] = remoteItem<CallAssignmentStats>(id, {
         data: statsItem?.data || {
           allTargets: 0,
           allocated: 0,
@@ -170,12 +171,12 @@ const callAssignmentsSlice = createSlice({
           callBackLater: 0,
           calledTooRecently: 0,
           done: 0,
+          id: id,
           missingPhoneNumber: 0,
           mostRecentCallTime: null,
           organizerActionNeeded: 0,
           queue: 0,
           ready: 0,
-          ...state.statsById[action.payload],
         },
         isLoading: true,
       });
@@ -190,6 +191,7 @@ const callAssignmentsSlice = createSlice({
           data: action.payload,
           isLoading: false,
           isStale: false,
+          loaded: new Date().toISOString(),
         }
       );
     },
