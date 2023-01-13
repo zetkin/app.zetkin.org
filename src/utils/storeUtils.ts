@@ -1,10 +1,10 @@
 interface RemoteData {
-  id: number;
+  id: number | string;
 }
 
 export interface RemoteItem<DataType> {
   error: unknown;
-  id: number;
+  id: number | string;
   isLoading: boolean;
   isStale: boolean;
   loaded: string | null;
@@ -15,12 +15,13 @@ export interface RemoteItem<DataType> {
 export interface RemoteList<DataType> {
   error: unknown;
   isLoading: boolean;
-  loaded: Date | null;
+  isStale: boolean;
+  loaded: string | null;
   items: RemoteItem<DataType>[];
 }
 
 export function remoteItem<DataType extends RemoteData>(
-  id: number,
+  id: number | string,
   item?: Partial<Omit<RemoteItem<DataType>, 'id'>>
 ): RemoteItem<DataType> {
   return {
@@ -40,6 +41,7 @@ export function remoteList<DataType extends RemoteData>(
   return {
     error: null,
     isLoading: false,
+    isStale: false,
     items: items.map((item) => remoteItem(item.id, { data: item })),
     loaded: null,
   };

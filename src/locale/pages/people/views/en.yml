@@ -1,3 +1,6 @@
+browser:
+  backToFolder: 'Back to {folder}'
+  backToRoot: Back to all views
 createViewButton:
   errorDialog:
     content: Sorry, we're having trouble creating that view.

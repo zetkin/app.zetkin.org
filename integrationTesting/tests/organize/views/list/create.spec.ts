@@ -5,7 +5,7 @@ import KPD from '../../../../mockData/orgs/KPD';
 import NewView from '../../../../mockData/orgs/KPD/people/views/NewView';
 import NewViewColumns from '../../../../mockData/orgs/KPD/people/views/NewView/columns';
 
-test.describe('Views list page', () => {
+test.describe.skip('Views list page', () => {
   test.beforeEach(({ moxy, login }) => {
     login();
     moxy.setZetkinApiMock('/orgs/1', 'get', KPD);

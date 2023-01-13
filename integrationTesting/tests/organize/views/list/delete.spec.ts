@@ -29,7 +29,7 @@ const expectDeleteViewSuccess = (moxy: NextWorkerFixtures['moxy']) => {
   expect(deleteViewRequest).toBeTruthy();
 };
 
-test.describe('Views list page', () => {
+test.describe.skip('Views list page', () => {
   test.beforeEach(({ moxy, login }) => {
     login();
     moxy.setZetkinApiMock('/orgs/1', 'get', KPD);

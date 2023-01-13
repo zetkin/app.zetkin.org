@@ -6,6 +6,7 @@ const view: ZetkinView = {
   content_query: null,
   created: '2021-12-16T14:00:00+00:00',
   description: 'A random description of this random view',
+  folder: null,
   id: 1,
   organization: mockOrganization(),
   owner: {
