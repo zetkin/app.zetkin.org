@@ -1,4 +1,5 @@
 import { Link } from '@mui/material';
+import { makeStyles } from '@mui/styles';
 import NextLink from 'next/link';
 import {
   ArrowBack,
@@ -26,6 +27,16 @@ function typeComparator(v0: ViewBrowserItem, v1: ViewBrowserItem): number {
   return index0 - index1;
 }
 
+const useStyles = makeStyles(() => ({
+  itemLink: {
+    '&:hover': {
+      fontWeight: 'bold',
+    },
+    color: 'inherit',
+    textDecoration: 'none',
+  },
+}));
+
 const ViewBrowser: FC<ViewBrowserProps> = ({
   basePath,
   folderId = null,
@@ -33,10 +44,13 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
 }) => {
   const intl = useIntl();
   const [sortModel, setSortModel] = useState<GridSortModel>([]);
+  const styles = useStyles();
 
   const colDefs: GridColDef<ViewBrowserItem>[] = [
     {
+      disableColumnMenu: true,
       field: 'icon',
+      filterable: false,
       headerName: '',
       renderCell: (params) => {
         if (params.row.type == 'folder') {
@@ -47,8 +61,11 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
           return <InsertDriveFileOutlined />;
         }
       },
+      sortable: false,
+      width: 40,
     },
     {
+      disableColumnMenu: true,
       field: 'title',
       flex: 2,
       headerName: intl.formatMessage({
@@ -62,7 +79,7 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
 
           return (
             <NextLink href={`${basePath}/${subPath}`} passHref>
-              <Link>
+              <Link className={styles.itemLink}>
                 {params.row.title ? (
                   <FormattedMessage
                     id="pages.people.views.browser.backToFolder"
@@ -77,13 +94,14 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
         } else {
           return (
             <NextLink href={`${basePath}/${params.row.id}`} passHref>
-              <Link>{params.row.title}</Link>
+              <Link className={styles.itemLink}>{params.row.title}</Link>
             </NextLink>
           );
         }
       },
     },
     {
+      disableColumnMenu: true,
       field: 'owner',
       flex: 1,
       headerName: intl.formatMessage({
@@ -130,10 +148,12 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
           <DataGridPro
             autoHeight
             columns={colDefs}
+            disableSelectionOnClick
             hideFooter
             onSortModelChange={(model) => setSortModel(model)}
             rows={rows}
             sortingMode="server"
+            sx={{ borderWidth: 0 }}
           />
         );
       }}
