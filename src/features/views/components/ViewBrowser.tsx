@@ -11,6 +11,8 @@ import { FC, useState } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 
 import ZUIFuture from 'zui/ZUIFuture';
+import ZUIPerson from 'zui/ZUIPerson';
+import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
 import ViewBrowserModel, { ViewBrowserItem } from '../models/ViewBrowserModel';
 
 interface ViewBrowserProps {
@@ -107,8 +109,18 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
       headerName: intl.formatMessage({
         id: 'pages.people.views.viewsList.columns.owner',
       }),
-      valueGetter: (params) =>
-        params.row.type == 'back' ? '' : params.row.owner,
+      renderCell: (params) => {
+        if (params.row.type == 'view') {
+          const owner = params.row.data.owner;
+          return (
+            <ZUIPersonHoverCard personId={owner.id}>
+              <ZUIPerson id={owner.id} name={owner.name} />
+            </ZUIPersonHoverCard>
+          );
+        } else {
+          return '';
+        }
+      },
     },
   ];
 
