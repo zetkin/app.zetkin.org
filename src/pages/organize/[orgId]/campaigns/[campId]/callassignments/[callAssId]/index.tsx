@@ -1,7 +1,6 @@
 import { GetServerSideProps } from 'next';
 import { FormattedMessage as Msg } from 'react-intl';
 import { Box, Typography } from '@mui/material';
-import { useEffect, useState } from 'react';
 
 import CallAssignmentLayout from 'features/callAssignments/layout/CallAssignmentLayout';
 import CallAssignmentModel from 'features/callAssignments/models/CallAssignmentModel';
@@ -10,6 +9,7 @@ import CallAssignmentTargets from 'features/callAssignments/components/CallAssig
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import useModel from 'core/useModel';
+import useServerSide from 'core/useServerSide';
 import ZUIStackedStatusBar from 'zui/ZUIStackedStatusBar';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
@@ -43,13 +43,12 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
   orgId,
   assignmentId,
 }) => {
-  const [onServer, setOnServer] = useState(true);
   const model = useModel(
     (env) =>
       new CallAssignmentModel(env, parseInt(orgId), parseInt(assignmentId))
   );
 
-  useEffect(() => setOnServer(false), []);
+  const onServer = useServerSide();
 
   if (onServer) {
     return null;

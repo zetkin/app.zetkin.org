@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 
 import SimpleLayout from 'utils/layout/SimpleLayout';
 import useModel from 'core/useModel';
+import useServerSide from 'core/useServerSide';
 import ViewBrowserModel from '../models/ViewBrowserModel';
 import ViewFolderSubtitle from '../components/ViewFolderSubtitle';
 import ZUIFuture from 'zui/ZUIFuture';
@@ -20,6 +21,11 @@ const PeopleLayout: React.FunctionComponent<PeopleLayoutProps> = ({
   const model = useModel(
     (env) => new ViewBrowserModel(env, parseInt(orgId as string))
   );
+
+  const onServer = useServerSide();
+  if (onServer) {
+    return null;
+  }
 
   return (
     <SimpleLayout

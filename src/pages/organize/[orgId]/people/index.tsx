@@ -6,6 +6,7 @@ import { PageWithLayout } from 'utils/types';
 import PeopleLayout from 'features/views/layout/PeopleLayout';
 import { scaffold } from 'utils/next';
 import useModel from 'core/useModel';
+import useServerSide from 'core/useServerSide';
 import ViewBrowser from 'features/views/components/ViewBrowser';
 import ViewBrowserModel from 'features/views/models/ViewBrowserModel';
 import { viewsResource } from 'features/views/api/views';
@@ -44,6 +45,11 @@ const PeopleViewsPage: PageWithLayout<PeopleViewsPageProps> = ({ orgId }) => {
   const model: ViewBrowserModel = useModel(
     (env) => new ViewBrowserModel(env, parseInt(orgId))
   );
+
+  const onServer = useServerSide();
+  if (onServer) {
+    return null;
+  }
 
   return (
     <>
