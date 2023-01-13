@@ -1,5 +1,5 @@
 import { useIntl } from 'react-intl';
-import { Dialog, useMediaQuery, useTheme } from '@mui/material';
+import { Box, Dialog, useMediaQuery, useTheme } from '@mui/material';
 import { FunctionComponent, useState } from 'react';
 
 import { ColumnChoice } from './choices';
@@ -40,32 +40,34 @@ const ViewColumnDialog: FunctionComponent<ViewColumnDialogProps> = ({
       onClose={() => onCancel()}
       open
     >
-      {columnChoice && (
-        <ColumnEditor
-          choice={columnChoice}
-          color="#234890"
-          existingColumns={existingColumns}
-          onCancel={() => setColumnChoice(null)}
-          onSave={async (columns) => {
-            await onSave(columns);
-            setColumnChoice(null);
-          }}
-        />
-      )}
-      {!columnChoice && (
-        <ColumnGallery
-          existingColumns={existingColumns}
-          onAdd={async (choice) => {
-            if (!choice.defaultColumns) {
-              return null;
-            }
+      <Box height="90vh">
+        {columnChoice && (
+          <ColumnEditor
+            choice={columnChoice}
+            color="#234890"
+            existingColumns={existingColumns}
+            onCancel={() => setColumnChoice(null)}
+            onSave={async (columns) => {
+              await onSave(columns);
+              setColumnChoice(null);
+            }}
+          />
+        )}
+        {!columnChoice && (
+          <ColumnGallery
+            existingColumns={existingColumns}
+            onAdd={async (choice) => {
+              if (!choice.defaultColumns) {
+                return null;
+              }
 
-            const columns = choice.defaultColumns(intl);
-            await onSave(columns);
-          }}
-          onConfigure={onConfigure}
-        />
-      )}
+              const columns = choice.defaultColumns(intl);
+              await onSave(columns);
+            }}
+            onConfigure={onConfigure}
+          />
+        )}
+      </Box>
     </Dialog>
   );
 };

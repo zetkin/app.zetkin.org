@@ -29,7 +29,7 @@ const ColumnEditor: FunctionComponent<ColumnEditorProps> = ({
   }
 
   return (
-    <Box display="flex" flexDirection="column">
+    <Box display="flex" flexDirection="column" height="100%">
       <Box bgcolor={color} display="flex" flexDirection="column" padding={2}>
         <Box alignSelf="flex-start" display="flex" sx={{ cursor: 'pointer' }}>
           <Link
