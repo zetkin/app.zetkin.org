@@ -3,9 +3,16 @@ import IApiClient from 'core/api/client/IApiClient';
 import shouldLoad from 'core/caching/shouldLoad';
 import { Store } from 'core/store';
 import { ViewTreeItem } from 'pages/api/views/tree';
-import { ZetkinViewFolder } from '../components/types';
-import { folderUpdate, folderUpdated, treeLoad, treeLoadded } from '../store';
+import {
+  folderUpdate,
+  folderUpdated,
+  treeLoad,
+  treeLoadded,
+  viewUpdate,
+  viewUpdated,
+} from '../store';
 import { IFuture, PromiseFuture, RemoteListFuture } from 'core/caching/futures';
+import { ZetkinView, ZetkinViewFolder } from '../components/types';
 
 export default class ViewsRepo {
   private _apiClient: IApiClient;
@@ -47,6 +54,23 @@ export default class ViewsRepo {
       .then((folder) => {
         this._store.dispatch(folderUpdated([folder, mutating]));
         return folder;
+      });
+
+    return new PromiseFuture(promise);
+  }
+
+  updateView(
+    orgId: number,
+    viewId: number,
+    data: Partial<Omit<ZetkinView, 'id'>>
+  ): IFuture<ZetkinView> {
+    const mutating = Object.keys(data);
+    this._store.dispatch(viewUpdate([viewId, mutating]));
+    const promise = this._apiClient
+      .patch<ZetkinView>(`/api/orgs/${orgId}/people/views/${viewId}`, data)
+      .then((view) => {
+        this._store.dispatch(viewUpdated([view, mutating]));
+        return view;
       });
 
     return new PromiseFuture(promise);

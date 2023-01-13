@@ -51,9 +51,38 @@ const viewsSlice = createSlice({
       state.treeList = remoteList(action.payload);
       state.treeList.loaded = new Date().toISOString();
     },
+    viewUpdate: (state, action: PayloadAction<[number, string[]]>) => {
+      const [id, mutating] = action.payload;
+      const item = state.treeList.items.find(
+        (item) => item.data?.type == 'view' && item.data?.data.id == id
+      );
+      if (item) {
+        item.mutating = mutating;
+      }
+    },
+    viewUpdated: (state, action: PayloadAction<[ZetkinView, string[]]>) => {
+      const [folder, mutating] = action.payload;
+      const item = state.treeList.items.find(
+        (item) => item.data?.type == 'view' && item.data?.data.id == folder.id
+      );
+      if (item) {
+        item.mutating = item.mutating.filter(
+          (attr) => !mutating.includes(attr)
+        );
+        if (item.data) {
+          item.data.title = folder.title;
+        }
+      }
+    },
   },
 });
 
 export default viewsSlice;
-export const { folderUpdate, folderUpdated, treeLoad, treeLoadded } =
-  viewsSlice.actions;
+export const {
+  folderUpdate,
+  folderUpdated,
+  viewUpdate,
+  viewUpdated,
+  treeLoad,
+  treeLoadded,
+} = viewsSlice.actions;

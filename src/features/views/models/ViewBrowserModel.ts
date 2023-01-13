@@ -84,6 +84,8 @@ export default class ViewBrowserModel extends ModelBase {
   renameItem(type: 'folder' | 'view', id: number, title: string) {
     if (type == 'folder') {
       this._repo.updateFolder(this._orgId, id, { title });
+    } else if (type == 'view') {
+      this._repo.updateView(this._orgId, id, { title });
     }
   }
 }
