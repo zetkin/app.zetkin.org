@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import SimpleLayout from 'utils/layout/SimpleLayout';
 import useModel from 'core/useModel';
 import ViewBrowserModel from '../models/ViewBrowserModel';
+import ViewFolderSubtitle from '../components/ViewFolderSubtitle';
 import ZUIFuture from 'zui/ZUIFuture';
 
 interface FolderLayoutProps {
@@ -23,7 +24,20 @@ const FolderLayout: React.FunctionComponent<FolderLayoutProps> = ({
   return (
     <ZUIFuture future={model.getFolder(folderId)}>
       {(data) => (
-        <SimpleLayout noPad title={data.title}>
+        <SimpleLayout
+          noPad
+          subtitle={
+            <ZUIFuture future={model.getItemSummary(folderId)}>
+              {(data) => (
+                <ViewFolderSubtitle
+                  numFolders={data.folders}
+                  numViews={data.views}
+                />
+              )}
+            </ZUIFuture>
+          }
+          title={data.title}
+        >
           {children}
         </SimpleLayout>
       )}

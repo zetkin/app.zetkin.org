@@ -1,3 +1,8 @@
+folder:
+  summary:
+    empty: Empty
+    folderCount: '{count, plural, =1 {1 folder} other {# folders}}'
+    viewCount: '{count, plural, =1 {1 view} other {# views}}'
 person:
   delete:
     button: Remove person

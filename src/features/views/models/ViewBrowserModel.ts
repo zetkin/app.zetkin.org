@@ -27,6 +27,24 @@ export default class ViewBrowserModel extends ModelBase {
     return new ResolvedFuture(item?.type == 'folder' ? item.data : null);
   }
 
+  getItemSummary(
+    folderId: number | null = null
+  ): IFuture<{ folders: number; views: number }> {
+    const itemsFuture = this._repo.getViewTree(this._orgId);
+    if (!itemsFuture.data) {
+      return new FutureBase(null, itemsFuture.error, itemsFuture.isLoading);
+    }
+
+    return new ResolvedFuture({
+      folders: itemsFuture.data.filter(
+        (item) => item.type == 'folder' && item.folderId == folderId
+      ).length,
+      views: itemsFuture.data.filter(
+        (item) => item.type == 'view' && item.folderId == folderId
+      ).length,
+    });
+  }
+
   getItems(folderId: number | null = null): IFuture<ViewTreeItem[]> {
     const itemsFuture = this._repo.getViewTree(this._orgId);
     if (!itemsFuture.data) {
