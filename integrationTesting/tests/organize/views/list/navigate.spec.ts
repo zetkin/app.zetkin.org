@@ -13,12 +13,14 @@ test.describe('Views list page', () => {
   test.afterEach(({ moxy }) => {
     moxy.teardown();
   });
+
   test('navigates to view page when user clicks view', async ({
     page,
     appUri,
     moxy,
   }) => {
     moxy.setZetkinApiMock('/orgs/1/people/views', 'get', [AllMembers]);
+    moxy.setZetkinApiMock('/orgs/1/people/view_folders', 'get', []);
 
     await page.goto(appUri + '/organize/1/people');
 

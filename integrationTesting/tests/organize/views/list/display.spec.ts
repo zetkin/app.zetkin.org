@@ -32,6 +32,7 @@ test.describe('Views list page', () => {
     appUri,
     moxy,
   }) => {
+    moxy.setZetkinApiMock('/orgs/1/people/view_folders', 'get', []);
     moxy.setZetkinApiMock('/orgs/1/people/views', 'get', [
       AllMembers,
       {
