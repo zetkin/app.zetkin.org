@@ -32,7 +32,7 @@ function typeComparator(v0: ViewBrowserItem, v1: ViewBrowserItem): number {
 const useStyles = makeStyles(() => ({
   itemLink: {
     '&:hover': {
-      fontWeight: 'bold',
+      textDecoration: 'underline',
     },
     color: 'inherit',
     textDecoration: 'none',
