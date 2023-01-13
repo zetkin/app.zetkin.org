@@ -6,6 +6,7 @@ import PersonFieldConfig from './PersonFieldConfig';
 import SingleIconCardVisual from './SingleIconCardVisual';
 import {
   COLUMN_TYPE,
+  NATIVE_PERSON_FIELDS,
   PendingZetkinViewColumn,
   SelectedViewColumn,
   ZetkinViewColumn,
@@ -60,6 +61,15 @@ const choices: ColumnChoice[] = [
     },
   },
   {
+    alreadyInView: (columns) => {
+      return Object.values(NATIVE_PERSON_FIELDS).every((fieldName) =>
+        columns.some(
+          (col) =>
+            col.type == COLUMN_TYPE.PERSON_FIELD &&
+            col.config.field == fieldName
+        )
+      );
+    },
     key: 'personFields',
     renderCardVisual: (color: string) => (
       <SingleIconCardVisual color={color} icon={Person} />
