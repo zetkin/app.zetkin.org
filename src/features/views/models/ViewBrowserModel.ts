@@ -15,11 +15,13 @@ type ViewBrowserBackItem = {
 export type ViewBrowserItem = ViewTreeItem | ViewBrowserBackItem;
 
 export default class ViewBrowserModel extends ModelBase {
+  private _env: Environment;
   private _orgId: number;
   private _repo: ViewsRepo;
 
   constructor(env: Environment, orgId: number) {
     super();
+    this._env = env;
     this._orgId = orgId;
     this._repo = new ViewsRepo(env);
   }
@@ -79,6 +81,14 @@ export default class ViewBrowserModel extends ModelBase {
     return new ResolvedFuture(
       items.concat(itemsFuture.data.filter((item) => item.folderId == folderId))
     );
+  }
+
+  itemIsRenaming(type: 'folder' | 'view', id: number): boolean {
+    const state = this._env.store.getState();
+    const item = state.views.treeList.items.find(
+      (item) => item.data?.type == type && item.data?.data.id == id
+    );
+    return item?.mutating.includes('title') ?? false;
   }
 
   renameItem(type: 'folder' | 'view', id: number, title: string) {

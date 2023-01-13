@@ -6,6 +6,13 @@ import {
   InsertDriveFileOutlined,
 } from '@mui/icons-material';
 import {
+  Box,
+  CircularProgress,
+  Link,
+  Theme,
+  useMediaQuery,
+} from '@mui/material';
+import {
   DataGridPro,
   GridColDef,
   GridSortModel,
@@ -13,7 +20,6 @@ import {
 } from '@mui/x-data-grid-pro';
 import { FC, useState } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { Link, Theme, useMediaQuery } from '@mui/material';
 
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import ZUIFuture from 'zui/ZUIFuture';
@@ -107,9 +113,14 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
           );
         } else {
           return (
-            <NextLink href={`${basePath}/${params.row.id}`} passHref>
-              <Link className={styles.itemLink}>{params.row.title}</Link>
-            </NextLink>
+            <Box display="flex" gap={1}>
+              <NextLink href={`${basePath}/${params.row.id}`} passHref>
+                <Link className={styles.itemLink}>{params.row.title}</Link>
+              </NextLink>
+              {model.itemIsRenaming(params.row.type, params.row.data.id) && (
+                <CircularProgress size={20} />
+              )}
+            </Box>
           );
         }
       },
