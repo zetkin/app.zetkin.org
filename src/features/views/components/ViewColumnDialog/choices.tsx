@@ -1,8 +1,8 @@
-import { Button } from '@mui/material';
 import { IntlShape } from 'react-intl';
 import { Person } from '@mui/icons-material';
 
 import DoubleIconCardVisual from './DoubleIconCardVisual';
+import PersonFieldConfig from './PersonFieldConfig';
 import SingleIconCardVisual from './SingleIconCardVisual';
 import {
   COLUMN_TYPE,
@@ -17,6 +17,7 @@ export type ColumnChoice = {
   key: string;
   renderCardVisual: (color: string) => JSX.Element;
   renderConfigForm?: (props: {
+    existingColumns: ZetkinViewColumn[];
     onOutputConfigured: (columns: SelectedViewColumn[]) => void;
   }) => JSX.Element;
 };
@@ -60,16 +61,18 @@ const choices: ColumnChoice[] = [
   },
   {
     key: 'personFields',
-    renderCardVisual: (color: string) => {
-      return <SingleIconCardVisual color={color} icon={Person} />;
-    },
+    renderCardVisual: (color: string) => (
+      <SingleIconCardVisual color={color} icon={Person} />
+    ),
     renderConfigForm: (props: {
+      existingColumns: ZetkinViewColumn[];
       onOutputConfigured: (columns: SelectedViewColumn[]) => void;
-    }) => {
-      return (
-        <Button onClick={() => props.onOutputConfigured([])}>Klick!</Button>
-      );
-    },
+    }) => (
+      <PersonFieldConfig
+        existingColumns={props.existingColumns}
+        onOutputConfigured={props.onOutputConfigured}
+      />
+    ),
   },
 ];
 

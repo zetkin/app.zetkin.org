@@ -4,10 +4,11 @@ import { FunctionComponent, useState } from 'react';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
 
 import { ColumnChoice } from './choices';
-import { SelectedViewColumn } from '../types';
+import { SelectedViewColumn, ZetkinViewColumn } from '../types';
 
 interface ColumnEditorProps {
   choice: ColumnChoice;
+  existingColumns: ZetkinViewColumn[];
   color: string;
   onCancel: () => void;
   onSave: (columns: SelectedViewColumn[]) => Promise<void>;
@@ -16,6 +17,7 @@ interface ColumnEditorProps {
 const ColumnEditor: FunctionComponent<ColumnEditorProps> = ({
   choice,
   color,
+  existingColumns,
   onCancel,
   onSave,
 }) => {
@@ -63,8 +65,17 @@ const ColumnEditor: FunctionComponent<ColumnEditorProps> = ({
         flexGrow="1"
         justifyContent="center"
       >
-        <Box alignSelf="center" maxWidth="md" padding={4}>
+        <Box
+          alignItems="center"
+          alignSelf="center"
+          display="flex"
+          flexDirection="column"
+          justifyContent="center"
+          maxWidth="md"
+          padding={2}
+        >
           {choice.renderConfigForm({
+            existingColumns: existingColumns,
             onOutputConfigured: (columns) => {
               setColumns(columns);
             },
