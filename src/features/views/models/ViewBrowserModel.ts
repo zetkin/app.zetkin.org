@@ -80,4 +80,10 @@ export default class ViewBrowserModel extends ModelBase {
       items.concat(itemsFuture.data.filter((item) => item.folderId == folderId))
     );
   }
+
+  renameItem(type: 'folder' | 'view', id: number, title: string) {
+    if (type == 'folder') {
+      this._repo.updateFolder(this._orgId, id, { title });
+    }
+  }
 }
