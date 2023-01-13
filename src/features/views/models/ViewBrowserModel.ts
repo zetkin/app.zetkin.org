@@ -5,6 +5,15 @@ import { ViewTreeItem } from 'pages/api/views/tree';
 import { ZetkinViewFolder } from '../components/types';
 import { FutureBase, IFuture, ResolvedFuture } from 'core/caching/futures';
 
+type ViewBrowserBackItem = {
+  folderId: number | null;
+  id: string;
+  title: string | null;
+  type: 'back';
+};
+
+export type ViewBrowserItem = ViewTreeItem | ViewBrowserBackItem;
+
 export default class ViewBrowserModel extends ModelBase {
   private _orgId: number;
   private _repo: ViewsRepo;
@@ -45,14 +54,30 @@ export default class ViewBrowserModel extends ModelBase {
     });
   }
 
-  getItems(folderId: number | null = null): IFuture<ViewTreeItem[]> {
+  getItems(folderId: number | null = null): IFuture<ViewBrowserItem[]> {
     const itemsFuture = this._repo.getViewTree(this._orgId);
     if (!itemsFuture.data) {
       return itemsFuture;
     }
 
+    const items: ViewBrowserItem[] = [];
+
+    if (folderId) {
+      const folderItem = itemsFuture.data.find(
+        (item) => item.type == 'folder' && item.data.id == folderId
+      );
+      if (folderItem) {
+        items.push({
+          folderId: folderItem.folderId,
+          id: 'back',
+          title: (folderItem.data as ZetkinViewFolder).parent?.title ?? null,
+          type: 'back',
+        });
+      }
+    }
+
     return new ResolvedFuture(
-      itemsFuture.data.filter((item) => item.folderId == folderId)
+      items.concat(itemsFuture.data.filter((item) => item.folderId == folderId))
     );
   }
 }
