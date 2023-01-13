@@ -1,6 +1,22 @@
 import { ApiFetch, createApiFetch } from 'utils/apiFetch';
 import { NextApiRequest, NextApiResponse } from 'next';
 
+import { ZetkinViewFolder } from 'features/views/components/types';
+
+interface LabeledBreadcrumbElement {
+  href: string;
+  label: string;
+}
+
+interface LocalizedBreadcrumbElement {
+  href: string;
+  labelMsg: string;
+}
+
+export type BreadcrumbElement =
+  | LabeledBreadcrumbElement
+  | LocalizedBreadcrumbElement;
+
 const breadcrumbs = async (
   req: NextApiRequest,
   res: NextApiResponse
@@ -16,7 +32,7 @@ const breadcrumbs = async (
 
     const apiFetch = createApiFetch(req.headers);
     const pathFields = pathname.split('/').slice(1);
-    const breadcrumbs = [];
+    const breadcrumbs: BreadcrumbElement[] = [];
     const curPath = [];
 
     for (const field of pathFields) {
@@ -24,14 +40,15 @@ const breadcrumbs = async (
         const fieldName = field.slice(1, -1);
         const fieldValue = query[fieldName];
 
-        const label = await fetchLabel(fieldName, fieldValue, orgId, apiFetch);
+        const elements = await fetchElements(
+          '/' + curPath.join('/'),
+          fieldName,
+          fieldValue,
+          orgId,
+          apiFetch
+        );
+        elements.forEach((elem) => breadcrumbs.push(elem));
         curPath.push(fieldValue);
-        if (label) {
-          breadcrumbs.push({
-            href: '/' + curPath.join('/'),
-            label: label,
-          });
-        }
       } else {
         curPath.push(field);
         breadcrumbs.push({
@@ -46,12 +63,55 @@ const breadcrumbs = async (
   }
 };
 
+async function fetchElements(
+  basePath: string,
+  fieldName: string,
+  fieldValue: string,
+  orgId: string,
+  apiFetch: ApiFetch
+): Promise<BreadcrumbElement[]> {
+  if (fieldName == 'folderId') {
+    const folders = await apiFetch(`/orgs/${orgId}/people/view_folders`)
+      .then((res) => res.json())
+      .then((envelope) => envelope.data as ZetkinViewFolder[]);
+
+    const ancestors: ZetkinViewFolder[] = [];
+    let nextAncestor = folders.find(
+      (folder) => folder.id == parseInt(fieldValue)
+    );
+    while (nextAncestor) {
+      ancestors.push(nextAncestor);
+      const parent = nextAncestor.parent;
+      nextAncestor = parent
+        ? folders.find((folder) => folder.id == parent.id)
+        : undefined;
+    }
+
+    return ancestors.reverse().map((folder) => ({
+      href: basePath + '/' + folder.id,
+      label: folder.title,
+    }));
+  } else {
+    const label = await fetchLabel(fieldName, fieldValue, orgId, apiFetch);
+    if (label) {
+      return [
+        {
+          href: basePath + '/' + fieldValue,
+          label: label,
+        },
+      ];
+    } else {
+      return [];
+    }
+  }
+}
+
 async function fetchLabel(
   fieldName: string,
   fieldValue: string,
   orgId: string,
   apiFetch: ApiFetch
-) {
+): Promise<string | null> {
   if (fieldName === 'orgId') {
     const org = await apiFetch(`/orgs/${orgId}`).then((res) => res.json());
     return org.data.title;
