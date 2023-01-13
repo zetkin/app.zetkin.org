@@ -11,10 +11,15 @@ import ZUIFuture from 'zui/ZUIFuture';
 
 interface ViewBrowserProps {
   basePath: string;
+  folderId?: number | null;
   model: ViewBrowserModel;
 }
 
-const ViewBrowser: FC<ViewBrowserProps> = ({ basePath, model }) => {
+const ViewBrowser: FC<ViewBrowserProps> = ({
+  basePath,
+  folderId = null,
+  model,
+}) => {
   const intl = useIntl();
 
   const colDefs: GridColDef<ViewTreeItem>[] = [
@@ -54,7 +59,7 @@ const ViewBrowser: FC<ViewBrowserProps> = ({ basePath, model }) => {
   ];
 
   return (
-    <ZUIFuture future={model.getItems()}>
+    <ZUIFuture future={model.getItems(folderId)}>
       {(data) => (
         <DataGridPro autoHeight columns={colDefs} hideFooter rows={data} />
       )}
