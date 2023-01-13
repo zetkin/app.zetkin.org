@@ -1,4 +1,3 @@
-import { Link } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import NextLink from 'next/link';
 import {
@@ -9,6 +8,7 @@ import {
 import { DataGridPro, GridColDef, GridSortModel } from '@mui/x-data-grid-pro';
 import { FC, useState } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
+import { Link, Theme, useMediaQuery } from '@mui/material';
 
 import ZUIFuture from 'zui/ZUIFuture';
 import ZUIPerson from 'zui/ZUIPerson';
@@ -47,6 +47,9 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
   const intl = useIntl();
   const [sortModel, setSortModel] = useState<GridSortModel>([]);
   const styles = useStyles();
+  const isMobile = useMediaQuery((theme: Theme) =>
+    theme.breakpoints.down('sm')
+  );
 
   const colDefs: GridColDef<ViewBrowserItem>[] = [
     {
@@ -102,7 +105,10 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
         }
       },
     },
-    {
+  ];
+
+  if (!isMobile) {
+    colDefs.push({
       disableColumnMenu: true,
       field: 'owner',
       flex: 1,
@@ -121,8 +127,8 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
           return '';
         }
       },
-    },
-  ];
+    });
+  }
 
   return (
     <ZUIFuture future={model.getItems(folderId)}>
