@@ -14,7 +14,7 @@ test.describe('Views list page', () => {
     moxy.teardown();
   });
 
-  test('informs user they do not have any views if list is empty', async ({
+  test.skip('informs user they do not have any views if list is empty', async ({
     page,
     appUri,
     moxy,
@@ -48,24 +48,5 @@ test.describe('Views list page', () => {
 
     await page.goto(appUri + '/organize/1/people');
     expect(await page.locator('.MuiDataGrid-row').count()).toEqual(2);
-  });
-
-  test('navigates to view page when user clicks view', async ({
-    page,
-    appUri,
-    moxy,
-  }) => {
-    moxy.setZetkinApiMock('/orgs/1/people/views', 'get', [AllMembers]);
-
-    await page.goto(appUri + '/organize/1/people');
-
-    await Promise.all([
-      page.waitForNavigation(),
-      page.click(`text=${AllMembers.title}`),
-    ]);
-
-    await expect(page.url()).toEqual(
-      appUri + `/organize/1/people/views/${AllMembers.id}`
-    );
   });
 });

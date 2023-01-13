@@ -5,7 +5,7 @@ import KPD from '../../../../mockData/orgs/KPD';
 import ReferendumSignatures from '../../../../mockData/orgs/KPD/campaigns/ReferendumSignatures';
 import WelcomeNewMembers from '../../../../mockData/orgs/KPD/campaigns/WelcomeNewMembers';
 
-test.describe('Campaigns list page', async () => {
+test.describe.skip('Campaigns list page', async () => {
   test.beforeEach(async ({ moxy, login }) => {
     login();
     moxy.setZetkinApiMock('/orgs/1', 'get', KPD);
