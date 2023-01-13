@@ -5,11 +5,17 @@ import {
   Folder,
   InsertDriveFileOutlined,
 } from '@mui/icons-material';
-import { DataGridPro, GridColDef, GridSortModel } from '@mui/x-data-grid-pro';
+import {
+  DataGridPro,
+  GridColDef,
+  GridSortModel,
+  useGridApiRef,
+} from '@mui/x-data-grid-pro';
 import { FC, useState } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { Link, Theme, useMediaQuery } from '@mui/material';
 
+import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import ZUIFuture from 'zui/ZUIFuture';
 import ZUIPerson from 'zui/ZUIPerson';
 import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
@@ -50,6 +56,8 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
   const isMobile = useMediaQuery((theme: Theme) =>
     theme.breakpoints.down('sm')
   );
+
+  const gridApiRef = useGridApiRef();
 
   const colDefs: GridColDef<ViewBrowserItem>[] = [
     {
@@ -129,6 +137,33 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
         }
       },
     });
+
+    colDefs.push({
+      field: 'menu',
+      headerName: '',
+      renderCell: (params) => {
+        return (
+          <ZUIEllipsisMenu
+            items={[
+              {
+                label: intl.formatMessage({
+                  id: 'pages.people.views.browser.menu.rename',
+                }),
+                onSelect: (e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  gridApiRef.current.startCellEditMode({
+                    field: 'title',
+                    id: params.row.id,
+                  });
+                },
+              },
+            ]}
+          />
+        );
+      },
+      width: 40,
+    });
   }
 
   return (
@@ -165,6 +200,7 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
 
         return (
           <DataGridPro
+            apiRef={gridApiRef}
             autoHeight
             columns={colDefs}
             disableSelectionOnClick
