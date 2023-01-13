@@ -1,7 +1,6 @@
 import { useIntl } from 'react-intl';
-import { useRouter } from 'next/router';
 
-import TabbedLayout from 'utils/layout/TabbedLayout';
+import SimpleLayout from 'utils/layout/SimpleLayout';
 
 interface PeopleLayoutProps {
   children: React.ReactNode;
@@ -11,22 +10,14 @@ const PeopleLayout: React.FunctionComponent<PeopleLayoutProps> = ({
   children,
 }) => {
   const intl = useIntl();
-  const { orgId } = useRouter().query;
 
   return (
-    <TabbedLayout
-      baseHref={`/organize/${orgId}/people`}
-      defaultTab="/views"
-      tabs={[
-        {
-          href: `/views`,
-          messageId: 'layout.organize.people.tabs.views',
-        },
-      ]}
+    <SimpleLayout
+      noPad
       title={intl.formatMessage({ id: 'layout.organize.people.title' })}
     >
       {children}
-    </TabbedLayout>
+    </SimpleLayout>
   );
 };
 

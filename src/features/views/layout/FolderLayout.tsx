@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 
-import TabbedLayout from 'utils/layout/TabbedLayout';
+import SimpleLayout from 'utils/layout/SimpleLayout';
 import useModel from 'core/useModel';
 import ViewBrowserModel from '../models/ViewBrowserModel';
 import ZUIFuture from 'zui/ZUIFuture';
@@ -23,19 +23,9 @@ const FolderLayout: React.FunctionComponent<FolderLayoutProps> = ({
   return (
     <ZUIFuture future={model.getFolder(folderId)}>
       {(data) => (
-        <TabbedLayout
-          baseHref={`/organize/${orgId}/people`}
-          defaultTab="/views"
-          tabs={[
-            {
-              href: `/views`,
-              messageId: 'layout.organize.people.tabs.views',
-            },
-          ]}
-          title={data.title}
-        >
+        <SimpleLayout noPad title={data.title}>
           {children}
-        </TabbedLayout>
+        </SimpleLayout>
       )}
     </ZUIFuture>
   );
