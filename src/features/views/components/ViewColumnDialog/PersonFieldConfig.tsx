@@ -30,7 +30,7 @@ const PersonFieldConfig = ({
   const intl = useIntl();
   const [selectedFields, setSelectedFields] = useState<string[]>([]);
 
-  const personFields = existingColumns.filter(
+  const personFieldsInView = existingColumns.filter(
     (column) => column.type === COLUMN_TYPE.PERSON_FIELD
   ) as PersonFieldViewColumn[];
 
@@ -82,7 +82,7 @@ const PersonFieldConfig = ({
         value={selectedFields}
       >
         {Object.values(NATIVE_PERSON_FIELDS).map((fieldSlug) => {
-          const disabled = !!personFields.find(
+          const disabled = !!personFieldsInView.find(
             (field) => field.config.field === fieldSlug
           );
           return (
