@@ -2,8 +2,8 @@ import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { useIntl } from 'react-intl';
 
+import FolderLayout from 'features/views/layout/FolderLayout';
 import { PageWithLayout } from 'utils/types';
-import PeopleLayout from 'features/views/layout/PeopleLayout';
 import { scaffold } from 'utils/next';
 import useModel from 'core/useModel';
 import ViewBrowser from 'features/views/components/ViewBrowser';
@@ -68,8 +68,10 @@ const PeopleViewsPage: PageWithLayout<PeopleViewsPageProps> = ({
   );
 };
 
-PeopleViewsPage.getLayout = function getLayout(page) {
-  return <PeopleLayout>{page}</PeopleLayout>;
+PeopleViewsPage.getLayout = function getLayout(page, props) {
+  return (
+    <FolderLayout folderId={parseInt(props.folderId)}>{page}</FolderLayout>
+  );
 };
 
 export default PeopleViewsPage;
