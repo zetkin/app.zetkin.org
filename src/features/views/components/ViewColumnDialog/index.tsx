@@ -1,92 +1,74 @@
 import { useIntl } from 'react-intl';
-import { useMediaQuery } from '@mui/material';
+import { Box, Dialog, useMediaQuery, useTheme } from '@mui/material';
 import { FunctionComponent, useState } from 'react';
 
+import { ColumnChoice } from './choices';
 import ColumnEditor from './ColumnEditor';
 import ColumnGallery from './ColumnGallery';
-import theme from 'theme';
-import ZUIDialog from 'zui/ZUIDialog';
 import {
-  COLUMN_TYPE,
   SelectedViewColumn,
+  ZetkinViewColumn,
 } from 'features/views/components/types';
 
-// These column types will auto save and not open the ColumnEditor
-export const AUTO_SAVE_TYPES = [
-  COLUMN_TYPE.JOURNEY_ASSIGNEE,
-  COLUMN_TYPE.LOCAL_BOOL,
-  COLUMN_TYPE.LOCAL_PERSON,
-  COLUMN_TYPE.PERSON_NOTES,
-];
-
 interface ViewColumnDialogProps {
-  selectedColumn: SelectedViewColumn;
+  columns: ZetkinViewColumn[];
   onCancel: () => void;
-  onSave: (colSpec: SelectedViewColumn) => Promise<void>;
+  onSave: (columns: SelectedViewColumn[]) => Promise<void>;
 }
 
 const ViewColumnDialog: FunctionComponent<ViewColumnDialogProps> = ({
-  selectedColumn,
+  columns: existingColumns,
   onCancel,
   onSave,
 }) => {
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const intl = useIntl();
-  const [column, setColumn] = useState<SelectedViewColumn>(
-    selectedColumn || {}
-  );
 
-  const onSelectType = (type: COLUMN_TYPE) => {
-    if (AUTO_SAVE_TYPES.includes(type)) {
-      // Save column if no configuration needed
-      onSave({
-        title: intl.formatMessage({
-          id: `misc.views.defaultColumnTitles.${type}`,
-        }),
-        type,
-      });
-      return;
-    }
-    // Create Pending state for column
-    setColumn({
-      config: {},
-      title: '',
-      type,
-    });
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
+
+  const [columnChoice, setColumnChoice] = useState<ColumnChoice | null>();
+
+  const onConfigure = (choice: ColumnChoice) => {
+    setColumnChoice(choice);
   };
 
   return (
-    <ZUIDialog
+    <Dialog
+      fullScreen={fullScreen}
+      fullWidth
       maxWidth="lg"
       onClose={() => onCancel()}
       open
-      title={
-        column.type
-          ? intl.formatMessage({
-              id: `misc.views.columnDialog.types.${column.type}`,
-            })
-          : intl.formatMessage({
-              id: 'misc.views.columnDialog.gallery.header',
-            })
-      }
     >
-      <div style={{ height: isMobile ? '80vh' : '50vh' }}>
-        {column.type && (
+      <Box height="90vh">
+        {columnChoice && (
           <ColumnEditor
-            column={column}
-            onCancel={onCancel}
-            onChange={(column) => {
-              setColumn(column);
-            }}
-            onSave={async () => {
-              await onSave(column);
-              setColumn({});
+            choice={columnChoice}
+            color="#234890"
+            existingColumns={existingColumns}
+            onCancel={() => setColumnChoice(null)}
+            onSave={async (columns) => {
+              await onSave(columns);
+              setColumnChoice(null);
             }}
           />
         )}
-        {!column.type && <ColumnGallery onSelectType={onSelectType} />}
-      </div>
-    </ZUIDialog>
+        {!columnChoice && (
+          <ColumnGallery
+            existingColumns={existingColumns}
+            onAdd={async (choice) => {
+              if (!choice.defaultColumns) {
+                return null;
+              }
+
+              const columns = choice.defaultColumns(intl);
+              await onSave(columns);
+            }}
+            onConfigure={onConfigure}
+          />
+        )}
+      </Box>
+    </Dialog>
   );
 };
 

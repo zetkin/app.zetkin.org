@@ -1,110 +1,100 @@
-import { useIntl } from 'react-intl';
-import { Box, Container } from '@mui/material';
-import { FormEvent, FunctionComponent } from 'react';
+import { ChevronLeft } from '@mui/icons-material';
+import { Box, Button, Link, Typography } from '@mui/material';
+import { FunctionComponent, useState } from 'react';
+import { FormattedMessage as Msg, useIntl } from 'react-intl';
 
-import { isColumnConfigValid } from './utils';
-import PersonFieldColumnConfigForm from './config/PersonFieldColumnConfigForm';
-import PersonQueryColumnConfigForm from './config/PersonQueryColumnConfigForm';
-import PersonTagColumnConfigForm from './config/PersonTagColumnConfigForm';
-import SurveyResponseColumnConfigForm from './config/SurveyResponseColumnConfigForm';
-import SurveySubmittedColumnConfigForm from './config/SurveySubmittedColumnConfigForm';
-import ZUISubmitCancelButtons from 'zui/ZUISubmitCancelButtons';
-import {
-  COLUMN_TYPE,
-  PendingZetkinViewColumn,
-  PersonFieldViewColumn,
-  PersonQueryViewColumn,
-  PersonTagViewColumn,
-  SelectedViewColumn,
-  SurveyResponseViewColumn,
-  SurveySubmittedViewColumn,
-  ZetkinViewColumn,
-} from 'features/views/components/types';
+import { ColumnChoice } from './choices';
+import { SelectedViewColumn, ZetkinViewColumn } from '../types';
 
 interface ColumnEditorProps {
-  column: ZetkinViewColumn | PendingZetkinViewColumn;
+  choice: ColumnChoice;
+  existingColumns: ZetkinViewColumn[];
+  color: string;
   onCancel: () => void;
-  onChange: (colSpec: SelectedViewColumn) => void;
-  onSave: () => Promise<void>;
+  onSave: (columns: SelectedViewColumn[]) => Promise<void>;
 }
 
 const ColumnEditor: FunctionComponent<ColumnEditorProps> = ({
-  column,
+  choice,
+  color,
+  existingColumns,
   onCancel,
-  onChange,
   onSave,
 }) => {
   const intl = useIntl();
+  const [columns, setColumns] = useState<SelectedViewColumn[]>([]);
 
-  const onSubmit = (e: FormEvent) => {
-    e.preventDefault();
-    onSave();
-  };
-
-  const onCancelButtonPress = () => {
-    // If is existing column, close config
-    if ('id' in column) {
-      onCancel();
-    }
-    // If is new column, go back to gallery
-    if (!('id' in column)) {
-      onChange({});
-    }
-  };
+  if (!choice.renderConfigForm) {
+    return null;
+  }
 
   return (
-    <form onSubmit={onSubmit} style={{ height: '100%' }}>
-      <Box display="flex" flexDirection="column" height="100%" pb={2}>
-        <Box
-          display="flex"
-          flexDirection="column"
-          flexGrow="1"
-          justifyContent="center"
-        >
-          <Container maxWidth="md">
-            {column.type == COLUMN_TYPE.PERSON_FIELD && (
-              <PersonFieldColumnConfigForm
-                column={column as PersonFieldViewColumn}
-                onChange={onChange}
-              />
-            )}
-            {column.type == COLUMN_TYPE.PERSON_QUERY && (
-              <PersonQueryColumnConfigForm
-                column={column as PersonQueryViewColumn}
-                onChange={onChange}
-              />
-            )}
-            {column.type == COLUMN_TYPE.PERSON_TAG && (
-              <PersonTagColumnConfigForm
-                column={column as PersonTagViewColumn}
-                onChange={onChange}
-              />
-            )}
-            {column.type == COLUMN_TYPE.SURVEY_RESPONSE && (
-              <SurveyResponseColumnConfigForm
-                column={column as SurveyResponseViewColumn}
-                onChange={onChange}
-              />
-            )}
-            {column.type == COLUMN_TYPE.SURVEY_SUBMITTED && (
-              <SurveySubmittedColumnConfigForm
-                column={column as SurveySubmittedViewColumn}
-                onChange={onChange}
-              />
-            )}
-          </Container>
+    <Box display="flex" flexDirection="column" height="100%">
+      <Box bgcolor={color} display="flex" flexDirection="column" padding={2}>
+        <Box alignSelf="flex-start" display="flex" sx={{ cursor: 'pointer' }}>
+          <Link
+            component="div"
+            onClick={() => onCancel()}
+            sx={{
+              color: 'white',
+              cursor: 'pointer',
+              display: 'flex',
+              fontFamily: 'inherit',
+              justifyContent: 'center',
+            }}
+            underline="none"
+            variant="h5"
+          >
+            <ChevronLeft sx={{ color: 'white' }} />
+            <Msg id="misc.views.columnDialog.editor.buttonLabels.change" />
+          </Link>
         </Box>
-        <Box flexGrow={0}>
-          <ZUISubmitCancelButtons
-            onCancel={onCancelButtonPress}
-            submitDisabled={!isColumnConfigValid(column)}
-            submitText={intl.formatMessage({
-              id: 'misc.views.columnDialog.editor.buttonLabels.save',
-            })}
-          />
+
+        <Box alignSelf="center" display="flex" flexDirection="column">
+          <Box height={100} paddingBottom={1} width={100}>
+            {choice.renderCardVisual(color)}
+          </Box>
+          <Typography color="white" variant="h5">
+            <Msg id={`misc.views.columnDialog.choices.${choice.key}.title`} />
+          </Typography>
         </Box>
       </Box>
-    </form>
+      <Box
+        display="flex"
+        flexDirection="column"
+        flexGrow="1"
+        justifyContent="center"
+      >
+        <Box
+          alignItems="center"
+          alignSelf="center"
+          display="flex"
+          flexDirection="column"
+          justifyContent="center"
+          maxWidth="md"
+          padding={2}
+        >
+          {choice.renderConfigForm({
+            existingColumns: existingColumns,
+            onOutputConfigured: (columns) => {
+              setColumns(columns);
+            },
+          })}
+        </Box>
+      </Box>
+      <Box display="flex" flexGrow={0} justifyContent="flex-end" padding={2}>
+        {!!columns.length && (
+          <Button onClick={() => onSave(columns)} variant="contained">
+            {intl.formatMessage(
+              {
+                id: 'misc.views.columnDialog.editor.buttonLabels.addColumns',
+              },
+              { columns: columns.length }
+            )}
+          </Button>
+        )}
+      </Box>
+    </Box>
   );
 };
 

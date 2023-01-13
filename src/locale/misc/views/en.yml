@@ -1,9 +1,22 @@
 # eslint-disable yml/key-name-casing
 columnDialog:
+  choices:
+    firstAndLastName:
+      description: First and last name of person
+      title: First and Last Name
+    personFields:
+      description: Add your choice of fields like email, phone number, etc.
+      title: Person fields
+  commonHeaders:
+    firstName: First Name
+    lastName: Last Name
   editor:
+    alreadyInView: Already in view
     buttonLabels:
-      cancel: Cancel
-      save: Save
+      addColumns: Add {columns, plural,
+        one {1 column}
+        other {{columns} columns}}
+      change: Change column type
     defaultTitle: New Column
     fieldLabels:
       field: Field
@@ -12,19 +25,10 @@ columnDialog:
       survey: Survey
       tag: Tag
   gallery:
-    addToView: Add to view
-    configureColumn: Configure column
+    add: Add
+    alreadyInView: Already in view
+    configure: Configure
     header: Add column to view
-  types:
-    journey_assignee: Assigned journeys
-    local_bool: On/off toggle in this view
-    local_person: Reference to another person
-    person_field: Basic person data (name, e-mail etc)
-    person_notes: Organizer notes on person
-    person_query: Smart Search cross-reference
-    person_tag: On/off toggle for tag
-    survey_response: Response to survey question
-    survey_submitted: Date of survey submission
 columnMenu:
   configure: Configure column
   confirmDelete: >-
