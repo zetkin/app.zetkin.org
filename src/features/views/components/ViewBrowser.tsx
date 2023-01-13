@@ -1,22 +1,29 @@
-import { FC } from 'react';
 import { Link } from '@mui/material';
 import NextLink from 'next/link';
-import { FormattedMessage, useIntl } from 'react-intl';
-import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
 import {
   ArrowBack,
   Folder,
   InsertDriveFileOutlined,
 } from '@mui/icons-material';
+import { DataGridPro, GridColDef, GridSortModel } from '@mui/x-data-grid-pro';
+import { FC, useState } from 'react';
+import { FormattedMessage, useIntl } from 'react-intl';
 
-import ViewBrowserModel, { ViewBrowserItem } from '../models/ViewBrowserModel';
-import { ViewTreeItem } from 'pages/api/views/tree';
 import ZUIFuture from 'zui/ZUIFuture';
+import ViewBrowserModel, { ViewBrowserItem } from '../models/ViewBrowserModel';
 
 interface ViewBrowserProps {
   basePath: string;
   folderId?: number | null;
   model: ViewBrowserModel;
+}
+
+const TYPE_SORT_ORDER = ['back', 'folder', 'view'];
+
+function typeComparator(v0: ViewBrowserItem, v1: ViewBrowserItem): number {
+  const index0 = TYPE_SORT_ORDER.indexOf(v0.type);
+  const index1 = TYPE_SORT_ORDER.indexOf(v1.type);
+  return index0 - index1;
 }
 
 const ViewBrowser: FC<ViewBrowserProps> = ({
@@ -25,6 +32,7 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
   model,
 }) => {
   const intl = useIntl();
+  const [sortModel, setSortModel] = useState<GridSortModel>([]);
 
   const colDefs: GridColDef<ViewBrowserItem>[] = [
     {
@@ -88,9 +96,47 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
 
   return (
     <ZUIFuture future={model.getItems(folderId)}>
-      {(data) => (
-        <DataGridPro autoHeight columns={colDefs} hideFooter rows={data} />
-      )}
+      {(data) => {
+        const rows = data.sort((item0, item1) => {
+          const typeSort = typeComparator(item0, item1);
+          if (typeSort != 0) {
+            return typeSort;
+          }
+
+          // If we get this far, none of the items will be of the "back"
+          // type, because there is only one 'back' and typeComparator()
+          // always returns non-zero when the two items are of different
+          // type. We still check for "back" here, because TypeScript
+          // doesn't understand the logic described above.
+          if (item0.type != 'back' && item1.type != 'back') {
+            for (const column of sortModel) {
+              let sort = 0;
+              if (column.field == 'title') {
+                sort = item0.title.localeCompare(item1.title);
+              } else if (column.field == 'owner') {
+                sort = item0.owner.localeCompare(item1.owner);
+              }
+
+              if (sort != 0) {
+                return column.sort == 'asc' ? sort : -sort;
+              }
+            }
+          }
+
+          return 0;
+        });
+
+        return (
+          <DataGridPro
+            autoHeight
+            columns={colDefs}
+            hideFooter
+            onSortModelChange={(model) => setSortModel(model)}
+            rows={rows}
+            sortingMode="server"
+          />
+        );
+      }}
     </ZUIFuture>
   );
 };
