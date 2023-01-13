@@ -153,6 +153,9 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
       field: 'menu',
       headerName: '',
       renderCell: (params) => {
+        if (params.row.type == 'back') {
+          return null;
+        }
         return (
           <ZUIEllipsisMenu
             items={[
@@ -217,6 +220,7 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
             disableSelectionOnClick
             experimentalFeatures={{ newEditingApi: true }}
             hideFooter
+            isCellEditable={(params) => params.row.type != 'back'}
             onSortModelChange={(model) => setSortModel(model)}
             processRowUpdate={(item) => {
               if (item.type != 'back') {
