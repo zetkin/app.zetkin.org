@@ -71,6 +71,7 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
     },
     {
       disableColumnMenu: true,
+      editable: true,
       field: 'title',
       flex: 2,
       headerName: intl.formatMessage({
@@ -167,8 +168,15 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
             autoHeight
             columns={colDefs}
             disableSelectionOnClick
+            experimentalFeatures={{ newEditingApi: true }}
             hideFooter
             onSortModelChange={(model) => setSortModel(model)}
+            processRowUpdate={(item) => {
+              if (item.type != 'back') {
+                model.renameItem(item.type, item.data.id, item.title);
+              }
+              return item;
+            }}
             rows={rows}
             sortingMode="server"
             sx={{ borderWidth: 0 }}
