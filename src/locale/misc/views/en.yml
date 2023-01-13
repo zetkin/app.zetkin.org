@@ -11,6 +11,7 @@ columnDialog:
     firstName: First Name
     lastName: Last Name
   editor:
+    alreadyInView: Already in view
     buttonLabels:
       addColumns: Add {columns, plural,
         one {1 column}

@@ -1,4 +1,3 @@
-import { useIntl } from 'react-intl';
 import { useState } from 'react';
 import {
   Box,
@@ -8,7 +7,9 @@ import {
   InputLabel,
   MenuItem,
   Select,
+  Typography,
 } from '@mui/material';
+import { FormattedMessage as Msg, useIntl } from 'react-intl';
 
 import {
   COLUMN_TYPE,
@@ -95,6 +96,11 @@ const PersonFieldConfig = ({
               {intl.formatMessage({
                 id: `misc.nativePersonFields.${fieldSlug}`,
               })}
+              {disabled && (
+                <Typography sx={{ fontStyle: 'italic' }} variant="body2">
+                  <Msg id="misc.views.columnDialog.editor.alreadyInView" />
+                </Typography>
+              )}
             </MenuItem>
           );
         })}
