@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import { NextRouter } from 'next/router';
 import { anything, capture, instance, mock, reset, when } from 'ts-mockito';
 
 import createStore from 'core/store';
@@ -33,9 +34,11 @@ function mockItem<DataType extends { id: number }>(data: DataType) {
 
 describe('CallAssignmentModel', () => {
   const mockClient = mock<IApiClient>();
+  const mockRouter = mock<NextRouter>();
 
   beforeEach(() => {
     reset(mockClient);
+    reset(mockRouter);
   });
 
   describe('isTargeted', () => {
@@ -68,7 +71,7 @@ describe('CallAssignmentModel', () => {
       });
 
       const apiClient = instance(mockClient);
-      const env = new Environment(store, apiClient);
+      const env = new Environment(store, apiClient, instance(mockRouter));
       const model = new CallAssignmentModel(env, 1, 2);
 
       expect(model.isTargeted).toBeFalsy();
@@ -108,7 +111,7 @@ describe('CallAssignmentModel', () => {
       });
 
       const apiClient = instance(mockClient);
-      const env = new Environment(store, apiClient);
+      const env = new Environment(store, apiClient, instance(mockRouter));
       const model = new CallAssignmentModel(env, 1, 2);
 
       expect(model.isTargeted).toBeTruthy();
@@ -181,7 +184,7 @@ describe('CallAssignmentModel', () => {
       );
 
       const apiClient = instance(mockClient);
-      const env = new Environment(store, apiClient);
+      const env = new Environment(store, apiClient, instance(mockRouter));
       const model = new CallAssignmentModel(env, 1, 2);
       expect(model.state).toBe(CallAssignmentState.UNKNOWN);
     });
@@ -192,7 +195,7 @@ describe('CallAssignmentModel', () => {
       jest.useFakeTimers().setSystemTime(new Date('1857-07-04'));
 
       const apiClient = instance(mockClient);
-      const env = new Environment(store, apiClient);
+      const env = new Environment(store, apiClient, instance(mockRouter));
       const model = new CallAssignmentModel(env, 1, 2);
       expect(model.state).toBe(CallAssignmentState.DRAFT);
     });
@@ -202,7 +205,7 @@ describe('CallAssignmentModel', () => {
       jest.useFakeTimers().setSystemTime(new Date('1857-07-04'));
 
       const apiClient = instance(mockClient);
-      const env = new Environment(store, apiClient);
+      const env = new Environment(store, apiClient, instance(mockRouter));
       const model = new CallAssignmentModel(env, 1, 2);
       expect(model.state).toBe(CallAssignmentState.SCHEDULED);
     });
@@ -212,7 +215,7 @@ describe('CallAssignmentModel', () => {
       jest.useFakeTimers().setSystemTime(new Date('1857-07-08'));
 
       const apiClient = instance(mockClient);
-      const env = new Environment(store, apiClient);
+      const env = new Environment(store, apiClient, instance(mockRouter));
       const model = new CallAssignmentModel(env, 1, 2);
       expect(model.state).toBe(CallAssignmentState.OPEN);
     });
@@ -222,7 +225,7 @@ describe('CallAssignmentModel', () => {
       jest.useFakeTimers().setSystemTime(new Date('1857-08-04'));
 
       const apiClient = instance(mockClient);
-      const env = new Environment(store, apiClient);
+      const env = new Environment(store, apiClient, instance(mockRouter));
       const model = new CallAssignmentModel(env, 1, 2);
       expect(model.state).toBe(CallAssignmentState.OPEN);
     });
@@ -235,7 +238,7 @@ describe('CallAssignmentModel', () => {
       );
 
       const apiClient = instance(mockClient);
-      const env = new Environment(store, apiClient);
+      const env = new Environment(store, apiClient, instance(mockRouter));
       const model = new CallAssignmentModel(env, 1, 2);
       expect(model.state).toBe(CallAssignmentState.OPEN);
     });
@@ -248,7 +251,7 @@ describe('CallAssignmentModel', () => {
       );
 
       const apiClient = instance(mockClient);
-      const env = new Environment(store, apiClient);
+      const env = new Environment(store, apiClient, instance(mockRouter));
       const model = new CallAssignmentModel(env, 1, 2);
       expect(model.state).toBe(CallAssignmentState.ACTIVE);
     });
@@ -259,7 +262,7 @@ describe('CallAssignmentModel', () => {
       jest.useFakeTimers().setSystemTime(new Date('1933-06-21'));
 
       const apiClient = instance(mockClient);
-      const env = new Environment(store, apiClient);
+      const env = new Environment(store, apiClient, instance(mockRouter));
       const model = new CallAssignmentModel(env, 1, 2);
       expect(model.state).toBe(CallAssignmentState.CLOSED);
     });
@@ -296,7 +299,7 @@ describe('CallAssignmentModel', () => {
 
       const apiClient = instance(mockClient);
 
-      const env = new Environment(store, apiClient);
+      const env = new Environment(store, apiClient, instance(mockRouter));
       const model = new CallAssignmentModel(env, 1, 2);
 
       const future = model.getStats();
@@ -356,7 +359,7 @@ describe('CallAssignmentModel', () => {
 
       const apiClient = instance(mockClient);
 
-      const env = new Environment(store, apiClient);
+      const env = new Environment(store, apiClient, instance(mockRouter));
       const model = new CallAssignmentModel(env, 1, 2);
 
       const future = model.getStats();
@@ -429,7 +432,7 @@ describe('CallAssignmentModel', () => {
 
       const apiClient = instance(mockClient);
 
-      const env = new Environment(store, apiClient);
+      const env = new Environment(store, apiClient, instance(mockRouter));
       const model = new CallAssignmentModel(env, 1, 2);
 
       const future = model.getStats();
@@ -475,7 +478,7 @@ describe('CallAssignmentModel', () => {
 
       const apiClient = instance(mockClient);
 
-      const env = new Environment(store, apiClient);
+      const env = new Environment(store, apiClient, instance(mockRouter));
       const model = new CallAssignmentModel(env, 1, 2);
 
       const future = model.getFilteredCallers('');
@@ -519,7 +522,7 @@ describe('CallAssignmentModel', () => {
 
       const apiClient = instance(mockClient);
 
-      const env = new Environment(store, apiClient);
+      const env = new Environment(store, apiClient, instance(mockRouter));
       const model = new CallAssignmentModel(env, 1, 2);
 
       const future = model.getFilteredCallers('rosa');
@@ -563,7 +566,7 @@ describe('CallAssignmentModel', () => {
 
       const apiClient = instance(mockClient);
 
-      const env = new Environment(store, apiClient);
+      const env = new Environment(store, apiClient, instance(mockRouter));
       const model = new CallAssignmentModel(env, 1, 2);
 
       const future = model.getFilteredCallers('boris');
@@ -584,7 +587,7 @@ describe('CallAssignmentModel', () => {
 
       const apiClient = instance(mockClient);
 
-      const env = new Environment(store, apiClient);
+      const env = new Environment(store, apiClient, instance(mockRouter));
       const model = new CallAssignmentModel(env, 1, 2);
 
       const future = model.getFilteredCallers('rosa');
@@ -648,7 +651,7 @@ describe('CallAssignmentModel', () => {
       (startDate, endDate, expectedData) => {
         const store = createStore(mockStoreData(startDate, endDate));
         const apiClient = instance(mockClient);
-        const env = new Environment(store, apiClient);
+        const env = new Environment(store, apiClient, instance(mockRouter));
         const model = new CallAssignmentModel(env, 1, 2);
         model.start();
 
@@ -705,7 +708,7 @@ describe('CallAssignmentModel', () => {
     it('sets end date to today when start is past, end is future', () => {
       const store = createStore(mockStoreData(pastDate(1), futureDate(1)));
       const apiClient = instance(mockClient);
-      const env = new Environment(store, apiClient);
+      const env = new Environment(store, apiClient, instance(mockRouter));
       const model = new CallAssignmentModel(env, 1, 2);
       model.end();
 
@@ -721,7 +724,7 @@ describe('CallAssignmentModel', () => {
     it('sets end date to today when start is past, end is null', () => {
       const store = createStore(mockStoreData(null, null));
       const apiClient = instance(mockClient);
-      const env = new Environment(store, apiClient);
+      const env = new Environment(store, apiClient, instance(mockRouter));
       const model = new CallAssignmentModel(env, 1, 2);
       model.end();
 
