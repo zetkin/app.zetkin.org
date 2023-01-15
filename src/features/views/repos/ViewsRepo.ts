@@ -8,6 +8,8 @@ import {
   allItemsLoaded,
   folderUpdate,
   folderUpdated,
+  viewCreate,
+  viewCreated,
   viewUpdate,
   viewUpdated,
 } from '../store';
@@ -21,6 +23,16 @@ export default class ViewsRepo {
   constructor(env: Environment) {
     this._apiClient = env.apiClient;
     this._store = env.store;
+  }
+
+  async createView(orgId: number, folderId = 0): Promise<ZetkinView> {
+    this._store.dispatch(viewCreate());
+    const view = await this._apiClient.post<ZetkinView>(
+      `/api/views/createNew?orgId=${orgId}&folderId=${folderId}`,
+      {}
+    );
+    this._store.dispatch(viewCreated(view));
+    return view;
   }
 
   getViewTree(orgId: number): IFuture<ViewTreeData> {

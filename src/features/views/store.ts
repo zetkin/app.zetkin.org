@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { ViewTreeData } from 'pages/api/views/tree';
-import { remoteList, RemoteList } from 'utils/storeUtils';
+import { remoteItem, remoteList, RemoteList } from 'utils/storeUtils';
 import { ZetkinView, ZetkinViewFolder } from './components/types';
 
 export interface ViewsStoreSlice {
@@ -52,6 +52,18 @@ const viewsSlice = createSlice({
         }
       }
     },
+    viewCreate: (state) => {
+      state.viewList.isLoading = true;
+    },
+    viewCreated: (state, action: PayloadAction<ZetkinView>) => {
+      const view = action.payload;
+      state.viewList.isLoading = false;
+      state.viewList.items.push(
+        remoteItem(view.id, {
+          data: view,
+        })
+      );
+    },
     viewUpdate: (state, action: PayloadAction<[number, string[]]>) => {
       const [id, mutating] = action.payload;
       const item = state.viewList.items.find((item) => item.id == id);
@@ -80,6 +92,8 @@ export const {
   allItemsLoaded,
   folderUpdate,
   folderUpdated,
+  viewCreate,
+  viewCreated,
   viewUpdate,
   viewUpdated,
 } = viewsSlice.actions;
