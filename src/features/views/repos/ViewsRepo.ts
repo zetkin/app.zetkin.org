@@ -6,6 +6,8 @@ import { ViewTreeData } from 'pages/api/views/tree';
 import {
   allItemsLoad,
   allItemsLoaded,
+  folderCreate,
+  folderCreated,
   folderUpdate,
   folderUpdated,
   viewCreate,
@@ -16,6 +18,11 @@ import {
 import { IFuture, PromiseFuture, ResolvedFuture } from 'core/caching/futures';
 import { ZetkinView, ZetkinViewFolder } from '../components/types';
 
+type ZetkinViewFolderPostBody = {
+  parent_id?: number;
+  title: string;
+};
+
 export default class ViewsRepo {
   private _apiClient: IApiClient;
   private _store: Store;
@@ -23,6 +30,24 @@ export default class ViewsRepo {
   constructor(env: Environment) {
     this._apiClient = env.apiClient;
     this._store = env.store;
+  }
+
+  async createFolder(
+    orgId: number,
+    title: string,
+    folderId?: number
+  ): Promise<ZetkinViewFolder> {
+    this._store.dispatch(folderCreate());
+    const folder = await this._apiClient.post<
+      ZetkinViewFolder,
+      ZetkinViewFolderPostBody
+    >(`/api/orgs/${orgId}/people/view_folders`, {
+      parent_id: folderId,
+      title,
+    });
+
+    this._store.dispatch(folderCreated(folder));
+    return folder;
   }
 
   async createView(orgId: number, folderId = 0): Promise<ZetkinView> {

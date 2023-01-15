@@ -51,6 +51,15 @@ export default class ViewBrowserModel extends ModelBase {
     this._repo = new ViewsRepo(env);
   }
 
+  createFolder(title: string, folderId?: number): IFuture<ZetkinViewFolder> {
+    const promise = this._repo
+      .createFolder(this._orgId, title, folderId)
+      .then((folder) => {
+        return folder;
+      });
+    return new PromiseFuture(promise);
+  }
+
   createView(folderId?: number): IFuture<ZetkinView> {
     const promise = this._repo
       .createView(this._orgId, folderId)

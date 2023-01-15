@@ -30,6 +30,14 @@ const viewsSlice = createSlice({
       state.viewList = remoteList(views);
       state.viewList.loaded = timestamp;
     },
+    folderCreate: (state) => {
+      state.folderList.isLoading = true;
+    },
+    folderCreated: (state, action: PayloadAction<ZetkinViewFolder>) => {
+      const folder = action.payload;
+      state.folderList.isLoading = false;
+      state.folderList.items.push(remoteItem(folder.id, { data: folder }));
+    },
     folderUpdate: (state, action: PayloadAction<[number, string[]]>) => {
       const [id, mutating] = action.payload;
       const item = state.folderList.items.find((item) => item.id == id);
@@ -90,6 +98,8 @@ export default viewsSlice;
 export const {
   allItemsLoad,
   allItemsLoaded,
+  folderCreate,
+  folderCreated,
   folderUpdate,
   folderUpdated,
   viewCreate,
