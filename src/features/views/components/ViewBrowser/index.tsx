@@ -1,17 +1,4 @@
-import { makeStyles } from '@mui/styles';
-import NextLink from 'next/link';
-import {
-  ArrowBack,
-  Folder,
-  InsertDriveFileOutlined,
-} from '@mui/icons-material';
-import {
-  Box,
-  CircularProgress,
-  Link,
-  Theme,
-  useMediaQuery,
-} from '@mui/material';
+import { useIntl } from 'react-intl';
 import {
   DataGridPro,
   GridColDef,
@@ -19,13 +6,17 @@ import {
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
 import { FC, useEffect, useState } from 'react';
-import { FormattedMessage, useIntl } from 'react-intl';
+import { Theme, useMediaQuery } from '@mui/material';
 
+import BrowserItem from './BrowserItem';
+import BrowserItemIcon from './BrowserItemIcon';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import ZUIFuture from 'zui/ZUIFuture';
 import ZUIPerson from 'zui/ZUIPerson';
 import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
-import ViewBrowserModel, { ViewBrowserItem } from '../models/ViewBrowserModel';
+import ViewBrowserModel, {
+  ViewBrowserItem,
+} from '../../models/ViewBrowserModel';
 
 interface ViewBrowserProps {
   basePath: string;
@@ -41,16 +32,6 @@ function typeComparator(v0: ViewBrowserItem, v1: ViewBrowserItem): number {
   return index0 - index1;
 }
 
-const useStyles = makeStyles(() => ({
-  itemLink: {
-    '&:hover': {
-      textDecoration: 'underline',
-    },
-    color: 'inherit',
-    textDecoration: 'none',
-  },
-}));
-
 const ViewBrowser: FC<ViewBrowserProps> = ({
   basePath,
   folderId = null,
@@ -58,7 +39,6 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
 }) => {
   const intl = useIntl();
   const [sortModel, setSortModel] = useState<GridSortModel>([]);
-  const styles = useStyles();
   const isMobile = useMediaQuery((theme: Theme) =>
     theme.breakpoints.down('sm')
   );
@@ -82,13 +62,7 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
       filterable: false,
       headerName: '',
       renderCell: (params) => {
-        if (params.row.type == 'folder') {
-          return <Folder />;
-        } else if (params.row.type == 'back') {
-          return <ArrowBack />;
-        } else if (params.row.type == 'view') {
-          return <InsertDriveFileOutlined />;
-        }
+        return <BrowserItemIcon item={params.row} />;
       },
       sortable: false,
       width: 40,
@@ -102,37 +76,9 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
         id: 'pages.people.views.viewsList.columns.title',
       }),
       renderCell: (params) => {
-        if (params.row.type == 'back') {
-          const subPath = params.row.folderId
-            ? 'folders/' + params.row.folderId
-            : '';
-
-          return (
-            <NextLink href={`${basePath}/${subPath}`} passHref>
-              <Link className={styles.itemLink}>
-                {params.row.title ? (
-                  <FormattedMessage
-                    id="pages.people.views.browser.backToFolder"
-                    values={{ folder: <em>{params.row.title}</em> }}
-                  />
-                ) : (
-                  <FormattedMessage id="pages.people.views.browser.backToRoot" />
-                )}
-              </Link>
-            </NextLink>
-          );
-        } else {
-          return (
-            <Box display="flex" gap={1}>
-              <NextLink href={`${basePath}/${params.row.id}`} passHref>
-                <Link className={styles.itemLink}>{params.row.title}</Link>
-              </NextLink>
-              {model.itemIsRenaming(params.row.type, params.row.data.id) && (
-                <CircularProgress size={20} />
-              )}
-            </Box>
-          );
-        }
+        return (
+          <BrowserItem basePath={basePath} item={params.row} model={model} />
+        );
       },
     },
   ];
