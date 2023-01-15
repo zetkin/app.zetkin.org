@@ -6,11 +6,13 @@ import { ZetkinView, ZetkinViewFolder } from './components/types';
 
 export interface ViewsStoreSlice {
   folderList: RemoteList<ZetkinViewFolder>;
+  recentlyCreatedFolder: ZetkinViewFolder | null;
   viewList: RemoteList<ZetkinView>;
 }
 
 const initialState: ViewsStoreSlice = {
   folderList: remoteList(),
+  recentlyCreatedFolder: null,
   viewList: remoteList(),
 };
 
@@ -32,11 +34,13 @@ const viewsSlice = createSlice({
     },
     folderCreate: (state) => {
       state.folderList.isLoading = true;
+      state.recentlyCreatedFolder = null;
     },
     folderCreated: (state, action: PayloadAction<ZetkinViewFolder>) => {
       const folder = action.payload;
       state.folderList.isLoading = false;
       state.folderList.items.push(remoteItem(folder.id, { data: folder }));
+      state.recentlyCreatedFolder = folder;
     },
     folderUpdate: (state, action: PayloadAction<[number, string[]]>) => {
       const [id, mutating] = action.payload;
@@ -44,6 +48,10 @@ const viewsSlice = createSlice({
       if (item) {
         item.mutating = mutating;
       }
+
+      // Mutating means that creating the "recently created folder"
+      // is no longer the most recent action takeing.
+      state.recentlyCreatedFolder = null;
     },
     folderUpdated: (
       state,

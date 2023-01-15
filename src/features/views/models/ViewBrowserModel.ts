@@ -166,6 +166,11 @@ export default class ViewBrowserModel extends ModelBase {
     }
   }
 
+  get recentlyCreatedFolder(): ZetkinViewFolder | null {
+    const state = this._env.store.getState();
+    return state.views.recentlyCreatedFolder;
+  }
+
   renameItem(type: 'folder' | 'view', id: number, title: string) {
     if (type == 'folder') {
       this._repo.updateFolder(this._orgId, id, { title });

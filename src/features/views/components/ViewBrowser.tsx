@@ -18,7 +18,7 @@ import {
   GridSortModel,
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
@@ -64,6 +64,16 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
   );
 
   const gridApiRef = useGridApiRef();
+
+  // If a folder was created, go into rename state
+  useEffect(() => {
+    if (gridApiRef.current && model.recentlyCreatedFolder) {
+      gridApiRef.current.startCellEditMode({
+        field: 'title',
+        id: 'folders/' + model.recentlyCreatedFolder.id,
+      });
+    }
+  }, [model.recentlyCreatedFolder]);
 
   const colDefs: GridColDef<ViewBrowserItem>[] = [
     {
