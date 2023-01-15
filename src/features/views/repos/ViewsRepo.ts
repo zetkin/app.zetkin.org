@@ -2,16 +2,16 @@ import Environment from 'core/env/Environment';
 import IApiClient from 'core/api/client/IApiClient';
 import shouldLoad from 'core/caching/shouldLoad';
 import { Store } from 'core/store';
-import { ViewTreeItem } from 'pages/api/views/tree';
+import { ViewTreeData } from 'pages/api/views/tree';
 import {
+  allItemsLoad,
+  allItemsLoaded,
   folderUpdate,
   folderUpdated,
-  treeLoad,
-  treeLoadded,
   viewUpdate,
   viewUpdated,
 } from '../store';
-import { IFuture, PromiseFuture, RemoteListFuture } from 'core/caching/futures';
+import { IFuture, PromiseFuture, ResolvedFuture } from 'core/caching/futures';
 import { ZetkinView, ZetkinViewFolder } from '../components/types';
 
 export default class ViewsRepo {
@@ -23,19 +23,25 @@ export default class ViewsRepo {
     this._store = env.store;
   }
 
-  getViewTree(orgId: number): IFuture<ViewTreeItem[]> {
+  getViewTree(orgId: number): IFuture<ViewTreeData> {
     const state = this._store.getState();
-    if (shouldLoad(state.views.treeList)) {
-      this._store.dispatch(treeLoad());
+    if (
+      shouldLoad(state.views.folderList) ||
+      shouldLoad(state.views.viewList)
+    ) {
+      this._store.dispatch(allItemsLoad());
       const promise = this._apiClient
-        .get<ViewTreeItem[]>(`/api/views/tree?orgId=${orgId}`)
+        .get<ViewTreeData>(`/api/views/tree?orgId=${orgId}`)
         .then((items) => {
-          this._store.dispatch(treeLoadded(items));
+          this._store.dispatch(allItemsLoaded(items));
           return items;
         });
       return new PromiseFuture(promise);
     } else {
-      return new RemoteListFuture(state.views.treeList);
+      return new ResolvedFuture({
+        folders: state.views.folderList.items.map((item) => item.data!),
+        views: state.views.viewList.items.map((item) => item.data!),
+      });
     }
   }
 

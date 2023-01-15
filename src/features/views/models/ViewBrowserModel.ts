@@ -1,9 +1,26 @@
 import Environment from 'core/env/Environment';
 import { ModelBase } from 'core/models';
 import ViewsRepo from '../repos/ViewsRepo';
-import { ViewTreeItem } from 'pages/api/views/tree';
-import { ZetkinViewFolder } from '../components/types';
 import { FutureBase, IFuture, ResolvedFuture } from 'core/caching/futures';
+import { ZetkinView, ZetkinViewFolder } from '../components/types';
+
+export interface ViewBrowserFolderItem {
+  id: number | string;
+  type: 'folder';
+  title: string;
+  owner: string;
+  data: ZetkinViewFolder;
+  folderId: number | null;
+}
+
+export interface ViewBrowserViewItem {
+  id: number | string;
+  type: 'view';
+  title: string;
+  owner: string;
+  data: ZetkinView;
+  folderId: number | null;
+}
 
 type ViewBrowserBackItem = {
   folderId: number | null;
@@ -12,7 +29,10 @@ type ViewBrowserBackItem = {
   type: 'back';
 };
 
-export type ViewBrowserItem = ViewTreeItem | ViewBrowserBackItem;
+export type ViewBrowserItem =
+  | ViewBrowserFolderItem
+  | ViewBrowserViewItem
+  | ViewBrowserBackItem;
 
 export default class ViewBrowserModel extends ModelBase {
   private _env: Environment;
@@ -32,10 +52,9 @@ export default class ViewBrowserModel extends ModelBase {
       return new FutureBase(null, itemsFuture.error, itemsFuture.isLoading);
     }
 
-    const item = itemsFuture.data.find(
-      (item) => item.type == 'folder' && item.data.id == folderId
+    return new ResolvedFuture(
+      itemsFuture.data.folders.find((folder) => folder.id == folderId) || null
     );
-    return new ResolvedFuture(item?.type == 'folder' ? item.data : null);
   }
 
   getItemSummary(
@@ -47,11 +66,11 @@ export default class ViewBrowserModel extends ModelBase {
     }
 
     return new ResolvedFuture({
-      folders: itemsFuture.data.filter(
-        (item) => item.type == 'folder' && item.folderId == folderId
+      folders: itemsFuture.data.folders.filter(
+        (folder) => folder.parent?.id == folderId
       ).length,
-      views: itemsFuture.data.filter(
-        (item) => item.type == 'view' && item.folderId == folderId
+      views: itemsFuture.data.views.filter(
+        (view) => view.folder?.id == folderId
       ).length,
     });
   }
@@ -59,36 +78,65 @@ export default class ViewBrowserModel extends ModelBase {
   getItems(folderId: number | null = null): IFuture<ViewBrowserItem[]> {
     const itemsFuture = this._repo.getViewTree(this._orgId);
     if (!itemsFuture.data) {
-      return itemsFuture;
+      return new FutureBase(null, itemsFuture.error, itemsFuture.isLoading);
     }
 
     const items: ViewBrowserItem[] = [];
 
     if (folderId) {
-      const folderItem = itemsFuture.data.find(
-        (item) => item.type == 'folder' && item.data.id == folderId
+      const folder = itemsFuture.data.folders.find(
+        (folder) => folder.id == folderId
       );
-      if (folderItem) {
+      if (folder) {
         items.push({
-          folderId: folderItem.folderId,
+          folderId: folder.parent?.id ?? null,
           id: 'back',
-          title: (folderItem.data as ZetkinViewFolder).parent?.title ?? null,
+          title: folder.parent?.title ?? null,
           type: 'back',
         });
       }
     }
 
-    return new ResolvedFuture(
-      items.concat(itemsFuture.data.filter((item) => item.folderId == folderId))
-    );
+    itemsFuture.data.folders
+      .filter((folder) => folder.parent?.id == folderId)
+      .forEach((folder) => {
+        items.push({
+          data: folder,
+          folderId: folderId,
+          id: 'folders/' + folder.id,
+          owner: '',
+          title: folder.title,
+          type: 'folder',
+        });
+      });
+
+    itemsFuture.data.views
+      .filter((view) => view.folder?.id == folderId)
+      .forEach((view) => {
+        items.push({
+          data: view,
+          folderId: folderId,
+          id: 'views/' + view.id,
+          owner: '',
+          title: view.title,
+          type: 'view',
+        });
+      });
+
+    return new ResolvedFuture(items);
   }
 
   itemIsRenaming(type: 'folder' | 'view', id: number): boolean {
     const state = this._env.store.getState();
-    const item = state.views.treeList.items.find(
-      (item) => item.data?.type == type && item.data?.data.id == id
-    );
-    return item?.mutating.includes('title') ?? false;
+    if (type == 'folder') {
+      const item = state.views.folderList.items.find((item) => item.id == id);
+      return item?.mutating.includes('title') ?? false;
+    } else if (type == 'view') {
+      const item = state.views.viewList.items.find((item) => item.id == id);
+      return item?.mutating.includes('title') ?? false;
+    } else {
+      return false;
+    }
   }
 
   renameItem(type: 'folder' | 'view', id: number, title: string) {

@@ -2,25 +2,10 @@ import { createApiFetch } from 'utils/apiFetch';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { ZetkinView, ZetkinViewFolder } from 'features/views/components/types';
 
-export interface ViewTreeFolder {
-  id: number | string;
-  type: 'folder';
-  title: string;
-  owner: string;
-  data: ZetkinViewFolder;
-  folderId: number | null;
-}
-
-export interface ViewTreeView {
-  id: number | string;
-  type: 'view';
-  title: string;
-  owner: string;
-  data: ZetkinView;
-  folderId: number | null;
-}
-
-export type ViewTreeItem = ViewTreeFolder | ViewTreeView;
+export type ViewTreeData = {
+  folders: ZetkinViewFolder[];
+  views: ZetkinView[];
+};
 
 export default async function handle(
   req: NextApiRequest,
@@ -38,29 +23,12 @@ export default async function handle(
     const foldersData = await foldersRes.json();
     const folders = foldersData.data as ZetkinViewFolder[];
 
-    const outputFolders = folders.map<ViewTreeFolder>((folder) => ({
-      data: folder,
-      folderId: folder.parent ? folder.parent.id : null,
-      id: 'folders/' + folder.id,
-      owner: '',
-      title: folder.title,
-      type: 'folder',
-    }));
+    const output: ViewTreeData = {
+      folders,
+      views,
+    };
 
-    const outputViews = views.map<ViewTreeView>((view) => ({
-      data: view,
-      folderId: view.folder ? view.folder.id : null,
-      id: 'views/' + view.id,
-      owner: view.owner.name,
-      title: view.title,
-      type: 'view',
-    }));
-
-    const output: ViewTreeItem[] = [...outputFolders, ...outputViews];
-
-    res.status(200).json({
-      data: output,
-    });
+    res.status(200).json({ data: output });
   } catch (err) {
     res.status(500).end();
   }
