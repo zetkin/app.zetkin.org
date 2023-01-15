@@ -1,23 +1,29 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 
-import { COLUMN_TYPE } from 'features/views/components/types';
-import { createApiFetch } from 'utils/apiFetch';
+import BackendApiClient from 'core/api/client/BackendApiClient';
 import { NATIVE_PERSON_FIELDS } from 'features/views/components/types';
-import postView from 'features/views/fetching/postView';
-import postViewColumn from 'features/views/fetching/postViewColumn';
-import putViewRow from 'features/views/fetching/putViewRow';
+import {
+  COLUMN_TYPE,
+  PendingZetkinViewColumn,
+  ZetkinView,
+  ZetkinViewColumn,
+} from 'features/views/components/types';
 import { getBrowserLanguage, getMessages } from 'utils/locale';
 
 export interface CreateNewViewReqBody {
-  rows: number[];
+  rows?: number[];
 }
+
+type ZetkinViewPostBody = Pick<ZetkinView, 'title'> & {
+  folder_id?: number;
+};
 
 const createNewView = async (
   req: NextApiRequest,
   res: NextApiResponse
 ): Promise<void> => {
   const {
-    query: { orgId },
+    query: { folderId, orgId },
     method,
     body,
   } = req;
@@ -33,40 +39,48 @@ const createNewView = async (
 
   const messages = await getMessages(lang, ['misc']);
 
-  const apiFetch = createApiFetch(req.headers);
+  const client = new BackendApiClient(req.headers);
 
   try {
-    const viewPostMethod = postView(orgId as string, apiFetch);
-    const newView = await viewPostMethod({
-      title: messages['misc.views.newViewFields.title'],
-    });
-    const { id: newViewId } = newView;
-
-    const columnsPostMethod = postViewColumn(
-      orgId as string,
-      newViewId,
-      apiFetch
+    const newView = await client.post<ZetkinView, ZetkinViewPostBody>(
+      `/api/orgs/${orgId}/people/views`,
+      {
+        folder_id: parseInt(folderId as string) || undefined,
+        title: messages['misc.views.newViewFields.title'],
+      }
     );
-    await columnsPostMethod({
-      config: {
-        field: NATIVE_PERSON_FIELDS.FIRST_NAME,
-      },
-      title: messages['misc.nativePersonFields.first_name'],
-      type: COLUMN_TYPE.PERSON_FIELD,
-    });
-    await columnsPostMethod({
-      config: {
-        field: NATIVE_PERSON_FIELDS.LAST_NAME,
-      },
-      title: messages['misc.nativePersonFields.last_name'],
-      type: COLUMN_TYPE.PERSON_FIELD,
-    });
 
+    // Create "First name" column
+    await client.post<ZetkinViewColumn, PendingZetkinViewColumn>(
+      `/api/orgs/${orgId}/people/views/${newView.id}/columns`,
+      {
+        config: {
+          field: NATIVE_PERSON_FIELDS.FIRST_NAME,
+        },
+        title: messages['misc.nativePersonFields.first_name'],
+        type: COLUMN_TYPE.PERSON_FIELD,
+      }
+    );
+
+    // Create "Last name" column
+    await client.post<ZetkinViewColumn, PendingZetkinViewColumn>(
+      `/api/orgs/${orgId}/people/views/${newView.id}/columns`,
+      {
+        config: {
+          field: NATIVE_PERSON_FIELDS.LAST_NAME,
+        },
+        title: messages['misc.nativePersonFields.last_name'],
+        type: COLUMN_TYPE.PERSON_FIELD,
+      }
+    );
+
+    // Add rows if any
     const { rows } = body as CreateNewViewReqBody;
-    if (rows.length) {
-      const rowsPutMethod = putViewRow(orgId as string, newViewId, apiFetch);
+    if (rows?.length) {
       for await (const personId of rows) {
-        await rowsPutMethod(personId);
+        await client.put(
+          `/api/orgs/${orgId}/people/views/${newView.id}/rows/${personId}`
+        );
       }
     }
 
