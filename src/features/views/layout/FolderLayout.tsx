@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import SimpleLayout from 'utils/layout/SimpleLayout';
 import useModel from 'core/useModel';
 import ViewBrowserModel from '../models/ViewBrowserModel';
+import ViewFolderActionButtons from '../components/ViewFolderActionButtons';
 import ViewFolderSubtitle from '../components/ViewFolderSubtitle';
 import ZUIFuture from 'zui/ZUIFuture';
 
@@ -25,6 +26,9 @@ const FolderLayout: React.FunctionComponent<FolderLayoutProps> = ({
     <ZUIFuture future={model.getFolder(folderId)}>
       {(data) => (
         <SimpleLayout
+          actionButtons={
+            <ViewFolderActionButtons folderId={folderId} model={model} />
+          }
           noPad
           subtitle={
             <ZUIFuture future={model.getItemSummary(folderId)}>
