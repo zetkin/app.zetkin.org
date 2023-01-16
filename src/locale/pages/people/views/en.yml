@@ -1,13 +1,11 @@
+actions:
+  createFolder: Create folder
+  createView: Create view
 browser:
   backToFolder: 'Back to {folder}'
   backToRoot: Back to all views
   menu:
     rename: Rename
-createViewButton:
-  errorDialog:
-    content: Sorry, we're having trouble creating that view.
-    tryAgain: Try again
-  tooltip: Create a new view
 layout:
   deleteDialog:
     error: There was an error deleting the view

@@ -66,6 +66,7 @@ empty:
 footer:
   addPlaceholder: Start typing to add person to view
   alreadyInView: Already in view
+newFolderTitle: New Folder
 newViewFields:
   title: New View
 removeDialog:

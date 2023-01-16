@@ -1,7 +1,12 @@
 import Environment from 'core/env/Environment';
 import { ModelBase } from 'core/models';
 import ViewsRepo from '../repos/ViewsRepo';
-import { FutureBase, IFuture, ResolvedFuture } from 'core/caching/futures';
+import {
+  FutureBase,
+  IFuture,
+  PromiseFuture,
+  ResolvedFuture,
+} from 'core/caching/futures';
 import { ZetkinView, ZetkinViewFolder } from '../components/types';
 
 export interface ViewBrowserFolderItem {
@@ -44,6 +49,28 @@ export default class ViewBrowserModel extends ModelBase {
     this._env = env;
     this._orgId = orgId;
     this._repo = new ViewsRepo(env);
+  }
+
+  createFolder(title: string, folderId?: number): IFuture<ZetkinViewFolder> {
+    const promise = this._repo
+      .createFolder(this._orgId, title, folderId)
+      .then((folder) => {
+        return folder;
+      });
+    return new PromiseFuture(promise);
+  }
+
+  createView(folderId?: number): IFuture<ZetkinView> {
+    const promise = this._repo
+      .createView(this._orgId, folderId)
+      .then((view) => {
+        this._env.router.push(
+          `/organize/${view.organization.id}/people/views/${view.id}`
+        );
+        return view;
+      });
+
+    return new PromiseFuture(promise);
   }
 
   getFolder(folderId: number): IFuture<ZetkinViewFolder> {
@@ -137,6 +164,11 @@ export default class ViewBrowserModel extends ModelBase {
     } else {
       return false;
     }
+  }
+
+  get recentlyCreatedFolder(): ZetkinViewFolder | null {
+    const state = this._env.store.getState();
+    return state.views.recentlyCreatedFolder;
   }
 
   renameItem(type: 'folder' | 'view', id: number, title: string) {

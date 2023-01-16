@@ -1,16 +1,18 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { ViewTreeData } from 'pages/api/views/tree';
-import { remoteList, RemoteList } from 'utils/storeUtils';
+import { remoteItem, remoteList, RemoteList } from 'utils/storeUtils';
 import { ZetkinView, ZetkinViewFolder } from './components/types';
 
 export interface ViewsStoreSlice {
   folderList: RemoteList<ZetkinViewFolder>;
+  recentlyCreatedFolder: ZetkinViewFolder | null;
   viewList: RemoteList<ZetkinView>;
 }
 
 const initialState: ViewsStoreSlice = {
   folderList: remoteList(),
+  recentlyCreatedFolder: null,
   viewList: remoteList(),
 };
 
@@ -30,12 +32,26 @@ const viewsSlice = createSlice({
       state.viewList = remoteList(views);
       state.viewList.loaded = timestamp;
     },
+    folderCreate: (state) => {
+      state.folderList.isLoading = true;
+      state.recentlyCreatedFolder = null;
+    },
+    folderCreated: (state, action: PayloadAction<ZetkinViewFolder>) => {
+      const folder = action.payload;
+      state.folderList.isLoading = false;
+      state.folderList.items.push(remoteItem(folder.id, { data: folder }));
+      state.recentlyCreatedFolder = folder;
+    },
     folderUpdate: (state, action: PayloadAction<[number, string[]]>) => {
       const [id, mutating] = action.payload;
       const item = state.folderList.items.find((item) => item.id == id);
       if (item) {
         item.mutating = mutating;
       }
+
+      // Mutating means that creating the "recently created folder"
+      // is no longer the most recent action takeing.
+      state.recentlyCreatedFolder = null;
     },
     folderUpdated: (
       state,
@@ -51,6 +67,18 @@ const viewsSlice = createSlice({
           item.data.title = folder.title;
         }
       }
+    },
+    viewCreate: (state) => {
+      state.viewList.isLoading = true;
+    },
+    viewCreated: (state, action: PayloadAction<ZetkinView>) => {
+      const view = action.payload;
+      state.viewList.isLoading = false;
+      state.viewList.items.push(
+        remoteItem(view.id, {
+          data: view,
+        })
+      );
     },
     viewUpdate: (state, action: PayloadAction<[number, string[]]>) => {
       const [id, mutating] = action.payload;
@@ -78,8 +106,12 @@ export default viewsSlice;
 export const {
   allItemsLoad,
   allItemsLoaded,
+  folderCreate,
+  folderCreated,
   folderUpdate,
   folderUpdated,
+  viewCreate,
+  viewCreated,
   viewUpdate,
   viewUpdated,
 } = viewsSlice.actions;
