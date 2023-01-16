@@ -1,5 +1,6 @@
-import { createApiFetch } from 'utils/apiFetch';
 import { NextApiRequest, NextApiResponse } from 'next';
+
+import BackendApiClient from 'core/api/client/BackendApiClient';
 
 export interface ZetkinTarget {
   status: {
@@ -31,43 +32,36 @@ export default async function handler(
 ): Promise<void> {
   const { org, assignment } = req.query;
 
-  const apiFetch = createApiFetch(req.headers);
+  const client = new BackendApiClient(req.headers);
 
-  const statsRes = await apiFetch(
-    `/orgs/${org}/call_assignments/${assignment}/stats`
+  const stats = await client.get<ZetkinCallAssignmentStats>(
+    `/api/orgs/${org}/call_assignments/${assignment}/stats`
   );
-  const statsData = (await statsRes.json()) as {
-    data: ZetkinCallAssignmentStats;
-  };
 
   let mostRecentCallTime: string | null = null;
-  const callsRes = await apiFetch(
-    `/orgs/${org}/call_assignments/${assignment}/calls?pp=1&p=0`
+  const calls = await client.get<{ allocation_time: string }[]>(
+    `/api/orgs/${org}/call_assignments/${assignment}/calls?pp=1&p=0`
   );
-  const callsData = await callsRes.json();
-  if (callsData.data.length) {
-    mostRecentCallTime = callsData.data[0].allocation_time;
+  if (calls.length) {
+    mostRecentCallTime = calls[0].allocation_time;
   }
 
   res.status(200).json({
     data: {
-      allTargets: statsData.data.num_target_matches,
-      allocated: statsData.data.num_blocked.allocated,
-      blocked: statsData.data.num_blocked.any,
-      callBackLater: statsData.data.num_blocked.call_back_after,
-      calledTooRecently: statsData.data.num_blocked.cooldown,
-      done:
-        statsData.data.num_target_matches -
-        statsData.data.num_remaining_targets,
-      missingPhoneNumber: statsData.data.num_blocked.no_number,
+      allTargets: stats.num_target_matches,
+      allocated: stats.num_blocked.allocated,
+      blocked: stats.num_blocked.any,
+      callBackLater: stats.num_blocked.call_back_after,
+      calledTooRecently: stats.num_blocked.cooldown,
+      done: stats.num_target_matches - stats.num_remaining_targets,
+      missingPhoneNumber: stats.num_blocked.no_number,
       mostRecentCallTime,
-      organizerActionNeeded: statsData.data.num_blocked.organizer_action_needed,
-      queue:
-        statsData.data.num_remaining_targets - statsData.data.num_blocked.any,
+      organizerActionNeeded: stats.num_blocked.organizer_action_needed,
+      queue: stats.num_remaining_targets - stats.num_blocked.any,
       ready:
-        statsData.data.num_remaining_targets -
-        statsData.data.num_blocked.any +
-        statsData.data.num_blocked.allocated,
+        stats.num_remaining_targets -
+        stats.num_blocked.any +
+        stats.num_blocked.allocated,
     },
   });
 }

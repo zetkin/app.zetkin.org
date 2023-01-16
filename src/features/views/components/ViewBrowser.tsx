@@ -5,11 +5,23 @@ import {
   Folder,
   InsertDriveFileOutlined,
 } from '@mui/icons-material';
-import { DataGridPro, GridColDef, GridSortModel } from '@mui/x-data-grid-pro';
+import {
+  Box,
+  CircularProgress,
+  Link,
+  Theme,
+  useMediaQuery,
+} from '@mui/material';
+import {
+  DataGridPro,
+  GridColDef,
+  GridSortModel,
+  useGridApiRef,
+} from '@mui/x-data-grid-pro';
 import { FC, useState } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { Link, Theme, useMediaQuery } from '@mui/material';
 
+import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import ZUIFuture from 'zui/ZUIFuture';
 import ZUIPerson from 'zui/ZUIPerson';
 import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
@@ -51,6 +63,8 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
     theme.breakpoints.down('sm')
   );
 
+  const gridApiRef = useGridApiRef();
+
   const colDefs: GridColDef<ViewBrowserItem>[] = [
     {
       disableColumnMenu: true,
@@ -71,6 +85,7 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
     },
     {
       disableColumnMenu: true,
+      editable: true,
       field: 'title',
       flex: 2,
       headerName: intl.formatMessage({
@@ -98,9 +113,14 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
           );
         } else {
           return (
-            <NextLink href={`${basePath}/${params.row.id}`} passHref>
-              <Link className={styles.itemLink}>{params.row.title}</Link>
-            </NextLink>
+            <Box display="flex" gap={1}>
+              <NextLink href={`${basePath}/${params.row.id}`} passHref>
+                <Link className={styles.itemLink}>{params.row.title}</Link>
+              </NextLink>
+              {model.itemIsRenaming(params.row.type, params.row.data.id) && (
+                <CircularProgress size={20} />
+              )}
+            </Box>
           );
         }
       },
@@ -127,6 +147,36 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
           return '';
         }
       },
+    });
+
+    colDefs.push({
+      field: 'menu',
+      headerName: '',
+      renderCell: (params) => {
+        if (params.row.type == 'back') {
+          return null;
+        }
+        return (
+          <ZUIEllipsisMenu
+            items={[
+              {
+                label: intl.formatMessage({
+                  id: 'pages.people.views.browser.menu.rename',
+                }),
+                onSelect: (e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  gridApiRef.current.startCellEditMode({
+                    field: 'title',
+                    id: params.row.id,
+                  });
+                },
+              },
+            ]}
+          />
+        );
+      },
+      width: 40,
     });
   }
 
@@ -164,11 +214,20 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
 
         return (
           <DataGridPro
+            apiRef={gridApiRef}
             autoHeight
             columns={colDefs}
             disableSelectionOnClick
+            experimentalFeatures={{ newEditingApi: true }}
             hideFooter
+            isCellEditable={(params) => params.row.type != 'back'}
             onSortModelChange={(model) => setSortModel(model)}
+            processRowUpdate={(item) => {
+              if (item.type != 'back') {
+                model.renameItem(item.type, item.data.id, item.title);
+              }
+              return item;
+            }}
             rows={rows}
             sortingMode="server"
             sx={{ borderWidth: 0 }}
