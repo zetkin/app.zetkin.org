@@ -4,6 +4,8 @@ import { FunctionComponent, useRef } from 'react';
 
 import categories from './categories';
 import ColumnChoiceCard from './ColumnChoiceCard';
+import { Theme, useMediaQuery } from '@mui/material';
+
 import { ZetkinViewColumn } from 'features/views/components/types';
 import choices, { ColumnChoice } from './choices';
 
@@ -19,6 +21,9 @@ const ColumnGallery: FunctionComponent<ColumnGalleryProps> = ({
   onConfigure,
 }) => {
   const intl = useIntl();
+  const isMobile = useMediaQuery((theme: Theme) =>
+    theme.breakpoints.down('sm')
+  );
 
   const categoriesRef = useRef<HTMLDivElement>();
 
@@ -26,7 +31,7 @@ const ColumnGallery: FunctionComponent<ColumnGalleryProps> = ({
     <Box display="flex" height="100%">
       <Box
         alignItems="center"
-        display="flex"
+        display={isMobile ? 'none' : 'flex'}
         flexDirection="column"
         justifyContent="space-between"
         sx={{
