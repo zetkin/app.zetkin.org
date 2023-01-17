@@ -1,6 +1,6 @@
-import { Box } from '@mui/material';
-import { FC } from 'react';
 import { useDrop } from 'react-dnd';
+import { Box, useTheme } from '@mui/material';
+import { createContext, FC } from 'react';
 import { GridRow, GridRowProps } from '@mui/x-data-grid-pro';
 
 import ViewBrowserModel, {
@@ -13,9 +13,13 @@ interface BrowserRowProps {
   rowProps: GridRowProps;
 }
 
-interface CollectedProps {
+export interface BrowserRowDropProps {
   active: boolean;
 }
+
+export const BrowserRowContext = createContext<BrowserRowDropProps>({
+  active: false,
+});
 
 /**
  * Row component for MUI X DataGrid, to be used in the ViewBrowser.
@@ -23,7 +27,12 @@ interface CollectedProps {
  * the row when dragging over, etc.
  */
 const BrowserRow: FC<BrowserRowProps> = ({ item, model, rowProps }) => {
-  const [, dropRef] = useDrop<ViewBrowserItem, unknown, CollectedProps>({
+  const theme = useTheme();
+  const [dropProps, dropRef] = useDrop<
+    ViewBrowserItem,
+    unknown,
+    BrowserRowDropProps
+  >({
     accept: 'ITEM',
     canDrop: (draggedItem) =>
       draggedItem.type == 'view' || draggedItem.id != item.id,
@@ -40,15 +49,28 @@ const BrowserRow: FC<BrowserRowProps> = ({ item, model, rowProps }) => {
     },
   });
 
-  if (item.type == 'view') {
-    // No drop target for views
-    return <GridRow {...rowProps} />;
+  let content = <GridRow {...rowProps} />;
+
+  if (item.type != 'view') {
+    // If it's not a view, wrap it in a drop target
+    content = (
+      <Box
+        ref={dropRef}
+        style={{
+          backgroundColor: dropProps.active
+            ? theme.palette.background.paper
+            : 'transparent',
+        }}
+      >
+        {content}
+      </Box>
+    );
   }
 
   return (
-    <Box ref={dropRef}>
-      <GridRow {...rowProps} />
-    </Box>
+    <BrowserRowContext.Provider value={dropProps}>
+      {content}
+    </BrowserRowContext.Provider>
   );
 };
 

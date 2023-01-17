@@ -1,10 +1,12 @@
-import { FC } from 'react';
 import {
   ArrowBack,
   Folder,
+  FolderOpen,
   InsertDriveFileOutlined,
 } from '@mui/icons-material';
+import { FC, useContext } from 'react';
 
+import { BrowserRowContext } from './BrowserRow';
 import { ViewBrowserItem } from 'features/views/models/ViewBrowserModel';
 
 interface BrowserItemIconProps {
@@ -12,8 +14,9 @@ interface BrowserItemIconProps {
 }
 
 const BrowserItemIcon: FC<BrowserItemIconProps> = ({ item }) => {
+  const dropProps = useContext(BrowserRowContext);
   if (item.type == 'folder') {
-    return <Folder />;
+    return dropProps.active ? <FolderOpen /> : <Folder />;
   } else if (item.type == 'back') {
     return <ArrowBack />;
   } else if (item.type == 'view') {

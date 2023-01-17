@@ -6,6 +6,8 @@ browser:
   backToRoot: Back to all views
   menu:
     rename: Rename
+  moveToFolder: 'Move to {folder}'
+  moveToRoot: Move to all views
 layout:
   deleteDialog:
     error: There was an error deleting the view

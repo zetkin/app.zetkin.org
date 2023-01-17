@@ -1,10 +1,11 @@
-import { FC } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { makeStyles } from '@mui/styles';
 import NextLink from 'next/link';
 import { useDrag } from 'react-dnd';
-import { Box, CircularProgress, Link } from '@mui/material';
+import { Box, CircularProgress, Link, Theme } from '@mui/material';
+import { FC, useContext } from 'react';
 
+import { BrowserRowContext, BrowserRowDropProps } from './BrowserRow';
 import ViewBrowserModel, {
   ViewBrowserItem,
 } from 'features/views/models/ViewBrowserModel';
@@ -15,18 +16,20 @@ interface BrowserItemProps {
   model: ViewBrowserModel;
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles<Theme, BrowserRowDropProps>({
   itemLink: {
     '&:hover': {
       textDecoration: 'underline',
     },
     color: 'inherit',
+    fontWeight: (props) => (props.active ? 'bold' : 'normal'),
     textDecoration: 'none',
   },
-}));
+});
 
 const BrowserItem: FC<BrowserItemProps> = ({ basePath, item, model }) => {
-  const styles = useStyles();
+  const dropProps = useContext(BrowserRowContext);
+  const styles = useStyles(dropProps);
 
   const [, dragRef] = useDrag({
     item: item,
@@ -35,17 +38,20 @@ const BrowserItem: FC<BrowserItemProps> = ({ basePath, item, model }) => {
 
   if (item.type == 'back') {
     const subPath = item.folderId ? 'folders/' + item.folderId : '';
+    const msgPrefix = dropProps.active ? 'moveTo' : 'backTo';
 
     return (
       <NextLink href={`${basePath}/${subPath}`} passHref>
         <Link className={styles.itemLink}>
           {item.title ? (
             <FormattedMessage
-              id="pages.people.views.browser.backToFolder"
+              id={`pages.people.views.browser.${msgPrefix}Folder`}
               values={{ folder: <em>{item.title}</em> }}
             />
           ) : (
-            <FormattedMessage id="pages.people.views.browser.backToRoot" />
+            <FormattedMessage
+              id={`pages.people.views.browser.${msgPrefix}Root`}
+            />
           )}
         </Link>
       </NextLink>
