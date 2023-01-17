@@ -23,6 +23,16 @@ type ZetkinViewFolderPostBody = {
   title: string;
 };
 
+type ZetkinViewUpdateBody = Partial<Omit<ZetkinView, 'id' | 'folder'>> & {
+  folder_id?: number | null;
+};
+
+type ZetkinViewFolderUpdateBody = Partial<
+  Omit<ZetkinViewFolder, 'id' | 'parent'>
+> & {
+  parent_id?: number | null;
+};
+
 export default class ViewsRepo {
   private _apiClient: IApiClient;
   private _store: Store;
@@ -85,7 +95,7 @@ export default class ViewsRepo {
   updateFolder(
     orgId: number,
     folderId: number,
-    data: Partial<Omit<ZetkinViewFolder, 'id'>>
+    data: ZetkinViewFolderUpdateBody
   ): IFuture<ZetkinViewFolder> {
     const mutating = Object.keys(data);
     this._store.dispatch(folderUpdate([folderId, mutating]));
@@ -105,7 +115,7 @@ export default class ViewsRepo {
   updateView(
     orgId: number,
     viewId: number,
-    data: Partial<Omit<ZetkinView, 'id'>>
+    data: ZetkinViewUpdateBody
   ): IFuture<ZetkinView> {
     const mutating = Object.keys(data);
     this._store.dispatch(viewUpdate([viewId, mutating]));
