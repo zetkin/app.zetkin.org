@@ -7,6 +7,7 @@ import { List, ListItem, ListItemText } from '@mui/material';
 import CampaignListItem from './CampaignListItem';
 import PersonListItem from './PersonListItem';
 import TaskListItem from './TaskListItem';
+import ViewListItem from './ViewListItem';
 import {
   SEARCH_DATA_TYPE,
   SearchResult,
@@ -41,6 +42,9 @@ const ResultsList: FunctionComponent<ResultsListProps> = ({
             }
             if (result.type === SEARCH_DATA_TYPE.TASK) {
               return <TaskListItem task={result.match} />;
+            }
+            if (result.type === SEARCH_DATA_TYPE.VIEW) {
+              return <ViewListItem view={result.match} />;
             }
           })}
         </>

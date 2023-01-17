@@ -5,8 +5,17 @@ import {
   PersonSearchResult,
   SEARCH_DATA_TYPE,
   TaskSearchResult,
+  ViewSearchResult,
 } from 'features/search/components/types';
 
+async function makeSearchRequest(
+  dataType: SEARCH_DATA_TYPE.VIEW,
+  query: {
+    orgId: number | string;
+    q: string;
+  },
+  apiFetch: ApiFetch
+): Promise<ViewSearchResult[]>;
 async function makeSearchRequest(
   dataType: SEARCH_DATA_TYPE.TASK,
   query: {
