@@ -3,7 +3,7 @@ import { Box, Typography } from '@mui/material';
 
 export interface ZUIIconLabelProps {
   icon: JSX.Element;
-  label: string;
+  label: string | JSX.Element;
 }
 
 const ZUIIconLabel: FC<ZUIIconLabelProps> = ({ icon, label }) => {
