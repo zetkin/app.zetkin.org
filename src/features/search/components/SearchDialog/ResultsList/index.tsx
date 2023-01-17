@@ -1,4 +1,3 @@
-/* eslint-disable react/display-name */
 import { FunctionComponent } from 'react';
 import { FormattedMessage as Msg } from 'react-intl';
 
