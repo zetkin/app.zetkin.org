@@ -12,6 +12,11 @@ import {
   ZetkinViewColumn,
 } from '../types';
 
+export enum CHOICES {
+  FIRST_AND_LAST_NAME = 'firstAndLastName',
+  PERSON_FIELDS = 'personFields',
+}
+
 export type ColumnChoice = {
   alreadyInView?: (columns: ZetkinViewColumn[]) => boolean;
   defaultColumns?: (intl: IntlShape) => PendingZetkinViewColumn[];
@@ -26,7 +31,10 @@ export type ColumnChoice = {
 const choices: ColumnChoice[] = [
   {
     alreadyInView: (columns) => {
-      const fieldsToAdd = ['first_name', 'last_name'];
+      const fieldsToAdd = [
+        NATIVE_PERSON_FIELDS.FIRST_NAME,
+        NATIVE_PERSON_FIELDS.LAST_NAME,
+      ];
       return fieldsToAdd.every((fieldName) =>
         columns.some(
           (col) =>
@@ -38,7 +46,7 @@ const choices: ColumnChoice[] = [
     defaultColumns: (intl) => [
       {
         config: {
-          field: 'first_name',
+          field: NATIVE_PERSON_FIELDS.FIRST_NAME,
         },
         title: intl.formatMessage({
           id: 'misc.views.columnDialog.commonHeaders.firstName',
@@ -47,7 +55,7 @@ const choices: ColumnChoice[] = [
       },
       {
         config: {
-          field: 'last_name',
+          field: NATIVE_PERSON_FIELDS.LAST_NAME,
         },
         title: intl.formatMessage({
           id: 'misc.views.columnDialog.commonHeaders.lastName',
@@ -55,7 +63,7 @@ const choices: ColumnChoice[] = [
         type: COLUMN_TYPE.PERSON_FIELD,
       },
     ],
-    key: 'firstAndLastName',
+    key: CHOICES.FIRST_AND_LAST_NAME,
     renderCardVisual: (color: string) => {
       return <DoubleIconCardVisual color={color} icons={[Person, Person]} />;
     },
@@ -70,7 +78,7 @@ const choices: ColumnChoice[] = [
         )
       );
     },
-    key: 'personFields',
+    key: CHOICES.PERSON_FIELDS,
     renderCardVisual: (color: string) => (
       <SingleIconCardVisual color={color} icon={Person} />
     ),
