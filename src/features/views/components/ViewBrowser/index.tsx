@@ -9,6 +9,7 @@ import {
 import { FC, useEffect, useState } from 'react';
 import { Theme, useMediaQuery } from '@mui/material';
 
+import BrowserDragLayer from './BrowserDragLayer';
 import BrowserItem from './BrowserItem';
 import BrowserItemIcon from './BrowserItemIcon';
 import BrowserRow from './BrowserRow';
@@ -171,33 +172,36 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
         });
 
         return (
-          <DataGridPro
-            apiRef={gridApiRef}
-            autoHeight
-            columns={colDefs}
-            components={{
-              Row: (props: GridRowProps) => {
-                const item = props.row as ViewBrowserItem;
-                return (
-                  <BrowserRow item={item} model={model} rowProps={props} />
-                );
-              },
-            }}
-            disableSelectionOnClick
-            experimentalFeatures={{ newEditingApi: true }}
-            hideFooter
-            isCellEditable={(params) => params.row.type != 'back'}
-            onSortModelChange={(model) => setSortModel(model)}
-            processRowUpdate={(item) => {
-              if (item.type != 'back') {
-                model.renameItem(item.type, item.data.id, item.title);
-              }
-              return item;
-            }}
-            rows={rows}
-            sortingMode="server"
-            sx={{ borderWidth: 0 }}
-          />
+          <>
+            <BrowserDragLayer />
+            <DataGridPro
+              apiRef={gridApiRef}
+              autoHeight
+              columns={colDefs}
+              components={{
+                Row: (props: GridRowProps) => {
+                  const item = props.row as ViewBrowserItem;
+                  return (
+                    <BrowserRow item={item} model={model} rowProps={props} />
+                  );
+                },
+              }}
+              disableSelectionOnClick
+              experimentalFeatures={{ newEditingApi: true }}
+              hideFooter
+              isCellEditable={(params) => params.row.type != 'back'}
+              onSortModelChange={(model) => setSortModel(model)}
+              processRowUpdate={(item) => {
+                if (item.type != 'back') {
+                  model.renameItem(item.type, item.data.id, item.title);
+                }
+                return item;
+              }}
+              rows={rows}
+              sortingMode="server"
+              sx={{ borderWidth: 0 }}
+            />
+          </>
         );
       }}
     </ZUIFuture>
