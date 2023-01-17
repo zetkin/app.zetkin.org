@@ -144,7 +144,7 @@ export default class ViewBrowserModel extends ModelBase {
           data: view,
           folderId: folderId,
           id: 'views/' + view.id,
-          owner: '',
+          owner: view.owner.name,
           title: view.title,
           type: 'view',
         });
