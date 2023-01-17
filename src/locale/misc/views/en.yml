@@ -1,5 +1,9 @@
 # eslint-disable yml/key-name-casing
 columnDialog:
+  categories:
+    basic:
+      description: Columns that are useful when organizing people and members.
+      title: Basic Columns
   choices:
     firstAndLastName:
       description: First and last name of person

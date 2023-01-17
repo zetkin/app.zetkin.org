@@ -1,6 +1,6 @@
-import { useIntl } from 'react-intl';
 import { Box, Grid, List, ListItem, Typography } from '@mui/material';
 import { FunctionComponent, useRef } from 'react';
+import { FormattedMessage as Msg, useIntl } from 'react-intl';
 
 import categories from './categories';
 import ColumnChoiceCard from './ColumnChoiceCard';
@@ -53,16 +53,28 @@ const ColumnGallery: FunctionComponent<ColumnGalleryProps> = ({
               }}
               sx={{ cursor: 'pointer', paddingY: 2 }}
             >
-              <Typography>{category.title}</Typography>
+              <Typography>
+                <Msg
+                  id={`misc.views.columnDialog.categories.${category.key}.title`}
+                />
+              </Typography>
             </ListItem>
           ))}
         </List>
       </Box>
       <Box ref={categoriesRef} flexGrow={1} sx={{ overflowY: 'scroll' }}>
         {categories.map((category, index) => (
-          <Box key={category.title} id={`category-${index}`} padding={2}>
-            <Typography variant="h4">{category.title}</Typography>
-            <Typography variant="h5">{category.description}</Typography>
+          <Box key={`category-${index}`} id={`category-${index}`} padding={2}>
+            <Typography variant="h4">
+              <Msg
+                id={`misc.views.columnDialog.categories.${category.key}.title`}
+              />
+            </Typography>
+            <Typography variant="h5">
+              <Msg
+                id={`misc.views.columnDialog.categories.${category.key}.description`}
+              />
+            </Typography>
             <Grid container paddingTop={2} spacing={3}>
               {category.choices.map((choiceName) => {
                 const choice = choices.find(
