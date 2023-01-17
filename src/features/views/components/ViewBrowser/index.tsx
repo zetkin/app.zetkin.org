@@ -2,6 +2,7 @@ import { useIntl } from 'react-intl';
 import {
   DataGridPro,
   GridColDef,
+  GridRowProps,
   GridSortModel,
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
@@ -10,6 +11,7 @@ import { Theme, useMediaQuery } from '@mui/material';
 
 import BrowserItem from './BrowserItem';
 import BrowserItemIcon from './BrowserItemIcon';
+import BrowserRow from './BrowserRow';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import ZUIFuture from 'zui/ZUIFuture';
 import ZUIPerson from 'zui/ZUIPerson';
@@ -173,6 +175,14 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
             apiRef={gridApiRef}
             autoHeight
             columns={colDefs}
+            components={{
+              Row: (props: GridRowProps) => {
+                const item = props.row as ViewBrowserItem;
+                return (
+                  <BrowserRow item={item} model={model} rowProps={props} />
+                );
+              },
+            }}
             disableSelectionOnClick
             experimentalFeatures={{ newEditingApi: true }}
             hideFooter

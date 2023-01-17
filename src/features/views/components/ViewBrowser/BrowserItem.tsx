@@ -2,6 +2,7 @@ import { FC } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { makeStyles } from '@mui/styles';
 import NextLink from 'next/link';
+import { useDrag } from 'react-dnd';
 import { Box, CircularProgress, Link } from '@mui/material';
 
 import ViewBrowserModel, {
@@ -27,6 +28,11 @@ const useStyles = makeStyles(() => ({
 const BrowserItem: FC<BrowserItemProps> = ({ basePath, item, model }) => {
   const styles = useStyles();
 
+  const [, dragRef] = useDrag({
+    item: item,
+    type: 'ITEM',
+  });
+
   if (item.type == 'back') {
     const subPath = item.folderId ? 'folders/' + item.folderId : '';
 
@@ -46,7 +52,7 @@ const BrowserItem: FC<BrowserItemProps> = ({ basePath, item, model }) => {
     );
   } else {
     return (
-      <Box display="flex" gap={1}>
+      <Box ref={dragRef} display="flex" gap={1}>
         <NextLink href={`${basePath}/${item.id}`} passHref>
           <Link className={styles.itemLink}>{item.title}</Link>
         </NextLink>
