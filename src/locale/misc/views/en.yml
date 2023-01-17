@@ -7,6 +7,9 @@ columnDialog:
     personFields:
       description: Add your choice of fields like email, phone number, etc.
       title: Person fields
+    tag:
+      description: Show a checkmark if the person has this tag
+      title: Tag
   commonHeaders:
     firstName: First Name
     lastName: Last Name
