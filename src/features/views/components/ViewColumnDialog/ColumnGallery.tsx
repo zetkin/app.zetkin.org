@@ -1,8 +1,11 @@
-import { FunctionComponent } from 'react';
-import { Grid } from '@mui/material';
-import { useIntl } from 'react-intl';
+import { Box, Grid, List, ListItem, Typography } from '@mui/material';
+import { FunctionComponent, useRef } from 'react';
+import { FormattedMessage as Msg, useIntl } from 'react-intl';
 
+import categories from './categories';
 import ColumnChoiceCard from './ColumnChoiceCard';
+import { Theme, useMediaQuery } from '@mui/material';
+
 import { ZetkinViewColumn } from 'features/views/components/types';
 import choices, { ColumnChoice } from './choices';
 
@@ -18,34 +21,97 @@ const ColumnGallery: FunctionComponent<ColumnGalleryProps> = ({
   onConfigure,
 }) => {
   const intl = useIntl();
+  const isMobile = useMediaQuery((theme: Theme) =>
+    theme.breakpoints.down('sm')
+  );
+
+  const choiceContainerRef = useRef<HTMLDivElement>();
+
   return (
-    <Grid container spacing={3}>
-      {choices.map((choice) => {
-        const alreadyInView =
-          choice.alreadyInView && choice.alreadyInView(existingColumns);
-        return (
-          <Grid key={choice.key} item md={4} sm={6}>
-            <ColumnChoiceCard
-              alreadyInView={alreadyInView}
-              cardVisual={choice.renderCardVisual(
-                alreadyInView ? 'gray' : '#234890'
-              )}
-              color={alreadyInView ? 'gray' : '#234890'}
-              description={intl.formatMessage({
-                id: `misc.views.columnDialog.choices.${choice.key}.description`,
+    <Box display="flex" height="100%">
+      <Box
+        alignItems="center"
+        display={isMobile ? 'none' : 'flex'}
+        flexDirection="column"
+        justifyContent="space-between"
+        sx={{
+          overflowY: 'scroll',
+        }}
+        width="20%"
+      >
+        <List>
+          {categories.map((category, index) => (
+            <ListItem
+              key={index}
+              onClick={() => {
+                if (choiceContainerRef.current) {
+                  const element = choiceContainerRef.current.querySelector(
+                    `#category-${index}`
+                  );
+                  element?.scrollIntoView({ behavior: 'smooth' });
+                }
+              }}
+              sx={{ cursor: 'pointer', paddingY: 2 }}
+            >
+              <Typography>
+                <Msg
+                  id={`misc.views.columnDialog.categories.${category.key}.title`}
+                />
+              </Typography>
+            </ListItem>
+          ))}
+        </List>
+      </Box>
+      <Box ref={choiceContainerRef} flexGrow={1} sx={{ overflowY: 'scroll' }}>
+        {categories.map((category, index) => (
+          <Box key={`category-${index}`} id={`category-${index}`} padding={2}>
+            <Typography variant="h4">
+              <Msg
+                id={`misc.views.columnDialog.categories.${category.key}.title`}
+              />
+            </Typography>
+            <Typography variant="h5">
+              <Msg
+                id={`misc.views.columnDialog.categories.${category.key}.description`}
+              />
+            </Typography>
+            <Grid container paddingTop={2} spacing={3}>
+              {category.choices.map((choiceName) => {
+                const choice = choices.find(
+                  (choice) => choice.key === choiceName
+                );
+                if (!choice) {
+                  return;
+                }
+                const alreadyInView =
+                  choice.alreadyInView && choice.alreadyInView(existingColumns);
+                return (
+                  <Grid key={choice.key} item lg={4} sm={6} xs={12}>
+                    <ColumnChoiceCard
+                      alreadyInView={alreadyInView}
+                      cardVisual={choice.renderCardVisual(
+                        alreadyInView ? 'gray' : '#234890'
+                      )}
+                      color={alreadyInView ? 'gray' : '#234890'}
+                      description={intl.formatMessage({
+                        id: `misc.views.columnDialog.choices.${choice.key}.description`,
+                      })}
+                      onAdd={() => onAdd(choice)}
+                      onConfigure={() => onConfigure(choice)}
+                      showAddButton={!!choice.defaultColumns}
+                      showConfigureButton={!!choice.renderConfigForm}
+                      title={intl.formatMessage({
+                        id: `misc.views.columnDialog.choices.${choice.key}.title`,
+                      })}
+                    />
+                  </Grid>
+                );
               })}
-              onAdd={() => onAdd(choice)}
-              onConfigure={() => onConfigure(choice)}
-              showAddButton={!!choice.defaultColumns}
-              showConfigureButton={!!choice.renderConfigForm}
-              title={intl.formatMessage({
-                id: `misc.views.columnDialog.choices.${choice.key}.title`,
-              })}
-            />
-          </Grid>
-        );
-      })}
-    </Grid>
+            </Grid>
+          </Box>
+        ))}
+      </Box>
+    </Box>
   );
 };
 
