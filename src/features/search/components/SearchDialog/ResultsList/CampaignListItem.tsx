@@ -1,4 +1,5 @@
 import { Event } from '@mui/icons-material';
+import { FormattedMessage } from 'react-intl';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { Avatar, ListItem, ListItemAvatar } from '@mui/material';
@@ -23,7 +24,10 @@ const CampaignListItem: React.FunctionComponent<{
             <Event />
           </Avatar>
         </ListItemAvatar>
-        <ResultsListItemText primary={campaign.title} secondary="Campaign" />
+        <ResultsListItemText
+          primary={campaign.title}
+          secondary={<FormattedMessage id="misc.search.results.campaign" />}
+        />
       </ListItem>
     </Link>
   );

@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { MobileFriendly } from '@mui/icons-material';
+import { useIntl } from 'react-intl';
 import { useRouter } from 'next/router';
 import { Avatar, ListItem, ListItemAvatar } from '@mui/material';
 
@@ -9,8 +10,16 @@ import { ZetkinTask } from 'utils/types/zetkin';
 const TaskListItem: React.FunctionComponent<{ task: ZetkinTask }> = ({
   task,
 }) => {
+  const intl = useIntl();
   const router = useRouter();
   const { orgId } = router.query as { orgId: string };
+
+  const elements = [
+    intl.formatMessage({ id: 'misc.search.results.task.campaign' }),
+    task.campaign.title,
+    intl.formatMessage({ id: 'misc.search.results.task.task' }),
+  ];
+
   return (
     <Link
       key={task.id}
@@ -25,7 +34,7 @@ const TaskListItem: React.FunctionComponent<{ task: ZetkinTask }> = ({
         </ListItemAvatar>
         <ResultsListItemText
           primary={task.title}
-          secondary={'Campaign / ' + task.campaign.title + ' / Task'}
+          secondary={elements.join(' / ')}
         />
       </ListItem>
     </Link>

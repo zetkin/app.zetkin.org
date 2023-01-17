@@ -1,4 +1,9 @@
 results:
+  campaign: Campaign
+  person: Person
+  task:
+    campaign: Campaign
+    task: Task
   view:
     people: People
     view: View
