@@ -25,7 +25,7 @@ const ColumnGallery: FunctionComponent<ColumnGalleryProps> = ({
     theme.breakpoints.down('sm')
   );
 
-  const categoriesRef = useRef<HTMLDivElement>();
+  const choiceContainerRef = useRef<HTMLDivElement>();
 
   return (
     <Box display="flex" height="100%">
@@ -44,8 +44,8 @@ const ColumnGallery: FunctionComponent<ColumnGalleryProps> = ({
             <ListItem
               key={index}
               onClick={() => {
-                if (categoriesRef.current) {
-                  const element = categoriesRef.current.querySelector(
+                if (choiceContainerRef.current) {
+                  const element = choiceContainerRef.current.querySelector(
                     `#category-${index}`
                   );
                   element?.scrollIntoView({ behavior: 'smooth' });
@@ -62,7 +62,7 @@ const ColumnGallery: FunctionComponent<ColumnGalleryProps> = ({
           ))}
         </List>
       </Box>
-      <Box ref={categoriesRef} flexGrow={1} sx={{ overflowY: 'scroll' }}>
+      <Box ref={choiceContainerRef} flexGrow={1} sx={{ overflowY: 'scroll' }}>
         {categories.map((category, index) => (
           <Box key={`category-${index}`} id={`category-${index}`} padding={2}>
             <Typography variant="h4">
