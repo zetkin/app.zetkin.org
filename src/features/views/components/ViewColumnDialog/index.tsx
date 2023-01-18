@@ -12,13 +12,13 @@ import {
 
 interface ViewColumnDialogProps {
   columns: ZetkinViewColumn[];
-  onCancel: () => void;
+  onClose: () => void;
   onSave: (columns: SelectedViewColumn[]) => Promise<void>;
 }
 
 const ViewColumnDialog: FunctionComponent<ViewColumnDialogProps> = ({
   columns: existingColumns,
-  onCancel,
+  onClose,
   onSave,
 }) => {
   const intl = useIntl();
@@ -37,7 +37,7 @@ const ViewColumnDialog: FunctionComponent<ViewColumnDialogProps> = ({
       fullScreen={fullScreen}
       fullWidth
       maxWidth="lg"
-      onClose={() => onCancel()}
+      onClose={() => onClose()}
       open
     >
       <Box height="90vh">
@@ -64,7 +64,7 @@ const ViewColumnDialog: FunctionComponent<ViewColumnDialogProps> = ({
               const columns = choice.defaultColumns(intl);
               await onSave(columns);
             }}
-            onCancel={onCancel}
+            onClose={onClose}
             onConfigure={onConfigure}
           />
         )}

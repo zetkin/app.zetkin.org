@@ -409,7 +409,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
       {columnToConfigure && (
         <ViewColumnDialog
           columns={columns}
-          onCancel={onColumnCancel}
+          onClose={onColumnCancel}
           onSave={async (columns) => {
             // TODO: Handle these async calls better
             // (maybe custom API endpoint to bulk create/edit columns?)

@@ -21,14 +21,14 @@ import choices, { ColumnChoice } from './choices';
 interface ColumnGalleryProps {
   existingColumns: ZetkinViewColumn[];
   onAdd: (choice: ColumnChoice) => void;
-  onCancel: () => void;
+  onClose: () => void;
   onConfigure: (choice: ColumnChoice) => void;
 }
 
 const ColumnGallery: FunctionComponent<ColumnGalleryProps> = ({
   existingColumns,
   onAdd,
-  onCancel,
+  onClose,
   onConfigure,
 }) => {
   const intl = useIntl();
@@ -80,7 +80,7 @@ const ColumnGallery: FunctionComponent<ColumnGalleryProps> = ({
           <Close
             color="secondary"
             fontSize="medium"
-            onClick={() => onCancel()}
+            onClick={() => onClose()}
             sx={{ cursor: 'pointer' }}
           />
         </Box>
