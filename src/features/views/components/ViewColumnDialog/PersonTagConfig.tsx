@@ -1,8 +1,8 @@
 import { FormControl } from '@mui/material';
-import TagManager from 'features/tags/components/TagManager';
 import { useState } from 'react';
-import { ZetkinTag } from 'utils/types/zetkin';
 
+import TagManager from 'features/tags/components/TagManager';
+import { ZetkinTag } from 'utils/types/zetkin';
 import { COLUMN_TYPE, SelectedViewColumn } from '../types';
 
 interface PersonTagConfigProps {
@@ -12,12 +12,14 @@ interface PersonTagConfigProps {
 const PersonTagConfig = ({ onOutputConfigured }: PersonTagConfigProps) => {
   const [selectedTags, setSelectedTags] = useState<ZetkinTag[]>([]);
 
-  const makeColumns = (tags: ZetkinTag[]) => {
-    return tags.map((tag) => ({
+  const onChangeTags = (tags: ZetkinTag[]) => {
+    setSelectedTags(tags);
+    const columns = tags.map((tag) => ({
       config: { tag_id: tag.id },
       title: tag.title,
       type: COLUMN_TYPE.PERSON_TAG,
     }));
+    onOutputConfigured(columns);
   };
 
   return (
@@ -27,15 +29,11 @@ const PersonTagConfig = ({ onOutputConfigured }: PersonTagConfigProps) => {
         groupTags={false}
         onAssignTag={(tag) => {
           const newAssignedTags = selectedTags.concat([tag] as ZetkinTag[]);
-          setSelectedTags(newAssignedTags);
-          const columns = makeColumns(newAssignedTags);
-          onOutputConfigured(columns);
+          onChangeTags(newAssignedTags);
         }}
         onUnassignTag={(tag) => {
           const unassignedTags = selectedTags.filter((t) => t.id != tag.id);
-          setSelectedTags(unassignedTags);
-          const columns = makeColumns(unassignedTags);
-          onOutputConfigured(columns);
+          onChangeTags(unassignedTags);
         }}
       />
     </FormControl>
