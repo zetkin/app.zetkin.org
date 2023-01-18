@@ -1,31 +1,27 @@
-import { makeStyles } from '@mui/styles';
 import NextLink from 'next/link';
-import {
-  ArrowBack,
-  Folder,
-  InsertDriveFileOutlined,
-} from '@mui/icons-material';
-import {
-  Box,
-  CircularProgress,
-  Link,
-  Theme,
-  useMediaQuery,
-} from '@mui/material';
+import { useIntl } from 'react-intl';
 import {
   DataGridPro,
   GridColDef,
+  GridRowProps,
   GridSortModel,
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
 import { FC, useEffect, useState } from 'react';
-import { FormattedMessage, useIntl } from 'react-intl';
+import { Link, Theme, useMediaQuery } from '@mui/material';
 
+import BrowserDraggableItem from './BrowserDragableItem';
+import BrowserDragLayer from './BrowserDragLayer';
+import BrowserItem from './BrowserItem';
+import BrowserItemIcon from './BrowserItemIcon';
+import BrowserRow from './BrowserRow';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import ZUIFuture from 'zui/ZUIFuture';
 import ZUIPerson from 'zui/ZUIPerson';
 import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
-import ViewBrowserModel, { ViewBrowserItem } from '../models/ViewBrowserModel';
+import ViewBrowserModel, {
+  ViewBrowserItem,
+} from '../../models/ViewBrowserModel';
 
 interface ViewBrowserProps {
   basePath: string;
@@ -41,16 +37,6 @@ function typeComparator(v0: ViewBrowserItem, v1: ViewBrowserItem): number {
   return index0 - index1;
 }
 
-const useStyles = makeStyles(() => ({
-  itemLink: {
-    '&:hover': {
-      textDecoration: 'underline',
-    },
-    color: 'inherit',
-    textDecoration: 'none',
-  },
-}));
-
 const ViewBrowser: FC<ViewBrowserProps> = ({
   basePath,
   folderId = null,
@@ -58,7 +44,6 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
 }) => {
   const intl = useIntl();
   const [sortModel, setSortModel] = useState<GridSortModel>([]);
-  const styles = useStyles();
   const isMobile = useMediaQuery((theme: Theme) =>
     theme.breakpoints.down('sm')
   );
@@ -82,12 +67,26 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
       filterable: false,
       headerName: '',
       renderCell: (params) => {
-        if (params.row.type == 'folder') {
-          return <Folder />;
-        } else if (params.row.type == 'back') {
-          return <ArrowBack />;
-        } else if (params.row.type == 'view') {
-          return <InsertDriveFileOutlined />;
+        const item = params.row;
+        const subPath = item.folderId ? 'folders/' + item.folderId : '';
+        if (item.type == 'back') {
+          return (
+            <NextLink href={`${basePath}/${subPath}`} passHref>
+              <Link color="inherit">
+                <BrowserItemIcon item={params.row} />
+              </Link>
+            </NextLink>
+          );
+        } else {
+          return (
+            <NextLink href={`${basePath}/${item.id}`} passHref>
+              <Link color="inherit">
+                <BrowserDraggableItem item={params.row}>
+                  <BrowserItemIcon item={params.row} />
+                </BrowserDraggableItem>
+              </Link>
+            </NextLink>
+          );
         }
       },
       sortable: false,
@@ -102,37 +101,9 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
         id: 'pages.people.views.viewsList.columns.title',
       }),
       renderCell: (params) => {
-        if (params.row.type == 'back') {
-          const subPath = params.row.folderId
-            ? 'folders/' + params.row.folderId
-            : '';
-
-          return (
-            <NextLink href={`${basePath}/${subPath}`} passHref>
-              <Link className={styles.itemLink}>
-                {params.row.title ? (
-                  <FormattedMessage
-                    id="pages.people.views.browser.backToFolder"
-                    values={{ folder: <em>{params.row.title}</em> }}
-                  />
-                ) : (
-                  <FormattedMessage id="pages.people.views.browser.backToRoot" />
-                )}
-              </Link>
-            </NextLink>
-          );
-        } else {
-          return (
-            <Box display="flex" gap={1}>
-              <NextLink href={`${basePath}/${params.row.id}`} passHref>
-                <Link className={styles.itemLink}>{params.row.title}</Link>
-              </NextLink>
-              {model.itemIsRenaming(params.row.type, params.row.data.id) && (
-                <CircularProgress size={20} />
-              )}
-            </Box>
-          );
-        }
+        return (
+          <BrowserItem basePath={basePath} item={params.row} model={model} />
+        );
       },
     },
   ];
@@ -223,25 +194,36 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
         });
 
         return (
-          <DataGridPro
-            apiRef={gridApiRef}
-            autoHeight
-            columns={colDefs}
-            disableSelectionOnClick
-            experimentalFeatures={{ newEditingApi: true }}
-            hideFooter
-            isCellEditable={(params) => params.row.type != 'back'}
-            onSortModelChange={(model) => setSortModel(model)}
-            processRowUpdate={(item) => {
-              if (item.type != 'back') {
-                model.renameItem(item.type, item.data.id, item.title);
-              }
-              return item;
-            }}
-            rows={rows}
-            sortingMode="server"
-            sx={{ borderWidth: 0 }}
-          />
+          <>
+            <BrowserDragLayer />
+            <DataGridPro
+              apiRef={gridApiRef}
+              autoHeight
+              columns={colDefs}
+              components={{
+                Row: (props: GridRowProps) => {
+                  const item = props.row as ViewBrowserItem;
+                  return (
+                    <BrowserRow item={item} model={model} rowProps={props} />
+                  );
+                },
+              }}
+              disableSelectionOnClick
+              experimentalFeatures={{ newEditingApi: true }}
+              hideFooter
+              isCellEditable={(params) => params.row.type != 'back'}
+              onSortModelChange={(model) => setSortModel(model)}
+              processRowUpdate={(item) => {
+                if (item.type != 'back') {
+                  model.renameItem(item.type, item.data.id, item.title);
+                }
+                return item;
+              }}
+              rows={rows}
+              sortingMode="server"
+              sx={{ borderWidth: 0 }}
+            />
+          </>
         );
       }}
     </ZUIFuture>

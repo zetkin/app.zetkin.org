@@ -64,7 +64,7 @@ const viewsSlice = createSlice({
           (attr) => !mutating.includes(attr)
         );
         if (item.data) {
-          item.data.title = folder.title;
+          item.data = folder;
         }
       }
     },
@@ -95,7 +95,7 @@ const viewsSlice = createSlice({
           (attr) => !mutating.includes(attr)
         );
         if (item.data) {
-          item.data.title = view.title;
+          item.data = view;
         }
       }
     },

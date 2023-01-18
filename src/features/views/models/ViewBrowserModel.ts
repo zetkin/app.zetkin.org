@@ -144,7 +144,7 @@ export default class ViewBrowserModel extends ModelBase {
           data: view,
           folderId: folderId,
           id: 'views/' + view.id,
-          owner: '',
+          owner: view.owner.name,
           title: view.title,
           type: 'view',
         });
@@ -163,6 +163,14 @@ export default class ViewBrowserModel extends ModelBase {
       return item?.mutating.includes('title') ?? false;
     } else {
       return false;
+    }
+  }
+
+  moveItem(type: 'folder' | 'view', id: number, newParentId: number | null) {
+    if (type == 'folder') {
+      this._repo.updateFolder(this._orgId, id, { parent_id: newParentId });
+    } else if (type == 'view') {
+      this._repo.updateView(this._orgId, id, { folder_id: newParentId });
     }
   }
 

@@ -4,6 +4,8 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { AppProps } from 'next/app';
 import createStore from 'core/store';
 import CssBaseline from '@mui/material/CssBaseline';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 import { Hydrate } from 'react-query/hydration';
 import { IntlProvider } from 'react-intl';
 import { LicenseInfo } from '@mui/x-data-grid-pro';
@@ -105,10 +107,12 @@ function MyApp({ Component, pageProps }: AppProps): JSX.Element {
                   <QueryClientProvider client={queryClient}>
                     <ZUISnackbarProvider>
                       <ZUIConfirmDialogProvider>
-                        <Hydrate state={dehydratedState}>
-                          <CssBaseline />
-                          {getLayout(<Component {...restProps} />, restProps)}
-                        </Hydrate>
+                        <DndProvider backend={HTML5Backend}>
+                          <Hydrate state={dehydratedState}>
+                            <CssBaseline />
+                            {getLayout(<Component {...restProps} />, restProps)}
+                          </Hydrate>
+                        </DndProvider>
                       </ZUIConfirmDialogProvider>
                     </ZUISnackbarProvider>
                     <ReactQueryDevtools initialIsOpen={false} />
