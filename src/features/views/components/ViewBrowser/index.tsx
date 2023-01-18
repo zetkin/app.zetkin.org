@@ -79,9 +79,13 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
           );
         } else {
           return (
-            <BrowserDraggableItem item={params.row}>
-              <BrowserItemIcon item={params.row} />
-            </BrowserDraggableItem>
+            <NextLink href={`${basePath}/${item.id}`} passHref>
+              <Link color="inherit">
+                <BrowserDraggableItem item={params.row}>
+                  <BrowserItemIcon item={params.row} />
+                </BrowserDraggableItem>
+              </Link>
+            </NextLink>
           );
         }
       },
