@@ -21,6 +21,7 @@ export type ColumnChoice = {
   alreadyInView?: (columns: ZetkinViewColumn[]) => boolean;
   defaultColumns?: (intl: IntlShape) => PendingZetkinViewColumn[];
   key: string;
+  keywords: string[];
   renderCardVisual: (color: string) => JSX.Element;
   renderConfigForm?: (props: {
     existingColumns: ZetkinViewColumn[];
@@ -64,6 +65,14 @@ const choices: ColumnChoice[] = [
       },
     ],
     key: CHOICES.FIRST_AND_LAST_NAME,
+    keywords: [
+      'firstname',
+      'name',
+      'first name',
+      'lastname',
+      'last name',
+      'first and last name',
+    ],
     renderCardVisual: (color: string) => {
       return <DoubleIconCardVisual color={color} icons={[Person, Person]} />;
     },
@@ -79,6 +88,7 @@ const choices: ColumnChoice[] = [
       );
     },
     key: CHOICES.PERSON_FIELDS,
+    keywords: ['fields', 'person fields', 'personfields', 'field'],
     renderCardVisual: (color: string) => (
       <SingleIconCardVisual color={color} icon={Person} />
     ),
