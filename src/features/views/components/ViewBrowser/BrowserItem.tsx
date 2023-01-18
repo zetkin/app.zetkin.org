@@ -1,11 +1,10 @@
 import { FormattedMessage } from 'react-intl';
-import { getEmptyImage } from 'react-dnd-html5-backend';
 import { makeStyles } from '@mui/styles';
 import NextLink from 'next/link';
-import { useDrag } from 'react-dnd';
-import { Box, CircularProgress, Link, Theme } from '@mui/material';
-import { FC, useContext, useEffect } from 'react';
+import { CircularProgress, Link, Theme } from '@mui/material';
+import { FC, useContext } from 'react';
 
+import BrowserDraggableItem from './BrowserDragableItem';
 import { BrowserRowContext, BrowserRowDropProps } from './BrowserRow';
 import ViewBrowserModel, {
   ViewBrowserItem,
@@ -32,17 +31,6 @@ const BrowserItem: FC<BrowserItemProps> = ({ basePath, item, model }) => {
   const dropProps = useContext(BrowserRowContext);
   const styles = useStyles(dropProps);
 
-  const [, dragRef, preview] = useDrag({
-    item: item,
-    type: 'ITEM',
-  });
-
-  useEffect(() => {
-    // Use an empty image as drag/drop preview, to hide while dragging.
-    // A nicer preview is rendered by the BrowserDragLayer component.
-    preview(getEmptyImage(), { captureDraggingState: true });
-  }, []);
-
   if (item.type == 'back') {
     const subPath = item.folderId ? 'folders/' + item.folderId : '';
     const msgPrefix = dropProps.active ? 'moveTo' : 'backTo';
@@ -65,14 +53,14 @@ const BrowserItem: FC<BrowserItemProps> = ({ basePath, item, model }) => {
     );
   } else {
     return (
-      <Box ref={dragRef} display="flex" gap={1}>
+      <BrowserDraggableItem item={item}>
         <NextLink href={`${basePath}/${item.id}`} passHref>
           <Link className={styles.itemLink}>{item.title}</Link>
         </NextLink>
         {model.itemIsRenaming(item.type, item.data.id) && (
           <CircularProgress size={20} />
         )}
-      </Box>
+      </BrowserDraggableItem>
     );
   }
 };

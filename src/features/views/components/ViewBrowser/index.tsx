@@ -9,6 +9,7 @@ import {
 import { FC, useEffect, useState } from 'react';
 import { Theme, useMediaQuery } from '@mui/material';
 
+import BrowserDraggableItem from './BrowserDragableItem';
 import BrowserDragLayer from './BrowserDragLayer';
 import BrowserItem from './BrowserItem';
 import BrowserItemIcon from './BrowserItemIcon';
@@ -65,7 +66,15 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
       filterable: false,
       headerName: '',
       renderCell: (params) => {
-        return <BrowserItemIcon item={params.row} />;
+        if (params.row.type == 'back') {
+          return <BrowserItemIcon item={params.row} />;
+        } else {
+          return (
+            <BrowserDraggableItem item={params.row}>
+              <BrowserItemIcon item={params.row} />
+            </BrowserDraggableItem>
+          );
+        }
       },
       sortable: false,
       width: 40,
