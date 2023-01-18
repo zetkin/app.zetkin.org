@@ -1,3 +1,4 @@
+import { FormattedMessage } from 'react-intl';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { Avatar, ListItem, ListItemAvatar } from '@mui/material';
@@ -22,7 +23,7 @@ const PersonListItem: React.FunctionComponent<{ person: ZetkinPerson }> = ({
         </ListItemAvatar>
         <ResultsListItemText
           primary={person.first_name + ' ' + person.last_name}
-          secondary={'Person'}
+          secondary={<FormattedMessage id="misc.search.results.person" />}
         />
       </ListItem>
     </Link>

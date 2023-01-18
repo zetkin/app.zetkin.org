@@ -1,39 +1,37 @@
+import { InsertDriveFileOutlined } from '@mui/icons-material';
 import Link from 'next/link';
-import { MobileFriendly } from '@mui/icons-material';
 import { useIntl } from 'react-intl';
 import { useRouter } from 'next/router';
 import { Avatar, ListItem, ListItemAvatar } from '@mui/material';
 
 import ResultsListItemText from './ResultsListItemText';
-import { ZetkinTask } from 'utils/types/zetkin';
+import { ZetkinView } from 'utils/types/zetkin';
 
-const TaskListItem: React.FunctionComponent<{ task: ZetkinTask }> = ({
-  task,
+const ViewListItem: React.FunctionComponent<{ view: ZetkinView }> = ({
+  view,
 }) => {
   const intl = useIntl();
   const router = useRouter();
   const { orgId } = router.query as { orgId: string };
 
   const elements = [
-    intl.formatMessage({ id: 'misc.search.results.task.campaign' }),
-    task.campaign.title,
-    intl.formatMessage({ id: 'misc.search.results.task.task' }),
+    intl.formatMessage({ id: 'misc.search.results.view.people' }),
   ];
+  if (view.folder) {
+    elements.push(view.folder.title);
+  }
+  elements.push(intl.formatMessage({ id: 'misc.search.results.view.view' }));
 
   return (
-    <Link
-      key={task.id}
-      href={`/organize/${orgId}/campaigns/${task.campaign.id}/calendar/tasks/${task.id}`}
-      passHref
-    >
+    <Link href={`/organize/${orgId}/people/views/${view.id}`} passHref>
       <ListItem button component="a" data-testid="SearchDialog-resultsListItem">
         <ListItemAvatar>
           <Avatar>
-            <MobileFriendly />
+            <InsertDriveFileOutlined />
           </Avatar>
         </ListItemAvatar>
         <ResultsListItemText
-          primary={task.title}
+          primary={view.title}
           secondary={elements.join(' / ')}
         />
       </ListItem>
@@ -41,4 +39,4 @@ const TaskListItem: React.FunctionComponent<{ task: ZetkinTask }> = ({
   );
 };
 
-export default TaskListItem;
+export default ViewListItem;
