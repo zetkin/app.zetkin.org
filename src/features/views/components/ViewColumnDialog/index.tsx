@@ -47,6 +47,7 @@ const ViewColumnDialog: FunctionComponent<ViewColumnDialogProps> = ({
             color="#234890"
             existingColumns={existingColumns}
             onCancel={() => setColumnChoice(null)}
+            onClose={onClose}
             onSave={async (columns) => {
               await onSave(columns);
               setColumnChoice(null);
