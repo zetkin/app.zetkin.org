@@ -1,8 +1,9 @@
 import { IntlShape } from 'react-intl';
-import { Person } from '@mui/icons-material';
+import { LocalOffer, Person } from '@mui/icons-material';
 
 import DoubleIconCardVisual from './DoubleIconCardVisual';
 import PersonFieldConfig from './PersonFieldConfig';
+import PersonTagConfig from './PersonTagConfig';
 import SingleIconCardVisual from './SingleIconCardVisual';
 import {
   COLUMN_TYPE,
@@ -91,6 +92,16 @@ const choices: ColumnChoice[] = [
         onOutputConfigured={props.onOutputConfigured}
       />
     ),
+  },
+  {
+    key: 'tag',
+    renderCardVisual: (color: string) => (
+      <SingleIconCardVisual color={color} icon={LocalOffer} />
+    ),
+    renderConfigForm: (props: {
+      existingColumns: ZetkinViewColumn[];
+      onOutputConfigured: (columns: SelectedViewColumn[]) => void;
+    }) => <PersonTagConfig onOutputConfigured={props.onOutputConfigured} />,
   },
 ];
 
