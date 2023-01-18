@@ -26,7 +26,9 @@ const PersonTagConfig = ({ onOutputConfigured }: PersonTagConfigProps) => {
     <FormControl sx={{ width: 300 }}>
       <TagManager
         assignedTags={selectedTags}
+        disableEditTags={true}
         groupTags={false}
+        ignoreValues={true}
         onAssignTag={(tag) => {
           const newAssignedTags = selectedTags.concat([tag] as ZetkinTag[]);
           onChangeTags(newAssignedTags);
