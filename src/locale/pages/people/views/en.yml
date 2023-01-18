@@ -4,6 +4,13 @@ actions:
 browser:
   backToFolder: 'Back to {folder}'
   backToRoot: Back to all views
+  confirmDelete:
+    folder:
+      title: Delete folder and content
+      warning: Deleting this folder and all views within is a permanent action which can't be undone. Are you sure you want to continue?
+    view:
+      title: Delete view
+      warning: Deleting this view is a permanent action which can't be undone. Are you sure you want to continue?
   menu:
     rename: Rename
   moveToFolder: 'Move to {folder}'
@@ -11,8 +18,6 @@ browser:
 layout:
   deleteDialog:
     error: There was an error deleting the view
-    title: Delete view
-    warningText: Deleting this view is a permanent action which can't be undone. Are you sure you want to continue?
   ellipsisMenu:
     delete: Delete view
     editQuery: Edit Smart Search query
