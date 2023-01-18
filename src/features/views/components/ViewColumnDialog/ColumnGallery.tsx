@@ -57,7 +57,9 @@ const ColumnGallery: FunctionComponent<ColumnGalleryProps> = ({
   return (
     <Box display="flex" flexDirection="column" height="100%">
       <Box display="flex" justifyContent="space-between" padding={2}>
-        <Typography variant="h4">Columns</Typography>
+        <Typography variant="h4">
+          <Msg id="misc.views.columnDialog.gallery.columns" />
+        </Typography>
         <Box alignItems="center" display="flex">
           <TextField
             InputProps={{
@@ -72,7 +74,9 @@ const ColumnGallery: FunctionComponent<ColumnGalleryProps> = ({
               setIsSearching(true);
               search();
             }}
-            placeholder="Find a column"
+            placeholder={intl.formatMessage({
+              id: 'misc.views.columnDialog.gallery.searchPlaceholder',
+            })}
             sx={{ paddingRight: 2 }}
             value={searchString}
             variant="outlined"
@@ -124,7 +128,12 @@ const ColumnGallery: FunctionComponent<ColumnGalleryProps> = ({
         <Box ref={choiceContainerRef} flexGrow={1} sx={{ overflowY: 'scroll' }}>
           {isSearching ? (
             <Box padding={2}>
-              <Typography variant="h4">{`Results for "${searchString}"`}</Typography>
+              <Typography variant="h4">
+                <Msg
+                  id="misc.views.columnDialog.gallery.searchResults"
+                  values={{ searchString: searchString }}
+                />
+              </Typography>
               <Box>
                 {searchResults.length > 0 ? (
                   <Grid container paddingTop={2} spacing={3}>
@@ -158,7 +167,12 @@ const ColumnGallery: FunctionComponent<ColumnGalleryProps> = ({
                     })}
                   </Grid>
                 ) : (
-                  <Typography>{`There are no column choices that match "${searchString}"`}</Typography>
+                  <Typography>
+                    <Msg
+                      id="misc.views.columnDialog.gallery.noSearchResults"
+                      values={{ searchString: searchString }}
+                    />
+                  </Typography>
                 )}
               </Box>
             </Box>

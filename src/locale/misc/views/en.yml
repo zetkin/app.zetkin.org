@@ -31,8 +31,12 @@ columnDialog:
   gallery:
     add: Add
     alreadyInView: Already in view
+    columns: Columns
     configure: Configure
     header: Add column to view
+    noSearchResults: There are no column choices that match "{searchString}"
+    searchPlaceholder: Find a column
+    searchResults: Results for "{searchString}"
 columnMenu:
   configure: Configure column
   confirmDelete: >-
