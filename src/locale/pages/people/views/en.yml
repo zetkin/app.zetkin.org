@@ -18,6 +18,9 @@ layout:
     makeStatic: Convert to static view
   jumpMenu:
     placeholder: Start typing to find view
+  subtitle:
+    columns: '{count, plural, =0 {No columns} =1 {1 column} other {# columns}}'
+    people: '{count, plural, =0 {Empty} =1 {1 person} other {# people}}'
 viewsList:
   columns:
     created: Date created
