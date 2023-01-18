@@ -14,6 +14,7 @@ import {
   folderUpdated,
   viewCreate,
   viewCreated,
+  viewDeleted,
   viewUpdate,
   viewUpdated,
 } from '../store';
@@ -78,6 +79,11 @@ export default class ViewsRepo {
       {}
     );
     this._store.dispatch(folderDeleted(report));
+  }
+
+  async deleteView(orgId: number, viewId: number): Promise<void> {
+    await this._apiClient.delete(`/api/orgs/${orgId}/people/views/${viewId}`);
+    this._store.dispatch(viewDeleted(viewId));
   }
 
   getViewTree(orgId: number): IFuture<ViewTreeData> {

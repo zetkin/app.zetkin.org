@@ -77,6 +77,10 @@ export default class ViewBrowserModel extends ModelBase {
     this._repo.deleteFolder(this._orgId, folderId);
   }
 
+  deleteView(viewId: number): void {
+    this._repo.deleteView(this._orgId, viewId);
+  }
+
   getFolder(folderId: number): IFuture<ZetkinViewFolder> {
     const itemsFuture = this._repo.getViewTree(this._orgId);
     if (!itemsFuture.data) {

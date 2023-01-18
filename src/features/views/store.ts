@@ -90,6 +90,12 @@ const viewsSlice = createSlice({
         })
       );
     },
+    viewDeleted: (state, action: PayloadAction<number>) => {
+      const viewId = action.payload;
+      state.viewList.items = state.viewList.items.filter(
+        (item) => item.id != viewId
+      );
+    },
     viewUpdate: (state, action: PayloadAction<[number, string[]]>) => {
       const [id, mutating] = action.payload;
       const item = state.viewList.items.find((item) => item.id == id);
@@ -123,6 +129,7 @@ export const {
   folderUpdated,
   viewCreate,
   viewCreated,
+  viewDeleted,
   viewUpdate,
   viewUpdated,
 } = viewsSlice.actions;
