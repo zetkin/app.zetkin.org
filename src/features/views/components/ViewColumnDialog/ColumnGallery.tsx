@@ -113,72 +113,100 @@ const ColumnGallery: FunctionComponent<ColumnGalleryProps> = ({
           </List>
         </Box>
         <Box ref={choiceContainerRef} flexGrow={1} sx={{ overflowY: 'scroll' }}>
-          {isSearching && (
+          {isSearching ? (
             <Box padding={2}>
               <Typography variant="h4">{`Results for "${searchString}"`}</Typography>
               <Box>
                 {searchResults.length > 0 ? (
-                  searchResults.map((searchResult) => (
-                    <Typography key={searchResult.key}>
-                      <Msg
-                        id={`misc.views.columnDialog.choices.${searchResult.key}.title`}
-                      />
-                    </Typography>
-                  ))
+                  <Grid container paddingTop={2} spacing={3}>
+                    {searchResults.map((searchResult) => {
+                      const alreadyInView =
+                        searchResult.alreadyInView &&
+                        searchResult.alreadyInView(existingColumns);
+                      return (
+                        <Grid key={searchResult.key} item lg={4} sm={6} xs={12}>
+                          <ColumnChoiceCard
+                            alreadyInView={alreadyInView}
+                            cardVisual={searchResult.renderCardVisual(
+                              alreadyInView ? 'gray' : '#234890'
+                            )}
+                            color={alreadyInView ? 'gray' : '#234890'}
+                            description={intl.formatMessage({
+                              id: `misc.views.columnDialog.choices.${searchResult.key}.description`,
+                            })}
+                            onAdd={() => onAdd(searchResult)}
+                            onConfigure={() => onConfigure(searchResult)}
+                            showAddButton={!!searchResult.defaultColumns}
+                            showConfigureButton={
+                              !!searchResult.renderConfigForm
+                            }
+                            title={intl.formatMessage({
+                              id: `misc.views.columnDialog.choices.${searchResult.key}.title`,
+                            })}
+                          />
+                        </Grid>
+                      );
+                    })}
+                  </Grid>
                 ) : (
                   <Typography>{`There are no column choices that match "${searchString}"`}</Typography>
                 )}
               </Box>
             </Box>
+          ) : (
+            categories.map((category, index) => (
+              <Box
+                key={`category-${index}`}
+                id={`category-${index}`}
+                padding={2}
+              >
+                <Typography variant="h4">
+                  <Msg
+                    id={`misc.views.columnDialog.categories.${category.key}.title`}
+                  />
+                </Typography>
+                <Typography variant="h5">
+                  <Msg
+                    id={`misc.views.columnDialog.categories.${category.key}.description`}
+                  />
+                </Typography>
+                <Grid container paddingTop={2} spacing={3}>
+                  {category.choices.map((choiceName) => {
+                    const choice = choices.find(
+                      (choice) => choice.key === choiceName
+                    );
+                    if (!choice) {
+                      return;
+                    }
+                    const alreadyInView =
+                      choice.alreadyInView &&
+                      choice.alreadyInView(existingColumns);
+                    return (
+                      <Grid key={choice.key} item lg={4} sm={6} xs={12}>
+                        <ColumnChoiceCard
+                          alreadyInView={alreadyInView}
+                          cardVisual={choice.renderCardVisual(
+                            alreadyInView ? 'gray' : '#234890'
+                          )}
+                          color={alreadyInView ? 'gray' : '#234890'}
+                          description={intl.formatMessage({
+                            id: `misc.views.columnDialog.choices.${choice.key}.description`,
+                          })}
+                          onAdd={() => onAdd(choice)}
+                          onConfigure={() => onConfigure(choice)}
+                          showAddButton={!!choice.defaultColumns}
+                          showConfigureButton={!!choice.renderConfigForm}
+                          title={intl.formatMessage({
+                            id: `misc.views.columnDialog.choices.${choice.key}.title`,
+                          })}
+                        />
+                      </Grid>
+                    );
+                  })}
+                </Grid>
+              </Box>
+            ))
           )}
-          {categories.map((category, index) => (
-            <Box key={`category-${index}`} id={`category-${index}`} padding={2}>
-              <Typography variant="h4">
-                <Msg
-                  id={`misc.views.columnDialog.categories.${category.key}.title`}
-                />
-              </Typography>
-              <Typography variant="h5">
-                <Msg
-                  id={`misc.views.columnDialog.categories.${category.key}.description`}
-                />
-              </Typography>
-              <Grid container paddingTop={2} spacing={3}>
-                {category.choices.map((choiceName) => {
-                  const choice = choices.find(
-                    (choice) => choice.key === choiceName
-                  );
-                  if (!choice) {
-                    return;
-                  }
-                  const alreadyInView =
-                    choice.alreadyInView &&
-                    choice.alreadyInView(existingColumns);
-                  return (
-                    <Grid key={choice.key} item lg={4} sm={6} xs={12}>
-                      <ColumnChoiceCard
-                        alreadyInView={alreadyInView}
-                        cardVisual={choice.renderCardVisual(
-                          alreadyInView ? 'gray' : '#234890'
-                        )}
-                        color={alreadyInView ? 'gray' : '#234890'}
-                        description={intl.formatMessage({
-                          id: `misc.views.columnDialog.choices.${choice.key}.description`,
-                        })}
-                        onAdd={() => onAdd(choice)}
-                        onConfigure={() => onConfigure(choice)}
-                        showAddButton={!!choice.defaultColumns}
-                        showConfigureButton={!!choice.renderConfigForm}
-                        title={intl.formatMessage({
-                          id: `misc.views.columnDialog.choices.${choice.key}.title`,
-                        })}
-                      />
-                    </Grid>
-                  );
-                })}
-              </Grid>
-            </Box>
-          ))}
         </Box>
       </Box>
     </Box>
