@@ -21,12 +21,14 @@ import choices, { ColumnChoice } from './choices';
 interface ColumnGalleryProps {
   existingColumns: ZetkinViewColumn[];
   onAdd: (choice: ColumnChoice) => void;
+  onCancel: () => void;
   onConfigure: (choice: ColumnChoice) => void;
 }
 
 const ColumnGallery: FunctionComponent<ColumnGalleryProps> = ({
   existingColumns,
   onAdd,
+  onCancel,
   onConfigure,
 }) => {
   const intl = useIntl();
@@ -58,7 +60,9 @@ const ColumnGallery: FunctionComponent<ColumnGalleryProps> = ({
         <Typography variant="h4">Columns</Typography>
         <Box alignItems="center" display="flex">
           <TextField
-            InputProps={{ endAdornment: <Search color="secondary" /> }}
+            InputProps={{
+              endAdornment: <Search color="secondary" />,
+            }}
             onChange={(evt) => {
               setSearchString(evt.target.value);
               if (evt.target.value === '') {
@@ -73,7 +77,12 @@ const ColumnGallery: FunctionComponent<ColumnGalleryProps> = ({
             value={searchString}
             variant="outlined"
           />
-          <Close color="secondary" fontSize="medium" />
+          <Close
+            color="secondary"
+            fontSize="medium"
+            onClick={() => onCancel()}
+            sx={{ cursor: 'pointer' }}
+          />
         </Box>
       </Box>
       <Box display="flex" height="100%">
