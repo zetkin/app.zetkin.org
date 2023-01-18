@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
+import { DeleteFolderReport } from 'pages/api/views/deleteFolder';
 import { ViewTreeData } from 'pages/api/views/tree';
 import { remoteItem, remoteList, RemoteList } from 'utils/storeUtils';
 import { ZetkinView, ZetkinViewFolder } from './components/types';
@@ -41,6 +42,15 @@ const viewsSlice = createSlice({
       state.folderList.isLoading = false;
       state.folderList.items.push(remoteItem(folder.id, { data: folder }));
       state.recentlyCreatedFolder = folder;
+    },
+    folderDeleted: (state, action: PayloadAction<DeleteFolderReport>) => {
+      const { foldersDeleted, viewsDeleted } = action.payload;
+      state.folderList.items = state.folderList.items.filter(
+        (item) => !foldersDeleted.includes(item.id)
+      );
+      state.viewList.items = state.viewList.items.filter(
+        (item) => !viewsDeleted.includes(item.id)
+      );
     },
     folderUpdate: (state, action: PayloadAction<[number, string[]]>) => {
       const [id, mutating] = action.payload;
@@ -108,6 +118,7 @@ export const {
   allItemsLoaded,
   folderCreate,
   folderCreated,
+  folderDeleted,
   folderUpdate,
   folderUpdated,
   viewCreate,
