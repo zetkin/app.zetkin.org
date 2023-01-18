@@ -1,3 +1,4 @@
+import NextLink from 'next/link';
 import { useIntl } from 'react-intl';
 import {
   DataGridPro,
@@ -7,7 +8,7 @@ import {
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
 import { FC, useEffect, useState } from 'react';
-import { Theme, useMediaQuery } from '@mui/material';
+import { Link, Theme, useMediaQuery } from '@mui/material';
 
 import BrowserDraggableItem from './BrowserDragableItem';
 import BrowserDragLayer from './BrowserDragLayer';
@@ -66,8 +67,16 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
       filterable: false,
       headerName: '',
       renderCell: (params) => {
-        if (params.row.type == 'back') {
-          return <BrowserItemIcon item={params.row} />;
+        const item = params.row;
+        const subPath = item.folderId ? 'folders/' + item.folderId : '';
+        if (item.type == 'back') {
+          return (
+            <NextLink href={`${basePath}/${subPath}`} passHref>
+              <Link color="inherit">
+                <BrowserItemIcon item={params.row} />
+              </Link>
+            </NextLink>
+          );
         } else {
           return (
             <BrowserDraggableItem item={params.row}>
