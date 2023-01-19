@@ -25,7 +25,13 @@ const ShareViewDialogShareTab: FC<ShareViewDialogShareTabProps> = ({
       <ZUIFuture future={accessFuture}>
         {(accessList) => (
           <>
-            <ZUIAccessList list={accessList} orgId={model.orgId} />
+            <ZUIAccessList
+              list={accessList}
+              onChangeLevel={(personId, level) =>
+                model.grantAccess(personId, level)
+              }
+              orgId={model.orgId}
+            />
             <MUIOnlyPersonSelect
               getOptionDisabled={(person) =>
                 accessList.some((item) => item.person.id == person.id)

@@ -15,11 +15,19 @@ import { ZetkinObjectAccess } from 'core/api/types';
 import ZUIAvatar from 'zui/ZUIAvatar';
 
 interface ZUIAccessListProps {
-  orgId: number;
   list: ZetkinObjectAccess[];
+  onChangeLevel?: (
+    personId: number,
+    level: ZetkinObjectAccess['level']
+  ) => void;
+  orgId: number;
 }
 
-const ZUIAccessList: FC<ZUIAccessListProps> = ({ list, orgId }) => {
+const ZUIAccessList: FC<ZUIAccessListProps> = ({
+  list,
+  onChangeLevel,
+  orgId,
+}) => {
   return (
     <List>
       {list.map((item) => {
@@ -44,7 +52,21 @@ const ZUIAccessList: FC<ZUIAccessListProps> = ({ list, orgId }) => {
                 </Box>
                 <Box>
                   <FormControl fullWidth size="small">
-                    <Select value={level}>
+                    <Select
+                      onChange={(ev) => {
+                        const level = ev.target.value;
+                        if (
+                          level == 'configure' ||
+                          level == 'edit' ||
+                          level == 'readonly'
+                        ) {
+                          if (onChangeLevel) {
+                            onChangeLevel(person.id, level);
+                          }
+                        }
+                      }}
+                      value={level}
+                    >
                       <MenuItem value="readonly">
                         <FormattedMessage id="zui.accessList.levels.readonly" />
                       </MenuItem>

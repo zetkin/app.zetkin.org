@@ -34,14 +34,26 @@ const viewsSlice = createSlice({
       const [viewId, accessObj] = action.payload;
       const list = state.accessByViewId[viewId];
       if (list) {
-        list.items.push(
-          remoteItem(accessObj.person.id, {
-            data: {
-              id: accessObj.person.id,
-              ...accessObj,
-            },
-          })
-        );
+        let updated = false;
+        const newItem = remoteItem(accessObj.person.id, {
+          data: {
+            id: accessObj.person.id,
+            ...accessObj,
+          },
+        });
+
+        list.items = list.items.map((item) => {
+          if (item.id == accessObj.person.id) {
+            updated = true;
+            return newItem;
+          } else {
+            return item;
+          }
+        });
+
+        if (!updated) {
+          list.items.push(newItem);
+        }
       }
     },
     accessLoad: (state, action: PayloadAction<number>) => {
