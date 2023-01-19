@@ -14,6 +14,10 @@ columnDialog:
     tag:
       description: Show a checkmark if the person has this tag
       title: Tag
+    toggle:
+      columnTitle: Toggle
+      description: Checkbox column
+      title: Toggle
   commonHeaders:
     firstName: First Name
     lastName: Last Name
