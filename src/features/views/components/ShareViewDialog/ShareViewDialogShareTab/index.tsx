@@ -1,4 +1,5 @@
-import { Box, FormControlLabel, Switch } from '@mui/material';
+import NextLink from 'next/link';
+import { Box, FormControlLabel, Link, Switch } from '@mui/material';
 import { FC, useRef, useState } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 
@@ -91,6 +92,23 @@ const ShareViewDialogShareTab: FC<ShareViewDialogShareTabProps> = ({
               }}
               selectedPerson={null}
             />
+            <Box textAlign="right">
+              <FormattedMessage
+                id="pages.people.views.shareDialog.share.collabInstructions"
+                values={{
+                  viewLink: (
+                    <NextLink
+                      href={`/organize/${model.orgId}/people/views/${model.viewId}/shared`}
+                      passHref
+                    >
+                      <Link>
+                        <FormattedMessage id="pages.people.views.shareDialog.share.viewLink" />
+                      </Link>
+                    </NextLink>
+                  ),
+                }}
+              />
+            </Box>
           </>
         )}
       </ZUIFutures>

@@ -32,8 +32,10 @@ layout:
     people: '{count, plural, =0 {Empty} =1 {1 person} other {# people}}'
 shareDialog:
   share:
+    collabInstructions: Outside collaborators are able to access {viewLink}
     showOfficials: Show officials
     statusLabel: Shared with {collaborators, plural, =1 {1 collaborator} other {# collaborators}}, {officials, plural, =1 {1 official} other {# officials}} can access all views.
+    viewLink: the restricted view
   title: 'Share "{title}"'
 viewsList:
   columns:

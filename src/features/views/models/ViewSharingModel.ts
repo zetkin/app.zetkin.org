@@ -37,4 +37,8 @@ export default class ViewSharingModel extends ModelBase {
   revokeAccess(personId: number): void {
     this._repo.revokeAccess(this._orgId, this._viewId, personId);
   }
+
+  get viewId(): number {
+    return this._viewId;
+  }
 }
