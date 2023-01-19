@@ -1,0 +1,5 @@
+levels:
+  configure: Edit & Configure
+  edit: Editing
+  readonly: Read-only
+removeAccess: Remove access
