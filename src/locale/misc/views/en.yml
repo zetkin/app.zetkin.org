@@ -7,9 +7,11 @@ columnDialog:
   choices:
     firstAndLastName:
       description: First and last name of person
+      keywords: name combo
       title: First and Last Name
     personFields:
       description: Add your choice of fields like email, phone number, etc.
+      keywords: field multiple
       title: Person fields
   commonHeaders:
     firstName: First Name

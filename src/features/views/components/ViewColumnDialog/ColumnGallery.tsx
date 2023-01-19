@@ -38,17 +38,40 @@ const ColumnGallery: FunctionComponent<ColumnGalleryProps> = ({
 
   const [isSearching, setIsSearching] = useState(false);
   const [searchString, setSearchString] = useState('');
-  const [searchResults, setSearchResults] = useState<ColumnChoice[]>([]);
+  const [searchResults, setSearchResults] = useState<
+    (ColumnChoice | undefined)[]
+  >([]);
+
+  //list of objects with localized strings to use in the fuse-search
+  const searchObjects = choices.map((choice) => ({
+    description: intl.formatMessage({
+      id: `misc.views.columnDialog.choices.${choice.key}.description`,
+    }),
+    key: choice.key,
+    keywords: intl.formatMessage({
+      id: `misc.views.columnDialog.choices.${choice.key}.keywords`,
+    }),
+    title: intl.formatMessage({
+      id: `misc.views.columnDialog.choices.${choice.key}.title`,
+    }),
+  }));
 
   const search = () => {
-    const fuse = new Fuse(choices, {
-      keys: ['keywords'],
+    const fuse = new Fuse(searchObjects, {
+      keys: ['description', 'keywords', 'title'],
       threshold: 0.4,
     });
 
-    const results = fuse
+    //get the keys from the search results
+    const keys = fuse
       .search(searchString)
-      .map((fuseResult) => fuseResult.item);
+      .map((fuseResult) => fuseResult.item.key);
+
+    //get the choice objects with matching keys
+    const results = keys.map((key) =>
+      choices.find((choice) => choice.key === key)
+    );
+
     setSearchResults(results);
   };
 
@@ -138,6 +161,9 @@ const ColumnGallery: FunctionComponent<ColumnGalleryProps> = ({
                 {searchResults.length > 0 ? (
                   <Grid container paddingTop={2} spacing={3}>
                     {searchResults.map((searchResult) => {
+                      if (!searchResult) {
+                        return;
+                      }
                       const alreadyInView =
                         searchResult.alreadyInView &&
                         searchResult.alreadyInView(existingColumns);
