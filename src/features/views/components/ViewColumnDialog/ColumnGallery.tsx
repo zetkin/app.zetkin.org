@@ -8,7 +8,7 @@ import {
   Typography,
 } from '@mui/material';
 import { Close, Search } from '@mui/icons-material';
-import { FunctionComponent, useRef, useState } from 'react';
+import { FunctionComponent, useMemo, useRef, useState } from 'react';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
 
 import categories from './categories';
@@ -38,9 +38,6 @@ const ColumnGallery: FunctionComponent<ColumnGalleryProps> = ({
 
   const [isSearching, setIsSearching] = useState(false);
   const [searchString, setSearchString] = useState('');
-  const [searchResults, setSearchResults] = useState<
-    (ColumnChoice | undefined)[]
-  >([]);
 
   //list of objects with localized strings to use in the fuse-search
   const searchObjects = choices.map((choice) => ({
@@ -67,13 +64,11 @@ const ColumnGallery: FunctionComponent<ColumnGalleryProps> = ({
       .search(searchString)
       .map((fuseResult) => fuseResult.item.key);
 
-    //get the choice objects with matching keys
-    const results = keys.map((key) =>
-      choices.find((choice) => choice.key === key)
-    );
-
-    setSearchResults(results);
+    //return the choice objects with matching keys
+    return keys.map((key) => choices.find((choice) => choice.key === key));
   };
+
+  const searchResults = useMemo(() => search(), [searchString]);
 
   const choiceContainerRef = useRef<HTMLDivElement>();
 
@@ -95,7 +90,6 @@ const ColumnGallery: FunctionComponent<ColumnGalleryProps> = ({
                 return;
               }
               setIsSearching(true);
-              search();
             }}
             placeholder={intl.formatMessage({
               id: 'misc.views.columnDialog.gallery.searchPlaceholder',
