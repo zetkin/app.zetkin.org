@@ -1,3 +1,4 @@
+import { DeleteFolderReport } from 'pages/api/views/deleteFolder';
 import Environment from 'core/env/Environment';
 import IApiClient from 'core/api/client/IApiClient';
 import shouldLoad from 'core/caching/shouldLoad';
@@ -8,10 +9,12 @@ import {
   allItemsLoaded,
   folderCreate,
   folderCreated,
+  folderDeleted,
   folderUpdate,
   folderUpdated,
   viewCreate,
   viewCreated,
+  viewDeleted,
   viewUpdate,
   viewUpdated,
 } from '../store';
@@ -68,6 +71,19 @@ export default class ViewsRepo {
     );
     this._store.dispatch(viewCreated(view));
     return view;
+  }
+
+  async deleteFolder(orgId: number, folderId: number): Promise<void> {
+    const report = await this._apiClient.post<DeleteFolderReport>(
+      `/api/views/deleteFolder?orgId=${orgId}&folderId=${folderId}`,
+      {}
+    );
+    this._store.dispatch(folderDeleted(report));
+  }
+
+  async deleteView(orgId: number, viewId: number): Promise<void> {
+    await this._apiClient.delete(`/api/orgs/${orgId}/people/views/${viewId}`);
+    this._store.dispatch(viewDeleted(viewId));
   }
 
   getViewTree(orgId: number): IFuture<ViewTreeData> {

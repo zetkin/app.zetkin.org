@@ -7,7 +7,7 @@ import {
   GridSortModel,
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
-import { FC, useEffect, useState } from 'react';
+import { FC, useContext, useEffect, useState } from 'react';
 import { Link, Theme, useMediaQuery } from '@mui/material';
 
 import BrowserDraggableItem from './BrowserDragableItem';
@@ -15,6 +15,7 @@ import BrowserDragLayer from './BrowserDragLayer';
 import BrowserItem from './BrowserItem';
 import BrowserItemIcon from './BrowserItemIcon';
 import BrowserRow from './BrowserRow';
+import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import ZUIFuture from 'zui/ZUIFuture';
 import ZUIPerson from 'zui/ZUIPerson';
@@ -44,6 +45,7 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
 }) => {
   const intl = useIntl();
   const [sortModel, setSortModel] = useState<GridSortModel>([]);
+  const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
   const isMobile = useMediaQuery((theme: Theme) =>
     theme.breakpoints.down('sm')
   );
@@ -134,7 +136,8 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
       field: 'menu',
       headerName: '',
       renderCell: (params) => {
-        if (params.row.type == 'back') {
+        const item = params.row;
+        if (item.type == 'back') {
           return null;
         }
         return (
@@ -150,6 +153,28 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
                   gridApiRef.current.startCellEditMode({
                     field: 'title',
                     id: params.row.id,
+                  });
+                },
+              },
+              {
+                id: 'delete-item',
+                label: 'Delete',
+                onSelect: (e) => {
+                  e.stopPropagation();
+                  showConfirmDialog({
+                    onSubmit: () => {
+                      if (item.type == 'folder') {
+                        model.deleteFolder(item.data.id);
+                      } else if (params.row.type == 'view') {
+                        model.deleteView(item.data.id);
+                      }
+                    },
+                    title: intl.formatMessage({
+                      id: `pages.people.views.browser.confirmDelete.${item.type}.title`,
+                    }),
+                    warningText: intl.formatMessage({
+                      id: `pages.people.views.browser.confirmDelete.${item.type}.warning`,
+                    }),
                   });
                 },
               },

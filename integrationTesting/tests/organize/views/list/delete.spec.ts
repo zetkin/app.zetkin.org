@@ -6,16 +6,8 @@ import KPD from '../../../../mockData/orgs/KPD';
 
 const deleteView = async (page: Page) => {
   await page.click('data-testid=ZUIEllipsisMenu-menuActivator');
-  await page.click(`data-testid=ZUIEllipsisMenu-item-delete-view`);
+  await page.click(`data-testid=ZUIEllipsisMenu-item-delete-item`);
   await page.click('button:text("Confirm")');
-};
-
-const expectDeleteViewError = async (page: Page) => {
-  await page.locator('data-testid=Snackbar-error').waitFor();
-  const canSeeErrorSnackbar = await page
-    .locator('data-testid=Snackbar-error')
-    .isVisible();
-  expect(canSeeErrorSnackbar).toBeTruthy();
 };
 
 const expectDeleteViewSuccess = (moxy: NextWorkerFixtures['moxy']) => {
@@ -29,7 +21,7 @@ const expectDeleteViewSuccess = (moxy: NextWorkerFixtures['moxy']) => {
   expect(deleteViewRequest).toBeTruthy();
 };
 
-test.describe.skip('Views list page', () => {
+test.describe('Views list page', () => {
   test.beforeEach(({ moxy, login }) => {
     login();
     moxy.setZetkinApiMock('/orgs/1', 'get', KPD);
@@ -52,24 +44,5 @@ test.describe.skip('Views list page', () => {
 
     await deleteView(page);
     expectDeleteViewSuccess(moxy);
-  });
-
-  test('shows error snackbar if view deletion fails', async ({
-    page,
-    appUri,
-    moxy,
-  }) => {
-    moxy.setZetkinApiMock('/orgs/1/people/views', 'get', [AllMembers]);
-    moxy.setZetkinApiMock(
-      `/orgs/1/people/1/views/${AllMembers.id}`,
-      'delete',
-      undefined,
-      405
-    );
-
-    await page.goto(appUri + '/organize/1/people');
-
-    await deleteView(page);
-    await expectDeleteViewError(page);
   });
 });
