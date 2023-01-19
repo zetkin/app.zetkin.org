@@ -1,7 +1,8 @@
 import { IntlShape } from 'react-intl';
-import { LocalOffer, Person } from '@mui/icons-material';
+import { CheckBox, LocalOffer, Person } from '@mui/icons-material';
 
 import DoubleIconCardVisual from './DoubleIconCardVisual';
+import getUniqueColumnName from '../../utils/getUniqueColumnName';
 import PersonFieldConfig from './PersonFieldConfig';
 import PersonTagConfig from './PersonTagConfig';
 import SingleIconCardVisual from './SingleIconCardVisual';
@@ -16,11 +17,16 @@ import {
 export enum CHOICES {
   FIRST_AND_LAST_NAME = 'firstAndLastName',
   PERSON_FIELDS = 'personFields',
+  TAG = 'tag',
+  BOOLEAN = 'toggle',
 }
 
 export type ColumnChoice = {
   alreadyInView?: (columns: ZetkinViewColumn[]) => boolean;
-  defaultColumns?: (intl: IntlShape) => PendingZetkinViewColumn[];
+  defaultColumns?: (
+    intl: IntlShape,
+    columns: ZetkinViewColumn[]
+  ) => PendingZetkinViewColumn[];
   key: string;
   renderCardVisual: (color: string) => JSX.Element;
   renderConfigForm?: (props: {
@@ -70,6 +76,16 @@ const choices: ColumnChoice[] = [
     },
   },
   {
+    key: CHOICES.TAG,
+    renderCardVisual: (color: string) => (
+      <SingleIconCardVisual color={color} icon={LocalOffer} />
+    ),
+    renderConfigForm: (props: {
+      existingColumns: ZetkinViewColumn[];
+      onOutputConfigured: (columns: SelectedViewColumn[]) => void;
+    }) => <PersonTagConfig onOutputConfigured={props.onOutputConfigured} />,
+  },
+  {
     alreadyInView: (columns) => {
       return Object.values(NATIVE_PERSON_FIELDS).every((fieldName) =>
         columns.some(
@@ -94,15 +110,27 @@ const choices: ColumnChoice[] = [
     ),
   },
   {
-    key: 'tag',
+    defaultColumns: (intl, columns) => [
+      {
+        config: {
+          field: 'local_bool',
+        },
+        title: getUniqueColumnName('pepa', columns),
+        type: COLUMN_TYPE.LOCAL_BOOL,
+      },
+    ],
+    key: CHOICES.BOOLEAN,
     renderCardVisual: (color: string) => (
-      <SingleIconCardVisual color={color} icon={LocalOffer} />
+      <SingleIconCardVisual color={color} icon={CheckBox} />
     ),
-    renderConfigForm: (props: {
-      existingColumns: ZetkinViewColumn[];
-      onOutputConfigured: (columns: SelectedViewColumn[]) => void;
-    }) => <PersonTagConfig onOutputConfigured={props.onOutputConfigured} />,
   },
 ];
 
+/* title: getUniqueColumnName(
+  intl.formatMessage({
+    id: 'misc.views.columnDialog.choices.toggle.columnTitle',
+  }),
+  columns
+),
+ */
 export default choices;

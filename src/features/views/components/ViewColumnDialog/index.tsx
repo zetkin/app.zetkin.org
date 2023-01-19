@@ -61,7 +61,7 @@ const ViewColumnDialog: FunctionComponent<ViewColumnDialogProps> = ({
                 return null;
               }
 
-              const columns = choice.defaultColumns(intl);
+              const columns = choice.defaultColumns(intl, existingColumns);
               await onSave(columns);
             }}
             onConfigure={onConfigure}
