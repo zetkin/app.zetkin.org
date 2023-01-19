@@ -1,5 +1,5 @@
-import { ChevronLeft } from '@mui/icons-material';
 import { Box, Button, Link, Typography } from '@mui/material';
+import { ChevronLeft, Close } from '@mui/icons-material';
 import { FunctionComponent, useState } from 'react';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
 
@@ -11,6 +11,7 @@ interface ColumnEditorProps {
   existingColumns: ZetkinViewColumn[];
   color: string;
   onCancel: () => void;
+  onClose: () => void;
   onSave: (columns: SelectedViewColumn[]) => Promise<void>;
 }
 
@@ -19,6 +20,7 @@ const ColumnEditor: FunctionComponent<ColumnEditorProps> = ({
   color,
   existingColumns,
   onCancel,
+  onClose,
   onSave,
 }) => {
   const intl = useIntl();
@@ -31,23 +33,43 @@ const ColumnEditor: FunctionComponent<ColumnEditorProps> = ({
   return (
     <Box display="flex" flexDirection="column" height="100%">
       <Box bgcolor={color} display="flex" flexDirection="column" padding={2}>
-        <Box alignSelf="flex-start" display="flex" sx={{ cursor: 'pointer' }}>
-          <Link
-            component="div"
-            onClick={() => onCancel()}
-            sx={{
-              color: 'white',
-              cursor: 'pointer',
-              display: 'flex',
-              fontFamily: 'inherit',
-              justifyContent: 'center',
-            }}
-            underline="none"
-            variant="h5"
+        <Box display="flex">
+          <Box
+            alignSelf="flex-start"
+            display="flex"
+            sx={{ cursor: 'pointer' }}
+            width="100%"
           >
-            <ChevronLeft sx={{ color: 'white' }} />
-            <Msg id="misc.views.columnDialog.editor.buttonLabels.change" />
-          </Link>
+            <Link
+              component="div"
+              onClick={() => onCancel()}
+              sx={{
+                color: 'white',
+                cursor: 'pointer',
+                display: 'flex',
+                fontFamily: 'inherit',
+                justifyContent: 'center',
+              }}
+              underline="none"
+              variant="h5"
+            >
+              <ChevronLeft sx={{ color: 'white' }} />
+              <Msg id="misc.views.columnDialog.editor.buttonLabels.change" />
+            </Link>
+          </Box>
+          <Box alignSelf="flex-end" display="flex" sx={{ cursor: 'pointer' }}>
+            <Close
+              fontSize="medium"
+              onClick={() => onClose()}
+              sx={{
+                color: 'white',
+                cursor: 'pointer',
+                display: 'flex',
+                fontFamily: 'inherit',
+                justifyContent: 'center',
+              }}
+            />
+          </Box>
         </Box>
 
         <Box alignSelf="center" display="flex" flexDirection="column">

@@ -7,9 +7,11 @@ columnDialog:
   choices:
     firstAndLastName:
       description: First and last name of person
+      keywords: name combo
       title: First and Last Name
     personFields:
       description: Add your choice of fields like email, phone number, etc.
+      keywords: field multiple
       title: Person fields
     tag:
       description: Show a checkmark if the person has this tag
@@ -34,8 +36,12 @@ columnDialog:
   gallery:
     add: Add
     alreadyInView: Already in view
+    columns: Columns
     configure: Configure
     header: Add column to view
+    noSearchResults: There are no column choices that match "{searchString}"
+    searchPlaceholder: Find a column
+    searchResults: Results for "{searchString}"
 columnMenu:
   configure: Configure column
   confirmDelete: >-
