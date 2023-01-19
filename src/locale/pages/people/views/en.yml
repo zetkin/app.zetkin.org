@@ -7,7 +7,7 @@ browser:
   confirmDelete:
     folder:
       title: Delete folder and content
-      warning: Deleting this folder and all views within is a permanent action which can't be undone. Are you sure you want to continue?
+      warning: Deleting this folder and all views within is a permanent action that cannot be undone. Are you sure you want to continue?
     view:
       title: Delete view
       warning: Deleting this view is a permanent action which can't be undone. Are you sure you want to continue?
