@@ -115,7 +115,12 @@ const choices: ColumnChoice[] = [
         config: {
           field: 'local_bool',
         },
-        title: getUniqueColumnName('pepa', columns),
+        title: getUniqueColumnName(
+          intl.formatMessage({
+            id: 'misc.views.columnDialog.choices.toggle.columnTitle',
+          }),
+          columns
+        ),
         type: COLUMN_TYPE.LOCAL_BOOL,
       },
     ],
@@ -126,11 +131,4 @@ const choices: ColumnChoice[] = [
   },
 ];
 
-/* title: getUniqueColumnName(
-  intl.formatMessage({
-    id: 'misc.views.columnDialog.choices.toggle.columnTitle',
-  }),
-  columns
-),
- */
 export default choices;
