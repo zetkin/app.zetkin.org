@@ -12,10 +12,12 @@ import {
 } from '@mui/material';
 
 import { ZetkinObjectAccess } from 'core/api/types';
+import { ZetkinOfficial } from 'utils/types/zetkin';
 import ZUIAvatar from 'zui/ZUIAvatar';
 
 interface ZUIAccessListProps {
-  list: ZetkinObjectAccess[];
+  accessList: ZetkinObjectAccess[];
+  officials: ZetkinOfficial[];
   onChangeLevel?: (
     personId: number,
     level: ZetkinObjectAccess['level']
@@ -25,14 +27,41 @@ interface ZUIAccessListProps {
 }
 
 const ZUIAccessList: FC<ZUIAccessListProps> = ({
-  list,
+  accessList,
+  officials,
   onChangeLevel,
   onRevoke,
   orgId,
 }) => {
   return (
     <List>
-      {list.map((item) => {
+      {officials.map((item) => {
+        return (
+          <>
+            <ListItem>
+              <Box
+                alignItems="center"
+                display="flex"
+                gap={2}
+                p={1}
+                width="100%"
+              >
+                <Box>
+                  <ZUIAvatar orgId={orgId} personId={item.id} />
+                </Box>
+                <Box flexGrow={1}>
+                  <Typography>{`${item.first_name} ${item.last_name}`}</Typography>
+                </Box>
+                <Box>
+                  <FormattedMessage id={`zui.accessList.roles.${item.role}`} />
+                </Box>
+              </Box>
+            </ListItem>
+            <Divider />
+          </>
+        );
+      })}
+      {accessList.map((item) => {
         const { person, level } = item;
         return (
           <>

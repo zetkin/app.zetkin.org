@@ -3,3 +3,6 @@ levels:
   edit: Editing
   readonly: Read-only
 removeAccess: Remove access
+roles:
+  admin: Admin
+  organizer: Organizer

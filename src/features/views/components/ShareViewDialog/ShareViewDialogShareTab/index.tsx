@@ -6,7 +6,7 @@ import { MUIOnlyPersonSelect } from 'zui/ZUIPersonSelect';
 import ViewSharingModel from 'features/views/models/ViewSharingModel';
 import { ZetkinPerson } from 'utils/types/zetkin';
 import ZUIAccessList from 'zui/ZUIAccessList';
-import ZUIFuture from 'zui/ZUIFuture';
+import ZUIFutures from 'zui/ZUIFutures';
 
 interface ShareViewDialogShareTabProps {
   model: ViewSharingModel;
@@ -19,14 +19,18 @@ const ShareViewDialogShareTab: FC<ShareViewDialogShareTabProps> = ({
   const selectInputRef = useRef<HTMLInputElement>();
 
   const accessFuture = model.getAccessList();
+  const officialsFuture = model.getOfficials();
 
   return (
     <Box>
-      <ZUIFuture future={accessFuture}>
-        {(accessList) => (
+      <ZUIFutures
+        futures={{ accessList: accessFuture, officials: officialsFuture }}
+      >
+        {({ data: { accessList, officials } }) => (
           <>
             <ZUIAccessList
-              list={accessList}
+              accessList={accessList}
+              officials={officials}
               onChangeLevel={(personId, level) =>
                 model.grantAccess(personId, level)
               }
@@ -61,7 +65,7 @@ const ShareViewDialogShareTab: FC<ShareViewDialogShareTabProps> = ({
             />
           </>
         )}
-      </ZUIFuture>
+      </ZUIFutures>
     </Box>
   );
 };

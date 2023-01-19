@@ -10,14 +10,18 @@ export default {
 const Template: ComponentStory<typeof ZUIAccessList> = (args) => {
   return (
     <div style={{ width: 700 }}>
-      <ZUIAccessList list={args.list} orgId={args.orgId} />
+      <ZUIAccessList
+        accessList={args.accessList}
+        officials={args.officials}
+        orgId={args.orgId}
+      />
     </div>
   );
 };
 
 export const basic = Template.bind({});
 basic.args = {
-  list: [
+  accessList: [
     {
       level: 'configure',
       person: {
@@ -73,6 +77,20 @@ basic.args = {
         id: 1,
         last_name: 'Zetkin',
       },
+    },
+  ],
+  officials: [
+    {
+      first_name: 'Angela',
+      id: 2,
+      last_name: 'Davis',
+      role: 'admin',
+    },
+    {
+      first_name: 'Angela',
+      id: 2,
+      last_name: 'Davis',
+      role: 'organizer',
     },
   ],
   orgId: 1,
