@@ -5,6 +5,7 @@ import shouldLoad from 'core/caching/shouldLoad';
 import { Store } from 'core/store';
 import { ViewTreeData } from 'pages/api/views/tree';
 import { ZetkinObjectAccess } from 'core/api/types';
+import { ZetkinOfficial } from 'utils/types/zetkin';
 import {
   accessAdded,
   accessLoad,
@@ -17,6 +18,8 @@ import {
   folderDeleted,
   folderUpdate,
   folderUpdated,
+  officialsLoad,
+  officialsLoaded,
   viewCreate,
   viewCreated,
   viewDeleted,
@@ -94,6 +97,24 @@ export default class ViewsRepo {
   async deleteView(orgId: number, viewId: number): Promise<void> {
     await this._apiClient.delete(`/api/orgs/${orgId}/people/views/${viewId}`);
     this._store.dispatch(viewDeleted(viewId));
+  }
+
+  // TODO: Move to it's own repo
+  getOfficials(orgId: number): IFuture<ZetkinOfficial[]> {
+    const state = this._store.getState();
+    if (shouldLoad(state.views.officialList)) {
+      this._store.dispatch(officialsLoad());
+      const promise = this._apiClient
+        .get<ZetkinOfficial[]>(`/api/orgs/${orgId}/officials`)
+        .then((officials) => {
+          this._store.dispatch(officialsLoaded(officials));
+          return officials;
+        });
+
+      return new PromiseFuture(promise);
+    }
+
+    return new RemoteListFuture(state.views.officialList);
   }
 
   getViewAccessList(

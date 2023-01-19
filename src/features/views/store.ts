@@ -1,6 +1,7 @@
 import { DeleteFolderReport } from 'pages/api/views/deleteFolder';
 import { ViewTreeData } from 'pages/api/views/tree';
 import { ZetkinObjectAccess } from 'core/api/types';
+import { ZetkinOfficial } from 'utils/types/zetkin';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { remoteItem, remoteList, RemoteList } from 'utils/storeUtils';
 import { ZetkinView, ZetkinViewFolder } from './components/types';
@@ -12,6 +13,7 @@ type ZetkinObjectAccessWithId = ZetkinObjectAccess & {
 export interface ViewsStoreSlice {
   accessByViewId: Record<number | string, RemoteList<ZetkinObjectAccessWithId>>;
   folderList: RemoteList<ZetkinViewFolder>;
+  officialList: RemoteList<ZetkinOfficial>;
   recentlyCreatedFolder: ZetkinViewFolder | null;
   viewList: RemoteList<ZetkinView>;
 }
@@ -19,6 +21,7 @@ export interface ViewsStoreSlice {
 const initialState: ViewsStoreSlice = {
   accessByViewId: {},
   folderList: remoteList(),
+  officialList: remoteList(),
   recentlyCreatedFolder: null,
   viewList: remoteList(),
 };
@@ -142,6 +145,13 @@ const viewsSlice = createSlice({
         }
       }
     },
+    officialsLoad: (state) => {
+      state.officialList.isLoading = true;
+    },
+    officialsLoaded: (state, action: PayloadAction<ZetkinOfficial[]>) => {
+      state.officialList = remoteList(action.payload);
+      state.officialList.loaded = new Date().toISOString();
+    },
     viewCreate: (state) => {
       state.viewList.isLoading = true;
     },
@@ -195,6 +205,8 @@ export const {
   folderDeleted,
   folderUpdate,
   folderUpdated,
+  officialsLoad,
+  officialsLoaded,
   viewCreate,
   viewCreated,
   viewDeleted,

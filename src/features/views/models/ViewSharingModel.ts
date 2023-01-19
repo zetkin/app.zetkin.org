@@ -3,6 +3,7 @@ import { IFuture } from 'core/caching/futures';
 import { ModelBase } from 'core/models';
 import ViewsRepo from '../repos/ViewsRepo';
 import { ZetkinObjectAccess } from 'core/api/types';
+import { ZetkinOfficial } from 'utils/types/zetkin';
 
 export default class ViewSharingModel extends ModelBase {
   private _orgId: number;
@@ -19,6 +20,10 @@ export default class ViewSharingModel extends ModelBase {
 
   getAccessList(): IFuture<ZetkinObjectAccess[]> {
     return this._repo.getViewAccessList(this._orgId, this._viewId);
+  }
+
+  getOfficials(): IFuture<ZetkinOfficial[]> {
+    return this._repo.getOfficials(this._orgId);
   }
 
   grantAccess(personId: number, level: ZetkinObjectAccess['level']) {

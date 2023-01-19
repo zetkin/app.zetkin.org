@@ -37,6 +37,13 @@ export interface ZetkinMembership {
   role: string | null;
 }
 
+export interface ZetkinOfficial {
+  id: number;
+  role: 'organizer' | 'admin';
+  first_name: string;
+  last_name: string;
+}
+
 export interface ZetkinEventResponse {
   action_id: number;
   id: number;
