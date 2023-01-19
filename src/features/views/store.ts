@@ -1,17 +1,23 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-
 import { DeleteFolderReport } from 'pages/api/views/deleteFolder';
 import { ViewTreeData } from 'pages/api/views/tree';
+import { ZetkinObjectAccess } from 'core/api/types';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { remoteItem, remoteList, RemoteList } from 'utils/storeUtils';
 import { ZetkinView, ZetkinViewFolder } from './components/types';
 
+type ZetkinObjectAccessWithId = ZetkinObjectAccess & {
+  id: number;
+};
+
 export interface ViewsStoreSlice {
+  accessByViewId: Record<number | string, RemoteList<ZetkinObjectAccessWithId>>;
   folderList: RemoteList<ZetkinViewFolder>;
   recentlyCreatedFolder: ZetkinViewFolder | null;
   viewList: RemoteList<ZetkinView>;
 }
 
 const initialState: ViewsStoreSlice = {
+  accessByViewId: {},
   folderList: remoteList(),
   recentlyCreatedFolder: null,
   viewList: remoteList(),
@@ -21,6 +27,28 @@ const viewsSlice = createSlice({
   initialState,
   name: 'views',
   reducers: {
+    accessLoad: (state, action: PayloadAction<number>) => {
+      if (!state.accessByViewId[action.payload]) {
+        state.accessByViewId[action.payload] =
+          remoteList<ZetkinObjectAccessWithId>();
+      }
+      state.accessByViewId[action.payload].isLoading = true;
+    },
+    accessLoaded: (
+      state,
+      action: PayloadAction<[number, ZetkinObjectAccess[]]>
+    ) => {
+      const [viewId, accessList] = action.payload;
+
+      // Add ID which is required by RemoteList
+      state.accessByViewId[viewId] = remoteList(
+        accessList.map((accessObj) => ({
+          ...accessObj,
+          id: accessObj.person.id,
+        }))
+      );
+      state.accessByViewId[viewId].loaded = new Date().toISOString();
+    },
     allItemsLoad: (state) => {
       state.folderList.isLoading = true;
       state.viewList.isLoading = true;
@@ -120,6 +148,8 @@ const viewsSlice = createSlice({
 
 export default viewsSlice;
 export const {
+  accessLoad,
+  accessLoaded,
   allItemsLoad,
   allItemsLoaded,
   folderCreate,

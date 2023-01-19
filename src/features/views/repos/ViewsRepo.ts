@@ -4,7 +4,10 @@ import IApiClient from 'core/api/client/IApiClient';
 import shouldLoad from 'core/caching/shouldLoad';
 import { Store } from 'core/store';
 import { ViewTreeData } from 'pages/api/views/tree';
+import { ZetkinObjectAccess } from 'core/api/types';
 import {
+  accessLoad,
+  accessLoaded,
   allItemsLoad,
   allItemsLoaded,
   folderCreate,
@@ -18,7 +21,12 @@ import {
   viewUpdate,
   viewUpdated,
 } from '../store';
-import { IFuture, PromiseFuture, ResolvedFuture } from 'core/caching/futures';
+import {
+  IFuture,
+  PromiseFuture,
+  RemoteListFuture,
+  ResolvedFuture,
+} from 'core/caching/futures';
 import { ZetkinView, ZetkinViewFolder } from '../components/types';
 
 type ZetkinViewFolderPostBody = {
@@ -84,6 +92,29 @@ export default class ViewsRepo {
   async deleteView(orgId: number, viewId: number): Promise<void> {
     await this._apiClient.delete(`/api/orgs/${orgId}/people/views/${viewId}`);
     this._store.dispatch(viewDeleted(viewId));
+  }
+
+  getViewAccessList(
+    orgId: number,
+    viewId: number
+  ): IFuture<ZetkinObjectAccess[]> {
+    const state = this._store.getState();
+    const cachedAccessList = state.views.accessByViewId[viewId];
+    if (!cachedAccessList || shouldLoad(cachedAccessList)) {
+      this._store.dispatch(accessLoad(viewId));
+      const promise = this._apiClient
+        .get<ZetkinObjectAccess[]>(
+          `/api/orgs/${orgId}/people/views/${viewId}/access`
+        )
+        .then((accessList) => {
+          this._store.dispatch(accessLoaded([viewId, accessList]));
+          return accessList;
+        });
+
+      return new PromiseFuture(promise);
+    }
+
+    return new RemoteListFuture(state.views.accessByViewId[viewId]);
   }
 
   getViewTree(orgId: number): IFuture<ViewTreeData> {
