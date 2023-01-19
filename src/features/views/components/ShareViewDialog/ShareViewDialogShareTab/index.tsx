@@ -30,6 +30,7 @@ const ShareViewDialogShareTab: FC<ShareViewDialogShareTabProps> = ({
               onChangeLevel={(personId, level) =>
                 model.grantAccess(personId, level)
               }
+              onRevoke={(personId) => model.revokeAccess(personId)}
               orgId={model.orgId}
             />
             <MUIOnlyPersonSelect

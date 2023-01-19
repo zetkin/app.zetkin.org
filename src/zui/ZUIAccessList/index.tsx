@@ -20,12 +20,14 @@ interface ZUIAccessListProps {
     personId: number,
     level: ZetkinObjectAccess['level']
   ) => void;
+  onRevoke?: (personId: number) => void;
   orgId: number;
 }
 
 const ZUIAccessList: FC<ZUIAccessListProps> = ({
   list,
   onChangeLevel,
+  onRevoke,
   orgId,
 }) => {
   return (
@@ -63,6 +65,8 @@ const ZUIAccessList: FC<ZUIAccessListProps> = ({
                           if (onChangeLevel) {
                             onChangeLevel(person.id, level);
                           }
+                        } else if (level == 'delete' && onRevoke) {
+                          onRevoke(person.id);
                         }
                       }}
                       value={level}

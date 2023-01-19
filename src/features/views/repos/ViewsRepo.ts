@@ -9,6 +9,7 @@ import {
   accessAdded,
   accessLoad,
   accessLoaded,
+  accessRevoked,
   allItemsLoad,
   allItemsLoaded,
   folderCreate,
@@ -155,6 +156,14 @@ export default class ViewsRepo {
       )
       .then((accessObj) => {
         this._store.dispatch(accessAdded([viewId, accessObj]));
+      });
+  }
+
+  revokeAccess(orgId: number, viewId: number, personId: number) {
+    this._apiClient
+      .delete(`/api/orgs/${orgId}/people/views/${viewId}/access/${personId}`)
+      .then(() => {
+        this._store.dispatch(accessRevoked([viewId, personId]));
       });
   }
 

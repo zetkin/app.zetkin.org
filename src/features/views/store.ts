@@ -78,6 +78,13 @@ const viewsSlice = createSlice({
       );
       state.accessByViewId[viewId].loaded = new Date().toISOString();
     },
+    accessRevoked: (state, action: PayloadAction<[number, number]>) => {
+      const [viewId, personId] = action.payload;
+      const list = state.accessByViewId[viewId];
+      if (list) {
+        list.items = list.items.filter((item) => item.id != personId);
+      }
+    },
     allItemsLoad: (state) => {
       state.folderList.isLoading = true;
       state.viewList.isLoading = true;
@@ -180,6 +187,7 @@ export const {
   accessAdded,
   accessLoad,
   accessLoaded,
+  accessRevoked,
   allItemsLoad,
   allItemsLoaded,
   folderCreate,
