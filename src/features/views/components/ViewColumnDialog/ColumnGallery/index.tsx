@@ -1,22 +1,15 @@
 import Fuse from 'fuse.js';
-import {
-  Box,
-  Grid,
-  List,
-  ListItem,
-  TextField,
-  Typography,
-} from '@mui/material';
+import { Box, List, ListItem, TextField, Typography } from '@mui/material';
 import { Close, Search } from '@mui/icons-material';
 import { FunctionComponent, useMemo, useRef, useState } from 'react';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
-
-import categories from './categories';
-import ColumnChoiceCard from './ColumnChoiceCard';
 import { Theme, useMediaQuery } from '@mui/material';
 
+import categories from '../categories';
+import ChoiceCategories from './ChoiceCategories';
+import SearchResults from './SearchResults';
 import { ZetkinViewColumn } from 'features/views/components/types';
-import choices, { ColumnChoice } from './choices';
+import choices, { ColumnChoice } from '../choices';
 
 interface ColumnGalleryProps {
   existingColumns: ZetkinViewColumn[];
@@ -153,39 +146,12 @@ const ColumnGallery: FunctionComponent<ColumnGalleryProps> = ({
               </Typography>
               <Box>
                 {searchResults.length > 0 ? (
-                  <Grid container paddingTop={2} spacing={3}>
-                    {searchResults.map((searchResult) => {
-                      if (!searchResult) {
-                        return;
-                      }
-                      const alreadyInView =
-                        searchResult.alreadyInView &&
-                        searchResult.alreadyInView(existingColumns);
-                      return (
-                        <Grid key={searchResult.key} item lg={4} sm={6} xs={12}>
-                          <ColumnChoiceCard
-                            alreadyInView={alreadyInView}
-                            cardVisual={searchResult.renderCardVisual(
-                              alreadyInView ? 'gray' : '#234890'
-                            )}
-                            color={alreadyInView ? 'gray' : '#234890'}
-                            description={intl.formatMessage({
-                              id: `misc.views.columnDialog.choices.${searchResult.key}.description`,
-                            })}
-                            onAdd={() => onAdd(searchResult)}
-                            onConfigure={() => onConfigure(searchResult)}
-                            showAddButton={!!searchResult.defaultColumns}
-                            showConfigureButton={
-                              !!searchResult.renderConfigForm
-                            }
-                            title={intl.formatMessage({
-                              id: `misc.views.columnDialog.choices.${searchResult.key}.title`,
-                            })}
-                          />
-                        </Grid>
-                      );
-                    })}
-                  </Grid>
+                  <SearchResults
+                    existingColumns={existingColumns}
+                    onAdd={onAdd}
+                    onConfigure={onConfigure}
+                    searchResults={searchResults}
+                  />
                 ) : (
                   <Typography>
                     <Msg
@@ -197,58 +163,11 @@ const ColumnGallery: FunctionComponent<ColumnGalleryProps> = ({
               </Box>
             </Box>
           ) : (
-            categories.map((category, index) => (
-              <Box
-                key={`category-${index}`}
-                id={`category-${index}`}
-                padding={2}
-              >
-                <Typography variant="h4">
-                  <Msg
-                    id={`misc.views.columnDialog.categories.${category.key}.title`}
-                  />
-                </Typography>
-                <Typography variant="h5">
-                  <Msg
-                    id={`misc.views.columnDialog.categories.${category.key}.description`}
-                  />
-                </Typography>
-                <Grid container paddingTop={2} spacing={3}>
-                  {category.choices.map((choiceName) => {
-                    const choice = choices.find(
-                      (choice) => choice.key === choiceName
-                    );
-                    if (!choice) {
-                      return;
-                    }
-                    const alreadyInView =
-                      choice.alreadyInView &&
-                      choice.alreadyInView(existingColumns);
-                    return (
-                      <Grid key={choice.key} item lg={4} sm={6} xs={12}>
-                        <ColumnChoiceCard
-                          alreadyInView={alreadyInView}
-                          cardVisual={choice.renderCardVisual(
-                            alreadyInView ? 'gray' : '#234890'
-                          )}
-                          color={alreadyInView ? 'gray' : '#234890'}
-                          description={intl.formatMessage({
-                            id: `misc.views.columnDialog.choices.${choice.key}.description`,
-                          })}
-                          onAdd={() => onAdd(choice)}
-                          onConfigure={() => onConfigure(choice)}
-                          showAddButton={!!choice.defaultColumns}
-                          showConfigureButton={!!choice.renderConfigForm}
-                          title={intl.formatMessage({
-                            id: `misc.views.columnDialog.choices.${choice.key}.title`,
-                          })}
-                        />
-                      </Grid>
-                    );
-                  })}
-                </Grid>
-              </Box>
-            ))
+            <ChoiceCategories
+              existingColumns={existingColumns}
+              onAdd={onAdd}
+              onConfigure={onConfigure}
+            />
           )}
         </Box>
       </Box>
