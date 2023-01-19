@@ -1,5 +1,5 @@
-import { Box } from '@mui/material';
-import { FC, useRef } from 'react';
+import { Box, FormControlLabel, Switch } from '@mui/material';
+import { FC, useRef, useState } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 
 import { MUIOnlyPersonSelect } from 'zui/ZUIPersonSelect';
@@ -17,6 +17,7 @@ const ShareViewDialogShareTab: FC<ShareViewDialogShareTabProps> = ({
 }) => {
   const intl = useIntl();
   const selectInputRef = useRef<HTMLInputElement>();
+  const [showOfficials, setShowOfficials] = useState(true);
 
   const accessFuture = model.getAccessList();
   const officialsFuture = model.getOfficials();
@@ -28,7 +29,11 @@ const ShareViewDialogShareTab: FC<ShareViewDialogShareTabProps> = ({
       >
         {({ data: { accessList, officials } }) => (
           <>
-            <Box display="flex" justifyContent="space-between">
+            <Box
+              alignItems="center"
+              display="flex"
+              justifyContent="space-between"
+            >
               <Box>
                 <FormattedMessage
                   id="pages.people.views.shareDialog.share.statusLabel"
@@ -38,10 +43,22 @@ const ShareViewDialogShareTab: FC<ShareViewDialogShareTabProps> = ({
                   }}
                 />
               </Box>
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={showOfficials}
+                    onChange={(ev) => setShowOfficials(ev.target.checked)}
+                  />
+                }
+                label={
+                  <FormattedMessage id="pages.people.views.shareDialog.share.showOfficials" />
+                }
+                labelPlacement="start"
+              />
             </Box>
             <ZUIAccessList
               accessList={accessList}
-              officials={officials}
+              officials={showOfficials ? officials : []}
               onChangeLevel={(personId, level) =>
                 model.grantAccess(personId, level)
               }
