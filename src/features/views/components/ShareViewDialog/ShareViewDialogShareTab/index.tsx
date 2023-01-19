@@ -1,6 +1,6 @@
 import { Box } from '@mui/material';
-import { useIntl } from 'react-intl';
 import { FC, useRef } from 'react';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 import { MUIOnlyPersonSelect } from 'zui/ZUIPersonSelect';
 import ViewSharingModel from 'features/views/models/ViewSharingModel';
@@ -28,6 +28,17 @@ const ShareViewDialogShareTab: FC<ShareViewDialogShareTabProps> = ({
       >
         {({ data: { accessList, officials } }) => (
           <>
+            <Box display="flex" justifyContent="space-between">
+              <Box>
+                <FormattedMessage
+                  id="pages.people.views.shareDialog.share.statusLabel"
+                  values={{
+                    collaborators: accessList.length,
+                    officials: officials.length,
+                  }}
+                />
+              </Box>
+            </Box>
             <ZUIAccessList
               accessList={accessList}
               officials={officials}
