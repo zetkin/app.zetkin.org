@@ -4,10 +4,12 @@ import { FC, useRef, useState } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 
 import { MUIOnlyPersonSelect } from 'zui/ZUIPersonSelect';
+import useAbsoluteUrl from 'utils/hooks/useAbsoluteUrl';
 import ViewSharingModel from 'features/views/models/ViewSharingModel';
 import { ZetkinPerson } from 'utils/types/zetkin';
 import ZUIAccessList from 'zui/ZUIAccessList';
 import ZUIFutures from 'zui/ZUIFutures';
+import ZUIInlineCopyToClipboard from 'zui/ZUIInlineCopyToClipBoard';
 
 interface ShareViewDialogShareTabProps {
   model: ViewSharingModel;
@@ -19,6 +21,9 @@ const ShareViewDialogShareTab: FC<ShareViewDialogShareTabProps> = ({
   const intl = useIntl();
   const selectInputRef = useRef<HTMLInputElement>();
   const [showOfficials, setShowOfficials] = useState(true);
+  const shareLinkUrl = useAbsoluteUrl(
+    `/organize/${model.orgId}/people/views/${model.viewId}/shared`
+  );
 
   const accessFuture = model.getAccessList();
   const officialsFuture = model.getOfficials();
@@ -97,14 +102,19 @@ const ShareViewDialogShareTab: FC<ShareViewDialogShareTabProps> = ({
                 id="pages.people.views.shareDialog.share.collabInstructions"
                 values={{
                   viewLink: (
-                    <NextLink
-                      href={`/organize/${model.orgId}/people/views/${model.viewId}/shared`}
-                      passHref
+                    <ZUIInlineCopyToClipboard
+                      alwaysShowIcon
+                      copyText={shareLinkUrl}
                     >
-                      <Link>
-                        <FormattedMessage id="pages.people.views.shareDialog.share.viewLink" />
-                      </Link>
-                    </NextLink>
+                      <NextLink
+                        href={`/organize/${model.orgId}/people/views/${model.viewId}/shared`}
+                        passHref
+                      >
+                        <Link>
+                          <FormattedMessage id="pages.people.views.shareDialog.share.viewLink" />
+                        </Link>
+                      </NextLink>
+                    </ZUIInlineCopyToClipboard>
                   ),
                 }}
               />
