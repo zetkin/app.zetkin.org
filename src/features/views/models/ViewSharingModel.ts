@@ -21,6 +21,10 @@ export default class ViewSharingModel extends ModelBase {
     return this._repo.getViewAccessList(this._orgId, this._viewId);
   }
 
+  grantAccess(personId: number, level: ZetkinObjectAccess['level']) {
+    this._repo.grantAccess(this._orgId, this._viewId, personId, level);
+  }
+
   get orgId(): number {
     return this._orgId;
   }

@@ -6,6 +6,7 @@ import { Store } from 'core/store';
 import { ViewTreeData } from 'pages/api/views/tree';
 import { ZetkinObjectAccess } from 'core/api/types';
 import {
+  accessAdded,
   accessLoad,
   accessLoaded,
   allItemsLoad,
@@ -137,6 +138,24 @@ export default class ViewsRepo {
         views: state.views.viewList.items.map((item) => item.data!),
       });
     }
+  }
+
+  grantAccess(
+    orgId: number,
+    viewId: number,
+    personId: number,
+    level: ZetkinObjectAccess['level']
+  ) {
+    this._apiClient
+      .put<ZetkinObjectAccess>(
+        `/api/orgs/${orgId}/people/views/${viewId}/access/${personId}`,
+        {
+          level,
+        }
+      )
+      .then((accessObj) => {
+        this._store.dispatch(accessAdded([viewId, accessObj]));
+      });
   }
 
   updateFolder(

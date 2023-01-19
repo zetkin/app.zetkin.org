@@ -27,6 +27,23 @@ const viewsSlice = createSlice({
   initialState,
   name: 'views',
   reducers: {
+    accessAdded: (
+      state,
+      action: PayloadAction<[number, ZetkinObjectAccess]>
+    ) => {
+      const [viewId, accessObj] = action.payload;
+      const list = state.accessByViewId[viewId];
+      if (list) {
+        list.items.push(
+          remoteItem(accessObj.person.id, {
+            data: {
+              id: accessObj.person.id,
+              ...accessObj,
+            },
+          })
+        );
+      }
+    },
     accessLoad: (state, action: PayloadAction<number>) => {
       if (!state.accessByViewId[action.payload]) {
         state.accessByViewId[action.payload] =
@@ -148,6 +165,7 @@ const viewsSlice = createSlice({
 
 export default viewsSlice;
 export const {
+  accessAdded,
   accessLoad,
   accessLoaded,
   allItemsLoad,
