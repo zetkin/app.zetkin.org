@@ -16,6 +16,8 @@ browser:
   moveToFolder: 'Move to {folder}'
   moveToRoot: Move to all views
 layout:
+  actions:
+    share: Share
   deleteDialog:
     error: There was an error deleting the view
   ellipsisMenu:
@@ -28,6 +30,8 @@ layout:
   subtitle:
     columns: '{count, plural, =0 {No columns} =1 {1 column} other {# columns}}'
     people: '{count, plural, =0 {Empty} =1 {1 person} other {# people}}'
+shareDialog:
+  title: 'Share "{title}"'
 viewsList:
   columns:
     created: Date created
