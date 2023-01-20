@@ -230,30 +230,43 @@ const SingleViewLayout: FunctionComponent<SingleViewLayoutProps> = ({
               ),
             }}
           >
-            {({ queries: { colsQuery, rowsQuery } }) => (
-              <ZUIIconLabelRow
-                iconLabels={[
-                  {
-                    icon: <Group />,
-                    label: (
-                      <FormattedMessage
-                        id="pages.people.views.layout.subtitle.people"
-                        values={{ count: rowsQuery.data.length }}
-                      />
-                    ),
-                  },
-                  {
-                    icon: <ViewColumnOutlined />,
-                    label: (
-                      <FormattedMessage
-                        id="pages.people.views.layout.subtitle.columns"
-                        values={{ count: colsQuery.data.length }}
-                      />
-                    ),
-                  },
-                ]}
-              />
-            )}
+            {({ queries: { colsQuery, rowsQuery } }) => {
+              const labels = [
+                {
+                  icon: <Group />,
+                  label: (
+                    <FormattedMessage
+                      id="pages.people.views.layout.subtitle.people"
+                      values={{ count: rowsQuery.data.length }}
+                    />
+                  ),
+                },
+                {
+                  icon: <ViewColumnOutlined />,
+                  label: (
+                    <FormattedMessage
+                      id="pages.people.views.layout.subtitle.columns"
+                      values={{ count: colsQuery.data.length }}
+                    />
+                  ),
+                },
+              ];
+
+              const accessListFuture = shareModel.getAccessList();
+              if (accessListFuture.data?.length) {
+                labels.push({
+                  icon: <Share />,
+                  label: (
+                    <FormattedMessage
+                      id="pages.people.views.layout.subtitle.collaborators"
+                      values={{ count: accessListFuture.data.length }}
+                    />
+                  ),
+                });
+              }
+
+              return <ZUIIconLabelRow iconLabels={labels} />;
+            }}
           </ZUIQuery>
         }
         tabs={[{ href: `/`, messageId: 'layout.organize.view.tabs.view' }]}
