@@ -3,6 +3,7 @@ import Head from 'next/head';
 import { useQuery } from 'react-query';
 
 import getOrg from 'utils/fetching/getOrg';
+import getUserMemberships from 'utils/getUserMemberships';
 import getView from 'features/views/fetching/getView';
 import getViewColumns from 'features/views/fetching/getViewColumns';
 import getViewRows from 'features/views/fetching/getViewRows';
@@ -13,6 +14,7 @@ import ViewDataTable from 'features/views/components/ViewDataTable';
 import ZUIQuery from 'zui/ZUIQuery';
 
 const scaffoldOptions = {
+  allowNonOfficials: true,
   authLevelRequired: 2,
   localeScope: ['layout.organize', 'pages.people.views'],
 };
@@ -34,12 +36,31 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
   const viewState = ctx.queryClient.getQueryState(['view', viewId]);
 
   if (orgState?.data && viewState?.data) {
-    return {
-      props: {
-        orgId,
-        viewId,
-      },
-    };
+    // Check if user is an official
+    // TODO: Consider moving this to some more general-purpose utility
+    const officialMemberships = await getUserMemberships(ctx, false);
+    if (!officialMemberships.includes(parseInt(orgId as string))) {
+      // The user does NOT have this organization among it's official memberships
+      // but they did have access to the view, so the view must have been shared
+      // with them.
+      return {
+        props: {
+          orgId,
+          viewId,
+        },
+        redirect: {
+          destination: `/organize/${orgId}/people/views/${viewId}/shared`,
+          permament: false,
+        },
+      };
+    } else {
+      return {
+        props: {
+          orgId,
+          viewId,
+        },
+      };
+    }
   } else {
     return {
       notFound: true,
