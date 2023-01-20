@@ -13,6 +13,7 @@ import ViewDataTable from 'features/views/components/ViewDataTable';
 import ZUIQuery from 'zui/ZUIQuery';
 
 const scaffoldOptions = {
+  allowNonOfficials: true,
   authLevelRequired: 2,
   localeScope: ['layout.organize', 'pages.people.views'],
 };
