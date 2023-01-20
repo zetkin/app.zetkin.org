@@ -1,10 +1,11 @@
 import { FC } from 'react';
-import { FormattedMessage } from 'react-intl';
 import { Divider, FormControl, List, MenuItem, Select } from '@mui/material';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 import AccessListItem from './AccessListItem';
 import { ZetkinObjectAccess } from 'core/api/types';
 import { ZetkinOfficial } from 'utils/types/zetkin';
+import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 
 interface ZUIAccessListProps {
   accessList: ZetkinObjectAccess[];
@@ -24,6 +25,7 @@ const ZUIAccessList: FC<ZUIAccessListProps> = ({
   onRevoke,
   orgId,
 }) => {
+  const intl = useIntl();
   let first = true;
   return (
     <List>
@@ -39,13 +41,14 @@ const ZUIAccessList: FC<ZUIAccessListProps> = ({
               }
               orgId={orgId}
               personId={item.id}
+              subtitle="-"
               title={`${item.first_name} ${item.last_name}`}
             />
           </>
         );
       })}
       {accessList.map((item) => {
-        const { person, level } = item;
+        const { person, level, updated, updated_by: sharer } = item;
         const showDivider = !first;
         first = false;
         return (
@@ -89,6 +92,19 @@ const ZUIAccessList: FC<ZUIAccessListProps> = ({
               }
               orgId={orgId}
               personId={person.id}
+              subtitle={intl.formatMessage(
+                { id: 'zui.accessList.added' },
+                {
+                  sharer: `${sharer.first_name} ${sharer.last_name}`,
+                  updated: (
+                    <ZUIRelativeTime
+                      convertToLocal
+                      datetime={updated}
+                      forcePast
+                    />
+                  ),
+                }
+              )}
               title={`${person.first_name} ${person.last_name}`}
             />
           </>

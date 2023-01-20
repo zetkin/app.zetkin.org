@@ -29,6 +29,12 @@ basic.args = {
         id: 1,
         last_name: 'Zetkin',
       },
+      updated: '1857-07-05T13:37:00.000Z',
+      updated_by: {
+        first_name: 'Angela',
+        id: 2,
+        last_name: 'Davis',
+      },
     },
     {
       level: 'edit',
@@ -37,13 +43,11 @@ basic.args = {
         id: 1,
         last_name: 'Zetkin',
       },
-    },
-    {
-      level: 'readonly',
-      person: {
-        first_name: 'Clara',
-        id: 1,
-        last_name: 'Zetkin',
+      updated: '1857-07-05T13:37:00.000Z',
+      updated_by: {
+        first_name: 'Angela',
+        id: 2,
+        last_name: 'Davis',
       },
     },
     {
@@ -53,13 +57,11 @@ basic.args = {
         id: 1,
         last_name: 'Zetkin',
       },
-    },
-    {
-      level: 'readonly',
-      person: {
-        first_name: 'Clara',
-        id: 1,
-        last_name: 'Zetkin',
+      updated: '1857-07-05T13:37:00.000Z',
+      updated_by: {
+        first_name: 'Angela',
+        id: 2,
+        last_name: 'Davis',
       },
     },
     {
@@ -69,6 +71,12 @@ basic.args = {
         id: 1,
         last_name: 'Zetkin',
       },
+      updated: '1857-07-05T13:37:00.000Z',
+      updated_by: {
+        first_name: 'Angela',
+        id: 2,
+        last_name: 'Davis',
+      },
     },
     {
       level: 'readonly',
@@ -76,6 +84,40 @@ basic.args = {
         first_name: 'Clara',
         id: 1,
         last_name: 'Zetkin',
+      },
+      updated: '1857-07-05T13:37:00.000Z',
+      updated_by: {
+        first_name: 'Angela',
+        id: 2,
+        last_name: 'Davis',
+      },
+    },
+    {
+      level: 'readonly',
+      person: {
+        first_name: 'Clara',
+        id: 1,
+        last_name: 'Zetkin',
+      },
+      updated: '1857-07-05T13:37:00.000Z',
+      updated_by: {
+        first_name: 'Angela',
+        id: 2,
+        last_name: 'Davis',
+      },
+    },
+    {
+      level: 'readonly',
+      person: {
+        first_name: 'Clara',
+        id: 1,
+        last_name: 'Zetkin',
+      },
+      updated: '1857-07-05T13:37:00.000Z',
+      updated_by: {
+        first_name: 'Angela',
+        id: 2,
+        last_name: 'Davis',
       },
     },
   ],

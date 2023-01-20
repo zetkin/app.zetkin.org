@@ -7,12 +7,14 @@ interface AccessListItemProps {
   action?: ReactNode;
   orgId: number;
   personId: number;
-  title: string;
+  subtitle?: ReactNode;
+  title: ReactNode;
 }
 const AccessListItem: FC<AccessListItemProps> = ({
   action,
   orgId,
   personId,
+  subtitle,
   title,
 }) => {
   return (
@@ -22,7 +24,10 @@ const AccessListItem: FC<AccessListItemProps> = ({
           <ZUIAvatar orgId={orgId} personId={personId} size="sm" />
         </Box>
         <Box flexGrow={1}>
-          <Typography>{title}</Typography>
+          <Typography component="div">{title}</Typography>
+          <Typography color="gray" component="div" variant="caption">
+            {subtitle}
+          </Typography>
         </Box>
         <Box>{action}</Box>
       </Box>
