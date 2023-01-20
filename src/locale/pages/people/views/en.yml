@@ -32,6 +32,10 @@ layout:
     columns: '{count, plural, =0 {No columns} =1 {1 column} other {# columns}}'
     people: '{count, plural, =0 {Empty} =1 {1 person} other {# people}}'
 shareDialog:
+  download:
+    shareLink: share data securely
+    warning1: Avoid exporting data from Zetkin when you can, to ensure that all data is kept in order.
+    warning2: You can {shareLink} within Zetkin. Exporting makes sense when you want to copy data to another system.
   share:
     addPlaceholder: Add collaborator
     collabInstructions: After adding collaborators, copy and send them the {viewLink}
