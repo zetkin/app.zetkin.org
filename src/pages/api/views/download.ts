@@ -3,7 +3,12 @@ import XLSX from 'xlsx-js-style';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 import BackendApiClient from 'core/api/client/BackendApiClient';
+import { COLUMN_TYPE } from 'features/views/components/types';
+import { SurveyResponse } from 'features/views/components/ViewDataTable/cells/SurveyResponseViewCell';
+import { SurveySubmission } from 'features/views/components/ViewDataTable/cells/SurveySubmittedViewCell';
 import {
+  ZetkinNote,
+  ZetkinPerson,
   ZetkinView,
   ZetkinViewColumn,
   ZetkinViewRow,
@@ -12,6 +17,61 @@ import {
 const FORMAT_TYPES = {
   csv: 'text/csv',
   xlsx: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+};
+
+type CellValue = string | number | boolean | Date;
+type ValueFunc = (cell: unknown, col: ZetkinViewColumn) => CellValue;
+const directFormatter: ValueFunc = (cell: unknown) => cell as CellValue;
+
+/* ============================================================================
+ * Getting an error here? READ THIS!
+ * ----------------------------------------------------------------------------
+ * The valueFormatters object contains a mapping between view column type and
+ * a function which returns a value that can be rendered in an output file,
+ * either CSV or XLSX.
+ *
+ * If you're getting a typescript error here after implementing a new view
+ * column type, it's probably because you have not yet implemented a formatter
+ * for the export in this object.
+ *
+ * This is intentional! It's easy to forget adding a formatter here, so we
+ * have implemented this logic in a way that causes typescript to report an
+ * error if any of the COLUMN_TYPE values does not have a formatter.
+ *
+ * Copy one of the existing ones, but change the formatter function to read
+ * the value correctly. If the value that's returned from the Zetkin API is
+ * fine as is (i.e. it's a simple number, string, boolean or date) you can
+ * use the directFormatter shortcut.
+ *
+ * Ironically, it seems like the only way to cause typescript to error here
+ * when not all COLUMN_TYPE values have a mapper, is to use this slightly
+ * type unsafe approach with the object. If you know a way to refactor for
+ * better type safety, let us know!
+ */
+const valueFormatters: Record<ZetkinViewColumn['type'], ValueFunc> = {
+  [COLUMN_TYPE.JOURNEY_ASSIGNEE]: ((cell) => {
+    return (cell as unknown[]).length;
+  }) as ValueFunc,
+  [COLUMN_TYPE.LOCAL_BOOL]: directFormatter,
+  [COLUMN_TYPE.LOCAL_PERSON]: ((cell) => {
+    const person = cell as ZetkinPerson | null;
+    return person ? `${person.first_name} ${person.last_name}` : '';
+  }) as ValueFunc,
+  [COLUMN_TYPE.PERSON_FIELD]: directFormatter,
+  [COLUMN_TYPE.PERSON_NOTES]: ((cell) => {
+    const notes = cell as ZetkinNote[];
+    return notes.length ? notes[0].text : '';
+  }) as ValueFunc,
+  [COLUMN_TYPE.PERSON_QUERY]: directFormatter,
+  [COLUMN_TYPE.PERSON_TAG]: directFormatter,
+  [COLUMN_TYPE.SURVEY_RESPONSE]: ((cell) => {
+    const responses = cell as SurveyResponse[];
+    return responses.length ? responses[0].text : '';
+  }) as ValueFunc,
+  [COLUMN_TYPE.SURVEY_SUBMITTED]: ((cell) => {
+    const submissions = cell as SurveySubmission[];
+    return submissions.length ? submissions[0].submitted : '';
+  }) as ValueFunc,
 };
 
 export default async function handler(
@@ -48,11 +108,11 @@ export default async function handler(
 
   const headerRow: string[] = ['ID'].concat(columns.map((col) => col.title));
 
-  const dataRows: (string | number | Date)[][] = rows.map((row) =>
-    [row.id.toString()].concat(
-      row.content.map((cell) => {
-        // TODO: Handle different types of columns separately
-        return cell as string;
+  const dataRows: CellValue[][] = rows.map((row) =>
+    [row.id as CellValue].concat(
+      row.content.map((cell, index) => {
+        const col = columns[index];
+        return valueFormatters[col.type](cell, col);
       })
     )
   );

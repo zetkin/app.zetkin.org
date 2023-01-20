@@ -6,7 +6,7 @@ import { FunctionComponent, useState } from 'react';
 import noPropagate from 'utils/noPropagate';
 import { ViewGridCellParams } from '.';
 
-interface SurveyResponse {
+export interface SurveyResponse {
   submission_id: number;
   text: string;
 }
