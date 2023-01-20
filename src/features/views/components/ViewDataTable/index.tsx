@@ -53,12 +53,14 @@ const useStyles = makeStyles((theme) => ({
 
 interface ViewDataTableProps {
   columns: ZetkinViewColumn[];
+  disableBulkActions?: boolean;
   rows: ZetkinViewRow[];
   view: ZetkinView;
 }
 
 const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
   columns,
+  disableBulkActions = false,
   rows,
   view,
 }) => {
@@ -374,7 +376,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
       <DataGridPro
         apiRef={gridApiRef}
         autoHeight={empty}
-        checkboxSelection={true}
+        checkboxSelection={!disableBulkActions}
         columns={gridColumns}
         components={{
           ColumnMenu: ViewDataTableColumnMenu,
@@ -382,6 +384,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
           Toolbar: ViewDataTableToolbar,
         }}
         componentsProps={componentsProps}
+        disableSelectionOnClick={true}
         getRowClassName={(params) =>
           params.id == addedId ? classes.addedRow : ''
         }
