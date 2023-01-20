@@ -6,13 +6,12 @@ export default function getUniqueColumnName(
 ) {
   let title = defaultTitle;
   let count = 2;
-  let foundNewTitle = false;
-  while (!foundNewTitle) {
+  while (true) {
     const titleIsAlreadyIn = columns.some((column) => column.title === title);
     if (titleIsAlreadyIn) {
-      title = defaultTitle + ' ' + count.toString();
+      title = defaultTitle + ' ' + count;
     } else {
-      foundNewTitle = true;
+      break;
     }
     count++;
   }
