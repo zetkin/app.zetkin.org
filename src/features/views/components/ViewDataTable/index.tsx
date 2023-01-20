@@ -54,6 +54,7 @@ const useStyles = makeStyles((theme) => ({
 interface ViewDataTableProps {
   columns: ZetkinViewColumn[];
   disableBulkActions?: boolean;
+  disableConfigure?: boolean;
   rows: ZetkinViewRow[];
   view: ZetkinView;
 }
@@ -61,6 +62,7 @@ interface ViewDataTableProps {
 const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
   columns,
   disableBulkActions = false,
+  disableConfigure,
   rows,
   view,
 }) => {
@@ -353,6 +355,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
       viewId,
     },
     toolbar: {
+      disableConfigure,
       disabled: waiting,
       gridColumns,
       isSmartSearch: !!view.content_query,

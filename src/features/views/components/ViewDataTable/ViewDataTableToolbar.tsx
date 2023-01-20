@@ -14,6 +14,7 @@ import ZUIDataTableSearch from 'zui/ZUIDataTableSearch';
 import ZUIDataTableSorting from 'zui/ZUIDataTableSorting';
 
 export interface ViewDataTableToolbarProps {
+  disableConfigure?: boolean;
   disabled: boolean;
   gridColumns: GridColDef[];
   isSmartSearch: boolean;
@@ -29,6 +30,7 @@ export interface ViewDataTableToolbarProps {
 const ViewDataTableToolbar: React.FunctionComponent<
   ViewDataTableToolbarProps
 > = ({
+  disableConfigure,
   disabled,
   gridColumns,
   isSmartSearch,
@@ -101,15 +103,17 @@ const ViewDataTableToolbar: React.FunctionComponent<
         }
         sortModel={sortModel}
       />
-      <Button
-        color="secondary"
-        data-testid="ViewDataTableToolbar-createColumn"
-        disabled={disabled}
-        onClick={onColumnCreate}
-        startIcon={<Add />}
-      >
-        <FormattedMessage id="misc.views.toolbar.createColumn" />
-      </Button>
+      {!disableConfigure && (
+        <Button
+          color="secondary"
+          data-testid="ViewDataTableToolbar-createColumn"
+          disabled={disabled}
+          onClick={onColumnCreate}
+          startIcon={<Add />}
+        >
+          <FormattedMessage id="misc.views.toolbar.createColumn" />
+        </Button>
+      )}
       <ZUIDataTableSearch
         onChange={(searchString) => setQuickSearch(searchString)}
       />

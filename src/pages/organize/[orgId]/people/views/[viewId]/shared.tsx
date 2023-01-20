@@ -79,6 +79,7 @@ const SharedViewPage: PageWithLayout<SharedViewPageProps> = ({
           <ViewDataTable
             columns={colsQuery.data}
             disableBulkActions
+            disableConfigure
             rows={rowsQuery.data}
             view={viewQuery.data}
           />
