@@ -6,7 +6,12 @@ const enum CATEGORIES {
 
 const categories = [
   {
-    choices: [CHOICES.FIRST_AND_LAST_NAME, CHOICES.PERSON_FIELDS],
+    choices: [
+      CHOICES.FIRST_AND_LAST_NAME,
+      CHOICES.PERSON_FIELDS,
+      CHOICES.TAG,
+      CHOICES.BOOLEAN,
+    ],
     key: CATEGORIES.BASIC,
   },
 ];
