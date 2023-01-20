@@ -1,3 +1,4 @@
+import slugify from 'slugify';
 import XLSX from 'xlsx-js-style';
 import { NextApiRequest, NextApiResponse } from 'next';
 
@@ -56,8 +57,7 @@ export default async function handler(
     )
   );
 
-  // TODO: Slugify this
-  const filePrefix = view.title;
+  const filePrefix = slugify(view.title).toLowerCase();
   const fileName = `${filePrefix}-${new Date().toISOString()}.${format}`;
 
   let fileData: string | Buffer;
