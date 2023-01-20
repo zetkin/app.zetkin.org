@@ -17,9 +17,9 @@ const AccessListItem: FC<AccessListItemProps> = ({
 }) => {
   return (
     <ListItem>
-      <Box alignItems="center" display="flex" gap={2} p={1} width="100%">
+      <Box alignItems="center" display="flex" gap={2} width="100%">
         <Box>
-          <ZUIAvatar orgId={orgId} personId={personId} />
+          <ZUIAvatar orgId={orgId} personId={personId} size="sm" />
         </Box>
         <Box flexGrow={1}>
           <Typography>{title}</Typography>

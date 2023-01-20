@@ -24,11 +24,15 @@ const ZUIAccessList: FC<ZUIAccessListProps> = ({
   onRevoke,
   orgId,
 }) => {
+  let first = true;
   return (
     <List>
       {officials.map((item) => {
+        const showDivider = !first;
+        first = false;
         return (
           <>
+            {showDivider && <Divider />}
             <AccessListItem
               action={
                 <FormattedMessage id={`zui.accessList.roles.${item.role}`} />
@@ -37,14 +41,16 @@ const ZUIAccessList: FC<ZUIAccessListProps> = ({
               personId={item.id}
               title={`${item.first_name} ${item.last_name}`}
             />
-            <Divider />
           </>
         );
       })}
       {accessList.map((item) => {
         const { person, level } = item;
+        const showDivider = !first;
+        first = false;
         return (
           <>
+            {showDivider && <Divider />}
             <AccessListItem
               action={
                 <FormControl fullWidth size="small">
@@ -85,7 +91,6 @@ const ZUIAccessList: FC<ZUIAccessListProps> = ({
               personId={person.id}
               title={`${person.first_name} ${person.last_name}`}
             />
-            <Divider />
           </>
         );
       })}
