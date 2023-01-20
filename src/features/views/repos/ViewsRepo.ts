@@ -4,7 +4,13 @@ import IApiClient from 'core/api/client/IApiClient';
 import shouldLoad from 'core/caching/shouldLoad';
 import { Store } from 'core/store';
 import { ViewTreeData } from 'pages/api/views/tree';
+import { ZetkinObjectAccess } from 'core/api/types';
+import { ZetkinOfficial } from 'utils/types/zetkin';
 import {
+  accessAdded,
+  accessLoad,
+  accessLoaded,
+  accessRevoked,
   allItemsLoad,
   allItemsLoaded,
   folderCreate,
@@ -12,13 +18,20 @@ import {
   folderDeleted,
   folderUpdate,
   folderUpdated,
+  officialsLoad,
+  officialsLoaded,
   viewCreate,
   viewCreated,
   viewDeleted,
   viewUpdate,
   viewUpdated,
 } from '../store';
-import { IFuture, PromiseFuture, ResolvedFuture } from 'core/caching/futures';
+import {
+  IFuture,
+  PromiseFuture,
+  RemoteListFuture,
+  ResolvedFuture,
+} from 'core/caching/futures';
 import { ZetkinView, ZetkinViewFolder } from '../components/types';
 
 type ZetkinViewFolderPostBody = {
@@ -86,6 +99,47 @@ export default class ViewsRepo {
     this._store.dispatch(viewDeleted(viewId));
   }
 
+  // TODO: Move to it's own repo
+  getOfficials(orgId: number): IFuture<ZetkinOfficial[]> {
+    const state = this._store.getState();
+    if (shouldLoad(state.views.officialList)) {
+      this._store.dispatch(officialsLoad());
+      const promise = this._apiClient
+        .get<ZetkinOfficial[]>(`/api/orgs/${orgId}/officials`)
+        .then((officials) => {
+          this._store.dispatch(officialsLoaded(officials));
+          return officials;
+        });
+
+      return new PromiseFuture(promise);
+    }
+
+    return new RemoteListFuture(state.views.officialList);
+  }
+
+  getViewAccessList(
+    orgId: number,
+    viewId: number
+  ): IFuture<ZetkinObjectAccess[]> {
+    const state = this._store.getState();
+    const cachedAccessList = state.views.accessByViewId[viewId];
+    if (!cachedAccessList || shouldLoad(cachedAccessList)) {
+      this._store.dispatch(accessLoad(viewId));
+      const promise = this._apiClient
+        .get<ZetkinObjectAccess[]>(
+          `/api/orgs/${orgId}/people/views/${viewId}/access`
+        )
+        .then((accessList) => {
+          this._store.dispatch(accessLoaded([viewId, accessList]));
+          return accessList;
+        });
+
+      return new PromiseFuture(promise);
+    }
+
+    return new RemoteListFuture(state.views.accessByViewId[viewId]);
+  }
+
   getViewTree(orgId: number): IFuture<ViewTreeData> {
     const state = this._store.getState();
     if (
@@ -106,6 +160,32 @@ export default class ViewsRepo {
         views: state.views.viewList.items.map((item) => item.data!),
       });
     }
+  }
+
+  grantAccess(
+    orgId: number,
+    viewId: number,
+    personId: number,
+    level: ZetkinObjectAccess['level']
+  ) {
+    this._apiClient
+      .put<ZetkinObjectAccess>(
+        `/api/orgs/${orgId}/people/views/${viewId}/access/${personId}`,
+        {
+          level,
+        }
+      )
+      .then((accessObj) => {
+        this._store.dispatch(accessAdded([viewId, accessObj]));
+      });
+  }
+
+  revokeAccess(orgId: number, viewId: number, personId: number) {
+    this._apiClient
+      .delete(`/api/orgs/${orgId}/people/views/${viewId}/access/${personId}`)
+      .then(() => {
+        this._store.dispatch(accessRevoked([viewId, personId]));
+      });
   }
 
   updateFolder(
