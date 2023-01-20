@@ -77,7 +77,8 @@ const ShareViewDialogShareTab: FC<ShareViewDialogShareTabProps> = ({
             <Box marginTop={1}>
               <MUIOnlyPersonSelect
                 getOptionDisabled={(person) =>
-                  accessList.some((item) => item.person.id == person.id)
+                  accessList.some((item) => item.person.id == person.id) ||
+                  officials.some((item) => item.id == person.id)
                 }
                 getOptionExtraLabel={(person) => {
                   const accessItem = accessList.find(
@@ -88,6 +89,16 @@ const ShareViewDialogShareTab: FC<ShareViewDialogShareTabProps> = ({
                       id: `zui.accessList.levels.${accessItem.level}`,
                     });
                   }
+
+                  const official = officials.find(
+                    (item) => item.id == person.id
+                  );
+                  if (official) {
+                    return intl.formatMessage({
+                      id: `zui.accessList.roles.${official.role}`,
+                    });
+                  }
+
                   return '';
                 }}
                 inputRef={selectInputRef}
