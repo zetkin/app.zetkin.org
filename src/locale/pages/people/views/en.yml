@@ -28,6 +28,7 @@ layout:
   jumpMenu:
     placeholder: Start typing to find view
   subtitle:
+    collaborators: '{count, plural, =1 {1 outside collaborator} other {# outside collaborators}}'
     columns: '{count, plural, =0 {No columns} =1 {1 column} other {# columns}}'
     people: '{count, plural, =0 {Empty} =1 {1 person} other {# people}}'
 shareDialog:
