@@ -53,6 +53,7 @@ interface ResultWithProps {
 interface ScaffoldOptions {
   // Level can be 1 (simple sign-in) or 2 (two-factor authentication)
   authLevelRequired?: number;
+  allowNonOfficials?: boolean;
   localeScope?: string[];
 }
 
@@ -162,7 +163,11 @@ export const scaffold =
         if (!hasOrg(reqWithSession, orgId)) {
           //fetch your orgs again to see if they've been updated
           try {
-            reqWithSession.session.memberships = await getUserMemberships(ctx);
+            const allowNonOfficials = !!options?.allowNonOfficials;
+            reqWithSession.session.memberships = await getUserMemberships(
+              ctx,
+              allowNonOfficials
+            );
           } catch (error) {
             reqWithSession.session.memberships = null;
           }
