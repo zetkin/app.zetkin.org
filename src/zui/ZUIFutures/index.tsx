@@ -60,12 +60,6 @@ function ZUIFutures<G extends Record<string, unknown>>({
     dataObjects[key] = future.data;
   });
 
-  /*
-  const dataObjects = futures as {
-    [I in keyof G]: G[I];
-  };
-  */
-
   // Render children if query resolves successfully
   return typeof children === 'function' ? (
     children({ data: dataObjects as { [I in keyof G]: G[I] } }) // Expose the successfully resolved query if children is a function
