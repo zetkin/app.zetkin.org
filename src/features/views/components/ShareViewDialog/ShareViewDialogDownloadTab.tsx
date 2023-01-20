@@ -1,6 +1,7 @@
 import { FC } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { makeStyles } from '@mui/styles';
+import { useRouter } from 'next/router';
 import { Box, Button, Link, Typography } from '@mui/material';
 
 interface ShareViewDialogDownloadTabProps {
@@ -28,6 +29,7 @@ const ShareViewDialogDownloadTab: FC<ShareViewDialogDownloadTabProps> = ({
   onAbort,
 }) => {
   const styles = useStyles();
+  const { orgId, viewId } = useRouter().query;
 
   return (
     <Box className={styles.container}>
@@ -55,8 +57,20 @@ const ShareViewDialogDownloadTab: FC<ShareViewDialogDownloadTabProps> = ({
           />
         </Typography>
         <Box display="flex" gap={1} justifyContent="center" marginTop={3}>
-          <Button variant="outlined">Download CSV file</Button>
-          <Button variant="outlined">Download Excel file</Button>
+          <Button
+            component="a"
+            href={`/api/views/download?orgId=${orgId}&viewId=${viewId}&format=csv`}
+            variant="outlined"
+          >
+            <FormattedMessage id="pages.people.views.shareDialog.download.buttons.csv" />
+          </Button>
+          <Button
+            component="a"
+            href={`/api/views/download?orgId=${orgId}&viewId=${viewId}&format=xlsx`}
+            variant="outlined"
+          >
+            <FormattedMessage id="pages.people.views.shareDialog.download.buttons.xlsx" />
+          </Button>
         </Box>
       </Box>
     </Box>
