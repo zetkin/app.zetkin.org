@@ -1,8 +1,10 @@
 import copy from 'copy-to-clipboard';
-import { FormattedMessage } from 'react-intl';
-import { Box, Collapse, Fade, IconButton, Typography } from '@mui/material';
-import React, { useState } from 'react';
+import { useIntl } from 'react-intl';
+import { Box, Fade, IconButton } from '@mui/material';
+import React, { useContext, useState } from 'react';
 import SvgIcon, { SvgIconProps } from '@mui/material/SvgIcon';
+
+import ZUISnackbarContext from './ZUISnackbarContext';
 
 interface IconProps {
   size?: number;
@@ -37,13 +39,23 @@ const ZUIInlineCopyToClipboard: React.FunctionComponent<{
   children: React.ReactNode;
   copyText: string | number | boolean;
 }> = ({ alwaysShowIcon = false, children, copyText }) => {
+  const intl = useIntl();
   const [hover, setHover] = useState<boolean>(false);
-  const [copied, setCopied] = useState<boolean>(false);
+
+  const { showSnackbar } = useContext(ZUISnackbarContext);
 
   const handleClick = () => {
-    copy(copyText.toString());
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2500);
+    const str = copyText.toString();
+    copy(str);
+    showSnackbar(
+      'success',
+      intl.formatMessage(
+        { id: 'zui.copyToClipboard.copiedValue' },
+        {
+          value: str.length > 30 ? str.slice(0, 30) + '…' : str,
+        }
+      )
+    );
   };
 
   return (
@@ -65,23 +77,6 @@ const ZUIInlineCopyToClipboard: React.FunctionComponent<{
           <IconButton onClick={() => handleClick()}>
             <CopyIcon />
           </IconButton>
-          <Box
-            style={{
-              left: '36px',
-              position: 'absolute',
-              top: '6px',
-            }}
-          >
-            <Collapse in={copied}>
-              <Typography
-                color="secondary"
-                style={{ fontSize: 11, fontWeight: 'bold' }}
-                variant="button"
-              >
-                <FormattedMessage id="misc.copyToClipboard.copied" />
-              </Typography>
-            </Collapse>
-          </Box>
         </Box>
       </Fade>
     </Box>
