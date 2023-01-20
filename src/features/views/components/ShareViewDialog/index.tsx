@@ -18,8 +18,8 @@ interface ShareViewDialogProps {
 
 const useStyles = makeStyles({
   tabPanel: {
-    height: '100vh',
-    maxHeight: '600px',
+    height: 'calc(100vh - 240px)',
+    maxHeight: 600,
     paddingBottom: 0,
     paddingLeft: 0,
     paddingRight: 0,
