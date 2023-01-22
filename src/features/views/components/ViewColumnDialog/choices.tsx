@@ -1,5 +1,5 @@
 import { IntlShape } from 'react-intl';
-import { CheckBox, LocalOffer, Person } from '@mui/icons-material';
+import { CheckBox, Description, LocalOffer, Person } from '@mui/icons-material';
 
 import DoubleIconCardVisual from './DoubleIconCardVisual';
 import getUniqueColumnName from '../../utils/getUniqueColumnName';
@@ -16,6 +16,7 @@ import {
 
 export enum CHOICES {
   FIRST_AND_LAST_NAME = 'firstAndLastName',
+  FOLLOW_UP = 'followUp',
   PERSON_FIELDS = 'personFields',
   TAG = 'tag',
   BOOLEAN = 'toggle',
@@ -112,9 +113,6 @@ const choices: ColumnChoice[] = [
   {
     defaultColumns: (intl, columns) => [
       {
-        config: {
-          field: 'local_bool',
-        },
         title: getUniqueColumnName(
           intl.formatMessage({
             id: 'misc.views.columnDialog.choices.toggle.columnTitle',
@@ -127,6 +125,32 @@ const choices: ColumnChoice[] = [
     key: CHOICES.BOOLEAN,
     renderCardVisual: (color: string) => (
       <SingleIconCardVisual color={color} icon={CheckBox} />
+    ),
+  },
+  {
+    defaultColumns: (intl, columns) => [
+      {
+        title: getUniqueColumnName(
+          intl.formatMessage({
+            id: 'misc.views.columnDialog.choices.followUp.columnTitleCheckbox',
+          }),
+          columns
+        ),
+        type: COLUMN_TYPE.LOCAL_BOOL,
+      },
+      {
+        title: getUniqueColumnName(
+          intl.formatMessage({
+            id: 'misc.views.columnDialog.choices.followUp.columnTitleNotes',
+          }),
+          columns
+        ),
+        type: COLUMN_TYPE.LOCAL_TEXT,
+      },
+    ],
+    key: CHOICES.FOLLOW_UP,
+    renderCardVisual: (color: string) => (
+      <DoubleIconCardVisual color={color} icons={[CheckBox, Description]} />
     ),
   },
 ];
