@@ -11,6 +11,7 @@ const categories = [
       CHOICES.PERSON_FIELDS,
       CHOICES.TAG,
       CHOICES.BOOLEAN,
+      CHOICES.FOLLOW_UP
     ],
     key: CATEGORIES.BASIC,
   },
