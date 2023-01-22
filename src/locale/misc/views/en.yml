@@ -9,6 +9,11 @@ columnDialog:
       description: First and last name of person
       keywords: name combo
       title: First and Last Name
+    followUp:
+      columnTitleCheckbox: Checkbox
+      columnTitleNotes: Notes
+      description: Adds a checkbox column and a notes column
+      title: Follow-up
     personFields:
       description: Add your choice of fields like email, phone number, etc.
       keywords: field multiple
