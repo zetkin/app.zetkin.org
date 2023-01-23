@@ -25,6 +25,10 @@ columnDialog:
       columnTitle: Assignee
       description: Let's you pick an assignee on every row
       title: Assigned Person
+    localText:
+      columnTitle: Notes
+      description: Add a column to write notes about a person.
+      title: Notes
     personFields:
       description: Add your choice of fields like email, phone number, etc.
       keywords: field multiple
