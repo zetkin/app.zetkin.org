@@ -1,6 +1,6 @@
 import makeStyles from '@mui/styles/makeStyles';
 import { useRouter } from 'next/router';
-import { Box, Theme } from '@mui/material';
+import { Box, Button, Theme } from '@mui/material';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { FunctionComponent, useContext, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
@@ -11,8 +11,11 @@ import getViewColumns from '../fetching/getViewColumns';
 import getViewRows from '../fetching/getViewRows';
 import NProgress from 'nprogress';
 import patchView from 'features/views/fetching/patchView';
+import ShareViewDialog from '../components/ShareViewDialog';
 import TabbedLayout from 'utils/layout/TabbedLayout';
+import useModel from 'core/useModel';
 import ViewJumpMenu from 'features/views/components/ViewJumpMenu';
+import ViewSharingModel from '../models/ViewSharingModel';
 import ViewSmartSearchDialog from 'features/views/components/ViewSmartSearchDialog';
 import { viewsResource } from 'features/views/api/views';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
@@ -21,7 +24,7 @@ import { ZUIEllipsisMenuProps } from 'zui/ZUIEllipsisMenu';
 import ZUIIconLabelRow from 'zui/ZUIIconLabelRow';
 import ZUIQuery from 'zui/ZUIQuery';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';
-import { Group, ViewColumnOutlined } from '@mui/icons-material';
+import { Group, Share, ViewColumnOutlined } from '@mui/icons-material';
 
 const useStyles = makeStyles<Theme, { deactivated: boolean }>(() => ({
   deactivateWrapper: {
@@ -42,11 +45,21 @@ const SingleViewLayout: FunctionComponent<SingleViewLayoutProps> = ({
   const router = useRouter();
   const { orgId, viewId } = router.query;
 
+  const shareModel = useModel(
+    (env) =>
+      new ViewSharingModel(
+        env,
+        parseInt(orgId as string),
+        parseInt(viewId as string)
+      )
+  );
+
   const [deactivated, setDeactivated] = useState(false);
   const classes = useStyles({ deactivated });
   const intl = useIntl();
   const queryClient = useQueryClient();
   const [queryDialogOpen, setQueryDialogOpen] = useState(false);
+  const [shareDialogOpen, setShareDialogOpen] = useState(false);
   const viewQuery = useQuery(
     ['view', viewId],
     getView(orgId as string, viewId as string)
@@ -190,6 +203,15 @@ const SingleViewLayout: FunctionComponent<SingleViewLayoutProps> = ({
   return (
     <Box className={classes.deactivateWrapper}>
       <TabbedLayout
+        actionButtons={
+          <Button
+            endIcon={<Share />}
+            onClick={() => setShareDialogOpen(true)}
+            variant="contained"
+          >
+            <FormattedMessage id="pages.people.views.layout.actions.share" />
+          </Button>
+        }
         baseHref={`/organize/${orgId}/people/views/${viewId}`}
         defaultTab="/"
         ellipsisMenuItems={ellipsisMenu}
@@ -208,30 +230,43 @@ const SingleViewLayout: FunctionComponent<SingleViewLayoutProps> = ({
               ),
             }}
           >
-            {({ queries: { colsQuery, rowsQuery } }) => (
-              <ZUIIconLabelRow
-                iconLabels={[
-                  {
-                    icon: <Group />,
-                    label: (
-                      <FormattedMessage
-                        id="pages.people.views.layout.subtitle.people"
-                        values={{ count: rowsQuery.data.length }}
-                      />
-                    ),
-                  },
-                  {
-                    icon: <ViewColumnOutlined />,
-                    label: (
-                      <FormattedMessage
-                        id="pages.people.views.layout.subtitle.columns"
-                        values={{ count: colsQuery.data.length }}
-                      />
-                    ),
-                  },
-                ]}
-              />
-            )}
+            {({ queries: { colsQuery, rowsQuery } }) => {
+              const labels = [
+                {
+                  icon: <Group />,
+                  label: (
+                    <FormattedMessage
+                      id="pages.people.views.layout.subtitle.people"
+                      values={{ count: rowsQuery.data.length }}
+                    />
+                  ),
+                },
+                {
+                  icon: <ViewColumnOutlined />,
+                  label: (
+                    <FormattedMessage
+                      id="pages.people.views.layout.subtitle.columns"
+                      values={{ count: colsQuery.data.length }}
+                    />
+                  ),
+                },
+              ];
+
+              const accessListFuture = shareModel.getAccessList();
+              if (accessListFuture.data?.length) {
+                labels.push({
+                  icon: <Share />,
+                  label: (
+                    <FormattedMessage
+                      id="pages.people.views.layout.subtitle.collaborators"
+                      values={{ count: accessListFuture.data.length }}
+                    />
+                  ),
+                });
+              }
+
+              return <ZUIIconLabelRow iconLabels={labels} />;
+            }}
           </ZUIQuery>
         }
         tabs={[{ href: `/`, messageId: 'layout.organize.view.tabs.view' }]}
@@ -244,6 +279,13 @@ const SingleViewLayout: FunctionComponent<SingleViewLayoutProps> = ({
           onDialogClose={() => setQueryDialogOpen(false)}
           orgId={orgId as string}
           view={view}
+        />
+      )}
+      {view && shareDialogOpen && (
+        <ShareViewDialog
+          model={shareModel}
+          onClose={() => setShareDialogOpen(false)}
+          view={viewQuery.data}
         />
       )}
     </Box>

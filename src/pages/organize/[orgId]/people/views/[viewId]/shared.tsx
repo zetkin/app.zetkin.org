@@ -8,11 +8,12 @@ import getViewColumns from 'features/views/fetching/getViewColumns';
 import getViewRows from 'features/views/fetching/getViewRows';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
-import SingleViewLayout from 'features/views/layout/SingleViewLayout';
+import SharedViewLayout from 'features/views/layout/SharedViewLayout';
 import ViewDataTable from 'features/views/components/ViewDataTable';
 import ZUIQuery from 'zui/ZUIQuery';
 
 const scaffoldOptions = {
+  allowNonOfficials: true,
   authLevelRequired: 2,
   localeScope: ['layout.organize', 'pages.people.views'],
 };
@@ -47,12 +48,12 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
   }
 }, scaffoldOptions);
 
-type SingleViewPageProps = {
+type SharedViewPageProps = {
   orgId: string;
   viewId: string;
 };
 
-const SingleViewPage: PageWithLayout<SingleViewPageProps> = ({
+const SharedViewPage: PageWithLayout<SharedViewPageProps> = ({
   orgId,
   viewId,
 }) => {
@@ -77,6 +78,8 @@ const SingleViewPage: PageWithLayout<SingleViewPageProps> = ({
           </Head>
           <ViewDataTable
             columns={colsQuery.data}
+            disableBulkActions
+            disableConfigure
             rows={rowsQuery.data}
             view={viewQuery.data}
           />
@@ -86,8 +89,8 @@ const SingleViewPage: PageWithLayout<SingleViewPageProps> = ({
   );
 };
 
-SingleViewPage.getLayout = function getLayout(page) {
-  return <SingleViewLayout>{page}</SingleViewLayout>;
+SharedViewPage.getLayout = function getLayout(page) {
+  return <SharedViewLayout>{page}</SharedViewLayout>;
 };
 
-export default SingleViewPage;
+export default SharedViewPage;

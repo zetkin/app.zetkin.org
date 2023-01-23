@@ -1,0 +1,9 @@
+added: Added by {sharer} {updated}
+levels:
+  configure: Edit & Configure
+  edit: Editing
+  readonly: Read-only
+removeAccess: Remove access
+roles:
+  admin: Admin
+  organizer: Organizer

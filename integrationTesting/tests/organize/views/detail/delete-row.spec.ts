@@ -37,7 +37,9 @@ test.describe('View detail page', () => {
 
     // Show toolbar button on row selection
     await expect(page.locator(removeButton)).toBeHidden();
-    await page.locator('[role=cell]:has-text("Clara")').click();
+    await page
+      .locator('[role=row]:has-text("Clara") input[type=checkbox]')
+      .click();
     await page.locator(removeButton).waitFor();
     await expect(page.locator(removeButton)).toBeVisible();
 

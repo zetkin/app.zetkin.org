@@ -12,6 +12,7 @@ const categories = [
       CHOICES.TAG,
       CHOICES.BOOLEAN,
       CHOICES.FOLLOW_UP,
+      CHOICES.LOCAL_PERSON,
     ],
     key: CATEGORIES.BASIC,
   },

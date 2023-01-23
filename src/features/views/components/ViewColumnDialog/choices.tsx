@@ -20,6 +20,7 @@ export enum CHOICES {
   PERSON_FIELDS = 'personFields',
   TAG = 'tag',
   BOOLEAN = 'toggle',
+  LOCAL_PERSON = 'localPerson',
 }
 
 export type ColumnChoice = {
@@ -152,6 +153,22 @@ const choices: ColumnChoice[] = [
     renderCardVisual: (color: string) => (
       <DoubleIconCardVisual color={color} icons={[CheckBox, Description]} />
     ),
+        config: {
+          field: COLUMN_TYPE.LOCAL_PERSON,
+        },
+        title: getUniqueColumnName(
+          intl.formatMessage({
+            id: 'misc.views.columnDialog.choices.localPerson.columnTitle',
+          }),
+          columns
+        ),
+        type: COLUMN_TYPE.LOCAL_PERSON,
+      },
+    ],
+    key: CHOICES.LOCAL_PERSON,
+    renderCardVisual: (color: string) => {
+      return <SingleIconCardVisual color={color} icon={Person} />;
+    },
   },
 ];
 
