@@ -153,6 +153,10 @@ const choices: ColumnChoice[] = [
     renderCardVisual: (color: string) => (
       <DoubleIconCardVisual color={color} icons={[CheckBox, Description]} />
     ),
+  },
+  {
+    defaultColumns: (intl, columns) => [
+      {
         config: {
           field: COLUMN_TYPE.LOCAL_PERSON,
         },
