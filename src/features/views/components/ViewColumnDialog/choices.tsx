@@ -1,5 +1,11 @@
 import { IntlShape } from 'react-intl';
-import { CheckBox, Description, LocalOffer, Person } from '@mui/icons-material';
+import {
+  CheckBox,
+  Description,
+  EventNote,
+  LocalOffer,
+  Person,
+} from '@mui/icons-material';
 
 import DoubleIconCardVisual from './DoubleIconCardVisual';
 import getUniqueColumnName from '../../utils/getUniqueColumnName';
@@ -23,6 +29,7 @@ export enum CHOICES {
   TAG = 'tag',
   BOOLEAN = 'toggle',
   LOCAL_PERSON = 'localPerson',
+  LOCAL_TEXT = 'localText',
 }
 
 export type ColumnChoice = {
@@ -218,6 +225,26 @@ const choices: ColumnChoice[] = [
     key: CHOICES.DELEGATE,
     renderCardVisual: (color: string) => {
       return <MultiIconCardVisual color={color} icon={Person} />;
+    },
+  },
+  {
+    defaultColumns: (intl, columns) => [
+      {
+        config: {
+          field: COLUMN_TYPE.LOCAL_TEXT,
+        },
+        title: getUniqueColumnName(
+          intl.formatMessage({
+            id: 'misc.views.columnDialog.choices.localText.columnTitle',
+          }),
+          columns
+        ),
+        type: COLUMN_TYPE.LOCAL_TEXT,
+      },
+    ],
+    key: CHOICES.LOCAL_TEXT,
+    renderCardVisual: (color: string) => {
+      return <SingleIconCardVisual color={color} icon={EventNote} />;
     },
   },
 ];
