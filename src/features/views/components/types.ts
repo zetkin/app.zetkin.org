@@ -44,6 +44,7 @@ export enum COLUMN_TYPE {
   JOURNEY_ASSIGNEE = 'journey_assignee',
   LOCAL_BOOL = 'local_bool',
   LOCAL_PERSON = 'local_person',
+  LOCAL_TEXT = 'local_text',
   PERSON_FIELD = 'person_field',
   PERSON_NOTES = 'person_notes',
   PERSON_QUERY = 'person_query',
@@ -66,6 +67,11 @@ export interface LocalBoolViewColumn extends ZetkinViewColumnBase {
 
 export interface LocalPersonViewColumn extends ZetkinViewColumnBase {
   type: COLUMN_TYPE.LOCAL_PERSON;
+  config?: Record<string, never>;
+}
+
+export interface LocalTextViewColumn extends ZetkinViewColumnBase {
+  type: COLUMN_TYPE.LOCAL_TEXT;
   config?: Record<string, never>;
 }
 
@@ -113,6 +119,7 @@ export type ZetkinViewColumn =
   | JourneyAssigneeViewColumn
   | LocalBoolViewColumn
   | LocalPersonViewColumn
+  | LocalTextViewColumn
   | PersonNotesViewColumn
   | PersonFieldViewColumn
   | PersonQueryViewColumn
