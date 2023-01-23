@@ -3,6 +3,7 @@ import { CheckBox, Description, LocalOffer, Person } from '@mui/icons-material';
 
 import DoubleIconCardVisual from './DoubleIconCardVisual';
 import getUniqueColumnName from '../../utils/getUniqueColumnName';
+import MultiIconCardVisual from './MultiIconCardVisual';
 import PersonFieldConfig from './PersonFieldConfig';
 import PersonTagConfig from './PersonTagConfig';
 import SingleIconCardVisual from './SingleIconCardVisual';
@@ -15,6 +16,7 @@ import {
 } from '../types';
 
 export enum CHOICES {
+  DELEGATE = 'delegate',
   FIRST_AND_LAST_NAME = 'firstAndLastName',
   FOLLOW_UP = 'followUp',
   PERSON_FIELDS = 'personFields',
@@ -172,6 +174,50 @@ const choices: ColumnChoice[] = [
     key: CHOICES.LOCAL_PERSON,
     renderCardVisual: (color: string) => {
       return <SingleIconCardVisual color={color} icon={Person} />;
+    },
+  },
+  {
+    defaultColumns: (intl, columns) => [
+      {
+        title: getUniqueColumnName(
+          intl.formatMessage({
+            id: 'misc.views.columnDialog.choices.delegate.columnTitleAssignee',
+          }),
+          columns
+        ),
+        type: COLUMN_TYPE.LOCAL_PERSON,
+      },
+      {
+        title: getUniqueColumnName(
+          intl.formatMessage({
+            id: 'misc.views.columnDialog.choices.delegate.columnTitleContacted',
+          }),
+          columns
+        ),
+        type: COLUMN_TYPE.LOCAL_BOOL,
+      },
+      {
+        title: getUniqueColumnName(
+          intl.formatMessage({
+            id: 'misc.views.columnDialog.choices.delegate.columnTitleResponded',
+          }),
+          columns
+        ),
+        type: COLUMN_TYPE.LOCAL_BOOL,
+      },
+      {
+        title: getUniqueColumnName(
+          intl.formatMessage({
+            id: 'misc.views.columnDialog.choices.delegate.columnTitleNotes',
+          }),
+          columns
+        ),
+        type: COLUMN_TYPE.LOCAL_TEXT,
+      },
+    ],
+    key: CHOICES.DELEGATE,
+    renderCardVisual: (color: string) => {
+      return <MultiIconCardVisual color={color} icon={Person} />;
     },
   },
 ];
