@@ -3,15 +3,17 @@ import { GridRenderCellParams } from '@mui/x-data-grid-pro';
 import { ViewGridCellParams } from '.';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 
-interface Submission {
+export interface SurveySubmission {
   submission_id: number;
   submitted: string;
 }
 
-export type SurveySubmittedParams = ViewGridCellParams<Submission[] | null>;
+export type SurveySubmittedParams = ViewGridCellParams<
+  SurveySubmission[] | null
+>;
 
 export const getNewestSubmission = (
-  submissions: Submission[]
+  submissions: SurveySubmission[]
 ): string | null => {
   if (!submissions.length) {
     return null;

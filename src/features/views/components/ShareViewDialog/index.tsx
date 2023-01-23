@@ -4,6 +4,7 @@ import { useIntl } from 'react-intl';
 import { FC, useState } from 'react';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 
+import ShareViewDialogDownloadTab from './ShareViewDialogDownloadTab';
 import ShareViewDialogShareTab from './ShareViewDialogShareTab';
 import ViewSharingModel from 'features/views/models/ViewSharingModel';
 import { ZetkinView } from '../types';
@@ -17,8 +18,8 @@ interface ShareViewDialogProps {
 
 const useStyles = makeStyles({
   tabPanel: {
-    height: '100vh',
-    maxHeight: '600px',
+    height: 'calc(100vh - 240px)',
+    maxHeight: 600,
     paddingBottom: 0,
     paddingLeft: 0,
     paddingRight: 0,
@@ -52,7 +53,9 @@ const ShareViewDialog: FC<ShareViewDialogProps> = ({
         <TabPanel className={styles.tabPanel} value="share">
           <ShareViewDialogShareTab model={model} />
         </TabPanel>
-        <TabPanel className={styles.tabPanel} value="download"></TabPanel>
+        <TabPanel className={styles.tabPanel} value="download">
+          <ShareViewDialogDownloadTab onAbort={() => setTab('share')} />
+        </TabPanel>
       </TabContext>
     </ZUIDialog>
   );
