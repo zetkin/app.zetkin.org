@@ -57,6 +57,7 @@ const valueFormatters: Record<ZetkinViewColumn['type'], ValueFunc> = {
     const person = cell as ZetkinPerson | null;
     return person ? `${person.first_name} ${person.last_name}` : '';
   }) as ValueFunc,
+  [COLUMN_TYPE.LOCAL_TEXT]: directFormatter,
   [COLUMN_TYPE.PERSON_FIELD]: directFormatter,
   [COLUMN_TYPE.PERSON_NOTES]: ((cell) => {
     const notes = cell as ZetkinNote[];
