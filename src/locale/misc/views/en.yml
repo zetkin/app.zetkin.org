@@ -5,6 +5,13 @@ columnDialog:
       description: Columns that are useful when organizing people and members.
       title: Basic Columns
   choices:
+    delegate:
+      columnTitleAssignee: Assignee
+      columnTitleContacted: Contacted
+      columnTitleNotes: Notes
+      columnTitleResponded: Responded
+      description: Adds a set of columns commonly used to delegate outreach work to some assignee.
+      title: Delegate
     firstAndLastName:
       description: First and last name of person
       keywords: name combo
