@@ -1,5 +1,11 @@
 import { IntlShape } from 'react-intl';
-import { CheckBox, Description, LocalOffer, Person } from '@mui/icons-material';
+import {
+  CheckBox,
+  Description,
+  Event,
+  LocalOffer,
+  Person,
+} from '@mui/icons-material';
 
 import DoubleIconCardVisual from './DoubleIconCardVisual';
 import getUniqueColumnName from '../../utils/getUniqueColumnName';
@@ -18,6 +24,7 @@ export enum CHOICES {
   FIRST_AND_LAST_NAME = 'firstAndLastName',
   FOLLOW_UP = 'followUp',
   PERSON_FIELDS = 'personFields',
+  SURVEY_SUBMIT_DATE = 'surveySubmitDate',
   TAG = 'tag',
   BOOLEAN = 'toggle',
   LOCAL_PERSON = 'localPerson',
@@ -172,6 +179,12 @@ const choices: ColumnChoice[] = [
     key: CHOICES.LOCAL_PERSON,
     renderCardVisual: (color: string) => {
       return <SingleIconCardVisual color={color} icon={Person} />;
+    },
+  },
+  {
+    key: CHOICES.SURVEY_SUBMIT_DATE,
+    renderCardVisual: (color: string) => {
+      return <SingleIconCardVisual color={color} icon={Event} />;
     },
   },
 ];
