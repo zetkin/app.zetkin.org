@@ -56,6 +56,7 @@ const SurveySubmitDateConfig = ({
                 },
               ]);
             }}
+            variant="standard"
           >
             {surveys?.map((survey) => (
               <MenuItem key={survey.id} value={survey.id}>
