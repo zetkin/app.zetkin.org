@@ -12,6 +12,7 @@ import getUniqueColumnName from '../../utils/getUniqueColumnName';
 import PersonFieldConfig from './PersonFieldConfig';
 import PersonTagConfig from './PersonTagConfig';
 import SingleIconCardVisual from './SingleIconCardVisual';
+import SurveySubmitDateConfig from './SurveySubmitDateConfig';
 import {
   COLUMN_TYPE,
   NATIVE_PERSON_FIELDS,
@@ -186,6 +187,12 @@ const choices: ColumnChoice[] = [
     renderCardVisual: (color: string) => {
       return <SingleIconCardVisual color={color} icon={Event} />;
     },
+    renderConfigForm: (props: {
+      existingColumns: ZetkinViewColumn[];
+      onOutputConfigured: (columns: SelectedViewColumn[]) => void;
+    }) => (
+      <SurveySubmitDateConfig onOutputConfigured={props.onOutputConfigured} />
+    ),
   },
 ];
 
