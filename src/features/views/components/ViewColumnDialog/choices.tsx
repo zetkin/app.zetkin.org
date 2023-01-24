@@ -183,6 +183,10 @@ const choices: ColumnChoice[] = [
     },
   },
   {
+    alreadyInView: () => {
+      //This card never disables.
+      return false;
+    },
     key: CHOICES.SURVEY_SUBMIT_DATE,
     renderCardVisual: (color: string) => {
       return <SingleIconCardVisual color={color} icon={Event} />;
