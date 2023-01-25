@@ -1,4 +1,4 @@
-import { Box, Grid, Typography } from '@mui/material';
+import { Box, Grid, Typography, useTheme } from '@mui/material';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
 
 import categories from '../categories';
@@ -19,6 +19,8 @@ const ChoiceCategories = ({
   onConfigure,
 }: CategoriesProps) => {
   const intl = useIntl();
+  const theme = useTheme();
+
   return (
     <Box>
       {categories.map((category, index) => (
@@ -48,9 +50,15 @@ const ChoiceCategories = ({
                   <ColumnChoiceCard
                     alreadyInView={alreadyInView}
                     cardVisual={choice.renderCardVisual(
-                      alreadyInView ? 'gray' : choice.color
+                      alreadyInView
+                        ? theme.palette.onSurface.disabled
+                        : choice.color
                     )}
-                    color={alreadyInView ? 'gray' : choice.color}
+                    color={
+                      alreadyInView
+                        ? theme.palette.onSurface.disabled
+                        : choice.color
+                    }
                     description={intl.formatMessage({
                       id: `misc.views.columnDialog.choices.${choice.key}.description`,
                     })}

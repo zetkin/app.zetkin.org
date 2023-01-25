@@ -12,7 +12,7 @@ interface PaletteIntensityOptions {
 
 declare module '@mui/material/styles/createPalette' {
   interface Palette {
-    onSurface: PaletteIntensityOptions;
+    onSurface: Required<PaletteIntensityOptions>;
     outline: PaletteIntensityOptions;
     targetingStatusBar: {
       blue: string;
