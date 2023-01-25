@@ -20,6 +20,11 @@ declare module '@mui/material/styles/createPalette' {
       green: string;
       orange: string;
     };
+    viewColumnGallery: {
+      blue: string;
+      purple: string;
+      red: string;
+    };
   }
   interface PaletteOptions {
     onSurface: PaletteIntensityOptions;
@@ -63,6 +68,11 @@ const themePalette = {
   },
   text: {
     secondary: 'rgba(0, 0, 0, 0.6)',
+  },
+  viewColumnGallery: {
+    blue: '#1976D2',
+    purple: '#BA68C8',
+    red: '#ED1C55',
   },
   warning: {
     main: '#ee8432',

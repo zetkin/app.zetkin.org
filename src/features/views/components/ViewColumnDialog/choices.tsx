@@ -15,6 +15,7 @@ import PersonFieldConfig from './PersonFieldConfig';
 import PersonTagConfig from './PersonTagConfig';
 import SingleIconCardVisual from './SingleIconCardVisual';
 import SurveySubmitDateConfig from './SurveySubmitDateConfig';
+import theme from 'theme';
 import {
   COLUMN_TYPE,
   NATIVE_PERSON_FIELDS,
@@ -35,15 +36,9 @@ export enum CHOICES {
   LOCAL_TEXT = 'localText',
 }
 
-enum COLORS {
-  BLUE = '#1976D2',
-  PURPLE = '#BA68C8',
-  RED = '#ED1C55',
-}
-
 export type ColumnChoice = {
   alreadyInView?: (columns: ZetkinViewColumn[]) => boolean;
-  color: COLORS;
+  color: string;
   defaultColumns?: (
     intl: IntlShape,
     columns: ZetkinViewColumn[]
@@ -55,6 +50,8 @@ export type ColumnChoice = {
     onOutputConfigured: (columns: SelectedViewColumn[]) => void;
   }) => JSX.Element;
 };
+
+const { blue, purple, red } = theme.palette.viewColumnGallery;
 
 const choices: ColumnChoice[] = [
   {
@@ -71,7 +68,7 @@ const choices: ColumnChoice[] = [
         )
       );
     },
-    color: COLORS.PURPLE,
+    color: purple,
     defaultColumns: (intl) => [
       {
         config: {
@@ -98,7 +95,7 @@ const choices: ColumnChoice[] = [
     },
   },
   {
-    color: COLORS.BLUE,
+    color: blue,
     key: CHOICES.TAG,
     renderCardVisual: (color: string) => (
       <SingleIconCardVisual color={color} icon={LocalOffer} />
@@ -118,7 +115,7 @@ const choices: ColumnChoice[] = [
         )
       );
     },
-    color: COLORS.BLUE,
+    color: blue,
     key: CHOICES.PERSON_FIELDS,
     renderCardVisual: (color: string) => (
       <SingleIconCardVisual color={color} icon={Person} />
@@ -134,7 +131,7 @@ const choices: ColumnChoice[] = [
     ),
   },
   {
-    color: COLORS.BLUE,
+    color: blue,
     defaultColumns: (intl, columns) => [
       {
         title: getUniqueColumnName(
@@ -152,7 +149,7 @@ const choices: ColumnChoice[] = [
     ),
   },
   {
-    color: COLORS.PURPLE,
+    color: purple,
     defaultColumns: (intl, columns) => [
       {
         title: getUniqueColumnName(
@@ -179,7 +176,7 @@ const choices: ColumnChoice[] = [
     ),
   },
   {
-    color: COLORS.BLUE,
+    color: blue,
     defaultColumns: (intl, columns) => [
       {
         config: {
@@ -204,7 +201,7 @@ const choices: ColumnChoice[] = [
       //This card never disables.
       return false;
     },
-    color: COLORS.BLUE,
+    color: blue,
     key: CHOICES.SURVEY_SUBMIT_DATE,
     renderCardVisual: (color: string) => {
       return <SingleIconCardVisual color={color} icon={Event} />;
@@ -217,7 +214,7 @@ const choices: ColumnChoice[] = [
     ),
   },
   {
-    color: COLORS.RED,
+    color: red,
     defaultColumns: (intl, columns) => [
       {
         title: getUniqueColumnName(
@@ -262,7 +259,7 @@ const choices: ColumnChoice[] = [
     },
   },
   {
-    color: COLORS.BLUE,
+    color: blue,
     defaultColumns: (intl, columns) => [
       {
         config: {
