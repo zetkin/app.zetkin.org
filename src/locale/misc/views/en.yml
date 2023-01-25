@@ -33,6 +33,10 @@ columnDialog:
       description: Add your choice of fields like email, phone number, etc.
       keywords: field multiple
       title: Person fields
+    surveySubmitDate:
+      description: Indicates whether a person submitted responses to a survey, and when
+      noSurveys: Your organisation does not have any surveys.
+      title: Survey submit date
     tag:
       description: Show a checkmark if the person has this tag
       title: Tag
