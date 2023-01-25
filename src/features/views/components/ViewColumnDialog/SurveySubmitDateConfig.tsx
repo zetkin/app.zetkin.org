@@ -29,48 +29,43 @@ const SurveySubmitDateConfig = ({
   );
   const surveys = surveysQuery.data;
 
-  return (
-    <>
-      {!surveys || surveys.length > 0 ? (
-        <FormControl sx={{ width: 300 }}>
-          <InputLabel>
-            {intl.formatMessage({
-              id: 'misc.views.columnDialog.editor.fieldLabels.survey',
-            })}
-          </InputLabel>
-          <Select
-            onChange={(evt) => {
-              if (!evt.target.value) {
-                return;
-              }
-              const surveyId = evt.target.value as number;
-              onOutputConfigured([
-                {
-                  config: {
-                    survey_id: surveyId,
-                  },
-                  title:
-                    surveys?.find((survey) => survey.id === surveyId)?.title ||
-                    '',
-                  type: COLUMN_TYPE.SURVEY_SUBMITTED,
-                },
-              ]);
-            }}
-            variant="standard"
-          >
-            {surveys?.map((survey) => (
-              <MenuItem key={survey.id} value={survey.id}>
-                {survey.title}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-      ) : (
-        <Typography>
-          <Msg id="misc.views.columnDialog.choices.surveySubmitDate.noSurveys" />
-        </Typography>
-      )}
-    </>
+  return !surveys || surveys.length > 0 ? (
+    <FormControl sx={{ width: 300 }}>
+      <InputLabel>
+        {intl.formatMessage({
+          id: 'misc.views.columnDialog.editor.fieldLabels.survey',
+        })}
+      </InputLabel>
+      <Select
+        onChange={(evt) => {
+          if (!evt.target.value) {
+            return;
+          }
+          const surveyId = evt.target.value as number;
+          onOutputConfigured([
+            {
+              config: {
+                survey_id: surveyId,
+              },
+              title:
+                surveys?.find((survey) => survey.id === surveyId)?.title || '',
+              type: COLUMN_TYPE.SURVEY_SUBMITTED,
+            },
+          ]);
+        }}
+        variant="standard"
+      >
+        {surveys?.map((survey) => (
+          <MenuItem key={survey.id} value={survey.id}>
+            {survey.title}
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
+  ) : (
+    <Typography>
+      <Msg id="misc.views.columnDialog.choices.surveySubmitDate.noSurveys" />
+    </Typography>
   );
 };
 
