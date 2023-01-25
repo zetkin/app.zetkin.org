@@ -71,8 +71,12 @@ const ColumnEditor: FunctionComponent<ColumnEditorProps> = ({
             />
           </Box>
         </Box>
-
-        <Box alignSelf="center" display="flex" flexDirection="column">
+        <Box
+          alignItems="center"
+          alignSelf="center"
+          display="flex"
+          flexDirection="column"
+        >
           <Box height={100} paddingBottom={1} width={100}>
             {choice.renderCardVisual(color)}
           </Box>
