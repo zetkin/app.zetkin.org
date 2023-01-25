@@ -2,6 +2,7 @@ import { IntlShape } from 'react-intl';
 import {
   CheckBox,
   Description,
+  Event,
   EventNote,
   LocalOffer,
   Person,
@@ -13,6 +14,7 @@ import MultiIconCardVisual from './MultiIconCardVisual';
 import PersonFieldConfig from './PersonFieldConfig';
 import PersonTagConfig from './PersonTagConfig';
 import SingleIconCardVisual from './SingleIconCardVisual';
+import SurveySubmitDateConfig from './SurveySubmitDateConfig';
 import {
   COLUMN_TYPE,
   NATIVE_PERSON_FIELDS,
@@ -26,6 +28,7 @@ export enum CHOICES {
   FIRST_AND_LAST_NAME = 'firstAndLastName',
   FOLLOW_UP = 'followUp',
   PERSON_FIELDS = 'personFields',
+  SURVEY_SUBMIT_DATE = 'surveySubmitDate',
   TAG = 'tag',
   BOOLEAN = 'toggle',
   LOCAL_PERSON = 'localPerson',
@@ -195,6 +198,23 @@ const choices: ColumnChoice[] = [
     renderCardVisual: (color: string) => {
       return <SingleIconCardVisual color={color} icon={Person} />;
     },
+  },
+  {
+    alreadyInView: () => {
+      //This card never disables.
+      return false;
+    },
+    color: COLORS.BLUE,
+    key: CHOICES.SURVEY_SUBMIT_DATE,
+    renderCardVisual: (color: string) => {
+      return <SingleIconCardVisual color={color} icon={Event} />;
+    },
+    renderConfigForm: (props: {
+      existingColumns: ZetkinViewColumn[];
+      onOutputConfigured: (columns: SelectedViewColumn[]) => void;
+    }) => (
+      <SurveySubmitDateConfig onOutputConfigured={props.onOutputConfigured} />
+    ),
   },
   {
     color: COLORS.RED,
