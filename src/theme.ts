@@ -12,13 +12,18 @@ interface PaletteIntensityOptions {
 
 declare module '@mui/material/styles/createPalette' {
   interface Palette {
-    onSurface: PaletteIntensityOptions;
+    onSurface: Required<PaletteIntensityOptions>;
     outline: PaletteIntensityOptions;
     targetingStatusBar: {
       blue: string;
       gray: string;
       green: string;
       orange: string;
+    };
+    viewColumnGallery: {
+      blue: string;
+      purple: string;
+      red: string;
     };
   }
   interface PaletteOptions {
@@ -63,6 +68,11 @@ const themePalette = {
   },
   text: {
     secondary: 'rgba(0, 0, 0, 0.6)',
+  },
+  viewColumnGallery: {
+    blue: '#1976D2',
+    purple: '#BA68C8',
+    red: '#ED1C55',
   },
   warning: {
     main: '#ee8432',

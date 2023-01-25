@@ -15,6 +15,7 @@ import PersonFieldConfig from './PersonFieldConfig';
 import PersonTagConfig from './PersonTagConfig';
 import SingleIconCardVisual from './SingleIconCardVisual';
 import SurveySubmitDateConfig from './SurveySubmitDateConfig';
+import theme from 'theme';
 import {
   COLUMN_TYPE,
   NATIVE_PERSON_FIELDS,
@@ -37,6 +38,7 @@ export enum CHOICES {
 
 export type ColumnChoice = {
   alreadyInView?: (columns: ZetkinViewColumn[]) => boolean;
+  color: string;
   defaultColumns?: (
     intl: IntlShape,
     columns: ZetkinViewColumn[]
@@ -48,6 +50,8 @@ export type ColumnChoice = {
     onOutputConfigured: (columns: SelectedViewColumn[]) => void;
   }) => JSX.Element;
 };
+
+const { blue, purple, red } = theme.palette.viewColumnGallery;
 
 const choices: ColumnChoice[] = [
   {
@@ -64,6 +68,7 @@ const choices: ColumnChoice[] = [
         )
       );
     },
+    color: purple,
     defaultColumns: (intl) => [
       {
         config: {
@@ -90,6 +95,7 @@ const choices: ColumnChoice[] = [
     },
   },
   {
+    color: blue,
     key: CHOICES.TAG,
     renderCardVisual: (color: string) => (
       <SingleIconCardVisual color={color} icon={LocalOffer} />
@@ -109,6 +115,7 @@ const choices: ColumnChoice[] = [
         )
       );
     },
+    color: blue,
     key: CHOICES.PERSON_FIELDS,
     renderCardVisual: (color: string) => (
       <SingleIconCardVisual color={color} icon={Person} />
@@ -124,6 +131,7 @@ const choices: ColumnChoice[] = [
     ),
   },
   {
+    color: blue,
     defaultColumns: (intl, columns) => [
       {
         title: getUniqueColumnName(
@@ -141,6 +149,7 @@ const choices: ColumnChoice[] = [
     ),
   },
   {
+    color: purple,
     defaultColumns: (intl, columns) => [
       {
         title: getUniqueColumnName(
@@ -167,6 +176,7 @@ const choices: ColumnChoice[] = [
     ),
   },
   {
+    color: blue,
     defaultColumns: (intl, columns) => [
       {
         config: {
@@ -191,6 +201,7 @@ const choices: ColumnChoice[] = [
       //This card never disables.
       return false;
     },
+    color: blue,
     key: CHOICES.SURVEY_SUBMIT_DATE,
     renderCardVisual: (color: string) => {
       return <SingleIconCardVisual color={color} icon={Event} />;
@@ -203,6 +214,7 @@ const choices: ColumnChoice[] = [
     ),
   },
   {
+    color: red,
     defaultColumns: (intl, columns) => [
       {
         title: getUniqueColumnName(
@@ -247,6 +259,7 @@ const choices: ColumnChoice[] = [
     },
   },
   {
+    color: blue,
     defaultColumns: (intl, columns) => [
       {
         config: {
