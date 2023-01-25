@@ -1,6 +1,7 @@
 import { GridColDef } from '@mui/x-data-grid-pro';
 
 import SimpleColumnType from './SimpleColumnType';
+import SurveyResponseColumnType from './SurveyResponseColumnType';
 import { COLUMN_TYPE, ZetkinViewColumn } from 'features/views/components/types';
 
 export interface IColumnType<
@@ -47,7 +48,7 @@ const columnTypes: Record<COLUMN_TYPE, IColumnType> = {
   [COLUMN_TYPE.PERSON_QUERY]: new DummyColumnType(),
   [COLUMN_TYPE.PERSON_TAG]: new DummyColumnType(),
   [COLUMN_TYPE.SURVEY_OPTIONS]: new DummyColumnType(),
-  [COLUMN_TYPE.SURVEY_RESPONSE]: new DummyColumnType(),
+  [COLUMN_TYPE.SURVEY_RESPONSE]: new SurveyResponseColumnType(),
   [COLUMN_TYPE.SURVEY_SUBMITTED]: new DummyColumnType(),
   [COLUMN_TYPE.LOCAL_TEXT]: new SimpleColumnType(),
 };
