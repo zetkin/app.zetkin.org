@@ -9,7 +9,6 @@ import { SelectedViewColumn, ZetkinViewColumn } from '../types';
 interface ColumnEditorProps {
   choice: ColumnChoice;
   existingColumns: ZetkinViewColumn[];
-  color: string;
   onCancel: () => void;
   onClose: () => void;
   onSave: (columns: SelectedViewColumn[]) => Promise<void>;
@@ -17,7 +16,6 @@ interface ColumnEditorProps {
 
 const ColumnEditor: FunctionComponent<ColumnEditorProps> = ({
   choice,
-  color,
   existingColumns,
   onCancel,
   onClose,
@@ -32,7 +30,12 @@ const ColumnEditor: FunctionComponent<ColumnEditorProps> = ({
 
   return (
     <Box display="flex" flexDirection="column" height="100%">
-      <Box bgcolor={color} display="flex" flexDirection="column" padding={2}>
+      <Box
+        bgcolor={choice.color}
+        display="flex"
+        flexDirection="column"
+        padding={2}
+      >
         <Box display="flex">
           <Box
             alignSelf="flex-start"
@@ -74,7 +77,7 @@ const ColumnEditor: FunctionComponent<ColumnEditorProps> = ({
 
         <Box alignSelf="center" display="flex" flexDirection="column">
           <Box height={100} paddingBottom={1} width={100}>
-            {choice.renderCardVisual(color)}
+            {choice.renderCardVisual(choice.color)}
           </Box>
           <Typography color="white" variant="h5">
             <Msg id={`misc.views.columnDialog.choices.${choice.key}.title`} />

@@ -48,9 +48,9 @@ const ChoiceCategories = ({
                   <ColumnChoiceCard
                     alreadyInView={alreadyInView}
                     cardVisual={choice.renderCardVisual(
-                      alreadyInView ? 'gray' : '#234890'
+                      alreadyInView ? 'gray' : choice.color
                     )}
-                    color={alreadyInView ? 'gray' : '#234890'}
+                    color={alreadyInView ? 'gray' : choice.color}
                     description={intl.formatMessage({
                       id: `misc.views.columnDialog.choices.${choice.key}.description`,
                     })}

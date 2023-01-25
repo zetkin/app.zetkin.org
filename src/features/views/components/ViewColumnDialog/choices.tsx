@@ -32,8 +32,15 @@ export enum CHOICES {
   LOCAL_TEXT = 'localText',
 }
 
+enum COLORS {
+  BLUE = '#1976D2',
+  PURPLE = '#BA68C8',
+  RED = '#ED1C55',
+}
+
 export type ColumnChoice = {
   alreadyInView?: (columns: ZetkinViewColumn[]) => boolean;
+  color: COLORS;
   defaultColumns?: (
     intl: IntlShape,
     columns: ZetkinViewColumn[]
@@ -61,6 +68,7 @@ const choices: ColumnChoice[] = [
         )
       );
     },
+    color: COLORS.PURPLE,
     defaultColumns: (intl) => [
       {
         config: {
@@ -87,6 +95,7 @@ const choices: ColumnChoice[] = [
     },
   },
   {
+    color: COLORS.BLUE,
     key: CHOICES.TAG,
     renderCardVisual: (color: string) => (
       <SingleIconCardVisual color={color} icon={LocalOffer} />
@@ -106,6 +115,7 @@ const choices: ColumnChoice[] = [
         )
       );
     },
+    color: COLORS.BLUE,
     key: CHOICES.PERSON_FIELDS,
     renderCardVisual: (color: string) => (
       <SingleIconCardVisual color={color} icon={Person} />
@@ -121,6 +131,7 @@ const choices: ColumnChoice[] = [
     ),
   },
   {
+    color: COLORS.BLUE,
     defaultColumns: (intl, columns) => [
       {
         title: getUniqueColumnName(
@@ -138,6 +149,7 @@ const choices: ColumnChoice[] = [
     ),
   },
   {
+    color: COLORS.PURPLE,
     defaultColumns: (intl, columns) => [
       {
         title: getUniqueColumnName(
@@ -164,6 +176,7 @@ const choices: ColumnChoice[] = [
     ),
   },
   {
+    color: COLORS.BLUE,
     defaultColumns: (intl, columns) => [
       {
         config: {
@@ -184,6 +197,7 @@ const choices: ColumnChoice[] = [
     },
   },
   {
+    color: COLORS.RED,
     defaultColumns: (intl, columns) => [
       {
         title: getUniqueColumnName(
@@ -228,6 +242,7 @@ const choices: ColumnChoice[] = [
     },
   },
   {
+    color: COLORS.BLUE,
     defaultColumns: (intl, columns) => [
       {
         config: {
