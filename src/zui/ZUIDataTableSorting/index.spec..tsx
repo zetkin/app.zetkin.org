@@ -2,7 +2,7 @@ import { GridSortModel } from '@mui/x-data-grid-pro';
 import userEvent from '@testing-library/user-event';
 
 import { COLUMN_TYPE } from 'features/views/components/types';
-import { makeGridColDef } from '../../features/views/components/ViewDataTable/utils';
+import columnTypes from 'features/views/components/ViewDataTable/columnTypes';
 import mockViewCol from 'utils/testing/mocks/mockViewCol';
 import { render } from 'utils/testing';
 import ZUIDataTableSorting from '.';
@@ -11,15 +11,17 @@ describe('ZUIDataTableSorting.tsx', () => {
   const fields = ['first_name', 'last_name', 'middle_name'];
 
   const gridColumns = fields.map((field, idx) => {
-    return makeGridColDef(
-      mockViewCol({
-        config: { field },
-        id: idx,
-        title: field,
-        type: COLUMN_TYPE.PERSON_FIELD,
-      }),
-      1
-    );
+    return {
+      field: field,
+      ...columnTypes[COLUMN_TYPE.PERSON_FIELD].getColDef(
+        mockViewCol({
+          config: { field },
+          id: idx,
+          title: field,
+          type: COLUMN_TYPE.PERSON_FIELD,
+        })
+      ),
+    };
   });
 
   const sortModel: GridSortModel = gridColumns
