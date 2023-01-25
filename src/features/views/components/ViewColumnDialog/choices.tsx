@@ -3,12 +3,14 @@ import {
   CheckBox,
   Description,
   Event,
+  EventNote,
   LocalOffer,
   Person,
 } from '@mui/icons-material';
 
 import DoubleIconCardVisual from './DoubleIconCardVisual';
 import getUniqueColumnName from '../../utils/getUniqueColumnName';
+import MultiIconCardVisual from './MultiIconCardVisual';
 import PersonFieldConfig from './PersonFieldConfig';
 import PersonTagConfig from './PersonTagConfig';
 import SingleIconCardVisual from './SingleIconCardVisual';
@@ -22,6 +24,7 @@ import {
 } from '../types';
 
 export enum CHOICES {
+  DELEGATE = 'delegate',
   FIRST_AND_LAST_NAME = 'firstAndLastName',
   FOLLOW_UP = 'followUp',
   PERSON_FIELDS = 'personFields',
@@ -29,6 +32,7 @@ export enum CHOICES {
   TAG = 'tag',
   BOOLEAN = 'toggle',
   LOCAL_PERSON = 'localPerson',
+  LOCAL_TEXT = 'localText',
 }
 
 export type ColumnChoice = {
@@ -197,6 +201,70 @@ const choices: ColumnChoice[] = [
     }) => (
       <SurveySubmitDateConfig onOutputConfigured={props.onOutputConfigured} />
     ),
+  },
+  {
+    defaultColumns: (intl, columns) => [
+      {
+        title: getUniqueColumnName(
+          intl.formatMessage({
+            id: 'misc.views.columnDialog.choices.delegate.columnTitleAssignee',
+          }),
+          columns
+        ),
+        type: COLUMN_TYPE.LOCAL_PERSON,
+      },
+      {
+        title: getUniqueColumnName(
+          intl.formatMessage({
+            id: 'misc.views.columnDialog.choices.delegate.columnTitleContacted',
+          }),
+          columns
+        ),
+        type: COLUMN_TYPE.LOCAL_BOOL,
+      },
+      {
+        title: getUniqueColumnName(
+          intl.formatMessage({
+            id: 'misc.views.columnDialog.choices.delegate.columnTitleResponded',
+          }),
+          columns
+        ),
+        type: COLUMN_TYPE.LOCAL_BOOL,
+      },
+      {
+        title: getUniqueColumnName(
+          intl.formatMessage({
+            id: 'misc.views.columnDialog.choices.delegate.columnTitleNotes',
+          }),
+          columns
+        ),
+        type: COLUMN_TYPE.LOCAL_TEXT,
+      },
+    ],
+    key: CHOICES.DELEGATE,
+    renderCardVisual: (color: string) => {
+      return <MultiIconCardVisual color={color} icon={Person} />;
+    },
+  },
+  {
+    defaultColumns: (intl, columns) => [
+      {
+        config: {
+          field: COLUMN_TYPE.LOCAL_TEXT,
+        },
+        title: getUniqueColumnName(
+          intl.formatMessage({
+            id: 'misc.views.columnDialog.choices.localText.columnTitle',
+          }),
+          columns
+        ),
+        type: COLUMN_TYPE.LOCAL_TEXT,
+      },
+    ],
+    key: CHOICES.LOCAL_TEXT,
+    renderCardVisual: (color: string) => {
+      return <SingleIconCardVisual color={color} icon={EventNote} />;
+    },
   },
 ];
 

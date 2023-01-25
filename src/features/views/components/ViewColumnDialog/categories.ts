@@ -14,6 +14,8 @@ const categories = [
       CHOICES.FOLLOW_UP,
       CHOICES.LOCAL_PERSON,
       CHOICES.SURVEY_SUBMIT_DATE,
+      CHOICES.DELEGATE,
+      CHOICES.LOCAL_TEXT,
     ],
     key: CATEGORIES.BASIC,
   },
