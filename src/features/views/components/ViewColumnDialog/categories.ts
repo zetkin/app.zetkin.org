@@ -16,6 +16,7 @@ const categories = [
       CHOICES.SURVEY_SUBMIT_DATE,
       CHOICES.DELEGATE,
       CHOICES.LOCAL_TEXT,
+      CHOICES.LOCAL_SMART_SEARCH,
     ],
     key: CATEGORIES.BASIC,
   },
