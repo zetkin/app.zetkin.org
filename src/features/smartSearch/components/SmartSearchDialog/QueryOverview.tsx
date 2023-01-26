@@ -49,18 +49,20 @@ const FIRST_FILTER = 'first_filter';
 
 interface QueryOverviewProps {
   filters: SmartSearchFilterWithId<AnyFilterConfig>[];
-  onCloseDialog: () => void;
-  onSaveQuery: () => void;
+  onCloseDialog?: () => void;
+  onSaveQuery?: () => void;
   onOpenFilterGallery: () => void;
   onEditFilter: (filter: SmartSearchFilterWithId) => void;
   onDeleteFilter: (filter: SmartSearchFilterWithId) => void;
   onOpenStartsWithEditor: () => void;
   startsWithAll: boolean;
   readOnly?: boolean;
+  hasSaveCancelButtons?: boolean;
 }
 
 const QueryOverview = ({
   filters,
+  hasSaveCancelButtons = true,
   readOnly,
   onCloseDialog,
   onSaveQuery,
@@ -246,39 +248,45 @@ const QueryOverview = ({
           </Button>
         </Box>
       </Box>
-      <DialogActions>
-        <Box
-          display="flex"
-          justifyContent="flex-end"
-          m={1}
-          style={{ gap: '1rem' }}
-        >
-          {readOnly && (
-            <Button color="primary" onClick={onCloseDialog} variant="outlined">
-              <Msg id="misc.smartSearch.buttonLabels.close" />
-            </Button>
-          )}
-          {!readOnly && (
-            <>
+      {hasSaveCancelButtons && (
+        <DialogActions>
+          <Box
+            display="flex"
+            justifyContent="flex-end"
+            m={1}
+            style={{ gap: '1rem' }}
+          >
+            {readOnly && (
               <Button
                 color="primary"
                 onClick={onCloseDialog}
                 variant="outlined"
               >
-                <Msg id="misc.smartSearch.buttonLabels.cancel" />
+                <Msg id="misc.smartSearch.buttonLabels.close" />
               </Button>
-              <Button
-                color="primary"
-                data-testid="QueryOverview-saveButton"
-                onClick={onSaveQuery}
-                variant="contained"
-              >
-                <Msg id="misc.smartSearch.buttonLabels.save" />
-              </Button>
-            </>
-          )}
-        </Box>
-      </DialogActions>
+            )}
+            {!readOnly && (
+              <>
+                <Button
+                  color="primary"
+                  onClick={onCloseDialog}
+                  variant="outlined"
+                >
+                  <Msg id="misc.smartSearch.buttonLabels.cancel" />
+                </Button>
+                <Button
+                  color="primary"
+                  data-testid="QueryOverview-saveButton"
+                  onClick={onSaveQuery}
+                  variant="contained"
+                >
+                  <Msg id="misc.smartSearch.buttonLabels.save" />
+                </Button>
+              </>
+            )}
+          </Box>
+        </DialogActions>
+      )}
     </Box>
   );
 };
