@@ -26,6 +26,9 @@ interface ViewSurveySubmissionPreviewProps {
 }
 
 const useStyles = makeStyles(() => ({
+  container: {
+    width: 300,
+  },
   header: {
     fontSize: '1.1em',
   },
@@ -53,7 +56,14 @@ const ViewSurveySubmissionPreview: FC<ViewSurveySubmissionPreviewProps> = ({
   const [mostRecent, ...older] = sorted;
 
   return (
-    <Popper anchorEl={anchorEl} open={!!anchorEl}>
+    <Popper
+      anchorEl={anchorEl}
+      className={styles.container}
+      open={!!anchorEl}
+      popperOptions={{
+        placement: 'left',
+      }}
+    >
       <Paper elevation={2}>
         <Box p={2}>
           <Box>
