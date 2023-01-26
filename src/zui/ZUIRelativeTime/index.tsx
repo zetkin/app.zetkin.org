@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
 import { FormattedRelativeTime } from 'react-intl';
+import { RelativeTimeFormatSingularUnit } from '@formatjs/ecma402-abstract';
 import { Tooltip } from '@mui/material';
 
 import ZUIDateTime from '../ZUIDateTime';
@@ -30,17 +31,37 @@ const ZUIRelativeTime: React.FunctionComponent<ZUIRelativeTimeProps> = ({
     return null;
   }
 
+  const [value, unit, updateInterval] = selectUnit(difference);
+
   return (
     <Tooltip arrow title={<ZUIDateTime convertToLocal datetime={datetime} />}>
       <span>
         <FormattedRelativeTime
           numeric="auto"
-          updateIntervalInSeconds={60}
-          value={difference}
+          unit={unit}
+          updateIntervalInSeconds={updateInterval}
+          value={value}
         />
       </span>
     </Tooltip>
   );
 };
+
+function selectUnit(
+  seconds: number
+): [number, RelativeTimeFormatSingularUnit | undefined, number | undefined] {
+  let value = seconds;
+  let updateInterval: number | undefined = 60;
+  let unit: RelativeTimeFormatSingularUnit | undefined = undefined;
+
+  const yearInSeconds = 365 * 24 * 60 * 60;
+  if (Math.abs(value) > 1.5 * yearInSeconds) {
+    value = Math.round(value / yearInSeconds);
+    unit = 'year';
+    updateInterval = undefined;
+  }
+
+  return [value, unit, updateInterval];
+}
 
 export default ZUIRelativeTime;
