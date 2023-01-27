@@ -66,7 +66,13 @@ const ColumnGallery: FunctionComponent<ColumnGalleryProps> = ({
   const choiceContainerRef = useRef<HTMLDivElement>();
 
   return (
-    <Box display="flex" flexDirection="column" height="100%">
+    <Box
+      display="flex"
+      flexDirection="column"
+      height="100%"
+      justifyContent="space-between"
+      width="100%"
+    >
       <Box display="flex" justifyContent="space-between" padding={2}>
         <Typography variant="h4">
           <Msg id="misc.views.columnDialog.gallery.columns" />
@@ -99,7 +105,12 @@ const ColumnGallery: FunctionComponent<ColumnGalleryProps> = ({
           />
         </Box>
       </Box>
-      <Box display="flex" height="100%">
+      <Box
+        display="flex"
+        height="85%"
+        justifyContent="space-between"
+        width="100%"
+      >
         <Box
           alignItems="center"
           display={isMobile ? 'none' : 'flex'}
@@ -135,7 +146,13 @@ const ColumnGallery: FunctionComponent<ColumnGalleryProps> = ({
             ))}
           </List>
         </Box>
-        <Box ref={choiceContainerRef} flexGrow={1} sx={{ overflowY: 'scroll' }}>
+        <Box
+          ref={choiceContainerRef}
+          display="flex"
+          flexDirection="column"
+          sx={{ overflowY: 'scroll' }}
+          width={isMobile ? '100%' : '80%'}
+        >
           {isSearching ? (
             <Box padding={2}>
               <Typography variant="h4">
@@ -153,7 +170,7 @@ const ColumnGallery: FunctionComponent<ColumnGalleryProps> = ({
                     searchResults={searchResults}
                   />
                 ) : (
-                  <Typography>
+                  <Typography variant="h5">
                     <Msg
                       id="misc.views.columnDialog.gallery.noSearchResults"
                       values={{ searchString: searchString }}

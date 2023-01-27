@@ -39,6 +39,10 @@ columnDialog:
       questionField: Questions
       surveyField: Surveys
       title: Survey responses
+    surveySubmitDate:
+      description: Indicates whether a person submitted responses to a survey, and when
+      noSurveys: Your organisation does not have any surveys.
+      title: Survey submit date
     tag:
       description: Show a checkmark if the person has this tag
       title: Tag
