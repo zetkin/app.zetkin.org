@@ -33,6 +33,12 @@ columnDialog:
       description: Add your choice of fields like email, phone number, etc.
       keywords: field multiple
       title: Person fields
+    surveyResponses:
+      description: Include responses from multiple survey questions.
+      keywords: field multiple
+      questionField: Questions
+      surveyField: Surveys
+      title: Survey responses
     tag:
       description: Show a checkmark if the person has this tag
       title: Tag
