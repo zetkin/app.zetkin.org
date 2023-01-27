@@ -1,6 +1,7 @@
 import { IntlShape } from 'react-intl';
 import {
   CheckBox,
+  ContactSupport,
   Description,
   EventNote,
   LocalOffer,
@@ -13,6 +14,7 @@ import MultiIconCardVisual from './MultiIconCardVisual';
 import PersonFieldConfig from './PersonFieldConfig';
 import PersonTagConfig from './PersonTagConfig';
 import SingleIconCardVisual from './SingleIconCardVisual';
+import SurveyResponsesConfig from './SurveyResponsePluralConfig';
 import {
   COLUMN_TYPE,
   NATIVE_PERSON_FIELDS,
@@ -30,6 +32,7 @@ export enum CHOICES {
   BOOLEAN = 'toggle',
   LOCAL_PERSON = 'localPerson',
   LOCAL_TEXT = 'localText',
+  SURVEY_RESPONSES = 'surveyResponses',
 }
 
 export type ColumnChoice = {
@@ -246,6 +249,18 @@ const choices: ColumnChoice[] = [
     renderCardVisual: (color: string) => {
       return <SingleIconCardVisual color={color} icon={EventNote} />;
     },
+  },
+  {
+    key: CHOICES.SURVEY_RESPONSES,
+    renderCardVisual: (color: string) => {
+      return <SingleIconCardVisual color={color} icon={ContactSupport} />;
+    },
+    renderConfigForm: (props: {
+      existingColumns: ZetkinViewColumn[];
+      onOutputConfigured: (columns: SelectedViewColumn[]) => void;
+    }) => (
+      <SurveyResponsesConfig onOutputConfigured={props.onOutputConfigured} />
+    ),
   },
 ];
 

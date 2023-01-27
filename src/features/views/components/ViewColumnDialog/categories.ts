@@ -15,6 +15,7 @@ const categories = [
       CHOICES.LOCAL_PERSON,
       CHOICES.DELEGATE,
       CHOICES.LOCAL_TEXT,
+      CHOICES.SURVEY_RESPONSES,
     ],
     key: CATEGORIES.BASIC,
   },
