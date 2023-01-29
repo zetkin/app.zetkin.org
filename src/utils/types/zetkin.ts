@@ -210,6 +210,36 @@ export interface ZetkinSurveyOption {
   text: string;
 }
 
+type ZetkinSurveyQuestionResponse =
+  | {
+      question_id: number;
+      response: string;
+    }
+  | {
+      options: number[];
+      question_id: number;
+    };
+
+export interface ZetkinSurveySubmission {
+  id: number;
+  organization: {
+    id: number;
+    title: string;
+  };
+  respondent: {
+    email: string;
+    first_name: string;
+    id: number | null;
+    last_name: string;
+  } | null;
+  survey: {
+    id: number;
+    title: string;
+  };
+  submitted: string;
+  responses: ZetkinSurveyQuestionResponse[];
+}
+
 export interface ZetkinCanvassAssignment {
   start_data: string;
   end_date: string;
