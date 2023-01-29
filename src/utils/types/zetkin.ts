@@ -178,11 +178,21 @@ export interface ZetkinSurveyExtended extends ZetkinSurvey {
   elements: ZetkinSurveyElement[];
 }
 
-export interface ZetkinSurveyElement {
-  id: number;
-  question: ZetkinQuestion;
-  type: ELEMENT_TYPE;
-}
+export type ZetkinSurveyElement =
+  | {
+      id: number;
+      question: ZetkinQuestion;
+      type: ELEMENT_TYPE.QUESTION;
+    }
+  | {
+      id: number;
+      question: ZetkinQuestion; // TODO: Delete this, it's a lie
+      text_block: {
+        content: string;
+        header: string;
+      };
+      type: ELEMENT_TYPE.TEXT;
+    };
 
 export enum RESPONSE_TYPE {
   OPTIONS = 'options',
