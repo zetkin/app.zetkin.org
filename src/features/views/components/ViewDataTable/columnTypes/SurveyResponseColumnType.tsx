@@ -1,11 +1,14 @@
 import { Box } from '@mui/material';
 import { GridColDef } from '@mui/x-data-grid-pro';
 import { makeStyles } from '@mui/styles';
+import { useRouter } from 'next/router';
 import { FC, useState } from 'react';
 
 import { getEllipsedString } from 'utils/stringUtils';
 import { IColumnType } from '.';
 import { SurveyResponseViewColumn } from '../../types';
+import SurveySubmissionPane from 'features/surveys/panes/SurveySubmissionPane';
+import { usePanes } from 'utils/panes';
 import ViewSurveySubmissionPreview from '../../ViewSurveySubmissionPreview';
 
 type SurveyResponceViewCell = {
@@ -49,8 +52,10 @@ const useStyles = makeStyles({
 });
 
 const Cell: FC<{ cell: SurveyResponceViewCell }> = ({ cell }) => {
+  const { orgId } = useRouter().query;
   const styles = useStyles();
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  const { openPane } = usePanes();
 
   if (cell.length == 0) {
     return null;
@@ -72,9 +77,23 @@ const Cell: FC<{ cell: SurveyResponceViewCell }> = ({ cell }) => {
         {sorted[0].text}
         <ViewSurveySubmissionPreview
           anchorEl={anchorEl}
-          submissions={cell.map((sub) => ({
+          onOpenSubmission={(id) => {
+            openPane({
+              render() {
+                return (
+                  <SurveySubmissionPane
+                    id={id}
+                    orgId={parseInt(orgId as string)}
+                  />
+                );
+              },
+              width: 400,
+            });
+          }}
+          submissions={cell.map((sub, index) => ({
             id: sub.submission_id,
-            matchingContent: getEllipsedString(sub.text, 300),
+            matchingContent:
+              index == 0 ? getEllipsedString(sub.text, 300) : null,
             submitted: sub.submitted,
           }))}
         />
