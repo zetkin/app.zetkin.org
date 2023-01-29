@@ -81,6 +81,7 @@ const ZUIPersonHoverCard: React.FunctionComponent<{
           },
         ]}
         open={open}
+        style={{ zIndex: 9999 }}
       >
         {person && (
           <Fade in={open} timeout={200}>
