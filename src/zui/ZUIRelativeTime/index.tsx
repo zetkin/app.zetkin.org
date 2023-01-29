@@ -34,7 +34,12 @@ const ZUIRelativeTime: React.FunctionComponent<ZUIRelativeTimeProps> = ({
   const [value, unit, updateInterval] = selectUnit(difference);
 
   return (
-    <Tooltip arrow title={<ZUIDateTime convertToLocal datetime={datetime} />}>
+    <Tooltip
+      arrow
+      title={
+        <ZUIDateTime convertToLocal={convertToLocal} datetime={datetime} />
+      }
+    >
       <span>
         <FormattedRelativeTime
           numeric="auto"
