@@ -79,11 +79,7 @@ const SurveySubmissionPane: FC<SurveySubmissionPaneProps> = ({ orgId, id }) => {
             {sub.elements.map((elem) => {
               if (elem.type == ELEM_TYPE.OPEN_QUESTION) {
                 return (
-                  <Question
-                    description={elem.description}
-                    hidden={elem.hidden}
-                    question={elem.question}
-                  >
+                  <Question hidden={elem.hidden} question={elem.question}>
                     <ResponseItem icon={<FormatQuote />}>
                       {elem.response || '-'}
                     </ResponseItem>
@@ -91,11 +87,7 @@ const SurveySubmissionPane: FC<SurveySubmissionPaneProps> = ({ orgId, id }) => {
                 );
               } else if (elem.type == ELEM_TYPE.OPTIONS) {
                 return (
-                  <Question
-                    description={elem.description}
-                    hidden={elem.hidden}
-                    question={elem.question}
-                  >
+                  <Question hidden={elem.hidden} question={elem.question}>
                     {elem.selectedOptions.length == 0 && '-'}
                     {elem.selectedOptions.map((option) => (
                       <ResponseItem key={option.id} icon={<Check />}>
@@ -126,15 +118,13 @@ const SurveySubmissionPane: FC<SurveySubmissionPaneProps> = ({ orgId, id }) => {
 
 const Question: FC<{
   children: ReactNode;
-  description: string | null;
   hidden: boolean;
   question: string;
-}> = ({ children, description, hidden, question }) => {
+}> = ({ children, hidden, question }) => {
   const styles = useStyles();
   return (
     <Box className={styles.element} sx={{ opacity: hidden ? 0.4 : 1 }}>
       <Typography className={styles.question}>{question}</Typography>
-      <Typography>{description}</Typography>
       <Box className={styles.response}>{children}</Box>
     </Box>
   );
