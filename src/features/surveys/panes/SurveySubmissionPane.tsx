@@ -1,7 +1,8 @@
-import { FC } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { makeStyles } from '@mui/styles';
-import { Box, List, ListItem, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
+import { Check, FormatQuote } from '@mui/icons-material';
+import { FC, ReactNode } from 'react';
 
 import PaneHeader from 'utils/panes/PaneHeader';
 import useModel from 'core/useModel';
@@ -22,6 +23,14 @@ const useStyles = makeStyles({
     marginBottom: 20,
   },
   question: {
+    fontWeight: 'bold',
+  },
+  response: {
+    marginTop: 10,
+  },
+  textContent: {},
+  textHeader: {
+    fontSize: '1.2em',
     fontWeight: 'bold',
   },
 });
@@ -75,26 +84,39 @@ const SurveySubmissionPane: FC<SurveySubmissionPaneProps> = ({ orgId, id }) => {
                       {elem.question}
                     </Typography>
                     <Typography>{elem.description}</Typography>
-                    {elem.response}
+                    <Box className={styles.response}>
+                      <ResponseItem icon={<FormatQuote />}>
+                        {elem.response || '-'}
+                      </ResponseItem>
+                    </Box>
                   </Box>
                 );
               } else if (elem.type == ELEM_TYPE.OPTIONS) {
                 return (
                   <Box className={styles.element}>
-                    <Typography>{elem.question}</Typography>
+                    <Typography className={styles.question}>
+                      {elem.question}
+                    </Typography>
                     <Typography>{elem.description}</Typography>
-                    <List>
+                    <Box className={styles.response}>
+                      {elem.selectedOptions.length == 0 && '-'}
                       {elem.selectedOptions.map((option) => (
-                        <ListItem key={option.id}>X {option.text}</ListItem>
+                        <ResponseItem key={option.id} icon={<Check />}>
+                          {option.text}
+                        </ResponseItem>
                       ))}
-                    </List>
+                    </Box>
                   </Box>
                 );
               } else if (elem.type == ELEM_TYPE.TEXT_BLOCK) {
                 return (
                   <Box className={styles.element}>
-                    <h1>{elem.header}</h1>
-                    <p>{elem.text}</p>
+                    <Typography className={styles.textHeader}>
+                      {elem.header}
+                    </Typography>
+                    <Typography className={styles.textContent}>
+                      {elem.text}
+                    </Typography>
                   </Box>
                 );
               }
@@ -103,6 +125,18 @@ const SurveySubmissionPane: FC<SurveySubmissionPaneProps> = ({ orgId, id }) => {
         );
       }}
     </ZUIFuture>
+  );
+};
+
+const ResponseItem: FC<{ children: ReactNode; icon: JSX.Element }> = ({
+  children,
+  icon,
+}) => {
+  return (
+    <Box display="flex">
+      <Box color="#888888">{icon}</Box>
+      <Box>{children}</Box>
+    </Box>
   );
 };
 
