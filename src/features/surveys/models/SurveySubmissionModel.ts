@@ -10,6 +10,7 @@ import { IFuture, LoadingFuture, ResolvedFuture } from 'core/caching/futures';
 
 type HydratedQuestionBase = {
   description: string | null;
+  hidden: boolean;
   question: string;
 };
 
@@ -105,6 +106,7 @@ export default class SurveySubmissionModel extends ModelBase {
         ) {
           elements.push({
             description: question.description,
+            hidden: elem.hidden,
             question: question.question,
             response: response.response,
             type: ELEM_TYPE.OPEN_QUESTION,
@@ -115,6 +117,7 @@ export default class SurveySubmissionModel extends ModelBase {
         ) {
           const hydratedResponse: HydratedQuestionWithOptions = {
             description: elem.question.description,
+            hidden: elem.hidden,
             question: elem.question.question,
             selectedOptions: [],
             type: ELEM_TYPE.OPTIONS,

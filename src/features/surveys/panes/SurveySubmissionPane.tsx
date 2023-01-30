@@ -79,34 +79,30 @@ const SurveySubmissionPane: FC<SurveySubmissionPaneProps> = ({ orgId, id }) => {
             {sub.elements.map((elem) => {
               if (elem.type == ELEM_TYPE.OPEN_QUESTION) {
                 return (
-                  <Box className={styles.element}>
-                    <Typography className={styles.question}>
-                      {elem.question}
-                    </Typography>
-                    <Typography>{elem.description}</Typography>
-                    <Box className={styles.response}>
-                      <ResponseItem icon={<FormatQuote />}>
-                        {elem.response || '-'}
-                      </ResponseItem>
-                    </Box>
-                  </Box>
+                  <Question
+                    description={elem.description}
+                    hidden={elem.hidden}
+                    question={elem.question}
+                  >
+                    <ResponseItem icon={<FormatQuote />}>
+                      {elem.response || '-'}
+                    </ResponseItem>
+                  </Question>
                 );
               } else if (elem.type == ELEM_TYPE.OPTIONS) {
                 return (
-                  <Box className={styles.element}>
-                    <Typography className={styles.question}>
-                      {elem.question}
-                    </Typography>
-                    <Typography>{elem.description}</Typography>
-                    <Box className={styles.response}>
-                      {elem.selectedOptions.length == 0 && '-'}
-                      {elem.selectedOptions.map((option) => (
-                        <ResponseItem key={option.id} icon={<Check />}>
-                          {option.text}
-                        </ResponseItem>
-                      ))}
-                    </Box>
-                  </Box>
+                  <Question
+                    description={elem.description}
+                    hidden={elem.hidden}
+                    question={elem.question}
+                  >
+                    {elem.selectedOptions.length == 0 && '-'}
+                    {elem.selectedOptions.map((option) => (
+                      <ResponseItem key={option.id} icon={<Check />}>
+                        {option.text}
+                      </ResponseItem>
+                    ))}
+                  </Question>
                 );
               } else if (elem.type == ELEM_TYPE.TEXT_BLOCK) {
                 return (
@@ -125,6 +121,22 @@ const SurveySubmissionPane: FC<SurveySubmissionPaneProps> = ({ orgId, id }) => {
         );
       }}
     </ZUIFuture>
+  );
+};
+
+const Question: FC<{
+  children: ReactNode;
+  description: string | null;
+  hidden: boolean;
+  question: string;
+}> = ({ children, description, hidden, question }) => {
+  const styles = useStyles();
+  return (
+    <Box className={styles.element} sx={{ opacity: hidden ? 0.4 : 1 }}>
+      <Typography className={styles.question}>{question}</Typography>
+      <Typography>{description}</Typography>
+      <Box className={styles.response}>{children}</Box>
+    </Box>
   );
 };
 

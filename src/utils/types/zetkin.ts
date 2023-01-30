@@ -180,11 +180,13 @@ export interface ZetkinSurveyExtended extends ZetkinSurvey {
 
 export type ZetkinSurveyElement =
   | {
+      hidden: boolean;
       id: number;
       question: ZetkinQuestion;
       type: ELEMENT_TYPE.QUESTION;
     }
   | {
+      hidden: boolean;
       id: number;
       question: ZetkinQuestion; // TODO: Delete this, it's a lie
       text_block: {
