@@ -4,7 +4,11 @@ import { ZetkinObjectAccess } from 'core/api/types';
 import { ZetkinOfficial } from 'utils/types/zetkin';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { remoteItem, remoteList, RemoteList } from 'utils/storeUtils';
-import { ZetkinView, ZetkinViewFolder } from './components/types';
+import {
+  ZetkinView,
+  ZetkinViewColumn,
+  ZetkinViewFolder,
+} from './components/types';
 
 type ZetkinObjectAccessWithId = ZetkinObjectAccess & {
   id: number;
@@ -12,6 +16,7 @@ type ZetkinObjectAccessWithId = ZetkinObjectAccess & {
 
 export interface ViewsStoreSlice {
   accessByViewId: Record<number | string, RemoteList<ZetkinObjectAccessWithId>>;
+  columnsByViewId: Record<number | string, RemoteList<ZetkinViewColumn>>;
   folderList: RemoteList<ZetkinViewFolder>;
   officialList: RemoteList<ZetkinOfficial>;
   recentlyCreatedFolder: ZetkinViewFolder | null;
@@ -20,6 +25,7 @@ export interface ViewsStoreSlice {
 
 const initialState: ViewsStoreSlice = {
   accessByViewId: {},
+  columnsByViewId: {},
   folderList: remoteList(),
   officialList: remoteList(),
   recentlyCreatedFolder: null,
@@ -99,6 +105,21 @@ const viewsSlice = createSlice({
       state.folderList.loaded = timestamp;
       state.viewList = remoteList(views);
       state.viewList.loaded = timestamp;
+    },
+    columnsLoad: (state, action: PayloadAction<number>) => {
+      const viewId = action.payload;
+      if (!state.columnsByViewId[viewId]) {
+        state.columnsByViewId[viewId] = remoteList([]);
+      }
+      state.columnsByViewId[viewId].isLoading = true;
+    },
+    columnsLoaded: (
+      state,
+      action: PayloadAction<[number, ZetkinViewColumn[]]>
+    ) => {
+      const [viewId, columns] = action.payload;
+      state.columnsByViewId[viewId] = remoteList(columns);
+      state.columnsByViewId[viewId].loaded = new Date().toISOString();
     },
     folderCreate: (state) => {
       state.folderList.isLoading = true;
@@ -200,6 +221,8 @@ export const {
   accessRevoked,
   allItemsLoad,
   allItemsLoaded,
+  columnsLoad,
+  columnsLoaded,
   folderCreate,
   folderCreated,
   folderDeleted,
