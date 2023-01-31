@@ -9,6 +9,7 @@ import { SurveySubmission } from 'features/views/components/ViewDataTable/cells/
 import {
   ZetkinNote,
   ZetkinPerson,
+  ZetkinSurveyOption,
   ZetkinView,
   ZetkinViewColumn,
   ZetkinViewRow,
@@ -66,6 +67,10 @@ const valueFormatters: Record<ZetkinViewColumn['type'], ValueFunc> = {
   }) as ValueFunc,
   [COLUMN_TYPE.PERSON_QUERY]: directFormatter,
   [COLUMN_TYPE.PERSON_TAG]: directFormatter,
+  [COLUMN_TYPE.SURVEY_OPTIONS]: ((cell) => {
+    const responses = cell as ZetkinSurveyOption[];
+    return responses.length ? responses[0].text : '';
+  }) as ValueFunc,
   [COLUMN_TYPE.SURVEY_RESPONSE]: ((cell) => {
     const responses = cell as SurveyResponse[];
     return responses.length ? responses[0].text : '';

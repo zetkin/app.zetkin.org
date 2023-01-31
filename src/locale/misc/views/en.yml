@@ -36,6 +36,12 @@ columnDialog:
       description: Add your choice of fields like email, phone number, etc.
       keywords: field multiple
       title: Person fields
+    surveyResponses:
+      description: Include responses from multiple survey questions.
+      keywords: field multiple
+      questionField: Questions
+      surveyField: Surveys
+      title: Survey responses
     surveySubmitDate:
       description: Indicates whether a person submitted responses to a survey, and when
       noSurveys: Your organisation does not have any surveys.

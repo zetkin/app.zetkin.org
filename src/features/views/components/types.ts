@@ -54,6 +54,7 @@ export enum COLUMN_TYPE {
   PERSON_NOTES = 'person_notes',
   PERSON_QUERY = 'person_query',
   PERSON_TAG = 'person_tag',
+  SURVEY_OPTIONS = 'survey_options',
   SURVEY_RESPONSE = 'survey_response',
   SURVEY_SUBMITTED = 'survey_submitted',
 }
@@ -113,6 +114,13 @@ export interface PersonTagViewColumn extends ZetkinViewColumnBase {
   };
 }
 
+export interface SurveyOptionsViewColumn extends ZetkinViewColumnBase {
+  type: COLUMN_TYPE.SURVEY_OPTIONS;
+  config: {
+    question_id: number;
+  };
+}
+
 export interface SurveyResponseViewColumn extends ZetkinViewColumnBase {
   type: COLUMN_TYPE.SURVEY_RESPONSE;
   config: {
@@ -137,6 +145,7 @@ export type ZetkinViewColumn =
   | PersonFieldViewColumn
   | PersonQueryViewColumn
   | PersonTagViewColumn
+  | SurveyOptionsViewColumn
   | SurveyResponseViewColumn
   | SurveySubmittedViewColumn;
 

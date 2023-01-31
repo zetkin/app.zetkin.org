@@ -17,6 +17,7 @@ const categories = [
       CHOICES.DELEGATE,
       CHOICES.LOCAL_TEXT,
       CHOICES.LOCAL_SMART_SEARCH,
+      CHOICES.SURVEY_RESPONSES,
     ],
     key: CATEGORIES.BASIC,
   },

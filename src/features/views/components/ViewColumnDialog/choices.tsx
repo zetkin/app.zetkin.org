@@ -1,6 +1,7 @@
 import { IntlShape } from 'react-intl';
 import {
   CheckBox,
+  ContactSupport,
   Description,
   Event,
   EventNote,
@@ -16,6 +17,7 @@ import MultiIconCardVisual from './MultiIconCardVisual';
 import PersonFieldConfig from './PersonFieldConfig';
 import PersonTagConfig from './PersonTagConfig';
 import SingleIconCardVisual from './SingleIconCardVisual';
+import SurveyResponsesConfig from './SurveyResponsePluralConfig';
 import SurveySubmitDateConfig from './SurveySubmitDateConfig';
 import theme from 'theme';
 import {
@@ -37,6 +39,7 @@ export enum CHOICES {
   LOCAL_PERSON = 'localPerson',
   LOCAL_TEXT = 'localText',
   LOCAL_SMART_SEARCH = 'localSmartSearch',
+  SURVEY_RESPONSES = 'surveyResponses',
 }
 
 export type ColumnChoice = {
@@ -293,6 +296,19 @@ const choices: ColumnChoice[] = [
       onOutputConfigured: (columns: SelectedViewColumn[]) => void;
     }) => (
       <LocalSmartSearchConfig onOutputConfigured={props.onOutputConfigured} />
+    ),
+  },
+  {
+    color: blue,
+    key: CHOICES.SURVEY_RESPONSES,
+    renderCardVisual: (color: string) => {
+      return <SingleIconCardVisual color={color} icon={ContactSupport} />;
+    },
+    renderConfigForm: (props: {
+      existingColumns: ZetkinViewColumn[];
+      onOutputConfigured: (columns: SelectedViewColumn[]) => void;
+    }) => (
+      <SurveyResponsesConfig onOutputConfigured={props.onOutputConfigured} />
     ),
   },
 ];
