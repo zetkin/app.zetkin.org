@@ -2,12 +2,28 @@ import { PayloadAction } from '@reduxjs/toolkit';
 
 import Environment from 'core/env/Environment';
 import IApiClient from 'core/api/client/IApiClient';
-import { RemoteList } from 'utils/storeUtils';
 import shouldLoad from 'core/caching/shouldLoad';
 import { Store } from 'core/store';
-import { columnsLoad, columnsLoaded, rowsLoad, rowsLoaded } from '../store';
-import { IFuture, PromiseFuture, RemoteListFuture } from 'core/caching/futures';
-import { ZetkinViewColumn, ZetkinViewRow } from '../components/types';
+import {
+  columnsLoad,
+  columnsLoaded,
+  rowsLoad,
+  rowsLoaded,
+  viewLoad,
+  viewLoaded,
+} from '../store';
+import {
+  IFuture,
+  PromiseFuture,
+  RemoteItemFuture,
+  RemoteListFuture,
+} from 'core/caching/futures';
+import { RemoteItem, RemoteList } from 'utils/storeUtils';
+import {
+  ZetkinView,
+  ZetkinViewColumn,
+  ZetkinViewRow,
+} from '../components/types';
 
 export default class ViewDataRepo {
   private _apiClient: IApiClient;
@@ -43,6 +59,17 @@ export default class ViewDataRepo {
         this._apiClient.get(`/api/orgs/${orgId}/people/views/${viewId}/rows`),
     });
   }
+
+  getView(orgId: number, viewId: number): IFuture<ZetkinView> {
+    const state = this._store.getState();
+    const item = state.views.viewList.items.find((item) => item.id == viewId);
+    return loadItemIfNecessary(item, this._store, {
+      actionOnLoad: () => viewLoad(viewId),
+      actionOnSuccess: (view) => viewLoaded(view),
+      loader: () =>
+        this._apiClient.get(`/api/orgs/${orgId}/people/views/${viewId}`),
+    });
+  }
 }
 
 // TODO: This is a candidate for reuse
@@ -70,4 +97,30 @@ function loadListIfNecessary<
   }
 
   return new RemoteListFuture(remoteList);
+}
+
+function loadItemIfNecessary<
+  DataType,
+  OnLoadPayload = void,
+  OnSuccessPayload = DataType
+>(
+  remoteItem: RemoteItem<DataType> | undefined,
+  store: Store,
+  hooks: {
+    actionOnLoad: () => PayloadAction<OnLoadPayload>;
+    actionOnSuccess: (item: DataType) => PayloadAction<OnSuccessPayload>;
+    loader: () => Promise<DataType>;
+  }
+): IFuture<DataType> {
+  if (!remoteItem || shouldLoad(remoteItem)) {
+    store.dispatch(hooks.actionOnLoad());
+    const promise = hooks.loader().then((val) => {
+      store.dispatch(hooks.actionOnSuccess(val));
+      return val;
+    });
+
+    return new PromiseFuture(promise);
+  }
+
+  return new RemoteItemFuture(remoteItem);
 }

@@ -206,6 +206,25 @@ const viewsSlice = createSlice({
         (item) => item.id != viewId
       );
     },
+    viewLoad: (state, action: PayloadAction<number>) => {
+      const viewId = action.payload;
+      const item = state.viewList.items.find((item) => item.id == viewId);
+      if (item) {
+        item.isLoading = true;
+      } else {
+        state.viewList.items = state.viewList.items.concat([
+          remoteItem(viewId, { isLoading: true }),
+        ]);
+      }
+    },
+    viewLoaded: (state, action: PayloadAction<ZetkinView>) => {
+      const view = action.payload;
+      state.viewList.items = state.viewList.items
+        .filter((item) => item.id != view.id)
+        .concat([
+          remoteItem(view.id, { data: view, loaded: new Date().toISOString() }),
+        ]);
+    },
     viewUpdate: (state, action: PayloadAction<[number, string[]]>) => {
       const [id, mutating] = action.payload;
       const item = state.viewList.items.find((item) => item.id == id);
@@ -250,6 +269,8 @@ export const {
   viewCreate,
   viewCreated,
   viewDeleted,
+  viewLoad,
+  viewLoaded,
   viewUpdate,
   viewUpdated,
 } = viewsSlice.actions;
