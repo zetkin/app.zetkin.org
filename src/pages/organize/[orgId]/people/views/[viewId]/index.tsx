@@ -1,17 +1,16 @@
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
-import { useQuery } from 'react-query';
 
 import getOrg from 'utils/fetching/getOrg';
 import getUserMemberships from 'utils/getUserMemberships';
 import getView from 'features/views/fetching/getView';
-import getViewColumns from 'features/views/fetching/getViewColumns';
-import getViewRows from 'features/views/fetching/getViewRows';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import SingleViewLayout from 'features/views/layout/SingleViewLayout';
+import useModel from 'core/useModel';
+import ViewDataModel from 'features/views/models/ViewDataModel';
 import ViewDataTable from 'features/views/components/ViewDataTable';
-import ZUIQuery from 'zui/ZUIQuery';
+import ZUIFutures from 'zui/ZUIFutures';
 
 const scaffoldOptions = {
   allowNonOfficials: true,
@@ -77,33 +76,27 @@ const SingleViewPage: PageWithLayout<SingleViewPageProps> = ({
   orgId,
   viewId,
 }) => {
+  const model = useModel(
+    (env) => new ViewDataModel(env, parseInt(orgId), parseInt(viewId))
+  );
+
   return (
-    <ZUIQuery
-      queries={{
-        colsQuery: useQuery(
-          ['view', viewId, 'columns'],
-          getViewColumns(orgId, viewId)
-        ),
-        rowsQuery: useQuery(
-          ['view', viewId, 'rows'],
-          getViewRows(orgId, viewId)
-        ),
-        viewQuery: useQuery(['view', viewId], getView(orgId, viewId)),
+    <ZUIFutures
+      futures={{
+        cols: model.getColumns(),
+        rows: model.getRows(),
+        view: model.getView(),
       }}
     >
-      {({ queries: { colsQuery, rowsQuery, viewQuery } }) => (
+      {({ data: { cols, rows, view } }) => (
         <>
           <Head>
-            <title>{viewQuery.data.title}</title>
+            <title>{view.title}</title>
           </Head>
-          <ViewDataTable
-            columns={colsQuery.data}
-            rows={rowsQuery.data}
-            view={viewQuery.data}
-          />
+          <ViewDataTable columns={cols} rows={rows} view={view} />
         </>
       )}
-    </ZUIQuery>
+    </ZUIFutures>
   );
 };
 

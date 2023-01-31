@@ -1,20 +1,19 @@
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
-import { useQuery } from 'react-query';
 
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import getOrg from 'utils/fetching/getOrg';
 import getView from 'features/views/fetching/getView';
-import getViewColumns from 'features/views/fetching/getViewColumns';
-import getViewRows from 'features/views/fetching/getViewRows';
 import IApiClient from 'core/api/client/IApiClient';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import SharedViewLayout from 'features/views/layout/SharedViewLayout';
+import useModel from 'core/useModel';
+import ViewDataModel from 'features/views/models/ViewDataModel';
 import ViewDataTable from 'features/views/components/ViewDataTable';
 import { ZetkinMembership } from 'utils/types/zetkin';
 import { ZetkinObjectAccess } from 'core/api/types';
-import ZUIQuery from 'zui/ZUIQuery';
+import ZUIFutures from 'zui/ZUIFutures';
 
 const scaffoldOptions = {
   allowNonOfficials: true,
@@ -102,37 +101,34 @@ const SharedViewPage: PageWithLayout<SharedViewPageProps> = ({
   orgId,
   viewId,
 }) => {
+  const model = useModel(
+    (env) => new ViewDataModel(env, parseInt(orgId), parseInt(viewId))
+  );
   const canConfigure = accessLevel == 'configure';
 
   return (
-    <ZUIQuery
-      queries={{
-        colsQuery: useQuery(
-          ['view', viewId, 'columns'],
-          getViewColumns(orgId, viewId)
-        ),
-        rowsQuery: useQuery(
-          ['view', viewId, 'rows'],
-          getViewRows(orgId, viewId)
-        ),
-        viewQuery: useQuery(['view', viewId], getView(orgId, viewId)),
+    <ZUIFutures
+      futures={{
+        cols: model.getColumns(),
+        rows: model.getRows(),
+        view: model.getView(),
       }}
     >
-      {({ queries: { colsQuery, rowsQuery, viewQuery } }) => (
+      {({ data: { cols, rows, view } }) => (
         <>
           <Head>
-            <title>{viewQuery.data.title}</title>
+            <title>{view.title}</title>
           </Head>
           <ViewDataTable
-            columns={colsQuery.data}
+            columns={cols}
             disableBulkActions
             disableConfigure={!canConfigure}
-            rows={rowsQuery.data}
-            view={viewQuery.data}
+            rows={rows}
+            view={view}
           />
         </>
       )}
-    </ZUIQuery>
+    </ZUIFutures>
   );
 };
 
