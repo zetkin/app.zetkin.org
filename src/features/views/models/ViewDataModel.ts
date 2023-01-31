@@ -2,7 +2,7 @@ import Environment from 'core/env/Environment';
 import { IFuture } from 'core/caching/futures';
 import { ModelBase } from 'core/models';
 import ViewDataRepo from '../repos/ViewDataRepo';
-import { ZetkinViewColumn } from '../components/types';
+import { ZetkinViewColumn, ZetkinViewRow } from '../components/types';
 
 export default class ViewDataModel extends ModelBase {
   private _orgId: number;
@@ -19,5 +19,9 @@ export default class ViewDataModel extends ModelBase {
 
   getColumns(): IFuture<ZetkinViewColumn[]> {
     return this._repo.getColumns(this._orgId, this._viewId);
+  }
+
+  getRows(): IFuture<ZetkinViewRow[]> {
+    return this._repo.getRows(this._orgId, this._viewId);
   }
 }

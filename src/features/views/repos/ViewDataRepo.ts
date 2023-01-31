@@ -5,9 +5,9 @@ import IApiClient from 'core/api/client/IApiClient';
 import { RemoteList } from 'utils/storeUtils';
 import shouldLoad from 'core/caching/shouldLoad';
 import { Store } from 'core/store';
-import { ZetkinViewColumn } from '../components/types';
-import { columnsLoad, columnsLoaded } from '../store';
+import { columnsLoad, columnsLoaded, rowsLoad, rowsLoaded } from '../store';
 import { IFuture, PromiseFuture, RemoteListFuture } from 'core/caching/futures';
+import { ZetkinViewColumn, ZetkinViewRow } from '../components/types';
 
 export default class ViewDataRepo {
   private _apiClient: IApiClient;
@@ -29,6 +29,18 @@ export default class ViewDataRepo {
         this._apiClient.get(
           `/api/orgs/${orgId}/people/views/${viewId}/columns`
         ),
+    });
+  }
+
+  getRows(orgId: number, viewId: number): IFuture<ZetkinViewRow[]> {
+    const state = this._store.getState();
+    const list = state.views.rowsByViewId[viewId];
+
+    return loadListIfNecessary(list, this._store, {
+      actionOnLoad: () => rowsLoad(viewId),
+      actionOnSuccess: (rows) => rowsLoaded([viewId, rows]),
+      loader: () =>
+        this._apiClient.get(`/api/orgs/${orgId}/people/views/${viewId}/rows`),
     });
   }
 }

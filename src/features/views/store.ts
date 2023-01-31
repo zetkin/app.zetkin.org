@@ -8,6 +8,7 @@ import {
   ZetkinView,
   ZetkinViewColumn,
   ZetkinViewFolder,
+  ZetkinViewRow,
 } from './components/types';
 
 type ZetkinObjectAccessWithId = ZetkinObjectAccess & {
@@ -20,6 +21,7 @@ export interface ViewsStoreSlice {
   folderList: RemoteList<ZetkinViewFolder>;
   officialList: RemoteList<ZetkinOfficial>;
   recentlyCreatedFolder: ZetkinViewFolder | null;
+  rowsByViewId: Record<number | string, RemoteList<ZetkinViewRow>>;
   viewList: RemoteList<ZetkinView>;
 }
 
@@ -29,6 +31,7 @@ const initialState: ViewsStoreSlice = {
   folderList: remoteList(),
   officialList: remoteList(),
   recentlyCreatedFolder: null,
+  rowsByViewId: {},
   viewList: remoteList(),
 };
 
@@ -173,6 +176,18 @@ const viewsSlice = createSlice({
       state.officialList = remoteList(action.payload);
       state.officialList.loaded = new Date().toISOString();
     },
+    rowsLoad: (state, action: PayloadAction<number>) => {
+      const viewId = action.payload;
+      if (!state.rowsByViewId[viewId]) {
+        state.rowsByViewId[viewId] = remoteList([]);
+      }
+      state.rowsByViewId[viewId].isLoading = true;
+    },
+    rowsLoaded: (state, action: PayloadAction<[number, ZetkinViewRow[]]>) => {
+      const [viewId, rows] = action.payload;
+      state.rowsByViewId[viewId] = remoteList(rows);
+      state.rowsByViewId[viewId].loaded = new Date().toISOString();
+    },
     viewCreate: (state) => {
       state.viewList.isLoading = true;
     },
@@ -230,6 +245,8 @@ export const {
   folderUpdated,
   officialsLoad,
   officialsLoaded,
+  rowsLoad,
+  rowsLoaded,
   viewCreate,
   viewCreated,
   viewDeleted,
