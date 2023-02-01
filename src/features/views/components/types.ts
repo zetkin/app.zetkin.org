@@ -79,7 +79,7 @@ export interface LocalPersonViewColumn extends ZetkinViewColumnBase {
 export interface LocalSmartSearchViewColumn extends ZetkinViewColumnBase {
   type: COLUMN_TYPE.LOCAL_SMART_SEARCH;
   config: {
-    filters: ZetkinSmartSearchFilter<AnyFilterConfig>[];
+    filter_spec: ZetkinSmartSearchFilter<AnyFilterConfig>[];
   };
 }
 

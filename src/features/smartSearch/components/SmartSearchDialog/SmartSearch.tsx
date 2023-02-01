@@ -102,10 +102,10 @@ const SmartSearch = ({
               onOutputConfigured([
                 {
                   config: {
-                    filters: filters,
+                    filter_spec: filters,
                   },
                   title: intl.formatMessage({
-                    id: 'misc.views.columnDialog.localSmartSearch.title',
+                    id: 'misc.views.columnDialog.choices.localSmartSearch.columnTitle',
                   }),
                   type: COLUMN_TYPE.LOCAL_SMART_SEARCH,
                 },
@@ -131,10 +131,10 @@ const SmartSearch = ({
               onOutputConfigured([
                 {
                   config: {
-                    filters: filters,
+                    filter_spec: filters,
                   },
                   title: intl.formatMessage({
-                    id: 'misc.views.columnDialog.localSmartSearch.title',
+                    id: 'misc.views.columnDialog.choices.localSmartSearch.columnTitle',
                   }),
                   type: COLUMN_TYPE.LOCAL_SMART_SEARCH,
                 },
