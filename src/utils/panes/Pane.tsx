@@ -13,7 +13,6 @@ const Pane: FC<PaneProps> = ({ children, onClose }) => {
       sx={{
         display: 'flex',
         maxHeight: '100%',
-        padding: 1,
         position: 'relative',
       }}
     >
@@ -32,6 +31,7 @@ const Pane: FC<PaneProps> = ({ children, onClose }) => {
         sx={{
           flex: 1,
           overflowY: 'scroll',
+          padding: 2,
         }}
       >
         {children}
