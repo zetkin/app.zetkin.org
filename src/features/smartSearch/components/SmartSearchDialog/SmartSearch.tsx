@@ -7,10 +7,17 @@ import QueryOverview from './QueryOverview';
 import StartsWith from '../StartsWith';
 import useSmartSearch from 'features/smartSearch/hooks/useSmartSearch';
 import {
+  AnyFilterConfig,
+  FILTER_TYPE,
+  OPERATION,
+  SelectedSmartSearchFilter,
+  ZetkinQuery,
+  ZetkinSmartSearchFilter,
+} from '../types';
+import {
   COLUMN_TYPE,
   SelectedViewColumn,
 } from 'features/views/components/types';
-import { SelectedSmartSearchFilter, ZetkinQuery } from '../types';
 
 export interface SmartSearchDialogProps {
   query?: ZetkinQuery | null;
@@ -102,7 +109,7 @@ const SmartSearch = ({
               onOutputConfigured([
                 {
                   config: {
-                    filter_spec: filters,
+                    filter_spec: [...filters, filter],
                   },
                   title: intl.formatMessage({
                     id: 'misc.views.columnDialog.choices.localSmartSearch.columnTitle',
@@ -111,7 +118,6 @@ const SmartSearch = ({
                 },
               ]);
             }
-
             setSearchState(STATE.PREVIEW);
             // If editing existing filter
             if ('id' in filter) {
@@ -127,11 +133,26 @@ const SmartSearch = ({
         <StartsWith
           onCancel={() => setSearchState(STATE.PREVIEW)}
           onSubmit={(shouldStartWithAll) => {
+            let filterSpec: ZetkinSmartSearchFilter<AnyFilterConfig>[] = [];
+
+            if (startsWithAll && !shouldStartWithAll) {
+              filterSpec = filters.slice(1);
+            } else if (!startsWithAll && shouldStartWithAll) {
+              filterSpec = [
+                {
+                  config: {},
+                  op: OPERATION.ADD,
+                  type: FILTER_TYPE.ALL,
+                },
+                ...filters,
+              ];
+            }
+
             if (onOutputConfigured) {
               onOutputConfigured([
                 {
                   config: {
-                    filter_spec: filters,
+                    filter_spec: filterSpec,
                   },
                   title: intl.formatMessage({
                     id: 'misc.views.columnDialog.choices.localSmartSearch.columnTitle',
