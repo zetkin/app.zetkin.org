@@ -11,20 +11,20 @@ import SurveySubmissionPane from 'features/surveys/panes/SurveySubmissionPane';
 import { usePanes } from 'utils/panes';
 import ViewSurveySubmissionPreview from '../../ViewSurveySubmissionPreview';
 
-type SurveyResponceViewCell = {
+type SurveyResponseViewCell = {
   submission_id: number;
   submitted: string;
   text: string;
 }[];
 
 export default class SurveyResponseColumnType
-  implements IColumnType<SurveyResponseViewColumn, SurveyResponceViewCell>
+  implements IColumnType<SurveyResponseViewColumn, SurveyResponseViewCell>
 {
-  cellToString(cell: SurveyResponceViewCell): string {
+  cellToString(cell: SurveyResponseViewCell): string {
     return cell.length ? cell[0].text : '';
   }
 
-  getColDef(): Omit<GridColDef<SurveyResponceViewCell>, 'field'> {
+  getColDef(): Omit<GridColDef<SurveyResponseViewCell>, 'field'> {
     return {
       renderCell: (params) => {
         return <Cell cell={params.value} />;
@@ -51,7 +51,7 @@ const useStyles = makeStyles({
   },
 });
 
-const Cell: FC<{ cell: SurveyResponceViewCell }> = ({ cell }) => {
+const Cell: FC<{ cell: SurveyResponseViewCell }> = ({ cell }) => {
   const { orgId } = useRouter().query;
   const styles = useStyles();
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
