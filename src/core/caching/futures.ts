@@ -61,6 +61,15 @@ export class ResolvedFuture<DataType>
   }
 }
 
+export class LoadingFuture<DataType>
+  extends FutureBase<DataType>
+  implements IFuture<DataType>
+{
+  constructor() {
+    super(null, null, true);
+  }
+}
+
 export class PlaceholderFuture<DataType>
   extends FutureBase<DataType>
   implements IFuture<DataType>
