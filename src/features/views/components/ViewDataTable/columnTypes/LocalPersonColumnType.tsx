@@ -1,21 +1,23 @@
 import { GridColDef } from '@mui/x-data-grid-pro';
 import { makeStyles } from '@mui/styles';
-import { useIntl } from 'react-intl';
 import { useRouter } from 'next/router';
 import {
   Box,
+  Button,
   List,
   ListItem,
   Paper,
   Popper,
   TextField,
+  Typography,
   useAutocomplete,
 } from '@mui/material';
+import { Close, Person } from '@mui/icons-material';
 import { FC, useState } from 'react';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 import { IColumnType } from '.';
 import { LocalPersonViewColumn } from '../../types';
-import { Person } from '@mui/icons-material';
 import { usePersonSelect } from 'zui/ZUIPersonSelect';
 import useViewDataModel from 'features/views/hooks/useViewDataModel';
 import ZUIAvatar from 'zui/ZUIAvatar';
@@ -59,16 +61,24 @@ const Cell: FC<{
   column: LocalPersonViewColumn;
   row: ZetkinViewRow;
 }> = ({ cell, column, row }) => {
-  const { orgId } = useRouter().query;
+  const query = useRouter().query;
   const intl = useIntl();
   const styles = useStyles();
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  const [searching, setSearching] = useState(false);
   const model = useViewDataModel();
+
+  const orgId = parseInt(query.orgId as string);
+
+  const updateCellValue = (person: ZetkinPerson | null) => {
+    model.setCellValue(row.id, column.id, person?.id ?? null);
+  };
 
   const personSelect = usePersonSelect({
     onChange: (person) => {
-      model.setCellValue(row.id, column.id, person.id);
+      updateCellValue(person);
       setAnchorEl(null);
+      setSearching(false);
     },
     selectedPerson: null,
   });
@@ -86,11 +96,7 @@ const Cell: FC<{
         setAnchorEl(null);
       }}
     >
-      {cell ? (
-        <ZUIAvatar orgId={parseInt(orgId as string)} personId={cell.id} />
-      ) : (
-        <Person />
-      )}
+      {cell ? <ZUIAvatar orgId={orgId} personId={cell.id} /> : <Person />}
       <Popper anchorEl={anchorEl} open={!!anchorEl}>
         <Paper
           className={styles.popper}
@@ -107,6 +113,8 @@ const Cell: FC<{
                 label={intl.formatMessage({
                   id: 'misc.views.cells.localPerson.searchLabel',
                 })}
+                onBlur={() => setSearching(false)}
+                onFocus={() => setSearching(true)}
               />
             </Box>
             <Box
@@ -116,21 +124,45 @@ const Cell: FC<{
                 overflowY: 'scroll',
               }}
             >
-              <List {...autoComplete.getListboxProps()}>
-                {(autoComplete.groupedOptions as ZetkinPerson[]).map(
-                  (option, index) => {
-                    const optProps = autoComplete.getOptionProps({
-                      index,
-                      option,
-                    });
-                    return (
-                      <ListItem key={option.id} {...optProps}>
-                        {`${option.first_name} ${option.last_name}`}
-                      </ListItem>
-                    );
-                  }
-                )}
-              </List>
+              {searching && (
+                <List {...autoComplete.getListboxProps()}>
+                  {(autoComplete.groupedOptions as ZetkinPerson[]).map(
+                    (option, index) => {
+                      const optProps = autoComplete.getOptionProps({
+                        index,
+                        option,
+                      });
+                      return (
+                        <ListItem key={option.id} {...optProps}>
+                          {`${option.first_name} ${option.last_name}`}
+                        </ListItem>
+                      );
+                    }
+                  )}
+                </List>
+              )}
+
+              {!searching && !!cell?.id && (
+                <Box
+                  alignItems="center"
+                  display="flex"
+                  flexDirection="column"
+                  height="100%"
+                  justifyContent="center"
+                  width="100%"
+                >
+                  <ZUIAvatar orgId={orgId} personId={cell.id} size="lg" />
+                  <Typography>
+                    {`${cell.first_name} ${cell.last_name}`}
+                  </Typography>
+                  <Button
+                    endIcon={<Close />}
+                    onClick={() => updateCellValue(null)}
+                  >
+                    <FormattedMessage id="misc.views.cells.localPerson.clearLabel" />
+                  </Button>
+                </Box>
+              )}
             </Box>
           </Box>
         </Paper>
