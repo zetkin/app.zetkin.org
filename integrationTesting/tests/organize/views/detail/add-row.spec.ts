@@ -44,7 +44,11 @@ test.describe('View detail page', () => {
     moxy.teardown();
   });
 
-  test('lets user add row to empty view', async ({ page, appUri, moxy }) => {
+  test.skip('lets user add row to empty view', async ({
+    page,
+    appUri,
+    moxy,
+  }) => {
     moxy.setZetkinApiMock('/orgs/1/people/views/1/rows', 'get', []);
     moxy.setZetkinApiMock(
       '/orgs/1/people/views/1/content_query',

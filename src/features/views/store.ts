@@ -4,7 +4,12 @@ import { ZetkinObjectAccess } from 'core/api/types';
 import { ZetkinOfficial } from 'utils/types/zetkin';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { remoteItem, remoteList, RemoteList } from 'utils/storeUtils';
-import { ZetkinView, ZetkinViewFolder } from './components/types';
+import {
+  ZetkinView,
+  ZetkinViewColumn,
+  ZetkinViewFolder,
+  ZetkinViewRow,
+} from './components/types';
 
 type ZetkinObjectAccessWithId = ZetkinObjectAccess & {
   id: number;
@@ -12,17 +17,21 @@ type ZetkinObjectAccessWithId = ZetkinObjectAccess & {
 
 export interface ViewsStoreSlice {
   accessByViewId: Record<number | string, RemoteList<ZetkinObjectAccessWithId>>;
+  columnsByViewId: Record<number | string, RemoteList<ZetkinViewColumn>>;
   folderList: RemoteList<ZetkinViewFolder>;
   officialList: RemoteList<ZetkinOfficial>;
   recentlyCreatedFolder: ZetkinViewFolder | null;
+  rowsByViewId: Record<number | string, RemoteList<ZetkinViewRow>>;
   viewList: RemoteList<ZetkinView>;
 }
 
 const initialState: ViewsStoreSlice = {
   accessByViewId: {},
+  columnsByViewId: {},
   folderList: remoteList(),
   officialList: remoteList(),
   recentlyCreatedFolder: null,
+  rowsByViewId: {},
   viewList: remoteList(),
 };
 
@@ -100,6 +109,39 @@ const viewsSlice = createSlice({
       state.viewList = remoteList(views);
       state.viewList.loaded = timestamp;
     },
+    cellUpdate: () => {
+      // Todo: Do something to indicate loading status?
+    },
+    cellUpdated: (
+      state,
+      action: PayloadAction<[number, number, number, unknown]>
+    ) => {
+      const [viewId, rowId, colId, newValue] = action.payload;
+      const rowList = state.rowsByViewId[viewId];
+      const rowItem = rowList.items.find((item) => item.id == rowId);
+      const columnList = state.columnsByViewId[viewId];
+      const colIndex = columnList.items.findIndex((item) => item.id == colId);
+      if (rowItem?.data?.content) {
+        rowItem.data.content = rowItem.data.content.map((oldValue, idx) =>
+          idx == colIndex ? newValue : oldValue
+        );
+      }
+    },
+    columnsLoad: (state, action: PayloadAction<number>) => {
+      const viewId = action.payload;
+      if (!state.columnsByViewId[viewId]) {
+        state.columnsByViewId[viewId] = remoteList([]);
+      }
+      state.columnsByViewId[viewId].isLoading = true;
+    },
+    columnsLoaded: (
+      state,
+      action: PayloadAction<[number, ZetkinViewColumn[]]>
+    ) => {
+      const [viewId, columns] = action.payload;
+      state.columnsByViewId[viewId] = remoteList(columns);
+      state.columnsByViewId[viewId].loaded = new Date().toISOString();
+    },
     folderCreate: (state) => {
       state.folderList.isLoading = true;
       state.recentlyCreatedFolder = null;
@@ -152,6 +194,18 @@ const viewsSlice = createSlice({
       state.officialList = remoteList(action.payload);
       state.officialList.loaded = new Date().toISOString();
     },
+    rowsLoad: (state, action: PayloadAction<number>) => {
+      const viewId = action.payload;
+      if (!state.rowsByViewId[viewId]) {
+        state.rowsByViewId[viewId] = remoteList([]);
+      }
+      state.rowsByViewId[viewId].isLoading = true;
+    },
+    rowsLoaded: (state, action: PayloadAction<[number, ZetkinViewRow[]]>) => {
+      const [viewId, rows] = action.payload;
+      state.rowsByViewId[viewId] = remoteList(rows);
+      state.rowsByViewId[viewId].loaded = new Date().toISOString();
+    },
     viewCreate: (state) => {
       state.viewList.isLoading = true;
     },
@@ -169,6 +223,25 @@ const viewsSlice = createSlice({
       state.viewList.items = state.viewList.items.filter(
         (item) => item.id != viewId
       );
+    },
+    viewLoad: (state, action: PayloadAction<number>) => {
+      const viewId = action.payload;
+      const item = state.viewList.items.find((item) => item.id == viewId);
+      if (item) {
+        item.isLoading = true;
+      } else {
+        state.viewList.items = state.viewList.items.concat([
+          remoteItem(viewId, { isLoading: true }),
+        ]);
+      }
+    },
+    viewLoaded: (state, action: PayloadAction<ZetkinView>) => {
+      const view = action.payload;
+      state.viewList.items = state.viewList.items
+        .filter((item) => item.id != view.id)
+        .concat([
+          remoteItem(view.id, { data: view, loaded: new Date().toISOString() }),
+        ]);
     },
     viewUpdate: (state, action: PayloadAction<[number, string[]]>) => {
       const [id, mutating] = action.payload;
@@ -200,6 +273,10 @@ export const {
   accessRevoked,
   allItemsLoad,
   allItemsLoaded,
+  cellUpdate,
+  cellUpdated,
+  columnsLoad,
+  columnsLoaded,
   folderCreate,
   folderCreated,
   folderDeleted,
@@ -207,9 +284,13 @@ export const {
   folderUpdated,
   officialsLoad,
   officialsLoaded,
+  rowsLoad,
+  rowsLoaded,
   viewCreate,
   viewCreated,
   viewDeleted,
+  viewLoad,
+  viewLoaded,
   viewUpdate,
   viewUpdated,
 } = viewsSlice.actions;

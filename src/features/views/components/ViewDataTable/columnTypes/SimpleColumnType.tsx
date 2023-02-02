@@ -8,8 +8,8 @@ type SimpleData = string | number | boolean;
 export default class SimpleColumnType
   implements IColumnType<ZetkinViewColumn, SimpleData>
 {
-  cellToString(cell: SimpleData): string {
-    return cell.toString();
+  cellToString(cell: SimpleData | null): string {
+    return cell ? cell.toString() : '';
   }
 
   getColDef(): Omit<GridColDef, 'field'> {

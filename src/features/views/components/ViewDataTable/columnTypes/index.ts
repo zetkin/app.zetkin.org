@@ -1,5 +1,6 @@
 import { GridColDef } from '@mui/x-data-grid-pro';
 
+import LocalPersonColumnType from './LocalPersonColumnType';
 import SimpleColumnType from './SimpleColumnType';
 import SurveyResponseColumnType from './SurveyResponseColumnType';
 import { COLUMN_TYPE, ZetkinViewColumn } from 'features/views/components/types';
@@ -42,7 +43,7 @@ class DummyColumnType implements IColumnType {
 const columnTypes: Record<COLUMN_TYPE, IColumnType> = {
   [COLUMN_TYPE.JOURNEY_ASSIGNEE]: new DummyColumnType(),
   [COLUMN_TYPE.LOCAL_BOOL]: new SimpleColumnType(),
-  [COLUMN_TYPE.LOCAL_PERSON]: new DummyColumnType(),
+  [COLUMN_TYPE.LOCAL_PERSON]: new LocalPersonColumnType(),
   [COLUMN_TYPE.LOCAL_SMART_SEARCH]: new DummyColumnType(),
   [COLUMN_TYPE.PERSON_FIELD]: new SimpleColumnType(),
   [COLUMN_TYPE.PERSON_NOTES]: new DummyColumnType(),

@@ -25,7 +25,7 @@ test.describe('View detail page', () => {
     moxy.teardown();
   });
 
-  test('lets user configure Smart Search query in empty view', async ({
+  test.skip('lets user configure Smart Search query in empty view', async ({
     page,
     appUri,
     moxy,

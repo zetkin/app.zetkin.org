@@ -1,4 +1,11 @@
 # eslint-disable yml/key-name-casing
+cells:
+  localPerson:
+    alreadyInView: Already in view
+    clearLabel: Unassign
+    otherPeople: Other people
+    restrictedMode: Can't be edited in shared views.
+    searchLabel: Select a person
 columnDialog:
   categories:
     basic:
