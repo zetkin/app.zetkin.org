@@ -109,6 +109,24 @@ const viewsSlice = createSlice({
       state.viewList = remoteList(views);
       state.viewList.loaded = timestamp;
     },
+    cellUpdate: () => {
+      // Todo: Do something to indicate loading status?
+    },
+    cellUpdated: (
+      state,
+      action: PayloadAction<[number, number, number, unknown]>
+    ) => {
+      const [viewId, rowId, colId, newValue] = action.payload;
+      const rowList = state.rowsByViewId[viewId];
+      const rowItem = rowList.items.find((item) => item.id == rowId);
+      const columnList = state.columnsByViewId[viewId];
+      const colIndex = columnList.items.findIndex((item) => item.id == colId);
+      if (rowItem?.data?.content) {
+        rowItem.data.content = rowItem.data.content.map((oldValue, idx) =>
+          idx == colIndex ? newValue : oldValue
+        );
+      }
+    },
     columnsLoad: (state, action: PayloadAction<number>) => {
       const viewId = action.payload;
       if (!state.columnsByViewId[viewId]) {
@@ -255,6 +273,8 @@ export const {
   accessRevoked,
   allItemsLoad,
   allItemsLoaded,
+  cellUpdate,
+  cellUpdated,
   columnsLoad,
   columnsLoaded,
   folderCreate,

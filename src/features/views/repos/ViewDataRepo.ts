@@ -5,6 +5,8 @@ import IApiClient from 'core/api/client/IApiClient';
 import shouldLoad from 'core/caching/shouldLoad';
 import { Store } from 'core/store';
 import {
+  cellUpdate,
+  cellUpdated,
   columnsLoad,
   columnsLoaded,
   rowsLoad,
@@ -69,6 +71,24 @@ export default class ViewDataRepo {
       loader: () =>
         this._apiClient.get(`/api/orgs/${orgId}/people/views/${viewId}`),
     });
+  }
+
+  setCellData<DataType>(
+    orgId: number,
+    viewId: number,
+    rowId: number,
+    colId: number,
+    value: DataType
+  ) {
+    this._store.dispatch(cellUpdate());
+    this._apiClient
+      .put<{ value: DataType }>(
+        `/api/orgs/${orgId}/people/views/${viewId}/rows/${rowId}/cells/${colId}`,
+        { value }
+      )
+      .then((data) => {
+        this._store.dispatch(cellUpdated([viewId, rowId, colId, data.value]));
+      });
   }
 }
 
