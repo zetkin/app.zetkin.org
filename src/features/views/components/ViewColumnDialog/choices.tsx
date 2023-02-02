@@ -7,10 +7,12 @@ import {
   EventNote,
   LocalOffer,
   Person,
+  PersonSearch,
 } from '@mui/icons-material';
 
 import DoubleIconCardVisual from './DoubleIconCardVisual';
 import getUniqueColumnName from '../../utils/getUniqueColumnName';
+import LocalSmartSearchConfig from './LocalSmartSearchConfig';
 import MultiIconCardVisual from './MultiIconCardVisual';
 import PersonFieldConfig from './PersonFieldConfig';
 import PersonTagConfig from './PersonTagConfig';
@@ -36,6 +38,7 @@ export enum CHOICES {
   BOOLEAN = 'toggle',
   LOCAL_PERSON = 'localPerson',
   LOCAL_TEXT = 'localText',
+  LOCAL_SMART_SEARCH = 'localSmartSearch',
   SURVEY_RESPONSES = 'surveyResponses',
 }
 
@@ -281,6 +284,19 @@ const choices: ColumnChoice[] = [
     renderCardVisual: (color: string) => {
       return <SingleIconCardVisual color={color} icon={EventNote} />;
     },
+  },
+  {
+    color: blue,
+    key: CHOICES.LOCAL_SMART_SEARCH,
+    renderCardVisual: (color: string) => {
+      return <SingleIconCardVisual color={color} icon={PersonSearch} />;
+    },
+    renderConfigForm: (props: {
+      existingColumns: ZetkinViewColumn[];
+      onOutputConfigured: (columns: SelectedViewColumn[]) => void;
+    }) => (
+      <LocalSmartSearchConfig onOutputConfigured={props.onOutputConfigured} />
+    ),
   },
   {
     color: blue,
