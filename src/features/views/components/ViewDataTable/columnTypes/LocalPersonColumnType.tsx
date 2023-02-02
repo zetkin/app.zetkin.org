@@ -6,6 +6,7 @@ import {
   Button,
   List,
   ListItem,
+  ListSubheader,
   Paper,
   Popper,
   TextField,
@@ -13,14 +14,15 @@ import {
   useAutocomplete,
 } from '@mui/material';
 import { Close, Person } from '@mui/icons-material';
-import { FC, useState } from 'react';
+import { FC, HTMLAttributes, useState } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 
 import { IColumnType } from '.';
-import { LocalPersonViewColumn } from '../../types';
 import { usePersonSelect } from 'zui/ZUIPersonSelect';
 import useViewDataModel from 'features/views/hooks/useViewDataModel';
+import ViewDataModel from 'features/views/models/ViewDataModel';
 import ZUIAvatar from 'zui/ZUIAvatar';
+import { COLUMN_TYPE, LocalPersonViewColumn } from '../../types';
 import { ZetkinPerson, ZetkinViewRow } from 'utils/types/zetkin';
 
 type LocalPersonViewCell = null | {
@@ -87,6 +89,10 @@ const Cell: FC<{
     ...personSelect.autoCompleteProps,
   });
 
+  const options = autoComplete.groupedOptions as ZetkinPerson[];
+  const peopleInView = usePeopleInView(model, options);
+  const showPeopleInView = searching || !cell;
+
   return (
     <Box
       onMouseEnter={(ev) => {
@@ -119,26 +125,46 @@ const Cell: FC<{
             </Box>
             <Box
               sx={{
-                display: 'flex',
                 height: 'calc(100% - 60px)',
                 overflowY: 'scroll',
               }}
             >
+              {showPeopleInView && !!peopleInView.length && (
+                <List>
+                  <ListSubheader>
+                    <FormattedMessage id="misc.views.cells.localPerson.alreadyInView" />
+                  </ListSubheader>
+                  {peopleInView.map((option) => (
+                    <PersonListItem
+                      key={option.id}
+                      listProps={{
+                        onClick: () => updateCellValue(option),
+                      }}
+                      orgId={orgId}
+                      person={option}
+                    />
+                  ))}
+                </List>
+              )}
               {searching && (
                 <List {...autoComplete.getListboxProps()}>
-                  {(autoComplete.groupedOptions as ZetkinPerson[]).map(
-                    (option, index) => {
-                      const optProps = autoComplete.getOptionProps({
-                        index,
-                        option,
-                      });
-                      return (
-                        <ListItem key={option.id} {...optProps}>
-                          {`${option.first_name} ${option.last_name}`}
-                        </ListItem>
-                      );
-                    }
-                  )}
+                  <ListSubheader>
+                    <FormattedMessage id="misc.views.cells.localPerson.otherPeople" />
+                  </ListSubheader>
+                  {options.map((option, index) => {
+                    const optProps = autoComplete.getOptionProps({
+                      index,
+                      option,
+                    });
+                    return (
+                      <PersonListItem
+                        key={option.id}
+                        listProps={optProps}
+                        orgId={orgId}
+                        person={option}
+                      />
+                    );
+                  })}
                 </List>
               )}
 
@@ -170,3 +196,75 @@ const Cell: FC<{
     </Box>
   );
 };
+
+const PersonListItem: FC<{
+  listProps: HTMLAttributes<HTMLLIElement>;
+  orgId: number;
+  person: ZetkinPerson;
+}> = ({ listProps, orgId, person }) => {
+  return (
+    <ListItem {...listProps}>
+      <Box
+        sx={{
+          cursor: 'pointer',
+          display: 'flex',
+          gap: 1,
+          justifyContent: 'center',
+        }}
+      >
+        <ZUIAvatar orgId={orgId} personId={person.id} size="sm" />
+        <Typography component="span">
+          {`${person.first_name} ${person.last_name}`}
+        </Typography>
+      </Box>
+    </ListItem>
+  );
+};
+
+function usePeopleInView(
+  model: ViewDataModel,
+  searchResults: ZetkinPerson[] = []
+): ZetkinPerson[] {
+  const rows = model.getRows().data;
+  const cols = model.getColumns().data;
+
+  if (!rows || !cols) {
+    return [];
+  }
+
+  const personColumnIndices = cols
+    .filter((col) => col.type == COLUMN_TYPE.LOCAL_PERSON)
+    .map((col) => cols.indexOf(col));
+
+  const peopleInView: ZetkinPerson[] = [];
+
+  rows.forEach((row) => {
+    row.content.forEach((cell, index) => {
+      if (!cell) {
+        // Skip empty cells
+        return;
+      }
+
+      if (!personColumnIndices.includes(index)) {
+        // Skip non-person cells
+        return;
+      }
+
+      const person = cell as ZetkinPerson;
+      if (peopleInView.some((existing) => existing.id == person.id)) {
+        // Skip people that are already in the list
+        return;
+      }
+
+      peopleInView.push(person);
+    });
+  });
+
+  if (searchResults.length) {
+    // Filter down people in view to only include search matches
+    const matchingIds = searchResults.map((person) => person.id);
+    return peopleInView.filter((person) => matchingIds.includes(person.id));
+  } else {
+    return peopleInView;
+  }
+}
