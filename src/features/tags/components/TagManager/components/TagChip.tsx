@@ -37,11 +37,10 @@ const useStyles = makeStyles<Theme, StyleProps>(() => ({
     overflow: 'hidden',
   },
   deleteButton: {
-    fontSize: '0.8rem',
+    fontSize: '1.1rem',
     padding: '3px',
     position: 'absolute',
-    right: '0.2em',
-    top: '0.3em',
+    right: '0.12em',
     transform: ({ deletable, hover }) =>
       deletable && hover ? 'translate(0,0)' : 'translate(2rem, 0)',
     transition: ({ deletable, hover }) =>
@@ -50,7 +49,7 @@ const useStyles = makeStyles<Theme, StyleProps>(() => ({
   deleteContainer: {
     padding: ({ deletable, hover }) => {
       if (deletable) {
-        return hover ? '0.2em 1.6em 0.2em 0.4em' : '0.2em 1em';
+        return hover ? '0.2em 1.5em 0.2em 0.7em' : '0.2em 1em';
       } else {
         return '0.2em 0.6em';
       }
@@ -63,7 +62,6 @@ const useStyles = makeStyles<Theme, StyleProps>(() => ({
       tag.value_type
         ? 'black'
         : getContrastColor(tag.color || DEFAULT_TAG_COLOR),
-    fontSize: 'inherit',
   },
   label: {
     backgroundColor: ({ tag }) => tag.color || DEFAULT_TAG_COLOR,
@@ -128,7 +126,7 @@ const TagChip: React.FunctionComponent<{
       }}
       size="large"
     >
-      <Clear className={classes.deleteIcon} />
+      <Clear className={classes.deleteIcon} fontSize="inherit" />
     </IconButton>
   ) : null;
 
