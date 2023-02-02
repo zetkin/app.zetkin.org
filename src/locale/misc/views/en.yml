@@ -33,6 +33,18 @@ columnDialog:
       description: Add your choice of fields like email, phone number, etc.
       keywords: field multiple
       title: Person fields
+    surveyResponse:
+      allOptions: All Options (Single Column)
+      allOptionsHeader: All Options
+      allOptionsSeparated: All Options (Separate Columns)
+      description: Include response to a question from any survey.
+      keywords: field multiple
+      oneOption: One Option
+      optionsLabel: What columns do you want to add?
+      questionField: Questions
+      surveyField: Surveys
+      textField: The answers are free text answers and will be displayed in a single column
+      title: Survey response
     surveyResponses:
       description: Include responses from multiple survey questions.
       keywords: field multiple
