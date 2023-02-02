@@ -2,6 +2,7 @@ import { GridColDef } from '@mui/x-data-grid-pro';
 import { makeStyles } from '@mui/styles';
 import { useRouter } from 'next/router';
 import {
+  Avatar,
   Box,
   Button,
   List,
@@ -102,7 +103,13 @@ const Cell: FC<{
         setAnchorEl(null);
       }}
     >
-      {cell ? <ZUIAvatar orgId={orgId} personId={cell.id} /> : <Person />}
+      {cell ? (
+        <ZUIAvatar orgId={orgId} personId={cell.id} />
+      ) : (
+        <Avatar>
+          <Person />
+        </Avatar>
+      )}
       <Popper anchorEl={anchorEl} open={!!anchorEl}>
         <Paper
           className={styles.popper}
@@ -137,7 +144,7 @@ const Cell: FC<{
                   {peopleInView.map((option) => (
                     <PersonListItem
                       key={option.id}
-                      listProps={{
+                      itemProps={{
                         onClick: () => updateCellValue(option),
                       }}
                       orgId={orgId}
@@ -159,7 +166,7 @@ const Cell: FC<{
                     return (
                       <PersonListItem
                         key={option.id}
-                        listProps={optProps}
+                        itemProps={optProps}
                         orgId={orgId}
                         person={option}
                       />
@@ -173,6 +180,7 @@ const Cell: FC<{
                   alignItems="center"
                   display="flex"
                   flexDirection="column"
+                  gap={1}
                   height="100%"
                   justifyContent="center"
                   width="100%"
@@ -198,12 +206,16 @@ const Cell: FC<{
 };
 
 const PersonListItem: FC<{
-  listProps: HTMLAttributes<HTMLLIElement>;
+  itemProps: HTMLAttributes<HTMLLIElement>;
   orgId: number;
   person: ZetkinPerson;
-}> = ({ listProps, orgId, person }) => {
+}> = ({ itemProps, orgId, person }) => {
   return (
-    <ListItem {...listProps}>
+    <ListItem
+      {...itemProps}
+      disablePadding
+      sx={{ paddingBottom: 0.5, paddingTop: 0.5 }}
+    >
       <Box
         sx={{
           cursor: 'pointer',
