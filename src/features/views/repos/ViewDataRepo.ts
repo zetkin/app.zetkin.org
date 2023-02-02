@@ -31,6 +31,17 @@ export default class ViewDataRepo {
   private _apiClient: IApiClient;
   private _store: Store;
 
+  clearCellData(orgId: number, viewId: number, rowId: number, colId: number) {
+    this._store.dispatch(cellUpdate());
+    this._apiClient
+      .delete(
+        `/api/orgs/${orgId}/people/views/${viewId}/rows/${rowId}/cells/${colId}`
+      )
+      .then(() => {
+        this._store.dispatch(cellUpdated([viewId, rowId, colId, null]));
+      });
+  }
+
   constructor(env: Environment) {
     this._apiClient = env.apiClient;
     this._store = env.store;
