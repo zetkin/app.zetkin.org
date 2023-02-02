@@ -9,6 +9,7 @@ import { scaffold } from 'utils/next';
 import SingleViewLayout from 'features/views/layout/SingleViewLayout';
 import useModel from 'core/useModel';
 import ViewDataModel from 'features/views/models/ViewDataModel';
+import { ViewDataModelProvider } from 'features/views/hooks/useViewDataModel';
 import ViewDataTable from 'features/views/components/ViewDataTable';
 import ZUIFutures from 'zui/ZUIFutures';
 
@@ -93,7 +94,9 @@ const SingleViewPage: PageWithLayout<SingleViewPageProps> = ({
           <Head>
             <title>{view.title}</title>
           </Head>
-          <ViewDataTable columns={cols} rows={rows} view={view} />
+          <ViewDataModelProvider model={model}>
+            <ViewDataTable columns={cols} rows={rows} view={view} />
+          </ViewDataModelProvider>
         </>
       )}
     </ZUIFutures>

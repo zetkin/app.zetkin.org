@@ -10,6 +10,7 @@ import { scaffold } from 'utils/next';
 import SharedViewLayout from 'features/views/layout/SharedViewLayout';
 import useModel from 'core/useModel';
 import ViewDataModel from 'features/views/models/ViewDataModel';
+import { ViewDataModelProvider } from 'features/views/hooks/useViewDataModel';
 import ViewDataTable from 'features/views/components/ViewDataTable';
 import { ZetkinMembership } from 'utils/types/zetkin';
 import { ZetkinObjectAccess } from 'core/api/types';
@@ -119,13 +120,15 @@ const SharedViewPage: PageWithLayout<SharedViewPageProps> = ({
           <Head>
             <title>{view.title}</title>
           </Head>
-          <ViewDataTable
-            columns={cols}
-            disableBulkActions
-            disableConfigure={!canConfigure}
-            rows={rows}
-            view={view}
-          />
+          <ViewDataModelProvider model={model}>
+            <ViewDataTable
+              columns={cols}
+              disableBulkActions
+              disableConfigure={!canConfigure}
+              rows={rows}
+              view={view}
+            />
+          </ViewDataModelProvider>
         </>
       )}
     </ZUIFutures>
