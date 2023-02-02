@@ -11,6 +11,7 @@ import {
   Paper,
   Popper,
   TextField,
+  Theme,
   Typography,
   useAutocomplete,
 } from '@mui/material';
@@ -19,6 +20,7 @@ import { FC, HTMLAttributes, useState } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 
 import { IColumnType } from '.';
+import useAccessLevel from 'features/views/hooks/useAccessLevel';
 import { usePersonSelect } from 'zui/ZUIPersonSelect';
 import useViewDataModel from 'features/views/hooks/useViewDataModel';
 import ViewDataModel from 'features/views/models/ViewDataModel';
@@ -49,11 +51,11 @@ export default class LocalPersonColumnType implements IColumnType {
   }
 }
 
-const useStyles = makeStyles({
+const useStyles = makeStyles<Theme, { isRestrictedMode: boolean }>({
   popper: {
     display: 'flex',
     flexDirection: 'column',
-    height: 400,
+    height: (props) => (props.isRestrictedMode ? 'auto' : 400),
     padding: '10px',
     width: 300,
   },
@@ -66,7 +68,8 @@ const Cell: FC<{
 }> = ({ cell, column, row }) => {
   const query = useRouter().query;
   const intl = useIntl();
-  const styles = useStyles();
+  const [isRestrictedMode] = useAccessLevel();
+  const styles = useStyles({ isRestrictedMode });
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [searching, setSearching] = useState(false);
   const model = useViewDataModel();
@@ -88,6 +91,7 @@ const Cell: FC<{
 
   const autoComplete = useAutocomplete({
     ...personSelect.autoCompleteProps,
+    disabled: isRestrictedMode,
   });
 
   const options = autoComplete.groupedOptions as ZetkinPerson[];
@@ -118,87 +122,98 @@ const Cell: FC<{
             ev.stopPropagation();
           }}
         >
-          <Box display="flex" flexDirection="column" height="100%">
-            <Box flex={0} height={60}>
-              <TextField
-                fullWidth
-                inputProps={autoComplete.getInputProps()}
-                label={intl.formatMessage({
-                  id: 'misc.views.cells.localPerson.searchLabel',
-                })}
-                onBlur={() => setSearching(false)}
-                onFocus={() => setSearching(true)}
-              />
+          {isRestrictedMode && (
+            <Box textAlign="center">
+              <Typography>
+                <FormattedMessage id="misc.views.cells.localPerson.restrictedMode" />
+              </Typography>
             </Box>
-            <Box
-              sx={{
-                height: 'calc(100% - 60px)',
-                overflowY: 'scroll',
-              }}
-            >
-              {showPeopleInView && !!peopleInView.length && (
-                <List>
-                  <ListSubheader>
-                    <FormattedMessage id="misc.views.cells.localPerson.alreadyInView" />
-                  </ListSubheader>
-                  {peopleInView.map((option) => (
-                    <PersonListItem
-                      key={option.id}
-                      itemProps={{
-                        onClick: () => updateCellValue(option),
-                      }}
-                      orgId={orgId}
-                      person={option}
-                    />
-                  ))}
-                </List>
-              )}
-              {searching && (
-                <List {...autoComplete.getListboxProps()}>
-                  <ListSubheader>
-                    <FormattedMessage id="misc.views.cells.localPerson.otherPeople" />
-                  </ListSubheader>
-                  {options.map((option, index) => {
-                    const optProps = autoComplete.getOptionProps({
-                      index,
-                      option,
-                    });
-                    return (
+          )}
+          {!isRestrictedMode && (
+            <Box display="flex" flexDirection="column" height="100%">
+              <Box flex={0} height={60}>
+                <TextField
+                  fullWidth
+                  inputProps={autoComplete.getInputProps()}
+                  label={intl.formatMessage({
+                    id: 'misc.views.cells.localPerson.searchLabel',
+                  })}
+                  onBlur={() => setSearching(false)}
+                  onFocus={() => setSearching(true)}
+                />
+              </Box>
+              <Box
+                sx={{
+                  height: 'calc(100% - 60px)',
+                  overflowY: 'scroll',
+                }}
+              >
+                {showPeopleInView && !!peopleInView.length && (
+                  <List>
+                    <ListSubheader>
+                      <FormattedMessage id="misc.views.cells.localPerson.alreadyInView" />
+                    </ListSubheader>
+                    {peopleInView.map((option) => (
                       <PersonListItem
                         key={option.id}
-                        itemProps={optProps}
+                        itemProps={{
+                          onClick: () => updateCellValue(option),
+                        }}
                         orgId={orgId}
                         person={option}
                       />
-                    );
-                  })}
-                </List>
-              )}
+                    ))}
+                  </List>
+                )}
+                {searching && (
+                  <List {...autoComplete.getListboxProps()}>
+                    <ListSubheader>
+                      <FormattedMessage id="misc.views.cells.localPerson.otherPeople" />
+                    </ListSubheader>
+                    {options.map((option, index) => {
+                      const optProps = autoComplete.getOptionProps({
+                        index,
+                        option,
+                      });
+                      return (
+                        <PersonListItem
+                          key={option.id}
+                          itemProps={optProps}
+                          orgId={orgId}
+                          person={option}
+                        />
+                      );
+                    })}
+                  </List>
+                )}
 
-              {!searching && !!cell?.id && (
-                <Box
-                  alignItems="center"
-                  display="flex"
-                  flexDirection="column"
-                  gap={1}
-                  height="100%"
-                  justifyContent="center"
-                  width="100%"
-                >
-                  <ZUIAvatar orgId={orgId} personId={cell.id} size="lg" />
-                  <Typography>
-                    {`${cell.first_name} ${cell.last_name}`}
-                  </Typography>
-                  <Button
-                    endIcon={<Close />}
-                    onClick={() => updateCellValue(null)}
+                {!searching && !!cell?.id && (
+                  <Box
+                    alignItems="center"
+                    display="flex"
+                    flexDirection="column"
+                    gap={1}
+                    height="100%"
+                    justifyContent="center"
+                    width="100%"
                   >
-                    <FormattedMessage id="misc.views.cells.localPerson.clearLabel" />
-                  </Button>
-                </Box>
-              )}
+                    <ZUIAvatar orgId={orgId} personId={cell.id} size="lg" />
+                    <Typography>
+                      {`${cell.first_name} ${cell.last_name}`}
+                    </Typography>
+                    {!isRestrictedMode && (
+                      <Button
+                        endIcon={<Close />}
+                        onClick={() => updateCellValue(null)}
+                      >
+                        <FormattedMessage id="misc.views.cells.localPerson.clearLabel" />
+                      </Button>
+                    )}
+                  </Box>
+                )}
+              </Box>
             </Box>
-          </Box>
+          )}
         </Paper>
       </Popper>
     </Box>
