@@ -1,12 +1,17 @@
+import { AssignmentTurnedInOutlined } from '@mui/icons-material';
 import { Box } from '@mui/material';
 import { FC } from 'react';
 import { GridColDef } from '@mui/x-data-grid-pro';
 
 import { IColumnType } from '.';
+import SurveySubmissionPane from 'features/surveys/panes/SurveySubmissionPane';
 import { SurveySubmittedViewColumn } from '../../types';
+import { usePanes } from 'utils/panes';
+import { useRouter } from 'next/router';
 import ZUIRelativeTime from '../../../../../zui/ZUIRelativeTime';
 
 type SurveySubmittedViewCell = {
+  submission_id: number;
   submitted: string;
 }[];
 
@@ -27,6 +32,9 @@ export default class SurveySubmittedColumnType
 }
 
 const Cell: FC<{ cell: SurveySubmittedViewCell }> = ({ cell }) => {
+  const { orgId } = useRouter().query;
+  const { openPane } = usePanes();
+
   if (cell.length === 0) {
     return null;
   }
@@ -38,8 +46,31 @@ const Cell: FC<{ cell: SurveySubmittedViewCell }> = ({ cell }) => {
   });
 
   return (
-    <Box sx={{ cursor: 'default' }}>
+    <Box
+      alignItems="center"
+      display="flex"
+      justifyContent="space-between"
+      sx={{ cursor: 'default' }}
+      width="100%"
+    >
       <ZUIRelativeTime datetime={sorted[0].submitted} />
+      <AssignmentTurnedInOutlined
+        color="secondary"
+        onClick={() =>
+          openPane({
+            render() {
+              return (
+                <SurveySubmissionPane
+                  id={sorted[0].submission_id}
+                  orgId={parseInt(orgId as string)}
+                />
+              );
+            },
+            width: 400,
+          })
+        }
+        sx={{ cursor: 'pointer' }}
+      />
     </Box>
   );
 };
