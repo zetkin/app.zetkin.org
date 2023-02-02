@@ -9,6 +9,7 @@ import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import SingleViewLayout from 'features/views/layout/SingleViewLayout';
 import useModel from 'core/useModel';
+import useServerSide from 'core/useServerSide';
 import ViewDataModel from 'features/views/models/ViewDataModel';
 import { ViewDataModelProvider } from 'features/views/hooks/useViewDataModel';
 import ViewDataTable from 'features/views/components/ViewDataTable';
@@ -78,9 +79,14 @@ const SingleViewPage: PageWithLayout<SingleViewPageProps> = ({
   orgId,
   viewId,
 }) => {
+  const onServer = useServerSide();
   const model = useModel(
     (env) => new ViewDataModel(env, parseInt(orgId), parseInt(viewId))
   );
+
+  if (onServer) {
+    return null;
+  }
 
   return (
     <ZUIFutures

@@ -11,6 +11,7 @@ import patchView from 'features/views/fetching/patchView';
 import ShareViewDialog from '../components/ShareViewDialog';
 import TabbedLayout from 'utils/layout/TabbedLayout';
 import useModel from 'core/useModel';
+import useServerSide from 'core/useServerSide';
 import ViewDataModel from '../models/ViewDataModel';
 import ViewJumpMenu from 'features/views/components/ViewJumpMenu';
 import ViewSharingModel from '../models/ViewSharingModel';
@@ -117,6 +118,13 @@ const SingleViewLayout: FunctionComponent<SingleViewLayoutProps> = ({
       },
     }
   );
+
+  // TODO: Remove once SSR is supported for models
+  const onServer = useServerSide();
+
+  if (onServer) {
+    return null;
+  }
 
   const title = (
     <>
