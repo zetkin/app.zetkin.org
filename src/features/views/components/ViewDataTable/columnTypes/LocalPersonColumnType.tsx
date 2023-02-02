@@ -111,7 +111,13 @@ const Cell: FC<{
           <Person />
         </Avatar>
       )}
-      <Popper anchorEl={anchorEl} open={!!anchorEl}>
+      <Popper
+        anchorEl={anchorEl}
+        open={!!anchorEl}
+        popperOptions={{
+          placement: 'left',
+        }}
+      >
         <Paper
           className={styles.popper}
           elevation={2}
