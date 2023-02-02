@@ -1,6 +1,7 @@
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 
+import { AccessLevelProvider } from 'features/views/hooks/useAccessLevel';
 import getOrg from 'utils/fetching/getOrg';
 import getUserMemberships from 'utils/getUserMemberships';
 import getView from 'features/views/fetching/getView';
@@ -95,7 +96,9 @@ const SingleViewPage: PageWithLayout<SingleViewPageProps> = ({
             <title>{view.title}</title>
           </Head>
           <ViewDataModelProvider model={model}>
-            <ViewDataTable columns={cols} rows={rows} view={view} />
+            <AccessLevelProvider>
+              <ViewDataTable columns={cols} rows={rows} view={view} />
+            </AccessLevelProvider>
           </ViewDataModelProvider>
         </>
       )}

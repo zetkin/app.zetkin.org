@@ -1,6 +1,7 @@
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 
+import { AccessLevelProvider } from 'features/views/hooks/useAccessLevel';
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import getOrg from 'utils/fetching/getOrg';
 import getView from 'features/views/fetching/getView';
@@ -121,13 +122,15 @@ const SharedViewPage: PageWithLayout<SharedViewPageProps> = ({
             <title>{view.title}</title>
           </Head>
           <ViewDataModelProvider model={model}>
-            <ViewDataTable
-              columns={cols}
-              disableBulkActions
-              disableConfigure={!canConfigure}
-              rows={rows}
-              view={view}
-            />
+            <AccessLevelProvider accessLevel={accessLevel} isRestricted={true}>
+              <ViewDataTable
+                columns={cols}
+                disableBulkActions
+                disableConfigure={!canConfigure}
+                rows={rows}
+                view={view}
+              />
+            </AccessLevelProvider>
           </ViewDataModelProvider>
         </>
       )}
