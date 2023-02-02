@@ -28,11 +28,7 @@ import ZUIAvatar from 'zui/ZUIAvatar';
 import { COLUMN_TYPE, LocalPersonViewColumn } from '../../types';
 import { ZetkinPerson, ZetkinViewRow } from 'utils/types/zetkin';
 
-type LocalPersonViewCell = null | {
-  first_name: string;
-  id: number;
-  last_name: string;
-};
+type LocalPersonViewCell = null | ZetkinPerson;
 
 export default class LocalPersonColumnType implements IColumnType {
   cellToString(cell: ZetkinPerson | null): string {
@@ -123,8 +119,16 @@ const Cell: FC<{
           }}
         >
           {isRestrictedMode && (
-            <Box textAlign="center">
-              <Typography>
+            <Box
+              alignItems="center"
+              display="flex"
+              flexDirection="column"
+              gap={1}
+              justifyContent="center"
+              width="100%"
+            >
+              {!!cell && <SelectedPerson orgId={orgId} person={cell} />}
+              <Typography fontStyle="italic" variant="caption">
                 <FormattedMessage id="misc.views.cells.localPerson.restrictedMode" />
               </Typography>
             </Box>
@@ -197,17 +201,16 @@ const Cell: FC<{
                     justifyContent="center"
                     width="100%"
                   >
-                    <ZUIAvatar orgId={orgId} personId={cell.id} size="lg" />
-                    <Typography>
-                      {`${cell.first_name} ${cell.last_name}`}
-                    </Typography>
                     {!isRestrictedMode && (
-                      <Button
-                        endIcon={<Close />}
-                        onClick={() => updateCellValue(null)}
-                      >
-                        <FormattedMessage id="misc.views.cells.localPerson.clearLabel" />
-                      </Button>
+                      <>
+                        <SelectedPerson orgId={orgId} person={cell} />
+                        <Button
+                          endIcon={<Close />}
+                          onClick={() => updateCellValue(null)}
+                        >
+                          <FormattedMessage id="misc.views.cells.localPerson.clearLabel" />
+                        </Button>
+                      </>
                     )}
                   </Box>
                 )}
@@ -217,6 +220,18 @@ const Cell: FC<{
         </Paper>
       </Popper>
     </Box>
+  );
+};
+
+const SelectedPerson: FC<{ orgId: number; person: ZetkinPerson }> = ({
+  orgId,
+  person,
+}) => {
+  return (
+    <>
+      <ZUIAvatar orgId={orgId} personId={person.id} size="lg" />
+      <Typography>{`${person.first_name} ${person.last_name}`}</Typography>
+    </>
   );
 };
 
