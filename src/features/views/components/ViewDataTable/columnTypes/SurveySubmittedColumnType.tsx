@@ -53,7 +53,9 @@ const Cell: FC<{ cell: SurveySubmittedViewCell }> = ({ cell }) => {
       sx={{ cursor: 'default' }}
       width="100%"
     >
-      <ZUIRelativeTime datetime={sorted[0].submitted} />
+      <Box sx={{ overflowX: 'hidden' }}>
+        <ZUIRelativeTime datetime={sorted[0].submitted} />
+      </Box>
       <AssignmentTurnedInOutlined
         color="secondary"
         onClick={() =>
