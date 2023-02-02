@@ -76,32 +76,35 @@ const SurveyResponsesConfig = ({
                 </MenuItem>
               ))}
             </TextField>
-
-            <Autocomplete
-              disabled={!surveyId}
-              fullWidth
-              getOptionLabel={(option) => option.question.question}
-              multiple
-              onChange={(evt, value) => {
-                setSelectedQuestions(value);
-                const columns = makeColumns(value);
-                onOutputConfigured(columns);
-              }}
-              options={questionFromSurvey || []}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  inputProps={{
-                    ...params.inputProps,
-                  }}
-                  label={intl.formatMessage({
-                    id: 'misc.views.columnDialog.choices.surveyResponses.questionField',
-                  })}
-                  variant="standard"
-                ></TextField>
-              )}
-              value={selectedQuestions}
-            />
+            {surveyId ? (
+              <Autocomplete
+                disabled={!surveyId}
+                fullWidth
+                getOptionLabel={(option) => option.question.question}
+                multiple
+                onChange={(evt, value) => {
+                  setSelectedQuestions(value);
+                  const columns = makeColumns(value);
+                  onOutputConfigured(columns);
+                }}
+                options={questionFromSurvey || []}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    inputProps={{
+                      ...params.inputProps,
+                    }}
+                    label={intl.formatMessage({
+                      id: 'misc.views.columnDialog.choices.surveyResponses.questionField',
+                    })}
+                    variant="standard"
+                  ></TextField>
+                )}
+                value={selectedQuestions}
+              />
+            ) : (
+              ''
+            )}
           </FormControl>
         );
       }}
