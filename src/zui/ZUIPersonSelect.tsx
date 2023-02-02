@@ -61,7 +61,7 @@ type ZUIPersonSelectProps = UsePersonSelectProps & {
   variant?: 'filled' | 'outlined' | 'standard';
 };
 
-const usePersonSelect: UsePersonSelect = ({
+export const usePersonSelect: UsePersonSelect = ({
   getOptionDisabled,
   getOptionExtraLabel,
   inputRef,
