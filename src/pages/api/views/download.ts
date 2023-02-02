@@ -66,6 +66,7 @@ const valueFormatters: Record<ZetkinViewColumn['type'], ValueFunc> = {
   }) as ValueFunc,
   [COLUMN_TYPE.PERSON_QUERY]: directFormatter,
   [COLUMN_TYPE.PERSON_TAG]: directFormatter,
+  [COLUMN_TYPE.SURVEY_OPTION]: directFormatter,
   [COLUMN_TYPE.SURVEY_OPTIONS]: ((cell) => {
     const responses = cell as ZetkinSurveyOption[];
     return responses.length ? responses[0].text : '';
