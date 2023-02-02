@@ -8,6 +8,7 @@ import { DataGridPro, GridColDef, useGridApiRef } from '@mui/x-data-grid-pro';
 import { FunctionComponent, useContext, useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 
+import columnTypes from './columnTypes';
 import deleteViewColumn from 'features/views/fetching/deleteViewColumn';
 import EmptyView from 'features/views/components/EmptyView';
 import patchViewColumn from 'features/views/fetching/patchViewColumn';
@@ -20,7 +21,7 @@ import { viewsResource } from 'features/views/api/views';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';
-import { colIdFromFieldName, makeGridColDef, viewQuickSearch } from './utils';
+import { colIdFromFieldName, viewQuickSearch } from './utils';
 import {
   SelectedViewColumn,
   ZetkinView,
@@ -297,7 +298,15 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
 
   const gridColumns = [
     avatarColumn,
-    ...columns.map((col) => makeGridColDef(col, orgId as string)),
+    ...columns.map((col) => ({
+      field: `col_${col.id}`,
+      headerName: col.title,
+      minWidth: 100,
+      resizable: true,
+      sortable: true,
+      width: 150,
+      ...columnTypes[col.type].getColDef(col),
+    })),
   ];
 
   const rowsWithSearch = viewQuickSearch(rows, columns, quickSearch);

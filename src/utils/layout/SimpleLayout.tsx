@@ -4,6 +4,7 @@ import { FunctionComponent, ReactElement, useState } from 'react';
 
 import DefaultLayout from './DefaultLayout';
 import Header from './Header';
+import { PaneProvider } from 'utils/panes';
 import { ZUIEllipsisMenuProps } from 'zui/ZUIEllipsisMenu';
 
 interface StyleProps {
@@ -71,7 +72,7 @@ const SimpleLayout: FunctionComponent<SimpleLayoutProps> = ({
           p={fixedHeight ? 0 : 3}
           position="relative"
         >
-          {children}
+          <PaneProvider>{children}</PaneProvider>
         </Box>
       </Box>
     </DefaultLayout>

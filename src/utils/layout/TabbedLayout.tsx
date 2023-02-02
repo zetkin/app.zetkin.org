@@ -6,6 +6,7 @@ import { FunctionComponent, ReactElement, useState } from 'react';
 
 import DefaultLayout from './DefaultLayout';
 import Header from './Header';
+import { PaneProvider } from 'utils/panes';
 import { ZUIEllipsisMenuProps } from 'zui/ZUIEllipsisMenu';
 
 interface StyleProps {
@@ -114,7 +115,7 @@ const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
           position="relative"
           role="tabpanel"
         >
-          {children}
+          <PaneProvider>{children}</PaneProvider>
         </Box>
       </Box>
     </DefaultLayout>

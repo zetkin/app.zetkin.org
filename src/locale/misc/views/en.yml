@@ -25,6 +25,10 @@ columnDialog:
       columnTitle: Assignee
       description: Let's you pick an assignee on every row
       title: Assigned Person
+    localSmartSearch:
+      columnTitle: In Smart Search?
+      description: Cross-reference each person against a Smart Search query
+      title: Smart Search
     localText:
       columnTitle: Notes
       description: Add a column to write notes about a person.
@@ -134,6 +138,13 @@ removeDialog:
 suggested:
   created: Created by {name}
   sectionTitle: Suggested
+surveyPreview:
+  mostRecent:
+    header: Most recent
+    openButton: Show full submission
+  older:
+    header: Older submissions
+    openButton: Show
 toolbar:
   createColumn: New column
   createFromSelection: Create view from selection
