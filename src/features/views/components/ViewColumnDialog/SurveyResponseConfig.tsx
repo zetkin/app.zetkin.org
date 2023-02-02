@@ -86,7 +86,7 @@ const SurveyResponseConfig = ({
           return {
             config: {
               option_id: option.id,
-              question_id: selectedQuestion.id,
+              survey_id: selectedQuestion.id,
             },
             title: option.text,
             type: COLUMN_TYPE.SURVEY_OPTION,
@@ -103,7 +103,7 @@ const SurveyResponseConfig = ({
           {
             config: {
               option_id: selectedOption as unknown as number,
-              question_id: selectedQuestion.id,
+              survey_id: selectedQuestion.id,
             },
             title: optionTitle.text,
             type: COLUMN_TYPE.SURVEY_OPTION,
