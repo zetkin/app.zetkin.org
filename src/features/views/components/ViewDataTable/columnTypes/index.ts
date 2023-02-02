@@ -44,6 +44,7 @@ const columnTypes: Record<COLUMN_TYPE, IColumnType> = {
   [COLUMN_TYPE.JOURNEY_ASSIGNEE]: new DummyColumnType(),
   [COLUMN_TYPE.LOCAL_BOOL]: new SimpleColumnType(),
   [COLUMN_TYPE.LOCAL_PERSON]: new LocalPersonColumnType(),
+  [COLUMN_TYPE.LOCAL_SMART_SEARCH]: new DummyColumnType(),
   [COLUMN_TYPE.PERSON_FIELD]: new SimpleColumnType(),
   [COLUMN_TYPE.PERSON_NOTES]: new DummyColumnType(),
   [COLUMN_TYPE.PERSON_QUERY]: new DummyColumnType(),
