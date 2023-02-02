@@ -74,6 +74,7 @@ const Cell: FC<{
 
   const updateCellValue = (person: ZetkinPerson | null) => {
     model.setCellValue(row.id, column.id, person?.id ?? null);
+    setSearching(false);
   };
 
   const personSelect = usePersonSelect({
@@ -142,7 +143,6 @@ const Cell: FC<{
                   label={intl.formatMessage({
                     id: 'misc.views.cells.localPerson.searchLabel',
                   })}
-                  onBlur={() => setSearching(false)}
                   onFocus={() => setSearching(true)}
                 />
               </Box>
