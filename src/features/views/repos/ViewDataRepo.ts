@@ -130,7 +130,7 @@ function loadListIfNecessary<
   return new RemoteListFuture(remoteList);
 }
 
-function loadItemIfNecessary<
+export function loadItemIfNecessary<
   DataType,
   OnLoadPayload = void,
   OnSuccessPayload = DataType
