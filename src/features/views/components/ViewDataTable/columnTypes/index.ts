@@ -2,9 +2,11 @@ import { GridColDef } from '@mui/x-data-grid-pro';
 
 import LocalPersonColumnType from './LocalPersonColumnType';
 import LocalQueryColumnType from './LocalQueryColumnType';
+import LocalTextColumnType from './LocalTextColumnType';
 import SimpleColumnType from './SimpleColumnType';
 import SurveyResponseColumnType from './SurveyResponseColumnType';
 import SurveySubmittedColumnType from './SurveySubmittedColumnType';
+import ViewDataModel from 'features/views/models/ViewDataModel';
 import { COLUMN_TYPE, ZetkinViewColumn } from 'features/views/components/types';
 
 export interface IColumnType<
@@ -13,6 +15,12 @@ export interface IColumnType<
 > {
   cellToString(cell: CellType, column: ColumnType): string;
   getColDef(column: ColumnType): Omit<GridColDef, 'field'>;
+  processRowUpdate?(
+    model: ViewDataModel,
+    colId: number,
+    personId: number,
+    data: CellType
+  ): void;
 }
 
 // TODO: Remove this once all real types have been implemented
@@ -55,7 +63,7 @@ const columnTypes: Record<COLUMN_TYPE, IColumnType> = {
   [COLUMN_TYPE.SURVEY_OPTIONS]: new DummyColumnType(),
   [COLUMN_TYPE.SURVEY_RESPONSE]: new SurveyResponseColumnType(),
   [COLUMN_TYPE.SURVEY_SUBMITTED]: new SurveySubmittedColumnType(),
-  [COLUMN_TYPE.LOCAL_TEXT]: new SimpleColumnType(),
+  [COLUMN_TYPE.LOCAL_TEXT]: new LocalTextColumnType(),
 };
 
 export default columnTypes;
