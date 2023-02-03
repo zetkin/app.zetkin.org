@@ -7,12 +7,12 @@ import { IColumnType } from '.';
 import theme from '../../../../../theme';
 import { ZetkinViewColumn } from '../../types';
 
-type LocalSmartSearchViewCell = boolean;
+type LocalQueryViewCell = boolean;
 
-export default class LocalSmartSearchColumnType
-  implements IColumnType<ZetkinViewColumn, LocalSmartSearchViewCell>
+export default class LocalQueryColumnType
+  implements IColumnType<ZetkinViewColumn, LocalQueryViewCell>
 {
-  cellToString(cell: LocalSmartSearchViewCell | null): string {
+  cellToString(cell: LocalQueryViewCell | null): string {
     return cell ? cell.toString() : '';
   }
 
@@ -27,7 +27,7 @@ export default class LocalSmartSearchColumnType
   }
 }
 
-const Cell: FC<{ cell: LocalSmartSearchViewCell }> = ({ cell }) => {
+const Cell: FC<{ cell: LocalQueryViewCell }> = ({ cell }) => {
   if (!cell) {
     return null;
   }

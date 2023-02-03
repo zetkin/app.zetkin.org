@@ -67,9 +67,9 @@ const SmartSearch = ({
     <>
       {searchState === STATE.PREVIEW && (
         <QueryOverview
-          filters={filterArray} // optional
+          filters={filterArray}
           hasSaveCancelButtons={hasSaveCancelButtons}
-          onCloseDialog={onDialogClose} //optional
+          onCloseDialog={onDialogClose}
           onDeleteFilter={(filter) => {
             setSearchState(STATE.PREVIEW);
             deleteFilter(filter.id);
@@ -112,9 +112,9 @@ const SmartSearch = ({
                     filter_spec: [...filters, filter],
                   },
                   title: intl.formatMessage({
-                    id: 'misc.views.columnDialog.choices.localSmartSearch.columnTitle',
+                    id: 'misc.views.columnDialog.choices.localQuery.columnTitle',
                   }),
-                  type: COLUMN_TYPE.LOCAL_SMART_SEARCH,
+                  type: COLUMN_TYPE.LOCAL_QUERY,
                 },
               ]);
             }
@@ -155,9 +155,9 @@ const SmartSearch = ({
                     filter_spec: filterSpec,
                   },
                   title: intl.formatMessage({
-                    id: 'misc.views.columnDialog.choices.localSmartSearch.columnTitle',
+                    id: 'misc.views.columnDialog.choices.localQuery.columnTitle',
                   }),
-                  type: COLUMN_TYPE.LOCAL_SMART_SEARCH,
+                  type: COLUMN_TYPE.LOCAL_QUERY,
                 },
               ]);
             }
