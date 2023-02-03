@@ -59,37 +59,35 @@ const Cell: FC<{
   const model = useModel((env) => new TagModel(env, orgId, tagId));
   const styles = useStyles();
 
-  if (cell?.value) {
-    return <>{cell.value}</>;
-  } else {
-    return (
-      <ZUIFuture future={model.getTag()}>
-        {(tag) => {
-          if (cell) {
-            return (
-              <TagChip
-                onDelete={() => {
-                  model.removeFromPerson(personId);
-                }}
-                tag={tag}
-              />
-            );
-          } else {
-            return (
-              <Box
-                className={styles.ghostContainer}
-                onClick={() => {
-                  model.assignToPerson(personId);
-                }}
-              >
-                <Box className={styles.ghost}>
-                  <TagChip tag={tag} />
-                </Box>
+  return (
+    <ZUIFuture future={model.getTag()}>
+      {(tag) => {
+        if (tag.value_type != null) {
+          return <>{cell?.value}</>;
+        } else if (cell) {
+          return (
+            <TagChip
+              onDelete={() => {
+                model.removeFromPerson(personId);
+              }}
+              tag={tag}
+            />
+          );
+        } else {
+          return (
+            <Box
+              className={styles.ghostContainer}
+              onClick={() => {
+                model.assignToPerson(personId);
+              }}
+            >
+              <Box className={styles.ghost}>
+                <TagChip tag={tag} />
               </Box>
-            );
-          }
-        }}
-      </ZUIFuture>
-    );
-  }
+            </Box>
+          );
+        }
+      }}
+    </ZUIFuture>
+  );
 };
