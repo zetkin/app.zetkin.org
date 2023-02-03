@@ -39,7 +39,7 @@ const SurveyResponseConfig = ({
     getSurveysWithElements(orgId as string)
   );
   const intl = useIntl();
-  const columnsReset: SelectedViewColumn[] = [];
+
   const [surveyId, setSurveyId] = useState<number | null>();
   const [selectedQuestion, setSelectedQuestion] =
     useState<ZetkinSurveyElement | null>(null);
@@ -47,24 +47,22 @@ const SurveyResponseConfig = ({
   const onSurveyChange: ChangeEventHandler<{ value: unknown }> = (ev) => {
     setSurveyId(ev.target.value as number);
     setSelectedQuestion(null);
-    onOutputConfigured(columnsReset);
+    onOutputConfigured([]);
   };
 
-  const makeColumnsText = (selectedElement: ZetkinSurveyElement) => {
-    if (selectedElement.question.response_type === RESPONSE_TYPE.TEXT) {
-      return [
-        {
-          config: {
-            question_id: selectedElement.id,
-          },
-          title: selectedElement.question.question,
-          type: COLUMN_TYPE.SURVEY_RESPONSE,
+  const makeTextColumn = (selectedElement: ZetkinSurveyElement) => {
+    return [
+      {
+        config: {
+          question_id: selectedElement.id,
         },
-      ];
-    }
+        title: selectedElement.question.question,
+        type: COLUMN_TYPE.SURVEY_RESPONSE,
+      },
+    ];
   };
 
-  const makeColumnsOption = (
+  const makeOptionColumns = (
     selectedOption: string | SURVEY_QUESTION_OPTIONS
   ) => {
     if (selectedQuestion !== undefined && selectedQuestion !== null) {
@@ -93,19 +91,19 @@ const SurveyResponseConfig = ({
           };
         });
       } else {
-        const optionTitle = selectedQuestion.question.options?.find(
-          (option) => option.id === (selectedOption as unknown as number)
+        const optionSelected = selectedQuestion.question.options?.find(
+          (option) => option.id === parseInt(selectedOption)
         );
-        if (optionTitle === undefined) {
+        if (optionSelected === undefined) {
           return [];
         }
         return [
           {
             config: {
-              option_id: selectedOption as unknown as number,
+              option_id: optionSelected.id,
               survey_id: selectedQuestion.id,
             },
-            title: optionTitle.text,
+            title: optionSelected.text,
             type: COLUMN_TYPE.SURVEY_OPTION,
           },
         ];
@@ -142,7 +140,7 @@ const SurveyResponseConfig = ({
                 </MenuItem>
               ))}
             </TextField>
-            {surveyId ? (
+            {!!surveyId && (
               <Autocomplete
                 disabled={!surveyId}
                 fullWidth
@@ -150,8 +148,8 @@ const SurveyResponseConfig = ({
                 onChange={(evt, value) => {
                   if (value !== null) {
                     setSelectedQuestion(value);
-                    const columns = makeColumnsText(value);
-                    if (columns !== undefined) {
+                    if (value.question.response_type === RESPONSE_TYPE.TEXT) {
+                      const columns = makeTextColumn(value);
                       onOutputConfigured(columns);
                     }
                   }
@@ -171,8 +169,6 @@ const SurveyResponseConfig = ({
                 )}
                 value={selectedQuestion}
               />
-            ) : (
-              ''
             )}
             {surveyId &&
             selectedQuestion &&
@@ -187,7 +183,7 @@ const SurveyResponseConfig = ({
                   id: 'misc.views.columnDialog.choices.surveyResponse.optionsLabel',
                 })}
                 onChange={(evt) => {
-                  const columns = makeColumnsOption(evt.target.value);
+                  const columns = makeOptionColumns(evt.target.value);
                   if (columns !== undefined) {
                     onOutputConfigured(columns);
                   }
@@ -208,7 +204,7 @@ const SurveyResponseConfig = ({
                   <FormattedMessage id="misc.views.columnDialog.choices.surveyResponse.oneOption" />
                 </ListSubheader>
                 {selectedQuestion?.question.options?.map((option) => (
-                  <MenuItem key={option.id} value={option.id}>
+                  <MenuItem key={option.id} value={option.id.toString()}>
                     {option.text}
                   </MenuItem>
                 ))}
