@@ -169,7 +169,7 @@ const SurveyResponseConfig = ({
                       id: 'misc.views.columnDialog.choices.surveyResponse.questionField',
                     })}
                     variant="standard"
-                  ></TextField>
+                  />
                 )}
                 value={selectedQuestion}
               />
