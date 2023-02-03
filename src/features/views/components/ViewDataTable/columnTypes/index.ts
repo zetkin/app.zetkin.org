@@ -51,6 +51,7 @@ const columnTypes: Record<COLUMN_TYPE, IColumnType> = {
   [COLUMN_TYPE.PERSON_NOTES]: new DummyColumnType(),
   [COLUMN_TYPE.PERSON_QUERY]: new LocalQueryColumnType(),
   [COLUMN_TYPE.PERSON_TAG]: new DummyColumnType(),
+  [COLUMN_TYPE.SURVEY_OPTION]: new DummyColumnType(),
   [COLUMN_TYPE.SURVEY_OPTIONS]: new DummyColumnType(),
   [COLUMN_TYPE.SURVEY_RESPONSE]: new SurveyResponseColumnType(),
   [COLUMN_TYPE.SURVEY_SUBMITTED]: new SurveySubmittedColumnType(),
