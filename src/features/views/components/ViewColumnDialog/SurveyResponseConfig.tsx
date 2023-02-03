@@ -25,8 +25,8 @@ interface SurveyResponseConfigProps {
 }
 
 export enum SURVEY_QUESTION_OPTIONS {
-  ALL_OPTIONS = 'AllSingle',
-  ALL_OPTIONS_SEPARATED = 'AllOptionsSeparated',
+  ALL_OPTIONS = 'allSingle',
+  ALL_OPTIONS_SEPARATED = 'allOptionsSeparated',
   ONE_OPTION = 'oneOption',
 }
 
