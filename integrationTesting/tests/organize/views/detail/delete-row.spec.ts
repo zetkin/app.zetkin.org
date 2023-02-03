@@ -39,6 +39,7 @@ test.describe('View detail page', () => {
     await expect(page.locator(removeButton)).toBeHidden();
     await page
       .locator('[role=row]:has-text("Clara") input[type=checkbox]')
+      .first()
       .click();
     await page.locator(removeButton).waitFor();
     await expect(page.locator(removeButton)).toBeVisible();
