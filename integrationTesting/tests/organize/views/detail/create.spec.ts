@@ -50,7 +50,7 @@ test.describe('View detail page', () => {
     await page.goto(appUri + '/organize/1/people/views/1');
 
     await page.locator('[role=cell] >> input[type=checkbox]').nth(0).click();
-    await page.locator('[role=cell] >> input[type=checkbox]').nth(1).click();
+    await page.locator('[role=cell] >> input[type=checkbox]').nth(2).click();
 
     await Promise.all([
       page.waitForNavigation(),
