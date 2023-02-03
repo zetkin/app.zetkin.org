@@ -17,8 +17,10 @@ import MultiIconCardVisual from './MultiIconCardVisual';
 import PersonFieldConfig from './PersonFieldConfig';
 import PersonTagConfig from './PersonTagConfig';
 import SingleIconCardVisual from './SingleIconCardVisual';
+import SurveyResponseConfig from './SurveyResponseConfig';
 import SurveyResponsesConfig from './SurveyResponsePluralConfig';
 import SurveySubmitDateConfig from './SurveySubmitDateConfig';
+
 import theme from 'theme';
 import {
   COLUMN_TYPE,
@@ -37,8 +39,10 @@ export enum CHOICES {
   TAG = 'tag',
   BOOLEAN = 'toggle',
   LOCAL_PERSON = 'localPerson',
+  LOCAL_SMART_SEARCH = 'localSmartSearch',
   LOCAL_TEXT = 'localText',
   LOCAL_QUERY = 'localQuery',
+  SURVEY_RESPONSE = 'surveyResponse',
   SURVEY_RESPONSES = 'surveyResponses',
 }
 
@@ -307,6 +311,19 @@ const choices: ColumnChoice[] = [
       onOutputConfigured: (columns: SelectedViewColumn[]) => void;
     }) => (
       <SurveyResponsesConfig onOutputConfigured={props.onOutputConfigured} />
+    ),
+  },
+  {
+    color: blue,
+    key: CHOICES.SURVEY_RESPONSE,
+    renderCardVisual: (color: string) => {
+      return <SingleIconCardVisual color={color} icon={ContactSupport} />;
+    },
+    renderConfigForm: (props: {
+      existingColumns: ZetkinViewColumn[];
+      onOutputConfigured: (columns: SelectedViewColumn[]) => void;
+    }) => (
+      <SurveyResponseConfig onOutputConfigured={props.onOutputConfigured} />
     ),
   },
 ];
