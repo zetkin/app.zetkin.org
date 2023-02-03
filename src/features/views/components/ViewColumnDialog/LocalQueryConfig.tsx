@@ -1,13 +1,11 @@
 import { SelectedViewColumn } from '../types';
 import SmartSearch from 'features/smartSearch/components/SmartSearchDialog/SmartSearch';
 
-interface LocalSmartSearchConfigProps {
+interface LocalQueryConfigProps {
   onOutputConfigured: (columns: SelectedViewColumn[]) => void;
 }
 
-const LocalSmartSearchConfig = ({
-  onOutputConfigured,
-}: LocalSmartSearchConfigProps) => {
+const LocalQueryConfig = ({ onOutputConfigured }: LocalQueryConfigProps) => {
   return (
     <SmartSearch
       hasSaveCancelButtons={false}
@@ -16,4 +14,4 @@ const LocalSmartSearchConfig = ({
   );
 };
 
-export default LocalSmartSearchConfig;
+export default LocalQueryConfig;

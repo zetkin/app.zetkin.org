@@ -1,6 +1,7 @@
 import { GridColDef } from '@mui/x-data-grid-pro';
 
 import LocalPersonColumnType from './LocalPersonColumnType';
+import LocalQueryColumnType from './LocalQueryColumnType';
 import SimpleColumnType from './SimpleColumnType';
 import SurveyResponseColumnType from './SurveyResponseColumnType';
 import SurveySubmittedColumnType from './SurveySubmittedColumnType';
@@ -45,10 +46,10 @@ const columnTypes: Record<COLUMN_TYPE, IColumnType> = {
   [COLUMN_TYPE.JOURNEY_ASSIGNEE]: new DummyColumnType(),
   [COLUMN_TYPE.LOCAL_BOOL]: new SimpleColumnType(),
   [COLUMN_TYPE.LOCAL_PERSON]: new LocalPersonColumnType(),
-  [COLUMN_TYPE.LOCAL_SMART_SEARCH]: new DummyColumnType(),
+  [COLUMN_TYPE.LOCAL_QUERY]: new LocalQueryColumnType(),
   [COLUMN_TYPE.PERSON_FIELD]: new SimpleColumnType(),
   [COLUMN_TYPE.PERSON_NOTES]: new DummyColumnType(),
-  [COLUMN_TYPE.PERSON_QUERY]: new DummyColumnType(),
+  [COLUMN_TYPE.PERSON_QUERY]: new LocalQueryColumnType(),
   [COLUMN_TYPE.PERSON_TAG]: new DummyColumnType(),
   [COLUMN_TYPE.SURVEY_OPTIONS]: new DummyColumnType(),
   [COLUMN_TYPE.SURVEY_RESPONSE]: new SurveyResponseColumnType(),
