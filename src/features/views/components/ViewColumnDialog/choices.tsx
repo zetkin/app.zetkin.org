@@ -12,7 +12,7 @@ import {
 
 import DoubleIconCardVisual from './DoubleIconCardVisual';
 import getUniqueColumnName from '../../utils/getUniqueColumnName';
-import LocalSmartSearchConfig from './LocalSmartSearchConfig';
+import LocalQueryConfig from './LocalQueryConfig';
 import MultiIconCardVisual from './MultiIconCardVisual';
 import PersonFieldConfig from './PersonFieldConfig';
 import PersonTagConfig from './PersonTagConfig';
@@ -38,7 +38,7 @@ export enum CHOICES {
   BOOLEAN = 'toggle',
   LOCAL_PERSON = 'localPerson',
   LOCAL_TEXT = 'localText',
-  LOCAL_SMART_SEARCH = 'localSmartSearch',
+  LOCAL_QUERY = 'localQuery',
   SURVEY_RESPONSES = 'surveyResponses',
 }
 
@@ -287,16 +287,14 @@ const choices: ColumnChoice[] = [
   },
   {
     color: blue,
-    key: CHOICES.LOCAL_SMART_SEARCH,
+    key: CHOICES.LOCAL_QUERY,
     renderCardVisual: (color: string) => {
       return <SingleIconCardVisual color={color} icon={PersonSearch} />;
     },
     renderConfigForm: (props: {
       existingColumns: ZetkinViewColumn[];
       onOutputConfigured: (columns: SelectedViewColumn[]) => void;
-    }) => (
-      <LocalSmartSearchConfig onOutputConfigured={props.onOutputConfigured} />
-    ),
+    }) => <LocalQueryConfig onOutputConfigured={props.onOutputConfigured} />,
   },
   {
     color: blue,

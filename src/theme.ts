@@ -58,6 +58,7 @@ const themePalette = {
     main: 'rgba(0, 0, 0, 0.6)',
   },
   success: {
+    light: '#9fdfb8',
     main: '#0eae4e',
   },
   targetingStatusBar: {
