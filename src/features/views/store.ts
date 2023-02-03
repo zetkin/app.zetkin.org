@@ -1,15 +1,17 @@
 import { DeleteFolderReport } from 'pages/api/views/deleteFolder';
 import { ViewTreeData } from 'pages/api/views/tree';
 import { ZetkinObjectAccess } from 'core/api/types';
-import { ZetkinOfficial } from 'utils/types/zetkin';
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { remoteItem, remoteList, RemoteList } from 'utils/storeUtils';
 import {
+  COLUMN_TYPE,
   ZetkinView,
   ZetkinViewColumn,
   ZetkinViewFolder,
   ZetkinViewRow,
 } from './components/types';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { remoteItem, remoteList, RemoteList } from 'utils/storeUtils';
+import { tagAssigned, tagUnassigned } from 'features/tags/store';
+import { ZetkinOfficial, ZetkinTag } from 'utils/types/zetkin';
 
 type ZetkinObjectAccessWithId = ZetkinObjectAccess & {
   id: number;
@@ -36,6 +38,16 @@ const initialState: ViewsStoreSlice = {
 };
 
 const viewsSlice = createSlice({
+  extraReducers: (builder) =>
+    builder
+      .addCase(tagAssigned, (state, action) => {
+        const [personId, tag] = action.payload;
+        setTagOnRelevantRows(state, personId, tag.id, tag);
+      })
+      .addCase(tagUnassigned, (state, action) => {
+        const [personId, tagId] = action.payload;
+        setTagOnRelevantRows(state, personId, tagId, null);
+      }),
   initialState,
   name: 'views',
   reducers: {
@@ -264,6 +276,44 @@ const viewsSlice = createSlice({
     },
   },
 });
+
+/**
+ * Find all rows and columns that are relevant when assigning/unassigning a
+ * tag to a person, and update the rows to reflect the new state.
+ */
+function setTagOnRelevantRows(
+  state: ViewsStoreSlice,
+  personId: number,
+  tagId: number,
+  tag: ZetkinTag | null
+) {
+  Object.entries(state.columnsByViewId).forEach(([viewId, columnList]) => {
+    // Find indices of relevant columns
+    const relevantColumnIndices: number[] = [];
+    columnList.items.forEach((colItem, index) => {
+      if (
+        colItem.data?.type == COLUMN_TYPE.PERSON_TAG &&
+        colItem.data.config.tag_id == tagId
+      ) {
+        relevantColumnIndices.push(index);
+      }
+    });
+
+    // If there are relevant columns in this view
+    if (relevantColumnIndices.length) {
+      const rowItems = state.rowsByViewId[viewId]?.items;
+      if (rowItems) {
+        rowItems.forEach((item) => {
+          if (item.data?.id == personId) {
+            for (const colIndex of relevantColumnIndices) {
+              item.data.content[colIndex] = tag;
+            }
+          }
+        });
+      }
+    }
+  });
+}
 
 export default viewsSlice;
 export const {
