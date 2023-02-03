@@ -9,6 +9,10 @@ export default class TagModel extends ModelBase {
   private _repo: TagsRepo;
   private _tagId: number;
 
+  assignToPerson(personId: number, value?: string) {
+    this._repo.assignTagToPerson(this._orgId, personId, this._tagId, value);
+  }
+
   constructor(env: Environment, orgId: number, tagId: number) {
     super();
     this._orgId = orgId;
@@ -18,5 +22,9 @@ export default class TagModel extends ModelBase {
 
   getTag(): IFuture<ZetkinTag> {
     return this._repo.getTag(this._orgId, this._tagId);
+  }
+
+  removeFromPerson(personId: number) {
+    this._repo.removeTagFromPerson(this._orgId, personId, this._tagId);
   }
 }
