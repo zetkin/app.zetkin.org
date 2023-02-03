@@ -14,6 +14,7 @@ import EmptyView from 'features/views/components/EmptyView';
 import patchViewColumn from 'features/views/fetching/patchViewColumn';
 import postViewColumn from 'features/views/fetching/postViewColumn';
 import useModelsFromQueryString from 'zui/ZUIUserConfigurableDataGrid/useModelsFromQueryString';
+import useViewDataModel from 'features/views/hooks/useViewDataModel';
 import ViewColumnDialog from '../ViewColumnDialog';
 import ViewRenameColumnDialog from '../ViewRenameColumnDialog';
 import { viewRowsResource } from 'features/views/api/viewRows';
@@ -88,6 +89,8 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
   const viewId = view.id.toString();
   const { showSnackbar } = useContext(ZUISnackbarContext);
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
+
+  const model = useViewDataModel();
 
   const showError = (error: VIEW_DATA_TABLE_ERROR) => {
     showSnackbar(
@@ -397,6 +400,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
         }}
         componentsProps={componentsProps}
         disableSelectionOnClick={true}
+        experimentalFeatures={{ newEditingApi: true }}
         getRowClassName={(params) =>
           params.id == addedId ? classes.addedRow : ''
         }
@@ -407,6 +411,22 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
           }),
         }}
         onSelectionModelChange={(model) => setSelection(model as number[])}
+        processRowUpdate={(after, before) => {
+          const changedField = Object.keys(after).find(
+            (key) => after[key] != before[key]
+          );
+          if (changedField) {
+            const colId = parseInt(changedField.slice(4));
+            const col = columns.find((col) => col.id == colId);
+            if (col) {
+              const processRowUpdate = columnTypes[col.type].processRowUpdate;
+              if (processRowUpdate) {
+                processRowUpdate(model, colId, after.id, after[changedField]);
+              }
+            }
+          }
+          return after;
+        }}
         rows={gridRows}
         style={{
           border: 'none',
