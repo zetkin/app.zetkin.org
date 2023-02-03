@@ -170,14 +170,14 @@ const SurveyResponseConfig = ({
                 value={selectedQuestion}
               />
             )}
-            {surveyId &&
-            selectedQuestion &&
-            selectedQuestion?.question.response_type === RESPONSE_TYPE.TEXT ? (
+            {selectedQuestion?.question.response_type ===
+              RESPONSE_TYPE.TEXT && (
               <Typography sx={{ marginTop: '15' }} variant="h6">
                 <Msg id="misc.views.columnDialog.choices.surveyResponse.textField" />
               </Typography>
-            ) : selectedQuestion?.question.response_type ===
-              RESPONSE_TYPE.OPTIONS ? (
+            )}
+            {selectedQuestion?.question.response_type ===
+              RESPONSE_TYPE.OPTIONS && (
               <TextField
                 label={intl.formatMessage({
                   id: 'misc.views.columnDialog.choices.surveyResponse.optionsLabel',
@@ -209,8 +209,6 @@ const SurveyResponseConfig = ({
                   </MenuItem>
                 ))}
               </TextField>
-            ) : (
-              ''
             )}
           </FormControl>
         );
