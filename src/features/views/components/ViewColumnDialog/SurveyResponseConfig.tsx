@@ -117,9 +117,13 @@ const SurveyResponseConfig = ({
         const selectedSurvey = successSurveysQuery.data.find(
           (survey) => survey.id == surveyId
         );
-        const questionFromSurvey = selectedSurvey?.elements.filter(
-          (elem) => elem.type == ELEMENT_TYPE.QUESTION
-        );
+        const questionsFromSurvey = selectedSurvey?.elements
+          .filter((elem) => elem.type == ELEMENT_TYPE.QUESTION)
+          .filter(
+            (elem) =>
+              elem.question.response_type === RESPONSE_TYPE.TEXT ||
+              elem.question.options?.length
+          );
 
         return (
           <FormControl sx={{ width: 300 }}>
@@ -154,7 +158,7 @@ const SurveyResponseConfig = ({
                     }
                   }
                 }}
-                options={questionFromSurvey || []}
+                options={questionsFromSurvey || []}
                 renderInput={(params) => (
                   <TextField
                     {...params}
