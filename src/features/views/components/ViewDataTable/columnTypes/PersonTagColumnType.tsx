@@ -40,7 +40,7 @@ const useStyles = makeStyles(() => ({
   },
   ghostContainer: {
     '&:hover': {
-      opacity: 0.3,
+      opacity: 0.4,
     },
     cursor: 'pointer',
     opacity: 0,
