@@ -48,7 +48,7 @@ export enum COLUMN_TYPE {
   JOURNEY_ASSIGNEE = 'journey_assignee',
   LOCAL_BOOL = 'local_bool',
   LOCAL_PERSON = 'local_person',
-  LOCAL_SMART_SEARCH = 'local_query',
+  LOCAL_QUERY = 'local_query',
   LOCAL_TEXT = 'local_text',
   PERSON_FIELD = 'person_field',
   PERSON_NOTES = 'person_notes',
@@ -77,8 +77,8 @@ export interface LocalPersonViewColumn extends ZetkinViewColumnBase {
   config?: Record<string, never>;
 }
 
-export interface LocalSmartSearchViewColumn extends ZetkinViewColumnBase {
-  type: COLUMN_TYPE.LOCAL_SMART_SEARCH;
+export interface LocalQueryViewColumn extends ZetkinViewColumnBase {
+  type: COLUMN_TYPE.LOCAL_QUERY;
   config: {
     filter_spec: ZetkinSmartSearchFilter<AnyFilterConfig>[];
   };
@@ -148,7 +148,7 @@ export type ZetkinViewColumn =
   | JourneyAssigneeViewColumn
   | LocalBoolViewColumn
   | LocalPersonViewColumn
-  | LocalSmartSearchViewColumn
+  | LocalQueryViewColumn
   | LocalTextViewColumn
   | PersonNotesViewColumn
   | PersonFieldViewColumn

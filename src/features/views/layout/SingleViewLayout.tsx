@@ -3,17 +3,16 @@ import { useRouter } from 'next/router';
 import { Box, Button, Theme } from '@mui/material';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { FunctionComponent, useContext, useState } from 'react';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
 
 import defaultFetch from 'utils/fetching/defaultFetch';
-import getView from 'features/views/fetching/getView';
-import getViewColumns from '../fetching/getViewColumns';
-import getViewRows from '../fetching/getViewRows';
 import NProgress from 'nprogress';
 import patchView from 'features/views/fetching/patchView';
 import ShareViewDialog from '../components/ShareViewDialog';
 import TabbedLayout from 'utils/layout/TabbedLayout';
 import useModel from 'core/useModel';
+import useServerSide from 'core/useServerSide';
+import ViewDataModel from '../models/ViewDataModel';
 import ViewJumpMenu from 'features/views/components/ViewJumpMenu';
 import ViewSharingModel from '../models/ViewSharingModel';
 import ViewSmartSearchDialog from 'features/views/components/ViewSmartSearchDialog';
@@ -21,8 +20,9 @@ import { viewsResource } from 'features/views/api/views';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
 import { ZUIEllipsisMenuProps } from 'zui/ZUIEllipsisMenu';
+import ZUIFuture from 'zui/ZUIFuture';
+import ZUIFutures from 'zui/ZUIFutures';
 import ZUIIconLabelRow from 'zui/ZUIIconLabelRow';
-import ZUIQuery from 'zui/ZUIQuery';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 import { Group, Share, ViewColumnOutlined } from '@mui/icons-material';
 
@@ -54,16 +54,21 @@ const SingleViewLayout: FunctionComponent<SingleViewLayoutProps> = ({
       )
   );
 
+  const dataModel = useModel(
+    (env) =>
+      new ViewDataModel(
+        env,
+        parseInt(orgId as string),
+        parseInt(viewId as string)
+      )
+  );
+
   const [deactivated, setDeactivated] = useState(false);
   const classes = useStyles({ deactivated });
   const intl = useIntl();
   const queryClient = useQueryClient();
   const [queryDialogOpen, setQueryDialogOpen] = useState(false);
   const [shareDialogOpen, setShareDialogOpen] = useState(false);
-  const viewQuery = useQuery(
-    ['view', viewId],
-    getView(orgId as string, viewId as string)
-  );
   const patchViewMutation = useMutation(
     patchView(orgId as string, viewId as string)
   );
@@ -96,8 +101,6 @@ const SingleViewLayout: FunctionComponent<SingleViewLayoutProps> = ({
     );
   };
 
-  const view = viewQuery.data;
-
   // TODO: Create mutation using new factory pattern
   const deleteQueryMutation = useMutation(
     async () => {
@@ -116,11 +119,17 @@ const SingleViewLayout: FunctionComponent<SingleViewLayoutProps> = ({
     }
   );
 
+  // TODO: Remove once SSR is supported for models
+  const onServer = useServerSide();
+
+  if (onServer) {
+    return null;
+  }
+
   const title = (
     <>
-      <ZUIQuery queries={{ viewQuery }}>
-        {({ queries: { viewQuery } }) => {
-          const view = viewQuery.data;
+      <ZUIFuture future={dataModel.getView()}>
+        {(view) => {
           return (
             <Box>
               <ZUIEditTextinPlace
@@ -133,11 +142,13 @@ const SingleViewLayout: FunctionComponent<SingleViewLayoutProps> = ({
             </Box>
           );
         }}
-      </ZUIQuery>
+      </ZUIFuture>
     </>
   );
 
   const ellipsisMenu: ZUIEllipsisMenuProps['items'] = [];
+
+  const view = dataModel.getView().data;
 
   if (view?.content_query) {
     ellipsisMenu.push({
@@ -218,26 +229,20 @@ const SingleViewLayout: FunctionComponent<SingleViewLayoutProps> = ({
         fixedHeight={true}
         subtitle={
           // TODO: Replace with model eventually
-          <ZUIQuery
-            queries={{
-              colsQuery: useQuery(
-                ['view', viewId, 'columns'],
-                getViewColumns(orgId as string, viewId as string)
-              ),
-              rowsQuery: useQuery(
-                ['view', viewId, 'rows'],
-                getViewRows(orgId as string, viewId as string)
-              ),
+          <ZUIFutures
+            futures={{
+              cols: dataModel.getColumns(),
+              rows: dataModel.getRows(),
             }}
           >
-            {({ queries: { colsQuery, rowsQuery } }) => {
+            {({ data: { cols, rows } }) => {
               const labels = [
                 {
                   icon: <Group />,
                   label: (
                     <FormattedMessage
                       id="pages.people.views.layout.subtitle.people"
-                      values={{ count: rowsQuery.data.length }}
+                      values={{ count: rows.length }}
                     />
                   ),
                 },
@@ -246,7 +251,7 @@ const SingleViewLayout: FunctionComponent<SingleViewLayoutProps> = ({
                   label: (
                     <FormattedMessage
                       id="pages.people.views.layout.subtitle.columns"
-                      values={{ count: colsQuery.data.length }}
+                      values={{ count: cols.length }}
                     />
                   ),
                 },
@@ -267,7 +272,7 @@ const SingleViewLayout: FunctionComponent<SingleViewLayoutProps> = ({
 
               return <ZUIIconLabelRow iconLabels={labels} />;
             }}
-          </ZUIQuery>
+          </ZUIFutures>
         }
         tabs={[{ href: `/`, messageId: 'layout.organize.view.tabs.view' }]}
         title={title}
@@ -285,7 +290,7 @@ const SingleViewLayout: FunctionComponent<SingleViewLayoutProps> = ({
         <ShareViewDialog
           model={shareModel}
           onClose={() => setShareDialogOpen(false)}
-          view={viewQuery.data}
+          view={view}
         />
       )}
     </Box>

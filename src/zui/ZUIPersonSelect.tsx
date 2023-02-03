@@ -36,6 +36,7 @@ interface UsePersonSelectReturn {
     getOptionSelected: (option: ZetkinPerson, value: ZetkinPerson) => boolean;
     getOptionValue?: (person: ZetkinPerson) => unknown;
     inputRef: MutableRefObject<HTMLInputElement | undefined> | undefined;
+    inputValue: string | undefined;
     label: string | undefined;
     name: string;
     noOptionsText: string;
@@ -61,7 +62,7 @@ type ZUIPersonSelectProps = UsePersonSelectProps & {
   variant?: 'filled' | 'outlined' | 'standard';
 };
 
-const usePersonSelect: UsePersonSelect = ({
+export const usePersonSelect: UsePersonSelect = ({
   getOptionDisabled,
   getOptionExtraLabel,
   inputRef,
@@ -123,10 +124,12 @@ const usePersonSelect: UsePersonSelect = ({
         option?.id == value?.id,
       getOptionValue: (person: ZetkinPerson) => person.id || null,
       inputRef,
+      inputValue: searchFieldValue,
       label,
       name: name || '',
       noOptionsText: searchLabel,
       onChange: (ev, value) => {
+        setSearchFieldValue('');
         onChange(value as ZetkinPerson);
       },
       onInputChange: (ev: unknown, value: string) => {

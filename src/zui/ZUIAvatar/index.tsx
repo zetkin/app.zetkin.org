@@ -4,9 +4,10 @@ import { FC } from 'react';
 interface ZUIAvatarProps {
   orgId: number;
   personId: number;
-  size?: 'sm' | 'md';
+  size?: 'sm' | 'md' | 'lg';
 }
 const SIZES = {
+  lg: 50,
   md: 40,
   sm: 30,
 };
