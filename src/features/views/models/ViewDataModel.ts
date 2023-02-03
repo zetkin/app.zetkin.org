@@ -34,7 +34,7 @@ export default class ViewDataModel extends ModelBase {
   }
 
   setCellValue<CellType>(personId: number, colId: number, data: CellType) {
-    if (data) {
+    if (data !== null) {
       this._repo.setCellData(this._orgId, this._viewId, personId, colId, data);
     } else {
       this._repo.clearCellData(this._orgId, this._viewId, personId, colId);

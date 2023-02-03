@@ -1,5 +1,6 @@
 import { GridColDef } from '@mui/x-data-grid-pro';
 
+import LocalBoolColumnType from './LocalBoolColumnType';
 import LocalPersonColumnType from './LocalPersonColumnType';
 import LocalQueryColumnType from './LocalQueryColumnType';
 import LocalTextColumnType from './LocalTextColumnType';
@@ -53,7 +54,7 @@ class DummyColumnType implements IColumnType {
  */
 const columnTypes: Record<COLUMN_TYPE, IColumnType> = {
   [COLUMN_TYPE.JOURNEY_ASSIGNEE]: new DummyColumnType(),
-  [COLUMN_TYPE.LOCAL_BOOL]: new SimpleColumnType(),
+  [COLUMN_TYPE.LOCAL_BOOL]: new LocalBoolColumnType(),
   [COLUMN_TYPE.LOCAL_PERSON]: new LocalPersonColumnType(),
   [COLUMN_TYPE.LOCAL_QUERY]: new LocalQueryColumnType(),
   [COLUMN_TYPE.PERSON_FIELD]: new SimpleColumnType(),
