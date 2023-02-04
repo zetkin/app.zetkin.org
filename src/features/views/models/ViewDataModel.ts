@@ -38,6 +38,10 @@ export default class ViewDataModel extends ModelBase {
     return this._repo.getView(this._orgId, this._viewId);
   }
 
+  removeRows(rows: number[]): Promise<void> {
+    return this._repo.removeRows(this._orgId, this._viewId, rows);
+  }
+
   setCellValue<CellType>(personId: number, colId: number, data: CellType) {
     if (data !== null) {
       this._repo.setCellData(this._orgId, this._viewId, personId, colId, data);

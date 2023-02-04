@@ -215,6 +215,13 @@ const viewsSlice = createSlice({
           .concat([remoteItem(row.id, { data: row })]);
       }
     },
+    rowRemoved: (state, action: PayloadAction<[number, number]>) => {
+      const [viewId, rowId] = action.payload;
+      const list = state.rowsByViewId[viewId];
+      if (list) {
+        list.items = list.items.filter((item) => item.id != rowId);
+      }
+    },
     rowsLoad: (state, action: PayloadAction<number>) => {
       const viewId = action.payload;
       if (!state.rowsByViewId[viewId]) {
@@ -344,6 +351,7 @@ export const {
   officialsLoad,
   officialsLoaded,
   rowAdded,
+  rowRemoved,
   rowsLoad,
   rowsLoaded,
   viewCreate,

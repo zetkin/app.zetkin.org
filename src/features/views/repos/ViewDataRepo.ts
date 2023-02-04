@@ -8,6 +8,7 @@ import {
   columnsLoad,
   columnsLoaded,
   rowAdded,
+  rowRemoved,
   rowsLoad,
   rowsLoaded,
   viewLoad,
@@ -89,6 +90,19 @@ export default class ViewDataRepo {
       loader: () =>
         this._apiClient.get(`/api/orgs/${orgId}/people/views/${viewId}`),
     });
+  }
+
+  async removeRows(
+    orgId: number,
+    viewId: number,
+    rows: number[]
+  ): Promise<void> {
+    await this._apiClient.post(
+      `/api/views/removeRows?orgId=${orgId}&viewId=${viewId}`,
+      { rows }
+    );
+
+    rows.forEach((rowId) => this._store.dispatch(rowRemoved([viewId, rowId])));
   }
 
   setCellData<DataType>(

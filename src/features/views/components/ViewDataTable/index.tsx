@@ -17,7 +17,6 @@ import useModelsFromQueryString from 'zui/ZUIUserConfigurableDataGrid/useModelsF
 import useViewDataModel from 'features/views/hooks/useViewDataModel';
 import ViewColumnDialog from '../ViewColumnDialog';
 import ViewRenameColumnDialog from '../ViewRenameColumnDialog';
-import { viewRowsResource } from 'features/views/api/viewRows';
 import { viewsResource } from 'features/views/api/views';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
@@ -148,11 +147,6 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
     }
   );
 
-  const removeRowsMutation = viewRowsResource(
-    view.organization.id,
-    viewId
-  ).useRemoveMany();
-
   const onColumnCancel = () => {
     setColumnToConfigure(null);
   };
@@ -239,16 +233,15 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
 
   const createNewViewMutation = viewsResource(orgId as string).useCreate();
 
-  const onRowsRemove = () => {
+  const onRowsRemove = async () => {
     setWaiting(true);
-    removeRowsMutation.mutate(selection, {
-      onSettled: (res) => {
-        setWaiting(false);
-        if (res?.failed?.length) {
-          showError(VIEW_DATA_TABLE_ERROR.REMOVE_ROWS);
-        }
-      },
-    });
+    try {
+      await model.removeRows(selection);
+    } catch (err) {
+      showError(VIEW_DATA_TABLE_ERROR.REMOVE_ROWS);
+    } finally {
+      setWaiting(false);
+    }
   };
 
   const onViewCreate = () => {

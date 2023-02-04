@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 
 import BackendApiClient from 'core/api/client/BackendApiClient';
 
-export interface CreateNewViewReqBody {
+export interface RemoveRowsReqBody {
   rows?: number[];
 }
 
@@ -15,7 +15,7 @@ export default async function createNewView(
     method,
     body,
   } = req;
-  const { rows } = body as CreateNewViewReqBody;
+  const { rows } = body as RemoveRowsReqBody;
 
   // Return error if method other than POST
   if (method !== 'POST') {
