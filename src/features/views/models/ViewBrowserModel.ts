@@ -63,9 +63,9 @@ export default class ViewBrowserModel extends ModelBase {
     return new PromiseFuture(promise);
   }
 
-  createView(folderId?: number): IFuture<ZetkinView> {
+  createView(folderId?: number, rows?: number[]): IFuture<ZetkinView> {
     const promise = this._repo
-      .createView(this._orgId, folderId)
+      .createView(this._orgId, folderId, rows)
       .then((view) => {
         this._env.router.push(
           `/organize/${view.organization.id}/people/views/${view.id}`

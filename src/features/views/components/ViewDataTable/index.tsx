@@ -13,11 +13,12 @@ import deleteViewColumn from 'features/views/fetching/deleteViewColumn';
 import EmptyView from 'features/views/components/EmptyView';
 import patchViewColumn from 'features/views/fetching/patchViewColumn';
 import postViewColumn from 'features/views/fetching/postViewColumn';
+import useModel from 'core/useModel';
 import useModelsFromQueryString from 'zui/ZUIUserConfigurableDataGrid/useModelsFromQueryString';
 import useViewDataModel from 'features/views/hooks/useViewDataModel';
+import ViewBrowserModel from 'features/views/models/ViewBrowserModel';
 import ViewColumnDialog from '../ViewColumnDialog';
 import ViewRenameColumnDialog from '../ViewRenameColumnDialog';
-import { viewsResource } from 'features/views/api/views';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';
@@ -90,6 +91,9 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
 
   const model = useViewDataModel();
+  const browserModel = useModel(
+    (env) => new ViewBrowserModel(env, parseInt(orgId as string))
+  );
 
   const showError = (error: VIEW_DATA_TABLE_ERROR) => {
     showSnackbar(
@@ -231,8 +235,6 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
     });
   };
 
-  const createNewViewMutation = viewsResource(orgId as string).useCreate();
-
   const onRowsRemove = async () => {
     setWaiting(true);
     try {
@@ -245,13 +247,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
   };
 
   const onViewCreate = () => {
-    createNewViewMutation.mutate(
-      { rows: selection },
-      {
-        onSuccess: (newView) =>
-          router.push(`/organize/${orgId}/people/views/${newView.id}`),
-      }
-    );
+    browserModel.createView(view.folder?.id ?? 0, selection);
   };
 
   const avatarColumn: GridColDef = {
