@@ -4,6 +4,7 @@ import { Store } from 'core/store';
 import {
   cellUpdate,
   cellUpdated,
+  columnDeleted,
   columnsLoad,
   columnsLoaded,
   rowAdded,
@@ -59,6 +60,13 @@ export default class ViewDataRepo {
   constructor(env: Environment) {
     this._apiClient = env.apiClient;
     this._store = env.store;
+  }
+
+  async deleteColumn(orgId: number, viewId: number, columnId: number) {
+    await this._apiClient.delete(
+      `/api/orgs/${orgId}/people/views/${viewId}/columns/${columnId}`
+    );
+    this._store.dispatch(columnDeleted([viewId, columnId]));
   }
 
   getColumns(orgId: number, viewId: number): IFuture<ZetkinViewColumn[]> {

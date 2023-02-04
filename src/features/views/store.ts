@@ -139,6 +139,20 @@ const viewsSlice = createSlice({
         );
       }
     },
+    columnDeleted: (state, action: PayloadAction<[number, number]>) => {
+      const [viewId, columnId] = action.payload;
+      const colList = state.columnsByViewId[viewId];
+      if (colList) {
+        colList.items = colList.items.filter((item) => item.id != columnId);
+        const rowList = state.rowsByViewId[viewId];
+
+        if (rowList) {
+          // Empty the view to force a reload
+          rowList.items = [];
+          rowList.isStale = true;
+        }
+      }
+    },
     columnsLoad: (state, action: PayloadAction<number>) => {
       const viewId = action.payload;
       if (!state.columnsByViewId[viewId]) {
@@ -233,6 +247,7 @@ const viewsSlice = createSlice({
       const [viewId, rows] = action.payload;
       state.rowsByViewId[viewId] = remoteList(rows);
       state.rowsByViewId[viewId].loaded = new Date().toISOString();
+      state.rowsByViewId[viewId].isStale = false;
     },
     viewCreate: (state) => {
       state.viewList.isLoading = true;
@@ -341,6 +356,7 @@ export const {
   allItemsLoaded,
   cellUpdate,
   cellUpdated,
+  columnDeleted,
   columnsLoad,
   columnsLoaded,
   folderCreate,

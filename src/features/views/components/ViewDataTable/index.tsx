@@ -9,7 +9,6 @@ import { FunctionComponent, useContext, useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 
 import columnTypes from './columnTypes';
-import deleteViewColumn from 'features/views/fetching/deleteViewColumn';
 import EmptyView from 'features/views/components/EmptyView';
 import patchViewColumn from 'features/views/fetching/patchViewColumn';
 import postViewColumn from 'features/views/fetching/postViewColumn';
@@ -130,27 +129,6 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
     }
   );
 
-  const removeColumnMutation = useMutation(
-    deleteViewColumn(orgId as string, viewId),
-    {
-      onError: () => {
-        showError(VIEW_DATA_TABLE_ERROR.DELETE_COLUMN);
-        NProgress.done();
-      },
-      onSettled: () => {
-        NProgress.done();
-      },
-      onSuccess: (data, colId) => {
-        const colsKey = ['view', viewId, 'columns'];
-        const cols = queryClient.getQueryData<ZetkinViewColumn[]>(colsKey);
-        queryClient.setQueryData(
-          colsKey,
-          cols?.filter((col) => col.id != colId)
-        );
-      },
-    }
-  );
-
   const onColumnCancel = () => {
     setColumnToConfigure(null);
   };
@@ -201,12 +179,22 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
   const onColumnDelete = async (colFieldName: string) => {
     const colId = colIdFromFieldName(colFieldName);
     const colSpec = columns.find((col) => col.id === colId) || null;
+
+    async function doDelete() {
+      try {
+        await model.deleteColumn(colId);
+      } catch (err) {
+        showError(VIEW_DATA_TABLE_ERROR.DELETE_COLUMN);
+        NProgress.done();
+      } finally {
+        NProgress.done();
+      }
+    }
+
     // If it's a local column, require confirmation
     if (colSpec?.type.includes('local_')) {
       showConfirmDialog({
-        onSubmit: () => {
-          removeColumnMutation.mutateAsync(colId);
-        },
+        onSubmit: doDelete,
         title: intl.formatMessage({
           id: `misc.views.columnMenu.delete`,
         }),
@@ -215,7 +203,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
         }),
       });
     } else {
-      removeColumnMutation.mutateAsync(colId);
+      doDelete();
     }
   };
 
