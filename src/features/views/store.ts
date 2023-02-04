@@ -206,6 +206,15 @@ const viewsSlice = createSlice({
       state.officialList = remoteList(action.payload);
       state.officialList.loaded = new Date().toISOString();
     },
+    rowAdded: (state, action: PayloadAction<[number, ZetkinViewRow]>) => {
+      const [viewId, row] = action.payload;
+      const list = state.rowsByViewId[viewId];
+      if (list) {
+        list.items = list.items
+          .filter((item) => item.id != row.id)
+          .concat([remoteItem(row.id, { data: row })]);
+      }
+    },
     rowsLoad: (state, action: PayloadAction<number>) => {
       const viewId = action.payload;
       if (!state.rowsByViewId[viewId]) {
@@ -334,6 +343,7 @@ export const {
   folderUpdated,
   officialsLoad,
   officialsLoaded,
+  rowAdded,
   rowsLoad,
   rowsLoaded,
   viewCreate,

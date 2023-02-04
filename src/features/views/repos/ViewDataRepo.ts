@@ -7,6 +7,7 @@ import {
   cellUpdated,
   columnsLoad,
   columnsLoaded,
+  rowAdded,
   rowsLoad,
   rowsLoaded,
   viewLoad,
@@ -25,6 +26,17 @@ import {
 export default class ViewDataRepo {
   private _apiClient: IApiClient;
   private _store: Store;
+
+  async addPersonToView(
+    orgId: number,
+    viewId: number,
+    personId: number
+  ): Promise<void> {
+    const row = await this._apiClient.put<ZetkinViewRow>(
+      `/api/orgs/${orgId}/people/views/${viewId}/rows/${personId}`
+    );
+    this._store.dispatch(rowAdded([viewId, row]));
+  }
 
   clearCellData(orgId: number, viewId: number, rowId: number, colId: number) {
     this._store.dispatch(cellUpdate());

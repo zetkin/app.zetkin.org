@@ -148,10 +148,6 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
     }
   );
 
-  const addRowMutation = viewRowsResource(
-    view.organization.id,
-    viewId
-  ).useAdd();
   const removeRowsMutation = viewRowsResource(
     view.organization.id,
     viewId
@@ -344,27 +340,24 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
       },
     },
     footer: {
-      onRowAdd: (person) => {
-        addRowMutation.mutate(person.id, {
-          onSettled: (newRow, err, personId: number) => {
-            // Store ID for highlighting the new row
-            setAddedId(personId);
+      onRowAdd: async (person) => {
+        await model.addPerson(person);
 
-            // Remove ID again after 2 seconds, unless the state has changed
-            setTimeout(() => {
-              setAddedId((curState) => (curState == personId ? 0 : curState));
-            }, 2000);
+        // Store ID for highlighting the new row
+        setAddedId(person.id);
 
-            // Scroll (jump) to row after short delay
-            setTimeout(() => {
-              const gridApi = gridApiRef.current;
-              const rowIndex = gridApi.getRowIndex(personId);
-              gridApi.scrollToIndexes({ rowIndex });
-            }, 200);
-          },
-        });
+        // Remove ID again after 2 seconds, unless the state has changed
+        setTimeout(() => {
+          setAddedId((curState) => (curState == person.id ? 0 : curState));
+        }, 2000);
+
+        // Scroll (jump) to row after short delay
+        setTimeout(() => {
+          const gridApi = gridApiRef.current;
+          const rowIndex = gridApi.getRowIndex(person.id);
+          gridApi.scrollToIndexes({ rowIndex });
+        }, 200);
       },
-      viewId,
     },
     toolbar: {
       disableConfigure,
