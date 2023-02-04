@@ -20,9 +20,9 @@ export default class FetchApiClient implements IApiClient {
     return body.data;
   }
 
-  async patch<DataType>(
+  async patch<DataType, InputType = Partial<DataType>>(
     path: string,
-    data: Partial<DataType>
+    data: InputType
   ): Promise<DataType> {
     const res = await this._fetch(path, {
       body: JSON.stringify(data),

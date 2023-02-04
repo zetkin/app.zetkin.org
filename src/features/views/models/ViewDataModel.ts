@@ -68,4 +68,8 @@ export default class ViewDataModel extends ModelBase {
   setTitle(newTitle: string) {
     this._repo.updateView(this._orgId, this._viewId, { title: newTitle });
   }
+
+  updateColumn(columnId: number, data: Partial<Omit<ZetkinViewColumn, 'id'>>) {
+    return this._repo.updateColumn(this._orgId, this._viewId, columnId, data);
+  }
 }

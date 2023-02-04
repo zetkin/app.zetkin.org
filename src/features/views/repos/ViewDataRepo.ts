@@ -8,6 +8,7 @@ import {
   columnDeleted,
   columnsLoad,
   columnsLoaded,
+  columnUpdated,
   rowAdded,
   rowRemoved,
   rowsLoad,
@@ -149,6 +150,19 @@ export default class ViewDataRepo {
       .then((data) => {
         this._store.dispatch(cellUpdated([viewId, rowId, colId, data.value]));
       });
+  }
+
+  async updateColumn(
+    orgId: number,
+    viewId: number,
+    columnId: number,
+    data: Partial<Omit<ZetkinViewColumn, 'id'>>
+  ) {
+    const column = await this._apiClient.patch<
+      ZetkinViewColumn,
+      Partial<Omit<ZetkinViewColumn, 'id'>>
+    >(`/api/orgs/${orgId}/people/views/${viewId}/columns/${columnId}`, data);
+    this._store.dispatch(columnUpdated([viewId, column]));
   }
 
   updateView(

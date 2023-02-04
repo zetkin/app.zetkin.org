@@ -168,6 +168,35 @@ const viewsSlice = createSlice({
         }
       }
     },
+    columnUpdated: (
+      state,
+      action: PayloadAction<[number, ZetkinViewColumn]>
+    ) => {
+      const [viewId, column] = action.payload;
+      const colList = state.columnsByViewId[viewId];
+      if (colList) {
+        let configChanged = false;
+        colList.items = colList.items.map((item) => {
+          if (item.id == column.id) {
+            if (
+              JSON.stringify(column.config) != JSON.stringify(item.data?.config)
+            ) {
+              configChanged = true;
+            }
+            return remoteItem(column.id, { data: column });
+          } else {
+            return item;
+          }
+        });
+
+        const rowList = state.rowsByViewId[viewId];
+        if (rowList && configChanged) {
+          // Empty the view to force a reload when config changes
+          rowList.items = [];
+          rowList.isStale = true;
+        }
+      }
+    },
     columnsLoad: (state, action: PayloadAction<number>) => {
       const viewId = action.payload;
       if (!state.columnsByViewId[viewId]) {
@@ -373,6 +402,7 @@ export const {
   cellUpdated,
   columnAdded,
   columnDeleted,
+  columnUpdated,
   columnsLoad,
   columnsLoaded,
   folderCreate,

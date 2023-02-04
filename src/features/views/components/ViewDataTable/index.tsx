@@ -6,11 +6,9 @@ import { useIntl } from 'react-intl';
 import { useRouter } from 'next/router';
 import { DataGridPro, GridColDef, useGridApiRef } from '@mui/x-data-grid-pro';
 import { FunctionComponent, useContext, useState } from 'react';
-import { useMutation, useQueryClient } from 'react-query';
 
 import columnTypes from './columnTypes';
 import EmptyView from 'features/views/components/EmptyView';
-import patchViewColumn from 'features/views/fetching/patchViewColumn';
 import useModel from 'core/useModel';
 import useModelsFromQueryString from 'zui/ZUIUserConfigurableDataGrid/useModelsFromQueryString';
 import useViewDataModel from 'features/views/hooks/useViewDataModel';
@@ -83,8 +81,6 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
   const [quickSearch, setQuickSearch] = useState('');
   const router = useRouter();
   const { orgId } = router.query;
-  const queryClient = useQueryClient();
-  const viewId = view.id.toString();
   const { showSnackbar } = useContext(ZUISnackbarContext);
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
 
@@ -100,27 +96,12 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
     );
   };
 
-  const updateColumnMutation = useMutation(
-    patchViewColumn(orgId as string, viewId),
-    {
-      onError: () => {
-        showError(VIEW_DATA_TABLE_ERROR.MODIFY_COLUMN);
-        NProgress.done();
-      },
-      onSettled: () => {
-        NProgress.done();
-        queryClient.invalidateQueries(['view', viewId]);
-      },
-    }
-  );
-
   const onColumnCancel = () => {
     setColumnToConfigure(null);
   };
 
   const onColumnSave = async (colSpec: SelectedViewColumn) => {
     setColumnToConfigure(null);
-    NProgress.start();
     if ('id' in colSpec) {
       // If is an existing column, PATCH it with changed values
       // Get existing column
@@ -137,10 +118,8 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
           changedFields[typedKey] = value;
         }
       });
-      await updateColumnMutation.mutateAsync({
-        ...changedFields,
-        id: colSpec.id,
-      });
+
+      updateColumn(colSpec.id, changedFields);
     } else {
       // If it's a new column, add it
       try {
@@ -204,14 +183,25 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
     setColumnToRename(colSpec);
   };
 
+  const updateColumn = async (
+    id: number,
+    data: Omit<Partial<ZetkinViewColumn>, 'id'>
+  ) => {
+    NProgress.start();
+    try {
+      await model.updateColumn(id, data);
+    } catch (err) {
+      showError(VIEW_DATA_TABLE_ERROR.MODIFY_COLUMN);
+    } finally {
+      NProgress.done();
+    }
+  };
+
   const onColumnRenameSave = async (
     column: Pick<ZetkinViewColumn, 'id' | 'title'>
   ) => {
     setColumnToRename(null);
-    await updateColumnMutation.mutateAsync({
-      id: column.id,
-      title: column.title,
-    });
+    updateColumn(column.id, { title: column.title });
   };
 
   const onRowsRemove = async () => {
