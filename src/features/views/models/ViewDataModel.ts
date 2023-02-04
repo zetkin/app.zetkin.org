@@ -41,6 +41,10 @@ export default class ViewDataModel extends ModelBase {
     return this._repo.deleteColumn(this._orgId, this._viewId, columnId);
   }
 
+  deleteContentQuery() {
+    return this._repo.deleteViewContentQuery(this._orgId, this._viewId);
+  }
+
   getColumns(): IFuture<ZetkinViewColumn[]> {
     return this._repo.getColumns(this._orgId, this._viewId);
   }

@@ -330,7 +330,10 @@ const viewsSlice = createSlice({
           remoteItem(view.id, { data: view, loaded: new Date().toISOString() }),
         ]);
     },
-    viewQueryUpdated: (state, action: PayloadAction<[number, ZetkinQuery]>) => {
+    viewQueryUpdated: (
+      state,
+      action: PayloadAction<[number, ZetkinQuery | null]>
+    ) => {
       const [viewId, query] = action.payload;
       const item = state.viewList.items.find((item) => item.id == viewId);
       if (item) {

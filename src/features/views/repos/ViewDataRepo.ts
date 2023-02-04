@@ -86,6 +86,13 @@ export default class ViewDataRepo {
     this._store.dispatch(columnDeleted([viewId, columnId]));
   }
 
+  async deleteViewContentQuery(orgId: number, viewId: number) {
+    await this._apiClient.delete(
+      `/api/orgs/${orgId}/people/views/${viewId}/content_query`
+    );
+    this._store.dispatch(viewQueryUpdated([viewId, null]));
+  }
+
   getColumns(orgId: number, viewId: number): IFuture<ZetkinViewColumn[]> {
     const state = this._store.getState();
     const list = state.views.columnsByViewId[viewId];
