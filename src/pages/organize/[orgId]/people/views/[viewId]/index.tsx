@@ -92,7 +92,11 @@ const SingleViewPage: PageWithLayout<SingleViewPageProps> = ({
           </Head>
           <ViewDataModelProvider model={model}>
             <AccessLevelProvider>
-              <ViewDataTable columns={cols} rows={rows} view={view} />
+              <>
+                {!model.getColumns().isLoading && (
+                  <ViewDataTable columns={cols} rows={rows} view={view} />
+                )}
+              </>
             </AccessLevelProvider>
           </ViewDataModelProvider>
         </>

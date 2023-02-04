@@ -110,13 +110,17 @@ const SharedViewPage: PageWithLayout<SharedViewPageProps> = ({
           </Head>
           <ViewDataModelProvider model={model}>
             <AccessLevelProvider accessLevel={accessLevel} isRestricted={true}>
-              <ViewDataTable
-                columns={cols}
-                disableBulkActions
-                disableConfigure={!canConfigure}
-                rows={rows}
-                view={view}
-              />
+              <>
+                {!model.getColumns().isLoading && (
+                  <ViewDataTable
+                    columns={cols}
+                    disableBulkActions
+                    disableConfigure={!canConfigure}
+                    rows={rows}
+                    view={view}
+                  />
+                )}
+              </>
             </AccessLevelProvider>
           </ViewDataModelProvider>
         </>
