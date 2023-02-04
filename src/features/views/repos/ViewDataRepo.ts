@@ -1,8 +1,6 @@
-import { PayloadAction } from '@reduxjs/toolkit';
-
 import Environment from 'core/env/Environment';
 import IApiClient from 'core/api/client/IApiClient';
-import shouldLoad from 'core/caching/shouldLoad';
+import { IFuture } from 'core/caching/futures';
 import { Store } from 'core/store';
 import {
   cellUpdate,
@@ -15,12 +13,9 @@ import {
   viewLoaded,
 } from '../store';
 import {
-  IFuture,
-  PromiseFuture,
-  RemoteItemFuture,
-  RemoteListFuture,
-} from 'core/caching/futures';
-import { RemoteItem, RemoteList } from 'utils/storeUtils';
+  loadItemIfNecessary,
+  loadListIfNecessary,
+} from 'core/caching/cacheUtils';
 import {
   ZetkinView,
   ZetkinViewColumn,
@@ -101,57 +96,4 @@ export default class ViewDataRepo {
         this._store.dispatch(cellUpdated([viewId, rowId, colId, data.value]));
       });
   }
-}
-
-// TODO: This is a candidate for reuse
-function loadListIfNecessary<
-  DataType,
-  OnLoadPayload = void,
-  OnSuccessPayload = DataType[]
->(
-  remoteList: RemoteList<DataType> | undefined,
-  store: Store,
-  hooks: {
-    actionOnLoad: () => PayloadAction<OnLoadPayload>;
-    actionOnSuccess: (items: DataType[]) => PayloadAction<OnSuccessPayload>;
-    loader: () => Promise<DataType[]>;
-  }
-): IFuture<DataType[]> {
-  if (!remoteList || shouldLoad(remoteList)) {
-    store.dispatch(hooks.actionOnLoad());
-    const promise = hooks.loader().then((val) => {
-      store.dispatch(hooks.actionOnSuccess(val));
-      return val;
-    });
-
-    return new PromiseFuture(promise);
-  }
-
-  return new RemoteListFuture(remoteList);
-}
-
-export function loadItemIfNecessary<
-  DataType,
-  OnLoadPayload = void,
-  OnSuccessPayload = DataType
->(
-  remoteItem: RemoteItem<DataType> | undefined,
-  store: Store,
-  hooks: {
-    actionOnLoad: () => PayloadAction<OnLoadPayload>;
-    actionOnSuccess: (item: DataType) => PayloadAction<OnSuccessPayload>;
-    loader: () => Promise<DataType>;
-  }
-): IFuture<DataType> {
-  if (!remoteItem || shouldLoad(remoteItem)) {
-    store.dispatch(hooks.actionOnLoad());
-    const promise = hooks.loader().then((val) => {
-      store.dispatch(hooks.actionOnSuccess(val));
-      return val;
-    });
-
-    return new PromiseFuture(promise);
-  }
-
-  return new RemoteItemFuture(remoteItem);
 }

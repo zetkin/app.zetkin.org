@@ -1,7 +1,7 @@
 import Environment from 'core/env/Environment';
 import IApiClient from 'core/api/client/IApiClient';
 import { IFuture } from 'core/caching/futures';
-import { loadItemIfNecessary } from 'features/views/repos/ViewDataRepo';
+import { loadItemIfNecessary } from 'core/caching/cacheUtils';
 import { Store } from 'core/store';
 import { ZetkinTag } from 'utils/types/zetkin';
 import { tagAssigned, tagLoad, tagLoaded, tagUnassigned } from '../store';
