@@ -1,9 +1,20 @@
 import { COLUMN_TYPE } from 'features/views/components/types';
-import mockPersonNote from 'utils/testing/mocks/mockPersonNote';
 import mockViewCol from 'utils/testing/mocks/mockViewCol';
 import mockViewRow from 'utils/testing/mocks/mockViewRow';
-import { PersonNote } from './cells/PersonNotesViewCell';
+import { SurveyResponseViewCell } from './columnTypes/SurveyResponseColumnType';
 import { viewQuickSearch } from './utils';
+
+let nextSubmissionId = 1;
+
+function mockSurveyResponseCell(text: string): SurveyResponseViewCell {
+  return [
+    {
+      submission_id: nextSubmissionId++,
+      submitted: new Date().toISOString(),
+      text,
+    },
+  ];
+}
 
 describe('viewQuickSearch', () => {
   const columns = [
@@ -26,10 +37,10 @@ describe('viewQuickSearch', () => {
 
   const rows = [
     mockViewRow({
-      content: ['Angela', 'Davis', [mockPersonNote({ text: 'Note text A' })]],
+      content: ['Angela', 'Davis', [mockSurveyResponseCell('Response text A')]],
     }),
     mockViewRow({
-      content: ['Clara', 'Zetkin', [mockPersonNote({ text: 'Note text B' })]],
+      content: ['Clara', 'Zetkin', [mockSurveyResponseCell('Response text B')]],
     }),
   ];
 
@@ -46,11 +57,11 @@ describe('viewQuickSearch', () => {
   });
   it('Correctly returns rows when searching for an object field', () => {
     const matchedRows = viewQuickSearch(rows, columns, 'text a');
-    const matchedNotes = matchedRows[0].content[2] as PersonNote[];
+    const matchedNotes = matchedRows[0].content[2] as SurveyResponseViewCell;
 
     expect(matchedRows.length).toEqual(1);
     expect(matchedNotes).toHaveLength(1);
-    expect(matchedNotes[0].text).toEqual('Note text A');
+    expect(matchedNotes[0].text).toEqual('Response text A');
   });
   it('Returns an empty array if no rows match the search', () => {
     const matchedRows = viewQuickSearch(rows, columns, 'text c');
