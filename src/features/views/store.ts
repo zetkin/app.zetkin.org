@@ -271,6 +271,8 @@ const viewsSlice = createSlice({
         list.items = list.items
           .filter((item) => item.id != row.id)
           .concat([remoteItem(row.id, { data: row })]);
+      } else {
+        state.rowsByViewId[viewId] = remoteList([row]);
       }
     },
     rowRemoved: (state, action: PayloadAction<[number, number]>) => {
