@@ -32,6 +32,10 @@ export default class SurveyResponseColumnType
       width: 250,
     };
   }
+
+  getSearchableStrings(cell: SurveyResponseViewCell): string[] {
+    return cell.map((sub) => sub.text);
+  }
 }
 
 const useStyles = makeStyles({

@@ -25,6 +25,10 @@ export default class LocalQueryColumnType
       width: 150,
     };
   }
+
+  getSearchableStrings(): string[] {
+    return [];
+  }
 }
 
 const Cell: FC<{ cell: LocalQueryViewCell }> = ({ cell }) => {

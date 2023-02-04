@@ -31,16 +31,16 @@ describe('viewQuickSearch', () => {
       type: COLUMN_TYPE.PERSON_FIELD,
     }),
     mockViewCol({
-      type: COLUMN_TYPE.PERSON_NOTES,
+      type: COLUMN_TYPE.SURVEY_RESPONSE,
     }),
   ];
 
   const rows = [
     mockViewRow({
-      content: ['Angela', 'Davis', [mockSurveyResponseCell('Response text A')]],
+      content: ['Angela', 'Davis', mockSurveyResponseCell('Response text A')],
     }),
     mockViewRow({
-      content: ['Clara', 'Zetkin', [mockSurveyResponseCell('Response text B')]],
+      content: ['Clara', 'Zetkin', mockSurveyResponseCell('Response text B')],
     }),
   ];
 

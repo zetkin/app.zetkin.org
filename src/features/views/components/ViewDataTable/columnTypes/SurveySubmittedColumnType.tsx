@@ -29,6 +29,9 @@ export default class SurveySubmittedColumnType
       width: 250,
     };
   }
+  getSearchableStrings(): string[] {
+    return [];
+  }
 }
 
 const Cell: FC<{ cell: SurveySubmittedViewCell }> = ({ cell }) => {
