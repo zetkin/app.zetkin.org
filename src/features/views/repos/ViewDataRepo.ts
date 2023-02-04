@@ -1,6 +1,7 @@
 import Environment from 'core/env/Environment';
 import IApiClient from 'core/api/client/IApiClient';
 import { Store } from 'core/store';
+import { ZetkinQuery } from 'utils/types/zetkin';
 import {
   cellUpdate,
   cellUpdated,
@@ -15,6 +16,7 @@ import {
   rowsLoaded,
   viewLoad,
   viewLoaded,
+  viewQueryUpdated,
   viewUpdate,
   viewUpdated,
 } from '../store';
@@ -180,5 +182,17 @@ export default class ViewDataRepo {
       });
 
     return new PromiseFuture(promise);
+  }
+
+  async updateViewContentQuery(
+    orgId: number,
+    viewId: number,
+    data: Pick<ZetkinQuery, 'filter_spec'>
+  ) {
+    const query = await this._apiClient.patch<ZetkinQuery>(
+      `/api/orgs/${orgId}/people/views/${viewId}/content_query`,
+      data
+    );
+    this._store.dispatch(viewQueryUpdated([viewId, query]));
   }
 }

@@ -3,7 +3,7 @@ import { IFuture } from 'core/caching/futures';
 import { ModelBase } from 'core/models';
 import ViewDataRepo from '../repos/ViewDataRepo';
 import ViewsRepo from '../repos/ViewsRepo';
-import { ZetkinPerson } from 'utils/types/zetkin';
+import { ZetkinPerson, ZetkinQuery } from 'utils/types/zetkin';
 import {
   ZetkinView,
   ZetkinViewColumn,
@@ -71,5 +71,9 @@ export default class ViewDataModel extends ModelBase {
 
   updateColumn(columnId: number, data: Partial<Omit<ZetkinViewColumn, 'id'>>) {
     return this._repo.updateColumn(this._orgId, this._viewId, columnId, data);
+  }
+
+  updateContentQuery(query: Pick<ZetkinQuery, 'filter_spec'>) {
+    return this._repo.updateViewContentQuery(this._orgId, this._viewId, query);
   }
 }

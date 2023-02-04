@@ -1,8 +1,7 @@
 import { FunctionComponent } from 'react';
-import { useMutation, useQueryClient } from 'react-query';
 
-import defaultFetch from 'utils/fetching/defaultFetch';
-import { ZetkinQuery } from 'features/smartSearch/components/types';
+import useModel from 'core/useModel';
+import ViewDataModel from '../models/ViewDataModel';
 import { ZetkinView } from 'features/views/components/types';
 import SmartSearchDialog, {
   SmartSearchDialogProps,
@@ -19,35 +18,15 @@ const ViewSmartSearchDialog: FunctionComponent<ViewSmartSearchDialogProps> = ({
   view,
   ...dialogProps
 }) => {
-  const queryClient = useQueryClient();
-
-  // TODO: Create mutation using new factory pattern
-  const updateQueryMutation = useMutation(
-    async (query: Partial<ZetkinQuery>) => {
-      await defaultFetch(
-        `/orgs/${orgId}/people/views/${view.id}/content_query`,
-        {
-          body: JSON.stringify(query),
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          method: 'PATCH',
-        }
-      );
-    },
-    {
-      onSettled: () => {
-        queryClient.invalidateQueries(['view', view.id.toString(), 'rows']);
-        queryClient.invalidateQueries(['view', view.id.toString()]);
-      },
-    }
+  const model = useModel(
+    (env) => new ViewDataModel(env, parseInt(orgId as string), view.id)
   );
 
   return (
     <SmartSearchDialog
       {...dialogProps}
       onSave={(query) => {
-        updateQueryMutation.mutate(query);
+        model.updateContentQuery(query);
         dialogProps.onDialogClose();
       }}
       query={view.content_query}

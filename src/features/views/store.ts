@@ -11,7 +11,7 @@ import {
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { remoteItem, remoteList, RemoteList } from 'utils/storeUtils';
 import { tagAssigned, tagUnassigned } from 'features/tags/store';
-import { ZetkinOfficial, ZetkinTag } from 'utils/types/zetkin';
+import { ZetkinOfficial, ZetkinQuery, ZetkinTag } from 'utils/types/zetkin';
 
 type ZetkinObjectAccessWithId = ZetkinObjectAccess & {
   id: number;
@@ -330,6 +330,21 @@ const viewsSlice = createSlice({
           remoteItem(view.id, { data: view, loaded: new Date().toISOString() }),
         ]);
     },
+    viewQueryUpdated: (state, action: PayloadAction<[number, ZetkinQuery]>) => {
+      const [viewId, query] = action.payload;
+      const item = state.viewList.items.find((item) => item.id == viewId);
+      if (item) {
+        if (item.data) {
+          item.data.content_query = query;
+        }
+      }
+      const rowList = state.rowsByViewId[viewId];
+      if (rowList) {
+        // Empty view to trigger reload
+        rowList.items = [];
+        rowList.isStale = true;
+      }
+    },
     viewUpdate: (state, action: PayloadAction<[number, string[]]>) => {
       const [id, mutating] = action.payload;
       const item = state.viewList.items.find((item) => item.id == id);
@@ -421,6 +436,7 @@ export const {
   viewDeleted,
   viewLoad,
   viewLoaded,
+  viewQueryUpdated,
   viewUpdate,
   viewUpdated,
 } = viewsSlice.actions;
