@@ -16,6 +16,10 @@ export default class ViewDataModel extends ModelBase {
   private _viewId: number;
   private _viewsRepo: ViewsRepo;
 
+  addColumn(data: Omit<ZetkinViewColumn, 'id'>) {
+    return this._repo.addColumnToView(this._orgId, this._viewId, data);
+  }
+
   addPerson(person: ZetkinPerson): Promise<void> {
     return this._repo.addPersonToView(this._orgId, this._viewId, person.id);
   }

@@ -139,6 +139,21 @@ const viewsSlice = createSlice({
         );
       }
     },
+    columnAdded: (state, action: PayloadAction<[number, ZetkinViewColumn]>) => {
+      const [viewId, column] = action.payload;
+      const colList = state.columnsByViewId[viewId];
+      if (colList) {
+        colList.items = colList.items.concat([
+          remoteItem(column.id, { data: column }),
+        ]);
+        const rowList = state.rowsByViewId[viewId];
+
+        if (rowList) {
+          // Force a reload without emptying the view
+          rowList.isStale = true;
+        }
+      }
+    },
     columnDeleted: (state, action: PayloadAction<[number, number]>) => {
       const [viewId, columnId] = action.payload;
       const colList = state.columnsByViewId[viewId];
@@ -356,6 +371,7 @@ export const {
   allItemsLoaded,
   cellUpdate,
   cellUpdated,
+  columnAdded,
   columnDeleted,
   columnsLoad,
   columnsLoaded,

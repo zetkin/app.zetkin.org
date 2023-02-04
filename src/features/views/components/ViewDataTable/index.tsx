@@ -11,7 +11,6 @@ import { useMutation, useQueryClient } from 'react-query';
 import columnTypes from './columnTypes';
 import EmptyView from 'features/views/components/EmptyView';
 import patchViewColumn from 'features/views/fetching/patchViewColumn';
-import postViewColumn from 'features/views/fetching/postViewColumn';
 import useModel from 'core/useModel';
 import useModelsFromQueryString from 'zui/ZUIUserConfigurableDataGrid/useModelsFromQueryString';
 import useViewDataModel from 'features/views/hooks/useViewDataModel';
@@ -101,20 +100,6 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
     );
   };
 
-  const addColumnMutation = useMutation(
-    postViewColumn(orgId as string, viewId),
-    {
-      onError: () => {
-        showError(VIEW_DATA_TABLE_ERROR.CREATE_COLUMN);
-        NProgress.done();
-      },
-      onSettled: () => {
-        NProgress.done();
-        queryClient.invalidateQueries(['view', viewId]);
-      },
-    }
-  );
-
   const updateColumnMutation = useMutation(
     patchViewColumn(orgId as string, viewId),
     {
@@ -157,12 +142,18 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
         id: colSpec.id,
       });
     } else {
-      // If it's a new view, POST a new column
-      await addColumnMutation.mutateAsync({
-        config: colSpec.config,
-        title: colSpec.title,
-        type: colSpec.type,
-      });
+      // If it's a new column, add it
+      try {
+        model.addColumn({
+          config: colSpec.config,
+          title: colSpec.title,
+          type: colSpec.type,
+        });
+      } catch (err) {
+        showError(VIEW_DATA_TABLE_ERROR.CREATE_COLUMN);
+      } finally {
+        NProgress.done();
+      }
     }
   };
 

@@ -4,6 +4,7 @@ import { Store } from 'core/store';
 import {
   cellUpdate,
   cellUpdated,
+  columnAdded,
   columnDeleted,
   columnsLoad,
   columnsLoaded,
@@ -34,6 +35,19 @@ type ZetkinViewUpdateBody = Partial<Omit<ZetkinView, 'id' | 'folder'>> & {
 export default class ViewDataRepo {
   private _apiClient: IApiClient;
   private _store: Store;
+
+  async addColumnToView(
+    orgId: number,
+    viewId: number,
+    data: Omit<ZetkinViewColumn, 'id'>
+  ) {
+    const column = await this._apiClient.post<
+      ZetkinViewColumn,
+      Omit<ZetkinViewColumn, 'id'>
+    >(`/api/orgs/${orgId}/people/views/${viewId}/columns`, data);
+
+    this._store.dispatch(columnAdded([viewId, column]));
+  }
 
   async addPersonToView(
     orgId: number,
