@@ -2,6 +2,7 @@ import Environment from 'core/env/Environment';
 import { IFuture } from 'core/caching/futures';
 import { ModelBase } from 'core/models';
 import ViewDataRepo from '../repos/ViewDataRepo';
+import ViewsRepo from '../repos/ViewsRepo';
 import { ZetkinPerson } from 'utils/types/zetkin';
 import {
   ZetkinView,
@@ -13,6 +14,7 @@ export default class ViewDataModel extends ModelBase {
   private _orgId: number;
   private _repo: ViewDataRepo;
   private _viewId: number;
+  private _viewsRepo: ViewsRepo;
 
   addPerson(person: ZetkinPerson): Promise<void> {
     return this._repo.addPersonToView(this._orgId, this._viewId, person.id);
@@ -22,8 +24,13 @@ export default class ViewDataModel extends ModelBase {
     super();
 
     this._repo = new ViewDataRepo(env);
+    this._viewsRepo = new ViewsRepo(env);
     this._orgId = orgId;
     this._viewId = viewId;
+  }
+
+  delete(): Promise<void> {
+    return this._viewsRepo.deleteView(this._orgId, this._viewId);
   }
 
   getColumns(): IFuture<ZetkinViewColumn[]> {

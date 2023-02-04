@@ -15,7 +15,6 @@ import ViewDataModel from '../models/ViewDataModel';
 import ViewJumpMenu from 'features/views/components/ViewJumpMenu';
 import ViewSharingModel from '../models/ViewSharingModel';
 import ViewSmartSearchDialog from 'features/views/components/ViewSmartSearchDialog';
-import { viewsResource } from 'features/views/api/views';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
 import { ZUIEllipsisMenuProps } from 'zui/ZUIEllipsisMenu';
@@ -70,7 +69,6 @@ const SingleViewLayout: FunctionComponent<SingleViewLayoutProps> = ({
   const [shareDialogOpen, setShareDialogOpen] = useState(false);
   const { showSnackbar } = useContext(ZUISnackbarContext);
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
-  const deleteMutation = viewsResource(orgId as string).useDelete();
 
   // TODO: Create mutation using new factory pattern
   const deleteQueryMutation = useMutation(
@@ -159,24 +157,23 @@ const SingleViewLayout: FunctionComponent<SingleViewLayoutProps> = ({
     });
   }
 
-  const deleteView = () => {
+  const deleteView = async () => {
     if (view) {
       setDeactivated(true);
       NProgress.start();
-      deleteMutation.mutate(view.id, {
-        onError: () => {
-          setDeactivated(false);
-          showSnackbar(
-            'error',
-            intl.formatMessage({
-              id: 'pages.people.views.layout.deleteDialog.error',
-            })
-          );
-        },
-        onSuccess: () => {
-          router.push(`/organize/${orgId}/people/views`);
-        },
-      });
+      try {
+        await dataModel.delete();
+      } catch (err) {
+        setDeactivated(false);
+        showSnackbar(
+          'error',
+          intl.formatMessage({
+            id: 'pages.people.views.layout.deleteDialog.error',
+          })
+        );
+      } finally {
+        router.push(`/organize/${orgId}/people/views`);
+      }
     }
   };
 
