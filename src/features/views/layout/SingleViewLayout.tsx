@@ -196,7 +196,7 @@ const SingleViewLayout: FunctionComponent<SingleViewLayoutProps> = ({
   });
 
   return (
-    <Box className={classes.deactivateWrapper}>
+    <Box key={viewId as string} className={classes.deactivateWrapper}>
       <TabbedLayout
         actionButtons={
           <Button
