@@ -8,6 +8,7 @@ import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import SharedViewLayout from 'features/views/layout/SharedViewLayout';
 import useModel from 'core/useModel';
+import useServerSide from 'core/useServerSide';
 import ViewDataModel from 'features/views/models/ViewDataModel';
 import { ViewDataModelProvider } from 'features/views/hooks/useViewDataModel';
 import ViewDataTable from 'features/views/components/ViewDataTable';
@@ -62,9 +63,9 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
     parseInt(viewId as string)
   );
 
-  const view = await apiClient.get(`/orgs/${orgId}/people/views/${viewId}`);
+  try {
+    await apiClient.get(`/api/orgs/${orgId}/people/views/${viewId}`);
 
-  if (view) {
     return {
       props: {
         accessLevel,
@@ -72,7 +73,7 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
         viewId,
       },
     };
-  } else {
+  } catch (err) {
     return {
       notFound: true,
     };
@@ -94,6 +95,11 @@ const SharedViewPage: PageWithLayout<SharedViewPageProps> = ({
     (env) => new ViewDataModel(env, parseInt(orgId), parseInt(viewId))
   );
   const canConfigure = accessLevel == 'configure';
+
+  const onServer = useServerSide();
+  if (onServer) {
+    return null;
+  }
 
   return (
     <ZUIFutures
