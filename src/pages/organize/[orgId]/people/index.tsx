@@ -2,6 +2,7 @@ import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { useIntl } from 'react-intl';
 
+import BackendApiClient from 'core/api/client/BackendApiClient';
 import { PageWithLayout } from 'utils/types';
 import PeopleLayout from 'features/views/layout/PeopleLayout';
 import { scaffold } from 'utils/next';
@@ -9,7 +10,6 @@ import useModel from 'core/useModel';
 import useServerSide from 'core/useServerSide';
 import ViewBrowser from 'features/views/components/ViewBrowser';
 import ViewBrowserModel from 'features/views/models/ViewBrowserModel';
-import { viewsResource } from 'features/views/api/views';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -19,11 +19,10 @@ const scaffoldOptions = {
 export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
   const { orgId } = ctx.params!;
 
-  const { state: viewsQueryState } = await viewsResource(
-    orgId as string
-  ).prefetch(ctx);
+  const apiClient = new BackendApiClient(ctx.req.headers);
+  const views = await apiClient.get(`/api/orgs/${orgId}/people/views`);
 
-  if (viewsQueryState?.status === 'success') {
+  if (views) {
     return {
       props: {
         orgId,
