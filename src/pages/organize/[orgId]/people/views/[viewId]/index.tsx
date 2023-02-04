@@ -2,9 +2,8 @@ import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 
 import { AccessLevelProvider } from 'features/views/hooks/useAccessLevel';
-import getOrg from 'utils/fetching/getOrg';
+import BackendApiClient from 'core/api/client/BackendApiClient';
 import getUserMemberships from 'utils/getUserMemberships';
-import getView from 'features/views/fetching/getView';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import SingleViewLayout from 'features/views/layout/SingleViewLayout';
@@ -24,20 +23,10 @@ const scaffoldOptions = {
 export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
   const { orgId, viewId } = ctx.params!;
 
-  await ctx.queryClient.prefetchQuery(
-    ['org', orgId],
-    getOrg(orgId as string, ctx.apiFetch)
-  );
-  const orgState = ctx.queryClient.getQueryState(['org', orgId]);
+  const apiClient = new BackendApiClient(ctx.req.headers);
+  const view = await apiClient.get(`/api/orgs/${orgId}/people/views/${viewId}`);
 
-  await ctx.queryClient.prefetchQuery(
-    ['view', viewId],
-    getView(orgId as string, viewId as string, ctx.apiFetch)
-  );
-
-  const viewState = ctx.queryClient.getQueryState(['view', viewId]);
-
-  if (orgState?.data && viewState?.data) {
+  if (view) {
     // Check if user is an official
     // TODO: Consider moving this to some more general-purpose utility
     const officialMemberships = await getUserMemberships(ctx, false);

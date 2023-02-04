@@ -3,8 +3,6 @@ import Head from 'next/head';
 
 import { AccessLevelProvider } from 'features/views/hooks/useAccessLevel';
 import BackendApiClient from 'core/api/client/BackendApiClient';
-import getOrg from 'utils/fetching/getOrg';
-import getView from 'features/views/fetching/getView';
 import IApiClient from 'core/api/client/IApiClient';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
@@ -64,20 +62,9 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
     parseInt(viewId as string)
   );
 
-  await ctx.queryClient.prefetchQuery(
-    ['org', orgId],
-    getOrg(orgId as string, ctx.apiFetch)
-  );
-  const orgState = ctx.queryClient.getQueryState(['org', orgId]);
+  const view = await apiClient.get(`/orgs/${orgId}/people/views/${viewId}`);
 
-  await ctx.queryClient.prefetchQuery(
-    ['view', viewId],
-    getView(orgId as string, viewId as string, ctx.apiFetch)
-  );
-
-  const viewState = ctx.queryClient.getQueryState(['view', viewId]);
-
-  if (orgState?.data && viewState?.data) {
+  if (view) {
     return {
       props: {
         accessLevel,

@@ -1,16 +1,15 @@
 import { FormattedMessage } from 'react-intl';
 import { FunctionComponent } from 'react';
 import makeStyles from '@mui/styles/makeStyles';
-import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 import { Box, Typography } from '@mui/material';
 import { Group, ViewColumnOutlined } from '@mui/icons-material';
 
-import getView from '../fetching/getView';
-import getViewColumns from '../fetching/getViewColumns';
-import getViewRows from '../fetching/getViewRows';
+import useModel from 'core/useModel';
+import ViewDataModel from '../models/ViewDataModel';
+import ZUIFuture from 'zui/ZUIFuture';
+import ZUIFutures from 'zui/ZUIFutures';
 import ZUIIconLabelRow from 'zui/ZUIIconLabelRow';
-import ZUIQuery from 'zui/ZUIQuery';
 
 const useStyles = makeStyles((theme) => ({
   main: {
@@ -44,31 +43,30 @@ const SharedViewLayout: FunctionComponent<SharedViewLayoutProps> = ({
   const router = useRouter();
   const { orgId, viewId } = router.query;
   const classes = useStyles();
-  const viewQuery = useQuery(
-    ['view', viewId],
-    getView(orgId as string, viewId as string)
+
+  const dataModel = useModel(
+    (env) =>
+      new ViewDataModel(
+        env,
+        parseInt(orgId as string),
+        parseInt(viewId as string)
+      )
   );
 
   const title = (
-    <ZUIQuery queries={{ viewQuery }}>
-      {({ queries: { viewQuery } }) => <>{viewQuery.data.title}</>}
-    </ZUIQuery>
+    <ZUIFuture future={dataModel.getView()}>
+      {(view) => <>{view.title}</>}
+    </ZUIFuture>
   );
   const subtitle = (
     // TODO: Replace with model eventually
-    <ZUIQuery
-      queries={{
-        colsQuery: useQuery(
-          ['view', viewId, 'columns'],
-          getViewColumns(orgId as string, viewId as string)
-        ),
-        rowsQuery: useQuery(
-          ['view', viewId, 'rows'],
-          getViewRows(orgId as string, viewId as string)
-        ),
+    <ZUIFutures
+      futures={{
+        cols: dataModel.getColumns(),
+        rows: dataModel.getRows(),
       }}
     >
-      {({ queries: { colsQuery, rowsQuery } }) => (
+      {({ data: { cols, rows } }) => (
         <ZUIIconLabelRow
           iconLabels={[
             {
@@ -76,7 +74,7 @@ const SharedViewLayout: FunctionComponent<SharedViewLayoutProps> = ({
               label: (
                 <FormattedMessage
                   id="pages.people.views.layout.subtitle.people"
-                  values={{ count: rowsQuery.data.length }}
+                  values={{ count: rows.length }}
                 />
               ),
             },
@@ -85,14 +83,14 @@ const SharedViewLayout: FunctionComponent<SharedViewLayoutProps> = ({
               label: (
                 <FormattedMessage
                   id="pages.people.views.layout.subtitle.columns"
-                  values={{ count: colsQuery.data.length }}
+                  values={{ count: cols.length }}
                 />
               ),
             },
           ]}
         />
       )}
-    </ZUIQuery>
+    </ZUIFutures>
   );
 
   return (

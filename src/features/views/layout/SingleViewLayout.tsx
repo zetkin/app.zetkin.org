@@ -7,7 +7,6 @@ import { useMutation, useQueryClient } from 'react-query';
 
 import defaultFetch from 'utils/fetching/defaultFetch';
 import NProgress from 'nprogress';
-import patchView from 'features/views/fetching/patchView';
 import ShareViewDialog from '../components/ShareViewDialog';
 import TabbedLayout from 'utils/layout/TabbedLayout';
 import useModel from 'core/useModel';
@@ -69,37 +68,9 @@ const SingleViewLayout: FunctionComponent<SingleViewLayoutProps> = ({
   const queryClient = useQueryClient();
   const [queryDialogOpen, setQueryDialogOpen] = useState(false);
   const [shareDialogOpen, setShareDialogOpen] = useState(false);
-  const patchViewMutation = useMutation(
-    patchView(orgId as string, viewId as string)
-  );
   const { showSnackbar } = useContext(ZUISnackbarContext);
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
   const deleteMutation = viewsResource(orgId as string).useDelete();
-
-  const updateTitle = async (newTitle: string) => {
-    patchViewMutation.mutateAsync(
-      { title: newTitle },
-      {
-        onError: () => {
-          showSnackbar(
-            'error',
-            intl.formatMessage({
-              id: `misc.views.editViewTitleAlert.error`,
-            })
-          );
-        },
-        onSuccess: async () => {
-          await queryClient.invalidateQueries(['view', viewId]);
-          showSnackbar(
-            'success',
-            intl.formatMessage({
-              id: `misc.views.editViewTitleAlert.success`,
-            })
-          );
-        },
-      }
-    );
-  };
 
   // TODO: Create mutation using new factory pattern
   const deleteQueryMutation = useMutation(
@@ -134,8 +105,24 @@ const SingleViewLayout: FunctionComponent<SingleViewLayoutProps> = ({
             <Box>
               <ZUIEditTextinPlace
                 key={view.id}
-                disabled={patchViewMutation.isLoading}
-                onChange={(newTitle) => updateTitle(newTitle)}
+                onChange={(newTitle) => {
+                  try {
+                    dataModel.setTitle(newTitle);
+                    showSnackbar(
+                      'success',
+                      intl.formatMessage({
+                        id: `misc.views.editViewTitleAlert.success`,
+                      })
+                    );
+                  } catch (err) {
+                    showSnackbar(
+                      'error',
+                      intl.formatMessage({
+                        id: `misc.views.editViewTitleAlert.error`,
+                      })
+                    );
+                  }
+                }}
                 value={view?.title}
               />
               <ViewJumpMenu />
