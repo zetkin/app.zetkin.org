@@ -1,5 +1,6 @@
 import Environment from 'core/env/Environment';
 import { ModelBase } from 'core/models';
+import ViewDataRepo from '../repos/ViewDataRepo';
 import ViewsRepo from '../repos/ViewsRepo';
 import {
   FutureBase,
@@ -40,6 +41,7 @@ export type ViewBrowserItem =
   | ViewBrowserBackItem;
 
 export default class ViewBrowserModel extends ModelBase {
+  private _dataRepo: ViewDataRepo;
   private _env: Environment;
   private _orgId: number;
   private _repo: ViewsRepo;
@@ -49,6 +51,7 @@ export default class ViewBrowserModel extends ModelBase {
     this._env = env;
     this._orgId = orgId;
     this._repo = new ViewsRepo(env);
+    this._dataRepo = new ViewDataRepo(env);
   }
 
   createFolder(title: string, folderId?: number): IFuture<ZetkinViewFolder> {
@@ -178,7 +181,7 @@ export default class ViewBrowserModel extends ModelBase {
     if (type == 'folder') {
       this._repo.updateFolder(this._orgId, id, { parent_id: newParentId });
     } else if (type == 'view') {
-      this._repo.updateView(this._orgId, id, { folder_id: newParentId });
+      this._dataRepo.updateView(this._orgId, id, { folder_id: newParentId });
     }
   }
 
@@ -191,7 +194,7 @@ export default class ViewBrowserModel extends ModelBase {
     if (type == 'folder') {
       this._repo.updateFolder(this._orgId, id, { title });
     } else if (type == 'view') {
-      this._repo.updateView(this._orgId, id, { title });
+      this._dataRepo.updateView(this._orgId, id, { title });
     }
   }
 }

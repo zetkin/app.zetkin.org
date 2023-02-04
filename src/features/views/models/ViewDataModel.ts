@@ -49,4 +49,8 @@ export default class ViewDataModel extends ModelBase {
       this._repo.clearCellData(this._orgId, this._viewId, personId, colId);
     }
   }
+
+  setTitle(newTitle: string) {
+    this._repo.updateView(this._orgId, this._viewId, { title: newTitle });
+  }
 }

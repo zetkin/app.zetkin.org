@@ -23,8 +23,6 @@ import {
   viewCreate,
   viewCreated,
   viewDeleted,
-  viewUpdate,
-  viewUpdated,
 } from '../store';
 import {
   IFuture,
@@ -37,10 +35,6 @@ import { ZetkinView, ZetkinViewFolder } from '../components/types';
 type ZetkinViewFolderPostBody = {
   parent_id?: number;
   title: string;
-};
-
-type ZetkinViewUpdateBody = Partial<Omit<ZetkinView, 'id' | 'folder'>> & {
-  folder_id?: number | null;
 };
 
 type ZetkinViewFolderUpdateBody = Partial<
@@ -203,23 +197,6 @@ export default class ViewsRepo {
       .then((folder) => {
         this._store.dispatch(folderUpdated([folder, mutating]));
         return folder;
-      });
-
-    return new PromiseFuture(promise);
-  }
-
-  updateView(
-    orgId: number,
-    viewId: number,
-    data: ZetkinViewUpdateBody
-  ): IFuture<ZetkinView> {
-    const mutating = Object.keys(data);
-    this._store.dispatch(viewUpdate([viewId, mutating]));
-    const promise = this._apiClient
-      .patch<ZetkinView>(`/api/orgs/${orgId}/people/views/${viewId}`, data)
-      .then((view) => {
-        this._store.dispatch(viewUpdated([view, mutating]));
-        return view;
       });
 
     return new PromiseFuture(promise);

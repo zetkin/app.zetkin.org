@@ -1,6 +1,5 @@
 import Environment from 'core/env/Environment';
 import IApiClient from 'core/api/client/IApiClient';
-import { IFuture } from 'core/caching/futures';
 import { Store } from 'core/store';
 import {
   cellUpdate,
@@ -13,7 +12,10 @@ import {
   rowsLoaded,
   viewLoad,
   viewLoaded,
+  viewUpdate,
+  viewUpdated,
 } from '../store';
+import { IFuture, PromiseFuture } from 'core/caching/futures';
 import {
   loadItemIfNecessary,
   loadListIfNecessary,
@@ -23,6 +25,10 @@ import {
   ZetkinViewColumn,
   ZetkinViewRow,
 } from '../components/types';
+
+type ZetkinViewUpdateBody = Partial<Omit<ZetkinView, 'id' | 'folder'>> & {
+  folder_id?: number | null;
+};
 
 export default class ViewDataRepo {
   private _apiClient: IApiClient;
@@ -121,5 +127,22 @@ export default class ViewDataRepo {
       .then((data) => {
         this._store.dispatch(cellUpdated([viewId, rowId, colId, data.value]));
       });
+  }
+
+  updateView(
+    orgId: number,
+    viewId: number,
+    data: ZetkinViewUpdateBody
+  ): IFuture<ZetkinView> {
+    const mutating = Object.keys(data);
+    this._store.dispatch(viewUpdate([viewId, mutating]));
+    const promise = this._apiClient
+      .patch<ZetkinView>(`/api/orgs/${orgId}/people/views/${viewId}`, data)
+      .then((view) => {
+        this._store.dispatch(viewUpdated([view, mutating]));
+        return view;
+      });
+
+    return new PromiseFuture(promise);
   }
 }
