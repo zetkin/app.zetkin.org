@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { ComponentMeta, ComponentStory } from '@storybook/react';
 
+import { AccessLevelProvider } from 'features/views/hooks/useAccessLevel';
 import ViewSurveySubmissionPreview from '.';
 
 export default {
@@ -11,15 +12,17 @@ export default {
 const Template: ComponentStory<typeof ViewSurveySubmissionPreview> = (args) => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   return (
-    <>
-      <div>
-        <a ref={(elem) => setAnchorEl(elem)}>Cell content</a>
-      </div>
-      <ViewSurveySubmissionPreview
-        anchorEl={anchorEl}
-        submissions={args.submissions}
-      />
-    </>
+    <AccessLevelProvider>
+      <>
+        <div>
+          <a ref={(elem) => setAnchorEl(elem)}>Cell content</a>
+        </div>
+        <ViewSurveySubmissionPreview
+          anchorEl={anchorEl}
+          submissions={args.submissions}
+        />
+      </>
+    </AccessLevelProvider>
   );
 };
 
