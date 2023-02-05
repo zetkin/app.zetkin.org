@@ -1,6 +1,7 @@
 import Environment from 'core/env/Environment';
 import { IFuture } from 'core/caching/futures';
 import { ModelBase } from 'core/models';
+import TagsRepo from 'features/tags/repos/TagsRepo';
 import ViewDataRepo from '../repos/ViewDataRepo';
 import ViewsRepo from '../repos/ViewsRepo';
 import { ZetkinPerson, ZetkinQuery } from 'utils/types/zetkin';
@@ -13,6 +14,7 @@ import {
 export default class ViewDataModel extends ModelBase {
   private _orgId: number;
   private _repo: ViewDataRepo;
+  private _tagsRepo: TagsRepo;
   private _viewId: number;
   private _viewsRepo: ViewsRepo;
 
@@ -28,6 +30,7 @@ export default class ViewDataModel extends ModelBase {
     super();
 
     this._repo = new ViewDataRepo(env);
+    this._tagsRepo = new TagsRepo(env);
     this._viewsRepo = new ViewsRepo(env);
     this._orgId = orgId;
     this._viewId = viewId;
@@ -71,6 +74,14 @@ export default class ViewDataModel extends ModelBase {
 
   setTitle(newTitle: string) {
     this._repo.updateView(this._orgId, this._viewId, { title: newTitle });
+  }
+
+  toggleTag(personId: number, tagId: number, assigned: boolean) {
+    if (assigned) {
+      this._tagsRepo.assignTagToPerson(this._orgId, personId, tagId);
+    } else {
+      this._tagsRepo.removeTagFromPerson(this._orgId, personId, tagId);
+    }
   }
 
   updateColumn(columnId: number, data: Partial<Omit<ZetkinViewColumn, 'id'>>) {

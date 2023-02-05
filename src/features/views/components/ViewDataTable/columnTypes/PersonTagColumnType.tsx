@@ -1,16 +1,25 @@
 import { Box } from '@mui/material';
-import { FC } from 'react';
 import { makeStyles } from '@mui/styles';
 import { useRouter } from 'next/router';
-import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid-pro';
+import { FC, KeyboardEvent } from 'react';
+import {
+  GridColDef,
+  GridRenderCellParams,
+  MuiEvent,
+} from '@mui/x-data-grid-pro';
 
 import { IColumnType } from '.';
 import TagChip from 'features/tags/components/TagManager/components/TagChip';
 import TagModel from 'features/tags/models/TagModel';
 import useModel from 'core/useModel';
+import ViewDataModel from 'features/views/models/ViewDataModel';
 import { ZetkinTag } from 'utils/types/zetkin';
 import ZUIFuture from 'zui/ZUIFuture';
 import { PersonTagViewColumn, ZetkinViewRow } from '../../types';
+
+type PersonTagViewCell = null | {
+  value?: string;
+};
 
 export default class PersonTagColumnType implements IColumnType {
   cellToString(cell: ZetkinTag): string {
@@ -35,6 +44,19 @@ export default class PersonTagColumnType implements IColumnType {
 
   getSearchableStrings(): string[] {
     return [];
+  }
+
+  handleKeyDown(
+    model: ViewDataModel,
+    column: PersonTagViewColumn,
+    personId: number,
+    data: PersonTagViewCell,
+    ev: MuiEvent<KeyboardEvent<HTMLElement>>
+  ): void {
+    if (ev.key == 'Enter' || ev.key == ' ') {
+      model.toggleTag(personId, column.config.tag_id, !data);
+      ev.defaultMuiPrevented = true;
+    }
   }
 }
 
