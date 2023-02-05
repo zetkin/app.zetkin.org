@@ -8,7 +8,9 @@ import {
 } from '@mui/x-data-grid-pro';
 
 import { IColumnType } from '.';
+import { LocalTextViewColumn } from '../../types';
 import ViewDataModel from 'features/views/models/ViewDataModel';
+import { ZetkinObjectAccess } from 'core/api/types';
 
 type LocalTextViewCell = string | null;
 
@@ -16,9 +18,12 @@ export default class LocalTextColumnType implements IColumnType {
   cellToString(cell: LocalTextViewCell): string {
     return cell ? cell : '';
   }
-  getColDef(): Omit<GridColDef, 'field'> {
+  getColDef(
+    column: LocalTextViewColumn,
+    accessLevel: ZetkinObjectAccess['level'] | null
+  ): Omit<GridColDef, 'field'> {
     return {
-      editable: true,
+      editable: accessLevel != 'readonly',
       renderCell: (params) => <Cell cell={params.value} />,
       renderEditCell: (params) => <EditTextarea {...params} />,
       width: 250,
