@@ -15,6 +15,7 @@ import { FunctionComponent, useContext, useState } from 'react';
 
 import columnTypes from './columnTypes';
 import EmptyView from 'features/views/components/EmptyView';
+import useAccessLevel from 'features/views/hooks/useAccessLevel';
 import useModel from 'core/useModel';
 import useModelsFromQueryString from 'zui/ZUIUserConfigurableDataGrid/useModelsFromQueryString';
 import useViewDataModel from 'features/views/hooks/useViewDataModel';
@@ -83,6 +84,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
   const [waiting, setWaiting] = useState(false);
 
   const { gridProps: modelGridProps } = useModelsFromQueryString();
+  const [, accessLevel] = useAccessLevel();
 
   const [quickSearch, setQuickSearch] = useState('');
   const router = useRouter();
@@ -268,7 +270,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
       resizable: true,
       sortable: true,
       width: 150,
-      ...columnTypes[col.type].getColDef(col),
+      ...columnTypes[col.type].getColDef(col, accessLevel),
     })),
   ];
 
@@ -383,7 +385,14 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
             if (col) {
               const handleKeyDown = columnTypes[col.type].handleKeyDown;
               if (handleKeyDown) {
-                handleKeyDown(model, col, params.row.id, params.value, ev);
+                handleKeyDown(
+                  model,
+                  col,
+                  params.row.id,
+                  params.value,
+                  ev,
+                  accessLevel
+                );
               }
             }
           }
