@@ -74,6 +74,16 @@ const EditTextarea = (props: GridRenderEditCellParams<string>) => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>();
   const apiRef = useGridApiContext();
 
+  const handleTextAreaRef = useCallback((el: HTMLTextAreaElement | null) => {
+    if (el) {
+      // When entering edit mode, focus the text area and put
+      // caret at the end of the text
+      el.focus();
+      el.setSelectionRange(el.value.length, el.value.length);
+      el.scrollTop = el.scrollHeight;
+    }
+  }, []);
+
   const handleRef = useCallback((el: HTMLElement | null) => {
     setAnchorEl(el);
   }, []);
@@ -121,6 +131,7 @@ const EditTextarea = (props: GridRenderEditCellParams<string>) => {
         <Popper anchorEl={anchorEl} open placement="bottom-start">
           <Paper elevation={1} sx={{ minWidth: colDef.computedWidth, p: 1 }}>
             <InputBase
+              inputRef={handleTextAreaRef}
               multiline
               onChange={handleChange}
               onKeyDown={handleKeyDown}
