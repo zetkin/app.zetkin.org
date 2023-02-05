@@ -4,7 +4,12 @@ import NextLink from 'next/link';
 import NProgress from 'nprogress';
 import { useIntl } from 'react-intl';
 import { useRouter } from 'next/router';
-import { DataGridPro, GridColDef, useGridApiRef } from '@mui/x-data-grid-pro';
+import {
+  DataGridPro,
+  GridCellEditStartReasons,
+  GridColDef,
+  useGridApiRef,
+} from '@mui/x-data-grid-pro';
 import { FunctionComponent, useContext, useState } from 'react';
 
 import columnTypes from './columnTypes';
@@ -360,6 +365,16 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
           noRowsLabel: intl.formatMessage({
             id: `misc.views.empty.notice.${contentSource}`,
           }),
+        }}
+        onCellEditStart={(params, event) => {
+          if (params.reason == GridCellEditStartReasons.printableKeyDown) {
+            // Don't enter edit mode when the user just presses a printable character.
+            // Doing so is the default DataGrid behaviour (as in spreadsheets) but it
+            // means the user will overwrite the original value, which is rarely what
+            // you want with the precious data that exists in views (when there is no
+            // undo feature).
+            event.defaultMuiPrevented = true;
+          }
         }}
         onSelectionModelChange={(model) => setSelection(model as number[])}
         processRowUpdate={(after, before) => {

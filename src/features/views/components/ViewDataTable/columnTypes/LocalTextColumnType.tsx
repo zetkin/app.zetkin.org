@@ -106,7 +106,8 @@ const EditTextarea = (props: GridRenderEditCellParams<string>) => {
         event.key === 'Escape' ||
         (event.key === 'Enter' &&
           !event.shiftKey &&
-          (event.ctrlKey || event.metaKey))
+          !event.ctrlKey &&
+          !event.metaKey)
       ) {
         const params = apiRef.current.getCellParams(id, field);
         apiRef.current.publishEvent('cellKeyDown', params, event);
