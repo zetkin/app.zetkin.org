@@ -1,4 +1,5 @@
-import { GridColDef } from '@mui/x-data-grid-pro';
+import { KeyboardEvent } from 'react';
+import { GridColDef, MuiEvent } from '@mui/x-data-grid-pro';
 
 import LocalBoolColumnType from './LocalBoolColumnType';
 import LocalPersonColumnType from './LocalPersonColumnType';
@@ -18,6 +19,13 @@ export interface IColumnType<
   cellToString(cell: CellType, column: ColumnType): string;
   getColDef(column: ColumnType): Omit<GridColDef, 'field'>;
   getSearchableStrings(cell: CellType): string[];
+  handleKeyDown?(
+    model: ViewDataModel,
+    column: ColumnType,
+    personId: number,
+    data: CellType,
+    ev: MuiEvent<KeyboardEvent<HTMLElement>>
+  ): void;
   processRowUpdate?(
     model: ViewDataModel,
     colId: number,

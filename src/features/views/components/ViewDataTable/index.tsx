@@ -7,6 +7,7 @@ import { useRouter } from 'next/router';
 import {
   DataGridPro,
   GridCellEditStartReasons,
+  GridCellParams,
   GridColDef,
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
@@ -376,18 +377,28 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
             event.defaultMuiPrevented = true;
           }
         }}
+        onCellKeyDown={(params: GridCellParams<unknown, ZetkinViewRow>, ev) => {
+          if (!params.isEditable) {
+            const col = colFromFieldName(params.field, columns);
+            if (col) {
+              const handleKeyDown = columnTypes[col.type].handleKeyDown;
+              if (handleKeyDown) {
+                handleKeyDown(model, col, params.row.id, params.value, ev);
+              }
+            }
+          }
+        }}
         onSelectionModelChange={(model) => setSelection(model as number[])}
         processRowUpdate={(after, before) => {
           const changedField = Object.keys(after).find(
             (key) => after[key] != before[key]
           );
           if (changedField) {
-            const colId = parseInt(changedField.slice(4));
-            const col = columns.find((col) => col.id == colId);
+            const col = colFromFieldName(changedField, columns);
             if (col) {
               const processRowUpdate = columnTypes[col.type].processRowUpdate;
               if (processRowUpdate) {
-                processRowUpdate(model, colId, after.id, after[changedField]);
+                processRowUpdate(model, col.id, after.id, after[changedField]);
               }
             }
           }
@@ -423,5 +434,13 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
     </>
   );
 };
+
+function colFromFieldName(
+  fieldName: string,
+  columns: ZetkinViewColumn[]
+): ZetkinViewColumn | undefined {
+  const colId = parseInt(fieldName.slice(4));
+  return columns.find((col) => col.id == colId);
+}
 
 export default ViewDataTable;
