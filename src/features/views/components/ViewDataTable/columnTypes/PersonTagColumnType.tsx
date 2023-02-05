@@ -14,6 +14,7 @@ import TagModel from 'features/tags/models/TagModel';
 import useAccessLevel from 'features/views/hooks/useAccessLevel';
 import useModel from 'core/useModel';
 import ViewDataModel from 'features/views/models/ViewDataModel';
+import { ZetkinObjectAccess } from 'core/api/types';
 import { ZetkinTag } from 'utils/types/zetkin';
 import ZUIFuture from 'zui/ZUIFuture';
 import { PersonTagViewColumn, ZetkinViewRow } from '../../types';
@@ -52,8 +53,14 @@ export default class PersonTagColumnType implements IColumnType {
     column: PersonTagViewColumn,
     personId: number,
     data: PersonTagViewCell,
-    ev: MuiEvent<KeyboardEvent<HTMLElement>>
+    ev: MuiEvent<KeyboardEvent<HTMLElement>>,
+    accessLevel: ZetkinObjectAccess['level']
   ): void {
+    if (accessLevel) {
+      // Any non-null value means we're in restricted mode
+      return;
+    }
+
     if (ev.key == 'Enter' || ev.key == ' ') {
       model.toggleTag(personId, column.config.tag_id, !data);
       ev.defaultMuiPrevented = true;
