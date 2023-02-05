@@ -11,6 +11,7 @@ import {
 import { IColumnType } from '.';
 import TagChip from 'features/tags/components/TagManager/components/TagChip';
 import TagModel from 'features/tags/models/TagModel';
+import useAccessLevel from 'features/views/hooks/useAccessLevel';
 import useModel from 'core/useModel';
 import ViewDataModel from 'features/views/models/ViewDataModel';
 import { ZetkinTag } from 'utils/types/zetkin';
@@ -85,22 +86,27 @@ const Cell: FC<{
   const model = useModel((env) => new TagModel(env, orgId, tagId));
   const styles = useStyles();
 
-  return (
-    <ZUIFuture future={model.getTag()}>
-      {(tag) => {
-        if (tag.value_type != null) {
-          return <>{cell?.value}</>;
-        } else if (cell) {
-          return (
-            <TagChip
-              onDelete={() => {
-                model.removeFromPerson(personId);
-              }}
-              tag={tag}
-            />
-          );
-        } else {
-          return (
+  const [isRestricted] = useAccessLevel();
+
+  if (cell?.value_type != null) {
+    return <>{cell.value}</>;
+  } else if (cell) {
+    return (
+      <TagChip
+        onDelete={() => {
+          model.removeFromPerson(personId);
+        }}
+        tag={cell}
+      />
+    );
+  } else {
+    if (!isRestricted) {
+      // Only render "ghost" tag in full-access (non-restricted) mode, as it's
+      // likely that a user in restricted mode will not have access to assign
+      // (or even retrieve) the tag.
+      return (
+        <ZUIFuture future={model.getTag()}>
+          {(tag) => (
             <Box
               className={styles.ghostContainer}
               onClick={() => {
@@ -111,9 +117,11 @@ const Cell: FC<{
                 <TagChip tag={tag} />
               </Box>
             </Box>
-          );
-        }
-      }}
-    </ZUIFuture>
-  );
+          )}
+        </ZUIFuture>
+      );
+    }
+
+    return null;
+  }
 };
