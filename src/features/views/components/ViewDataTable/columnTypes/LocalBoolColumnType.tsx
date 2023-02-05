@@ -9,6 +9,7 @@ import {
 import { IColumnType } from '.';
 import useViewDataModel from 'features/views/hooks/useViewDataModel';
 import ViewDataModel from 'features/views/models/ViewDataModel';
+import { ZetkinObjectAccess } from 'core/api/types';
 import {
   LocalBoolViewColumn,
   ZetkinViewColumn,
@@ -40,8 +41,13 @@ export default class LocalBoolColumnType implements IColumnType {
     column: ZetkinViewColumn,
     personId: number,
     data: boolean,
-    ev: MuiEvent<KeyboardEvent<HTMLElement>>
+    ev: MuiEvent<KeyboardEvent<HTMLElement>>,
+    accessLevel: ZetkinObjectAccess['level'] | null
   ): void {
+    if (accessLevel == 'readonly') {
+      return;
+    }
+
     if (ev.key == 'Enter' || ev.key == ' ') {
       model.setCellValue(personId, column.id, !data);
       ev.defaultMuiPrevented = true;
