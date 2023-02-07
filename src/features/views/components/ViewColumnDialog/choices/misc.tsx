@@ -18,6 +18,7 @@ import { COLUMN_TYPE, SelectedViewColumn, ZetkinViewColumn } from '../../types';
 const { blue, purple, red } = theme.palette.viewColumnGallery;
 
 export const personTag: ColumnChoice = {
+  // isRestricted: true,
   color: blue,
   renderCardVisual: (color: string) => (
     <SingleIconCardVisual color={color} icon={LocalOffer} />
@@ -29,6 +30,7 @@ export const personTag: ColumnChoice = {
 };
 
 export const toggle: ColumnChoice = {
+  // isRestricted: false,
   color: blue,
   defaultColumns: (intl, columns) => [
     {
@@ -47,6 +49,7 @@ export const toggle: ColumnChoice = {
 };
 
 export const followUpTemplate: ColumnChoice = {
+  // isRestricted: true,
   color: purple,
   defaultColumns: (intl, columns) => [
     {
@@ -74,6 +77,7 @@ export const followUpTemplate: ColumnChoice = {
 };
 
 export const localPerson: ColumnChoice = {
+  // isRestricted: true,
   color: blue,
   defaultColumns: (intl, columns) => [
     {
@@ -95,6 +99,7 @@ export const localPerson: ColumnChoice = {
 };
 
 export const delegateTemplate: ColumnChoice = {
+  // isRestricted: true,
   color: red,
   defaultColumns: (intl, columns) => [
     {
@@ -140,6 +145,7 @@ export const delegateTemplate: ColumnChoice = {
 };
 
 export const localText: ColumnChoice = {
+  // isRestricted: false,
   color: blue,
   defaultColumns: (intl, columns) => [
     {

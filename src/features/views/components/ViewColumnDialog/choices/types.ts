@@ -32,6 +32,7 @@ export type ColumnChoice = {
     intl: IntlShape,
     columns: ZetkinViewColumn[]
   ) => PendingZetkinViewColumn[];
+  isRestricted?: boolean;
   renderCardVisual: (color: string) => JSX.Element;
   renderConfigForm?: (props: {
     existingColumns: ZetkinViewColumn[];

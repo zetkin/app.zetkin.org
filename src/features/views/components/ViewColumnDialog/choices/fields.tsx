@@ -15,6 +15,7 @@ import {
 const { blue, purple } = theme.palette.viewColumnGallery;
 
 export const fullName: ColumnChoice = {
+  // isRestricted: true,
   alreadyInView: (columns) => {
     const fieldsToAdd = [
       NATIVE_PERSON_FIELDS.FIRST_NAME,
@@ -67,6 +68,7 @@ export const fullName: ColumnChoice = {
 };
 
 export const pickFields: ColumnChoice = {
+  // isRestricted: true,
   alreadyInView: (columns) => {
     return Object.values(NATIVE_PERSON_FIELDS).every((fieldName) =>
       columns.some(
@@ -92,6 +94,7 @@ export const pickFields: ColumnChoice = {
 
 function createFieldChoice(field: NATIVE_PERSON_FIELDS): ColumnChoice {
   return {
+    // isRestricted: true,
     alreadyInView: (columns) => {
       return columns.some(
         (col) =>

@@ -37,6 +37,9 @@ const ChoiceCategories = ({
           </Typography>
           <Grid container paddingTop={2} spacing={3}>
             {category.choices.map((choiceKey) => {
+              // const filteredChoices = isRestrictedMode ? choices.filter(
+              //   (choice) => !choice.activeRestricted(isRestrictedMode)
+              // ) : choices;
               const choice = choices[choiceKey];
               if (!choice) {
                 return;
