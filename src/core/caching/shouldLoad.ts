@@ -7,12 +7,12 @@ export default function shouldLoad(
     return true;
   }
 
-  if (item.isStale) {
-    return true;
-  }
-
   if (item.isLoading) {
     return false;
+  }
+
+  if (item.isStale) {
+    return true;
   }
 
   if (!item.loaded) {

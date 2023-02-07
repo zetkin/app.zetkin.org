@@ -11,6 +11,7 @@ test.describe('View detail page', () => {
   test.beforeEach(({ moxy, login }) => {
     login();
     moxy.setZetkinApiMock('/orgs/1', 'get', KPD);
+    moxy.setZetkinApiMock('/orgs/1/people/view_folders', 'get', []);
     moxy.setZetkinApiMock('/orgs/1/people/views', 'get', [AllMembers, NewView]);
     moxy.setZetkinApiMock('/orgs/1/people/views/1', 'get', AllMembers);
     moxy.setZetkinApiMock('/orgs/1/people/views/1/rows', 'get', AllMembersRows);

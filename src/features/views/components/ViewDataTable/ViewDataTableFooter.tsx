@@ -1,31 +1,23 @@
 import { Box } from '@mui/material';
+import { useIntl } from 'react-intl';
 import { FunctionComponent, useRef } from 'react';
 
-import getViewRows from 'features/views/fetching/getViewRows';
-import { useIntl } from 'react-intl';
-import { useQuery } from 'react-query';
-import { useRouter } from 'next/router';
+import useViewDataModel from 'features/views/hooks/useViewDataModel';
 import { ZetkinPerson } from 'utils/types/zetkin';
 import { MUIOnlyPersonSelect as ZUIPersonSelect } from 'zui/ZUIPersonSelect';
 
 export interface ViewDataTableFooterProps {
   onRowAdd: (person: ZetkinPerson) => void;
-  viewId: string;
 }
 
 const ViewDataTableFooter: FunctionComponent<ViewDataTableFooterProps> = ({
   onRowAdd,
-  viewId,
 }) => {
-  const { orgId } = useRouter().query;
   const intl = useIntl();
   const selectInputRef = useRef<HTMLInputElement>();
 
-  const rowsQuery = useQuery(
-    ['view', viewId, 'rows'],
-    getViewRows(orgId as string, viewId)
-  );
-  const rows = rowsQuery.data || [];
+  const model = useViewDataModel();
+  const rows = model.getRows().data || [];
 
   return (
     <Box p={1}>

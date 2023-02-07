@@ -9,13 +9,11 @@ import {
   Typography,
 } from '@mui/material';
 import { FunctionComponent, useState } from 'react';
-import { useMutation, useQueryClient } from 'react-query';
 
-import defaultFetch from 'utils/fetching/defaultFetch';
 import { MUIOnlyPersonSelect as PersonSelect } from 'zui/ZUIPersonSelect';
+import useViewDataModel from '../hooks/useViewDataModel';
 import ViewSmartSearchDialog from './ViewSmartSearchDialog';
-import { ZetkinPerson } from 'utils/types/zetkin';
-import { ZetkinView, ZetkinViewRow } from 'features/views/components/types';
+import { ZetkinView } from 'features/views/components/types';
 
 export interface EmptyViewProps {
   orgId: string | number;
@@ -23,45 +21,9 @@ export interface EmptyViewProps {
 }
 
 const EmptyView: FunctionComponent<EmptyViewProps> = ({ orgId, view }) => {
-  const queryClient = useQueryClient();
   const [queryDialogOpen, setQueryDialogOpen] = useState(false);
 
-  const rowsKey = ['view', view.id.toString(), 'rows'];
-
-  // TODO: Create mutation using new factory pattern
-  const addFirstRowMutation = useMutation(
-    async (person: Partial<ZetkinPerson>) => {
-      // Get rid of view Smart Search query if there is one
-      await defaultFetch(
-        `/orgs/${orgId}/people/views/${view?.id}/content_query`,
-        {
-          method: 'DELETE',
-        }
-      );
-
-      // Add person
-      const res = await defaultFetch(
-        `/orgs/${orgId}/people/views/${view.id}/rows/${person.id}`,
-        {
-          method: 'PUT',
-        }
-      );
-      const data = await res.json();
-      return data.data;
-    },
-    {
-      onSuccess: (newRow) => {
-        // Add created row directly to view, to avoid waiting for entire collection to reload
-        const prevRows: ZetkinViewRow[] =
-          queryClient.getQueryData<ZetkinViewRow[]>(rowsKey) || [];
-        const allRows = prevRows.concat([newRow as ZetkinViewRow]);
-        queryClient.setQueryData(rowsKey, allRows);
-
-        // Invalidate to retrieve entire row collection (in case more were added elsewhere)
-        queryClient.invalidateQueries(rowsKey);
-      },
-    }
-  );
+  const model = useViewDataModel();
 
   return (
     <Box m={2}>
@@ -78,8 +40,9 @@ const EmptyView: FunctionComponent<EmptyViewProps> = ({ orgId, view }) => {
               <Box marginTop={2}>
                 <PersonSelect
                   name="person"
-                  onChange={(person) => {
-                    addFirstRowMutation.mutate(person);
+                  onChange={async (person) => {
+                    await model.deleteContentQuery();
+                    await model.addPerson(person);
                   }}
                   selectedPerson={null}
                   variant="outlined"

@@ -1,15 +1,17 @@
 import { DeleteFolderReport } from 'pages/api/views/deleteFolder';
 import { ViewTreeData } from 'pages/api/views/tree';
 import { ZetkinObjectAccess } from 'core/api/types';
-import { ZetkinOfficial } from 'utils/types/zetkin';
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { remoteItem, remoteList, RemoteList } from 'utils/storeUtils';
 import {
+  COLUMN_TYPE,
   ZetkinView,
   ZetkinViewColumn,
   ZetkinViewFolder,
   ZetkinViewRow,
 } from './components/types';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { remoteItem, remoteList, RemoteList } from 'utils/storeUtils';
+import { tagAssigned, tagUnassigned } from 'features/tags/store';
+import { ZetkinOfficial, ZetkinQuery, ZetkinTag } from 'utils/types/zetkin';
 
 type ZetkinObjectAccessWithId = ZetkinObjectAccess & {
   id: number;
@@ -36,6 +38,16 @@ const initialState: ViewsStoreSlice = {
 };
 
 const viewsSlice = createSlice({
+  extraReducers: (builder) =>
+    builder
+      .addCase(tagAssigned, (state, action) => {
+        const [personId, tag] = action.payload;
+        setTagOnRelevantRows(state, personId, tag.id, tag);
+      })
+      .addCase(tagUnassigned, (state, action) => {
+        const [personId, tagId] = action.payload;
+        setTagOnRelevantRows(state, personId, tagId, null);
+      }),
   initialState,
   name: 'views',
   reducers: {
@@ -127,6 +139,64 @@ const viewsSlice = createSlice({
         );
       }
     },
+    columnAdded: (state, action: PayloadAction<[number, ZetkinViewColumn]>) => {
+      const [viewId, column] = action.payload;
+      const colList = state.columnsByViewId[viewId];
+      if (colList) {
+        colList.items = colList.items.concat([
+          remoteItem(column.id, { data: column }),
+        ]);
+        const rowList = state.rowsByViewId[viewId];
+
+        if (rowList) {
+          // Force a reload without emptying the view
+          rowList.isStale = true;
+        }
+      }
+    },
+    columnDeleted: (state, action: PayloadAction<[number, number]>) => {
+      const [viewId, columnId] = action.payload;
+      const colList = state.columnsByViewId[viewId];
+      if (colList) {
+        colList.items = colList.items.filter((item) => item.id != columnId);
+        const rowList = state.rowsByViewId[viewId];
+
+        if (rowList) {
+          // Empty the view to force a reload
+          rowList.items = [];
+          rowList.isStale = true;
+        }
+      }
+    },
+    columnUpdated: (
+      state,
+      action: PayloadAction<[number, ZetkinViewColumn]>
+    ) => {
+      const [viewId, column] = action.payload;
+      const colList = state.columnsByViewId[viewId];
+      if (colList) {
+        let configChanged = false;
+        colList.items = colList.items.map((item) => {
+          if (item.id == column.id) {
+            if (
+              JSON.stringify(column.config) != JSON.stringify(item.data?.config)
+            ) {
+              configChanged = true;
+            }
+            return remoteItem(column.id, { data: column });
+          } else {
+            return item;
+          }
+        });
+
+        const rowList = state.rowsByViewId[viewId];
+        if (rowList && configChanged) {
+          // Empty the view to force a reload when config changes
+          rowList.items = [];
+          rowList.isStale = true;
+        }
+      }
+    },
     columnsLoad: (state, action: PayloadAction<number>) => {
       const viewId = action.payload;
       if (!state.columnsByViewId[viewId]) {
@@ -194,6 +264,24 @@ const viewsSlice = createSlice({
       state.officialList = remoteList(action.payload);
       state.officialList.loaded = new Date().toISOString();
     },
+    rowAdded: (state, action: PayloadAction<[number, ZetkinViewRow]>) => {
+      const [viewId, row] = action.payload;
+      const list = state.rowsByViewId[viewId];
+      if (list) {
+        list.items = list.items
+          .filter((item) => item.id != row.id)
+          .concat([remoteItem(row.id, { data: row })]);
+      } else {
+        state.rowsByViewId[viewId] = remoteList([row]);
+      }
+    },
+    rowRemoved: (state, action: PayloadAction<[number, number]>) => {
+      const [viewId, rowId] = action.payload;
+      const list = state.rowsByViewId[viewId];
+      if (list) {
+        list.items = list.items.filter((item) => item.id != rowId);
+      }
+    },
     rowsLoad: (state, action: PayloadAction<number>) => {
       const viewId = action.payload;
       if (!state.rowsByViewId[viewId]) {
@@ -205,6 +293,7 @@ const viewsSlice = createSlice({
       const [viewId, rows] = action.payload;
       state.rowsByViewId[viewId] = remoteList(rows);
       state.rowsByViewId[viewId].loaded = new Date().toISOString();
+      state.rowsByViewId[viewId].isStale = false;
     },
     viewCreate: (state) => {
       state.viewList.isLoading = true;
@@ -243,6 +332,24 @@ const viewsSlice = createSlice({
           remoteItem(view.id, { data: view, loaded: new Date().toISOString() }),
         ]);
     },
+    viewQueryUpdated: (
+      state,
+      action: PayloadAction<[number, ZetkinQuery | null]>
+    ) => {
+      const [viewId, query] = action.payload;
+      const item = state.viewList.items.find((item) => item.id == viewId);
+      if (item) {
+        if (item.data) {
+          item.data.content_query = query;
+        }
+      }
+      const rowList = state.rowsByViewId[viewId];
+      if (rowList) {
+        // Empty view to trigger reload
+        rowList.items = [];
+        rowList.isStale = true;
+      }
+    },
     viewUpdate: (state, action: PayloadAction<[number, string[]]>) => {
       const [id, mutating] = action.payload;
       const item = state.viewList.items.find((item) => item.id == id);
@@ -265,6 +372,44 @@ const viewsSlice = createSlice({
   },
 });
 
+/**
+ * Find all rows and columns that are relevant when assigning/unassigning a
+ * tag to a person, and update the rows to reflect the new state.
+ */
+function setTagOnRelevantRows(
+  state: ViewsStoreSlice,
+  personId: number,
+  tagId: number,
+  tag: ZetkinTag | null
+) {
+  Object.entries(state.columnsByViewId).forEach(([viewId, columnList]) => {
+    // Find indices of relevant columns
+    const relevantColumnIndices: number[] = [];
+    columnList.items.forEach((colItem, index) => {
+      if (
+        colItem.data?.type == COLUMN_TYPE.PERSON_TAG &&
+        colItem.data.config.tag_id == tagId
+      ) {
+        relevantColumnIndices.push(index);
+      }
+    });
+
+    // If there are relevant columns in this view
+    if (relevantColumnIndices.length) {
+      const rowItems = state.rowsByViewId[viewId]?.items;
+      if (rowItems) {
+        rowItems.forEach((item) => {
+          if (item.data?.id == personId) {
+            for (const colIndex of relevantColumnIndices) {
+              item.data.content[colIndex] = tag;
+            }
+          }
+        });
+      }
+    }
+  });
+}
+
 export default viewsSlice;
 export const {
   accessAdded,
@@ -275,6 +420,9 @@ export const {
   allItemsLoaded,
   cellUpdate,
   cellUpdated,
+  columnAdded,
+  columnDeleted,
+  columnUpdated,
   columnsLoad,
   columnsLoaded,
   folderCreate,
@@ -284,6 +432,8 @@ export const {
   folderUpdated,
   officialsLoad,
   officialsLoaded,
+  rowAdded,
+  rowRemoved,
   rowsLoad,
   rowsLoaded,
   viewCreate,
@@ -291,6 +441,7 @@ export const {
   viewDeleted,
   viewLoad,
   viewLoaded,
+  viewQueryUpdated,
   viewUpdate,
   viewUpdated,
 } = viewsSlice.actions;

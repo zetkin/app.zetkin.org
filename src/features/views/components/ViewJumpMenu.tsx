@@ -16,18 +16,29 @@ import {
 } from '@mui/material';
 import { FunctionComponent, useEffect, useRef, useState } from 'react';
 
-import { viewsResource } from 'features/views/api/views';
+import useModel from 'core/useModel';
 import { ZetkinView } from './types';
-import ZUIQuery from 'zui/ZUIQuery';
+import ZUIFuture from 'zui/ZUIFuture';
+import ViewBrowserModel, {
+  ViewBrowserItem,
+  ViewBrowserViewItem,
+} from '../models/ViewBrowserModel';
 
 const ViewJumpMenu: FunctionComponent = () => {
   const intl = useIntl();
   const listRef = useRef<HTMLUListElement>(null);
   const router = useRouter();
   const { orgId, viewId } = router.query;
-  const viewsQuery = viewsResource(orgId as string).useQuery();
   const [jumpMenuAnchor, setJumpMenuAnchor] = useState<Element | null>(null);
   const [activeIndex, setActiveIndex] = useState<number>(Infinity);
+  const model = useModel(
+    (env) => new ViewBrowserModel(env, parseInt(orgId as string))
+  );
+  const itemsFuture = model.getItems();
+  const views: ZetkinView[] =
+    itemsFuture.data
+      ?.filter((item) => item.type == 'view')
+      .map((item: ViewBrowserItem) => (item as ViewBrowserViewItem).data) ?? [];
   const {
     getInputProps,
     getListboxProps,
@@ -37,7 +48,7 @@ const ViewJumpMenu: FunctionComponent = () => {
   } = useAutocomplete({
     clearOnBlur: true,
     getOptionLabel: (option) => option.title,
-    options: viewsQuery.data || [],
+    options: views,
   });
 
   // Set up event listeners to close menu when navigating away
@@ -72,7 +83,7 @@ const ViewJumpMenu: FunctionComponent = () => {
 
   // Exclude the current view from the list of views to jump to
   const allOptions = (
-    inputValue.length ? groupedOptions : viewsQuery.data || []
+    inputValue.length ? groupedOptions : views || []
   ) as ZetkinView[];
   const options = allOptions.filter(
     (view) => view.id.toString() != (viewId as string)
@@ -120,7 +131,7 @@ const ViewJumpMenu: FunctionComponent = () => {
           },
         }}
       >
-        <ZUIQuery queries={{ viewsQuery }}>
+        <ZUIFuture future={itemsFuture}>
           <Box {...getRootProps()} p={1}>
             <TextField
               {...tfProps}
@@ -161,7 +172,7 @@ const ViewJumpMenu: FunctionComponent = () => {
               );
             })}
           </List>
-        </ZUIQuery>
+        </ZUIFuture>
       </Popover>
     </>
   );

@@ -1,11 +1,15 @@
 import { GridColDef } from '@mui/x-data-grid-pro';
 
+import LocalBoolColumnType from './LocalBoolColumnType';
 import LocalPersonColumnType from './LocalPersonColumnType';
 import LocalQueryColumnType from './LocalQueryColumnType';
+import LocalTextColumnType from './LocalTextColumnType';
+import PersonTagColumnType from './PersonTagColumnType';
 import SimpleColumnType from './SimpleColumnType';
 import SurveyOptionsColumnType from './SurveyOptionsColumnType';
 import SurveyResponseColumnType from './SurveyResponseColumnType';
 import SurveySubmittedColumnType from './SurveySubmittedColumnType';
+import ViewDataModel from 'features/views/models/ViewDataModel';
 import { COLUMN_TYPE, ZetkinViewColumn } from 'features/views/components/types';
 
 export interface IColumnType<
@@ -14,6 +18,13 @@ export interface IColumnType<
 > {
   cellToString(cell: CellType, column: ColumnType): string;
   getColDef(column: ColumnType): Omit<GridColDef, 'field'>;
+  getSearchableStrings(cell: CellType): string[];
+  processRowUpdate?(
+    model: ViewDataModel,
+    colId: number,
+    personId: number,
+    data: CellType
+  ): void;
 }
 
 // TODO: Remove this once all real types have been implemented
@@ -24,6 +35,10 @@ class DummyColumnType implements IColumnType {
 
   getColDef(): Omit<GridColDef, 'field'> {
     return {};
+  }
+
+  getSearchableStrings(): string[] {
+    return [];
   }
 }
 
@@ -45,18 +60,18 @@ class DummyColumnType implements IColumnType {
  */
 const columnTypes: Record<COLUMN_TYPE, IColumnType> = {
   [COLUMN_TYPE.JOURNEY_ASSIGNEE]: new DummyColumnType(),
-  [COLUMN_TYPE.LOCAL_BOOL]: new SimpleColumnType(),
+  [COLUMN_TYPE.LOCAL_BOOL]: new LocalBoolColumnType(),
   [COLUMN_TYPE.LOCAL_PERSON]: new LocalPersonColumnType(),
   [COLUMN_TYPE.LOCAL_QUERY]: new LocalQueryColumnType(),
   [COLUMN_TYPE.PERSON_FIELD]: new SimpleColumnType(),
   [COLUMN_TYPE.PERSON_NOTES]: new DummyColumnType(),
   [COLUMN_TYPE.PERSON_QUERY]: new LocalQueryColumnType(),
-  [COLUMN_TYPE.PERSON_TAG]: new DummyColumnType(),
+  [COLUMN_TYPE.PERSON_TAG]: new PersonTagColumnType(),
   [COLUMN_TYPE.SURVEY_OPTION]: new DummyColumnType(),
   [COLUMN_TYPE.SURVEY_OPTIONS]: new SurveyOptionsColumnType(),
   [COLUMN_TYPE.SURVEY_RESPONSE]: new SurveyResponseColumnType(),
   [COLUMN_TYPE.SURVEY_SUBMITTED]: new SurveySubmittedColumnType(),
-  [COLUMN_TYPE.LOCAL_TEXT]: new SimpleColumnType(),
+  [COLUMN_TYPE.LOCAL_TEXT]: new LocalTextColumnType(),
 };
 
 export default columnTypes;

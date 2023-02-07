@@ -23,7 +23,7 @@ export interface SmartSearchDialogProps {
   query?: ZetkinQuery | null;
   onDialogClose?: () => void;
   onOutputConfigured?: (columns: SelectedViewColumn[]) => void;
-  onSave?: (query: Partial<ZetkinQuery>) => void;
+  onSave?: (query: Pick<ZetkinQuery, 'filter_spec'>) => void;
   readOnly?: boolean;
   hasSaveCancelButtons?: boolean;
 }

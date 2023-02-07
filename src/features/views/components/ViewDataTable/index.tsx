@@ -6,18 +6,15 @@ import { useIntl } from 'react-intl';
 import { useRouter } from 'next/router';
 import { DataGridPro, GridColDef, useGridApiRef } from '@mui/x-data-grid-pro';
 import { FunctionComponent, useContext, useState } from 'react';
-import { useMutation, useQueryClient } from 'react-query';
 
 import columnTypes from './columnTypes';
-import deleteViewColumn from 'features/views/fetching/deleteViewColumn';
 import EmptyView from 'features/views/components/EmptyView';
-import patchViewColumn from 'features/views/fetching/patchViewColumn';
-import postViewColumn from 'features/views/fetching/postViewColumn';
+import useModel from 'core/useModel';
 import useModelsFromQueryString from 'zui/ZUIUserConfigurableDataGrid/useModelsFromQueryString';
+import useViewDataModel from 'features/views/hooks/useViewDataModel';
+import ViewBrowserModel from 'features/views/models/ViewBrowserModel';
 import ViewColumnDialog from '../ViewColumnDialog';
 import ViewRenameColumnDialog from '../ViewRenameColumnDialog';
-import { viewRowsResource } from 'features/views/api/viewRows';
-import { viewsResource } from 'features/views/api/views';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';
@@ -84,10 +81,13 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
   const [quickSearch, setQuickSearch] = useState('');
   const router = useRouter();
   const { orgId } = router.query;
-  const queryClient = useQueryClient();
-  const viewId = view.id.toString();
   const { showSnackbar } = useContext(ZUISnackbarContext);
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
+
+  const model = useViewDataModel();
+  const browserModel = useModel(
+    (env) => new ViewBrowserModel(env, parseInt(orgId as string))
+  );
 
   const showError = (error: VIEW_DATA_TABLE_ERROR) => {
     showSnackbar(
@@ -96,71 +96,12 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
     );
   };
 
-  const addColumnMutation = useMutation(
-    postViewColumn(orgId as string, viewId),
-    {
-      onError: () => {
-        showError(VIEW_DATA_TABLE_ERROR.CREATE_COLUMN);
-        NProgress.done();
-      },
-      onSettled: () => {
-        NProgress.done();
-        queryClient.invalidateQueries(['view', viewId]);
-      },
-    }
-  );
-
-  const updateColumnMutation = useMutation(
-    patchViewColumn(orgId as string, viewId),
-    {
-      onError: () => {
-        showError(VIEW_DATA_TABLE_ERROR.MODIFY_COLUMN);
-        NProgress.done();
-      },
-      onSettled: () => {
-        NProgress.done();
-        queryClient.invalidateQueries(['view', viewId]);
-      },
-    }
-  );
-
-  const removeColumnMutation = useMutation(
-    deleteViewColumn(orgId as string, viewId),
-    {
-      onError: () => {
-        showError(VIEW_DATA_TABLE_ERROR.DELETE_COLUMN);
-        NProgress.done();
-      },
-      onSettled: () => {
-        NProgress.done();
-      },
-      onSuccess: (data, colId) => {
-        const colsKey = ['view', viewId, 'columns'];
-        const cols = queryClient.getQueryData<ZetkinViewColumn[]>(colsKey);
-        queryClient.setQueryData(
-          colsKey,
-          cols?.filter((col) => col.id != colId)
-        );
-      },
-    }
-  );
-
-  const addRowMutation = viewRowsResource(
-    view.organization.id,
-    viewId
-  ).useAdd();
-  const removeRowsMutation = viewRowsResource(
-    view.organization.id,
-    viewId
-  ).useRemoveMany();
-
   const onColumnCancel = () => {
     setColumnToConfigure(null);
   };
 
   const onColumnSave = async (colSpec: SelectedViewColumn) => {
     setColumnToConfigure(null);
-    NProgress.start();
     if ('id' in colSpec) {
       // If is an existing column, PATCH it with changed values
       // Get existing column
@@ -177,17 +118,21 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
           changedFields[typedKey] = value;
         }
       });
-      await updateColumnMutation.mutateAsync({
-        ...changedFields,
-        id: colSpec.id,
-      });
+
+      updateColumn(colSpec.id, changedFields);
     } else {
-      // If it's a new view, POST a new column
-      await addColumnMutation.mutateAsync({
-        config: colSpec.config,
-        title: colSpec.title,
-        type: colSpec.type,
-      });
+      // If it's a new column, add it
+      try {
+        model.addColumn({
+          config: colSpec.config,
+          title: colSpec.title,
+          type: colSpec.type,
+        });
+      } catch (err) {
+        showError(VIEW_DATA_TABLE_ERROR.CREATE_COLUMN);
+      } finally {
+        NProgress.done();
+      }
     }
   };
 
@@ -204,12 +149,22 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
   const onColumnDelete = async (colFieldName: string) => {
     const colId = colIdFromFieldName(colFieldName);
     const colSpec = columns.find((col) => col.id === colId) || null;
+
+    async function doDelete() {
+      try {
+        await model.deleteColumn(colId);
+      } catch (err) {
+        showError(VIEW_DATA_TABLE_ERROR.DELETE_COLUMN);
+        NProgress.done();
+      } finally {
+        NProgress.done();
+      }
+    }
+
     // If it's a local column, require confirmation
     if (colSpec?.type.includes('local_')) {
       showConfirmDialog({
-        onSubmit: () => {
-          removeColumnMutation.mutateAsync(colId);
-        },
+        onSubmit: doDelete,
         title: intl.formatMessage({
           id: `misc.views.columnMenu.delete`,
         }),
@@ -218,7 +173,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
         }),
       });
     } else {
-      removeColumnMutation.mutateAsync(colId);
+      doDelete();
     }
   };
 
@@ -228,38 +183,40 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
     setColumnToRename(colSpec);
   };
 
+  const updateColumn = async (
+    id: number,
+    data: Omit<Partial<ZetkinViewColumn>, 'id'>
+  ) => {
+    NProgress.start();
+    try {
+      await model.updateColumn(id, data);
+    } catch (err) {
+      showError(VIEW_DATA_TABLE_ERROR.MODIFY_COLUMN);
+    } finally {
+      NProgress.done();
+    }
+  };
+
   const onColumnRenameSave = async (
     column: Pick<ZetkinViewColumn, 'id' | 'title'>
   ) => {
     setColumnToRename(null);
-    await updateColumnMutation.mutateAsync({
-      id: column.id,
-      title: column.title,
-    });
+    updateColumn(column.id, { title: column.title });
   };
 
-  const createNewViewMutation = viewsResource(orgId as string).useCreate();
-
-  const onRowsRemove = () => {
+  const onRowsRemove = async () => {
     setWaiting(true);
-    removeRowsMutation.mutate(selection, {
-      onSettled: (res) => {
-        setWaiting(false);
-        if (res?.failed?.length) {
-          showError(VIEW_DATA_TABLE_ERROR.REMOVE_ROWS);
-        }
-      },
-    });
+    try {
+      await model.removeRows(selection);
+    } catch (err) {
+      showError(VIEW_DATA_TABLE_ERROR.REMOVE_ROWS);
+    } finally {
+      setWaiting(false);
+    }
   };
 
   const onViewCreate = () => {
-    createNewViewMutation.mutate(
-      { rows: selection },
-      {
-        onSuccess: (newView) =>
-          router.push(`/organize/${orgId}/people/views/${newView.id}`),
-      }
-    );
+    browserModel.createView(view.folder?.id ?? 0, selection);
   };
 
   const avatarColumn: GridColDef = {
@@ -341,27 +298,24 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
       },
     },
     footer: {
-      onRowAdd: (person) => {
-        addRowMutation.mutate(person.id, {
-          onSettled: (newRow, err, personId: number) => {
-            // Store ID for highlighting the new row
-            setAddedId(personId);
+      onRowAdd: async (person) => {
+        await model.addPerson(person);
 
-            // Remove ID again after 2 seconds, unless the state has changed
-            setTimeout(() => {
-              setAddedId((curState) => (curState == personId ? 0 : curState));
-            }, 2000);
+        // Store ID for highlighting the new row
+        setAddedId(person.id);
 
-            // Scroll (jump) to row after short delay
-            setTimeout(() => {
-              const gridApi = gridApiRef.current;
-              const rowIndex = gridApi.getRowIndex(personId);
-              gridApi.scrollToIndexes({ rowIndex });
-            }, 200);
-          },
-        });
+        // Remove ID again after 2 seconds, unless the state has changed
+        setTimeout(() => {
+          setAddedId((curState) => (curState == person.id ? 0 : curState));
+        }, 2000);
+
+        // Scroll (jump) to row after short delay
+        setTimeout(() => {
+          const gridApi = gridApiRef.current;
+          const rowIndex = gridApi.getRowIndex(person.id);
+          gridApi.scrollToIndexes({ rowIndex });
+        }, 200);
       },
-      viewId,
     },
     toolbar: {
       disableConfigure,
@@ -397,6 +351,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
         }}
         componentsProps={componentsProps}
         disableSelectionOnClick={true}
+        experimentalFeatures={{ newEditingApi: true }}
         getRowClassName={(params) =>
           params.id == addedId ? classes.addedRow : ''
         }
@@ -407,6 +362,22 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
           }),
         }}
         onSelectionModelChange={(model) => setSelection(model as number[])}
+        processRowUpdate={(after, before) => {
+          const changedField = Object.keys(after).find(
+            (key) => after[key] != before[key]
+          );
+          if (changedField) {
+            const colId = parseInt(changedField.slice(4));
+            const col = columns.find((col) => col.id == colId);
+            if (col) {
+              const processRowUpdate = columnTypes[col.type].processRowUpdate;
+              if (processRowUpdate) {
+                processRowUpdate(model, colId, after.id, after[changedField]);
+              }
+            }
+          }
+          return after;
+        }}
         rows={gridRows}
         style={{
           border: 'none',

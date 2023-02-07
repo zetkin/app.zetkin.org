@@ -1,10 +1,7 @@
-import AlarmOffIcon from '@mui/icons-material/AlarmOff';
-import CancelIcon from '@mui/icons-material/Cancel';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import FlagIcon from '@mui/icons-material/Flag';
 import { FormattedMessage } from 'react-intl';
 import React from 'react';
-import { Box, Grid, Typography } from '@mui/material';
+import { AlarmOff, Cancel, CheckCircle, Flag } from '@mui/icons-material';
+import { Box, Typography } from '@mui/material';
 
 import theme from 'theme';
 import UpdateContainer from './elements/UpdateContainer';
@@ -50,34 +47,30 @@ const TimelineJourneyMilestone: React.FunctionComponent<Props> = ({
 
   function renderContent() {
     return (
-      <Grid alignItems="center" container direction="row" item spacing={2}>
+      <Box display="flex">
         {changeToRender === 'complete' && (
-          <CheckCircleIcon style={{ color: theme.palette.success.main }} />
+          <CheckCircle sx={{ color: theme.palette.success.main }} />
         )}
         {changeToRender === 'incomplete' && (
-          <CancelIcon style={{ color: theme.palette.warning.main }} />
+          <Cancel sx={{ color: theme.palette.warning.main }} />
         )}
-        <Typography component={Grid} item variant="h6">
-          {update.details.milestone.title}
-        </Typography>
+        <Box paddingX={1}>
+          <Typography variant="h6">{update.details.milestone.title}</Typography>
+        </Box>
         {changeToRender === 'deadline' && renderDeadlineUpdate()}
-      </Grid>
+      </Box>
     );
   }
 
   function renderDeadlineUpdate() {
     const deadlineTo = update.details.changes?.deadline?.to;
-    const iconStyle = {
-      color: theme.palette.text.secondary,
-      marginLeft: theme.spacing(2),
-    };
 
     return (
-      <Box display="flex" flexDirection="row" style={{ gap: 8 }}>
+      <Box alignItems="center" display="flex" style={{ gap: 8 }}>
         {deadlineTo ? (
-          <FlagIcon style={iconStyle} />
+          <Flag sx={{ color: theme.palette.text.secondary }} />
         ) : (
-          <AlarmOffIcon style={iconStyle} />
+          <AlarmOff sx={{ color: theme.palette.text.secondary }} />
         )}
         <Typography color="textSecondary" variant="body2">
           <FormattedMessage

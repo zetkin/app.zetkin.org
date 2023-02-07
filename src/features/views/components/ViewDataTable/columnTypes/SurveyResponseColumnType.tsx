@@ -11,7 +11,7 @@ import SurveySubmissionPane from 'features/surveys/panes/SurveySubmissionPane';
 import { usePanes } from 'utils/panes';
 import ViewSurveySubmissionPreview from '../../ViewSurveySubmissionPreview';
 
-type SurveyResponseViewCell = {
+export type SurveyResponseViewCell = {
   submission_id: number;
   submitted: string;
   text: string;
@@ -31,6 +31,10 @@ export default class SurveyResponseColumnType
       },
       width: 250,
     };
+  }
+
+  getSearchableStrings(cell: SurveyResponseViewCell): string[] {
+    return cell.map((sub) => sub.text);
   }
 }
 
