@@ -33,6 +33,7 @@ test.describe('Views list page', () => {
 
   test('lets user delete a view', async ({ page, appUri, moxy }) => {
     moxy.setZetkinApiMock('/orgs/1/people/views', 'get', [AllMembers]);
+    moxy.setZetkinApiMock('/orgs/1/people/view_folders', 'get', []);
     moxy.setZetkinApiMock(
       `/orgs/1/people/1/views/${AllMembers.id}`,
       'delete',

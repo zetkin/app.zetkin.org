@@ -45,7 +45,9 @@ function ZUIFutures<G extends Record<string, unknown>>({
     );
   }
 
-  if (Object.values(futures).some((future) => future.isLoading)) {
+  if (
+    Object.values(futures).some((future) => future.isLoading && !future.data)
+  ) {
     return (
       loadingIndicator || (
         <Box display="flex" justifyContent="center" padding={3} width="100%">

@@ -1,4 +1,4 @@
-import ClickableCard from '../../features/views/components/SuggestedViews/ClickableCard';
+import ClickableCard from './ClickableCard';
 import ZUIJourneyInstanceItem, {
   ZUIJourneyInstanceItemProps,
 } from '../ZUIJourneyInstanceItem';

@@ -1,6 +1,12 @@
 import { ApiFetch } from 'utils/apiFetch';
 import IApiClient from './IApiClient';
 
+function assertOk(res: Response) {
+  if (!res.ok) {
+    throw new Error('Error during request');
+  }
+}
+
 export default class FetchApiClient implements IApiClient {
   private _fetch: ApiFetch;
 
@@ -9,20 +15,25 @@ export default class FetchApiClient implements IApiClient {
   }
 
   async delete(path: string): Promise<void> {
-    await this._fetch(path, {
+    const res = await this._fetch(path, {
       method: 'DELETE',
     });
+
+    assertOk(res);
   }
 
   async get<DataType>(path: string): Promise<DataType> {
     const res = await this._fetch(path);
     const body = await res.json();
+
+    assertOk(res);
+
     return body.data;
   }
 
-  async patch<DataType>(
+  async patch<DataType, InputType = Partial<DataType>>(
     path: string,
-    data: Partial<DataType>
+    data: InputType
   ): Promise<DataType> {
     const res = await this._fetch(path, {
       body: JSON.stringify(data),
@@ -31,6 +42,9 @@ export default class FetchApiClient implements IApiClient {
       },
       method: 'PATCH',
     });
+
+    assertOk(res);
+
     const body = await res.json();
     return body.data;
   }
@@ -46,6 +60,9 @@ export default class FetchApiClient implements IApiClient {
       },
       method: 'POST',
     });
+
+    assertOk(res);
+
     const body = await res.json();
     return body.data;
   }
@@ -66,6 +83,8 @@ export default class FetchApiClient implements IApiClient {
     }
 
     const res = await this._fetch(path, options);
+
+    assertOk(res);
 
     const body = await res.json();
     return body.data;

@@ -32,6 +32,10 @@ export default class PersonTagColumnType implements IColumnType {
       },
     };
   }
+
+  getSearchableStrings(): string[] {
+    return [];
+  }
 }
 
 const useStyles = makeStyles(() => ({

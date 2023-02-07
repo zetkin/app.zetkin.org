@@ -1,3 +1,4 @@
+import { CreateNewViewReqBody } from 'pages/api/views/createNew';
 import { DeleteFolderReport } from 'pages/api/views/deleteFolder';
 import Environment from 'core/env/Environment';
 import IApiClient from 'core/api/client/IApiClient';
@@ -23,8 +24,6 @@ import {
   viewCreate,
   viewCreated,
   viewDeleted,
-  viewUpdate,
-  viewUpdated,
 } from '../store';
 import {
   IFuture,
@@ -37,10 +36,6 @@ import { ZetkinView, ZetkinViewFolder } from '../components/types';
 type ZetkinViewFolderPostBody = {
   parent_id?: number;
   title: string;
-};
-
-type ZetkinViewUpdateBody = Partial<Omit<ZetkinView, 'id' | 'folder'>> & {
-  folder_id?: number | null;
 };
 
 type ZetkinViewFolderUpdateBody = Partial<
@@ -76,11 +71,15 @@ export default class ViewsRepo {
     return folder;
   }
 
-  async createView(orgId: number, folderId = 0): Promise<ZetkinView> {
+  async createView(
+    orgId: number,
+    folderId = 0,
+    rows: number[] = []
+  ): Promise<ZetkinView> {
     this._store.dispatch(viewCreate());
-    const view = await this._apiClient.post<ZetkinView>(
+    const view = await this._apiClient.post<ZetkinView, CreateNewViewReqBody>(
       `/api/views/createNew?orgId=${orgId}&folderId=${folderId}`,
-      {}
+      { rows }
     );
     this._store.dispatch(viewCreated(view));
     return view;
@@ -203,23 +202,6 @@ export default class ViewsRepo {
       .then((folder) => {
         this._store.dispatch(folderUpdated([folder, mutating]));
         return folder;
-      });
-
-    return new PromiseFuture(promise);
-  }
-
-  updateView(
-    orgId: number,
-    viewId: number,
-    data: ZetkinViewUpdateBody
-  ): IFuture<ZetkinView> {
-    const mutating = Object.keys(data);
-    this._store.dispatch(viewUpdate([viewId, mutating]));
-    const promise = this._apiClient
-      .patch<ZetkinView>(`/api/orgs/${orgId}/people/views/${viewId}`, data)
-      .then((view) => {
-        this._store.dispatch(viewUpdated([view, mutating]));
-        return view;
       });
 
     return new PromiseFuture(promise);

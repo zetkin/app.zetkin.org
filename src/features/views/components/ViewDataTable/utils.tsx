@@ -1,3 +1,4 @@
+import columnTypes from './columnTypes';
 import {
   ZetkinViewColumn,
   ZetkinViewRow,
@@ -19,44 +20,14 @@ export const viewQuickSearch = (
     return rows;
   }
 
-  const searchableStringFields = ['person_field'];
-  const searchableObjectFields = ['survey_response', 'person_notes'];
-
-  const getColIdxByFieldType = (fields: string[]) =>
-    columns.reduce((output: number[], input, idx) => {
-      if (fields.includes(input.type)) {
-        output.push(idx);
-      }
-      return output;
-    }, []);
-
-  const stringIndexes = getColIdxByFieldType(searchableStringFields);
-  const objectArrayIndexes = getColIdxByFieldType(searchableObjectFields);
-
-  const getSearchableString = (row: { content: unknown[] }) => {
-    const rowContent = row.content;
-    let searchable = '';
-
-    // Add string field values directly to searchable string
-    stringIndexes.forEach((idx) => {
-      searchable = [searchable, rowContent[idx]].join(',');
-    });
-
-    // Extract string values from object fields and add to searchable string
-    objectArrayIndexes.forEach((idx) => {
-      const content = rowContent[idx];
-      if (content instanceof Array) {
-        searchable = [
-          searchable,
-          content.map((item) => item.text).join(','),
-        ].join(',');
-      }
-    });
-
-    return searchable.toLowerCase();
-  };
-
   return rows.filter((row) => {
-    return getSearchableString(row).includes(quickSearch.toLowerCase());
+    const searchStrings = columns.flatMap((col, idx) => {
+      return columnTypes[col.type].getSearchableStrings(row.content[idx]);
+    });
+
+    const lowerCaseQuickSearch = quickSearch.toLowerCase();
+    return searchStrings.some((str) =>
+      str.toLowerCase().includes(lowerCaseQuickSearch)
+    );
   });
 };

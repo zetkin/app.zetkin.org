@@ -18,6 +18,7 @@ export interface IColumnType<
 > {
   cellToString(cell: CellType, column: ColumnType): string;
   getColDef(column: ColumnType): Omit<GridColDef, 'field'>;
+  getSearchableStrings(cell: CellType): string[];
   processRowUpdate?(
     model: ViewDataModel,
     colId: number,
@@ -34,6 +35,10 @@ class DummyColumnType implements IColumnType {
 
   getColDef(): Omit<GridColDef, 'field'> {
     return {};
+  }
+
+  getSearchableStrings(): string[] {
+    return [];
   }
 }
 
