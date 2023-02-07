@@ -111,7 +111,7 @@ const ColumnGallery: FunctionComponent<ColumnGalleryProps> = ({
       </Box>
       <Box
         display="flex"
-        height="85%"
+        height="calc(100% - 90px)"
         justifyContent="space-between"
         width="100%"
       >
