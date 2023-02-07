@@ -3,13 +3,12 @@ import Head from 'next/head';
 
 import { AccessLevelProvider } from 'features/views/hooks/useAccessLevel';
 import BackendApiClient from 'core/api/client/BackendApiClient';
-import getOrg from 'utils/fetching/getOrg';
-import getView from 'features/views/fetching/getView';
 import IApiClient from 'core/api/client/IApiClient';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import SharedViewLayout from 'features/views/layout/SharedViewLayout';
 import useModel from 'core/useModel';
+import useServerSide from 'core/useServerSide';
 import ViewDataModel from 'features/views/models/ViewDataModel';
 import { ViewDataModelProvider } from 'features/views/hooks/useViewDataModel';
 import ViewDataTable from 'features/views/components/ViewDataTable';
@@ -64,20 +63,9 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
     parseInt(viewId as string)
   );
 
-  await ctx.queryClient.prefetchQuery(
-    ['org', orgId],
-    getOrg(orgId as string, ctx.apiFetch)
-  );
-  const orgState = ctx.queryClient.getQueryState(['org', orgId]);
+  try {
+    await apiClient.get(`/api/orgs/${orgId}/people/views/${viewId}`);
 
-  await ctx.queryClient.prefetchQuery(
-    ['view', viewId],
-    getView(orgId as string, viewId as string, ctx.apiFetch)
-  );
-
-  const viewState = ctx.queryClient.getQueryState(['view', viewId]);
-
-  if (orgState?.data && viewState?.data) {
     return {
       props: {
         accessLevel,
@@ -85,7 +73,7 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
         viewId,
       },
     };
-  } else {
+  } catch (err) {
     return {
       notFound: true,
     };
@@ -108,6 +96,11 @@ const SharedViewPage: PageWithLayout<SharedViewPageProps> = ({
   );
   const canConfigure = accessLevel == 'configure';
 
+  const onServer = useServerSide();
+  if (onServer) {
+    return null;
+  }
+
   return (
     <ZUIFutures
       futures={{
@@ -123,13 +116,17 @@ const SharedViewPage: PageWithLayout<SharedViewPageProps> = ({
           </Head>
           <ViewDataModelProvider model={model}>
             <AccessLevelProvider accessLevel={accessLevel} isRestricted={true}>
-              <ViewDataTable
-                columns={cols}
-                disableBulkActions
-                disableConfigure={!canConfigure}
-                rows={rows}
-                view={view}
-              />
+              <>
+                {!model.getColumns().isLoading && (
+                  <ViewDataTable
+                    columns={cols}
+                    disableBulkActions
+                    disableConfigure={!canConfigure}
+                    rows={rows}
+                    view={view}
+                  />
+                )}
+              </>
             </AccessLevelProvider>
           </ViewDataModelProvider>
         </>

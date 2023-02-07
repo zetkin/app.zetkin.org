@@ -15,4 +15,8 @@ export default class SimpleColumnType
   getColDef(): Omit<GridColDef, 'field'> {
     return {};
   }
+
+  getSearchableStrings(cell: SimpleData): string[] {
+    return cell && cell !== true ? [cell.toString()] : [];
+  }
 }

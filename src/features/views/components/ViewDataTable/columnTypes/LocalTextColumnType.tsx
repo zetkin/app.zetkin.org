@@ -10,7 +10,7 @@ import {
 import { IColumnType } from '.';
 import ViewDataModel from 'features/views/models/ViewDataModel';
 
-type LocalTextViewCell = string;
+type LocalTextViewCell = string | null;
 
 export default class LocalTextColumnType implements IColumnType {
   cellToString(cell: LocalTextViewCell): string {
@@ -23,6 +23,9 @@ export default class LocalTextColumnType implements IColumnType {
       renderEditCell: (params) => <EditTextarea {...params} />,
       width: 250,
     };
+  }
+  getSearchableStrings(cell: LocalTextViewCell): string[] {
+    return cell ? [cell] : [];
   }
   processRowUpdate(
     model: ViewDataModel,

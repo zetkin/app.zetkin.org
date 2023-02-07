@@ -45,6 +45,17 @@ export default class LocalPersonColumnType implements IColumnType {
       },
     };
   }
+  getSearchableStrings(cell: LocalPersonViewCell): string[] {
+    return cell
+      ? ([
+          cell.first_name,
+          cell.last_name,
+          cell.email,
+          cell.phone,
+          cell.alt_phone,
+        ].filter((s) => !!s) as string[])
+      : [];
+  }
 }
 
 const useStyles = makeStyles<Theme, { isRestrictedMode: boolean }>({
