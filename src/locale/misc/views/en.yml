@@ -9,8 +9,23 @@ cells:
 columnDialog:
   categories:
     basic:
-      description: Columns that are useful when organizing people and members.
-      title: Basic Columns
+      description: Simple fields of information about people.
+      title: Basic information
+    categorizing:
+      description: For grouping, categorizing or shortlisting people, arbitrarily or based on data in Zetkin.
+      title: Categorizing
+    crossReferencing:
+      description: Cross-reference with data in Zetkin using Smart Search.
+      title: Cross-referencing
+    outreach:
+      description: Plan, delegate and execute outreach work, and report back when you're done
+      title: Outreach
+    surveys:
+      description: Explore, search and filter based on people's responses to surveys.
+      title: Surveys
+    utility:
+      description: Trusty columns that you'll want to reuse in most situations
+      title: Utility
   choices:
     delegate:
       columnTitleAssignee: Assignee

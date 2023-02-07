@@ -39,7 +39,6 @@ export enum CHOICES {
   TAG = 'tag',
   BOOLEAN = 'toggle',
   LOCAL_PERSON = 'localPerson',
-  LOCAL_SMART_SEARCH = 'localSmartSearch',
   LOCAL_TEXT = 'localText',
   LOCAL_QUERY = 'localQuery',
   SURVEY_RESPONSE = 'surveyResponse',
