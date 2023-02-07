@@ -1,16 +1,27 @@
 import { Box } from '@mui/material';
-import { FC } from 'react';
 import { makeStyles } from '@mui/styles';
 import { useRouter } from 'next/router';
-import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid-pro';
+import { FC, KeyboardEvent } from 'react';
+import {
+  GridColDef,
+  GridRenderCellParams,
+  MuiEvent,
+} from '@mui/x-data-grid-pro';
 
 import { IColumnType } from '.';
 import TagChip from 'features/tags/components/TagManager/components/TagChip';
 import TagModel from 'features/tags/models/TagModel';
+import useAccessLevel from 'features/views/hooks/useAccessLevel';
 import useModel from 'core/useModel';
+import ViewDataModel from 'features/views/models/ViewDataModel';
+import { ZetkinObjectAccess } from 'core/api/types';
 import { ZetkinTag } from 'utils/types/zetkin';
 import ZUIFuture from 'zui/ZUIFuture';
 import { PersonTagViewColumn, ZetkinViewRow } from '../../types';
+
+type PersonTagViewCell = null | {
+  value?: string;
+};
 
 export default class PersonTagColumnType implements IColumnType {
   cellToString(cell: ZetkinTag): string {
@@ -35,6 +46,25 @@ export default class PersonTagColumnType implements IColumnType {
 
   getSearchableStrings(): string[] {
     return [];
+  }
+
+  handleKeyDown(
+    model: ViewDataModel,
+    column: PersonTagViewColumn,
+    personId: number,
+    data: PersonTagViewCell,
+    ev: MuiEvent<KeyboardEvent<HTMLElement>>,
+    accessLevel: ZetkinObjectAccess['level']
+  ): void {
+    if (accessLevel) {
+      // Any non-null value means we're in restricted mode
+      return;
+    }
+
+    if (ev.key == 'Enter' || ev.key == ' ') {
+      model.toggleTag(personId, column.config.tag_id, !data);
+      ev.defaultMuiPrevented = true;
+    }
   }
 }
 
@@ -63,22 +93,27 @@ const Cell: FC<{
   const model = useModel((env) => new TagModel(env, orgId, tagId));
   const styles = useStyles();
 
-  return (
-    <ZUIFuture future={model.getTag()}>
-      {(tag) => {
-        if (tag.value_type != null) {
-          return <>{cell?.value}</>;
-        } else if (cell) {
-          return (
-            <TagChip
-              onDelete={() => {
-                model.removeFromPerson(personId);
-              }}
-              tag={tag}
-            />
-          );
-        } else {
-          return (
+  const [isRestricted] = useAccessLevel();
+
+  if (cell?.value_type != null) {
+    return <>{cell.value}</>;
+  } else if (cell) {
+    return (
+      <TagChip
+        onDelete={() => {
+          model.removeFromPerson(personId);
+        }}
+        tag={cell}
+      />
+    );
+  } else {
+    if (!isRestricted) {
+      // Only render "ghost" tag in full-access (non-restricted) mode, as it's
+      // likely that a user in restricted mode will not have access to assign
+      // (or even retrieve) the tag.
+      return (
+        <ZUIFuture future={model.getTag()}>
+          {(tag) => (
             <Box
               className={styles.ghostContainer}
               onClick={() => {
@@ -89,9 +124,11 @@ const Cell: FC<{
                 <TagChip tag={tag} />
               </Box>
             </Box>
-          );
-        }
-      }}
-    </ZUIFuture>
-  );
+          )}
+        </ZUIFuture>
+      );
+    }
+
+    return null;
+  }
 };

@@ -4,11 +4,18 @@ import NextLink from 'next/link';
 import NProgress from 'nprogress';
 import { useIntl } from 'react-intl';
 import { useRouter } from 'next/router';
-import { DataGridPro, GridColDef, useGridApiRef } from '@mui/x-data-grid-pro';
+import {
+  DataGridPro,
+  GridCellEditStartReasons,
+  GridCellParams,
+  GridColDef,
+  useGridApiRef,
+} from '@mui/x-data-grid-pro';
 import { FunctionComponent, useContext, useState } from 'react';
 
 import columnTypes from './columnTypes';
 import EmptyView from 'features/views/components/EmptyView';
+import useAccessLevel from 'features/views/hooks/useAccessLevel';
 import useModel from 'core/useModel';
 import useModelsFromQueryString from 'zui/ZUIUserConfigurableDataGrid/useModelsFromQueryString';
 import useViewDataModel from 'features/views/hooks/useViewDataModel';
@@ -77,6 +84,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
   const [waiting, setWaiting] = useState(false);
 
   const { gridProps: modelGridProps } = useModelsFromQueryString();
+  const [, accessLevel] = useAccessLevel();
 
   const [quickSearch, setQuickSearch] = useState('');
   const router = useRouter();
@@ -262,7 +270,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
       resizable: true,
       sortable: true,
       width: 150,
-      ...columnTypes[col.type].getColDef(col),
+      ...columnTypes[col.type].getColDef(col, accessLevel),
     })),
   ];
 
@@ -361,18 +369,45 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
             id: `misc.views.empty.notice.${contentSource}`,
           }),
         }}
+        onCellEditStart={(params, event) => {
+          if (params.reason == GridCellEditStartReasons.printableKeyDown) {
+            // Don't enter edit mode when the user just presses a printable character.
+            // Doing so is the default DataGrid behaviour (as in spreadsheets) but it
+            // means the user will overwrite the original value, which is rarely what
+            // you want with the precious data that exists in views (when there is no
+            // undo feature).
+            event.defaultMuiPrevented = true;
+          }
+        }}
+        onCellKeyDown={(params: GridCellParams<unknown, ZetkinViewRow>, ev) => {
+          if (!params.isEditable) {
+            const col = colFromFieldName(params.field, columns);
+            if (col) {
+              const handleKeyDown = columnTypes[col.type].handleKeyDown;
+              if (handleKeyDown) {
+                handleKeyDown(
+                  model,
+                  col,
+                  params.row.id,
+                  params.value,
+                  ev,
+                  accessLevel
+                );
+              }
+            }
+          }
+        }}
         onSelectionModelChange={(model) => setSelection(model as number[])}
         processRowUpdate={(after, before) => {
           const changedField = Object.keys(after).find(
             (key) => after[key] != before[key]
           );
           if (changedField) {
-            const colId = parseInt(changedField.slice(4));
-            const col = columns.find((col) => col.id == colId);
+            const col = colFromFieldName(changedField, columns);
             if (col) {
               const processRowUpdate = columnTypes[col.type].processRowUpdate;
               if (processRowUpdate) {
-                processRowUpdate(model, colId, after.id, after[changedField]);
+                processRowUpdate(model, col.id, after.id, after[changedField]);
               }
             }
           }
@@ -408,5 +443,13 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
     </>
   );
 };
+
+function colFromFieldName(
+  fieldName: string,
+  columns: ZetkinViewColumn[]
+): ZetkinViewColumn | undefined {
+  const colId = parseInt(fieldName.slice(4));
+  return columns.find((col) => col.id == colId);
+}
 
 export default ViewDataTable;

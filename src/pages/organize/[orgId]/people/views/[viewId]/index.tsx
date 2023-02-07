@@ -77,10 +77,12 @@ const SingleViewPage: PageWithLayout<SingleViewPageProps> = ({
     return null;
   }
 
+  const columnsFuture = model.getColumns();
+
   return (
     <ZUIFutures
       futures={{
-        cols: model.getColumns(),
+        cols: columnsFuture,
         rows: model.getRows(),
         view: model.getView(),
       }}
@@ -93,7 +95,7 @@ const SingleViewPage: PageWithLayout<SingleViewPageProps> = ({
           <ViewDataModelProvider model={model}>
             <AccessLevelProvider>
               <>
-                {!model.getColumns().isLoading && (
+                {(!columnsFuture.isLoading || !!columnsFuture.data?.length) && (
                   <ViewDataTable columns={cols} rows={rows} view={view} />
                 )}
               </>

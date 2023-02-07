@@ -1,4 +1,5 @@
-import { GridColDef } from '@mui/x-data-grid-pro';
+import { KeyboardEvent } from 'react';
+import { GridColDef, MuiEvent } from '@mui/x-data-grid-pro';
 
 import LocalBoolColumnType from './LocalBoolColumnType';
 import LocalPersonColumnType from './LocalPersonColumnType';
@@ -9,6 +10,7 @@ import SimpleColumnType from './SimpleColumnType';
 import SurveyResponseColumnType from './SurveyResponseColumnType';
 import SurveySubmittedColumnType from './SurveySubmittedColumnType';
 import ViewDataModel from 'features/views/models/ViewDataModel';
+import { ZetkinObjectAccess } from 'core/api/types';
 import { COLUMN_TYPE, ZetkinViewColumn } from 'features/views/components/types';
 
 export interface IColumnType<
@@ -16,8 +18,19 @@ export interface IColumnType<
   CellType = unknown
 > {
   cellToString(cell: CellType, column: ColumnType): string;
-  getColDef(column: ColumnType): Omit<GridColDef, 'field'>;
+  getColDef(
+    column: ColumnType,
+    accessLevel: ZetkinObjectAccess['level'] | null
+  ): Omit<GridColDef, 'field'>;
   getSearchableStrings(cell: CellType): string[];
+  handleKeyDown?(
+    model: ViewDataModel,
+    column: ColumnType,
+    personId: number,
+    data: CellType,
+    ev: MuiEvent<KeyboardEvent<HTMLElement>>,
+    accessLevel: ZetkinObjectAccess['level'] | null
+  ): void;
   processRowUpdate?(
     model: ViewDataModel,
     colId: number,

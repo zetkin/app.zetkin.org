@@ -19,7 +19,8 @@ describe('ZUIDataTableSorting.tsx', () => {
           id: idx,
           title: field,
           type: COLUMN_TYPE.PERSON_FIELD,
-        })
+        }),
+        null
       ),
     };
   });

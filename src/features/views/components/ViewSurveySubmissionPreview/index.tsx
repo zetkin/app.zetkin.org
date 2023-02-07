@@ -11,6 +11,7 @@ import {
 import { FC, ReactNode, useMemo } from 'react';
 
 import { FormattedMessage } from 'react-intl';
+import useAccessLevel from 'features/views/hooks/useAccessLevel';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 
 interface PreviewableSubmissionData {
@@ -52,6 +53,7 @@ const ViewSurveySubmissionPreview: FC<ViewSurveySubmissionPreviewProps> = ({
       }),
     [submissions]
   );
+  const [isRestricted] = useAccessLevel();
 
   const [mostRecent, ...older] = sorted;
 
@@ -80,14 +82,16 @@ const ViewSurveySubmissionPreview: FC<ViewSurveySubmissionPreviewProps> = ({
                   <ZUIRelativeTime datetime={mostRecent.submitted} forcePast />
                 </Typography>
                 <Box marginBottom={1}>{mostRecent.matchingContent}</Box>
-                <Button
-                  onClick={() =>
-                    onOpenSubmission && onOpenSubmission(mostRecent.id)
-                  }
-                  startIcon={<AssignmentTurnedInOutlined />}
-                >
-                  <FormattedMessage id="misc.views.surveyPreview.mostRecent.openButton" />
-                </Button>
+                {!isRestricted && (
+                  <Button
+                    onClick={() =>
+                      onOpenSubmission && onOpenSubmission(mostRecent.id)
+                    }
+                    startIcon={<AssignmentTurnedInOutlined />}
+                  >
+                    <FormattedMessage id="misc.views.surveyPreview.mostRecent.openButton" />
+                  </Button>
+                )}
               </Box>
             )}
           </Box>
@@ -110,14 +114,16 @@ const ViewSurveySubmissionPreview: FC<ViewSurveySubmissionPreviewProps> = ({
                           forcePast
                         />
                       </Typography>
-                      <Button
-                        onClick={() =>
-                          onOpenSubmission && onOpenSubmission(submission.id)
-                        }
-                        startIcon={<AssignmentTurnedInOutlined />}
-                      >
-                        <FormattedMessage id="misc.views.surveyPreview.older.openButton" />
-                      </Button>
+                      {!isRestricted && (
+                        <Button
+                          onClick={() =>
+                            onOpenSubmission && onOpenSubmission(submission.id)
+                          }
+                          startIcon={<AssignmentTurnedInOutlined />}
+                        >
+                          <FormattedMessage id="misc.views.surveyPreview.older.openButton" />
+                        </Button>
+                      )}
                     </Box>
                     <Box>{submission.matchingContent}</Box>
                   </Box>
