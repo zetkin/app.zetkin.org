@@ -7,8 +7,6 @@ import * as surveys from './surveys';
 
 const choices: Record<CHOICES, ColumnChoice> = {
   [CHOICES.FULL_NAME]: fields.fullName,
-  [CHOICES.FIRST_NAME]: fields.firstName,
-  [CHOICES.LAST_NAME]: fields.lastName,
   [CHOICES.EMAIL]: fields.email,
   [CHOICES.PHONE]: fields.phone,
   [CHOICES.PERSON_FIELDS]: fields.pickFields,

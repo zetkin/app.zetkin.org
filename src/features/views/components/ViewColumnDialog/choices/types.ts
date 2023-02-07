@@ -8,8 +8,6 @@ import {
 export enum CHOICES {
   DELEGATE = 'delegate',
   FULL_NAME = 'fullName',
-  FIRST_NAME = 'firstName',
-  LAST_NAME = 'lastName',
   EMAIL = 'email',
   PHONE = 'phone',
   FOLLOW_UP = 'followUp',

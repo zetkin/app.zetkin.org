@@ -13,8 +13,6 @@ const categories = [
   {
     choices: [
       CHOICES.FULL_NAME,
-      CHOICES.FIRST_NAME,
-      CHOICES.LAST_NAME,
       CHOICES.EMAIL,
       CHOICES.PHONE,
       CHOICES.PERSON_FIELDS,
@@ -44,8 +42,6 @@ const categories = [
   },
   {
     choices: [
-      CHOICES.EMAIL,
-      CHOICES.PHONE,
       CHOICES.PERSON_FIELDS,
       CHOICES.ASSIGNEE,
       CHOICES.TOGGLE,

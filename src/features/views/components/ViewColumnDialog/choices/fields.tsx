@@ -28,26 +28,39 @@ export const fullName: ColumnChoice = {
     );
   },
   color: purple,
-  defaultColumns: (intl) => [
-    {
-      config: {
-        field: NATIVE_PERSON_FIELDS.FIRST_NAME,
+  defaultColumns: (intl, existingColumns) => {
+    const bothColumns = [
+      {
+        config: {
+          field: NATIVE_PERSON_FIELDS.FIRST_NAME,
+        },
+        title: intl.formatMessage({
+          id: 'misc.views.columnDialog.commonHeaders.first_name',
+        }),
+        type: COLUMN_TYPE.PERSON_FIELD,
       },
-      title: intl.formatMessage({
-        id: 'misc.views.columnDialog.commonHeaders.firstName',
-      }),
-      type: COLUMN_TYPE.PERSON_FIELD,
-    },
-    {
-      config: {
-        field: NATIVE_PERSON_FIELDS.LAST_NAME,
+      {
+        config: {
+          field: NATIVE_PERSON_FIELDS.LAST_NAME,
+        },
+        title: intl.formatMessage({
+          id: 'misc.views.columnDialog.commonHeaders.last_name',
+        }),
+        type: COLUMN_TYPE.PERSON_FIELD,
       },
-      title: intl.formatMessage({
-        id: 'misc.views.columnDialog.commonHeaders.lastName',
-      }),
-      type: COLUMN_TYPE.PERSON_FIELD,
-    },
-  ],
+    ];
+
+    // Return first name, last name or both depending on what columns
+    // already exist in the view, to avoid duplicates.
+    return bothColumns.filter(
+      (nameCol) =>
+        !existingColumns.some(
+          (exCol) =>
+            exCol.type == COLUMN_TYPE.PERSON_FIELD &&
+            exCol.config.field == nameCol.config.field
+        )
+    );
+  },
   renderCardVisual: (color: string) => {
     return <DoubleIconCardVisual color={color} icons={[Person, Person]} />;
   },
