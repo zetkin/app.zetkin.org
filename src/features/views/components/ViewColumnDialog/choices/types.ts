@@ -20,6 +20,9 @@ export enum CHOICES {
   ASSIGNEE = 'localPerson',
   NOTES = 'localText',
   CUSTOM_QUERY = 'localQuery',
+  QUERY_REACHED = 'queryReached',
+  QUERY_PARTICIPATED = 'queryParticipated',
+  QUERY_BOOKED = 'queryBooked',
   SURVEY_RESPONSE = 'surveyResponse',
   SURVEY_RESPONSES = 'surveyResponses',
 }

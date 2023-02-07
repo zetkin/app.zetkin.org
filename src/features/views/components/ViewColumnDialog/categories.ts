@@ -26,7 +26,12 @@ const categories = [
     key: CATEGORIES.CATEGORIZING,
   },
   {
-    choices: [CHOICES.CUSTOM_QUERY],
+    choices: [
+      CHOICES.QUERY_REACHED,
+      CHOICES.QUERY_BOOKED,
+      CHOICES.QUERY_PARTICIPATED,
+      CHOICES.CUSTOM_QUERY,
+    ],
     key: CATEGORIES.CROSS_REFERENCING,
   },
   {

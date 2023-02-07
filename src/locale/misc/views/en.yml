@@ -75,6 +75,21 @@ columnDialog:
       description: ' '
       keywords: phone number
       title: Phone number
+    queryBooked:
+      columnTitle: Booked
+      description: Are they booked on any future events?
+      keywords: active booked
+      title: Has future bookings
+    queryParticipated:
+      columnTitle: Participated
+      description: Were they ever booked on an event?
+      keywords: active booked
+      title: Ever participated
+    queryReached:
+      columnTitle: Reached
+      description: Have we ever reached when phonebanking?
+      keywords: phone
+      title: Reached on phone
     surveyResponse:
       allOptions: All Options (Single Column)
       allOptionsHeader: All Options
