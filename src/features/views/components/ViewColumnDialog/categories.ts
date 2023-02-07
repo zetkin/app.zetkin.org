@@ -15,11 +15,11 @@ const categories = [
     key: CATEGORIES.BASIC,
   },
   {
-    choices: [CHOICES.TAG, CHOICES.BOOLEAN, CHOICES.LOCAL_QUERY],
+    choices: [CHOICES.TAG, CHOICES.TOGGLE, CHOICES.CUSTOM_QUERY],
     key: CATEGORIES.CATEGORIZING,
   },
   {
-    choices: [CHOICES.LOCAL_QUERY],
+    choices: [CHOICES.CUSTOM_QUERY],
     key: CATEGORIES.CROSS_REFERENCING,
   },
   {
@@ -32,18 +32,18 @@ const categories = [
   },
   {
     choices: [
-      CHOICES.LOCAL_PERSON,
-      CHOICES.BOOLEAN,
-      CHOICES.LOCAL_TEXT,
+      CHOICES.ASSIGNEE,
+      CHOICES.TOGGLE,
+      CHOICES.NOTES,
       CHOICES.DELEGATE,
     ],
     key: CATEGORIES.OUTREACH,
   },
   {
     choices: [
-      CHOICES.LOCAL_PERSON,
-      CHOICES.BOOLEAN,
-      CHOICES.LOCAL_TEXT,
+      CHOICES.ASSIGNEE,
+      CHOICES.TOGGLE,
+      CHOICES.NOTES,
       CHOICES.FOLLOW_UP,
     ],
     key: CATEGORIES.UTILITY,
