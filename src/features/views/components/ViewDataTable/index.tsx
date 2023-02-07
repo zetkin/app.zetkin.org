@@ -123,7 +123,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
     } else {
       // If it's a new column, add it
       try {
-        model.addColumn({
+        await model.addColumn({
           config: colSpec.config,
           title: colSpec.title,
           type: colSpec.type,
