@@ -79,7 +79,15 @@ const ViewSurveySubmissionPreview: FC<ViewSurveySubmissionPreviewProps> = ({
                 >
                   <ZUIRelativeTime datetime={mostRecent.submitted} forcePast />
                 </Typography>
-                <Box marginBottom={1}>{mostRecent.matchingContent}</Box>
+                <Box marginBottom={1}>
+                  {mostRecent.matchingContent ? (
+                    mostRecent.matchingContent
+                  ) : (
+                    <Typography color="secondary" sx={{ fontStyle: 'italic' }}>
+                      <FormattedMessage id="misc.views.surveyPreview.matches.notSelected" />
+                    </Typography>
+                  )}
+                </Box>
                 <Button
                   onClick={() =>
                     onOpenSubmission && onOpenSubmission(mostRecent.id)

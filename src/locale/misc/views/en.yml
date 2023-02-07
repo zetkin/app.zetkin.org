@@ -146,6 +146,9 @@ suggested:
   created: Created by {name}
   sectionTitle: Suggested
 surveyPreview:
+  matches:
+    notSelected: Not selected
+    selected: Selected
   mostRecent:
     header: Most recent
     openButton: Show full submission

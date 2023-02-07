@@ -1,0 +1,109 @@
+import { Box } from '@mui/material';
+import { FormattedMessage } from 'react-intl';
+import { GridColDef } from '@mui/x-data-grid-pro';
+import { useRouter } from 'next/router';
+import { Check, History } from '@mui/icons-material';
+import { FC, useState } from 'react';
+
+import { IColumnType } from '.';
+import { SurveyOptionViewColumn } from '../../types';
+import SurveySubmissionPane from 'features/surveys/panes/SurveySubmissionPane';
+import theme from '../../../../../theme';
+import { usePanes } from 'utils/panes';
+import ViewSurveySubmissionPreview from '../../ViewSurveySubmissionPreview';
+
+type SurveyOptionViewCell = {
+  selected: boolean;
+  submission_id: number;
+  submitted: string;
+}[];
+
+export default class SurveyOptionColumnType
+  implements IColumnType<SurveyOptionViewColumn, SurveyOptionViewCell>
+{
+  cellToString(cell: SurveyOptionViewCell): string {
+    const pickedThisOption = cell.filter((submission) => submission.selected);
+    return pickedThisOption.length ? pickedThisOption[0].submitted : '';
+  }
+
+  getColDef(): Omit<GridColDef<SurveyOptionViewColumn>, 'field'> {
+    return {
+      headerAlign: 'center',
+      renderCell: (params) => {
+        return <Cell cell={params.value} />;
+      },
+    };
+  }
+}
+
+const Cell: FC<{ cell: SurveyOptionViewCell }> = ({ cell }) => {
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  const { openPane } = usePanes();
+  const { orgId } = useRouter().query;
+
+  if (!cell.length) {
+    return null;
+  }
+
+  const hasPickedThisOption = !!cell.filter((submission) => submission.selected)
+    .length;
+
+  if (!hasPickedThisOption) {
+    return null;
+  }
+
+  const sorted = cell.concat().sort((sub0, sub1) => {
+    const d0 = new Date(sub0.submitted);
+    const d1 = new Date(sub1.submitted);
+    return d1.getTime() - d0.getTime();
+  });
+
+  const mostRecent = sorted[0];
+
+  return (
+    <>
+      <Box
+        alignItems="center"
+        bgcolor={mostRecent.selected ? theme.palette.success.light : ''}
+        display="flex"
+        height="100%"
+        justifyContent="center"
+        onMouseOut={() => setAnchorEl(null)}
+        onMouseOver={(ev) => setAnchorEl(ev.currentTarget)}
+        width="100%"
+      >
+        {mostRecent.selected ? (
+          <Check sx={{ opacity: '0.5' }} />
+        ) : (
+          <History color="secondary" />
+        )}
+        <ViewSurveySubmissionPreview
+          anchorEl={anchorEl}
+          onOpenSubmission={(id) => {
+            openPane({
+              render() {
+                return (
+                  <SurveySubmissionPane
+                    id={id}
+                    orgId={parseInt(orgId as string)}
+                  />
+                );
+              },
+              width: 400,
+            });
+          }}
+          submissions={cell.map((sub) => ({
+            id: sub.submission_id,
+            matchingContent: sub.selected ? (
+              <Box alignItems="center" display="flex">
+                <Check sx={{ paddingRight: 1 }} />
+                <FormattedMessage id="misc.views.surveyPreview.matches.selected" />
+              </Box>
+            ) : null,
+            submitted: sub.submitted.toString(),
+          }))}
+        />
+      </Box>
+    </>
+  );
+};
