@@ -31,6 +31,9 @@ export default class SurveyOptionsColumnType
       },
     };
   }
+  getSearchableStrings(cell: SurveyOptionsViewCell): string[] {
+    return cell.length ? cell[0].selected.map((o) => o.text) : [];
+  }
 }
 
 const useStyles = makeStyles((theme) => ({
