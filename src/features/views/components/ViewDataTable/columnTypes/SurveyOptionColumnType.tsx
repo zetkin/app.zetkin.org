@@ -34,6 +34,10 @@ export default class SurveyOptionColumnType
       },
     };
   }
+
+  getSearchableStrings(): string[] {
+    return [];
+  }
 }
 
 const Cell: FC<{ cell: SurveyOptionViewCell }> = ({ cell }) => {
