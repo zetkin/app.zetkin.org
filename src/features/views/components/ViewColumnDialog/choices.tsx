@@ -52,7 +52,6 @@ export type ColumnChoice = {
     intl: IntlShape,
     columns: ZetkinViewColumn[]
   ) => PendingZetkinViewColumn[];
-  key: string;
   renderCardVisual: (color: string) => JSX.Element;
   renderConfigForm?: (props: {
     existingColumns: ZetkinViewColumn[];
@@ -60,10 +59,12 @@ export type ColumnChoice = {
   }) => JSX.Element;
 };
 
+export type ColumnChoiceWithKey = ColumnChoice & { key: CHOICES };
+
 const { blue, purple, red } = theme.palette.viewColumnGallery;
 
-const choices: ColumnChoice[] = [
-  {
+const choices: Record<CHOICES, ColumnChoice> = {
+  [CHOICES.FIRST_AND_LAST_NAME]: {
     alreadyInView: (columns) => {
       const fieldsToAdd = [
         NATIVE_PERSON_FIELDS.FIRST_NAME,
@@ -98,14 +99,12 @@ const choices: ColumnChoice[] = [
         type: COLUMN_TYPE.PERSON_FIELD,
       },
     ],
-    key: CHOICES.FIRST_AND_LAST_NAME,
     renderCardVisual: (color: string) => {
       return <DoubleIconCardVisual color={color} icons={[Person, Person]} />;
     },
   },
-  {
+  [CHOICES.TAG]: {
     color: blue,
-    key: CHOICES.TAG,
     renderCardVisual: (color: string) => (
       <SingleIconCardVisual color={color} icon={LocalOffer} />
     ),
@@ -114,7 +113,7 @@ const choices: ColumnChoice[] = [
       onOutputConfigured: (columns: SelectedViewColumn[]) => void;
     }) => <PersonTagConfig onOutputConfigured={props.onOutputConfigured} />,
   },
-  {
+  [CHOICES.PERSON_FIELDS]: {
     alreadyInView: (columns) => {
       return Object.values(NATIVE_PERSON_FIELDS).every((fieldName) =>
         columns.some(
@@ -125,7 +124,6 @@ const choices: ColumnChoice[] = [
       );
     },
     color: blue,
-    key: CHOICES.PERSON_FIELDS,
     renderCardVisual: (color: string) => (
       <SingleIconCardVisual color={color} icon={Person} />
     ),
@@ -139,7 +137,7 @@ const choices: ColumnChoice[] = [
       />
     ),
   },
-  {
+  [CHOICES.BOOLEAN]: {
     color: blue,
     defaultColumns: (intl, columns) => [
       {
@@ -152,12 +150,11 @@ const choices: ColumnChoice[] = [
         type: COLUMN_TYPE.LOCAL_BOOL,
       },
     ],
-    key: CHOICES.BOOLEAN,
     renderCardVisual: (color: string) => (
       <SingleIconCardVisual color={color} icon={CheckBox} />
     ),
   },
-  {
+  [CHOICES.FOLLOW_UP]: {
     color: purple,
     defaultColumns: (intl, columns) => [
       {
@@ -179,12 +176,11 @@ const choices: ColumnChoice[] = [
         type: COLUMN_TYPE.LOCAL_TEXT,
       },
     ],
-    key: CHOICES.FOLLOW_UP,
     renderCardVisual: (color: string) => (
       <DoubleIconCardVisual color={color} icons={[CheckBox, Description]} />
     ),
   },
-  {
+  [CHOICES.LOCAL_PERSON]: {
     color: blue,
     defaultColumns: (intl, columns) => [
       {
@@ -200,18 +196,16 @@ const choices: ColumnChoice[] = [
         type: COLUMN_TYPE.LOCAL_PERSON,
       },
     ],
-    key: CHOICES.LOCAL_PERSON,
     renderCardVisual: (color: string) => {
       return <SingleIconCardVisual color={color} icon={Person} />;
     },
   },
-  {
+  [CHOICES.SURVEY_SUBMIT_DATE]: {
     alreadyInView: () => {
       //This card never disables.
       return false;
     },
     color: blue,
-    key: CHOICES.SURVEY_SUBMIT_DATE,
     renderCardVisual: (color: string) => {
       return <SingleIconCardVisual color={color} icon={Event} />;
     },
@@ -222,7 +216,7 @@ const choices: ColumnChoice[] = [
       <SurveySubmitDateConfig onOutputConfigured={props.onOutputConfigured} />
     ),
   },
-  {
+  [CHOICES.DELEGATE]: {
     color: red,
     defaultColumns: (intl, columns) => [
       {
@@ -262,12 +256,11 @@ const choices: ColumnChoice[] = [
         type: COLUMN_TYPE.LOCAL_TEXT,
       },
     ],
-    key: CHOICES.DELEGATE,
     renderCardVisual: (color: string) => {
       return <MultiIconCardVisual color={color} icon={Person} />;
     },
   },
-  {
+  [CHOICES.LOCAL_TEXT]: {
     color: blue,
     defaultColumns: (intl, columns) => [
       {
@@ -283,14 +276,12 @@ const choices: ColumnChoice[] = [
         type: COLUMN_TYPE.LOCAL_TEXT,
       },
     ],
-    key: CHOICES.LOCAL_TEXT,
     renderCardVisual: (color: string) => {
       return <SingleIconCardVisual color={color} icon={EventNote} />;
     },
   },
-  {
+  [CHOICES.LOCAL_QUERY]: {
     color: blue,
-    key: CHOICES.LOCAL_QUERY,
     renderCardVisual: (color: string) => {
       return <SingleIconCardVisual color={color} icon={PersonSearch} />;
     },
@@ -299,9 +290,8 @@ const choices: ColumnChoice[] = [
       onOutputConfigured: (columns: SelectedViewColumn[]) => void;
     }) => <LocalQueryConfig onOutputConfigured={props.onOutputConfigured} />,
   },
-  {
+  [CHOICES.SURVEY_RESPONSES]: {
     color: blue,
-    key: CHOICES.SURVEY_RESPONSES,
     renderCardVisual: (color: string) => {
       return <SingleIconCardVisual color={color} icon={ContactSupport} />;
     },
@@ -312,9 +302,8 @@ const choices: ColumnChoice[] = [
       <SurveyResponsesConfig onOutputConfigured={props.onOutputConfigured} />
     ),
   },
-  {
+  [CHOICES.SURVEY_RESPONSE]: {
     color: blue,
-    key: CHOICES.SURVEY_RESPONSE,
     renderCardVisual: (color: string) => {
       return <SingleIconCardVisual color={color} icon={ContactSupport} />;
     },
@@ -325,6 +314,6 @@ const choices: ColumnChoice[] = [
       <SurveyResponseConfig onOutputConfigured={props.onOutputConfigured} />
     ),
   },
-];
+};
 
 export default choices;

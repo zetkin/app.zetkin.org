@@ -2,15 +2,15 @@ import { Box, Grid, Typography, useTheme } from '@mui/material';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
 
 import categories from '../categories';
-import choices from '../choices';
 import { ColumnChoice } from '../choices';
 import ColumnChoiceCard from '../ColumnChoiceCard';
 import { ZetkinViewColumn } from '../../types';
+import choices, { ColumnChoiceWithKey } from '../choices';
 
 interface CategoriesProps {
   existingColumns: ZetkinViewColumn[];
   onAdd: (choice: ColumnChoice) => void;
-  onConfigure: (choice: ColumnChoice) => void;
+  onConfigure: (choice: ColumnChoiceWithKey) => void;
 }
 
 const ChoiceCategories = ({
@@ -36,17 +36,15 @@ const ChoiceCategories = ({
             />
           </Typography>
           <Grid container paddingTop={2} spacing={3}>
-            {category.choices.map((choiceName) => {
-              const choice = choices.find(
-                (choice) => choice.key === choiceName
-              );
+            {category.choices.map((choiceKey) => {
+              const choice = choices[choiceKey];
               if (!choice) {
                 return;
               }
               const alreadyInView =
                 choice.alreadyInView && choice.alreadyInView(existingColumns);
               return (
-                <Grid key={choice.key} item lg={4} sm={6} xs={12}>
+                <Grid key={choiceKey} item lg={4} sm={6} xs={12}>
                   <ColumnChoiceCard
                     alreadyInView={alreadyInView}
                     cardVisual={choice.renderCardVisual(
@@ -60,14 +58,16 @@ const ChoiceCategories = ({
                         : choice.color
                     }
                     description={intl.formatMessage({
-                      id: `misc.views.columnDialog.choices.${choice.key}.description`,
+                      id: `misc.views.columnDialog.choices.${choiceKey}.description`,
                     })}
                     onAdd={() => onAdd(choice)}
-                    onConfigure={() => onConfigure(choice)}
+                    onConfigure={() =>
+                      onConfigure({ ...choice, key: choiceKey })
+                    }
                     showAddButton={!!choice.defaultColumns}
                     showConfigureButton={!!choice.renderConfigForm}
                     title={intl.formatMessage({
-                      id: `misc.views.columnDialog.choices.${choice.key}.title`,
+                      id: `misc.views.columnDialog.choices.${choiceKey}.title`,
                     })}
                   />
                 </Grid>
