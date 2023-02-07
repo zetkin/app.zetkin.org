@@ -1,13 +1,12 @@
 import { GridColDef } from '@mui/x-data-grid-pro';
 import { IColumnType } from '.';
 import { makeStyles } from '@mui/styles';
+import { usePanes } from 'utils/panes';
+import { useRouter } from 'next/router';
 import { ZetkinSurveyOption } from 'utils/types/zetkin';
 import { ZetkinViewColumn } from '../../types';
 import { Box, Chip } from '@mui/material';
 import { FC, useState } from 'react';
-
-import { usePanes } from 'utils/panes';
-import { useRouter } from 'next/router';
 
 import SurveySubmissionPane from 'features/surveys/panes/SurveySubmissionPane';
 import ViewSurveySubmissionPreview from '../../ViewSurveySubmissionPreview';
@@ -27,8 +26,6 @@ export default class SurveyOptionsColumnType
 
   getColDef(): Omit<GridColDef, 'field'> {
     return {
-      align: 'center',
-      headerAlign: 'center',
       renderCell: (params) => {
         return <Cell cell={params.value} />;
       },
@@ -36,38 +33,41 @@ export default class SurveyOptionsColumnType
   }
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   cell: {
     alignItems: 'center',
     display: 'flex',
     height: '100%',
-    position: 'relative',
+    width: '100%',
   },
   cellCount: {
-    boxShadow: '0 0 0.8em rgba(0, 0, 0, 0.4)',
-    float: 'right',
-    minWidth: '1.2em',
-    position: 'relative',
-    textAlign: 'center',
-    top: '50%',
-    transform: 'translate(-20%, -50%)',
-    transition: 'opacity 0.3s',
+    alignItems: 'center',
+    backgroundColor: theme.palette.outline.main,
+    borderRadius: '50%',
+    display: 'flex',
+    fontSize: '0.8em',
+    height: '1.75em',
+    justifyContent: 'center',
+    width: '1.75em',
   },
   content: {
     '-webkit-box-orient': 'vertical',
-    '-webkit-box-orient2': 'vertical',
-    '-webkit-line-clamp': 2,
-    display: '-webkit-box',
-    maxHeight: '100%',
+    '-webkit-line-clamp': '2',
+    display: '-webkit-box !important',
+    flex: '1',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     whiteSpace: 'normal',
-    width: '100%',
+    wordBreak: 'break-all',
   },
   optionsChip: {
+    border: '1px solid ' + theme.palette.grey.A400,
+    borderRadius: '2em',
+    display: 'inline',
     fontSize: '0.8em',
-    lineHeight: '1.8em',
-    padding: '3px 5px',
+    lineHeight: '1.8',
+    marginRight: '0.25em',
+    padding: '1px 4px',
   },
 }));
 
@@ -90,54 +90,47 @@ const Cell: FC<{
   });
 
   return (
-    <Box className={styles.cell}>
-      <Box
-        className={styles.content}
-        onMouseOut={() => setAnchorEl(null)}
-        onMouseOver={(ev) => setAnchorEl(ev.currentTarget)}
-      >
+    <Box
+      className={styles.cell}
+      onMouseOut={() => setAnchorEl(null)}
+      onMouseOver={(ev) => setAnchorEl(ev.currentTarget)}
+    >
+      <Box className={styles.content}>
         {sorted[0].selected.map((s) => (
-          <Chip
-            /*className={styles.optionsChip}*/
-            key={s.id}
-            label={s.text}
-            size="small"
-            variant="outlined"
-          />
+          <Box key={s.id} className={styles.optionsChip} component="span">
+            {s.text}
+          </Box>
         ))}
-        {
-          <Chip
-            className={styles.cellCount}
-            label={sorted[0].selected.length}
-          />
-        }
-        <ViewSurveySubmissionPreview
-          anchorEl={anchorEl}
-          onOpenSubmission={(id) => {
-            openPane({
-              render() {
-                return (
-                  <SurveySubmissionPane
-                    id={id}
-                    orgId={parseInt(orgId as string)}
-                  />
-                );
-              },
-              width: 400,
-            });
-          }}
-          submissions={cell.map((sub, index) => ({
-            id: sub.submission_id,
-            matchingContent:
-              index == 0
-                ? sub.selected.map((s) => (
-                    <Chip key={s.id} label={s.text} variant="outlined" />
-                  ))
-                : null,
-            submitted: sub.submitted,
-          }))}
-        />
       </Box>
+      <Box className={styles.cellCount} component="span">
+        {sorted[0].selected.length}
+      </Box>
+      <ViewSurveySubmissionPreview
+        anchorEl={anchorEl}
+        onOpenSubmission={(id) => {
+          openPane({
+            render() {
+              return (
+                <SurveySubmissionPane
+                  id={id}
+                  orgId={parseInt(orgId as string)}
+                />
+              );
+            },
+            width: 400,
+          });
+        }}
+        submissions={cell.map((sub, index) => ({
+          id: sub.submission_id,
+          matchingContent:
+            index == 0
+              ? sub.selected.map((s) => (
+                  <Chip key={s.id} label={s.text} variant="outlined" />
+                ))
+              : null,
+          submitted: sub.submitted,
+        }))}
+      />
     </Box>
   );
 };
