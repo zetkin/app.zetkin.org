@@ -11,7 +11,14 @@ const enum CATEGORIES {
 
 const categories = [
   {
-    choices: [CHOICES.FIRST_AND_LAST_NAME, CHOICES.PERSON_FIELDS],
+    choices: [
+      CHOICES.FULL_NAME,
+      CHOICES.FIRST_NAME,
+      CHOICES.LAST_NAME,
+      CHOICES.EMAIL,
+      CHOICES.PHONE,
+      CHOICES.PERSON_FIELDS,
+    ],
     key: CATEGORIES.BASIC,
   },
   {
@@ -32,6 +39,9 @@ const categories = [
   },
   {
     choices: [
+      CHOICES.EMAIL,
+      CHOICES.PHONE,
+      CHOICES.PERSON_FIELDS,
       CHOICES.ASSIGNEE,
       CHOICES.TOGGLE,
       CHOICES.NOTES,

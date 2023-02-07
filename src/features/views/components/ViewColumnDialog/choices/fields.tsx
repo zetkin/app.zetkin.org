@@ -76,3 +76,34 @@ export const pickFields: ColumnChoice = {
     />
   ),
 };
+
+function createFieldChoice(field: NATIVE_PERSON_FIELDS): ColumnChoice {
+  return {
+    alreadyInView: (columns) => {
+      return columns.some(
+        (col) =>
+          col.type == COLUMN_TYPE.PERSON_FIELD && col.config.field == field
+      );
+    },
+    color: purple,
+    defaultColumns: (intl) => [
+      {
+        config: {
+          field: field,
+        },
+        title: intl.formatMessage({
+          id: `misc.views.columnDialog.commonHeaders.${field}`,
+        }),
+        type: COLUMN_TYPE.PERSON_FIELD,
+      },
+    ],
+    renderCardVisual: (color: string) => {
+      return <SingleIconCardVisual color={color} icon={Person} />;
+    },
+  };
+}
+
+export const firstName = createFieldChoice(NATIVE_PERSON_FIELDS.FIRST_NAME);
+export const lastName = createFieldChoice(NATIVE_PERSON_FIELDS.LAST_NAME);
+export const email = createFieldChoice(NATIVE_PERSON_FIELDS.EMAIL);
+export const phone = createFieldChoice(NATIVE_PERSON_FIELDS.PHONE);

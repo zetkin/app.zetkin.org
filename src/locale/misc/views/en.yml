@@ -34,15 +34,27 @@ columnDialog:
       columnTitleResponded: Responded
       description: Adds a set of columns commonly used to delegate outreach work to some assignee.
       title: Delegate
-    firstAndLastName:
-      description: First and last name of person
-      keywords: name combo
-      title: First and Last Name
+    email:
+      description: ' '
+      keywords: email e-mail
+      title: E-mail address
+    firstName:
+      description: ' '
+      keywords: first name
+      title: First name
     followUp:
       columnTitleCheckbox: Checkbox
       columnTitleNotes: Notes
       description: Adds a checkbox column and a notes column
       title: Follow-up
+    fullName:
+      description: First and last name of person
+      keywords: name combo
+      title: First and Last Name
+    lastName:
+      description: ' '
+      keywords: last name surname
+      title: Last name
     localPerson:
       columnTitle: Assignee
       description: Let's you pick an assignee on every row
@@ -59,6 +71,10 @@ columnDialog:
       description: Add your choice of fields like email, phone number, etc.
       keywords: field multiple
       title: Person fields
+    phone:
+      description: ' '
+      keywords: phone number
+      title: Phone number
     surveyResponse:
       allOptions: All Options (Single Column)
       allOptionsHeader: All Options
@@ -89,8 +105,10 @@ columnDialog:
       description: Checkbox column
       title: Toggle
   commonHeaders:
-    firstName: First Name
-    lastName: Last Name
+    email: Email address
+    first_name: First Name
+    last_name: Last Name
+    phone: Phone number
   editor:
     alreadyInView: Already in view
     buttonLabels:

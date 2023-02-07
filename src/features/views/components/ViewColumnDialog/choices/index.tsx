@@ -13,7 +13,11 @@ import * as surveys from './surveys';
 
 export enum CHOICES {
   DELEGATE = 'delegate',
-  FIRST_AND_LAST_NAME = 'firstAndLastName',
+  FULL_NAME = 'fullName',
+  FIRST_NAME = 'firstName',
+  LAST_NAME = 'lastName',
+  EMAIL = 'email',
+  PHONE = 'phone',
   FOLLOW_UP = 'followUp',
   PERSON_FIELDS = 'personFields',
   SURVEY_SUBMIT_DATE = 'surveySubmitDate',
@@ -43,7 +47,11 @@ export type ColumnChoice = {
 export type ColumnChoiceWithKey = ColumnChoice & { key: CHOICES };
 
 const choices: Record<CHOICES, ColumnChoice> = {
-  [CHOICES.FIRST_AND_LAST_NAME]: fields.fullName,
+  [CHOICES.FULL_NAME]: fields.fullName,
+  [CHOICES.FIRST_NAME]: fields.firstName,
+  [CHOICES.LAST_NAME]: fields.lastName,
+  [CHOICES.EMAIL]: fields.email,
+  [CHOICES.PHONE]: fields.phone,
   [CHOICES.PERSON_FIELDS]: fields.pickFields,
   [CHOICES.CUSTOM_QUERY]: query.customQuery,
   [CHOICES.SURVEY_RESPONSE]: surveys.singleSurveyQuestion,
