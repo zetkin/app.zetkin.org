@@ -61,16 +61,16 @@ columnDialog:
       title: Assigned Person
     localQuery:
       columnTitle: In Smart Search?
-      description: Cross-reference each person against a Smart Search query
-      title: Smart Search
+      description: Compare this list against a Smart Search query
+      title: Custom cross-reference
     localText:
       columnTitle: Notes
       description: Add a column to write notes about a person.
       title: Notes
     personFields:
       description: Add your choice of fields like email, phone number, etc.
-      keywords: field multiple
-      title: Person fields
+      keywords: address zip city country
+      title: Pick fields
     phone:
       description: ' '
       keywords: phone number
