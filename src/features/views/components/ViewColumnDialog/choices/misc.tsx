@@ -6,7 +6,7 @@ import {
   Person,
 } from '@mui/icons-material';
 
-import { ColumnChoice } from '.';
+import { ColumnChoice } from './types';
 import DoubleIconCardVisual from '../DoubleIconCardVisual';
 import getUniqueColumnName from '../../../utils/getUniqueColumnName';
 import MultiIconCardVisual from '../MultiIconCardVisual';

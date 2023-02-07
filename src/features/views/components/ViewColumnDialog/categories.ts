@@ -1,4 +1,4 @@
-import { CHOICES } from './choices';
+import { CHOICES } from './choices/types';
 
 const enum CATEGORIES {
   BASIC = 'basic',

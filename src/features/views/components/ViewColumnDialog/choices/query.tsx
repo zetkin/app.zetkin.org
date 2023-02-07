@@ -1,6 +1,6 @@
 import { PersonSearch } from '@mui/icons-material';
 
-import { ColumnChoice } from '.';
+import { ColumnChoice } from './types';
 import LocalQueryConfig from '../LocalQueryConfig';
 import SingleIconCardVisual from '../SingleIconCardVisual';
 import theme from 'theme';

@@ -1,6 +1,6 @@
 import { Person } from '@mui/icons-material';
 
-import { ColumnChoice } from '.';
+import { ColumnChoice } from './types';
 import DoubleIconCardVisual from '../DoubleIconCardVisual';
 import PersonFieldConfig from '../PersonFieldConfig';
 import SingleIconCardVisual from '../SingleIconCardVisual';
