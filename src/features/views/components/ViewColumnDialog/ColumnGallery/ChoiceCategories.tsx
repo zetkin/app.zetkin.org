@@ -32,18 +32,23 @@ const ChoiceCategories = ({
               (choiceKey) => !choices[choiceKey].isRestricted
             )
           : category.choices.filter((choiceKey) => choices[choiceKey]);
+
         return (
           <Box key={`category-${index}`} id={`category-${index}`} padding={2}>
-            <Typography variant="h4">
-              <Msg
-                id={`misc.views.columnDialog.categories.${category.key}.title`}
-              />
-            </Typography>
-            <Typography variant="h5">
-              <Msg
-                id={`misc.views.columnDialog.categories.${category.key}.description`}
-              />
-            </Typography>
+            {filteredKeys.length > 0 && (
+              <>
+                <Typography variant="h4">
+                  <Msg
+                    id={`misc.views.columnDialog.categories.${category.key}.title`}
+                  />
+                </Typography>
+                <Typography variant="h5">
+                  <Msg
+                    id={`misc.views.columnDialog.categories.${category.key}.description`}
+                  />
+                </Typography>
+              </>
+            )}
             <Grid container paddingTop={2} spacing={3}>
               {filteredKeys.map((filteredKey) => {
                 const choice = choices[filteredKey];
