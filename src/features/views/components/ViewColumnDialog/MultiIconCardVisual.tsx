@@ -12,42 +12,35 @@ const MultiIconCardVisual = ({
   icon: Icon,
 }: MultiIconCardVisualProps) => {
   return (
-    <>
-      <Box
-        alignItems="center"
-        bgcolor="white"
-        borderRadius="50%"
-        display="flex"
-        justifyContent="center"
-      >
-        <Icon sx={{ color: color, fontSize: '60px', margin: 2 }} />
+    <Box
+      sx={{
+        alignItems: 'center',
+        color: color,
+        display: 'flex',
+        fontSize: '60px',
+        justifyContent: 'center',
+      }}
+    >
+      <Box sx={{ backgroundColor: 'background.paper', borderRadius: '50%' }}>
+        <Icon sx={{ display: 'block', fontSize: '1em', margin: 2 }} />
       </Box>
-      <svg
-        fill="none"
-        style={{ marginLeft: '-20px' }}
-        viewBox="65 0 123 85"
-        width="129"
+      <Box
+        component="svg"
+        height="82"
+        sx={{
+          color: 'background.paper',
+          fill: 'currentColor',
+          marginLeft: '-0.2667em',
+          width: '1.0667em',
+        }}
+        viewBox="0 0 64 82"
+        width="64"
       >
-        <path
-          clipRule="evenodd"
-          d="M65.6748 83.1026C80.6962 75.5319 90.9998 59.969 90.9998 41.9995C90.9998 24.0301 80.6962 8.46718 65.6748 0.896484C84.7084 4.89353 98.9998 21.7776 98.9998 41.9995C98.9998 62.2215 84.7084 79.1056 65.6748 83.1026Z"
-          fill="white"
-          fillRule="evenodd"
-        />
-        <path
-          clipRule="evenodd"
-          d="M80.6748 83.1026C95.6962 75.5319 106 59.969 106 41.9995C106 24.0301 95.6962 8.46718 80.6748 0.896484C99.7084 4.89353 114 21.7776 114 41.9995C114 62.2215 99.7084 79.1056 80.6748 83.1026Z"
-          fill="white"
-          fillRule="evenodd"
-        />
-        <path
-          clipRule="evenodd"
-          d="M95.6748 83.1026C110.696 75.5319 121 59.969 121 41.9995C121 24.0301 110.696 8.46718 95.6748 0.896484C114.708 4.89353 129 21.7776 129 41.9995C129 62.2215 114.708 79.1056 95.6748 83.1026Z"
-          fill="white"
-          fillRule="evenodd"
-        />
-      </svg>
-    </>
+        <path d="m0,82c15.02139-7.55172,24-23.0756,24-41.00004S15.0214,7.55171,0,0c19.0336,3.98702,32,20.82876,32,40.99996S19.0336,78.01302,0,82Z" />
+        <path d="m16,82c15.02139-7.55172,24-23.0756,24-41.00004S31.0214,7.55171,16,0c19.0336,3.98702,32,20.82876,32,40.99996s-12.9664,37.01306-32,41.00004Z" />
+        <path d="m32,82c15.02139-7.55172,24-23.0756,24-41.00004S47.0214,7.55171,32,0c19.0336,3.98702,32,20.82876,32,40.99996s-12.9664,37.01306-32,41.00004Z" />
+      </Box>
+    </Box>
   );
 };
 
