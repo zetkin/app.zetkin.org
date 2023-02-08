@@ -69,7 +69,7 @@ const useStyles = makeStyles<Theme, { isRestrictedMode: boolean }>({
 });
 
 const Cell: FC<{
-  cell: LocalPersonViewCell;
+  cell: LocalPersonViewCell | undefined;
   column: LocalPersonViewColumn;
   row: ZetkinViewRow;
 }> = ({ cell, column, row }) => {

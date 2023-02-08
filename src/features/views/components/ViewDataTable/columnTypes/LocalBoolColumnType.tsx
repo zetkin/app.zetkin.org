@@ -57,7 +57,7 @@ export default class LocalBoolColumnType implements IColumnType {
 }
 
 const Cell: FC<{
-  cell?: boolean;
+  cell?: boolean | undefined;
   column: LocalBoolViewColumn;
   personId: number;
 }> = ({ cell, column, personId }) => {

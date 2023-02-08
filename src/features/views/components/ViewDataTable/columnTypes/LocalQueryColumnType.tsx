@@ -31,11 +31,7 @@ export default class LocalQueryColumnType
   }
 }
 
-const Cell: FC<{ cell: LocalQueryViewCell }> = ({ cell }) => {
-  if (!cell) {
-    return null;
-  }
-
+const Cell: FC<{ cell: LocalQueryViewCell | undefined }> = () => {
   return (
     <Box
       alignItems="center"
