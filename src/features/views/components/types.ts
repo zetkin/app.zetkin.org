@@ -45,26 +45,17 @@ export interface ZetkinViewColumnBase {
 }
 
 export enum COLUMN_TYPE {
-  JOURNEY_ASSIGNEE = 'journey_assignee',
   LOCAL_BOOL = 'local_bool',
   LOCAL_PERSON = 'local_person',
   LOCAL_QUERY = 'local_query',
   LOCAL_TEXT = 'local_text',
   PERSON_FIELD = 'person_field',
-  PERSON_NOTES = 'person_notes',
   PERSON_QUERY = 'person_query',
   PERSON_TAG = 'person_tag',
   SURVEY_OPTION = 'survey_option',
   SURVEY_OPTIONS = 'survey_options',
   SURVEY_RESPONSE = 'survey_response',
   SURVEY_SUBMITTED = 'survey_submitted',
-}
-
-export interface JourneyAssigneeViewColumn extends ZetkinViewColumnBase {
-  type: COLUMN_TYPE.JOURNEY_ASSIGNEE;
-  config: {
-    journey_id?: number;
-  };
 }
 
 export interface LocalBoolViewColumn extends ZetkinViewColumnBase {
@@ -86,11 +77,6 @@ export interface LocalQueryViewColumn extends ZetkinViewColumnBase {
 
 export interface LocalTextViewColumn extends ZetkinViewColumnBase {
   type: COLUMN_TYPE.LOCAL_TEXT;
-  config?: Record<string, never>;
-}
-
-export interface PersonNotesViewColumn extends ZetkinViewColumnBase {
-  type: COLUMN_TYPE.PERSON_NOTES;
   config?: Record<string, never>;
 }
 
@@ -145,12 +131,10 @@ export interface SurveySubmittedViewColumn extends ZetkinViewColumnBase {
 }
 
 export type ZetkinViewColumn =
-  | JourneyAssigneeViewColumn
   | LocalBoolViewColumn
   | LocalPersonViewColumn
   | LocalQueryViewColumn
   | LocalTextViewColumn
-  | PersonNotesViewColumn
   | PersonFieldViewColumn
   | PersonQueryViewColumn
   | PersonTagViewColumn
