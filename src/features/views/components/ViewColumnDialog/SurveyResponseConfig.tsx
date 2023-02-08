@@ -176,7 +176,7 @@ const SurveyResponseConfig = ({
             )}
             {selectedQuestion?.question.response_type ===
               RESPONSE_TYPE.TEXT && (
-              <Typography sx={{ marginTop: '15' }} variant="h6">
+              <Typography sx={{ marginTop: 2 }}>
                 <Msg id="misc.views.columnDialog.choices.surveyResponse.textField" />
               </Typography>
             )}
