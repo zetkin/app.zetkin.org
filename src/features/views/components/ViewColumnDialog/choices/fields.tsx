@@ -1,4 +1,6 @@
-import { Person } from '@mui/icons-material';
+import { OverridableComponent } from '@mui/material/OverridableComponent';
+import { SvgIconTypeMap } from '@mui/material';
+import { Email, Person, Phone } from '@mui/icons-material';
 
 import { ColumnChoice } from './types';
 import DoubleIconCardVisual from '../DoubleIconCardVisual';
@@ -90,7 +92,10 @@ export const pickFields: ColumnChoice = {
   ),
 };
 
-function createFieldChoice(field: NATIVE_PERSON_FIELDS): ColumnChoice {
+function createFieldChoice(
+  field: NATIVE_PERSON_FIELDS,
+  icon: OverridableComponent<SvgIconTypeMap<Record<string, unknown>, 'svg'>>
+): ColumnChoice {
   return {
     alreadyInView: (columns) => {
       return columns.some(
@@ -111,12 +116,18 @@ function createFieldChoice(field: NATIVE_PERSON_FIELDS): ColumnChoice {
       },
     ],
     renderCardVisual: (color: string) => {
-      return <SingleIconCardVisual color={color} icon={Person} />;
+      return <SingleIconCardVisual color={color} icon={icon} />;
     },
   };
 }
 
-export const firstName = createFieldChoice(NATIVE_PERSON_FIELDS.FIRST_NAME);
-export const lastName = createFieldChoice(NATIVE_PERSON_FIELDS.LAST_NAME);
-export const email = createFieldChoice(NATIVE_PERSON_FIELDS.EMAIL);
-export const phone = createFieldChoice(NATIVE_PERSON_FIELDS.PHONE);
+export const firstName = createFieldChoice(
+  NATIVE_PERSON_FIELDS.FIRST_NAME,
+  Person
+);
+export const lastName = createFieldChoice(
+  NATIVE_PERSON_FIELDS.LAST_NAME,
+  Person
+);
+export const email = createFieldChoice(NATIVE_PERSON_FIELDS.EMAIL, Email);
+export const phone = createFieldChoice(NATIVE_PERSON_FIELDS.PHONE, Phone);

@@ -1,6 +1,7 @@
 import { ContactSupport, Event } from '@mui/icons-material';
 
 import { ColumnChoice } from '.';
+import MultiIconCardVisual from '../MultiIconCardVisual';
 import SingleIconCardVisual from '../SingleIconCardVisual';
 import SurveyResponseConfig from '../SurveyResponseConfig';
 import SurveyResponsesConfig from '../SurveyResponsePluralConfig';
@@ -13,7 +14,7 @@ const { blue } = theme.palette.viewColumnGallery;
 export const multipleSurveyQuestions: ColumnChoice = {
   color: blue,
   renderCardVisual: (color: string) => {
-    return <SingleIconCardVisual color={color} icon={ContactSupport} />;
+    return <MultiIconCardVisual color={color} icon={ContactSupport} />;
   },
   renderConfigForm: (props: {
     existingColumns: ZetkinViewColumn[];

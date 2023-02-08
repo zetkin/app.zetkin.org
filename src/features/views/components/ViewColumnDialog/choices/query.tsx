@@ -1,4 +1,11 @@
-import { PersonSearch, Search } from '@mui/icons-material';
+import { OverridableComponent } from '@mui/material/OverridableComponent';
+import { SvgIconTypeMap } from '@mui/material';
+import {
+  Event,
+  EventAvailable,
+  PersonSearch,
+  PhoneInTalk,
+} from '@mui/icons-material';
 
 import { CHOICES } from './types';
 import { ColumnChoice } from './types';
@@ -28,6 +35,7 @@ export const customQuery: ColumnChoice = {
 
 function createQueryChoice(
   key: CHOICES,
+  icon: OverridableComponent<SvgIconTypeMap<Record<string, unknown>, 'svg'>>,
   filterSpec: ZetkinQuery['filter_spec']
 ): ColumnChoice {
   return {
@@ -44,12 +52,12 @@ function createQueryChoice(
       },
     ],
     renderCardVisual: (color: string) => {
-      return <SingleIconCardVisual color={color} icon={Search} />;
+      return <SingleIconCardVisual color={color} icon={icon} />;
     },
   };
 }
 
-export const booked = createQueryChoice(CHOICES.QUERY_BOOKED, [
+export const booked = createQueryChoice(CHOICES.QUERY_BOOKED, Event, [
   {
     config: {
       after: 'now',
@@ -70,7 +78,7 @@ export const booked = createQueryChoice(CHOICES.QUERY_BOOKED, [
   },
 ]);
 
-export const reached = createQueryChoice(CHOICES.QUERY_REACHED, [
+export const reached = createQueryChoice(CHOICES.QUERY_REACHED, PhoneInTalk, [
   {
     config: {
       operator: 'reached',
@@ -80,14 +88,18 @@ export const reached = createQueryChoice(CHOICES.QUERY_REACHED, [
   },
 ]);
 
-export const participated = createQueryChoice(CHOICES.QUERY_PARTICIPATED, [
-  {
-    config: {
-      before: 'now',
-      operator: 'in',
-      state: 'booked',
+export const participated = createQueryChoice(
+  CHOICES.QUERY_PARTICIPATED,
+  EventAvailable,
+  [
+    {
+      config: {
+        before: 'now',
+        operator: 'in',
+        state: 'booked',
+      },
+      op: OPERATION.ADD,
+      type: FILTER_TYPE.CAMPAIGN_PARTICIPATION,
     },
-    op: OPERATION.ADD,
-    type: FILTER_TYPE.CAMPAIGN_PARTICIPATION,
-  },
-]);
+  ]
+);
