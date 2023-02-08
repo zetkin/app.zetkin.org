@@ -128,7 +128,12 @@ const Cell: FC<{
           matchingContent:
             index == 0
               ? sub.selected.map((s) => (
-                  <Chip key={s.id} label={s.text} variant="outlined" />
+                  <Chip
+                    key={s.id}
+                    label={s.text}
+                    variant="outlined"
+                    sx={{ marginRight: '0.25em' }}
+                  />
                 ))
               : null,
           submitted: sub.submitted,
