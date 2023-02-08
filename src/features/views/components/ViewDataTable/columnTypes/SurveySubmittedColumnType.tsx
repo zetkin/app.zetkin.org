@@ -34,11 +34,11 @@ export default class SurveySubmittedColumnType
   }
 }
 
-const Cell: FC<{ cell: SurveySubmittedViewCell }> = ({ cell }) => {
+const Cell: FC<{ cell: SurveySubmittedViewCell | undefined }> = ({ cell }) => {
   const { orgId } = useRouter().query;
   const { openPane } = usePanes();
 
-  if (cell.length === 0) {
+  if (!cell || cell?.length == 0) {
     return null;
   }
 

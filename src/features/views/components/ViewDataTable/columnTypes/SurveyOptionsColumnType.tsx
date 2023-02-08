@@ -75,18 +75,18 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Cell: FC<{
-  cell: SurveyOptionsViewCell;
+  cell: SurveyOptionsViewCell | undefined;
 }> = ({ cell }) => {
   const { orgId } = useRouter().query;
   const styles = useStyles();
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const { openPane } = usePanes();
 
-  if (cell.length == 0) {
+  if (!cell || cell?.length == 0) {
     return null;
   }
 
-  const sorted = cell?.sort((sub0, sub1) => {
+  const sorted = cell.concat().sort((sub0, sub1) => {
     const d0 = new Date(sub0.submitted);
     const d1 = new Date(sub1.submitted);
     return d1.getTime() - d0.getTime();

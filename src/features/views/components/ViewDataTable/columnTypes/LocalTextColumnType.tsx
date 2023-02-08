@@ -59,7 +59,7 @@ const useStyles = makeStyles({
   },
 });
 
-const Cell: FC<{ cell: LocalTextViewCell }> = ({ cell }) => {
+const Cell: FC<{ cell: LocalTextViewCell | undefined }> = ({ cell }) => {
   const styles = useStyles();
 
   if (!cell) {

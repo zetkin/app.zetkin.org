@@ -55,13 +55,13 @@ const useStyles = makeStyles({
   },
 });
 
-const Cell: FC<{ cell: SurveyResponseViewCell }> = ({ cell }) => {
+const Cell: FC<{ cell: SurveyResponseViewCell | undefined }> = ({ cell }) => {
   const { orgId } = useRouter().query;
   const styles = useStyles();
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const { openPane } = usePanes();
 
-  if (cell.length == 0) {
+  if (!cell || cell?.length == 0) {
     return null;
   }
 

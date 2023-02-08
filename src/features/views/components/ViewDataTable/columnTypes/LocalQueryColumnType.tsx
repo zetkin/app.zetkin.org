@@ -31,7 +31,7 @@ export default class LocalQueryColumnType
   }
 }
 
-const Cell: FC<{ cell: LocalQueryViewCell }> = ({ cell }) => {
+const Cell: FC<{ cell: LocalQueryViewCell | undefined }> = ({ cell }) => {
   if (!cell) {
     return null;
   }
