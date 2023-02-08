@@ -8,7 +8,9 @@ import {
 } from '@mui/x-data-grid-pro';
 
 import { IColumnType } from '.';
+import { LocalTextViewColumn } from '../../types';
 import ViewDataModel from 'features/views/models/ViewDataModel';
+import { ZetkinObjectAccess } from 'core/api/types';
 
 type LocalTextViewCell = string | null;
 
@@ -16,9 +18,12 @@ export default class LocalTextColumnType implements IColumnType {
   cellToString(cell: LocalTextViewCell): string {
     return cell ? cell : '';
   }
-  getColDef(): Omit<GridColDef, 'field'> {
+  getColDef(
+    column: LocalTextViewColumn,
+    accessLevel: ZetkinObjectAccess['level'] | null
+  ): Omit<GridColDef, 'field'> {
     return {
-      editable: true,
+      editable: accessLevel != 'readonly',
       renderCell: (params) => <Cell cell={params.value} />,
       renderEditCell: (params) => <EditTextarea {...params} />,
       width: 250,
@@ -74,6 +79,16 @@ const EditTextarea = (props: GridRenderEditCellParams<string>) => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>();
   const apiRef = useGridApiContext();
 
+  const handleTextAreaRef = useCallback((el: HTMLTextAreaElement | null) => {
+    if (el) {
+      // When entering edit mode, focus the text area and put
+      // caret at the end of the text
+      el.focus();
+      el.setSelectionRange(el.value.length, el.value.length);
+      el.scrollTop = el.scrollHeight;
+    }
+  }, []);
+
   const handleRef = useCallback((el: HTMLElement | null) => {
     setAnchorEl(el);
   }, []);
@@ -96,7 +111,8 @@ const EditTextarea = (props: GridRenderEditCellParams<string>) => {
         event.key === 'Escape' ||
         (event.key === 'Enter' &&
           !event.shiftKey &&
-          (event.ctrlKey || event.metaKey))
+          !event.ctrlKey &&
+          !event.metaKey)
       ) {
         const params = apiRef.current.getCellParams(id, field);
         apiRef.current.publishEvent('cellKeyDown', params, event);
@@ -121,6 +137,7 @@ const EditTextarea = (props: GridRenderEditCellParams<string>) => {
         <Popper anchorEl={anchorEl} open placement="bottom-start">
           <Paper elevation={1} sx={{ minWidth: colDef.computedWidth, p: 1 }}>
             <InputBase
+              inputRef={handleTextAreaRef}
               multiline
               onChange={handleChange}
               onKeyDown={handleKeyDown}

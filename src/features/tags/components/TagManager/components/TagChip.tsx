@@ -125,6 +125,7 @@ const TagChip: React.FunctionComponent<{
         onDelete(tag);
       }}
       size="large"
+      tabIndex={-1}
     >
       <Clear className={classes.deleteIcon} fontSize="inherit" />
     </IconButton>
