@@ -7,6 +7,7 @@ import LocalQueryColumnType from './LocalQueryColumnType';
 import LocalTextColumnType from './LocalTextColumnType';
 import PersonTagColumnType from './PersonTagColumnType';
 import SimpleColumnType from './SimpleColumnType';
+import SurveyOptionColumnType from './SurveyOptionColumnType';
 import SurveyOptionsColumnType from './SurveyOptionsColumnType';
 import SurveyResponseColumnType from './SurveyResponseColumnType';
 import SurveySubmittedColumnType from './SurveySubmittedColumnType';
@@ -80,7 +81,7 @@ const columnTypes: Record<COLUMN_TYPE, IColumnType> = {
   [COLUMN_TYPE.PERSON_NOTES]: new DummyColumnType(),
   [COLUMN_TYPE.PERSON_QUERY]: new LocalQueryColumnType(),
   [COLUMN_TYPE.PERSON_TAG]: new PersonTagColumnType(),
-  [COLUMN_TYPE.SURVEY_OPTION]: new DummyColumnType(),
+  [COLUMN_TYPE.SURVEY_OPTION]: new SurveyOptionColumnType(),
   [COLUMN_TYPE.SURVEY_OPTIONS]: new SurveyOptionsColumnType(),
   [COLUMN_TYPE.SURVEY_RESPONSE]: new SurveyResponseColumnType(),
   [COLUMN_TYPE.SURVEY_SUBMITTED]: new SurveySubmittedColumnType(),

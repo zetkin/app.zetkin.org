@@ -145,6 +145,9 @@ removeDialog:
 suggested:
   created: Created by {name}
   sectionTitle: Suggested
+surveyOptionCell:
+  notSelected: Not selected
+  selected: Selected
 surveyPreview:
   mostRecent:
     header: Most recent
