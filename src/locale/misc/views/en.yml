@@ -24,7 +24,7 @@ columnDialog:
       description: Explore, search and filter based on people's responses to surveys.
       title: Surveys
     utility:
-      description: Trusty columns that you'll want to reuse in most situations
+      description: Trusty columns that you'll want to reuse in many situations
       title: Utility
   choices:
     delegate:
@@ -35,11 +35,11 @@ columnDialog:
       description: Adds a set of columns commonly used to delegate outreach work to some assignee.
       title: Delegate
     email:
-      description: ' '
+      description: Add a column containing email addresses
       keywords: email e-mail
       title: E-mail address
     firstName:
-      description: ' '
+      description: Add a column containing first names
       keywords: first name
       title: First name
     followUp:
@@ -48,11 +48,11 @@ columnDialog:
       description: Adds a checkbox column and a notes column
       title: Follow-up
     fullName:
-      description: First and last name of person
-      keywords: name combo
-      title: First and Last Name
+      description: Two columns containing first and last name
+      keywords: surname
+      title: Full name
     lastName:
-      description: ' '
+      description: Add a column containing last names
       keywords: last name surname
       title: Last name
     localPerson:
@@ -61,7 +61,7 @@ columnDialog:
       title: Assigned Person
     localQuery:
       columnTitle: In Smart Search?
-      description: Compare this list against a Smart Search query
+      description: See if each person matches a Smart Search query
       title: Custom cross-reference
     localText:
       columnTitle: Notes
@@ -72,7 +72,7 @@ columnDialog:
       keywords: address zip city country
       title: Pick fields
     phone:
-      description: ' '
+      description: Add a column containing phone numbers
       keywords: phone number
       title: Phone number
     queryBooked:
@@ -87,7 +87,7 @@ columnDialog:
       title: Ever participated
     queryReached:
       columnTitle: Reached
-      description: Have we ever reached when phonebanking?
+      description: Have we ever reached them when phonebanking?
       keywords: phone
       title: Reached on phone
     surveyResponse:
@@ -101,19 +101,19 @@ columnDialog:
       questionField: Questions
       surveyField: Surveys
       textField: The answers are free text answers and will be displayed in a single column
-      title: Survey response
+      title: Single survey question
     surveyResponses:
       description: Include responses from multiple survey questions.
       keywords: field multiple
       questionField: Questions
       surveyField: Surveys
-      title: Survey responses
+      title: Multiple questions
     surveySubmitDate:
-      description: Indicates whether a person submitted responses to a survey, and when
+      description: See whether a person submitted a survey, and when
       noSurveys: Your organisation does not have any surveys.
       title: Survey submit date
     tag:
-      description: Show a checkmark if the person has this tag
+      description: Toggle a tag for each person in the view
       title: Tag
     toggle:
       columnTitle: Toggle
