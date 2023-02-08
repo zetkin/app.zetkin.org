@@ -102,13 +102,13 @@ const Cell: FC<{ cell: SurveyOptionViewCell }> = ({ cell }) => {
             matchingContent = (
               <Box alignItems="center" display="flex">
                 <Check sx={{ paddingRight: 1 }} />
-                <FormattedMessage id="misc.views.surveyPreview.matches.selected" />
+                <FormattedMessage id="misc.views.surveyOptionCell.selected" />
               </Box>
             );
           } else if (index === 0 && !sub.selected) {
             matchingContent = (
               <Typography color="secondary" sx={{ fontStyle: 'italic' }}>
-                <FormattedMessage id="misc.views.surveyPreview.matches.notSelected" />
+                <FormattedMessage id="misc.views.surveyOptionCell.notSelected" />
               </Typography>
             );
           }
