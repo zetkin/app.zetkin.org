@@ -56,6 +56,7 @@ export enum COLUMN_TYPE {
   SURVEY_OPTIONS = 'survey_options',
   SURVEY_RESPONSE = 'survey_response',
   SURVEY_SUBMITTED = 'survey_submitted',
+  UNSUPPORTED = 'unsupported',
 }
 
 export interface LocalBoolViewColumn extends ZetkinViewColumnBase {
@@ -130,6 +131,11 @@ export interface SurveySubmittedViewColumn extends ZetkinViewColumnBase {
   };
 }
 
+export interface UnsupportedViewColumn extends ZetkinViewColumnBase {
+  type: COLUMN_TYPE.UNSUPPORTED;
+  config: undefined;
+}
+
 export type ZetkinViewColumn =
   | LocalBoolViewColumn
   | LocalPersonViewColumn
@@ -141,7 +147,8 @@ export type ZetkinViewColumn =
   | SurveyOptionViewColumn
   | SurveyOptionsViewColumn
   | SurveyResponseViewColumn
-  | SurveySubmittedViewColumn;
+  | SurveySubmittedViewColumn
+  | UnsupportedViewColumn;
 
 export type NewZetkinViewColumn = Record<string, never>;
 
