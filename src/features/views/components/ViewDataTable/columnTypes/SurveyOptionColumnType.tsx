@@ -1,7 +1,7 @@
-import { Box } from '@mui/material';
 import { FormattedMessage } from 'react-intl';
 import { GridColDef } from '@mui/x-data-grid-pro';
 import { useRouter } from 'next/router';
+import { Box, Typography } from '@mui/material';
 import { Check, History } from '@mui/icons-material';
 import { FC, useState } from 'react';
 
@@ -96,16 +96,30 @@ const Cell: FC<{ cell: SurveyOptionViewCell }> = ({ cell }) => {
               width: 400,
             });
           }}
-          submissions={cell.map((sub) => ({
-            id: sub.submission_id,
-            matchingContent: sub.selected ? (
-              <Box alignItems="center" display="flex">
-                <Check sx={{ paddingRight: 1 }} />
-                <FormattedMessage id="misc.views.surveyPreview.matches.selected" />
-              </Box>
-            ) : null,
-            submitted: sub.submitted.toString(),
-          }))}
+          submissions={sorted.map((sub, index) => {
+            let matchingContent: JSX.Element | null = null;
+
+            if (sub.selected) {
+              matchingContent = (
+                <Box alignItems="center" display="flex">
+                  <Check sx={{ paddingRight: 1 }} />
+                  <FormattedMessage id="misc.views.surveyPreview.matches.selected" />
+                </Box>
+              );
+            } else if (index === 0 && !sub.selected) {
+              matchingContent = (
+                <Typography color="secondary" sx={{ fontStyle: 'italic' }}>
+                  <FormattedMessage id="misc.views.surveyPreview.matches.notSelected" />
+                </Typography>
+              );
+            }
+
+            return {
+              id: sub.submission_id,
+              matchingContent: matchingContent,
+              submitted: sub.submitted.toString(),
+            };
+          })}
         />
       </Box>
     </>
