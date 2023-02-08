@@ -61,7 +61,7 @@ export const fullName: ColumnChoice = {
         )
     );
   },
-  isRestricted: true,
+
   renderCardVisual: (color: string) => {
     return <DoubleIconCardVisual color={color} icons={[Person, Person]} />;
   },
@@ -77,7 +77,6 @@ export const pickFields: ColumnChoice = {
     );
   },
   color: blue,
-  isRestricted: true,
   renderCardVisual: (color: string) => (
     <SingleIconCardVisual color={color} icon={Person} />
   ),
@@ -112,7 +111,6 @@ function createFieldChoice(field: NATIVE_PERSON_FIELDS): ColumnChoice {
         type: COLUMN_TYPE.PERSON_FIELD,
       },
     ],
-    isRestricted: true,
     renderCardVisual: (color: string) => {
       return <SingleIconCardVisual color={color} icon={Person} />;
     },

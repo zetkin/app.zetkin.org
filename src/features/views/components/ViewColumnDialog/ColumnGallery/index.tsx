@@ -7,7 +7,9 @@ import { Theme, useMediaQuery } from '@mui/material';
 
 import categories from '../categories';
 import ChoiceCategories from './ChoiceCategories';
+import { filteringKeys } from './utils';
 import SearchResults from './SearchResults';
+import useAccessLevel from 'features/views/hooks/useAccessLevel';
 import { ZetkinViewColumn } from 'features/views/components/types';
 import choices, {
   CHOICES,
@@ -33,6 +35,7 @@ const ColumnGallery: FunctionComponent<ColumnGalleryProps> = ({
     theme.breakpoints.down('sm')
   );
 
+  const [isRestrictedMode] = useAccessLevel();
   const [isSearching, setIsSearching] = useState(false);
   const [searchString, setSearchString] = useState('');
 
@@ -126,28 +129,34 @@ const ColumnGallery: FunctionComponent<ColumnGalleryProps> = ({
           width="20%"
         >
           <List>
-            {categories.map((category, index) => (
-              <ListItem
-                key={index}
-                onClick={() => {
-                  setSearchString('');
-                  setIsSearching(false);
-                  if (choiceContainerRef.current) {
-                    const element = choiceContainerRef.current.querySelector(
-                      `#category-${index}`
-                    );
-                    element?.scrollIntoView({ behavior: 'smooth' });
-                  }
-                }}
-                sx={{ cursor: 'pointer', paddingY: 2 }}
-              >
-                <Typography>
-                  <Msg
-                    id={`misc.views.columnDialog.categories.${category.key}.title`}
-                  />
-                </Typography>
-              </ListItem>
-            ))}
+            {categories.map((category, index) => {
+              const filteredKeys = filteringKeys(isRestrictedMode, category);
+              if (filteredKeys.length === 0) {
+                return;
+              }
+              return (
+                <ListItem
+                  key={index}
+                  onClick={() => {
+                    setSearchString('');
+                    setIsSearching(false);
+                    if (choiceContainerRef.current) {
+                      const element = choiceContainerRef.current.querySelector(
+                        `#category-${index}`
+                      );
+                      element?.scrollIntoView({ behavior: 'smooth' });
+                    }
+                  }}
+                  sx={{ cursor: 'pointer', paddingY: 2 }}
+                >
+                  <Typography>
+                    <Msg
+                      id={`misc.views.columnDialog.categories.${category.key}.title`}
+                    />
+                  </Typography>
+                </ListItem>
+              );
+            })}
           </List>
         </Box>
         <Box

@@ -12,7 +12,6 @@ const { blue } = theme.palette.viewColumnGallery;
 
 export const multipleSurveyQuestions: ColumnChoice = {
   color: blue,
-  isRestricted: true,
   renderCardVisual: (color: string) => {
     return <SingleIconCardVisual color={color} icon={ContactSupport} />;
   },
@@ -24,7 +23,6 @@ export const multipleSurveyQuestions: ColumnChoice = {
 
 export const singleSurveyQuestion: ColumnChoice = {
   color: blue,
-  isRestricted: true,
   renderCardVisual: (color: string) => {
     return <SingleIconCardVisual color={color} icon={ContactSupport} />;
   },
@@ -40,7 +38,6 @@ export const surveySubmitDate = {
     return false;
   },
   color: blue,
-  isRestricted: true,
   renderCardVisual: (color: string) => {
     return <SingleIconCardVisual color={color} icon={Event} />;
   },

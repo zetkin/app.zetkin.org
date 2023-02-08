@@ -17,7 +17,6 @@ const { blue } = theme.palette.viewColumnGallery;
 
 export const customQuery: ColumnChoice = {
   color: blue,
-  isRestricted: true,
   renderCardVisual: (color: string) => {
     return <SingleIconCardVisual color={color} icon={PersonSearch} />;
   },
@@ -44,7 +43,7 @@ function createQueryChoice(
         type: COLUMN_TYPE.LOCAL_QUERY,
       },
     ],
-    isRestricted: true,
+
     renderCardVisual: (color: string) => {
       return <SingleIconCardVisual color={color} icon={Search} />;
     },

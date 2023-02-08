@@ -26,13 +26,13 @@ export enum CHOICES {
 }
 
 export type ColumnChoice = {
+  allowInRestrictedMode?: boolean;
   alreadyInView?: (columns: ZetkinViewColumn[]) => boolean;
   color: string;
   defaultColumns?: (
     intl: IntlShape,
     columns: ZetkinViewColumn[]
   ) => PendingZetkinViewColumn[];
-  isRestricted?: boolean;
   renderCardVisual: (color: string) => JSX.Element;
   renderConfigForm?: (props: {
     existingColumns: ZetkinViewColumn[];

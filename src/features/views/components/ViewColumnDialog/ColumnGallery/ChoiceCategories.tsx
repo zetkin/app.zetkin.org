@@ -5,6 +5,7 @@ import { FormattedMessage as Msg, useIntl } from 'react-intl';
 import categories from '../categories';
 import { ColumnChoice } from '../choices';
 import ColumnChoiceCard from '../ColumnChoiceCard';
+import { filteringKeys } from './utils';
 import useAccessLevel from 'features/views/hooks/useAccessLevel';
 import { ZetkinViewColumn } from '../../types';
 
@@ -27,11 +28,7 @@ const ChoiceCategories = ({
   return (
     <Box>
       {categories.map((category, index) => {
-        const filteredKeys = isRestrictedMode
-          ? category.choices.filter(
-              (choiceKey) => !choices[choiceKey].isRestricted
-            )
-          : category.choices.filter((choiceKey) => choices[choiceKey]);
+        const filteredKeys = filteringKeys(isRestrictedMode, category);
 
         return (
           <Box key={`category-${index}`} id={`category-${index}`} padding={2}>
