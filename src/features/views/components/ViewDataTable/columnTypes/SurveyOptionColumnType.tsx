@@ -65,63 +65,61 @@ const Cell: FC<{ cell: SurveyOptionViewCell }> = ({ cell }) => {
   const mostRecent = sorted[0];
 
   return (
-    <>
-      <Box
-        alignItems="center"
-        bgcolor={mostRecent.selected ? theme.palette.success.light : ''}
-        display="flex"
-        height="100%"
-        justifyContent="center"
-        onMouseOut={() => setAnchorEl(null)}
-        onMouseOver={(ev) => setAnchorEl(ev.currentTarget)}
-        width="100%"
-      >
-        {mostRecent.selected ? (
-          <Check sx={{ opacity: '0.5' }} />
-        ) : (
-          <History color="secondary" />
-        )}
-        <ViewSurveySubmissionPreview
-          anchorEl={anchorEl}
-          onOpenSubmission={(id) => {
-            openPane({
-              render() {
-                return (
-                  <SurveySubmissionPane
-                    id={id}
-                    orgId={parseInt(orgId as string)}
-                  />
-                );
-              },
-              width: 400,
-            });
-          }}
-          submissions={sorted.map((sub, index) => {
-            let matchingContent: JSX.Element | null = null;
-
-            if (sub.selected) {
-              matchingContent = (
-                <Box alignItems="center" display="flex">
-                  <Check sx={{ paddingRight: 1 }} />
-                  <FormattedMessage id="misc.views.surveyPreview.matches.selected" />
-                </Box>
+    <Box
+      alignItems="center"
+      bgcolor={mostRecent.selected ? theme.palette.success.light : ''}
+      display="flex"
+      height="100%"
+      justifyContent="center"
+      onMouseOut={() => setAnchorEl(null)}
+      onMouseOver={(ev) => setAnchorEl(ev.currentTarget)}
+      width="100%"
+    >
+      {mostRecent.selected ? (
+        <Check sx={{ opacity: '0.5' }} />
+      ) : (
+        <History color="secondary" />
+      )}
+      <ViewSurveySubmissionPreview
+        anchorEl={anchorEl}
+        onOpenSubmission={(id) => {
+          openPane({
+            render() {
+              return (
+                <SurveySubmissionPane
+                  id={id}
+                  orgId={parseInt(orgId as string)}
+                />
               );
-            } else if (index === 0 && !sub.selected) {
-              matchingContent = (
-                <Typography color="secondary" sx={{ fontStyle: 'italic' }}>
-                  <FormattedMessage id="misc.views.surveyPreview.matches.notSelected" />
-                </Typography>
-              );
-            }
+            },
+            width: 400,
+          });
+        }}
+        submissions={sorted.map((sub, index) => {
+          let matchingContent: JSX.Element | null = null;
 
-            return {
-              id: sub.submission_id,
-              matchingContent: matchingContent,
-              submitted: sub.submitted.toString(),
-            };
-          })}
-        />
-      </Box>
-    </>
+          if (sub.selected) {
+            matchingContent = (
+              <Box alignItems="center" display="flex">
+                <Check sx={{ paddingRight: 1 }} />
+                <FormattedMessage id="misc.views.surveyPreview.matches.selected" />
+              </Box>
+            );
+          } else if (index === 0 && !sub.selected) {
+            matchingContent = (
+              <Typography color="secondary" sx={{ fontStyle: 'italic' }}>
+                <FormattedMessage id="misc.views.surveyPreview.matches.notSelected" />
+              </Typography>
+            );
+          }
+
+          return {
+            id: sub.submission_id,
+            matchingContent: matchingContent,
+            submitted: sub.submitted.toString(),
+          };
+        })}
+      />
+    </Box>
   );
 };
