@@ -1,5 +1,5 @@
-import { Grid } from '@mui/material';
 import { useIntl } from 'react-intl';
+import { Grid, useTheme } from '@mui/material';
 
 import ColumnChoiceCard from '../ColumnChoiceCard';
 import { ColumnChoiceWithKey } from '../choices';
@@ -19,6 +19,8 @@ const SearchResults = ({
   searchResults,
 }: SearchResultsProps) => {
   const intl = useIntl();
+  const theme = useTheme();
+
   return (
     <Grid container paddingTop={2} spacing={3}>
       {searchResults.map((searchResult) => {
@@ -33,9 +35,15 @@ const SearchResults = ({
             <ColumnChoiceCard
               alreadyInView={alreadyInView}
               cardVisual={searchResult.renderCardVisual(
-                alreadyInView ? 'gray' : searchResult.color
+                alreadyInView
+                  ? theme.palette.onSurface.disabled
+                  : searchResult.color
               )}
-              color={alreadyInView ? 'gray' : searchResult.color}
+              color={
+                alreadyInView
+                  ? theme.palette.onSurface.disabled
+                  : searchResult.color
+              }
               description={intl.formatMessage({
                 id: `misc.views.columnDialog.choices.${searchResult.key}.description`,
               })}
