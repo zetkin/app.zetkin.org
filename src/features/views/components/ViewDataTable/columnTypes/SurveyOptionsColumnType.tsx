@@ -82,10 +82,7 @@ const Cell: FC<{
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const { openPane } = usePanes();
 
-  if (!cell) {
-    return null;
-  }
-  if (cell.length == 0) {
+  if (!cell || cell?.length == 0) {
     return null;
   }
 
