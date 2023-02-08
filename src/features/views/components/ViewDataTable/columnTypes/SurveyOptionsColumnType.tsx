@@ -131,8 +131,8 @@ const Cell: FC<{
                   <Chip
                     key={s.id}
                     label={s.text}
-                    variant="outlined"
                     sx={{ marginRight: '0.25em' }}
+                    variant="outlined"
                   />
                 ))
               : null,
