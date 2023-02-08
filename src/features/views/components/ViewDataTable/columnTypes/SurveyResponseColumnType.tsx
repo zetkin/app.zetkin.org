@@ -26,6 +26,7 @@ export default class SurveyResponseColumnType
 
   getColDef(): Omit<GridColDef<SurveyResponseViewCell>, 'field'> {
     return {
+      filterable: false,
       renderCell: (params) => {
         return <Cell cell={params.value} />;
       },

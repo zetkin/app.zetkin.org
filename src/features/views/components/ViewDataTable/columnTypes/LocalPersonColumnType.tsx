@@ -41,6 +41,7 @@ export default class LocalPersonColumnType
   ): Omit<GridColDef<ZetkinViewRow>, 'field'> {
     return {
       align: 'center',
+      filterable: false,
       headerAlign: 'center',
       renderCell: (params) => {
         return <Cell cell={params.value} column={col} row={params.row} />;
