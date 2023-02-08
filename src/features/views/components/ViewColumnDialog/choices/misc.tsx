@@ -18,8 +18,8 @@ import { COLUMN_TYPE, SelectedViewColumn, ZetkinViewColumn } from '../../types';
 const { blue, purple, red } = theme.palette.viewColumnGallery;
 
 export const personTag: ColumnChoice = {
-  // isRestricted: true,
   color: blue,
+  isRestricted: true,
   renderCardVisual: (color: string) => (
     <SingleIconCardVisual color={color} icon={LocalOffer} />
   ),
@@ -30,7 +30,6 @@ export const personTag: ColumnChoice = {
 };
 
 export const toggle: ColumnChoice = {
-  // isRestricted: false,
   color: blue,
   defaultColumns: (intl, columns) => [
     {
@@ -43,13 +42,13 @@ export const toggle: ColumnChoice = {
       type: COLUMN_TYPE.LOCAL_BOOL,
     },
   ],
+  isRestricted: false,
   renderCardVisual: (color: string) => (
     <SingleIconCardVisual color={color} icon={CheckBox} />
   ),
 };
 
 export const followUpTemplate: ColumnChoice = {
-  // isRestricted: true,
   color: purple,
   defaultColumns: (intl, columns) => [
     {
@@ -71,13 +70,13 @@ export const followUpTemplate: ColumnChoice = {
       type: COLUMN_TYPE.LOCAL_TEXT,
     },
   ],
+  isRestricted: true,
   renderCardVisual: (color: string) => (
     <DoubleIconCardVisual color={color} icons={[CheckBox, Description]} />
   ),
 };
 
 export const localPerson: ColumnChoice = {
-  // isRestricted: true,
   color: blue,
   defaultColumns: (intl, columns) => [
     {
@@ -93,13 +92,13 @@ export const localPerson: ColumnChoice = {
       type: COLUMN_TYPE.LOCAL_PERSON,
     },
   ],
+  isRestricted: true,
   renderCardVisual: (color: string) => {
     return <SingleIconCardVisual color={color} icon={Person} />;
   },
 };
 
 export const delegateTemplate: ColumnChoice = {
-  // isRestricted: true,
   color: red,
   defaultColumns: (intl, columns) => [
     {
@@ -139,13 +138,13 @@ export const delegateTemplate: ColumnChoice = {
       type: COLUMN_TYPE.LOCAL_TEXT,
     },
   ],
+  isRestricted: true,
   renderCardVisual: (color: string) => {
     return <MultiIconCardVisual color={color} icon={Person} />;
   },
 };
 
 export const localText: ColumnChoice = {
-  // isRestricted: false,
   color: blue,
   defaultColumns: (intl, columns) => [
     {
@@ -161,6 +160,7 @@ export const localText: ColumnChoice = {
       type: COLUMN_TYPE.LOCAL_TEXT,
     },
   ],
+  isRestricted: false,
   renderCardVisual: (color: string) => {
     return <SingleIconCardVisual color={color} icon={EventNote} />;
   },

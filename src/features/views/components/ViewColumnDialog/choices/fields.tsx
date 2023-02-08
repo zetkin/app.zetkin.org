@@ -15,7 +15,6 @@ import {
 const { blue, purple } = theme.palette.viewColumnGallery;
 
 export const fullName: ColumnChoice = {
-  // isRestricted: true,
   alreadyInView: (columns) => {
     const fieldsToAdd = [
       NATIVE_PERSON_FIELDS.FIRST_NAME,
@@ -62,13 +61,13 @@ export const fullName: ColumnChoice = {
         )
     );
   },
+  isRestricted: true,
   renderCardVisual: (color: string) => {
     return <DoubleIconCardVisual color={color} icons={[Person, Person]} />;
   },
 };
 
 export const pickFields: ColumnChoice = {
-  // isRestricted: true,
   alreadyInView: (columns) => {
     return Object.values(NATIVE_PERSON_FIELDS).every((fieldName) =>
       columns.some(
@@ -78,6 +77,7 @@ export const pickFields: ColumnChoice = {
     );
   },
   color: blue,
+  isRestricted: true,
   renderCardVisual: (color: string) => (
     <SingleIconCardVisual color={color} icon={Person} />
   ),
@@ -94,7 +94,6 @@ export const pickFields: ColumnChoice = {
 
 function createFieldChoice(field: NATIVE_PERSON_FIELDS): ColumnChoice {
   return {
-    // isRestricted: true,
     alreadyInView: (columns) => {
       return columns.some(
         (col) =>
@@ -113,6 +112,7 @@ function createFieldChoice(field: NATIVE_PERSON_FIELDS): ColumnChoice {
         type: COLUMN_TYPE.PERSON_FIELD,
       },
     ],
+    isRestricted: true,
     renderCardVisual: (color: string) => {
       return <SingleIconCardVisual color={color} icon={Person} />;
     },
