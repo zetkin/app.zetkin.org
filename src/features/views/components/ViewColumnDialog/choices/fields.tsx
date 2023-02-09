@@ -61,7 +61,6 @@ export const fullName: ColumnChoice = {
         )
     );
   },
-
   renderCardVisual: (color: string) => {
     return <DoubleIconCardVisual color={color} icons={[Person, Person]} />;
   },

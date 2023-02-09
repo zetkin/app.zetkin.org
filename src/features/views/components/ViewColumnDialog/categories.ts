@@ -1,6 +1,6 @@
 import { CHOICES } from './choices/types';
 
-export const enum CATEGORIES {
+const enum CATEGORIES {
   BASIC = 'basic',
   CATEGORIZING = 'categorizing',
   CROSS_REFERENCING = 'crossReferencing',

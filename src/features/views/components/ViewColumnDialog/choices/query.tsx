@@ -43,7 +43,6 @@ function createQueryChoice(
         type: COLUMN_TYPE.LOCAL_QUERY,
       },
     ],
-
     renderCardVisual: (color: string) => {
       return <SingleIconCardVisual color={color} icon={Search} />;
     },

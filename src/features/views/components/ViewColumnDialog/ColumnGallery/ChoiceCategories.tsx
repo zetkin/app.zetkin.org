@@ -5,7 +5,7 @@ import { FormattedMessage as Msg, useIntl } from 'react-intl';
 import categories from '../categories';
 import { ColumnChoice } from '../choices';
 import ColumnChoiceCard from '../ColumnChoiceCard';
-import { filteringKeys } from './utils';
+import { filterChoicesByMode } from './utils';
 import useAccessLevel from 'features/views/hooks/useAccessLevel';
 import { ZetkinViewColumn } from '../../types';
 
@@ -28,24 +28,24 @@ const ChoiceCategories = ({
   return (
     <Box>
       {categories.map((category, index) => {
-        const filteredKeys = filteringKeys(isRestrictedMode, category);
+        const filteredKeys = filterChoicesByMode(isRestrictedMode, category);
 
+        if (!filteredKeys.length) {
+          return null;
+        }
         return (
           <Box key={`category-${index}`} id={`category-${index}`} padding={2}>
-            {filteredKeys.length > 0 && (
-              <>
-                <Typography variant="h4">
-                  <Msg
-                    id={`misc.views.columnDialog.categories.${category.key}.title`}
-                  />
-                </Typography>
-                <Typography variant="h5">
-                  <Msg
-                    id={`misc.views.columnDialog.categories.${category.key}.description`}
-                  />
-                </Typography>
-              </>
-            )}
+            <Typography variant="h4">
+              <Msg
+                id={`misc.views.columnDialog.categories.${category.key}.title`}
+              />
+            </Typography>
+            <Typography variant="h5">
+              <Msg
+                id={`misc.views.columnDialog.categories.${category.key}.description`}
+              />
+            </Typography>
+
             <Grid container paddingTop={2} spacing={3}>
               {filteredKeys.map((filteredKey) => {
                 const choice = choices[filteredKey];
