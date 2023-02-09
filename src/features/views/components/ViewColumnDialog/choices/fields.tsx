@@ -103,7 +103,7 @@ function createFieldChoice(
           col.type == COLUMN_TYPE.PERSON_FIELD && col.config.field == field
       );
     },
-    color: purple,
+    color: blue,
     defaultColumns: (intl) => [
       {
         config: {

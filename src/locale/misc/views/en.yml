@@ -68,7 +68,7 @@ columnDialog:
       description: Add a column to write notes about a person.
       title: Notes
     personFields:
-      description: Add your choice of fields like email, phone number, etc.
+      description: Add your choice of columns like email, phone number, etc.
       keywords: address zip city country
       title: Pick fields
     phone:

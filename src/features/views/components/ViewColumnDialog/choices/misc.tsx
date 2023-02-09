@@ -4,6 +4,7 @@ import {
   EventNote,
   LocalOffer,
   Person,
+  PersonAdd,
 } from '@mui/icons-material';
 
 import { ColumnChoice } from './types';
@@ -90,7 +91,7 @@ export const localPerson: ColumnChoice = {
     },
   ],
   renderCardVisual: (color: string) => {
-    return <SingleIconCardVisual color={color} icon={Person} />;
+    return <SingleIconCardVisual color={color} icon={PersonAdd} />;
   },
 };
 
