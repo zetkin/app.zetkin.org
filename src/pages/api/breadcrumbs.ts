@@ -170,6 +170,12 @@ async function fetchLabel(
     ).then((res) => res.json());
     return assignment.data.title;
   }
+  if (fieldName == 'surveyId') {
+    const survey = await apiFetch(`/orgs/${orgId}/surveys/${fieldValue}`).then(
+      (res) => res.json()
+    );
+    return survey.data.title;
+  }
   return fieldValue;
 }
 
