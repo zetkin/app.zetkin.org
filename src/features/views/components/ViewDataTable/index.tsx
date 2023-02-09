@@ -75,8 +75,10 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
   const classes = useStyles();
   const gridApiRef = useGridApiRef();
   const [addedId, setAddedId] = useState(0);
-  const [columnToConfigure, setColumnToConfigure] =
+  const [columnToCreate, setColumnToCreate] =
     useState<SelectedViewColumn | null>(null);
+  const [columnToConfigure, setColumnToConfigure] =
+    useState<ZetkinViewColumn | null>(null);
   const [columnToRename, setColumnToRename] = useState<ZetkinViewColumn | null>(
     null
   );
@@ -104,43 +106,55 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
     );
   };
 
-  const onColumnCancel = () => {
+  const updateColumn = async (
+    id: number,
+    data: Omit<Partial<ZetkinViewColumn>, 'id'>
+  ) => {
+    NProgress.start();
+    try {
+      await model.updateColumn(id, data);
+    } catch (err) {
+      showError(VIEW_DATA_TABLE_ERROR.MODIFY_COLUMN);
+    } finally {
+      NProgress.done();
+    }
+  };
+
+  const onCreateColumnCancel = () => {
+    setColumnToCreate(null);
+  };
+
+  const onConfigureColumnCancel = () => {
     setColumnToConfigure(null);
   };
 
-  const onColumnSave = async (colSpec: SelectedViewColumn) => {
+  const onConfigureColumnSave = (
+    id: number,
+    config: ZetkinViewColumn['config']
+  ) => {
     setColumnToConfigure(null);
-    if ('id' in colSpec) {
-      // If is an existing column, PATCH it with changed values
-      // Get existing column
-      const columnPreEdit = columns.find((col) => col.id === colSpec.id);
-      if (!columnPreEdit) {
-        showError(VIEW_DATA_TABLE_ERROR.MODIFY_COLUMN);
-        return;
-      }
-      // Extract out only fields which changed
-      const changedFields: Partial<ZetkinViewColumn> = {};
-      Object.entries(colSpec).forEach(([key, value]) => {
-        const typedKey = key as keyof ZetkinViewColumn;
-        if (columnPreEdit[typedKey] !== value) {
-          changedFields[typedKey] = value;
-        }
-      });
 
-      updateColumn(colSpec.id, changedFields);
-    } else {
-      // If it's a new column, add it
-      try {
-        model.addColumn({
-          config: colSpec.config,
-          title: colSpec.title,
-          type: colSpec.type,
-        });
-      } catch (err) {
-        showError(VIEW_DATA_TABLE_ERROR.CREATE_COLUMN);
-      } finally {
-        NProgress.done();
-      }
+    const columnPreEdit = columns.find((col) => col.id === id);
+    if (!columnPreEdit) {
+      showError(VIEW_DATA_TABLE_ERROR.MODIFY_COLUMN);
+      return;
+    }
+
+    updateColumn(id, { config: config });
+  };
+
+  const onCreateColumnSave = async (colSpec: SelectedViewColumn) => {
+    setColumnToCreate(null);
+    try {
+      model.addColumn({
+        config: colSpec.config,
+        title: colSpec.title,
+        type: colSpec.type,
+      });
+    } catch (err) {
+      showError(VIEW_DATA_TABLE_ERROR.CREATE_COLUMN);
+    } finally {
+      NProgress.done();
     }
   };
 
@@ -151,7 +165,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
   };
 
   const onColumnCreate = () => {
-    setColumnToConfigure({});
+    setColumnToCreate({});
   };
 
   const onColumnDelete = async (colFieldName: string) => {
@@ -189,20 +203,6 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
     const colId = colIdFromFieldName(colFieldName);
     const colSpec = columns.find((col) => col.id === colId) || null;
     setColumnToRename(colSpec);
-  };
-
-  const updateColumn = async (
-    id: number,
-    data: Omit<Partial<ZetkinViewColumn>, 'id'>
-  ) => {
-    NProgress.start();
-    try {
-      await model.updateColumn(id, data);
-    } catch (err) {
-      showError(VIEW_DATA_TABLE_ERROR.MODIFY_COLUMN);
-    } finally {
-      NProgress.done();
-    }
   };
 
   const onColumnRenameSave = async (
@@ -300,9 +300,16 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
       onConfigure: onColumnConfigure,
       onDelete: onColumnDelete,
       onRename: onColumnRename,
-      showConfigureButton: (): boolean => {
-        // TODO: Decide which ones should have a configure option
-        return false;
+      showConfigureButton: (field): boolean => {
+        const column = columns.find(
+          (column) => column.id === colIdFromFieldName(field)
+        );
+
+        if (!column) {
+          return false;
+        }
+
+        return !!columnTypes[column.type].renderConfigDialog;
       },
     },
     footer: {
@@ -344,6 +351,9 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
   const contentSource = view.content_query
     ? VIEW_CONTENT_SOURCE.DYNAMIC
     : VIEW_CONTENT_SOURCE.STATIC;
+
+  const renderConfigDialog =
+    columnToConfigure && columnTypes[columnToConfigure.type].renderConfigDialog;
 
   return (
     <>
@@ -427,19 +437,25 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
           onSave={onColumnRenameSave}
         />
       )}
-      {columnToConfigure && (
+      {columnToCreate && (
         <ViewColumnDialog
           columns={columns}
-          onClose={onColumnCancel}
+          onClose={onCreateColumnCancel}
           onSave={async (columns) => {
             // TODO: Handle these async calls better
             // (maybe custom API endpoint to bulk create/edit columns?)
             for (const col of columns) {
-              await onColumnSave(col);
+              await onCreateColumnSave(col);
             }
           }}
         />
       )}
+      {renderConfigDialog &&
+        renderConfigDialog(
+          columnToConfigure,
+          onConfigureColumnCancel,
+          onConfigureColumnSave
+        )}
     </>
   );
 };
