@@ -30,7 +30,9 @@ import { ZetkinPerson, ZetkinViewRow } from 'utils/types/zetkin';
 
 type LocalPersonViewCell = null | ZetkinPerson;
 
-export default class LocalPersonColumnType implements IColumnType {
+export default class LocalPersonColumnType
+  implements IColumnType<LocalPersonViewColumn, LocalPersonViewCell>
+{
   cellToString(cell: ZetkinPerson | null): string {
     return cell ? `${cell.first_name} ${cell.last_name}` : '';
   }
@@ -39,9 +41,28 @@ export default class LocalPersonColumnType implements IColumnType {
   ): Omit<GridColDef<ZetkinViewRow>, 'field'> {
     return {
       align: 'center',
+      filterable: false,
       headerAlign: 'center',
       renderCell: (params) => {
         return <Cell cell={params.value} column={col} row={params.row} />;
+      },
+      sortComparator: (
+        val0: LocalPersonViewCell,
+        val1: LocalPersonViewCell
+      ) => {
+        if (!val0 && !val1) {
+          return 0;
+        }
+        if (!val0) {
+          return 1;
+        }
+        if (!val1) {
+          return -1;
+        }
+
+        const name0 = val0.first_name + val1.last_name;
+        const name1 = val1.first_name + val1.last_name;
+        return name0.localeCompare(name1);
       },
     };
   }

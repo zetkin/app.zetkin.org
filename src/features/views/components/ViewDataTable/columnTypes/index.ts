@@ -41,14 +41,17 @@ export interface IColumnType<
   ): void;
 }
 
-// TODO: Remove this once all real types have been implemented
-class DummyColumnType implements IColumnType {
+/**
+ * This column type is used for any column that is using a type that this
+ * frontend does not yet support, and will just render empty cells.
+ */
+class UnsupportedColumnType implements IColumnType {
   cellToString(): string {
     return '';
   }
 
   getColDef(): Omit<GridColDef, 'field'> {
-    return {};
+    return { valueGetter: () => '' };
   }
 
   getSearchableStrings(): string[] {
@@ -73,12 +76,10 @@ class DummyColumnType implements IColumnType {
  * the value correctly.
  */
 const columnTypes: Record<COLUMN_TYPE, IColumnType> = {
-  [COLUMN_TYPE.JOURNEY_ASSIGNEE]: new DummyColumnType(),
   [COLUMN_TYPE.LOCAL_BOOL]: new LocalBoolColumnType(),
   [COLUMN_TYPE.LOCAL_PERSON]: new LocalPersonColumnType(),
   [COLUMN_TYPE.LOCAL_QUERY]: new LocalQueryColumnType(),
   [COLUMN_TYPE.PERSON_FIELD]: new SimpleColumnType(),
-  [COLUMN_TYPE.PERSON_NOTES]: new DummyColumnType(),
   [COLUMN_TYPE.PERSON_QUERY]: new LocalQueryColumnType(),
   [COLUMN_TYPE.PERSON_TAG]: new PersonTagColumnType(),
   [COLUMN_TYPE.SURVEY_OPTION]: new SurveyOptionColumnType(),
@@ -86,6 +87,7 @@ const columnTypes: Record<COLUMN_TYPE, IColumnType> = {
   [COLUMN_TYPE.SURVEY_RESPONSE]: new SurveyResponseColumnType(),
   [COLUMN_TYPE.SURVEY_SUBMITTED]: new SurveySubmittedColumnType(),
   [COLUMN_TYPE.LOCAL_TEXT]: new LocalTextColumnType(),
+  [COLUMN_TYPE.UNSUPPORTED]: new UnsupportedColumnType(),
 };
 
 export default columnTypes;
