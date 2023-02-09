@@ -1,3 +1,4 @@
+import columnTypes from './components/ViewDataTable/columnTypes';
 import { DeleteFolderReport } from 'pages/api/views/deleteFolder';
 import { ViewTreeData } from 'pages/api/views/tree';
 import { ZetkinObjectAccess } from 'core/api/types';
@@ -209,7 +210,16 @@ const viewsSlice = createSlice({
       action: PayloadAction<[number, ZetkinViewColumn[]]>
     ) => {
       const [viewId, columns] = action.payload;
-      state.columnsByViewId[viewId] = remoteList(columns);
+      const supportedColumns = columns.map((column) => {
+        const copy: ZetkinViewColumn = { ...column };
+        if (!Object.keys(columnTypes).includes(copy.type)) {
+          copy.type = COLUMN_TYPE.UNSUPPORTED;
+        }
+
+        return copy;
+      });
+
+      state.columnsByViewId[viewId] = remoteList(supportedColumns);
       state.columnsByViewId[viewId].loaded = new Date().toISOString();
     },
     folderCreate: (state) => {

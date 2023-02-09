@@ -26,6 +26,7 @@ export default class SurveyResponseColumnType
 
   getColDef(): Omit<GridColDef<SurveyResponseViewCell>, 'field'> {
     return {
+      filterable: false,
       renderCell: (params) => {
         return <Cell cell={params.value} />;
       },
@@ -61,7 +62,7 @@ const Cell: FC<{ cell: SurveyResponseViewCell | undefined }> = ({ cell }) => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const { openPane } = usePanes();
 
-  if (!cell || cell?.length == 0) {
+  if (!cell?.length) {
     return null;
   }
 

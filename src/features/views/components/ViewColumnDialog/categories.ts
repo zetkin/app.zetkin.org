@@ -1,27 +1,63 @@
-import { CHOICES } from './choices';
+import { CHOICES } from './choices/types';
 
 const enum CATEGORIES {
   BASIC = 'basic',
+  CATEGORIZING = 'categorizing',
+  CROSS_REFERENCING = 'crossReferencing',
+  SURVEYS = 'surveys',
+  OUTREACH = 'outreach',
+  UTILITY = 'utility',
 }
 
 const categories = [
   {
     choices: [
-      CHOICES.FIRST_AND_LAST_NAME,
+      CHOICES.FULL_NAME,
+      CHOICES.EMAIL,
+      CHOICES.PHONE,
       CHOICES.PERSON_FIELDS,
-      CHOICES.TAG,
-      CHOICES.BOOLEAN,
-      CHOICES.FOLLOW_UP,
-      CHOICES.LOCAL_PERSON,
-      CHOICES.SURVEY_SUBMIT_DATE,
-      CHOICES.DELEGATE,
-      CHOICES.LOCAL_TEXT,
-      CHOICES.LOCAL_SMART_SEARCH,
-      CHOICES.LOCAL_QUERY,
-      CHOICES.SURVEY_RESPONSE,
-      CHOICES.SURVEY_RESPONSES,
     ],
     key: CATEGORIES.BASIC,
+  },
+  {
+    choices: [CHOICES.TAG, CHOICES.TOGGLE, CHOICES.CUSTOM_QUERY],
+    key: CATEGORIES.CATEGORIZING,
+  },
+  {
+    choices: [
+      CHOICES.QUERY_REACHED,
+      CHOICES.QUERY_BOOKED,
+      CHOICES.QUERY_PARTICIPATED,
+      CHOICES.CUSTOM_QUERY,
+    ],
+    key: CATEGORIES.CROSS_REFERENCING,
+  },
+  {
+    choices: [
+      CHOICES.SURVEY_RESPONSE,
+      CHOICES.SURVEY_RESPONSES,
+      CHOICES.SURVEY_SUBMIT_DATE,
+    ],
+    key: CATEGORIES.SURVEYS,
+  },
+  {
+    choices: [
+      CHOICES.PERSON_FIELDS,
+      CHOICES.ASSIGNEE,
+      CHOICES.TOGGLE,
+      CHOICES.NOTES,
+      CHOICES.DELEGATE,
+    ],
+    key: CATEGORIES.OUTREACH,
+  },
+  {
+    choices: [
+      CHOICES.ASSIGNEE,
+      CHOICES.TOGGLE,
+      CHOICES.NOTES,
+      CHOICES.FOLLOW_UP,
+    ],
+    key: CATEGORIES.UTILITY,
   },
 ];
 

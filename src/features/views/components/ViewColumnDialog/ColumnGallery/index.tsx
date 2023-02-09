@@ -7,15 +7,21 @@ import { Theme, useMediaQuery } from '@mui/material';
 
 import categories from '../categories';
 import ChoiceCategories from './ChoiceCategories';
+import { filterChoicesByMode } from './utils';
 import SearchResults from './SearchResults';
+import useAccessLevel from 'features/views/hooks/useAccessLevel';
 import { ZetkinViewColumn } from 'features/views/components/types';
-import choices, { ColumnChoice } from '../choices';
+import choices, {
+  CHOICES,
+  ColumnChoice,
+  ColumnChoiceWithKey,
+} from '../choices';
 
 interface ColumnGalleryProps {
   existingColumns: ZetkinViewColumn[];
   onAdd: (choice: ColumnChoice) => void;
   onClose: () => void;
-  onConfigure: (choice: ColumnChoice) => void;
+  onConfigure: (choice: ColumnChoiceWithKey) => void;
 }
 
 const ColumnGallery: FunctionComponent<ColumnGalleryProps> = ({
@@ -29,20 +35,21 @@ const ColumnGallery: FunctionComponent<ColumnGalleryProps> = ({
     theme.breakpoints.down('sm')
   );
 
+  const [isRestrictedMode] = useAccessLevel();
   const [isSearching, setIsSearching] = useState(false);
   const [searchString, setSearchString] = useState('');
 
   //list of objects with localized strings to use in the fuse-search
-  const searchObjects = choices.map((choice) => ({
+  const searchObjects = Object.keys(choices).map((choiceKey) => ({
     description: intl.formatMessage({
-      id: `misc.views.columnDialog.choices.${choice.key}.description`,
+      id: `misc.views.columnDialog.choices.${choiceKey}.description`,
     }),
-    key: choice.key,
+    key: choiceKey as CHOICES,
     keywords: intl.formatMessage({
-      id: `misc.views.columnDialog.choices.${choice.key}.keywords`,
+      id: `misc.views.columnDialog.choices.${choiceKey}.keywords`,
     }),
     title: intl.formatMessage({
-      id: `misc.views.columnDialog.choices.${choice.key}.title`,
+      id: `misc.views.columnDialog.choices.${choiceKey}.title`,
     }),
   }));
 
@@ -58,12 +65,16 @@ const ColumnGallery: FunctionComponent<ColumnGalleryProps> = ({
       .map((fuseResult) => fuseResult.item.key);
 
     //return the choice objects with matching keys
-    return keys.map((key) => choices.find((choice) => choice.key === key));
+    return keys.map((key) => ({ ...choices[key], key }));
   };
 
   const searchResults = useMemo(() => search(), [searchString]);
 
   const choiceContainerRef = useRef<HTMLDivElement>();
+  const filteredCategories = categories.filter(
+    (category) =>
+      !!filterChoicesByMode(isRestrictedMode, category.choices).length
+  );
 
   return (
     <Box
@@ -107,7 +118,7 @@ const ColumnGallery: FunctionComponent<ColumnGalleryProps> = ({
       </Box>
       <Box
         display="flex"
-        height="85%"
+        height="calc(100% - 90px)"
         justifyContent="space-between"
         width="100%"
       >
@@ -122,7 +133,7 @@ const ColumnGallery: FunctionComponent<ColumnGalleryProps> = ({
           width="20%"
         >
           <List>
-            {categories.map((category, index) => (
+            {filteredCategories.map((category, index) => (
               <ListItem
                 key={index}
                 onClick={() => {

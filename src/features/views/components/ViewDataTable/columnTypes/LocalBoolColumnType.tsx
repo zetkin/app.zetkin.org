@@ -29,6 +29,7 @@ export default class LocalBoolColumnType implements IColumnType {
           <Cell cell={params.value} column={column} personId={params.row.id} />
         );
       },
+      type: 'boolean',
     };
   }
 

@@ -32,6 +32,7 @@ export default class SurveyOptionColumnType
       renderCell: (params) => {
         return <Cell cell={params.value} />;
       },
+      type: 'boolean',
     };
   }
 

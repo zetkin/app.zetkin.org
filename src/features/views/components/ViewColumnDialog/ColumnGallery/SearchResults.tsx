@@ -1,15 +1,15 @@
-import { Grid } from '@mui/material';
 import { useIntl } from 'react-intl';
+import { Grid, useTheme } from '@mui/material';
 
-import { ColumnChoice } from '../choices';
 import ColumnChoiceCard from '../ColumnChoiceCard';
+import { ColumnChoiceWithKey } from '../choices';
 import { ZetkinViewColumn } from '../../types';
 
 interface SearchResultsProps {
   existingColumns: ZetkinViewColumn[];
-  onAdd: (choice: ColumnChoice) => void;
-  onConfigure: (choice: ColumnChoice) => void;
-  searchResults: (ColumnChoice | undefined)[];
+  onAdd: (choice: ColumnChoiceWithKey) => void;
+  onConfigure: (choice: ColumnChoiceWithKey) => void;
+  searchResults: ColumnChoiceWithKey[];
 }
 
 const SearchResults = ({
@@ -19,6 +19,8 @@ const SearchResults = ({
   searchResults,
 }: SearchResultsProps) => {
   const intl = useIntl();
+  const theme = useTheme();
+
   return (
     <Grid container paddingTop={2} spacing={3}>
       {searchResults.map((searchResult) => {
@@ -33,9 +35,15 @@ const SearchResults = ({
             <ColumnChoiceCard
               alreadyInView={alreadyInView}
               cardVisual={searchResult.renderCardVisual(
-                alreadyInView ? 'gray' : '#234890'
+                alreadyInView
+                  ? theme.palette.onSurface.disabled
+                  : searchResult.color
               )}
-              color={alreadyInView ? 'gray' : '#234890'}
+              color={
+                alreadyInView
+                  ? theme.palette.onSurface.disabled
+                  : searchResult.color
+              }
               description={intl.formatMessage({
                 id: `misc.views.columnDialog.choices.${searchResult.key}.description`,
               })}

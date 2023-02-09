@@ -26,8 +26,26 @@ export default class SurveyOptionsColumnType
 
   getColDef(): Omit<GridColDef, 'field'> {
     return {
+      filterable: false,
       renderCell: (params) => {
         return <Cell cell={params.value} />;
+      },
+      sortComparator: (
+        val0: SurveyOptionsViewCell | undefined,
+        val1: SurveyOptionsViewCell | undefined
+      ) => {
+        if (!val0 && !val1) {
+          return 0;
+        } else if (!val0) {
+          return -1;
+        } else if (!val1) {
+          return 1;
+        }
+
+        // Sort total number of options selected
+        const count0 = val0.reduce((sum, sub) => sum + sub.selected.length, 0);
+        const count1 = val1.reduce((sum, sub) => sum + sub.selected.length, 0);
+        return count0 - count1;
       },
     };
   }
@@ -82,7 +100,7 @@ const Cell: FC<{
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const { openPane } = usePanes();
 
-  if (!cell || cell?.length == 0) {
+  if (!cell?.length) {
     return null;
   }
 
