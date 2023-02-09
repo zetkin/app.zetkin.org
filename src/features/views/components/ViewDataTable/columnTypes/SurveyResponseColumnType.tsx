@@ -62,7 +62,7 @@ const Cell: FC<{ cell: SurveyResponseViewCell | undefined }> = ({ cell }) => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const { openPane } = usePanes();
 
-  if (!cell || cell?.length == 0) {
+  if (!cell?.length) {
     return null;
   }
 
