@@ -7,7 +7,9 @@ import { Theme, useMediaQuery } from '@mui/material';
 
 import categories from '../categories';
 import ChoiceCategories from './ChoiceCategories';
+import { filterChoicesByMode } from './utils';
 import SearchResults from './SearchResults';
+import useAccessLevel from 'features/views/hooks/useAccessLevel';
 import { ZetkinViewColumn } from 'features/views/components/types';
 import choices, {
   CHOICES,
@@ -33,6 +35,7 @@ const ColumnGallery: FunctionComponent<ColumnGalleryProps> = ({
     theme.breakpoints.down('sm')
   );
 
+  const [isRestrictedMode] = useAccessLevel();
   const [isSearching, setIsSearching] = useState(false);
   const [searchString, setSearchString] = useState('');
 
@@ -68,6 +71,10 @@ const ColumnGallery: FunctionComponent<ColumnGalleryProps> = ({
   const searchResults = useMemo(() => search(), [searchString]);
 
   const choiceContainerRef = useRef<HTMLDivElement>();
+  const filteredCategories = categories.filter(
+    (category) =>
+      !!filterChoicesByMode(isRestrictedMode, category.choices).length
+  );
 
   return (
     <Box
@@ -126,7 +133,7 @@ const ColumnGallery: FunctionComponent<ColumnGalleryProps> = ({
           width="20%"
         >
           <List>
-            {categories.map((category, index) => (
+            {filteredCategories.map((category, index) => (
               <ListItem
                 key={index}
                 onClick={() => {

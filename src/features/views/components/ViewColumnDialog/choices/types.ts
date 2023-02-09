@@ -26,6 +26,7 @@ export enum CHOICES {
 }
 
 export type ColumnChoice = {
+  allowInRestrictedMode?: boolean;
   alreadyInView?: (columns: ZetkinViewColumn[]) => boolean;
   color: string;
   defaultColumns?: (

@@ -30,6 +30,7 @@ export const personTag: ColumnChoice = {
 };
 
 export const toggle: ColumnChoice = {
+  allowInRestrictedMode: true,
   color: blue,
   defaultColumns: (intl, columns) => [
     {
@@ -141,6 +142,7 @@ export const delegateTemplate: ColumnChoice = {
 };
 
 export const localText: ColumnChoice = {
+  allowInRestrictedMode: true,
   color: blue,
   defaultColumns: (intl, columns) => [
     {
