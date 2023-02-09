@@ -2,7 +2,7 @@ import { useIntl } from 'react-intl';
 import { Box, Dialog, useMediaQuery, useTheme } from '@mui/material';
 import { FunctionComponent, useState } from 'react';
 
-import { ColumnChoice } from './choices';
+import { ColumnChoiceWithKey } from './choices';
 import ColumnEditor from './ColumnEditor';
 import ColumnGallery from './ColumnGallery';
 import {
@@ -26,11 +26,8 @@ const ViewColumnDialog: FunctionComponent<ViewColumnDialogProps> = ({
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
-  const [columnChoice, setColumnChoice] = useState<ColumnChoice | null>();
-
-  const onConfigure = (choice: ColumnChoice) => {
-    setColumnChoice(choice);
-  };
+  const [columnChoice, setColumnChoice] =
+    useState<ColumnChoiceWithKey | null>();
 
   return (
     <Dialog
@@ -65,7 +62,7 @@ const ViewColumnDialog: FunctionComponent<ViewColumnDialogProps> = ({
               await onSave(columns);
             }}
             onClose={onClose}
-            onConfigure={onConfigure}
+            onConfigure={(choice) => setColumnChoice(choice)}
           />
         )}
       </Box>

@@ -3,11 +3,11 @@ import { ChevronLeft, Close } from '@mui/icons-material';
 import { FunctionComponent, useState } from 'react';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
 
-import { ColumnChoice } from './choices';
+import { ColumnChoiceWithKey } from './choices';
 import { SelectedViewColumn, ZetkinViewColumn } from '../types';
 
 interface ColumnEditorProps {
-  choice: ColumnChoice;
+  choice: ColumnChoiceWithKey;
   existingColumns: ZetkinViewColumn[];
   onCancel: () => void;
   onClose: () => void;
