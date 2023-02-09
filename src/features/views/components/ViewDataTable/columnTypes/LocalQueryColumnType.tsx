@@ -4,8 +4,9 @@ import { FC } from 'react';
 import { GridColDef } from '@mui/x-data-grid-pro';
 
 import { IColumnType } from '.';
+import SmartSearchDialog from 'features/smartSearch/components/SmartSearchDialog';
 import theme from '../../../../../theme';
-import { ZetkinViewColumn } from '../../types';
+import { LocalQueryViewColumn, ZetkinViewColumn } from '../../types';
 
 type LocalQueryViewCell = boolean;
 
@@ -28,6 +29,29 @@ export default class LocalQueryColumnType
 
   getSearchableStrings(): string[] {
     return [];
+  }
+
+  renderConfigDialog(
+    column: LocalQueryViewColumn,
+    onConfigureColumnCancel: () => void,
+    onConfigureColumnSave: (
+      id: number,
+      config: ZetkinViewColumn['config']
+    ) => void
+  ): JSX.Element {
+    const query = {
+      filter_spec: column.config.filter_spec,
+      id: column.id,
+    };
+    return (
+      <SmartSearchDialog
+        onDialogClose={onConfigureColumnCancel}
+        onSave={(query) => {
+          onConfigureColumnSave(column.id, { filter_spec: query.filter_spec });
+        }}
+        query={query}
+      />
+    );
   }
 }
 

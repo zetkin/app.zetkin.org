@@ -39,6 +39,14 @@ export interface IColumnType<
     personId: number,
     data: CellType
   ): void;
+  renderConfigDialog?(
+    column: ColumnType,
+    onConfigureColumnCancel: () => void,
+    onConfigureColumnSave: (
+      id: number,
+      config: ZetkinViewColumn['config']
+    ) => void
+  ): JSX.Element;
 }
 
 /**
