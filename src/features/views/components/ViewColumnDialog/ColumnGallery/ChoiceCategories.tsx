@@ -28,7 +28,10 @@ const ChoiceCategories = ({
   return (
     <Box>
       {categories.map((category, index) => {
-        const filteredKeys = filterChoicesByMode(isRestrictedMode, category);
+        const filteredKeys = filterChoicesByMode(
+          isRestrictedMode,
+          category.choices
+        );
 
         if (!filteredKeys.length) {
           return null;

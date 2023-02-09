@@ -72,7 +72,8 @@ const ColumnGallery: FunctionComponent<ColumnGalleryProps> = ({
 
   const choiceContainerRef = useRef<HTMLDivElement>();
   const filteredCategories = categories.filter(
-    (category) => !!filterChoicesByMode(isRestrictedMode, category).length
+    (category) =>
+      !!filterChoicesByMode(isRestrictedMode, category.choices).length
   );
 
   return (
@@ -132,30 +133,28 @@ const ColumnGallery: FunctionComponent<ColumnGalleryProps> = ({
           width="20%"
         >
           <List>
-            {filteredCategories.map((category, index) => {
-              return (
-                <ListItem
-                  key={index}
-                  onClick={() => {
-                    setSearchString('');
-                    setIsSearching(false);
-                    if (choiceContainerRef.current) {
-                      const element = choiceContainerRef.current.querySelector(
-                        `#category-${index}`
-                      );
-                      element?.scrollIntoView({ behavior: 'smooth' });
-                    }
-                  }}
-                  sx={{ cursor: 'pointer', paddingY: 2 }}
-                >
-                  <Typography>
-                    <Msg
-                      id={`misc.views.columnDialog.categories.${category.key}.title`}
-                    />
-                  </Typography>
-                </ListItem>
-              );
-            })}
+            {filteredCategories.map((category, index) => (
+              <ListItem
+                key={index}
+                onClick={() => {
+                  setSearchString('');
+                  setIsSearching(false);
+                  if (choiceContainerRef.current) {
+                    const element = choiceContainerRef.current.querySelector(
+                      `#category-${index}`
+                    );
+                    element?.scrollIntoView({ behavior: 'smooth' });
+                  }
+                }}
+                sx={{ cursor: 'pointer', paddingY: 2 }}
+              >
+                <Typography>
+                  <Msg
+                    id={`misc.views.columnDialog.categories.${category.key}.title`}
+                  />
+                </Typography>
+              </ListItem>
+            ))}
           </List>
         </Box>
         <Box

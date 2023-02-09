@@ -2,9 +2,9 @@ import choices, { CHOICES } from '../choices';
 
 export const filterChoicesByMode = (
   isRestrictedMode: boolean,
-  category: { choices: CHOICES[] }
+  categoryChoices: CHOICES[]
 ): CHOICES[] => {
-  return category.choices.filter((key) => {
+  return categoryChoices.filter((key) => {
     if (!isRestrictedMode) {
       // All choices are allowed when not in restricted mode
       return true;
