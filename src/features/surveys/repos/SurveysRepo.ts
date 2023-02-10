@@ -8,8 +8,11 @@ import {
   submissionLoaded,
   surveyLoad,
   surveyLoaded,
+  surveyUpdate,
+  surveyUpdated,
 } from '../store';
 import {
+  ZetkinSurvey,
   ZetkinSurveyExtended,
   ZetkinSurveySubmission,
 } from 'utils/types/zetkin';
@@ -60,5 +63,21 @@ export default class SurveysRepo {
     } else {
       return new RemoteItemFuture(item);
     }
+  }
+
+  updateSurvey(
+    orgId: number,
+    surveyId: number,
+    data: Partial<Omit<ZetkinSurvey, 'id'>>
+  ) {
+    this._store.dispatch(surveyUpdate([surveyId, Object.keys(data)]));
+    this._apiClient
+      .patch<ZetkinSurveyExtended>(
+        `/api/orgs/${orgId}/surveys/${surveyId}`,
+        data
+      )
+      .then((survey) => {
+        this._store.dispatch(surveyUpdated(survey));
+      });
   }
 }

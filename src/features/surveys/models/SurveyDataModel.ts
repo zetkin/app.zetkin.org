@@ -19,4 +19,8 @@ export default class SurveyDataModel extends ModelBase {
   getData(): IFuture<ZetkinSurvey> {
     return this._repo.getSurvey(this._orgId, this._surveyId);
   }
+
+  setTitle(title: string) {
+    this._repo.updateSurvey(this._orgId, this._surveyId, { title });
+  }
 }
