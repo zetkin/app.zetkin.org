@@ -1,4 +1,7 @@
+import SurveyDataModel from '../models/SurveyDataModel';
 import TabbedLayout from 'utils/layout/TabbedLayout';
+import useModel from 'core/useModel';
+import ZUIFuture from 'zui/ZUIFuture';
 
 interface SurveyLayoutProps {
   children: React.ReactNode;
@@ -12,6 +15,10 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
   campaignId,
   surveyId,
 }) => {
+  const model = useModel(
+    (env) => new SurveyDataModel(env, parseInt(orgId), parseInt(surveyId))
+  );
+
   return (
     <TabbedLayout
       baseHref={`/organize/${orgId}/campaigns/${campaignId}/surveys/${surveyId}`}
@@ -27,6 +34,13 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
           messageId: 'layout.organize.surveys.tabs.submissions',
         },
       ]}
+      title={
+        <ZUIFuture future={model.getData()}>
+          {(data) => {
+            return <>{data.title}</>;
+          }}
+        </ZUIFuture>
+      }
     />
   );
 };
