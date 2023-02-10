@@ -1,6 +1,7 @@
 import SurveyDataModel from '../models/SurveyDataModel';
 import TabbedLayout from 'utils/layout/TabbedLayout';
 import useModel from 'core/useModel';
+import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
 import ZUIFuture from 'zui/ZUIFuture';
 
 interface SurveyLayoutProps {
@@ -37,7 +38,14 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
       title={
         <ZUIFuture future={model.getData()}>
           {(data) => {
-            return <>{data.title}</>;
+            return (
+              <ZUIEditTextinPlace
+                onChange={(val) => {
+                  model.setTitle(val);
+                }}
+                value={data.title}
+              />
+            );
           }}
         </ZUIFuture>
       }
