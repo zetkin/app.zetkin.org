@@ -21,16 +21,16 @@ export const getServerSideProps: GetServerSideProps = scaffold(
   }
 );
 
-interface SubmissionPageProps {
+interface SubmissionsPageProps {
   campId: string;
   orgId: string;
   surveyId: string;
 }
 
-const SubmissionPage: PageWithLayout<SubmissionPageProps> = () => {
+const SubmissionsPage: PageWithLayout<SubmissionsPageProps> = () => {
   return <></>;
 };
-SubmissionPage.getLayout = function getLayout(page, props) {
+SubmissionsPage.getLayout = function getLayout(page, props) {
   return (
     <SurveyLayout
       campaignId={props.campId}
@@ -42,4 +42,4 @@ SubmissionPage.getLayout = function getLayout(page, props) {
   );
 };
 
-export default SubmissionPage;
+export default SubmissionsPage;
