@@ -30,4 +30,5 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
     />
   );
 };
+
 export default SurveyLayout;
