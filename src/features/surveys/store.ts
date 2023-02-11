@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { remoteItem, remoteList, RemoteList } from 'utils/storeUtils';
 import {
+  ZetkinSurvey,
   ZetkinSurveyExtended,
   ZetkinSurveySubmission,
 } from 'utils/types/zetkin';
@@ -60,9 +61,30 @@ const surveysSlice = createSlice({
       item.isLoading = false;
       item.loaded = new Date().toISOString();
     },
+    surveyUpdate: (state, action: PayloadAction<[number, string[]]>) => {
+      const [surveyId, mutating] = action.payload;
+      const item = state.surveyList.items.find((item) => item.id == surveyId);
+      if (item) {
+        item.mutating = mutating;
+      }
+    },
+    surveyUpdated: (state, action: PayloadAction<ZetkinSurvey>) => {
+      const survey = action.payload;
+      const item = state.surveyList.items.find((item) => item.id == survey.id);
+      if (item) {
+        item.data = { ...item.data, ...survey } as ZetkinSurveyExtended;
+        item.mutating = [];
+      }
+    },
   },
 });
 
 export default surveysSlice;
-export const { submissionLoad, submissionLoaded, surveyLoad, surveyLoaded } =
-  surveysSlice.actions;
+export const {
+  submissionLoad,
+  submissionLoaded,
+  surveyLoad,
+  surveyLoaded,
+  surveyUpdate,
+  surveyUpdated,
+} = surveysSlice.actions;
