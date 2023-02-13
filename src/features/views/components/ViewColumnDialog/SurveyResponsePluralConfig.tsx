@@ -10,7 +10,7 @@ import { COLUMN_TYPE, SelectedViewColumn } from '../types';
 import {
   ELEMENT_TYPE,
   RESPONSE_TYPE,
-  ZetkinSurveyElement,
+  ZetkinSurveyQuestionElement,
 } from 'utils/types/zetkin';
 
 interface SurveyResponsePluralConfigProps {
@@ -28,7 +28,7 @@ const SurveyResponsesConfig = ({
   const intl = useIntl();
   const [surveyId, setSurveyId] = useState<number | null>();
   const [selectedQuestions, setSelectedQuestions] = useState<
-    ZetkinSurveyElement[]
+    ZetkinSurveyQuestionElement[]
   >([]);
 
   const onSurveyChange: ChangeEventHandler<{ value: unknown }> = (ev) => {
@@ -36,7 +36,7 @@ const SurveyResponsesConfig = ({
     setSelectedQuestions([]);
   };
 
-  const makeColumns = (elements: ZetkinSurveyElement[]) => {
+  const makeColumns = (elements: ZetkinSurveyQuestionElement[]) => {
     return elements.map((question) => ({
       config: { question_id: question.id },
       title: question.question.question,
@@ -53,9 +53,10 @@ const SurveyResponsesConfig = ({
         const selectedSurvey = successSurveysQuery.data.find(
           (survey) => survey.id == surveyId
         );
-        const questionFromSurvey = selectedSurvey?.elements.filter(
-          (elem) => elem.type == ELEMENT_TYPE.QUESTION
-        );
+        const questionFromSurvey: ZetkinSurveyQuestionElement[] =
+          selectedSurvey?.elements.filter(
+            (elem) => elem.type == ELEMENT_TYPE.QUESTION
+          ) as ZetkinSurveyQuestionElement[];
 
         return (
           <FormControl sx={{ width: 300 }}>

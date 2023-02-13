@@ -17,7 +17,8 @@ import { COLUMN_TYPE, SelectedViewColumn } from '../types';
 import {
   ELEMENT_TYPE,
   RESPONSE_TYPE,
-  ZetkinSurveyElement,
+  ZetkinSurveyQuestionElement,
+  ZetkinSurveyTextQuestionElement,
 } from 'utils/types/zetkin';
 
 interface SurveyResponseConfigProps {
@@ -42,7 +43,7 @@ const SurveyResponseConfig = ({
 
   const [surveyId, setSurveyId] = useState<number | null>();
   const [selectedQuestion, setSelectedQuestion] =
-    useState<ZetkinSurveyElement | null>(null);
+    useState<ZetkinSurveyQuestionElement | null>(null);
 
   const onSurveyChange: ChangeEventHandler<{ value: unknown }> = (ev) => {
     setSurveyId(ev.target.value as number);
@@ -50,7 +51,7 @@ const SurveyResponseConfig = ({
     onOutputConfigured([]);
   };
 
-  const makeTextColumn = (selectedElement: ZetkinSurveyElement) => {
+  const makeTextColumn = (selectedElement: ZetkinSurveyTextQuestionElement) => {
     return [
       {
         config: {
@@ -65,6 +66,13 @@ const SurveyResponseConfig = ({
   const makeOptionColumns = (
     selectedOption: string | SURVEY_QUESTION_OPTIONS
   ) => {
+    if (
+      selectedQuestion?.type != ELEMENT_TYPE.QUESTION ||
+      selectedQuestion.question.response_type != RESPONSE_TYPE.OPTIONS
+    ) {
+      return [];
+    }
+
     if (selectedQuestion !== undefined && selectedQuestion !== null) {
       if (selectedOption === SURVEY_QUESTION_OPTIONS.ALL_OPTIONS) {
         return [
@@ -117,13 +125,13 @@ const SurveyResponseConfig = ({
         const selectedSurvey = successSurveysQuery.data.find(
           (survey) => survey.id == surveyId
         );
-        const questionsFromSurvey = selectedSurvey?.elements
-          .filter((elem) => elem.type == ELEMENT_TYPE.QUESTION)
-          .filter(
+        const questionsFromSurvey: ZetkinSurveyQuestionElement[] =
+          (selectedSurvey?.elements.filter(
             (elem) =>
-              elem.question.response_type === RESPONSE_TYPE.TEXT ||
-              elem.question.options?.length
-          );
+              elem.type == ELEMENT_TYPE.QUESTION &&
+              (elem.question.response_type == RESPONSE_TYPE.TEXT ||
+                elem.question.options?.length)
+          ) as ZetkinSurveyQuestionElement[]) ?? [];
 
         return (
           <FormControl sx={{ width: 300 }}>
@@ -153,7 +161,9 @@ const SurveyResponseConfig = ({
                   if (value !== null) {
                     setSelectedQuestion(value);
                     if (value.question.response_type === RESPONSE_TYPE.TEXT) {
-                      const columns = makeTextColumn(value);
+                      const columns = makeTextColumn(
+                        value as ZetkinSurveyTextQuestionElement
+                      );
                       onOutputConfigured(columns);
                     }
                   }

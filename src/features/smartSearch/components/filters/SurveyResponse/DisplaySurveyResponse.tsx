@@ -2,6 +2,7 @@ import { FormattedMessage as Msg } from 'react-intl';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 
+import { ELEMENT_TYPE } from 'utils/types/zetkin';
 import getSurveysWithElements from 'features/smartSearch/fetching/getSurveysWithElements';
 import {
   OPERATION,
@@ -30,13 +31,18 @@ const DisplaySurveyResponse = ({
 
   const surveys = surveysQuery.data || [];
 
-  const question = questionId
+  const questionElement = questionId
     ? surveys
         .find((s) => {
           return s.elements.find((e) => e.id === questionId);
         })
-        ?.elements.find((e) => e.id === questionId)?.question.question
+        ?.elements.find((e) => e.id === questionId)
     : undefined;
+
+  const question =
+    questionElement?.type == ELEMENT_TYPE.QUESTION
+      ? questionElement.question.question
+      : undefined;
 
   // get survey title from questionId if surveyId is undefined
   const surveyTitle = surveyId
