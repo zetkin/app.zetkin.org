@@ -119,4 +119,18 @@ export default class SurveyDataModel extends ModelBase {
       return SurveyState.DRAFT;
     }
   }
+
+  unpublish(): void {
+    const { data } = this.getData();
+    if (!data) {
+      return;
+    }
+
+    const now = dayjs();
+    const today = now.format('YYYY-MM-DD');
+
+    this._repo.updateSurvey(this._orgId, this._surveyId, {
+      expires: today,
+    });
+  }
 }

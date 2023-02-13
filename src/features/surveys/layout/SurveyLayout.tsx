@@ -28,7 +28,7 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
     <TabbedLayout
       actionButtons={
         model.state == SurveyState.PUBLISHED ? (
-          <Button variant="outlined">
+          <Button onClick={() => model.unpublish()} variant="outlined">
             <Msg id="layout.organize.surveys.actions.unpublish" />
           </Button>
         ) : (
