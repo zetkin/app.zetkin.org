@@ -35,7 +35,7 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
   },
   title: {
     marginBottom: '8px',
-    transition: 'all 0.3s ease',
+    transition: 'margin 0.3s ease',
   },
   titleGrid: {
     alignItems: 'center',
