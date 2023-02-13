@@ -1,3 +1,5 @@
+import dayjs from 'dayjs';
+
 import Environment from 'core/env/Environment';
 import { IFuture } from 'core/caching/futures';
 import { ModelBase } from 'core/models';
@@ -26,6 +28,64 @@ export default class SurveyDataModel extends ModelBase {
 
   getData(): IFuture<ZetkinSurvey> {
     return this._repo.getSurvey(this._orgId, this._surveyId);
+  }
+
+  publish(): void {
+    const { data } = this.getData();
+    if (!data) {
+      return;
+    }
+
+    const now = dayjs();
+    const today = now.format('YYYY-MM-DD');
+
+    const { published, expires } = data;
+
+    if (!published && !expires) {
+      this._repo.updateSurvey(this._orgId, this._surveyId, {
+        published: today,
+      });
+    } else if (!published) {
+      const endDate = dayjs(expires);
+      if (endDate.isBefore(today)) {
+        this._repo.updateSurvey(this._orgId, this._surveyId, {
+          expires: null,
+          published: today,
+        });
+      } else if (endDate.isAfter(today)) {
+        this._repo.updateSurvey(this._orgId, this._surveyId, {
+          published: today,
+        });
+      }
+    } else if (!expires) {
+      // Start date is non-null
+      const startDate = dayjs(published);
+      if (startDate.isAfter(today)) {
+        // End date is null, start date is future
+        this._repo.updateSurvey(this._orgId, this._surveyId, {
+          published: today,
+        });
+      }
+    } else {
+      // Start and end date are non-null
+      const startDate = dayjs(published);
+      const endDate = dayjs(expires);
+
+      if (
+        (startDate.isBefore(today) || startDate.isSame(today)) &&
+        (endDate.isBefore(today) || endDate.isSame(today))
+      ) {
+        // Start is past, end is past
+        this._repo.updateSurvey(this._orgId, this._surveyId, {
+          expires: null,
+        });
+      } else if (startDate.isAfter(today) && endDate.isAfter(today)) {
+        // Start is future, end is future
+        this._repo.updateSurvey(this._orgId, this._surveyId, {
+          published: today,
+        });
+      }
+    }
   }
 
   setTitle(title: string) {

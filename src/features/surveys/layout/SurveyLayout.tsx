@@ -32,7 +32,11 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
             <Msg id="layout.organize.surveys.actions.unpublish" />
           </Button>
         ) : (
-          <Button disabled={!hasQuestions} variant="contained">
+          <Button
+            disabled={!hasQuestions}
+            onClick={() => model.publish()}
+            variant="contained"
+          >
             <Msg id="layout.organize.surveys.actions.publish" />
           </Button>
         )
