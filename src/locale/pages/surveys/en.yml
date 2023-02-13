@@ -1,5 +1,5 @@
 state:
-  closed: Closed
   draft: Draft
-  open: Open
+  published: Published
   scheduled: Scheduled
+  unpublished: Unpublished
