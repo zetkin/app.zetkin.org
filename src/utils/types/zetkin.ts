@@ -172,6 +172,9 @@ export interface ZetkinSurvey {
   allow_anonymous: boolean;
   access: string;
   callers_only: boolean;
+  published: string | null;
+  expires: string | null;
+  elements: ZetkinSurveyElement[];
 }
 
 export interface ZetkinSurveyExtended extends ZetkinSurvey {

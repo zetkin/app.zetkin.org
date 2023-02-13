@@ -1,8 +1,10 @@
-import SurveyDataModel from '../models/SurveyDataModel';
+import { Button } from '@mui/material';
+import { FormattedMessage as Msg } from 'react-intl';
 import TabbedLayout from 'utils/layout/TabbedLayout';
 import useModel from 'core/useModel';
 import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
 import ZUIFuture from 'zui/ZUIFuture';
+import SurveyDataModel, { SurveyState } from '../models/SurveyDataModel';
 
 interface SurveyLayoutProps {
   children: React.ReactNode;
@@ -20,8 +22,25 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
     (env) => new SurveyDataModel(env, parseInt(orgId), parseInt(surveyId))
   );
 
+  const hasQuestions = !!model.getData().data?.elements.length;
+
   return (
     <TabbedLayout
+      actionButtons={
+        model.state == SurveyState.PUBLISHED ? (
+          <Button onClick={() => model.unpublish()} variant="outlined">
+            <Msg id="layout.organize.surveys.actions.unpublish" />
+          </Button>
+        ) : (
+          <Button
+            disabled={!hasQuestions}
+            onClick={() => model.publish()}
+            variant="contained"
+          >
+            <Msg id="layout.organize.surveys.actions.publish" />
+          </Button>
+        )
+      }
       baseHref={`/organize/${orgId}/campaigns/${campaignId}/surveys/${surveyId}`}
       defaultTab="/"
       tabs={[
