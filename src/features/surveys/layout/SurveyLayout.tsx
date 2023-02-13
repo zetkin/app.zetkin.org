@@ -14,6 +14,7 @@ interface SurveyLayoutProps {
 }
 
 const SurveyLayout: React.FC<SurveyLayoutProps> = ({
+  children,
   orgId,
   campaignId,
   surveyId,
@@ -68,7 +69,9 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
           }}
         </ZUIFuture>
       }
-    />
+    >
+      {children}
+    </TabbedLayout>
   );
 };
 
