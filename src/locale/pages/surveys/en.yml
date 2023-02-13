@@ -1,0 +1,5 @@
+state:
+  closed: Closed
+  draft: Draft
+  open: Open
+  scheduled: Scheduled

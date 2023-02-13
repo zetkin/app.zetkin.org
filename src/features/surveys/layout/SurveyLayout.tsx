@@ -1,5 +1,6 @@
-import { Button } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import { FormattedMessage as Msg } from 'react-intl';
+import SurveyStatusChip from '../components/SurveyStatusChip';
 import TabbedLayout from 'utils/layout/TabbedLayout';
 import useModel from 'core/useModel';
 import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
@@ -44,6 +45,11 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
       }
       baseHref={`/organize/${orgId}/campaigns/${campaignId}/surveys/${surveyId}`}
       defaultTab="/"
+      subtitle={
+        <Box alignItems="center" display="flex">
+          <SurveyStatusChip state={model.state} />
+        </Box>
+      }
       tabs={[
         { href: '/', messageId: 'layout.organize.surveys.tabs.overview' },
         {
