@@ -18,6 +18,10 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ model }) => {
     model.deleteElement(elemId);
   }
 
+  function handleToggleHidden(elemId: number, hidden: boolean) {
+    model.toggleElementHidden(elemId, hidden);
+  }
+
   return (
     <ZUIFuture future={model.getData()}>
       {(data) => {
@@ -27,7 +31,13 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ model }) => {
               if (elem.type == ELEMENT_TYPE.QUESTION) {
                 if (elem.question.response_type == RESPONSE_TYPE.TEXT) {
                   return (
-                    <BlockWrapper onDelete={() => handleDelete(elem.id)}>
+                    <BlockWrapper
+                      hidden={elem.hidden}
+                      onDelete={() => handleDelete(elem.id)}
+                      onToggleHidden={(hidden) =>
+                        handleToggleHidden(elem.id, hidden)
+                      }
+                    >
                       <OpenQuestionBlock question={elem.question} />
                     </BlockWrapper>
                   );
@@ -35,14 +45,26 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ model }) => {
                   elem.question.response_type == RESPONSE_TYPE.OPTIONS
                 ) {
                   return (
-                    <BlockWrapper onDelete={() => handleDelete(elem.id)}>
+                    <BlockWrapper
+                      hidden={elem.hidden}
+                      onDelete={() => handleDelete(elem.id)}
+                      onToggleHidden={(hidden) =>
+                        handleToggleHidden(elem.id, hidden)
+                      }
+                    >
                       <ChoiceQuestionBlock question={elem.question} />
                     </BlockWrapper>
                   );
                 }
               } else if (elem.type == ELEMENT_TYPE.TEXT) {
                 return (
-                  <BlockWrapper onDelete={() => handleDelete(elem.id)}>
+                  <BlockWrapper
+                    hidden={elem.hidden}
+                    onDelete={() => handleDelete(elem.id)}
+                    onToggleHidden={(hidden) =>
+                      handleToggleHidden(elem.id, hidden)
+                    }
+                  >
                     <TextBlock element={elem} />
                   </BlockWrapper>
                 );

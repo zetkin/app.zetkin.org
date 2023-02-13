@@ -4,6 +4,7 @@ import shouldLoad from 'core/caching/shouldLoad';
 import { Store } from 'core/store';
 import {
   elementDeleted,
+  elementUpdated,
   submissionLoad,
   submissionLoaded,
   surveyLoad,
@@ -14,6 +15,7 @@ import {
 import { IFuture, PromiseFuture, RemoteItemFuture } from 'core/caching/futures';
 import {
   ZetkinSurvey,
+  ZetkinSurveyElement,
   ZetkinSurveyExtended,
   ZetkinSurveySubmission,
 } from 'utils/types/zetkin';
@@ -71,6 +73,19 @@ export default class SurveysRepo {
     } else {
       return new RemoteItemFuture(item);
     }
+  }
+
+  async updateElement(
+    orgId: number,
+    surveyId: number,
+    elemId: number,
+    data: Pick<ZetkinSurveyElement, 'hidden'>
+  ) {
+    const element = await this._apiClient.patch<ZetkinSurveyElement>(
+      `/api/orgs/${orgId}/surveys/${surveyId}/elements/${elemId}`,
+      data
+    );
+    this._store.dispatch(elementUpdated([surveyId, elemId, element]));
   }
 
   updateSurvey(

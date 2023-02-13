@@ -27,4 +27,8 @@ export default class SurveyDataModel extends ModelBase {
   setTitle(title: string) {
     this._repo.updateSurvey(this._orgId, this._surveyId, { title });
   }
+
+  toggleElementHidden(elemId: number, hidden: boolean) {
+    this._repo.updateElement(this._orgId, this._surveyId, elemId, { hidden });
+  }
 }
