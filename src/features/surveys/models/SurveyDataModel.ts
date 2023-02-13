@@ -16,6 +16,10 @@ export default class SurveyDataModel extends ModelBase {
     this._repo = new SurveysRepo(env);
   }
 
+  deleteElement(elemId: number) {
+    this._repo.deleteSurveyElement(this._orgId, this._surveyId, elemId);
+  }
+
   getData(): IFuture<ZetkinSurveyExtended> {
     return this._repo.getSurvey(this._orgId, this._surveyId);
   }

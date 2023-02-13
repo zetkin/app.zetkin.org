@@ -14,6 +14,10 @@ interface SurveyEditorProps {
 }
 
 const SurveyEditor: FC<SurveyEditorProps> = ({ model }) => {
+  function handleDelete(elemId: number) {
+    model.deleteElement(elemId);
+  }
+
   return (
     <ZUIFuture future={model.getData()}>
       {(data) => {
@@ -23,7 +27,7 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ model }) => {
               if (elem.type == ELEMENT_TYPE.QUESTION) {
                 if (elem.question.response_type == RESPONSE_TYPE.TEXT) {
                   return (
-                    <BlockWrapper>
+                    <BlockWrapper onDelete={() => handleDelete(elem.id)}>
                       <OpenQuestionBlock question={elem.question} />
                     </BlockWrapper>
                   );
@@ -31,14 +35,14 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ model }) => {
                   elem.question.response_type == RESPONSE_TYPE.OPTIONS
                 ) {
                   return (
-                    <BlockWrapper>
+                    <BlockWrapper onDelete={() => handleDelete(elem.id)}>
                       <ChoiceQuestionBlock question={elem.question} />
                     </BlockWrapper>
                   );
                 }
               } else if (elem.type == ELEMENT_TYPE.TEXT) {
                 return (
-                  <BlockWrapper>
+                  <BlockWrapper onDelete={() => handleDelete(elem.id)}>
                     <TextBlock element={elem} />
                   </BlockWrapper>
                 );

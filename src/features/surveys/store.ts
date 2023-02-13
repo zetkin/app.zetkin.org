@@ -20,6 +20,17 @@ const surveysSlice = createSlice({
   initialState,
   name: 'surveys',
   reducers: {
+    elementDeleted: (state, action: PayloadAction<[number, number]>) => {
+      const [surveyId, elemId] = action.payload;
+      const surveyItem = state.surveyList.items.find(
+        (item) => item.id == surveyId
+      );
+      if (surveyItem && surveyItem.data) {
+        surveyItem.data.elements = surveyItem.data.elements.filter(
+          (elem) => elem.id !== elemId
+        );
+      }
+    },
     submissionLoad: (state, action: PayloadAction<number>) => {
       const id = action.payload;
       const item = state.submissionList.items.find((item) => item.id == id);
@@ -81,6 +92,7 @@ const surveysSlice = createSlice({
 
 export default surveysSlice;
 export const {
+  elementDeleted,
   submissionLoad,
   submissionLoaded,
   surveyLoad,
