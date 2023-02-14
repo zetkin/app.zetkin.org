@@ -120,6 +120,16 @@ export default class SurveyDataModel extends ModelBase {
     }
   }
 
+  get surveyIsEmpty(): boolean {
+    const { data } = this.getData();
+
+    if (!data) {
+      return true;
+    }
+
+    return data.elements.length ? false : true;
+  }
+
   unpublish(): void {
     const { data } = this.getData();
     if (!data) {
