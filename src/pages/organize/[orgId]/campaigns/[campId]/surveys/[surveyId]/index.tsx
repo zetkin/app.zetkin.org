@@ -60,7 +60,7 @@ const SurveyPage: PageWithLayout<SurveyPageProps> = ({
       justifyContent="center"
       paddingTop={8}
     >
-      {!survey.elements.length && (
+      {model.surveyIsEmpty && (
         <EmptyOverview campId={campId} orgId={orgId} surveyId={surveyId} />
       )}
     </Box>
