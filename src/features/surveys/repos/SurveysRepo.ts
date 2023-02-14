@@ -3,6 +3,7 @@ import IApiClient from 'core/api/client/IApiClient';
 import shouldLoad from 'core/caching/shouldLoad';
 import { Store } from 'core/store';
 import {
+  elementAdded,
   elementDeleted,
   elementUpdated,
   submissionLoad,
@@ -17,12 +18,35 @@ import {
   ZetkinSurvey,
   ZetkinSurveyElement,
   ZetkinSurveyExtended,
+  ZetkinSurveyOptionsQuestionElement,
   ZetkinSurveySubmission,
+  ZetkinSurveyTextElement,
+  ZetkinSurveyTextQuestionElement,
 } from 'utils/types/zetkin';
+
+export type ZetkinSurveyElementPostBody =
+  | Partial<Omit<ZetkinSurveyTextElement, 'id'>>
+  | Partial<Omit<ZetkinSurveyTextQuestionElement, 'id'>>
+  | Partial<Omit<ZetkinSurveyOptionsQuestionElement, 'id'>>;
 
 export default class SurveysRepo {
   private _apiClient: IApiClient;
   private _store: Store;
+
+  async addElement(
+    orgId: number,
+    surveyId: number,
+    data: ZetkinSurveyElementPostBody
+  ) {
+    await this._apiClient
+      .post<ZetkinSurveyElement, ZetkinSurveyElementPostBody>(
+        `/api/orgs/${orgId}/surveys/${surveyId}/elements`,
+        data
+      )
+      .then((newElement) => {
+        this._store.dispatch(elementAdded([surveyId, newElement]));
+      });
+  }
 
   constructor(env: Environment) {
     this._store = env.store;

@@ -1,15 +1,16 @@
 import { FormattedMessage as Msg } from 'react-intl';
 import { Box, Button, Card, Typography } from '@mui/material';
-
 import {
   FormatAlignLeft,
   FormatListBulleted,
   TextFields,
 } from '@mui/icons-material';
 
+import { ELEMENT_TYPE } from 'utils/types/zetkin';
+import SurveyDataModel from 'features/surveys/models/SurveyDataModel';
 import theme from 'theme';
 
-const AddBlocks = () => {
+const AddBlocks = ({ model }: { model: SurveyDataModel }) => {
   return (
     <Card
       sx={{
@@ -24,6 +25,16 @@ const AddBlocks = () => {
       </Typography>
       <Box display="flex" paddingTop={2}>
         <Button
+          onClick={() =>
+            model.addElement({
+              hidden: false,
+              text_block: {
+                content: '',
+                header: '',
+              },
+              type: ELEMENT_TYPE.TEXT,
+            })
+          }
           startIcon={<TextFields />}
           sx={{ marginRight: 1 }}
           variant="outlined"

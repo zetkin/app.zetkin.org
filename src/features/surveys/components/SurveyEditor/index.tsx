@@ -76,7 +76,7 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ model }) => {
           );
         }}
       </ZUIFuture>
-      <AddBlocks />
+      <AddBlocks model={model} />
     </>
   );
 };
