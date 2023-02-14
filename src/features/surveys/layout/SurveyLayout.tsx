@@ -16,7 +16,6 @@ interface SurveyLayoutProps {
 const SurveyLayout: React.FC<SurveyLayoutProps> = ({
   children,
   orgId,
-  children,
   campaignId,
   surveyId,
 }) => {

@@ -134,6 +134,10 @@ export default class SurveyDataModel extends ModelBase {
     return data.elements.length ? false : true;
   }
 
+  toggleElementHidden(elemId: number, hidden: boolean) {
+    this._repo.updateElement(this._orgId, this._surveyId, elemId, { hidden });
+  }
+
   unpublish(): void {
     const { data } = this.getData();
     if (!data) {
@@ -146,9 +150,5 @@ export default class SurveyDataModel extends ModelBase {
     this._repo.updateSurvey(this._orgId, this._surveyId, {
       expires: today,
     });
-  }
-  
-  toggleElementHidden(elemId: number, hidden: boolean) {
-    this._repo.updateElement(this._orgId, this._surveyId, elemId, { hidden });
   }
 }
