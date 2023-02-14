@@ -1,5 +1,6 @@
 import { ApiFetch } from 'utils/apiFetch';
 import IApiClient from './IApiClient';
+import { RPCDef, RPCRequestBody, RPCResponseBody } from 'core/rpc/types';
 
 function assertOk(res: Response) {
   if (!res.ok) {
@@ -88,5 +89,27 @@ export default class FetchApiClient implements IApiClient {
 
     const body = await res.json();
     return body.data;
+  }
+
+  async rpc<ParamsType, ResultType>(
+    def: RPCDef<ParamsType, ResultType>,
+    params: ParamsType
+  ): Promise<ResultType> {
+    const reqBody: RPCRequestBody<ParamsType> = {
+      func: def.name,
+      params,
+    };
+
+    const res = await this._fetch('/api/rpc', {
+      body: JSON.stringify(reqBody),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      method: 'POST',
+    });
+
+    const body = (await res.json()) as RPCResponseBody<ResultType>;
+
+    return body.result;
   }
 }

@@ -1,3 +1,5 @@
+import { RPCDef } from 'core/rpc/types';
+
 export default interface IApiClient {
   delete(path: string): Promise<void>;
   put<DataType = void>(
@@ -13,4 +15,9 @@ export default interface IApiClient {
     path: string,
     data: Partial<InputType>
   ): Promise<DataType>;
+
+  rpc<ParamsType, ResultType>(
+    def: RPCDef<ParamsType, ResultType>,
+    params: ParamsType
+  ): Promise<ResultType>;
 }
