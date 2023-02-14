@@ -1,8 +1,7 @@
+import { Box } from '@mui/material';
 import { GetServerSideProps } from 'next';
-import { FormattedMessage as Msg } from 'react-intl';
-import { QuizOutlined } from '@mui/icons-material';
-import { Box, Button, Link, Typography } from '@mui/material';
 
+import EmptyOverview from 'features/surveys/components/EmptyOverview';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import SurveyDataModel from 'features/surveys/models/SurveyDataModel';
@@ -61,27 +60,8 @@ const SurveyPage: PageWithLayout<SurveyPageProps> = ({
       justifyContent="center"
       paddingTop={8}
     >
-      {survey.elements.length ? (
-        <></>
-      ) : (
-        <Box alignItems="center" display="flex" flexDirection="column">
-          <QuizOutlined
-            color="secondary"
-            sx={{ fontSize: '8em', paddingBottom: 2 }}
-          />
-          <Typography color="secondary">
-            <Msg id="pages.organizeSurvey.overview.noQuestions.title" />
-          </Typography>
-          <Link
-            href={`/organize/${orgId}/campaigns/${campId}/surveys/${surveyId}/questions`}
-            sx={{ marginTop: 4 }}
-            underline="none"
-          >
-            <Button variant="contained">
-              <Msg id="pages.organizeSurvey.overview.noQuestions.button" />
-            </Button>
-          </Link>
-        </Box>
+      {!survey.elements.length && (
+        <EmptyOverview campId={campId} orgId={orgId} surveyId={surveyId} />
       )}
     </Box>
   );
