@@ -1,4 +1,4 @@
-import { CreateNewViewReqBody } from 'pages/api/views/createNew';
+import createNew from '../rpc/createNew/client';
 import deleteFolder from '../rpc/deleteFolder';
 import Environment from 'core/env/Environment';
 import IApiClient from 'core/api/client/IApiClient';
@@ -77,10 +77,11 @@ export default class ViewsRepo {
     rows: number[] = []
   ): Promise<ZetkinView> {
     this._store.dispatch(viewCreate());
-    const view = await this._apiClient.post<ZetkinView, CreateNewViewReqBody>(
-      `/api/views/createNew?orgId=${orgId}&folderId=${folderId}`,
-      { rows }
-    );
+    const view = await this._apiClient.rpc(createNew, {
+      folderId,
+      orgId,
+      rows,
+    });
     this._store.dispatch(viewCreated(view));
     return view;
   }
