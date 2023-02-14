@@ -2,8 +2,9 @@ import Environment from 'core/env/Environment';
 import IApiClient from 'core/api/client/IApiClient';
 import shouldLoad from 'core/caching/shouldLoad';
 import { Store } from 'core/store';
-import { IFuture, PromiseFuture, RemoteItemFuture } from 'core/caching/futures';
 import {
+  elementDeleted,
+  elementUpdated,
   submissionLoad,
   submissionLoaded,
   surveyLoad,
@@ -11,8 +12,10 @@ import {
   surveyUpdate,
   surveyUpdated,
 } from '../store';
+import { IFuture, PromiseFuture, RemoteItemFuture } from 'core/caching/futures';
 import {
   ZetkinSurvey,
+  ZetkinSurveyElement,
   ZetkinSurveyExtended,
   ZetkinSurveySubmission,
 } from 'utils/types/zetkin';
@@ -24,6 +27,13 @@ export default class SurveysRepo {
   constructor(env: Environment) {
     this._store = env.store;
     this._apiClient = env.apiClient;
+  }
+
+  async deleteSurveyElement(orgId: number, surveyId: number, elemId: number) {
+    await this._apiClient.delete(
+      `/api/orgs/${orgId}/surveys/${surveyId}/elements/${elemId}`
+    );
+    this._store.dispatch(elementDeleted([surveyId, elemId]));
   }
 
   getSubmission(orgId: number, id: number): IFuture<ZetkinSurveySubmission> {
@@ -63,6 +73,19 @@ export default class SurveysRepo {
     } else {
       return new RemoteItemFuture(item);
     }
+  }
+
+  async updateElement(
+    orgId: number,
+    surveyId: number,
+    elemId: number,
+    data: Pick<ZetkinSurveyElement, 'hidden'>
+  ) {
+    const element = await this._apiClient.patch<ZetkinSurveyElement>(
+      `/api/orgs/${orgId}/surveys/${surveyId}/elements/${elemId}`,
+      data
+    );
+    this._store.dispatch(elementUpdated([surveyId, elemId, element]));
   }
 
   updateSurvey(

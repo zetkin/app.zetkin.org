@@ -181,23 +181,37 @@ export interface ZetkinSurveyExtended extends ZetkinSurvey {
   elements: ZetkinSurveyElement[];
 }
 
+export interface ZetkinSurveyTextElement {
+  hidden: boolean;
+  id: number;
+  text_block: {
+    content: string;
+    header: string;
+  };
+  type: ELEMENT_TYPE.TEXT;
+}
+
+export interface ZetkinSurveyTextQuestionElement {
+  hidden: boolean;
+  id: number;
+  question: ZetkinTextQuestion;
+  type: ELEMENT_TYPE.QUESTION;
+}
+
+export interface ZetkinSurveyOptionsQuestionElement {
+  hidden: boolean;
+  id: number;
+  question: ZetkinOptionsQuestion;
+  type: ELEMENT_TYPE.QUESTION;
+}
+
+export type ZetkinSurveyQuestionElement =
+  | ZetkinSurveyOptionsQuestionElement
+  | ZetkinSurveyTextQuestionElement;
+
 export type ZetkinSurveyElement =
-  | {
-      hidden: boolean;
-      id: number;
-      question: ZetkinQuestion;
-      type: ELEMENT_TYPE.QUESTION;
-    }
-  | {
-      hidden: boolean;
-      id: number;
-      question: ZetkinQuestion; // TODO: Delete this, it's a lie
-      text_block: {
-        content: string;
-        header: string;
-      };
-      type: ELEMENT_TYPE.TEXT;
-    };
+  | ZetkinSurveyTextElement
+  | ZetkinSurveyQuestionElement;
 
 export enum RESPONSE_TYPE {
   OPTIONS = 'options',
@@ -209,15 +223,25 @@ export enum ELEMENT_TYPE {
   TEXT = 'text',
 }
 
-interface ZetkinQuestion {
+export interface ZetkinTextQuestion {
   description: string | null;
-  options?: ZetkinSurveyOption[];
   question: string;
   required: boolean;
   response_config: {
     multiline: boolean;
   };
-  response_type: RESPONSE_TYPE;
+  response_type: RESPONSE_TYPE.TEXT;
+}
+
+export interface ZetkinOptionsQuestion {
+  description: string | null;
+  options?: ZetkinSurveyOption[];
+  question: string;
+  required: boolean;
+  response_config: {
+    widget_type: 'checkbox' | 'radio' | 'select';
+  };
+  response_type: RESPONSE_TYPE.OPTIONS;
 }
 
 export interface ZetkinSurveyOption {

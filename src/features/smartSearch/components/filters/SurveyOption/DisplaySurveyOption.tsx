@@ -6,7 +6,11 @@ import { Box, Chip, Tooltip } from '@mui/material';
 
 import { getEllipsedString } from 'utils/stringUtils';
 import getSurveysWithElements from 'features/smartSearch/fetching/getSurveysWithElements';
-import { ZetkinSurveyOption } from 'utils/types/zetkin';
+import {
+  ELEMENT_TYPE,
+  RESPONSE_TYPE,
+  ZetkinSurveyOption,
+} from 'utils/types/zetkin';
 import {
   OPERATION,
   SmartSearchFilterWithId,
@@ -38,13 +42,16 @@ const DisplaySurveyOption = ({
   const surveys = surveysQuery.data || [];
 
   const survey = surveys.find((s) => s.id === surveyId);
-  const question = survey?.elements.find((e) => e.id === questionId)?.question;
+  const element = survey?.elements.find((e) => e.id == questionId);
+  const question =
+    element?.type == ELEMENT_TYPE.QUESTION ? element.question : null;
 
-  const options = question
-    ? (optionIds.map((oId) =>
-        question.options?.find((option) => option.id === oId)
-      ) as ZetkinSurveyOption[])
-    : [];
+  const options =
+    question && question.response_type == RESPONSE_TYPE.OPTIONS
+      ? (optionIds.map((oId) =>
+          question.options?.find((option) => option.id === oId)
+        ) as ZetkinSurveyOption[])
+      : [];
 
   return (
     <Msg

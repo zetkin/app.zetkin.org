@@ -4,7 +4,7 @@ import Environment from 'core/env/Environment';
 import { IFuture } from 'core/caching/futures';
 import { ModelBase } from 'core/models';
 import SurveysRepo from '../repos/SurveysRepo';
-import { ZetkinSurvey } from 'utils/types/zetkin';
+import { ZetkinSurveyExtended } from 'utils/types/zetkin';
 
 export enum SurveyState {
   UNPUBLISHED = 'unpublished',
@@ -26,7 +26,11 @@ export default class SurveyDataModel extends ModelBase {
     this._repo = new SurveysRepo(env);
   }
 
-  getData(): IFuture<ZetkinSurvey> {
+  deleteElement(elemId: number) {
+    this._repo.deleteSurveyElement(this._orgId, this._surveyId, elemId);
+  }
+
+  getData(): IFuture<ZetkinSurveyExtended> {
     return this._repo.getSurvey(this._orgId, this._surveyId);
   }
 
@@ -128,6 +132,10 @@ export default class SurveyDataModel extends ModelBase {
     }
 
     return data.elements.length ? false : true;
+  }
+
+  toggleElementHidden(elemId: number, hidden: boolean) {
+    this._repo.updateElement(this._orgId, this._surveyId, elemId, { hidden });
   }
 
   unpublish(): void {
