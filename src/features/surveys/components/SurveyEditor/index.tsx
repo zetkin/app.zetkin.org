@@ -1,6 +1,7 @@
 import { Box } from '@mui/material';
 import { FC } from 'react';
 
+import AddBlocks from './AddBlocks';
 import BlockWrapper from './blocks/BlockWrapper';
 import ChoiceQuestionBlock from './blocks/ChoiceQuestionBlock';
 import OpenQuestionBlock from './blocks/OpenQuestionBlock';
@@ -23,13 +24,41 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ model }) => {
   }
 
   return (
-    <ZUIFuture future={model.getData()}>
-      {(data) => {
-        return (
-          <Box>
-            {data.elements.map((elem) => {
-              if (elem.type == ELEMENT_TYPE.QUESTION) {
-                if (elem.question.response_type == RESPONSE_TYPE.TEXT) {
+    <>
+      <ZUIFuture future={model.getData()}>
+        {(data) => {
+          return (
+            <Box>
+              {data.elements.map((elem) => {
+                if (elem.type == ELEMENT_TYPE.QUESTION) {
+                  if (elem.question.response_type == RESPONSE_TYPE.TEXT) {
+                    return (
+                      <BlockWrapper
+                        hidden={elem.hidden}
+                        onDelete={() => handleDelete(elem.id)}
+                        onToggleHidden={(hidden) =>
+                          handleToggleHidden(elem.id, hidden)
+                        }
+                      >
+                        <OpenQuestionBlock question={elem.question} />
+                      </BlockWrapper>
+                    );
+                  } else if (
+                    elem.question.response_type == RESPONSE_TYPE.OPTIONS
+                  ) {
+                    return (
+                      <BlockWrapper
+                        hidden={elem.hidden}
+                        onDelete={() => handleDelete(elem.id)}
+                        onToggleHidden={(hidden) =>
+                          handleToggleHidden(elem.id, hidden)
+                        }
+                      >
+                        <ChoiceQuestionBlock question={elem.question} />
+                      </BlockWrapper>
+                    );
+                  }
+                } else if (elem.type == ELEMENT_TYPE.TEXT) {
                   return (
                     <BlockWrapper
                       hidden={elem.hidden}
@@ -38,42 +67,17 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ model }) => {
                         handleToggleHidden(elem.id, hidden)
                       }
                     >
-                      <OpenQuestionBlock question={elem.question} />
-                    </BlockWrapper>
-                  );
-                } else if (
-                  elem.question.response_type == RESPONSE_TYPE.OPTIONS
-                ) {
-                  return (
-                    <BlockWrapper
-                      hidden={elem.hidden}
-                      onDelete={() => handleDelete(elem.id)}
-                      onToggleHidden={(hidden) =>
-                        handleToggleHidden(elem.id, hidden)
-                      }
-                    >
-                      <ChoiceQuestionBlock question={elem.question} />
+                      <TextBlock element={elem} />
                     </BlockWrapper>
                   );
                 }
-              } else if (elem.type == ELEMENT_TYPE.TEXT) {
-                return (
-                  <BlockWrapper
-                    hidden={elem.hidden}
-                    onDelete={() => handleDelete(elem.id)}
-                    onToggleHidden={(hidden) =>
-                      handleToggleHidden(elem.id, hidden)
-                    }
-                  >
-                    <TextBlock element={elem} />
-                  </BlockWrapper>
-                );
-              }
-            })}
-          </Box>
-        );
-      }}
-    </ZUIFuture>
+              })}
+            </Box>
+          );
+        }}
+      </ZUIFuture>
+      <AddBlocks />
+    </>
   );
 };
 
