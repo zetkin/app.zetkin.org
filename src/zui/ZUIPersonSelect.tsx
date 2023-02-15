@@ -21,6 +21,7 @@ interface UsePersonSelectProps {
   getOptionDisabled?: (option: ZetkinPerson) => boolean;
   getOptionExtraLabel?: (option: ZetkinPerson) => string;
   inputRef?: MutableRefObject<HTMLInputElement | undefined> | undefined;
+  initialValue?: string;
   label?: string;
   name?: string;
   onChange: (person: ZetkinPerson) => void;
@@ -66,6 +67,7 @@ export const usePersonSelect: UsePersonSelect = ({
   getOptionDisabled,
   getOptionExtraLabel,
   inputRef,
+  initialValue,
   label,
   name,
   onChange,
@@ -74,7 +76,9 @@ export const usePersonSelect: UsePersonSelect = ({
 }) => {
   const intl = useIntl();
   const { orgId } = useRouter().query;
-  const [searchFieldValue, setSearchFieldValue] = useState<string>('');
+  const [searchFieldValue, setSearchFieldValue] = useState<string>(
+    initialValue || ''
+  );
 
   const {
     isLoading,
@@ -133,7 +137,9 @@ export const usePersonSelect: UsePersonSelect = ({
         onChange(value as ZetkinPerson);
       },
       onInputChange: (ev: unknown, value: string) => {
-        setSearchFieldValue(value);
+        if (ev !== null) {
+          setSearchFieldValue(value);
+        }
       },
       options: personOptions,
       placeholder,
