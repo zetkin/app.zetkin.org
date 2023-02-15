@@ -3,6 +3,16 @@ import IApiClient from 'core/api/client/IApiClient';
 import shouldLoad from 'core/caching/shouldLoad';
 import { Store } from 'core/store';
 import {
+  ELEMENT_TYPE,
+  ZetkinSurvey,
+  ZetkinSurveyElement,
+  ZetkinSurveyExtended,
+  ZetkinSurveyOptionsQuestionElement,
+  ZetkinSurveySubmission,
+  ZetkinSurveyTextElement,
+  ZetkinTextQuestion,
+} from 'utils/types/zetkin';
+import {
   elementAdded,
   elementDeleted,
   elementUpdated,
@@ -14,20 +24,18 @@ import {
   surveyUpdated,
 } from '../store';
 import { IFuture, PromiseFuture, RemoteItemFuture } from 'core/caching/futures';
-import {
-  ZetkinSurvey,
-  ZetkinSurveyElement,
-  ZetkinSurveyExtended,
-  ZetkinSurveyOptionsQuestionElement,
-  ZetkinSurveySubmission,
-  ZetkinSurveyTextElement,
-  ZetkinSurveyTextQuestionElement,
-} from 'utils/types/zetkin';
 
 export type ZetkinSurveyElementPostBody =
   | Partial<Omit<ZetkinSurveyTextElement, 'id'>>
-  | Partial<Omit<ZetkinSurveyTextQuestionElement, 'id'>>
+  | ZetkinSurveyTextQuestionElementPostBody
   | Partial<Omit<ZetkinSurveyOptionsQuestionElement, 'id'>>;
+
+type ZetkinTextQuestionPostBody = Omit<ZetkinTextQuestion, 'required'>;
+type ZetkinSurveyTextQuestionElementPostBody = {
+  hidden: boolean;
+  question: ZetkinTextQuestionPostBody;
+  type: ELEMENT_TYPE.QUESTION;
+};
 
 export default class SurveysRepo {
   private _apiClient: IApiClient;
