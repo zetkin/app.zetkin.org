@@ -28,7 +28,7 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ model }) => {
       <ZUIFuture future={model.getData()}>
         {(data) => {
           return (
-            <Box>
+            <Box paddingBottom={data.elements.length ? 4 : 0}>
               {data.elements.map((elem) => {
                 if (elem.type == ELEMENT_TYPE.QUESTION) {
                   if (elem.question.response_type == RESPONSE_TYPE.TEXT) {

@@ -16,7 +16,6 @@ const AddBlocks = ({ model }: { model: SurveyDataModel }) => {
       sx={{
         backgroundColor: theme.palette.grey[200],
         border: 'none',
-        marginTop: 4,
         padding: 2,
       }}
     >
