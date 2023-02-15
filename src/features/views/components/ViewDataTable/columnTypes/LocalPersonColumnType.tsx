@@ -161,18 +161,20 @@ const Cell: FC<{
         setAnchorEl(null);
       }}
     >
-      {cell ? (
-        <ZUIAvatar orgId={orgId} personId={cell.id} />
-      ) : (
-        <Avatar>
-          <Person />
-        </Avatar>
-      )}
+      <Box ref={(div: HTMLDivElement) => setAnchorEl(div)}>
+        <InputBase
+          fullWidth
+          inputProps={autoComplete.getInputProps()}
+          onChange={() => {
+            setSearching(true);
+          }}
+        ></InputBase>
+      </Box>
       <Popper
         anchorEl={anchorEl}
         open={!!anchorEl}
         popperOptions={{
-          placement: 'left',
+          placement: 'bottom',
         }}
       >
         <Paper
@@ -180,6 +182,7 @@ const Cell: FC<{
           elevation={2}
           onClick={(ev) => {
             ev.stopPropagation();
+            anchorEl?.focus();
           }}
         >
           {isRestrictedMode && (
@@ -189,6 +192,7 @@ const Cell: FC<{
               flexDirection="column"
               gap={1}
               justifyContent="center"
+              padding="10px"
               width="100%"
             >
               {!!cell && <SelectedPerson orgId={orgId} person={cell} />}
@@ -199,16 +203,6 @@ const Cell: FC<{
           )}
           {!isRestrictedMode && (
             <Box display="flex" flexDirection="column" height="100%">
-              <Box flex={0} height={60}>
-                <TextField
-                  fullWidth
-                  inputProps={autoComplete.getInputProps()}
-                  label={intl.formatMessage({
-                    id: 'misc.views.cells.localPerson.searchLabel',
-                  })}
-                  onFocus={() => setSearching(true)}
-                />
-              </Box>
               <Box
                 sx={{
                   height: 'calc(100% - 60px)',
