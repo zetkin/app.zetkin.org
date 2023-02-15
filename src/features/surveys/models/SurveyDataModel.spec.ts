@@ -31,41 +31,77 @@ describe('SurveyDataModel', () => {
   beforeEach(() => {
     reset(mockClient);
     reset(mockRouter);
+  });
 
-    describe('state', () => {
-      const mockStoreData = (
-        expires: string | null,
-        published: string | null
-      ) => ({
-        surveys: {
-          submissionList: mockList<ZetkinSurveySubmission>([]),
-          surveyList: mockList<ZetkinSurveyExtended>([
-            {
-              access: 'open',
-              allow_anonymous: true,
-              callers_only: false,
-              elements: [],
-              expires: expires,
+  describe('state', () => {
+    const mockStoreData = (
+      published: string | null,
+      expires: string | null
+    ) => ({
+      surveys: {
+        submissionList: mockList<ZetkinSurveySubmission>([]),
+        surveyList: mockList<ZetkinSurveyExtended>([
+          {
+            access: 'open',
+            allow_anonymous: true,
+            callers_only: false,
+            elements: [],
+            expires: expires,
+            id: 1,
+            info_text: 'Semla',
+            organization: {
               id: 1,
-              info_text: 'Semla',
-              organization: {
-                id: 1,
-                title: 'Semla lovers',
-              },
-              published: published,
-              title: 'Semla lovers assemble',
+              title: 'Semla lovers',
             },
-          ]),
-        },
-      });
-      it('is PUBLISHED', () => {
-        const mockData = mockStoreData('2023-06-28', '1991-08-23');
-        const store = createStore(mockData);
-        const apiClient = instance(mockClient);
-        const env = new Environment(store, apiClient, instance(mockRouter));
-        const model = new SurveyDataModel(env, 1, 1);
-        expect(model.state).toBe(SurveyState.PUBLISHED);
-      });
+            published: published,
+            title: 'Semla lovers assemble',
+          },
+        ]),
+      },
+    });
+
+    it('is SCHEDULED when publish date is in future', () => {
+      const mockData = mockStoreData('2022-03-23', '2022-04-01');
+      jest.useFakeTimers().setSystemTime(new Date('2022-03-01'));
+      const store = createStore(mockData);
+
+      const apiClient = instance(mockClient);
+      const env = new Environment(store, apiClient, instance(mockRouter));
+      const model = new SurveyDataModel(env, 1, 1);
+      expect(model.state).toBe(SurveyState.SCHEDULED);
+    });
+
+    it('is DRAFT when publish date and expire date are null', () => {
+      const mockData = mockStoreData(null, null);
+      jest.useFakeTimers().setSystemTime(new Date('2022-03-01'));
+      const store = createStore(mockData);
+
+      const apiClient = instance(mockClient);
+      const env = new Environment(store, apiClient, instance(mockRouter));
+      const model = new SurveyDataModel(env, 1, 1);
+      expect(model.state).toBe(SurveyState.DRAFT);
+    });
+
+    it('is UNPUBLISHED when publish date and expire date are in the past', () => {
+      jest.useFakeTimers().setSystemTime(new Date('2022-04-10'));
+      const mockData = mockStoreData('2022-03-23', '2022-04-01');
+      const store = createStore(mockData);
+
+      const apiClient = instance(mockClient);
+      const env = new Environment(store, apiClient, instance(mockRouter));
+      const model = new SurveyDataModel(env, 1, 1);
+      expect(model.state).toBe(SurveyState.UNPUBLISHED);
+    });
+
+    it('is PUBLISHED when publish date is past and expireDate is in the future', () => {
+      jest.useFakeTimers().setSystemTime(new Date('2022-04-23'));
+      const mockData = mockStoreData('2022-03-23', '2022-06-23');
+      const store = createStore(mockData);
+
+      const apiClient = instance(mockClient);
+      const env = new Environment(store, apiClient, instance(mockRouter));
+      const model = new SurveyDataModel(env, 1, 1);
+      expect(model.state).toBe(SurveyState.PUBLISHED);
     });
   });
 });
