@@ -62,7 +62,24 @@ const AddBlocks = ({ model }: { model: SurveyDataModel }) => {
         >
           <Msg id="misc.surveys.addBlocks.openQuestionButton" />
         </Button>
-        <Button startIcon={<FormatListBulleted />} variant="outlined">
+        <Button
+          onClick={() =>
+            model.addElement({
+              hidden: false,
+              question: {
+                description: '',
+                question: '',
+                response_config: {
+                  widget_type: 'checkbox',
+                },
+                response_type: RESPONSE_TYPE.OPTIONS,
+              },
+              type: ELEMENT_TYPE.QUESTION,
+            })
+          }
+          startIcon={<FormatListBulleted />}
+          variant="outlined"
+        >
           <Msg id="misc.surveys.addBlocks.choiceQuestionButton" />
         </Button>
       </Box>

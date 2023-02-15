@@ -4,10 +4,10 @@ import shouldLoad from 'core/caching/shouldLoad';
 import { Store } from 'core/store';
 import {
   ELEMENT_TYPE,
+  ZetkinOptionsQuestion,
   ZetkinSurvey,
   ZetkinSurveyElement,
   ZetkinSurveyExtended,
-  ZetkinSurveyOptionsQuestionElement,
   ZetkinSurveySubmission,
   ZetkinSurveyTextElement,
   ZetkinTextQuestion,
@@ -28,12 +28,19 @@ import { IFuture, PromiseFuture, RemoteItemFuture } from 'core/caching/futures';
 export type ZetkinSurveyElementPostBody =
   | Partial<Omit<ZetkinSurveyTextElement, 'id'>>
   | ZetkinSurveyTextQuestionElementPostBody
-  | Partial<Omit<ZetkinSurveyOptionsQuestionElement, 'id'>>;
+  | ZetkinSurveyOptionsQuestionElementPostBody;
 
 type ZetkinTextQuestionPostBody = Omit<ZetkinTextQuestion, 'required'>;
 type ZetkinSurveyTextQuestionElementPostBody = {
   hidden: boolean;
   question: ZetkinTextQuestionPostBody;
+  type: ELEMENT_TYPE.QUESTION;
+};
+
+type ZetkinOptionsQuestionPostBody = Omit<ZetkinOptionsQuestion, 'required'>;
+type ZetkinSurveyOptionsQuestionElementPostBody = {
+  hidden: boolean;
+  question: ZetkinOptionsQuestionPostBody;
   type: ELEMENT_TYPE.QUESTION;
 };
 
