@@ -94,7 +94,7 @@ describe('SurveyDataModel', () => {
       expect(model.state).toBe(SurveyState.UNPUBLISHED);
     });
 
-    it('is PUBLISHED when publish date is past and expireDate is in the future', () => {
+    it('is PUBLISHED when publish date is past and expire date is in the future', () => {
       jest.useFakeTimers().setSystemTime(new Date('2022-04-23'));
       const mockData = mockStoreData('2022-03-23', '2022-06-23');
       const store = createStore(mockData);
