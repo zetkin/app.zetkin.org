@@ -32,6 +32,7 @@ describe('SurveyDataModel', () => {
   beforeEach(() => {
     reset(mockClient);
     reset(mockRouter);
+    jest.useRealTimers();
   });
 
   describe('state', () => {
