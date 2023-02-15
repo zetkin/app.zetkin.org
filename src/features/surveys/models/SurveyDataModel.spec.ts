@@ -24,6 +24,7 @@ function mockItem<DataType extends { id: number }>(data: DataType) {
   item.loaded = new Date().toISOString();
   return item;
 }
+
 describe('SurveyDataModel', () => {
   const mockClient = mock<IApiClient>();
   const mockRouter = mock<NextRouter>();
@@ -61,8 +62,8 @@ describe('SurveyDataModel', () => {
     });
 
     it('is SCHEDULED when publish date is in future', () => {
-      const mockData = mockStoreData('2022-03-23', '2022-04-01');
       jest.useFakeTimers().setSystemTime(new Date('2022-03-01'));
+      const mockData = mockStoreData('2022-03-23', '2022-04-01');
       const store = createStore(mockData);
 
       const apiClient = instance(mockClient);
@@ -72,8 +73,8 @@ describe('SurveyDataModel', () => {
     });
 
     it('is DRAFT when publish date and expire date are null', () => {
+      jest.useFakeTimers().setSystemTime(new Date('2022-03-02'));
       const mockData = mockStoreData(null, null);
-      jest.useFakeTimers().setSystemTime(new Date('2022-03-01'));
       const store = createStore(mockData);
 
       const apiClient = instance(mockClient);
