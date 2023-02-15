@@ -72,6 +72,9 @@ surveys:
   actions:
     publish: Publish survey
     unpublish: Unpublish survey
+  stats:
+    questions: '{numQuestions, plural, one {1 question} other {# questions}}'
+    submissions: '{numSubmissions, plural, one {1 submission} other {# submissions}}'
   tabs:
     overview: Overview
     questions: Questions

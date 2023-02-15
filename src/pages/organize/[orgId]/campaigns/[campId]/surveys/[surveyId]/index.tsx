@@ -23,7 +23,11 @@ export const getServerSideProps: GetServerSideProps = scaffold(
   },
   {
     authLevelRequired: 2,
-    localeScope: ['layout.organize.surveys', 'pages.organizeSurvey'],
+    localeScope: [
+      'layout.organize.surveys',
+      'pages.organizeSurvey',
+      'layout.organize.survey',
+    ],
   }
 );
 

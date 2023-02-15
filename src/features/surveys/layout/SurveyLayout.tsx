@@ -1,9 +1,11 @@
 import { FormattedMessage as Msg } from 'react-intl';
+import { QuizOutlined } from '@mui/icons-material';
 import SurveyStatusChip from '../components/SurveyStatusChip';
 import TabbedLayout from 'utils/layout/TabbedLayout';
 import useModel from 'core/useModel';
 import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
 import ZUIFuture from 'zui/ZUIFuture';
+import ZUIIconLabelRow from 'zui/ZUIIconLabelRow';
 import { Box, Button } from '@mui/material';
 import SurveyDataModel, { SurveyState } from '../models/SurveyDataModel';
 
@@ -48,6 +50,39 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
       subtitle={
         <Box alignItems="center" display="flex">
           <SurveyStatusChip state={model.state} />
+          <Box display="flex" marginX={1}>
+            <ZUIFuture
+              future={model.getData()}
+              ignoreDataWhileLoading
+              skeletonWidth={100}
+            >
+              {(data) => {
+                const questionLength = data?.elements.filter(
+                  (question) => question.type === 'question'
+                ).length;
+
+                if (questionLength === 0) {
+                  return <></>;
+                }
+
+                const labels = [
+                  {
+                    icon: <QuizOutlined />,
+                    label: (
+                      <Msg
+                        id="layout.organize.surveys.stats.questions"
+                        values={{
+                          numQuestions: questionLength,
+                        }}
+                      />
+                    ),
+                  },
+                ];
+
+                return <ZUIIconLabelRow iconLabels={labels} />;
+              }}
+            </ZUIFuture>
+          </Box>
         </Box>
       }
       tabs={[
