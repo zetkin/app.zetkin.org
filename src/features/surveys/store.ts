@@ -57,6 +57,7 @@ const surveysSlice = createSlice({
       state,
       action: PayloadAction<ZetkinSurveySubmission>
     ) => {
+      // TODO: Segregate submission content from submission list
       const submission = action.payload;
       const item = state.submissionList.items.find(
         (item) => item.id == submission.id
@@ -87,6 +88,21 @@ const surveysSlice = createSlice({
       item.isLoading = false;
       item.loaded = new Date().toISOString();
     },
+    surveySubmissionsLoad: (state, action: PayloadAction<number>) => {
+      // TODO: Segregate submissions by survey ID
+      // I just wrote this for preventing never used error for commit
+      const id = action.payload;
+      state.submissionList.error = id;
+    },
+    surveySubmissionsLoaded: (
+      state,
+      action: PayloadAction<[number, ZetkinSurveySubmission[]]>
+    ) => {
+      // TODO: Segregate submissions by survey ID
+      const [, submissions] = action.payload;
+      state.submissionList = remoteList(submissions);
+      state.submissionList.loaded = new Date().toISOString();
+    },
     surveyUpdate: (state, action: PayloadAction<[number, string[]]>) => {
       const [surveyId, mutating] = action.payload;
       const item = state.surveyList.items.find((item) => item.id == surveyId);
@@ -113,6 +129,8 @@ export const {
   submissionLoaded,
   surveyLoad,
   surveyLoaded,
+  surveySubmissionsLoad,
+  surveySubmissionsLoaded,
   surveyUpdate,
   surveyUpdated,
 } = surveysSlice.actions;
