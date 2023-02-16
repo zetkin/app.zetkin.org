@@ -88,6 +88,8 @@ const useStyles = makeStyles<Theme, { isRestrictedMode: boolean }>({
   popper: {
     display: 'flex',
     height: (props) => (props.isRestrictedMode ? 'auto' : 400),
+    minWidth: '300px',
+    paddingLeft: '20px',
   },
 });
 
@@ -165,9 +167,6 @@ const Cell: FC<{
         <InputBase
           fullWidth
           inputProps={autoComplete.getInputProps()}
-          onChange={() => {
-            setSearching(true);
-          }}
         ></InputBase>
       </Box>
       <Popper
@@ -193,7 +192,6 @@ const Cell: FC<{
               gap={1}
               justifyContent="center"
               padding="10px"
-              width="100%"
             >
               {!!cell && <SelectedPerson orgId={orgId} person={cell} />}
               <Typography fontStyle="italic" variant="caption">
@@ -205,10 +203,37 @@ const Cell: FC<{
             <Box display="flex" flexDirection="column" height="100%">
               <Box
                 sx={{
-                  height: 'calc(100% - 60px)',
+                  height: 'calc(100% - 10px)',
+                  minWidth: '300px',
                   overflowY: 'scroll',
+                  width: '100%',
                 }}
               >
+                {!!cell?.id && (
+                  <Box
+                    alignItems="center"
+                    display="flex"
+                    flexDirection="inherit"
+                    gap={1}
+                    height="30%"
+                    justifyContent="space-between"
+                    margin="10px"
+                    width="80%"
+                  >
+                    {!isRestrictedMode && (
+                      <>
+                        <SelectedPerson orgId={orgId} person={cell} />
+                        <Button
+                          endIcon={<Close />}
+                          onClick={() => updateCellValue(null)}
+                          sx={{ paddingLeft: '10px' }}
+                        >
+                          <FormattedMessage id="misc.views.cells.localPerson.clearLabel" />
+                        </Button>
+                      </>
+                    )}
+                  </Box>
+                )}
                 {showPeopleInView && !!peopleInView.length && (
                   <List>
                     <ListSubheader>
@@ -226,51 +251,25 @@ const Cell: FC<{
                     ))}
                   </List>
                 )}
-                {searching && (
-                  <List {...autoComplete.getListboxProps()}>
-                    <ListSubheader>
-                      <FormattedMessage id="misc.views.cells.localPerson.otherPeople" />
-                    </ListSubheader>
-                    {options.map((option, index) => {
-                      const optProps = autoComplete.getOptionProps({
-                        index,
-                        option,
-                      });
-                      return (
-                        <PersonListItem
-                          key={option.id}
-                          itemProps={optProps}
-                          orgId={orgId}
-                          person={option}
-                        />
-                      );
-                    })}
-                  </List>
-                )}
-
-                {!searching && !!cell?.id && (
-                  <Box
-                    alignItems="center"
-                    display="flex"
-                    flexDirection="column"
-                    gap={1}
-                    height="100%"
-                    justifyContent="center"
-                    width="100%"
-                  >
-                    {!isRestrictedMode && (
-                      <>
-                        <SelectedPerson orgId={orgId} person={cell} />
-                        <Button
-                          endIcon={<Close />}
-                          onClick={() => updateCellValue(null)}
-                        >
-                          <FormattedMessage id="misc.views.cells.localPerson.clearLabel" />
-                        </Button>
-                      </>
-                    )}
-                  </Box>
-                )}
+                <List {...autoComplete.getListboxProps()}>
+                  <ListSubheader>
+                    <FormattedMessage id="misc.views.cells.localPerson.otherPeople" />
+                  </ListSubheader>
+                  {options.map((option, index) => {
+                    const optProps = autoComplete.getOptionProps({
+                      index,
+                      option,
+                    });
+                    return (
+                      <PersonListItem
+                        key={option.id}
+                        itemProps={optProps}
+                        orgId={orgId}
+                        person={option}
+                      />
+                    );
+                  })}
+                </List>
               </Box>
             </Box>
           )}
