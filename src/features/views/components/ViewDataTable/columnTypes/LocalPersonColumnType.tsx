@@ -87,9 +87,10 @@ export default class LocalPersonColumnType
 const useStyles = makeStyles<Theme, { isRestrictedMode: boolean }>({
   popper: {
     display: 'flex',
+    flexDirection: 'column',
     height: (props) => (props.isRestrictedMode ? 'auto' : 400),
-    minWidth: '300px',
-    paddingLeft: '20px',
+    padding: '10px',
+    width: 300,
   },
 });
 
@@ -121,7 +122,7 @@ const Cell: FC<{
   const [isRestrictedMode] = useAccessLevel();
   const styles = useStyles({ isRestrictedMode });
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-  const [searching, setSearching] = useState(true);
+  const [searching, setSearching] = useState(false);
 
   const model = useViewDataModel();
 
@@ -165,8 +166,11 @@ const Cell: FC<{
     >
       <Box ref={(div: HTMLDivElement) => setAnchorEl(div)}>
         <InputBase
+          /* eslint-disable-next-line jsx-a11y/no-autofocus */
+          autoFocus
           fullWidth
           inputProps={autoComplete.getInputProps()}
+          onChange={() => setSearching(true)}
         ></InputBase>
       </Box>
       <Popper
@@ -192,6 +196,7 @@ const Cell: FC<{
               gap={1}
               justifyContent="center"
               padding="10px"
+              width="100%"
             >
               {!!cell && <SelectedPerson orgId={orgId} person={cell} />}
               <Typography fontStyle="italic" variant="caption">
@@ -213,20 +218,17 @@ const Cell: FC<{
                   <Box
                     alignItems="center"
                     display="flex"
-                    flexDirection="inherit"
+                    flexDirection="column"
                     gap={1}
-                    height="30%"
-                    justifyContent="space-between"
-                    margin="10px"
-                    width="80%"
+                    justifyContent="center"
+                    marginTop="15px"
                   >
-                    {!isRestrictedMode && (
+                    {!isRestrictedMode && !searching && (
                       <>
                         <SelectedPerson orgId={orgId} person={cell} />
                         <Button
                           endIcon={<Close />}
                           onClick={() => updateCellValue(null)}
-                          sx={{ paddingLeft: '10px' }}
                         >
                           <FormattedMessage id="misc.views.cells.localPerson.clearLabel" />
                         </Button>
@@ -251,25 +253,27 @@ const Cell: FC<{
                     ))}
                   </List>
                 )}
-                <List {...autoComplete.getListboxProps()}>
-                  <ListSubheader>
-                    <FormattedMessage id="misc.views.cells.localPerson.otherPeople" />
-                  </ListSubheader>
-                  {options.map((option, index) => {
-                    const optProps = autoComplete.getOptionProps({
-                      index,
-                      option,
-                    });
-                    return (
-                      <PersonListItem
-                        key={option.id}
-                        itemProps={optProps}
-                        orgId={orgId}
-                        person={option}
-                      />
-                    );
-                  })}
-                </List>
+                {searching && (
+                  <List {...autoComplete.getListboxProps()}>
+                    <ListSubheader>
+                      <FormattedMessage id="misc.views.cells.localPerson.otherPeople" />
+                    </ListSubheader>
+                    {options.map((option, index) => {
+                      const optProps = autoComplete.getOptionProps({
+                        index,
+                        option,
+                      });
+                      return (
+                        <PersonListItem
+                          key={option.id}
+                          itemProps={optProps}
+                          orgId={orgId}
+                          person={option}
+                        />
+                      );
+                    })}
+                  </List>
+                )}
               </Box>
             </Box>
           )}
