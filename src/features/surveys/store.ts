@@ -1,6 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { remoteItem, remoteList, RemoteList } from 'utils/storeUtils';
 import {
+  ZetkinSurvey,
+  ZetkinSurveyElement,
   ZetkinSurveyExtended,
   ZetkinSurveySubmission,
 } from 'utils/types/zetkin';
@@ -19,6 +21,31 @@ const surveysSlice = createSlice({
   initialState,
   name: 'surveys',
   reducers: {
+    elementDeleted: (state, action: PayloadAction<[number, number]>) => {
+      const [surveyId, elemId] = action.payload;
+      const surveyItem = state.surveyList.items.find(
+        (item) => item.id == surveyId
+      );
+      if (surveyItem && surveyItem.data) {
+        surveyItem.data.elements = surveyItem.data.elements.filter(
+          (elem) => elem.id !== elemId
+        );
+      }
+    },
+    elementUpdated: (
+      state,
+      action: PayloadAction<[number, number, ZetkinSurveyElement]>
+    ) => {
+      const [surveyId, elemId, updatedElement] = action.payload;
+      const surveyItem = state.surveyList.items.find(
+        (item) => item.id == surveyId
+      );
+      if (surveyItem && surveyItem.data) {
+        surveyItem.data.elements = surveyItem.data.elements.map((oldElement) =>
+          oldElement.id == elemId ? updatedElement : oldElement
+        );
+      }
+    },
     submissionLoad: (state, action: PayloadAction<number>) => {
       const id = action.payload;
       const item = state.submissionList.items.find((item) => item.id == id);
@@ -60,9 +87,32 @@ const surveysSlice = createSlice({
       item.isLoading = false;
       item.loaded = new Date().toISOString();
     },
+    surveyUpdate: (state, action: PayloadAction<[number, string[]]>) => {
+      const [surveyId, mutating] = action.payload;
+      const item = state.surveyList.items.find((item) => item.id == surveyId);
+      if (item) {
+        item.mutating = mutating;
+      }
+    },
+    surveyUpdated: (state, action: PayloadAction<ZetkinSurvey>) => {
+      const survey = action.payload;
+      const item = state.surveyList.items.find((item) => item.id == survey.id);
+      if (item) {
+        item.data = { ...item.data, ...survey } as ZetkinSurveyExtended;
+        item.mutating = [];
+      }
+    },
   },
 });
 
 export default surveysSlice;
-export const { submissionLoad, submissionLoaded, surveyLoad, surveyLoaded } =
-  surveysSlice.actions;
+export const {
+  elementDeleted,
+  elementUpdated,
+  submissionLoad,
+  submissionLoaded,
+  surveyLoad,
+  surveyLoaded,
+  surveyUpdate,
+  surveyUpdated,
+} = surveysSlice.actions;

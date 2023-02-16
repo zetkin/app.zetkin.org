@@ -9,7 +9,11 @@ import getSurveysWithElements from '../../../fetching/getSurveysWithElements';
 import StyledSelect from '../../inputs/StyledSelect';
 import StyledTextInput from '../../inputs/StyledTextInput';
 import useSmartSearchFilter from 'features/smartSearch/hooks/useSmartSearchFilter';
-import { ELEMENT_TYPE, RESPONSE_TYPE } from 'utils/types/zetkin';
+import {
+  ELEMENT_TYPE,
+  RESPONSE_TYPE,
+  ZetkinSurveyTextQuestionElement,
+} from 'utils/types/zetkin';
 import {
   MATCH_OPERATORS,
   NewSmartSearchFilter,
@@ -90,14 +94,14 @@ const SurveyResponse = ({
   }, [surveys]);
 
   // check if there are questions with response type of 'text'
-  const validQuestions =
-    surveys
+  const validQuestions: ZetkinSurveyTextQuestionElement[] =
+    (surveys
       .find((s) => s.id === internalConfig.survey)
       ?.elements.filter(
         (e) =>
           e.type === ELEMENT_TYPE.QUESTION &&
           e.question.response_type === RESPONSE_TYPE.TEXT
-      ) || [];
+      ) as ZetkinSurveyTextQuestionElement[]) || [];
 
   //submit if there is valid survey, valid questions and search field filled in
   const submittable =

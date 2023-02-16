@@ -68,6 +68,14 @@ search:
   label: Search
   noResults: No results for this search
   placeholder: Type to search
+surveys:
+  actions:
+    publish: Publish survey
+    unpublish: Unpublish survey
+  tabs:
+    overview: Overview
+    questions: Questions
+    submissions: Submissions
 tasks:
   tabs:
     assignees: Assignees

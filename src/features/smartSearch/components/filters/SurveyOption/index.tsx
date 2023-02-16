@@ -22,6 +22,7 @@ import {
   ELEMENT_TYPE,
   RESPONSE_TYPE,
   ZetkinSurveyOption,
+  ZetkinSurveyQuestionElement,
 } from 'utils/types/zetkin';
 
 const DEFAULT_VALUE = 'none';
@@ -82,20 +83,23 @@ const SurveyOption = ({
   }, [surveys]);
 
   // check if there are questions with response type of 'text'
-  const validQuestions =
-    surveys
+  const validQuestions: ZetkinSurveyQuestionElement[] =
+    (surveys
       .find((s) => s.id === filter.config.survey)
       ?.elements.filter(
         (e) =>
           e.type === ELEMENT_TYPE.QUESTION &&
           e.question.response_type === RESPONSE_TYPE.OPTIONS
-      ) || [];
+      ) as ZetkinSurveyQuestionElement[]) || [];
 
+  const selectedElement = surveys
+    .find((s) => s.id === filter.config.survey)
+    ?.elements.find((e) => e.id == filter.config.question);
   const validOptions =
-    surveys
-      .find((s) => s.id === filter.config.survey)
-      ?.elements.find((e) => e.id === filter.config.question)?.question
-      .options || [];
+    (selectedElement?.type == ELEMENT_TYPE.QUESTION &&
+    selectedElement.question.response_type == RESPONSE_TYPE.OPTIONS
+      ? selectedElement.question.options
+      : []) || [];
 
   // convert filter.config.options to an array of Zetkin option objects keeping the correct order
   const selectedOptions = filter.config.options
