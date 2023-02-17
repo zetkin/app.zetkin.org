@@ -21,6 +21,18 @@ const surveysSlice = createSlice({
   initialState,
   name: 'surveys',
   reducers: {
+    elementAdded: (
+      state,
+      action: PayloadAction<[number, ZetkinSurveyElement]>
+    ) => {
+      const [surveyId, newElement] = action.payload;
+      const surveyItem = state.surveyList.items.find(
+        (item) => item.id == surveyId
+      );
+      if (surveyItem && surveyItem.data) {
+        surveyItem.data.elements.push(newElement);
+      }
+    },
     elementDeleted: (state, action: PayloadAction<[number, number]>) => {
       const [surveyId, elemId] = action.payload;
       const surveyItem = state.surveyList.items.find(
@@ -107,6 +119,7 @@ const surveysSlice = createSlice({
 
 export default surveysSlice;
 export const {
+  elementAdded,
   elementDeleted,
   elementUpdated,
   submissionLoad,

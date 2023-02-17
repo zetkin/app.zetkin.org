@@ -174,7 +174,6 @@ export interface ZetkinSurvey {
   callers_only: boolean;
   published: string | null;
   expires: string | null;
-  elements: ZetkinSurveyElement[];
 }
 
 export interface ZetkinSurveyExtended extends ZetkinSurvey {

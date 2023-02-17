@@ -3,6 +3,17 @@ import IApiClient from 'core/api/client/IApiClient';
 import shouldLoad from 'core/caching/shouldLoad';
 import { Store } from 'core/store';
 import {
+  ELEMENT_TYPE,
+  ZetkinOptionsQuestion,
+  ZetkinSurvey,
+  ZetkinSurveyElement,
+  ZetkinSurveyExtended,
+  ZetkinSurveySubmission,
+  ZetkinSurveyTextElement,
+  ZetkinTextQuestion,
+} from 'utils/types/zetkin';
+import {
+  elementAdded,
   elementDeleted,
   elementUpdated,
   submissionLoad,
@@ -13,16 +24,42 @@ import {
   surveyUpdated,
 } from '../store';
 import { IFuture, PromiseFuture, RemoteItemFuture } from 'core/caching/futures';
-import {
-  ZetkinSurvey,
-  ZetkinSurveyElement,
-  ZetkinSurveyExtended,
-  ZetkinSurveySubmission,
-} from 'utils/types/zetkin';
+
+export type ZetkinSurveyElementPostBody =
+  | Partial<Omit<ZetkinSurveyTextElement, 'id'>>
+  | ZetkinSurveyTextQuestionElementPostBody
+  | ZetkinSurveyOptionsQuestionElementPostBody;
+
+type ZetkinSurveyTextQuestionElementPostBody = {
+  hidden: boolean;
+  question: Omit<ZetkinTextQuestion, 'required'>;
+  type: ELEMENT_TYPE.QUESTION;
+};
+
+type ZetkinSurveyOptionsQuestionElementPostBody = {
+  hidden: boolean;
+  question: Omit<ZetkinOptionsQuestion, 'required'>;
+  type: ELEMENT_TYPE.QUESTION;
+};
 
 export default class SurveysRepo {
   private _apiClient: IApiClient;
   private _store: Store;
+
+  async addElement(
+    orgId: number,
+    surveyId: number,
+    data: ZetkinSurveyElementPostBody
+  ) {
+    await this._apiClient
+      .post<ZetkinSurveyElement, ZetkinSurveyElementPostBody>(
+        `/api/orgs/${orgId}/surveys/${surveyId}/elements`,
+        data
+      )
+      .then((newElement) => {
+        this._store.dispatch(elementAdded([surveyId, newElement]));
+      });
+  }
 
   constructor(env: Environment) {
     this._store = env.store;
