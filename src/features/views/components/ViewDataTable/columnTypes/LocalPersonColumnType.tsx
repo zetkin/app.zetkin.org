@@ -209,7 +209,7 @@ const Cell: FC<{
               <Box
                 sx={{
                   height: 'calc(100% - 10px)',
-                  minWidth: '300px',
+                  minWidth: '290px',
                   overflowY: 'scroll',
                   width: '100%',
                 }}
