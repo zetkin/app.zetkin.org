@@ -1,5 +1,5 @@
-import { CreateNewViewReqBody } from 'pages/api/views/createNew';
-import { DeleteFolderReport } from 'pages/api/views/deleteFolder';
+import createNew from '../rpc/createNew/client';
+import deleteFolder from '../rpc/deleteFolder';
 import Environment from 'core/env/Environment';
 import IApiClient from 'core/api/client/IApiClient';
 import shouldLoad from 'core/caching/shouldLoad';
@@ -77,19 +77,17 @@ export default class ViewsRepo {
     rows: number[] = []
   ): Promise<ZetkinView> {
     this._store.dispatch(viewCreate());
-    const view = await this._apiClient.post<ZetkinView, CreateNewViewReqBody>(
-      `/api/views/createNew?orgId=${orgId}&folderId=${folderId}`,
-      { rows }
-    );
+    const view = await this._apiClient.rpc(createNew, {
+      folderId,
+      orgId,
+      rows,
+    });
     this._store.dispatch(viewCreated(view));
     return view;
   }
 
   async deleteFolder(orgId: number, folderId: number): Promise<void> {
-    const report = await this._apiClient.post<DeleteFolderReport>(
-      `/api/views/deleteFolder?orgId=${orgId}&folderId=${folderId}`,
-      {}
-    );
+    const report = await this._apiClient.rpc(deleteFolder, { folderId, orgId });
     this._store.dispatch(folderDeleted(report));
   }
 

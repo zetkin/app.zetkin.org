@@ -1,5 +1,5 @@
 import columnTypes from './components/ViewDataTable/columnTypes';
-import { DeleteFolderReport } from 'pages/api/views/deleteFolder';
+import { DeleteFolderReport } from './rpc/deleteFolder';
 import { ViewTreeData } from 'pages/api/views/tree';
 import { ZetkinObjectAccess } from 'core/api/types';
 import {
