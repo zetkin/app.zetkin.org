@@ -34,6 +34,9 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ model }) => {
     <>
       <ZUIFuture future={model.getData()}>
         {(data) => {
+          const mostRecentlyAddedElement = data.elements
+            .concat()
+            .sort((elem1, elem2) => elem2.id - elem1.id)[0];
           return (
             <Box paddingBottom={data.elements.length ? 4 : 0}>
               {data.elements.map((elem) => {
@@ -76,6 +79,7 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ model }) => {
                     >
                       <TextBlock
                         element={elem}
+                        isMostRecent={elem.id === mostRecentlyAddedElement.id}
                         onSave={(textBlock) =>
                           handleTextBlockUpdate(elem.id, textBlock)
                         }

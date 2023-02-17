@@ -7,14 +7,15 @@ import { ZetkinSurveyTextElement } from 'utils/types/zetkin';
 
 interface TextBlockProps {
   element: ZetkinSurveyTextElement;
+  isMostRecent: boolean;
   onSave: (textBlock: { content: string; header: string }) => void; //Pick<ZetkinSurveyTextElement, 'text_block'>
 }
 
-const TextBlock: FC<TextBlockProps> = ({ element, onSave }) => {
+const TextBlock: FC<TextBlockProps> = ({ element, isMostRecent, onSave }) => {
   const intl = useIntl();
   const [header, setHeader] = useState('');
   const [content, setContent] = useState('');
-  const [preview, setPreview] = useState(false);
+  const [preview, setPreview] = useState(!isMostRecent);
 
   return (
     <ClickAwayListener
