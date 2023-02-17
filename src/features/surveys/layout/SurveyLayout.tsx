@@ -70,8 +70,8 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
                   (question) => question.type === 'question'
                 ).length;
 
+                // TODO: Replace this with custom RPC for survey stats
                 const submissionsLength = submissions.length;
-
                 const labels: ZUIIconLabelProps[] = [];
 
                 if (questionLength > 0) {

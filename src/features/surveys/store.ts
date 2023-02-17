@@ -88,11 +88,9 @@ const surveysSlice = createSlice({
       item.isLoading = false;
       item.loaded = new Date().toISOString();
     },
+    /* eslint-disable-next-line */
     surveySubmissionsLoad: (state, action: PayloadAction<number>) => {
       // TODO: Segregate submissions by survey ID
-      // I just wrote this for preventing never used error for commit
-      const id = action.payload;
-      state.submissionList.error = id;
     },
     surveySubmissionsLoaded: (
       state,
