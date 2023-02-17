@@ -89,8 +89,15 @@ const useStyles = makeStyles<Theme, { isRestrictedMode: boolean }>({
     display: 'flex',
     flexDirection: 'column',
     height: (props) => (props.isRestrictedMode ? 'auto' : 400),
-    padding: '10px',
     width: 300,
+  },
+  searchingList: {
+    height: 'calc(100% - 40px)',
+    minWidth: '250px',
+    overflowY: 'scroll',
+    paddingLeft: '20px',
+    position: 'absolute',
+    width: '100%',
   },
 });
 
@@ -195,7 +202,6 @@ const Cell: FC<{
               flexDirection="column"
               gap={1}
               justifyContent="center"
-              padding="10px"
               width="100%"
             >
               {!!cell && <SelectedPerson orgId={orgId} person={cell} />}
@@ -208,9 +214,11 @@ const Cell: FC<{
             <Box display="flex" flexDirection="column" height="100%">
               <Box
                 sx={{
+                  alignItems: 'center',
+                  display: 'flex',
                   height: 'calc(100% - 10px)',
+                  justifyContent: 'center',
                   minWidth: '290px',
-                  overflowY: 'scroll',
                   width: '100%',
                 }}
               >
@@ -221,7 +229,6 @@ const Cell: FC<{
                     flexDirection="column"
                     gap={1}
                     justifyContent="center"
-                    marginTop="15px"
                   >
                     {!isRestrictedMode && !searching && (
                       <>
@@ -236,44 +243,51 @@ const Cell: FC<{
                     )}
                   </Box>
                 )}
-                {showPeopleInView && !!peopleInView.length && (
-                  <List>
-                    <ListSubheader>
-                      <FormattedMessage id="misc.views.cells.localPerson.alreadyInView" />
-                    </ListSubheader>
-                    {peopleInView.map((option) => (
-                      <PersonListItem
-                        key={option.id}
-                        itemProps={{
-                          onClick: () => updateCellValue(option),
-                        }}
-                        orgId={orgId}
-                        person={option}
-                      />
-                    ))}
-                  </List>
-                )}
-                {searching && (
-                  <List {...autoComplete.getListboxProps()}>
-                    <ListSubheader>
-                      <FormattedMessage id="misc.views.cells.localPerson.otherPeople" />
-                    </ListSubheader>
-                    {options.map((option, index) => {
-                      const optProps = autoComplete.getOptionProps({
-                        index,
-                        option,
-                      });
-                      return (
+                <List
+                  className={styles.searchingList}
+                  sx={{ display: showPeopleInView ? 'block' : 'none' }}
+                >
+                  {showPeopleInView && !!peopleInView.length && (
+                    <List>
+                      <ListSubheader>
+                        <FormattedMessage id="misc.views.cells.localPerson.alreadyInView" />
+                      </ListSubheader>
+                      {peopleInView.map((option) => (
                         <PersonListItem
                           key={option.id}
-                          itemProps={optProps}
+                          itemProps={{
+                            onClick: () => {
+                              updateCellValue(option);
+                            },
+                          }}
                           orgId={orgId}
                           person={option}
                         />
-                      );
-                    })}
-                  </List>
-                )}
+                      ))}
+                    </List>
+                  )}
+                  {searching && (
+                    <List {...autoComplete.getListboxProps()}>
+                      <ListSubheader sx={{ position: 'relative' }}>
+                        <FormattedMessage id="misc.views.cells.localPerson.otherPeople" />
+                      </ListSubheader>
+                      {options.map((option, index) => {
+                        const optProps = autoComplete.getOptionProps({
+                          index,
+                          option,
+                        });
+                        return (
+                          <PersonListItem
+                            key={option.id}
+                            itemProps={optProps}
+                            orgId={orgId}
+                            person={option}
+                          />
+                        );
+                      })}
+                    </List>
+                  )}
+                </List>
               </Box>
             </Box>
           )}
