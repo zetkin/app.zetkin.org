@@ -1,6 +1,6 @@
-import { useIntl } from 'react-intl';
 import { Box, ClickAwayListener, TextField, Typography } from '@mui/material';
 import { FC, useState } from 'react';
+import { FormattedMessage as Msg, useIntl } from 'react-intl';
 
 import theme from 'theme';
 import { ZetkinSurveyTextElement } from 'utils/types/zetkin';
@@ -23,36 +23,25 @@ const TextBlock: FC<TextBlockProps> = ({ element, isMostRecent, onSave }) => {
         setPreview(true);
         onSave({
           content,
-          header: header
-            ? header
-            : intl.formatMessage({ id: 'misc.surveys.blocks.text.header' }),
+          header,
         });
       }}
     >
       {preview ? (
         <Box onClick={() => setPreview(false)}>
-          <Typography
-            color={
-              element.text_block.header ===
-              intl.formatMessage({ id: 'misc.surveys.blocks.text.header' })
-                ? 'secondary'
-                : 'black'
-            }
-            variant="h4"
-          >
-            {element.text_block.header}
-          </Typography>
-          <Typography
-            color={
-              element.text_block.content ===
-              intl.formatMessage({ id: 'misc.surveys.blocks.text.content' })
-                ? 'secondary'
-                : 'black'
-            }
-            sx={{ paddingTop: 1 }}
-          >
-            {element.text_block.content}
-          </Typography>
+          {!header && !content && (
+            <Typography color="secondary" variant="h4">
+              <Msg id="misc.surveys.blocks.text.empty" />
+            </Typography>
+          )}
+          {header && (
+            <Typography variant="h4">{element.text_block.header}</Typography>
+          )}
+          {content && (
+            <Typography sx={{ paddingTop: 1 }}>
+              {element.text_block.content}
+            </Typography>
+          )}
         </Box>
       ) : (
         <Box display="flex" flexDirection="column">

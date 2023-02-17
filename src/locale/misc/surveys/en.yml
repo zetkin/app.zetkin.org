@@ -6,4 +6,5 @@ addBlocks:
 blocks:
   text:
     content: Description
+    empty: Untitled block
     header: Title
