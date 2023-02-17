@@ -1,5 +1,7 @@
 openQuestion:
   description: Question description
+  multiLine: Multi-line
+  singleLine: Single-line
   textFieldType: Text field type
   title: Title
 overview:
