@@ -1,3 +1,7 @@
+openQuestion:
+  description: Question description
+  textFieldType: Text field type
+  title: Title
 overview:
   noQuestions:
     button: Create questions
