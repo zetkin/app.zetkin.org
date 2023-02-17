@@ -160,4 +160,13 @@ export default class SurveyDataModel extends ModelBase {
       expires: today,
     });
   }
+
+  updateTextBlock(
+    elemId: number,
+    textBlock: { content: string; header: string }
+  ) {
+    this._repo.updateElement(this._orgId, this._surveyId, elemId, {
+      text_block: textBlock,
+    });
+  }
 }

@@ -3,3 +3,7 @@ addBlocks:
   openQuestionButton: Open question
   textButton: Text
   title: Choose a block type to add more content to your survey
+blocks:
+  text:
+    content: Description
+    header: Title

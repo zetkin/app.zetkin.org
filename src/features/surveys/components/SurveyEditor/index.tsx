@@ -23,6 +23,13 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ model }) => {
     model.toggleElementHidden(elemId, hidden);
   }
 
+  function handleTextBlockUpdate(
+    elemId: number,
+    textBlock: { content: string; header: string } //Pick<ZetkinSurveyTextElement, 'text_block'>
+  ) {
+    model.updateTextBlock(elemId, textBlock);
+  }
+
   return (
     <>
       <ZUIFuture future={model.getData()}>
@@ -67,7 +74,12 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ model }) => {
                         handleToggleHidden(elem.id, hidden)
                       }
                     >
-                      <TextBlock element={elem} />
+                      <TextBlock
+                        element={elem}
+                        onSave={(textBlock) =>
+                          handleTextBlockUpdate(elem.id, textBlock)
+                        }
+                      />
                     </BlockWrapper>
                   );
                 }

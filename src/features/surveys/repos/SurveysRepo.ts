@@ -118,12 +118,12 @@ export default class SurveysRepo {
     orgId: number,
     surveyId: number,
     elemId: number,
-    data: Pick<ZetkinSurveyElement, 'hidden'>
+    data: ZetkinSurveyElementPostBody
   ) {
-    const element = await this._apiClient.patch<ZetkinSurveyElement>(
-      `/api/orgs/${orgId}/surveys/${surveyId}/elements/${elemId}`,
-      data
-    );
+    const element = await this._apiClient.patch<
+      ZetkinSurveyElement,
+      ZetkinSurveyElementPostBody
+    >(`/api/orgs/${orgId}/surveys/${surveyId}/elements/${elemId}`, data);
     this._store.dispatch(elementUpdated([surveyId, elemId, element]));
   }
 
