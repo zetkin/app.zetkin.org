@@ -44,6 +44,7 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ model }) => {
                   if (elem.question.response_type == RESPONSE_TYPE.TEXT) {
                     return (
                       <BlockWrapper
+                        key={elem.id}
                         hidden={elem.hidden}
                         onDelete={() => handleDelete(elem.id)}
                         onToggleHidden={(hidden) =>
@@ -58,6 +59,7 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ model }) => {
                   ) {
                     return (
                       <BlockWrapper
+                        key={elem.id}
                         hidden={elem.hidden}
                         onDelete={() => handleDelete(elem.id)}
                         onToggleHidden={(hidden) =>
@@ -71,6 +73,7 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ model }) => {
                 } else if (elem.type == ELEMENT_TYPE.TEXT) {
                   return (
                     <BlockWrapper
+                      key={elem.id}
                       hidden={elem.hidden}
                       onDelete={() => handleDelete(elem.id)}
                       onToggleHidden={(hidden) =>
