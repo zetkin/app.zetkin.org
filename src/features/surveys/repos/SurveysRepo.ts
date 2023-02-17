@@ -30,17 +30,15 @@ export type ZetkinSurveyElementPostBody =
   | ZetkinSurveyTextQuestionElementPostBody
   | ZetkinSurveyOptionsQuestionElementPostBody;
 
-type ZetkinTextQuestionPostBody = Omit<ZetkinTextQuestion, 'required'>;
 type ZetkinSurveyTextQuestionElementPostBody = {
   hidden: boolean;
-  question: ZetkinTextQuestionPostBody;
+  question: Omit<ZetkinTextQuestion, 'required'>;
   type: ELEMENT_TYPE.QUESTION;
 };
 
-type ZetkinOptionsQuestionPostBody = Omit<ZetkinOptionsQuestion, 'required'>;
 type ZetkinSurveyOptionsQuestionElementPostBody = {
   hidden: boolean;
-  question: ZetkinOptionsQuestionPostBody;
+  question: Omit<ZetkinOptionsQuestion, 'required'>;
   type: ELEMENT_TYPE.QUESTION;
 };
 
