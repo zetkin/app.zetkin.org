@@ -1,23 +1,20 @@
-import { GridColDef } from '@mui/x-data-grid-pro';
+import { FormattedMessage } from 'react-intl';
 import { makeStyles } from '@mui/styles';
 import { useRouter } from 'next/router';
 import {
   Avatar,
   Box,
   Button,
+  InputBase,
   List,
   ListItem,
   ListSubheader,
   Paper,
   Popper,
-  TextField,
   Theme,
   Typography,
   useAutocomplete,
 } from '@mui/material';
-import { Close, Person } from '@mui/icons-material';
-import { FC, HTMLAttributes, useState } from 'react';
-import { FormattedMessage, useIntl } from 'react-intl';
 
 import { IColumnType } from '.';
 import useAccessLevel from 'features/views/hooks/useAccessLevel';
@@ -25,7 +22,10 @@ import { usePersonSelect } from 'zui/ZUIPersonSelect';
 import useViewDataModel from 'features/views/hooks/useViewDataModel';
 import ViewDataModel from 'features/views/models/ViewDataModel';
 import ZUIAvatar from 'zui/ZUIAvatar';
+import { Close, Person } from '@mui/icons-material';
 import { COLUMN_TYPE, LocalPersonViewColumn } from '../../types';
+import { FC, HTMLAttributes, useState } from 'react';
+import { GridColDef, useGridApiContext } from '@mui/x-data-grid-pro';
 import { ZetkinPerson, ZetkinViewRow } from 'utils/types/zetkin';
 
 type LocalPersonViewCell = null | ZetkinPerson;
@@ -41,9 +41,14 @@ export default class LocalPersonColumnType
   ): Omit<GridColDef<ZetkinViewRow>, 'field'> {
     return {
       align: 'center',
+      editable: true,
       filterable: false,
       headerAlign: 'center',
+
       renderCell: (params) => {
+        return <ReadCell cell={params.value} />;
+      },
+      renderEditCell: (params) => {
         return <Cell cell={params.value} column={col} row={params.row} />;
       },
       sortComparator: (
@@ -84,10 +89,36 @@ const useStyles = makeStyles<Theme, { isRestrictedMode: boolean }>({
     display: 'flex',
     flexDirection: 'column',
     height: (props) => (props.isRestrictedMode ? 'auto' : 400),
-    padding: '10px',
     width: 300,
   },
+  searchingList: {
+    height: 'calc(100% - 40px)',
+    minWidth: '250px',
+    overflowY: 'scroll',
+    paddingLeft: '20px',
+    position: 'absolute',
+    width: '100%',
+  },
 });
+
+const ReadCell: FC<{
+  cell: LocalPersonViewCell | undefined;
+}> = ({ cell }) => {
+  const query = useRouter().query;
+  const orgId = parseInt(query.orgId as string);
+
+  return (
+    <Box>
+      {cell ? (
+        <ZUIAvatar orgId={orgId} personId={cell.id} />
+      ) : (
+        <Avatar>
+          <Person />
+        </Avatar>
+      )}
+    </Box>
+  );
+};
 
 const Cell: FC<{
   cell: LocalPersonViewCell | undefined;
@@ -95,21 +126,25 @@ const Cell: FC<{
   row: ZetkinViewRow;
 }> = ({ cell, column, row }) => {
   const query = useRouter().query;
-  const intl = useIntl();
   const [isRestrictedMode] = useAccessLevel();
   const styles = useStyles({ isRestrictedMode });
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [searching, setSearching] = useState(false);
+
   const model = useViewDataModel();
 
   const orgId = parseInt(query.orgId as string);
 
+  const api = useGridApiContext();
+
   const updateCellValue = (person: ZetkinPerson | null) => {
+    api.current.stopCellEditMode({ field: 'col_' + column.id, id: row.id });
     model.setCellValue(row.id, column.id, person?.id ?? null);
     setSearching(false);
   };
 
   const personSelect = usePersonSelect({
+    initialValue: cell ? cell.first_name + ' ' + cell.last_name : '',
     onChange: (person) => {
       updateCellValue(person);
       setAnchorEl(null);
@@ -136,18 +171,20 @@ const Cell: FC<{
         setAnchorEl(null);
       }}
     >
-      {cell ? (
-        <ZUIAvatar orgId={orgId} personId={cell.id} />
-      ) : (
-        <Avatar>
-          <Person />
-        </Avatar>
-      )}
+      <Box ref={(div: HTMLDivElement) => setAnchorEl(div)}>
+        <InputBase
+          /* eslint-disable-next-line jsx-a11y/no-autofocus */
+          autoFocus
+          fullWidth
+          inputProps={autoComplete.getInputProps()}
+          onChange={() => setSearching(true)}
+        ></InputBase>
+      </Box>
       <Popper
         anchorEl={anchorEl}
         open={!!anchorEl}
         popperOptions={{
-          placement: 'left',
+          placement: 'bottom',
         }}
       >
         <Paper
@@ -155,6 +192,7 @@ const Cell: FC<{
           elevation={2}
           onClick={(ev) => {
             ev.stopPropagation();
+            anchorEl?.focus();
           }}
         >
           {isRestrictedMode && (
@@ -174,72 +212,25 @@ const Cell: FC<{
           )}
           {!isRestrictedMode && (
             <Box display="flex" flexDirection="column" height="100%">
-              <Box flex={0} height={60}>
-                <TextField
-                  fullWidth
-                  inputProps={autoComplete.getInputProps()}
-                  label={intl.formatMessage({
-                    id: 'misc.views.cells.localPerson.searchLabel',
-                  })}
-                  onFocus={() => setSearching(true)}
-                />
-              </Box>
               <Box
                 sx={{
-                  height: 'calc(100% - 60px)',
-                  overflowY: 'scroll',
+                  alignItems: 'center',
+                  display: 'flex',
+                  height: 'calc(100% - 10px)',
+                  justifyContent: 'center',
+                  minWidth: '290px',
+                  width: '100%',
                 }}
               >
-                {showPeopleInView && !!peopleInView.length && (
-                  <List>
-                    <ListSubheader>
-                      <FormattedMessage id="misc.views.cells.localPerson.alreadyInView" />
-                    </ListSubheader>
-                    {peopleInView.map((option) => (
-                      <PersonListItem
-                        key={option.id}
-                        itemProps={{
-                          onClick: () => updateCellValue(option),
-                        }}
-                        orgId={orgId}
-                        person={option}
-                      />
-                    ))}
-                  </List>
-                )}
-                {searching && (
-                  <List {...autoComplete.getListboxProps()}>
-                    <ListSubheader>
-                      <FormattedMessage id="misc.views.cells.localPerson.otherPeople" />
-                    </ListSubheader>
-                    {options.map((option, index) => {
-                      const optProps = autoComplete.getOptionProps({
-                        index,
-                        option,
-                      });
-                      return (
-                        <PersonListItem
-                          key={option.id}
-                          itemProps={optProps}
-                          orgId={orgId}
-                          person={option}
-                        />
-                      );
-                    })}
-                  </List>
-                )}
-
-                {!searching && !!cell?.id && (
+                {!!cell?.id && (
                   <Box
                     alignItems="center"
                     display="flex"
                     flexDirection="column"
                     gap={1}
-                    height="100%"
                     justifyContent="center"
-                    width="100%"
                   >
-                    {!isRestrictedMode && (
+                    {!isRestrictedMode && !searching && (
                       <>
                         <SelectedPerson orgId={orgId} person={cell} />
                         <Button
@@ -252,6 +243,51 @@ const Cell: FC<{
                     )}
                   </Box>
                 )}
+                <List
+                  className={styles.searchingList}
+                  sx={{ display: showPeopleInView ? 'block' : 'none' }}
+                >
+                  {showPeopleInView && !!peopleInView.length && (
+                    <List>
+                      <ListSubheader>
+                        <FormattedMessage id="misc.views.cells.localPerson.alreadyInView" />
+                      </ListSubheader>
+                      {peopleInView.map((option) => (
+                        <PersonListItem
+                          key={option.id}
+                          itemProps={{
+                            onClick: () => {
+                              updateCellValue(option);
+                            },
+                          }}
+                          orgId={orgId}
+                          person={option}
+                        />
+                      ))}
+                    </List>
+                  )}
+                  {searching && (
+                    <List {...autoComplete.getListboxProps()}>
+                      <ListSubheader sx={{ position: 'relative' }}>
+                        <FormattedMessage id="misc.views.cells.localPerson.otherPeople" />
+                      </ListSubheader>
+                      {options.map((option, index) => {
+                        const optProps = autoComplete.getOptionProps({
+                          index,
+                          option,
+                        });
+                        return (
+                          <PersonListItem
+                            key={option.id}
+                            itemProps={optProps}
+                            orgId={orgId}
+                            person={option}
+                          />
+                        );
+                      })}
+                    </List>
+                  )}
+                </List>
               </Box>
             </Box>
           )}
