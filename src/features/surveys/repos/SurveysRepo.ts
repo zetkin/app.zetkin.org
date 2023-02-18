@@ -1,5 +1,6 @@
 import Environment from 'core/env/Environment';
 import IApiClient from 'core/api/client/IApiClient';
+import { loadListIfNecessary } from 'core/caching/cacheUtils';
 import shouldLoad from 'core/caching/shouldLoad';
 import { Store } from 'core/store';
 import {
@@ -20,6 +21,8 @@ import {
   submissionLoaded,
   surveyLoad,
   surveyLoaded,
+  surveySubmissionsLoad,
+  surveySubmissionsLoaded,
   surveyUpdate,
   surveyUpdated,
 } from '../store';
@@ -110,6 +113,21 @@ export default class SurveysRepo {
     } else {
       return new RemoteItemFuture(item);
     }
+  }
+
+  getSurveySubmissions(
+    orgId: number,
+    surveyId: number
+  ): IFuture<ZetkinSurveySubmission[]> {
+    const state = this._store.getState();
+    return loadListIfNecessary(state.surveys.submissionList, this._store, {
+      actionOnLoad: () => surveySubmissionsLoad(surveyId),
+      actionOnSuccess: (data) => surveySubmissionsLoaded([surveyId, data]),
+      loader: () =>
+        this._apiClient.get<ZetkinSurveySubmission[]>(
+          `/api/orgs/${orgId}/surveys/${surveyId}/submissions`
+        ),
+    });
   }
 
   async updateElement(
