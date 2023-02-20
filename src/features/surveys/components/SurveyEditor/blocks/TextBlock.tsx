@@ -6,16 +6,21 @@ import theme from 'theme';
 import { ZetkinSurveyTextElement } from 'utils/types/zetkin';
 
 interface TextBlockProps {
+  inEditMode: boolean;
   element: ZetkinSurveyTextElement;
-  isMostRecent: boolean;
-  onSave: (textBlock: ZetkinSurveyTextElement['text_block']) => void;
+  onEditModeEnter: () => void;
+  onEditModeExit: (textBlock: ZetkinSurveyTextElement['text_block']) => void;
 }
 
-const TextBlock: FC<TextBlockProps> = ({ element, isMostRecent, onSave }) => {
+const TextBlock: FC<TextBlockProps> = ({
+  inEditMode,
+  element,
+  onEditModeEnter,
+  onEditModeExit,
+}) => {
   const intl = useIntl();
   const [header, setHeader] = useState(element.text_block.header);
   const [content, setContent] = useState(element.text_block.content);
-  const [preview, setPreview] = useState(!isMostRecent);
 
   const [focusHeader, setFocusHeader] = useState(true);
   const [focusContent, setFocusContent] = useState(false);
@@ -36,14 +41,11 @@ const TextBlock: FC<TextBlockProps> = ({ element, isMostRecent, onSave }) => {
   }, [focusContent]);
 
   const handleKeyDown = (evt: KeyboardEvent<HTMLDivElement>) => {
-    if (evt.key === 'Escape') {
-      setPreview(true);
-    } else if (evt.key === 'Enter') {
-      onSave({
+    if (evt.key === 'Enter') {
+      onEditModeExit({
         content,
         header,
       });
-      setPreview(true);
       setFocusHeader(false);
       setFocusContent(false);
     }
@@ -52,38 +54,15 @@ const TextBlock: FC<TextBlockProps> = ({ element, isMostRecent, onSave }) => {
   return (
     <ClickAwayListener
       onClickAway={() => {
-        onSave({
+        onEditModeExit({
           content,
           header,
         });
-        setPreview(true);
         setFocusHeader(false);
         setFocusContent(false);
       }}
     >
-      {preview ? (
-        <Box onClick={() => setPreview(false)}>
-          <Typography
-            color={header ? 'inherit' : 'secondary'}
-            onClick={() => setFocusHeader(true)}
-            variant="h4"
-          >
-            {header ? (
-              element.text_block.header
-            ) : (
-              <Msg id="misc.surveys.blocks.text.empty" />
-            )}
-          </Typography>
-          {content && (
-            <Typography
-              onClick={() => setFocusContent(true)}
-              sx={{ paddingTop: 1 }}
-            >
-              {element.text_block.content}
-            </Typography>
-          )}
-        </Box>
-      ) : (
+      {inEditMode ? (
         <Box display="flex" flexDirection="column">
           <TextField
             InputProps={{
@@ -107,6 +86,28 @@ const TextBlock: FC<TextBlockProps> = ({ element, isMostRecent, onSave }) => {
             onKeyDown={(evt) => handleKeyDown(evt)}
             value={content}
           />
+        </Box>
+      ) : (
+        <Box onClick={() => onEditModeEnter()}>
+          <Typography
+            color={header ? 'inherit' : 'secondary'}
+            onClick={() => setFocusHeader(true)}
+            variant="h4"
+          >
+            {header ? (
+              element.text_block.header
+            ) : (
+              <Msg id="misc.surveys.blocks.text.empty" />
+            )}
+          </Typography>
+          {content && (
+            <Typography
+              onClick={() => setFocusContent(true)}
+              sx={{ paddingTop: 1 }}
+            >
+              {element.text_block.content}
+            </Typography>
+          )}
         </Box>
       )}
     </ClickAwayListener>

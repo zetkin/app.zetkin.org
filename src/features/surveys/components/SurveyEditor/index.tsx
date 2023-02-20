@@ -1,5 +1,5 @@
 import { Box } from '@mui/material';
-import { FC } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 
 import AddBlocks from './AddBlocks';
 import BlockWrapper from './blocks/BlockWrapper';
@@ -19,6 +19,23 @@ interface SurveyEditorProps {
 }
 
 const SurveyEditor: FC<SurveyEditorProps> = ({ model }) => {
+  const [idOfBlockInEditMode, setIdOfBlockInEditMode] = useState<
+    number | undefined
+  >();
+
+  const lengthRef = useRef(0);
+
+  useEffect(() => {
+    const data = model.getData().data;
+    if (data) {
+      const elements = data.elements;
+      if (lengthRef.current < elements.length && lengthRef.current !== 0) {
+        setIdOfBlockInEditMode(elements[elements.length - 1].id);
+      }
+      lengthRef.current = elements.length;
+    }
+  }, [model.getData().data?.elements.length]);
+
   function handleDelete(elemId: number) {
     model.deleteElement(elemId);
   }
@@ -27,20 +44,10 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ model }) => {
     model.toggleElementHidden(elemId, hidden);
   }
 
-  function handleTextBlockUpdate(
-    elemId: number,
-    textBlock: ZetkinSurveyTextElement['text_block']
-  ) {
-    model.updateTextBlock(elemId, textBlock);
-  }
-
   return (
     <>
       <ZUIFuture future={model.getData()}>
         {(data) => {
-          const mostRecentlyAddedElement = data.elements
-            .concat()
-            .sort((elem1, elem2) => elem2.id - elem1.id)[0];
           return (
             <Box paddingBottom={data.elements.length ? 4 : 0}>
               {data.elements.map((elem) => {
@@ -86,10 +93,16 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ model }) => {
                     >
                       <TextBlock
                         element={elem}
-                        isMostRecent={elem.id === mostRecentlyAddedElement.id}
-                        onSave={(textBlock) =>
-                          handleTextBlockUpdate(elem.id, textBlock)
-                        }
+                        inEditMode={elem.id === idOfBlockInEditMode}
+                        onEditModeEnter={() => setIdOfBlockInEditMode(elem.id)}
+                        onEditModeExit={(
+                          textBlock: ZetkinSurveyTextElement['text_block']
+                        ) => {
+                          if (elem.id === idOfBlockInEditMode) {
+                            setIdOfBlockInEditMode(undefined);
+                          }
+                          model.updateTextBlock(elem.id, textBlock);
+                        }}
                       />
                     </BlockWrapper>
                   );
