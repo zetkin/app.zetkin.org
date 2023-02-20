@@ -1,5 +1,5 @@
 import { Box, ClickAwayListener, TextField, Typography } from '@mui/material';
-import { FC, useEffect, useRef, useState } from 'react';
+import { FC, KeyboardEvent, useEffect, useRef, useState } from 'react';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
 
 import theme from 'theme';
@@ -8,7 +8,7 @@ import { ZetkinSurveyTextElement } from 'utils/types/zetkin';
 interface TextBlockProps {
   element: ZetkinSurveyTextElement;
   isMostRecent: boolean;
-  onSave: (textBlock: { content: string; header: string }) => void; //Pick<ZetkinSurveyTextElement, 'text_block'>
+  onSave: (textBlock: { content: string; header: string }) => void;
 }
 
 const TextBlock: FC<TextBlockProps> = ({ element, isMostRecent, onSave }) => {
@@ -34,6 +34,20 @@ const TextBlock: FC<TextBlockProps> = ({ element, isMostRecent, onSave }) => {
       contentRef.current?.focus();
     }
   }, [focusContent]);
+
+  const handleKeyDown = (evt: KeyboardEvent<HTMLDivElement>) => {
+    if (evt.key === 'Escape') {
+      setPreview(true);
+    } else if (evt.key === 'Enter') {
+      onSave({
+        content,
+        header,
+      });
+      setPreview(true);
+      setFocusHeader(false);
+      setFocusContent(false);
+    }
+  };
 
   return (
     <ClickAwayListener
@@ -80,6 +94,7 @@ const TextBlock: FC<TextBlockProps> = ({ element, isMostRecent, onSave }) => {
               id: 'misc.surveys.blocks.text.header',
             })}
             onChange={(evt) => setHeader(evt.target.value)}
+            onKeyDown={(evt) => handleKeyDown(evt)}
             sx={{ paddingBottom: 2 }}
             value={header}
           />
@@ -89,6 +104,7 @@ const TextBlock: FC<TextBlockProps> = ({ element, isMostRecent, onSave }) => {
               id: 'misc.surveys.blocks.text.content',
             })}
             onChange={(evt) => setContent(evt.target.value)}
+            onKeyDown={(evt) => handleKeyDown(evt)}
             value={content}
           />
         </Box>

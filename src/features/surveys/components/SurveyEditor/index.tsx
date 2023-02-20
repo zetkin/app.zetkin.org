@@ -25,7 +25,7 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ model }) => {
 
   function handleTextBlockUpdate(
     elemId: number,
-    textBlock: { content: string; header: string } //Pick<ZetkinSurveyTextElement, 'text_block'>
+    textBlock: { content: string; header: string }
   ) {
     model.updateTextBlock(elemId, textBlock);
   }
