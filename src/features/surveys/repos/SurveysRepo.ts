@@ -30,18 +30,29 @@ export type ZetkinSurveyElementPostBody =
   | ZetkinSurveyTextQuestionElementPostBody
   | ZetkinSurveyOptionsQuestionElementPostBody;
 
-type ZetkinTextQuestionPostBody = Omit<ZetkinTextQuestion, 'required'>;
 type ZetkinSurveyTextQuestionElementPostBody = {
   hidden: boolean;
-  question: ZetkinTextQuestionPostBody;
+  question: Omit<ZetkinTextQuestion, 'required'>;
   type: ELEMENT_TYPE.QUESTION;
 };
 
-type ZetkinOptionsQuestionPostBody = Omit<ZetkinOptionsQuestion, 'required'>;
 type ZetkinSurveyOptionsQuestionElementPostBody = {
   hidden: boolean;
-  question: ZetkinOptionsQuestionPostBody;
+  question: Omit<ZetkinOptionsQuestion, 'required'>;
   type: ELEMENT_TYPE.QUESTION;
+};
+
+type ZetkinSurveyElementPatchBody =
+  | ZetkinSurveyTextElementPatchBody
+  | Partial<Omit<ZetkinSurveyOptionsQuestionElementPostBody, 'type'>>
+  | Partial<Omit<ZetkinSurveyTextQuestionElementPostBody, 'type'>>;
+
+type ZetkinSurveyTextElementPatchBody = {
+  hidden?: boolean;
+  text_block?: {
+    content?: string;
+    header?: string;
+  };
 };
 
 export default class SurveysRepo {
@@ -118,11 +129,11 @@ export default class SurveysRepo {
     orgId: number,
     surveyId: number,
     elemId: number,
-    data: ZetkinSurveyElementPostBody
+    data: ZetkinSurveyElementPatchBody
   ) {
     const element = await this._apiClient.patch<
       ZetkinSurveyElement,
-      ZetkinSurveyElementPostBody
+      ZetkinSurveyElementPatchBody
     >(`/api/orgs/${orgId}/surveys/${surveyId}/elements/${elemId}`, data);
     this._store.dispatch(elementUpdated([surveyId, elemId, element]));
   }
