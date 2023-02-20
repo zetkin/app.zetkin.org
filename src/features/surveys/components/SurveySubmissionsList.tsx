@@ -1,5 +1,8 @@
 import { useIntl } from 'react-intl';
+import { useRouter } from 'next/router';
 import { ZetkinSurveySubmission } from 'utils/types/zetkin';
+import ZUIAvatar from 'zui/ZUIAvatar';
+import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 import {
   DataGridPro,
@@ -13,57 +16,34 @@ const SurveySubmissionsList = ({
   submissions: ZetkinSurveySubmission[];
 }) => {
   const intl = useIntl();
+  const { orgId } = useRouter().query;
+
+  const makeSimpleColumn = (
+    field: keyof NonNullable<ZetkinSurveySubmission['respondent']>,
+    messageId: string
+  ) => {
+    return {
+      field: field,
+      flex: 1,
+      headerName: intl.formatMessage({
+        id: `pages.organizeSurvey.surveys.${messageId}`,
+      }),
+      sortable: true,
+      valueGetter: (
+        params: GridValueGetterParams<string, ZetkinSurveySubmission>
+      ) => {
+        if (params.row.respondent !== null) {
+          return params.row.respondent[field];
+        }
+        return '-';
+      },
+    };
+  };
 
   const gridColumns = [
-    {
-      field: `first_name`,
-      flex: 1,
-      headerName: intl.formatMessage({
-        id: 'pages.organizeSurvey.surveys.firstNameColumn',
-      }),
-      sortable: false,
-      valueGetter: (
-        params: GridValueGetterParams<string, ZetkinSurveySubmission>
-      ) => {
-        if (params.row.respondent !== null) {
-          return `${params.row.respondent.first_name}`;
-        }
-        return '-';
-      },
-    },
-    {
-      field: `last_name`,
-      flex: 1,
-      headerName: intl.formatMessage({
-        id: 'pages.organizeSurvey.surveys.lastNameColumn',
-      }),
-      sortable: false,
-      valueGetter: (
-        params: GridValueGetterParams<string, ZetkinSurveySubmission>
-      ) => {
-        if (params.row.respondent !== null) {
-          return `${params.row.respondent.last_name}`;
-        }
-        return '-';
-      },
-    },
-    {
-      field: `email`,
-      flex: 1,
-      headerName: intl.formatMessage({
-        id: 'pages.organizeSurvey.surveys.emailColumn',
-      }),
-
-      sortable: false,
-      valueGetter: (
-        params: GridValueGetterParams<string, ZetkinSurveySubmission>
-      ) => {
-        if (params.row.respondent !== null) {
-          return `${params.row.respondent.email}`;
-        }
-        return '-';
-      },
-    },
+    makeSimpleColumn('first_name', 'firstNameColumn'),
+    makeSimpleColumn('last_name', 'lastNameColumn'),
+    makeSimpleColumn('email', 'emailColumn'),
     {
       field: `submitted`,
       flex: 1,
@@ -75,9 +55,36 @@ const SurveySubmissionsList = ({
       ) => {
         return <ZUIRelativeTime datetime={params.row.submitted} />;
       },
-      sortable: false,
+      sortable: true,
+    },
+    {
+      field: `respondent`,
+      flex: 1,
+      headerName: intl.formatMessage({
+        id: 'pages.organizeSurvey.surveys.personRecordColumn',
+      }),
+      renderCell: (
+        params: GridRenderCellParams<
+          ZetkinSurveySubmission['respondent'],
+          ZetkinSurveySubmission
+        >
+      ) => {
+        if (params.value?.id) {
+          return (
+            <ZUIPersonHoverCard personId={params.value.id}>
+              <ZUIAvatar
+                orgId={parseInt(orgId as string)}
+                personId={params.value.id}
+              />
+            </ZUIPersonHoverCard>
+          );
+        }
+        return <></>;
+      },
+      sortable: true,
     },
   ];
+
   return (
     <>
       <DataGridPro

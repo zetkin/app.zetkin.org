@@ -5,7 +5,7 @@ import SurveyLayout from 'features/surveys/layout/SurveyLayout';
 import SurveySubmissionsList from 'features/surveys/components/SurveySubmissionsList';
 import SurveySubmissionsModel from 'features/surveys/models/SurveySubmissionsModel';
 import useModel from 'core/useModel';
-import ZUIFutures from 'zui/ZUIFutures';
+import ZUIFuture from 'zui/ZUIFuture';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   async (ctx) => {
@@ -41,19 +41,14 @@ const SubmissionsPage: PageWithLayout<SubmissionsPageProps> = ({
   );
 
   return (
-    <>
-      <ZUIFutures futures={{ submissions: subsModel.getSubmissions() }}>
-        {({ data: { submissions } }) => {
-          return (
-            <>
-              <SurveySubmissionsList submissions={submissions} />
-            </>
-          );
-        }}
-      </ZUIFutures>
-    </>
+    <ZUIFuture future={subsModel.getSubmissions()}>
+      {(data) => {
+        return <SurveySubmissionsList submissions={data} />;
+      }}
+    </ZUIFuture>
   );
 };
+
 SubmissionsPage.getLayout = function getLayout(page, props) {
   return (
     <SurveyLayout

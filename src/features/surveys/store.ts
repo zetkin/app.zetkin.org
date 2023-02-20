@@ -103,6 +103,7 @@ const surveysSlice = createSlice({
     /* eslint-disable-next-line */
     surveySubmissionsLoad: (state, action: PayloadAction<number>) => {
       // TODO: Segregate submissions by survey ID
+      state.submissionList.isLoading = true;
     },
     surveySubmissionsLoaded: (
       state,
