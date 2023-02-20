@@ -1,9 +1,11 @@
 openQuestion:
   description: Question description
+  fieldTypePreview: text field
   multiLine: Multi-line
   singleLine: Single-line
   textFieldType: Text field type
   title: Title
+  titlePreview: Question Title
 overview:
   noQuestions:
     button: Create questions
