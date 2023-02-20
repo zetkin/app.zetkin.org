@@ -3,8 +3,8 @@ import dayjs from 'dayjs';
 import Environment from 'core/env/Environment';
 import { IFuture } from 'core/caching/futures';
 import { ModelBase } from 'core/models';
-import SurveysRepo from '../repos/SurveysRepo';
 import { ZetkinSurveyExtended } from 'utils/types/zetkin';
+import SurveysRepo, { ZetkinSurveyElementPostBody } from '../repos/SurveysRepo';
 
 export enum SurveyState {
   UNPUBLISHED = 'unpublished',
@@ -18,6 +18,15 @@ export default class SurveyDataModel extends ModelBase {
   private _orgId: number;
   private _repo: SurveysRepo;
   private _surveyId: number;
+
+  addElement(element: ZetkinSurveyElementPostBody) {
+    const { data } = this.getData();
+    if (!data) {
+      return;
+    }
+
+    this._repo.addElement(this._orgId, this._surveyId, element);
+  }
 
   constructor(env: Environment, orgId: number, surveyId: number) {
     super();

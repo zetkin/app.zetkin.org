@@ -174,7 +174,6 @@ export interface ZetkinSurvey {
   callers_only: boolean;
   published: string | null;
   expires: string | null;
-  elements: ZetkinSurveyElement[];
 }
 
 export interface ZetkinSurveyExtended extends ZetkinSurvey {
@@ -276,7 +275,7 @@ export interface ZetkinSurveySubmission {
     title: string;
   };
   submitted: string;
-  responses: ZetkinSurveyQuestionResponse[];
+  responses: ZetkinSurveyQuestionResponse[]; // TODO: Lying! Segregate with/without responses
 }
 
 export interface ZetkinCanvassAssignment {

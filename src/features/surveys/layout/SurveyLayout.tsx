@@ -1,10 +1,15 @@
 import { FormattedMessage as Msg } from 'react-intl';
 import SurveyStatusChip from '../components/SurveyStatusChip';
+import SurveySubmissionsModel from '../models/SurveySubmissionsModel';
 import TabbedLayout from 'utils/layout/TabbedLayout';
 import useModel from 'core/useModel';
 import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
 import ZUIFuture from 'zui/ZUIFuture';
+import ZUIFutures from 'zui/ZUIFutures';
+import { ZUIIconLabelProps } from 'zui/ZUIIconLabel';
+import ZUIIconLabelRow from 'zui/ZUIIconLabelRow';
 import { Box, Button } from '@mui/material';
+import { ChatBubbleOutline, QuizOutlined } from '@mui/icons-material';
 import SurveyDataModel, { SurveyState } from '../models/SurveyDataModel';
 
 interface SurveyLayoutProps {
@@ -22,6 +27,11 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
 }) => {
   const model = useModel(
     (env) => new SurveyDataModel(env, parseInt(orgId), parseInt(surveyId))
+  );
+
+  const subsModel = useModel(
+    (env) =>
+      new SurveySubmissionsModel(env, parseInt(orgId), parseInt(surveyId))
   );
 
   const hasQuestions = !!model.getData().data?.elements.length;
@@ -48,6 +58,54 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
       subtitle={
         <Box alignItems="center" display="flex">
           <SurveyStatusChip state={model.state} />
+          <Box display="flex" marginX={1}>
+            <ZUIFutures
+              futures={{
+                submissions: subsModel.getSubmissions(),
+                survey: model.getData(),
+              }}
+            >
+              {({ data: { submissions, survey } }) => {
+                const questionLength = survey?.elements.filter(
+                  (question) => question.type === 'question'
+                ).length;
+
+                // TODO: Replace this with custom RPC for survey stats
+                const submissionsLength = submissions.length;
+                const labels: ZUIIconLabelProps[] = [];
+
+                if (questionLength > 0) {
+                  labels.push({
+                    icon: <QuizOutlined />,
+                    label: (
+                      <Msg
+                        id="layout.organize.surveys.stats.questions"
+                        values={{
+                          numQuestions: questionLength,
+                        }}
+                      />
+                    ),
+                  });
+                }
+
+                if (submissionsLength > 0) {
+                  labels.push({
+                    icon: <ChatBubbleOutline />,
+                    label: (
+                      <Msg
+                        id="layout.organize.surveys.stats.questions"
+                        values={{
+                          numQuestions: submissionsLength,
+                        }}
+                      />
+                    ),
+                  });
+                }
+
+                return <ZUIIconLabelRow iconLabels={labels} />;
+              }}
+            </ZUIFutures>
+          </Box>
         </Box>
       }
       tabs={[

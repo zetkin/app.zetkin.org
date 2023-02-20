@@ -21,6 +21,18 @@ const surveysSlice = createSlice({
   initialState,
   name: 'surveys',
   reducers: {
+    elementAdded: (
+      state,
+      action: PayloadAction<[number, ZetkinSurveyElement]>
+    ) => {
+      const [surveyId, newElement] = action.payload;
+      const surveyItem = state.surveyList.items.find(
+        (item) => item.id == surveyId
+      );
+      if (surveyItem && surveyItem.data) {
+        surveyItem.data.elements.push(newElement);
+      }
+    },
     elementDeleted: (state, action: PayloadAction<[number, number]>) => {
       const [surveyId, elemId] = action.payload;
       const surveyItem = state.surveyList.items.find(
@@ -57,6 +69,7 @@ const surveysSlice = createSlice({
       state,
       action: PayloadAction<ZetkinSurveySubmission>
     ) => {
+      // TODO: Segregate submission content from submission list
       const submission = action.payload;
       const item = state.submissionList.items.find(
         (item) => item.id == submission.id
@@ -87,6 +100,19 @@ const surveysSlice = createSlice({
       item.isLoading = false;
       item.loaded = new Date().toISOString();
     },
+    /* eslint-disable-next-line */
+    surveySubmissionsLoad: (state, action: PayloadAction<number>) => {
+      // TODO: Segregate submissions by survey ID
+    },
+    surveySubmissionsLoaded: (
+      state,
+      action: PayloadAction<[number, ZetkinSurveySubmission[]]>
+    ) => {
+      // TODO: Segregate submissions by survey ID
+      const [, submissions] = action.payload;
+      state.submissionList = remoteList(submissions);
+      state.submissionList.loaded = new Date().toISOString();
+    },
     surveyUpdate: (state, action: PayloadAction<[number, string[]]>) => {
       const [surveyId, mutating] = action.payload;
       const item = state.surveyList.items.find((item) => item.id == surveyId);
@@ -107,12 +133,15 @@ const surveysSlice = createSlice({
 
 export default surveysSlice;
 export const {
+  elementAdded,
   elementDeleted,
   elementUpdated,
   submissionLoad,
   submissionLoaded,
   surveyLoad,
   surveyLoaded,
+  surveySubmissionsLoad,
+  surveySubmissionsLoaded,
   surveyUpdate,
   surveyUpdated,
 } = surveysSlice.actions;
