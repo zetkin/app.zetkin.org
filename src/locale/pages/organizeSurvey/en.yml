@@ -7,3 +7,9 @@ state:
   published: Published
   scheduled: Scheduled
   unpublished: Unpublished
+surveys:
+  dateColumn: Date
+  emailColumn: Email
+  firstNameColumn: First name
+  lastNameColumn: Last name
+  personRecordColumn: Person record
