@@ -4,6 +4,10 @@ addBlocks:
   textButton: Text
   title: Choose a block type to add more content to your survey
 blocks:
+  common:
+    description: Description
+    empty: Untitled block
+    title: Title
   text:
     content: Description
     empty: Untitled block

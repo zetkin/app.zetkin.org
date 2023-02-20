@@ -1,5 +1,12 @@
 import { Box, ClickAwayListener, TextField, Typography } from '@mui/material';
-import { FC, KeyboardEvent, useEffect, useRef, useState } from 'react';
+import {
+  FC,
+  KeyboardEvent,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
 
 import theme from 'theme';
@@ -22,23 +29,20 @@ const TextBlock: FC<TextBlockProps> = ({
   const [header, setHeader] = useState(element.text_block.header);
   const [content, setContent] = useState(element.text_block.content);
 
-  const [focusHeader, setFocusHeader] = useState(true);
-  const [focusContent, setFocusContent] = useState(false);
+  const [focus, setFocus] = useState<'content' | null>(null);
 
-  const headerRef = useRef<HTMLInputElement>(null);
   const contentRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-    if (focusHeader) {
-      headerRef.current?.focus();
-    }
-  }, [focusHeader]);
+  const headerRef = useCallback((node: HTMLInputElement) => {
+    node?.focus();
+  }, []);
 
   useEffect(() => {
-    if (focusContent) {
-      contentRef.current?.focus();
+    if (focus === 'content') {
+      const input = contentRef.current;
+      input?.focus();
     }
-  }, [focusContent]);
+  }, [focus]);
 
   const handleKeyDown = (evt: KeyboardEvent<HTMLDivElement>) => {
     if (evt.key === 'Enter') {
@@ -46,8 +50,7 @@ const TextBlock: FC<TextBlockProps> = ({
         content,
         header,
       });
-      setFocusHeader(false);
-      setFocusContent(false);
+      setFocus(null);
     }
   };
 
@@ -58,8 +61,7 @@ const TextBlock: FC<TextBlockProps> = ({
           content,
           header,
         });
-        setFocusHeader(false);
-        setFocusContent(false);
+        setFocus(null);
       }}
     >
       {inEditMode ? (
@@ -89,11 +91,7 @@ const TextBlock: FC<TextBlockProps> = ({
         </Box>
       ) : (
         <Box onClick={() => onEditModeEnter()}>
-          <Typography
-            color={header ? 'inherit' : 'secondary'}
-            onClick={() => setFocusHeader(true)}
-            variant="h4"
-          >
+          <Typography color={header ? 'inherit' : 'secondary'} variant="h4">
             {header ? (
               element.text_block.header
             ) : (
@@ -102,7 +100,7 @@ const TextBlock: FC<TextBlockProps> = ({
           </Typography>
           {content && (
             <Typography
-              onClick={() => setFocusContent(true)}
+              onClick={() => setFocus('content')}
               sx={{ paddingTop: 1 }}
             >
               {element.text_block.content}

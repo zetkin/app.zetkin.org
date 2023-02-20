@@ -29,8 +29,13 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ model }) => {
     const data = model.getData().data;
     if (data) {
       const elements = data.elements;
+      //If a block was just added, set its id to be in edit mode.
       if (lengthRef.current < elements.length && lengthRef.current !== 0) {
         setIdOfBlockInEditMode(elements[elements.length - 1].id);
+      } else if (lengthRef.current === 0) {
+        if (elements.length === 1) {
+          setIdOfBlockInEditMode(elements[0].id);
+        }
       }
       lengthRef.current = elements.length;
     }
@@ -77,7 +82,18 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ model }) => {
                           handleToggleHidden(elem.id, hidden)
                         }
                       >
-                        <ChoiceQuestionBlock question={elem.question} />
+                        <ChoiceQuestionBlock
+                          inEditMode={elem.id === idOfBlockInEditMode}
+                          onEditModeEnter={() =>
+                            setIdOfBlockInEditMode(elem.id)
+                          }
+                          onEditModeExit={() => {
+                            if (elem.id === idOfBlockInEditMode) {
+                              setIdOfBlockInEditMode(undefined);
+                            }
+                          }}
+                          question={elem.question}
+                        />
                       </BlockWrapper>
                     );
                   }
