@@ -20,11 +20,6 @@ export default class SurveyDataModel extends ModelBase {
   private _surveyId: number;
 
   addElement(element: ZetkinSurveyElementPostBody) {
-    const { data } = this.getData();
-    if (!data) {
-      return;
-    }
-
     this._repo.addElement(this._orgId, this._surveyId, element);
   }
 
