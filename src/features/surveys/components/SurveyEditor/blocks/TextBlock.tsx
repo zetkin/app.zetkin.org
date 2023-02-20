@@ -8,7 +8,7 @@ import { ZetkinSurveyTextElement } from 'utils/types/zetkin';
 interface TextBlockProps {
   element: ZetkinSurveyTextElement;
   isMostRecent: boolean;
-  onSave: (textBlock: { content: string; header: string }) => void;
+  onSave: (textBlock: ZetkinSurveyTextElement['text_block']) => void;
 }
 
 const TextBlock: FC<TextBlockProps> = ({ element, isMostRecent, onSave }) => {

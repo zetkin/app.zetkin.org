@@ -8,7 +8,11 @@ import OpenQuestionBlock from './blocks/OpenQuestionBlock';
 import SurveyDataModel from 'features/surveys/models/SurveyDataModel';
 import TextBlock from './blocks/TextBlock';
 import ZUIFuture from 'zui/ZUIFuture';
-import { ELEMENT_TYPE, RESPONSE_TYPE } from 'utils/types/zetkin';
+import {
+  ELEMENT_TYPE,
+  RESPONSE_TYPE,
+  ZetkinSurveyTextElement,
+} from 'utils/types/zetkin';
 
 interface SurveyEditorProps {
   model: SurveyDataModel;
@@ -25,7 +29,7 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ model }) => {
 
   function handleTextBlockUpdate(
     elemId: number,
-    textBlock: { content: string; header: string }
+    textBlock: ZetkinSurveyTextElement['text_block']
   ) {
     model.updateTextBlock(elemId, textBlock);
   }
