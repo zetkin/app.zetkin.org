@@ -26,7 +26,7 @@ const SurveySubmissionsList = ({
       field: field,
       flex: 1,
       headerName: intl.formatMessage({
-        id: `pages.organizeSurvey.surveys.${messageId}`,
+        id: `pages.organizeSurvey.submissions.${messageId}`,
       }),
       sortable: true,
       valueGetter: (
@@ -48,7 +48,7 @@ const SurveySubmissionsList = ({
       field: `submitted`,
       flex: 1,
       headerName: intl.formatMessage({
-        id: 'pages.organizeSurvey.surveys.dateColumn',
+        id: 'pages.organizeSurvey.submissions.dateColumn',
       }),
       renderCell: (
         params: GridRenderCellParams<string, ZetkinSurveySubmission>
@@ -61,7 +61,7 @@ const SurveySubmissionsList = ({
       field: `respondent`,
       flex: 1,
       headerName: intl.formatMessage({
-        id: 'pages.organizeSurvey.surveys.personRecordColumn',
+        id: 'pages.organizeSurvey.submissions.personRecordColumn',
       }),
       renderCell: (
         params: GridRenderCellParams<

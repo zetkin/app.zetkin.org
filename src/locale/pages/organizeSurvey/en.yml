@@ -7,7 +7,7 @@ state:
   published: Published
   scheduled: Scheduled
   unpublished: Unpublished
-surveys:
+submissions:
   dateColumn: Date
   emailColumn: Email
   firstNameColumn: First name
