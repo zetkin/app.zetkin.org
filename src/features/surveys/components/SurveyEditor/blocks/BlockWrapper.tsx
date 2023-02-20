@@ -26,7 +26,12 @@ const BlockWrapper: FC<BlockWrapperProps> = ({
           <IconButton onClick={() => onToggleHidden(!hidden)}>
             <RemoveRedEye />
           </IconButton>
-          <IconButton onClick={() => onDelete()}>
+          <IconButton
+            onClick={(evt) => {
+              evt.stopPropagation();
+              onDelete();
+            }}
+          >
             <Delete />
           </IconButton>
         </Box>
