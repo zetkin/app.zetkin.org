@@ -3,8 +3,11 @@ import dayjs from 'dayjs';
 import Environment from 'core/env/Environment';
 import { IFuture } from 'core/caching/futures';
 import { ModelBase } from 'core/models';
-import { ZetkinSurveyExtended } from 'utils/types/zetkin';
 import SurveysRepo, { ZetkinSurveyElementPostBody } from '../repos/SurveysRepo';
+import {
+  ZetkinSurveyExtended,
+  ZetkinSurveyTextElement,
+} from 'utils/types/zetkin';
 
 export enum SurveyState {
   UNPUBLISHED = 'unpublished',
@@ -158,7 +161,7 @@ export default class SurveyDataModel extends ModelBase {
 
   updateTextBlock(
     elemId: number,
-    textBlock: { content: string; header: string }
+    textBlock: ZetkinSurveyTextElement['text_block']
   ) {
     this._repo.updateElement(this._orgId, this._surveyId, elemId, {
       text_block: textBlock,
