@@ -3,6 +3,7 @@ import SurveyStatusChip from '../components/SurveyStatusChip';
 import SurveySubmissionsModel from '../models/SurveySubmissionsModel';
 import TabbedLayout from 'utils/layout/TabbedLayout';
 import useModel from 'core/useModel';
+import ZUIDateRangePicker from 'zui/ZUIDateRangePicker/ZUIDateRangePicker';
 import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
 import ZUIFuture from 'zui/ZUIFuture';
 import ZUIFutures from 'zui/ZUIFutures';
@@ -35,6 +36,7 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
   );
 
   const hasQuestions = !!model.getData().data?.elements.length;
+  const dataFuture = model.getData();
 
   return (
     <TabbedLayout
@@ -58,6 +60,15 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
       subtitle={
         <Box alignItems="center" display="flex">
           <SurveyStatusChip state={model.state} />
+          <Box marginX={2}>
+            <ZUIDateRangePicker
+              endDate={dataFuture.data?.expires || null}
+              onChange={(startDate, endDate) => {
+                model.setDates(startDate, endDate);
+              }}
+              startDate={dataFuture.data?.published || null}
+            />
+          </Box>
           <Box display="flex" marginX={1}>
             <ZUIFutures
               futures={{
