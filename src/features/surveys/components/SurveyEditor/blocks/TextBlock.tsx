@@ -1,5 +1,12 @@
 import { Box, ClickAwayListener, TextField, Typography } from '@mui/material';
-import { FC, KeyboardEvent, useEffect, useRef, useState } from 'react';
+import {
+  FC,
+  KeyboardEvent,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
 
 import theme from 'theme';
@@ -19,20 +26,21 @@ const TextBlock: FC<TextBlockProps> = ({
   onEditModeExit,
 }) => {
   const intl = useIntl();
+
   const [header, setHeader] = useState(element.text_block.header);
   const [content, setContent] = useState(element.text_block.content);
+  const [focus, setFocus] = useState<'content' | null>(null);
 
-  const [focus, setFocus] = useState<'content' | 'header' | null>(null);
-
-  const headerRef = useRef<HTMLInputElement>(null);
   const contentRef = useRef<HTMLInputElement>(null);
+
+  const headerRef = useCallback((node: HTMLInputElement) => {
+    node?.focus();
+  }, []);
 
   useEffect(() => {
     if (focus === 'content') {
-      contentRef.current?.focus();
-    }
-    if (focus === 'header') {
-      headerRef.current?.focus();
+      const input = contentRef.current;
+      input?.focus();
     }
   }, [focus]);
 
@@ -84,11 +92,7 @@ const TextBlock: FC<TextBlockProps> = ({
         </Box>
       ) : (
         <Box onClick={() => onEditModeEnter()}>
-          <Typography
-            color={header ? 'inherit' : 'secondary'}
-            onClick={() => setFocus('header')}
-            variant="h4"
-          >
+          <Typography color={header ? 'inherit' : 'secondary'} variant="h4">
             {header ? (
               element.text_block.header
             ) : (
