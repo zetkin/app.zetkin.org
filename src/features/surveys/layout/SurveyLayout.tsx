@@ -93,9 +93,9 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
                     icon: <ChatBubbleOutline />,
                     label: (
                       <Msg
-                        id="layout.organize.surveys.stats.questions"
+                        id="layout.organize.surveys.stats.submissions"
                         values={{
-                          numQuestions: submissionsLength,
+                          numSubmissions: submissionsLength,
                         }}
                       />
                     ),
