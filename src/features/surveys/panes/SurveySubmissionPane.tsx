@@ -77,6 +77,7 @@ const SurveySubmissionPane: FC<SurveySubmissionPaneProps> = ({ orgId, id }) => {
               title={sub.survey.title}
             />
             {sub.elements.map((elem) => {
+              //add key
               if (elem.type == ELEM_TYPE.OPEN_QUESTION) {
                 return (
                   <Question hidden={elem.hidden} question={elem.question}>

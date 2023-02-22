@@ -18,6 +18,12 @@ const SurveySubmissionsList = ({
   const { orgId } = useRouter().query;
   const { openPane } = usePanes();
 
+  const sortedSubmissions = [...submissions].sort((subOne, subTwo) => {
+    const dateOne = new Date(subOne.submitted);
+    const dateTwo = new Date(subTwo.submitted);
+    return dateTwo.getTime() - dateOne.getTime();
+  });
+
   const makeSimpleColumn = (
     field: keyof NonNullable<ZetkinSurveySubmission['respondent']>,
     messageId: string
@@ -96,7 +102,6 @@ const SurveySubmissionsList = ({
             </Box>
           );
         }
-        return '-';
       },
       sortable: true,
     },
@@ -135,7 +140,7 @@ const SurveySubmissionsList = ({
         columns={gridColumns}
         disableColumnFilter
         disableColumnMenu
-        rows={submissions}
+        rows={sortedSubmissions}
         style={{
           border: 'none',
         }}
