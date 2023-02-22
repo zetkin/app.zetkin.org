@@ -3,7 +3,11 @@ import Environment from 'core/env/Environment';
 import { IFuture } from 'core/caching/futures';
 import { ModelBase } from 'core/models';
 import SurveysRepo, { ZetkinSurveyElementPostBody } from '../repos/SurveysRepo';
-import { ZetkinSurveyExtended, ZetkinTextQuestion } from 'utils/types/zetkin';
+import {
+  ZetkinSurveyExtended,
+  ZetkinSurveyTextElement,
+  ZetkinTextQuestion,
+} from 'utils/types/zetkin';
 
 export enum SurveyState {
   UNPUBLISHED = 'unpublished',
@@ -19,11 +23,6 @@ export default class SurveyDataModel extends ModelBase {
   private _surveyId: number;
 
   addElement(element: ZetkinSurveyElementPostBody) {
-    const { data } = this.getData();
-    if (!data) {
-      return;
-    }
-
     this._repo.addElement(this._orgId, this._surveyId, element);
   }
 
@@ -173,6 +172,15 @@ export default class SurveyDataModel extends ModelBase {
   ) {
     this._repo.updateElement(this._orgId, this._surveyId, elemId, {
       question: data,
+    });
+  }
+
+  updateTextBlock(
+    elemId: number,
+    textBlock: ZetkinSurveyTextElement['text_block']
+  ) {
+    this._repo.updateElement(this._orgId, this._surveyId, elemId, {
+      text_block: textBlock,
     });
   }
 }
