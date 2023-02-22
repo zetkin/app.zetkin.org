@@ -4,11 +4,16 @@ addBlocks:
   textButton: Text
   title: Choose a block type to add more content to your survey
 blocks:
+  choiceQuestion:
+    checkbox: Multiple choice
+    radio: Single choice
+    select: Dropdown choice list
+    selectLabel: Poll type
   common:
     description: Description
     empty: Untitled block
     title: Title
   text:
     content: Description
-    empty: Untitled block
+    empty: Untitled text block
     header: Title

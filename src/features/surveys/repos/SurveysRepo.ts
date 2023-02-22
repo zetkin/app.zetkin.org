@@ -42,9 +42,9 @@ type ZetkinSurveyOptionsQuestionElementPostBody = {
   type: ELEMENT_TYPE.QUESTION;
 };
 
-type ZetkinSurveyElementPatchBody =
+export type ZetkinSurveyElementPatchBody =
   | ZetkinSurveyTextElementPatchBody
-  | Partial<Omit<ZetkinSurveyOptionsQuestionElementPostBody, 'type'>>
+  | ZetkinSurveyOptionsQuestionElementPatchBody
   | Partial<Omit<ZetkinSurveyTextQuestionElementPostBody, 'type'>>;
 
 type ZetkinSurveyTextElementPatchBody = {
@@ -53,6 +53,11 @@ type ZetkinSurveyTextElementPatchBody = {
     content?: string;
     header?: string;
   };
+};
+
+export type ZetkinSurveyOptionsQuestionElementPatchBody = {
+  hidden?: boolean;
+  question?: Partial<Omit<ZetkinOptionsQuestion, 'response_type'>>;
 };
 
 export default class SurveysRepo {
