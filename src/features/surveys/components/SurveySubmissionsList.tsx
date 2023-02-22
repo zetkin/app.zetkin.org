@@ -1,4 +1,7 @@
+import { Box } from '@mui/system';
+import SurveySubmissionPane from '../panes/SurveySubmissionPane';
 import { useIntl } from 'react-intl';
+import { usePanes } from 'utils/panes';
 import { useRouter } from 'next/router';
 import { ZetkinSurveySubmission } from 'utils/types/zetkin';
 import ZUIAvatar from 'zui/ZUIAvatar';
@@ -7,8 +10,9 @@ import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 import {
   DataGridPro,
   GridRenderCellParams,
-  GridValueGetterParams,
+  // GridValueGetterParams,
 } from '@mui/x-data-grid-pro';
+// import ViewSurveySubmissionPreview from 'features/views/components/ViewSurveySubmissionPreview';
 
 const SurveySubmissionsList = ({
   submissions,
@@ -17,6 +21,7 @@ const SurveySubmissionsList = ({
 }) => {
   const intl = useIntl();
   const { orgId } = useRouter().query;
+  const { openPane } = usePanes();
 
   const makeSimpleColumn = (
     field: keyof NonNullable<ZetkinSurveySubmission['respondent']>,
@@ -28,15 +33,40 @@ const SurveySubmissionsList = ({
       headerName: intl.formatMessage({
         id: `pages.organizeSurvey.submissions.${messageId}`,
       }),
-      sortable: true,
-      valueGetter: (
-        params: GridValueGetterParams<string, ZetkinSurveySubmission>
+      renderCell: (
+        params: GridRenderCellParams<string, ZetkinSurveySubmission>
       ) => {
         if (params.row.respondent !== null) {
-          return params.row.respondent[field];
+          return (
+            <Box
+              onClick={() => {
+                openPane({
+                  render() {
+                    return (
+                      <SurveySubmissionPane
+                        id={params.row.survey.id}
+                        orgId={parseInt(orgId as string)}
+                      />
+                    );
+                  },
+                  width: 400,
+                });
+              }}
+            >
+              {params.row.respondent[field]}
+            </Box>
+          );
         }
-        return '-';
       },
+      sortable: true,
+      // valueGetter: (
+      //   params: GridValueGetterParams<string, ZetkinSurveySubmission>
+      // ) => {
+      //   if (params.row.respondent !== null) {
+      //     return params.row.respondent[field];
+      //   }
+      //   return '-';
+      // },
     };
   };
 
