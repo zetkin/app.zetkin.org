@@ -1,6 +1,7 @@
 import AbcIcon from '@mui/icons-material/Abc';
 import { FormattedMessage as Msg } from 'react-intl';
 import SortIcon from '@mui/icons-material/Sort';
+import theme from 'theme';
 import { useIntl } from 'react-intl';
 import { ZetkinTextQuestion } from 'utils/types/zetkin';
 import {
@@ -156,6 +157,7 @@ const OpenQuestionBlock: FC<OpenQuestionBlockProps> = ({
             fullWidth
             InputProps={{
               inputRef: titleRef,
+              sx: { fontSize: theme.typography.h4.fontSize },
             }}
             label={intl.formatMessage({
               id: 'pages.organizeSurvey.openQuestion.title',
