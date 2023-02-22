@@ -5,27 +5,35 @@ import theme from 'theme';
 import { useIntl } from 'react-intl';
 import { ZetkinTextQuestion } from 'utils/types/zetkin';
 import {
+  BaseSyntheticEvent,
+  FC,
+  KeyboardEvent,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
+import {
   Box,
   ClickAwayListener,
   MenuItem,
   TextField,
   Typography,
 } from '@mui/material';
-import { FC, useEffect, useRef, useState } from 'react';
+
+type TextQuestionPatchBody = Omit<ZetkinTextQuestion, 'required'>;
 
 interface OpenQuestionBlockProps {
   element: ZetkinTextQuestion;
   inEditMode: boolean;
   onEditModeEnter: () => void;
-  onEditModeExit: (question: Omit<ZetkinTextQuestion, 'required'>) => void;
+  onEditModeExit: (question: TextQuestionPatchBody) => void;
 }
 
-enum fieldType {
-  multiLine = 'multiLine',
-  singleLine = 'singleLine',
+enum FIELDTYPE {
+  MULTILINE = 'multiLine',
+  SINGLELINE = 'singleLine',
 }
-
-type elementWithoutRequired = Omit<ZetkinTextQuestion, 'required'>;
 
 const OpenQuestionBlock: FC<OpenQuestionBlockProps> = ({
   element,
@@ -37,8 +45,8 @@ const OpenQuestionBlock: FC<OpenQuestionBlockProps> = ({
 
   const [typeField, setTypeField] = useState(
     element.response_config.multiline === true
-      ? fieldType.multiLine
-      : fieldType.singleLine
+      ? FIELDTYPE.MULTILINE
+      : FIELDTYPE.SINGLELINE
   );
 
   const [title, setTitle] = useState(element.question);
@@ -51,42 +59,36 @@ const OpenQuestionBlock: FC<OpenQuestionBlockProps> = ({
     'title' | 'description' | 'responseConfig' | null
   >(null);
 
-  const titleRef = useRef<HTMLInputElement>(null);
+  const titleRef = useCallback((node: HTMLInputElement) => {
+    node?.focus();
+  }, []);
   const descriptionRef = useRef<HTMLInputElement>(null);
   const typeConfigRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (focus === 'title') {
-      const input = titleRef.current;
-      input?.focus();
-    } else if (focus === 'description') {
+    if (focus === 'description') {
       const input = descriptionRef.current;
       input?.focus();
-    } else {
+    } else if (focus === 'responseConfig') {
       const input = typeConfigRef.current;
       input?.focus();
     }
   }, [focus]);
 
-  const handleKeyDown = (evt: React.KeyboardEvent<HTMLDivElement>) => {
+  const handleKeyDown = (evt: KeyboardEvent<HTMLDivElement>) => {
     if (evt.key === 'Enter') {
-      const elementWithout: elementWithoutRequired = {
-        description: description,
-        question: title,
-        response_config: { multiline: responseConfig },
-        response_type: element.response_type,
-      };
-      onEditModeExit(elementWithout);
+      const element = createElementToUpdate();
+      onEditModeExit(element);
       setFocus(null);
     }
   };
 
-  const handleSelect = (event: React.BaseSyntheticEvent) => {
+  const handleSelect = (event: BaseSyntheticEvent) => {
     setTypeField(event.target.value);
   };
 
   const createElementToUpdate = () => {
-    const elemenToUpdate: elementWithoutRequired = {
+    const elemenToUpdate: TextQuestionPatchBody = {
       description: description,
       question: title,
       response_config: { multiline: responseConfig },
@@ -103,7 +105,71 @@ const OpenQuestionBlock: FC<OpenQuestionBlockProps> = ({
         setFocus(null);
       }}
     >
-      {!inEditMode ? (
+      {inEditMode ? (
+        <Box display="flex" flexDirection="column">
+          <TextField
+            defaultValue={element.question}
+            fullWidth
+            InputProps={{
+              inputRef: titleRef,
+              sx: { fontSize: theme.typography.h4.fontSize },
+            }}
+            label={intl.formatMessage({
+              id: 'misc.surveys.blocks.text.header',
+            })}
+            margin="normal"
+            onChange={(ev) => setTitle(ev.target.value)}
+            onKeyDown={(evt) => handleKeyDown(evt)}
+          />
+          <TextField
+            defaultValue={element.description}
+            fullWidth
+            InputProps={{ inputRef: descriptionRef }}
+            label={intl.formatMessage({
+              id: 'misc.surveys.blocks.text.content',
+            })}
+            margin="normal"
+            onChange={(ev) => setDescription(ev.target.value)}
+            onKeyDown={(evt) => handleKeyDown(evt)}
+          />
+          <TextField
+            defaultValue={
+              element.response_config.multiline === true
+                ? FIELDTYPE.MULTILINE
+                : FIELDTYPE.SINGLELINE
+            }
+            fullWidth
+            InputProps={{ inputRef: typeConfigRef }}
+            label={intl.formatMessage({
+              id: 'misc.surveys.blocks.text.textFieldType',
+            })}
+            margin="normal"
+            onChange={(event) => {
+              handleSelect(event),
+                setResponseConfig(
+                  event.target.value === FIELDTYPE.MULTILINE ? true : false
+                );
+            }}
+            select
+            SelectProps={{
+              MenuProps: { disablePortal: true },
+            }}
+            sx={{ alignItems: 'center', display: 'flex' }}
+            value={typeField}
+          >
+            {Object.values(FIELDTYPE).map((value) => (
+              <MenuItem key={value} value={value}>
+                {value === 'singleLine' ? (
+                  <AbcIcon sx={{ marginRight: '10px' }} />
+                ) : (
+                  <SortIcon sx={{ marginRight: '10px' }} />
+                )}
+                <Msg id={`misc.surveys.blocks.text.${value}`} />
+              </MenuItem>
+            ))}
+          </TextField>
+        </Box>
+      ) : (
         <Box onClick={() => onEditModeEnter()}>
           <Typography
             component="h4"
@@ -114,7 +180,7 @@ const OpenQuestionBlock: FC<OpenQuestionBlockProps> = ({
             {element.question ? (
               element.question
             ) : (
-              <Msg id="pages.organizeSurvey.openQuestion.titlePreview" />
+              <Msg id="misc.surveys.blocks.text.empty" />
             )}
           </Typography>
           <Typography
@@ -126,7 +192,7 @@ const OpenQuestionBlock: FC<OpenQuestionBlockProps> = ({
             {element.description ? (
               element.description
             ) : (
-              <Msg id="pages.organizeSurvey.openQuestion.description" />
+              <Msg id="misc.surveys.blocks.text.content" />
             )}
           </Typography>
           <Typography
@@ -138,81 +204,17 @@ const OpenQuestionBlock: FC<OpenQuestionBlockProps> = ({
             {element.response_config.multiline ? (
               <>
                 <SortIcon sx={{ marginRight: '10px' }} />
-                <Msg id="pages.organizeSurvey.openQuestion.multiLine" />{' '}
-                <Msg id="pages.organizeSurvey.openQuestion.fieldTypePreview" />
+                <Msg id="misc.surveys.blocks.text.multiLine" />{' '}
+                <Msg id="misc.surveys.blocks.text.fieldTypePreview" />
               </>
             ) : (
               <>
                 <AbcIcon sx={{ marginRight: '10px' }} />
-                <Msg id="pages.organizeSurvey.openQuestion.singleLine" />{' '}
-                <Msg id="pages.organizeSurvey.openQuestion.fieldTypePreview" />
+                <Msg id="misc.surveys.blocks.text.singleLine" />{' '}
+                <Msg id="misc.surveys.blocks.text.fieldTypePreview" />
               </>
             )}
           </Typography>
-        </Box>
-      ) : (
-        <Box display="flex" flexDirection="column">
-          <TextField
-            defaultValue={element.question}
-            fullWidth
-            InputProps={{
-              inputRef: titleRef,
-              sx: { fontSize: theme.typography.h4.fontSize },
-            }}
-            label={intl.formatMessage({
-              id: 'pages.organizeSurvey.openQuestion.title',
-            })}
-            margin="normal"
-            onChange={(ev) => setTitle(ev.target.value)}
-            onKeyDown={(evt) => handleKeyDown(evt)}
-          />
-          <TextField
-            defaultValue={element.description}
-            fullWidth
-            InputProps={{ inputRef: descriptionRef }}
-            label={intl.formatMessage({
-              id: 'pages.organizeSurvey.openQuestion.description',
-            })}
-            margin="normal"
-            onChange={(ev) => setDescription(ev.target.value)}
-            onKeyDown={(evt) => handleKeyDown(evt)}
-          />
-          <TextField
-            defaultValue={
-              element.response_config.multiline === true
-                ? fieldType.multiLine
-                : fieldType.singleLine
-            }
-            fullWidth
-            InputProps={{ inputRef: typeConfigRef }}
-            label={intl.formatMessage({
-              id: 'pages.organizeSurvey.openQuestion.textFieldType',
-            })}
-            margin="normal"
-            onChange={(event) => {
-              handleSelect(event),
-                setResponseConfig(
-                  event.target.value === fieldType.multiLine ? true : false
-                );
-            }}
-            select
-            SelectProps={{
-              MenuProps: { disablePortal: true },
-            }}
-            sx={{ alignItems: 'center', display: 'flex' }}
-            value={typeField}
-          >
-            {Object.values(fieldType).map((value) => (
-              <MenuItem key={value} value={value}>
-                {value === 'singleLine' ? (
-                  <AbcIcon sx={{ marginRight: '10px' }} />
-                ) : (
-                  <SortIcon sx={{ marginRight: '10px' }} />
-                )}
-                <Msg id={`pages.organizeSurvey.openQuestion.${value}`} />
-              </MenuItem>
-            ))}
-          </TextField>
         </Box>
       )}
     </ClickAwayListener>
