@@ -1,10 +1,9 @@
 import dayjs from 'dayjs';
-
 import Environment from 'core/env/Environment';
 import { IFuture } from 'core/caching/futures';
 import { ModelBase } from 'core/models';
-import { ZetkinSurveyExtended } from 'utils/types/zetkin';
 import SurveysRepo, { ZetkinSurveyElementPostBody } from '../repos/SurveysRepo';
+import { ZetkinSurveyExtended, ZetkinTextQuestion } from 'utils/types/zetkin';
 
 export enum SurveyState {
   UNPUBLISHED = 'unpublished',
@@ -158,6 +157,15 @@ export default class SurveyDataModel extends ModelBase {
 
     this._repo.updateSurvey(this._orgId, this._surveyId, {
       expires: today,
+    });
+  }
+
+  updateOpenQuestionBlock(
+    elemId: number,
+    data: Omit<ZetkinTextQuestion, 'required'>
+  ) {
+    this._repo.updateElement(this._orgId, this._surveyId, elemId, {
+      question: data,
     });
   }
 }
