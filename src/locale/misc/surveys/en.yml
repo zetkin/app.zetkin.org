@@ -4,11 +4,14 @@ addBlocks:
   textButton: Text
   title: Choose a block type to add more content to your survey
 blocks:
-  text:
-    content: Description
+  common:
+    description: Description
     empty: Untitled block
+  open:
     fieldTypePreview: text field
-    header: Title
     multiLine: Multi-line
     singleLine: Single-line
     textFieldType: Text field type
+  text:
+    content: Description
+    header: Title

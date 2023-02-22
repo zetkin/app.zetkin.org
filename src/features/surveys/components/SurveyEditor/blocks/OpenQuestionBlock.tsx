@@ -115,7 +115,7 @@ const OpenQuestionBlock: FC<OpenQuestionBlockProps> = ({
               sx: { fontSize: theme.typography.h4.fontSize },
             }}
             label={intl.formatMessage({
-              id: 'misc.surveys.blocks.text.header',
+              id: 'misc.surveys.blocks.common.empty',
             })}
             margin="normal"
             onChange={(ev) => setTitle(ev.target.value)}
@@ -126,7 +126,7 @@ const OpenQuestionBlock: FC<OpenQuestionBlockProps> = ({
             fullWidth
             InputProps={{ inputRef: descriptionRef }}
             label={intl.formatMessage({
-              id: 'misc.surveys.blocks.text.content',
+              id: 'misc.surveys.blocks.common.description',
             })}
             margin="normal"
             onChange={(ev) => setDescription(ev.target.value)}
@@ -141,7 +141,7 @@ const OpenQuestionBlock: FC<OpenQuestionBlockProps> = ({
             fullWidth
             InputProps={{ inputRef: typeConfigRef }}
             label={intl.formatMessage({
-              id: 'misc.surveys.blocks.text.textFieldType',
+              id: 'misc.surveys.blocks.open.textFieldType',
             })}
             margin="normal"
             onChange={(event) => {
@@ -164,7 +164,7 @@ const OpenQuestionBlock: FC<OpenQuestionBlockProps> = ({
                 ) : (
                   <SortIcon sx={{ marginRight: '10px' }} />
                 )}
-                <Msg id={`misc.surveys.blocks.text.${value}`} />
+                <Msg id={`misc.surveys.blocks.open.${value}`} />
               </MenuItem>
             ))}
           </TextField>
@@ -180,7 +180,7 @@ const OpenQuestionBlock: FC<OpenQuestionBlockProps> = ({
             {element.question ? (
               element.question
             ) : (
-              <Msg id="misc.surveys.blocks.text.empty" />
+              <Msg id="misc.surveys.blocks.common.empty" />
             )}
           </Typography>
           <Typography
@@ -192,7 +192,7 @@ const OpenQuestionBlock: FC<OpenQuestionBlockProps> = ({
             {element.description ? (
               element.description
             ) : (
-              <Msg id="misc.surveys.blocks.text.content" />
+              <Msg id="misc.surveys.blocks.common.description" />
             )}
           </Typography>
           <Typography
@@ -204,14 +204,14 @@ const OpenQuestionBlock: FC<OpenQuestionBlockProps> = ({
             {element.response_config.multiline ? (
               <>
                 <SortIcon sx={{ marginRight: '10px' }} />
-                <Msg id="misc.surveys.blocks.text.multiLine" />{' '}
-                <Msg id="misc.surveys.blocks.text.fieldTypePreview" />
+                <Msg id="misc.surveys.blocks.open.multiLine" />{' '}
+                <Msg id="misc.surveys.blocks.open.fieldTypePreview" />
               </>
             ) : (
               <>
                 <AbcIcon sx={{ marginRight: '10px' }} />
-                <Msg id="misc.surveys.blocks.text.singleLine" />{' '}
-                <Msg id="misc.surveys.blocks.text.fieldTypePreview" />
+                <Msg id="misc.surveys.blocks.open.singleLine" />{' '}
+                <Msg id="misc.surveys.blocks.open.fieldTypePreview" />
               </>
             )}
           </Typography>
