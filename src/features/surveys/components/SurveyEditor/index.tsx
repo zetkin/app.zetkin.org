@@ -1,5 +1,5 @@
 import { Box } from '@mui/material';
-import { FC } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 
 import AddBlocks from './AddBlocks';
 import BlockWrapper from './blocks/BlockWrapper';
@@ -8,13 +8,41 @@ import OpenQuestionBlock from './blocks/OpenQuestionBlock';
 import SurveyDataModel from 'features/surveys/models/SurveyDataModel';
 import TextBlock from './blocks/TextBlock';
 import ZUIFuture from 'zui/ZUIFuture';
-import { ELEMENT_TYPE, RESPONSE_TYPE } from 'utils/types/zetkin';
+import {
+  ELEMENT_TYPE,
+  RESPONSE_TYPE,
+  ZetkinTextQuestion,
+} from 'utils/types/zetkin';
 
 interface SurveyEditorProps {
   model: SurveyDataModel;
 }
 
 const SurveyEditor: FC<SurveyEditorProps> = ({ model }) => {
+  const [idOfBlockInEditMode, setIdOfBlockInEditMode] = useState<
+    number | undefined
+  >();
+
+  const lengthRef = useRef(0);
+
+  useEffect(() => {
+    const data = model.getData().data;
+    if (data) {
+      const elements = data.elements;
+
+      //If a block was just added, set its id to be in edit mode.
+      if (lengthRef.current < elements.length && lengthRef.current !== 0) {
+        setIdOfBlockInEditMode(elements[elements.length - 1].id);
+      } else if (lengthRef.current === 0) {
+        if (elements.length === 1) {
+          setIdOfBlockInEditMode(elements[0].id);
+        }
+      }
+
+      lengthRef.current = elements.length;
+    }
+  }, [model.getData().data?.elements.length]);
+
   function handleDelete(elemId: number) {
     model.deleteElement(elemId);
   }
@@ -34,13 +62,28 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ model }) => {
                   if (elem.question.response_type == RESPONSE_TYPE.TEXT) {
                     return (
                       <BlockWrapper
+                        key={elem.id}
                         hidden={elem.hidden}
                         onDelete={() => handleDelete(elem.id)}
                         onToggleHidden={(hidden) =>
                           handleToggleHidden(elem.id, hidden)
                         }
                       >
-                        <OpenQuestionBlock question={elem.question} />
+                        <OpenQuestionBlock
+                          element={elem.question}
+                          inEditMode={elem.id === idOfBlockInEditMode}
+                          onEditModeEnter={() =>
+                            setIdOfBlockInEditMode(elem.id)
+                          }
+                          onEditModeExit={(
+                            data: Omit<ZetkinTextQuestion, 'required'>
+                          ) => {
+                            if (elem.id === idOfBlockInEditMode) {
+                              setIdOfBlockInEditMode(undefined);
+                            }
+                            model.updateOpenQuestionBlock(elem.id, data);
+                          }}
+                        />
                       </BlockWrapper>
                     );
                   } else if (
@@ -48,6 +91,7 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ model }) => {
                   ) {
                     return (
                       <BlockWrapper
+                        key={elem.id}
                         hidden={elem.hidden}
                         onDelete={() => handleDelete(elem.id)}
                         onToggleHidden={(hidden) =>
@@ -61,6 +105,7 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ model }) => {
                 } else if (elem.type == ELEMENT_TYPE.TEXT) {
                   return (
                     <BlockWrapper
+                      key={elem.id}
                       hidden={elem.hidden}
                       onDelete={() => handleDelete(elem.id)}
                       onToggleHidden={(hidden) =>
