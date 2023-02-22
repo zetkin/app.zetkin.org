@@ -101,6 +101,13 @@ export default class SurveyDataModel extends ModelBase {
     }
   }
 
+  setDates(published: string | null, expires: string | null): void {
+    this._repo.updateSurvey(this._orgId, this._surveyId, {
+      expires: expires,
+      published: published,
+    });
+  }
+
   setTitle(title: string) {
     this._repo.updateSurvey(this._orgId, this._surveyId, { title });
   }
