@@ -93,7 +93,7 @@ export default class SurveySubmissionModel extends ModelBase {
         });
       } else {
         const question = elem.question;
-        const response = submission.responses.find(
+        const response = submission.responses?.find(
           (res) => res.question_id == elem.id
         );
         if (!response) {

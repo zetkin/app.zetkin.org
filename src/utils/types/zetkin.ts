@@ -275,7 +275,7 @@ export interface ZetkinSurveySubmission {
     title: string;
   };
   submitted: string;
-  responses: ZetkinSurveyQuestionResponse[]; // TODO: Lying! Segregate with/without responses
+  responses?: ZetkinSurveyQuestionResponse[]; // TODO: Lying! Segregate with/without responses
 }
 
 export interface ZetkinCanvassAssignment {

@@ -7,12 +7,7 @@ import { ZetkinSurveySubmission } from 'utils/types/zetkin';
 import ZUIAvatar from 'zui/ZUIAvatar';
 import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
-import {
-  DataGridPro,
-  GridRenderCellParams,
-  // GridValueGetterParams,
-} from '@mui/x-data-grid-pro';
-// import ViewSurveySubmissionPreview from 'features/views/components/ViewSurveySubmissionPreview';
+import { DataGridPro, GridRenderCellParams } from '@mui/x-data-grid-pro';
 
 const SurveySubmissionsList = ({
   submissions,
@@ -39,34 +34,29 @@ const SurveySubmissionsList = ({
         if (params.row.respondent !== null) {
           return (
             <Box
-              onClick={() => {
+              key={`submissionList-${params.row.id}`}
+              onClick={() =>
                 openPane({
                   render() {
                     return (
                       <SurveySubmissionPane
-                        id={params.row.survey.id}
+                        id={params.row.id}
                         orgId={parseInt(orgId as string)}
                       />
                     );
                   },
                   width: 400,
-                });
-              }}
+                })
+              }
+              sx={{ cursor: 'pointer' }}
             >
               {params.row.respondent[field]}
             </Box>
           );
         }
+        return '-';
       },
       sortable: true,
-      // valueGetter: (
-      //   params: GridValueGetterParams<string, ZetkinSurveySubmission>
-      // ) => {
-      //   if (params.row.respondent !== null) {
-      //     return params.row.respondent[field];
-      //   }
-      //   return '-';
-      // },
     };
   };
 
@@ -83,7 +73,30 @@ const SurveySubmissionsList = ({
       renderCell: (
         params: GridRenderCellParams<string, ZetkinSurveySubmission>
       ) => {
-        return <ZUIRelativeTime datetime={params.row.submitted} />;
+        if (params.row.respondent !== null) {
+          return (
+            <Box
+              key={`submissionList-${params.row.id}`}
+              onClick={() =>
+                openPane({
+                  render() {
+                    return (
+                      <SurveySubmissionPane
+                        id={params.row.id}
+                        orgId={parseInt(orgId as string)}
+                      />
+                    );
+                  },
+                  width: 400,
+                })
+              }
+              sx={{ cursor: 'pointer' }}
+            >
+              <ZUIRelativeTime datetime={params.row.submitted} />
+            </Box>
+          );
+        }
+        return '-';
       },
       sortable: true,
     },
