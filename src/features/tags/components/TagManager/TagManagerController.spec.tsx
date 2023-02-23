@@ -92,7 +92,7 @@ describe('<TagManagerController />', () => {
     expect(getByText('Skills')).toBeTruthy();
     expect(getByTestId('TagManager-groupedTags-2').children.length).toEqual(3);
 
-    expect(getByText('misc.tags.tagManager.ungroupedHeader')).toBeTruthy();
+    expect(getByText('feat.tags.manager.ungroupedHeader')).toBeTruthy();
     expect(
       getByTestId('TagManager-groupedTags-ungrouped').children.length
     ).toEqual(2);
@@ -117,7 +117,7 @@ describe('<TagManagerController />', () => {
         onUnassignTag={unassignTagCallback}
       />
     );
-    const addTagButton = getByText('misc.tags.tagManager.addTag');
+    const addTagButton = getByText('feat.tags.manager.addTag');
     await userEvent.click(addTagButton);
 
     // Typing searches for tag
@@ -151,7 +151,7 @@ describe('<TagManagerController />', () => {
         onUnassignTag={unassignTagCallback}
       />
     );
-    const addTagButton = getByText('misc.tags.tagManager.addTag');
+    const addTagButton = getByText('feat.tags.manager.addTag');
     await userEvent.click(addTagButton);
 
     // Typing searches for tag
@@ -167,7 +167,7 @@ describe('<TagManagerController />', () => {
     // Check that we're in value mode
     const input = getByTestId('TagManager-TagSelect-searchField');
     expect(input.getAttribute('placeholder')).toEqual(
-      'misc.tags.tagManager.addValue'
+      'feat.tags.manager.addValue'
     );
 
     // Add value
@@ -244,7 +244,7 @@ describe('<TagManagerController />', () => {
         />
       );
 
-      const addTagButton = getByText('misc.tags.tagManager.addTag');
+      const addTagButton = getByText('feat.tags.manager.addTag');
       await userEvent.click(addTagButton);
 
       const tagSearchField = getByTestId('TagManager-TagSelect-searchField');
@@ -274,7 +274,7 @@ describe('<TagManagerController />', () => {
       );
 
       // Open create dialog
-      await userEvent.click(getByText('misc.tags.tagManager.addTag'));
+      await userEvent.click(getByText('feat.tags.manager.addTag'));
       await userEvent.click(
         getByTestId('TagManager-TagSelect-createTagOption')
       );
@@ -293,7 +293,7 @@ describe('<TagManagerController />', () => {
       const input = getByTestId('TagManager-TagSelect-searchField');
       expect(input.getAttribute('value')).toEqual('');
       expect(input.getAttribute('placeholder')).toEqual(
-        'misc.tags.tagManager.addTag'
+        'feat.tags.manager.addTag'
       );
     });
 
@@ -311,7 +311,7 @@ describe('<TagManagerController />', () => {
       );
 
       // Open create dialog
-      await userEvent.click(getByText('misc.tags.tagManager.addTag'));
+      await userEvent.click(getByText('feat.tags.manager.addTag'));
       await userEvent.click(
         getByTestId('TagManager-TagSelect-createTagOption')
       );
@@ -333,7 +333,7 @@ describe('<TagManagerController />', () => {
 
       const input = getByTestId('TagManager-TagSelect-searchField');
       expect(input.getAttribute('placeholder')).toEqual(
-        'misc.tags.tagManager.addValue'
+        'feat.tags.manager.addValue'
       );
 
       expect(assignTagCallback).not.toBeCalled();
@@ -379,7 +379,7 @@ describe('<TagManagerController />', () => {
         />
       );
 
-      const addTagButton = getByText('misc.tags.tagManager.addTag');
+      const addTagButton = getByText('feat.tags.manager.addTag');
       await userEvent.click(addTagButton);
 
       // Expect to not find edit button
@@ -403,7 +403,7 @@ describe('<TagManagerController />', () => {
         />
       );
 
-      const addTagButton = getByText('misc.tags.tagManager.addTag');
+      const addTagButton = getByText('feat.tags.manager.addTag');
       await userEvent.click(addTagButton);
 
       const editTagButton = getByTestId(

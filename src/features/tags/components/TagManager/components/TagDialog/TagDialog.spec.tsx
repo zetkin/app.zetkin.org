@@ -66,9 +66,7 @@ describe('<TagDialog />', () => {
     const groupField = getByTestId('TagManager-TagDialog-tagGroupSelect');
     await userEvent.click(groupField);
     await userEvent.keyboard('New Group');
-    const newGroupOption = getByText(
-      'misc.tags.tagManager.tagDialog.groupCreatePrompt'
-    );
+    const newGroupOption = getByText('feat.tags.dialog.groupCreatePrompt');
     await userEvent.click(newGroupOption);
 
     const submit = getByTestId('SubmitCancelButtons-submitButton');
