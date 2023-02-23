@@ -45,7 +45,7 @@ type ZetkinSurveyOptionsQuestionElementPostBody = {
   type: ELEMENT_TYPE.QUESTION;
 };
 
-type ZetkinSurveyElementPatchBody =
+export type ZetkinSurveyElementPatchBody =
   | ZetkinSurveyTextElementPatchBody
   | Partial<Omit<ZetkinSurveyOptionsQuestionElementPostBody, 'type'>>
   | Partial<Omit<ZetkinSurveyTextQuestionElementPostBody, 'type'>>;

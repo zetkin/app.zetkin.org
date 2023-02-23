@@ -3,6 +3,7 @@ import { FormattedMessage as Msg } from 'react-intl';
 import SortIcon from '@mui/icons-material/Sort';
 import theme from 'theme';
 import { useIntl } from 'react-intl';
+import { ZetkinSurveyElementPatchBody } from 'features/surveys/repos/SurveysRepo';
 import { ZetkinTextQuestion } from 'utils/types/zetkin';
 import {
   BaseSyntheticEvent,
@@ -21,13 +22,11 @@ import {
   Typography,
 } from '@mui/material';
 
-type TextQuestionPatchBody = Omit<ZetkinTextQuestion, 'required'>;
-
 interface OpenQuestionBlockProps {
   element: ZetkinTextQuestion;
   inEditMode: boolean;
   onEditModeEnter: () => void;
-  onEditModeExit: (question: TextQuestionPatchBody) => void;
+  onEditModeExit: (question: ZetkinSurveyElementPatchBody) => void;
 }
 
 enum FIELDTYPE {
@@ -88,11 +87,13 @@ const OpenQuestionBlock: FC<OpenQuestionBlockProps> = ({
   };
 
   const createElementToUpdate = () => {
-    const elemenToUpdate: TextQuestionPatchBody = {
-      description: description,
-      question: title,
-      response_config: { multiline: responseConfig },
-      response_type: element.response_type,
+    const elemenToUpdate: ZetkinSurveyElementPatchBody = {
+      question: {
+        description: description,
+        question: title,
+        response_config: { multiline: responseConfig },
+        response_type: element.response_type,
+      },
     };
     return elemenToUpdate;
   };
