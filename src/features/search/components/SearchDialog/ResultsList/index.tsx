@@ -1,5 +1,4 @@
 import { FunctionComponent } from 'react';
-import { FormattedMessage as Msg } from 'react-intl';
 
 import { List, ListItem, ListItemText } from '@mui/material';
 
@@ -11,6 +10,9 @@ import {
   SEARCH_DATA_TYPE,
   SearchResult,
 } from 'features/search/components/types';
+
+import messages from '../../../messages';
+import { Msg } from 'core/i18n';
 
 interface ResultsListProps {
   results: SearchResult[];
@@ -25,7 +27,7 @@ const ResultsList: FunctionComponent<ResultsListProps> = ({
       {results.length === 0 && (
         <ListItem>
           <ListItemText>
-            <Msg id="layout.organize.search.noResults" />
+            <Msg id={messages.noResults} />
           </ListItemText>
         </ListItem>
       )}

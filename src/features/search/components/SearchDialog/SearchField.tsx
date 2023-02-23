@@ -9,7 +9,6 @@ import {
 import Error from '@mui/icons-material/Error';
 import Search from '@mui/icons-material/Search';
 
-import { useIntl } from 'react-intl';
 import {
   CircularProgress,
   InputAdornment,
@@ -17,21 +16,21 @@ import {
   Tooltip,
 } from '@mui/material';
 
+import messages from '../../messages';
+import { useMessages } from 'core/i18n';
+
 const SearchFieldIcon: React.FunctionComponent<{
   error: boolean;
   loading: boolean;
 }> = ({ loading, error }) => {
-  const intl = useIntl();
+  const msg = useMessages(messages);
+
   return (
     <InputAdornment position="start">
       {loading ? (
         <CircularProgress size={24} />
       ) : error ? (
-        <Tooltip
-          title={intl.formatMessage({
-            id: 'layout.organize.search.error',
-          })}
-        >
+        <Tooltip title={msg.error()}>
           <Error color="error" data-testid="SearchDialog-errorIndicator" />
         </Tooltip>
       ) : (
@@ -55,7 +54,7 @@ const SearchField: React.FunctionComponent<SearchFieldProps> = ({
   loading,
   error,
 }) => {
-  const intl = useIntl();
+  const msg = useMessages(messages);
   const input = useRef<HTMLInputElement>();
 
   useEffect(() => {
@@ -67,9 +66,7 @@ const SearchField: React.FunctionComponent<SearchFieldProps> = ({
 
   return (
     <TextField
-      aria-label={intl.formatMessage({
-        id: 'layout.organize.search.label',
-      })}
+      aria-label={msg.label()}
       fullWidth
       id="SearchDialog-inputField"
       InputProps={{
@@ -78,9 +75,7 @@ const SearchField: React.FunctionComponent<SearchFieldProps> = ({
       inputRef={input}
       onChange={onChange}
       onKeyDown={onKeyDown}
-      placeholder={intl.formatMessage({
-        id: 'layout.organize.search.placeholder',
-      })}
+      placeholder={msg.placeholder()}
       variant="outlined"
     />
   );

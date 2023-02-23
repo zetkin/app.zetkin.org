@@ -1,26 +1,26 @@
 import { InsertDriveFileOutlined } from '@mui/icons-material';
 import Link from 'next/link';
-import { useIntl } from 'react-intl';
 import { useRouter } from 'next/router';
 import { Avatar, ListItem, ListItemAvatar } from '@mui/material';
 
 import ResultsListItemText from './ResultsListItemText';
 import { ZetkinView } from 'utils/types/zetkin';
 
+import messages from '../../../messages';
+import { useMessages } from 'core/i18n';
+
 const ViewListItem: React.FunctionComponent<{ view: ZetkinView }> = ({
   view,
 }) => {
-  const intl = useIntl();
+  const msg = useMessages(messages);
   const router = useRouter();
   const { orgId } = router.query as { orgId: string };
 
-  const elements = [
-    intl.formatMessage({ id: 'misc.search.results.view.people' }),
-  ];
+  const elements = [msg.results.people()];
   if (view.folder) {
     elements.push(view.folder.title);
   }
-  elements.push(intl.formatMessage({ id: 'misc.search.results.view.view' }));
+  elements.push(msg.results.view());
 
   return (
     <Link href={`/organize/${orgId}/people/views/${view.id}`} passHref>
