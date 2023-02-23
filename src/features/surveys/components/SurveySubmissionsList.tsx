@@ -54,7 +54,7 @@ const SurveySubmissionsList = ({
                   width: 400,
                 })
               }
-              sx={{ cursor: 'pointer' }}
+              sx={{ cursor: 'pointer', width: '200px' }}
             >
               {params.row.respondent[field]}
             </Box>
@@ -96,7 +96,7 @@ const SurveySubmissionsList = ({
                   width: 400,
                 })
               }
-              sx={{ cursor: 'pointer' }}
+              sx={{ cursor: 'pointer', width: '200px' }}
             >
               <ZUIRelativeTime datetime={params.row.submitted} />
             </Box>
