@@ -96,7 +96,7 @@ const TextBlock: FC<TextBlockProps> = ({
             {header ? (
               element.text_block.header
             ) : (
-              <Msg id="misc.surveys.blocks.text.empty" />
+              <Msg id="misc.surveys.blocks.common.empty" />
             )}
           </Typography>
           {content && (
