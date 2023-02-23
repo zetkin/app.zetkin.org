@@ -55,9 +55,9 @@ const OpenQuestionBlock: FC<OpenQuestionBlockProps> = ({
   const [responseConfig, setResponseConfig] = useState(
     element.response_config.multiline
   );
-  const [focus, setFocus] = useState<
-    'title' | 'description' | 'responseConfig' | null
-  >(null);
+  const [focus, setFocus] = useState<'description' | 'responseConfig' | null>(
+    null
+  );
 
   const titleRef = useCallback((node: HTMLInputElement) => {
     node?.focus();
@@ -116,7 +116,7 @@ const OpenQuestionBlock: FC<OpenQuestionBlockProps> = ({
                 sx: { fontSize: theme.typography.h4.fontSize },
               }}
               label={intl.formatMessage({
-                id: 'misc.surveys.blocks.common.empty',
+                id: 'misc.surveys.blocks.open.label',
               })}
               margin="normal"
               onChange={(ev) => setTitle(ev.target.value)}
@@ -127,7 +127,7 @@ const OpenQuestionBlock: FC<OpenQuestionBlockProps> = ({
               fullWidth
               InputProps={{ inputRef: descriptionRef }}
               label={intl.formatMessage({
-                id: 'misc.surveys.blocks.common.description',
+                id: 'misc.surveys.blocks.open.description',
               })}
               margin="normal"
               onChange={(ev) => setDescription(ev.target.value)}
@@ -181,16 +181,11 @@ const OpenQuestionBlock: FC<OpenQuestionBlockProps> = ({
           }}
         >
           <Box onClick={() => onEditModeEnter()}>
-            <Typography
-              component="h4"
-              marginBottom={2}
-              onClick={() => setFocus('title')}
-              variant="h4"
-            >
+            <Typography component="h4" marginBottom={2} variant="h4">
               {element.question ? (
                 element.question
               ) : (
-                <Msg id="misc.surveys.blocks.common.empty" />
+                <Msg id="misc.surveys.blocks.open.empty" />
               )}
             </Typography>
             <Typography
@@ -202,7 +197,7 @@ const OpenQuestionBlock: FC<OpenQuestionBlockProps> = ({
               {element.description ? (
                 element.description
               ) : (
-                <Msg id="misc.surveys.blocks.common.description" />
+                <Msg id="misc.surveys.blocks.open.description" />
               )}
             </Typography>
             <Typography
