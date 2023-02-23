@@ -5,7 +5,7 @@ import { Box, IconButton, List, ListItem, ListSubheader } from '@mui/material';
 import TagChip from '../TagChip';
 import { ZetkinTag } from 'utils/types/zetkin';
 
-import messages from '../../../../messages';
+import messageIds from '../../../../l10n/messageIds';
 import { Msg } from 'core/i18n';
 
 const TagSelectList: React.FC<{
@@ -87,13 +87,13 @@ const TagSelectList: React.FC<{
         <Add />
         {inputValue ? (
           <Msg
-            id={messages.manager.createNamedTag}
+            id={messageIds.manager.createNamedTag}
             values={{
               name: <b>{inputValue}</b>,
             }}
           />
         ) : (
-          <Msg id={messages.manager.createTag} />
+          <Msg id={messageIds.manager.createTag} />
         )}
       </ListItem>
     </List>

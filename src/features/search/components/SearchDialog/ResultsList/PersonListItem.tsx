@@ -5,7 +5,7 @@ import { Avatar, ListItem, ListItemAvatar } from '@mui/material';
 import ResultsListItemText from './ResultsListItemText';
 import { ZetkinPerson } from 'utils/types/zetkin';
 
-import messages from '../../../messages';
+import messageIds from '../../../l10n/messageIds';
 import { Msg } from 'core/i18n';
 
 const PersonListItem: React.FunctionComponent<{ person: ZetkinPerson }> = ({
@@ -25,7 +25,7 @@ const PersonListItem: React.FunctionComponent<{ person: ZetkinPerson }> = ({
         </ListItemAvatar>
         <ResultsListItemText
           primary={person.first_name + ' ' + person.last_name}
-          secondary={<Msg id={messages.results.person} />}
+          secondary={<Msg id={messageIds.results.person} />}
         />
       </ListItem>
     </Link>

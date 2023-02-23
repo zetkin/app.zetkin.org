@@ -11,7 +11,7 @@ import {
   SearchResult,
 } from 'features/search/components/types';
 
-import messages from '../../../messages';
+import messages from '../../../l10n/messageIds';
 import { Msg } from 'core/i18n';
 
 interface ResultsListProps {

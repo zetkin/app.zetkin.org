@@ -10,7 +10,7 @@ import ZUISubmitCancelButtons from 'zui/ZUISubmitCancelButtons';
 import { EditTag, NewTag, NewTagGroup } from '../../types';
 import { ZetkinTag, ZetkinTagGroup } from 'utils/types/zetkin';
 
-import messages from '../../../../messages';
+import messageIds from '../../../../l10n/messageIds';
 import { useMessages } from 'core/i18n';
 
 interface TagDialogProps {
@@ -28,7 +28,7 @@ const TagDialog: React.FunctionComponent<TagDialogProps> = ({
   onSubmit,
   tag,
 }) => {
-  const msg = useMessages(messages);
+  const messages = useMessages(messageIds);
 
   const [title, setTitle] = useState('');
   const [titleEdited, setTitleEdited] = useState(false);
@@ -67,7 +67,9 @@ const TagDialog: React.FunctionComponent<TagDialogProps> = ({
     <ZUIDialog
       onClose={closeAndClear}
       open={open}
-      title={editingTag ? msg.dialog.editTitle() : msg.dialog.createTitle()}
+      title={
+        editingTag ? messages.dialog.editTitle() : messages.dialog.createTitle()
+      }
     >
       <form
         onSubmit={(e) => {
@@ -101,9 +103,9 @@ const TagDialog: React.FunctionComponent<TagDialogProps> = ({
         <TextField
           error={titleEdited && !title}
           fullWidth
-          helperText={titleEdited && !title && msg.dialog.titleErrorText()}
+          helperText={titleEdited && !title && messages.dialog.titleErrorText()}
           inputProps={{ 'data-testid': 'TagManager-TagDialog-titleField' }}
-          label={msg.dialog.titleLabel()}
+          label={messages.dialog.titleLabel()}
           margin="normal"
           onChange={(e) => {
             setTitle(e.target.value);
@@ -134,7 +136,7 @@ const TagDialog: React.FunctionComponent<TagDialogProps> = ({
           onCancel={closeAndClear}
           submitDisabled={!title || !color.valid}
           submitText={
-            editingTag ? undefined : msg.dialog.submitCreateTagButton()
+            editingTag ? undefined : messages.dialog.submitCreateTagButton()
           }
         />
       </form>

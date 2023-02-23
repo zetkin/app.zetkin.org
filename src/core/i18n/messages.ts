@@ -96,7 +96,7 @@ export function im<Values extends Record<string, MessageValue>>(
  *   headline: 'My Page',
  * });
  */
-export function messages<MapType extends MessageMap>(
+export function makeMessages<MapType extends MessageMap>(
   prefix: string,
   map: MapType
 ): MapType {

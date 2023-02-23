@@ -7,7 +7,7 @@ import TagsList from './components/TagsList';
 import { EditTag, NewTag } from './types';
 import { ZetkinTag, ZetkinTagGroup } from 'utils/types/zetkin';
 
-import messages from '../../messages';
+import messageIds from '../../l10n/messageIds';
 import { Msg } from 'core/i18n';
 
 export interface TagManagerControllerProps {
@@ -54,7 +54,7 @@ export const TagManagerController: React.FunctionComponent<
           onClick={(event) => setAddTagButton(event.currentTarget)}
           startIcon={<Add />}
         >
-          <Msg id={messages.manager.addTag} />
+          <Msg id={messageIds.manager.addTag} />
         </Button>
         <Popover
           anchorEl={addTagButton}

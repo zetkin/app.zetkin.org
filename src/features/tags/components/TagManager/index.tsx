@@ -11,7 +11,7 @@ import TagManagerController, {
 } from './TagManagerController';
 import { useCreateTag, useEditTag } from './utils';
 
-import messages from '../../messages';
+import messageIds from '../../l10n/messageIds';
 import { useMessages } from 'core/i18n';
 
 type TagManagerProps = Omit<
@@ -46,7 +46,7 @@ const TagManager: React.FunctionComponent<TagManagerProps> = (props) => {
 export const TagManagerSection: React.FunctionComponent<
   Omit<TagManagerProps, 'groupTags'>
 > = (props) => {
-  const msg = useMessages(messages);
+  const messages = useMessages(messageIds);
 
   const [isGrouped, setIsGrouped] = useState(true);
 
@@ -58,7 +58,7 @@ export const TagManagerSection: React.FunctionComponent<
           onChange={() => setIsGrouped(!isGrouped)}
         />
       }
-      title={msg.manager.title()}
+      title={messages.manager.title()}
     >
       <TagManager groupTags={isGrouped} {...props} />
     </ZUISection>

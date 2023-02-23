@@ -1,8 +1,8 @@
 import { ReactElement } from 'react';
 
-import { im, m, messages } from 'core/i18n';
+import { im, m, makeMessages } from 'core/i18n';
 
-export default messages('feat.tags', {
+export default makeMessages('feat.tags', {
   dialog: {
     colorErrorText: m('Please enter a valid hex code'),
     colorLabel: m('Color'),

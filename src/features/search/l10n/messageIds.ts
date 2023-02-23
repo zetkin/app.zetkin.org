@@ -1,6 +1,6 @@
-import { m, messages } from 'core/i18n';
+import { m, makeMessages } from 'core/i18n';
 
-export default messages('feat.search', {
+export default makeMessages('feat.search', {
   error: m('There was an error'),
   label: m('Search'),
   noResults: m('No results'),

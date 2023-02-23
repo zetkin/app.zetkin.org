@@ -6,20 +6,20 @@ import { Avatar, ListItem, ListItemAvatar } from '@mui/material';
 import ResultsListItemText from './ResultsListItemText';
 import { ZetkinTask } from 'utils/types/zetkin';
 
-import messages from '../../../messages';
+import messageIds from '../../../l10n/messageIds';
 import { useMessages } from 'core/i18n';
 
 const TaskListItem: React.FunctionComponent<{ task: ZetkinTask }> = ({
   task,
 }) => {
-  const msg = useMessages(messages);
+  const messages = useMessages(messageIds);
   const router = useRouter();
   const { orgId } = router.query as { orgId: string };
 
   const elements = [
-    msg.results.campaign(),
+    messages.results.campaign(),
     task.campaign.title,
-    msg.results.task(),
+    messages.results.task(),
   ];
 
   return (

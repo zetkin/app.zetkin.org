@@ -6,21 +6,21 @@ import { Avatar, ListItem, ListItemAvatar } from '@mui/material';
 import ResultsListItemText from './ResultsListItemText';
 import { ZetkinView } from 'utils/types/zetkin';
 
-import messages from '../../../messages';
+import messageIds from '../../../l10n/messageIds';
 import { useMessages } from 'core/i18n';
 
 const ViewListItem: React.FunctionComponent<{ view: ZetkinView }> = ({
   view,
 }) => {
-  const msg = useMessages(messages);
+  const messages = useMessages(messageIds);
   const router = useRouter();
   const { orgId } = router.query as { orgId: string };
 
-  const elements = [msg.results.people()];
+  const elements = [messages.results.people()];
   if (view.folder) {
     elements.push(view.folder.title);
   }
-  elements.push(msg.results.view());
+  elements.push(messages.results.view());
 
   return (
     <Link href={`/organize/${orgId}/people/views/${view.id}`} passHref>

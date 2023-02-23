@@ -16,21 +16,21 @@ import {
   Tooltip,
 } from '@mui/material';
 
-import messages from '../../messages';
+import messageIds from '../../l10n/messageIds';
 import { useMessages } from 'core/i18n';
 
 const SearchFieldIcon: React.FunctionComponent<{
   error: boolean;
   loading: boolean;
 }> = ({ loading, error }) => {
-  const msg = useMessages(messages);
+  const messages = useMessages(messageIds);
 
   return (
     <InputAdornment position="start">
       {loading ? (
         <CircularProgress size={24} />
       ) : error ? (
-        <Tooltip title={msg.error()}>
+        <Tooltip title={messages.error()}>
           <Error color="error" data-testid="SearchDialog-errorIndicator" />
         </Tooltip>
       ) : (
@@ -54,7 +54,7 @@ const SearchField: React.FunctionComponent<SearchFieldProps> = ({
   loading,
   error,
 }) => {
-  const msg = useMessages(messages);
+  const msg = useMessages(messageIds);
   const input = useRef<HTMLInputElement>();
 
   useEffect(() => {

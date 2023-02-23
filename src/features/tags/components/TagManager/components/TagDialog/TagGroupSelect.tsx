@@ -5,7 +5,7 @@ import { Box, TextField } from '@mui/material';
 import { NewTagGroup } from '../../types';
 import { ZetkinTagGroup } from 'utils/types/zetkin';
 
-import messages from '../../../../messages';
+import messageIds from '../../../../l10n/messageIds';
 import { useMessages } from 'core/i18n';
 
 interface NewOption {
@@ -21,7 +21,7 @@ const TagGroupSelect: React.FunctionComponent<{
   onChange: (value: ZetkinTagGroup | NewTagGroup | null | undefined) => void;
   value: ZetkinTagGroup | NewTagGroup | null | undefined;
 }> = ({ groups, value, onChange }) => {
-  const msg = useMessages(messages);
+  const messages = useMessages(messageIds);
 
   return (
     <Box mb={0.8} mt={1.5}>
@@ -32,7 +32,7 @@ const TagGroupSelect: React.FunctionComponent<{
           if (params.inputValue !== '') {
             filtered.push({
               inputValue: params.inputValue,
-              title: msg.dialog.groupCreatePrompt({
+              title: messages.dialog.groupCreatePrompt({
                 groupName: params.inputValue,
               }),
             });
@@ -58,8 +58,8 @@ const TagGroupSelect: React.FunctionComponent<{
               ...params.inputProps,
               'data-testid': 'TagManager-TagDialog-tagGroupSelect',
             }}
-            label={msg.dialog.groupLabel()}
-            placeholder={msg.dialog.groupSelectPlaceholder()}
+            label={messages.dialog.groupLabel()}
+            placeholder={messages.dialog.groupSelectPlaceholder()}
             variant="outlined"
           />
         )}

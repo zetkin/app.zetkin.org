@@ -9,7 +9,7 @@ import {
 
 import { ZetkinTag } from 'utils/types/zetkin';
 
-import messages from '../../../../messages';
+import messageIds from '../../../../l10n/messageIds';
 import { Msg, useMessages } from 'core/i18n';
 
 const TypeSelect: React.FC<{
@@ -17,7 +17,7 @@ const TypeSelect: React.FC<{
   onChange: (value: ZetkinTag['value_type']) => void;
   value: ZetkinTag['value_type'];
 }> = ({ disabled, onChange, value }) => {
-  const msg = useMessages(messages);
+  const messages = useMessages(messageIds);
 
   return (
     <Box mb={0.8} mt={1.5}>
@@ -27,7 +27,7 @@ const TypeSelect: React.FC<{
         variant="standard"
       >
         <FormLabel>
-          <Msg id={messages.dialog.typeLabel} />
+          <Msg id={messageIds.dialog.typeLabel} />
         </FormLabel>
         <RadioGroup
           onChange={(ev) =>
@@ -41,12 +41,12 @@ const TypeSelect: React.FC<{
         >
           <FormControlLabel
             control={<Radio />}
-            label={msg.dialog.types.none()}
+            label={messages.dialog.types.none()}
             value="none"
           />
           <FormControlLabel
             control={<Radio />}
-            label={msg.dialog.types.text()}
+            label={messages.dialog.types.text()}
             value="text"
           />
         </RadioGroup>

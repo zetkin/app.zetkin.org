@@ -1,17 +1,17 @@
 import { Box, Switch, Typography } from '@mui/material';
 
-import messages from '../../../messages';
+import messageIds from '../../../l10n/messageIds';
 import { useMessages } from 'core/i18n';
 
 const GroupToggle: React.FunctionComponent<{
   checked?: boolean;
   onChange: () => void;
 }> = ({ checked, onChange }) => {
-  const msg = useMessages(messages);
+  const messages = useMessages(messageIds);
 
   return (
     <Box alignItems="center" display="flex">
-      <Typography variant="body2">{msg.manager.groupTags()}</Typography>
+      <Typography variant="body2">{messages.manager.groupTags()}</Typography>
       <Switch
         checked={checked}
         data-testid="TagManager-groupToggle"

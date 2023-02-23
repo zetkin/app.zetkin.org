@@ -6,7 +6,7 @@ import { Avatar, ListItem, ListItemAvatar } from '@mui/material';
 import ResultsListItemText from './ResultsListItemText';
 import { ZetkinCampaign } from 'utils/types/zetkin';
 
-import messages from '../../../messages';
+import messageIds from '../../../l10n/messageIds';
 import { Msg } from 'core/i18n';
 
 const CampaignListItem: React.FunctionComponent<{
@@ -28,7 +28,7 @@ const CampaignListItem: React.FunctionComponent<{
         </ListItemAvatar>
         <ResultsListItemText
           primary={campaign.title}
-          secondary={<Msg id={messages.results.campaign} />}
+          secondary={<Msg id={messageIds.results.campaign} />}
         />
       </ListItem>
     </Link>

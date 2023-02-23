@@ -5,7 +5,7 @@ import { ZetkinTag } from 'utils/types/zetkin';
 import { groupTags } from '../utils';
 import TagChip from './TagChip';
 
-import messages from '../../../messages';
+import messageIds from '../../../l10n/messageIds';
 import { useMessages } from 'core/i18n';
 
 const TagsList: React.FunctionComponent<{
@@ -13,10 +13,10 @@ const TagsList: React.FunctionComponent<{
   onUnassignTag?: (tag: ZetkinTag) => void;
   tags: ZetkinTag[];
 }> = ({ tags, isGrouped, onUnassignTag }) => {
-  const msg = useMessages(messages);
+  const messages = useMessages(messageIds);
 
   if (isGrouped) {
-    const groupedTags = groupTags(tags, msg.manager.ungroupedHeader());
+    const groupedTags = groupTags(tags, messages.manager.ungroupedHeader());
 
     return (
       <>

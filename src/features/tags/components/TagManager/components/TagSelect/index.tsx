@@ -9,7 +9,7 @@ import { EditTag, NewTag } from '../../types';
 import { filterTags, groupTags } from '../../utils';
 import { ZetkinTag, ZetkinTagGroup } from 'utils/types/zetkin';
 
-import messages from '../../../../messages';
+import messageIds from '../../../../l10n/messageIds';
 import { useMessages } from 'core/i18n';
 
 const TagSelect: React.FunctionComponent<{
@@ -33,7 +33,7 @@ const TagSelect: React.FunctionComponent<{
   onSelect,
   tags,
 }) => {
-  const msg = useMessages(messages);
+  const messages = useMessages(messageIds);
 
   const [inputValue, setInputValue] = useState('');
   const [selectedValueTag, setSelectedValueTag] = useState<ZetkinTag | null>(
@@ -57,7 +57,7 @@ const TagSelect: React.FunctionComponent<{
 
   const groupedFilteredTags = groupTags(
     groupedOptions as ZetkinTag[],
-    msg.manager.ungroupedHeader()
+    messages.manager.ungroupedHeader()
   );
 
   const handleSubmitValue = () => {
@@ -97,8 +97,8 @@ const TagSelect: React.FunctionComponent<{
           }}
           placeholder={
             selectedValueTag
-              ? msg.manager.addValue({ tag: selectedValueTag.title })
-              : msg.manager.addTag()
+              ? messages.manager.addValue({ tag: selectedValueTag.title })
+              : messages.manager.addTag()
           }
           variant="outlined"
         />
