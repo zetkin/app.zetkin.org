@@ -22,6 +22,13 @@ const useStyles = makeStyles({
   element: {
     marginBottom: 20,
   },
+  linkedChip: {
+    backgroundColor: '#A7DFB1',
+    borderRadius: '16px',
+    fontSize: '0.8em',
+    marginLeft: '0.6em',
+    padding: '0.2em 0.7em',
+  },
   question: {
     fontWeight: 'bold',
   },
@@ -49,9 +56,12 @@ const SurveySubmissionPane: FC<SurveySubmissionPaneProps> = ({ orgId, id }) => {
         if (sub.respondent) {
           if (sub.respondent.id) {
             person = (
-              <ZUIPersonLink
-                person={{ ...sub.respondent, id: sub.respondent.id }}
-              />
+              <Box display="flex">
+                <ZUIPersonLink
+                  person={{ ...sub.respondent, id: sub.respondent.id }}
+                />
+                <Box className={styles.linkedChip}>Linked</Box>
+              </Box>
             );
           } else {
             person = (
