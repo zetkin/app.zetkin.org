@@ -6,6 +6,7 @@ addBlocks:
 blocks:
   choiceQuestion:
     checkbox: Multiple choice
+    empty: Untitled choice question
     radio: Single choice
     select: Dropdown choice list
     selectLabel: Poll type

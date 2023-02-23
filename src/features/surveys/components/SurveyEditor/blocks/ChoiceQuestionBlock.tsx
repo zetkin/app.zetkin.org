@@ -174,7 +174,7 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
               {question ? (
                 questionElement.question
               ) : (
-                <Msg id="misc.surveys.blocks.common.empty" />
+                <Msg id="misc.surveys.blocks.choiceQuestion.empty" />
               )}
             </Typography>
             {question && (
