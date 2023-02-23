@@ -18,9 +18,9 @@ import {
 } from 'react';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
 
+import { OptionsQuestionPatchBody } from 'features/surveys/repos/SurveysRepo';
 import theme from 'theme';
 import { ZetkinOptionsQuestion } from 'utils/types/zetkin';
-import { ZetkinSurveyOptionsQuestionElementPatchBody } from 'features/surveys/repos/SurveysRepo';
 
 const enum POLL_TYPE {
   CHECKBOX = 'checkbox',
@@ -57,9 +57,7 @@ const widgetTypes = [
 interface ChoiceQuestionBlockProps {
   inEditMode: boolean;
   onEditModeEnter: () => void;
-  onEditModeExit: (
-    question: ZetkinSurveyOptionsQuestionElementPatchBody
-  ) => void;
+  onEditModeExit: (question: OptionsQuestionPatchBody) => void;
   question: ZetkinOptionsQuestion;
 }
 
@@ -100,12 +98,10 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
     <ClickAwayListener
       onClickAway={() => {
         onEditModeExit({
-          question: {
-            description,
-            question,
-            response_config: {
-              widget_type: widgetType,
-            },
+          description,
+          question,
+          response_config: {
+            widget_type: widgetType,
           },
         });
         setFocus(null);

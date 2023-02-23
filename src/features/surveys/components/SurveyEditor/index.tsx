@@ -5,6 +5,7 @@ import AddBlocks from './AddBlocks';
 import BlockWrapper from './blocks/BlockWrapper';
 import ChoiceQuestionBlock from './blocks/ChoiceQuestionBlock';
 import OpenQuestionBlock from './blocks/OpenQuestionBlock';
+import { OptionsQuestionPatchBody } from 'features/surveys/repos/SurveysRepo';
 import SurveyDataModel from 'features/surveys/models/SurveyDataModel';
 import TextBlock from './blocks/TextBlock';
 import ZUIFuture from 'zui/ZUIFuture';
@@ -87,10 +88,13 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ model }) => {
                           onEditModeEnter={() =>
                             setIdOfBlockInEditMode(elem.id)
                           }
-                          onEditModeExit={() => {
+                          onEditModeExit={(
+                            question: OptionsQuestionPatchBody
+                          ) => {
                             if (elem.id === idOfBlockInEditMode) {
                               setIdOfBlockInEditMode(undefined);
                             }
+                            model.updateChoiceQuestion(elem.id, question);
                           }}
                           question={elem.question}
                         />

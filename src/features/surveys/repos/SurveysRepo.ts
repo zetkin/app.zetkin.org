@@ -8,6 +8,7 @@ import {
   ZetkinSurvey,
   ZetkinSurveyElement,
   ZetkinSurveyExtended,
+  ZetkinSurveyOption,
   ZetkinSurveySubmission,
   ZetkinSurveyTextElement,
   ZetkinTextQuestion,
@@ -44,8 +45,7 @@ type ZetkinSurveyOptionsQuestionElementPostBody = {
 
 export type ZetkinSurveyElementPatchBody =
   | ZetkinSurveyTextElementPatchBody
-  | ZetkinSurveyOptionsQuestionElementPatchBody
-  | Partial<Omit<ZetkinSurveyTextQuestionElementPostBody, 'type'>>;
+  | OptionsQuestionPatchBody;
 
 type ZetkinSurveyTextElementPatchBody = {
   hidden?: boolean;
@@ -55,9 +55,13 @@ type ZetkinSurveyTextElementPatchBody = {
   };
 };
 
-export type ZetkinSurveyOptionsQuestionElementPatchBody = {
-  hidden?: boolean;
-  question?: Partial<Omit<ZetkinOptionsQuestion, 'response_type'>>;
+export type OptionsQuestionPatchBody = {
+  description?: string | null;
+  options?: ZetkinSurveyOption[];
+  question?: string;
+  response_config?: {
+    widget_type: 'checkbox' | 'radio' | 'select';
+  };
 };
 
 export default class SurveysRepo {

@@ -4,7 +4,10 @@ import Environment from 'core/env/Environment';
 import { IFuture } from 'core/caching/futures';
 import { ModelBase } from 'core/models';
 import { ZetkinSurveyExtended } from 'utils/types/zetkin';
-import SurveysRepo, { ZetkinSurveyElementPostBody } from '../repos/SurveysRepo';
+import SurveysRepo, {
+  OptionsQuestionPatchBody,
+  ZetkinSurveyElementPostBody,
+} from '../repos/SurveysRepo';
 
 export enum SurveyState {
   UNPUBLISHED = 'unpublished',
@@ -153,6 +156,15 @@ export default class SurveyDataModel extends ModelBase {
 
     this._repo.updateSurvey(this._orgId, this._surveyId, {
       expires: today,
+    });
+  }
+
+  updateChoiceQuestion(
+    elemId: number,
+    choiceQuestion: OptionsQuestionPatchBody
+  ) {
+    this._repo.updateElement(this._orgId, this._surveyId, elemId, {
+      ...choiceQuestion,
     });
   }
 
