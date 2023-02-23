@@ -5,8 +5,8 @@ import { useRouter } from 'next/router';
 import getViews from 'features/smartSearch/fetching/getViews';
 import {
   OPERATION,
-  SmartSearchFilterWithId,
   PersonViewFilterConfig,
+  SmartSearchFilterWithId,
 } from 'features/smartSearch/components/types';
 
 interface DisplayPersonViewProps {
@@ -23,7 +23,7 @@ const DisplayPersonView = ({ filter }: DisplayPersonViewProps): JSX.Element => {
   );
   const personViews = personViewsQuery?.data || [];
 
-  const view = personViews.find((v) => config.view ) || personViews[0];
+  const view = personViews.find((v) => v.id == config.view ) || personViews[0];
   const operator = config.operator;
 
   const op = filter.op || OPERATION.ADD;
@@ -40,7 +40,7 @@ const DisplayPersonView = ({ filter }: DisplayPersonViewProps): JSX.Element => {
             id={`misc.smartSearch.person_view.inSelect.${operator}`}
           />
         ),
-        viewSelect: view?.title
+        viewSelect: view.title
       }}
     />
   );

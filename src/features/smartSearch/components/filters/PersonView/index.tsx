@@ -2,24 +2,20 @@ import { MenuItem } from '@material-ui/core';
 import { FormattedMessage as Msg } from 'react-intl';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
-import { FormEvent, useEffect, useState } from 'react';
+import { FormEvent, useEffect } from 'react';
 
 import FilterForm from '../../FilterForm';
 import getViews from 'features/smartSearch/fetching/getViews';
 import StyledSelect from '../../inputs/StyledSelect';
 import useSmartSearchFilter from 'features/smartSearch/hooks/useSmartSearchFilter';
 import {
+  IN_OPERATOR,
   NewSmartSearchFilter,
   OPERATION,
-  IN_OPERATOR,
   PersonViewFilterConfig,
   SmartSearchFilterWithId,
   ZetkinSmartSearchFilter,
 } from 'features/smartSearch/components/types';
-
-import { ZetkinView } from 'utils/types/zetkin';
-
-const NO_VIEW_SELECTED = 'none';
 
 interface PersonViewProps {
   filter: SmartSearchFilterWithId<PersonViewFilterConfig> | NewSmartSearchFilter;
@@ -29,11 +25,6 @@ interface PersonViewProps {
       | ZetkinSmartSearchFilter<PersonViewFilterConfig>
   ) => void;
   onCancel: () => void;
-}
-
-interface InternalConfig {
-  view?: ZetkinView;
-  operator?: IN_OPERATOR;
 }
 
 const PersonView = ({
@@ -50,22 +41,17 @@ const PersonView = ({
   const personViews = personViewsQuery?.data || [];
 
   const { filter, setConfig, setOp } =
-    useSmartSearchFilter<PersonViewFilterConfig>(initialFilter);
-  console.log('Config');
-  console.log(filter);
+    useSmartSearchFilter<PersonViewFilterConfig>(initialFilter, {
+        operator: IN_OPERATOR.IN,
+        view: 0,
+    });
 
   useEffect(() => {
-    console.log('UseEffect triggered');
-    console.log(personViews);
     if (personViews.length) {
-      console.log('Update config');
-      console.log(filter);
       setConfig({
         operator: filter.config.operator || IN_OPERATOR.IN,
-        view: filter.config.view || personViews[0].id,
+        view: filter.config.view,
       });
-      console.log('config updated');
-      console.log(filter);
     }
   }, [personViews]);
 
@@ -74,13 +60,7 @@ const PersonView = ({
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (filter.config.view && filter.config.operator) {
-      onSubmit({
-        ...filter,
-        config: {
-          view: filter.config.view,
-          operator: filter.config.operator,
-        },
-      });
+      onSubmit(filter);
     }
   };
 
@@ -110,7 +90,7 @@ const PersonView = ({
           <Msg id="misc.smartSearch.person_view.examples.two" />
         </>
       )}
-      renderSentence={() => (!!personViews.length ?
+      renderSentence={() => (personViews.length ?
         <Msg
           id="misc.smartSearch.person_view.inputString"
           values={{

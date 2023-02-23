@@ -150,18 +150,18 @@ person_tags:
     two: "Remove people with all of the following tags: 'Board member'"
   inputString: '{addRemoveSelect} people with {condition} of the following tags: {tags}'
 person_view:
-  inSelect:
-    in: in
-    notin: not in
   addRemoveSelect:
     add: Add
     sub: Remove
-  viewSelect:
-    none: This organization doesn't have any views yet
   examples:
     one: Add people who are in the view 'Campaign 2020'.
     two: Remove people who are not in the view 'Campaign 2020'.
+  inSelect:
+    in: in
+    notin: not in
   inputString: '{addRemoveSelect} people who are {inSelect} the view {viewSelect}.'
+  viewSelect:
+    none: This organization doesn't have any views yet
 quantity:
   edit:
     integer: '{numInput} {quantitySelect}'
