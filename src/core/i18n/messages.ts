@@ -105,6 +105,13 @@ export function messages<MapType extends MessageMap>(
       if ('_id' in val) {
         output[key as keyof MapType] = val as MapType[typeof key];
         output[key]._id = keyId;
+
+        if (process.env.NODE_ENV == 'test') {
+          // In test mode, use the ID as the key, as this is how our
+          // unit tests were written, not expecting there to be any
+          // localized messages (or default fallbacks)
+          output[key]._defaultMessage = keyId;
+        }
       } else {
         output[key as keyof MapType] = addIds(
           val,
