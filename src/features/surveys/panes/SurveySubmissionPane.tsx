@@ -55,9 +55,7 @@ const SurveySubmissionPane: FC<SurveySubmissionPaneProps> = ({ orgId, id }) => {
             );
           } else {
             person = (
-              <>
-                `${sub.respondent.first_name} ${sub.respondent.last_name}`;
-              </>
+              <>{`${sub.respondent.first_name} ${sub.respondent.last_name}`}</>
             );
           }
         }
@@ -76,11 +74,14 @@ const SurveySubmissionPane: FC<SurveySubmissionPaneProps> = ({ orgId, id }) => {
               }
               title={sub.survey.title}
             />
-            {sub.elements.map((elem) => {
-              //add key
+            {sub.elements.map((elem, idx) => {
               if (elem.type == ELEM_TYPE.OPEN_QUESTION) {
                 return (
-                  <Question hidden={elem.hidden} question={elem.question}>
+                  <Question
+                    key={`elementQue-${idx}`}
+                    hidden={elem.hidden}
+                    question={elem.question}
+                  >
                     <ResponseItem icon={<FormatQuote />}>
                       {elem.response || '-'}
                     </ResponseItem>
@@ -88,7 +89,11 @@ const SurveySubmissionPane: FC<SurveySubmissionPaneProps> = ({ orgId, id }) => {
                 );
               } else if (elem.type == ELEM_TYPE.OPTIONS) {
                 return (
-                  <Question hidden={elem.hidden} question={elem.question}>
+                  <Question
+                    key={`elementOpt-${idx}`}
+                    hidden={elem.hidden}
+                    question={elem.question}
+                  >
                     {elem.selectedOptions.length == 0 && '-'}
                     {elem.selectedOptions.map((option) => (
                       <ResponseItem key={option.id} icon={<Check />}>
@@ -99,7 +104,7 @@ const SurveySubmissionPane: FC<SurveySubmissionPaneProps> = ({ orgId, id }) => {
                 );
               } else if (elem.type == ELEM_TYPE.TEXT_BLOCK) {
                 return (
-                  <Box className={styles.element}>
+                  <Box key={`elementTxt-${idx}`} className={styles.element}>
                     <Typography className={styles.textHeader}>
                       {elem.header}
                     </Typography>
