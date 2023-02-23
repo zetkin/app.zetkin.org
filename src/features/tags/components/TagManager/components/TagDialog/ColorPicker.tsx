@@ -1,14 +1,16 @@
 import ReplayIcon from '@mui/icons-material/Replay';
-import { useIntl } from 'react-intl';
 import { Box, InputAdornment, TextField } from '@mui/material';
 
 import { DEFAULT_TAG_COLOR, hexRegex, randomColor } from '../../utils';
+
+import messages from '../../../../messages';
+import { useMessages } from 'core/i18n';
 
 const ColorPicker: React.FunctionComponent<{
   onChange: (color: { valid: boolean; value: string }) => void;
   value: string;
 }> = ({ value, onChange }) => {
-  const intl = useIntl();
+  const msg = useMessages(messages);
 
   const error = !!value && !hexRegex.test(value);
 
@@ -16,12 +18,7 @@ const ColorPicker: React.FunctionComponent<{
     <TextField
       error={error}
       fullWidth
-      helperText={
-        error &&
-        intl.formatMessage({
-          id: 'misc.tags.tagManager.tagDialog.colorErrorText',
-        })
-      }
+      helperText={error && msg.dialog.colorErrorText()}
       inputProps={{ 'data-testid': 'TagManager-TagDialog-colorField' }}
       InputProps={{
         startAdornment: (
@@ -50,9 +47,7 @@ const ColorPicker: React.FunctionComponent<{
           </InputAdornment>
         ),
       }}
-      label={intl.formatMessage({
-        id: 'misc.tags.tagManager.tagDialog.colorLabel',
-      })}
+      label={msg.dialog.colorLabel()}
       margin="normal"
       onChange={(e) => {
         onChange({
@@ -61,9 +56,7 @@ const ColorPicker: React.FunctionComponent<{
         });
       }}
       onClick={(e) => (e.target as HTMLInputElement).focus()}
-      placeholder={intl.formatMessage({
-        id: 'misc.tags.tagManager.tagDialog.colorLabel',
-      })}
+      placeholder={msg.dialog.colorLabel()}
       value={value || ''}
       variant="outlined"
     />

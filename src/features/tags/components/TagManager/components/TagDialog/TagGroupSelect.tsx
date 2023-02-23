@@ -1,10 +1,12 @@
 import { Autocomplete } from '@mui/material';
 import { createFilterOptions } from '@mui/material/useAutocomplete';
-import { useIntl } from 'react-intl';
 import { Box, TextField } from '@mui/material';
 
 import { NewTagGroup } from '../../types';
 import { ZetkinTagGroup } from 'utils/types/zetkin';
+
+import messages from '../../../../messages';
+import { useMessages } from 'core/i18n';
 
 interface NewOption {
   inputValue: string;
@@ -19,7 +21,7 @@ const TagGroupSelect: React.FunctionComponent<{
   onChange: (value: ZetkinTagGroup | NewTagGroup | null | undefined) => void;
   value: ZetkinTagGroup | NewTagGroup | null | undefined;
 }> = ({ groups, value, onChange }) => {
-  const intl = useIntl();
+  const msg = useMessages(messages);
 
   return (
     <Box mb={0.8} mt={1.5}>
@@ -30,14 +32,9 @@ const TagGroupSelect: React.FunctionComponent<{
           if (params.inputValue !== '') {
             filtered.push({
               inputValue: params.inputValue,
-              title: intl.formatMessage(
-                {
-                  id: 'misc.tags.tagManager.tagDialog.groupCreatePrompt',
-                },
-                {
-                  groupName: params.inputValue,
-                }
-              ),
+              title: msg.dialog.groupCreatePrompt({
+                groupName: params.inputValue,
+              }),
             });
           }
 
@@ -61,12 +58,8 @@ const TagGroupSelect: React.FunctionComponent<{
               ...params.inputProps,
               'data-testid': 'TagManager-TagDialog-tagGroupSelect',
             }}
-            label={intl.formatMessage({
-              id: 'misc.tags.tagManager.tagDialog.groupLabel',
-            })}
-            placeholder={intl.formatMessage({
-              id: 'misc.tags.tagManager.tagDialog.groupSelectPlaceholder',
-            })}
+            label={msg.dialog.groupLabel()}
+            placeholder={msg.dialog.groupSelectPlaceholder()}
             variant="outlined"
           />
         )}

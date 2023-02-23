@@ -1,10 +1,12 @@
-import { FormattedMessage } from 'react-intl';
 import { useEffect } from 'react';
 import { Box, Typography } from '@mui/material';
 
 import TagChip from '../TagChip';
 import { ZetkinTag } from 'utils/types/zetkin';
 import ZUISubmitCancelButtons from 'zui/ZUISubmitCancelButtons';
+
+import messages from '../../../../messages';
+import Msg from 'core/i18n/Msg';
 
 const ValueTagForm: React.FC<{
   inputValue: string;
@@ -31,8 +33,8 @@ const ValueTagForm: React.FC<{
     >
       <Box display="flex" flexDirection="column" p={1}>
         <Typography variant="body2">
-          <FormattedMessage
-            id="misc.tags.tagManager.valueTagForm.typeHint"
+          <Msg
+            id={messages.manager.valueTagForm.typeHint}
             values={{ type: tag.value_type }}
           />
         </Typography>

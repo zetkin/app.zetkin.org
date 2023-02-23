@@ -1,4 +1,3 @@
-import { useIntl } from 'react-intl';
 import { Box, Typography } from '@mui/material';
 
 import { ZetkinTag } from 'utils/types/zetkin';
@@ -6,20 +5,18 @@ import { ZetkinTag } from 'utils/types/zetkin';
 import { groupTags } from '../utils';
 import TagChip from './TagChip';
 
+import messages from '../../../messages';
+import { useMessages } from 'core/i18n';
+
 const TagsList: React.FunctionComponent<{
   isGrouped: boolean;
   onUnassignTag?: (tag: ZetkinTag) => void;
   tags: ZetkinTag[];
 }> = ({ tags, isGrouped, onUnassignTag }) => {
-  const intl = useIntl();
+  const msg = useMessages(messages);
 
   if (isGrouped) {
-    const groupedTags = groupTags(
-      tags,
-      intl.formatMessage({
-        id: 'misc.tags.tagManager.ungroupedHeader',
-      })
-    );
+    const groupedTags = groupTags(tags, msg.manager.ungroupedHeader());
 
     return (
       <>

@@ -6,16 +6,18 @@ import {
   Radio,
   RadioGroup,
 } from '@mui/material';
-import { FormattedMessage, useIntl } from 'react-intl';
 
 import { ZetkinTag } from 'utils/types/zetkin';
+
+import messages from '../../../../messages';
+import { Msg, useMessages } from 'core/i18n';
 
 const TypeSelect: React.FC<{
   disabled?: boolean;
   onChange: (value: ZetkinTag['value_type']) => void;
   value: ZetkinTag['value_type'];
 }> = ({ disabled, onChange, value }) => {
-  const intl = useIntl();
+  const msg = useMessages(messages);
 
   return (
     <Box mb={0.8} mt={1.5}>
@@ -25,7 +27,7 @@ const TypeSelect: React.FC<{
         variant="standard"
       >
         <FormLabel>
-          <FormattedMessage id={'misc.tags.tagManager.tagDialog.typeLabel'} />
+          <Msg id={messages.dialog.typeLabel} />
         </FormLabel>
         <RadioGroup
           onChange={(ev) =>
@@ -39,16 +41,12 @@ const TypeSelect: React.FC<{
         >
           <FormControlLabel
             control={<Radio />}
-            label={intl.formatMessage({
-              id: 'misc.tags.tagManager.tagDialog.types.none',
-            })}
+            label={msg.dialog.types.none()}
             value="none"
           />
           <FormControlLabel
             control={<Radio />}
-            label={intl.formatMessage({
-              id: 'misc.tags.tagManager.tagDialog.types.text',
-            })}
+            label={msg.dialog.types.text()}
             value="text"
           />
         </RadioGroup>
