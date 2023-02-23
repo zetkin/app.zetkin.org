@@ -18,10 +18,16 @@ export type MessageValue =
 export type ValueRecord = Record<string, MessageValue>;
 
 export type PlainMessage<Values = void> = BaseMessage & {
+  // This function is never used (see InterpolatedMessage)
   _typeFunc: () => Values;
 };
 
 export type InterpolatedMessage<Values = ValueRecord> = BaseMessage & {
+  /**
+   * This function is never used. It's just there to carry the type of
+   * Values in the message, so that it can be extracted by TypeScript
+   * in situations where it matters, i.e. in useMessages() and <Msg/>.
+   */
   _typeFunc: (values: Values) => Values;
 };
 
