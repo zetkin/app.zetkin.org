@@ -98,126 +98,137 @@ const OpenQuestionBlock: FC<OpenQuestionBlockProps> = ({
   };
 
   return (
-    <ClickAwayListener
-      onClickAway={() => {
-        const element = createElementToUpdate();
-        onEditModeExit(element);
-        setFocus(null);
-      }}
-    >
-      {inEditMode ? (
-        <Box display="flex" flexDirection="column">
-          <TextField
-            defaultValue={element.question}
-            fullWidth
-            InputProps={{
-              inputRef: titleRef,
-              sx: { fontSize: theme.typography.h4.fontSize },
-            }}
-            label={intl.formatMessage({
-              id: 'misc.surveys.blocks.common.empty',
-            })}
-            margin="normal"
-            onChange={(ev) => setTitle(ev.target.value)}
-            onKeyDown={(evt) => handleKeyDown(evt)}
-          />
-          <TextField
-            defaultValue={element.description}
-            fullWidth
-            InputProps={{ inputRef: descriptionRef }}
-            label={intl.formatMessage({
-              id: 'misc.surveys.blocks.common.description',
-            })}
-            margin="normal"
-            onChange={(ev) => setDescription(ev.target.value)}
-            onKeyDown={(evt) => handleKeyDown(evt)}
-          />
-          <TextField
-            defaultValue={
-              element.response_config.multiline === true
-                ? FIELDTYPE.MULTILINE
-                : FIELDTYPE.SINGLELINE
-            }
-            fullWidth
-            InputProps={{ inputRef: typeConfigRef }}
-            label={intl.formatMessage({
-              id: 'misc.surveys.blocks.open.textFieldType',
-            })}
-            margin="normal"
-            onChange={(event) => {
-              handleSelect(event),
-                setResponseConfig(
-                  event.target.value === FIELDTYPE.MULTILINE ? true : false
-                );
-            }}
-            select
-            SelectProps={{
-              MenuProps: { disablePortal: true },
-            }}
-            sx={{ alignItems: 'center', display: 'flex' }}
-            value={typeField}
-          >
-            {Object.values(FIELDTYPE).map((value) => (
-              <MenuItem key={value} value={value}>
-                {value === 'singleLine' ? (
-                  <AbcIcon sx={{ marginRight: '10px' }} />
-                ) : (
-                  <SortIcon sx={{ marginRight: '10px' }} />
-                )}
-                <Msg id={`misc.surveys.blocks.open.${value}`} />
-              </MenuItem>
-            ))}
-          </TextField>
-        </Box>
-      ) : (
-        <Box onClick={() => onEditModeEnter()}>
-          <Typography
-            component="h4"
-            marginBottom={2}
-            onClick={() => setFocus('title')}
-            variant="h4"
-          >
-            {element.question ? (
-              element.question
-            ) : (
-              <Msg id="misc.surveys.blocks.common.empty" />
-            )}
-          </Typography>
-          <Typography
-            component="h5"
-            marginBottom={2}
-            onClick={() => setFocus('description')}
-            variant="h5"
-          >
-            {element.description ? (
-              element.description
-            ) : (
-              <Msg id="misc.surveys.blocks.common.description" />
-            )}
-          </Typography>
-          <Typography
-            component="h5"
-            marginBottom={2}
-            onClick={() => setFocus('responseConfig')}
-            variant="h5"
-          >
-            {element.response_config.multiline ? (
-              <>
-                <SortIcon sx={{ marginRight: '10px' }} />
-                <Msg id="misc.surveys.blocks.open.multiLine" />{' '}
-                <Msg id="misc.surveys.blocks.open.fieldTypePreview" />
-              </>
-            ) : (
-              <>
-                <AbcIcon sx={{ marginRight: '10px' }} />
-                <Msg id="misc.surveys.blocks.open.singleLine" />{' '}
-                <Msg id="misc.surveys.blocks.open.fieldTypePreview" />
-              </>
-            )}
-          </Typography>
-        </Box>
+    <>
+      {inEditMode && (
+        <ClickAwayListener
+          onClickAway={() => {
+            const element = createElementToUpdate();
+            onEditModeExit(element);
+            setFocus(null);
+          }}
+        >
+          <Box display="flex" flexDirection="column">
+            <TextField
+              defaultValue={element.question}
+              fullWidth
+              InputProps={{
+                inputRef: titleRef,
+                sx: { fontSize: theme.typography.h4.fontSize },
+              }}
+              label={intl.formatMessage({
+                id: 'misc.surveys.blocks.common.empty',
+              })}
+              margin="normal"
+              onChange={(ev) => setTitle(ev.target.value)}
+              onKeyDown={(evt) => handleKeyDown(evt)}
+            />
+            <TextField
+              defaultValue={element.description}
+              fullWidth
+              InputProps={{ inputRef: descriptionRef }}
+              label={intl.formatMessage({
+                id: 'misc.surveys.blocks.common.description',
+              })}
+              margin="normal"
+              onChange={(ev) => setDescription(ev.target.value)}
+              onKeyDown={(evt) => handleKeyDown(evt)}
+            />
+            <TextField
+              defaultValue={
+                element.response_config.multiline === true
+                  ? FIELDTYPE.MULTILINE
+                  : FIELDTYPE.SINGLELINE
+              }
+              fullWidth
+              InputProps={{ inputRef: typeConfigRef }}
+              label={intl.formatMessage({
+                id: 'misc.surveys.blocks.open.textFieldType',
+              })}
+              margin="normal"
+              onChange={(event) => {
+                handleSelect(event),
+                  setResponseConfig(
+                    event.target.value === FIELDTYPE.MULTILINE ? true : false
+                  );
+              }}
+              select
+              SelectProps={{
+                MenuProps: { disablePortal: true },
+              }}
+              sx={{ alignItems: 'center', display: 'flex' }}
+              value={typeField}
+            >
+              {Object.values(FIELDTYPE).map((value) => (
+                <MenuItem key={value} value={value}>
+                  {value === 'singleLine' ? (
+                    <AbcIcon sx={{ marginRight: '10px' }} />
+                  ) : (
+                    <SortIcon sx={{ marginRight: '10px' }} />
+                  )}
+                  <Msg id={`misc.surveys.blocks.open.${value}`} />
+                </MenuItem>
+              ))}
+            </TextField>
+          </Box>
+        </ClickAwayListener>
       )}
-    </ClickAwayListener>
+      {!inEditMode && (
+        <ClickAwayListener
+          onClickAway={() => {
+            const element = createElementToUpdate();
+            onEditModeExit(element);
+            setFocus(null);
+          }}
+        >
+          <Box onClick={() => onEditModeEnter()}>
+            <Typography
+              component="h4"
+              marginBottom={2}
+              onClick={() => setFocus('title')}
+              variant="h4"
+            >
+              {element.question ? (
+                element.question
+              ) : (
+                <Msg id="misc.surveys.blocks.common.empty" />
+              )}
+            </Typography>
+            <Typography
+              component="h5"
+              marginBottom={2}
+              onClick={() => setFocus('description')}
+              variant="h5"
+            >
+              {element.description ? (
+                element.description
+              ) : (
+                <Msg id="misc.surveys.blocks.common.description" />
+              )}
+            </Typography>
+            <Typography
+              component="h5"
+              marginBottom={2}
+              onClick={() => setFocus('responseConfig')}
+              variant="h5"
+            >
+              {element.response_config.multiline ? (
+                <>
+                  <SortIcon sx={{ marginRight: '10px' }} />
+                  <Msg id="misc.surveys.blocks.open.multiLine" />{' '}
+                  <Msg id="misc.surveys.blocks.open.fieldTypePreview" />
+                </>
+              ) : (
+                <>
+                  <AbcIcon sx={{ marginRight: '10px' }} />
+                  <Msg id="misc.surveys.blocks.open.singleLine" />{' '}
+                  <Msg id="misc.surveys.blocks.open.fieldTypePreview" />
+                </>
+              )}
+            </Typography>
+          </Box>
+        </ClickAwayListener>
+      )}
+    </>
   );
 };
 
