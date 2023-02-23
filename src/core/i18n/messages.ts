@@ -71,12 +71,23 @@ export function im<Values extends Record<string, MessageValue>>(
 
 /**
  * Use the messages() function to create a map of identifiable messages
- * from an object that can be nested in order to group messages. Use the
- * m() and im() functions to create the individual messages, e.g:
+ * from an object. Objects can be nested in order to group messages. Use
+ * the m() and im() functions to create the individual messages.
  *
- * export default messages({
- *   goodbye: m('Goodbye!'),
- *   hello: im<{ name: string }>('Hello, {name}'),
+ * The first parameter of messages() is a prefix that will be prepended
+ * to all message IDs behind the scenes. In the example below, the ID of
+ * the goodbye message will be 'misc.mypage.greetings.goodbye', but when
+ * used with useMessages() or <Msg/>, the messages.greetings.goodbye
+ * identifier can be used directly for type safety.
+ *
+ * Example:
+ *
+ * export default messages('misc.mypage', {
+ *   greetings: {
+ *     goodbye: m('Goodbye!'),
+ *     hello: im<{ name: string }>('Hello, {name}'),
+ *   },
+ *   headline: 'My Page',
  * });
  */
 export function messages<MapType extends MessageMap>(
