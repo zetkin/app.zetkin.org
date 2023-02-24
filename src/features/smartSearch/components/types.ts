@@ -187,6 +187,7 @@ export interface CampaignParticipationConfig {
 
 export interface SubQueryFilterConfig {
   query_id: number;
+  operator?: IN_OPERATOR;
 }
 
 interface TaskTimeFrameBefore {

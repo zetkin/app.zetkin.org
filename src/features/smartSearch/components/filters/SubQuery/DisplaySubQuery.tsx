@@ -55,6 +55,11 @@ const DisplaySubQuery = ({ filter }: DisplaySubQueryProps): JSX.Element => {
         addRemoveSelect: (
           <Msg id={`misc.smartSearch.sub_query.addRemoveSelect.${op}`} />
         ),
+        matchSelect: (
+          <Msg
+            id={`misc.smartSearch.sub_query.matchSelect.${filter.config.operator}`}
+          />
+        ),
         query: (
           <Msg
             id={`misc.smartSearch.query.preview.${query?.type || 'none'}`}

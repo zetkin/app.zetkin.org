@@ -211,7 +211,10 @@ sub_query:
   examples:
     one: Remove people who match Smart Search Query 'People who live in Stockholm'.
     two: Add people who match the target group of call Assignment 'Assignment one'.
-  inputString: '{addRemoveSelect} people that match {query}.'
+  inputString: '{addRemoveSelect} people that {matchSelect} {query}.'
+  matchSelect:
+    in: match
+    notin: do not match
 survey_option:
   addRemoveSelect:
     add: Add
