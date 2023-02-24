@@ -1,8 +1,8 @@
+import { FormEvent } from 'react';
 import { MenuItem } from '@material-ui/core';
 import { FormattedMessage as Msg } from 'react-intl';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
-import { FormEvent, useEffect } from 'react';
 
 import FilterForm from '../../FilterForm';
 import getViews from 'features/smartSearch/fetching/getViews';
