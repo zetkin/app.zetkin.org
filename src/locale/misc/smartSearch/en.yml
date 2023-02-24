@@ -106,6 +106,7 @@ filterTitles:
   person_data: Based on their name, address or other data
   person_field: Based on custom fields
   person_tags: Based on their tags
+  person_view: Based on a view
   random: A random selection of people
   sub_query: Based on another Smart Search query
   survey_option: Based on the options they have selected in survey questions
@@ -148,6 +149,19 @@ person_tags:
     one: "Add people with at least one of the following tags: 'Member', 'Activist'"
     two: "Remove people with all of the following tags: 'Board member'"
   inputString: '{addRemoveSelect} people with {condition} of the following tags: {tags}'
+person_view:
+  addRemoveSelect:
+    add: Add
+    sub: Remove
+  examples:
+    one: Add people who are in the view 'Campaign 2020'.
+    two: Remove people who are not in the view 'Campaign 2020'.
+  inSelect:
+    in: in
+    notin: not in
+  inputString: '{addRemoveSelect} people who are {inSelect} the view {viewSelect}.'
+  viewSelect:
+    none: This organization doesn't have any views yet
 quantity:
   edit:
     integer: '{numInput} {quantitySelect}'
