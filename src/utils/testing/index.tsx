@@ -11,6 +11,7 @@ import {
   ThemeProvider,
 } from '@mui/material/styles';
 
+import { Message } from 'core/i18n/messages';
 import theme from 'theme';
 import { UserContext } from 'utils/hooks/useFocusDate';
 
@@ -60,6 +61,11 @@ const ZetkinAppProviders: FC<ZetkinAppProvidersProps> = ({ children }) => {
   );
 };
 
+type CustomRenderResult = RenderResult & {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  getByMessageId(message: Message<any>): ReturnType<RenderResult['getByText']>;
+};
+
 /**
  * Render into a container which is appended to document.body.
  *
@@ -70,8 +76,17 @@ const ZetkinAppProviders: FC<ZetkinAppProvidersProps> = ({ children }) => {
 const customRender = (
   ui: ReactElement | FC<unknown>,
   options?: Omit<RenderOptions, 'wrapper'>
-): RenderResult =>
-  render(ui as ReactElement, { wrapper: ZetkinAppProviders, ...options });
+): CustomRenderResult => {
+  const result = render(ui as ReactElement, {
+    wrapper: ZetkinAppProviders,
+    ...options,
+  });
+
+  return {
+    ...result,
+    getByMessageId: (message) => result.getByText(message._id),
+  };
+};
 
 export * from '@testing-library/react';
 
