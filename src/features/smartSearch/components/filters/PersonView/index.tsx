@@ -18,7 +18,9 @@ import {
 } from 'features/smartSearch/components/types';
 
 interface PersonViewProps {
-  filter: SmartSearchFilterWithId<PersonViewFilterConfig> | NewSmartSearchFilter;
+  filter:
+    | SmartSearchFilterWithId<PersonViewFilterConfig>
+    | NewSmartSearchFilter;
   onSubmit: (
     filter:
       | SmartSearchFilterWithId<PersonViewFilterConfig>
@@ -42,8 +44,8 @@ const PersonView = ({
 
   const { filter, setConfig, setOp } =
     useSmartSearchFilter<PersonViewFilterConfig>(initialFilter, {
-        operator: IN_OPERATOR.IN,
-        view: 0,
+      operator: IN_OPERATOR.IN,
+      view: 0,
     });
 
   useEffect(() => {
@@ -90,55 +92,59 @@ const PersonView = ({
           <Msg id="misc.smartSearch.person_view.examples.two" />
         </>
       )}
-      renderSentence={() => (personViews.length ?
-        <Msg
-          id="misc.smartSearch.person_view.inputString"
-          values={{
-            addRemoveSelect: (
-              <StyledSelect
-                onChange={(e) => setOp(e.target.value as OPERATION)}
-                value={filter.op}
-              >
-                <MenuItem key={OPERATION.ADD} value={OPERATION.ADD}>
-                  <Msg id="misc.smartSearch.person_view.addRemoveSelect.add" />
-                </MenuItem>
-                <MenuItem key={OPERATION.SUB} value={OPERATION.SUB}>
-                  <Msg id="misc.smartSearch.person_view.addRemoveSelect.sub" />
-                </MenuItem>
-              </StyledSelect>
-            ),
-            inSelect: (
-              <StyledSelect
-                  onChange={(e) => handleInOperatorChange(e.target.value as IN_OPERATOR)}
+      renderSentence={() =>
+        personViews.length ? (
+          <Msg
+            id="misc.smartSearch.person_view.inputString"
+            values={{
+              addRemoveSelect: (
+                <StyledSelect
+                  onChange={(e) => setOp(e.target.value as OPERATION)}
+                  value={filter.op}
+                >
+                  <MenuItem key={OPERATION.ADD} value={OPERATION.ADD}>
+                    <Msg id="misc.smartSearch.person_view.addRemoveSelect.add" />
+                  </MenuItem>
+                  <MenuItem key={OPERATION.SUB} value={OPERATION.SUB}>
+                    <Msg id="misc.smartSearch.person_view.addRemoveSelect.sub" />
+                  </MenuItem>
+                </StyledSelect>
+              ),
+              inSelect: (
+                <StyledSelect
+                  onChange={(e) =>
+                    handleInOperatorChange(e.target.value as IN_OPERATOR)
+                  }
                   value={filter.config.operator}
                 >
-                <MenuItem key={IN_OPERATOR.IN} value={IN_OPERATOR.IN}>
-                  <Msg id="misc.smartSearch.person_view.inSelect.in" />
-                </MenuItem>
-                <MenuItem key={IN_OPERATOR.NOTIN} value={IN_OPERATOR.NOTIN}>
-                  <Msg id="misc.smartSearch.person_view.inSelect.notin" />
-                </MenuItem>
-              </StyledSelect>
-            ),
-            viewSelect: ( 
-              <StyledSelect
+                  <MenuItem key={IN_OPERATOR.IN} value={IN_OPERATOR.IN}>
+                    <Msg id="misc.smartSearch.person_view.inSelect.in" />
+                  </MenuItem>
+                  <MenuItem key={IN_OPERATOR.NOTIN} value={IN_OPERATOR.NOTIN}>
+                    <Msg id="misc.smartSearch.person_view.inSelect.notin" />
+                  </MenuItem>
+                </StyledSelect>
+              ),
+              viewSelect: (
+                <StyledSelect
                   onChange={(e) => handleViewChange(+e.target.value as number)}
                   value={filter.config.view}
                 >
-                  {
-                    personViews.map((v) => (
-                      <MenuItem key={v.id} value={v.id}>
-                        { v.title }
-                      </MenuItem>
-                    ))
-                  }
-              </StyledSelect>
-            ),
-          }}
-        /> : <Msg id="misc.smartSearch.person_view.viewSelect.none" />
-      )}
+                  {personViews.map((v) => (
+                    <MenuItem key={v.id} value={v.id}>
+                      {v.title}
+                    </MenuItem>
+                  ))}
+                </StyledSelect>
+              ),
+            }}
+          />
+        ) : (
+          <Msg id="misc.smartSearch.person_view.viewSelect.none" />
+        )
+      }
     />
-  )
+  );
 };
 
 export default PersonView;

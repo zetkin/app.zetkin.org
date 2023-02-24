@@ -23,7 +23,7 @@ const DisplayPersonView = ({ filter }: DisplayPersonViewProps): JSX.Element => {
   );
   const personViews = personViewsQuery?.data || [];
 
-  const view = personViews.find((v) => v.id == config.view ) || personViews[0];
+  const view = personViews.find((v) => v.id == config.view) || personViews[0];
   const operator = config.operator;
 
   const op = filter.op || OPERATION.ADD;
@@ -36,11 +36,9 @@ const DisplayPersonView = ({ filter }: DisplayPersonViewProps): JSX.Element => {
           <Msg id={`misc.smartSearch.person_view.addRemoveSelect.${op}`} />
         ),
         inSelect: (
-          <Msg
-            id={`misc.smartSearch.person_view.inSelect.${operator}`}
-          />
+          <Msg id={`misc.smartSearch.person_view.inSelect.${operator}`} />
         ),
-        viewSelect: view.title
+        viewSelect: view.title,
       }}
     />
   );
