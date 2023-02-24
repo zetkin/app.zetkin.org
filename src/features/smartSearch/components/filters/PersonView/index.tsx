@@ -48,16 +48,7 @@ const PersonView = ({
       view: 0,
     });
 
-  useEffect(() => {
-    if (personViews.length) {
-      setConfig({
-        operator: filter.config.operator || IN_OPERATOR.IN,
-        view: filter.config.view,
-      });
-    }
-  }, [personViews]);
-
-  const submittable = !!(filter.config.view != null && filter.config.operator);
+  const submittable = !!(filter.config.view > 0 && filter.config.operator);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
