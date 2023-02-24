@@ -1,9 +1,11 @@
 import dayjs from 'dayjs';
-
 import Environment from 'core/env/Environment';
 import { IFuture } from 'core/caching/futures';
 import { ModelBase } from 'core/models';
-import SurveysRepo, { ZetkinSurveyElementPostBody } from '../repos/SurveysRepo';
+import SurveysRepo, {
+  ZetkinSurveyElementPatchBody,
+  ZetkinSurveyElementPostBody,
+} from '../repos/SurveysRepo';
 import {
   ZetkinSurveyExtended,
   ZetkinSurveyTextElement,
@@ -164,6 +166,10 @@ export default class SurveyDataModel extends ModelBase {
     this._repo.updateSurvey(this._orgId, this._surveyId, {
       expires: today,
     });
+  }
+
+  updateOpenQuestionBlock(elemId: number, data: ZetkinSurveyElementPatchBody) {
+    this._repo.updateElement(this._orgId, this._surveyId, elemId, data);
   }
 
   updateTextBlock(
