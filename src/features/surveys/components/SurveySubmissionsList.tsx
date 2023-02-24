@@ -7,7 +7,12 @@ import { ZetkinSurveySubmission } from 'utils/types/zetkin';
 import ZUIAvatar from 'zui/ZUIAvatar';
 import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
-import { DataGridPro, GridRenderCellParams } from '@mui/x-data-grid-pro';
+import {
+  DataGridPro,
+  GridCellParams,
+  GridEventListener,
+  GridRenderCellParams,
+} from '@mui/x-data-grid-pro';
 
 const SurveySubmissionsList = ({
   submissions,
@@ -38,27 +43,7 @@ const SurveySubmissionsList = ({
         params: GridRenderCellParams<string, ZetkinSurveySubmission>
       ) => {
         if (params.row.respondent !== null) {
-          return (
-            <Box
-              key={`submissionList-${params.row.id}`}
-              onClick={() =>
-                openPane({
-                  render() {
-                    return (
-                      <SurveySubmissionPane
-                        id={params.row.id}
-                        orgId={parseInt(orgId as string)}
-                      />
-                    );
-                  },
-                  width: 400,
-                })
-              }
-              sx={{ cursor: 'pointer', width: '200px' }}
-            >
-              {params.row.respondent[field]}
-            </Box>
-          );
+          return params.row.respondent[field];
         }
         return '-';
       },
@@ -80,27 +65,7 @@ const SurveySubmissionsList = ({
         params: GridRenderCellParams<string, ZetkinSurveySubmission>
       ) => {
         if (params.row.respondent !== null) {
-          return (
-            <Box
-              key={`submissionList-${params.row.id}`}
-              onClick={() =>
-                openPane({
-                  render() {
-                    return (
-                      <SurveySubmissionPane
-                        id={params.row.id}
-                        orgId={parseInt(orgId as string)}
-                      />
-                    );
-                  },
-                  width: 400,
-                })
-              }
-              sx={{ cursor: 'pointer', width: '200px' }}
-            >
-              <ZUIRelativeTime datetime={params.row.submitted} />
-            </Box>
-          );
+          return <ZUIRelativeTime datetime={params.row.submitted} />;
         }
       },
       sortable: true,
@@ -133,19 +98,49 @@ const SurveySubmissionsList = ({
     },
   ];
 
+  const handlePane: GridEventListener<'cellClick'> = (params) => {
+    if (params.field === 'respondent') {
+      return;
+    }
+
+    return openPane({
+      render() {
+        return (
+          <SurveySubmissionPane
+            id={params.row.id}
+            orgId={parseInt(orgId as string)}
+          />
+        );
+      },
+      width: 400,
+    });
+  };
+
   return (
-    <>
+    <Box
+      sx={{
+        '& .pointer': {
+          cursor: 'pointer',
+        },
+      }}
+    >
       <DataGridPro
         autoHeight
         columns={gridColumns}
         disableColumnFilter
         disableColumnMenu
+        getCellClassName={(params: GridCellParams<string>) => {
+          return params.field === 'respondent' ? '' : 'pointer';
+        }}
+        onCellClick={(params, event, details) => {
+          handlePane(params, event, details);
+        }}
         rows={sortedSubmissions}
         style={{
           border: 'none',
         }}
       />
-    </>
+    </Box>
   );
 };
 
