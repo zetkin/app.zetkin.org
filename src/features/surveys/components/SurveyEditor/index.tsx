@@ -2,10 +2,9 @@ import { Box } from '@mui/material';
 import { FC, useEffect, useRef, useState } from 'react';
 
 import AddBlocks from './AddBlocks';
+import BlockArrowIcon from './blocks/BlockArrowIcon';
 import BlockWrapper from './blocks/BlockWrapper';
 import ChoiceQuestionBlock from './blocks/ChoiceQuestionBlock';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import OpenQuestionBlock from './blocks/OpenQuestionBlock';
 import SurveyDataModel from 'features/surveys/models/SurveyDataModel';
 import TextBlock from './blocks/TextBlock';
@@ -60,23 +59,19 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ model }) => {
         {(data) => {
           return (
             <Box paddingBottom={data.elements.length ? 4 : 0}>
-              {data.elements.map((elem) => {
-                const specificBlockIsOnEdit = elem.id === idOfBlockInEditMode;
+              {data.elements.map((elem, index) => {
+                const blockIsOnEdit = elem.id === idOfBlockInEditMode;
+                const blockLength = data.elements.length - 1;
 
                 if (elem.type == ELEMENT_TYPE.QUESTION) {
                   if (elem.question.response_type == RESPONSE_TYPE.TEXT) {
                     return (
                       <Box alignItems="center" display="flex">
-                        {specificBlockIsOnEdit && (
-                          <Box display="flex" flexDirection="column">
-                            <KeyboardArrowUpIcon
-                              sx={{ margin: '1em 1em 1em 0' }}
-                            />
-                            <KeyboardArrowDownIcon
-                              sx={{ margin: '1em 1em 1em 0' }}
-                            />
-                          </Box>
-                        )}
+                        <BlockArrowIcon
+                          blockIndex={index}
+                          blockIsOnEdit={blockIsOnEdit}
+                          blockLength={blockLength}
+                        />
                         <BlockWrapper
                           key={elem.id}
                           hidden={elem.hidden}
@@ -87,14 +82,14 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ model }) => {
                         >
                           <OpenQuestionBlock
                             element={elem.question}
-                            inEditMode={specificBlockIsOnEdit}
+                            inEditMode={blockIsOnEdit}
                             onEditModeEnter={() =>
                               setIdOfBlockInEditMode(elem.id)
                             }
                             onEditModeExit={(
                               data: ZetkinSurveyElementPatchBody
                             ) => {
-                              if (specificBlockIsOnEdit) {
+                              if (blockIsOnEdit) {
                                 setIdOfBlockInEditMode(undefined);
                               }
                               model.updateOpenQuestionBlock(elem.id, data);
@@ -107,6 +102,34 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ model }) => {
                     elem.question.response_type == RESPONSE_TYPE.OPTIONS
                   ) {
                     return (
+                      <Box alignItems="center" display="flex">
+                        <BlockArrowIcon
+                          blockIndex={index}
+                          blockIsOnEdit={blockIsOnEdit}
+                          blockLength={blockLength}
+                        />
+                        <BlockWrapper
+                          key={elem.id}
+                          hidden={elem.hidden}
+                          onDelete={() => handleDelete(elem.id)}
+                          onToggleHidden={(hidden) =>
+                            handleToggleHidden(elem.id, hidden)
+                          }
+                        >
+                          <ChoiceQuestionBlock question={elem.question} />
+                        </BlockWrapper>
+                      </Box>
+                    );
+                  }
+                } else if (elem.type == ELEMENT_TYPE.TEXT) {
+                  return (
+                    <Box alignItems="center" display="flex">
+                      <BlockArrowIcon
+                        blockIndex={index}
+                        blockIsOnEdit={blockIsOnEdit}
+                        blockLength={blockLength}
+                      />
+
                       <BlockWrapper
                         key={elem.id}
                         hidden={elem.hidden}
@@ -115,34 +138,23 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ model }) => {
                           handleToggleHidden(elem.id, hidden)
                         }
                       >
-                        <ChoiceQuestionBlock question={elem.question} />
-                      </BlockWrapper>
-                    );
-                  }
-                } else if (elem.type == ELEMENT_TYPE.TEXT) {
-                  return (
-                    <BlockWrapper
-                      key={elem.id}
-                      hidden={elem.hidden}
-                      onDelete={() => handleDelete(elem.id)}
-                      onToggleHidden={(hidden) =>
-                        handleToggleHidden(elem.id, hidden)
-                      }
-                    >
-                      <TextBlock
-                        element={elem}
-                        inEditMode={specificBlockIsOnEdit}
-                        onEditModeEnter={() => setIdOfBlockInEditMode(elem.id)}
-                        onEditModeExit={(
-                          textBlock: ZetkinSurveyTextElement['text_block']
-                        ) => {
-                          if (specificBlockIsOnEdit) {
-                            setIdOfBlockInEditMode(undefined);
+                        <TextBlock
+                          element={elem}
+                          inEditMode={blockIsOnEdit}
+                          onEditModeEnter={() =>
+                            setIdOfBlockInEditMode(elem.id)
                           }
-                          model.updateTextBlock(elem.id, textBlock);
-                        }}
-                      />
-                    </BlockWrapper>
+                          onEditModeExit={(
+                            textBlock: ZetkinSurveyTextElement['text_block']
+                          ) => {
+                            if (blockIsOnEdit) {
+                              setIdOfBlockInEditMode(undefined);
+                            }
+                            model.updateTextBlock(elem.id, textBlock);
+                          }}
+                        />
+                      </BlockWrapper>
+                    </Box>
                   );
                 }
               })}
