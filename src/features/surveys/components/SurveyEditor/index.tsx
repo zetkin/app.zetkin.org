@@ -4,6 +4,8 @@ import { FC, useEffect, useRef, useState } from 'react';
 import AddBlocks from './AddBlocks';
 import BlockWrapper from './blocks/BlockWrapper';
 import ChoiceQuestionBlock from './blocks/ChoiceQuestionBlock';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import OpenQuestionBlock from './blocks/OpenQuestionBlock';
 import SurveyDataModel from 'features/surveys/models/SurveyDataModel';
 import TextBlock from './blocks/TextBlock';
@@ -59,33 +61,47 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ model }) => {
           return (
             <Box paddingBottom={data.elements.length ? 4 : 0}>
               {data.elements.map((elem) => {
+                const specificBlockIsOnEdit = elem.id === idOfBlockInEditMode;
+
                 if (elem.type == ELEMENT_TYPE.QUESTION) {
                   if (elem.question.response_type == RESPONSE_TYPE.TEXT) {
                     return (
-                      <BlockWrapper
-                        key={elem.id}
-                        hidden={elem.hidden}
-                        onDelete={() => handleDelete(elem.id)}
-                        onToggleHidden={(hidden) =>
-                          handleToggleHidden(elem.id, hidden)
-                        }
-                      >
-                        <OpenQuestionBlock
-                          element={elem.question}
-                          inEditMode={elem.id === idOfBlockInEditMode}
-                          onEditModeEnter={() =>
-                            setIdOfBlockInEditMode(elem.id)
+                      <Box alignItems="center" display="flex">
+                        {specificBlockIsOnEdit && (
+                          <Box display="flex" flexDirection="column">
+                            <KeyboardArrowUpIcon
+                              sx={{ margin: '1em 1em 1em 0' }}
+                            />
+                            <KeyboardArrowDownIcon
+                              sx={{ margin: '1em 1em 1em 0' }}
+                            />
+                          </Box>
+                        )}
+                        <BlockWrapper
+                          key={elem.id}
+                          hidden={elem.hidden}
+                          onDelete={() => handleDelete(elem.id)}
+                          onToggleHidden={(hidden) =>
+                            handleToggleHidden(elem.id, hidden)
                           }
-                          onEditModeExit={(
-                            data: ZetkinSurveyElementPatchBody
-                          ) => {
-                            if (elem.id === idOfBlockInEditMode) {
-                              setIdOfBlockInEditMode(undefined);
+                        >
+                          <OpenQuestionBlock
+                            element={elem.question}
+                            inEditMode={specificBlockIsOnEdit}
+                            onEditModeEnter={() =>
+                              setIdOfBlockInEditMode(elem.id)
                             }
-                            model.updateOpenQuestionBlock(elem.id, data);
-                          }}
-                        />
-                      </BlockWrapper>
+                            onEditModeExit={(
+                              data: ZetkinSurveyElementPatchBody
+                            ) => {
+                              if (specificBlockIsOnEdit) {
+                                setIdOfBlockInEditMode(undefined);
+                              }
+                              model.updateOpenQuestionBlock(elem.id, data);
+                            }}
+                          />
+                        </BlockWrapper>
+                      </Box>
                     );
                   } else if (
                     elem.question.response_type == RESPONSE_TYPE.OPTIONS
@@ -115,12 +131,12 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ model }) => {
                     >
                       <TextBlock
                         element={elem}
-                        inEditMode={elem.id === idOfBlockInEditMode}
+                        inEditMode={specificBlockIsOnEdit}
                         onEditModeEnter={() => setIdOfBlockInEditMode(elem.id)}
                         onEditModeExit={(
                           textBlock: ZetkinSurveyTextElement['text_block']
                         ) => {
-                          if (elem.id === idOfBlockInEditMode) {
+                          if (specificBlockIsOnEdit) {
                             setIdOfBlockInEditMode(undefined);
                           }
                           model.updateTextBlock(elem.id, textBlock);

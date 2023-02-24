@@ -17,6 +17,7 @@ const BlockWrapper: FC<BlockWrapperProps> = ({
 }) => {
   return (
     <Box
+      flex={'1 0'}
       marginBottom={1}
       sx={{ opacity: hidden ? 0.5 : 1, transition: 'opacity 0.2s' }}
     >
