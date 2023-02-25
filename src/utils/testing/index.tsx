@@ -11,7 +11,7 @@ import {
   ThemeProvider,
 } from '@mui/material/styles';
 
-import { Message } from 'core/i18n/messages';
+import { AnyMessage } from 'core/i18n/messages';
 import theme from 'theme';
 import { UserContext } from 'utils/hooks/useFocusDate';
 
@@ -62,8 +62,8 @@ const ZetkinAppProviders: FC<ZetkinAppProvidersProps> = ({ children }) => {
 };
 
 type CustomRenderResult = RenderResult & {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  getByMessageId(message: Message<any>): ReturnType<RenderResult['getByText']>;
+  findByMessageId(message: AnyMessage): ReturnType<RenderResult['findByText']>;
+  getByMessageId(message: AnyMessage): ReturnType<RenderResult['getByText']>;
 };
 
 /**
@@ -84,6 +84,7 @@ const customRender = (
 
   return {
     ...result,
+    findByMessageId: (message) => result.findByText(message._id),
     getByMessageId: (message) => result.getByText(message._id),
   };
 };
