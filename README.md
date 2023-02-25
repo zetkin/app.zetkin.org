@@ -69,6 +69,8 @@ The `react-intl` setup in tests does not render the text in the components and i
 You can log in using the dummy user accounts to access dummy data from the
 development server.
 
+Hint: when in doubt, use **Administrator**
+
 | Role/access   | Username               | Password | SMS code |
 | ------------- | ---------------------- | -------- | -------- |
 | Administrator | testadmin@example.com  | password | 999999   |
