@@ -1,2 +1,3 @@
 surveySubmission:
+  anonymous: Anonymous
   subtitle: '{person} {date}'

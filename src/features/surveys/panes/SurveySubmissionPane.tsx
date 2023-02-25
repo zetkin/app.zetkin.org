@@ -155,7 +155,7 @@ const Question: FC<{
   const styles = useStyles();
   return (
     <Box className={styles.element}>
-      <Box display="flex">
+      <Box display="flex" justifyContent="space-between">
         <Typography
           className={styles.question}
           sx={{ opacity: hidden ? 0.4 : 1 }}
