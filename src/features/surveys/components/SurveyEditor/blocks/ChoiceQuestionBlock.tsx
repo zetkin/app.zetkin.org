@@ -1,13 +1,19 @@
 import {
   Box,
   ClickAwayListener,
+  IconButton,
   ListItemIcon,
   MenuItem,
   SvgIcon,
   TextField,
   Typography,
 } from '@mui/material';
-import { CheckBoxOutlined, RadioButtonChecked } from '@mui/icons-material';
+import {
+  CheckBoxOutlined,
+  Delete,
+  RadioButtonChecked,
+  RemoveRedEye,
+} from '@mui/icons-material';
 import {
   FC,
   KeyboardEvent,
@@ -55,16 +61,22 @@ const widgetTypes = [
 ];
 
 interface ChoiceQuestionBlockProps {
+  hidden: boolean;
   inEditMode: boolean;
+  onDelete: () => void;
   onEditModeEnter: () => void;
   onEditModeExit: (question: OptionsQuestionPatchBody) => void;
+  onToggleHidden: (hidden: boolean) => void;
   question: ZetkinOptionsQuestion;
 }
 
 const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
+  hidden,
   inEditMode,
+  onDelete,
   onEditModeEnter,
   onEditModeExit,
+  onToggleHidden,
   question: questionElement,
 }) => {
   const intl = useIntl();
@@ -183,6 +195,19 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
             )}
           </Box>
         )}
+        <Box display="flex" justifyContent="end" m={2}>
+          <IconButton onClick={() => onToggleHidden(!hidden)}>
+            <RemoveRedEye />
+          </IconButton>
+          <IconButton
+            onClick={(evt) => {
+              evt.stopPropagation();
+              onDelete();
+            }}
+          >
+            <Delete />
+          </IconButton>
+        </Box>
       </div>
     </ClickAwayListener>
   );

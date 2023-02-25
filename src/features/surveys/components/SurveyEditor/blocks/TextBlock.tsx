@@ -1,4 +1,11 @@
-import { Box, ClickAwayListener, TextField, Typography } from '@mui/material';
+import {
+  Box,
+  ClickAwayListener,
+  IconButton,
+  TextField,
+  Typography,
+} from '@mui/material';
+import { Delete, RemoveRedEye } from '@mui/icons-material';
 import {
   FC,
   KeyboardEvent,
@@ -13,17 +20,23 @@ import theme from 'theme';
 import { ZetkinSurveyTextElement } from 'utils/types/zetkin';
 
 interface TextBlockProps {
+  hidden: boolean;
   inEditMode: boolean;
   element: ZetkinSurveyTextElement;
+  onDelete: () => void;
   onEditModeEnter: () => void;
   onEditModeExit: (textBlock: ZetkinSurveyTextElement['text_block']) => void;
+  onToggleHidden: (hidden: boolean) => void;
 }
 
 const TextBlock: FC<TextBlockProps> = ({
+  hidden,
   inEditMode,
+  onDelete,
   element,
   onEditModeEnter,
   onEditModeExit,
+  onToggleHidden,
 }) => {
   const intl = useIntl();
   const [header, setHeader] = useState(element.text_block.header);
@@ -64,50 +77,65 @@ const TextBlock: FC<TextBlockProps> = ({
         setFocus(null);
       }}
     >
-      {inEditMode ? (
-        <Box display="flex" flexDirection="column">
-          <TextField
-            InputProps={{
-              inputRef: headerRef,
-              sx: { fontSize: theme.typography.h4.fontSize },
-            }}
-            label={intl.formatMessage({
-              id: 'misc.surveys.blocks.text.header',
-            })}
-            onChange={(evt) => setHeader(evt.target.value)}
-            onKeyDown={(evt) => handleKeyDown(evt)}
-            sx={{ paddingBottom: 2 }}
-            value={header}
-          />
-          <TextField
-            InputProps={{ inputRef: contentRef }}
-            label={intl.formatMessage({
-              id: 'misc.surveys.blocks.text.content',
-            })}
-            onChange={(evt) => setContent(evt.target.value)}
-            onKeyDown={(evt) => handleKeyDown(evt)}
-            value={content}
-          />
-        </Box>
-      ) : (
-        <Box onClick={() => onEditModeEnter()}>
-          <Typography color={header ? 'inherit' : 'secondary'} variant="h4">
-            {header ? (
-              element.text_block.header
-            ) : (
-              <Msg id="misc.surveys.blocks.text.empty" />
-            )}
-          </Typography>
-          {content && (
-            <Typography
-              onClick={() => setFocus('content')}
-              sx={{ paddingTop: 1 }}
-            >
-              {element.text_block.content}
+      <div>
+        {inEditMode ? (
+          <Box display="flex" flexDirection="column">
+            <TextField
+              InputProps={{
+                inputRef: headerRef,
+                sx: { fontSize: theme.typography.h4.fontSize },
+              }}
+              label={intl.formatMessage({
+                id: 'misc.surveys.blocks.text.header',
+              })}
+              onChange={(evt) => setHeader(evt.target.value)}
+              onKeyDown={(evt) => handleKeyDown(evt)}
+              sx={{ paddingBottom: 2 }}
+              value={header}
+            />
+            <TextField
+              InputProps={{ inputRef: contentRef }}
+              label={intl.formatMessage({
+                id: 'misc.surveys.blocks.text.content',
+              })}
+              onChange={(evt) => setContent(evt.target.value)}
+              onKeyDown={(evt) => handleKeyDown(evt)}
+              value={content}
+            />
+          </Box>
+        ) : (
+          <Box onClick={() => onEditModeEnter()}>
+            <Typography color={header ? 'inherit' : 'secondary'} variant="h4">
+              {header ? (
+                element.text_block.header
+              ) : (
+                <Msg id="misc.surveys.blocks.text.empty" />
+              )}
             </Typography>
-          )}
+            {content && (
+              <Typography
+                onClick={() => setFocus('content')}
+                sx={{ paddingTop: 1 }}
+              >
+                {element.text_block.content}
+              </Typography>
+            )}
+          </Box>
+        )}
+        <Box display="flex" justifyContent="end" m={2}>
+          <IconButton onClick={() => onToggleHidden(!hidden)}>
+            <RemoveRedEye />
+          </IconButton>
+          <IconButton
+            onClick={(evt) => {
+              evt.stopPropagation();
+              onDelete();
+            }}
+          >
+            <Delete />
+          </IconButton>
         </Box>
-      )}
+      </div>
     </ClickAwayListener>
   );
 };

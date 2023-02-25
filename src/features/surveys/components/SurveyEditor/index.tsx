@@ -60,31 +60,26 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ model }) => {
                 if (elem.type == ELEMENT_TYPE.QUESTION) {
                   if (elem.question.response_type == RESPONSE_TYPE.TEXT) {
                     return (
-                      <BlockWrapper
-                        key={elem.id}
-                        hidden={elem.hidden}
-                        onDelete={() => handleDelete(elem.id)}
-                        onToggleHidden={(hidden) =>
-                          handleToggleHidden(elem.id, hidden)
-                        }
-                      >
-                        <OpenQuestionBlock question={elem.question} />
+                      <BlockWrapper key={elem.id} hidden={elem.hidden}>
+                        <OpenQuestionBlock
+                          hidden={elem.hidden}
+                          onDelete={() => handleDelete(elem.id)}
+                          onToggleHidden={(hidden) =>
+                            handleToggleHidden(elem.id, hidden)
+                          }
+                          question={elem.question}
+                        />
                       </BlockWrapper>
                     );
                   } else if (
                     elem.question.response_type == RESPONSE_TYPE.OPTIONS
                   ) {
                     return (
-                      <BlockWrapper
-                        key={elem.id}
-                        hidden={elem.hidden}
-                        onDelete={() => handleDelete(elem.id)}
-                        onToggleHidden={(hidden) =>
-                          handleToggleHidden(elem.id, hidden)
-                        }
-                      >
+                      <BlockWrapper key={elem.id} hidden={elem.hidden}>
                         <ChoiceQuestionBlock
+                          hidden={elem.hidden}
                           inEditMode={elem.id === idOfBlockInEditMode}
+                          onDelete={() => handleDelete(elem.id)}
                           onEditModeEnter={() =>
                             setIdOfBlockInEditMode(elem.id)
                           }
@@ -96,6 +91,9 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ model }) => {
                             }
                             model.updateChoiceQuestion(elem.id, question);
                           }}
+                          onToggleHidden={(hidden) =>
+                            handleToggleHidden(elem.id, hidden)
+                          }
                           question={elem.question}
                         />
                       </BlockWrapper>
@@ -103,17 +101,12 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ model }) => {
                   }
                 } else if (elem.type == ELEMENT_TYPE.TEXT) {
                   return (
-                    <BlockWrapper
-                      key={elem.id}
-                      hidden={elem.hidden}
-                      onDelete={() => handleDelete(elem.id)}
-                      onToggleHidden={(hidden) =>
-                        handleToggleHidden(elem.id, hidden)
-                      }
-                    >
+                    <BlockWrapper key={elem.id} hidden={elem.hidden}>
                       <TextBlock
                         element={elem}
+                        hidden={elem.hidden}
                         inEditMode={elem.id === idOfBlockInEditMode}
+                        onDelete={() => handleDelete(elem.id)}
                         onEditModeEnter={() => setIdOfBlockInEditMode(elem.id)}
                         onEditModeExit={(
                           textBlock: ZetkinSurveyTextElement['text_block']
@@ -123,6 +116,9 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ model }) => {
                           }
                           model.updateTextBlock(elem.id, textBlock);
                         }}
+                        onToggleHidden={(hidden) =>
+                          handleToggleHidden(elem.id, hidden)
+                        }
                       />
                     </BlockWrapper>
                   );
