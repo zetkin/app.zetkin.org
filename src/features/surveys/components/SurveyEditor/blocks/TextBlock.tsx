@@ -1,11 +1,4 @@
-import {
-  Box,
-  ClickAwayListener,
-  IconButton,
-  TextField,
-  Typography,
-} from '@mui/material';
-import { Delete, RemoveRedEye } from '@mui/icons-material';
+import { Box, ClickAwayListener, TextField, Typography } from '@mui/material';
 import {
   FC,
   KeyboardEvent,
@@ -16,6 +9,7 @@ import {
 } from 'react';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
 
+import DeleteHideButtons from './DeleteHideButtons';
 import theme from 'theme';
 import { ZetkinSurveyTextElement } from 'utils/types/zetkin';
 
@@ -123,17 +117,11 @@ const TextBlock: FC<TextBlockProps> = ({
           </Box>
         )}
         <Box display="flex" justifyContent="end" m={2}>
-          <IconButton onClick={() => onToggleHidden(!hidden)}>
-            <RemoveRedEye />
-          </IconButton>
-          <IconButton
-            onClick={(evt) => {
-              evt.stopPropagation();
-              onDelete();
-            }}
-          >
-            <Delete />
-          </IconButton>
+          <DeleteHideButtons
+            hidden={hidden}
+            onDelete={onDelete}
+            onToggleHidden={onToggleHidden}
+          />
         </Box>
       </div>
     </ClickAwayListener>

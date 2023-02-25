@@ -1,7 +1,7 @@
+import { Box } from '@mui/material';
 import { FC } from 'react';
-import { Box, IconButton } from '@mui/material';
-import { Delete, RemoveRedEye } from '@mui/icons-material';
 
+import DeleteHideButtons from './DeleteHideButtons';
 import { ZetkinTextQuestion } from 'utils/types/zetkin';
 
 interface OpenQuestionBlockProps {
@@ -21,17 +21,11 @@ const OpenQuestionBlock: FC<OpenQuestionBlockProps> = ({
     <Box>
       {JSON.stringify(question)}
       <Box display="flex" justifyContent="end" m={2}>
-        <IconButton onClick={() => onToggleHidden(!hidden)}>
-          <RemoveRedEye />
-        </IconButton>
-        <IconButton
-          onClick={(evt) => {
-            evt.stopPropagation();
-            onDelete();
-          }}
-        >
-          <Delete />
-        </IconButton>
+        <DeleteHideButtons
+          hidden={hidden}
+          onDelete={onDelete}
+          onToggleHidden={onToggleHidden}
+        />
       </Box>
     </Box>
   );

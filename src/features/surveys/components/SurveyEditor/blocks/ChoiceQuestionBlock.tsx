@@ -1,19 +1,13 @@
 import {
   Box,
   ClickAwayListener,
-  IconButton,
   ListItemIcon,
   MenuItem,
   SvgIcon,
   TextField,
   Typography,
 } from '@mui/material';
-import {
-  CheckBoxOutlined,
-  Delete,
-  RadioButtonChecked,
-  RemoveRedEye,
-} from '@mui/icons-material';
+import { CheckBoxOutlined, RadioButtonChecked } from '@mui/icons-material';
 import {
   FC,
   KeyboardEvent,
@@ -24,6 +18,7 @@ import {
 } from 'react';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
 
+import DeleteHideButtons from './DeleteHideButtons';
 import { OptionsQuestionPatchBody } from 'features/surveys/repos/SurveysRepo';
 import theme from 'theme';
 import { ZetkinOptionsQuestion } from 'utils/types/zetkin';
@@ -196,17 +191,11 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
           </Box>
         )}
         <Box display="flex" justifyContent="end" m={2}>
-          <IconButton onClick={() => onToggleHidden(!hidden)}>
-            <RemoveRedEye />
-          </IconButton>
-          <IconButton
-            onClick={(evt) => {
-              evt.stopPropagation();
-              onDelete();
-            }}
-          >
-            <Delete />
-          </IconButton>
+          <DeleteHideButtons
+            hidden={hidden}
+            onDelete={onDelete}
+            onToggleHidden={onToggleHidden}
+          />
         </Box>
       </div>
     </ClickAwayListener>
