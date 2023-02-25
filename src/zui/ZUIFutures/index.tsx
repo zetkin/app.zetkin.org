@@ -1,9 +1,11 @@
 import { ErrorOutlined } from '@mui/icons-material';
 import { FC } from 'react';
-import { FormattedMessage } from 'react-intl';
 import { Box, CircularProgress, Typography } from '@mui/material';
 
 import { IFuture } from 'core/caching/futures';
+import { Msg } from 'core/i18n';
+
+import messageIds from 'zui/l10n/messageIds';
 
 interface ZUIFuturesProps<G extends Record<string, unknown>> {
   children?:
@@ -38,7 +40,7 @@ function ZUIFutures<G extends Record<string, unknown>>({
         >
           <ErrorOutlined color="error" fontSize="large" />
           <Typography variant="body1">
-            <FormattedMessage id="misc.errorLoading" />
+            <Msg id={messageIds.futures.errorLoading} />
           </Typography>
         </Box>
       )

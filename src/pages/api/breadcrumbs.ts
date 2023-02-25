@@ -59,7 +59,7 @@ const breadcrumbs = async (
         curPath.push(field);
         breadcrumbs.push({
           href: '/' + curPath.join('/'),
-          labelMsg: `misc.breadcrumbs.${field}`,
+          labelMsg: field,
         });
       }
     }

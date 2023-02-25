@@ -25,7 +25,7 @@ export default makeMessages('feat.tags', {
     addValue: im<{ tag: string }>('Add value for "{tag}"'),
     createNamedTag: im<{ name: ReactElement }>('Create tag: {name}'),
     createTag: m('New Tag'),
-    groupTags: m('Group tags!'),
+    groupTags: m('Group tags'),
     title: m('Tags'),
     ungroupedHeader: m('No group'),
     valueTagForm: {

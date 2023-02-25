@@ -1,13 +1,15 @@
-import { useIntl } from 'react-intl';
 import { Box, Collapse } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 
+import { useMessages } from 'core/i18n';
 import { ZetkinNoteBody } from 'utils/types/zetkin';
 import ZUISubmitCancelButtons from '../ZUISubmitCancelButtons';
 import ZUITextEditor from '../ZUITextEditor';
 import useFileUploads, {
   FileUploadState,
 } from 'features/files/hooks/useFileUploads';
+
+import messageIds from './l10n/messageIds';
 
 interface AddNoteProps {
   disabled?: boolean;
@@ -18,7 +20,7 @@ const TimelineAddNote: React.FunctionComponent<AddNoteProps> = ({
   disabled,
   onSubmit,
 }) => {
-  const intl = useIntl();
+  const messages = useMessages(messageIds);
   const [clear, setClear] = useState<number>(0);
   const [note, setNote] = useState<ZetkinNoteBody | null>(null);
   const {
@@ -63,9 +65,7 @@ const TimelineAddNote: React.FunctionComponent<AddNoteProps> = ({
           onCancelFile={cancelFileUpload}
           onChange={onChange}
           onClickAttach={() => openFilePicker()}
-          placeholder={intl.formatMessage({
-            id: 'misc.timeline.add_note_placeholder',
-          })}
+          placeholder={messages.addNotePlaceholder()}
         />
       </Box>
       <Collapse in={!!visibleText || fileUploads.length > 0}>

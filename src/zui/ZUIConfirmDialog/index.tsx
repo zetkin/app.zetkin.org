@@ -1,8 +1,10 @@
 import { Typography } from '@mui/material';
-import { useIntl } from 'react-intl';
 
+import { useMessages } from 'core/i18n';
 import ZUIDialog from 'zui/ZUIDialog';
 import ZUISubmitCancelButtons from 'zui/ZUISubmitCancelButtons';
+
+import messageIds from 'zui/l10n/messageIds';
 
 export interface ZUIConfirmDialogProps {
   open: boolean;
@@ -21,20 +23,15 @@ const ZUIConfirmDialog: React.FunctionComponent<ZUIConfirmDialogProps> = ({
   warningText,
   submitDisabled,
 }) => {
-  const intl = useIntl();
+  const messages = useMessages(messageIds);
   return (
     <ZUIDialog
       onClose={() => onCancel()}
       open={open}
-      title={
-        title || intl.formatMessage({ id: 'misc.ConfirmDialog.defaultTitle' })
-      }
+      title={title || messages.confirmDialog.defaultTitle()}
     >
       <Typography variant="body1">
-        {warningText ||
-          intl.formatMessage({
-            id: 'misc.ConfirmDialog.defaultWarningText',
-          })}
+        {warningText || messages.confirmDialog.defaultWarningText()}
       </Typography>
       <form
         onSubmit={(ev) => {
@@ -45,9 +42,7 @@ const ZUIConfirmDialog: React.FunctionComponent<ZUIConfirmDialogProps> = ({
         <ZUISubmitCancelButtons
           onCancel={() => onCancel()}
           submitDisabled={submitDisabled}
-          submitText={intl.formatMessage({
-            id: 'misc.ConfirmDialog.button',
-          })}
+          submitText={messages.confirmDialog.button()}
         />
       </form>
     </ZUIDialog>

@@ -1,10 +1,12 @@
-import { FormattedMessage } from 'react-intl';
 import { Typography } from '@mui/material';
 
+import { Msg } from 'core/i18n';
 import UpdateContainer from './elements/UpdateContainer';
 import { ZetkinUpdateJourneyInstanceClose } from 'zui/ZUITimeline/types';
 import ZUIJourneyInstanceCard from 'zui/ZUIJourneyInstanceCard';
 import ZUIPersonLink from 'zui/ZUIPersonLink';
+
+import messageIds from '../l10n/messageIds';
 
 interface TimelineJourneyCloseProps {
   update: ZetkinUpdateJourneyInstanceClose;
@@ -16,8 +18,8 @@ const TimelineJourneyClose: React.FC<TimelineJourneyCloseProps> = ({
   return (
     <UpdateContainer
       headerContent={
-        <FormattedMessage
-          id="misc.updates.journeyinstance.close.header"
+        <Msg
+          id={messageIds.updates.journeyinstance.close.header}
           values={{ actor: <ZUIPersonLink person={update.actor} /> }}
         />
       }
