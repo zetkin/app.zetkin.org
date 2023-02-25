@@ -1,18 +1,19 @@
 import { TextField } from 'mui-rff';
-import { useIntl } from 'react-intl';
 
 import { SHARE_LINK_FIELDS } from '../constants';
+import { useMessages } from 'core/i18n';
+
+import messageIds from 'features/tasks/l10n/messageIds';
 
 const ShareLinkFields = (): JSX.Element => {
-  const intl = useIntl();
+  const messages = useMessages(messageIds);
+
   return (
     <>
       <TextField
         fullWidth
         id="url"
-        label={intl.formatMessage({
-          id: 'misc.tasks.forms.shareLinkConfig.fields.url',
-        })}
+        label={messages.configs.shareLink.fields.url()}
         margin="normal"
         name={SHARE_LINK_FIELDS.URL}
         required
@@ -21,9 +22,7 @@ const ShareLinkFields = (): JSX.Element => {
       <TextField
         fullWidth
         id="default_message"
-        label={intl.formatMessage({
-          id: 'misc.tasks.forms.shareLinkConfig.fields.default_message',
-        })}
+        label={messages.configs.shareLink.fields.defaultMessage()}
         margin="normal"
         name={SHARE_LINK_FIELDS.DEFAULT_MESSAGE}
         required

@@ -5,7 +5,6 @@ import {
   Link as LinkIcon,
   NaturePeople,
   Share,
-  VideoLibrary,
 } from '@mui/icons-material';
 import {
   ListItem,
@@ -23,9 +22,7 @@ const TASK_TYPE_ICONS: { [key in TASK_TYPE]: React.ReactNode } = {
   [TASK_TYPE.OFFLINE]: <NaturePeople />,
   [TASK_TYPE.COLLECT_DEMOGRAPHICS]: <FormatListNumbered />,
   [TASK_TYPE.SHARE_LINK]: <Share />,
-  [TASK_TYPE.SHARE_IMAGE]: <Share />,
   [TASK_TYPE.VISIT_LINK]: <LinkIcon />,
-  [TASK_TYPE.WATCH_VIDEO]: <VideoLibrary />,
 };
 
 interface TaskListItemProps {

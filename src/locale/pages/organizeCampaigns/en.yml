@@ -16,6 +16,4 @@ mobilization:
   heading: Mobilization and outreach (none configured)
 noEvents: No events...
 noManager: No Campaign Manager
-noTasksCreatePrompt: No tasks... Click here to create one.
-showExpiredTasksPrompt: Show expired tasks...
 tasks: Tasks

@@ -2,7 +2,6 @@ import { Alert } from '@mui/material';
 import { Box } from '@mui/material';
 import { useRouter } from 'next/router';
 import { Delete, Settings } from '@mui/icons-material';
-import { FormattedMessage as Msg, useIntl } from 'react-intl';
 import React, { useContext, useState } from 'react';
 
 import PublishButton from './PublishButton';
@@ -12,7 +11,10 @@ import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUIDialog from 'zui/ZUIDialog';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';
+import { Msg, useMessages } from 'core/i18n';
 import { taskResource, tasksResource } from 'features/tasks/api/tasks';
+
+import messageIds from 'features/tasks/l10n/messageIds';
 
 enum TASK_MENU_ITEMS {
   EDIT_TASK = 'editTask',
@@ -26,7 +28,7 @@ interface TaskActionButtonsProps {
 const TaskActionButtons: React.FunctionComponent<TaskActionButtonsProps> = ({
   task,
 }) => {
-  const intl = useIntl();
+  const messages = useMessages(messageIds);
   const router = useRouter();
   // Dialogs
   const [editTaskDialogOpen, setEditTaskDialogOpen] = useState(false);
@@ -51,13 +53,7 @@ const TaskActionButtons: React.FunctionComponent<TaskActionButtonsProps> = ({
   };
   const handleDeleteTask = () => {
     deleteTaskMutation.mutate(task.id, {
-      onError: () =>
-        showSnackbar(
-          'error',
-          intl.formatMessage({
-            id: 'misc.tasks.forms.deleteTask.error',
-          })
-        ),
+      onError: () => showSnackbar('error', messages.deleteTask.error()),
       onSuccess: () => {
         // Navigate back to campaign page
         router.push(
@@ -82,7 +78,7 @@ const TaskActionButtons: React.FunctionComponent<TaskActionButtonsProps> = ({
                   <Box mr={1}>
                     <Settings />
                   </Box>
-                  <Msg id="misc.tasks.forms.editTask.title" />
+                  <Msg id={messageIds.editTask.title} />
                 </>
               ),
               onSelect: () => setEditTaskDialogOpen(true),
@@ -94,18 +90,14 @@ const TaskActionButtons: React.FunctionComponent<TaskActionButtonsProps> = ({
                   <Box mr={1}>
                     <Delete />
                   </Box>
-                  <Msg id="misc.tasks.forms.deleteTask.title" />
+                  <Msg id={messageIds.deleteTask.title} />
                 </>
               ),
               onSelect: () => {
                 showConfirmDialog({
                   onSubmit: handleDeleteTask,
-                  title: intl.formatMessage({
-                    id: 'misc.tasks.forms.deleteTask.title',
-                  }),
-                  warningText: intl.formatMessage({
-                    id: 'misc.tasks.forms.deleteTask.warning',
-                  }),
+                  title: messages.deleteTask.title(),
+                  warningText: messages.deleteTask.warning(),
                 });
               },
             },
@@ -115,13 +107,11 @@ const TaskActionButtons: React.FunctionComponent<TaskActionButtonsProps> = ({
       <ZUIDialog
         onClose={() => setEditTaskDialogOpen(false)}
         open={editTaskDialogOpen}
-        title={intl.formatMessage({
-          id: 'misc.tasks.forms.editTask.title',
-        })}
+        title={messages.editTask.title()}
       >
         {patchTaskMutation.isError && (
           <Alert color="error" data-testid="error-alert">
-            <Msg id="misc.formDialog.requestError" />
+            <Msg id={messageIds.form.requestError} />
           </Alert>
         )}
         <TaskDetailsForm

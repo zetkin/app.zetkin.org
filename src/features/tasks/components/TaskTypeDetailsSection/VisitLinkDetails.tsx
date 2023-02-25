@@ -1,6 +1,8 @@
 import TaskProperty from '../TaskProperty';
-import { useIntl } from 'react-intl';
+import { useMessages } from 'core/i18n';
 import { VisitLinkConfig } from 'features/tasks/components/types';
+
+import messageIds from 'features/tasks/l10n/messageIds';
 
 interface VisitLinkDetailsProps {
   taskConfig: Partial<VisitLinkConfig>;
@@ -9,13 +11,11 @@ interface VisitLinkDetailsProps {
 const VisitLinkDetails: React.FunctionComponent<VisitLinkDetailsProps> = ({
   taskConfig,
 }) => {
-  const intl = useIntl();
+  const messages = useMessages(messageIds);
 
   return (
     <TaskProperty
-      title={intl.formatMessage({
-        id: 'misc.tasks.forms.visitLinkConfig.fields.url',
-      })}
+      title={messages.configs.visitLink.fields.url()}
       url
       value={taskConfig.url}
     />

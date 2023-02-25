@@ -1,12 +1,13 @@
-import { useIntl } from 'react-intl';
-
 import { ZetkinTask } from 'utils/types/zetkin';
 import ZUIDateTime from 'zui/ZUIDateTime';
 
 import TaskProperty from './TaskProperty';
 import TaskTypeDetailsSection from 'features/tasks/components/TaskTypeDetailsSection';
+import { useMessages } from 'core/i18n';
 import ZUISection from 'zui/ZUISection';
 import { Card, List } from '@mui/material';
+
+import messageIds from '../l10n/messageIds';
 
 interface TaskDetailsCardProps {
   task: ZetkinTask;
@@ -15,98 +16,64 @@ interface TaskDetailsCardProps {
 const TaskDetailsCard: React.FunctionComponent<TaskDetailsCardProps> = ({
   task,
 }) => {
-  const intl = useIntl();
+  const messages = useMessages(messageIds);
+
   return (
-    <ZUISection
-      title={intl.formatMessage({
-        id: 'misc.tasks.taskDetails.title',
-      })}
-    >
+    <ZUISection title={messages.taskDetails.title()}>
       <Card>
         <List disablePadding>
           <TaskProperty
-            title={intl.formatMessage({
-              id: 'misc.tasks.taskDetails.instructionsLabel',
-            })}
+            title={messages.taskDetails.instructionsLabel()}
             value={task.instructions}
           />
 
           <TaskProperty
-            title={intl.formatMessage({
-              id: 'misc.tasks.taskDetails.timeEstimateLabel',
-            })}
+            title={messages.taskDetails.timeEstimateLabel()}
             value={
               task.time_estimate
-                ? intl.formatMessage(
-                    {
-                      id: 'misc.tasks.forms.createTask.fields.time_estimate_options.hoursAndMinutes',
-                    },
-                    {
-                      hours: Math.floor(task.time_estimate / 60),
-                      minutes: task.time_estimate % 60,
-                    }
-                  )
-                : intl.formatMessage({
-                    id: 'misc.tasks.forms.createTask.fields.time_estimate_options.noEstimate',
+                ? messages.form.fields.timeEstimateOptions.hoursAndMinutes({
+                    hours: Math.floor(task.time_estimate / 60),
+                    minutes: task.time_estimate % 60,
                   })
+                : messages.form.fields.timeEstimateOptions.noEstimate()
             }
           />
 
           <TaskProperty
-            title={intl.formatMessage({
-              id: 'misc.tasks.taskDetails.typeLabel',
-            })}
-            value={intl.formatMessage({
-              id: `misc.tasks.types.${task.type}`,
-            })}
+            title={messages.taskDetails.typeLabel()}
+            value={messages.types[task.type]()}
           />
 
           <TaskTypeDetailsSection task={task} />
 
           <TaskProperty
-            title={intl.formatMessage({
-              id: 'misc.tasks.taskDetails.publishedTime',
-            })}
+            title={messages.taskDetails.publishedTime()}
             value={task.published && <ZUIDateTime datetime={task.published} />}
           />
           <TaskProperty
-            title={intl.formatMessage({
-              id: 'misc.tasks.taskDetails.deadlineTime',
-            })}
+            title={messages.taskDetails.deadlineTime()}
             value={task.deadline && <ZUIDateTime datetime={task.deadline} />}
           />
           <TaskProperty
-            title={intl.formatMessage({
-              id: 'misc.tasks.taskDetails.expiresTime',
-            })}
+            title={messages.taskDetails.expiresTime()}
             value={task.expires && <ZUIDateTime datetime={task.expires} />}
           />
           <TaskProperty
-            title={intl.formatMessage({
-              id: 'misc.tasks.taskDetails.reassignInterval.label',
-            })}
+            title={messages.taskDetails.reassignInterval.label()}
             value={
               task.reassign_interval &&
-              intl.formatMessage(
-                { id: 'misc.tasks.taskDetails.reassignInterval.value' },
-                { value: task.reassign_interval }
-              )
+              messages.taskDetails.reassignInterval.value({
+                value: task.reassign_interval,
+              })
             }
           />
           <TaskProperty
-            title={intl.formatMessage({
-              id: 'misc.tasks.taskDetails.reassignLimit.label',
-            })}
+            title={messages.taskDetails.reassignLimit.label()}
             value={
               task.reassign_limit &&
-              intl.formatMessage(
-                {
-                  id: 'misc.tasks.taskDetails.reassignLimit.value',
-                },
-                {
-                  value: task.reassign_limit,
-                }
-              )
+              messages.taskDetails.reassignLimit.value({
+                value: task.reassign_limit,
+              })
             }
           />
         </List>

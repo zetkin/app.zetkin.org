@@ -1,11 +1,14 @@
 import { Box } from '@mui/material';
-import { FormattedMessage } from 'react-intl';
+
+import { Msg } from 'core/i18n';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 import {
   ASSIGNED_STATUS,
   ZetkinAssignedTask,
 } from 'features/tasks/components/types';
 import { Done, NotInterested } from '@mui/icons-material';
+
+import messageIds from 'features/tasks/l10n/messageIds';
 
 const TaskStatusSubtitle = ({
   task,
@@ -17,8 +20,8 @@ const TaskStatusSubtitle = ({
       <Box alignItems="center" display="flex">
         <Done fontSize="small" />
         <Box>
-          <FormattedMessage
-            id="misc.tasks.taskAssigneesList.completedStates.completed"
+          <Msg
+            id={messageIds.assigneesList.completedStates.completed}
             values={{
               time: <ZUIRelativeTime datetime={task.completed as string} />,
             }}
@@ -31,8 +34,8 @@ const TaskStatusSubtitle = ({
       <Box alignItems="center" display="flex">
         <NotInterested fontSize="small" />
         <Box>
-          <FormattedMessage
-            id="misc.tasks.taskAssigneesList.completedStates.ignored"
+          <Msg
+            id={messageIds.assigneesList.completedStates.ignored}
             values={{
               time: <ZUIRelativeTime datetime={task.ignored as string} />,
             }}
@@ -41,9 +44,7 @@ const TaskStatusSubtitle = ({
       </Box>
     );
   } else {
-    return (
-      <FormattedMessage id="misc.tasks.taskAssigneesList.completedStates.notCompleted" />
-    );
+    return <Msg id={messageIds.assigneesList.completedStates.notCompleted} />;
   }
 };
 
