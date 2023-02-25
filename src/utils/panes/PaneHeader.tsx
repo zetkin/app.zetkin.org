@@ -12,7 +12,9 @@ const PaneHeader: FC<PaneHeaderProps> = ({ title, subtitle }) => {
       <Typography fontSize={30} variant="h3">
         {title}
       </Typography>
-      <Typography>{subtitle}</Typography>
+      <Box display="flex" justifyContent="space-between">
+        {subtitle}
+      </Box>
     </Box>
   );
 };

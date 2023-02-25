@@ -40,7 +40,6 @@ const useStyles = makeStyles({
     borderRadius: '16px',
     fontSize: '0.8em',
     marginLeft: '0.6em',
-    marginRight: '4em',
     padding: '0.2em 0.7em',
   },
   question: {
@@ -70,7 +69,7 @@ const SurveySubmissionPane: FC<SurveySubmissionPaneProps> = ({ orgId, id }) => {
         if (sub.respondent) {
           if (sub.respondent.id) {
             person = (
-              <Box display="inline-flex">
+              <Box display="flex">
                 <ZUIPersonLink
                   person={{ ...sub.respondent, id: sub.respondent.id }}
                 />
