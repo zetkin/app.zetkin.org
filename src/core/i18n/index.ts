@@ -1,3 +1,3 @@
-export { im, m, makeMessages } from './messages';
+export { im, m, makeMessages, type AnyMessage } from './messages';
 export { default as Msg } from './Msg';
-export { default as useMessages } from './useMessages';
+export { default as useMessages, type UseMessagesMap } from './useMessages';

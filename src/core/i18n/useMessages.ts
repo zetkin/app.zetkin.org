@@ -17,15 +17,15 @@ import { Message, MessageMap, MessageValue } from './messages';
  */
 export default function useMessages<MapType extends MessageMap>(
   messages: MapType
-): HookedMessageMap<MapType> {
+): UseMessagesMap<MapType> {
   const intl = useIntl();
 
   function injectIntl<MapType extends MessageMap>(
     map: MapType
-  ): HookedMessageMap<MapType> {
+  ): UseMessagesMap<MapType> {
     const output: Record<
       string,
-      HookedMessageFunc<Message<any>> | HookedMessageMap<any>
+      HookedMessageFunc<Message<any>> | UseMessagesMap<any>
     > = {};
 
     Object.entries(map).forEach(([key, val]) => {
@@ -40,11 +40,11 @@ export default function useMessages<MapType extends MessageMap>(
           );
         }) as HookedMessageFunc<typeof val>;
       } else {
-        output[key] = injectIntl(val) as HookedMessageMap<typeof val>;
+        output[key] = injectIntl(val) as UseMessagesMap<typeof val>;
       }
     });
 
-    return output as HookedMessageMap<MapType>;
+    return output as UseMessagesMap<MapType>;
   }
 
   return injectIntl(messages);
@@ -54,10 +54,10 @@ type HookedMessageFunc<MapEntry extends Message<any>> = (
   values: ReturnType<MapEntry['_typeFunc']>
 ) => string;
 
-type HookedMessageMap<MapType> = {
+export type UseMessagesMap<MapType> = {
   [K in keyof MapType]: MapType[K] extends Message<any>
     ? HookedMessageFunc<MapType[K]>
-    : HookedMessageMap<MapType[K]>;
+    : UseMessagesMap<MapType[K]>;
 };
 
 function isMessage(val: MessageMap | Message<any>): val is Message<any> {

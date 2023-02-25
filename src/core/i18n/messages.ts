@@ -13,6 +13,7 @@ export type MessageValue =
   | boolean
   | null
   | undefined
+  | Date
   | ReactElement;
 
 export type ValueRecord = Record<string, MessageValue>;
@@ -34,6 +35,8 @@ export type InterpolatedMessage<Values = ValueRecord> = BaseMessage & {
 export type Message<Values extends ValueRecord> =
   | PlainMessage
   | InterpolatedMessage<Values>;
+
+export type AnyMessage = Message<any>;
 
 type RecursiveMap<Leaf> = { [key: string]: Leaf | RecursiveMap<Leaf> };
 
