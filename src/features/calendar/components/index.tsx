@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import { FormattedDate } from 'react-intl';
 import isoWeek from 'dayjs/plugin/isoWeek';
 import makeStyles from '@mui/styles/makeStyles';
 import { useRouter } from 'next/router';
@@ -11,14 +12,15 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
-import { FormattedDate, FormattedMessage as Msg } from 'react-intl';
 
 import MonthCalendar from './MonthCalendar';
 import { useFocusDate } from 'utils/hooks/useFocusDate';
-import { useIntl } from 'react-intl';
 import WeekCalendar from './WeekCalendar';
 import { CALENDAR_RANGES, getViewRange } from './utils';
+import { Msg, useMessages } from 'core/i18n';
 import { ZetkinCampaign, ZetkinEvent, ZetkinTask } from 'utils/types/zetkin';
+
+import messageIds from '../l10n/messageIds';
 
 interface ZetkinCalendarProps {
   baseHref: string;
@@ -53,8 +55,8 @@ const Calendar = ({
   campaigns,
   tasks,
 }: ZetkinCalendarProps): JSX.Element => {
+  const messages = useMessages(messageIds);
   const { orgId } = useRouter().query;
-  const intl = useIntl();
   const { focusDate, setFocusDate } = useFocusDate();
   const [range, setRange] = useState(CALENDAR_RANGES.MONTH);
   const classes = useStyles();
@@ -136,7 +138,7 @@ const Calendar = ({
             data-testid="back-button"
             onClick={handleBackButtonClick}
           >
-            <Msg id="misc.calendar.prev" />
+            <Msg id={messageIds.prev} />
           </Button>
           <Box
             data-testid="selected-month"
@@ -166,7 +168,7 @@ const Calendar = ({
             data-testid="fwd-button"
             onClick={handleForwardButtonClick}
           >
-            <Msg id="misc.calendar.next" />
+            <Msg id={messageIds.next} />
           </Button>
           {isTodayAfterView() ? (
             <Tooltip arrow placement="top" title="Today">
@@ -184,9 +186,7 @@ const Calendar = ({
           mr={1}
         >
           <TextField
-            aria-label={intl.formatMessage({
-              id: 'misc.calendar.label',
-            })}
+            aria-label={messages.rangeLabel()}
             id="calendar-view"
             onChange={(e) => setRange(e.target.value as CALENDAR_RANGES)}
             select
@@ -195,7 +195,7 @@ const Calendar = ({
           >
             {Object.values(CALENDAR_RANGES).map((range) => (
               <MenuItem key={range} value={range}>
-                <Msg id={`misc.calendar.${range}`} />
+                <Msg id={messageIds.ranges[range]} />
               </MenuItem>
             ))}
           </TextField>
