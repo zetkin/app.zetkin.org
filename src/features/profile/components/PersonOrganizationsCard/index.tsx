@@ -1,5 +1,4 @@
 import { Add } from '@mui/icons-material';
-import { useIntl } from 'react-intl';
 import {
   Collapse,
   Divider,
@@ -16,17 +15,20 @@ import PersonCard from '../PersonCard';
 import { PersonOrganization } from 'utils/organize/people';
 import { personOrganizationsResource } from 'features/profile/api/people';
 import { PersonPageProps } from 'pages/organize/[orgId]/people/[personId]';
+import { useMessages } from 'core/i18n';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';
+
+import messageIds from 'features/profile/l10n/messageIds';
 
 const PersonOrganizationsCard: React.FunctionComponent<PersonPageProps> = ({
   orgId,
   personId,
 }) => {
+  const messages = useMessages(messageIds);
   const [editable, setEditable] = useState<boolean>(false);
   const [addable, setAddable] = useState<boolean>(false);
   const [selected, setSelected] = useState<PersonOrganization>();
-  const intl = useIntl();
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
   const { showSnackbar } = useContext(ZUISnackbarContext);
   const { data } = personOrganizationsResource(orgId, personId).useQuery();
@@ -51,13 +53,7 @@ const PersonOrganizationsCard: React.FunctionComponent<PersonPageProps> = ({
   const submitSubOrg = () => {
     if (selected) {
       addOrgMutation.mutate(selected.id, {
-        onError: () =>
-          showSnackbar(
-            'error',
-            intl.formatMessage({
-              id: 'pages.people.person.organizations.addError',
-            })
-          ),
+        onError: () => showSnackbar('error', messages.organizations.addError()),
         onSuccess: () => setSelected(undefined),
       });
     }
@@ -68,12 +64,7 @@ const PersonOrganizationsCard: React.FunctionComponent<PersonPageProps> = ({
       onSubmit: () => {
         removeOrgMutation.mutate(subOrgId, {
           onError: () =>
-            showSnackbar(
-              'error',
-              intl.formatMessage({
-                id: 'pages.people.person.organizations.removeError',
-              })
-            ),
+            showSnackbar('error', messages.organizations.removeError()),
           onSuccess: () => setSelected(undefined),
         });
       },
@@ -87,7 +78,7 @@ const PersonOrganizationsCard: React.FunctionComponent<PersonPageProps> = ({
   return (
     <PersonCard
       onClickEdit={() => setEditable(!editable)}
-      titleId="pages.people.person.organizations.title"
+      title={messages.organizations.title()}
     >
       <List disablePadding>
         <OrganizationsTree
@@ -102,9 +93,7 @@ const PersonOrganizationsCard: React.FunctionComponent<PersonPageProps> = ({
             </ListItemIcon>
             <ListItemText
               color="primary"
-              primary={intl.formatMessage({
-                id: 'pages.people.person.organizations.add',
-              })}
+              primary={messages.organizations.add()}
             />
           </ListItem>
         </Collapse>
