@@ -21,7 +21,7 @@ const TaskStatusSubtitle = ({
         <Done fontSize="small" />
         <Box>
           <Msg
-            id={messageIds.assigneesList.completedStates.completed}
+            id={messageIds.assignees.completedStates.completed}
             values={{
               time: <ZUIRelativeTime datetime={task.completed as string} />,
             }}
@@ -35,7 +35,7 @@ const TaskStatusSubtitle = ({
         <NotInterested fontSize="small" />
         <Box>
           <Msg
-            id={messageIds.assigneesList.completedStates.ignored}
+            id={messageIds.assignees.completedStates.ignored}
             values={{
               time: <ZUIRelativeTime datetime={task.ignored as string} />,
             }}
@@ -44,7 +44,7 @@ const TaskStatusSubtitle = ({
       </Box>
     );
   } else {
-    return <Msg id={messageIds.assigneesList.completedStates.notCompleted} />;
+    return <Msg id={messageIds.assignees.completedStates.notCompleted} />;
   }
 };
 

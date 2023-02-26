@@ -20,7 +20,7 @@ describe('TaskStatusSubtitle', () => {
 
     const { getByMessageId } = render(<TaskStatusSubtitle task={task} />);
     const notCompletedSubtitle = getByMessageId(
-      messageIds.assigneesList.completedStates.notCompleted
+      messageIds.assignees.completedStates.notCompleted
     );
     expect(notCompletedSubtitle).not.toBeNull();
   });
@@ -32,7 +32,7 @@ describe('TaskStatusSubtitle', () => {
 
     const { getByMessageId } = render(<TaskStatusSubtitle task={task} />);
     const ignoredSubtitle = getByMessageId(
-      messageIds.assigneesList.completedStates.ignored
+      messageIds.assignees.completedStates.ignored
     );
     expect(ignoredSubtitle).not.toBeNull();
   });
@@ -44,7 +44,7 @@ describe('TaskStatusSubtitle', () => {
 
     const { getByMessageId } = render(<TaskStatusSubtitle task={task} />);
     const completedSubtitle = getByMessageId(
-      messageIds.assigneesList.completedStates.completed
+      messageIds.assignees.completedStates.completed
     );
     expect(completedSubtitle).not.toBeNull();
   });

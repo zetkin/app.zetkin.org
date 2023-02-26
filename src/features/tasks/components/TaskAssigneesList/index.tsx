@@ -18,7 +18,7 @@ const TaskAssigneesList: React.FunctionComponent<{
 
   return (
     <ZUISection
-      title={messages.assigneesList.title({
+      title={messages.assignees.title({
         numPeople: assignedTasks.length,
       })}
     >

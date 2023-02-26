@@ -10,7 +10,7 @@ import getOrg from 'utils/fetching/getOrg';
 import { PageWithLayout } from 'utils/types';
 import patchQuery from 'utils/fetching/patchQuery';
 import { QUERY_STATUS } from 'features/smartSearch/components/types';
-import QueryStatusAlert from 'features/smartSearch/components/QueryStatusAlert';
+import QueryStatusAlert from 'features/tasks/components/QueryStatusAlert';
 import { scaffold } from 'utils/next';
 import SingleTaskLayout from 'features/tasks/layout/SingleTaskLayout';
 import SmartSearchDialog from 'features/smartSearch/components/SmartSearchDialog';

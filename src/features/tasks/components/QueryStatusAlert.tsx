@@ -1,9 +1,10 @@
 import { Alert } from '@mui/material';
 import { Button } from '@mui/material';
 import { Color } from '@material-ui/lab';
-import { FormattedMessage as Msg } from 'react-intl';
 
+import messageIds from '../l10n/messageIds';
 import { QUERY_STATUS } from 'features/smartSearch/components/types';
+import { Msg, PlainMessage } from 'core/i18n';
 
 const SEVERITY: { [key in QUERY_STATUS]: Color } = {
   [QUERY_STATUS.ASSIGNED]: 'success',
@@ -12,11 +13,11 @@ const SEVERITY: { [key in QUERY_STATUS]: Color } = {
   [QUERY_STATUS.PUBLISHED]: 'info',
 };
 
-const ACTION_LABEL: { [key in QUERY_STATUS]: string } = {
-  [QUERY_STATUS.ASSIGNED]: 'pages.assignees.links.readOnly',
-  [QUERY_STATUS.EDITABLE]: 'pages.assignees.links.edit',
-  [QUERY_STATUS.NEW]: 'pages.assignees.links.create',
-  [QUERY_STATUS.PUBLISHED]: 'pages.assignees.links.readOnly',
+const ACTION_LABEL: { [key in QUERY_STATUS]: PlainMessage } = {
+  [QUERY_STATUS.ASSIGNED]: messageIds.assignees.links.readOnly,
+  [QUERY_STATUS.EDITABLE]: messageIds.assignees.links.edit,
+  [QUERY_STATUS.NEW]: messageIds.assignees.links.create,
+  [QUERY_STATUS.PUBLISHED]: messageIds.assignees.links.readOnly,
 };
 
 const QueryStatusAlert: React.FunctionComponent<{
@@ -37,7 +38,7 @@ const QueryStatusAlert: React.FunctionComponent<{
       severity={SEVERITY[status]}
       variant="filled"
     >
-      <Msg id={`pages.assignees.queryStates.${status}`} />
+      <Msg id={messageIds.assignees.queryStates[status]} />
     </Alert>
   );
 };

@@ -3,11 +3,30 @@ import { ReactElement } from 'react';
 import { im, m, makeMessages } from 'core/i18n';
 
 export default makeMessages('feat.tasks', {
-  assigneesList: {
+  assignees: {
     completedStates: {
       completed: im<{ time: ReactElement }>('Completed {time}'),
       ignored: im<{ time: ReactElement }>('Ignored {time}'),
       notCompleted: m('Not yet completed'),
+    },
+    links: {
+      create: m('Create Smart Search'),
+      edit: m('Edit Smart Search'),
+      readOnly: m('View Smart Search'),
+    },
+    queryStates: {
+      assigned: m(
+        'This task has been assigned to all people that match the targeting Smart Search query.'
+      ),
+      editable: m(
+        'When published, this task will be assigned to the people matching the targeting Smart Search query.'
+      ),
+      new: m(
+        'This task will be targeted to people matching a Smart Search query. Before you can publish, you must create a target group using Smart Search.'
+      ),
+      published: m(
+        'This task is currently being assigned to all that match the targeting Smart Search query...'
+      ),
     },
     title: im<{ numPeople: number }>(
       'Assigned to {numPeople, plural, one {# person} other {# people}}'
