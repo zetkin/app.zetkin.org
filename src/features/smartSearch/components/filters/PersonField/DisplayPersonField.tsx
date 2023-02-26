@@ -1,4 +1,3 @@
-import { FormattedMessage as Msg } from 'react-intl';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 
@@ -9,6 +8,10 @@ import {
   PersonFieldFilterConfig,
   SmartSearchFilterWithId,
 } from 'features/smartSearch/components/types';
+
+import messageIds from 'features/smartSearch/l10n/messageIds';
+import { Msg } from 'core/i18n';
+const localMessageIds = messageIds.filters.personField;
 
 interface DisplayPersonFieldProps {
   filter: SmartSearchFilterWithId<PersonFieldFilterConfig>;
@@ -34,32 +37,44 @@ const DisplayPersonField = ({
   const getField = (slug?: string) => fields.find((f) => f.slug === slug);
   const field = getField(slug);
 
+  const fieldType = field?.type || '';
+  if (fieldType != 'date' && fieldType != 'text' && fieldType != 'url') {
+    // TODO:
+    return <></>;
+  }
+
   return (
     <Msg
-      id="misc.smartSearch.person_field.inputString"
+      id={localMessageIds.inputString}
       values={{
-        addRemoveSelect: (
-          <Msg id={`misc.smartSearch.person_field.addRemoveSelect.${op}`} />
-        ),
-        field: (
-          <Msg
-            id={`misc.smartSearch.field.preview.${field?.type}`}
-            values={{
-              fieldName: field?.title,
-              searchTerm: search,
-              timeFrame: (
-                <Msg
-                  id={`misc.smartSearch.timeFrame.preview.${timeFrame}`}
-                  values={{
-                    afterDate: after?.toISOString().slice(0, 10),
-                    beforeDate: before?.toISOString().slice(0, 10),
-                    days: numDays,
-                  }}
-                />
-              ),
-            }}
-          />
-        ),
+        addRemoveSelect: <Msg id={localMessageIds.addRemoveSelect[op]} />,
+        field:
+          fieldType == 'date' ? (
+            <Msg
+              id={localMessageIds.preview.date}
+              values={{
+                fieldName: field?.title ?? '',
+                timeFrame: (
+                  <Msg
+                    id={messageIds.timeFrame.preview[timeFrame]}
+                    values={{
+                      afterDate: after?.toISOString().slice(0, 10),
+                      beforeDate: before?.toISOString().slice(0, 10),
+                      days: numDays,
+                    }}
+                  />
+                ),
+              }}
+            />
+          ) : (
+            <Msg
+              id={localMessageIds.preview[fieldType]}
+              values={{
+                fieldName: field?.title ?? '',
+                searchTerm: search || '',
+              }}
+            />
+          ),
       }}
     />
   );

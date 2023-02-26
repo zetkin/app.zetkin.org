@@ -1,11 +1,11 @@
 import { FormEvent } from 'react';
 import { MenuItem } from '@mui/material';
-import { FormattedMessage as Msg } from 'react-intl';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 
 import FilterForm from '../../FilterForm';
 import getAllCallAssignments from 'features/callAssignments/api/getAllCallAssignments';
+import { Msg } from 'core/i18n';
 import StyledNumberInput from '../../inputs/StyledNumberInput';
 import StyledSelect from '../../inputs/StyledSelect';
 import TimeFrame from '../TimeFrame';
@@ -19,6 +19,9 @@ import {
   TIME_FRAME,
   ZetkinSmartSearchFilter,
 } from 'features/smartSearch/components/types';
+
+import messageIds from 'features/smartSearch/l10n/messageIds';
+const localMessageIds = messageIds.filters.callHistory;
 
 const ANY_ASSIGNMENT = 'any';
 
@@ -86,14 +89,14 @@ const CallHistory = ({
       onSubmit={(e) => handleSubmit(e)}
       renderExamples={() => (
         <>
-          <Msg id="misc.smartSearch.call_history.examples.one" />
+          <Msg id={localMessageIds.examples.one} />
           <br />
-          <Msg id="misc.smartSearch.call_history.examples.two" />
+          <Msg id={localMessageIds.examples.two} />
         </>
       )}
       renderSentence={() => (
         <Msg
-          id="misc.smartSearch.call_history.inputString"
+          id={localMessageIds.inputString}
           values={{
             addRemoveSelect: (
               <StyledSelect
@@ -102,9 +105,7 @@ const CallHistory = ({
               >
                 {Object.values(OPERATION).map((o) => (
                   <MenuItem key={o} value={o}>
-                    <Msg
-                      id={`misc.smartSearch.call_history.addRemoveSelect.${o}`}
-                    />
+                    <Msg id={localMessageIds.addRemoveSelect[o]} />
                   </MenuItem>
                 ))}
               </StyledSelect>
@@ -115,14 +116,14 @@ const CallHistory = ({
                 SelectProps={{
                   renderValue: function getLabel(value) {
                     return value === ANY_ASSIGNMENT ? (
-                      <Msg id="misc.smartSearch.call_history.assignmentSelect.any" />
+                      <Msg id={localMessageIds.assignmentSelect.any} />
                     ) : (
                       <Msg
-                        id="misc.smartSearch.call_history.assignmentSelect.assignment"
+                        id={localMessageIds.assignmentSelect.assignment}
                         values={{
-                          assignmentTitle: assignments.find(
-                            (a) => a.id === value
-                          )?.title,
+                          assignmentTitle:
+                            assignments.find((a) => a.id === value)?.title ??
+                            '',
                         }}
                       />
                     );
@@ -132,12 +133,12 @@ const CallHistory = ({
               >
                 {!assignments.length && (
                   <MenuItem key={ANY_ASSIGNMENT} value={ANY_ASSIGNMENT}>
-                    <Msg id="misc.smartSearch.call_history.assignmentSelect.none" />
+                    <Msg id={localMessageIds.assignmentSelect.none} />
                   </MenuItem>
                 )}
                 {assignments.length && (
                   <MenuItem key={ANY_ASSIGNMENT} value={ANY_ASSIGNMENT}>
-                    <Msg id="misc.smartSearch.call_history.assignmentSelect.any" />
+                    <Msg id={localMessageIds.assignmentSelect.any} />
                   </MenuItem>
                 )}
                 {assignments.map((a) => (
@@ -159,12 +160,12 @@ const CallHistory = ({
               >
                 {Object.values(CALL_OPERATOR).map((o) => (
                   <MenuItem key={o} value={o}>
-                    <Msg id={`misc.smartSearch.call_history.callSelect.${o}`} />
+                    <Msg id={localMessageIds.callSelect[o]} />
                   </MenuItem>
                 ))}
               </StyledSelect>
             ),
-            minTimes: filter.config.minTimes,
+            minTimes: filter.config.minTimes ?? 1,
             minTimesInput: (
               <StyledNumberInput
                 defaultValue={filter.config.minTimes}

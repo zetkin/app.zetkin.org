@@ -1,4 +1,3 @@
-import { FormattedMessage as Msg } from 'react-intl';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 
@@ -9,6 +8,10 @@ import {
   SmartSearchFilterWithId,
   SurveySubmissionFilterConfig,
 } from 'features/smartSearch/components/types';
+
+import messageIds from 'features/smartSearch/l10n/messageIds';
+import { Msg } from 'core/i18n';
+const localMessageIds = messageIds.filters.surveySubmission;
 
 interface DisplaySurveySubmissionProps {
   filter: SmartSearchFilterWithId<SurveySubmissionFilterConfig>;
@@ -30,26 +33,22 @@ const DisplaySurveySubmission = ({
     ['survey', orgId, surveyId],
     getSurvey(orgId as string, surveyId.toString())
   );
-  const surveyTitle = surveyQuery?.data?.title;
+  const surveyTitle = surveyQuery?.data?.title ?? '';
 
   return (
     <Msg
-      id="misc.smartSearch.survey_submission.inputString"
+      id={localMessageIds.inputString}
       values={{
-        addRemoveSelect: (
-          <Msg
-            id={`misc.smartSearch.survey_submission.addRemoveSelect.${op}`}
-          />
-        ),
+        addRemoveSelect: <Msg id={localMessageIds.addRemoveSelect[op]} />,
         surveySelect: (
           <Msg
-            id="misc.smartSearch.survey_submission.surveySelect.survey"
+            id={localMessageIds.surveySelect.survey}
             values={{ surveyTitle }}
           />
         ),
         timeFrame: (
           <Msg
-            id={`misc.smartSearch.timeFrame.preview.${timeFrame}`}
+            id={messageIds.timeFrame.preview[timeFrame]}
             values={{
               afterDate: after?.toISOString().slice(0, 10),
               beforeDate: before?.toISOString().slice(0, 10),

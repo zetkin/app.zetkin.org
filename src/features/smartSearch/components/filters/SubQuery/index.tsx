@@ -1,5 +1,4 @@
 import { MenuItem } from '@mui/material';
-import { FormattedMessage as Msg } from 'react-intl';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 import { FormEvent, useEffect, useState } from 'react';
@@ -7,6 +6,7 @@ import { FormEvent, useEffect, useState } from 'react';
 import FilterForm from '../../FilterForm';
 import getAllCallAssignments from 'features/callAssignments/api/getAllCallAssignments';
 import getStandaloneQueries from 'utils/fetching/getStandaloneQueries';
+import { Msg } from 'core/i18n';
 import StyledSelect from '../../inputs/StyledSelect';
 import useSmartSearchFilter from 'features/smartSearch/hooks/useSmartSearchFilter';
 import {
@@ -18,6 +18,9 @@ import {
   ZetkinQuery,
   ZetkinSmartSearchFilter,
 } from 'features/smartSearch/components/types';
+
+import messageIds from 'features/smartSearch/l10n/messageIds';
+const localMessageIds = messageIds.filters.subQuery;
 
 const NO_QUERY_SELECTED = 'none';
 
@@ -116,14 +119,14 @@ const SubQuery = ({
       onSubmit={(e) => handleSubmit(e)}
       renderExamples={() => (
         <>
-          <Msg id="misc.smartSearch.sub_query.examples.one" />
+          <Msg id={localMessageIds.examples.one} />
           <br />
-          <Msg id="misc.smartSearch.sub_query.examples.two" />
+          <Msg id={localMessageIds.examples.two} />
         </>
       )}
       renderSentence={() => (
         <Msg
-          id="misc.smartSearch.sub_query.inputString"
+          id={localMessageIds.inputString}
           values={{
             addRemoveSelect: (
               <StyledSelect
@@ -132,23 +135,21 @@ const SubQuery = ({
               >
                 {Object.values(OPERATION).map((o) => (
                   <MenuItem key={o} value={o}>
-                    <Msg
-                      id={`misc.smartSearch.call_history.addRemoveSelect.${o}`}
-                    />
+                    <Msg id={localMessageIds.addRemoveSelect[o]} />
                   </MenuItem>
                 ))}
               </StyledSelect>
             ),
             query: !selectedQuery ? (
               <Msg
-                id="misc.smartSearch.query.edit.none"
+                id={localMessageIds.query.edit.none}
                 values={{
                   querySelect: (
                     <StyledSelect
                       SelectProps={{
                         renderValue: function getLabel() {
                           return (
-                            <Msg id="misc.smartSearch.query.querySelectLabel.none" />
+                            <Msg id={localMessageIds.query.selectLabel.none} />
                           );
                         },
                       }}
@@ -158,15 +159,16 @@ const SubQuery = ({
                         key={NO_QUERY_SELECTED}
                         value={NO_QUERY_SELECTED}
                       >
-                        <Msg id="misc.smartSearch.query.querySelectOptions.none" />
+                        <Msg id={localMessageIds.query.selectOptions.none} />
                       </MenuItem>
                     </StyledSelect>
                   ),
+                  titleSelect: <></>, // Not actually used, but required for interface consistency
                 }}
               />
             ) : (
               <Msg
-                id={`misc.smartSearch.query.edit.${selectedQuery.type}`}
+                id={localMessageIds.query.edit[selectedQuery.type || 'none']}
                 values={{
                   querySelect: (
                     <StyledSelect
@@ -177,7 +179,11 @@ const SubQuery = ({
                         renderValue: function getLabel(value) {
                           return (
                             <Msg
-                              id={`misc.smartSearch.query.querySelectLabel.${value}`}
+                              id={
+                                localMessageIds.query.selectLabel[
+                                  value as QUERY_TYPE
+                                ]
+                              }
                             />
                           );
                         },
@@ -189,7 +195,9 @@ const SubQuery = ({
                           key={QUERY_TYPE.STANDALONE}
                           value={QUERY_TYPE.STANDALONE}
                         >
-                          <Msg id="misc.smartSearch.query.querySelectOptions.standalone" />
+                          <Msg
+                            id={localMessageIds.query.selectOptions.standalone}
+                          />
                         </MenuItem>
                       )}
                       {targetGroupQueriesWithTitles.length && (
@@ -197,7 +205,12 @@ const SubQuery = ({
                           key={QUERY_TYPE.TARGET}
                           value={QUERY_TYPE.TARGET}
                         >
-                          <Msg id="misc.smartSearch.query.querySelectOptions.callassignment_target" />
+                          <Msg
+                            id={
+                              localMessageIds.query.selectOptions
+                                .callassignment_target
+                            }
+                          />
                         </MenuItem>
                       )}
                       {purposeGroupQueriesWithTitles.length && (
@@ -205,7 +218,12 @@ const SubQuery = ({
                           key={QUERY_TYPE.PURPOSE}
                           value={QUERY_TYPE.PURPOSE}
                         >
-                          <Msg id="misc.smartSearch.query.querySelectOptions.callassignment_goal" />
+                          <Msg
+                            id={
+                              localMessageIds.query.selectOptions
+                                .callassignment_goal
+                            }
+                          />
                         </MenuItem>
                       )}
                     </StyledSelect>

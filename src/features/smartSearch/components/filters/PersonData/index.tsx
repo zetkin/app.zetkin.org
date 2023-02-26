@@ -1,5 +1,4 @@
 import { MenuItem } from '@mui/material';
-import { FormattedMessage as Msg } from 'react-intl';
 import { FormEvent, useEffect, useState } from 'react';
 
 import FilterForm from '../../FilterForm';
@@ -14,6 +13,10 @@ import {
   SmartSearchFilterWithId,
   ZetkinSmartSearchFilter,
 } from 'features/smartSearch/components/types';
+
+import messageIds from 'features/smartSearch/l10n/messageIds';
+import { Msg } from 'core/i18n';
+const localMessageIds = messageIds.filters.personData;
 
 // set default select option
 const REMOVE_FIELD = 'none';
@@ -112,10 +115,10 @@ const PersonData = ({
       value={filter.op}
     >
       <MenuItem key={OPERATION.ADD} value={OPERATION.ADD}>
-        <Msg id="misc.smartSearch.person_data.addRemoveSelect.add" />
+        <Msg id={localMessageIds.addRemoveSelect.add} />
       </MenuItem>
       <MenuItem key={OPERATION.SUB} value={OPERATION.SUB}>
-        <Msg id="misc.smartSearch.person_data.addRemoveSelect.sub" />
+        <Msg id={localMessageIds.addRemoveSelect.sub} />
       </MenuItem>
     </StyledSelect>
   );
@@ -128,7 +131,7 @@ const PersonData = ({
       const options = [c.field].concat(globalOptions);
       existing = (
         <Msg
-          id="misc.smartSearch.criteria.criterion"
+          id={localMessageIds.fieldMatches}
           values={{
             field: (
               <StyledSelect
@@ -137,12 +140,12 @@ const PersonData = ({
               >
                 {criteria.length > 1 && (
                   <MenuItem key={REMOVE_FIELD} value={REMOVE_FIELD}>
-                    <Msg id="misc.smartSearch.criteria.criteriaSelect.remove" />
+                    <Msg id={localMessageIds.fieldSelect.remove} />
                   </MenuItem>
                 )}
                 {options.map((o) => (
                   <MenuItem key={o} value={o}>
-                    <Msg id={`misc.smartSearch.criteria.criteriaSelect.${o}`} />
+                    <Msg id={localMessageIds.fieldSelect[o]} />
                   </MenuItem>
                 ))}
               </StyledSelect>
@@ -160,7 +163,7 @@ const PersonData = ({
       if (criteriaString) {
         criteriaString = (
           <Msg
-            id="misc.smartSearch.criteria.tuple"
+            id={localMessageIds.fieldTuple}
             values={{
               first: criteriaString,
               second: existing,
@@ -181,14 +184,14 @@ const PersonData = ({
       onSubmit={(e) => handleSubmit(e)}
       renderExamples={() => (
         <>
-          <Msg id="misc.smartSearch.person_data.examples.one" />
+          <Msg id={localMessageIds.examples.one} />
           <br />
-          <Msg id="misc.smartSearch.person_data.examples.two" />
+          <Msg id={localMessageIds.examples.two} />
         </>
       )}
       renderSentence={() => (
         <Msg
-          id="misc.smartSearch.person_data.inputString"
+          id={localMessageIds.inputString}
           values={{
             addRemoveSelect,
             criteria: (
@@ -200,14 +203,12 @@ const PersonData = ({
                     value={REMOVE_FIELD}
                   >
                     <MenuItem key={REMOVE_FIELD} value={REMOVE_FIELD}>
-                      <Msg id="misc.smartSearch.person_data.ellipsis" />
+                      <Msg id={localMessageIds.ellipsis} />
                     </MenuItem>
                     {ALL_FIELDS.filter((f) => !currentFields.includes(f)).map(
                       (o) => (
                         <MenuItem key={o} value={o}>
-                          <Msg
-                            id={`misc.smartSearch.criteria.criteriaSelect.${o}`}
-                          />
+                          <Msg id={localMessageIds.fieldSelect[o]} />
                         </MenuItem>
                       )
                     )}

@@ -1,14 +1,17 @@
-import { FormattedMessage as Msg } from 'react-intl';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 
 import getCallAssignment from 'features/callAssignments/api/getCallAssignment';
 import { getTimeFrameWithConfig } from '../../utils';
+import { Msg } from 'core/i18n';
 import {
   CallHistoryFilterConfig,
   OPERATION,
   SmartSearchFilterWithId,
 } from 'features/smartSearch/components/types';
+
+import messageIds from 'features/smartSearch/l10n/messageIds';
+const localMessageIds = messageIds.filters.callHistory;
 
 interface DisplayCallHistoryProps {
   filter: SmartSearchFilterWithId<CallHistoryFilterConfig>;
@@ -36,29 +39,25 @@ const DisplayCallHistory = ({
 
   return (
     <Msg
-      id="misc.smartSearch.call_history.inputString"
+      id={localMessageIds.inputString}
       values={{
-        addRemoveSelect: (
-          <Msg id={`misc.smartSearch.call_history.addRemoveSelect.${op}`} />
-        ),
+        addRemoveSelect: <Msg id={localMessageIds.addRemoveSelect[op]} />,
         assignmentSelect: assignmentTitle ? (
           <Msg
-            id="misc.smartSearch.call_history.assignmentSelect.assignment"
+            id={localMessageIds.assignmentSelect.assignment}
             values={{
               assignmentTitle,
             }}
           />
         ) : (
-          <Msg id="misc.smartSearch.call_history.assignmentSelect.any" />
+          <Msg id={localMessageIds.assignmentSelect.any} />
         ),
-        callSelect: (
-          <Msg id={`misc.smartSearch.call_history.callSelect.${operator}`} />
-        ),
+        callSelect: <Msg id={localMessageIds.callSelect[operator]} />,
         minTimes: minTimes || 1,
-        minTimesInput: minTimes,
+        minTimesInput: minTimes || 1,
         timeFrame: (
           <Msg
-            id={`misc.smartSearch.timeFrame.preview.${timeFrame}`}
+            id={messageIds.timeFrame.preview[timeFrame]}
             values={{
               afterDate: after?.toISOString().slice(0, 10),
               beforeDate: before?.toISOString().slice(0, 10),
