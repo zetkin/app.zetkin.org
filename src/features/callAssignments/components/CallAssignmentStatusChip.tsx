@@ -1,9 +1,11 @@
 import { FC } from 'react';
-import { FormattedMessage } from 'react-intl';
 import { makeStyles } from '@mui/styles';
 import { Box, CircularProgress } from '@mui/material';
 
 import { CallAssignmentState } from '../models/CallAssignmentModel';
+import { Msg } from 'core/i18n';
+
+import messageIds from '../l10n/messageIds';
 
 interface CallAssignmentStatusChipProps {
   state: CallAssignmentState;
@@ -58,7 +60,7 @@ const CallAssignmentStatusChip: FC<CallAssignmentStatusChipProps> = ({
 
   return (
     <Box className={`${colorClassName} ${classes.chip}`}>
-      <FormattedMessage id={`pages.organizeCallAssignment.state.${state}`} />
+      <Msg id={messageIds.state[state]} />
       {state == CallAssignmentState.ACTIVE && (
         <CircularProgress
           className={classes.spinner}
