@@ -1,13 +1,16 @@
+import { FormattedDate } from 'react-intl';
 import { FunctionComponent } from 'react';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
-import { FormattedDate, FormattedMessage as Msg } from 'react-intl';
 
 import CampaignActionButtons from 'features/campaigns/components/CampaignActionButtons';
 import getCampaign from 'features/campaigns/fetching/getCampaign';
 import getCampaignEvents from '../fetching/getCampaignEvents';
+import { Msg } from 'core/i18n';
 import TabbedLayout from '../../../utils/layout/TabbedLayout';
 import { getFirstAndLastEvent, removeOffset } from 'utils/dateUtils';
+
+import messageIds from '../l10n/messageIds';
 
 interface SingleCampaignLayoutProps {
   children: React.ReactNode;
@@ -60,7 +63,7 @@ const SingleCampaignLayout: FunctionComponent<SingleCampaignLayoutProps> = ({
             />
           </>
         ) : (
-          <Msg id="pages.organizeCampaigns.indefinite" />
+          <Msg id={messageIds.indefinite} />
         )
       }
       tabs={[

@@ -1,8 +1,10 @@
 import { FunctionComponent } from 'react';
-import { useIntl } from 'react-intl';
 import { useRouter } from 'next/router';
 
 import TabbedLayout from '../../../utils/layout/TabbedLayout';
+import { useMessages } from 'core/i18n';
+
+import messageIds from '../l10n/messageIds';
 
 interface AllCampaignsLayoutProps {
   children: React.ReactNode;
@@ -14,7 +16,7 @@ const AllCampaignsLayout: FunctionComponent<AllCampaignsLayoutProps> = ({
   fixedHeight,
 }) => {
   const { orgId } = useRouter().query;
-  const intl = useIntl();
+  const messages = useMessages(messageIds);
 
   return (
     <TabbedLayout
@@ -28,9 +30,7 @@ const AllCampaignsLayout: FunctionComponent<AllCampaignsLayoutProps> = ({
           messageId: 'layout.organize.campaigns.calendar',
         },
       ]}
-      title={intl.formatMessage({
-        id: 'layout.organize.campaigns.allCampaigns',
-      })}
+      title={messages.layout.allCampaigns()}
     >
       {children}
     </TabbedLayout>

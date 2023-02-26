@@ -1,9 +1,3 @@
-campaigns:
-  allCampaigns: All Campaigns
-  archive: Archive
-  calendar: Calendar
-  insights: Insights
-  summary: Summary
 header:
   collapseButton:
     collapse: Collapse
