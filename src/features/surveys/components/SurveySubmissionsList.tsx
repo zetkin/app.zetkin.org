@@ -3,10 +3,10 @@ import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 
 import { Box } from '@mui/material';
-import { DataGridPro, GridRenderCellParams } from '@mui/x-data-grid-pro';
 import { useRouter } from 'next/router';
-import { FormattedMessage, useIntl } from 'react-intl';
 import { ZetkinSurveySubmission } from 'utils/types/zetkin';
+import { DataGridPro, GridRenderCellParams } from '@mui/x-data-grid-pro';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 const SurveySubmissionsList = ({
   submissions,
