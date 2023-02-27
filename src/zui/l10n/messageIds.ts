@@ -107,6 +107,12 @@ export default makeMessages('zui', {
     success: m('Success!'),
     warning: m('Warning!'),
   },
+  speedDial: {
+    createCampaign: m('Create campaign'),
+    createEvent: m('Create event'),
+    createTask: m('Create task'),
+    requestError: m('There was an error'),
+  },
   submitOrCancel: {
     cancel: m('Cancel'),
     submit: m('Submit'),

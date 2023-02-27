@@ -1,14 +1,16 @@
 import { Alert } from '@mui/material';
 import { CheckBox } from '@mui/icons-material';
-import { FormattedMessage } from 'react-intl';
 import { useRouter } from 'next/router';
 
 import TaskDetailsForm from 'features/tasks/components/TaskDetailsForm';
 import { ZetkinTaskRequestBody } from 'features/tasks/components/types';
 
 import { ACTIONS } from '../constants';
+import { Msg } from 'core/i18n';
 import { tasksResource } from 'features/tasks/api/tasks';
 import { ActionConfig, DialogContentBaseProps } from './types';
+
+import messageIds from 'zui/l10n/messageIds';
 
 const DialogContent: React.FunctionComponent<DialogContentBaseProps> = ({
   closeDialog,
@@ -40,7 +42,7 @@ const DialogContent: React.FunctionComponent<DialogContentBaseProps> = ({
     <>
       {isError && (
         <Alert color="error" data-testid="error-alert">
-          <FormattedMessage id="misc.formDialog.requestError" />
+          <Msg id={messageIds.speedDial.requestError} />
         </Alert>
       )}
       <TaskDetailsForm onCancel={closeDialog} onSubmit={handleFormSubmit} />

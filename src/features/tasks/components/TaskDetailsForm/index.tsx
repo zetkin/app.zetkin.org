@@ -231,9 +231,6 @@ const TaskDetailsForm = ({
             <MenuItem value={TASK_TYPE.VISIT_LINK}>
               <Msg id={messageIds.form.fields.types.visit_link} />
             </MenuItem>
-            {/* <MenuItem value={ TASK_TYPE.WATCH_VIDEO }>
-                            <FormattedMessage id="misc.tasks.forms.createTask.fields.types.watch_video" />
-                        </MenuItem> */}
             <MenuItem value={TASK_TYPE.COLLECT_DEMOGRAPHICS}>
               <Msg id={messageIds.form.fields.types.demographic} />
             </MenuItem>
