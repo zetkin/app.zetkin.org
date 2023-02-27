@@ -38,7 +38,7 @@ const ZUIAccessList: FC<ZUIAccessListProps> = ({
           <>
             {showDivider && <Divider />}
             <AccessListItem
-              action={<Msg id={messageIds.accessList.roles[item.role]} />}
+              action={<Msg id={messageIds.global.roles[item.role]} />}
               orgId={orgId}
               personId={item.id}
               subtitle="-"
@@ -75,13 +75,13 @@ const ZUIAccessList: FC<ZUIAccessListProps> = ({
                     value={level}
                   >
                     <MenuItem value="readonly">
-                      <Msg id={messageIds.accessList.levels.readonly} />
+                      <Msg id={messageIds.global.accessLevels.readonly} />
                     </MenuItem>
                     <MenuItem value="edit">
-                      <Msg id={messageIds.accessList.levels.edit} />
+                      <Msg id={messageIds.global.accessLevels.edit} />
                     </MenuItem>
                     <MenuItem value="configure">
-                      <Msg id={messageIds.accessList.levels.configure} />
+                      <Msg id={messageIds.global.accessLevels.configure} />
                     </MenuItem>
                     <Divider />
                     <MenuItem value="delete">

@@ -6,16 +6,7 @@ export default makeMessages('zui', {
     added: im<{ sharer: string; updated: ReactElement }>(
       'Added by {sharer} {updated}'
     ),
-    levels: {
-      configure: m('Edit & Configure'),
-      edit: m('Editing'),
-      readonly: m('Read-only'),
-    },
     removeAccess: m('Remove access'),
-    roles: {
-      admin: m('Admin'),
-      organizer: m('Organizer'),
-    },
   },
   breadcrumbs: {
     areas: m('Areas'),

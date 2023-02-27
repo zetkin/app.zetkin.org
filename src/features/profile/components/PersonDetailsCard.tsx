@@ -65,7 +65,7 @@ const PersonDetailsCard: React.FunctionComponent<{
     }
 
     return {
-      title: messages.fields[field](),
+      title: messages.global.personFields[field](),
       value,
     };
   });
