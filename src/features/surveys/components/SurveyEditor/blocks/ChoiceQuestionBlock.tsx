@@ -1,13 +1,21 @@
 import {
+  Add,
+  CheckBoxOutlined,
+  Close,
+  RadioButtonChecked,
+  RadioButtonUnchecked,
+} from '@mui/icons-material';
+import {
   Box,
+  Button,
   ClickAwayListener,
+  IconButton,
   ListItemIcon,
   MenuItem,
   SvgIcon,
   TextField,
   Typography,
 } from '@mui/material';
-import { CheckBoxOutlined, RadioButtonChecked } from '@mui/icons-material';
 import {
   FC,
   KeyboardEvent,
@@ -29,17 +37,37 @@ const enum POLL_TYPE {
   SELECT = 'select',
 }
 
-const widgetTypes = [
-  {
+type WidgetType = {
+  icon: JSX.Element;
+  previewIcon: JSX.Element;
+  value: POLL_TYPE;
+};
+
+const widgetTypes = {
+  checkbox: {
     icon: <CheckBoxOutlined />,
+    previewIcon: <CheckBoxOutlined color="secondary" />,
     value: POLL_TYPE.CHECKBOX,
   },
-  {
+  radio: {
     icon: <RadioButtonChecked />,
+    previewIcon: <RadioButtonUnchecked color="secondary" />,
     value: POLL_TYPE.RADIO,
   },
-  {
+  select: {
     icon: (
+      <SvgIcon>
+        <svg fill="none" height="24" viewBox="0 0 24 24" width="24">
+          <path
+            d="M19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19V5C21 3.9 20.1 3 19 3ZM19 19H5V5H19V19Z"
+            fill="black"
+            fillOpacity="0.54"
+          />
+          <path d="M7 9.5L12 14.5L17 9.5H7Z" fill="black" fillOpacity="0.54" />
+        </svg>
+      </SvgIcon>
+    ),
+    previewIcon: (
       <SvgIcon>
         <svg fill="none" height="24" viewBox="0 0 24 24" width="24">
           <path
@@ -53,11 +81,34 @@ const widgetTypes = [
     ),
     value: POLL_TYPE.SELECT,
   },
-];
+};
+
+interface OptionProps {
+  widgetType: WidgetType;
+}
+
+const Option = ({ widgetType }: OptionProps) => {
+  return (
+    <Box
+      alignItems="center"
+      display="flex"
+      justifyContent="center"
+      paddingTop={2}
+      width="100%"
+    >
+      <Box paddingX={2}>{widgetType.previewIcon}</Box>
+      <TextField fullWidth label="Option" sx={{ paddingLeft: 1 }} />
+      <IconButton sx={{ paddingX: 2 }}>
+        <Close />
+      </IconButton>
+    </Box>
+  );
+};
 
 interface ChoiceQuestionBlockProps {
   hidden: boolean;
   inEditMode: boolean;
+  onAddOption: () => void;
   onDelete: () => void;
   onEditModeEnter: () => void;
   onEditModeExit: (question: OptionsQuestionPatchBody) => void;
@@ -68,6 +119,7 @@ interface ChoiceQuestionBlockProps {
 const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
   hidden,
   inEditMode,
+  onAddOption,
   onDelete,
   onEditModeEnter,
   onEditModeExit,
@@ -76,7 +128,7 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
 }) => {
   const intl = useIntl();
 
-  const [widgetType, setWidgetType] = useState<POLL_TYPE>(POLL_TYPE.RADIO);
+  const [widgetType, setWidgetType] = useState<WidgetType>(widgetTypes.radio);
   const [question, setQuestion] = useState(questionElement.question);
   const [description, setDescription] = useState(questionElement.description);
   const [focus, setFocus] = useState<'description' | null>(null);
@@ -101,6 +153,8 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
     }
   };
 
+  const options = questionElement.options || [];
+
   return (
     <ClickAwayListener
       onClickAway={() => {
@@ -108,7 +162,7 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
           description,
           question,
           response_config: {
-            widget_type: widgetType,
+            widget_type: widgetType.value,
           },
         });
         setFocus(null);
@@ -149,16 +203,22 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
               margin="normal"
               onChange={(evt) => {
                 const value = evt.target.value as POLL_TYPE;
-                setWidgetType(value);
+                const widgetType = Object.values(widgetTypes).find(
+                  (type) => type.value === value
+                );
+                if (!widgetType) {
+                  return;
+                }
+                setWidgetType(widgetType);
               }}
               select
               SelectProps={{
                 MenuProps: { disablePortal: true },
               }}
               sx={{ alignItems: 'center', display: 'flex' }}
-              value={widgetType}
+              value={widgetType.value}
             >
-              {widgetTypes.map((type) => (
+              {Object.values(widgetTypes).map((type) => (
                 <MenuItem key={type.value} value={type.value}>
                   <Box alignItems="center" display="flex">
                     <ListItemIcon>{type.icon}</ListItemIcon>
@@ -169,6 +229,11 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
                 </MenuItem>
               ))}
             </TextField>
+            <Box alignItems="center" display="flex" flexDirection="column">
+              {options.map((option) => (
+                <Option key={option.id} widgetType={widgetType} />
+              ))}
+            </Box>
           </Box>
         )}
         {!inEditMode && (
@@ -180,7 +245,7 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
                 <Msg id="misc.surveys.blocks.choiceQuestion.empty" />
               )}
             </Typography>
-            {question && (
+            {description && (
               <Typography
                 onClick={() => setFocus('description')}
                 sx={{ paddingTop: 1 }}
@@ -190,7 +255,16 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
             )}
           </Box>
         )}
-        <Box display="flex" justifyContent="end" m={2}>
+        <Box
+          display="flex"
+          justifyContent={inEditMode ? 'space-between' : 'end'}
+          m={2}
+        >
+          {inEditMode && (
+            <Button onClick={onAddOption} startIcon={<Add />}>
+              <Msg id="misc.surveys.blocks.choiceQuestion.addOption" />
+            </Button>
+          )}
           <DeleteHideButtons
             hidden={hidden}
             onDelete={onDelete}

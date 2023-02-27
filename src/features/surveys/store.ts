@@ -1,11 +1,15 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { remoteItem, remoteList, RemoteList } from 'utils/storeUtils';
+
 import {
+  ELEMENT_TYPE,
+  RESPONSE_TYPE,
   ZetkinSurvey,
   ZetkinSurveyElement,
   ZetkinSurveyExtended,
+  ZetkinSurveyOption,
   ZetkinSurveySubmission,
 } from 'utils/types/zetkin';
+import { remoteItem, remoteList, RemoteList } from 'utils/storeUtils';
 
 export interface SurveysStoreSlice {
   submissionList: RemoteList<ZetkinSurveySubmission>;
@@ -42,6 +46,28 @@ const surveysSlice = createSlice({
         surveyItem.data.elements = surveyItem.data.elements.filter(
           (elem) => elem.id !== elemId
         );
+      }
+    },
+    elementOptionAdded: (
+      state,
+      action: PayloadAction<[number, number, ZetkinSurveyOption]>
+    ) => {
+      const [surveyId, elemId, newOption] = action.payload;
+      const surveyItem = state.surveyList.items.find(
+        (item) => item.id == surveyId
+      );
+      if (surveyItem && surveyItem.data) {
+        const elementItem = surveyItem.data.elements.find(
+          (element) => element.id === elemId
+        );
+
+        if (
+          elementItem &&
+          elementItem.type === ELEMENT_TYPE.QUESTION &&
+          elementItem.question.response_type === RESPONSE_TYPE.OPTIONS
+        ) {
+          elementItem.question.options?.push(newOption);
+        }
       }
     },
     elementUpdated: (
@@ -121,6 +147,7 @@ export default surveysSlice;
 export const {
   elementAdded,
   elementDeleted,
+  elementOptionAdded,
   elementUpdated,
   submissionLoad,
   submissionLoaded,

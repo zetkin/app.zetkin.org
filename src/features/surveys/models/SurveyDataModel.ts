@@ -26,6 +26,10 @@ export default class SurveyDataModel extends ModelBase {
     this._repo.addElement(this._orgId, this._surveyId, element);
   }
 
+  addElementOption(elemId: number) {
+    this._repo.addElementOption(this._orgId, this._surveyId, elemId);
+  }
+
   constructor(env: Environment, orgId: number, surveyId: number) {
     super();
     this._orgId = orgId;

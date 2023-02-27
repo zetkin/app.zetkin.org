@@ -16,6 +16,7 @@ import {
 import {
   elementAdded,
   elementDeleted,
+  elementOptionAdded,
   elementUpdated,
   submissionLoad,
   submissionLoaded,
@@ -81,6 +82,14 @@ export default class SurveysRepo {
       .then((newElement) => {
         this._store.dispatch(elementAdded([surveyId, newElement]));
       });
+  }
+
+  async addElementOption(orgId: number, surveyId: number, elemId: number) {
+    const option = await this._apiClient.post<ZetkinSurveyOption>(
+      `/api/orgs/${orgId}/surveys/${surveyId}/elements/${elemId}/options`,
+      { text: '' }
+    );
+    this._store.dispatch(elementOptionAdded([surveyId, elemId, option]));
   }
 
   constructor(env: Environment) {

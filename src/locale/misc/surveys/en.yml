@@ -5,6 +5,7 @@ addBlocks:
   title: Choose a block type to add more content to your survey
 blocks:
   choiceQuestion:
+    addOption: Add option
     checkbox: Multiple choice
     empty: Untitled choice question
     radio: Single choice
