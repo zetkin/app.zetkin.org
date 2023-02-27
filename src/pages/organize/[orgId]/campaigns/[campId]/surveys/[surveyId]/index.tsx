@@ -1,13 +1,16 @@
-import { Box } from '@mui/material';
+import { Box, Button, Card, IconButton, Link, Typography } from '@mui/material';
 import { GetServerSideProps } from 'next';
 
 import EmptyOverview from 'features/surveys/components/EmptyOverview';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
-import SurveyDataModel from 'features/surveys/models/SurveyDataModel';
+import SurveyDataModel, { SurveyState } from 'features/surveys/models/SurveyDataModel';
 import SurveyLayout from 'features/surveys/layout/SurveyLayout';
 import useModel from 'core/useModel';
 import useServerSide from 'core/useServerSide';
+import ZUICopyToClipboard from 'zui/ZUICopyToClipboard';
+import { OpenInNew, Share } from '@mui/icons-material';
+import SurveyURLCard from 'features/surveys/components/SurveyURLCard';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   async (ctx) => {
@@ -48,6 +51,7 @@ const SurveyPage: PageWithLayout<SurveyPageProps> = ({
   }
 
   const { data: survey } = model.getData();
+  const isOpen = model.state === SurveyState.PUBLISHED;
 
   if (!survey) {
     return null;
@@ -60,9 +64,13 @@ const SurveyPage: PageWithLayout<SurveyPageProps> = ({
       justifyContent="center"
       paddingTop={8}
     >
-      {model.surveyIsEmpty && (
+      {model.surveyIsEmpty ? (
         <EmptyOverview campId={campId} orgId={orgId} surveyId={surveyId} />
-      )}
+      ) :
+        (
+          <SurveyURLCard isOpen={isOpen} orgId={orgId} surveyId={surveyId} />
+        )
+      }
     </Box>
   );
 };

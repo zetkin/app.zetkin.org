@@ -17,6 +17,7 @@ components:
       save: Press 'enter' to save
 copyToClipboard:
   copied: Copied
+  copy: Copy
 dataTable:
   search:
     button: Search
