@@ -8,8 +8,9 @@ state:
   scheduled: Scheduled
   unpublished: Unpublished
 submissions:
+  anonymous: Anonymous
   dateColumn: Date
   emailColumn: Email
   firstNameColumn: First name
   lastNameColumn: Last name
-  personRecordColumn: Person record
+  personRecordColumn: Respondent

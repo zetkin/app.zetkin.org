@@ -1,14 +1,12 @@
-import { useIntl } from 'react-intl';
-import { useRouter } from 'next/router';
-import { ZetkinSurveySubmission } from 'utils/types/zetkin';
 import ZUIAvatar from 'zui/ZUIAvatar';
 import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
-import {
-  DataGridPro,
-  GridRenderCellParams,
-  GridValueGetterParams,
-} from '@mui/x-data-grid-pro';
+
+import { Box } from '@mui/material';
+import { DataGridPro, GridRenderCellParams } from '@mui/x-data-grid-pro';
+import { useRouter } from 'next/router';
+import { FormattedMessage, useIntl } from 'react-intl';
+import { ZetkinSurveySubmission } from 'utils/types/zetkin';
 
 const SurveySubmissionsList = ({
   submissions,
@@ -28,15 +26,25 @@ const SurveySubmissionsList = ({
       headerName: intl.formatMessage({
         id: `pages.organizeSurvey.submissions.${messageId}`,
       }),
-      sortable: true,
-      valueGetter: (
-        params: GridValueGetterParams<string, ZetkinSurveySubmission>
+      renderCell: (
+        params: GridRenderCellParams<string, ZetkinSurveySubmission>
       ) => {
         if (params.row.respondent !== null) {
-          return params.row.respondent[field];
+          return <Box>{params.row.respondent[field]}</Box>;
         }
-        return '-';
+        return (
+          <Box
+            sx={{
+              fontStyle: 'italic',
+            }}
+          >
+            <FormattedMessage
+              id={`pages.organizeSurvey.submissions.anonymous`}
+            />
+          </Box>
+        );
       },
+      sortable: true,
     };
   };
 
