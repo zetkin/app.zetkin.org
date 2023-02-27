@@ -163,13 +163,16 @@ export default class SurveyDataModel extends ModelBase {
     });
   }
 
-  updateChoiceQuestion(
+  updateOptionsQuestion(
     elemId: number,
-    choiceQuestion: OptionsQuestionPatchBody
+    optionsQuestion: OptionsQuestionPatchBody
   ) {
-    this._repo.updateElement(this._orgId, this._surveyId, elemId, {
-      ...choiceQuestion,
-    });
+    this._repo.updateElement(
+      this._orgId,
+      this._surveyId,
+      elemId,
+      optionsQuestion
+    );
   }
 
   updateTextBlock(

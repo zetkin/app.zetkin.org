@@ -148,7 +148,7 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
 
   const handleKeyDown = (evt: KeyboardEvent<HTMLDivElement>) => {
     if (evt.key === 'Enter') {
-      onEditModeExit({});
+      onEditModeExit({ question: {} });
       setFocus(null);
     }
   };
@@ -159,10 +159,12 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
     <ClickAwayListener
       onClickAway={() => {
         onEditModeExit({
-          description,
-          question,
-          response_config: {
-            widget_type: widgetType.value,
+          question: {
+            description,
+            question,
+            response_config: {
+              widget_type: widgetType.value,
+            },
           },
         });
         setFocus(null);

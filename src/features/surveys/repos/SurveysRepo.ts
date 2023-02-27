@@ -57,11 +57,13 @@ type ZetkinSurveyTextElementPatchBody = {
 };
 
 export type OptionsQuestionPatchBody = {
-  description?: string | null;
-  options?: ZetkinSurveyOption[];
-  question?: string;
-  response_config?: {
-    widget_type: 'checkbox' | 'radio' | 'select';
+  question: {
+    description?: string | null;
+    options?: ZetkinSurveyOption[];
+    question?: string;
+    response_config?: {
+      widget_type: 'checkbox' | 'radio' | 'select';
+    };
   };
 };
 

@@ -94,7 +94,7 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ model }) => {
                             if (elem.id === idOfBlockInEditMode) {
                               setIdOfBlockInEditMode(undefined);
                             }
-                            model.updateChoiceQuestion(elem.id, question);
+                            model.updateOptionsQuestion(elem.id, question);
                           }}
                           onToggleHidden={(hidden) =>
                             handleToggleHidden(elem.id, hidden)
