@@ -2,7 +2,6 @@ import Fuse from 'fuse.js';
 import { Box, List, ListItem, TextField, Typography } from '@mui/material';
 import { Close, Search } from '@mui/icons-material';
 import { FunctionComponent, useMemo, useRef, useState } from 'react';
-import { FormattedMessage as Msg, useIntl } from 'react-intl';
 import { Theme, useMediaQuery } from '@mui/material';
 
 import categories from '../categories';
@@ -16,6 +15,9 @@ import choices, {
   ColumnChoice,
   ColumnChoiceWithKey,
 } from '../choices';
+import { Msg, useMessages } from 'core/i18n';
+
+import messageIds from 'features/views/l10n/messageIds';
 
 interface ColumnGalleryProps {
   existingColumns: ZetkinViewColumn[];
@@ -30,7 +32,7 @@ const ColumnGallery: FunctionComponent<ColumnGalleryProps> = ({
   onClose,
   onConfigure,
 }) => {
-  const intl = useIntl();
+  const messages = useMessages(messageIds);
   const isMobile = useMediaQuery((theme: Theme) =>
     theme.breakpoints.down('sm')
   );
@@ -40,18 +42,15 @@ const ColumnGallery: FunctionComponent<ColumnGalleryProps> = ({
   const [searchString, setSearchString] = useState('');
 
   //list of objects with localized strings to use in the fuse-search
-  const searchObjects = Object.keys(choices).map((choiceKey) => ({
-    description: intl.formatMessage({
-      id: `misc.views.columnDialog.choices.${choiceKey}.description`,
-    }),
-    key: choiceKey as CHOICES,
-    keywords: intl.formatMessage({
-      id: `misc.views.columnDialog.choices.${choiceKey}.keywords`,
-    }),
-    title: intl.formatMessage({
-      id: `misc.views.columnDialog.choices.${choiceKey}.title`,
-    }),
-  }));
+  const searchObjects = Object.keys(choices).map((choiceKey) => {
+    const typedChoiceKey = choiceKey as CHOICES;
+    return {
+      description: messages.columnDialog.choices[typedChoiceKey].description(),
+      key: typedChoiceKey,
+      keywords: messages.columnDialog.choices[typedChoiceKey].keywords(),
+      title: messages.columnDialog.choices[typedChoiceKey].title(),
+    };
+  });
 
   const search = () => {
     const fuse = new Fuse(searchObjects, {
@@ -86,7 +85,7 @@ const ColumnGallery: FunctionComponent<ColumnGalleryProps> = ({
     >
       <Box display="flex" justifyContent="space-between" padding={2}>
         <Typography variant="h4">
-          <Msg id="misc.views.columnDialog.gallery.columns" />
+          <Msg id={messageIds.columnDialog.gallery.columns} />
         </Typography>
         <Box alignItems="center" display="flex">
           <TextField
@@ -101,9 +100,7 @@ const ColumnGallery: FunctionComponent<ColumnGalleryProps> = ({
               }
               setIsSearching(true);
             }}
-            placeholder={intl.formatMessage({
-              id: 'misc.views.columnDialog.gallery.searchPlaceholder',
-            })}
+            placeholder={messages.columnDialog.gallery.searchPlaceholder()}
             sx={{ paddingRight: 2 }}
             value={searchString}
             variant="outlined"
@@ -150,7 +147,7 @@ const ColumnGallery: FunctionComponent<ColumnGalleryProps> = ({
               >
                 <Typography>
                   <Msg
-                    id={`misc.views.columnDialog.categories.${category.key}.title`}
+                    id={messageIds.columnDialog.categories[category.key].title}
                   />
                 </Typography>
               </ListItem>
@@ -168,7 +165,7 @@ const ColumnGallery: FunctionComponent<ColumnGalleryProps> = ({
             <Box padding={2}>
               <Typography variant="h4">
                 <Msg
-                  id="misc.views.columnDialog.gallery.searchResults"
+                  id={messageIds.columnDialog.gallery.searchResults}
                   values={{ searchString: searchString }}
                 />
               </Typography>
@@ -183,7 +180,7 @@ const ColumnGallery: FunctionComponent<ColumnGalleryProps> = ({
                 ) : (
                   <Typography variant="h5">
                     <Msg
-                      id="misc.views.columnDialog.gallery.noSearchResults"
+                      id={messageIds.columnDialog.gallery.noSearchResults}
                       values={{ searchString: searchString }}
                     />
                   </Typography>

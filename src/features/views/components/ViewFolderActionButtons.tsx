@@ -1,9 +1,11 @@
 import { FC } from 'react';
 import { Box, Button } from '@mui/material';
 import { FolderOutlined, InsertDriveFileOutlined } from '@mui/icons-material';
-import { FormattedMessage, useIntl } from 'react-intl';
 
 import ViewBrowserModel from '../models/ViewBrowserModel';
+import { Msg, useMessages } from 'core/i18n';
+
+import messageIds from '../l10n/messageIds';
 
 interface ViewFolderActionButtonsProps {
   folderId: number | null;
@@ -14,20 +16,17 @@ const ViewFolderActionButtons: FC<ViewFolderActionButtonsProps> = ({
   folderId,
   model,
 }) => {
-  const intl = useIntl();
+  const messages = useMessages(messageIds);
   return (
     <Box display="flex" gap={1}>
       <Button
         endIcon={<FolderOutlined />}
         onClick={() => {
-          model.createFolder(
-            intl.formatMessage({ id: 'misc.views.newFolderTitle' }),
-            folderId || undefined
-          );
+          model.createFolder(messages.newFolderTitle(), folderId || undefined);
         }}
         variant="outlined"
       >
-        <FormattedMessage id="pages.people.views.actions.createFolder" />
+        <Msg id={messageIds.actions.createFolder} />
       </Button>
       <Button
         endIcon={<InsertDriveFileOutlined />}
@@ -36,7 +35,7 @@ const ViewFolderActionButtons: FC<ViewFolderActionButtonsProps> = ({
         }}
         variant="contained"
       >
-        <FormattedMessage id="pages.people.views.actions.createView" />
+        <Msg id={messageIds.actions.createView} />
       </Button>
     </Box>
   );

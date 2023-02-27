@@ -1,4 +1,3 @@
-import { useIntl } from 'react-intl';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 import ZUIQuery from 'zui/ZUIQuery';
@@ -6,12 +5,15 @@ import { Autocomplete, FormControl, MenuItem, TextField } from '@mui/material';
 import { ChangeEventHandler, useState } from 'react';
 
 import getSurveysWithElements from 'features/smartSearch/fetching/getSurveysWithElements';
+import { useMessages } from 'core/i18n';
 import { COLUMN_TYPE, SelectedViewColumn } from '../types';
 import {
   ELEMENT_TYPE,
   RESPONSE_TYPE,
   ZetkinSurveyQuestionElement,
 } from 'utils/types/zetkin';
+
+import messageIds from 'features/views/l10n/messageIds';
 
 interface SurveyResponsePluralConfigProps {
   onOutputConfigured: (columns: SelectedViewColumn[]) => void;
@@ -25,7 +27,7 @@ const SurveyResponsesConfig = ({
     ['surveysWithElements', orgId],
     getSurveysWithElements(orgId as string)
   );
-  const intl = useIntl();
+  const messages = useMessages(messageIds);
   const [surveyId, setSurveyId] = useState<number | null>();
   const [selectedQuestions, setSelectedQuestions] = useState<
     ZetkinSurveyQuestionElement[]
@@ -62,9 +64,7 @@ const SurveyResponsesConfig = ({
           <FormControl sx={{ width: 300 }}>
             <TextField
               fullWidth
-              label={intl.formatMessage({
-                id: 'misc.views.columnDialog.choices.surveyResponses.surveyField',
-              })}
+              label={messages.columnDialog.choices.surveyResponses.surveyField()}
               margin="normal"
               onChange={onSurveyChange}
               select
@@ -95,9 +95,7 @@ const SurveyResponsesConfig = ({
                     inputProps={{
                       ...params.inputProps,
                     }}
-                    label={intl.formatMessage({
-                      id: 'misc.views.columnDialog.choices.surveyResponses.questionField',
-                    })}
+                    label={messages.columnDialog.choices.surveyResponses.questionField()}
                     variant="standard"
                   ></TextField>
                 )}

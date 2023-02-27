@@ -32,12 +32,10 @@ export const personTag: ColumnChoice = {
 export const toggle: ColumnChoice = {
   allowInRestrictedMode: true,
   color: blue,
-  defaultColumns: (intl, columns) => [
+  defaultColumns: (messages, columns) => [
     {
       title: getUniqueColumnName(
-        intl.formatMessage({
-          id: 'misc.views.columnDialog.choices.toggle.columnTitle',
-        }),
+        messages.columnDialog.choices.toggle.columnTitle(),
         columns
       ),
       type: COLUMN_TYPE.LOCAL_BOOL,
@@ -50,21 +48,17 @@ export const toggle: ColumnChoice = {
 
 export const followUpTemplate: ColumnChoice = {
   color: purple,
-  defaultColumns: (intl, columns) => [
+  defaultColumns: (messages, columns) => [
     {
       title: getUniqueColumnName(
-        intl.formatMessage({
-          id: 'misc.views.columnDialog.choices.followUp.columnTitleCheckbox',
-        }),
+        messages.columnDialog.choices.followUp.columnTitleCheckbox(),
         columns
       ),
       type: COLUMN_TYPE.LOCAL_BOOL,
     },
     {
       title: getUniqueColumnName(
-        intl.formatMessage({
-          id: 'misc.views.columnDialog.choices.followUp.columnTitleNotes',
-        }),
+        messages.columnDialog.choices.followUp.columnTitleNotes(),
         columns
       ),
       type: COLUMN_TYPE.LOCAL_TEXT,
@@ -77,15 +71,13 @@ export const followUpTemplate: ColumnChoice = {
 
 export const localPerson: ColumnChoice = {
   color: blue,
-  defaultColumns: (intl, columns) => [
+  defaultColumns: (messages, columns) => [
     {
       config: {
         field: COLUMN_TYPE.LOCAL_PERSON,
       },
       title: getUniqueColumnName(
-        intl.formatMessage({
-          id: 'misc.views.columnDialog.choices.localPerson.columnTitle',
-        }),
+        messages.columnDialog.choices.localPerson.columnTitle(),
         columns
       ),
       type: COLUMN_TYPE.LOCAL_PERSON,
@@ -98,39 +90,31 @@ export const localPerson: ColumnChoice = {
 
 export const delegateTemplate: ColumnChoice = {
   color: red,
-  defaultColumns: (intl, columns) => [
+  defaultColumns: (messages, columns) => [
     {
       title: getUniqueColumnName(
-        intl.formatMessage({
-          id: 'misc.views.columnDialog.choices.delegate.columnTitleAssignee',
-        }),
+        messages.columnDialog.choices.delegate.columnTitleAssignee(),
         columns
       ),
       type: COLUMN_TYPE.LOCAL_PERSON,
     },
     {
       title: getUniqueColumnName(
-        intl.formatMessage({
-          id: 'misc.views.columnDialog.choices.delegate.columnTitleContacted',
-        }),
+        messages.columnDialog.choices.delegate.columnTitleContacted(),
         columns
       ),
       type: COLUMN_TYPE.LOCAL_BOOL,
     },
     {
       title: getUniqueColumnName(
-        intl.formatMessage({
-          id: 'misc.views.columnDialog.choices.delegate.columnTitleResponded',
-        }),
+        messages.columnDialog.choices.delegate.columnTitleResponded(),
         columns
       ),
       type: COLUMN_TYPE.LOCAL_BOOL,
     },
     {
       title: getUniqueColumnName(
-        intl.formatMessage({
-          id: 'misc.views.columnDialog.choices.delegate.columnTitleNotes',
-        }),
+        messages.columnDialog.choices.delegate.columnTitleNotes(),
         columns
       ),
       type: COLUMN_TYPE.LOCAL_TEXT,
@@ -144,15 +128,13 @@ export const delegateTemplate: ColumnChoice = {
 export const localText: ColumnChoice = {
   allowInRestrictedMode: true,
   color: blue,
-  defaultColumns: (intl, columns) => [
+  defaultColumns: (messages, columns) => [
     {
       config: {
         field: COLUMN_TYPE.LOCAL_TEXT,
       },
       title: getUniqueColumnName(
-        intl.formatMessage({
-          id: 'misc.views.columnDialog.choices.localText.columnTitle',
-        }),
+        messages.columnDialog.choices.localText.columnTitle(),
         columns
       ),
       type: COLUMN_TYPE.LOCAL_TEXT,

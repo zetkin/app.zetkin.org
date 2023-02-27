@@ -11,10 +11,6 @@ menu:
   inbox: Inbox
   manage: Manage
   people: People
-people:
-  tabs:
-    views: Views
-  title: People
 person:
   tabs:
     manage: Manage

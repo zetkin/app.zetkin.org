@@ -1,9 +1,11 @@
-import { useIntl } from 'react-intl';
 import { Grid, useTheme } from '@mui/material';
 
 import ColumnChoiceCard from '../ColumnChoiceCard';
 import { ColumnChoiceWithKey } from '../choices';
+import { useMessages } from 'core/i18n';
 import { ZetkinViewColumn } from '../../types';
+
+import messageIds from 'features/views/l10n/messageIds';
 
 interface SearchResultsProps {
   existingColumns: ZetkinViewColumn[];
@@ -18,7 +20,7 @@ const SearchResults = ({
   onConfigure,
   searchResults,
 }: SearchResultsProps) => {
-  const intl = useIntl();
+  const messages = useMessages(messageIds);
   const theme = useTheme();
 
   return (
@@ -44,16 +46,14 @@ const SearchResults = ({
                   ? theme.palette.onSurface.disabled
                   : searchResult.color
               }
-              description={intl.formatMessage({
-                id: `misc.views.columnDialog.choices.${searchResult.key}.description`,
-              })}
+              description={messages.columnDialog.choices[
+                searchResult.key
+              ].description()}
               onAdd={() => onAdd(searchResult)}
               onConfigure={() => onConfigure(searchResult)}
               showAddButton={!!searchResult.defaultColumns}
               showConfigureButton={!!searchResult.renderConfigForm}
-              title={intl.formatMessage({
-                id: `misc.views.columnDialog.choices.${searchResult.key}.title`,
-              })}
+              title={messages.columnDialog.choices[searchResult.key].title()}
             />
           </Grid>
         );

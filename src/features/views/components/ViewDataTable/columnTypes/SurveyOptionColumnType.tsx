@@ -1,4 +1,3 @@
-import { FormattedMessage } from 'react-intl';
 import { GridColDef } from '@mui/x-data-grid-pro';
 import { useRouter } from 'next/router';
 import { Box, Typography } from '@mui/material';
@@ -6,11 +5,14 @@ import { Check, History } from '@mui/icons-material';
 import { FC, useState } from 'react';
 
 import { IColumnType } from '.';
+import { Msg } from 'core/i18n';
 import { SurveyOptionViewColumn } from '../../types';
 import SurveySubmissionPane from 'features/surveys/panes/SurveySubmissionPane';
 import theme from '../../../../../theme';
 import { usePanes } from 'utils/panes';
 import ViewSurveySubmissionPreview from '../../ViewSurveySubmissionPreview';
+
+import messageIds from 'features/views/l10n/messageIds';
 
 type SurveyOptionViewCell = {
   selected: boolean;
@@ -103,13 +105,13 @@ const Cell: FC<{ cell: SurveyOptionViewCell }> = ({ cell }) => {
             matchingContent = (
               <Box alignItems="center" display="flex">
                 <Check sx={{ paddingRight: 1 }} />
-                <FormattedMessage id="misc.views.surveyOptionCell.selected" />
+                <Msg id={messageIds.surveyOptionCell.selected} />
               </Box>
             );
           } else if (index === 0 && !sub.selected) {
             matchingContent = (
               <Typography color="secondary" sx={{ fontStyle: 'italic' }}>
-                <FormattedMessage id="misc.views.surveyOptionCell.notSelected" />
+                <Msg id={messageIds.surveyOptionCell.notSelected} />
               </Typography>
             );
           }
