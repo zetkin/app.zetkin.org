@@ -1,21 +1,11 @@
-import { GetStaticProps } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 import { AppBar, Box, Container, Toolbar, Typography } from '@mui/material';
 
-import { getMessages } from '../utils/locale';
 import { Msg } from 'core/i18n';
 import ZUILogo from 'zui/ZUILogo';
 
 import messageIds from 'core/l10n/messageIds';
-
-export const getStaticProps: GetStaticProps = async () => {
-  const lang = 'en';
-  const messages = await getMessages(lang, ['pages.404', 'misc.publicHeader']);
-  return {
-    props: { lang, messages },
-  };
-};
 
 export default function Custom404(): JSX.Element {
   return (

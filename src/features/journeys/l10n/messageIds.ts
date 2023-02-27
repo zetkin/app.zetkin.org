@@ -79,6 +79,23 @@ export default makeMessages('feat.journeys', {
       title: m('Title'),
       updated: m('Last updated'),
     },
+    export: {
+      headers: {
+        assignees: m('Assignees'),
+        closed: m('Closed'),
+        created: m('Created'),
+        id: m('ID'),
+        journey: m('Journey'),
+        nextMilestone: m('Next milestone'),
+        nextMilestoneDeadline: m('Next milestone deadline'),
+        outcome: m('Outcome'),
+        subjects: m('Subjects'),
+        summary: m('Summary'),
+        title: m('Title'),
+        unsortedTags: m('Ungrouped Tags'),
+        updated: m('Updated'),
+      },
+    },
     filters: {
       doesNotHaveOperator: m('does not have'),
       doesNotIncludeOperator: m('does not include'),
