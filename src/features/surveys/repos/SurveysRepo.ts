@@ -18,6 +18,7 @@ import {
   elementDeleted,
   elementOptionAdded,
   elementOptionDeleted,
+  elementOptionUpdated,
   elementUpdated,
   submissionLoad,
   submissionLoaded,
@@ -169,6 +170,22 @@ export default class SurveysRepo {
       ZetkinSurveyElementPatchBody
     >(`/api/orgs/${orgId}/surveys/${surveyId}/elements/${elemId}`, data);
     this._store.dispatch(elementUpdated([surveyId, elemId, element]));
+  }
+
+  async updateElementOption(
+    orgId: number,
+    surveyId: number,
+    elemId: number,
+    optionId: number,
+    text: string
+  ) {
+    const option = await this._apiClient.patch<ZetkinSurveyOption>(
+      `/api/orgs/${orgId}/surveys/${surveyId}/elements/${elemId}/options/${optionId}`,
+      { text }
+    );
+    this._store.dispatch(
+      elementOptionUpdated([surveyId, elemId, optionId, option])
+    );
   }
 
   updateSurvey(

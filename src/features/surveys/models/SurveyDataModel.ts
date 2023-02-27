@@ -172,6 +172,16 @@ export default class SurveyDataModel extends ModelBase {
     });
   }
 
+  updateElementOption(elemId: number, optionId: number, text: string) {
+    this._repo.updateElementOption(
+      this._orgId,
+      this._surveyId,
+      elemId,
+      optionId,
+      text
+    );
+  }
+
   updateOptionsQuestion(
     elemId: number,
     optionsQuestion: OptionsQuestionPatchBody

@@ -29,7 +29,7 @@ import { FormattedMessage as Msg, useIntl } from 'react-intl';
 import DeleteHideButtons from './DeleteHideButtons';
 import { OptionsQuestionPatchBody } from 'features/surveys/repos/SurveysRepo';
 import theme from 'theme';
-import { ZetkinOptionsQuestion } from 'utils/types/zetkin';
+import { ZetkinOptionsQuestion, ZetkinSurveyOption } from 'utils/types/zetkin';
 
 const enum POLL_TYPE {
   CHECKBOX = 'checkbox',
@@ -84,12 +84,19 @@ const widgetTypes = {
 };
 
 interface OptionProps {
-  id: number;
+  option: ZetkinSurveyOption;
   onDeleteOption: (optionId: number) => void;
+  onUpdateOption: (optionId: number, text: string) => void;
   widgetType: WidgetType;
 }
 
-const Option = ({ id, onDeleteOption, widgetType }: OptionProps) => {
+const Option = ({
+  option,
+  onDeleteOption,
+  onUpdateOption,
+  widgetType,
+}: OptionProps) => {
+  const [value, setValue] = useState(option.text);
   return (
     <Box
       alignItems="center"
@@ -99,8 +106,18 @@ const Option = ({ id, onDeleteOption, widgetType }: OptionProps) => {
       width="100%"
     >
       <Box paddingX={2}>{widgetType.previewIcon}</Box>
-      <TextField fullWidth label="Option" sx={{ paddingLeft: 1 }} />
-      <IconButton onClick={() => onDeleteOption(id)} sx={{ paddingX: 2 }}>
+      <TextField
+        fullWidth
+        label="Option"
+        onBlur={() => onUpdateOption(option.id, value)}
+        onChange={(evt) => setValue(evt.target.value)}
+        sx={{ paddingLeft: 1 }}
+        value={value}
+      />
+      <IconButton
+        onClick={() => onDeleteOption(option.id)}
+        sx={{ paddingX: 2 }}
+      >
         <Close />
       </IconButton>
     </Box>
@@ -115,6 +132,7 @@ interface ChoiceQuestionBlockProps {
   onDeleteOption: (optionId: number) => void;
   onEditModeEnter: () => void;
   onEditModeExit: (question: OptionsQuestionPatchBody) => void;
+  onUpdateOption: (optionId: number, text: string) => void;
   onToggleHidden: (hidden: boolean) => void;
   question: ZetkinOptionsQuestion;
 }
@@ -128,6 +146,7 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
   onEditModeEnter,
   onEditModeExit,
   onToggleHidden,
+  onUpdateOption,
   question: questionElement,
 }) => {
   const intl = useIntl();
@@ -239,10 +258,9 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
               {options.map((option) => (
                 <Option
                   key={option.id}
-                  id={option.id}
-                  onDeleteOption={(optionId: number) =>
-                    onDeleteOption(optionId)
-                  }
+                  onDeleteOption={(id) => onDeleteOption(id)}
+                  onUpdateOption={(id, text) => onUpdateOption(id, text)}
+                  option={option}
                   widgetType={widgetType}
                 />
               ))}

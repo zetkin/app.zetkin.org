@@ -54,6 +54,10 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ model }) => {
     model.deleteElement(elemId);
   }
 
+  function handleUpdateOption(elemId: number, optionId: number, text: string) {
+    model.updateElementOption(elemId, optionId, text);
+  }
+
   function handleToggleHidden(elemId: number, hidden: boolean) {
     model.toggleElementHidden(elemId, hidden);
   }
@@ -105,6 +109,9 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ model }) => {
                           }}
                           onToggleHidden={(hidden) =>
                             handleToggleHidden(elem.id, hidden)
+                          }
+                          onUpdateOption={(optionId, text) =>
+                            handleUpdateOption(elem.id, optionId, text)
                           }
                           question={elem.question}
                         />
