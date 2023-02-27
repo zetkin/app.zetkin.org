@@ -8,7 +8,9 @@ import SurveyLayout from 'features/surveys/layout/SurveyLayout';
 import SurveyURLCard from 'features/surveys/components/SurveyURLCard';
 import useModel from 'core/useModel';
 import useServerSide from 'core/useServerSide';
-import SurveyDataModel, { SurveyState } from 'features/surveys/models/SurveyDataModel';
+import SurveyDataModel, {
+  SurveyState,
+} from 'features/surveys/models/SurveyDataModel';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   async (ctx) => {
@@ -64,11 +66,9 @@ const SurveyPage: PageWithLayout<SurveyPageProps> = ({
     >
       {model.surveyIsEmpty ? (
         <EmptyOverview campId={campId} orgId={orgId} surveyId={surveyId} />
-      ) :
-        (
-          <SurveyURLCard isOpen={isOpen} orgId={orgId} surveyId={surveyId} />
-        )
-      }
+      ) : (
+        <SurveyURLCard isOpen={isOpen} orgId={orgId} surveyId={surveyId} />
+      )}
     </Box>
   );
 };

@@ -23,18 +23,24 @@ const ZUITextfieldToClipboard: React.FunctionComponent<{
 
   return (
     <Box display="flex" gap={1}>
-      <Box alignItems="center" border={1} borderColor="lightgray" borderRadius={1} display="flex" paddingX={1}>
+      <Box
+        alignItems="center"
+        border={1}
+        borderColor="lightgray"
+        borderRadius={1}
+        display="flex"
+        paddingX={1}
+      >
         {children}
       </Box>
-      <Button
-        onClick={handleClick} variant="outlined">
-        {copied ?
+      <Button onClick={handleClick} variant="outlined">
+        {copied ? (
           <Msg id="misc.copyToClipboard.copied" />
-          :
+        ) : (
           <Msg id="misc.copyToClipboard.copy" />
-        }
+        )}
       </Button>
-    </Box >
+    </Box>
   );
 };
 
