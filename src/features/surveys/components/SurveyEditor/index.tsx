@@ -46,6 +46,10 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ model }) => {
     model.addElementOption(elemId);
   }
 
+  function handleDeleteOption(elemId: number, optionId: number) {
+    model.deleteElementOption(elemId, optionId);
+  }
+
   function handleDelete(elemId: number) {
     model.deleteElement(elemId);
   }
@@ -85,6 +89,9 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ model }) => {
                           inEditMode={elem.id === idOfBlockInEditMode}
                           onAddOption={() => handleAddOption(elem.id)}
                           onDelete={() => handleDelete(elem.id)}
+                          onDeleteOption={(optionId: number) =>
+                            handleDeleteOption(elem.id, optionId)
+                          }
                           onEditModeEnter={() =>
                             setIdOfBlockInEditMode(elem.id)
                           }

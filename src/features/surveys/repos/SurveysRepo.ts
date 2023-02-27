@@ -17,6 +17,7 @@ import {
   elementAdded,
   elementDeleted,
   elementOptionAdded,
+  elementOptionDeleted,
   elementUpdated,
   submissionLoad,
   submissionLoaded,
@@ -97,6 +98,18 @@ export default class SurveysRepo {
   constructor(env: Environment) {
     this._store = env.store;
     this._apiClient = env.apiClient;
+  }
+
+  deleteElementOption(
+    orgId: number,
+    surveyId: number,
+    elemId: number,
+    optionId: number
+  ) {
+    this._apiClient.delete(
+      `/api/orgs/${orgId}/surveys/${surveyId}/elements/${elemId}/options/${optionId}`
+    );
+    this._store.dispatch(elementOptionDeleted([surveyId, elemId, optionId]));
   }
 
   async deleteSurveyElement(orgId: number, surveyId: number, elemId: number) {

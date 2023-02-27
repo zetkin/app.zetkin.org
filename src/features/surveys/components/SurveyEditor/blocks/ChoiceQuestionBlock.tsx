@@ -84,10 +84,12 @@ const widgetTypes = {
 };
 
 interface OptionProps {
+  id: number;
+  onDeleteOption: (optionId: number) => void;
   widgetType: WidgetType;
 }
 
-const Option = ({ widgetType }: OptionProps) => {
+const Option = ({ id, onDeleteOption, widgetType }: OptionProps) => {
   return (
     <Box
       alignItems="center"
@@ -98,7 +100,7 @@ const Option = ({ widgetType }: OptionProps) => {
     >
       <Box paddingX={2}>{widgetType.previewIcon}</Box>
       <TextField fullWidth label="Option" sx={{ paddingLeft: 1 }} />
-      <IconButton sx={{ paddingX: 2 }}>
+      <IconButton onClick={() => onDeleteOption(id)} sx={{ paddingX: 2 }}>
         <Close />
       </IconButton>
     </Box>
@@ -110,6 +112,7 @@ interface ChoiceQuestionBlockProps {
   inEditMode: boolean;
   onAddOption: () => void;
   onDelete: () => void;
+  onDeleteOption: (optionId: number) => void;
   onEditModeEnter: () => void;
   onEditModeExit: (question: OptionsQuestionPatchBody) => void;
   onToggleHidden: (hidden: boolean) => void;
@@ -121,6 +124,7 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
   inEditMode,
   onAddOption,
   onDelete,
+  onDeleteOption,
   onEditModeEnter,
   onEditModeExit,
   onToggleHidden,
@@ -233,7 +237,14 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
             </TextField>
             <Box alignItems="center" display="flex" flexDirection="column">
               {options.map((option) => (
-                <Option key={option.id} widgetType={widgetType} />
+                <Option
+                  key={option.id}
+                  id={option.id}
+                  onDeleteOption={(optionId: number) =>
+                    onDeleteOption(optionId)
+                  }
+                  widgetType={widgetType}
+                />
               ))}
             </Box>
           </Box>

@@ -70,6 +70,30 @@ const surveysSlice = createSlice({
         }
       }
     },
+    elementOptionDeleted: (
+      state,
+      action: PayloadAction<[number, number, number]>
+    ) => {
+      const [surveyId, elemId, optionId] = action.payload;
+      const surveyItem = state.surveyList.items.find(
+        (item) => item.id == surveyId
+      );
+      if (surveyItem && surveyItem.data) {
+        const elementItem = surveyItem.data.elements.find(
+          (element) => element.id === elemId
+        );
+
+        if (
+          elementItem &&
+          elementItem.type === ELEMENT_TYPE.QUESTION &&
+          elementItem.question.response_type === RESPONSE_TYPE.OPTIONS
+        ) {
+          elementItem.question.options = elementItem.question.options?.filter(
+            (option) => option.id !== optionId
+          );
+        }
+      }
+    },
     elementUpdated: (
       state,
       action: PayloadAction<[number, number, ZetkinSurveyElement]>
@@ -148,6 +172,7 @@ export const {
   elementAdded,
   elementDeleted,
   elementOptionAdded,
+  elementOptionDeleted,
   elementUpdated,
   submissionLoad,
   submissionLoaded,
