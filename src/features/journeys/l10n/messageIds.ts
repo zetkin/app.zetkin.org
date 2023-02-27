@@ -35,6 +35,12 @@ export default makeMessages('feat.journeys', {
     markedCompleteLabel: im<{ relativeTime: ReactElement }>(
       'Marked complete {relativeTime}'
     ),
+    newInstance: {
+      draft: m('Draft'),
+      openingNote: m('Opening note'),
+      submitLabel: im<{ journey: string }>('Create new {journey}'),
+      title: im<{ journey: string }>('New {journey}'),
+    },
     noMilestones: m('There are no milestones.'),
     noOutcomeDetails: m('No outcome details provided.'),
     percentComplete: im<{ percentComplete: number }>(

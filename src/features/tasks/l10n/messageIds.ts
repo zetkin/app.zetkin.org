@@ -174,6 +174,13 @@ export default makeMessages('feat.tasks', {
     titleLabel: m('Title'),
     typeLabel: m('Type'),
   },
+  taskLayout: {
+    tabs: {
+      assignees: m('Assignees'),
+      insights: m('Insights'),
+      summary: m('Summary'),
+    },
+  },
   taskListItem: {
     relativeTimes: {
       active: im<{ time: ReactElement }>('Closes {time}'),

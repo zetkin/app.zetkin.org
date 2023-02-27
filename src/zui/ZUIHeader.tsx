@@ -1,5 +1,5 @@
 import { ArrowUpward } from '@mui/icons-material';
-import { FormattedMessage } from 'react-intl';
+import makeStyles from '@mui/styles/makeStyles';
 import { ReactElement } from 'react';
 import {
   Avatar,
@@ -10,11 +10,12 @@ import {
   Typography,
 } from '@mui/material';
 
-import makeStyles from '@mui/styles/makeStyles';
-
+import { Msg } from 'core/i18n';
 import SearchDialog from 'features/search/components/SearchDialog';
 import ZUIBreadcrumbTrail from 'zui/ZUIBreadcrumbTrail';
 import ZUIEllipsisMenu, { ZUIEllipsisMenuProps } from 'zui/ZUIEllipsisMenu';
+
+import messageIds from './l10n/messageIds';
 
 interface StyleProps {
   collapsed: boolean;
@@ -88,10 +89,12 @@ const Header: React.FC<HeaderProps> = ({
             {!!onToggleCollapsed && (
               <Box className={classes.collapseButton}>
                 <Button onClick={toggleCollapsed} startIcon={<ArrowUpward />}>
-                  <FormattedMessage
-                    id={`layout.organize.header.collapseButton.${
-                      collapsed ? 'expand' : 'collapse'
-                    }`}
+                  <Msg
+                    id={
+                      messageIds.header.collapseButton[
+                        collapsed ? 'expand' : 'collapse'
+                      ]
+                    }
                   />
                 </Button>
               </Box>

@@ -24,10 +24,10 @@ const AllCampaignsLayout: FunctionComponent<AllCampaignsLayoutProps> = ({
       defaultTab="/"
       fixedHeight={fixedHeight}
       tabs={[
-        { href: `/`, messageId: 'layout.organize.campaigns.summary' },
+        { href: `/`, label: messages.layout.summary() },
         {
           href: `/calendar`,
-          messageId: 'layout.organize.campaigns.calendar',
+          label: messages.layout.calendar(),
         },
       ]}
       title={messages.layout.allCampaigns()}

@@ -5,7 +5,6 @@ import { FunctionComponent, useContext, useState } from 'react';
 
 import NProgress from 'nprogress';
 import ShareViewDialog from '../components/ShareViewDialog';
-import TabbedLayout from 'utils/layout/TabbedLayout';
 import useModel from 'core/useModel';
 import useServerSide from 'core/useServerSide';
 import ViewDataModel from '../models/ViewDataModel';
@@ -23,6 +22,7 @@ import { Group, Share, ViewColumnOutlined } from '@mui/icons-material';
 import { Msg, useMessages } from 'core/i18n';
 
 import messageIds from '../l10n/messageIds';
+import SimpleLayout from 'utils/layout/SimpleLayout';
 
 const useStyles = makeStyles<Theme, { deactivated: boolean }>(() => ({
   deactivateWrapper: {
@@ -156,7 +156,7 @@ const SingleViewLayout: FunctionComponent<SingleViewLayoutProps> = ({
 
   return (
     <Box key={viewId as string} className={classes.deactivateWrapper}>
-      <TabbedLayout
+      <SimpleLayout
         actionButtons={
           <Button
             endIcon={<Share />}
@@ -166,8 +166,6 @@ const SingleViewLayout: FunctionComponent<SingleViewLayoutProps> = ({
             <Msg id={messageIds.viewLayout.actions.share} />
           </Button>
         }
-        baseHref={`/organize/${orgId}/people/views/${viewId}`}
-        defaultTab="/"
         ellipsisMenuItems={ellipsisMenu}
         fixedHeight={true}
         subtitle={
@@ -217,11 +215,10 @@ const SingleViewLayout: FunctionComponent<SingleViewLayoutProps> = ({
             }}
           </ZUIFutures>
         }
-        tabs={[{ href: `/`, messageId: 'layout.organize.view.tabs.view' }]}
         title={title}
       >
         {children}
-      </TabbedLayout>
+      </SimpleLayout>
       {queryDialogOpen && view && (
         <ViewSmartSearchDialog
           onDialogClose={() => setQueryDialogOpen(false)}

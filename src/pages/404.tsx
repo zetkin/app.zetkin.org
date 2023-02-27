@@ -1,11 +1,13 @@
 import { GetStaticProps } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
-import { FormattedMessage as Msg } from 'react-intl';
 import { AppBar, Box, Container, Toolbar, Typography } from '@mui/material';
 
 import { getMessages } from '../utils/locale';
+import { Msg } from 'core/i18n';
 import ZUILogo from 'zui/ZUILogo';
+
+import messageIds from 'core/l10n/messageIds';
 
 export const getStaticProps: GetStaticProps = async () => {
   const lang = 'en';
@@ -36,13 +38,13 @@ export default function Custom404(): JSX.Element {
             404
           </Typography>
           <Typography align="center" variant="h4">
-            <Msg id="pages.404.pageNotFound" />
+            <Msg id={messageIds.err404.pageNotFound} />
           </Typography>
           <Box mt={2}>
             <Typography align="center" variant="h6">
               <Link href="/">
                 <a data-testid="back-home-link">
-                  <Msg id="pages.404.backToHomePage" />
+                  <Msg id={messageIds.err404.backToHomePage} />
                 </a>
               </Link>
             </Typography>

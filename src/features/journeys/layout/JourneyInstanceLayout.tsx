@@ -214,11 +214,11 @@ const JourneyInstanceLayout: React.FunctionComponent<
       tabs={[
         {
           href: '/',
-          messageId: 'layout.organize.journeys.tabs.timeline',
+          label: messages.journeys.tabs.timeline(),
         },
         {
           href: '/milestones',
-          messageId: 'layout.organize.journeys.tabs.milestones',
+          label: messages.journeys.tabs.milestones(),
         },
       ]}
       title={

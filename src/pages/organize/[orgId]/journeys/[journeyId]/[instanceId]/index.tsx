@@ -1,7 +1,6 @@
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { useContext } from 'react';
-import { useIntl } from 'react-intl';
 import { useQueryClient } from 'react-query';
 import { Box, Divider, Grid } from '@mui/material';
 
@@ -12,6 +11,7 @@ import JourneyInstanceSidebar from 'features/journeys/components/JourneyInstance
 import JourneyInstanceSummary from 'features/journeys/components/JourneyInstanceSummary';
 import { organizationResource } from 'features/journeys/api/organizations';
 import { PageWithLayout } from 'utils/types';
+import { useMessages } from 'core/i18n';
 import ZUIQuery from 'zui/ZUIQuery';
 import ZUISection from 'zui/ZUISection';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';
@@ -22,6 +22,8 @@ import {
 } from 'features/journeys/api/journeys';
 import { scaffold, ScaffoldedGetServerSideProps } from 'utils/next';
 import { ZetkinJourneyInstance, ZetkinPerson } from 'utils/types/zetkin';
+
+import messageIds from 'features/journeys/l10n/messageIds';
 
 export const scaffoldOptions = {
   authLevelRequired: 2,
@@ -95,7 +97,7 @@ const JourneyDetailsPage: PageWithLayout<JourneyDetailsPageProps> = ({
     useRemoveSubject,
     useUnassignTag,
   } = journeyInstanceResource(orgId, instanceId);
-  const intl = useIntl();
+  const messages = useMessages(messageIds);
   const journeyInstanceQuery = useQuery();
   const addAssigneeMutation = useAddAssignee();
   const removeAssigneeMutation = useRemoveAssignee();
@@ -156,11 +158,7 @@ const JourneyDetailsPage: PageWithLayout<JourneyDetailsPageProps> = ({
           <Box mb={3} mt={4}>
             <Divider />
           </Box>
-          <ZUISection
-            title={intl.formatMessage({
-              id: 'pages.organizeJourneyInstance.sections.timeline',
-            })}
-          >
+          <ZUISection title={messages.instance.sections.timeline()}>
             <ZUIQuery queries={{ updatesQuery }}>
               {({ queries: { updatesQuery } }) => (
                 <ZUITimeline

@@ -83,6 +83,12 @@ export default makeMessages('zui', {
   futures: {
     errorLoading: m('There was an error loading the data.'),
   },
+  header: {
+    collapseButton: {
+      collapse: m('Collapse'),
+      expand: m('Expand'),
+    },
+  },
   imageSelectDialog: {
     instructions: m('Drag and drop an image file, or click to select'),
   },

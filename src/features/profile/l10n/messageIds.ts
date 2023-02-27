@@ -31,4 +31,9 @@ export default makeMessages('feat.profile', {
     removeError: m('This organization could not be removed'),
     title: m('Organizations'),
   },
+  tabs: {
+    manage: m('Manage'),
+    profile: m('Profile'),
+    timeline: m('Timeline'),
+  },
 });

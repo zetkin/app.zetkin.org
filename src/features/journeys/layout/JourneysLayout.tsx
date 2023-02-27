@@ -36,7 +36,7 @@ const JourneysLayout: React.FunctionComponent<JourneysLayoutProps> = ({
       tabs={[
         {
           href: `/overview`,
-          messageId: 'layout.organize.journeys.tabs.overview',
+          label: messages.journeys.tabs.overview(),
         },
       ]}
       title={messages.journeys.title()}

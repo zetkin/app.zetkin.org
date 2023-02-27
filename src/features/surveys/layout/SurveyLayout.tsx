@@ -2,6 +2,7 @@ import { FormattedMessage as Msg } from 'react-intl';
 import SurveyStatusChip from '../components/SurveyStatusChip';
 import SurveySubmissionsModel from '../models/SurveySubmissionsModel';
 import TabbedLayout from 'utils/layout/TabbedLayout';
+import { useMessages } from 'core/i18n';
 import useModel from 'core/useModel';
 import ZUIDateRangePicker from 'zui/ZUIDateRangePicker/ZUIDateRangePicker';
 import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
@@ -12,6 +13,8 @@ import ZUIIconLabelRow from 'zui/ZUIIconLabelRow';
 import { Box, Button } from '@mui/material';
 import { ChatBubbleOutline, QuizOutlined } from '@mui/icons-material';
 import SurveyDataModel, { SurveyState } from '../models/SurveyDataModel';
+
+import messageIds from '../l10n/messageIds';
 
 interface SurveyLayoutProps {
   children: React.ReactNode;
@@ -26,6 +29,7 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
   campaignId,
   surveyId,
 }) => {
+  const messages = useMessages(messageIds);
   const model = useModel(
     (env) => new SurveyDataModel(env, parseInt(orgId), parseInt(surveyId))
   );
@@ -120,14 +124,14 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
         </Box>
       }
       tabs={[
-        { href: '/', messageId: 'layout.organize.surveys.tabs.overview' },
+        { href: '/', label: messages.tabs.overview() },
         {
           href: '/questions',
-          messageId: 'layout.organize.surveys.tabs.questions',
+          label: messages.tabs.questions(),
         },
         {
           href: '/submissions',
-          messageId: 'layout.organize.surveys.tabs.submissions',
+          label: messages.tabs.submissions(),
         },
       ]}
       title={

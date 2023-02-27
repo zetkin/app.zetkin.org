@@ -1,7 +1,6 @@
 import { Box, Button, Typography } from '@mui/material';
 
 import CallAssignmentStatusChip from '../components/CallAssignmentStatusChip';
-import { Msg } from 'core/i18n';
 import TabbedLayout from '../../../utils/layout/TabbedLayout';
 import useModel from 'core/useModel';
 import ZUIDateRangePicker from 'zui/ZUIDateRangePicker/ZUIDateRangePicker';
@@ -11,6 +10,7 @@ import CallAssignmentModel, {
   CallAssignmentState,
 } from '../models/CallAssignmentModel';
 import { Headset, People } from '@material-ui/icons';
+import { Msg, useMessages } from 'core/i18n';
 
 import messageIds from '../l10n/messageIds';
 
@@ -27,6 +27,7 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
   campaignId,
   assignmentId,
 }) => {
+  const messages = useMessages(messageIds);
   const model = useModel(
     (env) =>
       new CallAssignmentModel(env, parseInt(orgId), parseInt(assignmentId))
@@ -111,19 +112,19 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
       tabs={[
         {
           href: '/',
-          messageId: 'layout.organize.callAssignment.tabs.overview',
+          label: messages.tabs.overview(),
         },
         {
           href: '/callers',
-          messageId: 'layout.organize.callAssignment.tabs.callers',
+          label: messages.tabs.callers(),
         },
         {
           href: '/conversation',
-          messageId: 'layout.organize.callAssignment.tabs.conversation',
+          label: messages.tabs.conversation(),
         },
         {
           href: '/insights',
-          messageId: 'layout.organize.callAssignment.tabs.insights',
+          label: messages.tabs.insights(),
         },
       ]}
       title={

@@ -19,6 +19,7 @@ export default makeMessages('feat.campaigns', {
   assigneeActions: m('Assignee actions'),
   calendarView: m('See all in calendar'),
   campaignManager: m('Campaign Manager'),
+  events: m('Events'),
   feedback: {
     copy: m(
       'Collecting feedback (during phonebanks or standalone) can help you work more efficiently'
@@ -77,5 +78,12 @@ export default makeMessages('feat.campaigns', {
     heading: m('Mobilization and outreach (none configured)'),
   },
   noManager: m('No Campaign Manager'),
+  taskLayout: {
+    tabs: {
+      assignees: m('Assignees'),
+      insights: m('Insights'),
+      summary: m('Summary'),
+    },
+  },
   tasks: m('Tasks'),
 });
