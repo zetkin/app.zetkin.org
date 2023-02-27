@@ -1,10 +1,5 @@
 import AbcIcon from '@mui/icons-material/Abc';
-import { FormattedMessage as Msg } from 'react-intl';
 import SortIcon from '@mui/icons-material/Sort';
-import theme from 'theme';
-import { useIntl } from 'react-intl';
-import { ZetkinSurveyElementPatchBody } from 'features/surveys/repos/SurveysRepo';
-import { ZetkinTextQuestion } from 'utils/types/zetkin';
 import {
   BaseSyntheticEvent,
   FC,
@@ -21,6 +16,13 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
+
+import theme from 'theme';
+import { ZetkinSurveyElementPatchBody } from 'features/surveys/repos/SurveysRepo';
+import { ZetkinTextQuestion } from 'utils/types/zetkin';
+import { Msg, useMessages } from 'core/i18n';
+
+import messageIds from 'features/surveys/l10n/messageIds';
 
 interface OpenQuestionBlockProps {
   element: ZetkinTextQuestion;
@@ -40,7 +42,7 @@ const OpenQuestionBlock: FC<OpenQuestionBlockProps> = ({
   onEditModeEnter,
   onEditModeExit,
 }) => {
-  const intl = useIntl();
+  const messages = useMessages(messageIds);
 
   const [typeField, setTypeField] = useState(
     element.response_config.multiline === true
@@ -116,9 +118,7 @@ const OpenQuestionBlock: FC<OpenQuestionBlockProps> = ({
                 inputRef: titleRef,
                 sx: { fontSize: theme.typography.h4.fontSize },
               }}
-              label={intl.formatMessage({
-                id: 'misc.surveys.blocks.open.label',
-              })}
+              label={messages.blocks.open.label()}
               margin="normal"
               onChange={(ev) => setTitle(ev.target.value)}
               onKeyDown={(evt) => handleKeyDown(evt)}
@@ -127,9 +127,7 @@ const OpenQuestionBlock: FC<OpenQuestionBlockProps> = ({
               defaultValue={element.description}
               fullWidth
               InputProps={{ inputRef: descriptionRef }}
-              label={intl.formatMessage({
-                id: 'misc.surveys.blocks.open.description',
-              })}
+              label={messages.blocks.open.description()}
               margin="normal"
               onChange={(ev) => setDescription(ev.target.value)}
               onKeyDown={(evt) => handleKeyDown(evt)}
@@ -142,9 +140,7 @@ const OpenQuestionBlock: FC<OpenQuestionBlockProps> = ({
               }
               fullWidth
               InputProps={{ inputRef: typeConfigRef }}
-              label={intl.formatMessage({
-                id: 'misc.surveys.blocks.open.textFieldType',
-              })}
+              label={messages.blocks.open.textFieldType()}
               margin="normal"
               onChange={(event) => {
                 handleSelect(event),
@@ -166,7 +162,7 @@ const OpenQuestionBlock: FC<OpenQuestionBlockProps> = ({
                   ) : (
                     <SortIcon sx={{ marginRight: '10px' }} />
                   )}
-                  <Msg id={`misc.surveys.blocks.open.${value}`} />
+                  <Msg id={messageIds.blocks.open[value]} />
                 </MenuItem>
               ))}
             </TextField>
@@ -186,7 +182,7 @@ const OpenQuestionBlock: FC<OpenQuestionBlockProps> = ({
               {element.question ? (
                 element.question
               ) : (
-                <Msg id="misc.surveys.blocks.open.empty" />
+                <Msg id={messageIds.blocks.open.empty} />
               )}
             </Typography>
             <Typography
@@ -198,7 +194,7 @@ const OpenQuestionBlock: FC<OpenQuestionBlockProps> = ({
               {element.description ? (
                 element.description
               ) : (
-                <Msg id="misc.surveys.blocks.open.description" />
+                <Msg id={messageIds.blocks.open.description} />
               )}
             </Typography>
             <Typography
@@ -210,14 +206,14 @@ const OpenQuestionBlock: FC<OpenQuestionBlockProps> = ({
               {element.response_config.multiline ? (
                 <>
                   <SortIcon sx={{ marginRight: '10px' }} />
-                  <Msg id="misc.surveys.blocks.open.multiLine" />{' '}
-                  <Msg id="misc.surveys.blocks.open.fieldTypePreview" />
+                  <Msg id={messageIds.blocks.open.multiLine} />{' '}
+                  <Msg id={messageIds.blocks.open.fieldTypePreview} />
                 </>
               ) : (
                 <>
                   <AbcIcon sx={{ marginRight: '10px' }} />
-                  <Msg id="misc.surveys.blocks.open.singleLine" />{' '}
-                  <Msg id="misc.surveys.blocks.open.fieldTypePreview" />
+                  <Msg id={messageIds.blocks.open.singleLine} />{' '}
+                  <Msg id={messageIds.blocks.open.fieldTypePreview} />
                 </>
               )}
             </Typography>

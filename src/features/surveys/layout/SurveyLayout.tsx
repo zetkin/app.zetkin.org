@@ -1,8 +1,6 @@
-import { FormattedMessage as Msg } from 'react-intl';
 import SurveyStatusChip from '../components/SurveyStatusChip';
 import SurveySubmissionsModel from '../models/SurveySubmissionsModel';
 import TabbedLayout from 'utils/layout/TabbedLayout';
-import { useMessages } from 'core/i18n';
 import useModel from 'core/useModel';
 import ZUIDateRangePicker from 'zui/ZUIDateRangePicker/ZUIDateRangePicker';
 import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
@@ -12,6 +10,7 @@ import { ZUIIconLabelProps } from 'zui/ZUIIconLabel';
 import ZUIIconLabelRow from 'zui/ZUIIconLabelRow';
 import { Box, Button } from '@mui/material';
 import { ChatBubbleOutline, QuizOutlined } from '@mui/icons-material';
+import { Msg, useMessages } from 'core/i18n';
 import SurveyDataModel, { SurveyState } from '../models/SurveyDataModel';
 
 import messageIds from '../l10n/messageIds';
@@ -47,7 +46,7 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
       actionButtons={
         model.state == SurveyState.PUBLISHED ? (
           <Button onClick={() => model.unpublish()} variant="outlined">
-            <Msg id="layout.organize.surveys.actions.unpublish" />
+            <Msg id={messageIds.layout.actions.unpublish} />
           </Button>
         ) : (
           <Button
@@ -55,7 +54,7 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
             onClick={() => model.publish()}
             variant="contained"
           >
-            <Msg id="layout.organize.surveys.actions.publish" />
+            <Msg id={messageIds.layout.actions.publish} />
           </Button>
         )
       }
@@ -94,7 +93,7 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
                     icon: <QuizOutlined />,
                     label: (
                       <Msg
-                        id="layout.organize.surveys.stats.questions"
+                        id={messageIds.layout.stats.questions}
                         values={{
                           numQuestions: questionLength,
                         }}
@@ -108,7 +107,7 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
                     icon: <ChatBubbleOutline />,
                     label: (
                       <Msg
-                        id="layout.organize.surveys.stats.submissions"
+                        id={messageIds.layout.stats.submissions}
                         values={{
                           numSubmissions: submissionsLength,
                         }}
