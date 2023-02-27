@@ -1,4 +1,3 @@
-import { FormattedMessage, IntlShape } from 'react-intl';
 import {
   GridCellParams,
   GridCellValue,
@@ -17,7 +16,10 @@ import {
   JourneyUnsortedTagsColumn,
   makeJourneyTagColumn,
 } from 'features/journeys/utils/journeyInstanceUtils';
+import { Msg, UseMessagesMap } from 'core/i18n';
 import { ZetkinJourneyInstance, ZetkinTag } from 'utils/types/zetkin';
+
+import messageIds from 'features/journeys/l10n/messageIds';
 
 const has = (
   col: JourneyTagGroupColumn | JourneyUnsortedTagsColumn,
@@ -90,7 +92,7 @@ const sortByTagName = (value0: GridCellValue, value1: GridCellValue) => {
 };
 
 const getTagColumns = (
-  intl: IntlShape,
+  messages: UseMessagesMap<typeof messageIds>,
   journeyInstances: ZetkinJourneyInstance[],
   tagColumns: JourneyTagColumnData[]
 ): GridColDef[] => {
@@ -115,32 +117,26 @@ const getTagColumns = (
           {
             InputComponent: FilterValueSelect,
             InputComponentProps: {
-              labelMessageId: 'misc.journeys.journeyInstancesFilters.tagLabel',
+              label: messages.instances.filters.tagLabel(),
               options: uniqueTags,
             },
             getApplyFilterFn: (item) => has(col, item),
-            label: intl.formatMessage({
-              id: 'misc.journeys.journeyInstancesFilters.hasOperator',
-            }),
+            label: messages.instances.filters.hasOperator(),
             value: 'has',
           },
           {
             InputComponent: FilterValueSelect,
             InputComponentProps: {
-              labelMessageId: 'misc.journeys.journeyInstancesFilters.tagLabel',
+              label: messages.instances.filters.tagLabel(),
               options: uniqueTags,
             },
             getApplyFilterFn: (item) => doesNotHave(col, item),
-            label: intl.formatMessage({
-              id: 'misc.journeys.journeyInstancesFilters.doesNotHaveOperator',
-            }),
+            label: messages.instances.filters.doesNotHaveOperator(),
             value: 'doesNotHave',
           },
           {
             getApplyFilterFn: () => isEmpty(col),
-            label: intl.formatMessage({
-              id: 'misc.journeys.journeyInstancesFilters.isEmptyOperator',
-            }),
+            label: messages.instances.filters.isEmptyOperator(),
             value: 'isEmpty',
           },
         ],
@@ -187,32 +183,26 @@ const getTagColumns = (
           {
             InputComponent: FilterValueSelect,
             InputComponentProps: {
-              labelMessageId: 'misc.journeys.journeyInstancesFilters.tagLabel',
+              label: messages.instances.filters.tagLabel(),
               options: uniqueTags,
             },
             getApplyFilterFn: (item) => has(col, item),
-            label: intl.formatMessage({
-              id: 'misc.journeys.journeyInstancesFilters.hasOperator',
-            }),
+            label: messages.instances.filters.hasOperator(),
             value: 'has',
           },
           {
             InputComponent: FilterValueSelect,
             InputComponentProps: {
-              labelMessageId: 'misc.journeys.journeyInstancesFilters.tagLabel',
+              label: messages.instances.filters.tagLabel(),
               options: uniqueTags,
             },
             getApplyFilterFn: (item) => doesNotHave(col, item),
-            label: intl.formatMessage({
-              id: 'misc.journeys.journeyInstancesFilters.doesNotHaveOperator',
-            }),
+            label: messages.instances.filters.doesNotHaveOperator(),
             value: 'doesNotHave',
           },
           {
             getApplyFilterFn: () => isEmpty(col),
-            label: intl.formatMessage({
-              id: 'misc.journeys.journeyInstancesFilters.isEmptyOperator',
-            }),
+            label: messages.instances.filters.isEmptyOperator(),
             value: 'isEmpty',
           },
         ],
@@ -224,9 +214,7 @@ const getTagColumns = (
             )),
         renderHeader: () => (
           <div className="MuiDataGrid-columnHeaderTitle">
-            <FormattedMessage
-              id={`pages.organizeJourneyInstances.columns.tagsFree`}
-            />
+            <Msg id={messageIds.instances.columns.tagsFree} />
           </div>
         ),
         sortComparator: (value0, value1) => sortByTagName(value0, value1),

@@ -1,4 +1,3 @@
-import { useIntl } from 'react-intl';
 import { DataGridPro, DataGridProProps } from '@mui/x-data-grid-pro';
 
 import getColumns from './getColumns';
@@ -9,7 +8,10 @@ import { FunctionComponent, useState } from 'react';
 
 import { JourneyTagColumnData } from 'features/journeys/utils/journeyInstanceUtils';
 import useConfigurableDataGridColumns from 'zui/ZUIUserConfigurableDataGrid/useConfigurableDataGridColumns';
+import { useMessages } from 'core/i18n';
 import useModelsFromQueryString from 'zui/ZUIUserConfigurableDataGrid/useModelsFromQueryString';
+
+import messageIds from 'features/journeys/l10n/messageIds';
 
 interface JourneysDataTableProps {
   dataGridProps?: Partial<DataGridProProps>;
@@ -24,24 +26,28 @@ const JourneyInstancesDataTable: FunctionComponent<JourneysDataTableProps> = ({
   journeyInstances,
   storageKey = 'journeyInstances',
 }) => {
-  const intl = useIntl();
+  const messages = useMessages(messageIds);
   const { gridProps: modelGridProps } = useModelsFromQueryString();
   const [quickSearch, setQuickSearch] = useState('');
   const rows = getRows({ journeyInstances, quickSearch });
 
-  const rawColumns = getColumns(intl, journeyInstances, tagColumnsData);
+  const rawColumns = getColumns(messages, journeyInstances, tagColumnsData);
   const { columns, setColumnOrder, setColumnWidth } =
     useConfigurableDataGridColumns(storageKey, rawColumns);
 
   // Add localised header titles
-  const columnsWithHeaderTitles = columns.map((column) => ({
-    headerName:
-      column.headerName ||
-      intl.formatMessage({
-        id: `pages.organizeJourneyInstances.columns.${column.field}`,
-      }),
-    ...column,
-  }));
+  const columnsWithHeaderTitles = columns.map((column) => {
+    const fieldName =
+      column.field in messages.instances.columns
+        ? (column.field as keyof typeof messages.instances.columns)
+        : null;
+    return {
+      headerName:
+        column.headerName ||
+        (fieldName ? messages.instances.columns[fieldName]() : ''),
+      ...column,
+    };
+  });
 
   return (
     <>

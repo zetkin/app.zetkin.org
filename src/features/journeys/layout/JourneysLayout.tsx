@@ -1,7 +1,9 @@
-import { useIntl } from 'react-intl';
+import { useMessages } from 'core/i18n';
 import { useRouter } from 'next/router';
 
 import TabbedLayout from '../../../utils/layout/TabbedLayout';
+
+import messageIds from '../l10n/messageIds';
 
 interface JourneysLayoutProps {
   children: React.ReactNode;
@@ -10,7 +12,7 @@ interface JourneysLayoutProps {
 const JourneysLayout: React.FunctionComponent<JourneysLayoutProps> = ({
   children,
 }) => {
-  const intl = useIntl();
+  const messages = useMessages(messageIds);
   const { orgId } = useRouter().query;
 
   return (
@@ -19,17 +21,13 @@ const JourneysLayout: React.FunctionComponent<JourneysLayoutProps> = ({
       defaultTab="/overview"
       ellipsisMenuItems={[
         {
-          label: intl.formatMessage({
-            id: 'layout.organize.journeys.menu.downloadCsv',
-          }),
+          label: messages.journeys.menu.downloadCsv(),
           onSelect: () => {
             location.href = `/api/journeyInstances/download?orgId=${orgId}`;
           },
         },
         {
-          label: intl.formatMessage({
-            id: 'layout.organize.journeys.menu.downloadXlsx',
-          }),
+          label: messages.journeys.menu.downloadXlsx(),
           onSelect: () => {
             location.href = `/api/journeyInstances/download?orgId=${orgId}&format=xlsx`;
           },
@@ -41,7 +39,7 @@ const JourneysLayout: React.FunctionComponent<JourneysLayoutProps> = ({
           messageId: 'layout.organize.journeys.tabs.overview',
         },
       ]}
-      title={intl.formatMessage({ id: 'layout.organize.journeys.title' })}
+      title={messages.journeys.title()}
     >
       {children}
     </TabbedLayout>

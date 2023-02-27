@@ -1,8 +1,11 @@
+import { FormattedDate } from 'react-intl';
 import { Schedule } from '@mui/icons-material';
 import { Box, LinearProgress, Typography } from '@mui/material';
-import { FormattedDate, FormattedMessage as Msg } from 'react-intl';
 
+import { Msg } from 'core/i18n';
 import { ZetkinJourneyMilestoneStatus } from 'utils/types/zetkin';
+
+import messageIds from '../l10n/messageIds';
 
 export const getCompletionPercentage = (
   milestones: ZetkinJourneyMilestoneStatus[]
@@ -34,7 +37,7 @@ const JourneyMilestoneProgress = ({
         }}
       >
         <Msg
-          id="pages.organizeJourneyInstance.percentComplete"
+          id={messageIds.instance.percentComplete}
           values={{ percentComplete }}
         />
       </Typography>

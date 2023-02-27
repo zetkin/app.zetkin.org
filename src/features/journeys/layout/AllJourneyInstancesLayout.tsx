@@ -1,9 +1,11 @@
 import { FunctionComponent } from 'react';
-import { useIntl } from 'react-intl';
 import { useRouter } from 'next/router';
 
 import { journeyResource } from 'features/journeys/api/journeys';
 import TabbedLayout from '../../../utils/layout/TabbedLayout';
+import { useMessages } from 'core/i18n';
+
+import messageIds from '../l10n/messageIds';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -14,7 +16,7 @@ const AllJourneyInstancesLayout: FunctionComponent<LayoutProps> = ({
   children,
   fixedHeight,
 }) => {
-  const intl = useIntl();
+  const messages = useMessages(messageIds);
   const { orgId, journeyId } = useRouter().query;
   const journeyQuery = journeyResource(
     orgId as string,
@@ -28,23 +30,17 @@ const AllJourneyInstancesLayout: FunctionComponent<LayoutProps> = ({
       defaultTab="/"
       ellipsisMenuItems={[
         {
-          label: intl.formatMessage(
-            {
-              id: 'layout.organize.journeyInstances.menu.downloadCsv',
-            },
-            { pluralLabel: journey?.plural_label ?? '' }
-          ),
+          label: messages.instances.menu.downloadCsv({
+            pluralLabel: journey?.plural_label ?? '',
+          }),
           onSelect: () => {
             location.href = `/api/journeyInstances/download?orgId=${orgId}&journeyId=${journeyId}`;
           },
         },
         {
-          label: intl.formatMessage(
-            {
-              id: 'layout.organize.journeyInstances.menu.downloadXlsx',
-            },
-            { pluralLabel: journey?.plural_label ?? '' }
-          ),
+          label: messages.instances.menu.downloadXlsx({
+            pluralLabel: journey?.plural_label ?? '',
+          }),
           onSelect: () => {
             location.href = `/api/journeyInstances/download?orgId=${orgId}&journeyId=${journeyId}&format=xlsx`;
           },
