@@ -8,6 +8,8 @@ blocks:
     addOption: Add option
     checkbox: Multiple choice
     empty: Untitled choice question
+    emptyOption: Empty option
+    option: Option
     radio: Single choice
     select: Dropdown choice list
     selectLabel: Poll type

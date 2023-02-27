@@ -96,6 +96,7 @@ const Option = ({
   onUpdateOption,
   widgetType,
 }: OptionProps) => {
+  const intl = useIntl();
   const [value, setValue] = useState(option.text);
   return (
     <Box
@@ -108,7 +109,9 @@ const Option = ({
       <Box paddingX={2}>{widgetType.previewIcon}</Box>
       <TextField
         fullWidth
-        label="Option"
+        label={intl.formatMessage({
+          id: 'misc.surveys.blocks.choiceQuestion.option',
+        })}
         onBlur={() => onUpdateOption(option.id, value)}
         onChange={(evt) => setValue(evt.target.value)}
         sx={{ paddingLeft: 1 }}
@@ -154,7 +157,7 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
   const [widgetType, setWidgetType] = useState<WidgetType>(widgetTypes.radio);
   const [question, setQuestion] = useState(questionElement.question);
   const [description, setDescription] = useState(questionElement.description);
-  const [focus, setFocus] = useState<'description' | null>(null);
+  const [focus, setFocus] = useState<'description' | 'widgetType' | null>(null);
 
   const questionRef = useCallback((node: HTMLInputElement) => {
     node?.focus();
@@ -269,21 +272,44 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
         )}
         {!inEditMode && (
           <Box onClick={onEditModeEnter}>
-            <Typography color={question ? 'inherit' : 'secondary'} variant="h4">
-              {question ? (
-                questionElement.question
-              ) : (
-                <Msg id="misc.surveys.blocks.choiceQuestion.empty" />
-              )}
-            </Typography>
-            {description && (
+            <Box paddingBottom={1}>
               <Typography
-                onClick={() => setFocus('description')}
-                sx={{ paddingTop: 1 }}
+                color={question ? 'inherit' : 'secondary'}
+                variant="h4"
               >
-                {questionElement.description}
+                {question ? (
+                  questionElement.question
+                ) : (
+                  <Msg id="misc.surveys.blocks.choiceQuestion.empty" />
+                )}
               </Typography>
-            )}
+              {description && (
+                <Typography
+                  onClick={() => setFocus('description')}
+                  sx={{ paddingTop: 1 }}
+                >
+                  {questionElement.description}
+                </Typography>
+              )}
+            </Box>
+            {questionElement.options?.map((option) => (
+              <Box
+                key={option.id}
+                display="flex"
+                onClick={() => setFocus('widgetType')}
+                paddingTop={2}
+              >
+                <Box paddingX={2}>{widgetType.previewIcon}</Box>
+                <Typography
+                  color={option.text ? 'inherit' : 'secondary'}
+                  fontStyle={option.text ? 'inherit' : 'italic'}
+                >
+                  {option.text || (
+                    <Msg id="misc.surveys.blocks.choiceQuestion.emptyOption" />
+                  )}
+                </Typography>
+              </Box>
+            ))}
           </Box>
         )}
         <Box
