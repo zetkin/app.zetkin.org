@@ -1,6 +1,7 @@
 import { Box } from '@mui/system';
 import SurveySubmissionPane from '../panes/SurveySubmissionPane';
 import { useIntl } from 'react-intl';
+import { useMemo } from 'react';
 import { usePanes } from 'utils/panes';
 import { useRouter } from 'next/router';
 import { ZetkinSurveySubmission } from 'utils/types/zetkin';
@@ -22,11 +23,14 @@ const SurveySubmissionsList = ({
   const { orgId } = useRouter().query;
   const { openPane } = usePanes();
 
-  const sortedSubmissions = [...submissions].sort((subOne, subTwo) => {
-    const dateOne = new Date(subOne.submitted);
-    const dateTwo = new Date(subTwo.submitted);
-    return dateTwo.getTime() - dateOne.getTime();
-  });
+  const sortedSubmissions = useMemo(() => {
+    const sorted = [...submissions].sort((subOne, subTwo) => {
+      const dateOne = new Date(subOne.submitted);
+      const dateTwo = new Date(subTwo.submitted);
+      return dateTwo.getTime() - dateOne.getTime();
+    });
+    return sorted;
+  }, [submissions]);
 
   const makeSimpleColumn = (
     field: keyof NonNullable<ZetkinSurveySubmission['respondent']>,
