@@ -2,6 +2,8 @@
 
 import { ReactElement } from 'react';
 
+import globalIds from './globalIds';
+
 type BaseMessage = {
   _defaultMessage: string;
   _id: string;
@@ -102,7 +104,7 @@ export function im<Values extends Record<string, MessageValue>>(
 export function makeMessages<MapType extends MessageMap>(
   prefix: string,
   map: MapType
-): MapType {
+): MapType & { global: typeof globalIds } {
   // Recursive function
   function addIds<MapType extends RecursiveMap<Message<any>>>(
     map: MapType,
@@ -132,5 +134,11 @@ export function makeMessages<MapType extends MessageMap>(
     return output;
   }
 
-  return addIds(map, prefix);
+  const local = addIds(map, prefix);
+  const global = addIds(globalIds, 'glob');
+
+  return {
+    ...local,
+    global,
+  };
 }
