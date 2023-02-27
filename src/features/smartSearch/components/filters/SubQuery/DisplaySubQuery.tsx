@@ -55,7 +55,18 @@ const DisplaySubQuery = ({ filter }: DisplaySubQueryProps): JSX.Element => {
     <Msg
       id={localMessageIds.inputString}
       values={{
-        addRemoveSelect: <Msg id={localMessageIds.addRemoveSelect[op]} />,
+        addRemoveSelect: (
+          <Msg id={messageIds.filters.subQuery.addRemoveSelect[op]} />
+        ),
+        matchSelect: (
+          <Msg
+            id={
+              messageIds.filters.subQuery.matchSelect[
+                filter.config.operator || 'in'
+              ]
+            }
+          />
+        ),
         query: (
           <Msg
             id={localMessageIds.query.preview[query?.type || 'none']}

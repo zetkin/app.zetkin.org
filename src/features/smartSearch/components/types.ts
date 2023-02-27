@@ -8,6 +8,7 @@ export enum FILTER_TYPE {
   PERSON_DATA = 'person_data',
   PERSON_FIELD = 'person_field',
   PERSON_TAGS = 'person_tags',
+  PERSON_VIEW = 'person_view',
   RANDOM = 'random',
   SUB_QUERY = 'sub_query',
   SURVEY_OPTION = 'survey_option',
@@ -21,6 +22,11 @@ export enum CONDITION_OPERATOR {
   ALL = 'all',
   ANY = 'any',
   NONE = 'none',
+}
+
+export enum IN_OPERATOR {
+  IN = 'in',
+  NOTIN = 'notin',
 }
 
 export enum MATCH_OPERATORS {
@@ -129,6 +135,11 @@ export interface PersonTagsFilterConfig {
   min_matching?: number;
 }
 
+export interface PersonViewFilterConfig {
+  view: number;
+  operator: IN_OPERATOR;
+}
+
 export interface RandomFilterConfig {
   size: number;
   seed: string;
@@ -176,6 +187,7 @@ export interface CampaignParticipationConfig {
 
 export interface SubQueryFilterConfig {
   query_id: number;
+  operator?: IN_OPERATOR;
 }
 
 interface TaskTimeFrameBefore {
@@ -222,6 +234,7 @@ export type AnyFilterConfig =
   | PersonDataFilterConfig
   | PersonFieldFilterConfig
   | PersonTagsFilterConfig
+  | PersonViewFilterConfig
   | RandomFilterConfig
   | SubQueryFilterConfig
   | SurveyOptionFilterConfig

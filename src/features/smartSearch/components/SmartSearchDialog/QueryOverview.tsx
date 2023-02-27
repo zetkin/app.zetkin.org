@@ -17,6 +17,7 @@ import DisplayMostActive from '../filters/MostActive/DisplayMostActive';
 import DisplayPersonData from '../filters/PersonData/DisplayPersonData';
 import DisplayPersonField from '../filters/PersonField/DisplayPersonField';
 import DisplayPersonTags from '../filter/PersonTags/DisplayPersonTags';
+import DisplayPersonView from '../filters/PersonView/DisplayPersonView';
 import DisplayRandom from '../filters/Random/DisplayRandom';
 import DisplayStartsWith from '../StartsWith/DisplayStartsWith';
 import DisplaySubQuery from '../filters/SubQuery/DisplaySubQuery';
@@ -35,6 +36,7 @@ import {
   PersonDataFilterConfig,
   PersonFieldFilterConfig,
   PersonTagsFilterConfig,
+  PersonViewFilterConfig,
   RandomFilterConfig,
   SmartSearchFilterWithId,
   SubQueryFilterConfig,
@@ -165,6 +167,13 @@ const QueryOverview = ({
                       <DisplayPersonTags
                         filter={
                           filter as SmartSearchFilterWithId<PersonTagsFilterConfig>
+                        }
+                      />
+                    )}
+                    {filter.type === FILTER_TYPE.PERSON_VIEW && (
+                      <DisplayPersonView
+                        filter={
+                          filter as SmartSearchFilterWithId<PersonViewFilterConfig>
                         }
                       />
                     )}

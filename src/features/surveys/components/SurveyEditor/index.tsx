@@ -7,6 +7,7 @@ import ChoiceQuestionBlock from './blocks/ChoiceQuestionBlock';
 import OpenQuestionBlock from './blocks/OpenQuestionBlock';
 import SurveyDataModel from 'features/surveys/models/SurveyDataModel';
 import TextBlock from './blocks/TextBlock';
+import { ZetkinSurveyElementPatchBody } from 'features/surveys/repos/SurveysRepo';
 import ZUIFuture from 'zui/ZUIFuture';
 import {
   ELEMENT_TYPE,
@@ -69,7 +70,21 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ model }) => {
                           handleToggleHidden(elem.id, hidden)
                         }
                       >
-                        <OpenQuestionBlock question={elem.question} />
+                        <OpenQuestionBlock
+                          element={elem.question}
+                          inEditMode={elem.id === idOfBlockInEditMode}
+                          onEditModeEnter={() =>
+                            setIdOfBlockInEditMode(elem.id)
+                          }
+                          onEditModeExit={(
+                            data: ZetkinSurveyElementPatchBody
+                          ) => {
+                            if (elem.id === idOfBlockInEditMode) {
+                              setIdOfBlockInEditMode(undefined);
+                            }
+                            model.updateOpenQuestionBlock(elem.id, data);
+                          }}
+                        />
                       </BlockWrapper>
                     );
                   } else if (

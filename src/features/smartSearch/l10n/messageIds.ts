@@ -26,6 +26,7 @@ export default makeMessages('feat.smartSearch', {
     person_data: m('Based on their name, address or other data'),
     person_field: m('Based on custom fields'),
     person_tags: m('Based on their tags'),
+    person_view: m('People from a view'),
     random: m('A random selection of people'),
     sub_query: m('Based on another Smart Search query'),
     survey_option: m(
@@ -262,6 +263,28 @@ export default makeMessages('feat.smartSearch', {
         '{addRemoveSelect} people with {condition} of the following tags: {tags}'
       ),
     },
+    personView: {
+      addRemoveSelect: {
+        add: m('Add'),
+        sub: m('Remove'),
+      },
+      examples: {
+        one: m('Add people who are in the view "Campaign 2020.'),
+        two: m('Remove people who are not in the view "Campaign 2020".'),
+      },
+      inSelect: {
+        in: m('in'),
+        notin: m('not in'),
+      },
+      inputString: im<{
+        addRemoveSelect: ReactElement;
+        inSelect: ReactElement;
+        viewSelect: ReactElement | string;
+      }>('{addRemoveSelect} people who are {inSelect} the view {viewSelect}.'),
+      viewSelect: {
+        none: m("This organization doesn't have any views yet"),
+      },
+    },
     random: {
       addRemoveSelect: {
         add: m('add'),
@@ -289,9 +312,15 @@ export default makeMessages('feat.smartSearch', {
           "Add people who match the target group of call Assignment 'Assignment one'."
         ),
       },
-      inputString: im<{ addRemoveSelect: ReactElement; query: ReactElement }>(
-        '{addRemoveSelect} people that match {query}.'
-      ),
+      inputString: im<{
+        addRemoveSelect: ReactElement;
+        matchSelect: ReactElement;
+        query: ReactElement;
+      }>('{addRemoveSelect} people who {matchSelect} {query}.'),
+      matchSelect: {
+        in: m('match'),
+        notin: m('do not match'),
+      },
       query: {
         edit: {
           callassignment_goal: im<{

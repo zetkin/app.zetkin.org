@@ -10,6 +10,7 @@ import { Msg } from 'core/i18n';
 import StyledSelect from '../../inputs/StyledSelect';
 import useSmartSearchFilter from 'features/smartSearch/hooks/useSmartSearchFilter';
 import {
+  IN_OPERATOR,
   NewSmartSearchFilter,
   OPERATION,
   QUERY_TYPE,
@@ -71,6 +72,7 @@ const SubQuery = ({
     useSmartSearchFilter<SubQueryFilterConfig>(initialFilter);
 
   const [selectedQuery, setSelectedQuery] = useState<ZetkinQuery>();
+  const [operator, setOperator] = useState<IN_OPERATOR>(IN_OPERATOR.IN);
 
   useEffect(() => {
     if (queries.length) {
@@ -90,6 +92,7 @@ const SubQuery = ({
       onSubmit({
         ...filter,
         config: {
+          operator: operator,
           query_id: selectedQuery.id,
         },
       });
@@ -110,6 +113,10 @@ const SubQuery = ({
   const handleOptionChange = (option: number) => {
     const newQuery = queries.find((q) => q.id === option);
     setSelectedQuery(newQuery);
+  };
+
+  const handleMatchOperatorChange = (operator: IN_OPERATOR) => {
+    setOperator(operator);
   };
 
   return (
@@ -138,6 +145,21 @@ const SubQuery = ({
                     <Msg id={localMessageIds.addRemoveSelect[o]} />
                   </MenuItem>
                 ))}
+              </StyledSelect>
+            ),
+            matchSelect: (
+              <StyledSelect
+                onChange={(e) =>
+                  handleMatchOperatorChange(e.target.value as IN_OPERATOR)
+                }
+                value={operator || IN_OPERATOR.IN}
+              >
+                <MenuItem key={IN_OPERATOR.IN} value={IN_OPERATOR.IN}>
+                  <Msg id={messageIds.filters.subQuery.matchSelect.in} />
+                </MenuItem>
+                <MenuItem key={IN_OPERATOR.NOTIN} value={IN_OPERATOR.NOTIN}>
+                  <Msg id={messageIds.filters.subQuery.matchSelect.notin} />
+                </MenuItem>
               </StyledSelect>
             ),
             query: !selectedQuery ? (
