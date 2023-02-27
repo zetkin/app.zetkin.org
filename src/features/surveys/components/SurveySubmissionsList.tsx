@@ -10,7 +10,6 @@ import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 import {
   DataGridPro,
   GridCellParams,
-  GridEventListener,
   GridRenderCellParams,
 } from '@mui/x-data-grid-pro';
 
@@ -98,24 +97,6 @@ const SurveySubmissionsList = ({
     },
   ];
 
-  const handlePane: GridEventListener<'cellClick'> = (params) => {
-    if (params.field === 'respondent') {
-      return;
-    }
-
-    return openPane({
-      render() {
-        return (
-          <SurveySubmissionPane
-            id={params.row.id}
-            orgId={parseInt(orgId as string)}
-          />
-        );
-      },
-      width: 400,
-    });
-  };
-
   return (
     <Box
       sx={{
@@ -132,8 +113,20 @@ const SurveySubmissionsList = ({
         getCellClassName={(params: GridCellParams<string>) => {
           return params.field === 'respondent' ? '' : 'pointer';
         }}
-        onCellClick={(params, event, details) => {
-          handlePane(params, event, details);
+        onCellClick={(params) => {
+          if (params.field !== 'respondent') {
+            openPane({
+              render() {
+                return (
+                  <SurveySubmissionPane
+                    id={params.row.id}
+                    orgId={parseInt(orgId as string)}
+                  />
+                );
+              },
+              width: 400,
+            });
+          }
         }}
         rows={sortedSubmissions}
         style={{
