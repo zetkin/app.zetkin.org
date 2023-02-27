@@ -14,9 +14,9 @@ submissions:
   lastNameColumn: Last name
   personRecordColumn: Person record
 urlCard:
+  nowAccepting: Now accepting submissions at this link
   open: Open for submissions
   preview: Preview survey
-  nowAccepting: Now accepting submissions at this link
-  willAccept: Will accept submissions at this link
-  visitPortal: Visit survey in activist portal
   previewPortal: Preview survey in activist portal
+  visitPortal: Visit survey in activist portal
+  willAccept: Will accept submissions at this link
