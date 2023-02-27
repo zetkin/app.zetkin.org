@@ -50,7 +50,7 @@ export default function useMessages<MapType extends MessageMap>(
   return injectIntl(messages);
 }
 
-type HookedMessageFunc<MapEntry extends Message<any>> = (
+export type HookedMessageFunc<MapEntry extends Message<any>> = (
   values: ReturnType<MapEntry['_typeFunc']>
 ) => string;
 
