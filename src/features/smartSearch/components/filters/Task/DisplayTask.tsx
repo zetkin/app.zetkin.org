@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router';
 
 import { campaignResource } from 'features/campaigns/api/campaigns';
+import DisplayTimeFrame from '../DisplayTimeFrame';
 import { Msg } from 'core/i18n';
 import { taskResource } from 'features/tasks/api/tasks';
 
@@ -29,7 +30,7 @@ const DisplayTask = ({ filter }: DisplayTaskProps): JSX.Element => {
   const op = filter.op || OPERATION.ADD;
 
   const tf = getTaskTimeFrameWithConfig(config);
-  const { after, before, numDays, timeFrame } = getTimeFrameWithConfig(tf);
+  const timeFrame = getTimeFrameWithConfig(tf);
 
   let taskTitle = null;
   if (config.task != undefined) {
@@ -98,16 +99,7 @@ const DisplayTask = ({ filter }: DisplayTaskProps): JSX.Element => {
         taskStatusSelect: (
           <Msg id={localMessageIds.taskStatusSelect[getTaskStatus(config)]} />
         ),
-        timeFrame: (
-          <Msg
-            id={messageIds.timeFrame.preview[timeFrame]}
-            values={{
-              afterDate: after?.toISOString().slice(0, 10),
-              beforeDate: before?.toISOString().slice(0, 10),
-              days: numDays,
-            }}
-          />
-        ),
+        timeFrame: <DisplayTimeFrame config={timeFrame} />,
       }}
     />
   );

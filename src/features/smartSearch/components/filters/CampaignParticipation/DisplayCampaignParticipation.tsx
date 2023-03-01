@@ -1,6 +1,7 @@
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 
+import DisplayTimeFrame from '../DisplayTimeFrame';
 import getActivity from 'features/smartSearch/fetching/getActivity';
 import getCampaign from 'features/campaigns/fetching/getCampaign';
 import getLocation from 'features/smartSearch/fetching/getLocation';
@@ -32,7 +33,7 @@ const DisplayCampaignParticipation = ({
     location: locationId,
   } = config;
   const op = filter.op || OPERATION.ADD;
-  const { timeFrame, after, before, numDays } = getTimeFrameWithConfig({
+  const timeFrame = getTimeFrameWithConfig({
     after: config.after,
     before: config.before,
   });
@@ -94,16 +95,7 @@ const DisplayCampaignParticipation = ({
         ) : (
           <Msg id={localMessageIds.locationSelect.any} />
         ),
-        timeFrame: (
-          <Msg
-            id={messageIds.timeFrame.preview[timeFrame]}
-            values={{
-              afterDate: after?.toISOString().slice(0, 10),
-              beforeDate: before?.toISOString().slice(0, 10),
-              days: numDays,
-            }}
-          />
-        ),
+        timeFrame: <DisplayTimeFrame config={timeFrame} />,
       }}
     />
   );

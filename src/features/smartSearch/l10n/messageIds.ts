@@ -645,12 +645,12 @@ export default makeMessages('feat.smartSearch', {
     preview: {
       afterDate: im<{ afterDate: string }>('after {afterDate}'),
       beforeDate: im<{ beforeDate: string }>('before {beforeDate}'),
-      beforeToday: im('before today'),
+      beforeToday: m('before today'),
       between: im<{ afterDate: string; beforeDate: string }>(
         'between {afterDate} and {beforeDate}'
       ),
-      ever: im('at any point in time'),
-      future: im('in the future'),
+      ever: m('at any point in time'),
+      future: m('in the future'),
       lastFew: im<{ days: number }>(
         'during the last {days} {days, plural, one {day} other {days}}'
       ),

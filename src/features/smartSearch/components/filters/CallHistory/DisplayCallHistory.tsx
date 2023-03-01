@@ -1,6 +1,7 @@
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 
+import DisplayTimeFrame from '../DisplayTimeFrame';
 import getCallAssignment from 'features/callAssignments/api/getCallAssignment';
 import { getTimeFrameWithConfig } from '../../utils';
 import { Msg } from 'core/i18n';
@@ -24,7 +25,7 @@ const DisplayCallHistory = ({
   const { config } = filter;
   const { minTimes, operator, assignment: assignmentId } = config;
   const op = filter.op || OPERATION.ADD;
-  const { after, before, numDays, timeFrame } = getTimeFrameWithConfig({
+  const timeFrame = getTimeFrameWithConfig({
     after: config.after,
     before: config.before,
   });
@@ -55,16 +56,7 @@ const DisplayCallHistory = ({
         callSelect: <Msg id={localMessageIds.callSelect[operator]} />,
         minTimes: minTimes || 1,
         minTimesInput: minTimes || 1,
-        timeFrame: (
-          <Msg
-            id={messageIds.timeFrame.preview[timeFrame]}
-            values={{
-              afterDate: after?.toISOString().slice(0, 10),
-              beforeDate: before?.toISOString().slice(0, 10),
-              days: numDays,
-            }}
-          />
-        ),
+        timeFrame: <DisplayTimeFrame config={timeFrame} />,
       }}
     />
   );

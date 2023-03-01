@@ -1,8 +1,10 @@
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 
+import DisplayTimeFrame from '../DisplayTimeFrame';
 import getCustomFields from 'features/smartSearch/fetching/getCustomFields';
 import { getTimeFrameWithConfig } from '../../utils';
+import { Msg } from 'core/i18n';
 import {
   OPERATION,
   PersonFieldFilterConfig,
@@ -10,7 +12,6 @@ import {
 } from 'features/smartSearch/components/types';
 
 import messageIds from 'features/smartSearch/l10n/messageIds';
-import { Msg } from 'core/i18n';
 const localMessageIds = messageIds.filters.personField;
 
 interface DisplayPersonFieldProps {
@@ -29,7 +30,7 @@ const DisplayPersonField = ({
   const { config } = filter;
   const { field: slug, search } = config;
   const op = filter.op || OPERATION.ADD;
-  const { timeFrame, after, before, numDays } = getTimeFrameWithConfig({
+  const timeFrame = getTimeFrameWithConfig({
     after: config.after,
     before: config.before,
   });
@@ -54,16 +55,7 @@ const DisplayPersonField = ({
               id={localMessageIds.preview.date}
               values={{
                 fieldName: field?.title ?? '',
-                timeFrame: (
-                  <Msg
-                    id={messageIds.timeFrame.preview[timeFrame]}
-                    values={{
-                      afterDate: after?.toISOString().slice(0, 10),
-                      beforeDate: before?.toISOString().slice(0, 10),
-                      days: numDays,
-                    }}
-                  />
-                ),
+                timeFrame: <DisplayTimeFrame config={timeFrame} />,
               }}
             />
           ) : (

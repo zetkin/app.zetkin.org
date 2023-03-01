@@ -1,8 +1,10 @@
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 
+import DisplayTimeFrame from '../DisplayTimeFrame';
 import getSurvey from 'features/smartSearch/fetching/getSurvey';
 import { getTimeFrameWithConfig } from '../../utils';
+import { Msg } from 'core/i18n';
 import {
   OPERATION,
   SmartSearchFilterWithId,
@@ -10,7 +12,6 @@ import {
 } from 'features/smartSearch/components/types';
 
 import messageIds from 'features/smartSearch/l10n/messageIds';
-import { Msg } from 'core/i18n';
 const localMessageIds = messageIds.filters.surveySubmission;
 
 interface DisplaySurveySubmissionProps {
@@ -24,7 +25,7 @@ const DisplaySurveySubmission = ({
   const { config } = filter;
   const { survey: surveyId } = config;
   const op = filter.op || OPERATION.ADD;
-  const { timeFrame, after, before, numDays } = getTimeFrameWithConfig({
+  const timeFrame = getTimeFrameWithConfig({
     after: config.after,
     before: config.before,
   });
@@ -46,16 +47,7 @@ const DisplaySurveySubmission = ({
             values={{ surveyTitle }}
           />
         ),
-        timeFrame: (
-          <Msg
-            id={messageIds.timeFrame.preview[timeFrame]}
-            values={{
-              afterDate: after?.toISOString().slice(0, 10),
-              beforeDate: before?.toISOString().slice(0, 10),
-              days: numDays,
-            }}
-          />
-        ),
+        timeFrame: <DisplayTimeFrame config={timeFrame} />,
       }}
     />
   );

@@ -5,8 +5,10 @@ import {
   SmartSearchFilterWithId,
 } from 'features/smartSearch/components/types';
 
-import messageIds from 'features/smartSearch/l10n/messageIds';
+import DisplayTimeFrame from '../DisplayTimeFrame';
 import { Msg } from 'core/i18n';
+
+import messageIds from 'features/smartSearch/l10n/messageIds';
 const localMessageIds = messageIds.filters.mostActive;
 
 interface DisplayMostActiveProps {
@@ -16,7 +18,7 @@ interface DisplayMostActiveProps {
 const DisplayMostActive = ({ filter }: DisplayMostActiveProps): JSX.Element => {
   const { config } = filter;
   const op = filter.op || OPERATION.ADD;
-  const { timeFrame, after, before, numDays } = getTimeFrameWithConfig({
+  const timeFrame = getTimeFrameWithConfig({
     after: config.after,
     before: config.before,
   });
@@ -28,16 +30,7 @@ const DisplayMostActive = ({ filter }: DisplayMostActiveProps): JSX.Element => {
         addRemoveSelect: <Msg id={localMessageIds.addRemoveSelect[op]} />,
         numPeople: config.size,
         numPeopleSelect: config.size || 0,
-        timeFrame: (
-          <Msg
-            id={messageIds.timeFrame.preview[timeFrame]}
-            values={{
-              afterDate: after?.toISOString().slice(0, 10),
-              beforeDate: before?.toISOString().slice(0, 10),
-              days: numDays,
-            }}
-          />
-        ),
+        timeFrame: <DisplayTimeFrame config={timeFrame} />,
       }}
     />
   );
