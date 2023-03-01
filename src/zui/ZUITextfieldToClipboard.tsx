@@ -1,7 +1,7 @@
 import copy from 'copy-to-clipboard';
 import { FormattedMessage as Msg } from 'react-intl';
 import { Box, Button } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 const ZUITextfieldToClipboard: React.FunctionComponent<{
   children: React.ReactNode;
@@ -14,12 +14,6 @@ const ZUITextfieldToClipboard: React.FunctionComponent<{
     setCopied(true);
     setTimeout(() => setCopied(false), 2500);
   };
-
-  useEffect(() => {
-    if (copied) {
-      setCopied(false);
-    }
-  }, []);
 
   return (
     <Box display="flex" gap={1}>
