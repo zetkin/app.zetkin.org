@@ -24,8 +24,8 @@ const SurveyURLCard = ({ isOpen, orgId, surveyId }: SurveyURLCardProps) => {
         <Box
           sx={{
             backgroundColor: isOpen
-              ? theme.palette.success.light
-              : theme.palette.grey['300'],
+              ? theme.palette.success.main
+              : theme.palette.grey['500'],
             borderRadius: 5,
             height: 20,
             width: 20,
