@@ -1,7 +1,7 @@
 import { FormattedMessage as Msg } from 'react-intl';
 import { OpenInNew } from '@mui/icons-material';
 import ZUITextfieldToClipboard from 'zui/ZUITextfieldToClipboard';
-import { Box, Card, Link, Typography } from '@mui/material';
+import { Box, Card, Link, Typography, useTheme } from '@mui/material';
 
 interface SurveyURLCardProps {
   isOpen: boolean;
@@ -10,6 +10,7 @@ interface SurveyURLCardProps {
 }
 
 const SurveyURLCard = ({ isOpen, orgId, surveyId }: SurveyURLCardProps) => {
+  const theme = useTheme();
   return (
     <Card style={{ padding: 16 }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -22,7 +23,9 @@ const SurveyURLCard = ({ isOpen, orgId, surveyId }: SurveyURLCardProps) => {
         </Typography>
         <Box
           sx={{
-            backgroundColor: isOpen ? 'lightgreen' : 'lightgray',
+            backgroundColor: isOpen
+              ? theme.palette.success.light
+              : theme.palette.grey['300'],
             borderRadius: 5,
             height: 20,
             width: 20,
