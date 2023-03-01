@@ -1,6 +1,6 @@
 import { ReactElement } from 'react';
 
-import { im, m, makeMessages } from 'core/i18n';
+import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('feat.views', {
   actions: {
@@ -8,7 +8,7 @@ export default makeMessages('feat.views', {
     createView: m('Create view'),
   },
   browser: {
-    backToFolder: im<{ folder: ReactElement }>('Back to {folder}'),
+    backToFolder: m<{ folder: ReactElement }>('Back to {folder}'),
     backToRoot: m('Back to all views'),
     confirmDelete: {
       folder: {
@@ -27,7 +27,7 @@ export default makeMessages('feat.views', {
     menu: {
       rename: m('Rename'),
     },
-    moveToFolder: im<{ folder: ReactElement }>('Move to {folder}'),
+    moveToFolder: m<{ folder: ReactElement }>('Move to {folder}'),
     moveToRoot: m('Move to all views'),
   },
   browserLayout: {
@@ -218,7 +218,7 @@ export default makeMessages('feat.views', {
     editor: {
       alreadyInView: m('Already in view'),
       buttonLabels: {
-        addColumns: im<{ columns: number }>(
+        addColumns: m<{ columns: number }>(
           'Add {columns, plural, one {1 column} other {{columns} columns}}'
         ),
         change: m('Change column type'),
@@ -238,11 +238,11 @@ export default makeMessages('feat.views', {
       columns: m('Columns'),
       configure: m('Configure'),
       header: m('Add column to view'),
-      noSearchResults: im<{ searchString: string }>(
+      noSearchResults: m<{ searchString: string }>(
         'There are no column choices that match "{searchString}"'
       ),
       searchPlaceholder: m('Find a column'),
-      searchResults: im<{ searchString: string }>(
+      searchResults: m<{ searchString: string }>(
         'Results for "{searchString}"'
       ),
     },
@@ -304,10 +304,10 @@ export default makeMessages('feat.views', {
   folder: {
     summary: {
       empty: m('Empty'),
-      folderCount: im<{ count: number }>(
+      folderCount: m<{ count: number }>(
         '{count, plural, =1 {1 folder} other {# folders}}'
       ),
-      viewCount: im<{ count: number }>(
+      viewCount: m<{ count: number }>(
         '{count, plural, =1 {1 view} other {# views}}'
       ),
     },
@@ -334,22 +334,22 @@ export default makeMessages('feat.views', {
       warning1: m(
         'Avoid exporting data from Zetkin when you can, to ensure that all data is kept in order.'
       ),
-      warning2: im<{ shareLink: ReactElement }>(
+      warning2: m<{ shareLink: ReactElement }>(
         'You can {shareLink} within Zetkin. Exporting makes sense when you want to copy data to another system.'
       ),
     },
     share: {
       addPlaceholder: m('Add collaborator'),
-      collabInstructions: im<{ viewLink: ReactElement }>(
+      collabInstructions: m<{ viewLink: ReactElement }>(
         'After adding collaborators, copy and send them the {viewLink}'
       ),
       showOfficials: m('Show officials'),
-      statusLabel: im<{ collaborators: number; officials: number }>(
+      statusLabel: m<{ collaborators: number; officials: number }>(
         'Shared with {collaborators, plural, =1 {1 collaborator} other {# collaborators}}, {officials, plural, =1 {1 official} other {# officials}} can access all views.'
       ),
       viewLink: m('restricted link'),
     },
-    title: im<{ title: string }>('Share "{title}"'),
+    title: m<{ title: string }>('Share "{title}"'),
   },
   suggested: {
     created: m('Created by {name}'),
@@ -372,7 +372,7 @@ export default makeMessages('feat.views', {
   toolbar: {
     createColumn: m('New column'),
     createFromSelection: m('Create view from selection'),
-    removeFromSelection: im<{ numSelected: number }>(
+    removeFromSelection: m<{ numSelected: number }>(
       'Remove {numSelected, plural, one {1 person} other {{numSelected} people} } from view'
     ),
     removeTooltip: m(
@@ -393,13 +393,13 @@ export default makeMessages('feat.views', {
       placeholder: m('Start typing to find view'),
     },
     subtitle: {
-      collaborators: im<{ count: number }>(
+      collaborators: m<{ count: number }>(
         '{count, plural, =1 {1 outside collaborator} other {# outside collaborators}}'
       ),
-      columns: im<{ count: number }>(
+      columns: m<{ count: number }>(
         '{count, plural, =0 {No columns} =1 {1 column} other {# columns}}'
       ),
-      people: im<{ count: number }>(
+      people: m<{ count: number }>(
         '{count, plural, =0 {Empty} =1 {1 person} other {# people}}'
       ),
     },

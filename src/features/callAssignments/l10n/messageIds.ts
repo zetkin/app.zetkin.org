@@ -1,4 +1,4 @@
-import { im, m, makeMessages } from 'core/i18n';
+import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('feat.callAssignments', {
   actions: {
@@ -12,7 +12,7 @@ export default makeMessages('feat.callAssignments', {
       'Set the minimum time between attempts to reach a target'
     ),
     cooldownLabel: m('Cooldown time in hours'),
-    hours: im<{ cooldown: number }>(
+    hours: m<{ cooldown: number }>(
       '{cooldown, plural, =0 {None} =1 {# hour} other {# hours}}'
     ),
     missingPhoneNumber: m('Missing phone number'),
@@ -38,7 +38,7 @@ export default makeMessages('feat.callAssignments', {
         h: m('Prioritized tags'),
         intro: m('First call targets with these tags.'),
       },
-      title: im<{ name: string }>('Customize Queue for {name}'),
+      title: m<{ name: string }>('Customize Queue for {name}'),
     },
     customizeButton: m('Customize'),
     excludedTagsColumn: m('Excluded tags'),
@@ -95,10 +95,10 @@ export default makeMessages('feat.callAssignments', {
     scheduled: m('Scheduled'),
   },
   stats: {
-    callers: im<{ numCallers: number }>(
+    callers: m<{ numCallers: number }>(
       '{numCallers, plural, =0 {No callers} one {1 caller} other {# callers}}'
     ),
-    targets: im<{ numTargets: number }>(
+    targets: m<{ numTargets: number }>(
       '{numTargets, plural, =0 {No targets} one {1 targets} other {# targets}}'
     ),
   },

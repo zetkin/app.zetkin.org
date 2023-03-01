@@ -1,6 +1,6 @@
 import { ReactElement } from 'react';
 
-import { im, m, makeMessages } from 'core/i18n';
+import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('feat.sruveys', {
   addBlocks: {
@@ -31,10 +31,10 @@ export default makeMessages('feat.sruveys', {
       unpublish: m('Unpublish survey'),
     },
     stats: {
-      questions: im<{ numQuestions: number }>(
+      questions: m<{ numQuestions: number }>(
         '{numQuestions, plural, one {1 question} other {# questions}}'
       ),
-      submissions: im<{ numSubmissions: number }>(
+      submissions: m<{ numSubmissions: number }>(
         '{numSubmissions, plural, one {1 submission} other {# submissions}}'
       ),
     },
@@ -54,7 +54,7 @@ export default makeMessages('feat.sruveys', {
   submissionPane: {
     anonymous: m('Anonymous'),
     subtitle:
-      im<{ date: ReactElement; person: ReactElement }>('{person} {date}'),
+      m<{ date: ReactElement; person: ReactElement }>('{person} {date}'),
   },
   submissions: {
     dateColumn: m('Date'),

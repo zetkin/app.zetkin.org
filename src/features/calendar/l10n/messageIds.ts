@@ -1,7 +1,7 @@
-import { im, m, makeMessages } from 'core/i18n';
+import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('feat.calendar', {
-  moreEvents: im<{ numEvents: number }>(
+  moreEvents: m<{ numEvents: number }>(
     '{numEvents, plural, one {# more event} other {# more events}}'
   ),
   next: m('NEXT'),

@@ -1,6 +1,6 @@
 import { ReactElement } from 'react';
 
-import { im, m, makeMessages } from 'core/i18n';
+import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('feat.tags', {
   dialog: {
@@ -8,7 +8,7 @@ export default makeMessages('feat.tags', {
     colorLabel: m('Color'),
     createTitle: m('Create tag'),
     editTitle: m('Edit tag'),
-    groupCreatePrompt: im<{ groupName: string }>('Add "{groupName}"'),
+    groupCreatePrompt: m<{ groupName: string }>('Add "{groupName}"'),
     groupLabel: m('Group'),
     groupSelectPlaceholder: m('Type to search or create a group'),
     submitCreateTagButton: m('Create and apply'),
@@ -22,14 +22,14 @@ export default makeMessages('feat.tags', {
   },
   manager: {
     addTag: m('Add tag'),
-    addValue: im<{ tag: string }>('Add value for "{tag}"'),
-    createNamedTag: im<{ name: ReactElement }>('Create tag: {name}'),
+    addValue: m<{ tag: string }>('Add value for "{tag}"'),
+    createNamedTag: m<{ name: ReactElement }>('Create tag: {name}'),
     createTag: m('New Tag'),
     groupTags: m('Group tags'),
     title: m('Tags'),
     ungroupedHeader: m('No group'),
     valueTagForm: {
-      typeHint: im<{ type: string | null }>(
+      typeHint: m<{ type: string | null }>(
         '{type, select, text {Enter some text} other {Enter a value}} to go along with the tag.'
       ),
     },

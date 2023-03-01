@@ -1,9 +1,9 @@
 import { ReactElement } from 'react';
-import { im, m, makeMessages } from 'core/i18n';
+import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('zui', {
   accessList: {
-    added: im<{ sharer: string; updated: ReactElement }>(
+    added: m<{ sharer: string; updated: ReactElement }>(
       'Added by {sharer} {updated}'
     ),
     removeAccess: m('Remove access'),
@@ -47,11 +47,11 @@ export default makeMessages('zui', {
   },
   copyToClipboard: {
     copied: m('Copied'),
-    copiedValue: im<{ value: string }>('Copied "{value}"'),
+    copiedValue: m<{ value: string }>('Copied "{value}"'),
   },
   dataTableSearch: {
     button: m('Search'),
-    helpText: im<{ minSearchLength: number }>(
+    helpText: m<{ minSearchLength: number }>(
       'Type at least {minSearchLength} characters'
     ),
     idSearchHelpText: m('Type an ID (numbers only)'),
@@ -62,17 +62,17 @@ export default makeMessages('zui', {
   dataTableSorting: {
     addButton: m('Add sorting column'),
     button: m('Sort'),
-    hint: im<{ shiftKeyIcon: ReactElement }>(
+    hint: m<{ shiftKeyIcon: ReactElement }>(
       'Hint: hold down {shiftKeyIcon} while clicking multiple columns'
     ),
     title: m('Sort'),
   },
   dateRange: {
     draft: m('No start date'),
-    finite: im<{ end: Date; start: Date }>(
+    finite: m<{ end: Date; start: Date }>(
       'From {start, date, medium} to {end, date, medium}'
     ),
-    indefinite: im<{ start: Date }>('From {start, date, medium} onwards'),
+    indefinite: m<{ start: Date }>('From {start, date, medium} onwards'),
   },
   editTextInPlace: {
     tooltip: {

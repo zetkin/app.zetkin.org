@@ -45,32 +45,22 @@ type RecursiveMap<Leaf> = { [key: string]: Leaf | RecursiveMap<Leaf> };
 export type MessageMap = RecursiveMap<Message<any>>;
 
 /**
- * Use m() to create a plain message, i.e. a message that is a simple
- * string without any external values. Use with messages(), e.g:
+ * Use m() to define a message, with or without interpolation values.
+ * If a type variable Values is included, m() will return a message that
+ * can only be used with values matching the Values type definition.
+ *
+ * Example:
  *
  * export default messages({
- *   myMessage: m('Hello, world!'),
+ *   hello: m<{ name: string }>('Hello, {name}'),   // requires name
+ *   goodbye: m('Goodbye'),                         // no values
  * });
  */
-export function m(defaultMessage: string): PlainMessage {
-  return {
-    _defaultMessage: defaultMessage,
-    _id: '',
-    _typeFunc: () => undefined,
-  };
-}
-
-/**
- * Use im() to create an interpolated message, i.e. a message that uses
- * external values when formatted. Use with messages(), and specify the
- * Values generic type to make the values typesafe, e.g.:
- *
- * export default messages({
- *   myMessage: im<{ name: string }>('Hello, {name}'),
- * });
- *
- */
-export function im<Values extends Record<string, MessageValue>>(
+export function m(defaultMessage: string): PlainMessage;
+export function m<Values extends ValueRecord>(
+  defaultMessage: string
+): InterpolatedMessage<Values>;
+export function m<Values extends Record<string, MessageValue>>(
   defaultMessage: string
 ): InterpolatedMessage<Values> {
   return {

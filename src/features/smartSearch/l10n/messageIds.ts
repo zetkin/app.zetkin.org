@@ -1,6 +1,6 @@
 import { ReactElement } from 'react';
 
-import { im, m, makeMessages } from 'core/i18n';
+import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('feat.smartSearch', {
   buttonLabels: {
@@ -39,7 +39,7 @@ export default makeMessages('feat.smartSearch', {
   },
   filters: {
     all: {
-      inputString: im<{ startWithSelect: ReactElement }>(
+      inputString: m<{ startWithSelect: ReactElement }>(
         'Start with {startWithSelect}.'
       ),
       startWithSelect: {
@@ -54,7 +54,7 @@ export default makeMessages('feat.smartSearch', {
       },
       assignmentSelect: {
         any: m('any assignment'),
-        assignment: im<{ assignmentTitle: string }>(
+        assignment: m<{ assignmentTitle: string }>(
           'assignment "{assignmentTitle}"'
         ),
         none: m("This organization doesn't have any call assignments yet"),
@@ -72,7 +72,7 @@ export default makeMessages('feat.smartSearch', {
           "Remove people who have been called at least 1 time in assignment 'Campaign 2020' during the last 30 days."
         ),
       },
-      inputString: im<{
+      inputString: m<{
         addRemoveSelect: ReactElement;
         assignmentSelect: ReactElement;
         callSelect: ReactElement;
@@ -85,7 +85,7 @@ export default makeMessages('feat.smartSearch', {
     },
     campaignParticipation: {
       activitySelect: {
-        activity: im<{ activity: string }>('activity "{activity}"'),
+        activity: m<{ activity: string }>('activity "{activity}"'),
         any: m('any activity'),
       },
       addRemoveSelect: {
@@ -98,7 +98,7 @@ export default makeMessages('feat.smartSearch', {
       },
       campaignSelect: {
         any: m('any campaign'),
-        campaign: im<{ campaign: string }>('campaign "{campaign}"'),
+        campaign: m<{ campaign: string }>('campaign "{campaign}"'),
       },
       examples: {
         one: m(
@@ -112,7 +112,7 @@ export default makeMessages('feat.smartSearch', {
         in: m('have'),
         notin: m('have not'),
       },
-      inputString: im<{
+      inputString: m<{
         activitySelect: ReactElement;
         addRemoveSelect: ReactElement;
         bookedSelect: ReactElement;
@@ -125,7 +125,7 @@ export default makeMessages('feat.smartSearch', {
       ),
       locationSelect: {
         any: m('any location'),
-        location: im<{ location: string }>('location "{location}"'),
+        location: m<{ location: string }>('location "{location}"'),
       },
     },
     mostActive: {
@@ -141,7 +141,7 @@ export default makeMessages('feat.smartSearch', {
           'Remove the 5 most active members of the organization at any point in time.'
         ),
       },
-      inputString: im<{
+      inputString: m<{
         addRemoveSelect: ReactElement;
         numPeople: number;
         numPeopleSelect: ReactElement | number;
@@ -162,7 +162,7 @@ export default makeMessages('feat.smartSearch', {
         ),
         two: m('Remove any person whose city is Stockholm.'),
       },
-      fieldMatches: im<{ field: ReactElement; value: ReactElement | string }>(
+      fieldMatches: m<{ field: ReactElement; value: ReactElement | string }>(
         '{field} matches {value}'
       ),
       fieldSelect: {
@@ -178,10 +178,10 @@ export default makeMessages('feat.smartSearch', {
         street_address: m('street address'),
         zip_code: m('zip code'),
       },
-      fieldTuple: im<{ first: ReactElement; second: ReactElement }>(
+      fieldTuple: m<{ first: ReactElement; second: ReactElement }>(
         '{first} and {second}'
       ),
-      inputString: im<{
+      inputString: m<{
         addRemoveSelect: ReactElement;
         criteria: ReactElement | string | null;
       }>('{addRemoveSelect} any person whose {criteria}.'),
@@ -192,31 +192,31 @@ export default makeMessages('feat.smartSearch', {
         sub: m('Remove'),
       },
       edit: {
-        date: im<{ fieldSelect: ReactElement; timeFrame: ReactElement }>(
+        date: m<{ fieldSelect: ReactElement; timeFrame: ReactElement }>(
           '{fieldSelect} is {timeFrame}'
         ),
         none: m("This organization doesn't have any custom fields yet."),
-        text: im<{ fieldSelect: ReactElement; freeTextInput: ReactElement }>(
+        text: m<{ fieldSelect: ReactElement; freeTextInput: ReactElement }>(
           '{fieldSelect} matches {freeTextInput}'
         ),
-        url: im<{ fieldSelect: ReactElement; freeTextInput: ReactElement }>(
+        url: m<{ fieldSelect: ReactElement; freeTextInput: ReactElement }>(
           '{fieldSelect} matches {freeTextInput}'
         ),
       },
       fieldSelect: {
         any: m('custom field'),
       },
-      inputString: im<{ addRemoveSelect: ReactElement; field: ReactElement }>(
+      inputString: m<{ addRemoveSelect: ReactElement; field: ReactElement }>(
         '{addRemoveSelect} any person whose {field}.'
       ),
       preview: {
-        date: im<{ fieldName: string; timeFrame: ReactElement }>(
+        date: m<{ fieldName: string; timeFrame: ReactElement }>(
           '{fieldName} is {timeFrame}'
         ),
-        text: im<{ fieldName: string; searchTerm: string }>(
+        text: m<{ fieldName: string; searchTerm: string }>(
           '{fieldName} matches {searchTerm}'
         ),
-        url: im<{ fieldName: string; searchTerm: string }>(
+        url: m<{ fieldName: string; searchTerm: string }>(
           '{fieldName} matches {searchTerm}'
         ),
       },
@@ -234,18 +234,18 @@ export default makeMessages('feat.smartSearch', {
           none: m('none'),
         },
         edit: {
-          all: im<{ conditionSelect: ReactElement }>('{conditionSelect}'),
-          any: im<{ conditionSelect: ReactElement }>('{conditionSelect}'),
-          minMatching: im<{
+          all: m<{ conditionSelect: ReactElement }>('{conditionSelect}'),
+          any: m<{ conditionSelect: ReactElement }>('{conditionSelect}'),
+          minMatching: m<{
             conditionSelect: ReactElement;
             minMatchingInput: ReactElement;
           }>('{conditionSelect} {minMatchingInput}'),
-          none: im<{ conditionSelect: ReactElement }>('{conditionSelect}'),
+          none: m<{ conditionSelect: ReactElement }>('{conditionSelect}'),
         },
         preview: {
           all: m('all'),
           any: m('any'),
-          minMatching: im<{ minMatching: number }>('at least {minMatching}'),
+          minMatching: m<{ minMatching: number }>('at least {minMatching}'),
           none: m('none'),
         },
       },
@@ -255,7 +255,7 @@ export default makeMessages('feat.smartSearch', {
         ),
         two: m("Remove people with all of the following tags: 'Board member'"),
       },
-      inputString: im<{
+      inputString: m<{
         addRemoveSelect: ReactElement;
         condition: ReactElement;
         tags: ReactElement;
@@ -276,7 +276,7 @@ export default makeMessages('feat.smartSearch', {
         in: m('in'),
         notin: m('not in'),
       },
-      inputString: im<{
+      inputString: m<{
         addRemoveSelect: ReactElement;
         inSelect: ReactElement;
         viewSelect: ReactElement | string;
@@ -294,7 +294,7 @@ export default makeMessages('feat.smartSearch', {
         one: m('Randomly add 20 people in the organization.'),
         two: m('Randomly remove 15% of the people in the organization.'),
       },
-      inputString: im<{
+      inputString: m<{
         addRemoveSelect: ReactElement;
         quantity: ReactElement;
       }>('Randomly {addRemoveSelect} {quantity} in the organization.'),
@@ -312,7 +312,7 @@ export default makeMessages('feat.smartSearch', {
           "Add people who match the target group of call Assignment 'Assignment one'."
         ),
       },
-      inputString: im<{
+      inputString: m<{
         addRemoveSelect: ReactElement;
         matchSelect: ReactElement;
         query: ReactElement;
@@ -323,31 +323,31 @@ export default makeMessages('feat.smartSearch', {
       },
       query: {
         edit: {
-          callassignment_goal: im<{
+          callassignment_goal: m<{
             querySelect: ReactElement;
             titleSelect: ReactElement;
           }>('{querySelect} of call assignment "{titleSelect}"'),
-          callassignment_target: im<{
+          callassignment_target: m<{
             querySelect: ReactElement;
             titleSelect: ReactElement;
           }>('{querySelect} of call assignment "{titleSelect}"'),
-          none: im<{ querySelect: ReactElement; titleSelect: ReactElement }>(
+          none: m<{ querySelect: ReactElement; titleSelect: ReactElement }>(
             '{querySelect}'
           ),
-          standalone: im<{
+          standalone: m<{
             querySelect: ReactElement;
             titleSelect: ReactElement;
           }>('{querySelect} "{titleSelect}"'),
         },
         preview: {
-          callassignment_goal: im<{ queryTitle: string }>(
+          callassignment_goal: m<{ queryTitle: string }>(
             'the purpose group of call assignment "{queryTitle}"'
           ),
-          callassignment_target: im<{ queryTitle: string }>(
+          callassignment_target: m<{ queryTitle: string }>(
             'the target group of call assignment "{queryTitle}"'
           ),
-          none: im<{ queryTitle: string }>('{queryTitle}'),
-          standalone: im<{ queryTitle: string }>(
+          none: m<{ queryTitle: string }>('{queryTitle}'),
+          standalone: m<{ queryTitle: string }>(
             'Smart Search query "{queryTitle}"'
           ),
         },
@@ -385,7 +385,7 @@ export default makeMessages('feat.smartSearch', {
           "Add all people who have chosen any of the following options in survey 'Member survey' (question 'Question two'): 'Option two'"
         ),
       },
-      inputString: im<{
+      inputString: m<{
         addRemoveSelect: ReactElement;
         conditionSelect: ReactElement;
         options: ReactElement;
@@ -397,12 +397,12 @@ export default makeMessages('feat.smartSearch', {
       questionSelect: {
         any: m('a question'),
         none: m('There are no option questions in this survey'),
-        question: im<{ question: string }>('question "{question}"'),
+        question: m<{ question: string }>('question "{question}"'),
       },
       surveySelect: {
         any: m('a survey'),
         none: m('This organization has no surveys yet'),
-        survey: im<{ surveyTitle: string }>('survey "{surveyTitle}"'),
+        survey: m<{ surveyTitle: string }>('survey "{surveyTitle}"'),
       },
     },
     surveyResponse: {
@@ -418,7 +418,7 @@ export default makeMessages('feat.smartSearch', {
           "People whose responses to survey 'Member survey' (question 'Question one') exactly match 'organize'."
         ),
       },
-      inputString: im<{
+      inputString: m<{
         addRemoveSelect: ReactElement;
         freeTextInput: ReactElement | string;
         matchSelect: ReactElement;
@@ -436,12 +436,12 @@ export default makeMessages('feat.smartSearch', {
       questionSelect: {
         any: m('any question'),
         none: m('There are no free text questions in this survey'),
-        question: im<{ question: string }>('question "{question}"'),
+        question: m<{ question: string }>('question "{question}"'),
       },
       surveySelect: {
         any: m('a survey'),
         none: m('This organization has no surveys yet'),
-        survey: im<{ surveyTitle: string }>('survey "{surveyTitle}"'),
+        survey: m<{ surveyTitle: string }>('survey "{surveyTitle}"'),
       },
     },
     surveySubmission: {
@@ -457,7 +457,7 @@ export default makeMessages('feat.smartSearch', {
           "People who have submitted responses to survey 'Member survey' during the last 30 days."
         ),
       },
-      inputString: im<{
+      inputString: m<{
         addRemoveSelect: ReactElement;
         surveySelect: ReactElement;
         timeFrame: ReactElement;
@@ -467,7 +467,7 @@ export default makeMessages('feat.smartSearch', {
       surveySelect: {
         any: m('a survey'),
         none: m('This organization has no surveys yet'),
-        survey: im<{ surveyTitle: string }>('survey "{surveyTitle}"'),
+        survey: m<{ surveyTitle: string }>('survey "{surveyTitle}"'),
       },
     },
     task: {
@@ -477,7 +477,7 @@ export default makeMessages('feat.smartSearch', {
       },
       campaignSelect: {
         any: m('any campaign'),
-        campaign: im<{ campaign: string }>('campaign "{campaign}"'),
+        campaign: m<{ campaign: string }>('campaign "{campaign}"'),
         in: m(' in '),
       },
       examples: {
@@ -488,7 +488,7 @@ export default makeMessages('feat.smartSearch', {
           'Add people who have ignored any task in any campaign between 2 and 5 times before today'
         ),
       },
-      inputString: im<{
+      inputString: m<{
         addRemoveSelect: ReactElement;
         campaignSelect: ReactElement | null;
         matchingSelect: ReactElement;
@@ -500,7 +500,7 @@ export default makeMessages('feat.smartSearch', {
       ),
       taskSelect: {
         any: m('any task'),
-        task: im<{ task: string }>('task "{task}"'),
+        task: m<{ task: string }>('task "{task}"'),
       },
       taskStatusSelect: {
         assigned: m('been assigned'),
@@ -521,7 +521,7 @@ export default makeMessages('feat.smartSearch', {
         one: m('Remove all people who are connected to a Zetkin user.'),
         two: m('Add all people who are not connected to a Zetkin user.'),
       },
-      inputString: im<{
+      inputString: m<{
         addRemoveSelect: ReactElement;
         connectedSelect: ReactElement;
       }>(
@@ -535,22 +535,22 @@ export default makeMessages('feat.smartSearch', {
   },
   matching: {
     edit: {
-      between: im<{
+      between: m<{
         matchingSelect: ReactElement;
         maxInput: ReactElement;
         minInput: ReactElement;
       }>('{matchingSelect} {minInput} and {maxInput} times'),
-      max: im<{
+      max: m<{
         matchingSelect: ReactElement;
         max: number;
         maxInput: ReactElement;
       }>('{matchingSelect} {maxInput} {max, plural, one {time} other {times}}'),
-      min: im<{
+      min: m<{
         matchingSelect: ReactElement;
         min: number;
         minInput: ReactElement;
       }>('{matchingSelect} {minInput} {min, plural, one {time} other {times}}'),
-      once: im<{ matchingSelect: ReactElement }>('{matchingSelect}'),
+      once: m<{ matchingSelect: ReactElement }>('{matchingSelect}'),
     },
     labels: {
       between: m('between'),
@@ -570,16 +570,14 @@ export default makeMessages('feat.smartSearch', {
       // be nicer to refactor any code that uses them so that it's 100%
       // type safe, by creating a new MatchingPreview component or something.
       // TODO: Replace consistent interface with actual interface
-      between: im<{ max: number; min: number }>(
-        'between {min} and {max} times'
-      ),
-      max: im<{ max: number; min: number }>(
+      between: m<{ max: number; min: number }>('between {min} and {max} times'),
+      max: m<{ max: number; min: number }>(
         'at most {max} {max, plural, one {time} other {times}}'
       ),
-      min: im<{ max: number; min: number }>(
+      min: m<{ max: number; min: number }>(
         'at least {min} {max, plural, one {time} other {times}}'
       ),
-      once: im<{ max: number; min: number }>('at least once'),
+      once: m<{ max: number; min: number }>('at least once'),
     },
   },
   misc: {
@@ -587,21 +585,21 @@ export default makeMessages('feat.smartSearch', {
   },
   quantity: {
     edit: {
-      integer: im<{ numInput: ReactElement; quantitySelect: ReactElement }>(
+      integer: m<{ numInput: ReactElement; quantitySelect: ReactElement }>(
         '{numInput} {quantitySelect}'
       ),
-      percent: im<{ numInput: ReactElement; quantitySelect: ReactElement }>(
+      percent: m<{ numInput: ReactElement; quantitySelect: ReactElement }>(
         '{numInput} {quantitySelect}'
       ),
     },
     preview: {
-      integer: im<{ people: number }>(
+      integer: m<{ people: number }>(
         '{people} {people, plural, one {person} other {people}}'
       ),
-      percent: im<{ people: number }>('{people} % of the people'),
+      percent: m<{ people: number }>('{people} % of the people'),
     },
     quantitySelectLabel: {
-      integer: im<{ people: number }>(
+      integer: m<{ people: number }>(
         '{people, plural, one {person} other {people}}'
       ),
       percent: m('% of the people'),
@@ -616,25 +614,25 @@ export default makeMessages('feat.smartSearch', {
   ),
   timeFrame: {
     edit: {
-      afterDate: im<{
+      afterDate: m<{
         afterDateSelect: ReactElement;
         timeFrameSelect: ReactElement;
       }>('{timeFrameSelect} {afterDateSelect}'),
-      beforeDate: im<{
+      beforeDate: m<{
         beforeDateSelect: ReactElement;
         timeFrameSelect: ReactElement;
       }>('{timeFrameSelect} {beforeDateSelect}'),
-      beforeToday: im<{ timeFrameSelect: ReactElement }>('{timeFrameSelect}'),
-      between: im<{
+      beforeToday: m<{ timeFrameSelect: ReactElement }>('{timeFrameSelect}'),
+      between: m<{
         afterDateSelect: ReactElement;
         beforeDateSelect: ReactElement;
         timeFrameSelect: ReactElement;
       }>('{timeFrameSelect} {afterDateSelect} and {beforeDateSelect}'),
-      ever: im<{
+      ever: m<{
         timeFrameSelect: ReactElement;
       }>('{timeFrameSelect}'),
-      future: im<{ timeFrameSelect: ReactElement }>('{timeFrameSelect}'),
-      lastFew: im<{
+      future: m<{ timeFrameSelect: ReactElement }>('{timeFrameSelect}'),
+      lastFew: m<{
         days: number;
         daysInput: ReactElement;
         timeFrameSelect: ReactElement;
@@ -643,15 +641,15 @@ export default makeMessages('feat.smartSearch', {
       ),
     },
     preview: {
-      afterDate: im<{ afterDate: string }>('after {afterDate}'),
-      beforeDate: im<{ beforeDate: string }>('before {beforeDate}'),
+      afterDate: m<{ afterDate: string }>('after {afterDate}'),
+      beforeDate: m<{ beforeDate: string }>('before {beforeDate}'),
       beforeToday: m('before today'),
-      between: im<{ afterDate: string; beforeDate: string }>(
+      between: m<{ afterDate: string; beforeDate: string }>(
         'between {afterDate} and {beforeDate}'
       ),
       ever: m('at any point in time'),
       future: m('in the future'),
-      lastFew: im<{ days: number }>(
+      lastFew: m<{ days: number }>(
         'during the last {days} {days, plural, one {day} other {days}}'
       ),
     },

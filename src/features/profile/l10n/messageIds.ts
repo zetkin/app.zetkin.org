@@ -1,9 +1,9 @@
-import { im, m, makeMessages } from 'core/i18n';
+import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('feat.profile', {
   delete: {
     button: m('Remove person'),
-    confirm: im<{ name: string }>(
+    confirm: m<{ name: string }>(
       'Are you sure you want to delete {name}? This is a permanent action.'
     ),
     title: m('Delete account'),
@@ -12,8 +12,8 @@ export default makeMessages('feat.profile', {
   details: {
     title: m('Details'),
   },
-  editButton: im<{ title: string }>('Edit {title}'),
-  editButtonClose: im<{ title: string }>('Stop editing {title}'),
+  editButton: m<{ title: string }>('Edit {title}'),
+  editButtonClose: m<{ title: string }>('Stop editing {title}'),
   editButtonLabel: m('Edit Details'),
   genders: {
     f: m('Female'),

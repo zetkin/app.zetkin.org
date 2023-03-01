@@ -1,5 +1,4 @@
 export {
-  im,
   m,
   makeMessages,
   type AnyMessage,

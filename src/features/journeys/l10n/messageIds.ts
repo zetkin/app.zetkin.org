@@ -1,6 +1,6 @@
 import { ReactElement } from 'react';
 
-import { im, m, makeMessages } from 'core/i18n';
+import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('feat.journeys', {
   instance: {
@@ -10,21 +10,21 @@ export default makeMessages('feat.journeys', {
     assignPersonLabel: m('Assign person'),
     closeButton: {
       dialog: {
-        outcomeFieldPlaceholder: im<{ singularLabel: string }>(
+        outcomeFieldPlaceholder: m<{ singularLabel: string }>(
           'Describe the outcome of the {singularLabel}'
         ),
         outcomeLabel: m('Outcome'),
         outcomeTagsDescription: m('Add any tags that describe the outcome.'),
         outcomeTagsLabel: m('Outcome tags'),
       },
-      error: im<{ singularLabel: string }>(
+      error: m<{ singularLabel: string }>(
         'There was an error closing the {singularLabel}'
       ),
-      label: im<{ singularLabel: string }>('Close {singularLabel}'),
+      label: m<{ singularLabel: string }>('Close {singularLabel}'),
     },
     collapseButton: m('Collapse'),
-    created: im<{ relative: ReactElement }>('Created {relative}'),
-    deadlineLabel: im<{ date: ReactElement }>('(Was due {date})'),
+    created: m<{ relative: ReactElement }>('Created {relative}'),
+    deadlineLabel: m<{ date: ReactElement }>('(Was due {date})'),
     dueDateInputClear: m('Clear'),
     dueDateInputLabel: m('Due date'),
     editButton: m('Edit'),
@@ -32,38 +32,38 @@ export default makeMessages('feat.journeys', {
       convert: m('Convert to...'),
     },
     expandButton: m('Expand'),
-    markedCompleteLabel: im<{ relativeTime: ReactElement }>(
+    markedCompleteLabel: m<{ relativeTime: ReactElement }>(
       'Marked complete {relativeTime}'
     ),
     newInstance: {
       draft: m('Draft'),
       openingNote: m('Opening note'),
-      submitLabel: im<{ journey: string }>('Create new {journey}'),
-      title: im<{ journey: string }>('New {journey}'),
+      submitLabel: m<{ journey: string }>('Create new {journey}'),
+      title: m<{ journey: string }>('New {journey}'),
     },
     noMilestones: m('There are no milestones.'),
     noOutcomeDetails: m('No outcome details provided.'),
-    percentComplete: im<{ percentComplete: number }>(
+    percentComplete: m<{ percentComplete: number }>(
       '{percentComplete}% complete'
     ),
     reopenButton: {
-      error: im<{ singularLabel: string }>(
+      error: m<{ singularLabel: string }>(
         'There was an error reopening the {singularLabel}'
       ),
-      label: im<{ singularLabel: string }>('Reopen {singularLabel}'),
+      label: m<{ singularLabel: string }>('Reopen {singularLabel}'),
     },
     sections: {
       assigned: m('Assigned to'),
       members: m('Members'),
       milestones: m('Milestones'),
-      outcome: im<{ journeyTitle: string }>('This {journeyTitle} is closed.'),
+      outcome: m<{ journeyTitle: string }>('This {journeyTitle} is closed.'),
       summary: m('Summary'),
       timeline: m('Notes'),
     },
-    summaryPlaceholder: im<{ journeyTitle: string }>(
+    summaryPlaceholder: m<{ journeyTitle: string }>(
       'Enter a brief description of the status of this {journeyTitle}.'
     ),
-    updated: im<{ relative: ReactElement }>('last activity {relative}'),
+    updated: m<{ relative: ReactElement }>('last activity {relative}'),
   },
   instances: {
     columns: {
@@ -109,8 +109,8 @@ export default makeMessages('feat.journeys', {
       tagLabel: m('Tag'),
     },
     menu: {
-      downloadCsv: im<{ pluralLabel: string }>('Download {pluralLabel} as CSV'),
-      downloadXlsx: im<{ pluralLabel: string }>(
+      downloadCsv: m<{ pluralLabel: string }>('Download {pluralLabel} as CSV'),
+      downloadXlsx: m<{ pluralLabel: string }>(
         'Download {pluralLabel} as Excel'
       ),
     },
@@ -119,7 +119,7 @@ export default makeMessages('feat.journeys', {
     buttonClose: m('Close'),
     buttonOpen: m('Open'),
     cardCTA: m('View all'),
-    closedCount: im<{ numberClosed: number }>('{numberClosed} closed'),
+    closedCount: m<{ numberClosed: number }>('{numberClosed} closed'),
     conversionSnackbar: {
       error: m('Something went wrong in converting the journey.'),
       success: m('Journey conversion successful!'),
@@ -134,7 +134,7 @@ export default makeMessages('feat.journeys', {
       downloadXlsx: m('Download all as Excel'),
     },
     nextMilestone: m('Next milestone'),
-    openCount: im<{ numberOpen: number }>('{numberOpen} open'),
+    openCount: m<{ numberOpen: number }>('{numberOpen} open'),
     overview: {
       overviewTitle: m('All journeys'),
     },

@@ -1,12 +1,12 @@
 import { ReactElement } from 'react';
 
-import { im, m, makeMessages } from 'core/i18n';
+import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('feat.tasks', {
   assignees: {
     completedStates: {
-      completed: im<{ time: ReactElement }>('Completed {time}'),
-      ignored: im<{ time: ReactElement }>('Ignored {time}'),
+      completed: m<{ time: ReactElement }>('Completed {time}'),
+      ignored: m<{ time: ReactElement }>('Ignored {time}'),
       notCompleted: m('Not yet completed'),
     },
     links: {
@@ -28,7 +28,7 @@ export default makeMessages('feat.tasks', {
         'This task is currently being assigned to all that match the targeting Smart Search query...'
       ),
     },
-    title: im<{ numPeople: number }>(
+    title: m<{ numPeople: number }>(
       'Assigned to {numPeople, plural, one {# person} other {# people}}'
     ),
   },
@@ -85,10 +85,10 @@ export default makeMessages('feat.tasks', {
       published: m('Publish Time'),
       reassignInterval: m('Reassign after completion'),
       reassignIntervalOptions: {
-        days: im<{ days: number }>(
+        days: m<{ days: number }>(
           '{days, plural, =1 {The next day} other {after # days}}'
         ),
-        hours: im<{ hours: number }>(
+        hours: m<{ hours: number }>(
           'After {hours, plural, =1 {one hour} other {# hours}}'
         ),
         noReassign: m('Never reassign'),
@@ -96,7 +96,7 @@ export default makeMessages('feat.tasks', {
       reassignLimit: m('Maximum number of (re)assigns:'),
       timeEstimate: m('Estimated time to complete'),
       timeEstimateOptions: {
-        hoursAndMinutes: im<{ hours: number; minutes: number }>(
+        hoursAndMinutes: m<{ hours: number; minutes: number }>(
           '{hours, plural, =0{} one{# hour} other{# hours}} {minutes, plural, =0{} one {# minute} other {# minutes}}'
         ),
         lessThanOneMinute: m('Less than one minute'),
@@ -158,13 +158,13 @@ export default makeMessages('feat.tasks', {
     publishedTime: m('Publish Time'),
     reassignInterval: {
       label: m('Reassign interval'),
-      value: im<{ value: number }>(
+      value: m<{ value: number }>(
         'Reassigns {value, plural, =1{one hour} other{# hours}} after completion'
       ),
     },
     reassignLimit: {
       label: m('Reassign limit'),
-      value: im<{ value: number }>(
+      value: m<{ value: number }>(
         'Repeats at most {value, plural, =1{one time} other{# times}} per person'
       ),
     },
@@ -183,18 +183,18 @@ export default makeMessages('feat.tasks', {
   },
   taskListItem: {
     relativeTimes: {
-      active: im<{ time: ReactElement }>('Closes {time}'),
-      closed: im<{ time: ReactElement }>('Closed {time}'),
-      expired: im<{ time: ReactElement }>('Expired {time}'),
-      expires: im<{ time: ReactElement }>('Expires {time}'),
-      indefinite: im<{ time: ReactElement }>('Published {time}'),
-      scheduled: im<{ time: ReactElement }>('Will be published {time}'),
+      active: m<{ time: ReactElement }>('Closes {time}'),
+      closed: m<{ time: ReactElement }>('Closed {time}'),
+      expired: m<{ time: ReactElement }>('Expired {time}'),
+      expires: m<{ time: ReactElement }>('Expires {time}'),
+      indefinite: m<{ time: ReactElement }>('Published {time}'),
+      scheduled: m<{ time: ReactElement }>('Will be published {time}'),
     },
   },
   taskPreview: {
     addImage: m('Add cover image'),
     sectionTitle: m('Preview'),
-    timeEstimate: im<{ minutes: number }>(
+    timeEstimate: m<{ minutes: number }>(
       '{minutes, plural, =0 {Less than one minute} =1 {One minute} other {# minutes}}'
     ),
   },

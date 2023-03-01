@@ -1,4 +1,4 @@
-import { im, m, makeMessages } from 'core/i18n';
+import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('feat.campaigns', {
   all: {
@@ -14,7 +14,7 @@ export default makeMessages('feat.campaigns', {
     heading: m('Current campaigns'),
     indefinite: m('Indefinite'),
     unsorted: m('Unsorted projects'),
-    upcoming: im<{ numEvents: number }>('{numEvents, number} upcoming events.'),
+    upcoming: m<{ numEvents: number }>('{numEvents, number} upcoming events.'),
   },
   assigneeActions: m('Assignee actions'),
   calendarView: m('See all in calendar'),
