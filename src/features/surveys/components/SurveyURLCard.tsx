@@ -12,7 +12,7 @@ interface SurveyURLCardProps {
 const SurveyURLCard = ({ isOpen, orgId, surveyId }: SurveyURLCardProps) => {
   return (
     <Card style={{ padding: 16 }}>
-      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
         <Typography variant="h5">
           {isOpen ? (
             <Msg id="pages.organizeSurvey.urlCard.open" />
@@ -20,7 +20,14 @@ const SurveyURLCard = ({ isOpen, orgId, surveyId }: SurveyURLCardProps) => {
             <Msg id="pages.organizeSurvey.urlCard.preview" />
           )}
         </Typography>
-        <Box sx={{ backgroundColor: isOpen ? "lightgreen" : "lightgray", borderRadius: 5, height: 20, width: 20 }} />
+        <Box
+          sx={{
+            backgroundColor: isOpen ? 'lightgreen' : 'lightgray',
+            borderRadius: 5,
+            height: 20,
+            width: 20,
+          }}
+        />
       </Box>
       <Typography color="GrayText" paddingBottom={4} variant="body2">
         {isOpen ? (
