@@ -3,7 +3,11 @@ import dayjs from 'dayjs';
 import Environment from 'core/env/Environment';
 import { IFuture } from 'core/caching/futures';
 import { ModelBase } from 'core/models';
-import { ZetkinSurveyExtended } from 'utils/types/zetkin';
+import {
+  ELEMENT_TYPE,
+  RESPONSE_TYPE,
+  ZetkinSurveyExtended,
+} from 'utils/types/zetkin';
 import SurveysRepo, {
   OptionsQuestionPatchBody,
   ZetkinSurveyElementPostBody,
@@ -29,9 +33,14 @@ export default class SurveyDataModel extends ModelBase {
       element
     );
 
-    //Add two options to the newly created element.
-    this._repo.addElementOption(this._orgId, this._surveyId, newElement.id);
-    this._repo.addElementOption(this._orgId, this._surveyId, newElement.id);
+    //Add two options to a newly created options element.
+    if (
+      newElement.type === ELEMENT_TYPE.QUESTION &&
+      newElement.question.response_type === RESPONSE_TYPE.OPTIONS
+    ) {
+      this._repo.addElementOption(this._orgId, this._surveyId, newElement.id);
+      this._repo.addElementOption(this._orgId, this._surveyId, newElement.id);
+    }
   }
 
   addElementOption(elemId: number) {
