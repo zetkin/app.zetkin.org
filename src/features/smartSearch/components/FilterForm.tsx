@@ -1,6 +1,9 @@
 import { FormEvent } from 'react';
-import { FormattedMessage as Msg } from 'react-intl';
 import { Box, Button, Typography } from '@mui/material';
+
+import { Msg } from 'core/i18n';
+
+import messageIds from '../l10n/messageIds';
 
 interface FilterFormProps {
   renderSentence: () => JSX.Element;
@@ -40,7 +43,7 @@ const FilterForm = ({
               {renderExamples && (
                 <>
                   <Typography variant="h5">
-                    <Msg id="misc.smartSearch.headers.examples" />
+                    <Msg id={messageIds.headers.examples} />
                   </Typography>
                   <Typography color="textSecondary">
                     {renderExamples()}
@@ -56,7 +59,7 @@ const FilterForm = ({
               style={{ gap: '1rem' }}
             >
               <Button color="primary" onClick={onCancel} variant="outlined">
-                <Msg id="misc.smartSearch.buttonLabels.cancel" />
+                <Msg id={messageIds.buttonLabels.cancel} />
               </Button>
               <Button
                 color="primary"
@@ -65,7 +68,7 @@ const FilterForm = ({
                 type="submit"
                 variant="contained"
               >
-                <Msg id="misc.smartSearch.buttonLabels.add" />
+                <Msg id={messageIds.buttonLabels.add} />
               </Button>
             </Box>
           </Box>

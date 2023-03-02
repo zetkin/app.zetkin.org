@@ -1,11 +1,11 @@
 import { FormEvent } from 'react';
 import { MenuItem } from '@material-ui/core';
-import { FormattedMessage as Msg } from 'react-intl';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 
 import FilterForm from '../../FilterForm';
 import getViews from 'features/smartSearch/fetching/getViews';
+import { Msg } from 'core/i18n';
 import StyledSelect from '../../inputs/StyledSelect';
 import useSmartSearchFilter from 'features/smartSearch/hooks/useSmartSearchFilter';
 import {
@@ -16,6 +16,9 @@ import {
   SmartSearchFilterWithId,
   ZetkinSmartSearchFilter,
 } from 'features/smartSearch/components/types';
+
+import messageIds from 'features/smartSearch/l10n/messageIds';
+const localMessageIds = messageIds.filters.personView;
 
 interface PersonViewProps {
   filter:
@@ -78,15 +81,15 @@ const PersonView = ({
       onSubmit={(e) => handleSubmit(e)}
       renderExamples={() => (
         <>
-          <Msg id="misc.smartSearch.person_view.examples.one" />
+          <Msg id={localMessageIds.examples.one} />
           <br />
-          <Msg id="misc.smartSearch.person_view.examples.two" />
+          <Msg id={localMessageIds.examples.two} />
         </>
       )}
       renderSentence={() =>
         personViews.length ? (
           <Msg
-            id="misc.smartSearch.person_view.inputString"
+            id={localMessageIds.inputString}
             values={{
               addRemoveSelect: (
                 <StyledSelect
@@ -94,10 +97,10 @@ const PersonView = ({
                   value={filter.op}
                 >
                   <MenuItem key={OPERATION.ADD} value={OPERATION.ADD}>
-                    <Msg id="misc.smartSearch.person_view.addRemoveSelect.add" />
+                    <Msg id={localMessageIds.addRemoveSelect.add} />
                   </MenuItem>
                   <MenuItem key={OPERATION.SUB} value={OPERATION.SUB}>
-                    <Msg id="misc.smartSearch.person_view.addRemoveSelect.sub" />
+                    <Msg id={localMessageIds.addRemoveSelect.sub} />
                   </MenuItem>
                 </StyledSelect>
               ),
@@ -109,10 +112,10 @@ const PersonView = ({
                   value={filter.config.operator}
                 >
                   <MenuItem key={IN_OPERATOR.IN} value={IN_OPERATOR.IN}>
-                    <Msg id="misc.smartSearch.person_view.inSelect.in" />
+                    <Msg id={localMessageIds.inSelect.in} />
                   </MenuItem>
                   <MenuItem key={IN_OPERATOR.NOTIN} value={IN_OPERATOR.NOTIN}>
-                    <Msg id="misc.smartSearch.person_view.inSelect.notin" />
+                    <Msg id={localMessageIds.inSelect.notin} />
                   </MenuItem>
                 </StyledSelect>
               ),
@@ -131,7 +134,7 @@ const PersonView = ({
             }}
           />
         ) : (
-          <Msg id="misc.smartSearch.person_view.viewSelect.none" />
+          <Msg id={localMessageIds.viewSelect.none} />
         )
       }
     />

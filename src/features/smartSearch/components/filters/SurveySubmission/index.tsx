@@ -1,5 +1,4 @@
 import { MenuItem } from '@mui/material';
-import { FormattedMessage as Msg } from 'react-intl';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 import { FormEvent, useEffect, useState } from 'react';
@@ -17,6 +16,10 @@ import {
   TIME_FRAME,
   ZetkinSmartSearchFilter,
 } from 'features/smartSearch/components/types';
+
+import messageIds from 'features/smartSearch/l10n/messageIds';
+import { Msg } from 'core/i18n';
+const localMessageIds = messageIds.filters.surveySubmission;
 
 const DEFAULT_VALUE = 'none';
 
@@ -92,14 +95,14 @@ const SurveySubmission = ({
       onSubmit={(e) => handleSubmit(e)}
       renderExamples={() => (
         <>
-          <Msg id="misc.smartSearch.survey_submission.examples.one" />
+          <Msg id={localMessageIds.examples.one} />
           <br />
-          <Msg id="misc.smartSearch.survey_submission.examples.two" />
+          <Msg id={localMessageIds.examples.two} />
         </>
       )}
       renderSentence={() => (
         <Msg
-          id="misc.smartSearch.survey_submission.inputString"
+          id={localMessageIds.inputString}
           values={{
             addRemoveSelect: (
               <StyledSelect
@@ -107,10 +110,10 @@ const SurveySubmission = ({
                 value={filter.op}
               >
                 <MenuItem key={OPERATION.ADD} value={OPERATION.ADD}>
-                  <Msg id="misc.smartSearch.survey_submission.addRemoveSelect.add" />
+                  <Msg id={localMessageIds.addRemoveSelect.add} />
                 </MenuItem>
                 <MenuItem key={OPERATION.SUB} value={OPERATION.SUB}>
-                  <Msg id="misc.smartSearch.survey_submission.addRemoveSelect.sub" />
+                  <Msg id={localMessageIds.addRemoveSelect.sub} />
                 </MenuItem>
               </StyledSelect>
             ),
@@ -120,13 +123,13 @@ const SurveySubmission = ({
                 SelectProps={{
                   renderValue: function getLabel(value) {
                     return value === DEFAULT_VALUE ? (
-                      <Msg id="misc.smartSearch.survey_submission.surveySelect.any" />
+                      <Msg id={localMessageIds.surveySelect.any} />
                     ) : (
                       <Msg
-                        id="misc.smartSearch.survey_submission.surveySelect.survey"
+                        id={localMessageIds.surveySelect.survey}
                         values={{
-                          surveyTitle: surveys.find((s) => s.id === value)
-                            ?.title,
+                          surveyTitle:
+                            surveys.find((s) => s.id === value)?.title ?? '',
                         }}
                       />
                     );
@@ -136,7 +139,7 @@ const SurveySubmission = ({
               >
                 {!surveys.length && (
                   <MenuItem key={DEFAULT_VALUE} value={DEFAULT_VALUE}>
-                    <Msg id="misc.smartSearch.survey_submission.surveySelect.none" />
+                    <Msg id={localMessageIds.surveySelect.none} />
                   </MenuItem>
                 )}
                 {surveys.map((s) => (

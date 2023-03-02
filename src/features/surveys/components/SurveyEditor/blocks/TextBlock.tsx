@@ -7,10 +7,12 @@ import {
   useRef,
   useState,
 } from 'react';
-import { FormattedMessage as Msg, useIntl } from 'react-intl';
 
 import theme from 'theme';
 import { ZetkinSurveyTextElement } from 'utils/types/zetkin';
+import { Msg, useMessages } from 'core/i18n';
+
+import messageIds from 'features/surveys/l10n/messageIds';
 
 interface TextBlockProps {
   inEditMode: boolean;
@@ -25,7 +27,7 @@ const TextBlock: FC<TextBlockProps> = ({
   onEditModeEnter,
   onEditModeExit,
 }) => {
-  const intl = useIntl();
+  const messages = useMessages(messageIds);
 
   const [header, setHeader] = useState(element.text_block.header);
   const [content, setContent] = useState(element.text_block.content);
@@ -72,9 +74,7 @@ const TextBlock: FC<TextBlockProps> = ({
               inputRef: headerRef,
               sx: { fontSize: theme.typography.h4.fontSize },
             }}
-            label={intl.formatMessage({
-              id: 'misc.surveys.blocks.text.header',
-            })}
+            label={messages.blocks.text.header()}
             onChange={(evt) => setHeader(evt.target.value)}
             onKeyDown={(evt) => handleKeyDown(evt)}
             sx={{ paddingBottom: 2 }}
@@ -82,9 +82,7 @@ const TextBlock: FC<TextBlockProps> = ({
           />
           <TextField
             InputProps={{ inputRef: contentRef }}
-            label={intl.formatMessage({
-              id: 'misc.surveys.blocks.text.content',
-            })}
+            label={messages.blocks.text.content()}
             onChange={(evt) => setContent(evt.target.value)}
             onKeyDown={(evt) => handleKeyDown(evt)}
             value={content}
@@ -96,7 +94,7 @@ const TextBlock: FC<TextBlockProps> = ({
             {header ? (
               element.text_block.header
             ) : (
-              <Msg id="misc.surveys.blocks.text.empty" />
+              <Msg id={messageIds.blocks.text.empty} />
             )}
           </Typography>
           {content && (

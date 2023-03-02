@@ -1,10 +1,12 @@
 import { Add } from '@mui/icons-material';
 import EditIcon from '@mui/icons-material/Edit';
-import { FormattedMessage } from 'react-intl';
 import { Box, IconButton, List, ListItem, ListSubheader } from '@mui/material';
 
 import TagChip from '../TagChip';
 import { ZetkinTag } from 'utils/types/zetkin';
+
+import messageIds from '../../../../l10n/messageIds';
+import { Msg } from 'core/i18n';
 
 const TagSelectList: React.FC<{
   disableEditTags: boolean;
@@ -84,19 +86,14 @@ const TagSelectList: React.FC<{
       >
         <Add />
         {inputValue ? (
-          <FormattedMessage
-            id="misc.tags.tagManager.createNamedTag"
+          <Msg
+            id={messageIds.manager.createNamedTag}
             values={{
-              b: (...chunks) => (
-                <>
-                  &nbsp;<b>{chunks}</b>
-                </>
-              ),
-              name: inputValue,
+              name: <b>{inputValue}</b>,
             }}
           />
         ) : (
-          <FormattedMessage id="misc.tags.tagManager.createTag" />
+          <Msg id={messageIds.manager.createTag} />
         )}
       </ListItem>
     </List>

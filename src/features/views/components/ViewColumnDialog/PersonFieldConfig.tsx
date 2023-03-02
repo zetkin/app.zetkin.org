@@ -11,7 +11,6 @@ import {
   Select,
   Typography,
 } from '@mui/material';
-import { FormattedMessage as Msg, useIntl } from 'react-intl';
 
 import getCustomFields from 'features/smartSearch/fetching/getCustomFields';
 import {
@@ -21,6 +20,9 @@ import {
   SelectedViewColumn,
   ZetkinViewColumn,
 } from '../types';
+import { Msg, useMessages } from 'core/i18n';
+
+import messageIds from 'features/views/l10n/messageIds';
 
 interface PersonFieldConfigProps {
   existingColumns: ZetkinViewColumn[];
@@ -36,7 +38,7 @@ const PersonFieldConfig = ({
   existingColumns,
   onOutputConfigured,
 }: PersonFieldConfigProps) => {
-  const intl = useIntl();
+  const messages = useMessages(messageIds);
   const [selectedFields, setSelectedFields] = useState<string[]>([]);
 
   //TODO: refactor to use model logic
@@ -59,9 +61,7 @@ const PersonFieldConfig = ({
   Object.values(NATIVE_PERSON_FIELDS).map((fieldSlug) =>
     fields.push({
       slug: fieldSlug,
-      title: intl.formatMessage({
-        id: `misc.nativePersonFields.${fieldSlug}`,
-      }),
+      title: messages.global.personFields[fieldSlug](),
     })
   );
 
@@ -83,9 +83,7 @@ const PersonFieldConfig = ({
   return (
     <FormControl sx={{ width: 300 }}>
       <InputLabel>
-        {intl.formatMessage({
-          id: 'misc.views.columnDialog.editor.fieldLabels.field',
-        })}
+        {messages.columnDialog.editor.fieldLabels.field()}
       </InputLabel>
       <Select
         input={<Input />}
@@ -131,7 +129,7 @@ const PersonFieldConfig = ({
               {field.title}
               {disabled && (
                 <Typography sx={{ fontStyle: 'italic' }} variant="body2">
-                  <Msg id="misc.views.columnDialog.editor.alreadyInView" />
+                  <Msg id={messageIds.columnDialog.editor.alreadyInView} />
                 </Typography>
               )}
             </MenuItem>

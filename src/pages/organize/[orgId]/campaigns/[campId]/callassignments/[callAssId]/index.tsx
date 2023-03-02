@@ -1,16 +1,18 @@
 import { GetServerSideProps } from 'next';
-import { FormattedMessage as Msg } from 'react-intl';
 import { Box, Typography } from '@mui/material';
 
 import CallAssignmentLayout from 'features/callAssignments/layout/CallAssignmentLayout';
 import CallAssignmentModel from 'features/callAssignments/models/CallAssignmentModel';
 import CallAssignmentStatusCards from 'features/callAssignments/components/CallAssignmentStatusCards';
 import CallAssignmentTargets from 'features/callAssignments/components/CallAssignmentTargets';
+import { Msg } from 'core/i18n';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import useModel from 'core/useModel';
 import useServerSide from 'core/useServerSide';
 import ZUIStackedStatusBar from 'zui/ZUIStackedStatusBar';
+
+import messageIds from 'features/callAssignments/l10n/messageIds';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   async (ctx) => {
@@ -80,7 +82,7 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
       </Box>
       <Box mb={2}>
         <Typography variant="h3">
-          <Msg id="pages.organizeCallAssignment.statusSectionTitle" />
+          <Msg id={messageIds.statusSectionTitle} />
         </Typography>
       </Box>
       <ZUIStackedStatusBar colors={colors} values={statusBarStatsList} />

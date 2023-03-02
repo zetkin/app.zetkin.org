@@ -1,4 +1,3 @@
-import { FormattedMessage as Msg } from 'react-intl';
 import { Box, Button, Card, Typography } from '@mui/material';
 import {
   FormatAlignLeft,
@@ -6,9 +5,12 @@ import {
   TextFields,
 } from '@mui/icons-material';
 
+import { Msg } from 'core/i18n';
 import SurveyDataModel from 'features/surveys/models/SurveyDataModel';
 import theme from 'theme';
 import { ELEMENT_TYPE, RESPONSE_TYPE } from 'utils/types/zetkin';
+
+import messageIds from 'features/surveys/l10n/messageIds';
 
 const AddBlocks = ({ model }: { model: SurveyDataModel }) => {
   return (
@@ -20,7 +22,7 @@ const AddBlocks = ({ model }: { model: SurveyDataModel }) => {
       }}
     >
       <Typography color="secondary">
-        <Msg id="misc.surveys.addBlocks.title" />
+        <Msg id={messageIds.addBlocks.title} />
       </Typography>
       <Box display="flex" paddingTop={2}>
         <Button
@@ -38,7 +40,7 @@ const AddBlocks = ({ model }: { model: SurveyDataModel }) => {
           sx={{ marginRight: 1 }}
           variant="outlined"
         >
-          <Msg id="misc.surveys.addBlocks.textButton" />
+          <Msg id={messageIds.addBlocks.textButton} />
         </Button>
         <Button
           onClick={() =>
@@ -59,7 +61,7 @@ const AddBlocks = ({ model }: { model: SurveyDataModel }) => {
           sx={{ marginRight: 1 }}
           variant="outlined"
         >
-          <Msg id="misc.surveys.addBlocks.openQuestionButton" />
+          <Msg id={messageIds.addBlocks.openQuestionButton} />
         </Button>
         <Button
           onClick={() =>
@@ -79,7 +81,7 @@ const AddBlocks = ({ model }: { model: SurveyDataModel }) => {
           startIcon={<FormatListBulleted />}
           variant="outlined"
         >
-          <Msg id="misc.surveys.addBlocks.choiceQuestionButton" />
+          <Msg id={messageIds.addBlocks.choiceQuestionButton} />
         </Button>
       </Box>
     </Card>

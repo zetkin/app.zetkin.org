@@ -1,7 +1,9 @@
-import { FormattedMessage as Msg } from 'react-intl';
 import { Box, Card, CardContent, Typography } from '@mui/material';
 
+import { Msg } from 'core/i18n';
 import { ZetkinJourneyInstance } from 'utils/types/zetkin';
+
+import messageIds from '../l10n/messageIds';
 
 const JourneyInstanceOutcome = ({
   journeyInstance,
@@ -14,7 +16,7 @@ const JourneyInstanceOutcome = ({
         <Box p={1.5}>
           <Typography gutterBottom variant="h5">
             <Msg
-              id="pages.organizeJourneyInstance.sections.outcome"
+              id={messageIds.instance.sections.outcome}
               values={{
                 journeyTitle:
                   journeyInstance.journey.singular_label.toLowerCase(),
@@ -25,7 +27,7 @@ const JourneyInstanceOutcome = ({
             {journeyInstance.outcome ? (
               journeyInstance.outcome
             ) : (
-              <Msg id="pages.organizeJourneyInstance.noOutcomeDetails" />
+              <Msg id={messageIds.instance.noOutcomeDetails} />
             )}
           </Typography>
         </Box>

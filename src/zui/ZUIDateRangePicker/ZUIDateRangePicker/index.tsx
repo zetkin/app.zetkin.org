@@ -1,4 +1,5 @@
 import { makeStyles } from '@mui/styles';
+import { useIntl } from 'react-intl';
 import {
   Box,
   ClickAwayListener,
@@ -13,24 +14,23 @@ import {
 import { CalendarToday, Clear } from '@mui/icons-material';
 import { DateRange, StaticDateRangePicker } from '@mui/x-date-pickers-pro';
 import dayjs, { Dayjs } from 'dayjs';
-import { IntlShape, useIntl } from 'react-intl';
 import React, { FC, MouseEvent, useEffect, useState } from 'react';
 
-const rangeStr = (intl: IntlShape, values: DateRange<Dayjs>): string => {
+import messageIds from 'zui/l10n/messageIds';
+import { useMessages, UseMessagesMap } from 'core/i18n';
+
+const rangeStr = (
+  messages: UseMessagesMap<typeof messageIds.dateRange>,
+  values: DateRange<Dayjs>
+): string => {
   const [start, end] = values;
 
   if (start && end) {
-    return intl.formatMessage(
-      { id: 'misc.dateRange.finite' },
-      { end: end.toDate(), start: start.toDate() }
-    );
+    return messages.finite({ end: end.toDate(), start: start.toDate() });
   } else if (start) {
-    return intl.formatMessage(
-      { id: 'misc.dateRange.indefinite' },
-      { start: start.toDate() }
-    );
+    return messages.indefinite({ start: start.toDate() });
   } else {
-    return intl.formatMessage({ id: 'misc.dateRange.draft' });
+    return messages.draft();
   }
 };
 
@@ -56,11 +56,11 @@ const ZUIDateRangePicker: FC<ZUIDateRangePickerProps> = ({
   onChange,
   startDate,
 }) => {
-  const intl = useIntl();
   const [anchorEl, setAnchorEl] = useState<HTMLSpanElement | null>(null);
   const [value, setValue] = useState<DateRange<Dayjs>>([null, null]);
 
   const classes = useStyles();
+  const messages = useMessages(messageIds);
 
   useEffect(() => {
     setValue([
@@ -88,7 +88,7 @@ const ZUIDateRangePicker: FC<ZUIDateRangePickerProps> = ({
             setAnchorEl(ev.currentTarget);
           }}
         >
-          {rangeStr(intl, value)}
+          {rangeStr(messages.dateRange, value)}
         </Typography>
       </Box>
       <ClickAwayListener

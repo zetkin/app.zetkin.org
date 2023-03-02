@@ -1,4 +1,3 @@
-import { FormattedMessage as Msg } from 'react-intl';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 
@@ -9,6 +8,10 @@ import {
   SmartSearchFilterWithId,
   SurveyResponseFilterConfig,
 } from 'features/smartSearch/components/types';
+
+import messageIds from 'features/smartSearch/l10n/messageIds';
+import { Msg } from 'core/i18n';
+const localMessageIds = messageIds.filters.surveyResponse;
 
 interface DisplaySurveyResponseProps {
   filter: SmartSearchFilterWithId<SurveyResponseFilterConfig>;
@@ -55,29 +58,23 @@ const DisplaySurveyResponse = ({
 
   return (
     <Msg
-      id="misc.smartSearch.survey_response.inputString"
+      id={localMessageIds.inputString}
       values={{
-        addRemoveSelect: (
-          <Msg id={`misc.smartSearch.survey_response.addRemoveSelect.${op}`} />
-        ),
+        addRemoveSelect: <Msg id={localMessageIds.addRemoveSelect[op]} />,
         freeTextInput: value,
-        matchSelect: (
-          <Msg
-            id={`misc.smartSearch.survey_response.matchSelect.${operator}`}
-          />
-        ),
+        matchSelect: <Msg id={localMessageIds.matchSelect[operator]} />,
         questionSelect: question ? (
           <Msg
-            id="misc.smartSearch.survey_response.questionSelect.question"
+            id={localMessageIds.questionSelect.question}
             values={{ question }}
           />
         ) : (
-          <Msg id="misc.smartSearch.survey_response.questionSelect.any" />
+          <Msg id={localMessageIds.questionSelect.any} />
         ),
         surveySelect: (
           <Msg
-            id="misc.smartSearch.survey_response.surveySelect.survey"
-            values={{ surveyTitle }}
+            id={localMessageIds.surveySelect.survey}
+            values={{ surveyTitle: surveyTitle || '' }}
           />
         ),
       }}

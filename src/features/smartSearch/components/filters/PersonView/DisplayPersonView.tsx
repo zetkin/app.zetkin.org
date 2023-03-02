@@ -1,13 +1,16 @@
-import { FormattedMessage as Msg } from 'react-intl';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 
 import getViews from 'features/smartSearch/fetching/getViews';
+import { Msg } from 'core/i18n';
 import {
   OPERATION,
   PersonViewFilterConfig,
   SmartSearchFilterWithId,
 } from 'features/smartSearch/components/types';
+
+import messageIds from 'features/smartSearch/l10n/messageIds';
+const localMessageIds = messageIds.filters.personView;
 
 interface DisplayPersonViewProps {
   filter: SmartSearchFilterWithId<PersonViewFilterConfig>;
@@ -30,14 +33,10 @@ const DisplayPersonView = ({ filter }: DisplayPersonViewProps): JSX.Element => {
 
   return (
     <Msg
-      id="misc.smartSearch.person_view.inputString"
+      id={localMessageIds.inputString}
       values={{
-        addRemoveSelect: (
-          <Msg id={`misc.smartSearch.person_view.addRemoveSelect.${op}`} />
-        ),
-        inSelect: (
-          <Msg id={`misc.smartSearch.person_view.inSelect.${operator}`} />
-        ),
+        addRemoveSelect: <Msg id={localMessageIds.addRemoveSelect[op]} />,
+        inSelect: <Msg id={localMessageIds.inSelect[operator]} />,
         viewSelect: view.title,
       }}
     />

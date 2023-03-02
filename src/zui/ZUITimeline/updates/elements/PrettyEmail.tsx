@@ -1,4 +1,3 @@
-import { FormattedMessage } from 'react-intl';
 import Link from 'next/link';
 import makeStyles from '@mui/styles/makeStyles';
 import {
@@ -12,8 +11,11 @@ import {
 import { LetterparserNode, parse } from 'letterparser';
 import { useEffect, useState } from 'react';
 
+import { Msg } from 'core/i18n';
 import ZUICleanHtml from 'zui/ZUICleanHtml';
 import ZUICollapse from 'zui/ZUICollapse';
+
+import messageIds from 'zui/ZUITimeline/l10n/messageIds';
 
 interface PrettyEmailProps {
   emailStr: string;
@@ -105,7 +107,8 @@ const EmailBody: React.FC<{
 const EmailHeader: React.FC<{ headers: LetterparserNode['headers'] }> = ({
   headers,
 }) => {
-  const RELEVANT_HEADERS = ['from', 'to', 'cc'];
+  const RELEVANT_HEADERS = ['from', 'to', 'cc'] as const;
+
   return (
     <Grid container direction="column" spacing={1}>
       {RELEVANT_HEADERS.map((headerName) => {
@@ -120,7 +123,7 @@ const EmailHeader: React.FC<{ headers: LetterparserNode['headers'] }> = ({
             <Grid key={headerName} container direction="row" item wrap="nowrap">
               <Grid item style={{ marginRight: 12, marginTop: '0.2em' }}>
                 <Typography>
-                  <FormattedMessage id={`misc.email.headers.${headerName}`} />
+                  <Msg id={messageIds.email.headers[headerName]} />
                 </Typography>
               </Grid>
               <Grid item>

@@ -1,5 +1,4 @@
 import { MenuItem } from '@mui/material';
-import { FormattedMessage as Msg } from 'react-intl';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 import { FormEvent, useEffect } from 'react';
@@ -7,6 +6,7 @@ import { FormEvent, useEffect } from 'react';
 import { CUSTOM_FIELD_TYPE } from 'utils/types/zetkin';
 import FilterForm from '../../FilterForm';
 import getCustomFields from 'features/smartSearch/fetching/getCustomFields';
+import { Msg } from 'core/i18n';
 import StyledSelect from '../../inputs/StyledSelect';
 import StyledTextInput from '../../inputs/StyledTextInput';
 import TimeFrame from '../TimeFrame';
@@ -18,6 +18,9 @@ import {
   SmartSearchFilterWithId,
   ZetkinSmartSearchFilter,
 } from 'features/smartSearch/components/types';
+
+import messageIds from 'features/smartSearch/l10n/messageIds';
+const localMessageIds = messageIds.filters.personField;
 
 interface PersonFieldProps {
   filter:
@@ -117,21 +120,100 @@ const PersonField = ({
     });
   };
 
+  function getFieldInput(type: CUSTOM_FIELD_TYPE | null): JSX.Element {
+    const fieldSelect = selectedField ? (
+      <StyledSelect
+        onChange={(e) => handleFieldChange(e.target.value)}
+        value={selectedField?.slug}
+      >
+        {filteredFields.map((f) => (
+          <MenuItem key={f.slug} value={f.slug}>
+            {f.title}
+          </MenuItem>
+        ))}
+      </StyledSelect>
+    ) : (
+      <StyledSelect
+        SelectProps={{
+          renderValue: function getLabel() {
+            return <Msg id={localMessageIds.fieldSelect.any} />;
+          },
+        }}
+        value={DEFAULT_VALUE}
+      >
+        <MenuItem key={DEFAULT_VALUE} value={DEFAULT_VALUE}>
+          <Msg id={localMessageIds.edit.none} />
+        </MenuItem>
+      </StyledSelect>
+    );
+
+    if (!type || type == CUSTOM_FIELD_TYPE.JSON) {
+      // Not relevant
+      return <></>;
+    } else {
+      if (type == CUSTOM_FIELD_TYPE.DATE) {
+        return (
+          <Msg
+            id={localMessageIds.edit.date}
+            values={{
+              fieldSelect,
+              timeFrame: (
+                <TimeFrame
+                  filterConfig={{
+                    after: filter.config.after,
+                    before: filter.config.before,
+                  }}
+                  onChange={handleTimeFrameChange}
+                />
+              ),
+            }}
+          />
+        );
+      } else if (type == CUSTOM_FIELD_TYPE.URL) {
+        return (
+          <Msg
+            id={localMessageIds.edit.url}
+            values={{
+              fieldSelect,
+              freeTextInput: (
+                <StyledTextInput
+                  inputString={filter.config.search || ''} // for dynamic width
+                  onChange={(e) => handleValueChange(e.target.value)}
+                  value={filter.config.search || ''}
+                />
+              ),
+            }}
+          />
+        );
+      } else {
+        return (
+          <Msg
+            id={localMessageIds.edit.text}
+            values={{
+              fieldSelect,
+              freeTextInput: (
+                <StyledTextInput
+                  inputString={filter.config.search || ''} // for dynamic width
+                  onChange={(e) => handleValueChange(e.target.value)}
+                  value={filter.config.search || ''}
+                />
+              ),
+            }}
+          />
+        );
+      }
+    }
+  }
+
   return (
     <FilterForm
       disableSubmit={!submittable}
       onCancel={onCancel}
       onSubmit={(e) => handleSubmit(e)}
-      renderExamples={() => (
-        <>
-          <Msg id="misc.smartSearch.person_field.examples.one" />
-          <br />
-          <Msg id="misc.smartSearch.person_field.examples.two" />
-        </>
-      )}
+      renderExamples={() => <></>}
       renderSentence={() => (
         <Msg
-          id="misc.smartSearch.person_field.inputString"
+          id={localMessageIds.inputString}
           values={{
             addRemoveSelect: (
               <StyledSelect
@@ -140,65 +222,12 @@ const PersonField = ({
               >
                 {Object.values(OPERATION).map((o) => (
                   <MenuItem key={o} value={o}>
-                    <Msg
-                      id={`misc.smartSearch.person_field.addRemoveSelect.${o}`}
-                    />
+                    <Msg id={localMessageIds.addRemoveSelect[o]} />
                   </MenuItem>
                 ))}
               </StyledSelect>
             ),
-            field: (
-              <Msg
-                id={`misc.smartSearch.field.edit.${
-                  selectedField?.type || DEFAULT_VALUE
-                }`}
-                values={{
-                  fieldSelect: selectedField ? (
-                    <StyledSelect
-                      onChange={(e) => handleFieldChange(e.target.value)}
-                      value={selectedField?.slug}
-                    >
-                      {filteredFields.map((f) => (
-                        <MenuItem key={f.slug} value={f.slug}>
-                          {f.title}
-                        </MenuItem>
-                      ))}
-                    </StyledSelect>
-                  ) : (
-                    <StyledSelect
-                      SelectProps={{
-                        renderValue: function getLabel() {
-                          return (
-                            <Msg id="misc.smartSearch.field.fieldSelect.any" />
-                          );
-                        },
-                      }}
-                      value={DEFAULT_VALUE}
-                    >
-                      <MenuItem key={DEFAULT_VALUE} value={DEFAULT_VALUE}>
-                        <Msg id="misc.smartSearch.field.edit.none" />
-                      </MenuItem>
-                    </StyledSelect>
-                  ),
-                  freeTextInput: (
-                    <StyledTextInput
-                      inputString={filter.config.search || ''} // for dynamic width
-                      onChange={(e) => handleValueChange(e.target.value)}
-                      value={filter.config.search || ''}
-                    />
-                  ),
-                  timeFrame: (
-                    <TimeFrame
-                      filterConfig={{
-                        after: filter.config.after,
-                        before: filter.config.before,
-                      }}
-                      onChange={handleTimeFrameChange}
-                    />
-                  ),
-                }}
-              />
-            ),
+            field: getFieldInput(selectedField?.type ?? null),
           }}
         />
       )}

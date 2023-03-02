@@ -1,12 +1,10 @@
 import makeStyles from '@mui/styles/makeStyles';
 import { useRouter } from 'next/router';
 import { Box, Button, Theme } from '@mui/material';
-import { FormattedMessage, useIntl } from 'react-intl';
 import { FunctionComponent, useContext, useState } from 'react';
 
 import NProgress from 'nprogress';
 import ShareViewDialog from '../components/ShareViewDialog';
-import TabbedLayout from 'utils/layout/TabbedLayout';
 import useModel from 'core/useModel';
 import useServerSide from 'core/useServerSide';
 import ViewDataModel from '../models/ViewDataModel';
@@ -21,6 +19,10 @@ import ZUIFutures from 'zui/ZUIFutures';
 import ZUIIconLabelRow from 'zui/ZUIIconLabelRow';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 import { Group, Share, ViewColumnOutlined } from '@mui/icons-material';
+import { Msg, useMessages } from 'core/i18n';
+
+import messageIds from '../l10n/messageIds';
+import SimpleLayout from 'utils/layout/SimpleLayout';
 
 const useStyles = makeStyles<Theme, { deactivated: boolean }>(() => ({
   deactivateWrapper: {
@@ -61,7 +63,7 @@ const SingleViewLayout: FunctionComponent<SingleViewLayoutProps> = ({
 
   const [deactivated, setDeactivated] = useState(false);
   const classes = useStyles({ deactivated });
-  const intl = useIntl();
+  const messages = useMessages(messageIds);
   const [queryDialogOpen, setQueryDialogOpen] = useState(false);
   const [shareDialogOpen, setShareDialogOpen] = useState(false);
   const { showSnackbar } = useContext(ZUISnackbarContext);
@@ -87,17 +89,10 @@ const SingleViewLayout: FunctionComponent<SingleViewLayoutProps> = ({
                     dataModel.setTitle(newTitle);
                     showSnackbar(
                       'success',
-                      intl.formatMessage({
-                        id: `misc.views.editViewTitleAlert.success`,
-                      })
+                      messages.editViewTitleAlert.success()
                     );
                   } catch (err) {
-                    showSnackbar(
-                      'error',
-                      intl.formatMessage({
-                        id: `misc.views.editViewTitleAlert.error`,
-                      })
-                    );
+                    showSnackbar('error', messages.editViewTitleAlert.error());
                   }
                 }}
                 value={view?.title}
@@ -116,24 +111,18 @@ const SingleViewLayout: FunctionComponent<SingleViewLayoutProps> = ({
 
   if (view?.content_query) {
     ellipsisMenu.push({
-      label: intl.formatMessage({
-        id: 'pages.people.views.layout.ellipsisMenu.editQuery',
-      }),
+      label: messages.viewLayout.ellipsisMenu.editQuery(),
       onSelect: () => setQueryDialogOpen(true),
     });
     ellipsisMenu.push({
-      label: intl.formatMessage({
-        id: 'pages.people.views.layout.ellipsisMenu.makeStatic',
-      }),
+      label: messages.viewLayout.ellipsisMenu.makeStatic(),
       onSelect: () => {
         dataModel.deleteContentQuery();
       },
     });
   } else {
     ellipsisMenu.push({
-      label: intl.formatMessage({
-        id: 'pages.people.views.layout.ellipsisMenu.makeDynamic',
-      }),
+      label: messages.viewLayout.ellipsisMenu.makeDynamic(),
       onSelect: () => setQueryDialogOpen(true),
     });
   }
@@ -146,12 +135,7 @@ const SingleViewLayout: FunctionComponent<SingleViewLayoutProps> = ({
         await dataModel.delete();
       } catch (err) {
         setDeactivated(false);
-        showSnackbar(
-          'error',
-          intl.formatMessage({
-            id: 'pages.people.views.layout.deleteDialog.error',
-          })
-        );
+        showSnackbar('error', messages.deleteDialog.error());
       } finally {
         router.push(`/organize/${orgId}/people/views`);
       }
@@ -160,36 +144,28 @@ const SingleViewLayout: FunctionComponent<SingleViewLayoutProps> = ({
 
   ellipsisMenu.push({
     id: 'delete-view',
-    label: intl.formatMessage({
-      id: 'pages.people.views.layout.ellipsisMenu.delete',
-    }),
+    label: messages.viewLayout.ellipsisMenu.delete(),
     onSelect: () => {
       showConfirmDialog({
         onSubmit: deleteView,
-        title: intl.formatMessage({
-          id: 'pages.people.views.layout.deleteDialog.title',
-        }),
-        warningText: intl.formatMessage({
-          id: 'pages.people.views.layout.deleteDialog.warningText',
-        }),
+        title: messages.deleteDialog.title(),
+        warningText: messages.deleteDialog.warningText(),
       });
     },
   });
 
   return (
     <Box key={viewId as string} className={classes.deactivateWrapper}>
-      <TabbedLayout
+      <SimpleLayout
         actionButtons={
           <Button
             endIcon={<Share />}
             onClick={() => setShareDialogOpen(true)}
             variant="contained"
           >
-            <FormattedMessage id="pages.people.views.layout.actions.share" />
+            <Msg id={messageIds.viewLayout.actions.share} />
           </Button>
         }
-        baseHref={`/organize/${orgId}/people/views/${viewId}`}
-        defaultTab="/"
         ellipsisMenuItems={ellipsisMenu}
         fixedHeight={true}
         subtitle={
@@ -205,8 +181,8 @@ const SingleViewLayout: FunctionComponent<SingleViewLayoutProps> = ({
                 {
                   icon: <Group />,
                   label: (
-                    <FormattedMessage
-                      id="pages.people.views.layout.subtitle.people"
+                    <Msg
+                      id={messageIds.viewLayout.subtitle.people}
                       values={{ count: rows.length }}
                     />
                   ),
@@ -214,8 +190,8 @@ const SingleViewLayout: FunctionComponent<SingleViewLayoutProps> = ({
                 {
                   icon: <ViewColumnOutlined />,
                   label: (
-                    <FormattedMessage
-                      id="pages.people.views.layout.subtitle.columns"
+                    <Msg
+                      id={messageIds.viewLayout.subtitle.columns}
                       values={{ count: cols.length }}
                     />
                   ),
@@ -227,8 +203,8 @@ const SingleViewLayout: FunctionComponent<SingleViewLayoutProps> = ({
                 labels.push({
                   icon: <Share />,
                   label: (
-                    <FormattedMessage
-                      id="pages.people.views.layout.subtitle.collaborators"
+                    <Msg
+                      id={messageIds.viewLayout.subtitle.collaborators}
                       values={{ count: accessListFuture.data.length }}
                     />
                   ),
@@ -239,11 +215,10 @@ const SingleViewLayout: FunctionComponent<SingleViewLayoutProps> = ({
             }}
           </ZUIFutures>
         }
-        tabs={[{ href: `/`, messageId: 'layout.organize.view.tabs.view' }]}
         title={title}
       >
         {children}
-      </TabbedLayout>
+      </SimpleLayout>
       {queryDialogOpen && view && (
         <ViewSmartSearchDialog
           onDialogClose={() => setQueryDialogOpen(false)}

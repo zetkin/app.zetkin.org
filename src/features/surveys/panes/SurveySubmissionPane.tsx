@@ -1,10 +1,10 @@
 import { EyeClosed } from 'zui/icons/EyeClosed';
-import { FormattedMessage } from 'react-intl';
 import { makeStyles } from '@mui/styles';
 import { Box, Typography } from '@mui/material';
 import { Check, FormatQuote } from '@mui/icons-material';
 import { FC, ReactNode } from 'react';
 
+import { Msg } from 'core/i18n';
 import PaneHeader from 'utils/panes/PaneHeader';
 import useModel from 'core/useModel';
 import ZUIFuture from 'zui/ZUIFuture';
@@ -13,6 +13,8 @@ import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 import SurveySubmissionModel, {
   ELEM_TYPE,
 } from '../models/SurveySubmissionModel';
+
+import messageIds from '../l10n/messageIds';
 
 interface SurveySubmissionPaneProps {
   orgId: number;
@@ -64,9 +66,7 @@ const SurveySubmissionPane: FC<SurveySubmissionPaneProps> = ({ orgId, id }) => {
   return (
     <ZUIFuture future={subFuture}>
       {(sub) => {
-        let person = (
-          <FormattedMessage id="misc.panes.surveySubmission.anonymous" />
-        );
+        let person = <Msg id={messageIds.submissionPane.anonymous} />;
         if (sub.respondent) {
           if (sub.respondent.id) {
             person = (
@@ -90,8 +90,8 @@ const SurveySubmissionPane: FC<SurveySubmissionPaneProps> = ({ orgId, id }) => {
           <>
             <PaneHeader
               subtitle={
-                <FormattedMessage
-                  id="misc.panes.surveySubmission.subtitle"
+                <Msg
+                  id={messageIds.submissionPane.subtitle}
                   values={{
                     date: <ZUIRelativeTime datetime={sub.submitted} />,
                     person: person,

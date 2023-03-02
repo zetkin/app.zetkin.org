@@ -1,12 +1,12 @@
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
-import { FormattedMessage as Msg } from 'react-intl';
 import { Grid, LinearProgress, Typography } from '@mui/material';
 
 import { getCompletionPercentage } from 'features/journeys/components/JourneyMilestoneProgress';
 import JourneyInstanceLayout from 'features/journeys/layout/JourneyInstanceLayout';
 import { journeyInstanceResource } from 'features/journeys/api/journeys';
 import JourneyMilestoneCard from 'features/journeys/components/JourneyMilestoneCard';
+import { Msg } from 'core/i18n';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import { ZetkinJourneyInstance } from 'utils/types/zetkin';
@@ -15,6 +15,8 @@ import {
   JourneyDetailsPageProps,
   scaffoldOptions,
 } from '../index';
+
+import messageIds from 'features/journeys/l10n/messageIds';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   getJourneyInstanceScaffoldProps,
@@ -53,7 +55,7 @@ const JourneyMilestonesPage: PageWithLayout<JourneyDetailsPageProps> = ({
                 variant="h4"
               >
                 <Msg
-                  id="pages.organizeJourneyInstance.percentComplete"
+                  id={messageIds.instance.percentComplete}
                   values={{ percentComplete }}
                 />
               </Typography>
@@ -67,7 +69,7 @@ const JourneyMilestonesPage: PageWithLayout<JourneyDetailsPageProps> = ({
             </>
           ) : (
             <Typography data-testid="JourneyMilestoneCard-noMilestones">
-              <Msg id="pages.organizeJourneyInstance.noMilestones" />
+              <Msg id={messageIds.instance.noMilestones} />
             </Typography>
           )}
         </Grid>

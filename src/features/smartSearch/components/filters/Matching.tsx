@@ -1,4 +1,3 @@
-import { FormattedMessage as Msg } from 'react-intl';
 import { MenuItem, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 
@@ -8,6 +7,9 @@ import { MATCHING } from 'features/smartSearch/components/types';
 
 import StyledNumberInput from '../inputs/StyledNumberInput';
 import StyledSelect from '../inputs/StyledSelect';
+
+import messageIds from 'features/smartSearch/l10n/messageIds';
+import { Msg } from 'core/i18n';
 
 interface MatchingProps {
   onChange: (range: { max?: number; min?: number }) => void;
@@ -41,39 +43,55 @@ const Matching = ({
     }
   }, [min, max, option]);
 
+  const matchingSelect = (
+    <StyledSelect
+      onChange={(e) => setOption(e.target.value as MATCHING)}
+      value={option}
+    >
+      {options.map((value) => (
+        <MenuItem key={value} value={value}>
+          <Msg id={messageIds.matching.labels[value]} />
+        </MenuItem>
+      ))}
+    </StyledSelect>
+  );
+
+  const minInput = (
+    <StyledNumberInput
+      onChange={(e) => setMin(+e.target.value)}
+      value={min || DEFAULT_MIN}
+    />
+  );
+  const maxInput = (
+    <StyledNumberInput
+      onChange={(e) => setMax(+e.target.value)}
+      value={max || DEFAULT_MAX}
+    />
+  );
+
   return (
     <Typography display="inline" variant="h4">
-      <Msg
-        id={`misc.smartSearch.matching.edit.${option}`}
-        values={{
-          matchingSelect: (
-            <StyledSelect
-              onChange={(e) => setOption(e.target.value as MATCHING)}
-              value={option}
-            >
-              {options.map((value) => (
-                <MenuItem key={value} value={value}>
-                  <Msg id={`misc.smartSearch.matching.labels.${value}`} />
-                </MenuItem>
-              ))}
-            </StyledSelect>
-          ),
-          max: max,
-          maxInput: (
-            <StyledNumberInput
-              onChange={(e) => setMax(+e.target.value)}
-              value={max || DEFAULT_MAX}
-            />
-          ),
-          min: min,
-          minInput: (
-            <StyledNumberInput
-              onChange={(e) => setMin(+e.target.value)}
-              value={min || DEFAULT_MIN}
-            />
-          ),
-        }}
-      />
+      {option == 'between' && (
+        <Msg
+          id={messageIds.matching.edit.between}
+          values={{ matchingSelect, maxInput, minInput }}
+        />
+      )}
+      {option == 'max' && (
+        <Msg
+          id={messageIds.matching.edit.max}
+          values={{ matchingSelect, max: max || 1, maxInput }}
+        />
+      )}
+      {option == 'min' && (
+        <Msg
+          id={messageIds.matching.edit.min}
+          values={{ matchingSelect, min: min || 1, minInput }}
+        />
+      )}
+      {option == 'once' && (
+        <Msg id={messageIds.matching.edit.once} values={{ matchingSelect }} />
+      )}
     </Typography>
   );
 };

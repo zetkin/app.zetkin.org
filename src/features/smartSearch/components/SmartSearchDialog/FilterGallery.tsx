@@ -1,5 +1,4 @@
 import { ChevronLeft } from '@mui/icons-material';
-import { FormattedMessage as Msg } from 'react-intl';
 import {
   Box,
   Button,
@@ -11,6 +10,9 @@ import {
 } from '@mui/material';
 
 import { FILTER_TYPE } from 'features/smartSearch/components/types';
+import { Msg } from 'core/i18n';
+
+import messageIds from 'features/smartSearch/l10n/messageIds';
 
 interface FilterGalleryProps {
   onCancelAddNewFilter: () => void;
@@ -70,12 +72,12 @@ const FilterGallery = ({
             onClick={onCancelAddNewFilter}
             startIcon={<ChevronLeft />}
           >
-            <Msg id="misc.smartSearch.buttonLabels.goBack" />
+            <Msg id={messageIds.buttonLabels.goBack} />
           </Button>
         </Box>
         <Box flex={1}>
           <Typography align="center" variant="h5">
-            <Msg id="misc.smartSearch.headers.gallery" />
+            <Msg id={messageIds.headers.gallery} />
           </Typography>
         </Box>
         <Box flex={1} />
@@ -84,7 +86,9 @@ const FilterGallery = ({
         <Box key={category} margin="auto" width={0.9}>
           <Box pl={2}>
             <Typography variant="h6">
-              <Msg id={`misc.smartSearch.filterCategories.${category}`} />
+              <Msg
+                id={messageIds.filterCategories[category as FILTER_CATEGORY]}
+              />
             </Typography>
           </Box>
           <Box
@@ -113,7 +117,7 @@ const FilterGallery = ({
                     padding={1}
                   >
                     <Typography>
-                      <Msg id={`misc.smartSearch.filterTitles.${filter}`} />
+                      <Msg id={messageIds.filterTitles[filter]} />
                     </Typography>
                   </Box>
                 </Card>

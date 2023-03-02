@@ -1,9 +1,11 @@
 import copy from 'copy-to-clipboard';
-import { FormattedMessage } from 'react-intl';
 import { ButtonBase, Collapse, Fade, Grid, Typography } from '@mui/material';
 import React, { useState } from 'react';
 
 import { CopyIcon } from './ZUIInlineCopyToClipBoard';
+import { Msg } from 'core/i18n';
+
+import messageIds from './l10n/messageIds';
 
 const ZUICopyToClipboard: React.FunctionComponent<{
   children: React.ReactNode;
@@ -49,7 +51,7 @@ const ZUICopyToClipboard: React.FunctionComponent<{
                 style={{ fontSize: 11, fontWeight: 'bold' }}
                 variant="button"
               >
-                <FormattedMessage id="misc.copyToClipboard.copied" />
+                <Msg id={messageIds.copyToClipboard.copied} />
               </Typography>
             </Collapse>
           </Grid>

@@ -1,4 +1,7 @@
-import { FormattedMessage as Msg } from 'react-intl';
+import { Msg } from 'core/i18n';
+
+import messageIds from 'features/smartSearch/l10n/messageIds';
+const localMessageIds = messageIds.filters.all;
 
 interface DisplayStartsWithProps {
   startsWithAll: boolean;
@@ -9,10 +12,14 @@ const DisplayStartsWith = ({
 }: DisplayStartsWithProps): JSX.Element => {
   return (
     <Msg
-      id="misc.smartSearch.all.inputString"
+      id={localMessageIds.inputString}
       values={{
         startWithSelect: (
-          <Msg id={`misc.smartSearch.all.startWithSelect.${startsWithAll}`} />
+          <Msg
+            id={
+              localMessageIds.startWithSelect[startsWithAll ? 'true' : 'false']
+            }
+          />
         ),
       }}
     />

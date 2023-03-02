@@ -2,7 +2,6 @@ import ArchiveIcon from '@mui/icons-material/Archive';
 import dayjs from 'dayjs';
 import { useRouter } from 'next/router';
 import { Box, Button, TextField, Typography } from '@mui/material';
-import { FormattedMessage, useIntl } from 'react-intl';
 import { useContext, useState } from 'react';
 
 import { journeyInstanceResource } from 'features/journeys/api/journeys';
@@ -10,12 +9,15 @@ import TagManager from 'features/tags/components/TagManager';
 import ZUIDialog from 'zui/ZUIDialog';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 import ZUISubmitCancelButtons from 'zui/ZUISubmitCancelButtons';
+import { Msg, useMessages } from 'core/i18n';
 import { ZetkinJourneyInstance, ZetkinTag } from 'utils/types/zetkin';
+
+import messageIds from '../l10n/messageIds';
 
 const JourneyInstanceCloseButton: React.FunctionComponent<{
   journeyInstance: ZetkinJourneyInstance;
 }> = ({ journeyInstance }) => {
-  const intl = useIntl();
+  const messages = useMessages(messageIds);
   const { orgId } = useRouter().query;
 
   const { showSnackbar } = useContext(ZUISnackbarContext);
@@ -47,10 +49,9 @@ const JourneyInstanceCloseButton: React.FunctionComponent<{
       onError: () =>
         showSnackbar(
           'error',
-          intl.formatMessage(
-            { id: 'misc.journeys.journeyInstanceCloseButton.error' },
-            { singularLabel: journeyInstance.journey.singular_label }
-          )
+          messages.instance.closeButton.error({
+            singularLabel: journeyInstance.journey.singular_label,
+          })
         ),
       onSuccess: () => closeAndClear(),
     });
@@ -65,8 +66,8 @@ const JourneyInstanceCloseButton: React.FunctionComponent<{
         startIcon={<ArchiveIcon />}
         variant="contained"
       >
-        <FormattedMessage
-          id="misc.journeys.journeyInstanceCloseButton.label"
+        <Msg
+          id={messageIds.instance.closeButton.label}
           values={{ singularLabel: journeyInstance.journey.singular_label }}
         />
       </Button>
@@ -80,7 +81,7 @@ const JourneyInstanceCloseButton: React.FunctionComponent<{
             }}
           >
             <Typography variant="h6">
-              <FormattedMessage id="misc.journeys.journeyInstanceCloseButton.dialog.outcomeLabel" />
+              <Msg id={messageIds.instance.closeButton.dialog.outcomeLabel} />
             </Typography>
             <TextField
               fullWidth
@@ -90,10 +91,7 @@ const JourneyInstanceCloseButton: React.FunctionComponent<{
               margin="normal"
               multiline
               onChange={(e) => setOutcomeNote(e.target.value)}
-              placeholder={intl.formatMessage(
-                {
-                  id: 'misc.journeys.journeyInstanceCloseButton.dialog.outcomeFieldPlaceholder',
-                },
+              placeholder={messages.instance.closeButton.dialog.outcomeFieldPlaceholder(
                 { singularLabel: journeyInstance.journey.singular_label }
               )}
               rows={3}
@@ -101,11 +99,18 @@ const JourneyInstanceCloseButton: React.FunctionComponent<{
             />
             <Box mt={2}>
               <Typography variant="h6">
-                <FormattedMessage id="misc.journeys.journeyInstanceCloseButton.dialog.outcomeTagsLabel" />
+                <Msg
+                  id={messageIds.instance.closeButton.dialog.outcomeTagsLabel}
+                />
               </Typography>
               <Box mb={3} mt={1}>
                 <Typography variant="body2">
-                  <FormattedMessage id="misc.journeys.journeyInstanceCloseButton.dialog.outcomeTagsDescription" />
+                  <Msg
+                    id={
+                      messageIds.instance.closeButton.dialog
+                        .outcomeTagsDescription
+                    }
+                  />
                 </Typography>
               </Box>
               <Box>
@@ -131,12 +136,9 @@ const JourneyInstanceCloseButton: React.FunctionComponent<{
             <ZUISubmitCancelButtons
               onCancel={closeAndClear}
               submitDisabled={closeJourneyInstanceMutation.isLoading}
-              submitText={intl.formatMessage(
-                {
-                  id: 'misc.journeys.journeyInstanceCloseButton.label',
-                },
-                { singularLabel: journeyInstance.journey.singular_label }
-              )}
+              submitText={messages.instance.closeButton.label({
+                singularLabel: journeyInstance.journey.singular_label,
+              })}
             />
           </form>
         </Box>
@@ -150,7 +152,7 @@ export default JourneyInstanceCloseButton;
 export const JourneyInstanceReopenButton: React.FunctionComponent<{
   journeyInstance: ZetkinJourneyInstance;
 }> = ({ journeyInstance }) => {
-  const intl = useIntl();
+  const messages = useMessages(messageIds);
   const { orgId } = useRouter().query;
   const { showSnackbar } = useContext(ZUISnackbarContext);
 
@@ -171,14 +173,9 @@ export const JourneyInstanceReopenButton: React.FunctionComponent<{
             onError: () =>
               showSnackbar(
                 'error',
-                intl.formatMessage(
-                  {
-                    id: 'misc.journeys.journeyInstanceReopenButton.error',
-                  },
-                  {
-                    singularLabel: journeyInstance.journey.singular_label,
-                  }
-                )
+                messages.instance.reopenButton.error({
+                  singularLabel: journeyInstance.journey.singular_label,
+                })
               ),
           }
         )
@@ -186,8 +183,8 @@ export const JourneyInstanceReopenButton: React.FunctionComponent<{
       startIcon={<ArchiveIcon />}
       variant="contained"
     >
-      <FormattedMessage
-        id="misc.journeys.journeyInstanceReopenButton.label"
+      <Msg
+        id={messageIds.instance.reopenButton.label}
         values={{ singularLabel: journeyInstance.journey.singular_label }}
       />
     </Button>

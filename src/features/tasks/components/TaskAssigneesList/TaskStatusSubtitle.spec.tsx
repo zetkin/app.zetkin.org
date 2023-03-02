@@ -4,6 +4,8 @@ import { render } from 'utils/testing';
 import singletonRouter from 'next/router';
 import TaskStatusSubtitle from './TaskStatusSubtitle';
 
+import messageIds from 'features/tasks/l10n/messageIds';
+
 jest.mock('next/dist/client/router', () => require('next-router-mock'));
 
 beforeEach(() => {
@@ -16,9 +18,9 @@ describe('TaskStatusSubtitle', () => {
   it('shows not completed status.', () => {
     const task = mockAssignedTask();
 
-    const { getByText } = render(<TaskStatusSubtitle task={task} />);
-    const notCompletedSubtitle = getByText(
-      'misc.tasks.taskAssigneesList.completedStates.notCompleted'
+    const { getByMessageId } = render(<TaskStatusSubtitle task={task} />);
+    const notCompletedSubtitle = getByMessageId(
+      messageIds.assignees.completedStates.notCompleted
     );
     expect(notCompletedSubtitle).not.toBeNull();
   });
@@ -28,9 +30,9 @@ describe('TaskStatusSubtitle', () => {
       status: ASSIGNED_STATUS.IGNORED,
     });
 
-    const { getByText } = render(<TaskStatusSubtitle task={task} />);
-    const ignoredSubtitle = getByText(
-      'misc.tasks.taskAssigneesList.completedStates.ignored'
+    const { getByMessageId } = render(<TaskStatusSubtitle task={task} />);
+    const ignoredSubtitle = getByMessageId(
+      messageIds.assignees.completedStates.ignored
     );
     expect(ignoredSubtitle).not.toBeNull();
   });
@@ -40,9 +42,9 @@ describe('TaskStatusSubtitle', () => {
       status: ASSIGNED_STATUS.COMPLETED,
     });
 
-    const { getByText } = render(<TaskStatusSubtitle task={task} />);
-    const completedSubtitle = getByText(
-      'misc.tasks.taskAssigneesList.completedStates.completed'
+    const { getByMessageId } = render(<TaskStatusSubtitle task={task} />);
+    const completedSubtitle = getByMessageId(
+      messageIds.assignees.completedStates.completed
     );
     expect(completedSubtitle).not.toBeNull();
   });

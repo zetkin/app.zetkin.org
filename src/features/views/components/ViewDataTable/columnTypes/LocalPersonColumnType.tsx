@@ -1,4 +1,3 @@
-import { FormattedMessage } from 'react-intl';
 import { makeStyles } from '@mui/styles';
 import { useRouter } from 'next/router';
 import {
@@ -17,6 +16,7 @@ import {
 } from '@mui/material';
 
 import { IColumnType } from '.';
+import { Msg } from 'core/i18n';
 import useAccessLevel from 'features/views/hooks/useAccessLevel';
 import { usePersonSelect } from 'zui/ZUIPersonSelect';
 import useViewDataModel from 'features/views/hooks/useViewDataModel';
@@ -27,6 +27,8 @@ import { COLUMN_TYPE, LocalPersonViewColumn } from '../../types';
 import { FC, HTMLAttributes, useState } from 'react';
 import { GridColDef, useGridApiContext } from '@mui/x-data-grid-pro';
 import { ZetkinPerson, ZetkinViewRow } from 'utils/types/zetkin';
+
+import messageIds from 'features/views/l10n/messageIds';
 
 type LocalPersonViewCell = null | ZetkinPerson;
 
@@ -206,7 +208,7 @@ const Cell: FC<{
             >
               {!!cell && <SelectedPerson orgId={orgId} person={cell} />}
               <Typography fontStyle="italic" variant="caption">
-                <FormattedMessage id="misc.views.cells.localPerson.restrictedMode" />
+                <Msg id={messageIds.cells.localPerson.restrictedMode} />
               </Typography>
             </Box>
           )}
@@ -237,7 +239,7 @@ const Cell: FC<{
                           endIcon={<Close />}
                           onClick={() => updateCellValue(null)}
                         >
-                          <FormattedMessage id="misc.views.cells.localPerson.clearLabel" />
+                          <Msg id={messageIds.cells.localPerson.clearLabel} />
                         </Button>
                       </>
                     )}
@@ -250,7 +252,7 @@ const Cell: FC<{
                   {showPeopleInView && !!peopleInView.length && (
                     <List>
                       <ListSubheader>
-                        <FormattedMessage id="misc.views.cells.localPerson.alreadyInView" />
+                        <Msg id={messageIds.cells.localPerson.alreadyInView} />
                       </ListSubheader>
                       {peopleInView.map((option) => (
                         <PersonListItem
@@ -269,7 +271,7 @@ const Cell: FC<{
                   {searching && (
                     <List {...autoComplete.getListboxProps()}>
                       <ListSubheader sx={{ position: 'relative' }}>
-                        <FormattedMessage id="misc.views.cells.localPerson.otherPeople" />
+                        <Msg id={messageIds.cells.localPerson.otherPeople} />
                       </ListSubheader>
                       {options.map((option, index) => {
                         const optProps = autoComplete.getOptionProps({

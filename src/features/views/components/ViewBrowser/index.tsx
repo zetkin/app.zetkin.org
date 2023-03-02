@@ -1,5 +1,4 @@
 import NextLink from 'next/link';
-import { useIntl } from 'react-intl';
 import {
   DataGridPro,
   GridColDef,
@@ -15,6 +14,7 @@ import BrowserDragLayer from './BrowserDragLayer';
 import BrowserItem from './BrowserItem';
 import BrowserItemIcon from './BrowserItemIcon';
 import BrowserRow from './BrowserRow';
+import { useMessages } from 'core/i18n';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import ZUIFuture from 'zui/ZUIFuture';
@@ -23,6 +23,8 @@ import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
 import ViewBrowserModel, {
   ViewBrowserItem,
 } from '../../models/ViewBrowserModel';
+
+import messageIds from 'features/views/l10n/messageIds';
 
 interface ViewBrowserProps {
   basePath: string;
@@ -43,7 +45,7 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
   folderId = null,
   model,
 }) => {
-  const intl = useIntl();
+  const messages = useMessages(messageIds);
   const [sortModel, setSortModel] = useState<GridSortModel>([]);
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
   const isMobile = useMediaQuery((theme: Theme) =>
@@ -99,9 +101,7 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
       editable: true,
       field: 'title',
       flex: 2,
-      headerName: intl.formatMessage({
-        id: 'pages.people.views.viewsList.columns.title',
-      }),
+      headerName: messages.viewsList.columns.title(),
       renderCell: (params) => {
         return (
           <BrowserItem basePath={basePath} item={params.row} model={model} />
@@ -115,9 +115,7 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
       disableColumnMenu: true,
       field: 'owner',
       flex: 1,
-      headerName: intl.formatMessage({
-        id: 'pages.people.views.viewsList.columns.owner',
-      }),
+      headerName: messages.viewsList.columns.owner(),
       renderCell: (params) => {
         if (params.row.type == 'view') {
           const owner = params.row.data.owner;
@@ -144,9 +142,7 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
           <ZUIEllipsisMenu
             items={[
               {
-                label: intl.formatMessage({
-                  id: 'pages.people.views.browser.menu.rename',
-                }),
+                label: messages.browser.menu.rename(),
                 onSelect: (e) => {
                   e.preventDefault();
                   e.stopPropagation();
@@ -169,12 +165,9 @@ const ViewBrowser: FC<ViewBrowserProps> = ({
                         model.deleteView(item.data.id);
                       }
                     },
-                    title: intl.formatMessage({
-                      id: `pages.people.views.browser.confirmDelete.${item.type}.title`,
-                    }),
-                    warningText: intl.formatMessage({
-                      id: `pages.people.views.browser.confirmDelete.${item.type}.warning`,
-                    }),
+                    title: messages.browser.confirmDelete[item.type].title(),
+                    warningText:
+                      messages.browser.confirmDelete[item.type].warning(),
                   });
                 },
               },

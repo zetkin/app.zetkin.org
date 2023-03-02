@@ -1,11 +1,13 @@
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { Box, Button, Typography } from '@mui/material';
-import { FormattedMessage, useIntl } from 'react-intl';
 import React, { useEffect, useRef, useState } from 'react';
 
 import UpdateContainer from './elements/UpdateContainer';
 import { ZetkinUpdateJourneyInstance } from 'zui/ZUITimeline/types';
 import ZUIPersonLink from 'zui/ZUIPersonLink';
+import { Msg, useMessages } from 'core/i18n';
+
+import messageIds from '../l10n/messageIds';
 
 interface Props {
   update: ZetkinUpdateJourneyInstance;
@@ -14,7 +16,7 @@ interface Props {
 const TimelineJourneyInstance: React.FunctionComponent<Props> = ({
   update,
 }) => {
-  const intl = useIntl();
+  const messages = useMessages(messageIds);
   const textRef = useRef<HTMLParagraphElement | null>(null);
   const fieldToUpdate = Object.keys(update.details.changes)[0] as
     | 'summary'
@@ -58,8 +60,8 @@ const TimelineJourneyInstance: React.FunctionComponent<Props> = ({
 
   function renderDescriptionText() {
     return (
-      <FormattedMessage
-        id={`misc.updates.${update.type}.${fieldToUpdate}`}
+      <Msg
+        id={messageIds.updates.journeyinstance.update[fieldToUpdate]}
         values={{
           actor: <ZUIPersonLink person={update.actor} />,
         }}
@@ -89,7 +91,7 @@ const TimelineJourneyInstance: React.FunctionComponent<Props> = ({
             startIcon={<ExpandMoreIcon />}
             variant="text"
           >
-            {intl.formatMessage({ id: 'misc.buttons.readMore' })}
+            {messages.updates.journeyinstance.update.readMore()}
           </Button>
         )}
       </Box>

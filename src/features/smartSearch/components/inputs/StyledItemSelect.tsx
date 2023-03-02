@@ -1,10 +1,12 @@
 import makeStyles from '@mui/styles/makeStyles';
-import { FormattedMessage as Msg } from 'react-intl';
 import { Autocomplete, AutocompleteProps, Box } from '@mui/material';
 import { Chip, TextField } from '@mui/material';
 import { Theme, Tooltip } from '@mui/material';
 
 import { getEllipsedString } from 'utils/stringUtils';
+import { Msg } from 'core/i18n';
+
+import messageIds from 'features/smartSearch/l10n/messageIds';
 
 const useStyles = makeStyles<Theme>((theme) => ({
   MuiInput: {
@@ -39,7 +41,7 @@ const StyledItemSelect = (props: StyledItemSelectProps): JSX.Element => {
       disableClearable
       getOptionLabel={(item) => item.title}
       multiple
-      noOptionsText={<Msg id="misc.smartSearch.misc.noOptions" />}
+      noOptionsText={<Msg id={messageIds.misc.noOptions} />}
       renderInput={(params) => (
         <TextField
           className={classes.MuiTextField}
