@@ -1,6 +1,11 @@
+import { Box } from '@mui/system';
+import SurveySubmissionPane from '../panes/SurveySubmissionPane';
+import { useMemo } from 'react';
+import { usePanes } from 'utils/panes';
 import { useRouter } from 'next/router';
 import {
   DataGridPro,
+  GridCellParams,
   GridRenderCellParams,
   GridValueGetterParams,
 } from '@mui/x-data-grid-pro';
@@ -20,6 +25,16 @@ const SurveySubmissionsList = ({
 }) => {
   const messages = useMessages(messageIds);
   const { orgId } = useRouter().query;
+  const { openPane } = usePanes();
+
+  const sortedSubmissions = useMemo(() => {
+    const sorted = [...submissions].sort((subOne, subTwo) => {
+      const dateOne = new Date(subOne.submitted);
+      const dateTwo = new Date(subTwo.submitted);
+      return dateTwo.getTime() - dateOne.getTime();
+    });
+    return sorted;
+  }, [submissions]);
 
   const makeSimpleColumn = (
     field: keyof NonNullable<ZetkinSurveySubmission['respondent']>,
@@ -57,7 +72,9 @@ const SurveySubmissionsList = ({
       renderCell: (
         params: GridRenderCellParams<string, ZetkinSurveySubmission>
       ) => {
-        return <ZUIRelativeTime datetime={params.row.submitted} />;
+        if (params.row.respondent !== null) {
+          return <ZUIRelativeTime datetime={params.row.submitted} />;
+        }
       },
       sortable: true,
     },
@@ -88,18 +105,42 @@ const SurveySubmissionsList = ({
   ];
 
   return (
-    <>
+    <Box
+      sx={{
+        '& .pointer': {
+          cursor: 'pointer',
+        },
+      }}
+    >
       <DataGridPro
         autoHeight
         columns={gridColumns}
         disableColumnFilter
         disableColumnMenu
-        rows={submissions}
+        getCellClassName={(params: GridCellParams<string>) => {
+          return params.field === 'respondent' ? '' : 'pointer';
+        }}
+        onCellClick={(params) => {
+          if (params.field !== 'respondent') {
+            openPane({
+              render() {
+                return (
+                  <SurveySubmissionPane
+                    id={params.row.id}
+                    orgId={parseInt(orgId as string)}
+                  />
+                );
+              },
+              width: 400,
+            });
+          }
+        }}
+        rows={sortedSubmissions}
         style={{
           border: 'none',
         }}
       />
-    </>
+    </Box>
   );
 };
 
