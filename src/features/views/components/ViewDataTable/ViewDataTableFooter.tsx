@@ -1,10 +1,12 @@
 import { Box } from '@mui/material';
-import { useIntl } from 'react-intl';
 import { FunctionComponent, useRef } from 'react';
 
+import { useMessages } from 'core/i18n';
 import useViewDataModel from 'features/views/hooks/useViewDataModel';
 import { ZetkinPerson } from 'utils/types/zetkin';
 import { MUIOnlyPersonSelect as ZUIPersonSelect } from 'zui/ZUIPersonSelect';
+
+import messageIds from 'features/views/l10n/messageIds';
 
 export interface ViewDataTableFooterProps {
   onRowAdd: (person: ZetkinPerson) => void;
@@ -13,7 +15,7 @@ export interface ViewDataTableFooterProps {
 const ViewDataTableFooter: FunctionComponent<ViewDataTableFooterProps> = ({
   onRowAdd,
 }) => {
-  const intl = useIntl();
+  const messages = useMessages(messageIds);
   const selectInputRef = useRef<HTMLInputElement>();
 
   const model = useViewDataModel();
@@ -25,9 +27,7 @@ const ViewDataTableFooter: FunctionComponent<ViewDataTableFooterProps> = ({
         getOptionDisabled={(option) => rows.some((row) => row.id == option.id)}
         getOptionExtraLabel={(option) => {
           return rows.some((row) => row.id == option.id)
-            ? intl.formatMessage({
-                id: 'misc.views.footer.alreadyInView',
-              })
+            ? messages.footer.alreadyInView()
             : '';
         }}
         inputRef={selectInputRef}
@@ -40,9 +40,7 @@ const ViewDataTableFooter: FunctionComponent<ViewDataTableFooterProps> = ({
           selectInputRef?.current?.blur();
           selectInputRef?.current?.focus();
         }}
-        placeholder={intl.formatMessage({
-          id: 'misc.views.footer.addPlaceholder',
-        })}
+        placeholder={messages.footer.addPlaceholder()}
         selectedPerson={null}
         variant="outlined"
       />

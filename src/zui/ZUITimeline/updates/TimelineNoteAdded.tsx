@@ -1,10 +1,10 @@
 import { Box } from '@mui/material';
-import { FormattedMessage } from 'react-intl';
 import makeStyles from '@mui/styles/makeStyles';
 import { useState } from 'react';
 
 import { Edit } from '@material-ui/icons';
 import EmailLoader from './elements/EmailLoader';
+import { Msg } from 'core/i18n';
 import UpdateContainer from './elements/UpdateContainer';
 import { ZetkinFileObjectChip } from 'zui/ZUIFileChip';
 import { ZetkinUpdateJourneyInstanceAddNote } from 'zui/ZUITimeline/types';
@@ -14,6 +14,8 @@ import ZUIPersonLink from 'zui/ZUIPersonLink';
 import ZUISubmitCancelButtons from 'zui/ZUISubmitCancelButtons';
 import ZUITextEditor from '../../ZUITextEditor';
 import { ZetkinFile, ZetkinNote } from 'utils/types/zetkin';
+
+import messageIds from '../l10n/messageIds';
 
 interface Props {
   onEditNote: (note: Pick<ZetkinNote, 'id' | 'text'>) => void;
@@ -62,8 +64,8 @@ const TimelineNoteAdded: React.FC<Props> = ({ onEditNote, update }) => {
         />
       }
       headerContent={
-        <FormattedMessage
-          id="misc.updates.journeyinstance.addnote"
+        <Msg
+          id={messageIds.updates.journeyinstance.addnote}
           values={{ actor: <ZUIPersonLink person={update.actor} /> }}
         />
       }

@@ -1,7 +1,6 @@
 import NextLink from 'next/link';
 import { Box, FormControlLabel, Link, Switch } from '@mui/material';
 import { FC, useRef, useState } from 'react';
-import { FormattedMessage, useIntl } from 'react-intl';
 
 import { MUIOnlyPersonSelect } from 'zui/ZUIPersonSelect';
 import useAbsoluteUrl from 'utils/hooks/useAbsoluteUrl';
@@ -11,6 +10,9 @@ import ZUIAccessList from 'zui/ZUIAccessList';
 import ZUIFutures from 'zui/ZUIFutures';
 import ZUIInlineCopyToClipboard from 'zui/ZUIInlineCopyToClipBoard';
 import ZUIScrollingContainer from 'zui/ZUIScrollingContainer';
+import { Msg, useMessages } from 'core/i18n';
+
+import messageIds from 'features/views/l10n/messageIds';
 
 interface ShareViewDialogShareTabProps {
   model: ViewSharingModel;
@@ -19,7 +21,7 @@ interface ShareViewDialogShareTabProps {
 const ShareViewDialogShareTab: FC<ShareViewDialogShareTabProps> = ({
   model,
 }) => {
-  const intl = useIntl();
+  const messages = useMessages(messageIds);
   const selectInputRef = useRef<HTMLInputElement>();
   const [showOfficials, setShowOfficials] = useState(true);
   const shareLinkUrl = useAbsoluteUrl(
@@ -42,8 +44,8 @@ const ShareViewDialogShareTab: FC<ShareViewDialogShareTabProps> = ({
               justifyContent="space-between"
             >
               <Box>
-                <FormattedMessage
-                  id="pages.people.views.shareDialog.share.statusLabel"
+                <Msg
+                  id={messageIds.shareDialog.share.statusLabel}
                   values={{
                     collaborators: accessList.length,
                     officials: officials.length,
@@ -57,9 +59,7 @@ const ShareViewDialogShareTab: FC<ShareViewDialogShareTabProps> = ({
                     onChange={(ev) => setShowOfficials(ev.target.checked)}
                   />
                 }
-                label={
-                  <FormattedMessage id="pages.people.views.shareDialog.share.showOfficials" />
-                }
+                label={<Msg id={messageIds.shareDialog.share.showOfficials} />}
                 labelPlacement="start"
               />
             </Box>
@@ -85,18 +85,14 @@ const ShareViewDialogShareTab: FC<ShareViewDialogShareTabProps> = ({
                     (item) => item.person.id == person.id
                   );
                   if (accessItem) {
-                    return intl.formatMessage({
-                      id: `zui.accessList.levels.${accessItem.level}`,
-                    });
+                    return messages.global.accessLevels[accessItem.level]();
                   }
 
                   const official = officials.find(
                     (item) => item.id == person.id
                   );
                   if (official) {
-                    return intl.formatMessage({
-                      id: `zui.accessList.roles.${official.role}`,
-                    });
+                    return messages.global.roles[official.role]();
                   }
 
                   return '';
@@ -110,15 +106,13 @@ const ShareViewDialogShareTab: FC<ShareViewDialogShareTabProps> = ({
                   selectInputRef?.current?.blur();
                   selectInputRef?.current?.focus();
                 }}
-                placeholder={intl.formatMessage({
-                  id: 'pages.people.views.shareDialog.share.addPlaceholder',
-                })}
+                placeholder={messages.shareDialog.share.addPlaceholder()}
                 selectedPerson={null}
               />
             </Box>
             <Box textAlign="right">
-              <FormattedMessage
-                id="pages.people.views.shareDialog.share.collabInstructions"
+              <Msg
+                id={messageIds.shareDialog.share.collabInstructions}
                 values={{
                   viewLink: (
                     <ZUIInlineCopyToClipboard
@@ -130,7 +124,7 @@ const ShareViewDialogShareTab: FC<ShareViewDialogShareTabProps> = ({
                         passHref
                       >
                         <Link>
-                          <FormattedMessage id="pages.people.views.shareDialog.share.viewLink" />
+                          <Msg id={messageIds.shareDialog.share.viewLink} />
                         </Link>
                       </NextLink>
                     </ZUIInlineCopyToClipboard>

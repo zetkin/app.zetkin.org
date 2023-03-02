@@ -1,7 +1,10 @@
-import { FormattedMessage as Msg } from 'react-intl';
 import { OpenInNew } from '@mui/icons-material';
-import ZUITextfieldToClipboard from 'zui/ZUITextfieldToClipboard';
 import { Box, Card, Link, Typography, useTheme } from '@mui/material';
+
+import { Msg } from 'core/i18n';
+import ZUITextfieldToClipboard from 'zui/ZUITextfieldToClipboard';
+
+import messageIds from '../l10n/messageIds';
 
 interface SurveyURLCardProps {
   isOpen: boolean;
@@ -16,9 +19,9 @@ const SurveyURLCard = ({ isOpen, orgId, surveyId }: SurveyURLCardProps) => {
       <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
         <Typography variant="h5">
           {isOpen ? (
-            <Msg id="pages.organizeSurvey.urlCard.open" />
+            <Msg id={messageIds.urlCard.open} />
           ) : (
-            <Msg id="pages.organizeSurvey.urlCard.preview" />
+            <Msg id={messageIds.urlCard.preview} />
           )}
         </Typography>
         <Box
@@ -34,9 +37,9 @@ const SurveyURLCard = ({ isOpen, orgId, surveyId }: SurveyURLCardProps) => {
       </Box>
       <Typography color="GrayText" paddingBottom={4} variant="body2">
         {isOpen ? (
-          <Msg id="pages.organizeSurvey.urlCard.nowAccepting" />
+          <Msg id={messageIds.urlCard.nowAccepting} />
         ) : (
-          <Msg id="pages.organizeSurvey.urlCard.willAccept" />
+          <Msg id={messageIds.urlCard.willAccept} />
         )}
       </Typography>
       <Box display="flex" flexDirection="row" paddingBottom={2}>
@@ -54,9 +57,9 @@ const SurveyURLCard = ({ isOpen, orgId, surveyId }: SurveyURLCardProps) => {
       >
         <OpenInNew fontSize="inherit" />
         {isOpen ? (
-          <Msg id="pages.organizeSurvey.urlCard.visitPortal" />
+          <Msg id={messageIds.urlCard.visitPortal} />
         ) : (
-          <Msg id="pages.organizeSurvey.urlCard.previewPortal" />
+          <Msg id={messageIds.urlCard.previewPortal} />
         )}
       </Link>
     </Card>

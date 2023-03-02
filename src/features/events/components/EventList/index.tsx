@@ -1,11 +1,13 @@
 import React from 'react';
 import { Card, Divider, ListItem, ListItemText } from '@mui/material';
-import { FormattedMessage as Msg, useIntl } from 'react-intl';
 
 import { ZetkinEvent } from 'utils/types/zetkin';
 import ZUIList from 'zui/ZUIList';
 
 import EventListItem from './EventListItem';
+import { Msg, useMessages } from 'core/i18n';
+
+import messageIds from 'features/events/l10n/messageIds';
 
 interface EventListProps {
   hrefBase: string;
@@ -13,20 +15,15 @@ interface EventListProps {
 }
 
 const EventList = ({ hrefBase, events }: EventListProps): JSX.Element => {
-  const intl = useIntl();
+  const messages = useMessages(messageIds);
 
   return (
     <Card>
-      <ZUIList
-        aria-label={intl.formatMessage({
-          id: 'pages.organizeCampaigns.events',
-        })}
-        initialLength={5}
-      >
+      <ZUIList aria-label={messages.list.events()} initialLength={5}>
         {events.length === 0 ? (
           <ListItem>
             <ListItemText>
-              <Msg id="pages.organizeCampaigns.noEvents" />
+              <Msg id={messageIds.list.noEvents} />
             </ListItemText>
           </ListItem>
         ) : (

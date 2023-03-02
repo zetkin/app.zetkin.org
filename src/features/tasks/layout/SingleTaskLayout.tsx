@@ -9,6 +9,9 @@ import TaskActionButtons from '../components/TaskActionButtons';
 import { taskResource } from '../api/tasks';
 import TaskStatusChip from '../components/TaskStatusChip';
 import TaskStatusText from '../components/TaskStatusText';
+import { useMessages } from 'core/i18n';
+
+import messageIds from '../l10n/messageIds';
 
 interface SingleTaskLayoutProps {
   children: React.ReactNode;
@@ -17,6 +20,7 @@ interface SingleTaskLayoutProps {
 const SingleTaskLayout: FunctionComponent<SingleTaskLayoutProps> = ({
   children,
 }) => {
+  const messages = useMessages(messageIds);
   const { taskId, orgId, campId } = useRouter().query;
   const { data: task } = taskResource(
     orgId as string,
@@ -43,12 +47,12 @@ const SingleTaskLayout: FunctionComponent<SingleTaskLayoutProps> = ({
         </Box>
       }
       tabs={[
-        { href: `/`, messageId: 'layout.organize.tasks.tabs.summary' },
+        { href: `/`, label: messages.taskLayout.tabs.summary() },
         {
           href: `/assignees`,
-          messageId: 'layout.organize.tasks.tabs.assignees',
+          label: messages.taskLayout.tabs.assignees(),
         },
-        { href: `/insights`, messageId: 'layout.organize.tasks.tabs.insights' },
+        { href: `/insights`, label: messages.taskLayout.tabs.insights() },
       ]}
       title={task?.title}
     >

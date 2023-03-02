@@ -1,5 +1,4 @@
 import { MenuItem } from '@mui/material';
-import { FormattedMessage as Msg } from 'react-intl';
 import { FormEvent, useEffect, useState } from 'react';
 
 import FilterForm from '../../FilterForm';
@@ -15,6 +14,10 @@ import {
   SmartSearchFilterWithId,
   ZetkinSmartSearchFilter,
 } from 'features/smartSearch/components/types';
+
+import messageIds from 'features/smartSearch/l10n/messageIds';
+import { Msg } from 'core/i18n';
+const localMessageIds = messageIds.filters.random;
 
 const shouldGenerateSeed = (
   // refresh the random selection if the type of quanity has changed, or if the selection size has increased
@@ -82,14 +85,14 @@ const Random = ({
       onSubmit={(e) => handleSubmit(e)}
       renderExamples={() => (
         <>
-          <Msg id="misc.smartSearch.random.examples.one" />
+          <Msg id={localMessageIds.examples.one} />
           <br />
-          <Msg id="misc.smartSearch.random.examples.two" />
+          <Msg id={localMessageIds.examples.two} />
         </>
       )}
       renderSentence={() => (
         <Msg
-          id="misc.smartSearch.random.inputString"
+          id={localMessageIds.inputString}
           values={{
             addRemoveSelect: (
               <StyledSelect
@@ -97,17 +100,16 @@ const Random = ({
                 value={filter.op}
               >
                 <MenuItem key={OPERATION.ADD} value={OPERATION.ADD}>
-                  <Msg id="misc.smartSearch.random.addRemoveSelect.add" />
+                  <Msg id={localMessageIds.addRemoveSelect.add} />
                 </MenuItem>
                 <MenuItem key={OPERATION.SUB} value={OPERATION.SUB}>
-                  <Msg id="misc.smartSearch.random.addRemoveSelect.sub" />
+                  <Msg id={localMessageIds.addRemoveSelect.sub} />
                 </MenuItem>
               </StyledSelect>
             ),
-            numPeople: filter.config?.size,
             quantity: (
               <Msg
-                id={`misc.smartSearch.quantity.edit.${selected}`}
+                id={messageIds.quantity.edit[selected]}
                 values={{
                   numInput: (
                     <StyledNumberInput
@@ -129,7 +131,6 @@ const Random = ({
                       value={quantityDisplay}
                     />
                   ),
-                  numPeople: filter.config.size,
                   quantitySelect: (
                     <StyledSelect
                       onChange={(e) => {
@@ -137,9 +138,17 @@ const Random = ({
                       }}
                       SelectProps={{
                         renderValue: function getLabel(value) {
-                          return (
+                          return value == QUANTITY.PERCENT ? (
                             <Msg
-                              id={`misc.smartSearch.quantity.quantitySelectLabel.${value}`}
+                              id={
+                                messageIds.quantity.quantitySelectLabel.percent
+                              }
+                            />
+                          ) : (
+                            <Msg
+                              id={
+                                messageIds.quantity.quantitySelectLabel.integer
+                              }
                               values={{
                                 people: quantityDisplay,
                               }}
@@ -152,7 +161,7 @@ const Random = ({
                       {Object.values(QUANTITY).map((q) => (
                         <MenuItem key={q} value={q}>
                           <Msg
-                            id={`misc.smartSearch.quantity.quantitySelectOptions.${q}`}
+                            id={messageIds.quantity.quantitySelectOptions[q]}
                           />
                         </MenuItem>
                       ))}

@@ -2,12 +2,15 @@ import XLSX from 'xlsx-js-style';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 import { createApiFetch } from 'utils/apiFetch';
-import { getBrowserLanguage, getMessages } from 'utils/locale';
+import { getBrowserLanguage } from 'utils/locale';
+import getServerMessages from 'core/i18n/server';
 import {
   getTagColumns,
   JourneyTagColumnType,
 } from 'features/journeys/utils/journeyInstanceUtils';
 import { ZetkinJourney, ZetkinJourneyInstance } from 'utils/types/zetkin';
+
+import messageIds from 'features/journeys/l10n/messageIds';
 
 const FORMAT_TYPES = {
   csv: 'text/csv',
@@ -56,25 +59,25 @@ export default async function handler(
   const columns = getTagColumns(journeyInstances);
 
   const lang = await getBrowserLanguage(req);
-  const messages = await getMessages(lang, ['server']);
+  const messages = await getServerMessages(lang, messageIds);
 
   const headerRow: string[] = [
-    messages['server.export.journeyInstances.headers.journey'],
-    messages['server.export.journeyInstances.headers.id'],
-    messages['server.export.journeyInstances.headers.title'],
-    messages['server.export.journeyInstances.headers.created'],
-    messages['server.export.journeyInstances.headers.updated'],
-    messages['server.export.journeyInstances.headers.subjects'],
-    messages['server.export.journeyInstances.headers.summary'],
-    messages['server.export.journeyInstances.headers.nextMilestone'],
-    messages['server.export.journeyInstances.headers.nextMilestoneDeadline'],
-    messages['server.export.journeyInstances.headers.closed'],
-    messages['server.export.journeyInstances.headers.outcome'],
-    messages['server.export.journeyInstances.headers.assignees'],
+    messages.instances.export.headers.journey(),
+    messages.instances.export.headers.id(),
+    messages.instances.export.headers.title(),
+    messages.instances.export.headers.created(),
+    messages.instances.export.headers.updated(),
+    messages.instances.export.headers.subjects(),
+    messages.instances.export.headers.summary(),
+    messages.instances.export.headers.nextMilestone(),
+    messages.instances.export.headers.nextMilestoneDeadline(),
+    messages.instances.export.headers.closed(),
+    messages.instances.export.headers.outcome(),
+    messages.instances.export.headers.assignees(),
   ].concat(
     columns.map((column) => {
       if (column.type == JourneyTagColumnType.UNSORTED) {
-        return messages['server.export.journeyInstances.headers.unsortedTags'];
+        return messages.instances.export.headers.unsortedTags();
       } else {
         return column.header;
       }

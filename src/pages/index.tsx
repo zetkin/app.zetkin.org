@@ -1,14 +1,16 @@
 import { applySession } from 'next-session';
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
-import { FormattedMessage as Msg } from 'react-intl';
 import { stringToBool } from '../utils/stringUtils';
 import { Button, ButtonGroup, Container, Typography } from '@mui/material';
 
 import { AppSession } from '../utils/types';
 import getUserMemberships from 'utils/getUserMemberships';
+import { Msg } from 'core/i18n';
 import { scaffold } from '../utils/next';
 import { ZetkinUser } from '../utils/types/zetkin';
+
+import messageIds from 'core/l10n/messageIds';
 
 //TODO: Create module definition and revert to import.
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -90,7 +92,7 @@ export default function Home(): JSX.Element {
       </Head>
       <Container>
         <Typography variant="h4">
-          <Msg id="pages.home.welcome" />
+          <Msg id={messageIds.home.welcome} />
         </Typography>
         {/* TODO: remove stuff below */}
         {process.env.NODE_ENV === 'development' && (

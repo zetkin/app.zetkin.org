@@ -1,19 +1,16 @@
 import { GridFilterInputValueProps } from '@mui/x-data-grid-pro';
 import { JSXElementConstructor } from 'react';
-import { FormattedMessage as Msg } from 'react-intl';
 import { FormControl, InputLabel, Select } from '@mui/material';
 
 const FilterValueSelect: JSXElementConstructor<
   GridFilterInputValueProps & {
-    labelMessageId?: string;
+    label?: string;
     options?: { id: number; title: string }[];
   }
-> = ({ applyValue, item, labelMessageId, options }) => {
+> = ({ applyValue, item, label, options }) => {
   return (
     <FormControl variant="standard">
-      <InputLabel>
-        <Msg id={labelMessageId} />
-      </InputLabel>
+      <InputLabel>{label}</InputLabel>
       <Select
         native
         onChange={(event) => applyValue({ ...item, value: event.target.value })}

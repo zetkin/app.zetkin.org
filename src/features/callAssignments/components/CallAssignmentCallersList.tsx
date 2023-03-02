@@ -2,7 +2,6 @@ import { makeStyles } from '@mui/styles';
 import { useRouter } from 'next/router';
 import { Avatar, Box, Button, Tooltip } from '@mui/material';
 import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
-import { FormattedMessage as Msg, useIntl } from 'react-intl';
 
 import { CallAssignmentCaller } from '../apiTypes';
 import TagChip from 'features/tags/components/TagManager/components/TagChip';
@@ -10,6 +9,9 @@ import { ZetkinTag } from 'utils/types/zetkin';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
 import ZUIResponsiveContainer from 'zui/ZUIResponsiveContainer';
 import { Delete, Edit } from '@mui/icons-material';
+import { Msg, useMessages } from 'core/i18n';
+
+import messageIds from '../l10n/messageIds';
 
 const useStyles = makeStyles((theme) => ({
   chip: {
@@ -67,7 +69,7 @@ const CallAssignmentCallersList = ({
   onCustomize: (caller: CallAssignmentCaller) => void;
   onRemove: (caller: CallAssignmentCaller) => void;
 }) => {
-  const intl = useIntl();
+  const messages = useMessages(messageIds);
   const { orgId } = useRouter().query;
 
   const columns: GridColDef<CallAssignmentCaller>[] = [
@@ -83,18 +85,14 @@ const CallAssignmentCallersList = ({
     {
       field: 'name',
       flex: 1,
-      headerName: intl.formatMessage({
-        id: 'pages.organizeCallAssignment.callers.nameColumn',
-      }),
+      headerName: messages.callers.nameColumn(),
       valueGetter: (params) =>
         `${params.row.first_name} ${params.row.last_name}`,
     },
     {
       field: 'prioritized_tags',
       flex: 1,
-      headerName: intl.formatMessage({
-        id: 'pages.organizeCallAssignment.callers.prioritizedTagsColumn',
-      }),
+      headerName: messages.callers.prioritizedTagsColumn(),
       renderCell: (props) => {
         return <TagsCell tags={props.row.prioritized_tags} />;
       },
@@ -103,9 +101,7 @@ const CallAssignmentCallersList = ({
     {
       field: 'excluded_tags',
       flex: 1,
-      headerName: intl.formatMessage({
-        id: 'pages.organizeCallAssignment.callers.excludedTagsColumn',
-      }),
+      headerName: messages.callers.excludedTagsColumn(),
       renderCell: (props) => {
         return <TagsCell tags={props.row.excluded_tags} />;
       },
@@ -120,21 +116,17 @@ const CallAssignmentCallersList = ({
         return (
           <Box>
             <Button onClick={() => onCustomize(props.row)} variant="outlined">
-              <Msg id="pages.organizeCallAssignment.callers.customizeButton" />
+              <Msg id={messageIds.callers.customizeButton} />
             </Button>
             <ZUIEllipsisMenu
               items={[
                 {
-                  label: intl.formatMessage({
-                    id: 'pages.organizeCallAssignment.callers.actions.customize',
-                  }),
+                  label: messages.callers.actions.customize(),
                   onSelect: () => onCustomize(props.row),
                   startIcon: <Edit />,
                 },
                 {
-                  label: intl.formatMessage({
-                    id: 'pages.organizeCallAssignment.callers.actions.remove',
-                  }),
+                  label: messages.callers.actions.remove(),
                   onSelect: () => onRemove(props.row),
                   startIcon: <Delete />,
                 },

@@ -21,11 +21,13 @@ export enum ELEM_TYPE {
 }
 
 type HydratedQuestionWithText = HydratedQuestionBase & {
+  id: number;
   response: string;
   type: ELEM_TYPE.OPEN_QUESTION;
 };
 
 type HydratedQuestionWithOptions = HydratedQuestionBase & {
+  id: number;
   selectedOptions: {
     id: number;
     text: string;
@@ -35,6 +37,7 @@ type HydratedQuestionWithOptions = HydratedQuestionBase & {
 
 type HydratedTextBlock = {
   header: string;
+  id: number;
   text: string;
   type: ELEM_TYPE.TEXT_BLOCK;
 };
@@ -88,12 +91,13 @@ export default class SurveySubmissionModel extends ModelBase {
       if (elem.type == ELEMENT_TYPE.TEXT) {
         elements.push({
           header: elem.text_block.header,
+          id: elem.id,
           text: elem.text_block.content,
           type: ELEM_TYPE.TEXT_BLOCK,
         });
       } else {
         const question = elem.question;
-        const response = submission.responses.find(
+        const response = submission.responses?.find(
           (res) => res.question_id == elem.id
         );
         if (!response) {
@@ -107,6 +111,7 @@ export default class SurveySubmissionModel extends ModelBase {
           elements.push({
             description: question.description,
             hidden: elem.hidden,
+            id: elem.id,
             question: question.question,
             response: response.response,
             type: ELEM_TYPE.OPEN_QUESTION,
@@ -118,6 +123,7 @@ export default class SurveySubmissionModel extends ModelBase {
           const hydratedResponse: HydratedQuestionWithOptions = {
             description: elem.question.description,
             hidden: elem.hidden,
+            id: elem.id,
             question: elem.question.question,
             selectedOptions: [],
             type: ELEM_TYPE.OPTIONS,

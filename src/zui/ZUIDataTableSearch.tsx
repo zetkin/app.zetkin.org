@@ -9,7 +9,6 @@ import {
   TextField,
 } from '@mui/material';
 import { Close, Search } from '@mui/icons-material';
-import { FormattedMessage, useIntl } from 'react-intl';
 import {
   ReactEventHandler,
   SyntheticEvent,
@@ -18,7 +17,9 @@ import {
   useState,
 } from 'react';
 
+import messageIds from './l10n/messageIds';
 import useDebounce from 'utils/hooks/useDebounce';
+import { Msg, useMessages } from 'core/i18n';
 
 export const ID_SEARCH_CHAR = '#';
 
@@ -41,6 +42,7 @@ const DataTableSearch: React.FunctionComponent<ZUIDataTableSearchProps> = ({
   onChange,
   searchById = false,
 }) => {
+  const messages = useMessages(messageIds);
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const classes = useStyles();
   const open = Boolean(anchorEl);
@@ -51,7 +53,6 @@ const DataTableSearch: React.FunctionComponent<ZUIDataTableSearchProps> = ({
   const isActive = searchString.length >= minSearchLength || isIdSearch;
   const textFieldInputRef = useRef<HTMLInputElement>();
   const [isTyping, setIsTyping] = useState(false);
-  const intl = useIntl();
 
   const debouncedFinishedTyping = useDebounce(async () => {
     setIsTyping(false);
@@ -106,7 +107,7 @@ const DataTableSearch: React.FunctionComponent<ZUIDataTableSearchProps> = ({
           onClick={handleSearchButtonClick}
           startIcon={<Search />}
         >
-          <FormattedMessage id="misc.dataTable.search.button" />
+          <Msg id={messageIds.dataTableSearch.button} />
         </Button>
       </Badge>
       <Popover
@@ -131,16 +132,15 @@ const DataTableSearch: React.FunctionComponent<ZUIDataTableSearchProps> = ({
           <TextField
             helperText={
               minSearchLength > 1 &&
-              searchString.length < 3 && (
-                <FormattedMessage
-                  id={`misc.dataTable.search.${
-                    searchString[0] === ID_SEARCH_CHAR && searchById
-                      ? 'idSearchHelpText'
-                      : 'helpText'
-                  }`}
+              searchString.length < 3 &&
+              (searchString[0] === ID_SEARCH_CHAR && searchById ? (
+                <Msg id={messageIds.dataTableSearch.idSearchHelpText} />
+              ) : (
+                <Msg
+                  id={messageIds.dataTableSearch.helpText}
                   values={{ minSearchLength }}
                 />
-              )
+              ))
             }
             InputProps={{
               endAdornment: (
@@ -153,11 +153,11 @@ const DataTableSearch: React.FunctionComponent<ZUIDataTableSearchProps> = ({
             }}
             inputRef={textFieldInputRef}
             onChange={handleChange as ReactEventHandler<unknown>}
-            placeholder={intl.formatMessage({
-              id: `misc.dataTable.search.placeholder${
-                searchById ? 'WithIdSearch' : ''
-              }`,
-            })}
+            placeholder={
+              searchById
+                ? messages.dataTableSearch.placeholderWithIdSearch()
+                : messages.dataTableSearch.placeholder()
+            }
             value={searchString}
             variant="outlined"
           />

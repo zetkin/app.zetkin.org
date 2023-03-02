@@ -1,10 +1,11 @@
-import { FormattedMessage } from 'react-intl';
-
+import { Msg } from 'core/i18n';
 import UpdateContainer from './elements/UpdateContainer';
 import { ZetkinUpdateJourneyInstanceStart } from 'zui/ZUITimeline/types';
 import ZUIJourneyInstanceCard from 'zui/ZUIJourneyInstanceCard';
 import ZUIMarkdown from 'zui/ZUIMarkdown';
 import ZUIPersonLink from 'zui/ZUIPersonLink';
+
+import messageIds from '../l10n/messageIds';
 
 interface TimelineJourneyStartProps {
   update: ZetkinUpdateJourneyInstanceStart;
@@ -16,8 +17,8 @@ const TimelineJourneyStart: React.FC<TimelineJourneyStartProps> = ({
   return (
     <UpdateContainer
       headerContent={
-        <FormattedMessage
-          id="misc.updates.journeyinstance.create.header"
+        <Msg
+          id={messageIds.updates.journeyinstance.create.header}
           values={{ actor: <ZUIPersonLink person={update.actor} /> }}
         />
       }

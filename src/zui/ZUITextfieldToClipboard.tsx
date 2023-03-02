@@ -1,7 +1,10 @@
 import copy from 'copy-to-clipboard';
-import { FormattedMessage as Msg } from 'react-intl';
 import { Box, Button } from '@mui/material';
 import React, { useState } from 'react';
+
+import { Msg } from 'core/i18n';
+
+import messageIds from './l10n/messageIds';
 
 const ZUITextfieldToClipboard: React.FunctionComponent<{
   children: React.ReactNode;
@@ -29,9 +32,9 @@ const ZUITextfieldToClipboard: React.FunctionComponent<{
       </Box>
       <Button onClick={handleClick} variant="outlined">
         {copied ? (
-          <Msg id="misc.copyToClipboard.copied" />
+          <Msg id={messageIds.copyToClipboard.copied} />
         ) : (
-          <Msg id="misc.copyToClipboard.copy" />
+          <Msg id={messageIds.copyToClipboard.copy} />
         )}
       </Button>
     </Box>

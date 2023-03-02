@@ -71,9 +71,7 @@ describe('<JourneyMilestoneCard />', () => {
       'input'
     );
 
-    expect(label?.textContent).toBe(
-      'pages.organizeJourneyInstance.dueDateInputLabel'
-    );
+    expect(label?.textContent).toBe('feat.journeys.instance.dueDateInputLabel');
     expect(input?.value).toBe('');
   });
 });

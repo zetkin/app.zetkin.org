@@ -34,7 +34,10 @@ export const customQuery: ColumnChoice = {
 };
 
 function createQueryChoice(
-  key: CHOICES,
+  key:
+    | CHOICES.QUERY_BOOKED
+    | CHOICES.QUERY_REACHED
+    | CHOICES.QUERY_PARTICIPATED,
   icon: OverridableComponent<SvgIconTypeMap<Record<string, unknown>, 'svg'>>,
   filterSpec: ZetkinQuery['filter_spec']
 ): ColumnChoice {
@@ -45,9 +48,7 @@ function createQueryChoice(
         config: {
           filter_spec: filterSpec,
         },
-        title: intl.formatMessage({
-          id: `misc.views.columnDialog.choices.${key}.columnTitle`,
-        }),
+        title: intl.columnDialog.choices[key].columnTitle(),
         type: COLUMN_TYPE.LOCAL_QUERY,
       },
     ],

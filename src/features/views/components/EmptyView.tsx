@@ -1,4 +1,3 @@
-import { FormattedMessage as Msg } from 'react-intl';
 import {
   Box,
   Button,
@@ -10,10 +9,13 @@ import {
 } from '@mui/material';
 import { FunctionComponent, useState } from 'react';
 
+import { Msg } from 'core/i18n';
 import { MUIOnlyPersonSelect as PersonSelect } from 'zui/ZUIPersonSelect';
 import useViewDataModel from '../hooks/useViewDataModel';
 import ViewSmartSearchDialog from './ViewSmartSearchDialog';
 import { ZetkinView } from 'features/views/components/types';
+
+import messageIds from '../l10n/messageIds';
 
 export interface EmptyViewProps {
   orgId: string | number;
@@ -32,10 +34,10 @@ const EmptyView: FunctionComponent<EmptyViewProps> = ({ orgId, view }) => {
           <Card>
             <CardContent>
               <Typography variant="h5">
-                <Msg id="misc.views.empty.static.headline" />
+                <Msg id={messageIds.empty.static.headline} />
               </Typography>
               <Typography variant="body1">
-                <Msg id="misc.views.empty.static.description" />
+                <Msg id={messageIds.empty.static.description} />
               </Typography>
               <Box marginTop={2}>
                 <PersonSelect
@@ -55,10 +57,10 @@ const EmptyView: FunctionComponent<EmptyViewProps> = ({ orgId, view }) => {
           <Card>
             <CardContent>
               <Typography variant="h5">
-                <Msg id="misc.views.empty.dynamic.headline" />
+                <Msg id={messageIds.empty.dynamic.headline} />
               </Typography>
               <Typography variant="body1">
-                <Msg id="misc.views.empty.dynamic.description" />
+                <Msg id={messageIds.empty.dynamic.description} />
               </Typography>
             </CardContent>
             <CardActions>
@@ -66,7 +68,7 @@ const EmptyView: FunctionComponent<EmptyViewProps> = ({ orgId, view }) => {
                 data-testid="EmptyView-configureButton"
                 onClick={() => setQueryDialogOpen(true)}
               >
-                <Msg id="misc.views.empty.dynamic.configureButton" />
+                <Msg id={messageIds.empty.dynamic.configureButton} />
               </Button>
             </CardActions>
           </Card>

@@ -1,13 +1,15 @@
-import { useIntl } from 'react-intl';
 import { useRouter } from 'next/router';
 
 import SimpleLayout from 'utils/layout/SimpleLayout';
+import { useMessages } from 'core/i18n';
 import useModel from 'core/useModel';
 import useServerSide from 'core/useServerSide';
 import ViewBrowserModel from '../models/ViewBrowserModel';
 import ViewFolderActionButtons from '../components/ViewFolderActionButtons';
 import ViewFolderSubtitle from '../components/ViewFolderSubtitle';
 import ZUIFuture from 'zui/ZUIFuture';
+
+import messageIds from '../l10n/messageIds';
 
 interface PeopleLayoutProps {
   children: React.ReactNode;
@@ -17,7 +19,7 @@ const PeopleLayout: React.FunctionComponent<PeopleLayoutProps> = ({
   children,
 }) => {
   const { orgId } = useRouter().query;
-  const intl = useIntl();
+  const messages = useMessages(messageIds);
 
   const model = useModel(
     (env) => new ViewBrowserModel(env, parseInt(orgId as string))
@@ -42,7 +44,7 @@ const PeopleLayout: React.FunctionComponent<PeopleLayoutProps> = ({
           )}
         </ZUIFuture>
       }
-      title={intl.formatMessage({ id: 'layout.organize.people.title' })}
+      title={messages.browserLayout.title()}
     >
       {children}
     </SimpleLayout>

@@ -1,5 +1,4 @@
 import makeStyles from '@mui/styles/makeStyles';
-import { useIntl } from 'react-intl';
 import {
   Card,
   List,
@@ -10,7 +9,10 @@ import {
 import { Close, Edit } from '@mui/icons-material';
 import { ReactEventHandler, SyntheticEvent, useState } from 'react';
 
+import { useMessages } from 'core/i18n';
 import ZUISection from 'zui/ZUISection';
+
+import messageIds from '../l10n/messageIds';
 
 const useStyles = makeStyles((theme) => ({
   divider: {
@@ -31,12 +33,11 @@ const useStyles = makeStyles((theme) => ({
 const PersonCard: React.FunctionComponent<{
   children: React.ReactNode;
   onClickEdit?: ReactEventHandler;
-  titleId: string;
-}> = ({ onClickEdit, titleId, children }) => {
+  title: string;
+}> = ({ onClickEdit, title, children }) => {
   const [editable, setEditable] = useState<boolean>();
   const classes = useStyles();
-  const intl = useIntl();
-  const title = intl.formatMessage({ id: titleId });
+  const messages = useMessages(messageIds);
 
   const onToggleEdit = (evt: SyntheticEvent) => {
     setEditable(!editable);
@@ -61,14 +62,11 @@ const PersonCard: React.FunctionComponent<{
               </ListItemIcon>
               <ListItemText
                 className={classes.editButton}
-                primary={intl.formatMessage(
-                  {
-                    id: `pages.people.person.${
-                      editable ? 'editButtonClose' : 'editButton'
-                    }`,
-                  },
-                  { title }
-                )}
+                primary={
+                  editable
+                    ? messages.editButtonClose({ title })
+                    : messages.editButton({ title })
+                }
               />
             </ListItem>
           </List>

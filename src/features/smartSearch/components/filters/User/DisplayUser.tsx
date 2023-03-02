@@ -1,31 +1,27 @@
-import { FormattedMessage as Msg } from 'react-intl';
-
+import { Msg } from 'core/i18n';
 import {
   OPERATION,
   SmartSearchFilterWithId,
   UserFilterConfig,
 } from 'features/smartSearch/components/types';
 
+import messageIds from 'features/smartSearch/l10n/messageIds';
+const localMessageIds = messageIds.filters.user;
+
 interface DisplayUserProps {
   filter: SmartSearchFilterWithId<UserFilterConfig>;
 }
 
 const DisplayUser = ({ filter }: DisplayUserProps): JSX.Element => {
-  const {
-    config: { is_user },
-  } = filter;
+  const msgId = filter.config.is_user ? 'true' : 'false';
   const op = filter.op || OPERATION.ADD;
 
   return (
     <Msg
-      id="misc.smartSearch.user.inputString"
+      id={localMessageIds.inputString}
       values={{
-        addRemoveSelect: (
-          <Msg id={`misc.smartSearch.user.addRemoveSelect.${op}`} />
-        ),
-        connectedSelect: (
-          <Msg id={`misc.smartSearch.user.connectedSelect.${is_user}`} />
-        ),
+        addRemoveSelect: <Msg id={localMessageIds.addRemoveSelect[op]} />,
+        connectedSelect: <Msg id={localMessageIds.connectedSelect[msgId]} />,
       }}
     />
   );

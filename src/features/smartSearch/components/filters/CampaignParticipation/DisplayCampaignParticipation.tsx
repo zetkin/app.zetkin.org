@@ -1,16 +1,20 @@
-import { FormattedMessage as Msg } from 'react-intl';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 
+import DisplayTimeFrame from '../DisplayTimeFrame';
 import getActivity from 'features/smartSearch/fetching/getActivity';
 import getCampaign from 'features/campaigns/fetching/getCampaign';
 import getLocation from 'features/smartSearch/fetching/getLocation';
 import { getTimeFrameWithConfig } from '../../utils';
+import { Msg } from 'core/i18n';
 import {
   CampaignParticipationConfig,
   OPERATION,
   SmartSearchFilterWithId,
 } from 'features/smartSearch/components/types';
+
+import messageIds from 'features/smartSearch/l10n/messageIds';
+const localMessageIds = messageIds.filters.campaignParticipation;
 
 interface DisplayCampaignParticipationProps {
   filter: SmartSearchFilterWithId<CampaignParticipationConfig>;
@@ -29,7 +33,7 @@ const DisplayCampaignParticipation = ({
     location: locationId,
   } = config;
   const op = filter.op || OPERATION.ADD;
-  const { timeFrame, after, before, numDays } = getTimeFrameWithConfig({
+  const timeFrame = getTimeFrameWithConfig({
     after: config.after,
     before: config.before,
   });
@@ -56,63 +60,42 @@ const DisplayCampaignParticipation = ({
 
   return (
     <Msg
-      id="misc.smartSearch.campaign_participation.inputString"
+      id={messageIds.filters.campaignParticipation.inputString}
       values={{
         activitySelect: activityTitle ? (
           <Msg
-            id="misc.smartSearch.campaign_participation.activitySelect.activity"
+            id={localMessageIds.activitySelect.activity}
             values={{
               activity: activityTitle,
             }}
           />
         ) : (
-          <Msg id="misc.smartSearch.campaign_participation.activitySelect.any" />
+          <Msg id={localMessageIds.activitySelect.any} />
         ),
-        addRemoveSelect: (
-          <Msg
-            id={`misc.smartSearch.campaign_participation.addRemoveSelect.${op}`}
-          />
-        ),
-        bookedSelect: (
-          <Msg
-            id={`misc.smartSearch.campaign_participation.bookedSelect.${state}`}
-          />
-        ),
+        addRemoveSelect: <Msg id={localMessageIds.addRemoveSelect[op]} />,
+        bookedSelect: <Msg id={localMessageIds.bookedSelect[state]} />,
         campaignSelect: campaignTitle ? (
           <Msg
-            id="misc.smartSearch.campaign_participation.campaignSelect.campaign"
+            id={localMessageIds.campaignSelect.campaign}
             values={{
               campaign: campaignTitle,
             }}
           />
         ) : (
-          <Msg id="misc.smartSearch.campaign_participation.campaignSelect.any" />
+          <Msg id={localMessageIds.campaignSelect.any} />
         ),
-        haveSelect: (
-          <Msg
-            id={`misc.smartSearch.campaign_participation.haveSelect.${operator}`}
-          />
-        ),
+        haveSelect: <Msg id={localMessageIds.haveSelect[operator]} />,
         locationSelect: locationTitle ? (
           <Msg
-            id="misc.smartSearch.campaign_participation.locationSelect.location"
+            id={localMessageIds.locationSelect.location}
             values={{
               location: locationTitle,
             }}
           />
         ) : (
-          <Msg id="misc.smartSearch.campaign_participation.locationSelect.any" />
+          <Msg id={localMessageIds.locationSelect.any} />
         ),
-        timeFrame: (
-          <Msg
-            id={`misc.smartSearch.timeFrame.preview.${timeFrame}`}
-            values={{
-              afterDate: after?.toISOString().slice(0, 10),
-              beforeDate: before?.toISOString().slice(0, 10),
-              days: numDays,
-            }}
-          />
-        ),
+        timeFrame: <DisplayTimeFrame config={timeFrame} />,
       }}
     />
   );

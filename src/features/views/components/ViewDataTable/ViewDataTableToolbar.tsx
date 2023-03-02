@@ -7,11 +7,13 @@ import {
   GridSortModel,
   GridToolbarFilterButton,
 } from '@mui/x-data-grid-pro';
-import { FormattedMessage, useIntl } from 'react-intl';
 
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUIDataTableSearch from 'zui/ZUIDataTableSearch';
 import ZUIDataTableSorting from 'zui/ZUIDataTableSorting';
+import { Msg, useMessages } from 'core/i18n';
+
+import messageIds from 'features/views/l10n/messageIds';
 
 export interface ViewDataTableToolbarProps {
   disableConfigure?: boolean;
@@ -42,16 +44,14 @@ const ViewDataTableToolbar: React.FunctionComponent<
   onSortModelChange,
   sortModel,
 }) => {
-  const intl = useIntl();
+  const messages = useMessages(messageIds);
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
 
   const onClickRemoveRows = () => {
     showConfirmDialog({
       onSubmit: onRowsRemove,
-      title: intl.formatMessage({ id: 'misc.views.removeDialog.title' }),
-      warningText: intl.formatMessage({
-        id: 'misc.views.removeDialog.action',
-      }),
+      title: messages.removeDialog.title(),
+      warningText: messages.removeDialog.action(),
     });
   };
   return (
@@ -63,19 +63,11 @@ const ViewDataTableToolbar: React.FunctionComponent<
           onClick={onViewCreate}
           startIcon={<Launch />}
         >
-          <FormattedMessage id="misc.views.toolbar.createFromSelection" />
+          <Msg id={messageIds.toolbar.createFromSelection} />
         </Button>
       </Slide>
       <Slide direction="left" in={!!selection.length} timeout={100}>
-        <Tooltip
-          title={
-            isSmartSearch
-              ? intl.formatMessage({
-                  id: 'misc.views.toolbar.removeTooltip',
-                })
-              : ''
-          }
-        >
+        <Tooltip title={isSmartSearch ? messages.toolbar.removeTooltip() : ''}>
           <span>
             <Button
               data-testid="ViewDataTableToolbar-removeFromSelection"
@@ -83,8 +75,8 @@ const ViewDataTableToolbar: React.FunctionComponent<
               onClick={onClickRemoveRows}
               startIcon={<RemoveCircleOutline />}
             >
-              <FormattedMessage
-                id="misc.views.toolbar.removeFromSelection"
+              <Msg
+                id={messageIds.toolbar.removeFromSelection}
                 values={{ numSelected: selection.length }}
               />
             </Button>
@@ -111,7 +103,7 @@ const ViewDataTableToolbar: React.FunctionComponent<
           onClick={onColumnCreate}
           startIcon={<Add />}
         >
-          <FormattedMessage id="misc.views.toolbar.createColumn" />
+          <Msg id={messageIds.toolbar.createColumn} />
         </Button>
       )}
       <ZUIDataTableSearch

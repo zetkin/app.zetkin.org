@@ -1,6 +1,5 @@
 import createStyles from '@mui/styles/createStyles';
 import makeStyles from '@mui/styles/makeStyles';
-import { FormattedMessage as Msg } from 'react-intl';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import NextLink from 'next/link';
 import { Theme } from '@mui/material/styles';
@@ -8,7 +7,11 @@ import { useQuery } from 'react-query';
 import { Breadcrumbs, Link, Typography, useMediaQuery } from '@mui/material';
 import { NextRouter, useRouter } from 'next/router';
 
+import { Breadcrumb } from 'utils/types';
 import getBreadcrumbs from '../utils/fetching/getBreadcrumbs';
+import { Msg } from 'core/i18n';
+
+import messageIds from './l10n/messageIds';
 
 const getQueryString = function (router: NextRouter): string {
   // Only use parameters that are part of the path (e.g. [personId])
@@ -43,6 +46,16 @@ const useStyles = makeStyles<Theme, { highlight?: boolean }>((theme) =>
   })
 );
 
+function validMessageId(
+  idStr: string
+): keyof typeof messageIds.breadcrumbs | null {
+  if (idStr in messageIds.breadcrumbs) {
+    return idStr as keyof typeof messageIds.breadcrumbs;
+  } else {
+    return null;
+  }
+}
+
 const ZUIBreadcrumbTrail = ({
   highlight,
 }: {
@@ -64,6 +77,17 @@ const ZUIBreadcrumbTrail = ({
     return <div />;
   }
 
+  const getLabel = (crumb: Breadcrumb) => {
+    if (crumb.labelMsg) {
+      const msgId = validMessageId(crumb.labelMsg);
+      if (msgId) {
+        return <Msg id={messageIds.breadcrumbs[msgId]} />;
+      }
+    }
+
+    return crumb.label;
+  };
+
   return (
     <div className={classes.root}>
       <Breadcrumbs
@@ -82,7 +106,7 @@ const ZUIBreadcrumbTrail = ({
                   color="inherit"
                   underline="hover"
                 >
-                  {crumb.labelMsg ? <Msg id={crumb.labelMsg} /> : crumb.label}
+                  {getLabel(crumb)}
                 </Link>
               </NextLink>
             );
@@ -92,7 +116,7 @@ const ZUIBreadcrumbTrail = ({
                 key={crumb.href}
                 classes={{ root: classes.viewTitle }}
               >
-                {crumb.labelMsg ? <Msg id={crumb.labelMsg} /> : crumb.label}
+                {getLabel(crumb)}
               </Typography>
             );
           }
