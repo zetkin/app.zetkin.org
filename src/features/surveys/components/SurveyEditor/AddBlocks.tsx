@@ -67,6 +67,7 @@ const AddBlocks = ({ model }: { model: SurveyDataModel }) => {
               hidden: false,
               question: {
                 description: '',
+                options: [],
                 question: '',
                 response_config: {
                   widget_type: 'checkbox',

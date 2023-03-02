@@ -157,7 +157,7 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
     }
   };
 
-  const options = questionElement.options || [];
+  const options = questionElement.options;
 
   return (
     <ClickAwayListener

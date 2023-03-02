@@ -234,7 +234,7 @@ export interface ZetkinTextQuestion {
 
 export interface ZetkinOptionsQuestion {
   description: string | null;
-  options?: ZetkinSurveyOption[];
+  options: ZetkinSurveyOption[];
   question: string;
   required: boolean;
   response_config: {

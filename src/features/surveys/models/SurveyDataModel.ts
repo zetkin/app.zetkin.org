@@ -22,8 +22,16 @@ export default class SurveyDataModel extends ModelBase {
   private _repo: SurveysRepo;
   private _surveyId: number;
 
-  addElement(element: ZetkinSurveyElementPostBody) {
-    this._repo.addElement(this._orgId, this._surveyId, element);
+  async addElement(element: ZetkinSurveyElementPostBody) {
+    const newElement = await this._repo.addElement(
+      this._orgId,
+      this._surveyId,
+      element
+    );
+
+    //Add two options to the newly created element.
+    this._repo.addElementOption(this._orgId, this._surveyId, newElement.id);
+    this._repo.addElementOption(this._orgId, this._surveyId, newElement.id);
   }
 
   addElementOption(elemId: number) {
