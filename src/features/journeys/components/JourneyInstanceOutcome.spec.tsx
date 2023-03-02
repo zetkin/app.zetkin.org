@@ -2,15 +2,17 @@ import JourneyInstanceOutcome from './JourneyInstanceOutcome';
 import mockJourneyInstance from 'utils/testing/mocks/mockJourneyInstance';
 import { render } from 'utils/testing';
 
+import messageIds from '../l10n/messageIds';
+
 describe('<JourneyInstanceOutcome/>', () => {
   it('shows the correct journeyTitle in title.', () => {
     const journeyInstance = mockJourneyInstance();
 
-    const { getByText } = render(
+    const { getByMessageId } = render(
       <JourneyInstanceOutcome journeyInstance={journeyInstance} />
     );
 
-    const titleEl = getByText('pages.organizeJourneyInstance.sections.outcome');
+    const titleEl = getByMessageId(messageIds.instance.sections.outcome);
 
     expect(titleEl).not.toBe(null);
   });
@@ -32,12 +34,12 @@ describe('<JourneyInstanceOutcome/>', () => {
   it('shows default outcome note if no note is provided by user.', () => {
     const journeyInstance = mockJourneyInstance();
 
-    const { getByText } = render(
+    const { getByMessageId } = render(
       <JourneyInstanceOutcome journeyInstance={journeyInstance} />
     );
 
-    const defaultOutcomeNote = getByText(
-      'pages.organizeJourneyInstance.noOutcomeDetails'
+    const defaultOutcomeNote = getByMessageId(
+      messageIds.instance.noOutcomeDetails
     );
 
     expect(defaultOutcomeNote).not.toBe(null);

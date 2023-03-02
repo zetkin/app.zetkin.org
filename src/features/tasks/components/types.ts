@@ -8,9 +8,7 @@ export enum TASK_TYPE {
   COLLECT_DEMOGRAPHICS = 'demographic',
   OFFLINE = 'offline',
   SHARE_LINK = 'share_link',
-  SHARE_IMAGE = 'share_image',
   VISIT_LINK = 'visit_link',
-  WATCH_VIDEO = 'watch_video',
 }
 
 export interface ShareLinkConfig {

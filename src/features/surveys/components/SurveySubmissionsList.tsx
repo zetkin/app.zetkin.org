@@ -1,33 +1,39 @@
-import { useIntl } from 'react-intl';
 import { useRouter } from 'next/router';
-import { ZetkinSurveySubmission } from 'utils/types/zetkin';
-import ZUIAvatar from 'zui/ZUIAvatar';
-import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
-import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 import {
   DataGridPro,
   GridRenderCellParams,
   GridValueGetterParams,
 } from '@mui/x-data-grid-pro';
 
+import { useMessages } from 'core/i18n';
+import { ZetkinSurveySubmission } from 'utils/types/zetkin';
+import ZUIAvatar from 'zui/ZUIAvatar';
+import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
+import ZUIRelativeTime from 'zui/ZUIRelativeTime';
+
+import messageIds from '../l10n/messageIds';
+
 const SurveySubmissionsList = ({
   submissions,
 }: {
   submissions: ZetkinSurveySubmission[];
 }) => {
-  const intl = useIntl();
+  const messages = useMessages(messageIds);
   const { orgId } = useRouter().query;
 
   const makeSimpleColumn = (
     field: keyof NonNullable<ZetkinSurveySubmission['respondent']>,
-    messageId: string
+    messageId:
+      | 'dateColumn'
+      | 'emailColumn'
+      | 'firstNameColumn'
+      | 'lastNameColumn'
+      | 'personRecordColumn'
   ) => {
     return {
       field: field,
       flex: 1,
-      headerName: intl.formatMessage({
-        id: `pages.organizeSurvey.submissions.${messageId}`,
-      }),
+      headerName: messages.submissions[messageId](),
       sortable: true,
       valueGetter: (
         params: GridValueGetterParams<string, ZetkinSurveySubmission>
@@ -47,9 +53,7 @@ const SurveySubmissionsList = ({
     {
       field: `submitted`,
       flex: 1,
-      headerName: intl.formatMessage({
-        id: 'pages.organizeSurvey.submissions.dateColumn',
-      }),
+      headerName: messages.submissions.dateColumn(),
       renderCell: (
         params: GridRenderCellParams<string, ZetkinSurveySubmission>
       ) => {
@@ -60,9 +64,7 @@ const SurveySubmissionsList = ({
     {
       field: `respondent`,
       flex: 1,
-      headerName: intl.formatMessage({
-        id: 'pages.organizeSurvey.submissions.personRecordColumn',
-      }),
+      headerName: messages.submissions.personRecordColumn(),
       renderCell: (
         params: GridRenderCellParams<
           ZetkinSurveySubmission['respondent'],

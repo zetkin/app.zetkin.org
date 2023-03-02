@@ -1,7 +1,8 @@
 import { Chip } from '@mui/material';
-import { useIntl } from 'react-intl';
-
 import { TASK_STATUS } from 'features/tasks/utils/getTaskStatus';
+import { useMessages } from 'core/i18n';
+
+import messageIds from '../l10n/messageIds';
 
 enum ChipColors {
   active = '#57a83d',
@@ -18,10 +19,11 @@ interface TaskStatusChipProps {
 const TaskStatusChip: React.FunctionComponent<TaskStatusChipProps> = ({
   status,
 }) => {
-  const intl = useIntl();
+  const messages = useMessages(messageIds);
+
   return (
     <Chip
-      label={intl.formatMessage({ id: `misc.tasks.statuses.${status}` })}
+      label={messages.statuses[status]()}
       size="small"
       style={{
         backgroundColor: ChipColors[status],

@@ -1,5 +1,4 @@
 import { Add } from '@mui/icons-material';
-import { FormattedMessage } from 'react-intl';
 import Link from 'next/link';
 import { useState } from 'react';
 import { Button, List, ListItem, Menu, MenuItem } from '@mui/material';
@@ -9,6 +8,9 @@ import PersonCard from '../PersonCard';
 import { personJourneysResource } from 'features/profile/api/people';
 import ZUIJourneyInstanceItem from 'zui/ZUIJourneyInstanceItem';
 import ZUIQuery from 'zui/ZUIQuery';
+import { Msg, useMessages } from 'core/i18n';
+
+import messageIds from 'features/profile/l10n/messageIds';
 
 interface PersonJourneysCardProps {
   orgId: string;
@@ -19,6 +21,7 @@ const PersonJourneysCard: React.FC<PersonJourneysCardProps> = ({
   orgId,
   personId,
 }) => {
+  const messages = useMessages(messageIds);
   const [addMenuAnchorEl, setMenuAnchorEl] = useState<HTMLElement | null>(null);
   const instancesQuery = personJourneysResource(orgId, personId).useQuery();
   const journeysQuery = journeysResource(orgId).useQuery();
@@ -26,7 +29,7 @@ const PersonJourneysCard: React.FC<PersonJourneysCardProps> = ({
   return (
     <ZUIQuery queries={{ instancesQuery }}>
       {({ queries }) => (
-        <PersonCard titleId="pages.people.person.journeys.title">
+        <PersonCard title={messages.journeys.title()}>
           <List data-testid="PersonJourneysCard-list" disablePadding>
             {queries.instancesQuery.data
               .sort((i0, i1) => Number(!!i0.closed) - Number(!!i1.closed))
@@ -48,7 +51,7 @@ const PersonJourneysCard: React.FC<PersonJourneysCardProps> = ({
                       onClick={(ev) => setMenuAnchorEl(ev.currentTarget)}
                       startIcon={<Add />}
                     >
-                      <FormattedMessage id="pages.people.person.journeys.addButton" />
+                      <Msg id={messageIds.journeys.addButton} />
                     </Button>
                     <Menu
                       anchorEl={addMenuAnchorEl}

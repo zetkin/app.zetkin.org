@@ -2,12 +2,14 @@ import NextLink from 'next/link';
 import { OpenInNew } from '@mui/icons-material';
 import { useRouter } from 'next/router';
 import { Button, Card, Link, ListItem, ListItemText } from '@mui/material';
-import { FormattedMessage, useIntl } from 'react-intl';
 
 import ZUIDate from 'zui/ZUIDate';
 import ZUIList from 'zui/ZUIList';
 import ZUISection from 'zui/ZUISection';
+import { Msg, useMessages } from 'core/i18n';
 import { ZetkinCustomField, ZetkinPerson } from 'utils/types/zetkin';
+
+import messageIds from '../l10n/messageIds';
 
 const PersonDetailLink: React.FunctionComponent<{
   children: React.ReactNode;
@@ -30,13 +32,13 @@ const nativeFieldsToDisplay = [
   'country',
   'gender',
   'ext_id',
-];
+] as const;
 
 const PersonDetailsCard: React.FunctionComponent<{
   customFields: ZetkinCustomField[];
   person: ZetkinPerson;
 }> = ({ customFields, person }) => {
-  const intl = useIntl();
+  const messages = useMessages(messageIds);
   const router = useRouter();
 
   const nativeFields = nativeFieldsToDisplay.map((field) => {
@@ -47,9 +49,7 @@ const PersonDetailsCard: React.FunctionComponent<{
 
     if (field === 'gender' && person.gender) {
       // Localise gender field
-      value = intl.formatMessage({
-        id: 'misc.person.genders.' + (person.gender || 'unknown'),
-      });
+      value = messages.genders[person.gender || 'unknown']();
     } else if (field === 'phone' && person.phone) {
       value = (
         <PersonDetailLink href={`tel:${person.phone}`}>
@@ -65,9 +65,7 @@ const PersonDetailsCard: React.FunctionComponent<{
     }
 
     return {
-      title: intl.formatMessage({
-        id: 'misc.person.fields.' + field,
-      }),
+      title: messages.global.personFields[field](),
       value,
     };
   });
@@ -100,11 +98,11 @@ const PersonDetailsCard: React.FunctionComponent<{
       action={
         <NextLink href={`${router.asPath}/edit`} passHref>
           <Button color="primary" startIcon={<OpenInNew />}>
-            <FormattedMessage id="misc.person.editButtonLabel" />
+            <Msg id={messageIds.editButtonLabel} />
           </Button>
         </NextLink>
       }
-      title={intl.formatMessage({ id: 'pages.people.person.details.title' })}
+      title={messages.details.title()}
     >
       <Card>
         <ZUIList initialLength={4} showMoreStep={allFields.length - 4}>

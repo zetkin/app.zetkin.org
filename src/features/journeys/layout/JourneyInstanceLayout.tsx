@@ -1,10 +1,10 @@
+import { FormattedDate } from 'react-intl';
 import { Forward } from '@mui/icons-material';
 import ScheduleIcon from '@mui/icons-material/Schedule';
 import { useContext } from 'react';
 import { useQueryClient } from 'react-query';
 import { useRouter } from 'next/router';
 import { Box, Typography } from '@mui/material';
-import { FormattedDate, FormattedMessage as Msg, useIntl } from 'react-intl';
 
 import JourneyStatusChip from '../components/JourneyStatusChip';
 import TabbedLayout from '../../../utils/layout/TabbedLayout';
@@ -20,6 +20,9 @@ import {
   journeyInstanceResource,
   journeysResource,
 } from 'features/journeys/api/journeys';
+import { Msg, useMessages } from 'core/i18n';
+
+import messageIds from '../l10n/messageIds';
 
 interface JourneyInstanceLayoutProps {
   children: React.ReactNode;
@@ -28,9 +31,9 @@ interface JourneyInstanceLayoutProps {
 const JourneyInstanceLayout: React.FunctionComponent<
   JourneyInstanceLayoutProps
 > = ({ children }) => {
+  const messages = useMessages(messageIds);
   const { orgId, journeyId, instanceId } = useRouter().query;
   const router = useRouter();
-  const intl = useIntl();
   const queryClient = useQueryClient();
 
   const { showSnackbar } = useContext(ZUISnackbarContext);
@@ -57,9 +60,7 @@ const JourneyInstanceLayout: React.FunctionComponent<
         onError: () => {
           showSnackbar(
             'error',
-            intl.formatMessage({
-              id: `misc.journeys.editJourneyTitleAlert.error`,
-            })
+            messages.journeys.editJourneyTitleAlert.error()
           );
         },
         onSuccess: async () => {
@@ -71,9 +72,7 @@ const JourneyInstanceLayout: React.FunctionComponent<
           ]);
           showSnackbar(
             'success',
-            intl.formatMessage({
-              id: `misc.journeys.editJourneyTitleAlert.success`,
-            })
+            messages.journeys.editJourneyTitleAlert.success()
           );
         },
       }
@@ -103,16 +102,12 @@ const JourneyInstanceLayout: React.FunctionComponent<
               onError: () =>
                 showSnackbar(
                   'error',
-                  intl.formatMessage({
-                    id: 'misc.journeys.conversionSnackbar.error',
-                  })
+                  messages.journeys.conversionSnackbar.error()
                 ),
               onSuccess: () => {
                 showSnackbar(
                   'success',
-                  intl.formatMessage({
-                    id: 'misc.journeys.conversionSnackbar.success',
-                  })
+                  messages.journeys.conversionSnackbar.success()
                 );
                 router.push(redirectUrl);
               },
@@ -124,9 +119,7 @@ const JourneyInstanceLayout: React.FunctionComponent<
   if (submenuItems.length) {
     ellipsisMenu.push({
       id: 'convert-journey',
-      label: intl.formatMessage({
-        id: 'pages.organizeJourneyInstance.ellipsisMenu.convert',
-      }),
+      label: messages.instance.ellipsisMenu.convert(),
       startIcon: <Forward color="secondary" />,
       subMenuItems: submenuItems,
     });
@@ -163,7 +156,7 @@ const JourneyInstanceLayout: React.FunctionComponent<
           >
             <Typography>
               <Msg
-                id="layout.organize.journeyInstance.created"
+                id={messageIds.instance.created}
                 values={{
                   relative: (
                     <ZUIRelativeTime
@@ -179,7 +172,7 @@ const JourneyInstanceLayout: React.FunctionComponent<
               <Typography>
                 {'\u00A0('}
                 <Msg
-                  id="layout.organize.journeyInstance.updated"
+                  id={messageIds.instance.updated}
                   values={{
                     relative: (
                       <ZUIRelativeTime
@@ -221,11 +214,11 @@ const JourneyInstanceLayout: React.FunctionComponent<
       tabs={[
         {
           href: '/',
-          messageId: 'layout.organize.journeys.tabs.timeline',
+          label: messages.journeys.tabs.timeline(),
         },
         {
           href: '/milestones',
-          messageId: 'layout.organize.journeys.tabs.milestones',
+          label: messages.journeys.tabs.milestones(),
         },
       ]}
       title={

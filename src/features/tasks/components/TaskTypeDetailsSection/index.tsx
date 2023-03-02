@@ -4,13 +4,11 @@ import {
   ShareLinkConfig,
   TASK_TYPE,
   VisitLinkConfig,
-  WatchVideoConfig,
 } from 'features/tasks/components/types';
 
 import CollectDemographicsDetails from './CollectDemographicsDetails';
 import ShareLinkDetails from './ShareLinkDetails';
 import VisitLinkDetails from './VisitLinkDetails';
-import WatchVideoDetails from './WatchVideoDetails';
 
 interface TaskTypeDetailsProps {
   task: ZetkinTask;
@@ -31,9 +29,6 @@ const TaskTypeDetailsSection: React.FunctionComponent<TaskTypeDetailsProps> = ({
       )}
       {task.type === TASK_TYPE.SHARE_LINK && (
         <ShareLinkDetails taskConfig={task.config as ShareLinkConfig} />
-      )}
-      {task.type === TASK_TYPE.WATCH_VIDEO && (
-        <WatchVideoDetails taskConfig={task.config as WatchVideoConfig} />
       )}
       {task.type === TASK_TYPE.COLLECT_DEMOGRAPHICS && (
         <CollectDemographicsDetails

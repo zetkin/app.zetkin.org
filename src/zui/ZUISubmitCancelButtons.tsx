@@ -1,5 +1,8 @@
-import { FormattedMessage as Msg } from 'react-intl';
 import { Box, Button, ButtonProps } from '@mui/material';
+
+import { Msg } from 'core/i18n';
+
+import messageIds from './l10n/messageIds';
 
 const ZUISubmitCancelButtons: React.FunctionComponent<{
   onCancel: () => unknown;
@@ -11,7 +14,7 @@ const ZUISubmitCancelButtons: React.FunctionComponent<{
     <Box display="flex" justifyContent="flex-end" mt={2} width={1}>
       <Box m={1}>
         <Button color="primary" onClick={onCancel}>
-          <Msg id="misc.formDialog.cancel" />
+          <Msg id={messageIds.submitOrCancel.cancel} />
         </Button>
       </Box>
       <Box m={1}>
@@ -23,7 +26,7 @@ const ZUISubmitCancelButtons: React.FunctionComponent<{
           variant="contained"
           {...submitButtonProps}
         >
-          {submitText || <Msg id="misc.formDialog.submit" />}
+          {submitText || <Msg id={messageIds.submitOrCancel.submit} />}
         </Button>
       </Box>
     </Box>

@@ -8,7 +8,6 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { FormattedMessage as Msg, useIntl } from 'react-intl';
 import { useEffect, useRef, useState } from 'react';
 
 import { CallAssignmentCaller } from 'features/callAssignments/apiTypes';
@@ -21,6 +20,9 @@ import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import useModel from 'core/useModel';
 import { ZetkinPerson } from 'utils/types/zetkin';
+import { Msg, useMessages } from 'core/i18n';
+
+import messageIds from 'features/callAssignments/l10n/messageIds';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   async (ctx) => {
@@ -61,7 +63,7 @@ const CallersPage: PageWithLayout<CallersPageProps> = ({
     (store) =>
       new CallAssignmentModel(store, parseInt(orgId), parseInt(assignmentId))
   );
-  const intl = useIntl();
+  const messages = useMessages(messageIds);
   const selectInputRef = useRef<HTMLInputElement>();
   const [selectedCaller, setSelectedCaller] =
     useState<CallAssignmentCaller | null>(null);
@@ -85,7 +87,7 @@ const CallersPage: PageWithLayout<CallersPageProps> = ({
         <Box p={2}>
           <Box display="flex" justifyContent="space-between" mb={2}>
             <Typography variant="h4">
-              <Msg id="pages.organizeCallAssignment.callers.title" />
+              <Msg id={messageIds.callers.title} />
             </Typography>
             <TextField
               InputProps={{
@@ -100,9 +102,7 @@ const CallersPage: PageWithLayout<CallersPageProps> = ({
               onChange={(evt) => {
                 setSearchString(evt.target.value);
               }}
-              placeholder={intl.formatMessage({
-                id: 'pages.organizeCallAssignment.callers.searchBox',
-              })}
+              placeholder={messages.callers.searchBox()}
               value={searchString}
               variant="outlined"
             />
@@ -118,11 +118,7 @@ const CallersPage: PageWithLayout<CallersPageProps> = ({
         <MUIOnlyPersonSelect
           getOptionDisabled={isCaller}
           getOptionExtraLabel={(person) =>
-            isCaller(person)
-              ? intl.formatMessage({
-                  id: 'pages.organizeCallAssignment.callers.add.alreadyAdded',
-                })
-              : ''
+            isCaller(person) ? messages.callers.add.alreadyAdded() : ''
           }
           inputRef={selectInputRef}
           onChange={(person) => {
@@ -133,9 +129,7 @@ const CallersPage: PageWithLayout<CallersPageProps> = ({
             selectInputRef?.current?.blur();
             selectInputRef?.current?.focus();
           }}
-          placeholder={intl.formatMessage({
-            id: 'pages.organizeCallAssignment.callers.add.placeholder',
-          })}
+          placeholder={messages.callers.add.placeholder()}
           selectedPerson={null}
         />
       </Box>

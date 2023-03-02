@@ -1,11 +1,11 @@
 import { FormEvent } from 'react';
 import { MenuItem } from '@mui/material';
-import { FormattedMessage as Msg } from 'react-intl';
 
 import FilterForm from '../../FilterForm';
 import getActivities from 'utils/fetching/getActivities';
 import getCampaigns from 'features/campaigns/fetching/getCampaigns';
 import getLocations from 'utils/fetching/getLocations';
+import { Msg } from 'core/i18n';
 import StyledSelect from '../../inputs/StyledSelect';
 import TimeFrame from '../TimeFrame';
 import { useQuery } from 'react-query';
@@ -18,6 +18,9 @@ import {
   SmartSearchFilterWithId,
   ZetkinSmartSearchFilter,
 } from 'features/smartSearch/components/types';
+
+import messageIds from 'features/smartSearch/l10n/messageIds';
+const localMessageIds = messageIds.filters.campaignParticipation;
 
 const DEFAULT_VALUE = 'any';
 
@@ -131,14 +134,14 @@ const CampaignParticipation = ({
       onSubmit={(e) => handleSubmit(e)}
       renderExamples={() => (
         <>
-          <Msg id="misc.smartSearch.most_active.examples.one" />
+          <Msg id={localMessageIds.examples.one} />
           <br />
-          <Msg id="misc.smartSearch.most_active.examples.two" />
+          <Msg id={localMessageIds.examples.two} />
         </>
       )}
       renderSentence={() => (
         <Msg
-          id="misc.smartSearch.campaign_participation.inputString"
+          id={localMessageIds.inputString}
           values={{
             activitySelect: (
               <StyledSelect
@@ -146,13 +149,13 @@ const CampaignParticipation = ({
                 SelectProps={{
                   renderValue: function getLabel(value) {
                     return value === DEFAULT_VALUE ? (
-                      <Msg id="misc.smartSearch.campaign_participation.activitySelect.any" />
+                      <Msg id={localMessageIds.activitySelect.any} />
                     ) : (
                       <Msg
-                        id="misc.smartSearch.campaign_participation.activitySelect.activity"
+                        id={localMessageIds.activitySelect.activity}
                         values={{
-                          activity: activities.find((l) => l.id === value)
-                            ?.title,
+                          activity:
+                            activities.find((l) => l.id === value)?.title ?? '',
                         }}
                       />
                     );
@@ -161,7 +164,7 @@ const CampaignParticipation = ({
                 value={filter.config.activity || DEFAULT_VALUE}
               >
                 <MenuItem key={DEFAULT_VALUE} value={DEFAULT_VALUE}>
-                  <Msg id="misc.smartSearch.campaign_participation.activitySelect.any" />
+                  <Msg id={localMessageIds.activitySelect.any} />
                 </MenuItem>
                 {activities.map((a) => (
                   <MenuItem key={a.id} value={a.id}>
@@ -176,10 +179,10 @@ const CampaignParticipation = ({
                 value={filter.op}
               >
                 <MenuItem key={OPERATION.ADD} value={OPERATION.ADD}>
-                  <Msg id="misc.smartSearch.campaign_participation.addRemoveSelect.add" />
+                  <Msg id={localMessageIds.addRemoveSelect.add} />
                 </MenuItem>
                 <MenuItem key={OPERATION.SUB} value={OPERATION.SUB}>
-                  <Msg id="misc.smartSearch.campaign_participation.addRemoveSelect.sub" />
+                  <Msg id={localMessageIds.addRemoveSelect.sub} />
                 </MenuItem>
               </StyledSelect>
             ),
@@ -194,10 +197,10 @@ const CampaignParticipation = ({
                 value={filter.config.state}
               >
                 <MenuItem key="booked" value="booked">
-                  <Msg id="misc.smartSearch.campaign_participation.bookedSelect.booked" />
+                  <Msg id={localMessageIds.bookedSelect.booked} />
                 </MenuItem>
                 <MenuItem key="signed_up" value="signed_up">
-                  <Msg id="misc.smartSearch.campaign_participation.bookedSelect.signed_up" />
+                  <Msg id={localMessageIds.bookedSelect.signed_up} />
                 </MenuItem>
               </StyledSelect>
             ),
@@ -209,13 +212,13 @@ const CampaignParticipation = ({
                 SelectProps={{
                   renderValue: function getLabel(value) {
                     return value === DEFAULT_VALUE ? (
-                      <Msg id="misc.smartSearch.campaign_participation.campaignSelect.any" />
+                      <Msg id={localMessageIds.campaignSelect.any} />
                     ) : (
                       <Msg
-                        id="misc.smartSearch.campaign_participation.campaignSelect.campaign"
+                        id={localMessageIds.campaignSelect.campaign}
                         values={{
-                          campaign: campaigns.find((c) => c.id === value)
-                            ?.title,
+                          campaign:
+                            campaigns.find((c) => c.id === value)?.title ?? '',
                         }}
                       />
                     );
@@ -224,7 +227,7 @@ const CampaignParticipation = ({
                 value={filter.config.campaign || DEFAULT_VALUE}
               >
                 <MenuItem key={DEFAULT_VALUE} value={DEFAULT_VALUE}>
-                  <Msg id="misc.smartSearch.campaign_participation.campaignSelect.any" />
+                  <Msg id={localMessageIds.campaignSelect.any} />
                 </MenuItem>
                 {campaigns.map((c) => (
                   <MenuItem key={c.id} value={c.id}>
@@ -244,10 +247,10 @@ const CampaignParticipation = ({
                 value={filter.config.operator}
               >
                 <MenuItem key="in" value="in">
-                  <Msg id="misc.smartSearch.campaign_participation.haveSelect.in" />
+                  <Msg id={localMessageIds.haveSelect.in} />
                 </MenuItem>
                 <MenuItem key="notin" value="notin">
-                  <Msg id="misc.smartSearch.campaign_participation.haveSelect.notin" />
+                  <Msg id={localMessageIds.haveSelect.notin} />
                 </MenuItem>
               </StyledSelect>
             ),
@@ -257,13 +260,13 @@ const CampaignParticipation = ({
                 SelectProps={{
                   renderValue: function getLabel(value) {
                     return value === DEFAULT_VALUE ? (
-                      <Msg id="misc.smartSearch.campaign_participation.locationSelect.any" />
+                      <Msg id={localMessageIds.locationSelect.any} />
                     ) : (
                       <Msg
-                        id="misc.smartSearch.campaign_participation.locationSelect.location"
+                        id={localMessageIds.locationSelect.location}
                         values={{
-                          location: locations.find((l) => l.id === value)
-                            ?.title,
+                          location:
+                            locations.find((l) => l.id === value)?.title ?? '',
                         }}
                       />
                     );
@@ -272,7 +275,7 @@ const CampaignParticipation = ({
                 value={filter.config.location || DEFAULT_VALUE}
               >
                 <MenuItem key={DEFAULT_VALUE} value={DEFAULT_VALUE}>
-                  <Msg id="misc.smartSearch.campaign_participation.locationSelect.any" />
+                  <Msg id={localMessageIds.locationSelect.any} />
                 </MenuItem>
                 {locations.map((l) => (
                   <MenuItem key={l.id} value={l.id}>

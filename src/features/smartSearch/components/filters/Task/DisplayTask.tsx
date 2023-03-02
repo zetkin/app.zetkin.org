@@ -1,8 +1,12 @@
-import { FormattedMessage as Msg } from 'react-intl';
 import { useRouter } from 'next/router';
 
 import { campaignResource } from 'features/campaigns/api/campaigns';
+import DisplayTimeFrame from '../DisplayTimeFrame';
+import { Msg } from 'core/i18n';
 import { taskResource } from 'features/tasks/api/tasks';
+
+import messageIds from 'features/smartSearch/l10n/messageIds';
+const localMessageIds = messageIds.filters.task;
 
 import {
   getMatchingWithConfig,
@@ -26,7 +30,7 @@ const DisplayTask = ({ filter }: DisplayTaskProps): JSX.Element => {
   const op = filter.op || OPERATION.ADD;
 
   const tf = getTaskTimeFrameWithConfig(config);
-  const { after, before, numDays, timeFrame } = getTimeFrameWithConfig(tf);
+  const timeFrame = getTimeFrameWithConfig(tf);
 
   let taskTitle = null;
   if (config.task != undefined) {
@@ -51,64 +55,51 @@ const DisplayTask = ({ filter }: DisplayTaskProps): JSX.Element => {
   // We don't want to show the campaign if a task has been specfied
   let campaignSelect = null;
   if (!taskTitle) {
-    const label = campaignTitle ? 'campaign' : 'any';
     campaignSelect = (
       <>
-        <Msg id="misc.smartSearch.task.campaignSelect.in" />
-        <Msg
-          id={`misc.smartSearch.task.campaignSelect.${label}`}
-          values={{
-            campaign: campaignTitle,
-          }}
-        />
+        <Msg id={localMessageIds.campaignSelect.in} />
+        {campaignTitle ? (
+          <Msg
+            id={localMessageIds.campaignSelect.campaign}
+            values={{ campaign: campaignTitle }}
+          />
+        ) : (
+          <Msg id={localMessageIds.campaignSelect.any} />
+        )}
       </>
     );
   }
 
   return (
     <Msg
-      id="misc.smartSearch.task.inputString"
+      id={localMessageIds.inputString}
       values={{
-        addRemoveSelect: (
-          <Msg id={`misc.smartSearch.task.addRemoveSelect.${op}`} />
-        ),
+        addRemoveSelect: <Msg id={localMessageIds.addRemoveSelect[op]} />,
         campaignSelect: campaignSelect,
         matchingSelect: (
+          // TODO: Move this to reusable component
           <Msg
-            id={`misc.smartSearch.matching.preview.${matching.option}`}
+            id={messageIds.matching.preview[matching.option]}
             values={{
-              max: matching.config?.max,
-              min: matching.config?.min,
+              max: matching.config?.max ?? 0,
+              min: matching.config?.min ?? 0,
             }}
           />
         ),
         taskSelect: taskTitle ? (
           <Msg
-            id="misc.smartSearch.task.taskSelect.task"
+            id={localMessageIds.taskSelect.task}
             values={{
               task: taskTitle,
             }}
           />
         ) : (
-          <Msg id="misc.smartSearch.task.taskSelect.any" />
+          <Msg id={localMessageIds.taskSelect.any} />
         ),
         taskStatusSelect: (
-          <Msg
-            id={`misc.smartSearch.task.taskStatusSelect.${getTaskStatus(
-              config
-            )}`}
-          />
+          <Msg id={localMessageIds.taskStatusSelect[getTaskStatus(config)]} />
         ),
-        timeFrame: (
-          <Msg
-            id={`misc.smartSearch.timeFrame.preview.${timeFrame}`}
-            values={{
-              afterDate: after?.toISOString().slice(0, 10),
-              beforeDate: before?.toISOString().slice(0, 10),
-              days: numDays,
-            }}
-          />
-        ),
+        timeFrame: <DisplayTimeFrame config={timeFrame} />,
       }}
     />
   );

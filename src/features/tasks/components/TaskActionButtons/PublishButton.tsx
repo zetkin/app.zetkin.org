@@ -1,15 +1,18 @@
 import dayjs from 'dayjs';
 import { useContext } from 'react';
 import { Button, Tooltip } from '@mui/material';
-import { FormattedMessage as Msg, useIntl } from 'react-intl';
 
 import { taskResource } from 'features/tasks/api/tasks';
 import validateTaskConfig from 'features/tasks/utils/validateTaskConfig';
 import { ZetkinTask } from 'utils/types/zetkin';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import getTaskStatus, { TASK_STATUS } from 'features/tasks/utils/getTaskStatus';
+import { Msg, useMessages, UseMessagesMap } from 'core/i18n';
+
+import messageIds from 'features/tasks/l10n/messageIds';
 
 const getTooltipContents = (
+  messages: UseMessagesMap<typeof messageIds>,
   taskStatus: TASK_STATUS,
   isTaskConfigValid: boolean,
   hasAssignees: boolean
@@ -19,19 +22,19 @@ const getTooltipContents = (
     taskStatus === TASK_STATUS.CLOSED ||
     taskStatus === TASK_STATUS.EXPIRED
   ) {
-    return 'misc.tasks.publishButton.tooltip.alreadyPublished';
+    return messages.publishButton.tooltip.alreadyPublished();
   }
 
   if (!isTaskConfigValid && !hasAssignees) {
-    return 'misc.tasks.publishButton.tooltip.missingFieldsAndAssignees';
+    return messages.publishButton.tooltip.missingFieldsAndAssignees();
   }
 
   if (!isTaskConfigValid) {
-    return 'misc.tasks.publishButton.tooltip.missingFields';
+    return messages.publishButton.tooltip.missingFields();
   }
 
   if (!hasAssignees) {
-    return 'misc.tasks.publishButton.tooltip.missingAssignees';
+    return messages.publishButton.tooltip.missingAssignees();
   }
 
   return null;
@@ -44,7 +47,7 @@ interface PublishButtonProps {
 const PublishButton: React.FunctionComponent<PublishButtonProps> = ({
   task,
 }) => {
-  const intl = useIntl();
+  const messages = useMessages(messageIds);
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
 
   const patchTaskMutation = taskResource(
@@ -68,16 +71,14 @@ const PublishButton: React.FunctionComponent<PublishButtonProps> = ({
     (taskStatus === TASK_STATUS.DRAFT || taskStatus === TASK_STATUS.SCHEDULED);
 
   const tooltipContents = getTooltipContents(
+    messages,
     taskStatus,
     isTaskConfigValid,
     hasAssignees
   );
 
   return (
-    <Tooltip
-      arrow
-      title={tooltipContents ? intl.formatMessage({ id: tooltipContents }) : ''}
-    >
+    <Tooltip arrow title={tooltipContents || ''}>
       <span>
         <Button
           color="primary"
@@ -85,17 +86,13 @@ const PublishButton: React.FunctionComponent<PublishButtonProps> = ({
           onClick={() =>
             showConfirmDialog({
               onSubmit: publishTask,
-              title: intl.formatMessage({
-                id: 'misc.tasks.forms.publishTask.title',
-              }),
-              warningText: intl.formatMessage({
-                id: 'misc.tasks.forms.publishTask.warning',
-              }),
+              title: messages.publishTask.title(),
+              warningText: messages.publishTask.warning(),
             })
           }
           variant="contained"
         >
-          <Msg id="misc.tasks.publishButton.publish" />
+          <Msg id={messageIds.publishButton.publish} />
         </Button>
       </span>
     </Tooltip>

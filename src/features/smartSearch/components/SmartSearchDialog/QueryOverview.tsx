@@ -1,5 +1,4 @@
 import { Alert } from '@mui/material';
-import { FormattedMessage as Msg } from 'react-intl';
 import { useState } from 'react';
 import {
   Box,
@@ -27,6 +26,7 @@ import DisplaySurveyResponse from '../filters/SurveyResponse/DisplaySurveyRespon
 import DisplaySurveySubmission from '../filters/SurveySubmission/DisplaySurveySubmission';
 import DisplayTask from '../filters/Task/DisplayTask';
 import DisplayUser from '../filters/User/DisplayUser';
+import { Msg } from 'core/i18n';
 import {
   AnyFilterConfig,
   CallHistoryFilterConfig,
@@ -46,6 +46,8 @@ import {
   TaskFilterConfig,
   UserFilterConfig,
 } from 'features/smartSearch/components/types';
+
+import messageIds from 'features/smartSearch/l10n/messageIds';
 
 const FIRST_FILTER = 'first_filter';
 
@@ -84,7 +86,7 @@ const QueryOverview = ({
     >
       {readOnly && (
         <Alert severity="info">
-          <Msg id="misc.smartSearch.readOnly" />
+          <Msg id={messageIds.readOnly} />
         </Alert>
       )}
       <Box margin="auto" maxWidth="500px" minWidth={0.5}>
@@ -253,7 +255,7 @@ const QueryOverview = ({
             onClick={onOpenFilterGallery}
             variant="contained"
           >
-            <Msg id="misc.smartSearch.buttonLabels.addNewFilter" />
+            <Msg id={messageIds.buttonLabels.addNewFilter} />
           </Button>
         </Box>
       </Box>
@@ -271,7 +273,7 @@ const QueryOverview = ({
                 onClick={onCloseDialog}
                 variant="outlined"
               >
-                <Msg id="misc.smartSearch.buttonLabels.close" />
+                <Msg id={messageIds.buttonLabels.close} />
               </Button>
             )}
             {!readOnly && (
@@ -281,7 +283,7 @@ const QueryOverview = ({
                   onClick={onCloseDialog}
                   variant="outlined"
                 >
-                  <Msg id="misc.smartSearch.buttonLabels.cancel" />
+                  <Msg id={messageIds.buttonLabels.cancel} />
                 </Button>
                 <Button
                   color="primary"
@@ -289,7 +291,7 @@ const QueryOverview = ({
                   onClick={onSaveQuery}
                   variant="contained"
                 >
-                  <Msg id="misc.smartSearch.buttonLabels.save" />
+                  <Msg id={messageIds.buttonLabels.save} />
                 </Button>
               </>
             )}

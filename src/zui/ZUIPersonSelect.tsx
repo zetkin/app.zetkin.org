@@ -1,5 +1,4 @@
 import { Autocomplete as MUIAutocomplete } from '@mui/material';
-import { useIntl } from 'react-intl';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 import { Box, TextField } from '@mui/material';
@@ -14,8 +13,11 @@ import React, {
 
 import getPeopleSearchResults from 'utils/fetching/getPeopleSearchResults';
 import useDebounce from 'utils/hooks/useDebounce';
+import { useMessages } from 'core/i18n';
 import { ZetkinPerson } from 'utils/types/zetkin';
 import ZUIPerson from 'zui/ZUIPerson';
+
+import messageIds from './l10n/messageIds';
 
 interface UsePersonSelectProps {
   getOptionDisabled?: (option: ZetkinPerson) => boolean;
@@ -74,7 +76,7 @@ export const usePersonSelect: UsePersonSelect = ({
   placeholder,
   selectedPerson,
 }) => {
-  const intl = useIntl();
+  const messages = useMessages(messageIds);
   const { orgId } = useRouter().query;
   const [searchFieldValue, setSearchFieldValue] = useState<string>(
     initialValue || ''
@@ -91,13 +93,13 @@ export const usePersonSelect: UsePersonSelect = ({
   );
 
   let searchLabel = searchFieldValue.length
-    ? intl.formatMessage({ id: 'misc.personSelect.keepTyping' })
-    : intl.formatMessage({ id: 'misc.personSelect.search' });
+    ? messages.personSelect.keepTyping()
+    : messages.personSelect.search();
 
   if (isLoading) {
-    searchLabel = intl.formatMessage({ id: 'misc.personSelect.searching' });
+    searchLabel = messages.personSelect.searching();
   } else if (results?.length == 0) {
-    searchLabel = intl.formatMessage({ id: 'misc.personSelect.noResult' });
+    searchLabel = messages.personSelect.noResult();
   }
 
   const debouncedQuery = useDebounce(async () => {

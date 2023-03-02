@@ -1,15 +1,17 @@
-import { FormattedMessage } from 'react-intl';
 import { FunctionComponent } from 'react';
 import makeStyles from '@mui/styles/makeStyles';
 import { useRouter } from 'next/router';
 import { Box, Typography } from '@mui/material';
 import { Group, ViewColumnOutlined } from '@mui/icons-material';
 
+import { Msg } from 'core/i18n';
 import useModel from 'core/useModel';
 import ViewDataModel from '../models/ViewDataModel';
 import ZUIFuture from 'zui/ZUIFuture';
 import ZUIFutures from 'zui/ZUIFutures';
 import ZUIIconLabelRow from 'zui/ZUIIconLabelRow';
+
+import messageIds from '../l10n/messageIds';
 
 const useStyles = makeStyles((theme) => ({
   main: {
@@ -72,8 +74,8 @@ const SharedViewLayout: FunctionComponent<SharedViewLayoutProps> = ({
             {
               icon: <Group />,
               label: (
-                <FormattedMessage
-                  id="pages.people.views.layout.subtitle.people"
+                <Msg
+                  id={messageIds.viewLayout.subtitle.people}
                   values={{ count: rows.length }}
                 />
               ),
@@ -81,8 +83,8 @@ const SharedViewLayout: FunctionComponent<SharedViewLayoutProps> = ({
             {
               icon: <ViewColumnOutlined />,
               label: (
-                <FormattedMessage
-                  id="pages.people.views.layout.subtitle.columns"
+                <Msg
+                  id={messageIds.viewLayout.subtitle.columns}
                   values={{ count: cols.length }}
                 />
               ),

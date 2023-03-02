@@ -1,15 +1,17 @@
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
-import { useIntl } from 'react-intl';
 
 import BackendApiClient from 'core/api/client/BackendApiClient';
 import { PageWithLayout } from 'utils/types';
 import PeopleLayout from 'features/views/layout/PeopleLayout';
 import { scaffold } from 'utils/next';
+import { useMessages } from 'core/i18n';
 import useModel from 'core/useModel';
 import useServerSide from 'core/useServerSide';
 import ViewBrowser from 'features/views/components/ViewBrowser';
 import ViewBrowserModel from 'features/views/models/ViewBrowserModel';
+
+import messageIds from 'features/views/l10n/messageIds';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -40,7 +42,7 @@ type PeopleViewsPageProps = {
 };
 
 const PeopleViewsPage: PageWithLayout<PeopleViewsPageProps> = ({ orgId }) => {
-  const intl = useIntl();
+  const messages = useMessages(messageIds);
   const model: ViewBrowserModel = useModel(
     (env) => new ViewBrowserModel(env, parseInt(orgId))
   );
@@ -53,11 +55,7 @@ const PeopleViewsPage: PageWithLayout<PeopleViewsPageProps> = ({ orgId }) => {
   return (
     <>
       <Head>
-        <title>
-          {intl.formatMessage({
-            id: 'layout.organize.people.title',
-          })}
-        </title>
+        <title>{messages.browserLayout.title()}</title>
       </Head>
       <ViewBrowser basePath={`/organize/${orgId}/people`} model={model} />
     </>

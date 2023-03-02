@@ -1,13 +1,15 @@
 import { makeStyles } from '@mui/styles';
 import { Typography } from '@mui/material';
-import { useIntl } from 'react-intl';
 import { FC, useEffect, useState } from 'react';
 
 import { CallAssignmentCaller } from '../apiTypes';
 import TagManager from 'features/tags/components/TagManager';
+import { useMessages } from 'core/i18n';
 import { ZetkinTag } from 'utils/types/zetkin';
 import ZUIDialog from 'zui/ZUIDialog';
 import ZUISubmitCancelButtons from 'zui/ZUISubmitCancelButtons';
+
+import messageIds from '../l10n/messageIds';
 
 interface CallerConfigDialogProps {
   caller: CallAssignmentCaller | null;
@@ -22,7 +24,7 @@ const CallerConfigDialog: FC<CallerConfigDialogProps> = ({
   onSubmit,
   open,
 }) => {
-  const intl = useIntl();
+  const messages = useMessages(messageIds);
   const [prioTags, setPrioTags] = useState<ZetkinTag[]>([]);
   const [excludedTags, setExcludedTags] = useState<ZetkinTag[]>([]);
 
@@ -39,10 +41,9 @@ const CallerConfigDialog: FC<CallerConfigDialogProps> = ({
       open={open}
       title={
         caller
-          ? intl.formatMessage(
-              { id: 'pages.organizeCallAssignment.callers.customize.title' },
-              { name: `${caller.first_name} ${caller.last_name}` }
-            )
+          ? messages.callers.customize.title({
+              name: `${caller.first_name} ${caller.last_name}`,
+            })
           : ''
       }
     >
@@ -55,23 +56,15 @@ const CallerConfigDialog: FC<CallerConfigDialogProps> = ({
         >
           <CallerTagSection
             onChange={setPrioTags}
-            subtitle={intl.formatMessage({
-              id: 'pages.organizeCallAssignment.callers.customize.prioritize.intro',
-            })}
+            subtitle={messages.callers.customize.prioritize.intro()}
             tags={prioTags}
-            title={intl.formatMessage({
-              id: 'pages.organizeCallAssignment.callers.customize.prioritize.h',
-            })}
+            title={messages.callers.customize.prioritize.h()}
           />
           <CallerTagSection
             onChange={setExcludedTags}
-            subtitle={intl.formatMessage({
-              id: 'pages.organizeCallAssignment.callers.customize.exclude.intro',
-            })}
+            subtitle={messages.callers.customize.exclude.intro()}
             tags={excludedTags}
-            title={intl.formatMessage({
-              id: 'pages.organizeCallAssignment.callers.customize.exclude.h',
-            })}
+            title={messages.callers.customize.exclude.h()}
           />
           <ZUISubmitCancelButtons onCancel={onClose} />
         </form>

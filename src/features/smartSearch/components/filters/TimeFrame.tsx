@@ -1,13 +1,15 @@
-import { FormattedMessage as Msg } from 'react-intl';
 import { MenuItem, TextField, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 
 import { getNewDateWithOffset } from 'utils/dateUtils';
 import { getTimeFrameWithConfig } from '../utils';
+import { Msg } from 'core/i18n';
 import StyledDatePicker from '../inputs/StyledDatePicker';
 import StyledNumberInput from '../inputs/StyledNumberInput';
 import StyledSelect from '../inputs/StyledSelect';
 import { TIME_FRAME } from 'features/smartSearch/components/types';
+
+import messageIds from 'features/smartSearch/l10n/messageIds';
 
 interface TimeFrameProps {
   onChange: (range: { after?: string; before?: string }) => void;
@@ -56,61 +58,105 @@ const TimeFrame = ({
     }
   }, [before, after, selected, numDays]);
 
+  const afterDateSelect = (
+    <StyledDatePicker
+      onChange={(date) => setAfter(date as unknown as Date)}
+      renderInput={(params) => <TextField {...params} />}
+      value={after}
+    />
+  );
+  const beforeDateSelect = (
+    <StyledDatePicker
+      onChange={(date) => setBefore(date as unknown as Date)}
+      renderInput={(params) => <TextField {...params} />}
+      value={before}
+    />
+  );
+  const timeFrameSelect = (
+    <StyledSelect
+      onChange={(e) => setSelected(e.target.value as TIME_FRAME)}
+      SelectProps={{
+        renderValue: function getLabel(value) {
+          return (
+            <Msg
+              id={
+                messageIds.timeFrame.timeFrameSelectLabel[value as TIME_FRAME]
+              }
+            />
+          );
+        },
+      }}
+      value={selected}
+    >
+      {options.map((value) => (
+        <MenuItem key={value} value={value}>
+          <Msg id={messageIds.timeFrame.timeFrameSelectOptions[value]} />
+        </MenuItem>
+      ))}
+    </StyledSelect>
+  );
+
   return (
     <Typography display="inline" variant="h4">
-      <Msg
-        id={`misc.smartSearch.timeFrame.edit.${selected}`}
-        values={{
-          afterDateSelect: (
-            <StyledDatePicker
-              onChange={(date) => setAfter(date as unknown as Date)}
-              renderInput={(params) => <TextField {...params} />}
-              value={after}
-            />
-          ),
-          beforeDateSelect: (
-            <StyledDatePicker
-              onChange={(date) => setBefore(date as unknown as Date)}
-              renderInput={(params) => <TextField {...params} />}
-              value={before}
-            />
-          ),
-          days: numDays,
-          daysInput: (
-            <StyledNumberInput
-              inputProps={{ min: '1' }}
-              onChange={(e) => setNumDays(+e.target.value)}
-              value={numDays}
-            />
-          ),
-          timeFrameSelect: (
-            <StyledSelect
-              onChange={(e) => setSelected(e.target.value as TIME_FRAME)}
-              SelectProps={{
-                renderValue: function getLabel(value) {
-                  return (
-                    <Msg
-                      id={`misc.smartSearch.timeFrame.timeFrameSelectLabel.${value}`}
-                      values={{
-                        days: numDays,
-                      }}
-                    />
-                  );
-                },
-              }}
-              value={selected}
-            >
-              {options.map((value) => (
-                <MenuItem key={value} value={value}>
-                  <Msg
-                    id={`misc.smartSearch.timeFrame.timeFrameSelectOptions.${value}`}
-                  />
-                </MenuItem>
-              ))}
-            </StyledSelect>
-          ),
-        }}
-      />
+      {selected == 'afterDate' && (
+        <Msg
+          id={messageIds.timeFrame.edit.afterDate}
+          values={{
+            afterDateSelect,
+            timeFrameSelect,
+          }}
+        />
+      )}
+      {selected == 'beforeDate' && (
+        <Msg
+          id={messageIds.timeFrame.edit.beforeDate}
+          values={{
+            beforeDateSelect,
+            timeFrameSelect,
+          }}
+        />
+      )}
+      {selected == 'beforeToday' && (
+        <Msg
+          id={messageIds.timeFrame.edit.beforeToday}
+          values={{ timeFrameSelect }}
+        />
+      )}
+      {selected == 'between' && (
+        <Msg
+          id={messageIds.timeFrame.edit.between}
+          values={{
+            afterDateSelect,
+            beforeDateSelect,
+            timeFrameSelect,
+          }}
+        />
+      )}
+      {selected == 'ever' && (
+        <Msg id={messageIds.timeFrame.edit.ever} values={{ timeFrameSelect }} />
+      )}
+      {selected == 'future' && (
+        <Msg
+          id={messageIds.timeFrame.edit.future}
+          values={{ timeFrameSelect }}
+        />
+      )}
+      {selected == 'lastFew' && (
+        <Msg
+          id={messageIds.timeFrame.edit.lastFew}
+          values={{
+            days: numDays,
+            daysInput: (
+              <StyledNumberInput
+                inputProps={{ min: '1' }}
+                onChange={(e) => setNumDays(+e.target.value)}
+                value={numDays}
+              />
+            ),
+            timeFrameSelect,
+          }}
+        />
+      )}
     </Typography>
   );
 };

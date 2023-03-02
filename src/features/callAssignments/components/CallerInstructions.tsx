@@ -7,13 +7,15 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
-import { FormattedMessage as Msg, useIntl } from 'react-intl';
 import { useContext, useState } from 'react';
 
 import CallerInstructionsModel from '../models/CallerInstructionsModel';
 import useModel from 'core/useModel';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUITextEditor from 'zui/ZUITextEditor';
+import { Msg, useMessages } from 'core/i18n';
+
+import messageIds from '../l10n/messageIds';
 
 interface CallerInstructionsProps {
   assignmentId: number;
@@ -24,7 +26,7 @@ const CallerInstructions = ({
   assignmentId,
   orgId,
 }: CallerInstructionsProps) => {
-  const intl = useIntl();
+  const messages = useMessages(messageIds);
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
 
   const theme = useTheme();
@@ -58,7 +60,7 @@ const CallerInstructions = ({
         }}
       >
         <Typography variant="h4">
-          <Msg id="pages.organizeCallAssignment.conversation.instructions.title" />
+          <Msg id={messageIds.conversation.instructions.title} />
         </Typography>
         <form
           onSubmit={(evt) => {
@@ -80,21 +82,21 @@ const CallerInstructions = ({
               key={key}
               initialValue={model.getInstructions()}
               onChange={onChange}
-              placeholder={intl.formatMessage({
-                id: 'pages.organizeCallAssignment.conversation.instructions.editorPlaceholder',
-              })}
+              placeholder={messages.conversation.instructions.editorPlaceholder()}
             />
           </Box>
           <Box alignItems="center" display="flex" justifyContent="flex-end">
             <Box marginRight={2}>
               {!model.isSaving && !model.hasUnsavedChanges && (
                 <Typography>
-                  <Msg id="pages.organizeCallAssignment.conversation.instructions.savedMessage" />
+                  <Msg id={messageIds.conversation.instructions.savedMessage} />
                 </Typography>
               )}
               {!model.isSaving && model.hasUnsavedChanges && (
                 <Typography component="span">
-                  <Msg id="pages.organizeCallAssignment.conversation.instructions.unsavedMessage" />{' '}
+                  <Msg
+                    id={messageIds.conversation.instructions.unsavedMessage}
+                  />{' '}
                   <Link
                     color="textPrimary"
                     component="span"
@@ -105,14 +107,13 @@ const CallerInstructions = ({
                           //Force Slate to re-mount
                           setKey((current) => current + 1);
                         },
-                        warningText: intl.formatMessage({
-                          id: 'pages.organizeCallAssignment.conversation.instructions.confirm',
-                        }),
+                        warningText:
+                          messages.conversation.instructions.confirm(),
                       });
                     }}
                     style={{ cursor: 'pointer', fontFamily: 'inherit' }}
                   >
-                    <Msg id="pages.organizeCallAssignment.conversation.instructions.revertLink" />
+                    <Msg id={messageIds.conversation.instructions.revertLink} />
                   </Link>
                 </Typography>
               )}
@@ -124,9 +125,9 @@ const CallerInstructions = ({
               variant="contained"
             >
               {model.isSaving ? (
-                <Msg id="pages.organizeCallAssignment.conversation.instructions.savingButton" />
+                <Msg id={messageIds.conversation.instructions.savingButton} />
               ) : (
-                <Msg id="pages.organizeCallAssignment.conversation.instructions.saveButton" />
+                <Msg id={messageIds.conversation.instructions.saveButton} />
               )}
             </Button>
           </Box>

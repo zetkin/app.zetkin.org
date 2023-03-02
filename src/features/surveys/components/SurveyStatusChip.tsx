@@ -1,8 +1,10 @@
 import { Box } from '@mui/material';
 import { FC } from 'react';
-import { FormattedMessage } from 'react-intl';
 import { makeStyles } from '@mui/styles';
+import { Msg } from 'core/i18n';
 import { SurveyState } from '../models/SurveyDataModel';
+
+import messageIds from '../l10n/messageIds';
 
 interface SurveyStatusChipProps {
   state: SurveyState;
@@ -54,7 +56,7 @@ const SurveyStatusChip: FC<SurveyStatusChipProps> = ({ state }) => {
 
   return (
     <Box className={`${colorClassName} ${classes.chip}`}>
-      <FormattedMessage id={`pages.organizeSurvey.state.${state}`} />
+      <Msg id={messageIds.state[state]} />
     </Box>
   );
 };

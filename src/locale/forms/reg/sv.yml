@@ -1,8 +1,0 @@
-actions:
-  submit: Skicka
-fields:
-  email: E-mail
-  firstName: Förnamn
-  lastName: Efternamn
-  password: Lösenord
-  phone: Telefonnummer

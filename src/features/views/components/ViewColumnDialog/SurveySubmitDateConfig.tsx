@@ -7,10 +7,12 @@ import {
   Select,
   Typography,
 } from '@mui/material';
-import { FormattedMessage as Msg, useIntl } from 'react-intl';
 
 import getSurveys from 'features/smartSearch/fetching/getSurveys';
 import { COLUMN_TYPE, SelectedViewColumn } from '../types';
+import { Msg, useMessages } from 'core/i18n';
+
+import messageIds from 'features/views/l10n/messageIds';
 
 interface SurveySubmitDateConfigProps {
   onOutputConfigured: (columns: SelectedViewColumn[]) => void;
@@ -19,7 +21,7 @@ interface SurveySubmitDateConfigProps {
 const SurveySubmitDateConfig = ({
   onOutputConfigured,
 }: SurveySubmitDateConfigProps) => {
-  const intl = useIntl();
+  const messages = useMessages(messageIds);
 
   //TODO: Refactor to use model pattern
   const { orgId } = useRouter().query;
@@ -32,9 +34,7 @@ const SurveySubmitDateConfig = ({
   return !surveys || surveys.length > 0 ? (
     <FormControl sx={{ width: 300 }}>
       <InputLabel>
-        {intl.formatMessage({
-          id: 'misc.views.columnDialog.editor.fieldLabels.survey',
-        })}
+        {messages.columnDialog.editor.fieldLabels.survey()}
       </InputLabel>
       <Select
         onChange={(evt) => {
@@ -64,7 +64,7 @@ const SurveySubmitDateConfig = ({
     </FormControl>
   ) : (
     <Typography>
-      <Msg id="misc.views.columnDialog.choices.surveySubmitDate.noSurveys" />
+      <Msg id={messageIds.columnDialog.choices.surveySubmitDate.noSurveys} />
     </Typography>
   );
 };

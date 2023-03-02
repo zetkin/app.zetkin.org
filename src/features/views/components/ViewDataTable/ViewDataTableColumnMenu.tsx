@@ -1,6 +1,5 @@
 import { forwardRef } from 'react';
 import { MenuItem } from '@mui/material';
-import { FormattedMessage as Msg } from 'react-intl';
 import {
   GridColDef,
   GridColumnMenuContainer,
@@ -8,7 +7,10 @@ import {
   GridFilterMenuItem,
 } from '@mui/x-data-grid-pro';
 
+import { Msg } from 'core/i18n';
 import noPropagate from 'utils/noPropagate';
+
+import messageIds from 'features/views/l10n/messageIds';
 
 export type ViewDataTableColumnMenuProps = {
   onConfigure: (colId: string) => void;
@@ -37,7 +39,7 @@ const ViewDataTableColumnMenu = forwardRef<
         data-testid={`rename-column-button-${currentColumn.field}`}
         onClick={noPropagate(() => onRename(currentColumn.field))}
       >
-        <Msg id="misc.views.columnMenu.rename" />
+        <Msg id={messageIds.columnMenu.rename} />
       </MenuItem>
       {
         // Conditionally show configure button only if the column type is configurable
@@ -45,7 +47,7 @@ const ViewDataTableColumnMenu = forwardRef<
           <MenuItem
             onClick={noPropagate(() => onConfigure(currentColumn.field))}
           >
-            <Msg id="misc.views.columnMenu.configure" />
+            <Msg id={messageIds.columnMenu.configure} />
           </MenuItem>
         )
       }
@@ -53,7 +55,7 @@ const ViewDataTableColumnMenu = forwardRef<
         data-testid={`delete-column-button-${currentColumn.field}`}
         onClick={noPropagate(() => onDelete(currentColumn.field))}
       >
-        <Msg id="misc.views.columnMenu.delete" />
+        <Msg id={messageIds.columnMenu.delete} />
       </MenuItem>
     </GridColumnMenuContainer>
   );

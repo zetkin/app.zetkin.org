@@ -1,7 +1,6 @@
 import { Box } from '@mui/material';
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
-import { useIntl } from 'react-intl';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
@@ -10,15 +9,18 @@ import getOrg from 'utils/fetching/getOrg';
 import { PageWithLayout } from 'utils/types';
 import patchQuery from 'utils/fetching/patchQuery';
 import { QUERY_STATUS } from 'features/smartSearch/components/types';
-import QueryStatusAlert from 'features/smartSearch/components/QueryStatusAlert';
+import QueryStatusAlert from 'features/tasks/components/QueryStatusAlert';
 import { scaffold } from 'utils/next';
 import SingleTaskLayout from 'features/tasks/layout/SingleTaskLayout';
 import SmartSearchDialog from 'features/smartSearch/components/SmartSearchDialog';
 import TaskAssigneesList from 'features/tasks/components/TaskAssigneesList';
 import { taskResource } from 'features/tasks/api/tasks';
+import { useMessages } from 'core/i18n';
 import ZUIQuery from 'zui/ZUIQuery';
 import getTaskStatus, { TASK_STATUS } from 'features/tasks/utils/getTaskStatus';
 import { ZetkinAssignedTask, ZetkinTask } from 'utils/types/zetkin';
+
+import messageIds from 'features/campaigns/l10n/messageIds';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -78,7 +80,7 @@ const getQueryStatus = (
 };
 
 const TaskAssigneesPage: PageWithLayout = () => {
-  const intl = useIntl();
+  const messages = useMessages(messageIds);
   const queryClient = useQueryClient();
 
   const { taskId, orgId } = useRouter().query;
@@ -110,9 +112,9 @@ const TaskAssigneesPage: PageWithLayout = () => {
   return (
     <>
       <Head>
-        <title>{`${task?.title} - ${intl.formatMessage({
-          id: 'layout.organize.tasks.tabs.assignees',
-        })}`}</title>
+        <title>
+          {`${task?.title} - ${messages.taskLayout.tabs.assignees()}`}
+        </title>
       </Head>
       <>
         <QueryStatusAlert

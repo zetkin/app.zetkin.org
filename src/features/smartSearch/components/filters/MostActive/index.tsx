@@ -1,6 +1,5 @@
 import { FormEvent } from 'react';
 import { MenuItem } from '@mui/material';
-import { FormattedMessage as Msg } from 'react-intl';
 
 import FilterForm from '../../FilterForm';
 import StyledNumberInput from '../../inputs/StyledNumberInput';
@@ -14,6 +13,10 @@ import {
   SmartSearchFilterWithId,
   ZetkinSmartSearchFilter,
 } from 'features/smartSearch/components/types';
+
+import messageIds from 'features/smartSearch/l10n/messageIds';
+import { Msg } from 'core/i18n';
+const localMessageIds = messageIds.filters.mostActive;
 
 interface MostActiveProps {
   filter:
@@ -58,14 +61,14 @@ const MostActive = ({
       onSubmit={(e) => handleSubmit(e)}
       renderExamples={() => (
         <>
-          <Msg id="misc.smartSearch.most_active.examples.one" />
+          <Msg id={localMessageIds.examples.one} />
           <br />
-          <Msg id="misc.smartSearch.most_active.examples.two" />
+          <Msg id={localMessageIds.examples.two} />
         </>
       )}
       renderSentence={() => (
         <Msg
-          id="misc.smartSearch.most_active.inputString"
+          id={localMessageIds.inputString}
           values={{
             addRemoveSelect: (
               <StyledSelect
@@ -73,10 +76,10 @@ const MostActive = ({
                 value={filter.op}
               >
                 <MenuItem key={OPERATION.ADD} value={OPERATION.ADD}>
-                  <Msg id="misc.smartSearch.most_active.addRemoveSelect.add" />
+                  <Msg id={localMessageIds.addRemoveSelect.add} />
                 </MenuItem>
                 <MenuItem key={OPERATION.SUB} value={OPERATION.SUB}>
-                  <Msg id="misc.smartSearch.most_active.addRemoveSelect.sub" />
+                  <Msg id={localMessageIds.addRemoveSelect.sub} />
                 </MenuItem>
               </StyledSelect>
             ),

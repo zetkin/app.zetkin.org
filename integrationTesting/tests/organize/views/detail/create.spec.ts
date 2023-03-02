@@ -79,8 +79,8 @@ test.describe('View detail page', () => {
 
     // Expect that correctly localised strings sent when posting
     expect(viewPostLogs[0].data?.title).toEqual('New View');
-    expect(columnPostLogs[0].data?.title).toEqual('First name');
-    expect(columnPostLogs[1].data?.title).toEqual('Last name');
+    expect(columnPostLogs[0].data?.title).toEqual('First Name');
+    expect(columnPostLogs[1].data?.title).toEqual('Last Name');
 
     // Expect that the correct rows were added
     expect(rowPutLogs[0].path).toMatch(/1$/);

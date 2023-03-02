@@ -4,11 +4,13 @@ import { TextField } from 'mui-rff';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 import { Box, Button, Grid, GridSize, MenuItem } from '@mui/material';
-import { FormattedMessage as Msg, useIntl } from 'react-intl';
 
 import getActivities from 'utils/fetching/getActivities';
 import getCampaigns from 'features/campaigns/fetching/getCampaigns';
 import getLocations from 'utils/fetching/getLocations';
+import { Msg, useMessages } from 'core/i18n';
+
+import messageIds from '../l10n/messageIds';
 
 interface EventDetailsFormProps {
   onSubmit: (data: Record<string, unknown>) => void;
@@ -30,7 +32,7 @@ const EventDetailsForm = ({
   const activities = activitiesQuery.data || [];
   const locations = locationsQuery.data || [];
   const campaigns = campaignsQuery.data || [];
-  const intl = useIntl();
+  const messages = useMessages(messageIds);
 
   const formattedNow = dayjs().format('YYYY-MM-DDTHH:mm:ss');
 
@@ -44,9 +46,7 @@ const EventDetailsForm = ({
   const validate = (values: Record<string, string>) => {
     const errors: Record<string, string> = {};
     if (!values.title) {
-      errors.title = intl.formatMessage({
-        id: 'misc.formDialog.required',
-      });
+      errors.title = messages.form.required();
     }
     return errors;
   };
@@ -83,9 +83,7 @@ const EventDetailsForm = ({
         <TextField
           fullWidth
           id="title"
-          label={intl.formatMessage({
-            id: 'misc.formDialog.event.title',
-          })}
+          label={messages.form.title()}
           margin="normal"
           name="title"
         />
@@ -98,9 +96,7 @@ const EventDetailsForm = ({
           disabled={!!campId}
           fullWidth
           id="camp"
-          label={intl.formatMessage({
-            id: 'misc.formDialog.event.campaign',
-          })}
+          label={messages.form.campaign()}
           margin="normal"
           name="campaign_id"
           select
@@ -119,9 +115,7 @@ const EventDetailsForm = ({
         <TextField
           fullWidth
           id="activity"
-          label={intl.formatMessage({
-            id: 'misc.formDialog.event.activity',
-          })}
+          label={messages.form.activity()}
           margin="normal"
           name="activity_id"
           select
@@ -140,9 +134,7 @@ const EventDetailsForm = ({
         <TextField
           fullWidth
           id="location"
-          label={intl.formatMessage({
-            id: 'misc.formDialog.event.place',
-          })}
+          label={messages.form.place()}
           margin="normal"
           name="location_id"
           select
@@ -163,9 +155,7 @@ const EventDetailsForm = ({
           InputLabelProps={{
             shrink: true,
           }}
-          label={intl.formatMessage({
-            id: 'misc.formDialog.event.start',
-          })}
+          label={messages.form.start()}
           margin="normal"
           name="start_time"
           required
@@ -181,9 +171,7 @@ const EventDetailsForm = ({
           InputLabelProps={{
             shrink: true,
           }}
-          label={intl.formatMessage({
-            id: 'misc.formDialog.event.end',
-          })}
+          label={messages.form.end()}
           margin="normal"
           name="end_time"
           required
@@ -199,9 +187,7 @@ const EventDetailsForm = ({
           InputLabelProps={{
             shrink: true,
           }}
-          label={intl.formatMessage({
-            id: 'misc.formDialog.event.minNo',
-          })}
+          label={messages.form.minNo()}
           name="num_participants_required"
           type="number"
         />
@@ -213,9 +199,7 @@ const EventDetailsForm = ({
         <TextField
           fullWidth
           id="info"
-          label={intl.formatMessage({
-            id: 'misc.formDialog.event.info',
-          })}
+          label={messages.form.info()}
           margin="normal"
           multiline
           name="info_text"
@@ -230,9 +214,7 @@ const EventDetailsForm = ({
         <TextField
           fullWidth
           id="link"
-          label={intl.formatMessage({
-            id: 'misc.formDialog.event.link',
-          })}
+          label={messages.form.link()}
           margin="normal"
           name="url"
         />
@@ -257,7 +239,7 @@ const EventDetailsForm = ({
             <Box display="flex" justifyContent="flex-end" width={1}>
               <Box m={1}>
                 <Button color="primary" onClick={onCancel}>
-                  <Msg id="misc.formDialog.cancel" />
+                  <Msg id={messageIds.form.cancel} />
                 </Button>
               </Box>
               <Box m={1}>
@@ -267,7 +249,7 @@ const EventDetailsForm = ({
                   type="submit"
                   variant="contained"
                 >
-                  <Msg id="misc.formDialog.submit" />
+                  <Msg id={messageIds.form.submit} />
                 </Button>
               </Box>
             </Box>

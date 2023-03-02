@@ -13,12 +13,14 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { FormattedMessage as Msg, useIntl } from 'react-intl';
 
 import CallAssignmentModel from '../models/CallAssignmentModel';
 import SmartSearchDialog from 'features/smartSearch/components/SmartSearchDialog';
 import StatusCardHeader from './StatusCardHeader';
 import StatusCardItem from './StatusCardItem';
+import { Msg, useMessages } from 'core/i18n';
+
+import messageIds from '../l10n/messageIds';
 
 interface CallAssignmentStatusCardProps {
   model: CallAssignmentModel;
@@ -27,7 +29,7 @@ interface CallAssignmentStatusCardProps {
 const CallAssignmentStatusCards = ({
   model,
 }: CallAssignmentStatusCardProps) => {
-  const intl = useIntl();
+  const messages = useMessages(messageIds);
   const { data: stats } = model.getStats();
   const { data } = model.getData();
   const cooldown = data?.cooldown ?? null;
@@ -46,12 +48,8 @@ const CallAssignmentStatusCards = ({
         <Card>
           <StatusCardHeader
             chipColor={hasTargets ? 'orange' : 'gray'}
-            subtitle={intl.formatMessage({
-              id: 'pages.organizeCallAssignment.blocked.subtitle',
-            })}
-            title={intl.formatMessage({
-              id: 'pages.organizeCallAssignment.blocked.title',
-            })}
+            subtitle={messages.blocked.subtitle()}
+            title={messages.blocked.title()}
             value={stats?.blocked}
           />
           <List>
@@ -60,8 +58,8 @@ const CallAssignmentStatusCards = ({
                 <Box display="flex" justifyContent="space-between">
                   <Typography color="secondary" variant="h5">
                     <Msg
-                      id="pages.organizeCallAssignment.blocked.hours"
-                      values={{ cooldown }}
+                      id={messageIds.blocked.hours}
+                      values={{ cooldown: cooldown || 0 }}
                     />
                   </Typography>
                   <Box ml={1}>
@@ -85,12 +83,8 @@ const CallAssignmentStatusCards = ({
                       <Paper elevation={3} variant="elevation">
                         <Box mt={1} p={2}>
                           <TextField
-                            helperText={intl.formatMessage({
-                              id: 'pages.organizeCallAssignment.blocked.cooldownHelperText',
-                            })}
-                            label={intl.formatMessage({
-                              id: 'pages.organizeCallAssignment.blocked.cooldownLabel',
-                            })}
+                            helperText={messages.blocked.cooldownHelperText()}
+                            label={messages.blocked.cooldownLabel()}
                             onChange={(ev) => {
                               const val = ev.target.value;
 
@@ -124,27 +118,19 @@ const CallAssignmentStatusCards = ({
                   </Popper>
                 </Box>
               }
-              title={intl.formatMessage({
-                id: 'pages.organizeCallAssignment.blocked.calledTooRecently',
-              })}
+              title={messages.blocked.calledTooRecently()}
               value={stats?.calledTooRecently}
             />
             <StatusCardItem
-              title={intl.formatMessage({
-                id: 'pages.organizeCallAssignment.blocked.callBackLater',
-              })}
+              title={messages.blocked.callBackLater()}
               value={stats?.callBackLater}
             />
             <StatusCardItem
-              title={intl.formatMessage({
-                id: 'pages.organizeCallAssignment.blocked.missingPhoneNumber',
-              })}
+              title={messages.blocked.missingPhoneNumber()}
               value={stats?.missingPhoneNumber}
             />
             <StatusCardItem
-              title={intl.formatMessage({
-                id: 'pages.organizeCallAssignment.blocked.organizerActionNeeded',
-              })}
+              title={messages.blocked.organizerActionNeeded()}
               value={stats?.organizerActionNeeded}
             />
           </List>
@@ -154,25 +140,17 @@ const CallAssignmentStatusCards = ({
         <Card>
           <StatusCardHeader
             chipColor={hasTargets ? 'green' : 'gray'}
-            subtitle={intl.formatMessage({
-              id: 'pages.organizeCallAssignment.ready.subtitle',
-            })}
-            title={intl.formatMessage({
-              id: 'pages.organizeCallAssignment.ready.title',
-            })}
+            subtitle={messages.ready.subtitle()}
+            title={messages.ready.title()}
             value={stats?.ready}
           />
           <List>
             <StatusCardItem
-              title={intl.formatMessage({
-                id: 'pages.organizeCallAssignment.ready.queue',
-              })}
+              title={messages.ready.queue()}
               value={stats?.queue}
             />
             <StatusCardItem
-              title={intl.formatMessage({
-                id: 'pages.organizeCallAssignment.ready.allocated',
-              })}
+              title={messages.ready.allocated()}
               value={stats?.allocated}
             />
           </List>
@@ -182,12 +160,8 @@ const CallAssignmentStatusCards = ({
         <Card>
           <StatusCardHeader
             chipColor={hasTargets ? 'blue' : 'gray'}
-            subtitle={intl.formatMessage({
-              id: 'pages.organizeCallAssignment.done.subtitle',
-            })}
-            title={intl.formatMessage({
-              id: 'pages.organizeCallAssignment.done.title',
-            })}
+            subtitle={messages.done.subtitle()}
+            title={messages.done.title()}
             value={stats?.done}
           />
           <Box p={2}>
@@ -196,7 +170,7 @@ const CallAssignmentStatusCards = ({
               startIcon={<Edit />}
               variant="outlined"
             >
-              <Msg id="pages.organizeCallAssignment.done.defineButton" />
+              <Msg id={messageIds.done.defineButton} />
             </Button>
             {queryDialogOpen && (
               <SmartSearchDialog

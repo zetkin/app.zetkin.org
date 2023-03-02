@@ -5,6 +5,8 @@ import ZUIEditTextinPlace, {
   ZUIEditTextinPlaceProps,
 } from 'zui/ZUIEditTextInPlace';
 
+import messageIds from 'zui/l10n/messageIds';
+
 const props: ZUIEditTextinPlaceProps = {
   onChange: async () => undefined,
   value: 'Current Text',
@@ -18,13 +20,13 @@ describe('ZUIEditTextInPlace', () => {
   });
 
   it('shows a tooltip informing the user to edit on hover', async () => {
-    const { getByDisplayValue, findByText } = render(
+    const { getByDisplayValue, findByMessageId } = render(
       <ZUIEditTextinPlace {...props} />
     );
     const inputEl = getByDisplayValue(props.value);
     await userEvent.hover(inputEl);
-    const tooltip = await findByText(
-      'misc.components.editTextInPlace.tooltip.edit'
+    const tooltip = await findByMessageId(
+      messageIds.editTextInPlace.tooltip.edit
     );
     expect(tooltip).not.toBeNull();
   });
@@ -41,15 +43,15 @@ describe('ZUIEditTextInPlace', () => {
   });
 
   it('shows a tooltip informing the user the field must not be empty when no text', async () => {
-    const { getByDisplayValue, findByText } = render(
+    const { getByDisplayValue, findByMessageId } = render(
       <ZUIEditTextinPlace {...props} />
     );
     const inputEl = getByDisplayValue(props.value);
     await userEvent.click(inputEl);
     await userEvent.clear(inputEl);
     await userEvent.hover(inputEl);
-    const tooltip = await findByText(
-      'misc.components.editTextInPlace.tooltip.noEmpty'
+    const tooltip = await findByMessageId(
+      messageIds.editTextInPlace.tooltip.noEmpty
     );
     expect(tooltip).not.toBeNull();
   });

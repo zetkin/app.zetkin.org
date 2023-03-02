@@ -42,10 +42,10 @@ async function* findYMLFiles(dir: string): AsyncIterable<string> {
 }
 
 async function loadMessages(): Promise<MessageDB> {
-  const basePath = path.resolve('./src/locale');
+  const basePath = path.resolve('./src');
   const messages: MessageDB = {};
 
-  for await (const fullPath of findYMLFiles('./src/locale')) {
+  for await (const fullPath of findYMLFiles('./src')) {
     const localPath = fullPath.replace(basePath, '');
     const pathElems = localPath.split(path.sep).filter((elem) => elem.length);
     const fileName = pathElems.pop();
@@ -88,7 +88,7 @@ export async function getMessages(
     MESSAGES = await loadMessages();
   }
 
-  const localizedMessages = MESSAGES ? MESSAGES[lang] || MESSAGES.en : {};
+  const localizedMessages = MESSAGES?.en ? MESSAGES[lang] || MESSAGES.en : {};
 
   if (scope.length) {
     const scoped: MessageList = {};

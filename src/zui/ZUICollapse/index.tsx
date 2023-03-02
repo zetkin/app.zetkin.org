@@ -1,7 +1,10 @@
-import { FormattedMessage } from 'react-intl';
 import { Button, Collapse } from '@mui/material';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import { useCallback, useState } from 'react';
+
+import { Msg } from 'core/i18n';
+
+import messageIds from 'zui/l10n/messageIds';
 
 interface ZUICollapseProps {
   children: React.ReactNode;
@@ -44,8 +47,12 @@ const ZUICollapse: React.FC<ZUICollapseProps> = ({
           startIcon={collapsed ? <ExpandMore /> : <ExpandLess />}
           style={{ textTransform: 'uppercase' }}
         >
-          <FormattedMessage
-            id={collapsed ? 'misc.buttons.expand' : 'misc.buttons.collapse'}
+          <Msg
+            id={
+              collapsed
+                ? messageIds.collapse.expand
+                : messageIds.collapse.collapse
+            }
           />
         </Button>
       )}

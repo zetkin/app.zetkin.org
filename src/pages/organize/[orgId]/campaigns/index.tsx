@@ -2,7 +2,6 @@ import { GetServerSideProps } from 'next';
 
 import { Box } from '@mui/material';
 import Head from 'next/head';
-import { useIntl } from 'react-intl';
 import { useQuery } from 'react-query';
 
 import AllCampaignsLayout from 'features/campaigns/layout/AllCampaignsLayout';
@@ -13,8 +12,11 @@ import getOrg from 'utils/fetching/getOrg';
 import getUpcomingEvents from 'features/events/fetching/getUpcomingEvents';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
+import { useMessages } from 'core/i18n';
 import ZUISection from 'zui/ZUISection';
 import ZUISpeedDial, { ACTIONS } from 'zui/ZUISpeedDial';
+
+import messageIds from 'features/campaigns/l10n/messageIds';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -82,7 +84,7 @@ type AllCampaignsSummaryPageProps = {
 const AllCampaignsSummaryPage: PageWithLayout<AllCampaignsSummaryPageProps> = ({
   orgId,
 }) => {
-  const intl = useIntl();
+  const messages = useMessages(messageIds);
   const campaignsQuery = useQuery(['campaigns', orgId], getCampaigns(orgId));
   const eventsQuery = useQuery(['events', orgId], getEvents(orgId));
 
@@ -92,17 +94,9 @@ const AllCampaignsSummaryPage: PageWithLayout<AllCampaignsSummaryPageProps> = ({
   return (
     <>
       <Head>
-        <title>
-          {intl.formatMessage({
-            id: 'layout.organize.campaigns.allCampaigns',
-          })}
-        </title>
+        <title>{messages.layout.allCampaigns()}</title>
       </Head>
-      <ZUISection
-        title={intl.formatMessage({
-          id: 'pages.organizeAllCampaigns.heading',
-        })}
-      >
+      <ZUISection title={messages.all.heading()}>
         <Box
           display="grid"
           gap={20}

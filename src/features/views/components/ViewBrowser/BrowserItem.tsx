@@ -1,14 +1,16 @@
-import { FormattedMessage } from 'react-intl';
 import { makeStyles } from '@mui/styles';
 import NextLink from 'next/link';
 import { CircularProgress, Link, Theme } from '@mui/material';
 import { FC, useContext } from 'react';
 
 import BrowserDraggableItem from './BrowserDragableItem';
+import { Msg } from 'core/i18n';
 import { BrowserRowContext, BrowserRowDropProps } from './BrowserRow';
 import ViewBrowserModel, {
   ViewBrowserItem,
 } from 'features/views/models/ViewBrowserModel';
+
+import messageIds from 'features/views/l10n/messageIds';
 
 interface BrowserItemProps {
   basePath: string;
@@ -33,19 +35,26 @@ const BrowserItem: FC<BrowserItemProps> = ({ basePath, item, model }) => {
 
   if (item.type == 'back') {
     const subPath = item.folderId ? 'folders/' + item.folderId : '';
-    const msgPrefix = dropProps.active ? 'moveTo' : 'backTo';
 
     return (
       <NextLink href={`${basePath}/${subPath}`} passHref>
         <Link className={styles.itemLink}>
           {item.title ? (
-            <FormattedMessage
-              id={`pages.people.views.browser.${msgPrefix}Folder`}
+            <Msg
+              id={
+                dropProps.active
+                  ? messageIds.browser.moveToFolder
+                  : messageIds.browser.backToFolder
+              }
               values={{ folder: <em>{item.title}</em> }}
             />
           ) : (
-            <FormattedMessage
-              id={`pages.people.views.browser.${msgPrefix}Root`}
+            <Msg
+              id={
+                dropProps.active
+                  ? messageIds.browser.moveToRoot
+                  : messageIds.browser.backToRoot
+              }
             />
           )}
         </Link>

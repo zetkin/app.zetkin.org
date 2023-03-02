@@ -3,7 +3,6 @@
 import { ExpandMore } from '@mui/icons-material';
 import Link from 'next/link';
 import useAutocomplete from '@mui/material/useAutocomplete';
-import { useIntl } from 'react-intl';
 import { useRouter } from 'next/router';
 import {
   Box,
@@ -16,6 +15,7 @@ import {
 } from '@mui/material';
 import { FunctionComponent, useEffect, useRef, useState } from 'react';
 
+import { useMessages } from 'core/i18n';
 import useModel from 'core/useModel';
 import { ZetkinView } from './types';
 import ZUIFuture from 'zui/ZUIFuture';
@@ -24,8 +24,10 @@ import ViewBrowserModel, {
   ViewBrowserViewItem,
 } from '../models/ViewBrowserModel';
 
+import messageIds from '../l10n/messageIds';
+
 const ViewJumpMenu: FunctionComponent = () => {
-  const intl = useIntl();
+  const messages = useMessages(messageIds);
   const listRef = useRef<HTMLUListElement>(null);
   const router = useRouter();
   const { orgId, viewId } = router.query;
@@ -138,9 +140,7 @@ const ViewJumpMenu: FunctionComponent = () => {
               autoFocus={true}
               color="primary"
               fullWidth
-              placeholder={intl.formatMessage({
-                id: 'pages.people.views.layout.jumpMenu.placeholder',
-              })}
+              placeholder={messages.viewLayout.jumpMenu.placeholder()}
               size="small"
               variant="outlined"
             />

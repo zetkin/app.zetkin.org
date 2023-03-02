@@ -1,5 +1,4 @@
 import { Add } from '@mui/icons-material';
-import { FormattedMessage } from 'react-intl';
 import { useState } from 'react';
 import { Box, Button, Popover } from '@mui/material';
 
@@ -7,6 +6,9 @@ import TagSelect from 'features/tags/components/TagManager/components/TagSelect'
 import TagsList from './components/TagsList';
 import { EditTag, NewTag } from './types';
 import { ZetkinTag, ZetkinTagGroup } from 'utils/types/zetkin';
+
+import messageIds from '../../l10n/messageIds';
+import { Msg } from 'core/i18n';
 
 export interface TagManagerControllerProps {
   assignedTags: ZetkinTag[];
@@ -52,7 +54,7 @@ export const TagManagerController: React.FunctionComponent<
           onClick={(event) => setAddTagButton(event.currentTarget)}
           startIcon={<Add />}
         >
-          <FormattedMessage id="misc.tags.tagManager.addTag" />
+          <Msg id={messageIds.manager.addTag} />
         </Button>
         <Popover
           anchorEl={addTagButton}

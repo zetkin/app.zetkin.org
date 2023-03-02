@@ -3,6 +3,7 @@ import singletonRouter from 'next/router';
 import userEvent from '@testing-library/user-event';
 import { waitFor } from '@testing-library/react';
 
+import messageIds from 'features/tags/l10n/messageIds';
 import { TagManagerController } from './TagManagerController';
 
 import mockTag from 'utils/testing/mocks/mockTag';
@@ -73,7 +74,7 @@ describe('<TagManagerController />', () => {
         title: 'Listens to progg',
       }),
     ];
-    const { getByTestId, getByText } = render(
+    const { getByTestId, getByMessageId, getByText } = render(
       <TagManagerController
         assignedTags={tags}
         availableGroups={[]}
@@ -92,7 +93,7 @@ describe('<TagManagerController />', () => {
     expect(getByText('Skills')).toBeTruthy();
     expect(getByTestId('TagManager-groupedTags-2').children.length).toEqual(3);
 
-    expect(getByText('misc.tags.tagManager.ungroupedHeader')).toBeTruthy();
+    expect(getByMessageId(messageIds.manager.ungroupedHeader)).toBeTruthy();
     expect(
       getByTestId('TagManager-groupedTags-ungrouped').children.length
     ).toEqual(2);
@@ -106,7 +107,7 @@ describe('<TagManagerController />', () => {
       title: 'Phone banking',
     });
 
-    const { getByText } = render(
+    const { getByMessageId, getByText } = render(
       <TagManagerController
         assignedTags={[]}
         availableGroups={[]}
@@ -117,7 +118,7 @@ describe('<TagManagerController />', () => {
         onUnassignTag={unassignTagCallback}
       />
     );
-    const addTagButton = getByText('misc.tags.tagManager.addTag');
+    const addTagButton = getByMessageId(messageIds.manager.addTag);
     await userEvent.click(addTagButton);
 
     // Typing searches for tag
@@ -140,7 +141,7 @@ describe('<TagManagerController />', () => {
       value_type: 'text',
     });
 
-    const { getByText, getByTestId } = render(
+    const { getByMessageId, getByTestId, getByText } = render(
       <TagManagerController
         assignedTags={[]}
         availableGroups={[]}
@@ -151,7 +152,7 @@ describe('<TagManagerController />', () => {
         onUnassignTag={unassignTagCallback}
       />
     );
-    const addTagButton = getByText('misc.tags.tagManager.addTag');
+    const addTagButton = getByMessageId(messageIds.manager.addTag);
     await userEvent.click(addTagButton);
 
     // Typing searches for tag
@@ -167,7 +168,7 @@ describe('<TagManagerController />', () => {
     // Check that we're in value mode
     const input = getByTestId('TagManager-TagSelect-searchField');
     expect(input.getAttribute('placeholder')).toEqual(
-      'misc.tags.tagManager.addValue'
+      'feat.tags.manager.addValue'
     );
 
     // Add value
@@ -232,7 +233,7 @@ describe('<TagManagerController />', () => {
     });
 
     it('passes the value in the tag search field in to the create tag', async () => {
-      const { getByTestId, getByText } = render(
+      const { getByTestId, getByMessageId } = render(
         <TagManagerController
           assignedTags={[]}
           availableGroups={[]}
@@ -244,7 +245,7 @@ describe('<TagManagerController />', () => {
         />
       );
 
-      const addTagButton = getByText('misc.tags.tagManager.addTag');
+      const addTagButton = getByMessageId(messageIds.manager.addTag);
       await userEvent.click(addTagButton);
 
       const tagSearchField = getByTestId('TagManager-TagSelect-searchField');
@@ -261,7 +262,7 @@ describe('<TagManagerController />', () => {
     });
 
     it('invokes onCreateTag() and onAssignTag() when creating a tag', async () => {
-      const { getByTestId, getByText } = render(
+      const { getByTestId, getByMessageId } = render(
         <TagManagerController
           assignedTags={[]}
           availableGroups={[]}
@@ -274,7 +275,7 @@ describe('<TagManagerController />', () => {
       );
 
       // Open create dialog
-      await userEvent.click(getByText('misc.tags.tagManager.addTag'));
+      await userEvent.click(getByMessageId(messageIds.manager.addTag));
       await userEvent.click(
         getByTestId('TagManager-TagSelect-createTagOption')
       );
@@ -293,12 +294,12 @@ describe('<TagManagerController />', () => {
       const input = getByTestId('TagManager-TagSelect-searchField');
       expect(input.getAttribute('value')).toEqual('');
       expect(input.getAttribute('placeholder')).toEqual(
-        'misc.tags.tagManager.addTag'
+        'feat.tags.manager.addTag'
       );
     });
 
     it('comes back to value tag state without onAssignTag() after creating value tag', async () => {
-      const { getByTestId, getByText } = render(
+      const { getByTestId, getByMessageId } = render(
         <TagManagerController
           assignedTags={[]}
           availableGroups={[]}
@@ -311,7 +312,7 @@ describe('<TagManagerController />', () => {
       );
 
       // Open create dialog
-      await userEvent.click(getByText('misc.tags.tagManager.addTag'));
+      await userEvent.click(getByMessageId(messageIds.manager.addTag));
       await userEvent.click(
         getByTestId('TagManager-TagSelect-createTagOption')
       );
@@ -333,7 +334,7 @@ describe('<TagManagerController />', () => {
 
       const input = getByTestId('TagManager-TagSelect-searchField');
       expect(input.getAttribute('placeholder')).toEqual(
-        'misc.tags.tagManager.addValue'
+        'feat.tags.manager.addValue'
       );
 
       expect(assignTagCallback).not.toBeCalled();
@@ -366,7 +367,7 @@ describe('<TagManagerController />', () => {
     it('does not show edit button for tag when `disableEditTags` set', async () => {
       const tagToEdit = mockTag();
 
-      const { getByTestId, getByText } = render(
+      const { getByTestId, getByMessageId } = render(
         <TagManagerController
           assignedTags={[]}
           availableGroups={[]}
@@ -379,7 +380,7 @@ describe('<TagManagerController />', () => {
         />
       );
 
-      const addTagButton = getByText('misc.tags.tagManager.addTag');
+      const addTagButton = getByMessageId(messageIds.manager.addTag);
       await userEvent.click(addTagButton);
 
       // Expect to not find edit button
@@ -391,7 +392,7 @@ describe('<TagManagerController />', () => {
     it('can edit an existing tag in the tag dialog', async () => {
       const tagToEdit = mockTag();
 
-      const { getByTestId, getByText } = render(
+      const { getByTestId, getByMessageId } = render(
         <TagManagerController
           assignedTags={[]}
           availableGroups={[]}
@@ -403,7 +404,7 @@ describe('<TagManagerController />', () => {
         />
       );
 
-      const addTagButton = getByText('misc.tags.tagManager.addTag');
+      const addTagButton = getByMessageId(messageIds.manager.addTag);
       await userEvent.click(addTagButton);
 
       const editTagButton = getByTestId(

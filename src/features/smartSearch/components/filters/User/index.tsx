@@ -1,6 +1,5 @@
 import { FormEvent } from 'react';
 import { MenuItem } from '@mui/material';
-import { FormattedMessage as Msg } from 'react-intl';
 
 import FilterForm from '../../FilterForm';
 import StyledSelect from '../../inputs/StyledSelect';
@@ -12,6 +11,10 @@ import {
   UserFilterConfig,
   ZetkinSmartSearchFilter,
 } from 'features/smartSearch/components/types';
+
+import messageIds from 'features/smartSearch/l10n/messageIds';
+import { Msg } from 'core/i18n';
+const localMessageIds = messageIds.filters.user;
 
 interface UserProps {
   filter: SmartSearchFilterWithId<UserFilterConfig> | NewSmartSearchFilter;
@@ -43,14 +46,14 @@ const User = ({
       onSubmit={(e) => handleSubmit(e)}
       renderExamples={() => (
         <>
-          <Msg id="misc.smartSearch.user.examples.one" />
+          <Msg id={localMessageIds.examples.one} />
           <br />
-          <Msg id="misc.smartSearch.user.examples.two" />
+          <Msg id={localMessageIds.examples.two} />
         </>
       )}
       renderSentence={() => (
         <Msg
-          id="misc.smartSearch.user.inputString"
+          id={localMessageIds.inputString}
           values={{
             addRemoveSelect: (
               <StyledSelect
@@ -58,10 +61,10 @@ const User = ({
                 value={filter.op}
               >
                 <MenuItem key={OPERATION.ADD} value={OPERATION.ADD}>
-                  <Msg id="misc.smartSearch.user.addRemoveSelect.add" />
+                  <Msg id={localMessageIds.addRemoveSelect.add} />
                 </MenuItem>
                 <MenuItem key={OPERATION.SUB} value={OPERATION.SUB}>
-                  <Msg id="misc.smartSearch.user.addRemoveSelect.sub" />
+                  <Msg id={localMessageIds.addRemoveSelect.sub} />
                 </MenuItem>
               </StyledSelect>
             ),
@@ -76,10 +79,10 @@ const User = ({
                 value={+filter.config.is_user}
               >
                 <MenuItem key={1} value={1}>
-                  <Msg id="misc.smartSearch.user.connectedSelect.true" />
+                  <Msg id={localMessageIds.connectedSelect.true} />
                 </MenuItem>
                 <MenuItem key={0} value={0}>
-                  <Msg id="misc.smartSearch.user.connectedSelect.false" />
+                  <Msg id={localMessageIds.connectedSelect.false} />
                 </MenuItem>
               </StyledSelect>
             ),

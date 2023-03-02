@@ -1,18 +1,20 @@
 import { Add } from '@mui/icons-material';
 import { useState } from 'react';
 import { Button, ClickAwayListener, Divider, Grid } from '@mui/material';
-import { FormattedMessage as Msg, useIntl } from 'react-intl';
 
 import JourneyMilestoneProgress from 'features/journeys/components/JourneyMilestoneProgress';
 import JourneyPerson from './JourneyPerson';
 import { MUIOnlyPersonSelect as PersonSelect } from 'zui/ZUIPersonSelect';
 import { TagManagerSection } from 'features/tags/components/TagManager';
 import ZUISection from 'zui/ZUISection';
+import { Msg, useMessages } from 'core/i18n';
 import {
   ZetkinJourneyInstance,
   ZetkinPerson as ZetkinPersonType,
   ZetkinTag,
 } from 'utils/types/zetkin';
+
+import messageIds from '../l10n/messageIds';
 
 const GridDivider = () => (
   <Grid item xs={12}>
@@ -42,7 +44,7 @@ const JourneyInstanceSidebar = ({
   onTagEdited: (tag: ZetkinTag) => void;
   onUnassignTag: (tag: ZetkinTag) => void;
 }): JSX.Element => {
-  const intl = useIntl();
+  const messages = useMessages(messageIds);
 
   const [addingAssignee, setAddingAssignee] = useState<boolean>(false);
   const [addingSubject, setAddingSubject] = useState<boolean>(false);
@@ -52,9 +54,7 @@ const JourneyInstanceSidebar = ({
       <Grid item xs={12}>
         <ZUISection
           data-testid="ZetkinSection-assignees"
-          title={intl.formatMessage({
-            id: 'pages.organizeJourneyInstance.sections.assigned',
-          })}
+          title={messages.instance.sections.assigned()}
         >
           {journeyInstance.assignees.map((assignee, index) => (
             <JourneyPerson
@@ -71,7 +71,7 @@ const JourneyInstanceSidebar = ({
               startIcon={<Add />}
               style={{ textTransform: 'uppercase' }}
             >
-              <Msg id="pages.organizeJourneyInstance.addAssigneeButton" />
+              <Msg id={messageIds.instance.addAssigneeButton} />
             </Button>
           )}
           {addingAssignee && (
@@ -84,9 +84,7 @@ const JourneyInstanceSidebar = ({
                       .map((a) => a.id)
                       .includes(option.id);
                   }}
-                  label={intl.formatMessage({
-                    id: 'pages.organizeJourneyInstance.assignPersonLabel',
-                  })}
+                  label={messages.instance.assignPersonLabel()}
                   name="person_id"
                   onChange={(person) => {
                     setAddingAssignee(false);
@@ -104,9 +102,7 @@ const JourneyInstanceSidebar = ({
       <Grid item xs={12}>
         <ZUISection
           data-testid="ZetkinSection-subjects"
-          title={intl.formatMessage({
-            id: 'pages.organizeJourneyInstance.sections.members',
-          })}
+          title={messages.instance.sections.members()}
         >
           {journeyInstance.subjects.map((member, index) => (
             <JourneyPerson
@@ -123,7 +119,7 @@ const JourneyInstanceSidebar = ({
               startIcon={<Add />}
               style={{ textTransform: 'uppercase' }}
             >
-              <Msg id="pages.organizeJourneyInstance.addSubjectButton" />
+              <Msg id={messageIds.instance.addSubjectButton} />
             </Button>
           )}
           {addingSubject && (
@@ -135,9 +131,7 @@ const JourneyInstanceSidebar = ({
                       .map((s) => s.id)
                       .includes(option.id);
                   }}
-                  label={intl.formatMessage({
-                    id: 'pages.organizeJourneyInstance.addSubjectLabel',
-                  })}
+                  label={messages.instance.addSubjectLabel()}
                   name="person_id"
                   onChange={(person) => {
                     setAddingSubject(false);
@@ -164,11 +158,7 @@ const JourneyInstanceSidebar = ({
         <>
           <GridDivider />
           <Grid item xs={12}>
-            <ZUISection
-              title={intl.formatMessage({
-                id: 'pages.organizeJourneyInstance.sections.milestones',
-              })}
-            >
+            <ZUISection title={messages.instance.sections.milestones()}>
               <JourneyMilestoneProgress
                 milestones={journeyInstance.milestones}
                 next_milestone={journeyInstance.next_milestone}
