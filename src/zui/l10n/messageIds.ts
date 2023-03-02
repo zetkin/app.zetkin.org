@@ -48,6 +48,7 @@ export default makeMessages('zui', {
   copyToClipboard: {
     copied: m('Copied'),
     copiedValue: m<{ value: string }>('Copied "{value}"'),
+    copy: m('Copy'),
   },
   dataTableSearch: {
     button: m('Search'),

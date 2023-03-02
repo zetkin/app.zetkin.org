@@ -68,4 +68,12 @@ export default makeMessages('feat.sruveys', {
     questions: m('Questions'),
     submissions: m('Submissions'),
   },
+  urlCard: {
+    nowAccepting: m('Now accepting submissions at this link'),
+    open: m('Open for submissions'),
+    preview: m('Preview survey'),
+    previewPortal: m('Preview survey in activist portal'),
+    visitPortal: m('Visit survey in activist portal'),
+    willAccept: m('Will accept submissions at this link'),
+  },
 });
