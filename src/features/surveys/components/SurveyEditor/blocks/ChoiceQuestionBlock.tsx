@@ -1,7 +1,6 @@
 import {
   Add,
   CheckBoxOutlined,
-  Close,
   RadioButtonChecked,
   RadioButtonUnchecked,
 } from '@mui/icons-material';
@@ -9,7 +8,6 @@ import {
   Box,
   Button,
   ClickAwayListener,
-  IconButton,
   ListItemIcon,
   MenuItem,
   TextField,
@@ -25,11 +23,12 @@ import {
 } from 'react';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
 
+import Choice from './Choice';
 import DeleteHideButtons from './DeleteHideButtons';
 import { OptionsQuestionPatchBody } from 'features/surveys/repos/SurveysRepo';
 import theme from 'theme';
+import { ZetkinOptionsQuestion } from 'utils/types/zetkin';
 import ZUIDropdownIcon from 'zui/ZUIDropdownIcon';
-import { ZetkinOptionsQuestion, ZetkinSurveyOption } from 'utils/types/zetkin';
 
 const enum POLL_TYPE {
   CHECKBOX = 'checkbox',
@@ -37,7 +36,7 @@ const enum POLL_TYPE {
   SELECT = 'select',
 }
 
-type WidgetType = {
+export type WidgetType = {
   icon: JSX.Element;
   previewIcon: JSX.Element;
   value: POLL_TYPE;
@@ -59,50 +58,6 @@ const widgetTypes = {
     previewIcon: <ZUIDropdownIcon />,
     value: POLL_TYPE.SELECT,
   },
-};
-
-interface OptionProps {
-  option: ZetkinSurveyOption;
-  onDeleteOption: (optionId: number) => void;
-  onUpdateOption: (optionId: number, text: string) => void;
-  widgetType: WidgetType;
-}
-
-const Option = ({
-  option,
-  onDeleteOption,
-  onUpdateOption,
-  widgetType,
-}: OptionProps) => {
-  const intl = useIntl();
-  const [value, setValue] = useState(option.text);
-  return (
-    <Box
-      alignItems="center"
-      display="flex"
-      justifyContent="center"
-      paddingTop={2}
-      width="100%"
-    >
-      <Box paddingX={2}>{widgetType.previewIcon}</Box>
-      <TextField
-        fullWidth
-        label={intl.formatMessage({
-          id: 'misc.surveys.blocks.choiceQuestion.option',
-        })}
-        onBlur={() => onUpdateOption(option.id, value)}
-        onChange={(evt) => setValue(evt.target.value)}
-        sx={{ paddingLeft: 1 }}
-        value={value}
-      />
-      <IconButton
-        onClick={() => onDeleteOption(option.id)}
-        sx={{ paddingX: 2 }}
-      >
-        <Close />
-      </IconButton>
-    </Box>
-  );
 };
 
 interface ChoiceQuestionBlockProps {
@@ -237,7 +192,7 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
             </TextField>
             <Box alignItems="center" display="flex" flexDirection="column">
               {options.map((option) => (
-                <Option
+                <Choice
                   key={option.id}
                   onDeleteOption={(id) => onDeleteOption(id)}
                   onUpdateOption={(id, text) => onUpdateOption(id, text)}
