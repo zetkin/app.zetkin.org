@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import { FormattedDate } from 'react-intl';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import {
@@ -8,10 +9,12 @@ import {
   Link,
   Typography,
 } from '@mui/material';
-import { FormattedDate, FormattedMessage as Msg } from 'react-intl';
 
+import { Msg } from 'core/i18n';
 import { getFirstAndLastEvent, removeOffset } from 'utils/dateUtils';
 import { ZetkinCampaign, ZetkinEvent } from 'utils/types/zetkin';
+
+import messageIds from '../l10n/messageIds';
 
 interface CampaignCardProps {
   campaign: ZetkinCampaign;
@@ -53,12 +56,12 @@ const CampaignCard = ({ campaign, events }: CampaignCardProps): JSX.Element => {
               />
             </>
           ) : (
-            <Msg id="pages.organizeAllCampaigns.indefinite" />
+            <Msg id={messageIds.indefinite} />
           )}
         </Typography>
         <Typography color="secondary" gutterBottom variant="body2">
           <Msg
-            id="pages.organizeAllCampaigns.upcoming"
+            id={messageIds.all.upcoming}
             values={{ numEvents: numOfUpcomingEvents }}
           />
         </Typography>
@@ -67,7 +70,7 @@ const CampaignCard = ({ campaign, events }: CampaignCardProps): JSX.Element => {
       <CardActions>
         <NextLink href={`/organize/${orgId}/campaigns/${id}`} passHref>
           <Link underline="hover" variant="button">
-            <Msg id="pages.organizeAllCampaigns.cardCTA" />
+            <Msg id={messageIds.all.cardCTA} />
           </Link>
         </NextLink>
       </CardActions>

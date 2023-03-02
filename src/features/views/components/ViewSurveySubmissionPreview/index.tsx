@@ -10,9 +10,11 @@ import {
 } from '@mui/material';
 import { FC, ReactNode, useMemo } from 'react';
 
-import { FormattedMessage } from 'react-intl';
+import { Msg } from 'core/i18n';
 import useAccessLevel from 'features/views/hooks/useAccessLevel';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
+
+import messageIds from 'features/views/l10n/messageIds';
 
 interface PreviewableSubmissionData {
   id: number;
@@ -72,7 +74,7 @@ const ViewSurveySubmissionPreview: FC<ViewSurveySubmissionPreviewProps> = ({
             {mostRecent && (
               <Box>
                 <Typography className={styles.header} variant="h5">
-                  <FormattedMessage id="misc.views.surveyPreview.mostRecent.header" />
+                  <Msg id={messageIds.surveyPreview.mostRecent.header} />
                 </Typography>
                 <Typography
                   className={styles.timestamp}
@@ -89,7 +91,7 @@ const ViewSurveySubmissionPreview: FC<ViewSurveySubmissionPreviewProps> = ({
                     }
                     startIcon={<AssignmentTurnedInOutlined />}
                   >
-                    <FormattedMessage id="misc.views.surveyPreview.mostRecent.openButton" />
+                    <Msg id={messageIds.surveyPreview.mostRecent.openButton} />
                   </Button>
                 )}
               </Box>
@@ -98,7 +100,7 @@ const ViewSurveySubmissionPreview: FC<ViewSurveySubmissionPreviewProps> = ({
           {!!older.length && (
             <Box marginTop={2}>
               <Typography className={styles.header} variant="h5">
-                <FormattedMessage id="misc.views.surveyPreview.older.header" />
+                <Msg id={messageIds.surveyPreview.older.header} />
               </Typography>
               {older.map((submission) => {
                 return (
@@ -121,7 +123,7 @@ const ViewSurveySubmissionPreview: FC<ViewSurveySubmissionPreviewProps> = ({
                           }
                           startIcon={<AssignmentTurnedInOutlined />}
                         >
-                          <FormattedMessage id="misc.views.surveyPreview.older.openButton" />
+                          <Msg id={messageIds.surveyPreview.older.openButton} />
                         </Button>
                       )}
                     </Box>

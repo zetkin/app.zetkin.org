@@ -1,13 +1,16 @@
-import { FormattedMessage as Msg } from 'react-intl';
 import { Box, Button, Card, Typography } from '@mui/material';
 
+import { Msg } from 'core/i18n';
+
+import messageIds from 'features/views/l10n/messageIds';
+
 interface ColumnChoiceCardProps {
-  addButtonLabel?: string;
+  addButtonLabel?: 'add';
   alreadyInView?: boolean;
   cardVisual: JSX.Element;
   description: string;
   color: string;
-  configureButtonLabel?: string;
+  configureButtonLabel?: 'configure';
   onAdd: () => void;
   onConfigure: () => void;
   showAddButton?: boolean;
@@ -53,19 +56,17 @@ const ColumnChoiceCard = ({
         <Box>
           {!alreadyInView && showAddButton && (
             <Button onClick={() => onAdd()} variant="text">
-              <Msg id={`misc.views.columnDialog.gallery.${addButtonLabel}`} />
+              <Msg id={messageIds.columnDialog.gallery[addButtonLabel]} />
             </Button>
           )}
           {!alreadyInView && showConfigureButton && (
             <Button onClick={() => onConfigure()} variant="text">
-              <Msg
-                id={`misc.views.columnDialog.gallery.${configureButtonLabel}`}
-              />
+              <Msg id={messageIds.columnDialog.gallery[configureButtonLabel]} />
             </Button>
           )}
           {alreadyInView && (
             <Button disabled variant="text">
-              <Msg id="misc.views.columnDialog.gallery.alreadyInView" />
+              <Msg id={messageIds.columnDialog.gallery.alreadyInView} />
             </Button>
           )}
         </Box>

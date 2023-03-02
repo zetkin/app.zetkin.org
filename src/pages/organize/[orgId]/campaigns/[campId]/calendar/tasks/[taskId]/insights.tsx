@@ -4,7 +4,6 @@ import Head from 'next/head';
 import { ResponsivePie } from '@nivo/pie';
 import { useRouter } from 'next/router';
 import { Box, Typography } from '@mui/material';
-import { FormattedMessage as Msg, useIntl } from 'react-intl';
 
 import getOrg from 'utils/fetching/getOrg';
 import { PageWithLayout } from 'utils/types';
@@ -16,6 +15,9 @@ import {
   ASSIGNED_STATUS,
   ZetkinAssignedTask,
 } from 'features/tasks/components/types';
+import { Msg, useMessages } from 'core/i18n';
+
+import messageIds from 'features/campaigns/l10n/messageIds';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -145,7 +147,7 @@ const PieChart: FunctionComponent<PieChartProps> = ({ tasks }) => {
 };
 
 const TaskInsightsPage: PageWithLayout = () => {
-  const intl = useIntl();
+  const messages = useMessages(messageIds);
 
   const { taskId, orgId } = useRouter().query;
   const { useQuery: useTaskQuery, useAssignedTasksQuery } = taskResource(
@@ -158,9 +160,7 @@ const TaskInsightsPage: PageWithLayout = () => {
   return (
     <>
       <Head>
-        <title>{`${task?.title} - ${intl.formatMessage({
-          id: 'layout.organize.tasks.tabs.insights',
-        })}`}</title>
+        <title>{`${task?.title} - ${messages.taskLayout.tabs.insights}`}</title>
       </Head>
       <>
         <ZUIQuery queries={{ assignedTasksQuery }}>
@@ -168,7 +168,7 @@ const TaskInsightsPage: PageWithLayout = () => {
             return (
               <Box height={400} maxWidth={500} mt={3} width="100%">
                 <Typography>
-                  <Msg id="pages.organizeCampaigns.assigneeActions" />
+                  <Msg id={messageIds.assigneeActions} />
                 </Typography>
                 <PieChart tasks={queries.assignedTasksQuery.data} />
               </Box>

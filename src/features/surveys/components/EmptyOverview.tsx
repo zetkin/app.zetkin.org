@@ -1,6 +1,9 @@
-import { FormattedMessage as Msg } from 'react-intl';
 import { QuizOutlined } from '@mui/icons-material';
 import { Box, Button, Link, Typography } from '@mui/material';
+
+import { Msg } from 'core/i18n';
+
+import messageIds from '../l10n/messageIds';
 
 interface EmptyOverviewProps {
   campId: string;
@@ -16,7 +19,7 @@ const EmptyOverview = ({ campId, orgId, surveyId }: EmptyOverviewProps) => {
         sx={{ fontSize: '8em', paddingBottom: 2 }}
       />
       <Typography color="secondary">
-        <Msg id="pages.organizeSurvey.overview.noQuestions.title" />
+        <Msg id={messageIds.overview.noQuestions.title} />
       </Typography>
       <Link
         href={`/organize/${orgId}/campaigns/${campId}/surveys/${surveyId}/questions`}
@@ -24,7 +27,7 @@ const EmptyOverview = ({ campId, orgId, surveyId }: EmptyOverviewProps) => {
         underline="none"
       >
         <Button variant="contained">
-          <Msg id="pages.organizeSurvey.overview.noQuestions.button" />
+          <Msg id={messageIds.overview.noQuestions.button} />
         </Button>
       </Link>
     </Box>

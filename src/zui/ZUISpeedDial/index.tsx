@@ -1,6 +1,5 @@
 import { Action } from './actions/types';
 import makeStyles from '@mui/styles/makeStyles';
-import { useIntl } from 'react-intl';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { SpeedDial, SpeedDialAction, SpeedDialIcon } from '@mui/material';
@@ -8,6 +7,9 @@ import { SpeedDial, SpeedDialAction, SpeedDialIcon } from '@mui/material';
 import ZUIDialog from '../ZUIDialog';
 
 import { ACTIONS } from './constants';
+import { useMessages } from 'core/i18n';
+
+import messageIds from 'zui/l10n/messageIds';
 
 const useStyles = makeStyles((theme) => ({
   expandButton: {
@@ -30,8 +32,8 @@ interface ZUISpeedDialProps {
 const ZUISpeedDial: React.FunctionComponent<ZUISpeedDialProps> = ({
   actions: actionKeys,
 }) => {
+  const messages = useMessages(messageIds);
   const classes = useStyles();
-  const intl = useIntl();
   const router = useRouter();
 
   const [speedDialOpen, setSpeedDialOpen] = useState<boolean>(false);
@@ -139,9 +141,7 @@ const ZUISpeedDial: React.FunctionComponent<ZUISpeedDialProps> = ({
                   shallow: true,
                 });
               }}
-              tooltipTitle={intl.formatMessage({
-                id: action.name,
-              })}
+              tooltipTitle={messages.speedDial[action.key]()}
             />
           );
         })}
@@ -155,7 +155,7 @@ const ZUISpeedDial: React.FunctionComponent<ZUISpeedDialProps> = ({
               closeAllDialogs();
             }}
             open={dialogsOpenState[action.key] === true}
-            title={intl.formatMessage({ id: action.name })}
+            title={messages.speedDial[action.key]()}
           >
             <DialogContent
               closeDialog={() => {

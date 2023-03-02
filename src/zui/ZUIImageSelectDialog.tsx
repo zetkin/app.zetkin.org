@@ -1,8 +1,8 @@
 import { Box } from '@mui/material';
-import { FormattedMessage } from 'react-intl';
 import Image from 'next/image';
 import { useEffect } from 'react';
 
+import { Msg } from 'core/i18n';
 import { ZetkinFile } from 'utils/types/zetkin';
 import { ZetkinFileUploadChip } from './ZUIFileChip';
 import ZUIDialog from './ZUIDialog';
@@ -10,6 +10,8 @@ import ZUISubmitCancelButtons from './ZUISubmitCancelButtons';
 import useFileUploads, {
   FILECAT_IMAGES,
 } from 'features/files/hooks/useFileUploads';
+
+import messageIds from './l10n/messageIds';
 
 interface ZUIImageSelectDialogProps {
   onClose: () => void;
@@ -50,7 +52,7 @@ const ZUIImageSelectDialog: React.FC<ZUIImageSelectDialogProps> = ({
             textAlign: 'center',
           }}
         >
-          <FormattedMessage id="misc.imageSelectDialog.instructions" />
+          <Msg id={messageIds.imageSelectDialog.instructions} />
         </Box>
       )}
       {!!fileUploads.length && (

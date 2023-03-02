@@ -1,9 +1,10 @@
 import { Chip } from '@mui/material';
-import { useIntl } from 'react-intl';
-
 import makeStyles from '@mui/styles/makeStyles';
 
+import { useMessages } from 'core/i18n';
 import { ZetkinJourneyInstance } from 'utils/types/zetkin';
+
+import messageIds from '../l10n/messageIds';
 
 const useStyles = makeStyles((theme) => ({
   closedChip: {
@@ -23,21 +24,14 @@ interface JourneyStatusChipProps {
 }
 
 const JourneyStatusChip: React.FC<JourneyStatusChipProps> = ({ instance }) => {
-  const intl = useIntl();
+  const messages = useMessages(messageIds);
   const classes = useStyles();
   return !instance.closed ? (
-    <Chip
-      className={classes.openChip}
-      label={intl.formatMessage({
-        id: 'layout.organize.journeys.statusOpen',
-      })}
-    />
+    <Chip className={classes.openChip} label={messages.journeys.statusOpen()} />
   ) : (
     <Chip
       className={classes.closedChip}
-      label={intl.formatMessage({
-        id: 'layout.organize.journeys.statusClosed',
-      })}
+      label={messages.journeys.statusClosed()}
     />
   );
 };

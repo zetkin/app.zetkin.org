@@ -1,14 +1,16 @@
 import { makeStyles } from '@mui/styles';
 import { Tab } from '@mui/material';
-import { useIntl } from 'react-intl';
 import { FC, useState } from 'react';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 
 import ShareViewDialogDownloadTab from './ShareViewDialogDownloadTab';
 import ShareViewDialogShareTab from './ShareViewDialogShareTab';
+import { useMessages } from 'core/i18n';
 import ViewSharingModel from 'features/views/models/ViewSharingModel';
 import { ZetkinView } from '../types';
 import ZUIDialog from 'zui/ZUIDialog';
+
+import messageIds from 'features/views/l10n/messageIds';
 
 interface ShareViewDialogProps {
   model: ViewSharingModel;
@@ -31,7 +33,7 @@ const ShareViewDialog: FC<ShareViewDialogProps> = ({
   onClose,
   view,
 }) => {
-  const intl = useIntl();
+  const messages = useMessages(messageIds);
   const styles = useStyles();
   const [tab, setTab] = useState<'share' | 'download'>('share');
 
@@ -40,10 +42,7 @@ const ShareViewDialog: FC<ShareViewDialogProps> = ({
       maxWidth="md"
       onClose={onClose}
       open={true}
-      title={intl.formatMessage(
-        { id: 'pages.people.views.shareDialog.title' },
-        { title: view.title }
-      )}
+      title={messages.shareDialog.title({ title: view.title })}
     >
       <TabContext value={tab}>
         <TabList onChange={(ev, newValue) => setTab(newValue)} value={tab}>

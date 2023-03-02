@@ -30,24 +30,20 @@ export const fullName: ColumnChoice = {
     );
   },
   color: purple,
-  defaultColumns: (intl, existingColumns) => {
+  defaultColumns: (messages, existingColumns) => {
     const bothColumns = [
       {
         config: {
           field: NATIVE_PERSON_FIELDS.FIRST_NAME,
         },
-        title: intl.formatMessage({
-          id: 'misc.views.columnDialog.commonHeaders.first_name',
-        }),
+        title: messages.columnDialog.commonHeaders.first_name(),
         type: COLUMN_TYPE.PERSON_FIELD,
       },
       {
         config: {
           field: NATIVE_PERSON_FIELDS.LAST_NAME,
         },
-        title: intl.formatMessage({
-          id: 'misc.views.columnDialog.commonHeaders.last_name',
-        }),
+        title: messages.columnDialog.commonHeaders.last_name(),
         type: COLUMN_TYPE.PERSON_FIELD,
       },
     ];
@@ -93,7 +89,11 @@ export const pickFields: ColumnChoice = {
 };
 
 function createFieldChoice(
-  field: NATIVE_PERSON_FIELDS,
+  field:
+    | NATIVE_PERSON_FIELDS.FIRST_NAME
+    | NATIVE_PERSON_FIELDS.LAST_NAME
+    | NATIVE_PERSON_FIELDS.EMAIL
+    | NATIVE_PERSON_FIELDS.PHONE,
   icon: OverridableComponent<SvgIconTypeMap<Record<string, unknown>, 'svg'>>
 ): ColumnChoice {
   return {
@@ -104,14 +104,12 @@ function createFieldChoice(
       );
     },
     color: blue,
-    defaultColumns: (intl) => [
+    defaultColumns: (messages) => [
       {
         config: {
           field: field,
         },
-        title: intl.formatMessage({
-          id: `misc.views.columnDialog.commonHeaders.${field}`,
-        }),
+        title: messages.columnDialog.commonHeaders[field](),
         type: COLUMN_TYPE.PERSON_FIELD,
       },
     ],

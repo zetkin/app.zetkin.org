@@ -1,8 +1,11 @@
 import { lighten } from '@mui/material/styles';
 import makeStyles from '@mui/styles/makeStyles';
-import { useIntl } from 'react-intl';
 import { FormControl, InputBase, Tooltip } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
+
+import { useMessages } from 'core/i18n';
+
+import messageIds from 'zui/l10n/messageIds';
 
 const useStyles = makeStyles((theme) => ({
   input: {
@@ -60,7 +63,7 @@ const ZUIEditTextinPlace: React.FunctionComponent<ZUIEditTextinPlaceProps> = ({
   const classes = useStyles();
   const inputRef = useRef<HTMLInputElement>(null);
   const spanRef = useRef<HTMLSpanElement>(null);
-  const intl = useIntl();
+  const messages = useMessages(messageIds);
 
   useEffect(() => {
     // If the value prop changes, set the text
@@ -133,14 +136,10 @@ const ZUIEditTextinPlace: React.FunctionComponent<ZUIEditTextinPlaceProps> = ({
       if (editing) {
         return '';
       } else {
-        return intl.formatMessage({
-          id: 'misc.components.editTextInPlace.tooltip.edit',
-        });
+        return messages.editTextInPlace.tooltip.edit();
       }
     } else {
-      return intl.formatMessage({
-        id: 'misc.components.editTextInPlace.tooltip.noEmpty',
-      });
+      return messages.editTextInPlace.tooltip.noEmpty();
     }
   };
 

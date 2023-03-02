@@ -1,6 +1,5 @@
 import { Box, Grid, Typography, useTheme } from '@mui/material';
 import choices, { ColumnChoiceWithKey } from '../choices';
-import { FormattedMessage as Msg, useIntl } from 'react-intl';
 
 import categories from '../categories';
 import { ColumnChoice } from '../choices';
@@ -8,6 +7,9 @@ import ColumnChoiceCard from '../ColumnChoiceCard';
 import { filterChoicesByMode } from './utils';
 import useAccessLevel from 'features/views/hooks/useAccessLevel';
 import { ZetkinViewColumn } from '../../types';
+import { Msg, useMessages } from 'core/i18n';
+
+import messageIds from 'features/views/l10n/messageIds';
 
 interface CategoriesProps {
   existingColumns: ZetkinViewColumn[];
@@ -20,7 +22,7 @@ const ChoiceCategories = ({
   onAdd,
   onConfigure,
 }: CategoriesProps) => {
-  const intl = useIntl();
+  const messages = useMessages(messageIds);
   const theme = useTheme();
 
   const [isRestrictedMode] = useAccessLevel();
@@ -40,12 +42,14 @@ const ChoiceCategories = ({
           <Box key={`category-${index}`} id={`category-${index}`} padding={2}>
             <Typography variant="h4">
               <Msg
-                id={`misc.views.columnDialog.categories.${category.key}.title`}
+                id={messageIds.columnDialog.categories[category.key].title}
               />
             </Typography>
             <Typography variant="h5">
               <Msg
-                id={`misc.views.columnDialog.categories.${category.key}.description`}
+                id={
+                  messageIds.columnDialog.categories[category.key].description
+                }
               />
             </Typography>
 
@@ -71,18 +75,16 @@ const ChoiceCategories = ({
                           ? theme.palette.onSurface.disabled
                           : choice.color
                       }
-                      description={intl.formatMessage({
-                        id: `misc.views.columnDialog.choices.${filteredKey}.description`,
-                      })}
+                      description={messages.columnDialog.choices[
+                        filteredKey
+                      ].description()}
                       onAdd={() => onAdd(choice)}
                       onConfigure={() =>
                         onConfigure({ ...choice, key: filteredKey })
                       }
                       showAddButton={!!choice.defaultColumns}
                       showConfigureButton={!!choice.renderConfigForm}
-                      title={intl.formatMessage({
-                        id: `misc.views.columnDialog.choices.${filteredKey}.title`,
-                      })}
+                      title={messages.columnDialog.choices[filteredKey].title()}
                     />
                   </Grid>
                 );

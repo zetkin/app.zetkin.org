@@ -1,7 +1,6 @@
 import { Edit } from '@mui/icons-material';
 import { useRouter } from 'next/router';
 import { Button, Typography } from '@mui/material';
-import { FormattedMessage as Msg, useIntl } from 'react-intl';
 import { useContext, useEffect, useRef, useState } from 'react';
 
 import { journeyInstanceResource } from 'features/journeys/api/journeys';
@@ -12,6 +11,9 @@ import ZUIMarkdown from 'zui/ZUIMarkdown';
 import ZUISection from 'zui/ZUISection';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 import ZUISubmitCancelButtons from 'zui/ZUISubmitCancelButtons';
+import { Msg, useMessages } from 'core/i18n';
+
+import messageIds from '../l10n/messageIds';
 
 const JourneyInstanceSummary = ({
   journeyInstance,
@@ -19,19 +21,16 @@ const JourneyInstanceSummary = ({
   journeyInstance: ZetkinJourneyInstance;
 }): JSX.Element => {
   const { orgId } = useRouter().query;
-  const intl = useIntl();
+  const messages = useMessages(messageIds);
   const { showSnackbar } = useContext(ZUISnackbarContext);
 
   const editingRef = useRef<HTMLTextAreaElement>(null);
 
   const [editingSummary, setEditingSummary] = useState<boolean>(false);
   const [summary, setSummary] = useState<string>(journeyInstance.summary);
-  const summaryPlaceholder = intl.formatMessage(
-    {
-      id: 'pages.organizeJourneyInstance.summaryPlaceholder',
-    },
-    { journeyTitle: journeyInstance.journey.singular_label.toLowerCase() }
-  );
+  const summaryPlaceholder = messages.instance.summaryPlaceholder({
+    journeyTitle: journeyInstance.journey.singular_label.toLowerCase(),
+  });
 
   const patchJourneyInstanceMutation = journeyInstanceResource(
     orgId as string,
@@ -70,13 +69,11 @@ const JourneyInstanceSummary = ({
             startIcon={<Edit />}
             style={{ textTransform: 'uppercase' }}
           >
-            <Msg id={'pages.organizeJourneyInstance.editButton'} />
+            <Msg id={messageIds.instance.editButton} />
           </Button>
         )
       }
-      title={intl.formatMessage({
-        id: 'pages.organizeJourneyInstance.sections.summary',
-      })}
+      title={messages.instance.sections.summary()}
     >
       {editingSummary ? (
         // Editing

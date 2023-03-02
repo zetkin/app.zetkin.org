@@ -1,8 +1,11 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { Snackbar } from '@mui/material';
-import { useIntl } from 'react-intl';
 import { Alert, AlertColor } from '@mui/material';
 import { createContext, useState } from 'react';
+
+import { useMessages } from 'core/i18n';
+
+import messageIds from './l10n/messageIds';
 
 interface ZUISnackbarContextProps {
   isOpen: boolean;
@@ -23,7 +26,7 @@ interface SnackbarProviderProps {
 const ZUISnackbarProvider: React.FunctionComponent<SnackbarProviderProps> = ({
   children,
 }) => {
-  const intl = useIntl();
+  const messages = useMessages(messageIds);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarState, setSnackbarState] = useState<{
     message: string;
@@ -34,8 +37,7 @@ const ZUISnackbarProvider: React.FunctionComponent<SnackbarProviderProps> = ({
     severity,
     customMessage?
   ) => {
-    const message =
-      customMessage || intl.formatMessage({ id: `misc.snackbar.${severity}` });
+    const message = customMessage || messages.snackbar[severity]();
     setSnackbarOpen(true);
     setSnackbarState({
       message,

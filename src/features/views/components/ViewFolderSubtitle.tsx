@@ -1,13 +1,15 @@
 import { FC } from 'react';
-import { useIntl } from 'react-intl';
 import {
   FolderOutlined,
   InfoOutlined,
   InsertDriveFileOutlined,
 } from '@mui/icons-material';
 
+import { useMessages } from 'core/i18n';
 import ZUIIconLabel from 'zui/ZUIIconLabel';
 import ZUIIconLabelRow from 'zui/ZUIIconLabelRow';
+
+import messageIds from '../l10n/messageIds';
 
 interface ViewFolderSubtitleProps {
   numFolders: number;
@@ -18,13 +20,13 @@ const ViewFolderSubtitle: FC<ViewFolderSubtitleProps> = ({
   numFolders,
   numViews,
 }) => {
-  const intl = useIntl();
+  const messages = useMessages(messageIds);
 
   if (numFolders + numViews == 0) {
     return (
       <ZUIIconLabel
         icon={<InfoOutlined />}
-        label={intl.formatMessage({ id: 'pages.people.folder.summary.empty' })}
+        label={messages.folder.summary.empty()}
       />
     );
   }
@@ -34,17 +36,11 @@ const ViewFolderSubtitle: FC<ViewFolderSubtitleProps> = ({
       iconLabels={[
         {
           icon: <FolderOutlined />,
-          label: intl.formatMessage(
-            { id: 'pages.people.folder.summary.folderCount' },
-            { count: numFolders }
-          ),
+          label: messages.folder.summary.folderCount({ count: numFolders }),
         },
         {
           icon: <InsertDriveFileOutlined />,
-          label: intl.formatMessage(
-            { id: 'pages.people.folder.summary.viewCount' },
-            { count: numViews }
-          ),
+          label: messages.folder.summary.viewCount({ count: numViews }),
         },
       ]}
     />

@@ -1,5 +1,4 @@
 import { DoneAll } from '@mui/icons-material';
-import { FormattedMessage as Msg } from 'react-intl';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 import { Box, Chip, MenuItem, Tooltip } from '@mui/material';
@@ -7,6 +6,7 @@ import { FormEvent, useEffect } from 'react';
 
 import FilterForm from '../../FilterForm';
 import getSurveysWithElements from '../../../fetching/getSurveysWithElements';
+import { Msg } from 'core/i18n';
 import StyledItemSelect from '../../inputs/StyledItemSelect';
 import StyledSelect from '../../inputs/StyledSelect';
 import useSmartSearchFilter from 'features/smartSearch/hooks/useSmartSearchFilter';
@@ -24,6 +24,9 @@ import {
   ZetkinSurveyOption,
   ZetkinSurveyQuestionElement,
 } from 'utils/types/zetkin';
+
+import messageIds from 'features/smartSearch/l10n/messageIds';
+const localMessageIds = messageIds.filters.surveyOption;
 
 const DEFAULT_VALUE = 'none';
 
@@ -184,14 +187,14 @@ const SurveyOption = ({
       onSubmit={(e) => handleSubmit(e)}
       renderExamples={() => (
         <>
-          <Msg id="misc.smartSearch.survey_option.examples.one" />
+          <Msg id={localMessageIds.examples.one} />
           <br />
-          <Msg id="misc.smartSearch.survey_option.examples.two" />
+          <Msg id={localMessageIds.examples.two} />
         </>
       )}
       renderSentence={() => (
         <Msg
-          id="misc.smartSearch.survey_option.inputString"
+          id={localMessageIds.inputString}
           values={{
             addRemoveSelect: (
               <StyledSelect
@@ -200,9 +203,7 @@ const SurveyOption = ({
               >
                 {Object.values(OPERATION).map((o) => (
                   <MenuItem key={o} value={o}>
-                    <Msg
-                      id={`misc.smartSearch.survey_option.addRemoveSelect.${o}`}
-                    />
+                    <Msg id={localMessageIds.addRemoveSelect[o]} />
                   </MenuItem>
                 ))}
               </StyledSelect>
@@ -214,9 +215,7 @@ const SurveyOption = ({
               >
                 {Object.values(CONDITION_OPERATOR).map((o) => (
                   <MenuItem key={o} value={o}>
-                    <Msg
-                      id={`misc.smartSearch.survey_option.conditionSelect.${o}`}
-                    />
+                    <Msg id={localMessageIds.conditionSelect[o]} />
                   </MenuItem>
                 ))}
               </StyledSelect>
@@ -262,13 +261,14 @@ const SurveyOption = ({
                 SelectProps={{
                   renderValue: function getLabel(value) {
                     return value === DEFAULT_VALUE ? (
-                      <Msg id="misc.smartSearch.survey_option.questionSelect.any" />
+                      <Msg id={localMessageIds.questionSelect.any} />
                     ) : (
                       <Msg
-                        id="misc.smartSearch.survey_option.questionSelect.question"
+                        id={localMessageIds.questionSelect.question}
                         values={{
-                          question: validQuestions.find((q) => q.id === value)
-                            ?.question.question,
+                          question:
+                            validQuestions.find((q) => q.id === value)?.question
+                              .question ?? '',
                         }}
                       />
                     );
@@ -278,7 +278,7 @@ const SurveyOption = ({
               >
                 {!validQuestions.length && (
                   <MenuItem key={DEFAULT_VALUE} value={DEFAULT_VALUE}>
-                    <Msg id="misc.smartSearch.survey_option.questionSelect.none" />
+                    <Msg id={localMessageIds.questionSelect.none} />
                   </MenuItem>
                 )}
                 {validQuestions.map((q) => (
@@ -294,13 +294,13 @@ const SurveyOption = ({
                 SelectProps={{
                   renderValue: function getLabel(value) {
                     return value === DEFAULT_VALUE ? (
-                      <Msg id="misc.smartSearch.survey_option.surveySelect.any" />
+                      <Msg id={localMessageIds.surveySelect.any} />
                     ) : (
                       <Msg
-                        id="misc.smartSearch.survey_option.surveySelect.survey"
+                        id={localMessageIds.surveySelect.survey}
                         values={{
-                          surveyTitle: surveys.find((s) => s.id === value)
-                            ?.title,
+                          surveyTitle:
+                            surveys.find((s) => s.id === value)?.title ?? '',
                         }}
                       />
                     );
@@ -310,7 +310,7 @@ const SurveyOption = ({
               >
                 {!surveys.length && (
                   <MenuItem key={DEFAULT_VALUE} value={DEFAULT_VALUE}>
-                    <Msg id="misc.smartSearch.survey_option.surveySelect.none" />
+                    <Msg id={localMessageIds.surveySelect.none} />
                   </MenuItem>
                 )}
                 {surveys.map((s) => (

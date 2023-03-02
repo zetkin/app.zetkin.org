@@ -4,11 +4,13 @@ import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { Link, MenuItem } from '@mui/material';
-import { FormattedMessage as Msg, useIntl } from 'react-intl';
 
 import getUserMemberships from 'utils/fetching/getUserMemberships';
 import ZUISubmitCancelButtons from '../../../zui/ZUISubmitCancelButtons';
+import { Msg, useMessages } from 'core/i18n';
 import { ZetkinCampaign, ZetkinPerson } from 'utils/types/zetkin';
+
+import messageIds from '../l10n/messageIds';
 
 interface CampaignDetailsFormProps {
   campaign?: ZetkinCampaign;
@@ -22,7 +24,7 @@ const CampaignDetailsForm = ({
   campaign,
 }: CampaignDetailsFormProps): JSX.Element => {
   const { orgId } = useRouter().query;
-  const intl = useIntl();
+  const messages = useMessages(messageIds);
 
   const membershipsQuery = useQuery('userMemberships', getUserMemberships());
   const activeMembership = membershipsQuery?.data?.find(
@@ -50,9 +52,7 @@ const CampaignDetailsForm = ({
   const validate = (values: Record<string, string>) => {
     const errors: Record<string, string> = {};
     if (!values.title) {
-      errors.title = intl.formatMessage({
-        id: 'misc.formDialog.required',
-      });
+      errors.title = messages.form.required();
     }
     return errors;
   };
@@ -77,9 +77,7 @@ const CampaignDetailsForm = ({
           <TextField
             fullWidth
             id="title"
-            label={intl.formatMessage({
-              id: 'misc.formDialog.campaign.name',
-            })}
+            label={messages.form.name()}
             margin="normal"
             name="title"
             required
@@ -88,9 +86,7 @@ const CampaignDetailsForm = ({
           <TextField
             fullWidth
             id="info_text"
-            label={intl.formatMessage({
-              id: 'misc.formDialog.campaign.description',
-            })}
+            label={messages.form.description()}
             margin="normal"
             multiline
             name="info_text"
@@ -127,43 +123,39 @@ const CampaignDetailsForm = ({
               }}
               underline="hover"
             >
-              <Msg id="misc.formDialog.campaign.manager.selectSelf" />
+              <Msg id={messageIds.form.manager.selectSelf} />
             </Link>
           )}
 
           <TextField
             fullWidth
             id="status"
-            label={intl.formatMessage({
-              id: 'misc.formDialog.campaign.status.heading',
-            })}
+            label={messages.form.status.heading()}
             margin="normal"
             name="status"
             select
           >
             <MenuItem value="published">
-              <Msg id="misc.formDialog.campaign.status.published" />
+              <Msg id={messageIds.form.status.published} />
             </MenuItem>
             <MenuItem value="draft">
-              <Msg id="misc.formDialog.campaign.status.draft" />
+              <Msg id={messageIds.form.status.draft} />
             </MenuItem>
           </TextField>
 
           <TextField
             fullWidth
             id="visibility"
-            label={intl.formatMessage({
-              id: 'misc.formDialog.campaign.visibility.heading',
-            })}
+            label={messages.form.visibility.heading()}
             margin="normal"
             name="visibility"
             select
           >
             <MenuItem value="hidden">
-              <Msg id="misc.formDialog.campaign.visibility.private" />
+              <Msg id={messageIds.form.visibility.private} />
             </MenuItem>
             <MenuItem value="open">
-              <Msg id="misc.formDialog.campaign.visibility.public" />
+              <Msg id={messageIds.form.visibility.public} />
             </MenuItem>
           </TextField>
 

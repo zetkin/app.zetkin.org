@@ -1,11 +1,14 @@
 import { getQuantityWithConfig } from 'features/smartSearch/components/utils';
-import { FormattedMessage as Msg } from 'react-intl';
 
 import {
   OPERATION,
   RandomFilterConfig,
   SmartSearchFilterWithId,
 } from 'features/smartSearch/components/types';
+
+import messageIds from 'features/smartSearch/l10n/messageIds';
+import { Msg } from 'core/i18n';
+const localMessageIds = messageIds.filters.random;
 
 interface DisplayRandomProps {
   filter: SmartSearchFilterWithId<RandomFilterConfig>;
@@ -17,14 +20,12 @@ const DisplayRandom = ({ filter }: DisplayRandomProps): JSX.Element => {
 
   return (
     <Msg
-      id="misc.smartSearch.random.inputString"
+      id={localMessageIds.inputString}
       values={{
-        addRemoveSelect: (
-          <Msg id={`misc.smartSearch.random.addRemoveSelect.${op}`} />
-        ),
+        addRemoveSelect: <Msg id={localMessageIds.addRemoveSelect[op]} />,
         quantity: (
           <Msg
-            id={`misc.smartSearch.quantity.preview.${quantity}`}
+            id={messageIds.quantity.preview[quantity]}
             values={{
               people: size,
             }}

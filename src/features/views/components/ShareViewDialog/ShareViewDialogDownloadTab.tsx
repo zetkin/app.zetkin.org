@@ -1,8 +1,11 @@
 import { FC } from 'react';
-import { FormattedMessage } from 'react-intl';
 import { makeStyles } from '@mui/styles';
 import { useRouter } from 'next/router';
 import { Box, Button, Link, Typography } from '@mui/material';
+
+import { Msg } from 'core/i18n';
+
+import messageIds from 'features/views/l10n/messageIds';
 
 interface ShareViewDialogDownloadTabProps {
   onAbort?: () => void;
@@ -35,11 +38,11 @@ const ShareViewDialogDownloadTab: FC<ShareViewDialogDownloadTabProps> = ({
     <Box className={styles.container}>
       <Box className={styles.warning}>
         <Typography marginBottom={1} variant="body1">
-          <FormattedMessage id="pages.people.views.shareDialog.download.warning1" />
+          <Msg id={messageIds.shareDialog.download.warning1} />
         </Typography>
         <Typography marginBottom={1} variant="body1">
-          <FormattedMessage
-            id="pages.people.views.shareDialog.download.warning2"
+          <Msg
+            id={messageIds.shareDialog.download.warning2}
             values={{
               shareLink: (
                 <Link
@@ -50,7 +53,7 @@ const ShareViewDialogDownloadTab: FC<ShareViewDialogDownloadTabProps> = ({
                     }
                   }}
                 >
-                  <FormattedMessage id="pages.people.views.shareDialog.download.shareLink" />
+                  <Msg id={messageIds.shareDialog.download.shareLink} />
                 </Link>
               ),
             }}
@@ -62,14 +65,14 @@ const ShareViewDialogDownloadTab: FC<ShareViewDialogDownloadTabProps> = ({
             href={`/api/views/download?orgId=${orgId}&viewId=${viewId}&format=csv`}
             variant="outlined"
           >
-            <FormattedMessage id="pages.people.views.shareDialog.download.buttons.csv" />
+            <Msg id={messageIds.shareDialog.download.buttons.csv} />
           </Button>
           <Button
             component="a"
             href={`/api/views/download?orgId=${orgId}&viewId=${viewId}&format=xlsx`}
             variant="outlined"
           >
-            <FormattedMessage id="pages.people.views.shareDialog.download.buttons.xlsx" />
+            <Msg id={messageIds.shareDialog.download.buttons.xlsx} />
           </Button>
         </Box>
       </Box>

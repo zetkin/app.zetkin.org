@@ -1,10 +1,12 @@
 import { Box, Button, Link, Typography } from '@mui/material';
 import { ChevronLeft, Close } from '@mui/icons-material';
 import { FunctionComponent, useState } from 'react';
-import { FormattedMessage as Msg, useIntl } from 'react-intl';
 
 import { ColumnChoiceWithKey } from './choices';
+import { Msg, useMessages } from 'core/i18n';
 import { SelectedViewColumn, ZetkinViewColumn } from '../types';
+
+import messageIds from 'features/views/l10n/messageIds';
 
 interface ColumnEditorProps {
   choice: ColumnChoiceWithKey;
@@ -21,7 +23,7 @@ const ColumnEditor: FunctionComponent<ColumnEditorProps> = ({
   onClose,
   onSave,
 }) => {
-  const intl = useIntl();
+  const messages = useMessages(messageIds);
   const [columns, setColumns] = useState<SelectedViewColumn[]>([]);
 
   if (!choice.renderConfigForm) {
@@ -57,7 +59,7 @@ const ColumnEditor: FunctionComponent<ColumnEditorProps> = ({
               variant="h5"
             >
               <ChevronLeft sx={{ color: 'white' }} />
-              <Msg id="misc.views.columnDialog.editor.buttonLabels.change" />
+              <Msg id={messageIds.columnDialog.editor.buttonLabels.change} />
             </Link>
           </Box>
           <Box alignSelf="flex-end" display="flex" sx={{ cursor: 'pointer' }}>
@@ -84,7 +86,7 @@ const ColumnEditor: FunctionComponent<ColumnEditorProps> = ({
             {choice.renderCardVisual(choice.color)}
           </Box>
           <Typography color="white" variant="h5">
-            <Msg id={`misc.views.columnDialog.choices.${choice.key}.title`} />
+            <Msg id={messageIds.columnDialog.choices[choice.key].title} />
           </Typography>
         </Box>
       </Box>
@@ -114,12 +116,9 @@ const ColumnEditor: FunctionComponent<ColumnEditorProps> = ({
       <Box display="flex" flexGrow={0} justifyContent="flex-end" padding={2}>
         {!!columns.length && (
           <Button onClick={() => onSave(columns)} variant="contained">
-            {intl.formatMessage(
-              {
-                id: 'misc.views.columnDialog.editor.buttonLabels.addColumns',
-              },
-              { columns: columns.length }
-            )}
+            {messages.columnDialog.editor.buttonLabels.addColumns({
+              columns: columns.length,
+            })}
           </Button>
         )}
       </Box>

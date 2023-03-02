@@ -1,11 +1,15 @@
-import { FormattedMessage as Msg } from 'react-intl';
-
 import { getTimeFrameWithConfig } from '../../utils';
 import {
   MostActiveFilterConfig,
   OPERATION,
   SmartSearchFilterWithId,
 } from 'features/smartSearch/components/types';
+
+import DisplayTimeFrame from '../DisplayTimeFrame';
+import { Msg } from 'core/i18n';
+
+import messageIds from 'features/smartSearch/l10n/messageIds';
+const localMessageIds = messageIds.filters.mostActive;
 
 interface DisplayMostActiveProps {
   filter: SmartSearchFilterWithId<MostActiveFilterConfig>;
@@ -14,30 +18,19 @@ interface DisplayMostActiveProps {
 const DisplayMostActive = ({ filter }: DisplayMostActiveProps): JSX.Element => {
   const { config } = filter;
   const op = filter.op || OPERATION.ADD;
-  const { timeFrame, after, before, numDays } = getTimeFrameWithConfig({
+  const timeFrame = getTimeFrameWithConfig({
     after: config.after,
     before: config.before,
   });
 
   return (
     <Msg
-      id="misc.smartSearch.most_active.inputString"
+      id={localMessageIds.inputString}
       values={{
-        addRemoveSelect: (
-          <Msg id={`misc.smartSearch.most_active.addRemoveSelect.${op}`} />
-        ),
+        addRemoveSelect: <Msg id={localMessageIds.addRemoveSelect[op]} />,
         numPeople: config.size,
-        numPeopleSelect: config.size,
-        timeFrame: (
-          <Msg
-            id={`misc.smartSearch.timeFrame.preview.${timeFrame}`}
-            values={{
-              afterDate: after?.toISOString().slice(0, 10),
-              beforeDate: before?.toISOString().slice(0, 10),
-              days: numDays,
-            }}
-          />
-        ),
+        numPeopleSelect: config.size || 0,
+        timeFrame: <DisplayTimeFrame config={timeFrame} />,
       }}
     />
   );

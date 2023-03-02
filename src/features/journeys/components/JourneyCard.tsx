@@ -1,9 +1,11 @@
-import { FormattedMessage as Msg } from 'react-intl';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import { Box, Card, CardActionArea, Link, Typography } from '@mui/material';
 
+import { Msg } from 'core/i18n';
 import { ZetkinJourney } from 'utils/types/zetkin';
+
+import messageIds from '../l10n/messageIds';
 
 interface JourneyCardProps {
   journey: ZetkinJourney;
@@ -23,19 +25,19 @@ const JourneyCard = ({ journey }: JourneyCardProps): JSX.Element => {
             </Typography>
             <Typography component="span">
               <Msg
-                id="pages.organizeJourneys.openCount"
+                id={messageIds.journeys.openCount}
                 values={{ numberOpen: stats.open }}
               />{' '}
               <Typography color="secondary" component="span">
                 <Msg
-                  id="pages.organizeJourneys.closedCount"
+                  id={messageIds.journeys.closedCount}
                   values={{ numberClosed: stats.closed }}
                 />
               </Typography>
             </Typography>
             <Box mt={3}>
               <Link underline="hover" variant="button">
-                <Msg id="pages.organizeJourneys.cardCTA" />
+                <Msg id={messageIds.journeys.cardCTA} />
               </Link>
             </Box>
           </Box>

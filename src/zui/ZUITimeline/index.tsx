@@ -1,5 +1,4 @@
 import { Alert } from '@mui/material';
-import { FormattedMessage } from 'react-intl';
 import React from 'react';
 import {
   Box,
@@ -14,6 +13,7 @@ import {
   Typography,
 } from '@mui/material';
 
+import { Msg } from 'core/i18n';
 import TimelineAddNote from './TimelineAddNote';
 import TimelineUpdate from './TimelineUpdate';
 import { ZetkinUpdate } from 'zui/ZUITimeline/types';
@@ -21,6 +21,8 @@ import useFilterUpdates, {
   UPDATE_TYPE_FILTER_OPTIONS,
 } from './useFilterUpdates';
 import { ZetkinNote, ZetkinNoteBody } from 'utils/types/zetkin';
+
+import messageIds from './l10n/messageIds';
 
 export interface ZUITimelineProps {
   disabled?: boolean;
@@ -67,14 +69,10 @@ const ZUITimeline: React.FunctionComponent<ZUITimelineProps> = ({
             }
             renderValue={(value) => (
               <Typography color="secondary">
-                <FormattedMessage
-                  id="misc.timeline.filter.filterSelectLabel"
+                <Msg
+                  id={messageIds.filter.filterSelectLabel}
                   values={{
-                    filter: (
-                      <FormattedMessage
-                        id={`misc.timeline.filter.byType.${value}`}
-                      />
-                    ),
+                    filter: <Msg id={messageIds.filter.byType[value]} />,
                   }}
                 />
               </Typography>
@@ -95,9 +93,7 @@ const ZUITimeline: React.FunctionComponent<ZUITimelineProps> = ({
                     width="100%"
                   >
                     <Box>
-                      <FormattedMessage
-                        id={`misc.timeline.filter.byType.${type}`}
-                      />
+                      <Msg id={messageIds.filter.byType[type]} />
                     </Box>
                     <Box>{groupedUpdates[type].length}</Box>
                   </Box>
@@ -116,7 +112,7 @@ const ZUITimeline: React.FunctionComponent<ZUITimelineProps> = ({
                 severity="warning"
                 style={{ cursor: 'pointer' }}
               >
-                <FormattedMessage id="misc.timeline.filter.warning" />
+                <Msg id={messageIds.filter.warning} />
               </Alert>
             </CardActionArea>
           </Grid>
@@ -167,7 +163,7 @@ const ZUITimeline: React.FunctionComponent<ZUITimelineProps> = ({
     return (
       <Grid item>
         <Button onClick={() => setExpanded(!expanded)} variant="outlined">
-          <FormattedMessage id="misc.timeline.expand" />
+          <Msg id={messageIds.expand} />
         </Button>
       </Grid>
     );

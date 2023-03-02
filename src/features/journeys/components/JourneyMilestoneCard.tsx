@@ -13,20 +13,22 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { FormattedMessage, useIntl } from 'react-intl';
 
 import { journeyMilestoneStatusResource } from 'features/journeys/api/journeys';
 import { ZetkinJourneyMilestoneStatus } from 'utils/types/zetkin';
 import ZUIDate from 'zui/ZUIDate';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';
+import { Msg, useMessages } from 'core/i18n';
+
+import messageIds from '../l10n/messageIds';
 
 const JourneyMilestoneCard = ({
   milestone,
 }: {
   milestone: ZetkinJourneyMilestoneStatus;
 }): JSX.Element => {
-  const intl = useIntl();
+  const messages = useMessages(messageIds);
   const { orgId, instanceId } = useRouter().query;
   const { showSnackbar } = useContext(ZUISnackbarContext);
   const queryClient = useQueryClient();
@@ -97,8 +99,8 @@ const JourneyMilestoneCard = ({
         {milestone.completed ? (
           <Box textAlign="right">
             <Typography>
-              <FormattedMessage
-                id="pages.organizeJourneyInstance.markedCompleteLabel"
+              <Msg
+                id={messageIds.instance.markedCompleteLabel}
                 values={{
                   relativeTime: (
                     <ZUIRelativeTime
@@ -112,8 +114,8 @@ const JourneyMilestoneCard = ({
             </Typography>
             {milestone.deadline && (
               <Typography variant="body2">
-                <FormattedMessage
-                  id="pages.organizeJourneyInstance.deadlineLabel"
+                <Msg
+                  id={messageIds.instance.deadlineLabel}
                   values={{
                     date: <ZUIDate datetime={milestone.deadline} />,
                   }}
@@ -125,9 +127,7 @@ const JourneyMilestoneCard = ({
           // TODO: Move this to new ZUIDatePicker
           <DatePicker
             data-testid="JourneyMilestoneCard-datePicker"
-            label={intl.formatMessage({
-              id: 'pages.organizeJourneyInstance.dueDateInputLabel',
-            })}
+            label={messages.instance.dueDateInputLabel()}
             onChange={(newDeadline) => {
               if (newDeadline && newDeadline.isValid()) {
                 const dateStr = newDeadline.format('YYYY-MM-DD');
@@ -146,9 +146,7 @@ const JourneyMilestoneCard = ({
                     endAdornment: (
                       <InputAdornment position="end">
                         <IconButton
-                          aria-label={intl.formatMessage({
-                            id: 'pages.organizeJourneyInstance.dueDateInputClear',
-                          })}
+                          aria-label={messages.instance.dueDateInputClear()}
                           onClick={() => {
                             // Deadline is cleared
                             patchMilestoneStatus({ deadline: null });

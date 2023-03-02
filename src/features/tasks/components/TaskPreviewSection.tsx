@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { AccessTime, Image as ImageIcon } from '@mui/icons-material';
 import { Box, Button, Card, Typography } from '@mui/material';
-import { FormattedMessage, useIntl } from 'react-intl';
 
 import { taskResource } from 'features/tasks/api/tasks';
 import { ZetkinTask } from 'features/tasks/components/types';
@@ -9,13 +8,16 @@ import ZUIEditableImage from 'zui/ZUIEditableImage';
 import ZUIImageSelectDialog from 'zui/ZUIImageSelectDialog';
 import ZUIMarkdown from 'zui/ZUIMarkdown';
 import ZUISection from 'zui/ZUISection';
+import { Msg, useMessages } from 'core/i18n';
+
+import messageIds from '../l10n/messageIds';
 
 interface TaskPreviewSectionProps {
   task: ZetkinTask;
 }
 
 const TaskPreviewSection: React.FC<TaskPreviewSectionProps> = ({ task }) => {
-  const intl = useIntl();
+  const messages = useMessages(messageIds);
   const [selecting, setSelecting] = useState(false);
 
   const taskMutation = taskResource(
@@ -32,12 +34,12 @@ const TaskPreviewSection: React.FC<TaskPreviewSectionProps> = ({ task }) => {
             onClick={() => setSelecting(true)}
             startIcon={<ImageIcon />}
           >
-            <FormattedMessage id={'misc.tasks.taskPreview.addImage'} />
+            <Msg id={messageIds.taskPreview.addImage} />
           </Button>
         )
       }
       data-testid="TaskPreviewSection-section"
-      title={intl.formatMessage({ id: 'misc.tasks.taskPreview.sectionTitle' })}
+      title={messages.taskPreview.sectionTitle()}
     >
       <Card>
         {task.cover_file && (
@@ -65,9 +67,9 @@ const TaskPreviewSection: React.FC<TaskPreviewSectionProps> = ({ task }) => {
               variant="body2"
             >
               <AccessTime fontSize="small" />
-              <FormattedMessage
-                id="misc.tasks.taskPreview.timeEstimate"
-                values={{ minutes: task.time_estimate }}
+              <Msg
+                id={messageIds.taskPreview.timeEstimate}
+                values={{ minutes: task.time_estimate || 0 }}
               />
             </Typography>
           )}

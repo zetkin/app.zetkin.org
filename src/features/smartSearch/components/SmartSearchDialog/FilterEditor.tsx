@@ -4,6 +4,7 @@ import MostActive from '../filters/MostActive';
 import PersonData from '../filters/PersonData';
 import PersonField from '../filters/PersonField';
 import PersonTags from '../filter/PersonTags';
+import PersonView from '../filters/PersonView';
 import Random from '../filters/Random';
 import SubQuery from '../filters/SubQuery';
 import SurveyOption from '../filters/SurveyOption';
@@ -71,6 +72,13 @@ const FilterEditor = ({
       )}
       {filter.type === FILTER_TYPE.PERSON_TAGS && (
         <PersonTags
+          filter={filter}
+          onCancel={onCancelSubmitFilter}
+          onSubmit={onSubmitFilter}
+        />
+      )}
+      {filter.type === FILTER_TYPE.PERSON_VIEW && (
+        <PersonView
           filter={filter}
           onCancel={onCancelSubmitFilter}
           onSubmit={onSubmitFilter}

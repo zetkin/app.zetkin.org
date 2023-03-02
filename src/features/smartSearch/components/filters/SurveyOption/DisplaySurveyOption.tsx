@@ -1,11 +1,11 @@
 import { DoneAll } from '@mui/icons-material';
-import { FormattedMessage as Msg } from 'react-intl';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 import { Box, Chip, Tooltip } from '@mui/material';
 
 import { getEllipsedString } from 'utils/stringUtils';
 import getSurveysWithElements from 'features/smartSearch/fetching/getSurveysWithElements';
+import { Msg } from 'core/i18n';
 import {
   ELEMENT_TYPE,
   RESPONSE_TYPE,
@@ -16,6 +16,9 @@ import {
   SmartSearchFilterWithId,
   SurveyOptionFilterConfig,
 } from 'features/smartSearch/components/types';
+
+import messageIds from 'features/smartSearch/l10n/messageIds';
+const localMessageIds = messageIds.filters.surveyOption;
 
 interface DisplaySurveyOptionProps {
   filter: SmartSearchFilterWithId<SurveyOptionFilterConfig>;
@@ -55,16 +58,10 @@ const DisplaySurveyOption = ({
 
   return (
     <Msg
-      id="misc.smartSearch.survey_option.inputString"
+      id={localMessageIds.inputString}
       values={{
-        addRemoveSelect: (
-          <Msg id={`misc.smartSearch.survey_option.addRemoveSelect.${op}`} />
-        ),
-        conditionSelect: (
-          <Msg
-            id={`misc.smartSearch.survey_option.conditionSelect.${operator}`}
-          />
-        ),
+        addRemoveSelect: <Msg id={localMessageIds.addRemoveSelect[op]} />,
+        conditionSelect: <Msg id={localMessageIds.conditionSelect[operator]} />,
         options: (
           <Box alignItems="start" display="inline-flex">
             {options.map((o) => {
@@ -93,16 +90,16 @@ const DisplaySurveyOption = ({
         ),
         questionSelect: question ? (
           <Msg
-            id="misc.smartSearch.survey_option.questionSelect.question"
+            id={localMessageIds.questionSelect.question}
             values={{ question: question.question }}
           />
         ) : (
-          <Msg id="misc.smartSearch.survey_option.questionSelect.any" />
+          <Msg id={localMessageIds.questionSelect.any} />
         ),
         surveySelect: (
           <Msg
-            id="misc.smartSearch.survey_option.surveySelect.survey"
-            values={{ surveyTitle: survey?.title }}
+            id={localMessageIds.surveySelect.survey}
+            values={{ surveyTitle: survey?.title ?? '' }}
           />
         ),
       }}

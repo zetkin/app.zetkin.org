@@ -1,4 +1,3 @@
-import { useIntl } from 'react-intl';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 
@@ -11,6 +10,9 @@ import TagManagerController, {
   TagManagerControllerProps,
 } from './TagManagerController';
 import { useCreateTag, useEditTag } from './utils';
+
+import messageIds from '../../l10n/messageIds';
+import { useMessages } from 'core/i18n';
 
 type TagManagerProps = Omit<
   TagManagerControllerProps,
@@ -44,7 +46,7 @@ const TagManager: React.FunctionComponent<TagManagerProps> = (props) => {
 export const TagManagerSection: React.FunctionComponent<
   Omit<TagManagerProps, 'groupTags'>
 > = (props) => {
-  const intl = useIntl();
+  const messages = useMessages(messageIds);
 
   const [isGrouped, setIsGrouped] = useState(true);
 
@@ -56,7 +58,7 @@ export const TagManagerSection: React.FunctionComponent<
           onChange={() => setIsGrouped(!isGrouped)}
         />
       }
-      title={intl.formatMessage({ id: 'misc.tags.tagManager.title' })}
+      title={messages.manager.title()}
     >
       <TagManager groupTags={isGrouped} {...props} />
     </ZUISection>
