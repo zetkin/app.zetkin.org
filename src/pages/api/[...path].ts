@@ -5,6 +5,8 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { AppSession } from 'utils/types';
 import getFilters from 'utils/getFilters';
+import { Server as HTTPServer } from 'http';
+import { Server as IOServer } from 'socket.io';
 import { stringToBool } from 'utils/stringUtils';
 import { ZetkinZResource, ZetkinZResult } from 'utils/types/sdk';
 
@@ -36,9 +38,17 @@ type NextApiRequestWithSession = NextApiRequest & {
   session: AppSession;
 };
 
+type NextApiResponseWithIO = NextApiResponse & {
+  socket: NextApiResponse['socket'] & {
+    server: HTTPServer & {
+      io: IOServer;
+    };
+  };
+};
+
 export default async function handle(
   req: NextApiRequestWithSession,
-  res: NextApiResponse
+  res: NextApiResponseWithIO
 ): Promise<void> {
   const path = req.query.path as string[];
   const queryParams = req.url?.split('?')[1];
@@ -89,6 +99,8 @@ export default async function handle(
     // No problem if the session could not be found
   }
 
+  const io = res.socket.server.io;
+
   try {
     const method = HTTP_VERBS_TO_ZETKIN_METHODS[req.method!];
     const result = await method(resource, req);
@@ -106,5 +118,18 @@ export default async function handle(
       // Not an API error, i.e. this is a bug!
       throw err;
     }
+  }
+
+  // TODO: Generalize this logic and abstract it away from here
+  if (
+    req.method == 'PUT' &&
+    path[3] == 'views' &&
+    path[5] == 'rows' &&
+    path[6]
+  ) {
+    const viewId = parseInt(path[4]);
+    const personId = parseInt(path[6]);
+
+    io.emit('personview.addrow', { personId, viewId });
   }
 }
