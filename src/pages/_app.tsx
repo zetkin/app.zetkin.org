@@ -26,6 +26,7 @@ import BrowserApiClient from 'core/api/client/BrowserApiClient';
 import Environment from 'core/env/Environment';
 import { EnvProvider } from 'core/env/EnvContext';
 import { PageWithLayout } from '../utils/types';
+import { SocketProvider } from 'core/rt/SocketContext';
 import theme from '../theme';
 import { UserContext } from 'utils/hooks/useFocusDate';
 import { ZUIConfirmDialogProvider } from 'zui/ZUIConfirmDialogProvider';
@@ -94,35 +95,40 @@ function MyApp({ Component, pageProps }: AppProps): JSX.Element {
 
   return (
     <ReduxProvider store={store}>
-      <EnvProvider env={env}>
-        <UserContext.Provider value={pageProps.user}>
-          <StyledEngineProvider injectFirst>
-            <ThemeProvider theme={theme}>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <IntlProvider
-                  defaultLocale="en"
-                  locale={lang}
-                  messages={messages}
-                >
-                  <QueryClientProvider client={queryClient}>
-                    <ZUISnackbarProvider>
-                      <ZUIConfirmDialogProvider>
-                        <DndProvider backend={HTML5Backend}>
-                          <Hydrate state={dehydratedState}>
-                            <CssBaseline />
-                            {getLayout(<Component {...restProps} />, restProps)}
-                          </Hydrate>
-                        </DndProvider>
-                      </ZUIConfirmDialogProvider>
-                    </ZUISnackbarProvider>
-                    <ReactQueryDevtools initialIsOpen={false} />
-                  </QueryClientProvider>
-                </IntlProvider>
-              </LocalizationProvider>
-            </ThemeProvider>
-          </StyledEngineProvider>
-        </UserContext.Provider>
-      </EnvProvider>
+      <SocketProvider store={store}>
+        <EnvProvider env={env}>
+          <UserContext.Provider value={pageProps.user}>
+            <StyledEngineProvider injectFirst>
+              <ThemeProvider theme={theme}>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <IntlProvider
+                    defaultLocale="en"
+                    locale={lang}
+                    messages={messages}
+                  >
+                    <QueryClientProvider client={queryClient}>
+                      <ZUISnackbarProvider>
+                        <ZUIConfirmDialogProvider>
+                          <DndProvider backend={HTML5Backend}>
+                            <Hydrate state={dehydratedState}>
+                              <CssBaseline />
+                              {getLayout(
+                                <Component {...restProps} />,
+                                restProps
+                              )}
+                            </Hydrate>
+                          </DndProvider>
+                        </ZUIConfirmDialogProvider>
+                      </ZUISnackbarProvider>
+                      <ReactQueryDevtools initialIsOpen={false} />
+                    </QueryClientProvider>
+                  </IntlProvider>
+                </LocalizationProvider>
+              </ThemeProvider>
+            </StyledEngineProvider>
+          </UserContext.Provider>
+        </EnvProvider>
+      </SocketProvider>
     </ReduxProvider>
   );
 }

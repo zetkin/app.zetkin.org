@@ -43,6 +43,7 @@ import ViewDataTableToolbar, {
 import { ZetkinViewColumn, ZetkinViewRow } from 'utils/types/zetkin';
 
 import messageIds from 'features/views/l10n/messageIds';
+import { useSocket } from 'core/rt/SocketContext';
 
 const useStyles = makeStyles((theme) => ({
   '@keyframes addedRowAnimation': {
@@ -95,6 +96,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
   const { orgId } = router.query;
   const { showSnackbar } = useContext(ZUISnackbarContext);
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
+  const socket = useSocket();
 
   const model = useViewDataModel();
   const browserModel = useModel(
@@ -310,6 +312,11 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
     footer: {
       onRowAdd: async (person) => {
         await model.addPerson(person);
+
+        socket?.emit('personview.addrow', {
+          personId: person.id,
+          viewId: model.getView().data?.id,
+        });
 
         // Store ID for highlighting the new row
         setAddedId(person.id);

@@ -41,6 +41,13 @@ const initialState: ViewsStoreSlice = {
 const viewsSlice = createSlice({
   extraReducers: (builder) =>
     builder
+      .addCase<string, PayloadAction<{ personId: number; viewId: number }>>(
+        'socket',
+        (state, action) => {
+          const { viewId } = action.payload;
+          state.rowsByViewId[viewId].isStale = true;
+        }
+      )
       .addCase(tagAssigned, (state, action) => {
         const [personId, tag] = action.payload;
         setTagOnRelevantRows(state, personId, tag.id, tag);
