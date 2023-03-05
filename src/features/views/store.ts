@@ -1,5 +1,6 @@
 import columnTypes from './components/ViewDataTable/columnTypes';
 import { DeleteFolderReport } from './rpc/deleteFolder';
+import { SocketPayload } from 'core/rt/SocketContext';
 import { ViewTreeData } from 'pages/api/views/tree';
 import { ZetkinObjectAccess } from 'core/api/types';
 import {
@@ -41,13 +42,20 @@ const initialState: ViewsStoreSlice = {
 const viewsSlice = createSlice({
   extraReducers: (builder) =>
     builder
-      .addCase<string, PayloadAction<{ personId: number; viewId: number }>>(
-        'socket',
-        (state, action) => {
-          const { viewId } = action.payload;
+      .addCase<
+        string,
+        PayloadAction<SocketPayload<{ personId: number; viewId: number }>>
+      >('socket', (state, action) => {
+        const { personId, viewId } = action.payload.data;
+        if (action.payload.name == 'personview.addrow') {
           state.rowsByViewId[viewId].isStale = true;
+        } else if (action.payload.name == 'personview.deleterow') {
+          const rowList = state.rowsByViewId[viewId];
+          if (rowList) {
+            rowList.items = rowList.items.filter((item) => item.id != personId);
+          }
         }
-      )
+      })
       .addCase(tagAssigned, (state, action) => {
         const [personId, tag] = action.payload;
         setTagOnRelevantRows(state, personId, tag.id, tag);

@@ -18,6 +18,11 @@ type SocketProviderProps = {
 
 const SocketContext = createContext<Socket | null>(null);
 
+export type SocketPayload<D> = {
+  data: D;
+  name: string;
+};
+
 const SocketProvider: FC<SocketProviderProps> = ({ children, store }) => {
   const [socket, setSocket] = useState<Socket | null>(null);
 
@@ -28,8 +33,25 @@ const SocketProvider: FC<SocketProviderProps> = ({ children, store }) => {
       });
 
       socket.on('personview.addrow', (data) => {
-        store.dispatch<PayloadAction>({
-          payload: data,
+        store.dispatch<
+          PayloadAction<SocketPayload<{ personId: number; viewId: number }>>
+        >({
+          payload: {
+            data,
+            name: 'personview.addrow',
+          },
+          type: 'socket',
+        });
+      });
+
+      socket.on('personview.deleterow', (data) => {
+        store.dispatch<
+          PayloadAction<SocketPayload<{ personId: number; viewId: number }>>
+        >({
+          payload: {
+            data,
+            name: 'personview.deleterow',
+          },
           type: 'socket',
         });
       });

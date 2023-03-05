@@ -21,6 +21,9 @@ app.prepare().then(() => {
     socket.on('personview.addrow', (args) => {
       socket.broadcast.emit('personview.addrow', args);
     });
+    socket.on('personview.deleterow', (args) => {
+      socket.broadcast.emit('personview.deleterow', args);
+    });
   });
 
   httpServer.io = io;

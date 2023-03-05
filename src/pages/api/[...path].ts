@@ -121,15 +121,14 @@ export default async function handle(
   }
 
   // TODO: Generalize this logic and abstract it away from here
-  if (
-    req.method == 'PUT' &&
-    path[3] == 'views' &&
-    path[5] == 'rows' &&
-    path[6]
-  ) {
+  if (path[3] == 'views' && path[5] == 'rows' && path[6]) {
     const viewId = parseInt(path[4]);
     const personId = parseInt(path[6]);
 
-    io.emit('personview.addrow', { personId, viewId });
+    if (req.method == 'PUT') {
+      io.emit('personview.addrow', { personId, viewId });
+    } else if (req.method == 'DELETE') {
+      io.emit('personview.deleterow', { personId, viewId });
+    }
   }
 }
