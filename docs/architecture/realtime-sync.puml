@@ -1,0 +1,86 @@
+@startuml context
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+
+LAYOUT_WITH_LEGEND()
+
+title "System Context diagram for app.zetkin.org"
+
+Person(official, "Organization official")
+System(frontend, "app.zetkin.org")
+System_Ext(platform, "Zetkin Platform API")
+
+Rel_R(official, frontend, "Uses")
+Rel_R(frontend, platform, "Uses API of", "HTTPS")
+
+@enduml
+
+@startuml container
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+LAYOUT_WITH_LEGEND()
+
+title "Container diagram for app.zetkin.org syncing"
+
+Person(off1, "Official A")
+Person(off2, "Official B")
+
+System_Boundary(app, "app.zetkin.org") {
+  Container(backend, "Backend", "NEXT.js")
+  Container(frontend1, "Browser app", "NEXT.js")
+}
+
+System_Ext(platform, "Zetkin Platform API")
+
+Rel_R(off1, frontend1, "Uses")
+Rel_U(off2, frontend1, "Uses")
+
+Rel_R(frontend1, backend, "API/page requests", "HTTPS")
+
+BiRel_R(frontend1, backend, "Pushes updates", "WebSocket")
+
+Rel_R(backend, platform, "Proxies API requests", "HTTPS")
+
+@enduml
+
+@startuml component
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+LAYOUT_WITH_LEGEND()
+
+title "Component diagram for app.zetkin.org syncing"
+
+Container_Ext(frontend2, "Browser app", "NEXT.js")
+System_Ext(platform, "Zetkin Platform API")
+
+Person(off1, "Official A")
+Person_Ext(off2, "Official B")
+Rel_R(off2, frontend2, "Uses")
+
+Container_Boundary(frontend, "Browser app") {
+  Component(gui, "GUI", "React")
+  Component(mgr, "Socket manager", "SocketContext", "Manages client socket")
+  Component(modelRepo, "Model/Repo", "", "Classes responsible for logic and data management")
+  Component(store, "Store", "redux", "Stores data and handles actions to update data.")
+
+  Rel_R(off1, gui, "Uses")
+  Rel_R(gui, modelRepo, "Delegates logic to")
+  Rel_R(modelRepo, store, "Triggers updates on", "Redux actions")
+  Rel_L(mgr, store, "Triggers updates on", "Redux action")
+}
+
+
+Container_Boundary(backend, "Backend") {
+  Component(proxy, "API proxy", "NEXT.js API route", "Proxies API requests on /api to the Zetkin Platform API")
+  Component(socketServer, "Socket server", "Socket.IO", "Manages server sockets")
+
+  Rel_R(proxy, socketServer, "Trigger")
+}
+
+BiRel_U(socketServer, mgr, "Broadcasts updates", "WebSocket")
+
+Rel_R(frontend2, proxy, "API requests", "HTTPS")
+Rel_D(proxy, platform, "Proxies API requests", "HTTPS")
+
+Rel_D(modelRepo, proxy, "API requests", "HTTPS")
+
+@enduml
