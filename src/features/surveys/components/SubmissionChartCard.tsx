@@ -39,9 +39,13 @@ const SubmissionChartCard: FC<SubmissionChartCardProps> = ({
               />
             )
           }
-          subheader={messages.chart.subheader({
-            days: data.submissionsByDay.length,
-          })}
+          subheader={
+            data.submissionCount
+              ? messages.chart.subheader({
+                  days: data.submissionsByDay.length,
+                })
+              : undefined
+          }
         >
           <Box height={400}>
             {!data.submissionCount && (
@@ -52,7 +56,12 @@ const SubmissionChartCard: FC<SubmissionChartCardProps> = ({
                 justifyContent="center"
                 width="100%"
               >
-                <Box display="flex" marginBottom={2} width="100%">
+                <Box
+                  display="flex"
+                  justifyContent="center"
+                  marginBottom={2}
+                  width="100%"
+                >
                   <PlaceholderVisual />
                 </Box>
                 <Typography
