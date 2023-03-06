@@ -57,6 +57,7 @@ module.exports = async (router) => {
     const messages = await loadMessages();
     res.json({
       messages: messages,
+      messages: {},
     });
   });
 };

@@ -1,248 +1,169 @@
-import React, {
+import { Box } from '@mui/system';
+import { DragIndicatorOutlined } from '@mui/icons-material';
+import { IconButton } from '@mui/material';
+
+import {
   FC,
-  Key,
-  ReactElement,
-  ReactNode,
+  MouseEvent as ReactMouseEvent,
   useEffect,
   useRef,
   useState,
 } from 'react';
-import { ELEMENT_TYPE } from 'utils/types/zetkin';
-import ReorderableItem from './ZUIReorderableItem';
 
-interface ZUIReorderableProps {
-  children: React.ReactElement[];
-  disabled: boolean;
-  onReordering: () => void;
-  onReorder: any;
-  y?: number;
-}
+type IDType = number | string;
 
-//Mock data
-const elementsArray: any[] = [
-  {
-    hidden: false,
-    key: 1,
-    id: 1,
-    text_block: {
-      content: 'This is a content',
-      header: 'this is a title',
-    },
-    type: ELEMENT_TYPE.TEXT,
-  },
-  {
-    hidden: false,
-    key: 2,
-    id: 2,
-    text_block: {
-      content: '2 This is a content',
-      header: '2 this is a title',
-    },
-    type: ELEMENT_TYPE.TEXT,
-  },
-  {
-    hidden: false,
-    key: 3,
-    id: 3,
-    text_block: {
-      content: '2 This is a content',
-      header: '2 this is a title',
-    },
-    type: ELEMENT_TYPE.TEXT,
-  },
-];
+type ReorderableItem = {
+  element: JSX.Element;
+  id: IDType;
+};
 
-const ZUIReorderable: FC<ZUIReorderableProps> = ({
-  disabled,
-  onReordering,
-  onReorder,
-  children,
-}) => {
-  const [width, setWidth] = useState(0);
-  const [activeKey, setActiveKey] = useState<Key | null>(null);
-  const [dragging, setDragging] = useState(true);
-  const [childNode, setChildNode] = useState<HTMLElement>();
-  const [reordering, setOnReorder] = useState(onReorder);
-  const [activeItem, setActiveItem] = useState();
+type ZUIReorderableProps = {
+  items: ReorderableItem[];
+};
 
-  const orderFunction = (
-    c0: React.ReactElement<any, string | React.JSXElementConstructor<any>>,
-    c1: React.ReactElement<any, string | React.JSXElementConstructor<any>>,
-    order: Key[]
-  ) => {
-    let idx0 = order.indexOf(c0.key!);
-    let idx1 = order.indexOf(c1.key!);
-    return idx0 - idx1;
-  };
+const ZUIReorderable: FC<ZUIReorderableProps> = ({ items }) => {
+  const [order, setOrder] = useState<IDType[]>(items.map((item) => item.id));
+  const [activeId, setActiveId] = useState<IDType | null>(null);
 
-  const getKeys = (elementsArray: React.ReactElement[]): Key[] => {
-    const f = elementsArray.filter((c) => c.key !== null);
-    return f.map((child) => child.key!);
-  };
-
-  const [order, setOrder] = useState<Key[]>(getKeys(elementsArray));
-
-  let elementRef = useRef<HTMLDivElement>(null);
-
-  const orderedChildren = elementsArray
-    .concat()
-    .sort((c0, c1) => orderFunction(c0, c1, order));
-
-  let createReorderableItems = orderedChildren.map((element, idx) => {
-    if (!element.key) {
-      throw 'Reorderable children must have keys';
-    }
-
-    let key = element.key;
-    //elementRef = useRef<HTMLDivElement>(element as HTMLDivElement);
-    let item: React.ReactElement = (
-      <ReorderableItem
-        id={element.id}
-        key={key}
-        itemKey={key}
-        dragging={key == activeKey}
-        onDragStart={(ev: any) => {
-          console.log('HEREEEE');
-          onItemDragStart(element.key, element, element.child, ev);
-        }}
-        onMouseMove={(ev: any) => onDocMouseMove(ev)}
-        onMouseUp={(ev: any) => onDocMouseUp(ev)}
-      >
-        {element}
-      </ReorderableItem>
-    );
-
-    return item;
-  });
-
-  const [items, setItems] = useState(createReorderableItems);
-
-  const onDocMouseMove = (ev: any) => {
-    console.log('inside onDocMouseMove', ev);
-    let mouseDY = ev.movementY;
-    let childNode = ev.target;
-    let childElementStyle = ev.target.style;
-    console.log('childNode', childNode);
-    setChildNode(childNode);
-    console.log('mouseDY', mouseDY); //Unnecessary?
-
-    let y = ev.clientY - mouseDY;
-
-    if (!dragging) {
-      setDragging(true);
-    }
-
-    let prevKeys = items.map((item) => item.key);
-    let orderedKeys = items
-      .map((item) => ({
-        y: item.key == activeKey ? y : item.props.y, // ?
-        key: item.key,
-      }))
-      .sort((i0, i1) => i0.y - i1.y)
-      .map((item) => item.key);
-
-    //const childElementStyle = getComputedStyle(childNode);
-    console.log('y', y);
-
-    childNode.style.top = y + 'px';
-
-    if (JSON.stringify(prevKeys) !== JSON.stringify(orderedKeys)) {
-      if (reordering) {
-        setOnReorder(orderedKeys);
-      }
-    }
-
-    if (Object.keys(orderedKeys).length) {
-      if (orderedKeys !== null) {
-        setOrder(orderedKeys as Key[]);
-      }
-    }
-  };
-
-  const [mouseDY, setMouseDY] = useState<number>();
-  const [startY, setStartY] = useState<number>();
-  const [MousePosition, setMousePosition] = useState({
-    left: 0,
-    top: 0,
-  });
-
-  function handleMouseMove(ev: any) {
-    setMousePosition({ left: ev.pageX, top: ev.pageY });
-  }
-
-  function onItemDragStart(key: Key, itemNode: any, childNode: any, ev: any) {
-    console.log('inside onItemBeginDrag');
-    setActiveKey(key);
-    setChildNode(childNode);
-
-    let ctrNode = document.getElementById(itemNode.id);
-    let ctrRect = ctrNode?.getBoundingClientRect(); //What is ctrNode
-    let itemRect = ev.target.getBoundingClientRect();
-
-    console.log('ctrNode', ctrNode);
-    console.log('ctrRect', ctrRect);
-    console.log('itemRect', itemRect);
-    console.log('ctrRect!.top', ctrRect!.top);
-    console.log(' itemRect.top', itemRect.top);
-    console.log('itemRect', ev.clientY);
-
-    setMouseDY(ctrRect!.top + (ev.clientY - itemRect.top)); //estos setter pa ke?
-    setStartY(itemRect.top - ctrRect!.top);
-    console.log(mouseDY); //wehat is mouseDY (my guess is movementY)
-    console.log(startY);
-  }
+  const activeItemRef = useRef<ReorderableItem>();
 
   useEffect(() => {
-    console.log('inside useeffect');
-    const activeItem = items.find((item) => item.key === activeKey);
-    console.log('activeItem', activeItem?.key);
-    console.log('childNode', childNode);
+    setOrder(items.map((item) => item.id));
+  }, [items]);
 
-    if (childNode) {
-      const ctrNode = document.getElementById(childNode['id']); //how to make this real DOM Element?
-      let ctrRect: DOMRect | undefined = ctrNode?.getBoundingClientRect();
-      console.log(ctrRect);
-      if (ctrNode !== null) {
-        const elementDom = document.getElementById(ctrNode.id);
-        console.log(ctrNode);
-        console.log(elementDom);
-      }
+  const dyRef = useRef<number>();
+  const ctrRef = useRef<HTMLDivElement>();
+  const activeContentRef = useRef<HTMLDivElement>();
+  const nodeByIdRef = useRef<Record<IDType, HTMLDivElement>>({});
 
-      let updatedItems = items.map((item) => {
-        if (childNode) {
-          let childRect = childNode.getBoundingClientRect();
-          console.log(childNode);
-          console.log(childRect);
-          return Object.assign({}, item, {
-            y: childRect!.top - ctrRect!.top,
-          });
-        }
-      });
-      if (updatedItems !== undefined) {
-        setItems(updatedItems as React.ReactElement[]);
-      }
-    }
-  }, [dragging]);
+  const onMouseMove = (ev: MouseEvent) => {
+    const ctrRect = ctrRef.current?.getBoundingClientRect();
+    const ctrY = ctrRect?.top ?? 0;
+    const targetY = ev.clientY - ctrY - (dyRef.current || 0);
 
-  function onDocMouseUp(ev: any) {
-    console.log('inside mouse up');
-    if (activeKey) {
-      setDragging(false);
-      setActiveKey(null);
-      console.log(activeKey);
+    const activeId = activeItemRef.current?.id ?? 0;
+
+    const prevKeys = order;
+    const reorderedItems = items
+      .map((item) => {
+        const y =
+          activeId == item.id
+            ? targetY
+            : nodeByIdRef.current[item.id].getBoundingClientRect().top;
+
+        return {
+          id: item.id,
+          y: y,
+        };
+      })
+      .sort((item0, item1) => item0.y - item1.y);
+
+    const reorderedKeys = reorderedItems.map((item) => item.id);
+
+    if (prevKeys.join(',') != reorderedKeys.join(',')) {
+      setOrder(reorderedKeys);
     }
 
-    let prevOrder = items.map((child) => child.key);
-    console.log(prevOrder);
-    console.log(order);
-    console.log(onReorder);
-
-    if (JSON.stringify(!prevOrder) === JSON.stringify(order) && onReorder) {
-      setOnReorder(order);
+    if (activeContentRef.current) {
+      activeContentRef.current.style.top = targetY + 'px';
     }
-  }
+  };
 
-  return <div style={{ width: '100%' }}>{items}</div>;
+  const onMouseUp = () => {
+    // console.log('release');
+
+    setActiveId(null);
+    activeItemRef.current = undefined;
+
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', onMouseUp);
+  };
+
+  const sortedItems = items.concat().sort((item0, item1) => {
+    return order.indexOf(item0.id) - order.indexOf(item1.id);
+  });
+
+  return (
+    <Box ref={ctrRef} sx={{ position: 'relative' }}>
+      {sortedItems.map((item) => {
+        return (
+          <ZUIReorderableItem
+            key={item.id}
+            dragging={activeId == item.id}
+            item={item}
+            onBeginDrag={(contentNode, ev, itemNode) => {
+              setActiveId(item.id);
+              activeItemRef.current = item;
+              activeContentRef.current = contentNode;
+
+              // When dragging starts, "hard-code" the height of the
+              // item container, so that it doesn't collapse once the
+              // item content starts moving.
+              const itemRect = itemNode.getBoundingClientRect();
+              itemNode.style.height = itemRect.height + 'px';
+
+              dyRef.current = ev.clientY - itemRect.top;
+
+              document.addEventListener('mousemove', onMouseMove);
+              document.addEventListener('mouseup', onMouseUp);
+            }}
+            onNodeExists={(div) => (nodeByIdRef.current[item.id] = div)}
+          />
+        );
+      })}
+    </Box>
+  );
+};
+
+const ZUIReorderableItem: FC<{
+  dragging: boolean;
+  item: ReorderableItem;
+  onBeginDrag: (
+    contentNode: HTMLDivElement,
+    ev: ReactMouseEvent<HTMLElement>,
+    itemNode: HTMLDivElement
+  ) => void;
+  onNodeExists: (node: HTMLDivElement) => void;
+}> = ({ dragging, item, onBeginDrag, onNodeExists }) => {
+  const itemRef = useRef<HTMLDivElement>();
+  const contentRef = useRef<HTMLDivElement>();
+
+  return (
+    <Box
+      key={item.id}
+      ref={(div: HTMLDivElement) => {
+        itemRef.current = div;
+        onNodeExists(div);
+      }}
+    >
+      <Box
+        ref={contentRef}
+        display="flex"
+        sx={{
+          position: dragging ? 'absolute' : 'static',
+        }}
+      >
+        <Box>
+          <IconButton
+            onMouseDown={(ev) => {
+              if (itemRef.current && contentRef.current) {
+                onBeginDrag(contentRef.current, ev, itemRef.current);
+              }
+            }}
+          >
+            <DragIndicatorOutlined />
+          </IconButton>
+        </Box>
+        <Box
+          sx={{
+            boxShadow: dragging ? '0 0 10px black' : 'none',
+          }}
+        >
+          {item.element}
+        </Box>
+      </Box>
+    </Box>
+  );
 };
 
 export default ZUIReorderable;
