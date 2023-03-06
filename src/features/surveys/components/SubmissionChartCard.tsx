@@ -1,16 +1,17 @@
 import { FC } from 'react';
+import { FormattedDate } from 'react-intl';
 import { linearGradientDef } from '@nivo/core';
 import { ResponsiveLine } from '@nivo/line';
-import { Box, useTheme } from '@mui/material';
+import { Box, Paper, Typography, useTheme } from '@mui/material';
 
 import SurveyDataModel from '../models/SurveyDataModel';
-import { useMessages } from 'core/i18n';
 import useModel from 'core/useModel';
+import ZUICard from 'zui/ZUICard';
 import ZUIFuture from 'zui/ZUIFuture';
+import ZUINumberChip from 'zui/ZUINumberChip';
+import { Msg, useMessages } from 'core/i18n';
 
 import messageIds from '../l10n/messageIds';
-import ZUICard from 'zui/ZUICard';
-import ZUINumberChip from 'zui/ZUINumberChip';
 
 type SubmissionChartCardProps = {
   orgId: number;
@@ -29,13 +30,16 @@ const SubmissionChartCard: FC<SubmissionChartCardProps> = ({
     <ZUIFuture future={model.getStats()}>
       {(data) => (
         <ZUICard
-          header={messages.chart.h()}
+          header={messages.chart.header()}
           status={
             <ZUINumberChip
               color={theme.palette.grey[200]}
               value={data.submissionCount}
             />
           }
+          subheader={messages.chart.subheader({
+            days: data.submissionsByDay.length,
+          })}
         >
           <Box height={400}>
             <ResponsiveLine
@@ -64,7 +68,9 @@ const SubmissionChartCard: FC<SubmissionChartCardProps> = ({
               enableGridX={false}
               enableGridY={false}
               enablePoints={false}
+              enableSlices="x"
               fill={[{ id: 'gradientA', match: '*' }]}
+              isInteractive={true}
               lineWidth={3}
               margin={{
                 bottom: 20,
@@ -73,6 +79,26 @@ const SubmissionChartCard: FC<SubmissionChartCardProps> = ({
                 // will fit inside the clipping rectangle.
                 left: 8 + data.submissionCount.toString().length * 8,
                 top: 20,
+              }}
+              sliceTooltip={(props) => {
+                const dataPoint = props.slice.points[0];
+                const date = new Date(dataPoint.data.xFormatted);
+
+                return (
+                  <Paper>
+                    <Box p={1}>
+                      <Typography variant="h6">
+                        <FormattedDate value={date} />
+                      </Typography>
+                      <Typography variant="body2">
+                        <Msg
+                          id={messageIds.chart.tooltip.submissions}
+                          values={{ count: dataPoint.data.y as number }}
+                        />
+                      </Typography>
+                    </Box>
+                  </Paper>
+                );
               }}
               xFormat="time:%Y-%m-%d"
               xScale={{
