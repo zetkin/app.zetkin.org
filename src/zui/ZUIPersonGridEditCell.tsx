@@ -24,10 +24,10 @@ import { FC, HTMLAttributes, useState } from 'react';
 
 const ZUIPersonGridEditCell: FC<{
   cell?: ZetkinPerson | null;
-  onGetSuggestedPeople: (people: ZetkinPerson[]) => ZetkinPerson[];
   onUpdate: (person: ZetkinPerson | null) => void;
   removePersonLabel: string;
-}> = ({ cell, onUpdate, removePersonLabel, onGetSuggestedPeople }) => {
+  suggestedPeople: ZetkinPerson[];
+}> = ({ cell, onUpdate, removePersonLabel, suggestedPeople }) => {
   const query = useRouter().query;
   const [isRestrictedMode] = useAccessLevel();
   const styles = useStyles({ isRestrictedMode });
@@ -51,9 +51,16 @@ const ZUIPersonGridEditCell: FC<{
     disabled: isRestrictedMode,
   });
 
-  const options = autoComplete.groupedOptions as ZetkinPerson[];
-  const suggestedPeople = onGetSuggestedPeople(options);
+  const searchResults = autoComplete.groupedOptions as ZetkinPerson[];
   const showSuggestedPeople = searching || !cell;
+
+  if (searchResults.length) {
+    // Filter down suggestedPeople to only include search matches
+    const matchingIds = searchResults.map((person) => person.id);
+    suggestedPeople = suggestedPeople.filter((person) =>
+      matchingIds.includes(person.id)
+    );
+  }
 
   return (
     <Box
@@ -164,7 +171,7 @@ const ZUIPersonGridEditCell: FC<{
                       <ListSubheader sx={{ position: 'relative' }}>
                         <FormattedMessage id="misc.views.cells.localPerson.otherPeople" />
                       </ListSubheader>
-                      {options.map((option, index) => {
+                      {searchResults.map((option, index) => {
                         const optProps = autoComplete.getOptionProps({
                           index,
                           option,

@@ -1,3 +1,4 @@
+import { FC } from 'react';
 import { IColumnType } from '.';
 import useViewDataModel from 'features/views/hooks/useViewDataModel';
 import ViewDataModel from 'features/views/models/ViewDataModel';
@@ -7,7 +8,6 @@ import ZUIPersonGridEditCell from 'zui/ZUIPersonGridEditCell';
 import { COLUMN_TYPE, LocalPersonViewColumn } from '../../types';
 import { GridColDef, useGridApiContext } from '@mui/x-data-grid-pro';
 import { ZetkinPerson, ZetkinViewRow } from 'utils/types/zetkin';
-import { FC } from 'react';
 
 type LocalPersonViewCell = null | ZetkinPerson;
 
@@ -30,7 +30,7 @@ export default class LocalPersonColumnType
         return <ZUIPersonGridCell cell={params.value} />;
       },
       renderEditCell: (params) => {
-        <EditCell cell={params.value} col={col} row={params.row} />;
+        return <EditCell cell={params.value} column={col} row={params.row} />;
       },
       sortComparator: (
         val0: LocalPersonViewCell,
@@ -66,39 +66,34 @@ export default class LocalPersonColumnType
 }
 
 const EditCell: FC<{
-  cell: ZetkinPerson | null;
-  col: LocalPersonViewColumn;
+  cell: LocalPersonViewCell;
+  column: LocalPersonViewColumn;
   row: ZetkinViewRow;
-}> = (cell, col, row) => {
+}> = ({ cell, column, row }) => {
   const api = useGridApiContext();
   const model = useViewDataModel();
 
-  const getPeopleInView = (people: ZetkinPerson[]) => {
-    return usePeopleInView(model, people);
-  };
+  const suggestedPeople = getPeopleInView(model);
 
   const updateCellValue = (person: ZetkinPerson | null) => {
     api.current.stopCellEditMode({
-      field: 'col_' + col.id,
+      field: 'col_' + column.id,
       id: row.id,
     });
-    model.setCellValue(row.id, col.id, person?.id ?? null);
+    model.setCellValue(row.id, column.id, person?.id ?? null);
   };
 
   return (
     <ZUIPersonGridEditCell
       cell={cell}
-      onGetSuggestedPeople={getPeopleInView}
       onUpdate={updateCellValue}
       removePersonLabel="misc.views.cells.localPerson.clearLabel"
+      suggestedPeople={suggestedPeople}
     />
   );
 };
 
-function usePeopleInView(
-  model: ViewDataModel,
-  searchResults: ZetkinPerson[] = []
-): ZetkinPerson[] {
+function getPeopleInView(model: ViewDataModel): ZetkinPerson[] {
   const rows = model.getRows().data;
   const cols = model.getColumns().data;
 
@@ -134,11 +129,5 @@ function usePeopleInView(
     });
   });
 
-  if (searchResults.length) {
-    // Filter down people in view to only include search matches
-    const matchingIds = searchResults.map((person) => person.id);
-    return peopleInView.filter((person) => matchingIds.includes(person.id));
-  } else {
-    return peopleInView;
-  }
+  return peopleInView;
 }
