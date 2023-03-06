@@ -1,7 +1,7 @@
-import { makeStyles } from '@mui/styles';
-import { Box, Divider, Theme, Typography } from '@mui/material';
+import { Box, Divider, Theme, Typography, useTheme } from '@mui/material';
 
 import ZUIAnimatedNumber from 'zui/ZUIAnimatedNumber';
+import ZUINumberChip from 'zui/ZUINumberChip';
 
 interface StatusCardHeaderProps {
   chipColor: keyof Theme['palette']['targetingStatusBar'];
@@ -10,31 +10,14 @@ interface StatusCardHeaderProps {
   value: number | undefined;
 }
 
-const useStyles = makeStyles<
-  Theme,
-  { chipColor: keyof Theme['palette']['targetingStatusBar'] }
->((theme) => ({
-  chip: {
-    backgroundColor: ({ chipColor }) =>
-      theme.palette.targetingStatusBar[chipColor],
-    borderRadius: '1em',
-    color: 'white',
-    display: 'flex',
-    fontSize: '1.8em',
-    lineHeight: 'normal',
-    marginRight: '0.1em',
-    overflow: 'hidden',
-    padding: '0.2em 0.7em',
-  },
-}));
-
 const StatusCardHeader = ({
   chipColor,
   subtitle,
   title,
   value,
 }: StatusCardHeaderProps) => {
-  const classes = useStyles({ chipColor });
+  const theme = useTheme();
+  const color = theme.palette.targetingStatusBar[chipColor];
   return (
     <Box>
       <Box
@@ -50,7 +33,7 @@ const StatusCardHeader = ({
         {value != undefined && (
           <ZUIAnimatedNumber value={value || 0}>
             {(animatedValue) => (
-              <Box className={classes.chip}>{animatedValue}</Box>
+              <ZUINumberChip color={color} size="lg" value={animatedValue} />
             )}
           </ZUIAnimatedNumber>
         )}

@@ -25,6 +25,18 @@ export default makeMessages('feat.sruveys', {
       header: m('Title'),
     },
   },
+  chart: {
+    header: m('Survey Submissions'),
+    placeholder: m('Start collecting submissions to see progress here'),
+    subheader: m<{ days: number }>(
+      'Accumulated submissions over the last {days, plural, =1 {day} other {# days}}'
+    ),
+    tooltip: {
+      submissions: m<{ count: number }>(
+        '{count, plural, =1 {1 submission} other {# submissions}}'
+      ),
+    },
+  },
   layout: {
     actions: {
       publish: m('Publish survey'),

@@ -1,8 +1,9 @@
 import { OpenInNew } from '@mui/icons-material';
-import { Box, Card, Link, Typography, useTheme } from '@mui/material';
+import { Box, Link, useTheme } from '@mui/material';
 
-import { Msg } from 'core/i18n';
+import ZUICard from 'zui/ZUICard';
 import ZUITextfieldToClipboard from 'zui/ZUITextfieldToClipboard';
+import { Msg, useMessages } from 'core/i18n';
 
 import messageIds from '../l10n/messageIds';
 
@@ -13,17 +14,12 @@ interface SurveyURLCardProps {
 }
 
 const SurveyURLCard = ({ isOpen, orgId, surveyId }: SurveyURLCardProps) => {
+  const messages = useMessages(messageIds);
   const theme = useTheme();
   return (
-    <Card style={{ padding: 16 }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-        <Typography variant="h5">
-          {isOpen ? (
-            <Msg id={messageIds.urlCard.open} />
-          ) : (
-            <Msg id={messageIds.urlCard.preview} />
-          )}
-        </Typography>
+    <ZUICard
+      header={isOpen ? messages.urlCard.open() : messages.urlCard.preview()}
+      status={
         <Box
           sx={{
             backgroundColor: isOpen
@@ -34,14 +30,11 @@ const SurveyURLCard = ({ isOpen, orgId, surveyId }: SurveyURLCardProps) => {
             width: 20,
           }}
         />
-      </Box>
-      <Typography color="GrayText" paddingBottom={4} variant="body2">
-        {isOpen ? (
-          <Msg id={messageIds.urlCard.nowAccepting} />
-        ) : (
-          <Msg id={messageIds.urlCard.willAccept} />
-        )}
-      </Typography>
+      }
+      subheader={
+        isOpen ? messages.urlCard.nowAccepting() : messages.urlCard.willAccept()
+      }
+    >
       <Box display="flex" flexDirection="row" paddingBottom={2}>
         <ZUITextfieldToClipboard
           copyText={`${process.env.NEXT_PUBLIC_ZETKIN_APP_DOMAIN}o/${orgId}/surveys/${surveyId}`}
@@ -62,7 +55,7 @@ const SurveyURLCard = ({ isOpen, orgId, surveyId }: SurveyURLCardProps) => {
           <Msg id={messageIds.urlCard.previewPortal} />
         )}
       </Link>
-    </Card>
+    </ZUICard>
   );
 };
 
