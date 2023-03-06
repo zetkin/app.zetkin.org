@@ -1,7 +1,7 @@
 import { Close } from '@mui/icons-material';
 import { useIntl } from 'react-intl';
-import { useState } from 'react';
 import { Box, IconButton, TextField } from '@mui/material';
+import { Ref, useState } from 'react';
 
 import { WidgetType } from './ChoiceQuestionBlock';
 import { ZetkinSurveyOption } from 'utils/types/zetkin';
@@ -10,6 +10,7 @@ interface ChoiceProps {
   option: ZetkinSurveyOption;
   onDeleteOption: (optionId: number) => void;
   onUpdateOption: (optionId: number, text: string) => void;
+  inputRef: Ref<HTMLInputElement>;
   widgetType: WidgetType;
 }
 
@@ -17,7 +18,7 @@ const Choice = ({
   option,
   onDeleteOption,
   onUpdateOption,
-
+  inputRef,
   widgetType,
 }: ChoiceProps) => {
   const intl = useIntl();
@@ -33,6 +34,9 @@ const Choice = ({
       <Box paddingX={2}>{widgetType.previewIcon}</Box>
       <TextField
         fullWidth
+        InputProps={{
+          inputRef: inputRef,
+        }}
         label={intl.formatMessage({
           id: 'misc.surveys.blocks.choiceQuestion.option',
         })}

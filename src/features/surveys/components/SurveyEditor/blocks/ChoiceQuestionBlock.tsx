@@ -1,6 +1,7 @@
 import {
   Add,
   CheckBoxOutlined,
+  Close,
   RadioButtonChecked,
   RadioButtonUnchecked,
 } from '@mui/icons-material';
@@ -8,6 +9,7 @@ import {
   Box,
   Button,
   ClickAwayListener,
+  IconButton,
   ListItemIcon,
   MenuItem,
   TextField,
@@ -23,7 +25,6 @@ import {
 } from 'react';
 import { FormattedMessage as Msg, useIntl } from 'react-intl';
 
-import Choice from './Choice';
 import DeleteHideButtons from './DeleteHideButtons';
 import { OptionsQuestionPatchBody } from 'features/surveys/repos/SurveysRepo';
 import theme from 'theme';
@@ -90,13 +91,14 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
   const [widgetType, setWidgetType] = useState<WidgetType>(widgetTypes.radio);
   const [question, setQuestion] = useState(questionElement.question);
   const [description, setDescription] = useState(questionElement.description);
-  const [focus, setFocus] = useState<'description' | 'widgetType' | null>(null);
+  const [focus, setFocus] = useState<'description' | number | null>(null);
+  const [optionValue, setOptionValue] = useState('');
 
   const questionRef = useCallback((node: HTMLInputElement) => {
     node?.focus();
   }, []);
   const descriptionRef = useRef<HTMLInputElement>(null);
-  const widgetTypeRef = useRef<HTMLInputElement>(null);
+  const choiceRefs = useRef<{ element: HTMLInputElement; id: number }[]>([]);
 
   useEffect(() => {
     if (focus === 'description') {
@@ -104,6 +106,14 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
       input?.focus();
     }
   }, [focus]);
+
+  useEffect(() => {
+    if (typeof focus === 'number') {
+      const choiceRef = choiceRefs.current.find((ref) => ref.id === focus);
+      choiceRef?.element?.focus();
+      choiceRefs.current.length = 0;
+    }
+  }, [choiceRefs.current]);
 
   const handleKeyDown = (evt: KeyboardEvent<HTMLDivElement>) => {
     if (evt.key === 'Enter') {
@@ -127,6 +137,7 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
           },
         });
         setFocus(null);
+        choiceRefs.current.length = 0;
       }}
     >
       <div>
@@ -157,7 +168,6 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
             <TextField
               defaultValue={POLL_TYPE.RADIO}
               fullWidth
-              InputProps={{ inputRef: widgetTypeRef }}
               label={intl.formatMessage({
                 id: 'misc.surveys.blocks.choiceQuestion.selectLabel',
               })}
@@ -191,15 +201,44 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
               ))}
             </TextField>
             <Box alignItems="center" display="flex" flexDirection="column">
-              {options.map((option) => (
-                <Choice
-                  key={option.id}
-                  onDeleteOption={(id) => onDeleteOption(id)}
-                  onUpdateOption={(id, text) => onUpdateOption(id, text)}
-                  option={option}
-                  widgetType={widgetType}
-                />
-              ))}
+              {options.map((option) => {
+                return (
+                  <Box
+                    key={option.id}
+                    alignItems="center"
+                    display="flex"
+                    justifyContent="center"
+                    paddingTop={2}
+                    width="100%"
+                  >
+                    <Box paddingX={2}>{widgetType.previewIcon}</Box>
+                    <TextField
+                      fullWidth
+                      inputRef={(element) => {
+                        if (element) {
+                          choiceRefs.current = choiceRefs.current.concat({
+                            element: element,
+                            id: option.id,
+                          });
+                        }
+                      }}
+                      label={intl.formatMessage({
+                        id: 'misc.surveys.blocks.choiceQuestion.option',
+                      })}
+                      onBlur={() => onUpdateOption(option.id, optionValue)}
+                      onChange={(evt) => setOptionValue(evt.target.value)}
+                      sx={{ paddingLeft: 1 }}
+                      value={optionValue}
+                    />
+                    <IconButton
+                      onClick={() => onDeleteOption(option.id)}
+                      sx={{ paddingX: 2 }}
+                    >
+                      <Close />
+                    </IconButton>
+                  </Box>
+                );
+              })}
             </Box>
           </Box>
         )}
@@ -229,7 +268,7 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
               <Box
                 key={option.id}
                 display="flex"
-                onClick={() => setFocus('widgetType')}
+                onClick={() => setFocus(option.id)}
                 paddingTop={2}
               >
                 <Box paddingX={2}>{widgetType.previewIcon}</Box>
