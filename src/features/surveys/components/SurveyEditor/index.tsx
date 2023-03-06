@@ -1,19 +1,21 @@
-import { Box } from '@mui/material';
-import { FC, useEffect, useRef, useState } from 'react';
-
 import AddBlocks from './AddBlocks';
 import BlockWrapper from './blocks/BlockWrapper';
+import { Box } from '@mui/material';
 import ChoiceQuestionBlock from './blocks/ChoiceQuestionBlock';
 import OpenQuestionBlock from './blocks/OpenQuestionBlock';
 import SurveyDataModel from 'features/surveys/models/SurveyDataModel';
 import TextBlock from './blocks/TextBlock';
 import { ZetkinSurveyElementPatchBody } from 'features/surveys/repos/SurveysRepo';
 import ZUIFuture from 'zui/ZUIFuture';
+import ZUIReorderable from 'zui/ZUIReorderable';
+
 import {
   ELEMENT_TYPE,
   RESPONSE_TYPE,
+  ZetkinSurveyElement,
   ZetkinSurveyTextElement,
 } from 'utils/types/zetkin';
+import { FC, useEffect, useRef, useState } from 'react';
 
 interface SurveyEditorProps {
   model: SurveyDataModel;
@@ -52,84 +54,84 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ model }) => {
     model.toggleElementHidden(elemId, hidden);
   }
 
+  const getElement = (elem: ZetkinSurveyElement) => {
+    if (elem.type == ELEMENT_TYPE.QUESTION) {
+      if (elem.question.response_type == RESPONSE_TYPE.TEXT) {
+        return {
+          element: (
+            <BlockWrapper
+              key={elem.id}
+              hidden={elem.hidden}
+              onDelete={() => handleDelete(elem.id)}
+              onToggleHidden={(hidden) => handleToggleHidden(elem.id, hidden)}
+            >
+              <OpenQuestionBlock
+                element={elem.question}
+                inEditMode={elem.id === idOfBlockInEditMode}
+                onEditModeEnter={() => setIdOfBlockInEditMode(elem.id)}
+                onEditModeExit={(data: ZetkinSurveyElementPatchBody) => {
+                  if (elem.id === idOfBlockInEditMode) {
+                    setIdOfBlockInEditMode(undefined);
+                  }
+                  model.updateOpenQuestionBlock(elem.id, data);
+                }}
+              />
+            </BlockWrapper>
+          ),
+          id: elem.id,
+        };
+      } else if (elem.question.response_type == RESPONSE_TYPE.OPTIONS) {
+        return {
+          element: (
+            <BlockWrapper
+              key={elem.id}
+              hidden={elem.hidden}
+              onDelete={() => handleDelete(elem.id)}
+              onToggleHidden={(hidden) => handleToggleHidden(elem.id, hidden)}
+            >
+              <ChoiceQuestionBlock question={elem.question} />
+            </BlockWrapper>
+          ),
+          id: elem.id,
+        };
+      }
+    } else if (elem.type == ELEMENT_TYPE.TEXT) {
+      return {
+        element: (
+          <BlockWrapper
+            key={elem.id}
+            hidden={elem.hidden}
+            onDelete={() => handleDelete(elem.id)}
+            onToggleHidden={(hidden) => handleToggleHidden(elem.id, hidden)}
+          >
+            <TextBlock
+              element={elem}
+              inEditMode={elem.id === idOfBlockInEditMode}
+              onEditModeEnter={() => setIdOfBlockInEditMode(elem.id)}
+              onEditModeExit={(
+                textBlock: ZetkinSurveyTextElement['text_block']
+              ) => {
+                if (elem.id === idOfBlockInEditMode) {
+                  setIdOfBlockInEditMode(undefined);
+                }
+                model.updateTextBlock(elem.id, textBlock);
+              }}
+            />
+          </BlockWrapper>
+        ),
+        id: elem.id,
+      };
+    }
+    return { element: <></>, id: 0 };
+  };
+
   return (
     <>
       <ZUIFuture future={model.getData()}>
         {(data) => {
           return (
             <Box paddingBottom={data.elements.length ? 4 : 0}>
-              {data.elements.map((elem) => {
-                if (elem.type == ELEMENT_TYPE.QUESTION) {
-                  if (elem.question.response_type == RESPONSE_TYPE.TEXT) {
-                    return (
-                      <BlockWrapper
-                        key={elem.id}
-                        hidden={elem.hidden}
-                        onDelete={() => handleDelete(elem.id)}
-                        onToggleHidden={(hidden) =>
-                          handleToggleHidden(elem.id, hidden)
-                        }
-                      >
-                        <OpenQuestionBlock
-                          element={elem.question}
-                          inEditMode={elem.id === idOfBlockInEditMode}
-                          onEditModeEnter={() =>
-                            setIdOfBlockInEditMode(elem.id)
-                          }
-                          onEditModeExit={(
-                            data: ZetkinSurveyElementPatchBody
-                          ) => {
-                            if (elem.id === idOfBlockInEditMode) {
-                              setIdOfBlockInEditMode(undefined);
-                            }
-                            model.updateOpenQuestionBlock(elem.id, data);
-                          }}
-                        />
-                      </BlockWrapper>
-                    );
-                  } else if (
-                    elem.question.response_type == RESPONSE_TYPE.OPTIONS
-                  ) {
-                    return (
-                      <BlockWrapper
-                        key={elem.id}
-                        hidden={elem.hidden}
-                        onDelete={() => handleDelete(elem.id)}
-                        onToggleHidden={(hidden) =>
-                          handleToggleHidden(elem.id, hidden)
-                        }
-                      >
-                        <ChoiceQuestionBlock question={elem.question} />
-                      </BlockWrapper>
-                    );
-                  }
-                } else if (elem.type == ELEMENT_TYPE.TEXT) {
-                  return (
-                    <BlockWrapper
-                      key={elem.id}
-                      hidden={elem.hidden}
-                      onDelete={() => handleDelete(elem.id)}
-                      onToggleHidden={(hidden) =>
-                        handleToggleHidden(elem.id, hidden)
-                      }
-                    >
-                      <TextBlock
-                        element={elem}
-                        inEditMode={elem.id === idOfBlockInEditMode}
-                        onEditModeEnter={() => setIdOfBlockInEditMode(elem.id)}
-                        onEditModeExit={(
-                          textBlock: ZetkinSurveyTextElement['text_block']
-                        ) => {
-                          if (elem.id === idOfBlockInEditMode) {
-                            setIdOfBlockInEditMode(undefined);
-                          }
-                          model.updateTextBlock(elem.id, textBlock);
-                        }}
-                      />
-                    </BlockWrapper>
-                  );
-                }
-              })}
+              <ZUIReorderable items={data.elements.map(getElement)} />
             </Box>
           );
         }}
