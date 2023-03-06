@@ -27,6 +27,7 @@ export default makeMessages('feat.sruveys', {
   },
   chart: {
     header: m('Survey Submissions'),
+    placeholder: m('Start collecting submissions to see progress here'),
     subheader: m<{ days: number }>(
       'Accumulated submissions over the last {days, plural, =1 {day} other {# days}}'
     ),
