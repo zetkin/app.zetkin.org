@@ -9,6 +9,7 @@ export default makeMessages('zui', {
     removeAccess: m('Remove access'),
   },
   breadcrumbs: {
+    activities: m('Activities'),
     areas: m('Areas'),
     assignees: m('Assignees'),
     calendar: m('Calendar'),

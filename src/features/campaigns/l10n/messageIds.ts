@@ -60,6 +60,7 @@ export default makeMessages('feat.campaigns', {
   },
   indefinite: m('Indefinite timeline'),
   layout: {
+    activities: m('Activities'),
     allCampaigns: m('All Campaigns'),
     archive: m('Archive'),
     calendar: m('Calendar'),
