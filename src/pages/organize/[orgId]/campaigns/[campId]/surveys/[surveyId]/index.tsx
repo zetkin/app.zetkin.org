@@ -1,9 +1,10 @@
-import { Box } from '@mui/material';
 import { GetServerSideProps } from 'next';
+import { Box, Grid } from '@mui/material';
 
 import EmptyOverview from 'features/surveys/components/EmptyOverview';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
+import SubmissionChartCard from 'features/surveys/components/SubmissionChartCard';
 import SurveyLayout from 'features/surveys/layout/SurveyLayout';
 import SurveyURLCard from 'features/surveys/components/SurveyURLCard';
 import useModel from 'core/useModel';
@@ -67,7 +68,17 @@ const SurveyPage: PageWithLayout<SurveyPageProps> = ({
       {model.surveyIsEmpty ? (
         <EmptyOverview campId={campId} orgId={orgId} surveyId={surveyId} />
       ) : (
-        <SurveyURLCard isOpen={isOpen} orgId={orgId} surveyId={surveyId} />
+        <Grid container spacing={2}>
+          <Grid item md={8}>
+            <SubmissionChartCard
+              orgId={parseInt(orgId)}
+              surveyId={parseInt(surveyId)}
+            />
+          </Grid>
+          <Grid item md={4}>
+            <SurveyURLCard isOpen={isOpen} orgId={orgId} surveyId={surveyId} />
+          </Grid>
+        </Grid>
       )}
     </Box>
   );

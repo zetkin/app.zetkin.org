@@ -25,6 +25,9 @@ export default makeMessages('feat.sruveys', {
       header: m('Title'),
     },
   },
+  chart: {
+    h: m('Survey Submissions'),
+  },
   layout: {
     actions: {
       publish: m('Publish survey'),
