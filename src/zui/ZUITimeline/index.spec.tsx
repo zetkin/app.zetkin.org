@@ -8,6 +8,7 @@ import { fireEvent, render } from 'utils/testing';
 import ZUITimeline, { SHOW_INITIALLY, ZUITimelineProps } from 'zui/ZUITimeline';
 
 import { createDynamicRouteParser } from 'next-router-mock/dynamic-routes';
+import messageIds from './l10n/messageIds';
 
 jest.mock('remark-parse', () => null);
 jest.mock('remark-gfm', () => null);
@@ -51,7 +52,7 @@ describe('ZUITimeline', () => {
   });
 
   it('if expandable, expands to show all updates', () => {
-    const { getAllByLabelText, getByText } = render(
+    const { getAllByLabelText, getByMessageId } = render(
       <ZUITimeline {...props} expandable={true} />
     );
     const updatesBefore = getAllByLabelText('timeline update');
@@ -60,7 +61,7 @@ describe('ZUITimeline', () => {
         (update) => getComputedStyle(update).visibility === 'visible'
       ).length
     ).toEqual(SHOW_INITIALLY);
-    const showMore = getByText('misc.timeline.expand');
+    const showMore = getByMessageId(messageIds.expand);
     fireEvent.click(showMore);
     const updates = getAllByLabelText('timeline update');
     expect(

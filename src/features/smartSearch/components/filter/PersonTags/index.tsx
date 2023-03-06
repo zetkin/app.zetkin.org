@@ -1,4 +1,3 @@
-import { FormattedMessage as Msg } from 'react-intl';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 import { Box, Chip, MenuItem } from '@mui/material';
@@ -19,6 +18,10 @@ import {
   SmartSearchFilterWithId,
   ZetkinSmartSearchFilter,
 } from 'features/smartSearch/components/types';
+
+import messageIds from 'features/smartSearch/l10n/messageIds';
+import { Msg } from 'core/i18n';
+const localMessageIds = messageIds.filters.personTags;
 
 const MIN_MATCHING = 'min_matching';
 
@@ -109,6 +112,22 @@ const PersonTags = ({
     });
   };
 
+  const conditionSelect = (
+    <StyledSelect
+      onChange={(e) => handleConditionChange(e.target.value)}
+      value={selected}
+    >
+      {Object.values(CONDITION_OPERATOR).map((o) => (
+        <MenuItem key={o} value={o}>
+          <Msg id={localMessageIds.condition.conditionSelect[o]} />
+        </MenuItem>
+      ))}
+      <MenuItem key={MIN_MATCHING} value={MIN_MATCHING}>
+        <Msg id={localMessageIds.condition.conditionSelect.minMatching} />
+      </MenuItem>
+    </StyledSelect>
+  );
+
   return (
     <FilterForm
       disableSubmit={!submittable}
@@ -116,14 +135,14 @@ const PersonTags = ({
       onSubmit={(e) => handleSubmit(e)}
       renderExamples={() => (
         <>
-          <Msg id="misc.smartSearch.person_tags.examples.one" />
+          <Msg id={localMessageIds.examples.one} />
           <br />
-          <Msg id="misc.smartSearch.person_tags.examples.two" />
+          <Msg id={localMessageIds.examples.two} />
         </>
       )}
       renderSentence={() => (
         <Msg
-          id="misc.smartSearch.person_tags.inputString"
+          id={localMessageIds.inputString}
           values={{
             addRemoveSelect: (
               <StyledSelect
@@ -132,47 +151,35 @@ const PersonTags = ({
               >
                 {Object.values(OPERATION).map((o) => (
                   <MenuItem key={o} value={o}>
-                    <Msg
-                      id={`misc.smartSearch.person_tags.addRemoveSelect.${o}`}
-                    />
+                    <Msg id={localMessageIds.addRemoveSelect[o]} />
                   </MenuItem>
                 ))}
               </StyledSelect>
             ),
-            condition: (
-              <Msg
-                id={`misc.smartSearch.condition.edit.${selected}`}
-                values={{
-                  conditionSelect: (
-                    <StyledSelect
-                      onChange={(e) => handleConditionChange(e.target.value)}
-                      value={selected}
-                    >
-                      {Object.values(CONDITION_OPERATOR).map((o) => (
-                        <MenuItem key={o} value={o}>
-                          <Msg
-                            id={`misc.smartSearch.condition.conditionSelect.${o}`}
-                          />
-                        </MenuItem>
-                      ))}
-                      <MenuItem key={MIN_MATCHING} value={MIN_MATCHING}>
-                        <Msg id="misc.smartSearch.condition.conditionSelect.min_matching" />
-                      </MenuItem>
-                    </StyledSelect>
-                  ),
-                  minMatchingInput: (
-                    <StyledNumberInput
-                      inputProps={{
-                        max: filter.config.tags.length,
-                        min: '1',
-                      }}
-                      onChange={(e) => setMinMatching(+e.target.value)}
-                      value={minMatching}
-                    />
-                  ),
-                }}
-              />
-            ),
+            condition:
+              selected == 'min_matching' ? (
+                <Msg
+                  id={localMessageIds.condition.edit.minMatching}
+                  values={{
+                    conditionSelect,
+                    minMatchingInput: (
+                      <StyledNumberInput
+                        inputProps={{
+                          max: filter.config.tags.length,
+                          min: '1',
+                        }}
+                        onChange={(e) => setMinMatching(+e.target.value)}
+                        value={minMatching}
+                      />
+                    ),
+                  }}
+                />
+              ) : (
+                <Msg
+                  id={localMessageIds.condition.edit[selected]}
+                  values={{ conditionSelect }}
+                />
+              ),
             tags: (
               <Box
                 alignItems="center"

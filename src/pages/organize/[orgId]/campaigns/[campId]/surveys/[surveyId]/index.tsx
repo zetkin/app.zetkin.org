@@ -4,10 +4,13 @@ import { GetServerSideProps } from 'next';
 import EmptyOverview from 'features/surveys/components/EmptyOverview';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
-import SurveyDataModel from 'features/surveys/models/SurveyDataModel';
 import SurveyLayout from 'features/surveys/layout/SurveyLayout';
+import SurveyURLCard from 'features/surveys/components/SurveyURLCard';
 import useModel from 'core/useModel';
 import useServerSide from 'core/useServerSide';
+import SurveyDataModel, {
+  SurveyState,
+} from 'features/surveys/models/SurveyDataModel';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   async (ctx) => {
@@ -48,6 +51,7 @@ const SurveyPage: PageWithLayout<SurveyPageProps> = ({
   }
 
   const { data: survey } = model.getData();
+  const isOpen = model.state === SurveyState.PUBLISHED;
 
   if (!survey) {
     return null;
@@ -60,8 +64,10 @@ const SurveyPage: PageWithLayout<SurveyPageProps> = ({
       justifyContent="center"
       paddingTop={8}
     >
-      {model.surveyIsEmpty && (
+      {model.surveyIsEmpty ? (
         <EmptyOverview campId={campId} orgId={orgId} surveyId={surveyId} />
+      ) : (
+        <SurveyURLCard isOpen={isOpen} orgId={orgId} surveyId={surveyId} />
       )}
     </Box>
   );

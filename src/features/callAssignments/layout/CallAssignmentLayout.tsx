@@ -1,5 +1,4 @@
 import { Box, Button, Typography } from '@mui/material';
-import { FormattedMessage as Msg, useIntl } from 'react-intl';
 
 import CallAssignmentStatusChip from '../components/CallAssignmentStatusChip';
 import TabbedLayout from '../../../utils/layout/TabbedLayout';
@@ -11,6 +10,9 @@ import CallAssignmentModel, {
   CallAssignmentState,
 } from '../models/CallAssignmentModel';
 import { Headset, People } from '@material-ui/icons';
+import { Msg, useMessages } from 'core/i18n';
+
+import messageIds from '../l10n/messageIds';
 
 interface CallAssignmentLayoutProps {
   children: React.ReactNode;
@@ -25,7 +27,7 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
   campaignId,
   assignmentId,
 }) => {
-  const intl = useIntl();
+  const messages = useMessages(messageIds);
   const model = useModel(
     (env) =>
       new CallAssignmentModel(env, parseInt(orgId), parseInt(assignmentId))
@@ -45,15 +47,11 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
         model.state == CallAssignmentState.OPEN ||
         model.state == CallAssignmentState.ACTIVE ? (
           <Button onClick={() => model.end()} variant="contained">
-            {intl.formatMessage({
-              id: 'layout.organize.callAssignment.actions.end',
-            })}
+            <Msg id={messageIds.actions.end} />
           </Button>
         ) : (
           <Button onClick={() => model.start()} variant="contained">
-            {intl.formatMessage({
-              id: 'layout.organize.callAssignment.actions.start',
-            })}
+            <Msg id={messageIds.actions.start} />
           </Button>
         )
       }
@@ -82,8 +80,8 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
                   <People />
                   <Typography marginLeft={1}>
                     <Msg
-                      id="layout.organize.callAssignment.stats.targets"
-                      values={{ numTargets: data?.allTargets }}
+                      id={messageIds.stats.targets}
+                      values={{ numTargets: data?.allTargets ?? 0 }}
                     />
                   </Typography>
                 </>
@@ -101,7 +99,7 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
                   <Headset />
                   <Typography marginLeft={1}>
                     <Msg
-                      id="layout.organize.callAssignment.stats.callers"
+                      id={messageIds.stats.callers}
                       values={{ numCallers: data.length }}
                     />
                   </Typography>
@@ -114,19 +112,19 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
       tabs={[
         {
           href: '/',
-          messageId: 'layout.organize.callAssignment.tabs.overview',
+          label: messages.tabs.overview(),
         },
         {
           href: '/callers',
-          messageId: 'layout.organize.callAssignment.tabs.callers',
+          label: messages.tabs.callers(),
         },
         {
           href: '/conversation',
-          messageId: 'layout.organize.callAssignment.tabs.conversation',
+          label: messages.tabs.conversation(),
         },
         {
           href: '/insights',
-          messageId: 'layout.organize.callAssignment.tabs.insights',
+          label: messages.tabs.insights(),
         },
       ]}
       title={

@@ -1,4 +1,3 @@
-import { IntlShape } from 'react-intl';
 import { Link } from '@mui/material';
 import NextLink from 'next/link';
 import {
@@ -11,6 +10,7 @@ import {
 
 import FilterValueSelect from './FilterValueSelect';
 import JourneyInstanceTitle from 'features/journeys/components/JourneyInstanceTitle';
+import { UseMessagesMap } from 'core/i18n';
 import ZUIDateTime from 'zui/ZUIDateTime';
 import ZUIPerson from 'zui/ZUIPerson';
 import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
@@ -20,18 +20,19 @@ import {
   ZetkinPerson as ZetkinPersonType,
 } from 'utils/types/zetkin';
 
+import messageIds from 'features/journeys/l10n/messageIds';
+
 function makeSelectFilterOperator(
-  intl: IntlShape,
-  operatorLabelMsgId: string,
+  operatorLabel: string,
   operatorValue: string,
-  selectMsgId: string,
+  selectLabel: string,
   options: { id: number; title: string }[],
   optionMatches: (item: GridFilterItem, params: GridCellParams) => boolean
 ): GridFilterOperator {
   return {
     InputComponent: FilterValueSelect,
     InputComponentProps: {
-      labelMessageId: selectMsgId,
+      label: selectLabel,
       options,
     },
     getApplyFilterFn: (item) => {
@@ -43,21 +44,20 @@ function makeSelectFilterOperator(
         return optionMatches(item, params);
       };
     },
-    label: intl.formatMessage({ id: operatorLabelMsgId }),
+    label: operatorLabel,
     value: operatorValue,
   };
 }
 
 function makeDoesNotIncludeFilterOperator(
-  intl: IntlShape,
-  labelMsgId: string,
+  messages: UseMessagesMap<typeof messageIds>,
+  label: string,
   options: { id: number; title: string }[]
 ): GridFilterOperator {
   return makeSelectFilterOperator(
-    intl,
-    'misc.journeys.journeyInstancesFilters.doesNotIncludeOperator',
+    messages.instances.filters.doesNotIncludeOperator(),
     'doesNotInclude',
-    labelMsgId,
+    label,
     options,
     (item, params) => {
       const people = params.value as ZetkinPersonType[];
@@ -69,15 +69,14 @@ function makeDoesNotIncludeFilterOperator(
 }
 
 function makeIncludesFilterOperator(
-  intl: IntlShape,
-  labelMsgId: string,
+  messages: UseMessagesMap<typeof messageIds>,
+  label: string,
   options: { id: number; title: string }[]
 ): GridFilterOperator {
   return makeSelectFilterOperator(
-    intl,
-    'misc.journeys.journeyInstancesFilters.includesOperator',
+    messages.instances.filters.includesOperator(),
     'includes',
-    labelMsgId,
+    label,
     options,
     (item, params) => {
       const people = params.value as ZetkinPersonType[];
@@ -88,7 +87,9 @@ function makeIncludesFilterOperator(
   );
 }
 
-function makeEmptyFilterOperator(intl: IntlShape): GridFilterOperator {
+function makeEmptyFilterOperator(
+  messages: UseMessagesMap<typeof messageIds>
+): GridFilterOperator {
   return {
     getApplyFilterFn: () => {
       return (params: GridCellParams) => {
@@ -96,9 +97,7 @@ function makeEmptyFilterOperator(intl: IntlShape): GridFilterOperator {
         return people.length === 0;
       };
     },
-    label: intl.formatMessage({
-      id: 'misc.journeys.journeyInstancesFilters.isEmptyOperator',
-    }),
+    label: messages.instances.filters.isEmptyOperator(),
     value: 'isEmpty',
   };
 }
@@ -139,7 +138,7 @@ const getPeopleString = (people: ZetkinPersonType[]) =>
   people.map((person) => fullName(person)).join(', ');
 
 export const getStaticColumns = (
-  intl: IntlShape,
+  messages: UseMessagesMap<typeof messageIds>,
   journeyInstances: ZetkinJourneyInstance[]
 ): GridColDef[] => {
   const uniqueSubjects = getUniqueById(
@@ -194,16 +193,16 @@ export const getStaticColumns = (
       field: 'subjects',
       filterOperators: [
         makeIncludesFilterOperator(
-          intl,
-          'misc.journeys.journeyInstancesFilters.personLabel',
+          messages,
+          messages.instances.filters.personLabel(),
           uniqueSubjects
         ),
         makeDoesNotIncludeFilterOperator(
-          intl,
-          'misc.journeys.journeyInstancesFilters.doesNotIncludeOperator',
+          messages,
+          messages.instances.filters.doesNotIncludeOperator(),
           uniqueSubjects
         ),
-        makeEmptyFilterOperator(intl),
+        makeEmptyFilterOperator(messages),
       ],
       sortComparator: (value0, value1) => sortByName(value0, value1),
       valueFormatter: (params) =>
@@ -231,10 +230,9 @@ export const getStaticColumns = (
       field: 'nextMilestoneTitle',
       filterOperators: [
         makeSelectFilterOperator(
-          intl,
-          'misc.journeys.journeyInstancesFilters.isOperator',
+          messages.instances.filters.isOperator(),
           'is',
-          'misc.journeys.journeyInstancesFilters.milestoneLabel',
+          messages.instances.filters.milestoneLabel(),
           uniqueMilestones,
           (item, params) =>
             (
@@ -242,10 +240,9 @@ export const getStaticColumns = (
             ).next_milestone?.id.toString() === item.value
         ),
         makeSelectFilterOperator(
-          intl,
-          'misc.journeys.journeyInstancesFilters.isNotOperator',
+          messages.instances.filters.isNotOperator(),
           'isNot',
-          'misc.journeys.journeyInstancesFilters.milestoneLabel',
+          messages.instances.filters.milestoneLabel(),
           uniqueMilestones,
           (item, params) =>
             (
@@ -276,16 +273,16 @@ export const getStaticColumns = (
       field: 'assignees',
       filterOperators: [
         makeIncludesFilterOperator(
-          intl,
-          'misc.journeys.journeyInstancesFilters.personLabel',
+          messages,
+          messages.instances.filters.personLabel(),
           uniqueAssignees
         ),
         makeDoesNotIncludeFilterOperator(
-          intl,
-          'misc.journeys.journeyInstancesFilters.doesNotIncludeOperator',
+          messages,
+          messages.instances.filters.doesNotIncludeOperator(),
           uniqueAssignees
         ),
-        makeEmptyFilterOperator(intl),
+        makeEmptyFilterOperator(messages),
       ],
       renderCell: (params) =>
         (params.row.assignees as ZetkinPersonType[]).map((person) => (

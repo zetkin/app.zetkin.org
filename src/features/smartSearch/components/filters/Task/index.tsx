@@ -1,6 +1,5 @@
 import { FormEvent } from 'react';
 import { MenuItem } from '@mui/material';
-import { FormattedMessage as Msg } from 'react-intl';
 import { useRouter } from 'next/router';
 
 import { campaignsResource } from 'features/campaigns/api/campaigns';
@@ -8,6 +7,7 @@ import { tasksResource } from 'features/tasks/api/tasks';
 
 import FilterForm from '../../FilterForm';
 import Matching from '../Matching';
+import { Msg } from 'core/i18n';
 import StyledSelect from '../../inputs/StyledSelect';
 import TimeFrame from '../TimeFrame';
 import useSmartSearchFilter from 'features/smartSearch/hooks/useSmartSearchFilter';
@@ -23,6 +23,9 @@ import {
   TIME_FRAME,
   ZetkinSmartSearchFilter,
 } from 'features/smartSearch/components/types';
+
+import messageIds from 'features/smartSearch/l10n/messageIds';
+const localMessageIds = messageIds.filters.task;
 
 const ANY_CAMPAIGN = 'any';
 const ANY_TASK = 'any';
@@ -131,14 +134,14 @@ const Task = ({
       onSubmit={(e) => handleSubmit(e)}
       renderExamples={() => (
         <>
-          <Msg id="misc.smartSearch.task.examples.one" />
+          <Msg id={localMessageIds.examples.one} />
           <br />
-          <Msg id="misc.smartSearch.task.examples.two" />
+          <Msg id={localMessageIds.examples.two} />
         </>
       )}
       renderSentence={() => (
         <Msg
-          id="misc.smartSearch.task.inputString"
+          id={localMessageIds.inputString}
           values={{
             addRemoveSelect: (
               <StyledSelect
@@ -147,27 +150,25 @@ const Task = ({
               >
                 {Object.values(OPERATION).map((o) => (
                   <MenuItem key={o} value={o}>
-                    <Msg
-                      id={`misc.smartSearch.call_history.addRemoveSelect.${o}`}
-                    />
+                    <Msg id={localMessageIds.addRemoveSelect[o]} />
                   </MenuItem>
                 ))}
               </StyledSelect>
             ),
             campaignSelect: !filter.config.task ? (
               <>
-                <Msg id="misc.smartSearch.task.campaignSelect.in" />
+                <Msg id={localMessageIds.campaignSelect.in} />
                 <StyledSelect
                   onChange={(e) => handleCampaignSelectChange(e.target.value)}
                   value={filter.config.campaign || ANY_CAMPAIGN}
                 >
                   <MenuItem key={ANY_CAMPAIGN} value={ANY_CAMPAIGN}>
-                    <Msg id="misc.smartSearch.task.campaignSelect.any" />
+                    <Msg id={localMessageIds.campaignSelect.any} />
                   </MenuItem>
                   {campaigns.map((c) => (
                     <MenuItem key={c.id} value={c.id}>
                       <Msg
-                        id="misc.smartSearch.task.campaignSelect.campaign"
+                        id={localMessageIds.campaignSelect.campaign}
                         values={{ campaign: c.title }}
                       />
                     </MenuItem>
@@ -187,12 +188,12 @@ const Task = ({
                 value={filter.config.task || ANY_TASK}
               >
                 <MenuItem key={ANY_TASK} value={ANY_TASK}>
-                  <Msg id="misc.smartSearch.task.taskSelect.any" />
+                  <Msg id={localMessageIds.taskSelect.any} />
                 </MenuItem>
                 {tasks.map((t) => (
                   <MenuItem key={t.id} value={t.id}>
                     <Msg
-                      id="misc.smartSearch.task.taskSelect.task"
+                      id={localMessageIds.taskSelect.task}
                       values={{ task: t.title }}
                     />
                   </MenuItem>
@@ -214,7 +215,7 @@ const Task = ({
               >
                 {Object.values(TASK_STATUS).map((s) => (
                   <MenuItem key={s} value={s}>
-                    <Msg id={`misc.smartSearch.task.taskStatusSelect.${s}`} />
+                    <Msg id={localMessageIds.taskStatusSelect[s]} />
                   </MenuItem>
                 ))}
               </StyledSelect>

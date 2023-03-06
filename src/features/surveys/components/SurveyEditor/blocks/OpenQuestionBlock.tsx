@@ -1,9 +1,14 @@
 import AbcIcon from '@mui/icons-material/Abc';
-import { FormattedMessage as Msg } from 'react-intl';
 import SortIcon from '@mui/icons-material/Sort';
-import theme from 'theme';
-import { useIntl } from 'react-intl';
-import { ZetkinTextQuestion } from 'utils/types/zetkin';
+import {
+  BaseSyntheticEvent,
+  FC,
+  KeyboardEvent,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import {
   Box,
   ClickAwayListener,
@@ -11,21 +16,25 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { FC, useEffect, useRef, useState } from 'react';
+
+import theme from 'theme';
+import { ZetkinSurveyElementPatchBody } from 'features/surveys/repos/SurveysRepo';
+import { ZetkinTextQuestion } from 'utils/types/zetkin';
+import { Msg, useMessages } from 'core/i18n';
+
+import messageIds from 'features/surveys/l10n/messageIds';
 
 interface OpenQuestionBlockProps {
   element: ZetkinTextQuestion;
   inEditMode: boolean;
   onEditModeEnter: () => void;
-  onEditModeExit: (question: Omit<ZetkinTextQuestion, 'required'>) => void;
+  onEditModeExit: (question: ZetkinSurveyElementPatchBody) => void;
 }
 
-enum fieldType {
-  multiLine = 'multiLine',
-  singleLine = 'singleLine',
+enum FIELDTYPE {
+  MULTILINE = 'multiLine',
+  SINGLELINE = 'singleLine',
 }
-
-type elementWithoutRequired = Omit<ZetkinTextQuestion, 'required'>;
 
 const OpenQuestionBlock: FC<OpenQuestionBlockProps> = ({
   element,
@@ -33,12 +42,12 @@ const OpenQuestionBlock: FC<OpenQuestionBlockProps> = ({
   onEditModeEnter,
   onEditModeExit,
 }) => {
-  const intl = useIntl();
+  const messages = useMessages(messageIds);
 
   const [typeField, setTypeField] = useState(
     element.response_config.multiline === true
-      ? fieldType.multiLine
-      : fieldType.singleLine
+      ? FIELDTYPE.MULTILINE
+      : FIELDTYPE.SINGLELINE
   );
 
   const [title, setTitle] = useState(element.question);
@@ -47,175 +56,171 @@ const OpenQuestionBlock: FC<OpenQuestionBlockProps> = ({
   const [responseConfig, setResponseConfig] = useState(
     element.response_config.multiline
   );
-  const [focus, setFocus] = useState<
-    'title' | 'description' | 'responseConfig' | null
-  >(null);
+  const [focus, setFocus] = useState<'description' | 'responseConfig' | null>(
+    null
+  );
 
-  const titleRef = useRef<HTMLInputElement>(null);
+  const titleRef = useCallback((node: HTMLInputElement) => {
+    node?.focus();
+  }, []);
   const descriptionRef = useRef<HTMLInputElement>(null);
   const typeConfigRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (focus === 'title') {
-      const input = titleRef.current;
-      input?.focus();
-    } else if (focus === 'description') {
+    if (focus === 'description') {
       const input = descriptionRef.current;
       input?.focus();
-    } else {
+    } else if (focus === 'responseConfig') {
       const input = typeConfigRef.current;
       input?.focus();
     }
   }, [focus]);
 
-  const handleKeyDown = (evt: React.KeyboardEvent<HTMLDivElement>) => {
+  const handleKeyDown = (evt: KeyboardEvent<HTMLDivElement>) => {
     if (evt.key === 'Enter') {
-      const elementWithout: elementWithoutRequired = {
-        description: description,
-        question: title,
-        response_config: { multiline: responseConfig },
-        response_type: element.response_type,
-      };
-      onEditModeExit(elementWithout);
+      const element = createElementToUpdate();
+      onEditModeExit(element);
       setFocus(null);
     }
   };
 
-  const handleSelect = (event: React.BaseSyntheticEvent) => {
+  const handleSelect = (event: BaseSyntheticEvent) => {
     setTypeField(event.target.value);
   };
 
   const createElementToUpdate = () => {
-    const elemenToUpdate: elementWithoutRequired = {
-      description: description,
-      question: title,
-      response_config: { multiline: responseConfig },
-      response_type: element.response_type,
+    const elemenToUpdate: ZetkinSurveyElementPatchBody = {
+      question: {
+        description: description,
+        question: title,
+        response_config: { multiline: responseConfig },
+        response_type: element.response_type,
+      },
     };
     return elemenToUpdate;
   };
 
   return (
-    <ClickAwayListener
-      onClickAway={() => {
-        const element = createElementToUpdate();
-        onEditModeExit(element);
-        setFocus(null);
-      }}
-    >
-      {!inEditMode ? (
-        <Box onClick={() => onEditModeEnter()}>
-          <Typography
-            component="h4"
-            marginBottom={2}
-            onClick={() => setFocus('title')}
-            variant="h4"
-          >
-            {element.question ? (
-              element.question
-            ) : (
-              <Msg id="pages.organizeSurvey.openQuestion.titlePreview" />
-            )}
-          </Typography>
-          <Typography
-            component="h5"
-            marginBottom={2}
-            onClick={() => setFocus('description')}
-            variant="h5"
-          >
-            {element.description ? (
-              element.description
-            ) : (
-              <Msg id="pages.organizeSurvey.openQuestion.description" />
-            )}
-          </Typography>
-          <Typography
-            component="h5"
-            marginBottom={2}
-            onClick={() => setFocus('responseConfig')}
-            variant="h5"
-          >
-            {element.response_config.multiline ? (
-              <>
-                <SortIcon sx={{ marginRight: '10px' }} />
-                <Msg id="pages.organizeSurvey.openQuestion.multiLine" />{' '}
-                <Msg id="pages.organizeSurvey.openQuestion.fieldTypePreview" />
-              </>
-            ) : (
-              <>
-                <AbcIcon sx={{ marginRight: '10px' }} />
-                <Msg id="pages.organizeSurvey.openQuestion.singleLine" />{' '}
-                <Msg id="pages.organizeSurvey.openQuestion.fieldTypePreview" />
-              </>
-            )}
-          </Typography>
-        </Box>
-      ) : (
-        <Box display="flex" flexDirection="column">
-          <TextField
-            defaultValue={element.question}
-            fullWidth
-            InputProps={{
-              inputRef: titleRef,
-              sx: { fontSize: theme.typography.h4.fontSize },
-            }}
-            label={intl.formatMessage({
-              id: 'pages.organizeSurvey.openQuestion.title',
-            })}
-            margin="normal"
-            onChange={(ev) => setTitle(ev.target.value)}
-            onKeyDown={(evt) => handleKeyDown(evt)}
-          />
-          <TextField
-            defaultValue={element.description}
-            fullWidth
-            InputProps={{ inputRef: descriptionRef }}
-            label={intl.formatMessage({
-              id: 'pages.organizeSurvey.openQuestion.description',
-            })}
-            margin="normal"
-            onChange={(ev) => setDescription(ev.target.value)}
-            onKeyDown={(evt) => handleKeyDown(evt)}
-          />
-          <TextField
-            defaultValue={
-              element.response_config.multiline === true
-                ? fieldType.multiLine
-                : fieldType.singleLine
-            }
-            fullWidth
-            InputProps={{ inputRef: typeConfigRef }}
-            label={intl.formatMessage({
-              id: 'pages.organizeSurvey.openQuestion.textFieldType',
-            })}
-            margin="normal"
-            onChange={(event) => {
-              handleSelect(event),
-                setResponseConfig(
-                  event.target.value === fieldType.multiLine ? true : false
-                );
-            }}
-            select
-            SelectProps={{
-              MenuProps: { disablePortal: true },
-            }}
-            sx={{ alignItems: 'center', display: 'flex' }}
-            value={typeField}
-          >
-            {Object.values(fieldType).map((value) => (
-              <MenuItem key={value} value={value}>
-                {value === 'singleLine' ? (
-                  <AbcIcon sx={{ marginRight: '10px' }} />
-                ) : (
-                  <SortIcon sx={{ marginRight: '10px' }} />
-                )}
-                <Msg id={`pages.organizeSurvey.openQuestion.${value}`} />
-              </MenuItem>
-            ))}
-          </TextField>
-        </Box>
+    <>
+      {inEditMode && (
+        <ClickAwayListener
+          onClickAway={() => {
+            const element = createElementToUpdate();
+            onEditModeExit(element);
+            setFocus(null);
+          }}
+        >
+          <Box display="flex" flexDirection="column">
+            <TextField
+              defaultValue={element.question}
+              fullWidth
+              InputProps={{
+                inputRef: titleRef,
+                sx: { fontSize: theme.typography.h4.fontSize },
+              }}
+              label={messages.blocks.open.label()}
+              margin="normal"
+              onChange={(ev) => setTitle(ev.target.value)}
+              onKeyDown={(evt) => handleKeyDown(evt)}
+            />
+            <TextField
+              defaultValue={element.description}
+              fullWidth
+              InputProps={{ inputRef: descriptionRef }}
+              label={messages.blocks.open.description()}
+              margin="normal"
+              onChange={(ev) => setDescription(ev.target.value)}
+              onKeyDown={(evt) => handleKeyDown(evt)}
+            />
+            <TextField
+              defaultValue={
+                element.response_config.multiline === true
+                  ? FIELDTYPE.MULTILINE
+                  : FIELDTYPE.SINGLELINE
+              }
+              fullWidth
+              InputProps={{ inputRef: typeConfigRef }}
+              label={messages.blocks.open.textFieldType()}
+              margin="normal"
+              onChange={(event) => {
+                handleSelect(event),
+                  setResponseConfig(
+                    event.target.value === FIELDTYPE.MULTILINE ? true : false
+                  );
+              }}
+              select
+              SelectProps={{
+                MenuProps: { disablePortal: true },
+              }}
+              sx={{ alignItems: 'center', display: 'flex' }}
+              value={typeField}
+            >
+              {Object.values(FIELDTYPE).map((value) => (
+                <MenuItem key={value} value={value}>
+                  {value === 'singleLine' ? (
+                    <AbcIcon sx={{ marginRight: '10px' }} />
+                  ) : (
+                    <SortIcon sx={{ marginRight: '10px' }} />
+                  )}
+                  <Msg id={messageIds.blocks.open[value]} />
+                </MenuItem>
+              ))}
+            </TextField>
+          </Box>
+        </ClickAwayListener>
       )}
-    </ClickAwayListener>
+      {!inEditMode && (
+        <ClickAwayListener
+          onClickAway={() => {
+            const element = createElementToUpdate();
+            onEditModeExit(element);
+            setFocus(null);
+          }}
+        >
+          <Box onClick={() => onEditModeEnter()}>
+            <Typography component="h4" marginBottom={2} variant="h4">
+              {element.question ? (
+                element.question
+              ) : (
+                <Msg id={messageIds.blocks.open.empty} />
+              )}
+            </Typography>
+            <Typography
+              component="h5"
+              marginBottom={2}
+              onClick={() => setFocus('description')}
+              variant="h5"
+            >
+              {element.description ? (
+                element.description
+              ) : (
+                <Msg id={messageIds.blocks.open.description} />
+              )}
+            </Typography>
+            <Typography
+              component="h5"
+              marginBottom={2}
+              onClick={() => setFocus('responseConfig')}
+              variant="h5"
+            >
+              {element.response_config.multiline ? (
+                <>
+                  <SortIcon sx={{ marginRight: '10px' }} />
+                  <Msg id={messageIds.blocks.open.multiLine} />{' '}
+                  <Msg id={messageIds.blocks.open.fieldTypePreview} />
+                </>
+              ) : (
+                <>
+                  <AbcIcon sx={{ marginRight: '10px' }} />
+                  <Msg id={messageIds.blocks.open.singleLine} />{' '}
+                  <Msg id={messageIds.blocks.open.fieldTypePreview} />
+                </>
+              )}
+            </Typography>
+          </Box>
+        </ClickAwayListener>
+      )}
+    </>
   );
 };
 

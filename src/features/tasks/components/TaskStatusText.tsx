@@ -1,8 +1,9 @@
-import { FormattedMessage } from 'react-intl';
-
+import { Msg } from 'core/i18n';
 import { ZetkinTask } from 'utils/types/zetkin';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 import getTaskStatus, { TASK_STATUS } from 'features/tasks/utils/getTaskStatus';
+
+import messageIds from '../l10n/messageIds';
 
 interface TaskStatusTextProps {
   task: ZetkinTask;
@@ -16,8 +17,8 @@ const TaskStatusText: React.FunctionComponent<TaskStatusTextProps> = ({
     <>
       {/* Scheduled */}
       {taskStatus === TASK_STATUS.SCHEDULED && published && (
-        <FormattedMessage
-          id="misc.tasks.taskListItem.relativeTimes.scheduled"
+        <Msg
+          id={messageIds.taskListItem.relativeTimes.scheduled}
           values={{
             time: <ZUIRelativeTime datetime={published} />,
           }}
@@ -25,8 +26,8 @@ const TaskStatusText: React.FunctionComponent<TaskStatusTextProps> = ({
       )}
       {/* Active and definite*/}
       {taskStatus === TASK_STATUS.ACTIVE && deadline && (
-        <FormattedMessage
-          id="misc.tasks.taskListItem.relativeTimes.active"
+        <Msg
+          id={messageIds.taskListItem.relativeTimes.active}
           values={{
             time: <ZUIRelativeTime datetime={deadline} />,
           }}
@@ -34,8 +35,8 @@ const TaskStatusText: React.FunctionComponent<TaskStatusTextProps> = ({
       )}
       {/* Active and indefinite */}
       {taskStatus === TASK_STATUS.ACTIVE && !deadline && published && (
-        <FormattedMessage
-          id="misc.tasks.taskListItem.relativeTimes.indefinite"
+        <Msg
+          id={messageIds.taskListItem.relativeTimes.indefinite}
           values={{
             time: <ZUIRelativeTime datetime={published} />,
           }}
@@ -43,15 +44,15 @@ const TaskStatusText: React.FunctionComponent<TaskStatusTextProps> = ({
       )}
       {/* Closed and has expiry date */}
       {taskStatus === TASK_STATUS.CLOSED && expires && (
-        <FormattedMessage
-          id="misc.tasks.taskListItem.relativeTimes.expires"
+        <Msg
+          id={messageIds.taskListItem.relativeTimes.expires}
           values={{ time: <ZUIRelativeTime datetime={expires} /> }}
         />
       )}
       {/* Closed and no expiry date */}
       {taskStatus === TASK_STATUS.CLOSED && !expires && deadline && (
-        <FormattedMessage
-          id="misc.tasks.taskListItem.relativeTimes.closed"
+        <Msg
+          id={messageIds.taskListItem.relativeTimes.closed}
           values={{
             time: <ZUIRelativeTime datetime={deadline} />,
           }}
@@ -59,8 +60,8 @@ const TaskStatusText: React.FunctionComponent<TaskStatusTextProps> = ({
       )}
       {/* Expired */}
       {taskStatus === TASK_STATUS.EXPIRED && expires && (
-        <FormattedMessage
-          id="misc.tasks.taskListItem.relativeTimes.expired"
+        <Msg
+          id={messageIds.taskListItem.relativeTimes.expired}
           values={{ time: <ZUIRelativeTime datetime={expires} /> }}
         />
       )}

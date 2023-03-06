@@ -1,11 +1,13 @@
 import { FC } from 'react';
 import { Divider, FormControl, List, MenuItem, Select } from '@mui/material';
-import { FormattedMessage, useIntl } from 'react-intl';
 
 import AccessListItem from './AccessListItem';
 import { ZetkinObjectAccess } from 'core/api/types';
 import { ZetkinOfficial } from 'utils/types/zetkin';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
+import { Msg, useMessages } from 'core/i18n';
+
+import messageIds from 'zui/l10n/messageIds';
 
 interface ZUIAccessListProps {
   accessList: ZetkinObjectAccess[];
@@ -25,7 +27,7 @@ const ZUIAccessList: FC<ZUIAccessListProps> = ({
   onRevoke,
   orgId,
 }) => {
-  const intl = useIntl();
+  const messages = useMessages(messageIds);
   let first = true;
   return (
     <List>
@@ -36,9 +38,7 @@ const ZUIAccessList: FC<ZUIAccessListProps> = ({
           <>
             {showDivider && <Divider />}
             <AccessListItem
-              action={
-                <FormattedMessage id={`zui.accessList.roles.${item.role}`} />
-              }
+              action={<Msg id={messageIds.global.roles[item.role]} />}
               orgId={orgId}
               personId={item.id}
               subtitle="-"
@@ -75,36 +75,33 @@ const ZUIAccessList: FC<ZUIAccessListProps> = ({
                     value={level}
                   >
                     <MenuItem value="readonly">
-                      <FormattedMessage id="zui.accessList.levels.readonly" />
+                      <Msg id={messageIds.global.accessLevels.readonly} />
                     </MenuItem>
                     <MenuItem value="edit">
-                      <FormattedMessage id="zui.accessList.levels.edit" />
+                      <Msg id={messageIds.global.accessLevels.edit} />
                     </MenuItem>
                     <MenuItem value="configure">
-                      <FormattedMessage id="zui.accessList.levels.configure" />
+                      <Msg id={messageIds.global.accessLevels.configure} />
                     </MenuItem>
                     <Divider />
                     <MenuItem value="delete">
-                      <FormattedMessage id="zui.accessList.removeAccess" />
+                      <Msg id={messageIds.accessList.removeAccess} />
                     </MenuItem>
                   </Select>
                 </FormControl>
               }
               orgId={orgId}
               personId={person.id}
-              subtitle={intl.formatMessage(
-                { id: 'zui.accessList.added' },
-                {
-                  sharer: `${sharer.first_name} ${sharer.last_name}`,
-                  updated: (
-                    <ZUIRelativeTime
-                      convertToLocal
-                      datetime={updated}
-                      forcePast
-                    />
-                  ),
-                }
-              )}
+              subtitle={messages.accessList.added({
+                sharer: `${sharer.first_name} ${sharer.last_name}`,
+                updated: (
+                  <ZUIRelativeTime
+                    convertToLocal
+                    datetime={updated}
+                    forcePast
+                  />
+                ),
+              })}
               title={`${person.first_name} ${person.last_name}`}
             />
           </>

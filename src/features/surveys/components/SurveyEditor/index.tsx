@@ -7,12 +7,12 @@ import ChoiceQuestionBlock from './blocks/ChoiceQuestionBlock';
 import OpenQuestionBlock from './blocks/OpenQuestionBlock';
 import SurveyDataModel from 'features/surveys/models/SurveyDataModel';
 import TextBlock from './blocks/TextBlock';
+import { ZetkinSurveyElementPatchBody } from 'features/surveys/repos/SurveysRepo';
 import ZUIFuture from 'zui/ZUIFuture';
 import {
   ELEMENT_TYPE,
   RESPONSE_TYPE,
   ZetkinSurveyTextElement,
-  ZetkinTextQuestion,
 } from 'utils/types/zetkin';
 
 interface SurveyEditorProps {
@@ -77,7 +77,7 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ model }) => {
                             setIdOfBlockInEditMode(elem.id)
                           }
                           onEditModeExit={(
-                            data: Omit<ZetkinTextQuestion, 'required'>
+                            data: ZetkinSurveyElementPatchBody
                           ) => {
                             if (elem.id === idOfBlockInEditMode) {
                               setIdOfBlockInEditMode(undefined);

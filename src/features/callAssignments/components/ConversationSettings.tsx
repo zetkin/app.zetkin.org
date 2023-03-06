@@ -1,8 +1,10 @@
-import { FormattedMessage as Msg } from 'react-intl';
 import { Box, Paper, Switch, Typography } from '@mui/material';
 
 import CallAssignmentModel from '../models/CallAssignmentModel';
+import { Msg } from 'core/i18n';
 import useModel from 'core/useModel';
+
+import messageIds from '../l10n/messageIds';
 
 interface ConversationSettingsProps {
   assignmentId: number;
@@ -21,7 +23,7 @@ const ConversationSettings = ({
     <Paper>
       <Box padding={2}>
         <Typography variant="h4">
-          <Msg id="pages.organizeCallAssignment.conversation.settings.title" />
+          <Msg id={messageIds.conversation.settings.title} />
         </Typography>
         <Box
           alignItems="center"
@@ -30,7 +32,7 @@ const ConversationSettings = ({
           marginTop={2}
         >
           <Typography variant="h6">
-            <Msg id="pages.organizeCallAssignment.conversation.settings.notes.title" />
+            <Msg id={messageIds.conversation.settings.title} />
           </Typography>
           <Switch
             //this looks backwards bc in interface we use the positive "allow"
@@ -39,7 +41,7 @@ const ConversationSettings = ({
           />
         </Box>
         <Typography>
-          <Msg id="pages.organizeCallAssignment.conversation.settings.notes.message" />
+          <Msg id={messageIds.conversation.settings.notes.message} />
         </Typography>
         <Box
           alignItems="center"
@@ -48,7 +50,7 @@ const ConversationSettings = ({
           marginTop={1}
         >
           <Typography variant="h6">
-            <Msg id="pages.organizeCallAssignment.conversation.settings.targetData.title" />
+            <Msg id={messageIds.conversation.settings.targetData.title} />
           </Typography>
           <Switch
             checked={model.getData().data?.expose_target_details}
@@ -58,7 +60,7 @@ const ConversationSettings = ({
           />
         </Box>
         <Typography>
-          <Msg id="pages.organizeCallAssignment.conversation.settings.targetData.message" />
+          <Msg id={messageIds.conversation.settings.targetData.message} />
         </Typography>
       </Box>
     </Paper>

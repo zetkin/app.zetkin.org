@@ -1,4 +1,3 @@
-import { FormattedMessage as Msg } from 'react-intl';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 import { Box, Chip } from '@mui/material';
@@ -10,6 +9,10 @@ import {
   PersonTagsFilterConfig,
   SmartSearchFilterWithId,
 } from 'features/smartSearch/components/types';
+
+import messageIds from 'features/smartSearch/l10n/messageIds';
+import { Msg } from 'core/i18n';
+const localMessageIds = messageIds.filters.personTags;
 
 interface DisplayPersonTagProps {
   filter: SmartSearchFilterWithId<PersonTagsFilterConfig>;
@@ -34,20 +37,18 @@ const DisplayPersonTags = ({ filter }: DisplayPersonTagProps): JSX.Element => {
 
   return (
     <Msg
-      id="misc.smartSearch.person_tags.inputString"
+      id={localMessageIds.inputString}
       values={{
-        addRemoveSelect: (
-          <Msg id={`misc.smartSearch.person_tags.addRemoveSelect.${op}`} />
-        ),
+        addRemoveSelect: <Msg id={localMessageIds.addRemoveSelect[op]} />,
         condition: min_matching ? (
           <Msg
-            id="misc.smartSearch.condition.preview.min_matching"
+            id={localMessageIds.condition.preview.minMatching}
             values={{
               minMatching: min_matching,
             }}
           />
         ) : (
-          <Msg id={`misc.smartSearch.condition.preview.${condition}`} />
+          <Msg id={localMessageIds.condition.preview[condition]} />
         ),
         tags: (
           <Box alignItems="start" display="inline-flex">

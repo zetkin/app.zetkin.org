@@ -1,13 +1,15 @@
-import { FormattedMessage } from 'react-intl';
 import React from 'react';
 import { AlarmOff, Cancel, CheckCircle, Flag } from '@mui/icons-material';
 import { Box, Typography } from '@mui/material';
 
+import { Msg } from 'core/i18n';
 import theme from 'theme';
 import UpdateContainer from './elements/UpdateContainer';
 import { ZetkinUpdateJourneyInstanceMilestone } from 'zui/ZUITimeline/types';
 import ZUIPersonLink from 'zui/ZUIPersonLink';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
+
+import messageIds from '../l10n/messageIds';
 
 interface Props {
   update: ZetkinUpdateJourneyInstanceMilestone;
@@ -36,8 +38,8 @@ const TimelineJourneyMilestone: React.FunctionComponent<Props> = ({
 
   function renderDescriptionText() {
     return (
-      <FormattedMessage
-        id={`misc.updates.${update.type}.${changeToRender}`}
+      <Msg
+        id={messageIds.updates.journeyinstance.updatemilestone[changeToRender]}
         values={{
           actor: <ZUIPersonLink person={update.actor} />,
         }}
@@ -73,18 +75,24 @@ const TimelineJourneyMilestone: React.FunctionComponent<Props> = ({
           <AlarmOff sx={{ color: theme.palette.text.secondary }} />
         )}
         <Typography color="textSecondary" variant="body2">
-          <FormattedMessage
-            id={`misc.updates.${update.type}.${
-              deadlineTo ? 'deadlineUpdate' : 'deadlineRemove'
-            }`}
-            values={
-              deadlineTo
-                ? {
-                    datetime: <ZUIRelativeTime datetime={deadlineTo} />,
-                  }
-                : {}
-            }
-          />
+          {deadlineTo ? (
+            <Msg
+              id={
+                messageIds.updates.journeyinstance.updatemilestone
+                  .deadlineUpdate
+              }
+              values={{
+                datetime: <ZUIRelativeTime datetime={deadlineTo} />,
+              }}
+            />
+          ) : (
+            <Msg
+              id={
+                messageIds.updates.journeyinstance.updatemilestone
+                  .deadlineRemove
+              }
+            />
+          )}
         </Typography>
       </Box>
     );

@@ -6,7 +6,7 @@ import {
   TIME_FRAME,
 } from 'features/smartSearch/components/types';
 
-interface TimeFrameConfig {
+export interface TimeFrameConfig {
   after?: Date;
   before?: Date;
   numDays?: number;

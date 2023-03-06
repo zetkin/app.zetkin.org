@@ -5,6 +5,7 @@ import userEvent from '@testing-library/user-event';
 import mockTag from 'utils/testing/mocks/mockTag';
 import { EditTag, NewTag } from '../../types';
 
+import messageIds from 'features/tags/l10n/messageIds';
 import TagDialog from 'features/tags/components/TagManager/components/TagDialog';
 
 jest.mock('next/dist/client/router', () => require('next-router-mock'));
@@ -49,7 +50,7 @@ describe('<TagDialog />', () => {
       When creating a new group, sends the new group properties
       to the onSubmit callback instead of groupId
     `, async () => {
-    const { getByTestId, getByText } = render(
+    const { getByTestId, getByMessageId } = render(
       <TagDialog
         groups={[]}
         onClose={() => undefined}
@@ -66,9 +67,7 @@ describe('<TagDialog />', () => {
     const groupField = getByTestId('TagManager-TagDialog-tagGroupSelect');
     await userEvent.click(groupField);
     await userEvent.keyboard('New Group');
-    const newGroupOption = getByText(
-      'misc.tags.tagManager.tagDialog.groupCreatePrompt'
-    );
+    const newGroupOption = getByMessageId(messageIds.dialog.groupCreatePrompt);
     await userEvent.click(newGroupOption);
 
     const submit = getByTestId('SubmitCancelButtons-submitButton');

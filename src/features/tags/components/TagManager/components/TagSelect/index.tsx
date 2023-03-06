@@ -1,5 +1,4 @@
 import useAutocomplete from '@mui/material/useAutocomplete';
-import { useIntl } from 'react-intl';
 import { useState } from 'react';
 import { Box, TextField } from '@mui/material';
 
@@ -9,6 +8,9 @@ import ValueTagForm from './ValueTagForm';
 import { EditTag, NewTag } from '../../types';
 import { filterTags, groupTags } from '../../utils';
 import { ZetkinTag, ZetkinTagGroup } from 'utils/types/zetkin';
+
+import messageIds from '../../../../l10n/messageIds';
+import { useMessages } from 'core/i18n';
 
 const TagSelect: React.FunctionComponent<{
   disableEditTags?: boolean;
@@ -31,7 +33,7 @@ const TagSelect: React.FunctionComponent<{
   onSelect,
   tags,
 }) => {
-  const intl = useIntl();
+  const messages = useMessages(messageIds);
 
   const [inputValue, setInputValue] = useState('');
   const [selectedValueTag, setSelectedValueTag] = useState<ZetkinTag | null>(
@@ -55,9 +57,7 @@ const TagSelect: React.FunctionComponent<{
 
   const groupedFilteredTags = groupTags(
     groupedOptions as ZetkinTag[],
-    intl.formatMessage({
-      id: 'misc.tags.tagManager.ungroupedHeader',
-    })
+    messages.manager.ungroupedHeader()
   );
 
   const handleSubmitValue = () => {
@@ -97,13 +97,8 @@ const TagSelect: React.FunctionComponent<{
           }}
           placeholder={
             selectedValueTag
-              ? intl.formatMessage(
-                  { id: 'misc.tags.tagManager.addValue' },
-                  { tag: selectedValueTag.title }
-                )
-              : intl.formatMessage({
-                  id: 'misc.tags.tagManager.addTag',
-                })
+              ? messages.manager.addValue({ tag: selectedValueTag.title })
+              : messages.manager.addTag()
           }
           variant="outlined"
         />

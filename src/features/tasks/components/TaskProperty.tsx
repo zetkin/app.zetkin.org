@@ -1,6 +1,9 @@
-import { FormattedMessage } from 'react-intl';
 import NextLink from 'next/link';
 import { Link, ListItem, ListItemText } from '@mui/material';
+
+import { Msg } from 'core/i18n';
+
+import messageIds from '../l10n/messageIds';
 
 interface TaskPropertyProps {
   title: string;
@@ -14,7 +17,7 @@ const TaskProperty: React.FunctionComponent<TaskPropertyProps> = ({
   url,
 }) => {
   const displayValue = !value ? (
-    <FormattedMessage id="misc.tasks.forms.common.notSet" />
+    <Msg id={messageIds.common.notSet} />
   ) : url ? (
     <NextLink href={value as string} passHref>
       <Link underline="hover">{value}</Link>

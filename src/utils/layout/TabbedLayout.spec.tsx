@@ -5,8 +5,8 @@ const mockTabbedLayoutProps = {
   baseHref: '/alpha/beta/gamma',
   defaultTab: '/',
   tabs: [
-    { href: '/', messageId: 'the.localisation.id.for.root' },
-    { href: '/delta', messageId: 'the.localisation.id.for.delta' },
+    { href: '/', label: 'Home' },
+    { href: '/delta', label: 'Delta' },
   ],
 };
 
@@ -17,7 +17,7 @@ describe('TabbedLayout.tsx', () => {
     it('displays the tab labels', () => {
       const { getByText } = render(<TabbedLayout {...mockTabbedLayoutProps} />);
       mockTabbedLayoutProps.tabs.forEach((tab) => {
-        const tabLabel = getByText(tab.messageId);
+        const tabLabel = getByText(tab.label);
         expect(tabLabel).toBeTruthy();
       });
     });

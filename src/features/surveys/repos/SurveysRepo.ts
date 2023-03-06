@@ -47,7 +47,6 @@ type ZetkinSurveyOptionsQuestionElementPostBody = {
 
 export type ZetkinSurveyElementPatchBody =
   | ZetkinSurveyTextElementPatchBody
-  | Omit<ZetkinTextQuestion, 'required'>
   | Partial<Omit<ZetkinSurveyOptionsQuestionElementPostBody, 'type'>>
   | Partial<Omit<ZetkinSurveyTextQuestionElementPostBody, 'type'>>;
 

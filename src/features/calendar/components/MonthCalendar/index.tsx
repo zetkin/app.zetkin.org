@@ -1,14 +1,17 @@
+import { FormattedDate } from 'react-intl';
 import { grey } from '@mui/material/colors';
 import makeStyles from '@mui/styles/makeStyles';
 import NextLink from 'next/link';
 import { Box, Button, Link, Tooltip, Typography } from '@mui/material';
-import { FormattedDate, FormattedMessage as Msg } from 'react-intl';
 import React, { useEffect, useRef, useState } from 'react';
 
 import MonthCalendarEvent from './MonthCalendarEvent';
 import MonthCalendarTask from './MonthCalendarTask';
+import { Msg } from 'core/i18n';
 import { CALENDAR_RANGES, getViewRange } from '../utils';
 import { ZetkinCampaign, ZetkinEvent, ZetkinTask } from 'utils/types/zetkin';
+
+import messageIds from 'features/calendar/l10n/messageIds';
 
 interface MonthCalendarProps {
   baseHref: string;
@@ -280,7 +283,7 @@ const MonthCalendar = ({
                   <Button disableRipple style={{ padding: 0 }}>
                     <Typography variant="body1">
                       <Msg
-                        id="misc.calendar.moreEvents"
+                        id={messageIds.moreEvents}
                         values={{
                           numEvents: totalTasksAndEvents - maxNoOfEvents,
                         }}

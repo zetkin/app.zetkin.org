@@ -1,9 +1,11 @@
-import { IntlShape } from 'react-intl';
+import { UseMessagesMap } from 'core/i18n';
 import {
   PendingZetkinViewColumn,
   SelectedViewColumn,
   ZetkinViewColumn,
 } from '../../types';
+
+import messageIds from 'features/views/l10n/messageIds';
 
 export enum CHOICES {
   DELEGATE = 'delegate',
@@ -30,7 +32,7 @@ export type ColumnChoice = {
   alreadyInView?: (columns: ZetkinViewColumn[]) => boolean;
   color: string;
   defaultColumns?: (
-    intl: IntlShape,
+    intl: UseMessagesMap<typeof messageIds>,
     columns: ZetkinViewColumn[]
   ) => PendingZetkinViewColumn[];
   renderCardVisual: (color: string) => JSX.Element;

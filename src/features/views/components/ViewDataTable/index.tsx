@@ -2,7 +2,6 @@ import { Link } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import NextLink from 'next/link';
 import NProgress from 'nprogress';
-import { useIntl } from 'react-intl';
 import { useRouter } from 'next/router';
 import {
   DataGridPro,
@@ -16,6 +15,7 @@ import { FunctionComponent, useContext, useState } from 'react';
 import columnTypes from './columnTypes';
 import EmptyView from 'features/views/components/EmptyView';
 import useAccessLevel from 'features/views/hooks/useAccessLevel';
+import { useMessages } from 'core/i18n';
 import useModel from 'core/useModel';
 import useModelsFromQueryString from 'zui/ZUIUserConfigurableDataGrid/useModelsFromQueryString';
 import useViewDataModel from 'features/views/hooks/useViewDataModel';
@@ -41,6 +41,8 @@ import ViewDataTableToolbar, {
   ViewDataTableToolbarProps,
 } from './ViewDataTableToolbar';
 import { ZetkinViewColumn, ZetkinViewRow } from 'utils/types/zetkin';
+
+import messageIds from 'features/views/l10n/messageIds';
 
 const useStyles = makeStyles((theme) => ({
   '@keyframes addedRowAnimation': {
@@ -71,7 +73,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
   rows,
   view,
 }) => {
-  const intl = useIntl();
+  const messages = useMessages(messageIds);
   const classes = useStyles();
   const gridApiRef = useGridApiRef();
   const [addedId, setAddedId] = useState(0);
@@ -100,10 +102,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
   );
 
   const showError = (error: VIEW_DATA_TABLE_ERROR) => {
-    showSnackbar(
-      'error',
-      intl.formatMessage({ id: `misc.views.dataTableErrors.${error}` })
-    );
+    showSnackbar('error', messages.dataTableErrors[error]());
   };
 
   const updateColumn = async (
@@ -187,12 +186,8 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
     if (colSpec?.type.includes('local_')) {
       showConfirmDialog({
         onSubmit: doDelete,
-        title: intl.formatMessage({
-          id: `misc.views.columnMenu.delete`,
-        }),
-        warningText: intl.formatMessage({
-          id: `misc.views.columnMenu.confirmDelete`,
-        }),
+        title: messages.columnMenu.delete(),
+        warningText: messages.columnMenu.confirmDelete(),
       });
     } else {
       doDelete();
@@ -375,9 +370,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
         }
         hideFooter={empty || contentSource == VIEW_CONTENT_SOURCE.DYNAMIC}
         localeText={{
-          noRowsLabel: intl.formatMessage({
-            id: `misc.views.empty.notice.${contentSource}`,
-          }),
+          noRowsLabel: messages.empty.notice[contentSource](),
         }}
         onCellEditStart={(params, event) => {
           if (params.reason == GridCellEditStartReasons.printableKeyDown) {

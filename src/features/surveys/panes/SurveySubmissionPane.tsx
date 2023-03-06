@@ -1,9 +1,10 @@
-import { FormattedMessage } from 'react-intl';
+import { EyeClosed } from 'zui/icons/EyeClosed';
 import { makeStyles } from '@mui/styles';
 import { Box, Typography } from '@mui/material';
 import { Check, FormatQuote } from '@mui/icons-material';
 import { FC, ReactNode } from 'react';
 
+import { Msg } from 'core/i18n';
 import PaneHeader from 'utils/panes/PaneHeader';
 import useModel from 'core/useModel';
 import ZUIFuture from 'zui/ZUIFuture';
@@ -13,6 +14,8 @@ import SurveySubmissionModel, {
   ELEM_TYPE,
 } from '../models/SurveySubmissionModel';
 
+import messageIds from '../l10n/messageIds';
+
 interface SurveySubmissionPaneProps {
   orgId: number;
   id: number;
@@ -21,6 +24,26 @@ interface SurveySubmissionPaneProps {
 const useStyles = makeStyles({
   element: {
     marginBottom: 20,
+  },
+  fullName: {
+    display: 'inline-block',
+    marginRight: '5.8em',
+  },
+  hidden: { fontSize: '1em' },
+  hiddenChip: {
+    backgroundColor: '#EBEBEB',
+    borderRadius: '16px',
+    display: 'flex',
+    fontSize: '0.8em',
+    marginLeft: '0.6em',
+    padding: '0.2em 0.7em',
+  },
+  linkedChip: {
+    backgroundColor: '#A7DFB1',
+    borderRadius: '16px',
+    fontSize: '0.8em',
+    marginLeft: '0.6em',
+    padding: '0.2em 0.7em',
   },
   question: {
     fontWeight: 'bold',
@@ -43,21 +66,22 @@ const SurveySubmissionPane: FC<SurveySubmissionPaneProps> = ({ orgId, id }) => {
   return (
     <ZUIFuture future={subFuture}>
       {(sub) => {
-        let person = (
-          <FormattedMessage id="misc.panes.surveySubmission.anonymous" />
-        );
+        let person = <Msg id={messageIds.submissionPane.anonymous} />;
         if (sub.respondent) {
           if (sub.respondent.id) {
             person = (
-              <ZUIPersonLink
-                person={{ ...sub.respondent, id: sub.respondent.id }}
-              />
+              <Box display="flex">
+                <ZUIPersonLink
+                  person={{ ...sub.respondent, id: sub.respondent.id }}
+                />
+                <Box className={styles.linkedChip}>Linked</Box>
+              </Box>
             );
           } else {
             person = (
-              <>
-                `${sub.respondent.first_name} ${sub.respondent.last_name}`;
-              </>
+              <Typography
+                className={styles.fullName}
+              >{`${sub.respondent.first_name} ${sub.respondent.last_name}`}</Typography>
             );
           }
         }
@@ -66,8 +90,8 @@ const SurveySubmissionPane: FC<SurveySubmissionPaneProps> = ({ orgId, id }) => {
           <>
             <PaneHeader
               subtitle={
-                <FormattedMessage
-                  id="misc.panes.surveySubmission.subtitle"
+                <Msg
+                  id={messageIds.submissionPane.subtitle}
                   values={{
                     date: <ZUIRelativeTime datetime={sub.submitted} />,
                     person: person,
@@ -79,7 +103,11 @@ const SurveySubmissionPane: FC<SurveySubmissionPaneProps> = ({ orgId, id }) => {
             {sub.elements.map((elem) => {
               if (elem.type == ELEM_TYPE.OPEN_QUESTION) {
                 return (
-                  <Question hidden={elem.hidden} question={elem.question}>
+                  <Question
+                    key={elem.id}
+                    hidden={elem.hidden}
+                    question={elem.question}
+                  >
                     <ResponseItem icon={<FormatQuote />}>
                       {elem.response || '-'}
                     </ResponseItem>
@@ -87,7 +115,11 @@ const SurveySubmissionPane: FC<SurveySubmissionPaneProps> = ({ orgId, id }) => {
                 );
               } else if (elem.type == ELEM_TYPE.OPTIONS) {
                 return (
-                  <Question hidden={elem.hidden} question={elem.question}>
+                  <Question
+                    key={elem.id}
+                    hidden={elem.hidden}
+                    question={elem.question}
+                  >
                     {elem.selectedOptions.length == 0 && '-'}
                     {elem.selectedOptions.map((option) => (
                       <ResponseItem key={option.id} icon={<Check />}>
@@ -98,7 +130,7 @@ const SurveySubmissionPane: FC<SurveySubmissionPaneProps> = ({ orgId, id }) => {
                 );
               } else if (elem.type == ELEM_TYPE.TEXT_BLOCK) {
                 return (
-                  <Box className={styles.element}>
+                  <Box key={elem.id} className={styles.element}>
                     <Typography className={styles.textHeader}>
                       {elem.header}
                     </Typography>
@@ -123,9 +155,24 @@ const Question: FC<{
 }> = ({ children, hidden, question }) => {
   const styles = useStyles();
   return (
-    <Box className={styles.element} sx={{ opacity: hidden ? 0.4 : 1 }}>
-      <Typography className={styles.question}>{question}</Typography>
-      <Box className={styles.response}>{children}</Box>
+    <Box className={styles.element}>
+      <Box display="flex" justifyContent="space-between">
+        <Typography
+          className={styles.question}
+          sx={{ opacity: hidden ? 0.4 : 1 }}
+        >
+          {question}
+        </Typography>
+        {hidden && (
+          <Box className={styles.hiddenChip}>
+            <EyeClosed />
+            <Typography className={styles.hidden}>Hidden</Typography>
+          </Box>
+        )}
+      </Box>
+      <Box className={styles.response} sx={{ opacity: hidden ? 0.4 : 1 }}>
+        {children}
+      </Box>
     </Box>
   );
 };

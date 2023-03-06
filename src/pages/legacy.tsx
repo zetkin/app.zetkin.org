@@ -3,10 +3,12 @@ import Head from 'next/head';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import { Box, Button, Card, Link, Typography } from '@mui/material';
-import { FormattedMessage, useIntl } from 'react-intl';
 import { GetServerSideProps, NextPage } from 'next';
 
 import { scaffold } from 'utils/next';
+import { Msg, useMessages } from 'core/i18n';
+
+import messageIds from 'core/l10n/messageIds';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   async (context) => {
@@ -32,13 +34,13 @@ interface LegacyPageProps {
 }
 
 const LegacyPage: NextPage<LegacyPageProps> = ({ destination }) => {
-  const intl = useIntl();
+  const messages = useMessages(messageIds);
   const router = useRouter();
 
   return (
     <>
       <Head>
-        <title>{intl.formatMessage({ id: 'pages.legacy.header' })}</title>
+        <title>{messages.legacy.header()}</title>
         <style
           dangerouslySetInnerHTML={{
             __html: `
@@ -65,17 +67,17 @@ const LegacyPage: NextPage<LegacyPageProps> = ({ destination }) => {
           }}
         >
           <Typography variant="h3">
-            <FormattedMessage id="pages.legacy.header" />
+            <Msg id={messageIds.legacy.header} />
           </Typography>
           <Typography
             style={{ marginBottom: 20, marginTop: 20 }}
             variant="body1"
           >
-            <FormattedMessage id="pages.legacy.info" />
+            <Msg id={messageIds.legacy.info} />
           </Typography>
           <NextLink href={destination} passHref>
             <Button color="primary" component="a" variant="contained">
-              <FormattedMessage id="pages.legacy.continueButton" />
+              <Msg id={messageIds.legacy.continueButton} />
             </Button>
           </NextLink>
           <Typography

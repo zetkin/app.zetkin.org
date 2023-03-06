@@ -1,7 +1,10 @@
 import { ErrorOutlined } from '@mui/icons-material';
-import { FormattedMessage } from 'react-intl';
 import { Box, CircularProgress, Typography } from '@mui/material';
 import { QueryObserverSuccessResult, UseQueryResult } from 'react-query';
+
+import { Msg } from 'core/i18n';
+
+import messageIds from 'zui/l10n/messageIds';
 
 interface ZUIQueryProps<G extends Record<string, unknown>> {
   children?:
@@ -36,7 +39,7 @@ function ZUIQuery<G extends Record<string, unknown>>({
         >
           <ErrorOutlined color="error" fontSize="large" />
           <Typography variant="body1">
-            <FormattedMessage id="misc.errorLoading" />
+            <Msg id={messageIds.futures.errorLoading} />
           </Typography>
         </Box>
       )

@@ -1,9 +1,12 @@
 import { FunctionComponent } from 'react';
 import { useRouter } from 'next/router';
+import { Box, Typography } from '@mui/material';
 
 import { personResource } from 'features/profile/api/people';
 import TabbedLayout from '../../../utils/layout/TabbedLayout';
-import { Box, Typography } from '@mui/material';
+import { useMessages } from 'core/i18n';
+
+import messageIds from '../l10n/messageIds';
 
 interface SinglePersonLayoutProps {
   children: React.ReactNode;
@@ -14,6 +17,7 @@ const SinglePersonLayout: FunctionComponent<SinglePersonLayoutProps> = ({
   children,
   fixedHeight,
 }) => {
+  const messages = useMessages(messageIds);
   const { orgId, personId } = useRouter().query;
   const { data: person } = personResource(
     orgId as string,
@@ -31,15 +35,15 @@ const SinglePersonLayout: FunctionComponent<SinglePersonLayoutProps> = ({
       defaultTab="/"
       fixedHeight={fixedHeight}
       tabs={[
-        { href: `/`, messageId: 'layout.organize.person.tabs.profile' },
+        { href: `/`, label: messages.tabs.profile() },
         {
           href: `/timeline`,
-          messageId: 'layout.organize.person.tabs.timeline',
+          label: messages.tabs.timeline(),
           tabProps: { disabled: true },
         },
         {
           href: `/manage`,
-          messageId: 'layout.organize.person.tabs.manage',
+          label: messages.tabs.manage(),
         },
       ]}
       title={

@@ -1,9 +1,12 @@
 import { MenuItem } from '@mui/material';
-import { FormattedMessage as Msg } from 'react-intl';
 import { FormEvent, useState } from 'react';
 
 import FilterForm from '../FilterForm';
 import StyledSelect from 'features/smartSearch/components/inputs/StyledSelect';
+
+import messageIds from 'features/smartSearch/l10n/messageIds';
+import { Msg } from 'core/i18n';
+const localMessageIds = messageIds.filters.all;
 
 interface StartsWithProps {
   startsWithAll: boolean;
@@ -29,7 +32,7 @@ const StartsWith = ({
       onSubmit={(e) => handleSubmit(e)}
       renderSentence={() => (
         <Msg
-          id="misc.smartSearch.all.inputString"
+          id={localMessageIds.inputString}
           values={{
             startWithSelect: (
               // convert numbers to boolean since MenuItem cannot take boolean as props
@@ -39,14 +42,14 @@ const StartsWith = ({
                 value={+shouldStartWithAll}
               >
                 <MenuItem key={1} data-testid="StartsWith-select-all" value={1}>
-                  <Msg id="misc.smartSearch.all.startWithSelect.true" />
+                  <Msg id={localMessageIds.startWithSelect.true} />
                 </MenuItem>
                 <MenuItem
                   key={0}
                   data-testid="StartsWith-select-empty"
                   value={0}
                 >
-                  <Msg id="misc.smartSearch.all.startWithSelect.false" />
+                  <Msg id={localMessageIds.startWithSelect.false} />
                 </MenuItem>
               </StyledSelect>
             ),
