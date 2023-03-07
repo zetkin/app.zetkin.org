@@ -7,7 +7,7 @@ import SurveyDataModel from 'features/surveys/models/SurveyDataModel';
 import TextBlock from './blocks/TextBlock';
 import { ZetkinSurveyElementPatchBody } from 'features/surveys/repos/SurveysRepo';
 import ZUIFuture from 'zui/ZUIFuture';
-import ZUIReorderable from 'zui/ZUIReorderable';
+import ZUIReorderable, { IDType } from 'zui/ZUIReorderable';
 
 import {
   ELEMENT_TYPE,
@@ -125,13 +125,18 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ model }) => {
     return { element: <></>, id: 0 };
   };
 
+  const onReorder = (orderedIds: IDType[]) => {};
+
   return (
     <>
       <ZUIFuture future={model.getData()}>
         {(data) => {
           return (
             <Box paddingBottom={data.elements.length ? 4 : 0}>
-              <ZUIReorderable items={data.elements.map(getElement)} />
+              <ZUIReorderable
+                items={data.elements.map(getElement)}
+                onReorder={onReorder}
+              />
             </Box>
           );
         }}

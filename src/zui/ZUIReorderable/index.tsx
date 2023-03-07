@@ -10,7 +10,7 @@ import {
   useState,
 } from 'react';
 
-type IDType = number | string;
+export type IDType = number | string;
 
 type ReorderableItem = {
   element: JSX.Element;
@@ -19,9 +19,10 @@ type ReorderableItem = {
 
 type ZUIReorderableProps = {
   items: ReorderableItem[];
+  onReorder?: (ids: IDType[]) => void;
 };
 
-const ZUIReorderable: FC<ZUIReorderableProps> = ({ items }) => {
+const ZUIReorderable: FC<ZUIReorderableProps> = ({ items, onReorder }) => {
   const [order, setOrder] = useState<IDType[]>(items.map((item) => item.id));
   const [activeId, setActiveId] = useState<IDType | null>(null);
 
@@ -62,6 +63,9 @@ const ZUIReorderable: FC<ZUIReorderableProps> = ({ items }) => {
 
     if (prevKeys.join(',') != reorderedKeys.join(',')) {
       setOrder(reorderedKeys);
+      if (onReorder) {
+        onReorder(reorderedKeys);
+      }
     }
 
     if (activeContentRef.current) {
