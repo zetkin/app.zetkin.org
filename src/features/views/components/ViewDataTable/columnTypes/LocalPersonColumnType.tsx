@@ -1,12 +1,13 @@
 import { FC } from 'react';
+import { GridColDef, useGridApiContext } from '@mui/x-data-grid-pro';
+
 import { IColumnType } from '.';
+import useAccessLevel from 'features/views/hooks/useAccessLevel';
 import useViewDataModel from 'features/views/hooks/useViewDataModel';
 import ViewDataModel from 'features/views/models/ViewDataModel';
 import ZUIPersonGridCell from 'zui/ZUIPersonGridCell';
 import ZUIPersonGridEditCell from 'zui/ZUIPersonGridEditCell';
-
 import { COLUMN_TYPE, LocalPersonViewColumn } from '../../types';
-import { GridColDef, useGridApiContext } from '@mui/x-data-grid-pro';
 import { ZetkinPerson, ZetkinViewRow } from 'utils/types/zetkin';
 
 type LocalPersonViewCell = null | ZetkinPerson;
@@ -74,6 +75,7 @@ const EditCell: FC<{
   const model = useViewDataModel();
 
   const suggestedPeople = getPeopleInView(model);
+  const [isRestrictedMode] = useAccessLevel();
 
   const updateCellValue = (person: ZetkinPerson | null) => {
     api.current.stopCellEditMode({
@@ -88,7 +90,9 @@ const EditCell: FC<{
       cell={cell}
       onUpdate={updateCellValue}
       removePersonLabel="misc.views.cells.localPerson.clearLabel"
+      restrictedMode={isRestrictedMode}
       suggestedPeople={suggestedPeople}
+      suggestedPeopleLabel="misc.views.cells.localPerson.alreadyInView"
     />
   );
 };

@@ -100,6 +100,31 @@ const surveysSlice = createSlice({
       item.isLoading = false;
       item.loaded = new Date().toISOString();
     },
+    surveySubmissionUpdate: (
+      state,
+      action: PayloadAction<[number, string[]]>
+    ) => {
+      const [submissionId, mutating] = action.payload;
+      const item = state.submissionList.items.find(
+        (item) => item.id == submissionId
+      );
+      if (item) {
+        item.mutating = mutating;
+      }
+    },
+    surveySubmissionUpdated: (
+      state,
+      action: PayloadAction<ZetkinSurveySubmission>
+    ) => {
+      const submission = action.payload;
+      const item = state.submissionList.items.find(
+        (item) => item.id == submission.id
+      );
+      if (item) {
+        item.data = { ...item.data, ...submission } as ZetkinSurveySubmission;
+        item.mutating = [];
+      }
+    },
     /* eslint-disable-next-line */
     surveySubmissionsLoad: (state, action: PayloadAction<number>) => {
       // TODO: Segregate submissions by survey ID
@@ -141,6 +166,8 @@ export const {
   submissionLoaded,
   surveyLoad,
   surveyLoaded,
+  surveySubmissionUpdate,
+  surveySubmissionUpdated,
   surveySubmissionsLoad,
   surveySubmissionsLoaded,
   surveyUpdate,

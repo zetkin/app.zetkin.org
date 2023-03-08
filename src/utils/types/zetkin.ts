@@ -278,6 +278,11 @@ export interface ZetkinSurveySubmission {
   responses: ZetkinSurveyQuestionResponse[]; // TODO: Lying! Segregate with/without responses
 }
 
+export interface ZetkinSurveySubmissionPatchBody
+  extends Partial<Omit<ZetkinTag, 'organization' | 'respondent' | 'survey'>> {
+  respondent_id: number | null;
+}
+
 export interface ZetkinCanvassAssignment {
   start_data: string;
   end_date: string;

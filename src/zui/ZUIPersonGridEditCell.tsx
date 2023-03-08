@@ -1,9 +1,9 @@
 import { Close } from '@mui/icons-material';
-import { FormattedMessage } from 'react-intl';
 import { makeStyles } from '@mui/styles';
-import useAccessLevel from 'features/views/hooks/useAccessLevel';
-import { usePersonSelect } from './ZUIPersonSelect';
 import { useRouter } from 'next/router';
+import { FormattedMessage, useIntl } from 'react-intl';
+
+import { usePersonSelect } from './ZUIPersonSelect';
 import { ZetkinPerson } from 'utils/types/zetkin';
 import ZUIAvatar from 'zui/ZUIAvatar';
 
@@ -26,10 +26,20 @@ const ZUIPersonGridEditCell: FC<{
   cell?: ZetkinPerson | null;
   onUpdate: (person: ZetkinPerson | null) => void;
   removePersonLabel: string;
+  restrictedMode?: boolean;
   suggestedPeople: ZetkinPerson[];
-}> = ({ cell, onUpdate, removePersonLabel, suggestedPeople }) => {
+  suggestedPeopleLabel: string;
+}> = ({
+  cell,
+  onUpdate,
+  removePersonLabel,
+  restrictedMode: isRestrictedMode = false,
+  suggestedPeople,
+  suggestedPeopleLabel,
+}) => {
+  const intl = useIntl();
+
   const query = useRouter().query;
-  const [isRestrictedMode] = useAccessLevel();
   const styles = useStyles({ isRestrictedMode });
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [searching, setSearching] = useState(false);
@@ -37,7 +47,7 @@ const ZUIPersonGridEditCell: FC<{
   const orgId = parseInt(query.orgId as string);
 
   const personSelect = usePersonSelect({
-    initialValue: cell ? cell.first_name + ' ' + cell.last_name : '',
+    initialValue: '',
     onChange: (person) => {
       onUpdate(person);
       setSearching(false);
@@ -52,7 +62,7 @@ const ZUIPersonGridEditCell: FC<{
   });
 
   const searchResults = autoComplete.groupedOptions as ZetkinPerson[];
-  const showSuggestedPeople = searching || !cell;
+  const showSuggestedPeople = !cell?.id;
 
   if (searchResults.length) {
     // Filter down suggestedPeople to only include search matches
@@ -61,6 +71,10 @@ const ZUIPersonGridEditCell: FC<{
       matchingIds.includes(person.id)
     );
   }
+
+  const placeholderLabel = intl.formatMessage({
+    id: 'misc.placeholder',
+  });
 
   return (
     <Box
@@ -78,121 +92,133 @@ const ZUIPersonGridEditCell: FC<{
           fullWidth
           inputProps={autoComplete.getInputProps()}
           onChange={() => setSearching(true)}
+          placeholder={placeholderLabel}
         ></InputBase>
       </Box>
-      <Popper
-        anchorEl={anchorEl}
-        open={!!anchorEl}
-        popperOptions={{
-          placement: 'bottom',
-        }}
-      >
-        <Paper
-          className={styles.popper}
-          elevation={2}
-          onClick={(ev) => {
-            ev.stopPropagation();
-            anchorEl?.focus();
+      {searchResults.length || suggestedPeople.length ? (
+        <Popper
+          anchorEl={anchorEl}
+          open={!!anchorEl}
+          popperOptions={{
+            placement: 'bottom',
           }}
         >
-          {isRestrictedMode && (
-            <Box
-              alignItems="center"
-              display="flex"
-              flexDirection="column"
-              gap={1}
-              justifyContent="center"
-              width="100%"
-            >
-              {!!cell && <SelectedPerson orgId={orgId} person={cell} />}
-              <Typography fontStyle="italic" variant="caption">
-                <FormattedMessage id="misc.views.cells.localPerson.restrictedMode" />
-              </Typography>
-            </Box>
-          )}
-          {!isRestrictedMode && (
-            <Box display="flex" flexDirection="column" height="100%">
+          <Paper
+            className={styles.popper}
+            elevation={2}
+            onClick={(ev) => {
+              ev.stopPropagation();
+              anchorEl?.focus();
+            }}
+          >
+            {isRestrictedMode && (
               <Box
-                sx={{
-                  alignItems: 'center',
-                  display: 'flex',
-                  height: 'calc(100% - 10px)',
-                  justifyContent: 'center',
-                  minWidth: '290px',
-                  width: '100%',
-                }}
+                alignItems="center"
+                display="flex"
+                flexDirection="column"
+                gap={1}
+                justifyContent="center"
+                width="100%"
               >
-                {!!cell?.id && (
-                  <Box
-                    alignItems="center"
-                    display="flex"
-                    flexDirection="column"
-                    gap={1}
-                    justifyContent="center"
-                  >
-                    {!isRestrictedMode && !searching && (
-                      <>
-                        <SelectedPerson orgId={orgId} person={cell} />
-                        <Button
-                          endIcon={<Close />}
-                          onClick={() => onUpdate(null)}
-                        >
-                          <FormattedMessage id={removePersonLabel} />
-                        </Button>
-                      </>
-                    )}
-                  </Box>
-                )}
-                <List
-                  className={styles.searchingList}
-                  sx={{ display: showSuggestedPeople ? 'block' : 'none' }}
+                {!!cell && <SelectedPerson orgId={orgId} person={cell} />}
+                <Typography fontStyle="italic" variant="caption">
+                  <FormattedMessage id="misc.views.cells.localPerson.restrictedMode" />
+                </Typography>
+              </Box>
+            )}
+            {!isRestrictedMode && (
+              <Box display="flex" flexDirection="column" height="100%">
+                <Box
+                  sx={{
+                    alignItems: 'center',
+                    display: 'flex',
+                    height: 'calc(100% - 10px)',
+                    justifyContent: 'center',
+                    minWidth: '290px',
+                    width: '100%',
+                  }}
                 >
-                  {showSuggestedPeople && !!suggestedPeople.length && (
-                    <List>
-                      <ListSubheader>
-                        <FormattedMessage id="misc.views.cells.localPerson.alreadyInView" />
-                      </ListSubheader>
-                      {suggestedPeople.map((option) => (
-                        <PersonListItem
-                          key={option.id}
-                          itemProps={{
-                            onClick: () => {
-                              onUpdate(option);
-                            },
-                          }}
-                          orgId={orgId}
-                          person={option}
-                        />
-                      ))}
-                    </List>
+                  {!!cell?.id && (
+                    <Box
+                      alignItems="center"
+                      display="flex"
+                      flexDirection="column"
+                      gap={1}
+                      justifyContent="center"
+                    >
+                      {!isRestrictedMode && !searching && (
+                        <>
+                          <SelectedPerson orgId={orgId} person={cell} />
+                          <Button
+                            endIcon={<Close />}
+                            onClick={() => onUpdate(null)}
+                            sx={{
+                              cursor: 'pointer',
+                            }}
+                          >
+                            <FormattedMessage id={removePersonLabel} />
+                          </Button>
+                        </>
+                      )}
+                    </Box>
                   )}
-                  {searching && (
-                    <List {...autoComplete.getListboxProps()}>
-                      <ListSubheader sx={{ position: 'relative' }}>
-                        <FormattedMessage id="misc.views.cells.localPerson.otherPeople" />
-                      </ListSubheader>
-                      {searchResults.map((option, index) => {
-                        const optProps = autoComplete.getOptionProps({
-                          index,
-                          option,
-                        });
-                        return (
+                  <List
+                    className={styles.searchingList}
+                    sx={{ display: showSuggestedPeople ? 'block' : 'none' }}
+                  >
+                    {showSuggestedPeople && !!suggestedPeople.length && (
+                      <List>
+                        <ListSubheader>
+                          <FormattedMessage id={suggestedPeopleLabel} />
+                        </ListSubheader>
+                        {suggestedPeople.map((option) => (
                           <PersonListItem
                             key={option.id}
-                            itemProps={optProps}
+                            itemProps={{
+                              onClick: () => {
+                                onUpdate(option);
+                              },
+                            }}
                             orgId={orgId}
                             person={option}
                           />
-                        );
-                      })}
-                    </List>
-                  )}
-                </List>
+                        ))}
+                      </List>
+                    )}
+                    {searching && (
+                      <List {...autoComplete.getListboxProps()}>
+                        <ListSubheader sx={{ position: 'relative' }}>
+                          {suggestedPeople.length ? (
+                            <FormattedMessage id="misc.views.cells.localPerson.otherPeople" />
+                          ) : (
+                            <FormattedMessage id="misc.views.cells.localPerson.searchResults" />
+                          )}
+                        </ListSubheader>
+                        {searchResults.map((option, index) => {
+                          const optProps = autoComplete.getOptionProps({
+                            index,
+                            option,
+                          });
+                          return (
+                            <PersonListItem
+                              key={option.id}
+                              itemProps={optProps}
+                              orgId={orgId}
+                              person={option}
+                            />
+                          );
+                        })}
+                      </List>
+                    )}
+                  </List>
+                </Box>
               </Box>
-            </Box>
-          )}
-        </Paper>
-      </Popper>
+            )}
+          </Paper>
+        </Popper>
+      ) : (
+        <></>
+      )}
     </Box>
   );
 };

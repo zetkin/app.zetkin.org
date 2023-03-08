@@ -149,4 +149,10 @@ export default class SurveySubmissionModel extends ModelBase {
       survey: submission.survey,
     });
   }
+
+  setRespondentId(id: number | null) {
+    this._repo.updateSurveySubmission(this._orgId, this._subId, {
+      respondent_id: id,
+    });
+  }
 }

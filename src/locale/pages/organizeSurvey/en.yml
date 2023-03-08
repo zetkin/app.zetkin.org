@@ -13,4 +13,5 @@ submissions:
   emailColumn: Email
   firstNameColumn: First name
   lastNameColumn: Last name
+  link: Link
   personRecordColumn: Respondent
