@@ -58,6 +58,10 @@ const surveysSlice = createSlice({
         );
       }
     },
+    elementsUpdated: (
+      state,
+      action: PayloadAction<ZetkinSurveyElement[]>
+    ) => {},
     submissionLoad: (state, action: PayloadAction<number>) => {
       const id = action.payload;
       const item = state.submissionList.items.find((item) => item.id == id);
@@ -137,6 +141,7 @@ export const {
   elementAdded,
   elementDeleted,
   elementUpdated,
+  elementsUpdated,
   submissionLoad,
   submissionLoaded,
   surveyLoad,

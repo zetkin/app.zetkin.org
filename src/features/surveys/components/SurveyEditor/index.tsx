@@ -71,6 +71,8 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ model }) => {
                           blockIndex={index}
                           blockIsOnEdit={blockIsOnEdit}
                           blockLength={blockLength}
+                          elements={data.elements}
+                          model={model}
                         />
                         <BlockWrapper
                           key={elem.id}
@@ -107,6 +109,8 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ model }) => {
                           blockIndex={index}
                           blockIsOnEdit={blockIsOnEdit}
                           blockLength={blockLength}
+                          elements={data.elements}
+                          model={model}
                         />
                         <BlockWrapper
                           key={elem.id}
@@ -128,6 +132,8 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ model }) => {
                         blockIndex={index}
                         blockIsOnEdit={blockIsOnEdit}
                         blockLength={blockLength}
+                        elements={data.elements}
+                        model={model}
                       />
 
                       <BlockWrapper

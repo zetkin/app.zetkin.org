@@ -17,6 +17,7 @@ import {
   elementAdded,
   elementDeleted,
   elementUpdated,
+  elementsUpdated,
   submissionLoad,
   submissionLoaded,
   surveyLoad,
@@ -170,5 +171,16 @@ export default class SurveysRepo {
       .then((survey) => {
         this._store.dispatch(surveyUpdated(survey));
       });
+  }
+  async updateElementsOrder(
+    orgId: number,
+    surveyId: number,
+    data: ZetkinSurveyElement[]
+  ) {
+    const elements = await this._apiClient.patch<ZetkinSurveyElement[]>(
+      `/api/orgs/${orgId}/surveys/${surveyId}/elements`,
+      data
+    );
+    this._store.dispatch(elementsUpdated(elements));
   }
 }

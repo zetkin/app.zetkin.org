@@ -7,6 +7,7 @@ import SurveysRepo, {
   ZetkinSurveyElementPostBody,
 } from '../repos/SurveysRepo';
 import {
+  ZetkinSurveyElement,
   ZetkinSurveyExtended,
   ZetkinSurveyTextElement,
 } from 'utils/types/zetkin';
@@ -166,6 +167,10 @@ export default class SurveyDataModel extends ModelBase {
     this._repo.updateSurvey(this._orgId, this._surveyId, {
       expires: today,
     });
+  }
+
+  updateBlockOrder(data: ZetkinSurveyElement[]) {
+    this._repo.updateElementsOrder(this._orgId, this._surveyId, data);
   }
 
   updateOpenQuestionBlock(elemId: number, data: ZetkinSurveyElementPatchBody) {
