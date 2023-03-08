@@ -10,7 +10,11 @@ const BlockWrapper: FC<BlockWrapperProps> = ({ children, hidden }) => {
   return (
     <Box
       marginBottom={1}
-      sx={{ opacity: hidden ? 0.5 : 1, transition: 'opacity 0.2s' }}
+      sx={{
+        flex: '1 0',
+        opacity: hidden ? 0.5 : 1,
+        transition: 'opacity 0.2s',
+      }}
     >
       <Card>
         <Box m={2}>{children}</Box>

@@ -8,6 +8,7 @@ import OpenQuestionBlock from './blocks/OpenQuestionBlock';
 import SurveyDataModel from 'features/surveys/models/SurveyDataModel';
 import TextBlock from './blocks/TextBlock';
 import ZUIFuture from 'zui/ZUIFuture';
+import ZUIReorderable from 'zui/ZUIReorderable';
 import {
   ELEMENT_TYPE,
   RESPONSE_TYPE,
@@ -51,59 +52,74 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ model }) => {
         {(data) => {
           return (
             <Box paddingBottom={data.elements.length ? 4 : 0}>
-              {data.elements.map((elem) => {
-                if (elem.type == ELEMENT_TYPE.QUESTION) {
-                  if (elem.question.response_type == RESPONSE_TYPE.TEXT) {
-                    return (
-                      <BlockWrapper key={elem.id} hidden={elem.hidden}>
-                        <OpenQuestionBlock
-                          editable={elem.id == idOfBlockInEditMode}
-                          element={elem as ZetkinSurveyTextQuestionElement}
-                          model={model}
-                          onEditModeEnter={() =>
-                            setIdOfBlockInEditMode(elem.id)
-                          }
-                          onEditModeExit={() => {
-                            setIdOfBlockInEditMode(undefined);
-                          }}
-                        />
-                      </BlockWrapper>
-                    );
-                  } else if (
-                    elem.question.response_type == RESPONSE_TYPE.OPTIONS
-                  ) {
-                    return (
-                      <BlockWrapper key={elem.id} hidden={elem.hidden}>
-                        <ChoiceQuestionBlock
-                          editable={elem.id == idOfBlockInEditMode}
-                          element={elem as ZetkinSurveyOptionsQuestionElement}
-                          model={model}
-                          onEditModeEnter={() => {
-                            setIdOfBlockInEditMode(elem.id);
-                          }}
-                          onEditModeExit={() => {
-                            setIdOfBlockInEditMode(undefined);
-                          }}
-                        />
-                      </BlockWrapper>
-                    );
-                  }
-                } else if (elem.type == ELEMENT_TYPE.TEXT) {
-                  return (
-                    <BlockWrapper key={elem.id} hidden={elem.hidden}>
-                      <TextBlock
-                        editable={elem.id == idOfBlockInEditMode}
-                        element={elem}
-                        model={model}
-                        onEditModeEnter={() => setIdOfBlockInEditMode(elem.id)}
-                        onEditModeExit={() => {
-                          setIdOfBlockInEditMode(undefined);
-                        }}
-                      />
-                    </BlockWrapper>
-                  );
-                }
-              })}
+              <ZUIReorderable
+                items={data.elements.map((elem) => ({
+                  id: elem.id,
+                  renderContent: () => {
+                    if (elem.type == ELEMENT_TYPE.QUESTION) {
+                      if (elem.question.response_type == RESPONSE_TYPE.TEXT) {
+                        return (
+                          <BlockWrapper key={elem.id} hidden={elem.hidden}>
+                            <OpenQuestionBlock
+                              editable={elem.id == idOfBlockInEditMode}
+                              element={elem as ZetkinSurveyTextQuestionElement}
+                              model={model}
+                              onEditModeEnter={() =>
+                                setIdOfBlockInEditMode(elem.id)
+                              }
+                              onEditModeExit={() => {
+                                setIdOfBlockInEditMode(undefined);
+                              }}
+                            />
+                          </BlockWrapper>
+                        );
+                      } else if (
+                        elem.question.response_type == RESPONSE_TYPE.OPTIONS
+                      ) {
+                        return (
+                          <BlockWrapper key={elem.id} hidden={elem.hidden}>
+                            <ChoiceQuestionBlock
+                              editable={elem.id == idOfBlockInEditMode}
+                              element={
+                                elem as ZetkinSurveyOptionsQuestionElement
+                              }
+                              model={model}
+                              onEditModeEnter={() => {
+                                setIdOfBlockInEditMode(elem.id);
+                              }}
+                              onEditModeExit={() => {
+                                setIdOfBlockInEditMode(undefined);
+                              }}
+                            />
+                          </BlockWrapper>
+                        );
+                      }
+                    } else if (elem.type == ELEMENT_TYPE.TEXT) {
+                      return (
+                        <BlockWrapper key={elem.id} hidden={elem.hidden}>
+                          <TextBlock
+                            editable={elem.id == idOfBlockInEditMode}
+                            element={elem}
+                            model={model}
+                            onEditModeEnter={() =>
+                              setIdOfBlockInEditMode(elem.id)
+                            }
+                            onEditModeExit={() => {
+                              setIdOfBlockInEditMode(undefined);
+                            }}
+                          />
+                        </BlockWrapper>
+                      );
+                    }
+
+                    // Only required to satisfy typescript. Should never happen.
+                    return <></>;
+                  },
+                }))}
+                onReorder={(ids) => {
+                  model.updateElementOrder(ids);
+                }}
+              />
             </Box>
           );
         }}
