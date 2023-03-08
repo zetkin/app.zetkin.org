@@ -3,17 +3,15 @@ import Environment from 'core/env/Environment';
 import { IFuture } from 'core/caching/futures';
 import { ModelBase } from 'core/models';
 import { SurveyStats } from '../rpc/getSurveyStats';
-import {
-  ELEMENT_TYPE,
-  RESPONSE_TYPE,
-  ZetkinSurveyExtended,
-  ZetkinSurveyTextElement,
-} from 'utils/types/zetkin';
 import SurveysRepo, {
   OptionsQuestionPatchBody,
   ZetkinSurveyElementPatchBody,
   ZetkinSurveyElementPostBody,
 } from '../repos/SurveysRepo';
+import {
+  ZetkinSurveyExtended,
+  ZetkinSurveyTextElement,
+} from 'utils/types/zetkin';
 
 export enum SurveyState {
   UNPUBLISHED = 'unpublished',
@@ -28,21 +26,8 @@ export default class SurveyDataModel extends ModelBase {
   private _repo: SurveysRepo;
   private _surveyId: number;
 
-  async addElement(element: ZetkinSurveyElementPostBody) {
-    const newElement = await this._repo.addElement(
-      this._orgId,
-      this._surveyId,
-      element
-    );
-
-    //Add two options to a newly created options element.
-    if (
-      newElement.type === ELEMENT_TYPE.QUESTION &&
-      newElement.question.response_type === RESPONSE_TYPE.OPTIONS
-    ) {
-      this._repo.addElementOption(this._orgId, this._surveyId, newElement.id);
-      this._repo.addElementOption(this._orgId, this._surveyId, newElement.id);
-    }
+  addElement(element: ZetkinSurveyElementPostBody) {
+    this._repo.addElement(this._orgId, this._surveyId, element);
   }
 
   addElementOption(elemId: number) {
