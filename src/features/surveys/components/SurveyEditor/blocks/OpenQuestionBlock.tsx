@@ -20,6 +20,7 @@ import { Msg, useMessages } from 'core/i18n';
 import messageIds from 'features/surveys/l10n/messageIds';
 
 interface OpenQuestionBlockProps {
+  editable: boolean;
   element: ZetkinSurveyTextQuestionElement;
   model: SurveyDataModel;
   onEditModeEnter: () => void;
@@ -32,6 +33,7 @@ enum FIELDTYPE {
 }
 
 const OpenQuestionBlock: FC<OpenQuestionBlockProps> = ({
+  editable,
   element,
   model,
   onEditModeEnter,
@@ -57,6 +59,7 @@ const OpenQuestionBlock: FC<OpenQuestionBlockProps> = ({
   };
 
   const { clickAwayProps, previewableProps } = useEditPreviewBlock({
+    editable,
     onEditModeEnter,
     onEditModeExit,
     save: () => {

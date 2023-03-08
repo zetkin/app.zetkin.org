@@ -20,23 +20,25 @@ interface SurveyEditorProps {
 }
 
 const SurveyEditor: FC<SurveyEditorProps> = ({ model }) => {
-  // TODO: Remove this altogether?
-  const [, setIdOfBlockInEditMode] = useState<number | undefined>();
+  const [idOfBlockInEditMode, setIdOfBlockInEditMode] = useState<
+    number | undefined
+  >();
 
-  const lengthRef = useRef(0);
+  const lengthRef = useRef<number>();
 
   useEffect(() => {
     const data = model.getData().data;
     if (data) {
       const elements = data.elements;
 
-      //If a block was just added, set its id to be in edit mode.
-      if (lengthRef.current < elements.length && lengthRef.current !== 0) {
-        setIdOfBlockInEditMode(elements[elements.length - 1].id);
-      } else if (lengthRef.current === 0) {
-        if (elements.length === 1) {
-          setIdOfBlockInEditMode(elements[0].id);
-        }
+      // If the previous length is null, it's because it only now loaded for the
+      // first time and the length has not really been read before.
+      if (
+        lengthRef.current !== undefined &&
+        lengthRef.current < elements.length
+      ) {
+        const lastElement = elements[elements.length - 1];
+        setIdOfBlockInEditMode(lastElement.id);
       }
 
       lengthRef.current = elements.length;
@@ -55,6 +57,7 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ model }) => {
                     return (
                       <BlockWrapper key={elem.id} hidden={elem.hidden}>
                         <OpenQuestionBlock
+                          editable={elem.id == idOfBlockInEditMode}
                           element={elem as ZetkinSurveyTextQuestionElement}
                           model={model}
                           onEditModeEnter={() =>
@@ -72,6 +75,7 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ model }) => {
                     return (
                       <BlockWrapper key={elem.id} hidden={elem.hidden}>
                         <ChoiceQuestionBlock
+                          editable={elem.id == idOfBlockInEditMode}
                           element={elem as ZetkinSurveyOptionsQuestionElement}
                           model={model}
                           onEditModeEnter={() => {
@@ -88,6 +92,7 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ model }) => {
                   return (
                     <BlockWrapper key={elem.id} hidden={elem.hidden}>
                       <TextBlock
+                        editable={elem.id == idOfBlockInEditMode}
                         element={elem}
                         model={model}
                         onEditModeEnter={() => setIdOfBlockInEditMode(elem.id)}

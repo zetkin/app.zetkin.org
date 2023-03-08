@@ -1,40 +1,37 @@
-import { useState } from 'react';
 import { ZUIPreviewableMode } from 'zui/ZUIPreviewableInput';
 
 type UseEditPreviewBlockProps = {
+  editable: boolean;
   onEditModeEnter: () => void;
   onEditModeExit: () => void;
   save: () => void;
 };
 
 export default function useEditPreviewBlock({
+  editable,
   save,
   onEditModeEnter,
   onEditModeExit,
 }: UseEditPreviewBlockProps) {
-  const [mode, setMode] = useState(ZUIPreviewableMode.PREVIEW);
-
   const handleSwitchMode = (newMode: ZUIPreviewableMode) => {
-    setMode(newMode);
     if (newMode == ZUIPreviewableMode.EDITABLE) {
       onEditModeEnter();
+    } else {
+      onEditModeExit();
     }
   };
 
   return {
     clickAwayProps: {
       onClickAway: () => {
-        if (mode == ZUIPreviewableMode.EDITABLE) {
-          setMode(ZUIPreviewableMode.PREVIEW);
+        if (editable) {
           onEditModeExit();
           save();
         }
       },
     },
-    editing: mode == ZUIPreviewableMode.EDITABLE,
-    mode,
     previewableProps: {
-      mode,
+      mode: editable ? ZUIPreviewableMode.EDITABLE : ZUIPreviewableMode.PREVIEW,
       onSwitchMode: handleSwitchMode,
     },
   };

@@ -28,6 +28,7 @@ import ZUIPreviewableInput from 'zui/ZUIPreviewableInput';
 import { Msg, useMessages } from 'core/i18n';
 
 interface ChoiceQuestionBlockProps {
+  editable: boolean;
   element: ZetkinSurveyOptionsQuestionElement;
   model: SurveyDataModel;
   onEditModeEnter: () => void;
@@ -52,6 +53,7 @@ const widgetTypes = {
 type WidgetTypeValue = keyof typeof widgetTypes;
 
 const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
+  editable,
   element,
   model,
   onEditModeEnter,
@@ -72,7 +74,8 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
     setOptions(elemQuestion.options || []);
   }, [elemQuestion]);
 
-  const { clickAwayProps, editing, previewableProps } = useEditPreviewBlock({
+  const { clickAwayProps, previewableProps } = useEditPreviewBlock({
+    editable,
     onEditModeEnter,
     onEditModeExit,
     save: () => {
@@ -107,7 +110,7 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
           value={description}
           variant="h5"
         />
-        {editing && (
+        {editable && (
           <TextField
             fullWidth
             label={messages.blocks.choice.widget()}
@@ -197,10 +200,10 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
         ))}
         <Box
           display="flex"
-          justifyContent={editing ? 'space-between' : 'end'}
+          justifyContent={editable ? 'space-between' : 'end'}
           m={2}
         >
-          {editing && (
+          {editable && (
             <Button
               onClick={(ev) => {
                 model.addElementOption(element.id);

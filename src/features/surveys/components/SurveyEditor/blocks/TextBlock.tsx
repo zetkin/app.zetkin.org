@@ -11,6 +11,7 @@ import { ZetkinSurveyTextElement } from 'utils/types/zetkin';
 import messageIds from 'features/surveys/l10n/messageIds';
 
 interface TextBlockProps {
+  editable: boolean;
   element: ZetkinSurveyTextElement;
   model: SurveyDataModel;
   onEditModeEnter: () => void;
@@ -18,6 +19,7 @@ interface TextBlockProps {
 }
 
 const TextBlock: FC<TextBlockProps> = ({
+  editable,
   element,
   model,
   onEditModeEnter,
@@ -29,6 +31,7 @@ const TextBlock: FC<TextBlockProps> = ({
   const [content, setContent] = useState(element.text_block.content);
 
   const { clickAwayProps, previewableProps } = useEditPreviewBlock({
+    editable,
     onEditModeEnter,
     onEditModeExit,
     save: () => {
