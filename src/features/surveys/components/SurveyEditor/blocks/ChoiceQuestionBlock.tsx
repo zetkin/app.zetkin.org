@@ -102,7 +102,7 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
           onChange={(value) => setTitle(value)}
           placeholder={messages.blocks.choice.emptyQuestion()}
           value={title}
-          variant="h4"
+          variant="header"
         />
         <PreviewableSurveyInput
           {...previewableProps}
@@ -110,7 +110,7 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
           onChange={(value) => setDescription(value)}
           placeholder={messages.blocks.choice.emptyDescription()}
           value={description}
-          variant="h5"
+          variant="content"
         />
         {editable && (
           <TextField

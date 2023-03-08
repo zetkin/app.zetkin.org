@@ -86,7 +86,7 @@ const OpenQuestionBlock: FC<OpenQuestionBlockProps> = ({
           onChange={(value) => setTitle(value)}
           placeholder={messages.blocks.open.empty()}
           value={title}
-          variant="h4"
+          variant="header"
         />
         <PreviewableSurveyInput
           {...previewableProps}
@@ -94,7 +94,7 @@ const OpenQuestionBlock: FC<OpenQuestionBlockProps> = ({
           onChange={(value) => setDescription(value)}
           placeholder=""
           value={description}
-          variant="h5"
+          variant="content"
         />
         <ZUIPreviewableInput
           {...previewableProps}

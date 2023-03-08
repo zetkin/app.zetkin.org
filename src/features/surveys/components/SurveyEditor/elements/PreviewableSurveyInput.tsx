@@ -13,8 +13,13 @@ type HeadlinePreviewableInputProps = {
   onSwitchMode: (newMode: ZUIPreviewableMode) => void;
   placeholder: string;
   value: string | undefined | null;
-  variant: 'h4' | 'h5';
+  variant: keyof typeof VARIANTS;
 };
+
+const VARIANTS = {
+  content: { fontSize: '1.1em' },
+  header: { fontSize: '2em' },
+} as const;
 
 const PreviewableSurveyInput: FC<HeadlinePreviewableInputProps> = ({
   focusInitially,
@@ -35,7 +40,7 @@ const PreviewableSurveyInput: FC<HeadlinePreviewableInputProps> = ({
       renderInput={(props) => (
         <TextField
           fullWidth
-          inputProps={props}
+          inputProps={{ ...props, sx: VARIANTS[variant] }}
           label={label}
           onChange={(ev) => onChange(ev.target.value)}
           sx={{ marginBottom: 2 }}
@@ -48,7 +53,7 @@ const PreviewableSurveyInput: FC<HeadlinePreviewableInputProps> = ({
             value ? theme.palette.text.primary : theme.palette.text.disabled
           }
           marginBottom={2}
-          variant={variant}
+          sx={VARIANTS[variant]}
         >
           {value || placeholder}
         </Typography>

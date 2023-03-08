@@ -55,7 +55,7 @@ const TextBlock: FC<TextBlockProps> = ({
           onChange={(value) => setHeader(value)}
           placeholder={messages.blocks.text.empty()}
           value={header}
-          variant="h4"
+          variant="header"
         />
         <PreviewableSurveyInput
           {...previewableProps}
@@ -63,7 +63,7 @@ const TextBlock: FC<TextBlockProps> = ({
           onChange={(value) => setContent(value)}
           placeholder=""
           value={content}
-          variant="h5"
+          variant="content"
         />
         <Box display="flex" justifyContent="end" m={2}>
           <DeleteHideButtons element={element} model={model} />
