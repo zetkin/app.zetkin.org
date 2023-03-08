@@ -4,7 +4,7 @@ import ZUIAnimatedNumber from 'zui/ZUIAnimatedNumber';
 import ZUINumberChip from 'zui/ZUINumberChip';
 
 interface StatusCardHeaderProps {
-  chipColor: keyof Theme['palette']['targetingStatusBar'];
+  chipColor: keyof Theme['palette']['statusColors'];
   subtitle: string;
   title: string;
   value: number | undefined;
@@ -17,7 +17,7 @@ const StatusCardHeader = ({
   value,
 }: StatusCardHeaderProps) => {
   const theme = useTheme();
-  const color = theme.palette.targetingStatusBar[chipColor];
+  const color = theme.palette.statusColors[chipColor];
   return (
     <Box>
       <Box

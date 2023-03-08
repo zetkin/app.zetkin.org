@@ -3,6 +3,7 @@ import { OverridableComponent } from '@mui/material/OverridableComponent';
 import { Box, SvgIconTypeMap, Theme, Typography } from '@mui/material';
 
 import ZUIIconLabel from 'zui/ZUIIconLabel';
+import ZUIMultiNumberChip from 'zui/ZUIMultiNumberChip';
 
 export const enum ACTIVITY_STATE {
   OPEN = 'open',
@@ -12,7 +13,7 @@ export const enum ACTIVITY_STATE {
 }
 
 interface StyleProps {
-  state: ACTIVITY_STATE;
+  color: STATUS_COLORS;
 }
 
 const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
@@ -24,7 +25,7 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
     padding: '1em',
   },
   dot: {
-    backgroundColor: ({ state }) => theme.palette.status[state],
+    backgroundColor: ({ color }) => theme.palette.statusColors[color],
     borderRadius: '100%',
     height: '10px',
     marginRight: '1em',
@@ -33,32 +34,6 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
   left: {
     alignItems: 'center',
     display: 'flex',
-  },
-  pillBlue: {
-    borderColor: theme.palette.targetingStatusBar.blue,
-    borderStyle: 'solid none solid solid',
-    borderWidth: '2px',
-    color: theme.palette.targetingStatusBar.blue,
-    fontSize: '14px',
-    padding: '3px 5px',
-  },
-  pillGreen: {
-    borderColor: theme.palette.targetingStatusBar.green,
-    borderRadius: '0 50em 50em 0',
-    borderStyle: 'solid',
-    borderWidth: '2px',
-    color: theme.palette.targetingStatusBar.green,
-    fontSize: '14px',
-    padding: '3px 7px 3px 5px',
-  },
-  pillOrange: {
-    borderColor: theme.palette.targetingStatusBar.orange,
-    borderRadius: '50em 0 0 50em',
-    borderStyle: 'solid none solid solid',
-    borderWidth: '2px',
-    color: theme.palette.targetingStatusBar.orange,
-    fontSize: '14px',
-    padding: '3px 5px 3px 7px',
   },
   primaryIcon: {
     color: theme.palette.grey[500],
@@ -75,6 +50,14 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
   },
 }));
 
+export enum STATUS_COLORS {
+  BLUE = 'blue',
+  GREEN = 'green',
+  GRAY = 'gray',
+  ORANGE = 'orange',
+  RED = 'red',
+}
+
 interface AcitivityListItemProps {
   PrimaryIcon: OverridableComponent<
     SvgIconTypeMap<Record<string, unknown>, 'svg'>
@@ -83,7 +66,7 @@ interface AcitivityListItemProps {
     SvgIconTypeMap<Record<string, unknown>, 'svg'>
   >;
   message?: string;
-  state: ACTIVITY_STATE;
+  color: STATUS_COLORS;
   title: string;
 }
 
@@ -91,10 +74,10 @@ const ActivityListItem = ({
   PrimaryIcon,
   SecondaryIcon,
   message,
-  state,
+  color,
   title,
 }: AcitivityListItemProps) => {
-  const classes = useStyles({ state });
+  const classes = useStyles({ color });
   return (
     <Box key={title} className={classes.box}>
       <Box className={classes.left}>
@@ -104,11 +87,11 @@ const ActivityListItem = ({
         {message && <Typography color="secondary">{message}</Typography>}
       </Box>
       <Box className={classes.right}>
-        <Box display="flex">
-          <Box className={classes.pillOrange}>23784</Box>
-          <Box className={classes.pillBlue}>561</Box>
-          <Box className={classes.pillGreen}>972</Box>
-        </Box>
+        <ZUIMultiNumberChip
+          blueValue={234}
+          greenValue={2342}
+          orangeValue={343}
+        />
         <ZUIIconLabel
           icon={
             SecondaryIcon ? (

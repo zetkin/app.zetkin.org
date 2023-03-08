@@ -12,7 +12,7 @@ import messageIds from '../l10n/messageIds';
 
 const useStyles = makeStyles((theme) => ({
   chip: {
-    backgroundColor: theme.palette.targetingStatusBar.gray,
+    backgroundColor: theme.palette.statusColors.gray,
     borderRadius: '1em',
     color: theme.palette.text.secondary,
     display: 'flex',
