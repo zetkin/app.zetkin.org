@@ -14,6 +14,12 @@ declare module '@mui/material/styles/createPalette' {
   interface Palette {
     onSurface: Required<PaletteIntensityOptions>;
     outline: PaletteIntensityOptions;
+    status: {
+      closed: string;
+      draft: string;
+      open: string;
+      scheduled: string;
+    };
     targetingStatusBar: {
       blue: string;
       gray: string;
@@ -56,6 +62,12 @@ const themePalette = {
   },
   secondary: {
     main: 'rgba(0, 0, 0, 0.6)',
+  },
+  status: {
+    closed: 'rgba(239, 83, 80, 1)',
+    draft: 'rgba(0, 0, 0, 0.6)',
+    open: 'rgba(102, 187, 106, 1)',
+    scheduled: 'rgba(25, 118, 210, 1)',
   },
   success: {
     light: '#9fdfb8',
