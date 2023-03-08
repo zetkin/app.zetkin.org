@@ -30,6 +30,10 @@ export default class SurveyDataModel extends ModelBase {
     this._repo.addElement(this._orgId, this._surveyId, element);
   }
 
+  addElementOption(elemId: number) {
+    this._repo.addElementOption(this._orgId, this._surveyId, elemId);
+  }
+
   constructor(env: Environment, orgId: number, surveyId: number) {
     super();
     this._orgId = orgId;
@@ -39,6 +43,15 @@ export default class SurveyDataModel extends ModelBase {
 
   deleteElement(elemId: number) {
     this._repo.deleteSurveyElement(this._orgId, this._surveyId, elemId);
+  }
+
+  deleteElementOption(elemId: number, optionId: number) {
+    this._repo.deleteElementOption(
+      this._orgId,
+      this._surveyId,
+      elemId,
+      optionId
+    );
   }
 
   getData(): IFuture<ZetkinSurveyExtended> {
@@ -172,6 +185,16 @@ export default class SurveyDataModel extends ModelBase {
     this._repo.updateSurvey(this._orgId, this._surveyId, {
       expires: today,
     });
+  }
+
+  updateElementOption(elemId: number, optionId: number, text: string) {
+    this._repo.updateElementOption(
+      this._orgId,
+      this._surveyId,
+      elemId,
+      optionId,
+      text
+    );
   }
 
   updateOpenQuestionBlock(elemId: number, data: ZetkinSurveyElementPatchBody) {

@@ -11,6 +11,7 @@ export default makeMessages('feat.sruveys', {
   },
   blocks: {
     choice: {
+      addOption: m('Add option'),
       description: m('Description'),
       emptyDescription: m('Description'),
       emptyOption: m('Empty option'),

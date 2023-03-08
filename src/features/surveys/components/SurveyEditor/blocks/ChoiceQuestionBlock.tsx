@@ -1,17 +1,21 @@
 import {
+  Add,
+  CheckBoxOutlined,
+  Close,
+  RadioButtonChecked,
+  RadioButtonUnchecked,
+} from '@mui/icons-material';
+import {
   Box,
+  Button,
   ClickAwayListener,
+  IconButton,
   ListItemIcon,
   MenuItem,
   TextField,
   Typography,
 } from '@mui/material';
-import {
-  CheckBoxOutlined,
-  RadioButtonChecked,
-  RadioButtonUnchecked,
-} from '@mui/icons-material';
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 
 import DropdownIcon from 'zui/icons/DropDown';
 import messageIds from 'features/surveys/l10n/messageIds';
@@ -57,13 +61,19 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
   const messages = useMessages(messageIds);
   const [title, setTitle] = useState(elemQuestion.question);
   const [description, setDescription] = useState(elemQuestion.description);
-  const [options, setOptions] = useState(elemQuestion.options!);
+  const [options, setOptions] = useState(elemQuestion.options || []);
   const [widgetType, setWidgetType] = useState<WidgetTypeValue>(
     elemQuestion.response_config.widget_type
   );
   const [mode, setMode] = useState<ZUIPreviewableMode>(
     ZUIPreviewableMode.PREVIEW
   );
+
+  useEffect(() => {
+    setTitle(elemQuestion.question);
+    setDescription(elemQuestion.description);
+    setOptions(elemQuestion.options || []);
+  }, [elemQuestion]);
 
   const editing = mode == ZUIPreviewableMode.EDITABLE;
 
@@ -159,6 +169,13 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
                 <TextField
                   fullWidth
                   inputProps={props}
+                  onBlur={(ev) => {
+                    model.updateElementOption(
+                      element.id,
+                      option.id,
+                      ev.target.value
+                    );
+                  }}
                   onChange={(ev) => {
                     setOptions(
                       options.map((oldOpt) =>
@@ -170,6 +187,14 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
                   }}
                   value={option.text}
                 />
+                <IconButton
+                  onClick={() => {
+                    model.deleteElementOption(element.id, option.id);
+                  }}
+                  sx={{ paddingX: 2 }}
+                >
+                  <Close />
+                </IconButton>
               </Box>
             )}
             renderPreview={() => (
@@ -186,6 +211,23 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
             value={option.text}
           />
         ))}
+        <Box
+          display="flex"
+          justifyContent={editing ? 'space-between' : 'end'}
+          m={2}
+        >
+          {editing && (
+            <Button
+              onClick={(ev) => {
+                model.addElementOption(element.id);
+                ev.stopPropagation();
+              }}
+              startIcon={<Add />}
+            >
+              <Msg id={messageIds.blocks.choice.addOption} />
+            </Button>
+          )}
+        </Box>
       </Box>
     </ClickAwayListener>
   );
