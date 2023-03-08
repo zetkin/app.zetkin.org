@@ -22,11 +22,10 @@ import DropdownIcon from 'zui/icons/DropDown';
 import messageIds from 'features/surveys/l10n/messageIds';
 import PreviewableSurveyInput from '../elements/PreviewableSurveyInput';
 import SurveyDataModel from 'features/surveys/models/SurveyDataModel';
+import useEditPreviewBlock from './useEditPreviewBlock';
 import { ZetkinSurveyOptionsQuestionElement } from 'utils/types/zetkin';
+import ZUIPreviewableInput from 'zui/ZUIPreviewableInput';
 import { Msg, useMessages } from 'core/i18n';
-import ZUIPreviewableInput, {
-  ZUIPreviewableMode,
-} from 'zui/ZUIPreviewableInput';
 
 interface ChoiceQuestionBlockProps {
   element: ZetkinSurveyOptionsQuestionElement;
@@ -66,9 +65,6 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
   const [widgetType, setWidgetType] = useState<WidgetTypeValue>(
     elemQuestion.response_config.widget_type
   );
-  const [mode, setMode] = useState<ZUIPreviewableMode>(
-    ZUIPreviewableMode.PREVIEW
-  );
 
   useEffect(() => {
     setTitle(elemQuestion.question);
@@ -76,49 +72,37 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
     setOptions(elemQuestion.options || []);
   }, [elemQuestion]);
 
-  const editing = mode == ZUIPreviewableMode.EDITABLE;
-
-  const handleSwitchMode = (newMode: ZUIPreviewableMode) => {
-    setMode(newMode);
-    if (newMode == ZUIPreviewableMode.EDITABLE) {
-      onEditModeEnter();
-    }
-  };
+  const { clickAwayProps, editing, previewableProps } = useEditPreviewBlock({
+    onEditModeEnter,
+    onEditModeExit,
+    save: () => {
+      model.updateOptionsQuestion(element.id, {
+        question: {
+          description: description,
+          question: title,
+          response_config: {
+            widget_type: widgetType,
+          },
+        },
+      });
+    },
+  });
 
   return (
-    <ClickAwayListener
-      onClickAway={() => {
-        if (mode == ZUIPreviewableMode.EDITABLE) {
-          setMode(ZUIPreviewableMode.PREVIEW);
-          onEditModeExit();
-
-          model.updateOptionsQuestion(element.id, {
-            question: {
-              description: description,
-              question: title,
-              response_config: {
-                widget_type: widgetType,
-              },
-            },
-          });
-        }
-      }}
-    >
+    <ClickAwayListener {...clickAwayProps}>
       <Box>
         <PreviewableSurveyInput
+          {...previewableProps}
           label={messages.blocks.choice.question()}
-          mode={mode}
           onChange={(value) => setTitle(value)}
-          onSwitchMode={handleSwitchMode}
           placeholder={messages.blocks.choice.emptyQuestion()}
           value={title}
           variant="h4"
         />
         <PreviewableSurveyInput
+          {...previewableProps}
           label={messages.blocks.choice.description()}
-          mode={mode}
           onChange={(value) => setDescription(value)}
-          onSwitchMode={handleSwitchMode}
           placeholder={messages.blocks.choice.emptyDescription()}
           value={description}
           variant="h5"
@@ -154,9 +138,8 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
         )}
         {options.map((option) => (
           <ZUIPreviewableInput
+            {...previewableProps}
             key={option.id}
-            mode={mode}
-            onSwitchMode={handleSwitchMode}
             renderInput={(props) => (
               <Box
                 key={option.id}

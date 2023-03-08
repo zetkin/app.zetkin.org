@@ -7,13 +7,12 @@ import ChoiceQuestionBlock from './blocks/ChoiceQuestionBlock';
 import OpenQuestionBlock from './blocks/OpenQuestionBlock';
 import SurveyDataModel from 'features/surveys/models/SurveyDataModel';
 import TextBlock from './blocks/TextBlock';
-import { ZetkinSurveyElementPatchBody } from 'features/surveys/repos/SurveysRepo';
 import ZUIFuture from 'zui/ZUIFuture';
 import {
   ELEMENT_TYPE,
   RESPONSE_TYPE,
   ZetkinSurveyOptionsQuestionElement,
-  ZetkinSurveyTextElement,
+  ZetkinSurveyTextQuestionElement,
 } from 'utils/types/zetkin';
 
 interface SurveyEditorProps {
@@ -21,9 +20,8 @@ interface SurveyEditorProps {
 }
 
 const SurveyEditor: FC<SurveyEditorProps> = ({ model }) => {
-  const [idOfBlockInEditMode, setIdOfBlockInEditMode] = useState<
-    number | undefined
-  >();
+  // TODO: Remove this altogether?
+  const [, setIdOfBlockInEditMode] = useState<number | undefined>();
 
   const lengthRef = useRef(0);
 
@@ -57,18 +55,13 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ model }) => {
                     return (
                       <BlockWrapper key={elem.id} hidden={elem.hidden}>
                         <OpenQuestionBlock
-                          element={elem.question}
-                          inEditMode={elem.id === idOfBlockInEditMode}
+                          element={elem as ZetkinSurveyTextQuestionElement}
+                          model={model}
                           onEditModeEnter={() =>
                             setIdOfBlockInEditMode(elem.id)
                           }
-                          onEditModeExit={(
-                            data: ZetkinSurveyElementPatchBody
-                          ) => {
-                            if (elem.id === idOfBlockInEditMode) {
-                              setIdOfBlockInEditMode(undefined);
-                            }
-                            model.updateOpenQuestionBlock(elem.id, data);
+                          onEditModeExit={() => {
+                            setIdOfBlockInEditMode(undefined);
                           }}
                         />
                       </BlockWrapper>
@@ -96,15 +89,10 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ model }) => {
                     <BlockWrapper key={elem.id} hidden={elem.hidden}>
                       <TextBlock
                         element={elem}
-                        inEditMode={elem.id === idOfBlockInEditMode}
+                        model={model}
                         onEditModeEnter={() => setIdOfBlockInEditMode(elem.id)}
-                        onEditModeExit={(
-                          textBlock: ZetkinSurveyTextElement['text_block']
-                        ) => {
-                          if (elem.id === idOfBlockInEditMode) {
-                            setIdOfBlockInEditMode(undefined);
-                          }
-                          model.updateTextBlock(elem.id, textBlock);
+                        onEditModeExit={() => {
+                          setIdOfBlockInEditMode(undefined);
                         }}
                       />
                     </BlockWrapper>

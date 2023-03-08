@@ -58,7 +58,7 @@ type ZetkinSurveyOptionsQuestionElementPostBody = {
 export type ZetkinSurveyElementPatchBody =
   | ZetkinSurveyTextElementPatchBody
   | OptionsQuestionPatchBody
-  | Partial<Omit<ZetkinSurveyTextQuestionElementPostBody, 'type'>>;
+  | TextQuestionPatchBody;
 
 type ZetkinSurveyTextElementPatchBody = {
   hidden?: boolean;
@@ -66,6 +66,10 @@ type ZetkinSurveyTextElementPatchBody = {
     content?: string;
     header?: string;
   };
+};
+
+export type TextQuestionPatchBody = {
+  question: Partial<ZetkinTextQuestion>;
 };
 
 export type OptionsQuestionPatchBody = {
