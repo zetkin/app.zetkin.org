@@ -12,6 +12,7 @@ import ZUIFuture from 'zui/ZUIFuture';
 import {
   ELEMENT_TYPE,
   RESPONSE_TYPE,
+  ZetkinSurveyOptionsQuestionElement,
   ZetkinSurveyTextElement,
 } from 'utils/types/zetkin';
 
@@ -99,7 +100,16 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ model }) => {
                           handleToggleHidden(elem.id, hidden)
                         }
                       >
-                        <ChoiceQuestionBlock question={elem.question} />
+                        <ChoiceQuestionBlock
+                          element={elem as ZetkinSurveyOptionsQuestionElement}
+                          model={model}
+                          onEditModeEnter={() => {
+                            setIdOfBlockInEditMode(elem.id);
+                          }}
+                          onEditModeExit={() => {
+                            setIdOfBlockInEditMode(undefined);
+                          }}
+                        />
                       </BlockWrapper>
                     );
                   }

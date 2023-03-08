@@ -4,6 +4,7 @@ import { IFuture } from 'core/caching/futures';
 import { ModelBase } from 'core/models';
 import { SurveyStats } from '../rpc/getSurveyStats';
 import SurveysRepo, {
+  OptionsQuestionPatchBody,
   ZetkinSurveyElementPatchBody,
   ZetkinSurveyElementPostBody,
 } from '../repos/SurveysRepo';
@@ -175,6 +176,18 @@ export default class SurveyDataModel extends ModelBase {
 
   updateOpenQuestionBlock(elemId: number, data: ZetkinSurveyElementPatchBody) {
     this._repo.updateElement(this._orgId, this._surveyId, elemId, data);
+  }
+
+  updateOptionsQuestion(
+    elemId: number,
+    optionsQuestion: OptionsQuestionPatchBody
+  ) {
+    this._repo.updateElement(
+      this._orgId,
+      this._surveyId,
+      elemId,
+      optionsQuestion
+    );
   }
 
   updateTextBlock(
