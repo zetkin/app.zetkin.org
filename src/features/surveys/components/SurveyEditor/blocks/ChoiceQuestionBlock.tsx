@@ -15,7 +15,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 
 import DeleteHideButtons from '../DeleteHideButtons';
 import DropdownIcon from 'zui/icons/DropDown';
@@ -61,6 +61,8 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
 }) => {
   const elemQuestion = element.question;
   const messages = useMessages(messageIds);
+  const lengthRef = useRef<number | undefined>(elemQuestion.options?.length);
+  const [addedOptionId, setAddedOptionId] = useState(0);
   const [title, setTitle] = useState(elemQuestion.question);
   const [description, setDescription] = useState(elemQuestion.description);
   const [options, setOptions] = useState(elemQuestion.options || []);
@@ -73,6 +75,23 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
     setDescription(elemQuestion.description);
     setOptions(elemQuestion.options || []);
   }, [elemQuestion]);
+
+  useEffect(() => {
+    const options = elemQuestion.options;
+    if (options) {
+      // If the previous length is null, it's because it only now loaded for the
+      // first time and the length has not really been read before.
+      if (
+        lengthRef.current !== undefined &&
+        lengthRef.current < options.length
+      ) {
+        const lastOption = options[options.length - 1];
+        setAddedOptionId(lastOption.id);
+      }
+
+      lengthRef.current = options.length;
+    }
+  }, [elemQuestion.options?.length]);
 
   const { autoFocusDefault, clickAwayProps, containerProps, previewableProps } =
     useEditPreviewBlock({
@@ -156,6 +175,8 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
               >
                 <Box paddingX={2}>{widgetTypes[widgetType].previewIcon}</Box>
                 <TextField
+                  // eslint-disable-next-line jsx-a11y/no-autofocus
+                  autoFocus={addedOptionId == option.id}
                   fullWidth
                   inputProps={props}
                   onBlur={(ev) => {
