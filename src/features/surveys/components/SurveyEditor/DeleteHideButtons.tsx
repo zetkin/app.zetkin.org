@@ -14,8 +14,9 @@ const DeleteHideButtons: FC<DeleteHideButtonsProps> = ({ element, model }) => {
   return (
     <Box display="flex">
       <IconButton
-        onClick={() => {
+        onClick={(ev) => {
           model.updateElement(element.id, { hidden: !element.hidden });
+          ev.stopPropagation();
         }}
       >
         <RemoveRedEye />

@@ -58,28 +58,30 @@ const OpenQuestionBlock: FC<OpenQuestionBlockProps> = ({
     setFieldType(event.target.value);
   };
 
-  const { clickAwayProps, previewableProps } = useEditPreviewBlock({
-    editable,
-    onEditModeEnter,
-    onEditModeExit,
-    save: () => {
-      model.updateOpenQuestionBlock(element.id, {
-        question: {
-          description: description,
-          question: title,
-          response_config: {
-            multiline: multiline,
+  const { autoFocusDefault, clickAwayProps, containerProps, previewableProps } =
+    useEditPreviewBlock({
+      editable,
+      onEditModeEnter,
+      onEditModeExit,
+      save: () => {
+        model.updateOpenQuestionBlock(element.id, {
+          question: {
+            description: description,
+            question: title,
+            response_config: {
+              multiline: multiline,
+            },
           },
-        },
-      });
-    },
-  });
+        });
+      },
+    });
 
   return (
     <ClickAwayListener {...clickAwayProps}>
-      <Box>
+      <Box {...containerProps}>
         <PreviewableSurveyInput
           {...previewableProps}
+          focusInitially={autoFocusDefault}
           label={messages.blocks.open.label()}
           onChange={(value) => setTitle(value)}
           placeholder={messages.blocks.open.empty()}

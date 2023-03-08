@@ -30,25 +30,27 @@ const TextBlock: FC<TextBlockProps> = ({
   const [header, setHeader] = useState(element.text_block.header);
   const [content, setContent] = useState(element.text_block.content);
 
-  const { clickAwayProps, previewableProps } = useEditPreviewBlock({
-    editable,
-    onEditModeEnter,
-    onEditModeExit,
-    save: () => {
-      model.updateElement(element.id, {
-        text_block: {
-          content: content,
-          header: header,
-        },
-      });
-    },
-  });
+  const { autoFocusDefault, clickAwayProps, containerProps, previewableProps } =
+    useEditPreviewBlock({
+      editable,
+      onEditModeEnter,
+      onEditModeExit,
+      save: () => {
+        model.updateElement(element.id, {
+          text_block: {
+            content: content,
+            header: header,
+          },
+        });
+      },
+    });
 
   return (
     <ClickAwayListener {...clickAwayProps}>
-      <Box>
+      <Box {...containerProps}>
         <PreviewableSurveyInput
           {...previewableProps}
+          focusInitially={autoFocusDefault}
           label={messages.blocks.text.header()}
           onChange={(value) => setHeader(value)}
           placeholder={messages.blocks.text.empty()}

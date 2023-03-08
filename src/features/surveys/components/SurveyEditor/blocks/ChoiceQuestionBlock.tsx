@@ -74,28 +74,30 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
     setOptions(elemQuestion.options || []);
   }, [elemQuestion]);
 
-  const { clickAwayProps, previewableProps } = useEditPreviewBlock({
-    editable,
-    onEditModeEnter,
-    onEditModeExit,
-    save: () => {
-      model.updateOptionsQuestion(element.id, {
-        question: {
-          description: description,
-          question: title,
-          response_config: {
-            widget_type: widgetType,
+  const { autoFocusDefault, clickAwayProps, containerProps, previewableProps } =
+    useEditPreviewBlock({
+      editable,
+      onEditModeEnter,
+      onEditModeExit,
+      save: () => {
+        model.updateOptionsQuestion(element.id, {
+          question: {
+            description: description,
+            question: title,
+            response_config: {
+              widget_type: widgetType,
+            },
           },
-        },
-      });
-    },
-  });
+        });
+      },
+    });
 
   return (
     <ClickAwayListener {...clickAwayProps}>
-      <Box>
+      <Box {...containerProps}>
         <PreviewableSurveyInput
           {...previewableProps}
+          focusInitially={autoFocusDefault}
           label={messages.blocks.choice.question()}
           onChange={(value) => setTitle(value)}
           placeholder={messages.blocks.choice.emptyQuestion()}

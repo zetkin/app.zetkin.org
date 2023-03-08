@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 import { ZUIPreviewableMode } from 'zui/ZUIPreviewableInput';
 
 type UseEditPreviewBlockProps = {
@@ -13,8 +15,11 @@ export default function useEditPreviewBlock({
   onEditModeEnter,
   onEditModeExit,
 }: UseEditPreviewBlockProps) {
+  const [autoFocusDefault, setAutoFocusDefault] = useState(true);
+
   const handleSwitchMode = (newMode: ZUIPreviewableMode) => {
     if (newMode == ZUIPreviewableMode.EDITABLE) {
+      setAutoFocusDefault(false);
       onEditModeEnter();
     } else {
       onEditModeExit();
@@ -22,11 +27,20 @@ export default function useEditPreviewBlock({
   };
 
   return {
+    autoFocusDefault,
     clickAwayProps: {
       onClickAway: () => {
         if (editable) {
           onEditModeExit();
           save();
+        }
+      },
+    },
+    containerProps: {
+      onClick: () => {
+        if (!editable) {
+          setAutoFocusDefault(true);
+          onEditModeEnter();
         }
       },
     },

@@ -6,6 +6,7 @@ import ZUIPreviewableInput, {
 } from 'zui/ZUIPreviewableInput';
 
 type HeadlinePreviewableInputProps = {
+  focusInitially?: boolean;
   label?: string;
   mode: ZUIPreviewableMode;
   onChange: (value: string) => void;
@@ -16,17 +17,19 @@ type HeadlinePreviewableInputProps = {
 };
 
 const PreviewableSurveyInput: FC<HeadlinePreviewableInputProps> = ({
-  placeholder,
+  focusInitially,
   label,
   mode,
   onChange,
   onSwitchMode,
+  placeholder,
   value,
   variant,
 }) => {
   const theme = useTheme();
   return (
     <ZUIPreviewableInput
+      focusInitially={focusInitially}
       mode={mode}
       onSwitchMode={onSwitchMode}
       renderInput={(props) => (
