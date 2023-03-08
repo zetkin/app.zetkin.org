@@ -45,14 +45,6 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ model }) => {
     }
   }, [model.getData().data?.elements.length]);
 
-  function handleDelete(elemId: number) {
-    model.deleteElement(elemId);
-  }
-
-  function handleToggleHidden(elemId: number, hidden: boolean) {
-    model.toggleElementHidden(elemId, hidden);
-  }
-
   return (
     <>
       <ZUIFuture future={model.getData()}>
@@ -63,14 +55,7 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ model }) => {
                 if (elem.type == ELEMENT_TYPE.QUESTION) {
                   if (elem.question.response_type == RESPONSE_TYPE.TEXT) {
                     return (
-                      <BlockWrapper
-                        key={elem.id}
-                        hidden={elem.hidden}
-                        onDelete={() => handleDelete(elem.id)}
-                        onToggleHidden={(hidden) =>
-                          handleToggleHidden(elem.id, hidden)
-                        }
-                      >
+                      <BlockWrapper key={elem.id} hidden={elem.hidden}>
                         <OpenQuestionBlock
                           element={elem.question}
                           inEditMode={elem.id === idOfBlockInEditMode}
@@ -92,14 +77,7 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ model }) => {
                     elem.question.response_type == RESPONSE_TYPE.OPTIONS
                   ) {
                     return (
-                      <BlockWrapper
-                        key={elem.id}
-                        hidden={elem.hidden}
-                        onDelete={() => handleDelete(elem.id)}
-                        onToggleHidden={(hidden) =>
-                          handleToggleHidden(elem.id, hidden)
-                        }
-                      >
+                      <BlockWrapper key={elem.id} hidden={elem.hidden}>
                         <ChoiceQuestionBlock
                           element={elem as ZetkinSurveyOptionsQuestionElement}
                           model={model}
@@ -115,14 +93,7 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ model }) => {
                   }
                 } else if (elem.type == ELEMENT_TYPE.TEXT) {
                   return (
-                    <BlockWrapper
-                      key={elem.id}
-                      hidden={elem.hidden}
-                      onDelete={() => handleDelete(elem.id)}
-                      onToggleHidden={(hidden) =>
-                        handleToggleHidden(elem.id, hidden)
-                      }
-                    >
+                    <BlockWrapper key={elem.id} hidden={elem.hidden}>
                       <TextBlock
                         element={elem}
                         inEditMode={elem.id === idOfBlockInEditMode}

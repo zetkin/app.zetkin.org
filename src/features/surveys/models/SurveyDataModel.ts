@@ -187,6 +187,10 @@ export default class SurveyDataModel extends ModelBase {
     });
   }
 
+  updateElement(elemId: number, data: ZetkinSurveyElementPatchBody) {
+    this._repo.updateElement(this._orgId, this._surveyId, elemId, data);
+  }
+
   updateElementOption(elemId: number, optionId: number, text: string) {
     this._repo.updateElementOption(
       this._orgId,

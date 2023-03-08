@@ -17,6 +17,7 @@ import {
 } from '@mui/material';
 import { FC, useEffect, useState } from 'react';
 
+import DeleteHideButtons from '../DeleteHideButtons';
 import DropdownIcon from 'zui/icons/DropDown';
 import messageIds from 'features/surveys/l10n/messageIds';
 import PreviewableSurveyInput from '../elements/PreviewableSurveyInput';
@@ -227,6 +228,7 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
               <Msg id={messageIds.blocks.choice.addOption} />
             </Button>
           )}
+          <DeleteHideButtons element={element} model={model} />
         </Box>
       </Box>
     </ClickAwayListener>
