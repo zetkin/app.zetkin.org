@@ -7,6 +7,7 @@ import {
   ZetkinOptionsQuestion,
   ZetkinSurvey,
   ZetkinSurveyElement,
+  ZetkinSurveyElementOrder,
   ZetkinSurveyExtended,
   ZetkinSurveyOption,
   ZetkinSurveySubmission,
@@ -19,6 +20,7 @@ import {
   elementOptionAdded,
   elementOptionDeleted,
   elementOptionUpdated,
+  elementsReordered,
   elementUpdated,
   statsLoad,
   statsLoaded,
@@ -229,6 +231,21 @@ export default class SurveysRepo {
     this._store.dispatch(
       elementOptionUpdated([surveyId, elemId, optionId, option])
     );
+  }
+
+  async updateElementOrder(
+    orgId: number,
+    surveyId: number,
+    ids: (string | number)[]
+  ) {
+    const newOrder = await this._apiClient.patch<ZetkinSurveyElementOrder>(
+      `/api/orgs/${orgId}/surveys/${surveyId}/element_order`,
+      {
+        default: ids.map((id) => parseInt(id as string)),
+      }
+    );
+
+    this._store.dispatch(elementsReordered([surveyId, newOrder]));
   }
 
   updateSurvey(

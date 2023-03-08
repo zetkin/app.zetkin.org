@@ -217,6 +217,10 @@ export enum RESPONSE_TYPE {
   TEXT = 'text',
 }
 
+export type ZetkinSurveyElementOrder = {
+  default: number[];
+};
+
 export enum ELEMENT_TYPE {
   QUESTION = 'question',
   TEXT = 'text',
