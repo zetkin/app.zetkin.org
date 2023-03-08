@@ -92,13 +92,14 @@ export default class SurveysRepo {
     surveyId: number,
     data: ZetkinSurveyElementPostBody
   ) {
-    await this._apiClient
+    return await this._apiClient
       .post<ZetkinSurveyElement, ZetkinSurveyElementPostBody>(
         `/api/orgs/${orgId}/surveys/${surveyId}/elements`,
         data
       )
       .then((newElement) => {
         this._store.dispatch(elementAdded([surveyId, newElement]));
+        return newElement;
       });
   }
 
