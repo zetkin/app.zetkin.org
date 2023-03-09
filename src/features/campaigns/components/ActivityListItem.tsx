@@ -5,13 +5,6 @@ import { Box, SvgIconTypeMap, Theme, Typography } from '@mui/material';
 import ZUIIconLabel from 'zui/ZUIIconLabel';
 import ZUIMultiNumberChip from 'zui/ZUIMultiNumberChip';
 
-export const enum ACTIVITY_STATE {
-  OPEN = 'open',
-  SCHEDULED = 'scheduled',
-  DRAFT = 'draft',
-  CLOSED = 'closed',
-}
-
 interface StyleProps {
   color: STATUS_COLORS;
 }
@@ -65,17 +58,25 @@ interface AcitivityListItemProps {
   SecondaryIcon?: OverridableComponent<
     SvgIconTypeMap<Record<string, unknown>, 'svg'>
   >;
+  blueChipValue?: string | number;
+  orangeChipValue: string | number;
+  greenChipValue: string | number;
   message?: string;
   color: STATUS_COLORS;
   title: string;
+  endNumber: string;
 }
 
 const ActivityListItem = ({
   PrimaryIcon,
   SecondaryIcon,
   message,
+  blueChipValue,
+  greenChipValue,
+  orangeChipValue,
   color,
   title,
+  endNumber,
 }: AcitivityListItemProps) => {
   const classes = useStyles({ color });
   return (
@@ -88,9 +89,9 @@ const ActivityListItem = ({
       </Box>
       <Box className={classes.right}>
         <ZUIMultiNumberChip
-          blueValue={234}
-          greenValue={2342}
-          orangeValue={343}
+          blueValue={blueChipValue}
+          greenValue={greenChipValue}
+          orangeValue={orangeChipValue}
         />
         <ZUIIconLabel
           icon={
@@ -100,7 +101,7 @@ const ActivityListItem = ({
               <PrimaryIcon className={classes.secondaryIcon} />
             )
           }
-          label={'1546'}
+          label={endNumber}
           labelColor="secondary"
         />
       </Box>
