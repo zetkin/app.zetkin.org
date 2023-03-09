@@ -22,11 +22,18 @@ type ReorderableItem = {
 };
 
 type ZUIReorderableProps = {
+  disableClick?: boolean;
+  disableDrag?: boolean;
   items: ReorderableItem[];
   onReorder: (ids: IDType[]) => void;
 };
 
-const ZUIReorderable: FC<ZUIReorderableProps> = ({ items, onReorder }) => {
+const ZUIReorderable: FC<ZUIReorderableProps> = ({
+  disableClick,
+  disableDrag,
+  items,
+  onReorder,
+}) => {
   const [order, setOrder] = useState<IDType[]>(items.map((item) => item.id));
   const [activeId, setActiveId] = useState<IDType | null>(null);
 
@@ -151,8 +158,9 @@ const ZUIReorderable: FC<ZUIReorderableProps> = ({ items, onReorder }) => {
             }
           }}
           onNodeExists={(div) => (nodeByIdRef.current[item.id] = div)}
-          showDownButton={index < items.length - 1}
-          showUpButton={index > 0}
+          showDownButton={!disableClick && index < items.length - 1}
+          showDragHandle={!disableDrag}
+          showUpButton={!disableClick && index > 0}
         />
       ))}
     </Box>
@@ -171,6 +179,7 @@ const ZUIReorderableItem: FC<{
   onClickUp: () => void;
   onNodeExists: (node: HTMLDivElement) => void;
   showDownButton: boolean;
+  showDragHandle: boolean;
   showUpButton: boolean;
 }> = ({
   dragging,
@@ -180,6 +189,7 @@ const ZUIReorderableItem: FC<{
   onClickUp,
   onNodeExists,
   showDownButton,
+  showDragHandle,
   showUpButton,
 }) => {
   const itemRef = useRef<HTMLDivElement>();
@@ -201,15 +211,17 @@ const ZUIReorderableItem: FC<{
         }}
       >
         <Box>
-          <IconButton
-            onMouseDown={(ev) => {
-              if (itemRef.current && contentRef.current) {
-                onBeginDrag(itemRef.current, contentRef.current, ev);
-              }
-            }}
-          >
-            <DragIndicatorOutlined />
-          </IconButton>
+          {showDragHandle && (
+            <IconButton
+              onMouseDown={(ev) => {
+                if (itemRef.current && contentRef.current) {
+                  onBeginDrag(itemRef.current, contentRef.current, ev);
+                }
+              }}
+            >
+              <DragIndicatorOutlined />
+            </IconButton>
+          )}
           <UpDownArrows
             onClickDown={onClickDown}
             onClickUp={onClickUp}
