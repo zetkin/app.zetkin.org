@@ -13,7 +13,7 @@ const Template: ComponentStory<typeof ZUIReorderable> = (args) => {
   const [items, setItems] = useState(args.items);
 
   return (
-    <div style={{ width: 400 }}>
+    <div style={{ marginTop: 100, width: 400 }}>
       <ZUIReorderable
         items={items}
         onReorder={(ids) => {

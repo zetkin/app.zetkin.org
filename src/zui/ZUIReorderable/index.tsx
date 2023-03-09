@@ -32,6 +32,20 @@ const ZUIReorderable: FC<ZUIReorderableProps> = ({ items, onReorder }) => {
     setOrder(items.map((item) => item.id));
   }, [items]);
 
+  useEffect(() => {
+    if (!activeId) {
+      // We just finished dragging. Check if the order changed, and
+      // alert the surroundings if it did.
+      // NOTE: It would be nicer to do this in `onMouseUp`, but because
+      // the closure of `onMouseUp` is created on mouse down, the order
+      // never changes from the perspective of `onMouseUp`.
+      const prevKeys = items.map((item) => item.id);
+      if (order.join(',') != prevKeys.join(',')) {
+        onReorder(order);
+      }
+    }
+  }, [activeId]);
+
   const dyRef = useRef<number>();
   const ctrRef = useRef<HTMLDivElement>();
   const activeContentRef = useRef<HTMLDivElement>();
@@ -40,16 +54,15 @@ const ZUIReorderable: FC<ZUIReorderableProps> = ({ items, onReorder }) => {
   const onMouseMove = (ev: MouseEvent) => {
     const ctrRect = ctrRef.current?.getBoundingClientRect();
     const ctrY = ctrRect?.top ?? 0;
-    const targetY = ev.clientY - ctrY - (dyRef.current || 0);
+    const newClientY = ev.clientY - (dyRef.current || 0);
 
     const activeId = activeItemRef.current?.id ?? 0;
 
-    const prevKeys = order;
-    const reorderedItems = items
+    const reorderedKeys = items
       .map((item) => {
         const y =
           activeId == item.id
-            ? targetY
+            ? newClientY
             : nodeByIdRef.current[item.id].getBoundingClientRect().top;
 
         return {
@@ -57,19 +70,13 @@ const ZUIReorderable: FC<ZUIReorderableProps> = ({ items, onReorder }) => {
           y: y,
         };
       })
-      .sort((item0, item1) => item0.y - item1.y);
+      .sort((item0, item1) => item0.y - item1.y)
+      .map((item) => item.id);
 
-    const reorderedKeys = reorderedItems.map((item) => item.id);
-
-    if (prevKeys.join(',') != reorderedKeys.join(',')) {
-      setOrder(reorderedKeys);
-      if (onReorder) {
-        onReorder(reorderedKeys);
-      }
-    }
+    setOrder(reorderedKeys);
 
     if (activeContentRef.current) {
-      activeContentRef.current.style.top = targetY + 'px';
+      activeContentRef.current.style.top = newClientY - ctrY + 'px';
     }
   };
 
