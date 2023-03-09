@@ -1,6 +1,5 @@
-import { makeStyles } from '@mui/styles';
 import messageIds from '../l10n/messageIds';
-import SurveySubmissionsModel from '../models/SurveySubmissionsModel';
+import SurveyDataModel from '../models/SurveyDataModel';
 import { useMessages } from 'core/i18n';
 import useModel from 'core/useModel';
 import ZUICard from 'zui/ZUICard';
@@ -13,51 +12,31 @@ type SurveyUnlinkedCardProps = {
   surveyId: number;
 };
 
-const useStyles = makeStyles({
-  unlinkedAvatar: { backgroundColor: 'grey' },
-});
-
 const SurveyUnlinkedCard = ({ orgId, surveyId }: SurveyUnlinkedCardProps) => {
-  const styles = useStyles();
   const messages = useMessages(messageIds);
   const theme = useTheme();
-  const subsModel = useModel(
-    (env) => new SurveySubmissionsModel(env, orgId, surveyId)
-  );
+  const model = useModel((env) => new SurveyDataModel(env, orgId, surveyId));
 
   return (
-    <ZUIFuture future={subsModel.getSubmissions()}>
-      {(submissions) => {
-        const unlinkedSubmitters = submissions.filter((sub) => {
-          if (sub.respondent !== null) {
-            return sub.respondent.id === undefined;
-          }
-        });
+    <ZUIFuture future={model.getStats()}>
+      {(sub) => {
+        const unlinkedSubmitters = sub.unlinkedSubmitterCount;
+
         return (
           <>
-            {unlinkedSubmitters.length > 0 && (
+            {unlinkedSubmitters > 0 && (
               <Box paddingTop={2}>
                 <ZUICard
                   header={messages.unlinkedCard.header()}
                   status={
                     <ZUINumberChip
                       color={theme.palette.grey[200]}
-                      value={unlinkedSubmitters.length}
+                      value={unlinkedSubmitters}
                     />
                   }
                   subheader={messages.unlinkedCard.description()}
                 >
-                  {unlinkedSubmitters.map((submitter, index) => (
-                    <Box
-                      key={`unsubmitter-${
-                        submitter.respondent!.first_name
-                      }-${index}`}
-                      className={styles.unlinkedAvatar}
-                    >
-                      {`${submitter.respondent!.first_name}
-                      ${submitter.respondent!.last_name}`}
-                    </Box>
-                  ))}
+                  <></>
                 </ZUICard>
               </Box>
             )}

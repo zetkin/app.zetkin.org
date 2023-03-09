@@ -78,7 +78,6 @@ const SurveyPage: PageWithLayout<SurveyPageProps> = ({
           </Grid>
           <Grid item md={4}>
             <SurveyURLCard isOpen={isOpen} orgId={orgId} surveyId={surveyId} />
-
             <SurveyUnlinkedCard
               orgId={parseInt(orgId)}
               surveyId={parseInt(surveyId)}
