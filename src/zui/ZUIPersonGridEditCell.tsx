@@ -64,7 +64,7 @@ const ZUIPersonGridEditCell: FC<{
 
   let searchResults = autoComplete.groupedOptions as ZetkinPerson[];
   const showSuggestedPeople =
-    suggestedPeople.length && (!cell?.id || searching);
+    !!suggestedPeople.length && (!cell?.id || searching);
 
   if (searchResults.length) {
     // Filter down suggestedPeople to only include search matches
@@ -170,12 +170,11 @@ const ZUIPersonGridEditCell: FC<{
                       )}
                     </Box>
                   )}
-                  <List
-                    className={styles.searchingList}
-                    sx={{ display: showSuggestedPeople ? 'block' : 'none' }}
-                  >
+                  <List className={styles.searchingList}>
                     {showSuggestedPeople && !!suggestedPeople.length && (
-                      <List>
+                      <List
+                        sx={{ display: showSuggestedPeople ? 'block' : 'none' }}
+                      >
                         <ListSubheader>
                           <Msg id={suggestedPeopleLabel} />
                         </ListSubheader>
