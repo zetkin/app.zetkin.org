@@ -25,6 +25,7 @@ import SurveyDataModel from 'features/surveys/models/SurveyDataModel';
 import useEditPreviewBlock from './useEditPreviewBlock';
 import { ZetkinSurveyOptionsQuestionElement } from 'utils/types/zetkin';
 import ZUIPreviewableInput from 'zui/ZUIPreviewableInput';
+import ZUIReorderable from 'zui/ZUIReorderable';
 import { Msg, useMessages } from 'core/i18n';
 
 interface ChoiceQuestionBlockProps {
@@ -141,65 +142,79 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
             ))}
           </TextField>
         )}
-        {options.map((option) => (
-          <ZUIPreviewableInput
-            {...previewableProps}
-            key={option.id}
-            renderInput={(props) => (
-              <Box
+        <ZUIReorderable
+          disableClick
+          disableDrag={!editable}
+          items={options.map((option) => ({
+            id: option.id,
+            renderContent: () => (
+              <ZUIPreviewableInput
+                {...previewableProps}
                 key={option.id}
-                alignItems="center"
-                display="flex"
-                justifyContent="center"
-                paddingTop={2}
-                width="100%"
-              >
-                <Box paddingX={2}>{widgetTypes[widgetType].previewIcon}</Box>
-                <TextField
-                  fullWidth
-                  inputProps={props}
-                  onBlur={(ev) => {
-                    model.updateElementOption(
-                      element.id,
-                      option.id,
-                      ev.target.value
-                    );
-                  }}
-                  onChange={(ev) => {
-                    setOptions(
-                      options.map((oldOpt) =>
-                        oldOpt.id == option.id
-                          ? { ...oldOpt, text: ev.target.value }
-                          : oldOpt
-                      )
-                    );
-                  }}
-                  value={option.text}
-                />
-                <IconButton
-                  onClick={() => {
-                    model.deleteElementOption(element.id, option.id);
-                  }}
-                  sx={{ paddingX: 2 }}
-                >
-                  <Close />
-                </IconButton>
-              </Box>
-            )}
-            renderPreview={() => (
-              <Box key={option.id} display="flex" paddingTop={2}>
-                <Box paddingX={2}>{widgetTypes[widgetType].previewIcon}</Box>
-                <Typography
-                  color={option.text ? 'inherit' : 'secondary'}
-                  fontStyle={option.text ? 'inherit' : 'italic'}
-                >
-                  {option.text || messages.blocks.choice.emptyOption()}
-                </Typography>
-              </Box>
-            )}
-            value={option.text}
-          />
-        ))}
+                renderInput={(props) => (
+                  <Box
+                    key={option.id}
+                    alignItems="center"
+                    display="flex"
+                    justifyContent="center"
+                    paddingTop={2}
+                    width="100%"
+                  >
+                    <Box paddingX={2}>
+                      {widgetTypes[widgetType].previewIcon}
+                    </Box>
+                    <TextField
+                      fullWidth
+                      inputProps={props}
+                      onBlur={(ev) => {
+                        model.updateElementOption(
+                          element.id,
+                          option.id,
+                          ev.target.value
+                        );
+                      }}
+                      onChange={(ev) => {
+                        setOptions(
+                          options.map((oldOpt) =>
+                            oldOpt.id == option.id
+                              ? { ...oldOpt, text: ev.target.value }
+                              : oldOpt
+                          )
+                        );
+                      }}
+                      value={option.text}
+                    />
+                    <IconButton
+                      onClick={() => {
+                        model.deleteElementOption(element.id, option.id);
+                      }}
+                      sx={{ paddingX: 2 }}
+                    >
+                      <Close />
+                    </IconButton>
+                  </Box>
+                )}
+                renderPreview={() => (
+                  <Box key={option.id} display="flex" paddingTop={2}>
+                    <Box paddingX={2}>
+                      {widgetTypes[widgetType].previewIcon}
+                    </Box>
+                    <Typography
+                      color={option.text ? 'inherit' : 'secondary'}
+                      fontStyle={option.text ? 'inherit' : 'italic'}
+                    >
+                      {option.text || messages.blocks.choice.emptyOption()}
+                    </Typography>
+                  </Box>
+                )}
+                value={option.text}
+              />
+            ),
+          }))}
+          onReorder={(ids) => {
+            model.updateOptionOrder(element.id, ids);
+          }}
+        />
         <Box
           display="flex"
           justifyContent={editable ? 'space-between' : 'end'}
