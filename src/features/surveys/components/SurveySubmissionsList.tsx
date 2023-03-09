@@ -1,22 +1,27 @@
-import { Box } from '@mui/system';
-import SurveySubmissionPane from '../panes/SurveySubmissionPane';
-import { useMemo } from 'react';
-import { usePanes } from 'utils/panes';
+import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
+import { FC, useMemo } from 'react';
+
+import { Box } from '@mui/system';
+import { Link } from '@mui/material';
 import {
   DataGridPro,
   GridCellParams,
   GridRenderCellParams,
-  GridValueGetterParams,
+  useGridApiContext,
 } from '@mui/x-data-grid-pro';
 
-import { useMessages } from 'core/i18n';
-import { ZetkinSurveySubmission } from 'utils/types/zetkin';
-import ZUIAvatar from 'zui/ZUIAvatar';
-import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
-import ZUIRelativeTime from 'zui/ZUIRelativeTime';
-
+import getPeopleSearchResults from 'utils/fetching/getPeopleSearchResults';
 import messageIds from '../l10n/messageIds';
+import SurveySubmissionModel from '../models/SurveySubmissionModel';
+import SurveySubmissionPane from '../panes/SurveySubmissionPane';
+import useModel from 'core/useModel';
+import { usePanes } from 'utils/panes';
+import ZUIPersonGridCell from 'zui/ZUIPersonGridCell';
+import ZUIPersonGridEditCell from 'zui/ZUIPersonGridEditCell';
+import ZUIRelativeTime from 'zui/ZUIRelativeTime';
+import { Msg, useMessages } from 'core/i18n';
+import { ZetkinPerson, ZetkinSurveySubmission } from 'utils/types/zetkin';
 
 const SurveySubmissionsList = ({
   submissions,
@@ -49,15 +54,23 @@ const SurveySubmissionsList = ({
       field: field,
       flex: 1,
       headerName: messages.submissions[messageId](),
-      sortable: true,
-      valueGetter: (
-        params: GridValueGetterParams<string, ZetkinSurveySubmission>
+      renderCell: (
+        params: GridRenderCellParams<string, ZetkinSurveySubmission>
       ) => {
         if (params.row.respondent !== null) {
-          return params.row.respondent[field];
+          return <Box>{params.row.respondent[field]}</Box>;
         }
-        return '-';
+        return (
+          <Box
+            sx={{
+              fontStyle: 'italic',
+            }}
+          >
+            <Msg id={messageIds.submissions.anonymous} />
+          </Box>
+        );
       },
+      sortable: true,
     };
   };
 
@@ -79,7 +92,8 @@ const SurveySubmissionsList = ({
       sortable: true,
     },
     {
-      field: `respondent`,
+      editable: true,
+      field: 'respondent',
       flex: 1,
       headerName: messages.submissions.personRecordColumn(),
       renderCell: (
@@ -88,21 +102,85 @@ const SurveySubmissionsList = ({
           ZetkinSurveySubmission
         >
       ) => {
-        if (params.value?.id) {
-          return (
-            <ZUIPersonHoverCard personId={params.value.id}>
-              <ZUIAvatar
-                orgId={parseInt(orgId as string)}
-                personId={params.value.id}
-              />
-            </ZUIPersonHoverCard>
-          );
-        }
-        return <></>;
+        return <ReadCell row={params.row} />;
+      },
+      renderEditCell: (
+        params: GridRenderCellParams<
+          ZetkinSurveySubmission['respondent'],
+          ZetkinSurveySubmission
+        >
+      ) => {
+        return <EditCell row={params.row} />;
       },
       sortable: true,
     },
   ];
+
+  const ReadCell: FC<{ row: ZetkinSurveySubmission }> = ({ row }) => {
+    const api = useGridApiContext();
+
+    const startEditing = () => {
+      return api.current.startCellEditMode({
+        field: 'respondent',
+        id: row.id,
+      });
+    };
+
+    if (row.respondent?.id) {
+      return (
+        <ZUIPersonGridCell
+          onClick={startEditing}
+          personId={row.respondent.id}
+        />
+      );
+    } else {
+      return (
+        <Link onClick={startEditing} sx={{ cursor: 'pointer' }}>
+          <Msg id={messageIds.submissions.link} />
+        </Link>
+      );
+    }
+  };
+
+  const EditCell: FC<{ row: ZetkinSurveySubmission }> = ({ row }) => {
+    const api = useGridApiContext();
+    const { orgId } = useRouter().query;
+    const email = row.respondent?.email || '';
+    let { data: suggestedPeople } = useQuery(
+      ['peopleSearchResults', email],
+      getPeopleSearchResults(email, orgId as string),
+      {
+        enabled: email.length >= 2,
+        retry: true,
+      }
+    );
+
+    if (!suggestedPeople) {
+      suggestedPeople = [];
+    }
+
+    const subsModel = useModel(
+      (env) => new SurveySubmissionModel(env, parseInt(orgId as string), row.id)
+    );
+
+    const updateCellValue = (person: ZetkinPerson | null) => {
+      api.current.stopCellEditMode({
+        field: 'respondent',
+        id: row.id,
+      });
+      subsModel.setRespondentId(person?.id || null);
+    };
+
+    return (
+      <ZUIPersonGridEditCell
+        cell={row.respondent}
+        onUpdate={updateCellValue}
+        removePersonLabel={messages.submissions.unlink()}
+        suggestedPeople={suggestedPeople}
+        suggestedPeopleLabel={messages.submissions.suggestedPeople()}
+      />
+    );
+  };
 
   return (
     <Box
@@ -117,6 +195,7 @@ const SurveySubmissionsList = ({
         columns={gridColumns}
         disableColumnFilter
         disableColumnMenu
+        experimentalFeatures={{ newEditingApi: true }}
         getCellClassName={(params: GridCellParams<string>) => {
           return params.field === 'respondent' ? '' : 'pointer';
         }}

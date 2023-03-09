@@ -83,11 +83,15 @@ export default makeMessages('feat.sruveys', {
       m<{ date: ReactElement; person: ReactElement }>('{person} {date}'),
   },
   submissions: {
+    anonymous: m('Anonymous'),
     dateColumn: m('Date'),
     emailColumn: m('Email'),
     firstNameColumn: m('First name'),
     lastNameColumn: m('Last name'),
-    personRecordColumn: m('Person record'),
+    link: m('Link'),
+    personRecordColumn: m('Respondent'),
+    suggestedPeople: m('Suggested people'),
+    unlink: m('Unlink'),
   },
   tabs: {
     overview: m('Overview'),
