@@ -1,6 +1,5 @@
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
-import { useIntl } from 'react-intl';
 
 import Calendar from 'features/calendar/components';
 import getCampaign from 'features/campaigns/fetching/getCampaign';
@@ -13,6 +12,9 @@ import { useQuery } from 'react-query';
 import ZUISpeedDial, { ACTIONS } from 'zui/ZUISpeedDial';
 
 import { campaignTasksResource } from 'features/tasks/api/tasks';
+import { useMessages } from 'core/i18n';
+
+import messageIds from 'features/campaigns/l10n/messageIds';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -90,7 +92,7 @@ const CampaignCalendarPage: PageWithLayout<OrganizeCalendarPageProps> = ({
   orgId,
   campId,
 }) => {
-  const intl = useIntl();
+  const messages = useMessages(messageIds);
   const eventsQuery = useQuery(
     ['campaignEvents', orgId, campId],
     getCampaignEvents(orgId, campId)
@@ -108,9 +110,9 @@ const CampaignCalendarPage: PageWithLayout<OrganizeCalendarPageProps> = ({
   return (
     <>
       <Head>
-        <title>{`${campaignQuery.data?.title} - ${intl.formatMessage({
-          id: 'layout.organize.campaigns.calendar',
-        })}`}</title>
+        <title>
+          {`${campaignQuery.data?.title} - ${messages.layout.calendar()}`}
+        </title>
       </Head>
       <Calendar
         baseHref={`/organize/${orgId}/campaigns/${campId}/calendar`}

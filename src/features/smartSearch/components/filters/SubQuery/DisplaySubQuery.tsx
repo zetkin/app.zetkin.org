@@ -1,4 +1,3 @@
-import { FormattedMessage as Msg } from 'react-intl';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 
@@ -10,6 +9,10 @@ import {
   SmartSearchFilterWithId,
   SubQueryFilterConfig,
 } from 'features/smartSearch/components/types';
+
+import messageIds from 'features/smartSearch/l10n/messageIds';
+import { Msg } from 'core/i18n';
+const localMessageIds = messageIds.filters.subQuery;
 
 interface DisplaySubQueryProps {
   filter: SmartSearchFilterWithId<SubQueryFilterConfig>;
@@ -50,21 +53,25 @@ const DisplaySubQuery = ({ filter }: DisplaySubQueryProps): JSX.Element => {
 
   return (
     <Msg
-      id="misc.smartSearch.sub_query.inputString"
+      id={localMessageIds.inputString}
       values={{
         addRemoveSelect: (
-          <Msg id={`misc.smartSearch.sub_query.addRemoveSelect.${op}`} />
+          <Msg id={messageIds.filters.subQuery.addRemoveSelect[op]} />
         ),
         matchSelect: (
           <Msg
-            id={`misc.smartSearch.sub_query.matchSelect.${filter.config.operator}`}
+            id={
+              messageIds.filters.subQuery.matchSelect[
+                filter.config.operator || 'in'
+              ]
+            }
           />
         ),
         query: (
           <Msg
-            id={`misc.smartSearch.query.preview.${query?.type || 'none'}`}
+            id={localMessageIds.query.preview[query?.type || 'none']}
             values={{
-              queryTitle: query?.title,
+              queryTitle: query?.title ?? '',
             }}
           />
         ),

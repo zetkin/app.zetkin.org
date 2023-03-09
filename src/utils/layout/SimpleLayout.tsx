@@ -3,7 +3,7 @@ import { Box, Theme } from '@mui/material';
 import { FunctionComponent, ReactElement, useState } from 'react';
 
 import DefaultLayout from './DefaultLayout';
-import Header from './Header';
+import Header from '../../zui/ZUIHeader';
 import { PaneProvider } from 'utils/panes';
 import { ZUIEllipsisMenuProps } from 'zui/ZUIEllipsisMenu';
 

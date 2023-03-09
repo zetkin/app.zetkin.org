@@ -1,5 +1,12 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { remoteItem, remoteList, RemoteList } from 'utils/storeUtils';
+
+import { SurveyStats } from './rpc/getSurveyStats';
+import {
+  RemoteItem,
+  remoteItem,
+  remoteList,
+  RemoteList,
+} from 'utils/storeUtils';
 import {
   ZetkinSurvey,
   ZetkinSurveyElement,
@@ -9,10 +16,12 @@ import {
 
 export interface SurveysStoreSlice {
   submissionList: RemoteList<ZetkinSurveySubmission>;
+  statsBySurveyId: Record<number, RemoteItem<SurveyStats>>;
   surveyList: RemoteList<ZetkinSurveyExtended>;
 }
 
 const initialState: SurveysStoreSlice = {
+  statsBySurveyId: {},
   submissionList: remoteList(),
   surveyList: remoteList(),
 };
@@ -57,6 +66,18 @@ const surveysSlice = createSlice({
           oldElement.id == elemId ? updatedElement : oldElement
         );
       }
+    },
+    statsLoad: (state, action: PayloadAction<number>) => {
+      const surveyId = action.payload;
+      state.statsBySurveyId[surveyId] = remoteItem<SurveyStats>(surveyId, {
+        isLoading: true,
+      });
+    },
+    statsLoaded: (state, action: PayloadAction<[number, SurveyStats]>) => {
+      const [surveyId, stats] = action.payload;
+      state.statsBySurveyId[surveyId].data = stats;
+      state.statsBySurveyId[surveyId].isLoading = false;
+      state.statsBySurveyId[surveyId].loaded = new Date().toISOString();
     },
     submissionLoad: (state, action: PayloadAction<number>) => {
       const id = action.payload;
@@ -164,6 +185,8 @@ export const {
   elementUpdated,
   submissionLoad,
   submissionLoaded,
+  statsLoad,
+  statsLoaded,
   surveyLoad,
   surveyLoaded,
   surveySubmissionUpdate,

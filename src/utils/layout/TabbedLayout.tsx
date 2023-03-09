@@ -1,11 +1,10 @@
-import { FormattedMessage } from 'react-intl';
 import makeStyles from '@mui/styles/makeStyles';
 import { useRouter } from 'next/router';
 import { Box, Collapse, Tab, TabProps, Tabs, Theme } from '@mui/material';
 import { FunctionComponent, ReactElement, useState } from 'react';
 
 import DefaultLayout from './DefaultLayout';
-import Header from './Header';
+import Header from '../../zui/ZUIHeader';
 import { PaneProvider } from 'utils/panes';
 import { ZUIEllipsisMenuProps } from 'zui/ZUIEllipsisMenu';
 
@@ -31,7 +30,7 @@ interface TabbedLayoutProps {
   subtitle?: string | ReactElement;
   defaultTab: string;
   noPad?: boolean;
-  tabs: { href: string; messageId: string; tabProps?: TabProps }[];
+  tabs: { href: string; label: string; tabProps?: TabProps }[];
 }
 
 const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
@@ -98,7 +97,7 @@ const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
                 <Tab
                   {...tab.tabProps}
                   key={tab.href}
-                  label={<FormattedMessage id={tab.messageId} />}
+                  label={tab.label}
                   value={tab.href}
                 />
               );

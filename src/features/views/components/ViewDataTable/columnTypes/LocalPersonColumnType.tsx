@@ -10,6 +10,8 @@ import ZUIPersonGridEditCell from 'zui/ZUIPersonGridEditCell';
 import { COLUMN_TYPE, LocalPersonViewColumn } from '../../types';
 import { ZetkinPerson, ZetkinViewRow } from 'utils/types/zetkin';
 
+import messageIds from 'features/views/l10n/messageIds';
+
 type LocalPersonViewCell = null | ZetkinPerson;
 
 export default class LocalPersonColumnType
@@ -89,10 +91,10 @@ const EditCell: FC<{
     <ZUIPersonGridEditCell
       cell={cell}
       onUpdate={updateCellValue}
-      removePersonLabel="misc.views.cells.localPerson.clearLabel"
+      removePersonLabel={messageIds.cells.localPerson.clearLabel}
       restrictedMode={isRestrictedMode}
       suggestedPeople={suggestedPeople}
-      suggestedPeopleLabel="misc.views.cells.localPerson.alreadyInView"
+      suggestedPeopleLabel={messageIds.cells.localPerson.alreadyInView}
     />
   );
 };

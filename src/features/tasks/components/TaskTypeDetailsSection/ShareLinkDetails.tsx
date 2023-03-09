@@ -1,6 +1,8 @@
 import { ShareLinkConfig } from 'features/tasks/components/types';
 import TaskProperty from '../TaskProperty';
-import { useIntl } from 'react-intl';
+import { useMessages } from 'core/i18n';
+
+import messageIds from 'features/tasks/l10n/messageIds';
 
 interface ShareLinkDetailsProps {
   taskConfig: Partial<ShareLinkConfig>;
@@ -9,21 +11,17 @@ interface ShareLinkDetailsProps {
 const ShareLinkDetails: React.FunctionComponent<ShareLinkDetailsProps> = ({
   taskConfig,
 }) => {
-  const intl = useIntl();
+  const messages = useMessages(messageIds);
 
   return (
     <>
       <TaskProperty
-        title={intl.formatMessage({
-          id: 'misc.tasks.forms.shareLinkConfig.fields.url',
-        })}
+        title={messages.configs.shareLink.fields.url()}
         url
         value={taskConfig.url}
       />
       <TaskProperty
-        title={intl.formatMessage({
-          id: 'misc.tasks.forms.shareLinkConfig.fields.default_message',
-        })}
+        title={messages.configs.shareLink.fields.url()}
         value={taskConfig.default_message}
       />
     </>

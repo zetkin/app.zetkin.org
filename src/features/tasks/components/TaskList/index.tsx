@@ -1,13 +1,14 @@
-import { FormattedMessage as Msg } from 'react-intl';
 import { useRouter } from 'next/router';
 import { Card, Divider, List, ListItem, ListItemText } from '@mui/material';
 import React, { useState } from 'react';
 
 import { config as createTaskAction } from 'zui/ZUISpeedDial/actions/createTask';
+import { Msg } from 'core/i18n';
+import TaskStatusSublist from './TaskStatusSublist';
 import { ZetkinTask } from 'utils/types/zetkin';
 import getTaskStatus, { TASK_STATUS } from 'features/tasks/utils/getTaskStatus';
 
-import TaskStatusSublist from './TaskStatusSublist';
+import messageIds from 'features/tasks/l10n/messageIds';
 
 interface TaskListProps {
   tasks: ZetkinTask[];
@@ -38,7 +39,7 @@ const TaskList: React.FunctionComponent<TaskListProps> = ({ tasks }) => {
             }}
           >
             <ListItemText>
-              <Msg id="pages.organizeCampaigns.noTasksCreatePrompt" />
+              <Msg id={messageIds.noTasksCreatePrompt} />
             </ListItemText>
           </ListItem>
         )}
@@ -91,7 +92,7 @@ const TaskList: React.FunctionComponent<TaskListProps> = ({ tasks }) => {
               onClick={() => setShowExpiredTasks(true)}
             >
               <ListItemText>
-                <Msg id="pages.organizeCampaigns.showExpiredTasksPrompt" />
+                <Msg id={messageIds.showExpiredTasksPrompt} />
               </ListItemText>
             </ListItem>
           </>

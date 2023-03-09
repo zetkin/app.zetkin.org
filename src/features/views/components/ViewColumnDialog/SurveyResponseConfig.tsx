@@ -10,7 +10,6 @@ import {
   Typography,
 } from '@mui/material';
 import { ChangeEventHandler, useState } from 'react';
-import { FormattedMessage, FormattedMessage as Msg, useIntl } from 'react-intl';
 
 import getSurveysWithElements from 'features/smartSearch/fetching/getSurveysWithElements';
 import { COLUMN_TYPE, SelectedViewColumn } from '../types';
@@ -20,6 +19,9 @@ import {
   ZetkinSurveyQuestionElement,
   ZetkinSurveyTextQuestionElement,
 } from 'utils/types/zetkin';
+import { Msg, useMessages } from 'core/i18n';
+
+import messageIds from 'features/views/l10n/messageIds';
 
 interface SurveyResponseConfigProps {
   onOutputConfigured: (columns: SelectedViewColumn[]) => void;
@@ -39,7 +41,7 @@ const SurveyResponseConfig = ({
     ['surveysWithElements', orgId],
     getSurveysWithElements(orgId as string)
   );
-  const intl = useIntl();
+  const messages = useMessages(messageIds);
 
   const [surveyId, setSurveyId] = useState<number | null>();
   const [selectedQuestion, setSelectedQuestion] =
@@ -137,9 +139,7 @@ const SurveyResponseConfig = ({
           <FormControl sx={{ width: 300 }}>
             <TextField
               fullWidth
-              label={intl.formatMessage({
-                id: 'misc.views.columnDialog.choices.surveyResponse.surveyField',
-              })}
+              label={messages.columnDialog.choices.surveyResponse.surveyField()}
               margin="normal"
               onChange={onSurveyChange}
               select
@@ -175,9 +175,7 @@ const SurveyResponseConfig = ({
                     inputProps={{
                       ...params.inputProps,
                     }}
-                    label={intl.formatMessage({
-                      id: 'misc.views.columnDialog.choices.surveyResponse.questionField',
-                    })}
+                    label={messages.columnDialog.choices.surveyResponse.questionField()}
                     variant="standard"
                   />
                 )}
@@ -187,15 +185,15 @@ const SurveyResponseConfig = ({
             {selectedQuestion?.question.response_type ===
               RESPONSE_TYPE.TEXT && (
               <Typography sx={{ marginTop: 2 }}>
-                <Msg id="misc.views.columnDialog.choices.surveyResponse.textField" />
+                <Msg
+                  id={messageIds.columnDialog.choices.surveyResponse.textField}
+                />
               </Typography>
             )}
             {selectedQuestion?.question.response_type ===
               RESPONSE_TYPE.OPTIONS && (
               <TextField
-                label={intl.formatMessage({
-                  id: 'misc.views.columnDialog.choices.surveyResponse.optionsLabel',
-                })}
+                label={messages.columnDialog.choices.surveyResponse.optionsLabel()}
                 onChange={(evt) => {
                   const columns = makeOptionColumns(evt.target.value);
                   if (columns !== undefined) {
@@ -206,16 +204,34 @@ const SurveyResponseConfig = ({
                 variant="standard"
               >
                 <ListSubheader>
-                  <FormattedMessage id="misc.views.columnDialog.choices.surveyResponse.allOptionsHeader" />
+                  <Msg
+                    id={
+                      messageIds.columnDialog.choices.surveyResponse
+                        .allOptionsHeader
+                    }
+                  />
                 </ListSubheader>
                 <MenuItem value={SURVEY_QUESTION_OPTIONS.ALL_OPTIONS}>
-                  <FormattedMessage id="misc.views.columnDialog.choices.surveyResponse.allOptions" />
+                  <Msg
+                    id={
+                      messageIds.columnDialog.choices.surveyResponse.allOptions
+                    }
+                  />
                 </MenuItem>
                 <MenuItem value={SURVEY_QUESTION_OPTIONS.ALL_OPTIONS_SEPARATED}>
-                  <FormattedMessage id="misc.views.columnDialog.choices.surveyResponse.allOptionsSeparated" />
+                  <Msg
+                    id={
+                      messageIds.columnDialog.choices.surveyResponse
+                        .allOptionsSeparated
+                    }
+                  />
                 </MenuItem>
                 <ListSubheader>
-                  <FormattedMessage id="misc.views.columnDialog.choices.surveyResponse.oneOption" />
+                  <Msg
+                    id={
+                      messageIds.columnDialog.choices.surveyResponse.oneOption
+                    }
+                  />
                 </ListSubheader>
                 {selectedQuestion?.question.options?.map((option) => (
                   <MenuItem key={option.id} value={option.id.toString()}>

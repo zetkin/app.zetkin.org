@@ -1,11 +1,10 @@
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { Box, Chip, Grid, Typography, useTheme } from '@mui/material';
-import { FormattedMessage as Msg, useIntl } from 'react-intl';
 import { useContext, useState } from 'react';
 
 import DefaultLayout from 'utils/layout/DefaultLayout';
-import Header from 'utils/layout/Header';
+import Header from 'zui/ZUIHeader';
 import JourneyInstanceSidebar from 'features/journeys/components/JourneyInstanceSidebar';
 import { organizationResource } from 'features/journeys/api/organizations';
 import { PageWithLayout } from 'utils/types';
@@ -21,7 +20,10 @@ import {
   journeyInstancesResource,
   journeyResource,
 } from 'features/journeys/api/journeys';
+import { Msg, useMessages } from 'core/i18n';
 import { ZetkinPerson, ZetkinTag } from 'utils/types/zetkin';
+
+import messageIds from 'features/journeys/l10n/messageIds';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -80,7 +82,7 @@ const NewJourneyPage: PageWithLayout<NewJourneyPageProps> = ({
 
   const { showSnackbar } = useContext(ZUISnackbarContext);
 
-  const intl = useIntl();
+  const messages = useMessages(messageIds);
   const theme = useTheme();
   const router = useRouter();
 
@@ -124,10 +126,9 @@ const NewJourneyPage: PageWithLayout<NewJourneyPageProps> = ({
           <>
             <Head>
               <title>
-                {intl.formatMessage(
-                  { id: 'pages.organizeNewJourneyInstance.title' },
-                  { journey: journey.singular_label }
-                )}
+                {messages.instance.newInstance.title({
+                  journey: journey.singular_label,
+                })}
               </title>
             </Head>
             <Header
@@ -139,9 +140,7 @@ const NewJourneyPage: PageWithLayout<NewJourneyPageProps> = ({
                   }}
                 >
                   <Chip
-                    label={intl.formatMessage({
-                      id: 'pages.organizeNewJourneyInstance.draft',
-                    })}
+                    label={messages.instance.newInstance.draft()}
                     style={{
                       backgroundColor: theme.palette.grey['300'],
                       fontWeight: 'bold',
@@ -153,10 +152,9 @@ const NewJourneyPage: PageWithLayout<NewJourneyPageProps> = ({
                 <ZUIEditTextinPlace
                   allowEmpty
                   onChange={async (value) => setTitle(value)}
-                  placeholder={intl.formatMessage(
-                    { id: 'pages.organizeNewJourneyInstance.title' },
-                    { journey: journey.singular_label }
-                  )}
+                  placeholder={messages.instance.newInstance.title({
+                    journey: journey.singular_label,
+                  })}
                   value={title}
                 />
               }
@@ -169,7 +167,7 @@ const NewJourneyPage: PageWithLayout<NewJourneyPageProps> = ({
                     style={{ marginBottom: '1.5rem' }}
                     variant="h6"
                   >
-                    <Msg id="pages.organizeNewJourneyInstance.openingNote" />
+                    <Msg id={messageIds.instance.newInstance.openingNote} />
                   </Typography>
                   <ZUIAutoTextArea
                     onChange={(value) => {
@@ -205,12 +203,9 @@ const NewJourneyPage: PageWithLayout<NewJourneyPageProps> = ({
                         createInstanceMutation.isLoading ||
                         createInstanceMutation.isSuccess
                       }
-                      submitText={intl.formatMessage(
-                        {
-                          id: 'pages.organizeNewJourneyInstance.submitLabel',
-                        },
-                        { journey: journey.singular_label }
-                      )}
+                      submitText={messages.instance.newInstance.submitLabel({
+                        journey: journey.singular_label,
+                      })}
                     />
                   </form>
                 </Grid>

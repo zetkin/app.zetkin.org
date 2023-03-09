@@ -1,6 +1,5 @@
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
-import { useIntl } from 'react-intl';
 import { useQuery } from 'react-query';
 import { Box, Grid, Typography } from '@mui/material';
 
@@ -13,10 +12,13 @@ import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import SingleCampaignLayout from 'features/campaigns/layout/SingleCampaignLayout';
 import TaskList from 'features/tasks/components/TaskList';
+import { useMessages } from 'core/i18n';
 import ZUIPerson from 'zui/ZUIPerson';
 import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
 import ZUISection from 'zui/ZUISection';
 import ZUISpeedDial, { ACTIONS } from 'zui/ZUISpeedDial';
+
+import messageIds from 'features/campaigns/l10n/messageIds';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -86,7 +88,7 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({
   orgId,
   campId,
 }) => {
-  const intl = useIntl();
+  const messages = useMessages(messageIds);
 
   const tasksQuery = campaignTasksResource(orgId, campId).useQuery();
 
@@ -121,9 +123,7 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({
                   <ZUIPerson
                     id={campaign.manager.id}
                     name={campaign.manager.name}
-                    subtitle={intl.formatMessage({
-                      id: 'pages.organizeCampaigns.campaignManager',
-                    })}
+                    subtitle={messages.campaignManager()}
                   />
                 </ZUIPersonHoverCard>
               </Grid>
@@ -134,11 +134,7 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({
         <Grid container spacing={2}>
           {/* Events */}
           <Grid item md={6} sm={12} xs={12}>
-            <ZUISection
-              title={intl.formatMessage({
-                id: 'pages.organizeCampaigns.events',
-              })}
-            >
+            <ZUISection title={messages.events()}>
               <EventList
                 events={events ?? []}
                 hrefBase={`/organize/${orgId}/campaigns/${campId}`}
@@ -148,11 +144,7 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({
 
           {/* Tasks */}
           <Grid item md={6} sm={12} xs={12}>
-            <ZUISection
-              title={intl.formatMessage({
-                id: 'pages.organizeCampaigns.tasks',
-              })}
-            >
+            <ZUISection title={messages.tasks()}>
               <TaskList tasks={tasks ?? []} />
             </ZUISection>
           </Grid>

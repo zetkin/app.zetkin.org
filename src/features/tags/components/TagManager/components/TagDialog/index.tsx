@@ -1,6 +1,5 @@
 /* eslint-disable jsx-a11y/no-autofocus */
 import { TextField } from '@mui/material';
-import { useIntl } from 'react-intl';
 import { useEffect, useState } from 'react';
 
 import ColorPicker from './ColorPicker';
@@ -10,6 +9,9 @@ import ZUIDialog from 'zui/ZUIDialog';
 import ZUISubmitCancelButtons from 'zui/ZUISubmitCancelButtons';
 import { EditTag, NewTag, NewTagGroup } from '../../types';
 import { ZetkinTag, ZetkinTagGroup } from 'utils/types/zetkin';
+
+import messageIds from '../../../../l10n/messageIds';
+import { useMessages } from 'core/i18n';
 
 interface TagDialogProps {
   groups: ZetkinTagGroup[];
@@ -26,7 +28,7 @@ const TagDialog: React.FunctionComponent<TagDialogProps> = ({
   onSubmit,
   tag,
 }) => {
-  const intl = useIntl();
+  const messages = useMessages(messageIds);
 
   const [title, setTitle] = useState('');
   const [titleEdited, setTitleEdited] = useState(false);
@@ -66,11 +68,7 @@ const TagDialog: React.FunctionComponent<TagDialogProps> = ({
       onClose={closeAndClear}
       open={open}
       title={
-        editingTag
-          ? 'Edit tag'
-          : intl.formatMessage({
-              id: 'misc.tags.tagManager.tagDialog.dialogTitle',
-            })
+        editingTag ? messages.dialog.editTitle() : messages.dialog.createTitle()
       }
     >
       <form
@@ -105,17 +103,9 @@ const TagDialog: React.FunctionComponent<TagDialogProps> = ({
         <TextField
           error={titleEdited && !title}
           fullWidth
-          helperText={
-            titleEdited &&
-            !title &&
-            intl.formatMessage({
-              id: 'misc.tags.tagManager.tagDialog.titleErrorText',
-            })
-          }
+          helperText={titleEdited && !title && messages.dialog.titleErrorText()}
           inputProps={{ 'data-testid': 'TagManager-TagDialog-titleField' }}
-          label={intl.formatMessage({
-            id: 'misc.tags.tagManager.tagDialog.titleLabel',
-          })}
+          label={messages.dialog.titleLabel()}
           margin="normal"
           onChange={(e) => {
             setTitle(e.target.value);
@@ -146,11 +136,7 @@ const TagDialog: React.FunctionComponent<TagDialogProps> = ({
           onCancel={closeAndClear}
           submitDisabled={!title || !color.valid}
           submitText={
-            editingTag
-              ? undefined
-              : intl.formatMessage({
-                  id: 'misc.tags.tagManager.submitCreateTagButton',
-                })
+            editingTag ? undefined : messages.dialog.submitCreateTagButton()
           }
         />
       </form>

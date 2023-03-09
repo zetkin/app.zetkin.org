@@ -1,39 +1,61 @@
-import { FC } from 'react';
-import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
-import { Box, Link } from '@mui/material';
+import { useQuery } from 'react-query';
+
+import { Box } from '@mui/system';
+import SurveySubmissionPane from '../panes/SurveySubmissionPane';
+import { usePanes } from 'utils/panes';
+
 import {
   DataGridPro,
+  GridCellParams,
   GridRenderCellParams,
   useGridApiContext,
 } from '@mui/x-data-grid-pro';
-import { FormattedMessage, useIntl } from 'react-intl';
+import { FC, useMemo } from 'react';
 
-import getPeopleSearchResults from 'utils/fetching/getPeopleSearchResults';
-import SurveySubmissionModel from '../models/SurveySubmissionModel';
-import useModel from 'core/useModel';
-import ZUIPersonGridCell from 'zui/ZUIPersonGridCell';
-import ZUIPersonGridEditCell from 'zui/ZUIPersonGridEditCell';
-import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 import { ZetkinPerson, ZetkinSurveySubmission } from 'utils/types/zetkin';
+import ZUIRelativeTime from 'zui/ZUIRelativeTime';
+import { Msg, useMessages } from 'core/i18n';
+
+import { Link } from '@mui/material';
+import messageIds from '../l10n/messageIds';
+import ZUIPersonGridCell from 'zui/ZUIPersonGridCell';
+import useModel from 'core/useModel';
+import getPeopleSearchResults from 'utils/fetching/getPeopleSearchResults';
+import ZUIPersonGridEditCell from 'zui/ZUIPersonGridEditCell';
+import SurveySubmissionModel from '../models/SurveySubmissionModel';
 
 const SurveySubmissionsList = ({
   submissions,
 }: {
   submissions: ZetkinSurveySubmission[];
 }) => {
-  const intl = useIntl();
+  const messages = useMessages(messageIds);
+  const { orgId } = useRouter().query;
+  const { openPane } = usePanes();
+
+  const sortedSubmissions = useMemo(() => {
+    const sorted = [...submissions].sort((subOne, subTwo) => {
+      const dateOne = new Date(subOne.submitted);
+      const dateTwo = new Date(subTwo.submitted);
+      return dateTwo.getTime() - dateOne.getTime();
+    });
+    return sorted;
+  }, [submissions]);
 
   const makeSimpleColumn = (
     field: keyof NonNullable<ZetkinSurveySubmission['respondent']>,
-    messageId: string
+    messageId:
+      | 'dateColumn'
+      | 'emailColumn'
+      | 'firstNameColumn'
+      | 'lastNameColumn'
+      | 'personRecordColumn'
   ) => {
     return {
       field: field,
       flex: 1,
-      headerName: intl.formatMessage({
-        id: `pages.organizeSurvey.submissions.${messageId}`,
-      }),
+      headerName: messages.submissions[messageId](),
       renderCell: (
         params: GridRenderCellParams<string, ZetkinSurveySubmission>
       ) => {
@@ -46,9 +68,7 @@ const SurveySubmissionsList = ({
               fontStyle: 'italic',
             }}
           >
-            <FormattedMessage
-              id={`pages.organizeSurvey.submissions.anonymous`}
-            />
+            <Msg id={messageIds.submissions.anonymous} />
           </Box>
         );
       },
@@ -63,13 +83,13 @@ const SurveySubmissionsList = ({
     {
       field: `submitted`,
       flex: 1,
-      headerName: intl.formatMessage({
-        id: 'pages.organizeSurvey.submissions.dateColumn',
-      }),
+      headerName: messages.submissions.dateColumn(),
       renderCell: (
         params: GridRenderCellParams<string, ZetkinSurveySubmission>
       ) => {
-        return <ZUIRelativeTime datetime={params.row.submitted} />;
+        if (params.row.respondent !== null) {
+          return <ZUIRelativeTime datetime={params.row.submitted} />;
+        }
       },
       sortable: true,
     },
@@ -77,9 +97,7 @@ const SurveySubmissionsList = ({
       editable: true,
       field: 'respondent',
       flex: 1,
-      headerName: intl.formatMessage({
-        id: 'pages.organizeSurvey.submissions.personRecordColumn',
-      }),
+      headerName: messages.submissions.personRecordColumn(),
       renderCell: (
         params: GridRenderCellParams<
           ZetkinSurveySubmission['respondent'],
@@ -120,7 +138,7 @@ const SurveySubmissionsList = ({
     } else {
       return (
         <Link onClick={startEditing} sx={{ cursor: 'pointer' }}>
-          Link
+          <Msg id={messageIds.submissions.link} />
         </Link>
       );
     }
@@ -169,27 +187,51 @@ const SurveySubmissionsList = ({
       <ZUIPersonGridEditCell
         cell={params.value}
         onUpdate={updateCellValue}
-        removePersonLabel="misc.surveys.submissions.unlink"
+        removePersonLabel={messageIds.submissions.unlink}
         suggestedPeople={suggestedPeople}
-        suggestedPeopleLabel="misc.surveys.suggestedPeople"
+        suggestedPeopleLabel={messageIds.submissions.suggestedPeople}
       />
     );
   };
 
   return (
-    <>
+    <Box
+      sx={{
+        '& .pointer': {
+          cursor: 'pointer',
+        },
+      }}
+    >
       <DataGridPro
         autoHeight
         columns={gridColumns}
         disableColumnFilter
         disableColumnMenu
         experimentalFeatures={{ newEditingApi: true }}
-        rows={submissions}
+        getCellClassName={(params: GridCellParams<string>) => {
+          return params.field === 'respondent' ? '' : 'pointer';
+        }}
+        onCellClick={(params) => {
+          if (params.field !== 'respondent') {
+            openPane({
+              render() {
+                return (
+                  <SurveySubmissionPane
+                    id={params.row.id}
+                    orgId={parseInt(orgId as string)}
+                  />
+                );
+              },
+              width: 400,
+            });
+          }
+        }}
+        rows={sortedSubmissions}
         style={{
           border: 'none',
         }}
       />
-    </>
+    </Box>
   );
 };
 

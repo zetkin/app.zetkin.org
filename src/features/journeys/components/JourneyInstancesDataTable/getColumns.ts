@@ -1,21 +1,23 @@
 import { GridColDef } from '@mui/x-data-grid-pro';
-import { IntlShape } from 'react-intl';
 
 import { getStaticColumns } from './getStaticColumns';
 import getTagColumns from './getTagColumns';
 import { JourneyTagColumnData } from 'features/journeys/utils/journeyInstanceUtils';
+import { UseMessagesMap } from 'core/i18n';
 import { ZetkinJourneyInstance } from 'utils/types/zetkin';
 
+import messageIds from 'features/journeys/l10n/messageIds';
+
 const getColumns = (
-  intl: IntlShape,
+  messages: UseMessagesMap<typeof messageIds>,
   journeyInstances: ZetkinJourneyInstance[],
   tagColumns: JourneyTagColumnData[]
 ): GridColDef[] => {
-  const staticColumns = getStaticColumns(intl, journeyInstances);
+  const staticColumns = getStaticColumns(messages, journeyInstances);
   return (
     staticColumns
       .splice(0, 2)
-      .concat(getTagColumns(intl, journeyInstances, tagColumns))
+      .concat(getTagColumns(messages, journeyInstances, tagColumns))
       // Add/override common props
       .concat(staticColumns)
       .map((col) => ({

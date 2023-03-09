@@ -7,7 +7,6 @@ export interface DialogContentBaseProps {
 export interface ActionConfig {
   key: ACTIONS;
   icon: React.ReactNode;
-  name: string;
   urlKey: string;
 }
 

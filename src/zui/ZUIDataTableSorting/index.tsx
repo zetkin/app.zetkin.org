@@ -1,4 +1,3 @@
-import { FormattedMessage } from 'react-intl';
 import { makeStyles } from '@mui/styles';
 import { useState } from 'react';
 import { Add, Delete, ImportExport } from '@mui/icons-material';
@@ -20,7 +19,10 @@ import {
   GridSortModel,
 } from '@mui/x-data-grid-pro';
 
+import { Msg } from 'core/i18n';
 import ShiftKeyIcon from '../../features/views/components/ViewDataTable/ShiftKeyIcon';
+
+import messageIds from 'zui/l10n/messageIds';
 
 const useStyles = makeStyles({
   deleteButton: {
@@ -103,7 +105,7 @@ const ZUIDataTableSorting: React.FunctionComponent<
           onClick={handleSortButtonClick}
           startIcon={<ImportExport />}
         >
-          <FormattedMessage id="misc.dataTable.sorting.button" />
+          <Msg id={messageIds.dataTableSorting.button} />
         </Button>
       </Badge>
       <Popover
@@ -124,7 +126,7 @@ const ZUIDataTableSorting: React.FunctionComponent<
       >
         <Box display="flex" flexDirection="column">
           <Typography variant="body1">
-            <FormattedMessage id="misc.dataTable.sorting.title" />
+            <Msg id={messageIds.dataTableSorting.title} />
           </Typography>
           <Divider />
           <Box display="flex" flexDirection="column" mt={1}>
@@ -193,12 +195,12 @@ const ZUIDataTableSorting: React.FunctionComponent<
               startIcon={<Add />}
               variant="text"
             >
-              <FormattedMessage id="misc.dataTable.sorting.addButton" />
+              <Msg id={messageIds.dataTableSorting.addButton} />
             </Button>
           </Box>
           <Typography variant="caption">
-            <FormattedMessage
-              id="misc.dataTable.sorting.hint"
+            <Msg
+              id={messageIds.dataTableSorting.hint}
               values={{
                 shiftKeyIcon: (
                   <ShiftKeyIcon

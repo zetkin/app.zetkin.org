@@ -1,10 +1,10 @@
-import { useIntl } from 'react-intl';
 import { useState } from 'react';
 
 import FilterEditor from './FilterEditor';
 import FilterGallery from './FilterGallery';
 import QueryOverview from './QueryOverview';
 import StartsWith from '../StartsWith';
+import { useMessages } from 'core/i18n';
 import useSmartSearch from 'features/smartSearch/hooks/useSmartSearch';
 import {
   AnyFilterConfig,
@@ -18,6 +18,8 @@ import {
   COLUMN_TYPE,
   SelectedViewColumn,
 } from 'features/views/components/types';
+
+import viewsMessageIds from 'features/views/l10n/messageIds';
 
 export interface SmartSearchDialogProps {
   query?: ZetkinQuery | null;
@@ -52,7 +54,8 @@ const SmartSearch = ({
     setStartsWithAll,
     deleteFilter,
   } = useSmartSearch(query?.filter_spec);
-  const intl = useIntl();
+  // TODO: Remove this after refactoring Smart Search / View connection
+  const viewsMessages = useMessages(viewsMessageIds);
 
   const isEmptyQuery = !filterArray.length && !readOnly;
 
@@ -111,9 +114,8 @@ const SmartSearch = ({
                   config: {
                     filter_spec: [...filters, filter],
                   },
-                  title: intl.formatMessage({
-                    id: 'misc.views.columnDialog.choices.localQuery.columnTitle',
-                  }),
+                  title:
+                    viewsMessages.columnDialog.choices.localQuery.columnTitle(),
                   type: COLUMN_TYPE.LOCAL_QUERY,
                 },
               ]);
@@ -154,9 +156,8 @@ const SmartSearch = ({
                   config: {
                     filter_spec: filterSpec,
                   },
-                  title: intl.formatMessage({
-                    id: 'misc.views.columnDialog.choices.localQuery.columnTitle',
-                  }),
+                  title:
+                    viewsMessages.columnDialog.choices.localQuery.columnTitle(),
                   type: COLUMN_TYPE.LOCAL_QUERY,
                 },
               ]);

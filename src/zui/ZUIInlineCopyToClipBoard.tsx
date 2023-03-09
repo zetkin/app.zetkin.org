@@ -1,10 +1,12 @@
 import copy from 'copy-to-clipboard';
-import { useIntl } from 'react-intl';
 import { Box, Fade, IconButton } from '@mui/material';
 import React, { useContext, useState } from 'react';
 import SvgIcon, { SvgIconProps } from '@mui/material/SvgIcon';
 
+import { useMessages } from 'core/i18n';
 import ZUISnackbarContext from './ZUISnackbarContext';
+
+import messageIds from './l10n/messageIds';
 
 interface IconProps {
   size?: number;
@@ -39,7 +41,7 @@ const ZUIInlineCopyToClipboard: React.FunctionComponent<{
   children: React.ReactNode;
   copyText: string | number | boolean;
 }> = ({ alwaysShowIcon = false, children, copyText }) => {
-  const intl = useIntl();
+  const messages = useMessages(messageIds);
   const [hover, setHover] = useState<boolean>(false);
 
   const { showSnackbar } = useContext(ZUISnackbarContext);
@@ -49,12 +51,9 @@ const ZUIInlineCopyToClipboard: React.FunctionComponent<{
     copy(str);
     showSnackbar(
       'success',
-      intl.formatMessage(
-        { id: 'zui.copyToClipboard.copiedValue' },
-        {
-          value: str.length > 30 ? str.slice(0, 30) + '…' : str,
-        }
-      )
+      messages.copyToClipboard.copiedValue({
+        value: str.length > 30 ? str.slice(0, 30) + '…' : str,
+      })
     );
   };
 

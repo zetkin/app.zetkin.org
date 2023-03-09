@@ -1,8 +1,9 @@
 import { Close } from '@mui/icons-material';
 import { makeStyles } from '@mui/styles';
+import { Msg, PlainMessage, useMessages } from 'core/i18n';
 import { useRouter } from 'next/router';
-import { FormattedMessage, useIntl } from 'react-intl';
 
+import messageIds from './l10n/messageIds';
 import { usePersonSelect } from './ZUIPersonSelect';
 import { ZetkinPerson } from 'utils/types/zetkin';
 import ZUIAvatar from 'zui/ZUIAvatar';
@@ -25,10 +26,10 @@ import { FC, HTMLAttributes, useState } from 'react';
 const ZUIPersonGridEditCell: FC<{
   cell?: ZetkinPerson | null;
   onUpdate: (person: ZetkinPerson | null) => void;
-  removePersonLabel: string;
+  removePersonLabel: PlainMessage;
   restrictedMode?: boolean;
   suggestedPeople: ZetkinPerson[];
-  suggestedPeopleLabel: string;
+  suggestedPeopleLabel: PlainMessage;
 }> = ({
   cell,
   onUpdate,
@@ -37,7 +38,7 @@ const ZUIPersonGridEditCell: FC<{
   suggestedPeople,
   suggestedPeopleLabel,
 }) => {
-  const intl = useIntl();
+  const messages = useMessages(messageIds);
 
   const query = useRouter().query;
   const styles = useStyles({ isRestrictedMode });
@@ -72,10 +73,6 @@ const ZUIPersonGridEditCell: FC<{
     );
   }
 
-  const placeholderLabel = intl.formatMessage({
-    id: 'misc.placeholder',
-  });
-
   return (
     <Box
       onMouseEnter={(ev) => {
@@ -92,7 +89,7 @@ const ZUIPersonGridEditCell: FC<{
           fullWidth
           inputProps={autoComplete.getInputProps()}
           onChange={() => setSearching(true)}
-          placeholder={placeholderLabel}
+          placeholder={messages.personSelect.search()}
         ></InputBase>
       </Box>
       {searchResults.length || suggestedPeople.length ? (
@@ -122,7 +119,7 @@ const ZUIPersonGridEditCell: FC<{
               >
                 {!!cell && <SelectedPerson orgId={orgId} person={cell} />}
                 <Typography fontStyle="italic" variant="caption">
-                  <FormattedMessage id="misc.views.cells.localPerson.restrictedMode" />
+                  {messages.personGridEditCell.restrictedMode()}
                 </Typography>
               </Box>
             )}
@@ -156,7 +153,7 @@ const ZUIPersonGridEditCell: FC<{
                               cursor: 'pointer',
                             }}
                           >
-                            <FormattedMessage id={removePersonLabel} />
+                            <Msg id={removePersonLabel} />
                           </Button>
                         </>
                       )}
@@ -169,7 +166,7 @@ const ZUIPersonGridEditCell: FC<{
                     {showSuggestedPeople && !!suggestedPeople.length && (
                       <List>
                         <ListSubheader>
-                          <FormattedMessage id={suggestedPeopleLabel} />
+                          <Msg id={suggestedPeopleLabel} />
                         </ListSubheader>
                         {suggestedPeople.map((option) => (
                           <PersonListItem
@@ -188,11 +185,9 @@ const ZUIPersonGridEditCell: FC<{
                     {searching && (
                       <List {...autoComplete.getListboxProps()}>
                         <ListSubheader sx={{ position: 'relative' }}>
-                          {suggestedPeople.length ? (
-                            <FormattedMessage id="misc.views.cells.localPerson.otherPeople" />
-                          ) : (
-                            <FormattedMessage id="misc.views.cells.localPerson.searchResults" />
-                          )}
+                          {suggestedPeople.length
+                            ? messages.personGridEditCell.otherPeople()
+                            : messages.personGridEditCell.searchResults()}
                         </ListSubheader>
                         {searchResults.map((option, index) => {
                           const optProps = autoComplete.getOptionProps({

@@ -1,6 +1,4 @@
-import { FormattedMessage as Msg } from 'react-intl';
 import SurveyStatusChip from '../components/SurveyStatusChip';
-import SurveySubmissionsModel from '../models/SurveySubmissionsModel';
 import TabbedLayout from 'utils/layout/TabbedLayout';
 import useModel from 'core/useModel';
 import ZUIDateRangePicker from 'zui/ZUIDateRangePicker/ZUIDateRangePicker';
@@ -11,7 +9,10 @@ import { ZUIIconLabelProps } from 'zui/ZUIIconLabel';
 import ZUIIconLabelRow from 'zui/ZUIIconLabelRow';
 import { Box, Button } from '@mui/material';
 import { ChatBubbleOutline, QuizOutlined } from '@mui/icons-material';
+import { Msg, useMessages } from 'core/i18n';
 import SurveyDataModel, { SurveyState } from '../models/SurveyDataModel';
+
+import messageIds from '../l10n/messageIds';
 
 interface SurveyLayoutProps {
   children: React.ReactNode;
@@ -26,13 +27,9 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
   campaignId,
   surveyId,
 }) => {
+  const messages = useMessages(messageIds);
   const model = useModel(
     (env) => new SurveyDataModel(env, parseInt(orgId), parseInt(surveyId))
-  );
-
-  const subsModel = useModel(
-    (env) =>
-      new SurveySubmissionsModel(env, parseInt(orgId), parseInt(surveyId))
   );
 
   const hasQuestions = !!model.getData().data?.elements.length;
@@ -43,7 +40,7 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
       actionButtons={
         model.state == SurveyState.PUBLISHED ? (
           <Button onClick={() => model.unpublish()} variant="outlined">
-            <Msg id="layout.organize.surveys.actions.unpublish" />
+            <Msg id={messageIds.layout.actions.unpublish} />
           </Button>
         ) : (
           <Button
@@ -51,7 +48,7 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
             onClick={() => model.publish()}
             variant="contained"
           >
-            <Msg id="layout.organize.surveys.actions.publish" />
+            <Msg id={messageIds.layout.actions.publish} />
           </Button>
         )
       }
@@ -72,17 +69,15 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
           <Box display="flex" marginX={1}>
             <ZUIFutures
               futures={{
-                submissions: subsModel.getSubmissions(),
+                stats: model.getStats(),
                 survey: model.getData(),
               }}
             >
-              {({ data: { submissions, survey } }) => {
+              {({ data: { stats, survey } }) => {
                 const questionLength = survey?.elements.filter(
                   (question) => question.type === 'question'
                 ).length;
 
-                // TODO: Replace this with custom RPC for survey stats
-                const submissionsLength = submissions.length;
                 const labels: ZUIIconLabelProps[] = [];
 
                 if (questionLength > 0) {
@@ -90,7 +85,7 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
                     icon: <QuizOutlined />,
                     label: (
                       <Msg
-                        id="layout.organize.surveys.stats.questions"
+                        id={messageIds.layout.stats.questions}
                         values={{
                           numQuestions: questionLength,
                         }}
@@ -99,14 +94,14 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
                   });
                 }
 
-                if (submissionsLength > 0) {
+                if (stats.submissionCount > 0) {
                   labels.push({
                     icon: <ChatBubbleOutline />,
                     label: (
                       <Msg
-                        id="layout.organize.surveys.stats.submissions"
+                        id={messageIds.layout.stats.submissions}
                         values={{
-                          numSubmissions: submissionsLength,
+                          numSubmissions: stats.submissionCount,
                         }}
                       />
                     ),
@@ -120,14 +115,14 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
         </Box>
       }
       tabs={[
-        { href: '/', messageId: 'layout.organize.surveys.tabs.overview' },
+        { href: '/', label: messages.tabs.overview() },
         {
           href: '/questions',
-          messageId: 'layout.organize.surveys.tabs.questions',
+          label: messages.tabs.questions(),
         },
         {
           href: '/submissions',
-          messageId: 'layout.organize.surveys.tabs.submissions',
+          label: messages.tabs.submissions(),
         },
       ]}
       title={

@@ -1,11 +1,13 @@
-import { FormattedMessage as Msg } from 'react-intl';
-
+import { Msg } from 'core/i18n';
 import {
   DATA_FIELD,
   OPERATION,
   PersonDataFilterConfig,
   SmartSearchFilterWithId,
 } from 'features/smartSearch/components/types';
+
+import messageIds from 'features/smartSearch/l10n/messageIds';
+const localMessageIds = messageIds.filters.personData;
 
 interface DisplayPersonDataProps {
   filter: SmartSearchFilterWithId<PersonDataFilterConfig>;
@@ -25,17 +27,17 @@ const DisplayPersonData = ({ filter }: DisplayPersonDataProps): JSX.Element => {
     criteria.forEach((c) => {
       existing = (
         <Msg
-          id="misc.smartSearch.criteria.criterion"
+          id={localMessageIds.fieldMatches}
           values={{
-            field: <Msg id={`misc.smartSearch.criteria.criteriaSelect.${c}`} />,
-            value: fields[c],
+            field: <Msg id={localMessageIds.fieldSelect[c]} />,
+            value: fields[c] || '',
           }}
         />
       );
       if (criteriaString) {
         criteriaString = (
           <Msg
-            id="misc.smartSearch.criteria.tuple"
+            id={localMessageIds.fieldTuple}
             values={{
               first: criteriaString,
               second: existing,
@@ -51,11 +53,9 @@ const DisplayPersonData = ({ filter }: DisplayPersonDataProps): JSX.Element => {
 
   return (
     <Msg
-      id="misc.smartSearch.person_data.inputString"
+      id={localMessageIds.inputString}
       values={{
-        addRemoveSelect: (
-          <Msg id={`misc.smartSearch.person_data.addRemoveSelect.${op}`} />
-        ),
+        addRemoveSelect: <Msg id={localMessageIds.addRemoveSelect[op]} />,
         criteria: getCriteriaString(),
       }}
     />

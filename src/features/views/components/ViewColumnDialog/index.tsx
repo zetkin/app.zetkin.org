@@ -1,14 +1,16 @@
-import { useIntl } from 'react-intl';
 import { Box, Dialog, useMediaQuery, useTheme } from '@mui/material';
 import { FunctionComponent, useState } from 'react';
 
 import { ColumnChoiceWithKey } from './choices';
 import ColumnEditor from './ColumnEditor';
 import ColumnGallery from './ColumnGallery';
+import { useMessages } from 'core/i18n';
 import {
   SelectedViewColumn,
   ZetkinViewColumn,
 } from 'features/views/components/types';
+
+import messageIds from 'features/views/l10n/messageIds';
 
 interface ViewColumnDialogProps {
   columns: ZetkinViewColumn[];
@@ -21,7 +23,7 @@ const ViewColumnDialog: FunctionComponent<ViewColumnDialogProps> = ({
   onClose,
   onSave,
 }) => {
-  const intl = useIntl();
+  const messages = useMessages(messageIds);
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -58,7 +60,7 @@ const ViewColumnDialog: FunctionComponent<ViewColumnDialogProps> = ({
                 return null;
               }
 
-              const columns = choice.defaultColumns(intl, existingColumns);
+              const columns = choice.defaultColumns(messages, existingColumns);
               await onSave(columns);
             }}
             onClose={onClose}

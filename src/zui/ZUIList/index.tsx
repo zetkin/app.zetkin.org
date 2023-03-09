@@ -1,6 +1,9 @@
-import { FormattedMessage as Msg } from 'react-intl';
 import { List, ListItem, ListItemText } from '@mui/material';
 import React, { useState } from 'react';
+
+import { Msg } from 'core/i18n';
+
+import messageIds from 'zui/l10n/messageIds';
 
 interface ZUIListProps {
   children: React.ReactNode;
@@ -47,7 +50,7 @@ const ZUIList: React.FunctionComponent<ZUIListProps> = ({
           }}
         >
           <ListItemText>
-            <Msg id="layout.organize.lists.showMore" />
+            <Msg id={messageIds.lists.showMore} />
           </ListItemText>
         </ListItem>
       )}

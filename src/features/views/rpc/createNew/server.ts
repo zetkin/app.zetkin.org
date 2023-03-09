@@ -1,5 +1,8 @@
-import IApiClient from 'core/api/client/IApiClient';
 import { NextApiRequest } from 'next';
+
+import { getBrowserLanguage } from 'utils/locale';
+import getServerMessages from 'core/i18n/server';
+import IApiClient from 'core/api/client/IApiClient';
 import {
   COLUMN_TYPE,
   NATIVE_PERSON_FIELDS,
@@ -7,9 +10,9 @@ import {
   ZetkinView,
   ZetkinViewColumn,
 } from '../../components/types';
-import { getBrowserLanguage, getMessages } from 'utils/locale';
-
 import { Params, paramsSchema, Result } from './client';
+
+import messageIds from 'features/views/l10n/messageIds';
 
 export const createNewViewRouteDef = {
   handler: handle,
@@ -29,13 +32,13 @@ async function handle(
   const { folderId, orgId, rows } = params;
   const lang = getBrowserLanguage(req);
 
-  const messages = await getMessages(lang, ['misc']);
+  const messages = await getServerMessages(lang, messageIds);
 
   const newView = await apiClient.post<ZetkinView, ZetkinViewPostBody>(
     `/api/orgs/${orgId}/people/views`,
     {
       folder_id: folderId || undefined,
-      title: messages['misc.views.newViewFields.title'],
+      title: messages.newViewFields.title(),
     }
   );
 
@@ -46,7 +49,7 @@ async function handle(
       config: {
         field: NATIVE_PERSON_FIELDS.FIRST_NAME,
       },
-      title: messages['misc.nativePersonFields.first_name'],
+      title: messages.global.personFields.first_name(),
       type: COLUMN_TYPE.PERSON_FIELD,
     }
   );
@@ -58,7 +61,7 @@ async function handle(
       config: {
         field: NATIVE_PERSON_FIELDS.LAST_NAME,
       },
-      title: messages['misc.nativePersonFields.last_name'],
+      title: messages.global.personFields.last_name(),
       type: COLUMN_TYPE.PERSON_FIELD,
     }
   );
