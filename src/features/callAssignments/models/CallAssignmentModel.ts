@@ -102,6 +102,7 @@ export default class CallAssignmentModel extends ModelBase {
         blocked: 0,
         callBackLater: 0,
         calledTooRecently: 0,
+        callsMade: 0,
         done: 0,
         id: this._id,
         missingPhoneNumber: 0,

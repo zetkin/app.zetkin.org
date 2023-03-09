@@ -170,6 +170,7 @@ const callAssignmentsSlice = createSlice({
           blocked: 0,
           callBackLater: 0,
           calledTooRecently: 0,
+          callsMade: 0,
           done: 0,
           id: id,
           missingPhoneNumber: 0,

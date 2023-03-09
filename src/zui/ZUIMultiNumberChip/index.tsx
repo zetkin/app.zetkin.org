@@ -51,12 +51,21 @@ const ZUIMultiNumberChip: FC<ZUIMultiNumberChipProps> = ({
   size = 'sm',
 }) => {
   const classes = useStyles({ size });
+
+  //We want to be able to render a 0 as the blue value, so
+  //this is used to render no blue value
+  //only if it's undefined or an empty string
+  const hasBlueValue =
+    typeof blueValue === 'number' ||
+    (typeof blueValue === 'string' && blueValue !== '');
+
   return (
     <Box display="flex">
       <Box className={`${classes.orange} ${classes.chip}`}>{orangeValue}</Box>
-      {blueValue && (
-        <Box className={`${classes.blue} ${classes.chip}`}>{blueValue}</Box>
-      )}
+      {typeof blueValue === 'undefined' ||
+        (hasBlueValue && (
+          <Box className={`${classes.blue} ${classes.chip}`}>{blueValue}</Box>
+        ))}
       <Box className={`${classes.green} ${classes.chip}`}>{greenValue}</Box>
     </Box>
   );

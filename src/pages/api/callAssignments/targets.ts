@@ -53,6 +53,7 @@ export default async function handler(
       blocked: stats.num_blocked.any,
       callBackLater: stats.num_blocked.call_back_after,
       calledTooRecently: stats.num_blocked.cooldown,
+      callsMade: stats.num_calls_made,
       done: stats.num_target_matches - stats.num_remaining_targets,
       missingPhoneNumber: stats.num_blocked.no_number,
       mostRecentCallTime,

@@ -28,6 +28,7 @@ export interface CallAssignmentStats {
   blocked: number;
   callBackLater: number;
   calledTooRecently: number;
+  callsMade: number;
   done: number;
   missingPhoneNumber: number;
   mostRecentCallTime: string | null;
