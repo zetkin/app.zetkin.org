@@ -6,6 +6,7 @@ import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import SubmissionChartCard from 'features/surveys/components/SubmissionChartCard';
 import SurveyLayout from 'features/surveys/layout/SurveyLayout';
+import SurveyUnlinkedCard from 'features/surveys/components/SurveyUnlinkedCard';
 import SurveyURLCard from 'features/surveys/components/SurveyURLCard';
 import useModel from 'core/useModel';
 import useServerSide from 'core/useServerSide';
@@ -77,6 +78,7 @@ const SurveyPage: PageWithLayout<SurveyPageProps> = ({
           </Grid>
           <Grid item md={4}>
             <SurveyURLCard isOpen={isOpen} orgId={orgId} surveyId={surveyId} />
+            <SurveyUnlinkedCard />
           </Grid>
         </Grid>
       )}

@@ -2,7 +2,7 @@ import { ReactElement } from 'react';
 
 import { m, makeMessages } from 'core/i18n';
 
-export default makeMessages('feat.sruveys', {
+export default makeMessages('feat.surveys', {
   addBlocks: {
     choiceQuestionButton: m('Choice question'),
     openQuestionButton: m('Open question'),
@@ -93,6 +93,10 @@ export default makeMessages('feat.sruveys', {
     overview: m('Overview'),
     questions: m('Questions'),
     submissions: m('Submissions'),
+  },
+  unlinkedCard: {
+    description: m('Submissions not linked to person records'),
+    header: m('Unlinked submitters'),
   },
   urlCard: {
     nowAccepting: m('Now accepting submissions at this link'),
