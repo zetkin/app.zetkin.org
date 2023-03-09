@@ -59,7 +59,8 @@ const ZUIReorderable: FC<ZUIReorderableProps> = ({
 
   const dyRef = useRef<number>();
   const ctrRef = useRef<HTMLDivElement>();
-  const activeContentRef = useRef<HTMLDivElement>();
+  const activeContentNodeRef = useRef<HTMLDivElement>();
+  const activeItemNodeRef = useRef<HTMLDivElement>();
   const nodeByIdRef = useRef<Record<IDType, HTMLDivElement>>({});
 
   const onMouseMove = (ev: MouseEvent) => {
@@ -86,8 +87,8 @@ const ZUIReorderable: FC<ZUIReorderableProps> = ({
 
     setOrder(reorderedKeys);
 
-    if (activeContentRef.current) {
-      activeContentRef.current.style.top = newClientY - ctrY + 'px';
+    if (activeContentNodeRef.current) {
+      activeContentNodeRef.current.style.top = newClientY - ctrY + 'px';
     }
   };
 
@@ -95,10 +96,13 @@ const ZUIReorderable: FC<ZUIReorderableProps> = ({
     setActiveId(null);
 
     // Reset content width
-    if (activeContentRef.current) {
-      activeContentRef.current.style.width = 'auto';
+    if (activeContentNodeRef.current) {
+      activeContentNodeRef.current.style.width = 'auto';
     }
 
+    if (activeItemNodeRef.current) {
+      activeItemNodeRef.current.style.height = 'auto';
+    }
     activeItemRef.current = undefined;
 
     document.removeEventListener('mousemove', onMouseMove);
@@ -119,7 +123,8 @@ const ZUIReorderable: FC<ZUIReorderableProps> = ({
           onBeginDrag={(itemNode, contentNode, ev) => {
             setActiveId(item.id);
             activeItemRef.current = item;
-            activeContentRef.current = contentNode;
+            activeItemNodeRef.current = itemNode;
+            activeContentNodeRef.current = contentNode;
 
             // When dragging starts, "hard-code" the height of the
             // item container, so that it doesn't collapse once the
