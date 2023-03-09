@@ -19,6 +19,7 @@ import {
   elementDeleted,
   elementOptionAdded,
   elementOptionDeleted,
+  elementOptionsReordered,
   elementOptionUpdated,
   elementsReordered,
   elementUpdated,
@@ -246,6 +247,22 @@ export default class SurveysRepo {
     );
 
     this._store.dispatch(elementsReordered([surveyId, newOrder]));
+  }
+
+  async updateOptionOrder(
+    orgId: number,
+    surveyId: number,
+    elemId: number,
+    ids: (string | number)[]
+  ) {
+    const newOrder = await this._apiClient.patch<ZetkinSurveyElementOrder>(
+      `/api/orgs/${orgId}/surveys/${surveyId}/elements/${elemId}/option_order`,
+      {
+        default: ids.map((id) => parseInt(id as string)),
+      }
+    );
+
+    this._store.dispatch(elementOptionsReordered([surveyId, elemId, newOrder]));
   }
 
   updateSurvey(
