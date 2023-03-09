@@ -75,7 +75,7 @@ export default makeMessages('feat.sruveys', {
     firstNameColumn: m('First name'),
     lastNameColumn: m('Last name'),
     link: m('Link'),
-    personRecordColumn: m('Person record'),
+    personRecordColumn: m('Respondent'),
     suggestedPeople: m('Suggested people'),
     unlink: m('Unlink'),
   },
