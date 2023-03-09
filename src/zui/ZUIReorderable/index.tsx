@@ -68,7 +68,13 @@ const ZUIReorderable: FC<ZUIReorderableProps> = ({
   const onMouseMove = (ev: MouseEvent) => {
     const ctrRect = ctrRef.current?.getBoundingClientRect();
     const ctrY = ctrRect?.top ?? 0;
-    const newClientY = ev.clientY - (dyRef.current || 0);
+
+    // Only allow dragging 10px beyond the top of the container, and just
+    // beyond the bottom of the container
+    const newClientY = Math.max(
+      ctrY - 10,
+      Math.min(ev.clientY - (dyRef.current || 0), ctrRect?.bottom ?? 0)
+    );
 
     const activeId = activeItemRef.current?.id ?? 0;
 
