@@ -175,9 +175,9 @@ const SurveySubmissionsList = ({
       <ZUIPersonGridEditCell
         cell={row.respondent}
         onUpdate={updateCellValue}
-        removePersonLabel={messageIds.submissions.unlink}
+        removePersonLabel={messages.submissions.unlink()}
         suggestedPeople={suggestedPeople}
-        suggestedPeopleLabel={messageIds.submissions.suggestedPeople}
+        suggestedPeopleLabel={messages.submissions.suggestedPeople()}
       />
     );
   };

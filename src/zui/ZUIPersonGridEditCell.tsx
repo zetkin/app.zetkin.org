@@ -1,13 +1,6 @@
 import { Close } from '@mui/icons-material';
 import { makeStyles } from '@mui/styles';
 import { useRouter } from 'next/router';
-import { Msg, PlainMessage, useMessages } from 'core/i18n';
-
-import messageIds from './l10n/messageIds';
-import { usePersonSelect } from './ZUIPersonSelect';
-import { ZetkinPerson } from 'utils/types/zetkin';
-import ZUIAvatar from 'zui/ZUIAvatar';
-
 import {
   Box,
   Button,
@@ -23,13 +16,20 @@ import {
 } from '@mui/material';
 import { FC, HTMLAttributes, useState } from 'react';
 
+import { useMessages } from 'core/i18n';
+import { usePersonSelect } from './ZUIPersonSelect';
+import { ZetkinPerson } from 'utils/types/zetkin';
+import ZUIAvatar from 'zui/ZUIAvatar';
+
+import messageIds from './l10n/messageIds';
+
 const ZUIPersonGridEditCell: FC<{
   cell?: (Partial<Omit<ZetkinPerson, 'id'>> & { id: number | null }) | null;
   onUpdate: (person: ZetkinPerson | null) => void;
-  removePersonLabel: PlainMessage;
+  removePersonLabel: string;
   restrictedMode?: boolean;
   suggestedPeople: ZetkinPerson[];
-  suggestedPeopleLabel: PlainMessage;
+  suggestedPeopleLabel: string;
 }> = ({
   cell,
   onUpdate,
@@ -164,20 +164,22 @@ const ZUIPersonGridEditCell: FC<{
                               cursor: 'pointer',
                             }}
                           >
-                            <Msg id={removePersonLabel} />
+                            {removePersonLabel}
                           </Button>
                         </>
                       )}
                     </Box>
                   )}
-                  <List className={styles.searchingList}>
+                  <List
+                    className={styles.searchingList}
+                    sx={{
+                      display:
+                        showSuggestedPeople || searching ? 'block' : 'none',
+                    }}
+                  >
                     {showSuggestedPeople && !!suggestedPeople.length && (
-                      <List
-                        sx={{ display: showSuggestedPeople ? 'block' : 'none' }}
-                      >
-                        <ListSubheader>
-                          <Msg id={suggestedPeopleLabel} />
-                        </ListSubheader>
+                      <List>
+                        <ListSubheader>{suggestedPeopleLabel}</ListSubheader>
                         {suggestedPeople.map((option) => (
                           <PersonListItem
                             key={option.id}

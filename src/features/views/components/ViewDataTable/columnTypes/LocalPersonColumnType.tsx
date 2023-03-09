@@ -11,6 +11,7 @@ import { COLUMN_TYPE, LocalPersonViewColumn } from '../../types';
 import { ZetkinPerson, ZetkinViewRow } from 'utils/types/zetkin';
 
 import messageIds from 'features/views/l10n/messageIds';
+import { useMessages } from 'core/i18n';
 
 type LocalPersonViewCell = null | ZetkinPerson;
 
@@ -30,7 +31,7 @@ export default class LocalPersonColumnType
       headerAlign: 'center',
 
       renderCell: (params) => {
-        return <ZUIPersonGridCell personId={params.value.id} />;
+        return <ZUIPersonGridCell personId={params.value?.id} />;
       },
       renderEditCell: (params) => {
         return <EditCell cell={params.value} column={col} row={params.row} />;
@@ -75,6 +76,7 @@ const EditCell: FC<{
 }> = ({ cell, column, row }) => {
   const api = useGridApiContext();
   const model = useViewDataModel();
+  const messages = useMessages(messageIds);
 
   const suggestedPeople = getPeopleInView(model);
   const [isRestrictedMode] = useAccessLevel();
@@ -91,10 +93,10 @@ const EditCell: FC<{
     <ZUIPersonGridEditCell
       cell={cell}
       onUpdate={updateCellValue}
-      removePersonLabel={messageIds.cells.localPerson.clearLabel}
+      removePersonLabel={messages.cells.localPerson.clearLabel()}
       restrictedMode={isRestrictedMode}
       suggestedPeople={suggestedPeople}
-      suggestedPeopleLabel={messageIds.cells.localPerson.alreadyInView}
+      suggestedPeopleLabel={messages.cells.localPerson.alreadyInView()}
     />
   );
 };

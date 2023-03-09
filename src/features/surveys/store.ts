@@ -142,7 +142,7 @@ const surveysSlice = createSlice({
         (item) => item.id == submission.id
       );
       if (item) {
-        item.data = { ...item.data, ...submission } as ZetkinSurveySubmission;
+        item.data = { ...item.data, ...submission };
         item.mutating = [];
       }
     },

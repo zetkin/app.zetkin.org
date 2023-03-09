@@ -9,11 +9,11 @@ export default class SurveySubmissionsModel extends ModelBase {
   private _repo: SurveysRepo;
   private _surveyId: number;
 
-  constructor(env: Environment, orgId: number, submissionId: number) {
+  constructor(env: Environment, orgId: number, surveyId: number) {
     super();
 
     this._orgId = orgId;
-    this._surveyId = submissionId;
+    this._surveyId = surveyId;
     this._repo = new SurveysRepo(env);
   }
 
