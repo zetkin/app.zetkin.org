@@ -62,14 +62,20 @@ const ZUIPersonGridEditCell: FC<{
     disabled: isRestrictedMode,
   });
 
-  const searchResults = autoComplete.groupedOptions as ZetkinPerson[];
-  const showSuggestedPeople = !cell?.id;
+  let searchResults = autoComplete.groupedOptions as ZetkinPerson[];
+  const showSuggestedPeople =
+    suggestedPeople.length && (!cell?.id || searching);
 
   if (searchResults.length) {
     // Filter down suggestedPeople to only include search matches
     const matchingIds = searchResults.map((person) => person.id);
     suggestedPeople = suggestedPeople.filter((person) =>
       matchingIds.includes(person.id)
+    );
+
+    // Filter search results to exclude suggested people
+    searchResults = searchResults.filter(
+      (p) => !suggestedPeople.find((s) => s.id == p.id)
     );
   }
 
