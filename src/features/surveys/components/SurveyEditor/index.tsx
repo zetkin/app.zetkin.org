@@ -55,11 +55,15 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ model }) => {
               <ZUIReorderable
                 items={data.elements.map((elem) => ({
                   id: elem.id,
-                  renderContent: () => {
+                  renderContent: ({ dragging }) => {
                     if (elem.type == ELEMENT_TYPE.QUESTION) {
                       if (elem.question.response_type == RESPONSE_TYPE.TEXT) {
                         return (
-                          <BlockWrapper key={elem.id} hidden={elem.hidden}>
+                          <BlockWrapper
+                            key={elem.id}
+                            dragging={dragging}
+                            hidden={elem.hidden}
+                          >
                             <OpenQuestionBlock
                               editable={elem.id == idOfBlockInEditMode}
                               element={elem as ZetkinSurveyTextQuestionElement}
@@ -77,7 +81,11 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ model }) => {
                         elem.question.response_type == RESPONSE_TYPE.OPTIONS
                       ) {
                         return (
-                          <BlockWrapper key={elem.id} hidden={elem.hidden}>
+                          <BlockWrapper
+                            key={elem.id}
+                            dragging={dragging}
+                            hidden={elem.hidden}
+                          >
                             <ChoiceQuestionBlock
                               editable={elem.id == idOfBlockInEditMode}
                               element={
@@ -96,7 +104,11 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ model }) => {
                       }
                     } else if (elem.type == ELEMENT_TYPE.TEXT) {
                       return (
-                        <BlockWrapper key={elem.id} hidden={elem.hidden}>
+                        <BlockWrapper
+                          key={elem.id}
+                          dragging={dragging}
+                          hidden={elem.hidden}
+                        >
                           <TextBlock
                             editable={elem.id == idOfBlockInEditMode}
                             element={elem}

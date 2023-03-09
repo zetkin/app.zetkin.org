@@ -12,9 +12,13 @@ import UpDownArrows from './UpDownArrows';
 
 type IDType = number | string;
 
+type ZUIReorderableRenderProps = {
+  dragging: boolean;
+};
+
 type ReorderableItem = {
   id: IDType;
-  renderContent: () => JSX.Element;
+  renderContent: (props: ZUIReorderableRenderProps) => JSX.Element;
 };
 
 type ZUIReorderableProps = {
@@ -213,7 +217,11 @@ const ZUIReorderableItem: FC<{
             showUp={showUpButton}
           />
         </Box>
-        <Box flex="1 0">{item.renderContent()}</Box>
+        <Box flex="1 0">
+          {item.renderContent({
+            dragging,
+          })}
+        </Box>
       </Box>
     </Box>
   );
