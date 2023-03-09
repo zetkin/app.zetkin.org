@@ -22,6 +22,7 @@ type ReorderableItem = {
 };
 
 type ZUIReorderableProps = {
+  centerWidgets?: boolean;
   disableClick?: boolean;
   disableDrag?: boolean;
   items: ReorderableItem[];
@@ -29,6 +30,7 @@ type ZUIReorderableProps = {
 };
 
 const ZUIReorderable: FC<ZUIReorderableProps> = ({
+  centerWidgets,
   disableClick,
   disableDrag,
   items,
@@ -118,6 +120,7 @@ const ZUIReorderable: FC<ZUIReorderableProps> = ({
       {sortedItems.map((item, index) => (
         <ZUIReorderableItem
           key={item.id}
+          centerWidgets={!!centerWidgets}
           dragging={activeId == item.id}
           item={item}
           onBeginDrag={(itemNode, contentNode, ev) => {
@@ -173,6 +176,7 @@ const ZUIReorderable: FC<ZUIReorderableProps> = ({
 };
 
 const ZUIReorderableItem: FC<{
+  centerWidgets: boolean;
   dragging: boolean;
   item: ReorderableItem;
   onBeginDrag: (
@@ -187,6 +191,7 @@ const ZUIReorderableItem: FC<{
   showDragHandle: boolean;
   showUpButton: boolean;
 }> = ({
+  centerWidgets,
   dragging,
   item,
   onBeginDrag,
@@ -210,6 +215,7 @@ const ZUIReorderableItem: FC<{
     >
       <Box
         ref={contentRef}
+        alignItems={centerWidgets ? 'center' : 'start'}
         display="flex"
         sx={{
           position: dragging ? 'absolute' : 'static',

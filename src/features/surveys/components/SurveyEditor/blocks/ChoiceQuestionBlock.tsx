@@ -143,6 +143,7 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
           </TextField>
         )}
         <ZUIReorderable
+          centerWidgets
           disableClick
           disableDrag={!editable}
           items={options.map((option) => ({
@@ -157,10 +158,10 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
                     alignItems="center"
                     display="flex"
                     justifyContent="center"
-                    paddingTop={2}
+                    paddingY={1}
                     width="100%"
                   >
-                    <Box paddingX={2}>
+                    <Box paddingTop={0.8} paddingX={2}>
                       {widgetTypes[widgetType].previewIcon}
                     </Box>
                     <TextField
