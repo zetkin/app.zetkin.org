@@ -6,6 +6,7 @@ import {
   RESPONSE_TYPE,
   ZetkinSurvey,
   ZetkinSurveyElement,
+  ZetkinSurveyElementOrder,
   ZetkinSurveyExtended,
   ZetkinSurveyOption,
   ZetkinSurveySubmission,
@@ -141,6 +142,24 @@ const surveysSlice = createSlice({
         );
       }
     },
+    elementsReordered: (
+      state,
+      action: PayloadAction<[number, ZetkinSurveyElementOrder]>
+    ) => {
+      const [surveyId, newOrder] = action.payload;
+      const surveyItem = state.surveyList.items.find(
+        (item) => item.id == surveyId
+      );
+      if (surveyItem?.data?.elements) {
+        surveyItem.data.elements = surveyItem.data.elements
+          .concat()
+          .sort(
+            (el0, el1) =>
+              newOrder.default.indexOf(el0.id) -
+              newOrder.default.indexOf(el1.id)
+          );
+      }
+    },
     statsLoad: (state, action: PayloadAction<number>) => {
       const surveyId = action.payload;
       state.statsBySurveyId[surveyId] = remoteItem<SurveyStats>(surveyId, {
@@ -235,6 +254,7 @@ export const {
   elementOptionDeleted,
   elementOptionUpdated,
   elementUpdated,
+  elementsReordered,
   submissionLoad,
   submissionLoaded,
   statsLoad,

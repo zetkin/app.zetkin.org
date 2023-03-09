@@ -201,6 +201,10 @@ export default class SurveyDataModel extends ModelBase {
     );
   }
 
+  updateElementOrder(ids: (string | number)[]) {
+    this._repo.updateElementOrder(this._orgId, this._surveyId, ids);
+  }
+
   updateOpenQuestionBlock(elemId: number, data: ZetkinSurveyElementPatchBody) {
     this._repo.updateElement(this._orgId, this._surveyId, elemId, data);
   }
