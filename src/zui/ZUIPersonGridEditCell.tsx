@@ -1,7 +1,7 @@
 import { Close } from '@mui/icons-material';
 import { makeStyles } from '@mui/styles';
-import { Msg, PlainMessage, useMessages } from 'core/i18n';
 import { useRouter } from 'next/router';
+import { Msg, PlainMessage, useMessages } from 'core/i18n';
 
 import messageIds from './l10n/messageIds';
 import { usePersonSelect } from './ZUIPersonSelect';
@@ -24,7 +24,7 @@ import {
 import { FC, HTMLAttributes, useState } from 'react';
 
 const ZUIPersonGridEditCell: FC<{
-  cell?: ZetkinPerson | null;
+  cell?: (Partial<Omit<ZetkinPerson, 'id'>> & { id: number | null }) | null;
   onUpdate: (person: ZetkinPerson | null) => void;
   removePersonLabel: PlainMessage;
   restrictedMode?: boolean;
@@ -117,7 +117,9 @@ const ZUIPersonGridEditCell: FC<{
                 justifyContent="center"
                 width="100%"
               >
-                {!!cell && <SelectedPerson orgId={orgId} person={cell} />}
+                {!!cell && (
+                  <SelectedPerson orgId={orgId} person={cell as ZetkinPerson} />
+                )}
                 <Typography fontStyle="italic" variant="caption">
                   {messages.personGridEditCell.restrictedMode()}
                 </Typography>
@@ -145,7 +147,10 @@ const ZUIPersonGridEditCell: FC<{
                     >
                       {!isRestrictedMode && !searching && (
                         <>
-                          <SelectedPerson orgId={orgId} person={cell} />
+                          <SelectedPerson
+                            orgId={orgId}
+                            person={cell as ZetkinPerson}
+                          />
                           <Button
                             endIcon={<Close />}
                             onClick={() => onUpdate(null)}

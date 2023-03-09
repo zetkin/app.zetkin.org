@@ -1,29 +1,27 @@
-import { useRouter } from 'next/router';
 import { useQuery } from 'react-query';
+import { useRouter } from 'next/router';
+import { FC, useMemo } from 'react';
 
 import { Box } from '@mui/system';
-import SurveySubmissionPane from '../panes/SurveySubmissionPane';
-import { usePanes } from 'utils/panes';
-
+import { Link } from '@mui/material';
 import {
   DataGridPro,
   GridCellParams,
   GridRenderCellParams,
   useGridApiContext,
 } from '@mui/x-data-grid-pro';
-import { FC, useMemo } from 'react';
 
-import { ZetkinPerson, ZetkinSurveySubmission } from 'utils/types/zetkin';
+import getPeopleSearchResults from 'utils/fetching/getPeopleSearchResults';
+import messageIds from '../l10n/messageIds';
+import SurveySubmissionModel from '../models/SurveySubmissionModel';
+import SurveySubmissionPane from '../panes/SurveySubmissionPane';
+import useModel from 'core/useModel';
+import { usePanes } from 'utils/panes';
+import ZUIPersonGridCell from 'zui/ZUIPersonGridCell';
+import ZUIPersonGridEditCell from 'zui/ZUIPersonGridEditCell';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 import { Msg, useMessages } from 'core/i18n';
-
-import { Link } from '@mui/material';
-import messageIds from '../l10n/messageIds';
-import ZUIPersonGridCell from 'zui/ZUIPersonGridCell';
-import useModel from 'core/useModel';
-import getPeopleSearchResults from 'utils/fetching/getPeopleSearchResults';
-import ZUIPersonGridEditCell from 'zui/ZUIPersonGridEditCell';
-import SurveySubmissionModel from '../models/SurveySubmissionModel';
+import { ZetkinPerson, ZetkinSurveySubmission } from 'utils/types/zetkin';
 
 const SurveySubmissionsList = ({
   submissions,
@@ -104,7 +102,7 @@ const SurveySubmissionsList = ({
           ZetkinSurveySubmission
         >
       ) => {
-        return <ReadCell params={params} />;
+        return <ReadCell row={params.row} />;
       },
       renderEditCell: (
         params: GridRenderCellParams<
@@ -112,29 +110,29 @@ const SurveySubmissionsList = ({
           ZetkinSurveySubmission
         >
       ) => {
-        return <EditCell params={params} />;
+        return <EditCell row={params.row} />;
       },
       sortable: true,
     },
   ];
 
-  const ReadCell: FC<
-    GridRenderCellParams<
-      ZetkinSurveySubmission['respondent'],
-      ZetkinSurveySubmission
-    >
-  > = ({ params }) => {
+  const ReadCell: FC<{ row: ZetkinSurveySubmission }> = ({ row }) => {
     const api = useGridApiContext();
 
     const startEditing = () => {
       return api.current.startCellEditMode({
         field: 'respondent',
-        id: params.id,
+        id: row.id,
       });
     };
 
-    if (params.value?.id) {
-      return <ZUIPersonGridCell cell={params.value} onClick={startEditing} />;
+    if (row.respondent?.id) {
+      return (
+        <ZUIPersonGridCell
+          onClick={startEditing}
+          personId={row.respondent.id}
+        />
+      );
     } else {
       return (
         <Link onClick={startEditing} sx={{ cursor: 'pointer' }}>
@@ -144,15 +142,10 @@ const SurveySubmissionsList = ({
     }
   };
 
-  const EditCell: FC<
-    GridRenderCellParams<
-      ZetkinSurveySubmission['respondent'],
-      ZetkinSurveySubmission
-    >
-  > = ({ params }) => {
+  const EditCell: FC<{ row: ZetkinSurveySubmission }> = ({ row }) => {
     const api = useGridApiContext();
     const { orgId } = useRouter().query;
-    const email = params.value?.email || '';
+    const email = row.respondent?.email || '';
     let { data: suggestedPeople } = useQuery(
       ['peopleSearchResults', email],
       getPeopleSearchResults(email, orgId as string),
@@ -167,25 +160,20 @@ const SurveySubmissionsList = ({
     }
 
     const subsModel = useModel(
-      (env) =>
-        new SurveySubmissionModel(
-          env,
-          parseInt(orgId as string),
-          parseInt(params.id)
-        )
+      (env) => new SurveySubmissionModel(env, parseInt(orgId as string), row.id)
     );
 
     const updateCellValue = (person: ZetkinPerson | null) => {
       api.current.stopCellEditMode({
         field: 'respondent',
-        id: params.id,
+        id: row.id,
       });
       subsModel.setRespondentId(person?.id || null);
     };
 
     return (
       <ZUIPersonGridEditCell
-        cell={params.value}
+        cell={row.respondent}
         onUpdate={updateCellValue}
         removePersonLabel={messageIds.submissions.unlink}
         suggestedPeople={suggestedPeople}
