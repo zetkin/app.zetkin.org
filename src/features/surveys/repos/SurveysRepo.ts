@@ -54,7 +54,9 @@ type ZetkinSurveyTextQuestionElementPostBody = {
 
 type ZetkinSurveyOptionsQuestionElementPostBody = {
   hidden: boolean;
-  question: Omit<ZetkinOptionsQuestion, 'required'>;
+  question: Omit<ZetkinOptionsQuestion, 'required' | 'options'> & {
+    options?: string[];
+  };
   type: ELEMENT_TYPE.QUESTION;
 };
 
