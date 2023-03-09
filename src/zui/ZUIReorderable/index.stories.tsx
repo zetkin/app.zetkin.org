@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { Box, Paper } from '@mui/material';
 import { ComponentMeta, ComponentStory } from '@storybook/react';
+import { ReactNode, useState } from 'react';
 
 import ZUIReorderable from '.';
 
@@ -12,7 +13,7 @@ const Template: ComponentStory<typeof ZUIReorderable> = (args) => {
   const [items, setItems] = useState(args.items);
 
   return (
-    <div style={{ width: 400 }}>
+    <div style={{ marginTop: 100, width: 400 }}>
       <ZUIReorderable
         items={items}
         onReorder={(ids) => {
@@ -26,9 +27,19 @@ const Template: ComponentStory<typeof ZUIReorderable> = (args) => {
 export const basic = Template.bind({});
 basic.args = {
   items: [
-    { id: 1, renderContent: () => <h1>Hello</h1> },
-    { id: 2, renderContent: () => <h1>Goodbye</h1> },
-    { id: 3, renderContent: () => <h1>See you later</h1> },
-    { id: 4, renderContent: () => <h1>Good night</h1> },
+    { id: 1, renderContent: () => <Item>Hello</Item> },
+    { id: 2, renderContent: () => <Item>Goodbye</Item> },
+    { id: 3, renderContent: () => <Item>See you later</Item> },
+    { id: 4, renderContent: () => <Item>Good night</Item> },
   ],
 };
+
+function Item({ children }: { children: ReactNode }): JSX.Element {
+  return (
+    <Paper>
+      <Box my={1} p={3}>
+        <h1>{children}</h1>
+      </Box>
+    </Paper>
+  );
+}
