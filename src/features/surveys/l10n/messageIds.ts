@@ -2,7 +2,7 @@ import { ReactElement } from 'react';
 
 import { m, makeMessages } from 'core/i18n';
 
-export default makeMessages('feat.sruveys', {
+export default makeMessages('feat.surveys', {
   addBlocks: {
     choiceQuestionButton: m('Choice question'),
     openQuestionButton: m('Open question'),
@@ -99,6 +99,12 @@ export default makeMessages('feat.sruveys', {
     overview: m('Overview'),
     questions: m('Questions'),
     submissions: m('Submissions'),
+  },
+  unlinkedCard: {
+    description: m(
+      'When someone submits a survey without first logging in,that survey will be unlinked. Searching for people in your database based on their survey responses will not work on unlinked submissions.'
+    ),
+    header: m('Unlinked submissions'),
   },
   urlCard: {
     nowAccepting: m('Now accepting submissions at this link'),
