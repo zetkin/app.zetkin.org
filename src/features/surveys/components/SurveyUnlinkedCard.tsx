@@ -20,7 +20,7 @@ const SurveyUnlinkedCard = ({ orgId, surveyId }: SurveyUnlinkedCardProps) => {
   return (
     <ZUIFuture future={model.getStats()}>
       {(sub) => {
-        const unlinkedSubmitters = sub.unlinkedSubmitterCount;
+        const unlinkedSubmitters = sub.unlinkedSubmissionCount;
 
         return (
           <>

@@ -95,8 +95,10 @@ export default makeMessages('feat.surveys', {
     submissions: m('Submissions'),
   },
   unlinkedCard: {
-    description: m('Submissions not linked to person records'),
-    header: m('Unlinked submitters'),
+    description: m(
+      'When someone submits a survey without first logging in,that survey will be unlinked. Searching for people in your database based on their survey responses will not work on unlinked submissions.'
+    ),
+    header: m('Unlinked submissions'),
   },
   urlCard: {
     nowAccepting: m('Now accepting submissions at this link'),

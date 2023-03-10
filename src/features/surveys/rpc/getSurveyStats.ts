@@ -17,7 +17,7 @@ export type SurveyStats = {
     accumulatedSubmissions: number;
     date: string;
   }[];
-  unlinkedSubmitterCount: number;
+  unlinkedSubmissionCount: number;
 };
 
 export const getSurveyStatsDef = {
@@ -41,6 +41,7 @@ async function handle(
 
   let sum = 0;
   let unlinkedCount = 0;
+
   if (submissions.length) {
     const sortedSubmissions = submissions
       .filter((sub) => sub.submitted)
@@ -53,11 +54,9 @@ async function handle(
     const curDate = new Date(sortedSubmissions[0].submitted.slice(0, 10));
     const lastDate = new Date();
 
-    unlinkedCount = submissions.filter((sub) => {
-      if (sub.respondent !== null) {
-        return sub.respondent.id === undefined;
-      }
-    }).length;
+    unlinkedCount = submissions.filter(
+      (sub) => sub.respondent && !sub.respondent.id
+    ).length;
 
     // Rewind one day before starting
     curDate.setDate(curDate.getDate() - 1);
@@ -83,6 +82,6 @@ async function handle(
     id: surveyId,
     submissionCount: sum,
     submissionsByDay: submissionsByDay.slice(-365),
-    unlinkedSubmitterCount: unlinkedCount,
+    unlinkedSubmissionCount: unlinkedCount,
   };
 }
