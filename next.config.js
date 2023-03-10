@@ -24,6 +24,11 @@ module.exports = {
         destination: '/organize/:orgId/people',
         permanent: true,
       },
+      {
+        source: `/organize/:orgId`,
+        destination: '/organize/:orgId/campaigns',
+        permanent: true,
+      },
       // redirects to Gen2 for MVP August 2021
       {
         source: '/organize/:orgId/people/:personId/edit',
