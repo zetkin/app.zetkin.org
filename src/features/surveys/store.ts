@@ -121,6 +121,15 @@ const surveysSlice = createSlice({
       item.isLoading = false;
       item.loaded = new Date().toISOString();
     },
+    surveysLoad: (state) => {
+      state.surveyList.isLoading = true;
+    },
+    surveysLoaded: (state, action: PayloadAction<ZetkinSurveyExtended[]>) => {
+      const surveys = action.payload;
+      const timestamp = new Date().toISOString();
+      state.surveyList = remoteList(surveys);
+      state.surveyList.loaded = timestamp;
+    },
     /* eslint-disable-next-line */
     surveySubmissionsLoad: (state, action: PayloadAction<number>) => {
       // TODO: Segregate submissions by survey ID
@@ -166,6 +175,8 @@ export const {
   surveyLoaded,
   surveySubmissionsLoad,
   surveySubmissionsLoaded,
+  surveysLoad,
+  surveysLoaded,
   surveyUpdate,
   surveyUpdated,
 } = surveysSlice.actions;

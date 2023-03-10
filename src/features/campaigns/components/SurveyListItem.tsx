@@ -2,20 +2,24 @@ import { FC } from 'react';
 import { AssignmentOutlined, ChatBubbleOutline } from '@mui/icons-material';
 
 import SurveySubmissionsModel from 'features/surveys/models/SurveySubmissionsModel';
+import useModel from 'core/useModel';
 import ActivityListItem, { STATUS_COLORS } from './ActivityListItem';
 import SurveyDataModel, {
   SurveyState,
 } from 'features/surveys/models/SurveyDataModel';
 
 interface SurveyListItemProps {
-  dataModel: SurveyDataModel;
-  submissionsModel: SurveySubmissionsModel;
+  orgId: number;
+  surveyId: number;
 }
 
-const SurveyListItem: FC<SurveyListItemProps> = ({
-  dataModel,
-  submissionsModel,
-}) => {
+const SurveyListItem: FC<SurveyListItemProps> = ({ orgId, surveyId }) => {
+  const dataModel = useModel(
+    (env) => new SurveyDataModel(env, orgId, surveyId)
+  );
+  const submissionsModel = useModel(
+    (env) => new SurveySubmissionsModel(env, orgId, surveyId)
+  );
   const data = dataModel.getData().data;
   const stats = dataModel.getStats().data;
   const submissions = submissionsModel.getSubmissions().data;

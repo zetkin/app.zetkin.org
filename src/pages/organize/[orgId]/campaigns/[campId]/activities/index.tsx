@@ -2,11 +2,14 @@ import { Box } from '@mui/material';
 import { GetServerSideProps } from 'next';
 
 import CallAssignmentListItem from 'features/campaigns/components/CallAssignmentListItem';
-import CampaignActivitiesModel from 'features/campaigns/models/CampaignAcitivitiesModel';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import SingleCampaignLayout from 'features/campaigns/layout/SingleCampaignLayout';
+import SurveyListItem from 'features/campaigns/components/SurveyListItem';
 import useModel from 'core/useModel';
+import CampaignActivitiesModel, {
+  ACTIVITIES,
+} from 'features/campaigns/models/CampaignAcitivitiesModel';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   async (ctx) => {
@@ -51,13 +54,23 @@ const CampaignActivitiesPage: PageWithLayout<CampaignActivitiesPageProps> = ({
       }}
     >
       {activities.map((activity) => {
-        return (
-          <CallAssignmentListItem
-            key={activity.id}
-            caId={activity.id}
-            orgId={parseInt(orgId)}
-          />
-        );
+        if (activity.kind === ACTIVITIES.CALL_ASSIGNMENT) {
+          return (
+            <CallAssignmentListItem
+              key={`ca-${activity.id}`}
+              caId={activity.id}
+              orgId={parseInt(orgId)}
+            />
+          );
+        } else if (activity.kind === ACTIVITIES.SURVEY) {
+          return (
+            <SurveyListItem
+              key={`survey-${activity.id}`}
+              orgId={parseInt(orgId)}
+              surveyId={activity.id}
+            />
+          );
+        }
       })}
     </Box>
   );
