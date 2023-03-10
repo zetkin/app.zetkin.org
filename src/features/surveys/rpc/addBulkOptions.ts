@@ -12,6 +12,10 @@ const paramsSchema = z.object({
 });
 
 type Params = z.input<typeof paramsSchema>;
+type Result = {
+  addedOptions: ZetkinSurveyOption[];
+  removedOptions: ZetkinSurveyOption[];
+};
 
 export const addBulkOptionsDef = {
   handler: handle,
@@ -19,15 +23,16 @@ export const addBulkOptionsDef = {
   schema: paramsSchema,
 };
 
-export default makeRPCDef<Params, ZetkinSurveyOption[]>(addBulkOptionsDef.name);
+export default makeRPCDef<Params, Result>(addBulkOptionsDef.name);
 
-async function handle(
-  params: Params,
-  apiClient: IApiClient
-): Promise<ZetkinSurveyOption[]> {
+async function handle(params: Params, apiClient: IApiClient): Promise<Result> {
   const { orgId, surveyId, elemId, options } = params;
 
-  const output: ZetkinSurveyOption[] = [];
+  const addedOptions: ZetkinSurveyOption[] = [];
+
+  const existingOptions = await apiClient.get<ZetkinSurveyOption[]>(
+    `/api/orgs/${orgId}/surveys/${surveyId}/elements/${elemId}/options`
+  );
 
   for (const optionText of options) {
     const option = await apiClient.post<ZetkinSurveyOption>(
@@ -35,8 +40,22 @@ async function handle(
       { text: optionText }
     );
 
-    output.push(option);
+    addedOptions.push(option);
   }
 
-  return output;
+  // Delete all empty options
+  const removedOptions: ZetkinSurveyOption[] = [];
+  for (const oldOption of existingOptions) {
+    if (oldOption.text.trim() == '') {
+      await apiClient.delete(
+        `/api/orgs/${orgId}/surveys/${surveyId}/elements/${elemId}/options/${oldOption.id}`
+      );
+      removedOptions.push(oldOption);
+    }
+  }
+
+  return {
+    addedOptions,
+    removedOptions,
+  };
 }

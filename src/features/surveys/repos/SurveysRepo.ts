@@ -123,15 +123,19 @@ export default class SurveysRepo {
     elemId: number,
     options: string[]
   ) {
-    const createdOptions = await this._apiClient.rpc(addBulkOptions, {
+    const result = await this._apiClient.rpc(addBulkOptions, {
       elemId,
       options,
       orgId,
       surveyId,
     });
 
-    createdOptions.forEach((option) => {
+    result.addedOptions.forEach((option) => {
       this._store.dispatch(elementOptionAdded([surveyId, elemId, option]));
+    });
+
+    result.removedOptions.forEach((option) => {
+      this._store.dispatch(elementOptionDeleted([surveyId, elemId, option.id]));
     });
   }
 

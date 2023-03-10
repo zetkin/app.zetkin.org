@@ -75,8 +75,6 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
   );
 
   useEffect(() => {
-    setTitle(elemQuestion.question);
-    setDescription(elemQuestion.description);
     setOptions(elemQuestion.options || []);
   }, [elemQuestion]);
 
@@ -118,6 +116,13 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
         });
       },
     });
+
+  const optionsToShow = options.filter((option) => {
+    // Show all options (including empty ones) in regular mode, but
+    // hide the empty ones while in bulk mode, because they will be
+    // deleted when bulk adding.
+    return !bulkAddingOptions || !!option.text.length;
+  });
 
   return (
     <ClickAwayListener {...clickAwayProps}>
@@ -172,7 +177,7 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
           centerWidgets
           disableClick
           disableDrag={!editable}
-          items={options.map((option) => ({
+          items={optionsToShow.map((option) => ({
             id: option.id,
             renderContent: () => (
               <ZUIPreviewableInput
