@@ -44,6 +44,10 @@ export default makeMessages('feat.campaigns', {
     },
     description: m('Description'),
     edit: m('Edit campaign'),
+    editCampaignTitle: {
+      error: m('Error updating campaign title'),
+      success: m('Campaign title updated'),
+    },
     manager: {
       label: m('Campaign manager'),
       selectSelf: m('Set yourself as manager'),
