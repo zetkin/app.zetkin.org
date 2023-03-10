@@ -28,7 +28,11 @@ export default makeMessages('feat.campaigns', {
     heading: m('Feedback and Surveys (none configured)'),
   },
   form: {
-    create: m('Create new campaign'),
+    createCampaign: {
+      create: m('Create campaign'),
+      error: m('There was an error creating the campaign'),
+      newCampaign: m('My campaign'),
+    },
     deleteCampaign: {
       cancel: m('Cancel'),
       error: m('There was an error deleting the campaign'),

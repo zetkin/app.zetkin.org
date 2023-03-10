@@ -5,6 +5,7 @@ import TabbedLayout from '../../../utils/layout/TabbedLayout';
 import { useMessages } from 'core/i18n';
 
 import messageIds from '../l10n/messageIds';
+import CampaignsActionButtons from '../components/CampaignsActionButtons';
 
 interface AllCampaignsLayoutProps {
   children: React.ReactNode;
@@ -20,6 +21,7 @@ const AllCampaignsLayout: FunctionComponent<AllCampaignsLayoutProps> = ({
 
   return (
     <TabbedLayout
+      actionButtons={<CampaignsActionButtons />}
       baseHref={`/organize/${orgId}/campaigns`}
       defaultTab="/"
       fixedHeight={fixedHeight}
