@@ -85,9 +85,7 @@ const SurveySubmissionsList = ({
       renderCell: (
         params: GridRenderCellParams<string, ZetkinSurveySubmission>
       ) => {
-        if (params.row.respondent !== null) {
-          return <ZUIRelativeTime datetime={params.row.submitted} />;
-        }
+        return <ZUIRelativeTime datetime={params.row.submitted} />;
       },
       sortable: true,
     },
