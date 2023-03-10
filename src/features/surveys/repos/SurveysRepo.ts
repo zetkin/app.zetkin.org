@@ -1,3 +1,4 @@
+import addBulkOptions from '../rpc/addBulkOptions';
 import Environment from 'core/env/Environment';
 import IApiClient from 'core/api/client/IApiClient';
 import shouldLoad from 'core/caching/shouldLoad';
@@ -117,6 +118,28 @@ export default class SurveysRepo {
       { text: '' }
     );
     this._store.dispatch(elementOptionAdded([surveyId, elemId, option]));
+  }
+
+  async addElementOptions(
+    orgId: number,
+    surveyId: number,
+    elemId: number,
+    options: string[]
+  ) {
+    const result = await this._apiClient.rpc(addBulkOptions, {
+      elemId,
+      options,
+      orgId,
+      surveyId,
+    });
+
+    result.addedOptions.forEach((option) => {
+      this._store.dispatch(elementOptionAdded([surveyId, elemId, option]));
+    });
+
+    result.removedOptions.forEach((option) => {
+      this._store.dispatch(elementOptionDeleted([surveyId, elemId, option.id]));
+    });
   }
 
   constructor(env: Environment) {

@@ -12,6 +12,12 @@ export default makeMessages('feat.surveys', {
   blocks: {
     choice: {
       addOption: m('Add option'),
+      addOptionsBulk: m('Add options in bulk'),
+      bulk: {
+        cancelButton: m('Cancel'),
+        placeholder: m('Type or paste one option per line'),
+        submitButton: m('Add all'),
+      },
       description: m('Description'),
       emptyDescription: m('Description'),
       emptyOption: m('Empty option'),
