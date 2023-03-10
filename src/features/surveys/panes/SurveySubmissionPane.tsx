@@ -168,9 +168,9 @@ const Question: FC<{
         {hidden && (
           <Box className={styles.hiddenChip}>
             <EyeClosed />
-            <Typography className={styles.hidden}>
+            <Box className={styles.hidden}>
               <Msg id={messageIds.submissionPane.hidden} />
-            </Typography>
+            </Box>
           </Box>
         )}
       </Box>
