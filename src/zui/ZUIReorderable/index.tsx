@@ -59,21 +59,24 @@ const ZUIReorderable: FC<ZUIReorderableProps> = ({
     }
   }, [activeId]);
 
-  const dyRef = useRef<number>();
-  const ctrRef = useRef<HTMLDivElement>();
+  const yOffsetRef = useRef<number>();
+  const containerRef = useRef<HTMLDivElement>();
   const activeContentNodeRef = useRef<HTMLDivElement>();
   const activeItemNodeRef = useRef<HTMLDivElement>();
   const nodeByIdRef = useRef<Record<IDType, HTMLDivElement>>({});
 
   const onMouseMove = (ev: MouseEvent) => {
-    const ctrRect = ctrRef.current?.getBoundingClientRect();
-    const ctrY = ctrRect?.top ?? 0;
+    const containerRect = containerRef.current?.getBoundingClientRect();
+    const containerY = containerRect?.top ?? 0;
 
     // Only allow dragging 10px beyond the top of the container, and just
     // beyond the bottom of the container
     const newClientY = Math.max(
-      ctrY - 10,
-      Math.min(ev.clientY - (dyRef.current || 0), ctrRect?.bottom ?? 0)
+      containerY - 10,
+      Math.min(
+        ev.clientY - (yOffsetRef.current || 0),
+        containerRect?.bottom ?? 0
+      )
     );
 
     const activeId = activeItemRef.current?.id ?? 0;
@@ -96,7 +99,7 @@ const ZUIReorderable: FC<ZUIReorderableProps> = ({
     setOrder(reorderedKeys);
 
     if (activeContentNodeRef.current) {
-      activeContentNodeRef.current.style.top = newClientY - ctrY + 'px';
+      activeContentNodeRef.current.style.top = newClientY - containerY + 'px';
     }
   };
 
@@ -122,7 +125,7 @@ const ZUIReorderable: FC<ZUIReorderableProps> = ({
   });
 
   return (
-    <Box ref={ctrRef} sx={{ position: 'relative' }}>
+    <Box ref={containerRef} sx={{ position: 'relative' }}>
       {sortedItems.map((item, index) => (
         <ZUIReorderableItem
           key={item.id}
@@ -146,7 +149,7 @@ const ZUIReorderable: FC<ZUIReorderableProps> = ({
             const contentRect = contentNode.getBoundingClientRect();
             contentNode.style.width = contentRect.width + 'px';
 
-            dyRef.current = ev.clientY - itemRect.top;
+            yOffsetRef.current = ev.clientY - itemRect.top;
 
             document.addEventListener('mousemove', onMouseMove);
             document.addEventListener('mouseup', onMouseUp);
