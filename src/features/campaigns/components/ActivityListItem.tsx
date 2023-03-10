@@ -59,8 +59,8 @@ interface AcitivityListItemProps {
     SvgIconTypeMap<Record<string, unknown>, 'svg'>
   >;
   blueChipValue?: string | number;
-  orangeChipValue: string | number;
-  greenChipValue: string | number;
+  orangeChipValue: string | number | undefined;
+  greenChipValue: string | number | undefined;
   message?: string;
   color: STATUS_COLORS;
   title: string;

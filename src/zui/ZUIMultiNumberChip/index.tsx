@@ -39,8 +39,8 @@ const useStyles = makeStyles<Theme, { size: keyof typeof FONT_SIZES }>(
 
 interface ZUIMultiNumberChipProps {
   blueValue?: number | string;
-  greenValue: number | string;
-  orangeValue: number | string;
+  greenValue: number | string | undefined;
+  orangeValue: number | string | undefined;
   size?: keyof typeof FONT_SIZES;
 }
 

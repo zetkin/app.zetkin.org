@@ -4,13 +4,19 @@ import CallAssignmentModel, {
   CallAssignmentState,
 } from 'features/callAssignments/models/CallAssignmentModel';
 
+import useModel from 'core/useModel';
 import ActivityListItem, { STATUS_COLORS } from './ActivityListItem';
 
 interface CallAssignmentListItemProps {
-  model: CallAssignmentModel;
+  orgId: number;
+  caId: number;
 }
 
-const CallAssignmentListItem: FC<CallAssignmentListItemProps> = ({ model }) => {
+const CallAssignmentListItem: FC<CallAssignmentListItemProps> = ({
+  caId,
+  orgId,
+}) => {
+  const model = useModel((env) => new CallAssignmentModel(env, orgId, caId));
   const state = model.state;
   const data = model.getData().data;
   const stats = model.getStats().data;
@@ -50,9 +56,9 @@ const CallAssignmentListItem: FC<CallAssignmentListItemProps> = ({ model }) => {
     }
   }
 
-  const orangeChipValue = stats?.blocked || '';
-  const blueChipValue = stats?.ready || '';
-  const greenChipValue = stats?.done || '';
+  const orangeChipValue = stats?.blocked;
+  const blueChipValue = stats?.ready;
+  const greenChipValue = stats?.done;
   const endNumber = stats?.callsMade.toString() || '';
 
   return (
