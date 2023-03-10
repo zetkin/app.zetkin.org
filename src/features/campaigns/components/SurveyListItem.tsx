@@ -1,7 +1,6 @@
 import { FC } from 'react';
 import { AssignmentOutlined, ChatBubbleOutline } from '@mui/icons-material';
 
-import SurveySubmissionsModel from 'features/surveys/models/SurveySubmissionsModel';
 import useModel from 'core/useModel';
 import ActivityListItem, { STATUS_COLORS } from './ActivityListItem';
 import SurveyDataModel, {
@@ -17,12 +16,8 @@ const SurveyListItem: FC<SurveyListItemProps> = ({ orgId, surveyId }) => {
   const dataModel = useModel(
     (env) => new SurveyDataModel(env, orgId, surveyId)
   );
-  const submissionsModel = useModel(
-    (env) => new SurveySubmissionsModel(env, orgId, surveyId)
-  );
   const data = dataModel.getData().data;
   const stats = dataModel.getStats().data;
-  const submissions = submissionsModel.getSubmissions().data;
 
   if (!data) {
     return null;
@@ -48,18 +43,16 @@ const SurveyListItem: FC<SurveyListItemProps> = ({ orgId, surveyId }) => {
     color = STATUS_COLORS.RED;
   }
 
-  const endNumber = stats?.submissionCount.toString() || '';
-  const greenChipValue =
-    submissions?.filter((sub) => sub.respondent).length || 0;
-  const orangeChipValue =
-    submissions?.filter((sub) => !sub.respondent).length || 0;
+  const submissionCount = stats?.submissionCount || 0;
+  const unlinkedSubmissionCount = stats?.unlinkedSubmissionCount || 0;
+  const linkedSubmissionCount = submissionCount - unlinkedSubmissionCount || 0;
 
   return (
     <ActivityListItem
       color={color}
-      endNumber={endNumber}
-      greenChipValue={greenChipValue}
-      orangeChipValue={orangeChipValue}
+      endNumber={submissionCount.toString()}
+      greenChipValue={linkedSubmissionCount}
+      orangeChipValue={unlinkedSubmissionCount}
       PrimaryIcon={AssignmentOutlined}
       SecondaryIcon={ChatBubbleOutline}
       title={data.title}

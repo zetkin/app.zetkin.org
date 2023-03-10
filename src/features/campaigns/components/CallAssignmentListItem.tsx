@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Headset } from '@mui/icons-material';
+import { HeadsetMic } from '@mui/icons-material';
 import CallAssignmentModel, {
   CallAssignmentState,
 } from 'features/callAssignments/models/CallAssignmentModel';
@@ -56,20 +56,20 @@ const CallAssignmentListItem: FC<CallAssignmentListItemProps> = ({
     }
   }
 
-  const orangeChipValue = stats?.blocked;
-  const blueChipValue = stats?.ready;
-  const greenChipValue = stats?.done;
-  const endNumber = stats?.callsMade.toString() || '';
+  const blocked = stats?.blocked;
+  const ready = stats?.ready;
+  const done = stats?.done;
+  const callsMade = stats?.callsMade.toString() || '';
 
   return (
     <ActivityListItem
-      blueChipValue={blueChipValue}
+      blueChipValue={ready}
       color={color}
-      endNumber={endNumber}
-      greenChipValue={greenChipValue}
+      endNumber={callsMade}
+      greenChipValue={done}
       message={message}
-      orangeChipValue={orangeChipValue}
-      PrimaryIcon={Headset}
+      orangeChipValue={blocked}
+      PrimaryIcon={HeadsetMic}
       title={data.title}
     />
   );
