@@ -209,6 +209,10 @@ export default class SurveyDataModel extends ModelBase {
     this._repo.updateElement(this._orgId, this._surveyId, elemId, data);
   }
 
+  updateOptionOrder(elemId: number, ids: (string | number)[]) {
+    this._repo.updateOptionOrder(this._orgId, this._surveyId, elemId, ids);
+  }
+
   updateOptionsQuestion(
     elemId: number,
     optionsQuestion: OptionsQuestionPatchBody

@@ -22,11 +22,20 @@ type ReorderableItem = {
 };
 
 type ZUIReorderableProps = {
+  centerWidgets?: boolean;
+  disableClick?: boolean;
+  disableDrag?: boolean;
   items: ReorderableItem[];
   onReorder: (ids: IDType[]) => void;
 };
 
-const ZUIReorderable: FC<ZUIReorderableProps> = ({ items, onReorder }) => {
+const ZUIReorderable: FC<ZUIReorderableProps> = ({
+  centerWidgets,
+  disableClick,
+  disableDrag,
+  items,
+  onReorder,
+}) => {
   const [order, setOrder] = useState<IDType[]>(items.map((item) => item.id));
   const [activeId, setActiveId] = useState<IDType | null>(null);
 
@@ -50,15 +59,28 @@ const ZUIReorderable: FC<ZUIReorderableProps> = ({ items, onReorder }) => {
     }
   }, [activeId]);
 
-  const dyRef = useRef<number>();
-  const ctrRef = useRef<HTMLDivElement>();
-  const activeContentRef = useRef<HTMLDivElement>();
+  const yOffsetRef = useRef<number>();
+  const containerRef = useRef<HTMLDivElement>();
+  const activeContentNodeRef = useRef<HTMLDivElement>();
+  const activeItemNodeRef = useRef<HTMLDivElement>();
   const nodeByIdRef = useRef<Record<IDType, HTMLDivElement>>({});
 
   const onMouseMove = (ev: MouseEvent) => {
-    const ctrRect = ctrRef.current?.getBoundingClientRect();
-    const ctrY = ctrRect?.top ?? 0;
-    const newClientY = ev.clientY - (dyRef.current || 0);
+    const containerRect = containerRef.current?.getBoundingClientRect();
+    const containerY = containerRect?.top ?? 0;
+
+    const itemRect = activeItemNodeRef.current?.getBoundingClientRect();
+    const itemHeight = itemRect?.height ?? 0;
+
+    // Only allow dragging 10px beyond the top of the container, and just
+    // beyond the bottom of the container
+    const newClientY = Math.max(
+      containerY - 10,
+      Math.min(
+        ev.clientY - (yOffsetRef.current || 0),
+        (containerRect?.bottom ?? 0) - itemHeight + 20
+      )
+    );
 
     const activeId = activeItemRef.current?.id ?? 0;
 
@@ -79,8 +101,8 @@ const ZUIReorderable: FC<ZUIReorderableProps> = ({ items, onReorder }) => {
 
     setOrder(reorderedKeys);
 
-    if (activeContentRef.current) {
-      activeContentRef.current.style.top = newClientY - ctrY + 'px';
+    if (activeContentNodeRef.current) {
+      activeContentNodeRef.current.style.top = newClientY - containerY + 'px';
     }
   };
 
@@ -88,10 +110,13 @@ const ZUIReorderable: FC<ZUIReorderableProps> = ({ items, onReorder }) => {
     setActiveId(null);
 
     // Reset content width
-    if (activeContentRef.current) {
-      activeContentRef.current.style.width = 'auto';
+    if (activeContentNodeRef.current) {
+      activeContentNodeRef.current.style.width = 'auto';
     }
 
+    if (activeItemNodeRef.current) {
+      activeItemNodeRef.current.style.height = 'auto';
+    }
     activeItemRef.current = undefined;
 
     document.removeEventListener('mousemove', onMouseMove);
@@ -103,16 +128,18 @@ const ZUIReorderable: FC<ZUIReorderableProps> = ({ items, onReorder }) => {
   });
 
   return (
-    <Box ref={ctrRef} sx={{ position: 'relative' }}>
+    <Box ref={containerRef} sx={{ position: 'relative' }}>
       {sortedItems.map((item, index) => (
         <ZUIReorderableItem
           key={item.id}
+          centerWidgets={!!centerWidgets}
           dragging={activeId == item.id}
           item={item}
           onBeginDrag={(itemNode, contentNode, ev) => {
             setActiveId(item.id);
             activeItemRef.current = item;
-            activeContentRef.current = contentNode;
+            activeItemNodeRef.current = itemNode;
+            activeContentNodeRef.current = contentNode;
 
             // When dragging starts, "hard-code" the height of the
             // item container, so that it doesn't collapse once the
@@ -125,7 +152,7 @@ const ZUIReorderable: FC<ZUIReorderableProps> = ({ items, onReorder }) => {
             const contentRect = contentNode.getBoundingClientRect();
             contentNode.style.width = contentRect.width + 'px';
 
-            dyRef.current = ev.clientY - itemRect.top;
+            yOffsetRef.current = ev.clientY - itemRect.top;
 
             document.addEventListener('mousemove', onMouseMove);
             document.addEventListener('mouseup', onMouseUp);
@@ -151,8 +178,9 @@ const ZUIReorderable: FC<ZUIReorderableProps> = ({ items, onReorder }) => {
             }
           }}
           onNodeExists={(div) => (nodeByIdRef.current[item.id] = div)}
-          showDownButton={index < items.length - 1}
-          showUpButton={index > 0}
+          showDownButton={!disableClick && index < items.length - 1}
+          showDragHandle={!disableDrag}
+          showUpButton={!disableClick && index > 0}
         />
       ))}
     </Box>
@@ -160,6 +188,7 @@ const ZUIReorderable: FC<ZUIReorderableProps> = ({ items, onReorder }) => {
 };
 
 const ZUIReorderableItem: FC<{
+  centerWidgets: boolean;
   dragging: boolean;
   item: ReorderableItem;
   onBeginDrag: (
@@ -171,8 +200,10 @@ const ZUIReorderableItem: FC<{
   onClickUp: () => void;
   onNodeExists: (node: HTMLDivElement) => void;
   showDownButton: boolean;
+  showDragHandle: boolean;
   showUpButton: boolean;
 }> = ({
+  centerWidgets,
   dragging,
   item,
   onBeginDrag,
@@ -180,6 +211,7 @@ const ZUIReorderableItem: FC<{
   onClickUp,
   onNodeExists,
   showDownButton,
+  showDragHandle,
   showUpButton,
 }) => {
   const itemRef = useRef<HTMLDivElement>();
@@ -195,21 +227,24 @@ const ZUIReorderableItem: FC<{
     >
       <Box
         ref={contentRef}
+        alignItems={centerWidgets ? 'center' : 'start'}
         display="flex"
         sx={{
           position: dragging ? 'absolute' : 'static',
         }}
       >
         <Box>
-          <IconButton
-            onMouseDown={(ev) => {
-              if (itemRef.current && contentRef.current) {
-                onBeginDrag(itemRef.current, contentRef.current, ev);
-              }
-            }}
-          >
-            <DragIndicatorOutlined />
-          </IconButton>
+          {showDragHandle && (
+            <IconButton
+              onMouseDown={(ev) => {
+                if (itemRef.current && contentRef.current) {
+                  onBeginDrag(itemRef.current, contentRef.current, ev);
+                }
+              }}
+            >
+              <DragIndicatorOutlined />
+            </IconButton>
+          )}
           <UpDownArrows
             onClickDown={onClickDown}
             onClickUp={onClickUp}

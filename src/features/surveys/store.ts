@@ -128,6 +128,30 @@ const surveysSlice = createSlice({
         }
       }
     },
+    elementOptionsReordered: (
+      state,
+      action: PayloadAction<[number, number, ZetkinSurveyElementOrder]>
+    ) => {
+      const [surveyId, elemId, newOrder] = action.payload;
+      const surveyItem = state.surveyList.items.find(
+        (item) => item.id == surveyId
+      );
+      const element = surveyItem?.data?.elements.find(
+        (elem) => elem.id == elemId
+      );
+
+      if (
+        element?.type == ELEMENT_TYPE.QUESTION &&
+        element.question.response_type == RESPONSE_TYPE.OPTIONS
+      ) {
+        element.question.options = element.question.options
+          ?.concat()
+          .sort(
+            (o0, o1) =>
+              newOrder.default.indexOf(o0.id) - newOrder.default.indexOf(o1.id)
+          );
+      }
+    },
     elementUpdated: (
       state,
       action: PayloadAction<[number, number, ZetkinSurveyElement]>
@@ -278,6 +302,7 @@ export const {
   elementOptionAdded,
   elementOptionDeleted,
   elementOptionUpdated,
+  elementOptionsReordered,
   elementUpdated,
   elementsReordered,
   submissionLoad,
