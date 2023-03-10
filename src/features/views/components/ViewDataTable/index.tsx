@@ -5,6 +5,7 @@ import NProgress from 'nprogress';
 import { useRouter } from 'next/router';
 import {
   DataGridPro,
+  GRID_CHECKBOX_SELECTION_COL_DEF,
   GridCellEditStartReasons,
   GridCellParams,
   GridColDef,
@@ -401,6 +402,9 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
           }
         }}
         onSelectionModelChange={(model) => setSelection(model as number[])}
+        pinnedColumns={{
+          left: ['id', GRID_CHECKBOX_SELECTION_COL_DEF.field],
+        }}
         processRowUpdate={(after, before) => {
           const changedField = Object.keys(after).find(
             (key) => after[key] != before[key]
