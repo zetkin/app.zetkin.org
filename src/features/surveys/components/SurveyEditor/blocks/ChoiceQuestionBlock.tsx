@@ -2,6 +2,7 @@ import {
   Add,
   CheckBoxOutlined,
   Close,
+  List,
   RadioButtonChecked,
   RadioButtonUnchecked,
 } from '@mui/icons-material';
@@ -64,6 +65,8 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
   const messages = useMessages(messageIds);
   const lengthRef = useRef<number | undefined>(elemQuestion.options?.length);
   const [addedOptionId, setAddedOptionId] = useState(0);
+  const [bulkAddingOptions, setBulkAddingOptions] = useState(false);
+  const [bulkOptionsText, setBulkOptionsText] = useState('');
   const [title, setTitle] = useState(elemQuestion.question);
   const [description, setDescription] = useState(elemQuestion.description);
   const [options, setOptions] = useState(elemQuestion.options || []);
@@ -87,7 +90,11 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
         lengthRef.current < options.length
       ) {
         const lastOption = options[options.length - 1];
-        setAddedOptionId(lastOption.id);
+        if (lastOption.text == '') {
+          // Only focus the last added option if it's empty, i.e. if it was
+          // added individually, to be edited after adding (not bulk).
+          setAddedOptionId(lastOption.id);
+        }
       }
 
       lengthRef.current = options.length;
@@ -237,22 +244,94 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
             model.updateOptionOrder(element.id, ids);
           }}
         />
+        {bulkAddingOptions && editable && (
+          <Box
+            alignItems="top"
+            display="flex"
+            paddingLeft={5}
+            paddingY={1}
+            width="100%"
+          >
+            <Box paddingTop={0.8} paddingX={2}>
+              <List />
+            </Box>
+            <Box flex="1 1">
+              <TextField
+                // eslint-disable-next-line jsx-a11y/no-autofocus
+                autoFocus
+                fullWidth
+                minRows={5}
+                multiline
+                onChange={(ev) => setBulkOptionsText(ev.target.value)}
+                placeholder={messages.blocks.choice.bulk.placeholder()}
+                value={bulkOptionsText}
+              />
+              <Button
+                onClick={async () => {
+                  await model.addElementOptionsFromText(
+                    element.id,
+                    bulkOptionsText
+                  );
+                  setBulkAddingOptions(false);
+                  setBulkOptionsText('');
+                }}
+                startIcon={<Add />}
+                sx={{ marginY: 1 }}
+                variant="contained"
+              >
+                <Msg id={messageIds.blocks.choice.bulk.submitButton} />
+              </Button>
+              <Button
+                onClick={() => {
+                  setBulkAddingOptions(false);
+                  setBulkOptionsText('');
+                }}
+                sx={{ margin: 1 }}
+                variant="text"
+              >
+                <Msg id={messageIds.blocks.choice.bulk.cancelButton} />
+              </Button>
+            </Box>
+            <IconButton
+              onClick={() => {
+                setBulkAddingOptions(false);
+                setBulkOptionsText('');
+              }}
+              sx={{ height: '2em', paddingX: 2 }}
+            >
+              <Close />
+            </IconButton>
+          </Box>
+        )}
         <Box
           display="flex"
           justifyContent={editable ? 'space-between' : 'end'}
           m={2}
         >
-          {editable && (
-            <Button
-              onClick={(ev) => {
-                model.addElementOption(element.id);
-                ev.stopPropagation();
-              }}
-              startIcon={<Add />}
-            >
-              <Msg id={messageIds.blocks.choice.addOption} />
-            </Button>
-          )}
+          <Box display="flex">
+            {editable && !bulkAddingOptions && (
+              <>
+                <Button
+                  onClick={(ev) => {
+                    model.addElementOption(element.id);
+                    ev.stopPropagation();
+                  }}
+                  startIcon={<Add />}
+                >
+                  <Msg id={messageIds.blocks.choice.addOption} />
+                </Button>
+                <Button
+                  onClick={(ev) => {
+                    ev.stopPropagation();
+                    setBulkAddingOptions(true);
+                  }}
+                  startIcon={<List />}
+                >
+                  <Msg id={messageIds.blocks.choice.addOptionsBulk} />
+                </Button>
+              </>
+            )}
+          </Box>
           <DeleteHideButtons element={element} model={model} />
         </Box>
       </Box>
