@@ -79,6 +79,8 @@ export default makeMessages('feat.sruveys', {
   },
   submissionPane: {
     anonymous: m('Anonymous'),
+    hidden: m('Hidden'),
+    linked: m('Linked'),
     subtitle:
       m<{ date: ReactElement; person: ReactElement }>('{person} {date}'),
   },

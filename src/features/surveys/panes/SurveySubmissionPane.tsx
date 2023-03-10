@@ -74,7 +74,9 @@ const SurveySubmissionPane: FC<SurveySubmissionPaneProps> = ({ orgId, id }) => {
                 <ZUIPersonLink
                   person={{ ...sub.respondent, id: sub.respondent.id }}
                 />
-                <Box className={styles.linkedChip}>Linked</Box>
+                <Box className={styles.linkedChip}>
+                  <Msg id={messageIds.submissionPane.linked} />
+                </Box>
               </Box>
             );
           } else {
@@ -166,7 +168,9 @@ const Question: FC<{
         {hidden && (
           <Box className={styles.hiddenChip}>
             <EyeClosed />
-            <Typography className={styles.hidden}>Hidden</Typography>
+            <Typography className={styles.hidden}>
+              <Msg id={messageIds.submissionPane.hidden} />
+            </Typography>
           </Box>
         )}
       </Box>
