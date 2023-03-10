@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import messageIds from '../l10n/messageIds';
 import SurveyDataModel from '../models/SurveyDataModel';
 import { useMessages } from 'core/i18n';
@@ -36,7 +37,7 @@ const SurveyUnlinkedCard = ({ orgId, surveyId }: SurveyUnlinkedCardProps) => {
                   }
                   subheader={messages.unlinkedCard.description()}
                 >
-                  <></>
+                  <Link href="/">Link submission now</Link>
                 </ZUICard>
               </Box>
             )}

@@ -100,6 +100,11 @@ export default makeMessages('feat.surveys', {
     ),
     header: m('Unlinked submissions'),
   },
+  unlinkedWarningCard: {
+    description: m('There are some submissions not linked to person records'),
+    header: m('Unlinked persons found'),
+    viewUnlink: m('View unlinked only'),
+  },
   urlCard: {
     nowAccepting: m('Now accepting submissions at this link'),
     open: m('Open for submissions'),
