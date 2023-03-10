@@ -7,14 +7,21 @@ import {
   ZetkinOptionsQuestion,
   ZetkinSurvey,
   ZetkinSurveyElement,
+  ZetkinSurveyElementOrder,
   ZetkinSurveyExtended,
+  ZetkinSurveyOption,
   ZetkinSurveySubmission,
+  ZetkinSurveySubmissionPatchBody,
   ZetkinSurveyTextElement,
   ZetkinTextQuestion,
 } from 'utils/types/zetkin';
 import {
   elementAdded,
   elementDeleted,
+  elementOptionAdded,
+  elementOptionDeleted,
+  elementOptionUpdated,
+  elementsReordered,
   elementUpdated,
   statsLoad,
   statsLoaded,
@@ -24,6 +31,8 @@ import {
   surveyLoaded,
   surveySubmissionsLoad,
   surveySubmissionsLoaded,
+  surveySubmissionUpdate,
+  surveySubmissionUpdated,
   surveyUpdate,
   surveyUpdated,
 } from '../store';
@@ -47,20 +56,37 @@ type ZetkinSurveyTextQuestionElementPostBody = {
 
 type ZetkinSurveyOptionsQuestionElementPostBody = {
   hidden: boolean;
-  question: Omit<ZetkinOptionsQuestion, 'required'>;
+  question: Omit<ZetkinOptionsQuestion, 'required' | 'options'> & {
+    options?: string[];
+  };
   type: ELEMENT_TYPE.QUESTION;
 };
 
 export type ZetkinSurveyElementPatchBody =
   | ZetkinSurveyTextElementPatchBody
-  | Partial<Omit<ZetkinSurveyOptionsQuestionElementPostBody, 'type'>>
-  | Partial<Omit<ZetkinSurveyTextQuestionElementPostBody, 'type'>>;
+  | OptionsQuestionPatchBody
+  | TextQuestionPatchBody;
 
 type ZetkinSurveyTextElementPatchBody = {
   hidden?: boolean;
   text_block?: {
     content?: string;
     header?: string;
+  };
+};
+
+export type TextQuestionPatchBody = {
+  question: Partial<ZetkinTextQuestion>;
+};
+
+export type OptionsQuestionPatchBody = {
+  question: {
+    description?: string | null;
+    options?: ZetkinSurveyOption[];
+    question?: string;
+    response_config?: {
+      widget_type: 'checkbox' | 'radio' | 'select';
+    };
   };
 };
 
@@ -73,19 +99,40 @@ export default class SurveysRepo {
     surveyId: number,
     data: ZetkinSurveyElementPostBody
   ) {
-    await this._apiClient
+    return await this._apiClient
       .post<ZetkinSurveyElement, ZetkinSurveyElementPostBody>(
         `/api/orgs/${orgId}/surveys/${surveyId}/elements`,
         data
       )
       .then((newElement) => {
         this._store.dispatch(elementAdded([surveyId, newElement]));
+        return newElement;
       });
+  }
+
+  async addElementOption(orgId: number, surveyId: number, elemId: number) {
+    const option = await this._apiClient.post<ZetkinSurveyOption>(
+      `/api/orgs/${orgId}/surveys/${surveyId}/elements/${elemId}/options`,
+      { text: '' }
+    );
+    this._store.dispatch(elementOptionAdded([surveyId, elemId, option]));
   }
 
   constructor(env: Environment) {
     this._store = env.store;
     this._apiClient = env.apiClient;
+  }
+
+  async deleteElementOption(
+    orgId: number,
+    surveyId: number,
+    elemId: number,
+    optionId: number
+  ) {
+    await this._apiClient.delete(
+      `/api/orgs/${orgId}/surveys/${surveyId}/elements/${elemId}/options/${optionId}`
+    );
+    this._store.dispatch(elementOptionDeleted([surveyId, elemId, optionId]));
   }
 
   async deleteSurveyElement(orgId: number, surveyId: number, elemId: number) {
@@ -175,6 +222,37 @@ export default class SurveysRepo {
     this._store.dispatch(elementUpdated([surveyId, elemId, element]));
   }
 
+  async updateElementOption(
+    orgId: number,
+    surveyId: number,
+    elemId: number,
+    optionId: number,
+    text: string
+  ) {
+    const option = await this._apiClient.patch<ZetkinSurveyOption>(
+      `/api/orgs/${orgId}/surveys/${surveyId}/elements/${elemId}/options/${optionId}`,
+      { text }
+    );
+    this._store.dispatch(
+      elementOptionUpdated([surveyId, elemId, optionId, option])
+    );
+  }
+
+  async updateElementOrder(
+    orgId: number,
+    surveyId: number,
+    ids: (string | number)[]
+  ) {
+    const newOrder = await this._apiClient.patch<ZetkinSurveyElementOrder>(
+      `/api/orgs/${orgId}/surveys/${surveyId}/element_order`,
+      {
+        default: ids.map((id) => parseInt(id as string)),
+      }
+    );
+
+    this._store.dispatch(elementsReordered([surveyId, newOrder]));
+  }
+
   updateSurvey(
     orgId: number,
     surveyId: number,
@@ -188,6 +266,24 @@ export default class SurveysRepo {
       )
       .then((survey) => {
         this._store.dispatch(surveyUpdated(survey));
+      });
+  }
+
+  updateSurveySubmission(
+    orgId: number,
+    submissionId: number,
+    data: ZetkinSurveySubmissionPatchBody
+  ) {
+    this._store.dispatch(
+      surveySubmissionUpdate([submissionId, Object.keys(data)])
+    );
+    this._apiClient
+      .patch<ZetkinSurveySubmission, ZetkinSurveySubmissionPatchBody>(
+        `/api/orgs/${orgId}/survey_submissions/${submissionId}`,
+        data
+      )
+      .then((submission) => {
+        this._store.dispatch(surveySubmissionUpdated(submission));
       });
   }
 }

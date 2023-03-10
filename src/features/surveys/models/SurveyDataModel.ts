@@ -4,6 +4,7 @@ import { IFuture } from 'core/caching/futures';
 import { ModelBase } from 'core/models';
 import { SurveyStats } from '../rpc/getSurveyStats';
 import SurveysRepo, {
+  OptionsQuestionPatchBody,
   ZetkinSurveyElementPatchBody,
   ZetkinSurveyElementPostBody,
 } from '../repos/SurveysRepo';
@@ -29,6 +30,10 @@ export default class SurveyDataModel extends ModelBase {
     this._repo.addElement(this._orgId, this._surveyId, element);
   }
 
+  addElementOption(elemId: number) {
+    this._repo.addElementOption(this._orgId, this._surveyId, elemId);
+  }
+
   constructor(env: Environment, orgId: number, surveyId: number) {
     super();
     this._orgId = orgId;
@@ -38,6 +43,15 @@ export default class SurveyDataModel extends ModelBase {
 
   deleteElement(elemId: number) {
     this._repo.deleteSurveyElement(this._orgId, this._surveyId, elemId);
+  }
+
+  deleteElementOption(elemId: number, optionId: number) {
+    this._repo.deleteElementOption(
+      this._orgId,
+      this._surveyId,
+      elemId,
+      optionId
+    );
   }
 
   getData(): IFuture<ZetkinSurveyExtended> {
@@ -173,8 +187,38 @@ export default class SurveyDataModel extends ModelBase {
     });
   }
 
+  updateElement(elemId: number, data: ZetkinSurveyElementPatchBody) {
+    this._repo.updateElement(this._orgId, this._surveyId, elemId, data);
+  }
+
+  updateElementOption(elemId: number, optionId: number, text: string) {
+    this._repo.updateElementOption(
+      this._orgId,
+      this._surveyId,
+      elemId,
+      optionId,
+      text
+    );
+  }
+
+  updateElementOrder(ids: (string | number)[]) {
+    this._repo.updateElementOrder(this._orgId, this._surveyId, ids);
+  }
+
   updateOpenQuestionBlock(elemId: number, data: ZetkinSurveyElementPatchBody) {
     this._repo.updateElement(this._orgId, this._surveyId, elemId, data);
+  }
+
+  updateOptionsQuestion(
+    elemId: number,
+    optionsQuestion: OptionsQuestionPatchBody
+  ) {
+    this._repo.updateElement(
+      this._orgId,
+      this._surveyId,
+      elemId,
+      optionsQuestion
+    );
   }
 
   updateTextBlock(
