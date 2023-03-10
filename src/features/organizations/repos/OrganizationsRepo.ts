@@ -15,9 +15,9 @@ export default class OrganizationsRepo {
     this._apiClient = env.apiClient;
   }
 
-  getOrganizations(): IFuture<ZetkinOrganization[]> {
+  getUserOrganizations(): IFuture<ZetkinOrganization[]> {
     const state = this._store.getState();
-    return loadListIfNecessary(state.organizations.allOrgs, this._store, {
+    return loadListIfNecessary(state.organizations.userOrgList, this._store, {
       actionOnLoad: () => organizationsLoad(),
       actionOnSuccess: (data) => organizationsLoaded(data),
       loader: () =>

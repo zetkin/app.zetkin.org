@@ -3,11 +3,11 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { remoteList, RemoteList } from 'utils/storeUtils';
 
 export interface OrganizationsStoreSlice {
-  allOrgs: RemoteList<ZetkinOrganization>;
+  userOrgList: RemoteList<ZetkinOrganization>;
 }
 
 const initialState: OrganizationsStoreSlice = {
-  allOrgs: remoteList(),
+  userOrgList: remoteList(),
 };
 
 const OrganizationsSlice = createSlice({
@@ -15,7 +15,7 @@ const OrganizationsSlice = createSlice({
   name: 'organizations',
   reducers: {
     organizationsLoad: (state) => {
-      state.allOrgs.isLoading = true;
+      state.userOrgList.isLoading = true;
     },
     organizationsLoaded: (
       state,
@@ -23,9 +23,9 @@ const OrganizationsSlice = createSlice({
     ) => {
       const organizationsList = action.payload;
 
-      state.allOrgs = remoteList(organizationsList);
-      state.allOrgs.loaded = new Date().toISOString();
-      state.allOrgs.isLoading = false;
+      state.userOrgList = remoteList(organizationsList);
+      state.userOrgList.loaded = new Date().toISOString();
+      state.userOrgList.isLoading = false;
     },
   },
 });
