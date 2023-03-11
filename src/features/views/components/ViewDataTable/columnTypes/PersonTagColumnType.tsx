@@ -24,8 +24,8 @@ type PersonTagViewCell = null | {
 };
 
 export default class PersonTagColumnType implements IColumnType {
-  cellToString(cell: ZetkinTag): string {
-    return cell.value ? cell.value.toString() : Boolean(cell).toString();
+  cellToString(cell: PersonTagViewCell): string {
+    return cell?.value ? cell.value.toString() : Boolean(cell).toString();
   }
 
   getColDef(column: PersonTagViewColumn): Omit<GridColDef, 'field'> {

@@ -17,8 +17,8 @@ import {
 } from '../../types';
 
 export default class LocalBoolColumnType implements IColumnType {
-  cellToString(cell: boolean): string {
-    return String(cell);
+  cellToString(cell: boolean | null): string {
+    return String(!!cell);
   }
 
   getColDef(column: LocalBoolViewColumn): Omit<GridColDef, 'field'> {
