@@ -5,6 +5,7 @@ import React, { useState } from 'react';
 import { Msg } from 'core/i18n';
 
 import messageIds from './l10n/messageIds';
+import { TextField } from '@material-ui/core';
 
 const ZUITextfieldToClipboard: React.FunctionComponent<{
   children: React.ReactNode;
@@ -19,17 +20,15 @@ const ZUITextfieldToClipboard: React.FunctionComponent<{
   };
 
   return (
-    <Box display="flex" gap={1}>
-      <Box
-        alignItems="center"
-        border={1}
-        borderColor="lightgray"
-        borderRadius={1}
-        display="flex"
-        paddingX={1}
-      >
-        {children}
-      </Box>
+    <Box display="flex" gap={1} width="100%">
+      <TextField
+        defaultValue={children}
+        fullWidth
+        InputProps={{
+          readOnly: true,
+        }}
+        variant="outlined"
+      />
       <Button onClick={handleClick} variant="outlined">
         {copied ? (
           <Msg id={messageIds.copyToClipboard.copied} />
