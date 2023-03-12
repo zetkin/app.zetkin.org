@@ -1,4 +1,5 @@
 import { GetServerSideProps } from 'next';
+import Head from 'next/head';
 import { Box, Typography } from '@mui/material';
 
 import CallAssignmentLayout from 'features/callAssignments/layout/CallAssignmentLayout';
@@ -76,20 +77,25 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
       : [1, 1, 1];
 
   return (
-    <Box>
-      <Box mb={2}>
-        <CallAssignmentTargets model={model} />
+    <>
+      <Head>
+        <title>{model.getData().data?.title}</title>
+      </Head>
+      <Box>
+        <Box mb={2}>
+          <CallAssignmentTargets model={model} />
+        </Box>
+        <Box mb={2}>
+          <Typography variant="h3">
+            <Msg id={messageIds.statusSectionTitle} />
+          </Typography>
+        </Box>
+        <ZUIStackedStatusBar colors={colors} values={statusBarStatsList} />
+        <Box mt={2}>
+          <CallAssignmentStatusCards model={model} />
+        </Box>
       </Box>
-      <Box mb={2}>
-        <Typography variant="h3">
-          <Msg id={messageIds.statusSectionTitle} />
-        </Typography>
-      </Box>
-      <ZUIStackedStatusBar colors={colors} values={statusBarStatsList} />
-      <Box mt={2}>
-        <CallAssignmentStatusCards model={model} />
-      </Box>
-    </Box>
+    </>
   );
 };
 
