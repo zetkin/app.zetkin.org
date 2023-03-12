@@ -1,6 +1,9 @@
 import { GetServerSideProps } from 'next';
+import Head from 'next/head';
+
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
+import SurveyDataModel from 'features/surveys/models/SurveyDataModel';
 import SurveyLayout from 'features/surveys/layout/SurveyLayout';
 import SurveySubmissionsList from 'features/surveys/components/SurveySubmissionsList';
 import SurveySubmissionsModel from 'features/surveys/models/SurveySubmissionsModel';
@@ -35,17 +38,25 @@ const SubmissionsPage: PageWithLayout<SubmissionsPageProps> = ({
   orgId,
   surveyId,
 }) => {
+  const model = useModel(
+    (env) => new SurveyDataModel(env, parseInt(orgId), parseInt(surveyId))
+  );
   const subsModel = useModel(
     (env) =>
       new SurveySubmissionsModel(env, parseInt(orgId), parseInt(surveyId))
   );
 
   return (
-    <ZUIFuture future={subsModel.getSubmissions()}>
-      {(data) => {
-        return <SurveySubmissionsList submissions={data} />;
-      }}
-    </ZUIFuture>
+    <>
+      <Head>
+        <title>{model.getData().data?.title}</title>
+      </Head>
+      <ZUIFuture future={subsModel.getSubmissions()}>
+        {(data) => {
+          return <SurveySubmissionsList submissions={data} />;
+        }}
+      </ZUIFuture>
+    </>
   );
 };
 
