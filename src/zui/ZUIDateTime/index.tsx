@@ -1,3 +1,4 @@
+import { Tooltip } from '@mui/material';
 import { FormattedDate, FormattedTime } from 'react-intl';
 
 interface ZUIDateTimeProps {
@@ -11,10 +12,30 @@ const ZUIDateTime: React.FunctionComponent<ZUIDateTimeProps> = ({
 }) => {
   const value = convertToLocal ? new Date(datetime + 'Z') : datetime;
   return (
-    <>
-      <FormattedDate day="numeric" month="long" value={value} year="numeric" />{' '}
-      <FormattedTime value={value} />
-    </>
+    <Tooltip
+      arrow
+      title={
+        <>
+          <FormattedDate
+            day="numeric"
+            month="long"
+            value={value}
+            year="numeric"
+          />{' '}
+          <FormattedTime value={value} />
+        </>
+      }
+    >
+      <>
+        <FormattedDate
+          day="numeric"
+          month="long"
+          value={value}
+          year="numeric"
+        />{' '}
+        <FormattedTime value={value} />
+      </>
+    </Tooltip>
   );
 };
 
