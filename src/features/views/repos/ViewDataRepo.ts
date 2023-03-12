@@ -43,7 +43,7 @@ export default class ViewDataRepo {
     orgId: number,
     viewId: number,
     data: Omit<ZetkinViewColumn, 'id'>
-  ) {
+  ): Promise<void> {
     const column = await this._apiClient.post<
       ZetkinViewColumn,
       Omit<ZetkinViewColumn, 'id'>
