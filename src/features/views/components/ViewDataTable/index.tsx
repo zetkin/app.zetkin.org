@@ -145,7 +145,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
   const onCreateColumnSave = async (colSpec: SelectedViewColumn) => {
     setColumnToCreate(null);
     try {
-      model.addColumn({
+      await model.addColumn({
         config: colSpec.config,
         title: colSpec.title,
         type: colSpec.type,
@@ -437,6 +437,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
           onSave={async (columns) => {
             // TODO: Handle these async calls better
             // (maybe custom API endpoint to bulk create/edit columns?)
+            // HERE WE ARE
             for (const col of columns) {
               await onCreateColumnSave(col);
             }
