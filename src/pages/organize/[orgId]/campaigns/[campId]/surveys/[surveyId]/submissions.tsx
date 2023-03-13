@@ -12,10 +12,12 @@ import { Grid, useMediaQuery, useTheme } from '@mui/material';
 export const getServerSideProps: GetServerSideProps = scaffold(
   async (ctx) => {
     const { orgId, campId, surveyId } = ctx.params!;
+    const filter = ctx.query.filter ?? false;
 
     return {
       props: {
         campId,
+        filterQuery: filter,
         orgId,
         surveyId,
       },
@@ -29,11 +31,14 @@ export const getServerSideProps: GetServerSideProps = scaffold(
 
 interface SubmissionsPageProps {
   campId: string;
+  filterQuery: string | boolean;
   orgId: string;
   surveyId: string;
 }
 
 const SubmissionsPage: PageWithLayout<SubmissionsPageProps> = ({
+  campId,
+  filterQuery,
   orgId,
   surveyId,
 }) => {
@@ -49,12 +54,20 @@ const SubmissionsPage: PageWithLayout<SubmissionsPageProps> = ({
       <Grid item md={8}>
         <ZUIFuture future={subsModel.getSubmissions()}>
           {(data) => {
-            return <SurveySubmissionsList submissions={data} />;
+            let submissions = data;
+            if (filterQuery) {
+              submissions = data.filter(
+                (sub) => sub.respondent && !sub.respondent.id
+              );
+            }
+            return <SurveySubmissionsList submissions={submissions} />;
           }}
         </ZUIFuture>
       </Grid>
       <Grid item md={4}>
         <SubmissionWarningCard
+          campId={parseInt(campId)}
+          filterQuery={filterQuery}
           orgId={parseInt(orgId)}
           surveyId={parseInt(surveyId)}
         />

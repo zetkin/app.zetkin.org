@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import messageIds from '../l10n/messageIds';
 import SurveyDataModel from '../models/SurveyDataModel';
 import { useMessages } from 'core/i18n';
@@ -6,14 +5,19 @@ import useModel from 'core/useModel';
 import ZUICard from 'zui/ZUICard';
 import ZUIFuture from 'zui/ZUIFuture';
 import ZUINumberChip from 'zui/ZUINumberChip';
-import { Box, useTheme } from '@mui/material';
+import { Box, Link, useTheme } from '@mui/material';
 
 type SurveyUnlinkedCardProps = {
+  campId: number;
   orgId: number;
   surveyId: number;
 };
 
-const SurveyUnlinkedCard = ({ orgId, surveyId }: SurveyUnlinkedCardProps) => {
+const SurveyUnlinkedCard = ({
+  campId,
+  orgId,
+  surveyId,
+}: SurveyUnlinkedCardProps) => {
   const messages = useMessages(messageIds);
   const theme = useTheme();
   const model = useModel((env) => new SurveyDataModel(env, orgId, surveyId));
@@ -37,7 +41,11 @@ const SurveyUnlinkedCard = ({ orgId, surveyId }: SurveyUnlinkedCardProps) => {
                   }
                   subheader={messages.unlinkedCard.description()}
                 >
-                  <Link href="/">Link submission now</Link>
+                  <Link
+                    href={`/organize/${orgId}/campaigns/${campId}/surveys/${surveyId}/submissions?filter=linked`}
+                  >
+                    {messages.unlinkedCard.openLink()}
+                  </Link>
                 </ZUICard>
               </Box>
             )}
