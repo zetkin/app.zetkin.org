@@ -6,6 +6,7 @@ import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import SingleCampaignLayout from 'features/campaigns/layout/SingleCampaignLayout';
 import SurveyListItem from 'features/campaigns/components/SurveyListItem';
+import TaskListItem from 'features/campaigns/components/TaskListItem';
 import useModel from 'core/useModel';
 import CampaignActivitiesModel, {
   ACTIVITIES,
@@ -68,6 +69,14 @@ const CampaignActivitiesPage: PageWithLayout<CampaignActivitiesPageProps> = ({
               key={`survey-${activity.id}`}
               orgId={parseInt(orgId)}
               surveyId={activity.id}
+            />
+          );
+        } else if (activity.kind === ACTIVITIES.TASK) {
+          return (
+            <TaskListItem
+              key={`task-${activity.id}`}
+              orgId={parseInt(orgId)}
+              taskId={activity.id}
             />
           );
         }

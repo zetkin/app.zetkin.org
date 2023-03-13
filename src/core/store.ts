@@ -5,12 +5,14 @@ import callAssignmentsSlice, {
 } from '../features/callAssignments/store';
 import surveysSlice, { SurveysStoreSlice } from 'features/surveys/store';
 import tagsSlice, { TagsStoreSlice } from 'features/tags/store';
+import tasksSlice, { TasksStoreSlice } from 'features/tasks/store';
 import viewsSlice, { ViewsStoreSlice } from 'features/views/store';
 
 export interface RootState {
   callAssignments: CallAssignmentSlice;
   surveys: SurveysStoreSlice;
   tags: TagsStoreSlice;
+  tasks: TasksStoreSlice;
   views: ViewsStoreSlice;
 }
 
@@ -18,6 +20,7 @@ const reducer = {
   callAssignments: callAssignmentsSlice.reducer,
   surveys: surveysSlice.reducer,
   tags: tagsSlice.reducer,
+  tasks: tasksSlice.reducer,
   views: viewsSlice.reducer,
 };
 
