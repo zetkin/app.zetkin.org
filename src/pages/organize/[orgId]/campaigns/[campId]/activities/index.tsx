@@ -30,7 +30,6 @@ export const getServerSideProps: GetServerSideProps = scaffold(
 );
 
 interface CampaignActivitiesPageProps {
-  campId: string;
   orgId: string;
 }
 

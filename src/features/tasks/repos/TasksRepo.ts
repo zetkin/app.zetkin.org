@@ -3,11 +3,19 @@ import IApiClient from 'core/api/client/IApiClient';
 import { IFuture } from 'core/caching/futures';
 import { Store } from 'core/store';
 import { ZetkinTask } from '../components/types';
+import getStats, { TaskStats } from '../rpc/getTaskStats';
 import {
   loadItemIfNecessary,
   loadListIfNecessary,
 } from 'core/caching/cacheUtils';
-import { taskLoad, taskLoaded, tasksLoad, tasksLoaded } from '../store';
+import {
+  statsLoad,
+  statsLoaded,
+  taskLoad,
+  taskLoaded,
+  tasksLoad,
+  tasksLoaded,
+} from '../store';
 
 export default class TasksRepo {
   private _apiClient: IApiClient;
@@ -27,6 +35,16 @@ export default class TasksRepo {
       actionOnSuccess: (data) => taskLoaded(data),
       loader: () =>
         this._apiClient.get<ZetkinTask>(`/api/orgs/${orgId}/tasks/${taskId}`),
+    });
+  }
+
+  getTaskStats(orgId: number, taskId: number): IFuture<TaskStats> {
+    const state = this._store.getState();
+    const item = state.tasks.statsById[taskId];
+    return loadItemIfNecessary(item, this._store, {
+      actionOnLoad: () => statsLoad(taskId),
+      actionOnSuccess: (data) => statsLoaded([taskId, data]),
+      loader: () => this._apiClient.rpc(getStats, { orgId, taskId }),
     });
   }
 

@@ -13,8 +13,9 @@ interface TaskListItemProps {
 const TaskListItem = ({ orgId, taskId }: TaskListItemProps) => {
   const model = useModel((env) => new TaskModel(env, orgId));
   const task = model.getTask(taskId).data;
+  const stats = model.getTaskStats(taskId).data;
 
-  if (!task) {
+  if (!task || !stats) {
     return null;
   }
 
@@ -34,10 +35,11 @@ const TaskListItem = ({ orgId, taskId }: TaskListItemProps) => {
 
   return (
     <ActivityListItem
+      blueChipValue={stats.assigned}
       color={color}
-      endNumber={'2321'}
-      greenChipValue={234}
-      orangeChipValue={232}
+      endNumber={stats.individuals.toString()}
+      greenChipValue={stats.completed}
+      orangeChipValue={stats.ignored}
       PrimaryIcon={CheckBoxOutlined}
       SecondaryIcon={People}
       title={task.title}

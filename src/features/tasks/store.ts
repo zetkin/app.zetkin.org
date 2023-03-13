@@ -1,13 +1,21 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
+import { TaskStats } from './rpc/getTaskStats';
 import { ZetkinTask } from './components/types';
-import { remoteItem, remoteList, RemoteList } from 'utils/storeUtils';
+import {
+  RemoteItem,
+  remoteItem,
+  remoteList,
+  RemoteList,
+} from 'utils/storeUtils';
 
 export interface TasksStoreSlice {
+  statsById: Record<number, RemoteItem<TaskStats>>;
   tasksList: RemoteList<ZetkinTask>;
 }
 
 const initialState: TasksStoreSlice = {
+  statsById: {},
   tasksList: remoteList(),
 };
 
@@ -15,6 +23,18 @@ const tasksSlice = createSlice({
   initialState,
   name: 'tasks',
   reducers: {
+    statsLoad: (state, action: PayloadAction<number>) => {
+      const taskId = action.payload;
+      state.statsById[taskId] = remoteItem<TaskStats>(taskId, {
+        isLoading: true,
+      });
+    },
+    statsLoaded: (state, action: PayloadAction<[number, TaskStats]>) => {
+      const [taskId, stats] = action.payload;
+      state.statsById[taskId].data = stats;
+      state.statsById[taskId].isLoading = false;
+      state.statsById[taskId].loaded = new Date().toISOString();
+    },
     taskLoad: (state, action: PayloadAction<number>) => {
       const taskId = action.payload;
       const item = state.tasksList.items.find((task) => task.id === taskId);
@@ -46,5 +66,11 @@ const tasksSlice = createSlice({
 });
 
 export default tasksSlice;
-export const { taskLoad, taskLoaded, tasksLoad, tasksLoaded } =
-  tasksSlice.actions;
+export const {
+  statsLoad,
+  statsLoaded,
+  taskLoad,
+  taskLoaded,
+  tasksLoad,
+  tasksLoaded,
+} = tasksSlice.actions;
