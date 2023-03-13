@@ -12,6 +12,12 @@ export default makeMessages('feat.surveys', {
   blocks: {
     choice: {
       addOption: m('Add option'),
+      addOptionsBulk: m('Add options in bulk'),
+      bulk: {
+        cancelButton: m('Cancel'),
+        placeholder: m('Type or paste one option per line'),
+        submitButton: m('Add all'),
+      },
       description: m('Description'),
       emptyDescription: m('Description'),
       emptyOption: m('Empty option'),
@@ -79,15 +85,21 @@ export default makeMessages('feat.surveys', {
   },
   submissionPane: {
     anonymous: m('Anonymous'),
+    hidden: m('Hidden'),
+    linked: m('Linked'),
     subtitle:
       m<{ date: ReactElement; person: ReactElement }>('{person} {date}'),
   },
   submissions: {
+    anonymous: m('Anonymous'),
     dateColumn: m('Date'),
     emailColumn: m('Email'),
     firstNameColumn: m('First name'),
     lastNameColumn: m('Last name'),
-    personRecordColumn: m('Person record'),
+    link: m('Link'),
+    personRecordColumn: m('Respondent'),
+    suggestedPeople: m('Suggested people'),
+    unlink: m('Unlink'),
   },
   tabs: {
     overview: m('Overview'),

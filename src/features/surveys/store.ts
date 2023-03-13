@@ -6,6 +6,7 @@ import {
   RESPONSE_TYPE,
   ZetkinSurvey,
   ZetkinSurveyElement,
+  ZetkinSurveyElementOrder,
   ZetkinSurveyExtended,
   ZetkinSurveyOption,
   ZetkinSurveySubmission,
@@ -127,6 +128,30 @@ const surveysSlice = createSlice({
         }
       }
     },
+    elementOptionsReordered: (
+      state,
+      action: PayloadAction<[number, number, ZetkinSurveyElementOrder]>
+    ) => {
+      const [surveyId, elemId, newOrder] = action.payload;
+      const surveyItem = state.surveyList.items.find(
+        (item) => item.id == surveyId
+      );
+      const element = surveyItem?.data?.elements.find(
+        (elem) => elem.id == elemId
+      );
+
+      if (
+        element?.type == ELEMENT_TYPE.QUESTION &&
+        element.question.response_type == RESPONSE_TYPE.OPTIONS
+      ) {
+        element.question.options = element.question.options
+          ?.concat()
+          .sort(
+            (o0, o1) =>
+              newOrder.default.indexOf(o0.id) - newOrder.default.indexOf(o1.id)
+          );
+      }
+    },
     elementUpdated: (
       state,
       action: PayloadAction<[number, number, ZetkinSurveyElement]>
@@ -139,6 +164,24 @@ const surveysSlice = createSlice({
         surveyItem.data.elements = surveyItem.data.elements.map((oldElement) =>
           oldElement.id == elemId ? updatedElement : oldElement
         );
+      }
+    },
+    elementsReordered: (
+      state,
+      action: PayloadAction<[number, ZetkinSurveyElementOrder]>
+    ) => {
+      const [surveyId, newOrder] = action.payload;
+      const surveyItem = state.surveyList.items.find(
+        (item) => item.id == surveyId
+      );
+      if (surveyItem?.data?.elements) {
+        surveyItem.data.elements = surveyItem.data.elements
+          .concat()
+          .sort(
+            (el0, el1) =>
+              newOrder.default.indexOf(el0.id) -
+              newOrder.default.indexOf(el1.id)
+          );
       }
     },
     statsLoad: (state, action: PayloadAction<number>) => {
@@ -195,6 +238,31 @@ const surveysSlice = createSlice({
       item.isLoading = false;
       item.loaded = new Date().toISOString();
     },
+    surveySubmissionUpdate: (
+      state,
+      action: PayloadAction<[number, string[]]>
+    ) => {
+      const [submissionId, mutating] = action.payload;
+      const item = state.submissionList.items.find(
+        (item) => item.id == submissionId
+      );
+      if (item) {
+        item.mutating = mutating;
+      }
+    },
+    surveySubmissionUpdated: (
+      state,
+      action: PayloadAction<ZetkinSurveySubmission>
+    ) => {
+      const submission = action.payload;
+      const item = state.submissionList.items.find(
+        (item) => item.id == submission.id
+      );
+      if (item) {
+        item.data = { ...item.data, ...submission };
+        item.mutating = [];
+      }
+    },
     /* eslint-disable-next-line */
     surveySubmissionsLoad: (state, action: PayloadAction<number>) => {
       // TODO: Segregate submissions by survey ID
@@ -234,13 +302,17 @@ export const {
   elementOptionAdded,
   elementOptionDeleted,
   elementOptionUpdated,
+  elementOptionsReordered,
   elementUpdated,
+  elementsReordered,
   submissionLoad,
   submissionLoaded,
   statsLoad,
   statsLoaded,
   surveyLoad,
   surveyLoaded,
+  surveySubmissionUpdate,
+  surveySubmissionUpdated,
   surveySubmissionsLoad,
   surveySubmissionsLoaded,
   surveyUpdate,

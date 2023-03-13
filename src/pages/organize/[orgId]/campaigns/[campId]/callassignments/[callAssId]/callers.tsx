@@ -1,5 +1,6 @@
 import { Close } from '@material-ui/icons';
 import { GetServerSideProps } from 'next';
+import Head from 'next/head';
 import {
   Box,
   Fade,
@@ -82,69 +83,74 @@ const CallersPage: PageWithLayout<CallersPageProps> = ({
     !!model.getFilteredCallers().data?.find((caller) => caller.id == person.id);
 
   return (
-    <Box>
-      <Paper>
-        <Box p={2}>
-          <Box display="flex" justifyContent="space-between" mb={2}>
-            <Typography variant="h4">
-              <Msg id={messageIds.callers.title} />
-            </Typography>
-            <TextField
-              InputProps={{
-                endAdornment: (
-                  <Fade in={isSearching}>
-                    <IconButton onClick={() => setSearchString('')}>
-                      <Close />
-                    </IconButton>
-                  </Fade>
-                ),
-              }}
-              onChange={(evt) => {
-                setSearchString(evt.target.value);
-              }}
-              placeholder={messages.callers.searchBox()}
-              value={searchString}
-              variant="outlined"
+    <>
+      <Head>
+        <title>{model.getData().data?.title}</title>
+      </Head>
+      <Box>
+        <Paper>
+          <Box p={2}>
+            <Box display="flex" justifyContent="space-between" mb={2}>
+              <Typography variant="h4">
+                <Msg id={messageIds.callers.title} />
+              </Typography>
+              <TextField
+                InputProps={{
+                  endAdornment: (
+                    <Fade in={isSearching}>
+                      <IconButton onClick={() => setSearchString('')}>
+                        <Close />
+                      </IconButton>
+                    </Fade>
+                  ),
+                }}
+                onChange={(evt) => {
+                  setSearchString(evt.target.value);
+                }}
+                placeholder={messages.callers.searchBox()}
+                value={searchString}
+                variant="outlined"
+              />
+            </Box>
+            <CallAssignmentCallersList
+              callers={future.data || []}
+              onCustomize={(caller) => setSelectedCaller(caller)}
+              onRemove={(caller) => model.removeCaller(caller.id)}
             />
           </Box>
-          <CallAssignmentCallersList
-            callers={future.data || []}
-            onCustomize={(caller) => setSelectedCaller(caller)}
-            onRemove={(caller) => model.removeCaller(caller.id)}
+        </Paper>
+        <Box marginTop={2}>
+          <MUIOnlyPersonSelect
+            getOptionDisabled={isCaller}
+            getOptionExtraLabel={(person) =>
+              isCaller(person) ? messages.callers.add.alreadyAdded() : ''
+            }
+            inputRef={selectInputRef}
+            onChange={(person) => {
+              model.addCaller(person);
+
+              // Blur and re-focus input to reset, so that user can type again to
+              // add another person, without taking their hands off the keyboard.
+              selectInputRef?.current?.blur();
+              selectInputRef?.current?.focus();
+            }}
+            placeholder={messages.callers.add.placeholder()}
+            selectedPerson={null}
           />
         </Box>
-      </Paper>
-      <Box marginTop={2}>
-        <MUIOnlyPersonSelect
-          getOptionDisabled={isCaller}
-          getOptionExtraLabel={(person) =>
-            isCaller(person) ? messages.callers.add.alreadyAdded() : ''
-          }
-          inputRef={selectInputRef}
-          onChange={(person) => {
-            model.addCaller(person);
-
-            // Blur and re-focus input to reset, so that user can type again to
-            // add another person, without taking their hands off the keyboard.
-            selectInputRef?.current?.blur();
-            selectInputRef?.current?.focus();
+        <CallerConfigDialog
+          caller={selectedCaller}
+          onClose={() => setSelectedCaller(null)}
+          onSubmit={(prioTags, excludedTags) => {
+            if (selectedCaller) {
+              model.setCallerTags(selectedCaller.id, prioTags, excludedTags);
+            }
+            setSelectedCaller(null);
           }}
-          placeholder={messages.callers.add.placeholder()}
-          selectedPerson={null}
+          open={!!selectedCaller}
         />
       </Box>
-      <CallerConfigDialog
-        caller={selectedCaller}
-        onClose={() => setSelectedCaller(null)}
-        onSubmit={(prioTags, excludedTags) => {
-          if (selectedCaller) {
-            model.setCallerTags(selectedCaller.id, prioTags, excludedTags);
-          }
-          setSelectedCaller(null);
-        }}
-        open={!!selectedCaller}
-      />
-    </Box>
+    </>
   );
 };
 

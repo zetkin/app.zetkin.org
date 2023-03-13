@@ -14,18 +14,20 @@ import ViewSurveySubmissionPreview from '../../ViewSurveySubmissionPreview';
 
 import messageIds from 'features/views/l10n/messageIds';
 
-type SurveyOptionViewCell = {
-  selected: boolean;
-  submission_id: number;
-  submitted: string;
-}[];
+type SurveyOptionViewCell =
+  | {
+      selected: boolean;
+      submission_id: number;
+      submitted: string;
+    }[]
+  | null;
 
 export default class SurveyOptionColumnType
   implements IColumnType<SurveyOptionViewColumn, SurveyOptionViewCell>
 {
   cellToString(cell: SurveyOptionViewCell): string {
-    const pickedThisOption = cell.filter((submission) => submission.selected);
-    return pickedThisOption.length ? pickedThisOption[0].submitted : '';
+    const pickedThisOption = cell?.filter((submission) => submission.selected);
+    return pickedThisOption?.length ? pickedThisOption[0].submitted : '';
   }
 
   getColDef(): Omit<GridColDef<SurveyOptionViewColumn>, 'field'> {
@@ -48,7 +50,7 @@ const Cell: FC<{ cell: SurveyOptionViewCell }> = ({ cell }) => {
   const { openPane } = usePanes();
   const { orgId } = useRouter().query;
 
-  if (!cell.length) {
+  if (!cell?.length) {
     return null;
   }
 

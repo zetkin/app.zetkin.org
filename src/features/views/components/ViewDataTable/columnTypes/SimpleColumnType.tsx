@@ -3,7 +3,7 @@ import { GridColDef } from '@mui/x-data-grid-pro';
 import { IColumnType } from '.';
 import { ZetkinViewColumn } from '../../types';
 
-type SimpleData = string | number | boolean;
+type SimpleData = string | number | boolean | null;
 
 export default class SimpleColumnType
   implements IColumnType<ZetkinViewColumn, SimpleData>

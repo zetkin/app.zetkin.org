@@ -5,6 +5,7 @@ import NProgress from 'nprogress';
 import { useRouter } from 'next/router';
 import {
   DataGridPro,
+  GRID_CHECKBOX_SELECTION_COL_DEF,
   GridCellEditStartReasons,
   GridCellParams,
   GridColDef,
@@ -145,7 +146,7 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
   const onCreateColumnSave = async (colSpec: SelectedViewColumn) => {
     setColumnToCreate(null);
     try {
-      model.addColumn({
+      await model.addColumn({
         config: colSpec.config,
         title: colSpec.title,
         type: colSpec.type,
@@ -401,6 +402,9 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
           }
         }}
         onSelectionModelChange={(model) => setSelection(model as number[])}
+        pinnedColumns={{
+          left: ['id', GRID_CHECKBOX_SELECTION_COL_DEF.field],
+        }}
         processRowUpdate={(after, before) => {
           const changedField = Object.keys(after).find(
             (key) => after[key] != before[key]
@@ -435,8 +439,6 @@ const ViewDataTable: FunctionComponent<ViewDataTableProps> = ({
           columns={columns}
           onClose={onCreateColumnCancel}
           onSave={async (columns) => {
-            // TODO: Handle these async calls better
-            // (maybe custom API endpoint to bulk create/edit columns?)
             for (const col of columns) {
               await onCreateColumnSave(col);
             }

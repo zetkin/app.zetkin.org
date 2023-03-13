@@ -1,3 +1,4 @@
+import addBulkOptions from '../rpc/addBulkOptions';
 import Environment from 'core/env/Environment';
 import IApiClient from 'core/api/client/IApiClient';
 import shouldLoad from 'core/caching/shouldLoad';
@@ -7,9 +8,11 @@ import {
   ZetkinOptionsQuestion,
   ZetkinSurvey,
   ZetkinSurveyElement,
+  ZetkinSurveyElementOrder,
   ZetkinSurveyExtended,
   ZetkinSurveyOption,
   ZetkinSurveySubmission,
+  ZetkinSurveySubmissionPatchBody,
   ZetkinSurveyTextElement,
   ZetkinTextQuestion,
 } from 'utils/types/zetkin';
@@ -18,7 +21,9 @@ import {
   elementDeleted,
   elementOptionAdded,
   elementOptionDeleted,
+  elementOptionsReordered,
   elementOptionUpdated,
+  elementsReordered,
   elementUpdated,
   statsLoad,
   statsLoaded,
@@ -28,6 +33,8 @@ import {
   surveyLoaded,
   surveySubmissionsLoad,
   surveySubmissionsLoaded,
+  surveySubmissionUpdate,
+  surveySubmissionUpdated,
   surveyUpdate,
   surveyUpdated,
 } from '../store';
@@ -111,6 +118,28 @@ export default class SurveysRepo {
       { text: '' }
     );
     this._store.dispatch(elementOptionAdded([surveyId, elemId, option]));
+  }
+
+  async addElementOptions(
+    orgId: number,
+    surveyId: number,
+    elemId: number,
+    options: string[]
+  ) {
+    const result = await this._apiClient.rpc(addBulkOptions, {
+      elemId,
+      options,
+      orgId,
+      surveyId,
+    });
+
+    result.addedOptions.forEach((option) => {
+      this._store.dispatch(elementOptionAdded([surveyId, elemId, option]));
+    });
+
+    result.removedOptions.forEach((option) => {
+      this._store.dispatch(elementOptionDeleted([surveyId, elemId, option.id]));
+    });
   }
 
   constructor(env: Environment) {
@@ -233,6 +262,37 @@ export default class SurveysRepo {
     );
   }
 
+  async updateElementOrder(
+    orgId: number,
+    surveyId: number,
+    ids: (string | number)[]
+  ) {
+    const newOrder = await this._apiClient.patch<ZetkinSurveyElementOrder>(
+      `/api/orgs/${orgId}/surveys/${surveyId}/element_order`,
+      {
+        default: ids.map((id) => parseInt(id as string)),
+      }
+    );
+
+    this._store.dispatch(elementsReordered([surveyId, newOrder]));
+  }
+
+  async updateOptionOrder(
+    orgId: number,
+    surveyId: number,
+    elemId: number,
+    ids: (string | number)[]
+  ) {
+    const newOrder = await this._apiClient.patch<ZetkinSurveyElementOrder>(
+      `/api/orgs/${orgId}/surveys/${surveyId}/elements/${elemId}/option_order`,
+      {
+        default: ids.map((id) => parseInt(id as string)),
+      }
+    );
+
+    this._store.dispatch(elementOptionsReordered([surveyId, elemId, newOrder]));
+  }
+
   updateSurvey(
     orgId: number,
     surveyId: number,
@@ -246,6 +306,24 @@ export default class SurveysRepo {
       )
       .then((survey) => {
         this._store.dispatch(surveyUpdated(survey));
+      });
+  }
+
+  updateSurveySubmission(
+    orgId: number,
+    submissionId: number,
+    data: ZetkinSurveySubmissionPatchBody
+  ) {
+    this._store.dispatch(
+      surveySubmissionUpdate([submissionId, Object.keys(data)])
+    );
+    this._apiClient
+      .patch<ZetkinSurveySubmission, ZetkinSurveySubmissionPatchBody>(
+        `/api/orgs/${orgId}/survey_submissions/${submissionId}`,
+        data
+      )
+      .then((submission) => {
+        this._store.dispatch(surveySubmissionUpdated(submission));
       });
   }
 }

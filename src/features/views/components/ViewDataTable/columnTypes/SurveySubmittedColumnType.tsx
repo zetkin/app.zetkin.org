@@ -10,18 +10,20 @@ import { usePanes } from 'utils/panes';
 import { useRouter } from 'next/router';
 import ZUIRelativeTime from '../../../../../zui/ZUIRelativeTime';
 
-type SurveySubmittedViewCell = {
-  submission_id: number;
-  submitted: string;
-}[];
+type SurveySubmittedViewCell =
+  | {
+      submission_id: number;
+      submitted: string;
+    }[]
+  | null;
 
 export default class SurveySubmittedColumnType
   implements IColumnType<SurveySubmittedViewColumn, SurveySubmittedViewCell>
 {
   cellToString(cell: SurveySubmittedViewCell): string {
-    return cell.length ? new Date(cell[0].submitted).toLocaleDateString() : '';
+    return cell?.length ? new Date(cell[0].submitted).toLocaleDateString() : '';
   }
-  getColDef(): Omit<GridColDef<SurveySubmittedViewCell>, 'field'> {
+  getColDef(): Omit<GridColDef<NonNullable<SurveySubmittedViewCell>>, 'field'> {
     return {
       renderCell: (params) => {
         return <Cell cell={params.value} />;

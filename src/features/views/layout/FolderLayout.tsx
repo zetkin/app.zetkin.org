@@ -5,6 +5,7 @@ import useModel from 'core/useModel';
 import ViewBrowserModel from '../models/ViewBrowserModel';
 import ViewFolderActionButtons from '../components/ViewFolderActionButtons';
 import ViewFolderSubtitle from '../components/ViewFolderSubtitle';
+import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
 import ZUIFuture from 'zui/ZUIFuture';
 
 interface FolderLayoutProps {
@@ -40,7 +41,15 @@ const FolderLayout: React.FunctionComponent<FolderLayoutProps> = ({
               )}
             </ZUIFuture>
           }
-          title={data.title}
+          title={
+            <ZUIEditTextinPlace
+              key={data.id}
+              onChange={(newTitle) => {
+                model.renameItem('folder', data.id, newTitle);
+              }}
+              value={data.title}
+            />
+          }
         >
           {children}
         </SimpleLayout>

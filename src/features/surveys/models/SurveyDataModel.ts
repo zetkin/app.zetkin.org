@@ -34,6 +34,20 @@ export default class SurveyDataModel extends ModelBase {
     this._repo.addElementOption(this._orgId, this._surveyId, elemId);
   }
 
+  async addElementOptionsFromText(elemId: number, bulkText: string) {
+    const lines = bulkText.split('\n');
+    const nonBlankLines = lines
+      .map((str) => str.trim())
+      .filter((str) => !!str.length);
+
+    this._repo.addElementOptions(
+      this._orgId,
+      this._surveyId,
+      elemId,
+      nonBlankLines
+    );
+  }
+
   constructor(env: Environment, orgId: number, surveyId: number) {
     super();
     this._orgId = orgId;
@@ -201,8 +215,16 @@ export default class SurveyDataModel extends ModelBase {
     );
   }
 
+  updateElementOrder(ids: (string | number)[]) {
+    this._repo.updateElementOrder(this._orgId, this._surveyId, ids);
+  }
+
   updateOpenQuestionBlock(elemId: number, data: ZetkinSurveyElementPatchBody) {
     this._repo.updateElement(this._orgId, this._surveyId, elemId, data);
+  }
+
+  updateOptionOrder(elemId: number, ids: (string | number)[]) {
+    this._repo.updateOptionOrder(this._orgId, this._surveyId, elemId, ids);
   }
 
   updateOptionsQuestion(
