@@ -44,7 +44,9 @@ const SurveyUnlinkedCard = ({
                   <Link
                     href={`/organize/${orgId}/campaigns/${campId}/surveys/${surveyId}/submissions?filter=linked`}
                   >
-                    {messages.unlinkedCard.openLink()}
+                    {messages.unlinkedCard.openLink({
+                      numUnlink: unlinkedSubmitters,
+                    })}
                   </Link>
                 </ZUICard>
               </Box>

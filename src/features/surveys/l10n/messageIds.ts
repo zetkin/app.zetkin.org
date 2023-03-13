@@ -99,17 +99,23 @@ export default makeMessages('feat.surveys', {
       'When someone submits a survey without first logging in,that survey will be unlinked. Searching for people in your database based on their survey responses will not work on unlinked submissions.'
     ),
     header: m('Unlinked submissions'),
-    openLink: m('Link submission now'),
+    openLink: m<{ numUnlink: number }>(
+      '{numUnlink, plural, one {Link submission now} other {Link submissions now}}'
+    ),
   },
   unlinkedWarningCard: {
-    description: m('There are some submissions not linked to person records'),
-    header: m('Unlinked persons found'),
+    description: m<{ numUnlink: number }>(
+      '{numUnlink, plural, one {There is a submission not linked to person record} other {There are some submissions not linked to person records}}'
+    ),
+    header: m<{ numUnlink: number }>(
+      '{numUnlink, plural, one {Unlinked person found} other {Unlinked people found}}'
+    ),
     viewAll: m('View all'),
     viewUnlink: m('View unlinked only'),
-    viewUnlinkHeader: m('Viewing unlinked only'),
-    viewUnlinkedDesc: m(
-      "You're viewing only submissions not linked to person records."
+    viewUnlinkDesc: m<{ numUnlink: number }>(
+      "{numUnlink, plural, one { You're viewing a submission not linked to person record.} other {You're viewing only submissions not linked to person records.}}"
     ),
+    viewUnlinkHeader: m('Viewing unlinked only'),
   },
   urlCard: {
     nowAccepting: m('Now accepting submissions at this link'),
