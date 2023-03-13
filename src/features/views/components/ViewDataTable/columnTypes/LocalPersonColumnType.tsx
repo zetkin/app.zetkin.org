@@ -18,7 +18,7 @@ type LocalPersonViewCell = null | ZetkinPerson;
 export default class LocalPersonColumnType
   implements IColumnType<LocalPersonViewColumn, LocalPersonViewCell>
 {
-  cellToString(cell: ZetkinPerson | null): string {
+  cellToString(cell: LocalPersonViewCell): string {
     return cell ? `${cell.first_name} ${cell.last_name}` : '';
   }
   getColDef(
