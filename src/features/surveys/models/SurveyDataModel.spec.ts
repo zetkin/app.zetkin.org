@@ -48,6 +48,7 @@ describe('SurveyDataModel', () => {
             access: 'open',
             allow_anonymous: true,
             callers_only: false,
+            campaign: null,
             elements: [],
             expires: expires,
             id: 1,

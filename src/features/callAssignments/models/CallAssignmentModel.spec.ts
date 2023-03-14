@@ -47,6 +47,7 @@ describe('CallAssignmentModel', () => {
         callAssignments: {
           assignmentList: mockList<CallAssignmentData>([
             {
+              campaign: null,
               cooldown: 3,
               disable_caller_notes: false,
               end_date: null,
@@ -82,6 +83,7 @@ describe('CallAssignmentModel', () => {
         callAssignments: {
           assignmentList: mockList<CallAssignmentData>([
             {
+              campaign: null,
               cooldown: 3,
               disable_caller_notes: false,
               end_date: null,
@@ -127,6 +129,7 @@ describe('CallAssignmentModel', () => {
       callAssignments: {
         assignmentList: mockList<CallAssignmentData>([
           {
+            campaign: null,
             cooldown: 3,
             disable_caller_notes: false,
             end_date: endDate,
@@ -275,6 +278,7 @@ describe('CallAssignmentModel', () => {
         callAssignments: {
           assignmentList: mockList<CallAssignmentData>([
             {
+              campaign: null,
               cooldown: 3,
               disable_caller_notes: false,
               end_date: null,
@@ -315,6 +319,7 @@ describe('CallAssignmentModel', () => {
         callAssignments: {
           assignmentList: mockList<CallAssignmentData>([
             {
+              campaign: null,
               cooldown: 3,
               disable_caller_notes: false,
               end_date: null,
@@ -389,6 +394,7 @@ describe('CallAssignmentModel', () => {
         callAssignments: {
           assignmentList: mockList<CallAssignmentData>([
             {
+              campaign: null,
               cooldown: 3,
               disable_caller_notes: false,
               end_date: null,
@@ -607,6 +613,7 @@ describe('CallAssignmentModel', () => {
       callAssignments: {
         assignmentList: mockList<CallAssignmentData>([
           {
+            campaign: null,
             cooldown: 3,
             disable_caller_notes: false,
             end_date: endDate,
@@ -675,6 +682,7 @@ describe('CallAssignmentModel', () => {
       callAssignments: {
         assignmentList: mockList<CallAssignmentData>([
           {
+            campaign: null,
             cooldown: 3,
             disable_caller_notes: false,
             end_date: endDate,

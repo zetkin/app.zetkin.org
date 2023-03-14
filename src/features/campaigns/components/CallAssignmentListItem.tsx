@@ -67,6 +67,9 @@ const CallAssignmentListItem: FC<CallAssignmentListItemProps> = ({
       color={color}
       endNumber={callsMade}
       greenChipValue={done}
+      href={`/organize/${orgId}/campaigns/${
+        data.campaign?.id ?? 'standalone'
+      }/callassignments/${caId}`}
       message={message}
       orangeChipValue={blocked}
       PrimaryIcon={HeadsetMic}

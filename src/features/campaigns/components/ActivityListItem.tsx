@@ -1,7 +1,9 @@
 import makeStyles from '@mui/styles/makeStyles';
+import NextLink from 'next/link';
 import { OverridableComponent } from '@mui/material/OverridableComponent';
-import { Box, SvgIconTypeMap, Theme, Typography } from '@mui/material';
+import { Box, Link, SvgIconTypeMap, Theme, Typography } from '@mui/material';
 
+import theme from 'theme';
 import ZUIIconLabel from 'zui/ZUIIconLabel';
 import ZUIMultiNumberChip from 'zui/ZUIMultiNumberChip';
 
@@ -59,6 +61,7 @@ interface AcitivityListItemProps {
     SvgIconTypeMap<Record<string, unknown>, 'svg'>
   >;
   blueChipValue?: string | number;
+  href: string;
   orangeChipValue: string | number | undefined;
   greenChipValue: string | number | undefined;
   message?: string;
@@ -70,6 +73,7 @@ interface AcitivityListItemProps {
 const ActivityListItem = ({
   PrimaryIcon,
   SecondaryIcon,
+  href,
   message,
   blueChipValue,
   greenChipValue,
@@ -84,7 +88,13 @@ const ActivityListItem = ({
       <Box className={classes.left}>
         <Box className={classes.dot}></Box>
         <PrimaryIcon className={classes.primaryIcon} />
-        <Typography sx={{ paddingX: 2 }}>{title}</Typography>
+        <NextLink href={href} passHref>
+          <Link underline="none">
+            <Typography color={theme.palette.text.primary} sx={{ paddingX: 2 }}>
+              {title}
+            </Typography>
+          </Link>
+        </NextLink>
         {message && <Typography color="secondary">{message}</Typography>}
       </Box>
       <Box className={classes.right}>

@@ -9,6 +9,7 @@ export interface CallAssignmentCaller {
 }
 
 export interface CallAssignmentData {
+  campaign: { id: number; title: string } | null;
   cooldown: number;
   disable_caller_notes: boolean;
   end_date: string | null;
