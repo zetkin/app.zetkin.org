@@ -8,6 +8,7 @@ import { scaffold } from 'utils/next';
 import SurveyListItem from 'features/campaigns/components/SurveyListItem';
 import TaskListItem from 'features/campaigns/components/TaskListItem';
 import useModel from 'core/useModel';
+import useServerSide from 'core/useServerSide';
 import CampaignActivitiesModel, {
   ACTIVITIES,
 } from 'features/campaigns/models/CampaignAcitivitiesModel';
@@ -35,6 +36,7 @@ interface CampaignActivitiesPageProps {
 const CampaignActivitiesPage: PageWithLayout<CampaignActivitiesPageProps> = ({
   orgId,
 }) => {
+  const onServer = useServerSide();
   const model = useModel(
     (env) => new CampaignActivitiesModel(env, parseInt(orgId))
   );
@@ -44,6 +46,10 @@ const CampaignActivitiesPage: PageWithLayout<CampaignActivitiesPageProps> = ({
 
   if (!activities) {
     return <>No activities</>;
+  }
+
+  if (onServer) {
+    return null;
   }
 
   return (
