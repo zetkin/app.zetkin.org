@@ -38,7 +38,9 @@ const CampaignActivitiesPage: PageWithLayout<CampaignActivitiesPageProps> = ({
   const model = useModel(
     (env) => new CampaignActivitiesModel(env, parseInt(orgId))
   );
-  const activities = model.getCurrentActivities().data;
+  const activities = model
+    .getCurrentActivities()
+    .data?.filter((activity) => activity.campaign === null);
 
   if (!activities) {
     return <>No activities</>;
