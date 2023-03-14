@@ -4,12 +4,6 @@ import { FC, useMemo } from 'react';
 
 import { Box } from '@mui/system';
 import { Link } from '@mui/material';
-import {
-  DataGridPro,
-  GridCellParams,
-  GridRenderCellParams,
-  useGridApiContext,
-} from '@mui/x-data-grid-pro';
 
 import getPeopleSearchResults from 'utils/fetching/getPeopleSearchResults';
 import messageIds from '../l10n/messageIds';
@@ -20,6 +14,12 @@ import { usePanes } from 'utils/panes';
 import ZUIPersonGridCell from 'zui/ZUIPersonGridCell';
 import ZUIPersonGridEditCell from 'zui/ZUIPersonGridEditCell';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
+import {
+  DataGridPro,
+  GridCellParams,
+  GridRenderCellParams,
+  useGridApiContext,
+} from '@mui/x-data-grid-pro';
 import { Msg, useMessages } from 'core/i18n';
 import { ZetkinPerson, ZetkinSurveySubmission } from 'utils/types/zetkin';
 
