@@ -217,6 +217,10 @@ export enum RESPONSE_TYPE {
   TEXT = 'text',
 }
 
+export type ZetkinSurveyElementOrder = {
+  default: number[];
+};
+
 export enum ELEMENT_TYPE {
   QUESTION = 'question',
   TEXT = 'text',
@@ -276,6 +280,11 @@ export interface ZetkinSurveySubmission {
   };
   submitted: string;
   responses?: ZetkinSurveyQuestionResponse[]; // TODO: Lying! Segregate with/without responses
+}
+
+export interface ZetkinSurveySubmissionPatchBody
+  extends Partial<Omit<ZetkinTag, 'organization' | 'respondent' | 'survey'>> {
+  respondent_id: number | null;
 }
 
 export interface ZetkinCanvassAssignment {

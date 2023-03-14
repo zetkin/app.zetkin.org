@@ -1,40 +1,30 @@
-import { Box, Card, IconButton } from '@mui/material';
-import { Delete, RemoveRedEye } from '@mui/icons-material';
+import { Box, Card } from '@mui/material';
 import { FC, ReactNode } from 'react';
 
 interface BlockWrapperProps {
   children: ReactNode;
+  dragging: boolean;
   hidden: boolean;
-  onDelete: () => void;
-  onToggleHidden: (hidden: boolean) => void;
 }
 
 const BlockWrapper: FC<BlockWrapperProps> = ({
   children,
+  dragging,
   hidden,
-  onDelete,
-  onToggleHidden,
 }) => {
   return (
     <Box
       marginBottom={1}
-      sx={{ opacity: hidden ? 0.5 : 1, transition: 'opacity 0.2s' }}
+      sx={{
+        boxShadow: dragging ? '0 0 20px rgba(0,0,0,0.1)' : 'none',
+        flex: '1 0',
+        opacity: hidden ? 0.5 : 1,
+        transform: dragging ? 'scale(101%) translate(0.3%, 0)' : 'none',
+        transition: 'opacity 0.2s, box-shadow 0.1s, transform 0.1s',
+      }}
     >
       <Card>
         <Box m={2}>{children}</Box>
-        <Box display="flex" justifyContent="end" m={2}>
-          <IconButton onClick={() => onToggleHidden(!hidden)}>
-            <RemoveRedEye />
-          </IconButton>
-          <IconButton
-            onClick={(evt) => {
-              evt.stopPropagation();
-              onDelete();
-            }}
-          >
-            <Delete />
-          </IconButton>
-        </Box>
       </Card>
     </Box>
   );

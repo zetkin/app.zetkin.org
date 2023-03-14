@@ -1,41 +1,24 @@
-import { makeStyles } from '@mui/styles';
-import { useRouter } from 'next/router';
-import {
-  Avatar,
-  Box,
-  Button,
-  InputBase,
-  List,
-  ListItem,
-  ListSubheader,
-  Paper,
-  Popper,
-  Theme,
-  Typography,
-  useAutocomplete,
-} from '@mui/material';
+import { FC } from 'react';
+import { GridColDef, useGridApiContext } from '@mui/x-data-grid-pro';
 
 import { IColumnType } from '.';
-import { Msg } from 'core/i18n';
 import useAccessLevel from 'features/views/hooks/useAccessLevel';
-import { usePersonSelect } from 'zui/ZUIPersonSelect';
 import useViewDataModel from 'features/views/hooks/useViewDataModel';
 import ViewDataModel from 'features/views/models/ViewDataModel';
-import ZUIAvatar from 'zui/ZUIAvatar';
-import { Close, Person } from '@mui/icons-material';
+import ZUIPersonGridCell from 'zui/ZUIPersonGridCell';
+import ZUIPersonGridEditCell from 'zui/ZUIPersonGridEditCell';
 import { COLUMN_TYPE, LocalPersonViewColumn } from '../../types';
-import { FC, HTMLAttributes, useState } from 'react';
-import { GridColDef, useGridApiContext } from '@mui/x-data-grid-pro';
 import { ZetkinPerson, ZetkinViewRow } from 'utils/types/zetkin';
 
 import messageIds from 'features/views/l10n/messageIds';
+import { useMessages } from 'core/i18n';
 
 type LocalPersonViewCell = null | ZetkinPerson;
 
 export default class LocalPersonColumnType
   implements IColumnType<LocalPersonViewColumn, LocalPersonViewCell>
 {
-  cellToString(cell: ZetkinPerson | null): string {
+  cellToString(cell: LocalPersonViewCell): string {
     return cell ? `${cell.first_name} ${cell.last_name}` : '';
   }
   getColDef(
@@ -48,10 +31,10 @@ export default class LocalPersonColumnType
       headerAlign: 'center',
 
       renderCell: (params) => {
-        return <ReadCell cell={params.value} />;
+        return <ZUIPersonGridCell personId={params.value?.id} />;
       },
       renderEditCell: (params) => {
-        return <Cell cell={params.value} column={col} row={params.row} />;
+        return <EditCell cell={params.value} column={col} row={params.row} />;
       },
       sortComparator: (
         val0: LocalPersonViewCell,
@@ -86,263 +69,39 @@ export default class LocalPersonColumnType
   }
 }
 
-const useStyles = makeStyles<Theme, { isRestrictedMode: boolean }>({
-  popper: {
-    display: 'flex',
-    flexDirection: 'column',
-    height: (props) => (props.isRestrictedMode ? 'auto' : 400),
-    width: 300,
-  },
-  searchingList: {
-    height: 'calc(100% - 40px)',
-    minWidth: '250px',
-    overflowY: 'scroll',
-    paddingLeft: '20px',
-    position: 'absolute',
-    width: '100%',
-  },
-});
-
-const ReadCell: FC<{
-  cell: LocalPersonViewCell | undefined;
-}> = ({ cell }) => {
-  const query = useRouter().query;
-  const orgId = parseInt(query.orgId as string);
-
-  return (
-    <Box>
-      {cell ? (
-        <ZUIAvatar orgId={orgId} personId={cell.id} />
-      ) : (
-        <Avatar>
-          <Person />
-        </Avatar>
-      )}
-    </Box>
-  );
-};
-
-const Cell: FC<{
-  cell: LocalPersonViewCell | undefined;
+const EditCell: FC<{
+  cell: LocalPersonViewCell;
   column: LocalPersonViewColumn;
   row: ZetkinViewRow;
 }> = ({ cell, column, row }) => {
-  const query = useRouter().query;
-  const [isRestrictedMode] = useAccessLevel();
-  const styles = useStyles({ isRestrictedMode });
-  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-  const [searching, setSearching] = useState(false);
-
-  const model = useViewDataModel();
-
-  const orgId = parseInt(query.orgId as string);
-
   const api = useGridApiContext();
+  const model = useViewDataModel();
+  const messages = useMessages(messageIds);
+
+  const suggestedPeople = getPeopleInView(model);
+  const [isRestrictedMode] = useAccessLevel();
 
   const updateCellValue = (person: ZetkinPerson | null) => {
-    api.current.stopCellEditMode({ field: 'col_' + column.id, id: row.id });
+    api.current.stopCellEditMode({
+      field: 'col_' + column.id,
+      id: row.id,
+    });
     model.setCellValue(row.id, column.id, person?.id ?? null);
-    setSearching(false);
   };
 
-  const personSelect = usePersonSelect({
-    initialValue: cell ? cell.first_name + ' ' + cell.last_name : '',
-    onChange: (person) => {
-      updateCellValue(person);
-      setAnchorEl(null);
-      setSearching(false);
-    },
-    selectedPerson: null,
-  });
-
-  const autoComplete = useAutocomplete({
-    ...personSelect.autoCompleteProps,
-    disabled: isRestrictedMode,
-  });
-
-  const options = autoComplete.groupedOptions as ZetkinPerson[];
-  const peopleInView = usePeopleInView(model, options);
-  const showPeopleInView = searching || !cell;
-
   return (
-    <Box
-      onMouseEnter={(ev) => {
-        setAnchorEl(ev.currentTarget);
-      }}
-      onMouseLeave={() => {
-        setAnchorEl(null);
-      }}
-    >
-      <Box ref={(div: HTMLDivElement) => setAnchorEl(div)}>
-        <InputBase
-          /* eslint-disable-next-line jsx-a11y/no-autofocus */
-          autoFocus
-          fullWidth
-          inputProps={autoComplete.getInputProps()}
-          onChange={() => setSearching(true)}
-        ></InputBase>
-      </Box>
-      <Popper
-        anchorEl={anchorEl}
-        open={!!anchorEl}
-        popperOptions={{
-          placement: 'bottom',
-        }}
-      >
-        <Paper
-          className={styles.popper}
-          elevation={2}
-          onClick={(ev) => {
-            ev.stopPropagation();
-            anchorEl?.focus();
-          }}
-        >
-          {isRestrictedMode && (
-            <Box
-              alignItems="center"
-              display="flex"
-              flexDirection="column"
-              gap={1}
-              justifyContent="center"
-              width="100%"
-            >
-              {!!cell && <SelectedPerson orgId={orgId} person={cell} />}
-              <Typography fontStyle="italic" variant="caption">
-                <Msg id={messageIds.cells.localPerson.restrictedMode} />
-              </Typography>
-            </Box>
-          )}
-          {!isRestrictedMode && (
-            <Box display="flex" flexDirection="column" height="100%">
-              <Box
-                sx={{
-                  alignItems: 'center',
-                  display: 'flex',
-                  height: 'calc(100% - 10px)',
-                  justifyContent: 'center',
-                  minWidth: '290px',
-                  width: '100%',
-                }}
-              >
-                {!!cell?.id && (
-                  <Box
-                    alignItems="center"
-                    display="flex"
-                    flexDirection="column"
-                    gap={1}
-                    justifyContent="center"
-                  >
-                    {!isRestrictedMode && !searching && (
-                      <>
-                        <SelectedPerson orgId={orgId} person={cell} />
-                        <Button
-                          endIcon={<Close />}
-                          onClick={() => updateCellValue(null)}
-                        >
-                          <Msg id={messageIds.cells.localPerson.clearLabel} />
-                        </Button>
-                      </>
-                    )}
-                  </Box>
-                )}
-                <List
-                  className={styles.searchingList}
-                  sx={{ display: showPeopleInView ? 'block' : 'none' }}
-                >
-                  {showPeopleInView && !!peopleInView.length && (
-                    <List>
-                      <ListSubheader>
-                        <Msg id={messageIds.cells.localPerson.alreadyInView} />
-                      </ListSubheader>
-                      {peopleInView.map((option) => (
-                        <PersonListItem
-                          key={option.id}
-                          itemProps={{
-                            onClick: () => {
-                              updateCellValue(option);
-                            },
-                          }}
-                          orgId={orgId}
-                          person={option}
-                        />
-                      ))}
-                    </List>
-                  )}
-                  {searching && (
-                    <List {...autoComplete.getListboxProps()}>
-                      <ListSubheader sx={{ position: 'relative' }}>
-                        <Msg id={messageIds.cells.localPerson.otherPeople} />
-                      </ListSubheader>
-                      {options.map((option, index) => {
-                        const optProps = autoComplete.getOptionProps({
-                          index,
-                          option,
-                        });
-                        return (
-                          <PersonListItem
-                            key={option.id}
-                            itemProps={optProps}
-                            orgId={orgId}
-                            person={option}
-                          />
-                        );
-                      })}
-                    </List>
-                  )}
-                </List>
-              </Box>
-            </Box>
-          )}
-        </Paper>
-      </Popper>
-    </Box>
+    <ZUIPersonGridEditCell
+      cell={cell}
+      onUpdate={updateCellValue}
+      removePersonLabel={messages.cells.localPerson.clearLabel()}
+      restrictedMode={isRestrictedMode}
+      suggestedPeople={suggestedPeople}
+      suggestedPeopleLabel={messages.cells.localPerson.alreadyInView()}
+    />
   );
 };
 
-const SelectedPerson: FC<{ orgId: number; person: ZetkinPerson }> = ({
-  orgId,
-  person,
-}) => {
-  return (
-    <>
-      <ZUIAvatar orgId={orgId} personId={person.id} size="lg" />
-      <Typography>{`${person.first_name} ${person.last_name}`}</Typography>
-    </>
-  );
-};
-
-const PersonListItem: FC<{
-  itemProps: HTMLAttributes<HTMLLIElement>;
-  orgId: number;
-  person: ZetkinPerson;
-}> = ({ itemProps, orgId, person }) => {
-  return (
-    <ListItem
-      {...itemProps}
-      disablePadding
-      sx={{ paddingBottom: 0.5, paddingTop: 0.5 }}
-    >
-      <Box
-        sx={{
-          cursor: 'pointer',
-          display: 'flex',
-          gap: 1,
-          justifyContent: 'center',
-        }}
-      >
-        <ZUIAvatar orgId={orgId} personId={person.id} size="sm" />
-        <Typography component="span">
-          {`${person.first_name} ${person.last_name}`}
-        </Typography>
-      </Box>
-    </ListItem>
-  );
-};
-
-function usePeopleInView(
-  model: ViewDataModel,
-  searchResults: ZetkinPerson[] = []
-): ZetkinPerson[] {
+function getPeopleInView(model: ViewDataModel): ZetkinPerson[] {
   const rows = model.getRows().data;
   const cols = model.getColumns().data;
 
@@ -378,11 +137,5 @@ function usePeopleInView(
     });
   });
 
-  if (searchResults.length) {
-    // Filter down people in view to only include search matches
-    const matchingIds = searchResults.map((person) => person.id);
-    return peopleInView.filter((person) => matchingIds.includes(person.id));
-  } else {
-    return peopleInView;
-  }
+  return peopleInView;
 }

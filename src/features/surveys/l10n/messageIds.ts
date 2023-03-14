@@ -2,7 +2,7 @@ import { ReactElement } from 'react';
 
 import { m, makeMessages } from 'core/i18n';
 
-export default makeMessages('feat.sruveys', {
+export default makeMessages('feat.surveys', {
   addBlocks: {
     choiceQuestionButton: m('Choice question'),
     openQuestionButton: m('Open question'),
@@ -10,6 +10,26 @@ export default makeMessages('feat.sruveys', {
     title: m('Choose a block type to add more content to your survey'),
   },
   blocks: {
+    choice: {
+      addOption: m('Add option'),
+      addOptionsBulk: m('Add options in bulk'),
+      bulk: {
+        cancelButton: m('Cancel'),
+        placeholder: m('Type or paste one option per line'),
+        submitButton: m('Add all'),
+      },
+      description: m('Description'),
+      emptyDescription: m('Description'),
+      emptyOption: m('Empty option'),
+      emptyQuestion: m('Title'),
+      question: m('Question'),
+      widget: m('Widget'),
+      widgets: {
+        checkbox: m('Multi-choice (checkboxes)'),
+        radio: m('Single-choice (radio buttons)'),
+        select: m('Single-choice (drop-down)'),
+      },
+    },
     open: {
       description: m('Description'),
       empty: m('Untitled open question'),
@@ -65,20 +85,32 @@ export default makeMessages('feat.sruveys', {
   },
   submissionPane: {
     anonymous: m('Anonymous'),
+    hidden: m('Hidden'),
+    linked: m('Linked'),
     subtitle:
       m<{ date: ReactElement; person: ReactElement }>('{person} {date}'),
   },
   submissions: {
+    anonymous: m('Anonymous'),
     dateColumn: m('Date'),
     emailColumn: m('Email'),
     firstNameColumn: m('First name'),
     lastNameColumn: m('Last name'),
-    personRecordColumn: m('Person record'),
+    link: m('Link'),
+    personRecordColumn: m('Respondent'),
+    suggestedPeople: m('Suggested people'),
+    unlink: m('Unlink'),
   },
   tabs: {
     overview: m('Overview'),
     questions: m('Questions'),
     submissions: m('Submissions'),
+  },
+  unlinkedCard: {
+    description: m(
+      'When someone submits a survey without first logging in,that survey will be unlinked. Searching for people in your database based on their survey responses will not work on unlinked submissions.'
+    ),
+    header: m('Unlinked submissions'),
   },
   urlCard: {
     nowAccepting: m('Now accepting submissions at this link'),

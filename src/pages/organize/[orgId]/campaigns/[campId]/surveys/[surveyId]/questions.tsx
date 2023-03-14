@@ -1,5 +1,6 @@
 import { Box } from '@mui/material';
 import { GetServerSideProps } from 'next';
+import Head from 'next/head';
 
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
@@ -41,9 +42,14 @@ const QuestionsPage: PageWithLayout<QuestionsPageProps> = ({
   );
 
   return (
-    <Box>
-      <SurveyEditor model={model} />
-    </Box>
+    <>
+      <Head>
+        <title>{model.getData().data?.title}</title>
+      </Head>
+      <Box>
+        <SurveyEditor model={model} />
+      </Box>
+    </>
   );
 };
 
