@@ -1,36 +1,27 @@
+import React from 'react';
 import { useRouter } from 'next/router';
 import { Box, Button } from '@mui/material';
-import React, { useContext } from 'react';
-import { useMutation, useQueryClient } from 'react-query';
 
-import postCampaign from '../fetching/postCampaign';
-import ZUISnackbarContext from 'zui/ZUISnackbarContext';
+import CampaignBrowserModel from '../models/CampaignBrowserModel';
+import useModel from 'core/useModel';
 import { Msg, useMessages } from 'core/i18n';
 
 import messageIds from '../l10n/messageIds';
 
 const CampaignActionButtons: React.FunctionComponent = () => {
   const messages = useMessages(messageIds);
-  const queryClient = useQueryClient();
   const router = useRouter();
-  const { showSnackbar } = useContext(ZUISnackbarContext);
   const { orgId } = router.query;
-
-  // Mutations
-  const postCampaignMutation = useMutation(postCampaign(orgId as string));
+  const model = useModel(
+    (env) => new CampaignBrowserModel(env, parseInt(orgId as string))
+  );
 
   // Event Handlers
   const handleCreateCampaign = () => {
     const campaign = {
       title: messages.form.createCampaign.newCampaign(),
     };
-    postCampaignMutation.mutate(campaign, {
-      onError: () =>
-        showSnackbar('error', messages.form.createCampaign.error()),
-      onSettled: () => queryClient.invalidateQueries(['campaign']),
-      onSuccess: (data) =>
-        router.push(`/organize/${orgId}/campaigns/${data.id}`),
-    });
+    model.createCampaign(campaign);
   };
 
   return (
