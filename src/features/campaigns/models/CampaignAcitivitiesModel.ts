@@ -32,7 +32,7 @@ export default class CampaignActivitiesModel extends ModelBase {
     this._tasksRepo = new TasksRepo(env);
   }
 
-  getActvities(): IFuture<CampaignAcitivity[]> {
+  getCurrentActivities(): IFuture<CampaignAcitivity[]> {
     const callAssignmentsFuture = this._callAssignmentsRepo.getCallAssignments(
       this._orgId
     );
@@ -47,23 +47,68 @@ export default class CampaignActivitiesModel extends ModelBase {
       return new LoadingFuture();
     }
 
-    const callAssignments: CampaignAcitivity[] = callAssignmentsFuture.data.map(
-      (ca) => ({
+    const callAssignments: CampaignAcitivity[] = callAssignmentsFuture.data
+      .filter((ca) => !ca.end_date || isInFuture(ca.end_date))
+      .map((ca) => ({
         ...ca,
         kind: ACTIVITIES.CALL_ASSIGNMENT,
-      })
-    );
+      }));
 
-    const surveys: CampaignAcitivity[] = surveysFuture.data.map((survey) => ({
-      ...survey,
-      kind: ACTIVITIES.SURVEY,
-    }));
+    const surveys: CampaignAcitivity[] = surveysFuture.data
+      .filter((survey) => !survey.expires || isInFuture(survey.expires))
+      .map((survey) => ({
+        ...survey,
+        kind: ACTIVITIES.SURVEY,
+      }));
 
-    const tasks: CampaignAcitivity[] = tasksFuture.data.map((task) => ({
-      ...task,
-      kind: ACTIVITIES.TASK,
-    }));
+    const tasks: CampaignAcitivity[] = tasksFuture.data
+      .filter((task) => !task.expires || isInFuture(task.expires))
+      .map((task) => ({
+        ...task,
+        kind: ACTIVITIES.TASK,
+      }));
 
-    return new ResolvedFuture([...callAssignments, ...surveys, ...tasks]);
+    const unsorted = callAssignments.concat(...surveys, ...tasks);
+
+    const sorted = unsorted.sort((first, second) => {
+      const firstStartDate = getStartDate(first);
+      const secondStartDate = getStartDate(second);
+
+      if (firstStartDate === null) {
+        return -1;
+      } else if (secondStartDate === null) {
+        return 1;
+      }
+
+      return secondStartDate.getTime() - firstStartDate.getTime();
+    });
+
+    return new ResolvedFuture(sorted);
   }
+}
+
+function getStartDate(activity: CampaignAcitivity) {
+  if (activity.kind === ACTIVITIES.SURVEY) {
+    if (!activity.published) {
+      return null;
+    }
+    return new Date(activity.published);
+  } else if (activity.kind === ACTIVITIES.CALL_ASSIGNMENT) {
+    if (!activity.start_date) {
+      return null;
+    }
+    return new Date(activity.start_date);
+  } else {
+    if (!activity.published) {
+      return null;
+    }
+    return new Date(activity.published);
+  }
+}
+
+function isInFuture(datestring: string): boolean {
+  const now = new Date();
+  const date = new Date(datestring);
+
+  return date > now;
 }

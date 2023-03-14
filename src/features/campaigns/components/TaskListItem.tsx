@@ -22,12 +22,9 @@ const TaskListItem = ({ orgId, taskId }: TaskListItemProps) => {
   const taskStatus = getTaskStatus(task);
   let color = STATUS_COLORS.GRAY;
 
-  if (taskStatus === TASK_STATUS.ACTIVE) {
+  if (taskStatus === TASK_STATUS.ACTIVE || taskStatus === TASK_STATUS.CLOSED) {
     color = STATUS_COLORS.GREEN;
-  } else if (
-    taskStatus === TASK_STATUS.CLOSED ||
-    taskStatus === TASK_STATUS.EXPIRED
-  ) {
+  } else if (taskStatus === TASK_STATUS.EXPIRED) {
     color = STATUS_COLORS.RED;
   } else if (taskStatus === TASK_STATUS.SCHEDULED) {
     color = STATUS_COLORS.BLUE;
