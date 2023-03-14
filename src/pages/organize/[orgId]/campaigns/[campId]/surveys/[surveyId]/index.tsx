@@ -1,4 +1,5 @@
 import { GetServerSideProps } from 'next';
+import Head from 'next/head';
 import { Box, Grid } from '@mui/material';
 
 import EmptyOverview from 'features/surveys/components/EmptyOverview';
@@ -47,6 +48,7 @@ const SurveyPage: PageWithLayout<SurveyPageProps> = ({
     (env) => new SurveyDataModel(env, parseInt(orgId), parseInt(surveyId))
   );
   const onServer = useServerSide();
+  const campaignId = isNaN(parseInt(campId)) ? 'standalone' : parseInt(campId);
 
   if (onServer) {
     return null;
@@ -60,32 +62,42 @@ const SurveyPage: PageWithLayout<SurveyPageProps> = ({
   }
 
   return (
-    <Box
-      alignItems="center"
-      display="flex"
-      justifyContent="center"
-      paddingTop={8}
-    >
-      {model.surveyIsEmpty ? (
-        <EmptyOverview campId={campId} orgId={orgId} surveyId={surveyId} />
-      ) : (
-        <Grid container spacing={2}>
-          <Grid item md={8}>
-            <SubmissionChartCard
-              orgId={parseInt(orgId)}
-              surveyId={parseInt(surveyId)}
-            />
+    <>
+      <Head>
+        <title>{model.getData().data?.title}</title>
+      </Head>
+      <Box
+        alignItems="center"
+        display="flex"
+        justifyContent="center"
+        paddingTop={8}
+      >
+        {model.surveyIsEmpty ? (
+          <EmptyOverview campId={campId} orgId={orgId} surveyId={surveyId} />
+        ) : (
+          <Grid container spacing={2}>
+            <Grid item md={8}>
+              <SubmissionChartCard
+                orgId={parseInt(orgId)}
+                surveyId={parseInt(surveyId)}
+              />
+            </Grid>
+            <Grid item md={4}>
+              <SurveyURLCard
+                isOpen={isOpen}
+                orgId={orgId}
+                surveyId={surveyId}
+              />
+              <SurveyUnlinkedCard
+                campId={campaignId}
+                orgId={parseInt(orgId)}
+                surveyId={parseInt(surveyId)}
+              />
+            </Grid>
           </Grid>
-          <Grid item md={4}>
-            <SurveyURLCard isOpen={isOpen} orgId={orgId} surveyId={surveyId} />
-            <SurveyUnlinkedCard
-              orgId={parseInt(orgId)}
-              surveyId={parseInt(surveyId)}
-            />
-          </Grid>
-        </Grid>
-      )}
-    </Box>
+        )}
+      </Box>
+    </>
   );
 };
 

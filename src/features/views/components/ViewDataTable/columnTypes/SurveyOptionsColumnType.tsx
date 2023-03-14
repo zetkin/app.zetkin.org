@@ -11,17 +11,19 @@ import { FC, useState } from 'react';
 import SurveySubmissionPane from 'features/surveys/panes/SurveySubmissionPane';
 import ViewSurveySubmissionPreview from '../../ViewSurveySubmissionPreview';
 
-export type SurveyOptionsViewCell = {
-  selected: ZetkinSurveyOption[];
-  submission_id: number;
-  submitted: string;
-}[];
+export type SurveyOptionsViewCell =
+  | {
+      selected: ZetkinSurveyOption[];
+      submission_id: number;
+      submitted: string;
+    }[]
+  | null;
 
 export default class SurveyOptionsColumnType
   implements IColumnType<ZetkinViewColumn, SurveyOptionsViewCell>
 {
   cellToString(cell: SurveyOptionsViewCell): string {
-    return cell.length ? cell[0].selected.map((o) => o.text).toString() : '';
+    return cell?.length ? cell[0].selected.map((o) => o.text).toString() : '';
   }
 
   getColDef(): Omit<GridColDef, 'field'> {
@@ -50,7 +52,7 @@ export default class SurveyOptionsColumnType
     };
   }
   getSearchableStrings(cell: SurveyOptionsViewCell): string[] {
-    return cell.length ? cell[0].selected.map((o) => o.text) : [];
+    return cell?.length ? cell[0].selected.map((o) => o.text) : [];
   }
 }
 

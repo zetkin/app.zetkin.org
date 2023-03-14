@@ -9,7 +9,7 @@ import Document, { Head, Html, Main, NextScript } from 'next/document';
 export default class MyDocument extends Document {
   render(): JSX.Element {
     return (
-      <Html lang="en">
+      <Html lang="en" style={{ overscrollBehaviorX: 'none' }}>
         <Head>
           {/* PWA primary color */}
           <meta content={theme.palette.primary.main} name="theme-color" />
@@ -17,7 +17,7 @@ export default class MyDocument extends Document {
           <script>{'try{Typekit.load({ async: true })}catch(e){}'}</script>
           <link href="/logo-zetkin.png" rel="shortcut icon" />
         </Head>
-        <body>
+        <body style={{ overscrollBehaviorX: 'none' }}>
           <Main />
           <NextScript />
         </body>
