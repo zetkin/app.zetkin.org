@@ -48,6 +48,7 @@ const SurveyPage: PageWithLayout<SurveyPageProps> = ({
     (env) => new SurveyDataModel(env, parseInt(orgId), parseInt(surveyId))
   );
   const onServer = useServerSide();
+  const campaignId = isNaN(parseInt(campId)) ? 'standalone' : parseInt(campId);
 
   if (onServer) {
     return null;
@@ -88,7 +89,7 @@ const SurveyPage: PageWithLayout<SurveyPageProps> = ({
                 surveyId={surveyId}
               />
               <SurveyUnlinkedCard
-                campId={parseInt(campId)}
+                campId={campaignId}
                 orgId={parseInt(orgId)}
                 surveyId={parseInt(surveyId)}
               />

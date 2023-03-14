@@ -1,4 +1,5 @@
 import messageIds from '../l10n/messageIds';
+import NextLink from 'next/link';
 import SurveyDataModel from '../models/SurveyDataModel';
 import { useMessages } from 'core/i18n';
 import useModel from 'core/useModel';
@@ -8,7 +9,7 @@ import ZUINumberChip from 'zui/ZUINumberChip';
 import { Box, Link, useTheme } from '@mui/material';
 
 type SurveyUnlinkedCardProps = {
-  campId: number;
+  campId: number | 'standalone';
   orgId: number;
   surveyId: number;
 };
@@ -41,13 +42,16 @@ const SurveyUnlinkedCard = ({
                   }
                   subheader={messages.unlinkedCard.description()}
                 >
-                  <Link
+                  <NextLink
                     href={`/organize/${orgId}/campaigns/${campId}/surveys/${surveyId}/submissions?filter=linked`}
+                    passHref
                   >
-                    {messages.unlinkedCard.openLink({
-                      numUnlink: unlinkedSubmitters,
-                    })}
-                  </Link>
+                    <Link>
+                      {messages.unlinkedCard.openLink({
+                        numUnlink: unlinkedSubmitters,
+                      })}
+                    </Link>
+                  </NextLink>
                 </ZUICard>
               </Box>
             )}

@@ -1,27 +1,27 @@
 import { GetServerSideProps } from 'next';
+import { Grid } from '@mui/material';
 import Head from 'next/head';
 
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
-import SubmissionWarningCard from 'features/surveys/components/SubmissionWarningCard';
+import SubmissionWarningAlert from 'features/surveys/components/SubmissionWarningAlert';
 import SurveyDataModel from 'features/surveys/models/SurveyDataModel';
 import SurveyLayout from 'features/surveys/layout/SurveyLayout';
 import SurveySubmissionsList from 'features/surveys/components/SurveySubmissionsList';
 import SurveySubmissionsModel from 'features/surveys/models/SurveySubmissionsModel';
 import useModel from 'core/useModel';
 import ZUIFuture from 'zui/ZUIFuture';
-import { Grid, useMediaQuery, useTheme } from '@mui/material';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   async (ctx) => {
     const { orgId, campId, surveyId } = ctx.params!;
-    const filter = ctx.query.filter ?? false;
+    const filter = ctx.query.filter ? true : false;
 
     return {
       props: {
         campId,
-        filterQuery: filter,
         orgId,
+        showUnlinkedOnly: filter,
         surveyId,
       },
     };
@@ -34,14 +34,14 @@ export const getServerSideProps: GetServerSideProps = scaffold(
 
 interface SubmissionsPageProps {
   campId: string;
-  filterQuery: string | boolean;
+  showUnlinkedOnly: boolean;
   orgId: string;
   surveyId: string;
 }
 
 const SubmissionsPage: PageWithLayout<SubmissionsPageProps> = ({
   campId,
-  filterQuery,
+  showUnlinkedOnly,
   orgId,
   surveyId,
 }) => {
@@ -52,20 +52,20 @@ const SubmissionsPage: PageWithLayout<SubmissionsPageProps> = ({
     (env) =>
       new SurveySubmissionsModel(env, parseInt(orgId), parseInt(surveyId))
   );
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+
+  const campaignId = isNaN(parseInt(campId)) ? 'standalone' : parseInt(campId);
 
   return (
     <>
       <Head>
         <title>{model.getData().data?.title}</title>
       </Head>
-      <Grid container direction={isMobile ? 'column' : 'row'}>
-        <Grid item md={8}>
+      <Grid container spacing={2}>
+        <Grid item md={8} sm={12} xs={12}>
           <ZUIFuture future={subsModel.getSubmissions()}>
             {(data) => {
               let submissions = data;
-              if (filterQuery) {
+              if (showUnlinkedOnly) {
                 submissions = data.filter(
                   (sub) => sub.respondent && !sub.respondent.id
                 );
@@ -74,11 +74,11 @@ const SubmissionsPage: PageWithLayout<SubmissionsPageProps> = ({
             }}
           </ZUIFuture>
         </Grid>
-        <Grid item md={4}>
-          <SubmissionWarningCard
-            campId={parseInt(campId)}
-            filterQuery={filterQuery}
+        <Grid item md={4} sm={12} xs={12}>
+          <SubmissionWarningAlert
+            campId={campaignId}
             orgId={parseInt(orgId)}
+            showUnlinkedOnly={showUnlinkedOnly}
             surveyId={parseInt(surveyId)}
           />
         </Grid>

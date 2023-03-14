@@ -108,26 +108,28 @@ export default makeMessages('feat.surveys', {
   },
   unlinkedCard: {
     description: m(
-      'When someone submits a survey without first logging in,that survey will be unlinked. Searching for people in your database based on their survey responses will not work on unlinked submissions.'
+      'When someone submits a survey without logging in,that survey will be unlinked. Searching for people in Zetkin based on their survey responses will not work on unlinked submissions.'
     ),
     header: m('Unlinked submissions'),
     openLink: m<{ numUnlink: number }>(
       '{numUnlink, plural, one {Link submission now} other {Link submissions now}}'
     ),
   },
-  unlinkedWarningCard: {
-    description: m<{ numUnlink: number }>(
-      '{numUnlink, plural, one {There is a submission not linked to person record} other {There are some submissions not linked to person records}}'
-    ),
-    header: m<{ numUnlink: number }>(
-      '{numUnlink, plural, one {Unlinked person found} other {Unlinked people found}}'
-    ),
-    viewAll: m('View all'),
-    viewUnlink: m('View unlinked only'),
-    viewUnlinkDesc: m<{ numUnlink: number }>(
-      "{numUnlink, plural, one { You're viewing a submission not linked to person record.} other {You're viewing only submissions not linked to person records.}}"
-    ),
-    viewUnlinkHeader: m('Viewing unlinked only'),
+  unlinkedWarningAlert: {
+    default: {
+      description: m<{ numUnlink: number }>(
+        "{numUnlink, plural, one {One survey submission has not been linked to a Zetkin profile, which means that it won't be included when searching.} other {There are survey submissions that have not been linked to Zetkin profiles, which means that they won't be included when searching.}}"
+      ),
+      header: m('Unlinked submissions'),
+      viewUnlinked: m('View unlinked only'),
+    },
+    filtered: {
+      description: m(
+        'The list is filtered and only displays signed survey submissions that have not been linked to a profile.'
+      ),
+      header: m('Viewing unlinked only'),
+      viewAll: m('View all'),
+    },
   },
   urlCard: {
     nowAccepting: m('Now accepting submissions at this link'),
