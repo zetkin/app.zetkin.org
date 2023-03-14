@@ -1,10 +1,10 @@
 import { Box } from '@mui/material';
 import { GetServerSideProps } from 'next';
 
+import AllCampaignsLayout from 'features/campaigns/layout/AllCampaignsLayout';
 import CallAssignmentListItem from 'features/campaigns/components/CallAssignmentListItem';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
-import SingleCampaignLayout from 'features/campaigns/layout/SingleCampaignLayout';
 import SurveyListItem from 'features/campaigns/components/SurveyListItem';
 import TaskListItem from 'features/campaigns/components/TaskListItem';
 import useModel from 'core/useModel';
@@ -14,11 +14,10 @@ import CampaignActivitiesModel, {
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   async (ctx) => {
-    const { orgId, campId } = ctx.params!;
+    const { orgId } = ctx.params!;
 
     return {
       props: {
-        campId,
         orgId,
       },
     };
@@ -85,7 +84,7 @@ const CampaignActivitiesPage: PageWithLayout<CampaignActivitiesPageProps> = ({
 };
 
 CampaignActivitiesPage.getLayout = function getLayout(page) {
-  return <SingleCampaignLayout>{page}</SingleCampaignLayout>;
+  return <AllCampaignsLayout>{page}</AllCampaignsLayout>;
 };
 
 export default CampaignActivitiesPage;

@@ -73,10 +73,6 @@ const SingleCampaignLayout: FunctionComponent<SingleCampaignLayoutProps> = ({
           href: `/calendar`,
           label: messages.layout.calendar(),
         },
-        {
-          href: '/activities',
-          label: messages.layout.activities(),
-        },
       ]}
       title={campaign?.title}
     >
