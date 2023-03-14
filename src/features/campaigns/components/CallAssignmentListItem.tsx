@@ -37,25 +37,6 @@ const CallAssignmentListItem: FC<CallAssignmentListItemProps> = ({
     color = STATUS_COLORS.BLUE;
   }
 
-  let message = '';
-  if (data.end_date) {
-    const endDate = new Date(data.end_date);
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
-
-    if (endDate.getDate() === tomorrow.getDate()) {
-      message = 'ends tomorrow';
-    }
-  } else if (data.start_date) {
-    const startDate = new Date(data.start_date);
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
-
-    if (startDate.getDate() === tomorrow.getDate()) {
-      message = 'begins tomorrow';
-    }
-  }
-
   const blocked = stats?.blocked;
   const ready = stats?.ready;
   const done = stats?.done;
@@ -70,7 +51,6 @@ const CallAssignmentListItem: FC<CallAssignmentListItemProps> = ({
       href={`/organize/${orgId}/campaigns/${
         data.campaign?.id ?? 'standalone'
       }/callassignments/${caId}`}
-      message={message}
       orangeChipValue={blocked}
       PrimaryIcon={HeadsetMic}
       title={data.title}

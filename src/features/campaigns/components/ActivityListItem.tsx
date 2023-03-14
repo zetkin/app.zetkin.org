@@ -64,7 +64,6 @@ interface AcitivityListItemProps {
   href: string;
   orangeChipValue: string | number | undefined;
   greenChipValue: string | number | undefined;
-  message?: string;
   color: STATUS_COLORS;
   title: string;
   endNumber: string;
@@ -74,7 +73,6 @@ const ActivityListItem = ({
   PrimaryIcon,
   SecondaryIcon,
   href,
-  message,
   blueChipValue,
   greenChipValue,
   orangeChipValue,
@@ -83,6 +81,7 @@ const ActivityListItem = ({
   endNumber,
 }: AcitivityListItemProps) => {
   const classes = useStyles({ color });
+
   return (
     <Box key={title} className={classes.box}>
       <Box className={classes.left}>
@@ -95,7 +94,6 @@ const ActivityListItem = ({
             </Typography>
           </Link>
         </NextLink>
-        {message && <Typography color="secondary">{message}</Typography>}
       </Box>
       <Box className={classes.right}>
         <ZUIMultiNumberChip
