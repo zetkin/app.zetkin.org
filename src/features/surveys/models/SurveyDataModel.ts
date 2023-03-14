@@ -239,6 +239,12 @@ export default class SurveyDataModel extends ModelBase {
     );
   }
 
+  updateSurveyAccess(access: string) {
+    this._repo.updateSurvey(this._orgId, this._surveyId, {
+      org_access: access,
+    });
+  }
+
   updateTextBlock(
     elemId: number,
     textBlock: ZetkinSurveyTextElement['text_block']
