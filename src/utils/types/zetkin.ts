@@ -29,6 +29,7 @@ export interface ZetkinCampaign {
 export interface ZetkinCampaignPostBody
   extends Partial<Omit<ZetkinCampaign, 'organization' | 'manager'>> {
   title: string;
+  manager_id?: number;
 }
 
 export interface ZetkinMembership {

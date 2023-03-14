@@ -1,5 +1,6 @@
-import { ZetkinCampaign } from 'utils/types/zetkin';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+
+import { ZetkinCampaign } from 'utils/types/zetkin';
 import { remoteItem, RemoteList, remoteList } from 'utils/storeUtils';
 
 export interface CampaignsStoreSlice {

@@ -1,6 +1,7 @@
+import { Store } from '@reduxjs/toolkit';
+
 import Environment from 'core/env/Environment';
 import IApiClient from 'core/api/client/IApiClient';
-import { Store } from '@reduxjs/toolkit';
 import { campaignCreate, campaignCreated } from '../store';
 import { ZetkinCampaign, ZetkinCampaignPostBody } from 'utils/types/zetkin';
 

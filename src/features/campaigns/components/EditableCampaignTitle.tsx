@@ -1,10 +1,10 @@
 import { Box } from '@mui/material';
-import { useMessages } from 'core/i18n';
 import { useRouter } from 'next/router';
 import { FC, useContext } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 
 import patchCampaign from '../fetching/patchCampaign';
+import { useMessages } from 'core/i18n';
 import { ZetkinCampaign } from 'utils/types/zetkin';
 import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
 import ZUISnackbarContext from 'zui/ZUISnackbarContext';
