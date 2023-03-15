@@ -1,10 +1,10 @@
 import { CallAssignmentData } from 'features/callAssignments/apiTypes';
 import CallAssignmentsRepo from 'features/callAssignments/repos/CallAssignmentsRepo';
 import Environment from 'core/env/Environment';
+import { getStartDate } from 'utils/dateUtils';
 import { ModelBase } from 'core/models';
 import SurveysRepo from 'features/surveys/repos/SurveysRepo';
 import TasksRepo from 'features/tasks/repos/TasksRepo';
-import { getStartDate, isInFuture } from 'utils/dateUtils';
 import { IFuture, LoadingFuture, ResolvedFuture } from 'core/caching/futures';
 import { ZetkinSurveyExtended, ZetkinTask } from 'utils/types/zetkin';
 
@@ -86,4 +86,11 @@ export default class CampaignActivitiesModel extends ModelBase {
 
     return new ResolvedFuture(sorted);
   }
+}
+
+function isInFuture(datestring: string): boolean {
+  const now = new Date();
+  const date = new Date(datestring);
+
+  return date > now;
 }

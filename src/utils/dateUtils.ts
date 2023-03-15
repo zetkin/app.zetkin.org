@@ -80,15 +80,3 @@ export function getStartDate(activity: CampaignAcitivity): Date | null {
     return new Date(activity.published);
   }
 }
-
-/**
- * Takes an ISO datestring and checks if it is in the future.
- * @param datestring
- * @returns boolean
- */
-export function isInFuture(datestring: string): boolean {
-  const now = new Date();
-  const date = new Date(datestring);
-
-  return date > now;
-}
