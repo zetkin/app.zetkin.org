@@ -4,21 +4,22 @@ import NextLink from 'next/link';
 import { Box, Link, Typography } from '@mui/material';
 
 import ActivityList from 'features/campaigns/components/ActivityList';
-import AllCampaignsLayout from 'features/campaigns/layout/AllCampaignsLayout';
 import CampaignActivitiesModel from 'features/campaigns/models/CampaignAcitivitiesModel';
 import messageIds from 'features/campaigns/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
+import SingleCampaignLayout from 'features/campaigns/layout/SingleCampaignLayout';
 import useModel from 'core/useModel';
 import useServerSide from 'core/useServerSide';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   async (ctx) => {
-    const { orgId } = ctx.params!;
+    const { campId, orgId } = ctx.params!;
 
     return {
       props: {
+        campId,
         orgId,
       },
     };
@@ -30,10 +31,12 @@ export const getServerSideProps: GetServerSideProps = scaffold(
 );
 
 interface CampaignActivitiesPageProps {
+  campId: string;
   orgId: string;
 }
 
 const CampaignActivitiesPage: PageWithLayout<CampaignActivitiesPageProps> = ({
+  campId,
   orgId,
 }) => {
   const onServer = useServerSide();
@@ -42,7 +45,7 @@ const CampaignActivitiesPage: PageWithLayout<CampaignActivitiesPageProps> = ({
   );
   const activities = model
     .getCurrentActivities()
-    .data?.filter((activity) => activity.campaign === null);
+    .data?.filter((activity) => activity.campaign?.id === parseInt(campId));
 
   if (onServer) {
     return null;
@@ -61,12 +64,12 @@ const CampaignActivitiesPage: PageWithLayout<CampaignActivitiesPageProps> = ({
         >
           <InfoOutlined color="secondary" sx={{ fontSize: '12em' }} />
           <Typography color="secondary">
-            <Msg id={messageIds.allProjects.noActivities} />
+            <Msg id={messageIds.singleProject.noActivities} />
           </Typography>
           <NextLink href={`/organize/${orgId}/campaigns`} passHref>
             <Link underline="none">
               <Typography color="secondary">
-                <Msg id={messageIds.allProjects.linkToSummary} />
+                <Msg id={messageIds.singleProject.createActivity} />
               </Typography>
             </Link>
           </NextLink>
@@ -80,7 +83,7 @@ const CampaignActivitiesPage: PageWithLayout<CampaignActivitiesPageProps> = ({
 };
 
 CampaignActivitiesPage.getLayout = function getLayout(page) {
-  return <AllCampaignsLayout>{page}</AllCampaignsLayout>;
+  return <SingleCampaignLayout>{page}</SingleCampaignLayout>;
 };
 
 export default CampaignActivitiesPage;
