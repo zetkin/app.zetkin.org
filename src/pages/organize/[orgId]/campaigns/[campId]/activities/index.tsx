@@ -43,15 +43,13 @@ const CampaignActivitiesPage: PageWithLayout<CampaignActivitiesPageProps> = ({
   const model = useModel(
     (env) => new CampaignActivitiesModel(env, parseInt(orgId))
   );
-  const activities = model
-    .getCurrentActivities()
-    .data?.filter((activity) => activity.campaign?.id === parseInt(campId));
+
+  const activities = model.getCampaignActivities(parseInt(campId)).data;
+  const hasActivities = Array.isArray(activities) && activities.length > 0;
 
   if (onServer) {
     return null;
   }
-
-  const hasActivities = Array.isArray(activities) && activities.length > 0;
 
   return (
     <Box>
