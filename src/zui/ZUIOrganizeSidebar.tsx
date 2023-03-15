@@ -101,7 +101,7 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
             </NextLink>
           </ListItem>
           <ListItem disableGutters>
-            <NextLink href={`/organize/${orgId}`} passHref>
+            <NextLink href="/organize/" passHref>
               <IconButton
                 aria-label="Home"
                 className={classes.roundButton}
