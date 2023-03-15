@@ -1,5 +1,6 @@
+import makeStyles from '@mui/styles/makeStyles';
+import { Menu } from '@mui/icons-material/';
 import NextLink from 'next/link';
-import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { useTheme } from '@mui/material/styles';
 import {
@@ -11,9 +12,6 @@ import {
   ListItem,
   Toolbar,
 } from '@mui/material';
-import { Event, Explore, Home, Map, Menu, People } from '@mui/icons-material/';
-
-import makeStyles from '@mui/styles/makeStyles';
 
 import ZUILogo from './ZUILogo';
 
@@ -61,7 +59,7 @@ const useStyles = makeStyles((theme) => ({
   toolbar: theme.mixins.toolbar,
 }));
 
-const ZUIOrganizeSidebar = (): JSX.Element => {
+const ZUIOrganizeSidebarNoMenu = (): JSX.Element => {
   const classes = useStyles();
   const theme = useTheme();
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -69,11 +67,6 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
-
-  const router = useRouter();
-  const { orgId } = router.query as { orgId: string };
-
-  const key = orgId ? router.pathname.split('[orgId]')[1] : 'organize';
 
   const drawer = (
     <Box
@@ -91,77 +84,12 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
               <IconButton
                 aria-label="Home"
                 className={classes.roundButton}
-                color={key === 'organize' ? 'primary' : 'secondary'}
+                color={'primary'}
                 data-test="logo-button"
                 size="large"
                 style={{ marginBottom: '2rem' }}
               >
                 <ZUILogo htmlColor="#ED1C55" size={40} />
-              </IconButton>
-            </NextLink>
-          </ListItem>
-          <ListItem disableGutters>
-            <NextLink href="/organize/" passHref>
-              <IconButton
-                aria-label="Home"
-                className={classes.roundButton}
-                color={key === '' ? 'primary' : 'secondary'}
-                data-test="home-button"
-                size="large"
-              >
-                <Home />
-              </IconButton>
-            </NextLink>
-          </ListItem>
-          <ListItem disableGutters>
-            <NextLink href={`/organize/${orgId}/people`} passHref>
-              <IconButton
-                aria-label="People"
-                className={classes.roundButton}
-                color={key.startsWith('/people') ? 'primary' : 'secondary'}
-                data-test="people-button"
-                size="large"
-              >
-                <People />
-              </IconButton>
-            </NextLink>
-          </ListItem>
-          <ListItem disableGutters>
-            <NextLink href={`/organize/${orgId}/journeys`} passHref>
-              <IconButton
-                aria-label="Journeys"
-                className={classes.roundButton}
-                color={key.startsWith('/journeys') ? 'primary' : 'secondary'}
-                data-test="people-button"
-                size="large"
-              >
-                <Explore />
-              </IconButton>
-            </NextLink>
-          </ListItem>
-          <ListItem disableGutters>
-            <NextLink href={`/organize/${orgId}/areas`} passHref>
-              <IconButton
-                aria-label="Areas"
-                className={classes.roundButton}
-                color={key.startsWith('/areas') ? 'primary' : 'secondary'}
-                data-test="area-button"
-                size="large"
-              >
-                <Map />
-              </IconButton>
-            </NextLink>
-          </ListItem>
-          <ListItem disableGutters>
-            <NextLink href={`/organize/${orgId}/campaigns`} passHref>
-              <IconButton
-                aria-label="Campaigns"
-                className={classes.roundButton}
-                color={key.startsWith('/campaigns') ? 'primary' : 'secondary'}
-                data-test="calendar-button"
-                size="large"
-              >
-                <Event />
               </IconButton>
             </NextLink>
           </ListItem>
@@ -216,4 +144,4 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
   );
 };
 
-export default ZUIOrganizeSidebar;
+export default ZUIOrganizeSidebarNoMenu;
