@@ -11,9 +11,9 @@ interface TaskListItemProps {
 }
 
 const TaskListItem = ({ orgId, taskId }: TaskListItemProps) => {
-  const model = useModel((env) => new TaskModel(env, orgId));
-  const task = model.getTask(taskId).data;
-  const stats = model.getTaskStats(taskId).data;
+  const model = useModel((env) => new TaskModel(env, orgId, taskId));
+  const task = model.getTask().data;
+  const stats = model.getTaskStats().data;
 
   if (!task || !stats) {
     return null;

@@ -8,18 +8,20 @@ import { ZetkinTask } from '../components/types';
 export default class TaskModel extends ModelBase {
   private _orgId: number;
   private _repo: TasksRepo;
+  private _taskId: number;
 
-  constructor(env: Environment, orgId: number) {
+  constructor(env: Environment, orgId: number, taskId: number) {
     super();
     this._orgId = orgId;
     this._repo = new TasksRepo(env);
+    this._taskId = taskId;
   }
 
-  getTask(taskId: number): IFuture<ZetkinTask> {
-    return this._repo.getTask(this._orgId, taskId);
+  getTask(): IFuture<ZetkinTask> {
+    return this._repo.getTask(this._orgId, this._taskId);
   }
 
-  getTaskStats(taskId: number): IFuture<TaskStats> {
-    return this._repo.getTaskStats(this._orgId, taskId);
+  getTaskStats(): IFuture<TaskStats> {
+    return this._repo.getTaskStats(this._orgId, this._taskId);
   }
 }
