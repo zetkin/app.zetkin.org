@@ -30,6 +30,12 @@ export default makeMessages('feat.surveys', {
         select: m('Single-choice (drop-down)'),
       },
     },
+    deleteDialog: {
+      title: m('Delete question'),
+      warningText: m(
+        'Are you sure you want to delete this question? This action is permanent and cannot be undone.'
+      ),
+    },
     open: {
       description: m('Description'),
       empty: m('Untitled open question'),
