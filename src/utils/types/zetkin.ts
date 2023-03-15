@@ -26,6 +26,12 @@ export interface ZetkinCampaign {
   published: boolean;
 }
 
+export interface ZetkinCampaignPostBody
+  extends Partial<Omit<ZetkinCampaign, 'organization' | 'manager'>> {
+  title: string;
+  manager_id?: number;
+}
+
 export interface ZetkinMembership {
   organization: ZetkinOrganization;
   follow?: boolean;

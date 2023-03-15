@@ -4,6 +4,7 @@ import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 
 import CampaignActionButtons from 'features/campaigns/components/CampaignActionButtons';
+import EditableCampaignTitle from '../components/EditableCampaignTitle';
 import getCampaign from 'features/campaigns/fetching/getCampaign';
 import getCampaignEvents from '../fetching/getCampaignEvents';
 import TabbedLayout from '../../../utils/layout/TabbedLayout';
@@ -74,7 +75,7 @@ const SingleCampaignLayout: FunctionComponent<SingleCampaignLayoutProps> = ({
           label: messages.layout.calendar(),
         },
       ]}
-      title={campaign?.title}
+      title={<EditableCampaignTitle campaign={campaign} />}
     >
       {children}
     </TabbedLayout>
