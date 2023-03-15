@@ -1,6 +1,7 @@
 import { BodySchema } from 'pages/api/callAssignments/setCallerTags';
 import Environment from 'core/env/Environment';
 import IApiClient from 'core/api/client/IApiClient';
+import { loadListIfNecessary } from 'core/caching/cacheUtils';
 import shouldLoad from 'core/caching/shouldLoad';
 import { Store } from 'core/store';
 import { ZetkinTag } from '../../../utils/types/zetkin';
@@ -12,6 +13,8 @@ import {
 import {
   callAssignmentLoad,
   callAssignmentLoaded,
+  callAssignmentsLoad,
+  callAssignmentsLoaded,
   callAssignmentUpdate,
   callAssignmentUpdated,
   callerAdd,
@@ -120,6 +123,20 @@ export default class CallAssignmentsRepo {
     } else {
       return new RemoteItemFuture(statsItem);
     }
+  }
+
+  getCallAssignments(orgId: number): IFuture<CallAssignmentData[]> {
+    const state = this._store.getState();
+    const assignmentList = state.callAssignments.assignmentList;
+
+    return loadListIfNecessary(assignmentList, this._store, {
+      actionOnLoad: () => callAssignmentsLoad(),
+      actionOnSuccess: (data) => callAssignmentsLoaded(data),
+      loader: () =>
+        this._apiClient.get<CallAssignmentData[]>(
+          `/api/orgs/${orgId}/call_assignments/`
+        ),
+    });
   }
 
   removeCaller(orgId: number, id: number, callerId: number) {

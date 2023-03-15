@@ -47,6 +47,7 @@ describe('CallAssignmentModel', () => {
         callAssignments: {
           assignmentList: mockList<CallAssignmentData>([
             {
+              campaign: null,
               cooldown: 3,
               disable_caller_notes: false,
               end_date: null,
@@ -82,6 +83,7 @@ describe('CallAssignmentModel', () => {
         callAssignments: {
           assignmentList: mockList<CallAssignmentData>([
             {
+              campaign: null,
               cooldown: 3,
               disable_caller_notes: false,
               end_date: null,
@@ -127,6 +129,7 @@ describe('CallAssignmentModel', () => {
       callAssignments: {
         assignmentList: mockList<CallAssignmentData>([
           {
+            campaign: null,
             cooldown: 3,
             disable_caller_notes: false,
             end_date: endDate,
@@ -153,6 +156,7 @@ describe('CallAssignmentModel', () => {
             blocked: 0,
             callBackLater: 0,
             calledTooRecently: 0,
+            callsMade: 0,
             done: 50,
             id: 2,
             missingPhoneNumber: 0,
@@ -274,6 +278,7 @@ describe('CallAssignmentModel', () => {
         callAssignments: {
           assignmentList: mockList<CallAssignmentData>([
             {
+              campaign: null,
               cooldown: 3,
               disable_caller_notes: false,
               end_date: null,
@@ -314,6 +319,7 @@ describe('CallAssignmentModel', () => {
         callAssignments: {
           assignmentList: mockList<CallAssignmentData>([
             {
+              campaign: null,
               cooldown: 3,
               disable_caller_notes: false,
               end_date: null,
@@ -348,6 +354,7 @@ describe('CallAssignmentModel', () => {
         blocked: 0,
         callBackLater: 0,
         calledTooRecently: 0,
+        callsMade: 0,
         done: 50,
         id: 2,
         missingPhoneNumber: 0,
@@ -370,6 +377,7 @@ describe('CallAssignmentModel', () => {
         blocked: 0,
         callBackLater: 0,
         calledTooRecently: 0,
+        callsMade: 0,
         done: 0,
         id: 2,
         missingPhoneNumber: 0,
@@ -387,6 +395,7 @@ describe('CallAssignmentModel', () => {
         callAssignments: {
           assignmentList: mockList<CallAssignmentData>([
             {
+              campaign: null,
               cooldown: 3,
               disable_caller_notes: false,
               end_date: null,
@@ -418,6 +427,7 @@ describe('CallAssignmentModel', () => {
               blocked: 0,
               callBackLater: 0,
               calledTooRecently: 0,
+              callsMade: 0,
               done: 50,
               id: 2,
               missingPhoneNumber: 0,
@@ -443,6 +453,7 @@ describe('CallAssignmentModel', () => {
         blocked: 0,
         callBackLater: 0,
         calledTooRecently: 0,
+        callsMade: 0,
         done: 50,
         id: 2,
         missingPhoneNumber: 0,
@@ -604,6 +615,7 @@ describe('CallAssignmentModel', () => {
       callAssignments: {
         assignmentList: mockList<CallAssignmentData>([
           {
+            campaign: null,
             cooldown: 3,
             disable_caller_notes: false,
             end_date: endDate,
@@ -672,6 +684,7 @@ describe('CallAssignmentModel', () => {
       callAssignments: {
         assignmentList: mockList<CallAssignmentData>([
           {
+            campaign: null,
             cooldown: 3,
             disable_caller_notes: false,
             end_date: endDate,

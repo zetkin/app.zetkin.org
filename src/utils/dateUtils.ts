@@ -50,3 +50,15 @@ export const LocalTimeToJsonPlugin = (
     return this.format('YYYY-MM-DDTHH:mm:ss');
   };
 };
+
+/**
+ * Takes an ISO datestring and returns a boolean that says if the date is in the futre or not.
+ * @param datestring
+ * @returns boolean
+ */
+export function isInFuture(datestring: string): boolean {
+  const now = new Date();
+  const date = new Date(datestring);
+
+  return date > now;
+}

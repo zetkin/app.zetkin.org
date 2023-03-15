@@ -9,6 +9,7 @@ export interface CallAssignmentCaller {
 }
 
 export interface CallAssignmentData {
+  campaign: { id: number; title: string } | null;
   cooldown: number;
   disable_caller_notes: boolean;
   end_date: string | null;
@@ -28,6 +29,7 @@ export interface CallAssignmentStats {
   blocked: number;
   callBackLater: number;
   calledTooRecently: number;
+  callsMade: number;
   done: number;
   missingPhoneNumber: number;
   mostRecentCallTime: string | null;

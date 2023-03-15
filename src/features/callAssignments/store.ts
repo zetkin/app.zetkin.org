@@ -98,6 +98,18 @@ const callAssignmentsSlice = createSlice({
         .filter((ca) => ca.id != assignment.id)
         .concat([remoteItem(assignment.id, { data: assignment })]);
     },
+    callAssignmentsLoad: (state) => {
+      state.assignmentList.isLoading = true;
+    },
+    callAssignmentsLoaded: (
+      state,
+      action: PayloadAction<CallAssignmentData[]>
+    ) => {
+      const assignments = action.payload;
+      const timestamp = new Date().toISOString();
+      state.assignmentList = remoteList(assignments);
+      state.assignmentList.loaded = timestamp;
+    },
     callerAdd: (state, action: PayloadAction<[number, number]>) => {
       const [assignmentId, callerId] = action.payload;
       state.callersById[assignmentId].items.push(
@@ -170,6 +182,7 @@ const callAssignmentsSlice = createSlice({
           blocked: 0,
           callBackLater: 0,
           calledTooRecently: 0,
+          callsMade: 0,
           done: 0,
           id: id,
           missingPhoneNumber: 0,
@@ -204,6 +217,8 @@ export const {
   callAssignmentLoaded,
   callAssignmentUpdate,
   callAssignmentUpdated,
+  callAssignmentsLoad,
+  callAssignmentsLoaded,
   callerAdd,
   callerAdded,
   callerConfigure,

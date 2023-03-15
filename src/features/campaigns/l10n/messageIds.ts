@@ -1,6 +1,12 @@
 import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('feat.campaigns', {
+  activityList: {
+    linkToSummary: m('Go to my active projects.'),
+    noActivities: m(
+      'If your organization has activities that do not belong to a project they will show up here.'
+    ),
+  },
   all: {
     cardCTA: m('Go to campaign'),
     create: m('Create new campaign'),
@@ -60,6 +66,7 @@ export default makeMessages('feat.campaigns', {
   },
   indefinite: m('Indefinite timeline'),
   layout: {
+    activities: m('Activities'),
     allCampaigns: m('All Campaigns'),
     archive: m('Archive'),
     calendar: m('Calendar'),

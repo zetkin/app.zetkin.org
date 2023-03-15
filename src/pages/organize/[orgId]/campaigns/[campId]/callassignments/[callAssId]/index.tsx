@@ -60,16 +60,8 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
   const { data: stats } = model.getStats();
 
   const colors = model.hasTargets
-    ? [
-        'targetingStatusBar.orange',
-        'targetingStatusBar.green',
-        'targetingStatusBar.blue',
-      ]
-    : [
-        'targetingStatusBar.gray',
-        'targetingStatusBar.gray',
-        'targetingStatusBar.gray',
-      ];
+    ? ['statusColors.orange', 'statusColors.green', 'statusColors.blue']
+    : ['statusColors.gray', 'statusColors.gray', 'statusColors.gray'];
 
   const statusBarStatsList =
     model.hasTargets && stats

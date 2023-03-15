@@ -174,6 +174,7 @@ export interface ZetkinSurvey {
   callers_only: boolean;
   published: string | null;
   expires: string | null;
+  campaign: { id: number; title: string } | null;
   org_access: 'sameorg' | 'suborgs';
 }
 

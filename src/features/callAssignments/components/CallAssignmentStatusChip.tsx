@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.success.main,
   },
   scheduled: {
-    backgroundColor: theme.palette.targetingStatusBar.blue,
+    backgroundColor: theme.palette.statusColors.blue,
   },
   spinner: {
     marginLeft: '0.5em',

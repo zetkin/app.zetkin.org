@@ -14,11 +14,12 @@ declare module '@mui/material/styles/createPalette' {
   interface Palette {
     onSurface: Required<PaletteIntensityOptions>;
     outline: PaletteIntensityOptions;
-    targetingStatusBar: {
+    statusColors: {
       blue: string;
       gray: string;
       green: string;
       orange: string;
+      red: string;
     };
     viewColumnGallery: {
       blue: string;
@@ -57,15 +58,16 @@ const themePalette = {
   secondary: {
     main: 'rgba(0, 0, 0, 0.6)',
   },
-  success: {
-    light: '#9fdfb8',
-    main: '#0eae4e',
-  },
-  targetingStatusBar: {
+  statusColors: {
     blue: 'rgba(25, 118, 210, 1)',
     gray: 'rgba(0, 0, 0, 0.12)',
     green: 'rgba(102, 187, 106, 1)',
     orange: 'rgba(245, 124, 0, 1)',
+    red: 'rgba(239, 83, 80, 1)',
+  },
+  success: {
+    light: '#9fdfb8',
+    main: '#0eae4e',
   },
   text: {
     secondary: 'rgba(0, 0, 0, 0.6)',
