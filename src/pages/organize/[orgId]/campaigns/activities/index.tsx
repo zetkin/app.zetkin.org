@@ -1,6 +1,7 @@
 import { GetServerSideProps } from 'next';
 import { InfoOutlined } from '@mui/icons-material';
-import { Box, Typography } from '@mui/material';
+import NextLink from 'next/link';
+import { Box, Link, Typography } from '@mui/material';
 
 import ActivityList from 'features/campaigns/components/ActivityList';
 import AllCampaignsLayout from 'features/campaigns/layout/AllCampaignsLayout';
@@ -60,6 +61,13 @@ const CampaignActivitiesPage: PageWithLayout<CampaignActivitiesPageProps> = ({
           <Typography color="secondary">
             <Msg id={messageIds.activityList.noActivities} />
           </Typography>
+          <NextLink href={`/organize/${orgId}/campaigns`} passHref>
+            <Link underline="none">
+              <Typography color="secondary">
+                <Msg id={messageIds.activityList.linkToSummary} />
+              </Typography>
+            </Link>
+          </NextLink>
         </Box>
       )}
       {activities && (

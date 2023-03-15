@@ -2,6 +2,7 @@ import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('feat.campaigns', {
   activityList: {
+    linkToSummary: m('Go to my active projects.'),
     noActivities: m(
       'If your organization has activities that do not belong to a project they will show up here.'
     ),
