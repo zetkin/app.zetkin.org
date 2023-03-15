@@ -31,10 +31,18 @@ export default makeMessages('feat.surveys', {
       },
     },
     deleteDialog: {
-      title: m('Delete question'),
-      warningText: m(
-        'Are you sure you want to delete this question? This action is permanent and cannot be undone.'
-      ),
+      deleteBlock: {
+        title: m('Delete question'),
+        warningText: m(
+          'Are you sure you want to delete this question? This action is permanent and cannot be undone.'
+        ),
+      },
+      deleteQuestionOpt: {
+        title: m('Delete option'),
+        warningText: m(
+          'Are you sure you want to delete this option? This action is permanent and cannot be undone.'
+        ),
+      },
     },
     open: {
       description: m('Description'),

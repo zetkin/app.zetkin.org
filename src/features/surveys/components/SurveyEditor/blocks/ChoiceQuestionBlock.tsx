@@ -16,7 +16,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { FC, useEffect, useRef, useState } from 'react';
+import { FC, useContext, useEffect, useRef, useState } from 'react';
 
 import DeleteHideButtons from '../DeleteHideButtons';
 import DropdownIcon from 'zui/icons/DropDown';
@@ -25,6 +25,7 @@ import PreviewableSurveyInput from '../elements/PreviewableSurveyInput';
 import SurveyDataModel from 'features/surveys/models/SurveyDataModel';
 import useEditPreviewBlock from './useEditPreviewBlock';
 import { ZetkinSurveyOptionsQuestionElement } from 'utils/types/zetkin';
+import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUIPreviewableInput from 'zui/ZUIPreviewableInput';
 import ZUIReorderable from 'zui/ZUIReorderable';
 import { Msg, useMessages } from 'core/i18n';
@@ -123,6 +124,7 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
     // deleted when bulk adding.
     return !bulkAddingOptions || !!option.text.length;
   });
+  const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
 
   return (
     <ClickAwayListener {...clickAwayProps}>
@@ -220,7 +222,14 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
                     />
                     <IconButton
                       onClick={() => {
-                        model.deleteElementOption(element.id, option.id);
+                        showConfirmDialog({
+                          onSubmit: () =>
+                            model.deleteElementOption(element.id, option.id),
+                          title:
+                            messages.blocks.deleteDialog.deleteQuestionOpt.title(),
+                          warningText:
+                            messages.blocks.deleteDialog.deleteQuestionOpt.warningText(),
+                        });
                       }}
                       sx={{ paddingX: 2 }}
                     >

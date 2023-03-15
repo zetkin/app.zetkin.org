@@ -17,10 +17,6 @@ const DeleteHideButtons: FC<DeleteHideButtonsProps> = ({ element, model }) => {
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
   const messages = useMessages(messageIds);
 
-  const onClickDelete = () => {
-    model.deleteElement(element.id);
-  };
-
   return (
     <Box display="flex">
       <IconButton
@@ -35,9 +31,9 @@ const DeleteHideButtons: FC<DeleteHideButtonsProps> = ({ element, model }) => {
         onClick={(ev) => {
           ev.stopPropagation();
           showConfirmDialog({
-            onSubmit: onClickDelete,
-            title: messages.blocks.deleteDialog.title(),
-            warningText: messages.blocks.deleteDialog.warningText(),
+            onSubmit: () => model.deleteElement(element.id),
+            title: messages.blocks.deleteDialog.deleteBlock.title(),
+            warningText: messages.blocks.deleteDialog.deleteBlock.warningText(),
           });
         }}
       >
