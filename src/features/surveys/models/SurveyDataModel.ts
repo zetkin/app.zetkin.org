@@ -239,7 +239,7 @@ export default class SurveyDataModel extends ModelBase {
     );
   }
 
-  updateSurveyAccess(access: string) {
+  updateSurveyAccess(access: 'sameorg' | 'suborgs') {
     this._repo.updateSurvey(this._orgId, this._surveyId, {
       org_access: access,
     });

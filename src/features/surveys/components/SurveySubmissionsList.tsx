@@ -1,16 +1,13 @@
-import { useQuery } from 'react-query';
-import { useRouter } from 'next/router';
-import { FC, useMemo } from 'react';
-
 import { Box } from '@mui/system';
-import { Link } from '@mui/material';
-
 import getPeopleSearchResults from 'utils/fetching/getPeopleSearchResults';
+import { Link } from '@mui/material';
 import messageIds from '../l10n/messageIds';
 import SurveySubmissionModel from '../models/SurveySubmissionModel';
 import SurveySubmissionPane from '../panes/SurveySubmissionPane';
 import useModel from 'core/useModel';
 import { usePanes } from 'utils/panes';
+import { useQuery } from 'react-query';
+import { useRouter } from 'next/router';
 import ZUIPersonGridCell from 'zui/ZUIPersonGridCell';
 import ZUIPersonGridEditCell from 'zui/ZUIPersonGridEditCell';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
@@ -20,6 +17,7 @@ import {
   GridRenderCellParams,
   useGridApiContext,
 } from '@mui/x-data-grid-pro';
+import { FC, useMemo } from 'react';
 import { Msg, useMessages } from 'core/i18n';
 import { ZetkinPerson, ZetkinSurveySubmission } from 'utils/types/zetkin';
 
