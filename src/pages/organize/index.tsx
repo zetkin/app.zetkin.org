@@ -1,7 +1,7 @@
-import DefaultLayout from 'utils/layout/DefaultLayout';
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import messageIds from 'features/organizations/l10n/messageIds';
+import NoMenuLayout from 'utils/layout/NoMenuLayout';
 import OrganizationsDataModel from 'features/organizations/models/OrganizationsDataModel';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
@@ -37,7 +37,7 @@ const OrganizePage: PageWithLayout = () => {
 };
 
 OrganizePage.getLayout = function getLayout(page) {
-  return <DefaultLayout>{page}</DefaultLayout>;
+  return <NoMenuLayout>{page}</NoMenuLayout>;
 };
 
 export default OrganizePage;
