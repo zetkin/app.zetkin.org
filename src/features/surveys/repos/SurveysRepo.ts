@@ -235,6 +235,7 @@ export default class SurveysRepo {
     });
   }
 
+  //TODO: refactor this to use ZetkinSurvey type.
   getSurveys(orgId: number): IFuture<ZetkinSurveyExtended[]> {
     const state = this._store.getState();
     const surveyList = state.surveys.surveyList;
