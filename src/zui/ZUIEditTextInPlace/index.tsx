@@ -68,7 +68,7 @@ const ZUIEditTextinPlace: React.FunctionComponent<ZUIEditTextinPlaceProps> = ({
   useEffect(() => {
     // If the value prop changes, set the text
     if (value !== text) {
-      setText(text);
+      setText(value);
     }
   }, [value]);
 
