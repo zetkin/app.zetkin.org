@@ -4,6 +4,7 @@ import Environment from 'core/env/Environment';
 import { ModelBase } from 'core/models';
 import SurveysRepo from 'features/surveys/repos/SurveysRepo';
 import TasksRepo from 'features/tasks/repos/TasksRepo';
+import { getStartDate, isInFuture } from 'utils/dateUtils';
 import { IFuture, LoadingFuture, ResolvedFuture } from 'core/caching/futures';
 import { ZetkinSurveyExtended, ZetkinTask } from 'utils/types/zetkin';
 
@@ -85,30 +86,4 @@ export default class CampaignActivitiesModel extends ModelBase {
 
     return new ResolvedFuture(sorted);
   }
-}
-
-function getStartDate(activity: CampaignAcitivity) {
-  if (activity.kind === ACTIVITIES.SURVEY) {
-    if (!activity.published) {
-      return null;
-    }
-    return new Date(activity.published);
-  } else if (activity.kind === ACTIVITIES.CALL_ASSIGNMENT) {
-    if (!activity.start_date) {
-      return null;
-    }
-    return new Date(activity.start_date);
-  } else {
-    if (!activity.published) {
-      return null;
-    }
-    return new Date(activity.published);
-  }
-}
-
-function isInFuture(datestring: string): boolean {
-  const now = new Date();
-  const date = new Date(datestring);
-
-  return date > now;
 }

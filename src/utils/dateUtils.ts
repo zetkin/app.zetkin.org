@@ -1,5 +1,10 @@
 import dayjs, { Dayjs } from 'dayjs';
 
+import {
+  ACTIVITIES,
+  CampaignAcitivity,
+} from 'features/campaigns/models/CampaignAcitivitiesModel';
+
 import { ZetkinEvent } from 'utils/types/zetkin';
 
 export const getNewDateWithOffset = (date: Date, offset: number): Date => {
@@ -50,3 +55,40 @@ export const LocalTimeToJsonPlugin = (
     return this.format('YYYY-MM-DDTHH:mm:ss');
   };
 };
+
+/**
+ * Takes a CampaignActivity and returns its start date as a Date object, or
+ * null if the start date is unset.
+ * @param activity
+ * @returns Date | null
+ */
+export function getStartDate(activity: CampaignAcitivity): Date | null {
+  if (activity.kind === ACTIVITIES.SURVEY) {
+    if (!activity.published) {
+      return null;
+    }
+    return new Date(activity.published);
+  } else if (activity.kind === ACTIVITIES.CALL_ASSIGNMENT) {
+    if (!activity.start_date) {
+      return null;
+    }
+    return new Date(activity.start_date);
+  } else {
+    if (!activity.published) {
+      return null;
+    }
+    return new Date(activity.published);
+  }
+}
+
+/**
+ * Takes an ISO datestring and checks if it is in the future.
+ * @param datestring
+ * @returns boolean
+ */
+export function isInFuture(datestring: string): boolean {
+  const now = new Date();
+  const date = new Date(datestring);
+
+  return date > now;
+}
