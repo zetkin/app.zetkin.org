@@ -1,7 +1,14 @@
 import makeStyles from '@mui/styles/makeStyles';
 import NextLink from 'next/link';
 import { OverridableComponent } from '@mui/material/OverridableComponent';
-import { Box, Link, SvgIconTypeMap, Theme, Typography } from '@mui/material';
+import {
+  Box,
+  Grid,
+  Link,
+  SvgIconTypeMap,
+  Theme,
+  Typography,
+} from '@mui/material';
 
 import theme from 'theme';
 import ZUIIconLabel from 'zui/ZUIIconLabel';
@@ -12,11 +19,9 @@ interface StyleProps {
 }
 
 const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
-  box: {
+  container: {
     alignItems: 'center',
-    borderBottom: `2px solid ${theme.palette.grey[300]}`,
     display: 'flex',
-    justifyContent: 'space-between',
     padding: '1em',
   },
   dot: {
@@ -25,6 +30,11 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
     height: '10px',
     marginRight: '1em',
     width: '10px',
+  },
+  endNumber: {
+    alignItems: 'center',
+    display: 'flex',
+    justifyContent: 'flex-start',
   },
   left: {
     alignItems: 'center',
@@ -35,9 +45,8 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
     fontSize: '28px',
   },
   right: {
+    alignItems: 'center',
     display: 'flex',
-    justifyContent: 'space-between',
-    width: '20%',
   },
   secondaryIcon: {
     color: theme.palette.grey[700],
@@ -57,7 +66,7 @@ interface AcitivityListItemProps {
   PrimaryIcon: OverridableComponent<
     SvgIconTypeMap<Record<string, unknown>, 'svg'>
   >;
-  SecondaryIcon?: OverridableComponent<
+  SecondaryIcon: OverridableComponent<
     SvgIconTypeMap<Record<string, unknown>, 'svg'>
   >;
   blueChipValue?: string | number;
@@ -83,37 +92,40 @@ const ActivityListItem = ({
   const classes = useStyles({ color });
 
   return (
-    <Box key={title} className={classes.box}>
-      <Box className={classes.left}>
-        <Box className={classes.dot}></Box>
-        <PrimaryIcon className={classes.primaryIcon} />
-        <NextLink href={href} passHref>
-          <Link underline="none">
-            <Typography color={theme.palette.text.primary} sx={{ paddingX: 2 }}>
-              {title}
-            </Typography>
-          </Link>
-        </NextLink>
-      </Box>
-      <Box className={classes.right}>
+    <Grid className={classes.container} container>
+      <Grid item lg={8} md={7} xs={6}>
+        <Box className={classes.left}>
+          <Box className={classes.dot}></Box>
+          <PrimaryIcon className={classes.primaryIcon} />
+          <NextLink href={href} passHref>
+            <Link underline="none">
+              <Typography
+                color={theme.palette.text.primary}
+                sx={{ paddingX: 2 }}
+              >
+                {title}
+              </Typography>
+            </Link>
+          </NextLink>
+        </Box>
+      </Grid>
+      <Grid item lg={2} md={3} xs={4}>
         <ZUIMultiNumberChip
           blueValue={blueChipValue}
           greenValue={greenChipValue}
           orangeValue={orangeChipValue}
         />
-        <ZUIIconLabel
-          icon={
-            SecondaryIcon ? (
-              <SecondaryIcon className={classes.secondaryIcon} />
-            ) : (
-              <PrimaryIcon className={classes.secondaryIcon} />
-            )
-          }
-          label={endNumber}
-          labelColor="secondary"
-        />
-      </Box>
-    </Box>
+      </Grid>
+      <Grid item xs={2}>
+        <Box className={classes.endNumber}>
+          <ZUIIconLabel
+            icon={<SecondaryIcon color="secondary" />}
+            label={endNumber}
+            labelColor="secondary"
+          />
+        </Box>
+      </Grid>
+    </Grid>
   );
 };
 

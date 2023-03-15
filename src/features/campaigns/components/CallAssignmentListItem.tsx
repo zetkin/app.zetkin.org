@@ -1,8 +1,8 @@
 import { FC } from 'react';
-import { HeadsetMic } from '@mui/icons-material';
 import CallAssignmentModel, {
   CallAssignmentState,
 } from 'features/callAssignments/models/CallAssignmentModel';
+import { HeadsetMic, PhoneOutlined } from '@mui/icons-material';
 
 import useModel from 'core/useModel';
 import ActivityListItem, { STATUS_COLORS } from './ActivityListItem';
@@ -33,6 +33,7 @@ const CallAssignmentListItem: FC<CallAssignmentListItemProps> = ({
     color = STATUS_COLORS.GREEN;
   } else if (state === CallAssignmentState.CLOSED) {
     color = STATUS_COLORS.RED;
+    color = STATUS_COLORS.BLUE;
   } else if (state === CallAssignmentState.SCHEDULED) {
     color = STATUS_COLORS.BLUE;
   }
@@ -53,6 +54,7 @@ const CallAssignmentListItem: FC<CallAssignmentListItemProps> = ({
       }/callassignments/${caId}`}
       orangeChipValue={blocked}
       PrimaryIcon={HeadsetMic}
+      SecondaryIcon={PhoneOutlined}
       title={data.title}
     />
   );

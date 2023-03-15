@@ -1,5 +1,5 @@
-import { Box } from '@mui/material';
 import { GetServerSideProps } from 'next';
+import { Box, Card, Divider } from '@mui/material';
 
 import AllCampaignsLayout from 'features/campaigns/layout/AllCampaignsLayout';
 import CallAssignmentListItem from 'features/campaigns/components/CallAssignmentListItem';
@@ -53,41 +53,35 @@ const CampaignActivitiesPage: PageWithLayout<CampaignActivitiesPageProps> = ({
   }
 
   return (
-    <Box
-      sx={{
-        borderColor: 'gray',
-        borderStyle: 'solid solid none solid',
-        borderWidth: '2px',
-      }}
-    >
-      {activities.map((activity) => {
+    <Card>
+      {activities.map((activity, index) => {
+        <Box key={`activity-${activity.id}`}></Box>;
         if (activity.kind === ACTIVITIES.CALL_ASSIGNMENT) {
           return (
-            <CallAssignmentListItem
-              key={`ca-${activity.id}`}
-              caId={activity.id}
-              orgId={parseInt(orgId)}
-            />
+            <Box key={`ca-${activity.id}`}>
+              <CallAssignmentListItem
+                caId={activity.id}
+                orgId={parseInt(orgId)}
+              />
+            </Box>
           );
         } else if (activity.kind === ACTIVITIES.SURVEY) {
           return (
-            <SurveyListItem
-              key={`survey-${activity.id}`}
-              orgId={parseInt(orgId)}
-              surveyId={activity.id}
-            />
+            <Box key={`survey-${activity.id}`}>
+              {index > 0 && <Divider />}
+              <SurveyListItem orgId={parseInt(orgId)} surveyId={activity.id} />
+            </Box>
           );
         } else if (activity.kind === ACTIVITIES.TASK) {
           return (
-            <TaskListItem
-              key={`task-${activity.id}`}
-              orgId={parseInt(orgId)}
-              taskId={activity.id}
-            />
+            <Box key={`task-${activity.id}`}>
+              {index > 0 && <Divider />}
+              <TaskListItem orgId={parseInt(orgId)} taskId={activity.id} />
+            </Box>
           );
         }
       })}
-    </Box>
+    </Card>
   );
 };
 
