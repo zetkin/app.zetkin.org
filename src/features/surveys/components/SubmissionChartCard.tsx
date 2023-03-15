@@ -28,122 +28,126 @@ const SubmissionChartCard: FC<SubmissionChartCardProps> = ({
 
   return (
     <ZUIFuture future={model.getStats()}>
-      {(data) => (
-        <ZUICard
-          header={messages.chart.header()}
-          status={
-            !!data.submissionCount && (
-              <ZUINumberChip
-                color={theme.palette.grey[200]}
-                value={data.submissionCount}
-              />
-            )
-          }
-          subheader={
-            data.submissionCount
-              ? messages.chart.subheader({
-                  days: data.submissionsByDay.length,
-                })
-              : undefined
-          }
-        >
-          <Box height={400}>
-            {!data.submissionCount && (
-              <Box
-                display="flex"
-                flexDirection="column"
-                height="100%"
-                justifyContent="center"
-                width="100%"
-              >
+      {(data) => {
+        const hasChartData = data.submissionsByDay.length > 1;
+
+        return (
+          <ZUICard
+            header={messages.chart.header()}
+            status={
+              !!data.submissionCount && (
+                <ZUINumberChip
+                  color={theme.palette.grey[200]}
+                  value={data.submissionCount}
+                />
+              )
+            }
+            subheader={
+              data.submissionCount
+                ? messages.chart.subheader({
+                    days: data.submissionsByDay.length,
+                  })
+                : undefined
+            }
+          >
+            <Box height={400}>
+              {!hasChartData && (
                 <Box
                   display="flex"
+                  flexDirection="column"
+                  height="100%"
                   justifyContent="center"
-                  marginBottom={2}
                   width="100%"
                 >
-                  <PlaceholderVisual />
+                  <Box
+                    display="flex"
+                    justifyContent="center"
+                    marginBottom={2}
+                    width="100%"
+                  >
+                    <PlaceholderVisual />
+                  </Box>
+                  <Typography
+                    sx={{
+                      color: theme.palette.text.disabled,
+                      textAlign: 'center',
+                    }}
+                  >
+                    <Msg id={messageIds.chart.placeholder} />
+                  </Typography>
                 </Box>
-                <Typography
-                  sx={{
-                    color: theme.palette.text.disabled,
-                    textAlign: 'center',
+              )}
+              {hasChartData && (
+                <ResponsiveLine
+                  animate={false}
+                  axisBottom={{
+                    format: '%b %d',
                   }}
-                >
-                  <Msg id={messageIds.chart.placeholder} />
-                </Typography>
-              </Box>
-            )}
-            {!!data.submissionCount && (
-              <ResponsiveLine
-                animate={false}
-                axisBottom={{
-                  format: '%b %d',
-                }}
-                colors={[theme.palette.primary.main]}
-                curve="basis"
-                data={[
-                  {
-                    data: data.submissionsByDay.map((day) => ({
-                      x: day.date,
-                      y: day.accumulatedSubmissions,
-                    })),
-                    id: data.id,
-                  },
-                ]}
-                defs={[
-                  linearGradientDef('gradientA', [
-                    { color: 'inherit', offset: 0 },
-                    { color: 'inherit', offset: 100, opacity: 0 },
-                  ]),
-                ]}
-                enableArea={true}
-                enableGridX={false}
-                enableGridY={false}
-                enablePoints={false}
-                enableSlices="x"
-                fill={[{ id: 'gradientA', match: '*' }]}
-                isInteractive={true}
-                lineWidth={3}
-                margin={{
-                  bottom: 20,
-                  // Calculate the left margin from the number of digits
-                  // in the submission count, to make sure the axis labels
-                  // will fit inside the clipping rectangle.
-                  left: 8 + data.submissionCount.toString().length * 8,
-                  top: 20,
-                }}
-                sliceTooltip={(props) => {
-                  const dataPoint = props.slice.points[0];
-                  const date = new Date(dataPoint.data.xFormatted);
+                  colors={[theme.palette.primary.main]}
+                  curve="basis"
+                  data={[
+                    {
+                      data: data.submissionsByDay.map((day) => ({
+                        x: day.date,
+                        y: day.accumulatedSubmissions,
+                      })),
+                      id: data.id,
+                    },
+                  ]}
+                  defs={[
+                    linearGradientDef('gradientA', [
+                      { color: 'inherit', offset: 0 },
+                      { color: 'inherit', offset: 100, opacity: 0 },
+                    ]),
+                  ]}
+                  enableArea={true}
+                  enableGridX={false}
+                  enableGridY={false}
+                  enablePoints={false}
+                  enableSlices="x"
+                  fill={[{ id: 'gradientA', match: '*' }]}
+                  isInteractive={true}
+                  lineWidth={3}
+                  margin={{
+                    bottom: 20,
+                    // Calculate the left margin from the number of digits
+                    // in the submission count, to make sure the axis labels
+                    // will fit inside the clipping rectangle.
+                    left: 8 + data.submissionCount.toString().length * 8,
+                    top: 20,
+                  }}
+                  sliceTooltip={(props) => {
+                    const dataPoint = props.slice.points[0];
+                    const date = new Date(dataPoint.data.xFormatted);
 
-                  return (
-                    <Paper>
-                      <Box p={1}>
-                        <Typography variant="h6">
-                          <FormattedDate value={date} />
-                        </Typography>
-                        <Typography variant="body2">
-                          <Msg
-                            id={messageIds.chart.tooltip.submissions}
-                            values={{ count: dataPoint.data.y as number }}
-                          />
-                        </Typography>
-                      </Box>
-                    </Paper>
-                  );
-                }}
-                xFormat="time:%Y-%m-%d"
-                xScale={{
-                  format: '%Y-%m-%d',
-                  precision: 'day',
-                  type: 'time',
-                }}
-              />
-            )}
-          </Box>
-        </ZUICard>
-      )}
+                    return (
+                      <Paper>
+                        <Box p={1}>
+                          <Typography variant="h6">
+                            <FormattedDate value={date} />
+                          </Typography>
+                          <Typography variant="body2">
+                            <Msg
+                              id={messageIds.chart.tooltip.submissions}
+                              values={{ count: dataPoint.data.y as number }}
+                            />
+                          </Typography>
+                        </Box>
+                      </Paper>
+                    );
+                  }}
+                  xFormat="time:%Y-%m-%d"
+                  xScale={{
+                    format: '%Y-%m-%d',
+                    precision: 'day',
+                    type: 'time',
+                  }}
+                />
+              )}
+            </Box>
+          </ZUICard>
+        );
+      }}
     </ZUIFuture>
   );
 };

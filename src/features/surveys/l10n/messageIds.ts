@@ -77,6 +77,12 @@ export default makeMessages('feat.surveys', {
       title: m('There are no questions in this survey yet'),
     },
   },
+  shareSuborgsCard: {
+    caption: m(
+      'When this is enabled, officials in sub-organizations can read and search surveys submitted by people connected to their organization.'
+    ),
+    title: m('Share with suborganizations'),
+  },
   state: {
     draft: m('Draft'),
     published: m('Published'),
@@ -108,9 +114,28 @@ export default makeMessages('feat.surveys', {
   },
   unlinkedCard: {
     description: m(
-      'When someone submits a survey without first logging in,that survey will be unlinked. Searching for people in your database based on their survey responses will not work on unlinked submissions.'
+      'When someone submits a survey without logging in,that survey will be unlinked. Searching for people in Zetkin based on their survey responses will not work on unlinked submissions.'
     ),
     header: m('Unlinked submissions'),
+    openLink: m<{ numUnlink: number }>(
+      '{numUnlink, plural, one {Link submission now} other {Link submissions now}}'
+    ),
+  },
+  unlinkedWarningAlert: {
+    default: {
+      description: m<{ numUnlink: number }>(
+        "{numUnlink, plural, one {One survey submission has not been linked to a Zetkin profile, which means that it won't be included when searching.} other {There are survey submissions that have not been linked to Zetkin profiles, which means that they won't be included when searching.}}"
+      ),
+      header: m('Unlinked submissions'),
+      viewUnlinked: m('View unlinked only'),
+    },
+    filtered: {
+      description: m(
+        'The list is filtered and only displays signed survey submissions that have not been linked to a profile.'
+      ),
+      header: m('Viewing unlinked only'),
+      viewAll: m('View all'),
+    },
   },
   urlCard: {
     nowAccepting: m('Now accepting submissions at this link'),
