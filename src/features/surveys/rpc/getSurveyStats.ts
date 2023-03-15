@@ -40,23 +40,21 @@ async function handle(
   );
 
   let sum = 0;
-  let unlinkedCount = 0;
+  const unlinkedCount = submissions.filter(
+    (sub) => sub.respondent && !sub.respondent.id
+  ).length;
 
-  if (submissions.length) {
-    const sortedSubmissions = submissions
-      .filter((sub) => sub.submitted)
-      .sort((sub0, sub1) => {
-        const date0 = new Date(sub0.submitted);
-        const date1 = new Date(sub1.submitted);
-        return date0.getTime() - date1.getTime();
-      });
+  const sortedSubmissions = submissions
+    .filter((sub) => sub.submitted)
+    .sort((sub0, sub1) => {
+      const date0 = new Date(sub0.submitted);
+      const date1 = new Date(sub1.submitted);
+      return date0.getTime() - date1.getTime();
+    });
 
+  if (sortedSubmissions.length) {
     const curDate = new Date(sortedSubmissions[0].submitted.slice(0, 10));
     const lastDate = new Date();
-
-    unlinkedCount = submissions.filter(
-      (sub) => sub.respondent && !sub.respondent.id
-    ).length;
 
     // Rewind one day before starting
     curDate.setDate(curDate.getDate() - 1);
@@ -80,7 +78,7 @@ async function handle(
 
   return {
     id: surveyId,
-    submissionCount: sum,
+    submissionCount: submissions.length,
     submissionsByDay: submissionsByDay.slice(-365),
     unlinkedSubmissionCount: unlinkedCount,
   };

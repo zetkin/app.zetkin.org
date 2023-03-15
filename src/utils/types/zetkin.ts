@@ -175,6 +175,7 @@ export interface ZetkinSurvey {
   published: string | null;
   expires: string | null;
   campaign: { id: number; title: string } | null;
+  org_access: 'sameorg' | 'suborgs';
 }
 
 export interface ZetkinSurveyExtended extends ZetkinSurvey {
