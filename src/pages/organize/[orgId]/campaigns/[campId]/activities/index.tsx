@@ -1,15 +1,14 @@
+import { Box } from '@mui/material';
 import { GetServerSideProps } from 'next';
-import { InfoOutlined } from '@mui/icons-material';
-import NextLink from 'next/link';
-import { Box, Link, Typography } from '@mui/material';
 
 import ActivityList from 'features/campaigns/components/ActivityList';
 import CampaignActivitiesModel from 'features/campaigns/models/CampaignAcitivitiesModel';
 import messageIds from 'features/campaigns/l10n/messageIds';
-import { Msg } from 'core/i18n';
+import NoActivities from 'features/campaigns/components/NoActivities';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import SingleCampaignLayout from 'features/campaigns/layout/SingleCampaignLayout';
+import { useMessages } from 'core/i18n';
 import useModel from 'core/useModel';
 import useServerSide from 'core/useServerSide';
 
@@ -39,6 +38,7 @@ const CampaignActivitiesPage: PageWithLayout<CampaignActivitiesPageProps> = ({
   campId,
   orgId,
 }) => {
+  const messages = useMessages(messageIds);
   const onServer = useServerSide();
   const model = useModel(
     (env) => new CampaignActivitiesModel(env, parseInt(orgId))
@@ -56,24 +56,7 @@ const CampaignActivitiesPage: PageWithLayout<CampaignActivitiesPageProps> = ({
   return (
     <Box>
       {!hasActivities && (
-        <Box
-          alignItems="center"
-          display="flex"
-          flexDirection="column"
-          paddingTop={5}
-        >
-          <InfoOutlined color="secondary" sx={{ fontSize: '12em' }} />
-          <Typography color="secondary">
-            <Msg id={messageIds.singleProject.noActivities} />
-          </Typography>
-          <NextLink href={`/organize/${orgId}/campaigns`} passHref>
-            <Link underline="none">
-              <Typography color="secondary">
-                <Msg id={messageIds.singleProject.createActivity} />
-              </Typography>
-            </Link>
-          </NextLink>
-        </Box>
+        <NoActivities message={messages.singleProject.noActivities()} />
       )}
       {hasActivities && (
         <ActivityList activities={activities} orgId={parseInt(orgId)} />
