@@ -48,9 +48,11 @@ const CampaignActivitiesPage: PageWithLayout<CampaignActivitiesPageProps> = ({
     return null;
   }
 
+  const hasActivities = Array.isArray(activities) && activities.length > 0;
+
   return (
     <Box>
-      {!activities && (
+      {!hasActivities && (
         <Box
           alignItems="center"
           display="flex"
@@ -70,7 +72,7 @@ const CampaignActivitiesPage: PageWithLayout<CampaignActivitiesPageProps> = ({
           </NextLink>
         </Box>
       )}
-      {activities && (
+      {hasActivities && (
         <ActivityList activities={activities} orgId={parseInt(orgId)} />
       )}
     </Box>
