@@ -1,7 +1,7 @@
 import { CallAssignmentData } from 'features/callAssignments/apiTypes';
 import CallAssignmentsRepo from 'features/callAssignments/repos/CallAssignmentsRepo';
 import Environment from 'core/env/Environment';
-import { getStartDate } from 'utils/dateUtils';
+import { isInFuture } from 'utils/dateUtils';
 import { ModelBase } from 'core/models';
 import SurveysRepo from 'features/surveys/repos/SurveysRepo';
 import TasksRepo from 'features/tasks/repos/TasksRepo';
@@ -88,9 +88,21 @@ export default class CampaignActivitiesModel extends ModelBase {
   }
 }
 
-function isInFuture(datestring: string): boolean {
-  const now = new Date();
-  const date = new Date(datestring);
-
-  return date > now;
+function getStartDate(activity: CampaignAcitivity): Date | null {
+  if (activity.kind === ACTIVITIES.SURVEY) {
+    if (!activity.published) {
+      return null;
+    }
+    return new Date(activity.published);
+  } else if (activity.kind === ACTIVITIES.CALL_ASSIGNMENT) {
+    if (!activity.start_date) {
+      return null;
+    }
+    return new Date(activity.start_date);
+  } else {
+    if (!activity.published) {
+      return null;
+    }
+    return new Date(activity.published);
+  }
 }
