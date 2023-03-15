@@ -9,6 +9,7 @@ import SurveyDataModel from 'features/surveys/models/SurveyDataModel';
 import SurveyLayout from 'features/surveys/layout/SurveyLayout';
 import SurveySubmissionsList from 'features/surveys/components/SurveySubmissionsList';
 import SurveySubmissionsModel from 'features/surveys/models/SurveySubmissionsModel';
+import SurveySuborgsCard from 'features/surveys/components/SurveySuborgsCard';
 import useModel from 'core/useModel';
 import ZUIFuture from 'zui/ZUIFuture';
 
@@ -79,6 +80,11 @@ const SubmissionsPage: PageWithLayout<SubmissionsPageProps> = ({
             campId={campaignId}
             orgId={parseInt(orgId)}
             showUnlinkedOnly={showUnlinkedOnly}
+            surveyId={parseInt(surveyId)}
+          />
+
+          <SurveySuborgsCard
+            orgId={parseInt(orgId)}
             surveyId={parseInt(surveyId)}
           />
         </Grid>

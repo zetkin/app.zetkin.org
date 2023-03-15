@@ -77,6 +77,12 @@ export default makeMessages('feat.surveys', {
       title: m('There are no questions in this survey yet'),
     },
   },
+  shareSuborgsCard: {
+    caption: m(
+      'When this is enabled, officials in sub-organizations can read and search surveys submitted by people connected to their organization.'
+    ),
+    title: m('Share with suborganizations'),
+  },
   state: {
     draft: m('Draft'),
     published: m('Published'),
