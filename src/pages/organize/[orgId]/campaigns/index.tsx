@@ -14,7 +14,6 @@ import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import { useMessages } from 'core/i18n';
 import ZUISection from 'zui/ZUISection';
-import ZUISpeedDial, { ACTIONS } from 'zui/ZUISpeedDial';
 
 import messageIds from 'features/campaigns/l10n/messageIds';
 
@@ -113,7 +112,6 @@ const AllCampaignsSummaryPage: PageWithLayout<AllCampaignsSummaryPageProps> = ({
           })}
         </Box>
       </ZUISection>
-      <ZUISpeedDial actions={[ACTIONS.CREATE_CAMPAIGN]} />
     </>
   );
 };
