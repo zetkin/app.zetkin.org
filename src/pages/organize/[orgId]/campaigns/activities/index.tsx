@@ -1,17 +1,12 @@
 import { GetServerSideProps } from 'next';
-import { Box, Card, Divider } from '@mui/material';
 
+import ActivityList from 'features/campaigns/components/ActivityList';
 import AllCampaignsLayout from 'features/campaigns/layout/AllCampaignsLayout';
-import CallAssignmentListItem from 'features/campaigns/components/CallAssignmentListItem';
+import CampaignActivitiesModel from 'features/campaigns/models/CampaignAcitivitiesModel';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
-import SurveyListItem from 'features/campaigns/components/SurveyListItem';
-import TaskListItem from 'features/campaigns/components/TaskListItem';
 import useModel from 'core/useModel';
 import useServerSide from 'core/useServerSide';
-import CampaignActivitiesModel, {
-  ACTIVITIES,
-} from 'features/campaigns/models/CampaignAcitivitiesModel';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   async (ctx) => {
@@ -52,37 +47,7 @@ const CampaignActivitiesPage: PageWithLayout<CampaignActivitiesPageProps> = ({
     return null;
   }
 
-  return (
-    <Card>
-      {activities.map((activity, index) => {
-        <Box key={`activity-${activity.id}`}></Box>;
-        if (activity.kind === ACTIVITIES.CALL_ASSIGNMENT) {
-          return (
-            <Box key={`ca-${activity.id}`}>
-              <CallAssignmentListItem
-                caId={activity.id}
-                orgId={parseInt(orgId)}
-              />
-            </Box>
-          );
-        } else if (activity.kind === ACTIVITIES.SURVEY) {
-          return (
-            <Box key={`survey-${activity.id}`}>
-              {index > 0 && <Divider />}
-              <SurveyListItem orgId={parseInt(orgId)} surveyId={activity.id} />
-            </Box>
-          );
-        } else if (activity.kind === ACTIVITIES.TASK) {
-          return (
-            <Box key={`task-${activity.id}`}>
-              {index > 0 && <Divider />}
-              <TaskListItem orgId={parseInt(orgId)} taskId={activity.id} />
-            </Box>
-          );
-        }
-      })}
-    </Card>
-  );
+  return <ActivityList activities={activities} orgId={parseInt(orgId)} />;
 };
 
 CampaignActivitiesPage.getLayout = function getLayout(page) {
