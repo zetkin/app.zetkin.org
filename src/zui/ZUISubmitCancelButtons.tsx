@@ -16,7 +16,8 @@ const ZUISubmitCancelButtons: React.FunctionComponent<{
         <Button
           color="primary"
           onClick={(ev) => {
-            ev.stopPropagation(), onCancel();
+            ev.stopPropagation();
+            onCancel();
           }}
         >
           <Msg id={messageIds.submitOrCancel.cancel} />

@@ -32,8 +32,8 @@ const DeleteHideButtons: FC<DeleteHideButtonsProps> = ({ element, model }) => {
           ev.stopPropagation();
           showConfirmDialog({
             onSubmit: () => model.deleteElement(element.id),
-            title: messages.blocks.deleteDialog.deleteBlock.title(),
-            warningText: messages.blocks.deleteDialog.deleteBlock.warningText(),
+            title: messages.blocks.deleteBlockDialog.title(),
+            warningText: messages.blocks.deleteBlockDialog.warningText(),
           });
         }}
       >

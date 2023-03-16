@@ -225,10 +225,9 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
                         showConfirmDialog({
                           onSubmit: () =>
                             model.deleteElementOption(element.id, option.id),
-                          title:
-                            messages.blocks.deleteDialog.deleteQuestionOpt.title(),
+                          title: messages.blocks.deleteOptionDialog.title(),
                           warningText:
-                            messages.blocks.deleteDialog.deleteQuestionOpt.warningText(),
+                            messages.blocks.deleteOptionDialog.warningText(),
                         });
                       }}
                       sx={{ paddingX: 2 }}

@@ -30,19 +30,17 @@ export default makeMessages('feat.surveys', {
         select: m('Single-choice (drop-down)'),
       },
     },
-    deleteDialog: {
-      deleteBlock: {
-        title: m('Delete question'),
-        warningText: m(
-          'Are you sure you want to delete this question? This action is permanent and cannot be undone.'
-        ),
-      },
-      deleteQuestionOpt: {
-        title: m('Delete option'),
-        warningText: m(
-          'Are you sure you want to delete this option? This action is permanent and cannot be undone.'
-        ),
-      },
+    deleteBlockDialog: {
+      title: m('Delete question'),
+      warningText: m(
+        'Are you sure you want to delete this question? This action is permanent and cannot be undone.'
+      ),
+    },
+    deleteOptionDialog: {
+      title: m('Delete option'),
+      warningText: m(
+        'Are you sure you want to delete this option? This action is permanent and cannot be undone.'
+      ),
     },
     open: {
       description: m('Description'),
