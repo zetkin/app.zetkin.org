@@ -39,7 +39,7 @@ const useStyles = makeStyles({
     bottom: 16,
     position: 'absolute',
     right: 16,
-    top: 16,
+    top: '30vh',
     zIndex: 10,
   },
   paper: {

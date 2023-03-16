@@ -111,7 +111,6 @@ const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
           flexGrow={1}
           minHeight={0}
           p={fixedHeight ? 0 : 3}
-          position="relative"
           role="tabpanel"
         >
           <PaneProvider>{children}</PaneProvider>
