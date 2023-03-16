@@ -10,6 +10,7 @@ import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 import ZUIPersonGridCell from 'zui/ZUIPersonGridCell';
 import ZUIPersonGridEditCell from 'zui/ZUIPersonGridEditCell';
+import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 import {
   DataGridPro,
@@ -124,10 +125,12 @@ const SurveySubmissionsList = ({
 
     if (row.respondent?.id) {
       return (
-        <ZUIPersonGridCell
-          onClick={startEditing}
-          personId={row.respondent.id}
-        />
+        <ZUIPersonHoverCard personId={row.respondent.id}>
+          <ZUIPersonGridCell
+            onClick={startEditing}
+            personId={row.respondent.id}
+          />
+        </ZUIPersonHoverCard>
       );
     } else {
       return (
