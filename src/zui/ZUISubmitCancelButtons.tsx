@@ -13,7 +13,13 @@ const ZUISubmitCancelButtons: React.FunctionComponent<{
   return (
     <Box display="flex" justifyContent="flex-end" mt={2} width={1}>
       <Box m={1}>
-        <Button color="primary" onClick={onCancel}>
+        <Button
+          color="primary"
+          onClick={(ev) => {
+            ev.stopPropagation();
+            onCancel();
+          }}
+        >
           <Msg id={messageIds.submitOrCancel.cancel} />
         </Button>
       </Box>
@@ -22,6 +28,7 @@ const ZUISubmitCancelButtons: React.FunctionComponent<{
           color="primary"
           data-testid="SubmitCancelButtons-submitButton"
           disabled={submitDisabled}
+          onClick={(ev) => ev.stopPropagation()}
           type="submit"
           variant="contained"
           {...submitButtonProps}
