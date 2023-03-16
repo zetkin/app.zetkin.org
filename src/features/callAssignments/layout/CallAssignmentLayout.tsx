@@ -46,7 +46,7 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
       actionButtons={
         model.state == CallAssignmentState.OPEN ||
         model.state == CallAssignmentState.ACTIVE ? (
-          <Button onClick={() => model.end()} variant="contained">
+          <Button onClick={() => model.end()} variant="outlined">
             <Msg id={messageIds.actions.end} />
           </Button>
         ) : (
