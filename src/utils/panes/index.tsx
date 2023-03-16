@@ -43,7 +43,7 @@ const useStyles = makeStyles({
     zIndex: 10,
   },
   paper: {
-    height: '100%',
+    height: 'calc(100vh - 32vh)',
   },
 });
 
