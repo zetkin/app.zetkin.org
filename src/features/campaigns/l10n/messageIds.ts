@@ -88,9 +88,7 @@ export default makeMessages('feat.campaigns', {
   singleProject: {
     filterActivities: m('Type to filter'),
     noActivities: m('There are no activities in this project yet.'),
-    noSearchResults: m<{ searchString: string }>(
-      'No search results for "{searchString}"'
-    ),
+    noSearchResults: m('Your filtering yielded no results.'),
   },
   taskLayout: {
     tabs: {

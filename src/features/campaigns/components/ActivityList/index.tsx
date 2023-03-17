@@ -66,29 +66,38 @@ const ActivityList = ({
 }: ActivityListProps) => {
   const messages = useMessages(messageIds);
 
-  const activities = allActivities.filter((activity) =>
+  const filteredActivities = allActivities.filter((activity) =>
     filters.includes(activity.kind)
   );
 
   const searchResults = useMemo(() => {
-    const fuse = new Fuse(activities, { keys: ['title'], threshold: 0.4 });
+    const fuse = new Fuse(filteredActivities, {
+      keys: ['title'],
+      threshold: 0.4,
+    });
     return fuse.search(searchString).map((fuseResult) => fuseResult.item);
   }, [searchString]);
 
+  const noSearchResults = isSearching && searchResults.length === 0;
+  const noFilterResults = !isSearching && filteredActivities.length === 0;
+  const showMessage = noFilterResults || noSearchResults;
+
   return (
     <>
-      {searchResults.length > 0 && isSearching && (
-        <Activities activities={searchResults} orgId={orgId} />
+      {filteredActivities.length > 0 && (
+        <Activities
+          activities={isSearching ? searchResults : filteredActivities}
+          orgId={orgId}
+        />
       )}
-      {!searchResults.length && isSearching && (
+      {showMessage && (
         <Box alignItems="center" display="flex" flexDirection="column">
           <FilterListOutlined color="secondary" sx={{ fontSize: '12em' }} />
           <Typography color="secondary">
-            {messages.singleProject.noSearchResults({ searchString })}
+            {messages.singleProject.noSearchResults()}
           </Typography>
         </Box>
       )}
-      {!isSearching && <Activities activities={activities} orgId={orgId} />}
     </>
   );
 };
