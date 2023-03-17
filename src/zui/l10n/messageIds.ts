@@ -15,7 +15,7 @@ export default makeMessages('zui', {
     calendar: m('Calendar'),
     callassignments: m('Call assignments'),
     callers: m('Callers'),
-    campaigns: m('Campaigns'),
+    campaigns: m('Projects'),
     closed: m('Closed'),
     conversation: m('Conversation'),
     events: m('Events'),
