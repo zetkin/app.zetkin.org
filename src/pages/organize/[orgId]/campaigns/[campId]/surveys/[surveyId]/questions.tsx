@@ -8,6 +8,7 @@ import SurveyDataModel from 'features/surveys/models/SurveyDataModel';
 import SurveyEditor from 'features/surveys/components/SurveyEditor';
 import SurveyLayout from 'features/surveys/layout/SurveyLayout';
 import useModel from 'core/useModel';
+import ZUIFuture from 'zui/ZUIFuture';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   async (ctx) => {
@@ -46,9 +47,18 @@ const QuestionsPage: PageWithLayout<QuestionsPageProps> = ({
       <Head>
         <title>{model.getData().data?.title}</title>
       </Head>
-      <Box>
-        <SurveyEditor model={model} />
-      </Box>
+      <ZUIFuture future={model.getStats()}>
+        {(stats) => {
+          return (
+            <Box>
+              <SurveyEditor
+                model={model}
+                readOnly={stats.submissionCount > 0}
+              />
+            </Box>
+          );
+        }}
+      </ZUIFuture>
     </>
   );
 };
