@@ -45,7 +45,6 @@ const CampaignActivitiesPage: PageWithLayout<CampaignActivitiesPageProps> = ({
     (env) => new CampaignActivitiesModel(env, parseInt(orgId))
   );
   const [searchString, setSearchString] = useState('');
-  const [isSearching, setIsSearching] = useState(false);
   const [filters, setFilters] = useState<ACTIVITIES[]>([
     ACTIVITIES.CALL_ASSIGNMENT,
     ACTIVITIES.SURVEY,
@@ -61,14 +60,8 @@ const CampaignActivitiesPage: PageWithLayout<CampaignActivitiesPageProps> = ({
     }
   };
 
-  const onSearchStringChange = (evt: ChangeEvent<HTMLInputElement>) => {
+  const onSearchStringChange = (evt: ChangeEvent<HTMLInputElement>) =>
     setSearchString(evt.target.value);
-    if (evt.target.value === '') {
-      setIsSearching(false);
-      return;
-    }
-    setIsSearching(true);
-  };
 
   const activities = model.getStandaloneActivities().data;
   const hasActivities = Array.isArray(activities) && activities.length > 0;
@@ -95,7 +88,6 @@ const CampaignActivitiesPage: PageWithLayout<CampaignActivitiesPageProps> = ({
             <ActivityList
               allActivities={activities}
               filters={filters}
-              isSearching={isSearching}
               orgId={parseInt(orgId)}
               searchString={searchString}
             />

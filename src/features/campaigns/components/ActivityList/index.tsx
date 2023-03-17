@@ -52,7 +52,6 @@ const Activities = ({ activities, orgId }: ActivitiesProps) => {
 interface ActivityListProps {
   allActivities: CampaignAcitivity[];
   filters: ACTIVITIES[];
-  isSearching: boolean;
   orgId: number;
   searchString: string;
 }
@@ -60,37 +59,32 @@ interface ActivityListProps {
 const ActivityList = ({
   allActivities,
   filters,
-  isSearching,
   orgId,
   searchString,
 }: ActivityListProps) => {
   const messages = useMessages(messageIds);
 
-  const filteredActivities = allActivities.filter((activity) =>
-    filters.includes(activity.kind)
-  );
-
   const searchResults = useMemo(() => {
+    const filteredActivities = allActivities.filter((activity) =>
+      filters.includes(activity.kind)
+    );
+
     const fuse = new Fuse(filteredActivities, {
       keys: ['title'],
       threshold: 0.4,
     });
-    return fuse.search(searchString).map((fuseResult) => fuseResult.item);
-  }, [searchString]);
 
-  const noSearchResults = isSearching && searchResults.length === 0;
-  const noFilterResults = !isSearching && filteredActivities.length === 0;
-  const showMessage = noFilterResults || noSearchResults;
+    return searchString
+      ? fuse.search(searchString).map((fuseResult) => fuseResult.item)
+      : filteredActivities;
+  }, [searchString, filters, allActivities]);
 
   return (
     <>
-      {filteredActivities.length > 0 && (
-        <Activities
-          activities={isSearching ? searchResults : filteredActivities}
-          orgId={orgId}
-        />
+      {searchResults.length > 0 && (
+        <Activities activities={searchResults} orgId={orgId} />
       )}
-      {showMessage && (
+      {!searchResults.length && (
         <Box alignItems="center" display="flex" flexDirection="column">
           <FilterListOutlined color="secondary" sx={{ fontSize: '12em' }} />
           <Typography color="secondary">
