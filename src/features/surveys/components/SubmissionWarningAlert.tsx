@@ -44,7 +44,7 @@ const SubmissionWarningAlert = ({
                 })}
             <Box>
               <NextLink
-                href={`/organize/${orgId}/campaigns/${campId}/surveys/${surveyId}/submissions${
+                href={`/organize/${orgId}/projects/${campId}/surveys/${surveyId}/submissions${
                   showUnlinkedOnly ? '' : '?filter=linked'
                 }`}
                 passHref

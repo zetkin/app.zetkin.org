@@ -34,7 +34,7 @@ const SingleTaskLayout: FunctionComponent<SingleTaskLayoutProps> = ({
   return (
     <TabbedLayout
       actionButtons={<TaskActionButtons task={task} />}
-      baseHref={`/organize/${orgId}/campaigns/${campId}/calendar/tasks/${taskId}`}
+      baseHref={`/organize/${orgId}/projects/${campId}/calendar/tasks/${taskId}`}
       defaultTab="/"
       subtitle={
         <Box alignItems="center" display="flex">

@@ -45,7 +45,7 @@ const SingleCampaignLayout: FunctionComponent<SingleCampaignLayoutProps> = ({
   return (
     <TabbedLayout
       actionButtons={<CampaignActionButtons campaign={campaign} />}
-      baseHref={`/organize/${orgId}/campaigns/${campId}`}
+      baseHref={`/organize/${orgId}/projects/${campId}`}
       defaultTab="/"
       fixedHeight={fixedHeight}
       subtitle={

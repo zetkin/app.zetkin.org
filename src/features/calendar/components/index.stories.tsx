@@ -21,7 +21,7 @@ const Template: ComponentStory<typeof Calendar> = (args) => (
 
 export const basic = Template.bind({});
 basic.args = {
-  baseHref: '/organize/1/campaigns/1/calendar',
+  baseHref: '/organize/1/projects/1/calendar',
   campaigns: [ReferendumSignatureCollection],
   events: [mockEvent()],
   tasks: [VisitReferendumWebsite],
