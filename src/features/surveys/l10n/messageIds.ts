@@ -57,6 +57,20 @@ export default makeMessages('feat.surveys', {
       ),
     },
   },
+  editWarning: {
+    editing: {
+      header: m('Survey unlocked'),
+      lockButton: m('Lock'),
+      subheader: m('Be careful editing the survey'),
+    },
+    locked: {
+      header: m('Survey locked'),
+      subheader: m(
+        'This survey has started receiving submissions. Editing the survey now may cause problems with the data. Proceed with caution.'
+      ),
+      unlockButton: m('Unlock'),
+    },
+  },
   layout: {
     actions: {
       publish: m('Publish survey'),
