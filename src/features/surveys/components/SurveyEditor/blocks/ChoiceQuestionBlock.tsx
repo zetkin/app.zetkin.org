@@ -35,6 +35,7 @@ interface ChoiceQuestionBlockProps {
   model: SurveyDataModel;
   onEditModeEnter: () => void;
   onEditModeExit: () => void;
+  readOnly: boolean;
 }
 
 const widgetTypes = {
@@ -60,6 +61,7 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
   model,
   onEditModeEnter,
   onEditModeExit,
+  readOnly,
 }) => {
   const elemQuestion = element.question;
   const messages = useMessages(messageIds);
@@ -104,6 +106,7 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
       editable,
       onEditModeEnter,
       onEditModeExit,
+      readOnly,
       save: () => {
         model.updateOptionsQuestion(element.id, {
           question: {
@@ -337,7 +340,7 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
               </>
             )}
           </Box>
-          <DeleteHideButtons element={element} model={model} />
+          {!readOnly && <DeleteHideButtons element={element} model={model} />}
         </Box>
       </Box>
     </ClickAwayListener>

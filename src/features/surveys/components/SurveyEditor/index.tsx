@@ -18,9 +18,10 @@ import {
 
 interface SurveyEditorProps {
   model: SurveyDataModel;
+  readOnly: boolean;
 }
 
-const SurveyEditor: FC<SurveyEditorProps> = ({ model }) => {
+const SurveyEditor: FC<SurveyEditorProps> = ({ model, readOnly }) => {
   const [idOfBlockInEditMode, setIdOfBlockInEditMode] = useState<
     number | undefined
   >();
@@ -53,6 +54,8 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ model }) => {
           return (
             <Box paddingBottom={data.elements.length ? 4 : 0}>
               <ZUIReorderable
+                disableClick={readOnly}
+                disableDrag={readOnly}
                 items={data.elements.map((elem) => ({
                   id: elem.id,
                   renderContent: ({ dragging }) => {
@@ -74,6 +77,7 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ model }) => {
                               onEditModeExit={() => {
                                 setIdOfBlockInEditMode(undefined);
                               }}
+                              readOnly={readOnly}
                             />
                           </BlockWrapper>
                         );
@@ -98,6 +102,7 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ model }) => {
                               onEditModeExit={() => {
                                 setIdOfBlockInEditMode(undefined);
                               }}
+                              readOnly={readOnly}
                             />
                           </BlockWrapper>
                         );
@@ -119,6 +124,7 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ model }) => {
                             onEditModeExit={() => {
                               setIdOfBlockInEditMode(undefined);
                             }}
+                            readOnly={readOnly}
                           />
                         </BlockWrapper>
                       );
@@ -136,7 +142,7 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ model }) => {
           );
         }}
       </ZUIFuture>
-      <AddBlocks model={model} />
+      {!readOnly && <AddBlocks model={model} />}
     </>
   );
 };
