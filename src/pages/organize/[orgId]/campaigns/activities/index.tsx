@@ -3,7 +3,6 @@ import { Box, Grid } from '@mui/material';
 
 import ActivityList from 'features/campaigns/components/ActivityList';
 import AllCampaignsLayout from 'features/campaigns/layout/AllCampaignsLayout';
-import CampaignActivitiesModel from 'features/campaigns/models/CampaignActivitiesModel';
 import FilterActivities from 'features/campaigns/components/ActivityList/FilterActivities';
 import messageIds from 'features/campaigns/l10n/messageIds';
 import NoActivities from 'features/campaigns/components/NoActivities';
@@ -12,6 +11,9 @@ import { scaffold } from 'utils/next';
 import { useMessages } from 'core/i18n';
 import useModel from 'core/useModel';
 import useServerSide from 'core/useServerSide';
+import CampaignActivitiesModel, {
+  ACTIVITIES,
+} from 'features/campaigns/models/CampaignActivitiesModel';
 import { ChangeEvent, useState } from 'react';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
@@ -44,16 +46,22 @@ const CampaignActivitiesPage: PageWithLayout<CampaignActivitiesPageProps> = ({
   );
   const [searchString, setSearchString] = useState('');
   const [isSearching, setIsSearching] = useState(false);
+  const [filters, setFilters] = useState<ACTIVITIES[]>([
+    ACTIVITIES.CALL_ASSIGNMENT,
+    ACTIVITIES.SURVEY,
+    ACTIVITIES.TASK,
+  ]);
 
-  const activities = model.getStandaloneActivities().data;
+  const onFiltersChange = (evt: ChangeEvent<HTMLInputElement>) => {
+    const filter = evt.target.value as ACTIVITIES;
+    if (filters.includes(filter)) {
+      setFilters(filters.filter((a) => a !== filter));
+    } else {
+      setFilters([...filters, filter]);
+    }
+  };
 
-  if (onServer) {
-    return null;
-  }
-
-  const hasActivities = Array.isArray(activities) && activities.length > 0;
-
-  const handleChange = (evt: ChangeEvent<HTMLInputElement>) => {
+  const onSearchStringChange = (evt: ChangeEvent<HTMLInputElement>) => {
     setSearchString(evt.target.value);
     if (evt.target.value === '') {
       setIsSearching(false);
@@ -61,6 +69,13 @@ const CampaignActivitiesPage: PageWithLayout<CampaignActivitiesPageProps> = ({
     }
     setIsSearching(true);
   };
+
+  const activities = model.getStandaloneActivities().data;
+  const hasActivities = Array.isArray(activities) && activities.length > 0;
+
+  if (onServer) {
+    return null;
+  }
 
   return (
     <Box>
@@ -75,14 +90,20 @@ const CampaignActivitiesPage: PageWithLayout<CampaignActivitiesPageProps> = ({
         <Grid container spacing={2}>
           <Grid item sm={8}>
             <ActivityList
-              activities={activities}
+              allActivities={activities}
+              filters={filters}
               isSearching={isSearching}
               orgId={parseInt(orgId)}
               searchString={searchString}
             />
           </Grid>
           <Grid item sm={4}>
-            <FilterActivities onChange={handleChange} value={searchString} />
+            <FilterActivities
+              filters={filters}
+              onFiltersChange={onFiltersChange}
+              onSearchStringChange={onSearchStringChange}
+              value={searchString}
+            />
           </Grid>
         </Grid>
       )}

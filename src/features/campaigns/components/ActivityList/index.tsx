@@ -50,19 +50,26 @@ const Activities = ({ activities, orgId }: ActivitiesProps) => {
 };
 
 interface ActivityListProps {
-  activities: CampaignAcitivity[];
+  allActivities: CampaignAcitivity[];
+  filters: ACTIVITIES[];
   isSearching: boolean;
   orgId: number;
   searchString: string;
 }
 
 const ActivityList = ({
-  activities,
+  allActivities,
+  filters,
   isSearching,
   orgId,
   searchString,
 }: ActivityListProps) => {
   const messages = useMessages(messageIds);
+
+  const activities = allActivities.filter((activity) =>
+    filters.includes(activity.kind)
+  );
+
   const searchResults = useMemo(() => {
     const fuse = new Fuse(activities, { keys: ['title'], threshold: 0.4 });
     return fuse.search(searchString).map((fuseResult) => fuseResult.item);
