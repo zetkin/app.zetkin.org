@@ -35,7 +35,9 @@ export default class CampaignActivitiesModel extends ModelBase {
 
   getCampaignActivities(campId: number): IFuture<CampaignAcitivity[]> {
     const activities = this.getCurrentActivities().data;
-    const filtered = activities?.filter((activity) => activity.id === campId);
+    const filtered = activities?.filter(
+      (activity) => activity.campaign?.id === campId
+    );
     return new ResolvedFuture(filtered || []);
   }
 
