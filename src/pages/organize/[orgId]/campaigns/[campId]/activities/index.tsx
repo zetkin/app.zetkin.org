@@ -2,7 +2,7 @@ import { Box } from '@mui/material';
 import { GetServerSideProps } from 'next';
 
 import ActivityList from 'features/campaigns/components/ActivityList';
-import CampaignActivitiesModel from 'features/campaigns/models/CampaignAcitivitiesModel';
+import CampaignActivitiesModel from 'features/campaigns/models/CampaignActivitiesModel';
 import messageIds from 'features/campaigns/l10n/messageIds';
 import NoActivities from 'features/campaigns/components/NoActivities';
 import { PageWithLayout } from 'utils/types';
