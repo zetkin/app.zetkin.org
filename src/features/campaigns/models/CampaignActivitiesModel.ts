@@ -33,6 +33,14 @@ export default class CampaignActivitiesModel extends ModelBase {
     this._tasksRepo = new TasksRepo(env);
   }
 
+  getCampaignActivities(campId: number): IFuture<CampaignAcitivity[]> {
+    const activities = this.getCurrentActivities().data;
+    const filtered = activities?.filter(
+      (activity) => activity.campaign?.id === campId
+    );
+    return new ResolvedFuture(filtered || []);
+  }
+
   getCurrentActivities(): IFuture<CampaignAcitivity[]> {
     const callAssignmentsFuture = this._callAssignmentsRepo.getCallAssignments(
       this._orgId
@@ -85,6 +93,14 @@ export default class CampaignActivitiesModel extends ModelBase {
     });
 
     return new ResolvedFuture(sorted);
+  }
+
+  getStandaloneActivities(): IFuture<CampaignAcitivity[]> {
+    const activities = this.getCurrentActivities().data;
+    const filtered = activities?.filter(
+      (activity) => activity.campaign === null
+    );
+    return new ResolvedFuture(filtered || []);
   }
 }
 

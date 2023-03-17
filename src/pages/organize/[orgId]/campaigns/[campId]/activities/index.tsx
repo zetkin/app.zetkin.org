@@ -2,22 +2,23 @@ import { Box } from '@mui/material';
 import { GetServerSideProps } from 'next';
 
 import ActivityList from 'features/campaigns/components/ActivityList';
-import AllCampaignsLayout from 'features/campaigns/layout/AllCampaignsLayout';
 import CampaignActivitiesModel from 'features/campaigns/models/CampaignActivitiesModel';
 import messageIds from 'features/campaigns/l10n/messageIds';
 import NoActivities from 'features/campaigns/components/NoActivities';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
+import SingleCampaignLayout from 'features/campaigns/layout/SingleCampaignLayout';
 import { useMessages } from 'core/i18n';
 import useModel from 'core/useModel';
 import useServerSide from 'core/useServerSide';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   async (ctx) => {
-    const { orgId } = ctx.params!;
+    const { campId, orgId } = ctx.params!;
 
     return {
       props: {
+        campId,
         orgId,
       },
     };
@@ -29,10 +30,12 @@ export const getServerSideProps: GetServerSideProps = scaffold(
 );
 
 interface CampaignActivitiesPageProps {
+  campId: string;
   orgId: string;
 }
 
 const CampaignActivitiesPage: PageWithLayout<CampaignActivitiesPageProps> = ({
+  campId,
   orgId,
 }) => {
   const messages = useMessages(messageIds);
@@ -40,22 +43,18 @@ const CampaignActivitiesPage: PageWithLayout<CampaignActivitiesPageProps> = ({
   const model = useModel(
     (env) => new CampaignActivitiesModel(env, parseInt(orgId))
   );
-  const activities = model.getStandaloneActivities().data;
+
+  const activities = model.getCampaignActivities(parseInt(campId)).data;
+  const hasActivities = Array.isArray(activities) && activities.length > 0;
 
   if (onServer) {
     return null;
   }
 
-  const hasActivities = Array.isArray(activities) && activities.length > 0;
-
   return (
     <Box>
       {!hasActivities && (
-        <NoActivities
-          href={`/organize/${orgId}/campaigns`}
-          linkMessage={messages.allProjects.linkToSummary()}
-          message={messages.allProjects.noActivities()}
-        />
+        <NoActivities message={messages.singleProject.noActivities()} />
       )}
       {hasActivities && (
         <ActivityList activities={activities} orgId={parseInt(orgId)} />
@@ -65,7 +64,7 @@ const CampaignActivitiesPage: PageWithLayout<CampaignActivitiesPageProps> = ({
 };
 
 CampaignActivitiesPage.getLayout = function getLayout(page) {
-  return <AllCampaignsLayout>{page}</AllCampaignsLayout>;
+  return <SingleCampaignLayout>{page}</SingleCampaignLayout>;
 };
 
 export default CampaignActivitiesPage;

@@ -1,12 +1,6 @@
 import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('feat.campaigns', {
-  activityList: {
-    linkToSummary: m('Go to my active projects.'),
-    noActivities: m(
-      'If your organization has activities that do not belong to a project they will show up here.'
-    ),
-  },
   all: {
     cardCTA: m('Go to campaign'),
     create: m('Create new campaign'),
@@ -21,6 +15,12 @@ export default makeMessages('feat.campaigns', {
     indefinite: m('Indefinite'),
     unsorted: m('Unsorted projects'),
     upcoming: m<{ numEvents: number }>('{numEvents, number} upcoming events.'),
+  },
+  allProjects: {
+    linkToSummary: m('Go to my active projects.'),
+    noActivities: m(
+      'If your organization has activities that do not belong to a project they will show up here.'
+    ),
   },
   assigneeActions: m('Assignee actions'),
   calendarView: m('See all in calendar'),
@@ -93,6 +93,10 @@ export default makeMessages('feat.campaigns', {
     heading: m('Mobilization and outreach (none configured)'),
   },
   noManager: m('No Campaign Manager'),
+  singleProject: {
+    createActivity: m('Create your first activity.'),
+    noActivities: m('There are no activities in this project yet.'),
+  },
   taskLayout: {
     tabs: {
       assignees: m('Assignees'),
