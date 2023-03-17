@@ -66,12 +66,7 @@ const SurveyPage: PageWithLayout<SurveyPageProps> = ({
       <Head>
         <title>{model.getData().data?.title}</title>
       </Head>
-      <Box
-        alignItems="center"
-        display="flex"
-        justifyContent="center"
-        paddingTop={8}
-      >
+      <Box>
         {model.surveyIsEmpty ? (
           <EmptyOverview campId={campId} orgId={orgId} surveyId={surveyId} />
         ) : (
