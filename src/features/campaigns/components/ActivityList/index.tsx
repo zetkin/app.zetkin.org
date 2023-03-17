@@ -1,19 +1,24 @@
-import { Box, Card, Divider } from '@mui/material';
+import { FilterListOutlined } from '@mui/icons-material';
+import Fuse from 'fuse.js';
+import { useMemo } from 'react';
+import { Box, Card, Divider, Typography } from '@mui/material';
 
 import CallAssignmentListItem from './CallAssignmentListItem';
+import messageIds from 'features/campaigns/l10n/messageIds';
 import SurveyListItem from './SurveyListItem';
 import TaskListItem from './TaskListItem';
+import { useMessages } from 'core/i18n';
 import {
   ACTIVITIES,
   CampaignAcitivity,
 } from 'features/campaigns/models/CampaignActivitiesModel';
 
-interface ActivityListProps {
+interface ActivitiesProps {
   activities: CampaignAcitivity[];
   orgId: number;
 }
 
-const ActivityList = ({ activities, orgId }: ActivityListProps) => {
+const Activities = ({ activities, orgId }: ActivitiesProps) => {
   return (
     <Card>
       {activities.map((activity, index) => {
@@ -41,6 +46,43 @@ const ActivityList = ({ activities, orgId }: ActivityListProps) => {
         }
       })}
     </Card>
+  );
+};
+
+interface ActivityListProps {
+  activities: CampaignAcitivity[];
+  isSearching: boolean;
+  orgId: number;
+  searchString: string;
+}
+
+const ActivityList = ({
+  activities,
+  isSearching,
+  orgId,
+  searchString,
+}: ActivityListProps) => {
+  const messages = useMessages(messageIds);
+  const searchResults = useMemo(() => {
+    const fuse = new Fuse(activities, { keys: ['title'], threshold: 0.4 });
+    return fuse.search(searchString).map((fuseResult) => fuseResult.item);
+  }, [searchString]);
+
+  return (
+    <>
+      {searchResults.length > 0 && isSearching && (
+        <Activities activities={searchResults} orgId={orgId} />
+      )}
+      {!searchResults.length && isSearching && (
+        <Box alignItems="center" display="flex" flexDirection="column">
+          <FilterListOutlined color="secondary" sx={{ fontSize: '12em' }} />
+          <Typography color="secondary">
+            {messages.singleProject.noSearchResults({ searchString })}
+          </Typography>
+        </Box>
+      )}
+      {!isSearching && <Activities activities={activities} orgId={orgId} />}
+    </>
   );
 };
 

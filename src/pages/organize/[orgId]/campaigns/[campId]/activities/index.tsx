@@ -1,8 +1,10 @@
-import { Box } from '@mui/material';
 import { GetServerSideProps } from 'next';
+import { Box, Grid } from '@mui/material';
+import { ChangeEvent, useState } from 'react';
 
 import ActivityList from 'features/campaigns/components/ActivityList';
 import CampaignActivitiesModel from 'features/campaigns/models/CampaignActivitiesModel';
+import FilterActivities from 'features/campaigns/components/ActivityList/FilterActivities';
 import messageIds from 'features/campaigns/l10n/messageIds';
 import NoActivities from 'features/campaigns/components/NoActivities';
 import { PageWithLayout } from 'utils/types';
@@ -43,6 +45,8 @@ const CampaignActivitiesPage: PageWithLayout<CampaignActivitiesPageProps> = ({
   const model = useModel(
     (env) => new CampaignActivitiesModel(env, parseInt(orgId))
   );
+  const [searchString, setSearchString] = useState('');
+  const [isSearching, setIsSearching] = useState(false);
 
   const activities = model.getCampaignActivities(parseInt(campId)).data;
   const hasActivities = Array.isArray(activities) && activities.length > 0;
@@ -51,13 +55,34 @@ const CampaignActivitiesPage: PageWithLayout<CampaignActivitiesPageProps> = ({
     return null;
   }
 
+  const handleChange = (evt: ChangeEvent<HTMLInputElement>) => {
+    setSearchString(evt.target.value);
+    if (evt.target.value === '') {
+      setIsSearching(false);
+      return;
+    }
+    setIsSearching(true);
+  };
+
   return (
     <Box>
       {!hasActivities && (
         <NoActivities message={messages.singleProject.noActivities()} />
       )}
       {hasActivities && (
-        <ActivityList activities={activities} orgId={parseInt(orgId)} />
+        <Grid container spacing={2}>
+          <Grid item sm={8}>
+            <ActivityList
+              activities={activities}
+              isSearching={isSearching}
+              orgId={parseInt(orgId)}
+              searchString={searchString}
+            />
+          </Grid>
+          <Grid item sm={4}>
+            <FilterActivities onChange={handleChange} value={searchString} />
+          </Grid>
+        </Grid>
       )}
     </Box>
   );
