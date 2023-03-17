@@ -71,7 +71,7 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
   const [description, setDescription] = useState(elemQuestion.description);
   const [options, setOptions] = useState(elemQuestion.options || []);
   const [widgetType, setWidgetType] = useState<WidgetTypeValue>(
-    elemQuestion.response_config.widget_type
+    elemQuestion.response_config.widget_type || 'checkbox'
   );
 
   useEffect(() => {
