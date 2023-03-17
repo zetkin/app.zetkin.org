@@ -76,6 +76,9 @@ const CampaignActivitiesPage: PageWithLayout<CampaignActivitiesPageProps> = ({
   const activities = model.getCampaignActivities(parseInt(campId)).data;
   const hasActivities = Array.isArray(activities) && activities.length > 0;
 
+  const activityTypes = activities?.map((activity) => activity.kind);
+  const filterTypes = [...new Set(activityTypes)];
+
   if (onServer) {
     return null;
   }
@@ -98,6 +101,7 @@ const CampaignActivitiesPage: PageWithLayout<CampaignActivitiesPageProps> = ({
           <Grid item sm={4}>
             <FilterActivities
               filters={filters}
+              filterTypes={filterTypes}
               onFiltersChange={onFiltersChange}
               onSearchStringChange={onSearchStringChange}
               value={searchString}

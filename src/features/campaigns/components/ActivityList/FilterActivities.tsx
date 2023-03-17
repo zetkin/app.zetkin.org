@@ -15,6 +15,7 @@ import { useMessages } from 'core/i18n';
 
 interface FilterActivitiesProps {
   filters: ACTIVITIES[];
+  filterTypes: ACTIVITIES[];
   onFiltersChange: (evt: ChangeEvent<HTMLInputElement>) => void;
   onSearchStringChange: (evt: ChangeEvent<HTMLInputElement>) => void;
   value: string;
@@ -22,6 +23,7 @@ interface FilterActivitiesProps {
 
 const FilterActivities = ({
   filters,
+  filterTypes,
   onFiltersChange,
   onSearchStringChange,
   value,
@@ -50,6 +52,7 @@ const FilterActivities = ({
             control={
               <Checkbox
                 checked={filters.includes(ACTIVITIES.SURVEY)}
+                disabled={!filterTypes.includes(ACTIVITIES.SURVEY)}
                 onChange={onFiltersChange}
                 value={ACTIVITIES.SURVEY}
               />
@@ -60,6 +63,7 @@ const FilterActivities = ({
             control={
               <Checkbox
                 checked={filters.includes(ACTIVITIES.CALL_ASSIGNMENT)}
+                disabled={!filterTypes.includes(ACTIVITIES.CALL_ASSIGNMENT)}
                 onChange={onFiltersChange}
                 value={ACTIVITIES.CALL_ASSIGNMENT}
               />
@@ -70,6 +74,7 @@ const FilterActivities = ({
             control={
               <Checkbox
                 checked={filters.includes(ACTIVITIES.TASK)}
+                disabled={!filterTypes.includes(ACTIVITIES.TASK)}
                 onChange={onFiltersChange}
                 value={ACTIVITIES.TASK}
               />
