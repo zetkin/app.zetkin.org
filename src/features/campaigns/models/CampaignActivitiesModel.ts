@@ -132,6 +132,31 @@ export default class CampaignActivitiesModel extends ModelBase {
     );
     return new ResolvedFuture(filtered || []);
   }
+
+  getWeekActivities(): IFuture<CampaignActivity[]> {
+    const activitiesFuture = this.getCurrentActivities();
+
+    const startOfToday = new Date(new Date().toISOString().slice(0, 10));
+    const weekFromNow = new Date(startOfToday);
+    weekFromNow.setDate(startOfToday.getDate() + 8);
+
+    const filtered = activitiesFuture.data?.filter((activity) => {
+      const startDate = getStartDate(activity);
+      const endDate = getEndDate(activity);
+
+      return (
+        startDate &&
+        startDate < weekFromNow &&
+        (!endDate || endDate >= startOfToday)
+      );
+    });
+
+    if (filtered) {
+      return new ResolvedFuture(filtered);
+    } else {
+      return activitiesFuture;
+    }
+  }
 }
 
 function getStartDate(activity: CampaignActivity): Date | null {
@@ -150,5 +175,13 @@ function getStartDate(activity: CampaignActivity): Date | null {
       return null;
     }
     return new Date(activity.published);
+  }
+}
+
+function getEndDate(activity: CampaignActivity): Date | null {
+  if (activity.kind == ACTIVITIES.CALL_ASSIGNMENT) {
+    return activity.end_date ? new Date(activity.end_date) : null;
+  } else {
+    return activity.expires ? new Date(activity.expires) : null;
   }
 }

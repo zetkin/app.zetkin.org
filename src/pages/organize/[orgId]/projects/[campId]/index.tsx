@@ -164,6 +164,18 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({
               }}
             </ZUIFuture>
           </Grid>
+          <Grid item md={4} xs={12}>
+            <ZUIFuture future={activitiesModel.getWeekActivities()}>
+              {(data) => {
+                return (
+                  <OverviewActivitiesCard
+                    activities={data}
+                    header={messages.activitiesCard.thisWeekCard()}
+                  />
+                );
+              }}
+            </ZUIFuture>
+          </Grid>
         </Grid>
       </>
     </>
