@@ -57,7 +57,7 @@ const TaskActionButtons: React.FunctionComponent<TaskActionButtonsProps> = ({
       onSuccess: () => {
         // Navigate back to campaign page
         router.push(
-          `/organize/${task.organization.id}/campaigns/${task.campaign.id}`
+          `/organize/${task.organization.id}/projects/${task.campaign.id}`
         );
       },
     });

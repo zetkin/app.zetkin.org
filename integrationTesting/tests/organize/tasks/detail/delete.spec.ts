@@ -28,7 +28,7 @@ test.describe('Task detail pagee', async () => {
         204
       );
 
-      await page.goto(appUri + '/organize/1/campaigns/1/calendar/tasks/1');
+      await page.goto(appUri + '/organize/1/projects/1/calendar/tasks/1');
 
       await page.click('data-testid=ZUIEllipsisMenu-menuActivator');
       await page.click('data-testid=ZUIEllipsisMenu-item-deleteTask');
@@ -38,7 +38,7 @@ test.describe('Task detail pagee', async () => {
         page.click('button:text("Confirm")'),
       ]);
 
-      expect(page.url()).toEqual(appUri + '/organize/1/campaigns/1');
+      expect(page.url()).toEqual(appUri + '/organize/1/projects/1');
       expect(log().length).toEqual(1);
     });
 
@@ -49,7 +49,7 @@ test.describe('Task detail pagee', async () => {
     }) => {
       moxy.setZetkinApiMock('/orgs/1/tasks/1', 'delete', {}, 404);
 
-      await page.goto(appUri + '/organize/1/campaigns/1/calendar/tasks/1');
+      await page.goto(appUri + '/organize/1/projects/1/calendar/tasks/1');
 
       await page.click('data-testid=ZUIEllipsisMenu-menuActivator');
       await page.click('data-testid=ZUIEllipsisMenu-item-deleteTask');

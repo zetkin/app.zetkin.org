@@ -23,7 +23,7 @@ export default class CampaignBrowserModel extends ModelBase {
       .createCampaign(campaignBody, this._orgId)
       .then((campaign: ZetkinCampaign) => {
         this._env.router.push(
-          `/organize/${campaign.organization?.id}/campaigns/${campaign.id}`
+          `/organize/${campaign.organization?.id}/projects/${campaign.id}`
         );
         return campaign;
       });

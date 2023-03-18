@@ -30,7 +30,7 @@ test.describe('Search', async () => {
       SpeakToFriendAboutReferendum,
     ]);
 
-    await page.goto(appUri + '/organize/1/campaigns/1');
+    await page.goto(appUri + '/organize/1/projects/1');
     await page.keyboard.press('/');
 
     // Check dialog open
@@ -52,7 +52,7 @@ test.describe('Search', async () => {
       SpeakToFriendAboutReferendum,
     ]);
 
-    await page.goto(appUri + '/organize/1/campaigns/1');
+    await page.goto(appUri + '/organize/1/projects/1');
 
     // Open dialog
     await page.click('data-testid=SearchDialog-activator');
@@ -88,7 +88,7 @@ test.describe('Search', async () => {
       SpeakToFriendAboutReferendum,
     ]);
 
-    await page.goto(appUri + '/organize/1/campaigns/1');
+    await page.goto(appUri + '/organize/1/projects/1');
 
     // Open modal
     await page.click('data-testid=SearchDialog-activator');

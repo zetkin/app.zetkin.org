@@ -52,7 +52,7 @@ test.describe('Task detail page', () => {
 
     moxy.setZetkinApiMock('/orgs/1/tasks/1', 'patch', taskWithFile);
 
-    await page.goto(appUri + '/organize/1/campaigns/1/calendar/tasks/1');
+    await page.goto(appUri + '/organize/1/projects/1/calendar/tasks/1');
 
     await page.locator('data-testid=TaskPreviewSection-addImage').click();
 
@@ -118,7 +118,7 @@ test.describe('Task detail page', () => {
       SpeakToFriend
     );
 
-    await page.goto(appUri + '/organize/1/campaigns/1/calendar/tasks/1');
+    await page.goto(appUri + '/organize/1/projects/1/calendar/tasks/1');
 
     expect(
       await page

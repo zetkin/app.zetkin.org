@@ -106,7 +106,7 @@ export default function Home(): JSX.Element {
               variant="text"
             >
               <Button href="organize/1/people">People</Button>
-              <Button href="organize/1/campaigns">Campaigns</Button>
+              <Button href="organize/1/projects">Projects</Button>
             </ButtonGroup>
           </div>
         )}

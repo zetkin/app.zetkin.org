@@ -371,7 +371,7 @@ const CalendarBar = ({
 
   return (
     <Box height={1} position="relative" width="0.5rem">
-      <NextLink href={`/organize/${orgId}/campaigns/${id}`} passHref>
+      <NextLink href={`/organize/${orgId}/projects/${id}`} passHref>
         <Link underline="hover">
           <Tooltip
             arrow

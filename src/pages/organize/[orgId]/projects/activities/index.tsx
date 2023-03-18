@@ -77,7 +77,7 @@ const CampaignActivitiesPage: PageWithLayout<CampaignActivitiesPageProps> = ({
     <Box>
       {!hasActivities && (
         <NoActivities
-          href={`/organize/${orgId}/campaigns`}
+          href={`/organize/${orgId}/projects`}
           linkMessage={messages.allProjects.linkToSummary()}
           message={messages.allProjects.noActivities()}
         />

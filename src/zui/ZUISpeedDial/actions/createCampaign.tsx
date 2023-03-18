@@ -29,7 +29,7 @@ const DialogContent: React.FunctionComponent<DialogContentBaseProps> = ({
         queryClient.invalidateQueries('campaigns');
         closeDialog();
         // Redirect to campaign page
-        router.push(`/organize/${orgId}/campaigns/${newCampaign.id}`);
+        router.push(`/organize/${orgId}/projects/${newCampaign.id}`);
       },
     });
   };
