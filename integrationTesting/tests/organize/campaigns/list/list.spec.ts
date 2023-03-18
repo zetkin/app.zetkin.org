@@ -21,7 +21,7 @@ test.describe('Campaigns list page ', () => {
       WelcomeNewMembers,
     ]);
 
-    await page.goto(appUri + '/organize/1/campaigns');
+    await page.goto(appUri + '/organize/1/projects');
 
     const numCampaignCards = await page.$$eval(
       'data-testid=campaign-card',

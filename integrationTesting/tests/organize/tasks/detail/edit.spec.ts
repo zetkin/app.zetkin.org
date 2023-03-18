@@ -27,7 +27,7 @@ test.describe('Task detail page', async () => {
       title: newTitle,
     });
 
-    await page.goto(appUri + '/organize/1/campaigns/1/calendar/tasks/1');
+    await page.goto(appUri + '/organize/1/projects/1/calendar/tasks/1');
 
     // Open modal
     await page.click('data-testid=ZUIEllipsisMenu-menuActivator');
@@ -56,7 +56,7 @@ test.describe('Task detail page', async () => {
   }) => {
     moxy.setZetkinApiMock('/orgs/1/tasks/1', 'patch', {}, 401);
 
-    await page.goto(appUri + '/organize/1/campaigns/1/calendar/tasks/1');
+    await page.goto(appUri + '/organize/1/projects/1/calendar/tasks/1');
 
     // Open modal
     await page.click('data-testid=ZUIEllipsisMenu-menuActivator');

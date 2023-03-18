@@ -28,7 +28,7 @@ test.describe('Campaign detail page', async () => {
   }) => {
     moxy.setZetkinApiMock('/orgs/1/search/person', 'post', [RosaLuxemburg]);
 
-    await page.goto(appUri + '/organize/1/campaigns/1');
+    await page.goto(appUri + '/organize/1/projects/1');
 
     // Open modal
     await page.click('data-testid=ZUIEllipsisMenu-menuActivator');
@@ -69,7 +69,7 @@ test.describe('Campaign detail page', async () => {
   }) => {
     moxy.setZetkinApiMock('/orgs/1/campaigns/1', 'patch', {}, 401);
 
-    await page.goto(appUri + '/organize/1/campaigns/1');
+    await page.goto(appUri + '/organize/1/projects/1');
 
     // Open modal
     await page.click('data-testid=ZUIEllipsisMenu-menuActivator');
