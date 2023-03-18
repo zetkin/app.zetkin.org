@@ -9,7 +9,6 @@ import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import SingleCampaignLayout from 'features/campaigns/layout/SingleCampaignLayout';
 import { useQuery } from 'react-query';
-import ZUISpeedDial, { ACTIONS } from 'zui/ZUISpeedDial';
 
 import { campaignTasksResource } from 'features/tasks/api/tasks';
 import { useMessages } from 'core/i18n';
@@ -120,7 +119,6 @@ const CampaignCalendarPage: PageWithLayout<OrganizeCalendarPageProps> = ({
         events={events}
         tasks={tasks}
       />
-      <ZUISpeedDial actions={[ACTIONS.CREATE_TASK]} />
     </>
   );
 };

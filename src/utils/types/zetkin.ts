@@ -167,6 +167,10 @@ export interface ZetkinCallAssignment {
   title: string;
 }
 
+export type ZetkinCallAssignmentPostBody = Partial<
+  Omit<ZetkinCallAssignment, 'organization'>
+>;
+
 export interface ZetkinSurvey {
   title: string;
   id: number;
@@ -182,6 +186,11 @@ export interface ZetkinSurvey {
   expires: string | null;
   campaign: { id: number; title: string } | null;
   org_access: 'sameorg' | 'suborgs';
+}
+
+export interface ZetkinSurveyPostBody
+  extends Partial<Omit<ZetkinSurvey, 'organization' | 'id'>> {
+  title: string;
 }
 
 export interface ZetkinSurveyExtended extends ZetkinSurvey {

@@ -39,6 +39,9 @@ export default makeMessages('feat.campaigns', {
       error: m('There was an error creating the campaign'),
       newCampaign: m('My campaign'),
     },
+    createTask: {
+      title: m('Create task'),
+    },
     deleteCampaign: {
       cancel: m('Cancel'),
       error: m('There was an error deleting the campaign'),
@@ -82,6 +85,10 @@ export default makeMessages('feat.campaigns', {
     summary: m('Summary'),
   },
   linkGroup: {
+    createActivity: m('Create activity'),
+    createCallAssignment: m('Create call assignment'),
+    createSurvey: m('Create survey'),
+    createTask: m('Create task'),
     public: m('Public Page'),
     settings: m('Edit Settings'),
   },

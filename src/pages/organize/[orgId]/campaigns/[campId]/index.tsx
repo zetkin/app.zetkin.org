@@ -16,7 +16,6 @@ import { useMessages } from 'core/i18n';
 import ZUIPerson from 'zui/ZUIPerson';
 import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
 import ZUISection from 'zui/ZUISection';
-import ZUISpeedDial, { ACTIONS } from 'zui/ZUISpeedDial';
 
 import messageIds from 'features/campaigns/l10n/messageIds';
 
@@ -149,7 +148,6 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({
             </ZUISection>
           </Grid>
         </Grid>
-        <ZUISpeedDial actions={[ACTIONS.CREATE_TASK]} />
       </>
     </>
   );
