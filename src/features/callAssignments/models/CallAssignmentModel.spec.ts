@@ -49,6 +49,7 @@ describe('CallAssignmentModel', () => {
             {
               campaign: null,
               cooldown: 3,
+              description: '',
               disable_caller_notes: false,
               end_date: null,
               expose_target_details: false,
@@ -58,6 +59,10 @@ describe('CallAssignmentModel', () => {
               },
               id: 2,
               instructions: 'Be nice when you call people.',
+              organization: {
+                id: 1,
+                title: '',
+              },
               start_date: null,
               target: {
                 filter_spec: [],
@@ -85,6 +90,7 @@ describe('CallAssignmentModel', () => {
             {
               campaign: null,
               cooldown: 3,
+              description: '',
               disable_caller_notes: false,
               end_date: null,
               expose_target_details: false,
@@ -94,6 +100,10 @@ describe('CallAssignmentModel', () => {
               },
               id: 2,
               instructions: 'Be nice when you call people.',
+              organization: {
+                id: 1,
+                title: '',
+              },
               start_date: null,
               target: {
                 filter_spec: [
@@ -131,6 +141,7 @@ describe('CallAssignmentModel', () => {
           {
             campaign: null,
             cooldown: 3,
+            description: '',
             disable_caller_notes: false,
             end_date: endDate,
             expose_target_details: false,
@@ -140,6 +151,10 @@ describe('CallAssignmentModel', () => {
             },
             id: 2,
             instructions: 'Be nice when you call people.',
+            organization: {
+              id: 1,
+              title: '',
+            },
             start_date: startDate,
             target: {
               filter_spec: [{ config: {}, type: FILTER_TYPE.ALL }],
@@ -280,6 +295,7 @@ describe('CallAssignmentModel', () => {
             {
               campaign: null,
               cooldown: 3,
+              description: '',
               disable_caller_notes: false,
               end_date: null,
               expose_target_details: false,
@@ -289,6 +305,10 @@ describe('CallAssignmentModel', () => {
               },
               id: 2,
               instructions: 'Be nice when you call people.',
+              organization: {
+                id: 1,
+                title: '',
+              },
               start_date: null,
               target: {
                 filter_spec: [],
@@ -321,6 +341,7 @@ describe('CallAssignmentModel', () => {
             {
               campaign: null,
               cooldown: 3,
+              description: '',
               disable_caller_notes: false,
               end_date: null,
               expose_target_details: false,
@@ -330,6 +351,10 @@ describe('CallAssignmentModel', () => {
               },
               id: 2,
               instructions: 'Be nice when you call people.',
+              organization: {
+                id: 1,
+                title: '',
+              },
               start_date: null,
               target: {
                 filter_spec: [
@@ -397,6 +422,7 @@ describe('CallAssignmentModel', () => {
             {
               campaign: null,
               cooldown: 3,
+              description: '',
               disable_caller_notes: false,
               end_date: null,
               expose_target_details: false,
@@ -406,6 +432,10 @@ describe('CallAssignmentModel', () => {
               },
               id: 2,
               instructions: 'Be nice when you call people.',
+              organization: {
+                id: 1,
+                title: '',
+              },
               start_date: null,
               target: {
                 filter_spec: [
@@ -617,6 +647,7 @@ describe('CallAssignmentModel', () => {
           {
             campaign: null,
             cooldown: 3,
+            description: '',
             disable_caller_notes: false,
             end_date: endDate,
             expose_target_details: false,
@@ -626,6 +657,10 @@ describe('CallAssignmentModel', () => {
             },
             id: 2,
             instructions: 'Be nice when you call people.',
+            organization: {
+              id: 1,
+              title: '',
+            },
             start_date: startDate,
             target: {
               filter_spec: [{ config: {}, type: FILTER_TYPE.ALL }],
@@ -686,6 +721,7 @@ describe('CallAssignmentModel', () => {
           {
             campaign: null,
             cooldown: 3,
+            description: '',
             disable_caller_notes: false,
             end_date: endDate,
             expose_target_details: false,
@@ -695,6 +731,10 @@ describe('CallAssignmentModel', () => {
             },
             id: 2,
             instructions: 'Be nice when you call people.',
+            organization: {
+              id: 1,
+              title: '',
+            },
             start_date: startDate,
             target: {
               filter_spec: [{ config: {}, type: FILTER_TYPE.ALL }],

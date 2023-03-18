@@ -10,11 +10,11 @@ import TaskListItem from './TaskListItem';
 import { useMessages } from 'core/i18n';
 import {
   ACTIVITIES,
-  CampaignAcitivity,
+  CampaignActivity,
 } from 'features/campaigns/models/CampaignActivitiesModel';
 
 interface ActivitiesProps {
-  activities: CampaignAcitivity[];
+  activities: CampaignActivity[];
   orgId: number;
 }
 
@@ -50,7 +50,7 @@ const Activities = ({ activities, orgId }: ActivitiesProps) => {
 };
 
 interface ActivityListProps {
-  allActivities: CampaignAcitivity[];
+  allActivities: CampaignActivity[];
   filters: ACTIVITIES[];
   orgId: number;
   searchString: string;

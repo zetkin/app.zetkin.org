@@ -6,7 +6,7 @@ import { ModelBase } from 'core/models';
 import SurveysRepo from 'features/surveys/repos/SurveysRepo';
 import TasksRepo from 'features/tasks/repos/TasksRepo';
 import { IFuture, LoadingFuture, ResolvedFuture } from 'core/caching/futures';
-import { ZetkinSurveyExtended, ZetkinTask } from 'utils/types/zetkin';
+import { ZetkinCallAssignment, ZetkinSurveyExtended, ZetkinTask } from 'utils/types/zetkin';
 
 export enum ACTIVITIES {
   CALL_ASSIGNMENT = 'callAssignment',
@@ -14,9 +14,9 @@ export enum ACTIVITIES {
   TASK = 'task',
 }
 
-export type CampaignAcitivity =
+export type CampaignActivity =
   | (ZetkinSurveyExtended & { kind: ACTIVITIES.SURVEY })
-  | (CallAssignmentData & { kind: ACTIVITIES.CALL_ASSIGNMENT })
+  | (ZetkinCallAssignment & { kind: ACTIVITIES.CALL_ASSIGNMENT })
   | (ZetkinTask & { kind: ACTIVITIES.TASK });
 
 export default class CampaignActivitiesModel extends ModelBase {
@@ -33,7 +33,7 @@ export default class CampaignActivitiesModel extends ModelBase {
     this._tasksRepo = new TasksRepo(env);
   }
 
-  getCampaignActivities(campId: number): IFuture<CampaignAcitivity[]> {
+  getCampaignActivities(campId: number): IFuture<CampaignActivity[]> {
     const activities = this.getCurrentActivities().data;
     const filtered = activities?.filter(
       (activity) => activity.campaign?.id === campId
@@ -41,7 +41,7 @@ export default class CampaignActivitiesModel extends ModelBase {
     return new ResolvedFuture(filtered || []);
   }
 
-  getCurrentActivities(): IFuture<CampaignAcitivity[]> {
+  getCurrentActivities(): IFuture<CampaignActivity[]> {
     const callAssignmentsFuture = this._callAssignmentsRepo.getCallAssignments(
       this._orgId
     );
@@ -56,21 +56,21 @@ export default class CampaignActivitiesModel extends ModelBase {
       return new LoadingFuture();
     }
 
-    const callAssignments: CampaignAcitivity[] = callAssignmentsFuture.data
+    const callAssignments: CampaignActivity[] = callAssignmentsFuture.data
       .filter((ca) => !ca.end_date || isInFuture(ca.end_date))
       .map((ca) => ({
         ...ca,
         kind: ACTIVITIES.CALL_ASSIGNMENT,
       }));
 
-    const surveys: CampaignAcitivity[] = surveysFuture.data
+    const surveys: CampaignActivity[] = surveysFuture.data
       .filter((survey) => !survey.expires || isInFuture(survey.expires))
       .map((survey) => ({
         ...survey,
         kind: ACTIVITIES.SURVEY,
       }));
 
-    const tasks: CampaignAcitivity[] = tasksFuture.data
+    const tasks: CampaignActivity[] = tasksFuture.data
       .filter((task) => !task.expires || isInFuture(task.expires))
       .map((task) => ({
         ...task,
@@ -95,7 +95,7 @@ export default class CampaignActivitiesModel extends ModelBase {
     return new ResolvedFuture(sorted);
   }
 
-  getStandaloneActivities(): IFuture<CampaignAcitivity[]> {
+  getStandaloneActivities(): IFuture<CampaignActivity[]> {
     const activities = this.getCurrentActivities().data;
     const filtered = activities?.filter(
       (activity) => activity.campaign === null
@@ -104,7 +104,7 @@ export default class CampaignActivitiesModel extends ModelBase {
   }
 }
 
-function getStartDate(activity: CampaignAcitivity): Date | null {
+function getStartDate(activity: CampaignActivity): Date | null {
   if (activity.kind === ACTIVITIES.SURVEY) {
     if (!activity.published) {
       return null;

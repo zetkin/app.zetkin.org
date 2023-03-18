@@ -1,4 +1,4 @@
-import { ZetkinQuery, ZetkinTag } from 'utils/types/zetkin';
+import { ZetkinCallAssignment, ZetkinTag } from 'utils/types/zetkin';
 
 export interface CallAssignmentCaller {
   id: number;
@@ -8,19 +8,8 @@ export interface CallAssignmentCaller {
   excluded_tags: ZetkinTag[];
 }
 
-export interface CallAssignmentData {
-  campaign: { id: number; title: string } | null;
-  cooldown: number;
-  disable_caller_notes: boolean;
-  end_date: string | null;
-  expose_target_details: boolean;
-  goal: ZetkinQuery;
-  id: number;
-  instructions: string;
-  start_date: string | null;
-  target: ZetkinQuery;
-  title: string;
-}
+// TODO: Consolidate these
+export type CallAssignmentData = ZetkinCallAssignment;
 
 export interface CallAssignmentStats {
   id: number;
