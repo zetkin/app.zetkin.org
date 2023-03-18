@@ -3,7 +3,15 @@ import { ArrowDropDown } from '@mui/icons-material';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import theme from 'theme';
-import { FunctionComponent, MouseEvent, ReactNode, useState } from 'react';
+import {
+  Children,
+  cloneElement,
+  FunctionComponent,
+  isValidElement,
+  MouseEvent,
+  ReactNode,
+  useState,
+} from 'react';
 
 const ZUIButtonMenu: FunctionComponent<{
   children: ReactNode;
@@ -17,6 +25,24 @@ const ZUIButtonMenu: FunctionComponent<{
   const handleClose = () => {
     setAnchorEl(null);
   };
+  const handleChildClick = (childOnClick: () => void) => () => {
+    handleClose();
+    if (childOnClick) {
+      childOnClick();
+    }
+  };
+
+  const modifiedChildren = Children.map(children, (child) => {
+    if (!isValidElement(child) || !('onClick' in child.props)) {
+      return child;
+    }
+
+    return cloneElement(child, {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      onClick: handleChildClick(child.props.onClick as () => void),
+    });
+  });
 
   return (
     <div>
@@ -56,7 +82,7 @@ const ZUIButtonMenu: FunctionComponent<{
           vertical: 'top',
         }}
       >
-        {children}
+        {modifiedChildren}
       </Menu>
     </div>
   );
