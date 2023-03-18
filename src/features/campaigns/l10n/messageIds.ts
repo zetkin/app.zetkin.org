@@ -1,6 +1,18 @@
 import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('feat.campaigns', {
+  activitiesCard: {
+    button: m('Browse and create activities'),
+    endsTomorrow: m('ends tomorrow'),
+    noActivities: m('There are no activities in this campaign yet'),
+    nothingToday: m('Nothing more to do today'),
+    nothingTomorrow: m('Nothing planned for tomorrow'),
+    startsTomorrow: m('starts tomorrow'),
+    thisWeekCard: m('Also this week'),
+    title: m('Campaign activities'),
+    todayCard: m('Today'),
+    tomorrowCard: m('Tomorrow'),
+  },
   all: {
     cardCTA: m('Go to project'),
     create: m('Create new project'),
