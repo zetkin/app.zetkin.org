@@ -5,7 +5,9 @@ import CallAssignmentModel, {
 import { HeadsetMic, PhoneOutlined } from '@mui/icons-material';
 
 import useModel from 'core/useModel';
-import ActivityListItem, { STATUS_COLORS } from './ActivityListItem';
+import OverviewListItem, {
+  STATUS_COLORS,
+} from '../OverviewList/OverviewListItem';
 
 interface CallAssignmentListItemProps {
   orgId: number;
@@ -44,17 +46,14 @@ const CallAssignmentListItem: FC<CallAssignmentListItemProps> = ({
   const callsMade = stats?.callsMade.toString() || '';
 
   return (
-    <ActivityListItem
-      blueChipValue={ready}
+    <OverviewListItem
       color={color}
       endNumber={callsMade}
-      greenChipValue={done}
       href={`/organize/${orgId}/campaigns/${
         data.campaign?.id ?? 'standalone'
       }/callassignments/${caId}`}
-      orangeChipValue={blocked}
       PrimaryIcon={HeadsetMic}
-      SecondaryIcon={PhoneOutlined}
+      SecondaryIcon={HeadsetMic}
       title={data.title}
     />
   );

@@ -79,6 +79,7 @@ export default makeMessages('feat.campaigns', {
     archive: m('Archive'),
     calendar: m('Calendar'),
     insights: m('Insights'),
+    overview: m('Overview'),
     summary: m('Summary'),
   },
   linkGroup: {
@@ -93,6 +94,19 @@ export default makeMessages('feat.campaigns', {
     heading: m('Mobilization and outreach (none configured)'),
   },
   noManager: m('No Campaign Manager'),
+  overviewList: {
+    button: m('Browse and create activities'),
+    noActivities: m('There are no activities in this campaign yet'),
+    nothingToday: m('Nothing more to do today'),
+    nothingTomorrow: m('Nothing planned for tomorrow'),
+    startsTomorrow: m('starts tomorrow'),
+    endsTomorrow: m('ends tomorrow'),
+    thisWeekCard: m('Also this week'),
+    todayCard: m('Today'),
+    tomorrowCard: m('Tomorrow'),
+
+    title: m('Campaign activities'),
+  },
   taskLayout: {
     tabs: {
       assignees: m('Assignees'),

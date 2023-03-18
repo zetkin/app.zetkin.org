@@ -1,10 +1,17 @@
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { useQuery } from 'react-query';
-import { Box, Grid, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  CardContent,
+  Divider,
+  Grid,
+  Link,
+  Typography,
+} from '@mui/material';
 
 import { campaignTasksResource } from 'features/tasks/api/tasks';
-import EventList from 'features/events/components/EventList';
 import getCampaign from 'features/campaigns/fetching/getCampaign';
 import getCampaignEvents from 'features/campaigns/fetching/getCampaignEvents';
 import getOrg from 'utils/fetching/getOrg';
@@ -13,71 +20,40 @@ import { scaffold } from 'utils/next';
 import SingleCampaignLayout from 'features/campaigns/layout/SingleCampaignLayout';
 import TaskList from 'features/tasks/components/TaskList';
 import { useMessages } from 'core/i18n';
-import ZUIPerson from 'zui/ZUIPerson';
-import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
-import ZUISection from 'zui/ZUISection';
-import ZUISpeedDial, { ACTIONS } from 'zui/ZUISpeedDial';
+import makeStyles from '@mui/styles/makeStyles';
 
 import messageIds from 'features/campaigns/l10n/messageIds';
+import ZUICard from 'zui/ZUICard';
+import useModel from 'core/useModel';
+import CampaignActivitiesModel, {
+  ACTIVITIES,
+  CampaignAcitivity,
+} from 'features/campaigns/models/CampaignAcitivitiesModel';
 
-const scaffoldOptions = {
-  authLevelRequired: 2,
-  localeScope: ['layout.organize', 'pages.organizeCampaigns'],
-};
+import SurveyListItem from 'features/campaigns/components/ActivityList/SurveyListItem';
+import SurveyOverviewListItem from 'features/campaigns/components/OverviewList/SurveyOverviewListItem';
+import CallAssignmentOverviewListItem from 'features/campaigns/components/OverviewList/CallAssignmentOverviewListItem';
+import TasksOverviewListItem from 'features/campaigns/components/OverviewList/TasksOverviewListItem';
+import SurveyDataModel from 'features/surveys/models/SurveyDataModel';
+import NoActivitiesOverview from 'features/campaigns/components/OverviewList/NoActivities';
+//import NoActivities from 'features/campaigns/components/NoActivities';
 
-export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
-  const { orgId, campId } = ctx.params!;
+export const getServerSideProps: GetServerSideProps = scaffold(
+  async (ctx) => {
+    const { orgId, campId } = ctx.params!;
 
-  const { prefetch: prefetchCampaignTasks } = campaignTasksResource(
-    orgId as string,
-    campId as string
-  );
-  const { state: campaignTasksState } = await prefetchCampaignTasks(ctx);
-
-  await ctx.queryClient.prefetchQuery(
-    ['org', orgId],
-    getOrg(orgId as string, ctx.apiFetch)
-  );
-  const orgState = ctx.queryClient.getQueryState(['org', orgId]);
-
-  await ctx.queryClient.prefetchQuery(
-    ['campaignEvents', orgId, campId],
-    getCampaignEvents(orgId as string, campId as string, ctx.apiFetch)
-  );
-  const campaignEventsState = ctx.queryClient.getQueryState([
-    'campaignEvents',
-    orgId,
-    campId,
-  ]);
-
-  await ctx.queryClient.prefetchQuery(
-    ['campaign', orgId, campId],
-    getCampaign(orgId as string, campId as string, ctx.apiFetch)
-  );
-  const campaignState = ctx.queryClient.getQueryState([
-    'campaign',
-    orgId,
-    campId,
-  ]);
-
-  if (
-    orgState?.status === 'success' &&
-    campaignEventsState?.status === 'success' &&
-    campaignState?.status === 'success' &&
-    campaignTasksState?.status === 'success'
-  ) {
     return {
       props: {
-        campId,
         orgId,
+        campId,
       },
     };
-  } else {
-    return {
-      notFound: true,
-    };
+  },
+  {
+    authLevelRequired: 2,
+    localeScope: ['layout.organize.surveys', 'pages.organizeSurvey'],
   }
-}, scaffoldOptions);
+);
 
 type CampaignCalendarPageProps = {
   campId: string;
@@ -90,67 +66,224 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({
 }) => {
   const messages = useMessages(messageIds);
 
-  const tasksQuery = campaignTasksResource(orgId, campId).useQuery();
-
-  const eventsQuery = useQuery(
-    ['campaignEvents', orgId, campId],
-    getCampaignEvents(orgId, campId)
-  );
   const campaignQuery = useQuery(
     ['campaign', orgId, campId],
     getCampaign(orgId, campId)
   );
-  const events = eventsQuery.data || [];
-  const tasks = tasksQuery.data || [];
+
   const campaign = campaignQuery.data;
+  const model = useModel(
+    (env) => new CampaignActivitiesModel(env, parseInt(orgId))
+  );
+
+  const surveyModel = useModel(
+    (env) => new SurveyDataModel(env, parseInt(orgId), 24)
+  );
+  console.log(surveyModel.getData().data);
+
+  const today = new Date();
+  const tomorrow = new Date(today);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+
+  const oneWeekFromNow = new Date(today);
+  oneWeekFromNow.setDate(today.getDate() + 8);
+
+  const todaysActivities: CampaignAcitivity[] = model
+    .getActivitiesFilteredByTime(
+      parseInt(campId),
+      today.toISOString().slice(0, 10)
+    )
+    .slice(0, 8);
+
+  const tomorrowActivities: CampaignAcitivity[] = model
+    .getActivitiesFilteredByTime(
+      parseInt(campId),
+      tomorrow.toISOString().slice(0, 10)
+    )
+    .slice(0, 8);
+
+  const alsoThisWeekActivities: CampaignAcitivity[] =
+    model.getActivitiesForTheWeek(parseInt(campId));
+
+  console.log('week', alsoThisWeekActivities);
+
+  console.log('today', todaysActivities);
+  console.log('tomorrow', tomorrowActivities);
 
   return (
     <>
       <Head>
         <title>{campaign?.title}</title>
       </Head>
-      <>
-        <Box mb={campaign?.info_text || campaign?.manager ? 2 : 0}>
-          <Grid container spacing={2}>
-            {campaign?.info_text && (
-              <Grid item lg={6} md={12} xs={12}>
-                <Typography variant="body1">{campaign?.info_text}</Typography>
-              </Grid>
-            )}
-            {campaign?.manager && (
-              <Grid item xs={12}>
-                <ZUIPersonHoverCard personId={campaign.manager.id}>
-                  <ZUIPerson
-                    id={campaign.manager.id}
-                    name={campaign.manager.name}
-                    subtitle={messages.campaignManager()}
-                  />
-                </ZUIPersonHoverCard>
-              </Grid>
-            )}
-          </Grid>
-        </Box>
 
-        <Grid container spacing={2}>
-          {/* Events */}
-          <Grid item md={6} sm={12} xs={12}>
-            <ZUISection title={messages.events()}>
-              <EventList
-                events={events ?? []}
-                hrefBase={`/organize/${orgId}/campaigns/${campId}`}
+      <Box>
+        <Grid container spacing={1}>
+          <Grid
+            container
+            spacing={1}
+            style={{
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}
+          >
+            <Typography
+              style={{
+                margin: '20px',
+                padding: '20px',
+              }}
+              variant="h4"
+            >
+              {messages.overviewList.title()}
+            </Typography>
+            <Button
+              href={`/organize/${orgId}/campaigns/${campId}/activities`}
+              variant="text"
+              color="info"
+              size="medium"
+            >
+              {messages.overviewList.button()}
+            </Button>
+          </Grid>
+
+          {todaysActivities.length === 0 && tomorrowActivities.length === 0 && (
+            <Grid spacing={1}>
+              <NoActivitiesOverview
+                href={`/organize/${orgId}/campaigns/${campId}/activities`}
+                message={messages.overviewList.noActivities()}
               />
-            </ZUISection>
-          </Grid>
+            </Grid>
+          )}
+          {todaysActivities.length > 0 && (
+            <Grid container spacing={3}>
+              <Grid item md={4} xs={4}>
+                <ZUICard header={messages.overviewList.todayCard()}>
+                  {todaysActivities.length === 0 && (
+                    <NoActivitiesOverview
+                      message={messages.overviewList.nothingToday()}
+                    />
+                  )}
+                  {todaysActivities?.map((activity, index) => {
+                    if (activity.kind === ACTIVITIES.CALL_ASSIGNMENT) {
+                      return (
+                        <Box key={`ca-${activity.id}`}>
+                          {index > 0 && <Divider />}
+                          <CallAssignmentOverviewListItem
+                            callAssignmentId={activity.id}
+                            orgId={parseInt(orgId)}
+                          />
+                        </Box>
+                      );
+                    } else if (activity.kind === ACTIVITIES.SURVEY) {
+                      return (
+                        <Box key={`survey-${activity.id}`}>
+                          {index > 0 && <Divider />}
+                          <SurveyOverviewListItem
+                            orgId={parseInt(orgId)}
+                            surveyId={activity.id}
+                          />
+                        </Box>
+                      );
+                    } else if (activity.kind === ACTIVITIES.TASK) {
+                      return (
+                        <Box key={`task-${activity.id}`}>
+                          {index > 0 && <Divider />}
+                          <TasksOverviewListItem
+                            orgId={parseInt(orgId)}
+                            taskId={activity.id}
+                          />
+                        </Box>
+                      );
+                    }
+                  })}
+                </ZUICard>
+              </Grid>
 
-          {/* Tasks */}
-          <Grid item md={6} sm={12} xs={12}>
-            <ZUISection title={messages.tasks()}>
-              <TaskList tasks={tasks ?? []} />
-            </ZUISection>
-          </Grid>
+              <Grid item md={4} xs={4}>
+                <ZUICard header={messages.overviewList.tomorrowCard()}>
+                  {tomorrowActivities.length === 0 && (
+                    <NoActivitiesOverview
+                      message={messages.overviewList.nothingTomorrow()}
+                    />
+                  )}
+                  {tomorrowActivities.length > 0 &&
+                    tomorrowActivities?.map((activity, index) => {
+                      if (activity.kind === ACTIVITIES.CALL_ASSIGNMENT) {
+                        return (
+                          <Box key={`ca-${activity.id}`}>
+                            {index > 0 && <Divider />}
+                            <CallAssignmentOverviewListItem
+                              callAssignmentId={activity.id}
+                              orgId={parseInt(orgId)}
+                              subtitle={messages.overviewList.startsTomorrow()}
+                            />
+                          </Box>
+                        );
+                      } else if (activity.kind === ACTIVITIES.SURVEY) {
+                        return (
+                          <Box key={`survey-${activity.id}`}>
+                            {index > 0 && <Divider />}
+                            <SurveyOverviewListItem
+                              orgId={parseInt(orgId)}
+                              surveyId={activity.id}
+                            />
+                          </Box>
+                        );
+                      } else if (activity.kind === ACTIVITIES.TASK) {
+                        return (
+                          <Box key={`task-${activity.id}`}>
+                            {index > 0 && <Divider />}
+                            <TasksOverviewListItem
+                              orgId={parseInt(orgId)}
+                              taskId={activity.id}
+                            />
+                          </Box>
+                        );
+                      }
+                    })}
+                </ZUICard>
+              </Grid>
+
+              <Grid item md={4} xs={4}>
+                <ZUICard header={messages.overviewList.thisWeekCard()}>
+                  {alsoThisWeekActivities?.map((activity, index) => {
+                    if (activity.kind === ACTIVITIES.CALL_ASSIGNMENT) {
+                      return (
+                        <Box key={`ca-${activity.id}`}>
+                          {index > 0 && <Divider />}
+                          <CallAssignmentOverviewListItem
+                            callAssignmentId={activity.id}
+                            orgId={parseInt(orgId)}
+                          />
+                        </Box>
+                      );
+                    } else if (activity.kind === ACTIVITIES.SURVEY) {
+                      return (
+                        <Box key={`survey-${activity.id}`}>
+                          {index > 0 && <Divider />}
+                          <SurveyOverviewListItem
+                            orgId={parseInt(orgId)}
+                            surveyId={activity.id}
+                          />
+                        </Box>
+                      );
+                    } else if (activity.kind === ACTIVITIES.TASK) {
+                      return (
+                        <Box key={`task-${activity.id}`}>
+                          {index > 0 && <Divider />}
+                          <TasksOverviewListItem
+                            orgId={parseInt(orgId)}
+                            taskId={activity.id}
+                          />
+                        </Box>
+                      );
+                    }
+                  })}
+                </ZUICard>
+              </Grid>
+            </Grid>
+          )}
         </Grid>
-        <ZUISpeedDial actions={[ACTIONS.CREATE_TASK]} />
-      </>
+      </Box>
     </>
   );
 };
