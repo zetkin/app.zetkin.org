@@ -1,6 +1,6 @@
+import { Alert } from '@mui/material';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { Alert, MenuItem } from '@mui/material';
 import {
   AssignmentOutlined,
   CheckBoxOutlined,
@@ -109,20 +109,26 @@ const CampaignActionButtons: React.FunctionComponent<
         </Link>
       </Box>
       <Box mr={1}>
-        <ZUIButtonMenu text={messages.linkGroup.createActivity()}>
-          <MenuItem disableRipple onClick={handleCreateCallAssignment}>
-            <HeadsetMic />
-            {messages.linkGroup.createCallAssignment()}
-          </MenuItem>
-          <MenuItem disableRipple onClick={handleCreateSurvey}>
-            <AssignmentOutlined />
-            {messages.linkGroup.createSurvey()}
-          </MenuItem>
-          <MenuItem disableRipple onClick={handleCreateTask}>
-            <CheckBoxOutlined />
-            {messages.linkGroup.createTask()}
-          </MenuItem>
-        </ZUIButtonMenu>
+        <ZUIButtonMenu
+          items={[
+            {
+              icon: <HeadsetMic />,
+              label: messages.linkGroup.createCallAssignment(),
+              onClick: handleCreateCallAssignment,
+            },
+            {
+              icon: <AssignmentOutlined />,
+              label: messages.linkGroup.createSurvey(),
+              onClick: handleCreateSurvey,
+            },
+            {
+              icon: <CheckBoxOutlined />,
+              label: messages.linkGroup.createTask(),
+              onClick: handleCreateTask,
+            },
+          ]}
+          label={messages.linkGroup.createActivity()}
+        />
       </Box>
       <Box>
         <ZUIEllipsisMenu

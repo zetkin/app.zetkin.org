@@ -2,21 +2,20 @@ import { alpha } from '@mui/material/styles';
 import { ArrowDropDown } from '@mui/icons-material';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
+import { MenuItem } from '@mui/material';
 import theme from 'theme';
-import {
-  Children,
-  cloneElement,
-  FunctionComponent,
-  isValidElement,
-  MouseEvent,
-  ReactNode,
-  useState,
-} from 'react';
+import { FC, MouseEvent, useState } from 'react';
 
-const ZUIButtonMenu: FunctionComponent<{
-  children: ReactNode;
-  text: string;
-}> = ({ text, children }) => {
+type ZUIButtonMenuProps = {
+  items: {
+    icon: JSX.Element;
+    label: string;
+    onClick: () => void;
+  }[];
+  label: string;
+};
+
+const ZUIButtonMenu: FC<ZUIButtonMenuProps> = ({ items, label }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: MouseEvent<HTMLElement>) => {
@@ -25,24 +24,6 @@ const ZUIButtonMenu: FunctionComponent<{
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const handleChildClick = (childOnClick: () => void) => () => {
-    handleClose();
-    if (childOnClick) {
-      childOnClick();
-    }
-  };
-
-  const modifiedChildren = Children.map(children, (child) => {
-    if (!isValidElement(child) || !('onClick' in child.props)) {
-      return child;
-    }
-
-    return cloneElement(child, {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      onClick: handleChildClick(child.props.onClick as () => void),
-    });
-  });
 
   return (
     <div>
@@ -51,7 +32,7 @@ const ZUIButtonMenu: FunctionComponent<{
         onClick={handleClick}
         variant="contained"
       >
-        {text}
+        {label}
       </Button>
       <Menu
         anchorEl={anchorEl}
@@ -82,7 +63,21 @@ const ZUIButtonMenu: FunctionComponent<{
           vertical: 'top',
         }}
       >
-        {modifiedChildren}
+        {items.map((item, idx) => {
+          return (
+            <MenuItem
+              key={idx}
+              disableRipple
+              onClick={() => {
+                handleClose();
+                item.onClick();
+              }}
+            >
+              {item.icon}
+              {item.label}
+            </MenuItem>
+          );
+        })}
       </Menu>
     </div>
   );
