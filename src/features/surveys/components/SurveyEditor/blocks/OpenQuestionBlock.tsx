@@ -25,6 +25,7 @@ interface OpenQuestionBlockProps {
   model: SurveyDataModel;
   onEditModeEnter: () => void;
   onEditModeExit: () => void;
+  readOnly: boolean;
 }
 
 enum FIELDTYPE {
@@ -38,6 +39,7 @@ const OpenQuestionBlock: FC<OpenQuestionBlockProps> = ({
   model,
   onEditModeEnter,
   onEditModeExit,
+  readOnly,
 }) => {
   const elemQuestion = element.question;
   const messages = useMessages(messageIds);
@@ -63,6 +65,7 @@ const OpenQuestionBlock: FC<OpenQuestionBlockProps> = ({
       editable,
       onEditModeEnter,
       onEditModeExit,
+      readOnly,
       save: () => {
         model.updateOpenQuestionBlock(element.id, {
           question: {
@@ -153,7 +156,7 @@ const OpenQuestionBlock: FC<OpenQuestionBlockProps> = ({
           value=""
         />
         <Box display="flex" justifyContent="end" m={2}>
-          <DeleteHideButtons element={element} model={model} />
+          {!readOnly && <DeleteHideButtons element={element} model={model} />}
         </Box>
       </Box>
     </ClickAwayListener>

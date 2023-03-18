@@ -128,7 +128,7 @@ const MonthCalendar = ({
       <Box display="flex" mr={0.5}>
         {campaigns.map((c) => {
           const campaignEvents = events
-            .filter((e) => e.campaign.id === c.id)
+            .filter((e) => e.campaign?.id === c.id)
             .sort((a, b) => {
               return (
                 new Date(a.start_time).getTime() -
@@ -198,7 +198,7 @@ const MonthCalendar = ({
               >
                 {tasksAndEvents.map((item, i) => {
                   const campaign = campaigns.find(
-                    (c) => c.id === item.data.campaign.id
+                    (c) => c.id === item.data.campaign?.id
                   );
                   return (
                     <React.Fragment key={i}>
@@ -246,7 +246,7 @@ const MonthCalendar = ({
                       >
                         {tasksAndEvents.map((item, i) => {
                           const campaign = campaigns.find(
-                            (c) => c.id === item.data.campaign.id
+                            (c) => c.id === item.data.campaign?.id
                           );
                           return (
                             <React.Fragment key={i}>

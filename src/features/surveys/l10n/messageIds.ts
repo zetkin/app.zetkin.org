@@ -69,6 +69,36 @@ export default makeMessages('feat.surveys', {
       ),
     },
   },
+  editWarning: {
+    editing: {
+      header: m('Survey can be edited'),
+      lockButton: m('Lock'),
+      safe: {
+        bullet1: m('Fixing spelling mistakes'),
+        bullet2: m('Reordering blocks'),
+        bullet3: m('Hiding questions'),
+        bullet4: m('Adding questions or options'),
+        header: m('Safe'),
+      },
+      subheader: m(
+        'Be careful not to make changes that may cause response data to be lost or corrupted.'
+      ),
+      unsafe: {
+        bullet1: m('Deleting questions (hide instead)'),
+        bullet2: m(
+          'Renaming questions or options in ways that change their meaning'
+        ),
+        header: m('Unsafe'),
+      },
+    },
+    locked: {
+      header: m('Survey locked'),
+      subheader: m(
+        'This survey has started receiving submissions. Editing the survey now may cause problems with the data. Proceed with caution.'
+      ),
+      unlockButton: m('Unlock'),
+    },
+  },
   layout: {
     actions: {
       publish: m('Publish survey'),

@@ -156,7 +156,7 @@ const WeekCalendar = ({
         <Box display="flex" flexDirection="column" mb={0.5}>
           {campaigns.map((c) => {
             const campaignEvents = events
-              .filter((e) => e.campaign.id === c.id)
+              .filter((e) => e.campaign?.id === c.id)
               .sort((a, b) => {
                 return (
                   new Date(a.start_time).getTime() -
@@ -286,7 +286,7 @@ const WeekCalendar = ({
                     .map((eventWithShiftValue) => {
                       const [shiftValue, event] = eventWithShiftValue;
                       const campaign = campaigns.find(
-                        (c) => c.id === event.campaign.id
+                        (c) => c.id === event.campaign?.id
                       );
                       return (
                         <WeekCalendarEvent

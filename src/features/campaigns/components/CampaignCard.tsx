@@ -26,7 +26,7 @@ const CampaignCard = ({ campaign, events }: CampaignCardProps): JSX.Element => {
   const { id, title } = campaign;
 
   const campaignEvents = events.filter(
-    (event) => event.campaign.id === campaign.id
+    (event) => event.campaign?.id === campaign.id
   );
   const numOfUpcomingEvents = campaignEvents.filter((event) =>
     dayjs(removeOffset(event.end_time)).isAfter(dayjs())
