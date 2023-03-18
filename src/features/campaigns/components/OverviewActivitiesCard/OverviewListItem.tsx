@@ -10,8 +10,12 @@ import {
   Typography,
 } from '@mui/material';
 
+import { isSameDate } from 'utils/dateUtils';
+import messageIds from 'features/campaigns/l10n/messageIds';
+import { Msg } from 'core/i18n';
 import theme from 'theme';
 import ZUIIconLabel from 'zui/ZUIIconLabel';
+import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 
 interface StyleProps {
   color: STATUS_COLORS;
@@ -74,6 +78,8 @@ interface OverviewListItemProps {
   color: STATUS_COLORS;
   title: string;
   endNumber: string;
+  startDate: Date | null;
+  endDate: Date | null;
 }
 
 const OverviewListItem = ({
@@ -83,8 +89,36 @@ const OverviewListItem = ({
   color,
   title,
   endNumber,
+  startDate,
+  endDate,
 }: OverviewListItemProps) => {
   const classes = useStyles({ color });
+
+  const now = new Date();
+  let label: JSX.Element | null = null;
+  if (startDate && isSameDate(startDate, now)) {
+    label = <Msg id={messageIds.activitiesCard.subtitles.startsToday} />;
+  } else if (startDate && startDate > now) {
+    label = (
+      <Msg
+        id={messageIds.activitiesCard.subtitles.startsLater}
+        values={{
+          relative: <ZUIRelativeTime datetime={startDate.toISOString()} />,
+        }}
+      />
+    );
+  } else if (endDate && isSameDate(endDate, now)) {
+    label = <Msg id={messageIds.activitiesCard.subtitles.endsToday} />;
+  } else if (endDate && endDate > now) {
+    label = (
+      <Msg
+        id={messageIds.activitiesCard.subtitles.endsLater}
+        values={{
+          relative: <ZUIRelativeTime datetime={endDate.toISOString()} />,
+        }}
+      />
+    );
+  }
 
   return (
     <Grid className={classes.container} container>
@@ -112,6 +146,22 @@ const OverviewListItem = ({
             labelColor="secondary"
           />
         </Box>
+      </Grid>
+      <Grid item lg={2} md={3} style={{ display: 'contents' }} xs={4}>
+        <Grid>
+          <Box style={{ marginTop: '5px' }}>
+            <ZUIIconLabel
+              icon={
+                <Box
+                  className={classes.dot}
+                  style={{ alignSelf: 'center', margin: 'auto' }}
+                ></Box>
+              }
+              label={label || ''}
+              labelColor={theme.palette.grey[500]}
+            />
+          </Box>
+        </Grid>
       </Grid>
     </Grid>
   );

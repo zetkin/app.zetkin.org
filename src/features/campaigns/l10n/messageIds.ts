@@ -1,3 +1,5 @@
+import { ReactElement } from 'react';
+
 import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('feat.campaigns', {
@@ -9,6 +11,12 @@ export default makeMessages('feat.campaigns', {
     nothingToday: m('Nothing more to do today'),
     nothingTomorrow: m('Nothing planned for tomorrow'),
     startsTomorrow: m('starts tomorrow'),
+    subtitles: {
+      endsLater: m<{ relative: ReactElement }>('Ends {relative}'),
+      endsToday: m('Ends today'),
+      startsLater: m<{ relative: ReactElement }>('Starts {relative}'),
+      startsToday: m('Starts today'),
+    },
     thisWeekCard: m('Also this week'),
     title: m('Campaign activities'),
     todayCard: m('Today'),

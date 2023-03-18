@@ -62,3 +62,11 @@ export function isInFuture(datestring: string): boolean {
 
   return date > now;
 }
+
+export function isSameDate(first: Date, second: Date): boolean {
+  return first.toISOString().slice(0, 10) == second.toISOString().slice(0, 10);
+}
+
+export function dateOrNull(dateString: string | null | undefined): Date | null {
+  return dateString ? new Date(dateString) : null;
+}

@@ -1,6 +1,7 @@
 import { FC } from 'react';
 import { HeadsetMic } from '@mui/icons-material';
 
+import { dateOrNull } from 'utils/dateUtils';
 import useModel from 'core/useModel';
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
 import CallAssignmentModel, {
@@ -38,7 +39,10 @@ const CallAssignmentOverviewListItem: FC<
 
   const state = dataModel.state;
   let color = STATUS_COLORS.GRAY;
-  if (state === CallAssignmentState.ACTIVE) {
+  if (
+    state === CallAssignmentState.ACTIVE ||
+    state == CallAssignmentState.OPEN
+  ) {
     color = STATUS_COLORS.GREEN;
   } else if (state === CallAssignmentState.SCHEDULED) {
     color = STATUS_COLORS.BLUE;
@@ -51,12 +55,14 @@ const CallAssignmentOverviewListItem: FC<
   return (
     <OverviewListItem
       color={color}
+      endDate={dateOrNull(assignment.end_date)}
       endNumber={submissionCount.toString()}
       href={`/organize/${assignment.organization.id}/projects/${
         data.campaign?.id ?? 'standalone'
       }/callassignments/${assignment.id}`}
       PrimaryIcon={HeadsetMic}
       SecondaryIcon={HeadsetMic}
+      startDate={dateOrNull(assignment.start_date)}
       title={data.title}
     />
   );

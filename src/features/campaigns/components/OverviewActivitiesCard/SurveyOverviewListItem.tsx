@@ -1,6 +1,7 @@
 import { FC } from 'react';
 import { AssignmentOutlined, ChatBubbleOutline } from '@mui/icons-material';
 
+import { dateOrNull } from 'utils/dateUtils';
 import useModel from 'core/useModel';
 import { ZetkinSurvey } from 'utils/types/zetkin';
 import OverviewListItem, { STATUS_COLORS } from './OverviewListItem';
@@ -50,12 +51,14 @@ const SurveyOverviewListItem: FC<SurveyOverviewListItemProps> = ({
   return (
     <OverviewListItem
       color={color}
+      endDate={dateOrNull(survey.expires)}
       endNumber={submissionCount.toString()}
       href={`/organize/${survey.organization.id}/projects/${
         data.campaign?.id ?? 'standalone'
       }/surveys/${survey.id}`}
       PrimaryIcon={AssignmentOutlined}
       SecondaryIcon={ChatBubbleOutline}
+      startDate={dateOrNull(survey.published)}
       title={data.title}
     />
   );
