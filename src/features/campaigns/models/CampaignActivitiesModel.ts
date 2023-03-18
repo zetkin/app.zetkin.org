@@ -1,4 +1,3 @@
-import { CallAssignmentData } from 'features/callAssignments/apiTypes';
 import CallAssignmentsRepo from 'features/callAssignments/repos/CallAssignmentsRepo';
 import Environment from 'core/env/Environment';
 import { isInFuture } from 'utils/dateUtils';
@@ -6,7 +5,11 @@ import { ModelBase } from 'core/models';
 import SurveysRepo from 'features/surveys/repos/SurveysRepo';
 import TasksRepo from 'features/tasks/repos/TasksRepo';
 import { IFuture, LoadingFuture, ResolvedFuture } from 'core/caching/futures';
-import { ZetkinCallAssignment, ZetkinSurveyExtended, ZetkinTask } from 'utils/types/zetkin';
+import {
+  ZetkinCallAssignment,
+  ZetkinSurveyExtended,
+  ZetkinTask,
+} from 'utils/types/zetkin';
 
 export enum ACTIVITIES {
   CALL_ASSIGNMENT = 'callAssignment',
@@ -31,6 +34,33 @@ export default class CampaignActivitiesModel extends ModelBase {
     this._callAssignmentsRepo = new CallAssignmentsRepo(env);
     this._surveysRepo = new SurveysRepo(env);
     this._tasksRepo = new TasksRepo(env);
+  }
+
+  getActivitiesByDay(date: string): IFuture<CampaignActivity[]> {
+    const activitiesFuture = this.getCurrentActivities();
+
+    const filtered = activitiesFuture.data?.filter((activity) => {
+      if (activity.kind == ACTIVITIES.CALL_ASSIGNMENT) {
+        return (
+          activity.start_date?.slice(0, 10) == date ||
+          activity.end_date?.slice(0, 10) == date
+        );
+      } else if (
+        activity.kind == ACTIVITIES.SURVEY ||
+        activity.kind == ACTIVITIES.TASK
+      ) {
+        return (
+          activity.published?.slice(0, 10) == date ||
+          activity.expires?.slice(0, 10) == date
+        );
+      }
+    });
+
+    if (filtered) {
+      return new ResolvedFuture(filtered);
+    } else {
+      return activitiesFuture;
+    }
   }
 
   getCampaignActivities(campId: number): IFuture<CampaignActivity[]> {

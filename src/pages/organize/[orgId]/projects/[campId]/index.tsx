@@ -3,22 +3,21 @@ import Head from 'next/head';
 import { useQuery } from 'react-query';
 import { Box, Grid, Typography } from '@mui/material';
 
+import CampaignActivitiesModel from 'features/campaigns/models/CampaignActivitiesModel';
 import { campaignTasksResource } from 'features/tasks/api/tasks';
-import EventList from 'features/events/components/EventList';
 import getCampaign from 'features/campaigns/fetching/getCampaign';
 import getCampaignEvents from 'features/campaigns/fetching/getCampaignEvents';
 import getOrg from 'utils/fetching/getOrg';
+import messageIds from 'features/campaigns/l10n/messageIds';
+import OverviewActivitiesCard from 'features/campaigns/components/OverviewActivitiesCard';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import SingleCampaignLayout from 'features/campaigns/layout/SingleCampaignLayout';
-import TaskList from 'features/tasks/components/TaskList';
 import { useMessages } from 'core/i18n';
+import useModel from 'core/useModel';
+import ZUIFuture from 'zui/ZUIFuture';
 import ZUIPerson from 'zui/ZUIPerson';
 import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
-import ZUISection from 'zui/ZUISection';
-import ZUISpeedDial, { ACTIONS } from 'zui/ZUISpeedDial';
-
-import messageIds from 'features/campaigns/l10n/messageIds';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -90,19 +89,20 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({
 }) => {
   const messages = useMessages(messageIds);
 
-  const tasksQuery = campaignTasksResource(orgId, campId).useQuery();
-
-  const eventsQuery = useQuery(
-    ['campaignEvents', orgId, campId],
-    getCampaignEvents(orgId, campId)
-  );
   const campaignQuery = useQuery(
     ['campaign', orgId, campId],
     getCampaign(orgId, campId)
   );
-  const events = eventsQuery.data || [];
-  const tasks = tasksQuery.data || [];
+
   const campaign = campaignQuery.data;
+
+  const activitiesModel = useModel(
+    (env) => new CampaignActivitiesModel(env, parseInt(orgId))
+  );
+
+  const todayDate = new Date();
+  const tomorrowDate = new Date();
+  tomorrowDate.setDate(tomorrowDate.getDate() + 1);
 
   return (
     <>
@@ -132,24 +132,39 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({
         </Box>
 
         <Grid container spacing={2}>
-          {/* Events */}
-          <Grid item md={6} sm={12} xs={12}>
-            <ZUISection title={messages.events()}>
-              <EventList
-                events={events ?? []}
-                hrefBase={`/organize/${orgId}/projects/${campId}`}
-              />
-            </ZUISection>
+          <Grid item md={4} xs={12}>
+            <ZUIFuture
+              future={activitiesModel.getActivitiesByDay(
+                todayDate.toISOString().slice(0, 10)
+              )}
+            >
+              {(data) => {
+                return (
+                  <OverviewActivitiesCard
+                    activities={data}
+                    header={messages.activitiesCard.todayCard()}
+                  />
+                );
+              }}
+            </ZUIFuture>
           </Grid>
-
-          {/* Tasks */}
-          <Grid item md={6} sm={12} xs={12}>
-            <ZUISection title={messages.tasks()}>
-              <TaskList tasks={tasks ?? []} />
-            </ZUISection>
+          <Grid item md={4} xs={12}>
+            <ZUIFuture
+              future={activitiesModel.getActivitiesByDay(
+                tomorrowDate.toISOString().slice(0, 10)
+              )}
+            >
+              {(data) => {
+                return (
+                  <OverviewActivitiesCard
+                    activities={data}
+                    header={messages.activitiesCard.tomorrowCard()}
+                  />
+                );
+              }}
+            </ZUIFuture>
           </Grid>
         </Grid>
-        <ZUISpeedDial actions={[ACTIONS.CREATE_TASK]} />
       </>
     </>
   );
