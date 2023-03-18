@@ -1,37 +1,9 @@
+import { alpha } from '@mui/material/styles';
 import { ArrowDropDown } from '@mui/icons-material';
 import Button from '@mui/material/Button';
-import { alpha, styled } from '@mui/material/styles';
+import Menu from '@mui/material/Menu';
+import theme from 'theme';
 import { FunctionComponent, MouseEvent, ReactNode, useState } from 'react';
-import Menu, { MenuProps } from '@mui/material/Menu';
-
-const StyledMenu = styled((props: MenuProps) => (
-  <Menu
-    anchorOrigin={{
-      horizontal: 'right',
-      vertical: 'bottom',
-    }}
-    transformOrigin={{
-      horizontal: 'right',
-      vertical: 'top',
-    }}
-    {...props}
-  />
-))(({ theme }) => ({
-  '& .MuiPaper-root': {
-    '& .MuiMenuItem-root': {
-      '& .MuiSvgIcon-root': {
-        marginRight: theme.spacing(1),
-      },
-      '&:active': {
-        backgroundColor: alpha(
-          theme.palette.primary.main,
-          theme.palette.action.selectedOpacity
-        ),
-      },
-    },
-    marginTop: theme.spacing(1),
-  },
-}));
 
 const ZUIButtonMenu: FunctionComponent<{
   children: ReactNode;
@@ -55,9 +27,37 @@ const ZUIButtonMenu: FunctionComponent<{
       >
         {text}
       </Button>
-      <StyledMenu anchorEl={anchorEl} onClose={handleClose} open={open}>
+      <Menu
+        anchorEl={anchorEl}
+        anchorOrigin={{
+          horizontal: 'right',
+          vertical: 'bottom',
+        }}
+        onClose={handleClose}
+        open={open}
+        sx={{
+          '& .MuiPaper-root': {
+            '& .MuiMenuItem-root': {
+              '& .MuiSvgIcon-root': {
+                marginRight: 1,
+              },
+              '&:active': {
+                backgroundColor: alpha(
+                  theme.palette.primary.main,
+                  theme.palette.action.selectedOpacity
+                ),
+              },
+            },
+            marginTop: theme.spacing(1),
+          },
+        }}
+        transformOrigin={{
+          horizontal: 'right',
+          vertical: 'top',
+        }}
+      >
         {children}
-      </StyledMenu>
+      </Menu>
     </div>
   );
 };

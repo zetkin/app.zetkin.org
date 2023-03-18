@@ -34,10 +34,16 @@ export default makeMessages('feat.campaigns', {
     heading: m('Feedback and Surveys (none configured)'),
   },
   form: {
+    createCallAssignment: {
+      newCallAssignment: m('My call assignment'),
+    },
     createCampaign: {
       create: m('Create campaign'),
       error: m('There was an error creating the campaign'),
       newCampaign: m('My campaign'),
+    },
+    createSurvey: {
+      newSurvey: m('My survey'),
     },
     createTask: {
       title: m('Create task'),

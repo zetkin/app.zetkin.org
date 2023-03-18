@@ -19,6 +19,7 @@ import deleteCampaign from 'features/campaigns/fetching/deleteCampaign';
 import patchCampaign from 'features/campaigns/fetching/patchCampaign';
 import useModel from 'core/useModel';
 import { ZetkinCampaign } from 'utils/types/zetkin';
+import ZUIButtonMenu from 'zui/ZUIButtonMenu';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUIDialog from 'zui/ZUIDialog';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
@@ -26,7 +27,6 @@ import ZUISnackbarContext from 'zui/ZUISnackbarContext';
 import { Msg, useMessages } from 'core/i18n';
 
 import messageIds from '../l10n/messageIds';
-import ZUIButtonMenu from 'zui/ZUIButtonMenu';
 
 enum CAMPAIGN_MENU_ITEMS {
   EDIT_CAMPAIGN = 'editCampaign',
@@ -84,13 +84,13 @@ const CampaignActionButtons: React.FunctionComponent<
     const assignment = {
       goal_filters: [],
       target_filters: [],
-      title: messages.form.createCampaign.newCampaign(),
+      title: messages.form.createCallAssignment.newCallAssignment(),
     };
     model.createCallAssignment(assignment);
   };
   const handleCreateSurvey = () => {
     const survey = {
-      title: messages.form.createCampaign.newCampaign(),
+      title: messages.form.createSurvey.newSurvey(),
     };
     model.createSurvey(survey);
   };
