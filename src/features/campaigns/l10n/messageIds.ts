@@ -4,6 +4,7 @@ export default makeMessages('feat.campaigns', {
   activitiesCard: {
     button: m('Browse and create activities'),
     endsTomorrow: m('ends tomorrow'),
+    extraActivities: m<{ numExtra: number }>('+ {numExtra} more'),
     noActivities: m('There are no activities in this campaign yet'),
     nothingToday: m('Nothing more to do today'),
     nothingTomorrow: m('Nothing planned for tomorrow'),
