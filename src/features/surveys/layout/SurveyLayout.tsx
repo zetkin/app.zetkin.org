@@ -52,7 +52,7 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
           </Button>
         )
       }
-      baseHref={`/organize/${orgId}/campaigns/${campaignId}/surveys/${surveyId}`}
+      baseHref={`/organize/${orgId}/projects/${campaignId}/surveys/${surveyId}`}
       defaultTab="/"
       subtitle={
         <Box alignItems="center" display="flex">

@@ -16,6 +16,7 @@ interface TextBlockProps {
   model: SurveyDataModel;
   onEditModeEnter: () => void;
   onEditModeExit: () => void;
+  readOnly: boolean;
 }
 
 const TextBlock: FC<TextBlockProps> = ({
@@ -24,6 +25,7 @@ const TextBlock: FC<TextBlockProps> = ({
   model,
   onEditModeEnter,
   onEditModeExit,
+  readOnly,
 }) => {
   const messages = useMessages(messageIds);
 
@@ -35,6 +37,7 @@ const TextBlock: FC<TextBlockProps> = ({
       editable,
       onEditModeEnter,
       onEditModeExit,
+      readOnly,
       save: () => {
         model.updateElement(element.id, {
           text_block: {
@@ -66,7 +69,7 @@ const TextBlock: FC<TextBlockProps> = ({
           variant="content"
         />
         <Box display="flex" justifyContent="end" m={2}>
-          <DeleteHideButtons element={element} model={model} />
+          {!readOnly && <DeleteHideButtons element={element} model={model} />}
         </Box>
       </Box>
     </ClickAwayListener>

@@ -114,7 +114,7 @@ const CampaignCalendarPage: PageWithLayout<OrganizeCalendarPageProps> = ({
         </title>
       </Head>
       <Calendar
-        baseHref={`/organize/${orgId}/campaigns/${campId}/calendar`}
+        baseHref={`/organize/${orgId}/projects/${campId}/calendar`}
         campaigns={campaigns}
         events={events}
         tasks={tasks}

@@ -26,7 +26,7 @@ test.describe('Campaign detail page', async () => {
       204
     );
 
-    await page.goto(appUri + '/organize/1/campaigns/1');
+    await page.goto(appUri + '/organize/1/projects/1');
 
     await page.click('data-testid=ZUIEllipsisMenu-menuActivator');
     await page.click('data-testid=ZUIEllipsisMenu-item-deleteCampaign');
@@ -36,7 +36,7 @@ test.describe('Campaign detail page', async () => {
       page.click('button:text("Confirm")'),
     ]);
 
-    expect(page.url()).toEqual(appUri + '/organize/1/campaigns');
+    expect(page.url()).toEqual(appUri + '/organize/1/projects');
     expect(log().length).toEqual(1);
   });
 
@@ -47,7 +47,7 @@ test.describe('Campaign detail page', async () => {
   }) => {
     moxy.setZetkinApiMock('/orgs/1/campaigns/1', 'delete', undefined, 400);
 
-    await page.goto(appUri + '/organize/1/campaigns/1');
+    await page.goto(appUri + '/organize/1/projects/1');
 
     await page.click('data-testid=ZUIEllipsisMenu-menuActivator');
     await page.click('data-testid=ZUIEllipsisMenu-item-deleteCampaign');
@@ -59,6 +59,6 @@ test.describe('Campaign detail page', async () => {
       .isVisible();
     expect(canSeeErrorSnackbar).toBeTruthy();
 
-    expect(page.url()).toEqual(appUri + '/organize/1/campaigns/1');
+    expect(page.url()).toEqual(appUri + '/organize/1/projects/1');
   });
 });

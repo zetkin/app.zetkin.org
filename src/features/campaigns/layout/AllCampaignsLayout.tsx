@@ -22,7 +22,7 @@ const AllCampaignsLayout: FunctionComponent<AllCampaignsLayoutProps> = ({
   return (
     <TabbedLayout
       actionButtons={<CampaignsActionButtons />}
-      baseHref={`/organize/${orgId}/campaigns`}
+      baseHref={`/organize/${orgId}/projects`}
       defaultTab="/"
       fixedHeight={fixedHeight}
       tabs={[

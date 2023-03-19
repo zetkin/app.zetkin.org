@@ -55,7 +55,7 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
           </Button>
         )
       }
-      baseHref={`/organize/${orgId}/campaigns/${campaignId}/callassignments/${assignmentId}`}
+      baseHref={`/organize/${orgId}/projects/${campaignId}/callassignments/${assignmentId}`}
       defaultTab="/"
       subtitle={
         <Box alignItems="center" display="flex">

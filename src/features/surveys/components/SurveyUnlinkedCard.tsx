@@ -43,7 +43,7 @@ const SurveyUnlinkedCard = ({
                   subheader={messages.unlinkedCard.description()}
                 >
                   <NextLink
-                    href={`/organize/${orgId}/campaigns/${campId}/surveys/${surveyId}/submissions?filter=linked`}
+                    href={`/organize/${orgId}/projects/${campId}/surveys/${surveyId}/submissions?filter=linked`}
                     passHref
                   >
                     <Link>

@@ -65,7 +65,7 @@ export interface ZetkinEvent {
   campaign: {
     id: number;
     title: string;
-  };
+  } | null;
   contact?: string | null;
   end_time: string;
   id: number;
@@ -259,7 +259,7 @@ export interface ZetkinOptionsQuestion {
   question: string;
   required: boolean;
   response_config: {
-    widget_type: 'checkbox' | 'radio' | 'select';
+    widget_type?: 'checkbox' | 'radio' | 'select';
   };
   response_type: RESPONSE_TYPE.OPTIONS;
 }

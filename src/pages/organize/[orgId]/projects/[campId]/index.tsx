@@ -136,7 +136,7 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({
             <ZUISection title={messages.events()}>
               <EventList
                 events={events ?? []}
-                hrefBase={`/organize/${orgId}/campaigns/${campId}`}
+                hrefBase={`/organize/${orgId}/projects/${campId}`}
               />
             </ZUISection>
           </Grid>

@@ -52,7 +52,7 @@ const SurveyListItem: FC<SurveyListItemProps> = ({ orgId, surveyId }) => {
       color={color}
       endNumber={submissionCount.toString()}
       greenChipValue={linkedSubmissionCount}
-      href={`/organize/${orgId}/campaigns/${
+      href={`/organize/${orgId}/projects/${
         data.campaign?.id ?? 'standalone'
       }/surveys/${surveyId}`}
       orangeChipValue={unlinkedSubmissionCount}

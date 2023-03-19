@@ -26,7 +26,7 @@ const CampaignCard = ({ campaign, events }: CampaignCardProps): JSX.Element => {
   const { id, title } = campaign;
 
   const campaignEvents = events.filter(
-    (event) => event.campaign.id === campaign.id
+    (event) => event.campaign?.id === campaign.id
   );
   const numOfUpcomingEvents = campaignEvents.filter((event) =>
     dayjs(removeOffset(event.end_time)).isAfter(dayjs())
@@ -68,7 +68,7 @@ const CampaignCard = ({ campaign, events }: CampaignCardProps): JSX.Element => {
         {/*TODO: labels for calls and surveys*/}
       </CardContent>
       <CardActions>
-        <NextLink href={`/organize/${orgId}/campaigns/${id}`} passHref>
+        <NextLink href={`/organize/${orgId}/projects/${id}`} passHref>
           <Link underline="hover" variant="button">
             <Msg id={messageIds.all.cardCTA} />
           </Link>

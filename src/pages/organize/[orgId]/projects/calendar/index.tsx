@@ -88,7 +88,7 @@ const AllCampaignsCalendarPage: PageWithLayout<
         <title>{messages.layout.calendar()}</title>
       </Head>
       <Calendar
-        baseHref={`/organize/${orgId}/campaigns/calendar`}
+        baseHref={`/organize/${orgId}/projects/calendar`}
         campaigns={campaigns}
         events={events}
         tasks={tasks}

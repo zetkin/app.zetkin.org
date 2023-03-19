@@ -195,6 +195,7 @@ const surveysSlice = createSlice({
       state.statsBySurveyId[surveyId].data = stats;
       state.statsBySurveyId[surveyId].isLoading = false;
       state.statsBySurveyId[surveyId].loaded = new Date().toISOString();
+      state.statsBySurveyId[surveyId].isStale = false;
     },
     submissionLoad: (state, action: PayloadAction<number>) => {
       const id = action.payload;
@@ -261,6 +262,7 @@ const surveysSlice = createSlice({
       if (item) {
         item.data = { ...item.data, ...submission };
         item.mutating = [];
+        state.statsBySurveyId[submission.survey.id].isStale = true;
       }
     },
     surveysLoad: (state) => {

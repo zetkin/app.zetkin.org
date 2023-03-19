@@ -32,7 +32,7 @@ const DialogContent: React.FunctionComponent<DialogContentBaseProps> = ({
         closeDialog();
         // Redirect to task page
         router.push(
-          `/organize/${orgId}/campaigns/${campId}/calendar/tasks/${newTask.id}`
+          `/organize/${orgId}/projects/${campId}/calendar/tasks/${newTask.id}`
         );
       },
     });

@@ -76,7 +76,7 @@ const CampaignActionButtons: React.FunctionComponent<
       onError: () =>
         showSnackbar('error', messages.form.deleteCampaign.error()),
       onSuccess: () => {
-        router.push(`/organize/${orgId as string}/campaigns`);
+        router.push(`/organize/${orgId as string}/projects`);
       },
     });
   };
@@ -102,7 +102,7 @@ const CampaignActionButtons: React.FunctionComponent<
   return (
     <Box display="flex">
       <Box mr={1}>
-        <Link href={`/o/${orgId}/campaigns/${campaign.id}`} passHref>
+        <Link href={`/o/${orgId}/projects/${campaign.id}`} passHref>
           <Button color="primary">
             <Msg id={messageIds.linkGroup.public} />
           </Button>

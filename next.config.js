@@ -26,8 +26,8 @@ module.exports = {
       },
       {
         source: `/organize/:orgId`,
-        destination: '/organize/:orgId/campaigns',
-        permanent: true,
+        destination: '/organize/:orgId/projects',
+        permanent: false,
       },
       // redirects to Gen2 for MVP August 2021
       {
@@ -48,13 +48,13 @@ module.exports = {
       },
       {
         source:
-          '/organize/:orgId(\\d{1,})/campaigns/calendar/events/:eventId(\\d{1,})',
+          '/organize/:orgId(\\d{1,})/projects/calendar/events/:eventId(\\d{1,})',
         destination: '/legacy?path=/campaign/action%3A:eventId&orgId=:orgId',
         permanent: false,
       },
       {
         source:
-          '/organize/:orgId(\\d{1,})/campaigns/:campId(\\d{1,})/calendar/events/:eventId(\\d{1,})',
+          '/organize/:orgId(\\d{1,})/projects/:campId(\\d{1,})/calendar/events/:eventId(\\d{1,})',
         destination: '/legacy?path=/campaign/action%3A:eventId&orgId=:orgId',
         permanent: false,
       },
