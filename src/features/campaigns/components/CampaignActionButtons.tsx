@@ -1,5 +1,5 @@
 import { Alert } from '@mui/material';
-import Link from 'next/link';
+import { Box } from '@mui/material';
 import { useRouter } from 'next/router';
 import {
   AssignmentOutlined,
@@ -8,7 +8,6 @@ import {
   HeadsetMic,
   Settings,
 } from '@mui/icons-material';
-import { Box, Button } from '@mui/material';
 import React, { useContext, useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 
@@ -100,15 +99,8 @@ const CampaignActionButtons: React.FunctionComponent<
   };
 
   return (
-    <Box display="flex">
-      <Box mr={1}>
-        <Link href={`/o/${orgId}/projects/${campaign.id}`} passHref>
-          <Button color="primary">
-            <Msg id={messageIds.linkGroup.public} />
-          </Button>
-        </Link>
-      </Box>
-      <Box mr={1}>
+    <Box display="flex" gap={1}>
+      <Box>
         <ZUIButtonMenu
           items={[
             {
