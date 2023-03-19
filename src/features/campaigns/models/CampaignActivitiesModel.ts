@@ -22,17 +22,17 @@ type CampaignActivityBase = {
   startDate: Date | null;
 };
 
-type CallAssignmentActivity = CampaignActivityBase & {
+export type CallAssignmentActivity = CampaignActivityBase & {
   data: ZetkinCallAssignment;
   kind: ACTIVITIES.CALL_ASSIGNMENT;
 };
 
-type SurveyActivity = CampaignActivityBase & {
+export type SurveyActivity = CampaignActivityBase & {
   data: ZetkinSurveyExtended;
   kind: ACTIVITIES.SURVEY;
 };
 
-type TaskActivity = CampaignActivityBase & {
+export type TaskActivity = CampaignActivityBase & {
   data: ZetkinTask;
   kind: ACTIVITIES.TASK;
 };

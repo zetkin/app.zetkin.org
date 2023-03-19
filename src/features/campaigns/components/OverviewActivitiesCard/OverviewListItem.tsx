@@ -10,6 +10,7 @@ import {
   Typography,
 } from '@mui/material';
 
+import { CampaignActivity } from 'features/campaigns/models/CampaignActivitiesModel';
 import { isSameDate } from 'utils/dateUtils';
 import messageIds from 'features/campaigns/l10n/messageIds';
 import { Msg } from 'core/i18n';
@@ -74,16 +75,16 @@ interface OverviewListItemProps {
     SvgIconTypeMap<Record<string, unknown>, 'svg'>
   >;
 
+  activity: CampaignActivity;
   focusDate: Date | null;
   href: string;
   color: STATUS_COLORS;
   title: string;
   endNumber: string;
-  startDate: Date | null;
-  endDate: Date | null;
 }
 
 const OverviewListItem = ({
+  activity,
   PrimaryIcon,
   SecondaryIcon,
   focusDate,
@@ -91,9 +92,8 @@ const OverviewListItem = ({
   color,
   title,
   endNumber,
-  startDate,
-  endDate,
 }: OverviewListItemProps) => {
+  const { endDate, startDate } = activity;
   const classes = useStyles({ color });
 
   const now = new Date();

@@ -40,7 +40,7 @@ const OverviewActivitiesCard: FC<OverviewListProps> = ({
             <Box key={`ca-${activity.data.id}`}>
               {index > 0 && <Divider />}
               <CallAssignmentOverviewListItem
-                assignment={activity.data}
+                activity={activity}
                 focusDate={focusDate}
               />
             </Box>
@@ -50,8 +50,8 @@ const OverviewActivitiesCard: FC<OverviewListProps> = ({
             <Box key={`survey-${activity.data.id}`}>
               {index > 0 && <Divider />}
               <SurveyOverviewListItem
+                activity={activity}
                 focusDate={focusDate}
-                survey={activity.data}
               />
             </Box>
           );
@@ -59,10 +59,7 @@ const OverviewActivitiesCard: FC<OverviewListProps> = ({
           return (
             <Box key={`task-${activity.data.id}`}>
               {index > 0 && <Divider />}
-              <TaskOverviewListItem
-                focusDate={focusDate}
-                task={activity.data}
-              />
+              <TaskOverviewListItem activity={activity} focusDate={focusDate} />
             </Box>
           );
         }

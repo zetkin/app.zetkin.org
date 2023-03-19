@@ -1,21 +1,21 @@
 import { FC } from 'react';
 import { CheckBoxOutlined, People } from '@mui/icons-material';
 
-import { dateOrNull } from 'utils/dateUtils';
+import { TaskActivity } from 'features/campaigns/models/CampaignActivitiesModel';
 import TaskModel from 'features/tasks/models/TaskModel';
 import useModel from 'core/useModel';
-import { ZetkinTask } from 'utils/types/zetkin';
 import OverviewListItem, { STATUS_COLORS } from './OverviewListItem';
 
 interface TasksOverviewListItemProps {
+  activity: TaskActivity;
   focusDate: Date | null;
-  task: ZetkinTask;
 }
 
 const TaskOverviewListItem: FC<TasksOverviewListItemProps> = ({
+  activity,
   focusDate,
-  task,
 }) => {
+  const task = activity.data;
   const model = useModel(
     (env) => new TaskModel(env, task.organization.id, task.id)
   );
@@ -36,8 +36,8 @@ const TaskOverviewListItem: FC<TasksOverviewListItemProps> = ({
 
   return (
     <OverviewListItem
+      activity={activity}
       color={color}
-      endDate={dateOrNull(task.expires)}
       endNumber={data.target.id.toString()}
       focusDate={focusDate}
       href={`/organize/${task.organization.id}/projects/${
@@ -45,7 +45,6 @@ const TaskOverviewListItem: FC<TasksOverviewListItemProps> = ({
       }/calendar/tasks/${task.id}`}
       PrimaryIcon={CheckBoxOutlined}
       SecondaryIcon={People}
-      startDate={dateOrNull(task.published)}
       title={data.title}
     />
   );

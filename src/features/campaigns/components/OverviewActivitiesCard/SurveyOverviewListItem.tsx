@@ -1,23 +1,23 @@
 import { FC } from 'react';
 import { AssignmentOutlined, ChatBubbleOutline } from '@mui/icons-material';
 
-import { dateOrNull } from 'utils/dateUtils';
+import { SurveyActivity } from 'features/campaigns/models/CampaignActivitiesModel';
 import useModel from 'core/useModel';
-import { ZetkinSurvey } from 'utils/types/zetkin';
 import OverviewListItem, { STATUS_COLORS } from './OverviewListItem';
 import SurveyDataModel, {
   SurveyState,
 } from 'features/surveys/models/SurveyDataModel';
 
 interface SurveyOverviewListItemProps {
+  activity: SurveyActivity;
   focusDate: Date | null;
-  survey: ZetkinSurvey;
 }
 
 const SurveyOverviewListItem: FC<SurveyOverviewListItemProps> = ({
+  activity,
   focusDate,
-  survey,
 }) => {
+  const survey = activity.data;
   const dataModel = useModel(
     (env) => new SurveyDataModel(env, survey.organization.id, survey.id)
   );
@@ -28,23 +28,13 @@ const SurveyOverviewListItem: FC<SurveyOverviewListItemProps> = ({
     return null;
   }
 
-  let hasExpired = false;
-  if (data.expires) {
-    const expires = new Date(data.expires);
-    const now = new Date();
-
-    if (expires < now) {
-      hasExpired = true;
-    }
-  }
-
   const state = dataModel.state;
   let color = STATUS_COLORS.GRAY;
   if (state === SurveyState.PUBLISHED) {
     color = STATUS_COLORS.GREEN;
   } else if (state === SurveyState.SCHEDULED) {
     color = STATUS_COLORS.BLUE;
-  } else if (hasExpired) {
+  } else if (SurveyState.UNPUBLISHED) {
     color = STATUS_COLORS.RED;
   }
 
@@ -52,8 +42,8 @@ const SurveyOverviewListItem: FC<SurveyOverviewListItemProps> = ({
 
   return (
     <OverviewListItem
+      activity={activity}
       color={color}
-      endDate={dateOrNull(survey.expires)}
       endNumber={submissionCount.toString()}
       focusDate={focusDate}
       href={`/organize/${survey.organization.id}/projects/${
@@ -61,7 +51,6 @@ const SurveyOverviewListItem: FC<SurveyOverviewListItemProps> = ({
       }/surveys/${survey.id}`}
       PrimaryIcon={AssignmentOutlined}
       SecondaryIcon={ChatBubbleOutline}
-      startDate={dateOrNull(survey.published)}
       title={data.title}
     />
   );

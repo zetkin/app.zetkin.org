@@ -1,22 +1,22 @@
 import { FC } from 'react';
 import { HeadsetMic } from '@mui/icons-material';
 
-import { dateOrNull } from 'utils/dateUtils';
+import { CallAssignmentActivity } from 'features/campaigns/models/CampaignActivitiesModel';
 import useModel from 'core/useModel';
-import { ZetkinCallAssignment } from 'utils/types/zetkin';
 import CallAssignmentModel, {
   CallAssignmentState,
 } from 'features/callAssignments/models/CallAssignmentModel';
 import OverviewListItem, { STATUS_COLORS } from './OverviewListItem';
 
 interface CallAssignmentOverviewListItemProps {
-  assignment: ZetkinCallAssignment;
+  activity: CallAssignmentActivity;
   focusDate: Date | null;
 }
 
 const CallAssignmentOverviewListItem: FC<
   CallAssignmentOverviewListItemProps
-> = ({ assignment, focusDate }) => {
+> = ({ activity, focusDate }) => {
+  const assignment = activity.data;
   const dataModel = useModel(
     (env) =>
       new CallAssignmentModel(env, assignment.organization.id, assignment.id)
@@ -28,16 +28,6 @@ const CallAssignmentOverviewListItem: FC<
     return null;
   }
 
-  let hasExpired = false;
-  if (data.end_date) {
-    const expires = new Date(data.end_date);
-    const now = new Date();
-
-    if (expires < now) {
-      hasExpired = true;
-    }
-  }
-
   const state = dataModel.state;
   let color = STATUS_COLORS.GRAY;
   if (
@@ -47,7 +37,7 @@ const CallAssignmentOverviewListItem: FC<
     color = STATUS_COLORS.GREEN;
   } else if (state === CallAssignmentState.SCHEDULED) {
     color = STATUS_COLORS.BLUE;
-  } else if (hasExpired) {
+  } else if (state == CallAssignmentState.CLOSED) {
     color = STATUS_COLORS.RED;
   }
 
@@ -55,8 +45,8 @@ const CallAssignmentOverviewListItem: FC<
 
   return (
     <OverviewListItem
+      activity={activity}
       color={color}
-      endDate={dateOrNull(assignment.end_date)}
       endNumber={submissionCount.toString()}
       focusDate={focusDate}
       href={`/organize/${assignment.organization.id}/projects/${
@@ -64,7 +54,6 @@ const CallAssignmentOverviewListItem: FC<
       }/callassignments/${assignment.id}`}
       PrimaryIcon={HeadsetMic}
       SecondaryIcon={HeadsetMic}
-      startDate={dateOrNull(assignment.start_date)}
       title={data.title}
     />
   );
