@@ -1,23 +1,16 @@
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
-import NextLink from 'next/link';
 import { useQuery } from 'react-query';
-import { Box, Button, Grid, Typography } from '@mui/material';
+import { Box, Grid, Typography } from '@mui/material';
 
-import CampaignActivitiesModel from 'features/campaigns/models/CampaignActivitiesModel';
+import ActivitiesOverview from 'features/campaigns/components/ActivitiesOverview';
 import { campaignTasksResource } from 'features/tasks/api/tasks';
 import getCampaign from 'features/campaigns/fetching/getCampaign';
 import getCampaignEvents from 'features/campaigns/fetching/getCampaignEvents';
 import getOrg from 'utils/fetching/getOrg';
-import messageIds from 'features/campaigns/l10n/messageIds';
-import OverviewActivitiesCard from 'features/campaigns/components/OverviewActivitiesCard';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import SingleCampaignLayout from 'features/campaigns/layout/SingleCampaignLayout';
-import useModel from 'core/useModel';
-import ZUIEmptyState from 'zui/ZUIEmptyState';
-import ZUIFuture from 'zui/ZUIFuture';
-import { Msg, useMessages } from 'core/i18n';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -87,22 +80,12 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({
   orgId,
   campId,
 }) => {
-  const messages = useMessages(messageIds);
-
   const campaignQuery = useQuery(
     ['campaign', orgId, campId],
     getCampaign(orgId, campId)
   );
 
   const campaign = campaignQuery.data;
-
-  const activitiesModel = useModel(
-    (env) => new CampaignActivitiesModel(env, parseInt(orgId))
-  );
-
-  const todayDate = new Date();
-  const tomorrowDate = new Date();
-  tomorrowDate.setDate(tomorrowDate.getDate() + 1);
 
   return (
     <>
@@ -119,75 +102,10 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({
             )}
           </Grid>
         </Box>
-        <Box
-          alignItems="center"
-          display="flex"
-          justifyContent="space-between"
-          my={2}
-        >
-          <Box>
-            <Typography variant="h4">
-              <Msg id={messageIds.activitiesCard.title} />
-            </Typography>
-          </Box>
-          <Box>
-            <NextLink
-              href={`/organize/${orgId}/projects/${campId}/activities`}
-              passHref
-            >
-              <Button variant="text">
-                <Msg id={messageIds.activitiesCard.button} />
-              </Button>
-            </NextLink>
-          </Box>
-        </Box>
-
-        <ZUIFuture
-          future={activitiesModel.getActivityOverview(parseInt(campId))}
-        >
-          {(data) => {
-            const totalLength =
-              data.today.length +
-              data.tomorrow.length +
-              data.alsoThisWeek.length;
-
-            if (totalLength == 0) {
-              return (
-                <Box>
-                  <ZUIEmptyState
-                    message={messages.activitiesCard.noActivities()}
-                  />
-                </Box>
-              );
-            }
-
-            return (
-              <Grid container spacing={2}>
-                <Grid item md={4} xs={12}>
-                  <OverviewActivitiesCard
-                    activities={data.today}
-                    focusDate={todayDate}
-                    header={messages.activitiesCard.todayCard()}
-                  />
-                </Grid>
-                <Grid item md={4} xs={12}>
-                  <OverviewActivitiesCard
-                    activities={data.tomorrow}
-                    focusDate={tomorrowDate}
-                    header={messages.activitiesCard.tomorrowCard()}
-                  />
-                </Grid>
-                <Grid item md={4} xs={12}>
-                  <OverviewActivitiesCard
-                    activities={data.alsoThisWeek}
-                    focusDate={null}
-                    header={messages.activitiesCard.thisWeekCard()}
-                  />
-                </Grid>
-              </Grid>
-            );
-          }}
-        </ZUIFuture>
+        <ActivitiesOverview
+          campaignId={parseInt(campId)}
+          orgId={parseInt(orgId)}
+        />
       </>
     </>
   );

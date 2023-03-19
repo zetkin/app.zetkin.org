@@ -3,7 +3,7 @@ import { ReactElement } from 'react';
 import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('feat.campaigns', {
-  activitiesCard: {
+  activitiesOverview: {
     button: m('Browse all activities'),
     empty: m('Nothing on this day'),
     endsTomorrow: m('ends tomorrow'),

@@ -108,11 +108,11 @@ const OverviewListItem = ({
 
   function getEndsLabel(endDate: Date) {
     if (endDate && isSameDate(endDate, now)) {
-      return <Msg id={messageIds.activitiesCard.subtitles.endsToday} />;
+      return <Msg id={messageIds.activitiesOverview.subtitles.endsToday} />;
     } else if (endDate && endDate > now) {
       return (
         <Msg
-          id={messageIds.activitiesCard.subtitles.endsLater}
+          id={messageIds.activitiesOverview.subtitles.endsLater}
           values={{
             relative: <ZUIRelativeTime datetime={endDate.toISOString()} />,
           }}
@@ -125,11 +125,11 @@ const OverviewListItem = ({
 
   function getStartsLabel(startDate: Date) {
     if (startDate && isSameDate(startDate, now)) {
-      return <Msg id={messageIds.activitiesCard.subtitles.startsToday} />;
+      return <Msg id={messageIds.activitiesOverview.subtitles.startsToday} />;
     } else if (startDate && startDate > now) {
       return (
         <Msg
-          id={messageIds.activitiesCard.subtitles.startsLater}
+          id={messageIds.activitiesOverview.subtitles.startsLater}
           values={{
             relative: <ZUIRelativeTime datetime={startDate.toISOString()} />,
           }}

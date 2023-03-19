@@ -74,7 +74,7 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
               }}
             >
               {({ data: { stats, survey } }) => {
-                const questionLength = survey?.elements.filter(
+                const questionLength = survey?.elements?.filter(
                   (question) => question.type === 'question'
                 ).length;
 

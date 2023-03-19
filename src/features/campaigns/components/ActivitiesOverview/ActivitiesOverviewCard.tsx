@@ -2,10 +2,10 @@ import { FC } from 'react';
 import { FlagOutlined } from '@mui/icons-material';
 import { Box, Divider, Typography } from '@mui/material';
 
-import CallAssignmentOverviewListItem from './CallAssignmentOverviewListItem';
+import CallAssignmentOverviewListItem from './items/CallAssignmentOverviewListItem';
 import messageIds from 'features/campaigns/l10n/messageIds';
-import SurveyOverviewListItem from './SurveyOverviewListItem';
-import TaskOverviewListItem from './TaskOverviewListItem';
+import SurveyOverviewListItem from './items/SurveyOverviewListItem';
+import TaskOverviewListItem from './items/TaskOverviewListItem';
 import ZUICard from 'zui/ZUICard';
 import ZUIEmptyState from 'zui/ZUIEmptyState';
 import {
@@ -20,7 +20,7 @@ type OverviewListProps = {
   header: string;
 };
 
-const OverviewActivitiesCard: FC<OverviewListProps> = ({
+const ActivitiesOverviewCard: FC<OverviewListProps> = ({
   activities,
   focusDate,
   header,
@@ -32,7 +32,7 @@ const OverviewActivitiesCard: FC<OverviewListProps> = ({
     <ZUICard header={header}>
       {activities.length === 0 && (
         <ZUIEmptyState
-          message={messages.activitiesCard.empty()}
+          message={messages.activitiesOverview.empty()}
           renderIcon={(props) => <FlagOutlined {...props} />}
         />
       )}
@@ -70,7 +70,7 @@ const OverviewActivitiesCard: FC<OverviewListProps> = ({
         <Box textAlign="center">
           <Typography>
             <Msg
-              id={messageIds.activitiesCard.extraActivities}
+              id={messageIds.activitiesOverview.extraActivities}
               values={{ numExtra }}
             />
           </Typography>
@@ -80,4 +80,4 @@ const OverviewActivitiesCard: FC<OverviewListProps> = ({
   );
 };
 
-export default OverviewActivitiesCard;
+export default ActivitiesOverviewCard;
