@@ -8,33 +8,36 @@ const useStyles = makeStyles(() => ({
 }));
 
 interface ZUIStackedStatusBarProps {
-  colors: string[];
-  values: number[];
+  height?: number;
+  values: {
+    color: string;
+    value: number;
+  }[];
 }
 
 const ZUIStackedStatusBar: React.FunctionComponent<
   ZUIStackedStatusBarProps
-> = ({ values, colors }) => {
+> = ({ height = 20, values }) => {
   const classes = useStyles();
-  const total = values.reduce((sum, value) => sum + value, 0);
+  const total = values.reduce((sum, valueObj) => sum + valueObj.value, 0);
 
   return (
     <Box
       borderRadius={50}
       display="flex"
       flexDirection="row"
-      height={20}
+      height={height}
       overflow="hidden"
     >
-      {values.map((value, index) => {
+      {values.map((valueObj, index) => {
         return (
           <Box
             key={index}
-            bgcolor={colors[index]}
+            bgcolor={valueObj.color}
             className={classes.animated}
             minWidth={10}
             mr={index + 1 < values.length ? 0.3 : 0}
-            width={value / total}
+            width={valueObj.value / total}
           />
         );
       })}
