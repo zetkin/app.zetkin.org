@@ -141,19 +141,19 @@ const OverviewListItem = ({
   }
 
   return (
-    <Box my={2}>
-      <Box alignItems="start" display="flex" justifyContent="space-between">
-        <Box width={30}>
-          <PrimaryIcon className={classes.primaryIcon} />
-        </Box>
-        <Box
-          sx={{
-            overflow: 'hidden',
-          }}
-          width="calc(100% - 30px - 80px - 20px)"
-        >
-          <NextLink href={href} passHref>
-            <Link underline="none">
+    <NextLink href={href} passHref>
+      <Link my={2} underline="none">
+        <Box my={2}>
+          <Box alignItems="start" display="flex" justifyContent="space-between">
+            <Box width={30}>
+              <PrimaryIcon className={classes.primaryIcon} />
+            </Box>
+            <Box
+              sx={{
+                overflow: 'hidden',
+              }}
+              width="calc(100% - 30px - 80px - 20px)"
+            >
               <Typography
                 color={theme.palette.text.primary}
                 sx={{
@@ -164,29 +164,33 @@ const OverviewListItem = ({
               >
                 {title}
               </Typography>
-            </Link>
-          </NextLink>
+            </Box>
+            <Box width={80}>
+              <ZUIIconLabel
+                icon={<SecondaryIcon color="secondary" />}
+                label={<ZUISuffixedNumber number={endNumber} />}
+                labelColor="secondary"
+              />
+            </Box>
+          </Box>
+          <Box
+            alignItems="center"
+            display="flex"
+            justifyContent="space-between"
+          >
+            <Box width={30}>
+              <Box className={classes.dot} />
+            </Box>
+            <Box width="calc(100% - 30px - 80px - 20px)">
+              <Typography color={theme.palette.grey[500]} variant="body2">
+                {label}
+              </Typography>
+            </Box>
+            <Box width={80}>{statusBar}</Box>
+          </Box>
         </Box>
-        <Box width={80}>
-          <ZUIIconLabel
-            icon={<SecondaryIcon color="secondary" />}
-            label={<ZUISuffixedNumber number={endNumber} />}
-            labelColor="secondary"
-          />
-        </Box>
-      </Box>
-      <Box alignItems="center" display="flex" justifyContent="space-between">
-        <Box width={30}>
-          <Box className={classes.dot} />
-        </Box>
-        <Box width="calc(100% - 30px - 80px - 20px)">
-          <Typography color={theme.palette.grey[500]} variant="body2">
-            {label}
-          </Typography>
-        </Box>
-        <Box width={80}>{statusBar}</Box>
-      </Box>
-    </Box>
+      </Link>
+    </NextLink>
   );
 };
 
