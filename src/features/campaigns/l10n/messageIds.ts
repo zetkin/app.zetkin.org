@@ -99,7 +99,7 @@ export default makeMessages('feat.campaigns', {
     archive: m('Archive'),
     calendar: m('Calendar'),
     insights: m('Insights'),
-    summary: m('Summary'),
+    overview: m('Overview'),
   },
   linkGroup: {
     public: m('Public Page'),

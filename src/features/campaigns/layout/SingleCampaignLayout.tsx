@@ -69,7 +69,7 @@ const SingleCampaignLayout: FunctionComponent<SingleCampaignLayoutProps> = ({
         )
       }
       tabs={[
-        { href: `/`, label: messages.layout.summary() },
+        { href: `/`, label: messages.layout.overview() },
         {
           href: `/calendar`,
           label: messages.layout.calendar(),
