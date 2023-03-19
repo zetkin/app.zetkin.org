@@ -9,27 +9,32 @@ export default {
   title: 'ZUIStackedStatusBar',
 } as ComponentMeta<typeof ZUIStackedStatusBar>;
 
-const Template: ComponentStory<typeof ZUIStackedStatusBar> = () => {
-  const [values, setValues] = useState([10, 10, 10]);
-  const [colors, setColors] = useState([
-    'rgba(245, 124, 0, 1)',
-    'rgba(102, 187, 106, 1)',
-    'rgba(25, 118, 210, 1)',
+const Template: ComponentStory<typeof ZUIStackedStatusBar> = (args) => {
+  const [values, setValues] = useState([
+    {
+      color: 'rgba(245, 124, 0, 1)',
+      value: 10,
+    },
+    {
+      color: 'rgba(102, 187, 106, 1)',
+      value: 10,
+    },
+    {
+      color: 'rgba(25, 118, 210, 1)',
+      value: 10,
+    },
   ]);
+
   return (
     <Box>
       <Button
         onClick={() => {
-          setValues([
-            Math.floor(Math.random() * 100),
-            Math.floor(Math.random() * 100),
-            Math.floor(Math.random() * 100),
-          ]);
-          setColors([
-            'rgba(245, 124, 0, 1)',
-            'rgba(102, 187, 106, 1)',
-            'rgba(25, 118, 210, 1)',
-          ]);
+          setValues(
+            values.map((valueObj) => ({
+              ...valueObj,
+              value: Math.floor(Math.random() * 100),
+            }))
+          );
         }}
         variant="contained"
       >
@@ -37,20 +42,20 @@ const Template: ComponentStory<typeof ZUIStackedStatusBar> = () => {
       </Button>
       <Button
         onClick={() => {
-          setValues([1, 1, 1]);
-          setColors([
-            'rgba(0, 0, 0, 0.12)',
-            'rgba(0, 0, 0, 0.12)',
-            'rgba(0, 0, 0, 0.12)',
-          ]);
+          setValues(
+            values.map(() => ({
+              color: 'rgba(0, 0, 0, 0.12)',
+              value: 1,
+            }))
+          );
         }}
         variant="contained"
       >
         Reset
       </Button>
-      <ZUIStackedStatusBar colors={colors} values={values} />
+      <ZUIStackedStatusBar height={args.height} values={values} />
     </Box>
   );
 };
 
-export const basic = Template.bind({});
+export const basic = Template.bind({ height: 20 });

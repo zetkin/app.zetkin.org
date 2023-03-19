@@ -102,3 +102,12 @@ export class RemoteListFuture<DataType>
     );
   }
 }
+
+export class ErrorFuture<DataType>
+  extends FutureBase<DataType>
+  implements IFuture<DataType>
+{
+  constructor(error: unknown) {
+    super(null, error, false);
+  }
+}

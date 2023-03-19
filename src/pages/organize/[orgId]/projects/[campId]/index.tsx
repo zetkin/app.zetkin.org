@@ -3,21 +3,15 @@ import Head from 'next/head';
 import { useQuery } from 'react-query';
 import { Box, Grid, Typography } from '@mui/material';
 
+import ActivitiesOverview from 'features/campaigns/components/ActivitiesOverview';
 import { campaignTasksResource } from 'features/tasks/api/tasks';
-import EventList from 'features/events/components/EventList';
 import getCampaign from 'features/campaigns/fetching/getCampaign';
 import getCampaignEvents from 'features/campaigns/fetching/getCampaignEvents';
 import getOrg from 'utils/fetching/getOrg';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import SingleCampaignLayout from 'features/campaigns/layout/SingleCampaignLayout';
-import TaskList from 'features/tasks/components/TaskList';
-import { useMessages } from 'core/i18n';
-import ZUIPerson from 'zui/ZUIPerson';
-import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
-import ZUISection from 'zui/ZUISection';
-
-import messageIds from 'features/campaigns/l10n/messageIds';
+import useServerSide from 'core/useServerSide';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -87,21 +81,17 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({
   orgId,
   campId,
 }) => {
-  const messages = useMessages(messageIds);
-
-  const tasksQuery = campaignTasksResource(orgId, campId).useQuery();
-
-  const eventsQuery = useQuery(
-    ['campaignEvents', orgId, campId],
-    getCampaignEvents(orgId, campId)
-  );
+  const isOnServer = useServerSide();
   const campaignQuery = useQuery(
     ['campaign', orgId, campId],
     getCampaign(orgId, campId)
   );
-  const events = eventsQuery.data || [];
-  const tasks = tasksQuery.data || [];
+
   const campaign = campaignQuery.data;
+
+  if (isOnServer) {
+    return null;
+  }
 
   return (
     <>
@@ -116,38 +106,12 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({
                 <Typography variant="body1">{campaign?.info_text}</Typography>
               </Grid>
             )}
-            {campaign?.manager && (
-              <Grid item xs={12}>
-                <ZUIPersonHoverCard personId={campaign.manager.id}>
-                  <ZUIPerson
-                    id={campaign.manager.id}
-                    name={campaign.manager.name}
-                    subtitle={messages.campaignManager()}
-                  />
-                </ZUIPersonHoverCard>
-              </Grid>
-            )}
           </Grid>
         </Box>
-
-        <Grid container spacing={2}>
-          {/* Events */}
-          <Grid item md={6} sm={12} xs={12}>
-            <ZUISection title={messages.events()}>
-              <EventList
-                events={events ?? []}
-                hrefBase={`/organize/${orgId}/projects/${campId}`}
-              />
-            </ZUISection>
-          </Grid>
-
-          {/* Tasks */}
-          <Grid item md={6} sm={12} xs={12}>
-            <ZUISection title={messages.tasks()}>
-              <TaskList tasks={tasks ?? []} />
-            </ZUISection>
-          </Grid>
-        </Grid>
+        <ActivitiesOverview
+          campaignId={parseInt(campId)}
+          orgId={parseInt(orgId)}
+        />
       </>
     </>
   );

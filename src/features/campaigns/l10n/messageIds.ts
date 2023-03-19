@@ -1,6 +1,27 @@
+import { ReactElement } from 'react';
+
 import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('feat.campaigns', {
+  activitiesOverview: {
+    button: m('Browse all activities'),
+    empty: m('Nothing on this day'),
+    endsTomorrow: m('ends tomorrow'),
+    extraActivities: m<{ numExtra: number }>('+ {numExtra} more'),
+    noActivities: m('There are no activities in this project yet.'),
+    nothingTomorrow: m('Nothing planned for tomorrow'),
+    startsTomorrow: m('starts tomorrow'),
+    subtitles: {
+      endsLater: m<{ relative: ReactElement }>('Ends {relative}'),
+      endsToday: m('Ends today'),
+      startsLater: m<{ relative: ReactElement }>('Starts {relative}'),
+      startsToday: m('Starts today'),
+    },
+    thisWeekCard: m('Also this week'),
+    title: m('Activities'),
+    todayCard: m('Today'),
+    tomorrowCard: m('Tomorrow'),
+  },
   all: {
     cardCTA: m('Go to project'),
     create: m('Create new project'),
@@ -24,7 +45,6 @@ export default makeMessages('feat.campaigns', {
   },
   assigneeActions: m('Assignee actions'),
   calendarView: m('See all in calendar'),
-  campaignManager: m('Project Manager'),
   events: m('Events'),
   feedback: {
     copy: m(
@@ -88,7 +108,7 @@ export default makeMessages('feat.campaigns', {
     archive: m('Archive'),
     calendar: m('Calendar'),
     insights: m('Insights'),
-    summary: m('Summary'),
+    overview: m('Overview'),
   },
   linkGroup: {
     createActivity: m('Create activity'),

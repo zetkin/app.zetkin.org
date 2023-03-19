@@ -157,7 +157,7 @@ export interface ZetkinCallAssignment {
   cooldown: number;
   description: string;
   disable_caller_notes: boolean;
-  end_date: string;
+  end_date: string | null;
   expose_target_details: boolean;
   goal: ZetkinQuery;
   id: number;
@@ -166,8 +166,7 @@ export interface ZetkinCallAssignment {
     id: number;
     title: string;
   };
-  organization_id: number;
-  start_date: string;
+  start_date: string | null;
   target: ZetkinQuery;
   title: string;
 }
