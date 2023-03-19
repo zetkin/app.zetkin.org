@@ -1,14 +1,7 @@
 import makeStyles from '@mui/styles/makeStyles';
 import NextLink from 'next/link';
 import { OverridableComponent } from '@mui/material/OverridableComponent';
-import {
-  Box,
-  Grid,
-  Link,
-  SvgIconTypeMap,
-  Theme,
-  Typography,
-} from '@mui/material';
+import { Box, Link, SvgIconTypeMap, Theme, Typography } from '@mui/material';
 
 import { CampaignActivity } from 'features/campaigns/models/CampaignActivitiesModel';
 import { isSameDate } from 'utils/dateUtils';
@@ -32,7 +25,8 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
     backgroundColor: ({ color }) => theme.palette.statusColors[color],
     borderRadius: '100%',
     height: '10px',
-    marginRight: '1em',
+    marginLeft: 'auto',
+    marginRight: 'auto',
     width: '10px',
   },
   endNumber: {
@@ -44,7 +38,6 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
     alignItems: 'center',
     display: 'flex',
   },
-
   primaryIcon: {
     color: theme.palette.grey[500],
     fontSize: '28px',
@@ -80,6 +73,7 @@ interface OverviewListItemProps {
   href: string;
   title: string;
   endNumber: string;
+  statusBar?: JSX.Element | null;
 }
 
 const OverviewListItem = ({
@@ -90,6 +84,7 @@ const OverviewListItem = ({
   href,
   title,
   endNumber,
+  statusBar,
 }: OverviewListItemProps) => {
   const { endDate, startDate } = activity;
   const color = getStatusColor(activity);
@@ -145,49 +140,50 @@ const OverviewListItem = ({
   }
 
   return (
-    <Grid className={classes.container} container>
-      <Grid item lg={8} md={7} xs={6}>
-        <Box className={classes.left}>
+    <Box my={2}>
+      <Box alignItems="start" display="flex" justifyContent="space-between">
+        <Box width={30}>
           <PrimaryIcon className={classes.primaryIcon} />
+        </Box>
+        <Box
+          sx={{
+            overflow: 'hidden',
+          }}
+          width="calc(100% - 30px - 80px - 20px)"
+        >
           <NextLink href={href} passHref>
             <Link underline="none">
               <Typography
                 color={theme.palette.text.primary}
-                sx={{ paddingX: 2 }}
+                sx={{
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                }}
               >
                 {title}
               </Typography>
             </Link>
           </NextLink>
         </Box>
-      </Grid>
-      <Grid item lg={2} md={3} xs={4}></Grid>
-      <Grid item xs={2}>
-        <Box className={classes.endNumber}>
+        <Box width={80}>
           <ZUIIconLabel
             icon={<SecondaryIcon color="secondary" />}
             label={endNumber}
             labelColor="secondary"
           />
         </Box>
-      </Grid>
-      <Grid item lg={2} md={3} style={{ display: 'contents' }} xs={4}>
-        <Grid>
-          <Box style={{ marginTop: '5px' }}>
-            <ZUIIconLabel
-              icon={
-                <Box
-                  className={classes.dot}
-                  style={{ alignSelf: 'center', margin: 'auto' }}
-                ></Box>
-              }
-              label={label || ''}
-              labelColor={theme.palette.grey[500]}
-            />
-          </Box>
-        </Grid>
-      </Grid>
-    </Grid>
+      </Box>
+      <Box alignItems="center" display="flex">
+        <Box width={30}>
+          <Box className={classes.dot} />
+        </Box>
+        <Box>
+          <Typography color={theme.palette.grey[500]}>{label}</Typography>
+        </Box>
+        <Box>{statusBar}</Box>
+      </Box>
+    </Box>
   );
 };
 
