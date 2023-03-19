@@ -48,7 +48,7 @@ const EditableCampaignTitle: FC<EditableCampaignTitleProps> = ({
         onChange={(newTitle) => {
           handleEditCampaignTitle(newTitle);
         }}
-        value={campaign?.title}
+        value={campaign.title}
       />
     </Box>
   );

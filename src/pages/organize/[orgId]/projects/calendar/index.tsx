@@ -11,7 +11,6 @@ import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import { tasksResource } from 'features/tasks/api/tasks';
 import { useMessages } from 'core/i18n';
-import ZUISpeedDial, { ACTIONS } from 'zui/ZUISpeedDial';
 
 import messageIds from 'features/campaigns/l10n/messageIds';
 
@@ -94,7 +93,6 @@ const AllCampaignsCalendarPage: PageWithLayout<
         events={events}
         tasks={tasks}
       />
-      <ZUISpeedDial actions={[ACTIONS.CREATE_CAMPAIGN]} />
     </>
   );
 };

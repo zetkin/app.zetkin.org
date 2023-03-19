@@ -157,8 +157,8 @@ export interface ZetkinCallAssignment {
   cooldown: number;
   description: string;
   disable_caller_notes: boolean;
-  expose_target_details: boolean;
   end_date: string | null;
+  expose_target_details: boolean;
   goal: ZetkinQuery;
   id: number;
   instructions: string;
@@ -170,6 +170,10 @@ export interface ZetkinCallAssignment {
   target: ZetkinQuery;
   title: string;
 }
+
+export type ZetkinCallAssignmentPostBody = Partial<
+  Omit<ZetkinCallAssignment, 'organization'>
+>;
 
 export interface ZetkinSurvey {
   title: string;
@@ -186,6 +190,11 @@ export interface ZetkinSurvey {
   expires: string | null;
   campaign: { id: number; title: string } | null;
   org_access: 'sameorg' | 'suborgs';
+}
+
+export interface ZetkinSurveyPostBody
+  extends Partial<Omit<ZetkinSurvey, 'organization' | 'id'>> {
+  title: string;
 }
 
 export interface ZetkinSurveyExtended extends ZetkinSurvey {
