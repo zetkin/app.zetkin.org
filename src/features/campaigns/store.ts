@@ -8,13 +8,13 @@ export interface CampaignsStoreSlice {
   campaignList: RemoteList<ZetkinCampaign>;
 }
 
-const initialState: CampaignsStoreSlice = {
+const initialCampaignsState: CampaignsStoreSlice = {
   campaignList: remoteList(),
   recentlyCreatedCampaign: null,
 };
 
 const campaignsSlice = createSlice({
-  initialState,
+  initialState: initialCampaignsState,
   name: 'campaigns',
   reducers: {
     campaignCreate: (state) => {

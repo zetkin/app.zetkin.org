@@ -1,15 +1,24 @@
 import { Alert } from '@mui/material';
-import Link from 'next/link';
+import { Box } from '@mui/material';
 import { useRouter } from 'next/router';
-import { Box, Button } from '@mui/material';
-import { Delete, Settings } from '@mui/icons-material';
+import {
+  AssignmentOutlined,
+  CheckBoxOutlined,
+  Delete,
+  HeadsetMic,
+  Settings,
+} from '@mui/icons-material';
 import React, { useContext, useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 
+import CampaignDataModel from '../models/CampaignDataModel';
 import CampaignDetailsForm from 'features/campaigns/components/CampaignDetailsForm';
+import { DialogContent as CreateTaskDialogContent } from 'zui/ZUISpeedDial/actions/createTask';
 import deleteCampaign from 'features/campaigns/fetching/deleteCampaign';
 import patchCampaign from 'features/campaigns/fetching/patchCampaign';
+import useModel from 'core/useModel';
 import { ZetkinCampaign } from 'utils/types/zetkin';
+import ZUIButtonMenu from 'zui/ZUIButtonMenu';
 import { ZUIConfirmDialogContext } from 'zui/ZUIConfirmDialogProvider';
 import ZUIDialog from 'zui/ZUIDialog';
 import ZUIEllipsisMenu from 'zui/ZUIEllipsisMenu';
@@ -38,7 +47,13 @@ const CampaignActionButtons: React.FunctionComponent<
   const { showSnackbar } = useContext(ZUISnackbarContext);
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
   const [editCampaignDialogOpen, setEditCampaignDialogOpen] = useState(false);
-  const closeDialog = () => setEditCampaignDialogOpen(false);
+  const [createTaskDialogOpen, setCreateTaskDialogOpen] = useState(false);
+  const closeEditCampaignDialog = () => setEditCampaignDialogOpen(false);
+  const closeCreateTaskDialog = () => setCreateTaskDialogOpen(false);
+
+  const model = useModel(
+    (env) => new CampaignDataModel(env, parseInt(orgId as string), campaign.id)
+  );
 
   // Mutations
   const patchCampaignMutation = useMutation(
@@ -52,7 +67,7 @@ const CampaignActionButtons: React.FunctionComponent<
   const handleEditCampaign = (campaign: Partial<ZetkinCampaign>) => {
     patchCampaignMutation.mutate(campaign, {
       onSettled: () => queryClient.invalidateQueries(['campaign']),
-      onSuccess: () => closeDialog(),
+      onSuccess: () => closeEditCampaignDialog(),
     });
   };
   const handleDeleteCampaign = () => {
@@ -60,19 +75,52 @@ const CampaignActionButtons: React.FunctionComponent<
       onError: () =>
         showSnackbar('error', messages.form.deleteCampaign.error()),
       onSuccess: () => {
-        router.push(`/organize/${orgId as string}/campaigns`);
+        router.push(`/organize/${orgId as string}/projects`);
       },
     });
   };
+  const handleCreateCallAssignment = () => {
+    const assignment = {
+      goal_filters: [],
+      target_filters: [],
+      title: messages.form.createCallAssignment.newCallAssignment(),
+    };
+    model.createCallAssignment(assignment);
+  };
+  const handleCreateSurvey = () => {
+    const survey = {
+      title: messages.form.createSurvey.newSurvey(),
+    };
+    model.createSurvey(survey);
+  };
+  const handleCreateTask = () => {
+    // Open the creat task dialog
+    setCreateTaskDialogOpen(true);
+  };
 
   return (
-    <Box display="flex">
-      <Box mr={1}>
-        <Link href={`/o/${orgId}/campaigns/${campaign.id}`} passHref>
-          <Button color="primary">
-            <Msg id={messageIds.linkGroup.public} />
-          </Button>
-        </Link>
+    <Box display="flex" gap={1}>
+      <Box>
+        <ZUIButtonMenu
+          items={[
+            {
+              icon: <HeadsetMic />,
+              label: messages.linkGroup.createCallAssignment(),
+              onClick: handleCreateCallAssignment,
+            },
+            {
+              icon: <AssignmentOutlined />,
+              label: messages.linkGroup.createSurvey(),
+              onClick: handleCreateSurvey,
+            },
+            {
+              icon: <CheckBoxOutlined />,
+              label: messages.linkGroup.createTask(),
+              onClick: handleCreateTask,
+            },
+          ]}
+          label={messages.linkGroup.createActivity()}
+        />
       </Box>
       <Box>
         <ZUIEllipsisMenu
@@ -111,7 +159,7 @@ const CampaignActionButtons: React.FunctionComponent<
         />
       </Box>
       <ZUIDialog
-        onClose={closeDialog}
+        onClose={closeEditCampaignDialog}
         open={editCampaignDialogOpen}
         title={messages.form.edit()}
       >
@@ -122,8 +170,21 @@ const CampaignActionButtons: React.FunctionComponent<
         )}
         <CampaignDetailsForm
           campaign={campaign}
-          onCancel={closeDialog}
+          onCancel={closeEditCampaignDialog}
           onSubmit={handleEditCampaign}
+        />
+      </ZUIDialog>
+      <ZUIDialog
+        onClose={() => {
+          closeCreateTaskDialog();
+        }}
+        open={createTaskDialogOpen}
+        title={messages.form.createTask.title()}
+      >
+        <CreateTaskDialogContent
+          closeDialog={() => {
+            closeCreateTaskDialog();
+          }}
         />
       </ZUIDialog>
     </Box>

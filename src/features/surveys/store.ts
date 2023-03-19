@@ -195,6 +195,7 @@ const surveysSlice = createSlice({
       state.statsBySurveyId[surveyId].data = stats;
       state.statsBySurveyId[surveyId].isLoading = false;
       state.statsBySurveyId[surveyId].loaded = new Date().toISOString();
+      state.statsBySurveyId[surveyId].isStale = false;
     },
     submissionLoad: (state, action: PayloadAction<number>) => {
       const id = action.payload;
@@ -219,6 +220,14 @@ const surveysSlice = createSlice({
       item.data = submission;
       item.isLoading = false;
       item.loaded = new Date().toISOString();
+    },
+    surveyCreate: (state) => {
+      state.surveyList.isLoading = true;
+    },
+    surveyCreated: (state, action: PayloadAction<ZetkinSurveyExtended>) => {
+      const survey = action.payload;
+      state.surveyList.isLoading = false;
+      state.surveyList.items.push(remoteItem(survey.id, { data: survey }));
     },
     surveyLoad: (state, action: PayloadAction<number>) => {
       const id = action.payload;
@@ -261,6 +270,7 @@ const surveysSlice = createSlice({
       if (item) {
         item.data = { ...item.data, ...submission };
         item.mutating = [];
+        state.statsBySurveyId[submission.survey.id].isStale = true;
       }
     },
     surveysLoad: (state) => {
@@ -318,6 +328,8 @@ export const {
   submissionLoaded,
   statsLoad,
   statsLoaded,
+  surveyCreate,
+  surveyCreated,
   surveyLoad,
   surveyLoaded,
   surveySubmissionUpdate,

@@ -27,7 +27,7 @@ const EmptyOverview = ({ campId, orgId, surveyId }: EmptyOverviewProps) => {
         <Msg id={messageIds.overview.noQuestions.title} />
       </Typography>
       <Link
-        href={`/organize/${orgId}/campaigns/${campId}/surveys/${surveyId}/questions`}
+        href={`/organize/${orgId}/projects/${campId}/surveys/${surveyId}/questions`}
         sx={{ marginTop: 4 }}
         underline="none"
       >

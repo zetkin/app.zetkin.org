@@ -2,8 +2,8 @@ import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('feat.campaigns', {
   all: {
-    cardCTA: m('Go to campaign'),
-    create: m('Create new campaign'),
+    cardCTA: m('Go to project'),
+    create: m('Create new project'),
     filter: {
       calls: m('Call assignments'),
       canvasses: m('Canvass assignments'),
@@ -11,7 +11,7 @@ export default makeMessages('feat.campaigns', {
       standalones: m('Standalone events'),
       surveys: m('Surveys'),
     },
-    heading: m('Current campaigns'),
+    heading: m('Current projects'),
     indefinite: m('Indefinite'),
     unsorted: m('Unsorted projects'),
     upcoming: m<{ numEvents: number }>('{numEvents, number} upcoming events.'),
@@ -24,7 +24,7 @@ export default makeMessages('feat.campaigns', {
   },
   assigneeActions: m('Assignee actions'),
   calendarView: m('See all in calendar'),
-  campaignManager: m('Campaign Manager'),
+  campaignManager: m('Project Manager'),
   events: m('Events'),
   feedback: {
     copy: m(
@@ -34,28 +34,37 @@ export default makeMessages('feat.campaigns', {
     heading: m('Feedback and Surveys (none configured)'),
   },
   form: {
+    createCallAssignment: {
+      newCallAssignment: m('My call assignment'),
+    },
     createCampaign: {
-      create: m('Create campaign'),
-      error: m('There was an error creating the campaign'),
-      newCampaign: m('My campaign'),
+      create: m('Create project'),
+      error: m('There was an error creating the project'),
+      newCampaign: m('My project'),
+    },
+    createSurvey: {
+      newSurvey: m('My survey'),
+    },
+    createTask: {
+      title: m('Create task'),
     },
     deleteCampaign: {
       cancel: m('Cancel'),
-      error: m('There was an error deleting the campaign'),
+      error: m('There was an error deleting the project'),
       submitButton: m('Confirm deletion'),
-      title: m('Delete campaign'),
+      title: m('Delete project'),
       warning: m(
         'Are you sure you want to delete this campiagn? This action is permanent.'
       ),
     },
     description: m('Description'),
-    edit: m('Edit campaign'),
+    edit: m('Edit project'),
     editCampaignTitle: {
-      error: m('Error updating campaign title'),
-      success: m('Campaign title updated'),
+      error: m('Error updating project title'),
+      success: m('Project title updated'),
     },
     manager: {
-      label: m('Campaign manager'),
+      label: m('Project manager'),
       selectSelf: m('Set yourself as manager'),
     },
     name: m('Name'),
@@ -75,13 +84,17 @@ export default makeMessages('feat.campaigns', {
   indefinite: m('Indefinite timeline'),
   layout: {
     activities: m('Activities'),
-    allCampaigns: m('All Campaigns'),
+    allCampaigns: m('All Projects'),
     archive: m('Archive'),
     calendar: m('Calendar'),
     insights: m('Insights'),
     summary: m('Summary'),
   },
   linkGroup: {
+    createActivity: m('Create activity'),
+    createCallAssignment: m('Create call assignment'),
+    createSurvey: m('Create survey'),
+    createTask: m('Create task'),
     public: m('Public Page'),
     settings: m('Edit Settings'),
   },
@@ -92,10 +105,11 @@ export default makeMessages('feat.campaigns', {
     create: m('Create call assignment'),
     heading: m('Mobilization and outreach (none configured)'),
   },
-  noManager: m('No Campaign Manager'),
+  noManager: m('No Project Manager'),
   singleProject: {
-    createActivity: m('Create your first activity.'),
+    filterActivities: m('Type to filter'),
     noActivities: m('There are no activities in this project yet.'),
+    noSearchResults: m('Your filtering yielded no results.'),
   },
   taskLayout: {
     tabs: {

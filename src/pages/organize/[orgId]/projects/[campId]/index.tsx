@@ -1,32 +1,27 @@
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
+import { useQuery } from 'react-query';
+import { Box, Grid, Typography } from '@mui/material';
 
-import Calendar from 'features/calendar/components';
+import { campaignTasksResource } from 'features/tasks/api/tasks';
+import EventList from 'features/events/components/EventList';
 import getCampaign from 'features/campaigns/fetching/getCampaign';
 import getCampaignEvents from 'features/campaigns/fetching/getCampaignEvents';
 import getOrg from 'utils/fetching/getOrg';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import SingleCampaignLayout from 'features/campaigns/layout/SingleCampaignLayout';
-import { useQuery } from 'react-query';
-import ZUISpeedDial, { ACTIONS } from 'zui/ZUISpeedDial';
-
-import { campaignTasksResource } from 'features/tasks/api/tasks';
+import TaskList from 'features/tasks/components/TaskList';
 import { useMessages } from 'core/i18n';
+import ZUIPerson from 'zui/ZUIPerson';
+import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
+import ZUISection from 'zui/ZUISection';
 
 import messageIds from 'features/campaigns/l10n/messageIds';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
-  localeScope: [
-    'layout.organize',
-    'misc.breadcrumbs',
-    'misc.calendar',
-    'misc.formDialog',
-    'misc.speedDial',
-    'misc.tasks',
-    'pages.organizeCampaigns',
-  ],
+  localeScope: ['layout.organize', 'pages.organizeCampaigns'],
 };
 
 export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
@@ -83,16 +78,19 @@ export const getServerSideProps: GetServerSideProps = scaffold(async (ctx) => {
   }
 }, scaffoldOptions);
 
-type OrganizeCalendarPageProps = {
+type CampaignCalendarPageProps = {
   campId: string;
   orgId: string;
 };
 
-const CampaignCalendarPage: PageWithLayout<OrganizeCalendarPageProps> = ({
+const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({
   orgId,
   campId,
 }) => {
   const messages = useMessages(messageIds);
+
+  const tasksQuery = campaignTasksResource(orgId, campId).useQuery();
+
   const eventsQuery = useQuery(
     ['campaignEvents', orgId, campId],
     getCampaignEvents(orgId, campId)
@@ -101,32 +99,62 @@ const CampaignCalendarPage: PageWithLayout<OrganizeCalendarPageProps> = ({
     ['campaign', orgId, campId],
     getCampaign(orgId, campId)
   );
-  const tasksQuery = campaignTasksResource(orgId, campId).useQuery();
-
   const events = eventsQuery.data || [];
   const tasks = tasksQuery.data || [];
-  const campaigns = campaignQuery.data ? [campaignQuery.data] : [];
+  const campaign = campaignQuery.data;
 
   return (
     <>
       <Head>
-        <title>
-          {`${campaignQuery.data?.title} - ${messages.layout.calendar()}`}
-        </title>
+        <title>{campaign?.title}</title>
       </Head>
-      <Calendar
-        baseHref={`/organize/${orgId}/campaigns/${campId}/calendar`}
-        campaigns={campaigns}
-        events={events}
-        tasks={tasks}
-      />
-      <ZUISpeedDial actions={[ACTIONS.CREATE_TASK]} />
+      <>
+        <Box mb={campaign?.info_text || campaign?.manager ? 2 : 0}>
+          <Grid container spacing={2}>
+            {campaign?.info_text && (
+              <Grid item lg={6} md={12} xs={12}>
+                <Typography variant="body1">{campaign?.info_text}</Typography>
+              </Grid>
+            )}
+            {campaign?.manager && (
+              <Grid item xs={12}>
+                <ZUIPersonHoverCard personId={campaign.manager.id}>
+                  <ZUIPerson
+                    id={campaign.manager.id}
+                    name={campaign.manager.name}
+                    subtitle={messages.campaignManager()}
+                  />
+                </ZUIPersonHoverCard>
+              </Grid>
+            )}
+          </Grid>
+        </Box>
+
+        <Grid container spacing={2}>
+          {/* Events */}
+          <Grid item md={6} sm={12} xs={12}>
+            <ZUISection title={messages.events()}>
+              <EventList
+                events={events ?? []}
+                hrefBase={`/organize/${orgId}/projects/${campId}`}
+              />
+            </ZUISection>
+          </Grid>
+
+          {/* Tasks */}
+          <Grid item md={6} sm={12} xs={12}>
+            <ZUISection title={messages.tasks()}>
+              <TaskList tasks={tasks ?? []} />
+            </ZUISection>
+          </Grid>
+        </Grid>
+      </>
     </>
   );
 };
 
-CampaignCalendarPage.getLayout = function getLayout(page) {
-  return <SingleCampaignLayout fixedHeight>{page}</SingleCampaignLayout>;
+CampaignSummaryPage.getLayout = function getLayout(page) {
+  return <SingleCampaignLayout>{page}</SingleCampaignLayout>;
 };
 
-export default CampaignCalendarPage;
+export default CampaignSummaryPage;

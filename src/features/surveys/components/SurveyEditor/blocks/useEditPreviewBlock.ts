@@ -6,21 +6,26 @@ type UseEditPreviewBlockProps = {
   editable: boolean;
   onEditModeEnter: () => void;
   onEditModeExit: () => void;
+  readOnly?: boolean;
   save: () => void;
 };
 
 export default function useEditPreviewBlock({
   editable,
-  save,
   onEditModeEnter,
   onEditModeExit,
+  readOnly,
+  save,
 }: UseEditPreviewBlockProps) {
   const [autoFocusDefault, setAutoFocusDefault] = useState(true);
 
   const handleSwitchMode = (newMode: ZUIPreviewableMode) => {
     if (newMode == ZUIPreviewableMode.EDITABLE) {
-      setAutoFocusDefault(false);
-      onEditModeEnter();
+      if (!readOnly) {
+        // Only allow switching if we're not in read-only mode.
+        setAutoFocusDefault(false);
+        onEditModeEnter();
+      }
     } else {
       onEditModeExit();
     }
@@ -38,7 +43,7 @@ export default function useEditPreviewBlock({
     },
     containerProps: {
       onClick: () => {
-        if (!editable) {
+        if (!editable && !readOnly) {
           setAutoFocusDefault(true);
           onEditModeEnter();
         }

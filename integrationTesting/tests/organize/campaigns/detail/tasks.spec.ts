@@ -25,7 +25,7 @@ test.describe('Campaign detail page', async () => {
       VisitReferendumWebsite,
     ]);
 
-    await page.goto(appUri + '/organize/1/campaigns/1');
+    await page.goto(appUri + '/organize/1/projects/1');
 
     await expect(
       page.locator('text=Speak to friend about the referendum')
@@ -42,7 +42,7 @@ test.describe('Campaign detail page', async () => {
   }) => {
     moxy.setZetkinApiMock('/orgs/1/campaigns/1/tasks', 'get', []);
 
-    await page.goto(appUri + '/organize/1/campaigns/1');
+    await page.goto(appUri + '/organize/1/projects/1');
 
     await expect(page.locator('text=No tasks')).toBeVisible();
   });

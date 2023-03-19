@@ -65,7 +65,7 @@ export interface ZetkinEvent {
   campaign: {
     id: number;
     title: string;
-  };
+  } | null;
   contact?: string | null;
   end_time: string;
   id: number;
@@ -150,10 +150,15 @@ export interface ZetkinSession {
 }
 
 export interface ZetkinCallAssignment {
+  campaign: {
+    id: number;
+    title: string;
+  } | null;
   cooldown: number;
   description: string;
   disable_caller_notes: boolean;
   end_date: string;
+  expose_target_details: boolean;
   goal: ZetkinQuery;
   id: number;
   instructions: string;
@@ -166,6 +171,10 @@ export interface ZetkinCallAssignment {
   target: ZetkinQuery;
   title: string;
 }
+
+export type ZetkinCallAssignmentPostBody = Partial<
+  Omit<ZetkinCallAssignment, 'organization'>
+>;
 
 export interface ZetkinSurvey {
   title: string;
@@ -182,6 +191,11 @@ export interface ZetkinSurvey {
   expires: string | null;
   campaign: { id: number; title: string } | null;
   org_access: 'sameorg' | 'suborgs';
+}
+
+export interface ZetkinSurveyPostBody
+  extends Partial<Omit<ZetkinSurvey, 'organization' | 'id'>> {
+  title: string;
 }
 
 export interface ZetkinSurveyExtended extends ZetkinSurvey {
@@ -250,7 +264,7 @@ export interface ZetkinOptionsQuestion {
   question: string;
   required: boolean;
   response_config: {
-    widget_type: 'checkbox' | 'radio' | 'select';
+    widget_type?: 'checkbox' | 'radio' | 'select';
   };
   response_type: RESPONSE_TYPE.OPTIONS;
 }

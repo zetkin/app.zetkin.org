@@ -17,7 +17,7 @@ const CampaignListItem: React.FunctionComponent<{
   return (
     <Link
       key={campaign.id}
-      href={`/organize/${orgId}/campaigns/${campaign.id}`}
+      href={`/organize/${orgId}/projects/${campaign.id}`}
       passHref
     >
       <ListItem button component="a" data-testid="SearchDialog-resultsListItem">

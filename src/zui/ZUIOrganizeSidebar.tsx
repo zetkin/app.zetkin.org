@@ -153,11 +153,11 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
             </NextLink>
           </ListItem>
           <ListItem disableGutters>
-            <NextLink href={`/organize/${orgId}/campaigns`} passHref>
+            <NextLink href={`/organize/${orgId}/projects`} passHref>
               <IconButton
-                aria-label="Campaigns"
+                aria-label="Projects"
                 className={classes.roundButton}
-                color={key.startsWith('/campaigns') ? 'primary' : 'secondary'}
+                color={key.startsWith('/projects') ? 'primary' : 'secondary'}
                 data-test="calendar-button"
                 size="large"
               >
