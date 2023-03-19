@@ -10,6 +10,7 @@ import { Msg } from 'core/i18n';
 import theme from 'theme';
 import ZUIIconLabel from 'zui/ZUIIconLabel';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
+import ZUISuffixedNumber from 'zui/ZUISuffixedNumber';
 
 interface StyleProps {
   color: STATUS_COLORS;
@@ -169,7 +170,7 @@ const OverviewListItem = ({
         <Box width={80}>
           <ZUIIconLabel
             icon={<SecondaryIcon color="secondary" />}
-            label={endNumber.toString()}
+            label={<ZUISuffixedNumber number={endNumber} />}
             labelColor="secondary"
           />
         </Box>
