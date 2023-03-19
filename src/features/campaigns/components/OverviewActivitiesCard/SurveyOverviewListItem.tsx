@@ -5,6 +5,7 @@ import OverviewListItem from './OverviewListItem';
 import { SurveyActivity } from 'features/campaigns/models/CampaignActivitiesModel';
 import SurveyDataModel from 'features/surveys/models/SurveyDataModel';
 import useModel from 'core/useModel';
+import ZUIStackedStatusBar from 'zui/ZUIStackedStatusBar';
 
 interface SurveyOverviewListItemProps {
   activity: SurveyActivity;
@@ -21,19 +22,35 @@ const SurveyOverviewListItem: FC<SurveyOverviewListItemProps> = ({
   );
 
   const stats = dataModel.getStats().data;
-
   const submissionCount = stats?.submissionCount || 0;
 
   return (
     <OverviewListItem
       activity={activity}
-      endNumber={submissionCount.toString()}
+      endNumber={submissionCount}
       focusDate={focusDate}
       href={`/organize/${survey.organization.id}/projects/${
         survey.campaign?.id ?? 'standalone'
       }/surveys/${survey.id}`}
       PrimaryIcon={AssignmentOutlined}
       SecondaryIcon={ChatBubbleOutline}
+      statusBar={
+        stats?.submissionCount ? (
+          <ZUIStackedStatusBar
+            height={4}
+            values={[
+              {
+                color: 'statusColors.orange',
+                value: stats.unlinkedSubmissionCount,
+              },
+              {
+                color: 'statusColors.green',
+                value: stats.submissionCount - stats.unlinkedSubmissionCount,
+              },
+            ]}
+          />
+        ) : null
+      }
       title={survey.title}
     />
   );
