@@ -37,26 +37,32 @@ const OverviewActivitiesCard: FC<OverviewListProps> = ({
       {truncActivities.map((activity, index) => {
         if (activity.kind === ACTIVITIES.CALL_ASSIGNMENT) {
           return (
-            <Box key={`ca-${activity.id}`}>
+            <Box key={`ca-${activity.data.id}`}>
               {index > 0 && <Divider />}
               <CallAssignmentOverviewListItem
-                assignment={activity}
+                assignment={activity.data}
                 focusDate={focusDate}
               />
             </Box>
           );
         } else if (activity.kind === ACTIVITIES.SURVEY) {
           return (
-            <Box key={`survey-${activity.id}`}>
+            <Box key={`survey-${activity.data.id}`}>
               {index > 0 && <Divider />}
-              <SurveyOverviewListItem focusDate={focusDate} survey={activity} />
+              <SurveyOverviewListItem
+                focusDate={focusDate}
+                survey={activity.data}
+              />
             </Box>
           );
         } else if (activity.kind === ACTIVITIES.TASK) {
           return (
-            <Box key={`task-${activity.id}`}>
+            <Box key={`task-${activity.data.id}`}>
               {index > 0 && <Divider />}
-              <TaskOverviewListItem focusDate={focusDate} task={activity} />
+              <TaskOverviewListItem
+                focusDate={focusDate}
+                task={activity.data}
+              />
             </Box>
           );
         }

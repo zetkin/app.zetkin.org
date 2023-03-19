@@ -24,23 +24,23 @@ const Activities = ({ activities, orgId }: ActivitiesProps) => {
       {activities.map((activity, index) => {
         if (activity.kind === ACTIVITIES.CALL_ASSIGNMENT) {
           return (
-            <Box key={`ca-${activity.id}`}>
+            <Box key={`ca-${activity.data.id}`}>
               {index > 0 && <Divider />}
-              <CallAssignmentListItem caId={activity.id} orgId={orgId} />
+              <CallAssignmentListItem caId={activity.data.id} orgId={orgId} />
             </Box>
           );
         } else if (activity.kind === ACTIVITIES.SURVEY) {
           return (
-            <Box key={`survey-${activity.id}`}>
+            <Box key={`survey-${activity.data.id}`}>
               {index > 0 && <Divider />}
-              <SurveyListItem orgId={orgId} surveyId={activity.id} />
+              <SurveyListItem orgId={orgId} surveyId={activity.data.id} />
             </Box>
           );
         } else if (activity.kind === ACTIVITIES.TASK) {
           return (
-            <Box key={`task-${activity.id}`}>
+            <Box key={`task-${activity.data.id}`}>
               {index > 0 && <Divider />}
-              <TaskListItem orgId={orgId} taskId={activity.id} />
+              <TaskListItem orgId={orgId} taskId={activity.data.id} />
             </Box>
           );
         }

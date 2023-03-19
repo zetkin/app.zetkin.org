@@ -1,9 +1,9 @@
 import CallAssignmentsRepo from 'features/callAssignments/repos/CallAssignmentsRepo';
 import Environment from 'core/env/Environment';
-import { isInFuture } from 'utils/dateUtils';
 import { ModelBase } from 'core/models';
 import SurveysRepo from 'features/surveys/repos/SurveysRepo';
 import TasksRepo from 'features/tasks/repos/TasksRepo';
+import { dateOrNull, isInFuture } from 'utils/dateUtils';
 import { IFuture, LoadingFuture, ResolvedFuture } from 'core/caching/futures';
 import {
   ZetkinCallAssignment,
@@ -17,10 +17,30 @@ export enum ACTIVITIES {
   TASK = 'task',
 }
 
+type CampaignActivityBase = {
+  endDate: Date | null;
+  startDate: Date | null;
+};
+
+type CallAssignmentActivity = CampaignActivityBase & {
+  data: ZetkinCallAssignment;
+  kind: ACTIVITIES.CALL_ASSIGNMENT;
+};
+
+type SurveyActivity = CampaignActivityBase & {
+  data: ZetkinSurveyExtended;
+  kind: ACTIVITIES.SURVEY;
+};
+
+type TaskActivity = CampaignActivityBase & {
+  data: ZetkinTask;
+  kind: ACTIVITIES.TASK;
+};
+
 export type CampaignActivity =
-  | (ZetkinSurveyExtended & { kind: ACTIVITIES.SURVEY })
-  | (ZetkinCallAssignment & { kind: ACTIVITIES.CALL_ASSIGNMENT })
-  | (ZetkinTask & { kind: ACTIVITIES.TASK });
+  | CallAssignmentActivity
+  | SurveyActivity
+  | TaskActivity;
 
 export default class CampaignActivitiesModel extends ModelBase {
   private _callAssignmentsRepo: CallAssignmentsRepo;
@@ -45,20 +65,10 @@ export default class CampaignActivitiesModel extends ModelBase {
       : this.getCurrentActivities();
 
     const filtered = activitiesFuture.data?.filter((activity) => {
-      if (activity.kind == ACTIVITIES.CALL_ASSIGNMENT) {
-        return (
-          activity.start_date?.slice(0, 10) == date ||
-          activity.end_date?.slice(0, 10) == date
-        );
-      } else if (
-        activity.kind == ACTIVITIES.SURVEY ||
-        activity.kind == ACTIVITIES.TASK
-      ) {
-        return (
-          activity.published?.slice(0, 10) == date ||
-          activity.expires?.slice(0, 10) == date
-        );
-      }
+      return (
+        activity.startDate?.toISOString().slice(0, 10) == date ||
+        activity.endDate?.toISOString().slice(0, 10) == date
+      );
     });
 
     if (filtered) {
@@ -71,7 +81,7 @@ export default class CampaignActivitiesModel extends ModelBase {
   getCampaignActivities(campId: number): IFuture<CampaignActivity[]> {
     const activities = this.getCurrentActivities().data;
     const filtered = activities?.filter(
-      (activity) => activity.campaign?.id === campId
+      (activity) => activity.data.campaign?.id === campId
     );
     return new ResolvedFuture(filtered || []);
   }
@@ -94,37 +104,40 @@ export default class CampaignActivitiesModel extends ModelBase {
     const callAssignments: CampaignActivity[] = callAssignmentsFuture.data
       .filter((ca) => !ca.end_date || isInFuture(ca.end_date))
       .map((ca) => ({
-        ...ca,
+        data: ca,
+        endDate: dateOrNull(ca.end_date),
         kind: ACTIVITIES.CALL_ASSIGNMENT,
+        startDate: dateOrNull(ca.start_date),
       }));
 
     const surveys: CampaignActivity[] = surveysFuture.data
       .filter((survey) => !survey.expires || isInFuture(survey.expires))
       .map((survey) => ({
-        ...survey,
+        data: survey,
+        endDate: dateOrNull(survey.expires),
         kind: ACTIVITIES.SURVEY,
+        startDate: dateOrNull(survey.published),
       }));
 
     const tasks: CampaignActivity[] = tasksFuture.data
       .filter((task) => !task.expires || isInFuture(task.expires))
       .map((task) => ({
-        ...task,
+        data: task,
+        endDate: dateOrNull(task.expires),
         kind: ACTIVITIES.TASK,
+        startDate: dateOrNull(task.published),
       }));
 
     const unsorted = callAssignments.concat(...surveys, ...tasks);
 
     const sorted = unsorted.sort((first, second) => {
-      const firstStartDate = getStartDate(first);
-      const secondStartDate = getStartDate(second);
-
-      if (firstStartDate === null) {
+      if (first.startDate === null) {
         return -1;
-      } else if (secondStartDate === null) {
+      } else if (second.startDate === null) {
         return 1;
       }
 
-      return secondStartDate.getTime() - firstStartDate.getTime();
+      return second.startDate.getTime() - first.startDate.getTime();
     });
 
     return new ResolvedFuture(sorted);
@@ -133,7 +146,7 @@ export default class CampaignActivitiesModel extends ModelBase {
   getStandaloneActivities(): IFuture<CampaignActivity[]> {
     const activities = this.getCurrentActivities().data;
     const filtered = activities?.filter(
-      (activity) => activity.campaign === null
+      (activity) => activity.data.campaign === null
     );
     return new ResolvedFuture(filtered || []);
   }
@@ -148,13 +161,10 @@ export default class CampaignActivitiesModel extends ModelBase {
     weekFromNow.setDate(startOfToday.getDate() + 8);
 
     const filtered = activitiesFuture.data?.filter((activity) => {
-      const startDate = getStartDate(activity);
-      const endDate = getEndDate(activity);
-
       return (
-        startDate &&
-        startDate < weekFromNow &&
-        (!endDate || endDate >= startOfToday)
+        activity.startDate &&
+        activity.startDate < weekFromNow &&
+        (!activity.endDate || activity.endDate >= startOfToday)
       );
     });
 
@@ -163,32 +173,5 @@ export default class CampaignActivitiesModel extends ModelBase {
     } else {
       return activitiesFuture;
     }
-  }
-}
-
-function getStartDate(activity: CampaignActivity): Date | null {
-  if (activity.kind === ACTIVITIES.SURVEY) {
-    if (!activity.published) {
-      return null;
-    }
-    return new Date(activity.published);
-  } else if (activity.kind === ACTIVITIES.CALL_ASSIGNMENT) {
-    if (!activity.start_date) {
-      return null;
-    }
-    return new Date(activity.start_date);
-  } else {
-    if (!activity.published) {
-      return null;
-    }
-    return new Date(activity.published);
-  }
-}
-
-function getEndDate(activity: CampaignActivity): Date | null {
-  if (activity.kind == ACTIVITIES.CALL_ASSIGNMENT) {
-    return activity.end_date ? new Date(activity.end_date) : null;
-  } else {
-    return activity.expires ? new Date(activity.expires) : null;
   }
 }
