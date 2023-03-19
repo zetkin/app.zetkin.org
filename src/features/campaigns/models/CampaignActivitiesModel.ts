@@ -1,9 +1,9 @@
 import CallAssignmentsRepo from 'features/callAssignments/repos/CallAssignmentsRepo';
 import Environment from 'core/env/Environment';
+import { isInFuture } from 'utils/dateUtils';
 import { ModelBase } from 'core/models';
 import SurveysRepo from 'features/surveys/repos/SurveysRepo';
 import TasksRepo from 'features/tasks/repos/TasksRepo';
-import { dateOrNull, isInFuture } from 'utils/dateUtils';
 import { IFuture, LoadingFuture, ResolvedFuture } from 'core/caching/futures';
 import {
   ZetkinCallAssignment,
@@ -105,27 +105,27 @@ export default class CampaignActivitiesModel extends ModelBase {
       .filter((ca) => !ca.end_date || isInFuture(ca.end_date))
       .map((ca) => ({
         data: ca,
-        endDate: dateOrNull(ca.end_date),
+        endDate: getUTCDateWithoutTime(ca.end_date),
         kind: ACTIVITIES.CALL_ASSIGNMENT,
-        startDate: dateOrNull(ca.start_date),
+        startDate: getUTCDateWithoutTime(ca.start_date),
       }));
 
     const surveys: CampaignActivity[] = surveysFuture.data
       .filter((survey) => !survey.expires || isInFuture(survey.expires))
       .map((survey) => ({
         data: survey,
-        endDate: dateOrNull(survey.expires),
+        endDate: getUTCDateWithoutTime(survey.expires),
         kind: ACTIVITIES.SURVEY,
-        startDate: dateOrNull(survey.published),
+        startDate: getUTCDateWithoutTime(survey.published),
       }));
 
     const tasks: CampaignActivity[] = tasksFuture.data
       .filter((task) => !task.expires || isInFuture(task.expires))
       .map((task) => ({
         data: task,
-        endDate: dateOrNull(task.expires),
+        endDate: getUTCDateWithoutTime(task.expires || null),
         kind: ACTIVITIES.TASK,
-        startDate: dateOrNull(task.published),
+        startDate: getUTCDateWithoutTime(task.published || null),
       }));
 
     const unsorted = callAssignments.concat(...surveys, ...tasks);
@@ -174,4 +174,19 @@ export default class CampaignActivitiesModel extends ModelBase {
       return activitiesFuture;
     }
   }
+}
+
+function getUTCDateWithoutTime(naiveDateString: string | null): Date | null {
+  if (!naiveDateString) {
+    return null;
+  }
+
+  const dateFromNaive = new Date(naiveDateString);
+  const utcTime = Date.UTC(
+    dateFromNaive.getFullYear(),
+    dateFromNaive.getMonth(),
+    dateFromNaive.getDate()
+  );
+
+  return new Date(utcTime);
 }
