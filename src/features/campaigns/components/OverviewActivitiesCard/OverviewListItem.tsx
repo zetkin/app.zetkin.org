@@ -72,7 +72,7 @@ interface OverviewListItemProps {
   focusDate: Date | null;
   href: string;
   title: string;
-  endNumber: number | string;
+  endNumber: number;
   statusBar?: JSX.Element | null;
 }
 
