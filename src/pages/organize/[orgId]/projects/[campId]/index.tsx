@@ -1,7 +1,8 @@
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
+import NextLink from 'next/link';
 import { useQuery } from 'react-query';
-import { Box, Grid, Typography } from '@mui/material';
+import { Box, Button, Grid, Typography } from '@mui/material';
 
 import CampaignActivitiesModel from 'features/campaigns/models/CampaignActivitiesModel';
 import { campaignTasksResource } from 'features/tasks/api/tasks';
@@ -13,9 +14,9 @@ import OverviewActivitiesCard from 'features/campaigns/components/OverviewActivi
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import SingleCampaignLayout from 'features/campaigns/layout/SingleCampaignLayout';
-import { useMessages } from 'core/i18n';
 import useModel from 'core/useModel';
 import ZUIFuture from 'zui/ZUIFuture';
+import { Msg, useMessages } from 'core/i18n';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -116,6 +117,28 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({
               </Grid>
             )}
           </Grid>
+        </Box>
+        <Box
+          alignItems="center"
+          display="flex"
+          justifyContent="space-between"
+          mb={2}
+        >
+          <Box>
+            <Typography variant="h4">
+              <Msg id={messageIds.activitiesCard.title} />
+            </Typography>
+          </Box>
+          <Box>
+            <NextLink
+              href={`/organize/${orgId}/projects/${campId}/activities`}
+              passHref
+            >
+              <Button variant="text">
+                <Msg id={messageIds.activitiesCard.button} />
+              </Button>
+            </NextLink>
+          </Box>
         </Box>
 
         <ZUIFuture
