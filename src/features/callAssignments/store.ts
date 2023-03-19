@@ -28,6 +28,19 @@ const callAssignmentsSlice = createSlice({
   initialState,
   name: 'callAssignments',
   reducers: {
+    callAssignmentCreate: (state) => {
+      state.assignmentList.isLoading = true;
+    },
+    callAssignmentCreated: (
+      state,
+      action: PayloadAction<CallAssignmentData>
+    ) => {
+      const callAssignment = action.payload;
+      state.assignmentList.isLoading = false;
+      state.assignmentList.items.push(
+        remoteItem(callAssignment.id, { data: callAssignment })
+      );
+    },
     callAssignmentLoad: (state, action: PayloadAction<number>) => {
       const id = action.payload;
       const item = state.assignmentList.items.find((item) => item.id == id);
@@ -213,6 +226,8 @@ const callAssignmentsSlice = createSlice({
 
 export default callAssignmentsSlice;
 export const {
+  callAssignmentCreate,
+  callAssignmentCreated,
   callAssignmentLoad,
   callAssignmentLoaded,
   callAssignmentUpdate,

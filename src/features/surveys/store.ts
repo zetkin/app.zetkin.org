@@ -221,6 +221,14 @@ const surveysSlice = createSlice({
       item.isLoading = false;
       item.loaded = new Date().toISOString();
     },
+    surveyCreate: (state) => {
+      state.surveyList.isLoading = true;
+    },
+    surveyCreated: (state, action: PayloadAction<ZetkinSurveyExtended>) => {
+      const survey = action.payload;
+      state.surveyList.isLoading = false;
+      state.surveyList.items.push(remoteItem(survey.id, { data: survey }));
+    },
     surveyLoad: (state, action: PayloadAction<number>) => {
       const id = action.payload;
       const item = state.surveyList.items.find((item) => item.id == id);
@@ -320,6 +328,8 @@ export const {
   submissionLoaded,
   statsLoad,
   statsLoaded,
+  surveyCreate,
+  surveyCreated,
   surveyLoad,
   surveyLoaded,
   surveySubmissionUpdate,

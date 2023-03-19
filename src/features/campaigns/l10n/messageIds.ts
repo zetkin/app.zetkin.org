@@ -34,10 +34,19 @@ export default makeMessages('feat.campaigns', {
     heading: m('Feedback and Surveys (none configured)'),
   },
   form: {
+    createCallAssignment: {
+      newCallAssignment: m('My call assignment'),
+    },
     createCampaign: {
       create: m('Create project'),
       error: m('There was an error creating the project'),
       newCampaign: m('My project'),
+    },
+    createSurvey: {
+      newSurvey: m('My survey'),
+    },
+    createTask: {
+      title: m('Create task'),
     },
     deleteCampaign: {
       cancel: m('Cancel'),
@@ -82,6 +91,10 @@ export default makeMessages('feat.campaigns', {
     summary: m('Summary'),
   },
   linkGroup: {
+    createActivity: m('Create activity'),
+    createCallAssignment: m('Create call assignment'),
+    createSurvey: m('Create survey'),
+    createTask: m('Create task'),
     public: m('Public Page'),
     settings: m('Edit Settings'),
   },
