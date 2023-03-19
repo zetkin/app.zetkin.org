@@ -15,6 +15,7 @@ import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import SingleCampaignLayout from 'features/campaigns/layout/SingleCampaignLayout';
 import useModel from 'core/useModel';
+import ZUIEmptyState from 'zui/ZUIEmptyState';
 import ZUIFuture from 'zui/ZUIFuture';
 import { Msg, useMessages } from 'core/i18n';
 
@@ -122,7 +123,7 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({
           alignItems="center"
           display="flex"
           justifyContent="space-between"
-          mb={2}
+          my={2}
         >
           <Box>
             <Typography variant="h4">
@@ -145,6 +146,21 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({
           future={activitiesModel.getActivityOverview(parseInt(campId))}
         >
           {(data) => {
+            const totalLength =
+              data.today.length +
+              data.tomorrow.length +
+              data.alsoThisWeek.length;
+
+            if (totalLength == 0) {
+              return (
+                <Box>
+                  <ZUIEmptyState
+                    message={messages.activitiesCard.noActivities()}
+                  />
+                </Box>
+              );
+            }
+
             return (
               <Grid container spacing={2}>
                 <Grid item md={4} xs={12}>
