@@ -16,8 +16,6 @@ import SingleCampaignLayout from 'features/campaigns/layout/SingleCampaignLayout
 import { useMessages } from 'core/i18n';
 import useModel from 'core/useModel';
 import ZUIFuture from 'zui/ZUIFuture';
-import ZUIPerson from 'zui/ZUIPerson';
-import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -115,17 +113,6 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({
             {campaign?.info_text && (
               <Grid item lg={6} md={12} xs={12}>
                 <Typography variant="body1">{campaign?.info_text}</Typography>
-              </Grid>
-            )}
-            {campaign?.manager && (
-              <Grid item xs={12}>
-                <ZUIPersonHoverCard personId={campaign.manager.id}>
-                  <ZUIPerson
-                    id={campaign.manager.id}
-                    name={campaign.manager.name}
-                    subtitle={messages.campaignManager()}
-                  />
-                </ZUIPersonHoverCard>
               </Grid>
             )}
           </Grid>

@@ -45,7 +45,6 @@ export default makeMessages('feat.campaigns', {
   },
   assigneeActions: m('Assignee actions'),
   calendarView: m('See all in calendar'),
-  campaignManager: m('Project Manager'),
   events: m('Events'),
   feedback: {
     copy: m(
