@@ -15,11 +15,13 @@ import { Msg, useMessages } from 'core/i18n';
 
 type OverviewListProps = {
   activities: CampaignActivity[];
+  focusDate: Date | null;
   header: string;
 };
 
 const OverviewActivitiesCard: FC<OverviewListProps> = ({
   activities,
+  focusDate,
   header,
 }) => {
   const messages = useMessages(messageIds);
@@ -37,21 +39,24 @@ const OverviewActivitiesCard: FC<OverviewListProps> = ({
           return (
             <Box key={`ca-${activity.id}`}>
               {index > 0 && <Divider />}
-              <CallAssignmentOverviewListItem assignment={activity} />
+              <CallAssignmentOverviewListItem
+                assignment={activity}
+                focusDate={focusDate}
+              />
             </Box>
           );
         } else if (activity.kind === ACTIVITIES.SURVEY) {
           return (
             <Box key={`survey-${activity.id}`}>
               {index > 0 && <Divider />}
-              <SurveyOverviewListItem survey={activity} />
+              <SurveyOverviewListItem focusDate={focusDate} survey={activity} />
             </Box>
           );
         } else if (activity.kind === ACTIVITIES.TASK) {
           return (
             <Box key={`task-${activity.id}`}>
               {index > 0 && <Divider />}
-              <TaskOverviewListItem task={activity} />
+              <TaskOverviewListItem focusDate={focusDate} task={activity} />
             </Box>
           );
         }

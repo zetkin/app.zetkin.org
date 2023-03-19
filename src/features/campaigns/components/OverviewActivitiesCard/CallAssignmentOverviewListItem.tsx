@@ -11,11 +11,12 @@ import OverviewListItem, { STATUS_COLORS } from './OverviewListItem';
 
 interface CallAssignmentOverviewListItemProps {
   assignment: ZetkinCallAssignment;
+  focusDate: Date | null;
 }
 
 const CallAssignmentOverviewListItem: FC<
   CallAssignmentOverviewListItemProps
-> = ({ assignment }) => {
+> = ({ assignment, focusDate }) => {
   const dataModel = useModel(
     (env) =>
       new CallAssignmentModel(env, assignment.organization.id, assignment.id)
@@ -57,6 +58,7 @@ const CallAssignmentOverviewListItem: FC<
       color={color}
       endDate={dateOrNull(assignment.end_date)}
       endNumber={submissionCount.toString()}
+      focusDate={focusDate}
       href={`/organize/${assignment.organization.id}/projects/${
         data.campaign?.id ?? 'standalone'
       }/callassignments/${assignment.id}`}

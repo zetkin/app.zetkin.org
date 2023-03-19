@@ -143,6 +143,7 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({
                 return (
                   <OverviewActivitiesCard
                     activities={data}
+                    focusDate={todayDate}
                     header={messages.activitiesCard.todayCard()}
                   />
                 );
@@ -160,6 +161,7 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({
                 return (
                   <OverviewActivitiesCard
                     activities={data}
+                    focusDate={tomorrowDate}
                     header={messages.activitiesCard.tomorrowCard()}
                   />
                 );
@@ -174,6 +176,7 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({
                 return (
                   <OverviewActivitiesCard
                     activities={data}
+                    focusDate={null}
                     header={messages.activitiesCard.thisWeekCard()}
                   />
                 );

@@ -10,10 +10,12 @@ import SurveyDataModel, {
 } from 'features/surveys/models/SurveyDataModel';
 
 interface SurveyOverviewListItemProps {
+  focusDate: Date | null;
   survey: ZetkinSurvey;
 }
 
 const SurveyOverviewListItem: FC<SurveyOverviewListItemProps> = ({
+  focusDate,
   survey,
 }) => {
   const dataModel = useModel(
@@ -53,6 +55,7 @@ const SurveyOverviewListItem: FC<SurveyOverviewListItemProps> = ({
       color={color}
       endDate={dateOrNull(survey.expires)}
       endNumber={submissionCount.toString()}
+      focusDate={focusDate}
       href={`/organize/${survey.organization.id}/projects/${
         data.campaign?.id ?? 'standalone'
       }/surveys/${survey.id}`}

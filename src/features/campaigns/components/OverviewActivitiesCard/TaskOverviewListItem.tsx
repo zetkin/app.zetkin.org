@@ -8,10 +8,14 @@ import { ZetkinTask } from 'utils/types/zetkin';
 import OverviewListItem, { STATUS_COLORS } from './OverviewListItem';
 
 interface TasksOverviewListItemProps {
+  focusDate: Date | null;
   task: ZetkinTask;
 }
 
-const TaskOverviewListItem: FC<TasksOverviewListItemProps> = ({ task }) => {
+const TaskOverviewListItem: FC<TasksOverviewListItemProps> = ({
+  focusDate,
+  task,
+}) => {
   const model = useModel(
     (env) => new TaskModel(env, task.organization.id, task.id)
   );
@@ -35,6 +39,7 @@ const TaskOverviewListItem: FC<TasksOverviewListItemProps> = ({ task }) => {
       color={color}
       endDate={dateOrNull(task.expires)}
       endNumber={data.target.id.toString()}
+      focusDate={focusDate}
       href={`/organize/${task.organization.id}/projects/${
         data.campaign?.id ?? 'standalone'
       }/calendar/tasks/${task.id}`}

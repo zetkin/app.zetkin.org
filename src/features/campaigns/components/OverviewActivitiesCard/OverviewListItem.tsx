@@ -74,6 +74,7 @@ interface OverviewListItemProps {
     SvgIconTypeMap<Record<string, unknown>, 'svg'>
   >;
 
+  focusDate: Date | null;
   href: string;
   color: STATUS_COLORS;
   title: string;
@@ -85,6 +86,7 @@ interface OverviewListItemProps {
 const OverviewListItem = ({
   PrimaryIcon,
   SecondaryIcon,
+  focusDate,
   href,
   color,
   title,
@@ -96,28 +98,51 @@ const OverviewListItem = ({
 
   const now = new Date();
   let label: JSX.Element | null = null;
-  if (startDate && isSameDate(startDate, now)) {
-    label = <Msg id={messageIds.activitiesCard.subtitles.startsToday} />;
-  } else if (startDate && startDate > now) {
-    label = (
-      <Msg
-        id={messageIds.activitiesCard.subtitles.startsLater}
-        values={{
-          relative: <ZUIRelativeTime datetime={startDate.toISOString()} />,
-        }}
-      />
-    );
-  } else if (endDate && isSameDate(endDate, now)) {
-    label = <Msg id={messageIds.activitiesCard.subtitles.endsToday} />;
-  } else if (endDate && endDate > now) {
-    label = (
-      <Msg
-        id={messageIds.activitiesCard.subtitles.endsLater}
-        values={{
-          relative: <ZUIRelativeTime datetime={endDate.toISOString()} />,
-        }}
-      />
-    );
+
+  if (!focusDate) {
+    if (startDate) {
+      label = getStartsLabel(startDate);
+    } else if (endDate) {
+      label = getEndsLabel(endDate);
+    }
+  } else if (startDate && isSameDate(focusDate, startDate)) {
+    label = getStartsLabel(startDate);
+  } else if (endDate && isSameDate(focusDate, endDate)) {
+    label = getEndsLabel(endDate);
+  }
+
+  function getEndsLabel(endDate: Date) {
+    if (endDate && isSameDate(endDate, now)) {
+      return <Msg id={messageIds.activitiesCard.subtitles.endsToday} />;
+    } else if (endDate && endDate > now) {
+      return (
+        <Msg
+          id={messageIds.activitiesCard.subtitles.endsLater}
+          values={{
+            relative: <ZUIRelativeTime datetime={endDate.toISOString()} />,
+          }}
+        />
+      );
+    }
+
+    return null;
+  }
+
+  function getStartsLabel(startDate: Date) {
+    if (startDate && isSameDate(startDate, now)) {
+      return <Msg id={messageIds.activitiesCard.subtitles.startsToday} />;
+    } else if (startDate && startDate > now) {
+      return (
+        <Msg
+          id={messageIds.activitiesCard.subtitles.startsLater}
+          values={{
+            relative: <ZUIRelativeTime datetime={startDate.toISOString()} />,
+          }}
+        />
+      );
+    }
+
+    return null;
   }
 
   return (
