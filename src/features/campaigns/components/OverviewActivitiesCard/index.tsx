@@ -1,12 +1,13 @@
 import { FC } from 'react';
+import { FlagOutlined } from '@mui/icons-material';
 import { Box, Divider, Typography } from '@mui/material';
 
 import CallAssignmentOverviewListItem from './CallAssignmentOverviewListItem';
 import messageIds from 'features/campaigns/l10n/messageIds';
-import NoActivitiesOverview from './NoActivities';
 import SurveyOverviewListItem from './SurveyOverviewListItem';
 import TaskOverviewListItem from './TaskOverviewListItem';
 import ZUICard from 'zui/ZUICard';
+import ZUIEmptyState from 'zui/ZUIEmptyState';
 import {
   ACTIVITIES,
   CampaignActivity,
@@ -30,8 +31,9 @@ const OverviewActivitiesCard: FC<OverviewListProps> = ({
   return (
     <ZUICard header={header}>
       {activities.length === 0 && (
-        <NoActivitiesOverview
-          message={messages.activitiesCard.nothingToday()}
+        <ZUIEmptyState
+          message={messages.activitiesCard.empty()}
+          renderIcon={(props) => <FlagOutlined {...props} />}
         />
       )}
       {truncActivities.map((activity, index) => {
