@@ -124,4 +124,7 @@ export default makeMessages('zui', {
     cancel: m('Cancel'),
     submit: m('Submit'),
   },
+  suffixedNumber: {
+    thousands: m<{ num: number }>('{num}K'),
+  },
 });
