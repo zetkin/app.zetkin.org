@@ -1,10 +1,15 @@
 import CallAssignmentsRepo from 'features/callAssignments/repos/CallAssignmentsRepo';
 import Environment from 'core/env/Environment';
-import { isInFuture } from 'utils/dateUtils';
 import { ModelBase } from 'core/models';
 import SurveysRepo from 'features/surveys/repos/SurveysRepo';
 import TasksRepo from 'features/tasks/repos/TasksRepo';
-import { IFuture, LoadingFuture, ResolvedFuture } from 'core/caching/futures';
+import {
+  ErrorFuture,
+  IFuture,
+  LoadingFuture,
+  ResolvedFuture,
+} from 'core/caching/futures';
+import { isInFuture, isSameDate } from 'utils/dateUtils';
 import {
   ZetkinCallAssignment,
   ZetkinSurveyExtended,
@@ -42,6 +47,12 @@ export type CampaignActivity =
   | SurveyActivity
   | TaskActivity;
 
+export type ActivityOverview = {
+  alsoThisWeek: CampaignActivity[];
+  today: CampaignActivity[];
+  tomorrow: CampaignActivity[];
+};
+
 export default class CampaignActivitiesModel extends ModelBase {
   private _callAssignmentsRepo: CallAssignmentsRepo;
   private _orgId: number;
@@ -56,26 +67,63 @@ export default class CampaignActivitiesModel extends ModelBase {
     this._tasksRepo = new TasksRepo(env);
   }
 
-  getActivitiesByDay(
-    date: string,
-    campaignId?: number
-  ): IFuture<CampaignActivity[]> {
+  getActivityOverview(campaignId?: number): IFuture<ActivityOverview> {
     const activitiesFuture = campaignId
       ? this.getCampaignActivities(campaignId)
       : this.getCurrentActivities();
 
-    const filtered = activitiesFuture.data?.filter((activity) => {
-      return (
-        activity.startDate?.toISOString().slice(0, 10) == date ||
-        activity.endDate?.toISOString().slice(0, 10) == date
-      );
-    });
-
-    if (filtered) {
-      return new ResolvedFuture(filtered);
-    } else {
-      return activitiesFuture;
+    if (activitiesFuture.isLoading) {
+      return new LoadingFuture();
+    } else if (activitiesFuture.error) {
+      return new ErrorFuture(activitiesFuture.error);
     }
+
+    const overview: ActivityOverview = {
+      alsoThisWeek: [],
+      today: [],
+      tomorrow: [],
+    };
+
+    const todayDate = new Date();
+    const tomorrowDate = new Date();
+    tomorrowDate.setDate(tomorrowDate.getDate() + 1);
+
+    if (activitiesFuture.data) {
+      const currentActivities = activitiesFuture.data;
+
+      overview.today = currentActivities.filter(
+        (activity) =>
+          (activity.startDate && isSameDate(activity.startDate, todayDate)) ||
+          (activity.endDate && isSameDate(activity.endDate, todayDate))
+      );
+      overview.tomorrow = currentActivities.filter(
+        (activity) =>
+          (activity.startDate &&
+            isSameDate(activity.startDate, tomorrowDate)) ||
+          (activity.endDate && isSameDate(activity.endDate, tomorrowDate))
+      );
+
+      const startOfToday = new Date(new Date().toISOString().slice(0, 10));
+      const weekFromNow = new Date(startOfToday);
+      weekFromNow.setDate(startOfToday.getDate() + 8);
+
+      overview.alsoThisWeek = currentActivities.filter((activity) => {
+        if (
+          overview.today.includes(activity) ||
+          overview.tomorrow.includes(activity)
+        ) {
+          return false;
+        }
+
+        return (
+          activity.startDate &&
+          activity.startDate < weekFromNow &&
+          (!activity.endDate || activity.endDate >= startOfToday)
+        );
+      });
+    }
+
+    return new ResolvedFuture(overview);
   }
 
   getCampaignActivities(campId: number): IFuture<CampaignActivity[]> {
@@ -149,30 +197,6 @@ export default class CampaignActivitiesModel extends ModelBase {
       (activity) => activity.data.campaign === null
     );
     return new ResolvedFuture(filtered || []);
-  }
-
-  getWeekActivities(campaignId?: number): IFuture<CampaignActivity[]> {
-    const activitiesFuture = campaignId
-      ? this.getCampaignActivities(campaignId)
-      : this.getCurrentActivities();
-
-    const startOfToday = new Date(new Date().toISOString().slice(0, 10));
-    const weekFromNow = new Date(startOfToday);
-    weekFromNow.setDate(startOfToday.getDate() + 8);
-
-    const filtered = activitiesFuture.data?.filter((activity) => {
-      return (
-        activity.startDate &&
-        activity.startDate < weekFromNow &&
-        (!activity.endDate || activity.endDate >= startOfToday)
-      );
-    });
-
-    if (filtered) {
-      return new ResolvedFuture(filtered);
-    } else {
-      return activitiesFuture;
-    }
   }
 }
 

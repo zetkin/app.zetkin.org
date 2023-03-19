@@ -131,59 +131,37 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({
           </Grid>
         </Box>
 
-        <Grid container spacing={2}>
-          <Grid item md={4} xs={12}>
-            <ZUIFuture
-              future={activitiesModel.getActivitiesByDay(
-                todayDate.toISOString().slice(0, 10),
-                parseInt(campId)
-              )}
-            >
-              {(data) => {
-                return (
+        <ZUIFuture
+          future={activitiesModel.getActivityOverview(parseInt(campId))}
+        >
+          {(data) => {
+            return (
+              <Grid container spacing={2}>
+                <Grid item md={4} xs={12}>
                   <OverviewActivitiesCard
-                    activities={data}
+                    activities={data.today}
                     focusDate={todayDate}
                     header={messages.activitiesCard.todayCard()}
                   />
-                );
-              }}
-            </ZUIFuture>
-          </Grid>
-          <Grid item md={4} xs={12}>
-            <ZUIFuture
-              future={activitiesModel.getActivitiesByDay(
-                tomorrowDate.toISOString().slice(0, 10),
-                parseInt(campId)
-              )}
-            >
-              {(data) => {
-                return (
+                </Grid>
+                <Grid item md={4} xs={12}>
                   <OverviewActivitiesCard
-                    activities={data}
+                    activities={data.tomorrow}
                     focusDate={tomorrowDate}
                     header={messages.activitiesCard.tomorrowCard()}
                   />
-                );
-              }}
-            </ZUIFuture>
-          </Grid>
-          <Grid item md={4} xs={12}>
-            <ZUIFuture
-              future={activitiesModel.getWeekActivities(parseInt(campId))}
-            >
-              {(data) => {
-                return (
+                </Grid>
+                <Grid item md={4} xs={12}>
                   <OverviewActivitiesCard
-                    activities={data}
+                    activities={data.alsoThisWeek}
                     focusDate={null}
                     header={messages.activitiesCard.thisWeekCard()}
                   />
-                );
-              }}
-            </ZUIFuture>
-          </Grid>
-        </Grid>
+                </Grid>
+              </Grid>
+            );
+          }}
+        </ZUIFuture>
       </>
     </>
   );
