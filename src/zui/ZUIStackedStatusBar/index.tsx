@@ -35,7 +35,7 @@ const ZUIStackedStatusBar: React.FunctionComponent<
             key={index}
             bgcolor={valueObj.color}
             className={classes.animated}
-            minWidth={10}
+            minWidth={height / 2}
             mr={index + 1 < values.length ? 0.3 : 0}
             width={valueObj.value / total}
           />

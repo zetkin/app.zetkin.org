@@ -72,7 +72,7 @@ interface OverviewListItemProps {
   focusDate: Date | null;
   href: string;
   title: string;
-  endNumber: string;
+  endNumber: number | string;
   statusBar?: JSX.Element | null;
 }
 
@@ -169,19 +169,21 @@ const OverviewListItem = ({
         <Box width={80}>
           <ZUIIconLabel
             icon={<SecondaryIcon color="secondary" />}
-            label={endNumber}
+            label={endNumber.toString()}
             labelColor="secondary"
           />
         </Box>
       </Box>
-      <Box alignItems="center" display="flex">
+      <Box alignItems="center" display="flex" justifyContent="space-between">
         <Box width={30}>
           <Box className={classes.dot} />
         </Box>
-        <Box>
-          <Typography color={theme.palette.grey[500]}>{label}</Typography>
+        <Box width="calc(100% - 30px - 80px - 20px)">
+          <Typography color={theme.palette.grey[500]} variant="body2">
+            {label}
+          </Typography>
         </Box>
-        <Box>{statusBar}</Box>
+        <Box width={80}>{statusBar}</Box>
       </Box>
     </Box>
   );
