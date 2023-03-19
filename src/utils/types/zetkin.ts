@@ -150,10 +150,15 @@ export interface ZetkinSession {
 }
 
 export interface ZetkinCallAssignment {
+  campaign: {
+    id: number;
+    title: string;
+  } | null;
   cooldown: number;
   description: string;
   disable_caller_notes: boolean;
   end_date: string;
+  expose_target_details: boolean;
   goal: ZetkinQuery;
   id: number;
   instructions: string;

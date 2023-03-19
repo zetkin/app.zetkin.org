@@ -1,6 +1,7 @@
-import CampaignRepo from '../repos/CampaignRepo';
+import CallAssignmentsRepo from 'features/callAssignments/repos/CallAssignmentsRepo';
 import Environment from 'core/env/Environment';
 import { ModelBase } from 'core/models';
+import SurveysRepo from 'features/surveys/repos/SurveysRepo';
 import { IFuture, PromiseFuture } from 'core/caching/futures';
 import {
   ZetkinCallAssignment,
@@ -10,23 +11,25 @@ import {
 } from 'utils/types/zetkin';
 
 export default class CampaignDataModel extends ModelBase {
+  private _callAssignmentsRepo: CallAssignmentsRepo;
   private _campaignId: number;
   private _env: Environment;
   private _orgId: number;
-  private _repo: CampaignRepo;
+  private _surveysRepo: SurveysRepo;
 
   constructor(env: Environment, orgId: number, campaignId: number) {
     super();
     this._env = env;
     this._orgId = orgId;
     this._campaignId = campaignId;
-    this._repo = new CampaignRepo(this._env);
+    this._callAssignmentsRepo = new CallAssignmentsRepo(env);
+    this._surveysRepo = new SurveysRepo(env);
   }
 
   createCallAssignment(
     campaignBody: ZetkinCallAssignmentPostBody
   ): IFuture<ZetkinCallAssignment> {
-    const promise = this._repo
+    const promise = this._callAssignmentsRepo
       .createCallAssignment(campaignBody, this._orgId, this._campaignId)
       .then((assignment: ZetkinCallAssignment) => {
         this._env.router.push(
@@ -38,7 +41,7 @@ export default class CampaignDataModel extends ModelBase {
   }
 
   createSurvey(surveyBody: ZetkinSurveyPostBody): IFuture<ZetkinSurvey> {
-    const promise = this._repo
+    const promise = this._surveysRepo
       .createSurvey(surveyBody, this._orgId, this._campaignId)
       .then((survey: ZetkinSurvey) => {
         this._env.router.push(

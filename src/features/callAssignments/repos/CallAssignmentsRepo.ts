@@ -4,13 +4,14 @@ import IApiClient from 'core/api/client/IApiClient';
 import { loadListIfNecessary } from 'core/caching/cacheUtils';
 import shouldLoad from 'core/caching/shouldLoad';
 import { Store } from 'core/store';
-import { ZetkinTag } from '../../../utils/types/zetkin';
 import {
   CallAssignmentCaller,
   CallAssignmentData,
   CallAssignmentStats,
 } from '../apiTypes';
 import {
+  callAssignmentCreate,
+  callAssignmentCreated,
   callAssignmentLoad,
   callAssignmentLoaded,
   callAssignmentsLoad,
@@ -34,6 +35,11 @@ import {
   RemoteItemFuture,
   RemoteListFuture,
 } from 'core/caching/futures';
+import {
+  ZetkinCallAssignment,
+  ZetkinCallAssignmentPostBody,
+  ZetkinTag,
+} from '../../../utils/types/zetkin';
 
 export default class CallAssignmentsRepo {
   private _apiClient: IApiClient;
@@ -56,6 +62,24 @@ export default class CallAssignmentsRepo {
   constructor(env: Environment) {
     this._apiClient = env.apiClient;
     this._store = env.store;
+  }
+
+  async createCallAssignment(
+    callAssignmentBody: ZetkinCallAssignmentPostBody,
+    orgId: number,
+    campaignId: number
+  ): Promise<ZetkinCallAssignment> {
+    this._store.dispatch(callAssignmentCreate());
+    const assignment = await this._apiClient.post<
+      ZetkinCallAssignment,
+      ZetkinCallAssignmentPostBody
+    >(
+      `/api/orgs/${orgId}/campaigns/${campaignId}/call_assignments`,
+      callAssignmentBody
+    );
+
+    this._store.dispatch(callAssignmentCreated(assignment));
+    return assignment;
   }
 
   getCallAssignment(orgId: number, id: number): IFuture<CallAssignmentData> {

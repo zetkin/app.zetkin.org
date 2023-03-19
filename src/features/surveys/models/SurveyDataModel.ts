@@ -180,7 +180,7 @@ export default class SurveyDataModel extends ModelBase {
       return true;
     }
 
-    return data.elements.length ? false : true;
+    return data.elements?.length ? false : true;
   }
 
   toggleElementHidden(elemId: number, hidden: boolean) {
