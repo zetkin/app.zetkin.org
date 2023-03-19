@@ -13,7 +13,12 @@ interface EmptyOverviewProps {
 
 const EmptyOverview = ({ campId, orgId, surveyId }: EmptyOverviewProps) => {
   return (
-    <Box alignItems="center" display="flex" flexDirection="column">
+    <Box
+      alignItems="center"
+      display="flex"
+      flexDirection="column"
+      paddingTop={8}
+    >
       <QuizOutlined
         color="secondary"
         sx={{ fontSize: '8em', paddingBottom: 2 }}
