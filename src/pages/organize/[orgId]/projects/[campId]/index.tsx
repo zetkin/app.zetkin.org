@@ -11,6 +11,7 @@ import getOrg from 'utils/fetching/getOrg';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import SingleCampaignLayout from 'features/campaigns/layout/SingleCampaignLayout';
+import useServerSide from 'core/useServerSide';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -80,12 +81,17 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({
   orgId,
   campId,
 }) => {
+  const isOnServer = useServerSide();
   const campaignQuery = useQuery(
     ['campaign', orgId, campId],
     getCampaign(orgId, campId)
   );
 
   const campaign = campaignQuery.data;
+
+  if (isOnServer) {
+    return null;
+  }
 
   return (
     <>
