@@ -4,7 +4,7 @@ import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('feat.campaigns', {
   activitiesCard: {
-    button: m('Browse activities'),
+    button: m('Browse all activities'),
     endsTomorrow: m('ends tomorrow'),
     extraActivities: m<{ numExtra: number }>('+ {numExtra} more'),
     noActivities: m('There are no activities in this campaign yet'),
@@ -18,7 +18,7 @@ export default makeMessages('feat.campaigns', {
       startsToday: m('Starts today'),
     },
     thisWeekCard: m('Also this week'),
-    title: m('Campaign activities'),
+    title: m('Activities'),
     todayCard: m('Today'),
     tomorrowCard: m('Tomorrow'),
   },
