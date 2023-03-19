@@ -135,7 +135,8 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({
           <Grid item md={4} xs={12}>
             <ZUIFuture
               future={activitiesModel.getActivitiesByDay(
-                todayDate.toISOString().slice(0, 10)
+                todayDate.toISOString().slice(0, 10),
+                parseInt(campId)
               )}
             >
               {(data) => {
@@ -151,7 +152,8 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({
           <Grid item md={4} xs={12}>
             <ZUIFuture
               future={activitiesModel.getActivitiesByDay(
-                tomorrowDate.toISOString().slice(0, 10)
+                tomorrowDate.toISOString().slice(0, 10),
+                parseInt(campId)
               )}
             >
               {(data) => {
@@ -165,7 +167,9 @@ const CampaignSummaryPage: PageWithLayout<CampaignCalendarPageProps> = ({
             </ZUIFuture>
           </Grid>
           <Grid item md={4} xs={12}>
-            <ZUIFuture future={activitiesModel.getWeekActivities()}>
+            <ZUIFuture
+              future={activitiesModel.getWeekActivities(parseInt(campId))}
+            >
               {(data) => {
                 return (
                   <OverviewActivitiesCard

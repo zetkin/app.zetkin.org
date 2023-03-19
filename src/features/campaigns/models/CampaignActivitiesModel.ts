@@ -36,8 +36,13 @@ export default class CampaignActivitiesModel extends ModelBase {
     this._tasksRepo = new TasksRepo(env);
   }
 
-  getActivitiesByDay(date: string): IFuture<CampaignActivity[]> {
-    const activitiesFuture = this.getCurrentActivities();
+  getActivitiesByDay(
+    date: string,
+    campaignId?: number
+  ): IFuture<CampaignActivity[]> {
+    const activitiesFuture = campaignId
+      ? this.getCampaignActivities(campaignId)
+      : this.getCurrentActivities();
 
     const filtered = activitiesFuture.data?.filter((activity) => {
       if (activity.kind == ACTIVITIES.CALL_ASSIGNMENT) {
@@ -133,8 +138,10 @@ export default class CampaignActivitiesModel extends ModelBase {
     return new ResolvedFuture(filtered || []);
   }
 
-  getWeekActivities(): IFuture<CampaignActivity[]> {
-    const activitiesFuture = this.getCurrentActivities();
+  getWeekActivities(campaignId?: number): IFuture<CampaignActivity[]> {
+    const activitiesFuture = campaignId
+      ? this.getCampaignActivities(campaignId)
+      : this.getCurrentActivities();
 
     const startOfToday = new Date(new Date().toISOString().slice(0, 10));
     const weekFromNow = new Date(startOfToday);
