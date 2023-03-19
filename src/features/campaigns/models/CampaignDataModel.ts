@@ -30,7 +30,7 @@ export default class CampaignDataModel extends ModelBase {
       .createCallAssignment(campaignBody, this._orgId, this._campaignId)
       .then((assignment: ZetkinCallAssignment) => {
         this._env.router.push(
-          `/organize/${this._orgId}/campaigns/${this._campaignId}/callassignments/${assignment.id}`
+          `/organize/${this._orgId}/projects/${this._campaignId}/callassignments/${assignment.id}`
         );
         return assignment;
       });
@@ -42,7 +42,7 @@ export default class CampaignDataModel extends ModelBase {
       .createSurvey(surveyBody, this._orgId, this._campaignId)
       .then((survey: ZetkinSurvey) => {
         this._env.router.push(
-          `/organize/${this._orgId}/campaigns/${this._campaignId}/surveys/${survey.id}`
+          `/organize/${this._orgId}/projects/${this._campaignId}/surveys/${survey.id}`
         );
         return survey;
       });
