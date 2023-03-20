@@ -1,4 +1,5 @@
 import { DragIndicatorOutlined } from '@mui/icons-material';
+import makeStyles from '@mui/styles/makeStyles';
 import { Box, IconButton } from '@mui/material';
 import {
   FC,
@@ -29,6 +30,12 @@ type ZUIReorderableProps = {
   onReorder: (ids: IDType[]) => void;
 };
 
+const useStyles = makeStyles(() => ({
+  draggable: {
+    zIndex: '1',
+  },
+}));
+
 const ZUIReorderable: FC<ZUIReorderableProps> = ({
   centerWidgets,
   disableClick,
@@ -40,6 +47,7 @@ const ZUIReorderable: FC<ZUIReorderableProps> = ({
   const [activeId, setActiveId] = useState<IDType | null>(null);
 
   const activeItemRef = useRef<ReorderableItem>();
+  const classes = useStyles();
 
   useEffect(() => {
     setOrder(items.map((item) => item.id));
@@ -69,16 +77,13 @@ const ZUIReorderable: FC<ZUIReorderableProps> = ({
     const containerRect = containerRef.current?.getBoundingClientRect();
     const containerY = containerRect?.top ?? 0;
 
-    const itemRect = activeItemNodeRef.current?.getBoundingClientRect();
-    const itemHeight = itemRect?.height ?? 0;
-
     // Only allow dragging 10px beyond the top of the container, and just
     // beyond the bottom of the container
     const newClientY = Math.max(
       containerY - 10,
       Math.min(
         ev.clientY - (yOffsetRef.current || 0),
-        (containerRect?.bottom ?? 0) - itemHeight + 20
+        containerRect?.bottom ?? 0
       )
     );
 
@@ -107,6 +112,12 @@ const ZUIReorderable: FC<ZUIReorderableProps> = ({
   };
 
   const onMouseUp = () => {
+    // reset z-index
+    const draggingCard = activeContentNodeRef.current;
+    if (draggingCard) {
+      draggingCard.lastElementChild?.classList.remove(classes.draggable);
+    }
+
     setActiveId(null);
 
     // Reset content width
@@ -140,6 +151,11 @@ const ZUIReorderable: FC<ZUIReorderableProps> = ({
             activeItemRef.current = item;
             activeItemNodeRef.current = itemNode;
             activeContentNodeRef.current = contentNode;
+
+            const draggingCard = nodeByIdRef.current[item.id].lastElementChild;
+            if (draggingCard) {
+              draggingCard.lastElementChild?.classList.add(classes.draggable);
+            }
 
             // When dragging starts, "hard-code" the height of the
             // item container, so that it doesn't collapse once the
