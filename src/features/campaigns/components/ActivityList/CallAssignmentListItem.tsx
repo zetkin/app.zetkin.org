@@ -38,10 +38,10 @@ const CallAssignmentListItem: FC<CallAssignmentListItemProps> = ({
     color = STATUS_COLORS.BLUE;
   }
 
-  const blocked = stats?.blocked;
-  const ready = stats?.ready;
-  const done = stats?.done;
-  const callsMade = stats?.callsMade.toString() || '';
+  const blocked = stats?.blocked || 0;
+  const ready = stats?.ready || 0;
+  const done = stats?.done || 0;
+  const callsMade = stats?.callsMade.toString() || '0';
 
   return (
     <ActivityListItem

@@ -38,7 +38,7 @@ const useStyles = makeStyles<Theme, { size: keyof typeof FONT_SIZES }>(
 );
 
 interface ZUIMultiNumberChipProps {
-  blueValue?: number | string;
+  blueValue: number | string | undefined;
   greenValue: number | string | undefined;
   orangeValue: number | string | undefined;
   size?: keyof typeof FONT_SIZES;
@@ -52,21 +52,17 @@ const ZUIMultiNumberChip: FC<ZUIMultiNumberChipProps> = ({
 }) => {
   const classes = useStyles({ size });
 
-  //We want to be able to render a 0 as the blue value, so
-  //this is used to render no blue value
-  //only if it's undefined or an empty string
-  const hasBlueValue =
-    typeof blueValue === 'number' ||
-    (typeof blueValue === 'string' && blueValue !== '');
-
   return (
     <Box display="flex">
-      <Box className={`${classes.orange} ${classes.chip}`}>{orangeValue}</Box>
-      {typeof blueValue === 'undefined' ||
-        (hasBlueValue && (
-          <Box className={`${classes.blue} ${classes.chip}`}>{blueValue}</Box>
-        ))}
-      <Box className={`${classes.green} ${classes.chip}`}>{greenValue}</Box>
+      <Box className={`${classes.orange} ${classes.chip}`}>
+        {orangeValue || 0}
+      </Box>
+      {typeof blueValue !== 'undefined' && (
+        <Box className={`${classes.blue} ${classes.chip}`}>{blueValue}</Box>
+      )}
+      <Box className={`${classes.green} ${classes.chip}`}>
+        {greenValue || 0}
+      </Box>
     </Box>
   );
 };

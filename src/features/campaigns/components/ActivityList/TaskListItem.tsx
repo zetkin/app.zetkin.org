@@ -32,14 +32,14 @@ const TaskListItem = ({ orgId, taskId }: TaskListItemProps) => {
 
   return (
     <ActivityListItem
-      blueChipValue={stats.assigned}
+      blueChipValue={stats.assigned || 0}
       color={color}
       endNumber={stats.individuals.toString()}
-      greenChipValue={stats.completed}
+      greenChipValue={stats.completed || 0}
       href={`/organize/${orgId}/projects/${
         task.campaign?.id ?? 'standalone'
       }/calendar/tasks/${taskId}`}
-      orangeChipValue={stats.ignored}
+      orangeChipValue={stats.ignored || 0}
       PrimaryIcon={CheckBoxOutlined}
       SecondaryIcon={People}
       title={task.title}
