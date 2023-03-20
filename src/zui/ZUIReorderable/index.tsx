@@ -1,5 +1,4 @@
 import { DragIndicatorOutlined } from '@mui/icons-material';
-import makeStyles from '@mui/styles/makeStyles';
 import { Box, IconButton } from '@mui/material';
 import {
   FC,
@@ -30,12 +29,6 @@ type ZUIReorderableProps = {
   onReorder: (ids: IDType[]) => void;
 };
 
-const useStyles = makeStyles(() => ({
-  draggable: {
-    zIndex: '1',
-  },
-}));
-
 const ZUIReorderable: FC<ZUIReorderableProps> = ({
   centerWidgets,
   disableClick,
@@ -47,7 +40,6 @@ const ZUIReorderable: FC<ZUIReorderableProps> = ({
   const [activeId, setActiveId] = useState<IDType | null>(null);
 
   const activeItemRef = useRef<ReorderableItem>();
-  const classes = useStyles();
 
   useEffect(() => {
     setOrder(items.map((item) => item.id));
@@ -112,12 +104,6 @@ const ZUIReorderable: FC<ZUIReorderableProps> = ({
   };
 
   const onMouseUp = () => {
-    // reset z-index
-    const draggingCard = activeContentNodeRef.current;
-    if (draggingCard) {
-      draggingCard.lastElementChild?.classList.remove(classes.draggable);
-    }
-
     setActiveId(null);
 
     // Reset content width
@@ -151,11 +137,6 @@ const ZUIReorderable: FC<ZUIReorderableProps> = ({
             activeItemRef.current = item;
             activeItemNodeRef.current = itemNode;
             activeContentNodeRef.current = contentNode;
-
-            const draggingCard = nodeByIdRef.current[item.id].lastElementChild;
-            if (draggingCard) {
-              draggingCard.lastElementChild?.classList.add(classes.draggable);
-            }
 
             // When dragging starts, "hard-code" the height of the
             // item container, so that it doesn't collapse once the
@@ -268,7 +249,7 @@ const ZUIReorderableItem: FC<{
             showUp={showUpButton}
           />
         </Box>
-        <Box flex="1 0">
+        <Box flex="1 0" zIndex={dragging ? '100' : '1'}>
           {item.renderContent({
             dragging,
           })}
