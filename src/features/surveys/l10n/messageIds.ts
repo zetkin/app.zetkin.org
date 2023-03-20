@@ -115,7 +115,9 @@ export default makeMessages('feat.surveys', {
   },
   optionCollapse: {
     collapse: m('Collapse'),
-    more: m('More'),
+    more: m<{ numOfOptions: number }>(
+      '{numOfOptions, plural, one {Show 1 more option} other {Show # more options}}'
+    ),
   },
   overview: {
     noQuestions: {

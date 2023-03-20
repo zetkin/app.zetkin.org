@@ -270,14 +270,13 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
             }}
             sx={{ ml: 1 }}
           >
-            {!expand && <Box sx={{ mr: 0.5 }}>{options.length - 3}</Box>}
-            <Msg
-              id={
-                expand
-                  ? messageIds.optionCollapse.collapse
-                  : messageIds.optionCollapse.more
-              }
-            />
+            {expand && <Msg id={messageIds.optionCollapse.collapse} />}
+            {!expand && (
+              <Msg
+                id={messageIds.optionCollapse.more}
+                values={{ numOfOptions: options.length - 3 }}
+              />
+            )}
           </Button>
         )}
         {bulkAddingOptions && editable && (
