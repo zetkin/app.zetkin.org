@@ -8,7 +8,8 @@ export default makeMessages('feat.campaigns', {
     empty: m('Nothing on this day'),
     endsTomorrow: m('ends tomorrow'),
     extraActivities: m<{ numExtra: number }>('+ {numExtra} more'),
-    noActivities: m('There are no activities in this project yet.'),
+    goToActivities: m('See all upcoming activities.'),
+    noActivities: m('There are no activities this week.'),
     nothingTomorrow: m('Nothing planned for tomorrow'),
     startsTomorrow: m('starts tomorrow'),
     subtitles: {

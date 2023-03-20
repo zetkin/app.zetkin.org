@@ -64,6 +64,8 @@ const ActivitiesOverview: FC<ActivitiesOverviewProps> = ({
             return (
               <Box>
                 <ZUIEmptyState
+                  href={`/organize/${orgId}/projects/${campaignId}/activities`}
+                  linkMessage={messages.activitiesOverview.goToActivities()}
                   message={messages.activitiesOverview.noActivities()}
                 />
               </Box>
