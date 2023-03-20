@@ -17,6 +17,7 @@ type ZUIReorderableRenderProps = {
 };
 
 type ReorderableItem = {
+  hidden?: boolean;
   id: IDType;
   renderContent: (props: ZUIReorderableRenderProps) => JSX.Element;
 };
@@ -129,60 +130,63 @@ const ZUIReorderable: FC<ZUIReorderableProps> = ({
 
   return (
     <Box ref={containerRef} sx={{ position: 'relative' }}>
-      {sortedItems.map((item, index) => (
-        <ZUIReorderableItem
-          key={item.id}
-          centerWidgets={!!centerWidgets}
-          dragging={activeId == item.id}
-          item={item}
-          onBeginDrag={(itemNode, contentNode, ev) => {
-            setActiveId(item.id);
-            activeItemRef.current = item;
-            activeItemNodeRef.current = itemNode;
-            activeContentNodeRef.current = contentNode;
+      {sortedItems.map(
+        (item, index) =>
+          !item.hidden && (
+            <ZUIReorderableItem
+              key={item.id}
+              centerWidgets={!!centerWidgets}
+              dragging={activeId == item.id}
+              item={item}
+              onBeginDrag={(itemNode, contentNode, ev) => {
+                setActiveId(item.id);
+                activeItemRef.current = item;
+                activeItemNodeRef.current = itemNode;
+                activeContentNodeRef.current = contentNode;
 
-            // When dragging starts, "hard-code" the height of the
-            // item container, so that it doesn't collapse once the
-            // item content starts moving.
-            const itemRect = itemNode.getBoundingClientRect();
-            itemNode.style.height = itemRect.height + 'px';
+                // When dragging starts, "hard-code" the height of the
+                // item container, so that it doesn't collapse once the
+                // item content starts moving.
+                const itemRect = itemNode.getBoundingClientRect();
+                itemNode.style.height = itemRect.height + 'px';
 
-            // Also "hard-code" width of item, so that it doesn't
-            // collapse if it's a flex item
-            const contentRect = contentNode.getBoundingClientRect();
-            contentNode.style.width = contentRect.width + 'px';
+                // Also "hard-code" width of item, so that it doesn't
+                // collapse if it's a flex item
+                const contentRect = contentNode.getBoundingClientRect();
+                contentNode.style.width = contentRect.width + 'px';
 
-            yOffsetRef.current = ev.clientY - itemRect.top;
+                yOffsetRef.current = ev.clientY - itemRect.top;
 
-            document.addEventListener('mousemove', onMouseMove);
-            document.addEventListener('mouseup', onMouseUp);
-          }}
-          onClickDown={() => {
-            if (index + 1 < items.length) {
-              const ids = items.map((item) => item.id);
-              const current = ids[index];
-              ids[index] = ids[index + 1];
-              ids[index + 1] = current;
+                document.addEventListener('mousemove', onMouseMove);
+                document.addEventListener('mouseup', onMouseUp);
+              }}
+              onClickDown={() => {
+                if (index + 1 < items.length) {
+                  const ids = items.map((item) => item.id);
+                  const current = ids[index];
+                  ids[index] = ids[index + 1];
+                  ids[index + 1] = current;
 
-              onReorder(ids);
-            }
-          }}
-          onClickUp={() => {
-            if (index > 0) {
-              const ids = items.map((item) => item.id);
-              const current = ids[index];
-              ids[index] = ids[index - 1];
-              ids[index - 1] = current;
+                  onReorder(ids);
+                }
+              }}
+              onClickUp={() => {
+                if (index > 0) {
+                  const ids = items.map((item) => item.id);
+                  const current = ids[index];
+                  ids[index] = ids[index - 1];
+                  ids[index - 1] = current;
 
-              onReorder(ids);
-            }
-          }}
-          onNodeExists={(div) => (nodeByIdRef.current[item.id] = div)}
-          showDownButton={!disableClick && index < items.length - 1}
-          showDragHandle={!disableDrag}
-          showUpButton={!disableClick && index > 0}
-        />
-      ))}
+                  onReorder(ids);
+                }
+              }}
+              onNodeExists={(div) => (nodeByIdRef.current[item.id] = div)}
+              showDownButton={!disableClick && index < items.length - 1}
+              showDragHandle={!disableDrag}
+              showUpButton={!disableClick && index > 0}
+            />
+          )
+      )}
     </Box>
   );
 };

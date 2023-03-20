@@ -113,6 +113,10 @@ export default makeMessages('feat.surveys', {
       ),
     },
   },
+  optionCollapse: {
+    collapse: m('Collapse'),
+    more: m('More'),
+  },
   overview: {
     noQuestions: {
       button: m('Create questions'),
