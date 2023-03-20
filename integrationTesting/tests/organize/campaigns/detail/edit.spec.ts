@@ -11,6 +11,8 @@ test.describe('Campaign detail page', async () => {
     moxy.setZetkinApiMock('/orgs/1/campaigns/1', 'get', ReferendumSignatures);
     moxy.setZetkinApiMock('/orgs/1/campaigns/1/actions', 'get', []);
     moxy.setZetkinApiMock('/orgs/1/campaigns/1/tasks', 'get', []);
+    moxy.setZetkinApiMock('/orgs/1/call_assignments', 'get', []);
+    moxy.setZetkinApiMock('/orgs/1/surveys', 'get', []);
     moxy.setZetkinApiMock('/orgs/1/tasks', 'get', []);
     login();
   });
