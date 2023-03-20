@@ -1,6 +1,7 @@
 import { FC } from 'react';
 import { InfoOutlined } from '@mui/icons-material';
-import { Box, SvgIconTypeMap, Typography } from '@mui/material';
+import NextLink from 'next/link';
+import { Box, Link, SvgIconTypeMap, Typography } from '@mui/material';
 
 type ZUIEmptyStateIconProps = {
   color: SvgIconTypeMap['props']['color'];
@@ -8,11 +9,18 @@ type ZUIEmptyStateIconProps = {
 };
 
 type ZUIEmptyStateProps = {
+  href?: string;
+  linkMessage?: string;
   message: string;
   renderIcon?: (props: ZUIEmptyStateIconProps) => JSX.Element;
 };
 
-const ZUIEmptyState: FC<ZUIEmptyStateProps> = ({ renderIcon, message }) => {
+const ZUIEmptyState: FC<ZUIEmptyStateProps> = ({
+  renderIcon,
+  message,
+  linkMessage,
+  href,
+}) => {
   const iconProps: ZUIEmptyStateIconProps = {
     color: 'disabled',
     sx: { fontSize: '12em' },
@@ -28,6 +36,13 @@ const ZUIEmptyState: FC<ZUIEmptyStateProps> = ({ renderIcon, message }) => {
     >
       {renderIcon ? renderIcon(iconProps) : <InfoOutlined {...iconProps} />}
       <Typography color="secondary">{message}</Typography>
+      {href && (
+        <NextLink href={href} passHref>
+          <Link underline="none">
+            <Typography color="secondary">{linkMessage}</Typography>
+          </Link>
+        </NextLink>
+      )}
     </Box>
   );
 };

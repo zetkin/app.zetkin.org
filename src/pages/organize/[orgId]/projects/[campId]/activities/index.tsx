@@ -5,13 +5,13 @@ import { ChangeEvent, useState } from 'react';
 import ActivityList from 'features/campaigns/components/ActivityList';
 import FilterActivities from 'features/campaigns/components/ActivityList/FilterActivities';
 import messageIds from 'features/campaigns/l10n/messageIds';
-import NoActivities from 'features/campaigns/components/NoActivities';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import SingleCampaignLayout from 'features/campaigns/layout/SingleCampaignLayout';
 import { useMessages } from 'core/i18n';
 import useModel from 'core/useModel';
 import useServerSide from 'core/useServerSide';
+import ZUIEmptyState from 'zui/ZUIEmptyState';
 import CampaignActivitiesModel, {
   ACTIVITIES,
 } from 'features/campaigns/models/CampaignActivitiesModel';
@@ -79,7 +79,7 @@ const CampaignActivitiesPage: PageWithLayout<CampaignActivitiesPageProps> = ({
   return (
     <Box>
       {!hasActivities && (
-        <NoActivities message={messages.singleProject.noActivities()} />
+        <ZUIEmptyState message={messages.singleProject.noActivities()} />
       )}
       {hasActivities && (
         <Grid container spacing={2}>
