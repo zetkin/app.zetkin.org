@@ -10,6 +10,7 @@ import {
 } from 'react';
 
 import Pane from './Pane';
+import { Theme } from '@material-ui/core/styles';
 
 type PaneDef = {
   render: () => ReactNode;
@@ -32,25 +33,29 @@ const PaneContext = createContext<PaneContextData>({
 
 type PaneProviderProps = {
   children: ReactNode;
+  collapsed: boolean;
 };
 
-const useStyles = makeStyles({
+const useStyles = makeStyles<Theme, { collapsed: boolean }>(() => ({
   container: {
     bottom: 16,
-    position: 'absolute',
+    position: 'fixed',
     right: 16,
-    top: 16,
+    top: ({ collapsed }) => (collapsed ? '17vh' : '35vh'),
     zIndex: 10,
   },
   paper: {
     height: '100%',
   },
-});
+}));
 
-export const PaneProvider: FC<PaneProviderProps> = ({ children }) => {
+export const PaneProvider: FC<PaneProviderProps> = ({
+  children,
+  collapsed,
+}) => {
   const paneRef = useRef<PaneDef | null>(null);
   const [open, setOpen] = useState(false);
-  const styles = useStyles();
+  const styles = useStyles({ collapsed });
   const [key, setKey] = useState(0);
 
   return (

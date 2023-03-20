@@ -114,7 +114,7 @@ const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
           position="relative"
           role="tabpanel"
         >
-          <PaneProvider>{children}</PaneProvider>
+          <PaneProvider collapsed={collapsed}>{children}</PaneProvider>
         </Box>
       </Box>
     </DefaultLayout>
