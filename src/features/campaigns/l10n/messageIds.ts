@@ -104,7 +104,8 @@ export default makeMessages('feat.campaigns', {
   },
   indefinite: m('Indefinite timeline'),
   layout: {
-    activities: m('Activities'),
+    uncategorizedActivities: m('Uncategorised activites'),
+    campaignActivities: m('Activites'),
     allCampaigns: m('All Projects'),
     archive: m('Archive'),
     calendar: m('Calendar'),

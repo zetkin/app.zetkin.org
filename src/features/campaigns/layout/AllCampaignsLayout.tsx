@@ -33,7 +33,7 @@ const AllCampaignsLayout: FunctionComponent<AllCampaignsLayoutProps> = ({
         },
         {
           href: '/activities',
-          label: messages.layout.activities(),
+          label: messages.layout.uncategorizedActivities(),
         },
       ]}
       title={messages.layout.allCampaigns()}
