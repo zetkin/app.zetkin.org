@@ -113,7 +113,7 @@ const Calendar = ({
   const weekNumber = dayjs(firstDayInView).isoWeek();
 
   return (
-    <Box display="flex" flexDirection="column" height={1}>
+    <Box display="flex" flexDirection="column" height={1} paddingTop={5}>
       <Box
         display="grid"
         flexGrow={0}
