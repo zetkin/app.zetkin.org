@@ -67,11 +67,11 @@ const AssignmentPage: PageWithLayout<AssignmentPageProps> = ({
             value: stats.blocked,
           },
           {
-            color: 'statusColors.green',
+            color: 'statusColors.blue',
             value: stats.ready,
           },
           {
-            color: 'statusColors.blue',
+            color: 'statusColors.green',
             value: stats.done,
           },
         ]
