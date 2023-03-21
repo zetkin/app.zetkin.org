@@ -5,8 +5,7 @@ import { useMessages } from 'core/i18n';
 import { ZetkinOrganization } from 'utils/types/zetkin';
 
 import ZUIFuture from 'zui/ZUIFuture';
-import ZUIList from 'zui/ZUIList';
-import { Avatar, Box, Link, Typography } from '@mui/material';
+import { Avatar, Box, Link, List, ListItem, Typography } from '@mui/material';
 
 interface UserOrganizationsProps {
   model: OrganizationsDataModel;
@@ -21,18 +20,10 @@ const OrganizationsList = ({ model }: UserOrganizationsProps) => {
         return (
           <Box style={{ margin: '30px' }}>
             <Typography variant="h3">{messages.page.title()}</Typography>
-            <ZUIList>
+            <List>
               {data.map((org: ZetkinOrganization) => {
                 return (
-                  <Box
-                    key={org.id}
-                    style={{
-                      alignItems: 'center',
-                      display: 'flex',
-                      justifyContent: 'unset',
-                      marginTop: '15px',
-                    }}
-                  >
+                  <ListItem key={org.id}>
                     <Avatar
                       src={`/api/orgs/${org.id}/avatar`}
                       style={{ margin: '15px' }}
@@ -40,10 +31,10 @@ const OrganizationsList = ({ model }: UserOrganizationsProps) => {
                     <NextLink href={`/organize/${org.id}`} passHref>
                       <Link underline="hover">{org.title}</Link>
                     </NextLink>
-                  </Box>
+                  </ListItem>
                 );
               })}
-            </ZUIList>
+            </List>
           </Box>
         );
       }}
