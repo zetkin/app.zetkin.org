@@ -1,5 +1,6 @@
 import CallAssignmentsRepo from 'features/callAssignments/repos/CallAssignmentsRepo';
 import Environment from 'core/env/Environment';
+import { isSameDate } from 'utils/dateUtils';
 import { ModelBase } from 'core/models';
 import SurveysRepo from 'features/surveys/repos/SurveysRepo';
 import TasksRepo from 'features/tasks/repos/TasksRepo';
@@ -9,7 +10,6 @@ import {
   LoadingFuture,
   ResolvedFuture,
 } from 'core/caching/futures';
-import { isInFuture, isInPast, isSameDate } from 'utils/dateUtils';
 import {
   ZetkinCallAssignment,
   ZetkinSurveyExtended,
@@ -53,10 +53,6 @@ export type ActivityOverview = {
   tomorrow: CampaignActivity[];
 };
 
-type BasicActivity = Partial<
-  ZetkinCallAssignment | ZetkinSurveyExtended | ZetkinTask
->;
-
 export default class CampaignActivitiesModel extends ModelBase {
   private _callAssignmentsRepo: CallAssignmentsRepo;
   private _orgId: number;
@@ -72,7 +68,7 @@ export default class CampaignActivitiesModel extends ModelBase {
   }
 
   getActivities(
-    filterFn: (activity: BasicActivity, kind: ACTIVITIES) => boolean
+    filterFn: (activity: CampaignActivity) => boolean
   ): IFuture<CampaignActivity[]> {
     const callAssignmentsFuture = this._callAssignmentsRepo.getCallAssignments(
       this._orgId
@@ -88,34 +84,32 @@ export default class CampaignActivitiesModel extends ModelBase {
       return new LoadingFuture();
     }
 
-    const callAssignments: CampaignActivity[] = callAssignmentsFuture.data
-      .filter((ca) => filterFn(ca, ACTIVITIES.CALL_ASSIGNMENT))
-      .map((ca) => ({
+    const callAssignments: CampaignActivity[] = callAssignmentsFuture.data.map(
+      (ca) => ({
         data: ca,
         endDate: getUTCDateWithoutTime(ca.end_date),
         kind: ACTIVITIES.CALL_ASSIGNMENT,
         startDate: getUTCDateWithoutTime(ca.start_date),
-      }));
+      })
+    );
 
-    const surveys: CampaignActivity[] = surveysFuture.data
-      .filter((survey) => filterFn(survey, ACTIVITIES.SURVEY))
-      .map((survey) => ({
-        data: survey,
-        endDate: getUTCDateWithoutTime(survey.expires),
-        kind: ACTIVITIES.SURVEY,
-        startDate: getUTCDateWithoutTime(survey.published),
-      }));
+    const surveys: CampaignActivity[] = surveysFuture.data.map((survey) => ({
+      data: survey,
+      endDate: getUTCDateWithoutTime(survey.expires),
+      kind: ACTIVITIES.SURVEY,
+      startDate: getUTCDateWithoutTime(survey.published),
+    }));
 
-    const tasks: CampaignActivity[] = tasksFuture.data
-      .filter((task) => filterFn(task, ACTIVITIES.TASK))
-      .map((task) => ({
-        data: task,
-        endDate: getUTCDateWithoutTime(task.expires || null),
-        kind: ACTIVITIES.TASK,
-        startDate: getUTCDateWithoutTime(task.published || null),
-      }));
+    const tasks: CampaignActivity[] = tasksFuture.data.map((task) => ({
+      data: task,
+      endDate: getUTCDateWithoutTime(task.expires || null),
+      kind: ACTIVITIES.TASK,
+      startDate: getUTCDateWithoutTime(task.published || null),
+    }));
 
-    const unsorted = callAssignments.concat(...surveys, ...tasks);
+    const unsorted = callAssignments
+      .concat(...surveys, ...tasks)
+      .filter((activity) => filterFn(activity));
 
     const sorted = unsorted.sort((first, second) => {
       if (first.startDate === null) {
@@ -190,15 +184,9 @@ export default class CampaignActivitiesModel extends ModelBase {
   }
 
   getArchivedActivities(): IFuture<CampaignActivity[]> {
-    return this.getActivities((activity, kind) => {
-      if (kind == ACTIVITIES.CALL_ASSIGNMENT) {
-        return !!activity.end_date && isInPast(activity.end_date);
-      } else if (kind == ACTIVITIES.SURVEY || kind == ACTIVITIES.TASK) {
-        return !!activity.expires && isInPast(activity.expires);
-      } else {
-        // Invalid activity
-        return false;
-      }
+    return this.getActivities((activity) => {
+      const now = new Date();
+      return !!activity.endDate && activity.endDate <= now;
     });
   }
 
@@ -219,15 +207,9 @@ export default class CampaignActivitiesModel extends ModelBase {
   }
 
   getCurrentActivities(): IFuture<CampaignActivity[]> {
-    return this.getActivities((activity, kind) => {
-      if (kind == ACTIVITIES.CALL_ASSIGNMENT) {
-        return !activity.end_date || isInFuture(activity.end_date);
-      } else if (kind == ACTIVITIES.SURVEY || kind == ACTIVITIES.TASK) {
-        return !activity.expires || isInFuture(activity.expires);
-      } else {
-        // Invalid activity
-        return false;
-      }
+    return this.getActivities((activity) => {
+      const now = new Date();
+      return !activity.endDate || activity.endDate > now;
     });
   }
 
