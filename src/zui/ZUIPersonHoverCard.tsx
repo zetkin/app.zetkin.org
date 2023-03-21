@@ -27,7 +27,7 @@ const ZUIPersonHoverCard: React.FunctionComponent<{
   children: React.ReactNode;
   personId: number;
   popperProps?: Partial<PopperProps>;
-}> = ({ BoxProps, children, personId, popperProps = {} }) => {
+}> = ({ BoxProps, children, personId, popperProps }) => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [open, setOpen] = useState(false);
   const openPopover = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
