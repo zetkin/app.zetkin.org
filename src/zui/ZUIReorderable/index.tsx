@@ -70,16 +70,13 @@ const ZUIReorderable: FC<ZUIReorderableProps> = ({
     const containerRect = containerRef.current?.getBoundingClientRect();
     const containerY = containerRect?.top ?? 0;
 
-    const itemRect = activeItemNodeRef.current?.getBoundingClientRect();
-    const itemHeight = itemRect?.height ?? 0;
-
     // Only allow dragging 10px beyond the top of the container, and just
     // beyond the bottom of the container
     const newClientY = Math.max(
       containerY - 10,
       Math.min(
         ev.clientY - (yOffsetRef.current || 0),
-        (containerRect?.bottom ?? 0) - itemHeight + 20
+        containerRect?.bottom ?? 0
       )
     );
 
@@ -256,7 +253,7 @@ const ZUIReorderableItem: FC<{
             showUp={showUpButton}
           />
         </Box>
-        <Box flex="1 0">
+        <Box flex="1 0" zIndex={dragging ? '100' : '1'}>
           {item.renderContent({
             dragging,
           })}
