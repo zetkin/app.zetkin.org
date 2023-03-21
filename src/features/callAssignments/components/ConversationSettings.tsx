@@ -32,7 +32,7 @@ const ConversationSettings = ({
           marginTop={2}
         >
           <Typography variant="h6">
-            <Msg id={messageIds.conversation.settings.title} />
+            <Msg id={messageIds.conversation.settings.notes.title} />
           </Typography>
           <Switch
             //this looks backwards bc in interface we use the positive "allow"
