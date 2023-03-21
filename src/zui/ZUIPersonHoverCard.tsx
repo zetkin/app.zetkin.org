@@ -8,6 +8,7 @@ import {
   Fade,
   Grid,
   Popper,
+  PopperProps,
   Typography,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
@@ -25,7 +26,8 @@ const ZUIPersonHoverCard: React.FunctionComponent<{
   BoxProps?: BoxProps;
   children: React.ReactNode;
   personId: number;
-}> = ({ BoxProps, children, personId }) => {
+  popperProps?: Partial<PopperProps>;
+}> = ({ BoxProps, children, personId, popperProps = {} }) => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [open, setOpen] = useState(false);
   const openPopover = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
@@ -82,6 +84,7 @@ const ZUIPersonHoverCard: React.FunctionComponent<{
         ]}
         open={open}
         style={{ zIndex: 9999 }}
+        {...popperProps}
       >
         {person && (
           <Fade in={open} timeout={200}>
