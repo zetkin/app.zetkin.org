@@ -1,4 +1,4 @@
-import { Close } from '@material-ui/icons';
+import { Close } from '@mui/icons-material';
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import {

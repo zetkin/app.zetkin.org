@@ -1,8 +1,8 @@
 import { Box } from '@mui/material';
+import { Edit } from '@mui/icons-material';
 import makeStyles from '@mui/styles/makeStyles';
 import { useState } from 'react';
 
-import { Edit } from '@material-ui/icons';
 import EmailLoader from './elements/EmailLoader';
 import { Msg } from 'core/i18n';
 import UpdateContainer from './elements/UpdateContainer';

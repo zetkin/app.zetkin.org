@@ -1,5 +1,3 @@
-import { Edit } from '@mui/icons-material';
-import SettingsIcon from '@material-ui/icons/Settings';
 import { useState } from 'react';
 import {
   Box,
@@ -13,6 +11,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
+import { Edit, Settings } from '@mui/icons-material';
 
 import CallAssignmentModel from '../models/CallAssignmentModel';
 import SmartSearchDialog from 'features/smartSearch/components/SmartSearchDialog';
@@ -63,7 +62,7 @@ const CallAssignmentStatusCards = ({
                     />
                   </Typography>
                   <Box ml={1}>
-                    <SettingsIcon
+                    <Settings
                       color="secondary"
                       cursor="pointer"
                       onClick={(event) =>
