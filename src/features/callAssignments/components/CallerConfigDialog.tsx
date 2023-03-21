@@ -104,7 +104,11 @@ const CallerTagSection: FC<{
         assignedTags={tags}
         groupTags={false}
         ignoreValues={true}
-        onAssignTag={(tag) => onChange(tags.concat([tag]))}
+        onAssignTag={(tag) => {
+          if (!tags.some((t) => t.id === tag.id)) {
+            onChange(tags.concat([tag]));
+          }
+        }}
         onUnassignTag={(tag) => onChange(tags.filter((t) => t.id != tag.id))}
       />
     </>
