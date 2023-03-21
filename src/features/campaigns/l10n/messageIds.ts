@@ -104,13 +104,13 @@ export default makeMessages('feat.campaigns', {
   },
   indefinite: m('Indefinite timeline'),
   layout: {
-    uncategorizedActivities: m('Uncategorised activites'),
-    campaignActivities: m('Activites'),
     allCampaigns: m('All Projects'),
     archive: m('Archive'),
     calendar: m('Calendar'),
+    campaignActivities: m('Activites'),
     insights: m('Insights'),
     overview: m('Overview'),
+    uncategorizedActivities: m('Uncategorised activites'),
   },
   linkGroup: {
     createActivity: m('Create activity'),
