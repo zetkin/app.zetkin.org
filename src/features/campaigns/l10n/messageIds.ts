@@ -40,8 +40,9 @@ export default makeMessages('feat.campaigns', {
   },
   allProjects: {
     linkToSummary: m('Go to my active projects.'),
-    noActivities: m(
-      'If your organization has activities that do not belong to a project they will show up here.'
+    noActivities: m("Your organization doesn't have any activities."),
+    noArchivedActivities: m(
+      'If your organization has any archived activities they will show up here.'
     ),
   },
   assigneeActions: m('Assignee actions'),
@@ -104,13 +105,13 @@ export default makeMessages('feat.campaigns', {
   },
   indefinite: m('Indefinite timeline'),
   layout: {
+    allActivities: m('All activities'),
     allCampaigns: m('All Projects'),
     archive: m('Archive'),
     calendar: m('Calendar'),
     campaignActivities: m('Activites'),
     insights: m('Insights'),
     overview: m('Overview'),
-    uncategorizedActivities: m('Uncategorised activites'),
   },
   linkGroup: {
     createActivity: m('Create activity'),

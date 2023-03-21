@@ -1,12 +1,13 @@
 import { GetServerSideProps } from 'next';
 import { Box, Grid } from '@mui/material';
+import { ChangeEvent, useState } from 'react';
 
 import ActivityList from 'features/campaigns/components/ActivityList';
-import AllCampaignsLayout from 'features/campaigns/layout/AllCampaignsLayout';
 import FilterActivities from 'features/campaigns/components/ActivityList/FilterActivities';
 import messageIds from 'features/campaigns/l10n/messageIds';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
+import SingleCampaignLayout from 'features/campaigns/layout/SingleCampaignLayout';
 import { useMessages } from 'core/i18n';
 import useModel from 'core/useModel';
 import useServerSide from 'core/useServerSide';
@@ -14,14 +15,14 @@ import ZUIEmptyState from 'zui/ZUIEmptyState';
 import CampaignActivitiesModel, {
   ACTIVITIES,
 } from 'features/campaigns/models/CampaignActivitiesModel';
-import { ChangeEvent, useState } from 'react';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   async (ctx) => {
-    const { orgId } = ctx.params!;
+    const { campId, orgId } = ctx.params!;
 
     return {
       props: {
+        campId,
         orgId,
       },
     };
@@ -33,10 +34,12 @@ export const getServerSideProps: GetServerSideProps = scaffold(
 );
 
 interface CampaignActivitiesPageProps {
+  campId: string;
   orgId: string;
 }
 
 const CampaignActivitiesPage: PageWithLayout<CampaignActivitiesPageProps> = ({
+  campId,
   orgId,
 }) => {
   const messages = useMessages(messageIds);
@@ -45,6 +48,7 @@ const CampaignActivitiesPage: PageWithLayout<CampaignActivitiesPageProps> = ({
     (env) => new CampaignActivitiesModel(env, parseInt(orgId))
   );
   const [searchString, setSearchString] = useState('');
+
   const [filters, setFilters] = useState<ACTIVITIES[]>([
     ACTIVITIES.CALL_ASSIGNMENT,
     ACTIVITIES.SURVEY,
@@ -63,7 +67,7 @@ const CampaignActivitiesPage: PageWithLayout<CampaignActivitiesPageProps> = ({
   const onSearchStringChange = (evt: ChangeEvent<HTMLInputElement>) =>
     setSearchString(evt.target.value);
 
-  const activities = model.getCurrentActivities().data;
+  const activities = model.getArchivedCampaignActivities(parseInt(campId)).data;
   const hasActivities = Array.isArray(activities) && activities.length > 0;
 
   const activityTypes = activities?.map((activity) => activity.kind);
@@ -72,15 +76,10 @@ const CampaignActivitiesPage: PageWithLayout<CampaignActivitiesPageProps> = ({
   if (onServer) {
     return null;
   }
-
   return (
     <Box>
       {!hasActivities && (
-        <ZUIEmptyState
-          href={`/organize/${orgId}/projects`}
-          linkMessage={messages.allProjects.linkToSummary()}
-          message={messages.allProjects.noActivities()}
-        />
+        <ZUIEmptyState message={messages.singleProject.noActivities()} />
       )}
       {hasActivities && (
         <Grid container spacing={2}>
@@ -108,7 +107,7 @@ const CampaignActivitiesPage: PageWithLayout<CampaignActivitiesPageProps> = ({
 };
 
 CampaignActivitiesPage.getLayout = function getLayout(page) {
-  return <AllCampaignsLayout>{page}</AllCampaignsLayout>;
+  return <SingleCampaignLayout>{page}</SingleCampaignLayout>;
 };
 
 export default CampaignActivitiesPage;

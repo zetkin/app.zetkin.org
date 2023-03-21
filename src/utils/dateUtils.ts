@@ -52,7 +52,7 @@ export const LocalTimeToJsonPlugin = (
 };
 
 /**
- * Takes an ISO datestring and returns a boolean that says if the date is in the futre or not.
+ * Takes an ISO datestring and returns a boolean that says if the date is in the future or not.
  * @param datestring
  * @returns boolean
  */
@@ -61,6 +61,18 @@ export function isInFuture(datestring: string): boolean {
   const date = new Date(datestring);
 
   return date > now;
+}
+
+/**
+ * Takes an ISO datestring and returns a boolean that says if the date is in the past or not.
+ * @param datestring
+ * @returns boolean
+ */
+export function isInPast(datestring: string): boolean {
+  const now = new Date();
+  const date = new Date(datestring);
+
+  return date <= now;
 }
 
 export function isSameDate(first: Date, second: Date): boolean {

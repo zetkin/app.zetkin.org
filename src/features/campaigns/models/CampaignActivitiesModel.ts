@@ -9,7 +9,7 @@ import {
   LoadingFuture,
   ResolvedFuture,
 } from 'core/caching/futures';
-import { isInFuture, isSameDate } from 'utils/dateUtils';
+import { isInFuture, isInPast, isSameDate } from 'utils/dateUtils';
 import {
   ZetkinCallAssignment,
   ZetkinSurveyExtended,
@@ -53,6 +53,10 @@ export type ActivityOverview = {
   tomorrow: CampaignActivity[];
 };
 
+type BasicActivity = Partial<
+  ZetkinCallAssignment | ZetkinSurveyExtended | ZetkinTask
+>;
+
 export default class CampaignActivitiesModel extends ModelBase {
   private _callAssignmentsRepo: CallAssignmentsRepo;
   private _orgId: number;
@@ -65,6 +69,65 @@ export default class CampaignActivitiesModel extends ModelBase {
     this._callAssignmentsRepo = new CallAssignmentsRepo(env);
     this._surveysRepo = new SurveysRepo(env);
     this._tasksRepo = new TasksRepo(env);
+  }
+
+  getActivities(
+    filterFn: (activity: BasicActivity, kind: ACTIVITIES) => boolean
+  ): IFuture<CampaignActivity[]> {
+    const callAssignmentsFuture = this._callAssignmentsRepo.getCallAssignments(
+      this._orgId
+    );
+    const surveysFuture = this._surveysRepo.getSurveys(this._orgId);
+    const tasksFuture = this._tasksRepo.getTasks(this._orgId);
+
+    if (
+      !callAssignmentsFuture.data ||
+      !surveysFuture.data ||
+      !tasksFuture.data
+    ) {
+      return new LoadingFuture();
+    }
+
+    const callAssignments: CampaignActivity[] = callAssignmentsFuture.data
+      .filter((ca) => filterFn(ca, ACTIVITIES.CALL_ASSIGNMENT))
+      .map((ca) => ({
+        data: ca,
+        endDate: getUTCDateWithoutTime(ca.end_date),
+        kind: ACTIVITIES.CALL_ASSIGNMENT,
+        startDate: getUTCDateWithoutTime(ca.start_date),
+      }));
+
+    const surveys: CampaignActivity[] = surveysFuture.data
+      .filter((survey) => filterFn(survey, ACTIVITIES.SURVEY))
+      .map((survey) => ({
+        data: survey,
+        endDate: getUTCDateWithoutTime(survey.expires),
+        kind: ACTIVITIES.SURVEY,
+        startDate: getUTCDateWithoutTime(survey.published),
+      }));
+
+    const tasks: CampaignActivity[] = tasksFuture.data
+      .filter((task) => filterFn(task, ACTIVITIES.TASK))
+      .map((task) => ({
+        data: task,
+        endDate: getUTCDateWithoutTime(task.expires || null),
+        kind: ACTIVITIES.TASK,
+        startDate: getUTCDateWithoutTime(task.published || null),
+      }));
+
+    const unsorted = callAssignments.concat(...surveys, ...tasks);
+
+    const sorted = unsorted.sort((first, second) => {
+      if (first.startDate === null) {
+        return -1;
+      } else if (second.startDate === null) {
+        return 1;
+      }
+
+      return second.startDate.getTime() - first.startDate.getTime();
+    });
+
+    return new ResolvedFuture(sorted);
   }
 
   getActivityOverview(campaignId?: number): IFuture<ActivityOverview> {
@@ -126,6 +189,27 @@ export default class CampaignActivitiesModel extends ModelBase {
     return new ResolvedFuture(overview);
   }
 
+  getArchivedActivities(): IFuture<CampaignActivity[]> {
+    return this.getActivities((activity, kind) => {
+      if (kind == ACTIVITIES.CALL_ASSIGNMENT) {
+        return !!activity.end_date && isInPast(activity.end_date);
+      } else if (kind == ACTIVITIES.SURVEY || kind == ACTIVITIES.TASK) {
+        return !!activity.expires && isInPast(activity.expires);
+      } else {
+        // Invalid activity
+        return false;
+      }
+    });
+  }
+
+  getArchivedCampaignActivities(campId: number): IFuture<CampaignActivity[]> {
+    const activities = this.getArchivedActivities().data;
+    const filtered = activities?.filter(
+      (activity) => activity.data.campaign?.id === campId
+    );
+    return new ResolvedFuture(filtered || []);
+  }
+
   getCampaignActivities(campId: number): IFuture<CampaignActivity[]> {
     const activities = this.getCurrentActivities().data;
     const filtered = activities?.filter(
@@ -135,60 +219,16 @@ export default class CampaignActivitiesModel extends ModelBase {
   }
 
   getCurrentActivities(): IFuture<CampaignActivity[]> {
-    const callAssignmentsFuture = this._callAssignmentsRepo.getCallAssignments(
-      this._orgId
-    );
-    const surveysFuture = this._surveysRepo.getSurveys(this._orgId);
-    const tasksFuture = this._tasksRepo.getTasks(this._orgId);
-
-    if (
-      !callAssignmentsFuture.data ||
-      !surveysFuture.data ||
-      !tasksFuture.data
-    ) {
-      return new LoadingFuture();
-    }
-
-    const callAssignments: CampaignActivity[] = callAssignmentsFuture.data
-      .filter((ca) => !ca.end_date || isInFuture(ca.end_date))
-      .map((ca) => ({
-        data: ca,
-        endDate: getUTCDateWithoutTime(ca.end_date),
-        kind: ACTIVITIES.CALL_ASSIGNMENT,
-        startDate: getUTCDateWithoutTime(ca.start_date),
-      }));
-
-    const surveys: CampaignActivity[] = surveysFuture.data
-      .filter((survey) => !survey.expires || isInFuture(survey.expires))
-      .map((survey) => ({
-        data: survey,
-        endDate: getUTCDateWithoutTime(survey.expires),
-        kind: ACTIVITIES.SURVEY,
-        startDate: getUTCDateWithoutTime(survey.published),
-      }));
-
-    const tasks: CampaignActivity[] = tasksFuture.data
-      .filter((task) => !task.expires || isInFuture(task.expires))
-      .map((task) => ({
-        data: task,
-        endDate: getUTCDateWithoutTime(task.expires || null),
-        kind: ACTIVITIES.TASK,
-        startDate: getUTCDateWithoutTime(task.published || null),
-      }));
-
-    const unsorted = callAssignments.concat(...surveys, ...tasks);
-
-    const sorted = unsorted.sort((first, second) => {
-      if (first.startDate === null) {
-        return -1;
-      } else if (second.startDate === null) {
-        return 1;
+    return this.getActivities((activity, kind) => {
+      if (kind == ACTIVITIES.CALL_ASSIGNMENT) {
+        return !activity.end_date || isInFuture(activity.end_date);
+      } else if (kind == ACTIVITIES.SURVEY || kind == ACTIVITIES.TASK) {
+        return !activity.expires || isInFuture(activity.expires);
+      } else {
+        // Invalid activity
+        return false;
       }
-
-      return second.startDate.getTime() - first.startDate.getTime();
     });
-
-    return new ResolvedFuture(sorted);
   }
 
   getStandaloneActivities(): IFuture<CampaignActivity[]> {

@@ -32,13 +32,13 @@ export const getServerSideProps: GetServerSideProps = scaffold(
   }
 );
 
-interface CampaignActivitiesPageProps {
+interface ArchivedCampaignActivitiesPageProps {
   orgId: string;
 }
 
-const CampaignActivitiesPage: PageWithLayout<CampaignActivitiesPageProps> = ({
-  orgId,
-}) => {
+const ArchivedCampaignActivitiesPage: PageWithLayout<
+  ArchivedCampaignActivitiesPageProps
+> = ({ orgId }) => {
   const messages = useMessages(messageIds);
   const onServer = useServerSide();
   const model = useModel(
@@ -63,7 +63,7 @@ const CampaignActivitiesPage: PageWithLayout<CampaignActivitiesPageProps> = ({
   const onSearchStringChange = (evt: ChangeEvent<HTMLInputElement>) =>
     setSearchString(evt.target.value);
 
-  const activities = model.getCurrentActivities().data;
+  const activities = model.getArchivedActivities().data;
   const hasActivities = Array.isArray(activities) && activities.length > 0;
 
   const activityTypes = activities?.map((activity) => activity.kind);
@@ -107,8 +107,8 @@ const CampaignActivitiesPage: PageWithLayout<CampaignActivitiesPageProps> = ({
   );
 };
 
-CampaignActivitiesPage.getLayout = function getLayout(page) {
+ArchivedCampaignActivitiesPage.getLayout = function getLayout(page) {
   return <AllCampaignsLayout>{page}</AllCampaignsLayout>;
 };
 
-export default CampaignActivitiesPage;
+export default ArchivedCampaignActivitiesPage;
