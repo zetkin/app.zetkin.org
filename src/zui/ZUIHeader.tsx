@@ -88,7 +88,11 @@ const Header: React.FC<HeaderProps> = ({
           <Box display="flex" flexDirection="row">
             {!!onToggleCollapsed && (
               <Box className={classes.collapseButton}>
-                <Button onClick={toggleCollapsed} startIcon={<ArrowUpward />}>
+                <Button
+                  color="inherit"
+                  onClick={toggleCollapsed}
+                  startIcon={<ArrowUpward />}
+                >
                   <Msg
                     id={
                       messageIds.header.collapseButton[
