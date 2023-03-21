@@ -125,10 +125,26 @@ const SurveySubmissionsList = ({
 
     if (row.respondent?.id) {
       return (
-        <ZUIPersonHoverCard personId={row.respondent.id}>
+        <ZUIPersonHoverCard
+          personId={row.respondent.id}
+          popperProps={{
+            modifiers: [
+              {
+                enabled: true,
+                name: 'preventOverflow',
+                options: {
+                  tetherOffset: 230,
+                },
+              },
+            ],
+          }}
+        >
           <ZUIPersonGridCell
             onClick={startEditing}
             personId={row.respondent.id}
+            sx={{
+              cursor: 'pointer',
+            }}
           />
         </ZUIPersonHoverCard>
       );

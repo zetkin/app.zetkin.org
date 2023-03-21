@@ -1,19 +1,20 @@
 import { FC } from 'react';
 import { Person } from '@mui/icons-material';
 import { useRouter } from 'next/router';
-import { Avatar, Box } from '@mui/material';
+import { Avatar, Box, SxProps } from '@mui/material';
 
 import ZUIAvatar from 'zui/ZUIAvatar';
 
 const ZUIPersonGridCell: FC<{
   onClick?: () => void;
   personId: number | null;
-}> = ({ personId, onClick }) => {
+  sx?: SxProps;
+}> = ({ personId, onClick, sx }) => {
   const query = useRouter().query;
   const orgId = parseInt(query.orgId as string);
 
   return (
-    <Box onClick={onClick}>
+    <Box onClick={onClick} sx={sx}>
       {personId ? (
         <ZUIAvatar orgId={orgId} personId={personId} />
       ) : (
