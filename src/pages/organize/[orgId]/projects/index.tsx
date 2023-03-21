@@ -1,6 +1,6 @@
 import { GetServerSideProps } from 'next';
 
-import { Box } from '@mui/material';
+import { Grid } from '@mui/material';
 import Head from 'next/head';
 import { useQuery } from 'react-query';
 
@@ -96,21 +96,15 @@ const AllCampaignsSummaryPage: PageWithLayout<AllCampaignsSummaryPageProps> = ({
         <title>{messages.layout.allCampaigns()}</title>
       </Head>
       <ZUISection title={messages.all.heading()}>
-        <Box
-          display="grid"
-          gap={20}
-          gridTemplateColumns="repeat( auto-fit, minmax(450px, 1fr) )"
-        >
+        <Grid container gap={5}>
           {campaigns.map((campaign) => {
             return (
-              <CampaignCard
-                key={campaign.id}
-                campaign={campaign}
-                events={events}
-              />
+              <Grid key={campaign.id} item lg={3} md={5} xs={12}>
+                <CampaignCard campaign={campaign} events={events} />
+              </Grid>
             );
           })}
-        </Box>
+        </Grid>
       </ZUISection>
     </>
   );
