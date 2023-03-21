@@ -1,6 +1,7 @@
 import { GetServerSideProps } from 'next';
 import { Grid } from '@mui/material';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
@@ -55,6 +56,7 @@ const SubmissionsPage: PageWithLayout<SubmissionsPageProps> = ({
   );
 
   const campaignId = isNaN(parseInt(campId)) ? 'standalone' : parseInt(campId);
+  const router = useRouter();
 
   return (
     <>
@@ -70,8 +72,19 @@ const SubmissionsPage: PageWithLayout<SubmissionsPageProps> = ({
                 submissions = data.filter(
                   (sub) => sub.respondent && !sub.respondent.id
                 );
+                if (submissions.length === 0) {
+                  router.push(
+                    `/organize/${orgId}/projects/${campId}/surveys/${surveyId}/submissions`
+                  );
+                }
               }
-              return <SurveySubmissionsList submissions={submissions} />;
+              return (
+                <>
+                  {(submissions.length !== 0 || !showUnlinkedOnly) && (
+                    <SurveySubmissionsList submissions={submissions} />
+                  )}
+                </>
+              );
             }}
           </ZUIFuture>
         </Grid>
