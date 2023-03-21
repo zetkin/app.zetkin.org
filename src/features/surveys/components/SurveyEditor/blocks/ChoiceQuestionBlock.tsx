@@ -70,6 +70,7 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
   const [addedOptionId, setAddedOptionId] = useState(0);
   const [bulkAddingOptions, setBulkAddingOptions] = useState(false);
   const [bulkOptionsText, setBulkOptionsText] = useState('');
+  const [expand, setExpand] = useState(false);
   const [title, setTitle] = useState(elemQuestion.question);
   const [description, setDescription] = useState(elemQuestion.description);
   const [options, setOptions] = useState(elemQuestion.options || []);
@@ -182,7 +183,8 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
           centerWidgets
           disableClick
           disableDrag={!editable}
-          items={optionsToShow.map((option) => ({
+          items={optionsToShow.map((option, index) => ({
+            hidden: index > 2 && !expand && !editable,
             id: option.id,
             renderContent: () => (
               <ZUIPreviewableInput
@@ -260,6 +262,23 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
             model.updateOptionOrder(element.id, ids);
           }}
         />
+        {options.length > 3 && !editable && (
+          <Button
+            onClick={(ev) => {
+              ev.stopPropagation();
+              setExpand(!expand);
+            }}
+            sx={{ ml: 1 }}
+          >
+            {expand && <Msg id={messageIds.optionCollapse.collapse} />}
+            {!expand && (
+              <Msg
+                id={messageIds.optionCollapse.more}
+                values={{ numOfOptions: options.length - 3 }}
+              />
+            )}
+          </Button>
+        )}
         {bulkAddingOptions && editable && (
           <Box
             alignItems="top"
