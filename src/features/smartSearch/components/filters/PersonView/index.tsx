@@ -1,5 +1,5 @@
 import { FormEvent } from 'react';
-import { MenuItem } from '@material-ui/core';
+import { MenuItem } from '@mui/material';
 import { useQuery } from 'react-query';
 import { useRouter } from 'next/router';
 

@@ -1,4 +1,5 @@
 import { Box, Button, Typography } from '@mui/material';
+import { Headset, People } from '@mui/icons-material';
 
 import CallAssignmentStatusChip from '../components/CallAssignmentStatusChip';
 import TabbedLayout from '../../../utils/layout/TabbedLayout';
@@ -9,7 +10,6 @@ import ZUIFuture from 'zui/ZUIFuture';
 import CallAssignmentModel, {
   CallAssignmentState,
 } from '../models/CallAssignmentModel';
-import { Headset, People } from '@material-ui/icons';
 import { Msg, useMessages } from 'core/i18n';
 
 import messageIds from '../l10n/messageIds';

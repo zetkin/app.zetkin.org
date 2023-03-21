@@ -1,10 +1,11 @@
 import { Alert } from '@mui/material';
 import { Button } from '@mui/material';
-import { Color } from '@material-ui/lab';
 
 import messageIds from '../l10n/messageIds';
 import { QUERY_STATUS } from 'features/smartSearch/components/types';
 import { Msg, PlainMessage } from 'core/i18n';
+
+type Color = 'success' | 'info' | 'warning' | 'info';
 
 const SEVERITY: { [key in QUERY_STATUS]: Color } = {
   [QUERY_STATUS.ASSIGNED]: 'success',
