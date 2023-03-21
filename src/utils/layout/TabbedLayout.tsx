@@ -98,6 +98,9 @@ const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
                   {...tab.tabProps}
                   key={tab.href}
                   label={tab.label}
+                  sx={{
+                    paddingX: 3,
+                  }}
                   value={tab.href}
                 />
               );
