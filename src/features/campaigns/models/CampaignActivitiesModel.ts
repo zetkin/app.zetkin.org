@@ -127,8 +127,13 @@ export default class CampaignActivitiesModel extends ModelBase {
   }
 
   getCampaignActivities(campId: number): IFuture<CampaignActivity[]> {
-    const activities = this.getCurrentActivities().data;
-    const filtered = activities?.filter(
+    const activities = this.getCurrentActivities();
+    if (activities.isLoading) {
+      return new LoadingFuture();
+    } else if (activities.error) {
+      return new ErrorFuture(activities.error);
+    }
+    const filtered = activities.data?.filter(
       (activity) => activity.data.campaign?.id === campId
     );
     return new ResolvedFuture(filtered || []);
@@ -140,6 +145,14 @@ export default class CampaignActivitiesModel extends ModelBase {
     );
     const surveysFuture = this._surveysRepo.getSurveys(this._orgId);
     const tasksFuture = this._tasksRepo.getTasks(this._orgId);
+
+    if (
+      callAssignmentsFuture.isLoading ||
+      surveysFuture.isLoading ||
+      tasksFuture.isLoading
+    ) {
+      return new LoadingFuture();
+    }
 
     if (
       !callAssignmentsFuture.data ||
@@ -192,10 +205,16 @@ export default class CampaignActivitiesModel extends ModelBase {
   }
 
   getStandaloneActivities(): IFuture<CampaignActivity[]> {
-    const activities = this.getCurrentActivities().data;
-    const filtered = activities?.filter(
+    const activities = this.getCurrentActivities();
+
+    if (activities.isLoading) {
+      return new LoadingFuture();
+    }
+
+    const filtered = activities.data?.filter(
       (activity) => activity.data.campaign === null
     );
+
     return new ResolvedFuture(filtered || []);
   }
 }
