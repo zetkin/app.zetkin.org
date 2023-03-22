@@ -69,6 +69,8 @@ const CampaignActivitiesPage: PageWithLayout<CampaignActivitiesPageProps> = ({
   const activityTypes = activities?.map((activity) => activity.kind);
   const filterTypes = [...new Set(activityTypes)];
 
+  const hasArchives = model.getArchivedActivities().data!.length > 0;
+
   if (onServer) {
     return null;
   }
@@ -77,8 +79,12 @@ const CampaignActivitiesPage: PageWithLayout<CampaignActivitiesPageProps> = ({
     <Box>
       {!hasActivities && (
         <ZUIEmptyState
-          href={`/organize/${orgId}/projects`}
-          linkMessage={messages.allProjects.linkToSummary()}
+          href={`/organize/${orgId}/projects${hasArchives ? '/archive' : ''}`}
+          linkMessage={
+            hasArchives
+              ? messages.allProjects.archiveLink()
+              : messages.allProjects.linkToSummary()
+          }
           message={messages.allProjects.noActivities()}
         />
       )}

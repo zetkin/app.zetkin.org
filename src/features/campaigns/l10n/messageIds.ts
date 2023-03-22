@@ -39,6 +39,7 @@ export default makeMessages('feat.campaigns', {
     upcoming: m<{ numEvents: number }>('{numEvents, number} upcoming events.'),
   },
   allProjects: {
+    archiveLink: m('View archives'),
     linkToSummary: m('Go to my active projects.'),
     noActivities: m("Your organization doesn't have any activities."),
     noArchivedActivities: m(
@@ -130,6 +131,7 @@ export default makeMessages('feat.campaigns', {
   },
   noManager: m('No Project Manager'),
   singleProject: {
+    archiveLink: m('View archives'),
     filterActivities: m('Type to filter'),
     noActivities: m('There are no activities in this project yet.'),
     noSearchResults: m('Your filtering yielded no results.'),

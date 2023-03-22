@@ -73,13 +73,22 @@ const CampaignActivitiesPage: PageWithLayout<CampaignActivitiesPageProps> = ({
   const activityTypes = activities?.map((activity) => activity.kind);
   const filterTypes = [...new Set(activityTypes)];
 
+  const hasArchives =
+    model.getArchivedCampaignActivities(parseInt(campId)).data!.length > 0;
+
   if (onServer) {
     return null;
   }
   return (
     <Box>
       {!hasActivities && (
-        <ZUIEmptyState message={messages.singleProject.noActivities()} />
+        <ZUIEmptyState
+          href={
+            hasArchives ? `/organize/${orgId}/projects/${campId}/archive` : ''
+          }
+          linkMessage={hasArchives ? messages.singleProject.archiveLink() : ''}
+          message={messages.singleProject.noActivities()}
+        />
       )}
       {hasActivities && (
         <Grid container spacing={2}>
