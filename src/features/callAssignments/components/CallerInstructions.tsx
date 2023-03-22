@@ -1,7 +1,7 @@
-import { Link } from '@material-ui/core';
 import {
   Box,
   Button,
+  Link,
   Paper,
   Typography,
   useMediaQuery,

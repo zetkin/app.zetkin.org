@@ -1,14 +1,13 @@
 import { makeStyles } from '@mui/styles';
 import { useState } from 'react';
-import { Add, Edit } from '@material-ui/icons';
+import { Add, Edit } from '@mui/icons-material';
 import { Box, Button, Card, Divider, Typography } from '@mui/material';
 
 import CallAssignmentModel from '../models/CallAssignmentModel';
+import messageIds from '../l10n/messageIds';
 import { Msg } from 'core/i18n';
 import SmartSearchDialog from 'features/smartSearch/components/SmartSearchDialog';
 import ZUIAnimatedNumber from 'zui/ZUIAnimatedNumber';
-
-import messageIds from '../l10n/messageIds';
 
 const useStyles = makeStyles((theme) => ({
   chip: {

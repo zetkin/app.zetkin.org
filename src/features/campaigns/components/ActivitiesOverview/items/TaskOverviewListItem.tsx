@@ -44,11 +44,11 @@ const TaskOverviewListItem: FC<TasksOverviewListItemProps> = ({
               },
               {
                 color: 'statusColors.blue',
-                value: stats.completed,
+                value: stats.assigned - stats.completed - stats.ignored,
               },
               {
                 color: 'statusColors.green',
-                value: stats.assigned - stats.completed - stats.ignored,
+                value: stats.completed,
               },
             ]}
           />
