@@ -89,6 +89,7 @@ const CampaignActionButtons: React.FunctionComponent<
   };
   const handleCreateSurvey = () => {
     const survey = {
+      signature: 'require_signature',
       title: messages.form.createSurvey.newSurvey(),
     };
     model.createSurvey(survey);
