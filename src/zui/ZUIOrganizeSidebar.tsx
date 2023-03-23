@@ -10,6 +10,7 @@ import {
   List,
   ListItem,
   Toolbar,
+  Typography,
 } from '@mui/material';
 import { Event, Explore, Home, Map, Menu, People } from '@mui/icons-material/';
 
@@ -24,6 +25,11 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.up('sm')]: {
       display: 'none',
     },
+  },
+  beta: {
+    fontSize: '0.32em',
+    paddingTop: '0.32em',
+    textAlign: 'left',
   },
   content: {
     flexGrow: 1,
@@ -96,7 +102,10 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                 size="large"
                 style={{ marginBottom: '2rem' }}
               >
-                <ZUILogo htmlColor="#ED1C55" size={40} />
+                <Box>
+                  <Typography className={classes.beta}>Beta</Typography>
+                  <ZUILogo htmlColor="#ED1C55" size={40} />
+                </Box>
               </IconButton>
             </NextLink>
           </ListItem>
