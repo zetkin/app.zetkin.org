@@ -29,6 +29,7 @@ const ZUIEllipsisMenu: FunctionComponent<ZUIEllipsisMenuProps> = ({
   return (
     <>
       <Button
+        color="inherit"
         data-testid="ZUIEllipsisMenu-menuActivator"
         disableElevation
         onClick={noPropagate((e) =>
