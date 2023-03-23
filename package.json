@@ -15,6 +15,7 @@
     "playwright:skipbuild": "cross-env NODE_ENV=production SKIP_BUILD=1 playwright test",
     "playwright:ci": "cross-env NODE_ENV=production playwright test",
     "storybook": "start-storybook -p 6006",
+    "make-yaml": "ts-node src/tools/make-yaml.ts",
     "build-storybook": "build-storybook"
   },
   "dependencies": {
@@ -72,6 +73,7 @@
     "slate-history": "^0.66.0",
     "slate-react": "^0.77.4",
     "slugify": "^1.6.5",
+    "tsconfig-paths": "^4.1.2",
     "unified": "^10.1.2",
     "validator": "^13.6.0",
     "xlsx-js-style": "^1.2.0",
@@ -132,6 +134,7 @@
     "ts-jest": "^27.0.5",
     "ts-loader": "^9.2.6",
     "ts-mockito": "^2.6.1",
+    "ts-node": "^10.9.1",
     "tsconfig-paths-webpack-plugin": "^3.5.2",
     "typescript": "^4.4.3",
     "webpack": "^5.58.1"
