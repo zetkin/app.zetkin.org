@@ -253,7 +253,7 @@ const ZUIReorderableItem: FC<{
             showUp={showUpButton}
           />
         </Box>
-        <Box flex="1 0" zIndex={dragging ? '100' : '1'}>
+        <Box flex="1 0" zIndex={dragging ? '100' : '0'}>
           {item.renderContent({
             dragging,
           })}
