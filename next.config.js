@@ -64,6 +64,11 @@ module.exports = {
         destination: 'https://zetk.in/o/:path*',
         permanent: false,
       },
+      {
+        source: '/organize/:orgId/campaigns/:path*',
+        destination: '/organize/:orgId/projects/:path*',
+        permanent: false,
+      }
     ];
   },
 };
