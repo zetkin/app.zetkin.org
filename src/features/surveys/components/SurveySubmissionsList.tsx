@@ -160,12 +160,13 @@ const SurveySubmissionsList = ({
   const EditCell: FC<{ row: ZetkinSurveySubmission }> = ({ row }) => {
     const api = useGridApiContext();
     const { orgId } = useRouter().query;
-    const email = row.respondent?.email || '';
+    const emailOrFirstName =
+      row.respondent?.email || row.respondent?.first_name || '';
     let { data: suggestedPeople } = useQuery(
-      ['peopleSearchResults', email],
-      getPeopleSearchResults(email, orgId as string),
+      ['peopleSearchResults', emailOrFirstName],
+      getPeopleSearchResults(emailOrFirstName, orgId as string),
       {
-        enabled: email.length >= 2,
+        enabled: emailOrFirstName.length >= 2,
         retry: true,
       }
     );
