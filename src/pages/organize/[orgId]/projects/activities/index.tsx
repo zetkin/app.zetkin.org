@@ -11,8 +11,10 @@ import { useMessages } from 'core/i18n';
 import useModel from 'core/useModel';
 import useServerSide from 'core/useServerSide';
 import ZUIEmptyState from 'zui/ZUIEmptyState';
+import ZUIFuture from 'zui/ZUIFuture';
 import CampaignActivitiesModel, {
   ACTIVITIES,
+  CampaignActivity,
 } from 'features/campaigns/models/CampaignActivitiesModel';
 import { ChangeEvent, useState } from 'react';
 
@@ -63,46 +65,53 @@ const CampaignActivitiesPage: PageWithLayout<CampaignActivitiesPageProps> = ({
   const onSearchStringChange = (evt: ChangeEvent<HTMLInputElement>) =>
     setSearchString(evt.target.value);
 
-  const activities = model.getStandaloneActivities().data;
-  const hasActivities = Array.isArray(activities) && activities.length > 0;
-
-  const activityTypes = activities?.map((activity) => activity.kind);
-  const filterTypes = [...new Set(activityTypes)];
-
   if (onServer) {
     return null;
   }
 
   return (
     <Box>
-      {!hasActivities && (
-        <ZUIEmptyState
-          href={`/organize/${orgId}/projects`}
-          linkMessage={messages.allProjects.linkToSummary()}
-          message={messages.allProjects.noActivities()}
-        />
-      )}
-      {hasActivities && (
-        <Grid container spacing={2}>
-          <Grid item sm={8}>
-            <ActivityList
-              allActivities={activities}
-              filters={filters}
-              orgId={parseInt(orgId)}
-              searchString={searchString}
-            />
-          </Grid>
-          <Grid item sm={4}>
-            <FilterActivities
-              filters={filters}
-              filterTypes={filterTypes}
-              onFiltersChange={onFiltersChange}
-              onSearchStringChange={onSearchStringChange}
-              value={searchString}
-            />
-          </Grid>
-        </Grid>
-      )}
+      <ZUIFuture future={model.getStandaloneActivities()} skeletonWidth={200}>
+        {(data) => {
+          if (data.length === 0) {
+            return (
+              <ZUIEmptyState
+                href={`/organize/${orgId}/projects`}
+                linkMessage={messages.allProjects.linkToSummary()}
+                message={messages.allProjects.noActivities()}
+              />
+            );
+          }
+
+          const activityTypes = data.map(
+            (activity: CampaignActivity) => activity.kind
+          );
+          const filterTypes = [...new Set(activityTypes)];
+
+          return (
+            <Grid container spacing={2}>
+              <Grid item sm={8}>
+                <ActivityList
+                  allActivities={data}
+                  filters={filters}
+                  orgId={parseInt(orgId)}
+                  searchString={searchString}
+                />
+              </Grid>
+
+              <Grid item sm={4}>
+                <FilterActivities
+                  filters={filters}
+                  filterTypes={filterTypes}
+                  onFiltersChange={onFiltersChange}
+                  onSearchStringChange={onSearchStringChange}
+                  value={searchString}
+                />
+              </Grid>
+            </Grid>
+          );
+        }}
+      </ZUIFuture>
     </Box>
   );
 };
