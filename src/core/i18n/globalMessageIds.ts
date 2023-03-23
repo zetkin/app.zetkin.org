@@ -1,6 +1,6 @@
-import { m } from './messages';
+import { m, makeMessages } from './messages';
 
-const globalMessages = {
+export default makeMessages('glob', {
   accessLevels: {
     configure: m('Edit & Configure'),
     edit: m('Editing'),
@@ -26,6 +26,4 @@ const globalMessages = {
     admin: m('Admin'),
     organizer: m('Organizer'),
   },
-};
-
-export default globalMessages;
+});

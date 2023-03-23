@@ -9,6 +9,7 @@ import ZUISection from 'zui/ZUISection';
 import { Msg, useMessages } from 'core/i18n';
 import { ZetkinCustomField, ZetkinPerson } from 'utils/types/zetkin';
 
+import globalMessageIds from 'core/i18n/globalMessageIds';
 import messageIds from '../l10n/messageIds';
 
 const PersonDetailLink: React.FunctionComponent<{
@@ -39,6 +40,7 @@ const PersonDetailsCard: React.FunctionComponent<{
   person: ZetkinPerson;
 }> = ({ customFields, person }) => {
   const messages = useMessages(messageIds);
+  const globalMessages = useMessages(globalMessageIds);
   const router = useRouter();
 
   const nativeFields = nativeFieldsToDisplay.map((field) => {
@@ -65,7 +67,7 @@ const PersonDetailsCard: React.FunctionComponent<{
     }
 
     return {
-      title: messages.global.personFields[field](),
+      title: globalMessages.personFields[field](),
       value,
     };
   });

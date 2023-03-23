@@ -12,6 +12,7 @@ import {
 } from '../../components/types';
 import { Params, paramsSchema, Result } from './client';
 
+import globalMessageIds from 'core/i18n/globalMessageIds';
 import messageIds from 'features/views/l10n/messageIds';
 
 export const createNewViewRouteDef = {
@@ -33,6 +34,7 @@ async function handle(
   const lang = getBrowserLanguage(req);
 
   const messages = await getServerMessages(lang, messageIds);
+  const globalMessages = await getServerMessages(lang, globalMessageIds);
 
   const newView = await apiClient.post<ZetkinView, ZetkinViewPostBody>(
     `/api/orgs/${orgId}/people/views`,
@@ -49,7 +51,7 @@ async function handle(
       config: {
         field: NATIVE_PERSON_FIELDS.FIRST_NAME,
       },
-      title: messages.global.personFields.first_name(),
+      title: globalMessages.personFields.first_name(),
       type: COLUMN_TYPE.PERSON_FIELD,
     }
   );
@@ -61,7 +63,7 @@ async function handle(
       config: {
         field: NATIVE_PERSON_FIELDS.LAST_NAME,
       },
-      title: messages.global.personFields.last_name(),
+      title: globalMessages.personFields.last_name(),
       type: COLUMN_TYPE.PERSON_FIELD,
     }
   );

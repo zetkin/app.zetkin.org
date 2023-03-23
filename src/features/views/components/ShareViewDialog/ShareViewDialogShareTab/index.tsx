@@ -12,6 +12,7 @@ import ZUIInlineCopyToClipboard from 'zui/ZUIInlineCopyToClipBoard';
 import ZUIScrollingContainer from 'zui/ZUIScrollingContainer';
 import { Msg, useMessages } from 'core/i18n';
 
+import globalMessageIds from 'core/i18n/globalMessageIds';
 import messageIds from 'features/views/l10n/messageIds';
 
 interface ShareViewDialogShareTabProps {
@@ -22,6 +23,7 @@ const ShareViewDialogShareTab: FC<ShareViewDialogShareTabProps> = ({
   model,
 }) => {
   const messages = useMessages(messageIds);
+  const globalMessages = useMessages(globalMessageIds);
   const selectInputRef = useRef<HTMLInputElement>();
   const [showOfficials, setShowOfficials] = useState(true);
   const shareLinkUrl = useAbsoluteUrl(
@@ -85,14 +87,14 @@ const ShareViewDialogShareTab: FC<ShareViewDialogShareTabProps> = ({
                     (item) => item.person.id == person.id
                   );
                   if (accessItem) {
-                    return messages.global.accessLevels[accessItem.level]();
+                    return globalMessages.accessLevels[accessItem.level]();
                   }
 
                   const official = officials.find(
                     (item) => item.id == person.id
                   );
                   if (official) {
-                    return messages.global.roles[official.role]();
+                    return globalMessages.roles[official.role]();
                   }
 
                   return '';
