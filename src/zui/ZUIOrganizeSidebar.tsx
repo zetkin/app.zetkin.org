@@ -26,11 +26,6 @@ const useStyles = makeStyles((theme) => ({
       display: 'none',
     },
   },
-  beta: {
-    fontSize: '0.32em',
-    paddingTop: '0.32em',
-    textAlign: 'left',
-  },
   content: {
     flexGrow: 1,
     padding: theme.spacing(3),
@@ -102,10 +97,7 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                 size="large"
                 style={{ marginBottom: '2rem' }}
               >
-                <Box>
-                  <Typography className={classes.beta}>Beta</Typography>
-                  <ZUILogo htmlColor="#ED1C55" size={40} />
-                </Box>
+                <ZUILogo htmlColor="#ED1C55" size={40} beta={true} />
               </IconButton>
             </NextLink>
           </ListItem>
