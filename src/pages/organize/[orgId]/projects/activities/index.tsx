@@ -73,7 +73,7 @@ const CampaignActivitiesPage: PageWithLayout<CampaignActivitiesPageProps> = ({
     <Box>
       <ZUIFuture future={model.getStandaloneActivities()} skeletonWidth={200}>
         {(data) => {
-          if (data && data.length === 0) {
+          if (data.length === 0) {
             return (
               <ZUIEmptyState
                 href={`/organize/${orgId}/projects`}

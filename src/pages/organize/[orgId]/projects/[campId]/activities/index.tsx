@@ -75,7 +75,7 @@ const CampaignActivitiesPage: PageWithLayout<CampaignActivitiesPageProps> = ({
     <Box>
       <ZUIFuture future={model.getCampaignActivities(parseInt(campId))}>
         {(data) => {
-          if (data && data.length === 0) {
+          if (data.length === 0) {
             return (
               <ZUIEmptyState message={messages.singleProject.noActivities()} />
             );
