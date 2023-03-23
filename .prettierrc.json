@@ -1,11 +1,3 @@
 {
-  "singleQuote": true,
-  "overrides": [
-    {
-      "files": "**/*.yml",
-      "options": {
-        "parser": "yaml"
-      }
-    }
-  ]
+  "singleQuote": true
 }
