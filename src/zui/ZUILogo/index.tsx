@@ -11,16 +11,16 @@ interface ZUILogoProps {
 
 const useStyles = makeStyles((theme) => ({
   beta: {
-    backgroundColor: theme.palette.primary.main,
-    bottom: theme.spacing(-1.5),
+    backgroundColor: theme.palette.secondary.main,
     borderRadius: theme.spacing(0.5),
+    bottom: theme.spacing(-1.5),
     color: theme.palette.background.paper,
     fontSize: '0.5rem',
+    fontWeight: 900,
     lineHeight: 1,
     padding: theme.spacing(0.5),
     position: 'absolute',
     right: 0,
-    fontWeight: 900,
   },
   logoContainer: {
     position: 'relative',

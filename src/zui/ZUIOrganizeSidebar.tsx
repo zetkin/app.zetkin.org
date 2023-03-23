@@ -10,7 +10,6 @@ import {
   List,
   ListItem,
   Toolbar,
-  Typography,
 } from '@mui/material';
 import { Event, Explore, Home, Map, Menu, People } from '@mui/icons-material/';
 
@@ -97,7 +96,7 @@ const ZUIOrganizeSidebar = (): JSX.Element => {
                 size="large"
                 style={{ marginBottom: '2rem' }}
               >
-                <ZUILogo htmlColor="#ED1C55" size={40} beta={true} />
+                <ZUILogo beta={true} htmlColor="#ED1C55" size={40} />
               </IconButton>
             </NextLink>
           </ListItem>
