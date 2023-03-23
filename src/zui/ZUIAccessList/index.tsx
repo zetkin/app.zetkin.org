@@ -7,6 +7,7 @@ import { ZetkinOfficial } from 'utils/types/zetkin';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 import { Msg, useMessages } from 'core/i18n';
 
+import globalMessageIds from 'core/i18n/globalMessageIds';
 import messageIds from 'zui/l10n/messageIds';
 
 interface ZUIAccessListProps {
@@ -38,7 +39,7 @@ const ZUIAccessList: FC<ZUIAccessListProps> = ({
           <>
             {showDivider && <Divider />}
             <AccessListItem
-              action={<Msg id={messageIds.global.roles[item.role]} />}
+              action={<Msg id={globalMessageIds.roles[item.role]} />}
               orgId={orgId}
               personId={item.id}
               subtitle="-"
@@ -75,13 +76,13 @@ const ZUIAccessList: FC<ZUIAccessListProps> = ({
                     value={level}
                   >
                     <MenuItem value="readonly">
-                      <Msg id={messageIds.global.accessLevels.readonly} />
+                      <Msg id={globalMessageIds.accessLevels.readonly} />
                     </MenuItem>
                     <MenuItem value="edit">
-                      <Msg id={messageIds.global.accessLevels.edit} />
+                      <Msg id={globalMessageIds.accessLevels.edit} />
                     </MenuItem>
                     <MenuItem value="configure">
-                      <Msg id={messageIds.global.accessLevels.configure} />
+                      <Msg id={globalMessageIds.accessLevels.configure} />
                     </MenuItem>
                     <Divider />
                     <MenuItem value="delete">

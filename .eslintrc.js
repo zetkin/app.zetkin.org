@@ -10,8 +10,6 @@ module.exports = {
   extends: [
     'eslint:recommended',
     'next',
-    'plugin:yml/standard',
-    'plugin:yml/prettier',
     'prettier',
   ],
   settings: { react: { version: 'detect' } },
@@ -87,14 +85,6 @@ module.exports = {
         ],
         'sort-keys': 'error',
         'sort-vars': 'error',
-      },
-    },
-    {
-      files: ['**/*.yaml', '**/*.yml'],
-      parser: 'yaml-eslint-parser',
-      rules: {
-        'yml/sort-keys': 'error',
-        'yml/key-name-casing': ['error', { camelCase: true }],
       },
     },
   ],

@@ -191,7 +191,9 @@ export const scaffold =
     // Figure out browser's preferred language
     const lang = getBrowserLanguage(contextFromNext.req);
 
-    const localeScope = (options?.localeScope ?? []).concat(['misc', 'zui']);
+    // TODO: Respect scope from options again
+    //const localeScope = (options?.localeScope ?? []).concat(['misc', 'zui']);
+    const localeScope: string[] = [];
     const messages = await getMessages(lang, localeScope);
 
     if (hasProps(result)) {

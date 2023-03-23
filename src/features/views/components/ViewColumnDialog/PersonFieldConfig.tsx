@@ -22,6 +22,7 @@ import {
 } from '../types';
 import { Msg, useMessages } from 'core/i18n';
 
+import globalMessageIds from 'core/i18n/globalMessageIds';
 import messageIds from 'features/views/l10n/messageIds';
 
 interface PersonFieldConfigProps {
@@ -39,6 +40,7 @@ const PersonFieldConfig = ({
   onOutputConfigured,
 }: PersonFieldConfigProps) => {
   const messages = useMessages(messageIds);
+  const globalMessages = useMessages(globalMessageIds);
   const [selectedFields, setSelectedFields] = useState<string[]>([]);
 
   //TODO: refactor to use model logic
@@ -61,7 +63,7 @@ const PersonFieldConfig = ({
   Object.values(NATIVE_PERSON_FIELDS).map((fieldSlug) =>
     fields.push({
       slug: fieldSlug,
-      title: messages.global.personFields[fieldSlug](),
+      title: globalMessages.personFields[fieldSlug](),
     })
   );
 

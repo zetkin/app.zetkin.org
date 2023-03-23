@@ -42,7 +42,7 @@ async function* findYMLFiles(dir: string): AsyncIterable<string> {
 }
 
 async function loadMessages(): Promise<MessageDB> {
-  const basePath = path.resolve('./src');
+  const basePath = path.resolve('./src/locale');
   const messages: MessageDB = {};
 
   for await (const fullPath of findYMLFiles('./src')) {
