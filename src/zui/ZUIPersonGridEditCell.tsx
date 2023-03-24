@@ -201,7 +201,7 @@ const ZUIPersonGridEditCell: FC<{
                       <List
                         {...autoComplete.getListboxProps()}
                         subheader={
-                          <ListSubheader>
+                          <ListSubheader sx={{ position: 'relative' }}>
                             {suggestedPeople.length >= 0 &&
                               messages.personGridEditCell.searchResults()}
                           </ListSubheader>
