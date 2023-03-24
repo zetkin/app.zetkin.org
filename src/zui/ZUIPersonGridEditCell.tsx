@@ -96,8 +96,10 @@ const ZUIPersonGridEditCell: FC<{
           inputProps={autoComplete.getInputProps()}
           onChange={() => setSearching(true)}
           placeholder={messages.personSelect.search()}
+          sx={{ paddingLeft: '10px' }}
         ></InputBase>
       </Box>
+
       {searchResults.length || suggestedPeople.length ? (
         <Popper
           anchorEl={anchorEl}
