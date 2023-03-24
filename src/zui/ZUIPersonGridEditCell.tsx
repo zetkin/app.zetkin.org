@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import {
   Box,
   Button,
+  CircularProgress,
   InputBase,
   List,
   ListItem,
@@ -197,12 +198,20 @@ const ZUIPersonGridEditCell: FC<{
                       </List>
                     )}
                     {searching && (
-                      <List {...autoComplete.getListboxProps()}>
-                        <ListSubheader sx={{ position: 'relative' }}>
-                          {suggestedPeople.length
-                            ? messages.personGridEditCell.otherPeople()
-                            : messages.personGridEditCell.searchResults()}
-                        </ListSubheader>
+                      <List
+                        {...autoComplete.getListboxProps()}
+                        subheader={
+                          <ListSubheader>
+                            {suggestedPeople.length >= 0 &&
+                              messages.personGridEditCell.searchResults()}
+                          </ListSubheader>
+                        }
+                      >
+                        {searchResults.length == 0 && (
+                          <CircularProgress
+                            sx={{ display: 'block', margin: 'auto' }}
+                          />
+                        )}
                         {searchResults.map((option, index) => {
                           const optProps = autoComplete.getOptionProps({
                             index,
