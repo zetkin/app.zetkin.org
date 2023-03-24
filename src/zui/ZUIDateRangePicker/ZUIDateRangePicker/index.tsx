@@ -92,6 +92,7 @@ const ZUIDateRangePicker: FC<ZUIDateRangePickerProps> = ({
         </Typography>
       </Box>
       <ClickAwayListener
+        mouseEvent="onMouseDown"
         onClickAway={() => {
           setAnchorEl(null);
           if (onChange) {
