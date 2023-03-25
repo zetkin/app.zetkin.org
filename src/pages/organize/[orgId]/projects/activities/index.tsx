@@ -71,7 +71,7 @@ const CampaignActivitiesPage: PageWithLayout<CampaignActivitiesPageProps> = ({
 
   return (
     <Box>
-      <ZUIFuture future={model.getStandaloneActivities()} skeletonWidth={200}>
+      <ZUIFuture future={model.getCurrentActivities()} skeletonWidth={200}>
         {(data) => {
           if (data.length === 0) {
             return (

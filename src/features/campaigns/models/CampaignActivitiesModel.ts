@@ -236,20 +236,6 @@ export default class CampaignActivitiesModel extends ModelBase {
 
     return new ResolvedFuture(filtered || []);
   }
-
-  getStandaloneActivities(): IFuture<CampaignActivity[]> {
-    const activities = this.getCurrentActivities();
-
-    if (activities.isLoading) {
-      return new LoadingFuture();
-    }
-
-    const filtered = activities.data?.filter(
-      (activity) => activity.data.campaign === null
-    );
-
-    return new ResolvedFuture(filtered || []);
-  }
 }
 
 function getUTCDateWithoutTime(naiveDateString: string | null): Date | null {
