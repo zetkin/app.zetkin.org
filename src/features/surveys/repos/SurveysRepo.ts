@@ -24,6 +24,8 @@ import {
   elementOptionDeleted,
   elementOptionsReordered,
   elementOptionUpdated,
+  elementsLoad,
+  elementsLoaded,
   elementsReordered,
   elementUpdated,
   statsLoad,
@@ -208,7 +210,7 @@ export default class SurveysRepo {
     }
   }
 
-  getSurvey(orgId: number, id: number): IFuture<ZetkinSurveyExtended> {
+  getSurvey(orgId: number, id: number): IFuture<ZetkinSurvey> {
     const state = this._store.getState();
     const item = state.surveys.surveyList.items.find((item) => item.id == id);
     if (!item || shouldLoad(item)) {
@@ -223,6 +225,27 @@ export default class SurveysRepo {
     } else {
       return new RemoteItemFuture(item);
     }
+  }
+
+  getSurveyElements(
+    orgId: number,
+    surveyId: number
+  ): IFuture<ZetkinSurveyElement[]> {
+    const state = this._store.getState();
+    return loadListIfNecessary<
+      ZetkinSurveyElement,
+      number,
+      [number, ZetkinSurveyElement[]]
+    >(state.surveys.elementsBySurveyId[surveyId], this._store, {
+      actionOnLoad: () => elementsLoad(surveyId),
+      actionOnSuccess: (elements) => elementsLoaded([surveyId, elements]),
+      loader: async () => {
+        const survey = await this._apiClient.get<ZetkinSurveyExtended>(
+          `/api/orgs/${orgId}/surveys/${surveyId}`
+        );
+        return survey.elements;
+      },
+    });
   }
 
   getSurveyStats(orgId: number, surveyId: number): IFuture<SurveyStats> {
@@ -253,8 +276,7 @@ export default class SurveysRepo {
     });
   }
 
-  //TODO: refactor this to use ZetkinSurvey type.
-  getSurveys(orgId: number): IFuture<ZetkinSurveyExtended[]> {
+  getSurveys(orgId: number): IFuture<ZetkinSurvey[]> {
     const state = this._store.getState();
     const surveyList = state.surveys.surveyList;
 

@@ -9,7 +9,8 @@ import SurveysRepo, {
   ZetkinSurveyElementPostBody,
 } from '../repos/SurveysRepo';
 import {
-  ZetkinSurveyExtended,
+  ZetkinSurvey,
+  ZetkinSurveyElement,
   ZetkinSurveyTextElement,
 } from 'utils/types/zetkin';
 
@@ -68,8 +69,12 @@ export default class SurveyDataModel extends ModelBase {
     );
   }
 
-  getData(): IFuture<ZetkinSurveyExtended> {
+  getData(): IFuture<ZetkinSurvey> {
     return this._repo.getSurvey(this._orgId, this._surveyId);
+  }
+
+  getElements(): IFuture<ZetkinSurveyElement[]> {
+    return this._repo.getSurveyElements(this._orgId, this._surveyId);
   }
 
   getStats(): IFuture<SurveyStats> {
@@ -174,13 +179,13 @@ export default class SurveyDataModel extends ModelBase {
   }
 
   get surveyIsEmpty(): boolean {
-    const { data } = this.getData();
+    const { data } = this.getElements();
 
     if (!data) {
       return true;
     }
 
-    return data.elements?.length ? false : true;
+    return data.length ? false : true;
   }
 
   toggleElementHidden(elemId: number, hidden: boolean) {
