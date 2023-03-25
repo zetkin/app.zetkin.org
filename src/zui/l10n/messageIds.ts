@@ -10,6 +10,7 @@ export default makeMessages('zui', {
   },
   breadcrumbs: {
     activities: m('Activities'),
+    archive: m('Archive'),
     areas: m('Areas'),
     assignees: m('Assignees'),
     calendar: m('Calendar'),

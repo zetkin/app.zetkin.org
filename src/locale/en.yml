@@ -1468,6 +1468,7 @@ zui:
     added: Added by {sharer} {updated}
     removeAccess: Remove access
   breadcrumbs:
+    archive: Archive
     activities: Activities
     areas: Areas
     assignees: Assignees
