@@ -188,8 +188,7 @@ feat:
         error: There was an error deleting the project
         submitButton: Confirm deletion
         title: Delete project
-        warning: Are you sure you want to delete this campiagn? This action is
-          permanent.
+        warning: Are you sure you want to delete this project? This action is permanent.
       description: Description
       edit: Edit project
       editCampaignTitle:
@@ -212,7 +211,7 @@ feat:
     indefinite: Indefinite timeline
     layout:
       activities: Activities
-      allCampaigns: All Projects
+      allCampaigns: All Projects & Activities
       archive: Archive
       calendar: Calendar
       insights: Insights
