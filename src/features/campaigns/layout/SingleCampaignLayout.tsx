@@ -78,6 +78,10 @@ const SingleCampaignLayout: FunctionComponent<SingleCampaignLayoutProps> = ({
           href: '/activities',
           label: messages.layout.activities(),
         },
+        {
+          href: '/archive',
+          label: messages.layout.archive(),
+        },
       ]}
       title={<EditableCampaignTitle campaign={campaign} />}
     >
