@@ -281,6 +281,7 @@ const surveysSlice = createSlice({
       const timestamp = new Date().toISOString();
       state.surveyList = remoteList(surveys);
       state.surveyList.loaded = timestamp;
+      state.surveyList.items.forEach((item) => (item.loaded = timestamp));
     },
     /* eslint-disable-next-line */
     surveySubmissionsLoad: (state, action: PayloadAction<number>) => {

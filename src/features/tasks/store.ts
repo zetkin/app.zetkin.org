@@ -61,6 +61,7 @@ const tasksSlice = createSlice({
       const timestamp = new Date().toISOString();
       state.tasksList = remoteList(tasks);
       state.tasksList.loaded = timestamp;
+      state.tasksList.items.forEach((item) => (item.loaded = timestamp));
     },
   },
 });

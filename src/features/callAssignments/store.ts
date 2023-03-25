@@ -122,6 +122,7 @@ const callAssignmentsSlice = createSlice({
       const timestamp = new Date().toISOString();
       state.assignmentList = remoteList(assignments);
       state.assignmentList.loaded = timestamp;
+      state.assignmentList.items.forEach((item) => (item.loaded = timestamp));
     },
     callerAdd: (state, action: PayloadAction<[number, number]>) => {
       const [assignmentId, callerId] = action.payload;
