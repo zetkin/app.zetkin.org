@@ -15,6 +15,7 @@ import { scaffold } from 'utils/next';
 import { Msg, useMessages } from 'core/i18n';
 
 import messageIds from 'features/campaigns/l10n/messageIds';
+import useServerSide from 'core/useServerSide';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -85,6 +86,11 @@ const AllCampaignsSummaryPage: PageWithLayout<AllCampaignsSummaryPageProps> = ({
   const messages = useMessages(messageIds);
   const campaignsQuery = useQuery(['campaigns', orgId], getCampaigns(orgId));
   const eventsQuery = useQuery(['events', orgId], getEvents(orgId));
+
+  const onServer = useServerSide();
+  if (onServer) {
+    return null;
+  }
 
   const campaigns = campaignsQuery.data || [];
   const events = eventsQuery.data || [];
