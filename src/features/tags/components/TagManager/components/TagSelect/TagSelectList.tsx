@@ -51,15 +51,7 @@ const TagSelectList: React.FC<{
                       disabled={disabledTags
                         .map((disabledTags) => disabledTags.id)
                         .includes(tag.id)}
-                      onClick={() => {
-                        if (
-                          !disabledTags
-                            .map((disabledTags) => disabledTags.id)
-                            .includes(tag.id)
-                        ) {
-                          onSelect(tag);
-                        }
-                      }}
+                      onClick={() => onSelect(tag)}
                       tag={tag}
                     />
                     {/* Edit tag button, only show if enabled (it's enabled by default) */}
