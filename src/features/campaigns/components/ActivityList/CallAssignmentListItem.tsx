@@ -33,7 +33,6 @@ const CallAssignmentListItem: FC<CallAssignmentListItemProps> = ({
     color = STATUS_COLORS.GREEN;
   } else if (state === CallAssignmentState.CLOSED) {
     color = STATUS_COLORS.RED;
-    color = STATUS_COLORS.BLUE;
   } else if (state === CallAssignmentState.SCHEDULED) {
     color = STATUS_COLORS.BLUE;
   }
