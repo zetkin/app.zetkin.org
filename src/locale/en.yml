@@ -144,7 +144,7 @@ feat:
         startsLater: Starts {relative}
         startsToday: Starts today
       thisWeekCard: Also this week
-      title: Activities
+      title: Upcoming activities
       todayCard: Today
       tomorrowCard: Tomorrow
     all:
@@ -156,7 +156,7 @@ feat:
         filter: Filter results
         standalones: Standalone events
         surveys: Surveys
-      heading: Current projects
+      heading: All projects
       indefinite: Indefinite
       unsorted: Unsorted projects
       upcoming: "{numEvents, number} upcoming events."
