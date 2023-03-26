@@ -89,7 +89,7 @@ const ZUIOrganizeSidebarNoMenu = (): JSX.Element => {
                 size="large"
                 style={{ marginBottom: '2rem' }}
               >
-                <ZUILogo htmlColor="#ED1C55" size={40} />
+                <ZUILogo beta={true} htmlColor="#ED1C55" size={40} />
               </IconButton>
             </NextLink>
           </ListItem>
