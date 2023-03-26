@@ -15,6 +15,10 @@ on:
         description: 'The name of the yarn script that runs the test.'
         required: true
         type: string
+      upload-path:
+        description: 'The path of a folder to upload.'
+        required: false
+        type: string
 
 permissions:
   contents: read
@@ -36,7 +40,7 @@ jobs:
 
     - name: Validate
       run: ${{ inputs.validation-script }}
-      if: ${{ inputs.validation-script }}
+      if: inputs.validation-script
 
     - name: Use Node.js ${{ matrix.node_version }}
       uses: actions/setup-node@v3
@@ -51,7 +55,13 @@ jobs:
 
     - name: Build
       run: ${{ inputs.build-script }}
-      if: ${{ inputs.build-script }}
+      if: inputs.build-script
 
     - name: Test
       run: yarn ${{ inputs.yarn-test-script }}
+
+    - uses: actions/upload-artifact@v3
+      if: always() && inputs.upload-path
+      with:
+        path: ${{ inputs.upload-path }}
+        retention-days: 30

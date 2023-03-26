@@ -25,6 +25,7 @@ jobs:
       validation-script: exit `grep -ER "(test|describe)\.only" integrationTesting | wc -l`
       build-script: npx playwright install chromium
       yarn-test-script: playwright:ci
+      upload-path: playwright-report/
 
   unit-test:
     uses: ./.github/workflows/reusable-base.yml
