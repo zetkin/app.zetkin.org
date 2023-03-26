@@ -2,6 +2,7 @@
   "name": "app.zetkin.org",
   "version": "0.1.0",
   "private": true,
+  "license": "UNLICENSED",
   "packageManager": "yarn@1.22.19",
   "engines": {
     "node": "^18.14.2"
