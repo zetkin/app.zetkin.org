@@ -4,7 +4,7 @@ module.exports = {
   testEnvironment: 'jsdom',
   testPathIgnorePatterns: ["<rootDir>/integrationTesting/", "<rootDir>/node_modules/"],
   transform: {
-    '^.+\\.tsx?$': 'babel-jest',
+    '^.+\\.tsx?$': ['babel-jest', { configFile: './.babelrc.jest.json'}],
   },
   moduleDirectories: ['node_modules', 'src']
 };
