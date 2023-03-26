@@ -1,3 +1,4 @@
+import { ELEMENT_TYPE } from 'utils/types/zetkin';
 import SurveyStatusChip from '../components/SurveyStatusChip';
 import TabbedLayout from 'utils/layout/TabbedLayout';
 import useModel from 'core/useModel';
@@ -32,7 +33,7 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
     (env) => new SurveyDataModel(env, parseInt(orgId), parseInt(surveyId))
   );
 
-  const hasQuestions = !!model.getData().data?.elements.length;
+  const hasQuestions = !!model.getElements().data?.length;
   const dataFuture = model.getData();
 
   return (
@@ -69,13 +70,13 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
           <Box display="flex" marginX={1}>
             <ZUIFutures
               futures={{
+                elements: model.getElements(),
                 stats: model.getStats(),
-                survey: model.getData(),
               }}
             >
-              {({ data: { stats, survey } }) => {
-                const questionLength = survey?.elements?.filter(
-                  (question) => question.type === 'question'
+              {({ data: { elements, stats } }) => {
+                const questionLength = elements.filter(
+                  (elem) => elem.type == ELEMENT_TYPE.QUESTION
                 ).length;
 
                 const labels: ZUIIconLabelProps[] = [];

@@ -12,7 +12,7 @@ import {
 } from 'core/caching/futures';
 import {
   ZetkinCallAssignment,
-  ZetkinSurveyExtended,
+  ZetkinSurvey,
   ZetkinTask,
 } from 'utils/types/zetkin';
 
@@ -33,7 +33,7 @@ export type CallAssignmentActivity = CampaignActivityBase & {
 };
 
 export type SurveyActivity = CampaignActivityBase & {
-  data: ZetkinSurveyExtended;
+  data: ZetkinSurvey;
   kind: ACTIVITIES.SURVEY;
 };
 

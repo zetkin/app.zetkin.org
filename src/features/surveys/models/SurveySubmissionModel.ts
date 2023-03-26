@@ -75,19 +75,19 @@ export default class SurveySubmissionModel extends ModelBase {
     }
 
     const submission = submissionFuture.data;
-    const surveyFuture = this._repo.getSurvey(
+    const surveyElementsFuture = this._repo.getSurveyElements(
       this._orgId,
       submission.survey.id
     );
 
-    if (!surveyFuture.data) {
+    if (!surveyElementsFuture.data) {
       return new LoadingFuture();
     }
 
-    const survey = surveyFuture.data;
+    const surveyElements = surveyElementsFuture.data;
     const elements: HydratedElement[] = [];
 
-    survey.elements.forEach((elem) => {
+    surveyElements.forEach((elem) => {
       if (elem.type == ELEMENT_TYPE.TEXT) {
         elements.push({
           header: elem.text_block.header,

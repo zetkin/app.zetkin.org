@@ -41,6 +41,7 @@ describe('SurveyDataModel', () => {
       expires: string | null
     ) => ({
       surveys: {
+        elementsBySurveyId: {},
         statsBySurveyId: {},
         submissionList: mockList<ZetkinSurveySubmission>([]),
         surveyList: mockList<ZetkinSurveyExtended>([

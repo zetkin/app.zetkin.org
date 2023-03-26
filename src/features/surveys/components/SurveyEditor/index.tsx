@@ -29,10 +29,8 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ model, readOnly }) => {
   const lengthRef = useRef<number>();
 
   useEffect(() => {
-    const data = model.getData().data;
-    if (data) {
-      const elements = data.elements;
-
+    const elements = model.getElements().data;
+    if (elements) {
       // If the previous length is null, it's because it only now loaded for the
       // first time and the length has not really been read before.
       if (
@@ -45,18 +43,18 @@ const SurveyEditor: FC<SurveyEditorProps> = ({ model, readOnly }) => {
 
       lengthRef.current = elements.length;
     }
-  }, [model.getData().data?.elements.length]);
+  }, [model.getElements().data]);
 
   return (
     <>
-      <ZUIFuture future={model.getData()}>
-        {(data) => {
+      <ZUIFuture future={model.getElements()}>
+        {(elements) => {
           return (
-            <Box paddingBottom={data.elements.length ? 4 : 0}>
+            <Box paddingBottom={elements.length ? 4 : 0}>
               <ZUIReorderable
                 disableClick={readOnly}
                 disableDrag={readOnly}
-                items={data.elements.map((elem) => ({
+                items={elements.map((elem) => ({
                   id: elem.id,
                   renderContent: ({ dragging }) => {
                     if (elem.type == ELEMENT_TYPE.QUESTION) {
