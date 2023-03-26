@@ -88,10 +88,10 @@ const CampaignActionButtons: React.FunctionComponent<
     model.createCallAssignment(assignment);
   };
   const handleCreateSurvey = () => {
-    const survey = {
+    model.createSurvey({
+      signature: 'require_signature',
       title: messages.form.createSurvey.newSurvey(),
-    };
-    model.createSurvey(survey);
+    });
   };
   const handleCreateTask = () => {
     // Open the creat task dialog
