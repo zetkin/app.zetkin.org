@@ -46,7 +46,6 @@ describe('SurveyDataModel', () => {
         surveyList: mockList<ZetkinSurveyExtended>([
           {
             access: 'open',
-            allow_anonymous: true,
             callers_only: false,
             campaign: null,
             elements: [],
@@ -59,6 +58,7 @@ describe('SurveyDataModel', () => {
               title: 'Semla lovers',
             },
             published: published,
+            signature: 'require_signature',
             title: 'Semla lovers assemble',
           },
         ]),

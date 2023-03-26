@@ -183,13 +183,13 @@ export interface ZetkinSurvey {
     id: number;
     title: string;
   };
-  allow_anonymous: boolean;
   access: string;
   callers_only: boolean;
   published: string | null;
   expires: string | null;
   campaign: { id: number; title: string } | null;
   org_access: 'sameorg' | 'suborgs';
+  signature: 'require_signature' | 'allow_anonymous' | 'force_anonymous';
 }
 
 export interface ZetkinSurveyPostBody
