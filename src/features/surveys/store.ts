@@ -170,9 +170,10 @@ const surveysSlice = createSlice({
     },
     statsLoad: (state, action: PayloadAction<number>) => {
       const surveyId = action.payload;
-      state.statsBySurveyId[surveyId] = remoteItem<SurveyStats>(surveyId, {
-        isLoading: true,
-      });
+      if (!state.statsBySurveyId[surveyId]) {
+        state.statsBySurveyId[surveyId] = remoteItem(surveyId);
+      }
+      state.statsBySurveyId[surveyId].isLoading = true;
     },
     statsLoaded: (state, action: PayloadAction<[number, SurveyStats]>) => {
       const [surveyId, stats] = action.payload;
