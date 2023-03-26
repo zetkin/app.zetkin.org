@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme) => ({
   beta: {
     backgroundColor: theme.palette.secondary.main,
     borderRadius: theme.spacing(0.25),
-    bottom: theme.spacing(-1.5),
+    bottom: theme.spacing(0.0),
     color: theme.palette.background.paper,
     fontSize: '0.5rem',
     fontWeight: 900,
