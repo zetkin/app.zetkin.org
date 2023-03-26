@@ -1,9 +1,11 @@
 import { ApiFetch } from 'utils/apiFetch';
 import handleResponseData from './handleResponseData';
 import {
+  CallAssignmentSearchResult,
   CampaignSearchResult,
   PersonSearchResult,
   SEARCH_DATA_TYPE,
+  SurveySearchResult,
   TaskSearchResult,
   ViewSearchResult,
 } from 'features/search/components/types';
@@ -40,6 +42,22 @@ async function makeSearchRequest(
   },
   apiFetch: ApiFetch
 ): Promise<PersonSearchResult[]>;
+async function makeSearchRequest(
+  dataType: SEARCH_DATA_TYPE.CALL_ASSIGNMENT,
+  query: {
+    orgId: number | string;
+    q: string;
+  },
+  apiFetch: ApiFetch
+): Promise<CallAssignmentSearchResult[]>;
+async function makeSearchRequest(
+  dataType: SEARCH_DATA_TYPE.SURVEY,
+  query: {
+    orgId: number | string;
+    q: string;
+  },
+  apiFetch: ApiFetch
+): Promise<SurveySearchResult[]>;
 async function makeSearchRequest(
   dataType: unknown,
   query: {

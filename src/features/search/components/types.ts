@@ -1,6 +1,8 @@
 import {
+  ZetkinCallAssignment,
   ZetkinCampaign,
   ZetkinPerson,
+  ZetkinSurvey,
   ZetkinTask,
   ZetkinView,
 } from 'utils/types/zetkin';
@@ -10,6 +12,8 @@ export enum SEARCH_DATA_TYPE {
   CAMPAIGN = 'campaign',
   TASK = 'task',
   VIEW = 'view',
+  CALL_ASSIGNMENT = 'callassignment',
+  SURVEY = 'survey',
 }
 
 export interface PersonSearchResult {
@@ -28,9 +32,19 @@ export interface ViewSearchResult {
   type: SEARCH_DATA_TYPE.VIEW;
   match: ZetkinView;
 }
+export interface CallAssignmentSearchResult {
+  type: SEARCH_DATA_TYPE.CALL_ASSIGNMENT;
+  match: ZetkinCallAssignment;
+}
+export interface SurveySearchResult {
+  type: SEARCH_DATA_TYPE.SURVEY;
+  match: ZetkinSurvey;
+}
 
 export type SearchResult =
   | PersonSearchResult
   | CampaignSearchResult
   | TaskSearchResult
-  | ViewSearchResult;
+  | ViewSearchResult
+  | CallAssignmentSearchResult
+  | SurveySearchResult;

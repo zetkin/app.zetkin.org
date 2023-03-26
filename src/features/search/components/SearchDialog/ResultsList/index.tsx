@@ -2,10 +2,13 @@ import { FunctionComponent } from 'react';
 
 import { List, ListItem, ListItemText } from '@mui/material';
 
+import CallAssignmentListItem from './CallAssignmentListItem';
 import CampaignListItem from './CampaignListItem';
 import PersonListItem from './PersonListItem';
+import SurveyListItem from './SurveyListItem';
 import TaskListItem from './TaskListItem';
 import ViewListItem from './ViewListItem';
+
 import {
   SEARCH_DATA_TYPE,
   SearchResult,
@@ -43,6 +46,12 @@ const ResultsList: FunctionComponent<ResultsListProps> = ({
             }
             if (result.type === SEARCH_DATA_TYPE.TASK) {
               return <TaskListItem task={result.match} />;
+            }
+            if (result.type === SEARCH_DATA_TYPE.CALL_ASSIGNMENT) {
+              return <CallAssignmentListItem callAssignment={result.match} />;
+            }
+            if (result.type === SEARCH_DATA_TYPE.SURVEY) {
+              return <SurveyListItem survey={result.match} />;
             }
             if (result.type === SEARCH_DATA_TYPE.VIEW) {
               return <ViewListItem view={result.match} />;
