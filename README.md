@@ -5,7 +5,7 @@ will run at app.zetkin.org and replace the current www.zetk.in, call.zetk.in and
 organize.zetk.in applications.
 
 **NOTE**: This is extremely early stages of development. The plan is to launch a
-public beta in the spring of 2021.
+public beta in the spring of 2023.
 
 ## Technology
 
