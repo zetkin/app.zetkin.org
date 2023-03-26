@@ -75,7 +75,7 @@ interface AcitivityListItemProps {
   greenChipValue: string | number | undefined;
   color: STATUS_COLORS;
   title: string;
-  endNumber: string;
+  endNumber: string | number;
 }
 
 const ActivityListItem = ({
@@ -120,7 +120,7 @@ const ActivityListItem = ({
         <Box className={classes.endNumber}>
           <ZUIIconLabel
             icon={<SecondaryIcon color="secondary" />}
-            label={endNumber}
+            label={endNumber.toString()}
             labelColor="secondary"
           />
         </Box>

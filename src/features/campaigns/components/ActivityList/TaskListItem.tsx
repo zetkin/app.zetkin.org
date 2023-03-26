@@ -15,7 +15,7 @@ const TaskListItem = ({ orgId, taskId }: TaskListItemProps) => {
   const task = model.getTask().data;
   const stats = model.getTaskStats().data;
 
-  if (!task || !stats) {
+  if (!task) {
     return null;
   }
 
@@ -32,14 +32,14 @@ const TaskListItem = ({ orgId, taskId }: TaskListItemProps) => {
 
   return (
     <ActivityListItem
-      blueChipValue={stats.assigned || 0}
+      blueChipValue={stats?.assigned}
       color={color}
-      endNumber={stats.individuals.toString()}
-      greenChipValue={stats.completed || 0}
+      endNumber={stats?.individuals ?? 0}
+      greenChipValue={stats?.completed}
       href={`/organize/${orgId}/projects/${
         task.campaign?.id ?? 'standalone'
       }/calendar/tasks/${taskId}`}
-      orangeChipValue={stats.ignored || 0}
+      orangeChipValue={stats?.ignored}
       PrimaryIcon={CheckBoxOutlined}
       SecondaryIcon={People}
       title={task.title}

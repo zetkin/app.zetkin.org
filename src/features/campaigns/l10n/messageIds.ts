@@ -19,7 +19,7 @@ export default makeMessages('feat.campaigns', {
       startsToday: m('Starts today'),
     },
     thisWeekCard: m('Also this week'),
-    title: m('Activities'),
+    title: m('Upcoming activities'),
     todayCard: m('Today'),
     tomorrowCard: m('Tomorrow'),
   },
@@ -33,7 +33,7 @@ export default makeMessages('feat.campaigns', {
       standalones: m('Standalone events'),
       surveys: m('Surveys'),
     },
-    heading: m('Current projects'),
+    heading: m('All projects'),
     indefinite: m('Indefinite'),
     unsorted: m('Unsorted projects'),
     upcoming: m<{ numEvents: number }>('{numEvents, number} upcoming events.'),
@@ -75,7 +75,7 @@ export default makeMessages('feat.campaigns', {
       submitButton: m('Confirm deletion'),
       title: m('Delete project'),
       warning: m(
-        'Are you sure you want to delete this campiagn? This action is permanent.'
+        'Are you sure you want to delete this project? This action is permanent.'
       ),
     },
     description: m('Description'),
@@ -105,7 +105,7 @@ export default makeMessages('feat.campaigns', {
   indefinite: m('Indefinite timeline'),
   layout: {
     activities: m('Activities'),
-    allCampaigns: m('All Projects'),
+    allCampaigns: m('All Projects & Activities'),
     archive: m('Archive'),
     calendar: m('Calendar'),
     insights: m('Insights'),

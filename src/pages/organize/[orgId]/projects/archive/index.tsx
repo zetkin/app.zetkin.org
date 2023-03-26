@@ -30,15 +30,15 @@ export const getServerSideProps: GetServerSideProps = scaffold(
   },
   {
     authLevelRequired: 2,
-    localeScope: ['layout.organize.surveys', 'pages.organizeSurvey'],
+    localeScope: [],
   }
 );
 
-interface CampaignActivitiesPageProps {
+interface ActivitiesArchivePageProps {
   orgId: string;
 }
 
-const CampaignActivitiesPage: PageWithLayout<CampaignActivitiesPageProps> = ({
+const ActivitiesArchivePage: PageWithLayout<ActivitiesArchivePageProps> = ({
   orgId,
 }) => {
   const messages = useMessages(messageIds);
@@ -71,7 +71,7 @@ const CampaignActivitiesPage: PageWithLayout<CampaignActivitiesPageProps> = ({
 
   return (
     <Box>
-      <ZUIFuture future={model.getCurrentActivities()} skeletonWidth={200}>
+      <ZUIFuture future={model.getArchivedActivities()} skeletonWidth={200}>
         {(data) => {
           if (data.length === 0) {
             return (
@@ -116,8 +116,8 @@ const CampaignActivitiesPage: PageWithLayout<CampaignActivitiesPageProps> = ({
   );
 };
 
-CampaignActivitiesPage.getLayout = function getLayout(page) {
+ActivitiesArchivePage.getLayout = function getLayout(page) {
   return <AllCampaignsLayout>{page}</AllCampaignsLayout>;
 };
 
-export default CampaignActivitiesPage;
+export default ActivitiesArchivePage;

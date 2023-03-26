@@ -1,5 +1,6 @@
 import CallAssignmentsRepo from 'features/callAssignments/repos/CallAssignmentsRepo';
 import Environment from 'core/env/Environment';
+import { isSameDate } from 'utils/dateUtils';
 import { ModelBase } from 'core/models';
 import SurveysRepo from 'features/surveys/repos/SurveysRepo';
 import TasksRepo from 'features/tasks/repos/TasksRepo';
@@ -9,7 +10,6 @@ import {
   LoadingFuture,
   ResolvedFuture,
 } from 'core/caching/futures';
-import { isInFuture, isSameDate } from 'utils/dateUtils';
 import {
   ZetkinCallAssignment,
   ZetkinSurveyExtended,
@@ -126,20 +126,7 @@ export default class CampaignActivitiesModel extends ModelBase {
     return new ResolvedFuture(overview);
   }
 
-  getCampaignActivities(campId: number): IFuture<CampaignActivity[]> {
-    const activities = this.getCurrentActivities();
-    if (activities.isLoading) {
-      return new LoadingFuture();
-    } else if (activities.error) {
-      return new ErrorFuture(activities.error);
-    }
-    const filtered = activities.data?.filter(
-      (activity) => activity.data.campaign?.id === campId
-    );
-    return new ResolvedFuture(filtered || []);
-  }
-
-  getCurrentActivities(): IFuture<CampaignActivity[]> {
+  getAllActivities(campaignId?: number): IFuture<CampaignActivity[]> {
     const callAssignmentsFuture = this._callAssignmentsRepo.getCallAssignments(
       this._orgId
     );
@@ -163,7 +150,7 @@ export default class CampaignActivitiesModel extends ModelBase {
     }
 
     const callAssignments: CampaignActivity[] = callAssignmentsFuture.data
-      .filter((ca) => !ca.end_date || isInFuture(ca.end_date))
+      .filter((ca) => !campaignId || ca.campaign?.id == campaignId)
       .map((ca) => ({
         data: ca,
         endDate: getUTCDateWithoutTime(ca.end_date),
@@ -172,7 +159,7 @@ export default class CampaignActivitiesModel extends ModelBase {
       }));
 
     const surveys: CampaignActivity[] = surveysFuture.data
-      .filter((survey) => !survey.expires || isInFuture(survey.expires))
+      .filter((survey) => !campaignId || survey.campaign?.id == campaignId)
       .map((survey) => ({
         data: survey,
         endDate: getUTCDateWithoutTime(survey.expires),
@@ -181,7 +168,7 @@ export default class CampaignActivitiesModel extends ModelBase {
       }));
 
     const tasks: CampaignActivity[] = tasksFuture.data
-      .filter((task) => !task.expires || isInFuture(task.expires))
+      .filter((task) => !campaignId || task.campaign?.id == campaignId)
       .map((task) => ({
         data: task,
         endDate: getUTCDateWithoutTime(task.expires || null),
@@ -204,15 +191,47 @@ export default class CampaignActivitiesModel extends ModelBase {
     return new ResolvedFuture(sorted);
   }
 
-  getStandaloneActivities(): IFuture<CampaignActivity[]> {
-    const activities = this.getCurrentActivities();
-
+  getArchivedActivities(campaignId?: number): IFuture<CampaignActivity[]> {
+    const activities = this.getAllActivities(campaignId);
     if (activities.isLoading) {
       return new LoadingFuture();
+    } else if (activities.error) {
+      return new ErrorFuture(activities.error);
     }
 
+    const now = new Date();
     const filtered = activities.data?.filter(
-      (activity) => activity.data.campaign === null
+      (activity) =>
+        activity.startDate && activity.endDate && activity.endDate < now
+    );
+
+    return new ResolvedFuture(filtered || []);
+  }
+
+  getCampaignActivities(campId: number): IFuture<CampaignActivity[]> {
+    const activities = this.getCurrentActivities();
+    if (activities.isLoading) {
+      return new LoadingFuture();
+    } else if (activities.error) {
+      return new ErrorFuture(activities.error);
+    }
+    const filtered = activities.data?.filter(
+      (activity) => activity.data.campaign?.id === campId
+    );
+    return new ResolvedFuture(filtered || []);
+  }
+
+  getCurrentActivities(): IFuture<CampaignActivity[]> {
+    const activities = this.getAllActivities();
+    if (activities.isLoading) {
+      return new LoadingFuture();
+    } else if (activities.error) {
+      return new ErrorFuture(activities.error);
+    }
+
+    const now = new Date();
+    const filtered = activities.data?.filter(
+      (activity) => !activity.endDate || activity.endDate > now
     );
 
     return new ResolvedFuture(filtered || []);
