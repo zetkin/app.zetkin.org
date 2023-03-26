@@ -12,7 +12,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
         with:
-          node-version: 16.x
+          node-version: 18.x
           cache: 'yarn'
       - name: Install dependencies
         run: yarn install --frozen-lockfile
@@ -24,7 +24,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
         with:
-          node-version: 16.x
+          node-version: 18.x
           cache: 'yarn'
       - name: Install dependencies
         run: yarn install --frozen-lockfile
@@ -38,7 +38,7 @@ jobs:
         run: exit `grep -ER "(test|describe)\.only" integrationTesting | wc -l`
       - uses: actions/setup-node@v2
         with:
-          node-version: 16.x
+          node-version: 18.x
           cache: 'yarn'
       - name: Install dependencies
         run: yarn install --frozen-lockfile && npx playwright install chromium
@@ -52,7 +52,7 @@ jobs:
         run: exit `grep -ER "(test|describe|it)\.only" src | wc -l`
       - uses: actions/setup-node@v2
         with:
-          node-version: 16.x
+          node-version: 18.x
           cache: 'yarn'
       - name: Install dependencies
         run: yarn install --frozen-lockfile
