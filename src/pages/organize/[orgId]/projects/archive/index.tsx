@@ -76,8 +76,8 @@ const ActivitiesArchivePage: PageWithLayout<ActivitiesArchivePageProps> = ({
           if (data.length === 0) {
             return (
               <ZUIEmptyState
-                href={`/organize/${orgId}/projects`}
-                linkMessage={messages.allProjects.linkToSummary()}
+                href={`/organize/${orgId}/projects/activities`}
+                linkMessage={messages.activitiesOverview.goToActivities()}
                 message={messages.allProjects.noActivities()}
               />
             );
