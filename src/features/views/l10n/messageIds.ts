@@ -331,6 +331,7 @@ export default makeMessages('feat.views', {
         xlsx: m('Download Excel file'),
       },
       shareLink: m('share data securely'),
+      tabLabel: m('Download'),
       warning1: m(
         'Avoid exporting data from Zetkin when you can, to ensure that all data is kept in order.'
       ),
@@ -347,6 +348,7 @@ export default makeMessages('feat.views', {
       statusLabel: m<{ collaborators: number; officials: number }>(
         'Shared with {collaborators, plural, =1 {1 collaborator} other {# collaborators}}, {officials, plural, =1 {1 official} other {# officials}} can access all views.'
       ),
+      tabLabel: m('Share'),
       viewLink: m('restricted link'),
     },
     title: m<{ title: string }>('Share "{title}"'),

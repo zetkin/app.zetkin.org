@@ -46,8 +46,11 @@ const ShareViewDialog: FC<ShareViewDialogProps> = ({
     >
       <TabContext value={tab}>
         <TabList onChange={(ev, newValue) => setTab(newValue)} value={tab}>
-          <Tab label="Share" value="share" />
-          <Tab label="Download" value="download" />
+          <Tab label={messages.shareDialog.share.tabLabel()} value="share" />
+          <Tab
+            label={messages.shareDialog.download.tabLabel()}
+            value="download"
+          />
         </TabList>
         <TabPanel className={styles.tabPanel} value="share">
           <ShareViewDialogShareTab model={model} />
