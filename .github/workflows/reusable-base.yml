@@ -1,0 +1,67 @@
+name: Base CI
+
+on:
+  workflow_call:
+    inputs:
+      validation-script:
+        description: 'A script to run before setting up node.'
+        required: false
+        type: string
+      build-script:
+        description: 'A script to run before testing.'
+        required: false
+        type: string
+      yarn-test-script:
+        description: 'The name of the yarn script that runs the test.'
+        required: true
+        type: string
+      upload-path:
+        description: 'The path of a folder to upload.'
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Test
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        node_version: ["18"]
+        os: ["ubuntu-latest"]
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Validate
+      run: ${{ inputs.validation-script }}
+      if: inputs.validation-script
+
+    - name: Use Node.js ${{ matrix.node_version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node_version }}
+        cache: 'yarn'
+
+    - name: Install dependencies
+      run: yarn install --frozen-lockfile
+      env:
+        PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
+
+    - name: Build
+      run: ${{ inputs.build-script }}
+      if: inputs.build-script
+
+    - name: Test
+      run: yarn ${{ inputs.yarn-test-script }}
+
+    - uses: actions/upload-artifact@v3
+      if: always() && inputs.upload-path
+      with:
+        path: ${{ inputs.upload-path }}
+        retention-days: 30
