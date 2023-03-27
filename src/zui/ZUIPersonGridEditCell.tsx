@@ -80,6 +80,29 @@ const ZUIPersonGridEditCell: FC<{
     );
   }
 
+  // Filter if the input value exists in suggested people list
+  const filteredSuggestedPeople =
+    personSelect.autoCompleteProps.inputValue === ''
+      ? suggestedPeople
+      : suggestedPeople.filter(
+          (p) =>
+            p.first_name
+              .toLocaleLowerCase()
+              .includes(
+                personSelect.autoCompleteProps.inputValue!.toLocaleLowerCase()
+              ) ||
+            p.last_name
+              .toLocaleLowerCase()
+              .includes(
+                personSelect.autoCompleteProps.inputValue!.toLocaleLowerCase()
+              ) ||
+            p.email
+              ?.toLocaleLowerCase()
+              .includes(
+                personSelect.autoCompleteProps.inputValue!.toLocaleLowerCase()
+              )
+        );
+
   return (
     <Box
       onMouseEnter={(ev) => {
@@ -180,10 +203,15 @@ const ZUIPersonGridEditCell: FC<{
                         showSuggestedPeople || searching ? 'block' : 'none',
                     }}
                   >
-                    {showSuggestedPeople && !!suggestedPeople.length && (
-                      <List>
-                        <ListSubheader>{suggestedPeopleLabel}</ListSubheader>
-                        {suggestedPeople.map((option) => (
+                    {showSuggestedPeople && filteredSuggestedPeople.length > 0 && (
+                      <>
+                        <ListSubheader
+                          disableSticky={true}
+                          sx={{ marginTop: 0, paddingTop: 0 }}
+                        >
+                          {suggestedPeopleLabel}
+                        </ListSubheader>
+                        {filteredSuggestedPeople.map((option) => (
                           <PersonListItem
                             key={option.id}
                             itemProps={{
