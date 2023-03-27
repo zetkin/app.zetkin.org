@@ -207,7 +207,7 @@ const SurveySubmissionsList = ({
         cell={row.respondent}
         onUpdate={updateCellValue}
         removePersonLabel={messages.submissions.unlink()}
-        suggestedPeople={respondents}
+        suggestedPeople={row.respondent === null ? [] : respondents} //filter anonymous
         suggestedPeopleLabel={messages.submissions.suggestedPeople()}
       />
     );
