@@ -98,6 +98,7 @@ export default makeMessages('zui', {
     showMore: m('Show more...'),
   },
   personGridEditCell: {
+    noResult: m('No matching person found'),
     otherPeople: m('Other people'),
     restrictedMode: m("Can't be edited in shared views."),
     searchResults: m('Search results'),

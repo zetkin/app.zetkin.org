@@ -152,7 +152,7 @@ export default makeMessages('feat.surveys', {
     lastNameColumn: m('Last name'),
     link: m('Link'),
     personRecordColumn: m('Respondent'),
-    suggestedPeople: m('Other linked respondents'),
+    suggestedPeople: m('Suggested people'),
     unlink: m('Unlink'),
   },
   tabs: {
