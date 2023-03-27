@@ -1,5 +1,5 @@
 import { Box } from '@mui/material';
-import { FunctionComponent } from 'react';
+import { createContext, FunctionComponent, useState } from 'react';
 
 import makeStyles from '@mui/styles/makeStyles';
 
@@ -20,22 +20,38 @@ const useStyles = makeStyles((theme) => ({
 
 interface DefaultLayoutProps {
   children: React.ReactNode;
+  onScroll?: () => void;
 }
 
-const DefaultLayout: FunctionComponent<DefaultLayoutProps> = ({ children }) => {
+const UglyContext = createContext<{
+  container: HTMLDivElement | null;
+}>({ container: null });
+
+export { UglyContext };
+
+const DefaultLayout: FunctionComponent<DefaultLayoutProps> = ({
+  children,
+  onScroll,
+}) => {
   const classes = useStyles();
+  const [container, setContainer] = useState<HTMLDivElement | null>(null);
+
   return (
     <Box className={classes.root} display="flex" height="100vh">
       <ZUIOrganizeSidebar />
       <Box
+        ref={(div: HTMLDivElement) => setContainer(div)}
         display="flex"
         flexDirection="column"
         height="100vh"
+        onScroll={onScroll}
         overflow="auto"
         position="relative"
         width={1}
       >
-        {children}
+        <UglyContext.Provider value={{ container }}>
+          {children}
+        </UglyContext.Provider>
       </Box>
     </Box>
   );
