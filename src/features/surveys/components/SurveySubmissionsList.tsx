@@ -35,6 +35,10 @@ const SurveySubmissionsList = ({
     .map((s) => s.respondent as ZetkinPerson)
     .filter((s) => s !== null);
 
+  const suggestedPeople = [
+    ...new Map(suggestedRespondents.map((p) => [p.id, p])).values(),
+  ];
+
   const sortedSubmissions = useMemo(() => {
     const sorted = [...submissions].sort((subOne, subTwo) => {
       const dateOne = new Date(subOne.submitted);
@@ -111,7 +115,7 @@ const SurveySubmissionsList = ({
           ZetkinSurveySubmission
         >
       ) => {
-        return <EditCell respondents={suggestedRespondents} row={params.row} />;
+        return <EditCell respondents={suggestedPeople} row={params.row} />;
       },
       sortable: true,
     },
