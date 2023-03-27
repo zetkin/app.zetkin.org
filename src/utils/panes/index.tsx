@@ -5,13 +5,12 @@ import {
   FC,
   ReactNode,
   useContext,
-  useEffect,
   useRef,
   useState,
 } from 'react';
 
-import { PageContainerContext } from './PageContainerContext';
 import Pane from './Pane';
+import useResizablePane from 'utils/panes/useResizablePane';
 
 type PaneDef = {
   render: () => ReactNode;
@@ -59,45 +58,8 @@ export const PaneProvider: FC<PaneProviderProps> = ({
   const styles = useStyles();
   const [key, setKey] = useState(0);
 
-  const paneContainerRef = useRef<HTMLDivElement>();
-  const slideRef = useRef<HTMLDivElement>();
-
-  const { container } = useContext(PageContainerContext);
-
-  const update = () => {
-    const paneContainer = paneContainerRef.current;
-    if (paneContainer) {
-      const rect = paneContainer.getBoundingClientRect();
-      if (slideRef.current) {
-        if (rect.top <= 16 && !fixedHeight) {
-          slideRef.current.style.position = 'fixed';
-          slideRef.current.style.height = 'auto';
-        } else {
-          slideRef.current.style.position = 'absolute';
-          if (!fixedHeight) {
-            slideRef.current.style.height =
-              Math.min(window.innerHeight - rect.top - 32, rect.height) + 'px';
-          }
-        }
-      }
-    }
-  };
-
-  useEffect(() => {
-    if (container) {
-      window.addEventListener('resize', update);
-      container.addEventListener('scroll', update);
-
-      return () => {
-        window.removeEventListener('resize', update);
-        container.removeEventListener('scroll', update);
-      };
-    }
-  }, [container]);
-
-  useEffect(() => {
-    update();
-  }, []);
+  const { paneContainerRef, slideRef, updatePaneHeight } =
+    useResizablePane(fixedHeight);
 
   return (
     <PaneContext.Provider
@@ -123,10 +85,10 @@ export const PaneProvider: FC<PaneProviderProps> = ({
           direction="left"
           in={!!paneRef.current && open}
           onEnter={() => {
-            update();
+            updatePaneHeight();
           }}
           onEntered={() => {
-            update();
+            updatePaneHeight();
           }}
         >
           <Box>
