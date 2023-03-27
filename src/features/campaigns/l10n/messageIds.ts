@@ -39,7 +39,6 @@ export default makeMessages('feat.campaigns', {
     upcoming: m<{ numEvents: number }>('{numEvents, number} upcoming events.'),
   },
   allProjects: {
-    linkToSummary: m('Go to my active projects.'),
     noActivities: m(
       'If your organization has activities that do not belong to a project they will show up here.'
     ),
