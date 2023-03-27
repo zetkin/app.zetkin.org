@@ -161,9 +161,9 @@ feat:
       unsorted: Unsorted projects
       upcoming: "{numEvents, number} upcoming events."
     allProjects:
-      linkToSummary: Go to my active projects.
       noActivities: If your organization has activities that do not belong to a
         project they will show up here.
+      viewArchive: View archive
     assigneeActions: Assignee actions
     calendarView: See all in calendar
     events: Events
@@ -233,6 +233,7 @@ feat:
       filterActivities: Type to filter
       noActivities: There are no activities in this project yet.
       noSearchResults: Your filtering yielded no results.
+      viewArchive: View archive
     taskLayout:
       tabs:
         assignees: Assignees
@@ -1365,6 +1366,7 @@ feat:
           csv: Download CSV file
           xlsx: Download Excel file
         shareLink: share data securely
+        tabLabel: Download
         warning1: Avoid exporting data from Zetkin when you can, to ensure that all data
           is kept in order.
         warning2: You can {shareLink} within Zetkin. Exporting makes sense when you want
@@ -1376,6 +1378,7 @@ feat:
         statusLabel: Shared with {collaborators, plural, =1 {1 collaborator} other {#
           collaborators}}, {officials, plural, =1 {1 official} other {#
           officials}} can access all views.
+        tabLabel: Share
         viewLink: restricted link
       title: Share "{title}"
     suggested:
@@ -1468,8 +1471,8 @@ zui:
     added: Added by {sharer} {updated}
     removeAccess: Remove access
   breadcrumbs:
-    archive: Archive
     activities: Activities
+    archive: Archive
     areas: Areas
     assignees: Assignees
     calendar: Calendar
