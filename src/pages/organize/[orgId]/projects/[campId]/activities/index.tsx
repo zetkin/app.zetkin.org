@@ -77,7 +77,11 @@ const CampaignActivitiesPage: PageWithLayout<CampaignActivitiesPageProps> = ({
         {(data) => {
           if (data.length === 0) {
             return (
-              <ZUIEmptyState message={messages.singleProject.noActivities()} />
+              <ZUIEmptyState
+                href={`/organize/${orgId}/projects/${campId}/archive`}
+                linkMessage={messages.singleProject.viewArchive()}
+                message={messages.singleProject.noActivities()}
+              />
             );
           }
 

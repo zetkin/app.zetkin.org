@@ -43,6 +43,7 @@ export default makeMessages('feat.campaigns', {
     noActivities: m(
       'If your organization has activities that do not belong to a project they will show up here.'
     ),
+    viewArchive: m('View archive'),
   },
   assigneeActions: m('Assignee actions'),
   calendarView: m('See all in calendar'),
@@ -129,8 +130,10 @@ export default makeMessages('feat.campaigns', {
   noManager: m('No Project Manager'),
   singleProject: {
     filterActivities: m('Type to filter'),
+    linkToSummary: m('Go to my active project.'),
     noActivities: m('There are no activities in this project yet.'),
     noSearchResults: m('Your filtering yielded no results.'),
+    viewArchive: m('View archive'),
   },
   taskLayout: {
     tabs: {
