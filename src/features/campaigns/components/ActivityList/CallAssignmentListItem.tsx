@@ -41,6 +41,7 @@ const CallAssignmentListItem: FC<CallAssignmentListItemProps> = ({
   const ready = stats?.ready || 0;
   const done = stats?.done || 0;
   const callsMade = stats?.callsMade.toString() || '0';
+  const statsLoading = model.getStats().isLoading;
 
   return (
     <ActivityListItem
@@ -55,6 +56,7 @@ const CallAssignmentListItem: FC<CallAssignmentListItemProps> = ({
       PrimaryIcon={HeadsetMic}
       SecondaryIcon={PhoneOutlined}
       title={data.title}
+      statsLoading={statsLoading}
     />
   );
 };

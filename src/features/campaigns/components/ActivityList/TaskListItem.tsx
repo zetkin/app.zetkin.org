@@ -30,6 +30,8 @@ const TaskListItem = ({ orgId, taskId }: TaskListItemProps) => {
     color = STATUS_COLORS.BLUE;
   }
 
+  const statsLoading = model.getTaskStats().isLoading;
+
   return (
     <ActivityListItem
       blueChipValue={stats?.assigned}
@@ -43,6 +45,7 @@ const TaskListItem = ({ orgId, taskId }: TaskListItemProps) => {
       PrimaryIcon={CheckBoxOutlined}
       SecondaryIcon={People}
       title={task.title}
+      statsLoading={statsLoading}
     />
   );
 };

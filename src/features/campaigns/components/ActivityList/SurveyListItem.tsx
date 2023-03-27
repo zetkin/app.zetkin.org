@@ -46,6 +46,7 @@ const SurveyListItem: FC<SurveyListItemProps> = ({ orgId, surveyId }) => {
   const submissionCount = stats?.submissionCount || 0;
   const unlinkedSubmissionCount = stats?.unlinkedSubmissionCount || 0;
   const linkedSubmissionCount = submissionCount - unlinkedSubmissionCount || 0;
+  const statsLoading = dataModel.getStats().isLoading;
 
   return (
     <ActivityListItem
@@ -59,6 +60,7 @@ const SurveyListItem: FC<SurveyListItemProps> = ({ orgId, surveyId }) => {
       PrimaryIcon={AssignmentOutlined}
       SecondaryIcon={ChatBubbleOutline}
       title={data.title}
+      statsLoading={statsLoading}
     />
   );
 };
