@@ -44,10 +44,10 @@ feat:
       customize:
         exclude:
           h: Utelukkede tags
-          intro: Aldri ring personer med disse tægene.
+          intro: Aldri ring personer med disse tæggene.
         prioritize:
-          h: Prioriterte tæger
-          intro: Ting til personer med disse tægene først.
+          h: Prioriterte tægger
+          intro: Ting til personer med disse tæggene først.
         title: Tilpass køen til {name}
       customizeButton: Tilpass
       excludedTagsColumn: Utelukkede tags
@@ -256,7 +256,7 @@ feat:
       people: Folk
       person: Person
       task: Innhold
-      view: Visning
+      view: Liste
   smartSearch:
     buttonLabels:
       add: Lagre utvalg
@@ -278,8 +278,8 @@ feat:
       most_active: De mest aktive
       person_data: Basert på navn, adresse, eller annen informasjon
       person_field: Basert på spesialfelter
-      person_tags: Basert på tags
-      person_view: Folk fra en visning
+      person_tags: Basert på tægger
+      person_view: Folk fra en liste
       random: Et tilfeldig utvalg av folk
       sub_query: Basert på et annet smartsøk
       survey_option: Basert på svar de har valgt i en spørreundersøkelse
@@ -298,12 +298,12 @@ feat:
           add: Legg til
           sub: Fjern
         assignmentSelect:
-          any: et hvilket som helst ringeoppdrag
+          any: et ringeoppdrag
           assignment: ringeoppdraget "{assignmentTitle}"
           none: Denne organisasjonen har ingen ringeoppdrag, ennå!
         callSelect:
           called: har blitt ringt
-          notreached: har blitt forsøkt ringt uten hell
+          notreached: har blitt forsøkt ringt
           reached: har blitt nådd
         examples:
           one: Legg til folk som har blitt nådd minst 2 ganger i et hvilket som helst
@@ -311,7 +311,7 @@ feat:
           two: Fjern folk som har blitt ringt minst en gang i ringeoppdraget "Valgkamp
             2023" de siste 30 dagene.
         inputString: '{addRemoveSelect} folk som {callSelect} minst {minTimesInput}
-          {minTimes, plural, one {en} other {ganger}} in {assignmentSelect} {timeFrame}.'
+          {minTimes, plural, one {gang} other {ganger}} i {assignmentSelect} {timeFrame}.'
       campaignParticipation:
         activitySelect:
           activity: aktiviteten "{activity}"
@@ -353,9 +353,8 @@ feat:
           sub: fjern
         ellipsis: '...'
         examples:
-          one: Legg til en hvilken som helst person med fornavnet 'Clara' og etternavnet
-            'Zetkin'.
-          two: Fjern en hvilken som helst person med poststed Oslo.
+          one: Legg til folk med fornavnet 'Clara' og etternavnet 'Zetkin'.
+          two: Fjern folk med poststed Oslo.
         fieldMatches: '{field} er {value}'
         fieldSelect:
           alt_phone: alternativt telefonnummer
@@ -370,7 +369,7 @@ feat:
           street_address: adresse
           zip_code: postnummer
         fieldTuple: '{first} og {second}'
-        inputString: '{addRemoveSelect} en hvilken som helst person med {criteria}.'
+        inputString: '{addRemoveSelect} folk med {criteria}.'
       personField:
         addRemoveSelect:
           add: Legg til
@@ -378,15 +377,15 @@ feat:
         edit:
           date: '{fieldSelect} er {timeFrame}'
           none: Organisasjonen har ingen spesialfelter
-          text: '{fieldSelect} er {freeTextInput}'
-          url: '{fieldSelect} er {freeTextInput}'
+          text: '{fieldSelect} {freeTextInput}'
+          url: '{fieldSelect} {freeTextInput}'
         fieldSelect:
           any: spesialfelt
-        inputString: '{addRemoveSelect} en hvilken som helst person med {field}.'
+        inputString: '{addRemoveSelect} folk med {field}.'
         preview:
-          date: '{fieldName} er {timeFrame}'
-          text: '{fieldName} er {searchTerm}'
-          url: '{fieldName} er {searchTerm}'
+          date: '{fieldName} {timeFrame}'
+          text: '{fieldName} {searchTerm}'
+          url: '{fieldName} {searchTerm}'
       personTags:
         addRemoveSelect:
           add: Legg til
@@ -394,31 +393,31 @@ feat:
         condition:
           conditionSelect:
             all: alle
-            any: en hvilken som helst
+            any: en av
             minMatching: minst
             none: ingen
           preview:
             all: alle
-            any: en hvilken som helst
+            any: en av
             minMatching: minst
             none: ingen
         examples:
-          one: 'Legg til folk med minst en av følgende tags: ''Medlem'', ''Aktivist'''
-          two: 'Fjern folk med alle av følgende tags: ''Styremedlem'''
+          one: 'Legg til folk med minst 1 av følgende: ''Medlem'', ''Aktivist'''
+          two: 'Fjern folk med alle av følgende: ''Styremedlem'''
         inputString: '{addRemoveSelect} folk med {condition} av følgende: {tags}'
       personView:
         addRemoveSelect:
           add: Legg til
           sub: Fjern
         examples:
-          one: Legg til folk som er i visningen 'Valgkampanje'.
-          two: Fjern folk som ikke er i visningen 'Valgkampanje'.
+          one: Legg til folk som er i lista 'Valgkamp'.
+          two: Fjern folk som ikke er i lista 'Valgkamp'.
         inSelect:
           in: er i
           notin: ikke er i
-        inputString: '{addRemoveSelect} folk som {inSelect} visningen {viewSelect}.'
+        inputString: '{addRemoveSelect} folk som {inSelect} lista {viewSelect}.'
         viewSelect:
-          none: Denne organisasjonen har ingen visninger ennå
+          none: Denne organisasjonen har ingen lister ennå
       random:
         addRemoveSelect:
           add: legg til
@@ -535,7 +534,7 @@ feat:
         inputString: '{addRemoveSelect} folk som har {taskStatusSelect} {taskSelect}{campaignSelect}
           {matchingSelect} {timeFrame}'
         taskSelect:
-          any: hvilket som helst innhold
+          any: innhold
           task: innholdet "{task}"
         taskStatusSelect:
           assigned: blitt tilsendt
@@ -760,29 +759,29 @@ feat:
     dialog:
       colorErrorText: Legg inn en gyldig HEX fargekode
       colorLabel: Farge
-      createTitle: Ny tæg
-      editTitle: Rediger tæg
+      createTitle: Ny tægg
+      editTitle: Rediger tægg
       groupCreatePrompt: Legg til "{groupName}"
       groupLabel: Gruppe
       groupSelectPlaceholder: Skriv for å søke eller opprette gruppe
       submitCreateTagButton: Lagre og bruk
-      titleErrorText: Du må gi tægen et navn
+      titleErrorText: Du må gi tæggen et navn
       titleLabel: Navn
       typeLabel: Type
       types:
         none: Vanlig
         text: Med tekst
     manager:
-      addTag: Legg til tæg
+      addTag: Legg til tægg
       addValue: Legg til tekst for "{tag}"
-      createNamedTag: 'Opprett tæg: {name}'
-      createTag: Ny tæg
-      groupTags: Gruppér tæger
-      title: Tæger
+      createNamedTag: 'Opprett tægg: {name}'
+      createTag: Ny tægg
+      groupTags: Gruppér tægger
+      title: Tægger
       ungroupedHeader: Ingen gruppe
       valueTagForm:
         typeHint: '{type, select, text {Legg til tekst} other {Legg til tall}} som
-          vises på tægen.'
+          vises på tæggen.'
   tasks:
     assignees:
       completedStates:
@@ -940,31 +939,31 @@ feat:
   views:
     actions:
       createFolder: Ny mappe
-      createView: Ny visning
+      createView: Ny liste
     browser:
       backToFolder: Tilbake til {folder}
-      backToRoot: Tilbake til forsiden for visninger
+      backToRoot: Tilbake til forsiden for lister
       confirmDelete:
         folder:
           title: Slett mappen og innholdet
           warning: Er du sikker på at du vil slette mappen? Dette kan ikke angres.
         view:
-          title: Slett visning
-          warning: Er du sikker på at du vil slette visningen? Dette kan ikke angres.
+          title: Slett list
+          warning: Er du sikker på at du vil slette lista? Dette kan ikke angres.
       menu:
         rename: Gi nytt navn
       moveToFolder: Flytt til {folder}
-      moveToRoot: Flytt til forsiden for visninger
+      moveToRoot: Flytt til forsiden for lister
     browserLayout:
       tabs:
-        views: Visninger
+        views: Lister
       title: Folk
     cells:
       localPerson:
-        alreadyInView: Finnes i visningen fra før
+        alreadyInView: Finnes i lista fra før
         clearLabel: Fjern
         otherPeople: Andre folk
-        restrictedMode: Kan ikke redigeres i delte visninger
+        restrictedMode: Kan ikke redigeres i delte lister
         searchLabel: Velg en person
     columnDialog:
       categories:
@@ -979,8 +978,8 @@ feat:
           description: Kryssreferer med informasjon i Zetkin ved hjelp av et smartsøk.
           title: Kryssreferering
         outreach:
-          description: Planlegg, deleger og gjennomfør kontaktarbeid, og rapporter
-            når du er ferdig.
+          description: Planlegg, deleger og gjennomfør kontaktarbeid, lagre notater
+            og sjekkliste.
           title: Kontakt
         surveys:
           description: Utforsk, søk, og filtrer basert på folk sine svar på spørreundersøkelser.
@@ -1047,7 +1046,7 @@ feat:
           columnTitle: Deltatt
           description: Har personen vært påmeldt et arrangement?
           keywords: påmeldt
-          title: Noensinne deltatt
+          title: Deltatt
         queryReached:
           columnTitle: Nådd
           description: Har vi snakket med personen på ringeaksjoner?
@@ -1076,19 +1075,19 @@ feat:
           noSurveys: Organisasjonen din har ingen spørreundersøkelser.
           title: Besvart dato
         tag:
-          description: Skru av og på en tæg for personer i visningen
-          title: Tæg
+          description: Vis og skru av og på en tægg for personer i lista
+          title: Tægg
         toggle:
-          columnTitle: Bryter
-          description: Sjekkliste
-          title: Bryter
+          columnTitle: Sjekkliste
+          description: Kolonne der du kan krysse av for hver rad
+          title: Sjekkliste
       commonHeaders:
         email: E-postadresse
         first_name: Fornavn
         last_name: Etternavn
         phone: Telefonnummer
       editor:
-        alreadyInView: Finnes i visningen fra før
+        alreadyInView: Finnes i lista fra før
         buttonLabels:
           addColumns: Legg til {columns, plural, one {en kolonne} other {{columns}
             kolonner}}
@@ -1099,13 +1098,13 @@ feat:
           question: Spørsmål
           smartSearch: Smartsøk
           survey: Spørreundersøkelse
-          tag: Tæg
+          tag: Tægg
       gallery:
         add: Legg til
-        alreadyInView: Finnes i visningen fra før
+        alreadyInView: Finnes i lista fra før
         columns: Kolonner
         configure: Sett opp
-        header: Legg til kolonne i visningen
+        header: Legg til kolonne i list
         noSearchResults: 'Fant ingen kolonner med søket: "{searchString}"'
         searchPlaceholder: Finn en kolonne
         searchResults: Resultater for "{searchString}"
@@ -1124,44 +1123,44 @@ feat:
       modify_column: Kunne ikke redigere kolonnen
       remove_rows: Kunne ikke fjerne rader
     defaultColumnTitles:
-      local_bool: Bryter
+      local_bool: Sjekkliste
       local_person: Personreferanse
       person_notes: Notater
     deleteDialog:
-      error: Kunne ikke slette visningen
-      title: Slette visning?
-      warningText: Er du sikker på at du vil slette visningen? All informasjon i den,
-        som notater og brytere (men folkene vil ikke bli slettet fra Zetkin)?
+      error: Kunne ikke slette lista
+      title: Slette liste?
+      warningText: Er du sikker på at du vil slette lista? All informasjon i den,
+        som notater og sjekklister (men folkene vil ikke bli slettet fra Zetkin)?
     editViewTitleAlert:
       error: Kunne ikke endre tittelen
       success: Tittelen ble endret!
     empty:
       dynamic:
         configureButton: Innstillinger
-        description: Opprett en dynamisk visning som legger til og fjerner folk automatisk
+        description: Opprett en dynamisk liste som legger til og fjerner folk automatisk
           med et smartsøk.
-        headline: Sett opp smartsøkvisning
+        headline: Sett opp smartsøkliste
       notice:
-        dynamic: Dette er en smartsøkvisning men ingen folk velges av smartsøket
+        dynamic: Dette er en smartsøkliste men ingen folk velges av smartsøket
         static: Du har ikke lagt til noen rader
       static:
-        description: Legg til en person for å lage en statisk visning der folk legges
+        description: Legg til en person for å lage en statisk liste der folk legges
           til og fjernes manuelt.
         headline: Legg til folk manuelt
     folder:
       summary:
         empty: Tomt
         folderCount: '{count, plural, =1 {En mappe} other {# mapper}}'
-        viewCount: '{count, plural, =1 {En visning} other {# visninger}}'
+        viewCount: '{count, plural, =1 {En liste} other {# lister}}'
     footer:
-      addPlaceholder: Begynn å skrive for å legge til en person i visningen
-      alreadyInView: Finnes i visningen fra før
+      addPlaceholder: Begynn å skrive for å legge til en person i lista
+      alreadyInView: Finnes i lista fra før
     newFolderTitle: Ny mappe
     newViewFields:
-      title: Ny visning
+      title: Ny liste
     removeDialog:
-      action: Er du sikker på at du vil fjerne disse radene fra visningen?
-      title: Fjern folk fra visningen
+      action: Er du sikker på at du vil fjerne disse radene fra lista?
+      title: Fjern folk fra lista
     shareDialog:
       download:
         buttons:
@@ -1171,16 +1170,17 @@ feat:
         warning1: Eksporter bare informasjon fra Zetkin hvis det er helt nødvendig.
           Eksporterte filer skal aldri deles med andre, skal kun lastes ned til en
           kryptert datamaskin, og skal slettes etter bruk.
-        warning2: Du kan {shareLink} inne i Zetkin, del bare visninger med tillitsvalgte
+        warning2: Du kan {shareLink} inne i Zetkin, del bare lister med tillitsvalgte
           og ansatte som har myndighet til å behandle personopplysninger.
       share:
         addPlaceholder: Legg til andre
-        collabInstructions: Når du har lagt til de som skal ha tilgang til visningen,
-          kopier og send dem {viewLink}
+        collabInstructions: Når du har lagt til de som skal ha tilgang til lista,
+          kopier og send dem {viewLink} lister skal bare deles med tillitsvalgte og
+          ansatte som har myndighet til å behandle personopplysninger.
         showOfficials: Vis admin og koordinatorer
-        statusLabel: Shared with {collaborators, plural, =1 {en person} other {# personer}},
+        statusLabel: Delt med {collaborators, plural, =1 {en person} other {# personer}},
           {officials, plural, =1 {1 admin/koordinator} other {# admin/koordinatorer}}
-          har tilgang til alle visninger.
+          har tilgang til alle lister.
         viewLink: sikker lenke
       title: Del "{title}"
     suggested:
@@ -1198,7 +1198,7 @@ feat:
         openButton: Vis
     toolbar:
       createColumn: Ny kolonne
-      createFromSelection: Opprett visning av valgte
+      createFromSelection: Opprett liste av valgte
       removeFromSelection: Fjern {numSelected, plural, one {1 person} other {{numSelected}
         folk} } from view
       removeTooltip: Smartsøk støtter ikke fjerning av rader
@@ -1206,12 +1206,12 @@ feat:
       actions:
         share: Del
       ellipsisMenu:
-        delete: Slett visning
+        delete: Slett liste
         editQuery: Rediger smartsøk
-        makeDynamic: Konverter til smarsøkvisning
-        makeStatic: Konverter til statisk visning
+        makeDynamic: Konverter til smarsøkliste
+        makeStatic: Konverter til statisk liste
       jumpMenu:
-        placeholder: Skriv for å finne visning
+        placeholder: Skriv for å finne liste
       subtitle:
         collaborators: '{count, plural, =1 {1 person} other {# personer}}'
         columns: '{count, plural, =0 {Ingen kolonner} =1 {En kolonne} other {# kolonner}}'
@@ -1221,7 +1221,7 @@ feat:
         created: Opprettet dato
         owner: Eier
         title: Tittel
-      empty: Du har ikke opprettet noen visninger
+      empty: Du har ikke opprettet noen lister
 glob:
   accessLevels:
     configure: Rediger og sett opp
@@ -1260,7 +1260,7 @@ zui:
     closed: Stengt
     conversation: Samtale
     events: Arrangementer
-    folders: Visninger
+    folders: Lister
     insights: Analyse
     manage: Behandle
     new: Ny
@@ -1271,7 +1271,7 @@ zui:
     submissions: Svar
     surveys: Spørreundersøkelser
     tasks: App-innhold
-    views: Visninger
+    views: Lister
   collapse:
     collapse: Skjul
     expand: Vis
@@ -1316,7 +1316,7 @@ zui:
     showMore: Vis mer...
   personGridEditCell:
     otherPeople: Andre folk
-    restrictedMode: Kan ikke redigeres i delte visninger
+    restrictedMode: Kan ikke redigeres i delte lister
     searchResults: Søkeresultater
   personSelect:
     keepTyping: Fortsett å skrive eller start søk
@@ -1350,12 +1350,12 @@ zui:
         files: Filer
         notes: Notater
         people: Folk
-        tags: Tægs
+        tags: Tægger
       filterSelectLabel: 'Vis: {filter}'
     updates:
       any:
-        addtags: '{actor} la til {count, plural, =1 {en tæg} other {# tæger}}'
-        removetags: '{actor} fjernet {count, plural, =1 {en tæg} other {# tæger}}'
+        addtags: '{actor} la til {count, plural, =1 {en tægg} other {# tægger}}'
+        removetags: '{actor} fjernet {count, plural, =1 {en tægg} other {# tægger}}'
       journeyinstance:
         addassignee: '{actor} tildelte kontaktperson {assignee}'
         addnote: '{actor} la til et notat'
