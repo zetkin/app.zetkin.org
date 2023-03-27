@@ -223,23 +223,28 @@ const ZUIPersonGridEditCell: FC<{
                             person={option}
                           />
                         ))}
-                      </List>
+                      </>
                     )}
                     {searching && (
                       <List
                         {...autoComplete.getListboxProps()}
                         subheader={
                           <ListSubheader sx={{ position: 'relative' }}>
-                            {suggestedPeople.length >= 0 &&
+                            {searchResults.length > 0 &&
                               messages.personGridEditCell.searchResults()}
+                            {personSelect.autoCompleteProps.inputValue !== '' &&
+                              !personSelect.autoCompleteProps.isLoading &&
+                              searchResults.length === 0 &&
+                              messages.personGridEditCell.noResult()}
                           </ListSubheader>
                         }
                       >
-                        {searchResults.length == 0 && (
+                        {personSelect.autoCompleteProps.isLoading && (
                           <CircularProgress
                             sx={{ display: 'block', margin: 'auto' }}
                           />
                         )}
+
                         {searchResults.map((option, index) => {
                           const optProps = autoComplete.getOptionProps({
                             index,

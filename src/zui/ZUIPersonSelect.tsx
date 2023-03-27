@@ -40,6 +40,7 @@ interface UsePersonSelectReturn {
     getOptionValue?: (person: ZetkinPerson) => unknown;
     inputRef: MutableRefObject<HTMLInputElement | undefined> | undefined;
     inputValue: string | undefined;
+    isLoading: boolean;
     label: string | undefined;
     name: string;
     noOptionsText: string;
@@ -131,6 +132,7 @@ export const usePersonSelect: UsePersonSelect = ({
       getOptionValue: (person: ZetkinPerson) => person.id || null,
       inputRef,
       inputValue: searchFieldValue,
+      isLoading,
       label,
       name: name || '',
       noOptionsText: searchLabel,
