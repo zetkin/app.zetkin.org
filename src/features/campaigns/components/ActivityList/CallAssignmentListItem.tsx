@@ -55,8 +55,8 @@ const CallAssignmentListItem: FC<CallAssignmentListItemProps> = ({
       orangeChipValue={blocked}
       PrimaryIcon={HeadsetMic}
       SecondaryIcon={PhoneOutlined}
-      title={data.title}
       statsLoading={statsLoading}
+      title={data.title}
     />
   );
 };

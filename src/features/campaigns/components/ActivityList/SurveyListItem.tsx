@@ -59,8 +59,8 @@ const SurveyListItem: FC<SurveyListItemProps> = ({ orgId, surveyId }) => {
       orangeChipValue={unlinkedSubmissionCount}
       PrimaryIcon={AssignmentOutlined}
       SecondaryIcon={ChatBubbleOutline}
-      title={data.title}
       statsLoading={statsLoading}
+      title={data.title}
     />
   );
 };

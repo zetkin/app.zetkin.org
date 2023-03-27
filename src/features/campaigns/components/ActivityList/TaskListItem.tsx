@@ -44,8 +44,8 @@ const TaskListItem = ({ orgId, taskId }: TaskListItemProps) => {
       orangeChipValue={stats?.ignored}
       PrimaryIcon={CheckBoxOutlined}
       SecondaryIcon={People}
-      title={task.title}
       statsLoading={statsLoading}
+      title={task.title}
     />
   );
 };
