@@ -1,8 +1,8 @@
 import { Box } from '@mui/material';
-import { createContext, FunctionComponent, useState } from 'react';
-
 import makeStyles from '@mui/styles/makeStyles';
+import { FunctionComponent, useState } from 'react';
 
+import { PageContainerContext } from 'utils/panes/PageContainerContext';
 import ZUIOrganizeSidebar from 'zui/ZUIOrganizeSidebar';
 
 const useStyles = makeStyles((theme) => ({
@@ -22,12 +22,6 @@ interface DefaultLayoutProps {
   children: React.ReactNode;
   onScroll?: () => void;
 }
-
-const UglyContext = createContext<{
-  container: HTMLDivElement | null;
-}>({ container: null });
-
-export { UglyContext };
 
 const DefaultLayout: FunctionComponent<DefaultLayoutProps> = ({
   children,
@@ -49,9 +43,9 @@ const DefaultLayout: FunctionComponent<DefaultLayoutProps> = ({
         position="relative"
         width={1}
       >
-        <UglyContext.Provider value={{ container }}>
+        <PageContainerContext.Provider value={{ container }}>
           {children}
-        </UglyContext.Provider>
+        </PageContainerContext.Provider>
       </Box>
     </Box>
   );

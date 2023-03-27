@@ -10,8 +10,8 @@ import {
   useState,
 } from 'react';
 
+import { PageContainerContext } from './PageContainerContext';
 import Pane from './Pane';
-import { UglyContext } from 'utils/layout/DefaultLayout';
 
 type PaneDef = {
   render: () => ReactNode;
@@ -62,7 +62,7 @@ export const PaneProvider: FC<PaneProviderProps> = ({
   const paneContainerRef = useRef<HTMLDivElement>();
   const slideRef = useRef<HTMLDivElement>();
 
-  const { container } = useContext(UglyContext);
+  const { container } = useContext(PageContainerContext);
 
   const update = () => {
     const paneContainer = paneContainerRef.current;
