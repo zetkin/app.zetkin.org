@@ -134,7 +134,7 @@ const TagChip: React.FunctionComponent<{
   return (
     <Box
       className={classes.chip}
-      onClick={() => onClick && onClick(tag)}
+      onClick={() => !disabled && onClick && onClick(tag)}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
     >
