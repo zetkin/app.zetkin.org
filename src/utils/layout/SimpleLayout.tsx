@@ -26,6 +26,7 @@ interface SimpleLayoutProps {
   ellipsisMenuItems?: ZUIEllipsisMenuProps['items'];
   fixedHeight?: boolean;
   title?: string | ReactElement;
+  publishDate?: ReactElement;
   subtitle?: string | ReactElement;
   noPad?: boolean;
 }
@@ -37,6 +38,7 @@ const SimpleLayout: FunctionComponent<SimpleLayoutProps> = ({
   ellipsisMenuItems,
   fixedHeight,
   noPad,
+  publishDate,
   subtitle,
   title,
 }) => {
@@ -60,6 +62,7 @@ const SimpleLayout: FunctionComponent<SimpleLayoutProps> = ({
           collapsed={collapsed}
           ellipsisMenuItems={ellipsisMenuItems}
           onToggleCollapsed={onToggleCollapsed}
+          publishDate={publishDate}
           subtitle={subtitle}
           title={title}
         />
