@@ -66,7 +66,9 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
       defaultTab="/"
       subtitle={
         <Box alignItems="center" display="flex">
-          <SurveyStatusChip state={model.state} />
+          <Box marginRight={1}>
+            <SurveyStatusChip state={model.state} />
+          </Box>
           <Box display="flex" marginX={1}>
             <ZUIFutures
               futures={{

@@ -68,7 +68,9 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
       defaultTab="/"
       subtitle={
         <Box alignItems="center" display="flex">
-          <CallAssignmentStatusChip state={model.state} />
+          <Box marginRight={1}>
+            <CallAssignmentStatusChip state={model.state} />
+          </Box>
           <Box display="flex" marginX={1}>
             <ZUIFuture
               future={statsFuture}
