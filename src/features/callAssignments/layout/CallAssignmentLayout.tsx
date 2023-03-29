@@ -56,8 +56,7 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
         )
       }
       baseHref={`/organize/${orgId}/projects/${campaignId}/callassignments/${assignmentId}`}
-      defaultTab="/"
-      publishDate={
+      datePicker={
         <ZUIDateRangePicker
           endDate={dataFuture.data.end_date || null}
           onChange={(startDate, endDate) => {
@@ -66,6 +65,7 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
           startDate={dataFuture.data.start_date || null}
         />
       }
+      defaultTab="/"
       subtitle={
         <Box alignItems="center" display="flex">
           <CallAssignmentStatusChip state={model.state} />

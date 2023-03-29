@@ -23,10 +23,10 @@ interface SimpleLayoutProps {
   actionButtons?: React.ReactElement | React.ReactElement[];
   avatar?: string;
   children?: React.ReactNode;
+  datePicker?: ReactElement;
   ellipsisMenuItems?: ZUIEllipsisMenuProps['items'];
   fixedHeight?: boolean;
   title?: string | ReactElement;
-  publishDate?: ReactElement;
   subtitle?: string | ReactElement;
   noPad?: boolean;
 }
@@ -35,10 +35,10 @@ const SimpleLayout: FunctionComponent<SimpleLayoutProps> = ({
   actionButtons,
   avatar,
   children,
+  datePicker,
   ellipsisMenuItems,
   fixedHeight,
   noPad,
-  publishDate,
   subtitle,
   title,
 }) => {
@@ -60,9 +60,9 @@ const SimpleLayout: FunctionComponent<SimpleLayoutProps> = ({
           actionButtons={actionButtons}
           avatar={avatar}
           collapsed={collapsed}
+          datePicker={datePicker}
           ellipsisMenuItems={ellipsisMenuItems}
           onToggleCollapsed={onToggleCollapsed}
-          publishDate={publishDate}
           subtitle={subtitle}
           title={title}
         />

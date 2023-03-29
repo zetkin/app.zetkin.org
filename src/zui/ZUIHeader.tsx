@@ -58,7 +58,7 @@ interface HeaderProps {
   collapsed?: boolean;
   ellipsisMenuItems?: ZUIEllipsisMenuProps['items'];
   onToggleCollapsed?: (collapsed: boolean) => void;
-  publishDate?: ReactElement;
+  datePicker?: ReactElement;
   subtitle?: string | ReactElement;
   title?: string | ReactElement;
 }
@@ -69,7 +69,7 @@ const Header: React.FC<HeaderProps> = ({
   collapsed = false,
   ellipsisMenuItems,
   onToggleCollapsed,
-  publishDate,
+  datePicker: publishDate,
   subtitle,
   title,
 }) => {
