@@ -63,6 +63,18 @@ export function isInFuture(datestring: string): boolean {
   return date > now;
 }
 
+/**
+ * Takes an ISO datestring and returns a boolean that says if the date is in the past or not.
+ * @param datestring
+ * @returns boolean
+ */
+export function isInPast(datestring: string): boolean {
+  const now = new Date();
+  const date = new Date(datestring);
+
+  return date < now;
+}
+
 export function isSameDate(first: Date, second: Date): boolean {
   return first.toISOString().slice(0, 10) == second.toISOString().slice(0, 10);
 }
