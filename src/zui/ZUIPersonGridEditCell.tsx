@@ -118,7 +118,7 @@ const ZUIPersonGridEditCell: FC<{
         ></InputBase>
       </Box>
 
-      {searchResults.length || suggestedPeople.length ? (
+      {suggestedPeople.length || autoComplete.inputValue != '' ? (
         <Popper
           anchorEl={anchorEl}
           open={!!anchorEl}
