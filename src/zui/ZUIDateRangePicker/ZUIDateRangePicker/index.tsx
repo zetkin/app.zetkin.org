@@ -20,7 +20,7 @@ import { EyeClosed } from 'zui/icons/EyeClosed';
 import messageIds from 'zui/l10n/messageIds';
 import { useMessages, UseMessagesMap } from 'core/i18n';
 
-const rangeStr = (
+const iconAndMessage = (
   messages: UseMessagesMap<typeof messageIds.dateRange>,
   values: DateRange<Dayjs>
 ): { icon: JSX.Element; message: string } => {
@@ -116,7 +116,7 @@ const ZUIDateRangePicker: FC<ZUIDateRangePickerProps> = ({
   const [start, end] = value;
   const duration = start && end ? end.diff(start, 'day') : 1;
 
-  const { icon, message } = rangeStr(messages.dateRange, value);
+  const { icon, message } = iconAndMessage(messages.dateRange, value);
 
   return (
     <>
