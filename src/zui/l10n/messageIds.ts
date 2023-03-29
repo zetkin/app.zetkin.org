@@ -72,10 +72,12 @@ export default makeMessages('zui', {
   },
   dateRange: {
     draft: m('No start date'),
+    end: m('End'),
     finite: m<{ end: Date; start: Date }>(
       'From {start, date, medium} to {end, date, medium}'
     ),
     indefinite: m<{ start: Date }>('From {start, date, medium} onwards'),
+    start: m('Start'),
   },
   editTextInPlace: {
     tooltip: {

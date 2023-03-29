@@ -113,7 +113,7 @@ const ZUIDateRangePicker: FC<ZUIDateRangePickerProps> = ({
             >
               <Box marginX={2} marginY={1}>
                 <DateTextField
-                  label="Start"
+                  label={messages.dateRange.start()}
                   onChange={(date) => {
                     let newEndDate = value[1];
                     if (date && newEndDate?.isBefore(date)) {
@@ -126,7 +126,7 @@ const ZUIDateRangePicker: FC<ZUIDateRangePickerProps> = ({
               </Box>
               <Box marginX={2} marginY={1}>
                 <DateTextField
-                  label="End"
+                  label={messages.dateRange.end()}
                   onChange={(date) => {
                     let newStartDate = value[0];
                     if (date && newStartDate?.isAfter(date)) {
