@@ -232,7 +232,12 @@ const ZUIPersonGridEditCell: FC<{
                           <ListSubheader sx={{ position: 'relative' }}>
                             {searchResults.length > 0 &&
                               messages.personGridEditCell.searchResults()}
-                            {personSelect.autoCompleteProps.inputValue !== '' &&
+                            {autoComplete.inputValue &&
+                              searchResults.length === 0 &&
+                              autoComplete.inputValue.length < 3 &&
+                              autoComplete.inputValue.length > 0 &&
+                              messages.personGridEditCell.keepTyping()}
+                            {autoComplete.inputValue.length >= 3 &&
                               !personSelect.autoCompleteProps.isLoading &&
                               searchResults.length === 0 &&
                               messages.personGridEditCell.noResult()}
