@@ -31,14 +31,6 @@ const SurveySubmissionsList = ({
   const { orgId } = useRouter().query;
   const { openPane } = usePanes();
 
-  const suggestedRespondents = submissions
-    .map((s) => s.respondent as ZetkinPerson)
-    .filter((s) => s !== null);
-
-  const suggestedPeople = [
-    ...new Map(suggestedRespondents.map((p) => [p.id, p])).values(),
-  ];
-
   const sortedSubmissions = useMemo(() => {
     const sorted = [...submissions].sort((subOne, subTwo) => {
       const dateOne = new Date(subOne.submitted);
@@ -115,7 +107,7 @@ const SurveySubmissionsList = ({
           ZetkinSurveySubmission
         >
       ) => {
-        return <EditCell respondents={suggestedPeople} row={params.row} />;
+        return <EditCell row={params.row} />;
       },
       sortable: true,
     },
@@ -166,9 +158,8 @@ const SurveySubmissionsList = ({
   };
 
   const EditCell: FC<{
-    respondents: ZetkinPerson[];
     row: ZetkinSurveySubmission;
-  }> = ({ respondents, row }) => {
+  }> = ({ row }) => {
     const api = useGridApiContext();
     const { orgId } = useRouter().query;
 
@@ -186,7 +177,7 @@ const SurveySubmissionsList = ({
       }
     );
 
-    if (!suggestedPeople || suggestedPeople === undefined) {
+    if (!suggestedPeople) {
       suggestedPeople = [];
     }
 
@@ -207,7 +198,7 @@ const SurveySubmissionsList = ({
         cell={row.respondent}
         onUpdate={updateCellValue}
         removePersonLabel={messages.submissions.unlink()}
-        suggestedPeople={row.respondent === null ? [] : respondents} //filter anonymous
+        suggestedPeople={row.respondent === null ? [] : suggestedPeople} //filter anonymous
         suggestedPeopleLabel={messages.submissions.suggestedPeople()}
       />
     );
