@@ -11,26 +11,67 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { CalendarToday, Clear } from '@mui/icons-material';
+import { Clear, Schedule, VisibilityOutlined } from '@mui/icons-material';
 import { DateRange, StaticDateRangePicker } from '@mui/x-date-pickers-pro';
 import dayjs, { Dayjs } from 'dayjs';
 import React, { FC, MouseEvent, useEffect, useState } from 'react';
 
+import { EyeClosed } from 'zui/icons/EyeClosed';
 import messageIds from 'zui/l10n/messageIds';
 import { useMessages, UseMessagesMap } from 'core/i18n';
 
 const rangeStr = (
   messages: UseMessagesMap<typeof messageIds.dateRange>,
   values: DateRange<Dayjs>
-): string => {
+): { icon: JSX.Element; message: string } => {
   const [start, end] = values;
+  const now = new Date();
 
   if (start && end) {
-    return messages.finite({ end: end.toDate(), start: start.toDate() });
+    if (end.isBefore(now)) {
+      //In the past, invisible
+      return {
+        icon: <EyeClosed />,
+        message: messages.invisible(),
+      };
+    }
+    if (start.isAfter(now)) {
+      //Scheduled, finite
+      return {
+        icon: <Schedule color="secondary" />,
+        message: messages.finiteScheduled({
+          end: end.toDate(),
+          start: start.toDate(),
+        }),
+      };
+    }
+    //Visible, finite
+    return {
+      icon: <VisibilityOutlined color="secondary" />,
+      message: messages.finiteVisible({
+        end: end.toDate(),
+        start: start.toDate(),
+      }),
+    };
   } else if (start) {
-    return messages.indefinite({ start: start.toDate() });
+    if (start.isAfter(new Date())) {
+      //Scheduled, onwards
+      return {
+        icon: <Schedule color="secondary" />,
+        message: messages.indefiniteScheduled({ start: start.toDate() }),
+      };
+    }
+    return {
+      //Visible onwards
+      icon: <VisibilityOutlined color="secondary" />,
+      message: messages.indefiniteVisible({ start: start.toDate() }),
+    };
   } else {
-    return messages.draft();
+    //Draft, invisible
+    return {
+      icon: <EyeClosed />,
+      message: messages.invisible(),
+    };
   }
 };
 
@@ -75,21 +116,26 @@ const ZUIDateRangePicker: FC<ZUIDateRangePickerProps> = ({
   const [start, end] = value;
   const duration = start && end ? end.diff(start, 'day') : 1;
 
+  const { icon, message } = rangeStr(messages.dateRange, value);
+
   return (
     <>
       <Box alignItems="center" className={classes.label} display="flex">
-        <CalendarToday />
-
-        <Typography
+        <Box
           component="span"
+          display="flex"
+          justifyContent="center"
           marginLeft={1}
           onClick={(ev: MouseEvent<HTMLSpanElement>) => {
             ev.stopPropagation();
             setAnchorEl(ev.currentTarget);
           }}
         >
-          {rangeStr(messages.dateRange, value)}
-        </Typography>
+          {icon}
+          <Typography color="secondary" sx={{ paddingLeft: 0.5 }}>
+            {message}
+          </Typography>
+        </Box>
       </Box>
       <ClickAwayListener
         mouseEvent="onMouseDown"

@@ -13,7 +13,6 @@ import CallAssignmentModel, {
 import { Msg, useMessages } from 'core/i18n';
 
 import messageIds from '../l10n/messageIds';
-import ZUIPublishDate from 'zui/ZUIPublishDate';
 
 interface CallAssignmentLayoutProps {
   children: React.ReactNode;
@@ -59,23 +58,17 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
       baseHref={`/organize/${orgId}/projects/${campaignId}/callassignments/${assignmentId}`}
       defaultTab="/"
       publishDate={
-        <ZUIPublishDate
-          end={dataFuture.data.end_date || undefined}
-          start={dataFuture.data.start_date || undefined}
+        <ZUIDateRangePicker
+          endDate={dataFuture.data.end_date || null}
+          onChange={(startDate, endDate) => {
+            model.setDates(startDate, endDate);
+          }}
+          startDate={dataFuture.data.start_date || null}
         />
       }
       subtitle={
         <Box alignItems="center" display="flex">
           <CallAssignmentStatusChip state={model.state} />
-          <Box marginX={2}>
-            <ZUIDateRangePicker
-              endDate={dataFuture.data.end_date || null}
-              onChange={(startDate, endDate) => {
-                model.setDates(startDate, endDate);
-              }}
-              startDate={dataFuture.data.start_date || null}
-            />
-          </Box>
           <Box display="flex" marginX={1}>
             <ZUIFuture
               future={statsFuture}

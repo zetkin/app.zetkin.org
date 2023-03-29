@@ -14,7 +14,6 @@ import { Msg, useMessages } from 'core/i18n';
 import SurveyDataModel, { SurveyState } from '../models/SurveyDataModel';
 
 import messageIds from '../l10n/messageIds';
-import ZUIPublishDate from 'zui/ZUIPublishDate';
 
 interface SurveyLayoutProps {
   children: React.ReactNode;
@@ -57,23 +56,17 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
       baseHref={`/organize/${orgId}/projects/${campaignId}/surveys/${surveyId}`}
       defaultTab="/"
       publishDate={
-        <ZUIPublishDate
-          end={dataFuture.data?.expires || undefined}
-          start={dataFuture.data?.published || undefined}
+        <ZUIDateRangePicker
+          endDate={dataFuture.data?.expires || null}
+          onChange={(startDate, endDate) => {
+            model.setDates(startDate, endDate);
+          }}
+          startDate={dataFuture.data?.published || null}
         />
       }
       subtitle={
         <Box alignItems="center" display="flex">
           <SurveyStatusChip state={model.state} />
-          <Box marginX={2}>
-            <ZUIDateRangePicker
-              endDate={dataFuture.data?.expires || null}
-              onChange={(startDate, endDate) => {
-                model.setDates(startDate, endDate);
-              }}
-              startDate={dataFuture.data?.published || null}
-            />
-          </Box>
           <Box display="flex" marginX={1}>
             <ZUIFutures
               futures={{
