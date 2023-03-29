@@ -13,6 +13,7 @@ import CallAssignmentModel, {
 import { Msg, useMessages } from 'core/i18n';
 
 import messageIds from '../l10n/messageIds';
+import ZUIPublishDate from 'zui/ZUIPublishDate';
 
 interface CallAssignmentLayoutProps {
   children: React.ReactNode;
@@ -57,6 +58,12 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
       }
       baseHref={`/organize/${orgId}/projects/${campaignId}/callassignments/${assignmentId}`}
       defaultTab="/"
+      publishDate={
+        <ZUIPublishDate
+          end={dataFuture.data.end_date || undefined}
+          start={dataFuture.data.start_date || undefined}
+        />
+      }
       subtitle={
         <Box alignItems="center" display="flex">
           <CallAssignmentStatusChip state={model.state} />

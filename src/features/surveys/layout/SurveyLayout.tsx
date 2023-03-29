@@ -14,6 +14,7 @@ import { Msg, useMessages } from 'core/i18n';
 import SurveyDataModel, { SurveyState } from '../models/SurveyDataModel';
 
 import messageIds from '../l10n/messageIds';
+import ZUIPublishDate from 'zui/ZUIPublishDate';
 
 interface SurveyLayoutProps {
   children: React.ReactNode;
@@ -55,6 +56,12 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
       }
       baseHref={`/organize/${orgId}/projects/${campaignId}/surveys/${surveyId}`}
       defaultTab="/"
+      publishDate={
+        <ZUIPublishDate
+          end={dataFuture.data?.expires || undefined}
+          start={dataFuture.data?.published || undefined}
+        />
+      }
       subtitle={
         <Box alignItems="center" display="flex">
           <SurveyStatusChip state={model.state} />
