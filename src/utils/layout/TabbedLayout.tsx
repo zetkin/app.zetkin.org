@@ -23,11 +23,11 @@ interface TabbedLayoutProps {
   actionButtons?: React.ReactElement | React.ReactElement[];
   avatar?: string;
   baseHref: string;
+  belowActionButtons?: ReactElement;
   children?: React.ReactNode;
   ellipsisMenuItems?: ZUIEllipsisMenuProps['items'];
   fixedHeight?: boolean;
   title?: string | ReactElement;
-  datePicker?: ReactElement;
   subtitle?: string | ReactElement;
   defaultTab: string;
   noPad?: boolean;
@@ -38,8 +38,8 @@ const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
   actionButtons,
   avatar,
   baseHref,
+  belowActionButtons,
   children,
-  datePicker,
   defaultTab,
   ellipsisMenuItems,
   fixedHeight,
@@ -82,8 +82,8 @@ const TabbedLayout: FunctionComponent<TabbedLayoutProps> = ({
         <Header
           actionButtons={actionButtons}
           avatar={avatar}
+          belowActionButtons={belowActionButtons}
           collapsed={collapsed}
-          datePicker={datePicker}
           ellipsisMenuItems={ellipsisMenuItems}
           onToggleCollapsed={onToggleCollapsed}
           subtitle={subtitle}

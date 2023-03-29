@@ -54,7 +54,7 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
         )
       }
       baseHref={`/organize/${orgId}/projects/${campaignId}/surveys/${surveyId}`}
-      datePicker={
+      belowActionButtons={
         <ZUIDateRangePicker
           endDate={dataFuture.data?.expires || null}
           onChange={(startDate, endDate) => {

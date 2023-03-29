@@ -56,7 +56,7 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
         )
       }
       baseHref={`/organize/${orgId}/projects/${campaignId}/callassignments/${assignmentId}`}
-      datePicker={
+      belowActionButtons={
         <ZUIDateRangePicker
           endDate={dataFuture.data.end_date || null}
           onChange={(startDate, endDate) => {
