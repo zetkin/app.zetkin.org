@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import { IntlProvider } from 'react-intl';
 import isoWeek from 'dayjs/plugin/isoWeek';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { muiTheme } from 'storybook-addon-material-ui';
+import { muiTheme } from 'storybook-addon-material-ui5';
 import { RouterContext } from 'next/dist/shared/lib/router-context'; // next 11.1
 import withMock from 'storybook-addon-mock';
 import { QueryClientProvider, QueryClient } from 'react-query';
