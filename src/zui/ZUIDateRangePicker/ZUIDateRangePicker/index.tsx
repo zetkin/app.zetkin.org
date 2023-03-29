@@ -39,7 +39,7 @@ const iconAndMessage = (
       //Scheduled, finite
       return {
         icon: <Schedule color="secondary" />,
-        message: messages.finiteScheduled({
+        message: messages.finite({
           end: end.toDate(),
           start: start.toDate(),
         }),
@@ -48,7 +48,7 @@ const iconAndMessage = (
     //Visible, finite
     return {
       icon: <VisibilityOutlined color="secondary" />,
-      message: messages.finiteVisible({
+      message: messages.finite({
         end: end.toDate(),
         start: start.toDate(),
       }),
@@ -58,13 +58,13 @@ const iconAndMessage = (
       //Scheduled, onwards
       return {
         icon: <Schedule color="secondary" />,
-        message: messages.indefiniteScheduled({ start: start.toDate() }),
+        message: messages.indefinite({ start: start.toDate() }),
       };
     }
     return {
       //Visible onwards
       icon: <VisibilityOutlined color="secondary" />,
-      message: messages.indefiniteVisible({ start: start.toDate() }),
+      message: messages.indefinite({ start: start.toDate() }),
     };
   } else {
     //Draft, invisible
