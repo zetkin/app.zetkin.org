@@ -88,19 +88,13 @@ const ZUIPersonGridEditCell: FC<{
           (p) =>
             p.first_name
               .toLocaleLowerCase()
-              .includes(
-                personSelect.autoCompleteProps.inputValue!.toLocaleLowerCase()
-              ) ||
+              .includes(autoComplete.inputValue.toLocaleLowerCase()) ||
             p.last_name
               .toLocaleLowerCase()
-              .includes(
-                personSelect.autoCompleteProps.inputValue!.toLocaleLowerCase()
-              ) ||
+              .includes(autoComplete.inputValue.toLocaleLowerCase()) ||
             p.email
               ?.toLocaleLowerCase()
-              .includes(
-                personSelect.autoCompleteProps.inputValue!.toLocaleLowerCase()
-              )
+              .includes(autoComplete.inputValue.toLocaleLowerCase())
         );
 
   return (
