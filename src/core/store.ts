@@ -1,5 +1,6 @@
 import { configureStore, ConfigureStoreOptions } from '@reduxjs/toolkit';
 
+import eventsSlice from 'features/events/store';
 import callAssignmentsSlice, {
   CallAssignmentSlice,
 } from '../features/callAssignments/store';
@@ -22,6 +23,7 @@ export interface RootState {
 
 const reducer = {
   callAssignments: callAssignmentsSlice.reducer,
+  events: eventsSlice.reducer,
   organizations: organizationsSlice.reducer,
   surveys: surveysSlice.reducer,
   tags: tagsSlice.reducer,
