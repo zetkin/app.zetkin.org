@@ -28,6 +28,7 @@ export default makeMessages('zui', {
     milestones: m('Milestones'),
     new: m('New'),
     organize: m('Organize'),
+    participants: m('Participants'),
     people: m('People'),
     projects: m('Projects'),
     questions: m('Questions'),
