@@ -259,6 +259,9 @@ feat:
     list:
       events: Events
       noEvents: No events...
+    tabs:
+      overview: Overview
+      participants: Participants
   journeys:
     instance:
       addAssigneeButton: Add assignee
@@ -1422,51 +1425,6 @@ feat:
         title: Title
       empty: You haven't created any views yet.
 zui:
-  timeline:
-    addNotePlaceholder: Enter text to leave a note
-    email:
-      headers:
-        cc: CC
-        from: From
-        to: To
-    expand: show full timeline
-    filter:
-      byType:
-        all: All
-        files: Files
-        journey: Journey
-        milestones: Milestones
-        notes: Notes
-        people: People
-        tags: Tags
-      filterSelectLabel: "Show: {filter}"
-      warning: The timeline is being filtered. Click here to remove the filter.
-    updates:
-      any:
-        addtags: "{actor} added {count, plural, =1 {a tag} other {# tags}}"
-        removetags: "{actor} removed {count, plural, =1 {a tag} other {# tags}}"
-      journeyinstance:
-        addassignee: "{actor} assigned {assignee}"
-        addnote: "{actor} added a note"
-        addsubject: "{actor} added {subject}"
-        close:
-          header: "{actor} closed the journey"
-        convert: "{actor} converted from {oldLabel} to {newLabel}"
-        create:
-          header: "{actor} started a new journey"
-        open: "{actor} opened the journey again"
-        removeassignee: "{actor} unassigned {assignee}"
-        removesubject: "{actor} removed {subject}"
-        update:
-          readMore: Read more
-          summary: "{actor} edited the summary"
-          title: "{actor} edited the title"
-        updatemilestone:
-          complete: "{actor} completed a milestone"
-          deadline: "{actor} updated a milestone deadline"
-          deadlineRemove: deadline was removed
-          deadlineUpdate: now due {datetime}
-          incomplete: "{actor} marked a milestone as incomplete"
   accessList:
     added: Added by {sharer} {updated}
     removeAccess: Remove access
@@ -1490,6 +1448,7 @@ zui:
     milestones: Milestones
     new: New
     organize: Organize
+    participants: Participants
     people: People
     projects: Projects
     questions: Questions
@@ -1562,3 +1521,48 @@ zui:
     submit: Submit
   suffixedNumber:
     thousands: "{num}K"
+  timeline:
+    addNotePlaceholder: Enter text to leave a note
+    email:
+      headers:
+        cc: CC
+        from: From
+        to: To
+    expand: show full timeline
+    filter:
+      byType:
+        all: All
+        files: Files
+        journey: Journey
+        milestones: Milestones
+        notes: Notes
+        people: People
+        tags: Tags
+      filterSelectLabel: "Show: {filter}"
+      warning: The timeline is being filtered. Click here to remove the filter.
+    updates:
+      any:
+        addtags: "{actor} added {count, plural, =1 {a tag} other {# tags}}"
+        removetags: "{actor} removed {count, plural, =1 {a tag} other {# tags}}"
+      journeyinstance:
+        addassignee: "{actor} assigned {assignee}"
+        addnote: "{actor} added a note"
+        addsubject: "{actor} added {subject}"
+        close:
+          header: "{actor} closed the journey"
+        convert: "{actor} converted from {oldLabel} to {newLabel}"
+        create:
+          header: "{actor} started a new journey"
+        open: "{actor} opened the journey again"
+        removeassignee: "{actor} unassigned {assignee}"
+        removesubject: "{actor} removed {subject}"
+        update:
+          readMore: Read more
+          summary: "{actor} edited the summary"
+          title: "{actor} edited the title"
+        updatemilestone:
+          complete: "{actor} completed a milestone"
+          deadline: "{actor} updated a milestone deadline"
+          deadlineRemove: deadline was removed
+          deadlineUpdate: now due {datetime}
+          incomplete: "{actor} marked a milestone as incomplete"

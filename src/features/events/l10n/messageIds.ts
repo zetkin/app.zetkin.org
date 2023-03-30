@@ -21,4 +21,8 @@ export default makeMessages('feat.events', {
     events: m('Events'),
     noEvents: m('No events...'),
   },
+  tabs: {
+    overview: m('Overview'),
+    participants: m('Participants'),
+  },
 });
