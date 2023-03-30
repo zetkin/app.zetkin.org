@@ -33,8 +33,24 @@ const eventsSlice = createSlice({
       item.isLoading = false;
       item.loaded = new Date().toISOString();
     },
+    eventUpdate: (state, action: PayloadAction<[number, string[]]>) => {
+      const [eventId, mutating] = action.payload;
+      const item = state.eventList.items.find((item) => item.id == eventId);
+      if (item) {
+        item.mutating = mutating;
+      }
+    },
+    eventUpdated: (state, action: PayloadAction<ZetkinEvent>) => {
+      const event = action.payload;
+      const item = state.eventList.items.find((item) => item.id == event.id);
+      if (item) {
+        item.data = { ...item.data, ...event };
+        item.mutating = [];
+      }
+    },
   },
 });
 
 export default eventsSlice;
-export const { eventLoad, eventLoaded } = eventsSlice.actions;
+export const { eventLoad, eventLoaded, eventUpdate, eventUpdated } =
+  eventsSlice.actions;

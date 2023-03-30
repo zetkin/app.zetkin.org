@@ -3,7 +3,7 @@ import IApiClient from 'core/api/client/IApiClient';
 import shouldLoad from 'core/caching/shouldLoad';
 import { Store } from 'core/store';
 import { ZetkinEvent } from 'utils/types/zetkin';
-import { eventLoad, eventLoaded } from '../store';
+import { eventLoad, eventLoaded, eventUpdate, eventUpdated } from '../store';
 import { IFuture, PromiseFuture, RemoteItemFuture } from 'core/caching/futures';
 
 export default class EventsRepo {
@@ -31,5 +31,18 @@ export default class EventsRepo {
     } else {
       return new RemoteItemFuture(item);
     }
+  }
+
+  updateEvent(
+    orgId: number,
+    eventId: number,
+    data: Partial<Omit<ZetkinEvent, 'id'>>
+  ) {
+    this._store.dispatch(eventUpdate([eventId, Object.keys(data)]));
+    this._apiClient
+      .patch<ZetkinEvent>(`/api/orgs/${orgId}/actions/${eventId}`, data)
+      .then((event) => {
+        this._store.dispatch(eventUpdated(event));
+      });
   }
 }

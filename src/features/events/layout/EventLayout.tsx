@@ -44,10 +44,10 @@ const EventLayout: React.FC<SurveyLayoutProps> = ({
           {(data) => {
             return (
               <ZUIEditTextinPlace
-                onChange={() => {
-                  // model.setTitle(val);
+                onChange={(val) => {
+                  model.setTitle(val);
                 }}
-                value={data.activity.title}
+                value={data.title || data.activity.title}
               />
             );
           }}

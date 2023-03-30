@@ -19,4 +19,8 @@ export default class EventDataModel extends ModelBase {
   getData(): IFuture<ZetkinEvent> {
     return this._repo.getEvent(this._orgId, this._eventId);
   }
+
+  setTitle(title: string) {
+    this._repo.updateEvent(this._orgId, this._eventId, { title });
+  }
 }
