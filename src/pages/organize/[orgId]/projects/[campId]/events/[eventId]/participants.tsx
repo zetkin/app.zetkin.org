@@ -19,7 +19,7 @@ export const getServerSideProps: GetServerSideProps = scaffold(
   {
     authLevelRequired: 2,
 
-    localeScope: ['layout.organize.events', 'pages.organizeEvent'],
+    localeScope: [],
   }
 );
 
