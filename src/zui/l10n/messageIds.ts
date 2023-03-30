@@ -84,6 +84,9 @@ export default makeMessages('zui', {
       noEmpty: m('This cannot be empty'),
     },
   },
+  eventDetailsCard: {
+    description: m('Description'),
+  },
   futures: {
     errorLoading: m('There was an error loading the data.'),
   },
