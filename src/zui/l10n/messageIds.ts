@@ -110,21 +110,6 @@ export default makeMessages('zui', {
     search: m('Type to start searching'),
     searching: m('Searching...'),
   },
-  publishDate: {
-    invisible: m('Not visible, not scheduled'),
-    scheduledOnwards: m<{ startDate: string }>(
-      'Scheduled to be visible from {startDate} and onwards'
-    ),
-    scheduledWithEndDate: m<{ endDate: string; startDate: string }>(
-      'Scheduled to be visible between {startDate} and {endDate}'
-    ),
-    visibleOnwards: m<{ startDate: string }>(
-      'Visible from {startDate} onwards'
-    ),
-    visibleWithEndDate: m<{ endDate: string; startDate: string }>(
-      'Visible between {startDate} and {endDate}'
-    ),
-  },
   snackbar: {
     error: m('Oh dear, something went wrong'),
     info: m(''),
