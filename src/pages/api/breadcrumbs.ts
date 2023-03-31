@@ -176,6 +176,12 @@ async function fetchLabel(
     );
     return survey.data.title;
   }
+  if (fieldName == 'eventId') {
+    const event = await apiFetch(`/orgs/${orgId}/actions/${fieldValue}`).then(
+      (res) => res.json()
+    );
+    return event.data.title;
+  }
   return fieldValue;
 }
 

@@ -21,6 +21,13 @@ export default makeMessages('feat.events', {
     events: m('Events'),
     noEvents: m('No events...'),
   },
+  state: {
+    cancelled: m('Cancelled'),
+    draft: m('Draft'),
+    ended: m('Ended'),
+    open: m('Open'),
+    scheduled: m('Scheduled'),
+  },
   tabs: {
     overview: m('Overview'),
     participants: m('Participants'),
