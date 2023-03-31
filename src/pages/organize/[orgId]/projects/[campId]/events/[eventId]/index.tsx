@@ -3,8 +3,12 @@ import { Grid } from '@mui/material';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 
+import EventDataModel from 'features/events/models/EventDataModel';
 import EventLayout from 'features/events/layout/EventLayout';
-import ZUIEventDetailsCard from 'zui/ZUIEventDetailsCard';
+import EventOverviewCard from 'features/events/components/EventOverviewCard/EventOverviewCard';
+import useModel from 'core/useModel';
+import { useState } from 'react';
+import ZUIFuture from 'zui/ZUIFuture';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   async (ctx) => {
@@ -30,13 +34,35 @@ interface EventPageProps {
   orgId: string;
 }
 
-const EventPage: PageWithLayout<EventPageProps> = () => {
+const EventPage: PageWithLayout<EventPageProps> = ({ orgId, eventId }) => {
+  const model = useModel(
+    (env) => new EventDataModel(env, parseInt(orgId), parseInt(eventId))
+  );
+
+  const [idOfBlockInEditMode, setIdOfBlockInEditMode] = useState<
+    number | undefined
+  >();
+
   return (
-    <Grid container spacing={1}>
-      <Grid item sm={8}>
-        <ZUIEventDetailsCard></ZUIEventDetailsCard>
-      </Grid>
-    </Grid>
+    <ZUIFuture future={model.getData()}>
+      {(data) => {
+        return (
+          <Grid container spacing={1}>
+            <Grid item sm={8}>
+              <EventOverviewCard
+                editable={data.id == idOfBlockInEditMode}
+                element={data}
+                model={model}
+                onEditModeEnter={() => setIdOfBlockInEditMode(data.id)}
+                onEditModeExit={() => {
+                  setIdOfBlockInEditMode(undefined);
+                }}
+              ></EventOverviewCard>
+            </Grid>
+          </Grid>
+        );
+      }}
+    </ZUIFuture>
   );
 };
 
