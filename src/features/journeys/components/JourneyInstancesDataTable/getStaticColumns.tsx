@@ -211,7 +211,11 @@ export const getStaticColumns = (
     {
       field: 'created',
       renderCell: (params) => (
-        <ZUIDateTime convertToLocal datetime={params.value as string} />
+        <ZUIRelativeTime
+          convertToLocal
+          datetime={params.value as string}
+          forcePast
+        />
       ),
       type: 'date',
     },
