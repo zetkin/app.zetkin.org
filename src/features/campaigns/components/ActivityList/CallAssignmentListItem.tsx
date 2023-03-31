@@ -41,6 +41,7 @@ const CallAssignmentListItem: FC<CallAssignmentListItemProps> = ({
   const ready = stats?.ready || 0;
   const done = stats?.done || 0;
   const callsMade = stats?.callsMade.toString() || '0';
+  const statsLoading = model.getStats().isLoading;
 
   return (
     <ActivityListItem
@@ -54,6 +55,7 @@ const CallAssignmentListItem: FC<CallAssignmentListItemProps> = ({
       orangeChipValue={blocked}
       PrimaryIcon={HeadsetMic}
       SecondaryIcon={PhoneOutlined}
+      statsLoading={statsLoading}
       title={data.title}
     />
   );
