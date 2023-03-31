@@ -53,11 +53,12 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
 }));
 
 interface HeaderProps {
-  actionButtons?: React.ReactElement | React.ReactElement[];
+  actionButtons?: ReactElement | ReactElement[];
   avatar?: string;
   collapsed?: boolean;
   ellipsisMenuItems?: ZUIEllipsisMenuProps['items'];
   onToggleCollapsed?: (collapsed: boolean) => void;
+  belowActionButtons?: ReactElement;
   subtitle?: string | ReactElement;
   title?: string | ReactElement;
 }
@@ -68,6 +69,7 @@ const Header: React.FC<HeaderProps> = ({
   collapsed = false,
   ellipsisMenuItems,
   onToggleCollapsed,
+  belowActionButtons,
   subtitle,
   title,
 }) => {
@@ -132,10 +134,20 @@ const Header: React.FC<HeaderProps> = ({
                 </Typography>
               </Box>
             </Box>
-            <Box display="flex" flexDirection="row">
-              <Box>{actionButtons}</Box>
-              {!!ellipsisMenuItems?.length && (
-                <ZUIEllipsisMenu items={ellipsisMenuItems} />
+            <Box
+              display="flex"
+              flexDirection="column"
+              height="100%"
+              justifyContent="space-between"
+            >
+              <Box alignSelf="flex-end" display="flex" paddingTop={3}>
+                <Box>{actionButtons}</Box>
+                {!!ellipsisMenuItems?.length && (
+                  <ZUIEllipsisMenu items={ellipsisMenuItems} />
+                )}
+              </Box>
+              {belowActionButtons && (
+                <Box paddingBottom={0.55}>{belowActionButtons}</Box>
               )}
             </Box>
           </Box>
