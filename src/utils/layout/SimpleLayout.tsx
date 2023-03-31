@@ -22,6 +22,7 @@ const useStyles = makeStyles<Theme, StyleProps>(() => ({
 interface SimpleLayoutProps {
   actionButtons?: React.ReactElement | React.ReactElement[];
   avatar?: string;
+  belowActionButtons?: ReactElement;
   children?: React.ReactNode;
   ellipsisMenuItems?: ZUIEllipsisMenuProps['items'];
   fixedHeight?: boolean;
@@ -33,6 +34,7 @@ interface SimpleLayoutProps {
 const SimpleLayout: FunctionComponent<SimpleLayoutProps> = ({
   actionButtons,
   avatar,
+  belowActionButtons,
   children,
   ellipsisMenuItems,
   fixedHeight,
@@ -57,6 +59,7 @@ const SimpleLayout: FunctionComponent<SimpleLayoutProps> = ({
         <Header
           actionButtons={actionButtons}
           avatar={avatar}
+          belowActionButtons={belowActionButtons}
           collapsed={collapsed}
           ellipsisMenuItems={ellipsisMenuItems}
           onToggleCollapsed={onToggleCollapsed}

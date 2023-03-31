@@ -54,18 +54,20 @@ const SurveyLayout: React.FC<SurveyLayoutProps> = ({
         )
       }
       baseHref={`/organize/${orgId}/projects/${campaignId}/surveys/${surveyId}`}
+      belowActionButtons={
+        <ZUIDateRangePicker
+          endDate={dataFuture.data?.expires || null}
+          onChange={(startDate, endDate) => {
+            model.setDates(startDate, endDate);
+          }}
+          startDate={dataFuture.data?.published || null}
+        />
+      }
       defaultTab="/"
       subtitle={
         <Box alignItems="center" display="flex">
-          <SurveyStatusChip state={model.state} />
-          <Box marginX={2}>
-            <ZUIDateRangePicker
-              endDate={dataFuture.data?.expires || null}
-              onChange={(startDate, endDate) => {
-                model.setDates(startDate, endDate);
-              }}
-              startDate={dataFuture.data?.published || null}
-            />
+          <Box marginRight={1}>
+            <SurveyStatusChip state={model.state} />
           </Box>
           <Box display="flex" marginX={1}>
             <ZUIFutures

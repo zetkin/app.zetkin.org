@@ -1,5 +1,4 @@
 import { makeStyles } from '@mui/styles';
-import { useIntl } from 'react-intl';
 import {
   Box,
   ClickAwayListener,
@@ -11,26 +10,101 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { CalendarToday, Clear } from '@mui/icons-material';
+import { Clear, Schedule, VisibilityOutlined } from '@mui/icons-material';
 import { DateRange, StaticDateRangePicker } from '@mui/x-date-pickers-pro';
 import dayjs, { Dayjs } from 'dayjs';
+import { IntlShape, useIntl } from 'react-intl';
 import React, { FC, MouseEvent, useEffect, useState } from 'react';
 
+import { EyeClosed } from 'zui/icons/EyeClosed';
 import messageIds from 'zui/l10n/messageIds';
 import { useMessages, UseMessagesMap } from 'core/i18n';
 
-const rangeStr = (
+const iconAndMessage = (
+  intl: IntlShape,
   messages: UseMessagesMap<typeof messageIds.dateRange>,
   values: DateRange<Dayjs>
-): string => {
+): { icon: JSX.Element; message: string } => {
   const [start, end] = values;
+  const now = dayjs();
+
+  const thisYear = now.year();
+  const startYear = start?.year();
+  const endYear = end?.year();
 
   if (start && end) {
-    return messages.finite({ end: end.toDate(), start: start.toDate() });
+    if (end.isBefore(now)) {
+      //In the past, invisible
+      return {
+        icon: <EyeClosed />,
+        message: messages.invisible(),
+      };
+    }
+    if (start.isAfter(now)) {
+      //Scheduled, finite
+      return {
+        icon: <Schedule color="secondary" />,
+        message: messages.finite({
+          end: intl.formatDate(end.toDate(), {
+            day: 'numeric',
+            month: 'long',
+            ...(endYear !== thisYear && { year: 'numeric' }),
+          }),
+          start: intl.formatDate(start.toDate(), {
+            day: 'numeric',
+            month: 'long',
+            ...(startYear !== thisYear && { year: 'numeric' }),
+          }),
+        }),
+      };
+    }
+    //Visible, finite
+    return {
+      icon: <VisibilityOutlined color="secondary" />,
+      message: messages.finite({
+        end: intl.formatDate(end.toDate(), {
+          day: 'numeric',
+          month: 'long',
+          ...(endYear !== thisYear && { year: 'numeric' }),
+        }),
+        start: intl.formatDate(start.toDate(), {
+          day: 'numeric',
+          month: 'long',
+          ...(startYear !== thisYear && { year: 'numeric' }),
+        }),
+      }),
+    };
   } else if (start) {
-    return messages.indefinite({ start: start.toDate() });
+    if (start.isAfter(new Date())) {
+      //Scheduled, onwards
+      return {
+        icon: <Schedule color="secondary" />,
+        message: messages.indefinite({
+          start: intl.formatDate(start.toDate(), {
+            day: 'numeric',
+            month: 'long',
+            ...(startYear !== thisYear && { year: 'numeric' }),
+          }),
+        }),
+      };
+    }
+    return {
+      //Visible onwards
+      icon: <VisibilityOutlined color="secondary" />,
+      message: messages.indefinite({
+        start: intl.formatDate(start.toDate(), {
+          day: 'numeric',
+          month: 'long',
+          ...(startYear !== thisYear && { year: 'numeric' }),
+        }),
+      }),
+    };
   } else {
-    return messages.draft();
+    //Draft, invisible
+    return {
+      icon: <EyeClosed />,
+      message: messages.invisible(),
+    };
   }
 };
 
@@ -61,6 +135,7 @@ const ZUIDateRangePicker: FC<ZUIDateRangePickerProps> = ({
 
   const classes = useStyles();
   const messages = useMessages(messageIds);
+  const intl = useIntl();
 
   useEffect(() => {
     setValue([
@@ -75,21 +150,26 @@ const ZUIDateRangePicker: FC<ZUIDateRangePickerProps> = ({
   const [start, end] = value;
   const duration = start && end ? end.diff(start, 'day') : 1;
 
+  const { icon, message } = iconAndMessage(intl, messages.dateRange, value);
+
   return (
     <>
       <Box alignItems="center" className={classes.label} display="flex">
-        <CalendarToday />
-
-        <Typography
+        <Box
           component="span"
+          display="flex"
+          justifyContent="center"
           marginLeft={1}
           onClick={(ev: MouseEvent<HTMLSpanElement>) => {
             ev.stopPropagation();
             setAnchorEl(ev.currentTarget);
           }}
         >
-          {rangeStr(messages.dateRange, value)}
-        </Typography>
+          {icon}
+          <Typography color="secondary" sx={{ paddingLeft: 0.5 }}>
+            {message}
+          </Typography>
+        </Box>
       </Box>
       <ClickAwayListener
         mouseEvent="onMouseDown"
@@ -113,7 +193,7 @@ const ZUIDateRangePicker: FC<ZUIDateRangePickerProps> = ({
             >
               <Box marginX={2} marginY={1}>
                 <DateTextField
-                  label="Start"
+                  label={messages.dateRange.start()}
                   onChange={(date) => {
                     let newEndDate = value[1];
                     if (date && newEndDate?.isBefore(date)) {
@@ -126,7 +206,7 @@ const ZUIDateRangePicker: FC<ZUIDateRangePickerProps> = ({
               </Box>
               <Box marginX={2} marginY={1}>
                 <DateTextField
-                  label="End"
+                  label={messages.dateRange.end()}
                   onChange={(date) => {
                     let newStartDate = value[0];
                     if (date && newStartDate?.isAfter(date)) {
