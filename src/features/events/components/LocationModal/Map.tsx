@@ -1,5 +1,12 @@
 import 'leaflet/dist/leaflet.css';
-import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet';
+import { MapContainer, Marker, TileLayer } from 'react-leaflet';
+
+import { icon } from 'leaflet';
+
+const customIcon = icon({
+  iconSize: [25, 32],
+  iconUrl: '/selectedMarker.png',
+});
 
 const Map = () => {
   return (
@@ -12,11 +19,7 @@ const Map = () => {
         attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      <Marker position={[51.505, -0.09]}>
-        <Popup>
-          A pretty CSS3 popup. <br /> Easily customizable.
-        </Popup>
-      </Marker>
+      <Marker icon={customIcon} position={[51.505, -0.09]} />
     </MapContainer>
   );
 };

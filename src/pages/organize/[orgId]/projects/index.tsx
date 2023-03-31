@@ -1,7 +1,7 @@
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { useQuery } from 'react-query';
-import { Box, Grid, Typography } from '@mui/material';
+import { Box, Button, Grid, Typography } from '@mui/material';
 
 import ActivitiesOverview from 'features/campaigns/components/ActivitiesOverview';
 import AllCampaignsLayout from 'features/campaigns/layout/AllCampaignsLayout';
@@ -14,8 +14,10 @@ import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 import { Msg, useMessages } from 'core/i18n';
 
+import LocationModal from 'features/events/components/LocationModal';
 import messageIds from 'features/campaigns/l10n/messageIds';
 import useServerSide from 'core/useServerSide';
+import { useState } from 'react';
 
 const scaffoldOptions = {
   authLevelRequired: 2,
@@ -87,6 +89,7 @@ const AllCampaignsSummaryPage: PageWithLayout<AllCampaignsSummaryPageProps> = ({
   const campaignsQuery = useQuery(['campaigns', orgId], getCampaigns(orgId));
   const eventsQuery = useQuery(['events', orgId], getEvents(orgId));
 
+  const [open, setOpen] = useState(false);
   const onServer = useServerSide();
   if (onServer) {
     return null;
@@ -100,6 +103,10 @@ const AllCampaignsSummaryPage: PageWithLayout<AllCampaignsSummaryPageProps> = ({
       <Head>
         <title>{messages.layout.allCampaigns()}</title>
       </Head>
+      <>
+        <Button onClick={() => setOpen(true)}>Open loacation modal</Button>
+        <LocationModal open={open} />
+      </>
       <ActivitiesOverview orgId={parseInt(orgId)} />
       <Box mt={4}>
         <Typography mb={2} variant="h4">
