@@ -1,5 +1,4 @@
 import { makeStyles } from '@mui/styles';
-import { useIntl } from 'react-intl';
 import {
   Box,
   ClickAwayListener,
@@ -14,6 +13,7 @@ import {
 import { Clear, Schedule, VisibilityOutlined } from '@mui/icons-material';
 import { DateRange, StaticDateRangePicker } from '@mui/x-date-pickers-pro';
 import dayjs, { Dayjs } from 'dayjs';
+import { IntlShape, useIntl } from 'react-intl';
 import React, { FC, MouseEvent, useEffect, useState } from 'react';
 
 import { EyeClosed } from 'zui/icons/EyeClosed';
@@ -21,11 +21,16 @@ import messageIds from 'zui/l10n/messageIds';
 import { useMessages, UseMessagesMap } from 'core/i18n';
 
 const iconAndMessage = (
+  intl: IntlShape,
   messages: UseMessagesMap<typeof messageIds.dateRange>,
   values: DateRange<Dayjs>
 ): { icon: JSX.Element; message: string } => {
   const [start, end] = values;
-  const now = new Date();
+  const now = dayjs();
+
+  const thisYear = now.year();
+  const startYear = start?.year();
+  const endYear = end?.year();
 
   if (start && end) {
     if (end.isBefore(now)) {
@@ -40,8 +45,16 @@ const iconAndMessage = (
       return {
         icon: <Schedule color="secondary" />,
         message: messages.finite({
-          end: end.toDate(),
-          start: start.toDate(),
+          end: intl.formatDate(end.toDate(), {
+            day: 'numeric',
+            month: 'long',
+            ...(endYear !== thisYear && { year: 'numeric' }),
+          }),
+          start: intl.formatDate(start.toDate(), {
+            day: 'numeric',
+            month: 'long',
+            ...(startYear !== thisYear && { year: 'numeric' }),
+          }),
         }),
       };
     }
@@ -49,8 +62,16 @@ const iconAndMessage = (
     return {
       icon: <VisibilityOutlined color="secondary" />,
       message: messages.finite({
-        end: end.toDate(),
-        start: start.toDate(),
+        end: intl.formatDate(end.toDate(), {
+          day: 'numeric',
+          month: 'long',
+          ...(endYear !== thisYear && { year: 'numeric' }),
+        }),
+        start: intl.formatDate(start.toDate(), {
+          day: 'numeric',
+          month: 'long',
+          ...(startYear !== thisYear && { year: 'numeric' }),
+        }),
       }),
     };
   } else if (start) {
@@ -58,13 +79,25 @@ const iconAndMessage = (
       //Scheduled, onwards
       return {
         icon: <Schedule color="secondary" />,
-        message: messages.indefinite({ start: start.toDate() }),
+        message: messages.indefinite({
+          start: intl.formatDate(start.toDate(), {
+            day: 'numeric',
+            month: 'long',
+            ...(startYear !== thisYear && { year: 'numeric' }),
+          }),
+        }),
       };
     }
     return {
       //Visible onwards
       icon: <VisibilityOutlined color="secondary" />,
-      message: messages.indefinite({ start: start.toDate() }),
+      message: messages.indefinite({
+        start: intl.formatDate(start.toDate(), {
+          day: 'numeric',
+          month: 'long',
+          ...(startYear !== thisYear && { year: 'numeric' }),
+        }),
+      }),
     };
   } else {
     //Draft, invisible
@@ -102,6 +135,7 @@ const ZUIDateRangePicker: FC<ZUIDateRangePickerProps> = ({
 
   const classes = useStyles();
   const messages = useMessages(messageIds);
+  const intl = useIntl();
 
   useEffect(() => {
     setValue([
@@ -116,7 +150,7 @@ const ZUIDateRangePicker: FC<ZUIDateRangePickerProps> = ({
   const [start, end] = value;
   const duration = start && end ? end.diff(start, 'day') : 1;
 
-  const { icon, message } = iconAndMessage(messages.dateRange, value);
+  const { icon, message } = iconAndMessage(intl, messages.dateRange, value);
 
   return (
     <>
