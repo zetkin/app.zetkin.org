@@ -17,7 +17,7 @@ import EventDataModel from 'features/events/models/EventDataModel';
 import { getWorkingUrl } from 'features/events/utils/getWorkingUrl';
 import messageIds from 'features/events/l10n/messageIds';
 import theme from 'theme';
-import UseEditEventOverviewCard from './useEditEventOverviewCard';
+import useEditPreviewBlock from 'zui/hooks/useEditPreviewBlock';
 import { useMessages } from 'core/i18n';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import ZUIPreviewableInput from 'zui/ZUIPreviewableInput';
@@ -44,7 +44,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
   const [infoText, setInfoText] = useState(element.info_text);
 
   const { clickAwayProps, containerProps, previewableProps } =
-    UseEditEventOverviewCard({
+    useEditPreviewBlock({
       editable,
       onEditModeEnter,
       onEditModeExit,
