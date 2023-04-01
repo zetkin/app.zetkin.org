@@ -43,7 +43,7 @@ const EventPage: PageWithLayout<EventPageProps> = ({ orgId, eventId }) => {
       {() => {
         return (
           <Grid container spacing={1}>
-            <Grid item sm={8}>
+            <Grid item md={8} xs={12}>
               <EventOverviewCard model={model} />
             </Grid>
           </Grid>
