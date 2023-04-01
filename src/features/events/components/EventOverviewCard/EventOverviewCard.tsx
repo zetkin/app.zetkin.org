@@ -1,12 +1,10 @@
 import EditIcon from '@mui/icons-material/Edit';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import {
   Box,
   Button,
   Card,
   ClickAwayListener,
-  Divider,
   Link,
   TextField,
   Typography,
@@ -29,8 +27,6 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({ model }) => {
   const eventData = model.getData().data;
   const messages = useMessages(messageIds);
   const [editable, setEditable] = useState(false);
-  const [startDate, setStartDate] = useState(eventData?.start_time ?? '');
-  const [endDate, setEndDate] = useState(eventData?.end_time ?? '');
   const [link, setLink] = useState(eventData?.url ?? '');
   const [infoText, setInfoText] = useState(eventData?.info_text ?? '');
 
@@ -41,9 +37,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({ model }) => {
       onEditModeExit: () => setEditable(false),
       save: () => {
         model.updateEventData({
-          end_time: endDate,
           info_text: infoText,
-          start_time: startDate,
           url: link,
         });
       },
@@ -64,30 +58,6 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({ model }) => {
               </Button>
             </Box>
           )}
-          <Box
-            m={2}
-            sx={{
-              alignItems: 'baseline',
-              display: 'flex',
-              justifyContent: 'space-between',
-            }}
-          >
-            <TextField
-              label="Start"
-              onChange={(ev) => setStartDate(ev.target.value)}
-              variant="outlined"
-            ></TextField>
-
-            <TextField
-              label="End"
-              onChange={(ev) => setEndDate(ev.target.value)}
-              sx={{ marginRight: '10px' }}
-              variant="outlined"
-            />
-            <Divider orientation="vertical"></Divider>
-            <TextField label="Location" variant="outlined" />
-            <LocationOnIcon />
-          </Box>
           <Box m={2}>
             <ZUIPreviewableInput
               {...previewableProps}
