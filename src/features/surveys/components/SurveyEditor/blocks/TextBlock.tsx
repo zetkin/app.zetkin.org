@@ -4,7 +4,7 @@ import { FC, useState } from 'react';
 import DeleteHideButtons from '../DeleteHideButtons';
 import PreviewableSurveyInput from '../elements/PreviewableSurveyInput';
 import SurveyDataModel from 'features/surveys/models/SurveyDataModel';
-import useEditPreviewBlock from './useEditPreviewBlock';
+import useEditPreviewBlock from 'zui/hooks/useEditPreviewBlock';
 import { useMessages } from 'core/i18n';
 import { ZetkinSurveyTextElement } from 'utils/types/zetkin';
 

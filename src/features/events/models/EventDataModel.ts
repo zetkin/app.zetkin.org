@@ -23,4 +23,8 @@ export default class EventDataModel extends ModelBase {
   setTitle(title: string) {
     this._repo.updateEvent(this._orgId, this._eventId, { title });
   }
+
+  updateEventData(eventData: Partial<ZetkinEvent>) {
+    this._repo.updateEvent(this._orgId, this._eventId, eventData);
+  }
 }

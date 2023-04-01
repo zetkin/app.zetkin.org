@@ -1,6 +1,11 @@
 import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('feat.events', {
+  eventOverviewCard: {
+    description: m('Description'),
+    editButton: m('Edit event information'),
+    url: m('Link'),
+  },
   form: {
     activity: m('Activity'),
     campaign: m('Campaign'),

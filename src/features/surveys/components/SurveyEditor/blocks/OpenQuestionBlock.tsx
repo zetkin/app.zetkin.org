@@ -12,7 +12,7 @@ import {
 import DeleteHideButtons from '../DeleteHideButtons';
 import PreviewableSurveyInput from '../elements/PreviewableSurveyInput';
 import SurveyDataModel from 'features/surveys/models/SurveyDataModel';
-import useEditPreviewBlock from './useEditPreviewBlock';
+import useEditPreviewBlock from 'zui/hooks/useEditPreviewBlock';
 import { ZetkinSurveyTextQuestionElement } from 'utils/types/zetkin';
 import ZUIPreviewableInput from 'zui/ZUIPreviewableInput';
 import { Msg, useMessages } from 'core/i18n';
