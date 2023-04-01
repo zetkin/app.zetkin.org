@@ -7,7 +7,6 @@ import EventDataModel from 'features/events/models/EventDataModel';
 import EventLayout from 'features/events/layout/EventLayout';
 import EventOverviewCard from 'features/events/components/EventOverviewCard/EventOverviewCard';
 import useModel from 'core/useModel';
-import { useState } from 'react';
 import ZUIFuture from 'zui/ZUIFuture';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
@@ -39,25 +38,13 @@ const EventPage: PageWithLayout<EventPageProps> = ({ orgId, eventId }) => {
     (env) => new EventDataModel(env, parseInt(orgId), parseInt(eventId))
   );
 
-  const [idOfBlockInEditMode, setIdOfBlockInEditMode] = useState<
-    number | undefined
-  >();
-
   return (
     <ZUIFuture future={model.getData()}>
-      {(data) => {
+      {() => {
         return (
           <Grid container spacing={1}>
             <Grid item sm={8}>
-              <EventOverviewCard
-                editable={data.id == idOfBlockInEditMode}
-                element={data}
-                model={model}
-                onEditModeEnter={() => setIdOfBlockInEditMode(data.id)}
-                onEditModeExit={() => {
-                  setIdOfBlockInEditMode(undefined);
-                }}
-              ></EventOverviewCard>
+              <EventOverviewCard model={model} />
             </Grid>
           </Grid>
         );

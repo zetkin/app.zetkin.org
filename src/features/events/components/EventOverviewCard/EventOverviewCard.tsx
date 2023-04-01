@@ -19,35 +19,26 @@ import messageIds from 'features/events/l10n/messageIds';
 import theme from 'theme';
 import useEditPreviewBlock from 'zui/hooks/useEditPreviewBlock';
 import { useMessages } from 'core/i18n';
-import { ZetkinEvent } from 'utils/types/zetkin';
 import ZUIPreviewableInput from 'zui/ZUIPreviewableInput';
 
 type EventOverviewCardProps = {
-  editable: boolean;
-  element: ZetkinEvent;
   model: EventDataModel;
-  onEditModeEnter: () => void;
-  onEditModeExit: () => void;
 };
 
-const EventOverviewCard: FC<EventOverviewCardProps> = ({
-  editable,
-  element,
-  model,
-  onEditModeEnter,
-  onEditModeExit,
-}) => {
+const EventOverviewCard: FC<EventOverviewCardProps> = ({ model }) => {
+  const eventData = model.getData().data;
   const messages = useMessages(messageIds);
-  const [startDate, setStartDate] = useState(element.start_time);
-  const [endDate, setEndDate] = useState(element.end_time);
-  const [link, setLink] = useState(element.url);
-  const [infoText, setInfoText] = useState(element.info_text);
+  const [editable, setEditable] = useState(false);
+  const [startDate, setStartDate] = useState(eventData?.start_time ?? '');
+  const [endDate, setEndDate] = useState(eventData?.end_time ?? '');
+  const [link, setLink] = useState(eventData?.url ?? '');
+  const [infoText, setInfoText] = useState(eventData?.info_text ?? '');
 
   const { clickAwayProps, containerProps, previewableProps } =
     useEditPreviewBlock({
       editable,
-      onEditModeEnter,
-      onEditModeExit,
+      onEditModeEnter: () => setEditable(true),
+      onEditModeExit: () => setEditable(false),
       save: () => {
         model.updateEventData({
           end_time: endDate,
@@ -57,6 +48,10 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
         });
       },
     });
+
+  if (!eventData) {
+    return null;
+  }
 
   return (
     <ClickAwayListener {...clickAwayProps}>
@@ -107,7 +102,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                 />
               )}
               renderPreview={() => {
-                if (element.url && element.url !== '') {
+                if (eventData.url && eventData.url !== '') {
                   return (
                     <Box>
                       <Typography
@@ -121,9 +116,9 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                         sx={{ alignItems: 'flex-start', display: 'flex' }}
                         variant="body2"
                       >
-                        {element.url}
+                        {eventData.url}
                         <Link
-                          href={getWorkingUrl(element.url)}
+                          href={getWorkingUrl(eventData.url)}
                           sx={{ marginLeft: '8px' }}
                           target="_blank"
                         >
@@ -155,7 +150,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                 />
               )}
               renderPreview={() => {
-                if (element.info_text !== '') {
+                if (eventData.info_text !== '') {
                   return (
                     <Box>
                       <Typography
@@ -166,7 +161,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                         {messages.eventOverviewCard.description().toUpperCase()}
                       </Typography>
                       <Typography variant="body2">
-                        {element.info_text}
+                        {eventData.info_text}
                       </Typography>
                     </Box>
                   );
