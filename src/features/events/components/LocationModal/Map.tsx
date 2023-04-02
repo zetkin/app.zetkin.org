@@ -2,8 +2,8 @@ import 'leaflet/dist/leaflet.css';
 import { FC } from 'react';
 import { MapContainer, Marker, TileLayer } from 'react-leaflet';
 
-import { icon } from 'leaflet';
 import { ZetkinLocation } from 'utils/types/zetkin';
+import { icon, latLngBounds } from 'leaflet';
 
 const customIcon = icon({
   iconAnchor: [12, 32],
@@ -16,19 +16,12 @@ interface MapProps {
 }
 
 const Map: FC<MapProps> = ({ locations }) => {
-  const lat =
-    locations.map((location) => location.lat).reduce((a, b) => a + b) /
-    locations.length;
-  const lng =
-    locations.map((location) => location.lng).reduce((a, b) => a + b) /
-    locations.length;
+  const bounds = latLngBounds(
+    locations.map((location) => [location.lat, location.lng])
+  );
 
   return (
-    <MapContainer
-      center={[lat, lng]}
-      style={{ height: '100%', width: '100%' }}
-      zoom={13}
-    >
+    <MapContainer bounds={bounds} style={{ height: '100%', width: '100%' }}>
       <TileLayer
         attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
