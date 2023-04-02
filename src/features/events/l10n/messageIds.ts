@@ -21,6 +21,11 @@ export default makeMessages('feat.events', {
     events: m('Events'),
     noEvents: m('No events...'),
   },
+  locationModal: {
+    infoText: m(
+      'You can click and drag to pan the map and pinch or scroll to zoom. To create a new location you can click on an empty spot on the map.'
+    ),
+  },
   tabs: {
     overview: m('Overview'),
     participants: m('Participants'),
