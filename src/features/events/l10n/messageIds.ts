@@ -25,6 +25,7 @@ export default makeMessages('feat.events', {
     infoText: m(
       'You can click and drag to pan the map and pinch or scroll to zoom. To create a new location you can click on an empty spot on the map.'
     ),
+    searchBox: m('Find location'),
   },
   tabs: {
     overview: m('Overview'),
