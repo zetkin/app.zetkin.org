@@ -35,17 +35,27 @@ export default makeMessages('feat.events', {
     scheduled: m('Scheduled'),
   },
   stats: {
-    eventTime: m<{
+    multiDay: m<{
       end: string;
       endDate: ReactElement;
-      open: string;
+      start: string;
       startDate: ReactElement;
-    }>('{startDate}, {open} - {endDate}{end}'),
+    }>('{startDate}, {start} - {endDate}, {end}'),
+    multiDayEndsToday: m<{
+      end: string;
+      start: string;
+      startDate: ReactElement;
+    }>('{startDate}, {start} - Today, {end}'),
+    multiDayToday: m<{ end: string; endDate: ReactElement; start: string }>(
+      'Today, {start} - {endDate}, {end}'
+    ),
     participants: m<{ participants: number }>(
       '{participants, plural, one {1 participant} other {# participants}}'
     ),
-    today: m('Today'),
-    todaysEventTime: m<{ end: string; open: string }>(', {open} - {end}'),
+    singleDay: m<{ date: ReactElement; end: string; start: string }>(
+      '{date}, {start} - {end}'
+    ),
+    singleDayToday: m<{ end: string; start: string }>('Today, {start} - {end}'),
   },
   tabs: {
     overview: m('Overview'),

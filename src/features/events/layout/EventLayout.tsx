@@ -58,10 +58,12 @@ const EventLayout: React.FC<EventLayoutProps> = ({
                 const endDate = new Date(data.end_time);
                 const endTime = showTimeOnly(endDate);
 
-                const isOnSameDay = startDate.getDate() === endDate.getDate();
-
                 const isToday =
                   startDate.toDateString() === new Date().toDateString();
+                const endsOnSameDay =
+                  startDate.toDateString() === endDate.toDateString();
+                const endsOnToday =
+                  endDate.toDateString() === new Date().toDateString();
 
                 const labels: ZUIIconLabelProps[] = [];
 
@@ -72,39 +74,92 @@ const EventLayout: React.FC<EventLayoutProps> = ({
                       <>
                         {isToday && (
                           <>
-                            <Msg id={messageIds.stats.today} />
-                            <Msg
-                              id={messageIds.stats.todaysEventTime}
-                              values={{ end: endTime, open: startTime }}
-                            />
-                          </>
-                        )}
-                        {!isToday && (
-                          <Msg
-                            id={messageIds.stats.eventTime}
-                            values={{
-                              end: `${!isOnSameDay ? ',' : ''} ${endTime}`,
-                              endDate: (
-                                <>
-                                  {!isOnSameDay && (
+                            {endsOnSameDay && (
+                              <Msg
+                                id={messageIds.stats.singleDayToday}
+                                values={{ end: endTime, start: startTime }}
+                              />
+                            )}
+                            {!endsOnSameDay && (
+                              <Msg
+                                id={messageIds.stats.multiDayToday}
+                                values={{
+                                  end: endTime,
+                                  endDate: (
                                     <FormattedDate
                                       day="numeric"
                                       month="long"
                                       value={data.end_time}
                                     />
-                                  )}
-                                </>
-                              ),
-                              open: startTime,
-                              startDate: (
-                                <FormattedDate
-                                  day="numeric"
-                                  month="long"
-                                  value={data.start_time}
-                                />
-                              ),
-                            }}
-                          />
+                                  ),
+                                  start: startTime,
+                                }}
+                              />
+                            )}
+                          </>
+                        )}
+                        {!isToday && (
+                          <>
+                            {endsOnSameDay && (
+                              <Msg
+                                id={messageIds.stats.singleDay}
+                                values={{
+                                  date: (
+                                    <FormattedDate
+                                      day="numeric"
+                                      month="long"
+                                      value={data.start_time}
+                                    />
+                                  ),
+                                  end: endTime,
+                                  start: startTime,
+                                }}
+                              />
+                            )}
+                            {!endsOnSameDay && (
+                              <>
+                                {endsOnToday && (
+                                  <Msg
+                                    id={messageIds.stats.multiDayEndsToday}
+                                    values={{
+                                      end: endTime,
+                                      start: startTime,
+                                      startDate: (
+                                        <FormattedDate
+                                          day="numeric"
+                                          month="long"
+                                          value={data.start_time}
+                                        />
+                                      ),
+                                    }}
+                                  />
+                                )}
+                                {!endsOnToday && (
+                                  <Msg
+                                    id={messageIds.stats.multiDay}
+                                    values={{
+                                      end: endTime,
+                                      endDate: (
+                                        <FormattedDate
+                                          day="numeric"
+                                          month="long"
+                                          value={data.end_time}
+                                        />
+                                      ),
+                                      start: startTime,
+                                      startDate: (
+                                        <FormattedDate
+                                          day="numeric"
+                                          month="long"
+                                          value={data.start_time}
+                                        />
+                                      ),
+                                    }}
+                                  />
+                                )}
+                              </>
+                            )}
+                          </>
                         )}
                       </>
                     ),

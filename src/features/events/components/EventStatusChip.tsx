@@ -40,12 +40,17 @@ const useStyles = makeStyles((theme) => ({
 const EventStatusChip: FC<EventStatusChipProps> = ({ state }) => {
   const classes = useStyles();
 
+  if (state == EventState.UNKNOWN) {
+    return null;
+  }
+
   const classMap: Record<EventState, string> = {
     [EventState.ENDED]: classes.ended,
     [EventState.DRAFT]: classes.draft,
     [EventState.OPEN]: classes.open,
     [EventState.SCHEDULED]: classes.scheduled,
     [EventState.CANCELLED]: classes.cancelled,
+    [EventState.UNKNOWN]: classes.draft,
   };
 
   const colorClassName = classMap[state];

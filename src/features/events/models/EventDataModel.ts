@@ -10,6 +10,7 @@ export enum EventState {
   ENDED = 'ended',
   OPEN = 'open',
   SCHEDULED = 'scheduled',
+  UNKNOWN = 'unknown',
 }
 
 export default class EventDataModel extends ModelBase {
@@ -35,7 +36,7 @@ export default class EventDataModel extends ModelBase {
   get state(): EventState {
     const { data } = this.getData();
     if (!data) {
-      return EventState.CANCELLED;
+      return EventState.UNKNOWN;
     }
 
     if (data.start_time) {
