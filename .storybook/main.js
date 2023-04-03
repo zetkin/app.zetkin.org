@@ -7,7 +7,7 @@ module.exports = {
     '@storybook/addon-essentials',
     '@storybook/addon-interactions',
     'storybook-addon-next-router',
-    'storybook-addon-material-ui',
+    'storybook-addon-material-ui5',
     'storybook-addon-mock/register',
   ],
   framework: '@storybook/react',

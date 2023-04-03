@@ -56,18 +56,20 @@ const CallAssignmentLayout: React.FC<CallAssignmentLayoutProps> = ({
         )
       }
       baseHref={`/organize/${orgId}/projects/${campaignId}/callassignments/${assignmentId}`}
+      belowActionButtons={
+        <ZUIDateRangePicker
+          endDate={dataFuture.data.end_date || null}
+          onChange={(startDate, endDate) => {
+            model.setDates(startDate, endDate);
+          }}
+          startDate={dataFuture.data.start_date || null}
+        />
+      }
       defaultTab="/"
       subtitle={
         <Box alignItems="center" display="flex">
-          <CallAssignmentStatusChip state={model.state} />
-          <Box marginX={2}>
-            <ZUIDateRangePicker
-              endDate={dataFuture.data.end_date || null}
-              onChange={(startDate, endDate) => {
-                model.setDates(startDate, endDate);
-              }}
-              startDate={dataFuture.data.start_date || null}
-            />
+          <Box marginRight={1}>
+            <CallAssignmentStatusChip state={model.state} />
           </Box>
           <Box display="flex" marginX={1}>
             <ZUIFuture

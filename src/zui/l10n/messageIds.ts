@@ -73,10 +73,11 @@ export default makeMessages('zui', {
   },
   dateRange: {
     draft: m('No start date'),
-    finite: m<{ end: Date; start: Date }>(
-      'From {start, date, medium} to {end, date, medium}'
-    ),
-    indefinite: m<{ start: Date }>('From {start, date, medium} onwards'),
+    end: m('End'),
+    finite: m<{ end: string; start: string }>('Visible from {start} to {end}'),
+    indefinite: m<{ start: string }>('Visible from {start} onwards'),
+    invisible: m('Not visible or scheduled'),
+    start: m('Start'),
   },
   editTextInPlace: {
     tooltip: {
@@ -100,6 +101,8 @@ export default makeMessages('zui', {
     showMore: m('Show more...'),
   },
   personGridEditCell: {
+    keepTyping: m('Keep typing..'),
+    noResult: m('No matching person found'),
     otherPeople: m('Other people'),
     restrictedMode: m("Can't be edited in shared views."),
     searchResults: m('Search results'),

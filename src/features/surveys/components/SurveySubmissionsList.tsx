@@ -157,15 +157,22 @@ const SurveySubmissionsList = ({
     }
   };
 
-  const EditCell: FC<{ row: ZetkinSurveySubmission }> = ({ row }) => {
+  const EditCell: FC<{
+    row: ZetkinSurveySubmission;
+  }> = ({ row }) => {
     const api = useGridApiContext();
     const { orgId } = useRouter().query;
-    const email = row.respondent?.email || '';
+
+    const emailOrName =
+      row.respondent?.email ||
+      row.respondent?.first_name ||
+      row.respondent?.last_name ||
+      '';
     let { data: suggestedPeople } = useQuery(
-      ['peopleSearchResults', email],
-      getPeopleSearchResults(email, orgId as string),
+      ['peopleSearchResults', emailOrName],
+      getPeopleSearchResults(emailOrName, orgId as string),
       {
-        enabled: email.length >= 2,
+        enabled: emailOrName.length >= 2,
         retry: true,
       }
     );
@@ -191,7 +198,7 @@ const SurveySubmissionsList = ({
         cell={row.respondent}
         onUpdate={updateCellValue}
         removePersonLabel={messages.submissions.unlink()}
-        suggestedPeople={suggestedPeople}
+        suggestedPeople={row.respondent === null ? [] : suggestedPeople} //filter anonymous
         suggestedPeopleLabel={messages.submissions.suggestedPeople()}
       />
     );

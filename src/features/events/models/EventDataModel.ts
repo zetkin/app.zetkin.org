@@ -59,4 +59,7 @@ export default class EventDataModel extends ModelBase {
       return EventState.DRAFT;
     }
   }
+  updateEventData(eventData: Partial<ZetkinEvent>) {
+    this._repo.updateEvent(this._orgId, this._eventId, eventData);
+  }
 }

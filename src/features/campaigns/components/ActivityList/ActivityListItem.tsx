@@ -3,6 +3,7 @@ import NextLink from 'next/link';
 import { OverridableComponent } from '@mui/material/OverridableComponent';
 import {
   Box,
+  CircularProgress,
   Grid,
   Link,
   SvgIconTypeMap,
@@ -76,6 +77,7 @@ interface AcitivityListItemProps {
   color: STATUS_COLORS;
   title: string;
   endNumber: string | number;
+  statsLoading: boolean;
 }
 
 const ActivityListItem = ({
@@ -88,6 +90,7 @@ const ActivityListItem = ({
   color,
   title,
   endNumber,
+  statsLoading,
 }: AcitivityListItemProps) => {
   const classes = useStyles({ color });
 
@@ -110,11 +113,15 @@ const ActivityListItem = ({
         </Box>
       </Grid>
       <Grid item lg={2} md={3} xs={4}>
-        <ZUIMultiNumberChip
-          blueValue={blueChipValue}
-          greenValue={greenChipValue}
-          orangeValue={orangeChipValue}
-        />
+        {statsLoading ? (
+          <CircularProgress size={26} />
+        ) : (
+          <ZUIMultiNumberChip
+            blueValue={blueChipValue}
+            greenValue={greenChipValue}
+            orangeValue={orangeChipValue}
+          />
+        )}
       </Grid>
       <Grid item xs={2}>
         <Box className={classes.endNumber}>
