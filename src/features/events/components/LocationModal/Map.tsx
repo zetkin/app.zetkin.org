@@ -21,7 +21,7 @@ const MapMarker = ({ location }: { location: ZetkinLocation }) => {
     <Marker
       eventHandlers={{
         click: (evt) => {
-          map.setView(evt.latlng);
+          map.setView(evt.latlng, 17);
         },
       }}
       icon={customIcon}
