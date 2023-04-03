@@ -2,6 +2,7 @@ import { TASK_TYPE } from 'features/tasks/components/types';
 
 export enum FILTER_TYPE {
   ALL = 'all',
+  CALL_BLOCKED = 'call_blocked',
   CALL_HISTORY = 'call_history',
   CAMPAIGN_PARTICIPATION = 'campaign_participation',
   MOST_ACTIVE = 'most_active',
@@ -92,6 +93,16 @@ export enum TASK_STATUS {
  * Filter Configs
  */
 export type DefaultFilterConfig = Record<string, never>; // Default filter config is an empty object
+
+export interface CallBlockedFilterConfig {
+  reason:
+    | 'allocated'
+    | 'organizer_action_needed'
+    | 'call_back_after'
+    | 'cooldown'
+    | 'no_number'
+    | 'any';
+}
 
 export interface CallHistoryFilterConfig {
   operator: CALL_OPERATOR;
@@ -227,6 +238,7 @@ export interface TaskFilterConfig {
 }
 
 export type AnyFilterConfig =
+  | CallBlockedFilterConfig
   | CallHistoryFilterConfig
   | CampaignParticipationConfig
   | DefaultFilterConfig

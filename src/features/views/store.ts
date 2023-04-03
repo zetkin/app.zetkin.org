@@ -12,7 +12,17 @@ import {
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { remoteItem, remoteList, RemoteList } from 'utils/storeUtils';
 import { tagAssigned, tagUnassigned } from 'features/tags/store';
-import { ZetkinOfficial, ZetkinQuery, ZetkinTag } from 'utils/types/zetkin';
+import {
+  ZetkinOfficial,
+  ZetkinOrganizerAction,
+  ZetkinQuery,
+  ZetkinTag,
+} from 'utils/types/zetkin';
+import ViewDataModel from './models/ViewDataModel';
+import useModel from 'core/useModel';
+import useViewDataModel from './hooks/useViewDataModel';
+import { callUpdated } from 'features/callAssignments/store';
+import { Call } from 'features/callAssignments/apiTypes';
 
 type ZetkinObjectAccessWithId = ZetkinObjectAccess & {
   id: number;
@@ -48,6 +58,10 @@ const viewsSlice = createSlice({
       .addCase(tagUnassigned, (state, action) => {
         const [personId, tagId] = action.payload;
         setTagOnRelevantRows(state, personId, tagId, null);
+      })
+      .addCase(callUpdated, (state, action) => {
+        const [call, mutations] = action.payload;
+        updateCallOnRelevantRows(state, call, mutations);
       }),
   initialState,
   name: 'views',
@@ -292,6 +306,16 @@ const viewsSlice = createSlice({
         list.items = list.items.filter((item) => item.id != rowId);
       }
     },
+    rowLoaded: (state, action: PayloadAction<[number, ZetkinViewRow]>) => {
+      const [viewId, row] = action.payload;
+      const list = state.rowsByViewId[viewId];
+      if (list) {
+        const idx = list.items.findIndex((item) => item.id == row.id);
+        list.items[idx] = remoteItem(row);
+      }
+      state.rowsByViewId[viewId].loaded = new Date().toISOString();
+      state.rowsByViewId[viewId].isStale = false;
+    },
     rowsLoad: (state, action: PayloadAction<number>) => {
       const viewId = action.payload;
       if (!state.rowsByViewId[viewId]) {
@@ -412,6 +436,47 @@ function setTagOnRelevantRows(
           if (item.data?.id == personId) {
             for (const colIndex of relevantColumnIndices) {
               item.data.content[colIndex] = tag;
+            }
+          }
+        });
+      }
+    }
+  });
+}
+
+function updateCallOnRelevantRows(
+  state: ViewsStoreSlice,
+  call: Call,
+  mutations: string[]
+) {
+  Object.entries(state.columnsByViewId).forEach(([viewId, columnList]) => {
+    const personId = call.target.id;
+
+    // Find indices of relevant columns
+    const relevantColumnIndices: number[] = [];
+    columnList.items.forEach((colItem, index) => {
+      if (colItem.data?.type == COLUMN_TYPE.ORGANIZER_ACTION) {
+        relevantColumnIndices.push(index);
+      }
+    });
+
+    // If there are relevant columns in this view
+    if (relevantColumnIndices.length) {
+      const rowItems = state.rowsByViewId[viewId]?.items;
+      if (rowItems) {
+        rowItems.forEach((item) => {
+          if (item.data?.id == personId) {
+            for (const colIndex of relevantColumnIndices) {
+              const calls = item.data.content[
+                colIndex
+              ] as ZetkinOrganizerAction[];
+              for (const c of calls) {
+                if (call.id == c.id) {
+                  if (mutations.includes('organizer_action_taken')) {
+                    c.organizer_action_taken = call.organizer_action_taken;
+                  }
+                }
+              }
             }
           }
         });

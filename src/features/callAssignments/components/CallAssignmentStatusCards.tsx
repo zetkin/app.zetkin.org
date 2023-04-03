@@ -11,15 +11,18 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { Edit, Settings } from '@mui/icons-material';
+import { Edit, Settings, Visibility } from '@mui/icons-material';
 
 import CallAssignmentModel from '../models/CallAssignmentModel';
 import SmartSearchDialog from 'features/smartSearch/components/SmartSearchDialog';
 import StatusCardHeader from './StatusCardHeader';
 import StatusCardItem from './StatusCardItem';
+import ViewBrowserModel from 'features/views/models/ViewBrowserModel';
 import { Msg, useMessages } from 'core/i18n';
 
 import messageIds from '../l10n/messageIds';
+import useModel from 'core/useModel';
+import { useRouter } from 'next/router';
 
 interface CallAssignmentStatusCardProps {
   model: CallAssignmentModel;
@@ -34,6 +37,12 @@ const CallAssignmentStatusCards = ({
   const cooldown = data?.cooldown ?? null;
   const hasTargets = model.hasTargets;
   const goalQuery = data?.goal;
+
+  const { orgId } = useRouter().query;
+
+  const viewsModel: ViewBrowserModel = useModel(
+    (env) => new ViewBrowserModel(env, parseInt(orgId as string))
+  );
 
   const [anchorEl, setAnchorEl] = useState<
     null | (EventTarget & SVGSVGElement)
@@ -129,6 +138,15 @@ const CallAssignmentStatusCards = ({
               value={stats?.missingPhoneNumber}
             />
             <StatusCardItem
+              action={
+                <Button
+                  onClick={() => viewsModel.getOrganizerActionView()}
+                  startIcon={<Visibility />}
+                  variant="outlined"
+                >
+                  View sheet
+                </Button>
+              }
               title={messages.blocked.organizerActionNeeded()}
               value={stats?.organizerActionNeeded}
             />
@@ -138,7 +156,7 @@ const CallAssignmentStatusCards = ({
       <Grid item md={4} xs={12}>
         <Card>
           <StatusCardHeader
-            chipColor={hasTargets ? 'blue' : 'gray'}
+            chipColor={hasTargets ? 'green' : 'gray'}
             subtitle={messages.ready.subtitle()}
             title={messages.ready.title()}
             value={stats?.ready}
@@ -158,7 +176,7 @@ const CallAssignmentStatusCards = ({
       <Grid item md={4} xs={12}>
         <Card>
           <StatusCardHeader
-            chipColor={hasTargets ? 'green' : 'gray'}
+            chipColor={hasTargets ? 'blue' : 'gray'}
             subtitle={messages.done.subtitle()}
             title={messages.done.title()}
             value={stats?.done}

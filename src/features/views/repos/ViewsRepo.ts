@@ -32,6 +32,7 @@ import {
   ResolvedFuture,
 } from 'core/caching/futures';
 import { ZetkinView, ZetkinViewFolder } from '../components/types';
+import getOrganizerActionView from '../rpc/getOrganizerActionView';
 
 type ZetkinViewFolderPostBody = {
   parent_id?: number;
@@ -112,6 +113,15 @@ export default class ViewsRepo {
     }
 
     return new RemoteListFuture(state.views.officialList);
+  }
+
+  async getOrganizerActionView(orgId: number): Promise<ZetkinView> {
+    this._store.dispatch(viewCreate());
+    const view = await this._apiClient.rpc(getOrganizerActionView, {
+      orgId,
+    });
+    this._store.dispatch(viewCreated(view));
+    return view;
   }
 
   getViewAccessList(

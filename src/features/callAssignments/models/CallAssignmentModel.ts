@@ -207,6 +207,18 @@ export default class CallAssignmentModel extends ModelBase {
     }
   }
 
+  setOrganizerActionNeeded(callId: number) {
+    this._repo.updateCall(this._orgId, callId, {
+      organizer_action_taken: false,
+    });
+  }
+
+  setOrganizerActionTaken(callId: number) {
+    this._repo.updateCall(this._orgId, callId, {
+      organizer_action_taken: true,
+    });
+  }
+
   setTargetDetailsExposed(exposeTargetDetails: boolean) {
     this._repo.updateCallAssignment(this._orgId, this._id, {
       expose_target_details: exposeTargetDetails,

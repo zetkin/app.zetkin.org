@@ -49,6 +49,7 @@ export enum COLUMN_TYPE {
   LOCAL_PERSON = 'local_person',
   LOCAL_QUERY = 'local_query',
   LOCAL_TEXT = 'local_text',
+  ORGANIZER_ACTION = 'organizer_action',
   PERSON_FIELD = 'person_field',
   PERSON_QUERY = 'person_query',
   PERSON_TAG = 'person_tag',
@@ -79,6 +80,14 @@ export interface LocalQueryViewColumn extends ZetkinViewColumnBase {
 export interface LocalTextViewColumn extends ZetkinViewColumnBase {
   type: COLUMN_TYPE.LOCAL_TEXT;
   config?: Record<string, never>;
+}
+
+export interface OrganizerActionViewColumn extends ZetkinViewColumnBase {
+  type: COLUMN_TYPE.ORGANIZER_ACTION;
+  config: {
+    assignment_id?: number;
+    type: 'action_needed' | 'action_taken' | 'all_flagged';
+  };
 }
 
 export interface PersonFieldViewColumn extends ZetkinViewColumnBase {
@@ -141,6 +150,7 @@ export type ZetkinViewColumn =
   | LocalPersonViewColumn
   | LocalQueryViewColumn
   | LocalTextViewColumn
+  | OrganizerActionViewColumn
   | PersonFieldViewColumn
   | PersonQueryViewColumn
   | PersonTagViewColumn

@@ -208,6 +208,14 @@ export default class CampaignActivitiesModel extends ModelBase {
     return new ResolvedFuture(filtered || []);
   }
 
+  getArchivedStandaloneActivities(): IFuture<CampaignActivity[]> {
+    const activities = this.getArchivedActivities().data;
+    const filtered = activities?.filter(
+      (activity) => activity.data.campaign === null
+    );
+    return new ResolvedFuture(filtered || []);
+  }
+
   getCampaignActivities(campId: number): IFuture<CampaignActivity[]> {
     const activities = this.getCurrentActivities();
     if (activities.isLoading) {
