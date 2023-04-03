@@ -35,9 +35,6 @@ const useStyles = makeStyles((theme) => ({
   scheduled: {
     backgroundColor: theme.palette.statusColors.blue,
   },
-  spinner: {
-    marginLeft: '0.5em',
-  },
 }));
 
 const EventStatusChip: FC<EventStatusChipProps> = ({ state }) => {
