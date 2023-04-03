@@ -7,36 +7,39 @@ import { MapContainer, Marker, TileLayer, useMap } from 'react-leaflet';
 import messageIds from 'features/events/l10n/messageIds';
 import { useMessages } from 'core/i18n';
 import { ZetkinLocation } from 'utils/types/zetkin';
-import { icon, latLngBounds } from 'leaflet';
+import { icon, latLngBounds, Map as MapType } from 'leaflet';
 
-const customIcon = icon({
+const selectedIcon = icon({
   iconAnchor: [12, 32],
   iconSize: [25, 32],
   iconUrl: '/selectedMarker.png',
 });
 
-const MapMarker = ({ location }: { location: ZetkinLocation }) => {
-  const map = useMap();
-  return (
-    <Marker
-      eventHandlers={{
-        click: (evt) => {
-          map.setView(evt.latlng, 17);
-        },
-      }}
-      icon={customIcon}
-      position={[location.lat, location.lng]}
-    />
-  );
-};
+const basicIcon = icon({
+  iconAnchor: [12, 32],
+  iconSize: [25, 32],
+  iconUrl: '/basicMarker.png',
+});
 
 interface MapProps {
   locations: ZetkinLocation[];
 }
 
+const MapProvider = ({
+  children,
+}: {
+  children: (map: MapType) => JSX.Element;
+}) => {
+  const map = useMap();
+  return children(map);
+};
+
 const Map: FC<MapProps> = ({ locations }) => {
   const messages = useMessages(messageIds);
   const [searchString, setSearchString] = useState('');
+  const [selectedLocationId, setSelectedLocationId] = useState<
+    number | undefined
+  >();
 
   const bounds = latLngBounds(
     locations.map((location) => [location.lat, location.lng])
@@ -88,9 +91,26 @@ const Map: FC<MapProps> = ({ locations }) => {
         attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      {filteredLocations.map((location) => (
-        <MapMarker key={location.id} location={location} />
-      ))}
+      {filteredLocations.map((location) => {
+        return (
+          <MapProvider key={location.id}>
+            {(map) => (
+              <Marker
+                eventHandlers={{
+                  click: (evt) => {
+                    map.setView(evt.latlng, 17);
+                    setSelectedLocationId(location.id);
+                  },
+                }}
+                icon={
+                  selectedLocationId === location.id ? selectedIcon : basicIcon
+                }
+                position={[location.lat, location.lng]}
+              />
+            )}
+          </MapProvider>
+        );
+      })}
     </MapContainer>
   );
 };
