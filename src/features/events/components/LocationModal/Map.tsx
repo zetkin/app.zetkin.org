@@ -2,7 +2,7 @@ import 'leaflet/dist/leaflet.css';
 import Fuse from 'fuse.js';
 import { Autocomplete, Box, TextField } from '@mui/material';
 import { FC, useState } from 'react';
-import { MapContainer, Marker, TileLayer } from 'react-leaflet';
+import { MapContainer, Marker, TileLayer, useMap } from 'react-leaflet';
 
 import messageIds from 'features/events/l10n/messageIds';
 import { useMessages } from 'core/i18n';
@@ -15,6 +15,21 @@ const customIcon = icon({
   iconUrl: '/selectedMarker.png',
 });
 
+const MapMarker = ({ location }: { location: ZetkinLocation }) => {
+  const map = useMap();
+  return (
+    <Marker
+      eventHandlers={{
+        click: (evt) => {
+          map.setView(evt.latlng);
+        },
+      }}
+      icon={customIcon}
+      position={[location.lat, location.lng]}
+    />
+  );
+};
+
 interface MapProps {
   locations: ZetkinLocation[];
 }
@@ -22,6 +37,7 @@ interface MapProps {
 const Map: FC<MapProps> = ({ locations }) => {
   const messages = useMessages(messageIds);
   const [searchString, setSearchString] = useState('');
+
   const bounds = latLngBounds(
     locations.map((location) => [location.lat, location.lng])
   );
@@ -73,11 +89,7 @@ const Map: FC<MapProps> = ({ locations }) => {
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
       {filteredLocations.map((location) => (
-        <Marker
-          key={location.id}
-          icon={customIcon}
-          position={[location.lat, location.lng]}
-        />
+        <MapMarker key={location.id} location={location} />
       ))}
     </MapContainer>
   );
