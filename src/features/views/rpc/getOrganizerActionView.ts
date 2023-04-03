@@ -1,4 +1,4 @@
-import lodash from 'lodash';
+import isEqual from 'lodash';
 import { NextApiRequest } from 'next';
 import { z } from 'zod';
 
@@ -46,8 +46,8 @@ async function handle(
 ): Promise<Result> {
   const { orgId } = params;
 
-  const lang = getBrowserLanguage(req);
-  const messages = await getServerMessages(lang, messageIds);
+  //const lang = getBrowserLanguage(req);
+  //const messages = await getServerMessages(lang, messageIds);
 
   const views = await apiClient.get<ZetkinView[]>(
     `/api/orgs/${orgId}/people/views`
@@ -59,7 +59,7 @@ async function handle(
       filter_spec: [
         {
           config: {
-            type: 'all_flagged',
+            reason: 'organizer_action_needed',
           },
           type: FILTER_TYPE.CALL_BLOCKED,
         },
@@ -88,27 +88,33 @@ async function handle(
   ];
 
   // Look for a view that matches the definition of an Organizer Action View
-  let view = views.find(async (v) => {
-    if (
-      v.content_query?.filter_spec.length == 1 &&
-      v.content_query.filter_spec[0].type ==
-        targetView.content_query.filter_spec[0].type &&
-      v.content_query.filter_spec[0].config ==
-        targetView.content_query.filter_spec[0].config
-    ) {
-      // Check the columns
-      const columns = await apiClient.get<ZetkinViewColumn[]>(
-        `/api/orgs/${orgId}/people/views/${v.id}/columns`
-      );
-      return targetColumns.every((targetCol): boolean => {
-        return columns.some(
-          (c: ZetkinViewColumn) =>
-            c.type == targetCol.type &&
-            lodash.isEqual(targetCol.config, c.config)
+  let view = await Promise.all(
+    views.map(async (v) => {
+      if (
+        v.content_query?.filter_spec.length == 1 &&
+        v.content_query.filter_spec[0].type ==
+          targetView.content_query.filter_spec[0].type &&
+        v.content_query.filter_spec[0].config?.reason ==
+          targetView.content_query.filter_spec[0].config?.reason
+      ) {
+        // Check the columns
+        const columns = await apiClient.get<ZetkinViewColumn[]>(
+          `/api/orgs/${orgId}/people/views/${v.id}/columns`
         );
-      });
-    }
-  });
+        if (
+          targetColumns.every((targetCol): boolean => {
+            return columns.some(
+              (c: ZetkinViewColumn) =>
+                c.type == targetCol.type && isEqual(targetCol.config, c.config)
+            );
+          })
+        ) {
+          return v;
+        }
+      }
+      return null;
+    })
+  ).then((result) => result.find((v) => v !== null));
 
   if (view) {
     return view;
@@ -116,7 +122,8 @@ async function handle(
     view = await apiClient.post<ZetkinView, Partial<ZetkinView>>(
       `/api/orgs/${orgId}/people/views`,
       {
-        title: messages.defaultViewTitles.organizer_action(),
+        //        title: messages.defaultViewTitles.organizer_action(),
+        title: 'Organizer action',
       }
     );
     await apiClient.patch<{ filter_spec: ZetkinSmartSearchFilter[] }>(
@@ -132,7 +139,8 @@ async function handle(
         config: {
           field: NATIVE_PERSON_FIELDS.FIRST_NAME,
         },
-        title: messages.global.personFields.first_name(),
+        // title: messages.global.personFields.first_name(),
+        title: 'First name',
         type: COLUMN_TYPE.PERSON_FIELD,
       }
     );
@@ -144,7 +152,8 @@ async function handle(
         config: {
           field: NATIVE_PERSON_FIELDS.LAST_NAME,
         },
-        title: messages.global.personFields.last_name(),
+        // title: messages.global.personFields.last_name(),
+        title: 'Last name',
         type: COLUMN_TYPE.PERSON_FIELD,
       }
     );
@@ -156,7 +165,8 @@ async function handle(
         config: {
           field: NATIVE_PERSON_FIELDS.LAST_NAME,
         },
-        title: messages.defaultColumnTitles.organizer_action(),
+        // title: messages.defaultColumnTitles.organizer_action(),
+        title: 'Organizer action',
         type: COLUMN_TYPE.ORGANIZER_ACTION,
       }
     );
