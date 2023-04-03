@@ -1,3 +1,4 @@
+import { ReactElement } from 'react';
 import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('feat.events', {
@@ -27,6 +28,19 @@ export default makeMessages('feat.events', {
     ended: m('Ended'),
     open: m('Open'),
     scheduled: m('Scheduled'),
+  },
+  stats: {
+    eventTime: m<{
+      end: string;
+      endDate: ReactElement;
+      open: string;
+      startDate: ReactElement;
+    }>('{startDate}, {open} - {endDate}{end}'),
+    participants: m<{ participants: number }>(
+      '{participants, plural, one {1 participant} other {# participants}}'
+    ),
+    today: m('Today'),
+    todaysEventTime: m<{ end: string; open: string }>(', {open} - {end}'),
   },
   tabs: {
     overview: m('Overview'),
