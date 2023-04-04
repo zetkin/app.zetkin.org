@@ -163,7 +163,7 @@ async function handle(
       `/api/orgs/${orgId}/people/views/${view.id}/columns`,
       {
         config: {
-          field: NATIVE_PERSON_FIELDS.LAST_NAME,
+          type: 'all_flagged',
         },
         // title: messages.defaultColumnTitles.organizer_action(),
         title: 'Organizer action',

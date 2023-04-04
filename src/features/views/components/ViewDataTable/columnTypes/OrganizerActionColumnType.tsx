@@ -1,9 +1,5 @@
-import {
-  Check,
-  ListAlt,
-  PriorityHigh,
-  ViewModuleOutlined,
-} from '@mui/icons-material';
+import { makeStyles } from '@mui/styles';
+import { useRouter } from 'next/router';
 import {
   Box,
   Button,
@@ -12,8 +8,7 @@ import {
   PopperProps,
   Typography,
 } from '@mui/material';
-import { makeStyles } from '@mui/styles';
-import { useRouter } from 'next/router';
+import { Check, ListAlt, PriorityHigh } from '@mui/icons-material';
 import { FC, KeyboardEvent, useMemo, useState } from 'react';
 import {
   GridColDef,
@@ -21,23 +16,21 @@ import {
   MuiEvent,
 } from '@mui/x-data-grid-pro';
 
+import { getEllipsedString } from 'utils/stringUtils';
 import { IColumnType } from '.';
+import { Msg } from 'core/i18n';
+import { OrganizerActionPane } from 'features/callAssignments/panes/OrganizerActionPane';
+import theme from 'theme';
 import useAccessLevel from 'features/views/hooks/useAccessLevel';
+import { usePanes } from 'utils/panes';
+import useViewDataModel from 'features/views/hooks/useViewDataModel';
 import ViewDataModel from 'features/views/models/ViewDataModel';
 import { ZetkinObjectAccess } from 'core/api/types';
-import ZUIFuture from 'zui/ZUIFuture';
-import { OrganizerActionViewColumn, ZetkinViewRow } from '../../types';
-import theme from 'theme';
-
-import { getEllipsedString } from 'utils/stringUtils';
-import messageIds from 'features/views/l10n/messageIds';
-import { Msg } from 'core/i18n';
-import { usePanes } from 'utils/panes';
-import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 import { ZetkinOrganizerAction } from 'utils/types/zetkin';
-import { OrganizerActionPane } from 'features/callAssignments/panes/OrganizerActionPane';
-import { ModelBase } from 'core/models';
-import useViewDataModel from 'features/views/hooks/useViewDataModel';
+import ZUIRelativeTime from 'zui/ZUIRelativeTime';
+import { OrganizerActionViewColumn, ZetkinViewRow } from '../../types';
+
+import messageIds from 'features/views/l10n/messageIds';
 
 type OrganizerActionViewCell = null | [ZetkinOrganizerAction];
 
@@ -175,15 +168,29 @@ const usePopperStyles = makeStyles(() => ({
     display: 'flex',
     justifyContent: 'end',
   },
-  buttonIcon: { marginRight: '0.2em' },
   container: {
     width: 300,
   },
   header: {
-    fontSize: '1.1em',
+    color: theme.palette.grey,
+    fontSize: '1em',
+    fontWeight: 'bold',
+    textTransform: 'uppercase',
+    paddingBottom: '1em',
+  },
+  messageToOrganizer: {
+    paddingBottom: '0.7em',
   },
   timestamp: {
-    color: 'grey',
+    color: theme.palette.grey,
+    paddingBottom: '0.5em',
+  },
+  solvedIssues: {
+    color: theme.palette.grey,
+    fontSize: '1em',
+    fontWeight: 'bold',
+    textTransform: 'uppercase',
+    paddingTop: '1em',
   },
 }));
 
@@ -219,19 +226,21 @@ const PreviewPopper: FC<PreviewPopperProps> = ({
     >
       <Paper elevation={2}>
         <Box p={2}>
-          <Typography variant="h6">
+          <Typography className={styles.header}>
             <Msg id={messageIds.cells.organizerAction.actionNeeded} />
           </Typography>
           {sortedUnsolved?.map((call) => (
             <Box key={call.id}>
-              <ZUIRelativeTime datetime={call.update_time} />
-              <Typography>
-                {getEllipsedString(call.message_to_organizer, 70)}
+              <Typography className={styles.timestamp}>
+                <ZUIRelativeTime datetime={call.update_time} />
+              </Typography>
+              <Typography className={styles.messageToOrganizer}>
+                {getEllipsedString(call.message_to_organizer || '', 70)}
               </Typography>
             </Box>
           ))}
           {numSolved > 0 ? (
-            <Typography variant="h6">
+            <Typography className={styles.header}>
               <Msg
                 id={messageIds.cells.organizerAction.solvedIssues}
                 values={{ count: numSolved }}
@@ -239,8 +248,7 @@ const PreviewPopper: FC<PreviewPopperProps> = ({
             </Typography>
           ) : null}
           <Box className={styles.buttonBox}>
-            <Button onClick={onOpenCalls}>
-              <ListAlt className={styles.buttonIcon} />
+            <Button onClick={onOpenCalls} startIcon={<ListAlt />}>
               <Msg id={messageIds.cells.organizerAction.showDetails} />
             </Button>
           </Box>
