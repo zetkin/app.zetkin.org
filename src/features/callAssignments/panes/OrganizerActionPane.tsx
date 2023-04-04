@@ -1,7 +1,6 @@
-import { FC, useMemo } from 'react';
-import { makeStyles } from '@mui/styles';
 import { Box, Button, Typography } from '@mui/material';
 import { Check, PriorityHigh } from '@mui/icons-material';
+import { FC, useMemo } from 'react';
 
 import CallModel from '../models/CallModel';
 import PaneHeader from 'utils/panes/PaneHeader';
@@ -21,13 +20,6 @@ interface OrganizerActionPaneProps {
   personId: number;
   viewModel: ViewDataModel;
 }
-
-const useStyles = makeStyles(() => ({
-  buttonBox: {
-    display: 'flex',
-    justifyContent: 'end',
-  },
-}));
 
 export const OrganizerActionPane: FC<OrganizerActionPaneProps> = ({
   orgId,

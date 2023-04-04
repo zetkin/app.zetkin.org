@@ -20,11 +20,9 @@ import theme from 'theme';
 import useAccessLevel from 'features/views/hooks/useAccessLevel';
 import { usePanes } from 'utils/panes';
 import useViewDataModel from 'features/views/hooks/useViewDataModel';
-import ViewDataModel from 'features/views/models/ViewDataModel';
-import { ZetkinObjectAccess } from 'core/api/types';
 import { ZetkinOrganizerAction } from 'utils/types/zetkin';
+import { ZetkinViewRow } from '../../types';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
-import { OrganizerActionViewColumn, ZetkinViewRow } from '../../types';
 
 import messageIds from 'features/views/l10n/messageIds';
 
@@ -39,7 +37,7 @@ export default class OrganizerActionColumnType implements IColumnType {
     return requiresAction ? 'X' : '';
   }
 
-  getColDef(column: OrganizerActionViewColumn): Omit<GridColDef, 'field'> {
+  getColDef(): Omit<GridColDef, 'field'> {
     return {
       align: 'center',
       headerAlign: 'center',
@@ -89,15 +87,14 @@ const Cell: FC<{
   const viewModel = useViewDataModel();
 
   const [isRestricted] = useAccessLevel();
+  const numUnsolved =
+    cell?.filter((call) => !call.organizer_action_taken).length ?? 0;
+  const styles = useStyles({ numUnsolved });
 
   if (cell?.length) {
     if (!isRestricted) {
       // Onclick?
     }
-    const numUnsolved = cell.filter(
-      (call) => !call.organizer_action_taken
-    ).length;
-    const styles = useStyles({ numUnsolved });
     return (
       <Box
         className={styles.organizerActionContainer}
@@ -158,22 +155,22 @@ const usePopperStyles = makeStyles({
     color: 'grey',
     fontSize: '1em',
     fontWeight: 'bold',
-    textTransform: 'uppercase',
     paddingBottom: '1em',
+    textTransform: 'uppercase',
   },
   messageToOrganizer: {
     paddingBottom: '0.7em',
-  },
-  timestamp: {
-    color: 'grey',
-    paddingBottom: '0.5em',
   },
   solvedIssues: {
     color: 'grey',
     fontSize: '1em',
     fontWeight: 'bold',
-    textTransform: 'uppercase',
     paddingTop: '1em',
+    textTransform: 'uppercase',
+  },
+  timestamp: {
+    color: 'grey',
+    paddingBottom: '0.5em',
   },
 });
 

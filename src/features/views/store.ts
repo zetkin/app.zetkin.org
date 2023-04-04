@@ -1,3 +1,5 @@
+import { Call } from 'features/callAssignments/apiTypes';
+import { callUpdated } from 'features/callAssignments/store';
 import columnTypes from './components/ViewDataTable/columnTypes';
 import { DeleteFolderReport } from './rpc/deleteFolder';
 import { ViewTreeData } from 'pages/api/views/tree';
@@ -18,11 +20,6 @@ import {
   ZetkinQuery,
   ZetkinTag,
 } from 'utils/types/zetkin';
-import ViewDataModel from './models/ViewDataModel';
-import useModel from 'core/useModel';
-import useViewDataModel from './hooks/useViewDataModel';
-import { callUpdated } from 'features/callAssignments/store';
-import { Call } from 'features/callAssignments/apiTypes';
 
 type ZetkinObjectAccessWithId = ZetkinObjectAccess & {
   id: number;
@@ -299,13 +296,6 @@ const viewsSlice = createSlice({
         state.rowsByViewId[viewId] = remoteList([row]);
       }
     },
-    rowRemoved: (state, action: PayloadAction<[number, number]>) => {
-      const [viewId, rowId] = action.payload;
-      const list = state.rowsByViewId[viewId];
-      if (list) {
-        list.items = list.items.filter((item) => item.id != rowId);
-      }
-    },
     rowLoaded: (state, action: PayloadAction<[number, ZetkinViewRow]>) => {
       const [viewId, row] = action.payload;
       const list = state.rowsByViewId[viewId];
@@ -315,6 +305,13 @@ const viewsSlice = createSlice({
       }
       state.rowsByViewId[viewId].loaded = new Date().toISOString();
       state.rowsByViewId[viewId].isStale = false;
+    },
+    rowRemoved: (state, action: PayloadAction<[number, number]>) => {
+      const [viewId, rowId] = action.payload;
+      const list = state.rowsByViewId[viewId];
+      if (list) {
+        list.items = list.items.filter((item) => item.id != rowId);
+      }
     },
     rowsLoad: (state, action: PayloadAction<number>) => {
       const viewId = action.payload;
