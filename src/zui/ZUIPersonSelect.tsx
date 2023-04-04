@@ -55,6 +55,7 @@ interface UsePersonSelectReturn {
       props: HTMLAttributes<HTMLLIElement>,
       person: ZetkinPerson
     ) => ReactElement;
+    shiftHeld: boolean;
     value: ZetkinPerson | null;
   };
 }
@@ -82,6 +83,7 @@ export const usePersonSelect: UsePersonSelect = ({
   const [searchFieldValue, setSearchFieldValue] = useState<string>(
     initialValue || ''
   );
+  const [shiftHeld, setShiftHeld] = useState(false);
 
   const {
     isLoading,
@@ -113,6 +115,27 @@ export const usePersonSelect: UsePersonSelect = ({
       debouncedQuery();
     }
   }, [searchFieldValue.length, debouncedQuery]);
+
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+    };
+  }, []);
+
+  const handleKeyDown = (e: KeyboardEvent) => {
+    if (e.key === 'Shift') {
+      setShiftHeld(true);
+    }
+  };
+
+  const handleKeyUp = (e: KeyboardEvent) => {
+    if (e.key === 'Shift') {
+      setShiftHeld(false);
+    }
+  };
 
   let personOptions = (results || []) as ZetkinPerson[];
   if (
@@ -161,6 +184,7 @@ export const usePersonSelect: UsePersonSelect = ({
           </Box>
         );
       },
+      shiftHeld,
       value: selectedPerson,
     },
   };
@@ -172,13 +196,14 @@ const MUIOnlyPersonSelect: FunctionComponent<ZUIPersonSelectProps> = (
   const { label, size, variant, ...restComponentProps } = props;
   const { autoCompleteProps } = usePersonSelect(restComponentProps);
 
-  const { name, placeholder, inputRef, ...restProps } = autoCompleteProps;
-
+  const { name, placeholder, inputRef, shiftHeld, ...restProps } =
+    autoCompleteProps;
   delete restProps.getOptionValue;
 
   return (
     <MUIAutocomplete
       {...restProps}
+      handleHomeEndKeys={!shiftHeld}
       renderInput={(params) => (
         <TextField
           {...params}
