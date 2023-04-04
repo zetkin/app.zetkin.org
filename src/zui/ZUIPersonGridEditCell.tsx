@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import {
   Box,
   Button,
+  CircularProgress,
   InputBase,
   List,
   ListItem,
@@ -79,6 +80,23 @@ const ZUIPersonGridEditCell: FC<{
     );
   }
 
+  // Filter if the input value exists in suggested people list
+  const filteredSuggestedPeople =
+    personSelect.autoCompleteProps.inputValue === ''
+      ? suggestedPeople
+      : suggestedPeople.filter(
+          (p) =>
+            p.first_name
+              .toLocaleLowerCase()
+              .includes(autoComplete.inputValue.toLocaleLowerCase()) ||
+            p.last_name
+              .toLocaleLowerCase()
+              .includes(autoComplete.inputValue.toLocaleLowerCase()) ||
+            p.email
+              ?.toLocaleLowerCase()
+              .includes(autoComplete.inputValue.toLocaleLowerCase())
+        );
+
   return (
     <Box
       onMouseEnter={(ev) => {
@@ -96,9 +114,11 @@ const ZUIPersonGridEditCell: FC<{
           inputProps={autoComplete.getInputProps()}
           onChange={() => setSearching(true)}
           placeholder={messages.personSelect.search()}
+          sx={{ paddingLeft: '10px' }}
         ></InputBase>
       </Box>
-      {searchResults.length || suggestedPeople.length ? (
+
+      {suggestedPeople.length || autoComplete.inputValue != '' ? (
         <Popper
           anchorEl={anchorEl}
           open={!!anchorEl}
@@ -177,10 +197,15 @@ const ZUIPersonGridEditCell: FC<{
                         showSuggestedPeople || searching ? 'block' : 'none',
                     }}
                   >
-                    {showSuggestedPeople && !!suggestedPeople.length && (
-                      <List>
-                        <ListSubheader>{suggestedPeopleLabel}</ListSubheader>
-                        {suggestedPeople.map((option) => (
+                    {showSuggestedPeople && filteredSuggestedPeople.length > 0 && (
+                      <>
+                        <ListSubheader
+                          disableSticky={true}
+                          sx={{ marginTop: 0, paddingTop: 0 }}
+                        >
+                          {suggestedPeopleLabel}
+                        </ListSubheader>
+                        {filteredSuggestedPeople.map((option) => (
                           <PersonListItem
                             key={option.id}
                             itemProps={{
@@ -192,15 +217,33 @@ const ZUIPersonGridEditCell: FC<{
                             person={option}
                           />
                         ))}
-                      </List>
+                      </>
                     )}
                     {searching && (
-                      <List {...autoComplete.getListboxProps()}>
-                        <ListSubheader sx={{ position: 'relative' }}>
-                          {suggestedPeople.length
-                            ? messages.personGridEditCell.otherPeople()
-                            : messages.personGridEditCell.searchResults()}
-                        </ListSubheader>
+                      <List
+                        {...autoComplete.getListboxProps()}
+                        subheader={
+                          <ListSubheader sx={{ position: 'relative' }}>
+                            {searchResults.length > 0 &&
+                              messages.personGridEditCell.searchResults()}
+                            {autoComplete.inputValue &&
+                              searchResults.length === 0 &&
+                              autoComplete.inputValue.length < 3 &&
+                              autoComplete.inputValue.length > 0 &&
+                              messages.personGridEditCell.keepTyping()}
+                            {autoComplete.inputValue.length >= 3 &&
+                              !personSelect.autoCompleteProps.isLoading &&
+                              searchResults.length === 0 &&
+                              messages.personGridEditCell.noResult()}
+                          </ListSubheader>
+                        }
+                      >
+                        {personSelect.autoCompleteProps.isLoading && (
+                          <CircularProgress
+                            sx={{ display: 'block', margin: 'auto' }}
+                          />
+                        )}
+
                         {searchResults.map((option, index) => {
                           const optProps = autoComplete.getOptionProps({
                             index,

@@ -1,8 +1,13 @@
 import { GetServerSideProps } from 'next';
+import { Grid } from '@mui/material';
 import { PageWithLayout } from 'utils/types';
 import { scaffold } from 'utils/next';
 
+import EventDataModel from 'features/events/models/EventDataModel';
 import EventLayout from 'features/events/layout/EventLayout';
+import EventOverviewCard from 'features/events/components/EventOverviewCard/EventOverviewCard';
+import useModel from 'core/useModel';
+import ZUIFuture from 'zui/ZUIFuture';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   async (ctx) => {
@@ -28,8 +33,24 @@ interface EventPageProps {
   orgId: string;
 }
 
-const EventPage: PageWithLayout<EventPageProps> = () => {
-  return <>event page</>;
+const EventPage: PageWithLayout<EventPageProps> = ({ orgId, eventId }) => {
+  const model = useModel(
+    (env) => new EventDataModel(env, parseInt(orgId), parseInt(eventId))
+  );
+
+  return (
+    <ZUIFuture future={model.getData()}>
+      {() => {
+        return (
+          <Grid container spacing={1}>
+            <Grid item md={8} xs={12}>
+              <EventOverviewCard model={model} />
+            </Grid>
+          </Grid>
+        );
+      }}
+    </ZUIFuture>
+  );
 };
 
 EventPage.getLayout = function getLayout(page, props) {
