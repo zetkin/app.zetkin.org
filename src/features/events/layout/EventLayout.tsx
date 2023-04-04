@@ -6,8 +6,10 @@ import TabbedLayout from 'utils/layout/TabbedLayout';
 
 import EventDataModel from '../models/EventDataModel';
 import EventStatusChip from '../components/EventStatusChip';
+import EventTypesModel from '../models/EventTypesModel';
 import messageIds from '../l10n/messageIds';
 import useModel from 'core/useModel';
+import ZUIAutocompleteInPlace from 'zui/ZUIAutocompleteInPlace';
 import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
 import ZUIFuture from 'zui/ZUIFuture';
 import { ZUIIconLabelProps } from 'zui/ZUIIconLabel';
@@ -33,6 +35,10 @@ const EventLayout: React.FC<EventLayoutProps> = ({
     (env) => new EventDataModel(env, parseInt(orgId), parseInt(eventId))
   );
 
+  const typesModel = useModel(
+    (env) => new EventTypesModel(env, parseInt(orgId))
+  );
+
   const showTimeOnly = (value: Date) => {
     return value.toLocaleTimeString('en-Us', {
       hour: '2-digit',
@@ -48,7 +54,14 @@ const EventLayout: React.FC<EventLayoutProps> = ({
       defaultTab="/"
       subtitle={
         <Box alignItems="center" display="flex">
-          <EventStatusChip state={model.state} />
+          <Box marginRight={2}>
+            <EventStatusChip state={model.state} />
+          </Box>
+          <ZUIFuture future={typesModel.getTypes()}>
+            {(data) => {
+              return <ZUIAutocompleteInPlace text={data[0].title} />;
+            }}
+          </ZUIFuture>
           <Box marginX={2}>
             <ZUIFuture future={model.getData()}>
               {(data) => {

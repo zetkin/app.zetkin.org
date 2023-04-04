@@ -1,10 +1,18 @@
 import Environment from 'core/env/Environment';
 import IApiClient from 'core/api/client/IApiClient';
+import { loadListIfNecessary } from 'core/caching/cacheUtils';
 import shouldLoad from 'core/caching/shouldLoad';
 import { Store } from 'core/store';
-import { ZetkinEvent } from 'utils/types/zetkin';
-import { eventLoad, eventLoaded, eventUpdate, eventUpdated } from '../store';
+import {
+  eventLoad,
+  eventLoaded,
+  eventTypesLoad,
+  eventTypesLoaded,
+  eventUpdate,
+  eventUpdated,
+} from '../store';
 import { IFuture, PromiseFuture, RemoteItemFuture } from 'core/caching/futures';
+import { ZetkinActivity, ZetkinEvent } from 'utils/types/zetkin';
 
 export default class EventsRepo {
   private _apiClient: IApiClient;
@@ -13,6 +21,16 @@ export default class EventsRepo {
   constructor(env: Environment) {
     this._store = env.store;
     this._apiClient = env.apiClient;
+  }
+
+  getAllTypes(orgId: number) {
+    const state = this._store.getState();
+    return loadListIfNecessary(state.events.eventTypeList, this._store, {
+      actionOnLoad: () => eventTypesLoad(orgId),
+      actionOnSuccess: (data) => eventTypesLoaded([orgId, data]),
+      loader: () =>
+        this._apiClient.get<ZetkinActivity[]>(`/api/orgs/${orgId}/activities`),
+    });
   }
 
   getEvent(orgId: number, id: number): IFuture<ZetkinEvent> {
