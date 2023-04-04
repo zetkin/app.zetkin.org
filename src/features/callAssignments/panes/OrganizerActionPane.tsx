@@ -73,19 +73,21 @@ export const OrganizerActionPane: FC<OrganizerActionPaneProps> = ({
       <PaneHeader
         subtitle={
           recipient && (
-            <Msg
-              id={messageIds.organizerActionPane.subtitle}
-              values={{
-                person: <ZUIPersonLink person={recipient} />,
-              }}
-            />
+            <Typography variant="body2">
+              <Msg
+                id={messageIds.organizerActionPane.subtitle}
+                values={{
+                  person: <ZUIPersonLink person={recipient} />,
+                }}
+              />
+            </Typography>
           )
         }
         title={messages.organizerActionPane.title()}
       />
       {sorted.map((call) => (
-        <Box key={call?.id}>
-          <Typography>
+        <Box key={call?.id} mt={4}>
+          <Typography variant="body2">
             <Msg
               id={messageIds.organizerActionPane.noteByCaller}
               values={{
@@ -105,24 +107,26 @@ export const OrganizerActionPane: FC<OrganizerActionPaneProps> = ({
               }}
             />
           </Typography>
-          <Typography>{call?.message_to_organizer}</Typography>
-          {!call?.organizer_action_taken ? (
-            <Button
-              onClick={() => call && model.setOrganizerActionTaken(call.id)}
-              startIcon={<Check />}
-              variant="contained"
-            >
-              <Msg id={messageIds.organizerActionPane.markAsSolved} />
-            </Button>
-          ) : (
-            <Button
-              onClick={() => call && model.setOrganizerActionNeeded(call.id)}
-              variant="outlined"
-            >
-              <PriorityHigh />
-              <Msg id={messageIds.organizerActionPane.markAsUnsolved} />
-            </Button>
-          )}
+          <Typography my={1}>{call?.message_to_organizer}</Typography>
+          <Box display="flex" justifyContent="flex-end" my={2}>
+            {!call?.organizer_action_taken ? (
+              <Button
+                onClick={() => call && model.setOrganizerActionTaken(call.id)}
+                startIcon={<Check />}
+                variant="contained"
+              >
+                <Msg id={messageIds.organizerActionPane.markAsSolved} />
+              </Button>
+            ) : (
+              <Button
+                onClick={() => call && model.setOrganizerActionNeeded(call.id)}
+                startIcon={<PriorityHigh />}
+                variant="text"
+              >
+                <Msg id={messageIds.organizerActionPane.markAsUnsolved} />
+              </Button>
+            )}
+          </Box>
         </Box>
       ))}
     </>
