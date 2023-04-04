@@ -1,3 +1,4 @@
+import CallBlocked from '../filters/CallBlocked';
 import CallHistory from '../filters/CallHistory';
 import CampaignParticipation from '../filters/CampaignParticipation';
 import MostActive from '../filters/MostActive';
@@ -35,6 +36,13 @@ const FilterEditor = ({
 }: FilterEditorProps): JSX.Element => {
   return (
     <>
+      {filter.type === FILTER_TYPE.CALL_BLOCKED && (
+        <CallBlocked
+          filter={filter}
+          onCancel={onCancelSubmitFilter}
+          onSubmit={onSubmitFilter}
+        />
+      )}
       {filter.type === FILTER_TYPE.CALL_HISTORY && (
         <CallHistory
           filter={filter}

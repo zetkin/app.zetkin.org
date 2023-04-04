@@ -48,6 +48,15 @@ export default makeMessages('feat.smartSearch', {
         true: m('a list of all the people in the organization'),
       },
     },
+    callBlocked: {
+      addRemoveSelect: {
+        add: m('Add'),
+        sub: m('Remove'),
+      },
+      inputString: m<{ addRemoveSelect: ReactElement }>(
+        '{addRemoveSelect} people who are blocked from calling for any reason'
+      ),
+    },
     callHistory: {
       addRemoveSelect: {
         add: m('Add'),
