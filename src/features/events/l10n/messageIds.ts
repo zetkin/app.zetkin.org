@@ -7,6 +7,14 @@ export default makeMessages('feat.events', {
     editButton: m('Edit event information'),
     url: m('Link'),
   },
+  eventParticipantsCard: {
+    header: m('Participants'),
+    pending: m('Pending Sign-ups'),
+    booked: m('Booked participants'),
+    cancelled: m('Cancelled'),
+    contact: m('Contact'),
+    participant_list: m('View participants'),
+  },
   form: {
     activity: m('Activity'),
     campaign: m('Campaign'),

@@ -6,6 +6,7 @@ import { scaffold } from 'utils/next';
 import EventDataModel from 'features/events/models/EventDataModel';
 import EventLayout from 'features/events/layout/EventLayout';
 import EventOverviewCard from 'features/events/components/EventOverviewCard/EventOverviewCard';
+import EventParticipantsCard from 'features/events/components/EventOverviewCard/EventParticipantsCard';
 import useModel from 'core/useModel';
 import ZUIFuture from 'zui/ZUIFuture';
 
@@ -45,6 +46,9 @@ const EventPage: PageWithLayout<EventPageProps> = ({ orgId, eventId }) => {
           <Grid container spacing={1}>
             <Grid item md={8} xs={12}>
               <EventOverviewCard model={model} />
+            </Grid>
+            <Grid item md={4} xs={6}>
+              <EventParticipantsCard model={model} />
             </Grid>
           </Grid>
         );
