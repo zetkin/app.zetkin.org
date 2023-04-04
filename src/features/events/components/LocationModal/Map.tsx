@@ -60,7 +60,17 @@ const Map: FC<MapProps> = ({ locations }) => {
   );
 
   return (
-    <MapContainer bounds={bounds} style={{ height: '100%', width: '100%' }}>
+    <MapContainer
+      bounds={bounds}
+      style={{
+        alignItems: 'flex-start',
+        display: 'flex',
+        flexDirection: 'row',
+        height: '100%',
+        justifyContent: 'flex-end',
+        width: '100%',
+      }}
+    >
       <MapProvider>
         {(map) => (
           <>
@@ -68,9 +78,10 @@ const Map: FC<MapProps> = ({ locations }) => {
               sx={{
                 display: 'flex',
                 justifyContent: 'flex-end',
-                padding: 2,
+                justifySelf: 'flex-end',
+                margin: 2,
                 position: 'relative',
-                width: '100%',
+                width: '30%',
                 zIndex: 10000,
               }}
             >
@@ -79,7 +90,7 @@ const Map: FC<MapProps> = ({ locations }) => {
                   display: 'flex',
                   flexDirection: 'column',
                   minWidth: '200px',
-                  width: '30%',
+                  width: '100%',
                 }}
               >
                 {!selectedLocation && (
