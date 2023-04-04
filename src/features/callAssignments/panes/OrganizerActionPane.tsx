@@ -107,7 +107,15 @@ export const OrganizerActionPane: FC<OrganizerActionPaneProps> = ({
               }}
             />
           </Typography>
-          <Typography my={1}>{call?.message_to_organizer}</Typography>
+          <Box my={1}>
+            {call?.message_to_organizer ? (
+              <Typography>{call.message_to_organizer}</Typography>
+            ) : (
+              <Typography sx={{ color: 'GrayText', fontStyle: 'italic' }}>
+                <Msg id={messageIds.organizerActionPane.messagePlaceholder} />
+              </Typography>
+            )}
+          </Box>
           <Box display="flex" justifyContent="flex-end" my={2}>
             {!call?.organizer_action_taken ? (
               <Button

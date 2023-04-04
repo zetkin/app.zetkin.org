@@ -85,6 +85,7 @@ export default makeMessages('feat.callAssignments', {
   organizerActionPane: {
     markAsSolved: m('Mark as solved'),
     markAsUnsolved: m('Mark as unsolved'),
+    messagePlaceholder: m('Caller did not leave a message'),
     noteByCaller: m<{ person: ReactElement; time: ReactElement }>(
       'Note by {person} {time}'
     ),
