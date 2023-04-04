@@ -1,44 +1,31 @@
-import isEqual, { isEqualWith } from 'lodash';
+import { isEqualWith } from 'lodash';
 import { NextApiRequest } from 'next';
-import { z } from 'zod';
 
 import { getBrowserLanguage } from 'utils/locale';
 import getServerMessages from 'core/i18n/server';
 import IApiClient from 'core/api/client/IApiClient';
-import { makeRPCDef } from 'core/rpc/types';
+import {
+  CallBlockedFilterConfig,
+  FILTER_TYPE,
+  ZetkinSmartSearchFilter,
+} from 'features/smartSearch/components/types';
 import {
   COLUMN_TYPE,
   NATIVE_PERSON_FIELDS,
   PendingZetkinViewColumn,
   ZetkinView,
   ZetkinViewColumn,
-} from '../components/types';
-import {
-  CallBlockedFilterConfig,
-  FILTER_TYPE,
-  ZetkinSmartSearchFilter,
-} from 'features/smartSearch/components/types';
+} from '../../components/types';
 
+import globalMessageIds from 'core/i18n/globalMessageIds';
 import messageIds from 'features/views/l10n/messageIds';
-
-const paramsSchema = z.object({
-  orgId: z.number(),
-});
-
-export type GetOrganizerActionViewReport = {
-  view: (number | string)[];
-};
-
-type Params = z.input<typeof paramsSchema>;
-type Result = ZetkinView;
+import { Params, paramsSchema, Result } from './client';
 
 export const getOrganizerActionViewRouteDef = {
   handler: handle,
   name: 'getOrganizerActionView',
   schema: paramsSchema,
 };
-
-export default makeRPCDef<Params, Result>('getOrganizerActionView');
 
 async function handle(
   params: Params,
@@ -47,8 +34,9 @@ async function handle(
 ): Promise<Result> {
   const { orgId } = params;
 
-  //const lang = getBrowserLanguage(req);
-  //const messages = await getServerMessages(lang, messageIds);
+  const lang = getBrowserLanguage(req);
+  const messages = await getServerMessages(lang, messageIds);
+  const globalMessages = await getServerMessages(lang, globalMessageIds);
 
   const views = await apiClient.get<ZetkinView[]>(
     `/api/orgs/${orgId}/people/views`
@@ -122,8 +110,7 @@ async function handle(
     view = await apiClient.post<ZetkinView, Partial<ZetkinView>>(
       `/api/orgs/${orgId}/people/views`,
       {
-        //        title: messages.defaultViewTitles.organizer_action(),
-        title: 'Organizer action',
+        title: messages.defaultViewTitles.organizer_action(),
       }
     );
     await apiClient.patch<{ filter_spec: ZetkinSmartSearchFilter[] }>(
@@ -139,8 +126,7 @@ async function handle(
         config: {
           field: NATIVE_PERSON_FIELDS.FIRST_NAME,
         },
-        // title: messages.global.personFields.first_name(),
-        title: 'First name',
+        title: globalMessages.personFields.first_name(),
         type: COLUMN_TYPE.PERSON_FIELD,
       }
     );
@@ -152,8 +138,7 @@ async function handle(
         config: {
           field: NATIVE_PERSON_FIELDS.LAST_NAME,
         },
-        // title: messages.global.personFields.last_name(),
-        title: 'Last name',
+        title: globalMessages.personFields.last_name(),
         type: COLUMN_TYPE.PERSON_FIELD,
       }
     );
@@ -165,8 +150,7 @@ async function handle(
         config: {
           type: 'all_flagged',
         },
-        // title: messages.defaultColumnTitles.organizer_action(),
-        title: 'Organizer action',
+        title: messages.defaultColumnTitles.organizer_action(),
         type: COLUMN_TYPE.ORGANIZER_ACTION,
       }
     );

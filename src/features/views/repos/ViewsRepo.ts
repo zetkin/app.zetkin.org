@@ -1,6 +1,7 @@
 import createNew from '../rpc/createNew/client';
 import deleteFolder from '../rpc/deleteFolder';
 import Environment from 'core/env/Environment';
+import getOrganizerActionView from '../rpc/getOrganizerActionView/client';
 import IApiClient from 'core/api/client/IApiClient';
 import shouldLoad from 'core/caching/shouldLoad';
 import { Store } from 'core/store';
@@ -32,7 +33,6 @@ import {
   ResolvedFuture,
 } from 'core/caching/futures';
 import { ZetkinView, ZetkinViewFolder } from '../components/types';
-import getOrganizerActionView from '../rpc/getOrganizerActionView';
 
 type ZetkinViewFolderPostBody = {
   parent_id?: number;

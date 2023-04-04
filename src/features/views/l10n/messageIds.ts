@@ -276,11 +276,11 @@ export default makeMessages('feat.views', {
     journey_assignee: m('Assigned journeys'),
     local_bool: m('Toggle'),
     local_person: m('Person reference'),
-    organizer_action: m('Organizer action'),
+    organizer_action: m('Flagged calls'),
     person_notes: m('Notes'),
   },
   defaultViewTitles: {
-    organizer_action: m('Organizer action'),
+    organizer_action: m('Organizer action needed'),
   },
   deleteDialog: {
     error: m('There was an error deleting the view'),
