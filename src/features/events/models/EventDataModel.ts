@@ -2,7 +2,7 @@ import Environment from 'core/env/Environment';
 import EventsRepo from '../repo/EventsRepo';
 import { IFuture } from 'core/caching/futures';
 import { ModelBase } from 'core/models';
-import { ZetkinEvent } from 'utils/types/zetkin';
+import { ZetkinEvent, ZetkinLocation } from 'utils/types/zetkin';
 
 export default class EventDataModel extends ModelBase {
   private _eventId: number;
@@ -18,6 +18,12 @@ export default class EventDataModel extends ModelBase {
 
   getData(): IFuture<ZetkinEvent> {
     return this._repo.getEvent(this._orgId, this._eventId);
+  }
+
+  setLocation(location: ZetkinLocation) {
+    this._repo.updateEvent(this._orgId, this._eventId, {
+      location_id: location.id,
+    });
   }
 
   setTitle(title: string) {

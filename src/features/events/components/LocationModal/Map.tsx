@@ -1,7 +1,13 @@
 import 'leaflet/dist/leaflet.css';
 import { Close } from '@mui/icons-material';
 import Fuse from 'fuse.js';
-import { Autocomplete, Box, TextField, Typography } from '@mui/material';
+import {
+  Autocomplete,
+  Box,
+  Button,
+  TextField,
+  Typography,
+} from '@mui/material';
 import { FC, useState } from 'react';
 import { MapContainer, Marker, TileLayer, useMap } from 'react-leaflet';
 
@@ -24,6 +30,8 @@ const basicIcon = icon({
 
 interface MapProps {
   locations: ZetkinLocation[];
+  onMapClose: () => void;
+  onSelectLocation: (location: ZetkinLocation) => void;
 }
 
 const MapProvider = ({
@@ -35,7 +43,7 @@ const MapProvider = ({
   return children(map);
 };
 
-const Map: FC<MapProps> = ({ locations }) => {
+const Map: FC<MapProps> = ({ locations, onMapClose, onSelectLocation }) => {
   const messages = useMessages(messageIds);
   const [searchString, setSearchString] = useState('');
   const [selectedLocationId, setSelectedLocationId] = useState<
@@ -155,6 +163,21 @@ const Map: FC<MapProps> = ({ locations }) => {
                         {selectedLocation.info_text}
                       </Typography>
                     )}
+                    <Box
+                      display="flex"
+                      justifyContent="flex-end"
+                      paddingTop={2}
+                    >
+                      <Button
+                        onClick={() => {
+                          onSelectLocation(selectedLocation);
+                          onMapClose();
+                        }}
+                        variant="contained"
+                      >
+                        {messages.locationModal.useLocation()}
+                      </Button>
+                    </Box>
                   </Box>
                 )}
               </Box>
