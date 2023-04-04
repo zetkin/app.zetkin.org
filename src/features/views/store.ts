@@ -311,7 +311,7 @@ const viewsSlice = createSlice({
       const list = state.rowsByViewId[viewId];
       if (list) {
         const idx = list.items.findIndex((item) => item.id == row.id);
-        list.items[idx] = remoteItem(row);
+        list.items[idx] = remoteItem(row.id, { data: row });
       }
       state.rowsByViewId[viewId].loaded = new Date().toISOString();
       state.rowsByViewId[viewId].isStale = false;

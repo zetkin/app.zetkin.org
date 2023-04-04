@@ -37,7 +37,7 @@ export const OrganizerActionPane: FC<OrganizerActionPaneProps> = ({
 }) => {
   const rows = viewModel.getRows().data;
   const row = rows?.find((r) => r.id == personId);
-  let calls: ZetkinOrganizerAction[] = row?.content[columnIdx];
+  let calls = row?.content[columnIdx] as ZetkinOrganizerAction[];
   if (!calls) {
     calls = [];
   }
@@ -80,12 +80,14 @@ export const OrganizerActionPane: FC<OrganizerActionPaneProps> = ({
     <>
       <PaneHeader
         subtitle={
-          <Msg
-            id={messageIds.organizerActionPane.subtitle}
-            values={{
-              person: recipient && <ZUIPersonLink person={recipient} />,
-            }}
-          />
+          recipient && (
+            <Msg
+              id={messageIds.organizerActionPane.subtitle}
+              values={{
+                person: <ZUIPersonLink person={recipient} />,
+              }}
+            />
+          )
         }
         title={messages.organizerActionPane.title()}
       />

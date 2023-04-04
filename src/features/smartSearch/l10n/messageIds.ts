@@ -20,6 +20,7 @@ export default makeMessages('feat.smartSearch', {
   },
   filterTitles: {
     all: m('Everyone'),
+    call_blocked: m('Blocked from calling'),
     call_history: m('Based on their call history'),
     campaign_participation: m('Based on their campaign participation'),
     most_active: m('The most active people'),

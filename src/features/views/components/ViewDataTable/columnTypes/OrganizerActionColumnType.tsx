@@ -9,12 +9,8 @@ import {
   Typography,
 } from '@mui/material';
 import { Check, ListAlt, PriorityHigh } from '@mui/icons-material';
-import { FC, KeyboardEvent, useMemo, useState } from 'react';
-import {
-  GridColDef,
-  GridRenderCellParams,
-  MuiEvent,
-} from '@mui/x-data-grid-pro';
+import { FC, useMemo, useState } from 'react';
+import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid-pro';
 
 import { getEllipsedString } from 'utils/stringUtils';
 import { IColumnType } from '.';
@@ -32,11 +28,15 @@ import { OrganizerActionViewColumn, ZetkinViewRow } from '../../types';
 
 import messageIds from 'features/views/l10n/messageIds';
 
-type OrganizerActionViewCell = null | [ZetkinOrganizerAction];
+type OrganizerActionViewCell = null | ZetkinOrganizerAction[];
 
 export default class OrganizerActionColumnType implements IColumnType {
   cellToString(cell: OrganizerActionViewCell): string {
-    return cell?.value ? cell.value.toString() : Boolean(cell).toString();
+    const requiresAction = cell?.length
+      ? cell.some((oan) => !oan.organizer_action_taken)
+      : false;
+
+    return requiresAction ? 'X' : '';
   }
 
   getColDef(column: OrganizerActionViewColumn): Omit<GridColDef, 'field'> {
@@ -62,28 +62,9 @@ export default class OrganizerActionColumnType implements IColumnType {
   getSearchableStrings(): string[] {
     return [];
   }
-
-  handleKeyDown(
-    model: ViewDataModel,
-    column: OrganizerActionViewColumn,
-    personId: number,
-    data: OrganizerActionViewCell,
-    ev: MuiEvent<KeyboardEvent<HTMLElement>>,
-    accessLevel: ZetkinObjectAccess['level']
-  ): void {
-    if (accessLevel) {
-      // Any non-null value means we're in restricted mode
-      return;
-    }
-
-    if (ev.key == 'Enter' || ev.key == ' ') {
-      model.toggleTag(personId, column.config.tag_id, !data);
-      ev.defaultMuiPrevented = true;
-    }
-  }
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles<typeof theme, { numUnsolved: number }>(() => ({
   organizerActionContainer: {
     alignItems: 'center',
     backgroundColor: (props) =>
@@ -155,6 +136,8 @@ const Cell: FC<{
       </Box>
     );
   }
+
+  return null;
 };
 
 interface PreviewPopperProps {
@@ -163,7 +146,7 @@ interface PreviewPopperProps {
   calls: OrganizerActionViewCell;
 }
 
-const usePopperStyles = makeStyles(() => ({
+const usePopperStyles = makeStyles({
   buttonBox: {
     display: 'flex',
     justifyContent: 'end',
@@ -172,7 +155,7 @@ const usePopperStyles = makeStyles(() => ({
     width: 300,
   },
   header: {
-    color: theme.palette.grey,
+    color: 'grey',
     fontSize: '1em',
     fontWeight: 'bold',
     textTransform: 'uppercase',
@@ -182,17 +165,17 @@ const usePopperStyles = makeStyles(() => ({
     paddingBottom: '0.7em',
   },
   timestamp: {
-    color: theme.palette.grey,
+    color: 'grey',
     paddingBottom: '0.5em',
   },
   solvedIssues: {
-    color: theme.palette.grey,
+    color: 'grey',
     fontSize: '1em',
     fontWeight: 'bold',
     textTransform: 'uppercase',
     paddingTop: '1em',
   },
-}));
+});
 
 const PreviewPopper: FC<PreviewPopperProps> = ({
   anchorEl,
