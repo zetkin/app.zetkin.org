@@ -30,18 +30,30 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({ model }) => {
   const [link, setLink] = useState(eventData?.url ?? '');
   const [infoText, setInfoText] = useState(eventData?.info_text ?? '');
 
-  const { clickAwayProps, containerProps, previewableProps } =
-    useEditPreviewBlock({
-      editable,
-      onEditModeEnter: () => setEditable(true),
-      onEditModeExit: () => setEditable(false),
-      save: () => {
-        model.updateEventData({
-          info_text: infoText,
-          url: link,
-        });
-      },
-    });
+  const { clickAwayProps, containerProps } = useEditPreviewBlock({
+    editable,
+    onEditModeEnter: () => setEditable(true),
+    onEditModeExit: () => setEditable(false),
+    save: () => {
+      model.updateEventData({
+        info_text: infoText,
+        url: link,
+      });
+    },
+  });
+
+  const { previewableProps } = useEditPreviewBlock({
+    editable,
+    onEditModeEnter: () => setEditable(true),
+    onEditModeExit: () => setEditable(false),
+    readOnly: true,
+    save: () => {
+      model.updateEventData({
+        info_text: infoText,
+        url: link,
+      });
+    },
+  });
 
   if (!eventData) {
     return null;
@@ -49,11 +61,15 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({ model }) => {
 
   return (
     <ClickAwayListener {...clickAwayProps}>
-      <Box {...containerProps}>
+      <Box>
         <Card>
           {!editable && (
             <Box display="flex" justifyContent="flex-end" m={2}>
-              <Button startIcon={<EditIcon />} variant="outlined">
+              <Button
+                {...containerProps}
+                startIcon={<EditIcon />}
+                variant="outlined"
+              >
                 {messages.eventOverviewCard.editButton().toUpperCase()}
               </Button>
             </Box>
