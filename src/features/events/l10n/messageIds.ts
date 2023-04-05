@@ -61,4 +61,5 @@ export default makeMessages('feat.events', {
     overview: m('Overview'),
     participants: m('Participants'),
   },
+  uncategorized: m('Uncategorized'),
 });

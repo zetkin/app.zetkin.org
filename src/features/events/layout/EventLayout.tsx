@@ -12,6 +12,7 @@ import useModel from 'core/useModel';
 import ZUIAutocompleteInPlace from 'zui/ZUIAutocompleteInPlace';
 import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
 import ZUIFuture from 'zui/ZUIFuture';
+import ZUIFutures from 'zui/ZUIFutures';
 import { ZUIIconLabelProps } from 'zui/ZUIIconLabel';
 import ZUIIconLabelRow from 'zui/ZUIIconLabelRow';
 import { Msg, useMessages } from 'core/i18n';
@@ -57,11 +58,23 @@ const EventLayout: React.FC<EventLayoutProps> = ({
           <Box marginRight={2}>
             <EventStatusChip state={model.state} />
           </Box>
-          <ZUIFuture future={typesModel.getTypes()}>
-            {(data) => {
-              return <ZUIAutocompleteInPlace text={data[0].title} />;
+          <ZUIFutures
+            futures={{
+              currentType: model.getData(),
+              eventTypes: typesModel.getTypes(),
             }}
-          </ZUIFuture>
+          >
+            {({ data: { eventTypes: types, currentType } }) => {
+              const eventTypes: string[] = [];
+
+              if (currentType.activity.title === null) {
+                eventTypes.push(messages.uncategorized());
+              }
+              types.map((item) => eventTypes.push(item.title));
+
+              return <ZUIAutocompleteInPlace types={eventTypes} />;
+            }}
+          </ZUIFutures>
           <Box marginX={2}>
             <ZUIFuture future={model.getData()}>
               {(data) => {
