@@ -1,4 +1,3 @@
-import { makeStyles } from '@mui/styles';
 import { useState } from 'react';
 import {
   Box,
@@ -25,12 +24,6 @@ import messageIds from '../l10n/messageIds';
 import useModel from 'core/useModel';
 import { useRouter } from 'next/router';
 
-const useStyles = makeStyles(() => ({
-  button: {
-    height: '2.59em',
-  },
-}));
-
 interface CallAssignmentStatusCardProps {
   model: CallAssignmentModel;
 }
@@ -50,7 +43,6 @@ const CallAssignmentStatusCards = ({
   const viewsModel: ViewBrowserModel = useModel(
     (env) => new ViewBrowserModel(env, parseInt(orgId as string))
   );
-  const styles = useStyles();
 
   const [anchorEl, setAnchorEl] = useState<
     null | (EventTarget & SVGSVGElement)
@@ -148,7 +140,6 @@ const CallAssignmentStatusCards = ({
             <StatusCardItem
               action={
                 <Button
-                  className={styles.button}
                   onClick={() => viewsModel.getOrganizerActionView()}
                   startIcon={<Visibility />}
                   variant="outlined"
