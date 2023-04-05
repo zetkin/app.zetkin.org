@@ -1,6 +1,8 @@
 import 'leaflet/dist/leaflet.css';
 import { Box } from '@mui/material';
 import Fuse from 'fuse.js';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/system';
 import { FC, useState } from 'react';
 import { MapContainer, Marker, TileLayer, useMap } from 'react-leaflet';
 
@@ -20,6 +22,29 @@ const basicIcon = icon({
   iconSize: [25, 32],
   iconUrl: '/basicMarker.png',
 });
+
+interface StyleProps {
+  selectedLocation?: ZetkinLocation;
+}
+
+const useStyles = makeStyles<Theme, StyleProps>(() => ({
+  mapContainer: {
+    height: '80vh',
+    width: '100%',
+  },
+  overlay: {
+    bottom: ({ selectedLocation }) => (selectedLocation ? 1 : undefined),
+    display: 'flex',
+    justifyContent: 'flex-end',
+    justifySelf: 'flex-end',
+    margin: 2,
+    position: 'absolute',
+    right: 1,
+    top: 1,
+    width: '30%',
+    zIndex: 1000,
+  },
+}));
 
 interface MapProps {
   locations: ZetkinLocation[];
@@ -64,6 +89,7 @@ const Map: FC<MapProps> = ({
   const selectedLocation = locations.find(
     (location) => location.id === selectedLocationId
   );
+  const classes = useStyles({ selectedLocation });
 
   return (
     <MapContainer
@@ -72,29 +98,13 @@ const Map: FC<MapProps> = ({
           ? latLngBounds([[selectedLocation.lat, selectedLocation.lng]])
           : bounds
       }
-      style={{
-        height: '80vh',
-        width: '100%',
-      }}
+      className={classes.mapContainer}
     >
       <MapProvider>
         {(map) => {
           return (
             <>
-              <Box
-                sx={{
-                  bottom: selectedLocation ? 1 : undefined,
-                  display: 'flex',
-                  justifyContent: 'flex-end',
-                  justifySelf: 'flex-end',
-                  margin: 2,
-                  position: 'absolute',
-                  right: 1,
-                  top: 1,
-                  width: '30%',
-                  zIndex: 1000,
-                }}
-              >
+              <Box className={classes.overlay}>
                 {!selectedLocation && (
                   <LocationSearch
                     onChange={(value) => {
