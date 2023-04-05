@@ -29,19 +29,17 @@ const LocationModal: FC<LocationModalProps> = ({
   return (
     <Dialog fullWidth maxWidth="lg" onClose={onMapClose} open={open}>
       <Box padding={2}>
-        <Box height="80vh">
-          <Map
-            locationId={locationId}
-            locations={locations}
-            onMapClose={onMapClose}
-            onSelectLocation={(location: ZetkinLocation) =>
-              onSelectLocation(location)
-            }
-          />
-        </Box>
+        <Map
+          locationId={locationId}
+          locations={locations}
+          onMapClose={onMapClose}
+          onSelectLocation={(location: ZetkinLocation) =>
+            onSelectLocation(location)
+          }
+        />
         <Box alignItems="center" display="flex" paddingTop={1}>
           <InfoOutlined color="secondary" />
-          <Typography color="secondary" paddingLeft={1}>
+          <Typography color="secondary" paddingLeft={1} variant="body2">
             {messages.locationModal.infoText()}
           </Typography>
         </Box>

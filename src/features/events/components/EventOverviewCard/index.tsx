@@ -79,38 +79,37 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
               renderInput={() => {
                 return (
                   <Box alignItems="center" display="flex">
-                    {locations && locations.length && (
-                      <Autocomplete
-                        fullWidth
-                        onChange={(ev, value) => {
-                          const location = locations?.find(
-                            (location) => location.title === value
-                          );
-                          if (!location) {
-                            return;
-                          }
-                          setLocationId(location.id);
-                        }}
-                        options={
-                          locations?.map((location) => location.title) || []
+                    <Autocomplete
+                      disableClearable
+                      fullWidth
+                      onChange={(ev, value) => {
+                        const location = locations?.find(
+                          (location) => location.title === value
+                        );
+                        if (!location) {
+                          return;
                         }
-                        renderInput={(params) => (
-                          <TextField
-                            {...params}
-                            label={messages.eventOverviewCard.location()}
-                            sx={{
-                              backgroundColor: 'white',
-                              borderRadius: '5px',
-                            }}
-                          />
-                        )}
-                        value={
-                          locations?.find(
-                            (location) => location.id === locationId
-                          )?.title
-                        }
-                      />
-                    )}
+                        setLocationId(location.id);
+                      }}
+                      options={
+                        locations?.map((location) => location.title) || []
+                      }
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          label={messages.eventOverviewCard.location()}
+                          sx={{
+                            backgroundColor: 'white',
+                            borderRadius: '5px',
+                          }}
+                        />
+                      )}
+                      value={
+                        locations?.find(
+                          (location) => location.id === locationId
+                        )?.title
+                      }
+                    />
                     <Place
                       color="secondary"
                       onClick={() => setLocationModalOpen(true)}

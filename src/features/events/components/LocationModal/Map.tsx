@@ -81,11 +81,7 @@ const Map: FC<MapProps> = ({
           : bounds
       }
       style={{
-        alignItems: 'flex-start',
-        display: 'flex',
-        flexDirection: 'row',
-        height: '100%',
-        justifyContent: 'flex-end',
+        height: '80vh',
         width: '100%',
       }}
     >
@@ -94,103 +90,97 @@ const Map: FC<MapProps> = ({
           <>
             <Box
               sx={{
+                bottom: selectedLocation ? 1 : undefined,
                 display: 'flex',
                 justifyContent: 'flex-end',
                 justifySelf: 'flex-end',
                 margin: 2,
-                position: 'relative',
+                position: 'absolute',
+                right: 1,
+                top: 1,
                 width: '30%',
-                zIndex: 10000,
+                zIndex: 1000,
               }}
             >
-              <Box
-                sx={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  minWidth: '200px',
-                  width: '100%',
-                }}
-              >
-                {!selectedLocation && (
-                  <Autocomplete
-                    onChange={(ev, value) => {
-                      const location = locations.find(
-                        (location) => location.title === value
-                      );
-                      if (!location?.lat || !location?.lng) {
-                        return;
-                      }
-                      map.setView(latLng(location.lat, location.lng), 17);
-                    }}
-                    onInputChange={(ev, value) => {
-                      setSearchString(value || '');
-                      setSelectedLocationId(
-                        locations.find((location) => location.title === value)
-                          ?.id || undefined
-                      );
-                    }}
-                    options={locations.map((location) => location.title)}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        label={messages.locationModal.searchBox()}
-                        onChange={(ev) => setSearchString(ev.target.value)}
-                        sx={{
-                          backgroundColor: 'white',
-                          borderRadius: '5px',
-                        }}
-                      />
-                    )}
-                  />
-                )}
-                {selectedLocation && (
-                  <Box
-                    bgcolor="white"
-                    padding={2}
-                    sx={{
-                      cursor: 'default',
-                      display: 'flex',
-                      flexDirection: 'column',
-                    }}
-                  >
-                    <Box display="flex" justifyContent="space-between">
-                      <Typography variant="h5">
-                        {selectedLocation?.title}
-                      </Typography>
-                      <Close
-                        color="secondary"
-                        onClick={() => {
-                          setSearchString('');
-                          setSelectedLocationId(undefined);
-                        }}
-                        sx={{
-                          cursor: 'pointer',
-                        }}
-                      />
-                    </Box>
-                    {selectedLocation?.info_text && (
-                      <Typography color="secondary">
-                        {selectedLocation.info_text}
-                      </Typography>
-                    )}
-                    <Box
-                      display="flex"
-                      justifyContent="flex-end"
-                      paddingTop={2}
-                    >
-                      <Button
-                        onClick={() => {
-                          onSelectLocation(selectedLocation);
-                          onMapClose();
-                        }}
-                        variant="contained"
-                      >
-                        {messages.locationModal.useLocation()}
-                      </Button>
-                    </Box>
+              {!selectedLocation && (
+                <Autocomplete
+                  disableClearable
+                  fullWidth
+                  onChange={(ev, value) => {
+                    const location = locations.find(
+                      (location) => location.title === value
+                    );
+                    if (!location?.lat || !location?.lng) {
+                      return;
+                    }
+                    map.setView(latLng(location.lat, location.lng), 17);
+                  }}
+                  onInputChange={(ev, value) => {
+                    setSearchString(value || '');
+                    setSelectedLocationId(
+                      locations.find((location) => location.title === value)
+                        ?.id || undefined
+                    );
+                  }}
+                  options={locations.map((location) => location.title)}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label={messages.locationModal.searchBox()}
+                      onChange={(ev) => setSearchString(ev.target.value)}
+                      sx={{
+                        backgroundColor: 'white',
+                        borderRadius: '5px',
+                      }}
+                    />
+                  )}
+                />
+              )}
+              {selectedLocation && (
+                <Box
+                  padding={2}
+                  sx={{
+                    backgroundColor: 'white',
+                    cursor: 'default',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between',
+                    width: '100%',
+                  }}
+                >
+                  <Box display="flex" justifyContent="space-between">
+                    <Typography variant="h5">
+                      {selectedLocation?.title}
+                    </Typography>
+                    <Close
+                      color="secondary"
+                      onClick={() => {
+                        setSearchString('');
+                        setSelectedLocationId(undefined);
+                      }}
+                      sx={{
+                        cursor: 'pointer',
+                      }}
+                    />
                   </Box>
-                )}
-              </Box>
+                  {selectedLocation?.info_text && (
+                    <Typography color="secondary">
+                      {selectedLocation.info_text}
+                    </Typography>
+                  )}
+                  <Box display="flex" justifyContent="flex-end" paddingTop={2}>
+                    <Button
+                      onClick={() => {
+                        onSelectLocation(selectedLocation);
+                        onMapClose();
+                      }}
+                      variant="contained"
+                    >
+                      {messages.locationModal.useLocation()}
+                    </Button>
+                  </Box>
+                </Box>
+              )}
             </Box>
             <TileLayer
               attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
