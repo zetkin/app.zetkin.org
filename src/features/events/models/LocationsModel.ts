@@ -8,7 +8,7 @@ export default class LocationsModel extends ModelBase {
   private _orgId: number;
   private _repo: EventsRepo;
 
-  constructor(orgId: number, env: Environment) {
+  constructor(env: Environment, orgId: number) {
     super();
     this._orgId = orgId;
     this._repo = new EventsRepo(env);

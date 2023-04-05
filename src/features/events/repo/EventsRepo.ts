@@ -14,14 +14,16 @@ import {
 import { IFuture, PromiseFuture, RemoteItemFuture } from 'core/caching/futures';
 import { ZetkinEvent, ZetkinLocation } from 'utils/types/zetkin';
 
-type ZetkinPatchEvent = {
+export type ZetkinEventPatchBody = Partial<
+  Omit<
+    ZetkinEvent,
+    'id' | 'activity' | 'campaign' | 'location' | 'organization'
+  >
+> & {
   activity_id?: number;
   campaign_id?: number;
-  end_time?: string;
   location_id?: number;
-  num_participants_required?: number;
-  start_time?: string;
-  title?: string;
+  organization_id?: number;
 };
 
 export default class EventsRepo {
@@ -63,7 +65,7 @@ export default class EventsRepo {
     });
   }
 
-  updateEvent(orgId: number, eventId: number, data: ZetkinPatchEvent) {
+  updateEvent(orgId: number, eventId: number, data: ZetkinEventPatchBody) {
     this._store.dispatch(eventUpdate([eventId, Object.keys(data)]));
     this._apiClient
       .patch<ZetkinEvent>(`/api/orgs/${orgId}/actions/${eventId}`, data)

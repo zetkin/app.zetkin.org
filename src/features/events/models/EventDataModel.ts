@@ -1,7 +1,7 @@
 import Environment from 'core/env/Environment';
-import EventsRepo from '../repo/EventsRepo';
 import { IFuture } from 'core/caching/futures';
 import { ModelBase } from 'core/models';
+import EventsRepo, { ZetkinEventPatchBody } from '../repo/EventsRepo';
 import { ZetkinEvent, ZetkinLocation } from 'utils/types/zetkin';
 
 export enum EventState {
@@ -66,7 +66,8 @@ export default class EventDataModel extends ModelBase {
       return EventState.DRAFT;
     }
   }
-  updateEventData(eventData: Partial<ZetkinEvent>) {
+
+  updateEventData(eventData: ZetkinEventPatchBody) {
     this._repo.updateEvent(this._orgId, this._eventId, eventData);
   }
 }
