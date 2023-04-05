@@ -34,7 +34,11 @@ interface EventPageProps {
   orgId: string;
 }
 
-const EventPage: PageWithLayout<EventPageProps> = ({ orgId, eventId }) => {
+const EventPage: PageWithLayout<EventPageProps> = ({
+  orgId,
+  eventId,
+  campId,
+}) => {
   const model = useModel(
     (env) => new EventDataModel(env, parseInt(orgId), parseInt(eventId))
   );
@@ -43,12 +47,12 @@ const EventPage: PageWithLayout<EventPageProps> = ({ orgId, eventId }) => {
     <ZUIFuture future={model.getData()}>
       {() => {
         return (
-          <Grid container spacing={1}>
+          <Grid container spacing={2}>
             <Grid item md={8} xs={12}>
               <EventOverviewCard model={model} />
             </Grid>
             <Grid item md={4} xs={6}>
-              <EventParticipantsCard model={model} />
+              <EventParticipantsCard model={model} campId={campId} />
             </Grid>
           </Grid>
         );
