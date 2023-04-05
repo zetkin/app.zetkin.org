@@ -41,30 +41,13 @@ export const OrganizerActionPane: FC<OrganizerActionPaneProps> = ({
     personId.toString()
   ).useQuery();
 
-  // Sort first according to date ascending, then organizer action needed first
   const sorted: ZetkinOrganizerAction[] = useMemo(
     () =>
-      [...calls]
-        .sort((call0, call1) => {
-          const d0 = new Date(call0?.update_time || 0);
-          const d1 = new Date(call1?.update_time || 0);
-          return d1.getTime() - d0.getTime();
-        })
-        .sort((call0, call1) => {
-          if (
-            !call0?.organizer_action_taken &&
-            !!call1?.organizer_action_taken
-          ) {
-            return -1;
-          } else if (
-            !!call0?.organizer_action_taken &&
-            !call1?.organizer_action_taken
-          ) {
-            return 1;
-          } else {
-            return 0;
-          }
-        }),
+      [...calls].sort((call0, call1) => {
+        const d0 = new Date(call0?.update_time || 0);
+        const d1 = new Date(call1?.update_time || 0);
+        return d1.getTime() - d0.getTime();
+      }),
     [calls]
   );
 
