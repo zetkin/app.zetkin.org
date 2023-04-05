@@ -144,7 +144,7 @@ const CallAssignmentStatusCards = ({
                   startIcon={<Visibility />}
                   variant="outlined"
                 >
-                  View sheet
+                  <Msg id={messageIds.blocked.viewSheetButton} />
                 </Button>
               }
               title={messages.blocked.organizerActionNeeded()}
