@@ -6,6 +6,7 @@ type ZUINumberChipProps = {
   color: string;
   size?: keyof typeof FONT_SIZES;
   value: number | string;
+  outlined?: boolean;
 };
 
 const FONT_SIZES = {
@@ -16,12 +17,17 @@ const FONT_SIZES = {
 
 const useStyles = makeStyles<
   Theme,
-  { color: string; size: keyof typeof FONT_SIZES }
+  { color: string; size: keyof typeof FONT_SIZES; outlined: boolean }
 >((theme) => ({
   chip: {
-    backgroundColor: ({ color }) => color,
+    backgroundColor: ({ color, outlined }) =>
+      outlined ? theme.palette.common.white : color,
+    borderColor: ({ color }) => color,
     borderRadius: '1em',
-    color: ({ color }) => theme.palette.getContrastText(color),
+    borderStyle: 'solid',
+    borderWidth: 'thin',
+    color: ({ color, outlined }) =>
+      outlined ? color : theme.palette.getContrastText(color),
     display: 'flex',
     fontSize: ({ size }) => FONT_SIZES[size],
     lineHeight: 'normal',
@@ -35,8 +41,9 @@ const ZUINumberChip: FC<ZUINumberChipProps> = ({
   color,
   size = 'md',
   value,
+  outlined = false,
 }) => {
-  const classes = useStyles({ color, size });
+  const classes = useStyles({ color, size, outlined });
   return <Box className={classes.chip}>{value}</Box>;
 };
 
