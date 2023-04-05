@@ -5,6 +5,7 @@ export default makeMessages('feat.events', {
   eventOverviewCard: {
     description: m('Description'),
     editButton: m('Edit event information'),
+    location: m('Location'),
     url: m('Link'),
   },
   form: {
@@ -26,6 +27,13 @@ export default makeMessages('feat.events', {
   list: {
     events: m('Events'),
     noEvents: m('No events...'),
+  },
+  locationModal: {
+    infoText: m(
+      'You can click and drag to pan the map and pinch or scroll to zoom. To create a new location you can click on an empty spot on the map.'
+    ),
+    searchBox: m('Find location'),
+    useLocation: m('Use location'),
   },
   state: {
     cancelled: m('Cancelled'),

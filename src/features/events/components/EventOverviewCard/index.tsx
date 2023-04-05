@@ -1,6 +1,8 @@
 import EditIcon from '@mui/icons-material/Edit';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import { Place } from '@mui/icons-material';
 import {
+  Autocomplete,
   Box,
   Button,
   Card,
@@ -13,22 +15,34 @@ import { FC, useState } from 'react';
 
 import EventDataModel from 'features/events/models/EventDataModel';
 import { getWorkingUrl } from 'features/events/utils/getWorkingUrl';
+import LocationModal from '../LocationModal';
+import LocationsModel from 'features/events/models/LocationsModel';
 import messageIds from 'features/events/l10n/messageIds';
 import theme from 'theme';
 import useEditPreviewBlock from 'zui/hooks/useEditPreviewBlock';
 import { useMessages } from 'core/i18n';
+import { ZetkinLocation } from 'utils/types/zetkin';
 import ZUIPreviewableInput from 'zui/ZUIPreviewableInput';
 
 type EventOverviewCardProps = {
-  model: EventDataModel;
+  dataModel: EventDataModel;
+  locationsModel: LocationsModel;
 };
 
-const EventOverviewCard: FC<EventOverviewCardProps> = ({ model }) => {
-  const eventData = model.getData().data;
+const EventOverviewCard: FC<EventOverviewCardProps> = ({
+  dataModel,
+  locationsModel,
+}) => {
+  const eventData = dataModel.getData().data;
+  const locations = locationsModel.getLocations().data;
   const messages = useMessages(messageIds);
   const [editable, setEditable] = useState(false);
   const [link, setLink] = useState(eventData?.url ?? '');
   const [infoText, setInfoText] = useState(eventData?.info_text ?? '');
+  const [locationId, setLocationId] = useState(
+    eventData?.location.id ?? undefined
+  );
+  const [locationModalOpen, setLocationModalOpen] = useState(false);
 
   const { clickAwayProps, containerProps, previewableProps } =
     useEditPreviewBlock({
@@ -36,8 +50,9 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({ model }) => {
       onEditModeEnter: () => setEditable(true),
       onEditModeExit: () => setEditable(false),
       save: () => {
-        model.updateEventData({
+        dataModel.updateEventData({
           info_text: infoText,
+          location_id: locationId,
           url: link,
         });
       },
@@ -58,6 +73,86 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({ model }) => {
               </Button>
             </Box>
           )}
+          <Box m={2}>
+            <ZUIPreviewableInput
+              {...previewableProps}
+              renderInput={() => {
+                return (
+                  <Box alignItems="center" display="flex">
+                    <Autocomplete
+                      disableClearable
+                      fullWidth
+                      onChange={(ev, value) => {
+                        const location = locations?.find(
+                          (location) => location.title === value
+                        );
+                        if (!location) {
+                          return;
+                        }
+                        setLocationId(location.id);
+                      }}
+                      options={
+                        locations?.map((location) => location.title) || []
+                      }
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          label={messages.eventOverviewCard.location()}
+                          sx={{
+                            backgroundColor: 'white',
+                            borderRadius: '5px',
+                          }}
+                        />
+                      )}
+                      value={
+                        locations?.find(
+                          (location) => location.id === locationId
+                        )?.title
+                      }
+                    />
+                    <Place
+                      color="secondary"
+                      onClick={() => setLocationModalOpen(true)}
+                      sx={{ cursor: 'pointer', marginLeft: 2 }}
+                    />
+                    <LocationModal
+                      locationId={locationId}
+                      locations={locations || []}
+                      onMapClose={() => setLocationModalOpen(false)}
+                      onSelectLocation={(location: ZetkinLocation) =>
+                        setLocationId(location.id)
+                      }
+                      open={locationModalOpen}
+                    />
+                  </Box>
+                );
+              }}
+              renderPreview={() => {
+                if (eventData.location) {
+                  return (
+                    <Box>
+                      <Typography
+                        color="secondary"
+                        component="h3"
+                        variant="subtitle1"
+                      >
+                        {messages.eventOverviewCard.location().toUpperCase()}
+                      </Typography>
+                      <Typography
+                        sx={{ alignItems: 'flex-start', display: 'flex' }}
+                        variant="body2"
+                      >
+                        {eventData.location.title}
+                      </Typography>
+                    </Box>
+                  );
+                } else {
+                  return <></>;
+                }
+              }}
+              value={locationId || ''}
+            />
+          </Box>
           <Box m={2}>
             <ZUIPreviewableInput
               {...previewableProps}

@@ -1,10 +1,30 @@
 import Environment from 'core/env/Environment';
 import IApiClient from 'core/api/client/IApiClient';
+import { loadListIfNecessary } from 'core/caching/cacheUtils';
 import shouldLoad from 'core/caching/shouldLoad';
 import { Store } from 'core/store';
-import { ZetkinEvent } from 'utils/types/zetkin';
-import { eventLoad, eventLoaded, eventUpdate, eventUpdated } from '../store';
+import {
+  eventLoad,
+  eventLoaded,
+  eventUpdate,
+  eventUpdated,
+  locationsLoad,
+  locationsLoaded,
+} from '../store';
 import { IFuture, PromiseFuture, RemoteItemFuture } from 'core/caching/futures';
+import { ZetkinEvent, ZetkinLocation } from 'utils/types/zetkin';
+
+export type ZetkinEventPatchBody = Partial<
+  Omit<
+    ZetkinEvent,
+    'id' | 'activity' | 'campaign' | 'location' | 'organization'
+  >
+> & {
+  activity_id?: number;
+  campaign_id?: number;
+  location_id?: number;
+  organization_id?: number;
+};
 
 export default class EventsRepo {
   private _apiClient: IApiClient;
@@ -33,11 +53,19 @@ export default class EventsRepo {
     }
   }
 
-  updateEvent(
-    orgId: number,
-    eventId: number,
-    data: Partial<Omit<ZetkinEvent, 'id'>>
-  ) {
+  getLocations(orgId: number): IFuture<ZetkinLocation[]> {
+    const state = this._store.getState();
+    const locationsList = state.events.locationList;
+
+    return loadListIfNecessary(locationsList, this._store, {
+      actionOnLoad: () => locationsLoad(),
+      actionOnSuccess: (data) => locationsLoaded(data),
+      loader: () =>
+        this._apiClient.get<ZetkinLocation[]>(`/api/orgs/${orgId}/locations`),
+    });
+  }
+
+  updateEvent(orgId: number, eventId: number, data: ZetkinEventPatchBody) {
     this._store.dispatch(eventUpdate([eventId, Object.keys(data)]));
     this._apiClient
       .patch<ZetkinEvent>(`/api/orgs/${orgId}/actions/${eventId}`, data)
