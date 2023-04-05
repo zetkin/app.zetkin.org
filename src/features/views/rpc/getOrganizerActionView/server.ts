@@ -65,7 +65,7 @@ async function handle(
     },
     {
       config: {
-        type: 'all_flagged',
+        state: 'any',
       },
       type: COLUMN_TYPE.ORGANIZER_ACTION,
     },
@@ -148,7 +148,7 @@ async function handle(
       `/api/orgs/${orgId}/people/views/${view.id}/columns`,
       {
         config: {
-          type: 'all_flagged',
+          state: 'any',
         },
         title: messages.defaultColumnTitles.organizer_action(),
         type: COLUMN_TYPE.ORGANIZER_ACTION,

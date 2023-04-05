@@ -111,11 +111,6 @@ export interface ZetkinOrganizerAction {
     id: number;
     last_name: string;
   };
-  recipient: {
-    first_name: string;
-    id: number;
-    last_name: string;
-  };
   id: number;
   message_to_organizer: string;
   organizer_action_needed: boolean;

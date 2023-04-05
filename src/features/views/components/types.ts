@@ -86,7 +86,7 @@ export interface OrganizerActionViewColumn extends ZetkinViewColumnBase {
   type: COLUMN_TYPE.ORGANIZER_ACTION;
   config: {
     assignment_id?: number;
-    type: 'action_needed' | 'action_taken' | 'all_flagged';
+    state: 'action_needed' | 'action_taken' | 'any';
   };
 }
 
