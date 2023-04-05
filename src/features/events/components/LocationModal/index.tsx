@@ -13,6 +13,7 @@ interface LocationModalProps {
   onMapClose: () => void;
   onSelectLocation: (location: ZetkinLocation) => void;
   open: boolean;
+  locationId?: number;
 }
 
 const LocationModal: FC<LocationModalProps> = ({
@@ -20,6 +21,7 @@ const LocationModal: FC<LocationModalProps> = ({
   onMapClose,
   onSelectLocation,
   open,
+  locationId,
 }) => {
   const Map = dynamic(() => import('./Map'), { ssr: false });
   const messages = useMessages(messageIds);
@@ -29,6 +31,7 @@ const LocationModal: FC<LocationModalProps> = ({
       <Box padding={2}>
         <Box height="80vh">
           <Map
+            locationId={locationId}
             locations={locations}
             onMapClose={onMapClose}
             onSelectLocation={(location: ZetkinLocation) =>

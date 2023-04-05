@@ -117,6 +117,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                       sx={{ cursor: 'pointer', marginLeft: 2 }}
                     />
                     <LocationModal
+                      locationId={locationId}
                       locations={locations || []}
                       onMapClose={() => setLocationModalOpen(false)}
                       onSelectLocation={(location: ZetkinLocation) =>

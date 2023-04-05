@@ -30,6 +30,7 @@ const basicIcon = icon({
 
 interface MapProps {
   locations: ZetkinLocation[];
+  locationId?: number;
   onMapClose: () => void;
   onSelectLocation: (location: ZetkinLocation) => void;
 }
@@ -43,12 +44,17 @@ const MapProvider = ({
   return children(map);
 };
 
-const Map: FC<MapProps> = ({ locations, onMapClose, onSelectLocation }) => {
+const Map: FC<MapProps> = ({
+  locations,
+  locationId,
+  onMapClose,
+  onSelectLocation,
+}) => {
   const messages = useMessages(messageIds);
   const [searchString, setSearchString] = useState('');
-  const [selectedLocationId, setSelectedLocationId] = useState<
-    number | undefined
-  >();
+  const [selectedLocationId, setSelectedLocationId] = useState(
+    locationId || undefined
+  );
 
   const bounds = latLngBounds(
     locations.map((location) => [location.lat, location.lng])
@@ -69,7 +75,11 @@ const Map: FC<MapProps> = ({ locations, onMapClose, onSelectLocation }) => {
 
   return (
     <MapContainer
-      bounds={bounds}
+      bounds={
+        selectedLocation
+          ? latLngBounds([[selectedLocation.lat, selectedLocation.lng]])
+          : bounds
+      }
       style={{
         alignItems: 'flex-start',
         display: 'flex',
