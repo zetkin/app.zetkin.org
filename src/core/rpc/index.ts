@@ -16,7 +16,6 @@ export function createRPCRouter() {
   rpcRouter.register(getSurveyStatsDef);
   rpcRouter.register(getTaskStatsRouteDef);
   rpcRouter.register(addBulkOptionsDef);
-  rpcRouter.register(addBulkOptionsDef);
 
   return rpcRouter;
 }

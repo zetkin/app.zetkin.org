@@ -296,16 +296,6 @@ const viewsSlice = createSlice({
         state.rowsByViewId[viewId] = remoteList([row]);
       }
     },
-    rowLoaded: (state, action: PayloadAction<[number, ZetkinViewRow]>) => {
-      const [viewId, row] = action.payload;
-      const list = state.rowsByViewId[viewId];
-      if (list) {
-        const idx = list.items.findIndex((item) => item.id == row.id);
-        list.items[idx] = remoteItem(row.id, { data: row });
-      }
-      state.rowsByViewId[viewId].loaded = new Date().toISOString();
-      state.rowsByViewId[viewId].isStale = false;
-    },
     rowRemoved: (state, action: PayloadAction<[number, number]>) => {
       const [viewId, rowId] = action.payload;
       const list = state.rowsByViewId[viewId];
