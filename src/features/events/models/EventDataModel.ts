@@ -33,6 +33,12 @@ export default class EventDataModel extends ModelBase {
     this._repo.updateEvent(this._orgId, this._eventId, { title });
   }
 
+  setReqParticipants(reqParticipants: number) {
+    this._repo.updateEvent(this._orgId, this._eventId, {
+      num_participants_required: reqParticipants,
+    });
+  }
+
   get state(): EventState {
     const { data } = this.getData();
     if (!data) {
