@@ -12,18 +12,17 @@ import { FC, useState } from 'react';
 
 import EventDataModel from 'features/events/models/EventDataModel';
 import messageIds from 'features/events/l10n/messageIds';
-import theme from 'theme';
 import NextLink from 'next/link';
+import { Settings } from '@mui/icons-material';
+import theme from 'theme';
 import { useMessages } from 'core/i18n';
 import ZUICard from 'zui/ZUICard';
 import ZUINumberChip from 'zui/ZUINumberChip';
-import ZUIAvatar from 'zui/ZUIAvatar';
-import { Settings } from '@mui/icons-material';
 import ZUIPerson from 'zui/ZUIPerson';
 
 type EventParticipantsCardProps = {
-  model: EventDataModel;
   campId: string;
+  model: EventDataModel;
 };
 
 const EventParticipantsCard: FC<EventParticipantsCardProps> = ({
@@ -49,15 +48,13 @@ const EventParticipantsCard: FC<EventParticipantsCardProps> = ({
   const getParticipantStatus = () => {
     const diff = reqParticipants - availParticipants;
 
-    switch (true) {
-      case diff <= 0:
-        return theme.palette.statusColors.green;
-      case diff === 1:
-        return theme.palette.statusColors.orange;
-      case diff > 1:
-        return theme.palette.statusColors.red;
+    if (diff <= 0) {
+      return theme.palette.statusColors.green;
+    } else if (diff === 1) {
+      return theme.palette.statusColors.orange;
+    } else {
+      return theme.palette.statusColors.red;
     }
-    return theme.palette.statusColors.red;
   };
 
   return (
@@ -68,9 +65,9 @@ const EventParticipantsCard: FC<EventParticipantsCardProps> = ({
           <Box display="flex">
             <ZUINumberChip
               color={getParticipantStatus()}
-              value={`${availParticipants}/${reqParticipants}`}
-              size="sm"
               outlined={true}
+              size="sm"
+              value={`${availParticipants}/${reqParticipants}`}
             />
             <Box ml={1}>
               <Settings
@@ -141,9 +138,9 @@ const EventParticipantsCard: FC<EventParticipantsCardProps> = ({
           justifyContent="space-between"
         >
           <Box
+            alignItems="center"
             display="flex"
             justifyContent="space-between"
-            alignItems="center"
             marginY={1}
           >
             <Typography
@@ -158,9 +155,9 @@ const EventParticipantsCard: FC<EventParticipantsCardProps> = ({
             </Typography>
           </Box>
           <Box
+            alignItems="center"
             display="flex"
             justifyContent="space-between"
-            alignItems="center"
             marginBottom={1}
           >
             <Typography
@@ -173,9 +170,9 @@ const EventParticipantsCard: FC<EventParticipantsCardProps> = ({
             <Typography>{`${availParticipants}/${availParticipants}`}</Typography>
           </Box>
           <Box
+            alignItems="center"
             display="flex"
             justifyContent="space-between"
-            alignItems="center"
             marginBottom={1}
           >
             <Typography

@@ -29,14 +29,14 @@ export default class EventDataModel extends ModelBase {
     return this._repo.getEvent(this._orgId, this._eventId);
   }
 
-  setTitle(title: string) {
-    this._repo.updateEvent(this._orgId, this._eventId, { title });
-  }
-
   setReqParticipants(reqParticipants: number) {
     this._repo.updateEvent(this._orgId, this._eventId, {
       num_participants_required: reqParticipants,
     });
+  }
+
+  setTitle(title: string) {
+    this._repo.updateEvent(this._orgId, this._eventId, { title });
   }
 
   get state(): EventState {

@@ -4,9 +4,9 @@ import { Box, Theme } from '@mui/material';
 
 type ZUINumberChipProps = {
   color: string;
+  outlined?: boolean;
   size?: keyof typeof FONT_SIZES;
   value: number | string;
-  outlined?: boolean;
 };
 
 const FONT_SIZES = {
@@ -17,7 +17,7 @@ const FONT_SIZES = {
 
 const useStyles = makeStyles<
   Theme,
-  { color: string; size: keyof typeof FONT_SIZES; outlined: boolean }
+  { color: string; outlined: boolean; size: keyof typeof FONT_SIZES }
 >((theme) => ({
   chip: {
     backgroundColor: ({ color, outlined }) =>
@@ -43,7 +43,7 @@ const ZUINumberChip: FC<ZUINumberChipProps> = ({
   value,
   outlined = false,
 }) => {
-  const classes = useStyles({ color, size, outlined });
+  const classes = useStyles({ color, outlined, size });
   return <Box className={classes.chip}>{value}</Box>;
 };
 

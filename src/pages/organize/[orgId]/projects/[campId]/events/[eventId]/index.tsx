@@ -52,7 +52,7 @@ const EventPage: PageWithLayout<EventPageProps> = ({
               <EventOverviewCard model={model} />
             </Grid>
             <Grid item md={4} xs={6}>
-              <EventParticipantsCard model={model} campId={campId} />
+              <EventParticipantsCard campId={campId} model={model} />
             </Grid>
           </Grid>
         );

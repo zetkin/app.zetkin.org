@@ -8,14 +8,14 @@ export default makeMessages('feat.events', {
     url: m('Link'),
   },
   eventParticipantsCard: {
-    header: m('Participants'),
-    pending: m('Pending Sign-ups'),
     booked: m('Notifications'),
     contact: m('Contact'),
+    header: m('Participants'),
+    noContact: m('None assigned'),
     participantList: m('View participants'),
+    pending: m('Pending Sign-ups'),
     reqParticipantsHelperText: m('The minimum number of participants required'),
     reqParticipantsLabel: m('Required participants'),
-    noContact: m('None assigned'),
   },
   form: {
     activity: m('Activity'),
