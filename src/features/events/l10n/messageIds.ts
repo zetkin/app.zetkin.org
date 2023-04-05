@@ -10,10 +10,12 @@ export default makeMessages('feat.events', {
   eventParticipantsCard: {
     header: m('Participants'),
     pending: m('Pending Sign-ups'),
-    booked: m('Booked participants'),
-    cancelled: m('Cancelled'),
+    booked: m('Notifications'),
     contact: m('Contact'),
-    participant_list: m('View participants'),
+    participantList: m('View participants'),
+    reqParticipantsHelperText: m('The minimum number of participants required'),
+    reqParticipantsLabel: m('Required participants'),
+    noContact: m('None assigned'),
   },
   form: {
     activity: m('Activity'),
