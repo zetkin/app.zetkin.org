@@ -5,7 +5,7 @@ import { scaffold } from 'utils/next';
 
 import EventDataModel from 'features/events/models/EventDataModel';
 import EventLayout from 'features/events/layout/EventLayout';
-import EventOverviewCard from 'features/events/components/EventOverviewCard/EventOverviewCard';
+import EventOverviewCard from 'features/events/components/EventOverviewCard';
 import LocationsModel from 'features/events/models/LocationsModel';
 import useModel from 'core/useModel';
 import ZUIFuture from 'zui/ZUIFuture';
