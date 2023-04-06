@@ -89,6 +89,10 @@ export interface ZetkinEvent {
   url?: string;
 }
 
+export type ZetkinEventParticipant = ZetkinPerson & {
+  reminder_sent: null | string;
+};
+
 export interface ZetkinFile {
   id: number;
   original_name: string;

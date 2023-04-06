@@ -12,9 +12,15 @@ import {
   eventUpdated,
   locationsLoad,
   locationsLoaded,
+  participantsLoad,
+  participantsLoaded,
 } from '../store';
 import { IFuture, PromiseFuture, RemoteItemFuture } from 'core/caching/futures';
-import { ZetkinEvent, ZetkinLocation } from 'utils/types/zetkin';
+import {
+  ZetkinEvent,
+  ZetkinEventParticipant,
+  ZetkinLocation,
+} from 'utils/types/zetkin';
 
 export type ZetkinEventPatchBody = Partial<
   Omit<
@@ -64,6 +70,24 @@ export default class EventsRepo {
     } else {
       return new RemoteItemFuture(item);
     }
+  }
+
+  getEventParticipants(
+    orgId: number,
+    eventId: number
+  ): IFuture<ZetkinEventParticipant[]> {
+    const state = this._store.getState();
+    const list = state.events.participantsByEventId[eventId];
+
+    return loadListIfNecessary(list, this._store, {
+      actionOnLoad: () => participantsLoad(eventId),
+      actionOnSuccess: (participants) =>
+        participantsLoaded([eventId, participants]),
+      loader: () =>
+        this._apiClient.get<ZetkinEventParticipant[]>(
+          `/api/orgs/${orgId}/actions/${eventId}/participants`
+        ),
+    });
   }
 
   getLocations(orgId: number): IFuture<ZetkinLocation[]> {
