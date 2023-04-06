@@ -1,7 +1,14 @@
 import { FC } from 'react';
-import { EventOutlined, Group } from '@mui/icons-material';
+import {
+  EventOutlined,
+  Group,
+  PlaceOutlined,
+  ScheduleOutlined,
+} from '@mui/icons-material';
 
 import useModel from 'core/useModel';
+import ZUIIconLabelRow from 'zui/ZUIIconLabelRow';
+import ZUITimeSpan from 'zui/ZUITimeSpan';
 import ActivityListItem, { STATUS_COLORS } from './ActivityListItem';
 import EventDataModel, {
   EventState,
@@ -36,9 +43,30 @@ const EventListItem: FC<EventListeItemProps> = ({ eventId, orgId }) => {
       endNumber={`${data.num_participants_available} / ${data.num_participants_required}`}
       href={`/organize/${orgId}/projects/${
         data.campaign?.id ?? 'standalone'
-      }/callassignments/${eventId}`}
+      }/events/${eventId}`}
       PrimaryIcon={EventOutlined}
       SecondaryIcon={Group}
+      subtitle={
+        <ZUIIconLabelRow
+          color="gray"
+          iconLabels={[
+            {
+              icon: <ScheduleOutlined fontSize="inherit" />,
+              label: (
+                <ZUITimeSpan
+                  end={new Date(data.end_time)}
+                  start={new Date(data.start_time)}
+                />
+              ),
+            },
+            {
+              icon: <PlaceOutlined fontSize="inherit" />,
+              label: data.location.title,
+            },
+          ]}
+          size="sm"
+        />
+      }
       title={data.title || data.activity.title}
     />
   );

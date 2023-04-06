@@ -1,14 +1,7 @@
 import makeStyles from '@mui/styles/makeStyles';
 import NextLink from 'next/link';
 import { OverridableComponent } from '@mui/material/OverridableComponent';
-import {
-  Box,
-  Grid,
-  Link,
-  SvgIconTypeMap,
-  Theme,
-  Typography,
-} from '@mui/material';
+import { Box, Link, SvgIconTypeMap, Theme, Typography } from '@mui/material';
 
 import theme from 'theme';
 import ZUIIconLabel from 'zui/ZUIIconLabel';
@@ -21,23 +14,31 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
   container: {
     alignItems: 'center',
     display: 'flex',
-    padding: '1em',
+    justifyContent: 'space-between',
+    padding: '1.0em 0.5em',
   },
   dot: {
     backgroundColor: ({ color }) => theme.palette.statusColors[color],
     borderRadius: '100%',
     height: '10px',
-    marginRight: '1em',
+    marginLeft: '0.5em',
+    marginRight: '0.5em',
     width: '10px',
   },
   endNumber: {
     alignItems: 'center',
     display: 'flex',
     justifyContent: 'flex-start',
+    width: '7em',
   },
   left: {
     alignItems: 'center',
     display: 'flex',
+    flex: '1 0',
+    gap: '1em',
+  },
+  meta: {
+    width: '8em',
   },
   primaryIcon: {
     color: theme.palette.grey[500],
@@ -72,6 +73,7 @@ export type AcitivityListItemProps = {
   endNumber: string | number;
   href: string;
   meta?: JSX.Element;
+  subtitle?: JSX.Element;
   title: string;
 };
 
@@ -81,42 +83,43 @@ const ActivityListItem = ({
   href,
   color,
   meta,
+  subtitle,
   title,
   endNumber,
 }: AcitivityListItemProps) => {
   const classes = useStyles({ color });
 
   return (
-    <Grid className={classes.container} container>
-      <Grid item lg={8} md={7} xs={6}>
-        <Box className={classes.left}>
-          <Box className={classes.dot}></Box>
-          <PrimaryIcon className={classes.primaryIcon} />
+    <Box className={classes.container}>
+      <Box className={classes.left}>
+        <Box className={classes.dot}></Box>
+        <PrimaryIcon className={classes.primaryIcon} />
+        <Box>
           <NextLink href={href} passHref>
             <Link underline="none">
-              <Typography
-                color={theme.palette.text.primary}
-                sx={{ paddingX: 2 }}
-              >
+              <Typography color={theme.palette.text.primary}>
                 {title}
               </Typography>
             </Link>
           </NextLink>
+          {subtitle && (
+            <Box>
+              <Typography variant="body2">{subtitle}</Typography>
+            </Box>
+          )}
         </Box>
-      </Grid>
-      <Grid item lg={2} md={3} xs={4}>
-        {meta}
-      </Grid>
-      <Grid item xs={2}>
+      </Box>
+      <Box className={classes.meta}>{meta}</Box>
+      <Box>
         <Box className={classes.endNumber}>
           <ZUIIconLabel
+            color="secondary"
             icon={<SecondaryIcon color="secondary" />}
             label={endNumber.toString()}
-            labelColor="secondary"
           />
         </Box>
-      </Grid>
-    </Grid>
+      </Box>
+    </Box>
   );
 };
 
