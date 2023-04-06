@@ -1,3 +1,5 @@
+import NextLink from 'next/link';
+import { Settings } from '@mui/icons-material';
 import {
   Box,
   ClickAwayListener,
@@ -12,8 +14,6 @@ import { FC, useState } from 'react';
 
 import EventDataModel from 'features/events/models/EventDataModel';
 import messageIds from 'features/events/l10n/messageIds';
-import NextLink from 'next/link';
-import { Settings } from '@mui/icons-material';
 import theme from 'theme';
 import { useMessages } from 'core/i18n';
 import ZUICard from 'zui/ZUICard';
