@@ -1,6 +1,7 @@
 import NextLink from 'next/link';
 import { Settings } from '@mui/icons-material';
 import {
+  Avatar,
   Box,
   ClickAwayListener,
   Divider,
@@ -14,11 +15,12 @@ import { FC, useState } from 'react';
 
 import EventDataModel from 'features/events/models/EventDataModel';
 import messageIds from 'features/events/l10n/messageIds';
+import { personResource } from 'features/profile/api/people';
 import theme from 'theme';
 import { useMessages } from 'core/i18n';
 import ZUICard from 'zui/ZUICard';
 import ZUINumberChip from 'zui/ZUINumberChip';
-import ZUIPerson from 'zui/ZUIPerson';
+import ZUIPersonLink from 'zui/ZUIPersonLink';
 
 type EventParticipantsCardProps = {
   campId: string;
@@ -43,6 +45,14 @@ const EventParticipantsCard: FC<EventParticipantsCardProps> = ({
 
   if (!eventData) {
     return null;
+  }
+
+  let contact = null;
+  if (eventData.contact) {
+    contact = personResource(
+      eventData.organization.id.toString(),
+      eventData.contact.id.toString()
+    ).useQuery().data;
   }
 
   const getParticipantStatus = () => {
@@ -170,14 +180,16 @@ const EventParticipantsCard: FC<EventParticipantsCardProps> = ({
             <Typography color={'secondary'} component="h6" variant="subtitle1">
               {messages.eventParticipantsCard.contact()}
             </Typography>
-            {eventData.contact && (
-              <ZUIPerson
-                id={eventData.contact.id}
-                name={eventData.contact.name}
-                size={30}
-              />
+            {contact && eventData.contact && (
+              <Box alignItems="center" display="flex">
+                <Avatar
+                  src={`/api/orgs/${eventData.organization.id}/people/${eventData.contact.id}/avatar`}
+                  style={{ height: 30, marginRight: 10, width: 30 }}
+                />
+                <ZUIPersonLink person={contact} />
+              </Box>
             )}
-            {!eventData.contact && (
+            {!contact && (
               <Typography>
                 {messages.eventParticipantsCard.noContact()}
               </Typography>
