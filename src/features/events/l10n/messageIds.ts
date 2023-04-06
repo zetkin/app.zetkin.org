@@ -14,7 +14,7 @@ export default makeMessages('feat.events', {
     header: m('Participants'),
     noContact: m('None assigned'),
     participantList: m('View participants'),
-    pending: m('Pending Sign-ups'),
+    pending: m('Pending sign-ups'),
     reqParticipantsHelperText: m('The minimum number of participants required'),
     reqParticipantsLabel: m('Required participants'),
   },
