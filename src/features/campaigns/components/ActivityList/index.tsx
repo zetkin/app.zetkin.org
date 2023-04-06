@@ -4,6 +4,7 @@ import { useMemo } from 'react';
 import { Box, Card, Divider, Typography } from '@mui/material';
 
 import CallAssignmentListItem from './CallAssignmentListItem';
+import EventListItem from './EventListItem';
 import messageIds from 'features/campaigns/l10n/messageIds';
 import SurveyListItem from './SurveyListItem';
 import TaskListItem from './TaskListItem';
@@ -27,6 +28,13 @@ const Activities = ({ activities, orgId }: ActivitiesProps) => {
             <Box key={`ca-${activity.data.id}`}>
               {index > 0 && <Divider />}
               <CallAssignmentListItem caId={activity.data.id} orgId={orgId} />
+            </Box>
+          );
+        } else if (activity.kind === ACTIVITIES.EVENT) {
+          return (
+            <Box key={`event-${activity.data.id}`}>
+              {index > 0 && <Divider />}
+              <EventListItem eventId={activity.data.id} orgId={orgId} />
             </Box>
           );
         } else if (activity.kind === ACTIVITIES.SURVEY) {

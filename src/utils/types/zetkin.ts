@@ -76,8 +76,8 @@ export interface ZetkinEvent {
     lng: number;
     title: string;
   };
-  num_participants_required?: number;
-  num_participants_available?: number;
+  num_participants_required: number;
+  num_participants_available: number;
   start_time: string;
   title?: string;
   organization: {
