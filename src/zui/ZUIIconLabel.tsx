@@ -4,14 +4,31 @@ import { Box, Typography } from '@mui/material';
 export interface ZUIIconLabelProps {
   icon: JSX.Element;
   label: string | JSX.Element;
-  labelColor?: string;
+  color?: string;
+  size?: 'sm' | 'md';
 }
 
-const ZUIIconLabel: FC<ZUIIconLabelProps> = ({ icon, label, labelColor }) => {
+const FONT_SIZES = {
+  md: '1.1em',
+  sm: '1em',
+} as const;
+
+const ZUIIconLabel: FC<ZUIIconLabelProps> = ({
+  icon,
+  label,
+  color,
+  size = 'md',
+}) => {
   return (
-    <Box display="flex" gap={1}>
+    <Box
+      alignItems="center"
+      color={color}
+      display="flex"
+      fontSize={FONT_SIZES[size]}
+      gap={1}
+    >
       {icon}
-      <Typography color={labelColor ? labelColor : 'inherit'}>
+      <Typography color={color ? color : 'inherit'} fontSize="inherit">
         {label}
       </Typography>
     </Box>

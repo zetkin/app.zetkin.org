@@ -167,9 +167,9 @@ const OverviewListItem = ({
             </Box>
             <Box width={80}>
               <ZUIIconLabel
+                color="secondary"
                 icon={<SecondaryIcon color="secondary" />}
                 label={<ZUISuffixedNumber number={endNumber} />}
-                labelColor="secondary"
               />
             </Box>
           </Box>
