@@ -3,7 +3,6 @@ import NextLink from 'next/link';
 import { OverridableComponent } from '@mui/material/OverridableComponent';
 import {
   Box,
-  CircularProgress,
   Grid,
   Link,
   SvgIconTypeMap,
@@ -13,7 +12,6 @@ import {
 
 import theme from 'theme';
 import ZUIIconLabel from 'zui/ZUIIconLabel';
-import ZUIMultiNumberChip from 'zui/ZUIMultiNumberChip';
 
 interface StyleProps {
   color: STATUS_COLORS;
@@ -63,34 +61,28 @@ export enum STATUS_COLORS {
   RED = 'red',
 }
 
-interface AcitivityListItemProps {
+export type AcitivityListItemProps = {
   PrimaryIcon: OverridableComponent<
     SvgIconTypeMap<Record<string, unknown>, 'svg'>
   >;
   SecondaryIcon: OverridableComponent<
     SvgIconTypeMap<Record<string, unknown>, 'svg'>
   >;
-  blueChipValue?: string | number;
-  href: string;
-  orangeChipValue: string | number | undefined;
-  greenChipValue: string | number | undefined;
   color: STATUS_COLORS;
-  title: string;
   endNumber: string | number;
-  statsLoading: boolean;
-}
+  href: string;
+  meta?: JSX.Element;
+  title: string;
+};
 
 const ActivityListItem = ({
   PrimaryIcon,
   SecondaryIcon,
   href,
-  blueChipValue,
-  greenChipValue,
-  orangeChipValue,
   color,
+  meta,
   title,
   endNumber,
-  statsLoading,
 }: AcitivityListItemProps) => {
   const classes = useStyles({ color });
 
@@ -113,15 +105,7 @@ const ActivityListItem = ({
         </Box>
       </Grid>
       <Grid item lg={2} md={3} xs={4}>
-        {statsLoading ? (
-          <CircularProgress size={26} />
-        ) : (
-          <ZUIMultiNumberChip
-            blueValue={blueChipValue}
-            greenValue={greenChipValue}
-            orangeValue={orangeChipValue}
-          />
-        )}
+        {meta}
       </Grid>
       <Grid item xs={2}>
         <Box className={classes.endNumber}>

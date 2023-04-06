@@ -34,14 +34,11 @@ const EventListItem: FC<EventListeItemProps> = ({ eventId, orgId }) => {
     <ActivityListItem
       color={color}
       endNumber={`${data.num_participants_available} / ${data.num_participants_required}`}
-      greenChipValue={undefined}
       href={`/organize/${orgId}/projects/${
         data.campaign?.id ?? 'standalone'
       }/callassignments/${eventId}`}
-      orangeChipValue={undefined}
       PrimaryIcon={EventOutlined}
       SecondaryIcon={Group}
-      statsLoading={false}
       title={data.title || data.activity.title}
     />
   );

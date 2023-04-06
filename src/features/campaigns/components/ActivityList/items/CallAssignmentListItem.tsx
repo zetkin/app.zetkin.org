@@ -1,11 +1,12 @@
 import { FC } from 'react';
+import { HeadsetMic, PhoneOutlined } from '@mui/icons-material';
+
+import ActivityListItemWithStats from './ActivityListItemWithStats';
+import { STATUS_COLORS } from './ActivityListItem';
+import useModel from 'core/useModel';
 import CallAssignmentModel, {
   CallAssignmentState,
 } from 'features/callAssignments/models/CallAssignmentModel';
-import { HeadsetMic, PhoneOutlined } from '@mui/icons-material';
-
-import useModel from 'core/useModel';
-import ActivityListItem, { STATUS_COLORS } from './ActivityListItem';
 
 interface CallAssignmentListItemProps {
   orgId: number;
@@ -44,7 +45,7 @@ const CallAssignmentListItem: FC<CallAssignmentListItemProps> = ({
   const statsLoading = model.getStats().isLoading;
 
   return (
-    <ActivityListItem
+    <ActivityListItemWithStats
       blueChipValue={ready}
       color={color}
       endNumber={callsMade}
