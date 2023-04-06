@@ -143,11 +143,7 @@ const EventParticipantsCard: FC<EventParticipantsCardProps> = ({
             justifyContent="space-between"
             marginY={1}
           >
-            <Typography
-              color={theme.palette.text.secondary}
-              component="h6"
-              variant="subtitle1"
-            >
+            <Typography color={'secondary'} component="h6" variant="subtitle1">
               {messages.eventParticipantsCard.pending()}
             </Typography>
             <Typography>
@@ -160,11 +156,7 @@ const EventParticipantsCard: FC<EventParticipantsCardProps> = ({
             justifyContent="space-between"
             marginBottom={1}
           >
-            <Typography
-              color={theme.palette.text.secondary}
-              component="h6"
-              variant="subtitle1"
-            >
+            <Typography color={'secondary'} component="h6" variant="subtitle1">
               {messages.eventParticipantsCard.booked()}
             </Typography>
             <Typography>{`${availParticipants}/${availParticipants}`}</Typography>
@@ -175,11 +167,7 @@ const EventParticipantsCard: FC<EventParticipantsCardProps> = ({
             justifyContent="space-between"
             marginBottom={1}
           >
-            <Typography
-              color={theme.palette.text.secondary}
-              component="h6"
-              variant="subtitle1"
-            >
+            <Typography color={'secondary'} component="h6" variant="subtitle1">
               {messages.eventParticipantsCard.contact()}
             </Typography>
             {eventData.contact && (
