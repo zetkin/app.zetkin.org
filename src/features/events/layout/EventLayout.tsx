@@ -55,24 +55,30 @@ const EventLayout: React.FC<EventLayoutProps> = ({
       defaultTab="/"
       subtitle={
         <Box alignItems="center" display="flex">
-          <Box marginRight={2}>
+          <Box marginRight={1}>
             <EventStatusChip state={model.state} />
           </Box>
           <ZUIFutures
             futures={{
-              currentType: model.getData(),
-              eventTypes: typesModel.getTypes(),
+              currentEvent: model.getData(),
+              types: typesModel.getTypes(),
             }}
           >
-            {({ data: { eventTypes: types, currentType } }) => {
+            {({ data: { types, currentEvent } }) => {
               const eventTypes: string[] = [];
+              const currentType = currentEvent.activity.title;
 
-              if (currentType.activity.title === null) {
+              if (currentType === null) {
                 eventTypes.push(messages.uncategorized());
               }
               types.map((item) => eventTypes.push(item.title));
 
-              return <ZUIAutocompleteInPlace types={eventTypes} />;
+              return (
+                <ZUIAutocompleteInPlace
+                  currentType={currentType}
+                  types={eventTypes}
+                />
+              );
             }}
           </ZUIFutures>
           <Box marginX={2}>
