@@ -6,6 +6,8 @@ import { Store } from 'core/store';
 import {
   eventLoad,
   eventLoaded,
+  eventsLoad,
+  eventsLoaded,
   eventUpdate,
   eventUpdated,
   locationsLoad,
@@ -33,6 +35,17 @@ export default class EventsRepo {
   constructor(env: Environment) {
     this._store = env.store;
     this._apiClient = env.apiClient;
+  }
+
+  getAllEvents(orgId: number): IFuture<ZetkinEvent[]> {
+    const state = this._store.getState();
+
+    return loadListIfNecessary(state.events.eventList, this._store, {
+      actionOnLoad: () => eventsLoad(),
+      actionOnSuccess: (events) => eventsLoaded(events),
+      loader: () =>
+        this._apiClient.get<ZetkinEvent[]>(`/api/orgs/${orgId}/actions`),
+    });
   }
 
   getEvent(orgId: number, id: number): IFuture<ZetkinEvent> {

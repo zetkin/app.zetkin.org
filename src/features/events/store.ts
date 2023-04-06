@@ -50,6 +50,13 @@ const eventsSlice = createSlice({
         item.mutating = [];
       }
     },
+    eventsLoad: (state) => {
+      state.eventList.isLoading = true;
+    },
+    eventsLoaded: (state, action: PayloadAction<ZetkinEvent[]>) => {
+      state.eventList = remoteList(action.payload);
+      state.eventList.loaded = new Date().toISOString();
+    },
     locationsLoad: (state) => {
       state.locationList.isLoading = true;
     },
@@ -66,6 +73,8 @@ export default eventsSlice;
 export const {
   eventLoad,
   eventLoaded,
+  eventsLoad,
+  eventsLoaded,
   eventUpdate,
   eventUpdated,
   locationsLoad,
