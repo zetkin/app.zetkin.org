@@ -44,6 +44,13 @@ export default makeMessages('feat.views', {
       restrictedMode: m("Can't be edited in shared views."),
       searchLabel: m('Select a person'),
     },
+    organizerAction: {
+      actionNeeded: m('Organizer action needed'),
+      showDetails: m('Show details'),
+      solvedIssues: m<{ count: number }>(
+        '{count, plural, =1 {1 solved issue} other {# solved issues}}'
+      ),
+    },
   },
   columnDialog: {
     categories: {
@@ -269,7 +276,11 @@ export default makeMessages('feat.views', {
     journey_assignee: m('Assigned journeys'),
     local_bool: m('Toggle'),
     local_person: m('Person reference'),
+    organizer_action: m('Flagged calls'),
     person_notes: m('Notes'),
+  },
+  defaultViewTitles: {
+    organizer_action: m('Organizer action needed'),
   },
   deleteDialog: {
     error: m('There was an error deleting the view'),

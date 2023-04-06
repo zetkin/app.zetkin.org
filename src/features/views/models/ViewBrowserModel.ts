@@ -164,6 +164,19 @@ export default class ViewBrowserModel extends ModelBase {
     return new ResolvedFuture(items);
   }
 
+  getOrganizerActionView(): IFuture<ZetkinView> {
+    const promise = this._repo
+      .getOrganizerActionView(this._orgId)
+      .then((view) => {
+        this._env.router.push(
+          `/organize/${view.organization.id}/people/views/${view.id}`
+        );
+        return view;
+      });
+
+    return new PromiseFuture(promise);
+  }
+
   itemIsRenaming(type: 'folder' | 'view', id: number): boolean {
     const state = this._env.store.getState();
     if (type == 'folder') {

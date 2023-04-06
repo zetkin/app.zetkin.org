@@ -1,8 +1,8 @@
 import Environment from 'core/env/Environment';
-import EventsRepo from '../repo/EventsRepo';
 import { IFuture } from 'core/caching/futures';
 import { ModelBase } from 'core/models';
-import { ZetkinEvent } from 'utils/types/zetkin';
+import EventsRepo, { ZetkinEventPatchBody } from '../repo/EventsRepo';
+import { ZetkinEvent, ZetkinLocation } from 'utils/types/zetkin';
 
 export enum EventState {
   CANCELLED = 'cancelled',
@@ -27,6 +27,12 @@ export default class EventDataModel extends ModelBase {
 
   getData(): IFuture<ZetkinEvent> {
     return this._repo.getEvent(this._orgId, this._eventId);
+  }
+
+  setLocation(location: ZetkinLocation) {
+    this._repo.updateEvent(this._orgId, this._eventId, {
+      location_id: location.id,
+    });
   }
 
   setReqParticipants(reqParticipants: number) {
@@ -66,7 +72,8 @@ export default class EventDataModel extends ModelBase {
       return EventState.DRAFT;
     }
   }
-  updateEventData(eventData: Partial<ZetkinEvent>) {
+
+  updateEventData(eventData: ZetkinEventPatchBody) {
     this._repo.updateEvent(this._orgId, this._eventId, eventData);
   }
 }

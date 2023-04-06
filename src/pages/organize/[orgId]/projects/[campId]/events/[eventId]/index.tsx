@@ -5,8 +5,9 @@ import { scaffold } from 'utils/next';
 
 import EventDataModel from 'features/events/models/EventDataModel';
 import EventLayout from 'features/events/layout/EventLayout';
-import EventOverviewCard from 'features/events/components/EventOverviewCard/EventOverviewCard';
+import EventOverviewCard from 'features/events/components/EventOverviewCard';
 import EventParticipantsCard from 'features/events/components/EventOverviewCard/EventParticipantsCard';
+import LocationsModel from 'features/events/models/LocationsModel';
 import useModel from 'core/useModel';
 import ZUIFuture from 'zui/ZUIFuture';
 
@@ -39,20 +40,27 @@ const EventPage: PageWithLayout<EventPageProps> = ({
   eventId,
   campId,
 }) => {
-  const model = useModel(
+  const dataModel = useModel(
     (env) => new EventDataModel(env, parseInt(orgId), parseInt(eventId))
   );
 
+  const locationsModel = useModel(
+    (env) => new LocationsModel(env, parseInt(orgId))
+  );
+
   return (
-    <ZUIFuture future={model.getData()}>
+    <ZUIFuture future={dataModel.getData()}>
       {() => {
         return (
           <Grid container spacing={2}>
             <Grid item md={8} xs={12}>
-              <EventOverviewCard model={model} />
+              <EventOverviewCard
+                dataModel={dataModel}
+                locationsModel={locationsModel}
+              />
             </Grid>
             <Grid item md={4} xs={6}>
-              <EventParticipantsCard campId={campId} model={model} />
+              <EventParticipantsCard campId={campId} model={dataModel} />
             </Grid>
           </Grid>
         );

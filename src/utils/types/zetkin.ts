@@ -101,6 +101,23 @@ export interface ZetkinFile {
   mime_type: string;
 }
 
+export interface ZetkinOrganizerAction {
+  assigment: {
+    id: number;
+    title: string;
+  };
+  caller: {
+    first_name: string;
+    id: number;
+    last_name: string;
+  };
+  id: number;
+  message_to_organizer: string;
+  organizer_action_needed: boolean;
+  organizer_action_taken: boolean;
+  update_time: string;
+}
+
 export interface ZetkinUser {
   first_name: string;
   id: number;
