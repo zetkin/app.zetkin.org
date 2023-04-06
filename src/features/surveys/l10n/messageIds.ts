@@ -119,6 +119,10 @@ export default makeMessages('feat.surveys', {
       '{numOfOptions, plural, one {Show 1 more option} other {Show # more options}}'
     ),
   },
+  organizerActionPane: {
+    subtitle: m<{ person: ReactElement }>('Notes on calls to {person}'),
+    title: m('Organizer Action Needed'),
+  },
   overview: {
     noQuestions: {
       button: m('Create questions'),

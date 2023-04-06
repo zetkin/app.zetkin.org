@@ -1,6 +1,7 @@
 import createNew from '../rpc/createNew/client';
 import deleteFolder from '../rpc/deleteFolder';
 import Environment from 'core/env/Environment';
+import getOrganizerActionView from '../rpc/getOrganizerActionView/client';
 import IApiClient from 'core/api/client/IApiClient';
 import shouldLoad from 'core/caching/shouldLoad';
 import { Store } from 'core/store';
@@ -112,6 +113,15 @@ export default class ViewsRepo {
     }
 
     return new RemoteListFuture(state.views.officialList);
+  }
+
+  async getOrganizerActionView(orgId: number): Promise<ZetkinView> {
+    this._store.dispatch(viewCreate());
+    const view = await this._apiClient.rpc(getOrganizerActionView, {
+      orgId,
+    });
+    this._store.dispatch(viewCreated(view));
+    return view;
   }
 
   getViewAccessList(

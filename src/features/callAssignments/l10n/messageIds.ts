@@ -1,3 +1,4 @@
+import { ReactElement } from 'react';
 import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('feat.callAssignments', {
@@ -19,6 +20,7 @@ export default makeMessages('feat.callAssignments', {
     organizerActionNeeded: m('Organizer action needed'),
     subtitle: m('Targets not ready to be called'),
     title: m('Blocked'),
+    viewSheetButton: m('View sheet'),
   },
   callers: {
     actions: {
@@ -80,6 +82,16 @@ export default makeMessages('feat.callAssignments', {
     defineButton: m('Edit done criteria'),
     subtitle: m('Targets that meet the done criteria'),
     title: m('Done'),
+  },
+  organizerActionPane: {
+    markAsSolved: m('Mark as solved'),
+    markAsUnsolved: m('Mark as unsolved'),
+    messagePlaceholder: m('Caller did not leave a message'),
+    noteByCaller: m<{ person: ReactElement; time: ReactElement }>(
+      'Note by {person} {time}'
+    ),
+    subtitle: m<{ person: ReactElement }>('Notes on {person}'),
+    title: m('Organizer Action Needed'),
   },
   ready: {
     allocated: m('Targets allocated to caller'),

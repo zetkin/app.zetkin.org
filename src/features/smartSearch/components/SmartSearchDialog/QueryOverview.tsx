@@ -11,6 +11,7 @@ import {
 } from '@mui/material';
 import { DeleteOutline, Settings } from '@mui/icons-material';
 
+import DisplayCallBlocked from '../filters/CallBlocked/DisplayCallBlocked';
 import DisplayCallHistory from '../filters/CallHistory/DisplayCallHistory';
 import DisplayCampaignParticipation from '../filters/CampaignParticipation/DisplayCampaignParticipation';
 import DisplayMostActive from '../filters/MostActive/DisplayMostActive';
@@ -29,6 +30,7 @@ import DisplayUser from '../filters/User/DisplayUser';
 import { Msg } from 'core/i18n';
 import {
   AnyFilterConfig,
+  CallBlockedFilterConfig,
   CallHistoryFilterConfig,
   CampaignParticipationConfig,
   FILTER_TYPE,
@@ -128,6 +130,13 @@ const QueryOverview = ({
                   width={1}
                 >
                   <Typography align="center" variant="body2">
+                    {filter.type === FILTER_TYPE.CALL_BLOCKED && (
+                      <DisplayCallBlocked
+                        filter={
+                          filter as SmartSearchFilterWithId<CallBlockedFilterConfig>
+                        }
+                      />
+                    )}
                     {filter.type === FILTER_TYPE.CALL_HISTORY && (
                       <DisplayCallHistory
                         filter={

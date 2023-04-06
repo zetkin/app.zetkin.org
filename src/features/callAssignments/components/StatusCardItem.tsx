@@ -11,7 +11,12 @@ interface StatusCardItemProps {
 const StatusCardItem = ({ action, title, value }: StatusCardItemProps) => {
   return (
     <ListItem>
-      <Box display="flex" justifyContent="space-between" width="100%">
+      <Box
+        alignItems="flex-start"
+        display="flex"
+        justifyContent="space-between"
+        width="100%"
+      >
         <Box display="flex" flexDirection="column">
           <Typography color="secondary" variant="h5">
             {title}

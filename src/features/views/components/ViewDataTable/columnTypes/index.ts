@@ -5,6 +5,7 @@ import LocalBoolColumnType from './LocalBoolColumnType';
 import LocalPersonColumnType from './LocalPersonColumnType';
 import LocalQueryColumnType from './LocalQueryColumnType';
 import LocalTextColumnType from './LocalTextColumnType';
+import OrganizerActionColumnType from './OrganizerActionColumnType';
 import PersonTagColumnType from './PersonTagColumnType';
 import SimpleColumnType from './SimpleColumnType';
 import SurveyOptionColumnType from './SurveyOptionColumnType';
@@ -87,6 +88,7 @@ const columnTypes: Record<COLUMN_TYPE, IColumnType> = {
   [COLUMN_TYPE.LOCAL_BOOL]: new LocalBoolColumnType(),
   [COLUMN_TYPE.LOCAL_PERSON]: new LocalPersonColumnType(),
   [COLUMN_TYPE.LOCAL_QUERY]: new LocalQueryColumnType(),
+  [COLUMN_TYPE.ORGANIZER_ACTION]: new OrganizerActionColumnType(),
   [COLUMN_TYPE.PERSON_FIELD]: new SimpleColumnType(),
   [COLUMN_TYPE.PERSON_QUERY]: new LocalQueryColumnType(),
   [COLUMN_TYPE.PERSON_TAG]: new PersonTagColumnType(),
