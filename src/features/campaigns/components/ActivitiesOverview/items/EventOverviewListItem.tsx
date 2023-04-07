@@ -32,6 +32,11 @@ const EventOverviewListItem: FC<EventOverviewListItemProps> = ({
     <OverviewListItem
       activity={activity}
       endNumber={`${event.num_participants_available} / ${event.num_participants_required}`}
+      endNumberColor={
+        event.num_participants_available < event.num_participants_required
+          ? 'error'
+          : undefined
+      }
       focusDate={focusDate}
       href={`/organize/${event.organization.id}/projects/${
         event.campaign?.id ?? 'standalone'

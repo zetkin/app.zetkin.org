@@ -8,9 +8,9 @@ import { isSameDate } from 'utils/dateUtils';
 import messageIds from 'features/campaigns/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import theme from 'theme';
-import ZUIIconLabel from 'zui/ZUIIconLabel';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 import ZUISuffixedNumber from 'zui/ZUISuffixedNumber';
+import ZUIIconLabel, { ZUIIconLabelProps } from 'zui/ZUIIconLabel';
 
 interface StyleProps {
   color: STATUS_COLORS;
@@ -75,6 +75,7 @@ interface OverviewListItemProps {
   meta?: JSX.Element;
   title: string;
   endNumber: number | string;
+  endNumberColor?: ZUIIconLabelProps['color'];
   statusBar?: JSX.Element | null;
   subtitle?: JSX.Element;
 }
@@ -88,6 +89,7 @@ const OverviewListItem = ({
   meta,
   title,
   endNumber,
+  endNumberColor = 'secondary',
   statusBar,
   subtitle,
 }: OverviewListItemProps) => {
@@ -180,8 +182,8 @@ const OverviewListItem = ({
             {meta && <Box flex="0 0">{meta}</Box>}
             <Box flex="1 0 80px">
               <ZUIIconLabel
-                color="secondary"
-                icon={<SecondaryIcon color="secondary" />}
+                color={endNumberColor}
+                icon={<SecondaryIcon color={endNumberColor} />}
                 label={
                   typeof endNumber === 'number' ? (
                     <ZUISuffixedNumber number={endNumber} />
