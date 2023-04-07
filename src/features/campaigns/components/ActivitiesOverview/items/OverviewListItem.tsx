@@ -75,6 +75,7 @@ interface OverviewListItemProps {
   title: string;
   endNumber: number | string;
   statusBar?: JSX.Element | null;
+  subtitle?: JSX.Element;
 }
 
 const OverviewListItem = ({
@@ -86,6 +87,7 @@ const OverviewListItem = ({
   title,
   endNumber,
   statusBar,
+  subtitle,
 }: OverviewListItemProps) => {
   const { endDate, startDate } = activity;
   const color = getStatusColor(activity);
@@ -94,7 +96,9 @@ const OverviewListItem = ({
   const now = new Date();
   let label: JSX.Element | null = null;
 
-  if (!focusDate) {
+  if (subtitle) {
+    label = subtitle;
+  } else if (!focusDate) {
     if (startDate) {
       label = getStartsLabel(startDate);
     } else if (endDate) {

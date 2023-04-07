@@ -1,8 +1,15 @@
 import { FC } from 'react';
-import { EventOutlined, People } from '@mui/icons-material';
+import {
+  EventOutlined,
+  People,
+  PlaceOutlined,
+  ScheduleOutlined,
+} from '@mui/icons-material';
 
 import { EventActivity } from 'features/campaigns/models/CampaignActivitiesModel';
 import OverviewListItem from './OverviewListItem';
+import ZUIIconLabelRow from 'zui/ZUIIconLabelRow';
+import ZUITimeSpan from 'zui/ZUITimeSpan';
 
 interface EventOverviewListItemProps {
   activity: EventActivity;
@@ -26,6 +33,25 @@ const EventOverviewListItem: FC<EventOverviewListItemProps> = ({
       PrimaryIcon={EventOutlined}
       SecondaryIcon={People}
       statusBar={null}
+      subtitle={
+        <ZUIIconLabelRow
+          iconLabels={[
+            {
+              icon: <ScheduleOutlined fontSize="inherit" />,
+              label: (
+                <ZUITimeSpan
+                  end={new Date(event.end_time)}
+                  start={new Date(event.start_time)}
+                />
+              ),
+            },
+            {
+              icon: <PlaceOutlined fontSize="inherit" />,
+              label: event.location.title,
+            },
+          ]}
+        />
+      }
       title={event.title || event.activity.title}
     />
   );
