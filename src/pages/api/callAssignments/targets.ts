@@ -50,7 +50,7 @@ export default async function handler(
     data: {
       allTargets: stats.num_target_matches,
       allocated: stats.num_blocked.allocated,
-      blocked: stats.num_blocked.any,
+      blocked: stats.num_blocked.any - stats.num_blocked.allocated,
       callBackLater: stats.num_blocked.call_back_after,
       calledTooRecently: stats.num_blocked.cooldown,
       callsMade: stats.num_calls_made,
