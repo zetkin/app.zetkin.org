@@ -83,6 +83,12 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                       disableClearable
                       fullWidth
                       onChange={(ev, value) => {
+                        if (
+                          value ===
+                          '+ ' + messages.eventOverviewCard.createLocation()
+                        ) {
+                          setLocationModalOpen(true);
+                        }
                         const location = locations?.find(
                           (location) => location.title === value
                         );
@@ -92,7 +98,11 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                         setLocationId(location.id);
                       }}
                       options={
-                        locations?.map((location) => location.title) || []
+                        locations
+                          ?.map((location) => location.title)
+                          .concat([
+                            '+ ' + messages.eventOverviewCard.createLocation(),
+                          ]) || []
                       }
                       renderInput={(params) => (
                         <TextField

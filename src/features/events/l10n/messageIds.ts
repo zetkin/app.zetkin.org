@@ -3,6 +3,7 @@ import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('feat.events', {
   eventOverviewCard: {
+    createLocation: m('Create new location'),
     description: m('Description'),
     editButton: m('Edit event information'),
     location: m('Location'),
