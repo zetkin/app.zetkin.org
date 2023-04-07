@@ -156,7 +156,7 @@ const CallAssignmentStatusCards = ({
       <Grid item md={4} xs={12}>
         <Card>
           <StatusCardHeader
-            chipColor={hasTargets ? 'green' : 'gray'}
+            chipColor={hasTargets ? 'blue' : 'gray'}
             subtitle={messages.ready.subtitle()}
             title={messages.ready.title()}
             value={stats?.ready}
@@ -176,7 +176,7 @@ const CallAssignmentStatusCards = ({
       <Grid item md={4} xs={12}>
         <Card>
           <StatusCardHeader
-            chipColor={hasTargets ? 'blue' : 'gray'}
+            chipColor={hasTargets ? 'green' : 'gray'}
             subtitle={messages.done.subtitle()}
             title={messages.done.title()}
             value={stats?.done}
