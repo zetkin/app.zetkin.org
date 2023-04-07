@@ -1,3 +1,4 @@
+import BackendApiClient from 'core/api/client/BackendApiClient';
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { Box, Grid } from '@mui/material';
@@ -11,6 +12,7 @@ import SurveyUnlinkedCard from 'features/surveys/components/SurveyUnlinkedCard';
 import SurveyURLCard from 'features/surveys/components/SurveyURLCard';
 import useModel from 'core/useModel';
 import useServerSide from 'core/useServerSide';
+import { ZetkinSurvey } from 'utils/types/zetkin';
 import SurveyDataModel, {
   SurveyState,
 } from 'features/surveys/models/SurveyDataModel';
@@ -18,6 +20,18 @@ import SurveyDataModel, {
 export const getServerSideProps: GetServerSideProps = scaffold(
   async (ctx) => {
     const { orgId, campId, surveyId } = ctx.params!;
+    try {
+      const client = new BackendApiClient(ctx.req.headers);
+      const data = await client.get<ZetkinSurvey>(
+        `/api/orgs/${orgId}/surveys/${surveyId}`
+      );
+      const actualCampaign = data.campaign?.id.toString() ?? 'standalone';
+      if (actualCampaign !== campId) {
+        return { notFound: true };
+      }
+    } catch (error) {
+      return { notFound: true };
+    }
 
     return {
       props: {
