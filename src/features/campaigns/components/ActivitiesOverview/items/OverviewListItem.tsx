@@ -73,7 +73,7 @@ interface OverviewListItemProps {
   focusDate: Date | null;
   href: string;
   title: string;
-  endNumber: number;
+  endNumber: number | string;
   statusBar?: JSX.Element | null;
 }
 
@@ -169,7 +169,13 @@ const OverviewListItem = ({
               <ZUIIconLabel
                 color="secondary"
                 icon={<SecondaryIcon color="secondary" />}
-                label={<ZUISuffixedNumber number={endNumber} />}
+                label={
+                  typeof endNumber === 'number' ? (
+                    <ZUISuffixedNumber number={endNumber} />
+                  ) : (
+                    endNumber
+                  )
+                }
               />
             </Box>
           </Box>
