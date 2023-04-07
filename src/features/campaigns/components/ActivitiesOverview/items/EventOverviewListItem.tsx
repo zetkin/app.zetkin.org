@@ -1,5 +1,4 @@
 import { FC } from 'react';
-import { Box, Typography } from '@mui/material';
 import {
   EventOutlined,
   People,
@@ -37,6 +36,7 @@ const EventOverviewListItem: FC<EventOverviewListItemProps> = ({
       href={`/organize/${event.organization.id}/projects/${
         event.campaign?.id ?? 'standalone'
       }/events/${event.id}`}
+      meta={<EventWarningIcons compact model={model} />}
       PrimaryIcon={EventOutlined}
       SecondaryIcon={People}
       statusBar={null}
@@ -59,12 +59,7 @@ const EventOverviewListItem: FC<EventOverviewListItemProps> = ({
           ]}
         />
       }
-      title={
-        <Box alignItems="center" display="flex" justifyContent="space-between">
-          <Typography>{event.title || event.activity.title}</Typography>
-          <EventWarningIcons compact model={model} />
-        </Box>
-      }
+      title={event.title || event.activity.title}
     />
   );
 };

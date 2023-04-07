@@ -72,7 +72,8 @@ interface OverviewListItemProps {
   activity: CampaignActivity;
   focusDate: Date | null;
   href: string;
-  title: JSX.Element | string;
+  meta?: JSX.Element;
+  title: string;
   endNumber: number | string;
   statusBar?: JSX.Element | null;
   subtitle?: JSX.Element;
@@ -84,6 +85,7 @@ const OverviewListItem = ({
   SecondaryIcon,
   focusDate,
   href,
+  meta,
   title,
   endNumber,
   statusBar,
@@ -148,8 +150,13 @@ const OverviewListItem = ({
     <NextLink href={href} passHref>
       <Link my={2} underline="none">
         <Box my={2}>
-          <Box alignItems="start" display="flex" justifyContent="space-between">
-            <Box width={30}>
+          <Box
+            alignItems="center"
+            display="flex"
+            gap={1}
+            justifyContent="space-between"
+          >
+            <Box flex="0 0" width={30}>
               <PrimaryIcon className={classes.primaryIcon} />
             </Box>
             <Box
@@ -161,6 +168,7 @@ const OverviewListItem = ({
               <Typography
                 color={theme.palette.text.primary}
                 sx={{
+                  margin: 0,
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
                   whiteSpace: 'nowrap',
@@ -169,7 +177,8 @@ const OverviewListItem = ({
                 {title}
               </Typography>
             </Box>
-            <Box width={80}>
+            {meta && <Box flex="0 0">{meta}</Box>}
+            <Box flex="1 0 80px">
               <ZUIIconLabel
                 color="secondary"
                 icon={<SecondaryIcon color="secondary" />}

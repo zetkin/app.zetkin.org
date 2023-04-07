@@ -89,7 +89,7 @@ const WarningSlot: FC<{
     <Box width="1.6em">
       {tooltip ? (
         <Tooltip arrow title={tooltip}>
-          <Box>{icon}</Box>
+          <Box display="flex">{icon}</Box>
         </Tooltip>
       ) : (
         icon
