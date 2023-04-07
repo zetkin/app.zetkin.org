@@ -1,8 +1,9 @@
 import { FC } from 'react';
 import { AssignmentOutlined, ChatBubbleOutline } from '@mui/icons-material';
 
+import ActivityListItemWithStats from './ActivityListItemWithStats';
+import { STATUS_COLORS } from './ActivityListItem';
 import useModel from 'core/useModel';
-import ActivityListItem, { STATUS_COLORS } from './ActivityListItem';
 import SurveyDataModel, {
   SurveyState,
 } from 'features/surveys/models/SurveyDataModel';
@@ -49,7 +50,7 @@ const SurveyListItem: FC<SurveyListItemProps> = ({ orgId, surveyId }) => {
   const statsLoading = dataModel.getStats().isLoading;
 
   return (
-    <ActivityListItem
+    <ActivityListItemWithStats
       color={color}
       endNumber={submissionCount.toString()}
       greenChipValue={linkedSubmissionCount}

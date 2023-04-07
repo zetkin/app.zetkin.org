@@ -76,8 +76,8 @@ export interface ZetkinEvent {
     lng: number;
     title: string;
   };
-  num_participants_required?: number;
-  num_participants_available?: number;
+  num_participants_required: number;
+  num_participants_available: number;
   start_time: string;
   title?: string;
   organization: {
@@ -88,6 +88,10 @@ export interface ZetkinEvent {
   userResponse?: boolean;
   url?: string;
 }
+
+export type ZetkinEventParticipant = ZetkinPerson & {
+  reminder_sent: null | string;
+};
 
 export interface ZetkinFile {
   id: number;

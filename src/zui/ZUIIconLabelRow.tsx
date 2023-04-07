@@ -3,14 +3,19 @@ import { FC } from 'react';
 import ZUIIconLabel, { ZUIIconLabelProps } from './ZUIIconLabel';
 
 interface ZUIIconLabelRowProps {
+  color?: ZUIIconLabelProps['color'];
   iconLabels: ZUIIconLabelProps[];
+  size?: ZUIIconLabelProps['size'];
 }
 
-const ZUIIconLabelRow: FC<ZUIIconLabelRowProps> = ({ iconLabels }) => {
+const ZUIIconLabelRow: FC<ZUIIconLabelRowProps> = ({
+  iconLabels,
+  ...restProps
+}) => {
   return (
     <Box display="flex" gap={2}>
       {iconLabels.map((props, index) => (
-        <ZUIIconLabel key={index} {...props} />
+        <ZUIIconLabel key={index} {...restProps} {...props} />
       ))}
     </Box>
   );

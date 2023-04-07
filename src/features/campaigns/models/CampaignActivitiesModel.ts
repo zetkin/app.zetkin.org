@@ -1,5 +1,6 @@
 import CallAssignmentsRepo from 'features/callAssignments/repos/CallAssignmentsRepo';
 import Environment from 'core/env/Environment';
+import EventsRepo from 'features/events/repo/EventsRepo';
 import { isSameDate } from 'utils/dateUtils';
 import { ModelBase } from 'core/models';
 import SurveysRepo from 'features/surveys/repos/SurveysRepo';
@@ -12,12 +13,14 @@ import {
 } from 'core/caching/futures';
 import {
   ZetkinCallAssignment,
+  ZetkinEvent,
   ZetkinSurvey,
   ZetkinTask,
 } from 'utils/types/zetkin';
 
 export enum ACTIVITIES {
   CALL_ASSIGNMENT = 'callAssignment',
+  EVENT = 'event',
   SURVEY = 'survey',
   TASK = 'task',
 }
@@ -42,8 +45,14 @@ export type TaskActivity = CampaignActivityBase & {
   kind: ACTIVITIES.TASK;
 };
 
+export type EventActivity = CampaignActivityBase & {
+  data: ZetkinEvent;
+  kind: ACTIVITIES.EVENT;
+};
+
 export type CampaignActivity =
   | CallAssignmentActivity
+  | EventActivity
   | SurveyActivity
   | TaskActivity;
 
@@ -55,6 +64,7 @@ export type ActivityOverview = {
 
 export default class CampaignActivitiesModel extends ModelBase {
   private _callAssignmentsRepo: CallAssignmentsRepo;
+  private _eventsRepo: EventsRepo;
   private _orgId: number;
   private _surveysRepo: SurveysRepo;
   private _tasksRepo: TasksRepo;
@@ -63,6 +73,7 @@ export default class CampaignActivitiesModel extends ModelBase {
     super();
     this._orgId = orgId;
     this._callAssignmentsRepo = new CallAssignmentsRepo(env);
+    this._eventsRepo = new EventsRepo(env);
     this._surveysRepo = new SurveysRepo(env);
     this._tasksRepo = new TasksRepo(env);
   }
@@ -130,11 +141,13 @@ export default class CampaignActivitiesModel extends ModelBase {
     const callAssignmentsFuture = this._callAssignmentsRepo.getCallAssignments(
       this._orgId
     );
+    const eventsFuture = this._eventsRepo.getAllEvents(this._orgId);
     const surveysFuture = this._surveysRepo.getSurveys(this._orgId);
     const tasksFuture = this._tasksRepo.getTasks(this._orgId);
 
     if (
       callAssignmentsFuture.isLoading ||
+      eventsFuture.isLoading ||
       surveysFuture.isLoading ||
       tasksFuture.isLoading
     ) {
@@ -143,6 +156,7 @@ export default class CampaignActivitiesModel extends ModelBase {
 
     if (
       !callAssignmentsFuture.data ||
+      !eventsFuture.data ||
       !surveysFuture.data ||
       !tasksFuture.data
     ) {
@@ -156,6 +170,15 @@ export default class CampaignActivitiesModel extends ModelBase {
         endDate: getUTCDateWithoutTime(ca.end_date),
         kind: ACTIVITIES.CALL_ASSIGNMENT,
         startDate: getUTCDateWithoutTime(ca.start_date),
+      }));
+
+    const events: CampaignActivity[] = eventsFuture.data
+      .filter((event) => !campaignId || event.campaign?.id == campaignId)
+      .map((event) => ({
+        data: event,
+        endDate: getUTCDateWithoutTime(event.end_time), // End date (cancelled) not implemented in backend yet
+        kind: ACTIVITIES.EVENT,
+        startDate: new Date(0), // Start date (published) not implemented in backend yet
       }));
 
     const surveys: CampaignActivity[] = surveysFuture.data
@@ -176,7 +199,7 @@ export default class CampaignActivitiesModel extends ModelBase {
         startDate: getUTCDateWithoutTime(task.published || null),
       }));
 
-    const unsorted = callAssignments.concat(...surveys, ...tasks);
+    const unsorted = callAssignments.concat(...events, ...surveys, ...tasks);
 
     const sorted = unsorted.sort((first, second) => {
       if (first.startDate === null) {

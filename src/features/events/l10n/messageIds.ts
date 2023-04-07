@@ -1,4 +1,3 @@
-import { ReactElement } from 'react';
 import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('feat.events', {
@@ -53,27 +52,9 @@ export default makeMessages('feat.events', {
     scheduled: m('Scheduled'),
   },
   stats: {
-    multiDay: m<{
-      end: string;
-      endDate: ReactElement;
-      start: string;
-      startDate: ReactElement;
-    }>('{startDate}, {start} - {endDate}, {end}'),
-    multiDayEndsToday: m<{
-      end: string;
-      start: string;
-      startDate: ReactElement;
-    }>('{startDate}, {start} - Today, {end}'),
-    multiDayToday: m<{ end: string; endDate: ReactElement; start: string }>(
-      'Today, {start} - {endDate}, {end}'
-    ),
     participants: m<{ participants: number }>(
       '{participants, plural, one {1 participant} other {# participants}}'
     ),
-    singleDay: m<{ date: ReactElement; end: string; start: string }>(
-      '{date}, {start} - {end}'
-    ),
-    singleDayToday: m<{ end: string; start: string }>('Today, {start} - {end}'),
   },
   tabs: {
     overview: m('Overview'),
