@@ -20,7 +20,7 @@ import theme from 'theme';
 import { useMessages } from 'core/i18n';
 import ZUICard from 'zui/ZUICard';
 import ZUINumberChip from 'zui/ZUINumberChip';
-import ZUIPersonLink from 'zui/ZUIPersonLink';
+import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
 
 type EventParticipantsCardProps = {
   campId: string;
@@ -182,11 +182,13 @@ const EventParticipantsCard: FC<EventParticipantsCardProps> = ({
             </Typography>
             {contact && eventData.contact && (
               <Box alignItems="center" display="flex">
-                <Avatar
-                  src={`/api/orgs/${eventData.organization.id}/people/${eventData.contact.id}/avatar`}
-                  style={{ height: 30, marginRight: 10, width: 30 }}
-                />
-                <ZUIPersonLink person={contact} />
+                <ZUIPersonHoverCard personId={eventData.contact.id}>
+                  <Avatar
+                    src={`/api/orgs/${eventData.organization.id}/people/${eventData.contact.id}/avatar`}
+                    style={{ height: 30, marginRight: 10, width: 30 }}
+                  />
+                  {eventData.contact.name}
+                </ZUIPersonHoverCard>
               </Box>
             )}
             {!contact && (
