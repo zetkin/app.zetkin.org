@@ -35,6 +35,12 @@ export default class EventDataModel extends ModelBase {
     });
   }
 
+  setReqParticipants(reqParticipants: number) {
+    this._repo.updateEvent(this._orgId, this._eventId, {
+      num_participants_required: reqParticipants,
+    });
+  }
+
   setTitle(title: string) {
     this._repo.updateEvent(this._orgId, this._eventId, { title });
   }

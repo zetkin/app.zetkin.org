@@ -66,7 +66,7 @@ export interface ZetkinEvent {
     id: number;
     title: string;
   } | null;
-  contact?: string | null;
+  contact?: null | { id: number; name: string };
   end_time: string;
   id: number;
   info_text: string;

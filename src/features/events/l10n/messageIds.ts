@@ -8,6 +8,16 @@ export default makeMessages('feat.events', {
     location: m('Location'),
     url: m('Link'),
   },
+  eventParticipantsCard: {
+    booked: m('Notifications'),
+    contact: m('Contact'),
+    header: m('Participants'),
+    noContact: m('None assigned'),
+    participantList: m('View participants'),
+    pending: m('Pending sign-ups'),
+    reqParticipantsHelperText: m('The minimum number of participants required'),
+    reqParticipantsLabel: m('Required participants'),
+  },
   form: {
     activity: m('Activity'),
     campaign: m('Campaign'),
