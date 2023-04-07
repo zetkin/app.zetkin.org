@@ -137,7 +137,7 @@ const SingleViewLayout: FunctionComponent<SingleViewLayoutProps> = ({
         setDeactivated(false);
         showSnackbar('error', messages.deleteDialog.error());
       } finally {
-        router.push(`/organize/${orgId}/people/views`);
+        router.push(`/organize/${orgId}/people`);
       }
     }
   };
