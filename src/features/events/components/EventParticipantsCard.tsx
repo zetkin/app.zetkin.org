@@ -15,7 +15,6 @@ import { FC, useState } from 'react';
 
 import EventDataModel from 'features/events/models/EventDataModel';
 import messageIds from 'features/events/l10n/messageIds';
-import { personResource } from 'features/profile/api/people';
 import theme from 'theme';
 import { useMessages } from 'core/i18n';
 import ZUICard from 'zui/ZUICard';
@@ -45,14 +44,6 @@ const EventParticipantsCard: FC<EventParticipantsCardProps> = ({
 
   if (!eventData) {
     return null;
-  }
-
-  let contact = null;
-  if (eventData.contact) {
-    contact = personResource(
-      eventData.organization.id.toString(),
-      eventData.contact.id.toString()
-    ).useQuery().data;
   }
 
   const getParticipantStatus = () => {
@@ -180,7 +171,7 @@ const EventParticipantsCard: FC<EventParticipantsCardProps> = ({
             <Typography color={'secondary'} component="h6" variant="subtitle1">
               {messages.eventParticipantsCard.contact()}
             </Typography>
-            {contact && eventData.contact && (
+            {eventData.contact && (
               <Box alignItems="center" display="flex">
                 <ZUIPersonHoverCard personId={eventData.contact.id}>
                   <Avatar
@@ -191,7 +182,7 @@ const EventParticipantsCard: FC<EventParticipantsCardProps> = ({
                 </ZUIPersonHoverCard>
               </Box>
             )}
-            {!contact && (
+            {!eventData.contact && (
               <Typography>
                 {messages.eventParticipantsCard.noContact()}
               </Typography>
