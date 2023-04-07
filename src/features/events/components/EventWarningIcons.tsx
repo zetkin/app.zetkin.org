@@ -11,10 +11,11 @@ import messageIds from 'features/campaigns/l10n/messageIds';
 import { useMessages } from 'core/i18n';
 
 type EventWarningIconsProps = {
+  compact?: boolean;
   model: EventDataModel;
 };
 
-const EventWarningIcons: FC<EventWarningIconsProps> = ({ model }) => {
+const EventWarningIcons: FC<EventWarningIconsProps> = ({ compact, model }) => {
   const messages = useMessages(messageIds);
   const data = model.getData().data;
 
@@ -24,11 +25,7 @@ const EventWarningIcons: FC<EventWarningIconsProps> = ({ model }) => {
 
   const participants = model.getParticipants();
 
-  const icons: JSX.Element[] = [
-    <WarningSlot key="contact" />,
-    <WarningSlot key="signups" />,
-    <WarningSlot key="reminders" />,
-  ];
+  const icons: (JSX.Element | null)[] = [null, null, null];
 
   if (participants.data) {
     if (!data.contact) {
@@ -69,7 +66,19 @@ const EventWarningIcons: FC<EventWarningIconsProps> = ({ model }) => {
     icons.push(<CircularProgress />);
   }
 
-  return <Box display="flex">{icons}</Box>;
+  return (
+    <Box display="flex">
+      {icons.map((icon, idx) => {
+        if (icon) {
+          return icon;
+        }
+
+        if (!compact) {
+          return <WarningSlot key={idx} />;
+        }
+      })}
+    </Box>
+  );
 };
 
 const WarningSlot: FC<{

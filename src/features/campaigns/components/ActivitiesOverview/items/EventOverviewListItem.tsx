@@ -62,7 +62,7 @@ const EventOverviewListItem: FC<EventOverviewListItemProps> = ({
       title={
         <Box alignItems="center" display="flex" justifyContent="space-between">
           <Typography>{event.title || event.activity.title}</Typography>
-          <EventWarningIcons model={model} />
+          <EventWarningIcons compact model={model} />
         </Box>
       }
     />
