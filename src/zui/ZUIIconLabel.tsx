@@ -4,7 +4,7 @@ import { Box, Typography } from '@mui/material';
 export interface ZUIIconLabelProps {
   icon: JSX.Element;
   label: string | JSX.Element;
-  color?: string;
+  color?: 'error' | 'secondary';
   size?: 'sm' | 'md';
 }
 

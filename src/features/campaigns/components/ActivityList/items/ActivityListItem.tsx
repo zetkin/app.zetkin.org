@@ -4,7 +4,7 @@ import { OverridableComponent } from '@mui/material/OverridableComponent';
 import { Box, Link, SvgIconTypeMap, Theme, Typography } from '@mui/material';
 
 import theme from 'theme';
-import ZUIIconLabel from 'zui/ZUIIconLabel';
+import ZUIIconLabel, { ZUIIconLabelProps } from 'zui/ZUIIconLabel';
 
 interface StyleProps {
   color: STATUS_COLORS;
@@ -71,6 +71,7 @@ export type AcitivityListItemProps = {
   >;
   color: STATUS_COLORS;
   endNumber: string | number;
+  endNumberColor?: ZUIIconLabelProps['color'];
   href: string;
   meta?: JSX.Element;
   subtitle?: JSX.Element;
@@ -86,6 +87,7 @@ const ActivityListItem = ({
   subtitle,
   title,
   endNumber,
+  endNumberColor = 'secondary',
 }: AcitivityListItemProps) => {
   const classes = useStyles({ color });
 
@@ -113,8 +115,8 @@ const ActivityListItem = ({
       <Box>
         <Box className={classes.endNumber}>
           <ZUIIconLabel
-            color="secondary"
-            icon={<SecondaryIcon color="secondary" />}
+            color={endNumberColor}
+            icon={<SecondaryIcon color={endNumberColor} />}
             label={endNumber.toString()}
           />
         </Box>

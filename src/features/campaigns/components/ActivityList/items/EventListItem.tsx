@@ -95,6 +95,11 @@ const EventListItem: FC<EventListeItemProps> = ({ eventId, orgId }) => {
     <ActivityListItem
       color={color}
       endNumber={`${data.num_participants_available} / ${data.num_participants_required}`}
+      endNumberColor={
+        data.num_participants_available < data.num_participants_required
+          ? 'error'
+          : undefined
+      }
       href={`/organize/${orgId}/projects/${
         data.campaign?.id ?? 'standalone'
       }/events/${eventId}`}
@@ -103,7 +108,7 @@ const EventListItem: FC<EventListeItemProps> = ({ eventId, orgId }) => {
       SecondaryIcon={Group}
       subtitle={
         <ZUIIconLabelRow
-          color="gray"
+          color="secondary"
           iconLabels={[
             {
               icon: <ScheduleOutlined fontSize="inherit" />,
