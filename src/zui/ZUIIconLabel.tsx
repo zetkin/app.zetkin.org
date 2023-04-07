@@ -24,11 +24,16 @@ const ZUIIconLabel: FC<ZUIIconLabelProps> = ({
       alignItems="center"
       color={color}
       display="flex"
+      flexShrink="0"
       fontSize={FONT_SIZES[size]}
       gap={1}
     >
       {icon}
-      <Typography color={color ? color : 'inherit'} fontSize="inherit">
+      <Typography
+        color={color ? color : 'inherit'}
+        flexShrink="0"
+        fontSize="inherit"
+      >
         {label}
       </Typography>
     </Box>
