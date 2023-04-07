@@ -72,7 +72,7 @@ interface OverviewListItemProps {
   activity: CampaignActivity;
   focusDate: Date | null;
   href: string;
-  title: string;
+  title: JSX.Element | string;
   endNumber: number | string;
   statusBar?: JSX.Element | null;
   subtitle?: JSX.Element;

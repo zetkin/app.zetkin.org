@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import { Box, Typography } from '@mui/material';
 import {
   EventOutlined,
   People,
@@ -7,7 +8,10 @@ import {
 } from '@mui/icons-material';
 
 import { EventActivity } from 'features/campaigns/models/CampaignActivitiesModel';
+import EventDataModel from 'features/events/models/EventDataModel';
+import EventWarningIcons from 'features/events/components/EventWarningIcons';
 import OverviewListItem from './OverviewListItem';
+import useModel from 'core/useModel';
 import ZUIIconLabelRow from 'zui/ZUIIconLabelRow';
 import ZUITimeSpan from 'zui/ZUITimeSpan';
 
@@ -21,6 +25,9 @@ const EventOverviewListItem: FC<EventOverviewListItemProps> = ({
   focusDate,
 }) => {
   const event = activity.data;
+  const model = useModel(
+    (env) => new EventDataModel(env, event.organization.id, event.id)
+  );
 
   return (
     <OverviewListItem
@@ -52,7 +59,12 @@ const EventOverviewListItem: FC<EventOverviewListItemProps> = ({
           ]}
         />
       }
-      title={event.title || event.activity.title}
+      title={
+        <Box alignItems="center" display="flex" justifyContent="space-between">
+          <Typography>{event.title || event.activity.title}</Typography>
+          <EventWarningIcons model={model} />
+        </Box>
+      }
     />
   );
 };
