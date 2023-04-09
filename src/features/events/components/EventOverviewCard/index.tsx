@@ -1,6 +1,6 @@
 import EditIcon from '@mui/icons-material/Edit';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
-import { Place } from '@mui/icons-material';
+import { Add, Place } from '@mui/icons-material';
 import {
   Autocomplete,
   Box,
@@ -83,6 +83,9 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                       disableClearable
                       fullWidth
                       onChange={(ev, value) => {
+                        if (value === 'CREATE_NEW_LOCATION') {
+                          setLocationModalOpen(true);
+                        }
                         const location = locations?.find(
                           (location) => location.title === value
                         );
@@ -92,7 +95,9 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                         setLocationId(location.id);
                       }}
                       options={
-                        locations?.map((location) => location.title) || []
+                        locations
+                          ?.map((location) => location.title)
+                          .concat(['CREATE_NEW_LOCATION']) || []
                       }
                       renderInput={(params) => (
                         <TextField
@@ -104,6 +109,16 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                           }}
                         />
                       )}
+                      renderOption={(params, option) =>
+                        option === 'CREATE_NEW_LOCATION' ? (
+                          <li {...params}>
+                            <Add sx={{ marginRight: 2 }} />
+                            {messages.eventOverviewCard.createLocation()}
+                          </li>
+                        ) : (
+                          <li {...params}>{option}</li>
+                        )
+                      }
                       value={
                         locations?.find(
                           (location) => location.id === locationId
