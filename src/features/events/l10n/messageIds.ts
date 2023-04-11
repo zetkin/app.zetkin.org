@@ -61,5 +61,9 @@ export default makeMessages('feat.events', {
     overview: m('Overview'),
     participants: m('Participants'),
   },
-  uncategorized: m('Uncategorized'),
+  type: {
+    createType: m<{ type: string }>('Create type "{type}"'),
+    tooltip: m('Click to edit a type'),
+    uncategorized: m('Uncategorized'),
+  },
 });

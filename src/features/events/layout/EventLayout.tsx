@@ -9,7 +9,7 @@ import EventStatusChip from '../components/EventStatusChip';
 import EventTypesModel from '../models/EventTypesModel';
 import messageIds from '../l10n/messageIds';
 import useModel from 'core/useModel';
-import ZUIAutocompleteInPlace from 'zui/ZUIAutocompleteInPlace';
+import ZUIAutocompleteInPlaceTest from 'zui/ZUIAutocompleteInPlaceTest';
 import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
 import ZUIFuture from 'zui/ZUIFuture';
 import ZUIFutures from 'zui/ZUIFutures';
@@ -65,18 +65,14 @@ const EventLayout: React.FC<EventLayoutProps> = ({
             }}
           >
             {({ data: { types, currentEvent } }) => {
-              const eventTypes: string[] = [];
-              const currentType = currentEvent.activity.title;
-
-              if (currentType === null) {
-                eventTypes.push(messages.uncategorized());
-              }
-              types.map((item) => eventTypes.push(item.title));
-
               return (
-                <ZUIAutocompleteInPlace
-                  currentType={currentType}
-                  types={eventTypes}
+                // <ZUIAutocompleteInPlace
+                //   currentType={currentType}
+                //   types={eventTypes}
+                // />
+                <ZUIAutocompleteInPlaceTest
+                  currentType={currentEvent.activity}
+                  types={types}
                 />
               );
             }}

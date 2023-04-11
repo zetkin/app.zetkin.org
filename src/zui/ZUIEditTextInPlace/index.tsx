@@ -144,7 +144,12 @@ const ZUIEditTextinPlace: React.FunctionComponent<ZUIEditTextinPlaceProps> = ({
   };
 
   return (
-    <Tooltip arrow disableHoverListener={editing} title={tooltipText()}>
+    <Tooltip
+      arrow
+      disableHoverListener={editing}
+      placement="top"
+      title={tooltipText()}
+    >
       <FormControl style={{ overflow: 'hidden' }} variant="standard">
         <span ref={spanRef} className={classes.span}>
           {text || placeholder}
