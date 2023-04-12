@@ -1,6 +1,6 @@
 import EditIcon from '@mui/icons-material/Edit';
+import { Map } from '@mui/icons-material';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
-import { Place } from '@mui/icons-material';
 import {
   Autocomplete,
   Box,
@@ -43,7 +43,6 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
     eventData?.location.id ?? undefined
   );
   const [locationModalOpen, setLocationModalOpen] = useState(false);
-
   const { clickAwayProps, containerProps, previewableProps } =
     useEditPreviewBlock({
       editable,
@@ -82,18 +81,17 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                     <Autocomplete
                       disableClearable
                       fullWidth
+                      getOptionLabel={(option) => option.title}
                       onChange={(ev, value) => {
                         const location = locations?.find(
-                          (location) => location.title === value
+                          (location) => location.id === value.id
                         );
                         if (!location) {
                           return;
                         }
                         setLocationId(location.id);
                       }}
-                      options={
-                        locations?.map((location) => location.title) || []
-                      }
+                      options={locations || []}
                       renderInput={(params) => (
                         <TextField
                           {...params}
@@ -104,13 +102,11 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                           }}
                         />
                       )}
-                      value={
-                        locations?.find(
-                          (location) => location.id === locationId
-                        )?.title
-                      }
+                      value={locations?.find(
+                        (location) => location.id === locationId
+                      )}
                     />
-                    <Place
+                    <Map
                       color="secondary"
                       onClick={() => setLocationModalOpen(true)}
                       sx={{ cursor: 'pointer', marginLeft: 2 }}
@@ -118,7 +114,9 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                     <LocationModal
                       locationId={locationId}
                       locations={locations || []}
-                      onMapClose={() => setLocationModalOpen(false)}
+                      onMapClose={() => {
+                        setLocationModalOpen(false);
+                      }}
                       onSelectLocation={(location: ZetkinLocation) =>
                         setLocationId(location.id)
                       }

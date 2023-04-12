@@ -1,12 +1,35 @@
 import dynamic from 'next/dynamic';
-import { FC } from 'react';
 import { InfoOutlined } from '@mui/icons-material';
-import { Box, Dialog, Typography } from '@mui/material';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/system';
+import { Box, Dialog, TextField, Typography } from '@mui/material';
+import { FC, useEffect, useState } from 'react';
 
 import 'leaflet/dist/leaflet.css';
+import LocationCard from './LocationCard';
+import LocationSearch from './LocationSearch';
 import messageIds from 'features/events/l10n/messageIds';
 import { useMessages } from 'core/i18n';
 import { ZetkinLocation } from 'utils/types/zetkin';
+
+interface StyleProps {
+  selectedLocation?: ZetkinLocation;
+}
+
+const useStyles = makeStyles<Theme, StyleProps>(() => ({
+  overlay: {
+    bottom: ({ selectedLocation }) => (selectedLocation ? 64 : ''),
+    display: 'flex',
+    justifyContent: 'flex-end',
+    justifySelf: 'flex-end',
+    margin: 2,
+    position: 'absolute',
+    right: 32,
+    top: 32,
+    width: '30%',
+    zIndex: 1000,
+  },
+}));
 
 interface LocationModalProps {
   locations: ZetkinLocation[];
@@ -16,6 +39,7 @@ interface LocationModalProps {
   locationId?: number;
 }
 
+const Map = dynamic(() => import('./Map'), { ssr: false });
 const LocationModal: FC<LocationModalProps> = ({
   locations,
   onMapClose,
@@ -23,20 +47,97 @@ const LocationModal: FC<LocationModalProps> = ({
   open,
   locationId,
 }) => {
-  const Map = dynamic(() => import('./Map'), { ssr: false });
   const messages = useMessages(messageIds);
+  const [searchString, setSearchString] = useState('');
+  const [selectedLocationId, setSelectedLocationId] = useState(
+    locationId ?? undefined
+  );
+  const [focusedMarker, setFocusedMarker] = useState<
+    { lat: number; lng: number } | undefined
+  >();
+
+  const selectedLocation = locations.find(
+    (location) => location.id === selectedLocationId
+  );
+
+  const classes = useStyles({ selectedLocation });
+
+  useEffect(() => {
+    setSelectedLocationId(locationId);
+  }, [open]);
 
   return (
     <Dialog fullWidth maxWidth="lg" onClose={onMapClose} open={open}>
       <Box padding={2}>
         <Map
-          locationId={locationId}
+          focusedMarker={focusedMarker}
           locations={locations}
-          onMapClose={onMapClose}
-          onSelectLocation={(location: ZetkinLocation) =>
-            onSelectLocation(location)
-          }
+          onMarkerClick={(locationId: number) => {
+            const location = locations.find(
+              (location) => location.id === locationId
+            );
+            if (!location?.lat || !location?.lng) {
+              return;
+            }
+            setSelectedLocationId(location.id);
+            setFocusedMarker({ lat: location.lat, lng: location.lng });
+          }}
+          searchString={searchString}
+          selectedLocation={selectedLocation}
         />
+        <Box className={classes.overlay}>
+          {!selectedLocation && (
+            <LocationSearch
+              onChange={(value: ZetkinLocation) => {
+                const location = locations.find(
+                  (location) => location.id === value.id
+                );
+                if (!location?.lat || !location?.lng) {
+                  return;
+                }
+                setFocusedMarker({ lat: location.lat, lng: location.lng });
+                setSelectedLocationId(location.id);
+                setSearchString('');
+              }}
+              onInputChange={(value) => setSearchString(value || '')}
+              onTextFieldChange={(value) => setSearchString(value)}
+              options={locations}
+            />
+          )}
+          {selectedLocation && (
+            <LocationCard
+              onClose={() => {
+                setSearchString('');
+                setSelectedLocationId(undefined);
+              }}
+              primaryAction={() => {
+                onSelectLocation(selectedLocation);
+                onMapClose();
+              }}
+              primaryActionTitle={selectedLocation ? 'Use location' : 'Save'}
+              secondaryActionTitle="Cancel"
+              title={
+                selectedLocation
+                  ? selectedLocation.title
+                  : 'Create new location'
+              }
+            >
+              <>
+                {selectedLocation && (
+                  <Typography color="secondary">
+                    {selectedLocation.info_text}
+                  </Typography>
+                )}
+                {!selectedLocation && (
+                  <>
+                    <TextField />
+                    <TextField />
+                  </>
+                )}
+              </>
+            </LocationCard>
+          )}
+        </Box>
         <Box alignItems="center" display="flex" paddingTop={1}>
           <InfoOutlined color="secondary" />
           <Typography color="secondary" paddingLeft={1} variant="body2">

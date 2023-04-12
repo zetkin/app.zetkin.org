@@ -3,12 +3,13 @@ import { Autocomplete, TextField } from '@mui/material';
 
 import messageIds from 'features/events/l10n/messageIds';
 import { useMessages } from 'core/i18n';
+import { ZetkinLocation } from 'utils/types/zetkin';
 
 interface LocationSearchProps {
-  onChange: (value: string) => void;
+  onChange: (value: ZetkinLocation) => void;
   onInputChange: (value: string) => void;
   onTextFieldChange: (value: string) => void;
-  options: string[];
+  options: ZetkinLocation[];
 }
 
 const LocationSearch: FC<LocationSearchProps> = ({
@@ -22,6 +23,7 @@ const LocationSearch: FC<LocationSearchProps> = ({
     <Autocomplete
       disableClearable
       fullWidth
+      getOptionLabel={(option) => option.title}
       onChange={(ev, value) => onChange(value)}
       onInputChange={(ev, value) => onInputChange(value)}
       options={options}
