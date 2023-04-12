@@ -65,4 +65,83 @@ describe('userClusteredEvents()', () => {
     expect(result.current[2].type).toBe(CLUSTER_TYPE.SINGLE);
     expect(result.current[2].events[0].id).toBe(3);
   });
+
+  it('clusters three multi-shift events and leaves a third unrelated', () => {
+    const { result } = renderHook(() =>
+      useClusteredEvents([
+        mockEvent(1, {
+          end_time: '1857-07-05T13:00:00.000Z',
+          start_time: '1857-07-05T12:00:00.000Z',
+        }),
+        mockEvent(2, {
+          end_time: '1857-07-05T14:00:00.000Z',
+          start_time: '1857-07-05T13:00:00.000Z',
+        }),
+        mockEvent(3, {
+          end_time: '1857-07-05T15:00:00.000Z',
+          start_time: '1857-07-05T14:00:00.000Z',
+        }),
+        mockEvent(4, {
+          end_time: '1857-07-05T17:00:00.000Z',
+          start_time: '1857-07-05T16:00:00.000Z',
+        }),
+      ])
+    );
+
+    expect(result.current.length).toBe(2);
+    expect(result.current[0].type).toBe(CLUSTER_TYPE.MULTI_SHIFT);
+    expect(result.current[0].events.length).toBe(3);
+    expect(result.current[0].events[0].id).toBe(1);
+    expect(result.current[0].events[1].id).toBe(2);
+    expect(result.current[0].events[2].id).toBe(3);
+    expect(result.current[1].type).toBe(CLUSTER_TYPE.SINGLE);
+    expect(result.current[1].events.length).toBe(1);
+    expect(result.current[1].events[0].id).toBe(4);
+  });
+
+  it('clusters two multi-shift events, but ignores events in different location', () => {
+    const { result } = renderHook(() =>
+      useClusteredEvents([
+        mockEvent(1, {
+          end_time: '1857-07-05T13:00:00.000Z',
+          location: {
+            id: 1,
+            lat: 0,
+            lng: 0,
+            title: '',
+          },
+          start_time: '1857-07-05T12:00:00.000Z',
+        }),
+        mockEvent(2, {
+          end_time: '1857-07-05T14:00:00.000Z',
+          location: {
+            id: 1,
+            lat: 0,
+            lng: 0,
+            title: '',
+          },
+          start_time: '1857-07-05T13:00:00.000Z',
+        }),
+        mockEvent(3, {
+          end_time: '1857-07-05T15:00:00.000Z',
+          location: {
+            id: 2, // <-- Different location
+            lat: 0,
+            lng: 0,
+            title: '',
+          },
+          start_time: '1857-07-05T14:00:00.000Z',
+        }),
+      ])
+    );
+
+    expect(result.current.length).toBe(2);
+    expect(result.current[0].type).toBe(CLUSTER_TYPE.MULTI_SHIFT);
+    expect(result.current[0].events.length).toBe(2);
+    expect(result.current[0].events[0].id).toBe(1);
+    expect(result.current[0].events[1].id).toBe(2);
+    expect(result.current[1].type).toBe(CLUSTER_TYPE.SINGLE);
+    expect(result.current[1].events.length).toBe(1);
+    expect(result.current[1].events[0].id).toBe(3);
+  });
 });
