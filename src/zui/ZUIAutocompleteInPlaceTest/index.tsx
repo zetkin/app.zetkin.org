@@ -1,3 +1,4 @@
+import AddIcon from '@mui/icons-material/Add';
 import Fuse from 'fuse.js';
 import { lighten } from '@mui/material/styles';
 import makeStyles from '@mui/styles/makeStyles';
@@ -5,6 +6,7 @@ import {
   Autocomplete,
   Box,
   ClickAwayListener,
+  IconButton,
   TextField,
   Tooltip,
 } from '@mui/material';
@@ -17,6 +19,12 @@ import { ZetkinActivity } from 'utils/types/zetkin';
 import ZUIPreviewableInput from 'zui/ZUIPreviewableInput';
 
 const useStyles = makeStyles((theme) => ({
+  create: {
+    display: 'contents',
+    fontSize: '1em',
+    margin: 0,
+    paddingLeft: 0,
+  },
   input: {
     height: '30px',
   },
@@ -49,15 +57,15 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 interface NewEventType {
-  id: number;
+  id?: number;
   title: string | null;
   info_text?: string | null;
+  createType?: boolean;
 }
 interface ZUIAutocompleteInPlaceTestProps {
   types: ZetkinActivity[];
   currentType: NewEventType;
 }
-type EventOptions = ZetkinActivity | NewEventType;
 
 const ZUIAutocompleteInPlaceTest = ({
   types,
@@ -72,7 +80,6 @@ const ZUIAutocompleteInPlaceTest = ({
 
     if (currentType.title === null) {
       eTypes.unshift({
-        id: 0,
         title: messages.type.uncategorized(),
       });
     }
@@ -108,7 +115,7 @@ const ZUIAutocompleteInPlaceTest = ({
                 disablePortal
                 filterOptions={(options, { inputValue }) => {
                   const searchedResults = fuse.search(inputValue);
-                  const output: ZetkinActivity[] = [];
+                  const output: NewEventType[] = [];
 
                   searchedResults.map((result) => {
                     if (result.item.title !== null) {
@@ -118,6 +125,16 @@ const ZUIAutocompleteInPlaceTest = ({
                         title: result.item.title,
                       });
                     }
+                  });
+
+                  if (
+                    output.filter((item) => item.title === inputValue).length
+                  ) {
+                    return output;
+                  }
+                  output.push({
+                    createType: true,
+                    title: '',
                   });
 
                   return inputValue ? output : options;
@@ -136,7 +153,7 @@ const ZUIAutocompleteInPlaceTest = ({
                   );
                 }}
                 onFocus={() => setEditing(true)}
-                options={(eventTypes as EventOptions[]) || []}
+                options={eventTypes}
                 readOnly={!editing}
                 renderInput={(params) => (
                   <TextField
@@ -152,21 +169,23 @@ const ZUIAutocompleteInPlaceTest = ({
                     }}
                   />
                 )}
-                // PaperComponent={({ children }) => {
-                //   return (
-                //     <Paper sx={{ fontWeight: 400 }}>
-                //       {children}
-
-                //       <IconButton>
-                //         {messages.type.createType({ type: 'hello' })}
-                //       </IconButton>
-                //     </Paper>
-                //   );
-                // }}
+                renderOption={(props, option, { inputValue }) => {
+                  if (option.createType) {
+                    return (
+                      <li {...props}>
+                        <IconButton className={classes.create}>
+                          <AddIcon />
+                          {messages.type.createType({ type: inputValue })}
+                        </IconButton>
+                      </li>
+                    );
+                  }
+                  return <li {...props}>{option.title}</li>;
+                }}
                 value={
                   eventType.title
                     ? eventType
-                    : { id: 0, title: messages.type.uncategorized() }
+                    : { title: messages.type.uncategorized() }
                 }
               />
             </Tooltip>
