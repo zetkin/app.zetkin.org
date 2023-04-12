@@ -13,7 +13,7 @@ const ZUIIconLabelRow: FC<ZUIIconLabelRowProps> = ({
   ...restProps
 }) => {
   return (
-    <Box display="flex" gap={2}>
+    <Box display="flex" flexShrink="0" gap={2}>
       {iconLabels.map((props, index) => (
         <ZUIIconLabel key={index} {...restProps} {...props} />
       ))}
