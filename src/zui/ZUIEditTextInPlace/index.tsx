@@ -3,9 +3,8 @@ import makeStyles from '@mui/styles/makeStyles';
 import { FormControl, InputBase, Tooltip } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 
-import { useMessages } from 'core/i18n';
-
 import messageIds from 'zui/l10n/messageIds';
+import { useMessages } from 'core/i18n';
 
 const useStyles = makeStyles((theme) => ({
   input: {
@@ -24,6 +23,14 @@ const useStyles = makeStyles((theme) => ({
     fontFamily: 'inherit',
     fontSize: 'inherit !important',
     fontWeight: 'inherit',
+  },
+  showBorder: {
+    border: '2px dotted transparent',
+    borderColor: lighten(theme.palette.primary.main, 0.65),
+    borderRadius: 10,
+    paddingLeft: 10,
+    paddingRight: 0,
+    transition: 'all 0.2s ease',
   },
   span: {
     // Same styles as input
@@ -48,6 +55,8 @@ export interface ZUIEditTextinPlaceProps {
   onChange: (newValue: string) => void;
   placeholder?: string;
   value: string;
+  showBorder?: boolean;
+  setShowBorder?: (value: boolean) => void;
 }
 
 const ZUIEditTextinPlace: React.FunctionComponent<ZUIEditTextinPlaceProps> = ({
@@ -55,6 +64,8 @@ const ZUIEditTextinPlace: React.FunctionComponent<ZUIEditTextinPlaceProps> = ({
   disabled,
   onChange,
   placeholder,
+  setShowBorder,
+  showBorder,
   value,
 }) => {
   const [editing, setEditing] = useState<boolean>(false);
@@ -93,6 +104,7 @@ const ZUIEditTextinPlace: React.FunctionComponent<ZUIEditTextinPlaceProps> = ({
 
   const startEditing = () => {
     setEditing(true);
+    setBorderOnTypeEdit(true);
   };
 
   const cancelEditing = () => {
@@ -104,6 +116,7 @@ const ZUIEditTextinPlace: React.FunctionComponent<ZUIEditTextinPlaceProps> = ({
   const submitChange = () => {
     setEditing(false);
     onChange(text);
+    setBorderOnTypeEdit(false);
   };
 
   const onKeyDown = (evt: React.KeyboardEvent) => {
@@ -131,6 +144,12 @@ const ZUIEditTextinPlace: React.FunctionComponent<ZUIEditTextinPlaceProps> = ({
     }
   };
 
+  const setBorderOnTypeEdit = (value: boolean) => {
+    if (setShowBorder !== undefined) {
+      setShowBorder(value);
+    }
+  };
+
   const tooltipText = () => {
     if (text || allowEmpty) {
       if (editing) {
@@ -150,13 +169,17 @@ const ZUIEditTextinPlace: React.FunctionComponent<ZUIEditTextinPlaceProps> = ({
       placement="top"
       title={tooltipText()}
     >
-      <FormControl style={{ overflow: 'hidden' }} variant="standard">
+      <FormControl
+        onClick={(e) => e.stopPropagation()}
+        style={{ overflow: 'hidden' }}
+        variant="standard"
+      >
         <span ref={spanRef} className={classes.span}>
           {text || placeholder}
         </span>
         <InputBase
           classes={{
-            input: classes.input,
+            input: showBorder ? classes.showBorder : classes.input,
             root: classes.inputRoot,
           }}
           disabled={disabled}

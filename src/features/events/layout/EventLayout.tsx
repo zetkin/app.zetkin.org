@@ -3,6 +3,7 @@ import EventIcon from '@mui/icons-material/Event';
 import { FormattedDate } from 'react-intl';
 import PeopleIcon from '@mui/icons-material/People';
 import TabbedLayout from 'utils/layout/TabbedLayout';
+import { useState } from 'react';
 
 import EventDataModel from '../models/EventDataModel';
 import EventStatusChip from '../components/EventStatusChip';
@@ -30,6 +31,7 @@ const EventLayout: React.FC<EventLayoutProps> = ({
   orgId,
   campaignId,
 }) => {
+  const [showBorder, setShowBorder] = useState<boolean>(false);
   const messages = useMessages(messageIds);
 
   const model = useModel(
@@ -72,6 +74,8 @@ const EventLayout: React.FC<EventLayoutProps> = ({
                 // />
                 <ZUIAutocompleteInPlaceTest
                   currentType={currentEvent.activity}
+                  setShowBorder={setShowBorder}
+                  showBorder={showBorder}
                   types={types}
                   typesModel={typesModel}
                 />
@@ -228,6 +232,8 @@ const EventLayout: React.FC<EventLayoutProps> = ({
                 onChange={(val) => {
                   model.setTitle(val);
                 }}
+                setShowBorder={setShowBorder}
+                showBorder={showBorder}
                 value={data.title || data.activity.title}
               />
             );

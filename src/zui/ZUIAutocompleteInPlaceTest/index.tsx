@@ -52,6 +52,17 @@ const useStyles = makeStyles((theme) => ({
     transition: 'all 0.2s ease',
     width: '18vw',
   },
+  showBorder: {
+    '& fieldset': { border: 'none' },
+    border: '2px dotted transparent',
+    borderColor: lighten(theme.palette.primary.main, 0.65),
+    borderRadius: 10,
+    maxWidth: '200px',
+    paddingLeft: 10,
+    paddingRight: 0,
+    transition: 'all 0.2s ease',
+    width: '18vw',
+  },
 }));
 
 interface NewEventType {
@@ -64,12 +75,16 @@ interface ZUIAutocompleteInPlaceTestProps {
   types: ZetkinActivity[];
   currentType: NewEventType;
   typesModel: EventTypesModel;
+  showBorder: boolean;
+  setShowBorder: (value: boolean) => void;
 }
 
 const ZUIAutocompleteInPlaceTest = ({
   types,
   currentType,
   typesModel,
+  setShowBorder,
+  showBorder,
 }: ZUIAutocompleteInPlaceTestProps) => {
   const [editing, setEditing] = useState<boolean>(false);
   const [eventType, setEventType] = useState<NewEventType>(currentType);
@@ -92,8 +107,14 @@ const ZUIAutocompleteInPlaceTest = ({
 
   const { clickAwayProps, previewableProps } = useEditPreviewBlock({
     editable: editing,
-    onEditModeEnter: () => setEditing(true),
-    onEditModeExit: () => setEditing(false),
+    onEditModeEnter: () => {
+      setEditing(true);
+      setShowBorder(true);
+    },
+    onEditModeExit: () => {
+      setEditing(false);
+      setShowBorder(false);
+    },
     save: () => {
       return <></>;
     },
@@ -128,7 +149,11 @@ const ZUIAutocompleteInPlaceTest = ({
                   });
 
                   if (
-                    output.filter((item) => item.title === inputValue).length
+                    output.filter(
+                      (item) =>
+                        item.title?.toLocaleLowerCase() ===
+                        inputValue.toLocaleLowerCase()
+                    ).length
                   ) {
                     return output;
                   }
@@ -152,11 +177,12 @@ const ZUIAutocompleteInPlaceTest = ({
                         title: newValue.title,
                       } || currentType
                     );
+                  } else {
+                    typesModel.addType(0, newValue.title!);
                   }
-                  typesModel.addType(0, newValue.title!);
                   setEditing(false);
+                  setShowBorder(false);
                 }}
-                onFocus={() => setEditing(true)}
                 options={eventTypes}
                 readOnly={!editing}
                 renderInput={(params) => (
@@ -176,7 +202,7 @@ const ZUIAutocompleteInPlaceTest = ({
                 renderOption={(props, option) => {
                   if (option.createType) {
                     return (
-                      <li {...props}>
+                      <li {...props} key={option.id}>
                         <IconButton className={classes.create}>
                           <AddIcon />
                           {messages.type.createType({ type: option.title! })}
@@ -184,7 +210,11 @@ const ZUIAutocompleteInPlaceTest = ({
                       </li>
                     );
                   }
-                  return <li {...props}>{option.title}</li>;
+                  return (
+                    <li {...props} key={option.id}>
+                      {option.title}
+                    </li>
+                  );
                 }}
                 value={
                   eventType.title
@@ -199,7 +229,7 @@ const ZUIAutocompleteInPlaceTest = ({
               <Tooltip arrow title={messages.type.tooltip()}>
                 <Autocomplete
                   classes={{
-                    root: classes.preview,
+                    root: showBorder ? classes.showBorder : classes.preview,
                   }}
                   freeSolo
                   fullWidth
