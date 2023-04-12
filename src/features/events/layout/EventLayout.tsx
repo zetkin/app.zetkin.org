@@ -73,6 +73,7 @@ const EventLayout: React.FC<EventLayoutProps> = ({
                 <ZUIAutocompleteInPlaceTest
                   currentType={currentEvent.activity}
                   types={types}
+                  typesModel={typesModel}
                 />
               );
             }}

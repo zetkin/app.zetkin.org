@@ -6,18 +6,32 @@ import { Store } from 'core/store';
 import {
   eventLoad,
   eventLoaded,
+  eventTypeAdd,
+  eventTypeAdded,
   eventTypesLoad,
   eventTypesLoaded,
   eventUpdate,
   eventUpdated,
 } from '../store';
 import { IFuture, PromiseFuture, RemoteItemFuture } from 'core/caching/futures';
-import { ZetkinActivity, ZetkinEvent } from 'utils/types/zetkin';
+import {
+  ZetkinActivity,
+  ZetkinActivityPostBody,
+  ZetkinEvent,
+} from 'utils/types/zetkin';
 
 export default class EventsRepo {
   private _apiClient: IApiClient;
   private _store: Store;
 
+  addType(orgId: number, data: ZetkinActivityPostBody) {
+    this._store.dispatch(eventTypeAdd([orgId, data]));
+    this._apiClient
+      .post<ZetkinActivity>(`/api/orgs/${orgId}/activities`, data)
+      .then((event) => {
+        this._store.dispatch(eventTypeAdded(event));
+      });
+  }
   constructor(env: Environment) {
     this._store = env.store;
     this._apiClient = env.apiClient;

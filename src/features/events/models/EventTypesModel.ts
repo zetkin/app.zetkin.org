@@ -8,6 +8,9 @@ export default class EventTypesModel extends ModelBase {
   private _orgId: number;
   private _repo: EventsRepo;
 
+  addType(activity_id: number, title: string) {
+    this._repo.addType(this._orgId, { activity_id, title });
+  }
   constructor(env: Environment, orgId: number) {
     super();
     this._orgId = orgId;

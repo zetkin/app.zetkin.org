@@ -1,6 +1,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { remoteItem, remoteList, RemoteList } from 'utils/storeUtils';
-import { ZetkinActivity, ZetkinEvent } from 'utils/types/zetkin';
+import {
+  ZetkinActivity,
+  ZetkinActivityPostBody,
+  ZetkinEvent,
+} from 'utils/types/zetkin';
 
 export interface EventsStoreSlice {
   eventList: RemoteList<ZetkinEvent>;
@@ -34,6 +38,20 @@ const eventsSlice = createSlice({
       item.data = event;
       item.isLoading = false;
       item.loaded = new Date().toISOString();
+    },
+    eventTypeAdd: (
+      state,
+      /* eslint-disable-next-line */
+      action: PayloadAction<[number, ZetkinActivityPostBody]>
+    ) => {
+      state.eventTypeList.isLoading = true;
+    },
+    eventTypeAdded: (state, action: PayloadAction<ZetkinActivity>) => {
+      const data = action.payload;
+
+      state.eventTypeList.items = state.eventTypeList.items.concat([
+        remoteItem(data.id, { data: data, isLoading: false }),
+      ]);
     },
     /* eslint-disable-next-line */
     eventTypesLoad: (state, action: PayloadAction<number>) => {
@@ -69,6 +87,8 @@ export default eventsSlice;
 export const {
   eventLoad,
   eventLoaded,
+  eventTypeAdd,
+  eventTypeAdded,
   eventTypesLoad,
   eventTypesLoaded,
   eventUpdate,

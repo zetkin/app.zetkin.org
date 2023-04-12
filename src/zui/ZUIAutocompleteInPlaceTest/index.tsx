@@ -12,6 +12,7 @@ import {
 } from '@mui/material';
 import { useMemo, useState } from 'react';
 
+import EventTypesModel from 'features/events/models/EventTypesModel';
 import messageIds from 'features/events/l10n/messageIds';
 import useEditPreviewBlock from 'zui/hooks/useEditPreviewBlock';
 import { useMessages } from 'core/i18n';
@@ -24,9 +25,6 @@ const useStyles = makeStyles((theme) => ({
     fontSize: '1em',
     margin: 0,
     paddingLeft: 0,
-  },
-  input: {
-    height: '30px',
   },
   inputRoot: {
     '& fieldset': { border: 'none' },
@@ -65,11 +63,13 @@ interface NewEventType {
 interface ZUIAutocompleteInPlaceTestProps {
   types: ZetkinActivity[];
   currentType: NewEventType;
+  typesModel: EventTypesModel;
 }
 
 const ZUIAutocompleteInPlaceTest = ({
   types,
   currentType,
+  typesModel,
 }: ZUIAutocompleteInPlaceTestProps) => {
   const [editing, setEditing] = useState<boolean>(false);
   const [eventType, setEventType] = useState<NewEventType>(currentType);
@@ -134,7 +134,7 @@ const ZUIAutocompleteInPlaceTest = ({
                   }
                   output.push({
                     createType: true,
-                    title: '',
+                    title: inputValue,
                   });
 
                   return inputValue ? output : options;
@@ -145,12 +145,16 @@ const ZUIAutocompleteInPlaceTest = ({
                   option.title === value.title
                 }
                 onChange={(e, newValue) => {
-                  setEventType(
-                    {
-                      id: newValue.id,
-                      title: newValue.title,
-                    } || currentType
-                  );
+                  if (!newValue.createType) {
+                    setEventType(
+                      {
+                        id: newValue.id,
+                        title: newValue.title,
+                      } || currentType
+                    );
+                  }
+                  typesModel.addType(0, newValue.title!);
+                  setEditing(false);
                 }}
                 onFocus={() => setEditing(true)}
                 options={eventTypes}
@@ -169,13 +173,13 @@ const ZUIAutocompleteInPlaceTest = ({
                     }}
                   />
                 )}
-                renderOption={(props, option, { inputValue }) => {
+                renderOption={(props, option) => {
                   if (option.createType) {
                     return (
                       <li {...props}>
                         <IconButton className={classes.create}>
                           <AddIcon />
-                          {messages.type.createType({ type: inputValue })}
+                          {messages.type.createType({ type: option.title! })}
                         </IconButton>
                       </li>
                     );

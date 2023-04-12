@@ -62,7 +62,7 @@ export default makeMessages('feat.events', {
     participants: m('Participants'),
   },
   type: {
-    createType: m<{ type: string }>('Create type "{type}"'),
+    createType: m<{ type: string }>('Create "{type}"'),
     tooltip: m('Click to edit a type'),
     uncategorized: m('Uncategorized'),
   },
