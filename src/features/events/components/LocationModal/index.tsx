@@ -9,6 +9,7 @@ import 'leaflet/dist/leaflet.css';
 import CreateLocationCard from './CreateLocationCard';
 import LocationDetailsCard from './LocationDetailsCard';
 import LocationSearch from './LocationSearch';
+import LocationsModel from 'features/events/models/LocationsModel';
 import messageIds from 'features/events/l10n/messageIds';
 import { useMessages } from 'core/i18n';
 import { ZetkinLocation } from 'utils/types/zetkin';
@@ -39,6 +40,7 @@ export type PendingLocation = {
 
 interface LocationModalProps {
   locations: ZetkinLocation[];
+  model: LocationsModel;
   onCreateLocation: (newLocation: Partial<ZetkinLocation>) => void;
   onMapClose: () => void;
   onSelectLocation: (location: ZetkinLocation) => void;
@@ -49,6 +51,7 @@ interface LocationModalProps {
 const Map = dynamic(() => import('./Map'), { ssr: false });
 const LocationModal: FC<LocationModalProps> = ({
   locations,
+  model,
   onCreateLocation,
   onMapClose,
   onSelectLocation,
@@ -125,6 +128,7 @@ const LocationModal: FC<LocationModalProps> = ({
           {selectedLocation && (
             <LocationDetailsCard
               location={selectedLocation}
+              model={model}
               onClose={() => {
                 setSearchString('');
                 setSelectedLocationId(null);
