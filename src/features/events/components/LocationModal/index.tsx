@@ -14,14 +14,12 @@ import { useMessages } from 'core/i18n';
 import { ZetkinLocation } from 'utils/types/zetkin';
 
 interface StyleProps {
-  pendingLocation?: PendingLocation;
-  selectedLocation?: ZetkinLocation;
+  isLong: boolean;
 }
 
 const useStyles = makeStyles<Theme, StyleProps>(() => ({
   overlay: {
-    bottom: ({ pendingLocation, selectedLocation }) =>
-      pendingLocation || selectedLocation ? 64 : '',
+    bottom: ({ isLong }) => (isLong ? 64 : ''),
     display: 'flex',
     justifyContent: 'flex-end',
     justifySelf: 'flex-end',
@@ -34,7 +32,7 @@ const useStyles = makeStyles<Theme, StyleProps>(() => ({
   },
 }));
 
-type PendingLocation = {
+export type PendingLocation = {
   lat: number;
   lng: number;
 };
@@ -53,29 +51,29 @@ const LocationModal: FC<LocationModalProps> = ({
   onMapClose,
   onSelectLocation,
   open,
-  locationId,
+  locationId = null,
 }) => {
   const messages = useMessages(messageIds);
   const [searchString, setSearchString] = useState('');
-  const [selectedLocationId, setSelectedLocationId] = useState(
-    locationId ?? undefined
-  );
+  const [selectedLocationId, setSelectedLocationId] = useState(locationId);
   const [focusedMarker, setFocusedMarker] = useState<
     { lat: number; lng: number } | undefined
   >();
-  const [pendingLocation, setPendingLocation] = useState<
-    PendingLocation | undefined
-  >();
+  const [pendingLocation, setPendingLocation] = useState<Pick<
+    ZetkinLocation,
+    'lat' | 'lng'
+  > | null>(null);
 
   const selectedLocation = locations.find(
     (location) => location.id === selectedLocationId
   );
 
-  const classes = useStyles({ pendingLocation, selectedLocation });
+  const isLong = !!pendingLocation || !!selectedLocation;
+  const classes = useStyles({ isLong });
 
   useEffect(() => {
     setSelectedLocationId(locationId);
-    setPendingLocation(undefined);
+    setPendingLocation(null);
   }, [open]);
 
   return (
@@ -85,7 +83,7 @@ const LocationModal: FC<LocationModalProps> = ({
           focusedMarker={focusedMarker}
           locations={locations}
           onMapClick={(latlng: PendingLocation) => {
-            setSelectedLocationId(undefined);
+            setSelectedLocationId(null);
             setPendingLocation(latlng);
           }}
           onMarkerClick={(locationId: number) => {
@@ -95,9 +93,11 @@ const LocationModal: FC<LocationModalProps> = ({
             if (!location?.lat || !location?.lng) {
               return;
             }
+            setPendingLocation(null);
             setSelectedLocationId(location.id);
             setFocusedMarker({ lat: location.lat, lng: location.lng });
           }}
+          pendingLocation={pendingLocation}
           searchString={searchString}
           selectedLocation={selectedLocation}
         />
@@ -125,7 +125,7 @@ const LocationModal: FC<LocationModalProps> = ({
               location={selectedLocation}
               onClose={() => {
                 setSearchString('');
-                setSelectedLocationId(undefined);
+                setSelectedLocationId(null);
               }}
               onUseLocation={() => {
                 onSelectLocation(selectedLocation);
@@ -136,10 +136,10 @@ const LocationModal: FC<LocationModalProps> = ({
           {pendingLocation && !selectedLocation && (
             <CreateLocationCard
               onClose={() => {
-                setPendingLocation(undefined);
+                setPendingLocation(null);
               }}
               onCreateLocation={() => {
-                setPendingLocation(undefined);
+                setPendingLocation(null);
               }}
             />
           )}
