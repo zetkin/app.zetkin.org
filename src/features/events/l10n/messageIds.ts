@@ -6,6 +6,7 @@ export default makeMessages('feat.events', {
     description: m('Description'),
     editButton: m('Edit event information'),
     location: m('Location'),
+    startDate: m('Start'),
     url: m('Link'),
   },
   eventParticipantsCard: {
