@@ -2,7 +2,8 @@ import { renderHook } from '@testing-library/react';
 import { describe, expect, it } from '@jest/globals';
 
 import { ZetkinEvent } from 'utils/types/zetkin';
-import useClusteredEvents, { CLUSTER_TYPE } from './useClusteredEvents';
+import { ACTIVITIES, EventActivity } from '../models/CampaignActivitiesModel';
+import useClusteredActivities, { CLUSTER_TYPE } from './useClusteredActivities';
 
 const mockEventData: ZetkinEvent = {
   activity: {
@@ -32,16 +33,23 @@ const mockEventData: ZetkinEvent = {
   start_time: '1857-07-05T13:37:00.000Z',
 };
 
-const mockEvent = (id: number, data: Partial<ZetkinEvent>) => ({
-  ...mockEventData,
-  ...data,
-  id,
-});
+function mockEvent(id: number, data: Partial<ZetkinEvent>): EventActivity {
+  return {
+    data: {
+      ...mockEventData,
+      ...data,
+      id,
+    },
+    endDate: null,
+    kind: ACTIVITIES.EVENT,
+    startDate: null,
+  };
+}
 
-describe('userClusteredEvents()', () => {
+describe('userClusteredActivities()', () => {
   it('does nothing with unrelated events on different days', () => {
     const { result } = renderHook(() =>
-      useClusteredEvents([
+      useClusteredActivities([
         mockEvent(1, {
           end_time: '1857-07-01T13:00:00.000Z',
           start_time: '1857-07-01T12:00:00.000Z',
@@ -68,7 +76,7 @@ describe('userClusteredEvents()', () => {
 
   it('clusters three multi-shift events and leaves a third unrelated', () => {
     const { result } = renderHook(() =>
-      useClusteredEvents([
+      useClusteredActivities([
         mockEvent(1, {
           end_time: '1857-07-05T13:00:00.000Z',
           start_time: '1857-07-05T12:00:00.000Z',
@@ -101,7 +109,7 @@ describe('userClusteredEvents()', () => {
 
   it('clusters two multi-shift events, but ignores events in different location', () => {
     const { result } = renderHook(() =>
-      useClusteredEvents([
+      useClusteredActivities([
         mockEvent(1, {
           end_time: '1857-07-05T13:00:00.000Z',
           location: {

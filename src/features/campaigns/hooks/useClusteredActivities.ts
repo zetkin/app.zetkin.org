@@ -1,5 +1,9 @@
-import { EventActivity } from 'features/campaigns/models/CampaignActivitiesModel';
 import { ZetkinEvent } from 'utils/types/zetkin';
+import {
+  ACTIVITIES,
+  CampaignActivity,
+  EventActivity,
+} from 'features/campaigns/models/CampaignActivitiesModel';
 
 export enum CLUSTER_TYPE {
   MULTI_LOCATION = 'multilocation',
@@ -27,36 +31,31 @@ export type ClusteredEvent =
   | MultiShiftEventCluster
   | SingleEvent;
 
-function isActivities(
-  events: ZetkinEvent[] | EventActivity[]
-): events is EventActivity[] {
-  const firstEvent = events[0];
-  return firstEvent && 'type' in firstEvent;
-}
+function clusterEvents(eventActivities: EventActivity[]): ClusteredEvent[] {
+  const sortedEvents = eventActivities
+    .map((activity) => activity.data)
+    .sort((a, b) => {
+      const aStart = new Date(a.start_time);
+      const bStart = new Date(b.start_time);
+      const diffStart = aStart.getTime() - bStart.getTime();
 
-function clusterEvents(events: ZetkinEvent[]): ClusteredEvent[] {
-  const sorted = events.concat().sort((a, b) => {
-    const aStart = new Date(a.start_time);
-    const bStart = new Date(b.start_time);
-    const diffStart = aStart.getTime() - bStart.getTime();
+      // Primarily sort by start time
+      if (diffStart != 0) {
+        return diffStart;
+      }
 
-    // Primarily sort by start time
-    if (diffStart != 0) {
-      return diffStart;
-    }
+      // When start times are identical, sort by end time
+      const aEnd = new Date(a.end_time);
+      const bEnd = new Date(b.end_time);
 
-    // When start times are identical, sort by end time
-    const aEnd = new Date(a.end_time);
-    const bEnd = new Date(b.end_time);
-
-    return aEnd.getTime() - bEnd.getTime();
-  });
+      return aEnd.getTime() - bEnd.getTime();
+    });
 
   let allClusters: ClusteredEvent[] = [];
   let pendingClusters: ClusteredEvent[] = [];
 
-  sorted.forEach((event, index) => {
-    const lastEvent = sorted[index - 1];
+  sortedEvents.forEach((event, index) => {
+    const lastEvent = sortedEvents[index - 1];
 
     if (lastEvent?.start_time.slice(0, 10) != event.start_time.slice(0, 10)) {
       // This event is the first of this day, so we can reset all
@@ -113,12 +112,19 @@ function clusterEvents(events: ZetkinEvent[]): ClusteredEvent[] {
   return allClusters.concat(pendingClusters);
 }
 
-export default function useClusteredEvents(
-  events: ZetkinEvent[] | EventActivity[]
+export default function useClusteredActivities(
+  activities: CampaignActivity[]
 ): ClusteredEvent[] {
-  const simpleEvents = isActivities(events)
-    ? events.map((activity) => activity.data)
-    : events;
+  const eventActivities: EventActivity[] = [];
+  const otherActivities: CampaignActivity[] = [];
 
-  return clusterEvents(simpleEvents);
+  activities.forEach((activity) => {
+    if (activity.kind == ACTIVITIES.EVENT) {
+      eventActivities.push(activity);
+    } else {
+      otherActivities.push(activity);
+    }
+  });
+
+  return clusterEvents(eventActivities);
 }
