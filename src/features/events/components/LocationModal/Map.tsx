@@ -23,6 +23,7 @@ interface MapProps {
   locations: ZetkinLocation[];
   searchString: string;
   selectedLocation?: ZetkinLocation;
+  onMapClick: (latlng: { lat: number; lng: number }) => void;
   onMarkerClick: (locationId: number) => void;
 }
 
@@ -38,6 +39,7 @@ const MapProvider = ({
 const Map: FC<MapProps> = ({
   focusedMarker,
   locations,
+  onMapClick,
   onMarkerClick,
   selectedLocation,
   searchString,
@@ -69,6 +71,9 @@ const Map: FC<MapProps> = ({
           if (focusedMarker) {
             map.setView(focusedMarker, 17);
           }
+          map.on('click', (evt) => {
+            onMapClick({ lat: evt.latlng.lat, lng: evt.latlng.lng });
+          });
           return (
             <>
               <TileLayer

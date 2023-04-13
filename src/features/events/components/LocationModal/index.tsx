@@ -6,6 +6,7 @@ import { Box, Dialog, Typography } from '@mui/material';
 import { FC, useEffect, useState } from 'react';
 
 import 'leaflet/dist/leaflet.css';
+import CreateLocationCard from './CreateLocationCard';
 import LocationDetailsCard from './LocationDetailsCard';
 import LocationSearch from './LocationSearch';
 import messageIds from 'features/events/l10n/messageIds';
@@ -13,12 +14,14 @@ import { useMessages } from 'core/i18n';
 import { ZetkinLocation } from 'utils/types/zetkin';
 
 interface StyleProps {
+  pendingLocation?: PendingLocation;
   selectedLocation?: ZetkinLocation;
 }
 
 const useStyles = makeStyles<Theme, StyleProps>(() => ({
   overlay: {
-    bottom: ({ selectedLocation }) => (selectedLocation ? 64 : ''),
+    bottom: ({ pendingLocation, selectedLocation }) =>
+      pendingLocation || selectedLocation ? 64 : '',
     display: 'flex',
     justifyContent: 'flex-end',
     justifySelf: 'flex-end',
@@ -30,6 +33,11 @@ const useStyles = makeStyles<Theme, StyleProps>(() => ({
     zIndex: 1000,
   },
 }));
+
+type PendingLocation = {
+  lat: number;
+  lng: number;
+};
 
 interface LocationModalProps {
   locations: ZetkinLocation[];
@@ -55,15 +63,19 @@ const LocationModal: FC<LocationModalProps> = ({
   const [focusedMarker, setFocusedMarker] = useState<
     { lat: number; lng: number } | undefined
   >();
+  const [pendingLocation, setPendingLocation] = useState<
+    PendingLocation | undefined
+  >();
 
   const selectedLocation = locations.find(
     (location) => location.id === selectedLocationId
   );
 
-  const classes = useStyles({ selectedLocation });
+  const classes = useStyles({ pendingLocation, selectedLocation });
 
   useEffect(() => {
     setSelectedLocationId(locationId);
+    setPendingLocation(undefined);
   }, [open]);
 
   return (
@@ -72,6 +84,10 @@ const LocationModal: FC<LocationModalProps> = ({
         <Map
           focusedMarker={focusedMarker}
           locations={locations}
+          onMapClick={(latlng: PendingLocation) => {
+            setSelectedLocationId(undefined);
+            setPendingLocation(latlng);
+          }}
           onMarkerClick={(locationId: number) => {
             const location = locations.find(
               (location) => location.id === locationId
@@ -86,7 +102,7 @@ const LocationModal: FC<LocationModalProps> = ({
           selectedLocation={selectedLocation}
         />
         <Box className={classes.overlay}>
-          {!selectedLocation && (
+          {!selectedLocation && !pendingLocation && (
             <LocationSearch
               onChange={(value: ZetkinLocation) => {
                 const location = locations.find(
@@ -114,6 +130,16 @@ const LocationModal: FC<LocationModalProps> = ({
               onUseLocation={() => {
                 onSelectLocation(selectedLocation);
                 onMapClose();
+              }}
+            />
+          )}
+          {pendingLocation && !selectedLocation && (
+            <CreateLocationCard
+              onClose={() => {
+                setPendingLocation(undefined);
+              }}
+              onCreateLocation={() => {
+                setPendingLocation(undefined);
               }}
             />
           )}
