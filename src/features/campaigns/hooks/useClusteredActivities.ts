@@ -1,8 +1,11 @@
 import { ZetkinEvent } from 'utils/types/zetkin';
 import {
   ACTIVITIES,
+  CallAssignmentActivity,
   CampaignActivity,
   EventActivity,
+  SurveyActivity,
+  TaskActivity,
 } from 'features/campaigns/models/CampaignActivitiesModel';
 
 export enum CLUSTER_TYPE {
@@ -13,23 +16,29 @@ export enum CLUSTER_TYPE {
 
 export type MultiShiftEventCluster = {
   events: ZetkinEvent[];
-  type: CLUSTER_TYPE.MULTI_SHIFT;
+  kind: CLUSTER_TYPE.MULTI_SHIFT;
 };
 
 export type MultiLocationEventCluster = {
   events: ZetkinEvent[];
-  type: CLUSTER_TYPE.MULTI_LOCATION;
+  kind: CLUSTER_TYPE.MULTI_LOCATION;
 };
 
 export type SingleEvent = {
   events: [ZetkinEvent];
-  type: CLUSTER_TYPE.SINGLE;
+  kind: CLUSTER_TYPE.SINGLE;
 };
 
 export type ClusteredEvent =
   | MultiLocationEventCluster
   | MultiShiftEventCluster
   | SingleEvent;
+
+export type NonEventActivity =
+  | CallAssignmentActivity
+  | SurveyActivity
+  | TaskActivity;
+export type ClusteredActivity = ClusteredEvent | NonEventActivity;
 
 function clusterEvents(eventActivities: EventActivity[]): ClusteredEvent[] {
   const sortedEvents = eventActivities
@@ -68,7 +77,7 @@ function clusterEvents(eventActivities: EventActivity[]): ClusteredEvent[] {
       const cluster = pendingClusters[i];
       const lastClusterEvent = cluster.events[cluster.events.length - 1];
 
-      if (cluster.type == CLUSTER_TYPE.SINGLE) {
+      if (cluster.kind == CLUSTER_TYPE.SINGLE) {
         if (
           event.activity.id != lastClusterEvent.activity.id ||
           event.title != lastClusterEvent.title
@@ -82,11 +91,11 @@ function clusterEvents(eventActivities: EventActivity[]): ClusteredEvent[] {
         ) {
           pendingClusters[i] = {
             events: [...cluster.events, event],
-            type: CLUSTER_TYPE.MULTI_SHIFT,
+            kind: CLUSTER_TYPE.MULTI_SHIFT,
           };
           return;
         }
-      } else if (cluster.type == CLUSTER_TYPE.MULTI_SHIFT) {
+      } else if (cluster.kind == CLUSTER_TYPE.MULTI_SHIFT) {
         // If activity and location is the same, and this event
         // starts right after the last event in the group ends,
         // the event is part of this cluster.
@@ -105,7 +114,7 @@ function clusterEvents(eventActivities: EventActivity[]): ClusteredEvent[] {
     // No cluster was found, create new single
     pendingClusters.push({
       events: [event],
-      type: CLUSTER_TYPE.SINGLE,
+      kind: CLUSTER_TYPE.SINGLE,
     });
   });
 
@@ -114,9 +123,9 @@ function clusterEvents(eventActivities: EventActivity[]): ClusteredEvent[] {
 
 export default function useClusteredActivities(
   activities: CampaignActivity[]
-): ClusteredEvent[] {
+): ClusteredActivity[] {
   const eventActivities: EventActivity[] = [];
-  const otherActivities: CampaignActivity[] = [];
+  const otherActivities: NonEventActivity[] = [];
 
   activities.forEach((activity) => {
     if (activity.kind == ACTIVITIES.EVENT) {
@@ -126,5 +135,32 @@ export default function useClusteredActivities(
     }
   });
 
-  return clusterEvents(eventActivities);
+  const clusteredEvents: ClusteredActivity[] = clusterEvents(eventActivities);
+
+  return clusteredEvents.concat(otherActivities).sort((a, b) => {
+    const aStart = isCluster(a)
+      ? new Date(a.events[0].start_time)
+      : a.startDate;
+    const bStart = isCluster(b)
+      ? new Date(b.events[0].start_time)
+      : b.startDate;
+
+    if (!aStart && !bStart) {
+      return 0;
+    } else if (!aStart) {
+      return -1;
+    } else if (!bStart) {
+      return 1;
+    }
+
+    return aStart.getTime() - bStart.getTime();
+  });
+}
+
+function isCluster(activity: ClusteredActivity): activity is ClusteredEvent {
+  return (
+    activity.kind == CLUSTER_TYPE.SINGLE ||
+    activity.kind == CLUSTER_TYPE.MULTI_LOCATION ||
+    activity.kind == CLUSTER_TYPE.MULTI_SHIFT
+  );
 }

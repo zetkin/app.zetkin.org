@@ -1,9 +1,21 @@
 import { renderHook } from '@testing-library/react';
 import { describe, expect, it } from '@jest/globals';
 
-import { ZetkinEvent } from 'utils/types/zetkin';
-import { ACTIVITIES, EventActivity } from '../models/CampaignActivitiesModel';
-import useClusteredActivities, { CLUSTER_TYPE } from './useClusteredActivities';
+import {
+  ACTIVITIES,
+  CallAssignmentActivity,
+  EventActivity,
+  SurveyActivity,
+} from '../models/CampaignActivitiesModel';
+import useClusteredActivities, {
+  CLUSTER_TYPE,
+  ClusteredEvent,
+} from './useClusteredActivities';
+import {
+  ZetkinCallAssignment,
+  ZetkinEvent,
+  ZetkinSurvey,
+} from 'utils/types/zetkin';
 
 const mockEventData: ZetkinEvent = {
   activity: {
@@ -66,12 +78,12 @@ describe('userClusteredActivities()', () => {
     );
 
     expect(result.current.length).toBe(3);
-    expect(result.current[0].type).toBe(CLUSTER_TYPE.SINGLE);
-    expect(result.current[0].events[0].id).toBe(1);
-    expect(result.current[1].type).toBe(CLUSTER_TYPE.SINGLE);
-    expect(result.current[1].events[0].id).toBe(2);
-    expect(result.current[2].type).toBe(CLUSTER_TYPE.SINGLE);
-    expect(result.current[2].events[0].id).toBe(3);
+    expect(result.current[0].kind).toBe(CLUSTER_TYPE.SINGLE);
+    expect((result.current[0] as ClusteredEvent).events[0].id).toBe(1);
+    expect(result.current[1].kind).toBe(CLUSTER_TYPE.SINGLE);
+    expect((result.current[1] as ClusteredEvent).events[0].id).toBe(2);
+    expect(result.current[2].kind).toBe(CLUSTER_TYPE.SINGLE);
+    expect((result.current[2] as ClusteredEvent).events[0].id).toBe(3);
   });
 
   it('clusters three multi-shift events and leaves a third unrelated', () => {
@@ -97,14 +109,14 @@ describe('userClusteredActivities()', () => {
     );
 
     expect(result.current.length).toBe(2);
-    expect(result.current[0].type).toBe(CLUSTER_TYPE.MULTI_SHIFT);
-    expect(result.current[0].events.length).toBe(3);
-    expect(result.current[0].events[0].id).toBe(1);
-    expect(result.current[0].events[1].id).toBe(2);
-    expect(result.current[0].events[2].id).toBe(3);
-    expect(result.current[1].type).toBe(CLUSTER_TYPE.SINGLE);
-    expect(result.current[1].events.length).toBe(1);
-    expect(result.current[1].events[0].id).toBe(4);
+    expect(result.current[0].kind).toBe(CLUSTER_TYPE.MULTI_SHIFT);
+    expect((result.current[0] as ClusteredEvent).events.length).toBe(3);
+    expect((result.current[0] as ClusteredEvent).events[0].id).toBe(1);
+    expect((result.current[0] as ClusteredEvent).events[1].id).toBe(2);
+    expect((result.current[0] as ClusteredEvent).events[2].id).toBe(3);
+    expect(result.current[1].kind).toBe(CLUSTER_TYPE.SINGLE);
+    expect((result.current[1] as ClusteredEvent).events.length).toBe(1);
+    expect((result.current[1] as ClusteredEvent).events[0].id).toBe(4);
   });
 
   it('clusters two multi-shift events, but ignores events in different location', () => {
@@ -144,12 +156,63 @@ describe('userClusteredActivities()', () => {
     );
 
     expect(result.current.length).toBe(2);
-    expect(result.current[0].type).toBe(CLUSTER_TYPE.MULTI_SHIFT);
-    expect(result.current[0].events.length).toBe(2);
-    expect(result.current[0].events[0].id).toBe(1);
-    expect(result.current[0].events[1].id).toBe(2);
-    expect(result.current[1].type).toBe(CLUSTER_TYPE.SINGLE);
-    expect(result.current[1].events.length).toBe(1);
-    expect(result.current[1].events[0].id).toBe(3);
+    expect(result.current[0].kind).toBe(CLUSTER_TYPE.MULTI_SHIFT);
+    expect((result.current[0] as ClusteredEvent).events.length).toBe(2);
+    expect((result.current[0] as ClusteredEvent).events[0].id).toBe(1);
+    expect((result.current[0] as ClusteredEvent).events[1].id).toBe(2);
+    expect(result.current[1].kind).toBe(CLUSTER_TYPE.SINGLE);
+    expect((result.current[1] as ClusteredEvent).events.length).toBe(1);
+    expect((result.current[1] as ClusteredEvent).events[0].id).toBe(3);
+  });
+
+  it('includes non-event activities in the correct order', () => {
+    const { result } = renderHook(() =>
+      useClusteredActivities([
+        mockEvent(1, {
+          end_time: '1857-07-05T13:00:00.000Z',
+          location: {
+            id: 1,
+            lat: 0,
+            lng: 0,
+            title: '',
+          },
+          start_time: '1857-07-05T12:00:00.000Z',
+        }),
+        {
+          // Fake data, will never be used
+          data: { id: 1 } as ZetkinSurvey,
+          endDate: new Date('1857-07-06T13:37:00.000Z'),
+          kind: ACTIVITIES.SURVEY,
+          // This should appear first
+          startDate: new Date('1857-07-05T11:37:00.000Z'),
+        },
+        {
+          // Fake data, will never be used
+          data: { id: 2 } as ZetkinCallAssignment,
+          endDate: new Date('1857-07-06T13:37:00.000Z'),
+          kind: ACTIVITIES.CALL_ASSIGNMENT,
+          // This should appear last
+          startDate: new Date('1857-07-05T13:37:00.000Z'),
+        },
+        mockEvent(2, {
+          end_time: '1857-07-05T14:00:00.000Z',
+          location: {
+            id: 1,
+            lat: 0,
+            lng: 0,
+            title: '',
+          },
+          start_time: '1857-07-05T13:00:00.000Z',
+        }),
+      ])
+    );
+
+    expect(result.current.length).toBe(3);
+    expect(result.current[0].kind).toBe(ACTIVITIES.SURVEY);
+    expect(result.current[1].kind).toBe(CLUSTER_TYPE.MULTI_SHIFT);
+    expect(result.current[2].kind).toBe(ACTIVITIES.CALL_ASSIGNMENT);
+
+    expect((result.current[0] as SurveyActivity).data.id).toBe(1);
+    expect((result.current[2] as CallAssignmentActivity).data.id).toBe(2);
   });
 });
