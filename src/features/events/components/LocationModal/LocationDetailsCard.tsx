@@ -43,7 +43,9 @@ const LocationDetailsCard: FC<LocationDetailsCardProps> = ({
         />
       </Box>
       {location.info_text && (
-        <Typography color="secondary">{location.info_text}</Typography>
+        <Box display="flex" flex={1} flexDirection="column" paddingTop={1}>
+          <Typography color="secondary">{location.info_text}</Typography>
+        </Box>
       )}
       <Box display="flex" justifyContent="flex-end" paddingTop={2}>
         <Button onClick={onUseLocation} variant="contained">
