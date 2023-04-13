@@ -2,11 +2,11 @@ import dynamic from 'next/dynamic';
 import { InfoOutlined } from '@mui/icons-material';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/system';
-import { Box, Dialog, TextField, Typography } from '@mui/material';
+import { Box, Dialog, Typography } from '@mui/material';
 import { FC, useEffect, useState } from 'react';
 
 import 'leaflet/dist/leaflet.css';
-import LocationCard from './LocationCard';
+import LocationDetailsCard from './LocationDetailsCard';
 import LocationSearch from './LocationSearch';
 import messageIds from 'features/events/l10n/messageIds';
 import { useMessages } from 'core/i18n';
@@ -105,37 +105,17 @@ const LocationModal: FC<LocationModalProps> = ({
             />
           )}
           {selectedLocation && (
-            <LocationCard
+            <LocationDetailsCard
+              location={selectedLocation}
               onClose={() => {
                 setSearchString('');
                 setSelectedLocationId(undefined);
               }}
-              primaryAction={() => {
+              onUseLocation={() => {
                 onSelectLocation(selectedLocation);
                 onMapClose();
               }}
-              primaryActionTitle={selectedLocation ? 'Use location' : 'Save'}
-              secondaryActionTitle="Cancel"
-              title={
-                selectedLocation
-                  ? selectedLocation.title
-                  : 'Create new location'
-              }
-            >
-              <>
-                {selectedLocation && (
-                  <Typography color="secondary">
-                    {selectedLocation.info_text}
-                  </Typography>
-                )}
-                {!selectedLocation && (
-                  <>
-                    <TextField />
-                    <TextField />
-                  </>
-                )}
-              </>
-            </LocationCard>
+            />
           )}
         </Box>
         <Box alignItems="center" display="flex" paddingTop={1}>
