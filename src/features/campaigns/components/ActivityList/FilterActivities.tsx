@@ -81,6 +81,17 @@ const FilterActivities = ({
             }
             label={messages.tasks()}
           />
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={filters.includes(ACTIVITIES.EVENT)}
+                disabled={!filterTypes.includes(ACTIVITIES.EVENT)}
+                onChange={onFiltersChange}
+                value={ACTIVITIES.EVENT}
+              />
+            }
+            label={messages.events()}
+          />
         </FormGroup>
       </Box>
     </Card>

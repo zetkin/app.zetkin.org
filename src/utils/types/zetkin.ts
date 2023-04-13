@@ -66,7 +66,7 @@ export interface ZetkinEvent {
     id: number;
     title: string;
   } | null;
-  contact?: string | null;
+  contact?: null | { id: number; name: string };
   end_time: string;
   id: number;
   info_text: string;
@@ -76,8 +76,8 @@ export interface ZetkinEvent {
     lng: number;
     title: string;
   };
-  num_participants_required?: number;
-  num_participants_available?: number;
+  num_participants_required: number;
+  num_participants_available: number;
   start_time: string;
   title?: string;
   organization: {
@@ -89,6 +89,10 @@ export interface ZetkinEvent {
   url?: string;
 }
 
+export type ZetkinEventParticipant = ZetkinPerson & {
+  reminder_sent: null | string;
+};
+
 export interface ZetkinFile {
   id: number;
   original_name: string;
@@ -99,6 +103,23 @@ export interface ZetkinFile {
   };
   url: string;
   mime_type: string;
+}
+
+export interface ZetkinOrganizerAction {
+  assigment: {
+    id: number;
+    title: string;
+  };
+  caller: {
+    first_name: string;
+    id: number;
+    last_name: string;
+  };
+  id: number;
+  message_to_organizer: string;
+  organizer_action_needed: boolean;
+  organizer_action_taken: boolean;
+  update_time: string;
 }
 
 export interface ZetkinUser {

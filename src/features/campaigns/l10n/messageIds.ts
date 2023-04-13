@@ -23,6 +23,15 @@ export default makeMessages('feat.campaigns', {
     todayCard: m('Today'),
     tomorrowCard: m('Tomorrow'),
   },
+  activityList: {
+    eventItem: {
+      contact: m('No contact person has been assigned'),
+      reminders: m<{ numMissing: number }>(
+        '{numMissing, plural, =1 {One participant} other {# participants}} have not yet received reminders'
+      ),
+      signups: m('There are pending signups'),
+    },
+  },
   all: {
     cardCTA: m('Go to project'),
     create: m('Create new project'),

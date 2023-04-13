@@ -1,6 +1,6 @@
 import EditIcon from '@mui/icons-material/Edit';
-import { Map } from '@mui/icons-material';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import { Add, Map } from '@mui/icons-material';
 import {
   Autocomplete,
   Box,
@@ -61,6 +61,10 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
     return null;
   }
 
+  const options: (ZetkinLocation | 'CREATE_NEW_LOCATION')[] = locations
+    ? [...locations, 'CREATE_NEW_LOCATION']
+    : ['CREATE_NEW_LOCATION'];
+
   return (
     <ClickAwayListener {...clickAwayProps}>
       <Box {...containerProps}>
@@ -81,17 +85,25 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                     <Autocomplete
                       disableClearable
                       fullWidth
-                      getOptionLabel={(option) => option.title}
-                      onChange={(ev, value) => {
+                      getOptionLabel={(option) =>
+                        option === 'CREATE_NEW_LOCATION'
+                          ? messages.locationModal.createLocation()
+                          : option.title
+                      }
+                      onChange={(ev, option) => {
+                        if (option === 'CREATE_NEW_LOCATION') {
+                          setLocationModalOpen(true);
+                          return;
+                        }
                         const location = locations?.find(
-                          (location) => location.id === value.id
+                          (location) => location.id === option.id
                         );
                         if (!location) {
                           return;
                         }
                         setLocationId(location.id);
                       }}
-                      options={locations || []}
+                      options={options}
                       renderInput={(params) => (
                         <TextField
                           {...params}
@@ -102,8 +114,20 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                           }}
                         />
                       )}
-                      value={locations?.find(
-                        (location) => location.id === locationId
+                      renderOption={(params, option) =>
+                        option === 'CREATE_NEW_LOCATION' ? (
+                          <li {...params}>
+                            <Add sx={{ marginRight: 2 }} />
+                            {messages.eventOverviewCard.createLocation()}
+                          </li>
+                        ) : (
+                          <li {...params}>{option.title}</li>
+                        )
+                      }
+                      value={options?.find(
+                        (location) =>
+                          location !== 'CREATE_NEW_LOCATION' &&
+                          location.id === locationId
                       )}
                     />
                     <Map

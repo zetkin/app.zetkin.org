@@ -8,6 +8,7 @@ import { FILTER_TYPE } from 'features/smartSearch/components/types';
 import IApiClient from 'core/api/client/IApiClient';
 import { ZetkinCallAssignment } from 'utils/types/zetkin';
 import {
+  Call,
   CallAssignmentCaller,
   CallAssignmentData,
   CallAssignmentStats,
@@ -71,6 +72,7 @@ describe('CallAssignmentModel', () => {
               title: 'My assignment',
             },
           ]),
+          callList: mockList<Call>(),
           callersById: {},
           statsById: {},
         },
@@ -117,6 +119,7 @@ describe('CallAssignmentModel', () => {
               title: 'My assignment',
             },
           ]),
+          callList: mockList<Call>(),
           callersById: {},
           statsById: {},
         },
@@ -163,6 +166,7 @@ describe('CallAssignmentModel', () => {
             title: 'My assignment',
           },
         ]),
+        callList: mockList<Call>(),
         callersById: {},
         statsById: {
           2: mockItem({
@@ -192,6 +196,7 @@ describe('CallAssignmentModel', () => {
       const store = createStore({
         callAssignments: {
           assignmentList: mockList(),
+          callList: mockList<Call>(),
           callersById: {},
           statsById: {},
         },
@@ -317,6 +322,7 @@ describe('CallAssignmentModel', () => {
               title: 'My assignment',
             },
           ]),
+          callList: mockList<Call>(),
           callersById: {},
           statsById: {},
         },
@@ -368,6 +374,7 @@ describe('CallAssignmentModel', () => {
               title: 'My assignment',
             },
           ]),
+          callList: mockList<Call>(),
           callersById: {},
           statsById: {},
         },
@@ -449,6 +456,7 @@ describe('CallAssignmentModel', () => {
               title: 'My assignment',
             },
           ]),
+          callList: mockList<Call>(),
           callersById: {},
           statsById: {
             2: mockItem({
@@ -502,6 +510,7 @@ describe('CallAssignmentModel', () => {
       const store = createStore({
         callAssignments: {
           assignmentList: mockList(),
+          callList: mockList<Call>(),
           callersById: {
             2: mockList<CallAssignmentCaller>([
               {
@@ -539,6 +548,7 @@ describe('CallAssignmentModel', () => {
       const store = createStore({
         callAssignments: {
           assignmentList: mockList(),
+          callList: mockList<Call>(),
           callersById: {
             2: mockList<CallAssignmentCaller>([
               {
@@ -583,6 +593,7 @@ describe('CallAssignmentModel', () => {
       const store = createStore({
         callAssignments: {
           assignmentList: mockList(),
+          callList: mockList<Call>(),
           callersById: {
             2: mockList<CallAssignmentCaller>([
               {
@@ -619,6 +630,7 @@ describe('CallAssignmentModel', () => {
       const store = createStore({
         callAssignments: {
           assignmentList: mockList(),
+          callList: mockList<Call>(),
           callersById: {
             2: mockList<CallAssignmentCaller>([]),
           },
@@ -669,6 +681,7 @@ describe('CallAssignmentModel', () => {
             title: 'My assignment',
           },
         ]),
+        callList: mockList<Call>(),
         callersById: {},
         statsById: {},
       },
@@ -743,6 +756,7 @@ describe('CallAssignmentModel', () => {
             title: 'My assignment',
           },
         ]),
+        callList: mockList<Call>(),
         callersById: {},
         statsById: {},
       },

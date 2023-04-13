@@ -20,6 +20,7 @@ export default makeMessages('feat.smartSearch', {
   },
   filterTitles: {
     all: m('Everyone'),
+    call_blocked: m('Blocked from calling'),
     call_history: m('Based on their call history'),
     campaign_participation: m('Based on their campaign participation'),
     most_active: m('The most active people'),
@@ -46,6 +47,15 @@ export default makeMessages('feat.smartSearch', {
         false: m('an empty list'),
         true: m('a list of all the people in the organization'),
       },
+    },
+    callBlocked: {
+      addRemoveSelect: {
+        add: m('Add'),
+        sub: m('Remove'),
+      },
+      inputString: m<{ addRemoveSelect: ReactElement }>(
+        '{addRemoveSelect} people who are blocked from calling for any reason'
+      ),
     },
     callHistory: {
       addRemoveSelect: {

@@ -8,9 +8,9 @@ import { isSameDate } from 'utils/dateUtils';
 import messageIds from 'features/campaigns/l10n/messageIds';
 import { Msg } from 'core/i18n';
 import theme from 'theme';
-import ZUIIconLabel from 'zui/ZUIIconLabel';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
 import ZUISuffixedNumber from 'zui/ZUISuffixedNumber';
+import ZUIIconLabel, { ZUIIconLabelProps } from 'zui/ZUIIconLabel';
 
 interface StyleProps {
   color: STATUS_COLORS;
@@ -72,9 +72,12 @@ interface OverviewListItemProps {
   activity: CampaignActivity;
   focusDate: Date | null;
   href: string;
+  meta?: JSX.Element;
   title: string;
-  endNumber: number;
+  endNumber: number | string;
+  endNumberColor?: ZUIIconLabelProps['color'];
   statusBar?: JSX.Element | null;
+  subtitle?: JSX.Element;
 }
 
 const OverviewListItem = ({
@@ -83,9 +86,12 @@ const OverviewListItem = ({
   SecondaryIcon,
   focusDate,
   href,
+  meta,
   title,
   endNumber,
+  endNumberColor = 'secondary',
   statusBar,
+  subtitle,
 }: OverviewListItemProps) => {
   const { endDate, startDate } = activity;
   const color = getStatusColor(activity);
@@ -94,7 +100,9 @@ const OverviewListItem = ({
   const now = new Date();
   let label: JSX.Element | null = null;
 
-  if (!focusDate) {
+  if (subtitle) {
+    label = subtitle;
+  } else if (!focusDate) {
     if (startDate) {
       label = getStartsLabel(startDate);
     } else if (endDate) {
@@ -144,8 +152,13 @@ const OverviewListItem = ({
     <NextLink href={href} passHref>
       <Link my={2} underline="none">
         <Box my={2}>
-          <Box alignItems="start" display="flex" justifyContent="space-between">
-            <Box width={30}>
+          <Box
+            alignItems="center"
+            display="flex"
+            gap={1}
+            justifyContent="space-between"
+          >
+            <Box flex="0 0" width={30}>
               <PrimaryIcon className={classes.primaryIcon} />
             </Box>
             <Box
@@ -157,6 +170,7 @@ const OverviewListItem = ({
               <Typography
                 color={theme.palette.text.primary}
                 sx={{
+                  margin: 0,
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
                   whiteSpace: 'nowrap',
@@ -165,11 +179,18 @@ const OverviewListItem = ({
                 {title}
               </Typography>
             </Box>
-            <Box width={80}>
+            {meta && <Box flex="0 0">{meta}</Box>}
+            <Box flex="1 0 80px">
               <ZUIIconLabel
-                icon={<SecondaryIcon color="secondary" />}
-                label={<ZUISuffixedNumber number={endNumber} />}
-                labelColor="secondary"
+                color={endNumberColor}
+                icon={<SecondaryIcon color={endNumberColor} />}
+                label={
+                  typeof endNumber === 'number' ? (
+                    <ZUISuffixedNumber number={endNumber} />
+                  ) : (
+                    endNumber
+                  )
+                }
               />
             </Box>
           </Box>

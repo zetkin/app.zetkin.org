@@ -26,3 +26,28 @@ export interface CallAssignmentStats {
   queue: number;
   ready: number;
 }
+
+export interface Call {
+  id: number;
+  allocation_time: string;
+  update_time: string;
+  state: number;
+  notes?: string;
+  call_back_after?: string;
+  organizer_action_needed: boolean;
+  organizer_action_taken: boolean;
+  message_to_organizer: string;
+  assignment_id: number;
+  caller: {
+    first_name?: string;
+    id: number;
+    last_name?: string;
+    name: string;
+  };
+  target: {
+    alt_phone: string;
+    id: number;
+    name: string;
+    phone: string;
+  };
+}
