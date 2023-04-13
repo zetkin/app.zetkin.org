@@ -5,8 +5,11 @@ export default makeMessages('feat.events', {
     createLocation: m('Create new location'),
     description: m('Description'),
     editButton: m('Edit event information'),
+    endDate: m('End'),
+    endTime: m('End time'),
     location: m('Location'),
     startDate: m('Start'),
+    startTime: m('Start time'),
     url: m('Link'),
   },
   eventParticipantsCard: {

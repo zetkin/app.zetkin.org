@@ -2,6 +2,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import EditIcon from '@mui/icons-material/Edit';
 import { FormattedTime } from 'react-intl';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import { Add, Place } from '@mui/icons-material';
 import {
   Autocomplete,
@@ -22,14 +23,18 @@ import { getWorkingUrl } from 'features/events/utils/getWorkingUrl';
 import LocationModal from '../LocationModal';
 import LocationsModel from 'features/events/models/LocationsModel';
 import messageIds from 'features/events/l10n/messageIds';
-import { removeOffset } from 'utils/dateUtils';
 import theme from 'theme';
 import useEditPreviewBlock from 'zui/hooks/useEditPreviewBlock';
 import { useMessages } from 'core/i18n';
 import { ZetkinLocation } from 'utils/types/zetkin';
 import ZUIDate from 'zui/ZUIDate';
 import ZUIPreviewableInput from 'zui/ZUIPreviewableInput';
-import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+import {
+  endDateIsBeforeStartDate,
+  isSameDate,
+  isSameTime,
+  removeOffset,
+} from 'utils/dateUtils';
 
 type EventOverviewCardProps = {
   dataModel: EventDataModel;
@@ -55,6 +60,9 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
       ? dayjs(removeOffset(eventData.start_time))
       : undefined
   );
+  const [endDate, setEndDate] = useState<Dayjs | undefined>(
+    eventData?.end_time ? dayjs(removeOffset(eventData.end_time)) : undefined
+  );
 
   const [locationModalOpen, setLocationModalOpen] = useState(false);
 
@@ -65,6 +73,10 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
       onEditModeExit: () => setEditable(false),
       save: () => {
         dataModel.updateEventData({
+          end_time: dayjs(endDate)
+            .hour(endDate ? endDate.hour() : 0)
+            .minute(endDate ? endDate.minute() : 0)
+            .format(),
           info_text: infoText,
           location_id: locationId,
           start_time: dayjs(startDate)
@@ -99,9 +111,17 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                 return (
                   <DatePicker
                     inputFormat="DD-MM-YYYY"
-                    onChange={(newValue) => setStartDate(dayjs(newValue))}
+                    label={messages.eventOverviewCard.startDate()}
+                    onChange={(newValue) => {
+                      setStartDate(dayjs(newValue));
+                    }}
                     renderInput={(params) => {
-                      return <TextField {...params} />;
+                      return (
+                        <TextField
+                          {...params}
+                          inputProps={{ ...params.inputProps, ...props }}
+                        />
+                      );
                     }}
                     value={dayjs(startDate)}
                   />
@@ -122,8 +142,113 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                         datetime={new Date(
                           dayjs(startDate).format()
                         ).toISOString()}
-                      ></ZUIDate>
+                      />
                     </>
+                  );
+                } else {
+                  return <></>;
+                }
+              }}
+              value={dayjs(startDate).format() ?? ''}
+            />
+          </Box>
+
+          <Box m={2}>
+            <ZUIPreviewableInput
+              {...previewableProps}
+              renderInput={(props) => {
+                return (
+                  <DatePicker
+                    inputFormat="DD-MM-YYYY"
+                    label={messages.eventOverviewCard.endDate()}
+                    onChange={(newValue) => {
+                      setEndDate(dayjs(newValue));
+                      if (
+                        startDate &&
+                        newValue &&
+                        endDateIsBeforeStartDate(
+                          startDate.toDate(),
+                          newValue.toDate()
+                        )
+                      ) {
+                        setStartDate(newValue);
+                      }
+                    }}
+                    renderInput={(params) => {
+                      return (
+                        <TextField
+                          {...params}
+                          inputProps={{ ...params.inputProps, ...props }}
+                        />
+                      );
+                    }}
+                    value={dayjs(endDate)}
+                  />
+                );
+              }}
+              renderPreview={() => {
+                if (
+                  endDate &&
+                  startDate &&
+                  !isSameDate(startDate.toDate(), endDate.toDate())
+                ) {
+                  return (
+                    <>
+                      <Typography
+                        color="secondary"
+                        component="h3"
+                        variant="subtitle1"
+                      >
+                        {messages.eventOverviewCard.endDate().toUpperCase()}
+                      </Typography>
+                      <ZUIDate
+                        datetime={new Date(
+                          dayjs(endDate).format()
+                        ).toISOString()}
+                      />
+                    </>
+                  );
+                } else {
+                  return <></>;
+                }
+              }}
+              value={dayjs(endDate).format() ?? ''}
+            />
+          </Box>
+
+          {/****** start time */}
+          <Box m={2}>
+            <ZUIPreviewableInput
+              {...previewableProps}
+              renderInput={(props) => {
+                return (
+                  <TimePicker
+                    ampm={false}
+                    inputFormat="HH:mm"
+                    label={messages.eventOverviewCard.startTime()}
+                    onChange={(newValue) => {
+                      setStartDate(dayjs(newValue));
+                    }}
+                    open={false}
+                    renderInput={(params) => {
+                      return (
+                        <TextField
+                          {...params}
+                          inputProps={{ ...params.inputProps, ...props }}
+                        />
+                      );
+                    }}
+                    value={dayjs(startDate)}
+                  />
+                );
+              }}
+              renderPreview={() => {
+                if (startDate) {
+                  return (
+                    <FormattedTime
+                      hour12={false}
+                      value={new Date(dayjs(startDate).format()).toISOString()}
+                    />
                   );
                 } else {
                   return <></>;
@@ -140,30 +265,40 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                   <TimePicker
                     ampm={false}
                     inputFormat="HH:mm"
+                    label={messages.eventOverviewCard.endTime()}
                     onChange={(newValue) => {
-                      if (newValue) {
-                        setStartDate(dayjs(newValue));
-                      }
+                      setEndDate(dayjs(newValue));
                     }}
                     open={false}
-                    renderInput={(props) => <TextField {...props}></TextField>}
-                    value={dayjs(startDate)}
+                    renderInput={(params) => {
+                      return (
+                        <TextField
+                          {...params}
+                          inputProps={{ ...params.inputProps, ...props }}
+                        />
+                      );
+                    }}
+                    value={dayjs(endDate)}
                   />
                 );
               }}
               renderPreview={() => {
-                if (startDate) {
+                if (
+                  endDate &&
+                  startDate &&
+                  !isSameTime(startDate.unix(), endDate.unix())
+                ) {
                   return (
                     <FormattedTime
                       hour12={false}
-                      value={new Date(dayjs(startDate).format()).toISOString()}
-                    ></FormattedTime>
+                      value={new Date(dayjs(endDate).format()).toISOString()}
+                    />
                   );
                 } else {
                   return <></>;
                 }
               }}
-              value={dayjs(startDate).format()}
+              value={dayjs(endDate).format()}
             />
           </Box>
           <Divider orientation="vertical"></Divider>

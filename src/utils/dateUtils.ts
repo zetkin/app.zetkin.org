@@ -66,3 +66,11 @@ export function isInFuture(datestring: string): boolean {
 export function isSameDate(first: Date, second: Date): boolean {
   return first.toISOString().slice(0, 10) == second.toISOString().slice(0, 10);
 }
+
+export function isSameTime(first: number, second: number): boolean {
+  return first == second;
+}
+
+export function endDateIsBeforeStartDate(first: Date, second: Date): boolean {
+  return first.toISOString().slice(0, 10) > second.toISOString().slice(0, 10);
+}
