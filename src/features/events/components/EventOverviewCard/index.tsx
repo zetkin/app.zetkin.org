@@ -104,202 +104,215 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
               </Button>
             </Box>
           )}
-          <Box m={2}>
-            <ZUIPreviewableInput
-              {...previewableProps}
-              renderInput={(props) => {
-                return (
-                  <DatePicker
-                    inputFormat="DD-MM-YYYY"
-                    label={messages.eventOverviewCard.startDate()}
-                    onChange={(newValue) => {
-                      setStartDate(dayjs(newValue));
-                    }}
-                    renderInput={(params) => {
-                      return (
-                        <TextField
-                          {...params}
-                          inputProps={{ ...params.inputProps, ...props }}
-                        />
-                      );
-                    }}
-                    value={dayjs(startDate)}
-                  />
-                );
-              }}
-              renderPreview={() => {
-                if (startDate) {
+          <Box>
+            <Box m={2}>
+              <ZUIPreviewableInput
+                {...previewableProps}
+                renderInput={(props) => {
                   return (
-                    <>
-                      <Typography
-                        color="secondary"
-                        component="h3"
-                        variant="subtitle1"
-                      >
-                        {messages.eventOverviewCard.startDate().toUpperCase()}
-                      </Typography>
-                      <ZUIDate
-                        datetime={new Date(
+                    <DatePicker
+                      inputFormat="DD-MM-YYYY"
+                      label={messages.eventOverviewCard.startDate()}
+                      onChange={(newValue) => {
+                        setStartDate(dayjs(newValue));
+                      }}
+                      renderInput={(params) => {
+                        return (
+                          <TextField
+                            {...params}
+                            inputProps={{ ...params.inputProps, ...props }}
+                          />
+                        );
+                      }}
+                      value={dayjs(startDate)}
+                    />
+                  );
+                }}
+                renderPreview={() => {
+                  if (startDate) {
+                    return (
+                      <>
+                        <Typography
+                          color="secondary"
+                          component="h3"
+                          variant="subtitle1"
+                        >
+                          {messages.eventOverviewCard.startDate().toUpperCase()}
+                        </Typography>
+                        <ZUIDate
+                          datetime={new Date(
+                            dayjs(startDate).format()
+                          ).toISOString()}
+                        />
+                      </>
+                    );
+                  } else {
+                    return <></>;
+                  }
+                }}
+                value={dayjs(startDate).format() ?? ''}
+              />
+            </Box>
+
+            <Box m={2}>
+              <ZUIPreviewableInput
+                {...previewableProps}
+                renderInput={(props) => {
+                  return (
+                    <DatePicker
+                      inputFormat="DD-MM-YYYY"
+                      label={messages.eventOverviewCard.endDate()}
+                      onChange={(newValue) => {
+                        setEndDate(dayjs(newValue));
+                        if (
+                          startDate &&
+                          newValue &&
+                          endDateIsBeforeStartDate(
+                            startDate.toDate(),
+                            newValue.toDate()
+                          )
+                        ) {
+                          setStartDate(newValue);
+                        }
+                      }}
+                      renderInput={(params) => {
+                        return (
+                          <TextField
+                            {...params}
+                            inputProps={{ ...params.inputProps, ...props }}
+                          />
+                        );
+                      }}
+                      value={dayjs(endDate)}
+                    />
+                  );
+                }}
+                renderPreview={() => {
+                  if (
+                    endDate &&
+                    startDate &&
+                    !isSameDate(startDate.toDate(), endDate.toDate())
+                  ) {
+                    return (
+                      <>
+                        <Typography
+                          color="secondary"
+                          component="h3"
+                          variant="subtitle1"
+                        >
+                          {messages.eventOverviewCard.endDate().toUpperCase()}
+                        </Typography>
+                        <ZUIDate
+                          datetime={new Date(
+                            dayjs(endDate).format()
+                          ).toISOString()}
+                        />
+                      </>
+                    );
+                  } else if (
+                    endDate &&
+                    startDate &&
+                    isSameDate(startDate.toDate(), endDate.toDate())
+                  ) {
+                    return (
+                      <Button variant="outlined">
+                        {messages.eventOverviewCard.buttonEndDate()}
+                      </Button>
+                    );
+                  } else {
+                    return <></>;
+                  }
+                }}
+                value={dayjs(endDate).format() ?? ''}
+              />
+            </Box>
+
+            <Box m={2}>
+              <ZUIPreviewableInput
+                {...previewableProps}
+                renderInput={(props) => {
+                  return (
+                    <TimePicker
+                      ampm={false}
+                      inputFormat="HH:mm"
+                      label={messages.eventOverviewCard.startTime()}
+                      onChange={(newValue) => {
+                        setStartDate(dayjs(newValue));
+                      }}
+                      open={false}
+                      renderInput={(params) => {
+                        return (
+                          <TextField
+                            {...params}
+                            inputProps={{ ...params.inputProps, ...props }}
+                          />
+                        );
+                      }}
+                      value={dayjs(startDate)}
+                    />
+                  );
+                }}
+                renderPreview={() => {
+                  if (startDate) {
+                    return (
+                      <FormattedTime
+                        hour12={false}
+                        value={new Date(
                           dayjs(startDate).format()
                         ).toISOString()}
                       />
-                    </>
-                  );
-                } else {
-                  return <></>;
-                }
-              }}
-              value={dayjs(startDate).format() ?? ''}
-            />
-          </Box>
-
-          <Box m={2}>
-            <ZUIPreviewableInput
-              {...previewableProps}
-              renderInput={(props) => {
-                return (
-                  <DatePicker
-                    inputFormat="DD-MM-YYYY"
-                    label={messages.eventOverviewCard.endDate()}
-                    onChange={(newValue) => {
-                      setEndDate(dayjs(newValue));
-                      if (
-                        startDate &&
-                        newValue &&
-                        endDateIsBeforeStartDate(
-                          startDate.toDate(),
-                          newValue.toDate()
-                        )
-                      ) {
-                        setStartDate(newValue);
-                      }
-                    }}
-                    renderInput={(params) => {
-                      return (
-                        <TextField
-                          {...params}
-                          inputProps={{ ...params.inputProps, ...props }}
-                        />
-                      );
-                    }}
-                    value={dayjs(endDate)}
-                  />
-                );
-              }}
-              renderPreview={() => {
-                if (
-                  endDate &&
-                  startDate &&
-                  !isSameDate(startDate.toDate(), endDate.toDate())
-                ) {
+                    );
+                  } else {
+                    return <></>;
+                  }
+                }}
+                value={dayjs(startDate).format()}
+              />
+            </Box>
+            <Box m={2}>
+              <ZUIPreviewableInput
+                {...previewableProps}
+                renderInput={(props) => {
                   return (
-                    <>
-                      <Typography
-                        color="secondary"
-                        component="h3"
-                        variant="subtitle1"
-                      >
-                        {messages.eventOverviewCard.endDate().toUpperCase()}
-                      </Typography>
-                      <ZUIDate
-                        datetime={new Date(
-                          dayjs(endDate).format()
-                        ).toISOString()}
+                    <TimePicker
+                      ampm={false}
+                      inputFormat="HH:mm"
+                      label={messages.eventOverviewCard.endTime()}
+                      onChange={(newValue) => {
+                        setEndDate(dayjs(newValue));
+                      }}
+                      open={false}
+                      renderInput={(params) => {
+                        return (
+                          <TextField
+                            {...params}
+                            inputProps={{ ...params.inputProps, ...props }}
+                          />
+                        );
+                      }}
+                      value={dayjs(endDate)}
+                    />
+                  );
+                }}
+                renderPreview={() => {
+                  if (
+                    endDate &&
+                    startDate &&
+                    !isSameTime(startDate.unix(), endDate.unix())
+                  ) {
+                    return (
+                      <FormattedTime
+                        hour12={false}
+                        value={new Date(dayjs(endDate).format()).toISOString()}
                       />
-                    </>
-                  );
-                } else {
-                  return <></>;
-                }
-              }}
-              value={dayjs(endDate).format() ?? ''}
-            />
-          </Box>
-
-          {/****** start time */}
-          <Box m={2}>
-            <ZUIPreviewableInput
-              {...previewableProps}
-              renderInput={(props) => {
-                return (
-                  <TimePicker
-                    ampm={false}
-                    inputFormat="HH:mm"
-                    label={messages.eventOverviewCard.startTime()}
-                    onChange={(newValue) => {
-                      setStartDate(dayjs(newValue));
-                    }}
-                    open={false}
-                    renderInput={(params) => {
-                      return (
-                        <TextField
-                          {...params}
-                          inputProps={{ ...params.inputProps, ...props }}
-                        />
-                      );
-                    }}
-                    value={dayjs(startDate)}
-                  />
-                );
-              }}
-              renderPreview={() => {
-                if (startDate) {
-                  return (
-                    <FormattedTime
-                      hour12={false}
-                      value={new Date(dayjs(startDate).format()).toISOString()}
-                    />
-                  );
-                } else {
-                  return <></>;
-                }
-              }}
-              value={dayjs(startDate).format()}
-            />
-          </Box>
-          <Box m={2}>
-            <ZUIPreviewableInput
-              {...previewableProps}
-              renderInput={(props) => {
-                return (
-                  <TimePicker
-                    ampm={false}
-                    inputFormat="HH:mm"
-                    label={messages.eventOverviewCard.endTime()}
-                    onChange={(newValue) => {
-                      setEndDate(dayjs(newValue));
-                    }}
-                    open={false}
-                    renderInput={(params) => {
-                      return (
-                        <TextField
-                          {...params}
-                          inputProps={{ ...params.inputProps, ...props }}
-                        />
-                      );
-                    }}
-                    value={dayjs(endDate)}
-                  />
-                );
-              }}
-              renderPreview={() => {
-                if (
-                  endDate &&
-                  startDate &&
-                  !isSameTime(startDate.unix(), endDate.unix())
-                ) {
-                  return (
-                    <FormattedTime
-                      hour12={false}
-                      value={new Date(dayjs(endDate).format()).toISOString()}
-                    />
-                  );
-                } else {
-                  return <></>;
-                }
-              }}
-              value={dayjs(endDate).format()}
-            />
+                    );
+                  } else {
+                    return <></>;
+                  }
+                }}
+                value={dayjs(endDate).format()}
+              />
+            </Box>
           </Box>
           <Divider orientation="vertical"></Divider>
 
