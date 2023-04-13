@@ -31,6 +31,7 @@ const LocationDetailsCard: FC<LocationDetailsCardProps> = ({
   const messages = useMessages(messageIds);
   const [editable, setEditable] = useState(false);
   const [title, setTitle] = useState(location.title);
+  const [description, setDescription] = useState(location.info_text);
 
   const { clickAwayProps, containerProps, previewableProps } =
     useEditPreviewBlock({
@@ -39,6 +40,7 @@ const LocationDetailsCard: FC<LocationDetailsCardProps> = ({
       onEditModeExit: () => setEditable(false),
       save: () => {
         model.updateLocationData(location.id, {
+          info_text: description,
           title: title,
         });
       },
@@ -67,7 +69,6 @@ const LocationDetailsCard: FC<LocationDetailsCardProps> = ({
                   inputProps={props}
                   label={messages.locationModal.title()}
                   onChange={(ev) => setTitle(ev.target.value)}
-                  rows={4}
                   sx={{ marginBottom: 2 }}
                   value={title}
                 />
@@ -94,12 +95,35 @@ const LocationDetailsCard: FC<LocationDetailsCardProps> = ({
             />
           </Box>
           {location.info_text && (
-            <Box
-              display="flex"
-              flex={1}
-              flexDirection="column"
-              paddingTop={1}
-            ></Box>
+            <Box display="flex" flex={1} flexDirection="column" paddingTop={1}>
+              <ZUIPreviewableInput
+                {...previewableProps}
+                renderInput={(props) => (
+                  <TextField
+                    fullWidth
+                    inputProps={props}
+                    label={messages.locationModal.description()}
+                    multiline
+                    onChange={(ev) => setDescription(ev.target.value)}
+                    rows={4}
+                    sx={{ marginBottom: 2 }}
+                    value={description}
+                  />
+                )}
+                renderPreview={() => {
+                  if (location.title !== '') {
+                    return (
+                      <Typography color="secondary">
+                        {location.info_text}
+                      </Typography>
+                    );
+                  } else {
+                    return <></>;
+                  }
+                }}
+                value={location.title}
+              />
+            </Box>
           )}
         </Box>
       </ClickAwayListener>
