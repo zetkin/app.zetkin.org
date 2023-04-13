@@ -2,6 +2,7 @@ import AddIcon from '@mui/icons-material/Add';
 import Fuse from 'fuse.js';
 import { lighten } from '@mui/material/styles';
 import makeStyles from '@mui/styles/makeStyles';
+import { useState } from 'react';
 import {
   Autocomplete,
   Box,
@@ -10,7 +11,6 @@ import {
   TextField,
   Tooltip,
 } from '@mui/material';
-import { useMemo, useState } from 'react';
 
 import EventTypesModel from 'features/events/models/EventTypesModel';
 import messageIds from 'features/events/l10n/messageIds';
@@ -71,18 +71,23 @@ interface NewEventType {
   info_text?: string | null;
   createType?: boolean;
 }
+
 interface ZUIAutocompleteInPlaceTestProps {
-  types: ZetkinActivity[];
   currentType: NewEventType;
+  onTypeChange: (value: string) => void;
+  types: ZetkinActivity[];
   typesModel: EventTypesModel;
   showBorder: boolean;
+  setAutoOnEdit: (value: boolean) => void;
   setShowBorder: (value: boolean) => void;
 }
 
 const ZUIAutocompleteInPlaceTest = ({
   types,
   currentType,
+  onTypeChange,
   typesModel,
+  setAutoOnEdit,
   setShowBorder,
   showBorder,
 }: ZUIAutocompleteInPlaceTestProps) => {
@@ -90,17 +95,13 @@ const ZUIAutocompleteInPlaceTest = ({
   const [eventType, setEventType] = useState<NewEventType>(currentType);
   const messages = useMessages(messageIds);
 
-  const eventTypes = useMemo(() => {
-    const eTypes: NewEventType[] = [];
-
-    if (currentType.title === null) {
-      eTypes.unshift({
-        title: messages.type.uncategorized(),
-      });
-    }
-    types.map((item) => eTypes.push(item));
-    return eTypes;
-  }, [types]);
+  if (currentType === null) {
+    types = [
+      { id: 0, info_text: '', title: messages.type.uncategorized() },
+      ...types,
+    ];
+  }
+  const eventTypes: NewEventType[] = types;
 
   const classes = useStyles();
   const fuse = new Fuse(eventTypes, { keys: ['title'], threshold: 0.4 });
@@ -114,9 +115,20 @@ const ZUIAutocompleteInPlaceTest = ({
     onEditModeExit: () => {
       setEditing(false);
       setShowBorder(false);
+      setAutoOnEdit(false);
     },
     save: () => {
-      return <></>;
+      if (!eventType.id) {
+        const typesAfterCreateType = typesModel.getTypes();
+        const newId = typesAfterCreateType.data!.find(
+          (item) => item.title === eventType.title
+        )!.id;
+        typesModel.setType(newId);
+      }
+      if (eventType.id) {
+        typesModel.setType(eventType.id!);
+      }
+      onTypeChange('');
     },
   });
 
@@ -137,6 +149,14 @@ const ZUIAutocompleteInPlaceTest = ({
                 filterOptions={(options, { inputValue }) => {
                   const searchedResults = fuse.search(inputValue);
                   const output: NewEventType[] = [];
+                  const inputStartWithCapital = inputValue
+                    ? `${inputValue[0].toUpperCase()}${inputValue.substring(
+                        1,
+                        inputValue.length
+                      )}`
+                    : '';
+                  //placeholder to title
+                  onTypeChange(inputStartWithCapital);
 
                   searchedResults.map((result) => {
                     if (result.item.title !== null) {
@@ -147,7 +167,7 @@ const ZUIAutocompleteInPlaceTest = ({
                       });
                     }
                   });
-
+                  //when user's type already exists
                   if (
                     output.filter(
                       (item) =>
@@ -157,11 +177,11 @@ const ZUIAutocompleteInPlaceTest = ({
                   ) {
                     return output;
                   }
+
                   output.push({
                     createType: true,
-                    title: inputValue,
+                    title: inputStartWithCapital,
                   });
-
                   return inputValue ? output : options;
                 }}
                 getOptionLabel={(option) => option.title!}
@@ -170,18 +190,17 @@ const ZUIAutocompleteInPlaceTest = ({
                   option.title === value.title
                 }
                 onChange={(e, newValue) => {
-                  if (!newValue.createType) {
-                    setEventType(
-                      {
-                        id: newValue.id,
-                        title: newValue.title,
-                      } || currentType
-                    );
-                  } else {
+                  if (newValue.createType) {
                     typesModel.addType(0, newValue.title!);
                   }
-                  setEditing(false);
-                  setShowBorder(false);
+                  //placeholder to title
+                  onTypeChange(newValue.title!);
+                  setEventType(
+                    {
+                      id: newValue.id,
+                      title: newValue.title,
+                    } || currentType
+                  );
                 }}
                 options={eventTypes}
                 readOnly={!editing}
@@ -234,6 +253,7 @@ const ZUIAutocompleteInPlaceTest = ({
                   freeSolo
                   fullWidth
                   id="auto-preview"
+                  onFocus={() => setAutoOnEdit(true)}
                   options={[]}
                   readOnly={true}
                   renderInput={(params) => (

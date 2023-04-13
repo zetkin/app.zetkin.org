@@ -32,6 +32,9 @@ const EventLayout: React.FC<EventLayoutProps> = ({
   campaignId,
 }) => {
   const [showBorder, setShowBorder] = useState<boolean>(false);
+  const [autoOnEdit, setAutoOnEdit] = useState<boolean>(false);
+  const [userType, setUserType] = useState<string>('');
+
   const messages = useMessages(messageIds);
 
   const model = useModel(
@@ -39,7 +42,7 @@ const EventLayout: React.FC<EventLayoutProps> = ({
   );
 
   const typesModel = useModel(
-    (env) => new EventTypesModel(env, parseInt(orgId))
+    (env) => new EventTypesModel(env, parseInt(orgId), parseInt(eventId))
   );
 
   const showTimeOnly = (value: Date) => {
@@ -72,8 +75,11 @@ const EventLayout: React.FC<EventLayoutProps> = ({
                 //   currentType={currentType}
                 //   types={eventTypes}
                 // />
+
                 <ZUIAutocompleteInPlaceTest
                   currentType={currentEvent.activity}
+                  onTypeChange={setUserType}
+                  setAutoOnEdit={setAutoOnEdit}
                   setShowBorder={setShowBorder}
                   showBorder={showBorder}
                   types={types}
@@ -229,9 +235,15 @@ const EventLayout: React.FC<EventLayoutProps> = ({
           {(data) => {
             return (
               <ZUIEditTextinPlace
+                allowEmpty={true}
+                autoOnEdit={autoOnEdit}
+                currentType={data.activity.title}
                 onChange={(val) => {
                   model.setTitle(val);
                 }}
+                placeholder={
+                  userType || (data.activity.title ?? messages.type.untitle())
+                }
                 setShowBorder={setShowBorder}
                 showBorder={showBorder}
                 value={data.title || data.activity.title}

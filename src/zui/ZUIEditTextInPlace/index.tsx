@@ -51,22 +51,28 @@ const useStyles = makeStyles((theme) => ({
 
 export interface ZUIEditTextinPlaceProps {
   allowEmpty?: boolean;
+  autoOnEdit?: boolean;
+  currentType?: string;
   disabled?: boolean;
   onChange: (newValue: string) => void;
   placeholder?: string;
   value: string;
   showBorder?: boolean;
   setShowBorder?: (value: boolean) => void;
+  // onTypeChange?: () => string | undefined;
 }
 
 const ZUIEditTextinPlace: React.FunctionComponent<ZUIEditTextinPlaceProps> = ({
   allowEmpty = false,
+  autoOnEdit,
+  currentType,
   disabled,
   onChange,
   placeholder,
   setShowBorder,
   showBorder,
   value,
+  // onTypeChange,
 }) => {
   const [editing, setEditing] = useState<boolean>(false);
   const [text, setText] = useState<string>(value);
@@ -111,12 +117,17 @@ const ZUIEditTextinPlace: React.FunctionComponent<ZUIEditTextinPlaceProps> = ({
     setEditing(false);
     // Set text back to value passed in props
     setText(value);
+    if (!autoOnEdit) {
+      setBorderOnTypeEdit(false);
+    }
   };
 
   const submitChange = () => {
     setEditing(false);
     onChange(text);
-    setBorderOnTypeEdit(false);
+    if (!autoOnEdit) {
+      setBorderOnTypeEdit(false);
+    }
   };
 
   const onKeyDown = (evt: React.KeyboardEvent) => {
@@ -153,6 +164,9 @@ const ZUIEditTextinPlace: React.FunctionComponent<ZUIEditTextinPlaceProps> = ({
   const tooltipText = () => {
     if (text || allowEmpty) {
       if (editing) {
+        if (!text) {
+          return messages.editTextInPlace.tooltip.untitle();
+        }
         return '';
       } else {
         return messages.editTextInPlace.tooltip.edit();
@@ -162,6 +176,21 @@ const ZUIEditTextinPlace: React.FunctionComponent<ZUIEditTextinPlaceProps> = ({
     }
   };
 
+  const valueText = () => {
+    if ((autoOnEdit && !text) || (editing && !text)) {
+      return '';
+    }
+
+    if (
+      (!autoOnEdit && currentType !== placeholder) ||
+      (!autoOnEdit && !text)
+    ) {
+      return currentType;
+    }
+    if (text) {
+      return text;
+    }
+  };
   return (
     <Tooltip
       arrow
@@ -190,7 +219,7 @@ const ZUIEditTextinPlace: React.FunctionComponent<ZUIEditTextinPlaceProps> = ({
           onKeyDown={onKeyDown}
           placeholder={placeholder}
           readOnly={!editing}
-          value={text}
+          value={valueText()}
         />
       </FormControl>
     </Tooltip>

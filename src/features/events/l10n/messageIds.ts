@@ -65,5 +65,6 @@ export default makeMessages('feat.events', {
     createType: m<{ type: string }>('Create "{type}"'),
     tooltip: m('Click to edit a type'),
     uncategorized: m('Uncategorized'),
+    untitle: m('Untitled Event'),
   },
 });
