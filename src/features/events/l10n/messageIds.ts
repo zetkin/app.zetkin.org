@@ -9,6 +9,7 @@ export default makeMessages('feat.events', {
     endDate: m('End'),
     endTime: m('End time'),
     location: m('Location'),
+    noLocation: m('No physical location'),
     startDate: m('Start'),
     startTime: m('Start time'),
     url: m('Link'),
