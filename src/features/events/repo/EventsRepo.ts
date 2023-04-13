@@ -10,6 +10,7 @@ import {
   eventsLoaded,
   eventUpdate,
   eventUpdated,
+  locationAdded,
   locationsLoad,
   locationsLoaded,
   participantsLoad,
@@ -37,6 +38,19 @@ export type ZetkinEventPatchBody = Partial<
 export default class EventsRepo {
   private _apiClient: IApiClient;
   private _store: Store;
+
+  async addLocation(orgId: number, newLocation: Partial<ZetkinLocation>) {
+    const location = await this._apiClient.post<ZetkinLocation>(
+      `/api/orgs/${orgId}/locations`,
+      {
+        info_text: newLocation.info_text,
+        lat: newLocation.lat,
+        lng: newLocation.lng,
+        title: newLocation.title,
+      }
+    );
+    this._store.dispatch(locationAdded(location));
+  }
 
   constructor(env: Environment) {
     this._store = env.store;

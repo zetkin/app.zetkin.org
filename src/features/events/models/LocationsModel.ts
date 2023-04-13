@@ -8,6 +8,10 @@ export default class LocationsModel extends ModelBase {
   private _orgId: number;
   private _repo: EventsRepo;
 
+  addLocation(newLocation: Partial<ZetkinLocation>): void {
+    this._repo.addLocation(this._orgId, newLocation);
+  }
+
   constructor(env: Environment, orgId: number) {
     super();
     this._orgId = orgId;

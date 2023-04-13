@@ -39,10 +39,15 @@ export default makeMessages('feat.events', {
     noEvents: m('No events...'),
   },
   locationModal: {
+    cancel: m('Cancel'),
+    createLocation: m('Create new location'),
+    description: m('Description'),
     infoText: m(
       'You can click and drag to pan the map and pinch or scroll to zoom. To create a new location you can click on an empty spot on the map.'
     ),
+    save: m('Save'),
     searchBox: m('Find location'),
+    title: m('Location name'),
     useLocation: m('Use location'),
   },
   state: {

@@ -1,6 +1,6 @@
 import EditIcon from '@mui/icons-material/Edit';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
-import { Add, Place } from '@mui/icons-material';
+import { Add, Map } from '@mui/icons-material';
 import {
   Autocomplete,
   Box,
@@ -43,7 +43,6 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
     eventData?.location.id ?? undefined
   );
   const [locationModalOpen, setLocationModalOpen] = useState(false);
-
   const { clickAwayProps, containerProps, previewableProps } =
     useEditPreviewBlock({
       editable,
@@ -61,6 +60,10 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
   if (!eventData) {
     return null;
   }
+
+  const options: (ZetkinLocation | 'CREATE_NEW_LOCATION')[] = locations
+    ? [...locations, 'CREATE_NEW_LOCATION']
+    : ['CREATE_NEW_LOCATION'];
 
   return (
     <ClickAwayListener {...clickAwayProps}>
@@ -82,23 +85,25 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                     <Autocomplete
                       disableClearable
                       fullWidth
-                      onChange={(ev, value) => {
-                        if (value === 'CREATE_NEW_LOCATION') {
+                      getOptionLabel={(option) =>
+                        option === 'CREATE_NEW_LOCATION'
+                          ? messages.locationModal.createLocation()
+                          : option.title
+                      }
+                      onChange={(ev, option) => {
+                        if (option === 'CREATE_NEW_LOCATION') {
                           setLocationModalOpen(true);
+                          return;
                         }
                         const location = locations?.find(
-                          (location) => location.title === value
+                          (location) => location.id === option.id
                         );
                         if (!location) {
                           return;
                         }
                         setLocationId(location.id);
                       }}
-                      options={
-                        locations
-                          ?.map((location) => location.title)
-                          .concat(['CREATE_NEW_LOCATION']) || []
-                      }
+                      options={options}
                       renderInput={(params) => (
                         <TextField
                           {...params}
@@ -116,16 +121,16 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                             {messages.eventOverviewCard.createLocation()}
                           </li>
                         ) : (
-                          <li {...params}>{option}</li>
+                          <li {...params}>{option.title}</li>
                         )
                       }
-                      value={
-                        locations?.find(
-                          (location) => location.id === locationId
-                        )?.title
-                      }
+                      value={options?.find(
+                        (location) =>
+                          location !== 'CREATE_NEW_LOCATION' &&
+                          location.id === locationId
+                      )}
                     />
-                    <Place
+                    <Map
                       color="secondary"
                       onClick={() => setLocationModalOpen(true)}
                       sx={{ cursor: 'pointer', marginLeft: 2 }}
@@ -133,7 +138,14 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                     <LocationModal
                       locationId={locationId}
                       locations={locations || []}
-                      onMapClose={() => setLocationModalOpen(false)}
+                      onCreateLocation={(
+                        newLocation: Partial<ZetkinLocation>
+                      ) => {
+                        locationsModel.addLocation(newLocation);
+                      }}
+                      onMapClose={() => {
+                        setLocationModalOpen(false);
+                      }}
                       onSelectLocation={(location: ZetkinLocation) =>
                         setLocationId(location.id)
                       }
