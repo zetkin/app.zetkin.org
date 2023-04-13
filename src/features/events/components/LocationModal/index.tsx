@@ -39,6 +39,7 @@ export type PendingLocation = {
 
 interface LocationModalProps {
   locations: ZetkinLocation[];
+  onCreateLocation: (newLocation: Partial<ZetkinLocation>) => void;
   onMapClose: () => void;
   onSelectLocation: (location: ZetkinLocation) => void;
   open: boolean;
@@ -48,6 +49,7 @@ interface LocationModalProps {
 const Map = dynamic(() => import('./Map'), { ssr: false });
 const LocationModal: FC<LocationModalProps> = ({
   locations,
+  onCreateLocation,
   onMapClose,
   onSelectLocation,
   open,
@@ -138,9 +140,11 @@ const LocationModal: FC<LocationModalProps> = ({
               onClose={() => {
                 setPendingLocation(null);
               }}
-              onCreateLocation={() => {
+              onCreateLocation={(newLocation: Partial<ZetkinLocation>) => {
+                onCreateLocation(newLocation);
                 setPendingLocation(null);
               }}
+              pendingLocation={pendingLocation}
             />
           )}
         </Box>

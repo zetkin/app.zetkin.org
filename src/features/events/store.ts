@@ -50,6 +50,12 @@ const eventsSlice = createSlice({
         item.mutating = [];
       }
     },
+    locationAdded: (state, action: PayloadAction<ZetkinLocation>) => {
+      const location = action.payload;
+      state.locationList.items = state.locationList.items
+        .filter((l) => l.id !== location.id)
+        .concat([remoteItem(location.id, { data: location })]);
+    },
     locationsLoad: (state) => {
       state.locationList.isLoading = true;
     },
@@ -68,6 +74,7 @@ export const {
   eventLoaded,
   eventUpdate,
   eventUpdated,
+  locationAdded,
   locationsLoad,
   locationsLoaded,
 } = eventsSlice.actions;

@@ -4,15 +4,18 @@ import { FC, useState } from 'react';
 
 import messageIds from 'features/events/l10n/messageIds';
 import { useMessages } from 'core/i18n';
+import { ZetkinLocation } from 'utils/types/zetkin';
 
 interface CreateLocationCardProps {
   onClose: () => void;
-  onCreateLocation: () => void;
+  onCreateLocation: (newLocation: Partial<ZetkinLocation>) => void;
+  pendingLocation: Pick<ZetkinLocation, 'lat' | 'lng'>;
 }
 
 const CreateLocationCard: FC<CreateLocationCardProps> = ({
   onClose,
   onCreateLocation,
+  pendingLocation,
 }) => {
   const messages = useMessages(messageIds);
 
@@ -68,7 +71,14 @@ const CreateLocationCard: FC<CreateLocationCardProps> = ({
         <Button onClick={onClose}>{messages.locationModal.cancel()}</Button>
         <Button
           disabled={!title}
-          onClick={onCreateLocation}
+          onClick={() =>
+            onCreateLocation({
+              info_text: description,
+              lat: pendingLocation.lat,
+              lng: pendingLocation.lng,
+              title,
+            })
+          }
           variant="contained"
         >
           {messages.locationModal.save()}

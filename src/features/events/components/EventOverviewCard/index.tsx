@@ -114,6 +114,11 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                     <LocationModal
                       locationId={locationId}
                       locations={locations || []}
+                      onCreateLocation={(
+                        newLocation: Partial<ZetkinLocation>
+                      ) => {
+                        locationsModel.addLocation(newLocation);
+                      }}
                       onMapClose={() => {
                         setLocationModalOpen(false);
                       }}
