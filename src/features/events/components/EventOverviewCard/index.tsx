@@ -304,7 +304,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                                       setOpenButton(true);
                                     }}
                                     sx={{ marginBottom: 4.4, width: '100%' }}
-                                    variant="outlined"
+                                    variant="text"
                                   >
                                     {messages.eventOverviewCard.buttonEndDate()}
                                   </Button>
@@ -378,7 +378,6 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                             onChange={(newValue) => {
                               if (newValue && isValidDate(newValue.toDate())) {
                                 setInvalidFormat(false);
-
                                 setEndDate(newValue);
                               } else {
                                 setInvalidFormat(false);
@@ -425,7 +424,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                 <Divider
                   flexItem
                   orientation="vertical"
-                  sx={{ marginLeft: '10px' }}
+                  sx={{ marginBottom: '10px', marginLeft: '10px' }}
                 />
 
                 <Grid sx={{ marginLeft: '10px', marginTop: 2 }} xs>
@@ -502,7 +501,12 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                         if (eventData.location) {
                           return (
                             <Box ml={4}>
-                              <Box sx={{ display: 'flex' }}>
+                              <Box
+                                sx={{
+                                  display: 'flex',
+                                  justifyContent: 'space-between',
+                                }}
+                              >
                                 <Typography
                                   color="secondary"
                                   component="h3"
@@ -515,7 +519,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                                 <MapIcon
                                   color="secondary"
                                   onClick={() => setLocationModalOpen(true)}
-                                  sx={{ cursor: 'pointer', marginLeft: 2 }}
+                                  sx={{ cursor: 'pointer' }}
                                 />
                               </Box>
                               <Typography
