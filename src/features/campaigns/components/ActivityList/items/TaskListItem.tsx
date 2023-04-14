@@ -1,8 +1,9 @@
-import TaskModel from 'features/tasks/models/TaskModel';
-import useModel from 'core/useModel';
 import { CheckBoxOutlined, People } from '@mui/icons-material';
 
-import ActivityListItem, { STATUS_COLORS } from './ActivityListItem';
+import ActivityListItemWithStats from './ActivityListItemWithStats';
+import { STATUS_COLORS } from './ActivityListItem';
+import TaskModel from 'features/tasks/models/TaskModel';
+import useModel from 'core/useModel';
 import getTaskStatus, { TASK_STATUS } from 'features/tasks/utils/getTaskStatus';
 
 interface TaskListItemProps {
@@ -33,7 +34,7 @@ const TaskListItem = ({ orgId, taskId }: TaskListItemProps) => {
   const statsLoading = model.getTaskStats().isLoading;
 
   return (
-    <ActivityListItem
+    <ActivityListItemWithStats
       blueChipValue={stats?.assigned}
       color={color}
       endNumber={stats?.individuals ?? 0}

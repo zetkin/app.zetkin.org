@@ -13,12 +13,25 @@ import useModel from 'core/useModel';
 import useServerSide from 'core/useServerSide';
 import ZUIStackedStatusBar from 'zui/ZUIStackedStatusBar';
 
+import BackendApiClient from 'core/api/client/BackendApiClient';
 import messageIds from 'features/callAssignments/l10n/messageIds';
+import { ZetkinCallAssignment } from 'utils/types/zetkin';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   async (ctx) => {
     const { orgId, campId, callAssId } = ctx.params!;
-
+    try {
+      const client = new BackendApiClient(ctx.req.headers);
+      const data = await client.get<ZetkinCallAssignment>(
+        `/api/orgs/${orgId}/call_assignments/${callAssId}`
+      );
+      const actualCampaign = data.campaign?.id.toString() ?? 'standalone';
+      if (actualCampaign !== campId) {
+        return { notFound: true };
+      }
+    } catch (error) {
+      return { notFound: true };
+    }
     return {
       props: {
         assignmentId: callAssId,

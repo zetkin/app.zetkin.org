@@ -7,6 +7,7 @@ import {
 } from 'utils/storeUtils';
 
 import {
+  Call,
   CallAssignmentCaller,
   CallAssignmentData,
   CallAssignmentStats,
@@ -15,11 +16,13 @@ import {
 export interface CallAssignmentSlice {
   assignmentList: RemoteList<CallAssignmentData>;
   callersById: Record<number, RemoteList<CallAssignmentCaller>>;
+  callList: RemoteList<Call>;
   statsById: Record<number, RemoteItem<CallAssignmentStats>>;
 }
 
 const initialState: CallAssignmentSlice = {
   assignmentList: remoteList(),
+  callList: remoteList(),
   callersById: {},
   statsById: {},
 };
@@ -123,6 +126,30 @@ const callAssignmentsSlice = createSlice({
       state.assignmentList = remoteList(assignments);
       state.assignmentList.loaded = timestamp;
       state.assignmentList.items.forEach((item) => (item.loaded = timestamp));
+    },
+    callUpdate: (state, action: PayloadAction<[number, string[]]>) => {
+      const [id, attributes] = action.payload;
+      const callItem = state.callList.items.find((item) => item.id == id);
+
+      if (callItem) {
+        callItem.mutating = callItem.mutating
+          .filter((attr) => !attributes.includes(attr))
+          .concat(attributes);
+      }
+    },
+    callUpdated: (state, action: PayloadAction<[Call, string[]]>) => {
+      const [call, mutating] = action.payload;
+      const callItem = state.callList.items.find((item) => item.id == call.id);
+
+      if (callItem) {
+        callItem.mutating = callItem.mutating.filter((attr) =>
+          mutating.includes(attr)
+        );
+      }
+
+      state.callList.items = state.callList.items
+        .filter((c) => c.id != call?.id)
+        .concat([remoteItem(call.id, { data: call })]);
     },
     callerAdd: (state, action: PayloadAction<[number, number]>) => {
       const [assignmentId, callerId] = action.payload;
@@ -235,6 +262,8 @@ export const {
   callAssignmentUpdated,
   callAssignmentsLoad,
   callAssignmentsLoaded,
+  callUpdate,
+  callUpdated,
   callerAdd,
   callerAdded,
   callerConfigure,

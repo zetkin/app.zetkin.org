@@ -1,11 +1,22 @@
-import { ReactElement } from 'react';
 import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('feat.events', {
   eventOverviewCard: {
+    createLocation: m('Create new location'),
     description: m('Description'),
     editButton: m('Edit event information'),
+    location: m('Location'),
     url: m('Link'),
+  },
+  eventParticipantsCard: {
+    booked: m('Notifications'),
+    contact: m('Contact'),
+    header: m('Participants'),
+    noContact: m('None assigned'),
+    participantList: m('View participants'),
+    pending: m('Pending sign-ups'),
+    reqParticipantsHelperText: m('The minimum number of participants required'),
+    reqParticipantsLabel: m('Required participants'),
   },
   form: {
     activity: m('Activity'),
@@ -27,6 +38,18 @@ export default makeMessages('feat.events', {
     events: m('Events'),
     noEvents: m('No events...'),
   },
+  locationModal: {
+    cancel: m('Cancel'),
+    createLocation: m('Create new location'),
+    description: m('Description'),
+    infoText: m(
+      'You can click and drag to pan the map and pinch or scroll to zoom. To create a new location you can click on an empty spot on the map.'
+    ),
+    save: m('Save'),
+    searchBox: m('Find location'),
+    title: m('Location name'),
+    useLocation: m('Use location'),
+  },
   state: {
     cancelled: m('Cancelled'),
     draft: m('Draft'),
@@ -35,27 +58,9 @@ export default makeMessages('feat.events', {
     scheduled: m('Scheduled'),
   },
   stats: {
-    multiDay: m<{
-      end: string;
-      endDate: ReactElement;
-      start: string;
-      startDate: ReactElement;
-    }>('{startDate}, {start} - {endDate}, {end}'),
-    multiDayEndsToday: m<{
-      end: string;
-      start: string;
-      startDate: ReactElement;
-    }>('{startDate}, {start} - Today, {end}'),
-    multiDayToday: m<{ end: string; endDate: ReactElement; start: string }>(
-      'Today, {start} - {endDate}, {end}'
-    ),
     participants: m<{ participants: number }>(
       '{participants, plural, one {1 participant} other {# participants}}'
     ),
-    singleDay: m<{ date: ReactElement; end: string; start: string }>(
-      '{date}, {start} - {end}'
-    ),
-    singleDayToday: m<{ end: string; start: string }>('Today, {start} - {end}'),
   },
   tabs: {
     overview: m('Overview'),

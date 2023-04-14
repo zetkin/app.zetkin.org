@@ -11,7 +11,6 @@ import {
 import FilterValueSelect from './FilterValueSelect';
 import JourneyInstanceTitle from 'features/journeys/components/JourneyInstanceTitle';
 import { UseMessagesMap } from 'core/i18n';
-import ZUIDateTime from 'zui/ZUIDateTime';
 import ZUIPerson from 'zui/ZUIPerson';
 import ZUIPersonHoverCard from 'zui/ZUIPersonHoverCard';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
@@ -211,7 +210,11 @@ export const getStaticColumns = (
     {
       field: 'created',
       renderCell: (params) => (
-        <ZUIDateTime convertToLocal datetime={params.value as string} />
+        <ZUIRelativeTime
+          convertToLocal
+          datetime={params.value as string}
+          forcePast
+        />
       ),
       type: 'date',
     },

@@ -3,10 +3,11 @@ import Fuse from 'fuse.js';
 import { useMemo } from 'react';
 import { Box, Card, Divider, Typography } from '@mui/material';
 
-import CallAssignmentListItem from './CallAssignmentListItem';
+import CallAssignmentListItem from './items/CallAssignmentListItem';
+import EventListItem from './items/EventListItem';
 import messageIds from 'features/campaigns/l10n/messageIds';
-import SurveyListItem from './SurveyListItem';
-import TaskListItem from './TaskListItem';
+import SurveyListItem from './items/SurveyListItem';
+import TaskListItem from './items/TaskListItem';
 import { useMessages } from 'core/i18n';
 import {
   ACTIVITIES,
@@ -27,6 +28,13 @@ const Activities = ({ activities, orgId }: ActivitiesProps) => {
             <Box key={`ca-${activity.data.id}`}>
               {index > 0 && <Divider />}
               <CallAssignmentListItem caId={activity.data.id} orgId={orgId} />
+            </Box>
+          );
+        } else if (activity.kind === ACTIVITIES.EVENT) {
+          return (
+            <Box key={`event-${activity.data.id}`}>
+              {index > 0 && <Divider />}
+              <EventListItem eventId={activity.data.id} orgId={orgId} />
             </Box>
           );
         } else if (activity.kind === ACTIVITIES.SURVEY) {

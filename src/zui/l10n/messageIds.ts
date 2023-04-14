@@ -132,4 +132,30 @@ export default makeMessages('zui', {
   suffixedNumber: {
     thousands: m<{ num: number }>('{num}K'),
   },
+  timeSpan: {
+    multiDay: m<{
+      end: ReactElement;
+      endDate: ReactElement;
+      start: ReactElement;
+      startDate: ReactElement;
+    }>('{startDate}, {start} - {endDate}, {end}'),
+    multiDayEndsToday: m<{
+      end: ReactElement;
+      start: ReactElement;
+      startDate: ReactElement;
+    }>('{startDate}, {start} - Today, {end}'),
+    multiDayToday: m<{
+      end: ReactElement;
+      endDate: ReactElement;
+      start: ReactElement;
+    }>('Today, {start} - {endDate}, {end}'),
+    singleDay: m<{
+      date: ReactElement;
+      end: ReactElement;
+      start: ReactElement;
+    }>('{date}, {start} - {end}'),
+    singleDayToday: m<{ end: ReactElement; start: ReactElement }>(
+      'Today, {start} - {end}'
+    ),
+  },
 });

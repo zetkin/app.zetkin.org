@@ -4,15 +4,21 @@ import {
   ZetkinActivity,
   ZetkinActivityBody,
   ZetkinEvent,
+  ZetkinEventParticipant,
+  ZetkinLocation,
 } from 'utils/types/zetkin';
 
 export interface EventsStoreSlice {
   eventList: RemoteList<ZetkinEvent>;
   typeList: RemoteList<ZetkinActivity>;
+  locationList: RemoteList<ZetkinLocation>;
+  participantsByEventId: Record<number, RemoteList<ZetkinEventParticipant>>;
 }
 
 const initialState: EventsStoreSlice = {
   eventList: remoteList(),
+  locationList: remoteList(),
+  participantsByEventId: {},
   typeList: remoteList(),
 };
 
@@ -80,17 +86,62 @@ const eventsSlice = createSlice({
         item.mutating = [];
       }
     },
+    eventsLoad: (state) => {
+      state.eventList.isLoading = true;
+    },
+    eventsLoaded: (state, action: PayloadAction<ZetkinEvent[]>) => {
+      state.eventList = remoteList(action.payload);
+      state.eventList.loaded = new Date().toISOString();
+    },
+    locationAdded: (state, action: PayloadAction<ZetkinLocation>) => {
+      const location = action.payload;
+      state.locationList.items = state.locationList.items
+        .filter((l) => l.id !== location.id)
+        .concat([remoteItem(location.id, { data: location })]);
+    },
+    locationsLoad: (state) => {
+      state.locationList.isLoading = true;
+    },
+    locationsLoaded: (state, action: PayloadAction<ZetkinLocation[]>) => {
+      const locations = action.payload;
+      const timestamp = new Date().toISOString();
+      state.locationList = remoteList(locations);
+      state.locationList.loaded = timestamp;
+    },
+    participantsLoad: (state, action: PayloadAction<number>) => {
+      const eventId = action.payload;
+      if (!state.participantsByEventId[eventId]) {
+        state.participantsByEventId[eventId] = remoteList();
+      }
+
+      state.participantsByEventId[eventId].isLoading = true;
+    },
+    participantsLoaded: (
+      state,
+      action: PayloadAction<[number, ZetkinEventParticipant[]]>
+    ) => {
+      const [eventId, participants] = action.payload;
+      state.participantsByEventId[eventId] = remoteList(participants);
+      state.participantsByEventId[eventId].loaded = new Date().toISOString();
+    },
   },
 });
 
 export default eventsSlice;
 export const {
-  eventLoad,
-  eventLoaded,
   typeAdd,
   typeAdded,
   eventTypesLoad,
   eventTypesLoaded,
+  eventLoad,
+  eventLoaded,
+  eventsLoad,
+  eventsLoaded,
   eventUpdate,
   eventUpdated,
+  locationAdded,
+  locationsLoad,
+  locationsLoaded,
+  participantsLoad,
+  participantsLoaded,
 } = eventsSlice.actions;
