@@ -3,6 +3,7 @@ import { FlagOutlined } from '@mui/icons-material';
 import { Box, Divider, Typography } from '@mui/material';
 
 import CallAssignmentOverviewListItem from './items/CallAssignmentOverviewListItem';
+import EventOverviewListItem from './items/EventOverviewListItem';
 import messageIds from 'features/campaigns/l10n/messageIds';
 import SurveyOverviewListItem from './items/SurveyOverviewListItem';
 import TaskOverviewListItem from './items/TaskOverviewListItem';
@@ -42,6 +43,16 @@ const ActivitiesOverviewCard: FC<OverviewListProps> = ({
             <Box key={`ca-${activity.data.id}`}>
               {index > 0 && <Divider />}
               <CallAssignmentOverviewListItem
+                activity={activity}
+                focusDate={focusDate}
+              />
+            </Box>
+          );
+        } else if (activity.kind === ACTIVITIES.EVENT) {
+          return (
+            <Box key={`ca-${activity.data.id}`}>
+              {index > 0 && <Divider />}
+              <EventOverviewListItem
                 activity={activity}
                 focusDate={focusDate}
               />

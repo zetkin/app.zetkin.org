@@ -1,10 +1,10 @@
-import { Add } from '@mui/icons-material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import EditIcon from '@mui/icons-material/Edit';
 import { FormattedTime } from 'react-intl';
 import MapIcon from '@mui/icons-material/Map';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+import { Add, Map } from '@mui/icons-material';
 import {
   Autocomplete,
   Box,
@@ -69,7 +69,6 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
   const [invalidFormat, setInvalidFormat] = useState(false);
 
   const [locationModalOpen, setLocationModalOpen] = useState(false);
-
   const { clickAwayProps, containerProps, previewableProps } =
     useEditPreviewBlock({
       editable,
@@ -99,6 +98,10 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
   if (!eventData) {
     return null;
   }
+
+  const options: (ZetkinLocation | 'CREATE_NEW_LOCATION')[] = locations
+    ? [...locations, 'CREATE_NEW_LOCATION']
+    : ['CREATE_NEW_LOCATION'];
 
   return (
     <ClickAwayListener {...clickAwayProps}>
@@ -324,7 +327,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                           !isSameDate(startDate.toDate(), endDate.toDate())
                         ) {
                           return (
-                            <Box ml={4}>
+                            <Box ml={10}>
                               <Typography
                                 color="secondary"
                                 component="h3"
@@ -347,7 +350,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                           isSameDate(startDate.toDate(), endDate.toDate())
                         ) {
                           return (
-                            <Box ml={4}>
+                            <Box ml={10}>
                               <Typography
                                 color="secondary"
                                 component="h3"
@@ -403,7 +406,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                       renderPreview={() => {
                         if (endDate) {
                           return (
-                            <Box ml={4}>
+                            <Box ml={10}>
                               <FormattedTime
                                 hour12={false}
                                 value={new Date(
@@ -437,23 +440,25 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                             <Autocomplete
                               disableClearable
                               fullWidth
-                              onChange={(ev, value) => {
-                                if (value === 'CREATE_NEW_LOCATION') {
+                              getOptionLabel={(option) =>
+                                option === 'CREATE_NEW_LOCATION'
+                                  ? messages.locationModal.createLocation()
+                                  : option.title
+                              }
+                              onChange={(ev, option) => {
+                                if (option === 'CREATE_NEW_LOCATION') {
                                   setLocationModalOpen(true);
+                                  return;
                                 }
                                 const location = locations?.find(
-                                  (location) => location.title === value
+                                  (location) => location.id === option.id
                                 );
                                 if (!location) {
                                   return;
                                 }
                                 setLocationId(location.id);
                               }}
-                              options={
-                                locations
-                                  ?.map((location) => location.title)
-                                  .concat(['CREATE_NEW_LOCATION']) || []
-                              }
+                              options={options}
                               renderInput={(params) => (
                                 <TextField
                                   {...params}
@@ -471,14 +476,14 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                                     {messages.eventOverviewCard.createLocation()}
                                   </li>
                                 ) : (
-                                  <li {...params}>{option}</li>
+                                  <li {...params}>{option.title}</li>
                                 )
                               }
-                              value={
-                                locations?.find(
-                                  (location) => location.id === locationId
-                                )?.title
-                              }
+                              value={options?.find(
+                                (location) =>
+                                  location !== 'CREATE_NEW_LOCATION' &&
+                                  location.id === locationId
+                              )}
                             />
                             <MapIcon
                               color="secondary"
@@ -488,7 +493,14 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                             <LocationModal
                               locationId={locationId}
                               locations={locations || []}
-                              onMapClose={() => setLocationModalOpen(false)}
+                              onCreateLocation={(
+                                newLocation: Partial<ZetkinLocation>
+                              ) => {
+                                locationsModel.addLocation(newLocation);
+                              }}
+                              onMapClose={() => {
+                                setLocationModalOpen(false);
+                              }}
                               onSelectLocation={(location: ZetkinLocation) =>
                                 setLocationId(location.id)
                               }
