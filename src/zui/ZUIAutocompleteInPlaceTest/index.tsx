@@ -216,6 +216,7 @@ const ZUIAutocompleteInPlaceTest = ({
                     InputProps={{
                       ...params.InputProps,
                     }}
+                    size="small"
                   />
                 )}
                 renderOption={(props, option) => {
@@ -266,6 +267,7 @@ const ZUIAutocompleteInPlaceTest = ({
                           textOverflow: 'ellipsis',
                         },
                       }}
+                      size="small"
                     />
                   )}
                   value={eventType.title || messages.type.uncategorized()}
