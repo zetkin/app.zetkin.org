@@ -65,6 +65,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
   const [endDate, setEndDate] = useState<Dayjs | undefined>(
     eventData?.end_time ? dayjs(removeOffset(eventData.end_time)) : undefined
   );
+  const [openButton, setOpenButton] = useState(false);
 
   const [locationModalOpen, setLocationModalOpen] = useState(false);
 
@@ -72,7 +73,10 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
     useEditPreviewBlock({
       editable,
       onEditModeEnter: () => setEditable(true),
-      onEditModeExit: () => setEditable(false),
+      onEditModeExit: () => {
+        setEditable(false);
+        setOpenButton(false);
+      },
       save: () => {
         dataModel.updateEventData({
           end_time: dayjs(endDate)
@@ -248,16 +252,46 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                               }
                             }}
                             renderInput={(params) => {
-                              return (
-                                <TextField
-                                  {...params}
-                                  inputProps={{
-                                    ...params.inputProps,
-                                    ...props,
-                                  }}
-                                  sx={{ marginBottom: '15px' }}
-                                />
-                              );
+                              if (
+                                (endDate &&
+                                  startDate &&
+                                  !isSameDate(
+                                    startDate.toDate(),
+                                    endDate.toDate()
+                                  )) ||
+                                openButton
+                              ) {
+                                return (
+                                  <TextField
+                                    {...params}
+                                    inputProps={{
+                                      ...params.inputProps,
+                                      ...props,
+                                    }}
+                                    sx={{ marginBottom: '15px' }}
+                                  />
+                                );
+                              } else if (
+                                endDate &&
+                                startDate &&
+                                !openButton &&
+                                isSameDate(startDate.toDate(), endDate.toDate())
+                              ) {
+                                return (
+                                  <Button
+                                    onClick={() => {
+                                      console.log('inside button', openButton),
+                                        setOpenButton(true);
+                                    }}
+                                    sx={{ marginBottom: 4.4, width: '100%' }}
+                                    variant="outlined"
+                                  >
+                                    {messages.eventOverviewCard.buttonEndDate()}
+                                  </Button>
+                                );
+                              } else {
+                                return <></>;
+                              }
                             }}
                             value={dayjs(endDate)}
                           />
@@ -293,9 +327,18 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                           isSameDate(startDate.toDate(), endDate.toDate())
                         ) {
                           return (
-                            <Button variant="outlined">
-                              {messages.eventOverviewCard.buttonEndDate()}
-                            </Button>
+                            <Box ml={4}>
+                              <Typography
+                                color="secondary"
+                                component="h3"
+                                variant="subtitle1"
+                              >
+                                {messages.eventOverviewCard
+                                  .endDate()
+                                  .toUpperCase()}
+                              </Typography>
+                              <Box mb={2.8} />
+                            </Box>
                           );
                         } else {
                           return <></>;
@@ -332,11 +375,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                         );
                       }}
                       renderPreview={() => {
-                        if (
-                          endDate &&
-                          startDate &&
-                          !isSameTime(startDate.unix(), endDate.unix())
-                        ) {
+                        if (endDate) {
                           return (
                             <Box ml={4}>
                               <FormattedTime
