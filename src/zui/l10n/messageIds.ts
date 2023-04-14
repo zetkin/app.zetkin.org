@@ -83,7 +83,6 @@ export default makeMessages('zui', {
     tooltip: {
       edit: m('Click to edit'),
       noEmpty: m('This cannot be empty'),
-      untitle: m('Untitle events will display type as title'),
     },
   },
   futures: {

@@ -8,12 +8,12 @@ import {
 
 export interface EventsStoreSlice {
   eventList: RemoteList<ZetkinEvent>;
-  eventTypeList: RemoteList<ZetkinActivity>;
+  typeList: RemoteList<ZetkinActivity>;
 }
 
 const initialState: EventsStoreSlice = {
   eventList: remoteList(),
-  eventTypeList: remoteList(),
+  typeList: remoteList(),
 };
 
 const eventsSlice = createSlice({
@@ -39,31 +39,31 @@ const eventsSlice = createSlice({
       item.isLoading = false;
       item.loaded = new Date().toISOString();
     },
-    eventTypeAdd: (
+    typeAdd: (
       state,
       /* eslint-disable-next-line */
       action: PayloadAction<[number, ZetkinActivityBody]>
     ) => {
-      state.eventTypeList.isLoading = true;
+      state.typeList.isLoading = true;
     },
-    eventTypeAdded: (state, action: PayloadAction<ZetkinActivity>) => {
+    typeAdded: (state, action: PayloadAction<ZetkinActivity>) => {
       const data = action.payload;
 
-      state.eventTypeList.items = state.eventTypeList.items.concat([
+      state.typeList.items = state.typeList.items.concat([
         remoteItem(data.id, { data: data, isLoading: false }),
       ]);
     },
     /* eslint-disable-next-line */
     eventTypesLoad: (state, action: PayloadAction<number>) => {
-      state.eventTypeList.isLoading = true;
+      state.typeList.isLoading = true;
     },
     eventTypesLoaded: (
       state,
       action: PayloadAction<[number, ZetkinActivity[]]>
     ) => {
       const [, eventTypes] = action.payload;
-      state.eventTypeList = remoteList(eventTypes);
-      state.eventTypeList.loaded = new Date().toISOString();
+      state.typeList = remoteList(eventTypes);
+      state.typeList.loaded = new Date().toISOString();
     },
     eventUpdate: (state, action: PayloadAction<[number, string[]]>) => {
       const [eventId, mutating] = action.payload;
@@ -87,8 +87,8 @@ export default eventsSlice;
 export const {
   eventLoad,
   eventLoaded,
-  eventTypeAdd,
-  eventTypeAdded,
+  typeAdd,
+  typeAdded,
   eventTypesLoad,
   eventTypesLoaded,
   eventUpdate,

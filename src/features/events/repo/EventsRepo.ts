@@ -6,12 +6,12 @@ import { Store } from 'core/store';
 import {
   eventLoad,
   eventLoaded,
-  eventTypeAdd,
-  eventTypeAdded,
   eventTypesLoad,
   eventTypesLoaded,
   eventUpdate,
   eventUpdated,
+  typeAdd,
+  typeAdded,
 } from '../store';
 import { IFuture, PromiseFuture, RemoteItemFuture } from 'core/caching/futures';
 import {
@@ -25,11 +25,11 @@ export default class EventsRepo {
   private _store: Store;
 
   addType(orgId: number, data: ZetkinActivityBody) {
-    this._store.dispatch(eventTypeAdd([orgId, data]));
+    this._store.dispatch(typeAdd([orgId, data]));
     this._apiClient
       .post<ZetkinActivity>(`/api/orgs/${orgId}/activities`, data)
       .then((event) => {
-        this._store.dispatch(eventTypeAdded(event));
+        this._store.dispatch(typeAdded(event));
       });
   }
   constructor(env: Environment) {
@@ -39,7 +39,7 @@ export default class EventsRepo {
 
   getAllTypes(orgId: number) {
     const state = this._store.getState();
-    return loadListIfNecessary(state.events.eventTypeList, this._store, {
+    return loadListIfNecessary(state.events.typeList, this._store, {
       actionOnLoad: () => eventTypesLoad(orgId),
       actionOnSuccess: (data) => eventTypesLoaded([orgId, data]),
       loader: () =>
@@ -68,23 +68,11 @@ export default class EventsRepo {
   updateEvent(
     orgId: number,
     eventId: number,
-    data: Partial<Omit<ZetkinEvent, 'id'>>
+    data: Partial<Omit<ZetkinEvent, 'id'>> | ZetkinActivityBody
   ) {
     this._store.dispatch(eventUpdate([eventId, Object.keys(data)]));
     this._apiClient
       .patch<ZetkinEvent>(`/api/orgs/${orgId}/actions/${eventId}`, data)
-      .then((event) => {
-        this._store.dispatch(eventUpdated(event));
-      });
-  }
-
-  updateEventType(orgId: number, eventId: number, data: ZetkinActivityBody) {
-    this._store.dispatch(eventUpdate([eventId, Object.keys(data)]));
-    this._apiClient
-      .patch<ZetkinEvent, ZetkinActivityBody>(
-        `/api/orgs/${orgId}/actions/${eventId}`,
-        data
-      )
       .then((event) => {
         this._store.dispatch(eventUpdated(event));
       });

@@ -42,7 +42,7 @@ const EventLayout: React.FC<EventLayoutProps> = ({
   );
 
   const typesModel = useModel(
-    (env) => new EventTypesModel(env, parseInt(orgId), parseInt(eventId))
+    (env) => new EventTypesModel(env, parseInt(orgId))
   );
 
   const showTimeOnly = (value: Date) => {
@@ -78,9 +78,10 @@ const EventLayout: React.FC<EventLayoutProps> = ({
 
                 <ZUIAutocompleteInPlaceTest
                   currentType={currentEvent.activity}
+                  model={model}
+                  onBorderToggle={setShowBorder}
+                  onFocus={setAutoOnEdit}
                   onTypeChange={setUserType}
-                  setAutoOnEdit={setAutoOnEdit}
-                  setShowBorder={setShowBorder}
                   showBorder={showBorder}
                   types={types}
                   typesModel={typesModel}
@@ -237,15 +238,15 @@ const EventLayout: React.FC<EventLayoutProps> = ({
               <ZUIEditTextinPlace
                 allowEmpty={true}
                 autoOnEdit={autoOnEdit}
-                currentType={data.activity.title}
                 onChange={(val) => {
                   model.setTitle(val);
                 }}
+                onFocus={setShowBorder}
                 placeholder={
-                  userType || (data.activity.title ?? messages.type.untitle())
+                  userType || (data.activity.title ?? messages.type.untitled())
                 }
-                setShowBorder={setShowBorder}
                 showBorder={showBorder}
+                tooltipContent={messages.tooltipContent()}
                 value={data.title || data.activity.title}
               />
             );

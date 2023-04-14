@@ -9,9 +9,11 @@ import {
   ClickAwayListener,
   IconButton,
   TextField,
+  Theme,
   Tooltip,
 } from '@mui/material';
 
+import EventDataModel from 'features/events/models/EventDataModel';
 import EventTypesModel from 'features/events/models/EventTypesModel';
 import messageIds from 'features/events/l10n/messageIds';
 import useEditPreviewBlock from 'zui/hooks/useEditPreviewBlock';
@@ -19,7 +21,11 @@ import { useMessages } from 'core/i18n';
 import { ZetkinActivity } from 'utils/types/zetkin';
 import ZUIPreviewableInput from 'zui/ZUIPreviewableInput';
 
-const useStyles = makeStyles((theme) => ({
+interface StyleProps {
+  showBorder: boolean | undefined;
+}
+
+const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
   create: {
     display: 'contents',
     fontSize: '1em',
@@ -47,19 +53,11 @@ const useStyles = makeStyles((theme) => ({
       paddingRight: 0,
     },
     border: '2px dotted transparent',
+    borderColor: ({ showBorder }) =>
+      showBorder ? lighten(theme.palette.primary.main, 0.65) : '',
     borderRadius: 10,
     maxWidth: '200px',
-    transition: 'all 0.2s ease',
-    width: '18vw',
-  },
-  showBorder: {
-    '& fieldset': { border: 'none' },
-    border: '2px dotted transparent',
-    borderColor: lighten(theme.palette.primary.main, 0.65),
-    borderRadius: 10,
-    maxWidth: '200px',
-    paddingLeft: 10,
-    paddingRight: 0,
+    paddingLeft: ({ showBorder }) => (showBorder ? 10 : 0),
     transition: 'all 0.2s ease',
     width: '18vw',
   },
@@ -74,12 +72,13 @@ interface NewEventType {
 
 interface ZUIAutocompleteInPlaceTestProps {
   currentType: NewEventType;
+  onBorderToggle: (value: boolean) => void;
+  onFocus: (value: boolean) => void;
   onTypeChange: (value: string) => void;
   types: ZetkinActivity[];
   typesModel: EventTypesModel;
+  model: EventDataModel;
   showBorder: boolean;
-  setAutoOnEdit: (value: boolean) => void;
-  setShowBorder: (value: boolean) => void;
 }
 
 const ZUIAutocompleteInPlaceTest = ({
@@ -87,8 +86,9 @@ const ZUIAutocompleteInPlaceTest = ({
   currentType,
   onTypeChange,
   typesModel,
-  setAutoOnEdit,
-  setShowBorder,
+  model,
+  onFocus,
+  onBorderToggle,
   showBorder,
 }: ZUIAutocompleteInPlaceTestProps) => {
   const [editing, setEditing] = useState<boolean>(false);
@@ -103,19 +103,19 @@ const ZUIAutocompleteInPlaceTest = ({
   }
   const eventTypes: NewEventType[] = types;
 
-  const classes = useStyles();
+  const classes = useStyles({ showBorder });
   const fuse = new Fuse(eventTypes, { keys: ['title'], threshold: 0.4 });
 
   const { clickAwayProps, previewableProps } = useEditPreviewBlock({
     editable: editing,
     onEditModeEnter: () => {
       setEditing(true);
-      setShowBorder(true);
+      onBorderToggle(true);
     },
     onEditModeExit: () => {
       setEditing(false);
-      setShowBorder(false);
-      setAutoOnEdit(false);
+      onBorderToggle(false);
+      onFocus(false);
     },
     save: () => {
       if (!eventType.id) {
@@ -123,10 +123,10 @@ const ZUIAutocompleteInPlaceTest = ({
         const newId = typesAfterCreateType.data!.find(
           (item) => item.title === eventType.title
         )!.id;
-        typesModel.setType(newId);
+        model.setType(newId);
       }
       if (eventType.id) {
-        typesModel.setType(eventType.id!);
+        model.setType(eventType.id!);
       }
       onTypeChange('');
     },
@@ -248,12 +248,12 @@ const ZUIAutocompleteInPlaceTest = ({
               <Tooltip arrow title={messages.type.tooltip()}>
                 <Autocomplete
                   classes={{
-                    root: showBorder ? classes.showBorder : classes.preview,
+                    root: classes.preview,
                   }}
                   freeSolo
                   fullWidth
                   id="auto-preview"
-                  onFocus={() => setAutoOnEdit(true)}
+                  onFocus={() => onFocus(true)}
                   options={[]}
                   readOnly={true}
                   renderInput={(params) => (
