@@ -106,7 +106,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
               </Button>
             </Box>
           )}
-          <Grid container spacing={3} sx={{ marginTop: '100px' }}>
+          <Grid container spacing={2} sx={{ marginTop: '100px' }}>
             <Grid
               container
               item
@@ -114,57 +114,71 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
               sx={{ justifyContent: 'space-evenly' }}
               xs={8}
             >
-              <Grid container direction="row" item spacing={3} xs>
-                <Grid item xs>
-                  <ZUIPreviewableInput
-                    {...previewableProps}
-                    renderInput={(props) => {
-                      return (
-                        <DatePicker
-                          inputFormat="DD-MM-YYYY"
-                          label={messages.eventOverviewCard.startDate()}
-                          onChange={(newValue) => {
-                            setStartDate(dayjs(newValue));
-                          }}
-                          renderInput={(params) => {
-                            return (
-                              <TextField
-                                {...params}
-                                inputProps={{ ...params.inputProps, ...props }}
-                              />
-                            );
-                          }}
-                          value={dayjs(startDate)}
-                        />
-                      );
-                    }}
-                    renderPreview={() => {
-                      if (startDate) {
+              <Grid container direction="row" item spacing={2} xs>
+                <Grid
+                  direction="column"
+                  item
+                  spacing={2}
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'inherit',
+                  }}
+                  xs
+                >
+                  <Grid item>
+                    <ZUIPreviewableInput
+                      {...previewableProps}
+                      renderInput={(props) => {
                         return (
-                          <>
-                            <Typography
-                              color="secondary"
-                              component="h3"
-                              variant="subtitle1"
-                            >
-                              {messages.eventOverviewCard
-                                .startDate()
-                                .toUpperCase()}
-                            </Typography>
-                            <ZUIDate
-                              datetime={new Date(
-                                dayjs(startDate).format()
-                              ).toISOString()}
-                            />
-                          </>
+                          <DatePicker
+                            inputFormat="DD-MM-YYYY"
+                            label={messages.eventOverviewCard.startDate()}
+                            onChange={(newValue) => {
+                              setStartDate(dayjs(newValue));
+                            }}
+                            renderInput={(params) => {
+                              return (
+                                <TextField
+                                  {...params}
+                                  inputProps={{
+                                    ...params.inputProps,
+                                    ...props,
+                                  }}
+                                  sx={{ marginBottom: '15px' }}
+                                />
+                              );
+                            }}
+                            value={dayjs(startDate)}
+                          />
                         );
-                      } else {
-                        return <></>;
-                      }
-                    }}
-                    value={dayjs(startDate).format() ?? ''}
-                  />
-                  <Grid item mt={2}>
+                      }}
+                      renderPreview={() => {
+                        if (startDate) {
+                          return (
+                            <Box ml={1}>
+                              <Typography
+                                color="secondary"
+                                component="h3"
+                                variant="subtitle1"
+                              >
+                                {messages.eventOverviewCard
+                                  .startDate()
+                                  .toUpperCase()}
+                              </Typography>
+                              <ZUIDate
+                                datetime={new Date(
+                                  dayjs(startDate).format()
+                                ).toISOString()}
+                              />
+                            </Box>
+                          );
+                        } else {
+                          return <></>;
+                        }
+                      }}
+                      value={dayjs(startDate).format() ?? ''}
+                    />
+
                     <ZUIPreviewableInput
                       {...previewableProps}
                       renderInput={(props) => {
@@ -195,12 +209,14 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                       renderPreview={() => {
                         if (startDate) {
                           return (
-                            <FormattedTime
-                              hour12={false}
-                              value={new Date(
-                                dayjs(startDate).format()
-                              ).toISOString()}
-                            />
+                            <Box ml={1}>
+                              <FormattedTime
+                                hour12={false}
+                                value={new Date(
+                                  dayjs(startDate).format()
+                                ).toISOString()}
+                              />
+                            </Box>
                           );
                         } else {
                           return <></>;
@@ -209,10 +225,8 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                       value={dayjs(startDate).format()}
                     />
                   </Grid>
-                </Grid>
 
-                <Grid item xs>
-                  <Grid item>
+                  <Grid item ml={1}>
                     <ZUIPreviewableInput
                       {...previewableProps}
                       renderInput={(props) => {
@@ -241,6 +255,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                                     ...params.inputProps,
                                     ...props,
                                   }}
+                                  sx={{ marginBottom: '15px' }}
                                 />
                               );
                             }}
@@ -255,7 +270,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                           !isSameDate(startDate.toDate(), endDate.toDate())
                         ) {
                           return (
-                            <>
+                            <Box ml={4}>
                               <Typography
                                 color="secondary"
                                 component="h3"
@@ -270,7 +285,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                                   dayjs(endDate).format()
                                 ).toISOString()}
                               />
-                            </>
+                            </Box>
                           );
                         } else if (
                           endDate &&
@@ -288,9 +303,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                       }}
                       value={dayjs(endDate).format() ?? ''}
                     />
-                  </Grid>
 
-                  <Grid item mt={2}>
                     <ZUIPreviewableInput
                       {...previewableProps}
                       renderInput={(props) => {
@@ -325,12 +338,14 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                           !isSameTime(startDate.unix(), endDate.unix())
                         ) {
                           return (
-                            <FormattedTime
-                              hour12={false}
-                              value={new Date(
-                                dayjs(endDate).format()
-                              ).toISOString()}
-                            />
+                            <Box ml={4}>
+                              <FormattedTime
+                                hour12={false}
+                                value={new Date(
+                                  dayjs(endDate).format()
+                                ).toISOString()}
+                              />
+                            </Box>
                           );
                         } else {
                           return <></>;
@@ -344,10 +359,10 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                 <Divider
                   flexItem
                   orientation="vertical"
-                  sx={{ marginLeft: '20px' }}
+                  sx={{ marginLeft: '10px' }}
                 />
 
-                <Grid item xs>
+                <Grid sx={{ marginLeft: '10px', marginTop: 2 }} xs>
                   <Grid item>
                     <ZUIPreviewableInput
                       {...previewableProps}
@@ -403,7 +418,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                             <MapIcon
                               color="secondary"
                               onClick={() => setLocationModalOpen(true)}
-                              sx={{ cursor: 'pointer', marginLeft: 2 }}
+                              sx={{ cursor: 'pointer', marginLeft: 1 }}
                             />
                             <LocationModal
                               locationId={locationId}
@@ -420,7 +435,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                       renderPreview={() => {
                         if (eventData.location) {
                           return (
-                            <Box>
+                            <Box ml={4}>
                               <Box sx={{ display: 'flex' }}>
                                 <Typography
                                   color="secondary"
@@ -450,7 +465,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                           );
                         } else {
                           return (
-                            <Box>
+                            <Box ml={4}>
                               <Typography
                                 color="secondary"
                                 component="h3"
@@ -493,7 +508,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                       renderPreview={() => {
                         if (eventData.url && eventData.url !== '') {
                           return (
-                            <Box mt={2}>
+                            <Box ml={4}>
                               <Typography
                                 color={theme.palette.text.secondary}
                                 component="h3"
@@ -530,7 +545,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
               </Grid>
             </Grid>
           </Grid>
-          <Box sx={{ margin: '15px' }}>
+          <Box>
             <ZUIPreviewableInput
               {...previewableProps}
               renderInput={(props) => (
@@ -541,14 +556,14 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                   multiline
                   onChange={(ev) => setInfoText(ev.target.value)}
                   rows={4}
-                  sx={{ marginBottom: 2 }}
+                  sx={{ marginBottom: 2, marginLeft: 1, paddingRight: 2 }}
                   value={infoText}
                 />
               )}
               renderPreview={() => {
                 if (eventData.info_text !== '') {
                   return (
-                    <Box>
+                    <Box mb={2} ml={2}>
                       <Typography
                         color={theme.palette.text.secondary}
                         component="h3"
