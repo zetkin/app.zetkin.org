@@ -34,7 +34,7 @@ import ZUIPreviewableInput from 'zui/ZUIPreviewableInput';
 import {
   endDateIsBeforeStartDate,
   isSameDate,
-  isSameTime,
+  isValidDate,
   removeOffset,
 } from 'utils/dateUtils';
 
@@ -66,6 +66,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
     eventData?.end_time ? dayjs(removeOffset(eventData.end_time)) : undefined
   );
   const [openButton, setOpenButton] = useState(false);
+  const [invalidFormat, setInvalidFormat] = useState(false);
 
   const [locationModalOpen, setLocationModalOpen] = useState(false);
 
@@ -138,12 +139,18 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                             inputFormat="DD-MM-YYYY"
                             label={messages.eventOverviewCard.startDate()}
                             onChange={(newValue) => {
-                              setStartDate(dayjs(newValue));
+                              if (newValue && isValidDate(newValue.toDate())) {
+                                setInvalidFormat(false);
+                                setStartDate(dayjs(newValue));
+                              } else {
+                                setInvalidFormat(true);
+                              }
                             }}
                             renderInput={(params) => {
                               return (
                                 <TextField
                                   {...params}
+                                  error={invalidFormat}
                                   inputProps={{
                                     ...params.inputProps,
                                     ...props,
@@ -192,7 +199,12 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                             inputFormat="HH:mm"
                             label={messages.eventOverviewCard.startTime()}
                             onChange={(newValue) => {
-                              setStartDate(dayjs(newValue));
+                              if (newValue && isValidDate(newValue.toDate())) {
+                                setInvalidFormat(false);
+                                setStartDate(dayjs(newValue));
+                              } else {
+                                setInvalidFormat(true);
+                              }
                             }}
                             open={false}
                             renderInput={(params) => {
@@ -239,16 +251,24 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                             inputFormat="DD-MM-YYYY"
                             label={messages.eventOverviewCard.endDate()}
                             onChange={(newValue) => {
-                              setEndDate(dayjs(newValue));
-                              if (
-                                startDate &&
-                                newValue &&
-                                endDateIsBeforeStartDate(
-                                  startDate.toDate(),
-                                  newValue.toDate()
-                                )
-                              ) {
-                                setStartDate(newValue);
+                              if (newValue && isValidDate(newValue.toDate())) {
+                                if (
+                                  startDate &&
+                                  newValue &&
+                                  endDateIsBeforeStartDate(
+                                    startDate.toDate(),
+                                    newValue.toDate()
+                                  )
+                                ) {
+                                  setInvalidFormat(false);
+                                  setStartDate(newValue);
+                                  setEndDate(newValue);
+                                } else {
+                                  setInvalidFormat(false);
+                                  setEndDate(newValue);
+                                }
+                              } else {
+                                setInvalidFormat(true);
                               }
                             }}
                             renderInput={(params) => {
@@ -264,6 +284,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                                 return (
                                   <TextField
                                     {...params}
+                                    error={invalidFormat}
                                     inputProps={{
                                       ...params.inputProps,
                                       ...props,
@@ -280,8 +301,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                                 return (
                                   <Button
                                     onClick={() => {
-                                      console.log('inside button', openButton),
-                                        setOpenButton(true);
+                                      setOpenButton(true);
                                     }}
                                     sx={{ marginBottom: 4.4, width: '100%' }}
                                     variant="outlined"
@@ -356,13 +376,20 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                             inputFormat="HH:mm"
                             label={messages.eventOverviewCard.endTime()}
                             onChange={(newValue) => {
-                              setEndDate(dayjs(newValue));
+                              if (newValue && isValidDate(newValue.toDate())) {
+                                setInvalidFormat(false);
+
+                                setEndDate(newValue);
+                              } else {
+                                setInvalidFormat(false);
+                              }
                             }}
                             open={false}
                             renderInput={(params) => {
                               return (
                                 <TextField
                                   {...params}
+                                  error={invalidFormat}
                                   inputProps={{
                                     ...params.inputProps,
                                     ...props,
