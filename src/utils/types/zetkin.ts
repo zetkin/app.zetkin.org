@@ -75,7 +75,7 @@ export interface ZetkinEvent {
     lat: number;
     lng: number;
     title: string;
-  };
+  } | null;
   num_participants_required: number;
   num_participants_available: number;
   start_time: string;
