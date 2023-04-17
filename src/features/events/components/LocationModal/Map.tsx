@@ -27,7 +27,7 @@ interface MapProps {
   pendingLocation: Pick<ZetkinLocation, 'lat' | 'lng'> | null;
 }
 
-const MapProvider = ({
+const MapWrapper = ({
   children,
 }: {
   children: (map: MapType) => JSX.Element;
@@ -66,7 +66,7 @@ const Map: FC<MapProps> = ({
       }
       style={{ height: '80vh', width: '100%' }}
     >
-      <MapProvider>
+      <MapWrapper>
         {(map) => {
           if (selectedLocation) {
             map.setView(
@@ -116,7 +116,7 @@ const Map: FC<MapProps> = ({
             </>
           );
         }}
-      </MapProvider>
+      </MapWrapper>
     </MapContainer>
   );
 };
