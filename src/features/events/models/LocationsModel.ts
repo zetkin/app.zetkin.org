@@ -1,8 +1,8 @@
 import Environment from 'core/env/Environment';
+import EventsRepo from '../repo/EventsRepo';
 import { IFuture } from 'core/caching/futures';
 import { ModelBase } from 'core/models';
 import { ZetkinLocation } from 'utils/types/zetkin';
-import EventsRepo, { ZetkinLocationPatchBody } from '../repo/EventsRepo';
 
 export default class LocationsModel extends ModelBase {
   private _orgId: number;
@@ -22,7 +22,7 @@ export default class LocationsModel extends ModelBase {
     return this._repo.getLocations(this._orgId);
   }
 
-  updateLocationData(locationId: number, data: ZetkinLocationPatchBody) {
-    this._repo.updateLocation(this._orgId, locationId, { ...data });
+  setLocationTitle(locationId: number, title: string) {
+    this._repo.updateLocation(this._orgId, locationId, { title });
   }
 }
