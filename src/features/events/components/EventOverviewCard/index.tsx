@@ -32,7 +32,7 @@ import { ZetkinLocation } from 'utils/types/zetkin';
 import ZUIDate from 'zui/ZUIDate';
 import ZUIPreviewableInput from 'zui/ZUIPreviewableInput';
 import {
-  endDateIsBeforeStartDate,
+  dateIsBefore,
   isSameDate,
   isValidDate,
   removeOffset,
@@ -258,7 +258,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                                 if (
                                   startDate &&
                                   newValue &&
-                                  endDateIsBeforeStartDate(
+                                  dateIsBefore(
                                     startDate.toDate(),
                                     newValue.toDate()
                                   )
