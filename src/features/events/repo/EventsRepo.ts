@@ -8,8 +8,6 @@ import {
   eventLoaded,
   eventsLoad,
   eventsLoaded,
-  eventTypesLoad,
-  eventTypesLoaded,
   eventUpdate,
   eventUpdated,
   locationAdded,
@@ -19,6 +17,8 @@ import {
   participantsLoaded,
   typeAdd,
   typeAdded,
+  typesLoad,
+  typesLoaded,
 } from '../store';
 import { IFuture, PromiseFuture, RemoteItemFuture } from 'core/caching/futures';
 import {
@@ -86,8 +86,8 @@ export default class EventsRepo {
   getAllTypes(orgId: number) {
     const state = this._store.getState();
     return loadListIfNecessary(state.events.typeList, this._store, {
-      actionOnLoad: () => eventTypesLoad(orgId),
-      actionOnSuccess: (data) => eventTypesLoaded([orgId, data]),
+      actionOnLoad: () => typesLoad(orgId),
+      actionOnSuccess: (data) => typesLoaded([orgId, data]),
       loader: () =>
         this._apiClient.get<ZetkinActivity[]>(`/api/orgs/${orgId}/activities`),
     });

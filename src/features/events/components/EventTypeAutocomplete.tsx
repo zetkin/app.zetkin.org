@@ -106,7 +106,7 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
         disableClearable
         filterOptions={(options, { inputValue }) => {
           const searchedResults = fuse.search(inputValue);
-          const output: NewEventType[] = [];
+          const filtered: NewEventType[] = [];
           const inputStartWithCapital = inputValue
             ? `${inputValue[0].toUpperCase()}${inputValue.substring(
                 1,
@@ -116,7 +116,7 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
 
           searchedResults.map((result) => {
             if (result.item.title !== null) {
-              output.push({
+              filtered.push({
                 id: result.item.id,
                 title: result.item.title,
               });
@@ -124,21 +124,21 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
           });
           //when user's type already exists
           if (
-            output.filter(
+            filtered.filter(
               (item) =>
                 item.title?.toLocaleLowerCase() ===
                 inputValue.toLocaleLowerCase()
             ).length
           ) {
-            return output;
+            return filtered;
           }
 
-          output.push({
+          filtered.push({
             createType: true,
             title: inputStartWithCapital,
           });
 
-          return inputValue ? output : options;
+          return inputValue ? filtered : options;
         }}
         fullWidth
         getOptionLabel={(option) => option.title!}

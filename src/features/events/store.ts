@@ -45,32 +45,6 @@ const eventsSlice = createSlice({
       item.isLoading = false;
       item.loaded = new Date().toISOString();
     },
-    typeAdd: (
-      state,
-      /* eslint-disable-next-line */
-      action: PayloadAction<[number, ZetkinActivityBody]>
-    ) => {
-      state.typeList.isLoading = true;
-    },
-    typeAdded: (state, action: PayloadAction<ZetkinActivity>) => {
-      const data = action.payload;
-
-      state.typeList.items = state.typeList.items.concat([
-        remoteItem(data.id, { data: data, isLoading: false }),
-      ]);
-    },
-    /* eslint-disable-next-line */
-    eventTypesLoad: (state, action: PayloadAction<number>) => {
-      state.typeList.isLoading = true;
-    },
-    eventTypesLoaded: (
-      state,
-      action: PayloadAction<[number, ZetkinActivity[]]>
-    ) => {
-      const [, eventTypes] = action.payload;
-      state.typeList = remoteList(eventTypes);
-      state.typeList.loaded = new Date().toISOString();
-    },
     eventUpdate: (state, action: PayloadAction<[number, string[]]>) => {
       const [eventId, mutating] = action.payload;
       const item = state.eventList.items.find((item) => item.id == eventId);
@@ -124,15 +98,34 @@ const eventsSlice = createSlice({
       state.participantsByEventId[eventId] = remoteList(participants);
       state.participantsByEventId[eventId].loaded = new Date().toISOString();
     },
+    typeAdd: (
+      state,
+      /* eslint-disable-next-line */
+      action: PayloadAction<[number, ZetkinActivityBody]>
+    ) => {
+      state.typeList.isLoading = true;
+    },
+    typeAdded: (state, action: PayloadAction<ZetkinActivity>) => {
+      const data = action.payload;
+
+      state.typeList.items = state.typeList.items.concat([
+        remoteItem(data.id, { data: data, isLoading: false }),
+      ]);
+    },
+    /* eslint-disable-next-line */
+    typesLoad: (state, action: PayloadAction<number>) => {
+      state.typeList.isLoading = true;
+    },
+    typesLoaded: (state, action: PayloadAction<[number, ZetkinActivity[]]>) => {
+      const [, eventTypes] = action.payload;
+      state.typeList = remoteList(eventTypes);
+      state.typeList.loaded = new Date().toISOString();
+    },
   },
 });
 
 export default eventsSlice;
 export const {
-  typeAdd,
-  typeAdded,
-  eventTypesLoad,
-  eventTypesLoaded,
   eventLoad,
   eventLoaded,
   eventsLoad,
@@ -144,4 +137,8 @@ export const {
   locationsLoaded,
   participantsLoad,
   participantsLoaded,
+  typeAdd,
+  typeAdded,
+  typesLoad,
+  typesLoaded,
 } = eventsSlice.actions;
