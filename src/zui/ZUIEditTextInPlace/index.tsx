@@ -50,20 +50,20 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
 
 export interface ZUIEditTextinPlaceProps {
   allowEmpty?: boolean;
-  autoOnEdit?: boolean;
   disabled?: boolean;
   onChange: (newValue: string) => void;
   placeholder?: string;
   value: string;
   showBorder?: boolean;
-  onFocus?: (value: boolean) => void;
+  onBlur?: () => void;
+  onFocus?: () => void;
   tooltipContent?: string;
 }
 
 const ZUIEditTextinPlace: React.FunctionComponent<ZUIEditTextinPlaceProps> = ({
   allowEmpty = false,
-  autoOnEdit,
   disabled,
+  onBlur,
   onChange,
   onFocus,
   placeholder,
@@ -102,6 +102,9 @@ const ZUIEditTextinPlace: React.FunctionComponent<ZUIEditTextinPlaceProps> = ({
       inputRef.current?.focus();
     } else {
       inputRef.current?.blur();
+      if (onBlur) {
+        onBlur();
+      }
     }
   }, [editing]);
 
@@ -114,17 +117,11 @@ const ZUIEditTextinPlace: React.FunctionComponent<ZUIEditTextinPlaceProps> = ({
     setEditing(false);
     // Set text back to value passed in props
     setText(value);
-    if (!autoOnEdit) {
-      setBorderOnTypeEdit(false);
-    }
   };
 
   const submitChange = () => {
     setEditing(false);
     onChange(text);
-    if (!autoOnEdit) {
-      setBorderOnTypeEdit(false);
-    }
   };
 
   const onKeyDown = (evt: React.KeyboardEvent) => {
@@ -140,7 +137,7 @@ const ZUIEditTextinPlace: React.FunctionComponent<ZUIEditTextinPlaceProps> = ({
     }
   };
 
-  const onBlur = () => {
+  const handleBlur = () => {
     if (editing) {
       if (!!text || allowEmpty) {
         if (text === value) {
@@ -154,7 +151,7 @@ const ZUIEditTextinPlace: React.FunctionComponent<ZUIEditTextinPlaceProps> = ({
 
   const setBorderOnTypeEdit = (value: boolean) => {
     if (onFocus !== undefined) {
-      onFocus(value);
+      onFocus();
     }
   };
 
@@ -195,7 +192,7 @@ const ZUIEditTextinPlace: React.FunctionComponent<ZUIEditTextinPlaceProps> = ({
           }}
           disabled={disabled}
           inputRef={inputRef}
-          onBlur={onBlur}
+          onBlur={handleBlur}
           onChange={(e) => setText(e.target.value)}
           onFocus={startEditing}
           onKeyDown={onKeyDown}

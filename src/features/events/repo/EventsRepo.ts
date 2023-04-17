@@ -141,11 +141,7 @@ export default class EventsRepo {
     });
   }
 
-  updateEvent(
-    orgId: number,
-    eventId: number,
-    data: ZetkinEventPatchBody | ZetkinActivityBody
-  ) {
+  updateEvent(orgId: number, eventId: number, data: ZetkinEventPatchBody) {
     this._store.dispatch(eventUpdate([eventId, Object.keys(data)]));
     this._apiClient
       .patch<ZetkinEvent>(`/api/orgs/${orgId}/actions/${eventId}`, data)

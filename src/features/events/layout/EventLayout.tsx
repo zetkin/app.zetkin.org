@@ -17,6 +17,7 @@ import { ZUIIconLabelProps } from 'zui/ZUIIconLabel';
 import ZUIIconLabelRow from 'zui/ZUIIconLabelRow';
 import ZUITimeSpan from 'zui/ZUITimeSpan';
 import { Msg, useMessages } from 'core/i18n';
+import EventTypeAutocomplete from '../components/EventTypeAutocomplete';
 
 interface EventLayoutProps {
   children: React.ReactNode;
@@ -31,9 +32,7 @@ const EventLayout: React.FC<EventLayoutProps> = ({
   orgId,
   campaignId,
 }) => {
-  const [showBorder, setShowBorder] = useState<boolean>(false);
-  const [autoOnEdit, setAutoOnEdit] = useState<boolean>(false);
-  const [userType, setUserType] = useState<string>('');
+  const [editingTypeOrTitle, setEditingTypeOrTitle] = useState(false);
 
   const messages = useMessages(messageIds);
 
@@ -62,18 +61,26 @@ const EventLayout: React.FC<EventLayoutProps> = ({
           >
             {({ data: { types, currentEvent } }) => {
               return (
-                // <ZUIAutocompleteInPlace
-                //   currentType={currentType}
-                //   types={eventTypes}
-                // />
-
-                <ZUIAutocompleteInPlaceTest
-                  currentType={currentEvent.activity}
+                <EventTypeAutocomplete
+                  showBorder={editingTypeOrTitle}
+                  value={currentEvent.activity}
                   model={model}
-                  onBorderToggle={setShowBorder}
-                  onFocus={setAutoOnEdit}
-                  onTypeChange={setUserType}
-                  showBorder={showBorder}
+                  onBlur={(createdType) => {
+                    const newId = types.find(
+                      (item) => item.title === createdType.title
+                    )!.id;
+                    model.setType(newId);
+
+                    setEditingTypeOrTitle(false);
+                  }}
+                  onChange={(newValue) => {
+                    if (newValue) {
+                      // TODO: Pass null values as well, when API supports it
+                      model.setType(newValue.id);
+                    }
+                    // setEditingTypeOrTitle(false);
+                  }}
+                  onFocus={() => setEditingTypeOrTitle(true)}
                   types={types}
                   typesModel={typesModel}
                 />
@@ -127,17 +134,21 @@ const EventLayout: React.FC<EventLayoutProps> = ({
             return (
               <ZUIEditTextinPlace
                 allowEmpty={true}
-                autoOnEdit={autoOnEdit}
+                onBlur={() => {
+                  console.log('blur?');
+                  setEditingTypeOrTitle(false);
+                }}
                 onChange={(val) => {
+                  setEditingTypeOrTitle(false);
                   model.setTitle(val);
                 }}
-                onFocus={setShowBorder}
+                onFocus={() => setEditingTypeOrTitle(true)}
                 placeholder={
-                  userType || (data.activity.title ?? messages.type.untitled())
+                  data.title || data.activity.title || messages.type.untitled()
                 }
-                showBorder={showBorder}
+                showBorder={editingTypeOrTitle}
                 tooltipContent={messages.tooltipContent()}
-                value={data.title || data.activity.title}
+                value={data.title || ''}
               />
             );
           }}
