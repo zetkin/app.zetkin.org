@@ -77,9 +77,9 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
   const messages = useMessages(messageIds);
 
   useEffect(() => {
-    //When a user creates a new type, it is missing an event ID..
+    //When a user creates a new type, it is missing an event ID.
     //In here, when the length of the type changes,
-    //it searches for the corresponding event with the id and updates event.
+    //it searches for the created event and updates event with an ID.
     if (createdType !== '') {
       const newId = types.find((item) => item.title === createdType)!.id;
       onChangeNewOption(newId);
@@ -104,7 +104,6 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
           root: classes.inputRoot,
         }}
         disableClearable
-        disablePortal
         filterOptions={(options, { inputValue }) => {
           const searchedResults = fuse.search(inputValue);
           const output: NewEventType[] = [];
