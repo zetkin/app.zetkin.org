@@ -57,8 +57,8 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
     eventData?.location.id ?? undefined
   );
 
-  const [startDate, setStartDate] = useState<Dayjs>(
-    dayjs(removeOffset(eventData!.start_time))
+  const [startDate, setStartDate] = useState<Dayjs | null>(
+    eventData ? dayjs(removeOffset(eventData.start_time)) : null
   );
   const [endDate, setEndDate] = useState<Dayjs | undefined>(
     eventData?.end_time ? dayjs(removeOffset(eventData.end_time)) : undefined
