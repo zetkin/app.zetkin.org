@@ -121,49 +121,44 @@ const LocationDetailsCard: FC<LocationDetailsCardProps> = ({
               }}
             />
           </Box>
-          {location.info_text && (
-            <ZUIPreviewableInput
-              mode={
-                fieldEditing === 'description'
-                  ? ZUIPreviewableMode.EDITABLE
-                  : ZUIPreviewableMode.PREVIEW
-              }
-              onSwitchMode={(mode) => {
-                setFieldEditing(
-                  mode === ZUIPreviewableMode.EDITABLE ? 'description' : null
-                );
-              }}
-              renderInput={(props) => (
-                <TextField
-                  fullWidth
-                  inputProps={props}
-                  inputRef={handleDescriptionTextAreaRef}
-                  maxRows={4}
-                  multiline
-                  onChange={(ev) => setDescription(ev.target.value)}
-                  sx={{ marginTop: 2 }}
-                  value={description}
-                />
-              )}
-              renderPreview={() => {
-                if (location.info_text !== '') {
-                  return (
-                    <Box paddingTop={1}>
-                      <Typography
-                        color="secondary"
-                        sx={{ overflowWrap: 'anywhere' }}
-                      >
-                        {location.info_text}
-                      </Typography>
-                    </Box>
-                  );
-                } else {
-                  return <></>;
-                }
-              }}
-              value={location.title}
-            />
-          )}
+          <ZUIPreviewableInput
+            mode={
+              fieldEditing === 'description'
+                ? ZUIPreviewableMode.EDITABLE
+                : ZUIPreviewableMode.PREVIEW
+            }
+            onSwitchMode={(mode) => {
+              setFieldEditing(
+                mode === ZUIPreviewableMode.EDITABLE ? 'description' : null
+              );
+            }}
+            renderInput={(props) => (
+              <TextField
+                fullWidth
+                inputProps={props}
+                inputRef={handleDescriptionTextAreaRef}
+                maxRows={4}
+                multiline
+                onChange={(ev) => setDescription(ev.target.value)}
+                sx={{ marginTop: 2 }}
+                value={description}
+              />
+            )}
+            renderPreview={() => (
+              <Box paddingTop={1}>
+                <Typography
+                  color="secondary"
+                  fontStyle={location.info_text ? 'inherit' : 'italic'}
+                  sx={{ overflowWrap: 'anywhere' }}
+                >
+                  {location.info_text
+                    ? location.info_text
+                    : messages.locationModal.noDescription()}
+                </Typography>
+              </Box>
+            )}
+            value={location.title}
+          />
         </Box>
       </ClickAwayListener>
       <Box display="flex" justifyContent="flex-end" paddingTop={2}>
