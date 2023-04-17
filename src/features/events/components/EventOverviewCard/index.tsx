@@ -143,6 +143,15 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                               if (newValue && isValidDate(newValue.toDate())) {
                                 setInvalidFormat(false);
                                 setStartDate(dayjs(newValue));
+                                if (
+                                  endDate &&
+                                  dateIsBefore(
+                                    newValue.toDate(),
+                                    endDate.toDate()
+                                  )
+                                ) {
+                                  setEndDate(newValue);
+                                }
                               } else {
                                 setInvalidFormat(true);
                               }
