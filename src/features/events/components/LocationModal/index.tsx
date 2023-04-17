@@ -61,9 +61,6 @@ const LocationModal: FC<LocationModalProps> = ({
   const messages = useMessages(messageIds);
   const [searchString, setSearchString] = useState('');
   const [selectedLocationId, setSelectedLocationId] = useState(locationId);
-  const [focusedMarker, setFocusedMarker] = useState<
-    { lat: number; lng: number } | undefined
-  >();
   const [pendingLocation, setPendingLocation] = useState<Pick<
     ZetkinLocation,
     'lat' | 'lng'
@@ -85,7 +82,6 @@ const LocationModal: FC<LocationModalProps> = ({
     <Dialog fullWidth maxWidth="lg" onClose={onMapClose} open={open}>
       <Box padding={2}>
         <Map
-          focusedMarker={focusedMarker}
           locations={locations}
           onMapClick={(latlng: PendingLocation) => {
             setSelectedLocationId(null);
@@ -100,7 +96,6 @@ const LocationModal: FC<LocationModalProps> = ({
             }
             setPendingLocation(null);
             setSelectedLocationId(location.id);
-            setFocusedMarker({ lat: location.lat, lng: location.lng });
           }}
           pendingLocation={pendingLocation}
           searchString={searchString}
@@ -116,7 +111,6 @@ const LocationModal: FC<LocationModalProps> = ({
                 if (!location?.lat || !location?.lng) {
                   return;
                 }
-                setFocusedMarker({ lat: location.lat, lng: location.lng });
                 setSelectedLocationId(location.id);
                 setSearchString('');
               }}

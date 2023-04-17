@@ -19,7 +19,6 @@ const basicIcon = icon({
 });
 
 interface MapProps {
-  focusedMarker?: { lat: number; lng: number };
   locations: ZetkinLocation[];
   searchString: string;
   selectedLocation?: ZetkinLocation;
@@ -38,7 +37,6 @@ const MapProvider = ({
 };
 
 const Map: FC<MapProps> = ({
-  focusedMarker,
   locations,
   onMapClick,
   onMarkerClick,
@@ -70,8 +68,11 @@ const Map: FC<MapProps> = ({
     >
       <MapProvider>
         {(map) => {
-          if (focusedMarker) {
-            map.setView(focusedMarker, 17);
+          if (selectedLocation) {
+            map.setView(
+              { lat: selectedLocation.lat, lng: selectedLocation.lng },
+              17
+            );
           }
 
           map.on('click', (evt) => {
