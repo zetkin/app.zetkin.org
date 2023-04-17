@@ -15,12 +15,12 @@ import { useMessages } from 'core/i18n';
 import { ZetkinLocation } from 'utils/types/zetkin';
 
 interface StyleProps {
-  isLong: boolean;
+  cardIsFullHeight: boolean;
 }
 
 const useStyles = makeStyles<Theme, StyleProps>(() => ({
   overlay: {
-    bottom: ({ isLong }) => (isLong ? 64 : ''),
+    bottom: ({ cardIsFullHeight }) => (cardIsFullHeight ? 64 : ''),
     display: 'flex',
     justifyContent: 'flex-end',
     justifySelf: 'flex-end',
@@ -70,8 +70,8 @@ const LocationModal: FC<LocationModalProps> = ({
     (location) => location.id === selectedLocationId
   );
 
-  const isLong = !!pendingLocation || !!selectedLocation;
-  const classes = useStyles({ isLong });
+  const cardIsFullHeight = !!pendingLocation || !!selectedLocation;
+  const classes = useStyles({ cardIsFullHeight });
 
   useEffect(() => {
     setSelectedLocationId(locationId);
