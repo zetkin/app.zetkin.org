@@ -65,7 +65,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
   const [endDate, setEndDate] = useState<Dayjs | undefined>(
     eventData?.end_time ? dayjs(removeOffset(eventData.end_time)) : undefined
   );
-  const [openButton, setOpenButton] = useState(false);
+  const [showEndDate, setShowEndDate] = useState(false);
   const [invalidFormat, setInvalidFormat] = useState(false);
 
   const [locationModalOpen, setLocationModalOpen] = useState(false);
@@ -75,7 +75,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
       onEditModeEnter: () => setEditable(true),
       onEditModeExit: () => {
         setEditable(false);
-        setOpenButton(false);
+        setShowEndDate(false);
       },
       save: () => {
         dataModel.updateEventData({
@@ -282,7 +282,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                                     startDate.toDate(),
                                     endDate.toDate()
                                   )) ||
-                                openButton
+                                showEndDate
                               ) {
                                 return (
                                   <TextField
@@ -298,13 +298,13 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                               } else if (
                                 endDate &&
                                 startDate &&
-                                !openButton &&
+                                !showEndDate &&
                                 isSameDate(startDate.toDate(), endDate.toDate())
                               ) {
                                 return (
                                   <Button
                                     onClick={() => {
-                                      setOpenButton(true);
+                                      setShowEndDate(true);
                                     }}
                                     sx={{ marginBottom: 4.4, width: '100%' }}
                                     variant="text"
