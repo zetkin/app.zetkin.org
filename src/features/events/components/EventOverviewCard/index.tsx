@@ -57,10 +57,8 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
     eventData?.location.id ?? undefined
   );
 
-  const [startDate, setStartDate] = useState<Dayjs | undefined>(
-    eventData?.start_time
-      ? dayjs(removeOffset(eventData.start_time))
-      : undefined
+  const [startDate, setStartDate] = useState<Dayjs>(
+    dayjs(removeOffset(eventData!.start_time))
   );
   const [endDate, setEndDate] = useState<Dayjs | undefined>(
     eventData?.end_time ? dayjs(removeOffset(eventData.end_time)) : undefined
@@ -231,9 +229,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                             <Box ml={1}>
                               <FormattedTime
                                 hour12={false}
-                                value={new Date(
-                                  dayjs(startDate).format()
-                                ).toISOString()}
+                                value={startDate.format()}
                               />
                             </Box>
                           );
