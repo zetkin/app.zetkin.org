@@ -6,7 +6,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { FC, useEffect, useState } from 'react';
+import { FC, useCallback, useEffect, useState } from 'react';
 
 import LocationsModel from 'features/events/models/LocationsModel';
 import messageIds from 'features/events/l10n/messageIds';
@@ -31,12 +31,27 @@ const LocationDetailsCard: FC<LocationDetailsCardProps> = ({
 }) => {
   const messages = useMessages(messageIds);
   const [title, setTitle] = useState(location.title);
+  const [description, setDescription] = useState(location.info_text);
   const [fieldEditing, setFieldEditing] = useState<
     'title' | 'description' | null
   >(null);
 
+  const handleDescriptionTextAreaRef = useCallback(
+    (el: HTMLTextAreaElement | null) => {
+      if (el) {
+        // When entering edit mode for desciption, focus the text area and put
+        // caret at the end of the text
+        el.focus();
+        el.setSelectionRange(el.value.length, el.value.length);
+        el.scrollTop = el.scrollHeight;
+      }
+    },
+    []
+  );
+
   useEffect(() => {
     setTitle(location.title);
+    setDescription(location.info_text);
   }, [location]);
 
   return (
@@ -54,58 +69,103 @@ const LocationDetailsCard: FC<LocationDetailsCardProps> = ({
       <ClickAwayListener
         mouseEvent="onMouseDown"
         onClickAway={() => {
-          if (fieldEditing) {
+          if (fieldEditing === 'title') {
             setFieldEditing(null);
             model.setLocationTitle(location.id, title);
+          } else if (fieldEditing === 'description') {
+            setFieldEditing(null);
+            model.setLocationDescription(location.id, description);
           }
         }}
       >
-        <Box display="flex" justifyContent="space-between">
-          <ZUIPreviewableInput
-            mode={
-              fieldEditing === 'title'
-                ? ZUIPreviewableMode.EDITABLE
-                : ZUIPreviewableMode.PREVIEW
-            }
-            onSwitchMode={(mode) => {
-              setFieldEditing(
-                mode === ZUIPreviewableMode.EDITABLE ? 'title' : null
-              );
-            }}
-            renderInput={(props) => (
-              <TextField
-                fullWidth
-                inputProps={props}
-                onChange={(ev) => setTitle(ev.target.value)}
-                sx={{ marginBottom: 2 }}
-                value={title}
-              />
-            )}
-            renderPreview={() => {
-              if (location.title !== '') {
-                return <Typography component="h5">{location.title}</Typography>;
-              } else {
-                return <></>;
+        <Box>
+          <Box display="flex" justifyContent="space-between">
+            <ZUIPreviewableInput
+              mode={
+                fieldEditing === 'title'
+                  ? ZUIPreviewableMode.EDITABLE
+                  : ZUIPreviewableMode.PREVIEW
               }
-            }}
-            value={location.title}
-          />
-          <Close
-            color="secondary"
-            onClick={() => {
-              onClose();
-            }}
-            sx={{
-              cursor: 'pointer',
-            }}
-          />
+              onSwitchMode={(mode) => {
+                setFieldEditing(
+                  mode === ZUIPreviewableMode.EDITABLE ? 'title' : null
+                );
+              }}
+              renderInput={(props) => (
+                <TextField
+                  fullWidth
+                  inputProps={props}
+                  onChange={(ev) => setTitle(ev.target.value)}
+                  sx={{ marginBottom: 2 }}
+                  value={title}
+                />
+              )}
+              renderPreview={() => {
+                if (location.title !== '') {
+                  return (
+                    <Typography component="h5">{location.title}</Typography>
+                  );
+                } else {
+                  return <></>;
+                }
+              }}
+              value={location.title}
+            />
+            <Close
+              color="secondary"
+              onClick={() => {
+                onClose();
+              }}
+              sx={{
+                cursor: 'pointer',
+              }}
+            />
+          </Box>
+          {location.info_text && (
+            <ZUIPreviewableInput
+              mode={
+                fieldEditing === 'description'
+                  ? ZUIPreviewableMode.EDITABLE
+                  : ZUIPreviewableMode.PREVIEW
+              }
+              onSwitchMode={(mode) => {
+                setFieldEditing(
+                  mode === ZUIPreviewableMode.EDITABLE ? 'description' : null
+                );
+              }}
+              renderInput={(props) => (
+                <TextField
+                  fullWidth
+                  inputProps={props}
+                  inputRef={handleDescriptionTextAreaRef}
+                  maxRows={4}
+                  multiline
+                  onChange={(ev) => setDescription(ev.target.value)}
+                  sx={{ marginTop: 2 }}
+                  value={description}
+                />
+              )}
+              renderPreview={() => {
+                if (location.info_text !== '') {
+                  return (
+                    <Box paddingTop={1}>
+                      <Typography
+                        color="secondary"
+                        sx={{ overflowWrap: 'anywhere' }}
+                      >
+                        {location.info_text}
+                      </Typography>
+                    </Box>
+                  );
+                } else {
+                  return <></>;
+                }
+              }}
+              value={location.title}
+            />
+          )}
         </Box>
       </ClickAwayListener>
-      {location.info_text && (
-        <Box display="flex" flex={1} flexDirection="column" paddingTop={1}>
-          <Typography color="secondary">{location.info_text}</Typography>
-        </Box>
-      )}
       <Box display="flex" justifyContent="flex-end" paddingTop={2}>
         <Button onClick={onUseLocation} variant="contained">
           {messages.locationModal.useLocation()}

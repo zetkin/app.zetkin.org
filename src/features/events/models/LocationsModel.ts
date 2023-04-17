@@ -22,6 +22,12 @@ export default class LocationsModel extends ModelBase {
     return this._repo.getLocations(this._orgId);
   }
 
+  setLocationDescription(locationId: number, description: string) {
+    this._repo.updateLocation(this._orgId, locationId, {
+      info_text: description,
+    });
+  }
+
   setLocationTitle(locationId: number, title: string) {
     this._repo.updateLocation(this._orgId, locationId, { title });
   }
