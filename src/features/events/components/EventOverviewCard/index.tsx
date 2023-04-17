@@ -168,11 +168,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                         if (startDate) {
                           return (
                             <Box ml={1}>
-                              <Typography
-                                color="secondary"
-                                component="h3"
-                                variant="subtitle1"
-                              >
+                              <Typography color="secondary" variant="subtitle1">
                                 {messages.eventOverviewCard
                                   .startDate()
                                   .toUpperCase()}
@@ -324,11 +320,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                         ) {
                           return (
                             <Box ml={10}>
-                              <Typography
-                                color="secondary"
-                                component="h3"
-                                variant="subtitle1"
-                              >
+                              <Typography color="secondary" variant="subtitle1">
                                 {messages.eventOverviewCard
                                   .endDate()
                                   .toUpperCase()}
@@ -347,11 +339,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                         ) {
                           return (
                             <Box ml={10}>
-                              <Typography
-                                color="secondary"
-                                component="h3"
-                                variant="subtitle1"
-                              >
+                              <Typography color="secondary" variant="subtitle1">
                                 {messages.eventOverviewCard
                                   .endDate()
                                   .toUpperCase()}
@@ -517,25 +505,19 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                               >
                                 <Typography
                                   color="secondary"
-                                  component="h3"
                                   variant="subtitle1"
                                 >
                                   {messages.eventOverviewCard
                                     .location()
                                     .toUpperCase()}
                                 </Typography>
-                                <MapIcon
-                                  color="secondary"
-                                  onClick={() => setLocationModalOpen(true)}
-                                  sx={{ cursor: 'pointer' }}
-                                />
                               </Box>
                               <Typography
                                 sx={{
                                   alignItems: 'flex-start',
                                   display: 'flex',
                                 }}
-                                variant="body2"
+                                variant="body1"
                               >
                                 {eventData.location.title}
                               </Typography>
@@ -544,11 +526,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                         } else {
                           return (
                             <Box ml={4}>
-                              <Typography
-                                color="secondary"
-                                component="h3"
-                                variant="subtitle1"
-                              >
+                              <Typography color="secondary" variant="subtitle1">
                                 {messages.eventOverviewCard
                                   .location()
                                   .toUpperCase()}
@@ -558,7 +536,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                                   alignItems: 'flex-start',
                                   display: 'flex',
                                 }}
-                                variant="body2"
+                                variant="body1"
                               >
                                 {messages.eventOverviewCard.noLocation()}
                               </Typography>
@@ -589,7 +567,6 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                             <Box ml={4}>
                               <Typography
                                 color={theme.palette.text.secondary}
-                                component="h3"
                                 variant="subtitle1"
                               >
                                 {messages.eventOverviewCard.url().toUpperCase()}
@@ -599,7 +576,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                                   alignItems: 'flex-start',
                                   display: 'flex',
                                 }}
-                                variant="body2"
+                                variant="body1"
                               >
                                 {eventData.url}
                                 <Link
@@ -623,7 +600,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
               </Grid>
             </Grid>
           </Grid>
-          <Box>
+          <Box p={1}>
             <ZUIPreviewableInput
               {...previewableProps}
               renderInput={(props) => (
@@ -634,22 +611,20 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                   multiline
                   onChange={(ev) => setInfoText(ev.target.value)}
                   rows={4}
-                  sx={{ marginBottom: 2, marginLeft: 1, paddingRight: 2 }}
                   value={infoText}
                 />
               )}
               renderPreview={() => {
                 if (eventData.info_text !== '') {
                   return (
-                    <Box mb={2} ml={2}>
+                    <Box p={1}>
                       <Typography
                         color={theme.palette.text.secondary}
-                        component="h3"
                         variant="subtitle1"
                       >
                         {messages.eventOverviewCard.description().toUpperCase()}
                       </Typography>
-                      <Typography variant="body2">
+                      <Typography variant="body1">
                         {eventData.info_text}
                       </Typography>
                     </Box>
