@@ -97,7 +97,7 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
   const fuse = new Fuse(eventTypes, { keys: ['title'], threshold: 0.4 });
 
   return (
-    <Tooltip arrow title={messages.type.tooltip()}>
+    <Tooltip arrow title={showBorder ? '' : messages.type.tooltip()}>
       <Autocomplete
         blurOnSelect
         classes={{
