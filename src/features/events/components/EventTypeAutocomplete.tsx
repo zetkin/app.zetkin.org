@@ -1,24 +1,20 @@
-import { FC, useEffect } from 'react';
 import AddIcon from '@mui/icons-material/Add';
 import Fuse from 'fuse.js';
 import { lighten } from '@mui/material/styles';
 import makeStyles from '@mui/styles/makeStyles';
-import { useState } from 'react';
 import {
   Autocomplete,
-  Box,
-  ClickAwayListener,
   IconButton,
   TextField,
   Theme,
   Tooltip,
 } from '@mui/material';
+import { FC, useEffect, useState } from 'react';
 
-import { ZetkinActivity, ZetkinEvent } from 'utils/types/zetkin';
+import EventTypesModel from '../models/EventTypesModel';
 import messageIds from '../l10n/messageIds';
 import { useMessages } from 'core/i18n';
-import EventTypesModel from '../models/EventTypesModel';
-import EventDataModel from '../models/EventDataModel';
+import { ZetkinActivity, ZetkinEvent } from 'utils/types/zetkin';
 
 interface StyleProps {
   showBorder: boolean | undefined;
@@ -45,16 +41,15 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
     maxWidth: '200px',
     paddingLeft: ({ showBorder }) => (showBorder ? 10 : 0),
     transition: 'all 0.2s ease',
-    width: '18vw',
   },
 }));
 
 type EventTypeAutocompleteProps = {
-  onBlur: (value: NewEventType) => void;
+  onBlur: () => void;
   onChange: (newValue: ZetkinEvent['activity'] | null) => void;
+  onChangeNewOption: (newId: number) => void;
   onFocus: () => void;
   showBorder?: boolean;
-  model: EventDataModel;
   types: ZetkinActivity[];
   typesModel: EventTypesModel;
   value: ZetkinEvent['activity'];
@@ -63,23 +58,33 @@ type EventTypeAutocompleteProps = {
 interface NewEventType {
   id?: number;
   title: string | null;
-  //   info_text?: string | null;
   createType?: boolean;
 }
 
 const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
   onBlur,
   onChange,
+  onChangeNewOption,
   onFocus,
   showBorder,
   types,
-  model,
   typesModel,
   value,
 }) => {
-  const [userType, setUserType] = useState<NewEventType>(value);
+  const [createdType, setCreatedType] = useState<string>('');
+
   const classes = useStyles({ showBorder });
   const messages = useMessages(messageIds);
+
+  useEffect(() => {
+    //When a user creates a new type, it is missing an event ID..
+    //In here, when the length of the type changes,
+    //it searches for the corresponding event with the id and updates event.
+    if (createdType !== '') {
+      const newId = types.find((item) => item.title === createdType)!.id;
+      onChangeNewOption(newId);
+    }
+  }, [types.length]);
 
   if (value.title === null) {
     types = [
@@ -92,107 +97,102 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
   const fuse = new Fuse(eventTypes, { keys: ['title'], threshold: 0.4 });
 
   return (
-    <Autocomplete
-      classes={{
-        root: classes.inputRoot,
-      }}
-      disableClearable
-      disablePortal
-      filterOptions={(options, { inputValue }) => {
-        const searchedResults = fuse.search(inputValue);
-        const output: NewEventType[] = [];
-        const inputStartWithCapital = inputValue
-          ? `${inputValue[0].toUpperCase()}${inputValue.substring(
-              1,
-              inputValue.length
-            )}`
-          : '';
+    <Tooltip arrow title={messages.type.tooltip()}>
+      <Autocomplete
+        blurOnSelect
+        classes={{
+          root: classes.inputRoot,
+        }}
+        disableClearable
+        disablePortal
+        filterOptions={(options, { inputValue }) => {
+          const searchedResults = fuse.search(inputValue);
+          const output: NewEventType[] = [];
+          const inputStartWithCapital = inputValue
+            ? `${inputValue[0].toUpperCase()}${inputValue.substring(
+                1,
+                inputValue.length
+              )}`
+            : '';
 
-        searchedResults.map((result) => {
-          if (result.item.title !== null) {
-            output.push({
-              id: result.item.id,
-              //   info_text: result.item.info_text || null,
-              title: result.item.title,
-            });
+          searchedResults.map((result) => {
+            if (result.item.title !== null) {
+              output.push({
+                id: result.item.id,
+                title: result.item.title,
+              });
+            }
+          });
+          //when user's type already exists
+          if (
+            output.filter(
+              (item) =>
+                item.title?.toLocaleLowerCase() ===
+                inputValue.toLocaleLowerCase()
+            ).length
+          ) {
+            return output;
           }
-        });
-        //when user's type already exists
-        if (
-          output.filter(
-            (item) =>
-              item.title?.toLocaleLowerCase() === inputValue.toLocaleLowerCase()
-          ).length
-        ) {
-          return output;
-        }
 
-        output.push({
-          createType: true,
-          title: inputStartWithCapital,
-        });
-        return inputValue ? output : options;
-      }}
-      getOptionLabel={(option) => option.title!}
-      isOptionEqualToValue={(option, value) => option.title === value.title}
-      onBlur={() => {
-        //TO DO: send title null as well here
-        if (userType.title) {
-          onBlur(userType);
-        }
-      }}
-      onChange={(_, value) => {
-        if (value.createType) {
-          typesModel.addType(0, value.title!);
-        }
-        //to set title to value when user create a type.
-        setUserType({
-          id: value.id,
-          title: value.title,
-        });
-        onChange({
-          id: value.id!,
-          title: value.title!,
-        });
-      }}
-      onFocus={() => onFocus()}
-      options={eventTypes}
-      renderInput={(params) => (
-        <TextField
-          {...params}
-          InputLabelProps={{
-            shrink: false,
-            style: {
-              maxWidth: 180,
-            },
-          }}
-          InputProps={{
-            ...params.InputProps,
-          }}
-          size="small"
-        />
-      )}
-      renderOption={(props, option) => {
-        if (option.createType) {
+          output.push({
+            createType: true,
+            title: inputStartWithCapital,
+          });
+
+          return inputValue ? output : options;
+        }}
+        fullWidth
+        getOptionLabel={(option) => option.title!}
+        isOptionEqualToValue={(option, value) => option.title === value.title}
+        onBlur={() => onBlur()}
+        onChange={(_, value) => {
+          if (value.createType) {
+            typesModel.addType(0, value.title!);
+            setCreatedType(value.title!);
+          }
+
+          onChange({
+            id: value.id!,
+            title: value.title!,
+          });
+        }}
+        onFocus={() => onFocus()}
+        options={eventTypes}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            InputLabelProps={{
+              shrink: false,
+              style: {
+                maxWidth: 180,
+              },
+            }}
+            InputProps={{
+              ...params.InputProps,
+            }}
+            size="small"
+          />
+        )}
+        renderOption={(props, option) => {
+          if (option.createType) {
+            return (
+              <li {...props} key={option.id}>
+                <IconButton className={classes.create}>
+                  <AddIcon />
+                  {messages.type.createType({ type: option.title! })}
+                </IconButton>
+              </li>
+            );
+          }
           return (
             <li {...props} key={option.id}>
-              <IconButton className={classes.create}>
-                <AddIcon />
-                {messages.type.createType({ type: option.title! })}
-              </IconButton>
+              {option.title}
             </li>
           );
-        }
-        return (
-          <li {...props} key={option.id}>
-            {option.title}
-          </li>
-        );
-      }}
-      value={
-        userType.title ? userType : { title: messages.type.uncategorized() }
-      }
-    />
+        }}
+        value={value.title ? value : { title: messages.type.uncategorized() }}
+      />
+    </Tooltip>
   );
 };
 

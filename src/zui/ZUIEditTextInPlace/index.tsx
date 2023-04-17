@@ -110,7 +110,7 @@ const ZUIEditTextinPlace: React.FunctionComponent<ZUIEditTextinPlaceProps> = ({
 
   const startEditing = () => {
     setEditing(true);
-    setBorderOnTypeEdit(true);
+    setBorderOnTypeEdit();
   };
 
   const cancelEditing = () => {
@@ -149,7 +149,7 @@ const ZUIEditTextinPlace: React.FunctionComponent<ZUIEditTextinPlaceProps> = ({
     }
   };
 
-  const setBorderOnTypeEdit = (value: boolean) => {
+  const setBorderOnTypeEdit = () => {
     if (onFocus !== undefined) {
       onFocus();
     }

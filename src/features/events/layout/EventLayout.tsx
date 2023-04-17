@@ -6,10 +6,10 @@ import { useState } from 'react';
 
 import EventDataModel from '../models/EventDataModel';
 import EventStatusChip from '../components/EventStatusChip';
+import EventTypeAutocomplete from '../components/EventTypeAutocomplete';
 import EventTypesModel from '../models/EventTypesModel';
 import messageIds from '../l10n/messageIds';
 import useModel from 'core/useModel';
-import ZUIAutocompleteInPlaceTest from 'zui/ZUIAutocompleteInPlaceTest';
 import ZUIEditTextinPlace from 'zui/ZUIEditTextInPlace';
 import ZUIFuture from 'zui/ZUIFuture';
 import ZUIFutures from 'zui/ZUIFutures';
@@ -17,7 +17,6 @@ import { ZUIIconLabelProps } from 'zui/ZUIIconLabel';
 import ZUIIconLabelRow from 'zui/ZUIIconLabelRow';
 import ZUITimeSpan from 'zui/ZUITimeSpan';
 import { Msg, useMessages } from 'core/i18n';
-import EventTypeAutocomplete from '../components/EventTypeAutocomplete';
 
 interface EventLayoutProps {
   children: React.ReactNode;
@@ -62,32 +61,25 @@ const EventLayout: React.FC<EventLayoutProps> = ({
             {({ data: { types, currentEvent } }) => {
               return (
                 <EventTypeAutocomplete
-                  showBorder={editingTypeOrTitle}
-                  value={currentEvent.activity}
-                  model={model}
-                  onBlur={(createdType) => {
-                    const newId = types.find(
-                      (item) => item.title === createdType.title
-                    )!.id;
-                    model.setType(newId);
-
-                    setEditingTypeOrTitle(false);
-                  }}
+                  onBlur={() => setEditingTypeOrTitle(false)}
                   onChange={(newValue) => {
                     if (newValue) {
                       // TODO: Pass null values as well, when API supports it
                       model.setType(newValue.id);
                     }
-                    // setEditingTypeOrTitle(false);
+                    setEditingTypeOrTitle(false);
                   }}
+                  onChangeNewOption={(newValueId) => model.setType(newValueId)}
                   onFocus={() => setEditingTypeOrTitle(true)}
+                  showBorder={editingTypeOrTitle}
                   types={types}
                   typesModel={typesModel}
+                  value={currentEvent.activity}
                 />
               );
             }}
           </ZUIFutures>
-          <Box marginX={2}>
+          <Box marginX={1}>
             <ZUIFuture future={model.getData()}>
               {(data) => {
                 const startDate = new Date(data.start_time);
@@ -135,7 +127,6 @@ const EventLayout: React.FC<EventLayoutProps> = ({
               <ZUIEditTextinPlace
                 allowEmpty={true}
                 onBlur={() => {
-                  console.log('blur?');
                   setEditingTypeOrTitle(false);
                 }}
                 onChange={(val) => {
