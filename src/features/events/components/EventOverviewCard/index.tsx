@@ -28,31 +28,40 @@ import messageIds from 'features/events/l10n/messageIds';
 import theme from 'theme';
 import useEditPreviewBlock from 'zui/hooks/useEditPreviewBlock';
 import { useMessages } from 'core/i18n';
-import { ZetkinLocation } from 'utils/types/zetkin';
 import ZUIDate from 'zui/ZUIDate';
-import ZUIFuture from 'zui/ZUIFuture';
 import ZUIPreviewableInput from 'zui/ZUIPreviewableInput';
-
-import { dateIsBefore, isSameDate, isValidDate } from 'utils/dateUtils';
+import {
+  dateIsBefore,
+  isSameDate,
+  isValidDate,
+  removeOffset,
+} from 'utils/dateUtils';
+import { ZetkinEvent, ZetkinLocation } from 'utils/types/zetkin';
 
 type EventOverviewCardProps = {
+  data: ZetkinEvent;
   dataModel: EventDataModel;
   locationsModel: LocationsModel;
 };
 
 const EventOverviewCard: FC<EventOverviewCardProps> = ({
+  data,
   dataModel,
   locationsModel,
 }) => {
   const locations = locationsModel.getLocations().data;
   const messages = useMessages(messageIds);
   const [editable, setEditable] = useState(false);
-  const [link, setLink] = useState('');
-  const [infoText, setInfoText] = useState('');
-  const [locationId, setLocationId] = useState<number | undefined>();
+  const [link, setLink] = useState(data.url);
+  const [infoText, setInfoText] = useState(data.info_text);
+  const [locationId, setLocationId] = useState<number>(data.location.id);
 
-  const [startDate, setStartDate] = useState<Dayjs | undefined>();
-  const [endDate, setEndDate] = useState<Dayjs | undefined>();
+  const [startDate, setStartDate] = useState<Dayjs>(
+    dayjs(removeOffset(data.start_time))
+  );
+  const [endDate, setEndDate] = useState<Dayjs>(
+    dayjs(removeOffset(data.end_time))
+  );
   const [showEndDate, setShowEndDate] = useState(false);
   const [invalidFormat, setInvalidFormat] = useState(false);
 
@@ -68,14 +77,14 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
       save: () => {
         dataModel.updateEventData({
           end_time: dayjs(endDate)
-            .hour(endDate ? endDate.hour() : 0)
-            .minute(endDate ? endDate.minute() : 0)
+            .hour(endDate.hour())
+            .minute(endDate.minute())
             .format(),
           info_text: infoText,
           location_id: locationId,
           start_time: dayjs(startDate)
-            .hour(startDate ? startDate.hour() : 0)
-            .minute(startDate ? startDate.minute() : 0)
+            .hour(startDate.hour())
+            .minute(startDate.minute())
             .format(),
 
           url: link,
@@ -88,582 +97,460 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
     : ['CREATE_NEW_LOCATION'];
 
   return (
-    <ZUIFuture future={dataModel.getData()}>
-      {(eventData) => {
-        return (
-          <ClickAwayListener {...clickAwayProps}>
-            <Box {...containerProps}>
-              <Card>
-                {!editable && (
-                  <Box display="flex" justifyContent="flex-end" m={2}>
-                    <Button startIcon={<EditIcon />} variant="outlined">
-                      {messages.eventOverviewCard.editButton().toUpperCase()}
-                    </Button>
-                  </Box>
-                )}
-                <Grid container spacing={2} sx={{ marginTop: '100px' }}>
-                  <Grid
-                    container
-                    item
-                    sm
-                    sx={{ justifyContent: 'space-evenly' }}
-                    xs={8}
-                  >
-                    <Grid container direction="row" item spacing={2} xs>
-                      <Grid
-                        direction="column"
-                        item
-                        spacing={2}
-                        sx={{
-                          display: 'flex',
-                          flexDirection: 'inherit',
-                        }}
-                        xs
-                      >
-                        <Grid item>
-                          <ZUIPreviewableInput
-                            {...previewableProps}
-                            renderInput={(props) => {
-                              return (
-                                <DatePicker
-                                  inputFormat="DD-MM-YYYY"
-                                  label={messages.eventOverviewCard.startDate()}
-                                  onChange={(newValue) => {
-                                    if (
-                                      newValue &&
-                                      isValidDate(newValue.toDate())
-                                    ) {
-                                      setInvalidFormat(false);
-                                      setStartDate(dayjs(newValue));
-                                      if (
-                                        endDate &&
-                                        dateIsBefore(
-                                          newValue.toDate(),
-                                          endDate.toDate()
-                                        )
-                                      ) {
-                                        setEndDate(newValue);
-                                      }
-                                    } else {
-                                      setInvalidFormat(true);
-                                    }
-                                  }}
-                                  renderInput={(params) => {
-                                    return (
-                                      <TextField
-                                        {...params}
-                                        error={invalidFormat}
-                                        inputProps={{
-                                          ...params.inputProps,
-                                          ...props,
-                                        }}
-                                        sx={{ marginBottom: '15px' }}
-                                      />
-                                    );
-                                  }}
-                                  value={dayjs(startDate)}
-                                />
-                              );
-                            }}
-                            renderPreview={() => {
-                              if (startDate) {
-                                return (
-                                  <Box ml={1}>
-                                    <Typography
-                                      color="secondary"
-                                      variant="subtitle1"
-                                    >
-                                      {messages.eventOverviewCard
-                                        .startDate()
-                                        .toUpperCase()}
-                                    </Typography>
-                                    <ZUIDate
-                                      datetime={new Date(
-                                        dayjs(startDate).format()
-                                      ).toISOString()}
-                                    />
-                                  </Box>
-                                );
-                              } else {
-                                return <></>;
-                              }
-                            }}
-                            value={dayjs(startDate).format() ?? ''}
-                          />
-
-                          <ZUIPreviewableInput
-                            {...previewableProps}
-                            renderInput={(props) => {
-                              return (
-                                <TimePicker
-                                  ampm={false}
-                                  inputFormat="HH:mm"
-                                  label={messages.eventOverviewCard.startTime()}
-                                  onChange={(newValue) => {
-                                    if (
-                                      newValue &&
-                                      isValidDate(newValue.toDate())
-                                    ) {
-                                      setInvalidFormat(false);
-                                      setStartDate(dayjs(newValue));
-                                    } else {
-                                      setInvalidFormat(true);
-                                    }
-                                  }}
-                                  open={false}
-                                  renderInput={(params) => {
-                                    return (
-                                      <TextField
-                                        {...params}
-                                        inputProps={{
-                                          ...params.inputProps,
-                                          ...props,
-                                        }}
-                                      />
-                                    );
-                                  }}
-                                  value={dayjs(startDate)}
-                                />
-                              );
-                            }}
-                            renderPreview={() => {
-                              if (startDate) {
-                                return (
-                                  <Box ml={1}>
-                                    <FormattedTime
-                                      hour12={false}
-                                      value={startDate.format()}
-                                    />
-                                  </Box>
-                                );
-                              } else {
-                                return <></>;
-                              }
-                            }}
-                            value={dayjs(startDate).format()}
-                          />
-                        </Grid>
-
-                        <Grid item ml={1}>
-                          <ZUIPreviewableInput
-                            {...previewableProps}
-                            renderInput={(props) => {
-                              return (
-                                <DatePicker
-                                  inputFormat="DD-MM-YYYY"
-                                  label={messages.eventOverviewCard.endDate()}
-                                  onChange={(newValue) => {
-                                    if (
-                                      newValue &&
-                                      isValidDate(newValue.toDate())
-                                    ) {
-                                      if (
-                                        startDate &&
-                                        newValue &&
-                                        dateIsBefore(
-                                          startDate.toDate(),
-                                          newValue.toDate()
-                                        )
-                                      ) {
-                                        setInvalidFormat(false);
-                                        setStartDate(newValue);
-                                        setEndDate(newValue);
-                                      } else {
-                                        setInvalidFormat(false);
-                                        setEndDate(newValue);
-                                      }
-                                    } else {
-                                      setInvalidFormat(true);
-                                    }
-                                  }}
-                                  renderInput={(params) => {
-                                    if (
-                                      (endDate &&
-                                        startDate &&
-                                        !isSameDate(
-                                          startDate.toDate(),
-                                          endDate.toDate()
-                                        )) ||
-                                      showEndDate
-                                    ) {
-                                      return (
-                                        <TextField
-                                          {...params}
-                                          error={invalidFormat}
-                                          inputProps={{
-                                            ...params.inputProps,
-                                            ...props,
-                                          }}
-                                          sx={{ marginBottom: '15px' }}
-                                        />
-                                      );
-                                    } else if (
-                                      endDate &&
-                                      startDate &&
-                                      !showEndDate &&
-                                      isSameDate(
-                                        startDate.toDate(),
-                                        endDate.toDate()
-                                      )
-                                    ) {
-                                      return (
-                                        <Button
-                                          onClick={() => {
-                                            setShowEndDate(true);
-                                          }}
-                                          sx={{
-                                            marginBottom: 4.4,
-                                            width: '100%',
-                                          }}
-                                          variant="text"
-                                        >
-                                          {messages.eventOverviewCard.buttonEndDate()}
-                                        </Button>
-                                      );
-                                    } else {
-                                      return <></>;
-                                    }
-                                  }}
-                                  value={dayjs(endDate)}
-                                />
-                              );
-                            }}
-                            renderPreview={() => {
+    <ClickAwayListener {...clickAwayProps}>
+      <Box {...containerProps}>
+        <Card>
+          {!editable && (
+            <Box display="flex" justifyContent="flex-end" m={2}>
+              <Button startIcon={<EditIcon />} variant="outlined">
+                {messages.eventOverviewCard.editButton().toUpperCase()}
+              </Button>
+            </Box>
+          )}
+          <Grid container sx={{ marginTop: '100px' }}>
+            <Grid container m={2} sm xs={8}>
+              <Grid
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                }}
+                xs
+              >
+                <Grid item sx={{ alignItems: 'center' }}>
+                  <ZUIPreviewableInput
+                    {...previewableProps}
+                    renderInput={(props) => {
+                      return (
+                        <DatePicker
+                          inputFormat="DD-MM-YYYY"
+                          label={messages.eventOverviewCard.startDate()}
+                          onChange={(newValue) => {
+                            if (newValue && isValidDate(newValue.toDate())) {
+                              setInvalidFormat(false);
+                              setStartDate(dayjs(newValue));
                               if (
-                                endDate &&
-                                startDate &&
-                                !isSameDate(
-                                  startDate.toDate(),
+                                dateIsBefore(
+                                  newValue.toDate(),
                                   endDate.toDate()
                                 )
                               ) {
-                                return (
-                                  <Box ml={10}>
-                                    <Typography
-                                      color="secondary"
-                                      variant="subtitle1"
-                                    >
-                                      {messages.eventOverviewCard
-                                        .endDate()
-                                        .toUpperCase()}
-                                    </Typography>
-                                    <ZUIDate
-                                      datetime={new Date(
-                                        dayjs(endDate).format()
-                                      ).toISOString()}
-                                    />
-                                  </Box>
-                                );
-                              } else if (
-                                endDate &&
-                                startDate &&
-                                isSameDate(startDate.toDate(), endDate.toDate())
-                              ) {
-                                return (
-                                  <Box ml={10}>
-                                    <Typography
-                                      color="secondary"
-                                      variant="subtitle1"
-                                    >
-                                      {messages.eventOverviewCard
-                                        .endDate()
-                                        .toUpperCase()}
-                                    </Typography>
-                                    <Box mb={2.8} />
-                                  </Box>
-                                );
-                              } else {
-                                return <></>;
+                                setEndDate(newValue);
                               }
-                            }}
-                            value={dayjs(endDate).format() ?? ''}
+                            } else {
+                              setInvalidFormat(true);
+                            }
+                          }}
+                          renderInput={(params) => {
+                            return (
+                              <TextField
+                                {...params}
+                                error={invalidFormat}
+                                inputProps={{
+                                  ...params.inputProps,
+                                  ...props,
+                                }}
+                                sx={{ marginBottom: '15px' }}
+                              />
+                            );
+                          }}
+                          value={dayjs(startDate)}
+                        />
+                      );
+                    }}
+                    renderPreview={() => {
+                      return (
+                        <Box>
+                          <Typography color="secondary" variant="subtitle1">
+                            {messages.eventOverviewCard
+                              .startDate()
+                              .toUpperCase()}
+                          </Typography>
+                          <ZUIDate
+                            datetime={new Date(
+                              dayjs(startDate).format()
+                            ).toISOString()}
                           />
+                        </Box>
+                      );
+                    }}
+                    value={dayjs(startDate).format()}
+                  />
 
-                          <ZUIPreviewableInput
-                            {...previewableProps}
-                            renderInput={(props) => {
+                  <ZUIPreviewableInput
+                    {...previewableProps}
+                    renderInput={(props) => {
+                      return (
+                        <TimePicker
+                          ampm={false}
+                          inputFormat="HH:mm"
+                          label={messages.eventOverviewCard.startTime()}
+                          onChange={(newValue) => {
+                            if (newValue && isValidDate(newValue.toDate())) {
+                              setInvalidFormat(false);
+                              setStartDate(dayjs(newValue));
+                            } else {
+                              setInvalidFormat(true);
+                            }
+                          }}
+                          open={false}
+                          renderInput={(params) => {
+                            return (
+                              <TextField
+                                {...params}
+                                inputProps={{
+                                  ...params.inputProps,
+                                  ...props,
+                                }}
+                              />
+                            );
+                          }}
+                          value={dayjs(startDate)}
+                        />
+                      );
+                    }}
+                    renderPreview={() => {
+                      return (
+                        <Box>
+                          <FormattedTime
+                            hour12={false}
+                            value={startDate.format()}
+                          />
+                        </Box>
+                      );
+                    }}
+                    value={dayjs(startDate).format()}
+                  />
+                </Grid>
+
+                <Grid id={'wrap'} ml={1} sx={{ alignItems: 'center' }}>
+                  <ZUIPreviewableInput
+                    {...previewableProps}
+                    renderInput={(props) => {
+                      return (
+                        <DatePicker
+                          inputFormat="DD-MM-YYYY"
+                          label={messages.eventOverviewCard.endDate()}
+                          onChange={(newValue) => {
+                            if (newValue && isValidDate(newValue.toDate())) {
+                              if (
+                                newValue &&
+                                dateIsBefore(
+                                  startDate.toDate(),
+                                  newValue.toDate()
+                                )
+                              ) {
+                                setInvalidFormat(false);
+                                setStartDate(newValue);
+                                setEndDate(newValue);
+                              } else {
+                                setInvalidFormat(false);
+                                setEndDate(newValue);
+                              }
+                            } else {
+                              setInvalidFormat(true);
+                            }
+                          }}
+                          renderInput={(params) => {
+                            if (
+                              !isSameDate(
+                                startDate.toDate(),
+                                endDate.toDate()
+                              ) ||
+                              showEndDate
+                            ) {
                               return (
-                                <TimePicker
-                                  ampm={false}
-                                  inputFormat="HH:mm"
-                                  label={messages.eventOverviewCard.endTime()}
-                                  onChange={(newValue) => {
-                                    if (
-                                      newValue &&
-                                      isValidDate(newValue.toDate())
-                                    ) {
-                                      setInvalidFormat(false);
-                                      setEndDate(newValue);
-                                    } else {
-                                      setInvalidFormat(false);
-                                    }
+                                <TextField
+                                  {...params}
+                                  error={invalidFormat}
+                                  inputProps={{
+                                    ...params.inputProps,
+                                    ...props,
                                   }}
-                                  open={false}
-                                  renderInput={(params) => {
-                                    return (
-                                      <TextField
-                                        {...params}
-                                        error={invalidFormat}
-                                        inputProps={{
-                                          ...params.inputProps,
-                                          ...props,
-                                        }}
-                                      />
-                                    );
-                                  }}
-                                  value={dayjs(endDate)}
+                                  sx={{ marginBottom: '15px' }}
                                 />
                               );
-                            }}
-                            renderPreview={() => {
-                              if (endDate) {
-                                return (
-                                  <Box ml={10}>
-                                    <FormattedTime
-                                      hour12={false}
-                                      value={new Date(
-                                        dayjs(endDate).format()
-                                      ).toISOString()}
-                                    />
-                                  </Box>
-                                );
-                              } else {
-                                return <></>;
-                              }
-                            }}
-                            value={dayjs(endDate).format()}
-                          />
-                        </Grid>
-                      </Grid>
-
-                      <Divider
-                        flexItem
-                        orientation="vertical"
-                        sx={{ marginBottom: '10px', marginLeft: '10px' }}
-                      />
-
-                      <Grid sx={{ marginLeft: '10px', marginTop: 2 }} xs>
-                        <Grid item>
-                          <ZUIPreviewableInput
-                            {...previewableProps}
-                            renderInput={() => {
+                            } else {
                               return (
-                                <Box alignItems="center" display="flex">
-                                  <Autocomplete
-                                    disableClearable
-                                    fullWidth
-                                    getOptionLabel={(option) =>
-                                      option === 'CREATE_NEW_LOCATION'
-                                        ? messages.locationModal.createLocation()
-                                        : option.title
-                                    }
-                                    onChange={(ev, option) => {
-                                      if (option === 'CREATE_NEW_LOCATION') {
-                                        setLocationModalOpen(true);
-                                        return;
-                                      }
-                                      const location = locations?.find(
-                                        (location) => location.id === option.id
-                                      );
-                                      if (!location) {
-                                        return;
-                                      }
-                                      setLocationId(location.id);
-                                    }}
-                                    options={options}
-                                    renderInput={(params) => (
-                                      <TextField
-                                        {...params}
-                                        label={messages.eventOverviewCard.location()}
-                                        sx={{
-                                          backgroundColor: 'white',
-                                          borderRadius: '5px',
-                                        }}
-                                      />
-                                    )}
-                                    renderOption={(params, option) =>
-                                      option === 'CREATE_NEW_LOCATION' ? (
-                                        <li {...params}>
-                                          <Add sx={{ marginRight: 2 }} />
-                                          {messages.eventOverviewCard.createLocation()}
-                                        </li>
-                                      ) : (
-                                        <li {...params}>{option.title}</li>
-                                      )
-                                    }
-                                    value={options?.find(
-                                      (location) =>
-                                        location !== 'CREATE_NEW_LOCATION' &&
-                                        location.id ===
-                                          (locationId || eventData.location.id)
-                                    )}
-                                  />
-                                  <MapIcon
-                                    color="secondary"
-                                    onClick={() => setLocationModalOpen(true)}
-                                    sx={{ cursor: 'pointer', marginLeft: 1 }}
-                                  />
-                                  <LocationModal
-                                    locationId={
-                                      locationId || eventData.location.id
-                                    }
-                                    locations={locations || []}
-                                    onCreateLocation={(
-                                      newLocation: Partial<ZetkinLocation>
-                                    ) => {
-                                      locationsModel.addLocation(newLocation);
-                                    }}
-                                    onMapClose={() => {
-                                      setLocationModalOpen(false);
-                                    }}
-                                    onSelectLocation={(
-                                      location: ZetkinLocation
-                                    ) => setLocationId(location.id)}
-                                    open={locationModalOpen}
-                                  />
-                                </Box>
+                                <Grid container xs={6}>
+                                  <Grid item mt={2}>
+                                    <Button
+                                      onClick={() => {
+                                        setShowEndDate(true);
+                                      }}
+                                      sx={{
+                                        marginBottom: '19px',
+                                        width: 'max-content',
+                                      }}
+                                      variant="text"
+                                    >
+                                      {messages.eventOverviewCard.buttonEndDate()}
+                                    </Button>
+                                  </Grid>
+                                </Grid>
                               );
-                            }}
-                            renderPreview={() => {
-                              if (eventData.location) {
-                                return (
-                                  <Box ml={4}>
-                                    <Box
-                                      sx={{
-                                        display: 'flex',
-                                        justifyContent: 'space-between',
-                                      }}
-                                    >
-                                      <Typography
-                                        color="secondary"
-                                        variant="subtitle1"
-                                      >
-                                        {messages.eventOverviewCard
-                                          .location()
-                                          .toUpperCase()}
-                                      </Typography>
-                                    </Box>
-                                    <Typography
-                                      sx={{
-                                        alignItems: 'flex-start',
-                                        display: 'flex',
-                                      }}
-                                      variant="body1"
-                                    >
-                                      {eventData.location.title}
-                                    </Typography>
-                                  </Box>
-                                );
-                              } else {
-                                return (
-                                  <Box ml={4}>
-                                    <Typography
-                                      color="secondary"
-                                      variant="subtitle1"
-                                    >
-                                      {messages.eventOverviewCard
-                                        .location()
-                                        .toUpperCase()}
-                                    </Typography>
-                                    <Typography
-                                      sx={{
-                                        alignItems: 'flex-start',
-                                        display: 'flex',
-                                      }}
-                                      variant="body1"
-                                    >
-                                      {messages.eventOverviewCard.noLocation()}
-                                    </Typography>
-                                  </Box>
-                                );
-                              }
-                            }}
-                            value={locationId || eventData.location.id}
-                          />
-                        </Grid>
+                            }
+                          }}
+                          value={dayjs(endDate)}
+                        />
+                      );
+                    }}
+                    renderPreview={() => {
+                      if (!isSameDate(startDate.toDate(), endDate.toDate())) {
+                        return (
+                          <Box ml={10}>
+                            <Typography color="secondary" variant="subtitle1">
+                              {messages.eventOverviewCard
+                                .endDate()
+                                .toUpperCase()}
+                            </Typography>
+                            <ZUIDate
+                              datetime={new Date(
+                                dayjs(endDate).format()
+                              ).toISOString()}
+                            />
+                          </Box>
+                        );
+                      } else {
+                        return (
+                          <Box ml={10}>
+                            <Typography color="secondary" variant="subtitle1">
+                              {messages.eventOverviewCard
+                                .endDate()
+                                .toUpperCase()}
+                            </Typography>
+                            <Box mb={3}></Box>
+                          </Box>
+                        );
+                      }
+                    }}
+                    value={dayjs(endDate).format()}
+                  />
 
-                        <Grid item mt={2}>
-                          <ZUIPreviewableInput
-                            {...previewableProps}
-                            renderInput={(props) => (
+                  <ZUIPreviewableInput
+                    {...previewableProps}
+                    renderInput={(props) => {
+                      return (
+                        <TimePicker
+                          ampm={false}
+                          inputFormat="HH:mm"
+                          label={messages.eventOverviewCard.endTime()}
+                          onChange={(newValue) => {
+                            if (newValue && isValidDate(newValue.toDate())) {
+                              setInvalidFormat(false);
+                              setEndDate(newValue);
+                            } else {
+                              setInvalidFormat(false);
+                            }
+                          }}
+                          open={false}
+                          renderInput={(params) => {
+                            return (
                               <TextField
-                                fullWidth
-                                inputProps={props}
-                                label={messages.eventOverviewCard.url()}
-                                onChange={(ev) => setLink(ev.target.value)}
-                                sx={{ marginBottom: 2 }}
-                                value={link}
+                                {...params}
+                                error={invalidFormat}
+                                inputProps={{
+                                  ...params.inputProps,
+                                  ...props,
+                                }}
+                              />
+                            );
+                          }}
+                          value={dayjs(endDate)}
+                        />
+                      );
+                    }}
+                    renderPreview={() => {
+                      return (
+                        <Box ml={10}>
+                          <FormattedTime
+                            hour12={false}
+                            value={new Date(
+                              dayjs(endDate).format()
+                            ).toISOString()}
+                          />
+                        </Box>
+                      );
+                    }}
+                    value={dayjs(endDate).format()}
+                  />
+                </Grid>
+              </Grid>
+
+              <Divider
+                flexItem
+                orientation="vertical"
+                sx={{ marginBottom: '10px', marginLeft: '10px' }}
+              />
+
+              <Grid sx={{ marginLeft: '10px' }} xs>
+                <Grid item sx={{ alignItems: 'center' }}>
+                  <ZUIPreviewableInput
+                    {...previewableProps}
+                    renderInput={() => {
+                      return (
+                        <Box alignItems="center" display="flex">
+                          <Autocomplete
+                            disableClearable
+                            fullWidth
+                            getOptionLabel={(option) =>
+                              option === 'CREATE_NEW_LOCATION'
+                                ? messages.locationModal.createLocation()
+                                : option.title
+                            }
+                            onChange={(ev, option) => {
+                              if (option === 'CREATE_NEW_LOCATION') {
+                                setLocationModalOpen(true);
+                                return;
+                              }
+                              const location = locations?.find(
+                                (location) => location.id === option.id
+                              );
+                              if (!location) {
+                                return;
+                              }
+                              setLocationId(location.id);
+                            }}
+                            options={options}
+                            renderInput={(params) => (
+                              <TextField
+                                {...params}
+                                label={messages.eventOverviewCard.location()}
+                                sx={{
+                                  backgroundColor: 'white',
+                                  borderRadius: '5px',
+                                }}
                               />
                             )}
-                            renderPreview={() => {
-                              if (eventData.url && eventData.url !== '') {
-                                return (
-                                  <Box ml={4}>
-                                    <Typography
-                                      color={theme.palette.text.secondary}
-                                      variant="subtitle1"
-                                    >
-                                      {messages.eventOverviewCard
-                                        .url()
-                                        .toUpperCase()}
-                                    </Typography>
-                                    <Typography
-                                      sx={{
-                                        alignItems: 'flex-start',
-                                        display: 'flex',
-                                      }}
-                                      variant="body1"
-                                    >
-                                      {eventData.url}
-                                      <Link
-                                        href={getWorkingUrl(eventData.url)}
-                                        sx={{ marginLeft: '8px' }}
-                                        target="_blank"
-                                      >
-                                        <OpenInNewIcon color="primary" />
-                                      </Link>
-                                    </Typography>
-                                  </Box>
-                                );
-                              } else {
-                                return <></>;
-                              }
-                            }}
-                            value={link || ''}
+                            renderOption={(params, option) =>
+                              option === 'CREATE_NEW_LOCATION' ? (
+                                <li {...params}>
+                                  <Add sx={{ marginRight: 2 }} />
+                                  {messages.eventOverviewCard.createLocation()}
+                                </li>
+                              ) : (
+                                <li {...params}>{option.title}</li>
+                              )
+                            }
+                            value={options?.find(
+                              (location) =>
+                                location !== 'CREATE_NEW_LOCATION' &&
+                                location.id === locationId
+                            )}
                           />
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                  </Grid>
+                          <MapIcon
+                            color="secondary"
+                            onClick={() => setLocationModalOpen(true)}
+                            sx={{ cursor: 'pointer', marginLeft: 1 }}
+                          />
+                          <LocationModal
+                            locationId={locationId}
+                            locations={locations || []}
+                            onCreateLocation={(
+                              newLocation: Partial<ZetkinLocation>
+                            ) => {
+                              locationsModel.addLocation(newLocation);
+                            }}
+                            onMapClose={() => {
+                              setLocationModalOpen(false);
+                            }}
+                            onSelectLocation={(location: ZetkinLocation) =>
+                              setLocationId(location.id)
+                            }
+                            open={locationModalOpen}
+                          />
+                        </Box>
+                      );
+                    }}
+                    renderPreview={() => {
+                      if (data.location) {
+                        return (
+                          <Box ml={4}>
+                            <Box
+                              sx={{
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                              }}
+                            >
+                              <Typography color="secondary" variant="subtitle1">
+                                {messages.eventOverviewCard
+                                  .location()
+                                  .toUpperCase()}
+                              </Typography>
+                            </Box>
+                            <Typography
+                              sx={{
+                                alignItems: 'flex-start',
+                                display: 'flex',
+                              }}
+                              variant="body1"
+                            >
+                              {data.location.title}
+                            </Typography>
+                          </Box>
+                        );
+                      } else {
+                        return (
+                          <Box ml={4}>
+                            <Typography color="secondary" variant="subtitle1">
+                              {messages.eventOverviewCard
+                                .location()
+                                .toUpperCase()}
+                            </Typography>
+                            <Typography
+                              sx={{
+                                alignItems: 'flex-start',
+                                display: 'flex',
+                              }}
+                              variant="body1"
+                            >
+                              {messages.eventOverviewCard.noLocation()}
+                            </Typography>
+                          </Box>
+                        );
+                      }
+                    }}
+                    value={locationId}
+                  />
                 </Grid>
-                <Box p={1}>
+
+                <Grid item mt={2}>
                   <ZUIPreviewableInput
                     {...previewableProps}
                     renderInput={(props) => (
                       <TextField
                         fullWidth
                         inputProps={props}
-                        label={messages.eventOverviewCard.description()}
-                        multiline
-                        onChange={(ev) => setInfoText(ev.target.value)}
-                        rows={4}
-                        value={infoText}
+                        label={messages.eventOverviewCard.url()}
+                        onChange={(ev) => setLink(ev.target.value)}
+                        sx={{ marginBottom: 2 }}
+                        value={link}
                       />
                     )}
                     renderPreview={() => {
-                      if (eventData.info_text !== '') {
+                      if (data.url && data.url !== '') {
                         return (
-                          <Box p={1}>
+                          <Box ml={4}>
                             <Typography
                               color={theme.palette.text.secondary}
                               variant="subtitle1"
                             >
-                              {messages.eventOverviewCard
-                                .description()
-                                .toUpperCase()}
+                              {messages.eventOverviewCard.url().toUpperCase()}
                             </Typography>
-                            <Typography variant="body1">
-                              {eventData.info_text}
+                            <Typography
+                              sx={{
+                                alignItems: 'flex-start',
+                                display: 'flex',
+                              }}
+                              variant="body1"
+                            >
+                              {data.url}
+                              <Link
+                                href={getWorkingUrl(data.url)}
+                                sx={{ marginLeft: '8px' }}
+                                target="_blank"
+                              >
+                                <OpenInNewIcon color="primary" />
+                              </Link>
                             </Typography>
                           </Box>
                         );
@@ -671,15 +558,49 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                         return <></>;
                       }
                     }}
-                    value={infoText}
+                    value={link || ''}
                   />
-                </Box>
-              </Card>
-            </Box>
-          </ClickAwayListener>
-        );
-      }}
-    </ZUIFuture>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Box p={2}>
+            <ZUIPreviewableInput
+              {...previewableProps}
+              renderInput={(props) => (
+                <TextField
+                  fullWidth
+                  inputProps={props}
+                  label={messages.eventOverviewCard.description()}
+                  multiline
+                  onChange={(ev) => setInfoText(ev.target.value)}
+                  rows={4}
+                  value={infoText}
+                />
+              )}
+              renderPreview={() => {
+                if (data.info_text !== '') {
+                  return (
+                    <Box>
+                      <Typography
+                        color={theme.palette.text.secondary}
+                        variant="subtitle1"
+                      >
+                        {messages.eventOverviewCard.description().toUpperCase()}
+                      </Typography>
+                      <Typography variant="body1">{data.info_text}</Typography>
+                    </Box>
+                  );
+                } else {
+                  return <></>;
+                }
+              }}
+              value={infoText}
+            />
+          </Box>
+        </Card>
+      </Box>
+    </ClickAwayListener>
   );
 };
 
