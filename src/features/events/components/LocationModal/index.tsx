@@ -159,7 +159,13 @@ const LocationModal: FC<LocationModalProps> = ({
           {inMovingState && selectedLocation && !pendingLocation && (
             <MoveLocationCard
               location={selectedLocation}
-              onClose={() => setInMovingState(false)}
+              onCancel={() => {
+                setInMovingState(false);
+              }}
+              onClose={() => {
+                setInMovingState(false);
+                setSelectedLocationId(null);
+              }}
               onSaveLocation={() => {
                 if (newLatLng) {
                   model.setLocationLatLng(

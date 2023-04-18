@@ -24,12 +24,14 @@ const useStyles = makeStyles((theme) => ({
 
 interface MoveLocationCardProps {
   location: ZetkinLocation;
+  onCancel: () => void;
   onClose: () => void;
   onSaveLocation: (newLatLng: { lat: number; lng: number }) => void;
 }
 
 const MoveLocationCard: FC<MoveLocationCardProps> = ({
   location,
+  onCancel,
   onClose,
   onSaveLocation,
 }) => {
@@ -65,7 +67,7 @@ const MoveLocationCard: FC<MoveLocationCardProps> = ({
         </Typography>
       </Box>
       <Box display="flex" justifyContent="space-between" padding={2}>
-        <Button onClick={onClose}>{messages.locationModal.cancel()}</Button>
+        <Button onClick={onCancel}>{messages.locationModal.cancel()}</Button>
         <Button
           onClick={() => onSaveLocation({ lat: 3, lng: 4 })}
           variant="contained"
