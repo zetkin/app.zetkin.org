@@ -1,4 +1,3 @@
-import { Close } from '@mui/icons-material';
 import {
   Box,
   Button,
@@ -6,6 +5,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
+import { Close, OpenWith } from '@mui/icons-material';
 import { FC, useCallback, useEffect, useState } from 'react';
 
 import LocationsModel from 'features/events/models/LocationsModel';
@@ -19,6 +19,7 @@ import ZUIPreviewableInput, {
 interface LocationDetailsCardProps {
   model: LocationsModel;
   onClose: () => void;
+  onMove: () => void;
   onUseLocation: () => void;
   location: ZetkinLocation;
 }
@@ -26,6 +27,7 @@ interface LocationDetailsCardProps {
 const LocationDetailsCard: FC<LocationDetailsCardProps> = ({
   model,
   onClose,
+  onMove,
   onUseLocation,
   location,
 }) => {
@@ -161,7 +163,10 @@ const LocationDetailsCard: FC<LocationDetailsCardProps> = ({
           />
         </Box>
       </ClickAwayListener>
-      <Box display="flex" justifyContent="flex-end" paddingTop={2}>
+      <Box display="flex" justifyContent="space-between" paddingTop={2}>
+        <Button onClick={onMove} startIcon={<OpenWith />}>
+          {messages.locationModal.move()}
+        </Button>
         <Button onClick={onUseLocation} variant="contained">
           {messages.locationModal.useLocation()}
         </Button>
