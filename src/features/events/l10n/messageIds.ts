@@ -2,10 +2,16 @@ import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('feat.events', {
   eventOverviewCard: {
+    buttonEndDate: m('+ End date'),
     createLocation: m('Create new location'),
     description: m('Description'),
     editButton: m('Edit event information'),
+    endDate: m('End'),
+    endTime: m('End time'),
     location: m('Location'),
+    noLocation: m('No physical location'),
+    startDate: m('Start'),
+    startTime: m('Start time'),
     url: m('Link'),
   },
   eventParticipantsCard: {
