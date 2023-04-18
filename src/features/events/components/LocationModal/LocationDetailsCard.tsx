@@ -104,9 +104,7 @@ const LocationDetailsCard: FC<LocationDetailsCardProps> = ({
               )}
               renderPreview={() => {
                 if (location.title !== '') {
-                  return (
-                    <Typography component="h5">{location.title}</Typography>
-                  );
+                  return <Typography variant="h5">{location.title}</Typography>;
                 } else {
                   return <></>;
                 }
