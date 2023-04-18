@@ -66,8 +66,7 @@ const LocationModal: FC<LocationModalProps> = ({
     ZetkinLocation,
     'lat' | 'lng'
   > | null>(null);
-  //RE-NAME THIS
-  const [inMovingState, setInMovingState] = useState(false);
+  const [inMoveState, setInMoveState] = useState(false);
   const [newLatLng, setNewLatLng] =
     useState<Pick<ZetkinLocation, 'lat' | 'lng'>>();
 
@@ -76,7 +75,7 @@ const LocationModal: FC<LocationModalProps> = ({
   );
 
   const cardIsFullHeight =
-    (!!pendingLocation || !!selectedLocation) && !inMovingState;
+    (!!pendingLocation || !!selectedLocation) && !inMoveState;
   const classes = useStyles({ cardIsFullHeight });
 
   useEffect(() => {
@@ -88,7 +87,7 @@ const LocationModal: FC<LocationModalProps> = ({
     <Dialog fullWidth maxWidth="lg" onClose={onMapClose} open={open}>
       <Box padding={2}>
         <Map
-          inMoveState={inMovingState}
+          inMoveState={inMoveState}
           locations={locations}
           onMapClick={(latlng: PendingLocation) => {
             setSelectedLocationId(null);
@@ -129,7 +128,7 @@ const LocationModal: FC<LocationModalProps> = ({
               options={locations}
             />
           )}
-          {selectedLocation && !inMovingState && (
+          {selectedLocation && !inMoveState && (
             <LocationDetailsCard
               location={selectedLocation}
               model={model}
@@ -137,7 +136,7 @@ const LocationModal: FC<LocationModalProps> = ({
                 setSearchString('');
                 setSelectedLocationId(null);
               }}
-              onMove={() => setInMovingState(true)}
+              onMove={() => setInMoveState(true)}
               onUseLocation={() => {
                 onSelectLocation(selectedLocation);
                 onMapClose();
@@ -156,14 +155,14 @@ const LocationModal: FC<LocationModalProps> = ({
               pendingLocation={pendingLocation}
             />
           )}
-          {inMovingState && selectedLocation && !pendingLocation && (
+          {inMoveState && selectedLocation && !pendingLocation && (
             <MoveLocationCard
               location={selectedLocation}
               onCancel={() => {
-                setInMovingState(false);
+                setInMoveState(false);
               }}
               onClose={() => {
-                setInMovingState(false);
+                setInMoveState(false);
                 setSelectedLocationId(null);
               }}
               onSaveLocation={() => {
@@ -174,7 +173,7 @@ const LocationModal: FC<LocationModalProps> = ({
                     newLatLng.lng
                   );
                 }
-                setInMovingState(false);
+                setInMoveState(false);
               }}
             />
           )}

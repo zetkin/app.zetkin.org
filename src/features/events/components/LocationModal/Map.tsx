@@ -53,10 +53,10 @@ const Map: FC<MapProps> = ({
   selectedLocation,
   searchString,
 }) => {
-  const [newPosition, setNewPosition] = useState<{
-    lat: number;
-    lng: number;
-  } | null>(null);
+  const [newPosition, setNewPosition] = useState<Pick<
+    ZetkinLocation,
+    'lat' | 'lng'
+  > | null>(null);
 
   const selectedMarkerRef = useRef<MarkerType>(null);
 
