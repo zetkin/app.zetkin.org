@@ -157,7 +157,7 @@ const LocationDetailsCard: FC<LocationDetailsCardProps> = ({
                 </Typography>
               </Box>
             )}
-            value={location.title}
+            value={location.info_text}
           />
         </Box>
       </ClickAwayListener>
