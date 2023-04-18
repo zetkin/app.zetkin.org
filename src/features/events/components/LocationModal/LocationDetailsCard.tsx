@@ -148,10 +148,12 @@ const LocationDetailsCard: FC<LocationDetailsCardProps> = ({
               <Box paddingTop={1}>
                 <Typography
                   color="secondary"
-                  fontStyle={location.info_text ? 'inherit' : 'italic'}
+                  fontStyle={
+                    location.info_text.trim().length ? 'inherit' : 'italic'
+                  }
                   sx={{ overflowWrap: 'anywhere' }}
                 >
-                  {location.info_text
+                  {location.info_text.trim().length
                     ? location.info_text
                     : messages.locationModal.noDescription()}
                 </Typography>
