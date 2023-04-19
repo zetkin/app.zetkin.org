@@ -56,6 +56,15 @@ export default makeMessages('feat.events', {
     title: m('Location name'),
     useLocation: m('Use location'),
   },
+  participantSummaryCard: {
+    bookButton: m('Book all'),
+    booked: m('Notifications'),
+    header: m('Participants'),
+    pending: m('Pending sign-ups'),
+    remindButton: m('Remind all'),
+    reqParticipantsHelperText: m('The minimum number of participants required'),
+    reqParticipantsLabel: m('Required participants'),
+  },
   state: {
     cancelled: m('Cancelled'),
     draft: m('Draft'),
