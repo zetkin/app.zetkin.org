@@ -1,6 +1,7 @@
 import { GetServerSideProps } from 'next';
 import { Grid } from '@mui/material';
 
+import AddPersonButton from 'features/events/components/AddPersonButton';
 import EventDataModel from 'features/events/models/EventDataModel';
 import EventLayout from 'features/events/layout/EventLayout';
 import { PageWithLayout } from 'utils/types';
@@ -8,7 +9,6 @@ import ParticipantSummaryCard from 'features/events/components/ParticipantSummar
 import { scaffold } from 'utils/next';
 import useModel from 'core/useModel';
 import ZUIFuture from 'zui/ZUIFuture';
-import AddPersonButton from 'features/events/components/AddPersonButton';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   async (ctx) => {
@@ -50,7 +50,9 @@ const ParticipantsPage: PageWithLayout<ParticipantsProps> = ({
             <Grid item md={8} xs={12}>
               <ParticipantSummaryCard model={dataModel} />
             </Grid>
-            <AddPersonButton />
+            <Grid item md={12} container justifyContent="flex-end">
+              <AddPersonButton />
+            </Grid>
           </Grid>
         );
       }}
