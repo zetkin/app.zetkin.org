@@ -75,7 +75,7 @@ const SimpleLayout: FunctionComponent<SimpleLayoutProps> = ({
           p={fixedHeight ? 0 : 3}
           position="relative"
         >
-          <PaneProvider>{children}</PaneProvider>
+          <PaneProvider fixedHeight={!!fixedHeight}>{children}</PaneProvider>
         </Box>
       </Box>
     </DefaultLayout>
