@@ -24,6 +24,14 @@ export default makeMessages('feat.events', {
     reqParticipantsHelperText: m('The minimum number of participants required'),
     reqParticipantsLabel: m('Required participants'),
   },
+  eventParticipantsList: {
+    bookedParticipants: m('Booked Participants'),
+    columnEmail: m('Email'),
+    columnName: m('Name'),
+    columnNotified: m('Notified'),
+    columnPhone: m('Phone'),
+    signUps: m('Sign-ups'),
+  },
   form: {
     activity: m('Activity'),
     campaign: m('Campaign'),
