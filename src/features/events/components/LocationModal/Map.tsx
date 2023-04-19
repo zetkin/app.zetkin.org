@@ -1,27 +1,19 @@
 import 'leaflet/dist/leaflet.css';
 import Fuse from 'fuse.js';
+import { renderToStaticMarkup } from 'react-dom/server';
 import { FC, useRef, useState } from 'react';
 import { MapContainer, Marker, TileLayer, useMap } from 'react-leaflet';
 
+import BasicMarker from './BasicMarker';
+import SelectedMarker from './SelectedMarker';
+import { useTheme } from '@mui/material';
 import { ZetkinLocation } from 'utils/types/zetkin';
 import {
-  icon,
+  divIcon,
   latLngBounds,
   Map as MapType,
   Marker as MarkerType,
 } from 'leaflet';
-
-const selectedIcon = icon({
-  iconAnchor: [12, 32],
-  iconSize: [25, 32],
-  iconUrl: '/selectedMarker.png',
-});
-
-const basicIcon = icon({
-  iconAnchor: [12, 32],
-  iconSize: [25, 32],
-  iconUrl: '/basicMarker.png',
-});
 
 interface MapProps {
   inMoveState: boolean;
@@ -53,6 +45,7 @@ const Map: FC<MapProps> = ({
   selectedLocation,
   searchString,
 }) => {
+  const theme = useTheme();
   const [newPosition, setNewPosition] = useState<Pick<
     ZetkinLocation,
     'lat' | 'lng'
@@ -115,6 +108,7 @@ const Map: FC<MapProps> = ({
                     draggable={inMoveState && isSelectedMarker}
                     eventHandlers={{
                       click: (evt) => {
+                        evt.originalEvent.stopPropagation();
                         setNewPosition(null);
                         map.setView(evt.latlng, 17);
                         onMarkerClick(location.id);
@@ -130,7 +124,22 @@ const Map: FC<MapProps> = ({
                         }
                       },
                     }}
-                    icon={isSelectedMarker ? selectedIcon : basicIcon}
+                    icon={
+                      isSelectedMarker
+                        ? divIcon({
+                            className: '',
+                            html: renderToStaticMarkup(<SelectedMarker />),
+                          })
+                        : divIcon({
+                            className: '',
+                            html: renderToStaticMarkup(
+                              <BasicMarker
+                                color={theme.palette.primary.main}
+                                events={location.title.length}
+                              />
+                            ),
+                          })
+                    }
                     position={
                       isSelectedMarker && newPosition && inMoveState
                         ? newPosition
@@ -141,7 +150,10 @@ const Map: FC<MapProps> = ({
               })}
               {pendingLocation && (
                 <Marker
-                  icon={selectedIcon}
+                  icon={divIcon({
+                    className: '',
+                    html: renderToStaticMarkup(<SelectedMarker />),
+                  })}
                   position={[pendingLocation.lat, pendingLocation.lng]}
                 />
               )}
