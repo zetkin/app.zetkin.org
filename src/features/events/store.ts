@@ -1,14 +1,17 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { remoteItem, remoteList, RemoteList } from 'utils/storeUtils';
 import {
+  ZetkinActivity,
   ZetkinEvent,
   ZetkinEventParticipant,
   ZetkinEventResponse,
+  ZetkinEventTypePostBody,
   ZetkinLocation,
 } from 'utils/types/zetkin';
 
 export interface EventsStoreSlice {
   eventList: RemoteList<ZetkinEvent>;
+  typeList: RemoteList<ZetkinActivity>;
   locationList: RemoteList<ZetkinLocation>;
   participantsByEventId: Record<number, RemoteList<ZetkinEventParticipant>>;
   respondentsByEventId: Record<number, RemoteList<ZetkinEventResponse>>;
@@ -19,6 +22,7 @@ const initialState: EventsStoreSlice = {
   locationList: remoteList(),
   participantsByEventId: {},
   respondentsByEventId: {},
+  typeList: remoteList(),
 };
 
 const eventsSlice = createSlice({
@@ -125,7 +129,6 @@ const eventsSlice = createSlice({
       state.participantsByEventId[eventId] = remoteList(participants);
       state.participantsByEventId[eventId].loaded = new Date().toISOString();
     },
-
     participantsReminded: (state, action: PayloadAction<number>) => {
       const eventId = action.payload;
       state.participantsByEventId[eventId].items.map((item) => {
@@ -150,6 +153,29 @@ const eventsSlice = createSlice({
       state.respondentsByEventId[eventId] = remoteList(respondents);
       state.respondentsByEventId[eventId].loaded = new Date().toISOString();
     },
+    typeAdd: (
+      state,
+      /* eslint-disable-next-line */
+      action: PayloadAction<[number, ZetkinEventTypePostBody]>
+    ) => {
+      state.typeList.isLoading = true;
+    },
+    typeAdded: (state, action: PayloadAction<ZetkinActivity>) => {
+      const data = action.payload;
+
+      state.typeList.items = state.typeList.items.concat([
+        remoteItem(data.id, { data: data, isLoading: false }),
+      ]);
+    },
+    /* eslint-disable-next-line */
+    typesLoad: (state, action: PayloadAction<number>) => {
+      state.typeList.isLoading = true;
+    },
+    typesLoaded: (state, action: PayloadAction<[number, ZetkinActivity[]]>) => {
+      const [, eventTypes] = action.payload;
+      state.typeList = remoteList(eventTypes);
+      state.typeList.loaded = new Date().toISOString();
+    },
   },
 });
 
@@ -172,4 +198,8 @@ export const {
   participantsReminded,
   respondentsLoad,
   respondentsLoaded,
+  typeAdd,
+  typeAdded,
+  typesLoad,
+  typesLoaded,
 } = eventsSlice.actions;

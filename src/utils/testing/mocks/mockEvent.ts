@@ -4,6 +4,7 @@ import { ZetkinEvent } from 'utils/types/zetkin';
 
 const event: ZetkinEvent = {
   activity: {
+    id: 1,
     title: 'Active activity',
   },
   campaign: {
