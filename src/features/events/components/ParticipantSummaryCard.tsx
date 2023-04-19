@@ -148,8 +148,6 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({ model }) => {
                   }}
                   startIcon={<Check />}
                   sx={{
-                    borderColor: 'statusColors.blue',
-                    color: 'statusColors.blue',
                     marginLeft: 2,
                   }}
                   variant="outlined"
@@ -173,8 +171,6 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({ model }) => {
                   }}
                   startIcon={<Check />}
                   sx={{
-                    borderColor: 'statusColors.blue',
-                    color: 'statusColors.blue',
                     marginLeft: 2,
                   }}
                   variant="outlined"
