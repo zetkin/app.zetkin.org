@@ -134,7 +134,7 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({ model }) => {
       >
         <Box display="flex" justifyContent="space-between">
           <Box display="flex" flexDirection="column">
-            <Typography color={'secondary'} component="h6" variant="subtitle1">
+            <Typography color={'secondary'}>
               {messages.participantSummaryCard.pending()}
             </Typography>
             <Box display="flex">
@@ -158,7 +158,7 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({ model }) => {
             </Box>
           </Box>
           <Box display="flex" flexDirection="column">
-            <Typography color={'secondary'} component="h6" variant="subtitle1">
+            <Typography color={'secondary'}>
               {messages.participantSummaryCard.booked()}
             </Typography>
             <Box display="flex">
