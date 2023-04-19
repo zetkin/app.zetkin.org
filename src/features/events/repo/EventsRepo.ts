@@ -27,10 +27,10 @@ import {
 import { IFuture, PromiseFuture, RemoteItemFuture } from 'core/caching/futures';
 import {
   ZetkinActivity,
-  ZetkinActivityBody,
   ZetkinEvent,
   ZetkinEventParticipant,
   ZetkinEventResponse,
+  ZetkinEventTypePostBody,
   ZetkinLocation,
 } from 'utils/types/zetkin';
 
@@ -74,7 +74,7 @@ export default class EventsRepo {
     this._store.dispatch(participantAdded([eventId, participant]));
   }
 
-  addType(orgId: number, data: ZetkinActivityBody) {
+  addType(orgId: number, data: ZetkinEventTypePostBody) {
     this._store.dispatch(typeAdd([orgId, data]));
     this._apiClient
       .post<ZetkinActivity>(`/api/orgs/${orgId}/activities`, data)

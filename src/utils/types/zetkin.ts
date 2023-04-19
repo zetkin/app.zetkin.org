@@ -356,8 +356,7 @@ export interface ZetkinActivity {
   info_text: string | null;
 }
 
-export interface ZetkinActivityBody {
-  activity_id: number;
+export interface ZetkinEventTypePostBody {
   title: string;
 }
 

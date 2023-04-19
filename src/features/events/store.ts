@@ -2,10 +2,10 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { remoteItem, remoteList, RemoteList } from 'utils/storeUtils';
 import {
   ZetkinActivity,
-  ZetkinActivityBody,
   ZetkinEvent,
   ZetkinEventParticipant,
   ZetkinEventResponse,
+  ZetkinEventTypePostBody,
   ZetkinLocation,
 } from 'utils/types/zetkin';
 
@@ -137,7 +137,7 @@ const eventsSlice = createSlice({
     typeAdd: (
       state,
       /* eslint-disable-next-line */
-      action: PayloadAction<[number, ZetkinActivityBody]>
+      action: PayloadAction<[number, ZetkinEventTypePostBody]>
     ) => {
       state.typeList.isLoading = true;
     },

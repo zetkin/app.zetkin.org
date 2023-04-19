@@ -146,7 +146,7 @@ const EventTypeAutocomplete: FC<EventTypeAutocompleteProps> = ({
         onBlur={() => onBlur()}
         onChange={(_, value) => {
           if (value.createType) {
-            typesModel.addType(0, value.title!);
+            typesModel.addType(value.title!);
             setCreatedType(value.title!);
           }
 
