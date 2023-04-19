@@ -37,6 +37,10 @@ export default class EventDataModel extends ModelBase {
     return this._repo.getEventParticipants(this._orgId, this._eventId);
   }
 
+  getSignUps(): IFuture<ZetkinEventParticipant[]> {
+    return this._repo.getEventSignUps(this._orgId, this._eventId);
+  }
+
   setLocation(location: ZetkinLocation) {
     this._repo.updateEvent(this._orgId, this._eventId, {
       location_id: location.id,
