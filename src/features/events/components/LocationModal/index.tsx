@@ -9,17 +9,18 @@ import 'leaflet/dist/leaflet.css';
 import CreateLocationCard from './CreateLocationCard';
 import LocationDetailsCard from './LocationDetailsCard';
 import LocationSearch from './LocationSearch';
+import LocationsModel from 'features/events/models/LocationsModel';
 import messageIds from 'features/events/l10n/messageIds';
 import { useMessages } from 'core/i18n';
 import { ZetkinLocation } from 'utils/types/zetkin';
 
 interface StyleProps {
-  isLong: boolean;
+  cardIsFullHeight: boolean;
 }
 
 const useStyles = makeStyles<Theme, StyleProps>(() => ({
   overlay: {
-    bottom: ({ isLong }) => (isLong ? 64 : ''),
+    bottom: ({ cardIsFullHeight }) => (cardIsFullHeight ? 64 : ''),
     display: 'flex',
     justifyContent: 'flex-end',
     justifySelf: 'flex-end',
@@ -39,6 +40,7 @@ export type PendingLocation = {
 
 interface LocationModalProps {
   locations: ZetkinLocation[];
+  model: LocationsModel;
   onCreateLocation: (newLocation: Partial<ZetkinLocation>) => void;
   onMapClose: () => void;
   onSelectLocation: (location: ZetkinLocation) => void;
@@ -49,6 +51,7 @@ interface LocationModalProps {
 const Map = dynamic(() => import('./Map'), { ssr: false });
 const LocationModal: FC<LocationModalProps> = ({
   locations,
+  model,
   onCreateLocation,
   onMapClose,
   onSelectLocation,
@@ -58,9 +61,6 @@ const LocationModal: FC<LocationModalProps> = ({
   const messages = useMessages(messageIds);
   const [searchString, setSearchString] = useState('');
   const [selectedLocationId, setSelectedLocationId] = useState(locationId);
-  const [focusedMarker, setFocusedMarker] = useState<
-    { lat: number; lng: number } | undefined
-  >();
   const [pendingLocation, setPendingLocation] = useState<Pick<
     ZetkinLocation,
     'lat' | 'lng'
@@ -70,8 +70,8 @@ const LocationModal: FC<LocationModalProps> = ({
     (location) => location.id === selectedLocationId
   );
 
-  const isLong = !!pendingLocation || !!selectedLocation;
-  const classes = useStyles({ isLong });
+  const cardIsFullHeight = !!pendingLocation || !!selectedLocation;
+  const classes = useStyles({ cardIsFullHeight });
 
   useEffect(() => {
     setSelectedLocationId(locationId);
@@ -82,7 +82,6 @@ const LocationModal: FC<LocationModalProps> = ({
     <Dialog fullWidth maxWidth="lg" onClose={onMapClose} open={open}>
       <Box padding={2}>
         <Map
-          focusedMarker={focusedMarker}
           locations={locations}
           onMapClick={(latlng: PendingLocation) => {
             setSelectedLocationId(null);
@@ -97,7 +96,6 @@ const LocationModal: FC<LocationModalProps> = ({
             }
             setPendingLocation(null);
             setSelectedLocationId(location.id);
-            setFocusedMarker({ lat: location.lat, lng: location.lng });
           }}
           pendingLocation={pendingLocation}
           searchString={searchString}
@@ -113,7 +111,6 @@ const LocationModal: FC<LocationModalProps> = ({
                 if (!location?.lat || !location?.lng) {
                   return;
                 }
-                setFocusedMarker({ lat: location.lat, lng: location.lng });
                 setSelectedLocationId(location.id);
                 setSearchString('');
               }}
@@ -125,6 +122,7 @@ const LocationModal: FC<LocationModalProps> = ({
           {selectedLocation && (
             <LocationDetailsCard
               location={selectedLocation}
+              model={model}
               onClose={() => {
                 setSearchString('');
                 setSelectedLocationId(null);

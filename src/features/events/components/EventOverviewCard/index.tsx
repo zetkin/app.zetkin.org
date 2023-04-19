@@ -175,7 +175,6 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                     }}
                     value={dayjs(startDate).format()}
                   />
-
                   <ZUIPreviewableInput
                     {...previewableProps}
                     renderInput={(props) => {
@@ -221,7 +220,6 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                     value={dayjs(startDate).format()}
                   />
                 </Grid>
-
                 <Grid id={'wrap'} ml={1} sx={{ alignItems: 'center' }}>
                   <ZUIPreviewableInput
                     {...previewableProps}
@@ -325,7 +323,6 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                     }}
                     value={dayjs(endDate).format()}
                   />
-
                   <ZUIPreviewableInput
                     {...previewableProps}
                     renderInput={(props) => {
@@ -375,13 +372,11 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                   />
                 </Grid>
               </Grid>
-
               <Divider
                 flexItem
                 orientation="vertical"
                 sx={{ marginBottom: '10px', marginLeft: '10px' }}
               />
-
               <Grid sx={{ marginLeft: '10px' }} xs>
                 <Grid item sx={{ alignItems: 'center' }}>
                   <ZUIPreviewableInput
@@ -445,6 +440,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                           <LocationModal
                             locationId={locationId}
                             locations={locations || []}
+                            model={locationsModel}
                             onCreateLocation={(
                               newLocation: Partial<ZetkinLocation>
                             ) => {
@@ -512,7 +508,6 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                     value={locationId}
                   />
                 </Grid>
-
                 <Grid item mt={2}>
                   <ZUIPreviewableInput
                     {...previewableProps}

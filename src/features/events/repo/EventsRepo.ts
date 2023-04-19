@@ -13,6 +13,8 @@ import {
   locationAdded,
   locationsLoad,
   locationsLoaded,
+  locationUpdate,
+  locationUpdated,
   participantAdded,
   participantsLoad,
   participantsLoaded,
@@ -39,6 +41,8 @@ export type ZetkinEventPatchBody = Partial<
   location_id?: number;
   organization_id?: number;
 };
+
+export type ZetkinLocationPatchBody = Partial<Omit<ZetkinLocation, 'id'>>;
 
 export default class EventsRepo {
   private _apiClient: IApiClient;
@@ -164,6 +168,19 @@ export default class EventsRepo {
       .patch<ZetkinEvent>(`/api/orgs/${orgId}/actions/${eventId}`, data)
       .then((event) => {
         this._store.dispatch(eventUpdated(event));
+      });
+  }
+
+  updateLocation(
+    orgId: number,
+    locationId: number,
+    data: ZetkinLocationPatchBody
+  ) {
+    this._store.dispatch(locationUpdate([locationId, Object.keys(data)]));
+    this._apiClient
+      .patch<ZetkinLocation>(`/api/orgs/${orgId}/locations/${locationId}`, data)
+      .then((location) => {
+        this._store.dispatch(locationUpdated(location));
       });
   }
 }

@@ -19,7 +19,6 @@ const basicIcon = icon({
 });
 
 interface MapProps {
-  focusedMarker?: { lat: number; lng: number };
   locations: ZetkinLocation[];
   searchString: string;
   selectedLocation?: ZetkinLocation;
@@ -28,7 +27,7 @@ interface MapProps {
   pendingLocation: Pick<ZetkinLocation, 'lat' | 'lng'> | null;
 }
 
-const MapProvider = ({
+const MapWrapper = ({
   children,
 }: {
   children: (map: MapType) => JSX.Element;
@@ -38,7 +37,6 @@ const MapProvider = ({
 };
 
 const Map: FC<MapProps> = ({
-  focusedMarker,
   locations,
   onMapClick,
   onMarkerClick,
@@ -68,10 +66,13 @@ const Map: FC<MapProps> = ({
       }
       style={{ height: '80vh', width: '100%' }}
     >
-      <MapProvider>
+      <MapWrapper>
         {(map) => {
-          if (focusedMarker) {
-            map.setView(focusedMarker, 17);
+          if (selectedLocation) {
+            map.setView(
+              { lat: selectedLocation.lat, lng: selectedLocation.lng },
+              17
+            );
           }
 
           map.on('click', (evt) => {
@@ -115,7 +116,7 @@ const Map: FC<MapProps> = ({
             </>
           );
         }}
-      </MapProvider>
+      </MapWrapper>
     </MapContainer>
   );
 };

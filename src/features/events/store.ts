@@ -72,6 +72,25 @@ const eventsSlice = createSlice({
         .filter((l) => l.id !== location.id)
         .concat([remoteItem(location.id, { data: location })]);
     },
+    locationUpdate: (state, action: PayloadAction<[number, string[]]>) => {
+      const [locationId, mutating] = action.payload;
+      const item = state.locationList.items.find(
+        (location) => location.id === locationId
+      );
+      if (item) {
+        item.mutating = mutating;
+      }
+    },
+    locationUpdated: (state, action: PayloadAction<ZetkinLocation>) => {
+      const location = action.payload;
+      const item = state.locationList.items.find(
+        (item) => item.id == location.id
+      );
+      if (item) {
+        item.data = { ...item.data, ...location };
+        item.mutating = [];
+      }
+    },
     locationsLoad: (state) => {
       state.locationList.isLoading = true;
     },
@@ -142,6 +161,8 @@ export const {
   eventsLoaded,
   eventUpdate,
   eventUpdated,
+  locationUpdate,
+  locationUpdated,
   locationAdded,
   locationsLoad,
   locationsLoaded,
