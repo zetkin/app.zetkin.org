@@ -82,4 +82,5 @@ export default makeMessages('feat.events', {
     overview: m('Overview'),
     participants: m('Participants'),
   },
+  addPerson: m('Add person'),
 });

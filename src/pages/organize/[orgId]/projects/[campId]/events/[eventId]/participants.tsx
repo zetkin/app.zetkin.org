@@ -8,6 +8,7 @@ import ParticipantSummaryCard from 'features/events/components/ParticipantSummar
 import { scaffold } from 'utils/next';
 import useModel from 'core/useModel';
 import ZUIFuture from 'zui/ZUIFuture';
+import AddParticipantButton from 'features/events/components/AddParticipantButton';
 
 export const getServerSideProps: GetServerSideProps = scaffold(
   async (ctx) => {
@@ -49,6 +50,7 @@ const ParticipantsPage: PageWithLayout<ParticipantsProps> = ({
             <Grid item md={8} xs={12}>
               <ParticipantSummaryCard model={dataModel} />
             </Grid>
+            <AddParticipantButton />
           </Grid>
         );
       }}
