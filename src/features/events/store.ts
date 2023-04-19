@@ -5,6 +5,7 @@ import {
   ZetkinActivityBody,
   ZetkinEvent,
   ZetkinEventParticipant,
+  ZetkinEventResponse,
   ZetkinLocation,
 } from 'utils/types/zetkin';
 
@@ -13,12 +14,14 @@ export interface EventsStoreSlice {
   typeList: RemoteList<ZetkinActivity>;
   locationList: RemoteList<ZetkinLocation>;
   participantsByEventId: Record<number, RemoteList<ZetkinEventParticipant>>;
+  respondentsByEventId: Record<number, RemoteList<ZetkinEventResponse>>;
 }
 
 const initialState: EventsStoreSlice = {
   eventList: remoteList(),
   locationList: remoteList(),
   participantsByEventId: {},
+  respondentsByEventId: {},
   typeList: remoteList(),
 };
 
@@ -82,6 +85,15 @@ const eventsSlice = createSlice({
       state.locationList = remoteList(locations);
       state.locationList.loaded = timestamp;
     },
+    participantAdded: (
+      state,
+      action: PayloadAction<[number, ZetkinEventParticipant]>
+    ) => {
+      const [eventId, participant] = action.payload;
+      state.participantsByEventId[eventId].items
+        .filter((item) => item.id !== participant.id)
+        .concat([remoteItem(participant.id, { data: participant })]);
+    },
     participantsLoad: (state, action: PayloadAction<number>) => {
       const eventId = action.payload;
       if (!state.participantsByEventId[eventId]) {
@@ -97,6 +109,30 @@ const eventsSlice = createSlice({
       const [eventId, participants] = action.payload;
       state.participantsByEventId[eventId] = remoteList(participants);
       state.participantsByEventId[eventId].loaded = new Date().toISOString();
+    },
+    participantsReminded: (state, action: PayloadAction<number>) => {
+      const eventId = action.payload;
+      state.participantsByEventId[eventId].items.map((item) => {
+        if (item.data && item.data?.reminder_sent !== null) {
+          item.data = { ...item.data, reminder_sent: new Date().toISOString() };
+        }
+      });
+    },
+    respondentsLoad: (state, action: PayloadAction<number>) => {
+      const eventId = action.payload;
+      if (!state.respondentsByEventId[eventId]) {
+        state.respondentsByEventId[eventId] = remoteList();
+      }
+
+      state.respondentsByEventId[eventId].isLoading = true;
+    },
+    respondentsLoaded: (
+      state,
+      action: PayloadAction<[number, ZetkinEventResponse[]]>
+    ) => {
+      const [eventId, respondents] = action.payload;
+      state.respondentsByEventId[eventId] = remoteList(respondents);
+      state.respondentsByEventId[eventId].loaded = new Date().toISOString();
     },
     typeAdd: (
       state,
@@ -135,8 +171,12 @@ export const {
   locationAdded,
   locationsLoad,
   locationsLoaded,
+  participantAdded,
   participantsLoad,
   participantsLoaded,
+  participantsReminded,
+  respondentsLoad,
+  respondentsLoaded,
   typeAdd,
   typeAdded,
   typesLoad,
