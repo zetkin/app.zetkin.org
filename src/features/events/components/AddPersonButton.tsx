@@ -1,12 +1,12 @@
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
-import { IconButton, Popover } from '@mui/material';
+import { Box, IconButton, Paper, Popover, TextField } from '@mui/material';
 import { useState } from 'react';
 
 import messageIds from '../l10n/messageIds';
 import { Msg, useMessages } from 'core/i18n';
 import ZUIPersonGridEditCell from 'zui/ZUIPersonGridEditCell';
 
-const AddParticipantButton = () => {
+const AddPersonButton = () => {
   const messages = useMessages(messageIds);
   const [btnAnchor, setBtnAnchor] = useState<Element | null>(null);
 
@@ -25,7 +25,7 @@ const AddParticipantButton = () => {
       <Popover
         anchorEl={btnAnchor}
         onClose={() => setBtnAnchor(null)}
-        onKeyDown={(ev) => setBtnAnchor(null)}
+        // onKeyDown={(ev) => setBtnAnchor(null)}
         anchorOrigin={{
           vertical: 'bottom',
           horizontal: 'right',
@@ -44,15 +44,20 @@ const AddParticipantButton = () => {
           },
         }}
       >
-        <ZUIPersonGridEditCell
-          onUpdate={update}
-          removePersonLabel={''}
-          suggestedPeople={[]}
-          suggestedPeopleLabel={''}
-        />
+        <Paper elevation={3} variant="elevation">
+          <Box mt={1} p={2}>
+            <TextField variant="outlined" />
+          </Box>
+          {/* <ZUIPersonGridEditCell
+            onUpdate={update}
+            removePersonLabel={''}
+            suggestedPeople={[]}
+            suggestedPeopleLabel={''}
+          /> */}
+        </Paper>
       </Popover>
     </>
   );
 };
 
-export default AddParticipantButton;
+export default AddPersonButton;
