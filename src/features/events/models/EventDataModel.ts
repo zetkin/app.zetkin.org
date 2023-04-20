@@ -1,6 +1,7 @@
 import Environment from 'core/env/Environment';
 import { IFuture } from 'core/caching/futures';
 import { ModelBase } from 'core/models';
+import theme from 'theme';
 import EventsRepo, { ZetkinEventPatchBody } from '../repo/EventsRepo';
 import {
   ZetkinEvent,
@@ -34,12 +35,37 @@ export default class EventDataModel extends ModelBase {
     this._repo = new EventsRepo(env);
   }
 
+  getAvailParticipants(): number {
+    const participants = this.getParticipants().data;
+    return participants ? participants.length : 0;
+  }
+
   getData(): IFuture<ZetkinEvent> {
     return this._repo.getEvent(this._orgId, this._eventId);
   }
 
+  getParticipantStatus = (
+    availParticipants: number,
+    reqParticipants: number
+  ) => {
+    const diff = reqParticipants - availParticipants;
+
+    if (diff <= 0) {
+      return theme.palette.statusColors.green;
+    } else if (diff === 1) {
+      return theme.palette.statusColors.orange;
+    } else {
+      return theme.palette.statusColors.red;
+    }
+  };
+
   getParticipants(): IFuture<ZetkinEventParticipant[]> {
     return this._repo.getEventParticipants(this._orgId, this._eventId);
+  }
+
+  getRemindedParticipants(): number {
+    const participants = this.getParticipants().data;
+    return participants?.filter((p) => p.reminder_sent != null).length ?? 0;
   }
 
   getRespondents(): IFuture<ZetkinEventResponse[]> {
@@ -48,6 +74,15 @@ export default class EventDataModel extends ModelBase {
 
   getSignUps(): IFuture<ZetkinEventParticipant[]> {
     return this._repo.getEventSignUps(this._orgId, this._eventId);
+  }
+
+  getSignedParticipants(): number {
+    const participants = this.getParticipants().data;
+    const respondents = this.getRespondents().data;
+    return (
+      respondents?.filter((r) => !participants?.some((p) => p.id === r.id))
+        .length ?? 0
+    );
   }
 
   sendReminders() {
