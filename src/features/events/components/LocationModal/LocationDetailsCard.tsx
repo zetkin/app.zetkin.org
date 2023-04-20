@@ -1,4 +1,3 @@
-import { Close } from '@mui/icons-material';
 import {
   Box,
   Button,
@@ -6,6 +5,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
+import { Close, OpenWith } from '@mui/icons-material';
 import { FC, useCallback, useEffect, useState } from 'react';
 
 import LocationsModel from 'features/events/models/LocationsModel';
@@ -19,6 +19,7 @@ import ZUIPreviewableInput, {
 interface LocationDetailsCardProps {
   model: LocationsModel;
   onClose: () => void;
+  onMove: () => void;
   onUseLocation: () => void;
   location: ZetkinLocation;
 }
@@ -26,6 +27,7 @@ interface LocationDetailsCardProps {
 const LocationDetailsCard: FC<LocationDetailsCardProps> = ({
   model,
   onClose,
+  onMove,
   onUseLocation,
   location,
 }) => {
@@ -102,9 +104,7 @@ const LocationDetailsCard: FC<LocationDetailsCardProps> = ({
               )}
               renderPreview={() => {
                 if (location.title !== '') {
-                  return (
-                    <Typography component="h5">{location.title}</Typography>
-                  );
+                  return <Typography variant="h5">{location.title}</Typography>;
                 } else {
                   return <></>;
                 }
@@ -148,20 +148,25 @@ const LocationDetailsCard: FC<LocationDetailsCardProps> = ({
               <Box paddingTop={1}>
                 <Typography
                   color="secondary"
-                  fontStyle={location.info_text ? 'inherit' : 'italic'}
+                  fontStyle={
+                    location.info_text.trim().length ? 'inherit' : 'italic'
+                  }
                   sx={{ overflowWrap: 'anywhere' }}
                 >
-                  {location.info_text
+                  {location.info_text.trim().length
                     ? location.info_text
                     : messages.locationModal.noDescription()}
                 </Typography>
               </Box>
             )}
-            value={location.title}
+            value={location.info_text}
           />
         </Box>
       </ClickAwayListener>
-      <Box display="flex" justifyContent="flex-end" paddingTop={2}>
+      <Box display="flex" justifyContent="space-between" paddingTop={2}>
+        <Button onClick={onMove} startIcon={<OpenWith />}>
+          {messages.locationModal.move()}
+        </Button>
         <Button onClick={onUseLocation} variant="contained">
           {messages.locationModal.useLocation()}
         </Button>

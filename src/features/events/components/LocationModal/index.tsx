@@ -11,6 +11,7 @@ import LocationDetailsCard from './LocationDetailsCard';
 import LocationSearch from './LocationSearch';
 import LocationsModel from 'features/events/models/LocationsModel';
 import messageIds from 'features/events/l10n/messageIds';
+import MoveLocationCard from './MoveLocationCard';
 import { useMessages } from 'core/i18n';
 import { ZetkinLocation } from 'utils/types/zetkin';
 
@@ -65,12 +66,16 @@ const LocationModal: FC<LocationModalProps> = ({
     ZetkinLocation,
     'lat' | 'lng'
   > | null>(null);
+  const [inMoveState, setInMoveState] = useState(false);
+  const [newLatLng, setNewLatLng] =
+    useState<Pick<ZetkinLocation, 'lat' | 'lng'>>();
 
   const selectedLocation = locations.find(
     (location) => location.id === selectedLocationId
   );
 
-  const cardIsFullHeight = !!pendingLocation || !!selectedLocation;
+  const cardIsFullHeight =
+    (!!pendingLocation || !!selectedLocation) && !inMoveState;
   const classes = useStyles({ cardIsFullHeight });
 
   useEffect(() => {
@@ -82,6 +87,7 @@ const LocationModal: FC<LocationModalProps> = ({
     <Dialog fullWidth maxWidth="lg" onClose={onMapClose} open={open}>
       <Box padding={2}>
         <Map
+          inMoveState={inMoveState}
           locations={locations}
           onMapClick={(latlng: PendingLocation) => {
             setSelectedLocationId(null);
@@ -97,6 +103,9 @@ const LocationModal: FC<LocationModalProps> = ({
             setPendingLocation(null);
             setSelectedLocationId(location.id);
           }}
+          onMarkerDragEnd={(lat: number, lng: number) =>
+            setNewLatLng({ lat, lng })
+          }
           pendingLocation={pendingLocation}
           searchString={searchString}
           selectedLocation={selectedLocation}
@@ -119,7 +128,7 @@ const LocationModal: FC<LocationModalProps> = ({
               options={locations}
             />
           )}
-          {selectedLocation && (
+          {selectedLocation && !inMoveState && (
             <LocationDetailsCard
               location={selectedLocation}
               model={model}
@@ -127,6 +136,7 @@ const LocationModal: FC<LocationModalProps> = ({
                 setSearchString('');
                 setSelectedLocationId(null);
               }}
+              onMove={() => setInMoveState(true)}
               onUseLocation={() => {
                 onSelectLocation(selectedLocation);
                 onMapClose();
@@ -143,6 +153,28 @@ const LocationModal: FC<LocationModalProps> = ({
                 setPendingLocation(null);
               }}
               pendingLocation={pendingLocation}
+            />
+          )}
+          {inMoveState && selectedLocation && !pendingLocation && (
+            <MoveLocationCard
+              location={selectedLocation}
+              onCancel={() => {
+                setInMoveState(false);
+              }}
+              onClose={() => {
+                setInMoveState(false);
+                setSelectedLocationId(null);
+              }}
+              onSaveLocation={() => {
+                if (newLatLng) {
+                  model.setLocationLatLng(
+                    selectedLocation.id,
+                    newLatLng.lat,
+                    newLatLng.lng
+                  );
+                }
+                setInMoveState(false);
+              }}
             />
           )}
         </Box>
