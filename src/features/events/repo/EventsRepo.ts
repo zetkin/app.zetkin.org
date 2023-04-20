@@ -13,13 +13,26 @@ import {
   locationAdded,
   locationsLoad,
   locationsLoaded,
+  locationUpdate,
+  locationUpdated,
+  participantAdded,
   participantsLoad,
   participantsLoaded,
+  participantsReminded,
+  respondentsLoad,
+  respondentsLoaded,
+  typeAdd,
+  typeAdded,
+  typesLoad,
+  typesLoaded,
 } from '../store';
 import { IFuture, PromiseFuture, RemoteItemFuture } from 'core/caching/futures';
 import {
+  ZetkinActivity,
   ZetkinEvent,
   ZetkinEventParticipant,
+  ZetkinEventResponse,
+  ZetkinEventTypePostBody,
   ZetkinLocation,
 } from 'utils/types/zetkin';
 
@@ -34,6 +47,8 @@ export type ZetkinEventPatchBody = Partial<
   location_id?: number;
   organization_id?: number;
 };
+
+export type ZetkinLocationPatchBody = Partial<Omit<ZetkinLocation, 'id'>>;
 
 export default class EventsRepo {
   private _apiClient: IApiClient;
@@ -52,6 +67,26 @@ export default class EventsRepo {
     this._store.dispatch(locationAdded(location));
   }
 
+  async addParticipant(orgId: number, eventId: number, personId: number) {
+    const participant = await this._apiClient.put<ZetkinEventParticipant>(
+      `/api/orgs/${orgId}/actions/${eventId}/participants/${personId}`,
+      {
+        id: personId,
+        reminder_sent: null,
+      }
+    );
+    this._store.dispatch(participantAdded([eventId, participant]));
+  }
+
+  addType(orgId: number, data: ZetkinEventTypePostBody) {
+    this._store.dispatch(typeAdd([orgId, data]));
+    this._apiClient
+      .post<ZetkinActivity>(`/api/orgs/${orgId}/activities`, data)
+      .then((event) => {
+        this._store.dispatch(typeAdded(event));
+      });
+  }
+
   constructor(env: Environment) {
     this._store = env.store;
     this._apiClient = env.apiClient;
@@ -65,6 +100,16 @@ export default class EventsRepo {
       actionOnSuccess: (events) => eventsLoaded(events),
       loader: () =>
         this._apiClient.get<ZetkinEvent[]>(`/api/orgs/${orgId}/actions`),
+    });
+  }
+
+  getAllTypes(orgId: number) {
+    const state = this._store.getState();
+    return loadListIfNecessary(state.events.typeList, this._store, {
+      actionOnLoad: () => typesLoad(orgId),
+      actionOnSuccess: (data) => typesLoaded([orgId, data]),
+      loader: () =>
+        this._apiClient.get<ZetkinActivity[]>(`/api/orgs/${orgId}/activities`),
     });
   }
 
@@ -104,6 +149,24 @@ export default class EventsRepo {
     });
   }
 
+  getEventRespondents(
+    orgId: number,
+    eventId: number
+  ): IFuture<ZetkinEventResponse[]> {
+    const state = this._store.getState();
+    const list = state.events.respondentsByEventId[eventId];
+
+    return loadListIfNecessary(list, this._store, {
+      actionOnLoad: () => respondentsLoad(eventId),
+      actionOnSuccess: (respondents) =>
+        respondentsLoaded([eventId, respondents]),
+      loader: () =>
+        this._apiClient.get<ZetkinEventResponse[]>(
+          `/api/orgs/${orgId}/actions/${eventId}/responses`
+        ),
+    });
+  }
+
   getEventSignUps(
     orgId: number,
     eventId: number
@@ -134,12 +197,33 @@ export default class EventsRepo {
     });
   }
 
+  async sendReminders(orgId: number, eventId: number) {
+    await this._apiClient.post(
+      `/api/orgs/${orgId}/actions/${eventId}/reminders`,
+      {}
+    );
+    this._store.dispatch(participantsReminded(eventId));
+  }
+
   updateEvent(orgId: number, eventId: number, data: ZetkinEventPatchBody) {
     this._store.dispatch(eventUpdate([eventId, Object.keys(data)]));
     this._apiClient
       .patch<ZetkinEvent>(`/api/orgs/${orgId}/actions/${eventId}`, data)
       .then((event) => {
         this._store.dispatch(eventUpdated(event));
+      });
+  }
+
+  updateLocation(
+    orgId: number,
+    locationId: number,
+    data: ZetkinLocationPatchBody
+  ) {
+    this._store.dispatch(locationUpdate([locationId, Object.keys(data)]));
+    this._apiClient
+      .patch<ZetkinLocation>(`/api/orgs/${orgId}/locations/${locationId}`, data)
+      .then((location) => {
+        this._store.dispatch(locationUpdated(location));
       });
   }
 }

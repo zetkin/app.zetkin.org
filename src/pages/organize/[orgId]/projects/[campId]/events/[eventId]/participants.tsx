@@ -1,10 +1,12 @@
 import { GetServerSideProps } from 'next';
-import { PageWithLayout } from 'utils/types';
-import { scaffold } from 'utils/next';
+import { Grid } from '@mui/material';
 
 import EventDataModel from 'features/events/models/EventDataModel';
 import EventLayout from 'features/events/layout/EventLayout';
 import EventParticipansList from 'features/events/components/EventParticipansTab/EventParticipantsList';
+import { PageWithLayout } from 'utils/types';
+import ParticipantSummaryCard from 'features/events/components/ParticipantSummaryCard';
+import { scaffold } from 'utils/next';
 import useModel from 'core/useModel';
 import ZUIFuture from 'zui/ZUIFuture';
 
@@ -34,8 +36,8 @@ interface ParticipantsProps {
 }
 
 const ParticipantsPage: PageWithLayout<ParticipantsProps> = ({
-  orgId,
   eventId,
+  orgId,
 }) => {
   const dataModel = useModel(
     (env) => new EventDataModel(env, parseInt(orgId), parseInt(eventId))
@@ -44,7 +46,16 @@ const ParticipantsPage: PageWithLayout<ParticipantsProps> = ({
   return (
     <ZUIFuture future={dataModel.getData()}>
       {(data) => {
-        return <EventParticipansList data={data}></EventParticipansList>;
+        return (
+          <>
+            <Grid container spacing={2}>
+              <Grid item md={8} xs={12}>
+                <ParticipantSummaryCard model={dataModel} />
+              </Grid>
+            </Grid>
+            <EventParticipansList data={data}></EventParticipansList>
+          </>
+        );
       }}
     </ZUIFuture>
   );

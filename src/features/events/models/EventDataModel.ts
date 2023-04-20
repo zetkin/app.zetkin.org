@@ -5,6 +5,7 @@ import EventsRepo, { ZetkinEventPatchBody } from '../repo/EventsRepo';
 import {
   ZetkinEvent,
   ZetkinEventParticipant,
+  ZetkinEventResponse,
   ZetkinLocation,
 } from 'utils/types/zetkin';
 
@@ -22,6 +23,10 @@ export default class EventDataModel extends ModelBase {
   private _orgId: number;
   private _repo: EventsRepo;
 
+  addParticipant(personId: number) {
+    this._repo.addParticipant(this._orgId, this._eventId, personId);
+  }
+
   constructor(env: Environment, orgId: number, eventId: number) {
     super();
     this._orgId = orgId;
@@ -37,8 +42,16 @@ export default class EventDataModel extends ModelBase {
     return this._repo.getEventParticipants(this._orgId, this._eventId);
   }
 
+  getRespondents(): IFuture<ZetkinEventResponse[]> {
+    return this._repo.getEventRespondents(this._orgId, this._eventId);
+  }
+
   getSignUps(): IFuture<ZetkinEventParticipant[]> {
     return this._repo.getEventSignUps(this._orgId, this._eventId);
+  }
+
+  sendReminders() {
+    this._repo.sendReminders(this._orgId, this._eventId);
   }
 
   setLocation(location: ZetkinLocation) {
@@ -55,6 +68,12 @@ export default class EventDataModel extends ModelBase {
 
   setTitle(title: string) {
     this._repo.updateEvent(this._orgId, this._eventId, { title });
+  }
+
+  setType(id: number) {
+    this._repo.updateEvent(this._orgId, this._eventId, {
+      activity_id: id,
+    });
   }
 
   get state(): EventState {

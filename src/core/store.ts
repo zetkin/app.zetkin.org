@@ -1,9 +1,9 @@
 import { configureStore, ConfigureStoreOptions } from '@reduxjs/toolkit';
 
-import eventsSlice from 'features/events/store';
 import callAssignmentsSlice, {
   CallAssignmentSlice,
 } from '../features/callAssignments/store';
+import eventsSlice, { EventsStoreSlice } from 'features/events/store';
 import organizationsSlice, {
   OrganizationsStoreSlice,
 } from 'features/organizations/store';
@@ -14,6 +14,7 @@ import viewsSlice, { ViewsStoreSlice } from 'features/views/store';
 
 export interface RootState {
   callAssignments: CallAssignmentSlice;
+  events: EventsStoreSlice;
   surveys: SurveysStoreSlice;
   tags: TagsStoreSlice;
   tasks: TasksStoreSlice;

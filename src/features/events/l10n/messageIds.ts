@@ -59,10 +59,20 @@ export default makeMessages('feat.events', {
     infoText: m(
       'You can click and drag to pan the map and pinch or scroll to zoom. To create a new location you can click on an empty spot on the map.'
     ),
+    noDescription: m('No description'),
     save: m('Save'),
     searchBox: m('Find location'),
     title: m('Location name'),
     useLocation: m('Use location'),
+  },
+  participantSummaryCard: {
+    bookButton: m('Book all'),
+    booked: m('Notifications'),
+    header: m('Participants'),
+    pending: m('Pending sign-ups'),
+    remindButton: m('Remind all'),
+    reqParticipantsHelperText: m('The minimum number of participants required'),
+    reqParticipantsLabel: m('Required participants'),
   },
   state: {
     cancelled: m('Cancelled'),
@@ -79,5 +89,12 @@ export default makeMessages('feat.events', {
   tabs: {
     overview: m('Overview'),
     participants: m('Participants'),
+  },
+  tooltipContent: m('Untitled events will display type as title'),
+  type: {
+    createType: m<{ type: string }>('Create "{type}"'),
+    tooltip: m('Click to change type'),
+    uncategorized: m('Uncategorized'),
+    untitled: m('Untitled Event'),
   },
 });
