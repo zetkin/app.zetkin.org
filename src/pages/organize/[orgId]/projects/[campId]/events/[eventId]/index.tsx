@@ -63,11 +63,12 @@ const EventPage: PageWithLayout<EventPageProps> = ({
 
   return (
     <ZUIFuture future={dataModel.getData()}>
-      {() => {
+      {(data) => {
         return (
           <Grid container spacing={2}>
             <Grid item md={8} xs={12}>
               <EventOverviewCard
+                data={data}
                 dataModel={dataModel}
                 locationsModel={locationsModel}
               />

@@ -1,8 +1,8 @@
 import { Box } from '@mui/material';
-import { FunctionComponent } from 'react';
-
 import makeStyles from '@mui/styles/makeStyles';
+import { FunctionComponent, useState } from 'react';
 
+import { PageContainerContext } from 'utils/panes/PageContainerContext';
 import ZUIOrganizeSidebar from 'zui/ZUIOrganizeSidebar';
 
 const useStyles = makeStyles((theme) => ({
@@ -20,22 +20,32 @@ const useStyles = makeStyles((theme) => ({
 
 interface DefaultLayoutProps {
   children: React.ReactNode;
+  onScroll?: () => void;
 }
 
-const DefaultLayout: FunctionComponent<DefaultLayoutProps> = ({ children }) => {
+const DefaultLayout: FunctionComponent<DefaultLayoutProps> = ({
+  children,
+  onScroll,
+}) => {
   const classes = useStyles();
+  const [container, setContainer] = useState<HTMLDivElement | null>(null);
+
   return (
     <Box className={classes.root} display="flex" height="100vh">
       <ZUIOrganizeSidebar />
       <Box
+        ref={(div: HTMLDivElement) => setContainer(div)}
         display="flex"
         flexDirection="column"
         height="100vh"
+        onScroll={onScroll}
         overflow="auto"
         position="relative"
         width={1}
       >
-        {children}
+        <PageContainerContext.Provider value={{ container }}>
+          {children}
+        </PageContainerContext.Provider>
       </Box>
     </Box>
   );

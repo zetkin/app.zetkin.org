@@ -21,4 +21,18 @@ export default class LocationsModel extends ModelBase {
   getLocations(): IFuture<ZetkinLocation[]> {
     return this._repo.getLocations(this._orgId);
   }
+
+  setLocationDescription(locationId: number, description: string) {
+    this._repo.updateLocation(this._orgId, locationId, {
+      info_text: description,
+    });
+  }
+
+  setLocationLatLng(locationId: number, lat: number, lng: number) {
+    this._repo.updateLocation(this._orgId, locationId, { lat, lng });
+  }
+
+  setLocationTitle(locationId: number, title: string) {
+    this._repo.updateLocation(this._orgId, locationId, { title });
+  }
 }
