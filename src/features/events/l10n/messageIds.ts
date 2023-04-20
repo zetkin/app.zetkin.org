@@ -30,6 +30,9 @@ export default makeMessages('feat.events', {
     columnName: m('Name'),
     columnNotified: m('Notified'),
     columnPhone: m('Phone'),
+    descriptionBooked: m(
+      'These are the people you have booked and are counting on for the event. To cancel their participation they have to contact you and you can cancel them manually.'
+    ),
     signUps: m('Sign-ups'),
   },
   form: {

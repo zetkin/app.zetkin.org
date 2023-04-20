@@ -53,7 +53,10 @@ const ParticipantsPage: PageWithLayout<ParticipantsProps> = ({
                 <ParticipantSummaryCard model={dataModel} />
               </Grid>
             </Grid>
-            <EventParticipansList data={data}></EventParticipansList>
+            <EventParticipansList
+              data={data}
+              model={dataModel}
+            ></EventParticipansList>
           </>
         );
       }}
