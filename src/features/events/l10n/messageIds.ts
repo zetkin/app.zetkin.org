@@ -1,7 +1,12 @@
 import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('feat.events', {
-  addPerson: m('Add person'),
+  addPerson: {
+    addButton: m('Add person'),
+    keepTyping: m('Keep typing..'),
+    noResult: m('No matching person found'),
+    search: m('Type to start searching'),
+  },
   eventOverviewCard: {
     buttonEndDate: m('+ End date'),
     createLocation: m('Create new location'),
