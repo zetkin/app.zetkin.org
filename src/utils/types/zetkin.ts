@@ -61,7 +61,7 @@ export interface ZetkinEventResponse {
 }
 
 export interface ZetkinEvent {
-  activity: { title: string };
+  activity: { id: number; title: string };
   campaign: {
     id: number;
     title: string;
@@ -354,6 +354,10 @@ export interface ZetkinActivity {
   id: number;
   title: string;
   info_text: string | null;
+}
+
+export interface ZetkinEventTypePostBody {
+  title: string;
 }
 
 export interface ZetkinTagGroup {
