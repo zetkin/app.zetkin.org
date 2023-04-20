@@ -51,7 +51,10 @@ const ParticipantsPage: PageWithLayout<ParticipantsProps> = ({
               <ParticipantSummaryCard model={dataModel} />
             </Grid>
             <Grid item md={12} container justifyContent="flex-end">
-              <AddPersonButton />
+              <AddPersonButton
+                orgId={parseInt(orgId)}
+                eventId={parseInt(eventId)}
+              />
             </Grid>
           </Grid>
         );
