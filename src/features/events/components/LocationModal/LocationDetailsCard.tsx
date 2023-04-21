@@ -1,3 +1,4 @@
+import { makeStyles } from '@mui/styles';
 import NextLink from 'next/link';
 import {
   Box,
@@ -8,7 +9,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { Close, OpenWith } from '@mui/icons-material';
+import { Close, EventOutlined, OpenWith } from '@mui/icons-material';
 import { FC, useCallback, useEffect, useState } from 'react';
 
 import { getParticipantsStatusColor } from 'features/events/utils/eventUtils';
@@ -21,6 +22,13 @@ import { ZetkinEvent, ZetkinLocation } from 'utils/types/zetkin';
 import ZUIPreviewableInput, {
   ZUIPreviewableMode,
 } from 'zui/ZUIPreviewableInput';
+
+const useStyles = makeStyles((theme) => ({
+  icon: {
+    color: theme.palette.grey[400],
+    fontSize: '8rem',
+  },
+}));
 
 interface LocationDetailsCardProps {
   model: LocationsModel;
@@ -39,6 +47,7 @@ const LocationDetailsCard: FC<LocationDetailsCardProps> = ({
   onUseLocation,
   relatedEvents,
 }) => {
+  const classes = useStyles();
   const messages = useMessages(messageIds);
   const [title, setTitle] = useState(location.title);
   const [description, setDescription] = useState(location.info_text);
@@ -171,60 +180,79 @@ const LocationDetailsCard: FC<LocationDetailsCardProps> = ({
         </Box>
       </ClickAwayListener>
       <Divider />
-      <Box height="100%" overflow="scroll" padding={2}>
+      <Box
+        display="flex"
+        flexDirection="column"
+        height="100%"
+        overflow="scroll"
+        padding={2}
+      >
         <Typography fontWeight="bold" variant="h5">
           {messages.locationModal.relatedEvents()}
         </Typography>
-        <Box>
-          {relatedEvents.length > 0 &&
-            relatedEvents.map((event) => (
-              <>
+        {relatedEvents.length > 0 &&
+          relatedEvents.map((event) => (
+            <>
+              <Box
+                key={event.id}
+                display="flex"
+                flexDirection="column"
+                paddingY={2}
+              >
                 <Box
-                  key={event.id}
+                  alignItems="center"
                   display="flex"
-                  flexDirection="column"
-                  paddingY={2}
+                  justifyContent="space-between"
                 >
-                  <Box
-                    alignItems="center"
-                    display="flex"
-                    justifyContent="space-between"
+                  <NextLink
+                    href={`/organize/${event.organization.id}/${
+                      event.campaign
+                        ? `project/${event.campaign.id}`
+                        : 'standalone'
+                    }/events/${event.id}`}
+                    passHref
                   >
-                    <NextLink
-                      href={`/organize/${event.organization.id}/${
-                        event.campaign
-                          ? `project/${event.campaign.id}`
-                          : 'standalone'
-                      }/events/${event.id}`}
-                      passHref
-                    >
-                      <Link>
-                        <Typography>
-                          {event.title || event.activity.title}
-                        </Typography>
-                      </Link>
-                    </NextLink>
-                    <ZUINumberChip
-                      color={getParticipantsStatusColor(
-                        event.num_participants_required,
-                        event.num_participants_available
-                      )}
-                      outlined={true}
-                      size="sm"
-                      value={`${event.num_participants_available}/${event.num_participants_required}`}
-                    />
-                  </Box>
-                  <Typography color="secondary">
-                    <ZUITimeSpan
-                      end={new Date(event.end_time)}
-                      start={new Date(event.start_time)}
-                    />
-                  </Typography>
+                    <Link>
+                      <Typography>
+                        {event.title || event.activity.title}
+                      </Typography>
+                    </Link>
+                  </NextLink>
+                  <ZUINumberChip
+                    color={getParticipantsStatusColor(
+                      event.num_participants_required,
+                      event.num_participants_available
+                    )}
+                    outlined={true}
+                    size="sm"
+                    value={`${event.num_participants_available}/${event.num_participants_required}`}
+                  />
                 </Box>
-                <Divider />
-              </>
-            ))}
-        </Box>
+                <Typography color="secondary">
+                  <ZUITimeSpan
+                    end={new Date(event.end_time)}
+                    start={new Date(event.start_time)}
+                  />
+                </Typography>
+              </Box>
+              <Divider />
+            </>
+          ))}
+        {!relatedEvents.length && (
+          <Box
+            alignItems="center"
+            display="flex"
+            flex={1}
+            flexDirection="column"
+            height="100"
+            justifyContent="center"
+          >
+            <EventOutlined className={classes.icon} />
+            <Typography color="secondary">
+              {messages.locationModal.noRelatedEvents()}
+            </Typography>
+          </Box>
+        )}
       </Box>
       <Box display="flex" justifyContent="space-between" padding={2}>
         <Button onClick={onMove} startIcon={<OpenWith />}>
