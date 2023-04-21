@@ -22,7 +22,7 @@ interface MapProps {
   onMarkerClick: (locationId: number) => void;
   onMarkerDragEnd: (lat: number, lng: number) => void;
   pendingLocation: Pick<ZetkinLocation, 'lat' | 'lng'> | null;
-  relevantEvents: ZetkinEvent[];
+  relatedEvents: ZetkinEvent[];
   searchString: string;
   selectedLocation?: ZetkinLocation;
 }
@@ -43,7 +43,7 @@ const Map: FC<MapProps> = ({
   onMarkerClick,
   onMarkerDragEnd,
   pendingLocation,
-  relevantEvents,
+  relatedEvents,
   selectedLocation,
   searchString,
 }) => {
@@ -101,7 +101,7 @@ const Map: FC<MapProps> = ({
               />
               {filteredLocations.map((location) => {
                 const isSelectedMarker = selectedLocation?.id == location.id;
-                const noOfRelevantEvents = relevantEvents.filter(
+                const noOfRelevantEvents = relatedEvents.filter(
                   (event) => event.location.id === location.id
                 ).length;
                 return (

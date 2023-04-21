@@ -14,6 +14,7 @@ import {
 import { FC, useState } from 'react';
 
 import EventDataModel from 'features/events/models/EventDataModel';
+import { getParticipantsStatusColor } from '../utils/eventUtils';
 import messageIds from 'features/events/l10n/messageIds';
 import theme from 'theme';
 import { useMessages } from 'core/i18n';
@@ -46,18 +47,6 @@ const EventParticipantsCard: FC<EventParticipantsCardProps> = ({
     return null;
   }
 
-  const getParticipantStatus = () => {
-    const diff = reqParticipants - availParticipants;
-
-    if (diff <= 0) {
-      return theme.palette.statusColors.green;
-    } else if (diff === 1) {
-      return theme.palette.statusColors.orange;
-    } else {
-      return theme.palette.statusColors.red;
-    }
-  };
-
   return (
     <Box>
       <ZUICard
@@ -65,7 +54,10 @@ const EventParticipantsCard: FC<EventParticipantsCardProps> = ({
         status={
           <Box display="flex">
             <ZUINumberChip
-              color={getParticipantStatus()}
+              color={getParticipantsStatusColor(
+                reqParticipants,
+                availParticipants
+              )}
               outlined={true}
               size="sm"
               value={`${availParticipants}/${reqParticipants}`}

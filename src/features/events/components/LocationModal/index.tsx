@@ -87,7 +87,7 @@ const LocationModal: FC<LocationModalProps> = ({
 
   return (
     <Dialog fullWidth maxWidth="lg" onClose={onMapClose} open={open}>
-      <Box padding={2}>
+      <Box border={1} padding={2}>
         <Map
           inMoveState={inMoveState}
           locations={locations}
@@ -109,7 +109,7 @@ const LocationModal: FC<LocationModalProps> = ({
             setNewLatLng({ lat, lng })
           }
           pendingLocation={pendingLocation}
-          relevantEvents={events}
+          relatedEvents={events}
           searchString={searchString}
           selectedLocation={selectedLocation}
         />
@@ -144,6 +144,9 @@ const LocationModal: FC<LocationModalProps> = ({
                 onSelectLocation(selectedLocation);
                 onMapClose();
               }}
+              relatedEvents={events.filter(
+                (event) => event.location.id === selectedLocation.id
+              )}
             />
           )}
           {pendingLocation && !selectedLocation && (

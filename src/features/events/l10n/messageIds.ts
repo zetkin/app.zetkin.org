@@ -54,6 +54,7 @@ export default makeMessages('feat.events', {
     move: m('Move'),
     moveInstructions: m('Drag the pin to select location.'),
     noDescription: m('No description'),
+    relatedEvents: m('Other events in this location'),
     save: m('Save'),
     saveLocation: m('Save location'),
     searchBox: m('Find location'),
