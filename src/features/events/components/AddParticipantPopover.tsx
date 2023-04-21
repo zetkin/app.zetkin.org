@@ -22,6 +22,7 @@ import { useMessages } from 'core/i18n';
 import { usePersonSelect } from 'zui/ZUIPersonSelect';
 import { ZetkinPerson } from 'utils/types/zetkin';
 import ZUIAvatar from 'zui/ZUIAvatar';
+import ZUIFutures from 'zui/ZUIFutures';
 
 interface AddParticipantPopoverProps {
   anchorEl: Element | null;
@@ -77,7 +78,6 @@ const PopoverContent = ({ model }: PopoverContentProps) => {
   const messages = useMessages(messageIds);
 
   const handleSelectedPerson = (person: ZetkinPerson) => {
-    console.log(person);
     model.addParticipant(person.id);
   };
 
@@ -144,29 +144,48 @@ const PopoverContent = ({ model }: PopoverContentProps) => {
         {personSelect.autoCompleteProps.isLoading && (
           <CircularProgress sx={{ display: 'block', margin: 'auto' }} />
         )}
-        {searchResults.map((option, index) => {
-          const optProps = autoComplete.getOptionProps({
-            index,
-            option,
-          });
-          return (
-            <PersonListItem
-              key={option.id}
-              orgId={1}
-              person={option}
-              itemProps={optProps}
-            />
-          );
-        })}
+        <ZUIFutures
+          futures={{
+            participants: model.getParticipants(),
+            respondents: model.getRespondents(),
+          }}
+        >
+          {({ data: { participants, respondents } }) => {
+            console.log(participants);
+            console.log(respondents, ' res');
+            let status: StatusType = '';
+            return (
+              <>
+                {searchResults.map((option, index) => {
+                  const optProps = autoComplete.getOptionProps({
+                    index,
+                    option,
+                  });
+                  return (
+                    <PersonListItem
+                      key={option.id}
+                      orgId={1}
+                      person={option}
+                      itemProps={optProps}
+                      status={status}
+                    />
+                  );
+                })}
+              </>
+            );
+          }}
+        </ZUIFutures>
       </List>
     </Box>
   );
 };
+type StatusType = 'booked' | 'cancelled' | 'signed up' | '';
 
 const PersonListItem: FC<{
   itemProps: HTMLAttributes<HTMLLIElement>;
   orgId: number;
   person: ZetkinPerson;
+  status: StatusType;
 }> = ({ itemProps, orgId, person }) => {
   return (
     <ListItem {...itemProps} disablePadding sx={{ py: 0.8 }}>
