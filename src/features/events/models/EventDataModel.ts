@@ -63,6 +63,16 @@ export default class EventDataModel extends ModelBase {
     return this._repo.getEventParticipants(this._orgId, this._eventId);
   }
 
+  getPendingSignUps(): ZetkinEventResponse[] {
+    const participants = this.getParticipants().data;
+    const respondents = this.getRespondents().data;
+
+    return (
+      respondents?.filter((r) => !participants?.some((p) => p.id === r.id)) ||
+      []
+    );
+  }
+
   getRemindedParticipants(): number {
     const participants = this.getParticipants().data;
     return participants?.filter((p) => p.reminder_sent != null).length ?? 0;
@@ -70,10 +80,6 @@ export default class EventDataModel extends ModelBase {
 
   getRespondents(): IFuture<ZetkinEventResponse[]> {
     return this._repo.getEventRespondents(this._orgId, this._eventId);
-  }
-
-  getSignUps(): IFuture<ZetkinEventParticipant[]> {
-    return this._repo.getEventSignUps(this._orgId, this._eventId);
   }
 
   getSignedParticipants(): number {

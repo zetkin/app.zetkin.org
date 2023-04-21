@@ -167,24 +167,6 @@ export default class EventsRepo {
     });
   }
 
-  getEventSignUps(
-    orgId: number,
-    eventId: number
-  ): IFuture<ZetkinEventParticipant[]> {
-    const state = this._store.getState();
-    const list = state.events.participantsByEventId[eventId];
-
-    return loadListIfNecessary(list, this._store, {
-      actionOnLoad: () => participantsLoad(eventId),
-      actionOnSuccess: (participants) =>
-        participantsLoaded([eventId, participants]),
-      loader: () =>
-        this._apiClient.get<ZetkinEventParticipant[]>(
-          `/api/orgs/${orgId}/actions/${eventId}/responses`
-        ),
-    });
-  }
-
   getLocations(orgId: number): IFuture<ZetkinLocation[]> {
     const state = this._store.getState();
     const locationsList = state.events.locationList;

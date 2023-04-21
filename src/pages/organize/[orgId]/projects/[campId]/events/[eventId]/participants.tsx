@@ -56,7 +56,7 @@ const ParticipantsPage: PageWithLayout<ParticipantsProps> = ({
             <EventParticipansList
               data={data}
               model={dataModel}
-              orgId={orgId}
+              orgId={parseInt(orgId)}
             ></EventParticipansList>
           </>
         );
