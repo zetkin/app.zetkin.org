@@ -1,23 +1,19 @@
 import { makeStyles } from '@mui/styles';
-import NextLink from 'next/link';
 import {
   Box,
   Button,
   ClickAwayListener,
   Divider,
-  Link,
   TextField,
   Typography,
 } from '@mui/material';
 import { Close, EventOutlined, OpenWith } from '@mui/icons-material';
 import { FC, useCallback, useEffect, useState } from 'react';
 
-import { getParticipantsStatusColor } from 'features/events/utils/eventUtils';
 import LocationsModel from 'features/events/models/LocationsModel';
 import messageIds from 'features/events/l10n/messageIds';
+import RelatedEventCard from './RelatedEventCard';
 import { useMessages } from 'core/i18n';
-import ZUINumberChip from 'zui/ZUINumberChip';
-import ZUITimeSpan from 'zui/ZUITimeSpan';
 import { ZetkinEvent, ZetkinLocation } from 'utils/types/zetkin';
 import ZUIPreviewableInput, {
   ZUIPreviewableMode,
@@ -180,63 +176,23 @@ const LocationDetailsCard: FC<LocationDetailsCardProps> = ({
         </Box>
       </ClickAwayListener>
       <Divider />
+      <Typography fontWeight="bold" padding={2} variant="h5">
+        {messages.locationModal.relatedEvents()}
+      </Typography>
       <Box
         display="flex"
         flexDirection="column"
         height="100%"
         overflow="scroll"
-        padding={2}
+        paddingBottom={2}
+        paddingX={2}
       >
-        <Typography fontWeight="bold" variant="h5">
-          {messages.locationModal.relatedEvents()}
-        </Typography>
         {relatedEvents.length > 0 &&
-          relatedEvents.map((event) => (
-            <>
-              <Box
-                key={event.id}
-                display="flex"
-                flexDirection="column"
-                paddingY={2}
-              >
-                <Box
-                  alignItems="center"
-                  display="flex"
-                  justifyContent="space-between"
-                >
-                  <NextLink
-                    href={`/organize/${event.organization.id}/${
-                      event.campaign
-                        ? `project/${event.campaign.id}`
-                        : 'standalone'
-                    }/events/${event.id}`}
-                    passHref
-                  >
-                    <Link>
-                      <Typography>
-                        {event.title || event.activity.title}
-                      </Typography>
-                    </Link>
-                  </NextLink>
-                  <ZUINumberChip
-                    color={getParticipantsStatusColor(
-                      event.num_participants_required,
-                      event.num_participants_available
-                    )}
-                    outlined={true}
-                    size="sm"
-                    value={`${event.num_participants_available}/${event.num_participants_required}`}
-                  />
-                </Box>
-                <Typography color="secondary">
-                  <ZUITimeSpan
-                    end={new Date(event.end_time)}
-                    start={new Date(event.start_time)}
-                  />
-                </Typography>
-              </Box>
-              <Divider />
-            </>
+          relatedEvents.map((event, index) => (
+            <Box key={event.id} paddingTop={index === 0 ? '' : 2}>
+              <RelatedEventCard event={event} />
+              <Divider sx={{ paddingTop: 2 }} />
+            </Box>
           ))}
         {!relatedEvents.length && (
           <Box
