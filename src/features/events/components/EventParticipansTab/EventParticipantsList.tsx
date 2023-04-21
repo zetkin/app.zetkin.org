@@ -1,15 +1,19 @@
 import { FC } from 'react';
 import { Box, Button, Typography } from '@mui/material';
-import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
+import {
+  DataGridPro,
+  GridActionsCellItem,
+  GridColDef,
+} from '@mui/x-data-grid-pro';
 
 import EventDataModel from 'features/events/models/EventDataModel';
 import messageIds from 'features/events/l10n/messageIds';
 import theme from 'theme';
 import { useMessages } from 'core/i18n';
+import { ZetkinEvent } from 'utils/types/zetkin';
 import ZUIAvatar from 'zui/ZUIAvatar';
 import ZUINumberChip from 'zui/ZUINumberChip';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
-import { ZetkinEvent, ZetkinEventParticipant } from 'utils/types/zetkin';
 
 interface EventParticipansListProps {
   data: ZetkinEvent;
@@ -25,7 +29,7 @@ const EventParticipansList: FC<EventParticipansListProps> = ({
   const messages = useMessages(messageIds);
   const bookedParticipants = model.getParticipants().data;
 
-  const columns: GridColDef<ZetkinEventParticipant>[] = [
+  const columns: GridColDef[] = [
     {
       field: 'avatar',
       headerName: '',
@@ -62,11 +66,23 @@ const EventParticipansList: FC<EventParticipansListProps> = ({
     },
     {
       field: 'cancel',
-      flex: 1,
       headerName: '',
-      renderCell: () => <Button variant="text">CANCEL</Button>,
+      renderCell: () => (
+        <GridActionsCellItem
+          icon={<Button variant="text">CANCEL</Button>}
+          label=""
+        />
+      ),
     },
   ];
+
+  const bookColumn: GridColDef = {
+    field: 'book',
+    headerName: '',
+    renderCell: () => <Button variant="outlined">BOOK</Button>,
+  };
+
+  const signUpsColumns = [...columns, bookColumn];
 
   return (
     <Box>
@@ -94,14 +110,25 @@ const EventParticipansList: FC<EventParticipansListProps> = ({
           <Typography mb={2} variant="body1">
             {messages.eventParticipantsList.descriptionSignups()}
           </Typography>
+          <DataGridPro
+            autoHeight
+            checkboxSelection
+            columns={signUpsColumns}
+            rows={model.getPendingSignUps()}
+          />
         </>
       )}
 
       <Box
         id={'Booked-header'}
-        style={{ alignItems: 'center', display: 'flex', flexDirection: 'row' }}
+        style={{
+          alignItems: 'center',
+          display: 'flex',
+          flexDirection: 'row',
+          marginTop: '15px',
+        }}
       >
-        <Typography mr={2} variant="h4">
+        <Typography mb={2} mr={2} variant="h4">
           {messages.eventParticipantsList.bookedParticipants()}
         </Typography>
         <ZUINumberChip
@@ -122,7 +149,7 @@ const EventParticipansList: FC<EventParticipansListProps> = ({
         autoHeight
         checkboxSelection
         columns={columns}
-        rows={bookedParticipants ? bookedParticipants : []}
+        rows={bookedParticipants ?? []}
       />
     </Box>
   );

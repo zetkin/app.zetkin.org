@@ -33,7 +33,9 @@ export default makeMessages('feat.events', {
     descriptionBooked: m(
       'These are the people you have booked and are counting on for the event. To cancel their participation they have to contact you and you can cancel them manually.'
     ),
-    descriptionSignups: m('Placeholder for Sign-ups description'),
+    descriptionSignups: m(
+      'These people have signed up in the activists portal. They can still cancel their sign-up at any time.'
+    ),
     signUps: m('Sign-ups'),
   },
   form: {
