@@ -21,6 +21,7 @@ import dayjs, { Dayjs } from 'dayjs';
 import { FC, useState } from 'react';
 
 import EventDataModel from 'features/events/models/EventDataModel';
+import { EventsModel } from 'features/events/models/EventsModel';
 import { getWorkingUrl } from 'features/events/utils/getWorkingUrl';
 import LocationModal from '../LocationModal';
 import LocationsModel from 'features/events/models/LocationsModel';
@@ -31,7 +32,7 @@ import { useMessages } from 'core/i18n';
 import ZUIDate from 'zui/ZUIDate';
 import ZUIPreviewableInput from 'zui/ZUIPreviewableInput';
 import {
-  dateIsBefore,
+  isBefore,
   isSameDate,
   isValidDate,
   removeOffset,
@@ -41,12 +42,14 @@ import { ZetkinEvent, ZetkinLocation } from 'utils/types/zetkin';
 type EventOverviewCardProps = {
   data: ZetkinEvent;
   dataModel: EventDataModel;
+  eventsModel: EventsModel;
   locationsModel: LocationsModel;
 };
 
 const EventOverviewCard: FC<EventOverviewCardProps> = ({
   data,
   dataModel,
+  eventsModel,
   locationsModel,
 }) => {
   const locations = locationsModel.getLocations().data;
@@ -96,6 +99,11 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
     ? [...locations, 'CREATE_NEW_LOCATION']
     : ['CREATE_NEW_LOCATION'];
 
+  const events = eventsModel.getEventsInTimespan(
+    data.start_time,
+    data.end_time
+  ).data;
+
   return (
     <ClickAwayListener {...clickAwayProps}>
       <Box {...containerProps}>
@@ -129,10 +137,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                               setInvalidFormat(false);
                               setStartDate(dayjs(newValue));
                               if (
-                                dateIsBefore(
-                                  newValue.toDate(),
-                                  endDate.toDate()
-                                )
+                                isBefore(newValue.toDate(), endDate.toDate())
                               ) {
                                 setEndDate(newValue);
                               }
@@ -234,10 +239,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                             if (newValue && isValidDate(newValue.toDate())) {
                               if (
                                 newValue &&
-                                dateIsBefore(
-                                  startDate.toDate(),
-                                  newValue.toDate()
-                                )
+                                isBefore(startDate.toDate(), newValue.toDate())
                               ) {
                                 setInvalidFormat(false);
                                 setStartDate(newValue);
@@ -443,6 +445,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
                             sx={{ cursor: 'pointer', marginLeft: 1 }}
                           />
                           <LocationModal
+                            events={events || []}
                             locationId={locationId}
                             locations={locations || []}
                             model={locationsModel}

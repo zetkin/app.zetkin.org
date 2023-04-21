@@ -7,13 +7,13 @@ import { MapContainer, Marker, TileLayer, useMap } from 'react-leaflet';
 import BasicMarker from './BasicMarker';
 import SelectedMarker from './SelectedMarker';
 import { useTheme } from '@mui/material';
-import { ZetkinLocation } from 'utils/types/zetkin';
 import {
   divIcon,
   latLngBounds,
   Map as MapType,
   Marker as MarkerType,
 } from 'leaflet';
+import { ZetkinEvent, ZetkinLocation } from 'utils/types/zetkin';
 
 interface MapProps {
   inMoveState: boolean;
@@ -22,6 +22,7 @@ interface MapProps {
   onMarkerClick: (locationId: number) => void;
   onMarkerDragEnd: (lat: number, lng: number) => void;
   pendingLocation: Pick<ZetkinLocation, 'lat' | 'lng'> | null;
+  relevantEvents: ZetkinEvent[];
   searchString: string;
   selectedLocation?: ZetkinLocation;
 }
@@ -42,6 +43,7 @@ const Map: FC<MapProps> = ({
   onMarkerClick,
   onMarkerDragEnd,
   pendingLocation,
+  relevantEvents,
   selectedLocation,
   searchString,
 }) => {
@@ -99,6 +101,9 @@ const Map: FC<MapProps> = ({
               />
               {filteredLocations.map((location) => {
                 const isSelectedMarker = selectedLocation?.id == location.id;
+                const noOfRelevantEvents = relevantEvents.filter(
+                  (event) => event.location.id === location.id
+                ).length;
                 return (
                   <Marker
                     key={location.id}
@@ -135,7 +140,7 @@ const Map: FC<MapProps> = ({
                             html: renderToStaticMarkup(
                               <BasicMarker
                                 color={theme.palette.primary.main}
-                                events={location.title.length}
+                                events={noOfRelevantEvents}
                               />
                             ),
                           })

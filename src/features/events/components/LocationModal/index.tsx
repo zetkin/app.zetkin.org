@@ -13,7 +13,7 @@ import LocationsModel from 'features/events/models/LocationsModel';
 import messageIds from 'features/events/l10n/messageIds';
 import MoveLocationCard from './MoveLocationCard';
 import { useMessages } from 'core/i18n';
-import { ZetkinLocation } from 'utils/types/zetkin';
+import { ZetkinEvent, ZetkinLocation } from 'utils/types/zetkin';
 
 interface StyleProps {
   cardIsFullHeight: boolean;
@@ -40,6 +40,7 @@ export type PendingLocation = {
 };
 
 interface LocationModalProps {
+  events: ZetkinEvent[];
   locations: ZetkinLocation[];
   model: LocationsModel;
   onCreateLocation: (newLocation: Partial<ZetkinLocation>) => void;
@@ -51,6 +52,7 @@ interface LocationModalProps {
 
 const Map = dynamic(() => import('./Map'), { ssr: false });
 const LocationModal: FC<LocationModalProps> = ({
+  events,
   locations,
   model,
   onCreateLocation,
@@ -107,6 +109,7 @@ const LocationModal: FC<LocationModalProps> = ({
             setNewLatLng({ lat, lng })
           }
           pendingLocation={pendingLocation}
+          relevantEvents={events}
           searchString={searchString}
           selectedLocation={selectedLocation}
         />
