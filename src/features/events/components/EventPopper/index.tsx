@@ -29,6 +29,15 @@ interface StyleProps {
 }
 
 const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
+  description: {
+    '-webkit-box-orient': 'vertical',
+    '-webkit-line-clamp': 3,
+    display: '-webkit-box',
+    maxHeight: '100%',
+    overflow: 'hidden',
+    whiteSpace: 'normal',
+    width: '100%',
+  },
   dot: {
     backgroundColor: ({ color }) => theme.palette.statusColors[color],
     borderRadius: '100%',
@@ -158,12 +167,12 @@ const EventPopper = ({
       </Box>
       {event.info_text && (
         <Box display="flex" flexDirection="column">
-          <Box alignItems="center" display="flex">
-            <Typography color="secondary" variant="body2">
-              {messages.eventPopper.description().toUpperCase()}
-            </Typography>
+          <Typography color="secondary" variant="body2">
+            {messages.eventPopper.description().toUpperCase()}
+          </Typography>
+          <Box className={classes.description}>
+            <Typography color="secondary">{event.info_text}</Typography>
           </Box>
-          <Typography color="secondary">{event.info_text}</Typography>
         </Box>
       )}
       <Box alignItems="center" display="flex" justifyContent="flex-end">
