@@ -1,4 +1,5 @@
 import ClearIcon from '@mui/icons-material/Clear';
+import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
 import SearchIcon from '@mui/icons-material/Search';
 import { FC, HTMLAttributes, useState } from 'react';
 import {
@@ -98,8 +99,6 @@ const PopoverContent = ({ model }: PopoverContentProps) => {
 
   let searchResults = autoComplete.groupedOptions as ZetkinPerson[];
 
-  console.log(autoComplete.getInputProps());
-
   return (
     <Box mt={1} p={2}>
       <TextField
@@ -151,9 +150,6 @@ const PopoverContent = ({ model }: PopoverContentProps) => {
           }}
         >
           {({ data: { participants, respondents } }) => {
-            console.log(participants);
-            console.log(respondents, ' res');
-            let status: StatusType = '';
             return (
               <>
                 {searchResults.map((option, index) => {
@@ -161,13 +157,24 @@ const PopoverContent = ({ model }: PopoverContentProps) => {
                     index,
                     option,
                   });
+
+                  const settingStatus = (personId: number) => {
+                    if (participants.find((item) => item.id === personId)) {
+                      return 'booked';
+                    }
+                    if (respondents.find((item) => item.id === personId)) {
+                      return 'signed up';
+                    }
+                    return '';
+                  };
+
                   return (
                     <PersonListItem
                       key={option.id}
                       orgId={1}
                       person={option}
                       itemProps={optProps}
-                      status={status}
+                      status={settingStatus(option.id)}
                     />
                   );
                 })}
@@ -186,7 +193,7 @@ const PersonListItem: FC<{
   orgId: number;
   person: ZetkinPerson;
   status: StatusType;
-}> = ({ itemProps, orgId, person }) => {
+}> = ({ itemProps, orgId, person, status }) => {
   return (
     <ListItem {...itemProps} disablePadding sx={{ py: 0.8 }}>
       <Box
@@ -198,9 +205,13 @@ const PersonListItem: FC<{
         }}
       >
         <ZUIAvatar orgId={orgId} personId={person.id} size="md" />
-        <Typography component="span">
-          {`${person.first_name} ${person.last_name}`}
-        </Typography>
+        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+          <Typography component="span">
+            {`${person.first_name} ${person.last_name}`}
+          </Typography>
+          {status === 'booked' && <EmojiPeopleIcon sx={{ color: '#A8A8A8' }} />}
+          {status === 'signed up' && 'signed up'}
+        </Box>
       </Box>
     </ListItem>
   );

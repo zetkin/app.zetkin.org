@@ -6,6 +6,10 @@ export default makeMessages('feat.events', {
     keepTyping: m('Keep typing..'),
     noResult: m('No matching person found'),
     search: m('Type to start searching'),
+    status: {
+      booked: m('Already ooked'),
+      signedUp: m('Already Signed up'),
+    },
   },
   eventOverviewCard: {
     buttonEndDate: m('+ End date'),
