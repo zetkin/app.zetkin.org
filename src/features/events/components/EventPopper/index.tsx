@@ -1,5 +1,6 @@
 import makeStyles from '@mui/styles/makeStyles';
 import NextLink from 'next/link';
+import React from 'react';
 import {
   AccessTime,
   ArrowForward,
@@ -28,7 +29,7 @@ interface StyleProps {
   color: STATUS_COLORS;
 }
 
-const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
+const useStyles = makeStyles<Theme>(() => ({
   description: {
     '-webkit-box-orient': 'vertical',
     '-webkit-line-clamp': 3,
@@ -37,14 +38,6 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
     overflow: 'hidden',
     whiteSpace: 'normal',
     width: '100%',
-  },
-  dot: {
-    backgroundColor: ({ color }) => theme.palette.statusColors[color],
-    borderRadius: '100%',
-    height: '10px',
-    marginLeft: '0.5em',
-    marginRight: '0.5em',
-    width: '10px',
   },
 }));
 
@@ -59,6 +52,36 @@ const Quota = ({ numerator, denominator }: QuotaParams) => {
       color={denominator > numerator ? 'red' : 'secondary'}
     >{`${numerator}/${denominator}`}</Typography>
   );
+};
+
+const useDotStyles = makeStyles<Theme, StyleProps>((theme) => ({
+  dot: {
+    backgroundColor: ({ color }) => theme.palette.statusColors[color],
+    borderRadius: '100%',
+    height: '10px',
+    marginLeft: '0.5em',
+    marginRight: '0.5em',
+    width: '10px',
+  },
+}));
+
+interface DotParams {
+  state: EventState;
+}
+
+const Dot = ({ state }: DotParams) => {
+  let color = STATUS_COLORS.GRAY;
+  if (state === EventState.OPEN) {
+    color = STATUS_COLORS.GREEN;
+  } else if (state === EventState.ENDED) {
+    color = STATUS_COLORS.RED;
+  } else if (state === EventState.SCHEDULED) {
+    color = STATUS_COLORS.BLUE;
+  } else if (state === EventState.CANCELLED) {
+    color = STATUS_COLORS.ORANGE;
+  }
+  const classes = useDotStyles({ color });
+  return <Box className={classes.dot} />;
 };
 
 interface EventPopperProps {
@@ -80,18 +103,8 @@ const EventPopper = ({
   respondents,
   participants,
 }: EventPopperProps) => {
-  let color = STATUS_COLORS.GRAY;
-  if (state === EventState.OPEN) {
-    color = STATUS_COLORS.GREEN;
-  } else if (state === EventState.ENDED) {
-    color = STATUS_COLORS.RED;
-  } else if (state === EventState.SCHEDULED) {
-    color = STATUS_COLORS.BLUE;
-  } else if (state === EventState.CANCELLED) {
-    color = STATUS_COLORS.ORANGE;
-  }
-  const classes = useStyles({ color });
   const messages = useMessages(messageIds);
+  const classes = useStyles();
   const remindedParticipants =
     participants?.filter((p) => p.reminder_sent != null).length ?? 0;
   const availableParticipants = participants?.length ?? 0;
@@ -107,7 +120,7 @@ const EventPopper = ({
         </Typography>
       </Box>
       <Box alignItems="center" display="flex">
-        <Box className={classes.dot} />
+        <Dot state={state} />
         <Typography color="secondary">{event.activity.title}</Typography>
       </Box>
       <Box alignItems="center" display="flex" justifyContent="space-between">
