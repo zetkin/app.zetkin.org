@@ -1,7 +1,7 @@
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 
-import Calendar from 'features/calendar/components';
+import Calendar from 'features/calendar/oldComponents';
 import getCampaign from 'features/campaigns/fetching/getCampaign';
 import getCampaignEvents from 'features/campaigns/fetching/getCampaignEvents';
 import getOrg from 'utils/fetching/getOrg';
