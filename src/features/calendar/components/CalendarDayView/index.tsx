@@ -1,5 +1,15 @@
+import Box from '@mui/material/Box';
+import CalendarDayItem from './CalendarDayItem';
+
 const CalendarDayView = () => {
-  return <h2>Day</h2>;
+  return <Box sx={{
+      flexDirection: 'row',
+      backgroundColor: 'green',
+    }}>
+    <CalendarDayItem/>
+    <CalendarDayItem/>
+    <CalendarDayItem/>
+  </Box>
 };
 
 export default CalendarDayView;
