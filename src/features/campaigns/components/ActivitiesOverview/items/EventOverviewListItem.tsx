@@ -30,7 +30,7 @@ const EventOverviewListItem: FC<EventOverviewListItemProps> = ({
 
   return (
     <OverviewListItem
-      activity={activity}
+      endDate={null}
       endNumber={`${event.num_participants_available} / ${event.num_participants_required}`}
       endNumberColor={
         event.num_participants_available < event.num_participants_required
@@ -44,6 +44,7 @@ const EventOverviewListItem: FC<EventOverviewListItemProps> = ({
       meta={<EventWarningIcons compact model={model} />}
       PrimaryIcon={EventOutlined}
       SecondaryIcon={People}
+      startDate={null}
       statusBar={null}
       subtitle={
         <ZUIIconLabelRow
