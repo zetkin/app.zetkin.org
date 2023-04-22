@@ -8,6 +8,10 @@ export default class LocationsModel extends ModelBase {
   private _orgId: number;
   private _repo: EventsRepo;
 
+  addLocation(newLocation: Partial<ZetkinLocation>): void {
+    this._repo.addLocation(this._orgId, newLocation);
+  }
+
   constructor(env: Environment, orgId: number) {
     super();
     this._orgId = orgId;
@@ -16,5 +20,19 @@ export default class LocationsModel extends ModelBase {
 
   getLocations(): IFuture<ZetkinLocation[]> {
     return this._repo.getLocations(this._orgId);
+  }
+
+  setLocationDescription(locationId: number, description: string) {
+    this._repo.updateLocation(this._orgId, locationId, {
+      info_text: description,
+    });
+  }
+
+  setLocationLatLng(locationId: number, lat: number, lng: number) {
+    this._repo.updateLocation(this._orgId, locationId, { lat, lng });
+  }
+
+  setLocationTitle(locationId: number, title: string) {
+    this._repo.updateLocation(this._orgId, locationId, { title });
   }
 }

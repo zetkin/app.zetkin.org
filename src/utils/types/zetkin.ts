@@ -357,6 +357,10 @@ export interface ZetkinActivity {
   info_text: string | null;
 }
 
+export interface ZetkinEventTypePostBody {
+  title: string;
+}
+
 export interface ZetkinTagGroup {
   id: number;
   title: string;
