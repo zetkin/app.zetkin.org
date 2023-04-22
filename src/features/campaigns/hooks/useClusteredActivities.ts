@@ -7,6 +7,7 @@ import {
   SurveyActivity,
   TaskActivity,
 } from 'features/campaigns/models/CampaignActivitiesModel';
+import { log } from 'console';
 
 export enum CLUSTER_TYPE {
   MULTI_LOCATION = 'multilocation',
@@ -96,6 +97,16 @@ export function clusterEvents(eventActivities: EventActivity[]): ClusteredEvent[
           };
           return;
         }
+
+        if (
+          doesMultipleLocationEventsMatch(lastClusterEvent, event)
+        ) {
+          pendingClusters[i] = {
+            events: [...cluster.events, event],
+            kind: CLUSTER_TYPE.MULTI_LOCATION
+          }
+          return;
+        }
       } else if (cluster.kind == CLUSTER_TYPE.MULTI_SHIFT) {
         // If activity and location is the same, and this event
         // starts right after the last event in the group ends,
@@ -106,6 +117,11 @@ export function clusterEvents(eventActivities: EventActivity[]): ClusteredEvent[
           lastClusterEvent.location.id == event.location.id &&
           lastClusterEvent.end_time == event.start_time
         ) {
+          pendingClusters[i].events.push(event);
+          return;
+        }
+      } else if (cluster.kind == CLUSTER_TYPE.MULTI_LOCATION) {
+        if (doesMultipleLocationEventsMatch(lastClusterEvent, event)) {
           pendingClusters[i].events.push(event);
           return;
         }
@@ -164,4 +180,12 @@ function isCluster(activity: ClusteredActivity): activity is ClusteredEvent {
     activity.kind == CLUSTER_TYPE.MULTI_LOCATION ||
     activity.kind == CLUSTER_TYPE.MULTI_SHIFT
   );
+}
+
+function doesMultipleLocationEventsMatch(event1: ZetkinEvent, event2: ZetkinEvent): boolean {
+  return (event1.activity === event2?.activity &&
+    event1.campaign === event2?.campaign &&
+    event1.start_time === event2?.start_time &&
+    event1.end_time === event2?.end_time &&
+    event1.organization === event2?.organization)
 }
