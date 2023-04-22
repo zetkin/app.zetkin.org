@@ -1,6 +1,7 @@
 import Box from '@mui/material/Box';
 import CalendarDayEvent from './CalendarDayEvent';
 import CalendarDayOtherActivities from './CalendarDayOtherActivities';
+import CalendarDayDate from './CalendarDayDate';
 
 const CalendarDayItem = () => {
   return <Box display="flex"
@@ -14,17 +15,7 @@ const CalendarDayItem = () => {
         width: 300,
       }}
     >
-      <Box
-        display="inline-block"
-        padding={1}
-        color="white"
-        sx={{
-          borderRadius: "16px",
-          backgroundColor: 'blue',
-        }}
-      >
-        10 May, Mon
-      </Box>
+      <CalendarDayDate focusDate={new Date("2023-04-23")} date={new Date()} />
     </Box>
     <Box
       display="flex" flexDirection="column"
