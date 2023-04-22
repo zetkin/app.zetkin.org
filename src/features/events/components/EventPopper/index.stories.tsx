@@ -70,7 +70,18 @@ basic.args = {
 };
 export const cancelled = Template.bind({});
 cancelled.args = {
-  event: mockEvent(),
+  event: {
+    ...mockEvent(),
+    info_text:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris ex turpis, viverra sit amet consectetur eu, ' +
+      'vestibulum vel nulla. Nunc tristique, tortor nec porttitor vulputate, nisi libero porttitor purus, vitae ' +
+      'blandit sem nisl ut risus. In nulla metus, lobortis sed consectetur eu, porttitor et velit. Curabitur faucibus ' +
+      'ex lacus, eget blandit libero molestie sed. Etiam dolor nisl, aliquam non elit eu, interdum ornare tellus. ' +
+      'Morbi pharetra eu purus sit amet rutrum. Duis tincidunt augue at molestie mollis. Aliquam suscipit metus at ' +
+      'venenatis porta. Quisque egestas malesuada dui nec fringilla. Maecenas condimentum metus mi. Quisque eleifend ' +
+      'lorem eu sapien aliquet dapibus. Nunc sagittis dictum orci, ut molestie orci venenatis tincidunt. Sed non ' +
+      'libero non nibh auctor cursus.',
+  },
   participants: [mockEventParticipant()],
   respondents: [mockEventResponse()],
   state: EventState.CANCELLED,
