@@ -6,8 +6,10 @@ import {
   SplitscreenOutlined,
 } from '@mui/icons-material';
 
+import { EventState } from 'features/events/models/EventDataModel';
 import MultiLocationIcon from 'zui/icons/MultiLocation';
 import { removeOffset } from 'utils/dateUtils';
+import { ZetkinEvent } from 'utils/types/zetkin';
 import ZUIIconLabelRow from 'zui/ZUIIconLabelRow';
 import ZUITimeSpan from 'zui/ZUITimeSpan';
 import ActivityListItem, { STATUS_COLORS } from './ActivityListItem';
@@ -87,8 +89,20 @@ function useEventClusterData(cluster: ClusteredEvent) {
     0
   );
 
-  const color = STATUS_COLORS.GRAY;
-  // TODO: Figure out color
+  // Get the state of the events, or UNKNOWN if the states vary
+  let state = getEventState(cluster.events[0]);
+  if (cluster.events.filter((event) => getEventState(event) != state).length) {
+    state = EventState.UNKNOWN;
+  }
+
+  let color = STATUS_COLORS.GRAY;
+  if (state === EventState.OPEN) {
+    color = STATUS_COLORS.GREEN;
+  } else if (state === EventState.ENDED) {
+    color = STATUS_COLORS.RED;
+  } else if (state === EventState.SCHEDULED) {
+    color = STATUS_COLORS.BLUE;
+  }
 
   const firstEvent = cluster.events[0];
   const campaignId = firstEvent.campaign?.id ?? 'standalone';
@@ -112,3 +126,30 @@ function useEventClusterData(cluster: ClusteredEvent) {
     title,
   };
 }
+
+const getEventState = (data: ZetkinEvent) => {
+  if (!data) {
+    return EventState.UNKNOWN;
+  }
+
+  if (data.start_time) {
+    const startTime = new Date(data.start_time);
+    const now = new Date();
+
+    if (startTime > now) {
+      return EventState.SCHEDULED;
+    } else {
+      if (data.end_time) {
+        const endTime = new Date(data.end_time);
+
+        if (endTime < now) {
+          return EventState.ENDED;
+        }
+      }
+
+      return EventState.OPEN;
+    }
+  } else {
+    return EventState.DRAFT;
+  }
+};
