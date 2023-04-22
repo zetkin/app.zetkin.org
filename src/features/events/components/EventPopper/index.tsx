@@ -193,9 +193,13 @@ const EventPopper = ({
         </NextLink>
       </Box>
       <Box alignItems="center" display="flex" justifyContent="flex-end">
-        <Button onClick={onPublish} variant="contained">
-          {messages.eventPopper.publish()}
-        </Button>
+        {state == EventState.DRAFT ||
+          state == EventState.SCHEDULED ||
+          (state == EventState.CANCELLED && (
+            <Button onClick={onPublish} variant="contained">
+              {messages.eventPopper.publish()}
+            </Button>
+          ))}
         <ZUIEllipsisMenu
           items={[
             { label: 'Delete', onSelect: onDelete },
