@@ -40,7 +40,7 @@ const Calendar = () => {
         timeScale={selectedTimeScale}
       />
 
-      {selectedTimeScale === TimeScale.DAY && <CalendarDayView />}
+      {selectedTimeScale === TimeScale.DAY && <CalendarDayView focusDate={focusDate} />}
       {selectedTimeScale === TimeScale.WEEK && <CalendarWeekView />}
       {selectedTimeScale === TimeScale.MONTH && <CalendarMonthView />}
     </Grid>
