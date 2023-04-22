@@ -1,3 +1,4 @@
+import isEventCluster from '../utils/isEventCluster';
 import { ZetkinEvent } from 'utils/types/zetkin';
 import {
   ACTIVITIES,
@@ -138,10 +139,10 @@ export default function useClusteredActivities(
   const clusteredEvents: ClusteredActivity[] = clusterEvents(eventActivities);
 
   return clusteredEvents.concat(otherActivities).sort((a, b) => {
-    const aStart = isCluster(a)
+    const aStart = isEventCluster(a)
       ? new Date(a.events[0].start_time)
       : a.startDate;
-    const bStart = isCluster(b)
+    const bStart = isEventCluster(b)
       ? new Date(b.events[0].start_time)
       : b.startDate;
 
@@ -155,12 +156,4 @@ export default function useClusteredActivities(
 
     return aStart.getTime() - bStart.getTime();
   });
-}
-
-function isCluster(activity: ClusteredActivity): activity is ClusteredEvent {
-  return (
-    activity.kind == CLUSTER_TYPE.SINGLE ||
-    activity.kind == CLUSTER_TYPE.MULTI_LOCATION ||
-    activity.kind == CLUSTER_TYPE.MULTI_SHIFT
-  );
 }
