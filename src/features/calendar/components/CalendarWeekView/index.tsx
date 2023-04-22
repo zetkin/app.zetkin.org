@@ -48,25 +48,62 @@ export interface CalendarWeekViewProps {
   focusDate: Date;
 }
 
+const TIME_COLUMN_WIDTH = '3em';
+const DAY_COLUMN_MIN_WIDTH = '2em';
+
 const CalendarWeekView = ({ focusDate }: CalendarWeekViewProps) => {
   return (
     <Grid container>
       <Grid container spacing={2}>
-        {_.range(7).map((weekday: number) => {
-          const weekdayDate = dayjs(focusDate).day(weekday + 1);
+        <Grid container xs={1} />
+        <Grid container xs={11}>
+          {_.range(7).map((weekday: number) => {
+            const weekdayDate = dayjs(focusDate).day(weekday + 1);
 
+            return (
+              <DayHeader
+                key={weekday}
+                date={weekdayDate}
+                focused={
+                  new Date().toDateString() ==
+                  weekdayDate.toDate().toDateString()
+                }
+              />
+            );
+          })}
+        </Grid>
+      </Grid>
+      <Grid container sx={{ marginTop: '1em' }}>
+        {_.range(24).map((hour: number) => {
           return (
-            <DayHeader
-              key={weekday}
-              date={weekdayDate}
-              focused={focusDate == weekdayDate.toDate()}
-            />
+            <Grid key={hour} container>
+              <Grid item width={TIME_COLUMN_WIDTH} xs={1}>
+                {hour}:00
+              </Grid>
+              <Grid container spacing={2} sx={{ borderWidth: '5px' }} xs={11}>
+                {_.range(7).map((weekday: number) => {
+                  return (
+                    <Grid
+                      key={weekday}
+                      item
+                      sx={{
+                        backgroundColor: 'gray',
+                        height: '10em',
+                      }}
+                      xs={12 / 7}
+                    >
+                      test
+                    </Grid>
+                  );
+                })}
+              </Grid>
+            </Grid>
           );
         })}
       </Grid>
-      <Grid container spacing={2}></Grid>
     </Grid>
   );
 };
+
 
 export default CalendarWeekView;
