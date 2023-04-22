@@ -1,21 +1,36 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { remoteItem, remoteList, RemoteList } from 'utils/storeUtils';
+import {
+  RemoteItem,
+  remoteItem,
+  remoteList,
+  RemoteList,
+} from 'utils/storeUtils';
 import {
   ZetkinEvent,
   ZetkinEventParticipant,
   ZetkinLocation,
 } from 'utils/types/zetkin';
 
+export type EventStats = {
+  id: number;
+  numBooked: number;
+  numPending: number;
+  numReminded: number;
+  numSignups: number;
+};
+
 export interface EventsStoreSlice {
   eventList: RemoteList<ZetkinEvent>;
   locationList: RemoteList<ZetkinLocation>;
   participantsByEventId: Record<number, RemoteList<ZetkinEventParticipant>>;
+  statsByEventId: Record<number, RemoteItem<EventStats>>;
 }
 
 const initialState: EventsStoreSlice = {
   eventList: remoteList(),
   locationList: remoteList(),
   participantsByEventId: {},
+  statsByEventId: {},
 };
 
 const eventsSlice = createSlice({
@@ -88,6 +103,17 @@ const eventsSlice = createSlice({
       state.participantsByEventId[eventId] = remoteList(participants);
       state.participantsByEventId[eventId].loaded = new Date().toISOString();
     },
+    statsLoad: (state, action: PayloadAction<number>) => {
+      const eventId = action.payload;
+      state.statsByEventId[eventId] = remoteItem<EventStats>(eventId);
+      state.statsByEventId[eventId].isLoading = true;
+    },
+    statsLoaded: (state, action: PayloadAction<[number, EventStats]>) => {
+      const [eventId, stats] = action.payload;
+      state.statsByEventId[eventId].data = stats;
+      state.statsByEventId[eventId].isLoading = false;
+      state.statsByEventId[eventId].loaded = new Date().toISOString();
+    },
   },
 });
 
@@ -103,4 +129,6 @@ export const {
   locationsLoaded,
   participantsLoad,
   participantsLoaded,
+  statsLoad,
+  statsLoaded,
 } = eventsSlice.actions;
