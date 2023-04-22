@@ -16,7 +16,6 @@ type EventWarningIconsProps = {
 };
 
 const EventWarningIcons: FC<EventWarningIconsProps> = ({ compact, model }) => {
-  const messages = useMessages(messageIds);
   const data = model.getData().data;
 
   if (!data) {
@@ -25,10 +24,43 @@ const EventWarningIcons: FC<EventWarningIconsProps> = ({ compact, model }) => {
 
   const participants = model.getParticipants();
 
+  return (
+    <EventWarningIconsSansModel
+      compact={compact}
+      hasContact={!!data.contact}
+      numParticipants={participants.data?.length ?? 0}
+      numRemindersSent={
+        participants.data?.filter((p) => !!p.reminder_sent).length ?? 0
+      }
+      numSignups={data.num_participants_available}
+      participantsLoading={!participants.data}
+    />
+  );
+};
+
+const EventWarningIconsSansModel: FC<{
+  compact?: boolean;
+  hasContact: boolean;
+  numParticipants: number;
+  numRemindersSent: number;
+  numSignups: number;
+  participantsLoading: boolean;
+}> = ({
+  compact,
+  numParticipants,
+  numRemindersSent,
+  numSignups,
+  hasContact,
+  participantsLoading,
+}) => {
+  const messages = useMessages(messageIds);
+
   const icons: (JSX.Element | null)[] = [null, null, null];
 
-  if (participants.data) {
-    if (!data.contact) {
+  if (participantsLoading) {
+    icons.push(<CircularProgress />);
+  } else {
+    if (!hasContact) {
       icons[0] = (
         <WarningSlot
           key="contact"
@@ -38,8 +70,8 @@ const EventWarningIcons: FC<EventWarningIconsProps> = ({ compact, model }) => {
       );
     }
 
-    const numBooked = participants.data.length;
-    if (data.num_participants_available > numBooked) {
+    const numBooked = numParticipants;
+    if (numSignups > 0) {
       icons[1] = (
         <WarningSlot
           key="signups"
@@ -49,21 +81,17 @@ const EventWarningIcons: FC<EventWarningIconsProps> = ({ compact, model }) => {
       );
     }
 
-    const reminded = participants.data.filter((p) => !!p.reminder_sent);
-    const numReminded = reminded.length;
-    if (numReminded < participants.data.length) {
+    if (numRemindersSent < numBooked) {
       icons[2] = (
         <WarningSlot
           key="reminders"
           icon={<MailOutline color="error" />}
           tooltip={messages.activityList.eventItem.reminders({
-            numMissing: participants.data.length - numReminded,
+            numMissing: numParticipants - numRemindersSent,
           })}
         />
       );
     }
-  } else {
-    icons.push(<CircularProgress />);
   }
 
   return (
@@ -97,5 +125,7 @@ const WarningSlot: FC<{
     </Box>
   );
 };
+
+export { EventWarningIconsSansModel };
 
 export default EventWarningIcons;
