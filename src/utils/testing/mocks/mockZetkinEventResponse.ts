@@ -1,5 +1,5 @@
 import { mockObject } from './index';
-import { ZetkinEventResponse, ZetkinPerson } from '../../types/zetkin';
+import { ZetkinEventResponse } from '../../types/zetkin';
 
 const eventResponse: ZetkinEventResponse = {
   action_id: 1,
