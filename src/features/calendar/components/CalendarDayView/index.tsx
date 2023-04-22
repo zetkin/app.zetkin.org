@@ -1,5 +1,8 @@
+import { event } from "utils/testing/mocks/mockEvent";
+import CalendarDayViewActivity from "./CalendarDayViewActivity";
+
 const CalendarDayView = () => {
-  return <h2>Day</h2>;
+  return <><CalendarDayViewActivity event={event}/></>;
 };
 
 export default CalendarDayView;
