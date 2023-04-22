@@ -12,6 +12,7 @@ export enum CLUSTER_TYPE {
   MULTI_LOCATION = 'multilocation',
   MULTI_SHIFT = 'multishift',
   SINGLE = 'single',
+  ARBITRARY = 'arbitrary'
 }
 
 export type MultiShiftEventCluster = {
@@ -40,7 +41,7 @@ export type NonEventActivity =
   | TaskActivity;
 export type ClusteredActivity = ClusteredEvent | NonEventActivity;
 
-function clusterEvents(eventActivities: EventActivity[]): ClusteredEvent[] {
+export function clusterEvents(eventActivities: EventActivity[]): ClusteredEvent[] {
   const sortedEvents = eventActivities
     .map((activity) => activity.data)
     .sort((a, b) => {
