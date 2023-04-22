@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useContext } from 'react';
 import {
   Group,
   PlaceOutlined,
@@ -18,19 +18,31 @@ import {
   ClusteredEvent,
 } from 'features/campaigns/hooks/useClusteredActivities';
 
+import { EnvContext } from 'core/env/EnvContext';
+import { EventWarningIconsSansModel } from 'features/events/components/EventWarningIcons';
+import getEventStats from 'features/events/rpc/getEventStats';
+import { loadItemIfNecessary } from 'core/caching/cacheUtils';
+import { RootState } from 'core/store';
+import { useStore } from 'react-redux';
+import { statsLoad, statsLoaded } from 'features/events/store';
+
 interface EventListeItemProps {
   cluster: ClusteredEvent;
 }
 
 const EventClusterListItem: FC<EventListeItemProps> = ({ cluster }) => {
   const {
+    allHaveContacts,
     campaignId,
     color,
     endTime,
     eventId,
     location,
-    numParticipantsAvailable,
+    numBooked,
     numParticipantsRequired,
+    numPending,
+    numReminded,
+    statsLoading,
     orgId,
     startTime,
     title,
@@ -39,12 +51,19 @@ const EventClusterListItem: FC<EventListeItemProps> = ({ cluster }) => {
   return (
     <ActivityListItem
       color={color}
-      endNumber={`${numParticipantsAvailable} / ${numParticipantsRequired}`}
-      endNumberColor={
-        numParticipantsAvailable < numParticipantsRequired ? 'error' : undefined
-      }
+      endNumber={`${numBooked} / ${numParticipantsRequired}`}
+      endNumberColor={numBooked < numParticipantsRequired ? 'error' : undefined}
       href={`/organize/${orgId}/projects/${campaignId}/events/${eventId}`}
-      meta={<></>}
+      meta={
+        <EventWarningIconsSansModel
+          compact={false}
+          hasContact={allHaveContacts}
+          numParticipants={numBooked}
+          numRemindersSent={numReminded}
+          numSignups={numPending}
+          participantsLoading={statsLoading}
+        />
+      }
       PrimaryIcon={
         cluster.kind == CLUSTER_TYPE.MULTI_LOCATION
           ? MultiLocationIcon
@@ -80,27 +99,68 @@ const EventClusterListItem: FC<EventListeItemProps> = ({ cluster }) => {
 export default EventClusterListItem;
 
 function useEventClusterData(cluster: ClusteredEvent) {
-  const numParticipantsAvailable = cluster.events.reduce(
-    (sum, event) => sum + event.num_participants_available,
-    0
-  );
   const numParticipantsRequired = cluster.events.reduce(
     (sum, event) => sum + event.num_participants_required,
     0
   );
 
+  let statsLoading = false;
+  const store = useStore<RootState>();
+  const state = store.getState();
+  const env = useContext(EnvContext);
+  const allStats = cluster.events.map((event) => {
+    const future = loadItemIfNecessary(
+      state.events.statsByEventId[event.id],
+      store,
+      {
+        actionOnLoad: () => statsLoad(event.id),
+        actionOnSuccess: (stats) => statsLoaded([event.id, stats]),
+        loader: () => {
+          return env!.apiClient.rpc(getEventStats, {
+            eventId: event.id,
+            orgId: event.organization.id,
+          });
+        },
+      }
+    );
+
+    if (future.isLoading) {
+      statsLoading = true;
+    }
+
+    return future.data;
+  });
+
+  const allHaveContacts = cluster.events.reduce(
+    (allTrue, event) => allTrue && !!event.contact,
+    true
+  );
+
   // Get the state of the events, or UNKNOWN if the states vary
-  let state = getEventState(cluster.events[0]);
-  if (cluster.events.filter((event) => getEventState(event) != state).length) {
-    state = EventState.UNKNOWN;
+  let status = getEventState(cluster.events[0]);
+  if (cluster.events.filter((event) => getEventState(event) != status).length) {
+    status = EventState.UNKNOWN;
+  }
+
+  let numBooked = 0;
+  let numPending = 0;
+  let numReminded = 0;
+  if (!statsLoading) {
+    allStats.forEach((stats) => {
+      if (stats) {
+        numPending += stats.numPending;
+        numBooked += stats.numBooked;
+        numReminded += stats.numReminded;
+      }
+    });
   }
 
   let color = STATUS_COLORS.GRAY;
-  if (state === EventState.OPEN) {
+  if (status === EventState.OPEN) {
     color = STATUS_COLORS.GREEN;
-  } else if (state === EventState.ENDED) {
+  } else if (status === EventState.ENDED) {
     color = STATUS_COLORS.RED;
-  } else if (state === EventState.SCHEDULED) {
+  } else if (status === EventState.SCHEDULED) {
     color = STATUS_COLORS.BLUE;
   }
 
@@ -114,15 +174,19 @@ function useEventClusterData(cluster: ClusteredEvent) {
   const title = firstEvent.title || firstEvent.activity.title;
 
   return {
+    allHaveContacts,
     campaignId,
     color,
     endTime,
     eventId,
     location,
-    numParticipantsAvailable,
+    numBooked,
     numParticipantsRequired,
+    numPending,
+    numReminded,
     orgId,
     startTime,
+    statsLoading,
     title,
   };
 }
