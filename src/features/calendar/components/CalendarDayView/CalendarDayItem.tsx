@@ -3,7 +3,15 @@ import CalendarDayEvent from './CalendarDayEvent';
 import CalendarDayOtherActivities from './CalendarDayOtherActivities';
 import CalendarDayDate from './CalendarDayDate';
 
-const CalendarDayItem = () => {
+export interface CalendarDayItemProps {
+  focusDate: Date;
+  date: Date;
+}
+
+const CalendarDayItem = ({
+  focusDate,
+  date
+}: CalendarDayItemProps) => {
   return <Box display="flex"
     sx={{
       marginBottom: '0.5em',
@@ -15,7 +23,7 @@ const CalendarDayItem = () => {
         width: 300,
       }}
     >
-      <CalendarDayDate focusDate={new Date("2023-04-23")} date={new Date()} />
+      <CalendarDayDate focusDate={focusDate} date={date} />
     </Box>
     <Box
       display="flex" flexDirection="column"

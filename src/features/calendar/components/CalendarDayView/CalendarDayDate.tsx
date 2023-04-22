@@ -1,5 +1,7 @@
 import Box from '@mui/material/Box';
 import dayjs from 'dayjs';
+import { isSameDate } from 'utils/dateUtils';
+
 
 export interface CalendarDayDateProps {
   focusDate: Date;
@@ -28,13 +30,13 @@ const CalendarDayDate = ({
   return <Box
     display="inline-block"
     padding={1}
-    color={dayjs(focusDate).format('YYYY-MM-DD') == dayjs(date).format('YYYY-MM-DD') ? "white" : "black"}
+    color={isSameDate(focusDate, date) ? "white" : "black"}
     sx={{
       borderRadius: "16px",
-      backgroundColor: dayjs(focusDate).format('YYYY-MM-DD') == dayjs(date).format('YYYY-MM-DD') ? "blue" : "inherited",
+      backgroundColor: isSameDate(focusDate, date) ? "blue" : "inherited",
     }}
   >
-    {dayjs(focusDate).get('D')} {months[dayjs(focusDate).get('month')]}, {dayjs(focusDate).format('dddd')}
+    {dayjs(date).get('D')} {months[dayjs(date).get('month')]}, {dayjs(date).format('dddd')}
   </Box>
 };
 
