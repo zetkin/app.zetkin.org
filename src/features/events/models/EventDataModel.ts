@@ -50,6 +50,12 @@ export default class EventDataModel extends ModelBase {
     this._repo.sendReminders(this._orgId, this._eventId);
   }
 
+  setCoverFile(id: number | null) {
+    this._repo.updateEvent(this._orgId, this._eventId, {
+      cover_file_id: id,
+    });
+  }
+
   setLocation(location: ZetkinLocation) {
     this._repo.updateEvent(this._orgId, this._eventId, {
       location_id: location.id,

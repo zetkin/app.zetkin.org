@@ -61,7 +61,18 @@ export interface ZetkinEventResponse {
 }
 
 export interface ZetkinEvent {
-  activity: { id: number; title: string };
+  cover_file?: {
+    id: number;
+    mime_type: string;
+    organization: {
+      id: number;
+      title: string;
+    };
+    original_name: string;
+    uploaded: string;
+    url: string;
+  };
+  activity?: { id: number; title: string };
   campaign: {
     id: number;
     title: string;
@@ -70,7 +81,7 @@ export interface ZetkinEvent {
   end_time: string;
   id: number;
   info_text: string;
-  location: {
+  location?: {
     id: number;
     lat: number;
     lng: number;

@@ -39,12 +39,13 @@ import {
 export type ZetkinEventPatchBody = Partial<
   Omit<
     ZetkinEvent,
-    'id' | 'activity' | 'campaign' | 'location' | 'organization'
+    'id' | 'activity' | 'campaign' | 'location' | 'organization' | 'cover_file'
   >
 > & {
-  activity_id?: number;
+  activity_id?: number | null;
   campaign_id?: number;
-  location_id?: number;
+  cover_file_id?: number | null;
+  location_id?: number | null;
   organization_id?: number;
 };
 

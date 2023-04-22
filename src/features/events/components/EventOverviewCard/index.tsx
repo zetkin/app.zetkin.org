@@ -29,6 +29,8 @@ import theme from 'theme';
 import useEditPreviewBlock from 'zui/hooks/useEditPreviewBlock';
 import { useMessages } from 'core/i18n';
 import ZUIDate from 'zui/ZUIDate';
+import ZUIEditableImage from 'zui/ZUIEditableImage';
+import ZUIImageSelectDialog from 'zui/ZUIImageSelectDialog';
 import ZUIPreviewableInput from 'zui/ZUIPreviewableInput';
 import {
   dateIsBefore,
@@ -55,6 +57,7 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
   const [link, setLink] = useState(data.url);
   const [infoText, setInfoText] = useState(data.info_text);
   const [locationId, setLocationId] = useState<number>(data.location.id);
+  const [selectingCover, setSelectingCover] = useState(false);
 
   const [startDate, setStartDate] = useState<Dayjs>(
     dayjs(removeOffset(data.start_time))
@@ -108,6 +111,33 @@ const EventOverviewCard: FC<EventOverviewCardProps> = ({
             </Box>
           )}
           <Grid container sx={{ marginTop: '100px' }}>
+            <Grid container m={1}>
+              <Grid
+                item
+                sx={{ alignItems: 'center', height: '10em', width: '10em' }}
+              >
+                <ZUIEditableImage
+                  alt={data.title || ''}
+                  height={200}
+                  onEdit={() => {
+                    setSelectingCover(true);
+                  }}
+                  onReset={() => {
+                    dataModel.setCoverFile(null);
+                  }}
+                  src={data.cover_file?.url || 'TODO: default image?'}
+                  width={100}
+                />
+                <ZUIImageSelectDialog
+                  onClose={() => setSelectingCover(false)}
+                  onSelectFile={(file) => {
+                    setSelectingCover(false);
+                    dataModel.setCoverFile(file.id);
+                  }}
+                  open={selectingCover}
+                />
+              </Grid>
+            </Grid>
             <Grid container m={2} sm xs={8}>
               <Grid
                 sx={{
