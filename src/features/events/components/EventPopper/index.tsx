@@ -48,6 +48,19 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
   },
 }));
 
+interface QuotaParams {
+  denominator: number;
+  numerator: number;
+}
+
+const Quota = ({ numerator, denominator }: QuotaParams) => {
+  return (
+    <Typography
+      color={denominator > numerator ? 'red' : 'secondary'}
+    >{`${numerator}/${denominator}`}</Typography>
+  );
+};
+
 interface EventPopperProps {
   event: ZetkinEvent;
   onCancel: (e: React.MouseEvent<HTMLLIElement, MouseEvent>) => void;
@@ -81,7 +94,7 @@ const EventPopper = ({
   const messages = useMessages(messageIds);
   const remindedParticipants =
     participants?.filter((p) => p.reminder_sent != null).length ?? 0;
-  const availParticipants = participants?.length ?? 0;
+  const availableParticipants = participants?.length ?? 0;
   const signedParticipants =
     respondents?.filter((r) => !participants?.some((p) => p.id === r.id))
       .length ?? 0;
@@ -94,7 +107,7 @@ const EventPopper = ({
         </Typography>
       </Box>
       <Box alignItems="center" display="flex">
-        <Box className={classes.dot} />{' '}
+        <Box className={classes.dot} />
         <Typography color="secondary">{event.activity.title}</Typography>
       </Box>
       <Box alignItems="center" display="flex" justifyContent="space-between">
@@ -105,7 +118,10 @@ const EventPopper = ({
               {messages.eventPopper.booked().toUpperCase()}
             </Typography>
           </Box>
-          <Typography color="secondary">{`${event.num_participants_available}/${event.num_participants_required}`}</Typography>
+          <Quota
+            denominator={event.num_participants_required}
+            numerator={event.num_participants_available}
+          />
         </Box>
         <Box display="flex" flexDirection="column">
           <Box alignItems="center" display="flex">
@@ -114,7 +130,10 @@ const EventPopper = ({
               {messages.eventPopper.notified().toUpperCase()}
             </Typography>
           </Box>
-          <Typography color="secondary">{`${remindedParticipants}/${availParticipants}`}</Typography>
+          <Quota
+            denominator={availableParticipants}
+            numerator={remindedParticipants}
+          />
         </Box>
         <Box display="flex" flexDirection="column">
           <Box alignItems="center" display="flex">
@@ -123,7 +142,9 @@ const EventPopper = ({
               {messages.eventPopper.signups().toUpperCase()}
             </Typography>
           </Box>
-          <Typography color="secondary">{signedParticipants}</Typography>
+          <Typography color={signedParticipants > 0 ? 'red' : 'secondary'}>
+            {signedParticipants}
+          </Typography>
         </Box>
       </Box>
       <Box display="flex" flexDirection="column">
