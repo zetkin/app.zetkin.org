@@ -6,6 +6,7 @@ import CalendarDayView from './CalendarDayView';
 import CalendarMonthView from './CalendarMonthView';
 import CalendarNavBar from './CalendarNavBar';
 import CalendarWeekView from './CalendarWeekView';
+import { Box } from '@mui/system';
 
 export enum TimeScale {
   DAY = 'day',
@@ -20,30 +21,34 @@ const Calendar = () => {
   );
 
   return (
-    <Grid padding={2}>
-      <CalendarNavBar
-        focusDate={focusDate}
-        onChangeFocusDate={(date) => {
-          setFocusDate(date);
-        }}
-        onChangeTimeScale={(timeScale) => {
-          setSelectedTimeScale(timeScale);
-        }}
-        onStepBackward={() => {
-          setFocusDate(
-            dayjs(focusDate).subtract(1, selectedTimeScale).toDate()
-          );
-        }}
-        onStepForward={() => {
-          setFocusDate(dayjs(focusDate).add(1, selectedTimeScale).toDate());
-        }}
-        timeScale={selectedTimeScale}
-      />
+    <Box height="100%" display="flex" flexDirection="column" >
+      <Box>
+        <CalendarNavBar
+          focusDate={focusDate}
+          onChangeFocusDate={(date) => {
+            setFocusDate(date);
+          }}
+          onChangeTimeScale={(timeScale) => {
+            setSelectedTimeScale(timeScale);
+          }}
+          onStepBackward={() => {
+            setFocusDate(
+              dayjs(focusDate).subtract(1, selectedTimeScale).toDate()
+            );
+          }}
+          onStepForward={() => {
+            setFocusDate(dayjs(focusDate).add(1, selectedTimeScale).toDate());
+          }}
+          timeScale={selectedTimeScale}
+        />
+      </Box>
 
-      {selectedTimeScale === TimeScale.DAY && <CalendarDayView />}
-      {selectedTimeScale === TimeScale.WEEK && <CalendarWeekView />}
-      {selectedTimeScale === TimeScale.MONTH && <CalendarMonthView />}
-    </Grid>
+      <Box flexGrow="1" display="flex" flexDirection="column">
+        {selectedTimeScale === TimeScale.DAY && <CalendarDayView />}
+        {selectedTimeScale === TimeScale.WEEK && <CalendarWeekView />}
+        {selectedTimeScale === TimeScale.MONTH && <CalendarMonthView focusDate={focusDate} onChangeFocusDate={(date) => setFocusDate(date)} />}
+      </Box>
+    </Box>
   );
 };
 
