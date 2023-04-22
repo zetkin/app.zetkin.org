@@ -47,7 +47,6 @@ export function clusterEventsforWeekCalander(eventActivities: EventActivity[]): 
         }
     });
 
-
     return pendingClusters
 }
 
