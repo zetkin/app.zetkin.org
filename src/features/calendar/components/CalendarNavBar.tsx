@@ -2,11 +2,26 @@ import { Box } from '@mui/system';
 import { ArrowBack, ArrowForward } from '@mui/icons-material';
 import { Button, ButtonGroup, IconButton } from '@mui/material';
 
-const CalendarNavBar = () => {
+// import { TimeScale } from '.';
+
+export interface CalendarNavBarProps {
+  focusDate: Date;
+  onChangeFocusDate: (date: Date) => void;
+  // onChangeTimeScale: () => void;
+  // onStepBackward: () => void;
+  // onStepForward: () => void;
+  // timeScale: TimeScale;
+}
+
+const CalendarNavBar = ({ onChangeFocusDate }: CalendarNavBarProps) => {
   return (
     <Box display="flex" justifyContent="space-between">
       <Box>
-        <Button color="primary" variant="outlined">
+        <Button
+          color="primary"
+          onClick={() => onChangeFocusDate(new Date())}
+          variant="outlined"
+        >
           Today
         </Button>
         <IconButton>
