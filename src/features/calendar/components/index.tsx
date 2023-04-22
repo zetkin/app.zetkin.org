@@ -16,7 +16,7 @@ export enum TimeScale {
 const Calendar = () => {
   const [focusDate, setFocusDate] = useState<Date>(new Date());
   const [selectedTimeScale, setSelectedTimeScale] = useState<TimeScale>(
-    TimeScale.MONTH
+    TimeScale.WEEK
   );
 
   return (
@@ -41,7 +41,9 @@ const Calendar = () => {
       />
 
       {selectedTimeScale === TimeScale.DAY && <CalendarDayView />}
-      {selectedTimeScale === TimeScale.WEEK && <CalendarWeekView />}
+      {selectedTimeScale === TimeScale.WEEK && (
+        <CalendarWeekView focusDate={focusDate} />
+      )}
       {selectedTimeScale === TimeScale.MONTH && <CalendarMonthView />}
     </Grid>
   );
