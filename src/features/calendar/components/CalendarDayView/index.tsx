@@ -4,7 +4,7 @@ import CalendarDayItem from './CalendarDayItem';
 const CalendarDayView = () => {
   return <Box sx={{
       flexDirection: 'row',
-      backgroundColor: 'green',
+      marginTop: '1em'
     }}>
     <CalendarDayItem/>
     <CalendarDayItem/>
