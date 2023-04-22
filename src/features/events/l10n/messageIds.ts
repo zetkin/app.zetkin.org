@@ -24,6 +24,18 @@ export default makeMessages('feat.events', {
     reqParticipantsHelperText: m('The minimum number of participants required'),
     reqParticipantsLabel: m('Required participants'),
   },
+  eventPopper: {
+    booked: m('Booked'),
+    contactPerson: m('Contact Person'),
+    dateAndTime: m('Date & Time'),
+    description: m('Description'),
+    eventPageLink: m('Go to event page'),
+    location: m('Location'),
+    noContact: m('No contact person'),
+    notified: m('Notified'),
+    publish: m('Publish'),
+    signups: m('Signups'),
+  },
   form: {
     activity: m('Activity'),
     campaign: m('Campaign'),

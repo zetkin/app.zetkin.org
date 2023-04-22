@@ -25,7 +25,7 @@ const event: ZetkinEvent = {
   num_participants_required: 2,
   organization: mockOrganization(),
   start_time: '2022-06-16T07:00:00+00:00',
-  title: undefined,
+  title: 'Dance party in the park',
   url: undefined,
 };
 
