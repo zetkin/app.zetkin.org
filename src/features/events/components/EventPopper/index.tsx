@@ -18,6 +18,7 @@ import { STATUS_COLORS } from '../../../campaigns/components/ActivityList/items/
 import { useMessages } from 'core/i18n';
 import ZUIEllipsisMenu from '../../../../zui/ZUIEllipsisMenu';
 import ZUIPerson from '../../../../zui/ZUIPerson';
+import ZUIPersonHoverCard from '../../../../zui/ZUIPersonHoverCard';
 import ZUITimeSpan from '../../../../zui/ZUITimeSpan';
 import {
   ZetkinEvent,
@@ -192,7 +193,13 @@ const EventPopper = ({
           </Typography>
         </Box>
         {event.contact ? (
-          <ZUIPerson id={event.contact.id} name={event.contact.name} />
+          <ZUIPersonHoverCard personId={event.contact.id}>
+            <ZUIPerson
+              id={event.contact.id}
+              name={event.contact.name}
+              size={20}
+            />
+          </ZUIPersonHoverCard>
         ) : (
           <Typography color="secondary" fontStyle="italic">
             {messages.eventPopper.noContact()}

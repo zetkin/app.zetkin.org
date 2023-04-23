@@ -31,7 +31,7 @@ const Template: ComponentStory<typeof EventPopper> = (args) => {
 
 export const basic = Template.bind({});
 basic.args = {
-  event: mockEvent(),
+  event: { ...mockEvent(), contact: { id: 1, name: 'Clara Zetkin' } },
   onCancel: (e) => e,
   onDelete: (e) => e,
   onPublish: () => null,
