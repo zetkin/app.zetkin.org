@@ -45,10 +45,14 @@ const LocationSearch: FC<LocationSearchProps> = ({
           sx={{
             backgroundColor: 'white',
             borderRadius: '5px',
-            padding: 0,
           }}
         />
       )}
+      sx={{
+        '& .MuiOutlinedInput-root': {
+          paddingRight: '10px!important',
+        },
+      }}
     />
   );
 };
