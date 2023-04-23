@@ -67,9 +67,16 @@ const CalendarWeekView = ({ focusDate }: CalendarWeekViewProps) => {
   const correctWeek = dayjs(focusDate).isoWeekday() == 7 ? dayjs(focusDate).add(-1, 'day') : focusDate
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-      <Grid container>
-        <Grid container spacing={1}>
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        flexGrow: 0,
+        height: '100%',
+      }}
+    >
+      <Box flexGrow={0} flexShrink={0}>
+        <Grid>
           <Grid container xs={1} />
           <Grid container xs={11}>
             {_.range(7).map((weekday: number) => {
@@ -88,55 +95,50 @@ const CalendarWeekView = ({ focusDate }: CalendarWeekViewProps) => {
             })}
           </Grid>
         </Grid>
-        <Box
-          sx={{
-            height: '60vh',
-            overflowY: 'auto',
-          }}
-        >
-          <Grid container sx={{ marginTop: '1em' }}>
-            {_.range(24).map((hour: number) => {
-              return (
-                <Grid key={hour} container>
-                  <Grid item width={TIME_COLUMN_WIDTH} xs={1}>
-                    {hour}.00
-                  </Grid>
-                  <Grid
-                    container
-                    spacing={2}
-                    sx={{ borderWidth: '5px' }}
-                    xs={11}
-                  >
-                    {_.range(7).map((weekday: number) => {
-                      return (
-                        <Grid
-                          key={weekday}
-                          item
-                          sx={{
-                            height: '8em',
-                          }}
-                          xs={12 / 7}
-                        >
-                          <Box
-                            sx={{
-                              backgroundColor: theme.palette.statusColors.gray,
-                              borderBottomColor: theme.palette.divider,
-                              borderBottomStyle: hour !== 23 ? 'solid' : null,
-                              borderBottomWidth: '2px',
-                              height: '100%',
-                              width: '100%',
-                            }}
-                          ></Box>
-                        </Grid>
-                      );
-                    })}
-                  </Grid>
+      </Box>
+      <Box
+        sx={{
+          flexGrow: 1,
+          overflow: 'auto',
+        }}
+      >
+        <Grid container sx={{ marginTop: '1em' }}>
+          {_.range(24).map((hour: number) => {
+            return (
+              <Grid key={hour} container>
+                <Grid item width={TIME_COLUMN_WIDTH} xs={1}>
+                  {hour}.00
                 </Grid>
-              );
-            })}
-          </Grid>
-        </Box>
-      </Grid>
+                <Grid container spacing={2} sx={{ borderWidth: '5px' }} xs={11}>
+                  {_.range(7).map((weekday: number) => {
+                    return (
+                      <Grid
+                        key={weekday}
+                        item
+                        sx={{
+                          height: '8em',
+                        }}
+                        xs={12 / 7}
+                      >
+                        <Box
+                          sx={{
+                            backgroundColor: theme.palette.statusColors.gray,
+                            borderBottomColor: theme.palette.divider,
+                            borderBottomStyle: hour !== 23 ? 'solid' : null,
+                            borderBottomWidth: '2px',
+                            height: '100%',
+                            width: '100%',
+                          }}
+                        ></Box>
+                      </Grid>
+                    );
+                  })}
+                </Grid>
+              </Grid>
+            );
+          })}
+        </Grid>
+      </Box>
     </Box>
   );
 };

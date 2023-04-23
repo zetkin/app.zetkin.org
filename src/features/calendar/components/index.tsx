@@ -20,7 +20,7 @@ const Calendar = () => {
   );
 
   return (
-    <Box display="flex" flexDirection="column" height={'100%'} padding={2}>
+    <Box display="flex" flexDirection="column" height={1} padding={1}>
       <Box>
         <CalendarNavBar
           focusDate={focusDate}
@@ -42,9 +42,11 @@ const Calendar = () => {
         />
       </Box>
 
-      <Box flexGrow={1}>
+      <Box flexGrow={1} overflow="auto">
         {selectedTimeScale === TimeScale.DAY && <CalendarDayView />}
-        {selectedTimeScale === TimeScale.WEEK && <CalendarWeekView focusDate={focusDate} />}
+        {selectedTimeScale === TimeScale.WEEK && (
+          <CalendarWeekView focusDate={focusDate} />
+        )}
         {selectedTimeScale === TimeScale.MONTH && <CalendarMonthView />}
       </Box>
     </Box>
