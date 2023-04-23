@@ -31,7 +31,7 @@ export function doArbitraryClustering(
   return clusteredEvents;
 }
 
-function isEventsOverlaping(
+export function isEventsOverlaping(
   clusterTimeSpan1: ClusterTimeSpan,
   clusterTimeSpan2: ClusterTimeSpan
 ): boolean {

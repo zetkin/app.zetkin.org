@@ -3,7 +3,10 @@ import {
   ACTIVITIES,
   EventActivity,
 } from 'features/campaigns/models/CampaignActivitiesModel';
-import { doArbitraryClustering } from './clusterdEventsForWeekCalender';
+import {
+  doArbitraryClustering,
+  isEventsOverlaping,
+} from './clusterdEventsForWeekCalender';
 
 const mockEventData: ZetkinEvent = {
   activity: {
@@ -97,5 +100,34 @@ describe('doArbitraryClustering()', () => {
       }),
     ]);
     expect(result.length).toBe(1);
+  });
+});
+
+describe('isEventsOverlaping()', () => {
+  it('returns true if starttime of timespan2 is in timespan1', () => {
+    const result = isEventsOverlaping(
+      {
+        endTime: '1857-07-05T13:00:00.000Z',
+        startTime: '1857-07-05T12:00:00.000Z',
+      },
+      {
+        endTime: '1857-07-05T13:37:00.000Z',
+        startTime: '1857-07-05T12:37:00.000Z',
+      }
+    );
+    expect(result).toBe(true);
+  });
+  it('returns false if starttime of timespan2 is not in timespan1', () => {
+    const result = isEventsOverlaping(
+      {
+        endTime: '1857-07-05T13:00:00.000Z',
+        startTime: '1857-07-05T12:00:00.000Z',
+      },
+      {
+        endTime: '1857-07-05T13:37:00.000Z',
+        startTime: '1857-07-05T13:01:00.000Z',
+      }
+    );
+    expect(result).toBe(false);
   });
 });
