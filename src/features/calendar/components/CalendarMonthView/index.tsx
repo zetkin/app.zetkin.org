@@ -52,11 +52,14 @@ const CalendarMonthView = ({ focusDate, onChangeFocusDate }: Props) => {
   }, []);
 
   useEffect(() => {
-    setWeekNumber(firstDayOfCalendar.isoWeek());
   }, [firstDayOfCalendar]);
 
   function getDayIndex(rowIndex: number, columnIndex: number) {
     return (columnIndex) + (rowIndex * (numberOfColumns))
+  }
+  function getWeekNumber(rowIndex: number) {
+    return firstDayOfCalendar.add(rowIndex, "week").isoWeek();
+
   }
 
   return <>
@@ -73,7 +76,7 @@ const CalendarMonthView = ({ focusDate, onChangeFocusDate }: Props) => {
         .map((_, rowIndex) => [...Array(numberOfColumns + 1)]
           .map((_, columnIndex) =>
             <>
-              {columnIndex === 0 && <CalendarWeekNumber weekNr={weekNumber + rowIndex} />}
+              {columnIndex === 0 && <CalendarWeekNumber weekNr={getWeekNumber(rowIndex)} />}
               {columnIndex !== 0 && <CalendarMonthViewDay
                 firstDateOfCalendar={firstDayOfCalendar}
                 focusDate={focusDate}
