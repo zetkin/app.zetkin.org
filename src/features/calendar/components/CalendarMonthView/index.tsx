@@ -1,7 +1,7 @@
 import { Box } from "@mui/system";
 import dayjs from 'dayjs';
 import isoWeek from 'dayjs/plugin/isoWeek';
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import CalendarMonthViewDay from "./CalendarMonthViewDay";
 
 type CalendarWeekNumberProps = {
@@ -29,7 +29,6 @@ type Props = {
   onChangeFocusDate: (date: Date) => void
 }
 const CalendarMonthView = ({ focusDate, onChangeFocusDate }: Props) => {
-  const [weekNumber, setWeekNumber] = useState(0);
   const numberOfRows = 6;
   const numberOfColumns = 7;
 
@@ -47,19 +46,12 @@ const CalendarMonthView = ({ focusDate, onChangeFocusDate }: Props) => {
   const firstDayOfCalendar = dayjs(firstDayOfMonth).subtract(daysBeforeFirstDay, "day");
   const currentDate = new Date();
 
-  useEffect(() => {
-    dayjs.extend(isoWeek)
-  }, []);
-
-  useEffect(() => {
-  }, [firstDayOfCalendar]);
-
+  dayjs.extend(isoWeek)
   function getDayIndex(rowIndex: number, columnIndex: number) {
     return (columnIndex) + (rowIndex * (numberOfColumns))
   }
   function getWeekNumber(rowIndex: number) {
     return firstDayOfCalendar.add(rowIndex, "week").isoWeek();
-
   }
 
   return <>
@@ -75,7 +67,7 @@ const CalendarMonthView = ({ focusDate, onChangeFocusDate }: Props) => {
       {[...Array(numberOfRows)]
         .map((_, rowIndex) => [...Array(numberOfColumns + 1)]
           .map((_, columnIndex) =>
-            <>
+            <React.Fragment key={`${rowIndex * numberOfColumns + columnIndex}`}>
               {columnIndex === 0 && <CalendarWeekNumber weekNr={getWeekNumber(rowIndex)} />}
               {columnIndex !== 0 && <CalendarMonthViewDay
                 firstDateOfCalendar={firstDayOfCalendar}
@@ -84,7 +76,7 @@ const CalendarMonthView = ({ focusDate, onChangeFocusDate }: Props) => {
                 currentDate={currentDate}
                 dayIndex={getDayIndex(rowIndex, columnIndex - 1)}
               />}
-            </>
+            </React.Fragment>
           )
         )}
     </Box>
