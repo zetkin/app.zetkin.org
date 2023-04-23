@@ -66,6 +66,7 @@ export interface ZetkinEvent {
     id: number;
     title: string;
   } | null;
+  cancelled?: string; // TODO - should be `null | string`
   contact?: null | { id: number; name: string };
   end_time: string;
   id: number;
