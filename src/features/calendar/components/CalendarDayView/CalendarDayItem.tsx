@@ -10,43 +10,40 @@ export interface CalendarDayItemProps {
   events: ZetkinEvent[];
 }
 
-const CalendarDayItem = ({
-  focusDate,
-  date,
-  events,
-}: CalendarDayItemProps) => {
-  return <Box display="flex"
-    sx={{
-      marginBottom: '0.5em',
-      backgroundColor: '#eeeeee',
-    }}
-  >
+const CalendarDayItem = ({ focusDate, date, events }: CalendarDayItemProps) => {
+  return (
     <Box
+      display="flex"
       sx={{
-        width: 300,
+        marginBottom: '0.5em',
+        backgroundColor: '#eeeeee',
       }}
     >
-      <CalendarDayDate focusDate={focusDate} date={date} />
-    </Box>
-    <Box
-      display="flex" flexDirection="column"
-      sx={{
-        padding: "1em",
-        width: "100%",
-      }}
-    >
-      <CalendarDayOtherActivities />
-      {
-        events.map((event, i) =>
-          <CalendarDayEvent/>)
-      }
-      {/* <CalendarDayEvent/>
+      <Box
+        sx={{
+          width: 300,
+        }}
+      >
+        <CalendarDayDate focusDate={focusDate} date={date} />
+      </Box>
+      <Box
+        display="flex"
+        flexDirection="column"
+        sx={{
+          padding: '1em',
+          width: '100%',
+        }}
+      >
+        <CalendarDayOtherActivities />
+        {events.map((event, i) => (
+          <CalendarDayEvent event={event} />
+        ))}
+        {/* <CalendarDayEvent/>
       <CalendarDayEvent/>
       <CalendarDayEvent/> */}
+      </Box>
     </Box>
-  </Box>
+  );
 };
 
 export default CalendarDayItem;
-
-

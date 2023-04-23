@@ -1,6 +1,13 @@
 import Box from '@mui/material/Box';
+import { ZetkinEvent } from 'utils/types/zetkin';
 
-const CalendarDayEvent = () => {
+export interface CalendarDayEventProps {
+  event: ZetkinEvent;
+}
+
+const CalendarDayEvent = ({
+  event,
+}: CalendarDayEventProps) => {
   return <Box display="flex"
     sx={{
       margin: "0.5em",
@@ -8,7 +15,7 @@ const CalendarDayEvent = () => {
       backgroundColor: 'white',
     }}
   >
-    Hand out those papers
+    {event.title || event.activity.title}
   </Box>
 };
 
