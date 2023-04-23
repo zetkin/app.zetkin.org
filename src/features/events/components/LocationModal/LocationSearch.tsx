@@ -45,6 +45,7 @@ const LocationSearch: FC<LocationSearchProps> = ({
           sx={{
             backgroundColor: 'white',
             borderRadius: '5px',
+            padding: 0,
           }}
         />
       )}
