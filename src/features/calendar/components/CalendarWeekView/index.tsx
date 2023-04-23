@@ -14,7 +14,7 @@ const DayHeader = ({ date, focused }: DayHeaderProps) => {
   const isFirstDayOfWeek = dayjs(date).isoWeekday() == 1
 
   return (
-    <Grid container xs={12 / 7} marginTop={2} spacing={2} >
+    <Grid container xs={12 / 7} marginTop={2} >
       <Grid item xs={5}>
         <Box sx={
           {
@@ -66,6 +66,8 @@ const CalendarWeekView = ({ focusDate }: CalendarWeekViewProps) => {
   const correctWeek = dayjs(focusDate).isoWeekday() == 7 ? dayjs(focusDate).add(-1, 'day') : focusDate
 
   return (
+  
+    <Grid container>
       <Grid container spacing={2}>
         <Grid container xs={1} />
         <Grid container xs={11}>
