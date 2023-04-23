@@ -1,3 +1,5 @@
+import { useState } from 'react';
+import { Box, Button } from '@mui/material';
 import { ComponentMeta, ComponentStory } from '@storybook/react';
 
 import EventPopper from '.';
@@ -16,16 +18,28 @@ export default {
 } as ComponentMeta<typeof EventPopper>;
 
 const Template: ComponentStory<typeof EventPopper> = (args) => {
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   return (
-    <EventPopper
-      event={args.event}
-      onCancel={args.onCancel}
-      onDelete={args.onDelete}
-      onPublish={args.onPublish}
-      participants={args.participants}
-      respondents={args.respondents}
-      state={args.state}
-    />
+    <Box display="flex">
+      <Button
+        onClick={(evt) =>
+          anchorEl ? setAnchorEl(null) : setAnchorEl(evt.currentTarget)
+        }
+      >
+        Toggle open
+      </Button>
+      <EventPopper
+        anchorEl={anchorEl}
+        event={args.event}
+        onCancel={args.onCancel}
+        onDelete={args.onDelete}
+        onPublish={args.onPublish}
+        open={Boolean(anchorEl)}
+        participants={args.participants}
+        respondents={args.respondents}
+        state={args.state}
+      />
+    </Box>
   );
 };
 
