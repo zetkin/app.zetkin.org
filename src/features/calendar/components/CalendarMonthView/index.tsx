@@ -28,7 +28,7 @@ const CalendarWeekNumber = ({ weekNr }: CalendarWeekNumberProps) => {
 type Props = {
   focusDate: Date;
 };
-const CalendarMonthView = ({ focusDate}: Props) => {
+const CalendarMonthView = ({ focusDate }: Props) => {
   const numberOfRows = 6;
   const numberOfColumns = 7;
 

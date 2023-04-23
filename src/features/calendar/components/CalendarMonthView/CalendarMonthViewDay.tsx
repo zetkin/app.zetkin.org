@@ -55,4 +55,3 @@ const CalendarMonthViewDay = ({
 };
 
 export default CalendarMonthViewDay;
-
