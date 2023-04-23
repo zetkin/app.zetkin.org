@@ -5,10 +5,16 @@ import { useRouter } from 'next/router';
 import ZUIFuture from 'zui/ZUIFuture';
 import CalendarDayItem from './CalendarDayItem';
 import { dateIsEqualOrBefore, isSameDate } from 'utils/dateUtils';
-import { ZetkinEvent } from 'utils/types/zetkin';
+import { ZetkinActivity, ZetkinEvent } from 'utils/types/zetkin';
 
 export interface CalendarDayViewProps {
   focusDate: Date;
+}
+
+export interface DayInfo {
+  events: ZetkinEvent[];
+  activities_starts: ZetkinActivity[];
+  activities_ends: ZetkinActivity[];
 }
 
 const CalendarDayView = ({
@@ -22,6 +28,27 @@ const CalendarDayView = ({
   return (
     <ZUIFuture future={model.getAllActivities()}>
       {(data) => {
+        // Group all by date
+        const activitiesByDate: { [key: string]: DayInfo } = {};
+        for (let i = 0; i < data.length; i++) {
+          const activity = data[i];
+          if (activity.kind == ACTIVITIES.EVENT) {
+            const dateString = new Date(activity.data.start_time).toISOString().slice(0, 10);
+            if (!(dateString in activitiesByDate)) {
+              activitiesByDate[dateString] = {
+                "events": [],
+                "activities_starts": [],
+                "activities_ends": []
+              }
+            }
+
+            activitiesByDate[dateString].events.push(activity.data);
+          } else {
+
+          }
+        }
+        console.log("Object.keys(activitiesByDate)");
+        console.log(Object.keys(activitiesByDate));
         const events = data.filter(a => a.kind == ACTIVITIES.EVENT).map(activity => activity.data) as ZetkinEvent[];
         const laterEvents = events.filter(a => a.start_time != null && dateIsEqualOrBefore(new Date(a.start_time), new Date(focusDate)));
         const laterEventsSameDay = laterEvents.length > 0 ?
