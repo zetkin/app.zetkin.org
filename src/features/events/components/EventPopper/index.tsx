@@ -274,7 +274,7 @@ function EventPopperBasic({
         <NextLink
           href={`/organize/${event.organization.id}/${
             event.campaign ? `projects/${event.campaign.id}` : 'standalone'
-          }/${event.id}`}
+          }/events/${event.id}`}
           passHref
         >
           <Link underline="none">
