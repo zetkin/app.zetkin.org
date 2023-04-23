@@ -65,4 +65,37 @@ describe('doArbitraryClustering()', () => {
     ]);
     expect(result.length).toBe(3);
   });
+  it('should cluster more than 3 events with overlaping times', () => {
+    const result = doArbitraryClustering([
+      mockEvent(1, {
+        activity: {
+          id: 5,
+          title: 'JumpingJacks',
+        },
+        end_time: '1857-07-05T13:37:00.000Z',
+        start_time: '1857-07-05T12:00:00.000Z',
+      }),
+      mockEvent(2, {
+        activity: {
+          id: 4,
+          title: 'Dancing',
+        },
+        end_time: '1857-07-05T13:37:00.000Z',
+        start_time: '1857-07-05T12:15:00.000Z',
+      }),
+      mockEvent(3, {
+        end_time: '1857-07-05T13:37:00.000Z',
+        start_time: '1857-07-05T12:30:00.000Z',
+      }),
+      mockEvent(4, {
+        activity: {
+          id: 3,
+          title: 'Banana',
+        },
+        end_time: '1857-07-05T13:37:00.000Z',
+        start_time: '1857-07-05T12:45:00.000Z',
+      }),
+    ]);
+    expect(result.length).toBe(1);
+  });
 });
