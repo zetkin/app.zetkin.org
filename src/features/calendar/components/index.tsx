@@ -1,4 +1,4 @@
-import { Grid } from '@mui/material';
+import { Box, Grid } from '@mui/material';
 import dayjs from 'dayjs';
 import { useState } from 'react';
 
