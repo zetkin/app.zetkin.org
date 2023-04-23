@@ -1,4 +1,4 @@
-import { Grid } from '@mui/material';
+import { Box } from '@mui/system';
 import dayjs from 'dayjs';
 import { useState } from 'react';
 
@@ -6,7 +6,6 @@ import CalendarDayView from './CalendarDayView';
 import CalendarMonthView from './CalendarMonthView';
 import CalendarNavBar from './CalendarNavBar';
 import CalendarWeekView from './CalendarWeekView';
-import { Box } from '@mui/system';
 
 export enum TimeScale {
   DAY = 'day',
@@ -21,7 +20,7 @@ const Calendar = () => {
   );
 
   return (
-    <Box height="100%" display="flex" flexDirection="column" >
+    <Box display="flex" flexDirection="column" height={'100%'} padding={2}>
       <Box>
         <CalendarNavBar
           focusDate={focusDate}
@@ -43,7 +42,7 @@ const Calendar = () => {
         />
       </Box>
 
-      <Box flexGrow="1" display="flex" flexDirection="column">
+      <Box flexGrow={1}>
         {selectedTimeScale === TimeScale.DAY && <CalendarDayView />}
         {selectedTimeScale === TimeScale.WEEK && <CalendarWeekView />}
         {selectedTimeScale === TimeScale.MONTH && <CalendarMonthView focusDate={focusDate} onChangeFocusDate={(date) => setFocusDate(date)} />}
