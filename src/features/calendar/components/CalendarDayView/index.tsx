@@ -4,7 +4,7 @@ import CampaignActivitiesModel, { ACTIVITIES } from 'features/campaigns/models/C
 import { useRouter } from 'next/router';
 import ZUIFuture from 'zui/ZUIFuture';
 import CalendarDayItem from './CalendarDayItem';
-import { dateIsBefore } from 'utils/dateUtils';
+import { dateIsEqualOrBefore, isSameDate } from 'utils/dateUtils';
 
 export interface CalendarDayViewProps {
   focusDate: Date;
@@ -22,7 +22,9 @@ const CalendarDayView = ({
     <ZUIFuture future={model.getAllActivities()}>
       {(data) => {
         const events = data.filter(a => a.kind == ACTIVITIES.EVENT);
-        const laterEvents = events.filter(a => a.data.start_time != null && dateIsBefore(new Date(a.data.start_time), new Date(focusDate)));
+        const laterEvents = events.filter(a => a.data.start_time != null && dateIsEqualOrBefore(new Date(a.data.start_time), new Date(focusDate)));
+        const laterEventsSameDay = laterEvents.length > 0 ?
+          laterEvents.filter(a => isSameDate(new Date(a.data.start_time), new Date(laterEvents[0].data.start_time))) : [];
         return (
           <Box
             sx={{
@@ -31,15 +33,23 @@ const CalendarDayView = ({
             }}
           >
             {console.log("focusdate: "+focusDate.toISOString())}
-            {console.log(events)}
-            {console.log(laterEvents)}
-            {console.log(events[0].data.start_time)}
-            { laterEvents.length > 0 && 
-              <CalendarDayItem focusDate={new Date(focusDate)} date={new Date(laterEvents[0].data.start_time)} />
+            {/* {console.log(events)} */}
+            {console.log("laterEvents length: "+laterEvents.length)}
+            {console.log("laterEvents[0].data.start_time: "+laterEvents[0].data.start_time)}
+            {console.log("laterEvents[1].data.start_time: "+laterEvents[1].data.start_time)}
+
+
+            {console.log("laterEventsSameDay.length: "+laterEventsSameDay.length)}
+            {console.log("laterEventsSameDay[0].data.start_time: "+laterEventsSameDay[0].data.start_time)}
+            {console.log("laterEventsSameDay[1].data.start_time: "+laterEventsSameDay[1].data.start_time)}
+
+            
+            { laterEventsSameDay.length > 0 && 
+              <CalendarDayItem focusDate={new Date(focusDate)} date={new Date(laterEventsSameDay[0].data.start_time)} />
             }
-            { laterEvents.length > 1 && 
+            {/* { laterEvents.length > 1 && 
               <CalendarDayItem focusDate={new Date(focusDate)} date={new Date(laterEvents[1].data.start_time)} />
-            }
+            } */}
           </Box>
         );
       }}
