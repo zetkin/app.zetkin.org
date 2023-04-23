@@ -14,9 +14,9 @@ import {
   Box,
   Button,
   Checkbox,
+  Link,
   Paper,
   Popper,
-  Link,
   Theme,
   Typography,
 } from '@mui/material';
@@ -127,7 +127,7 @@ const EventPopper = ({
       .length ?? 0;
   return (
     <Popper anchorEl={anchorEl} open={open} placement="bottom">
-      <Paper sx={{ width: '300px', padding: 2 }}>
+      <Paper sx={{ padding: 2, width: '300px' }}>
         <Box display="flex" flexDirection="column">
           <Box alignItems="center" display="flex">
             <Checkbox size="medium" />
@@ -151,7 +151,7 @@ const EventPopper = ({
               <Box alignItems="center" display="flex">
                 <People
                   color="secondary"
-                  sx={{ pr: 0.5, fontSize: '1.3rem' }}
+                  sx={{ fontSize: '1.3rem', pr: 0.5 }}
                 />
                 <Typography color="secondary" sx={{ fontSize: '0.7rem' }}>
                   {messages.eventPopper.booked().toUpperCase()}
@@ -166,7 +166,7 @@ const EventPopper = ({
               <Box alignItems="center" display="flex">
                 <MailOutlined
                   color="secondary"
-                  sx={{ pr: 0.5, fontSize: '1.3rem' }}
+                  sx={{ fontSize: '1.3rem', pr: 0.5 }}
                 />
                 <Typography color="secondary" sx={{ fontSize: '0.7rem' }}>
                   {messages.eventPopper.notified().toUpperCase()}
@@ -181,7 +181,7 @@ const EventPopper = ({
               <Box alignItems="center" display="flex">
                 <EmojiPeople
                   color="secondary"
-                  sx={{ pr: 0.5, fontSize: '1.3rem' }}
+                  sx={{ fontSize: '1.3rem', pr: 0.5 }}
                 />
                 <Typography color="secondary" sx={{ fontSize: '0.7rem' }}>
                   {messages.eventPopper.signups().toUpperCase()}
