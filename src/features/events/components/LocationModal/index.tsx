@@ -123,6 +123,26 @@ const LocationModal: FC<LocationModalProps> = ({
                 setSelectedLocationId(location.id);
                 setSearchString('');
               }}
+              onClickGeolocate={() => {
+                if ('geolocation' in navigator) {
+                  navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                      console.log(position);
+                      setPendingLocation({
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude,
+                      });
+                    },
+                    (error) => {
+                      console.log('error');
+                      console.log(error);
+                    }
+                  );
+                  /* geolocation is available */
+                } else {
+                  console.log('denied');
+                }
+              }}
               onInputChange={(value) => setSearchString(value || '')}
               onTextFieldChange={(value) => setSearchString(value)}
               options={locations}
