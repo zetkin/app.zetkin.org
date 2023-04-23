@@ -1,6 +1,6 @@
 import Box from '@mui/material/Box';
 import useModel from 'core/useModel';
-import CampaignActivitiesModel, { ACTIVITIES } from 'features/campaigns/models/CampaignActivitiesModel';
+import CampaignActivitiesModel, { ACTIVITIES, CampaignActivity } from 'features/campaigns/models/CampaignActivitiesModel';
 import { useRouter } from 'next/router';
 import ZUIFuture from 'zui/ZUIFuture';
 import CalendarDayItem from './CalendarDayItem';
@@ -13,8 +13,8 @@ export interface CalendarDayViewProps {
 
 export interface DayInfo {
   events: ZetkinEvent[];
-  activities_starts: ZetkinActivity[];
-  activities_ends: ZetkinActivity[];
+  activities_starts: CampaignActivity[];
+  activities_ends: CampaignActivity[];
 }
 
 const CalendarDayView = ({
@@ -44,11 +44,32 @@ const CalendarDayView = ({
 
             activitiesByDate[dateString].events.push(activity.data);
           } else {
-
+            if (activity.startDate != null) {
+              const dateString = new Date(activity.startDate).toISOString().slice(0, 10);
+              if (!(dateString in activitiesByDate)) {
+                activitiesByDate[dateString] = {
+                  "events": [],
+                  "activities_starts": [],
+                  "activities_ends": []
+                }
+              }
+              activitiesByDate[dateString].activities_starts.push(activity);
+            }
+            if (activity.endDate != null) {
+              const dateString = new Date(activity.endDate).toISOString().slice(0, 10);
+              if (!(dateString in activitiesByDate)) {
+                activitiesByDate[dateString] = {
+                  "events": [],
+                  "activities_starts": [],
+                  "activities_ends": []
+                }
+              }
+              activitiesByDate[dateString].activities_ends.push(activity);
+            }
           }
         }
-        console.log("Object.keys(activitiesByDate)");
-        console.log(Object.keys(activitiesByDate));
+        console.log("activitiesByDate");
+        console.log(activitiesByDate);
         const events = data.filter(a => a.kind == ACTIVITIES.EVENT).map(activity => activity.data) as ZetkinEvent[];
         const laterEvents = events.filter(a => a.start_time != null && dateIsEqualOrBefore(new Date(a.start_time), new Date(focusDate)));
         const laterEventsSameDay = laterEvents.length > 0 ?
