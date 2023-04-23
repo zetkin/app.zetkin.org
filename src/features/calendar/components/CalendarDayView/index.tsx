@@ -62,7 +62,7 @@ const CalendarDayView = ({
             }
           }
         }
-        const todayAndFutureEventsDates = Object.keys(activitiesByDate).filter(d => dateIsEqualOrBefore(new Date(d), new Date(focusDate))).sort();
+        const todayAndFutureActivitiesDates = Object.keys(activitiesByDate).filter(d => dateIsEqualOrBefore(new Date(d), new Date(focusDate))).sort();
 
         return (
           <Box
@@ -71,7 +71,7 @@ const CalendarDayView = ({
               marginTop: '1em',
             }}
           >
-            { todayAndFutureEventsDates.map((d, i) => (
+            { todayAndFutureActivitiesDates.map((d, i) => (
               <CalendarDayItem focusDate={new Date(focusDate)} date={new Date(d)} dayInfo={activitiesByDate[d]} />
             ))}
           </Box>

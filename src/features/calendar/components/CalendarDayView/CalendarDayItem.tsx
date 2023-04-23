@@ -2,7 +2,6 @@ import Box from '@mui/material/Box';
 import CalendarDayEvent from './CalendarDayEvent';
 import CalendarDayOtherActivities from './CalendarDayOtherActivities';
 import CalendarDayDate from './CalendarDayDate';
-import { ZetkinEvent } from 'utils/types/zetkin';
 import { DayInfo } from './types';
 
 export interface CalendarDayItemProps {
