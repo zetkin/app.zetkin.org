@@ -1,9 +1,8 @@
 import { Person } from '@mui/icons-material';
 import { useRouter } from 'next/router';
-import { FC, forwardRef } from 'react';
+import { ZetkinPerson } from 'utils/types/zetkin';
+import { FC } from 'react';
 import { Avatar, Box, SxProps, Tooltip } from '@mui/material';
-
-import ZetkinPerson from 'utils/types/zetkin';
 
 //this is basicly a copy of ZUIAvatar
 interface ZUICellAvatarProps {
@@ -25,9 +24,9 @@ const ZUICellAvatar: FC<ZUICellAvatarProps> = ({ orgId, person }) => {
 
 const ZUIPersonGridCell: FC<{
   onClick?: () => void;
-  sx?: SxProps;
   person: ZetkinPerson | null;
-}> = ({ onClick, sx, person }) => {
+  sx?: SxProps;
+}> = ({ onClick, person, sx }) => {
   const query = useRouter().query;
   const orgId = parseInt(query.orgId as string);
 

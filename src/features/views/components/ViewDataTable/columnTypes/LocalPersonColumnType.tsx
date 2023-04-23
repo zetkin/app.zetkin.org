@@ -33,7 +33,9 @@ export default class LocalPersonColumnType
         return <ZUIPersonGridCell person={params.value ?? null} />;
       },
       renderEditCell: (params) => {
-        return <EditCell cell={params.value} column={col} row={params.row} />;
+        return (
+          <EditCell cell={params.value ?? null} column={col} row={params.row} />
+        );
       },
       sortComparator: (
         val0: LocalPersonViewCell,
