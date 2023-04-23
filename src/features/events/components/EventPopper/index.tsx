@@ -278,11 +278,11 @@ function EventPopperBasic({
           passHref
         >
           <Link underline="none">
-            <Box display="flex">
-              <Typography sx={{ paddingRight: 1 }}>
+            <Box alignItems="center" display="flex">
+              <Typography sx={{ fontSize: '0.8em', paddingRight: 1 }}>
                 {messages.eventPopper.eventPageLink().toUpperCase()}
               </Typography>
-              <ArrowForward color="primary" />
+              <ArrowForward color="primary" sx={{ fontSize: '1em' }} />
             </Box>
           </Link>
         </NextLink>
