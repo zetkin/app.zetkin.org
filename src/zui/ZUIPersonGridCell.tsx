@@ -1,7 +1,7 @@
+import { FC } from 'react';
 import { Person } from '@mui/icons-material';
 import { useRouter } from 'next/router';
 import { ZetkinPerson } from 'utils/types/zetkin';
-import { FC } from 'react';
 import { Avatar, Box, SxProps, Tooltip } from '@mui/material';
 
 //this is basicly a copy of ZUIAvatar
