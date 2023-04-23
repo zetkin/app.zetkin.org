@@ -74,11 +74,6 @@ type Props = {
 }
 const CalendarMonthView = ({ focusDate, onChangeFocusDate }: Props) => {
   const [weekNumber, setWeekNumber] = useState(0);
-  useEffect(() => {
-    dayjs.extend(isoWeek)
-    setWeekNumber(firstDayOfCalender.isoWeek());
-  }, []);
-
   const numberOfRows = 6;
   const numberOfColumns = 7;
 
@@ -92,19 +87,19 @@ const CalendarMonthView = ({ focusDate, onChangeFocusDate }: Props) => {
     }
   }
 
-
-
   const daysBeforeFirstDay = getDaysBeforeFirstDay();
   console.log("daysBeforeFirstDay", daysBeforeFirstDay);
   const firstDayOfCalender = dayjs(firstDayOfMonth).subtract(daysBeforeFirstDay, "day");
   const currentDate = new Date();
-
+  
+  useEffect(() => {
+    dayjs.extend(isoWeek)
+    setWeekNumber(firstDayOfCalender.isoWeek());
+  }, [firstDayOfCalender]);
 
   function getDayIndex(rowIndex: number, columnIndex: number) {
-
     return (columnIndex) + (rowIndex * (numberOfColumns) )
   }
-
 
   return <>
     <Box
