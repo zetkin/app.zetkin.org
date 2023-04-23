@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { Box } from '@mui/system';
-import { Grid } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
 import dayjs, { Dayjs } from 'dayjs';
 
 import theme from 'theme';
@@ -11,46 +11,46 @@ export interface DayHeaderProps {
 }
 
 const DayHeader = ({ date, focused }: DayHeaderProps) => {
-  const week = dayjs(date).isoWeek().toString()
-  const isFirstDayOfWeek = dayjs(date).isoWeekday() == 1
-
   return (
-    <Grid container xs={12 / 7} marginTop={2} >
-      <Grid item xs={5}>
-        <Box sx={
-          {
-            color: theme.palette.statusColors.gray,
-            fontSize: "12px",
-            display: "flex",
-            height: "100%",
-            justifyContent: "flex-start",
-            alignItems: "center",
-          }
-        }>
-          <b>{date.format('ddd')}</b>&nbsp;{ isFirstDayOfWeek ? " " +"w" + week : "" } 
-        </Box>
-      </Grid>
-      <Grid item xs={2} sx={
-        {
-          textAlign: "center",
-        }
-      }>
-        <Box sx={
-          {
-            backgroundColor: focused ? theme.palette.statusColors.blue : "",
-            color: focused ? "white" : "inherit",
-            textAlign: "center",
-            width: "32px",
-            height: "32px",
-            borderRadius: "50%",
-            fontSize: "20px",
-          }
-        }>
+    <Box
+      sx={{
+        display: 'flex',
+        justifyContent: 'space-around',
+        width: '100%',
+      }}
+    >
+      <Box
+        sx={{
+          alignItems: 'center',
+          color: theme.palette.grey,
+          display: 'flex',
+          fontSize: '0.7em',
+          justifyContent: 'flex-start',
+        }}
+      >
+        <Typography sx={{ fontStyle: 'bold' }}>{date.format('ddd')}</Typography>
+      </Box>
+      <Box
+        sx={{
+          textAlign: 'center',
+        }}
+      >
+        <Box
+          sx={{
+            backgroundColor: focused ? theme.palette.statusColors.blue : '',
+            borderRadius: '50%',
+            color: focused ? 'white' : 'inherit',
+            fontSize: '1.2em',
+            height: '1.7em',
+            textAlign: 'center',
+            width: '1.7em',
+          }}
+        >
           {date.format('D')}
         </Box>
-      </Grid>
-      <Grid item xs={5} ></Grid>
-    </Grid>
+      </Box>
+      <Box></Box>
+    </Box>
   );
 };
 
@@ -59,12 +59,15 @@ export interface CalendarWeekViewProps {
 }
 
 const TIME_COLUMN_WIDTH = '3em';
-const DAY_COLUMN_MIN_WIDTH = '2em';
 
 const CalendarWeekView = ({ focusDate }: CalendarWeekViewProps) => {
-  const isoWeek = require('dayjs/plugin/isoWeek')
-  dayjs.extend(isoWeek)
-  const correctWeek = dayjs(focusDate).isoWeekday() == 7 ? dayjs(focusDate).add(-1, 'day') : focusDate
+  const isoWeek = require('dayjs/plugin/isoWeek');
+  dayjs.extend(isoWeek);
+  const correctWeek =
+    dayjs(focusDate).isoWeekday() == 7
+      ? dayjs(focusDate).add(-1, 'day')
+      : focusDate;
+  const week = dayjs(correctWeek).isoWeek();
 
   return (
     <Box
@@ -75,69 +78,71 @@ const CalendarWeekView = ({ focusDate }: CalendarWeekViewProps) => {
         height: '100%',
       }}
     >
-      <Box flexGrow={0} flexShrink={0}>
-        <Grid>
-          <Grid container xs={1} />
-          <Grid container xs={11}>
-            {_.range(7).map((weekday: number) => {
+      <Box display="flex" flexDirection="row">
+        <Box
+          sx={{
+            alignItems: 'flex-end',
+            display: 'flex',
+            width: TIME_COLUMN_WIDTH,
+          }}
+        >
+          {'w' + week + ''}
+        </Box>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'row',
+            flexGrow: 1,
+            justifyContent: 'space-around',
+            marginTop: '1em',
+          }}
+        >
+          {_.range(7).map((weekday: number) => {
             const weekdayDate = dayjs(correctWeek).day(weekday + 1);
 
-              return (
-                <DayHeader
-                  key={weekday}
-                  date={weekdayDate}
-                  focused={
-                    new Date().toDateString() ==
-                    weekdayDate.toDate().toDateString()
-                  }
-                />
-              );
-            })}
-          </Grid>
-        </Grid>
+            return (
+              <DayHeader
+                key={weekday}
+                date={weekdayDate}
+                focused={
+                  new Date().toDateString() ==
+                  weekdayDate.toDate().toDateString()
+                }
+              />
+            );
+          })}
+        </Box>
       </Box>
       <Box
+        display="flex"
+        flexDirection="row"
         sx={{
           flexGrow: 1,
           overflow: 'auto',
         }}
       >
-        <Grid container sx={{ marginTop: '1em' }}>
-          {_.range(24).map((hour: number) => {
-            return (
-              <Grid key={hour} container>
-                <Grid item width={TIME_COLUMN_WIDTH} xs={1}>
-                  {hour}.00
-                </Grid>
-                <Grid container spacing={2} sx={{ borderWidth: '5px' }} xs={11}>
-                  {_.range(7).map((weekday: number) => {
-                    return (
-                      <Grid
-                        key={weekday}
-                        item
-                        sx={{
-                          height: '8em',
-                        }}
-                        xs={12 / 7}
-                      >
-                        <Box
-                          sx={{
-                            backgroundColor: theme.palette.statusColors.gray,
-                            borderBottomColor: theme.palette.divider,
-                            borderBottomStyle: hour !== 23 ? 'solid' : null,
-                            borderBottomWidth: '2px',
-                            height: '100%',
-                            width: '100%',
-                          }}
-                        ></Box>
-                      </Grid>
-                    );
-                  })}
-                </Grid>
-              </Grid>
-            );
-          })}
-        </Grid>
+        <Box sx={{ marginTop: '2em', width: TIME_COLUMN_WIDTH }}>
+          {_.range(24).map((hour: number) => (
+            <Box key={hour} sx={{ height: '5em' }}>
+              <Box display="flex" width={TIME_COLUMN_WIDTH}>
+                {hour}.00
+              </Box>
+            </Box>
+          ))}
+        </Box>
+        {_.range(7).map((weekday: number) => {
+          return (
+            <Box
+              key={weekday}
+              flexGrow={1}
+              height="120em"
+              sx={{
+                backgroundImage: `repeating-linear-gradient(180deg, black 0, ${theme.palette.divider} 1px, ${theme.palette.grey[200]} 1px, ${theme.palette.grey[200]} 5em)`,
+                marginLeft: '1em',
+              }}
+            ></Box>
+          );
+        })}
       </Box>
     </Box>
   );
