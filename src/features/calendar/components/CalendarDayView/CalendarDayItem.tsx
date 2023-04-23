@@ -3,14 +3,15 @@ import CalendarDayEvent from './CalendarDayEvent';
 import CalendarDayOtherActivities from './CalendarDayOtherActivities';
 import CalendarDayDate from './CalendarDayDate';
 import { ZetkinEvent } from 'utils/types/zetkin';
+import { DayInfo } from './types';
 
 export interface CalendarDayItemProps {
   focusDate: Date;
   date: Date;
-  events: ZetkinEvent[];
+  dayInfo: DayInfo;
 }
 
-const CalendarDayItem = ({ focusDate, date, events }: CalendarDayItemProps) => {
+const CalendarDayItem = ({ focusDate, date, dayInfo }: CalendarDayItemProps) => {
   return (
     <Box
       display="flex"
@@ -34,13 +35,12 @@ const CalendarDayItem = ({ focusDate, date, events }: CalendarDayItemProps) => {
           width: '100%',
         }}
       >
-        <CalendarDayOtherActivities />
-        {events.map((event, i) => (
+        { (dayInfo.activities_starts.length > 0 || dayInfo.activities_ends.length > 0) &&
+          <CalendarDayOtherActivities dayInfo={dayInfo} />      
+        }
+        {dayInfo.events.map((event, i) => (
           <CalendarDayEvent event={event} />
         ))}
-        {/* <CalendarDayEvent/>
-      <CalendarDayEvent/>
-      <CalendarDayEvent/> */}
       </Box>
     </Box>
   );

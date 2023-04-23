@@ -1,13 +1,24 @@
 import Box from '@mui/material/Box';
+import { DayInfo } from './types';
 
-const CalendarDayOtherActivities = () => {
+export interface CalendarDayOtherActivitiesProps {
+  dayInfo: DayInfo;
+}
+
+const CalendarDayOtherActivities = ({ dayInfo }: CalendarDayOtherActivitiesProps) => {
   return <Box display="flex"
     sx={{
       margin: "0.5em",
       padding: "0.5em",
     }}
   >
-    2 surveys end 1 call assignment starts, 1 ends
+    { dayInfo.activities_starts.length > 0 &&
+      <div>{dayInfo.activities_starts.length} activity starts</div>
+    },
+    { dayInfo.activities_ends.length > 0 &&
+      <div>{dayInfo.activities_ends.length} activity ends</div>
+    }
+    
   </Box>
 };
 

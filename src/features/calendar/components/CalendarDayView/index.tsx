@@ -6,15 +6,10 @@ import ZUIFuture from 'zui/ZUIFuture';
 import CalendarDayItem from './CalendarDayItem';
 import { dateIsEqualOrBefore, isSameDate } from 'utils/dateUtils';
 import { ZetkinActivity, ZetkinEvent } from 'utils/types/zetkin';
+import { DayInfo } from './types';
 
 export interface CalendarDayViewProps {
   focusDate: Date;
-}
-
-export interface DayInfo {
-  events: ZetkinEvent[];
-  activities_starts: CampaignActivity[];
-  activities_ends: CampaignActivity[];
 }
 
 const CalendarDayView = ({
@@ -70,6 +65,11 @@ const CalendarDayView = ({
         }
         console.log("activitiesByDate");
         console.log(activitiesByDate);
+        const todayAndFutureEventsDates = Object.keys(activitiesByDate).filter(d => dateIsEqualOrBefore(new Date(d), new Date(focusDate))).sort();
+        console.log("todayAndFutureEventsDates");
+        console.log(todayAndFutureEventsDates);
+
+
         const events = data.filter(a => a.kind == ACTIVITIES.EVENT).map(activity => activity.data) as ZetkinEvent[];
         const laterEvents = events.filter(a => a.start_time != null && dateIsEqualOrBefore(new Date(a.start_time), new Date(focusDate)));
         const laterEventsSameDay = laterEvents.length > 0 ?
@@ -92,8 +92,11 @@ const CalendarDayView = ({
             {console.log("laterEventsSameDay[1].data.start_time: "+String((laterEventsSameDay.length > 1 ? laterEventsSameDay[1].start_time: "-")))}
 
             
-            { laterEventsSameDay.length > 0 && 
+            {/* { laterEventsSameDay.length > 0 && 
               <CalendarDayItem focusDate={new Date(focusDate)} date={new Date(laterEventsSameDay[0].start_time)} events={laterEventsSameDay} />
+            } */}
+            { todayAndFutureEventsDates.length > 0 && 
+              <CalendarDayItem focusDate={new Date(focusDate)} date={new Date(todayAndFutureEventsDates[0])} dayInfo={activitiesByDate[todayAndFutureEventsDates[0]]} />
             }
             {/* { laterEvents.length > 1 && 
               <CalendarDayItem focusDate={new Date(focusDate)} date={new Date(laterEvents[1].data.start_time)} />
