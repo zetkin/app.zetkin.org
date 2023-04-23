@@ -14,7 +14,6 @@ import messageIds from 'features/views/l10n/messageIds';
 import { useMessages } from 'core/i18n';
 
 type LocalPersonViewCell = null | ZetkinPerson;
-
 export default class LocalPersonColumnType
   implements IColumnType<LocalPersonViewColumn, LocalPersonViewCell>
 {
@@ -23,7 +22,7 @@ export default class LocalPersonColumnType
   }
   getColDef(
     col: LocalPersonViewColumn
-  ): Omit<GridColDef<ZetkinViewRow>, 'field'> {
+  ): Omit<GridColDef<ZetkinViewRow, LocalPersonViewCell>, 'field'> {
     return {
       align: 'center',
       editable: true,
@@ -31,7 +30,7 @@ export default class LocalPersonColumnType
       headerAlign: 'center',
 
       renderCell: (params) => {
-        return <ZUIPersonGridCell personId={params.value?.id} />;
+        return <ZUIPersonGridCell person={params.value ?? null} />;
       },
       renderEditCell: (params) => {
         return <EditCell cell={params.value} column={col} row={params.row} />;
