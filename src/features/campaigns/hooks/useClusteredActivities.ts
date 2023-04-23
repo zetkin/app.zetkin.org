@@ -7,7 +7,7 @@ import {
   SurveyActivity,
   TaskActivity,
 } from 'features/campaigns/models/CampaignActivitiesModel';
-import { log } from 'console';
+
 
 export enum CLUSTER_TYPE {
   MULTI_LOCATION = 'multilocation',
