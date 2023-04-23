@@ -1,8 +1,8 @@
 import { FC } from 'react';
 import { Autocomplete, IconButton, TextField } from '@mui/material';
 
-import { LocationOn } from '@mui/icons-material';
 import messageIds from 'features/events/l10n/messageIds';
+import { MyLocation } from '@mui/icons-material';
 import { useMessages } from 'core/i18n';
 import { ZetkinLocation } from 'utils/types/zetkin';
 
@@ -36,7 +36,7 @@ const LocationSearch: FC<LocationSearchProps> = ({
           InputProps={{
             endAdornment: (
               <IconButton onClick={onClickGeolocate}>
-                <LocationOn />
+                <MyLocation />
               </IconButton>
             ),
           }}
