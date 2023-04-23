@@ -35,17 +35,18 @@ const CalendarDayView = ({
             {console.log("focusdate: "+focusDate.toISOString())}
             {/* {console.log(events)} */}
             {console.log("laterEvents length: "+laterEvents.length)}
-            {console.log("laterEvents[0].data.start_time: "+laterEvents[0].data.start_time)}
-            {console.log("laterEvents[1].data.start_time: "+laterEvents[1].data.start_time)}
+            {console.log("laterEvents[0].data.start_time: "+String((laterEvents.length > 0 ? laterEvents[0].data.start_time: "-")))}
+            {console.log("laterEvents[1].data.start_time: "+String((laterEvents.length > 1 ? laterEvents[1].data.start_time: "-")))}
+            {/* {console.log("laterEvents[1].data.start_time: "+(laterEvents.length > 1 ? laterEvents[1].data.start_time: "-")} */}
 
 
             {console.log("laterEventsSameDay.length: "+laterEventsSameDay.length)}
-            {console.log("laterEventsSameDay[0].data.start_time: "+laterEventsSameDay[0].data.start_time)}
-            {console.log("laterEventsSameDay[1].data.start_time: "+laterEventsSameDay[1].data.start_time)}
+            {console.log("laterEventsSameDay[0].data.start_time: "+String((laterEventsSameDay.length > 0 ? laterEventsSameDay[0].data.start_time: "-")))}
+            {console.log("laterEventsSameDay[1].data.start_time: "+String((laterEventsSameDay.length > 1 ? laterEventsSameDay[1].data.start_time: "-")))}
 
             
             { laterEventsSameDay.length > 0 && 
-              <CalendarDayItem focusDate={new Date(focusDate)} date={new Date(laterEventsSameDay[0].data.start_time)} />
+              <CalendarDayItem focusDate={new Date(focusDate)} date={new Date(laterEventsSameDay[0].data.start_time)} events={laterEventsSameDay} />
             }
             {/* { laterEvents.length > 1 && 
               <CalendarDayItem focusDate={new Date(focusDate)} date={new Date(laterEvents[1].data.start_time)} />

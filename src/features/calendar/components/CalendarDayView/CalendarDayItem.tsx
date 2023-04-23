@@ -7,12 +7,13 @@ import { ZetkinEvent } from 'utils/types/zetkin';
 export interface CalendarDayItemProps {
   focusDate: Date;
   date: Date;
-  // event: 
+  events: ZetkinEvent[];
 }
 
 const CalendarDayItem = ({
   focusDate,
-  date
+  date,
+  events,
 }: CalendarDayItemProps) => {
   return <Box display="flex"
     sx={{
@@ -35,9 +36,13 @@ const CalendarDayItem = ({
       }}
     >
       <CalendarDayOtherActivities />
+      {
+        events.map((event, i) =>
+          <CalendarDayEvent/>)
+      }
+      {/* <CalendarDayEvent/>
       <CalendarDayEvent/>
-      <CalendarDayEvent/>
-      <CalendarDayEvent/>
+      <CalendarDayEvent/> */}
     </Box>
   </Box>
 };
