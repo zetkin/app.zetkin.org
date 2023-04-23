@@ -1,8 +1,15 @@
+import _ from 'lodash';
 import { Box } from '@mui/system';
-import { ArrowBack, ArrowForward } from '@mui/icons-material';
-import { Button, ButtonGroup, IconButton } from '@mui/material';
-
+import dayjs from 'dayjs';
 import { TimeScale } from '.';
+import { ArrowBack, ArrowForward } from '@mui/icons-material';
+import {
+  Button,
+  ButtonGroup,
+  IconButton,
+  MenuItem,
+  Select,
+} from '@mui/material';
 
 export interface CalendarNavBarProps {
   focusDate: Date;
@@ -14,6 +21,7 @@ export interface CalendarNavBarProps {
 }
 
 const CalendarNavBar = ({
+  focusDate,
   onChangeFocusDate,
   onChangeTimeScale,
   onStepBackward,
@@ -36,6 +44,14 @@ const CalendarNavBar = ({
         <IconButton onClick={onStepForward}>
           <ArrowForward />
         </IconButton>
+        <CalendarMonthSelect
+          focusDate={focusDate}
+          onChange={(date) => onChangeFocusDate(date)}
+        />
+        <CalendarYearSelect
+          focusDate={focusDate}
+          onChange={(date) => onChangeFocusDate(date)}
+        />
       </Box>
 
       <ButtonGroup>
@@ -59,6 +75,80 @@ const CalendarNavBar = ({
         </Button>
       </ButtonGroup>
     </Box>
+  );
+};
+
+export interface CalendarMonthSelectProps {
+  focusDate: Date;
+  onChange: (date: Date) => void;
+}
+
+const CalendarMonthSelect = ({
+  focusDate,
+  onChange,
+}: CalendarMonthSelectProps) => {
+  return (
+    <Select
+      disableUnderline
+      onChange={(event) => {
+        const newMonth =
+          typeof event.target.value === 'number'
+            ? event.target.value
+            : parseInt(event.target.value);
+        const newDate = dayjs(focusDate).month(newMonth);
+        onChange(newDate.toDate());
+      }}
+      value={focusDate.getMonth()}
+      variant="standard"
+    >
+      {_.range(12).map((index) => {
+        return (
+          <MenuItem key={index} value={index}>
+            {index}
+          </MenuItem>
+        );
+      })}
+    </Select>
+  );
+};
+
+export interface CalendarYearSelectProps {
+  focusDate: Date;
+  onChange: (date: Date) => void;
+}
+
+const CalendarYearSelect = ({
+  focusDate,
+  onChange,
+}: CalendarYearSelectProps) => {
+  const amountOfYears = 18;
+  const startYear = focusDate.getFullYear() - 8;
+
+  return (
+    <Select
+      disableUnderline
+      onChange={(event) => {
+        const newYear =
+          typeof event.target.value === 'number'
+            ? event.target.value
+            : parseInt(event.target.value);
+        const newDate = dayjs(focusDate).year(newYear);
+        onChange(newDate.toDate());
+      }}
+      value={focusDate.getFullYear()}
+      variant="standard"
+    >
+      {_.range(amountOfYears).map((index) => {
+        const year = dayjs(focusDate)
+          .year(startYear + index)
+          .year();
+        return (
+          <MenuItem key={index} value={year}>
+            {year}
+          </MenuItem>
+        );
+      })}
+    </Select>
   );
 };
 
