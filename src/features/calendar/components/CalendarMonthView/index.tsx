@@ -1,7 +1,12 @@
 import { Box, fontSize } from "@mui/system";
-import dayjs from 'dayjs';
+import useModel from "core/useModel";
+import dayjs, { Dayjs } from 'dayjs';
 import isoWeek from 'dayjs/plugin/isoWeek';
+import CampaignActivitiesModel, { ACTIVITIES, CampaignActivity } from "features/campaigns/models/CampaignActivitiesModel";
+import { useRouter } from "next/router";
 import { KeyboardEventHandler, useEffect, useState } from "react";
+import ZUIFuture from "zui/ZUIFuture";
+import CalendarMonthViewDay from "./CalendarMonthViewDay";
 
 type CalendarWeekNumberProps = {
   weekNr: number
@@ -21,51 +26,6 @@ const CalendarWeekNumber = ({weekNr}: CalendarWeekNumberProps) => {
 }
 
 
-type CalendarMonthViewBoxProps = {
-  date: Date,
-  focusDate: Date,
-  currentDate: Date,
-  onChangeFocusDate: (date: Date) => void
-}
-const CalendarMonthViewBox = ({date, focusDate, currentDate} : CalendarMonthViewBoxProps) => {
-  const isSameMonth = date.getMonth() === focusDate.getMonth();
-  const isSameAsCurrentDate = dayjs(date).isSame(currentDate, "day");
-  let textColor = "#9f9f9f";
-  if (isSameAsCurrentDate) {
-    textColor = "#6ba5df";
-  } else if (!isSameMonth) {
-    textColor = "#dfdfdf";
-  }
-
-
-  return <>
-    <button
-      style={{
-        background: "none",
-        border: "none",
-        outline: "none",
-        padding: "0",
-        fontSize: "0.75rem"
-      }}>
-      <Box
-        bgcolor={isSameMonth ? "#eee" : "none"}
-        border="2px solid #eeeeee"
-        borderColor={isSameAsCurrentDate ? "#6ba5df" : "#eee"}
-        color={textColor}
-        alignItems="start"
-        padding="6px"
-        display="flex"
-        flexDirection="column"
-        height="100%"
-        width="100%"
-      >
-        {date.toLocaleDateString("sv", { day: "numeric" })}
-      </Box>
-    </button>
-  </>
-}
-
-
 
 
 type Props = {
@@ -73,6 +33,11 @@ type Props = {
   onChangeFocusDate: (date: Date) => void
 }
 const CalendarMonthView = ({ focusDate, onChangeFocusDate }: Props) => {
+  const { orgId } = useRouter().query;
+  const model = useModel(
+    (env) => new CampaignActivitiesModel(env, parseInt(orgId as string))
+  );
+
   const [weekNumber, setWeekNumber] = useState(0);
   const numberOfRows = 6;
   const numberOfColumns = 7;
@@ -88,44 +53,67 @@ const CalendarMonthView = ({ focusDate, onChangeFocusDate }: Props) => {
   }
 
   const daysBeforeFirstDay = getDaysBeforeFirstDay();
-  console.log("daysBeforeFirstDay", daysBeforeFirstDay);
-  const firstDayOfCalender = dayjs(firstDayOfMonth).subtract(daysBeforeFirstDay, "day");
+  const firstDayOfCalendar = dayjs(firstDayOfMonth).subtract(daysBeforeFirstDay, "day");
   const currentDate = new Date();
   
   useEffect(() => {
     dayjs.extend(isoWeek)
-    setWeekNumber(firstDayOfCalender.isoWeek());
-  }, [firstDayOfCalender]);
+  }, []);
+
+  useEffect(() => {
+    setWeekNumber(firstDayOfCalendar.isoWeek());
+  }, [firstDayOfCalendar]);
 
   function getDayIndex(rowIndex: number, columnIndex: number) {
     return (columnIndex) + (rowIndex * (numberOfColumns) )
   }
 
+  function isBetween(testDate: Date | Dayjs, first: Date | Dayjs, last: Date | Dayjs) : boolean {
+    const date = dayjs(testDate);
+    return date.isAfter(first) && date.isBefore(last);
+  }
+
   return <>
-    <Box
-      display="grid"
-      gridTemplateColumns={`auto repeat(${numberOfColumns}, 1fr)`}
-      gridTemplateRows={`repeat(${numberOfRows}, 1fr)`}
-      gap="8px"
-      flexGrow="1"
-      bgcolor="#f5f5f5"
-      margin="12px"
-    >
-      {[...Array(numberOfRows)]
-        .map((_, rowIndex) => [...Array(numberOfColumns + 1)]
-          .map((_, columnIndex) =>
-            <>
-              {columnIndex === 0 && <CalendarWeekNumber weekNr={weekNumber + rowIndex} />}
-              {columnIndex !== 0 && <CalendarMonthViewBox
-                focusDate={focusDate}
-                onChangeFocusDate={onChangeFocusDate}
-                currentDate={currentDate}
-                date={dayjs(firstDayOfCalender).add(getDayIndex(rowIndex, columnIndex - 1), "day").toDate()}
-              />}
-            </>
-          )
-        )}
-    </Box>
+    <ZUIFuture future={model.getAllActivities()}>
+      {(data) => {
+        const events = data.filter(a => a.kind == ACTIVITIES.EVENT);
+        const eventsOfMonth = events
+          .filter(a => a.endDate != null)
+          .filter(a => 
+            isBetween(a.endDate!, firstDayOfCalendar, firstDayOfCalendar.add(6, "weeks"))
+          );
+        //console.log("events", events);
+        console.log("eventsOfMonth", eventsOfMonth);
+        return (
+          <Box
+            display="grid"
+            gridTemplateColumns={`auto repeat(${numberOfColumns}, 1fr)`}
+            gridTemplateRows={`repeat(${numberOfRows}, 1fr)`}
+            gap="8px"
+            flexGrow="1"
+            bgcolor="#f5f5f5"
+            margin="12px"
+          >
+            {[...Array(numberOfRows)]
+              .map((_, rowIndex) => [...Array(numberOfColumns + 1)]
+                .map((_, columnIndex) =>
+                  <>
+                    {columnIndex === 0 && <CalendarWeekNumber weekNr={weekNumber + rowIndex} />}
+                    {columnIndex !== 0 && <CalendarMonthViewDay
+                      firstDateOfCalendar={firstDayOfCalendar}
+                      eventsOfMonth={eventsOfMonth}
+                      focusDate={focusDate}
+                      onChangeFocusDate={onChangeFocusDate}
+                      currentDate={currentDate}
+                      dayIndex={getDayIndex(rowIndex, columnIndex - 1)}
+                    />}
+                  </>
+                )
+              )}
+          </Box>
+        );
+      }}
+    </ZUIFuture>
   </>
 };
 
