@@ -1,16 +1,20 @@
 import Box from '@mui/material/Box';
 import CalendarDayEvent from './CalendarDayEvent';
-import CalendarDayOtherActivities from './CalendarDayOtherActivities';
 import CalendarDayDate from './CalendarDayDate';
+import CalendarDayOtherActivities from './CalendarDayOtherActivities';
 import { DayInfo } from './types';
 
 export interface CalendarDayItemProps {
-  focusDate: Date;
   date: Date;
   dayInfo: DayInfo;
+  focusDate: Date;
 }
 
-const CalendarDayItem = ({ focusDate, date, dayInfo }: CalendarDayItemProps) => {
+const CalendarDayItem = ({
+  date,
+  dayInfo,
+  focusDate,
+}: CalendarDayItemProps) => {
   return (
     <Box
       display="flex"
@@ -34,9 +38,10 @@ const CalendarDayItem = ({ focusDate, date, dayInfo }: CalendarDayItemProps) => 
           width: '100%',
         }}
       >
-        { (dayInfo.activities_starts.length > 0 || dayInfo.activities_ends.length > 0) &&
-          <CalendarDayOtherActivities dayInfo={dayInfo} />      
-        }
+        {(dayInfo.activities_starts.length > 0 ||
+          dayInfo.activities_ends.length > 0) && (
+          <CalendarDayOtherActivities dayInfo={dayInfo} />
+        )}
         {dayInfo.events.map((event, i) => (
           <CalendarDayEvent event={event} />
         ))}

@@ -43,7 +43,9 @@ const Calendar = () => {
       </Box>
 
       <Box display="flex" flexDirection="column" flexGrow={1}>
-        {selectedTimeScale === TimeScale.DAY && <CalendarDayView focusDate={focusDate} />}
+        {selectedTimeScale === TimeScale.DAY && (
+          <CalendarDayView focusDate={focusDate} />
+        )}
         {selectedTimeScale === TimeScale.WEEK && <CalendarWeekView />}
         {selectedTimeScale === TimeScale.MONTH && <CalendarMonthView />}
       </Box>

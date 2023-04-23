@@ -5,7 +5,9 @@ export interface CalendarDayOtherActivitiesProps {
   dayInfo: DayInfo;
 }
 
-const CalendarDayOtherActivities = ({ dayInfo }: CalendarDayOtherActivitiesProps) => {
+const CalendarDayOtherActivities = ({
+  dayInfo,
+}: CalendarDayOtherActivitiesProps) => {
   let infoTexts = [];
   if (dayInfo.activities_starts.length > 0) {
     infoTexts.push(`${dayInfo.activities_starts.length} activities starts`);
@@ -13,18 +15,19 @@ const CalendarDayOtherActivities = ({ dayInfo }: CalendarDayOtherActivitiesProps
   if (dayInfo.activities_ends.length > 0) {
     infoTexts.push(`${dayInfo.activities_ends.length} activities ends`);
   }
-  const allInfoText = infoTexts.join(", ");
+  const allInfoText = infoTexts.join(', ');
 
   return (
-    <Box display="flex"
+    <Box
+      display="flex"
       sx={{
-        margin: "0.5em",
-        padding: "0.5em",
+        margin: '0.5em',
+        padding: '0.5em',
       }}
     >
-      { allInfoText }
+      {allInfoText}
     </Box>
-  )
+  );
 };
 
 export default CalendarDayOtherActivities;
