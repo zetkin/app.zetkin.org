@@ -26,15 +26,20 @@ export default makeMessages('feat.events', {
   },
   eventPopper: {
     booked: m('Booked'),
-    contactPerson: m('Contact Person'),
+    contactPerson: m('Contact person'),
     dateAndTime: m('Date & Time'),
     description: m('Description'),
     eventPageLink: m('Go to event page'),
     location: m('Location'),
-    noContact: m('No contact person'),
+    noContact: m('No contact person has been assigned'),
     notified: m('Notified'),
+    pendingSignups: m('There are pending signups'),
     publish: m('Publish'),
+    reminded: m('Reminded'),
     signups: m('Signups'),
+    unsentReminders: m<{ numMissing: number }>(
+      '{numMissing, plural, =1 {One participant} other {# participants}} have not yet received reminders'
+    ),
   },
   form: {
     activity: m('Activity'),

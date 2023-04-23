@@ -81,7 +81,7 @@ const EventWarningIcons: FC<EventWarningIconsProps> = ({ compact, model }) => {
   );
 };
 
-const WarningSlot: FC<{
+export const WarningSlot: FC<{
   icon?: JSX.Element;
   tooltip?: string;
 }> = ({ icon, tooltip }) => {
