@@ -30,6 +30,13 @@ type CalendarMonthViewBoxProps = {
 const CalendarMonthViewBox = ({date, focusDate, currentDate} : CalendarMonthViewBoxProps) => {
   const isSameMonth = date.getMonth() === focusDate.getMonth();
   const isSameAsCurrentDate = dayjs(date).isSame(currentDate, "day");
+  let textColor = "#9f9f9f";
+  if (isSameAsCurrentDate) {
+    textColor = "#6ba5df";
+  } else if (!isSameMonth) {
+    textColor = "#dfdfdf";
+  }
+
 
   return <>
     <button
@@ -41,10 +48,10 @@ const CalendarMonthViewBox = ({date, focusDate, currentDate} : CalendarMonthView
         fontSize: "0.75rem"
       }}>
       <Box
-        bgcolor={isSameMonth ? "#eeeeee" : "none"}
+        bgcolor={isSameMonth ? "#eee" : "none"}
         border="2px solid #eeeeee"
-        borderColor={isSameAsCurrentDate ? "#6ba5df" : "#eeeeee"}
-        color={isSameAsCurrentDate ? "#6ba5df" : "#9f9f9f"}
+        borderColor={isSameAsCurrentDate ? "#6ba5df" : "#eee"}
+        color={textColor}
         alignItems="start"
         padding="6px"
         display="flex"
@@ -52,7 +59,7 @@ const CalendarMonthViewBox = ({date, focusDate, currentDate} : CalendarMonthView
         height="100%"
         width="100%"
       >
-        {date.toLocaleDateString("sv", { day: "2-digit" })}
+        {date.toLocaleDateString("sv", { day: "numeric" })}
       </Box>
     </button>
   </>
