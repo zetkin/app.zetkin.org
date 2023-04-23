@@ -1,4 +1,4 @@
-import { Box, Grid } from '@mui/material';
+import { Box } from '@mui/material';
 import dayjs from 'dayjs';
 import { useState } from 'react';
 
@@ -20,32 +20,34 @@ const Calendar = () => {
   );
 
   return (
-    <Grid padding={2}>
-      <CalendarNavBar
-        focusDate={focusDate}
-        onChangeFocusDate={(date) => {
-          setFocusDate(date);
-        }}
-        onChangeTimeScale={(timeScale) => {
-          setSelectedTimeScale(timeScale);
-        }}
-        onStepBackward={() => {
-          setFocusDate(
-            dayjs(focusDate).subtract(1, selectedTimeScale).toDate()
-          );
-        }}
-        onStepForward={() => {
-          setFocusDate(dayjs(focusDate).add(1, selectedTimeScale).toDate());
-        }}
-        timeScale={selectedTimeScale}
-      />
+    <Box display="flex" flexDirection="column" height={'100%'} padding={2}>
+      <Box>
+        <CalendarNavBar
+          focusDate={focusDate}
+          onChangeFocusDate={(date) => {
+            setFocusDate(date);
+          }}
+          onChangeTimeScale={(timeScale) => {
+            setSelectedTimeScale(timeScale);
+          }}
+          onStepBackward={() => {
+            setFocusDate(
+              dayjs(focusDate).subtract(1, selectedTimeScale).toDate()
+            );
+          }}
+          onStepForward={() => {
+            setFocusDate(dayjs(focusDate).add(1, selectedTimeScale).toDate());
+          }}
+          timeScale={selectedTimeScale}
+        />
+      </Box>
 
-      {selectedTimeScale === TimeScale.DAY && <CalendarDayView />}
-      {selectedTimeScale === TimeScale.WEEK && (
-        <CalendarWeekView focusDate={focusDate} />
-      )}
-      {selectedTimeScale === TimeScale.MONTH && <CalendarMonthView />}
-    </Grid>
+      <Box flexGrow={1}>
+        {selectedTimeScale === TimeScale.DAY && <CalendarDayView />}
+        {selectedTimeScale === TimeScale.WEEK && <CalendarWeekView focusDate={focusDate} />}
+        {selectedTimeScale === TimeScale.MONTH && <CalendarMonthView />}
+      </Box>
+    </Box>
   );
 };
 
