@@ -1,23 +1,21 @@
 import { Box } from "@mui/system";
+import theme from 'theme';
 import dayjs, { Dayjs } from "dayjs";
-import { CampaignActivity } from "features/campaigns/models/CampaignActivitiesModel";
 
 type CalendarMonthViewDayProps = {
-  eventsOfMonth: CampaignActivity[],
   focusDate: Date,
   currentDate: Date,
   firstDateOfCalendar: Dayjs,
   dayIndex: number,
   onChangeFocusDate: (date: Date) => void
 }
-const CalendarMonthViewDay = ({focusDate, currentDate, firstDateOfCalendar, dayIndex, eventsOfMonth} : CalendarMonthViewDayProps) => {
+const CalendarMonthViewDay = ({focusDate, currentDate, firstDateOfCalendar, dayIndex} : CalendarMonthViewDayProps) => {
   const date = firstDateOfCalendar.add(dayIndex, "day");
-  const eventsOfDay = eventsOfMonth.filter(event => dayjs(event.endDate).isSame(date, "days"));
   const isSameMonth = date.month() === focusDate.getMonth();
   const isSameAsCurrentDate = dayjs(date).isSame(currentDate, "day");
-  let textColor = "#9f9f9f";
+  let textColor = theme.palette.text.secondary;
   if (isSameAsCurrentDate) {
-    textColor = "#6ba5df";
+    textColor = theme.palette.primary.main;
   } else if (!isSameMonth) {
     textColor = "#dfdfdf";
   }
@@ -34,7 +32,7 @@ const CalendarMonthViewDay = ({focusDate, currentDate, firstDateOfCalendar, dayI
       <Box
         bgcolor={isSameMonth ? "#eee" : "none"}
         border="2px solid #eeeeee"
-        borderColor={isSameAsCurrentDate ? "#6ba5df" : "#eee"}
+        borderColor={isSameAsCurrentDate ? theme.palette.primary.main : "eee"}
         color={textColor}
         alignItems="start"
         padding="6px"

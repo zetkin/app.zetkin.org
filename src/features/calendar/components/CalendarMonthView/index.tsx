@@ -1,11 +1,7 @@
-import { Box, fontSize } from "@mui/system";
-import useModel from "core/useModel";
-import dayjs, { Dayjs } from 'dayjs';
+import { Box } from "@mui/system";
+import dayjs from 'dayjs';
 import isoWeek from 'dayjs/plugin/isoWeek';
-import CampaignActivitiesModel, { ACTIVITIES, CampaignActivity } from "features/campaigns/models/CampaignActivitiesModel";
-import { useRouter } from "next/router";
-import { KeyboardEventHandler, useEffect, useState } from "react";
-import ZUIFuture from "zui/ZUIFuture";
+import { useEffect, useState } from "react";
 import CalendarMonthViewDay from "./CalendarMonthViewDay";
 
 type CalendarWeekNumberProps = {
@@ -13,7 +9,7 @@ type CalendarWeekNumberProps = {
 
 }
 
-const CalendarWeekNumber = ({weekNr}: CalendarWeekNumberProps) => {
+const CalendarWeekNumber = ({ weekNr }: CalendarWeekNumberProps) => {
   return <>
     <Box
       fontSize="0.75rem"
@@ -33,11 +29,6 @@ type Props = {
   onChangeFocusDate: (date: Date) => void
 }
 const CalendarMonthView = ({ focusDate, onChangeFocusDate }: Props) => {
-  const { orgId } = useRouter().query;
-  const model = useModel(
-    (env) => new CampaignActivitiesModel(env, parseInt(orgId as string))
-  );
-
   const [weekNumber, setWeekNumber] = useState(0);
   const numberOfRows = 6;
   const numberOfColumns = 7;
@@ -55,7 +46,7 @@ const CalendarMonthView = ({ focusDate, onChangeFocusDate }: Props) => {
   const daysBeforeFirstDay = getDaysBeforeFirstDay();
   const firstDayOfCalendar = dayjs(firstDayOfMonth).subtract(daysBeforeFirstDay, "day");
   const currentDate = new Date();
-  
+
   useEffect(() => {
     dayjs.extend(isoWeek)
   }, []);
@@ -65,55 +56,35 @@ const CalendarMonthView = ({ focusDate, onChangeFocusDate }: Props) => {
   }, [firstDayOfCalendar]);
 
   function getDayIndex(rowIndex: number, columnIndex: number) {
-    return (columnIndex) + (rowIndex * (numberOfColumns) )
-  }
-
-  function isBetween(testDate: Date | Dayjs, first: Date | Dayjs, last: Date | Dayjs) : boolean {
-    const date = dayjs(testDate);
-    return date.isAfter(first) && date.isBefore(last);
+    return (columnIndex) + (rowIndex * (numberOfColumns))
   }
 
   return <>
-    <ZUIFuture future={model.getAllActivities()}>
-      {(data) => {
-        const events = data.filter(a => a.kind == ACTIVITIES.EVENT);
-        const eventsOfMonth = events
-          .filter(a => a.endDate != null)
-          .filter(a => 
-            isBetween(a.endDate!, firstDayOfCalendar, firstDayOfCalendar.add(6, "weeks"))
-          );
-        //console.log("events", events);
-        console.log("eventsOfMonth", eventsOfMonth);
-        return (
-          <Box
-            display="grid"
-            gridTemplateColumns={`auto repeat(${numberOfColumns}, 1fr)`}
-            gridTemplateRows={`repeat(${numberOfRows}, 1fr)`}
-            gap="8px"
-            flexGrow="1"
-            bgcolor="#f5f5f5"
-            margin="12px"
-          >
-            {[...Array(numberOfRows)]
-              .map((_, rowIndex) => [...Array(numberOfColumns + 1)]
-                .map((_, columnIndex) =>
-                  <>
-                    {columnIndex === 0 && <CalendarWeekNumber weekNr={weekNumber + rowIndex} />}
-                    {columnIndex !== 0 && <CalendarMonthViewDay
-                      firstDateOfCalendar={firstDayOfCalendar}
-                      eventsOfMonth={eventsOfMonth}
-                      focusDate={focusDate}
-                      onChangeFocusDate={onChangeFocusDate}
-                      currentDate={currentDate}
-                      dayIndex={getDayIndex(rowIndex, columnIndex - 1)}
-                    />}
-                  </>
-                )
-              )}
-          </Box>
-        );
-      }}
-    </ZUIFuture>
+    <Box
+      display="grid"
+      gridTemplateColumns={`auto repeat(${numberOfColumns}, 1fr)`}
+      gridTemplateRows={`repeat(${numberOfRows}, 1fr)`}
+      gap="8px"
+      flexGrow="1"
+      bgcolor="#f5f5f5"
+      margin="12px"
+    >
+      {[...Array(numberOfRows)]
+        .map((_, rowIndex) => [...Array(numberOfColumns + 1)]
+          .map((_, columnIndex) =>
+            <>
+              {columnIndex === 0 && <CalendarWeekNumber weekNr={weekNumber + rowIndex} />}
+              {columnIndex !== 0 && <CalendarMonthViewDay
+                firstDateOfCalendar={firstDayOfCalendar}
+                focusDate={focusDate}
+                onChangeFocusDate={onChangeFocusDate}
+                currentDate={currentDate}
+                dayIndex={getDayIndex(rowIndex, columnIndex - 1)}
+              />}
+            </>
+          )
+        )}
+    </Box>
   </>
 };
 
