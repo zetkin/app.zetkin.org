@@ -109,7 +109,7 @@ const CalendarMonthView = ({ focusDate, onChangeFocusDate }: Props) => {
   return <>
     <Box
       display="grid"
-      gridTemplateColumns={`auto repeat(${numberOfColumns}, minmax(125px, 1fr))`}
+      gridTemplateColumns={`auto repeat(${numberOfColumns}, 1fr)`}
       gridTemplateRows={`repeat(${numberOfRows}, 1fr)`}
       gap="8px"
       flexGrow="1"
