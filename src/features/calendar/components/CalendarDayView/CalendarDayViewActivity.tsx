@@ -22,13 +22,6 @@ export enum STATUS_COLORS {
     RED = 'red',
 }
 
-const centerIcon = {
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center"
-}
-
-
 const CalendarDayViewActivity = ({
     event,
     statusColor = STATUS_COLORS.GREEN
@@ -50,7 +43,11 @@ const CalendarDayViewActivity = ({
                 display: "flex",
                 gap: "1em"
             }}>
-                <Box style={centerIcon}>
+                <Box style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center"
+                }}>
                     <div style={{
                         backgroundColor: theme.palette.statusColors[statusColor],
                         width: "10px",
@@ -58,7 +55,11 @@ const CalendarDayViewActivity = ({
                         borderRadius: "100%"
                     }}></div>
                 </Box>
-                <Box style={centerIcon}>
+                <Box style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "center"
+                    }}>
                     <EventIcon />
                 </Box>
                 <Box style={{
@@ -71,7 +72,8 @@ const CalendarDayViewActivity = ({
                     <Box style={{
                         display: "flex",
                         alignItems: "center",
-                        gap: "0.5em"
+                        gap: "0.5em",
+                        color: theme.palette.text.secondary
                     }}>
                         <Box>
                             <ScheduleIcon />
@@ -85,7 +87,7 @@ const CalendarDayViewActivity = ({
                     <Box style={{
                         display: "flex",
                         alignItems: "center",
-                        color: "secondary",
+                        color: theme.palette.text.secondary,
                         gap: "0.5em"
                     }}>
                         <PlaceOutlinedIcon />
@@ -107,10 +109,11 @@ const CalendarDayViewActivity = ({
                 </Box>
                 <Box style={{
                     display: "flex",
-                    gap: "0.5em"
+                    gap: "0.5em",
+                    alignItems: "center"
                 }}>
                     <PeopleIcon />
-                    <span>{event.num_participants_available} / {event.num_participants_required}</span>
+                    <span>{event.num_participants_available}/{event.num_participants_required}</span>
                 </Box>
                 
             </Box>
