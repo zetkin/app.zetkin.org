@@ -71,7 +71,8 @@ const CalendarDayViewActivity = ({
                     <Box style={{
                         display: "flex",
                         alignItems: "center",
-                        gap: "0.5em"
+                        gap: "0.5em",
+                        color: theme.palette.text.secondary
                     }}>
                         <Box>
                             <ScheduleIcon />
@@ -85,7 +86,7 @@ const CalendarDayViewActivity = ({
                     <Box style={{
                         display: "flex",
                         alignItems: "center",
-                        color: "secondary",
+                        color: theme.palette.text.secondary,
                         gap: "0.5em"
                     }}>
                         <PlaceOutlinedIcon />
@@ -107,10 +108,11 @@ const CalendarDayViewActivity = ({
                 </Box>
                 <Box style={{
                     display: "flex",
-                    gap: "0.5em"
+                    gap: "0.5em",
+                    alignItems: "center"
                 }}>
                     <PeopleIcon />
-                    <span>{event.num_participants_available} / {event.num_participants_required}</span>
+                    <span>{event.num_participants_available}/{event.num_participants_required}</span>
                 </Box>
                 
             </Box>
