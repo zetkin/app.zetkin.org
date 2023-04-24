@@ -22,13 +22,6 @@ export enum STATUS_COLORS {
     RED = 'red',
 }
 
-const centerIcon = {
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center"
-}
-
-
 const CalendarDayViewActivity = ({
     event,
     statusColor = STATUS_COLORS.GREEN
@@ -50,7 +43,11 @@ const CalendarDayViewActivity = ({
                 display: "flex",
                 gap: "1em"
             }}>
-                <Box style={centerIcon}>
+                <Box style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center"
+                }}>
                     <div style={{
                         backgroundColor: theme.palette.statusColors[statusColor],
                         width: "10px",
@@ -58,7 +55,11 @@ const CalendarDayViewActivity = ({
                         borderRadius: "100%"
                     }}></div>
                 </Box>
-                <Box style={centerIcon}>
+                <Box style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "center"
+                    }}>
                     <EventIcon />
                 </Box>
                 <Box style={{
