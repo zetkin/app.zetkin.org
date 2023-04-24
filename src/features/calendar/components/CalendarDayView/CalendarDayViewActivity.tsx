@@ -29,7 +29,6 @@ const CalendarDayViewActivity = ({
     event: ZetkinEvent
     statusColor: STATUS_COLORS
 }) => {
-    console.log(event)
     return <>
         <Box style={{
             display: "flex",
@@ -37,7 +36,8 @@ const CalendarDayViewActivity = ({
             justifyContent: "space-between",
             backgroundColor: "white",
             border: "1px secondary solid",
-            padding: "1em"
+            padding: "1em",
+            flexWrap: "wrap"
         }}>
             <Box style={{
                 display: "flex",
@@ -55,40 +55,43 @@ const CalendarDayViewActivity = ({
                         borderRadius: "100%"
                     }}></div>
                 </Box>
-                <Box style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "center"
-                    }}>
-                    <EventIcon />
-                </Box>
+                
                 <Box style={{
                     display: "flex",
                     flexWrap: "wrap",
                     alignItems: "center",
                     gap: "1em"
                 }}>
-                    <span>{event.title || event.activity.title}</span>
+                    <Box display="flex" gap="0.1em">
+                        <span style={{
+                                display: "flex",
+                                flexDirection: "column",
+                                justifyContent: "center",
+                                
+                            }}>
+                            <EventIcon />
+                        </span>
+                        <span>{event.title || event.activity.title}</span>
+                    </Box>
                     <Box style={{
                         display: "flex",
                         alignItems: "center",
-                        gap: "0.5em",
+                        gap: "0.1em",
                         color: theme.palette.text.secondary
                     }}>
+                        <ScheduleIcon />
                         <Box>
-                            <ScheduleIcon />
+                            <span>{ dayjs(event.start_time).format("HH:mm") }</span>
+                            {event.end_time && (
+                                <span> - { dayjs(event.end_time).format("HH:mm") }</span>
+                            )}
                         </Box>
-                        
-                        <span>{ dayjs(event.start_time).format("HH:mm") }</span>
-                        {event.end_time && (
-                            <span> - { dayjs(event.end_time).format("HH:mm") }</span>
-                        )}
                     </Box>
                     <Box style={{
                         display: "flex",
                         alignItems: "center",
                         color: theme.palette.text.secondary,
-                        gap: "0.5em"
+                        gap: "0.1em"
                     }}>
                         <PlaceOutlinedIcon />
                         <span>{ event.location.title }</span>
@@ -102,6 +105,7 @@ const CalendarDayViewActivity = ({
                         gap: "1em"
                     }}>
                 {/* <EventWarningIcons/> */}
+                {/* TODO: Pass in data to EventWarningIcons component */}
                 <Box display="flex">
                     <EmojiPeople color="error" />
                     <FaceRetouchingOff color="error"  />

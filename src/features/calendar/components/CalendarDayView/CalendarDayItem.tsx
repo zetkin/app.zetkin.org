@@ -1,5 +1,4 @@
 import Box from '@mui/material/Box';
-import CalendarDayEvent from './CalendarDayEvent';
 import CalendarDayDate from './CalendarDayDate';
 import CalendarDayViewActivity, { STATUS_COLORS } from "./CalendarDayViewActivity";
 import CalendarDayOtherActivities from './CalendarDayOtherActivities';
@@ -26,10 +25,14 @@ const CalendarDayItem = ({
     >
       <Box
         sx={{
-          width: 300,
+          width: 300
         }}
       >
-        <CalendarDayDate focusDate={focusDate} date={date} />
+        <Box sx={{
+          padding: "1em"
+        }}>
+          <CalendarDayDate focusDate={focusDate} date={date} />
+        </Box>
       </Box>
       <Box
         display="flex"
@@ -37,6 +40,7 @@ const CalendarDayItem = ({
         sx={{
           padding: '1em',
           width: '100%',
+          gap: "0.7em"
         }}
       >
         {(dayInfo.activities_starts.length > 0 ||
