@@ -31,14 +31,16 @@ const CalendarDayViewActivity = ({
 }) => {
     return <>
         <Box style={{
-            display: "flex",
-            width: "100%",
-            justifyContent: "space-between",
-            backgroundColor: "white",
-            border: "1px secondary solid",
-            padding: "1em",
-            flexWrap: "wrap"
-        }}>
+                display: "flex",
+                width: "100%",
+                justifyContent: "space-between",
+                backgroundColor: "white",
+                border: "1px secondary solid",
+                padding: "1em",
+                flexWrap: "wrap"
+            }}
+            // TODO: On Click open event popper
+            >
             <Box style={{
                 display: "flex",
                 gap: "1em"

@@ -19,7 +19,7 @@ const CalendarDayDate = ({ date, focusDate }: CalendarDayDateProps) => {
         borderRadius: "2em",
       }}
     >
-      {dayjs(date).get('D')} {dayjs(date).format('MMMM')},{' '}
+      {dayjs(date).format('D')} {dayjs(date).format('MMMM')},{' '}
       {dayjs(date).format('dddd')}
     </Box>
   );
