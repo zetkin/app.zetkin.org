@@ -50,7 +50,7 @@ const ParticipantsPage: PageWithLayout<ParticipantsProps> = ({
             <Grid item md={8} xs={12}>
               <ParticipantSummaryCard model={dataModel} />
             </Grid>
-            <Grid item md={12} container justifyContent="flex-end">
+            <Grid container item justifyContent="flex-end" md={12}>
               <AddPersonButton model={dataModel} />
             </Grid>
           </Grid>

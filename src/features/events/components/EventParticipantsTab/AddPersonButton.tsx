@@ -5,8 +5,8 @@ import { useRef, useState } from 'react';
 
 import EventDataModel from 'features/events/models/EventDataModel';
 import messageIds from '../../l10n/messageIds';
-import { MUIOnlyPersonSelect as ZUIPersonSelect } from 'zui/ZUIPersonSelect';
 import ZUIFutures from 'zui/ZUIFutures';
+import { MUIOnlyPersonSelect as ZUIPersonSelect } from 'zui/ZUIPersonSelect';
 import { Msg, useMessages } from 'core/i18n';
 
 interface AddPersonButtonProps {
@@ -37,12 +37,12 @@ const AddPersonButton = ({ model }: AddPersonButtonProps) => {
       </IconButton>
 
       <Popover
-        elevation={1}
         anchorEl={anchorEl}
         anchorOrigin={{
           horizontal: 'right',
           vertical: 'bottom',
         }}
+        elevation={1}
         onClose={() => setAnchorEl(null)}
         open={!!anchorEl}
         PaperProps={{
@@ -50,8 +50,8 @@ const AddPersonButton = ({ model }: AddPersonButtonProps) => {
             display: 'flex',
             flexDirection: 'column',
             maxHeight: '40vh',
-            width: '40vh',
             maxWidth: '400px',
+            width: '40vh',
           },
         }}
         transformOrigin={{
@@ -67,9 +67,6 @@ const AddPersonButton = ({ model }: AddPersonButtonProps) => {
             }}
           >
             {({ data: { participants, respondents } }) => {
-              console.log(participants);
-              console.log(respondents);
-
               const settingStatus = (personId: number) => {
                 if (
                   participants.some(
@@ -80,8 +77,8 @@ const AddPersonButton = ({ model }: AddPersonButtonProps) => {
                     <Box
                       sx={{
                         color: '#A8A8A8',
-                        fontSize: '0.9rem',
                         display: 'flex',
+                        fontSize: '0.9rem',
                       }}
                     >
                       <People sx={{ fontSize: '1.3rem', mr: 1 }} />
@@ -96,8 +93,8 @@ const AddPersonButton = ({ model }: AddPersonButtonProps) => {
                     <Box
                       sx={{
                         color: '#A8A8A8',
-                        fontSize: '0.9rem',
                         display: 'flex',
+                        fontSize: '0.9rem',
                       }}
                     >
                       <EmojiPeople sx={{ fontSize: '1.3rem', mr: 1 }} />
@@ -134,8 +131,3 @@ const AddPersonButton = ({ model }: AddPersonButtonProps) => {
 };
 
 export default AddPersonButton;
-
-//   <Box sx={{ color: '#A8A8A8', fontSize: '0.9rem', display: 'flex' }}>
-//     <DoDisturb sx={{ fontSize: '1.3rem', mr: 1 }} />
-//     <Msg id={messageIds.addPerson.status.signedUp} />
-//   </Box>
