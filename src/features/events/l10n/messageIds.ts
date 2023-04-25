@@ -26,6 +26,8 @@ export default makeMessages('feat.events', {
   },
   eventParticipantsList: {
     bookedParticipants: m('Booked Participants'),
+    buttonBook: m('BOOK'),
+    buttonCancel: m('CANCEL'),
     columnEmail: m('Email'),
     columnName: m('Name'),
     columnNotified: m('Notified'),

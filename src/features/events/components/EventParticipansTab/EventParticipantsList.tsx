@@ -1,19 +1,16 @@
 import { FC } from 'react';
 import { Box, Button, Typography } from '@mui/material';
-import {
-  DataGridPro,
-  GridActionsCellItem,
-  GridColDef,
-} from '@mui/x-data-grid-pro';
+import { DataGridPro, GridColDef } from '@mui/x-data-grid-pro';
 
 import EventDataModel from 'features/events/models/EventDataModel';
 import messageIds from 'features/events/l10n/messageIds';
+import noPropagate from 'utils/noPropagate';
 import theme from 'theme';
 import { useMessages } from 'core/i18n';
-import { ZetkinEvent } from 'utils/types/zetkin';
 import ZUIAvatar from 'zui/ZUIAvatar';
 import ZUINumberChip from 'zui/ZUINumberChip';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
+import { ZetkinEvent, ZetkinEventResponse } from 'utils/types/zetkin';
 
 interface EventParticipansListProps {
   data: ZetkinEvent;
@@ -27,7 +24,6 @@ const EventParticipansList: FC<EventParticipansListProps> = ({
   orgId,
 }) => {
   const messages = useMessages(messageIds);
-  const bookedParticipants = model.getParticipants().data;
 
   const columns: GridColDef[] = [
     {
@@ -41,52 +37,93 @@ const EventParticipansList: FC<EventParticipansListProps> = ({
       field: 'name',
       flex: 1,
       headerName: messages.eventParticipantsList.columnName(),
-      valueGetter: (params) =>
-        `${params.row.first_name + ' ' + params.row.last_name} `,
+      renderCell: (params) => {
+        if (params.row.person) {
+          return <Typography>{params.row.person.name}</Typography>;
+        } else {
+          return (
+            <Typography>
+              {params.row.first_name + ' ' + params.row.last_name}
+            </Typography>
+          );
+        }
+      },
     },
     {
       field: 'phone',
       flex: 1,
       headerName: messages.eventParticipantsList.columnPhone(),
-      valueGetter: (params) => `${params.row.phone} `,
+      renderCell: (params) => {
+        if (params.row.person) {
+          return <Typography>{''}</Typography>;
+        } else {
+          return <Typography>{params.row.phone}</Typography>;
+        }
+      },
     },
     {
       field: 'email',
       flex: 1,
       headerName: messages.eventParticipantsList.columnEmail(),
-      valueGetter: (params) => `${params.row.email} `,
+      valueGetter: (params) => {
+        if (params.row.person) {
+          return '';
+        } else {
+          return `${params.row.email}`;
+        }
+      },
     },
     {
       field: 'notified',
       flex: 1,
       headerName: messages.eventParticipantsList.columnNotified(),
-      renderCell: (params) => (
-        <ZUIRelativeTime datetime={params.row.reminder_sent || ' '} />
-      ),
+      renderCell: (params) => {
+        if (params.row.person) {
+          return <ZUIRelativeTime datetime={params.row.response_date} />;
+        } else {
+          return <ZUIRelativeTime datetime={params.row.reminder_sent} />;
+        }
+      },
     },
     {
       field: 'cancel',
       headerName: '',
       renderCell: () => (
-        <GridActionsCellItem
-          icon={<Button variant="text">CANCEL</Button>}
-          label=""
-        />
+        <Button variant="text">
+          {messages.eventParticipantsList.buttonCancel()}
+        </Button>
       ),
     },
   ];
 
+  function handleClick(personId: number) {
+    model.addParticipant(personId);
+  }
+
   const bookColumn: GridColDef = {
+    editable: true,
     field: 'book',
     headerName: '',
-    renderCell: () => <Button variant="outlined">BOOK</Button>,
+    renderCell: (params) => (
+      <Button
+        onClick={noPropagate(() => {
+          handleClick(params.row.id);
+        })}
+        variant="outlined"
+      >
+        {messages.eventParticipantsList.buttonBook()}
+      </Button>
+    ),
   };
 
-  const signUpsColumns = [...columns, bookColumn];
+  const signUpsColumns: GridColDef<ZetkinEventResponse>[] = [
+    ...columns,
+    bookColumn,
+  ];
 
   return (
     <Box>
-      {model.getSignedParticipants() < 1 && (
+      {model.getSignedParticipants() > 0 && (
         <>
           <Box
             id={'Sign-up-header'}
@@ -149,7 +186,7 @@ const EventParticipansList: FC<EventParticipansListProps> = ({
         autoHeight
         checkboxSelection
         columns={columns}
-        rows={bookedParticipants ?? []}
+        rows={model.getParticipants().data ?? []}
       />
     </Box>
   );
