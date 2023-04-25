@@ -1,5 +1,7 @@
 import ClearIcon from '@mui/icons-material/Clear';
-import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
+// import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
+import { DoDisturb, EmojiPeople, People } from '@mui/icons-material';
+
 import SearchIcon from '@mui/icons-material/Search';
 import { FC, HTMLAttributes, useState } from 'react';
 import {
@@ -19,7 +21,7 @@ import {
 import EventDataModel from '../models/EventDataModel';
 import messageIds from '../l10n/messageIds';
 import useModel from 'core/useModel';
-import { useMessages } from 'core/i18n';
+import { Msg, useMessages } from 'core/i18n';
 import { usePersonSelect } from 'zui/ZUIPersonSelect';
 import { ZetkinPerson } from 'utils/types/zetkin';
 import ZUIAvatar from 'zui/ZUIAvatar';
@@ -150,6 +152,9 @@ const PopoverContent = ({ model }: PopoverContentProps) => {
           }}
         >
           {({ data: { participants, respondents } }) => {
+            console.log(participants);
+            console.log(respondents);
+
             return (
               <>
                 {searchResults.map((option, index) => {
@@ -205,12 +210,34 @@ const PersonListItem: FC<{
         }}
       >
         <ZUIAvatar orgId={orgId} personId={person.id} size="md" />
-        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+          }}
+        >
           <Typography component="span">
             {`${person.first_name} ${person.last_name}`}
           </Typography>
-          {status === 'booked' && <EmojiPeopleIcon sx={{ color: '#A8A8A8' }} />}
-          {status === 'signed up' && 'signed up'}
+          {status === 'booked' && (
+            <Box sx={{ color: '#A8A8A8', fontSize: '0.9rem', display: 'flex' }}>
+              <People sx={{ fontSize: '1.3rem', mr: 1 }} />
+              <Msg id={messageIds.addPerson.status.booked} />
+            </Box>
+          )}
+          {status === 'signed up' && (
+            <Box sx={{ color: '#A8A8A8', fontSize: '0.9rem', display: 'flex' }}>
+              <EmojiPeople sx={{ fontSize: '1.3rem', mr: 1 }} />
+              <Msg id={messageIds.addPerson.status.signedUp} />
+            </Box>
+          )}
+          {status === 'cancelled' && (
+            <Box sx={{ color: '#A8A8A8', fontSize: '0.9rem', display: 'flex' }}>
+              <DoDisturb sx={{ fontSize: '1.3rem', mr: 1 }} />
+              <Msg id={messageIds.addPerson.status.signedUp} />
+            </Box>
+          )}
         </Box>
       </Box>
     </ListItem>

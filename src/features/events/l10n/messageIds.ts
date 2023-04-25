@@ -7,7 +7,7 @@ export default makeMessages('feat.events', {
     noResult: m('No matching person found'),
     search: m('Type to start searching'),
     status: {
-      booked: m('Already ooked'),
+      booked: m('Already booked'),
       signedUp: m('Already Signed up'),
     },
   },
