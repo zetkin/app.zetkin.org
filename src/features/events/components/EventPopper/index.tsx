@@ -26,6 +26,7 @@ import messageIds from '../../l10n/messageIds';
 import StatusDot from './StatusDot';
 import { useMessages } from 'core/i18n';
 import ZUIEllipsisMenu from '../../../../zui/ZUIEllipsisMenu';
+import ZUIIconLabel from '../../../../zui/ZUIIconLabel';
 import ZUIPerson from '../../../../zui/ZUIPerson';
 import ZUIPersonHoverCard from '../../../../zui/ZUIPersonHoverCard';
 import ZUITimeSpan from '../../../../zui/ZUITimeSpan';
@@ -113,7 +114,6 @@ function EventPopperBasic({
       .length ?? 0;
   return (
     <>
-      <EventPopperHeader event={event} state={state} />
       <Box
         alignItems="center"
         display="flex"
@@ -122,10 +122,12 @@ function EventPopperBasic({
       >
         <Box display="flex" flexDirection="column">
           <Box alignItems="center" display="flex">
-            <People color="secondary" sx={{ fontSize: '1.3rem', pr: 0.5 }} />
-            <Typography color="secondary" sx={{ fontSize: '0.7rem' }}>
-              {messages.eventPopper.booked().toUpperCase()}
-            </Typography>
+            <ZUIIconLabel
+              color="secondary"
+              icon={<People color="secondary" sx={{ fontSize: '1.3rem' }} />}
+              label={messages.eventPopper.booked().toUpperCase()}
+              size="xs"
+            />
           </Box>
           <Quota
             denominator={event.num_participants_required}
@@ -134,13 +136,14 @@ function EventPopperBasic({
         </Box>
         <Box display="flex" flexDirection="column">
           <Box alignItems="center" display="flex">
-            <MailOutlined
+            <ZUIIconLabel
               color="secondary"
-              sx={{ fontSize: '1.3rem', pr: 0.5 }}
+              icon={
+                <MailOutlined color="secondary" sx={{ fontSize: '1.3rem' }} />
+              }
+              label={messages.eventPopper.notified().toUpperCase()}
+              size="xs"
             />
-            <Typography color="secondary" sx={{ fontSize: '0.7rem' }}>
-              {messages.eventPopper.notified().toUpperCase()}
-            </Typography>
           </Box>
           <Quota
             denominator={availableParticipants}
@@ -149,13 +152,14 @@ function EventPopperBasic({
         </Box>
         <Box display="flex" flexDirection="column">
           <Box alignItems="center" display="flex">
-            <EmojiPeople
+            <ZUIIconLabel
               color="secondary"
-              sx={{ fontSize: '1.3rem', pr: 0.5 }}
+              icon={
+                <EmojiPeople color="secondary" sx={{ fontSize: '1.3rem' }} />
+              }
+              label={messages.eventPopper.signups().toUpperCase()}
+              size="xs"
             />
-            <Typography color="secondary" sx={{ fontSize: '0.7rem' }}>
-              {messages.eventPopper.signups().toUpperCase()}
-            </Typography>
           </Box>
           <Typography color={signedParticipants > 0 ? 'red' : 'secondary'}>
             {signedParticipants}
@@ -163,11 +167,13 @@ function EventPopperBasic({
         </Box>
       </Box>
       <Box display="flex" flexDirection="column" sx={{ mb: 2 }}>
-        <Box alignItems="center" display="flex">
-          <AccessTime color="secondary" sx={{ paddingRight: 1 }} />
-          <Typography color="secondary" variant="body2">
-            {messages.eventPopper.dateAndTime().toUpperCase()}
-          </Typography>
+        <Box sx={{ mb: 0.4 }}>
+          <ZUIIconLabel
+            color="secondary"
+            icon={<AccessTime color="secondary" sx={{ fontSize: '1.3rem' }} />}
+            label={messages.eventPopper.dateAndTime().toUpperCase()}
+            size="xs"
+          />
         </Box>
         <Typography color="secondary">
           <ZUITimeSpan
@@ -177,21 +183,29 @@ function EventPopperBasic({
         </Typography>
       </Box>
       <Box display="flex" flexDirection="column" sx={{ mb: 2 }}>
-        <Box alignItems="center" display="flex">
-          <PlaceOutlined color="secondary" sx={{ paddingRight: 1 }} />
-          <Typography color="secondary" variant="body2">
-            {messages.eventPopper.location().toUpperCase()}
-          </Typography>
+        <Box sx={{ mb: 0.4 }}>
+          <ZUIIconLabel
+            color="secondary"
+            icon={
+              <PlaceOutlined color="secondary" sx={{ fontSize: '1.3rem' }} />
+            }
+            label={messages.eventPopper.location().toUpperCase()}
+            size="xs"
+          />
         </Box>
         <Typography color="secondary">{event.location.title}</Typography>
       </Box>
 
       <Box display="flex" flexDirection="column" sx={{ mb: 2 }}>
-        <Box alignItems="center" display="flex">
-          <FaceOutlined color="secondary" sx={{ paddingRight: 1 }} />
-          <Typography color="secondary" variant="body2">
-            {messages.eventPopper.contactPerson().toUpperCase()}
-          </Typography>
+        <Box sx={{ mb: 0.4 }}>
+          <ZUIIconLabel
+            color="secondary"
+            icon={
+              <FaceOutlined color="secondary" sx={{ fontSize: '1.3rem' }} />
+            }
+            label={messages.eventPopper.contactPerson().toUpperCase()}
+            size="xs"
+          />
         </Box>
         {event.contact ? (
           <ZUIPersonHoverCard personId={event.contact.id}>
@@ -209,7 +223,7 @@ function EventPopperBasic({
       </Box>
       {event.info_text && (
         <Box display="flex" flexDirection="column" sx={{ mb: 3 }}>
-          <Typography color="secondary" variant="body2">
+          <Typography color="secondary" fontSize="0.7em">
             {messages.eventPopper.description().toUpperCase()}
           </Typography>
           <Box className={classes.description}>
@@ -226,15 +240,15 @@ function EventPopperBasic({
         <NextLink
           href={`/organize/${event.organization.id}/${
             event.campaign ? `projects/${event.campaign.id}` : 'standalone'
-          }/${event.id}`}
+          }/events/${event.id}`}
           passHref
         >
           <Link underline="none">
-            <Box display="flex">
-              <Typography sx={{ paddingRight: 1 }}>
+            <Box alignItems="center" display="flex">
+              <Typography sx={{ fontSize: '0.8em', paddingRight: 1 }}>
                 {messages.eventPopper.eventPageLink().toUpperCase()}
               </Typography>
-              <ArrowForward color="primary" />
+              <ArrowForward color="primary" sx={{ fontSize: '1em' }} />
             </Box>
           </Link>
         </NextLink>
@@ -273,8 +287,9 @@ interface EventPopperProps {
 const EventPopper = (props: EventPopperProps) => {
   return (
     <Popper anchorEl={props.anchorEl} open={props.open} placement="bottom">
-      <Paper sx={{ padding: 2, width: '300px' }}>
+      <Paper sx={{ padding: 2, width: '340px' }}>
         <Box display="flex" flexDirection="column">
+          <EventPopperHeader event={props.event} state={props.state} />
           <EventPopperBasic {...props} />
         </Box>
       </Paper>

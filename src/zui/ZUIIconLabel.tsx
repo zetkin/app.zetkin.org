@@ -5,12 +5,13 @@ export interface ZUIIconLabelProps {
   icon: JSX.Element;
   label: string | JSX.Element;
   color?: 'error' | 'secondary';
-  size?: 'sm' | 'md';
+  size?: 'sm' | 'md' | 'xs';
 }
 
 const FONT_SIZES = {
   md: '1.1em',
   sm: '1em',
+  xs: '0.7em',
 } as const;
 
 const ZUIIconLabel: FC<ZUIIconLabelProps> = ({
