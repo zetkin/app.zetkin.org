@@ -23,7 +23,7 @@ import {
 
 import { EventState } from '../../models/EventDataModel';
 import messageIds from '../../l10n/messageIds';
-import { STATUS_COLORS } from '../../../campaigns/components/ActivityList/items/ActivityListItem';
+import StatusDot from './StatusDot';
 import { useMessages } from 'core/i18n';
 import ZUIEllipsisMenu from '../../../../zui/ZUIEllipsisMenu';
 import ZUIPerson from '../../../../zui/ZUIPerson';
@@ -34,10 +34,6 @@ import {
   ZetkinEventParticipant,
   ZetkinEventResponse,
 } from '../../../../utils/types/zetkin';
-
-interface StyleProps {
-  color: STATUS_COLORS;
-}
 
 const useStyles = makeStyles<Theme>(() => ({
   description: {
@@ -64,36 +60,6 @@ const Quota = ({ numerator, denominator }: QuotaParams) => {
   );
 };
 
-const useDotStyles = makeStyles<Theme, StyleProps>((theme) => ({
-  dot: {
-    backgroundColor: ({ color }) => theme.palette.statusColors[color],
-    borderRadius: '100%',
-    height: '10px',
-    marginLeft: '0.5em',
-    marginRight: '0.5em',
-    width: '10px',
-  },
-}));
-
-interface DotParams {
-  state: EventState;
-}
-
-const Dot = ({ state }: DotParams) => {
-  let color = STATUS_COLORS.GRAY;
-  if (state === EventState.OPEN) {
-    color = STATUS_COLORS.GREEN;
-  } else if (state === EventState.ENDED) {
-    color = STATUS_COLORS.RED;
-  } else if (state === EventState.SCHEDULED) {
-    color = STATUS_COLORS.BLUE;
-  } else if (state === EventState.CANCELLED) {
-    color = STATUS_COLORS.ORANGE;
-  }
-  const classes = useDotStyles({ color });
-  return <Box className={classes.dot} />;
-};
-
 interface EventPopperHeaderParams {
   event: ZetkinEvent;
   state: EventState;
@@ -109,7 +75,7 @@ function EventPopperHeader({ event, state }: EventPopperHeaderParams) {
         </Typography>
       </Box>
       <Box alignItems="center" display="flex" sx={{ ml: 1 }}>
-        <Dot state={state} />
+        <StatusDot state={state} />
         <Typography color="secondary" sx={{ ml: 1 }}>
           {event.activity.title}
         </Typography>
