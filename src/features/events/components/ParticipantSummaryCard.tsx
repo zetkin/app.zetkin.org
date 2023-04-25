@@ -12,7 +12,6 @@ import { FC, useState } from 'react';
 
 import EventDataModel from 'features/events/models/EventDataModel';
 import messageIds from 'features/events/l10n/messageIds';
-import theme from 'theme';
 import ZUICard from 'zui/ZUICard';
 import ZUINumberChip from 'zui/ZUINumberChip';
 import { Msg, useMessages } from 'core/i18n';
@@ -23,16 +22,14 @@ type ParticipantSummaryCardProps = {
 
 const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({ model }) => {
   const eventData = model.getData().data;
-  const participants = model.getParticipants().data;
   const respondents = model.getRespondents().data;
   const messages = useMessages(messageIds);
+
   const reqParticipants = eventData?.num_participants_required ?? 0;
-  const availParticipants = participants?.length ?? 0;
-  const remindedParticipants =
-    participants?.filter((p) => p.reminder_sent != null).length ?? 0;
-  const signedParticipants =
-    respondents?.filter((r) => !participants?.some((p) => p.id === r.id))
-      .length ?? 0;
+  const availParticipants = model.getAvailParticipants();
+  const remindedParticipants = model.getRemindedParticipants();
+
+  const signedParticipants = model.getSignedParticipants();
   const contactPerson = eventData?.contact;
 
   const [newReqParticipants, setNewReqParticipants] = useState<number | null>(
@@ -46,18 +43,6 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({ model }) => {
     return null;
   }
 
-  const getParticipantStatus = () => {
-    const diff = reqParticipants - availParticipants;
-
-    if (diff <= 0) {
-      return theme.palette.statusColors.green;
-    } else if (diff === 1) {
-      return theme.palette.statusColors.orange;
-    } else {
-      return theme.palette.statusColors.red;
-    }
-  };
-
   return (
     <Box>
       <ZUICard
@@ -65,7 +50,10 @@ const ParticipantSummaryCard: FC<ParticipantSummaryCardProps> = ({ model }) => {
         status={
           <Box display="flex">
             <ZUINumberChip
-              color={getParticipantStatus()}
+              color={model.getParticipantStatus(
+                availParticipants,
+                reqParticipants
+              )}
               outlined={true}
               size="sm"
               value={`${availParticipants}/${reqParticipants}`}
