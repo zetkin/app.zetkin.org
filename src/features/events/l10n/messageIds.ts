@@ -3,9 +3,7 @@ import { m, makeMessages } from 'core/i18n';
 export default makeMessages('feat.events', {
   addPerson: {
     addButton: m('Add person'),
-    keepTyping: m('Keep typing..'),
-    noResult: m('No matching person found'),
-    search: m('Type to start searching'),
+    addPlaceholder: m('Start typing to add participant'),
     status: {
       booked: m('Already booked'),
       signedUp: m('Already Signed up'),

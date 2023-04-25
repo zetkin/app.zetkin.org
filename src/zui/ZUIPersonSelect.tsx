@@ -21,7 +21,7 @@ import messageIds from './l10n/messageIds';
 
 interface UsePersonSelectProps {
   getOptionDisabled?: (option: ZetkinPerson) => boolean;
-  getOptionExtraLabel?: (option: ZetkinPerson) => string;
+  getOptionExtraLabel?: (option: ZetkinPerson) => string | JSX.Element;
   inputRef?: MutableRefObject<HTMLInputElement | undefined> | undefined;
   initialValue?: string;
   label?: string;
