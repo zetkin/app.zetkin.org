@@ -108,6 +108,11 @@ const AddPersonButton = ({ model }: AddPersonButtonProps) => {
               return (
                 <>
                   <ZUIPersonSelect
+                    getOptionDisabled={(option) =>
+                      participants.some(
+                        (participant) => participant.id == option.id
+                      )
+                    }
                     getOptionExtraLabel={(option) => {
                       return settingStatus(option.id);
                     }}
