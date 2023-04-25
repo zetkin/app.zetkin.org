@@ -26,8 +26,10 @@ export default makeMessages('feat.events', {
   },
   eventPopper: {
     booked: m('Booked'),
+    cancel: m('Cancel'),
     contactPerson: m('Contact person'),
     dateAndTime: m('Date & Time'),
+    delete: m('Delete'),
     description: m('Description'),
     eventPageLink: m('Go to event page'),
     location: m('Location'),
