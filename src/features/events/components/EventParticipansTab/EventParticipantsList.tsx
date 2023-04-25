@@ -7,10 +7,10 @@ import messageIds from 'features/events/l10n/messageIds';
 import noPropagate from 'utils/noPropagate';
 import theme from 'theme';
 import { useMessages } from 'core/i18n';
+import { ZetkinEvent } from 'utils/types/zetkin';
 import ZUIAvatar from 'zui/ZUIAvatar';
 import ZUINumberChip from 'zui/ZUINumberChip';
 import ZUIRelativeTime from 'zui/ZUIRelativeTime';
-import { ZetkinEvent, ZetkinEventResponse } from 'utils/types/zetkin';
 
 interface EventParticipansListProps {
   data: ZetkinEvent;
@@ -27,16 +27,20 @@ const EventParticipansList: FC<EventParticipansListProps> = ({
 
   const columns: GridColDef[] = [
     {
+      disableColumnMenu: true,
       field: 'avatar',
       headerName: '',
+      hideSortIcons: true,
       renderCell: (params) => (
         <ZUIAvatar orgId={orgId} personId={params.row.id} />
       ),
     },
     {
+      disableColumnMenu: true,
       field: 'name',
       flex: 1,
       headerName: messages.eventParticipantsList.columnName(),
+      hideSortIcons: true,
       renderCell: (params) => {
         if (params.row.person) {
           return <Typography>{params.row.person.name}</Typography>;
@@ -50,9 +54,11 @@ const EventParticipansList: FC<EventParticipansListProps> = ({
       },
     },
     {
+      disableColumnMenu: true,
       field: 'phone',
       flex: 1,
       headerName: messages.eventParticipantsList.columnPhone(),
+      hideSortIcons: true,
       renderCell: (params) => {
         if (params.row.person) {
           return <Typography>{''}</Typography>;
@@ -62,9 +68,11 @@ const EventParticipansList: FC<EventParticipansListProps> = ({
       },
     },
     {
+      disableColumnMenu: true,
       field: 'email',
       flex: 1,
       headerName: messages.eventParticipantsList.columnEmail(),
+      hideSortIcons: true,
       valueGetter: (params) => {
         if (params.row.person) {
           return '';
@@ -74,9 +82,11 @@ const EventParticipansList: FC<EventParticipansListProps> = ({
       },
     },
     {
+      disableColumnMenu: true,
       field: 'notified',
       flex: 1,
       headerName: messages.eventParticipantsList.columnNotified(),
+      hideSortIcons: true,
       renderCell: (params) => {
         if (params.row.person) {
           return <ZUIRelativeTime datetime={params.row.response_date} />;
@@ -86,39 +96,38 @@ const EventParticipansList: FC<EventParticipansListProps> = ({
       },
     },
     {
+      align: 'right',
+      disableColumnMenu: true,
       field: 'cancel',
+      flex: 1,
       headerName: '',
-      renderCell: () => (
-        <Button variant="text">
-          {messages.eventParticipantsList.buttonCancel()}
-        </Button>
-      ),
+      hideSortIcons: true,
+      renderCell: (params) => {
+        if (params.row.person) {
+          return (
+            <>
+              <Button sx={{ marginRight: '10px' }} variant="text">
+                {messages.eventParticipantsList.buttonCancel()}
+              </Button>
+              <Button
+                onClick={noPropagate(() => {
+                  model.addParticipant(params.row.id);
+                })}
+                variant="outlined"
+              >
+                {messages.eventParticipantsList.buttonBook()}
+              </Button>
+            </>
+          );
+        } else {
+          return (
+            <Button variant="text">
+              {messages.eventParticipantsList.buttonCancel()}
+            </Button>
+          );
+        }
+      },
     },
-  ];
-
-  function handleClick(personId: number) {
-    model.addParticipant(personId);
-  }
-
-  const bookColumn: GridColDef = {
-    editable: true,
-    field: 'book',
-    headerName: '',
-    renderCell: (params) => (
-      <Button
-        onClick={noPropagate(() => {
-          handleClick(params.row.id);
-        })}
-        variant="outlined"
-      >
-        {messages.eventParticipantsList.buttonBook()}
-      </Button>
-    ),
-  };
-
-  const signUpsColumns: GridColDef<ZetkinEventResponse>[] = [
-    ...columns,
-    bookColumn,
   ];
 
   return (
@@ -126,8 +135,8 @@ const EventParticipansList: FC<EventParticipansListProps> = ({
       {model.getSignedParticipants() > 0 && (
         <>
           <Box
-            id={'Sign-up-header'}
-            style={{
+            sx={{
+              '& div': { backgroundColor: 'transparent' },
               alignItems: 'center',
               display: 'flex',
               flexDirection: 'row',
@@ -150,15 +159,15 @@ const EventParticipansList: FC<EventParticipansListProps> = ({
           <DataGridPro
             autoHeight
             checkboxSelection
-            columns={signUpsColumns}
-            rows={model.getPendingSignUps()}
+            columns={columns}
+            rows={model.getPendingSignUps() ?? []}
           />
         </>
       )}
 
       <Box
-        id={'Booked-header'}
-        style={{
+        sx={{
+          '& div': { backgroundColor: 'transparent' },
           alignItems: 'center',
           display: 'flex',
           flexDirection: 'row',
