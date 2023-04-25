@@ -16,6 +16,7 @@ import {
 import { ZetkinEvent, ZetkinLocation } from 'utils/types/zetkin';
 
 interface MapProps {
+  currentEventId: number;
   inMoveState: boolean;
   locations: ZetkinLocation[];
   onMapClick: (latlng: Pick<ZetkinLocation, 'lat' | 'lng'>) => void;
@@ -37,6 +38,7 @@ const MapWrapper = ({
 };
 
 const Map: FC<MapProps> = ({
+  currentEventId,
   inMoveState,
   locations,
   onMapClick,
@@ -102,7 +104,9 @@ const Map: FC<MapProps> = ({
               {filteredLocations.map((location) => {
                 const isSelectedMarker = selectedLocation?.id == location.id;
                 const noOfRelevantEvents = relatedEvents.filter(
-                  (event) => event.location.id === location.id
+                  (event) =>
+                    event.location.id === location.id &&
+                    event.id !== currentEventId
                 ).length;
                 return (
                   <Marker

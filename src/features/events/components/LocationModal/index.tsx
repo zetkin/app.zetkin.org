@@ -40,6 +40,7 @@ export type PendingLocation = {
 };
 
 interface LocationModalProps {
+  currentEventId: number;
   events: ZetkinEvent[];
   locations: ZetkinLocation[];
   model: LocationsModel;
@@ -52,6 +53,7 @@ interface LocationModalProps {
 
 const Map = dynamic(() => import('./Map'), { ssr: false });
 const LocationModal: FC<LocationModalProps> = ({
+  currentEventId,
   events,
   locations,
   model,
@@ -89,6 +91,7 @@ const LocationModal: FC<LocationModalProps> = ({
     <Dialog fullWidth maxWidth="lg" onClose={onMapClose} open={open}>
       <Box border={1} padding={2}>
         <Map
+          currentEventId={currentEventId}
           inMoveState={inMoveState}
           locations={locations}
           onMapClick={(latlng: PendingLocation) => {
@@ -145,7 +148,9 @@ const LocationModal: FC<LocationModalProps> = ({
                 onMapClose();
               }}
               relatedEvents={events.filter(
-                (event) => event.location.id === selectedLocation.id
+                (event) =>
+                  event.location.id === selectedLocation.id &&
+                  event.id !== currentEventId
               )}
             />
           )}
