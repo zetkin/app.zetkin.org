@@ -24,33 +24,31 @@ export enum CLUSTER_TYPE {
   SHIFT = 'shift',
 }
 
-interface EventPopperListItemProps {
-  checked: boolean;
+interface MultiEventListItemProps {
   clusterType: CLUSTER_TYPE;
   compact: boolean;
   event: ZetkinEvent;
-  onChange: () => void;
   participants: ZetkinEventParticipant[];
   state: EventState;
 }
 
-const EventPopperListItem: FC<EventPopperListItemProps> = ({
-  checked,
+const MultiEventListItem: FC<MultiEventListItemProps> = ({
   clusterType,
   compact,
   event,
-  onChange,
   participants,
   state,
 }) => {
   const intl = useIntl();
   const messages = useMessages(messageIds);
+
   const warningIcons: (JSX.Element | null)[] = [null, null, null];
+
   if (!event.contact) {
     warningIcons[0] = (
       <WarningSlot
         key="contact"
-        icon={<FaceRetouchingOff color="error" />}
+        icon={<FaceRetouchingOff color="error" fontSize="small" />}
         tooltip={messages.eventPopper.noContact()}
       />
     );
@@ -61,7 +59,7 @@ const EventPopperListItem: FC<EventPopperListItemProps> = ({
     warningIcons[1] = (
       <WarningSlot
         key="signups"
-        icon={<EmojiPeople color="error" />}
+        icon={<EmojiPeople color="error" fontSize="small" />}
         tooltip={messages.eventPopper.pendingSignups()}
       />
     );
@@ -73,7 +71,7 @@ const EventPopperListItem: FC<EventPopperListItemProps> = ({
     warningIcons[2] = (
       <WarningSlot
         key="reminders"
-        icon={<MailOutline color="error" />}
+        icon={<MailOutline color="error" fontSize="small" />}
         tooltip={messages.eventPopper.unsentReminders({
           numMissing: participants.length - numReminded,
         })}
@@ -94,11 +92,7 @@ const EventPopperListItem: FC<EventPopperListItemProps> = ({
       >
         <Box display="flex">
           <Box>
-            <Checkbox
-              checked={checked}
-              onChange={onChange}
-              sx={{ padding: '0px' }}
-            />
+            <Checkbox sx={{ padding: '0px' }} />
           </Box>
           <Box display="flex" flexDirection="column">
             <Typography fontWeight="bold" sx={{ paddingLeft: 1 }}>
@@ -142,9 +136,11 @@ const EventPopperListItem: FC<EventPopperListItemProps> = ({
                       ? 'error'
                       : 'secondary'
                   }
+                  fontSize="small"
                 />
               }
               label={`${event.num_participants_available}/${event.num_participants_required}`}
+              size="sm"
             />
           </Box>
           <NextLink
@@ -163,4 +159,4 @@ const EventPopperListItem: FC<EventPopperListItemProps> = ({
   );
 };
 
-export default EventPopperListItem;
+export default MultiEventListItem;

@@ -38,6 +38,7 @@ export default makeMessages('feat.events', {
     pendingSignups: m('There are pending signups'),
     publish: m('Publish'),
     reminded: m('Reminded'),
+    shifts: m('Shifts'),
     signups: m('Signups'),
     unsentReminders: m<{ numMissing: number }>(
       '{numMissing, plural, =1 {One participant} other {# participants}} have not yet received reminders'
