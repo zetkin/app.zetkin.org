@@ -1,3 +1,4 @@
+import theme from 'theme';
 import { Box, Typography } from '@mui/material';
 
 type CalendarWeekNumberProps = {
@@ -7,7 +8,12 @@ type CalendarWeekNumberProps = {
 const WeekNumber = ({ weekNr }: CalendarWeekNumberProps) => {
   return (
     <Box marginTop="2px">
-      <Typography color="#9f9f9f" fontSize=".8rem" fontWeight={600}>
+      <Typography
+        color={theme.palette.secondary.light}
+        fontStyle="bold"
+        sx={{ fontWeight: 800 }}
+        variant="body2"
+      >
         {weekNr}
       </Typography>
     </Box>

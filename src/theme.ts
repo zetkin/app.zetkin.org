@@ -56,6 +56,7 @@ const themePalette = {
     main: '#ED1C55',
   },
   secondary: {
+    light: '#9f9f9f',
     main: 'rgba(0, 0, 0, 0.6)',
   },
   statusColors: {

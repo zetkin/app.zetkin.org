@@ -29,7 +29,7 @@ const Day = ({ date, isInFocusMonth }: DayProps) => {
       width="100%"
     >
       <Box marginLeft="5px">
-        <Typography color={textColor} fontSize=".8rem">
+        <Typography color={textColor} variant="body2">
           <FormattedDate day="numeric" value={date} />
         </Typography>
       </Box>
