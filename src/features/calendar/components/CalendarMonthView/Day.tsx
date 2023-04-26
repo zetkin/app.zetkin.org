@@ -5,17 +5,16 @@ import { Box, ButtonBase, Typography } from '@mui/material';
 
 type DayProps = {
   date: Date;
-  focusDate: Date;
+  isInFocusMonth: boolean;
 };
-const Day = ({ date, focusDate }: DayProps) => {
-  const isSameMonth = dayjs(date).month() === focusDate.getMonth();
+const Day = ({ date, isInFocusMonth }: DayProps) => {
   const isToday = dayjs(date).isSame(new Date(), 'day');
   const { locale } = useIntl();
 
   let textColor = theme.palette.text.secondary;
   if (isToday) {
     textColor = theme.palette.primary.main;
-  } else if (!isSameMonth) {
+  } else if (!isInFocusMonth) {
     textColor = '#dfdfdf';
   }
 
@@ -31,7 +30,7 @@ const Day = ({ date, focusDate }: DayProps) => {
       >
         <Box
           alignItems="start"
-          bgcolor={isSameMonth ? '#eee' : 'none'}
+          bgcolor={isInFocusMonth ? '#eee' : 'none'}
           border="2px solid #eeeeee"
           borderColor={isToday ? theme.palette.primary.main : 'eee'}
           display="flex"

@@ -35,28 +35,30 @@ const CalendarMonthView = ({ focusDate }: CalendarMonthViewProps) => {
       gridTemplateRows={`repeat(${numberOfRows}, 1fr)`}
     >
       {[...Array(numberOfRows)].map((_, rowIndex) =>
-        [...Array(numberOfColumns + 1)].map((_, columnIndex) => (
-          <React.Fragment key={`${rowIndex * numberOfColumns + columnIndex}`}>
-            {/* First item in each row is the week number */}
-            {columnIndex === 0 && (
+        [...Array(numberOfColumns + 1)].map((_, columnIndex) => {
+          //First item in each column is the week number
+          if (columnIndex === 0) {
+            return (
               <WeekNumber
+                key={rowIndex * numberOfColumns + columnIndex}
                 weekNr={getWeekNumber(firstDayOfCalendar, rowIndex)}
               />
-            )}
-            {/* Following items are days */}
-            {columnIndex > 0 && (
-              <Day
-                date={dayjs(firstDayOfCalendar)
-                  .add(
-                    getDayIndex(rowIndex, columnIndex, numberOfColumns),
-                    'day'
-                  )
-                  .toDate()}
-                focusDate={focusDate}
-              />
-            )}
-          </React.Fragment>
-        ))
+            );
+          }
+
+          const date = dayjs(firstDayOfCalendar)
+            .add(getDayIndex(rowIndex, columnIndex, numberOfColumns), 'day')
+            .toDate();
+
+          // Remaining items are days
+          return (
+            <Day
+              key={rowIndex * numberOfColumns + columnIndex}
+              date={date}
+              isInFocusMonth={dayjs(date).month() === focusDate.getMonth()}
+            />
+          );
+        })
       )}
     </Box>
   );
