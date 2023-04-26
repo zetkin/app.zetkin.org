@@ -46,7 +46,7 @@ interface LocationModalProps {
   onMapClose: () => void;
   onSelectLocation: (location: ZetkinLocation) => void;
   open: boolean;
-  locationId?: number;
+  locationId?: number | null;
 }
 
 const Map = dynamic(() => import('./Map'), { ssr: false });

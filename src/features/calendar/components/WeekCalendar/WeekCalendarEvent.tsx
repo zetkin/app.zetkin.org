@@ -140,7 +140,7 @@ const WeekCalendarEvent = ({
                   </span>
                 </Typography>
               )}
-              {maxNoOfLabels > 1 && event.location.title && (
+              {maxNoOfLabels > 1 && event.location?.title && (
                 <Typography
                   data-testid={`location-${event.id}`}
                   noWrap

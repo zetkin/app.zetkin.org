@@ -57,10 +57,14 @@ const EventOverviewListItem: FC<EventOverviewListItemProps> = ({
                 />
               ),
             },
-            {
-              icon: <PlaceOutlined fontSize="inherit" />,
-              label: event.location.title,
-            },
+            ...(event.location
+              ? [
+                  {
+                    icon: <PlaceOutlined fontSize="inherit" />,
+                    label: event.location.title,
+                  },
+                ]
+              : []),
           ]}
         />
       }
