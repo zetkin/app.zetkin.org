@@ -1,6 +1,11 @@
 import { m, makeMessages } from 'core/i18n';
 
 export default makeMessages('feat.events', {
+  eventContactCard: {
+    header: m('Contact'),
+    noContact: m('No Contact Assigned!'),
+    removeButton: m('Remove'),
+  },
   eventOverviewCard: {
     buttonEndDate: m('+ End date'),
     createLocation: m('Create new location'),
