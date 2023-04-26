@@ -17,6 +17,7 @@ const CalendarMonthViewDay = ({
   const date = dayjs(firstDateOfCalendar).add(dayIndex, 'day');
   const isSameMonth = date.month() === focusDate.getMonth();
   const isToday = date.isSame(currentDate, 'day');
+
   let textColor = theme.palette.text.secondary;
   if (isToday) {
     textColor = theme.palette.primary.main;

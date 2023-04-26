@@ -5,11 +5,15 @@ import React from 'react';
 
 import Day from './Day';
 import WeekNumber from './WeekNumber';
+import { getDayIndex, getDaysBeforeFirstDay, getWeekNumber } from './utils';
 
-type Props = {
+dayjs.extend(isoWeek);
+
+type CalendarMonthViewProps = {
   focusDate: Date;
 };
-const CalendarMonthView = ({ focusDate }: Props) => {
+
+const CalendarMonthView = ({ focusDate }: CalendarMonthViewProps) => {
   const numberOfRows = 6;
   const numberOfColumns = 7;
 
@@ -18,29 +22,11 @@ const CalendarMonthView = ({ focusDate }: Props) => {
     focusDate.getMonth(),
     1
   );
-  function getDaysBeforeFirstDay() {
-    const daysBeforeFirstDay = firstDayOfMonth.getDay();
-    if (daysBeforeFirstDay === 0) {
-      return 6;
-    } else {
-      return daysBeforeFirstDay - 1;
-    }
-  }
 
-  const daysBeforeFirstDay = getDaysBeforeFirstDay();
-  const firstDayOfCalendar = dayjs(firstDayOfMonth).subtract(
-    daysBeforeFirstDay,
-    'day'
-  );
-  const currentDate = new Date();
-
-  dayjs.extend(isoWeek);
-  function getDayIndex(rowIndex: number, columnIndex: number) {
-    return columnIndex + rowIndex * numberOfColumns;
-  }
-  function getWeekNumber(rowIndex: number) {
-    return firstDayOfCalendar.add(rowIndex, 'week').isoWeek();
-  }
+  const daysBeforeFirstDay = getDaysBeforeFirstDay(firstDayOfMonth);
+  const firstDayOfCalendar = dayjs(firstDayOfMonth)
+    .subtract(daysBeforeFirstDay, 'day')
+    .toDate();
 
   return (
     <>
@@ -56,14 +42,16 @@ const CalendarMonthView = ({ focusDate }: Props) => {
             <React.Fragment key={`${rowIndex * numberOfColumns + columnIndex}`}>
               {/* First item in each row is the week number */}
               {columnIndex === 0 && (
-                <WeekNumber weekNr={getWeekNumber(rowIndex)} />
+                <WeekNumber
+                  weekNr={getWeekNumber(firstDayOfCalendar, rowIndex)}
+                />
               )}
               {/* Following items are days */}
               {columnIndex > 0 && (
                 <Day
-                  currentDate={currentDate}
-                  dayIndex={getDayIndex(rowIndex, columnIndex - 1)}
-                  firstDateOfCalendar={firstDayOfCalendar.toDate()}
+                  currentDate={new Date()}
+                  dayIndex={getDayIndex(rowIndex, columnIndex, numberOfColumns)}
+                  firstDateOfCalendar={firstDayOfCalendar}
                   focusDate={focusDate}
                 />
               )}
