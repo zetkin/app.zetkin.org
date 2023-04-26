@@ -1,19 +1,15 @@
 import Box from '@mui/material/Box';
+import { useRouter } from 'next/router';
+import ZUIFuture from 'zui/ZUIFuture';
+
+import { dateIsEqualOrBefore } from 'utils/dateUtils';
 import useModel from 'core/useModel';
 import CampaignActivitiesModel, {
   ACTIVITIES,
-  CampaignActivity,
 } from 'features/campaigns/models/CampaignActivitiesModel';
-import { useRouter } from 'next/router';
-import ZUIFuture from 'zui/ZUIFuture';
+
 import CalendarDayItem from './CalendarDayItem';
-import { dateIsEqualOrBefore, isSameDate } from 'utils/dateUtils';
 import { DayInfo } from './types';
-
-// import { event } from "utils/testing/mocks/mockEvent";
-
-// const CalendarDayView = () => {
-//   return <><CalendarDayViewActivity event={event}/></>;
 
 export interface CalendarDayViewProps {
   focusDate: Date;
@@ -38,9 +34,9 @@ const CalendarDayView = ({ focusDate }: CalendarDayViewProps) => {
               .slice(0, 10);
             if (!(dateString in activitiesByDate)) {
               activitiesByDate[dateString] = {
-                events: [],
-                activities_starts: [],
                 activities_ends: [],
+                activities_starts: [],
+                events: [],
               };
             }
 
@@ -52,9 +48,9 @@ const CalendarDayView = ({ focusDate }: CalendarDayViewProps) => {
                 .slice(0, 10);
               if (!(dateString in activitiesByDate)) {
                 activitiesByDate[dateString] = {
-                  events: [],
-                  activities_starts: [],
                   activities_ends: [],
+                  activities_starts: [],
+                  events: [],
                 };
               }
               activitiesByDate[dateString].activities_starts.push(activity);
@@ -65,9 +61,9 @@ const CalendarDayView = ({ focusDate }: CalendarDayViewProps) => {
                 .slice(0, 10);
               if (!(dateString in activitiesByDate)) {
                 activitiesByDate[dateString] = {
-                  events: [],
-                  activities_starts: [],
                   activities_ends: [],
+                  activities_starts: [],
+                  events: [],
                 };
               }
               activitiesByDate[dateString].activities_ends.push(activity);
@@ -85,11 +81,12 @@ const CalendarDayView = ({ focusDate }: CalendarDayViewProps) => {
               marginTop: '1em',
             }}
           >
-            {todayAndFutureActivitiesDates.map((d, i) => (
+            {todayAndFutureActivitiesDates.map((date, index) => (
               <CalendarDayItem
+                key={index}
+                date={new Date(date)}
+                dayInfo={activitiesByDate[date]}
                 focusDate={new Date(focusDate)}
-                date={new Date(d)}
-                dayInfo={activitiesByDate[d]}
               />
             ))}
           </Box>

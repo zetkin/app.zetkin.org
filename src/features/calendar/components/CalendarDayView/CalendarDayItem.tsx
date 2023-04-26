@@ -1,8 +1,11 @@
 import Box from '@mui/material/Box';
+
 import CalendarDayDate from './CalendarDayDate';
-import CalendarDayViewActivity, { STATUS_COLORS } from "./CalendarDayViewActivity";
 import CalendarDayOtherActivities from './CalendarDayOtherActivities';
 import { DayInfo } from './types';
+import CalendarDayViewActivity, {
+  STATUS_COLORS,
+} from './CalendarDayViewActivity';
 
 export interface CalendarDayItemProps {
   date: Date;
@@ -19,37 +22,43 @@ const CalendarDayItem = ({
     <Box
       display="flex"
       sx={{
-        marginBottom: '0.5em',
         backgroundColor: '#eeeeee',
+        marginBottom: '0.5em',
       }}
     >
       <Box
         sx={{
-          width: 300
+          width: 300,
         }}
       >
-        <Box sx={{
-          padding: "1em"
-        }}>
-          <CalendarDayDate focusDate={focusDate} date={date} />
+        <Box
+          sx={{
+            padding: '1em',
+          }}
+        >
+          <CalendarDayDate date={date} focusDate={focusDate} />
         </Box>
       </Box>
       <Box
         display="flex"
         flexDirection="column"
         sx={{
+          gap: '0.7em',
           padding: '1em',
           width: '100%',
-          gap: "0.7em"
         }}
       >
         {(dayInfo.activities_starts.length > 0 ||
           dayInfo.activities_ends.length > 0) && (
           <CalendarDayOtherActivities dayInfo={dayInfo} />
         )}
-        {dayInfo.events.map((event, i) => (
+        {dayInfo.events.map((event, index) => (
           // TODO: Use statusColor in reasonable way
-          <CalendarDayViewActivity statusColor={STATUS_COLORS.GREEN} event={event} />
+          <CalendarDayViewActivity
+            key={index}
+            event={event}
+            statusColor={STATUS_COLORS.GREEN}
+          />
         ))}
       </Box>
     </Box>

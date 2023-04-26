@@ -15,8 +15,10 @@ const CalendarDayDate = ({ date, focusDate }: CalendarDayDateProps) => {
       display="inline-block"
       padding={1}
       sx={{
-        backgroundColor: isSameDate(focusDate, date) ? theme.palette.primary.main : 'inherited',
-        borderRadius: "2em",
+        backgroundColor: isSameDate(focusDate, date)
+          ? theme.palette.primary.main
+          : 'inherited',
+        borderRadius: '2em',
       }}
     >
       {dayjs(date).format('D')} {dayjs(date).format('MMMM')},{' '}

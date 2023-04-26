@@ -8,7 +8,7 @@ export interface CalendarDayOtherActivitiesProps {
 const CalendarDayOtherActivities = ({
   dayInfo,
 }: CalendarDayOtherActivitiesProps) => {
-  let infoTexts = [];
+  const infoTexts = [];
   if (dayInfo.activities_starts.length > 0) {
     infoTexts.push(`${dayInfo.activities_starts.length} activities starts`);
   }
