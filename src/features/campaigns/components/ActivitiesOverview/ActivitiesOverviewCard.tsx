@@ -4,11 +4,11 @@ import { Box, Divider, Typography } from '@mui/material';
 
 import CallAssignmentOverviewListItem from './items/CallAssignmentOverviewListItem';
 import EventClusterOverviewListItem from './items/EventClusterOverviewListItem';
+import EventOverviewListItem from './items/EventOverviewListItem';
 import isEventCluster from 'features/campaigns/utils/isEventCluster';
 import messageIds from 'features/campaigns/l10n/messageIds';
 import SurveyOverviewListItem from './items/SurveyOverviewListItem';
 import TaskOverviewListItem from './items/TaskOverviewListItem';
-import useClusteredActivities from 'features/campaigns/hooks/useClusteredActivities';
 import ZUICard from 'zui/ZUICard';
 import ZUIEmptyState from 'zui/ZUIEmptyState';
 import {
@@ -16,6 +16,9 @@ import {
   CampaignActivity,
 } from 'features/campaigns/models/CampaignActivitiesModel';
 import { Msg, useMessages } from 'core/i18n';
+import useClusteredActivities, {
+  CLUSTER_TYPE,
+} from 'features/campaigns/hooks/useClusteredActivities';
 
 type OverviewListProps = {
   activities: CampaignActivity[];
@@ -56,10 +59,17 @@ const ActivitiesOverviewCard: FC<OverviewListProps> = ({
           return (
             <Box key={`cluster-${activity.events[0].id}`}>
               {index > 0 && <Divider />}
-              <EventClusterOverviewListItem
-                cluster={activity}
-                focusDate={focusDate}
-              />
+              {activity.kind == CLUSTER_TYPE.SINGLE ? (
+                <EventOverviewListItem
+                  event={activity.events[0]}
+                  focusDate={focusDate}
+                />
+              ) : (
+                <EventClusterOverviewListItem
+                  cluster={activity}
+                  focusDate={focusDate}
+                />
+              )}
             </Box>
           );
         } else if (activity.kind === ACTIVITIES.SURVEY) {
